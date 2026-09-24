@@ -54,10 +54,14 @@
 //!     declaration and its enclosing class bodies (c.rs); an
 //!     out-of-class member definition cannot see its specifier from
 //!     its own file and reads as exported — the safe side.
+//!   - Java's access modifiers, spelled or implied by the holder, are
+//!     read the same way (java.rs); package access is exported and
+//!     restricted (bit 2), the `pub(crate)` reading.
 
 mod c;
 mod hs;
 mod hs_lex;
+mod java;
 mod py;
 #[cfg(test)]
 #[path = "../../../tests/unit/fourclass/visibility/tests.rs"]
@@ -67,8 +71,13 @@ mod tests;
 mod tests_hs;
 mod ts;
 
+// the one ancestor walk lives with the AST helpers, since the scan
+// layer's owner road reads it too; re-exported for the climbs below
+// and for the mention category word (mention/conv)
 use crate::scan::ast;
+pub(crate) use crate::scan::ast::ancestors;
 use crate::scan::lang::Lang;
+pub(crate) use java::modifiers as java_modifiers;
 use tree_sitter::Node;
 
 /// Frozen bit positions for `symbols.flags`. Bit 0 is the one the
@@ -94,6 +103,7 @@ pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
         Lang::Go => word(go_exported(node, src), go_scope_open(node)),
         Lang::Haskell => word(hs::exported(node, src), true),
         Lang::C | Lang::Cpp => c::bits(node, src),
+        Lang::Java => java::bits(node),
         _ => 0,
     }
 }
@@ -163,13 +173,6 @@ fn go_scope_open(node: Node<'_>) -> bool {
             "function_declaration" | "method_declaration" | "func_literal"
         )
     })
-}
-
-/// The parent chain, innermost first, ending at the file root (shared
-/// with the mention category word, mention/conv, which reads the same
-/// chain for enclosing classes, ambient blocks and Rust attributes).
-pub(crate) fn ancestors(node: Node<'_>) -> impl Iterator<Item = Node<'_>> {
-    std::iter::successors(node.parent(), |n| n.parent())
 }
 
 fn root_of(node: Node<'_>) -> Node<'_> {

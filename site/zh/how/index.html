@@ -441,7 +441,7 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   <p class="note">U 是自有的一次 walk：隐藏文件进入，<code>.git</code>/<code>.ce</code> 按名裁掉，
   <em>未声明</em>的嵌套仓库被整体裁掉，而根的 <code>.gitmodules</code> 声明的路径是外来的，它能拼出名字，故留在 U 里，但永不被度量；只认 <code>.gitignore</code> 与 <code>.ceignore</code>，因此同一提交在任何机器上得到同一个 U，walk 的每个参数都是 <code>MENTION_REV</code> 的输入。mentions 存的是 64 位哈希而非文本。Rust 抽取每条声明的提及名与类别词，按最廉价者先问三个否决问题；Haskell 只读可见性词与 mounts 行（文件的 <code>mod</code> 挂载有几处私有、是否有门面再导出、其包是否将其保私），并赋上面那条冻结全序。两表随 <code>graph.request</code> 同来同去：不带两表的请求得到逐字节相同的十键应答，死集两种情形相同。超过 <code>unmentionedCap</code> 时核仍判图、丢表并具名说明。顾问永不使门变红，永不进入 <code>ce erase</code>。</p>
   <ul class="consts">
-    <li><b>MENTION_REV</b> 2</li>
+    <li><b>MENTION_REV</b> 3</li>
     <li><b>FOLD_MIN_CHARS</b> 7</li>
     <li><b>unmentionedVisMask</b> 3</li>
     <li><b>unmentionedCap</b> 131072</li>

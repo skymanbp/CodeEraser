@@ -97,11 +97,14 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
-/// 16 = the C family enters the graph (plan v2.30 step 2): the
-/// `include` site kind joins KINDS, C / C++ declarations enter the
-/// symbols table with their own visibility and convention words, and
-/// compile_commands.json becomes a resolver config — a new stored kind
-/// code and new stored rows, so every site is re-detected.
+/// 16 = the C family and Java enter the graph (plan v2.30 steps 2 and
+/// 3, one release): the `include`, `import_star` and `type_ref` site
+/// kinds join KINDS (a Java single-type import keeps the `import`
+/// label), C / C++ and Java declarations enter the symbols table with
+/// their own visibility and convention words, and compile_commands.json
+/// becomes a resolver config — new stored kind codes and new stored
+/// rows, so every site is re-detected. Step 3 did not move the counter:
+/// no index ever held a row it changes (step 2 shipped in no release).
 pub const GRAPH_REV: i64 = 16;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
@@ -153,6 +156,8 @@ const KINDS: &[&str] = &[
     "url",
     "export_star",
     "include",
+    "import_star",
+    "type_ref",
 ];
 
 /// The frozen code for one site kind. KINDS is the single owner of

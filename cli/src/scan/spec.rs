@@ -6,6 +6,13 @@
 //! Alignment targets (plan §6 M1 acceptance): lizard (TS/Py),
 //! rust-code-analysis (Rust), gocyclo/gocognit (Go). Known divergences
 //! are recorded in contracts/ during the M1 cross-check, not hidden.
+//!
+//! This file is the CONTRACT — the struct, the dispatch and the empty
+//! table. The tables live beside it, one file per language family
+//! (spec_launch.rs holds the M1 launch set, spec_hs.rs, spec_c.rs and
+//! spec_java.rs the later ones): a table is data a reader compares
+//! against its grammar, and the contract read past the 300-line line
+//! once plan v2.30 step 3 added the mechanisms Java needs (RM16).
 
 use super::lang::Lang;
 
@@ -25,11 +32,43 @@ pub enum NameStyle {
 /// because the table repeats it for nearly every entry.
 pub type Kinds = &'static [&'static str];
 
+/// How overload resolution (LangSpec::overloads) counts. A unit's
+/// parameter list bounds the arguments a call may pass: every named
+/// parameter child counts toward both bounds except an `optional` one
+/// (a C++ default argument: the upper bound only), a `variadic` one (no
+/// upper bound — C++'s C-style `...` is an anonymous token and is
+/// matched by kind like the named pack declaration) and an `ignored`
+/// one (Java's receiver parameter `Foo this`, which no argument fills).
+/// A call passes its argument list's entries, unless one is a `spread`
+/// (a C++ pack expansion `f(a...)`): then the count is unknown and
+/// admits every seat. An `unreachable` unit competes for no seat at
+/// all — a Java constructor is reached by `new` and `this(…)`, neither
+/// of them a call kind, and a method named like its class must not
+/// resolve to it.
+pub struct Overloads {
+    pub optional: Kinds,
+    pub variadic: Kinds,
+    pub ignored: Kinds,
+    pub spread: Kinds,
+    pub unreachable: Kinds,
+}
+
 pub struct LangSpec {
     /// Node kinds counted as standalone function units. Anything not
     /// listed here (Go func_literal, Python lambda) is absorbed into
     /// its host function by construction — no separate flag needed.
     pub fn_kinds: Kinds,
+    /// fn_kinds entries that form a unit ONLY when the node carries a
+    /// field, as (kind, field). Haskell's `bind` is also the do-statement
+    /// `x <- act` and pattern-bind kind, and `function` also the arrow
+    /// TYPE inside a signature (AST-probed 3k): the value-level equation
+    /// carries `name` and the impostors never do — without the gate
+    /// every do line became a unit and its complexity left the host.
+    /// Java's `method_declaration` without a `body` is an abstract,
+    /// interface or native signature, with nothing to measure — the C++
+    /// `= default` stance (register D24); the other grammars spell a
+    /// signature with a kind that never enters fn_kinds at all.
+    pub fn_required_fields: &'static [(&'static str, &'static str)],
     /// Kind of the parameter-list child (direct child of a fn node).
     pub param_list_kinds: Kinds,
     /// +1 cyclomatic per node of these kinds.
@@ -42,6 +81,15 @@ pub struct LangSpec {
     pub chain_kinds: Kinds,
     /// Cognitive: structures that increment AND raise nesting.
     pub coc_nesting_kinds: Kinds,
+    /// Cognitive: the if kinds, EXACT — where an else branch may hang
+    /// off the if's `alternative` FIELD instead of arriving as an else
+    /// node (Go and Java carry the next if or the else body there
+    /// directly). An if in another if's alternative is an else-if (flat
+    /// +1, chain level); any other alternative that is no coc_flat node
+    /// is a plain else, +1 — a Java `else return x;` included, which
+    /// the block-only reading missed. A kind list, not a prefix: the
+    /// ternary also has an `alternative` field (booklet §4 (d)).
+    pub if_kinds: Kinds,
     /// Cognitive: flat +1 (no nesting penalty), e.g. `else`.
     pub coc_flat_kinds: Kinds,
     /// Cognitive: raise nesting only (lambdas / inline fns).
@@ -66,16 +114,18 @@ pub struct LangSpec {
     /// the lifetime/label tick (M2 attack review: classifying it LIT
     /// made every `&'a str` signature a false clone driver).
     pub literal_delims: Kinds,
-    /// fn_kinds entries that form a unit ONLY when the node carries a
-    /// `name` field. Haskell's `bind` kind is also the do-statement
-    /// `x <- act` and pattern-bind kind (AST-probed 3k) — without the
-    /// name gate every do line would become a standalone unit and its
-    /// complexity would vanish from the host.
-    pub fn_named_only_kinds: Kinds,
     /// Recursion (whitepaper p.8, plan v2.23): call/application node
-    /// kinds. Empty = the language mints no call edges. The callee is
-    /// the `function` field of every one of them (grammar-probed).
+    /// kinds. Empty = the language mints no call edges.
     pub call_kinds: Kinds,
+    /// (callee field, receiver field) of every call kind. Seven grammars
+    /// hang the callee off `function` and select a member INSIDE it
+    /// (call_member_kinds). Java hangs the method name off `name` and
+    /// the receiver off the call's own `object` field: a call carrying
+    /// the receiver field takes the member road with that field as its
+    /// object, one without it the bare road (booklet §4 (c)). The one
+    /// spelling both readers use — the arcs here and the similar
+    /// advisor's callee words.
+    pub call_fields: (&'static str, Option<&'static str>),
     /// Callee shapes spelling a bare name, matched against the WHOLE
     /// unit name — a Go method reads `(T) g`, so `g()` never reaches it.
     pub call_name_kinds: Kinds,
@@ -95,6 +145,22 @@ pub struct LangSpec {
     /// themselves. A bare name never reaches inside one — a method
     /// answers to a receiver, never to its own name alone.
     pub call_member_scopes: Kinds,
+    /// Named type declarations whose `name` spells a member's OWNER
+    /// (Java): the chain of these around a unit, outermost first, keys
+    /// its member road the way the C family's declarator does
+    /// (scan/declarator.rs). No owner when the unit's nearest member
+    /// scope belongs to anything else — an anonymous class, an enum
+    /// constant's body — which no call can name.
+    pub owner_kinds: Kinds,
+    /// Overload resolution (C++, Java): same-named callables of one
+    /// scope are DIFFERENT functions, told apart by their parameters, so
+    /// each is its own callable and a call reaches the one whose arity
+    /// range admits its argument count — two admitting it, no edge (the
+    /// undercount direction). None keeps the other reading, where
+    /// same-named units of one scope are ONE callable: Haskell equations,
+    /// a function written twice under two cfg / `#if` arms, a Python
+    /// property's getter and setter.
+    pub overloads: Option<&'static Overloads>,
     /// Kinds that BIND names locally — an import written inside a
     /// body. Names appearing under one shadow the callable enclosing
     /// it, so a bare call of that name is not provably the local one:
@@ -114,13 +180,15 @@ pub struct LangSpec {
 
 pub fn spec(lang: Lang) -> &'static LangSpec {
     match lang {
-        Lang::Python => &PYTHON,
-        Lang::TypeScript | Lang::Tsx => &TYPESCRIPT,
-        Lang::Rust => &RUST,
-        Lang::Go => &GO,
+        Lang::Python => &super::spec_launch::PYTHON,
+        Lang::TypeScript | Lang::Tsx => &super::spec_launch::TYPESCRIPT,
+        Lang::Rust => &super::spec_launch::RUST,
+        Lang::Go => &super::spec_launch::GO,
         Lang::Markdown => &MARKDOWN,
         Lang::Haskell => &super::spec_hs::HASKELL,
-        Lang::C | Lang::Cpp => &super::spec_c::C_FAMILY,
+        Lang::C => &super::spec_c::C,
+        Lang::Cpp => &super::spec_c::CPP,
+        Lang::Java => &super::spec_java::JAVA,
         // The sentinel is never walked; the scan-only arm (plan
         // v2.5) is size-only like Markdown — grammar() is None for
         // all of them, so measure_file never reaches these tables:
@@ -129,215 +197,15 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
     }
 }
 
-static PYTHON: LangSpec = LangSpec {
-    fn_kinds: &["function_definition"],
-    param_list_kinds: &["parameters"],
-    cc_kinds: &[
-        "if_statement",
-        "elif_clause",
-        "conditional_expression",
-        "for_statement",
-        "while_statement",
-        "except_clause",
-        "case_clause",
-        "assert_statement",
-        // comprehension clauses are real branch paths: lizard and radon
-        // both count them (M1 cross-check finding). CoC deliberately does
-        // NOT count them (declarative expression, no nesting cost).
-        "for_in_clause",
-        "if_clause",
-    ],
-    cc_operators: &["and", "or"],
-    chain_kinds: &[],
-    coc_nesting_kinds: &[
-        "if_statement",
-        "for_statement",
-        "while_statement",
-        "except_clause",
-        "conditional_expression",
-        "match_statement",
-    ],
-    coc_flat_kinds: &["elif_clause", "else_clause"],
-    coc_nest_only_kinds: &["lambda"],
-    coc_operators: &["and", "or"],
-    // Python has no labeled jumps.
-    coc_jump_kinds: &[],
-    label_kinds: &[],
-    comment_kinds: &["comment"],
-    name_style: NameStyle::Snake,
-    // Python quotes surface as named string_start/string_end kinds.
-    literal_delims: &[],
-    fn_named_only_kinds: &[],
-    call_kinds: &["call"],
-    call_name_kinds: &["identifier"],
-    call_member_kinds: &["attribute"],
-    call_self_words: &["self", "cls"],
-    call_member_scopes: &["class_definition"],
-    call_import_kinds: &["import_from_statement", "import_statement"],
-    opaque_fields: &[],
-};
-
-static TYPESCRIPT: LangSpec = LangSpec {
-    fn_kinds: &[
-        "function_declaration",
-        "generator_function_declaration",
-        "method_definition",
-        "arrow_function",
-        "function_expression",
-    ],
-    param_list_kinds: &["formal_parameters"],
-    cc_kinds: &[
-        "if_statement",
-        "ternary_expression",
-        "for_statement",
-        "for_in_statement",
-        "while_statement",
-        "do_statement",
-        "switch_case",
-        "catch_clause",
-    ],
-    cc_operators: &["&&", "||", "??"],
-    chain_kinds: &[],
-    coc_nesting_kinds: &[
-        "if_statement",
-        "for_statement",
-        "for_in_statement",
-        "while_statement",
-        "do_statement",
-        "switch_statement",
-        "catch_clause",
-        "ternary_expression",
-    ],
-    coc_flat_kinds: &["else_clause"],
-    // Empty on purpose: arrow/function_expression are STANDALONE units
-    // (fn_kinds) here, so a nest-only entry could never fire (the M1
-    // attack review caught the dead entries). Only absorbed inline fns
-    // (Go func_literal, Python lambda) belong in nest-only.
-    coc_nest_only_kinds: &[],
-    // `??` counts in CC (a real branch) but NOT here: whitepaper p.6
-    // ignores null-coalescing in CoC. `?.` counts in neither (M1 stance,
-    // pinned in tests/sonar_whitepaper.rs).
-    coc_operators: &["&&", "||"],
-    coc_jump_kinds: &["continue_statement", "break_statement"],
-    label_kinds: &["statement_identifier"],
-    comment_kinds: &["comment"],
-    name_style: NameStyle::MixedCaps,
-    literal_delims: &["\"", "'", "`"],
-    fn_named_only_kinds: &[],
-    call_kinds: &["call_expression"],
-    call_name_kinds: &["identifier"],
-    call_member_kinds: &["member_expression"],
-    call_self_words: &["this"],
-    call_member_scopes: &["class_body", "object"],
-    call_import_kinds: &[],
-    opaque_fields: &[],
-};
-
-static RUST: LangSpec = LangSpec {
-    fn_kinds: &["function_item", "closure_expression"],
-    param_list_kinds: &["parameters", "closure_parameters"],
-    cc_kinds: &[
-        "if_expression",
-        "match_arm",
-        "for_expression",
-        "while_expression",
-        "loop_expression",
-        // `expr?` is an implicit early-return branch (== match Ok/Err);
-        // rust-code-analysis counts it (M1 cross-check, ban.rs 21 vs 17).
-        "try_expression",
-    ],
-    cc_operators: &["&&", "||"],
-    // let_chain joins let_conditions/exprs with anonymous `&&` tokens
-    // (no operator field — AST-probed; M1 attack review finding).
-    chain_kinds: &["let_chain"],
-    coc_nesting_kinds: &[
-        "if_expression",
-        "for_expression",
-        "while_expression",
-        "loop_expression",
-        "match_expression",
-    ],
-    coc_flat_kinds: &["else_clause"],
-    // Empty on purpose: closure_expression is a standalone unit
-    // (fn_kinds), so nest-only could never fire (dead-entry review).
-    coc_nest_only_kinds: &[],
-    coc_operators: &["&&", "||"],
-    // `break 'l` / `continue 'l`: the label child kind is `label`;
-    // a plain `break value` has an expression child, so it won't count.
-    coc_jump_kinds: &["continue_expression", "break_expression"],
-    label_kinds: &["label"],
-    comment_kinds: &["line_comment", "block_comment"],
-    name_style: NameStyle::Snake,
-    // NOT `'`: that is the lifetime/label tick (char_literal is one
-    // token and needs no delimiter piece).
-    literal_delims: &["\""],
-    fn_named_only_kinds: &[],
-    call_kinds: &["call_expression"],
-    call_name_kinds: &["identifier"],
-    call_member_kinds: &["field_expression", "scoped_identifier"],
-    call_self_words: &["self", "Self"],
-    call_member_scopes: &["impl_item", "trait_item"],
-    call_import_kinds: &["use_declaration"],
-    opaque_fields: &[],
-};
-
-static GO: LangSpec = LangSpec {
-    // gocyclo attributes func-literal branches to the enclosing decl,
-    // so func_literal is absorbed, not standalone.
-    fn_kinds: &["function_declaration", "method_declaration"],
-    param_list_kinds: &["parameter_list"],
-    cc_kinds: &[
-        "if_statement",
-        "for_statement",
-        // default_case is NOT counted: gocyclo v0.6.0 complexity.go
-        // skips CaseClause/CommClause with a nil list ("ignore default
-        // case"), and the whitepaper p.5 margin (getWords CC=4) agrees.
-        // Found by the M1 attack review — no default: in the fixtures,
-        // so 52/52 was silent on this axis.
-        "expression_case",
-        "type_case",
-        "communication_case",
-    ],
-    cc_operators: &["&&", "||"],
-    chain_kinds: &[],
-    coc_nesting_kinds: &[
-        "if_statement",
-        "for_statement",
-        "expression_switch_statement",
-        "type_switch_statement",
-        "select_statement",
-    ],
-    // Go has no else node kind: else lives in the if's `alternative`
-    // field and is scored by the field-aware logic in cognitive.rs.
-    coc_flat_kinds: &[],
-    coc_nest_only_kinds: &["func_literal"],
-    coc_operators: &["&&", "||"],
-    // goto always carries a label_name, so it always counts.
-    coc_jump_kinds: &["continue_statement", "break_statement", "goto_statement"],
-    label_kinds: &["label_name"],
-    comment_kinds: &["comment"],
-    name_style: NameStyle::MixedCaps,
-    // `'` is Go's rune delimiter but rune_literal is a single token.
-    literal_delims: &["\"", "`"],
-    fn_named_only_kinds: &[],
-    call_kinds: &["call_expression"],
-    call_name_kinds: &["identifier"],
-    call_member_kinds: &["selector_expression"],
-    call_self_words: &[],
-    // a Go method is declared at the top level and its name carries
-    // the receiver type, so a bare name cannot reach one at all
-    call_member_scopes: &[],
-    call_import_kinds: &[],
-    opaque_fields: &[],
-};
-
 static MARKDOWN: LangSpec = LangSpec {
     fn_kinds: &[],
+    fn_required_fields: &[],
     param_list_kinds: &[],
     cc_kinds: &[],
     cc_operators: &[],
     chain_kinds: &[],
     coc_nesting_kinds: &[],
+    if_kinds: &[],
     coc_flat_kinds: &[],
     coc_nest_only_kinds: &[],
     coc_operators: &[],
@@ -346,14 +214,14 @@ static MARKDOWN: LangSpec = LangSpec {
     comment_kinds: &[],
     name_style: NameStyle::Any,
     literal_delims: &[],
-    fn_named_only_kinds: &[],
     call_kinds: &[],
+    call_fields: ("function", None),
     call_name_kinds: &[],
     call_member_kinds: &[],
     call_self_words: &[],
-    // a Go method is declared at the top level and its name carries
-    // the receiver type, so a bare name cannot reach one at all
     call_member_scopes: &[],
+    owner_kinds: &[],
+    overloads: None,
     call_import_kinds: &[],
     opaque_fields: &[],
 };

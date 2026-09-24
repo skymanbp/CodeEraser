@@ -7,11 +7,13 @@
 //! (p.8); plain jumps are free. Operator runs use coc_operators, not
 //! cc_operators: CoC ignores null-coalescing shorthand (p.6).
 //!
-//! else-branch handling: TS/Rust/Python surface else as a node kind
-//! (coc_flat_kinds); Go hides it in the if's `alternative` field, so
-//! the walker is field-aware. An `else if` never pays double: the
-//! wrapping clause yields to the inner if, which scores flat +1 and
-//! keeps its children at the chain's nesting level (Sonar Appendix B).
+//! else-branch handling: TS/Rust/Python/C surface else as a node kind
+//! (coc_flat_kinds); Go and Java hang it in the if's `alternative`
+//! field, so the walker is field-aware, and it knows an if by the
+//! exact if_kinds table — a prefix test would read every kind spelled
+//! `if…` as one. An `else if` never pays double: the wrapping clause
+//! yields to the inner if, which scores flat +1 and keeps its children
+//! at the chain's nesting level (Sonar Appendix B).
 //!
 //! What this module does NOT do: the recursion increment (p.8,
 //! Appendix B1 — one point for each function in a recursion cycle).
@@ -83,24 +85,19 @@ impl Walker<'_, '_> {
         } else if self.spec.coc_flat_kinds.contains(&kind) {
             // An else-clause wrapping an if (`else if`) yields its +1
             // to the inner if; a plain else/elif pays here.
-            if !has_if_child(node) {
+            if !has_child_of(node, self.spec.if_kinds) {
                 self.score += 1;
             }
             self.walk_children(node, nesting);
         } else if self.spec.coc_nest_only_kinds.contains(&kind) {
             self.walk_children(node, nesting + 1);
         } else {
-            if self.spec.coc_jump_kinds.contains(&kind) && self.has_label(node) {
+            if self.spec.coc_jump_kinds.contains(&kind) && has_child_of(node, self.spec.label_kinds)
+            {
                 self.score += 1; // fundamental: no nesting penalty
             }
             self.walk_children(node, nesting);
         }
-    }
-
-    fn has_label(&self, node: Node<'_>) -> bool {
-        ast::children(node)
-            .iter()
-            .any(|c| self.spec.label_kinds.contains(&c.kind()))
     }
 
     fn structural(&mut self, node: Node<'_>, nesting: u32) {
@@ -115,33 +112,34 @@ impl Walker<'_, '_> {
         }
     }
 
-    /// Go-style plain else: `alternative` field holding a block.
+    /// A plain else hung off the if's `alternative` FIELD: anything
+    /// there but the next if or an else node is the else body itself —
+    /// a Go block, or a Java single statement (`else return x;`).
     fn field_else_bonus(&mut self, node: Node<'_>) {
-        if !node.kind().starts_with("if") {
+        if !self.spec.if_kinds.contains(&node.kind()) {
             return;
         }
-        if node
-            .child_by_field_name("alternative")
-            .is_some_and(|a| a.kind() == "block")
-        {
+        if node.child_by_field_name("alternative").is_some_and(|a| {
+            !self.spec.if_kinds.contains(&a.kind()) && !self.spec.coc_flat_kinds.contains(&a.kind())
+        }) {
             self.score += 1;
         }
     }
 
     fn is_else_if(&self, node: Node<'_>) -> bool {
-        if !node.kind().starts_with("if") {
+        if !self.spec.if_kinds.contains(&node.kind()) {
             return false;
         }
         let Some(parent) = node.parent() else {
             return false;
         };
         if self.spec.coc_flat_kinds.contains(&parent.kind()) {
-            return true; // TS/Rust/Python: if directly under an else clause
+            return true; // TS/Rust/Python/C: if directly under an else clause
         }
-        parent.kind().starts_with("if")
+        self.spec.if_kinds.contains(&parent.kind())
             && parent
                 .child_by_field_name("alternative")
-                .is_some_and(|a| a.id() == node.id()) // Go: if as alternative
+                .is_some_and(|a| a.id() == node.id()) // Go, Java: if as alternative
     }
 
     /// Root of a maximal boolean chain: a short-circuit node whose
@@ -154,10 +152,12 @@ impl Walker<'_, '_> {
     }
 }
 
-fn has_if_child(node: Node<'_>) -> bool {
+/// Whether a direct child of `node` is one of `kinds` — a jump's
+/// label, the if an else clause wraps.
+fn has_child_of(node: Node<'_>, kinds: &[&str]) -> bool {
     ast::children(node)
         .iter()
-        .any(|c| c.kind().starts_with("if"))
+        .any(|c| kinds.contains(&c.kind()))
 }
 
 /// Operator runs in source order within one boolean chain:

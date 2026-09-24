@@ -24,16 +24,19 @@ pub struct FnUnit<'t> {
 
 /// THE standalone-unit predicate — extraction, own_nodes and the
 /// cognitive walker must agree on what a unit is, so they all call
-/// this one throat. Name-gated kinds (Haskell `bind`, which is also
-/// the do-statement / pattern-bind kind) only open a unit when the
-/// node carries a `name` field; a declarator-named kind (the C
+/// this one throat. A gated kind only opens a unit when the node
+/// carries its field (fn_required_fields: Haskell's `bind` needs a
+/// `name`, a Java method a `body`); a declarator-named kind (the C
 /// family's function_definition) only when it is shaped like a
 /// definition and not nested in one (declarator::defined — the source
 /// is what lets a typeless definition prove it is a constructor).
 pub fn is_unit_node(node: Node<'_>, src: &[u8], spec: &LangSpec) -> bool {
-    spec.fn_kinds.contains(&node.kind())
-        && (!spec.fn_named_only_kinds.contains(&node.kind())
-            || node.child_by_field_name("name").is_some())
+    let kind = node.kind();
+    spec.fn_kinds.contains(&kind)
+        && spec
+            .fn_required_fields
+            .iter()
+            .all(|&(gated, field)| gated != kind || node.child_by_field_name(field).is_some())
         && declarator::defined(node, src)
 }
 
@@ -97,14 +100,61 @@ pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
     "(anonymous)".to_string()
 }
 
-/// The owner half of a C-family unit's identity — the class chain a
-/// definition sits in, or the qualifier an out-of-class definition
-/// spells (`Outer::Inner`, `ns::K`) — and None for every other grammar
-/// and for a free function. scan/calls.rs keys its member road by it:
-/// `this->m()` inside `K::b` reaches `K::m` whether `m` was defined in
-/// the class body or out of it.
-pub(crate) fn owner_of(node: Node<'_>, src: &[u8]) -> Option<String> {
-    declarator::identity(node, src)?.0
+/// The class a unit is a member of, spelled the way a call's
+/// qualifier can name it. The C family spells it through the
+/// declarator — the class chain a definition sits in, or the qualifier
+/// an out-of-class one writes (`Outer::Inner`, `ns::K`) — and that
+/// spelling is also the owner scan/callees.rs keys the member road by,
+/// so `this->m()` inside `K::b` reaches `K::m` wherever `m` was
+/// defined. Java spells it as the name of the type declaration whose
+/// body holds the unit (LangSpec::owner_kinds); its member road keys by
+/// the body itself (callees::Owner). None for a free function, for
+/// every other grammar, and for a member of an anonymous class
+/// (`new T() { … }`, an enum constant's body), which no qualifier can
+/// name.
+pub(crate) fn owner_of(node: Node<'_>, src: &[u8], spec: &LangSpec) -> Option<String> {
+    if spec.owner_kinds.is_empty() {
+        return declarator::identity(node, src)?.0;
+    }
+    let holder = ast::ancestors(node)
+        .find(|a| spec.call_member_scopes.contains(&a.kind()))?
+        .parent()?;
+    if !spec.owner_kinds.contains(&holder.kind()) {
+        return None;
+    }
+    Some(text(holder.child_by_field_name("name")?, src))
+}
+
+/// The argument counts a unit accepts, `(fewest, most)` with `most`
+/// None = no upper bound, read where the grammar overloads
+/// (LangSpec::overloads — its kinds say which parameter counts toward
+/// which bound). A grammar that does not overload answers `(0, None)`:
+/// its same-named units are one callable, and a count decides nothing.
+/// A C `(void)` list, and a unit with no list, accept none.
+pub(crate) fn arity(node: Node<'_>, src: &[u8], spec: &LangSpec) -> (usize, Option<usize>) {
+    let Some(overloads) = spec.overloads else {
+        return (0, None);
+    };
+    let Some(params) = param_list(node, spec.param_list_kinds) else {
+        return (0, Some(0));
+    };
+    if void_only(&ast::entries(params), src) {
+        return (0, Some(0));
+    }
+    let (mut fewest, mut most, mut open) = (0, 0, false);
+    for kid in ast::children(params) {
+        let kind = kid.kind();
+        if overloads.variadic.contains(&kind) {
+            open = true;
+        } else if overloads.optional.contains(&kind) {
+            most += 1;
+        } else if kid.is_named() && !kind.contains("comment") && !overloads.ignored.contains(&kind)
+        {
+            fewest += 1;
+            most += 1;
+        }
+    }
+    (fewest, (!open).then_some(most))
 }
 
 /// The receiver's type text (`T`, `*U`) for a Go method_declaration —
@@ -142,23 +192,39 @@ fn field_for(parent_kind: &str) -> &'static str {
 /// pre-existing stance, untouched here. The C family names no such
 /// field on the definition: its list hangs off the innermost
 /// function_declarator (declarator::chain), and `(void)` spells an
-/// EMPTY list (register D12).
+/// EMPTY list (register D12). A Java receiver parameter (`void m(K
+/// this)`) is no formal parameter either (JLS 8.4.1): the kinds
+/// Overloads::ignored names, which take no argument, count for neither
+/// reading.
 fn param_count(node: Node<'_>, src: &[u8], spec: &LangSpec) -> usize {
-    let params = match node.child_by_field_name("parameters") {
-        Some(field) => field,
-        None => match chain_params(node).or_else(|| child_of_kinds(node, spec.param_list_kinds)) {
-            Some(found) => found,
-            None => return 0,
-        },
+    let Some(params) = param_list(node, spec.param_list_kinds) else {
+        return 0;
     };
-    let kids: Vec<Node<'_>> = ast::named_children(params)
-        .into_iter()
-        .filter(|c| !c.kind().contains("comment"))
-        .collect();
+    let kids = ast::entries(params);
     if void_only(&kids, src) {
         return 0;
     }
-    kids.len()
+    let ignored = spec.overloads.map_or(&[][..], |o| o.ignored);
+    kids.iter().filter(|k| !ignored.contains(&k.kind())).count()
+}
+
+/// The parameter list a unit declares: its `parameters` field, else
+/// the C family's declarator chain, else a child of one of `kinds` —
+/// or, for a Java record's compact constructor, which spells no list,
+/// the record header's: its components are the constructor's
+/// implicitly declared parameters (JLS 8.10.4.2).
+fn param_list<'t>(node: Node<'t>, kinds: &[&str]) -> Option<Node<'t>> {
+    node.child_by_field_name("parameters")
+        .or_else(|| chain_params(node))
+        .or_else(|| child_of_kinds(node, kinds))
+        .or_else(|| record_header(node))
+}
+
+fn record_header(node: Node<'_>) -> Option<Node<'_>> {
+    if node.kind() != "compact_constructor_declaration" {
+        return None;
+    }
+    node.parent()?.parent()?.child_by_field_name("parameters")
 }
 
 fn chain_params(node: Node<'_>) -> Option<Node<'_>> {

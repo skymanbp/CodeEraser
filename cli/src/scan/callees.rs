@@ -8,33 +8,69 @@
 //! full spelling, members excluded (a method answers to a receiver,
 //! never to its own name alone). BASE: (owner, name with the receiver
 //! / class qualification stripped), which is what `this->m()`,
-//! `K::m()` and — inside a member of `K` — a bare `m()` look up. A
-//! key owned by two groups is dropped rather than disambiguated: that
-//! one rule keeps the measured false positives out.
+//! `K::m()` and — inside a member of `K` — a bare `m()` look up; the
+//! owner is what Owner says it is per grammar. A
+//! key naming two callables reaches neither, unless the grammar
+//! overloads and the call's argument count admits exactly one of them
+//! (`pick`): that one rule keeps the measured false positives out.
 //!
 //! A callable is not always one unit: Haskell gives every equation of
 //! `f` its own `function` node (divergence D7), and those equations
 //! are one function, not an ambiguity. So names are owned by GROUPS
 //! keyed by (parent, name) — equations share a parent, while a
 //! `where`-local `go` and a top-level `go` do not, and stay two
-//! callables that cancel each other out.
+//! callables that cancel each other out. A grammar that overloads
+//! (C++, Java — LangSpec::overloads) reads the other way: its
+//! same-named units of one scope are different functions, each a group
+//! of its own, told apart by the arguments a call passes.
 
+use super::ast;
 use super::functions::{self, FnUnit};
-use super::spec::LangSpec;
+use super::spec::{LangSpec, Overloads};
 use std::collections::HashMap;
-use std::hash::Hash;
 use tree_sitter::Node;
 
 /// A base-road key: the owner a member answers to (None for a free
 /// callable and for every grammar without one) and the name with its
 /// receiver / class qualification stripped.
-pub(super) type BaseKey = (Option<String>, String);
+pub(super) type BaseKey = (Option<Owner>, String);
+
+/// Who a member answers to on the base road.
+#[derive(Clone, PartialEq, Eq, Hash)]
+pub(super) enum Owner {
+    /// The class a C++ declarator spells (functions::owner_of): a
+    /// member defined out of class meets its class there, wherever the
+    /// definition sits.
+    Spelled(String),
+    /// The one type body a member sits in, where lexical nesting is the
+    /// only owner (Java — LangSpec::owner_kinds). A class has exactly
+    /// one body, so the body alone tells an anonymous class, an enum
+    /// constant's body and a same-named local class from every other —
+    /// none of which a spelled owner can tell apart.
+    Body(usize),
+}
+
+/// A unit's base-road owner (see Owner): None for a free callable and
+/// for every grammar that has no owner road.
+pub(super) fn owner_key(node: Node<'_>, src: &[u8], spec: &LangSpec) -> Option<Owner> {
+    if spec.owner_kinds.is_empty() {
+        return functions::owner_of(node, src, spec).map(Owner::Spelled);
+    }
+    in_member_scope(node, spec).then(|| Owner::Body(container_of(node)))
+}
+
+/// The argument counts a callable accepts, `(fewest, most)` with
+/// `most` None = no upper bound (functions::arity).
+type Range = (usize, Option<usize>);
 
 pub(super) struct Named {
     pub(super) groups: Vec<Vec<usize>>,
     pub(super) containers: Vec<usize>,
-    pub(super) whole: HashMap<String, usize>,
-    pub(super) base: HashMap<BaseKey, usize>,
+    /// The groups each key names — its seats, narrowed by `pick`.
+    pub(super) whole: HashMap<String, Vec<usize>>,
+    pub(super) base: HashMap<BaseKey, Vec<usize>>,
+    ranges: Vec<Range>,
+    overloads: Option<&'static Overloads>,
 }
 
 /// Whether a declaration sits in a type's member body — see
@@ -61,55 +97,78 @@ pub(super) fn container_of(node: Node<'_>) -> usize {
 
 impl Named {
     pub(super) fn of(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Self {
-        let mut groups: Vec<Vec<usize>> = Vec::new();
-        let mut containers: Vec<usize> = Vec::new();
-        let mut seats: Vec<(&str, bool, Option<String>)> = Vec::new();
+        let mut named = Named {
+            groups: Vec::new(),
+            containers: Vec::new(),
+            whole: HashMap::new(),
+            base: HashMap::new(),
+            ranges: Vec::new(),
+            overloads: spec.overloads,
+        };
+        let unreachable = spec.overloads.map_or(&[][..], |o| o.unreachable);
         let mut seat: HashMap<(usize, &str), usize> = HashMap::new();
         for (i, unit) in units.iter().enumerate() {
-            let parent = container_of(unit.node);
-            match seat.get(&(parent, unit.name.as_str())) {
-                Some(&g) => groups[g].push(i),
-                None => {
-                    seat.insert((parent, unit.name.as_str()), groups.len());
-                    seats.push((
-                        &unit.name,
-                        in_member_scope(unit.node, spec),
-                        functions::owner_of(unit.node, src),
-                    ));
-                    containers.push(parent);
-                    groups.push(vec![i]);
+            if unreachable.contains(&unit.node.kind()) {
+                continue;
+            }
+            let key = (container_of(unit.node), unit.name.as_str());
+            match seat.get(&key) {
+                Some(&g) if spec.overloads.is_none() => named.groups[g].push(i),
+                _ => {
+                    seat.insert(key, named.groups.len());
+                    named.seat(unit, i, src, spec);
                 }
             }
         }
-        let rows = seats.iter().enumerate();
-        Named {
-            // a member is absent from the bare road entirely, so a
-            // top-level name is not cancelled by a method spelling it
-            whole: unique(
-                rows.clone()
-                    .filter(|(_, (_, member, _))| !member)
-                    .map(|(g, (n, ..))| (n.to_string(), g)),
-            ),
-            base: unique(
-                rows.map(|(g, (n, _, owner))| ((owner.clone(), base_name(n).to_string()), g)),
-            ),
-            containers,
-            groups,
+        named
+    }
+
+    /// A new callable for `unit`: its group, container and range, and
+    /// the keys it answers to. A member is absent from the bare road
+    /// entirely, so a top-level name is not cancelled by a method
+    /// spelling it.
+    fn seat(&mut self, unit: &FnUnit<'_>, i: usize, src: &[u8], spec: &LangSpec) {
+        let group = self.groups.len();
+        self.groups.push(vec![i]);
+        self.containers.push(container_of(unit.node));
+        self.ranges.push(functions::arity(unit.node, src, spec));
+        if !in_member_scope(unit.node, spec) {
+            self.whole.entry(unit.name.clone()).or_default().push(group);
         }
+        let owner = owner_key(unit.node, src, spec);
+        let base = (owner, base_name(&unit.name).to_string());
+        self.base.entry(base).or_default().push(group);
+    }
+
+    /// The one group among `seats` a call reaches: those whose range
+    /// admits the call's argument count, when exactly one does. Where
+    /// the grammar does not overload every range admits every call, so
+    /// a key names one callable or none — two callables spelling one
+    /// key cancel out.
+    pub(super) fn pick(&self, seats: &[usize], call: Node<'_>) -> Option<usize> {
+        let args = self.overloads.and_then(|o| arguments(call, o));
+        let mut fit = seats
+            .iter()
+            .copied()
+            .filter(|&g| admits(self.ranges[g], args));
+        let first = fit.next()?;
+        fit.next().is_none().then_some(first)
     }
 }
 
-/// Keys owned by exactly one group; a repeat erases its key for good.
-fn unique<K: Eq + Hash>(named: impl Iterator<Item = (K, usize)>) -> HashMap<K, usize> {
-    let mut seen: HashMap<K, Option<usize>> = HashMap::new();
-    for (key, group) in named {
-        seen.entry(key)
-            .and_modify(|slot| *slot = None)
-            .or_insert(Some(group));
-    }
-    seen.into_iter()
-        .filter_map(|(key, slot)| Some((key, slot?)))
-        .collect()
+/// Whether a range admits a call passing `args` arguments; an unknown
+/// count admits every range.
+fn admits((fewest, most): Range, args: Option<usize>) -> bool {
+    args.is_none_or(|n| fewest <= n && most.is_none_or(|m| n <= m))
+}
+
+/// How many arguments a call passes — its `arguments` list's entries —
+/// or None when no reader can tell: no list, or an entry spreading an
+/// unknown count (Overloads::spread).
+fn arguments(call: Node<'_>, overloads: &Overloads) -> Option<usize> {
+    let args = ast::entries(call.child_by_field_name("arguments")?);
+    let spread = args.iter().any(|a| overloads.spread.contains(&a.kind()));
+    (!spread).then_some(args.len())
 }
 
 /// `(T) add` → `add` — the receiver qualification functions::name_of

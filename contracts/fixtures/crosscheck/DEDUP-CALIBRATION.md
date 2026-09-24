@@ -152,7 +152,7 @@ fixtures 并对表；四个外部语料（tip 见 EVAL-SET-M5-3.md，本表只�
 <!-- distinct:begin -->
 | 语料 @ tip | 文件 | 块（下限关） | distinct ≤ 6 = 出厂 7 抑制 | 落在哪些文件（族 = 两端文件名） |
 |---|---|---|---|---|
-| fixtures @ tracked (SOURCES.md) | 30 | 208 | 24 | lbaselib.c ↔ ldblib.c ×7, include__fmt__format.h ×5, lbaselib.c ×4, packages__zod__src__v4__locales__ru.ts ×3, packages__zod__src__v4__locales__bg.ts ×2, packages__zod__src__v4__locales__ota.ts ×2, … 另 1 族 |
+| fixtures @ tracked (SOURCES.md) | 35 | 218 | 34 | gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java ×10, lbaselib.c ↔ ldblib.c ×7, include__fmt__format.h ×5, lbaselib.c ×4, packages__zod__src__v4__locales__ru.ts ×3, packages__zod__src__v4__locales__bg.ts ×2, … 另 2 族 |
 | cobra @ adbc881 | 36 | 1903 | 13 | bash_completions_test.go ×8, bash_completions_test.go ↔ command_test.go ×3, completions_test.go ×2 |
 | requests @ 8068356 | 37 | 75 | 12 | flask_theme_support.py ×11, status_codes.py ×1 |
 | ripgrep @ 3fce3b5 | 110 | 10937 | 17 | disallowed.rs ×10, hiargs.rs ×7 |

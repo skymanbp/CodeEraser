@@ -38,8 +38,9 @@ const ROLE_UNIT: i64 = 1 << 8;
 
 /// Role facts of one file node. Main.hs is cabal's executable
 /// main-is convention — nothing imports a main module, exactly like
-/// main.rs; the declared-target role covers the manifests' OWN
-/// declarations beside these name conventions.
+/// main.rs, and Main.java is the class a launcher names; the
+/// declared-target role covers the manifests' OWN declarations beside
+/// these name conventions.
 pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: &Declared) -> i64 {
     let base = path.rsplit('/').next().unwrap_or(path);
     let mut r = 0i64;
@@ -53,6 +54,7 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
             | "main.c"
             | "main.cc"
             | "main.cpp"
+            | "Main.java"
     ) {
         r |= ROLE_ENTRY_NAMED;
     }
@@ -100,12 +102,11 @@ fn allow_claim(root: &Path, path: &str) -> bool {
 
 /// Spec.hs is the cabal test-suite main-is convention (hspec/stack
 /// templates) — the test root nothing imports, like _test.go; the
-/// C-family `_test` suffix is googletest's and Unity's (plan v2.30).
+/// C-family `_test` files and Maven Surefire's test classes come from
+/// the table the convention word reads too (runner_test, plan v2.30).
 fn is_test(path: &str, base: &str) -> bool {
     base.ends_with("_test.go")
-        || base.ends_with("_test.c")
-        || base.ends_with("_test.cc")
-        || base.ends_with("_test.cpp")
+        || crate::mention::conv::name::runner_test(base)
         || base.ends_with(".test.ts")
         || (base.starts_with("test_") && base.ends_with(".py"))
         || base == "Spec.hs"

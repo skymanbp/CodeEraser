@@ -30,20 +30,16 @@ pub struct Unit {
 }
 
 pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
-    match lang.grammar() {
-        Some(grammar) => code_segments(text, lang, grammar),
-        None => markdown_segments(text),
+    if lang.grammar().is_none() {
+        return markdown_segments(text);
     }
-}
-
-fn code_segments(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<Unit> {
-    let Some(tree) = ast::parse(text, &grammar) else {
-        return Vec::new(); // no segmentation: everything is toplevel
-    };
-    node_segments(tree.root_node(), text.as_bytes(), lang)
-        .into_iter()
-        .map(|(unit, _)| unit)
-        .collect()
+    // a parse failure segments nothing: everything is toplevel
+    ast::with_tree(text, lang, |tree| {
+        node_segments(tree.root_node(), text.as_bytes(), lang)
+            .into_iter()
+            .map(|(unit, _)| unit)
+            .collect()
+    })
 }
 
 /// Every code unit with its declaration node still in hand — the one

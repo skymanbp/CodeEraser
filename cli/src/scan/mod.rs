@@ -20,6 +20,8 @@ pub mod report;
 pub mod spec;
 pub mod spec_c;
 pub mod spec_hs;
+pub mod spec_java;
+pub mod spec_launch;
 pub mod walk;
 pub mod wire;
 

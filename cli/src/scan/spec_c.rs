@@ -1,10 +1,15 @@
-//! The C / C++ LangSpec table (plan v2.30 step 2). ONE table for both
-//! grammars: tree-sitter-cpp is a superset of tree-sitter-c and spells
-//! every construct the two share with the same node kind (probe
-//! transcripts 2026-09-24, four rounds against the pinned 0.24.2 /
-//! 0.23.4 — scripts/tsprobe), so the C++-only kinds below simply never
-//! occur in a C parse. Lives beside spec_hs.rs for the reason that
-//! file does: spec.rs is a 300-line throat (RM16).
+//! The C / C++ LangSpec tables (plan v2.30 step 2). ONE set of kinds
+//! for both grammars: tree-sitter-cpp is a superset of tree-sitter-c
+//! and spells every construct the two share with the same node kind
+//! (probe transcripts 2026-09-24, four rounds against the pinned
+//! 0.24.2 / 0.23.4 — scripts/tsprobe), so the C++-only kinds below
+//! simply never occur in a C parse. The two tables differ in one
+//! LANGUAGE fact no kind can carry (plan v2.30 step 3): C++ overloads a
+//! name by its parameters and C does not — two same-named C functions
+//! of one scope are one function under two `#if` arms, two C++ ones
+//! may be two functions (LangSpec::overloads). Lives beside
+//! spec_hs.rs for the reason that file does: spec.rs is the contract
+//! alone (RM16).
 //!
 //! The external oracle is lizard (CCN only — no C/C++ cognitive
 //! oracle exists), and every place the table reads differently from it
@@ -44,10 +49,35 @@
 //!   `#elif` are neither branches nor nesting (register D1 — lizard
 //!   counts them), and a macro body is one opaque `preproc_arg` token
 
-use super::spec::{LangSpec, NameStyle};
+use super::spec::{LangSpec, NameStyle, Overloads};
 
-pub static C_FAMILY: LangSpec = LangSpec {
+/// C: same-named definitions of one scope are one function written
+/// under two preprocessor arms — the language forbids a second one.
+pub static C: LangSpec = FAMILY;
+
+/// C++: a name is overloaded by its parameters. A default argument
+/// counts toward the upper bound only; a parameter pack and the
+/// C-style `...` (an anonymous token in a parameter_list, probed)
+/// remove it; a pack expansion in a call (`f(a...)`, probed as
+/// parameter_pack_expansion) passes a count no reader can tell. A
+/// constructor stays reachable — `K(x)` constructs a K.
+pub static CPP: LangSpec = LangSpec {
+    overloads: Some(&CPP_OVERLOADS),
+    ..FAMILY
+};
+
+static CPP_OVERLOADS: Overloads = Overloads {
+    optional: &["optional_parameter_declaration"],
+    variadic: &["variadic_parameter_declaration", "..."],
+    ignored: &[],
+    spread: &["parameter_pack_expansion"],
+    unreachable: &[],
+};
+
+const FAMILY: LangSpec = LangSpec {
     fn_kinds: &["function_definition"],
+    // every definition shape rides declarator::defined instead
+    fn_required_fields: &[],
     // the list hangs off the declarator chain — functions.rs reads it
     // through the chain, nothing here to scan for
     param_list_kinds: &[],
@@ -78,6 +108,8 @@ pub static C_FAMILY: LangSpec = LangSpec {
         "conditional_expression",
         "catch_clause",
     ],
+    // the if's `alternative` is an else_clause, scored by the flat rule
+    if_kinds: &["if_statement"],
     coc_flat_kinds: &["else_clause"],
     coc_nest_only_kinds: &["lambda_expression"],
     coc_operators: &["&&", "||", "and", "or"],
@@ -87,8 +119,8 @@ pub static C_FAMILY: LangSpec = LangSpec {
     // no single convention holds across C code bases (register D22)
     name_style: NameStyle::Any,
     literal_delims: &["\"", "'", "character", "R\""],
-    fn_named_only_kinds: &[],
     call_kinds: &["call_expression"],
+    call_fields: ("function", None),
     call_name_kinds: &["identifier"],
     call_member_kinds: &["field_expression", "qualified_identifier"],
     call_self_words: &["this"],
@@ -96,6 +128,9 @@ pub static C_FAMILY: LangSpec = LangSpec {
     // class_body precedent); a namespace body is a declaration_list
     // and is NOT a member scope — bare names resolve inside it
     call_member_scopes: &["field_declaration_list"],
+    // the declarator spells a member's owner (scan/declarator.rs)
+    owner_kinds: &[],
+    overloads: None,
     call_import_kinds: &["using_declaration"],
     // `#if defined(A) && B` / `#elif`: the condition is an expression
     // to the parser and compile-time text to every metric (register

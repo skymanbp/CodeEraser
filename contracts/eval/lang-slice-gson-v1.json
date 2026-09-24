@@ -1,0 +1,2376 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "java",
+    "name": "gson",
+    "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+  },
+  "excluded": {
+    "other_extension": 49
+  },
+  "files": [
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/extras/examples/rawcollections/RawCollectionsExample.java",
+      "sha256": "17be0448aa0041e8f36bb9069a0b8535176b6b9b0899a6aeb1d8e0d98cda2d2e",
+      "sites": {
+        "import": 5,
+        "type_ref": 21
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/interceptors/Intercept.java",
+      "sha256": "4b33a711eeaaff55c8cd8c79c5bb49cdf4ba1217d3b0ac328d2d479aebe3a517",
+      "sites": {
+        "import": 4,
+        "type_ref": 7
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/interceptors/InterceptorFactory.java",
+      "sha256": "3f51cd4ce3218069126715c6b331f7793bd1516133611bf7c40dc73f29eaee3b",
+      "sites": {
+        "import": 7,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/interceptors/JsonPostDeserializer.java",
+      "sha256": "388dc51c622a0587efc515e57a86f401800b762fb0a88831ff67dd81782f562b",
+      "sites": {
+        "import": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/typeadapters/PostConstructAdapterFactory.java",
+      "sha256": "dca33b7d30f3c6a434e18077fcf096fb1f5e4896be86b8a0b3365e0d2edd37a6",
+      "sites": {
+        "import": 10,
+        "type_ref": 27
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/typeadapters/RuntimeTypeAdapterFactory.java",
+      "sha256": "8615ac71bb10c77aecd104502f8869071ecf8aab9cbbc1b1900f24ffdcda37fe",
+      "sites": {
+        "import": 14,
+        "type_ref": 77
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/main/java/com/google/gson/typeadapters/UtcDateTypeAdapter.java",
+      "sha256": "7592d5ba20994fb051334131aee81db15a3c36c949bd2b97f78cc84a7ff90852",
+      "sites": {
+        "import": 13,
+        "type_ref": 72
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/test/java/com/google/gson/interceptors/InterceptorTest.java",
+      "sha256": "7c33a099867b693765243f16a790b82aa56a05ca4c92eca721d3cc003216d38e",
+      "sites": {
+        "import": 18,
+        "type_ref": 67
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/test/java/com/google/gson/typeadapters/PostConstructAdapterFactoryTest.java",
+      "sha256": "4a664f8bc21a7768935da60832d6029b380e935c7c221993f734715368f7f7c3",
+      "sites": {
+        "import": 9,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/test/java/com/google/gson/typeadapters/RuntimeTypeAdapterFactoryTest.java",
+      "sha256": "c207e11cd4f0fcf4682867e1c92129765fa1b0a772f927df185c60bc738e125d",
+      "sites": {
+        "import": 7,
+        "type_ref": 71
+      }
+    },
+    {
+      "lang": "java",
+      "path": "extras/src/test/java/com/google/gson/typeadapters/UtcDateTypeAdapterTest.java",
+      "sha256": "4e9045d88ab00406f5b3d6b7025837efe8a7e599a7008058777aa5eebd508872",
+      "sites": {
+        "import": 11,
+        "type_ref": 45
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java-templates/com/google/gson/internal/GsonBuildConfig.java",
+      "sha256": "842f6b9e6c138447aae1e9559e8f2f15e2e0588d2d02700df9b902e76e575f7e",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/ExclusionStrategy.java",
+      "sha256": "849d986c98528991445bc979ce472f83892d0eebc5e115c9112ed9af7daaa1bb",
+      "sites": {
+        "type_ref": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/FieldAttributes.java",
+      "sha256": "a2d037e46dff7691a067b068a376fb63321a184b543c477af70f6fa1c8cb89a6",
+      "sites": {
+        "import": 6,
+        "type_ref": 14
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/FieldNamingPolicy.java",
+      "sha256": "79ffe7c1218af989873d2cf84438bafebc18072099716a49621218bf36ab6231",
+      "sites": {
+        "import": 2,
+        "type_ref": 36
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/FieldNamingStrategy.java",
+      "sha256": "1af14eb2d058a0f1da4f52aefd596c4fdfefa3f98c964bff0d512f3a3bc7b665",
+      "sites": {
+        "import": 4,
+        "type_ref": 6
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/FormattingStyle.java",
+      "sha256": "ad6ca9cfd55ef84c2af3af59e11d8ffeb56e5951f69d22bb7ea5f6c04df9f44c",
+      "sites": {
+        "import": 2,
+        "type_ref": 12
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/Gson.java",
+      "sha256": "1a33f3eb5ddc01f0a33bbe2b43dc26f8474fc8d5b80876ad9a2f33056224fc94",
+      "sites": {
+        "import": 28,
+        "type_ref": 251
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/GsonBuilder.java",
+      "sha256": "31a5577eee8ab35fa2fab617741d5c02067b7cab6f7db4a64c78544a05ea1d13",
+      "sites": {
+        "import": 36,
+        "type_ref": 254
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/InstanceCreator.java",
+      "sha256": "9b0dc1d31cd1c329cb5a4bae23b390b96492746a46ec7cb21661317544fdf31e",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonArray.java",
+      "sha256": "689968b9e9711a3412710751bae0da632bc35d88c042a77cf5f61b6299c4c6f2",
+      "sites": {
+        "import": 7,
+        "type_ref": 63
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonDeserializationContext.java",
+      "sha256": "39288d425fc4500e5dd4adb773d7cde931f6b1b915f4044d54374e256cfa1e22",
+      "sites": {
+        "import": 1,
+        "type_ref": 4
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonDeserializer.java",
+      "sha256": "13feb9200b08781bd0ed03acc4b17d28843d63c368e8dd3991858bd5d918c9b4",
+      "sites": {
+        "import": 1,
+        "type_ref": 4
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonElement.java",
+      "sha256": "3215d81cdf2b213c7250cbb7703c793595819b9bac4ffd246034d4eb9fdf5e19",
+      "sites": {
+        "import": 6,
+        "type_ref": 46
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonIOException.java",
+      "sha256": "c64b29889ebe91707f40f2c343fa87561eefe8ae0652836dfd12c7e83c4ec956",
+      "sites": {
+        "type_ref": 6
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonNull.java",
+      "sha256": "ac3db4e5688062384391f1af7fc6231960734d32534cbf7c42e4599fa57b4b1d",
+      "sites": {
+        "type_ref": 6
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonObject.java",
+      "sha256": "db276033bee6538e7a36f7d7479518c170462288e74e5af4c40be63597081a87",
+      "sites": {
+        "import": 4,
+        "type_ref": 54
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonParseException.java",
+      "sha256": "0885d9204fb6fec26aea6e1a1aece03a5693140747ce1be6eab5924c5cedb8db",
+      "sites": {
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonParser.java",
+      "sha256": "6b14eff5bc9d09b401864bfac976274f2fe11d462ac90693ec2881f5510c6dbb",
+      "sites": {
+        "import": 8,
+        "type_ref": 47
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonPrimitive.java",
+      "sha256": "5b466c1eee42aa86fd7106469858f121d1a062b1c6c4b48269afd96e78c051e4",
+      "sites": {
+        "import": 5,
+        "type_ref": 84
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonSerializationContext.java",
+      "sha256": "7236ac6689009cbbac2e764d6fa4104cf59a8f290b9b15146b4078d35edf9f8b",
+      "sites": {
+        "import": 1,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonSerializer.java",
+      "sha256": "2cec380cc0761e17c773e9476ea01ccaadff26d830945c90d4c451ddac288c23",
+      "sites": {
+        "import": 1,
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonStreamParser.java",
+      "sha256": "1dad227fa5b034724a68ef82ac03c7f959f85ed0c978ada91949553a64b3fae2",
+      "sites": {
+        "import": 9,
+        "type_ref": 26
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/JsonSyntaxException.java",
+      "sha256": "b1a2d223a591ff5bc17d22f83f8156317bc7af748c73e5569129f6e4b92b59cb",
+      "sites": {
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/LongSerializationPolicy.java",
+      "sha256": "2a95e1ad757ab0787153000a59634a9a13c19f9f9ccc1e9294a6377db6f0f94d",
+      "sites": {
+        "import": 1,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/ReflectionAccessFilter.java",
+      "sha256": "bf82c2586bbe1d46fda4e91b573962d598f10c245abc5c110e6908af7072da99",
+      "sites": {
+        "import": 2,
+        "type_ref": 21
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/Strictness.java",
+      "sha256": "d0151a6b4d3a8d04e54d7c136ce5300408f7dfaf8d1fd278a0d847cbbdd93ce8",
+      "sites": {
+        "import": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/ToNumberPolicy.java",
+      "sha256": "46774ff02ecf38a280c5c53c86d82892c7368538313bab8e19d3435a38f12fcd",
+      "sites": {
+        "import": 6,
+        "type_ref": 35
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/ToNumberStrategy.java",
+      "sha256": "c3086db8b9bc7c85c9a5d4f7136aaef9a632a88020b06126414c56b03baffe76",
+      "sites": {
+        "import": 2,
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/TypeAdapter.java",
+      "sha256": "3b13e9c2a9337369e61fa32c493a6fbb80b011b0876c779c2f95ab1464c9e57c",
+      "sites": {
+        "import": 10,
+        "type_ref": 40
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/TypeAdapterFactory.java",
+      "sha256": "6369ac04815fd40fb0a0053f62a74da60a89ebf15c766514f9bbe5b65499bd3b",
+      "sites": {
+        "import": 1,
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/annotations/Expose.java",
+      "sha256": "cb5a05183ce8bc3734791ab0934d313377a2e285259cef2b28dbbd251646f656",
+      "sites": {
+        "import": 5,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/annotations/JsonAdapter.java",
+      "sha256": "9ea0c29d448c4984d3e7fbb892ca8a24eb14718d2979a23378725ee76a01245d",
+      "sites": {
+        "import": 11,
+        "type_ref": 6
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/annotations/SerializedName.java",
+      "sha256": "8e574df8df479286591050674f315e2c6fef831dd23c8b219bee5a332abb99be",
+      "sites": {
+        "import": 5,
+        "type_ref": 8
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/annotations/Since.java",
+      "sha256": "c2e8c1e6e32735b62cd0bad8e3205a6fb5d7de7028fecf9219bb4694ba03357d",
+      "sites": {
+        "import": 6,
+        "type_ref": 6
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/annotations/Until.java",
+      "sha256": "5c4964196c0a431c500f6baa06f6b4f8c38cb1421fc801325bdebd80b5ef1f33",
+      "sites": {
+        "import": 6,
+        "type_ref": 6
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/annotations/package-info.java",
+      "sha256": "e353085f37c03f53e075ad8afabcf40a696da532f7e0980a73654ba9be1a19e3",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+      "sha256": "46f484ee2d14a5329dc91ed8e491f29ada5635f8a989d3315ccb48678dbea978",
+      "sites": {
+        "import": 24,
+        "type_ref": 135
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Excluder.java",
+      "sha256": "d8477101c0c2804a4f015e9c74e29fee14b85a1be36f43783a0401cde70a815c",
+      "sites": {
+        "import": 18,
+        "type_ref": 59
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+      "sha256": "53e584f03829c8df16b6b746dbd653de12e6e54b765dcd5b7812d708198dc58e",
+      "sites": {
+        "import": 16,
+        "type_ref": 274
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/JavaVersion.java",
+      "sha256": "36a16173a8e753163cb31c7184c59f15514f8139bbfee70e1979a7907ecf99c7",
+      "sites": {
+        "type_ref": 14
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/JsonReaderInternalAccess.java",
+      "sha256": "2ac4f290f339d7c64d8598012598a8a62e603a3afaec9ed282309e065734aed5",
+      "sites": {
+        "import": 2,
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/LazilyParsedNumber.java",
+      "sha256": "7dcae8aa73c0c4f886f7f25046331cdac6880da20be8cdde45e6312e7a969e80",
+      "sites": {
+        "import": 4,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/LinkedTreeMap.java",
+      "sha256": "e597fe66b14de2f2feeb519185846f498fdb6a38bb9daac0af5d9a2f089c6a57",
+      "sites": {
+        "import": 15,
+        "type_ref": 100
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/NonNullElementWrapperList.java",
+      "sha256": "016b57a0bed41728738129846b2fd3b229e79496059d097402b1de775ffea62d",
+      "sites": {
+        "import": 9,
+        "type_ref": 38
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/NumberLimits.java",
+      "sha256": "e47e4501ada090c6c65740f218bdc01bb672be508db80ba1899a294f1d61cdfd",
+      "sites": {
+        "import": 2,
+        "type_ref": 13
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ObjectConstructor.java",
+      "sha256": "fc286ea45292ca5ae5769799e58939f1d23d59ec585b8f6ada034f7c266cfc87",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/PreJava9DateFormatProvider.java",
+      "sha256": "68b49dfd28cf7088027093f127fb3b5732923f58ea3a86c486158788e8a7283b",
+      "sites": {
+        "import": 3,
+        "type_ref": 16
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Primitives.java",
+      "sha256": "dbee9175d2fb298f3a13589584590e99c638379e8be6f26d2c893259ca9756d7",
+      "sites": {
+        "import": 1,
+        "type_ref": 55
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java",
+      "sha256": "087a18fb2734e09550421b32ef9701f728f0d23ace3b045299758b8e14d5aa51",
+      "sites": {
+        "import": 5,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/Streams.java",
+      "sha256": "44721c03446078fe229390349a08265bd8c95f7eec211e2462329c6410bb2a3c",
+      "sites": {
+        "import": 16,
+        "type_ref": 61
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/TroubleshootingGuide.java",
+      "sha256": "58c3962efa0df5686695b999487d7b69b56744e08adc3d7b84d9dabd0883098f",
+      "sites": {
+        "type_ref": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/UnsafeAllocator.java",
+      "sha256": "35dee219db8ced601f91f09662aca65344516321a651b98472c734e9fe0431f8",
+      "sites": {
+        "import": 4,
+        "type_ref": 43
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ArrayTypeAdapter.java",
+      "sha256": "52622d3dee3ec2fa3361ccaf5e61e9b60e0d5ad1f226bebc8add9b4c6527b522",
+      "sites": {
+        "import": 13,
+        "type_ref": 44
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/CollectionTypeAdapterFactory.java",
+      "sha256": "bf1cb5c1268e4ed721ccc06a2b29e0eabc8b2ce4803d134b74dc1b4691cc1cee",
+      "sites": {
+        "import": 13,
+        "type_ref": 37
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/DefaultDateTypeAdapter.java",
+      "sha256": "999ef090f627687fee8257073900859e97d077ade3fb614c8da6e89914d6b6a9",
+      "sites": {
+        "import": 22,
+        "type_ref": 76
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/EnumTypeAdapter.java",
+      "sha256": "5f5ff13e8f5897ef6e357f70aac3bc3120fd26c343cfd165201c659b8d96dc22",
+      "sites": {
+        "import": 14,
+        "type_ref": 46
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/IgnoreJRERequirement.java",
+      "sha256": "deb00e3f5167f80b3b96e5f6db7a1285edddf4eb77789a2221e14ca5bb131da1",
+      "sites": {
+        "import": 4,
+        "type_ref": 8
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java",
+      "sha256": "d26ba63d400721bf6dc1626ef1714c83db2813c68ea97dfae7b22a8ad571024f",
+      "sites": {
+        "import": 25,
+        "type_ref": 225
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonAdapterAnnotationTypeAdapterFactory.java",
+      "sha256": "2ba0688b757c0170b19384833275354b8cbe3829da7e4bc5306469ce7e47d641",
+      "sites": {
+        "import": 11,
+        "type_ref": 72
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonElementTypeAdapter.java",
+      "sha256": "bad32c0b183bd79da45bfc31de5d9b885b9609ac2f96348f4d326bdda926aa30",
+      "sites": {
+        "import": 14,
+        "type_ref": 47
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeReader.java",
+      "sha256": "c9f98c2ff9d88cb2ac81dd58523415cf2075063585743148b3b9ea6461baca98",
+      "sites": {
+        "import": 14,
+        "type_ref": 190
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeWriter.java",
+      "sha256": "bf752e76fcc0fe1ecb213f673e62eebf3dc258740c437ea4e0a7b1adc0f4f1fd",
+      "sites": {
+        "import": 12,
+        "type_ref": 127
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/MapTypeAdapterFactory.java",
+      "sha256": "9482d71994a72a56fa4cfbb48bb0d998c1f69c9675411330273a5f6dc8fa7558",
+      "sites": {
+        "import": 20,
+        "type_ref": 73
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/NumberTypeAdapter.java",
+      "sha256": "adf8843b560cc384c0832a39dbd7da4b66a93202645cb3bef3dc87e1273a6edc",
+      "sites": {
+        "import": 11,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ObjectTypeAdapter.java",
+      "sha256": "d4af22263da9c76b8de0f00f3855913f5d5b76e77fcc7757b1a192bde76daeb3",
+      "sites": {
+        "import": 16,
+        "type_ref": 67
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java",
+      "sha256": "4241c342f437a3ea3233c9506734ebf0128ad506b33a3c25d1aa5696ab861dfe",
+      "sites": {
+        "import": 39,
+        "type_ref": 254
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/SerializationDelegatingTypeAdapter.java",
+      "sha256": "f1b18f21fe092e59e318024bc643d6638fbbf37c8cc698bc6886ff0c3234bcde",
+      "sites": {
+        "import": 1,
+        "type_ref": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TreeTypeAdapter.java",
+      "sha256": "36048e717854a909743a3377c409fa0f4c68c0bc6f7c661d5fb136766fc10a65",
+      "sites": {
+        "import": 16,
+        "type_ref": 75
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapterRuntimeTypeWrapper.java",
+      "sha256": "e97b7230861ad12af0b310ed9c1b49fc0923c06df992cb23e31df788e0f1a8dd",
+      "sites": {
+        "import": 9,
+        "type_ref": 35
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java",
+      "sha256": "0c3d558f7122b6278d8fb95173925c8cc7f08cd2210def4730cc7d309513c47c",
+      "sites": {
+        "import": 38,
+        "type_ref": 645
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/bind/util/ISO8601Utils.java",
+      "sha256": "0fa00b1939a8159d665c133754469faf15c7b6ea2f4dd5da75f637a667c0a612",
+      "sites": {
+        "import": 7,
+        "type_ref": 69
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/package-info.java",
+      "sha256": "727921b6f154ac878b6c90938415fa088bc3dd710d2eb4f241c2df815366a0ac",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/reflect/ReflectionHelper.java",
+      "sha256": "bf5084036985b46f400479991b0e92dd9f60710be45edba16135cd605202e190",
+      "sites": {
+        "import": 8,
+        "type_ref": 119
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/sql/SqlDateTypeAdapter.java",
+      "sha256": "6c01ffc0b602184f10fa71e34d3e1171e86260291b75a2cfddcaab48c73d6cfc",
+      "sites": {
+        "import": 14,
+        "type_ref": 30
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/sql/SqlTimeTypeAdapter.java",
+      "sha256": "357227a1dbc336baf93680b0592be279a933bd953960f65c6ee1ff19c61ea0a3",
+      "sites": {
+        "import": 15,
+        "type_ref": 30
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/sql/SqlTimestampTypeAdapter.java",
+      "sha256": "740b27d080679f3c46f3e410a3b1c42f0a39ca3d2a3bf54239a31b571db47fff",
+      "sites": {
+        "import": 9,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/internal/sql/SqlTypesSupport.java",
+      "sha256": "e3a93a9e57c8b489454979677fafbf1a81f475bbe406d7a9ae61188ecc82a13d",
+      "sites": {
+        "import": 7,
+        "type_ref": 32
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/package-info.java",
+      "sha256": "442e253e10cd85d2277c58b1c8ea46178aebf2a79bec282645e2f0034e78e8e1",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/reflect/TypeToken.java",
+      "sha256": "f182b1fe6d242196dd846617bf594ce45741103d17bbc3f148219bfeb23db8bd",
+      "sites": {
+        "import": 10,
+        "type_ref": 152
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/reflect/package-info.java",
+      "sha256": "c6fa09d4dda7ad9a256df4ffe11e5e0af933639e92a26d9653cdd3ac6957d457",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+      "sha256": "46321d93477d0ca372aea8d8f62431ea44b7ca8947afea2f474bdebc2ff1e589",
+      "sites": {
+        "import": 10,
+        "type_ref": 204
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonScope.java",
+      "sha256": "70a321df3791fdd2a195e3500bed590ed05b533b10c0ef4791c85e4cc4ba7181",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonToken.java",
+      "sha256": "a4b0cce35f143c052f821cee687aa58512a10fcd56382542cdb8257cfc8c0822",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/JsonWriter.java",
+      "sha256": "6b739b0ba2cc5a8e6809f1bdd31244c12e4f9a7145f6e93cd8f39ea193bf0e5b",
+      "sites": {
+        "import": 21,
+        "type_ref": 124
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/MalformedJsonException.java",
+      "sha256": "6ef87295358ae95dd0e8157576db82609bfafa947d25804864db8aaf8c71e9d9",
+      "sites": {
+        "import": 2,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/com/google/gson/stream/package-info.java",
+      "sha256": "e0be86105fc9b95cab38a3f5d6258583866281afbdb207dca33bbb4fba7d053e",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/main/java/module-info.java",
+      "sha256": "52b1aa6d35aaafedb89e48367cca6eb66cec7ef310b3a69eae22c44af9ae3ccf",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/CommentsTest.java",
+      "sha256": "561e55a3a8cec2b8ee422ff38590167858b72ce5af1417597b49aff71ad2a537",
+      "sites": {
+        "import": 4,
+        "type_ref": 8
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/DefaultInetAddressTypeAdapterTest.java",
+      "sha256": "7babe796ed0cc5fef39066de43bf259ec45d3e13c230d8f729febfc21270a8fc",
+      "sites": {
+        "import": 5,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/DefaultMapJsonSerializerTest.java",
+      "sha256": "6b9f8ec132a7d28ee143491236d73fd9e2e40936db08a4ab9632a8be48d099d2",
+      "sites": {
+        "import": 6,
+        "type_ref": 40
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/ExposeAnnotationExclusionStrategyTest.java",
+      "sha256": "f88261d48f0923cb9bf1800eb1b736f2677e30cb50c9f78f92a411d928ba66fe",
+      "sites": {
+        "import": 5,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/FieldAttributesTest.java",
+      "sha256": "0bc3fee9347b022b6ca43f3a45bd4d1f61745ac9435d06415fd7ed530c250d99",
+      "sites": {
+        "import": 8,
+        "type_ref": 26
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/FieldNamingPolicyTest.java",
+      "sha256": "f4836e3917079546fb6f1cc8a785c0d5cf16ea48307b85b706e2c08781166b35",
+      "sites": {
+        "import": 5,
+        "type_ref": 44
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/GenericArrayTypeTest.java",
+      "sha256": "43b9ec24e1d9cb37b0589f37ccc8cd769ae66d943635a9b3894f664734620489",
+      "sites": {
+        "import": 8,
+        "type_ref": 23
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/GsonBuilderTest.java",
+      "sha256": "ea4dcdd85e4ba2ef312d77d844f29700e95bab0cb0910f9b357766e164bd7dad",
+      "sites": {
+        "import": 13,
+        "type_ref": 195
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/GsonTest.java",
+      "sha256": "db3b31423b7d6c6c4528db29fb646ae0a7032bd0a2e9a9493ab10a26eb09e1a3",
+      "sites": {
+        "import": 15,
+        "type_ref": 249
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/GsonTypeAdapterTest.java",
+      "sha256": "95f974de2e52097dafd1a8930e1e96af83792db5ca6a723b396fb5eb442d0f5d",
+      "sites": {
+        "import": 8,
+        "type_ref": 75
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/InnerClassExclusionStrategyTest.java",
+      "sha256": "54384ee9673b6731598a9db6ea020c3fb111c5f1004c69cbb0af92a8ae22059f",
+      "sites": {
+        "import": 4,
+        "type_ref": 17
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JavaSerializationTest.java",
+      "sha256": "5c00e14cc98629751814fedbd091fb28cef81f321bac7ece2725f171847ef32b",
+      "sites": {
+        "import": 11,
+        "type_ref": 46
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonArrayAsListSuiteTest.java",
+      "sha256": "17506f1ba8e41376be2c9db92428e5229d673649ae6112e160027c3d5df61195",
+      "sites": {
+        "import": 10,
+        "type_ref": 39
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonArrayAsListTest.java",
+      "sha256": "b397bf8daa9222fa6cb3d098003a5b3ee7267bc6f3e11995e2144a9d04194cb9",
+      "sites": {
+        "import": 11,
+        "type_ref": 207
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonArrayTest.java",
+      "sha256": "48fb8dc29b149dbf5ce261d80ab40fd3103755a533ae50393855e6223ef72003",
+      "sites": {
+        "import": 7,
+        "type_ref": 242
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonNullTest.java",
+      "sha256": "b91fb688135d89b97c2c9c31b42c4d4803876c5b8d096eb603fe9298a3bbcc9f",
+      "sites": {
+        "import": 3,
+        "type_ref": 20
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonObjectAsMapSuiteTest.java",
+      "sha256": "8d50e205e8508ce92a80c8d72872c764dac00bf3a6ceecf24268ab36673c9a94",
+      "sites": {
+        "import": 12,
+        "type_ref": 66
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonObjectAsMapTest.java",
+      "sha256": "cbbb83e67fe3df16b4cfacc5815c1b6c4f4aecaac9bf9ffd2b58051a37d7c419",
+      "sites": {
+        "import": 14,
+        "type_ref": 184
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonObjectTest.java",
+      "sha256": "66a40ec1e60327ae49cfcc09ef7b3c9a0f634d6d451a1f5fdbc8d66ecccb17e4",
+      "sites": {
+        "import": 15,
+        "type_ref": 160
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonParserParameterizedTest.java",
+      "sha256": "a94a24bf6138322400ae27beac9f26d800f17e885653217e3fb0bb6548626f34",
+      "sites": {
+        "import": 8,
+        "type_ref": 15
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonParserTest.java",
+      "sha256": "eec2fcb653aa49325d068b1bd58ef517b794bc48b413b1b37187e7a6cf3767fd",
+      "sites": {
+        "import": 10,
+        "type_ref": 89
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonPrimitiveTest.java",
+      "sha256": "1493ead2220fc69ef703bd20ebf98c603f49a34be44eb6839d8591813350bc70",
+      "sites": {
+        "import": 8,
+        "type_ref": 285
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/JsonStreamParserTest.java",
+      "sha256": "d89705031b64d1af4dc5cc73a338869a992bf08ccbbfa58379dab39304dc240b",
+      "sites": {
+        "import": 6,
+        "type_ref": 32
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/LongSerializationPolicyTest.java",
+      "sha256": "67d788f3d5ef629a6389eafda21947939195e4604424c189817cab014e0677fb",
+      "sites": {
+        "import": 2,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/MixedStreamTest.java",
+      "sha256": "16442bf22353de813c0b07ed0bf6fc6b0f70816cce245ee47b92b6860a591a37",
+      "sites": {
+        "import": 12,
+        "type_ref": 141
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/ObjectTypeAdapterParameterizedTest.java",
+      "sha256": "633fffffa99104ffdd32d02ad53e93cdedc2bc9b81e77cfb6244116b8fcdc376",
+      "sites": {
+        "import": 8,
+        "type_ref": 16
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/ObjectTypeAdapterTest.java",
+      "sha256": "a12a4f1b7463388badf3e320a66c21045515a5e5ada463dd094e9dfc5412820f",
+      "sites": {
+        "import": 10,
+        "type_ref": 61
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/OverrideCoreTypeAdaptersTest.java",
+      "sha256": "c752142a845494a735267e9bcc6cdddccc43340924ca00b2a937388f6a4e819a",
+      "sites": {
+        "import": 6,
+        "type_ref": 42
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/ParameterizedTypeFixtures.java",
+      "sha256": "3be3941dff5eab8a9376bed4c23790e1af9a528e80ffee8c9a21c698b7393ac2",
+      "sites": {
+        "import": 6,
+        "type_ref": 54
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/ParameterizedTypeTest.java",
+      "sha256": "a954ca79953af1f0c6c4ea098136fd4432e1264e07e359c0d23318c5da1758d5",
+      "sites": {
+        "import": 8,
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/PrimitiveTypeAdapter.java",
+      "sha256": "942c020f83478a99e1e8bc91a5cbd6995b56e0f62403c0eed43fdff27fda3971",
+      "sites": {
+        "import": 3,
+        "type_ref": 20
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/SubsetTest.java",
+      "sha256": "df39401b9d3c88b81a7a0b7a590e8d2a8ca544c34a4d78d38581c52d681b2a5d",
+      "sites": {
+        "import": 3,
+        "type_ref": 13
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/ToNumberPolicyTest.java",
+      "sha256": "57745e7d35dad20062ba956c0bd79d7252c65d68bb938dad68e648f35bc06c1c",
+      "sites": {
+        "import": 9,
+        "type_ref": 57
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/TypeAdapterTest.java",
+      "sha256": "9d79609f6d9c0511a70b30b6e9d2b34845abc3619c29ef38c7ba3aa2e71cea40",
+      "sites": {
+        "import": 7,
+        "type_ref": 54
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/VersionExclusionStrategyTest.java",
+      "sha256": "bd73ae494840c87bbf6d073941e6db49a91450def3f71541a64edb9d196fa693",
+      "sites": {
+        "import": 7,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/common/MoreAsserts.java",
+      "sha256": "84db5a013d657073ebccb8158547335d599414704f9bb3dc02a25afb231ae0eb",
+      "sites": {
+        "import": 7,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/common/TestTypes.java",
+      "sha256": "9823a4a90d3999de13b9a68a06d128b1e7e292708bdbb6d1c11fd85138b24381",
+      "sites": {
+        "import": 12,
+        "type_ref": 94
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ArrayTest.java",
+      "sha256": "2ffac45ffd83e9d461453746aeeb2d790d0306c270be0218171949a893c9a3d9",
+      "sites": {
+        "import": 14,
+        "type_ref": 123
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/CircularReferenceTest.java",
+      "sha256": "c8a0e101ffbad830ee9cf8905f8c43cc7574bc4278c8adecd0d5e8892da0dc7f",
+      "sites": {
+        "import": 16,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/CollectionTest.java",
+      "sha256": "20c86ad3205c278123577aa22f04adebb5c20e782aea1467c0da66d8d155cd76",
+      "sites": {
+        "import": 30,
+        "type_ref": 277
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ConcurrencyTest.java",
+      "sha256": "d7aaa5427c6f522a086ad93dcf3509452654e6fe298ee847182d117418549159",
+      "sites": {
+        "import": 8,
+        "type_ref": 37
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/CustomDeserializerTest.java",
+      "sha256": "6ee14cec20d69ff27a7a5bc0c954b556c5212e279ac27cc2ccd8251dfda00a24",
+      "sites": {
+        "import": 13,
+        "type_ref": 73
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/CustomSerializerTest.java",
+      "sha256": "f80ceaf3b11029ac063c48edd530c5e66c158a87056636a0fa42f2474ebe7845",
+      "sites": {
+        "import": 14,
+        "type_ref": 70
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java",
+      "sha256": "38b2ee1c9700a84bebb542b9d817494333dbbd2c59fc76279bfb1fe1a8941478",
+      "sites": {
+        "import": 26,
+        "type_ref": 241
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/DefaultTypeAdaptersTest.java",
+      "sha256": "7cd95d5cd7271ec27c264f36cc017f8980feb346efce5a6caa430b2d9a706952",
+      "sites": {
+        "import": 62,
+        "type_ref": 663
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/DelegateTypeAdapterTest.java",
+      "sha256": "57af00680c6c101e72057032179b79172811f33c600fff376d89d603a3217e2f",
+      "sites": {
+        "import": 14,
+        "type_ref": 34
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/EnumTest.java",
+      "sha256": "0ba8c862fe9331b8a992b5ddbdfec07ca6572d3f3026163bd1c90f5c1ab3b8e6",
+      "sites": {
+        "import": 23,
+        "type_ref": 104
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/EnumWithObfuscatedTest.java",
+      "sha256": "a303ee7e1c9374cadefab215dc74a602dfc70f8943d32a77399d4bd81e29fc5f",
+      "sites": {
+        "import": 6,
+        "type_ref": 8
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/EscapingTest.java",
+      "sha256": "c3112277d3703248be76dbb220c4bcda1443c4a87934ba1d335c598b86d73a67",
+      "sites": {
+        "import": 8,
+        "type_ref": 38
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ExclusionStrategyFunctionalTest.java",
+      "sha256": "bb9258a4c2b03c50c142750e1ea7966b3267bda96c013c5c6febaac5e81271d5",
+      "sites": {
+        "import": 13,
+        "type_ref": 64
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ExposeFieldsTest.java",
+      "sha256": "64abc4006411ad789ba4cdc5f98e7be067f686b541baca450c4b4aca67803709",
+      "sites": {
+        "import": 9,
+        "type_ref": 40
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/FieldExclusionTest.java",
+      "sha256": "569bf3e9541ad96b7d7c5336a96907dd8d0a977ca411267b532a4869fd8cf192",
+      "sites": {
+        "import": 5,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/FieldNamingTest.java",
+      "sha256": "dd44c00a171b02bfc9775c28a2692d3c0aa94e1c29c6bcfcd26a65b1494c1931",
+      "sites": {
+        "import": 12,
+        "type_ref": 17
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/FormattingStyleTest.java",
+      "sha256": "7135ea0b7e8fef47e8f104be4f094ad007dc2729e0546503c801bac373cc47b4",
+      "sites": {
+        "import": 13,
+        "type_ref": 86
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/GsonVersionDiagnosticsTest.java",
+      "sha256": "fdd848296d4383b0d3a7f522d7056894e0f7445fd701190ec1391dc3beda7f08",
+      "sites": {
+        "import": 10,
+        "type_ref": 24
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/InheritanceTest.java",
+      "sha256": "d9789ef440824de99f7c056e64b9d8af19e83bafb7f3219fe1000c7208d88e2e",
+      "sites": {
+        "import": 23,
+        "type_ref": 134
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/InstanceCreatorTest.java",
+      "sha256": "ac1ceeb81a069164ffcf6dd6e6cc56202895b8220de83ef2e473839012967d17",
+      "sites": {
+        "import": 14,
+        "type_ref": 67
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/InterfaceTest.java",
+      "sha256": "8ebe72905f5af08288e7e9cc26cda7c299a6482329c2cfa8b5f08fa81609f2ff",
+      "sites": {
+        "import": 4,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/InternationalizationTest.java",
+      "sha256": "c29345e6360623bc15345302181b00a1effdd31d4469d6e0031bd74f587c4307",
+      "sites": {
+        "import": 4,
+        "type_ref": 30
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/Java17RecordTest.java",
+      "sha256": "ca036fe58c879f7e18e233ceb0dad76cbf677ba582cb869154a1412ce3e6f368",
+      "sites": {
+        "import": 26,
+        "type_ref": 131
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JavaUtilConcurrentAtomicTest.java",
+      "sha256": "49935d10c8498f8dececb7689908c8fe95bf9aa4d15dd6d4691df2a6336ebded",
+      "sites": {
+        "import": 13,
+        "type_ref": 41
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JavaUtilTest.java",
+      "sha256": "ce901bec8e2ce40cea59965a306f234d76fd873193c9ea6df190fd5a600696fa",
+      "sites": {
+        "import": 6,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java",
+      "sha256": "eac3031a9a31b7d18aa4a535dbe632cdc4aeb60a4f62e0058c5ae471d2c5b49e",
+      "sites": {
+        "import": 24,
+        "type_ref": 286
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnFieldsTest.java",
+      "sha256": "c8aadf6260f46ac886a7956dd885826f1b8dcfb8e71e34dfeb664e924de98907",
+      "sites": {
+        "import": 24,
+        "type_ref": 341
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JsonAdapterSerializerDeserializerTest.java",
+      "sha256": "491e88fbd6371cd7d0500d07064e1624303cff482343e7c38e431f8f51e7c1fd",
+      "sites": {
+        "import": 18,
+        "type_ref": 99
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JsonParserTest.java",
+      "sha256": "e62bc0ff34e8963161cd446a85df7dbde801436084cd4a067bca67e45050bfbe",
+      "sites": {
+        "import": 20,
+        "type_ref": 61
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/JsonTreeTest.java",
+      "sha256": "f51129b4d697ca690deeb03d8c41d0a316cc18b2482b2513fc7a5009c3d11793",
+      "sites": {
+        "import": 11,
+        "type_ref": 49
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/LeniencyTest.java",
+      "sha256": "591dee2ecbfbb7790de4852fd4ad1299f622826b0ced4737129ed6a7df55ef9c",
+      "sites": {
+        "import": 8,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/MapAsArrayTypeAdapterTest.java",
+      "sha256": "4e95ca3c662de256f9e256903b9a6d78d12d92574302ea1436ddb9a78a83ef49",
+      "sites": {
+        "import": 14,
+        "type_ref": 152
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/MapTest.java",
+      "sha256": "a95efd39351668f6e8291de79b3097a9ce403dfd9dc8d1d9f4f312b01888e29f",
+      "sites": {
+        "import": 36,
+        "type_ref": 580
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/MoreSpecificTypeSerializationTest.java",
+      "sha256": "0d9b45f00eca5a25cd2f049bbcf623cca382b252c7c32fe5be910d2954a97682",
+      "sites": {
+        "import": 10,
+        "type_ref": 77
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/NamingPolicyTest.java",
+      "sha256": "c747cdbbe82e8c943cb17925babd3d2a7e0814890c8ebfd1cb29ececca6faab7",
+      "sites": {
+        "import": 14,
+        "type_ref": 155
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/NullObjectAndFieldTest.java",
+      "sha256": "01e02e4927106b00444bd867ae389f0f6cf54f3b0c152b817d7dd4d690809652",
+      "sites": {
+        "import": 15,
+        "type_ref": 91
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/NumberLimitsTest.java",
+      "sha256": "703fac67368d1f8bbe77e9cec47e6ae2d59f85a04d4dd3158c6345a162bf6e0f",
+      "sites": {
+        "import": 20,
+        "type_ref": 91
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ObjectTest.java",
+      "sha256": "f8d4c5c75f37d7160751408eebdc036370557a0b4d5edd255b5c49035d81b72f",
+      "sites": {
+        "import": 38,
+        "type_ref": 271
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ParameterizedTypesTest.java",
+      "sha256": "013714c477f0ce05f0ae9e001c4e9668554b253a112c663594d91a3ce6aeb972",
+      "sites": {
+        "import": 23,
+        "type_ref": 285
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/PrettyPrintingTest.java",
+      "sha256": "f32eea4fb65383c7819081e5ce25701440c293949a308042bed7ab658157e54d",
+      "sites": {
+        "import": 14,
+        "type_ref": 44
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/PrimitiveCharacterTest.java",
+      "sha256": "06bde7681e380a15ce272d207714ba13855d87550fe83cdc140ad37e8c8f0509",
+      "sites": {
+        "import": 6,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/PrimitiveTest.java",
+      "sha256": "5cc2e522e5babdceef8192e6cb5cca13cae1c26eb63da0ed53a0ea80bb7bbe7b",
+      "sites": {
+        "import": 17,
+        "type_ref": 481
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/PrintFormattingTest.java",
+      "sha256": "c25a58b2176fbdece950eb4ce57b4645233b627ebb8add73bbbeaad56f27019d",
+      "sites": {
+        "import": 12,
+        "type_ref": 27
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/RawSerializationTest.java",
+      "sha256": "660d86032da56a4401a09dcc9c4d89a849bd5940df05fd293261bc469c334257",
+      "sites": {
+        "import": 7,
+        "type_ref": 27
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ReadersWritersTest.java",
+      "sha256": "eca68779181bf06972c5238523196c3f7ea7722a014b165d033469c18da4eb4f",
+      "sites": {
+        "import": 21,
+        "type_ref": 104
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java",
+      "sha256": "b9efe5790b28df8a740e29fbaf2a580966d6589451829a21da368760af4d7810",
+      "sites": {
+        "import": 27,
+        "type_ref": 175
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ReflectionAccessTest.java",
+      "sha256": "476d05207d4c554717e97281faff5def33018ac08026065a60b5103f1da63424",
+      "sites": {
+        "import": 18,
+        "type_ref": 66
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ReusedTypeVariablesFullyResolveTest.java",
+      "sha256": "43444c3e615ebd192199ab332af921507efee3dc1ee2db65802364a0d3564d04",
+      "sites": {
+        "import": 8,
+        "type_ref": 8
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/RuntimeTypeAdapterFactoryFunctionalTest.java",
+      "sha256": "77faac15bc38dca3a3b551325fb46bf47947dd09cd3c78d14eb865b4e486a9f4",
+      "sites": {
+        "import": 18,
+        "type_ref": 75
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/SecurityTest.java",
+      "sha256": "c69e65fa6a65a7c9a6179cd7aeddac56f03a55982c307d5185c7d53687499202",
+      "sites": {
+        "import": 6,
+        "type_ref": 27
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/SerializedNameTest.java",
+      "sha256": "2ff1d66fef41b0c3578a949c856477d1b5bf9bdf370959a7b9f8d2740bbfe621",
+      "sites": {
+        "import": 4,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/StreamingTypeAdaptersTest.java",
+      "sha256": "2c407d1573e823ecc81da8d33d2fdb720282154efa7655230d660586962cfbed",
+      "sites": {
+        "import": 21,
+        "type_ref": 108
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/StringTest.java",
+      "sha256": "42d437bcb18b0f1a0d2fdf9ecc979d80648af69c5cbc9c8e4426254aa3623ecd",
+      "sites": {
+        "import": 4,
+        "type_ref": 71
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/ToNumberPolicyFunctionalTest.java",
+      "sha256": "312bc851561fbc7a7fbc546050ce693c05c91353a3c76ca49c1e35eebfae2ad4",
+      "sites": {
+        "import": 14,
+        "type_ref": 100
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/TreeTypeAdaptersTest.java",
+      "sha256": "52724de8f7d399106b3e0eacff7152dbdb90bb286c2b04b5db10e936c01479c0",
+      "sites": {
+        "import": 18,
+        "type_ref": 47
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/TypeAdapterPrecedenceTest.java",
+      "sha256": "7208606eb0e4b8697eca05469c90e4d620dce05147509d973642ab9472a02bbf",
+      "sites": {
+        "import": 15,
+        "type_ref": 50
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/TypeAdapterRuntimeTypeWrapperTest.java",
+      "sha256": "22a74456c6feda9e3494e83d21bf45a56bc30a850bcb755a70ae7425aaf4bf7e",
+      "sites": {
+        "import": 14,
+        "type_ref": 54
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/TypeHierarchyAdapterTest.java",
+      "sha256": "073f61031141037c5a0f4a2bd4bc796c5a99ed0adab5826380d42fcd3fd97d99",
+      "sites": {
+        "import": 13,
+        "type_ref": 43
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/TypeVariableTest.java",
+      "sha256": "309e2b4778366be20ee58272f133598482daf843eff3fe1e286099d40743313a",
+      "sites": {
+        "import": 10,
+        "type_ref": 42
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/UncategorizedTest.java",
+      "sha256": "db56194d7d53a37f82cd03d39dfaa284dd7c3848b8d4e86846822d204947113a",
+      "sites": {
+        "import": 15,
+        "type_ref": 44
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/functional/VersioningTest.java",
+      "sha256": "d1e5e93b886a08d8f1d19812c666b0556e0e9a9b870d0294cf21455759770a65",
+      "sites": {
+        "import": 7,
+        "type_ref": 48
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/integration/OSGiManifestIT.java",
+      "sha256": "196cb03b219822e0504fbc859a064028838b00d78e6cf0f8f02b4b03f347402e",
+      "sites": {
+        "import": 16,
+        "type_ref": 56
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/ConstructorConstructorTest.java",
+      "sha256": "a73703347a6b6cc8b0e374d0a8201e701e1e038bd800518ff6195768cae5c8d5",
+      "sites": {
+        "import": 19,
+        "type_ref": 103
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/GsonBuildConfigTest.java",
+      "sha256": "90b8247e8ab33e1651a8dc5d5cb7befeddd88b7e35ce42c84080aa3ab3b1768f",
+      "sites": {
+        "import": 2,
+        "type_ref": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/GsonTypesTest.java",
+      "sha256": "cf1795a03e42c7a2d9ac1669aacda222cd90bd9927ce1c6e43ea43d2e5ebd446",
+      "sites": {
+        "import": 9,
+        "type_ref": 59
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/JavaVersionTest.java",
+      "sha256": "88b8137efde6a5908fc588f4d78f9682da99a5b9b0dbf4913081727ac532767f",
+      "sites": {
+        "import": 2,
+        "type_ref": 25
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/LazilyParsedNumberTest.java",
+      "sha256": "42ba46ce660380cfe4f935db4ae911055002641e796015b378b3d7f87264c916",
+      "sites": {
+        "import": 11,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/LinkedTreeMapSuiteTest.java",
+      "sha256": "91fa3b18500e91610f0daa96a258b3a5047001cbc7013b49eea23f6293470967",
+      "sites": {
+        "import": 15,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/LinkedTreeMapTest.java",
+      "sha256": "2212d5096b2c848e4c7196faaf004960912ff60e17981b28717e50b31ce8b092",
+      "sites": {
+        "import": 15,
+        "type_ref": 147
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/StreamsTest.java",
+      "sha256": "48f1fc9bfe0400bbe9335b6d476f663800c1a5843e6f377446b2f10edf95539a",
+      "sites": {
+        "import": 7,
+        "type_ref": 28
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/UnsafeAllocatorInstantiationTest.java",
+      "sha256": "c2f97dfe03cc01ce36e697008662cce517f888ebdb41bfdb5468798a03985a47",
+      "sites": {
+        "import": 3,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/DefaultDateTypeAdapterTest.java",
+      "sha256": "3e8cea9384014d620db0f04c9e6d7da7a9c868a9f5cad209d0a3ab42f6ba63ae",
+      "sites": {
+        "import": 16,
+        "type_ref": 178
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/Java17ReflectiveTypeAdapterFactoryTest.java",
+      "sha256": "9646e2ded34c112cda2139e367e90236f908f639cdf14b4318e7683b1ed7e666",
+      "sites": {
+        "import": 13,
+        "type_ref": 37
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/JsonElementReaderTest.java",
+      "sha256": "8d77da3de86055d65d123710bab14fd713cad047b2194a71d732f942051b59bd",
+      "sites": {
+        "import": 10,
+        "type_ref": 151
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/JsonTreeReaderTest.java",
+      "sha256": "08d0d0052c5c034abb6452d21de7185dfa4640f0829bb004a20d45a316825074",
+      "sites": {
+        "import": 15,
+        "type_ref": 128
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/JsonTreeWriterTest.java",
+      "sha256": "7a945fb53d21c1980778b279f80209079838ab48d71b3ac83beb85dd317053b1",
+      "sites": {
+        "import": 13,
+        "type_ref": 176
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/RecursiveTypesResolveTest.java",
+      "sha256": "42b47c355b28d07efc6ff471324ce30b35d9702a3d6f3c651f04328a8a3c6616",
+      "sites": {
+        "import": 5,
+        "type_ref": 40
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/bind/util/ISO8601UtilsTest.java",
+      "sha256": "b80ad9d5d0f839d4f55907ad61ed1c8a9af30030928a8b6f6fcfa0d16da2df23",
+      "sites": {
+        "import": 10,
+        "type_ref": 76
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/reflect/Java17ReflectionHelperTest.java",
+      "sha256": "977c28164fc8657cf7ad8b64496b0c8a73dc1efd4365f5978f08e6881c3a2baf",
+      "sites": {
+        "import": 8,
+        "type_ref": 36
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/sql/SqlTypesGsonTest.java",
+      "sha256": "5186249b568151e6e3c109f8c2f413bb970c718e02fad347868b0ea015470454",
+      "sites": {
+        "import": 11,
+        "type_ref": 89
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/internal/sql/SqlTypesSupportTest.java",
+      "sha256": "1580079eb0f660b1b0a22314238467bd9b663f07a660eda420682405d52a5ca0",
+      "sites": {
+        "import": 2,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/metrics/PerformanceTest.java",
+      "sha256": "a800f25fb7ebd9c8d81866c8455f606979ef461b86c5f4202ce751d9c43315dc",
+      "sites": {
+        "import": 14,
+        "type_ref": 137
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/reflect/TypeTokenTest.java",
+      "sha256": "44e02ad619d21f04fe8e4829eacc25ac67da2b0747eec44a46abad9183c6c850",
+      "sites": {
+        "import": 14,
+        "type_ref": 270
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/stream/JsonReaderPathTest.java",
+      "sha256": "1926102106697ce44e5e55d21a556de0fc86ee318db292d04804dae5a2f9f127",
+      "sites": {
+        "import": 14,
+        "type_ref": 118
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/stream/JsonReaderTest.java",
+      "sha256": "7fb35a955e2f46fc9aed9176a3f3301dc59d198419d57e22f300d14f615f94c4",
+      "sites": {
+        "import": 19,
+        "type_ref": 1126
+      }
+    },
+    {
+      "lang": "java",
+      "path": "gson/src/test/java/com/google/gson/stream/JsonWriterTest.java",
+      "sha256": "5c93af17005af72916961848685c332d24e0409a21b053969a68df0a39c52dca",
+      "sites": {
+        "import": 10,
+        "type_ref": 468
+      }
+    },
+    {
+      "lang": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitives.java",
+      "sha256": "6d67a297a32e132aac43cb1eab283bf0499ec608a21376fdb225f14ae32a033a",
+      "sites": {
+        "import": 1,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitivesDeserializationBenchmark.java",
+      "sha256": "17ac526100f216e179d30dce407f94d279b5e70195a3bc6fa95e95be7b79ddaf",
+      "sites": {
+        "import": 6,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/CollectionsDeserializationBenchmark.java",
+      "sha256": "b329033e5fbfa7700ca2711a35d6c833f3601d6a20bb7c7793836b8d5f100a29",
+      "sites": {
+        "import": 10,
+        "type_ref": 50
+      }
+    },
+    {
+      "lang": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/NonUploadingCaliperRunner.java",
+      "sha256": "3645935c8e18b79785592277e62ea2dea8b42d30846cd6efe6d5e3efc7ee67f1",
+      "sites": {
+        "import": 1,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java",
+      "sha256": "0229cc56912701c07b15b3a062308b3740f49843f1c74b8185a22fe7341d2ff5",
+      "sites": {
+        "import": 32,
+        "type_ref": 226
+      }
+    },
+    {
+      "lang": "java",
+      "path": "metrics/src/main/java/com/google/gson/metrics/SerializationBenchmark.java",
+      "sha256": "111af9e945aeccff90d70291ab6d28303997e2c6bc3141a81145d02bf072c775",
+      "sites": {
+        "import": 4,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/LegacyProtoTypeAdapterFactory.java",
+      "sha256": "88920524aa8e0155f8ca3790cfbd4eaa7b18bc870a1b26f95b7fb844fda43c8f",
+      "sites": {
+        "import": 30,
+        "type_ref": 286
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/ProtoTypeAdapter.java",
+      "sha256": "854d299fc09ad7ce633d4d24b1a837461a2c421dc6779120c526e241bf10e791",
+      "sites": {
+        "import": 32,
+        "type_ref": 166
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/main/java/com/google/gson/protobuf/StructTypeAdapter.java",
+      "sha256": "6bd272850f09dea688531d9234716a28929f4b1bb803765f211bc3472bb52e7d",
+      "sites": {
+        "import": 10,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/LegacyProtoTypeAdapterFactoryTest.java",
+      "sha256": "f13f009d3b775a7124800524f953e9f5de847f650e16bf5e938ceed55793977d",
+      "sites": {
+        "import": 38,
+        "type_ref": 171
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/ProtosWithAnnotationsAndJsonNamesTest.java",
+      "sha256": "e0c9311354796885dfbd73d8a120db8be88dc3bdaea23915d3e1a0e4a349bb98",
+      "sites": {
+        "import": 9,
+        "type_ref": 61
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/ProtosWithAnnotationsTest.java",
+      "sha256": "f8db717876ed55559bc103701ce53d3e7997556236343017abdfde160c84e983",
+      "sites": {
+        "import": 15,
+        "type_ref": 67
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/ProtosWithComplexAndRepeatedFieldsTest.java",
+      "sha256": "f4b5cb2d7493544f502a79b6273d007a5038e83c5b4e5d3986ec77b54179c78d",
+      "sites": {
+        "import": 13,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/ProtosWithPrimitiveTypesTest.java",
+      "sha256": "df9d5c50942d756d5b584d139eff2820b146aef4042500301b73c69489c7dc9e",
+      "sites": {
+        "import": 9,
+        "type_ref": 24
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/StructTypeAdapterTest.java",
+      "sha256": "d4c1c7f5b8e4c22060ae748cdbb8677b6b69dcc8255edb87a2dfe91908d3ae91",
+      "sites": {
+        "import": 15,
+        "type_ref": 80
+      }
+    },
+    {
+      "lang": "java",
+      "path": "proto/src/test/java/com/google/gson/protobuf/functional/TestMessages.java",
+      "sha256": "d95546f09ae9139be4685d4d7e61d2018a6adb5aa0450aa9d45221416ca56e7f",
+      "sites": {
+        "import": 4,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-graal-native-image/src/test/java/com/google/gson/native_test/Java17RecordReflectionTest.java",
+      "sha256": "0132afd1c9b427eab684ce44fca34d5604343264b25d4819e746d342855a17bf",
+      "sites": {
+        "import": 10,
+        "type_ref": 60
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-graal-native-image/src/test/java/com/google/gson/native_test/ReflectionTest.java",
+      "sha256": "f51030716b81c531d758aa16e9c6ad2bc11fddc196a2e6ff32906b2bbf85867d",
+      "sites": {
+        "import": 14,
+        "type_ref": 68
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-jpms/src/main/java/module-info.java",
+      "sha256": "4516367668bbfa4084c8780b42ee92c4f39d388df1234c5193aec063d20233e4",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "test-jpms/src/test/java/com/google/gson/jpms_test/ExportedPackagesTest.java",
+      "sha256": "667eb45eca4d8a191e178d56e1c33a2e9dbc4d5c132d8e4a9c28cb8ace7897e8",
+      "sites": {
+        "import": 14,
+        "type_ref": 38
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-jpms/src/test/java/com/google/gson/jpms_test/ModuleTest.java",
+      "sha256": "b04b316b57994ff59e86e401c06a9b5ca154527be5f98d34685a1e9ff6a3cc24",
+      "sites": {
+        "import": 10,
+        "type_ref": 43
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-jpms/src/test/java/com/google/gson/jpms_test/ReflectionInaccessibleTest.java",
+      "sha256": "5caa209ac7d30e9ad6a23ce2d0ef841f99725f9f22cd28680463140f79eb68a7",
+      "sites": {
+        "import": 5,
+        "type_ref": 9
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-jpms/src/test/java/com/google/gson/jpms_test/opened/ReflectionTest.java",
+      "sha256": "895ab8546cfab9e152b7c992fd8a060f38016696fb4f7090901c95875cfa45a3",
+      "sites": {
+        "import": 3,
+        "type_ref": 7
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-jpms/src/test/java/module-info.java",
+      "sha256": "607e78a3f283b668e7dfc3be057e767e1c0f3df320b520f74cdd710a9f5fd90b",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithAdapter.java",
+      "sha256": "c6122f62ff484ee66a1971b7585f668f1a5632d3448493aedd7916137854e563",
+      "sites": {
+        "import": 5,
+        "type_ref": 13
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithExposeAnnotation.java",
+      "sha256": "4258c8407ecd869d9407ef7702cba5bbac5f32349264cf41483b67aed07f3661",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithHasArgsConstructor.java",
+      "sha256": "8361fce97e458ee4a2c7d487947b941fcb1639623689ab92d7921109d2ccbb68",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithJsonAdapterAnnotation.java",
+      "sha256": "be4adf1358bac64ea85c3d3902203f08b1fee139f0d2c2aa1d3685f978842021",
+      "sites": {
+        "import": 17,
+        "type_ref": 54
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithNamedFields.java",
+      "sha256": "256e79e11562b014daf25e4357f376b8f17d2cacabd60c5d98d025423d0e1d81",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithNoArgsConstructor.java",
+      "sha256": "03c3729a55168e90be333f3002ab3fb9b5bda9801d6519ec183b390f05fade26",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithSerializedName.java",
+      "sha256": "98b64dbff52f3bc01743752e3409f2e55e10d850e9542ef1ff6e785f71f02ba8",
+      "sites": {
+        "import": 1,
+        "type_ref": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithUnreferencedHasArgsConstructor.java",
+      "sha256": "4e9b1e020c3684f0ae6146ae33fee8e131f432c7198edd3dbae162954415180c",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithUnreferencedNoArgsConstructor.java",
+      "sha256": "862063b7c24547db77dee7b77fbe79063b1e8660e442de40f16e7a14f600c9ec",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/ClassWithVersionAnnotations.java",
+      "sha256": "c272ce471c78b6a26bb57e202da32d2b707c2658cbf4a4eb22e552f7dc8e8240",
+      "sites": {
+        "import": 2,
+        "type_ref": 4
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/EnumClass.java",
+      "sha256": "44f8828efa748f548e9ab82d5902b2a61919d29c2c65c62b746ed516175965a6",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/EnumClassWithSerializedName.java",
+      "sha256": "cfbdc70e5b3053004f48e2dca888f448ff1642fdc9fa42516509f135e0efb77b",
+      "sites": {
+        "import": 1,
+        "type_ref": 2
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/GenericClasses.java",
+      "sha256": "384725f107128829af0d15aff05d60d07d9ceecf0230ad9833ce6e988ef4f7c4",
+      "sites": {
+        "import": 6,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/InterfaceWithImplementation.java",
+      "sha256": "422e0c3173a997a3434570d992b2c3d7bc873650faff7ab472029d5084e00f3f",
+      "sites": {
+        "import": 1,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/Main.java",
+      "sha256": "c6ad1f03a4f1dc5c9cc7f9a11f60224bbc021264a9f6271fab4d4cc6bd278509",
+      "sites": {
+        "import": 12,
+        "type_ref": 180
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/NoSerializedNameMain.java",
+      "sha256": "384b1419bd397b84a480754d5da171c51fada6fec0fc3788174f4aa3fcfaa6f6",
+      "sites": {
+        "import": 3,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/TestExecutor.java",
+      "sha256": "71a6599406d211c7607fcab78c0f1e637fad28bb873c4d6658996b0f2b87e10b",
+      "sites": {
+        "import": 3,
+        "type_ref": 12
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/main/java/com/example/UnusedClass.java",
+      "sha256": "f18180b696a6095412b812aa1096610daa6a5edba574c6a7a08a1b5cc2781458",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "test-shrinker/src/test/java/com/google/gson/it/ShrinkingIT.java",
+      "sha256": "ad6b34cb2537d3c25beb0cf3bfab45279e54d1d3b15fb5b3795e7f2b9724cf9c",
+      "sites": {
+        "import": 21,
+        "type_ref": 58
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "bac61699134056622fe48e4cc86877e9fdba3f58",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "java"
+    ]
+  },
+  "summary": {
+    "files": 264,
+    "sites_by": {
+      "java/import": 2674,
+      "java/type_ref": 20024
+    },
+    "total_sites": 22698
+  }
+}

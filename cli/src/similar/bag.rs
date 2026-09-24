@@ -193,12 +193,22 @@ fn shape(u: &Unit, node: Node<'_>, src: &[u8], sp: &LangSpec) -> Vec<String> {
         out.push(format!("p:{n}"));
     }
     if functions::is_unit_node(node, src, sp) {
-        let ret = ["return_type", "result"]
-            .iter()
-            .any(|f| node.child_by_field_name(f).is_some());
-        out.push(format!("ret:{}", u8::from(ret)));
+        out.push(format!("ret:{}", u8::from(declares_return(node, src))));
     }
     out
+}
+
+/// Whether a callable declares what it returns: a `return_type`
+/// (Rust, Python, TypeScript) or `result` (Go) field, or a `type`
+/// field that is not `void` — the C family and Java spell the return
+/// type in front of the name, and a constructor spells none.
+fn declares_return(node: Node<'_>, src: &[u8]) -> bool {
+    ["return_type", "result"]
+        .iter()
+        .any(|f| node.child_by_field_name(f).is_some())
+        || node
+            .child_by_field_name("type")
+            .is_some_and(|ty| ty.utf8_text(src) != Ok("void"))
 }
 
 /// The kind word: a callable is a lambda, a method (the grammar's own
@@ -231,12 +241,13 @@ fn kind_word(u: &Unit, node: Node<'_>, src: &[u8], sp: &LangSpec) -> &'static st
     }
 }
 
-/// Callee spellings in the unit's own body: the `function` field of
-/// every call node, a bare name whole or a member's last segment.
+/// Callee spellings in the unit's own body: the callee field of every
+/// call node (LangSpec::call_fields — the arcs read the same one), a
+/// bare name whole or a member's last segment.
 fn callees(own: &[Node<'_>], src: &[u8], sp: &LangSpec) -> Vec<String> {
     let mut out = Vec::new();
     for node in own.iter().filter(|n| sp.call_kinds.contains(&n.kind())) {
-        let Some(callee) = node.child_by_field_name("function") else {
+        let Some(callee) = node.child_by_field_name(sp.call_fields.0) else {
             continue;
         };
         let name = if sp.call_name_kinds.contains(&callee.kind()) {

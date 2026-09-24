@@ -48,6 +48,25 @@ pub fn named_children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
     kids(node.named_child_count(), |i| node.named_child(i))
 }
 
+/// A list's entries — its named children, comments aside: a parameter
+/// list's parameters, an argument list's arguments. One reading for
+/// both, because overload resolution compares the two counts.
+pub fn entries<'t>(list: Node<'t>) -> Vec<Node<'t>> {
+    named_children(list)
+        .into_iter()
+        .filter(|c| !c.kind().contains("comment"))
+        .collect()
+}
+
+/// The parent chain, innermost first, ending at the file root — the
+/// one ancestor walk. The scan layer reads it for a Java member's
+/// owner (functions::owner_of); the visibility climbs and the mention
+/// category word (mention/conv) read the same chain for enclosing
+/// classes, ambient blocks and Rust attributes.
+pub fn ancestors(node: Node<'_>) -> impl Iterator<Item = Node<'_>> {
+    std::iter::successors(node.parent(), |n| n.parent())
+}
+
 /// Pre-order nodes under `root`: `kids` yields a node's children and
 /// `enter` prunes a subtree (the root itself is never asked). The one
 /// walk unit extraction and the per-unit metric walk drive — they

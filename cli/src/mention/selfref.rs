@@ -5,22 +5,29 @@
 //! see: a Go `text/template` action inside a string, a TS string or
 //! template literal (minus the code inside `${…}`, plus the strings
 //! nested in that code), a Python doctest line, a Rust
-//! `macro_rules!` body or a fenced block in a run of doc comments,
-//! a fenced or bird-tracked block in a run of Haskell haddock, a C /
-//! C++ string literal (the `dlsym` argument, the method-table entry,
-//! the Lua or Python registration name — TS's reason). Plain
-//! comments and prose of the same file never count (X-5/X-6: a
-//! language-neutral rule revived dead code from docstrings in one
-//! corpus and killed live code in another).
+//! `macro_rules!` body or a fenced or indented block in a run of doc
+//! comments (rustdoc compiles both as doctests), a fenced or
+//! bird-tracked block in a run of Haskell haddock, a C / C++ string
+//! literal (the `dlsym` argument, the method-table entry, the Lua or
+//! Python registration name — TS's reason) or a Doxygen code block
+//! (`@code`, a fence, an indented block), a Java string (reflection's
+//! `getMethod("name")`, the same reason) or a Javadoc code span or
+//! Markdown code block. Plain comments and prose
+//! of the same file never count (X-5/X-6: a language-neutral rule
+//! revived dead code from docstrings in one corpus and killed live
+//! code in another).
 //!
 //! Read lazily and once per file: the token set is built the first
 //! time a declaration of the file survives the other-file checks,
 //! from the same bytes the allow claim reads (conv/name.rs).
 
+mod doc;
+
 use super::conv::text;
 use super::token::{emit, whole_run_only};
 use crate::scan::ast;
 use crate::scan::lang::Lang;
+use doc::Runs;
 use std::collections::BTreeSet;
 use std::path::Path;
 use tree_sitter::Node;
@@ -79,7 +86,7 @@ fn regions(rel: &str, source: &str) -> Vec<String> {
     };
     let src = source.as_bytes();
     let mut out = Vec::new();
-    let mut runs = Runs::default();
+    let mut runs = Runs::new(lang);
     let mut stack = vec![tree.root_node()];
     while let Some(node) = stack.pop() {
         // the node kinds each language hands to a second interpreter,
@@ -100,6 +107,8 @@ fn regions(rel: &str, source: &str) -> Vec<String> {
             (Lang::C | Lang::Cpp, "string_literal" | "raw_string_literal") => {
                 out.push(text(node, src).to_string());
             }
+            // every Java string, a text block included (one kind)
+            (Lang::Java, "string_literal") => out.push(text(node, src).to_string()),
             _ => {}
         }
         // a run of doc comments is a fact about siblings in document
@@ -109,7 +118,7 @@ fn regions(rel: &str, source: &str) -> Vec<String> {
             stack.push(*child);
         }
         for child in kids {
-            runs.feed(lang, child, src, &mut out);
+            runs.feed(child, src, &mut out);
         }
     }
     runs.flush(&mut out);
@@ -166,109 +175,6 @@ fn py_doctest(node: Node<'_>, src: &[u8], out: &mut Vec<String>) {
             }
         }
     }
-}
-
-/// The maximal runs of consecutive doc-comment nodes (§2 (c)): Rust
-/// `///`/`//!` line comments and `/** */`/`/*! */` blocks, Haskell
-/// `haddock` nodes. A run ends at the first non-doc node or row gap;
-/// its fenced blocks are the region.
-#[derive(Default)]
-struct Runs {
-    lines: Vec<String>,
-    end_row: Option<usize>,
-}
-
-impl Runs {
-    fn feed(&mut self, lang: Lang, node: Node<'_>, src: &[u8], out: &mut Vec<String>) {
-        let Some(body) = doc_body(lang, node, src) else {
-            // a comment's own marker children are not a break in the
-            // run; any other node is
-            if !node.kind().ends_with("comment_marker") && node.kind() != "doc_comment" {
-                self.flush(out);
-            }
-            return;
-        };
-        if self
-            .end_row
-            .is_some_and(|r| r + 1 < node.start_position().row)
-        {
-            self.flush(out);
-        }
-        self.lines.extend(body.lines().map(str::to_string));
-        // a line comment's node spans its newline: its LAST row of
-        // text is the one adjacency is measured from
-        let end = node.end_position();
-        self.end_row = Some(end.row - usize::from(end.column == 0 && end.row > 0));
-    }
-
-    fn flush(&mut self, out: &mut Vec<String>) {
-        if !self.lines.is_empty() {
-            out.extend(fenced(&std::mem::take(&mut self.lines)));
-        }
-        self.end_row = None;
-    }
-}
-
-/// The comment's text with its doc markers stripped, or None for a
-/// node that is not a doc comment.
-fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {
-    let t = text(node, src);
-    match (lang, node.kind()) {
-        (Lang::Rust, "line_comment") => {
-            let rest = t.strip_prefix("///").or_else(|| t.strip_prefix("//!"))?;
-            (!rest.starts_with('/')).then(|| rest.to_string())
-        }
-        (Lang::Rust, "block_comment") => {
-            let inner = t
-                .strip_prefix("/**")
-                .or_else(|| t.strip_prefix("/*!"))?
-                .strip_suffix("*/")?;
-            (!inner.starts_with('*')).then(|| {
-                inner
-                    .lines()
-                    .map(|l| l.trim_start().strip_prefix('*').unwrap_or(l.trim_start()))
-                    .collect::<Vec<_>>()
-                    .join("\n")
-            })
-        }
-        (Lang::Haskell, "haddock") => Some(
-            t.lines()
-                .map(|l| {
-                    let l = l.trim_start();
-                    let l = l
-                        .strip_prefix("--")
-                        .or_else(|| l.strip_prefix("{-"))
-                        .unwrap_or(l);
-                    l.strip_suffix("-}")
-                        .unwrap_or(l)
-                        .trim_start_matches(['|', '^', '$', '*'])
-                })
-                .collect::<Vec<_>>()
-                .join("\n"),
-        ),
-        _ => None,
-    }
-}
-
-/// The code blocks of a doc run: markdown fences, haddock `@` blocks
-/// and `>` bird tracks — the safe direction is more mentions, so all
-/// three forms count.
-fn fenced(lines: &[String]) -> Vec<String> {
-    let mut out = Vec::new();
-    let (mut fence, mut at) = (false, false);
-    for line in lines {
-        let t = line.trim();
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = !fence;
-        } else if t == "@" {
-            at = !at;
-        } else if fence || at {
-            out.push(line.clone());
-        } else if let Some(bird) = t.strip_prefix('>') {
-            out.push(bird.to_string());
-        }
-    }
-    out
 }
 
 #[cfg(test)]

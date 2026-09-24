@@ -1,0 +1,1927 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "java",
+    "name": "jsoup",
+    "tip": "093e2f58492c531667e551e8793513a41b22443e"
+  },
+  "excluded": {
+    "other_extension": 114
+  },
+  "files": [
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/Connection.java",
+      "sha256": "031151f474574f94a8c9176049a4d8a9f97b14c334cde9ffd1f5b05127acc062",
+      "sites": {
+        "import": 18,
+        "type_ref": 147
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/HttpStatusException.java",
+      "sha256": "ecf725c71ae86ab5d915431ce4980b4ffb679d273b1b2561242842fab1ff3196",
+      "sites": {
+        "import": 1,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/Jsoup.java",
+      "sha256": "08efd20ddec51728d05d6aa70091468d6adcd4be703bb578e164012a882c3bf7",
+      "sites": {
+        "import": 14,
+        "type_ref": 119
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/Progress.java",
+      "sha256": "edeb649820e6879673415e431cb49db14852b432b55ce0d1858ed359f45293bc",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/SerializationException.java",
+      "sha256": "96e426ace0e719074fd26e67ca36bb2657050c133af49b1fd4fba3368e652c59",
+      "sites": {
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/UnsupportedMimeTypeException.java",
+      "sha256": "ba4fb475e31d400f274d24c1cac751322061be5af6a6b8297df5b489cc6285ac",
+      "sites": {
+        "import": 1,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/examples/HtmlToPlainText.java",
+      "sha256": "3f7e6718b8518240a8d538f60030edeab37648c0b7e70b6c620ee26a434bac7e",
+      "sites": {
+        "import": 12,
+        "type_ref": 46
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/examples/ListLinks.java",
+      "sha256": "a4e4260d8e9671de4fa49d9a0016bec7170631efed2dc5422e4a7583a60cd86e",
+      "sites": {
+        "import": 6,
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/examples/Wikipedia.java",
+      "sha256": "abf753f2d99f3b5bbd83e55d8af178ebc5a01749a544cb5a0ec1d4f8331a0aa1",
+      "sites": {
+        "import": 5,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/examples/package-info.java",
+      "sha256": "995cdbbfecde15035d09eea28005fe3911cec22de2cc61b5d9daeb537c5861fa",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/AuthenticationHandler.java",
+      "sha256": "b545635ca593e5df27b62527996980be457ec75745283cc02399d002aa0eb782",
+      "sites": {
+        "import": 4,
+        "type_ref": 26
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/CookieUtil.java",
+      "sha256": "8def4382a79e3ff766d48d29348dca04a5e07e6badee9ad042f4f784518037c2",
+      "sites": {
+        "import": 18,
+        "type_ref": 74
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/DataUtil.java",
+      "sha256": "5ff6d0e32308c350deb8c7541bf430e79caa1eac73a9c9d7b15f4fe90673ea6f",
+      "sites": {
+        "import": 35,
+        "type_ref": 174
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/HttpConnection.java",
+      "sha256": "9f439dc7f7aa03d18a1fbff716cfb562f9e2667b249a60dfc329f5232b3c1145",
+      "sites": {
+        "import": 49,
+        "type_ref": 677
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/Re2jRegex.java",
+      "sha256": "1ee3361ff0b7a48e9332ed96780162d4601c3f7c392f189b3d4cef3164a4c9f5",
+      "sites": {
+        "type_ref": 26
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/Regex.java",
+      "sha256": "50b30ad1a0cdd14d27070407f577f27397bbaedb2baf7e98ecd813c79b89eee0",
+      "sites": {
+        "import": 5,
+        "type_ref": 32
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/RequestAuthenticator.java",
+      "sha256": "52ddc822692de5b5f21ee161d5743e18bbb3a2b24aebd0714a77f8a1f9ef69dd",
+      "sites": {
+        "import": 5,
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/RequestDispatch.java",
+      "sha256": "8f6f8c50b1126e6b4f3c48e67b861f2df60158ff61ec79e85590f968d3f4dc8c",
+      "sites": {
+        "import": 6,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/RequestExecutor.java",
+      "sha256": "666b1e382faebcb196e9cd351607455fe29592e347dcb47a4f6f9f66f745c01e",
+      "sites": {
+        "import": 5,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/UrlBuilder.java",
+      "sha256": "874ee79c27016735ff8a5141e1f09f76be40438e1f9bec99311b9a34a6e6f593",
+      "sites": {
+        "import": 12,
+        "type_ref": 41
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/UrlConnectionExecutor.java",
+      "sha256": "886011395e27d3922686ae88fc7fe305c2a512d11c9770cc7de1887d4f17998c",
+      "sites": {
+        "import": 12,
+        "type_ref": 56
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/Validate.java",
+      "sha256": "256262c372b996305f30d89e668cb5110d6b36b13afa551c8bfa3a5ee50c85e6",
+      "sites": {
+        "import": 1,
+        "type_ref": 51
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/ValidationException.java",
+      "sha256": "209e9b62845a9effe55d9e684c8ebe76d6f63be27cd66ee0a2ff24ce3585cfbd",
+      "sites": {
+        "import": 2,
+        "type_ref": 12
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/W3CDom.java",
+      "sha256": "97221e9770c46f56ad4736fccc0ec5fd690f9708ded17537e59fcd9faf137725",
+      "sites": {
+        "import": 45,
+        "type_ref": 234
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/helper/package-info.java",
+      "sha256": "51ae1eef9089ec1ff5be148bc7119c2290755f962e4c79cb5fe48d55c004a28d",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/ControllableInputStream.java",
+      "sha256": "8b1561d4df241a4ce77ce009df23e7e604763b35f2700f9ba2e4a23b08bae1eb",
+      "sites": {
+        "import": 10,
+        "type_ref": 59
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/LineMap.java",
+      "sha256": "a512f223f1f9c2ada0abb37b0342d2cfbc91181d3593b2d9035b6287e3c567a0",
+      "sites": {
+        "import": 1,
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/NamespaceBindings.java",
+      "sha256": "10ec33f8ed69f55cac30042a59b5508068513466f352eab85b9ea40f71dafca5",
+      "sites": {
+        "import": 5,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/Normalizer.java",
+      "sha256": "5587cbbc0574eebd72f2ef03442047f36f924ae4ec95347fc24aee0c6ab50185",
+      "sites": {
+        "import": 4,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/QuietAppendable.java",
+      "sha256": "7ddaaa971e97c710c34c5a824d40583c8a452297cec2668d801eaa4f9de4dc9f",
+      "sites": {
+        "import": 2,
+        "type_ref": 23
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/SharedConstants.java",
+      "sha256": "efea92b5536f08bbb85c1ee3233d8a3fa4cac854f49413a816fc9dd488f72e17",
+      "sites": {
+        "type_ref": 7
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/SimpleBufferedInput.java",
+      "sha256": "5456a093bb2da2fdbde7775182fb364ee7a44ddaa2b76e6d0410d8962ba2a525",
+      "sites": {
+        "import": 6,
+        "type_ref": 28
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/SimpleStreamReader.java",
+      "sha256": "26daa659178efc7edde8f2b58e0b862ed68d96e9adacaf8a3ed0ab6eddd4968e",
+      "sites": {
+        "import": 12,
+        "type_ref": 23
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/SoftPool.java",
+      "sha256": "f2e1f04034ff027f342fe1863532702aefa2aabe77ce425b96f1896f7de01e08",
+      "sites": {
+        "import": 3,
+        "type_ref": 14
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/StringUtil.java",
+      "sha256": "7e61ba7e8630f101f0a74d56fb91237c8588fceeb5c472166c60926dd6047881",
+      "sites": {
+        "import": 10,
+        "type_ref": 96
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/internal/package-info.java",
+      "sha256": "3c55a5a2a42cc3231e89d826393abd13fb7448d11dd566716d1b577f0966641a",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attribute.java",
+      "sha256": "3d747f3fad35d3f9dfc0f8466a45c94b21e362cc553d8190119eac4047315739",
+      "sites": {
+        "import": 11,
+        "type_ref": 107
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Attributes.java",
+      "sha256": "39551b1d008f2a77b212b5b16e09e257b0ec9d8f118a0b7131a1cfe11ac32875",
+      "sites": {
+        "import": 25,
+        "type_ref": 240
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/CDataNode.java",
+      "sha256": "07f8c6622992fa6af68516d09cf7cf1a25b0006aa69e90a6208a7b90a53b32d9",
+      "sites": {
+        "import": 1,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Comment.java",
+      "sha256": "311956f0cd15ecacca663f56a27f9bbb18beb71968aa7b7171bd81831c93d3e8",
+      "sites": {
+        "import": 4,
+        "type_ref": 21
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/DataNode.java",
+      "sha256": "045c6c94ff716e666b842e79ee961c923559b89d3ca51c2e174ea9f4e63c0848",
+      "sites": {
+        "import": 1,
+        "type_ref": 12
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Document.java",
+      "sha256": "cad397b7c5c767c294f27edf7971932c0d531ae8a368827e6ec34e1267a17502",
+      "sites": {
+        "import": 16,
+        "type_ref": 97
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/DocumentType.java",
+      "sha256": "7a37c3ef20e42e53ea53a2faa1045155f05f938a74ab153007900e37a3f64664",
+      "sites": {
+        "import": 5,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Element.java",
+      "sha256": "64113061dec074483ca4bcf51a528ca55e511f81da2192e44e626347cc9c6340",
+      "sites": {
+        "import": 38,
+        "type_ref": 560
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Entities.java",
+      "sha256": "5192dae7df7bc05b3c6346f8db8c7bb45f5084e45f6d6ac17f9f5791b2555bcc",
+      "sites": {
+        "import": 16,
+        "type_ref": 93
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/EntitiesData.java",
+      "sha256": "5d2d6726a607fca5d0f9393aa6d5dc0882e780507dfb35371cd4d17e7e1e63f9",
+      "sites": {
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/FormElement.java",
+      "sha256": "400e23f8f7ede595e2063bb1611bc796de6d7b920fd835f11ffb4afc6b1ab6e5",
+      "sites": {
+        "import": 13,
+        "type_ref": 45
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/LeafNode.java",
+      "sha256": "a034f109630e48e6c225e15737288c8e27b12d370dd103fc945bf83c8a89edba",
+      "sites": {
+        "import": 4,
+        "type_ref": 73
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Node.java",
+      "sha256": "5a8e21930be1a65ae41055a09ba3400dd8a134ad3e693cea61f41cc4242d27ec",
+      "sites": {
+        "import": 16,
+        "type_ref": 191
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/NodeInternals.java",
+      "sha256": "3d593987076236b10c89ce8c3b6ebf3103fba56338cee9c7180255ce9795eda9",
+      "sites": {
+        "import": 2,
+        "type_ref": 24
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/NodeIterator.java",
+      "sha256": "6f5b0b36d110f6c664016bbfc0a11b3eb6af01d441b20f230a90839b9dc18bab",
+      "sites": {
+        "import": 4,
+        "type_ref": 23
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/NodeUtils.java",
+      "sha256": "04dffffb32b1fa4bfeb237205faa6e37433cf773ecc57a9e89de3f9d1eb67bd9",
+      "sites": {
+        "import": 11,
+        "type_ref": 37
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Printer.java",
+      "sha256": "63972e16a946056b46d1cc6b92bfc4df3c5c6e559b865a4ba21c1a0a23452de5",
+      "sites": {
+        "import": 8,
+        "type_ref": 113
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/ProcessingInstruction.java",
+      "sha256": "08ac02e2561950fc907ff4481099932aab5e0d9acf77ea59da599cfb001e3974",
+      "sites": {
+        "import": 4,
+        "type_ref": 48
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/Range.java",
+      "sha256": "5e5365018f097d63eba66eb24d84dfd0a7e1d623ec9d9b20a86b694c0eb9d68b",
+      "sites": {
+        "import": 4,
+        "type_ref": 52
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/TextNode.java",
+      "sha256": "6b524fbd7fc85e56ad19fd5b45beb2bd72f299a30441c423bdcdca71837a12a8",
+      "sites": {
+        "import": 3,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/XmlDeclaration.java",
+      "sha256": "622cf1a566bf747593815d3d39b6f91406f4a73f738caf79886675ef14d53ad5",
+      "sites": {
+        "import": 2,
+        "type_ref": 27
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/nodes/package-info.java",
+      "sha256": "4534f106a90a47f7b5c3ac8c9273e7f408eb9b68b89a09ede8a12b3648cde396",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/package-info.java",
+      "sha256": "07ab7e28716d579619e064a6e64ee55ae7792377515603e42e27c2e5b9a30d52",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/CharacterReader.java",
+      "sha256": "f93452a6022d438df7ce17f00dabd9d32589815b30ee4f5e6d1bd1208e36274c",
+      "sites": {
+        "import": 11,
+        "type_ref": 82
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTagOptions.java",
+      "sha256": "ecf9e4de64b525014c62ef46e7fda0cd5f45c9afa39b57143134c29d301c98e1",
+      "sites": {
+        "import": 1,
+        "import_star": 1,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilder.java",
+      "sha256": "4656259a195ba78383acc20f6a6d4676a28de7a73c449597ba4cf35f456f25cb",
+      "sites": {
+        "import": 23,
+        "import_star": 1,
+        "type_ref": 334
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java",
+      "sha256": "ceb5ca54dcbfd053605ecbfd8d3bd534800cb0f81719e869adee3ff7cfe6249b",
+      "sites": {
+        "import": 17,
+        "import_star": 1,
+        "type_ref": 282
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/ParseError.java",
+      "sha256": "73a1dbe9caf2a439051b5dd77af383ae339d034d24ec673f9634d092d23aa6f0",
+      "sites": {
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/ParseErrorList.java",
+      "sha256": "c4aa6c789ee9044cb74ca35255bfd7030b1f45b6f38a4da7744bc48bd6efcea3",
+      "sites": {
+        "import": 1,
+        "type_ref": 4
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/ParseSettings.java",
+      "sha256": "733903589b1f65f000b04b969b4d3dd462754b2b9b3b94f1342f5b284b3af3fd",
+      "sites": {
+        "import": 3,
+        "type_ref": 7
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/Parser.java",
+      "sha256": "2b8baa95140fbf12fad9c874b42d8d31e24b186fd7c665c1708395e6d852ba98",
+      "sites": {
+        "import": 10,
+        "type_ref": 103
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/StreamParser.java",
+      "sha256": "5a50cf810031c426623c68cc630218c3e6725e1519bb039143777f9f19637855",
+      "sites": {
+        "import": 24,
+        "type_ref": 105
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/Tag.java",
+      "sha256": "98b0a56d5963298da2176eeb555ae1e66cf43ddd0df28a25ebec1fa8ed7bee5a",
+      "sites": {
+        "import": 6,
+        "type_ref": 49
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/TagSet.java",
+      "sha256": "26261d2c9ee3d2e978c184f15328022488af3264ae8b1c54b6bd8fcdd02a0dff",
+      "sites": {
+        "import": 13,
+        "type_ref": 112
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/Token.java",
+      "sha256": "be399ca5e3705a867eb6023048f3e7aac021cd5c34c7640c078a448bf9d513a9",
+      "sites": {
+        "import": 8,
+        "type_ref": 119
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/TokenData.java",
+      "sha256": "816b9225ced88924eb45b7a0dccea19f4a15e96154a9700f34fad3a3435e4bfb",
+      "sites": {
+        "import": 2,
+        "type_ref": 15
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/TokenQueue.java",
+      "sha256": "7a23106abcfc95d71a6b774bdc10c02d33a98b25cbc429ade2d94db5d69e0fb1",
+      "sites": {
+        "import": 2,
+        "type_ref": 65
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/Tokeniser.java",
+      "sha256": "16250f9ef5cf94e3fc7100a8356e466ef1c4273d84c455d64ace82a29b35a09f",
+      "sites": {
+        "import": 7,
+        "type_ref": 93
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/TokeniserState.java",
+      "sha256": "d6a94fc73b4561011470263872b74b29024ed1ddddf220df636357a1ab35bea0",
+      "sites": {
+        "import": 5,
+        "type_ref": 279
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/TreeBuilder.java",
+      "sha256": "6f210b4b6e1f5e5d1f81655aa279103bf101e5b1f0ec17ee8fe7035894c10746",
+      "sites": {
+        "import": 14,
+        "type_ref": 110
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/XmlTreeBuilder.java",
+      "sha256": "c016f43e79dbf01b49370d5ba689ebbdb70f3d15e108d9d0f75eacf1e6a88abd",
+      "sites": {
+        "import": 27,
+        "type_ref": 93
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/parser/package-info.java",
+      "sha256": "9f7d619d98bd6f20ccfff008e2bb2f02e9dfeb4da4ae956d7aef6e1744231cd6",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/safety/Cleaner.java",
+      "sha256": "7116b40cb8be432493dff5eea6cee4e774867b08c04cc04157b8137d97102a0d",
+      "sites": {
+        "import": 17,
+        "type_ref": 70
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/safety/Safelist.java",
+      "sha256": "0ff250830902fd2a7d7a2c6f5e3cd1eb851ef0c57123f71db6afaf5711990501",
+      "sites": {
+        "import": 13,
+        "type_ref": 153
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/safety/package-info.java",
+      "sha256": "927799d1e3b86e983374130a463e243fc28f1c74da48925f2547d75f59c7a0bb",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/Collector.java",
+      "sha256": "84a60695159cdd345b6ec5f19ea968ba9d0951956c7d9ad0ae97a7ab01e009c5",
+      "sites": {
+        "import": 9,
+        "type_ref": 33
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/CombiningEvaluator.java",
+      "sha256": "4d7d2aa47151f1be31769709738db73afafe65458871b817510925327c4fe1c8",
+      "sites": {
+        "import": 10,
+        "type_ref": 54
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/Elements.java",
+      "sha256": "b6ed7b3905a52d85658ba6e6b1347de84513b9c6b51e8c8f5879ee29865f2873",
+      "sites": {
+        "import": 17,
+        "type_ref": 158
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/Evaluator.java",
+      "sha256": "5a3ce0742ddf5d5bb647e8627735c47c656f5642361f41fbb30f26fa7b6f7e8d",
+      "sites": {
+        "import": 18,
+        "type_ref": 347
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/HasEvaluator.java",
+      "sha256": "64e5e7227c38b9663c3dab4fb152c17ffc7ef9b155f42a2b99f9b57b1307e321",
+      "sites": {
+        "import": 8,
+        "type_ref": 46
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/NodeEvaluator.java",
+      "sha256": "7099d38531322df9b7a3c6a12995f891aaa37620d4b21b26a3017d8721dbcc7e",
+      "sites": {
+        "import": 8,
+        "type_ref": 51
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/NodeFilter.java",
+      "sha256": "d6902c3debda319f47a7df5b281a2544154bf692c57b3a35af248456fb3a4234",
+      "sites": {
+        "import": 1,
+        "type_ref": 4
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/NodeTraversor.java",
+      "sha256": "3fc9d4e257300e2399bf61d631838411539936e733adbec458a483f2b3b1e235",
+      "sites": {
+        "import": 4,
+        "type_ref": 41
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/NodeVisitor.java",
+      "sha256": "f6b26808cd5acd748746a94bc45935a63776ad7dcc38f5f2d80c04375aae773d",
+      "sites": {
+        "import": 2,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/Nodes.java",
+      "sha256": "d4c8c088df00bf04e5c9cd7e47bda7b644a52552bf11387870f882f07b0ac7f2",
+      "sites": {
+        "import": 12,
+        "type_ref": 39
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/QueryParser.java",
+      "sha256": "86eb0671a0c358d12f75bbeea6da4fe4525dfa879ce339d25e27ba58f66a58d3",
+      "sites": {
+        "import": 22,
+        "type_ref": 249
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/Selector.java",
+      "sha256": "5452b5f12561dedcb8b7dccfdf861c4159e1e4292fef6a2d0cb4f1636f8a84b9",
+      "sites": {
+        "import": 8,
+        "type_ref": 80
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/StructuralEvaluator.java",
+      "sha256": "5e67d4df5224e8e19ecf8415d50ac19c1ae19889cb98823fa4ca9028e040bd16",
+      "sites": {
+        "import": 7,
+        "type_ref": 97
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java/org/jsoup/select/package-info.java",
+      "sha256": "5c5e118a884a2ac12e752d43f00fa6028aded19660721ef79414c557ca343ea7",
+      "sites": {
+        "import": 1,
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java11/module-info.java",
+      "sha256": "35e54a5eb753dfa48e603a4d3f1bfe7f3111debdab62c3c06077e4b64678269a",
+      "sites": {}
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java11/org/jsoup/helper/HttpClientExecutor.java",
+      "sha256": "c74ce30cbb8dd1531136fcdb7531d7bfd3b9eab2aff85f71be6d75bb945e33a5",
+      "sites": {
+        "import": 23,
+        "type_ref": 104
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/main/java11/org/jsoup/helper/RequestAuthHandler.java",
+      "sha256": "9121ad786b1a91d5b2914545e984781e13b63079c7372b249420b7d9fbe75c38",
+      "sites": {
+        "import": 2,
+        "type_ref": 17
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/JsoupTest.java",
+      "sha256": "8d8039b4b81d2356b7ca75f0b27e1e29a6af586854c00636dea485ed8abb7136",
+      "sites": {
+        "import": 7,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/MultiLocaleExtension.java",
+      "sha256": "fdb8addf79951bf0f918e028dd743a72bad28ffa900fbfa9332df9484b8e2d90",
+      "sites": {
+        "import": 10,
+        "import_star": 1,
+        "type_ref": 25
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/SerializationExceptionTest.java",
+      "sha256": "63fbf253602ec747c8e83b9db9b04cd764c6406f9ad8db3d1b29881ae80179b2",
+      "sites": {
+        "import": 1,
+        "import_star": 1,
+        "type_ref": 8
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/TextUtil.java",
+      "sha256": "48216be48aa35dae2459fc3f2ea487abda9e3a6924dae3c0b661a4fd6cc684d2",
+      "sites": {
+        "import": 1,
+        "type_ref": 16
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/AuthenticationHandlerTest.java",
+      "sha256": "ca1b1239aee0eb137febdb56d6b691c736363077afb5f943d83697774d9ca304",
+      "sites": {
+        "type_ref": 1
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/CookieUtilTest.java",
+      "sha256": "001d6251a2f997d49903c5e4829134752c4625155058931566240476a2f067db",
+      "sites": {
+        "import": 1,
+        "import_star": 1,
+        "type_ref": 9
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/DataUtilTest.java",
+      "sha256": "355ac412d5c93d409c2c2e72700e55673aec4f4d4a6cca68e43639b28c3ad00d",
+      "sites": {
+        "import": 14,
+        "import_star": 2,
+        "type_ref": 254
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/HttpConnectionTest.java",
+      "sha256": "62d806a0f78b538163554bd09e4cd9cdd58f5a5dbfcaf1addf600dd73a357355",
+      "sites": {
+        "import": 25,
+        "import_star": 1,
+        "type_ref": 276
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/RegexTest.java",
+      "sha256": "47bf33cc239cf508c71f92a1ace99dc329644d6369d5fc356c8d16406a2b4b7b",
+      "sites": {
+        "import": 10,
+        "import_star": 1,
+        "type_ref": 39
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/ValidateTest.java",
+      "sha256": "34dc5c7d4be83ab69a3c8d40ab65c2b33cd83a82a9801bfe3f913ea12feaf7f2",
+      "sites": {
+        "import": 2,
+        "import_star": 1,
+        "type_ref": 76
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/helper/W3CDomTest.java",
+      "sha256": "3def0f732425cf7a1808e2957363a41bdd55c85f56b54708874663911302d989",
+      "sites": {
+        "import": 35,
+        "import_star": 1,
+        "type_ref": 516
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/Benchmark.java",
+      "sha256": "e928f9cfbd7e67be3bb4dcee16a4023aa9971edf20f970190a95608e904473ce",
+      "sites": {
+        "import": 1,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/ConnectIT.java",
+      "sha256": "b30ca83354d9d3b3a499ccadbbb9bcfd8e3dd4af3c995099a6120ca9177b7837",
+      "sites": {
+        "import": 24,
+        "import_star": 1,
+        "type_ref": 174
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/ConnectTest.java",
+      "sha256": "9368249e4d895b15079432e7b2c070134c2537b8d0dd108a031b3c187f715673",
+      "sites": {
+        "import": 50,
+        "import_star": 2,
+        "type_ref": 660
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/FuzzFixesTest.java",
+      "sha256": "8949b1d0a3d84c39a613c7dfa490bf18886b4481bc5a648376b76b5f3e372356",
+      "sites": {
+        "import": 12,
+        "type_ref": 43
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/ParseTest.java",
+      "sha256": "82fd0a6474d3266c35ab617a7634c99c04028d49ffab8b8202b2e959181d3cc3",
+      "sites": {
+        "import": 16,
+        "import_star": 2,
+        "type_ref": 83
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/ParserSoakIT.java",
+      "sha256": "ecc4ea61abfa16851fbb20202d0ad18c8db5f8d4ab318ead670486c13e29c775",
+      "sites": {
+        "import": 12,
+        "type_ref": 28
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/ProxyTest.java",
+      "sha256": "e94048f8e873cec9531d54ac53e8bcba682a41a751c8b25c2db2a2564165d795",
+      "sites": {
+        "import": 14,
+        "import_star": 2,
+        "type_ref": 75
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/SafelistExtensionTest.java",
+      "sha256": "106f5dce7ec758648171f95cbbb4dc3c725fa3beaa16fce1f28322e0f00677c5",
+      "sites": {
+        "import": 7,
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/SessionIT.java",
+      "sha256": "27e65d484f528555ccc1e64937b604681485177b2d5bd030a7f8b3f062f60c6d",
+      "sites": {
+        "import": 11,
+        "import_star": 2,
+        "type_ref": 68
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/SessionTest.java",
+      "sha256": "833456a0589f63b4494721857259d48786b9fa64502cb587e897b4fd0869c5fe",
+      "sites": {
+        "import": 15,
+        "import_star": 1,
+        "type_ref": 72
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/TestAuth.java",
+      "sha256": "559df9440caf9eeeaa4c20a53067cc9ae58b6317dae09d9cac765ae993c2122a",
+      "sites": {
+        "import": 2,
+        "type_ref": 25
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/TestServer.java",
+      "sha256": "68882dcaedf82a1ecd853b3db1500fbb3be1036fe415900ae30725c86dfcddf8",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 44
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/TestTls.java",
+      "sha256": "465816c53fd753e9c6af6cb9d8dd63ab21e182232ce2bf4f5923a47822b420be",
+      "sites": {
+        "import": 12,
+        "type_ref": 30
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/NettyProxyServer.java",
+      "sha256": "96d63d19921fda86a38cc9ebfe9f94811f4f3bbc71440ba9062a5022a169ae72",
+      "sites": {
+        "import": 19,
+        "import_star": 2,
+        "type_ref": 239
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/NettySupport.java",
+      "sha256": "8d5888ec4c98e831b1b9d058d2275f44dfe0deabe1fbc1eb9cfa848ae901ef14",
+      "sites": {
+        "import": 2,
+        "type_ref": 4
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/NettyTestServer.java",
+      "sha256": "9e14fea16f8edc30fc465ba1ec542cd3777a2eb6b086945041433ea5a5e42129",
+      "sites": {
+        "import": 15,
+        "import_star": 2,
+        "type_ref": 122
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/RawResponseWriter.java",
+      "sha256": "c46490635bf9068f4f82d729da142d7b614832f9c76a655b45c1816df68cdced",
+      "sites": {
+        "import": 10,
+        "type_ref": 23
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/RouteHandler.java",
+      "sha256": "bf559fcbb4ca5c7962bb89146ac434e8be146348914fb4b662e427fe33308450",
+      "sites": {
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/TestPart.java",
+      "sha256": "3c236784a1444ec24e40dd32014764c51a3b8cf7add4d899a82785bfa818a00f",
+      "sites": {
+        "import": 1,
+        "type_ref": 15
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/TestRequest.java",
+      "sha256": "173363e0853021514fc3a628de7b0919ee53490fc8ac43c7d361fe14eba3213a",
+      "sites": {
+        "import": 11,
+        "import_star": 2,
+        "type_ref": 159
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/TestResponse.java",
+      "sha256": "e410363dbd62d869f0cad9ecaa88591f1a21148f8ec0990274290465341e2336",
+      "sites": {
+        "import": 17,
+        "import_star": 1,
+        "type_ref": 71
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/netty/TestResponseTest.java",
+      "sha256": "ce13af1c60842d85ca25846db7d8ec6fc1bfc2cdea86d7ef5651f409a6e0d757",
+      "sites": {
+        "import": 10,
+        "type_ref": 14
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/CookieRoute.java",
+      "sha256": "eb3e734d5f38d073f5c8a82efa20c5a5628e9259bcf9bd4285de76064885f280",
+      "sites": {
+        "import": 3,
+        "type_ref": 10
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/DeflateRoute.java",
+      "sha256": "8533234979ceaf7a21350cedee0752b31fbc4a2fdf8dfed0b549619d15b9c54f",
+      "sites": {
+        "import": 7,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/EchoRoute.java",
+      "sha256": "ffdfafa9a84320f52403829c9db803da76fb8bcfd0f2d8af914c651e094d13c7",
+      "sites": {
+        "import": 8,
+        "type_ref": 24
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/FileRoute.java",
+      "sha256": "569b0eb09c56a29732de4004aabdf1fd401683f1ea89ecd6ce00d2936e2058ea",
+      "sites": {
+        "import": 6,
+        "type_ref": 13
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/HelloRoute.java",
+      "sha256": "bce65b9b747e43909acdab848a0b7140be4ca74482442ebf861c0cb1a3e23d76",
+      "sites": {
+        "import": 2,
+        "type_ref": 3
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/InterruptedRoute.java",
+      "sha256": "bee299b1c0c8855df902b261f83195b30a065a449369bf317dd095b93ac3daf0",
+      "sites": {
+        "import": 4,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/LargeGzipRoute.java",
+      "sha256": "05c5b27873acae58badef679b06605cb65a9f9f98ad38017a878feed544591ab",
+      "sites": {
+        "import": 5,
+        "type_ref": 12
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/RedirectRoute.java",
+      "sha256": "0f488c27c6bf0b646f6b81f7e6dbf2f4b1d6e854b43dc94dad9074ecc88ff2b3",
+      "sites": {
+        "import": 3,
+        "type_ref": 11
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/integration/routes/SlowRider.java",
+      "sha256": "31e7a73d4d490ad0e07fd134f6ff510f68017a54307c7525960b2e48e0080624",
+      "sites": {
+        "import": 2,
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/ControllableInputStreamTest.java",
+      "sha256": "9b9ee374a8ad6b4e4daa3cb87ad0c4668c040cbf1ee453acafd2232144556055",
+      "sites": {
+        "import": 7,
+        "import_star": 1,
+        "type_ref": 68
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/NamespaceBindingsTest.java",
+      "sha256": "b23cb0e3d78202179f166e4c6c14a13dc076ce2dd278d24b64edad7757b9fd28",
+      "sites": {
+        "import": 7,
+        "type_ref": 12
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/NormalizerTest.java",
+      "sha256": "a9d1420a5576ad4b8f2b606eafab5184b9702c16e03d2fe24fe8dff6e3e964eb",
+      "sites": {
+        "import": 3,
+        "import_star": 1,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/QuietAppendableTest.java",
+      "sha256": "3057ce123b84949bce8b93c07c73487819ee97424068718c51dc3f053cc33add",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 41
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/ReaderTest.java",
+      "sha256": "abee2f1dc5fcf61ab1f3776fd9b30407c1ef3980600a27ddff65e526792140c2",
+      "sites": {
+        "import": 12,
+        "type_ref": 28
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/SoftPoolTest.java",
+      "sha256": "3e31efd3bc8e97e98ce323ed8d39e0a8a9da68fb56a4c9dff766ba7c5b53d033",
+      "sites": {
+        "import": 10,
+        "import_star": 1,
+        "type_ref": 36
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/internal/StringUtilTest.java",
+      "sha256": "fea37a1468e8ae80de62c7e263330134621edb44c6c85346884c9d17e9fad2eb",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 146
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/AttributeTest.java",
+      "sha256": "74e430e5475b9e81cfcdf74fcc5476501766de35948debc47cbc9565c07da852",
+      "sites": {
+        "import": 5,
+        "import_star": 1,
+        "type_ref": 62
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/AttributesTest.java",
+      "sha256": "a92b281635b30dadee55ab7f7bd0aa04977209bb3209e7084607afbd08d44391",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 150
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/BuildEntities.java",
+      "sha256": "8e151f0b2e8a134d82ab6b2ffbfdbf0668c5ee8b602f890529a0d0c5c25ba18f",
+      "sites": {
+        "import": 11,
+        "type_ref": 45
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/CommentTest.java",
+      "sha256": "a600f77eb400f5f2e3434a236ce8eec15ce7763933bd85ba873a525865ee36ce",
+      "sites": {
+        "import": 2,
+        "import_star": 1,
+        "type_ref": 29
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/DataNodeTest.java",
+      "sha256": "7abe7b2a3a52b58cf51783fbb5681dfdb2d773e2ba67b5f54fc1f9e64caa748a",
+      "sites": {
+        "import": 3,
+        "type_ref": 51
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/DocumentTest.java",
+      "sha256": "0817778bff4e706eb928c1291a1d6453d2da9db77a274b39aae946ac6e9c44f8",
+      "sites": {
+        "import": 14,
+        "import_star": 2,
+        "type_ref": 250
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/DocumentTypeTest.java",
+      "sha256": "89450c2fdc78cae04d7d0f3015b2996d74cc477131036edfc71fe38a94a36bb3",
+      "sites": {
+        "import": 5,
+        "type_ref": 40
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/ElementIT.java",
+      "sha256": "1eeb04bb235e3525eb545f93eea0dc17541423f38a6c0ee363b5442cc7100304",
+      "sites": {
+        "import": 7,
+        "import_star": 1,
+        "type_ref": 87
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/ElementTest.java",
+      "sha256": "f3d201c08a41ee429f5fe9fb72a12bbb6a620592d1276e66d876022fb5ef39bc",
+      "sites": {
+        "import": 35,
+        "import_star": 1,
+        "type_ref": 1631
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/EntitiesTest.java",
+      "sha256": "be0796266a13ffc97dd6af587ff18fa7820813e54106e10f66de09b19f02da46",
+      "sites": {
+        "import": 7,
+        "import_star": 1,
+        "type_ref": 151
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/FormElementTest.java",
+      "sha256": "c2ab583b114caf85d3be743cda05c17a93374f0ed0f4e0fa3148798f349ef7e5",
+      "sites": {
+        "import": 10,
+        "import_star": 1,
+        "type_ref": 112
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/LeafNodeTest.java",
+      "sha256": "44822d1a05f3c92110c8f80a27f0d47d80443f828105b7c93a78a48b12636d51",
+      "sites": {
+        "import": 4,
+        "import_star": 1,
+        "type_ref": 22
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/NodeIteratorTest.java",
+      "sha256": "149503af2e01faa6ea85c170da08435790458e603aaadb4bea15c93dc37e7681",
+      "sites": {
+        "import": 4,
+        "import_star": 1,
+        "type_ref": 150
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/NodeStreamTest.java",
+      "sha256": "c0e5678e89da2b0a58a104188a49af061ca19a5cc68682aaa63ced73e099a07b",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 35
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/NodeTest.java",
+      "sha256": "3b6d7ea516e915ec05adbe30b4297237608fed33eeebc28c2ed30b01f44b18ff",
+      "sites": {
+        "import": 8,
+        "import_star": 2,
+        "type_ref": 298
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/PrinterTest.java",
+      "sha256": "928cfecd990464e6e70426c197f5ce2a36f6fb1e977be40b3c335ddbcda4dbb7",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 43
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/ProcessingInstructionTest.java",
+      "sha256": "6ec03a0b61969c3dc67d98731a778a7ee17d4485d6e9104f8cc99dc896241098",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 90
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/nodes/TextNodeTest.java",
+      "sha256": "9cfc08240e71420991061295fea222d92c78b0423923aa8c352579f1e8e1fe28",
+      "sites": {
+        "import": 7,
+        "import_star": 1,
+        "type_ref": 106
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/AttributeParseTest.java",
+      "sha256": "adb428a688a377bfaba24e4155e028a0ff2816a1cf373e12838807fcf89b7a1f",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 74
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/CharacterReaderTest.java",
+      "sha256": "5572727403a641794bb69fedc2e141798dc5186e1a09095cd5995546491d0367",
+      "sites": {
+        "import": 7,
+        "import_star": 1,
+        "type_ref": 158
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/CharacterTokenTest.java",
+      "sha256": "729c08f2ccb1007d364aa5ad5a2cf65d7a765e6e687ca4dd90a57880b774008a",
+      "sites": {
+        "import": 3,
+        "import_star": 1,
+        "type_ref": 30
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/HtmlParserTest.java",
+      "sha256": "cf5981e4501d406e33e010584f351e1de166ed9a49089cf227c8034173efc845",
+      "sites": {
+        "import": 19,
+        "import_star": 2,
+        "type_ref": 1774
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/HtmlTextHandlingTest.java",
+      "sha256": "ffd7a47666c8a822d56083ce9c6516f22c6414950a5e9e586b2f52cfb72b36fa",
+      "sites": {
+        "import": 9,
+        "import_star": 1,
+        "type_ref": 116
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/HtmlTreeBuilderStateTest.java",
+      "sha256": "81d68df622423cd2d1f3911227886e96401cb45973f2b3eb7e9affa35bf2f53f",
+      "sites": {
+        "import": 11,
+        "import_star": 1,
+        "type_ref": 45
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/HtmlTreeBuilderTest.java",
+      "sha256": "d7bb5ef59792baa58e3455be6e28c90e81e0469ed33fec5746815c6aef505a2a",
+      "sites": {
+        "import": 12,
+        "import_star": 1,
+        "type_ref": 265
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/NameNormalizationTest.java",
+      "sha256": "bb07fcb09a43a595991b79d0ec46aabae04b2a27bb3c09101b5be8382d122429",
+      "sites": {
+        "import": 7,
+        "import_star": 1,
+        "type_ref": 82
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/ParserIT.java",
+      "sha256": "c9600b787033037369c7dc75037e0521ef9656a4b8279ce3d68e910717800a3d",
+      "sites": {
+        "import": 7,
+        "type_ref": 44
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/ParserSettingsTest.java",
+      "sha256": "9a4c0e9d0768f1eb0972218cd86a9fbf498f77778af9582f094984ceb213c6ff",
+      "sites": {
+        "import": 4,
+        "type_ref": 24
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/ParserTest.java",
+      "sha256": "6362027600d83606d916189e8fa5c4c29b26bc1e3736ee98d3a9541d06281ec5",
+      "sites": {
+        "import": 11,
+        "type_ref": 47
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/PositionTest.java",
+      "sha256": "a0b6e0952bef1441999d4d9f82bace559fc17e7244a0176cf0012d15cd630907",
+      "sites": {
+        "import": 21,
+        "import_star": 1,
+        "type_ref": 411
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/StreamParserTest.java",
+      "sha256": "83588e6ebafd1c3f390e7deefcd0c00e3b9d48366d41680778a2c2a12e512677",
+      "sites": {
+        "import": 27,
+        "import_star": 1,
+        "type_ref": 461
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/TagSetTest.java",
+      "sha256": "38829cb5f6e080f3d7dcee82947a827182f05727fb54adb29a5313ef5b30a3db",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 115
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/TagTest.java",
+      "sha256": "c9eb06ac8011a92c4ed556a7fa82e6a66463d6be233e6fe8fad819bf66055026",
+      "sites": {
+        "import": 10,
+        "import_star": 1,
+        "type_ref": 168
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/TokenQueueTest.java",
+      "sha256": "f60f4542ee3df7e666e92a7ccc8ad3532646eac42160019fffc2d441f0509a5b",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 206
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/TokeniserStateTest.java",
+      "sha256": "f200bbfc2371095a5a380732a8cab4112da17550a708f589ed0312dd3739540a",
+      "sites": {
+        "import": 16,
+        "type_ref": 192
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/TokeniserTest.java",
+      "sha256": "7a46081cda1ef38bea650c8960a487fc36d00ea79b34af068eb6b90b800f5b05",
+      "sites": {
+        "import": 6,
+        "import_star": 2,
+        "type_ref": 118
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/parser/XmlTreeBuilderTest.java",
+      "sha256": "77e737f8c2c1e141db1e9957495bd5a633eb41b8719c9b47de5d965b3c0e8e59",
+      "sites": {
+        "import": 14,
+        "import_star": 2,
+        "type_ref": 454
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/safety/CleanerTest.java",
+      "sha256": "8f4e9abb7574ab5552634f21f025e2c33c3df95d4622f3f05324c32734425bfc",
+      "sites": {
+        "import": 19,
+        "import_star": 1,
+        "type_ref": 498
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/safety/SafelistTest.java",
+      "sha256": "af3b581643e773f14bc71c83abfbff499adf706c3d9f89e919a997c244329c4f",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 60
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/CssTest.java",
+      "sha256": "89fa0627ec7586eb2489524544566da9e9dd6877a6d2490e14f2fa0791ca14f1",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 51
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/ElementsTest.java",
+      "sha256": "31900b1bd82389ef2ad069c3b85a79145106cdc7e52fd9a6d1d63db001e4eb08",
+      "sites": {
+        "import": 13,
+        "import_star": 1,
+        "type_ref": 301
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/EvaluatorDebug.java",
+      "sha256": "47b2134864d61e190bbede6367f4e01dc1116d48dd5328677ddb23da427afbd0",
+      "sites": {
+        "import": 4,
+        "type_ref": 45
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/EvaluatorTest.java",
+      "sha256": "14dfea68899faf43dd5b70e46a3a2d0ec354668bc4d4e04f6dce2800175cab3c",
+      "sites": {
+        "import": 7,
+        "type_ref": 165
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/NodesTest.java",
+      "sha256": "32b1b37bac32edc95e2a64d78fff3ab2185472d0fa0e2c25c55fb3da6c8777ea",
+      "sites": {
+        "import": 5,
+        "type_ref": 18
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/QueryParserTest.java",
+      "sha256": "96ed98f44e16d6f117ee4c8e39e8eaa6fd721cbd5632175591e4e1b67cf9d1d8",
+      "sites": {
+        "import": 6,
+        "import_star": 1,
+        "type_ref": 119
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/SelectorIT.java",
+      "sha256": "ae40b2d53e97593ea8a312d8d006642b737711409d7671ac89f6299da53ad70a",
+      "sites": {
+        "import": 8,
+        "type_ref": 19
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/SelectorTest.java",
+      "sha256": "0560f38b89cb82e8f7e12386d468b43bd069874941be5fa85ad3227363e18d66",
+      "sites": {
+        "import": 19,
+        "import_star": 1,
+        "type_ref": 921
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/StructuralEvaluatorTest.java",
+      "sha256": "928faa52a8dcece4ee85285a675474a84b07f58a1910b7a656558029c8cd3cac",
+      "sites": {
+        "import": 8,
+        "import_star": 1,
+        "type_ref": 43
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/TraversorTest.java",
+      "sha256": "1ea8831c2735020325e69ae84ab8d024301206d88b287186cbd4680d1697df9b",
+      "sites": {
+        "import": 14,
+        "import_star": 1,
+        "type_ref": 365
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java/org/jsoup/select/XpathTest.java",
+      "sha256": "c58f890bf35d696868cefd5ba830097a34224879fb6d56672a6ff619fbe38799",
+      "sites": {
+        "import": 18,
+        "import_star": 1,
+        "type_ref": 120
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/helper/HttpClientExecutorTest.java",
+      "sha256": "406bd58dde708e24ce36c3e29452e84a6b3de98292bd8fbfa1b427b29254e68e",
+      "sites": {
+        "import": 27,
+        "import_star": 1,
+        "type_ref": 204
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/helper/HttpClientTestAccess.java",
+      "sha256": "a297f97dd9e49afb4c4fe7c6c5665a0ae86c8b17d1881142c8d6ac9086ba80c5",
+      "sites": {
+        "import": 7,
+        "type_ref": 41
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/integration/HttpClientConnectIT.java",
+      "sha256": "cd4bf8cdff53bf1a2be57e9ee4d4106fbd4f54b8eda2c06d6519578635f8b007",
+      "sites": {
+        "import": 18,
+        "type_ref": 31
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/integration/HttpClientConnectTest.java",
+      "sha256": "ca86413f98949cc190418dc14e668f1868929744f07751f82359aa35d079bfbd",
+      "sites": {
+        "import": 3,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/integration/HttpClientSessionIT.java",
+      "sha256": "cb9fb7ed86ee47bbd20709465212309643a4d22a8f0162d022d2824c127ebe64",
+      "sites": {
+        "import": 3,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/integration/HttpClientSessionTest.java",
+      "sha256": "d56790e0fd834b87287cddbb28c9612c97d1c20cf00a27431380f0c8d7701ef4",
+      "sites": {
+        "import": 3,
+        "type_ref": 5
+      }
+    },
+    {
+      "lang": "java",
+      "path": "src/test/java11/org/jsoup/integration/MultiReleaseJarIT.java",
+      "sha256": "2b17a8206ed4bcded241204c7a46513f2a225eb0c974c3d179f195deb7a4e9bb",
+      "sites": {
+        "import": 10,
+        "type_ref": 14
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "bac61699134056622fe48e4cc86877e9fdba3f58",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "java"
+    ]
+  },
+  "summary": {
+    "files": 204,
+    "sites_by": {
+      "java/import": 1887,
+      "java/import_star": 80,
+      "java/type_ref": 22243
+    },
+    "total_sites": 24210
+  }
+}

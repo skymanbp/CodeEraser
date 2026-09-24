@@ -19,17 +19,19 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:102-158](../../../cli/src/graph/spec.rs#L102)), so the site universe (the precision denominator)
+([spec.rs:129-189](../../../cli/src/graph/spec.rs#L129)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:156](../../../cli/src/graph/spec.rs#L156)). The eleven frozen site
-kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star`
-([store.rs:140-155](../../../cli/src/graph/store.rs#L140)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:105](../../../cli/src/graph/store.rs#L105), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS
+grammar and scans line-wise ([spec.rs:184](../../../cli/src/graph/spec.rs#L184)). The fourteen frozen site
+kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
+include, import_star, type_ref` ([store.rs:146-161](../../../cli/src/graph/store.rs#L146)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:108](../../../cli/src/graph/store.rs#L108), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
 an `import` site off its require clause ([spec.rs:42](../../../cli/src/graph/spec.rs#L42),
-[spec.rs:82](../../../cli/src/graph/spec.rs#L82)); the rev paid for the stored-fact and ladder changes.
+[spec.rs:91](../../../cli/src/graph/spec.rs#L91)); the rev paid for the stored-fact and ladder changes.
+Rev 16 (plan v2.30, one release for all of it) added C / C++'s `include` and Java's `import_star` and
+`type_ref`; a Java single-type import keeps the `import` label.
 
 ### 2. The resolution ladder
 

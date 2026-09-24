@@ -9,12 +9,12 @@
 //!   - the PATH: `Test` by path component, package-root-qualified
 //!     directory, equal basename or pattern (`*` non-empty); `Ambient`
 //!     by the `.d.ts` family;
-//!   - the NAME × language: `Main` (Python/Haskell/C/C++ `main`),
+//!   - the NAME × language: `Main` (Python/Haskell/C/C++/Java `main`),
 //!     `Protocol` (the framework names a loader spells for the author —
 //!     Python unittest/xunit/pluggy/Django/reflection prefixes, TS
 //!     filename × export-name conventions, Haskell autogen modules and
 //!     hspec, the C-family entries a linker, a JVM or a language
-//!     runtime looks up by name);
+//!     runtime looks up by name, the Java methods the platform calls);
 //!   - the KEY: a Go method's receiver decides `MemberDispatch` (an
 //!     unexported receiver — only an interface or embedding reaches
 //!     it) or `MemberApi` (an exported one);
@@ -30,16 +30,26 @@ use std::path::{Path, PathBuf};
 /// Path components that make a file a test file wherever they sit.
 const TEST_DIRS: [&str; 5] = ["test", "tests", "spec", "__tests__", "testdata"];
 /// Basename suffixes behind a non-empty stem (`starred`): the Go and
-/// Python `_test` files, hspec's `Spec.hs`, the C-family `_test`
-/// convention (plan v2.30 step 2).
-const TEST_SUFFIXES: [&str; 6] = [
-    "_test.go",
-    "_test.py",
-    "Spec.hs",
-    "_test.c",
-    "_test.cc",
-    "_test.cpp",
-];
+/// Python `_test` files, hspec's `Spec.hs`.
+const TEST_SUFFIXES: [&str; 3] = ["_test.go", "_test.py", "Spec.hs"];
+
+/// The basenames a language's own test runner discovers, as `prefix *
+/// suffix` with the `*` non-empty (`starred`): the C-family `_test`
+/// convention (googletest's, Unity's) and Maven Surefire's default
+/// includes (`Test*.java`, `*Test.java`, `*Tests.java`,
+/// `*TestCase.java`; a bare `Test.java` earns nothing here, this
+/// file's non-empty star). The one table both test readers share — the
+/// dead-code role (graph/deadcode/flags.rs) and this category's path
+/// half: the two lists judge different things elsewhere, and agree on
+/// these by construction (plan v2.30, booklet §8).
+const RUNNER_TESTS: &str = "\
+* _test.c
+* _test.cc
+* _test.cpp
+Test * .java
+* Test.java
+* Tests.java
+* TestCase.java";
 
 /// Python names a loader spells: unittest's discovered hooks, pytest's
 /// xunit-style hooks, Django's loader targets. Prefixes follow.
@@ -74,6 +84,16 @@ const TS_PAGES: &str =
     "getStaticProps getServerSideProps getStaticPaths GET POST PUT PATCH DELETE HEAD OPTIONS ALL";
 const TS_ROUTES: &str = "loader action meta links headers ErrorBoundary HydrateFallback \
                          shouldRevalidate clientLoader clientAction";
+
+/// Java methods the platform or a container calls for the author (plan
+/// v2.30 step 3, booklet §9): the Object and Comparable contracts, the
+/// functional interfaces, iteration, serialization's reflected hooks,
+/// cloning and finalization, the enum's synthesized pair, and the
+/// servlet lifecycle. `main` is `Main`.
+const JAVA_NAMES: &str = "toString equals hashCode compareTo compare run call get accept apply test \
+                          close iterator hasNext next readObject writeObject readResolve \
+                          writeReplace finalize clone valueOf values doGet doPost doPut doDelete \
+                          init destroy service";
 
 /// C / C++ names a loader, the linker or a language runtime spells for
 /// the author (plan v2.30 step 2): the Windows DLL and program entries,
@@ -149,10 +169,19 @@ impl PathWords {
         matches!(*base, "conftest.py" | "Spec.hs")
             || (*base == "build.rs" && self.is_pkg_root(&dirs.join("/")))
             || TEST_SUFFIXES.iter().any(|s| starred(base, "", s))
+            || runner_test(base)
             || starred(base, "test_", ".py")
             || infixed(base, ".test.")
             || infixed(base, ".spec.")
     }
+}
+
+/// A basename the language's own test runner discovers (RUNNER_TESTS).
+pub(crate) fn runner_test(base: &str) -> bool {
+    RUNNER_TESTS.lines().any(|row| {
+        let (prefix, suffix) = row.split_once('*').expect("a `prefix * suffix` row");
+        starred(base, prefix.trim(), suffix.trim())
+    })
 }
 
 /// `<prefix>*<suffix>` with `*` non-empty.
@@ -172,7 +201,11 @@ fn infixed(base: &str, mid: &str) -> bool {
 /// the Go receiver pair. `name` is `mention_name` of `key`.
 pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {
     let mut word = 0;
-    if matches!(lang, Lang::Python | Lang::Haskell | Lang::C | Lang::Cpp) && name == "main" {
+    if matches!(
+        lang,
+        Lang::Python | Lang::Haskell | Lang::C | Lang::Cpp | Lang::Java
+    ) && name == "main"
+    {
         word |= Conv::Main.bit();
     }
     if protocol(lang, rel, name) {
@@ -207,6 +240,7 @@ fn protocol(lang: Lang, rel: &str, name: &str) -> bool {
         Lang::C | Lang::Cpp => {
             listed(C_NAMES, name) || C_PREFIXES.iter().any(|p| starred(name, p, ""))
         }
+        Lang::Java => listed(JAVA_NAMES, name),
         _ => false,
     }
 }

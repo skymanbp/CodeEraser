@@ -12,7 +12,10 @@
 //! silence an advisory row: the safe direction of the veto.
 //!
 //! Positions are frozen. Adding, removing or re-reading an AST-half
-//! producer is a GRAPH_REV bump; the name-table half moves freely.
+//! producer is a GRAPH_REV bump wherever an index may hold a row the
+//! producer measured; a language entering the graph brings its producer
+//! with it and has no such row (graph/store.rs, GRAPH_REV 16). The
+//! name-table half moves freely.
 
 mod c;
 pub mod name;
@@ -22,7 +25,7 @@ mod rs;
 #[path = "../../../tests/unit/mention/conv/tests.rs"]
 mod tests;
 
-use crate::fourclass::visibility::ancestors;
+use crate::fourclass::visibility::{ancestors, java_modifiers};
 use crate::scan::ast;
 use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
@@ -34,7 +37,7 @@ use tree_sitter::Node;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(i64)]
 pub enum Conv {
-    /// Python/Haskell `main` (name half).
+    /// Python/Haskell/C/C++/Java `main` (name half).
     Main = 0,
     /// A test file by path (name half), or a Rust `cfg` predicate
     /// holding the atom `test` (AST half, rs.rs).
@@ -44,7 +47,7 @@ pub enum Conv {
     /// a C / C++ `extern "C"` or linker-facing attribute (AST half).
     Ffi = 2,
     /// Registered by a decorator: Python's registrar table, any TS
-    /// decorator (AST half).
+    /// decorator, any Java annotation (AST half).
     Registration = 3,
     /// A framework protocol name (name half).
     Protocol = 4,
@@ -101,6 +104,7 @@ pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i6
         Lang::Go => go_bits(node, src),
         Lang::Haskell => hs_bits(node, src, &facts.foreign_exports),
         Lang::C | Lang::Cpp => c::bits(node, src),
+        Lang::Java => java_bits(node),
         _ => 0,
     }
 }
@@ -225,4 +229,24 @@ fn ts_bits(node: Node<'_>) -> i64 {
 /// Anonymous leaves (`default`) and named ones (`decorator`) alike.
 fn has_child(node: Node<'_>, kind: &str) -> bool {
     ast::children(node).iter().any(|c| c.kind() == kind)
+}
+
+// ---- Java (AST half) ----
+
+// Java: `Registration` — an annotation among the declaration's
+// modifiers (plan v2.30 step 3; booklet §9; the grammar puts both
+// `@Marker` and `@Named(args)` there, probed). A framework reaches an
+// annotated class or method by reflection (`@Test`, `@Bean`,
+// `@GetMapping`), the TS decorator's reading; `@Override` counts too —
+// that method is reached by dispatch, and silencing its row is the
+// safe direction of the veto.
+fn java_bits(node: Node<'_>) -> i64 {
+    let annotated = java_modifiers(node)
+        .iter()
+        .any(|m| matches!(m.kind(), "annotation" | "marker_annotation"));
+    if annotated {
+        Conv::Registration.bit()
+    } else {
+        0
+    }
 }

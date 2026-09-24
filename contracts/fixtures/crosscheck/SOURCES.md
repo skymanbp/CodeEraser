@@ -13,11 +13,20 @@
 | rust | BurntSushi/ripgrep | 3fce3b5bb0236da2df6d99672afb8a719642eca7 | MIT OR Unlicense |
 | c | lua/lua | 0b29f408433e92953cc72b1d3e06c7ac8139e439 | MIT（lua.h 末尾许可段） |
 | cpp | fmtlib/fmt | 6d71f74624be5daa548073ff8e4e0c8aa5476010 | MIT |
+| java | google/gson | 854c8255b625cf1e13c701a83ea9ccb4caaa576a | Apache-2.0 |
 
 c / cpp 两行是 2026-09-24（计划 v2.30 步 2）按同一规则加入的：lua 取 `*.c`，
 fmt 取 `*.h`（`.h` 按 2026-09-24 拍板归 C++，同规则下 fmt 的 `*.cc` 只有四个
 源文件，头文件才是它的代码所在）。fmt 抽中的 `include/fmt/base.h` 是一个
 8 行的兼容头（只含一句 `#include "core.h"`），与 zod 的 locale 文件同理保留。
+
+java 行是 2026-09-24（计划 v2.30 步 3）按同一规则加入的：gson 取 `*.java`，264 个
+排除测试路径后余 103 个，抽中五个——两个接口（`JsonDeserializationContext`、
+`JsonPostDeserializer`，只有无体方法、零函数单位，与 zod 的 locale 文件同理保留）、
+`BagOfPrimitives`、`SqlTypesSupport` 与 694 行的 `ReflectiveTypeAdapterFactory`。
+gson 在同一 tip 上也是 Java 精度考题的第一个语料（`contracts/eval/lang-slice-gson-v1.json`），
+`cli/tests/it/eval_lang.rs` 的 `crosscheck_fixtures_track_the_frozen_universe`
+逐个按冻结行复核这五个文件。
 
 ## 抽样规则（确定性，复现命令见下）
 
@@ -39,8 +48,11 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 
 ## 对照工具版本（本机安装记录）
 
-- lizard 1.23.0（CC：python/typescript/rust 兜底；C/C++ 的唯一对照物——
+- lizard 1.23.0（CC：python/typescript/rust 兜底，C/C++ 与 java 的对照物——
   C/C++ 没有认知复杂度对照物，CoC 只对白皮书电池 `cli/tests/it/coc_c.rs`）
+- PMD 7.27.0（CoC：java，`category/java/design.xml/CognitiveComplexity` 设
+  `reportLevel` 为 1，报出每个非零方法；跑在 Temurin JDK 25.0.4.1 上；规则集与
+  复现命令在 DIVERGENCES.md 的 Java 节。它的 CYCLO 是另一种口径，不作 CC 对照）
 - gocyclo v0.6.0（CC：go；complexity.go 明示 "ignore default case"——
   ce 同步不计 default_case）
 - gocognit（CoC：go，唯一外部 CoC 对照）

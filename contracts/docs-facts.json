@@ -79,7 +79,7 @@
       "id": "count:grammars#word",
       "source": "cli/src/scan/lang.rs::GRAMMARS (rows)",
       "tier": "scraped",
-      "value": "8"
+      "value": "9"
     },
     {
       "id": "count:hooks#word",
@@ -103,7 +103,7 @@
       "id": "count:langs#word",
       "source": "cli/src/scan/lang.rs::Lang::judged_mask (set bits)",
       "tier": "linked",
-      "value": "9"
+      "value": "10"
     },
     {
       "debt": "mcp::tools is a private module; promote = a pub names() face",
@@ -408,7 +408,7 @@
       "id": "ver:mention_rev#digits",
       "source": "cli/src/mention/mod.rs::MENTION_REV",
       "tier": "linked",
-      "value": "2"
+      "value": "3"
     },
     {
       "id": "ver:pin#v",

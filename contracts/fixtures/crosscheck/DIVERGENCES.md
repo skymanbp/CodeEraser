@@ -16,6 +16,8 @@
 | CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见末节） |
 | C CC | lizard 1.23.0 | 118 | **116/118** | 2 条归因保留（`default:`，D2；2026-09-24 计划 v2.30 步 2，详见 C / C++ 节） |
 | C++ CC | lizard 1.23.0 | 420 join（lizard 430 起始行 / ce 428 单位） | 394/420 | 26 条 + 两侧独有 18 条全归因：D1 20、D2 3、局部类 1 + 4、解析器恢复 1 + 14、lizard 三类缺陷 1 + 1 + 10 重复行（详见 C / C++ 节） |
+| Java CC | lizard 1.23.0 | 33 join（按结束行；lizard 34 行 / ce 38 单位） | **33/33** | 零数值分歧；ce 独有 5 条 = 带类型实参的匿名类方法，lizard 并进宿主或整段不报（D29，详见 Java 节） |
+| Java CoC | PMD 7.27.0 | 38 join（PMD 46 方法，8 个无体） | 36/38 | 匿名类方法并进宿主（D29，归因保留）1；`if` 条件里的三元 1（用户裁条件不算嵌套，下一提交落码） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -247,6 +249,69 @@ lizard 同一起始行重复报出 10 行：:1559 / :2173 / :2296 / :2395 / :272
 struct 折叠 1、`FMT_CATCH` 1、`basic_string_view<Char>` 1）。四份既有语料同树重扫
 单位数不变（go 52 / python 118 / rust 322 / typescript 25）：新规则只对带 `declarator`
 字段的结点生效，`opaque_fields` 只有 C 表非空。
+
+**步 3 补记（重载按实参个数择一，2026-09-24）**：C++ 与 Java 里同名、形参不同的函数是不同
+的函数，调用按实参个数落到恰好一个能接纳它的重载（`scan/callees.rs` 的 `pick`；两个都接纳
+即不连边）。此前同一作用域里的同名函数被读成一个可调用体，于是「调同名、参数个数不同的另
+一个重载」被记成递归、CoC 多 1。fmt 五头文件同树重扫 CC 不动，CoC 四个单位各 −1，四个都是
+委托给另一个重载：`styled_arg::vformat_to`（color.h:478，四参调三参）5 → 4、`append`
+（format.h:1054，`append(range)` 调 `append(begin, end)`）1 → 0、`to_utf8::convert`（:1552，
+调三参的静态重载）2 → 1、`size_padding::nested_format_specs::parse`（:4080，四参调三参）
+3 → 2。
+
+## Java 对拍（2026-09-24，计划 v2.30 步 3；fixtures 见 SOURCES.md 的 java 行）
+
+CC 对照物 lizard 1.23.0；CoC 对照物 PMD 7.27.0 的 `CognitiveComplexity` 规则——Java 是第一个
+有可跑的独立 CoC 实现的新语言（SonarSource 自家的 sonar-java 读同一份白皮书，但只在 SonarQube
+里跑；它的访问器源码按需第一方核对，见下）。复现：
+
+```
+python -m lizard -l java contracts/fixtures/crosscheck/java/*.java
+pmd check -d contracts/fixtures/crosscheck/java -R ruleset.xml -f csv
+ce scan contracts/fixtures/crosscheck --format json        # 按结束行 join
+```
+
+`ruleset.xml` 只有两条规则：`category/java/design.xml/CognitiveComplexity`（`reportLevel` = 1，
+报出每个非零方法）与 `category/java/design.xml/CyclomaticComplexity`（`methodReportLevel` = 1——
+它列出 PMD 读到的每个方法，于是「有 CYCLO 行、无 CoC 行」就是 CoC 0）。
+
+**join 键 = 文件 + 结束行。** tree-sitter-java 的方法结点从它的 `modifiers` 起，注解是方法声明的
+一部分（JLS 8.4.3，MethodModifier 含 Annotation），所以 ce 的起始行落在第一个注解上；lizard 与
+PMD 从名字所在的行起。五个文件里 16 个带注解的方法起始行差一行，结束行两侧处处相同（D30）。
+
+**CC（lizard）**：lizard 34 行 = 33 个结束行（`getBoundFields` :341 被报两行、数值相同——多行
+签名带泛型形参，C++ 节同款），ce 38 单位；join 33，**33/33 数值一致**，形参个数也全等。ce 独有
+5 条，全是匿名类的方法（D29）：
+
+- `ReflectiveTypeAdapterFactory.create`（:110）里 `return new TypeAdapter<T>() { … }` 的
+  `read`、`write`、`toString`（:124 / :130 / :135）；
+- `SqlTypesSupport` 静态初始化块里 `new DateType<java.sql.Date>(…) { … }` 与
+  `new DateType<Timestamp>(…) { … }` 各一个 `deserialize`（:65 / :72）。
+
+lizard 的 Java reader 遇到带类型实参的匿名类即把类体并进宿主（宿主是静态初始化块时整段不报）；
+不带类型实参的匿名类它自己也单独报成 `(anonymous)::m`——同一文件 :237 / :276 / :290 那三个即
+如此，两侧一致。最小样本：`Object f() { return new Box<T>() { public String toString() { if (a)
+return "a"; return "b"; } }; }` lizard 只报 `f` CCN 2；删掉 `<T>` 则报 `(anonymous)::toString`
+2 与 `f` 1。无体方法（两个接口方法、六个 `abstract`）两侧都不成单位（D24 同一立场）。
+
+**CoC（PMD）**：PMD 46 个方法里 8 个无体（只有 CYCLO 1 那一行），其余与 ce 的 38 单位逐一 join
+（同名，且 PMD 报的行落在 ce 单位的起止行之间），**36/38 一致**。两条差：
+
+- `createBoundField`（:181）PMD 39 / ce 7：方法体里 `new BoundField(…) { … }` 的三个方法
+  （`write` 12、`readIntoArray` 2、`readIntoField` 8，两侧对它们本身的读数相同）被 PMD 再整个
+  并进宿主、每个结构多一层嵌套。sonar-java（SonarSource/sonar-java@98c1e25 的
+  `CognitiveComplexityVisitor`）也并进宿主（`visitClass` 抬嵌套），但不再单独给这些方法记分
+  （`shouldAnalyzeMethod` 跳过匿名类与局部类的成员）；PMD 两处都记。ce 的单位拆分模型下它们是
+  独立单位、宿主不含——与 Python 装饰器（白皮书 p.15，上文「立场钉死」）同源，归因保留（D29）。
+- `checkAccessible`（:168）PMD 2 / ce 3：`if (!canAccess(member, isStatic(…) ? null : object))`
+  ——三元在 `if` 的条件里。PMD 与 sonar-java（`visitIfStatement` 在 `nesting++` 之前扫条件）都
+  不给条件加嵌套，ce 给（三元 +2）。白皮书没写条件算不算在结构里面（p.9 与 Appendix B2 只列抬
+  嵌套的结构）；2026-09-24 用户裁「条件都不算」——所有语言统一只让语句体抬嵌套，随下一个提交
+  落码，届时此行改为 37/38。
+
+PMD 的 CYCLO 不作 CC 对照：它是另一种口径——`throw` 计 +1（`createDuplicateFieldException`
+PMD 2、lizard 与 ce 1），控制流条件之外的 `&&` / `||` 不计（`BagOfPrimitives.equals` 末尾那句带
+三个 `&&` 的 `return`：PMD 3、lizard 与 ce 6）。
 
 ## 工具注记
 

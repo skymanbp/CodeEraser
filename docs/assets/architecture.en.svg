@@ -278,15 +278,15 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="100" y="326" class="t-muted" font-size="9" text-anchor="middle">source · docs · git</text>
         </g>
 
-        <g id="node-scan" data-node-id="scan" data-node-label="Parse &amp; size" tabindex="0" role="button" aria-label="Focus Parse &amp; size, tree-sitter · eight grammars, cli/ — Rust · measurement" aria-pressed="false" data-node-kind="backend" data-node-sublabel="tree-sitter · eight grammars" data-node-context="cli/ — Rust · measurement">
-          <title>Parse &amp; size · tree-sitter · eight grammars · cli/ — Rust · measurement</title>
+        <g id="node-scan" data-node-id="scan" data-node-label="Parse &amp; size" tabindex="0" role="button" aria-label="Focus Parse &amp; size, tree-sitter · nine grammars, cli/ — Rust · measurement" aria-pressed="false" data-node-kind="backend" data-node-sublabel="tree-sitter · nine grammars" data-node-context="cli/ — Rust · measurement">
+          <title>Parse &amp; size · tree-sitter · nine grammars · cli/ — Rust · measurement</title>
           <rect x="230" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="230" y="280" width="150" height="64" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(236 286) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="305" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Parse &amp; size</text>
-        <text x="305" y="326" class="t-muted" font-size="8.4" text-anchor="middle">tree-sitter · eight grammars</text>
+        <text x="305" y="326" class="t-muted" font-size="8.7" text-anchor="middle">tree-sitter · nine grammars</text>
         </g>
 
         <g id="node-daemon" data-node-id="daemon" data-node-label="Warm daemon" tabindex="0" role="button" aria-label="Focus Warm daemon, lazy · per project, cli/ — Rust · measurement" aria-pressed="false" data-node-kind="backend" data-node-sublabel="lazy · per project" data-node-context="cli/ — Rust · measurement">

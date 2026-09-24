@@ -19,7 +19,8 @@
 //! reads the judged set off the wire (`judgedMask`, proto 7.2.0)
 //! instead of a constant, so a row flipping here needs no core change.
 //! Step 2 turned C and C++ (spec_c.rs; `.h` is C++ by the 2026-09-24
-//! ruling — a header parsed as C loses every class body).
+//! ruling — a header parsed as C loses every class body); step 3 turned
+//! Java (spec_java.rs).
 
 use std::path::Path;
 use tree_sitter_language::LanguageFn;
@@ -93,7 +94,7 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
         false,
     ),
     (Lang::Lua, &[], "lua", true),
-    (Lang::Java, &[], "java", true),
+    (Lang::Java, &["java"], "java", false),
     (Lang::Ruby, &[], "ruby", true),
     (Lang::R, &[], "r", true),
 ];
@@ -105,7 +106,7 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
 /// eighth arm on (tests/it/grammar_pins.rs stores its pins the same
 /// way, for the same reason). The plan v2.30 reserved codes join as
 /// their steps land.
-const GRAMMARS: [(Lang, LanguageFn); 8] = [
+const GRAMMARS: [(Lang, LanguageFn); 9] = [
     (Lang::Python, tree_sitter_python::LANGUAGE),
     (
         Lang::TypeScript,
@@ -117,6 +118,7 @@ const GRAMMARS: [(Lang, LanguageFn); 8] = [
     (Lang::Haskell, tree_sitter_haskell::LANGUAGE),
     (Lang::C, tree_sitter_c::LANGUAGE),
     (Lang::Cpp, tree_sitter_cpp::LANGUAGE),
+    (Lang::Java, tree_sitter_java::LANGUAGE),
 ];
 
 impl Lang {
@@ -198,11 +200,13 @@ impl Lang {
 /// the boundary predicate above because it is an extension table of
 /// the same kind): files of these extensions keep a `$`-carrying run
 /// WHOLE — `$ZodString` and `ZodString` are distinct identifiers in
-/// the JS family, and emitting the `$`-free piece would let each hide
-/// the other's death. Every other extension, and no extension, takes
-/// the union arm (shell `$name`, Haskell `f$g`). A `MENTION_REV` input.
-pub const MENTION_WHOLE_RUN_EXTS: [&str; 10] = [
-    "ts", "tsx", "mts", "cts", "js", "mjs", "cjs", "jsx", "vue", "svelte",
+/// the JS family, and so are `Outer$Inner` and `Inner` in Java, whose
+/// identifiers take `$` too; emitting the `$`-free piece would let each
+/// hide the other's death. Every other extension, and no extension,
+/// takes the union arm (shell `$name`, Haskell `f$g`). A `MENTION_REV`
+/// input.
+pub const MENTION_WHOLE_RUN_EXTS: [&str; 11] = [
+    "ts", "tsx", "mts", "cts", "js", "mjs", "cjs", "jsx", "vue", "svelte", "java",
 ];
 
 #[cfg(test)]

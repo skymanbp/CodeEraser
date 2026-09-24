@@ -49,30 +49,53 @@
 //! the member road matches `this->m()`, `K::m()` and, inside a member
 //! of `K`, a bare `m()` against (owner, base) — undercount still: a
 //! qualifier naming any other class, a call off another object, or a
-//! virtual override in some other file all mint nothing.
+//! virtual override in some other file all mint nothing. Once the
+//! class declares the name, the enclosing scopes are never consulted —
+//! class scope hides them, even where the class's own seats cannot
+//! tell which one the call reaches.
+//!
+//! Overloads (C++, Java — LangSpec::overloads) split one name into
+//! several callables, and a call reaches the one whose argument range
+//! admits its count (callees::Named::pick). Reading them as one
+//! callable — the step-2 C++ reading — charged a delegating overload
+//! (`f(double d) { f((int)d); }`) a recursion point it does not have.
+//!
+//! Java (plan v2.30 step 3) hangs the receiver off the call itself
+//! (LangSpec::call_fields), and its member road keys by the one class
+//! BODY a member sits in (callees::Owner): a local class may share its
+//! name with another, and an anonymous class has none, yet each body is
+//! one class, so `this.m()` and a bare `m()` inside either reach the
+//! class's own `m`. `super.m()` is never the caller's own `m` — an
+//! override calling its super is Java's commonest delegation, not a
+//! recursion.
 
 use super::ast;
-use super::callees::{Named, container_of};
+use super::callees::{Named, Owner, container_of, owner_key};
 use super::functions::{self, FnUnit};
 use super::metrics::own_nodes;
 use super::spec::LangSpec;
 use std::collections::HashSet;
 use tree_sitter::Node;
 
-/// The callee's field name — one spelling across all seven grammars
-/// (probed against the pinned versions, not recalled).
-const CALLEE: &str = "function";
-
 /// What a caller brings to a resolution: the container its own
 /// declaration sits in, the receiver name standing for its own type,
-/// the names its own imports bind, and (C family) the class it is a
-/// member of. One record rather than more parameters — the fn-params
+/// the names its own imports bind, and (C++, Java) the owner its
+/// member road keys by and the class name a qualifier must spell to
+/// name it. One record rather than more parameters — the fn-params
 /// line this repo sets is five.
 struct Caller<'a> {
     container: usize,
     receiver: Option<&'a str>,
     shadowed: HashSet<&'a str>,
-    owner: Option<String>,
+    owner: Option<Owner>,
+    class: Option<String>,
+}
+
+/// What a call spells: a bare name, or an object and the member
+/// selected off it.
+enum Callee<'t> {
+    Bare(Node<'t>),
+    Member(Node<'t>, Node<'t>),
 }
 
 /// Edges `(caller, callee)` as indices into `units`, sorted and
@@ -91,7 +114,8 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
             container: container_of(unit.node),
             receiver: receiver.as_deref(),
             shadowed: shadowed(&own, src, spec),
-            owner: functions::owner_of(unit.node, src),
+            owner: owner_key(unit.node, src, spec),
+            class: functions::owner_of(unit.node, src, spec),
         };
         for node in own {
             if !spec.call_kinds.contains(&node.kind()) {
@@ -116,54 +140,73 @@ fn target(
     caller: &Caller<'_>,
     named: &Named,
 ) -> Option<usize> {
-    let callee = call.child_by_field_name(CALLEE)?;
+    match callee(call, spec)? {
+        Callee::Bare(name) => bare(call, text(name, src)?, caller, named),
+        Callee::Member(object, member) => {
+            let obj = text(object, src)?;
+            let own_type = spec.call_self_words.contains(&obj)
+                || caller.receiver == Some(obj)
+                || owner_tail(caller) == Some(obj);
+            if !own_type {
+                return None;
+            }
+            let key = (caller.owner.clone(), text(member, src)?.to_string());
+            own(named.pick(named.base.get(&key)?, call)?, caller, named)
+        }
+    }
+}
+
+/// What a call spells, read through LangSpec::call_fields: a receiver
+/// field on the call itself makes it a member call (Java), otherwise
+/// the callee node's own shape decides.
+fn callee<'t>(call: Node<'t>, spec: &LangSpec) -> Option<Callee<'t>> {
+    let (callee_field, receiver_field) = spec.call_fields;
+    let callee = call.child_by_field_name(callee_field)?;
+    if let Some(object) = receiver_field.and_then(|f| call.child_by_field_name(f)) {
+        return Some(Callee::Member(object, callee));
+    }
     if spec.call_name_kinds.contains(&callee.kind()) {
-        return bare(call, text(callee, src)?, caller, named);
+        return Some(Callee::Bare(callee));
     }
     if !spec.call_member_kinds.contains(&callee.kind()) {
         return None;
     }
     let kids = ast::named_children(callee);
     let (object, member) = (*kids.first()?, *kids.last()?);
-    if object.id() == member.id() {
-        return None;
-    }
-    let obj = text(object, src)?;
-    let own_type = spec.call_self_words.contains(&obj)
-        || caller.receiver == Some(obj)
-        || owner_tail(caller) == Some(obj);
-    if !own_type {
-        return None;
-    }
-    let key = (caller.owner.clone(), text(member, src)?.to_string());
-    let group = *named.base.get(&key)?;
-    (caller.owner.is_some() || named.containers[group] == caller.container).then_some(group)
+    (object.id() != member.id()).then_some(Callee::Member(object, member))
 }
 
 /// The bare road. A name an import binds is not provably the local
-/// callable; inside a C++ member the class's own members come first
-/// (class scope precedes every enclosing scope, and a member defined
-/// out of class is not lexically visible at all); otherwise a whole
-/// name reaches a callable the call site can see.
+/// callable; inside a member the class's own members come first
+/// (class scope precedes every enclosing scope, and a C++ member
+/// defined out of class is not lexically visible at all); otherwise a
+/// whole name reaches a callable the call site can see.
 fn bare(call: Node<'_>, name: &str, caller: &Caller<'_>, named: &Named) -> Option<usize> {
     if caller.shadowed.contains(name) {
         return None;
     }
     if caller.owner.is_some()
-        && let Some(&group) = named.base.get(&(caller.owner.clone(), name.to_string()))
+        && let Some(seats) = named.base.get(&(caller.owner.clone(), name.to_string()))
     {
-        return Some(group);
+        return own(named.pick(seats, call)?, caller, named);
     }
-    let group = *named.whole.get(name)?;
+    let group = named.pick(named.whole.get(name)?, call)?;
     sees(call, named.containers[group]).then_some(group)
 }
 
-/// `K::m()` inside a member of `K`: the qualifier names the caller's
-/// own class by its unqualified name — the innermost segment of the
-/// owner chain (`Outer::Inner` answers to `Inner`). Any other
+/// A callee of the caller's own type: an owner key proves it (the seats
+/// it names are the caller's class's own, by construction); without
+/// one, the callee must sit in the caller's own container.
+fn own(group: usize, caller: &Caller<'_>, named: &Named) -> Option<usize> {
+    (caller.owner.is_some() || named.containers[group] == caller.container).then_some(group)
+}
+
+/// `K::m()` / `K.m()` inside a member of `K`: the qualifier names the
+/// caller's own class by its unqualified name — the innermost segment
+/// of a C++ owner chain (`Outer::Inner` answers to `Inner`). Any other
 /// qualifier (a base class, a namespace) proves nothing here.
 fn owner_tail<'c>(caller: &'c Caller<'_>) -> Option<&'c str> {
-    caller.owner.as_deref().and_then(|o| o.rsplit("::").next())
+    caller.class.as_deref().and_then(|o| o.rsplit("::").next())
 }
 
 /// Names an import binds inside a unit's own body — see
@@ -221,3 +264,6 @@ fn text<'s>(node: Node<'_>, src: &'s [u8]) -> Option<&'s str> {
 #[cfg(test)]
 #[path = "../../tests/unit/scan/calls.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "../../tests/unit/scan/calls_scope.rs"]
+mod tests_scope;

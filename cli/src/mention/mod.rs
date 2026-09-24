@@ -81,8 +81,10 @@ use std::path::Path;
 /// 1 = the pass as sealed (spec v9); 2 = the declared-submodule
 /// exemption reads `.gitmodules` with git's grammar (sections, key
 /// case, quoted values, comments, continuations — spec erratum ⑮)
-/// and an unseated declared submodule refuses instead of shrinking U.
-pub const MENTION_REV: i64 = 2;
+/// and an unseated declared submodule refuses instead of shrinking U;
+/// 3 = `.java` joins the `$` arm (plan v2.30 step 3), so a stored Java
+/// file's `Outer$Inner` stops emitting `Outer` and `Inner`.
+pub const MENTION_REV: i64 = 3;
 
 /// Distinct tokens one file may store; the rest are clipped and
 /// counted. The table cap bounds the whole database (a 500 MB tree

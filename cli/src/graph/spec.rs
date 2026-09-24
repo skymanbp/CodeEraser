@@ -40,6 +40,15 @@ pub enum Specifier {
     /// other module import — a stdlib module the ladder answers
     /// External.
     Literal(&'static str),
+    /// A Java import (plan v2.30 step 3): the declaration names its
+    /// target by an UNFIELDED child — the first `scoped_identifier` or
+    /// `identifier` — and says `.*` by an `asterisk` child. The spec
+    /// runs from the anonymous `static` token when there is one to the
+    /// end of the name (`static a.b.C.m`), so the ladder reads the last
+    /// segment as a member and the spec stays a substring of its line.
+    /// `star` picks the form the entry matches — the star entry listed
+    /// first, as FieldIfStar's is.
+    FirstNamed { star: bool },
 }
 
 /// (tree-sitter node kind, stable doc/wire label, specifier source).
@@ -97,6 +106,24 @@ const INCLUDE: [SiteKind; 1] = [SiteKind {
     via: Specifier::Field("path"),
 }];
 
+/// Java's import declaration (plan v2.30 step 3): the star form under
+/// its own label, as TS's `export *` is. Java's other site kind,
+/// `type_ref`, is no table row: which names count excludes the ones the
+/// file itself declares — a file-level fact — so graph/sites/java.rs
+/// runs a pass of its own.
+const JAVA: [SiteKind; 2] = [
+    SiteKind {
+        node: "import_declaration",
+        label: "import_star",
+        via: Specifier::FirstNamed { star: true },
+    },
+    SiteKind {
+        node: "import_declaration",
+        label: "import",
+        via: Specifier::FirstNamed { star: false },
+    },
+];
+
 /// The site vocabulary of one language. Labels are frozen doc/wire
 /// identity — renaming one is a contract change.
 pub fn sites(lang: Lang) -> &'static [SiteKind] {
@@ -153,6 +180,7 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
         }],
         Lang::Haskell => &HASKELL,
         Lang::C | Lang::Cpp => &INCLUDE,
+        Lang::Java => &JAVA,
         // Markdown scans line-wise in graph/md.rs (no grammar); the
         // sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — no site vocabulary either way.

@@ -166,6 +166,8 @@ M5 收口欠账清算、3m recall 仪器 B、审查热修+CI 门补全、ADR-008
 v2.29 同角色顾问的 ROI 度量（similar 仪器、样本、仲裁 oracle、p@1 / hit@5 与阈值裁定）
 → [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md)（第三次拆册，2026-09-05；
 EVAL-SET-M5-CLOSE.md 已 303 行）。
+v2.30 语言扩展的逐语言精度考题（站点宇宙、样本、盲判真值、判分）
+→ [EVAL-SET-LANGS.md](EVAL-SET-LANGS.md)（第四次拆册，2026-09-24；EVAL-SET-SIMILAR.md 已 351 行）。
 
 ## 声明级搬迁（O48）
 

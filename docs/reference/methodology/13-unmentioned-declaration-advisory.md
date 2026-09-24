@@ -77,7 +77,8 @@ and `$` ([token.rs:29-35](../../../cli/src/mention/token.rs#L29)). Three emitter
 run and none feeds another: (i) the whole run; (ii) the script split — the run's maximal
 ASCII-identifier pieces, so `调用$graph函数` yields `$graph` and never a bare `graph`;
 (iii) the `$` arm — the run's maximal `$`-free pieces, for every extension OUTSIDE the
-JS family ([token.rs:72-80](../../../cli/src/mention/token.rs#L72),
+JS family and Java, whose identifiers take `$` too (`Outer$Inner` is not `Inner`)
+([token.rs:72-80](../../../cli/src/mention/token.rs#L72),
 [token.rs:97-103](../../../cli/src/mention/token.rs#L97)). A piece that does not open a run
 (digit-led) is dropped; a piece equal to the run is the run. The arm table is
 `MENTION_WHOLE_RUN_EXTS`, looked up lower-cased, and no extension is the union arm
@@ -90,15 +91,15 @@ Two hashes are stored per distinct token: the fnv1a64 of the token, and — for 
 of at least seven literal characters — the fnv1a64 of its fold key (`_`, `-` and `$`
 filtered, lower-cased), a second chance for a Rust `zod_string` spelled `$ZodString`
 elsewhere ([token.rs:109-120](../../../cli/src/mention/token.rs#L109),
-[mod.rs:281-288](../../../cli/src/mention/mod.rs#L281)). No plaintext token enters the
+[mod.rs:283-290](../../../cli/src/mention/mod.rs#L283)). No plaintext token enters the
 database ([store.rs:32](../../../cli/src/mention/store.rs#L32)); the pass has its own
 version row and any change to a frozen input re-derives every row
-([mod.rs:85](../../../cli/src/mention/mod.rs#L85)). Two caps bound the store — 65,536
+([mod.rs:89](../../../cli/src/mention/mod.rs#L89)). Two caps bound the store — 65,536
 distinct tokens per file (a function of the bytes: the clip is final and the file's hash
 is stored) and 4,194,304 rows per table (a function of the whole store: a starved file
 gets neither rows nor hash and is retried every run) — and both are counted in the
 header the operator sees ([mod.rs:87-92](../../../cli/src/mention/mod.rs#L87),
-[mod.rs:250-278](../../../cli/src/mention/mod.rs#L250)).
+[mod.rs:252-280](../../../cli/src/mention/mod.rs#L252)).
 
 ### 3. The domain and the veto
 
@@ -120,10 +121,13 @@ yes ([candidates.rs:89-111](../../../cli/src/mention/candidates.rs#L89)):
    ([token.rs:127-144](../../../cli/src/mention/token.rs#L127),
    [store.rs:231-233](../../../cli/src/mention/store.rs#L231));
 3. **the file's own exception regions spell it** — Go template actions, TS string and
-   template literals, Python doctests, Rust macro definitions and fenced doc blocks,
-   Haskell haddock fences: text inside the declaring file that a loader or a reader
-   treats as a reference ([selfref.rs:73-111](../../../cli/src/mention/selfref.rs#L73),
-   [selfref.rs:214-272](../../../cli/src/mention/selfref.rs#L214)).
+   template literals, Python doctests, Rust macro definitions and fenced or indented doc
+   blocks, Haskell haddock fences, C / C++ string literals and Doxygen code blocks, Java
+   strings, Javadoc code spans and Markdown code blocks: text inside the declaring file
+   that a loader or a reader treats as a reference
+   ([selfref.rs:79-127](../../../cli/src/mention/selfref.rs#L79),
+   [doc.rs:19-70](../../../cli/src/mention/selfref/doc.rs#L19),
+   [blocks.rs:15-22](../../../cli/src/mention/selfref/doc/blocks.rs#L15)).
 
 A survivor becomes one row keyed `[node, vis, conv]` with its names kept beside the key
 on the Rust side — the wire carries integers only, never a name
@@ -144,30 +148,30 @@ read after it yields one false unmentioned that the next run converges away
 
 Every survivor carries a twelve-bit category word; bits 0–10 are *exemptions* (a reason
 the name is reached without being spelled), bit 11 is rendered and never exempts
-([conv/mod.rs:36-68](../../../cli/src/mention/conv/mod.rs#L36)). The AST half is stored at
+([conv/mod.rs:39-71](../../../cli/src/mention/conv/mod.rs#L39)). The AST half is stored at
 index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign export`, Go
 `//export`; `Registration` for a decorator; `Member`; `DefaultExport`; `Ambient`; Rust
-`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:96-105](../../../cli/src/mention/conv/mod.rs#L96)).
+`cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:99-108](../../../cli/src/mention/conv/mod.rs#L99)).
 The name-table half is computed at wire time from the path, the name and the key: a test
 file by path component, a `benches`/`examples` component only under a Cargo package
 root, `conftest.py`/`Spec.hs`/`build.rs` and the `*_test.go` / `test_*.py` / `.test.` /
 `.spec.` patterns ([conv/name.rs:31](../../../cli/src/mention/conv/name.rs#L31),
-[conv/name.rs:138-157](../../../cli/src/mention/conv/name.rs#L138)); Python/Haskell `main`;
+[conv/name.rs:158-177](../../../cli/src/mention/conv/name.rs#L158)); Python/Haskell `main`;
 the framework `Protocol` names a loader spells for the author — Python unittest/xunit/
 pluggy/Django hooks, TS file-form × export-name rows, Haskell `Paths_*` and hspec
-([conv/name.rs:46-76](../../../cli/src/mention/conv/name.rs#L46),
-[conv/name.rs:173-227](../../../cli/src/mention/conv/name.rs#L173)); a Go method's receiver
-exportedness ([conv/name.rs:240-252](../../../cli/src/mention/conv/name.rs#L240)); and a
+([conv/name.rs:56-86](../../../cli/src/mention/conv/name.rs#L56),
+[conv/name.rs:202-256](../../../cli/src/mention/conv/name.rs#L202)); a Go method's receiver
+exportedness ([conv/name.rs:274-286](../../../cli/src/mention/conv/name.rs#L274)); and a
 file-level `ce:allow(unmentioned) -- <why>` claim
-([conv/name.rs:189-195](../../../cli/src/mention/conv/name.rs#L189)). Every bit is silence,
+([conv/name.rs:222-228](../../../cli/src/mention/conv/name.rs#L222)). Every bit is silence,
 the safe direction.
 
 ### 5. Visibility, mounts and the core's code
 
 The core reads two more integer facts per row. The visibility word is three bits: bit 0
-is "exported" ([visibility/mod.rs:76](../../../cli/src/fourclass/visibility/mod.rs#L76)), bit 1 that the enclosing scopes let the
-name out too ([visibility/mod.rs:78](../../../cli/src/fourclass/visibility/mod.rs#L78)), and bit 2 marks a restricted export
-(`pub(crate)` and kin) ([visibility/mod.rs:80](../../../cli/src/fourclass/visibility/mod.rs#L80)). The **mounts** table is one row per node —
+is "exported" ([visibility/mod.rs:85](../../../cli/src/fourclass/visibility/mod.rs#L85)), bit 1 that the enclosing scopes let the
+name out too ([visibility/mod.rs:87](../../../cli/src/fourclass/visibility/mod.rs#L87)), and bit 2 marks a restricted export
+(`pub(crate)` and kin) ([visibility/mod.rs:89](../../../cli/src/fourclass/visibility/mod.rs#L89)). The **mounts** table is one row per node —
 `[node, private, total, bits]` — computed for every node without exception: how many of
 the file's `mod` mounts are private, how many mounts it has, whether a façade re-exports
 it (a Rust `via_reexport` edge or a TS `export *` target — bit 0) and whether its own
@@ -279,7 +283,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1064 (1088 − 12 pattern-ignored − 12 early-NUL) | rust | 2688 (1476) | 288 (0) | 10.7 % | 4 / 288 = 1.4 % | 4 / 2381 |
+| self @ this commit | 1090 (1114 − 12 pattern-ignored − 12 early-NUL) | rust | 2749 (1499) | 304 (0) | 11.1 % | 4 / 304 = 1.3 % | 4 / 2426 |
 | | | haskell | 1560 (352) | 271 (0) | 17.4 % | 18 / 271 = 6.6 % | 18 / 1289 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
@@ -294,7 +298,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1476<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1499<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

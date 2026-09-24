@@ -16,9 +16,11 @@
 //! type forms belong here whether or not a relocation case exists:
 //! Go's `type_spec`/`type_alias` nest inside a `type_declaration`,
 //! which the walker descends anyway, and Haskell's six type forms
-//! carry `name` like a `bind`. Go `const_spec`/`var_spec` stay out —
-//! they are as often a function-local as a package-level
-//! declaration, and a local is never a cross-file identifier.
+//! carry `name` like a `bind`, as Java's five type declarations do.
+//! Go `const_spec`/`var_spec` stay out — they are as often a
+//! function-local as a package-level declaration, and a local is never
+//! a cross-file identifier; a Java field stays out likewise, its
+//! references being the class's own.
 
 use crate::scan::lang::Lang;
 
@@ -98,6 +100,13 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
             "data_family",
         ],
         Lang::C | Lang::Cpp => &C_FAMILY,
+        Lang::Java => &[
+            "class_declaration",
+            "interface_declaration",
+            "enum_declaration",
+            "record_declaration",
+            "annotation_type_declaration",
+        ],
         // the sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never four-classified
         _ => &[],

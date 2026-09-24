@@ -1,11 +1,11 @@
 {
   "corpora": [
     {
-      "blocks": 208,
-      "files": 30,
+      "blocks": 218,
+      "files": 35,
       "histogram": {
         "02": 2,
-        "04": 6,
+        "04": 16,
         "05": 15,
         "06": 1,
         "07": 61,
@@ -31,7 +31,7 @@
         "31": 2
       },
       "name": "fixtures",
-      "suppressed": 24,
+      "suppressed": 34,
       "suppressed_blocks": [
         {
           "a": "c/lbaselib.c:510",
@@ -128,6 +128,66 @@
           "b": "cpp/include__fmt__format.h:1300",
           "distinct": 5,
           "tokens": 79
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:17",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:42",
+          "distinct": 4,
+          "tokens": 68
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:17",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:43",
+          "distinct": 4,
+          "tokens": 70
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:17",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:44",
+          "distinct": 4,
+          "tokens": 68
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:27",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:32",
+          "distinct": 4,
+          "tokens": 55
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:27",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:37",
+          "distinct": 4,
+          "tokens": 58
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:28",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:37",
+          "distinct": 4,
+          "tokens": 60
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:29",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:37",
+          "distinct": 4,
+          "tokens": 60
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:30",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:37",
+          "distinct": 4,
+          "tokens": 60
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:31",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:37",
+          "distinct": 4,
+          "tokens": 60
+        },
+        {
+          "a": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:32",
+          "b": "java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java:37",
+          "distinct": 4,
+          "tokens": 57
         },
         {
           "a": "python/src__requests__status_codes.py:30",

@@ -761,53 +761,53 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 188,
+    "line": 190,
     "text": "pub fn fingerprints(self) -> bool {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|2f99cfba7853fa18|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 168,
-    "text": "// Python quotes surface as named string_start/string_end kinds."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|6102e94730fc5ddf|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 225,
-    "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|8f2d953fe270d4e3|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 321,
-    "text": "literal_delims: &[\"\\\"\", \"`\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|94c43c67b19eccdd|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 273,
-    "text": "literal_delims: &[\"\\\"\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|b778be50cc3e9751|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 271,
-    "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|d5dc8ea61e1a0a65|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 320,
-    "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|fa0e54683c00a56d|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 169,
-    "text": "literal_delims: &[],\nfn_named_only_kinds: &[],\ncall_kinds: &[\"call\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
     "target": "../../../cli/src/scan/spec_hs.rs",
-    "line": 69,
+    "line": 79,
     "text": "// string literals lex as ONE `string` leaf (quotes inside the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|62105facb0b61d1c|0": {
     "target": "../../../cli/src/scan/spec_hs.rs",
-    "line": 71,
+    "line": 81,
     "text": "literal_delims: &[],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|2f99cfba7853fa18|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 48,
+    "text": "// Python quotes surface as named string_start/string_end kinds."
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|6102e94730fc5ddf|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 109,
+    "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|62105facb0b61d1c|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 49,
+    "text": "literal_delims: &[],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|8f2d953fe270d4e3|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 213,
+    "text": "literal_delims: &[\"\\\"\", \"`\"],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|94c43c67b19eccdd|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 161,
+    "text": "literal_delims: &[\"\\\"\"],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|b778be50cc3e9751|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 159,
+    "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|d5dc8ea61e1a0a65|0": {
+    "target": "../../../cli/src/scan/spec_launch.rs",
+    "line": 212,
+    "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/trend/mod.rs|452a1b52cbdfe32a|0": {
     "target": "../../../cli/src/trend/mod.rs",
@@ -4136,18 +4136,18 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|3e0121921e556557|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 102,
-    "end": 158,
+    "line": 129,
+    "end": 189,
     "text": "pub fn sites(lang: Lang) -> &'static [SiteKind] {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|43216d5bb511435f|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 156,
+    "line": 184,
     "text": "// Markdown scans line-wise in graph/md.rs (no grammar); the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|4a89ebeaad9f1ec2|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 82,
+    "line": 91,
     "text": "label: \"import\",\nvia: Specifier::Field(\"source\"),\n};"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|e57213347ad2937a|0": {
@@ -4161,16 +4161,16 @@
     "line": 42,
     "text": "Literal(&'static str),"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|8d38434be5ab313d|0": {
+    "target": "../../../cli/src/graph/store.rs",
+    "line": 146,
+    "end": 161,
+    "text": "const KINDS: &[&str] = &["
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|b7ec742e36bb0247|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 105,
+    "line": 108,
     "text": "pub const GRAPH_REV: i64 = 16;"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dc145d0e51fefed8|0": {
-    "target": "../../../cli/src/graph/store.rs",
-    "line": 140,
-    "end": 155,
-    "text": "/// Frozen site-kind storage codes: label -> row position. Appending"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
     "target": "../../../cli/src/graph/symwire.rs",
@@ -5820,8 +5820,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|34a1176370ed9e32|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 73,
-    "end": 95,
+    "line": 75,
+    "end": 97,
     "text": "pub fn extra(lang: Lang) -> &'static [&'static str] {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
@@ -5939,26 +5939,26 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 226,
-    "end": 231,
+    "line": 222,
+    "end": 227,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 158,
-    "end": 171,
+    "line": 154,
+    "end": 167,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 69,
-    "end": 74,
+    "line": 65,
+    "end": 70,
     "text": "let unit = Unit {\nkey: format!(\"{}/{}\", f.name, f.params),"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 175,
-    "end": 197,
+    "line": 171,
+    "end": 193,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {
@@ -7434,17 +7434,17 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|30ccbd2d9190022f|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 80,
+    "line": 89,
     "text": "pub const VIS_RESTRICTED: i64 = 1 << 2;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|342a9df605f3ff81|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 76,
+    "line": 85,
     "text": "pub const VIS_EXPORTED: i64 = 1 << 0;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|3eb5f25bbd28fd7c|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
-    "line": 78,
+    "line": 87,
     "text": "pub const VIS_SCOPE_EXPORTED: i64 = 1 << 1;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/py.rs|411a2c6aae78ef2d|0": {
@@ -7574,14 +7574,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|46d157f7613a2c08|0": {
     "target": "../../../cli/src/mention/conv/mod.rs",
-    "line": 36,
-    "end": 68,
+    "line": 39,
+    "end": 71,
     "text": "pub enum Conv {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|e2ac031b7a1e5cdc|0": {
     "target": "../../../cli/src/mention/conv/mod.rs",
-    "line": 96,
-    "end": 105,
+    "line": 99,
+    "end": 108,
     "text": "pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|4aca9b8f144898bb|0": {
@@ -7591,32 +7591,32 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|63d363616b9351ce|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 46,
-    "end": 76,
+    "line": 56,
+    "end": 86,
     "text": "const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|712e15f5fedd6462|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 173,
-    "end": 227,
+    "line": 202,
+    "end": 256,
     "text": "pub fn name_bits(lang: Lang, rel: &str, key: &str, name: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|81b073da29331bbb|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 240,
-    "end": 252,
+    "line": 274,
+    "end": 286,
     "text": "fn go_member(key: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|d0662c6502f5d3c8|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 189,
-    "end": 195,
+    "line": 222,
+    "end": 228,
     "text": "pub fn text_bits(text: &str) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/name.rs|e9da6bea8e856d37|0": {
     "target": "../../../cli/src/mention/conv/name.rs",
-    "line": 138,
-    "end": 157,
+    "line": 158,
+    "end": 177,
     "text": "fn test_file(&mut self, rel: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/py.rs|cba48a2d1cbb6671|0": {
@@ -7632,20 +7632,21 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|0362eb6b6f6329cc|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 281,
-    "end": 288,
+    "line": 283,
+    "end": 290,
     "text": "fn row_of(token: &str) -> store::Row {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|07d5e0db6ab16b79|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 250,
-    "end": 278,
+    "line": 252,
+    "end": 280,
     "text": "/// Tokens de-duplicated and written under the file's own hash. The"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|2a970e8dcf78a456|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|233de814113c2a65|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 85,
-    "text": "pub const MENTION_REV: i64 = 2;"
+    "line": 87,
+    "end": 92,
+    "text": "pub const MENTION_REV: i64 = 3;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|48346051f9dbd2a6|0": {
     "target": "../../../cli/src/mention/mod.rs",
@@ -7655,8 +7656,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|8ea54e2f462b95c5|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 87,
-    "end": 92,
+    "line": 89,
+    "end": 94,
     "text": "/// Distinct tokens one file may store; the rest are clipped and"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|ad600be7b31d9b23|0": {
@@ -7700,17 +7701,23 @@
     "end": 102,
     "text": "Some(Veto::Other) => {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref.rs|09b87349acdc7268|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref.rs|42621da0659dcaab|0": {
     "target": "../../../cli/src/mention/selfref.rs",
-    "line": 73,
-    "end": 111,
-    "text": "fn regions(rel: &str, source: &str) -> Vec<String> {"
+    "line": 79,
+    "end": 127,
+    "text": "/// The text regions the language hands to a second interpreter."
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref.rs|76eaab87fb163228|0": {
-    "target": "../../../cli/src/mention/selfref.rs",
-    "line": 214,
-    "end": 272,
-    "text": "fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {"
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref/doc.rs|139ae0e7748a9822|0": {
+    "target": "../../../cli/src/mention/selfref/doc.rs",
+    "line": 19,
+    "end": 70,
+    "text": "pub(super) struct Runs {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref/doc/blocks.rs|b655885efd4aa60d|0": {
+    "target": "../../../cli/src/mention/selfref/doc/blocks.rs",
+    "line": 15,
+    "end": 22,
+    "text": "pub(super) fn code_blocks(lang: Lang, lines: &[String]) -> Vec<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/store.rs|295d30e8a6dc7f2e|0": {
     "target": "../../../cli/src/mention/store.rs",

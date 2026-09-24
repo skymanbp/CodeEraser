@@ -12,6 +12,8 @@
 //! folds never cut; a fragment cut mid-path is refused, never
 //! guessed shallow (ladder/rs.rs module header).
 
+mod java;
+
 use super::md;
 use super::spec::{SiteKind, Specifier, sites as site_table};
 use crate::fourclass::units;
@@ -60,9 +62,10 @@ pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Un
     if lang.scan_only() {
         return (Vec::new(), Vec::new());
     }
-    let mut found = match lang.grammar() {
-        Some(grammar) => code_sites(text, lang, grammar),
-        None => md::detect(text),
+    let mut found = if lang.grammar().is_some() {
+        code_sites(text, lang)
+    } else {
+        md::detect(text)
     };
     let owners = units::segments(text, lang);
     let mut prev = (0usize, 0usize);
@@ -83,11 +86,19 @@ pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Un
     (found, owners)
 }
 
-fn code_sites(text: &str, lang: Lang, grammar: tree_sitter::Language) -> Vec<RawSite> {
-    match ast::parse(text, &grammar) {
-        None => Vec::new(),
-        Some(tree) => walk_sites(tree.root_node(), text.as_bytes(), site_table(lang)),
-    }
+fn code_sites(text: &str, lang: Lang) -> Vec<RawSite> {
+    ast::with_tree(text, lang, |tree| {
+        let (root, src) = (tree.root_node(), text.as_bytes());
+        let mut found = walk_sites(root, src, site_table(lang));
+        if lang == Lang::Java {
+            // imports precede every type in a compilation unit (JLS 7.3),
+            // so the pass's sites follow the table's in document order on
+            // any line the two share; the stable sort keeps that order
+            found.extend(java::type_refs(root, src));
+            found.sort_by_key(|s| s.line);
+        }
+        found
+    })
 }
 
 fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<RawSite> {
@@ -114,45 +125,74 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<Ra
 
 /// Whether the entry opened a site (or several) on this node.
 fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawSite>) -> bool {
-    let before = out.len();
-    match &kind.via {
-        Specifier::Field(field) => {
-            if let Some(spec) = field_text(node, src, field) {
-                out.push(site(kind.label, node, spec));
-            }
-        }
-        Specifier::FieldIfStar(field) => {
-            if star_export(node)
-                && let Some(spec) = field_text(node, src, field)
-            {
-                out.push(site(kind.label, node, spec));
-            }
-        }
-        Specifier::NameIfNoBody => {
-            if node.child_by_field_name("body").is_none()
-                && let Some(spec) = field_text(node, src, "name")
-            {
-                out.push(site(kind.label, node, spec));
-            }
-        }
-        Specifier::EachImportTarget => {
-            for child in children(node) {
-                if let Some(spec) = import_target(child, src) {
-                    out.push(site(kind.label, child, spec));
-                }
-            }
-        }
-        Specifier::Literal(spec) => out.push(site(kind.label, node, spec.to_string())),
+    let found = specs(node, src, &kind.via);
+    let opened = !found.is_empty();
+    out.extend(
+        found
+            .into_iter()
+            .map(|(at, spec)| site(kind.label, at, spec)),
+    );
+    opened
+}
+
+/// The specs an entry reads off a node, each with the node its site
+/// sits on (a Python import target is a child of the statement).
+fn specs<'t>(
+    node: tree_sitter::Node<'t>,
+    src: &[u8],
+    via: &Specifier,
+) -> Vec<(tree_sitter::Node<'t>, String)> {
+    let here = |spec: Option<String>| spec.map(|s| (node, s)).into_iter().collect();
+    match via {
+        Specifier::Field(field) => here(field_text(node, src, field)),
+        Specifier::FieldIfStar(field) => here(
+            star_export(node)
+                .then(|| field_text(node, src, field))
+                .flatten(),
+        ),
+        Specifier::NameIfNoBody => here(
+            node.child_by_field_name("body")
+                .is_none()
+                .then(|| field_text(node, src, "name"))
+                .flatten(),
+        ),
+        Specifier::EachImportTarget => children(node)
+            .into_iter()
+            .filter_map(|child| import_target(child, src).map(|spec| (child, spec)))
+            .collect(),
+        Specifier::Literal(spec) => vec![(node, spec.to_string())],
+        Specifier::FirstNamed { star } => here(
+            (star_export(node) == *star)
+                .then(|| import_name(node, src))
+                .flatten(),
+        ),
     }
-    out.len() > before
 }
 
 /// `export * from …` carries a bare `*` token, `export * as ns from …`
-/// a `namespace_export` child; the `export_clause` forms carry neither.
+/// a `namespace_export` child and a Java `import a.b.*` an `asterisk`
+/// one; the `export_clause` forms and a single-type import carry none.
 fn star_export(node: tree_sitter::Node) -> bool {
     children(node)
         .into_iter()
-        .any(|c| matches!(c.kind(), "*" | "namespace_export"))
+        .any(|c| matches!(c.kind(), "*" | "namespace_export" | "asterisk"))
+}
+
+/// A Java import's spec (Specifier::FirstNamed): the source from the
+/// `static` token, when there is one, to the end of the first
+/// `scoped_identifier` / `identifier` child — cut at a line break like
+/// every spec, so it stays a substring of its line.
+fn import_name(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
+    let kids = children(node);
+    let name = kids
+        .iter()
+        .find(|c| matches!(c.kind(), "scoped_identifier" | "identifier"))?;
+    let start = kids
+        .iter()
+        .find(|c| c.kind() == "static")
+        .map_or(name.start_byte(), |s| s.start_byte());
+    let raw = std::str::from_utf8(src.get(start..name.end_byte())?).ok()?;
+    Some(raw.split('\n').next().unwrap_or("").trim().to_string())
 }
 
 /// Python `import a.b, c as d`: dotted_name children are targets;
