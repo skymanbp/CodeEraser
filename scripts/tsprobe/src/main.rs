@@ -1,12 +1,12 @@
 //! AST probe for the language-expansion design booklet
 //! (docs/reference/language-expansion.md §10): parse one snippet with
-//! one of the seven pinned grammars and print the tree with field
+//! one of the six pinned grammars and print the tree with field
 //! names, so every kind and field the booklet's tables cite can be
 //! re-read from a transcript instead of recalled. Not a product
 //! surface: nothing in cli/ or core/ reads it, and the tests
 //! submodule does not mount it.
 //!
-//! Usage: `cargo run --release -- <c|cpp|lua|java|ruby|r|html> <file>`.
+//! Usage: `cargo run --release -- <c|cpp|lua|java|r|html> <file>`.
 //! The header line carries the grammar's ABI (tree-sitter 0.27 accepts
 //! 13–15), whether the parse holds any ERROR node, and the kind count.
 
@@ -14,14 +14,13 @@ use std::fmt::Write as _;
 use tree_sitter::{Node, Parser};
 use tree_sitter_language::LanguageFn;
 
-/// One grammar per name — the seven the booklet pins.
+/// One grammar per name — the six the booklet pins.
 fn grammar(name: &str) -> Option<LanguageFn> {
     Some(match name {
         "c" => tree_sitter_c::LANGUAGE,
         "cpp" => tree_sitter_cpp::LANGUAGE,
         "lua" => tree_sitter_lua::LANGUAGE,
         "java" => tree_sitter_java::LANGUAGE,
-        "ruby" => tree_sitter_ruby::LANGUAGE,
         "r" => tree_sitter_r::LANGUAGE,
         "html" => tree_sitter_html::LANGUAGE,
         _ => return None,
@@ -77,7 +76,7 @@ fn dump(out: &mut String, node: Node<'_>, src: &[u8], slot: Slot<'_>) {
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let [_, name, path] = args.as_slice() else {
-        eprintln!("usage: tsprobe <c|cpp|lua|java|ruby|r|html> <file>");
+        eprintln!("usage: tsprobe <c|cpp|lua|java|r|html> <file>");
         std::process::exit(2);
     };
     let Some(language) = grammar(name) else {

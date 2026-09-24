@@ -35,9 +35,9 @@ pub(crate) struct GraphCfg {
     /// `[graph.search_roots]` (plan v2.30): language name → the
     /// directories that language's ladder searches after the site's
     /// own rung and before its build configuration — C / C++ include
-    /// roots under the shared key `c`, and the Lua, Ruby, Java, R and
-    /// HTML roots as their steps land. One table, one key form, for
-    /// what is one concept six times (booklet §14 ruling 8).
+    /// roots under the shared key `c`, and the Lua, Java, R and HTML
+    /// roots as their steps land. One table, one key form, for what is
+    /// one concept five times (booklet §14 ruling 8).
     /// Root-relative directories; a key naming no such language is
     /// refused at load, and a directory holding no walked file is
     /// refused by the walk (the crate_roots posture).
@@ -45,7 +45,7 @@ pub(crate) struct GraphCfg {
 }
 
 /// The languages whose ladders read a declared search root.
-const SEARCH_ROOT_LANGS: [&str; 6] = ["c", "lua", "ruby", "java", "r", "html"];
+const SEARCH_ROOT_LANGS: [&str; 5] = ["c", "lua", "java", "r", "html"];
 
 impl GraphCfg {
     /// The load-throat refusal: a floor below 1 would call every
