@@ -19,9 +19,9 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:220-263](../../../cli/src/graph/spec.rs#L220)), so the site universe (the precision denominator)
+([spec.rs:240-283](../../../cli/src/graph/spec.rs#L240)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:258](../../../cli/src/graph/spec.rs#L258)). The eighteen frozen site
+grammar and scans line-wise ([spec.rs:278](../../../cli/src/graph/spec.rs#L278)). The eighteen frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
 include, import_star, type_ref, require, load, source, library` ([store.rs:146-165](../../../cli/src/graph/store.rs#L146)) — positions, not names, so reordering is a
 `GRAPH_REV` bump ([store.rs:108](../../../cli/src/graph/store.rs#L108), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS

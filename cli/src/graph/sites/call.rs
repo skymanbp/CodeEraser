@@ -9,9 +9,10 @@
 //! no site — naming what it would load is a guess (the ladder's rule).
 //! A qualified callee (`base::source("x.R")`) is no site either: the
 //! form is rare, and the package it names is a `library` site of its
-//! own.
+//! own. A protected call is the call it protects: Lua's
+//! `pcall(require, "a.b")` loads `a.b` (graph/spec.rs LUA_PROTECTED).
 
-use crate::graph::spec::calls;
+use crate::graph::spec::{calls, protected};
 use crate::scan::ast;
 use crate::scan::lang::Lang;
 use tree_sitter::Node;
@@ -22,10 +23,11 @@ use tree_sitter::Node;
 /// call is one the grammar spells (LangSpec::call_kinds), its callee
 /// read through LangSpec::call_fields as a bare name
 /// (call_name_kinds) — the recursion arcs' own reading — and one of
-/// the row's `callees`. R matches a named argument before a positional
-/// one, so the argument named `formal` wins over the first unnamed one;
-/// a Lua argument list has no names. The argument must be a string
-/// literal — its content, so R's raw `r"(x.R)"` and Lua's long
+/// the row's `callees`; a protected call is read as the call it
+/// protects (`unprotected`). R matches a named argument before a
+/// positional one, so the argument named `formal` wins over the first
+/// unnamed one; a Lua argument list has no names. The argument must be
+/// a string literal — its content, so R's raw `r"(x.R)"` and Lua's long
 /// `[[x.lua]]` read like any quoted one, cut at a line break like every
 /// spec — or an identifier where the callee reads one unevaluated
 /// (`unquoted` is Some: R's `library(pkg)`) and the call does not pass
@@ -43,9 +45,9 @@ pub(super) fn site<'t>(
     let callee = node
         .child_by_field_name(grammar.call_fields.0)
         .filter(|c| grammar.call_name_kinds.contains(&c.kind()))?;
-    let name = callee.utf8_text(src).ok()?;
-    let row = rows.iter().find(|r| r.callees.contains(&name))?;
     let args = ast::entries(node.child_by_field_name("arguments")?);
+    let (name, args) = unprotected(callee, &args, lang, src)?;
+    let row = rows.iter().find(|r| r.callees.contains(&name))?;
     let arg = args
         .iter()
         .find(|a| formal_is(a, row.formal, src))
@@ -59,11 +61,30 @@ pub(super) fn site<'t>(
         "string" => value
             .child_by_field_name("content")
             .map_or(Some(""), |c| c.utf8_text(src).ok())?,
-        "identifier" if reads_names(&args, row.unquoted, src) => value.utf8_text(src).ok()?,
+        "identifier" if reads_names(args, row.unquoted, src) => value.utf8_text(src).ok()?,
         _ => return None,
     };
     let spec = text.split('\n').next().unwrap_or("").to_string();
     Some((row.label, value, spec))
+}
+
+/// A call's callee name and arguments, a protected call's being those
+/// of the call it protects (spec::protected): the wrapper's first
+/// argument is the function, its text matched against the rows' bare
+/// names like any callee's (`pcall(m.require, "x")` spells none), and
+/// the function's own arguments follow the wrapper's leading ones —
+/// `pcall(require, "x")` is `require("x")`.
+fn unprotected<'a, 't>(
+    callee: Node<'t>,
+    args: &'a [Node<'t>],
+    lang: Lang,
+    src: &'a [u8],
+) -> Option<(&'a str, &'a [Node<'t>])> {
+    let name = callee.utf8_text(src).ok()?;
+    let Some((_, leading)) = protected(lang).iter().find(|(w, _)| *w == name) else {
+        return Some((name, args));
+    };
+    Some((args.first()?.utf8_text(src).ok()?, args.get(*leading..)?))
 }
 
 /// Whether the call reads an identifier argument as a name: the callee

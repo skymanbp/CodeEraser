@@ -128,7 +128,7 @@ HTML 的 LangSpec 为空表（MARKDOWN 同款），只提供 `comment_kinds = [c
 | C/C++ | `preproc_include` | `include` | `Field("path")`：`"x.h"` 去引号，`<x>` 保留尖括号，阶梯据此分形 |
 | Java | `import_declaration` | `import` / `import_star` | 新 `FirstNamed`：首个具名子结点（`scoped_identifier`/`identifier`）文本，无字段名；有 `asterisk` 兄弟→`import_star`；`static` 记号→spec 前缀 `static ` |
 | Java | `type_identifier`（排除本文件声明的类/接口/枚举/记录/注解名与 `type_parameter` 名——文件局部事实，仍是解析无关的检测） | `type_ref` | 结点文本 |
-| Lua | `function_call`，callee 是裸名 `require` / `dofile` / `loadfile` | `require` / `load` | `CallSite`：首个实参须是字符串（`require "x"` 无括号形与长字符串 `[[x]]` 同读，取内容）；计算出来的实参（`require(prefix .. name)`）与对象上的同名方法（`x.require(…)`）不开站点 |
+| Lua | `function_call`，callee 是裸名 `require` / `dofile` / `loadfile` | `require` / `load` | `CallSite`：首个实参须是字符串（`require "x"` 无括号形与长字符串 `[[x]]` 同读，取内容）；计算出来的实参（`require(prefix .. name)`）与对象上的同名方法（`x.require(…)`）不开站点；受保护的调用读成它保护的那次调用（`LUA_PROTECTED`，用户裁「现在支持」）：`pcall(require, "x")`、`xpcall(require, h, "x")`——首个实参是被保护的函数、按裸名匹配，它的实参跟在 `pcall` 的一个、`xpcall` 的两个前导实参之后 |
 | R | `call`，callee 是裸名 `source` / `sys.source` | `source` | `CallSite`：先认全名实参 `file =`，否则首个无名实参；须是字符串（`r"(…)"` 取内容） |
 | R | `call`，callee 是裸名 `library` / `require`（实参名 `package`；未传 `character.only`、或传字面 `FALSE` 时认裸标识符）与 `requireNamespace` / `loadNamespace`（只认字符串：它们对实参求值）；`namespace_operator`（`pkg::name`、`pkg:::name`） | `library` | `CallSite` / `Field("lhs")`；限定的调用（`base::source("x.R")`）不另开 `source` 站点——它的 `base::` 已是一个 `library` 站点 |
 | HTML | `attribute`（`start_tag`/`self_closing_tag` 内）按 (tag_name, attribute_name) | `href`（a/area/link/base/use）、`src`（script/img/iframe/embed/source/track/video/audio、object·data、video·poster）、`srcset`（逗号表，每候选一站，`nth` 序位）、`action`（form） | 新 `Attr`：`attribute_value` 文本，只解 `&amp;` |

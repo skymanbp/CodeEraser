@@ -36,8 +36,8 @@ lua / r 两行是 2026-09-25（计划 v2.30 步 4）按同一规则加入的。l
 另三个是 487 行的 `src/luarocks/build.lua`、`cmd/upload.lua` 与 `admin/cmd/make_manifest.lua`。
 stringr 取 `*.R` 与 `*.r`（R 的两个扩展名），67 个排除 `tests/testthat` 后余 36 个，抽中
 `R/replace.R`、`R/case.R`、`R/conv.R`、`R/compat-types-check.R`（rlang 的独立兼容文件，491 行）
-与 `R/detect.R`。两者各是本语言精度考题的第一个语料（`lang-slice-luarocks-v1.json`、
-`lang-slice-stringr-v1.json`），同一 tip，同一条门复核。
+与 `R/detect.R`。两者各是本语言精度考题的第一个语料（`lang-slice-luarocks-v2.json`——Lua 考题
+2026-09-25 升为第二代——与 `lang-slice-stringr-v1.json`），同一 tip，同一条门复核。
 
 ## 抽样规则（确定性，复现命令见下）
 

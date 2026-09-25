@@ -6,20 +6,23 @@
 > `cli/tests/it/lang_provenance.rs`）。母册链：[EVAL-SET.md](EVAL-SET.md) → [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) →
 > [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md) → [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → 本册。本册与前四册同入
 > 冻结集（`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。一个语言在它自己的步里加一节，
-> 三步各记一段；重冻结 = 换 tip 并在本册具名记一条，生成器拒绝覆写已冻结的档。
+> 三步各记一段；重冻结 = 该语言考题的代数加一（考题表的 `generation`：检测器多读了一种写法、或换 tip），新一代
+> 用新文件名，旧一代的档按名退役并在本册具名记一条——顺序门读一份档的首个提交，原地重写的档会留着旧一代的
+> 提交；生成器拒绝覆写已冻结的档。
 
 ## 仪器与门
 
 - **站点宇宙**（`cli/tests/it/eval_lang_parts/generate.rs` 的 `lang_slice`，`#[ignore]`，读 `.ce-eval/corpora/<名>`
   的钉住克隆，别的树按名拒绝）：按考题表 `eval_lang_parts::EXAMS` 的扩展名走一遍钉住的树，逐文件记检测器看到的
   文本 sha256 与各站点类的计数（`graph::sites`——只读文法 kind 表与文件内事实，不查任何路径，所以能先于阶梯冻结）。
-  档 `contracts/eval/lang-slice-<语料>-v1.json`。
+  档 `contracts/eval/lang-slice-<语料>-v<代>.json`（代 = 考题表的 `generation`，同一门考题的档同一代）。
 - **抽样**（同文件 `lang_sample`）：一个语言的全部冻结宇宙合成一个池，逐文件先复现它的冻结行再取站点——池等于
   冻结宇宙靠核对、不靠信任。秩 = `sha256(域|corpus|commit|path|line|nth|kind|spec)`（M5-2 的载荷顺序，spec 居末
   保单射）；每个站点类先取 min(15, 该类的池)，剩下的座位按各类剩余池的最大余数分满 100；主样本按审阅域哈希排列
   （审阅者看不到秩序）；每类另留 min(20, 池 − 配额) 道备用题，只在同类主样本无法作答时按序顶上（补分母不跨类，
-  护住地板）。档 `contracts/eval/lang-sample-<语言>-v1.json`。
-- **CI 门**（`cli/tests/it/eval_lang.rs`，不跑 git、不要语料克隆）：冻结集恰为考题语料；每份宇宙过共用信封、钉
+  护住地板）。档 `contracts/eval/lang-sample-<语言>-v<代>.json`。
+- **CI 门**（`cli/tests/it/eval_lang.rs`，不跑 git、不要语料克隆）：冻结集恰为考题语料、每份在考题的代数上（退役的
+  一代留在树里，就读成那个语料出现了两次），审阅表的冻结集恰为已审阅考题的语料；每份宇宙过共用信封、钉
   tip、语言与范围；考题扩展名 = 产品路径表对该语言的扩展名；样本的配额从冻结宇宙的摘要重算、每行两个哈希从自身
   字段重导、同一文件同一类被抽中的数不超过它冻结行的计数、备用题按（类，审阅哈希）排列且秩排在同类每道主样本
   之后；篡改（伪路径、伪 spec、伪类、伪秩、伪审阅哈希、缺一行、调换两行、把备用题混进主样本）一律拒绝；交叉核对夹具
@@ -30,7 +33,7 @@
   correct，包目录答案对包真值；External 是一种答案，对站内真值答 External 算 wrong；没有答案时，真值是关键词为 unresolved_ok，
   否则 missed。摘要 = M5-2 的 rescore（含按级截断表）加每个站点类一行（`type_ref` 单独可归因）；宇宙台账对冻结宇宙的每个站点
   都解一遍（逐类逐级、逐类逐拒答原因计数），解出率是召回的上限；审阅者记下的候选漏检逐条附上检测器在那一行读到的每个站点与
-  阶梯的答案。生成器冻结前先跑 CI 的核对。档 `contracts/eval/lang-precision-<语料>-v1.json`；它是冻结档里唯一依赖产品代码的：
+  阶梯的答案。生成器冻结前先跑 CI 的核对。档 `contracts/eval/lang-precision-<语料>-v<代>.json`；它是冻结档里唯一依赖产品代码的：
   阶梯的改动挪动了答案就重判——删档、重生成、在本册具名记一条。CI 门（`cli/tests/it/eval_lang_precision.rs`，不跑 git、不要
   克隆）：冻结集 = 已判分考题的语料（考题表的 `scored` 旗标与盘上的档逐语料相符，判分前必须已审阅）；每行按样本顺序回显身份
   与审阅真值、答案只能是三种形状之一、判词从行本身重算；摘要从行重算；台账的比率从两张计数表重算、逐类合计等于冻结宇宙；
@@ -194,6 +197,38 @@ koreader 自己的模块同名的文件」判（若有，那些行会变成 `ext
 的 `dofile` 路径 3 条，可能的伪站点 1 条（`spore_spec.lua:67` 的 `require` 取回的是预先塞进 `package.loaded` 的桩）；判分时
 逐条核实。另有 7 条落在 luarocks 的命令行启动脚本 `src/bin/luarocks`（没有扩展名的 Lua 脚本，两批各自记下）：按扩展名走的
 冻结宇宙看不到它，所以不算本册的候选漏检，照录在审阅表新的 `scope_gaps` 栏。
+
+### 第二代：受保护的加载（2026-09-25 重冻结）
+
+用户裁「现在支持」（2026-09-25）：`pcall(require, "x")` 调用 `require("x")`、把错误交回而不抛出，是可选模块的惯用
+写法；检测器从此把受保护的调用读成它保护的那次调用（`graph/spec.rs` 的 `LUA_PROTECTED`：`pcall` 的目标实参跟在
+函数之后，`xpcall` 的跟在消息处理函数之后——Lua 5.2 起与 LuaJIT 把其余实参传下去，5.1 的 `xpcall` 不传）。第一代的
+站点宇宙少记了这类加载，按上面的重冻结规则整门考题升为第二代。第一代五份档按名退役，删出树、历史里仍在：
+`lang-slice-luarocks-v1.json`、`lang-slice-koreader-v1.json`、`lang-sample-lua-v1.json`（冻结于 `9d28d6b`）与
+`lang-review-luarocks-v1.json`、`lang-review-koreader-v1.json`（冻结于 `8f823c0`）。
+
+| 语料 | tip | 文件 | 站点 | require | load | 冻结行变了的文件 |
+|---|---|---|---|---|---|---|
+| luarocks/luarocks | `2d2cc8e` | 162 | 702 | 702 | 0 | 77 |
+| koreader/koreader | `d9cd278` | 594 | 5,058 | 4,967 | 91 | 16 |
+
+多出的 95 + 33 个站点逐文件对过受保护加载的字面写法：luarocks 的 95 个都是 `pcall(require, "…")`，其中 73 个是
+Teal 编译产物首行的 `compat53.module` 兼容前言；koreader 的 33 个是 29 个 `pcall(require, "…")` 与 4 个
+`pcall(dofile, "…")`；两个语料都没有这样用 `xpcall`。字面写法里没读成站点的都该如此：拼出来的模块名 3 处
+（`"luarocks.build." .. btype` 一类）、写在字符串里的生成代码 2 处（luarocks 为 Unix 与 Windows 拼的包装脚本）、块注释
+里的 1 处（koreader `frontend/device/kindle/device.lua` 注释掉的 `isWifiUp`）。同一个检测器重生成 Java 与 R 的四份站点
+宇宙，除 `generated_from` 外与冻结档逐字相同（gson 22,698、jsoup 24,210、stringr 55、covid19model 1,697 个站点）：
+`LUA_PROTECTED` 只在 Lua 这一臂。
+
+样本：配额不变（require 84 / load 16，备用两类各 20）；主样本 97 道与第一代相同——秩只由站点自身的字段定，新进的
+站点只挤掉排在它们之后的——3 道新进（luarocks 两处 `compat53.module`，koreader `frontend/userpatch.lua` 的
+`pcall(require, "android")`），3 道被挤出（koreader 的 `ffi`、`ui/event`、`ui/widget/inputtext`）；按语料分是 luarocks
+require 12、koreader require 72 + load 16，落在 87 个文件上。三份档的 `generated_from` 记 ce 1.7.4、树 `8f823c0`、
+dirty = true：受保护调用的读法与这三份档在同一个提交里落地。
+
+真值：第二代的 100 道主样本整体重新盲评（下一个提交），不沿用第一代的判词——第一代审阅表的候选漏检里有 8 条正是现在
+读得到的受保护加载，考题变了，审阅表跟着换代；新判词在 97 道相同题上与第一代的一致程度一并记下，作为盲评本身的噪声
+读数。
 
 ## R（步 4）
 

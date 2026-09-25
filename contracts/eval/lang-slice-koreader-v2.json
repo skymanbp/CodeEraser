@@ -17,7 +17,7 @@
       "path": "datastorage.lua",
       "sha256": "32ba6a7688ee2a279fbc67dad9060454a58420a9065a10175f47866fa4f967cb",
       "sites": {
-        "require": 1
+        "require": 2
       }
     },
     {
@@ -120,7 +120,7 @@
       "path": "frontend/apps/reader/modules/readeractivityindicator.lua",
       "sha256": "f85c0ea5dce62e6520f37e76e0d9c0366a94f4b7992951528b8c5d6ef2bed08b",
       "sites": {
-        "require": 2
+        "require": 3
       }
     },
     {
@@ -486,7 +486,7 @@
       "sha256": "ecd9a2827c710cc50fd1b9435f149711415a601b783551aef6256c2865a7902a",
       "sites": {
         "load": 1,
-        "require": 22
+        "require": 23
       }
     },
     {
@@ -500,7 +500,7 @@
       "path": "frontend/device/android/powerd.lua",
       "sha256": "eabb4a23f8f05970162c2bc432d8e1ce90415d9108ed28c4ba25dd0778da8c37",
       "sites": {
-        "require": 1
+        "require": 2
       }
     },
     {
@@ -579,7 +579,7 @@
       "sha256": "20b891f773f6caadda278822b88330d02e28a4a88115493fd589b02006b40a37",
       "sites": {
         "load": 7,
-        "require": 77
+        "require": 94
       }
     },
     {
@@ -617,7 +617,7 @@
       "path": "frontend/device/kindle/powerd.lua",
       "sha256": "e4f233415386f9d5c48ad5d8222d8c4c703090908f08d61fc999978a2649282f",
       "sites": {
-        "require": 5
+        "require": 6
       }
     },
     {
@@ -867,7 +867,7 @@
       "path": "frontend/gettext.lua",
       "sha256": "c992d0448800cfebbe66979e1bd974091c1646160f47a037aa7ce6d76069e57a",
       "sites": {
-        "require": 5
+        "require": 6
       }
     },
     {
@@ -899,7 +899,7 @@
       "path": "frontend/logger.lua",
       "sha256": "f0d17650a7bfb4193fd9d5c5ab07e1e9663d01b280474a0d71cd1847efcbd4bd",
       "sites": {
-        "require": 1
+        "require": 2
       }
     },
     {
@@ -915,6 +915,7 @@
       "path": "frontend/luadefaults.lua",
       "sha256": "efaf82c77f6959689e6ea8c0be0eeb6f4e33a59a21afecd192a0993b7075f126",
       "sites": {
+        "load": 1,
         "require": 6
       }
     },
@@ -1450,6 +1451,7 @@
       "path": "frontend/ui/data/onetime_migration.lua",
       "sha256": "f2f629eac26445001c7734c2ad2fa080e206a7d474f3adf7e3244f17b829718b",
       "sites": {
+        "load": 2,
         "require": 23
       }
     },
@@ -1507,7 +1509,7 @@
       "sha256": "d7e3801f2a81ed246ed4d9473a6a71e5fe3e0a9ac075e16408e08c391b417999",
       "sites": {
         "load": 8,
-        "require": 21
+        "require": 22
       }
     },
     {
@@ -1684,7 +1686,7 @@
       "path": "frontend/ui/elements/timeout_android.lua",
       "sha256": "f0ada8a6db216313c6d309508514fd33cf64fea07ab9e927da932f3785f00c7a",
       "sites": {
-        "require": 3
+        "require": 4
       }
     },
     {
@@ -2702,7 +2704,7 @@
       "path": "frontend/userpatch.lua",
       "sha256": "9fa51408b32c038ff919480d86077e5fa6da7b180b8a1bdddb6011047b6961c1",
       "sites": {
-        "require": 7
+        "require": 8
       }
     },
     {
@@ -3042,7 +3044,7 @@
       "path": "plugins/coverimage.koplugin/main.lua",
       "sha256": "9e50cef2a74e1a18d2caae027945579a67469bc6727a7370b36bcf0282fe8163",
       "sites": {
-        "require": 20
+        "require": 21
       }
     },
     {
@@ -3893,7 +3895,7 @@
       "path": "plugins/wallabag.koplugin/main.lua",
       "sha256": "b7812479b7337cbc8d1fb03ff3fdf129c962a7eb858ca3bae075f2e449eb3221",
       "sites": {
-        "require": 31
+        "require": 32
       }
     },
     {
@@ -4626,6 +4628,7 @@
       "path": "tools/bench/djvu_getpagetextboxes_bench.lua",
       "sha256": "78b1cdf256770adf144474cc4b8060f1702ef23ee77874d44b483657b9620ab7",
       "sites": {
+        "load": 1,
         "require": 5
       }
     },
@@ -4688,7 +4691,7 @@
   ],
   "generated_from": {
     "ce": "1.7.4",
-    "commit": "ced7ea8b37d47b0d19f59137e1d276229c3a8959",
+    "commit": "8f823c0292948e6844650c99f07b6146ccd41331",
     "dirty": true
   },
   "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
@@ -4702,9 +4705,9 @@
   "summary": {
     "files": 594,
     "sites_by": {
-      "lua/load": 87,
-      "lua/require": 4938
+      "lua/load": 91,
+      "lua/require": 4967
     },
-    "total_sites": 5025
+    "total_sites": 5058
   }
 }

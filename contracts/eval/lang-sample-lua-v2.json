@@ -41,6 +41,18 @@
       "spec": "plugins/calibre.koplugin/wireless.lua"
     },
     {
+      "audit": "077582dc317c4b0c99e00b97428cb03f93809d5b2306cb13ec6029eeceef4e84",
+      "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
+      "corpus": "koreader",
+      "kind": "load",
+      "lang": "lua",
+      "line": 145,
+      "nth": 0,
+      "path": "frontend/ui/data/onetime_migration.lua",
+      "rank": "438e0ff829035d35d6fe8e85106fe596d2b280cccbb4a3003f069c92d0d3f613",
+      "spec": "plugins/statistics.koplugin/main.lua"
+    },
+    {
       "audit": "1883b79b171728fdfc0fecb7c82ea023c801fee974003ee32cf758565f8002c7",
       "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
       "corpus": "koreader",
@@ -231,18 +243,6 @@
       "path": "frontend/apps/reader/modules/readermenu.lua",
       "rank": "867323d5b62c14407b52cfd4a8842048fcc89ecd9f43c56857153991763c8a3a",
       "spec": "frontend/ui/elements/page_overlap.lua"
-    },
-    {
-      "audit": "40d69d198e5e720bb75f32aa8c746152c1280a4832ce3cb0f5bea0c94af2db78",
-      "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
-      "corpus": "koreader",
-      "kind": "load",
-      "lang": "lua",
-      "line": 1,
-      "nth": 0,
-      "path": "frontend/ui/data/keyboardlayouts/en_keyboard.lua",
-      "rank": "5f8d667e66192943cabd4e45f4e536e2355c249d79b8ffb6cb2684d5b52d2b01",
-      "spec": "frontend/ui/data/keyboardlayouts/keypopup/en_popup.lua"
     },
     {
       "audit": "001cf2aa0c0d8887b0cadd160b9604a65389934b4c7d13db9a7df642526a4c3f",
@@ -496,12 +496,24 @@
   },
   "generated_from": {
     "ce": "1.7.4",
-    "commit": "ced7ea8b37d47b0d19f59137e1d276229c3a8959",
+    "commit": "8f823c0292948e6844650c99f07b6146ccd41331",
     "dirty": true
   },
   "lang": "lua",
   "method": "hash-ranked stratified draw over the language's frozen site universes, reconstructed file by file against their frozen rows. rank id = sha256(domain|corpus|commit|path|line|nth|kind|spec), the M5-2 payload. Primaries: per kind min(min_per_kind, pool), the seats left to total by largest remainder over each kind's remaining pool, top of the site-domain rank per kind; rows stored in audit-domain order. Backups: per kind, the audit-domain rank over the unpicked rest — the audit walks them only for an unanswerable primary of the same kind.",
   "rows": [
+    {
+      "audit": "0050df94557d96e206b1192991c241bb714cd7321b2dd57684daf0e8d6604822",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "kind": "require",
+      "lang": "lua",
+      "line": 1,
+      "nth": 0,
+      "path": "src/luarocks/build/cmake.lua",
+      "rank": "00bedece192860b1604c73de75dfb8404bd1798ab26e2e6e3ea3743b6f94dd0d",
+      "spec": "compat53.module"
+    },
     {
       "audit": "043abb18c12ecfe45e966a773de2b8beabf9d7200149981ca1235dfb5f138499",
       "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
@@ -729,18 +741,6 @@
       "path": "spec/upload_spec.lua",
       "rank": "0103c3750ae2cf3bf13be89605b74665d9084bce0c79f1476c2614c6319d6702",
       "spec": "spec.util.test_env"
-    },
-    {
-      "audit": "3626d657470d7c0ec85fac97aa2cdd85f9726795ae82606206abb6f4e560322a",
-      "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
-      "corpus": "koreader",
-      "kind": "require",
-      "lang": "lua",
-      "line": 9,
-      "nth": 0,
-      "path": "frontend/document/pdfdocument.lua",
-      "rank": "0355eb1fb2ba128e1db2c15637c85d55dab4d07fbb8c2f4566f3f0a6bb629cdc",
-      "spec": "ffi"
     },
     {
       "audit": "376b5c84eb201a9b8ce02feaf15e3ff5d2fa9ae6f9e71949a9f31f4ca66c0e96",
@@ -971,6 +971,18 @@
       "spec": "ui/widget/verticalgroup"
     },
     {
+      "audit": "609fcedbd071c26a5d354858b610e4c3a431151def709b7db3d0d8388055749a",
+      "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
+      "corpus": "koreader",
+      "kind": "require",
+      "lang": "lua",
+      "line": 7,
+      "nth": 0,
+      "path": "frontend/userpatch.lua",
+      "rank": "01f036b323969928da2c38cda57edd5e557bece938539633d746221f9a7b55af",
+      "spec": "android"
+    },
+    {
       "audit": "60ad7015886602ddfae8295603f4165efc40df5935b2d5ade65350e992bac802",
       "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
       "corpus": "koreader",
@@ -1019,6 +1031,18 @@
       "spec": "ui/widget/container/movablecontainer"
     },
     {
+      "audit": "6a87204d6142d6a6cd9270a8e21121480ffd303430a272ce94e93cf0aad07a8f",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "kind": "require",
+      "lang": "lua",
+      "line": 1,
+      "nth": 0,
+      "path": "src/luarocks/fetch/cvs.lua",
+      "rank": "011268de2ab0e132c7af962d0635d7aa5b82f4944a29abc701950731ac177e1b",
+      "spec": "compat53.module"
+    },
+    {
       "audit": "6b2ff72ef98e7eb6072c7af91df94f4fa796ab107472d546fde6e0d76d8f51ec",
       "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
       "corpus": "luarocks",
@@ -1029,18 +1053,6 @@
       "path": "src/luarocks/cmd/build.lua",
       "rank": "01e281bbb79ecbe434c5ebc4ca0c683f6a6d0f4a3a9cde6781ca98b3b67951c6",
       "spec": "luarocks.fs"
-    },
-    {
-      "audit": "6c7f5ecc841f6fd5b342b359ae3493f694ecf7aa82fc02ce4bf241aaf3ca81bc",
-      "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
-      "corpus": "koreader",
-      "kind": "require",
-      "lang": "lua",
-      "line": 7,
-      "nth": 0,
-      "path": "frontend/apps/reader/modules/readerhighlight.lua",
-      "rank": "0338ae4917425a416fd6f930a4918f3f797459fd6161f9848cbdfb13b0097cf3",
-      "spec": "ui/event"
     },
     {
       "audit": "6e05493c2a4ca5674682fa913bce47391433e61ef7172ffa0ad457578332a929",
@@ -1065,18 +1077,6 @@
       "path": "frontend/ui/widget/textwidget.lua",
       "rank": "00987beb808d9f0411763034ec5d9642bd3a1744aa6f382be29fc382a2960fc2",
       "spec": "ui/widget/widget"
-    },
-    {
-      "audit": "6f4ac089c745368ecbb85e560e219dbf3ac8021c74f864c5592e423ad9cfa6e6",
-      "commit": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
-      "corpus": "koreader",
-      "kind": "require",
-      "lang": "lua",
-      "line": 7,
-      "nth": 0,
-      "path": "plugins/terminal.koplugin/terminputtext.lua",
-      "rank": "03673abb31d85a916638474c6ca82dddc53fd3dbd87a8a176780c0e0263902cd",
-      "spec": "ui/widget/inputtext"
     },
     {
       "audit": "6f5b167a9e86b3560061864aa4f3001f6f4f3b6a6b09da2baa4a8d3908880e27",
@@ -1708,12 +1708,12 @@
     {
       "corpus": "luarocks",
       "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
-      "total_sites": 607
+      "total_sites": 702
     },
     {
       "corpus": "koreader",
       "tip": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44",
-      "total_sites": 5025
+      "total_sites": 5058
     }
   ]
 }

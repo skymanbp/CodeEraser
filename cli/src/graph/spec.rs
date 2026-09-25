@@ -162,7 +162,8 @@ pub struct CallSite {
 }
 
 /// Lua: a module by `require` (a dotted name, the package.path search),
-/// a file by `dofile` / `loadfile` (a path).
+/// a file by `dofile` / `loadfile` (a path) — called directly or under
+/// protection (LUA_PROTECTED).
 const LUA_CALLS: [CallSite; 2] = [
     CallSite {
         label: "require",
@@ -177,6 +178,16 @@ const LUA_CALLS: [CallSite; 2] = [
         unquoted: None,
     },
 ];
+
+/// Lua calls a loader under protection too: `pcall(require, "x")` runs
+/// `require("x")` and hands back its error instead of raising it — the
+/// idiom for an optional module. The wrapper's first argument is the
+/// protected function, spelled as a bare name, and that function's own
+/// arguments follow the `leading` ones: the function for `pcall`, the
+/// function and the message handler for `xpcall` (Lua 5.2 on, and
+/// LuaJIT, pass the rest on; 5.1's `xpcall` takes none). A function
+/// named any other way (`pcall(m.require, "x")`) is no row's callee.
+const LUA_PROTECTED: [(&str, usize); 2] = [("pcall", 1), ("xpcall", 2)];
 
 /// R: a file by `source` (its first formal is `file`), a package by the
 /// `library` family (`package`). `library` and `require` read a bare
@@ -210,6 +221,15 @@ pub fn calls(lang: Lang) -> &'static [CallSite] {
     match lang {
         Lang::Lua => &LUA_CALLS,
         Lang::R => &R_CALLS,
+        _ => &[],
+    }
+}
+
+/// The protected-call wrappers of one language, each with the count of
+/// arguments before the protected function's own (LUA_PROTECTED).
+pub fn protected(lang: Lang) -> &'static [(&'static str, usize)] {
+    match lang {
+        Lang::Lua => &LUA_PROTECTED,
         _ => &[],
     }
 }
