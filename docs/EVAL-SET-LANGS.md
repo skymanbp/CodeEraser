@@ -166,6 +166,35 @@ Lua 与 R 从一开始就各取两个语料，一个包、一个应用（设计�
 三份档的 `generated_from` 记 ce 1.7.4、树 `ced7ea8`、dirty = true：冻结时 Lua 的检测代码本身还没提交（它和这三份
 档在同一个提交里落地），与 Java 那三份同理。
 
+### 真值（2026-09-25 冻结）
+
+档 `contracts/eval/lang-review-luarocks-v1.json` 与 `lang-review-koreader-v1.json`。切批与读法同 Java 一节：100 道主样本
+按审阅序切成四批，每批 25 道交给一个独立的 Opus 代理，只读两个语料在钉住 tip 的干净克隆和自己那一批，不读仓库里别的
+东西、不跑 `ce`（派卷前清掉了 luarocks 副本里插件钩子留下的 `.ce/` 索引——那是解析结果）。判词照 Lua 自己的装载规则：
+`require` 走 `package.searchers`，用项目实际运行时的 `package.path`（入口脚本、启动器、测试配置、安装布局设的那一个），
+答第一个命中的模板找到的语料内文件；`dofile` / `loadfile` 的路径相对进程的工作目录，按项目从哪个目录运行来判。词表：
+语料内文件、`external` / `ambiguous` / `dynamic` / `none`。装配逐字照录，判决不动。100 道的 spec 全在记录的行上，零
+失配，没有动用备用题；没有 `ambiguous` / `dynamic` / `none`。
+
+| 语料 | 主样本 | external | 文件 |
+|---|---|---|---|
+| luarocks | 10 | 0 | 10 |
+| koreader | 90 | 12 | 78 |
+
+koreader 的 `require` 多落在 `frontend/`：`setupkoenv.lua` 把 `common/?.lua;frontend/?.lua;plugins/exporter.koplugin/?.lua;`
+放在搜索路径最前，各启动器先进入安装目录（Makefile 把仓库的 `frontend/` 与 `plugins/` 链接进去），16 道 `load` 也在那个
+目录下按路径打开。12 道 external 是 LuaJIT 内建（`ffi`、`bit`）、没检出的子模块 koreader-base 提供的模块（`ffi/*`、
+`libs/libkoreader-lfs`）与 LuaSocket（`socket.url`）。luarocks 的 10 道落在 `src/luarocks/` 与 `spec/util/`：源码运行的包装
+脚本、安装后的启动器、单文件版与测试四种运行方式到的是同一个文件。
+
+两条约定照判词记下。搜索路径的第一个模板 `common/?.lua` 指向 koreader-base 的构建产物，克隆里没有：代理按「那里没有与
+koreader 自己的模块同名的文件」判（若有，那些行会变成 `external`，KOReader 自己也会坏）。测试的运行器在同一个子模块里，
+测试的工作目录按 `make/emulator.mk` 推定。候选漏检 16 条（luarocks 12、koreader 4）：`pcall(require, "…")` 传字面模块名
+8 条（其中 7 条是 luarocks 各文件首行的 `compat53.module` 兼容前言），`loader.lua` 里 `require` 的局部别名 4 条，拼出来
+的 `dofile` 路径 3 条，可能的伪站点 1 条（`spore_spec.lua:67` 的 `require` 取回的是预先塞进 `package.loaded` 的桩）；判分时
+逐条核实。另有 7 条落在 luarocks 的命令行启动脚本 `src/bin/luarocks`（没有扩展名的 Lua 脚本，两批各自记下）：按扩展名走的
+冻结宇宙看不到它，所以不算本册的候选漏检，照录在审阅表新的 `scope_gaps` 栏。
+
 ## R（步 4）
 
 ### 站点宇宙与抽样（2026-09-25 冻结）
@@ -187,3 +216,28 @@ stringr 是包：包内的 R 文件之间不经任何站点互相引用（装载
 宇宙里的每个站点都解一遍。
 
 三份档的 `generated_from` 同 Lua。
+
+### 真值（2026-09-25 冻结）
+
+档 `contracts/eval/lang-review-stringr-v1.json` 与 `lang-review-covid19model-v1.json`，切批与读法同 Lua 一节。判词：
+`source` 的路径相对工作目录——covid19model 的说明（README、Docker 说明、CI）都从仓库根运行脚本，`covid19AgeModel/` 之外
+没有 `setwd` / `chdir`；`library` / `pkg::` 在语料里有 `DESCRIPTION` 声明同名包时答包目录（语料根是包时写 `.`），否则
+`external`。100 道的 spec 全在记录的行上，零失配，没有动用备用题；没有 `ambiguous` / `dynamic` / `none`。
+
+| 语料 | 主样本 | external | 文件 | 包目录 |
+|---|---|---|---|---|
+| stringr | 2 | 2 | 0 | 0 |
+| covid19model | 98 | 80 | 15 | 3 |
+
+covid19model 唯一的 `DESCRIPTION` 在 `covid19AgeModel/`（`Package: covid19AgeModel`），三道 `library(covid19AgeModel)`
+答这个目录；80 道 external 里 79 道是 CRAN 包与 R 自带的 `parallel`，1 道是
+`source("usa/code/utils/read-data-usa-2.r")`——语料里没有这个文件（调用在 `covid19AgeModel/inst/deprecated/` 的旧脚本
+里），按词表「语料外的文件」判 `external`。两道 `source` 只在 `if (FULL)` 分支里执行，README 要求完整模式运行、分支
+决定读不读而不决定读哪个，按文件判。stringr 两道是 `cli::` 与 `vctrs::`。候选漏检 6 条：样本没有抽到的字面 `source` 1 条与
+`library(covid19AgeModel)` 2 条，经 `system("Rscript …")` 另起进程运行语料内脚本 3 条（不在两类站点之内，只作信息）。一个代理另用 R 4.6.1 自己的解析器（`parse` + `getParseData`）核对了它那批站点，照判词记下；
+另一个代理曾在共用的批文件目录里写过两个辅助脚本（含它的判词），交卷前自行删除——每个代理的说明都只许读自己那一批。
+
+门随本节加两处（`cli/tests/it/eval_lang_parts/review.rs`）：包目录真值不再只给按需导入，一张 `PACKAGE_KINDS` 表按站点类说
+包的代码在目录下哪里——Java 的按需导入是直接装着该包冻结文件的目录，R 的包装载是包根、其 `R/` 下直接有冻结文件；候选
+漏检分两栏，`site_gaps` 必须落在冻结文件上、`scope_gaps` 必须落在冻结宇宙之外（Java 的两张表早于这一栏，没有它）。
+考题表 Lua、R 的 `audited` 翻为 true。
