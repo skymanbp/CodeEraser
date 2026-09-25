@@ -20,13 +20,16 @@ demo/** text eol=lf
 README.md text eol=lf
 README.zh.md text eol=lf
 
-# GitHub linguist (v0.5.0 cleanup batch): the language bar measures
-# the PRODUCT — test batteries and frozen contract fixtures are
-# scaffolding, excluded symmetrically on both language sides; the
+# GitHub linguist (v0.5.0 cleanup batch; revised 2026-09-25): the
+# language bar counts the product plus the Haskell core's own
+# property batteries (core/test) — a user ruling of 2026-09-25 (the
+# Haskell share target, plan banner v2.31). It is NOT symmetric: the
+# Rust test suites live in the CodeEraser-tests submodule, which
+# linguist never reads, so the bar leans toward Haskell by that
+# battery's size. Frozen contract fixtures stay scaffolding; the
 # website is documentation. The judgment core is Haskell, the
-# measurement plumbing Rust (ADR-001/002) — stats should say so.
+# measurement plumbing Rust (ADR-001/002).
 cli/tests/** linguist-vendored
-core/test/** linguist-vendored
 contracts/** linguist-vendored
 site/** linguist-documentation
 
