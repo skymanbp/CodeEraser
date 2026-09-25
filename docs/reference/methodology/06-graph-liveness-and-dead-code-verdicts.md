@@ -40,13 +40,13 @@ candidate resolves it, and more than one candidate at a rung is `Unresolved(ambi
 picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph/ladder/mod.rs#L1)).
 `External` (stdlib, registry, `node_modules`) is a **correct terminal answer, not a miss**
 (same lines). Every resolved edge stores the rung that answered it
-([ladder/mod.rs:43](../../../cli/src/graph/ladder/mod.rs#L43)), which is what makes per-level precision
+([ladder/mod.rs:48](../../../cli/src/graph/ladder/mod.rs#L48)), which is what makes per-level precision
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported, Empty`
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
-([ladder/mod.rs:49-60](../../../cli/src/graph/ladder/mod.rs#L49)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:221-224](../../../cli/src/graph/ladder/mod.rs#L221)).
+([ladder/mod.rs:54-65](../../../cli/src/graph/ladder/mod.rs#L54)); a language without rungs must return
+`Unsupported`, never a silent skip ([ladder/mod.rs:230-233](../../../cli/src/graph/ladder/mod.rs#L230)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -256,7 +256,7 @@ crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for t
 Rust ladder's `mod` and `crate::` rungs alike
 ([rs.rs:79](../../../cli/src/graph/ladder/rs.rs#L79)), one normalizer serving both readers
 ([graph.rs:77](../../../cli/src/config/graph.rs#L77)); a declared path the walk does not hold, or that
-is no Rust file, is refused by name ([walkidx.rs:127](../../../cli/src/dedup/walkidx.rs#L127)). The legacy flags column this
+is no Rust file, is refused by name ([walkidx.rs:132](../../../cli/src/dedup/walkidx.rs#L132)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.

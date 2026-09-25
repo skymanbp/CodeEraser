@@ -101,10 +101,10 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// 3, one release): the `include`, `import_star` and `type_ref` site
 /// kinds join KINDS (a Java single-type import keeps the `import`
 /// label), C / C++ and Java declarations enter the symbols table with
-/// their own visibility and convention words, and compile_commands.json
-/// becomes a resolver config — new stored kind codes and new stored
-/// rows, so every site is re-detected. Step 3 did not move the counter:
-/// no index ever held a row it changes (step 2 shipped in no release).
+/// their own visibility and convention words, compile_commands.json
+/// becomes a resolver config and Java's declared packages join the
+/// resolve_key — new kind codes and stored rows, so every site is
+/// re-detected; step 3 kept 16, since step 2 shipped in no release.
 pub const GRAPH_REV: i64 = 16;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the

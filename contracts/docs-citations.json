@@ -114,7 +114,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 295,
+    "line": 296,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|3c4c22af6667dce2|0": {
@@ -144,7 +144,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|757b0378afa2499a|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 264,
+    "line": 265,
     "text": "idx.resolve_refreshed(&dirty, &mut resolver)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|764cfb44238d1148|0": {
@@ -154,22 +154,22 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 285,
+    "line": 286,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 303,
+    "line": 304,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|1": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 303,
+    "line": 304,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|c97285682ec824a2|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 308,
+    "line": 309,
     "text": "kgram: 25,\nwindow: 26,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|0": {
@@ -931,14 +931,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 295,
-    "end": 299,
+    "line": 296,
+    "end": 300,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 303,
-    "end": 311,
+    "line": 304,
+    "end": 312,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -3603,7 +3603,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
     "target": "../../../cli/src/dedup/walkidx.rs",
-    "line": 127,
+    "line": 132,
     "text": "anyhow::ensure!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
@@ -3896,8 +3896,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|6e425539668b7f43|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 221,
-    "end": 224,
+    "line": 230,
+    "end": 233,
     "text": "Lang::Rust => rs::resolve(site, scope),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -3908,13 +3908,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 49,
-    "end": 60,
+    "line": 54,
+    "end": 65,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|e63f76e53c783474|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 43,
+    "line": 48,
     "text": "pub type Rung = u8;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|04440d166e5d3c04|0": {
@@ -6664,8 +6664,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 285,
-    "end": 311,
+    "line": 286,
+    "end": 312,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|98cd5d387767c13a|0": {

@@ -8,6 +8,7 @@
 
 use super::{Params, index, pairs, tokens};
 use crate::config::Config;
+use crate::graph::ladder::java_header;
 use crate::graph::store;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
@@ -31,6 +32,9 @@ pub(super) struct WalkIndex {
     /// ce.toml `[graph.search_roots]`: language → directories, each
     /// holding at least one walked file (plan v2.30).
     pub search_roots: BTreeMap<String, BTreeSet<String>>,
+    /// Every walked Java file's header (plan v2.30 step 3): the Java
+    /// ladder's candidate index, handed over through ladder::Scope.
+    pub java: BTreeMap<String, java_header::Header>,
 }
 
 /// One full-tree pass: the walk (refresh_tree) and then the phase-2
@@ -45,6 +49,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         resolve_key: 0,
         crate_roots: BTreeSet::new(),
         search_roots: BTreeMap::new(),
+        java: BTreeMap::new(),
     };
     // md slug sets are resolver INPUTS like config bytes (the anchor
     // rung reads the target's headings), so they join the key — a
@@ -101,7 +106,7 @@ fn refresh_tree(
         let Some(src) = walk::read_surviving(&path)? else {
             continue; // vanished mid-walk: not live this pass
         };
-        lang_fact(lang, &rel, &src, md_facts);
+        lang_fact(lang, &rel, &src, md_facts, &mut out.java);
         if idx.refresh_file(&rel, &src, lang, Params::default(), foreign)? {
             out.dirty.insert(rel.clone());
         }
@@ -171,9 +176,18 @@ fn roots_bytes<'r>(roots: impl Iterator<Item = &'r String>) -> Vec<u8> {
 }
 
 /// Cross-file resolver INPUTS per language (split from index_all at
-/// the E01 fn gate): md heading slugs and the Rust pub-use surface
-/// both join the resolve_key — the same discipline, one throat.
-fn lang_fact(lang: Lang, rel: &str, src: &[u8], facts: &mut Vec<(String, u64)>) {
+/// the E01 fn gate): md heading slugs, the Rust pub-use surface and a
+/// Java file's declared package all join the resolve_key — the same
+/// discipline, one throat. A Java header's imports stay out of the key:
+/// they steer only the file's own sites, which a change to them
+/// re-resolves as the file's refresh does.
+fn lang_fact(
+    lang: Lang,
+    rel: &str,
+    src: &[u8],
+    facts: &mut Vec<(String, u64)>,
+    java: &mut BTreeMap<String, java_header::Header>,
+) {
     let text = String::from_utf8_lossy(src);
     match lang {
         Lang::Markdown => facts.push((rel.to_string(), crate::graph::ladder::md::slug_hash(&text))),
@@ -181,6 +195,11 @@ fn lang_fact(lang: Lang, rel: &str, src: &[u8], facts: &mut Vec<(String, u64)>) 
             rel.to_string(),
             crate::graph::ladder::rs_reexport::pubuse_hash(&text),
         )),
+        Lang::Java => {
+            let header = java_header::read(&text);
+            facts.push((rel.to_string(), tokens::fnv1a(header.package.as_bytes())));
+            java.insert(rel.to_string(), header);
+        }
         _ => {}
     }
 }
