@@ -15,6 +15,19 @@
 //! yields to the inner if, which scores flat +1 and keeps its children
 //! at the chain's nesting level (Sonar Appendix B).
 //!
+//! Headers do not nest (user ruling 2026-09-24, all languages): a
+//! structure's condition, loop clause, switch value or catch parameter
+//! scores at the structure's own level and only its body raises
+//! nesting; each coc_nesting_kinds entry names its structure's body.
+//! The whitepaper lists the structures that nest (p.9, Appendix B2)
+//! and is silent on their headers. The oracles agree only on an if's
+//! own condition, which sonar-java and PMD scan before nesting++; PMD
+//! 7.27.0 nests the loops', the switch's and an else-if's headers
+//! (register D31). An else-if's or an elif's condition sits at the
+//! chain's level, where the first if's does. The ternaries' entries
+//! name no body, so they nest whole: every operand is an expression,
+//! and PMD nests the ternary's condition too.
+//!
 //! What this module does NOT do: the recursion increment (p.8,
 //! Appendix B1 — one point for each function in a recursion cycle).
 //! That rule needs a call relation, so it is split (ADR-008 fourth
@@ -26,7 +39,7 @@
 //! reads scan::settle instead.
 
 use crate::scan::ast::{self, operator_text};
-use crate::scan::spec::LangSpec;
+use crate::scan::spec::{Kinds, LangSpec};
 use tree_sitter::Node;
 
 pub struct Cognitive {
@@ -80,15 +93,17 @@ impl Walker<'_, '_> {
         if self.spec.chain_kinds.contains(&kind) {
             self.score += 1; // one run of anonymous `&&` (let_chain)
         }
-        if self.spec.coc_nesting_kinds.contains(&kind) {
-            self.structural(node, nesting);
-        } else if self.spec.coc_flat_kinds.contains(&kind) {
+        if let Some(entry) = entry_of(self.spec.coc_nesting_kinds, kind) {
+            self.structural(node, entry, nesting);
+        } else if let Some(entry) = entry_of(self.spec.coc_flat_kinds, kind) {
             // An else-clause wrapping an if (`else if`) yields its +1
             // to the inner if; a plain else/elif pays here.
             if !has_child_of(node, self.spec.if_kinds) {
                 self.score += 1;
             }
-            self.walk_children(node, nesting);
+            // a flat branch that carries a condition (Python's elif)
+            // holds it at the chain's level, like an else-if
+            self.walk_split(node, entry, nesting.saturating_sub(1), nesting);
         } else if self.spec.coc_nest_only_kinds.contains(&kind) {
             self.walk_children(node, nesting + 1);
         } else {
@@ -100,15 +115,42 @@ impl Walker<'_, '_> {
         }
     }
 
-    fn structural(&mut self, node: Node<'_>, nesting: u32) {
+    fn structural(&mut self, node: Node<'_>, entry: &str, nesting: u32) {
         self.field_else_bonus(node);
         if self.is_else_if(node) {
             self.score += 1;
-            self.walk_children(node, nesting); // stay at chain level
+            // the chain's level: the body where the first if's sits,
+            // the condition where that if's own condition does
+            self.walk_split(node, entry, nesting.saturating_sub(1), nesting);
         } else {
             self.score += 1 + nesting;
             self.max_nesting = self.max_nesting.max(nesting + 1);
-            self.walk_children(node, nesting + 1);
+            self.walk_split(node, entry, nesting, nesting + 1);
+        }
+    }
+
+    /// A structure's children: its body (the positions its entry names
+    /// after the kind) at `body`, every other child (its header) at
+    /// `head`. An entry that names no position is all body: the
+    /// ternaries nest whole.
+    fn walk_split(&mut self, node: Node<'_>, entry: &str, head: u32, body: u32) {
+        let spots: Vec<&str> = entry.split(' ').skip(1).collect();
+        if spots.is_empty() {
+            return self.walk_children(node, body);
+        }
+        // a field can hold several children (Python's elif branches
+        // all hang on `alternative`), so every one of them is read
+        let mut cursor = node.walk();
+        let mut fielded = Vec::new();
+        for spot in &spots {
+            fielded.extend(
+                node.children_by_field_name(spot, &mut cursor)
+                    .map(|c| c.id()),
+            );
+        }
+        for child in super::walk::measured(node, self.spec) {
+            let in_body = fielded.contains(&child.id()) || spots.contains(&child.kind());
+            self.visit(child, if in_body { body } else { head });
         }
     }
 
@@ -120,7 +162,8 @@ impl Walker<'_, '_> {
             return;
         }
         if node.child_by_field_name("alternative").is_some_and(|a| {
-            !self.spec.if_kinds.contains(&a.kind()) && !self.spec.coc_flat_kinds.contains(&a.kind())
+            !self.spec.if_kinds.contains(&a.kind())
+                && entry_of(self.spec.coc_flat_kinds, a.kind()).is_none()
         }) {
             self.score += 1;
         }
@@ -133,7 +176,7 @@ impl Walker<'_, '_> {
         let Some(parent) = node.parent() else {
             return false;
         };
-        if self.spec.coc_flat_kinds.contains(&parent.kind()) {
+        if entry_of(self.spec.coc_flat_kinds, parent.kind()).is_some() {
             return true; // TS/Rust/Python/C: if directly under an else clause
         }
         self.spec.if_kinds.contains(&parent.kind())
@@ -150,6 +193,16 @@ impl Walker<'_, '_> {
                 .parent()
                 .is_none_or(|p| logic_op(p, self.src, self.spec).is_none())
     }
+}
+
+/// A kind's entry in a kind table: the kind, then, for a structure
+/// that nests or a branch that carries a condition, the positions of
+/// its body (spec.rs, coc_nesting_kinds).
+fn entry_of(table: Kinds, kind: &str) -> Option<&'static str> {
+    table
+        .iter()
+        .copied()
+        .find(|e| e.split(' ').next() == Some(kind))
 }
 
 /// Whether a direct child of `node` is one of `kinds` — a jump's

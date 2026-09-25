@@ -98,15 +98,15 @@ const FAMILY: LangSpec = LangSpec {
     cc_operators: &["&&", "||", "and", "or"],
     chain_kinds: &[],
     coc_nesting_kinds: &[
-        "if_statement",
-        "for_statement",
-        "for_range_loop",
-        "while_statement",
-        "do_statement",
-        "switch_statement",
+        "if_statement consequence alternative",
+        "for_statement body",
+        "for_range_loop body",
+        "while_statement body",
+        "do_statement body",
+        "switch_statement body",
         // the ternary nests like TypeScript's (register D4)
         "conditional_expression",
-        "catch_clause",
+        "catch_clause body",
     ],
     // the if's `alternative` is an else_clause, scored by the flat rule
     if_kinds: &["if_statement"],

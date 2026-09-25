@@ -13,11 +13,12 @@
 | Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（harness 已随 M7.5 封册退役，复跑从 git 历史复活；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
 | CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/it/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
-| CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见末节） |
+| CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见「递归增量」节） |
 | C CC | lizard 1.23.0 | 118 | **116/118** | 2 条归因保留（`default:`，D2；2026-09-24 计划 v2.30 步 2，详见 C / C++ 节） |
 | C++ CC | lizard 1.23.0 | 420 join（lizard 430 起始行 / ce 428 单位） | 394/420 | 26 条 + 两侧独有 18 条全归因：D1 20、D2 3、局部类 1 + 4、解析器恢复 1 + 14、lizard 三类缺陷 1 + 1 + 10 重复行（详见 C / C++ 节） |
 | Java CC | lizard 1.23.0 | 33 join（按结束行；lizard 34 行 / ce 38 单位） | **33/33** | 零数值分歧；ce 独有 5 条 = 带类型实参的匿名类方法，lizard 并进宿主或整段不报（D29，详见 Java 节） |
-| Java CoC | PMD 7.27.0 | 38 join（PMD 46 方法，8 个无体） | 36/38 | 匿名类方法并进宿主（D29，归因保留）1；`if` 条件里的三元 1（用户裁条件不算嵌套，下一提交落码） |
+| Java CoC | PMD 7.27.0 | 38 join（PMD 46 方法，8 个无体） | **37/38** | 匿名类方法并进宿主（D29，归因保留）1；`if` 条件里的三元那条随「条件不抬嵌套」（D31）落码两侧一致 |
+| CoC 条件不抬嵌套（D31） | 七个对拍语料重跑（新旧二进制同树） | 1,098 单元 | 2 条移动 | Java `checkAccessible` 3 → 2（与 PMD 相符）、C++ `do_write_float` 16 → 15，都是 `if` 条件里的三元（详见「条件不抬嵌套」节） |
 
 ## 对拍暴露并已修复的 ce 缺口（真收益）
 
@@ -295,7 +296,7 @@ return "a"; return "b"; } }; }` lizard 只报 `f` CCN 2；删掉 `<T>` 则报 `(
 2 与 `f` 1。无体方法（两个接口方法、六个 `abstract`）两侧都不成单位（D24 同一立场）。
 
 **CoC（PMD）**：PMD 46 个方法里 8 个无体（只有 CYCLO 1 那一行），其余与 ce 的 38 单位逐一 join
-（同名，且 PMD 报的行落在 ce 单位的起止行之间），**36/38 一致**。两条差：
+（同名，且 PMD 报的行落在 ce 单位的起止行之间），**37/38 一致**。一条差；落码前的第二条已随 D31 消掉：
 
 - `createBoundField`（:181）PMD 39 / ce 7：方法体里 `new BoundField(…) { … }` 的三个方法
   （`write` 12、`readIntoArray` 2、`readIntoField` 8，两侧对它们本身的读数相同）被 PMD 再整个
@@ -303,15 +304,36 @@ return "a"; return "b"; } }; }` lizard 只报 `f` CCN 2；删掉 `<T>` 则报 `(
   `CognitiveComplexityVisitor`）也并进宿主（`visitClass` 抬嵌套），但不再单独给这些方法记分
   （`shouldAnalyzeMethod` 跳过匿名类与局部类的成员）；PMD 两处都记。ce 的单位拆分模型下它们是
   独立单位、宿主不含——与 Python 装饰器（白皮书 p.15，上文「立场钉死」）同源，归因保留（D29）。
-- `checkAccessible`（:168）PMD 2 / ce 3：`if (!canAccess(member, isStatic(…) ? null : object))`
-  ——三元在 `if` 的条件里。PMD 与 sonar-java（`visitIfStatement` 在 `nesting++` 之前扫条件）都
-  不给条件加嵌套，ce 给（三元 +2）。白皮书没写条件算不算在结构里面（p.9 与 Appendix B2 只列抬
-  嵌套的结构）；2026-09-24 用户裁「条件都不算」——所有语言统一只让语句体抬嵌套，随下一个提交
-  落码，届时此行改为 37/38。
+- `checkAccessible`（:168）：`if (!canAccess(member, isStatic(…) ? null : object))`——三元在 `if`
+  的条件里。PMD 与 sonar-java（`visitIfStatement` 在 `nesting++` 之前扫条件）都不给条件加嵌套，读 2；
+  ce 落码前给（三元 +2）读 3。2026-09-24 用户裁「条件都不算」，落码后读 2，两侧一致（D31，见「条件
+  不抬嵌套」节）。
 
 PMD 的 CYCLO 不作 CC 对照：它是另一种口径——`throw` 计 +1（`createDuplicateFieldException`
 PMD 2、lizard 与 ce 1），控制流条件之外的 `&&` / `||` 不计（`BagOfPrimitives.equals` 末尾那句带
 三个 `&&` 的 `return`：PMD 3、lizard 与 ce 6）。
+
+## 条件不抬嵌套（2026-09-24，D31，所有语言）
+
+用户裁「条件都不算」：结构的头部——条件、循环子句、switch 的值、catch 的形参——按结构自己的层级计分，
+只有语句体抬嵌套；else-if / elif 的条件与首个 if 的条件同在链的层级；三元整个抬嵌套（D4 不变）。每个语言
+在 `LangSpec::coc_nesting_kinds` 的项里写明结构的语句体位置：字段名，或者语法没给语句体起字段名时写它的 kind
+（Python except 的 `block`、Go switch 的两种 case、Haskell case 的 `alternatives`）。白皮书只列抬嵌套的
+结构（p.9、Appendix B2），没说头部算不算在里面。
+
+对照物只在 `if` 自己的条件上一致：sonar-java 的 `visitIfStatement` 与 PMD 7.27.0 都在 `nesting++` 之前扫它。
+其余头部 PMD 照样抬嵌套。九个方法的探针（每个方法在一种头部里放一个三元），PMD 读 `if` 2、`while` 3、`for` 3、
+for-each 3、do-while 3、`switch` 3、else-if 4、`if` 条件里的 lambda 3、catch 体里 `if` 条件的三元 5；ce 读
+2 / 2 / 2 / 2 / 2 / 2 / 3 / 3 / 5——在循环、switch 与 else-if 的头上比 PMD 低 1，立场如此，归因保留。三元的
+条件里再套三元，两侧都抬嵌套（PMD 3、ce 3）。电池 `cli/tests/it/coc_headers.rs`（八种语言 25 行，每行记落码
+前的读数，Java 行另记 PMD 的读数）。
+
+重跑（落码前后两个二进制，同一棵树，逐单元按起始行对拍）：七个对拍语料 1,098 个单元里移动 2 个——Java
+`checkAccessible` 3 → 2（与 PMD 相符，见 Java 节）、C++ `do_write_float` 16 → 15（`if` 条件里的三元）；本仓
+（`4f021e2` 的 `cli/src`、`core/app`、`core/test`）与九个语料——cobra `adbc881`、gson `854c825`、jsoup `093e2f5`、
+requests `8068356`、ripgrep `3fce3b5`、zod `912f0f5`、junit4 `890f3c9`、mockito `5a2f0f8`、TheAlgorithms/Java
+`dd8df80`——43,732 个单元里移动 12 个，全是头部里的三元、lambda 或 Haskell `case` 判断值里的 `if`，每个降 1–2 分
+（jsoup `matchesSibling` 降 2：`for` 头里两个三元）。
 
 ## 工具注记
 

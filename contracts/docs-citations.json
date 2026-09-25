@@ -766,47 +766,47 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
     "target": "../../../cli/src/scan/spec_hs.rs",
-    "line": 79,
+    "line": 81,
     "text": "// string literals lex as ONE `string` leaf (quotes inside the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|62105facb0b61d1c|0": {
     "target": "../../../cli/src/scan/spec_hs.rs",
-    "line": 81,
+    "line": 83,
     "text": "literal_delims: &[],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|2f99cfba7853fa18|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 48,
+    "line": 50,
     "text": "// Python quotes surface as named string_start/string_end kinds."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|6102e94730fc5ddf|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 109,
+    "line": 111,
     "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|62105facb0b61d1c|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 49,
+    "line": 51,
     "text": "literal_delims: &[],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|8f2d953fe270d4e3|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 213,
+    "line": 217,
     "text": "literal_delims: &[\"\\\"\", \"`\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|94c43c67b19eccdd|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 161,
+    "line": 163,
     "text": "literal_delims: &[\"\\\"\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|b778be50cc3e9751|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 159,
+    "line": 161,
     "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|d5dc8ea61e1a0a65|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 212,
+    "line": 216,
     "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/trend/mod.rs|452a1b52cbdfe32a|0": {

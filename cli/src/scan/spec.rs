@@ -79,7 +79,16 @@ pub struct LangSpec {
     /// tokens invisible to cc_operators (Rust let_chain: no `operator`
     /// field). CC adds N-1; CoC adds one operator run.
     pub chain_kinds: Kinds,
-    /// Cognitive: structures that increment AND raise nesting.
+    /// Cognitive: structures that increment AND raise nesting. Each
+    /// entry is the kind, then where its body sits: a field name or,
+    /// where the grammar leaves the body unnamed (a Python except's
+    /// block, a Go switch's cases), the body child's kind. Only the
+    /// body raises nesting: every other child (the condition, a
+    /// loop's clause, a switch's value, a catch's parameter) is the
+    /// header and scores at the structure's own level. An entry that
+    /// names no position nests whole (the ternaries). The positions
+    /// sit in the entries, not in a table of their own: a second table
+    /// lines up across the language tables as a clone of itself.
     pub coc_nesting_kinds: Kinds,
     /// Cognitive: the if kinds, EXACT — where an else branch may hang
     /// off the if's `alternative` FIELD instead of arriving as an else
@@ -90,7 +99,10 @@ pub struct LangSpec {
     /// the block-only reading missed. A kind list, not a prefix: the
     /// ternary also has an `alternative` field (booklet §4 (d)).
     pub if_kinds: Kinds,
-    /// Cognitive: flat +1 (no nesting penalty), e.g. `else`.
+    /// Cognitive: flat +1 (no nesting penalty), e.g. `else`. A branch
+    /// that carries a condition names its body the way a nesting
+    /// entry does (Python's elif, whose condition stays at the
+    /// chain's level).
     pub coc_flat_kinds: Kinds,
     /// Cognitive: raise nesting only (lambdas / inline fns).
     pub coc_nest_only_kinds: Kinds,

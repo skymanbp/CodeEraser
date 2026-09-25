@@ -58,7 +58,9 @@ pub static HASKELL: LangSpec = LangSpec {
     // TEXT via the operator field, same as every other language.
     cc_operators: &["&&", "||"],
     chain_kinds: &[],
-    coc_nesting_kinds: &["conditional", "case", "multi_way_if"],
+    // `case e of`: the scrutinee is the header. `if` is an expression
+    // (a ternary) and a multi-way if has no header: both nest whole
+    coc_nesting_kinds: &["conditional", "case alternatives", "multi_way_if"],
     // `if … then … else …` is the `conditional` EXPRESSION, whose else
     // is its own field and scores like a nested ternary (module doc):
     // no if statement carries an alternative-field else here
