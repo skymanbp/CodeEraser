@@ -12,7 +12,9 @@
 //! Python registration name — TS's reason) or a Doxygen code block
 //! (`@code`, a fence, an indented block), a Java string (reflection's
 //! `getMethod("name")`, the same reason) or a Javadoc code span or
-//! Markdown code block. Plain comments and prose
+//! Markdown code block, a Lua or R string (`_G["name"]`, `get("name")`,
+//! `do.call("name", …)` — the same reason) or an LDoc `@usage` /
+//! roxygen `@examples` section. Plain comments and prose
 //! of the same file never count (X-5/X-6: a language-neutral rule
 //! revived dead code from docstrings in one corpus and killed live
 //! code in another).
@@ -109,6 +111,9 @@ fn regions(rel: &str, source: &str) -> Vec<String> {
             }
             // every Java string, a text block included (one kind)
             (Lang::Java, "string_literal") => out.push(text(node, src).to_string()),
+            // every Lua string (a long `[[…]]` one included) and every
+            // R string (a raw `r"(…)"` one included): one kind each
+            (Lang::Lua | Lang::R, "string") => out.push(text(node, src).to_string()),
             _ => {}
         }
         // a run of doc comments is a fact about siblings in document

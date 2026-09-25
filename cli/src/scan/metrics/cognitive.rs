@@ -7,13 +7,13 @@
 //! (p.8); plain jumps are free. Operator runs use coc_operators, not
 //! cc_operators: CoC ignores null-coalescing shorthand (p.6).
 //!
-//! else-branch handling: TS/Rust/Python/C surface else as a node kind
-//! (coc_flat_kinds); Go and Java hang it in the if's `alternative`
-//! field, so the walker is field-aware, and it knows an if by the
-//! exact if_kinds table — a prefix test would read every kind spelled
-//! `if…` as one. An `else if` never pays double: the wrapping clause
-//! yields to the inner if, which scores flat +1 and keeps its children
-//! at the chain's nesting level (Sonar Appendix B).
+//! else-branch handling: TS/Rust/Python/C/Lua surface else as a node
+//! kind (coc_flat_kinds); Go, Java and R hang it in the if's
+//! `alternative` field, so the walker is field-aware, and it knows an
+//! if by the exact if_kinds table — a prefix test would read every
+//! kind spelled `if…` as one. An `else if` never pays double: the
+//! wrapping clause yields to the inner if, which scores flat +1 and
+//! keeps its children at the chain's nesting level (Sonar Appendix B).
 //!
 //! Headers do not nest (user ruling 2026-09-24, all languages): a
 //! structure's condition, loop clause, switch value or catch parameter
@@ -230,22 +230,20 @@ fn operator_runs(root: Node<'_>, src: &[u8], spec: &LangSpec) -> u32 {
 }
 
 /// In-order (left, self, right) so runs reflect source token order.
-/// Operand fields differ by grammar family: python/ts/rust/go expose
-/// `left`/`right`, tree-sitter-haskell `left_operand`/`right_operand`
-/// (AST-probed 3k) — one alias lookup instead of a per-lang walker.
+/// Operand fields differ by grammar family: python/ts/rust/go/lua
+/// expose `left`/`right`, tree-sitter-haskell `left_operand` /
+/// `right_operand` (AST-probed 3k), tree-sitter-r `lhs`/`rhs` (plan
+/// v2.30 step 4) — one alias lookup instead of a per-lang walker.
 fn collect_in_order<'s>(node: Node<'_>, src: &'s [u8], spec: &LangSpec, out: &mut Vec<&'s str>) {
     let Some(op) = logic_op(node, src, spec) else {
         return;
     };
-    let operand = |side: &str, alias: &str| {
-        node.child_by_field_name(side)
-            .or_else(|| node.child_by_field_name(alias))
-    };
-    if let Some(left) = operand("left", "left_operand") {
+    let operand = |fields: [&str; 3]| fields.iter().find_map(|f| node.child_by_field_name(f));
+    if let Some(left) = operand(["left", "left_operand", "lhs"]) {
         collect_in_order(left, src, spec, out);
     }
     out.push(op);
-    if let Some(right) = operand("right", "right_operand") {
+    if let Some(right) = operand(["right", "right_operand", "rhs"]) {
         collect_in_order(right, src, spec, out);
     }
 }

@@ -19,6 +19,7 @@
 
 mod c;
 pub mod name;
+pub(crate) mod protocol;
 mod py;
 mod rs;
 #[cfg(test)]

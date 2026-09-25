@@ -1,0 +1,1292 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "lua",
+    "name": "luarocks",
+    "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+  },
+  "excluded": {
+    "other_extension": 347
+  },
+  "files": [
+    {
+      "lang": "lua",
+      "path": "spec/add_spec.lua",
+      "sha256": "f86398cdd37d1d9faf3ed5335947f0b6519bdea59eb2c361211e69589bd03e45",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/build_spec.lua",
+      "sha256": "fedef67726953067531a80cc28b0bf6b577e5418a5b78007fd85c32a6abf16e9",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/cmd_spec.lua",
+      "sha256": "d237ff42d2606b07af758d1f9c0e8c376f7da054be358b7f78a657b472b66f36",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/config_spec.lua",
+      "sha256": "c2531c8c46c2a072991f2241f0097caa452dc7e71d0edf4b0172680911b4ca94",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/deps_spec.lua",
+      "sha256": "daf8e9496ec2a8941c85496ccca46259ce978411c3b3189da0eba2f5cce39388",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/doc_spec.lua",
+      "sha256": "19cd015601270d96c951422a9b6a4e13d011ced1fcfaff1136fe650a980a090d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/download_spec.lua",
+      "sha256": "4ea569bbc4d1ab1309d3d97a4142be8144a0148433e48aa017556bc137399e23",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/dummy_spec.lua",
+      "sha256": "2492924ab1022703be3d1889d767a0639d85ca7535ba3bcd304588f79560c440",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/external_spec.lua",
+      "sha256": "a3d09894f928b9903c88fd0cdf34e06b6a179a1661c03ff9e03474d086772c3b",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/a_rock.lua",
+      "sha256": "1232d8379de77e154ca533689af2e42629dd7574bda5a0a390799849f07607c3",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/busted_project/spec/sum_spec.lua",
+      "sha256": "9caefbea78b5ab7aa25c5483e18e5773eac2fe3ba6485d5940ed849371de3ad4",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/busted_project/sum.lua",
+      "sha256": "991cbbf2c741ba28e51b7db2e1e7cb94d9ab36a7eb979a05787db9c40dcc98ce",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/double_deploy_type/ddt1.lua",
+      "sha256": "1436d4652db725b575166d21216c4a11c3535eb5adae1175f998b2a3145be259",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/double_deploy_type/ddt2.lua",
+      "sha256": "b7ce9ccbb53d54ca2893160fda18c6c3791d41e5412497e9ee462e524bc24ab1",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/legacyexternalcommand.lua",
+      "sha256": "3d65440844f789dedd2dfe8b5091f82051c0bbf072e562f98b0fa875daa560e9",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fixtures/mixed_deploy_type/mdt.lua",
+      "sha256": "40adbbe99b5eef9898983528278d199e43ba8485c29ecb72df9da340afc16673",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "spec/fs_spec.lua",
+      "sha256": "838c974f3c109179c7e6e5edfba6af5597105e6381e8d643d0ae3e03afa3d3ae",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/help_spec.lua",
+      "sha256": "6a766625c153427cf4c6d1f23a35b6f6fb274a67c1da38e091f3a8fc5584a4da",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/init_spec.lua",
+      "sha256": "5457d9422096c8b52b47a575811fe9f0efe5f080e82008538abc17addec32f8f",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/install_spec.lua",
+      "sha256": "0a92d42370a3997f885b752d429255c1ad11724684bb859b8cc3704a294cbf93",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/lint_spec.lua",
+      "sha256": "008f03a1f96bde45a7002d453428e5b66277c6358d7db6437c4c2d0460b9ba8c",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/list_spec.lua",
+      "sha256": "ce137461314f5bc8dc792908a41a1a2705c0a70bc8b9c8c328ac2126dfc66fd4",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/loader_spec.lua",
+      "sha256": "3205e7fc263b32a87572298a39a0a033e6d92a80dc8a69fc52734ecaf8b105e4",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/make_spec.lua",
+      "sha256": "c176e0ee125778cf0c3f063aa41c1aba158b2f8d8d311fc6bb40f64a6d0f2777",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/pack_spec.lua",
+      "sha256": "5e4dc2cd917ae0bc3343e2f9a8b4095dde8299ad62862245dff83996e23f9107",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/path_spec.lua",
+      "sha256": "d1ac1f914722e7e611c505016e486c6f7640e3263fed726dee7bc0ce9d318d0a",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/quick_spec.lua",
+      "sha256": "cc95f2090dfb4f2bd92532594c5f221a96f3bc04cbabcd9ee6b5e2112c1d1a74",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/refresh_cache_spec.lua",
+      "sha256": "8c4193268657e24f6c5bd8b42bac1b5f8f7c3cfdb8d13709b25da6e9cbbabc42",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/remove_spec.lua",
+      "sha256": "e93b806a1ab6ffd37cf285a113858025f3129d67a6bfb0a3316f74e600a45ed9",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/search_spec.lua",
+      "sha256": "23f0a50222820aa1a8a4fdf8ddd995817fa823f5923a5e84ffb85ac78ae90635",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/show_spec.lua",
+      "sha256": "c9e0a897bf28d423c8a9a74499aec0dd87e9bc8ca4bcea9fb60c49d80ea3e94b",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/test_spec.lua",
+      "sha256": "cb128dda221454aff3a6d1d9b1bb59d69b716f887a5dda6eb510f5dfd43169d4",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/build_spec.lua",
+      "sha256": "682aaa21c0b4419c67f0589a59d09d07162927f60cc42465edef542f91eb0d98",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/deps_spec.lua",
+      "sha256": "ca0aaf038ee1171cc1d2ca1470feba54547c707194e82e4bfa9fb39ac7fc573b",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/dir_spec.lua",
+      "sha256": "2896a4185166522ccfb647ce05060c33cf3724edc1446a65775da1a45b123720",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/fetch_spec.lua",
+      "sha256": "5090823a667459e06dce3f3b557420a9bc8be25382aed8167d8a0d9fcad74a3a",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/fs_spec.lua",
+      "sha256": "261d0b4fdebe0e346216d8b930b2542f381cee783b95f72acde327e78cf7f1ee",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/fun_spec.lua",
+      "sha256": "76f08dc371df86ebc62a3ad885b52d476b154a8386880a9e76c05d4b22333064",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/loader_spec.lua",
+      "sha256": "fe77aef44dde1fdea0a8316ee3b7dfe552e22049d8a883e78043fdd2dc4f6eeb",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/persist_spec.lua",
+      "sha256": "76b7841ea3c5397702508aa88f2226c431ff1ad7dc60e9539e863b4d87079e2d",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/rockspecs_spec.lua",
+      "sha256": "7853f678af6e1dace3990f4689982baed0a818c982f598c21a19ca677e05cea3",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/sysdetect_spec.lua",
+      "sha256": "5dc20246a54e51d8b49eb63e730b81ae07be670b8a93896cbe61559c4ea3e0aa",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/test_spec.lua",
+      "sha256": "a4dd2ab1e401cf5c57da05826c27f776f9397aca7f9b812ca582b7c21ac67bb6",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/tools_spec.lua",
+      "sha256": "0f07927d002403a2b6e1ad651d7d79d4632e14ab13ead04b4428e71be8ff5d6f",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/util_spec.lua",
+      "sha256": "d94b9de08732f7e33b17ac2b40f48a2d2418a4afc7dfe2de6a69caac9c4ea4f5",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unpack_spec.lua",
+      "sha256": "7fd57e7d2148519a5633cba3775d3fe93cad4d6368e3bb2956d8e071a6e3969b",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/upload_spec.lua",
+      "sha256": "1ffff83d52dc929cd94b3695f26c2468f12c57ffffc5a824fb828dbf28dfdc82",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/util/git_repo.lua",
+      "sha256": "be3c192a7e443b9d7198310bd26bfb37210e89b86e25bb7e7ba759832d69886f",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/util/mock-server.lua",
+      "sha256": "94e22dea688bf158a2e5505e6059cf4a4b7259444420ffffc45b12d14306764d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/util/quick.lua",
+      "sha256": "1ebeaf31f68cb629c4f1e36adc1b0d28f4d0b7b93a9e9272f71e2401eab157f8",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/util/test_env.lua",
+      "sha256": "901fff002fd9421b3da3c9184051bd457e536e157089f75ad4149a2298fee542",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/util/versions.lua",
+      "sha256": "d66193eeb8b3f219536f8ab268cacc3e5ef204984d87f94ccd809a5bd6423a02",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "spec/util_spec.lua",
+      "sha256": "dca21caa797050b54b351773b9311927ab4e3ff5b4d16bcf878b9f8c1cf6b3c6",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/which_spec.lua",
+      "sha256": "a5685bb14826312d7b47142b11fa86df694756e4bbb0ee35bed459f741aeb29d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/write_rockspec_spec.lua",
+      "sha256": "1707dba9db89a4f28765e29be67fcb272a66aefe162781122b10d55c724d6684",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/admin/cache.lua",
+      "sha256": "431aa016cde186b130ee2d795e6489115f0eb90455ff8592f5f900b2136942d7",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/admin/cmd/add.lua",
+      "sha256": "d92969e055a8cd7a67af5fb8336ace59eccfafc92648f217e4d2d838516e77fd",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/admin/cmd/make_manifest.lua",
+      "sha256": "c17849469a461299989870c6e8a23b918806896d123e0a6189755476139cd5f5",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/admin/cmd/refresh_cache.lua",
+      "sha256": "28fd7fe750fb6efd1844bdd8ddc6d5494c283e89192d94fffc84e16fcc39133f",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/admin/cmd/remove.lua",
+      "sha256": "d1f7f3fef94aeed0b419e79fca3090ad164614d661237eb1df6b99959ab4c266",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/admin/index.lua",
+      "sha256": "73d97bb55c8ce073c112f548cbecca9360d44e33e4734df6935f8e2d69e56518",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/build.lua",
+      "sha256": "481466b8a0f353584efb2872fc5baf1ff32494cc701b85565eacd988dd3fad4b",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/build/builtin.lua",
+      "sha256": "f1bf23255aacf01cadac43a9a5ef93f109db9d8737c7f3ed1a1e6130a4fa1c03",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/build/cmake.lua",
+      "sha256": "cd4fe4b2fde0666228d6c6000dee33f912839be5ea69e30cf01534de2f09551a",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/build/command.lua",
+      "sha256": "d2ec1fb58112cb7239a75f5e9802c166298862b4e47d876b0779f29226e84b42",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/build/make.lua",
+      "sha256": "178d7d9bf276f59612320f9d340e2117ed1aedf91cbadaf3ef4990aa947c1af9",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd.lua",
+      "sha256": "896fc52877ec46f02f26adf87fd4f70a136128102d297e6f008d64812c6eb022",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/build.lua",
+      "sha256": "c5747e9677cb073bbf6bc31372f031b4ede38d19d1c4056b5283e87137b99e06",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/config.lua",
+      "sha256": "26a530e06f8b0547cc26c39e3f0154351162481b63ea525aafa7efd1cd92ad2a",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/doc.lua",
+      "sha256": "89550bad74c61259b825a6c6cc09cdc1f244bf1e943b859ce4c67f5bcae54f64",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/download.lua",
+      "sha256": "26c994d094301b9cdee3661e0b3dfd57c3c7ad38b4ba3d507d078d2ea40e0223",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/init.lua",
+      "sha256": "618f54016e6cb47b50acf8661a70935f2d7fa9098e07abaa6ea921e1350fb36d",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/install.lua",
+      "sha256": "37b939133662312d13ce91599f75e7787df6248f485853c95d62bf8c5bfb2f00",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/lint.lua",
+      "sha256": "b5d1d25db235197e454696a3a89d46840381ad4ca2b7ae5c8673c45338cb2942",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/list.lua",
+      "sha256": "682e34e12b6d4d7171b064af34c91c25a5d452bd65826f132c83877a1e3e7984",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/make.lua",
+      "sha256": "c338199111550e953e58906cdbfbc30261089ef2f4529f13fb12c4be40b49c06",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/new_version.lua",
+      "sha256": "310a908bc07dc84f932e00fe28cf9ff3ca97bb098fb9b373f97d86060a340036",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/pack.lua",
+      "sha256": "5eaea6c387ba440e6082c499a1d6459a125d753ecd298df2e7fa29c46d31227c",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/path.lua",
+      "sha256": "2ce89b8c869fad56921753cfc4f4db02d2bfecdf1686d7f9c75ebef784ba76be",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/purge.lua",
+      "sha256": "000c4ed43c19b3b486b6abf401f2ba808b9e2a2e578c5d47b29a696fdbe33d09",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/remove.lua",
+      "sha256": "19eb9d9155d48d4000016767c7e18948739b7289c6a70b04938ed08d54bda92e",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/search.lua",
+      "sha256": "75dc247adb6ae2ae444c95840bfc30e95573a03cdfa4262d3de57e36605f684d",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/show.lua",
+      "sha256": "e2bb46317792e361a12803e7df5bee5cb01500655a058a21411b79557c0af396",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/test.lua",
+      "sha256": "ec510b41752da9b9ba9d42c8e1dcb165e8de79e4f8e1b19a8fadecae823599f4",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/unpack.lua",
+      "sha256": "3cb8f32a1c4caf2e7b4e613e178f4c586e086b0e0891cf6a93541921dc39e3fe",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/upload.lua",
+      "sha256": "0af44601f944d082a70a2c301afa68195591df007f94222e1180168835899d45",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/which.lua",
+      "sha256": "2c4cafe1a217e722bec4c709a63d67890004553dbcad81dd090a7993d117b24d",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/cmd/write_rockspec.lua",
+      "sha256": "917c41143501b7b7eaf22dababaa8399906e8e34d481a01626e38f66abf4aad1",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/config.lua",
+      "sha256": "b1b6dcdbf4e4b1afcf25d205d49d94fabb169049bec6988ce9c97df3af82ff2e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/cfg.lua",
+      "sha256": "5589607da7e69e96acbb9f0eea9c239c1102cce1db5e85661eb67dfbc0d286a4",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/dir.lua",
+      "sha256": "307119f16b03dae1d010a7ead0f63b327a142401a8eba5d4d46ff312cefbd223",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/manif.lua",
+      "sha256": "852231b302fa89cf83f19190dbdf086269bca4786d98f892d7e5d96923bcaf2e",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/path.lua",
+      "sha256": "652bc57c8dd8028038b8c06d4b2f4bf2f398bbd46c0e00d59753cd3c2ea4ceca",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/persist.lua",
+      "sha256": "8e63791532451705b3ed54a4ac4c0379bb87c2c0b4f9710385a862c12a00a5d3",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/sysdetect.lua",
+      "sha256": "4b11f90f7b1ab6ffa9c05c25f53fc1f449839abf82482c76fd700c11e07f32d3",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/types/query.lua",
+      "sha256": "845adb0ee07df9d60d311b72057c936cb4065875069c35561f48c1e18b30a1f0",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/types/result.lua",
+      "sha256": "dabd2190530ab7ca3b5790b9e7e2899f3e8a0bca832e1ce1788afd5095c97456",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/types/rockspec.lua",
+      "sha256": "76b5d05548b932f8838d02cba1eb47fc317fd633d938be7e4c032117f242d497",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/util.lua",
+      "sha256": "8ecd83e143fb493fbea28e2103f2151aae6db0f6762369e930253f268d15793f",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/core/vers.lua",
+      "sha256": "4cb551dc673404f6f10689cfdf9dcdcccbcec5ba4e319743be158ce63f4922ba",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/deplocks.lua",
+      "sha256": "d33a9c50bcebcbeec424413bdc41006f62e6da19f6d6ae42ba811a21c2e3e7fb",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/deps.lua",
+      "sha256": "270ebfaba8a5e1179d812187dc60eb6e43e1dba7dd767db04502230843f3d83b",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/dir.lua",
+      "sha256": "6808d468cd8368e1369f958a3403342d8097fde57553fd931461e2ee9d4e6921",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/download.lua",
+      "sha256": "20423bb6ff96a1b8f6c60aec117ee55596385887247fbdd03162cec93ef45e40",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch.lua",
+      "sha256": "e6022c4f5d8f7d604e069956eacc4e617ed34af34ccec954d0fa678479cdfb43",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/cvs.lua",
+      "sha256": "442eff744e6e38110e58fa188504519e817b9dd386d589f8224ef362ae1c4695",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/git.lua",
+      "sha256": "11ef43e7b078f4bdff42e725e533c52b9b3d7ef70108d7c66033cb4d5c1b1022",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/git_file.lua",
+      "sha256": "d94c0ec7144b43e390895a37424af82c80abb5b0db588245550373f7b2c9fb0a",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/git_http.lua",
+      "sha256": "4b69aac10e702606830e023a4b17a92994724ee70451cccb11629ef581077596",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/git_https.lua",
+      "sha256": "3816c0170c777a381a976126e61128c2ff28fa54bccc5370aa5974c30e777cb6",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/git_ssh.lua",
+      "sha256": "2c6cfe617f156a318d7c06efcf9b4ed7d7a0bb49b500b080db3c15cba39662d7",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/hg.lua",
+      "sha256": "f8359fc1b1bd563ee0567337c6fd4e25b151ffb6fc65674d3dfb45c4310270a6",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/hg_http.lua",
+      "sha256": "effc642c4f2d045c19668be8a7ae534f93125aed94c080fcb6768971b8d69d2e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/hg_https.lua",
+      "sha256": "fb840f84932c6f9435237b3164e8541127f64d78cdab847a44631c20a2757d6f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/hg_ssh.lua",
+      "sha256": "fb840f84932c6f9435237b3164e8541127f64d78cdab847a44631c20a2757d6f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/sscm.lua",
+      "sha256": "fc961ee384788c11726d052c0906ab97828098eeff0f885dcd509a52574fd35f",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fetch/svn.lua",
+      "sha256": "11668fc4b4cb45ba0736a020225c4357b04f981e4e2ad46b9781b43a0475e8c8",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs.lua",
+      "sha256": "7c298108f37b86941edc95c80b453054af3d1214dda8d02ca7410d8aa10a5a95",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/linux.lua",
+      "sha256": "d8b2750398e8c4ee84d549a839439dad0f3085710c702c37189aa03a6bad482c",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/lua.lua",
+      "sha256": "8f303cb6d086d26c0369b52f1f1f37b5e91440b54dbfdd17d0ec192cb859b072",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/macosx.lua",
+      "sha256": "b85c0ff65d8b67ba65d100aced9130a7c78ac7f1f776418f957ad7e4606b384e",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/tools.lua",
+      "sha256": "74c5e4a46e1439fab0e16423108ce615b37be58fa830f01e7fe02aa0da52dc2b",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/unix.lua",
+      "sha256": "9b525a659a507027eb8289aeb8d7efb6cf6bc0f4092c2f1152f6b3ab80f03c3f",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/unix/tools.lua",
+      "sha256": "3331b5d700f1288d435082d6c12cde14a2f8b765d2b0b5601a981cd5c6ec8b16",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/win32.lua",
+      "sha256": "3e6aecc46b6920f152ed773833652c1c600ad97621f2cef21a6781d6db5071d8",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fs/win32/tools.lua",
+      "sha256": "0d2410cdb5a99d476821c5e1f1be142472c3f0ce86e7811165a7c52958045c28",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/fun.lua",
+      "sha256": "5d7780225d4ddd24f27b5c02599fef9ca30fd2f8447329a96061f9a1a153e4b3",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/loader.lua",
+      "sha256": "6f94b262ef4bbe10d7fbf94c3b374d92f0ecab8dab389949146c54e8eeb753f2",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/manif.lua",
+      "sha256": "b3abd774c688268053c9fccf670845eacc20719ba8a1d1065f3ac518f45bb7f7",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/manif/writer.lua",
+      "sha256": "cb68fd7eb5f34b4b182c9d90c422b441ab61a806f4816c4a885b137f9cb44080",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/pack.lua",
+      "sha256": "9db7f0e74f8210c9cdcc577e4a52b55413cd85ff76f02e1404a300faad71dee5",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/path.lua",
+      "sha256": "c3f44985e8d61f2d7adea632a69a58bd885156a89b3acae6586f553fd0be4483",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/persist.lua",
+      "sha256": "3566ac2b88d2f0a34babcf73ceb64f854b4af48e0961211647517c9b0f24e92a",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/queries.lua",
+      "sha256": "9d9c70a13349eb12f79183d7a0120ae8b7b00371ecc6ef5cdc2afffa78c3a6bc",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/remove.lua",
+      "sha256": "934c86d064f46b1a4591762f0f88deddcb18970fe3b497646bc671402c24d2f5",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/repo_writer.lua",
+      "sha256": "550d138fc9ae5673975d6aada01e22754902664acd288dac545211041676a616",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/repos.lua",
+      "sha256": "f8e5b18c14ffef5b9e55564b0beab07280ac7b5ced130f640bd307d40ec5982a",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/require.lua",
+      "sha256": "04371d314081a3975f1ce52d79ba28de2f0906f796054740ddbc3d06b4ea9fc9",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/results.lua",
+      "sha256": "0792fe0fb6ed0d44b7449a85c8b12e106d90f2d16f78572ac97d1b92f2a4244b",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/rockspecs.lua",
+      "sha256": "39c6db944cf08fc662e56a4b81ec040be4e3fa0a64ec9b9dcafcc2581f1efd53",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/search.lua",
+      "sha256": "079952fb7cf760740ea7a1b21967f04609762fa621b8b03fe33d1ed38765a7d7",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/signing.lua",
+      "sha256": "114a5d90cdd176d7ccc3c3b7c862b3675f55ca4784fb69395f439378130c2f6f",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/test.lua",
+      "sha256": "a8f1b3328cb9e5ef32afdf0c2c78f8073b92a29227b06348c322ba235b7efec7",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/test/busted.lua",
+      "sha256": "f79cb1dd1214286bcb43ce7f0d4c1837b9c4ba68a9bd24017934dc7e6ceb402e",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/test/command.lua",
+      "sha256": "4ff0393e59b2866b40d47fee857866828a4cd2f6c1657d1528c725ed2e465810",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/tools/patch.lua",
+      "sha256": "c0095fadac2a5117ade5a3e4d1c046c84f8bd8a3b9a68cfd2d49c9c5d82da348",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/tools/tar.lua",
+      "sha256": "aae77e5433e887eb97b33c4749f37143d4a869ba145bdd1284740234d7c6dec9",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/tools/zip.lua",
+      "sha256": "2721a9c542548dc623b9e4a109101d0caaac9d2a4dd13a7029c65cf207457693",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/type/manifest.lua",
+      "sha256": "dbfaca109164f87129690c95bc2e59300cf57d8a08b7e58c8a205d5def86cf2f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/type/rockspec.lua",
+      "sha256": "b4e120f3e59f30f0da986c2f1c63fc320957080a7b34ebef0b3942f981cf5342",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/type_check.lua",
+      "sha256": "3a9fe31195f0d5458f06cb92d987debc6b56408bcb15618e22ce60c7488217b7",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/upload/api.lua",
+      "sha256": "eef4beb557c4b6de2b8dd1fcff038232e080ee8c484fa6ee4f00cdd288aeac35",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/upload/multipart.lua",
+      "sha256": "f2a849c872431a9756aa43559c2f59ee1520e5157e6cec9b3f8d89c7517325ec",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "src/luarocks/util.lua",
+      "sha256": "5066f8f91a90bc32466e0e65d979f3f5c97f650d3780f2b1261ac551c0edc875",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tlconfig.lua",
+      "sha256": "6735b9441df57d79006e5f64a78e541af0e37fdef30f5a7c46f144984f3ca986",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "vendor/argparse.lua",
+      "sha256": "cef8afcac1851170711839eaa0130517a0d55c1560674b3d086310ea32c48fdb",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "vendor/compat53/file_mt.lua",
+      "sha256": "a3a89241f7d8f8a1d7f864f8a2e9ff098738bea252155ca828af884a30b4f9ca",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "vendor/compat53/init.lua",
+      "sha256": "d337e5c68371ba46a8d7a7045d7f76c7930683cd0a64803aeae6a55e722f5e3b",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "vendor/compat53/module.lua",
+      "sha256": "8246795ebd6560ff35e6a030fde2ebbad0e99c2b1e0905972949e49023bd3fad",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "vendor/dkjson.lua",
+      "sha256": "34821882ec0dc2ce5d58af6d4ec17403f6d63d5179528bc870006748e66ac27f",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "win32/LuaRocks.reg.lua",
+      "sha256": "954c1caf6f8d67737d0ef888eca9f050199ade1ed64425b4756ced554240d91d",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "win32/pe-parser.lua",
+      "sha256": "37639a21c0cc31d10baa045a35bd8ccb2ff6a3cda7a14bccc0215cf516456878",
+      "sites": {}
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "ced7ea8b37d47b0d19f59137e1d276229c3a8959",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "lua"
+    ]
+  },
+  "summary": {
+    "files": 162,
+    "sites_by": {
+      "lua/require": 607
+    },
+    "total_sites": 607
+  }
+}

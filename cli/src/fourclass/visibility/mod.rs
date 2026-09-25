@@ -57,12 +57,17 @@
 //!   - Java's access modifiers, spelled or implied by the holder, are
 //!     read the same way (java.rs); package access is exported and
 //!     restricted (bit 2), the `pub(crate)` reading.
+//!   - Lua's `local` hides a function and nothing else does (lua.rs);
+//!     R reads a roxygen file's `@export` tags, else the leading-dot
+//!     convention (r.rs) — the NAMESPACE file itself is never read.
 
 mod c;
 mod hs;
 mod hs_lex;
 mod java;
+mod lua;
 mod py;
+mod r;
 #[cfg(test)]
 #[path = "../../../tests/unit/fourclass/visibility/tests.rs"]
 mod tests;
@@ -104,6 +109,8 @@ pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
         Lang::Haskell => word(hs::exported(node, src), true),
         Lang::C | Lang::Cpp => c::bits(node, src),
         Lang::Java => java::bits(node),
+        Lang::Lua => lua::bits(node, src),
+        Lang::R => r::bits(node, src),
         _ => 0,
     }
 }

@@ -313,6 +313,53 @@ PMD 的 CYCLO 不作 CC 对照：它是另一种口径——`throw` 计 +1（`cr
 PMD 2、lizard 与 ce 1），控制流条件之外的 `&&` / `||` 不计（`BagOfPrimitives.equals` 末尾那句带
 三个 `&&` 的 `return`：PMD 3、lizard 与 ce 6）。
 
+## Lua / R 对拍（2026-09-25，计划 v2.30 步 4；fixtures 见 SOURCES.md 的 lua / r 行）
+
+对照物是 lizard 1.23.0 的 CCN 与形参数：Lua 与 R 都没有认知复杂度对照物，CoC 的执行者是白皮书电池
+`cli/tests/it/coc_lua.rs` 与 `coc_r.rs`。R 原登记为「无外部对照」（D0）——钉版时核对 lizard 的 reader
+列表漏了 `lizard_languages/r.py`，步 4 对拍时发现并启用。join 键 = 文件 + 起始行：lizard 的 R reader
+把函数的结束行记在函数之后第一个代码记号所在的行（函数后隔几行空行与注释，结束行就落在下一个函数
+那一行），两侧只有起始行可比。复现：
+
+```
+python -m lizard -l lua --csv contracts/fixtures/crosscheck/lua/*.lua
+python -m lizard -l r   --csv contracts/fixtures/crosscheck/r/*.R
+ce scan contracts/fixtures/crosscheck --format json     # 按 start_line join
+```
+
+**Lua（luarocks 五文件）**：lizard 22 行，ce 28 单位；join 22，**22/22 CC 一致**，形参数也全等。ce 独有
+6 条，全在两个 busted 测试文件里。lizard 的 Lua reader 继承 Ruby 的状态机（`lizard_languages/lua.py` 的
+`LuaReader(RubylikeReader)`），其中为 RSpec 写的规则把 `it` 当作 `it … do` 块的开头（`rubylike.py` 的
+`_it`：等到 `do` 或 `{` 才开一个函数）。Lua 的 `it("…", function() … end)` 永远等不到，状态机停在 `_it`
+里吞掉此后的每个记号，于是外层的 `describe(…, function() … end)` 与第一个 `it` 之后的函数全部不报：
+`spec/help_spec.lua` 的外层与四个 `it` 回调（:4、:10、:14、:18、:22）、`spec/quick_spec.lua` 的外层（:5，
+ce CC 7：两个 `for`、两个 `if`、`and`、`or`）。最小样本：`f(function()` / `it("x", function() end)` / `end)`
+三行 lizard 一个函数都不报，把 `it` 换成任何别的名字（`g`、`i`、`at`）两个函数都报。
+
+**R（stringr 五文件）**：lizard 43 行，ce 44 单位；join 43，**34 条 CC 一致**。9 条差与 1 条 ce 独有全部归因：
+
+- **D8 以调用承担的控制流 5 条**：`str_detect`（detect.R:41）、`str_starts`（:95）、`str_ends`（:130）、
+  `str_replace`（replace.R:71）、`str_replace_all`（:107）各含一个 `switch(…)`，lizard 各多 1。lizard 的
+  R reader 把 `switch` `tryCatch` `try` `ifelse` 当控制流关键字；它们在 R 里都是函数调用，ce 不计（D8）。
+- **原生管道 `|>` 1 条**：`str_to_camel`（case.R:81）ce 2 / lizard 5。lizard 的 R 分词没有 `|>`（R 4.1 起的
+  原生管道），把它切成 `|` 与 `>`，再按向量化的 `|` 计分支（它计 `&` 与 `|`，ce 按 D9 不计），三处管道
+  各 +1。最小样本：`x |> g() |> h()` lizard CCN 3。
+- **嵌套函数截断宿主 3 条**：lizard 的 R reader 在函数体里遇到 `name <- function` 或 `name = function`
+  （实参 `error = function(cnd)` 也是）就先结束当前函数，此后不再回到它，宿主余下的部分不算给任何函数。
+  `.rlang_types_check_number`（compat-types-check.R:191）ce 14 / lizard 2，只剩第一个 `if`；其中嵌套的
+  `.stop`（:209）ce 1 / lizard 2——宿主接下来那个 `if`（:221）被算给了它；`str_transform_all`（replace.R:220）
+  ce 4 / lizard 2，`withCallingHandlers(…, error = function(cnd) …)` 之后的两个 `if` 丢了。ce 的读法是 D3：
+  Lua 与 R 的函数值是独立单元，宿主不含。
+- **ce 独有 1 条**：replace.R:281 `lapply(seq_along(ls), function(i) …)` 的匿名函数（D3）。lizard 只把赋给
+  名字的函数当单元，把它并进 `chop_index`（两侧 CC 都是 1）。
+
+**形参数（D32）**：Lua 22/22 一致。R 28 条一致、15 条差，差全在 lizard 一侧：它不计 `...`（15 个函数各少 1），
+还把形参表截在第一个 `)` 上——默认值里一个调用的右括号——之后的形参全丢（带 `arg = caller_arg(x), call =
+caller_env()` 的 14 个函数各再少 1）。最小样本：`function(x, ...)` lizard 1、`function(x, a = h(1), b = 2)`
+lizard 2、`function(x, a = 1, b = 2)` lizard 3；ce 依次 2、3、3。lizard 自己的 Python reader 计 `*args` 与
+`**kw`（`def f(a, *args, **kw)` 两侧都是 3），Lua 的 `...` 它也不计；ce 对三种语言同一读法：签名里写出的
+形参都算。
+
 ## 条件不抬嵌套（2026-09-24，D31，所有语言）
 
 用户裁「条件都不算」：结构的头部——条件、循环子句、switch 的值、catch 的形参——按结构自己的层级计分，

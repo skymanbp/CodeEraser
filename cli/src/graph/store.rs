@@ -97,14 +97,14 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
-/// 16 = the C family and Java enter the graph (plan v2.30 steps 2 and
-/// 3, one release): the `include`, `import_star` and `type_ref` site
-/// kinds join KINDS (a Java single-type import keeps the `import`
-/// label), C / C++ and Java declarations enter the symbols table with
-/// their own visibility and convention words, compile_commands.json
-/// becomes a resolver config and Java's declared packages join the
-/// resolve_key — new kind codes and stored rows, so every site is
-/// re-detected; step 3 kept 16, since step 2 shipped in no release.
+/// 16 = the C family, Java, Lua and R enter the graph (plan v2.30
+/// steps 2–4, one release): `include`, `import_star`, `type_ref`,
+/// `require`, `load`, `source` and `library` join KINDS (a Java
+/// single-type import keeps `import`), the four languages' symbols
+/// carry their own visibility and convention words,
+/// compile_commands.json becomes a resolver config and Java's packages
+/// join the resolve_key — new kind codes and stored rows, so every
+/// site is re-detected; steps 3–4 kept 16: step 2 shipped in no release.
 pub const GRAPH_REV: i64 = 16;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
@@ -158,6 +158,10 @@ const KINDS: &[&str] = &[
     "include",
     "import_star",
     "type_ref",
+    "require",
+    "load",
+    "source",
+    "library",
 ];
 
 /// The frozen code for one site kind. KINDS is the single owner of

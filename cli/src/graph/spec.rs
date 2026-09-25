@@ -58,39 +58,48 @@ pub struct SiteKind {
     pub via: Specifier,
 }
 
+/// One table row, in the struct's field order. A macro, not a const
+/// fn: a row must stay a constant expression for a match arm's `&[…]`
+/// to be promoted to `'static`, and a const fn call never is.
+macro_rules! site {
+    ($node:expr, $label:expr, $via:expr $(,)?) => {
+        SiteKind {
+            node: $node,
+            label: $label,
+            via: $via,
+        }
+    };
+}
+
 /// The anon `import` keyword token and foreign_import's inner token
 /// share this kind name (the 3k D11 collision class, AST-probed
 /// 2026-08-14) but carry no `module` field, so the Field specifier
 /// drops them by construction. Housed outside sites() for the E01
 /// fn-length line — a lone table, not the 3k statics trap (that
 /// extraction PAIRED two isomorphic tables into a new T2 block).
-const HASKELL: [SiteKind; 1] = [SiteKind {
-    node: "import",
-    label: "import",
-    via: Specifier::Field("module"),
-}];
+const HASKELL: [SiteKind; 1] = [site!("import", "import", Specifier::Field("module"))];
 
 /// `from __future__ import …` is its own grammar node without a
 /// module field; the site names the literal module (plan v2.17 L
 /// round step 8, O27). A named const, like the Haskell table: the
 /// two per-language arms it would otherwise lengthen rhymed under
 /// the clone gate.
-const FUTURE_IMPORT: SiteKind = SiteKind {
-    node: "future_import_statement",
-    label: "import_from",
-    via: Specifier::Literal("__future__"),
-};
+const FUTURE_IMPORT: SiteKind = site!(
+    "future_import_statement",
+    "import_from",
+    Specifier::Literal("__future__")
+);
 
 /// `import fs = require("./b")` hangs `source` off this child clause,
 /// not off the statement (step 8, O26); `import X = A.B.C` is an
 /// `import_alias` naming a namespace, not a module — the file it may
 /// reach is already referenced by the `import * as A` that bound
 /// `A`, so it opens no site by construction.
-const IMPORT_REQUIRE: SiteKind = SiteKind {
-    node: "import_require_clause",
-    label: "import",
-    via: Specifier::Field("source"),
-};
+const IMPORT_REQUIRE: SiteKind = site!(
+    "import_require_clause",
+    "import",
+    Specifier::Field("source")
+);
 
 /// The C family's one site (plan v2.30 step 2): `#include`, whose
 /// `path` field is a `string_literal` or a `system_lib_string` (both
@@ -100,11 +109,11 @@ const IMPORT_REQUIRE: SiteKind = SiteKind {
 /// macro-spelled include (`#include HEADER`) carries an identifier in
 /// the field and is a site whose spec no rung can answer — the
 /// honest ledger row, never a guess.
-const INCLUDE: [SiteKind; 1] = [SiteKind {
-    node: "preproc_include",
-    label: "include",
-    via: Specifier::Field("path"),
-}];
+const INCLUDE: [SiteKind; 1] = [site!(
+    "preproc_include",
+    "include",
+    Specifier::Field("path")
+)];
 
 /// Java's import declaration (plan v2.30 step 3): the star form under
 /// its own label, as TS's `export *` is. Java's other site kind,
@@ -112,75 +121,140 @@ const INCLUDE: [SiteKind; 1] = [SiteKind {
 /// file itself declares — a file-level fact — so graph/sites/java.rs
 /// runs a pass of its own.
 const JAVA: [SiteKind; 2] = [
-    SiteKind {
-        node: "import_declaration",
-        label: "import_star",
-        via: Specifier::FirstNamed { star: true },
+    site!(
+        "import_declaration",
+        "import_star",
+        Specifier::FirstNamed { star: true }
+    ),
+    site!(
+        "import_declaration",
+        "import",
+        Specifier::FirstNamed { star: false }
+    ),
+];
+
+/// R's one site that is no call: `pkg::name` names its package whatever
+/// the right side selects (plan v2.30 step 4) — the `library` site a
+/// qualified call opens in place of a call site of its own.
+const R: [SiteKind; 1] = [site!(
+    "namespace_operator",
+    "library",
+    Specifier::Field("lhs")
+)];
+
+/// A call naming its target by an argument (plan v2.30 step 4): Lua's
+/// `require` and file loaders, R's `source` and `library` family —
+/// neither language has an import statement. Its own table, not a
+/// SiteKind row: which node is a call and where its callee hangs are
+/// the grammar's facts (LangSpec::call_kinds / call_fields, the
+/// spelling the recursion arcs read), so a row names only what varies
+/// — the bare callee names, and the argument naming the target: the
+/// one passed as `formal` (R matches names first; a Lua call passes
+/// none) or else the first unnamed one. That argument must be a string
+/// literal — or an identifier, where the callee reads one unevaluated:
+/// `unquoted` names the argument that turns that off
+/// (graph/sites/call.rs).
+pub struct CallSite {
+    pub label: &'static str,
+    pub callees: &'static [&'static str],
+    pub formal: &'static str,
+    pub unquoted: Option<&'static str>,
+}
+
+/// Lua: a module by `require` (a dotted name, the package.path search),
+/// a file by `dofile` / `loadfile` (a path).
+const LUA_CALLS: [CallSite; 2] = [
+    CallSite {
+        label: "require",
+        callees: &["require"],
+        formal: "",
+        unquoted: None,
     },
-    SiteKind {
-        node: "import_declaration",
-        label: "import",
-        via: Specifier::FirstNamed { star: false },
+    CallSite {
+        label: "load",
+        callees: &["dofile", "loadfile"],
+        formal: "",
+        unquoted: None,
     },
 ];
 
-/// The site vocabulary of one language. Labels are frozen doc/wire
-/// identity — renaming one is a contract change.
+/// R: a file by `source` (its first formal is `file`), a package by the
+/// `library` family (`package`). `library` and `require` read a bare
+/// name as the package unless the call passes `character.only`;
+/// `requireNamespace` and `loadNamespace` evaluate the argument, so a
+/// bare name there is a variable (R's own help pages, base `library`
+/// and `ns-load`).
+const R_CALLS: [CallSite; 3] = [
+    CallSite {
+        label: "source",
+        callees: &["source", "sys.source"],
+        formal: "file",
+        unquoted: None,
+    },
+    CallSite {
+        label: "library",
+        callees: &["library", "require"],
+        formal: "package",
+        unquoted: Some("character.only"),
+    },
+    CallSite {
+        label: "library",
+        callees: &["requireNamespace", "loadNamespace"],
+        formal: "package",
+        unquoted: None,
+    },
+];
+
+/// The calls that open a site in one language (CallSite).
+pub fn calls(lang: Lang) -> &'static [CallSite] {
+    match lang {
+        Lang::Lua => &LUA_CALLS,
+        Lang::R => &R_CALLS,
+        _ => &[],
+    }
+}
+
+/// The site vocabulary of one language, its calls' aside (`calls`).
+/// Labels are frozen doc/wire identity — renaming one is a contract
+/// change.
 pub fn sites(lang: Lang) -> &'static [SiteKind] {
     match lang {
         Lang::Python => &[
-            SiteKind {
-                node: "import_statement",
-                label: "import",
-                via: Specifier::EachImportTarget,
-            },
-            SiteKind {
-                node: "import_from_statement",
-                label: "import_from",
-                via: Specifier::Field("module_name"),
-            },
+            site!("import_statement", "import", Specifier::EachImportTarget),
+            site!(
+                "import_from_statement",
+                "import_from",
+                Specifier::Field("module_name")
+            ),
             FUTURE_IMPORT,
         ],
         Lang::TypeScript | Lang::Tsx => &[
-            SiteKind {
-                node: "import_statement",
-                label: "import",
-                via: Specifier::Field("source"),
-            },
+            site!("import_statement", "import", Specifier::Field("source")),
             IMPORT_REQUIRE,
             // the star form first (plan v2.17 L round piece (5)): a
             // re-export target is the mounts table's bit 0
-            SiteKind {
-                node: "export_statement",
-                label: "export_star",
-                via: Specifier::FieldIfStar("source"),
-            },
-            SiteKind {
-                node: "export_statement",
-                label: "export_from",
-                via: Specifier::Field("source"),
-            },
+            site!(
+                "export_statement",
+                "export_star",
+                Specifier::FieldIfStar("source")
+            ),
+            site!(
+                "export_statement",
+                "export_from",
+                Specifier::Field("source")
+            ),
         ],
         Lang::Rust => &[
-            SiteKind {
-                node: "use_declaration",
-                label: "use",
-                via: Specifier::Field("argument"),
-            },
-            SiteKind {
-                node: "mod_item",
-                label: "mod_decl",
-                via: Specifier::NameIfNoBody,
-            },
+            site!("use_declaration", "use", Specifier::Field("argument")),
+            site!("mod_item", "mod_decl", Specifier::NameIfNoBody),
         ],
-        Lang::Go => &[SiteKind {
-            node: "import_spec",
-            label: "import",
-            via: Specifier::Field("path"),
-        }],
+        Lang::Go => &[site!("import_spec", "import", Specifier::Field("path"))],
         Lang::Haskell => &HASKELL,
         Lang::C | Lang::Cpp => &INCLUDE,
         Lang::Java => &JAVA,
+        // every Lua site is a call (`calls`)
+        Lang::Lua => &[],
+        Lang::R => &R,
         // Markdown scans line-wise in graph/md.rs (no grammar); the
         // sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — no site vocabulary either way.

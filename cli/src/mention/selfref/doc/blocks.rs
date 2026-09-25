@@ -11,12 +11,17 @@ use crate::scan::lang::Lang;
 /// Markdown doc comment) also render an indented block; haddock is no
 /// Markdown, so an indented haddock line stays prose. Java reads the
 /// Markdown forms on every run: one run may hold both comment forms,
-/// and in a `/** */` run they only ever add mentions.
+/// and in a `/** */` run they only ever add mentions. R and Lua read
+/// the tag their doc tool renders as code: roxygen's `@examples` (the
+/// code `R CMD check` runs) and `@examplesIf` (the same, behind a
+/// condition), LDoc's `@usage`.
 pub(super) fn code_blocks(lang: Lang, lines: &[String]) -> Vec<String> {
     match lang {
         Lang::Java => [javadoc(lines), indented(lines)].concat(),
         Lang::C | Lang::Cpp => [doxygen(lines), indented(lines)].concat(),
         Lang::Rust => [fenced(lines), indented(lines)].concat(),
+        Lang::R => tagged(lines, &["@examples", "@examplesIf"]),
+        Lang::Lua => tagged(lines, &["@usage"]),
         _ => fenced(lines),
     }
 }
@@ -59,6 +64,30 @@ fn between(
             inside = false;
         } else if !inside && opens(t) {
             inside = true;
+        } else if inside {
+            out.push(line.clone());
+        }
+    }
+    out
+}
+
+/// The sections the given tags open, each to the next line that starts
+/// a tag of any name — how roxygen and LDoc both end a tag's text. The
+/// tag line's own rest is the section's first line (`@usage f(x)`).
+fn tagged(lines: &[String], tags: &[&str]) -> Vec<String> {
+    let mut out = Vec::new();
+    let mut inside = false;
+    for line in lines {
+        let t = line.trim_start();
+        let opened = tags.iter().find_map(|tag| {
+            t.strip_prefix(tag)
+                .filter(|rest| rest.is_empty() || rest.starts_with([' ', '\t']))
+        });
+        if let Some(rest) = opened {
+            inside = true;
+            out.push(rest.to_string());
+        } else if t.starts_with('@') {
+            inside = false;
         } else if inside {
             out.push(line.clone());
         }

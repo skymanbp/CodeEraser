@@ -14,7 +14,9 @@ use tree_sitter::Node;
 /// The maximal runs of consecutive doc-comment nodes (§2 (c)): Rust
 /// and C / C++ `///`/`//!` line comments and `/** */`/`/*! */` blocks,
 /// Java `/** */` blocks and `///` Markdown comments, Haskell `haddock`
-/// nodes. A run ends at the first non-doc node or row gap; its code
+/// nodes, R roxygen `#'` lines and every Lua comment — LDoc continues a
+/// `---` block on plain `--` lines, so a plain comment is a doc line
+/// there. A run ends at the first non-doc node or row gap; its code
 /// blocks (`code_blocks`) are the region.
 pub(super) struct Runs {
     lang: Lang,
@@ -82,6 +84,8 @@ fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {
         (Lang::C | Lang::Cpp, "comment") => {
             line_doc(t, &["///", "//!"]).or_else(|| block_doc(t, &["/**", "/*!"]))
         }
+        (Lang::Lua, "comment") => lua_doc(t),
+        (Lang::R, "comment") => t.strip_prefix("#'").map(str::to_string),
         (Lang::Haskell, "haddock") => Some(
             t.lines()
                 .map(|l| {
@@ -101,20 +105,31 @@ fn doc_body(lang: Lang, node: Node<'_>, src: &[u8]) -> Option<String> {
     }
 }
 
+/// A Lua comment's text past its dashes — `---` opens an LDoc block and
+/// a line of dashes is a rule — or a long comment's between its
+/// brackets of one level (`--[==[ … ]==]`), past LDoc's `--[[--`.
+fn lua_doc(t: &str) -> Option<String> {
+    let rest = t.strip_prefix("--")?;
+    let long = rest.strip_prefix('[').and_then(|open| {
+        let level = open.len() - open.trim_start_matches('=').len();
+        let body = open[level..].strip_prefix('[')?;
+        let close = format!("]{}]", "=".repeat(level));
+        Some(body.strip_suffix(close.as_str()).unwrap_or(body))
+    });
+    Some(long.unwrap_or(rest).trim_start_matches('-').to_string())
+}
+
 /// A line doc comment's text past its marker; a fourth slash (`////`)
 /// is a plain comment.
 fn line_doc(t: &str, markers: &[&str]) -> Option<String> {
-    let rest = markers.iter().find_map(|m| t.strip_prefix(m))?;
+    let rest = past_marker(t, markers)?;
     (!rest.starts_with('/')).then(|| rest.to_string())
 }
 
 /// A block doc comment's lines, each past its leading `*`; `/**/` and a
 /// `/***` banner are plain comments.
 fn block_doc(t: &str, markers: &[&str]) -> Option<String> {
-    let inner = markers
-        .iter()
-        .find_map(|m| t.strip_prefix(m))?
-        .strip_suffix("*/")?;
+    let inner = past_marker(t, markers)?.strip_suffix("*/")?;
     (!inner.starts_with('*')).then(|| {
         inner
             .lines()
@@ -122,4 +137,9 @@ fn block_doc(t: &str, markers: &[&str]) -> Option<String> {
             .collect::<Vec<_>>()
             .join("\n")
     })
+}
+
+/// The comment's text past whichever of `markers` it opens with.
+fn past_marker<'t>(t: &'t str, markers: &[&str]) -> Option<&'t str> {
+    markers.iter().find_map(|m| t.strip_prefix(m))
 }

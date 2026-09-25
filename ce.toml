@@ -506,4 +506,34 @@ entry_globs = [
 # share, removes the repetition itself rather than the budget over
 # it; every refusal is golden-pinned text and stays byte-identical.
 # That one row left, none arrived. Measured on the formatted tree.
-budget = 54
+# 54 -> 59 (v2.30 step 4 commit A, Lua and R join the judged set): the
+# batch landed ten rows and took five back. Taken back at the
+# mechanism: graph/spec.rs spelled Lua's and R's call sites as one
+# CallArg arm per language, and the arms rhymed twice (51 and 56
+# tokens) -- they are one CallSite table now, the call node and its
+# callee field read through the grammar's own call_kinds / call_fields
+# (the spelling the recursion arcs already read); mention/selfref/
+# doc.rs's line and block readers each restated the marker strip (50)
+# and share past_marker; scan/callees.rs's owner_key restated
+# functions::owner_of's lookup (54) and reads it instead. One row came
+# and went on its own: graph/store.rs's KINDS list grew into chain
+# range of scan/walk.rs's BUILTIN_EXCLUDES (50), and the vendored
+# trees the booklet names (lua_modules/, renv/, packrat/) lengthened
+# that list back out of it.
+# The five that stand are LangSpec tables rhyming with LangSpec tables
+# -- spec_lua.rs and spec_r.rs against spec_c.rs, spec_launch.rs and
+# each other (50 to 104 tokens). Two grammars that name their nodes
+# alike (`for_statement body`, `repeat_statement body`, `parameters`)
+# state two facts, not one: a shared constant would tie Lua's table to
+# R's grammar. It is the record face the v2.24 entry above booked for
+# the sixth time, and a data table reshaped to stop rhyming is writing
+# code for the ratio. A repayment was tried and MEASURED: the two new
+# tables' empty fields dropped behind a `..BARE` default base leaves
+# 57, three of the five standing (spec_c.rs <-> spec_lua.rs still 90
+# tokens) -- and a struct literal with a base no longer has to spell
+# every field, which is the check these tables are written for: a
+# field added to LangSpec forces a decision in every language's table
+# (step 3 added four that way). Declined. Row set diffed against the
+# HEAD worktree: exactly these five new, none gone. Measured on the
+# formatted tree.
+budget = 59

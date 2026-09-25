@@ -3,13 +3,15 @@
 //! standalone units are measured separately and skipped inside their
 //! host (see metrics walkers).
 //!
-//! Three roads spell a unit's name, tried in this order: the node's
-//! own `name` field (five grammars), the leaf of its declarator chain
-//! (the C family — a definition names itself through nested
-//! declarators, see scan/declarator.rs), and the enclosing declarator /
-//! pair / assignment an anonymous function hangs off (arrow functions).
+//! Four roads spell a unit's name, tried in this order: the node's
+//! own named `name` field, the leaf of its declarator chain (the C
+//! family — a definition names itself through nested declarators, see
+//! scan/declarator.rs), the enclosing declarator / pair / assignment an
+//! anonymous function hangs off (arrow functions), and the statement
+//! that binds a Lua or R function value (scan/binding.rs).
 
 use super::ast;
+use super::binding;
 use super::declarator;
 use super::spec::LangSpec;
 use tree_sitter::Node;
@@ -60,9 +62,11 @@ fn unit<'t>(node: Node<'t>, src: &[u8], spec: &LangSpec) -> FnUnit<'t> {
     }
 }
 
-/// Name from the node's `name` field, else from the C family's
+/// Name from the node's named `name` field (R's is the `function`
+/// keyword token and does not count), else from the C family's
 /// declarator chain, else from an enclosing variable_declarator/pair
-/// (arrow functions), else "(anonymous)".
+/// (arrow functions), else from the Lua or R statement binding the
+/// function value, else "(anonymous)".
 /// Go methods carry their receiver TYPE as a prefix — `(T) add` and
 /// `(*U) add` are different identities (attack review F7), and the
 /// qualification lives HERE at the one extraction root so metric
@@ -78,7 +82,7 @@ fn unit<'t>(node: Node<'t>, src: &[u8], spec: &LangSpec) -> FnUnit<'t> {
 /// part, so the guard cannot drift from the key (plan v2.17 L round,
 /// criterion T3).
 pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
-    if let Some(name) = node.child_by_field_name("name") {
+    if let Some(name) = node.child_by_field_name("name").filter(|n| n.is_named()) {
         let base = text(name, src);
         return match receiver_type(node, src) {
             Some(recv) => format!("({recv}) {base}"),
@@ -97,7 +101,9 @@ pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
     {
         return text(name, src);
     }
-    "(anonymous)".to_string()
+    binding::of(node, src)
+        .and_then(|b| binding::spelled(b.name, src))
+        .unwrap_or_else(|| "(anonymous)".to_string())
 }
 
 /// The class a unit is a member of, spelled the way a call's
@@ -108,11 +114,16 @@ pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
 /// so `this->m()` inside `K::b` reaches `K::m` wherever `m` was
 /// defined. Java spells it as the name of the type declaration whose
 /// body holds the unit (LangSpec::owner_kinds); its member road keys by
-/// the body itself (callees::Owner). None for a free function, for
-/// every other grammar, and for a member of an anonymous class
-/// (`new T() { … }`, an enum constant's body), which no qualifier can
-/// name.
+/// the body itself (callees::Owner). Lua and R spell it as the object a
+/// member-shaped name is selected off — `M` of `function M.f()` and of
+/// `M:f`, `x` of `x$f <- function()` (scan/binding.rs). None for a free
+/// function, for every other grammar, and for a member of an anonymous
+/// class (`new T() { … }`, an enum constant's body), which no qualifier
+/// can name.
 pub(crate) fn owner_of(node: Node<'_>, src: &[u8], spec: &LangSpec) -> Option<String> {
+    if let Some((object, _)) = binding::member_of(node, src) {
+        return Some(object);
+    }
     if spec.owner_kinds.is_empty() {
         return declarator::identity(node, src)?.0;
     }

@@ -10,11 +10,12 @@
 //! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
 //! the C family's followed in plan v2.30 step 2 (c.rs) and Java's in
 //! step 3 (java.rs); a language without rungs must return
-//! Unresolved(Unsupported) — an honest
-//! ledger row, never a silent skip. Dispatch carries the site's frozen
-//! kind label (store::KINDS): the TS/Py rungs are kind-uniform, Rust's
-//! mod_decl and use walk different rungs, and Markdown routes five
-//! kinds through one chain.
+//! Unresolved(Unsupported) — an honest ledger row, never a silent
+//! skip, and the row every Lua and R site is between plan v2.30 step
+//! 4's sites commit and its ladder one. Dispatch carries the site's
+//! frozen kind label (store::KINDS): the TS/Py rungs are kind-uniform,
+//! Rust's mod_decl and use walk different rungs, and Markdown routes
+//! five kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
@@ -235,7 +236,8 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Java => java::resolve(site.kind, site.from, site.spec, scope),
         // The sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — if either ever arrives, the honest
-        // answer is the documented no-rungs stance, never a guess.
+        // answer is the documented no-rungs stance, never a guess; Lua
+        // and R sites take it until their ladders land (step 4).
         _ => Outcome::Unresolved(Reason::Unsupported),
     }
 }

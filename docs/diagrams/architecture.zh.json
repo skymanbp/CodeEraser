@@ -13,7 +13,7 @@
   },
   "components": [
     {"id": "repo", "type": "external", "label": "仓库", "sublabel": "源码 · 文档 · git", "pos": [30, 280], "size": [140, 64]},
-    {"id": "scan", "type": "backend", "label": "解析与尺寸", "sublabel": "tree-sitter · 九套语法", "pos": [230, 280], "size": [150, 64], "sources": [{"path": "cli/src/scan/lang.rs"}, {"path": "cli/src/scan/ast.rs"}]},
+    {"id": "scan", "type": "backend", "label": "解析与尺寸", "sublabel": "tree-sitter · 十一套语法", "pos": [230, 280], "size": [150, 64], "sources": [{"path": "cli/src/scan/lang.rs"}, {"path": "cli/src/scan/ast.rs"}]},
     {"id": "daemon", "type": "backend", "label": "常驻 daemon", "sublabel": "懒启动 · 逐项目", "pos": [480, 60], "size": [150, 64], "sources": [{"path": "cli/src/daemon/server.rs"}, {"path": "cli/src/daemon/coldstart.rs"}]},
     {"id": "index", "type": "database", "label": "指纹索引", "sublabel": ".ce/index.db · SQLite WAL", "pos": [480, 170], "size": [150, 64], "sources": [{"path": "cli/src/dedup/winnow.rs"}, {"path": "cli/src/dedup/schema.rs"}]},
     {"id": "graph", "type": "backend", "label": "引用图", "sublabel": "解析阶梯 · SCC · 提及", "pos": [480, 280], "size": [150, 64], "sources": [{"path": "cli/src/graph/sites.rs"}, {"path": "cli/src/mention/walk.rs"}]},

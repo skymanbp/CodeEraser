@@ -13,7 +13,11 @@
 //!     its brackets, so the last one is always the receiver's close; a
 //!     C++ qualifier goes with `rsplit("::")` — `K::b` is reached by
 //!     spelling `b` off an object or a scope, and `operator==` / `~K`
-//!     fall to the token invariant below;
+//!     fall to the token invariant below; a Lua table prefix goes with
+//!     the last `.` or `:` — `M.f` and `M:f` are reached as `f` off the
+//!     table a module returns. An R member name (`x$f`) and a dotted R
+//!     name (`print.foo`) stay whole and fall to the invariant: the `$`
+//!     arm spells `x$f` as three tokens, and `.` ends a run;
 //!   - a Python dunder is out (protocol, never referenced by spelling);
 //!   - what remains must be ONE token of the declaring file's own
 //!     tokenizer arm (§2 invariant: `tokenize_for(ext, r) == [r]`) —
@@ -38,6 +42,7 @@ pub fn mention_name(rel: &str, key: &str) -> Option<String> {
     let bare = match lang {
         Lang::Go => key.rsplit_once(") ").map_or(key, |(_, method)| method),
         Lang::Cpp => key.rsplit("::").next().unwrap_or(key),
+        Lang::Lua => key.rsplit(['.', ':']).next().unwrap_or(key),
         _ => key,
     };
     let name = de_arity(bare);

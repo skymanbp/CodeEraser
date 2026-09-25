@@ -10,7 +10,7 @@
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行（或超过其 `[[rules.class]]` 声明的那条线）的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 与 `ce commitmsg` 拒绝提交，CI 退出码拒绝合入。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Markdown（<!--ce:count:grammars#word-->九<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十六<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown（<!--ce:count:grammars#word-->十一<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十二<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、html/htm、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十六<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现，以及它的不同之处
 
@@ -172,7 +172,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 <sub>在 [codeeraser.dev/zh/#architecture](https://codeeraser.dev/zh/#architecture) 可缩放、拖动查看此图。</sub>
 
-- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）。`codeeraser` crate 里有 tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->九<!--/ce-->套已接线的语法（v2.30 计划的语法 crate 先于各自的步钉版）、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->16<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->16<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->3<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
+- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）。`codeeraser` crate 里有 tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十一<!--/ce-->套已接线的语法（v2.30 计划的语法 crate 先于各自的步钉版）、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->16<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->16<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->3<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`，每个判决家族、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
 - **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->7.2.0<!--/ce-->，<!--ce:count:families#word-->十二<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.1.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
@@ -185,7 +185,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。二进制未签名。
 
-- **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->九<!--/ce-->套语法；Markdown 没有 tree-sitter 语法，由文档与图规则判决；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。
+- **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十一<!--/ce-->套语法；Markdown 没有 tree-sitter 语法，由文档与图规则判决；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。
 - **只当顾问，永不是判决。** 符号层存活性只是顾问、永不是判决；`ce deadcode` 自己最后一行就这么写。同角色顾问是顾问不是判决：`ce similar`、MCP `similar_units` 与 GUI 相似屏只排序不裁决。`ce similar` 恒退 0，`ce check` 从不读这一族，Stop 审计的顾问行只落进 observe 账本。守卫类在拿出自己的误报记录之前一律停在 `observe`。
 - **本产品不替你画的线。** 复杂度轴出厂不带任何硬线。`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。
 - **分发与接线。** v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）；以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。

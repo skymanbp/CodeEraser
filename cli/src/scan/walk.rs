@@ -32,9 +32,9 @@ pub(crate) const SECRET_GLOBS: [&str; 8] = [
     "*credentials*",
 ];
 
-/// Built-in excludes: lockfiles, minified/generated, vendored,
-/// snapshots, migrations (plan §4.1 category list); the secret globs
-/// above join them in build_overrides.
+/// Built-in excludes: lockfiles, minified/generated, vendored (Lua's
+/// and R's project trees since plan v2.30 step 4), snapshots, migrations
+/// (plan §4.1); the secret globs above join them in build_overrides.
 const BUILTIN_EXCLUDES: &[&str] = &[
     "!package-lock.json",
     "!yarn.lock",
@@ -47,6 +47,9 @@ const BUILTIN_EXCLUDES: &[&str] = &[
     "!*.generated.*",
     "!vendor/",
     "!node_modules/",
+    "!lua_modules/",
+    "!renv/",
+    "!packrat/",
     "!__snapshots__/",
     "!*.snap",
     "!migrations/",

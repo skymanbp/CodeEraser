@@ -48,13 +48,17 @@ pub fn named_children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
     kids(node.named_child_count(), |i| node.named_child(i))
 }
 
-/// A list's entries — its named children, comments aside: a parameter
-/// list's parameters, an argument list's arguments. One reading for
-/// both, because overload resolution compares the two counts.
+/// A list's entries — its named children, comments and separators
+/// aside: a parameter list's parameters, an argument list's arguments.
+/// One reading for both, because overload resolution compares the two
+/// counts. tree-sitter-r spells its separator as a NAMED `comma` node,
+/// the one grammar of the eleven that does (node-types.json checked,
+/// plan v2.30 step 4): read as an entry, every comma of an R list
+/// counted as one more parameter or argument.
 pub fn entries<'t>(list: Node<'t>) -> Vec<Node<'t>> {
     named_children(list)
         .into_iter()
-        .filter(|c| !c.kind().contains("comment"))
+        .filter(|c| !c.kind().contains("comment") && c.kind() != "comma")
         .collect()
 }
 

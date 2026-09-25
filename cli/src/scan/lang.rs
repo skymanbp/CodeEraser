@@ -20,7 +20,8 @@
 //! instead of a constant, so a row flipping here needs no core change.
 //! Step 2 turned C and C++ (spec_c.rs; `.h` is C++ by the 2026-09-24
 //! ruling — a header parsed as C loses every class body); step 3 turned
-//! Java (spec_java.rs).
+//! Java (spec_java.rs); step 4 turned Lua and R (spec_lua.rs, spec_r.rs;
+//! R takes both `.R` and `.r`, the extension match being exact).
 
 use std::path::Path;
 use tree_sitter_language::LanguageFn;
@@ -93,10 +94,10 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
         "cpp",
         false,
     ),
-    (Lang::Lua, &[], "lua", true),
+    (Lang::Lua, &["lua"], "lua", false),
     (Lang::Java, &["java"], "java", false),
     (Lang::Ruby, &[], "ruby", true),
-    (Lang::R, &[], "r", true),
+    (Lang::R, &["R", "r"], "r", false),
 ];
 
 /// The grammar of every AST-backed language, as the `LanguageFn`
@@ -106,7 +107,7 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
 /// eighth arm on (tests/it/grammar_pins.rs stores its pins the same
 /// way, for the same reason). The plan v2.30 reserved codes join as
 /// their steps land.
-const GRAMMARS: [(Lang, LanguageFn); 9] = [
+const GRAMMARS: [(Lang, LanguageFn); 11] = [
     (Lang::Python, tree_sitter_python::LANGUAGE),
     (
         Lang::TypeScript,
@@ -119,6 +120,8 @@ const GRAMMARS: [(Lang, LanguageFn); 9] = [
     (Lang::C, tree_sitter_c::LANGUAGE),
     (Lang::Cpp, tree_sitter_cpp::LANGUAGE),
     (Lang::Java, tree_sitter_java::LANGUAGE),
+    (Lang::Lua, tree_sitter_lua::LANGUAGE),
+    (Lang::R, tree_sitter_r::LANGUAGE),
 ];
 
 impl Lang {

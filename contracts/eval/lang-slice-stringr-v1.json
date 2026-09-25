@@ -1,0 +1,481 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "r",
+    "name": "stringr",
+    "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+  },
+  "excluded": {
+    "other_extension": 114
+  },
+  "files": [
+    {
+      "lang": "r",
+      "path": "R/c.R",
+      "sha256": "8463005b27bdd2c078bcaeb74ae769669a968d8901214afa9dae0217466a39ba",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/case.R",
+      "sha256": "4568a6a8de811501df0a587220f7fd65c417e1429b74839ec54a9ee8ebd25240",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/compat-obj-type.R",
+      "sha256": "661725c5a1e344df5b2001114f34a840cf4806e18cde0923b82b2a0b0616edc7",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/compat-purrr.R",
+      "sha256": "a0f330b54f6b994b64566b9619f3b22e05b8fcafe82df3545da55d9c876895e8",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/compat-types-check.R",
+      "sha256": "9cf75ce573b949e093e8917f135b1a597c06edae6b6e54544756c1be93912454",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/conv.R",
+      "sha256": "ac77c6833d60c98594542a1e74f2e51d67d71704c3381561290ba7ebcfafea70",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/count.R",
+      "sha256": "7ee0cd583220b012b0dffc1683298db83d38f6aff52a2d8f3bf764823af6ed44",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/data.R",
+      "sha256": "ea005a6156800189704b87f6c855a8605296baf36ade8dd001a1c472a526f4cc",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/detect.R",
+      "sha256": "b6caecd4d4e1d90327f3e3407df19e3b40b83eeb08ab363d8372541d3077b119",
+      "sites": {
+        "library": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/dup.R",
+      "sha256": "378d6fb942f6cc5e2683907348eb96251d280cb1767055abace9b5af0b01c64a",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/equal.R",
+      "sha256": "5b46c5a01176bd1f9c03ba9ea534770f2ebdd8f2ec6c33f19ad4d3dcec6043f8",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/escape.R",
+      "sha256": "af027dba906c09c34a35383d708e4030c5eb0c22d96811a51f23cfeaacc1d920",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/extract.R",
+      "sha256": "409c738b004de138df7fdc427d5c2d6eec7957914971b0a8f3f884f21ec88842",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/flatten.R",
+      "sha256": "526272268b6ae89aaa429d7ed6c27b122c847ca2d03cf92185d91600eb8d7d25",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/glue.R",
+      "sha256": "560b20cd4828f02ae35ba5d4f33a448ac56a771f3ef07668dca9bfdeb0669bd3",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/interp.R",
+      "sha256": "cf486c76b545da60ca71e7687f5cbf31e4c3058638ab90ce8d945886092ef957",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/length.R",
+      "sha256": "121e44e6ede844ded1f93851615990c7de2c3ffe7b05ef48c0b888cdc962c1ca",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/locate.R",
+      "sha256": "cf3ab3a44e685dad917c08971b6b91b62d2cf32a8ba90f01804a5058b1c99da2",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/match.R",
+      "sha256": "c08c4a12e8003d5f1ff67bf60df091fadd43c140061ba233fdc5b92b9dfe5e35",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/modifiers.R",
+      "sha256": "a9f0536d98395f9dbc80a3d4747581a44039a4b25607b59f2cc06204ed0ed4c9",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/pad.R",
+      "sha256": "197afa785649b49ee596a93280f9cda1b454e070b3bdf836b97c7475abf27e08",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/remove.R",
+      "sha256": "675141d224286ef3927e3b396d95357cc3c8d8dc2fe68d15f18f8466cb310bb6",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/replace.R",
+      "sha256": "c17fa0beeab33c2d286db52c0815966792d175556eb7fe25f4ab8cdd98d86b01",
+      "sites": {
+        "library": 6
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/sort.R",
+      "sha256": "a2d013a3db1c656fa5cf5cdaad0a0fbd579efe3ce0147e64d4b5b096a49a4d17",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/split.R",
+      "sha256": "3b2863f031ec3034c12b3122fb16a9615a0e6837c6fb4c1b738517fa236255a2",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/stringr-package.R",
+      "sha256": "b20bd492fb9ea2d570ea17c13d3887cb72ab5909d1c9a4cd8f7a8ad2e8056f4a",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/sub.R",
+      "sha256": "cbf7884217110fae820a37e706927a9e863797f74a96e4fb241f2fc9c743a655",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/subset.R",
+      "sha256": "3779c16732009d2183007148d7ee8f13bbfce527bb733f3799462b352c3bb350",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/trim.R",
+      "sha256": "3f6cfe5580323b512f1508c47895a8a7d91467aef0662f32e7b59f54c89a392b",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "R/trunc.R",
+      "sha256": "7c2349406097b148beb81f8a49470eb5ed8d48dbb50e3a35439bb10304d22904",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/unique.R",
+      "sha256": "a71a1306baea52f5440f937f1b05cc13de31852edcda684fa20a9a977cc15647",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/utils.R",
+      "sha256": "5200aae34b77c82249b26342f31eca8fdca01b540e32ca32cfc6cf2160670a68",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/view.R",
+      "sha256": "aaac5f757b194a92b9b4a70128c21d680f3d9b7f45a94bf4457b70a9683181ee",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/word.R",
+      "sha256": "fa37d2da0cad894e9b091ea97bb89e9db3885deab901a44f0ff51c3cb5166b86",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "R/wrap.R",
+      "sha256": "07b859876d0eefbc391da1b8ba3d42ed7b3027df5b74167739a08d29f3517a4f",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "data-raw/samples.R",
+      "sha256": "3c5575dedeb88254da2a70c36df7556d98ebcb729bc84e8341500b9f3df75418",
+      "sites": {
+        "library": 6
+      }
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat.R",
+      "sha256": "faf88118e6c6d064388f54fb6970edf60ab16a1e88b1f7cdca6d8a5dcba8a584",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-c.R",
+      "sha256": "79a695f0bbba1e89d5adc502c1d1b869abb5c938408653b9f05bda7a67ec2365",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-case.R",
+      "sha256": "95e8ae3d2decec23eb2208547000070ba3b7a75085d54e331a301605a839ea37",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-conv.R",
+      "sha256": "8fe3f402a512f0ca39f4bac8ea9193a86ceb4aac89abdc64bff6dfa70f3cfbc2",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-count.R",
+      "sha256": "cf50e1fe887de869c49aabf7355db09badbb76c630d92e7031aa994e64939de5",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-detect.R",
+      "sha256": "689bb8a94007158fc0cbad9bfcb96dad0c59cd2576aea714c95d282e786059d4",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-dup.R",
+      "sha256": "7f175285d11949097e6d9b34cac8fe313829e17d48f56c55fd2a1815f720d99d",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-equal.R",
+      "sha256": "a1c749fe2363671fc9f398f3620761dc258d547cdffcc21443e1856ec8e57aa3",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-escape.R",
+      "sha256": "0643b11ecde588895935ef89103454bd9c8666e761806b99017fe6fce2f17472",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-extract.R",
+      "sha256": "681d6891208f3c275b4d49704e37e5f50c4b81d42e1f1563bb10506747b2326a",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-flatten.R",
+      "sha256": "ddbcd187c39ed0a9abb3c15c94f6906e5264c8c3da90d342994bb2d1625a1ba4",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-glue.R",
+      "sha256": "b3ef4ac344d2de8f69800c3b5179d65ab23c148a3935e140a55923985ef9450e",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-interp.R",
+      "sha256": "5ffd1f459df52cc989e103c4ba85c09ef3def484e555084259f906ffba679bd9",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-length.R",
+      "sha256": "b2fe37bd656bb81533c726e0da4fc9a80aa3072d3f4ef46d0d0d53b386aa72a4",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-locate.R",
+      "sha256": "6b7cfb685e638286a5d98ad51e1c8832cb554348e9cb5ba9d46bb0129286c7c2",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-match.R",
+      "sha256": "6a45e95ec850d35950996f764d591c0cded19c9b2ac5c6bbfa1072394dcac36c",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-modifiers.R",
+      "sha256": "d1d9d78afc2d8c553785cd53a1c643ef86ab674338b5b543a3c820066448b7c3",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-pad.R",
+      "sha256": "75f9fdeeb16d4758e00f58f7414bb24ed646a47c105616d9045dcc57f03c9955",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-remove.R",
+      "sha256": "f2574a047e0f2db62efa2ea91f9564e4e7cd0a16e5cf4b03cb21cb481b9101bf",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-replace.R",
+      "sha256": "55a2aa073a60ff83998b4cdbcde1fcb79714d949aa2d845904b73a837294f412",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-sort.R",
+      "sha256": "d37177fe781cd16d358cf9257c68097d5b8eabd538fe26ed0c0878fd63840db7",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-split.R",
+      "sha256": "da7a51e98264e44ba41a5038cbc28f1bed3cc404549cb3b64979a5a031b380d0",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-sub.R",
+      "sha256": "28bcbb44340d250032f69bc01b763fb9f94f41b3d7c89a6c8e8194a9b81d57bd",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-subset.R",
+      "sha256": "597b7027aefbca7a680fbbfa63b9bd2b1325934f7e06871ff9b623b41a3b5cfa",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-trim.R",
+      "sha256": "2333525f7b2f9bd2e949d8b732ca13f57b7bc96d2866510d52ad13dfe28c0e80",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-trunc.R",
+      "sha256": "00b5e3be10b88824ca998078b536367d79d221f0df8effcb87420be2a7b04a0d",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-unique.R",
+      "sha256": "6d1a9f0b80396ba5dd58442358eb5b50a4ca367b8c699d1ede3b2ef335fac8ad",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-utils.R",
+      "sha256": "a59c86a250d19452487eeffad8ce4e8dfe1b6947b023e8d1322462ffad7730b5",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-view.R",
+      "sha256": "ce60bcbfbc6b7362eca0d6593d5d0b4264a6296b8a4ef66e7e1b21e66d091649",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-word.R",
+      "sha256": "9fc97bc9b811116477d56cc287bcb7996d7a0046325c18992a39920d6492b94a",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "tests/testthat/test-wrap.R",
+      "sha256": "63f53aa833a9f0223881dddfceb0386ba4a2603fe3ea5fa844969ae0edca3d7a",
+      "sites": {}
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "ced7ea8b37d47b0d19f59137e1d276229c3a8959",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "R",
+      "r"
+    ]
+  },
+  "summary": {
+    "files": 67,
+    "sites_by": {
+      "r/library": 55
+    },
+    "total_sites": 55
+  }
+}

@@ -19,19 +19,19 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:129-189](../../../cli/src/graph/spec.rs#L129)), so the site universe (the precision denominator)
+([spec.rs:220-263](../../../cli/src/graph/spec.rs#L220)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:184](../../../cli/src/graph/spec.rs#L184)). The fourteen frozen site
+grammar and scans line-wise ([spec.rs:258](../../../cli/src/graph/spec.rs#L258)). The eighteen frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
-include, import_star, type_ref` ([store.rs:146-161](../../../cli/src/graph/store.rs#L146)) — positions, not names, so reordering is a
+include, import_star, type_ref, require, load, source, library` ([store.rs:146-165](../../../cli/src/graph/store.rs#L146)) — positions, not names, so reordering is a
 `GRAPH_REV` bump ([store.rs:108](../../../cli/src/graph/store.rs#L108), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
 an `import` site off its require clause ([spec.rs:42](../../../cli/src/graph/spec.rs#L42),
-[spec.rs:91](../../../cli/src/graph/spec.rs#L91)); the rev paid for the stored-fact and ladder changes.
-Rev 16 (plan v2.30, one release for all of it) added C / C++'s `include` and Java's `import_star` and
-`type_ref`; a Java single-type import keeps the `import` label.
+[spec.rs:98](../../../cli/src/graph/spec.rs#L98)); the rev paid for the stored-fact and ladder changes.
+Rev 16 (plan v2.30, one release for all of it) added C / C++'s `include`, Java's `import_star` and `type_ref`,
+Lua's `require` and `load` and R's `source` and `library`; a Java single-type import keeps the `import` label.
 
 ### 2. The resolution ladder
 
@@ -40,13 +40,13 @@ candidate resolves it, and more than one candidate at a rung is `Unresolved(ambi
 picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph/ladder/mod.rs#L1)).
 `External` (stdlib, registry, `node_modules`) is a **correct terminal answer, not a miss**
 (same lines). Every resolved edge stores the rung that answered it
-([ladder/mod.rs:48](../../../cli/src/graph/ladder/mod.rs#L48)), which is what makes per-level precision
+([ladder/mod.rs:49](../../../cli/src/graph/ladder/mod.rs#L49)), which is what makes per-level precision
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported, Empty`
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
-([ladder/mod.rs:54-65](../../../cli/src/graph/ladder/mod.rs#L54)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:230-233](../../../cli/src/graph/ladder/mod.rs#L230)).
+([ladder/mod.rs:55-70](../../../cli/src/graph/ladder/mod.rs#L55)); a language without rungs must return
+`Unsupported`, never a silent skip ([ladder/mod.rs:237-241](../../../cli/src/graph/ladder/mod.rs#L237)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -214,7 +214,7 @@ Only file nodes carry entry facts; section and package rows get `0`
 (batch-7 slice 3 main body) the node row's last column carries **role facts** — the third and
 last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:310](../../../cli/src/graph/deadcode.rs#L310)) — and the
 category membership Rust used to fuse into the flags column is decided by the core's
-**role table** `roleBits` ([Graph/Cost.hs:137-138](../../../core/app/CE/Graph/Cost.hs#L137)):
+**role table** `roleBits` ([Graph/Cost.hs:143-144](../../../core/app/CE/Graph/Cost.hs#L143)):
 the row's entry bits derive through `deriveFlags`
 ([Dead.hs:76-78](../../../core/app/CE/Graph/Dead.hs#L76), applied at
 [Graph.hs:155-157](../../../core/app/CE/Graph.hs#L155)). Until 5.0.0 a legacy flags
@@ -222,27 +222,35 @@ column sat between `kind` and `roles` and yielded to them; it is gone, and a
 wrong-width row now refuses by row index rather than as a mixed table. The Rust producer measures:
 
 ```
-role 0  base ∈ {main.rs, main.go, __main__.py, build.rs, Main.hs}   [flags.rs:40-45]
-role 1  path starts with src/bin/, examples/, benches/, cmd/        [flags.rs:46-51]
-role 2  base ends _test.go | .test.ts | (test_*.py) | == Spec.hs,
-        or path starts tests/ or contains /tests/ | /__tests__/     [flags.rs:84-92]
+role 0  base ∈ {main.rs, build.rs, main.go, __main__.py, Main.hs, main.c,
+        main.cc, main.cpp, Main.java, main.lua, conf.lua, app.R, ui.R,
+        server.R, global.R}, or init.lua at the root                [flags.rs:42-52, 74-76]
+role 1  path starts with an entry directory: src/bin/ examples/ benches/
+        cmd/ (every language); Neovim's plugin/ ftplugin/ indent/ syntax/
+        colors/ compiler/ ftdetect/ lsp/ after/ (Lua); an R package's
+        inst/ vignettes/ data-raw/ exec/ demo/ (R)                  [flags.rs:54-67, 106-115]
+role 2  base ends _test.go | .test.ts | (test_*.py) | == Spec.hs, or a
+        runner's own test name (the C family's _test, Surefire's .java
+        forms, busted's _spec.lua / _test.lua, testthat's test[-_]*.[Rr]), or
+        path starts tests/ or contains /tests/ | /__tests__/        [flags.rs:127-142; name.rs:35-59]
 role 3  ce.toml [graph] entry_globs hit through the ONE ce.toml glob
         dialect (exclude / class / entry share it): exact path, bare
         basename, dir/ (= dir/**), *.ext, and every pattern as written [globs.rs:33-89]
-role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md} [flags.rs:58-62]
+role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md} [flags.rs:92-96]
 role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
-        claims nothing — the docdup exemption discipline)           [flags.rs:72-80]
+        claims nothing — the docdup exemption discipline)           [flags.rs:117-125]
 role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
         and conventional targets via crate_roots, cabal main-is
         through each stanza's source roots                          [targets.rs:18-35, 41-73; cabal.rs:91-116]
 role 7  a declared submodule's node (index `files.owner` = 1; a
         package or section under a foreign file's path), sent ALONE
-        — no other role is measured on a reader                     [flags.rs:31; deadcode.rs:304-307, 325-326; nodes.rs:32-77]
+        — no other role is measured on a reader                     [flags.rs:30-34; deadcode.rs:305-308, 325-326; nodes.rs:32-77]
+role 8  a C-family compilation unit (.c / .cc / .cpp / .cxx)        [flags.rs:35-40, 77-82]
 ```
 
-([flags.rs:20-26](../../../cli/src/graph/deadcode/flags.rs#L20),
-[flags.rs:39-76](../../../cli/src/graph/deadcode/flags.rs#L39)). The role→bit landing is the
-core's data: roles 0, 1 and 6 all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, and role 7
+([flags.rs:23-40](../../../cli/src/graph/deadcode/flags.rs#L23),
+[flags.rs:69-104](../../../cli/src/graph/deadcode/flags.rs#L69)). The role→bit landing is the
+core's data: roles 0, 1, 6 and 8 (7.2.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, and role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has. **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where

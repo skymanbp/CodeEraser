@@ -143,3 +143,47 @@ jsoup import 12 + import_star 15 + type_ref 35。
 `HttpConnection.java` 的两行里两处 `Connection.Base`、两处 `Connection.Request` 都读到并解到 `Connection.java`（没读的
 `HttpConnection.Base` 以本文件的类开头，真值本就是 `none`）；jsoup `TokeniserState.java` 那条走两层嵌套类的 static 导入
 读到，R2 解到 `Document.java`。
+
+## Lua（步 4）
+
+### 站点宇宙与抽样（2026-09-25 冻结）
+
+两个语料各用自己的钉住 tip，范围 = `*.lua`，排除的只有其他扩展名：
+
+| 语料 | tip | 许可 | 文件 | 站点 | require | load | 排除（其他扩展名） |
+|---|---|---|---|---|---|---|---|
+| luarocks/luarocks | `2d2cc8e` | MIT | 162 | 607 | 607 | 0 | 347 |
+| koreader/koreader | `d9cd278` | AGPL-3.0 | 594 | 5,025 | 4,938 | 87 | 370 |
+
+Lua 与 R 从一开始就各取两个语料，一个包、一个应用（设计册 §14 第 17 条）：包按模块名找到自己的文件（`require`），
+应用还按路径（`dofile` / `loadfile`）——luarocks 的站点宇宙里 `load` 一类为零，只有 koreader 考得到。luarocks 同时是
+交叉核对语料（SOURCES.md 的 lua 行，五个文件，与宇宙同一 tip）。koreader 是 AGPL-3.0：冻结档只记它的路径、哈希、
+计数与站点的 spec 片段，交叉核对夹具只取 MIT 的 luarocks。
+
+样本：主 100 道——require 84 / load 16（load 先取地板 15，余下 70 座按最大余数再得 1 座）；备用 40 道（两类各
+20）；主样本落在 87 个文件上，按语料分是 luarocks require 10、koreader require 74 + load 16。
+
+三份档的 `generated_from` 记 ce 1.7.4、树 `ced7ea8`、dirty = true：冻结时 Lua 的检测代码本身还没提交（它和这三份
+档在同一个提交里落地），与 Java 那三份同理。
+
+## R（步 4）
+
+### 站点宇宙与抽样（2026-09-25 冻结）
+
+范围 = `*.R` 与 `*.r`（产品路径表给 R 的两个扩展名），排除的只有其他扩展名：
+
+| 语料 | tip | 许可 | 文件 | 站点 | library | source | 排除（其他扩展名） |
+|---|---|---|---|---|---|---|---|
+| tidyverse/stringr | `ae054b1` | MIT | 67 | 55 | 55 | 0 | 114 |
+| ImperialCollegeLondon/covid19model | `fcc30e2` | MIT | 177 | 1,697 | 1,647 | 50 | 984 |
+
+stringr 是包：包内的 R 文件之间不经任何站点互相引用（装载器把 `R/` 整体读入，设计册 D18），它的 `library` 站点
+几乎都指向别的包（`pkg::name` 运算符也读作 `library`）；`source` 只有应用 covid19model 考得到。stringr 同时是交叉
+核对语料（SOURCES.md 的 r 行）。
+
+样本：主 100 道——library 84 / source 16；备用 40 道（两类各 20，都在 covid19model）；主样本落在 62 个文件上，按语料
+分是 stringr library 2、covid19model library 82 + source 16。stringr 的 55 个站点只占 library 池的 55 / 1,702，按哈希秩
+取到 2 道（期望 2.7）：抽样按站点人口、不设语料地板，这是预登记的规则；包的读法另由精度册的宇宙台账检验——冻结
+宇宙里的每个站点都解一遍。
+
+三份档的 `generated_from` 同 Lua。

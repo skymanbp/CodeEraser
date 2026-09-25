@@ -12,6 +12,7 @@
 //! folds never cut; a fragment cut mid-path is refused, never
 //! guessed shallow (ladder/rs.rs module header).
 
+mod call;
 mod java;
 
 use super::md;
@@ -89,7 +90,7 @@ pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Un
 fn code_sites(text: &str, lang: Lang) -> Vec<RawSite> {
     ast::with_tree(text, lang, |tree| {
         let (root, src) = (tree.root_node(), text.as_bytes());
-        let mut found = walk_sites(root, src, site_table(lang));
+        let mut found = walk_sites(root, src, lang);
         if lang == Lang::Java {
             // imports precede every type in a compilation unit (JLS 7.3),
             // so the pass's sites follow the table's in document order on
@@ -101,7 +102,8 @@ fn code_sites(text: &str, lang: Lang) -> Vec<RawSite> {
     })
 }
 
-fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<RawSite> {
+fn walk_sites(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<RawSite> {
+    let table = site_table(lang);
     let mut out = Vec::new();
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
@@ -113,6 +115,8 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], table: &[SiteKind]) -> Vec<Ra
                 break;
             }
         }
+        // a call opens its site from the call table (graph/sites/call.rs)
+        out.extend(call::site(node, src, lang).map(|(label, at, spec)| site(label, at, spec)));
         // deterministic order: children pushed reversed => visited
         // in document order after the stack pop
         for child in children(node).into_iter().rev() {

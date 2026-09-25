@@ -10,11 +10,8 @@
 //!     directory, equal basename or pattern (`*` non-empty); `Ambient`
 //!     by the `.d.ts` family;
 //!   - the NAME × language: `Main` (Python/Haskell/C/C++/Java `main`),
-//!     `Protocol` (the framework names a loader spells for the author —
-//!     Python unittest/xunit/pluggy/Django/reflection prefixes, TS
-//!     filename × export-name conventions, Haskell autogen modules and
-//!     hspec, the C-family entries a linker, a JVM or a language
-//!     runtime looks up by name, the Java methods the platform calls);
+//!     `Protocol` (the framework names a loader spells for the author,
+//!     one table per language in protocol.rs);
 //!   - the KEY: a Go method's receiver decides `MemberDispatch` (an
 //!     unexported receiver — only an interface or embedding reaches
 //!     it) or `MemberApi` (an exported one);
@@ -23,6 +20,8 @@
 //! Every bit is an exemption (silence), the safe direction of the veto.
 
 use super::Conv;
+use super::protocol::protocol;
+use super::protocol::starred;
 use crate::scan::lang::Lang;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -41,7 +40,9 @@ const TEST_SUFFIXES: [&str; 3] = ["_test.go", "_test.py", "Spec.hs"];
 /// file's non-empty star). The one table both test readers share — the
 /// dead-code role (graph/deadcode/flags.rs) and this category's path
 /// half: the two lists judge different things elsewhere, and agree on
-/// these by construction (plan v2.30, booklet §8).
+/// these by construction (plan v2.30, booklet §8). Lua: busted's
+/// `_spec` and the `_test` of luaunit and its kin; R: testthat's
+/// `test-` / `test_` files, which it finds under either extension case.
 const RUNNER_TESTS: &str = "\
 * _test.c
 * _test.cc
@@ -49,60 +50,13 @@ const RUNNER_TESTS: &str = "\
 Test * .java
 * Test.java
 * Tests.java
-* TestCase.java";
-
-/// Python names a loader spells: unittest's discovered hooks, pytest's
-/// xunit-style hooks, Django's loader targets. Prefixes follow.
-const PY_NAMES: &str = "setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \
-                        asyncSetUp asyncTearDown load_tests runTest \
-                        setup teardown setup_module teardown_module setup_function \
-                        teardown_function setup_class teardown_class setup_method teardown_method \
-                        Command Migration";
-/// pluggy hooks and the fixed-prefix reflection Django/DRF perform
-/// (`clean_<field>`, `validate_<field>`, `perform_<action>`).
-const PY_PREFIXES: [&str; 4] = ["pytest_", "clean_", "validate_", "perform_"];
-
-/// TS/TSX file form × export names, one line per form group: the
-/// stem (basename minus extension) on the left, the function- or
-/// class-capable exports a framework loads by name on the right —
-/// Next App Router route handlers and segment hooks, SvelteKit
-/// endpoints, page/layout loads and hooks, Next middleware and
-/// instrumentation. Constant-form exports (`metadata`, `prerender`,
-/// `actions`, `config`) are out of the domain by §3.1 and not rows.
-const TS_BY_STEM: &str = "\
-route : GET POST PUT PATCH DELETE HEAD OPTIONS
-+server : GET POST PUT PATCH DELETE HEAD OPTIONS fallback
-page layout template default loading error not-found global-error : generateStaticParams generateMetadata generateViewport
-opengraph-image twitter-image icon apple-icon sitemap : generateImageMetadata generateSitemaps
-middleware : middleware
-instrumentation : register onRequestError
-+page +page.server +layout +layout.server : load entries
-hooks hooks.server hooks.client : handle handleError handleFetch init reroute";
-/// Directory-scoped forms: Next/Astro `pages/**` (data fetchers and
-/// endpoint verbs), Remix `routes/**` and its `root` module.
-const TS_PAGES: &str =
-    "getStaticProps getServerSideProps getStaticPaths GET POST PUT PATCH DELETE HEAD OPTIONS ALL";
-const TS_ROUTES: &str = "loader action meta links headers ErrorBoundary HydrateFallback \
-                         shouldRevalidate clientLoader clientAction";
-
-/// Java methods the platform or a container calls for the author (plan
-/// v2.30 step 3, booklet §9): the Object and Comparable contracts, the
-/// functional interfaces, iteration, serialization's reflected hooks,
-/// cloning and finalization, the enum's synthesized pair, and the
-/// servlet lifecycle. `main` is `Main`.
-const JAVA_NAMES: &str = "toString equals hashCode compareTo compare run call get accept apply test \
-                          close iterator hasNext next readObject writeObject readResolve \
-                          writeReplace finalize clone valueOf values doGet doPost doPut doDelete \
-                          init destroy service";
-
-/// C / C++ names a loader, the linker or a language runtime spells for
-/// the author (plan v2.30 step 2): the Windows DLL and program entries,
-/// the bare-metal entry, the JNI, Node-API and libFuzzer hooks. `main`
-/// is `Main`, the category the criterion keeps for it. Prefixes follow:
-/// CPython, Lua and JNI native modules are looked up by a prefixed name.
-const C_NAMES: &str = "DllMain WinMain wWinMain wmain _start JNI_OnLoad JNI_OnUnload \
-                       napi_register_module_v1 LLVMFuzzerTestOneInput LLVMFuzzerInitialize";
-const C_PREFIXES: [&str; 3] = ["PyInit_", "luaopen_", "Java_"];
+* TestCase.java
+* _spec.lua
+* _test.lua
+test- * .R
+test_ * .R
+test- * .r
+test_ * .r";
 
 /// The path-derived bits of every file, memoized per file, with the
 /// package-root stats memoized per DIRECTORY (one `Cargo.toml` stat
@@ -184,11 +138,6 @@ pub(crate) fn runner_test(base: &str) -> bool {
     })
 }
 
-/// `<prefix>*<suffix>` with `*` non-empty.
-fn starred(base: &str, prefix: &str, suffix: &str) -> bool {
-    base.len() > prefix.len() + suffix.len() && base.starts_with(prefix) && base.ends_with(suffix)
-}
-
 /// `*<mid>*` with both stars non-empty — at ANY occurrence, so a
 /// basename opening with the infix (`.test.helper.test.ts`) still
 /// matches on its later one.
@@ -225,42 +174,6 @@ pub fn text_bits(text: &str) -> i64 {
     } else {
         0
     }
-}
-
-fn protocol(lang: Lang, rel: &str, name: &str) -> bool {
-    let base = rel.rsplit('/').next().unwrap_or(rel);
-    match lang {
-        Lang::Python => listed(PY_NAMES, name) || PY_PREFIXES.iter().any(|p| starred(name, p, "")),
-        Lang::TypeScript | Lang::Tsx => ts_protocol(rel, base, name),
-        Lang::Haskell => {
-            base.starts_with("Paths_")
-                || base.starts_with("PackageInfo_")
-                || (name == "spec" && starred(base, "", "Spec.hs"))
-        }
-        Lang::C | Lang::Cpp => {
-            listed(C_NAMES, name) || C_PREFIXES.iter().any(|p| starred(name, p, ""))
-        }
-        Lang::Java => listed(JAVA_NAMES, name),
-        _ => false,
-    }
-}
-
-fn listed(table: &str, name: &str) -> bool {
-    table.split_whitespace().any(|n| n == name)
-}
-
-/// Filename form × export name: the stem rows, then the directory
-/// rows (`pages/**`; Remix `routes/**` and `app/root.*`).
-fn ts_protocol(rel: &str, base: &str, name: &str) -> bool {
-    let stem = base.rsplit_once('.').map_or(base, |(stem, _)| stem);
-    let by_stem = TS_BY_STEM.lines().any(|row| {
-        let (stems, names) = row.split_once(" : ").expect("a `stems : names` row");
-        listed(stems, stem) && listed(names, name)
-    });
-    let in_dir = |d: &str| rel.split('/').rev().skip(1).any(|c| c == d);
-    by_stem
-        || (in_dir("pages") && listed(TS_PAGES, name))
-        || ((in_dir("routes") || (stem == "root" && in_dir("app"))) && listed(TS_ROUTES, name))
 }
 
 /// The Go receiver's exportedness, read off the key `(<recv>) m/n`:

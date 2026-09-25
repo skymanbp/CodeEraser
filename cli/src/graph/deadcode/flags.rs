@@ -11,7 +11,10 @@
 //! surface (graph/symwire.rs) rather than through this column.
 
 use super::targets::Declared;
+use crate::mention::conv::name::runner_test;
+use crate::mention::conv::protocol::listed;
 use crate::scan::globs::{self, Inclusions};
+use crate::scan::lang::Lang;
 use std::path::Path;
 
 /// Frozen role-bit positions (wire node row column 4). Facts, never
@@ -36,26 +39,39 @@ pub(super) const ROLE_FOREIGN: i64 = 1 << 7;
 /// The core lands it on the executable bit (roleBits row 8, 7.2.0).
 const ROLE_UNIT: i64 = 1 << 8;
 
-/// Role facts of one file node. Main.hs is cabal's executable
-/// main-is convention — nothing imports a main module, exactly like
-/// main.rs, and Main.java is the class a launcher names; the
-/// declared-target role covers the manifests' OWN declarations beside
-/// these name conventions.
+/// Files a runtime or a build starts by their own name, which nothing
+/// imports: Rust's `main.rs` and `build.rs`, Go's `main.go`, Python's
+/// `__main__.py`, cabal's executable main-is `Main.hs`, the C family's
+/// `main` file, the class a Java launcher names, what LÖVE runs
+/// (`main.lua`, and `conf.lua` before it) and what Shiny's `runApp`
+/// reads from an app directory (`app.R`, or `ui.R` and `server.R`, and
+/// `global.R`). Neovim's `init.lua` is one only at the root, where a
+/// config keeps it: anywhere else the name is a module's own file
+/// (`require "a"` reads `a/init.lua`), which the graph reaches.
+const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c main.cc \
+                           main.cpp Main.java main.lua conf.lua app.R ui.R server.R global.R";
+
+/// Directories whose files a runtime starts by where they sit, never
+/// by an import — root-anchored, one row per language (`*` every
+/// judged one): Cargo's `src/bin/` `examples/` `benches/` and Go's
+/// `cmd/`; the Neovim runtime directories a Lua file is sourced from by
+/// path (`plugin/` at startup; `ftplugin/` `indent/` `syntax/`
+/// `colors/` `compiler/` `ftdetect/` `lsp/` on demand; `after/`
+/// holding the same — `autoload/` is Vim script's alone, `lua/` is
+/// `require`'s); the directories of an R package whose scripts R and
+/// its tools run by path (`inst/` installed as it is, `vignettes/`,
+/// `data-raw/`, `exec/`, `demo/`).
+const ENTRY_DIRS: &str = "\
+* src/bin/ examples/ benches/ cmd/
+lua plugin/ ftplugin/ indent/ syntax/ colors/ compiler/ ftdetect/ lsp/ after/
+r inst/ vignettes/ data-raw/ exec/ demo/";
+
+/// Role facts of one file node; the declared-target role covers the
+/// manifests' OWN declarations beside the name and place conventions.
 pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: &Declared) -> i64 {
     let base = path.rsplit('/').next().unwrap_or(path);
     let mut r = 0i64;
-    if matches!(
-        base,
-        "main.rs"
-            | "main.go"
-            | "__main__.py"
-            | "build.rs"
-            | "Main.hs"
-            | "main.c"
-            | "main.cc"
-            | "main.cpp"
-            | "Main.java"
-    ) {
+    if listed(ENTRY_NAMES, base) || path == "init.lua" {
         r |= ROLE_ENTRY_NAMED;
     }
     if matches!(
@@ -64,10 +80,7 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     ) {
         r |= ROLE_UNIT;
     }
-    if ["src/bin/", "examples/", "benches/", "cmd/"]
-        .iter()
-        .any(|p| path.starts_with(p))
-    {
+    if entry_dir(path) {
         r |= ROLE_ENTRY_DIR;
     }
     if is_test(path, base) {
@@ -90,6 +103,17 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     r
 }
 
+/// Whether a row of ENTRY_DIRS for the file's language, or for every
+/// language, holds a prefix of the path.
+fn entry_dir(path: &str) -> bool {
+    let lang = Lang::judged_path(Path::new(path)).map_or("", Lang::name);
+    ENTRY_DIRS.lines().any(|row| {
+        let mut words = row.split_whitespace();
+        matches!(words.next(), Some(scope) if scope == "*" || scope == lang)
+            && words.any(|dir| path.starts_with(dir))
+    })
+}
+
 /// `ce:allow(deadcode) -- <why>` anywhere in the file claims
 /// liveness — the one claim grammar (crate::allow: a bare marker
 /// claims NOTHING). An unreadable file makes no claim. Full content
@@ -102,11 +126,13 @@ fn allow_claim(root: &Path, path: &str) -> bool {
 
 /// Spec.hs is the cabal test-suite main-is convention (hspec/stack
 /// templates) — the test root nothing imports, like _test.go; the
-/// C-family `_test` files and Maven Surefire's test classes come from
-/// the table the convention word reads too (runner_test, plan v2.30).
+/// C-family `_test` files, Maven Surefire's test classes, busted's
+/// `_spec.lua` and testthat's `test-*.R` come from the table the
+/// convention word reads too (runner_test, plan v2.30). testthat's own
+/// directory is `tests/testthat/`, which the `tests/` rule reads.
 fn is_test(path: &str, base: &str) -> bool {
     base.ends_with("_test.go")
-        || crate::mention::conv::name::runner_test(base)
+        || runner_test(base)
         || base.ends_with(".test.ts")
         || (base.starts_with("test_") && base.ends_with(".py"))
         || base == "Spec.hs"

@@ -1,0 +1,4710 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "lua",
+    "name": "koreader",
+    "tip": "d9cd2788e4ec023b8fbf60b0982e831c82d15a44"
+  },
+  "excluded": {
+    "other_extension": 370
+  },
+  "files": [
+    {
+      "lang": "lua",
+      "path": "datastorage.lua",
+      "sha256": "32ba6a7688ee2a279fbc67dad9060454a58420a9065a10175f47866fa4f967cb",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "defaults.lua",
+      "sha256": "be7c335d81dc6d7bebc608e15584b569ac2a541fbbabd019ad53719e3853f78f",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanager.lua",
+      "sha256": "a0dd105aaad555d9066564da866b0f05c3822dae4da1c8b047dd2f5c1b38e958",
+      "sites": {
+        "require": 45
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagerbookinfo.lua",
+      "sha256": "6fa10a875490d5829ddb0990fb65c53ac4e3d2fb7b8320d5a6237bfde2a14cb2",
+      "sites": {
+        "require": 27
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagercollection.lua",
+      "sha256": "3aeca0e27aa8d45372cfc1a8d11ab1497857c52f13f6383a785b74a70b96b6c7",
+      "sites": {
+        "require": 32
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagerconverter.lua",
+      "sha256": "19338e7be0a739bee3f2d66c15902172ec3dd5c631a26c35bfd7b2d37a36f975",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagerfilesearcher.lua",
+      "sha256": "c6a4f9bc8ed69e80ba9a890c73fd0706abea1bd303e942a057e195a9d7809c06",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagerhistory.lua",
+      "sha256": "a8996b205246a4ff99a5ea63ea8a5f71290ca3ad3fe90bf5e946a085011d3cfa",
+      "sites": {
+        "require": 21
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagermenu.lua",
+      "sha256": "1c165e7cbb97128b0ef231cce21d4a439b542f543ae668c1e64b32901ff760a3",
+      "sites": {
+        "load": 6,
+        "require": 31
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagersetdefaults.lua",
+      "sha256": "888688466df3b103f390345050debbfbea1e40b7ec24746b8e0c99b87b6a05a1",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagershortcuts.lua",
+      "sha256": "29ebcd64f2a12a3e12669126d1e87bf1a963072450f893f2c6880abc88a37ba8",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/filemanagerutil.lua",
+      "sha256": "67509496c1aa1fa748a20c686ae4a6ad67305a7ddb2210016d5b2898e3041eee",
+      "sites": {
+        "require": 26
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/filemanager/lib/md.lua",
+      "sha256": "af320c067b328464279e3d5862b74ed0267db053d62c7e455b16ed8d1161b83d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readeractivityindicator.lua",
+      "sha256": "f85c0ea5dce62e6520f37e76e0d9c0366a94f4b7992951528b8c5d6ef2bed08b",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerannotation.lua",
+      "sha256": "ef0a59a9045c7338d1fffcbf5e201c3fe7de3f73761769734eb635b34f306626",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerback.lua",
+      "sha256": "6992b529d2080b6a73a9cf4e92c6846685c868beaf6a5532f919c4ae647ebd09",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerbookmark.lua",
+      "sha256": "bde9d2e97d915f1dd737da0343d645337d34507bf5c19b73dca8a5e68fbb98f4",
+      "sites": {
+        "require": 27
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerconfig.lua",
+      "sha256": "8acc5e9a4ccdbf1eb62e6faaeeb40f998b141cda9929ace060a63665dae2a527",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readercoptlistener.lua",
+      "sha256": "38508fed1515bfc544f13921170af4104b2bace76b29656972686b9f5d297235",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readercropping.lua",
+      "sha256": "1b9cb8108c98aed608e5a47cdd14951fe9af416f844072a350c6241972b3371e",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerdevicestatus.lua",
+      "sha256": "0ad3fbb74a4916c887571c00c1dc6dec8722be9583d80a505d9099ac8e4731a7",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerdictionary.lua",
+      "sha256": "09ebbae462df4e9402b3ea03abf8f307c97bc4b0dfec33937c75dca322ccd902",
+      "sites": {
+        "require": 39
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerdogear.lua",
+      "sha256": "9c2862b675d29ce92f84a4101413c169f73cb4b1c20e72d1376c2911188af747",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerflipping.lua",
+      "sha256": "35a1b86909e5ee0ebfa032a972a6f6f853269e8e3de1d3fa2e0c92b3ead29775",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerfont.lua",
+      "sha256": "a53fdbc39a5f83a2c4f033da91d6b7fdb4133f0d3d961e606b0a720514dc853c",
+      "sites": {
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerfooter.lua",
+      "sha256": "e6db221c0af3d7c18aba35aed8eb883d23e35a98b6e73995b87d8bb4b8cc9eb4",
+      "sites": {
+        "require": 33
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readergoto.lua",
+      "sha256": "902448c7bf549739f17fdc6c83998c07465e344f324bcb6b9b8897720ee90f45",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerhandmade.lua",
+      "sha256": "1e66d181de76624c4d21018fc1cddc6faba5b9c14cfaf4b47028d9b5b4153dcb",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerhighlight.lua",
+      "sha256": "234c5fa4956980222f03e8cc5a17b1f5a0ecfa1ac20d7290198d2c868eb3dc04",
+      "sites": {
+        "require": 25
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerhinting.lua",
+      "sha256": "100ce59b7d6ee6568e0e7096e7572e21d82344bd8a970ce9ad4fb072bb6a4bca",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerkeyselection.lua",
+      "sha256": "75f4bda24f36e5677b8fd1ee1b69ac69706d8c2d842143d0ba68486b0afadf2f",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerkoptlistener.lua",
+      "sha256": "03bc57e03ceb89fc5d4b53d6f3560d8abd2ac8fdf4e14edbe6f7efee66c078eb",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerlink.lua",
+      "sha256": "c05e1d64990ac502a5713f255a4933050485b615607e180a0a236985a5ea490d",
+      "sites": {
+        "require": 19
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readermenu.lua",
+      "sha256": "5d712a468df3862707808cff3231f0c41d939ad9f20bc881223df40ed60f4657",
+      "sites": {
+        "load": 8,
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerpagemap.lua",
+      "sha256": "cb9e1f15c00324a7240e3da6ed8253c7450931f2ac82887bb90dc8bfd611c4fb",
+      "sites": {
+        "require": 21
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerpaging.lua",
+      "sha256": "d110f266d90ceb48699c85118f74c0c8d213e50dd2d6c2301a7c499abc65fcd7",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerpanning.lua",
+      "sha256": "bcd1f7783162b7bdcdad7e7d2b7fda7c0a94ac4559969faa8b8b51ffa95bcb19",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerrolling.lua",
+      "sha256": "4af978e7d81fa91d8f3a93096b9c656edf0a7c47078a305ea35ac87d9d72d68c",
+      "sites": {
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerscrolling.lua",
+      "sha256": "e76cb7f1da4bcc14675756a197fdd0ee953817bf99f54dbb0dd6f3b91da14c8d",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readersearch.lua",
+      "sha256": "b9014711a0aaaa73fe9901a9075bf0885afa85dbfceac2ae4a97540dcc9663c5",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerstatus.lua",
+      "sha256": "c46458fd10dddc3ab3221f50c25c1a958f6ddb56f098b8b67227d9e85eed0017",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerstyletweak.lua",
+      "sha256": "0ca07b9e31b6bff09c20442712503f6f123e5152fba1237d9aeaa96c09eb65a3",
+      "sites": {
+        "require": 31
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerthumbnail.lua",
+      "sha256": "84572c4511cb73354750fe6cbf69cc14956b73de9423f4b7bbd4f533045af871",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readertoc.lua",
+      "sha256": "9672c948ce50a229911954b689f03cc03aaafb9befe39137960573833bd67637",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readertypeset.lua",
+      "sha256": "56d2e85550bd2149b37261f0d2d514e5123c5a0006593d81cf4a4a5dc721fb8f",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readertypography.lua",
+      "sha256": "1cce85dc450bd01e4e11343b3084403cdfebf884d1f6c6d16218932bf5df707c",
+      "sites": {
+        "require": 16
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readeruserhyph.lua",
+      "sha256": "6c1b669af1ef191c9068c2e56b8dbe2e5703ca7abb97dadf13ef2498a6c55aee",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerview.lua",
+      "sha256": "27a46b5c5b35c055bae0ea37a08d39910197e39f7dac83560fe99f59cf091489",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerwikipedia.lua",
+      "sha256": "a82bc0162538cb41759ed54571703be4b33388f82fc98b5ba51d43a74ce249c4",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/modules/readerzooming.lua",
+      "sha256": "216f333915fcf0cca4fbee9f6c0d3025e3d5f9afd261992c1e6a860cdfd10112",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/apps/reader/readerui.lua",
+      "sha256": "08c8039d5514f4801bed3980be5deb962a30f45668cf5bf4d25dcecf96c9f532",
+      "sites": {
+        "require": 72
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/cache.lua",
+      "sha256": "f6ff31fa60b93190c007a9e3b407c5ef8043fc7ab0f1531f24703aab9eec32b5",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/cacheitem.lua",
+      "sha256": "7a01e1a423c5654204cc57ce867783a767a84051833007fbd7c46414f94fcb59",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/cachesqlite.lua",
+      "sha256": "0c236cb749a53b16cc8a9c61cb6172d0156e54f0d7aaf12b6c53f14710bea7fd",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/configurable.lua",
+      "sha256": "51abad81d29f15e8f73b5e2cf2594e9a55c317b7d70e2b182cf6c7268806bab2",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/datetime.lua",
+      "sha256": "46810d09cf6c9683a6ec04aab7e10d50f9942311891d8516e46fa1b89ec606fb",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/dbg.lua",
+      "sha256": "0849ffd67cd7ae8ac523c0a9ba9ba6735f687f69e7f8d264c38b9e9c327aff08",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/depgraph.lua",
+      "sha256": "f8a7f49573964b378e75aec898b7580d2cee4203a600ef14933ef47ec8cfeb99",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device.lua",
+      "sha256": "eb48dca4c6199ead3a09aeef1070d3766cb92e2ff182586f90ee996d652e8b6a",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/android/device.lua",
+      "sha256": "ecd9a2827c710cc50fd1b9435f149711415a601b783551aef6256c2865a7902a",
+      "sites": {
+        "load": 1,
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/android/event_map.lua",
+      "sha256": "7d73cbeb6d4895b84c3f3603f7cbdd480a526b09ec8212fd8b602586c0e80982",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/android/powerd.lua",
+      "sha256": "eabb4a23f8f05970162c2bc432d8e1ce90415d9108ed28c4ba25dd0778da8c37",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/cervantes/device.lua",
+      "sha256": "a206e42355f2de7c42438bc5908921bf8e9c855358784d0e0f317c0102bffd45",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/cervantes/powerd.lua",
+      "sha256": "3c23be48a88deeffef799cc62e7da3af2fc36b91168bee216a0291e346c6c6f3",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/devicelistener.lua",
+      "sha256": "8336d0dc943f27edb9f6ef1ee41a3b4ee81c7c4f6b6cfa68efba7466c17bd9ab",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/dummy/device.lua",
+      "sha256": "1aac1546623f1cfbd29bb5911cb28b53cd58ddc4f301544b6d14b8f9ffc71d56",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/generic/device.lua",
+      "sha256": "07cb0b0b334b9b3bcfa8b24f52e906cca33bd94207bb8963ac6f4ac34d3b98de",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/generic/powerd.lua",
+      "sha256": "e1a12b8b566ecfd43025de96e01ba32ef03e2cab2569edcee384137f739119f4",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/gesturedetector.lua",
+      "sha256": "eda71485de9e19b3487c71833e0d9b62a4cd56caa0d05b34a6256ccd1f5c6e34",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/input.lua",
+      "sha256": "f03648c5eb1b9eba6eaafd341a142557322c0be8278cdfaf4e766a36ca784b7e",
+      "sites": {
+        "require": 18
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/key.lua",
+      "sha256": "ebbeaa311c9c61a9502e074301263cf7328292f3c1034133e099fa51e58ff66d",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/device.lua",
+      "sha256": "20b891f773f6caadda278822b88330d02e28a4a88115493fd589b02006b40a37",
+      "sites": {
+        "load": 7,
+        "require": 77
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/event_map_keyboard.lua",
+      "sha256": "05a9c3cdd8ae657573aabb0b1660f8afb580b77a2f96eb63362f7e0b619f1a2a",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/event_map_kindle4.lua",
+      "sha256": "36817a92766ed2d0af42362ea8c7a5ff1fb12fc190ecbbe175276a16198b3be5",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/k3_alt_and_top_row.lua",
+      "sha256": "bd16923770a8d062e0f4d570e5a5faaaf8b46406f923c4f62e796fb6c4755327",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/keyboard_layout.lua",
+      "sha256": "1bbe0ce54bb68aa007396543fc6142107c631df98dc201537a90a62bf347445b",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/mockrtc.lua",
+      "sha256": "85bfa11f58272112707067f50be9821c9bd2fe3312606a91afce80d82176c191",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kindle/powerd.lua",
+      "sha256": "e4f233415386f9d5c48ad5d8222d8c4c703090908f08d61fc999978a2649282f",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kobo/device.lua",
+      "sha256": "a8d370589a00554f577d68a1803ee9520448df59a4229ac3869f2f5a27135883",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kobo/nickel_conf.lua",
+      "sha256": "2b4f7f98090ae507204f49b8878f048589a57e81e14f9d6f7421af8231c576fa",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kobo/ntx_io.lua",
+      "sha256": "a53f4c6114f523c5af29b690c9f797fe60a8140a8b82cb21692aa4ec8e1ebc83",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/kobo/powerd.lua",
+      "sha256": "c9404c9ef84d4378bde8757a8156a7dee2a3a0c99b669e42cdf2dcac60c67725",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/pocketbook/device.lua",
+      "sha256": "fc5b3bce260f24073d25d8307183629dde5dc888b0d38fd42fd0a62ff36d395d",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/pocketbook/powerd.lua",
+      "sha256": "93711d6916a553a2ec6e88d7b3d0f3ee87b19f909a13975fb96d039bfe9578cb",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/remarkable/device.lua",
+      "sha256": "88aa0366b5c1eac3fa8713f0e2ab0ab306f2ba4a9e9f81d9c4a1eed3cb569f45",
+      "sites": {
+        "load": 1,
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/remarkable/event_map.lua",
+      "sha256": "582fa5d5587f590cc70095b8735a3e437c96f8234f5f08b2e6fcf85da2fbd112",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/remarkable/powerd.lua",
+      "sha256": "18cb39a3f088db147095164f358463200696f551f929efc87de3362dc9aaa3c4",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/sdl/device.lua",
+      "sha256": "6b6eabde38523852310c4a45fd5aeb91da223f8a3e3c76731f26b08908001c48",
+      "sites": {
+        "load": 2,
+        "require": 19
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/sdl/event_map_sdl2.lua",
+      "sha256": "90fa94ea1286bc6cd1c6ab84cbb68bf96cd93cab6125e665bdf1605bc1c8f5f2",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/sdl/gamepad.lua",
+      "sha256": "f95fc7c6927363869f2f70ba19e29572a449adfad3a268a1aa0b0814adc7032f",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/sdl/keyboard_layout.lua",
+      "sha256": "e9419cf88ebea212dc772c8bf915dc037aa190f17cfdb1385812149b52c28535",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/sdl/powerd.lua",
+      "sha256": "30095c7db138125a2021f84d0e1db4248eb103423453c7c7bcf9dc32440a5268",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/sysfs_light.lua",
+      "sha256": "ca28327babe6dcc0ce89a7a571c6f6d1009139494458c96f791aed895e7515aa",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/thirdparty.lua",
+      "sha256": "4c484fab5ded1dc6372995707adfda07192d31a0e43d1d1807d75654e6b23877",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/device/wakeupmgr.lua",
+      "sha256": "452edffa8c9d89f222c615ad885065d898a20832d30e89299f138d18904f5828",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/dispatcher.lua",
+      "sha256": "5939e9e8ddcdaf19ab6f35610675aba959c1c61b98d79bdb956ea0414c874e12",
+      "sites": {
+        "require": 28
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/docsettings.lua",
+      "sha256": "2ac292560866b8ecae40cfd8afa7bc79adf84d62711619ab3e476edaa82a0ad0",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/canvascontext.lua",
+      "sha256": "1412e64a4e957d63ef3fe1a6d9c32ce8032e0504c8716d8a3a8eae2612bfefd3",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/credocument.lua",
+      "sha256": "1638deaf9c8f0d5a43df588713d5053e0ec22890a510e2d4a1004e6fac253a11",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/djvudocument.lua",
+      "sha256": "af2d0cb1c85a6b0eeb4a150b5aee304aeccf8c6977b745c44a6c17c071cf7ed7",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/doccache.lua",
+      "sha256": "dd20bc668f0974a8598a2f8b65f9fe6abdac7abe2a005d47ac4395bb2eb5ab42",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/document.lua",
+      "sha256": "fbc8a11e4a5321c4b86742f9d699839a56ebe125edf6030f85f8ef57789c4129",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/documentregistry.lua",
+      "sha256": "2d5d43d9d7f0ebefafb575d2d08ba63eab867d77d682a2c27c79c568c287838a",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/koptinterface.lua",
+      "sha256": "6e1df97a2dd655dd31030447d87ff671fa3ff3f74bfbb3b535018c0180d205f4",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/pdfdocument.lua",
+      "sha256": "51e6ec248674186fb67abb0fd50de7aff0b8326165618adb737a27026146a6df",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/picdocument.lua",
+      "sha256": "3fa0f4235afaec4051ecfbd2db590e87f1b93f087c3a7b76d0022a6b505beda9",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/document/tilecacheitem.lua",
+      "sha256": "3b7b80f60d0c7b1eae2d21924b3cfbc195123b3b1da4b3743ed3f43fc10e3c0a",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/dump.lua",
+      "sha256": "016dd15917b707d351f549f43b3e271710acd7f78bdc0ac85198880e3c11bcc5",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/fontlist.lua",
+      "sha256": "07001c2424c821d09fcc6ecf33eb1b27e24f67e40876d893dcfb215cc702ba03",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/gettext.lua",
+      "sha256": "c992d0448800cfebbe66979e1bd974091c1646160f47a037aa7ce6d76069e57a",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/httpasync.lua",
+      "sha256": "2cdcb4fe5554bfa6a3a60eb19dbef1472d13fbce547d4d5fc7a6ff4fd82dcd7f",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/httpclient.lua",
+      "sha256": "7f7ab9260c79a86625266b1e99647fcecd3afb165605d213f6cfae2da2df1142",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/languagesupport.lua",
+      "sha256": "7bf8c365fc5851c92e2c82aceef13c9017dba9d754a317ddfd232a3914b53b6b",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/logger.lua",
+      "sha256": "f0d17650a7bfb4193fd9d5c5ab07e1e9663d01b280474a0d71cd1847efcbd4bd",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/luadata.lua",
+      "sha256": "53ad4d8ab3529a3103763c02103dcea029affb907f022c8d255e6e76f1634c38",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/luadefaults.lua",
+      "sha256": "efaf82c77f6959689e6ea8c0be0eeb6f4e33a59a21afecd192a0993b7075f126",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/luasettings.lua",
+      "sha256": "3483f15c8f3ec6a4e2a3a6196683f6446a91c5782acf6be375298a934ed91b8c",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/luxl.lua",
+      "sha256": "6424f06824ce156ee0dd885a95de0d76496e03b01db5590e2645094050922b45",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/optmath.lua",
+      "sha256": "bb630c2db62d468bf4bf59fb3347515481262696891b51e577390f099bfacdca",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/persist.lua",
+      "sha256": "78cb40306628f570eae8e29790134a0b604557648bbdf8a7f875dc6f4ea40656",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/pluginloader.lua",
+      "sha256": "9f27af5090ea20377ab1fbe40b3b9758673819a00f667f6965ee12675b7d807f",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/pluginshare.lua",
+      "sha256": "a52e5420638676747e2f28002a78889f32806a983ed2b541230004cb17567236",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/provider.lua",
+      "sha256": "78995be124e947ce7b4fea95ad62f5f75e707efcc26dbdca053107121745b0a6",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/random.lua",
+      "sha256": "0151b873608cce2deafceb8a07c321ec3a6d20a994bbc3bd634ea395c4b82212",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/readcollection.lua",
+      "sha256": "be32c5999cf6a03a0fd9988cf0707085e21c90e2865b82cadb4a1edc8a86bf44",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/readhistory.lua",
+      "sha256": "b6da914f0b49bc2b84fb4f4b8970f44874601fe9763639be062dc7abf8e90d4e",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/socketutil.lua",
+      "sha256": "3fcdf366ee34d499d603f14733bfc27fdf941dbe9934e34c0713cd7976609908",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/sort.lua",
+      "sha256": "7cd22f8695228d2cbed1e07d5cd5828c44500116b124e422b93827b18df1b1e2",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/bidi.lua",
+      "sha256": "05ca900fd03f930c39ff6cd4667ffa7f397dcd4a13e09eb8a3884111725853b2",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/creoptions.lua",
+      "sha256": "7beb54531450cbd77d47e97c1846ca0b4ca5f1daf8e9d8b2e4e8117319a3d94c",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/css_tweaks.lua",
+      "sha256": "de5a6abb994aa8c1ec6faec9ca7c042cee780ff602f10f0b881ba5e7a37dc645",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/dictionaries.lua",
+      "sha256": "fc78913da8a71215c4bd3e3170c1a5aeddda4543db51aff11d8524e053f296a0",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/dictionaries_koreader_dicts.lua",
+      "sha256": "44d6a0bc58b77e472cad96d400851474f1ee216b56e43e3523116b06fb7582f2",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/dictionaries_wikdict.lua",
+      "sha256": "60a36c667880a052b525146ff4473cf52764dba978a082ff74ea1b143dcc67c9",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/isolanguage.lua",
+      "sha256": "0c34fccc140f17ba1454f347fea0bee1615e8c8f0af132de431308346c5e6790",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua",
+      "sha256": "4544bfcffc3042cd6c3f84685eb4371deaf5f0580195379c9db0f0c041b5c154",
+      "sites": {
+        "load": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/bg_keyboard.lua",
+      "sha256": "14c7ade857c17caf297a5d1ec3bda5b05a6389b91264e5fe973ff1af5aabdf96",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/bn_keyboard.lua",
+      "sha256": "34f1f3cba30e60ba797821c8428693911b75ec269ff41e242415612166583e53",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/cs_keyboard.lua",
+      "sha256": "cf4d85bf6ce1d73e301a1223c51fb631d996a72aa2d997f04bdaf1a14507d86a",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/da_keyboard.lua",
+      "sha256": "6c331d08c9645831db32b513b59bf857edf4452f5420dddb6b7a078adb5269ba",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/de_keyboard.lua",
+      "sha256": "402fa10922bdc60c0d874e870733f628d8a9faf7b2e60990fadaaab552a811ef",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/el_keyboard.lua",
+      "sha256": "d9128ed087e08c492517d1db4a9711058c0ea6955216451eb164dcb486be047f",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/en_keyboard.lua",
+      "sha256": "aec6218ddf1ceb302396fe6cccfba130b9e21c6d5ce4e0535b453814610555b8",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/es_keyboard.lua",
+      "sha256": "1cabdaecceabdc7e2f69d5d5bd4375b98b09ca2e41b5de81c75ec0d417b26778",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/fa_keyboard.lua",
+      "sha256": "381a0fd39e942454ee2c840bceb6bebfeadb3f8ca18cb72f87007fffdc2f58e5",
+      "sites": {
+        "load": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/fr_keyboard.lua",
+      "sha256": "fb427ebeb131c6bb01d0e6db98e678b8ece42613471403fc7163eb14d83908b6",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/generic_ime.lua",
+      "sha256": "e2439f3e2d62722f7356c448de56ebb81b7239ea995284426f7e7a2f8d4a7bdd",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/he_keyboard.lua",
+      "sha256": "e9f9015d026aa5bd95b8b10b662c8ddb34ffb0a61a43bdf62095d11e8d2cd8d7",
+      "sites": {
+        "load": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/hu_keyboard.lua",
+      "sha256": "f36b2d6a088f52c865b199758192a1f8b92904eef5d363125447d32781bbdae3",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ja_keyboard.lua",
+      "sha256": "56b21ab47c3705c386bcd14b8adee03e83833b2ce9efcde78ce3072416069b84",
+      "sites": {
+        "load": 1,
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ja_keyboard_keys.lua",
+      "sha256": "efc6e6addea5cbffc18ba747dde2ed3bbf254c205f0541a1e8286cadcd68a929",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ka_keyboard.lua",
+      "sha256": "9c47948317c00fec7fe73919ffb7b213b8b02c35e7c2a94c385310380f4ae24d",
+      "sites": {
+        "load": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ar_popup.lua",
+      "sha256": "26df783d9466f5885850a850550ee888739adb8be86001f225749035ad12d5c3",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/bn_popup.lua",
+      "sha256": "cf9648f966d47dd434cf5cf598f3a391dc6a1fc49ed076a26260eaf651dfa191",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/el_popup.lua",
+      "sha256": "a17d4674faac02dd83b215cca5f047a1769ee025a3b26e410129096a5b4e3e8f",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/en_popup.lua",
+      "sha256": "3afb575b482e2d098db022150a08e5b3d1e37b81e7b7f5932cae50daf6ca18cd",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/fa_popup.lua",
+      "sha256": "12c59c21c9abc4a49bd6a0109496ca83bc3344b64df7f71b05af94bb94374adc",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/he_popup.lua",
+      "sha256": "e6d58c5495a88b4350a99d6c94ae1aa9a924f9e2a026f466b31f2436e18bb6e5",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ka_popup.lua",
+      "sha256": "73f9f43efb2e7ecb013ee9bb792babb66629687e3d03c76b27acc749a35aa851",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ml_popup.lua",
+      "sha256": "af6549304808b32053696884b78a246c5da56211e0584937c75ab8b195c83e67",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ro_popup.lua",
+      "sha256": "7cfada090f8c4dfc51982f2804eeee233f53edaec5fe39a9d59137f2cb2ff593",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ru_popup.lua",
+      "sha256": "26595e7760bce5b51f08ba8fac7e9dd520221ef6260d2f38f17d107d21768c64",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sk_popup.lua",
+      "sha256": "dc67c546a6927ba6a36c7df8c8ca1ada506e5c6224f9e831af14e9565e4262fb",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sr_popup.lua",
+      "sha256": "4efbc439377486c713b5d3c7086ebbfe2d0fc1dd8ce89c794f98cbb42db652d0",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/uk_popup.lua",
+      "sha256": "323889772436969d7a1fdb16d504d319b81f3e7940d6b7ff3ef57f4f1648dcde",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ko_KR_helper.lua",
+      "sha256": "21e04c17da803aedda697bd1b5739a5b0dc09e96bb185a496b8a14803b5a78e3",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ko_KR_keyboard.lua",
+      "sha256": "4fffcf7721937539d989125e5860e10ff2e528cea630923b53922e9688d53ec3",
+      "sites": {
+        "load": 1,
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ml_keyboard.lua",
+      "sha256": "f8b6ed906639c69f3131b185ec7067d649878c751a3556057e1ad2a5f62aaf6e",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/no_keyboard.lua",
+      "sha256": "989cdb9d19cc7caf68ac555d3dccb5f5ef142763f047156c877d2966fbf59e0b",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/pl_keyboard.lua",
+      "sha256": "968f96e724c666f483a7a6b7148fa16069a3f620bdbf80aa51d6d1e9be26d789",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/pt_keyboard.lua",
+      "sha256": "45bdd4cf0e80649aaecfd09a0439ef8bb92b089d9be524878ddc65d57cb23597",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ro_keyboard.lua",
+      "sha256": "6e4ea570c4782f441b77b4785d77dc39794217fcd582f810a64a1783588adfc8",
+      "sites": {
+        "load": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/ru_keyboard.lua",
+      "sha256": "7df663e1367ab4153223fd1431737acdb73d3256c42ca8248a0d7747b1814973",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/sk_keyboard.lua",
+      "sha256": "a3a788fd4775ff54b6916342470a0e3d8ce9eac7e7e4c010429116b78fecd62e",
+      "sites": {
+        "load": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/sr_keyboard.lua",
+      "sha256": "5ce46e14ea8a322d17ca439b2d148a6162c664b9cc8fbe9553c9c4ef05f94869",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/sv_keyboard.lua",
+      "sha256": "e3928bee3e952f285195361f157515f90427822276fb7c80c01ef39d184dcb71",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/th_keyboard.lua",
+      "sha256": "686d42adf6cfaa141c4dc0a5da20e9cd1586818eea91920b2dfd61a32a1a911e",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/tr_keyboard.lua",
+      "sha256": "01b61d4fdbfbe1b096bf2db39fde8cb6e7e221e941d3ca58a7e7ef3ff64e9769",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/uk_keyboard.lua",
+      "sha256": "3e685c6fde6c0fcc1b5f2f1ad32664730873b216002593e2787881e95122f2f2",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/vi_keyboard.lua",
+      "sha256": "3558394e85922325a035cab49d5bab552d2e4e1f0d83100c42212a02db19a482",
+      "sites": {
+        "load": 2,
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/vi_telex_data.lua",
+      "sha256": "8ae720124f2e6be6d59454eb9a4df290fe9f75a212f93c13cc6dda458285b7ce",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/zh_CN_keyboard.lua",
+      "sha256": "73f7e1ae3222de68d92a01a5078fcaa42f0b6de2cfe2fee32bafedb21ec730ee",
+      "sites": {
+        "load": 2,
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua",
+      "sha256": "407804be13440177392ab4362320df5eef85444ebac3fb2d99d10be996fb7411",
+      "sites": {
+        "load": 2,
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/zh_pinyin_data.lua",
+      "sha256": "231d810693602a12a1309097d3c68820c71c46f546a6cc12cfb67b057b2a2443",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/keyboardlayouts/zh_stroke_data.lua",
+      "sha256": "9a3a7f5d13e4c842a2f4ae2e91620ca9a5eb1dc1645f66037d48f98633e1ad1b",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/koptoptions.lua",
+      "sha256": "03ef8bd83c61ffec0cb38061e18b17eb563944857d1d03a9747ff2f102b532b5",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/ocr.lua",
+      "sha256": "7fb695dbdb3e5d7930c87d24ceb8c3cd69121bc0eaa3cb928ad9e5be50dedfaa",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/onetime_migration.lua",
+      "sha256": "f2f629eac26445001c7734c2ad2fa080e206a7d474f3adf7e3244f17b829718b",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/optionsutil.lua",
+      "sha256": "a78b65d98b297025ce22f29ce8b58b3481fa31dfccd6f38cac1c83d3c9a1a471",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/data/settings_migration.lua",
+      "sha256": "509eaf8c9701be197294e88189ca630f9d5206a2e5ab30075942defa36f44e42",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/downloadmgr.lua",
+      "sha256": "a49491354c4723fa5a075ae317468d41e9758d4ff971cc7ffaf2b10f88fc2b41",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/avoid_flashing_ui.lua",
+      "sha256": "32c320d96da670bae8c5867fa95d73a7acbe12a534efbcff436e1993d1f47280",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/common_exit_menu_table.lua",
+      "sha256": "740ef8deb7df393918b6c8a35ed6a0a08d0479728c6746c4ebaebf4d6671a960",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/common_info_menu_table.lua",
+      "sha256": "cab875297870fa2caf204597b9127ef80b47d78e8e9a6d5ff7c67302d9986963",
+      "sites": {
+        "require": 18
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/common_settings_menu_table.lua",
+      "sha256": "d7e3801f2a81ed246ed4d9473a6a71e5fe3e0a9ac075e16408e08c391b417999",
+      "sites": {
+        "load": 8,
+        "require": 21
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/file_ext_assoc.lua",
+      "sha256": "2cfa16063cd6c26b3816c2714202955c333dc1274fa18c22e5c8175a26f43666",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/filemanager_menu_order.lua",
+      "sha256": "16c054d5cd411df8db3376a42285c010dbfab6400e5e3ac1b3ebba265df2acd2",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/flash_keyboard.lua",
+      "sha256": "086bcef36999a891eeb54b8c4da7796bf0ca19a7c536c82235f4f3ea5c28ea6f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/flash_ui.lua",
+      "sha256": "db6869245325ee5beaa7804066723b6d5fe44f2f34e535cb486a865ff83b18f3",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/font_settings.lua",
+      "sha256": "995f9cbc5513ad8b48a78cda56763e0afade82d860a5b33997ef0fd7e263eafb",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/font_ui_fallbacks.lua",
+      "sha256": "b34c653577107f6531a854d6c371928157a3df56a5d71ef92a9af3435e44b53a",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/mass_storage.lua",
+      "sha256": "61b33a0d35dacdcecc74c44bc7b743cccd91bccf81b4d33be37b249f34222e60",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/menu_activate.lua",
+      "sha256": "af105bdb4b97b1e2e0fb289949c649918df638bf83f60acd33e0e0ffdf503ec0",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/menu_keyboard_layout.lua",
+      "sha256": "efc627383ba3615391388a2d41d46d0120f10c47dbd683235aa337b2d03951cd",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/page_overlap.lua",
+      "sha256": "318f43fce28f376d479e0c87ed9034bb2b45c13e7d5192a584a5d5fdb07f1456",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/page_turns.lua",
+      "sha256": "f3116278d3234b5d41ad25d0a8e268c8e1abe1714b6e4ea664e819e4da24c1c8",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/patch_management.lua",
+      "sha256": "baaeebfe4686f13d097ae627d9ca84ae62d295b084b290907ac7bdea99ec33dd",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/physical_buttons.lua",
+      "sha256": "646d2bda5071f92475836a76db556f143cfdb8011595017d4a4f40d12c0a60c4",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/reader_menu_order.lua",
+      "sha256": "9cd96c2b876d8c9fde883b3782d6fa158f72c9eea284066b6d06dddcc97e96d6",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/refresh_menu_table.lua",
+      "sha256": "f9febd1d5e6f68e4d43973889b5f95ea73e15722891ffdedb65d9e96e31e4fa9",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/screen_color_menu_table.lua",
+      "sha256": "de90e4130c8bbb21679ba8b5726e2c860aa999e140f20f944b4e8649e9b1b814",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/screen_dpi_menu_table.lua",
+      "sha256": "c45954fec1da269cc63197dd153ea9dc08b2679e8aad84e53e9a195be298b518",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/screen_eink_opt_menu_table.lua",
+      "sha256": "0452c00cb58503853154bcf3d502e24dec311187fe073dd032a95b5e362ad0d7",
+      "sites": {
+        "load": 4,
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/screen_notification_menu_table.lua",
+      "sha256": "5e01095b7a2e3f8e82ace4db3727b9ebafe1eac537682c1e448f69e58dcf528b",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/screen_rotation_menu_table.lua",
+      "sha256": "e74944593d20819191b1f5d9889174fe0c948a2b1a2862f474817b01b38e98b2",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/screensaver_menu.lua",
+      "sha256": "064d86da0c4eb4db926e5831064ed2a18b0f7c69b773cda53fa7bd482db45567",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/timeout_android.lua",
+      "sha256": "f0ada8a6db216313c6d309508514fd33cf64fea07ab9e927da932f3785f00c7a",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/elements/waveform_level.lua",
+      "sha256": "dbab2ec6f90635ca22fa927ad1a0c8862c8e21d120dc0c42124fb36599192693",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/event.lua",
+      "sha256": "d03efff829c3bb4ad5208d0273ac80641e4e894d314c928d3050587edb4541f4",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/font.lua",
+      "sha256": "585abd9b24c949d95b805865fc39a0cc06375c18cbf1cf1c46a809a1d1dbe500",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/geometry.lua",
+      "sha256": "830f8a8cc3f5e23abb9384f23befa532d52e792325182efc91fd0607d79157b9",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/gesturerange.lua",
+      "sha256": "888d782c7191ed10bd144c9395d12e80dec52bd3bd460945beca9abb571d4d7a",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/hook_container.lua",
+      "sha256": "0d3d5a3359199cf60ed6b1af7e765cf9c51399650002e3348c015f9b27d14605",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/language.lua",
+      "sha256": "ce9c60466dc51f6b31b67dcd13651a2157b1a165c925a13d11cf4827ead1dc61",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/menusorter.lua",
+      "sha256": "092231b01d0906403f0c999e0d9a51816efa53283664c6193aafcdb18a325e4c",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/message/filemessagequeue.lua",
+      "sha256": "7b9f00740ef7a3de1fae0cff1d28f5f884661d4db28c8cf636c64d2b34c67a3c",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/message/messagequeue.lua",
+      "sha256": "dcc0f533b87ec71c9cd9a95c3fd6cc434494c06bd066dee515397e8bb2c738f1",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/message/simpletcpserver.lua",
+      "sha256": "683a8269dbcd446dc711db13237741574641b0c7ad9cc9f8544805f4b3e075f1",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/message/streammessagequeue.lua",
+      "sha256": "e4a1250fe6ed0a8280864b8a762f4198998ad13ddc0a988d9129967d75085aac",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/message/streammessagequeueserver.lua",
+      "sha256": "4c212574a239d230bd67d75ef625ef40e606e1e632462ffb96aa0f084ed5b19d",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/network/manager.lua",
+      "sha256": "ed117774ba8f32cc044273ab4a20c84257bc92e9137d723c53facc70080b80ef",
+      "sites": {
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/network/networklistener.lua",
+      "sha256": "26d5d4dc891048725fcdf8100d2023bae8d6676d13a3ffff89a7fbf1566283ea",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/network/wpa_supplicant.lua",
+      "sha256": "56c2a948e9012e0ff704a61d811dbc01237e976e1ecd194d3594d1eb50f68f12",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/otamanager.lua",
+      "sha256": "460397336e72e6d3299aa3252c1da5251cca363da7cfe61ab70c890a0ce420f2",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/plugin/background_task_plugin.lua",
+      "sha256": "47f8485bfdd9135138285751840fe3ea34e76b87e478c921cb448b76f78096b9",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/plugin/insert_menu.lua",
+      "sha256": "e5836570782614c7b3f172f1002470503b2fc806ddcfc27fd923dbc30c94d763",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/plugin/switch_plugin.lua",
+      "sha256": "cae5aee395ea666627030bc8fbb9e9b1301417e3d0441c290360fdad0a7827e8",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/presets.lua",
+      "sha256": "8a681d3adb5ff96c27612505afebf3054ef64af2353a425e409b409bf407049a",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/quickstart.lua",
+      "sha256": "d1961904c814780e6aa6a07eb1818a97b369fd6ceec235b3eeaab9279b67c18f",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/renderimage.lua",
+      "sha256": "7f952fa73cfaa8d20013db4407bf52094ab2da74af11ba91f36e7dce588b534d",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/rendertext.lua",
+      "sha256": "f40f0e490611691179219c8d7c58a91f1e0cfb0ceb3552f4f64e822eddf89de6",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/screensaver.lua",
+      "sha256": "9e0886b646b3ac184999992655e22ab8e664681d92b8d17ac9e4bfe122631d74",
+      "sites": {
+        "require": 34
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/size.lua",
+      "sha256": "4ff6bea67702896e1911c313a174cbabe96bac92a9c7279047ba851ed5a5080e",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/time.lua",
+      "sha256": "75f6369f7e9f4e28430b76d5d76c42267ac7685da05405d3aec713b2cdef9530",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/translator.lua",
+      "sha256": "bf585e799c481256ed905d121ad1f4da26768f8f3ed1469515a2b0e369df2a5b",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/trapper.lua",
+      "sha256": "c245afc277ac709f2ec3500132de97fff221bc83ad1f4b3be3fbc68fff791683",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/uimanager.lua",
+      "sha256": "6c90eca8549ec887b806e0806949bdbe6d3ce8b6d774989ade38a13a168dcc25",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/viewhtml.lua",
+      "sha256": "0b182c6324081c5521b32a5da78af408ea23392bc0d9dd7385415a152f1d07ec",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/bboxwidget.lua",
+      "sha256": "424f5730659d4cbc5ad277102a0700bbe2a2a1d8fd005463eca69b40d8682e62",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/booklist.lua",
+      "sha256": "cb71a09dd75869cf18c6f55d08d6d35ad22681a7e9843b12cff418625762c0ef",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/bookmapwidget.lua",
+      "sha256": "c734c9b928377a42026bb3dd44153e604bb630bd65ea8f607c9776ef02b6dcbc",
+      "sites": {
+        "require": 35
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/bookmarkbrowser.lua",
+      "sha256": "d097bf4cb3c25bd46c317440de162d5da583ebf17371cc18559b3a303a7118d5",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/bookmetadataarchive.lua",
+      "sha256": "220e0ed3bf6a4d4b80dcbd33e36f028cb7013d328b3f18cc0684cb57259bd881",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/bookstatuswidget.lua",
+      "sha256": "89ae2264767dbf3da9e95a03fcfae5eb6fe5aa0c73b4e8d3cf8dd5252cf6a8b5",
+      "sites": {
+        "require": 30
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/button.lua",
+      "sha256": "923735eb9a639fd373fdcebac0ba2bb05a02feb12be57b5f37ff9ff344f3c5d5",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/buttondialog.lua",
+      "sha256": "34055c2b77568e1d3eb2c58a3f6c9d8059c9539c6986aecd535c115e72d9b46e",
+      "sites": {
+        "require": 18
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/buttondialogtitle.lua",
+      "sha256": "e4a100fe01cbc11f9f3ac5a8fa654ef0788d7cd45ffc774d02074dab7b1807b9",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/buttonprogresswidget.lua",
+      "sha256": "6541dc53a2fa074c9bb7acd4009f81658ac779a1c11f1f9d50d6b27c4c173583",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/buttonselector.lua",
+      "sha256": "15a52f26fcab912fccdb42451cffa3ce965156a30f4010ee34f2314a3c0bd4a2",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/buttontable.lua",
+      "sha256": "a2f3be2c0764336ac90ae0208849b1e9fed117634fcd46e72417beda316fe4ca",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/checkbutton.lua",
+      "sha256": "21b2595c27615f5a7fb01ac83d1f772ddafdff6a969d4c76734418345d9ed2f2",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/checkmark.lua",
+      "sha256": "959620ab3396d305c038d26b2a591eae854dc8edf243ddb0b8b0d5d2bbec1bd7",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/configdialog.lua",
+      "sha256": "395e321329a6d96bb36107fa3972e5fa1338b32374294f8284dcc449b4fd473a",
+      "sites": {
+        "require": 36
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/confirmbox.lua",
+      "sha256": "3715411432d91796e69de4dc980b8cf3739bfac85e47ea8f7b1979050b10c11e",
+      "sites": {
+        "require": 19
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/alphacontainer.lua",
+      "sha256": "c1f095142fd4fb04e40193065f34c430d422aacb49f8b7d92cadd3488248de7b",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/bottomcontainer.lua",
+      "sha256": "bc40de5dec664348194151beea892b048866d24bb2f32e40874ef8b691114048",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/centercontainer.lua",
+      "sha256": "b2049c506473643e245dc3e45efea8ec7886f3e7405b4f0e3572ae2d5cfd58e7",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/custompositioncontainer.lua",
+      "sha256": "383fa30af60adbac12a15311b7b64f028b59a27be977de8dce5bfb21ee3405a9",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/framecontainer.lua",
+      "sha256": "1c0ff207a2acc802ab6ac38020e59793b0b1989fb0e3afa35ef263a90ed030da",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/inputcontainer.lua",
+      "sha256": "e13f2d1d313dccf3bda04c71df4207e9679619dfab73b76bdbc498dcd8e0ce28",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/leftcontainer.lua",
+      "sha256": "ad5a19de49cbc7681d4c7532ac925e1c7572bb990fa4f96c4b3895be8e039fb0",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/movablecontainer.lua",
+      "sha256": "042bf1e6fe1aff18d9585e7296bfcb81ae871f219f67cc655327b6e48e720ba8",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/rightcontainer.lua",
+      "sha256": "6ef21ccf8f43de7a29503965c7576b742e6b16675382e501dd871e621acb540c",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/scrollablecontainer.lua",
+      "sha256": "65d6a7e5db68948ca8566c42108494bb67b40633f95a39076659d4b7648b62f4",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/topcontainer.lua",
+      "sha256": "515e61970a71e4e93ac0bae759b711804dda397a21d68a78c7b5ff46ee0e5c15",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/underlinecontainer.lua",
+      "sha256": "00a31d2d02dbdd159e2c4f07844d3bbdb647482e3e952c1ed6925ab26407c425",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/container/widgetcontainer.lua",
+      "sha256": "ece7f08f6bab459338b12f3d568c0cf9dcbcdbf98912129026b338818f828d39",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/datetimewidget.lua",
+      "sha256": "97cf38c7fdf7965ccd8889f7f9ca0b7941b85b8ad824a3b9554f54eb77752972",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/dictquicklookup.lua",
+      "sha256": "ce18603a163a9a9b6c93fc0a5155dfbb1c643f34bcc56a1c4506c95773cef30b",
+      "sites": {
+        "require": 42
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/doublespinwidget.lua",
+      "sha256": "77df78f16cdb132009d64c3fbdd25ee3acc4f3e80eb390af6e9769666ea52af2",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/eventlistener.lua",
+      "sha256": "0418358ed648cf55576523dc8d78f9ad8544a4e93e041675604545a9e2440e3a",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/filechooser.lua",
+      "sha256": "d2d13fc34a014e8a9dc0e1c43567dbd0345ae35060aa7f92098ec3735351e4b2",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/fixedtextwidget.lua",
+      "sha256": "bb7d54db54d202a2275a71f3a6a8b7da8bed5a7fb1f803b8be73e97ee78ebfa6",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/focusmanager.lua",
+      "sha256": "8ee35e7398585bfe4da51db9a97aa08d4ec66f9234aeebed71ada928469b0864",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/fontchooser.lua",
+      "sha256": "2f624fc5de0ae3b99d0e757ee7f383d5e55b11ca9c7e75bd187818aee385e3a3",
+      "sites": {
+        "require": 21
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/footnotewidget.lua",
+      "sha256": "5f61bd18a4bc8e1474649d582ac7645fdc6c6fe1468e881d8824e361d717b910",
+      "sites": {
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/frontlightwidget.lua",
+      "sha256": "8057dab505a61a9dd2807c2dd13cc15a74e0fe256cd42453407cf72080aa12ae",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/horizontalgroup.lua",
+      "sha256": "035afb39d0114d7215453565690d0266ea29d49b5db1131194ce04b9ac228cc5",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/horizontalscrollbar.lua",
+      "sha256": "e4cdb73097fc44bcd5db62d1d3c771d857be9bebaaebce9353ed5754e86851c1",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/horizontalspan.lua",
+      "sha256": "de2161de6fa9dfdd3cd43a634cf3c2b152c2c6c517ed0249ca0a7333353de3ba",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/htmlboxwidget.lua",
+      "sha256": "ccb8c18f3d7d073171ed393160452ef7286a24ebfba11502731728137220587e",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/iconbutton.lua",
+      "sha256": "9172f219a1ce2c62e283dff7d2987f8cb58c0c534c6a0ea0b2be0bb6503e641d",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/iconwidget.lua",
+      "sha256": "51ed99e09622d807ede899decc3e2ce676b1ba00f470d6b2ee9b34a0c244f929",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/imageviewer.lua",
+      "sha256": "191dc1f283c3c040ab2e1a4d9571533022f26d243166e5573146566a27727933",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/imagewidget.lua",
+      "sha256": "57c1469ded4289ac76f0d4c66eac6b6ff2da764a2f3c374b6577964e6f8e6db7",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/infomessage.lua",
+      "sha256": "6040f2c2ac111bb68c45e23dcf6e30f7441ee604b955b4db62c1096ca3793f35",
+      "sites": {
+        "require": 19
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/inputdialog.lua",
+      "sha256": "5e9e698a3b1e089a304aa185cf79ee7fcc1722e5f8159c56c37f6ac0ee4e588a",
+      "sites": {
+        "require": 27
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/inputtext.lua",
+      "sha256": "0c23ebfc6080a609a82dd1672c173e4b685122f6c1f93944b87593b7b266fae3",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/keyboardlayoutdialog.lua",
+      "sha256": "9e1cd10400d9a176973d630f45f7b6202772b38e9e34cefb76d63fddca7d7a7b",
+      "sites": {
+        "require": 19
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/keyvaluepage.lua",
+      "sha256": "67fa0d95f99f8ca44a3e2f3e66c686efc92353f55e857b17aa21af3d376ac4f9",
+      "sites": {
+        "require": 26
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/linewidget.lua",
+      "sha256": "5e8b88eba8d581d2e80da669483e1b71563280f8ef93e623987de47a069917b1",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/linkbox.lua",
+      "sha256": "200e9ac5a863e255690be8aa38a47ce0dff581a205816c1784dd998f7de82b3a",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/listview.lua",
+      "sha256": "d79173d6c0ad433d8b95f6bb3913961b087c885d2b0d326164acbdda82dd26b2",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/menu.lua",
+      "sha256": "2af0f969d0d4fc669fdf33f030b3973627726cd6e74d668d1d90a2e9396b32a6",
+      "sites": {
+        "require": 34
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/multiconfirmbox.lua",
+      "sha256": "e726611eeff11b46a82fd67685b8ecb237503bc5a7f3272b01a3ca7e003f3d42",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/multiinputdialog.lua",
+      "sha256": "f39877b5247e514014d89544b01f337c0d437cd49b49b29948c71ca71593ffc2",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/naturallightwidget.lua",
+      "sha256": "1c46878d43570ff6b5fa2e545da23ed5af7c70eb7bf43b09022465834a6a0f69",
+      "sites": {
+        "require": 18
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/networksetting.lua",
+      "sha256": "25e5bc1d54649d416ee3a20568d6c7fae602f375c6b56c49e431caf7f0a7610c",
+      "sites": {
+        "require": 28
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/notification.lua",
+      "sha256": "7cbb211c630b17219054d21339b2415285520be6612d97ad3511076e7e5675c7",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/numberpickerwidget.lua",
+      "sha256": "835225f9c13a1d12d2a830d815ce28b598aa7d6499e445140c3e01e95b197f2f",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/openwithdialog.lua",
+      "sha256": "804f28331acce00271dc7712a3563abcc985b728888aa4fae540f8110e4d4857",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/overlapgroup.lua",
+      "sha256": "cfe9a51aefef406d95b29e36bc1caa3e3d576c65e91741750a0427bd45b0431a",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/pagebrowserwidget.lua",
+      "sha256": "346e5d56fee159920405e57999a47185fe111e759b9cdff23e6eb59855f0d9cd",
+      "sites": {
+        "require": 27
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/pathchooser.lua",
+      "sha256": "edd280cb4a8364743d8571cea64bd7dc39e037a55489e7c593600c6210d7032e",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/physicalkeyboard.lua",
+      "sha256": "9a6287c7c2e2f648a1c582a56fcce6811b90dc66a46a2c7060cf28f88a65db6e",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/progressbardialog.lua",
+      "sha256": "e55d3e76055a0d06b52c7f270166c039c3a22f007524425e2c6c578901b6b197",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/progresswidget.lua",
+      "sha256": "c13ee5a156f04155f087b96ca31bc134fec88ec4622d786776b1c98e61335844",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/qrmessage.lua",
+      "sha256": "6b5f50990c8bca7f11c76b8a442cba754c83dd1b6c3bbeed4eab270a241d2a05",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/qrwidget.lua",
+      "sha256": "bd2be7609720604e387b792dd42c5f2c98816752bea1a913f75e889ec945b890",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/radiobuttontable.lua",
+      "sha256": "d0a8586422d0db36bfacfa6c313c20674880e2c57a8ef47fb14ce33e12d8a878",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/radiobuttonwidget.lua",
+      "sha256": "12becaae5c431e6b95f0c10ae722a20b019f104e2a7711f97ff2dd35a29cb85e",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/radiomark.lua",
+      "sha256": "876be1b81569134c1b2ffc8424a58f4f6d1244c103a7dc8df479c24df3343467",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/rectspan.lua",
+      "sha256": "3ae111fc62370473577ff8cffe1570633773bef3ca449bae8e80ad6b62a8e354",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/screensaverlockwidget.lua",
+      "sha256": "fffd2a44acc1dcde8d8ed768e41c1447f1f2759b4c73da91ba0c612f6625ce2e",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/screensaverwidget.lua",
+      "sha256": "286a577cfcb6908d3d7b98a5818a67376a54c9196a5b8b71be429368990b3ee3",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/screenshoter.lua",
+      "sha256": "5c2da946e9ae2f23ccdf6849304fe0056bdc8128658e2ea57b901a4240c95b45",
+      "sites": {
+        "require": 16
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/scrollhtmlwidget.lua",
+      "sha256": "3bf8e99645fc4e68edd06cf6fde278f5ef482d4a2ff088d837479b153a37df4e",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/scrolltextwidget.lua",
+      "sha256": "886f52be09046d912b5e4f69f9a9ee76b4b849b67d6d189d05bcea36d642b2b7",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/skimtowidget.lua",
+      "sha256": "53d3a9c42b868d8f6c0e404cda4e833a755994f3e28610bdb60cb08bbefc20a9",
+      "sites": {
+        "require": 21
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/sortwidget.lua",
+      "sha256": "69eefc79a5bbca24d406f87c8696871ee5aad01c9daf96f7185ecbf108535ddc",
+      "sites": {
+        "require": 28
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/spinwidget.lua",
+      "sha256": "6324d391c41c99f20db7bdc6405b209991988e81bf52a1b2afdf29009c3a126b",
+      "sites": {
+        "require": 18
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/textboxwidget.lua",
+      "sha256": "51ec990ae8a68b8a0151d7c45d45d1b7aa36e398fcf7f8b9c8c74098ff25092c",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/textviewer.lua",
+      "sha256": "2f92b55a6f217bdefb96dd826f27eec25570be38e29ed7f06a9b7a86b49a3c00",
+      "sites": {
+        "require": 30
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/textwidget.lua",
+      "sha256": "bc0a6a92bf1a8648c908af59d7120d73a12d44f33554c65a84e106214d5a9b88",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/titlebar.lua",
+      "sha256": "70705ec078292014be171b97253abfa71ec0d350dc174ad4563acd7caca702e1",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/toggleswitch.lua",
+      "sha256": "7d1565a59991fb7fe295fd7e78a889b7601435ad2865b8ed1152851608a86587",
+      "sites": {
+        "require": 16
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/touchmenu.lua",
+      "sha256": "a95ee3745f31baf3dbafb9de0eaff71dc872e455227212c3b4858eb5296dbe60",
+      "sites": {
+        "require": 39
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/trapwidget.lua",
+      "sha256": "ab088521c3d86ff63fc8179fd396e0186f55bec2cc235fca7ca251c6ea9fe79c",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/verticalgroup.lua",
+      "sha256": "04d56ba983834133c5d285c2059cb5b8943fc3e76b68789e24450b08a2483991",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/verticalscrollbar.lua",
+      "sha256": "4eccc890d330f2bbb7122708dbb9b6fc5c8d9e0098691a817c55735fefa270d2",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/verticalspan.lua",
+      "sha256": "23c68e93a6809a34550f976533e17f9aa63f353966d8f55fd349d7497ddc6f21",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/virtualkeyboard.lua",
+      "sha256": "bbd11d3b08c5e03756bb5d1540a93c576f026080854c56ceb7311466044f4766",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/widget/widget.lua",
+      "sha256": "4050d6717983781edea1a7ff791a50054a57a7d185dc02f5ab70af64793e8277",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/ui/wikipedia.lua",
+      "sha256": "0e19f51084a2c540259ebabf4dd228f034ffa5bc102034783076363259d92102",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/userpatch.lua",
+      "sha256": "9fa51408b32c038ff919480d86077e5fa6da7b180b8a1bdddb6011047b6961c1",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/util.lua",
+      "sha256": "4bfe8af88903491bb23355897222af98e157382c8c5d41d05caa8eec9b1edefb",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "frontend/version.lua",
+      "sha256": "6559e9abb2b85a2eb4fff49178ef9c18db1c8c5e1645f3a92f0f68a3329307e1",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "platform/android/llapp_main.lua",
+      "sha256": "2adbda7899e0999d8e6379aed0420d0914e784dc015d6c38efc4c34be0cfef60",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "platform/remarkable/qtfb_keep_alive.lua",
+      "sha256": "0dcdf5c756657485d2afdf0786c46d60f8a525bc3382e90abbfa9fdea01ae38d",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/SSH.koplugin/_meta.lua",
+      "sha256": "d55ad2fd60f01aca333455c52b5809dc19e1841d653f7cef512321df68679f13",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/SSH.koplugin/main.lua",
+      "sha256": "4cf5413d031e603db290b3c8994d7a135437e1d7a5752f15d18e647ce331006c",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/archiveviewer.koplugin/_meta.lua",
+      "sha256": "f178f482a979fee8726ef9058cd39b49df1d6b2af79aff8239b3f369905071b3",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/archiveviewer.koplugin/main.lua",
+      "sha256": "30d54bbc13ba445e4ca1792dcf350ebb8223639b6491329180043bd2e0a4024f",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autodim.koplugin/_meta.lua",
+      "sha256": "8c4c2e29d4d9568e12832c72367ddbb4d0cbb4bc35de7e470a3faba04ac2d894",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autodim.koplugin/main.lua",
+      "sha256": "dada6e2ffb51c2ada220b482914b9219f5c31e0dab363f4597444da02666ca0c",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autostandby.koplugin/_meta.lua",
+      "sha256": "429df34efb34271849f31e267da25c7e88a21c43a89726eec929d442417a3152",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autostandby.koplugin/main.lua",
+      "sha256": "c6dfbaf3f01addcf76794ec06efbb33d90645cd1b46983b4fa5de50d16f69461",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autosuspend.koplugin/_meta.lua",
+      "sha256": "eab769a7c4f6e7a7abba89f19be0add8949616e88c63a91a83ab8218187f6966",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autosuspend.koplugin/main.lua",
+      "sha256": "aa9507c532598e3463a5b07f17d0fdd43b9dd2775cd479e830610c9e8058f050",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autoturn.koplugin/_meta.lua",
+      "sha256": "05dcff9110e07b1494b30f0a304f6a0567bb06717a4be381a58a894c2fb7245b",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autoturn.koplugin/main.lua",
+      "sha256": "c57793b1c3d94751de02fbbe5acf75ccf71712a71b4218fc63ff200970e7f3d1",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autowarmth.koplugin/_meta.lua",
+      "sha256": "5935f52648d9bfd7f85fe8695ece735da3fd59667dc1ac97d24d78887be81876",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autowarmth.koplugin/main.lua",
+      "sha256": "361bb4f945ba712a5c4921f63dcc9f7c68803dc9a79d6b65674d39d95cad229a",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/autowarmth.koplugin/suntime.lua",
+      "sha256": "b005faa30fa3cecd2945d1b49a00627073088a62bd069de52e1bf318f2361fa9",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/batterystat.koplugin/_meta.lua",
+      "sha256": "0c225b48b170304500cf248033f4f2420877fecfe867e20ff34dda55b199723f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/batterystat.koplugin/main.lua",
+      "sha256": "b74f31a2902ed52a5146f46115d06fbff3335c7d394805195975a469d3ce69ae",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/bookshortcuts.koplugin/_meta.lua",
+      "sha256": "f64f16050d64758729c69e8fe943866ae48e82235b4afc26ae96e352b08c9b9d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/bookshortcuts.koplugin/main.lua",
+      "sha256": "a0f807f44d8fa0b23901e6e5516ccebc7055237b1808de693fb452828ce45ff3",
+      "sites": {
+        "require": 16
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/calibre.koplugin/_meta.lua",
+      "sha256": "6c21bb96c67826ae9b9904a1c38e95ec5619c829b10bce1aa9829650231334ba",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/calibre.koplugin/extensions.lua",
+      "sha256": "73d3ce0590a29ff1c413086492f132fb6bf478450c2b0993a008f6027225163e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/calibre.koplugin/main.lua",
+      "sha256": "de267e3f6d3c1e19662aba47f2c6f59aa676b5e29dc46722841d38bca86caf2d",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/calibre.koplugin/metadata.lua",
+      "sha256": "e209612dee32ee7bf881f209b15777ffdf8a31d62a6c8d9bfe69f574e0c128d2",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/calibre.koplugin/search.lua",
+      "sha256": "961c19ec507cd991dc6b809cfa808740876f120052345ce9c79cae2b0b6a2d95",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/calibre.koplugin/wireless.lua",
+      "sha256": "9f867d473fd09158f331aba49c9104f294521415db8d7cd903f556c665c188b7",
+      "sites": {
+        "require": 28
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/cloudstorage.koplugin/_meta.lua",
+      "sha256": "8b80d2fc41c6dadfc89ebf7fe0227ab5c211cc53a4d90d25d094319fb417926d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/cloudstorage.koplugin/cloudstorage.lua",
+      "sha256": "827e21300949eceb7f35f3f89dba5ca512507fb912c8b6365f8ecd0ab9830f15",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/cloudstorage.koplugin/main.lua",
+      "sha256": "a0aa222b75368e221c27e7d69105656d33f1f0d6018a5b9629a38178a0907c68",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/cloudstorage.koplugin/providers/dropbox.lua",
+      "sha256": "e61e60ea9c72170856ecb9b6e901026f3386d93c7b9e0de9d7420363905fdf0c",
+      "sites": {
+        "require": 17
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/cloudstorage.koplugin/providers/ftp.lua",
+      "sha256": "62fce33e9a32f2f1aa9fd8ddff801de9cb40e50e9b17f6d1db9e2dc054a3073f",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/cloudstorage.koplugin/providers/webdav.lua",
+      "sha256": "95e217a8992da0b20b807fc6698024cae5a8b7e87fa642ab7b65ef3ee5f611f3",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverbrowser.koplugin/_meta.lua",
+      "sha256": "50fe960839f50882436399eb8b71a5446b05dec9e6d25d680c71b8be1524c30d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverbrowser.koplugin/bookinfomanager.lua",
+      "sha256": "09132f7bdadc87e60e920abdb53967f8584e0ef8dbcfbe1b633ac47f5348150f",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverbrowser.koplugin/covermenu.lua",
+      "sha256": "aafe2b01a0c80a11e12dec733fabc2cde221c31edcd4acea40725a4340c4f726",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverbrowser.koplugin/listmenu.lua",
+      "sha256": "02f71511e6aa81896954d0f205b5b04860251aa8862aa09ed6d8b3aa18064402",
+      "sites": {
+        "require": 31
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverbrowser.koplugin/main.lua",
+      "sha256": "b2789ca27461ff4f58b431c693eb70e9e64b278f59647a9c09602054ae0692b7",
+      "sites": {
+        "require": 27
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverbrowser.koplugin/mosaicmenu.lua",
+      "sha256": "1bee697a85ecf285c93449312f9a2fb5bc2fa53c2847fbe829bcb1bf6f065ade",
+      "sites": {
+        "require": 29
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverimage.koplugin/_meta.lua",
+      "sha256": "58b9c2880c70daa5651724aed93b11012b4cc3b9e2b2a0d4c0b934a86e883280",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/coverimage.koplugin/main.lua",
+      "sha256": "9e50cef2a74e1a18d2caae027945579a67469bc6727a7370b36bcf0282fe8163",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/docsettingtweak.koplugin/_meta.lua",
+      "sha256": "8186eb0627df10f9ad69a2344c28ad5d75bef0a1198700b878359e8cb62293e8",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/docsettingtweak.koplugin/directory_defaults_template.lua",
+      "sha256": "91b87349d061c1f340378a00ccd40aeac05e4bc95f673a36155b190f6dd6d9f7",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/docsettingtweak.koplugin/main.lua",
+      "sha256": "f58948f6b786b24a7014c0c249f4ad106ead49be738ccf3d1eb59bdc08bd2b1d",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/_meta.lua",
+      "sha256": "dcbc174471a4639cca8c71d36f9dde24a5a09c2ad7d71bc964c5844ca4960c6c",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/base.lua",
+      "sha256": "52a836df95db6941035147146c4f71ee054b6186f56b3d6a8a3ce35e4cb9a4ab",
+      "sites": {
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/clip.lua",
+      "sha256": "cba3a90b184dcb6d4367595229ce0ce272a1bae491699d59a49b16fdd9dcba67",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/main.lua",
+      "sha256": "6d1986920d57c8aa2fb08f2113238da0ad57cdd6e2f9e05c48c13e81acdf6470",
+      "sites": {
+        "require": 26
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/html.lua",
+      "sha256": "b963b50b032715e7c617966f34d1f12cc5091d371dd7f6de5b8e3664fc273720",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/joplin.lua",
+      "sha256": "25b2b68f3e766950b0567ee8b0c4c570f1ed197b47a2b8b2ac76e5b9e722da29",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/json.lua",
+      "sha256": "44b5e603e3408c75a8a093ace6fe6afffe4c2d59a2090f1b8bd794b2479ac055",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/markdown.lua",
+      "sha256": "c1f47d5f018be751ba2db6baf11b5fc64e0d2b4e9ed40d7795133e8bbab2abc6",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/my_clippings.lua",
+      "sha256": "0768962083505d0dd4d90a4f9c05a06a4719dabea4b8cdbc30f1675db14868f8",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/nextcloud.lua",
+      "sha256": "06871a8a960e5fff8a98b05c02fea573dde413c150d5e684671a29a96d5d3286",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/readwise.lua",
+      "sha256": "f87a33a353581ab162b0f627aa788b3f6ef972a53e6ebc7cb425a250ebaaf0c2",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/text.lua",
+      "sha256": "d6570d94177f8dd60c1c2e6d7fc5465d5a28534d840b07da243ba3878829e365",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/target/xmnote.lua",
+      "sha256": "a861fa39f0b0f8e1096a3fe14b857f0d8928b077d096117327eb1e576ca53a60",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/template/md.lua",
+      "sha256": "4fa3b2a939417d836c698e1e055eacdde93e06f32f98f3e09217908c90e4cd33",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/exporter.koplugin/template/slt2.lua",
+      "sha256": "21b61a05d80c9a050e222871ed9172e85c3320b350685102e82f8eb55ec7cd50",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/_meta.lua",
+      "sha256": "f036c85805f2a9bb168322ad5e639de2f408d3736109051dfd715f5c7d133d09",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/event_map_keyboard.lua",
+      "sha256": "590883a425b1e94408d3cd200cbb5d53524850d119fac4575737a011f7244a5e",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/find-keyboard.lua",
+      "sha256": "613f4541bd60de6b9fb1f333d7dc6b4529ff8a3d6486a428f63d2ac876110f74",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layout.lua",
+      "sha256": "5140eb23c812a93f90238146a0cb1ad187812f69be61c4b1067c6a997cae7c0e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ar.lua",
+      "sha256": "da4a67a02b7afc051cd3f0d3ef700afe1d3365ce0f53e25f0cb278ae44632ec0",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/be.lua",
+      "sha256": "3f0ba711a9c44961749e8f0c20c74934844ed2f36277804397a34658a7ba966e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/br.lua",
+      "sha256": "b1ca837829e5d8bfcb83f2a3df4edb0a6b8ed9948b8b2e436719f05197fee764",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/cz.lua",
+      "sha256": "57ddf27b3ae6a002dd4f9761d73519c44db26871c9ec3251765bb051e2c1b4cb",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/de.lua",
+      "sha256": "b9a7142c094e51dab3d65a2ad25c953480d5595dd190b57a022b2944a28d228f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/el.lua",
+      "sha256": "a6865101f37c94493fbb2b4531aa6ef42a8f2a2bb6ce90fdb588e1e33de4717f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/es.lua",
+      "sha256": "288eddfa278ff832fe4a285ee09e111dc88254a4436006009ae7583e3c55d186",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/fr.lua",
+      "sha256": "7619a283f15fa986a4d94637ba15df656032eb9f7a79fd5a4672e8101b523fae",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/gb.lua",
+      "sha256": "c73f2c9cb401b1ba84de1c803ce4a2cd4a415853e570f8a1418b0c5bfd2d756f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/he.lua",
+      "sha256": "28215b6f006473860c6ac8b013e028cb9d19e35da7069116b61371afce62ed34",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/hu.lua",
+      "sha256": "8e8f0ed3f6acf9e50776a07770393ccc9b36f5028fec36a989722dab16237b10",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/it.lua",
+      "sha256": "c787b6ca529a43533f9b85a7863208e309d300741b9959b524a98fca2735537e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/kz.lua",
+      "sha256": "f0bf60b63b1df41e5c14a51853d3407c4162b0b51a1da1f7f28620af6c0b6ea1",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/nl.lua",
+      "sha256": "644bf4cff3f85a80d2af53421428abca96b564ae16eea562a2f0f8b1e3a92654",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/pl.lua",
+      "sha256": "e1a74cb49b62ee814d5cb72d1448e535447152e52c34a261003e20e9ae3311d0",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ro.lua",
+      "sha256": "bf2489931a207febf59fb43d878cce46515796def39392884d0428e471b192a8",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ru.lua",
+      "sha256": "7fa5a1e088c15722294089cd732b023897a890643cd661d6e8e818ed0f28a141",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/uk.lua",
+      "sha256": "5b26ca927ae529e7518201427caeed350d05d124921e235dbc0382863a92bb37",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-altgr-intl.lua",
+      "sha256": "6349ebfc55ac21f26e224c29105f9882e0daf38d1653c4d183875b6cae05101f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-intl.lua",
+      "sha256": "9c01fc7d6ac26c7c53d953da0c8ff37819b7979183f576f4f69044a0fcb311a7",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us.lua",
+      "sha256": "2607879bb3e5edbfa526d1c78acc46b1397ee142683f8e2e101fe93b304e48fb",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/externalkeyboard.koplugin/main.lua",
+      "sha256": "13f82d8d28a4c04e6c5c1ce2ba766d6d677279800d00cca05675e07685fb4c47",
+      "sites": {
+        "load": 2,
+        "require": 13
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/gestures.koplugin/_meta.lua",
+      "sha256": "38f297acf09f288829b67045d790ce8f1cb21afc67ebfce88828989e9c73a386",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/gestures.koplugin/defaults.lua",
+      "sha256": "c9420680b8355ce1a43059afb65f0b44534a7396a2d4e1ef3028a0fb73a3a6bf",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/gestures.koplugin/main.lua",
+      "sha256": "6bed0579a2cfc9bc6402044330b4ec6477a5f5e456c005f52eb52dbdc0c51b7b",
+      "sites": {
+        "require": 25
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/gestures.koplugin/migration.lua",
+      "sha256": "43bf3a97a9e29fd044b31d31a66472c43d3df50abcc1007e26b84fdb1f428db6",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/hello.koplugin/_meta.lua",
+      "sha256": "871155fbd6e2d854d825c78b5127af5703456a8838e424c2a7bc83beae2485ff",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/hello.koplugin/main.lua",
+      "sha256": "97f3b9641556a5f3692b8de0727316c2303cfb6cdea1dbce09adcb72f4eeb2ea",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/hotkeys.koplugin/_meta.lua",
+      "sha256": "8620f25072aff3d486b56f224730e02372800c83c380ac3e7a8367ee2d18cce5",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/hotkeys.koplugin/defaults.lua",
+      "sha256": "47058c23f69ec67c6c2de595c8b188d76817706adfb18a34c63b019d915866b4",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/hotkeys.koplugin/main.lua",
+      "sha256": "9888ab6b941a39bf82f6bbd575e753267a3931a0e3fa0525d586e0e187351364",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/httpinspector.koplugin/_meta.lua",
+      "sha256": "8fafef7bbb26402e12665c94715998f099bc36f0a1d4e54f3c90fa0b175f540d",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/httpinspector.koplugin/main.lua",
+      "sha256": "d35884650bfcf68f9675dfce0f8500ca2d8fcbd9e7085073b906e35aacd8f023",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/japanese.koplugin/_meta.lua",
+      "sha256": "00192b68496e51972cfcac4c6e5d0d9ef9721378976b174d45f5e50d8d7524cd",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/japanese.koplugin/deinflector.lua",
+      "sha256": "1f81d0d1fe10fd5256182a63257c0638f661fb67a48d3cf448fbee42b570cb51",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/japanese.koplugin/main.lua",
+      "sha256": "721893e2294b230a452d2323c453a2122d0d19a8013622457e5fde63560d631a",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/keepalive.koplugin/_meta.lua",
+      "sha256": "bf3d65789ee0d6037d708e2212e10659df1165f64425d66f0f09f4f1c1cb5c89",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/keepalive.koplugin/main.lua",
+      "sha256": "415d519287e207962e2a29dafa47f6ecc48c38456b1acab534a198ad399358f5",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/kosync.koplugin/KOSyncClient.lua",
+      "sha256": "0e781fef1d2d9d0537566888f12b286039b366935089a11f18fd54f725e49fdb",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/kosync.koplugin/KOSyncQueue.lua",
+      "sha256": "d65434b2ee945fb328875658092bb4493942ec9aa3dc15ba3d170d2b650905c4",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/kosync.koplugin/_meta.lua",
+      "sha256": "fc4d4a16f9dd3f3594aa7ce8501e7a97de00df72a463e97cfb4123015d49317a",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/kosync.koplugin/main.lua",
+      "sha256": "218d37200e6d002877a09ebc803a5c0e90e9560d04bfa3d875fceeeaaa59e2f7",
+      "sites": {
+        "require": 31
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/movetoarchive.koplugin/_meta.lua",
+      "sha256": "6be2e480aeeaa9dd7e21e66b7e69ae0732bbe51b25ec55bfe17440e73fe54a32",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/movetoarchive.koplugin/main.lua",
+      "sha256": "0fa392653bf1c7b6409664e2a92bc066d6e8b9f0e07161ba8211f48acf2a7c50",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/_meta.lua",
+      "sha256": "603fbae044add7035411379ca114f0a70c2f39848ce68095c3f741e227b12945",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/epubdownloadbackend.lua",
+      "sha256": "d2efb2cc96a9fd10622ca1b66f9af61b419a11f06d799323d33726fbc0f837eb",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/feed_config.lua",
+      "sha256": "ecdb8a3e376ae413a392256f7fcd81e3ea877594c8b91bac396792509030dd8b",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/feed_view.lua",
+      "sha256": "d8cbb3d3b6e22ee5e7cfdd95495f4250af6ce27e7e3f4c8231eeb03da78d35fc",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/lib/dateparser.lua",
+      "sha256": "b5700ea7140aa43f7108dd4d9c95fe03234b305ba4d869d1a192221706fb0df8",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/lib/handler.lua",
+      "sha256": "e807168fdeffdd0c1e8dd85c2d3677344c975b983d12af0301031b4027893448",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/lib/xml.lua",
+      "sha256": "9cf55b40855a5678c38acd1d59039408754cc98df4131c6034b9dccf4cbc5c73",
+      "sites": {}
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/newsdownloader.koplugin/main.lua",
+      "sha256": "1e5364a39f5f37262891f9a50d978ec88a0619648b459e74ed6b2a1e5fc9c7d3",
+      "sites": {
+        "require": 38
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/_meta.lua",
+      "sha256": "1054e9c7a1068c755746267bb3fae4b7698c1a54d1098ad78ed648b2431a66f4",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/cookiejar.lua",
+      "sha256": "fa24c20174dffe1abf6fa2da24513bfeb4e4dc9d16e627ef88af20898df0b5e4",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/main.lua",
+      "sha256": "2b9b9e328bf4e88aca743146117fee2285e6deb05016532183fe29b96e5e3bce",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/opdsbrowser.lua",
+      "sha256": "28b7db274d19d7f30ddfdadb2f697d133e4c2b86ba4377643b5e990c6c275da9",
+      "sites": {
+        "require": 33
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/opdsclient.lua",
+      "sha256": "13c64402f1cab6a47e0457c52db7fd2e685ce213f02a9bdf13bf10fd32b5d5f9",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/opdsparser.lua",
+      "sha256": "b1fa226f9d0ce2572239eed18962f78ebc6e4a5ad4a9cf9d57182b5757725f0c",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/opds.koplugin/opdspse.lua",
+      "sha256": "e985d37bc6ef488639a3143323b9ede613a190bd52b30590bc834940ad6b4f92",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/perceptionexpander.koplugin/_meta.lua",
+      "sha256": "7eb37c2a9946ecaff9b8522d51358957630f65eb207b75e763fe22dfccfb28f0",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/perceptionexpander.koplugin/main.lua",
+      "sha256": "703f13de3bea540058850046cfd249efe8ccb4fea94365f56c1a9cde644d120a",
+      "sites": {
+        "require": 14
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/profiles.koplugin/_meta.lua",
+      "sha256": "ece7849ac212daa043a578c403580a75523109ba4bdd674532a4fe05aeec54eb",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/profiles.koplugin/main.lua",
+      "sha256": "1493237f1a277c6166508bc49013f7d7f36c893181a6eb32fe8e49af2a23c0a2",
+      "sites": {
+        "require": 20
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/qrclipboard.koplugin/_meta.lua",
+      "sha256": "5036b867ef9bbf362d105b29d1c90475f238397e8e387c795f8f0a86d1883d0b",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/qrclipboard.koplugin/main.lua",
+      "sha256": "5e2113e6096830745057533242bcba0e594461fccbfd5152df08770595e9b09b",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/readtimer.koplugin/_meta.lua",
+      "sha256": "87e5cd79428728824a5664d0da9c6446064b265e2667a1a948e60ae5a088dc9e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/readtimer.koplugin/main.lua",
+      "sha256": "d1041bfefbb0857668833b0744ca1230b2f67de5e387c35f27be06a32a58a9df",
+      "sites": {
+        "require": 16
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/statistics.koplugin/_meta.lua",
+      "sha256": "9afc8b61b4b08f15dec62b4912fc4cea0006a5e581edd9e185944b5593b0e258",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/statistics.koplugin/calendarview.lua",
+      "sha256": "80e232d13a46660c2c0c9aafb2a043668c36175d57a8ee5b1539c583b00347b1",
+      "sites": {
+        "require": 30
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/statistics.koplugin/main.lua",
+      "sha256": "da6db5e381bcfdaf05053d23bf75781166cc713b14076a65fcd2c527067fd088",
+      "sites": {
+        "require": 30
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/statistics.koplugin/readerprogress.lua",
+      "sha256": "2edf8d29ef8374d921cb14cfb2f928c42c05b7259683b4566be05a7dbf9643d9",
+      "sites": {
+        "require": 22
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/systemstat.koplugin/_meta.lua",
+      "sha256": "982d7454cb1f280ee04ab26acd2c2ec50297b7bedc24a4fe154500303ee81c56",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/systemstat.koplugin/main.lua",
+      "sha256": "0683683ef5a4aad5fae6e0c63856b9e1bbef30b2d36c24cc715b42157c088710",
+      "sites": {
+        "require": 10
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/terminal.koplugin/_meta.lua",
+      "sha256": "7a2cd67cd8b763611775126dbfc7e5144b3af10aa12a1af7d2e5151043adc2b7",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/terminal.koplugin/aliases.lua",
+      "sha256": "8c84d444f92c9022dafc3e166f15b1f75cd45281a3dec2941c6a70e4d0604574",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/terminal.koplugin/main.lua",
+      "sha256": "caf0d27aa02fcf81a32817821033ff046823d0398cb33c589a2908ec5037916d",
+      "sites": {
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/terminal.koplugin/terminputtext.lua",
+      "sha256": "a9952c683d1fe4610cbbea6047a0657c52736025c0e662c22ef635f390e2e102",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/texteditor.koplugin/_meta.lua",
+      "sha256": "7f42c368ceab9da25fa5516f3a3fb15da68278df4d408fbf572529401e22ea3a",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/texteditor.koplugin/main.lua",
+      "sha256": "fa5ca761eddac3f8e0fa1b95c52ab42f7651049a4f6407c8d6022815e02ffd17",
+      "sites": {
+        "require": 24
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/timesync.koplugin/_meta.lua",
+      "sha256": "6683e9a96238540dc5332cc923944444fcaf94eab67ff70d6a416174e8af728f",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/timesync.koplugin/main.lua",
+      "sha256": "ce0aec018869fc98314fa6502ddf78475b1ea9ebd67c5d7c9bbaef1dd17f66b4",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/vocabbuilder.koplugin/_meta.lua",
+      "sha256": "0ebcd20e8bde3d0ab485b4e2fcf944fd049545c41d70d8a4562667f1a9293884",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/vocabbuilder.koplugin/db.lua",
+      "sha256": "b3574904e0d21f127d79a1faa586a2b74a6e93639387600b31681264be5cb229",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/vocabbuilder.koplugin/main.lua",
+      "sha256": "a1435b39a8ec815785bcfb14da5bae0928e3768c1eacce7392eb0e80c4628e84",
+      "sites": {
+        "require": 45
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/wallabag.koplugin/_meta.lua",
+      "sha256": "1f9c861209a6cdfe4e5b9cd969f147498ad0173203096660abd4efd6bc39624e",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "plugins/wallabag.koplugin/main.lua",
+      "sha256": "b7812479b7337cbc8d1fb03ff3fdf129c962a7eb858ca3bae075f2e449eb3221",
+      "sites": {
+        "require": 31
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "reader.lua",
+      "sha256": "1e39148f3fbe312653bd2ede233569317bd35257ab5e42c9c4e3c497cfc271b8",
+      "sites": {
+        "load": 1,
+        "require": 27
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "setupkoenv.lua",
+      "sha256": "8e0abd2e33734bd61a7593a19f042349eae045d30975a9c0bbf40e0f426e0da9",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/autosuspend_spec.lua",
+      "sha256": "2d984c380102cb3ac2709115d26e22e0e77f496c7af3960100f908d6b275144f",
+      "sites": {
+        "load": 4,
+        "require": 23
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/batterystat_spec.lua",
+      "sha256": "d9977eab73af4bf1c8c6673a5a5660656b1126c14bad8367f8763efebe028d62",
+      "sites": {
+        "load": 1,
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/button_spec.lua",
+      "sha256": "729dcedd34a8d8c413d3e3c066b05368751349588c18dbe310a49faed8e58074",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/cache_spec.lua",
+      "sha256": "04af3a7612536cbd926e97c7ddb970cba0430172250205dc85e084187751ab6f",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/cachesqlite_spec.lua",
+      "sha256": "c4d91be5152e43bef929940a0bb407c749866d6864853fa81c54a82044db51c1",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/calibre_wireless_spec.lua",
+      "sha256": "4e6ba5f206c04c8fb9966ed45fd26854db9f58a9218ac45cb1241047b0c78390",
+      "sites": {
+        "load": 1,
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/commonrequire.lua",
+      "sha256": "935aeeded8e18f2aa7e7adda75d1f3014d364086d4a966f8da285e21431ec2e2",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/datetime_spec.lua",
+      "sha256": "2122e22ac91cdbb79da108855f108b6c980732157135447b61406f26006919f6",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/dbg_spec.lua",
+      "sha256": "8f7cdf7e92944557e1e08c1d12e05b6d26c9f0485fa3f26ed0b0ebcccd3e4039",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/defaults_spec.lua",
+      "sha256": "71794f8cbd61a66c0b4d6aceb8cfbf1d5be695a58cacd9ec8259c891d84ba9b8",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/depgraph_spec.lua",
+      "sha256": "b105938856777744c4716926940e689074ad8c884bac552195e0526ec10506ed",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/device_spec.lua",
+      "sha256": "69fd1ad6e5810e55314c0e5dd35eb894a49b8ad7c60d111014025c2d6524d052",
+      "sites": {
+        "require": 34
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/dispatcher_spec.lua",
+      "sha256": "013eaee75fc8c761287400ddabe006f08a1aecebe2ed51d71edced8fbc041004",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/djvudocument_spec.lua",
+      "sha256": "06830c7f35295b98449160b34a09a4b60f8e6f532345764a79dc353c7f9175e2",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/docsettings_spec.lua",
+      "sha256": "cd9a709c6c8064904e6852357aabd80cb89095f07cd7e964596b9f84150f1245",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/document_registry_spec.lua",
+      "sha256": "a4c98e44f4279741d795d4aa9d12bf432d0ccfc462049450a1af50b720e573a7",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/document_spec.lua",
+      "sha256": "ae2693ad6c345a09312c9fae2cd261bdb3b5d2de7c1d537f87f3f88e0f47f5a7",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/eink_optimization_spec.lua",
+      "sha256": "570898118e1dda17546e2420f0fb560af0e6f6b06f3f09bb946182cee9af11f2",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/exporter_plugin_main_spec.lua",
+      "sha256": "5d8dd8f76bcc84dc5665f24dc63b5d178ec52bf8da0e374e9703a0e5ad9442f6",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/externalkeyboard_event_map_spec.lua",
+      "sha256": "fdb99ec7a769d265d976da45daf5bc3542717610ad7fba083cd3bad0953be2b5",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/externalkeyboard_layout_spec.lua",
+      "sha256": "23439149f543bf66591d706e650ec2779dbabfb14f0dc743b6008617739f2283",
+      "sites": {
+        "load": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/filemanager_spec.lua",
+      "sha256": "48c45435e89a258aba905c5212a6745691a7933153d5d5418042c817201a6087",
+      "sites": {
+        "require": 12
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/filemanagerconverter_spec.lua",
+      "sha256": "f17ddf46f2df50d3ce25305b0dac330b00a5fe8736a01590e3a20bcdec1fd680",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/focusmanager_spec.lua",
+      "sha256": "f9bf075f086f8f25a82ae1346d3b053016111931393c9f91c13c4cddc26aa66d",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/font_spec.lua",
+      "sha256": "c9c66a7ef0205a4f733851012d8d96694685a61500558d0161038ef27b212bd6",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/frontlight_spec.lua",
+      "sha256": "7f711e4e69b9f66a5be4a05362289b5aef5a6316be4857eba0021d819c636757",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/gesturedetector_spec.lua",
+      "sha256": "305be2ca0153f8a8963b27ea58c355d23864d202de65c75f531442e3a14ba90b",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/gesturerange_spec.lua",
+      "sha256": "1e1c2ff4e502571db47731f02c369634bd1d7a669f45193386f8f9b8f4494c9c",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/gettext_spec.lua",
+      "sha256": "02f2d55383a4b6648ba5177d1ac7a61cd1b42647887643c8ec57be6391741800",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/hook_container_spec.lua",
+      "sha256": "0737272d099eb66f1f6be8e958480e4f13f099ba748df2d022bfcf63accee850",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/httpclient_spec.lua",
+      "sha256": "c9ec3e55a524d42a38df9b362e5db4d7c1f6c6da2bcb112828addf8a4e11a85d",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/imagewidget_spec.lua",
+      "sha256": "9edaee3f3ca53df9249e6d6b17fd22d71cd4e95b3935e27685974545f8e28a84",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/input_spec.lua",
+      "sha256": "ed1f431e9b5d0bac98c867c3c38af1ef185d805e7a53123cfe15d755641f7fb4",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/inputtext_spec.lua",
+      "sha256": "77c9f9678e62339a5fa08298ad1038717c5d4e945386dc29c8e388da5a0b326f",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/key_spec.lua",
+      "sha256": "9d26a7d667c89f91192b33e9d0a293522a7c7dee6241a821286beed4f00e44c0",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/koptinterface_spec.lua",
+      "sha256": "59e05b0a7fd0875da999ebd051caeb7bf606da6f7c028ade8950578f589c444b",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/kosync_queue_spec.lua",
+      "sha256": "17aa91bf42c5bf39b02e48d161e3fc71eeaac02cea4a34f1342874c1ff57d39f",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/kosync_spec.lua",
+      "sha256": "8f7b15f3ef3265a67ad601b59644fe313c5a10e1b45e0e6b3a06e2a505adbf28",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/luadata_spec.lua",
+      "sha256": "6d328d3bbe904e24834c36985cdd3bdada8f90098fd702ea2486a011c3e3aecb",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/luasettings_spec.lua",
+      "sha256": "85cf756166ddb9e29d80ae7add0051920baa85dc946001503c7677d2edef0fbf",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/menu_table_screen_color_spec.lua",
+      "sha256": "d19ecf30dbd01aa39de091659ed0fee0df8b888a5bb6de57c5b04d8037440e2a",
+      "sites": {
+        "load": 1,
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/menusorter_spec.lua",
+      "sha256": "0fe15b4d38117488a536914c98a65035711f3ddc04bf7d58903c4865e6952b66",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/mock_time.lua",
+      "sha256": "f65955d58099066cba000fe91e72bb93e44343ef518dd68486a9dc5fbb912001",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/mock_time_spec.lua",
+      "sha256": "b6a14b3ce2f9fbf2573de1fc9c16c6379363eb24d3f5ffa9f944a18738b6e622",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/network_manager_spec.lua",
+      "sha256": "ad27a78db45eb4ac519bf41ef08b99f40d0d438a5aa7b49592e50e61eb17a24b",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/networksetting_spec.lua",
+      "sha256": "4f880dfdf9c83b91680491a7580d7ff2d8567626392afc1446407653f5873002",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/newsdownloader_spec.lua",
+      "sha256": "e60ebc64444a9ba0411763e0bcafa30407ff3cefd68b457f697a95b31737d440",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/newsdownloader_url_normalization_spec.lua",
+      "sha256": "bd788b89728dc9251f5221b2d15e13f756f40bf9cff038ba0d751a1e299095f3",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/nickel_conf_spec.lua",
+      "sha256": "09c076133193cc411645c8bfc5b44d89a23e4a698aec1f0cf4d939d0ec03feb6",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/opds_spec.lua",
+      "sha256": "e569b97a8cd16fe045326fa180576f4904b10e4aa235ab81e2d9fba4cc852ebb",
+      "sites": {
+        "require": 19
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/optmath_spec.lua",
+      "sha256": "357016d88f077192d6bcfaef2a2cd3eb65aa5a5cebc582dadc71a2a0478744b0",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/pdf_bench.lua",
+      "sha256": "ad1fdcaedb447cbbb009e99cc261ea72c895ed7f135c8da12f837bbd9451c7fc",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/persist_spec.lua",
+      "sha256": "e177bd2ddbdc55984f1b43e6a420808e18351460f3c4b4967ac2681623ecfbeb",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/pluginloader_spec.lua",
+      "sha256": "d56522cd4a8a0161f79f915926aa65529767336716d6fe58384c4111d91b4c1b",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/provider_spec.lua",
+      "sha256": "3296afa41e15431fe9cbb69b55df649762d4473a624a8b596b005efd6033e945",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/quickstart_spec.lua",
+      "sha256": "e1c35eff2815a2fce3c7750c3869a3f97e3dff400e5d1b9479aa15a70de50e25",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/random_spec.lua",
+      "sha256": "547a675ee0e58aebb0b5d07bfad99666ed63f3000b0b2ff677776dc354f68868",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerbookmark_spec.lua",
+      "sha256": "fbf87c40f2af64b7c526b5ecc5feee143206936f6da6e0652ab826424f8691d3",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerdictionary_spec.lua",
+      "sha256": "c5f28bc5fc8ad7f27972722b2b5f23a046323ace7ae9c1849e90b101363f14af",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerfooter_spec.lua",
+      "sha256": "c672e9e51b63a62fdae94458cd96b9ec294236d081ce128312eddef90bcce80e",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerhighlight_spec.lua",
+      "sha256": "8ae7f9e5def0f58f716f170a7fe2c6eadf2cb18572cacff02cdc135994e5ce23",
+      "sites": {
+        "require": 11
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerlink_spec.lua",
+      "sha256": "ee0dc073f59dccaac59066046fd3b985c07333ff60bab1dd5f68a057f1e7f00b",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerpaging_spec.lua",
+      "sha256": "6075e386b9958a96bec6eafd562505a7b818b511aa4ca1ca5bf74b082fbc66a7",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerrolling_spec.lua",
+      "sha256": "bbb57c78b603feaafc676133e913910a4dfac90bc1cf41caaf66238569df2897",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readersearch_spec.lua",
+      "sha256": "e83941723229750b18f3aa11c343f098bc9c625cf5cd77f1f2e9c19099b4ef85",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readertoc_spec.lua",
+      "sha256": "7a3adf2e8ec6f7d636f5ac3887e51b72ae64419adf613c1a3fb7a0a7b422d8ae",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerui_spec.lua",
+      "sha256": "3cb91c4fb3c5205972bc508cf85b578015a4f99bf2e7e7b83cbaaa5b70385cca",
+      "sites": {
+        "require": 6
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readerview_spec.lua",
+      "sha256": "5b283cddae6f3460f1d0b37623401ef0dded399e047110e70e2ff14af1620d86",
+      "sites": {
+        "require": 9
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/readhistory_spec.lua",
+      "sha256": "ff727415a78b0242f41aa023463e641bdeb874cfa3f28c72862f03f5270e2ecd",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/screenshoter_spec.lua",
+      "sha256": "dbe2b4f7ba46d39cb1c43bca7abf0156d9171ac59ffd0d90aca71320d4dfc969",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/size_spec.lua",
+      "sha256": "362e44b0deb09903dd1528ca92fbabd1aeecafc74941a093fd9ad10ec3ac0352",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/spore_spec.lua",
+      "sha256": "e36d1f1111b8714d7a38efa830e69bf62eb632d82a302f30103673e465797359",
+      "sites": {
+        "require": 7
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/switch_plugin_spec.lua",
+      "sha256": "414c5c485d9828a11f7debdada0d2906be91155e3318c9af2e5f970d7d6670b7",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/taskqueue_bench.lua",
+      "sha256": "4a3ca77705490797aff0c221145d3e49f9c6e1f016c959b9155cb4fa41e5efbb",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/textboxwidget_spec.lua",
+      "sha256": "8dadc5eaa60d43971be2659779b87c1a66790dbb3e8b0ccf2e5f800cfeabaefe",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/time_spec.lua",
+      "sha256": "48483a7d219903d5a396a566b07fcc5984cc2f24a287645ea7fd2c0414fd808c",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/toggleswitch_spec.lua",
+      "sha256": "f3edecc7c2514967b0a5033624e5661871ad59a9cc41dff7e58c51506295ab87",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/touch_probe_spec.lua",
+      "sha256": "85675e99794dbd556681d81eadc1f398c37f8d2e1ce9e54122644e3d6eba7953",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/translator_spec.lua",
+      "sha256": "d53da207df31e6f15e0f1b8db37c6fbe73517a142fdc3226c916e4c58d3a2fcb",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/uimanager_bench.lua",
+      "sha256": "5ed3929e767dab13d350a0b79355bc2cab50ccfec99dfc7d303efd6e8a13df11",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/uimanager_spec.lua",
+      "sha256": "d08ebbadfbcf62255177f50d1e84fdcebc0d09cc1e20ea484490beed016e0690",
+      "sites": {
+        "require": 4
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/util_spec.lua",
+      "sha256": "a705f277c65b4d8edd33ee8442ea98365efa25e2de5034e8ffde870e8fcb5917",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/version_spec.lua",
+      "sha256": "261b6f45c04c17f0664d293817b57e45e080c9dd70c3d238c7d3fc919215f26d",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/wakeupmgr_spec.lua",
+      "sha256": "98927b4eccf45d0e88ecef55aef8356d69b10a2d79281a4aed457cc30033dd7f",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/widget_inputcontainer_spec.lua",
+      "sha256": "235cd885cc75029a36131d5f5d00d01d51d97901bef4f8d289b2ae4ade57bc61",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/widget_menu_spec.lua",
+      "sha256": "a55de5da01cb3fd35c61522aad8462e84fbfbec1547067298e7065af20e272e2",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/widget_progresswidget_spec.lua",
+      "sha256": "b8c26ee4dfa51e23291b9f6b2f896d19877fdbfa7f55644d843c07a81e0af9b0",
+      "sites": {
+        "require": 3
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "spec/unit/wikipedia_spec.lua",
+      "sha256": "7e99b1628cc38d40180d33ce542d2180faaf7cc0dd3fe5f119f1c21129e15121",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/bench/djvu_getpagetextboxes_bench.lua",
+      "sha256": "78b1cdf256770adf144474cc4b8060f1702ef23ee77874d44b483657b9620ab7",
+      "sites": {
+        "require": 5
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/benchmark.lua",
+      "sha256": "780606915d342e8de09f99fd3e1f59a3239bb83150f76fa34e912cee5bc50398",
+      "sites": {
+        "require": 8
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/kobo_touch_probe.lua",
+      "sha256": "ebc4ac86c03c5f2b2bb7306432e7cc9a5d1a292c3ea6b9c59fe5e26b85ed0987",
+      "sites": {
+        "require": 15
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/merge_luacov_stats.lua",
+      "sha256": "0919b45817d66c6f0fecbc68d80ae2cdf91a3d0f256a30fc0e955594c669985d",
+      "sites": {
+        "require": 2
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/trace_require.lua",
+      "sha256": "959357c83f9af81e074be1f23e280a01b2bc6bca87d48648e00363d96edbb15b",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/update-metadata.lua",
+      "sha256": "ec6260ca8c55114583faa2d39d1aa1892b7b3ba53a121ae4d9392a6e87f11ede",
+      "sites": {
+        "require": 1
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/wbuilder.lua",
+      "sha256": "574e6d778140ee71dfe0a538e1c46ae3b54c0a4d101ada61dc4e96e583ef98b3",
+      "sites": {
+        "require": 31
+      }
+    },
+    {
+      "lang": "lua",
+      "path": "tools/xkb_to_lua.lua",
+      "sha256": "e89eff42ac238fd298a9175af0f53f7d9f49a50b437722a14c0ddf4ab0bd3f94",
+      "sites": {
+        "require": 1
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "ced7ea8b37d47b0d19f59137e1d276229c3a8959",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "lua"
+    ]
+  },
+  "summary": {
+    "files": 594,
+    "sites_by": {
+      "lua/load": 87,
+      "lua/require": 4938
+    },
+    "total_sites": 5025
+  }
+}

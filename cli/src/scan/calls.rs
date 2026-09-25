@@ -68,6 +68,17 @@
 //! class's own `m`. `super.m()` is never the caller's own `m` — an
 //! override calling its super is Java's commonest delegation, not a
 //! recursion.
+//!
+//! Lua and R (plan v2.30 step 4) name most functions by the statement
+//! binding a function value (scan/binding.rs), which also places the
+//! name: a field in its table, an assignment in its block. The member
+//! road keys by the table or object a member-shaped name spells (`M`
+//! of `M.f` and `M:f`, `x` of `x$f`) — so `M.f()`, `self:f()` and,
+//! inside a member of `M`, `M.g()` reach `M`'s own — but a table is no
+//! class: a bare `g()` inside `M.f` is whichever `g` the block sees.
+//! And a Lua local reaches only the calls past its declaration: `local
+//! f = function() f() end` calls the `f` that was there before, and a
+//! local declared further down is not yet in scope above it.
 
 use super::ast;
 use super::callees::{Named, Owner, container_of, owner_key};
@@ -111,7 +122,7 @@ pub fn edges(units: &[FnUnit<'_>], src: &[u8], spec: &LangSpec) -> Vec<(usize, u
         let receiver = receiver_binding(unit.node, src);
         let own = own_nodes(unit.node, src, spec);
         let caller = Caller {
-            container: container_of(unit.node),
+            container: container_of(unit.node, src),
             receiver: receiver.as_deref(),
             shadowed: shadowed(&own, src, spec),
             owner: owner_key(unit.node, src, spec),
@@ -185,13 +196,13 @@ fn bare(call: Node<'_>, name: &str, caller: &Caller<'_>, named: &Named) -> Optio
     if caller.shadowed.contains(name) {
         return None;
     }
-    if caller.owner.is_some()
-        && let Some(seats) = named.base.get(&(caller.owner.clone(), name.to_string()))
+    if let Some(owner) = caller.owner.as_ref().filter(|o| o.is_class())
+        && let Some(seats) = named.base.get(&(Some(owner.clone()), name.to_string()))
     {
         return own(named.pick(seats, call)?, caller, named);
     }
     let group = named.pick(named.whole.get(name)?, call)?;
-    sees(call, named.containers[group]).then_some(group)
+    (sees(call, named.containers[group]) && named.visible(group, call)).then_some(group)
 }
 
 /// A callee of the caller's own type: an owner key proves it (the seats

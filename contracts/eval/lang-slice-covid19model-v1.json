@@ -1,0 +1,1446 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "r",
+    "name": "covid19model",
+    "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+  },
+  "excluded": {
+    "other_extension": 984
+  },
+  "files": [
+    {
+      "lang": "r",
+      "path": "Brazil/code/plot-3-panel.r",
+      "sha256": "b80c959fd85aebc4b7a333a2bfb957ba3469b01cebf90569d2273eeb1b24ac4a",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Brazil/code/preprocessing-subnation-brazil.r",
+      "sha256": "c1d13dc0bdbf5fcaf518ec3d4478ef6ae05c58917a320cb9ccca2635e4c927f1",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/plotting/format-data-plotting.r",
+      "sha256": "5e1aaf22f601865c0c8cfed2eb3a88475f2b5edb75f6a3ec7271a69ca0e40079",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/plotting/make-plots.r",
+      "sha256": "41f1669de9f8849a895d80523f4b9c73dd5ca5f88377fd3c9fe55cf1a9048e85",
+      "sites": {
+        "library": 3,
+        "source": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/plotting/make-rt-plot.r",
+      "sha256": "a16eba97c66c21390ceb13322693a4af0f0732e479b8c7aa2c04670725caad0e",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/plotting/make-scenario-plots-top7.r",
+      "sha256": "bb06998b4294359c96506e45a6da56ffb1350f47efaf2729581e39db7e1a656f",
+      "sites": {
+        "library": 7,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/plotting/make-scenario-plots.r",
+      "sha256": "c0c72fa76e31192aca1d1207d31be7aa950cdd46af7646d88da83f2009412f32",
+      "sites": {
+        "library": 4,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/plotting/make-three-panel-plots.r",
+      "sha256": "f7de6a010790822873c4037bc343944bc72f67f13294a5a794cc43221bfb00b7",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/utils/make-table.r",
+      "sha256": "c33df9530f7cfaa70438a19d4fb5dccd70ce3693a2ed5347eb0cd5f50f0db40f",
+      "sites": {
+        "library": 13,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/utils/process-covariates-italy.r",
+      "sha256": "edc0379d37729536212fcde2b79f00435bef4b8eb583b7f0ce0656249405e78e",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/utils/read-data-subnational.r",
+      "sha256": "9c10a4b02bd191d2ca1f2aeef1178dbe3496acb9248dbfb5f9406c5ecbeb0d67",
+      "sites": {
+        "library": 6
+      }
+    },
+    {
+      "lang": "r",
+      "path": "Italy/code/utils/simulate-regional.r",
+      "sha256": "0e54ec606e2520d8edb17695fa8257416409b1fa7e7218f0ef6a9ac82fec4a95",
+      "sites": {
+        "library": 14
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base-Brazil.r",
+      "sha256": "80c624e5402eb0d92d0aa9d3f54855fedf1bf47a2b76559434b8023bd8d87b1f",
+      "sites": {
+        "library": 20,
+        "source": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base-Italy.r",
+      "sha256": "9844c122aa1a99dc0fd8126571da3d81df500328bbd99674ba1adfcc710b9f19",
+      "sites": {
+        "library": 17,
+        "source": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base-nature.r",
+      "sha256": "cbf92aeb95a0f16b74ba0952839bfec3b90d67efafa77eec69283b2195250516",
+      "sites": {
+        "library": 20,
+        "source": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base-usa-cases.r",
+      "sha256": "64ad751fd6e9d65a5c296c734d2cb4ad98dc1794d8c5c602ad2eef9b4898ad44",
+      "sites": {
+        "library": 16,
+        "source": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base-usa.r",
+      "sha256": "1f837cedfc69f9e0175446b08fef1617a492e0f68901c07ba005b231ad256e68",
+      "sites": {
+        "library": 17,
+        "source": 9
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base.r",
+      "sha256": "3c3e390a645bb40cda5f5e7a45e980d48ae5d3dab1f903502d04e99e0b74ef18",
+      "sites": {
+        "library": 11,
+        "source": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "base_general.r",
+      "sha256": "5a3c911320b54196e64a703defcc72f09a334307bb4e0eaf14575c9e87de8eee",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "compute-ifr-europe.r",
+      "sha256": "25c635a3ad87b2e10145b5b128c02b8707b6620d52a21133538513a241d36483",
+      "sites": {
+        "library": 4,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "compute-ifr-usa.r",
+      "sha256": "486079944ae189a642fc3b728f72fd371df97aab9ff0b1096e5f1651bab5b2b8",
+      "sites": {
+        "library": 4,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covariate-size-effects.r",
+      "sha256": "473510cb331d3ed7cfd075c8f326f90ad3564834a5a3c291ebd0e4c4a8978c0f",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/data-plotting-functions.r",
+      "sha256": "ddc97629e90c1013e7f9c5b7314aae555a395745dedbefb35466e816eea4aeb7",
+      "sites": {
+        "library": 30
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/data-usa-read-functions.r",
+      "sha256": "8e58c97714a7c8f7c0c724bc03cb73197516f9cf237ec445e9286b54effab660",
+      "sites": {
+        "library": 26
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/post-processing-plot-functions.r",
+      "sha256": "a92fe040eb2feb8846497404d8b8e18575d1861815a3df08bb3550a4b71d16ac",
+      "sites": {
+        "library": 33
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/post-processing-summary-functions.r",
+      "sha256": "b80962f4ed57a116b1c67494796bd7cf77d1f1104da12031092d9316ef8a8577",
+      "sites": {
+        "library": 89
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/post-processing-table-functions.r",
+      "sha256": "12bce339b1d5cc7ebde707e6c94028caf0c3d5bc5dfee62d1e98d34c98cab20b",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/stan-functions.r",
+      "sha256": "650191f3351a74a0087bfe9a9d2ec7355d42347d36e62ab7e00f09eedaa17728",
+      "sites": {
+        "library": 57
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/stan-utility.R",
+      "sha256": "8cd39f5c466b6e628b1493fe88a7b74b90002efc8c089989e6432f88494c7bb1",
+      "sites": {
+        "library": 8
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/utils-alternative-gamma-functions.r",
+      "sha256": "40425d071f22ea02dbab516c5afa9893ab6ca43fd51bd2388a5b4274e92ca757",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/utils-numbers-for-reporting.r",
+      "sha256": "d05d42987f089e9dee8ea26f14b0e1cc9e7afb84319bd2fe12bdd5a5214832c3",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/R/utils-school.r",
+      "sha256": "7893408099c1c1de9cffa5d891ff3aa595c3de3d05fcbecede98b25b0bcc10ab",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/explore-emodo-mobility-contacts.R",
+      "sha256": "1b33cff2ddf97a10d4cf8d87bea0f0a1d494cd70b12331165b9f2e5a8d60ab32",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/explore.r",
+      "sha256": "a63195dec14959f4d4b40165f6c374fbc582cbe3afeb868d1c0679474d39f61f",
+      "sites": {
+        "library": 56
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/fit_ts_model_county.R",
+      "sha256": "b16926ad489170fb952e647766a9ce08f1dc072e8427b7055dc627653d557d97",
+      "sites": {
+        "library": 31
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/preprocess-append-foursquare-mobility.r",
+      "sha256": "d2b64418ee15dc364aca87033bfcf5caa5740fe2c90baf40f3147b7e88e72323",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/preprocess-contact-rates.r",
+      "sha256": "76cd0b68f06ac33ba55b182760663060ffd8a201060b0f977731b83324634739",
+      "sites": {
+        "library": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/preprocess-death-data.R",
+      "sha256": "17cde9acfa1db4e5d5d81a56a4a3be6b38b170ff0a3df25caaccee4127fb2f4d",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/preprocess-ifr-by-age-prior.r",
+      "sha256": "f96465b9d1fde3b452e67aeee6747764713f00bb08d7498a2473f121a3af0af8",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-Brazeau-ifr-by-age-prior.R",
+      "sha256": "dfb17ee8075f15a37823fa10da8ddb57f078e5216fc0878366d8c8b99eba8eea",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-Levin-ifr-by-age-prior-v7.R",
+      "sha256": "3b6c8695988f62c032dfe7dac6a9f6eb54f12f3a7b0a3afb9325d9a46d53d4fc",
+      "sites": {
+        "library": 6
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-Levin-ifr-by-age-prior.r",
+      "sha256": "464deb67cc55ae089d570e7ad97adfef2c70071a7eb507e84bcca31ffe64098c",
+      "sites": {
+        "library": 6
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-OR-Zhang-table.R",
+      "sha256": "b5449506c485dedc2e0f3c302bcc526a74526c0cb7c0d6922217e3a6fd315e77",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-US-NPI.r",
+      "sha256": "8a9e453d13b97053f45bc63d3a655fb55ef843e97a7b0647d936be03f9c58cf3",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-Verity-ifr-by-age-prior.r",
+      "sha256": "678252a88bb27b6cd3a708b3618c098cb40cae03dbb8e4fa6a436243fbf817fc",
+      "sites": {
+        "library": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/R-utils/save-outbreak-contact-matrix-China-UK.r",
+      "sha256": "344c06642849bd423f8e5fd5544d72955dce04f1416259c20b5a4b115c5e8bba",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/compute-ifr.R",
+      "sha256": "2c888cbe3f7b693e6e6b2d188328c053aa9efce84781515758ffcea75f8bccfe",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/deprecated-post-processing-functions.r",
+      "sha256": "0d6e584158984fde1eb1be486a3ba763b2c7017396ceb1e65b8b377b4ec41cbc",
+      "sites": {
+        "library": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/deprecated-stan-functions.R",
+      "sha256": "c6045a104c38e0f299fe159eaa50045bc6ba12a4f1442b121b725f19e355155e",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/format_data_plotting.R",
+      "sha256": "2e594b0d2e1783da05806d44a8c175b6f8b5c0c65bdd659a46465ed8b471b9e6",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/foursquare_mobility.R",
+      "sha256": "a44c48f167060b622f4a1aa94e1f4b4358e8e0b75b53df49b28d95ac3d5102e2",
+      "sites": {
+        "library": 2,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/foursquare_mobility_extend.R",
+      "sha256": "dd3efe1417e5419b0a96a835544fe0f8abbb4c6a9e5249880128ab34f71f7e0c",
+      "sites": {
+        "library": 3,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/geom-stepribbon.r",
+      "sha256": "0a6ae49be648f4ee084650803b3b3c1319582f1e8ef1c6379677328fe8b0dbad",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/preprocess-find-polynomial-coefficients-ifr-by-age.r",
+      "sha256": "84cd1bc70a223274a46e1f2bad81a5a36c4ad4840a5091a6bc2e681f788a1158",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/preprocess-other.r",
+      "sha256": "8b857ee42fd5a6ceb125ffc75e670db26bab04d403f4c0d9e8104c3175a50427",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/R/read-data-compare-nyt-and-jhu.R",
+      "sha256": "5c1895484e250c0301857bd76a907b30a83d6af1ae2f16c5ade6a97dedb2785f",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/ifr-by-age/ifr-by-age-assess-mixing.r",
+      "sha256": "bb5553dcf9715ad123457115e32be3023e926a1cd14310016974631de151a1bc",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/ifr-by-age/ifr-by-age-make-posterior-interval-plots.r",
+      "sha256": "a4b19557698803242cb5ad0d31aedfb293da062b55a1570c3f95b8d76abe1242",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/ifr-by-age/ifr-by-age-save-prior.r",
+      "sha256": "223c3604361852417d6a795335936c204997a4ede471d1320810fbb072dcc3eb",
+      "sites": {
+        "library": 8
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/ifr-by-age/ifr-by-age-stan.r",
+      "sha256": "f2d84deb9a08e313651a2dbefd4c709d5f1d701d26876c886f6f21b5a3be879f",
+      "sites": {
+        "library": 8
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/deprecated/ifr-by-age/make-analysis-ifr-by-age-HPC.R",
+      "sha256": "2abe738139cf2ddfe358227bf43c89bea9a82b5af8c8dd619b6dc6e2eab09a2a",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-dev-HPC.R",
+      "sha256": "0c47d5332c6a9aff3712c3f0186b0506d3ea4b72d75522b1ac7a465c7cabad3a",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-report32-HPC.R",
+      "sha256": "0c813251489f86659ef0234c35acdf815f62e71c9900b1c4f2a894ba61042660",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-report32-bash.R",
+      "sha256": "59921dcbe9abb4f2de252c6e9bf33896ae8ca94d7d0d78b5eca80673e689edc1",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-report32-demo-bash.R",
+      "sha256": "69cc5b0c0732c15a228751b95eefa57028db6ad3966301d11785286e14a787b1",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-v110-HPC.R",
+      "sha256": "e8b4143e55e4605397275313e59e9df68ec5e3670ab30bc9e54839db49784b9e",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-v110-bash.R",
+      "sha256": "8e4144e8467935cb41dd3e3d8b19e45a09aebad44594d7196fb59f6003a59c9f",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-v110-demo-bash.R",
+      "sha256": "23ffdc011515ea8f278550799744a697924625495cb2a4d8dc9a52c11f8d1966",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-v120-HPC.R",
+      "sha256": "d9ff1b9149e19034de301ec2ef8f0a287a8f6bc5666d4cba866900026b7c1f66",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-v120-bash.R",
+      "sha256": "f484075190e7dc00129599dc84df5943b2afab92c1be81fa9d3b10e03906a43d",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/make-analysis-covid19AgeModel-v120-demo-bash.R",
+      "sha256": "d22b9afe6ac0117831a5e6155debf64e6fa59fbf01fa92a8b0d0f25f4dd15397",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/generate-quantities-forecast-v110.r",
+      "sha256": "200b59a4278a625ec5d93ee578bd1263af9bb6875ba73aa38d78657a76afabcb",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/generate-quantities-forecast-v120.r",
+      "sha256": "ec45ae175c5825bf8616ff3e7820de184c1f66bbd76f46d48e2bb70e1238828a",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/generate-quantities-forecast.r",
+      "sha256": "bb2edfb3f18a4179d842c78650ebecb5d7c3c0ce3f43623a53f470fdaeaed4e6",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/generate-quantities-new-strain.R",
+      "sha256": "f7bd328596508890e21e3749a4b063a2f79a7b0a423516815956c382ba544fb7",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/generate-quantities.r",
+      "sha256": "75852ff5c7d323f437589b1dfd9443c4378cbb521eebffae1683469b1d8e404b",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/generate-shielding-forecasts.r",
+      "sha256": "16675ee5ee669525e4b4331aadf9e3a127f626ccf3e1272e321feeb8742ba3d4",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-age-pars.R",
+      "sha256": "0eb0e890647a4b36cef5c1055933990395e08972fc1882ddecf0326c844a3033",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-assess-mixing.R",
+      "sha256": "8455520294706c010e3434dd08c398f0d68fd43e890a6741ba7bda66c117d1da",
+      "sites": {
+        "library": 5
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-compare-fsq-emodo-data.R",
+      "sha256": "42b394e790bf22600ab36737c2d7c6568beee3fd7cd838574263cf0b8955ad1e",
+      "sites": {
+        "library": 17
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-deathsage-casesage-plot-v110.R",
+      "sha256": "869d5eba8667dfb5a955272854dcc10d8e32e4b8b4c2a0a9cfa988a174c36929",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-deathsage-casesage-plot-v120.R",
+      "sha256": "55538aa99d278d1fee49d4d7f42e8de6c4061cd8c8ef0120468392e075f33a3b",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-deathsage-casesage-plot.R",
+      "sha256": "b501a6eb5e98f795b29f662c49cb8e7dddf5f6353149d6ae1066628bd18051b3",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-etas.R",
+      "sha256": "167b5941a0740362de8636d3a9519e927c959469398d3e2b3cfb3a754adcd102",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-flows.R",
+      "sha256": "88be8b2c8d0c21e23c33788f2f62ec765addca6cdf4270953e237e00fbf516c6",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-forecast-contributions.r",
+      "sha256": "dd5b3f6deffabc44366ecfdfe89038daffd632d44a629d5e3ca01e16f660df1d",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-forecast-increase-Rt.r",
+      "sha256": "0d1bae27c2fe0e0519cf66f0e7f610d07dbfd2b7cf6f3014aaa563886a4e1865",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-forecast-increase-deaths-cases.r",
+      "sha256": "ebc89333e3306d6c83b7a9479e8068712a0f8d0d4033a78efd584f8cfe7cbf20",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-forecast-plot-cases.R",
+      "sha256": "de3b98226ca0d33a9e6fc0fab0687328befd4ff2ab7d4be11c4aeea1c415b5e6",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-forecast-plot-deaths.r",
+      "sha256": "2720fb494fd316f53699062f7a7b7cc89841aadbfcad5337cb6474b9caab117c",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-forecast-shielding-plot-death.r",
+      "sha256": "492815158bd5f7c3e161971d290cf857cc03d9acb56a044846a7697bbfedc61e",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-fsq-mobility-analysis.R",
+      "sha256": "de54f563af9eee9775c0db71c09853306042f4bb4d3ca211a945bccb71a9d10a",
+      "sites": {
+        "library": 16
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-knit-report-forecast.r",
+      "sha256": "64e449cd82b5c7d48143f68467b27ec78b659cb331d6d15bd3535302c1919d6a",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-knit-report.R",
+      "sha256": "1130d2928488f274eaf3572d00305fda7dad8d7f512eb14749f49573828578e2",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-log-likelihood.r",
+      "sha256": "0be37b35537ad5fddecac88a2d55a32760415b7b7474bb33e2acc37e850d2d0f",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-Rt-byage-table.R",
+      "sha256": "bea5b62e2100a208e37e8f1d30b09d0035a6ee12ed75602c0cb72cb4d2a75509",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-Rtlessthan1-classifications.R",
+      "sha256": "4c3ec376b1b1f53e8c22d9cf0d120c8e5b4f99a44f2b3ddaf7e6712464062f09",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-aRt-allstates-plot.R",
+      "sha256": "7b57fd172aa121748c070fadfcff6e0766b010ef588555759f7735e0fb575c09",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-attackrate-tables.R",
+      "sha256": "0fa22dad990d734129f55da85a2cde877136a31687736768f52ea052583f6e9f",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-daily-weekly-deaths-expected-observed-plot.R",
+      "sha256": "59ee0b1f11cc30b243548fb1bc608939ba4e0ac7fdcc412c1f152f504c219ea1",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-deaths-eacases-Rt-plot.R",
+      "sha256": "26c235bffda5524263a8ac5d37350935eebd128652563a6603085595e5450451",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-deaths-mobility-contacts-plot.R",
+      "sha256": "2fdbc9a797876c94ddffd9bc1f0cebbd16c795c3bbf24409bbbbb447aea960d5",
+      "sites": {
+        "library": 16
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-deaths-panel-plot.R",
+      "sha256": "969da1548e33d32eb4795747ab45df8b266febcfc7b3b00b8add722e6b1ad603",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-eacases-eff-over-time-plot.R",
+      "sha256": "e780afdc28708e0bcbdf2dfc88552a25c4960a9c5af7e79c7f00c30d42110484",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-figure-0.R",
+      "sha256": "d28de8e6dc653493ccbe9f6e255f3abb949b4689bc84c5cd501e5fc724651bd9",
+      "sites": {
+        "library": 15
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-five-panel-plot.R",
+      "sha256": "e0b73a36244746c41a7b8ed462e767a708e08c6a50076d1a76bdfd14f2f681b7",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-flow-byage-table.R",
+      "sha256": "e18e9312dfb8343c2406a1eadf2c6ea58650111ea91b0e9d8e2ca57a111e9111",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-ifr-table.R",
+      "sha256": "1fa6a290e23bbcb0b800bfd026e21de14d5a63f0efc00c85ad7b98054ac2c2a4",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-newcases-overalldeaths-Rt-plot.R",
+      "sha256": "0f71ea8d9faaa35a8a3f5b478462b9f9ffa9b82e6dbd6547084addcc147c8b7e",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-make-prop-susceptible-byage-plot.R",
+      "sha256": "42082963106cf1d7c460e6405dd197fc0d85b7d06173ab852e129384e8e9b30e",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-new-strain-make-Rt-plot.R",
+      "sha256": "5319274428ac2cc3a671deae00bfb5aa25445185448044860f0bb913259b120d",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-new-strain-make-deaths-cases-plot.R",
+      "sha256": "9f1b934f2a24abbcb0ef7de7c90f5a97b5485ff4520085e019a702ac2f181a2d",
+      "sites": {
+        "library": 14
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-plot-age-newcases.R",
+      "sha256": "be2954f37369dc887e52b98b86aea3bff7520b5806f03401a84989a522417873",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-sensitivity-Rt-contribution.R",
+      "sha256": "8119678e1ac797b218d16be0d2638c4ff16d24c806d842c478d724cb65c4363e",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-sensitivity-age-seed-new-cases-contribution.R",
+      "sha256": "1144cc47d5e65049826679a8578d07fb170eb5fb504faa0043d8cf01b1a2f0ac",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-sensitivity-antibody.R",
+      "sha256": "38cdedfceb8e334b5a9b4231fa29f67e73487edbffc25dba814690ca051c5672",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-sensitivity-attackrate.R",
+      "sha256": "327d0cb784f562145588640cac107e0992eb03ac01503170e0aae9da50519540",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-sensitivity-mltp_cntct_school_close-Rt-contribution.r",
+      "sha256": "e02cb9d5c8226ef36fe758a9cbc35e2abbc8035003284540fae7e44092f08862",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-sensitivity-mltp_cntct_school_close-contact_patterns.r",
+      "sha256": "557037a5da03b4224c0d0e77feccfa2ef56417119a1e03948915262fc9be3ad1",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-state-pars.R",
+      "sha256": "a929388e9f7ae4b3953b2d1516687359476e3f6d3c3d548440710ee1a04edd4e",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-summarise-antibody.R",
+      "sha256": "4a813e06bbb63f8c5be5be92ec62c8a75b7e2f3c25d4ac3144a4b8535bfc87d3",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-test-flows.R",
+      "sha256": "63f13dbe4a7e4935b12709e59c1c5dbb549afb84d48802890f7c56ad19cd75bd",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/post-processing-validate-attackrates.R",
+      "sha256": "496fd20d7072d0653e4e2bd53c41f413f2972b0a6fe729e2d0f0cd6d10f4e801",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/pre-processing-death-data-jhu.R",
+      "sha256": "9f085f4a192dd2ca20091b13aa0c53cc47b40dcff03bca745a9cc2f04dc0a6f9",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/pre-processing-death-data-nyt.R",
+      "sha256": "e60964a51f72b4a4f344c4d140becac973862f1ccfbd359eef043c0815e32050",
+      "sites": {
+        "library": 5
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/pre-processing-interventions.R",
+      "sha256": "7bf0cec3ec44c76b1fe4c93f30bbd92e9d1387d4c503054106de26ce453db770",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/save-posterior-samples-forecast-shielding.R",
+      "sha256": "eb8117ea82d01e6453856209f7355524c7ae2fa31728c5ea774b92b6539b12f2",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/save-posterior-samples-forecast.R",
+      "sha256": "fdcd77992bb0c66625da2a06139e97030c1c1ea3c21fe6b798d451692ae88a21",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/save-posterior-samples-new-strain.R",
+      "sha256": "a3363140931b8cd4c180938dc8d823cb688a6a32a9a11b06ff9f9378fdefa151",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/save-posterior-samples.R",
+      "sha256": "2bd3127832366cc17fe2845d4a229716b9e834f90c22a764fe2ba5f8c8b1c97c",
+      "sites": {
+        "library": 14
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/stan-convert-csv-to-rda.r",
+      "sha256": "915557f1945d251bb7b609ddce72640b4f6c73186efb3bc539ceb96d0758de32",
+      "sites": {
+        "library": 2
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/stan-make-data-usa-dev.r",
+      "sha256": "1c7927fb1bf6ac91e67fda3567928847daf54c3f87f05f7cdce7200712f5a88d",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/stan-make-data-usa-report32.r",
+      "sha256": "d8df3599afbb4cdce5ab624c1b40576c5f27b5928e4de1b83623831ed50d461a",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/stan-make-data-usa-v110.r",
+      "sha256": "17f6eb8318adce92df745aedb7d4b254ae99cb13f2f3f1450ebd30fdec2d12cf",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/stan-make-data-usa-v120.r",
+      "sha256": "b2b7693b120c77b5b38a858dff51f4e29a246d5e7e628054d6c5f2ff2f613bd8",
+      "sites": {
+        "library": 12
+      }
+    },
+    {
+      "lang": "r",
+      "path": "covid19AgeModel/inst/scripts/stan-save-stanfit-model-comparison.r",
+      "sha256": "72f78531367d7419cfb69dfdddabbdb8f2e2e9bfd62b885c1f7cf9057c979788",
+      "sites": {
+        "library": 5
+      }
+    },
+    {
+      "lang": "r",
+      "path": "data/fetch-ecdc.r",
+      "sha256": "6a239224b819c3774fe0ca26354c076cc22401f0c1e24758fe17e93632297bd3",
+      "sites": {
+        "library": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "debug/test_stan_models_identical_lp.R",
+      "sha256": "4fb2b8a00cc7ff0276051be0447fd240687fb75ea21138aa7dc3f0ee780cdb13",
+      "sites": {
+        "library": 8
+      }
+    },
+    {
+      "lang": "r",
+      "path": "make-table.r",
+      "sha256": "8efb513c52df57219389588f60a42208527b0dc281f2b2279329f6914822f1c3",
+      "sites": {
+        "library": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "nature/utils/covariate-size-effects.r",
+      "sha256": "e277fe6d56c07a96a3fdce5384af17116c08662ac696eb7ed216d91d56f4e390",
+      "sites": {
+        "library": 7
+      }
+    },
+    {
+      "lang": "r",
+      "path": "nature/utils/format-data.r",
+      "sha256": "45afb157b2beee8032dcfa5a878a0f5e5a873d595f99e29b4ead5a5a911c1ec4",
+      "sites": {
+        "library": 15
+      }
+    },
+    {
+      "lang": "r",
+      "path": "nature/utils/geom-stepribbon.r",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "nature/utils/make-table.r",
+      "sha256": "c7f014e97a11a16ffd60f7325e974b37752190ffd5ba6b15fd47fae46ac8f5f1",
+      "sites": {
+        "library": 8,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "nature/utils/plot-3-panel.r",
+      "sha256": "92cdd1dd8202b3429f53adade383120197add275b92db2a01e949ea1ae6fb21b",
+      "sites": {
+        "library": 15,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "nature/utils/process-covariates.r",
+      "sha256": "7f6954ecabea996f0cd1273613c28394c7a0ffd3040980f03fabe9ff50d6ffd1",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "plot-3-panel.r",
+      "sha256": "6a65987614e978ad45258db74088446e0709eed87a913f838769ce7099139886",
+      "sites": {
+        "library": 15,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "plot-forecast.r",
+      "sha256": "42b00f61a216abb78cac1e7144c8c13a5ea825063ccd3ca21c520ae4a9c188a9",
+      "sites": {
+        "library": 14,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "tiers/no_need_to_run/backdate_tiers.R",
+      "sha256": "6ca8b43397c3b8e385f82e6cf542238be1dc4fcbd08dc2b8d9c91cb7b6118793",
+      "sites": {
+        "library": 14
+      }
+    },
+    {
+      "lang": "r",
+      "path": "tiers/no_need_to_run/create_data.R",
+      "sha256": "d7f2a45a242f10d650c241a2f132619d22f02f9845cd8de318bd232864437f34",
+      "sites": {
+        "library": 15
+      }
+    },
+    {
+      "lang": "r",
+      "path": "tiers/spline_LFA.R",
+      "sha256": "114acd0779713c86206e89715050b194ab5cb8e7d73311214cf72e507d1d3570",
+      "sites": {
+        "library": 9
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/data-scrape/process-death-data-jhu.r",
+      "sha256": "9f085f4a192dd2ca20091b13aa0c53cc47b40dcff03bca745a9cc2f04dc0a6f9",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/data-scrape/process-death-data-nyt.r",
+      "sha256": "f0775e781679c627b88d000dd204a2b37065c8f9ae5134422294aaece15c5986",
+      "sites": {
+        "library": 5
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/data-scrape/process-interventions.r",
+      "sha256": "3c1e6b4fd9d92196d52f3512586129fbd30136a82bb3ece24590d34b286537b1",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/covariate-effect-sizes.r",
+      "sha256": "84de862660afd637780ad3da4943e3c118ce74de9fb08853fce08c636b768bc0",
+      "sites": {
+        "library": 7,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/format-data-plotting.r",
+      "sha256": "2ac87df1bceb050276c7877ff1264f7c7ecae62e56c9710e1655fcdb2e07e67c",
+      "sites": {
+        "library": 13
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/infectiousness-plots.r",
+      "sha256": "07ac12e87d7c61ce9c90bbaba9ece85aeb52805057123d57236848fd1bb3b4cd",
+      "sites": {
+        "library": 12,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/make-plots.r",
+      "sha256": "ec99e9fb9b989e430e5b70e631d48766772914cb226e3d3f30f600f4bad00895",
+      "sites": {
+        "library": 2,
+        "source": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/make-rt-percentage-map.r",
+      "sha256": "582c513105d67c7ada6c28cb36c0660042b325ec0a4246d0aef2a083aa7f26f9",
+      "sites": {
+        "library": 11
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/make-rt-plot.r",
+      "sha256": "ad38f456b385bfaae54ff590dd08c1f47dd9cf1ebe9d60f49907c9cd7a3765f5",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/make-scenario-plots.r",
+      "sha256": "768553378a1a5729ea7dd3876ad774fff64b083a3b78553d4ad4e518a9193621",
+      "sites": {
+        "library": 7,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/make-three-panel-plots.r",
+      "sha256": "08dd95af86fb0e18c530babcbf34ea31dcd9b32f2421c9154ad4331ba8eeeaf4",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/plotting/make_rt_plot.R",
+      "sha256": "32302a73805c621040dc42c6c1a9668325fe8f1d2bd71604fd0b7aa7dd528bd8",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/scrape-required-data.r",
+      "sha256": "86e22c4365e68bacd9c7c027739333ec47cd1a9f47ee2036cdb97fab9cab860a",
+      "sites": {
+        "library": 3
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/simulate.r",
+      "sha256": "bc2d771998d33d9f363afdfb4b680c0ca8ccb777ca0e92a3b389400956c56843",
+      "sites": {
+        "library": 15,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/calculate-infectiousness.r",
+      "sha256": "2d8fe0e851b75dac6ad87c5bbcd300692e44bc73f8a116065e03dc6465bf0a5b",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/create-output-files.r",
+      "sha256": "07ca737c054287c4dedc2092406b6e536ea751102bf94eae06ad743a21b64170",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/mobility-reg/mobility-regression.r",
+      "sha256": "387a31d88b1d67f06dff1a28a06d5530f25d899dcb1f46c64f7213a724c74eb0",
+      "sites": {
+        "library": 6,
+        "source": 1
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/process-covariates-usa-cases.r",
+      "sha256": "a5c9e8e1865869eae0e3a35ec08f277fed9167b7581b4edfa1364eb90a8b1526",
+      "sites": {
+        "library": 9
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/process-covariates.r",
+      "sha256": "8c5957117f038a7660f7ecad3dd872b43b97acb746241b22b4ac00dea19a33f9",
+      "sites": {
+        "library": 9
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/read-data-usa-cases.r",
+      "sha256": "42da79ad4ca0a45263a0dc0d1abc194dfdb2f0c15f2ec7627278d2b30e4b5a49",
+      "sites": {
+        "library": 9
+      }
+    },
+    {
+      "lang": "r",
+      "path": "usa/code/utils/read-data-usa.r",
+      "sha256": "b5e3f1ea8914191f86193654885a9ad6e094c847bf39afef94fff04853ece588",
+      "sites": {
+        "library": 6
+      }
+    },
+    {
+      "lang": "r",
+      "path": "utils/geom-stepribbon.r",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "utils/get-ar.r",
+      "sha256": "51118f142530aa914c90184cb33347264d69f1d1ae76de42656434d75672e030",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "utils/process-covariates.r",
+      "sha256": "b1bb70e4b864b114e75c2a62a826b241ea439271bf729f3aca5a8171694ff614",
+      "sites": {
+        "library": 10
+      }
+    },
+    {
+      "lang": "r",
+      "path": "utils/read-data.r",
+      "sha256": "dd1cc953140e9bf0ff9dc6e112293fb73df7ecdb8201ba7dcce847bf46ec6e03",
+      "sites": {
+        "library": 4
+      }
+    },
+    {
+      "lang": "r",
+      "path": "web-fetch-and-run.r",
+      "sha256": "e8500d49b9b94d2a7afd36d96624933c949751820ffee555310f1de854bda302",
+      "sites": {}
+    },
+    {
+      "lang": "r",
+      "path": "web-verify-output.r",
+      "sha256": "59d2d2f765a8235b742c657c49cc422bbe9c555fb27677a2ce9b5dc715550e90",
+      "sites": {
+        "library": 1
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "ced7ea8b37d47b0d19f59137e1d276229c3a8959",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope, inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "R",
+      "r"
+    ]
+  },
+  "summary": {
+    "files": 177,
+    "sites_by": {
+      "r/library": 1647,
+      "r/source": 50
+    },
+    "total_sites": 1697
+  }
+}

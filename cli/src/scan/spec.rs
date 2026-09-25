@@ -9,10 +9,11 @@
 //!
 //! This file is the CONTRACT — the struct, the dispatch and the empty
 //! table. The tables live beside it, one file per language family
-//! (spec_launch.rs holds the M1 launch set, spec_hs.rs, spec_c.rs and
-//! spec_java.rs the later ones): a table is data a reader compares
-//! against its grammar, and the contract read past the 300-line line
-//! once plan v2.30 step 3 added the mechanisms Java needs (RM16).
+//! (spec_launch.rs holds the M1 launch set, spec_hs.rs, spec_c.rs,
+//! spec_java.rs, spec_lua.rs and spec_r.rs the later ones): a table is
+//! data a reader compares against its grammar, and the contract read
+//! past the 300-line line once plan v2.30 step 3 added the mechanisms
+//! Java needs (RM16).
 
 use super::lang::Lang;
 
@@ -135,8 +136,9 @@ pub struct LangSpec {
     /// the receiver off the call's own `object` field: a call carrying
     /// the receiver field takes the member road with that field as its
     /// object, one without it the bare road (booklet §4 (c)). The one
-    /// spelling both readers use — the arcs here and the similar
-    /// advisor's callee words.
+    /// spelling every reader of a call uses, with call_kinds — the arcs
+    /// here, the similar advisor's callee words and the graph's call
+    /// sites (graph/sites/call.rs).
     pub call_fields: (&'static str, Option<&'static str>),
     /// Callee shapes spelling a bare name, matched against the WHOLE
     /// unit name — a Go method reads `(T) g`, so `g()` never reaches it.
@@ -201,6 +203,8 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
         Lang::C => &super::spec_c::C,
         Lang::Cpp => &super::spec_c::CPP,
         Lang::Java => &super::spec_java::JAVA,
+        Lang::Lua => &super::spec_lua::LUA,
+        Lang::R => &super::spec_r::R,
         // The sentinel is never walked; the scan-only arm (plan
         // v2.5) is size-only like Markdown — grammar() is None for
         // all of them, so measure_file never reaches these tables:

@@ -6,6 +6,7 @@
 //! — CLI gate, MCP tool and GUI face alike since batch-7 slice 8.
 
 pub mod ast;
+pub mod binding;
 pub mod callees;
 pub mod calls;
 pub mod chunk;
@@ -22,6 +23,8 @@ pub mod spec_c;
 pub mod spec_hs;
 pub mod spec_java;
 pub mod spec_launch;
+pub mod spec_lua;
+pub mod spec_r;
 pub mod walk;
 pub mod wire;
 
