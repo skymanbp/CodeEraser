@@ -1,0 +1,112 @@
+{
+  "corpus": {
+    "lang": "r",
+    "name": "stringr",
+    "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+  },
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "642e919006195813364554adbb9e558f11cfceea",
+    "dirty": false
+  },
+  "method": "the frozen sample rows of one corpus, resolved by the shipped ladder against its frozen universe (every file re-read at the pinned tip and reproduced against its frozen row first; a drifted tree never scores), with the tree's resolver configs and no declared root, judged against the frozen blind audit. An in-corpus answer matches its truth exactly, or at file level when the ladder made no unit claim; a package answer matches a package truth; External is an answer, so external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over every site of the frozen universe: its resolution rate is a recall ceiling. Each audit site gap is answered with every site the detector reads off its line. Pre-registered: the per-rung cut table and one line per site kind are published; precision >= 0.90 overall and per corpus where the in-corpus truths reach 5 (the M5-2 G2 contract).",
+  "rows": [
+    {
+      "answered": null,
+      "external": true,
+      "kind": "library",
+      "lang": "r",
+      "line": 198,
+      "nth": 0,
+      "path": "R/view.R",
+      "rank": "00acb671d2f5c689acc136408d96d7f32a6b6b50fa47956dcf8260c1930e9e9e",
+      "reason": null,
+      "rung": 3,
+      "spec": "cli",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "library",
+      "lang": "r",
+      "line": 59,
+      "nth": 0,
+      "path": "R/c.R",
+      "rank": "00c7cb01f6589b79c63e42227c328d6819e8edb7f767c06c160f6954f28ae154",
+      "reason": null,
+      "rung": 3,
+      "spec": "vctrs",
+      "truth": "external",
+      "verdict": "external_ok"
+    }
+  ],
+  "schema": "ce.eval-lang-precision/1.0.0",
+  "site_gaps": [],
+  "summary": {
+    "by_kind": {
+      "library": {
+        "in_corpus_truths": 0,
+        "precision": null,
+        "recall": null,
+        "verdicts": {
+          "external_ok": 2
+        }
+      }
+    },
+    "by_lang": {
+      "r": {
+        "external_ok": 2
+      }
+    },
+    "cut": [
+      [
+        1,
+        0,
+        0,
+        null
+      ],
+      [
+        2,
+        0,
+        0,
+        null
+      ],
+      [
+        3,
+        0,
+        0,
+        null
+      ],
+      [
+        4,
+        0,
+        0,
+        null
+      ],
+      [
+        5,
+        0,
+        0,
+        null
+      ]
+    ],
+    "in_corpus_truths": 0,
+    "precision": null,
+    "recall": null,
+    "verdicts": {
+      "external_ok": 2
+    }
+  },
+  "universe": {
+    "r0_share": 0.0,
+    "resolution_by": {
+      "r/library/r2": 1,
+      "r/library/r3": 54
+    },
+    "resolution_rate": 1.0,
+    "total_sites": 55,
+    "unresolved_by": {}
+  }
+}

@@ -1,0 +1,314 @@
+{
+  "corpus": {
+    "lang": "lua",
+    "name": "luarocks",
+    "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+  },
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "642e919006195813364554adbb9e558f11cfceea",
+    "dirty": false
+  },
+  "method": "the frozen sample rows of one corpus, resolved by the shipped ladder against its frozen universe (every file re-read at the pinned tip and reproduced against its frozen row first; a drifted tree never scores), with the tree's resolver configs and no declared root, judged against the frozen blind audit. An in-corpus answer matches its truth exactly, or at file level when the ladder made no unit claim; a package answer matches a package truth; External is an answer, so external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over every site of the frozen universe: its resolution rate is a recall ceiling. Each audit site gap is answered with every site the detector reads off its line. Pre-registered: the per-rung cut table and one line per site kind are published; precision >= 0.90 overall and per corpus where the in-corpus truths reach 5 (the M5-2 G2 contract).",
+  "r0_disposition": "RG1 disposition: Lua's first rung is its whole require search - every search directory (the tree root, src, lua, the declared roots) and every package.path template the corpus's own files write - and require is every site of this corpus (702 of 702), so the share (559 of the 560 answers at R1; the one R3 is a standard-library name) restates the site mix, not a narrow rung. Refusals stay counted (142 out_of_scope, 20.2 %: modules other rocks and the C side supply, and the vendor/compat53 prelude whose directory only the GNUmakefile's LUA_PATH adds - a declared [graph.search_roots] lua = [\"vendor\"] answers it), and recall shows no timidity: 10 of the 12 in-corpus truths of the sample answered, each correct; the two misses are that prelude.",
+  "rows": [
+    {
+      "answered": null,
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 1,
+      "nth": 0,
+      "path": "src/luarocks/build/cmake.lua",
+      "rank": "00bedece192860b1604c73de75dfb8404bd1798ab26e2e6e3ea3743b6f94dd0d",
+      "reason": "out_of_scope",
+      "rung": null,
+      "spec": "compat53.module",
+      "truth": "vendor/compat53/module.lua",
+      "verdict": "missed"
+    },
+    {
+      "answered": "src/luarocks/core/vers.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 11,
+      "nth": 0,
+      "path": "src/luarocks/cmd/purge.lua",
+      "rank": "012f91ef8effe11659f8ee43686ad618373e58d18e7b9b43ad0aeb2579037206",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.core.vers",
+      "truth": "src/luarocks/core/vers.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/fs.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 440,
+      "nth": 0,
+      "path": "src/luarocks/deps.lua",
+      "rank": "02d6b08175770292c92f7fb98ed907c9b1da8167a41baa6179f6eb04056df1e3",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.fs",
+      "truth": "src/luarocks/fs.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/fs.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 7,
+      "nth": 0,
+      "path": "src/luarocks/fetch/git.lua",
+      "rank": "010e4dc1bf3bc93d755c019655503d4525e2438d1a719b53c052eaca5aa0ce73",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.fs",
+      "truth": "src/luarocks/fs.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/util.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 6,
+      "nth": 0,
+      "path": "src/luarocks/admin/index.lua",
+      "rank": "02e55a8e05d7a32f49a11e63dd8c48a0df51200027e40cde12f9c19b65388f1f",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.util",
+      "truth": "src/luarocks/util.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "spec/util/test_env.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 1,
+      "nth": 0,
+      "path": "spec/upload_spec.lua",
+      "rank": "0103c3750ae2cf3bf13be89605b74665d9084bce0c79f1476c2614c6319d6702",
+      "reason": null,
+      "rung": 1,
+      "spec": "spec.util.test_env",
+      "truth": "spec/util/test_env.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 1,
+      "nth": 0,
+      "path": "src/luarocks/fetch/cvs.lua",
+      "rank": "011268de2ab0e132c7af962d0635d7aa5b82f4944a29abc701950731ac177e1b",
+      "reason": "out_of_scope",
+      "rung": null,
+      "spec": "compat53.module",
+      "truth": "vendor/compat53/module.lua",
+      "verdict": "missed"
+    },
+    {
+      "answered": "src/luarocks/fs.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 13,
+      "nth": 0,
+      "path": "src/luarocks/cmd/build.lua",
+      "rank": "01e281bbb79ecbe434c5ebc4ca0c683f6a6d0f4a3a9cde6781ca98b3b67951c6",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.fs",
+      "truth": "src/luarocks/fs.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/util.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 16,
+      "nth": 0,
+      "path": "src/luarocks/cmd/show.lua",
+      "rank": "004228ab5f6c81ef6ec044b277a4a0ee642cf39616699bd2a9f5fddef1105acb",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.util",
+      "truth": "src/luarocks/util.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/queries.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 14,
+      "nth": 0,
+      "path": "src/luarocks/cmd/list.lua",
+      "rank": "014191c83bbc4de1af53b2a42267fa4fbce6a6a023efbd0c5b79265d6e6effe4",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.queries",
+      "truth": "src/luarocks/queries.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/fetch/hg.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 11,
+      "nth": 0,
+      "path": "src/luarocks/fetch/hg_http.lua",
+      "rank": "0337ff9c1c06fd5cf5590af114c2b75556e9d08a1355fcc52361e8f7827a7351",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.fetch.hg",
+      "truth": "src/luarocks/fetch/hg.lua",
+      "verdict": "correct"
+    },
+    {
+      "answered": "src/luarocks/path.lua",
+      "external": false,
+      "kind": "require",
+      "lang": "lua",
+      "line": 5,
+      "nth": 0,
+      "path": "src/luarocks/repo_writer.lua",
+      "rank": "02c173977e6bc43d07e8f53ae98b488c1e799b833149a21e4620fa6f63fa77e9",
+      "reason": null,
+      "rung": 1,
+      "spec": "luarocks.path",
+      "truth": "src/luarocks/path.lua",
+      "verdict": "correct"
+    }
+  ],
+  "schema": "ce.eval-lang-precision/1.0.0",
+  "site_gaps": [
+    {
+      "line": 1,
+      "path": "src/luarocks/cmd/show.lua",
+      "sites": [
+        {
+          "answered": null,
+          "external": false,
+          "kind": "require",
+          "nth": 0,
+          "reason": "out_of_scope",
+          "rung": null,
+          "spec": "compat53.module"
+        }
+      ]
+    },
+    {
+      "line": 1,
+      "path": "src/luarocks/cmd/list.lua",
+      "sites": [
+        {
+          "answered": null,
+          "external": false,
+          "kind": "require",
+          "nth": 0,
+          "reason": "out_of_scope",
+          "rung": null,
+          "spec": "compat53.module"
+        }
+      ]
+    },
+    {
+      "line": 1,
+      "path": "src/luarocks/fetch/hg_http.lua",
+      "sites": [
+        {
+          "answered": null,
+          "external": false,
+          "kind": "require",
+          "nth": 0,
+          "reason": "out_of_scope",
+          "rung": null,
+          "spec": "compat53.module"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "by_kind": {
+      "require": {
+        "in_corpus_truths": 12,
+        "precision": 1.0,
+        "recall": 0.8333333333333334,
+        "verdicts": {
+          "correct": 10,
+          "missed": 2
+        }
+      }
+    },
+    "by_lang": {
+      "lua": {
+        "correct": 10,
+        "missed": 2
+      }
+    },
+    "cut": [
+      [
+        1,
+        10,
+        0,
+        1.0
+      ],
+      [
+        2,
+        10,
+        0,
+        1.0
+      ],
+      [
+        3,
+        10,
+        0,
+        1.0
+      ],
+      [
+        4,
+        10,
+        0,
+        1.0
+      ],
+      [
+        5,
+        10,
+        0,
+        1.0
+      ]
+    ],
+    "in_corpus_truths": 12,
+    "precision": 1.0,
+    "recall": 0.8333333333333334,
+    "verdicts": {
+      "correct": 10,
+      "missed": 2
+    }
+  },
+  "universe": {
+    "r0_share": 0.9982142857142857,
+    "resolution_by": {
+      "lua/require/r1": 559,
+      "lua/require/r3": 1
+    },
+    "resolution_rate": 0.7977207977207977,
+    "total_sites": 702,
+    "unresolved_by": {
+      "lua/require/out_of_scope": 142
+    }
+  }
+}

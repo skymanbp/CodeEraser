@@ -260,6 +260,46 @@ koreader 自己的模块同名的文件」判；测试运行器在同一个子�
 第一代另记的 `loader.lua` 局部别名 4 条、`cmd.lua:37` 的构建期模块 1 条与 `spore_spec.lua:67` 的疑似伪站点这次没有代理
 再记（批次切法相同、看到的文件不同）；判分时两代的记录一并核。
 
+### 判分（2026-09-25）
+
+档 `contracts/eval/lang-precision-luarocks-v2.json` 与 `lang-precision-koreader-v2.json`，在 Lua 阶梯的提交 `642e919` 之上生成、
+随下一个提交落地：顺序门要每份档的 `generated_from` 严格晚于审阅表的首个提交，而第二代的两张审阅表就是 `f473c39`，与阶梯
+同一棵树上生成的档过不了它。两份档的 `generated_from` 记树 `642e919`、dirty = false。
+
+| 语料 | 主样本 | correct | wrong | missed | external_ok | unresolved_ok | 精度 | 召回 |
+|---|---|---|---|---|---|---|---|---|
+| luarocks | 12 | 10 | 0 | 2 | 0 | 0 | 10/10 | 10/12 |
+| koreader | 88 | 75 | 0 | 1 | 1 | 11 | 75/75 | 75/76 |
+| 合计 | 100 | 85 | 0 | 3 | 1 | 11 | 85/85 = 1.000 | 85/88 |
+
+按站点类：`require` 84 道 correct 69、wrong 0、missed 3；`load` 16 道 correct 16（全在 koreader，都答在 R2）。按级截断：只收
+R1 的答案是 69 对 0 错，收到 R2 起 85 对 0 错。门是 M5-2 的 G2：整体与站内真值不少于 5 道的每个语料都不低于 0.90——两个语料
+与整体都过。
+
+- 三道 missed 都是搜索目录不在文本里的情形，阶梯按设计不猜：luarocks 两处 `compat53.module` 前言（`src/luarocks/build/cmake.lua:1`、
+  `src/luarocks/fetch/cvs.lua:1`），真值 `vendor/compat53/module.lua`——`vendor/` 只由 `GNUmakefile` 写进包装脚本的 `LUA_PATH`
+  （`src/?.lua;vendor/?.lua`），语料里没有哪个 Lua 文件把它写进 `package.path`；声明 `[graph.search_roots] lua = ["vendor"]`
+  即答对。koreader `spec/unit/readersearch_spec.lua:7` 的 `require("commonrequire")`，真值 `spec/unit/commonrequire.lua`——
+  `spec/unit/` 由测试运行器的配置加进路径，那份配置在未检出的 koreader-base 子模块里。
+- 11 道 unresolved_ok 的真值都是 `external`，阶梯答 out_of_scope：koreader-base 提供的 `ffi/*` 与 `libs/libkoreader-lfs`、
+  LuaSocket 的 `socket.url`、Android 启动器的 `android`；拒答不算错，也不进召回的分母。1 道 external_ok：`bit`（LuaJIT 内建，R3）。
+- 候选漏检：luarocks 三条 compat53 前言（`cmd/show.lua`、`cmd/list.lua`、`fetch/hg_http.lua` 各第 1 行）检测器都读到了，阶梯同样
+  答 out_of_scope——不是漏检，是上面两道 missed 的同类；koreader 两条（`pluginloader.lua:244`、`llapp_main.lua:32`）那一行没有
+  字面实参的站点，检测器按设计不读。
+
+宇宙台账（对冻结宇宙的每个站点都解一遍，解出率是召回的上限）：
+
+| 语料 | 站点 | 解出 | R1 | R2 | R3（External） | 拒答 |
+|---|---|---|---|---|---|---|
+| luarocks | 702 | 79.8 % | 559 | 0 | 1 | 142，全是 out_of_scope |
+| koreader | 5,058 | 84.1 % | 4,105 | 91 | 59 | 803，其中 2 个 ambiguous_root、其余 out_of_scope |
+
+首级（R1）在解出里的占比 luarocks 99.8 %、koreader 96.5 %，过了 0.80 的触发线（RG1），两份档各带一条书面处置
+（`r0_disposition`）：Lua 的第一级就是 `require` 的整个搜索（每个搜索目录与树里文件写的每条模板），而 `require` 是 luarocks
+的全部站点、koreader 的 4,967 / 5,058，占比复述的是站点构成而不是某一级偏窄；拒答照计（20.2 % / 15.9 %），召回不怯
+（10/12、75/76）。koreader 的模板读自 `setupkoenv.lua`（`common/?.lua;frontend/?.lua;plugins/exporter.koplugin/?.lua;`），
+插件加载器用 `string.format` 拼的路径不算模板。
+
 ## R（步 4）
 
 ### 站点宇宙与抽样（2026-09-25 冻结）
@@ -306,3 +346,37 @@ covid19model 唯一的 `DESCRIPTION` 在 `covid19AgeModel/`（`Package: covid19A
 包的代码在目录下哪里——Java 的按需导入是直接装着该包冻结文件的目录，R 的包装载是包根、其 `R/` 下直接有冻结文件；候选
 漏检分两栏，`site_gaps` 必须落在冻结文件上、`scope_gaps` 必须落在冻结宇宙之外（Java 的两张表早于这一栏，没有它）。
 考题表 Lua、R 的 `audited` 翻为 true。
+
+### 判分（2026-09-25）
+
+档 `contracts/eval/lang-precision-stringr-v1.json` 与 `lang-precision-covid19model-v1.json`，在 R 阶梯的提交 `642e919` 之上生成、随下一个提交落地（顺序门同
+Lua）；`generated_from` 记树 `642e919`、dirty = false。
+
+| 语料 | 主样本 | correct | wrong | missed | external_ok | unresolved_ok | 精度 | 召回 |
+|---|---|---|---|---|---|---|---|---|
+| stringr | 2 | 0 | 0 | 0 | 2 | 0 | — | — |
+| covid19model | 98 | 18 | 0 | 0 | 79 | 1 | 18/18 | 18/18 |
+| 合计 | 100 | 18 | 0 | 0 | 81 | 1 | 18/18 = 1.000 | 18/18 |
+
+按站点类：`library` 84 道 correct 3（三道 `library(covid19AgeModel)` 答包目录 `covid19AgeModel`，R2）、external_ok 81；`source`
+16 道 correct 15（全在 R1）、unresolved_ok 1。stringr 的两道都是 `cli::` / `vctrs::`，站内真值为零，精度无定义——包的读法由宇宙
+台账检验（下表）。1 道 unresolved_ok：`covid19AgeModel/inst/deprecated/R/foursquare_mobility_extend.R:4` 的
+`source("usa/code/utils/read-data-usa-2.r")`，语料里没有这个文件，真值 `external`，阶梯答 out_of_scope——拒答不算错。门 G2：
+整体 1.000，covid19model 18 道站内真值 1.000；stringr 不足 5 道不单独计。
+
+- 候选漏检 6 条逐条核实：`nature/utils/make-table.r:9` 的 `source('nature/utils/format-data.r')` 检测器读到、阶梯 R1 答
+  `nature/utils/format-data.r`；`covid19AgeModel/inst/scripts/post-processing-etas.R:18` 与
+  `covid19AgeModel/inst/deprecated/ifr-by-age/ifr-by-age-stan.r:5` 的 `library(covid19AgeModel)` 都读到、答包目录；`base.r:124`、
+  `base_general.r:288`、`web-fetch-and-run.r:7` 经 `system("Rscript …")` 另起进程，那一行没有 `source` / `library` 站点，按设计不读。
+
+宇宙台账：
+
+| 语料 | 站点 | 解出 | R1（source） | R2（包目录） | R3（External） | 拒答 |
+|---|---|---|---|---|---|---|
+| stringr | 55 | 100 % | 0 | 1 | 54 | 0 |
+| covid19model | 1,697 | 99.8 % | 47 | 77 | 1,570 | 3，全是 out_of_scope |
+
+stringr 的 R2 一道是 `tests/testthat.R:2` 的 `library(stringr)`，答包根 `.`；54 道 R3 是 CRAN 包与 base R。covid19model 的 77 道
+R2 全指 `covid19AgeModel/`（唯一的 `DESCRIPTION`；`library(covid19AgeModel)` 60、`require(covid19AgeModel)` 16、
+`covid19AgeModel::` 1）；3 道拒答是 `source` 指向语料里没有的文件。首级占比 stringr 0 %、covid19model 2.8 %，远低于 0.80，不需要
+书面处置。
