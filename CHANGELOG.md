@@ -137,6 +137,14 @@
 - **文档**：`docs/EVAL-SET-LANGS.md` 的重冻结规则改为按代数，三处档名改成 `-v<代>.json`，CI 门一条补上代数与审阅表的冻结集，Lua 一节加「第二代：受保护的加载」一段（第一代的记录原样留着）；设计册 §8 Lua 调用站点一行补上受保护的调用；`contracts/fixtures/crosscheck/SOURCES.md` 的 Lua 行改指第二代宇宙；计划书横幅与 §6 T 轨步 4。
 - 门：主 check 945 / dedup 59 / scan 84 warn 0 fail（deadcode 0 / docdup 0 / erase 0），子仓 982 / 119 / 43 warn 0 fail；lib 393 / it 433 (15 ign，条数不变：拆分只挪测试，审阅表的冻结集门长在原有的校验里)——提交前的全量跑是 431 绿 2 红：`lang_provenance` 两条对尚未提交的 `lang-sample-lua-v2.json` 报 `never committed`，与提交 A′ 同是提交序的产物，提交后单跑复核；clippy（cli 全目标）+ fmt 清；核未动，`cabal test` 不涉及。ADR-006 具名重立：主 `docs/EVAL-SET-LANGS.md` 243 → 278（cap 253）、`cli/src/graph/sites/call.rs` 96 → 117（cap 106）、`cli/src/graph/spec.rs` 263 → 283（cap 273）超容差，`CHANGELOG.md` 654 → 663 容差内同定，新写的三个函数入基线，softLine 366 不动；子 softLine 300 → 299，两个新文件 `it/eval_lang_review.rs` 169 与 `it/eval_lang_parts/draw.rs` 85 入基线，搬走的函数按新路径换键（路径是成员身份的一部分），十个文件的行数都在容差内（`it/eval_lang.rs` 277 → 148、`it/eval_lang_parts/mod.rs` 286 → 235）；两仓离散集与克隆成员集不变。
 
+
+**无默认档位变更。** 语言扩展 v2.30 步 4 Lua 考题第二代提交 A2′：盲评真值冻结（2026-09-25；只加冻结工件与一个旗标，判决代码字节零变化）：
+
+- **真值表** `contracts/eval/lang-review-luarocks-v2.json`（12 行）与 `lang-review-koreader-v2.json`（88 行）：四个新起的独立 Opus 代理各判一批 25 道主样本（按样本的审阅序切批），只读两个语料在钉住 tip 的克隆和自己那一批，没看过第一代的表、没看过产品的任何解析结果、没跑过 ce（派卷前查过两个副本都没有 `.ce/`）；简报只比第一代多一句「受保护的调用装载的就是不受保护时装载的那个文件」。装配逐字照录，判决不动。100 道的 spec 全在记录的行上，零失配，没有动用备用题；语料内文件 88、external 12，没有 `ambiguous` / `dynamic` / `none`。
+- **盲评的噪声读数**：97 道两代共有的题（秩是站点自身的哈希，同秩即同站点），两批互不相识的代理判词 97/97 相同、判到的文件逐题相同。3 道新进的题：luarocks 两处 `compat53.module` 前言由两个不同的代理各自判 `vendor/compat53/module.lua`，并各自记下同一条保留意见（`make bootstrap` / `--with-system-rocks` / busted 测试环境装的是另装的 compat53 rock）；koreader `frontend/userpatch.lua:7` 的 `pcall(require, "android")` 判 `external`（Android 启动器子模块提供，未检出）。候选漏检 5 条（三条 compat53 前言第二代宇宙已读到，判分时按宇宙核实即销）+ 宇宙外 4 条，逐条见 `docs/EVAL-SET-LANGS.md`「第二代真值」。
+- 考题表 Lua 的 `audited` 翻回 true（子仓 `it/eval_lang_parts/mod.rs` 一个词）；审阅表的校验门与冻结集门就此覆盖第二代的两张表。
+- 门：主 check 945 / dedup 59 / scan 85 warn 0 fail（deadcode 0 / docdup 0 / erase 0；多出的一条 warn 是 `docs/EVAL-SET-LANGS.md` 过 300 行），子仓 982 / 119 / 43 warn 0 fail；lib 393 未动（`cli/src` 本提交零改动）/ it 433 (15 ign)——提交前的全量跑是 431 绿 2 红：`lang_provenance` 两条对尚未提交的两张 v2 审阅表报 `never committed`，与 A′ 同是提交序的产物，提交后单跑复核；clippy（cli 全目标）+ fmt 清；核未动，`cabal test` 不涉及。ADR-006 具名重立（主根）：`docs/EVAL-SET-LANGS.md` 278 → 308 超容差（cap 288，长出来的是「第二代真值」一节），`CHANGELOG.md` 663 → 671 容差内同定，实体零增零减；子仓无棘轮移动。
+
 ## [v1.7.4] — 2026-09-19 — 官网八页的图片取景器、整站元件对齐、how 页目录面板与中文散文不再断在句中；判决请求的 `sim` 表改成一对文件只出一行（两个家族都判过的那一对曾让核拒收整份请求，`ce check` 在那棵树上一个判决也给不出）
 
 **无默认档位变更。** 官网与 README 读者面（2026-09-14，用户四条：架构图要能放大缩小 / 拖动〔参照 AutoShade README〕、README 首张架构图与正文宽度岔开、网页各元件长宽对齐、截图区一大坨难看 + 全面美化）：

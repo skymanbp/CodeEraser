@@ -1,0 +1,196 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "luarocks",
+ "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+ "lang": "lua",
+ "auditor": "four independent Opus subagents, fresh for the second generation (none saw the first's tables), one batch of 25 primaries each in the sample's audit order, reading only the two clones at their pinned tips and their batch - never the product's parse, no ce, no resolver (booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched)",
+ "summary": {
+  "file": 12
+ },
+ "rows": [
+  {
+   "rank": "00bedece192860b1604c73de75dfb8404bd1798ab26e2e6e3ea3743b6f94dd0d",
+   "path": "src/luarocks/build/cmake.lua",
+   "line": 1,
+   "nth": 0,
+   "kind": "require",
+   "spec": "compat53.module",
+   "batch": 1,
+   "truth": "vendor/compat53/module.lua",
+   "why": "Teal compat prelude that runs only on Lua < 5.3; the documented build (docs/installation_instructions_for_unix.md:44-49) vendors compat53 for 5.1/5.2 (GNUmakefile:26-27, installed to $(luadir)/luarocks/vendor/ at :141-149 and put on package.path at :24,:84), the in-tree wrapper uses LUA_PATH=src/?.lua;vendor/?.lua;; (:67) and binary/all_in_one:192,500 bundles vendor/ as compat53.module, so the Lua loader finds vendor/compat53/module.lua. Modes that opt out of the vendored copy load a separately installed compat53 instead: configure --with-system-rocks (configure:146), make bootstrap (rockspec dependency, luarocks-dev-1.rockspec:24) and the busted harness (compat53 rock in its deps tree ahead of vendor/?.lua, spec/util/test_env.lua:583-597,1163-1165)."
+  },
+  {
+   "rank": "012f91ef8effe11659f8ee43686ad618373e58d18e7b9b43ad0aeb2579037206",
+   "path": "src/luarocks/cmd/purge.lua",
+   "line": 11,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.core.vers",
+   "batch": 1,
+   "truth": "src/luarocks/core/vers.lua",
+   "why": "Installed luarocks: the first searcher added by the built script loads luarocks.* names from $(luadir)/luarocks/... (GNUmakefile:85), installed from src/luarocks/**.lua (:128-131); the in-tree wrapper (LUA_PATH src/?.lua;vendor/?.lua;;, :67) and the busted harness (src/?.lua in spec/util/test_env.lua:583-597) find src/luarocks/core/vers.lua directly."
+  },
+  {
+   "rank": "02d6b08175770292c92f7fb98ed907c9b1da8167a41baa6179f6eb04056df1e3",
+   "path": "src/luarocks/deps.lua",
+   "line": 440,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.fs",
+   "batch": 1,
+   "truth": "src/luarocks/fs.lua",
+   "why": "Installed luarocks: the first searcher added by the built script loads luarocks.* names from $(luadir)/luarocks/... (GNUmakefile:85), installed from src/luarocks/**.lua (:128-131); the in-tree wrapper (LUA_PATH src/?.lua;vendor/?.lua;;, :67) and the busted harness (src/?.lua in spec/util/test_env.lua:583-597) find src/luarocks/fs.lua directly."
+  },
+  {
+   "rank": "010e4dc1bf3bc93d755c019655503d4525e2438d1a719b53c052eaca5aa0ce73",
+   "path": "src/luarocks/fetch/git.lua",
+   "line": 7,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.fs",
+   "batch": 1,
+   "truth": "src/luarocks/fs.lua",
+   "why": "Installed luarocks: the first searcher added by the built script loads luarocks.* names from $(luadir)/luarocks/... (GNUmakefile:85), installed from src/luarocks/**.lua (:128-131); the in-tree wrapper (LUA_PATH src/?.lua;vendor/?.lua;;, :67) and the busted harness (src/?.lua in spec/util/test_env.lua:583-597) find src/luarocks/fs.lua directly."
+  },
+  {
+   "rank": "02e55a8e05d7a32f49a11e63dd8c48a0df51200027e40cde12f9c19b65388f1f",
+   "path": "src/luarocks/admin/index.lua",
+   "line": 6,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.util",
+   "batch": 1,
+   "truth": "src/luarocks/util.lua",
+   "why": "Installed luarocks: the first searcher added by the built script loads luarocks.* names from $(luadir)/luarocks/... (GNUmakefile:96 (luarocks-admin)), installed from src/luarocks/**.lua (:128-131); the in-tree wrapper (LUA_PATH src/?.lua;vendor/?.lua;;, :75) and the busted harness (src/?.lua in spec/util/test_env.lua:583-597) find src/luarocks/util.lua directly."
+  },
+  {
+   "rank": "0103c3750ae2cf3bf13be89605b74665d9084bce0c79f1476c2614c6319d6702",
+   "path": "spec/upload_spec.lua",
+   "line": 1,
+   "nth": 0,
+   "kind": "require",
+   "spec": "spec.util.test_env",
+   "batch": 1,
+   "truth": "spec/util/test_env.lua",
+   "why": "Busted runs from the repository root (.github/workflows/test.yml:74) and .busted:6 loads this same module as its helper; the only corpus file the dotted name maps to is spec/util/test_env.lua (Lua's default ./?.lua template; no src/spec/ exists), and the spec's require returns that cached module."
+  },
+  {
+   "rank": "011268de2ab0e132c7af962d0635d7aa5b82f4944a29abc701950731ac177e1b",
+   "path": "src/luarocks/fetch/cvs.lua",
+   "line": 1,
+   "nth": 0,
+   "kind": "require",
+   "spec": "compat53.module",
+   "batch": 2,
+   "truth": "vendor/compat53/module.lua",
+   "why": "The call only runs when _VERSION < 5.3, and the default build vendors compat53 for exactly Lua 5.1/5.2 (GNUmakefile:23-28): it installs vendor/compat53/*.lua under $(luadir)/luarocks/vendor/ (GNUmakefile:141-150), which the installed launcher's path $(luadir)/?.lua;$(luadir)/luarocks/vendor/?.lua (GNUmakefile:21-24,84) reaches, and the in-tree wrapper (LUA_PATH src/?.lua;vendor/?.lua, GNUmakefile:67), install.bat:1030-1039 and the binary build (binary/all_in_one:192,500) load the same vendor/compat53/module.lua. Caveat: make bootstrap (rockspec dependency compat53, luarocks-dev-1.rockspec:23-27; GNUmakefile:181-182), --with-system-rocks and the test harness (compat53 rock installed into the deps tree ahead of vendor/, spec/util/test_env.lua:593-596,693,1163-1165) load a separately installed compat53 instead."
+  },
+  {
+   "rank": "01e281bbb79ecbe434c5ebc4ca0c683f6a6d0f4a3a9cde6781ca98b3b67951c6",
+   "path": "src/luarocks/cmd/build.lua",
+   "line": 13,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.fs",
+   "batch": 2,
+   "truth": "src/luarocks/fs.lua",
+   "why": "Every run mode reaches src/luarocks/fs.lua: the installed launcher's first searcher loads $(luadir)/luarocks/fs.lua copied from src/ (GNUmakefile:85,128-131), the in-tree wrapper and the test harness put src/?.lua on LUA_PATH (GNUmakefile:67; spec/util/test_env.lua:595), and the binary embeds it as luarocks.fs (binary/all_in_one:192,500); there is no src/luarocks/fs/init.lua."
+  },
+  {
+   "rank": "004228ab5f6c81ef6ec044b277a4a0ee642cf39616699bd2a9f5fddef1105acb",
+   "path": "src/luarocks/cmd/show.lua",
+   "line": 16,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.util",
+   "batch": 3,
+   "truth": "src/luarocks/util.lua",
+   "why": "The in-tree wrapper runs with LUA_PATH=$(CURDIR)/src/?.lua;... (GNUmakefile:67); the installed wrapper adds $(luadir)/?.lua and a luarocks.* searcher over $(luadir) (GNUmakefile:84-85), where GNUmakefile:128-130 installs src/luarocks/*.lua with src/ stripped; tests prepend <repo>/src/?.lua (spec/util/test_env.lua:756, 798-800). All reach src/luarocks/util.lua."
+  },
+  {
+   "rank": "014191c83bbc4de1af53b2a42267fa4fbce6a6a023efbd0c5b79265d6e6effe4",
+   "path": "src/luarocks/cmd/list.lua",
+   "line": 14,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.queries",
+   "batch": 3,
+   "truth": "src/luarocks/queries.lua",
+   "why": "The in-tree wrapper runs with LUA_PATH=$(CURDIR)/src/?.lua;... (GNUmakefile:67); the installed wrapper adds $(luadir)/?.lua and a luarocks.* searcher over $(luadir) (GNUmakefile:84-85), where GNUmakefile:128-130 installs src/luarocks/*.lua with src/ stripped; tests prepend <repo>/src/?.lua (spec/util/test_env.lua:756, 798-800). All reach src/luarocks/queries.lua."
+  },
+  {
+   "rank": "0337ff9c1c06fd5cf5590af114c2b75556e9d08a1355fcc52361e8f7827a7351",
+   "path": "src/luarocks/fetch/hg_http.lua",
+   "line": 11,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.fetch.hg",
+   "batch": 4,
+   "truth": "src/luarocks/fetch/hg.lua",
+   "why": "Module path luarocks/fetch/hg: the installed launcher prepends $(luadir)/?.lua and inserts a first searcher that loadfiles $(luadir)/<name with dots as slashes>.lua for every luarocks.* name (GNUmakefile:84-85), and install copies src/luarocks/**/*.lua to $(luadir)/luarocks/ (GNUmakefile:128-130); the in-tree wrapper (LUA_PATH=src/?.lua, GNUmakefile:67), the test helper (spec/util/test_env.lua:798-801) and the all-in-one binary (binary/all_in_one:192,500) reach the same file, src/luarocks/fetch/hg.lua (the generated .lua, not the Teal source hg.tl)."
+  },
+  {
+   "rank": "02c173977e6bc43d07e8f53ae98b488c1e799b833149a21e4620fa6f63fa77e9",
+   "path": "src/luarocks/repo_writer.lua",
+   "line": 5,
+   "nth": 0,
+   "kind": "require",
+   "spec": "luarocks.path",
+   "batch": 4,
+   "truth": "src/luarocks/path.lua",
+   "why": "Module path luarocks/path: the installed launcher prepends $(luadir)/?.lua and inserts a first searcher that loadfiles $(luadir)/<name with dots as slashes>.lua for every luarocks.* name (GNUmakefile:84-85), and install copies src/luarocks/**/*.lua to $(luadir)/luarocks/ (GNUmakefile:128-130); the in-tree wrapper (LUA_PATH=src/?.lua, GNUmakefile:67), the test helper (spec/util/test_env.lua:798-801) and the all-in-one binary (binary/all_in_one:192,500) reach the same file, src/luarocks/path.lua (not cmd/path.lua or core/path.lua, which are luarocks.cmd.path / luarocks.core.path)."
+  }
+ ],
+ "site_gaps": [
+  {
+   "batch": 3,
+   "path": "src/luarocks/cmd/show.lua",
+   "line": 1,
+   "note": "pcall(require, 'compat53.module') - a protected require with a literal argument (run on Lua < 5.3); vendor/compat53/module.lua exists and the in-tree LUA_PATH includes $(CURDIR)/vendor/?.lua (GNUmakefile:67). Not in this batch; listed only in case the detector missed the protected form."
+  },
+  {
+   "batch": 3,
+   "path": "src/luarocks/cmd/list.lua",
+   "line": 1,
+   "note": "Same Teal-generated header: pcall(require, 'compat53.module') on line 1. Not in this batch; listed only in case the detector missed the protected form."
+  },
+  {
+   "batch": 4,
+   "path": "src/luarocks/fetch/hg_http.lua",
+   "line": 1,
+   "note": "Teal compat header: pcall(require, 'compat53.module') is a protected require with a literal (single-quoted) name; no row of this batch covers it. It only runs on Lua < 5.3, where the install puts vendor/compat53/*.lua under $(luadir)/luarocks/vendor/ and adds $(luadir)/luarocks/vendor/?.lua (GNUmakefile:24,141-149), i.e. vendor/compat53/module.lua. The same header opens src/luarocks/loader.lua:1 and presumably every generated .lua file."
+  }
+ ],
+ "scope_gaps": [
+  {
+   "batch": 1,
+   "path": "src/bin/luarocks",
+   "line": 4,
+   "note": "require(\"luarocks.core.cfg\") -> src/luarocks/core/cfg.lua in the extensionless main CLI script (shebang Lua); a detector keyed on the .lua extension would not report it. Not covered by any row in this batch."
+  },
+  {
+   "batch": 1,
+   "path": "src/bin/luarocks",
+   "line": 6,
+   "note": "require(\"luarocks.loader\") -> src/luarocks/loader.lua in the same extensionless entry script."
+  },
+  {
+   "batch": 1,
+   "path": "src/bin/luarocks",
+   "line": 7,
+   "note": "require(\"luarocks.cmd\") -> src/luarocks/cmd.lua in the same extensionless entry script."
+  },
+  {
+   "batch": 2,
+   "path": "src/bin/luarocks",
+   "line": 15,
+   "note": "Command modules (e.g. build = \"luarocks.cmd.build\", lines 11-33) are named as plain strings and required later by cmd.run_command; not a require call, so outside the kinds, but it is how src/luarocks/cmd/build.lua itself gets loaded."
+  }
+ ],
+ "notes": [
+  "koreader rows are judged from the install layout (Makefile:56,136,144,155): the corpus's reader.lua, setupkoenv.lua, frontend/ and plugins/ are linked beside koreader-base's build output, and the process runs from that directory (make/emulator.mk:10,35; platform/common/koreader.sh:21). setupkoenv.lua:2-4 puts common/?.lua (base's build output, not in the corpus) before frontend/?.lua. I found no in-corpus sign that common/ provides dump, util, logger, gettext, httpclient or any ui/ module, and the program and specs call koreader-specific APIs of the frontend versions through the same bare names (reader.lua:59-61, spec/unit/commonrequire.lua:3-4, spec/unit/filemanager_spec.lua:13), with .luacov:63 excluding common/ as third-party; so these rows answer the frontend files. The koreader test runner (base/test-runner/runtests, kodev:659) is inside the not-checked-out base submodule, so the spore_spec.lua:62 row's test-time path is inferred from the specs' bare-name requires. Plugin rows: PluginLoader:_load prepends the plugin root while main.lua runs and restores the path afterwards (frontend/pluginloader.lua:242-244,269-270); none of the five plugin dirs involved has a ui/ subdirectory. luarocks.* rows: every run mode (installed script GNUmakefile:84-85/:96, in-tree wrappers :67/:75, all-in-one binary, busted harness) reaches the same src/luarocks/*.lua; luarocks.loader (src/luarocks/loader.lua:323) resolves only modules listed in rock manifests, and a make install is not a rock. Least certain row: src/luarocks/build/cmake.lua:1 (compat53.module). I answered the vendored file because the documented build/install and the in-tree wrapper load it. configure --with-system-rocks, make bootstrap and the busted harness load a separately installed compat53 (not in the corpus) instead, and on Lua >= 5.3 the call never runs.",
+  "koreader: the runtime package.path is setupkoenv.lua:2-4 prepended to LuaJIT's default, the process runs from the install root (launchers cd there), and the install root links the source frontend/, plugins/, reader.lua and setupkoenv.lua plus koreader-base build output (ffi/, common/, libs/ ...), which is out of corpus. Because base/ is not checked out I could not list what base puts in common/; I assumed it ships no common/<name>.lua for the koreader frontend names in this batch (optmath, dbg, logger, device, ui/...), all of which exist only under frontend/. The commonrequire row relies on base/test-runner/runtests (not readable) for the busted lpath; it is decided by the unique in-corpus candidate plus the spec's use of disable_plugins(). Every recorded line holds exactly one site, so nth 0 is unambiguous, and each spec occurs verbatim on its recorded line. UNSURE: luarocks src/luarocks/fetch/cvs.lua:1 (compat53.module). I answered vendor/compat53/module.lua because the default configure/make install, install.bat, the in-tree ./luarocks wrapper and the binary build all load it, for exactly the Lua versions (5.1/5.2) under which the guarded pcall runs. However, make bootstrap, --with-system-rocks and the busted harness (which installs a compat53 rock into its deps tree ahead of vendor/) load a separately installed compat53, which would be external. If the exam requires every run mode, tests included, to agree, this row does not have a single in-corpus answer. The same caveat applies to every luarocks file's line-1 compat53 pcall.",
+  "koreader: cwd taken as the KOReader install dir, which every launcher cds into (platform/common/koreader.sh:21, platform/kindle/koreader.sh:130, platform/kobo/koreader.sh:12, make/emulator.mk:10) and which Makefile:56/:144/:155 fills with frontend/, datastorage.lua and plugins/ from the corpus; package.path = common/?.lua;frontend/?.lua;plugins/exporter.koplugin/?.lua; + LuaJIT's default (whose ./?.lua is what lets reader.lua:22 find setupkoenv). common/ and the ffi/* modules come from the base submodule, which is not checked out: its contents and its test runner (base/test-runner/runtests, sourced by kodev) could not be read, so the claim that common/ does not shadow KOReader's own frontend modules rests on corpus evidence only (.emmyrc.json module roots, .luacov excludes), not on reading base. Plugin rows account for the loader's temporary prepend (frontend/pluginloader.lua:242) and the permanent append (:285); no plugin dir involved holds a same-named module. No package.preload, custom searcher or package.loaded pre-population exists for any batch module in either corpus. luarocks: dev wrapper, installed wrapper, single-binary build (binary/all_in_one:192 embeds src/ files under their dotted names) and tests all reach the same src/ file. Out of scope and not reported as gaps (non-literal arguments): frontend/pluginloader.lua:244 pcall(dofile, mainfile), platform/android/llapp_main.lua:32 dofile(android.dir..'/reader.lua'), plugins/externalkeyboard.koplugin/main.lua:218 and keyboard_layout.lua:54 loadfile with concatenated names. All 25 spec texts were confirmed on their recorded lines; none of the 25 files shadows require/dofile/loadfile.",
+  "koreader: judged against the install layout the Makefile builds ($(INSTALL_DIR)/koreader with frontend/, plugins/, tools/, datastorage.lua symlinked in, Makefile:56-57,144,155) and run from that directory by every launcher. The search path is setupkoenv.lua:2-4 prepended to LuaJIT's default path, whose first template is ./?.lua: reader.lua:22 can only find the root setupkoenv.lua through it, before the path is changed. common/ is koreader-base build output (Makefile:136). It is not in the corpus, and I assumed it holds no module shadowing a frontend/ name (such a file would shadow the app's own modules everywhere). For spec/ rows the test runner (base/test-runner/runtests) is in the not-checked-out base submodule, so its exact lpath is not visible. The verdicts rest on the tests' working directory (install root, evidenced by .luacov) and on the target basenames being unique in the corpus. Plugin loading prepends the plugin dir (pluginloader.lua:242) and later appends every enabled plugin dir (pluginloader.lua:285); no target here is shadowed or reached that way. luarocks: every configuration (installed launcher, in-tree wrapper, test helper, all-in-one binary) maps luarocks.X.Y to src/luarocks/X/Y.lua; the .tl Teal sources are never loaded."
+ ]
+}

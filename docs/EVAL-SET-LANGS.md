@@ -226,9 +226,39 @@ Teal 编译产物首行的 `compat53.module` 兼容前言；koreader 的 33 个�
 require 12、koreader require 72 + load 16，落在 87 个文件上。三份档的 `generated_from` 记 ce 1.7.4、树 `8f823c0`、
 dirty = true：受保护调用的读法与这三份档在同一个提交里落地。
 
-真值：第二代的 100 道主样本整体重新盲评（下一个提交），不沿用第一代的判词——第一代审阅表的候选漏检里有 8 条正是现在
-读得到的受保护加载，考题变了，审阅表跟着换代；新判词在 97 道相同题上与第一代的一致程度一并记下，作为盲评本身的噪声
-读数。
+### 第二代真值（2026-09-25 冻结）
+
+档 `contracts/eval/lang-review-luarocks-v2.json` 与 `lang-review-koreader-v2.json`。切批与读法同第一代：四个新起的独立
+Opus 代理（没看过第一代的表）各判一批 25 道，只读两个干净克隆和自己那一批，不跑 `ce`（派卷前查过两个副本都没有 `.ce/`）；
+简报只多一句「受保护的调用装载的就是不受保护时装载的那个文件，程序容忍模块缺席不改变装的是哪个文件」。装配逐字照录，判决
+不动。100 道的 spec 全在记录的行上，零失配，没有动用备用题；没有 `ambiguous` / `dynamic` / `none`。
+
+| 语料 | 主样本 | external | 文件 |
+|---|---|---|---|
+| luarocks | 12 | 0 | 12 |
+| koreader | 88 | 12 | 76 |
+
+**与第一代的一致程度（盲评本身的噪声读数）**：97 道两代共有的题（秩是站点自身的哈希，同秩即同站点），两批互不相识的代理
+判词 97/97 相同，判到的文件逐题相同。3 道新进的题：luarocks 两处 `compat53.module` 前言（`src/luarocks/build/cmake.lua:1`、
+`src/luarocks/fetch/cvs.lua:1`）由两个不同的代理各自判 `vendor/compat53/module.lua`——只在 Lua < 5.3 上运行；文档写明的
+构建（`GNUmakefile` 为 5.1 / 5.2 打包 `vendor/compat53/`、装到 `$(luadir)/luarocks/vendor/` 并放进搜索路径）、源码树里的
+包装脚本（`LUA_PATH=src/?.lua;vendor/?.lua`）与单文件版都装它；两个代理都记下同一条保留意见：`make bootstrap`、
+`--with-system-rocks` 与 busted 测试环境装的是另装的 compat53 rock，若要求每种运行方式（含测试）一致，这一题没有单一的
+语料内答案。koreader `frontend/userpatch.lua:7` 的 `pcall(require, "android")` 判 `external`：`android` 由 Android 启动器
+子模块（`platform/android/luajit-launcher`，未检出）提供，语料里没有 `android.lua`、preload 项或搜索器。
+
+12 道 external：LuaJIT 内建（`bit`）、未检出的 koreader-base 提供的模块（`ffi/util`、`ffi/SDL3`、`ffi/drawcontext`、
+`ffi/input_pocketbook`、`ffi/linux_input_h`、`ffi/posix_h`、`libs/libkoreader-lfs`）、LuaSocket（`socket.url`）与上面的
+`android`。约定同第一代：`common/?.lua` 排在搜索路径最前而指向 koreader-base 的构建产物，四个代理都按「那里没有与
+koreader 自己的模块同名的文件」判；测试运行器在同一个子模块里，工作目录按 `make/emulator.mk`、`.luacov` 与安装布局推定。
+
+候选漏检 5 条（luarocks 3、koreader 2）：luarocks 三条是别的文件首行的 `compat53.module` 前言（`cmd/show.lua`、`cmd/list.lua`、
+`fetch/hg_http.lua`，第一代七条里的三条；第二代宇宙已经读到它们，代理「只怕检测器漏掉受保护的写法」才记下，判分时按宇宙
+核实即销）；koreader 两条与第一代相同——拼出来的 `dofile` 路径（`pluginloader.lua:244` 装每个插件的 `main.lua` / `_meta.lua`，
+`llapp_main.lua:32` 拼 `android.dir .. "/reader.lua"`），不在字面实参的站点定义之内。`scope_gaps` 4 条全在 luarocks 的
+命令行启动脚本 `src/bin/luarocks`（没有扩展名）：第 4 / 6 / 7 行的三处 `require` 与第 15 行起用纯字符串命名的命令模块表。
+第一代另记的 `loader.lua` 局部别名 4 条、`cmd.lua:37` 的构建期模块 1 条与 `spore_spec.lua:67` 的疑似伪站点这次没有代理
+再记（批次切法相同、看到的文件不同）；判分时两代的记录一并核。
 
 ## R（步 4）
 
