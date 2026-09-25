@@ -8,7 +8,7 @@
 
 use super::{Params, index, pairs, tokens};
 use crate::config::Config;
-use crate::graph::ladder::java_header;
+use crate::graph::ladder::{java_header, lua_path};
 use crate::graph::store;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
@@ -35,6 +35,10 @@ pub(super) struct WalkIndex {
     /// Every walked Java file's header (plan v2.30 step 3): the Java
     /// ladder's candidate index, handed over through ladder::Scope.
     pub java: BTreeMap<String, java_header::Header>,
+    /// The templates the walked Lua files assign to `package.path`
+    /// (plan v2.30 step 4): search directories the Lua ladder adds to
+    /// its defaults, handed over through ladder::Scope.
+    pub lua: BTreeSet<lua_path::Template>,
 }
 
 /// One full-tree pass: the walk (refresh_tree) and then the phase-2
@@ -50,6 +54,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         crate_roots: BTreeSet::new(),
         search_roots: BTreeMap::new(),
         java: BTreeMap::new(),
+        lua: BTreeSet::new(),
     };
     // md slug sets are resolver INPUTS like config bytes (the anchor
     // rung reads the target's headings), so they join the key — a
@@ -106,7 +111,7 @@ fn refresh_tree(
         let Some(src) = walk::read_surviving(&path)? else {
             continue; // vanished mid-walk: not live this pass
         };
-        lang_fact(lang, &rel, &src, md_facts, &mut out.java);
+        lang_fact(lang, &rel, &src, md_facts, out);
         if idx.refresh_file(&rel, &src, lang, Params::default(), foreign)? {
             out.dirty.insert(rel.clone());
         }
@@ -176,17 +181,19 @@ fn roots_bytes<'r>(roots: impl Iterator<Item = &'r String>) -> Vec<u8> {
 }
 
 /// Cross-file resolver INPUTS per language (split from index_all at
-/// the E01 fn gate): md heading slugs, the Rust pub-use surface and a
-/// Java file's declared package all join the resolve_key — the same
-/// discipline, one throat. A Java header's imports stay out of the key:
-/// they steer only the file's own sites, which a change to them
-/// re-resolves as the file's refresh does.
+/// the E01 fn gate): md heading slugs, the Rust pub-use surface, a
+/// Java file's declared package and the templates a Lua file assigns
+/// to `package.path` all join the resolve_key — the same discipline,
+/// one throat. A Java header's imports stay out of the key: they steer
+/// only the file's own sites, which a change to them re-resolves as
+/// the file's refresh does. A Lua file without templates adds no key
+/// input, so a tree without them keys as it did before step 4.
 fn lang_fact(
     lang: Lang,
     rel: &str,
     src: &[u8],
     facts: &mut Vec<(String, u64)>,
-    java: &mut BTreeMap<String, java_header::Header>,
+    out: &mut WalkIndex,
 ) {
     let text = String::from_utf8_lossy(src);
     match lang {
@@ -198,7 +205,18 @@ fn lang_fact(
         Lang::Java => {
             let header = java_header::read(&text);
             facts.push((rel.to_string(), tokens::fnv1a(header.package.as_bytes())));
-            java.insert(rel.to_string(), header);
+            out.java.insert(rel.to_string(), header);
+        }
+        Lang::Lua => {
+            let templates = lua_path::read(&text);
+            if !templates.is_empty() {
+                let bytes: Vec<u8> = templates
+                    .iter()
+                    .flat_map(|t| [t.dir.as_bytes(), b"\0", t.suffix.as_bytes(), b"\0"].concat())
+                    .collect();
+                facts.push((rel.to_string(), tokens::fnv1a(&bytes)));
+                out.lua.extend(templates);
+            }
         }
         _ => {}
     }

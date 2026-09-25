@@ -102,9 +102,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// `require`, `load`, `source` and `library` join KINDS (a Java
 /// single-type import keeps `import`), the four languages' symbols
 /// carry their own visibility and convention words,
-/// compile_commands.json becomes a resolver config and Java's packages
-/// join the resolve_key — new kind codes and stored rows, so every
-/// site is re-detected; steps 3–4 kept 16: step 2 shipped in no release.
+/// compile_commands.json and an R package's DESCRIPTION become
+/// resolver configs, and Java's packages and the Lua `package.path`
+/// templates a file writes join the resolve_key — new kind codes and
+/// stored rows, so every site is re-detected; steps 3–4 kept 16: step
+/// 2 shipped in no release.
 pub const GRAPH_REV: i64 = 16;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the

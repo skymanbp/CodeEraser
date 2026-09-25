@@ -41,7 +41,7 @@
 //! resolve_key input — a heading edit anywhere shifts the key and
 //! the phase-2 sweep re-validates every anchor.
 
-use super::{Outcome, Reason, Scope};
+use super::{Outcome, Reason, Scope, Site};
 use crate::graph::md::{content_lines, detect, ref_definition};
 use crate::graph::roots;
 use slug::{percent_decode, slug_set};
@@ -52,8 +52,9 @@ use std::rc::Rc;
 pub(crate) mod slug;
 pub use slug::slug_hash;
 
-pub fn resolve(kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {
-    match kind {
+pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
+    let (from, spec) = (site.from, site.spec);
+    match site.kind {
         "link" | "image" => link(from, spec, scope),
         "ref_link" => ref_link(from, spec, scope),
         "ref_def" => ref_def(from, spec, scope),

@@ -31,14 +31,15 @@
 
 use super::java_header::{self, Header};
 use super::java_jdk::{LANG, PACKAGES};
-use super::{Outcome, Reason, Rung, Scope};
+use super::{Outcome, Reason, Rung, Scope, Site};
 use crate::graph::roots;
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Every walked Java file by the package its header declares.
 type Index = BTreeMap<String, Vec<String>>;
 
-pub fn resolve(kind: &str, from: &str, spec: &str, scope: &Scope) -> Outcome {
+pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
+    let (kind, from, spec) = (site.kind, site.from, site.spec);
     let (is_static, name) = match spec.strip_prefix("static") {
         Some(rest) if rest.starts_with(char::is_whitespace) => (true, rest),
         _ => (false, spec),

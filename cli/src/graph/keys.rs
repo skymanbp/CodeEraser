@@ -14,13 +14,16 @@ use std::path::Path;
 /// (2f refinement); an extends target under an arbitrary name stays
 /// a documented boundary. compile_commands.json (plan v2.30 step 2)
 /// is the C-family ladder's third rung wherever it sits — a build
-/// directory inside the tree is the common home.
+/// directory inside the tree is the common home; an R package's
+/// DESCRIPTION (step 4) names the package the R ladder's second rung
+/// reaches.
 const CONFIG_NAMES: &[&str] = &[
     "Cargo.toml",
     "go.mod",
     "package.json",
     "pyproject.toml",
     "compile_commands.json",
+    "DESCRIPTION",
 ];
 
 /// `.cabal` is a basename SUFFIX (the file carries the package name:

@@ -20,10 +20,7 @@
 //! are two files, and picking one would invent an edge (the register's
 //! "no basename search" row).
 
-use std::collections::BTreeSet;
-
-use super::Scope;
-use super::{Outcome, Reason};
+use super::{Outcome, Reason, Scope, paths};
 use crate::graph::compdb;
 use crate::graph::roots;
 
@@ -57,22 +54,7 @@ fn beside(from: &str, name: &str, scope: &Scope) -> Option<Outcome> {
 /// R2: every declared root joined with the name; one distinct hit
 /// resolves, two refuse.
 fn declared_rung(name: &str, scope: &Scope) -> Option<Outcome> {
-    let hits: BTreeSet<String> = scope
-        .search_roots
-        .get("c")
-        .into_iter()
-        .flatten()
-        .filter_map(|dir| roots::join_rel(dir, name))
-        .filter(|p| scope.files.contains(p))
-        .collect();
-    match hits.len() {
-        0 => None,
-        1 => Some(Outcome::Resolved {
-            path: hits.into_iter().next()?,
-            rung: 2,
-        }),
-        _ => Some(Outcome::Unresolved(Reason::AmbiguousRoot)),
-    }
+    paths::one_of(paths::declared("c", name, scope), 2)
 }
 
 /// R3: the including file's own compile entries, first hit in

@@ -38,7 +38,11 @@ interprocess = "2.4.3"
 # 0.40.2 / libsqlite3-sys 0.38.2 build on the pinned stable toolchain (rust-toolchain.toml); fallible_uint keeps the checked usize/u64 ToSql/FromSql impls mention/store.rs reads with (off by default since 0.38)
 rusqlite = { version = "0.40", features = ["bundled", "fallible_uint"] }
 serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+# float_roundtrip: a float reads back as the f64 it was written from
+# (the default parser is best-effort, one ULP off at times) — the frozen
+# eval docs re-derive every stored ratio exactly (lang-precision's
+# 559/607 read back one ULP low without it)
+serde_json = { version = "1", features = ["float_roundtrip"] }
 # the updater's pin check (update/apply.rs): the same SHA-256 ce.sh
 # asks sha256sum for — already in both lockfiles transitively, so no
 # new build node

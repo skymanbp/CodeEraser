@@ -86,10 +86,21 @@ pub fn ids(nodes: &[Node]) -> BTreeMap<(&str, &str), usize> {
 }
 
 /// Synthetic containment arcs: package node → every file under its
-/// directory. rung 1: containment is a fact, not a resolution
-/// mechanism, and it must survive every rung ceiling.
-pub fn contain(nodes: &[Node], ids: &BTreeMap<(&str, &str), usize>, wire: &mut BTreeSet<[i64; 4]>) {
+/// directory, except a package whose `code` is declared (an R
+/// package's DESCRIPTION, deadcode/targets.rs), which reaches that
+/// code and nothing else: `library(pkg)` runs the package's `R/`
+/// files, not its NEWS.md or its reverse-dependency notes — and the
+/// package at the tree root would otherwise reach every file of the
+/// tree. rung 1: containment is a fact, not a resolution mechanism,
+/// and it must survive every rung ceiling.
+pub fn contain(
+    nodes: &[Node],
+    ids: &BTreeMap<(&str, &str), usize>,
+    code: &BTreeMap<String, BTreeSet<String>>,
+    wire: &mut BTreeSet<[i64; 4]>,
+) {
     for pkg in nodes.iter().filter(|n| n.kind == super::wire::GRAN_PACKAGE) {
+        let declared = code.get(&pkg.path);
         // A package at the REPO ROOT has path "", and `format!("{}/",
         // "")` is "/" — which no repo-relative member starts with, so
         // the root package contained nothing and its files read as
@@ -100,9 +111,13 @@ pub fn contain(nodes: &[Node], ids: &BTreeMap<(&str, &str), usize>, wire: &mut B
             p => format!("{p}/"),
         };
         let p = ids[&(pkg.path.as_str(), "")] as i64;
+        let held = |n: &&Node| match declared {
+            Some(code) => code.contains(&n.path),
+            None => n.path.starts_with(&prefix),
+        };
         for member in nodes
             .iter()
-            .filter(|n| n.kind == super::wire::GRAN_FILE && n.path.starts_with(&prefix))
+            .filter(|n| n.kind == super::wire::GRAN_FILE && held(n))
         {
             let m = ids[&(member.path.as_str(), "")] as i64;
             wire.insert([p, m, super::wire::EDGE_CONTAIN, 1]);

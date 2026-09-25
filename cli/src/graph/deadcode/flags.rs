@@ -11,6 +11,7 @@
 //! surface (graph/symwire.rs) rather than through this column.
 
 use super::targets::Declared;
+use crate::graph::roots;
 use crate::mention::conv::name::runner_test;
 use crate::mention::conv::protocol::listed;
 use crate::scan::globs::{self, Inclusions};
@@ -52,8 +53,10 @@ const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c m
                            main.cpp Main.java main.lua conf.lua app.R ui.R server.R global.R";
 
 /// Directories whose files a runtime starts by where they sit, never
-/// by an import — root-anchored, one row per language (`*` every
-/// judged one): Cargo's `src/bin/` `examples/` `benches/` and Go's
+/// by an import — one row per language (`*` every judged one), each
+/// under the tree root except R's, which sit under each package root
+/// (a DESCRIPTION's directory, targets.rs): Cargo's `src/bin/`
+/// `examples/` `benches/` and Go's
 /// `cmd/`; the Neovim runtime directories a Lua file is sourced from by
 /// path (`plugin/` at startup; `ftplugin/` `indent/` `syntax/`
 /// `colors/` `compiler/` `ftdetect/` `lsp/` on demand; `after/`
@@ -80,7 +83,7 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     ) {
         r |= ROLE_UNIT;
     }
-    if entry_dir(path) {
+    if entry_dir(path, declared) {
         r |= ROLE_ENTRY_DIR;
     }
     if is_test(path, base) {
@@ -104,13 +107,24 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
 }
 
 /// Whether a row of ENTRY_DIRS for the file's language, or for every
-/// language, holds a prefix of the path.
-fn entry_dir(path: &str) -> bool {
+/// language, holds a prefix of the path — R's rows under each package
+/// root, the others under the tree root.
+fn entry_dir(path: &str, declared: &Declared) -> bool {
     let lang = Lang::judged_path(Path::new(path)).map_or("", Lang::name);
     ENTRY_DIRS.lines().any(|row| {
         let mut words = row.split_whitespace();
-        matches!(words.next(), Some(scope) if scope == "*" || scope == lang)
-            && words.any(|dir| path.starts_with(dir))
+        let Some(scope) = words.next().filter(|s| *s == "*" || *s == lang) else {
+            return false;
+        };
+        let bases: Vec<&str> = match scope {
+            "r" => declared.packages().collect(),
+            _ => vec![""],
+        };
+        words.any(|dir| {
+            bases
+                .iter()
+                .any(|b| path.starts_with(&roots::join_dir(b, dir)))
+        })
     })
 }
 

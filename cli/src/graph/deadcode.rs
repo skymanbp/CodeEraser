@@ -14,7 +14,8 @@
 //! design's "no entry rule = every doc trivially dies" stance is
 //! deliberate: an unlinked doc IS reported. Asset edges never count
 //! as references (design §4 Markdown row); a package node gets
-//! SYNTHETIC containment arcs to every file under it — reaching a
+//! SYNTHETIC containment arcs to every file under it, or to the code
+//! its manifest declares when it is an R package — reaching a
 //! package reaches what it holds (the self-repo disposition run
 //! found doc→directory edges stranded from the members the walk had
 //! already proven alive); section and package verdicts are REPORTED,
@@ -235,7 +236,7 @@ pub fn wire_of(
         .map(|n| node_row(root, n, &entries, &declared))
         .collect();
     let mut wire = edge_wire(&edges, &ids)?;
-    nodes::contain(&nodes, &ids, &mut wire);
+    nodes::contain(&nodes, &ids, declared.package_code_by_root(), &mut wire);
     let symbols = super::symwire::export_surface(idx, &ids)?;
     let (unmentioned, mounts) = match advisory {
         Advisory::No => (None, None),
