@@ -1,0 +1,452 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "gson",
+ "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+ "lang": "java",
+ "auditor": "four independent Opus subagents, one batch of 25 primaries each in the sample's audit order, reading only the two clones at their pinned tips and their batch - no parse, no ce, no resolver (user delegation 2026-09-24, booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched)",
+ "summary": {
+  "external": 26,
+  "file": 11,
+  "member": 1
+ },
+ "rows": [
+  {
+   "rank": "0001be22a19def6030fb3d83cc2413b65e4a9dbda5ef652ab466610fe8b1c47e",
+   "path": "gson/src/test/java/com/google/gson/common/TestTypes.java",
+   "line": 255,
+   "nth": 1,
+   "kind": "type_ref",
+   "spec": "StringBuilder",
+   "batch": 1,
+   "truth": "external",
+   "why": "java.lang.StringBuilder, implicitly imported: TestTypes.java has no import or nested type named StringBuilder, the enclosing class Nested (line 241) has no supertype, and no file in the corpus declares a StringBuilder type. nth 1 is the 'new StringBuilder()' occurrence; both occurrences on the line name the same type."
+  },
+  {
+   "rank": "001104aed68c68fb1f5752d83a241b76f5447186b9b47a744e6547e5ae0ca17e",
+   "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+   "line": 487,
+   "nth": 1,
+   "kind": "type_ref",
+   "spec": "Class",
+   "batch": 1,
+   "truth": "external",
+   "why": "java.lang.Class, implicit (java.lang). Line 487 names Class twice ('instanceof Class' and the cast '(Class<?>)'), both the same type; GsonTypes has no supertype and no corpus file declares a type named Class."
+  },
+  {
+   "rank": "00496b74d55e39a125abda80271612a77fdc177d443b78f117d18ce0bd94a54f",
+   "path": "gson/src/test/java/com/google/gson/functional/PrimitiveTest.java",
+   "line": 494,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Test",
+   "batch": 1,
+   "truth": "external",
+   "why": "Single-type import org.junit.Test at line 36 (JUnit 4, test-scoped 'junit' dependency in gson/pom.xml line 58). PrimitiveTest has no supertype and declares no type named Test."
+  },
+  {
+   "rank": "0052a024623c9fac5174a41b42ec53eea3171d6adc16e81859563e2694731872",
+   "path": "gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java",
+   "line": 375,
+   "nth": 1,
+   "kind": "type_ref",
+   "spec": "IOException",
+   "batch": 1,
+   "truth": "external",
+   "why": "Single-type import java.io.IOException at line 37 (JDK). The site is the throws clause of read() in an anonymous com.google.gson.TypeAdapter subclass; TypeAdapter declares no member type named IOException (its only nested type is the private NullSafeTypeAdapter)."
+  },
+  {
+   "rank": "000e8cc999ee3643a4065e438421cbb94d7e0dbd14954b59fccff09b5b1c4194",
+   "path": "gson/src/main/java/com/google/gson/Gson.java",
+   "line": 640,
+   "nth": 1,
+   "kind": "type_ref",
+   "spec": "Type",
+   "batch": 1,
+   "truth": "external",
+   "why": "Single-type import java.lang.reflect.Type at line 41 (JDK). The second site on line 640, after Object, is the parameter type Type."
+  },
+  {
+   "rank": "00098e6ea58610167bd29a593ca9e29090166f98bca4a1cb0ef8a01c27c868c9",
+   "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+   "line": 588,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Type",
+   "batch": 1,
+   "truth": "external",
+   "why": "Single-type import java.lang.reflect.Type at line 26 (JDK). The site is the constructor parameter of the nested GenericArrayTypeImpl, whose only supertype java.lang.reflect.GenericArrayType declares no member types."
+  },
+  {
+   "rank": "001c4d94fbf5be1fc61dd72d7898d25ef74a29a26a1ed04dbf755347f85329da",
+   "path": "gson/src/test/java/com/google/gson/stream/JsonReaderTest.java",
+   "line": 1432,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "JsonReader",
+   "batch": 1,
+   "truth": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+   "why": "Same package com.google.gson.stream (the test root sees its module's main sources): gson/src/main/java/com/google/gson/stream/JsonReader.java line 211 declares 'public class JsonReader'. No import names JsonReader. nth 0 is the local variable's declared type."
+  },
+  {
+   "rank": "002c0aef2331de6bd4b235348f54d47ef7f112c975ab52bf3ea18f229eb1efe3",
+   "path": "test-shrinker/src/main/java/com/example/Main.java",
+   "line": 287,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "TestExecutor",
+   "batch": 1,
+   "truth": "test-shrinker/src/main/java/com/example/TestExecutor.java",
+   "why": "Same package com.example, in the same module and root: test-shrinker/src/main/java/com/example/TestExecutor.java line 7 declares 'public class TestExecutor'. 'TestExecutor.run(' is a static-method receiver. The static import at line 3 imports only the member 'same', not the type."
+  },
+  {
+   "rank": "003332cf81cdb8f52bcdcd09db5fe39140335ed23782abaa8ee9285ee1bbc386",
+   "path": "gson/src/main/java/com/google/gson/FieldNamingPolicy.java",
+   "line": 115,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Override",
+   "batch": 1,
+   "truth": "external",
+   "why": "java.lang.Override, implicit. The site is an annotation inside an enum-constant body; neither FieldNamingPolicy nor its supertype com.google.gson.FieldNamingStrategy declares a member type named Override."
+  },
+  {
+   "rank": "003b9c9716b0a58aea906e3b7d72d8078d928828b61859999a816ff1142d0f8d",
+   "path": "gson/src/main/java/com/google/gson/internal/bind/JsonTreeWriter.java",
+   "line": 112,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "IllegalStateException",
+   "batch": 1,
+   "truth": "external",
+   "why": "java.lang.IllegalStateException, implicit ('throw new IllegalStateException()'). JsonTreeWriter's supertype com.google.gson.stream.JsonWriter declares no nested types, and no corpus file declares a type of this name."
+  },
+  {
+   "rank": "001d7e3b65ac52bc358ce92b80847c7b8db86d8cb5a466c4fb5d02a78ca86651",
+   "path": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java",
+   "line": 268,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Override",
+   "batch": 1,
+   "truth": "external",
+   "why": "java.lang.Override, implicit. The site is inside an anonymous TypeAdapters.IntegerFieldsTypeAdapter<Year> subclass; none of IntegerFieldsTypeAdapter, com.google.gson.TypeAdapter or TypeAdapters.FactorySupplier declares a member type named Override."
+  },
+  {
+   "rank": "002bf51a7e710aabfd440f219d2ad1f622ee33a349d20c36e93beb892a14973b",
+   "path": "gson/src/test/java/com/google/gson/functional/CustomTypeAdaptersTest.java",
+   "line": 265,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "JsonSerializer",
+   "batch": 1,
+   "truth": "gson/src/main/java/com/google/gson/JsonSerializer.java",
+   "why": "Single-type import com.google.gson.JsonSerializer at line 31, declared at gson/src/main/java/com/google/gson/JsonSerializer.java line 75 ('public interface JsonSerializer<T>'). The site is the cast '(JsonSerializer<byte[]>)', and the test root sees its module's main sources."
+  },
+  {
+   "rank": "0048210268205d50b9653e207da1a4730979507837c4812b5ba40de7f9ecdac6",
+   "path": "gson/src/test/java/com/google/gson/JsonPrimitiveTest.java",
+   "line": 40,
+   "nth": 2,
+   "kind": "type_ref",
+   "spec": "Number",
+   "batch": 2,
+   "truth": "external",
+   "why": "The cast (Number) null, the third type name on the line after NullPointerException and JsonPrimitive. It is java.lang.Number, imported implicitly: no import names Number and no in-corpus file declares a type Number (none in package com.google.gson either)."
+  },
+  {
+   "rank": "0019c5fd6c0d060813f50137b95cb92b07663bce1c5d35a45a4add05bcc7adba",
+   "path": "gson/src/main/java/com/google/gson/internal/reflect/ReflectionHelper.java",
+   "line": 242,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Class",
+   "batch": 2,
+   "truth": "external",
+   "why": "Declared type Class<?> of classRecordComponent is java.lang.Class, imported implicitly: no import or in-corpus type is named Class, and neither the enclosing RecordSupportedHelper nor its supertype RecordHelper declares one. The string given to Class.forName on the same line names a JDK type and is not this site."
+  },
+  {
+   "rank": "001f3ce47ad5b42b4c4966ffd50a280ad56972fe9a7088b952c983ae73ffad98",
+   "path": "gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java",
+   "line": 333,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "JsonReader",
+   "batch": 2,
+   "truth": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+   "why": "Parameter type of NullableClassJsonAdapter.read (class at line 326, extends com.google.gson.TypeAdapter, which has no member JsonReader); the single-type import at line 36 names com.google.gson.stream.JsonReader, declared in gson/src/main/java/com/google/gson/stream/JsonReader.java."
+  },
+  {
+   "rank": "001c7ebe7a363b7bbe779d6edefc18cd1585b12db9cecf7bc03c741471b10aac",
+   "path": "gson/src/test/java/com/google/gson/functional/CustomDeserializerTest.java",
+   "line": 167,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Gson",
+   "batch": 2,
+   "truth": "gson/src/main/java/com/google/gson/Gson.java",
+   "why": "Declared type of local gson; the single-type import at line 21 names com.google.gson.Gson, declared in gson/src/main/java/com/google/gson/Gson.java, which this module's test sources can see. No nested type of CustomDeserializerTest is named Gson."
+  },
+  {
+   "rank": "001c16621c49b501f4937738f229ac1aed6b99e3323cae98c9b857c9195c04d9",
+   "path": "proto/src/test/java/com/google/gson/protobuf/functional/StructTypeAdapterTest.java",
+   "line": 94,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Struct",
+   "batch": 2,
+   "truth": "external",
+   "why": "Receiver of Struct.newBuilder() on line 94, inside the statement that starts at line 93. The single-type import at line 27 names com.google.protobuf.Struct from protobuf-java (dependency at proto/pom.xml:53); no in-corpus file declares Struct."
+  },
+  {
+   "rank": "00f0d25b91f4d08ecf9b02a2cf9c8ee5db90e21a24f1ca60c49b837c2e079c4c",
+   "path": "gson/src/test/java/com/google/gson/functional/TypeVariableTest.java",
+   "line": 28,
+   "nth": 0,
+   "kind": "import",
+   "spec": "org.junit.Test",
+   "batch": 2,
+   "truth": "external",
+   "why": "Single-type import of the JUnit 4 annotation org.junit.Test (junit:junit, test dependency at gson/pom.xml:58); no in-corpus file declares it."
+  },
+  {
+   "rank": "00ae29d896073ab9d676ffb839901744855aff811be06b6e600fce3f1e17ca6f",
+   "path": "test-graal-native-image/src/test/java/com/google/gson/native_test/ReflectionTest.java",
+   "line": 32,
+   "nth": 0,
+   "kind": "import",
+   "spec": "org.junit.jupiter.api.Test",
+   "batch": 2,
+   "truth": "external",
+   "why": "Single-type import of the JUnit Jupiter annotation org.junit.jupiter.api.Test (org.junit.jupiter:junit-jupiter, test dependency at test-graal-native-image/pom.xml:62)."
+  },
+  {
+   "rank": "0011b22343e6f34fc871f4ce7b6869a0715d30714d681df3ea48fdee56f55bfa",
+   "path": "gson/src/test/java/com/google/gson/reflect/TypeTokenTest.java",
+   "line": 406,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "IllegalArgumentException",
+   "batch": 2,
+   "truth": "external",
+   "why": "Declared type of local e in method testMethodTypeVariable of the local class Enclosing<T> (line 347, which declares only Inner). It is java.lang.IllegalArgumentException, imported implicitly: no import or in-corpus type has that name."
+  },
+  {
+   "rank": "00f1478e56ce9193ba20c4d314514b7664e01ae417b5ec5a38646223147a4efd",
+   "path": "gson/src/test/java/com/google/gson/internal/LinkedTreeMapTest.java",
+   "line": 28,
+   "nth": 0,
+   "kind": "import",
+   "spec": "java.util.Collections",
+   "batch": 2,
+   "truth": "external",
+   "why": "Single-type import of the JDK class java.util.Collections."
+  },
+  {
+   "rank": "00f71702292a778ac2d99ec1a1f547369ca1e5d9fa414854eb1a733126505808",
+   "path": "gson/src/main/java/com/google/gson/internal/bind/NumberTypeAdapter.java",
+   "line": 19,
+   "nth": 0,
+   "kind": "import",
+   "spec": "com.google.gson.Gson",
+   "batch": 3,
+   "truth": "gson/src/main/java/com/google/gson/Gson.java",
+   "why": "Single-type import at line 19 names com.google.gson.Gson, declared as public final class Gson at gson/src/main/java/com/google/gson/Gson.java line 156 in the same gson module's main root; it is the only Gson.java in the corpus."
+  },
+  {
+   "rank": "0016b93b38bf64f21aea7b5fc7602193b3773c2ebc0a4abedd5ab823d0b0a97d",
+   "path": "test-jpms/src/test/java/com/google/gson/jpms_test/ReflectionInaccessibleTest.java",
+   "line": 50,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Test",
+   "batch": 3,
+   "truth": "external",
+   "why": "Annotation @Test resolves through the single-type import org.junit.Test at line 24: JUnit 4 (junit:junit), a test dependency in test-jpms/pom.xml. The class has no supertype and its only member type is MyClass."
+  },
+  {
+   "rank": "001e9385063bed15d1334e1b610e8bd338f8a3c3f8f3498bb4c04a1a98f43377",
+   "path": "gson/src/test/java/com/google/gson/JsonArrayTest.java",
+   "line": 320,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "JsonElement",
+   "batch": 3,
+   "truth": "gson/src/main/java/com/google/gson/JsonElement.java",
+   "why": "Cast '(JsonElement) null'. JsonArrayTest is in package com.google.gson, imports no JsonElement and declares no member types, so the same package supplies it: gson/src/main/java/com/google/gson/JsonElement.java line 96 declares public abstract class JsonElement (the gson test root sees its module's main root)."
+  },
+  {
+   "rank": "002427a887ea753c19b44c194f18f0b2c9bae32636326f152dfb69e4ad7c1d8c",
+   "path": "gson/src/test/java/com/google/gson/functional/JsonAdapterAnnotationOnClassesTest.java",
+   "line": 197,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "String",
+   "batch": 3,
+   "truth": "external",
+   "why": "Class literal 'String.class' inside NullReturningFactory (implements TypeAdapterFactory): java.lang.String, implicit. No import names String and no in-corpus type named String exists to be declared or inherited in scope."
+  },
+  {
+   "rank": "001ad0d4d2d430d5b69edee66c5b712b027ac36f686b7c18f5a10dacb80e8191",
+   "path": "gson/src/test/java/com/google/gson/functional/DelegateTypeAdapterTest.java",
+   "line": 54,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "BagOfPrimitives",
+   "batch": 3,
+   "truth": "gson/src/test/java/com/google/gson/common/TestTypes.java#BagOfPrimitives",
+   "why": "Constructor call 'new BagOfPrimitives(...)'. The single-type import com.google.gson.common.TestTypes.BagOfPrimitives at line 24 names the public static nested class declared at TestTypes.java line 112 inside top-level class TestTypes (line 38). The metrics module's com.google.gson.metrics.BagOfPrimitives is in another package and module and is not visible."
+  },
+  {
+   "rank": "00e329afc2ce6311c79ed06f6f41addabc1b5adfc4dcc9833b03e572b77c9208",
+   "path": "gson/src/test/java/com/google/gson/JsonParserParameterizedTest.java",
+   "line": 22,
+   "nth": 0,
+   "kind": "import",
+   "spec": "java.util.Arrays",
+   "batch": 3,
+   "truth": "external",
+   "why": "Single-type import at line 22 names java.util.Arrays, a JDK class."
+  },
+  {
+   "rank": "004a758c95dcec7597cb0c6b920712966a43d74acc3ced53acc9f221c18e8770",
+   "path": "gson/src/main/java/com/google/gson/stream/JsonReader.java",
+   "line": 560,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "JsonToken",
+   "batch": 3,
+   "truth": "gson/src/main/java/com/google/gson/stream/JsonToken.java",
+   "why": "Receiver in 'return JsonToken.END_OBJECT;'. No variable is named JsonToken and no import names it, so the same package com.google.gson.stream supplies it: gson/src/main/java/com/google/gson/stream/JsonToken.java line 25 declares public enum JsonToken."
+  },
+  {
+   "rank": "0001b34de42cc9901dec4d787da4824434aafbe24db0919f1106e4770b7345ce",
+   "path": "proto/src/test/java/com/google/gson/protobuf/functional/StructTypeAdapterTest.java",
+   "line": 61,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Value",
+   "batch": 3,
+   "truth": "external",
+   "why": "Receiver in 'Value.newBuilder()'. The single-type import com.google.protobuf.Value at line 28 names the protobuf-java well-known type (com.google.protobuf:protobuf-java, a dependency in proto/pom.xml). No in-corpus .java file declares Value, and the corpus's .proto files generate only into com.google.gson.protobuf*."
+  },
+  {
+   "rank": "002b803aaa23557ae90e9dfc8874d4a204f48abed8fff3143edd75f36ee0e555",
+   "path": "gson/src/main/java/com/google/gson/internal/GsonTypes.java",
+   "line": 661,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Override",
+   "batch": 3,
+   "truth": "external",
+   "why": "Annotation @Override in WildcardTypeImpl (implements java.lang.reflect.WildcardType): java.lang.Override, implicit. There is no import of Override and no in-corpus type named Override."
+  },
+  {
+   "rank": "000ae117875f42ace7e2dbb0f9fdd4a0bdc1fcf216668c632ea425c7fd007c6a",
+   "path": "gson/src/test/java/com/google/gson/stream/JsonReaderPathTest.java",
+   "line": 293,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "Test",
+   "batch": 3,
+   "truth": "external",
+   "why": "Annotation @Test resolves through the single-type import org.junit.Test at line 31: JUnit 4 (junit:junit), a test dependency in gson/pom.xml. The class has no supertype and its only member type is enum Factory."
+  },
+  {
+   "rank": "002dc37393471f35694f711df9b4d2d01cbf263931412a7525d30254bc8358b5",
+   "path": "gson/src/main/java/com/google/gson/internal/ReflectionAccessFilterHelper.java",
+   "line": 94,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "AccessibleObject",
+   "batch": 3,
+   "truth": "external",
+   "why": "Parameter type in 'public boolean canAccess(AccessibleObject accessibleObject, Object object)' inside an anonymous AccessChecker. The single-type import java.lang.reflect.AccessibleObject at line 21 names a JDK class, and no in-corpus type is named AccessibleObject."
+  },
+  {
+   "rank": "000a07b713e320de8766965f67f18c62bf4ef1246b8b5fc7f3332313f5cbfe32",
+   "path": "extras/src/main/java/com/google/gson/interceptors/InterceptorFactory.java",
+   "line": 22,
+   "nth": 0,
+   "kind": "import",
+   "spec": "com.google.gson.reflect.TypeToken",
+   "batch": 4,
+   "truth": "gson/src/main/java/com/google/gson/reflect/TypeToken.java",
+   "why": "Single-type import at line 22 names com.google.gson.reflect.TypeToken, declared ('public class TypeToken<T>', line 54) in gson/src/main/java/com/google/gson/reflect/TypeToken.java, the only TypeToken.java in the corpus. The extras module depends on the in-reactor gson module (extras/pom.xml:51-53, com.google.code.gson:gson 2.14.1-SNAPSHOT = gson/pom.xml artifactId gson)."
+  },
+  {
+   "rank": "003c41cebae6d14c11192dbcaef23bdae45b58aeaea00283a3be34f5bc6746f4",
+   "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+   "line": 117,
+   "nth": 0,
+   "kind": "type_ref",
+   "spec": "InstanceCreator",
+   "batch": 4,
+   "truth": "gson/src/main/java/com/google/gson/InstanceCreator.java",
+   "why": "Local variable type InstanceCreator<T> on line 117. The single-type import com.google.gson.InstanceCreator at line 19 points to 'public interface InstanceCreator<T>' in gson/src/main/java/com/google/gson/InstanceCreator.java. ConstructorConstructor has no supertype, and its nested types (ThrowingObjectConstructor, InstanceCreatorConstructor) do not shadow the name."
+  },
+  {
+   "rank": "00c781591cc75cd478c8611bbe0443ca093656a14452361e2955e6345443adb7",
+   "path": "gson/src/test/java/com/google/gson/internal/bind/Java17ReflectiveTypeAdapterFactoryTest.java",
+   "line": 19,
+   "nth": 0,
+   "kind": "import",
+   "spec": "static com.google.common.truth.Truth.assertThat",
+   "batch": 4,
+   "truth": "external",
+   "why": "Static single import at line 19 names the member assertThat of com.google.common.truth.Truth. That is Google Truth, test-scoped in gson/pom.xml:62-64 (com.google.truth:truth)."
+  },
+  {
+   "rank": "004692951142793111c2ae764724196fd4f0e6bc3717fda8aa9d5ded769bd44c",
+   "path": "gson/src/main/java/com/google/gson/internal/ConstructorConstructor.java",
+   "line": 339,
+   "nth": 1,
+   "kind": "type_ref",
+   "spec": "Map",
+   "batch": 4,
+   "truth": "external",
+   "why": "Wildcard bound '? extends Map<?, Object>' on line 339 (nth 0 is ObjectConstructor) resolves through the single-type import java.util.Map at line 38 (JDK). No nested or in-corpus type is named Map."
+  },
+  {
+   "rank": "004647ee7b985c458c58fdc959e4209eba9671ee4148111497e2f87ab55e4182",
+   "path": "metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java",
+   "line": 74,
+   "nth": 1,
+   "kind": "type_ref",
+   "spec": "TypeReference",
+   "batch": 4,
+   "truth": "external",
+   "why": "Constructor parameter type TypeReference<?> on line 74 (nth 0 is TypeToken). The single-type import com.fasterxml.jackson.core.type.TypeReference at line 23 is Jackson, a third-party library (metrics/pom.xml:54-56 declares jackson-databind). No in-corpus type is named TypeReference."
+  },
+  {
+   "rank": "00b0edfe49a89767f7065743e616a9566cd7999f5100464a843074c82ec20dae",
+   "path": "gson/src/main/java/com/google/gson/internal/bind/CollectionTypeAdapterFactory.java",
+   "line": 24,
+   "nth": 0,
+   "kind": "import",
+   "spec": "com.google.gson.internal.ObjectConstructor",
+   "batch": 4,
+   "truth": "gson/src/main/java/com/google/gson/internal/ObjectConstructor.java",
+   "why": "Single-type import at line 24 names com.google.gson.internal.ObjectConstructor, declared ('public interface ObjectConstructor<T>', line 27) in gson/src/main/java/com/google/gson/internal/ObjectConstructor.java in the same module. It is the only ObjectConstructor.java in the corpus."
+  }
+ ],
+ "site_gaps": [
+  {
+   "batch": 1,
+   "path": "gson/src/test/java/com/google/gson/functional/ReflectionAccessFilterTest.java",
+   "line": 375,
+   "note": "The line names three types: return type ClassWithoutNoArgsConstructor (declared in this file), parameter type JsonReader (in-corpus, gson/src/main/java/com/google/gson/stream/JsonReader.java via the import at line 34) and IOException. The sampled IOException row has nth 1, so the detector emitted only one of the two earlier names. If the missing one is JsonReader, that is a missed in-corpus reference; if it is the same-file type, the omission is harmless."
+  },
+  {
+   "batch": 1,
+   "path": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java",
+   "line": 44,
+   "note": "'implements TypeAdapters.FactorySupplier' is a qualified nested-type reference to gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java#FactorySupplier (same package). Worth confirming the detector emits it with spec 'TypeAdapters.FactorySupplier'."
+  }
+ ],
+ "notes": [
+  "Every row's spec text was confirmed on its recorded line in a clean clone at the pinned commit (git status clean, HEAD = batch commit). Name resolution followed JLS 6.4 and 7.5; for each site I checked the enclosing class and its supertypes (including anonymous-class and enum-constant bodies) for shadowing member types, and grepped the whole corpus for any declaration of the same simple name. No gson file declares StringBuilder, Class, Type, Override, IllegalStateException, IOException or Test. No jsoup file declares String, Override, IOException, Test or Stream. Tokeniser, TokenQueue, Parser, W3CDom, TestServer, JsonReader, JsonSerializer and TestExecutor each have exactly one in-corpus declaration. Visibility: a test root sees its own module's main root (gson module 'gson'; jsoup is a single module whose src/test/java11 is a profile-added test root). The nth values fit a detector that emits annotations and java.lang names as sites. The one oddity is row 0052a024 (see site_gaps); its spec is unique on the line, so it is not a mismatch. site_gaps entries are candidates only: I cannot see the detector's full output, so each one says what to check.",
+  "All 25 spec texts were found on their recorded lines. Both clones were verified at the pinned commits with clean working trees (git rev-parse HEAD, git status). Conventions applied: (1) A java.lang name used without an import is 'external' only after a git grep over every .java file in the clone (class/interface/enum/record/@interface declarations, nested ones included) confirmed that nothing in-corpus declares that simple name, so no same-package, member, or static-on-demand type could shadow java.lang. (2) A static on-demand import of a third-party type's members (org.junit.jupiter.api.Assertions.*) is 'external', following the TYPE-members rule. (3) On lines with several sites, the recorded nth was checked against a left-to-right count of type-name sites. It agrees on every row except JsonAdapterAnnotationOnClassesTest.java:333 (below). On every row, every occurrence of the spec text on the line resolves to the same target, so the ordinal never changes the truth (ReflectionHelper.java:242 has Class twice, TagSetTest.java:191 has TagSet twice). Observation, not listed as a site gap: on gson JsonAdapterAnnotationOnClassesTest.java:333 'public NullableClass read(JsonReader in)', JsonReader is recorded as nth 0 although the return type NullableClass comes first on the line. NullableClass is a same-file private nested class (line 324), so its truth would be 'none' and omitting it is harmless. It would be a detector gap only if the detector also skips method return types that name other files, and this one row cannot show that. Tally: 16 external (JDK, JUnit 4, JUnit Jupiter, protobuf-java), 9 in-corpus files (7 by single-type import, 2 by same package). No row is doubtful.",
+  "Both clones were verified at their pinned commits with clean working trees. Conventions: an on-demand import of an external type's members (JUnit Assertions) is answered external; JDK and library names are external after confirming that no in-corpus file declares a type of that name or package. Row 32db635a (HtmlTreeBuilderState.java:22) is the one judgment call: the static on-demand import names HtmlTreeBuilderState.Constants, which the importing file itself declares, so I applied the vocabulary's 'type declared in this same file' rule and answered none. If same-file nested targets should instead be answered as path#Name, the answer would be src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java#Constants. For the two nth 1 rows I read the line left to right: ValidateTest.java:69 nth 1 = the class literal ValidationException.class, and TraversorTest.java:431 nth 1 = the Node parameter after @Override. On both lines, the same-named occurrences resolve identically. Observation: Node.java:392 records String as nth 0 although the return type Node (the file's own class) precedes it, so the detector seems not to count references to the file's own top-level type. It did emit the HtmlTreeBuilderState.java:22 import, whose target is also in the same file.",
+  "All 25 spec texts occur on their recorded lines, and every nth > 0 matches the left-to-right order of type-name tokens on the line (e.g. ConstructorConstructor:339 ObjectConstructor=0, Map=1; ParseBenchmark:74 TypeToken=0, TypeReference=1; Safelist:354 Iterator=0, Map.Entry=1; XmlTreeBuilderTest:42 declared type=0, new=1). No row is a mismatch. Shadowing was checked by running git grep over each corpus for any class/interface/enum/record named Test, IOException, Override, String, Map, Entry, Iterator, Optional, InstanceCreator, TypeReference or ValidationException, and by reading the enclosing class's supertypes and nested types. The only in-corpus hits were the intended targets (InstanceCreator, ValidationException). Package on-demand imports follow the split-package rule from the brief: org.jsoup.nodes has files in both src/main/java and src/test/java (none in the java11 roots), and both importers are in src/test/java, so the answer is src/test/java/org/jsoup/nodes. A resolver that answers src/main/java/org/jsoup/nodes (where the node types live) would disagree only through that convention. Module visibility for gson was taken from the poms: extras and metrics each depend on the in-reactor gson artifact. The jsoup Java 11 overlay root (src/main/java11) only adds HttpClientExecutor and RequestAuthHandler, with no same-path twins in src/main/java. site_gaps is empty because I did not hunt for gaps, and every construct I read either belongs to a batch row or is an ordinary site that could simply be unsampled; none of them looked like something the detector would systematically miss."
+ ]
+}

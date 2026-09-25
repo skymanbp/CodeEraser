@@ -252,9 +252,9 @@ The gate `eval_similar_precision` is not ignored: every generation's oracle must
 with the live constants and re-derived from its rows, the four fixture corpora replay byte for
 byte, later generations must not overlap earlier ones, and each generation holds the floor its
 own ledger set — 60 % for v1, 40 % for v2 — floors that only rise
-([eval_similar_precision.rs:37](../../../cli/tests/it/eval_similar_precision.rs#L37),
-[eval_similar_precision.rs:65](../../../cli/tests/it/eval_similar_precision.rs#L65),
-[eval_similar_precision.rs:165](../../../cli/tests/it/eval_similar_precision.rs#L165)).
+([eval_similar_precision.rs:34](../../../cli/tests/it/eval_similar_precision.rs#L34),
+[eval_similar_precision.rs:62](../../../cli/tests/it/eval_similar_precision.rs#L62),
+[eval_similar_precision.rs:162](../../../cli/tests/it/eval_similar_precision.rs#L162)).
 
 ### 8. Residual risks, stated
 

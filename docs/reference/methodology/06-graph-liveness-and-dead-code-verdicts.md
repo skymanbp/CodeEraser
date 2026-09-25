@@ -385,10 +385,10 @@ property battery in CI
 applied overall and per corpus **where the in-corpus ground-truth denominator reaches 5**
 ([eval_graph_precision.rs:83](../../../cli/tests/it/eval_graph_precision.rs#L83),
 [eval_graph_precision.rs:86-94](../../../cli/tests/it/eval_graph_precision.rs#L86),
-[precision.rs:38-48](../../../cli/tests/it/eval_support/precision.rs#L38)); precision is
+[precision.rs:43-53](../../../cli/tests/it/eval_support/precision.rs#L43)); precision is
 `correct / (correct + wrong)` over answered rows only
-([precision.rs:43](../../../cli/tests/it/eval_support/precision.rs#L43),
-[precision.rs:65](../../../cli/tests/it/eval_support/precision.rs#L65)).
+([precision.rs:48](../../../cli/tests/it/eval_support/precision.rs#L48),
+[precision.rs:70](../../../cli/tests/it/eval_support/precision.rs#L70)).
 
 Frozen results across the five pinned corpora (100 judged sites total):
 

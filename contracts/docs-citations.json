@@ -4245,18 +4245,18 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_support/precision.rs|47344f83250b5715|0": {
     "target": "../../../cli/tests/it/eval_support/precision.rs",
-    "line": 65,
+    "line": 70,
     "text": "let overall = agg.correct as f64 / (agg.correct + agg.wrong) as f64;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_support/precision.rs|5b95651726935737|0": {
     "target": "../../../cli/tests/it/eval_support/precision.rs",
-    "line": 38,
-    "end": 48,
+    "line": 43,
+    "end": 53,
     "text": "pub fn assert_corpus_precision(key: &str, answered: (u64, u64), denom: u64, gate: f64, tag: &str) {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_support/precision.rs|a06b99604e519d7f|0": {
     "target": "../../../cli/tests/it/eval_support/precision.rs",
-    "line": 43,
+    "line": 48,
     "text": "let p = c as f64 / (c + w) as f64;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/unit/graph/ladder/md_tests.rs|7888a8dfa6029cde|0": {
@@ -8972,17 +8972,17 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|3fd9786ee83f067a|0": {
     "target": "../../../cli/tests/it/eval_similar_precision.rs",
-    "line": 165,
+    "line": 162,
     "text": "fn similar_oracle_floors() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|74f9f9453210f75e|0": {
     "target": "../../../cli/tests/it/eval_similar_precision.rs",
-    "line": 37,
+    "line": 34,
     "text": "const GENERATIONS: [(u32, u64); 2] = [(1, 60), (2, 40)];"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|84da349508d0e98c|0": {
     "target": "../../../cli/tests/it/eval_similar_precision.rs",
-    "line": 65,
+    "line": 62,
     "text": "fn similar_oracle_consistent() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/face_parity.rs|5a4bc4e95b316259|0": {

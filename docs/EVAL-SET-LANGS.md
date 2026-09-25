@@ -61,6 +61,30 @@ jsoup import 12 + import_star 15 + type_ref 35。
 
 `type_ref` 是新站点类（设计册 D17：Java 同包引用不经 import，只能靠类型名站点补上），精度册里单独出一行。
 
-### 真值与判分
+### 真值（2026-09-24 冻结）
 
-尚未进行：真值在下一个提交里由独立代理判定并冻结，判分随 Java 的阶梯一起提交，两段届时补在这里。
+档 `contracts/eval/lang-review-gson-v1.json` 与 `lang-review-jsoup-v1.json`。100 道主样本按审阅序切成四批，每批
+25 道交给一个独立的 Opus 代理；代理只读两个语料在钉住 tip 的干净克隆和自己那一批，不读仓库里别的东西、不跑 `ce`，
+照 javac 的名字解析（JLS §6.4、§6.5.5、§7.5；跨模块可见性读各自的 `pom.xml`）逐站判目标。词表沿用 M5-2：声明目标
+类型的语料文件（目标是文件里的成员时带 `#名`）、按需导入一个包时装着该包文件的目录（包拆在几个源根里时取导入者
+自己源根下的那个）、`external` / `ambiguous` / `dynamic` / `none`；每条判词写明机制。装配逐字照录，判决不动。
+100 道的 spec 全在记录的行上，零失配，没有动用备用题。
+
+| 语料 | 主样本 | external | 文件 | `#成员` | 包目录 | none |
+|---|---|---|---|---|---|---|
+| gson | 38 | 26 | 11 | 1 | 0 | 0 |
+| jsoup | 62 | 37 | 22 | 0 | 2 | 1 |
+
+两处约定照判词记下。jsoup 的 `HtmlTreeBuilderState.java` 用 `import static org.jsoup.parser.HtmlTreeBuilderState.Constants.*`
+导入本文件自己的嵌套类，按词表「本文件声明的类型」判 `none`，判词另记了按 `…/HtmlTreeBuilderState.java#Constants`
+判的答案。两条 `import org.jsoup.nodes.*` 都在测试根里，而 `org.jsoup.nodes` 在 `src/main/java` 与 `src/test/java`
+各有文件，按拆分包约定判 `src/test/java/org/jsoup/nodes`。代理另记了 5 条候选漏检（gson 2、jsoup 3），判分时逐条核实。
+
+门（`cli/tests/it/eval_lang.rs`，读 `eval_lang_parts/review.rs`）：每张表逐行对应该语料的主样本、按样本顺序、身份
+字段逐字回显；真值只能是四个关键词、该语料冻结宇宙里的文件（可带 `#成员`），或——只对按需导入——直接装着冻结
+文件的目录；判词不短于 40 字符；摘要从真值重算；候选漏检只落在冻结文件上；篡改一律拒绝。考题表的 `audited` 旗标
+（本提交对 Java 翻为 true）必须与盘上的表逐语料相符：表消失会被点名，不会被读成「尚未审阅」；顺序门读同一个判定。
+
+### 判分
+
+随 Java 的阶梯一起提交，届时补在这里。
