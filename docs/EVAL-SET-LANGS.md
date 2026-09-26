@@ -17,6 +17,11 @@
   文件（`scan::walk::Scope`，语料自己的 ignore 文件与内建排除照读；走查拒读的被追踪文件只计 `walk_refused`，不出题——
   考题只问产品读得到的东西），逐文件记检测器看到的文本 sha256 与各站点类的计数（`graph::sites`——只读文法 kind 表与文件内事实，不查任何路径，所以能先于阶梯冻结）。
   档 `contracts/eval/lang-slice-<语料>-v<代>.json`（代 = 考题表的 `generation`，同一门考题的档同一代）。
+- **钉住的树**（`cli/tests/it/eval_lang_parts/tree.rs` 的 `lang_tree`，`#[ignore]`，读钉住克隆）：只给真值够得到整棵树的考题
+  （考题表 `reach = Tree`，今为 HTML——页面取的是站点服务的东西，不限于页面）：`git ls-tree` 在钉住 tip 列出的每个路径，按字节序，
+  只是 tip 的函数、不含任何产品判断。审阅门用它把真值与 `scope_gaps` 绑到真实文件上而不必有克隆；门把树对着宇宙核：宇宙的文件全在
+  树上，其余按宇宙自己的排除计数（另一种扩展名 / 走查拒读）逐类对上；判分的生成器有克隆在手，判分前把树重导一遍。
+  档 `contracts/eval/lang-tree-<语料>-v<代>.json`。
 - **抽样**（同文件 `lang_sample`）：一个语言的全部冻结宇宙合成一个池，逐文件先复现它的冻结行再取站点——池等于
   冻结宇宙靠核对、不靠信任。秩 = `sha256(域|corpus|commit|path|line|nth|kind|spec)`（M5-2 的载荷顺序，spec 居末
   保单射）；每个站点类先取 min(15, 该类的池)，剩下的座位按各类剩余池的最大余数分满 100；主样本按审阅域哈希排列
@@ -411,3 +416,60 @@ R2 全指 `covid19AgeModel/`（唯一的 `DESCRIPTION`；`library(covid19AgeMode
   learning-area 63、codeeraser 37、html5-boilerplate 0（6 个站点没有一个被秩选中）；备用题 60（`href`、`src`、`link_asset`
   各 20，另两类池已空）。档 `contracts/eval/lang-slice-{codeeraser,html5-boilerplate,learning-area}-v1.json`、
   `contracts/eval/lang-sample-html-v1.json`。
+
+### 真值（2026-09-26 冻结）
+
+档 `contracts/eval/lang-review-codeeraser-v1.json`（37 行）、`lang-review-learning-area-v1.json`（63 行）与
+`lang-review-html5-boilerplate-v1.json`（0 行：它的 6 个站点没有一个被秩选中，没有代理读过它；表照样立档，因为已审阅的考题每个
+语料都要有表〔`Exam::filed`〕，它的宇宙到判分时仍由台账整个解一遍）。切批与读法同 Lua 一节：四个独立 Opus 代理各判一批 25 道
+主样本（按样本的审阅序切批），只读两个干净克隆（本仓 `d4b7f1f`、learning-area `dbed6bc`；派卷前查过两个副本都没有 `.ce/`）和
+自己那一批，不跑 `ce`、不看产品的任何解析；装配逐字照录，判决不动。100 道的 spec 全在记录的行上，零失配，没有动用备用题。
+
+**词表在 HTML 上的读法**（简报给的定义，代理照此判）：一个站点的真值 = 它的 URL 在该语料**部署出来的站点**上服务的文件——
+相对值对文档 URL 解，根相对值对源根解，目录 URL 服务它的 `index.html`，`?query` 不入文件映射，`#frag` 只在目标页真有该 `id`
+时带上（裸 `#` 解成本页、不带节）；别的源 = `external`；模板或脚本拼出来的值 = `dynamic`；解出的 URL 上服务不到文件 = `none`。
+**部署从仓内证据读出**，不查线上：本仓 = Cloudflare Pages 以 `site/` 为源根（`scripts/deploy_site.js` 的 `pages deploy site`、
+每页第 12 行的 `og:url`）；learning-area = GitHub Pages 项目站 `https://mdn.github.io/learning-area/` 一比一映射仓根（仓内三处
+绝对 URL 指回语料自己的文件；根相对的 `/my-handling-form-page` 因此出了项目前缀，判 `external`）。
+
+| 语料 | 主样本 | external | 文件（其中宇宙内的页面） | 节（`页#id`） | dynamic | none |
+|---|---|---|---|---|---|---|
+| codeeraser | 37 | 12 | 20（9） | 5 | 0 | 0 |
+| learning-area | 63 | 9 | 51（5） | 1 | 1 | 1 |
+| html5-boilerplate | 0 | 0 | 0 | 0 | 0 | 0 |
+
+**真值可指向钉住树里的任何被追踪文件**：页面取的是站点服务的东西——样式表、图片、脚本、另一页——71 道文件真值里 57 道在
+站点宇宙之外（`site/style.css`、`site/icon-256.png`，learning-area 的 `style.css` / `main.js` / `.jpg` / `.mp3` / `.svg`）。
+审阅门为此多冻一份档 `contracts/eval/lang-tree-<语料>-v1.json`（仪器一节「钉住的树」），考题表的 `reach` 说这门考题的真值
+够得到整棵树（Java / Lua / R 只够得到自己的宇宙）；树档与宇宙的排除计数逐类对得上，真值与 `scope_gaps` 必须落在树上。
+
+21 道 external：Google Fonts 两个域 8（`fonts.googleapis.com` 7、`fonts.gstatic.com` 1）、GitHub 的 releases / blob 页 6、
+`http://example.com` 表单 2、`/my-handling-form-page` 2、`developer.mozilla.org` / `studio.blender.org` / `thenounproject.com`
+各 1。`dynamic` 1 = Flask 模板 `html/forms/sending-form-data/templates/form.html:28` 的 `action="{{ url_for('hello') }}"`
+（渲染后是后端路由 `/hello`，静态副本里连花括号都是字面）；`none` 1 = `accessibility/assessment-finished/index.html:99` 的
+`<a href="bear.mp3">`（这个目录下没有 `bear.mp3`，音频在 `media/bear.mp3`，同一段的 `<source>` 用的是后者）。6 道节真值全是
+本文件里的 `#id`（`site/how/index.html#f04` / `#honesty`、`site/zh/how/index.html#f01` / `#acting` / `#honesty`、learning-area
+的 `css/web-fonts/fonts/zantroke-demo.html#layout`），两道 `href="#"` 判成本页不带节。`srcset` 7 道的 `nth` 按物理行内的候选
+序位判——多行 `srcset` 属性的续行上第一个候选是 nth 0。
+
+**一次简报错误与它的修正**：简报把 `nth` 定义成「同类站点在行内的序位」，而样本的定义是「该行全部站点（不分类）按文档序的
+0 起序位」（`graph/sites.rs`）。发现后四个代理各自按正确定义把 25 行重查一遍：只有一行受影响——`site/zh/how/index.html:31`
+同一行有 `<a href="/zh/">` 与 `<img src="/icon-256.png">`，nth 1 是那个 `img`，代理原按同类序位判成 `mismatch`，重查后判
+`site/icon-256.png`；其余 99 行每行只有一类站点，两种定义给同一个位置，判词不变。修正记在这里，也记在表的 `auditor` 字段里。
+
+候选漏检：codeeraser 42 条（16 处不同行）全是 `<meta property="og:url" | "og:image" content="https://codeeraser.dev/…">`——
+meta 的 `content` 不在站点表里（浏览器既不取也不导航到它，它是给第三方抓取器的元数据），判分时按协议逐条附检测器在该行读到的
+站点；learning-area 8 条（6 处不同行）= `<style>` 里的 `url(header.jpg)`（三个批次各记了一次）与四处内联 `<script>` 里写死的
+URL 字符串（`fetch()` / `new Request()` / `link.href =`）——内嵌脚本与样式是 `raw_text`、不解析（设计册 §1）；`scope_gaps` 5 条
+在宇宙之外的文件上：`javascript/building-blocks/gallery/main.js:26`（脚本拼 `src`）、`javascript/apis/video-audio/finished/style.css:3`
+（`@font-face src`）、`javascript/apis/fetching-data/can-store-xhr/can-style.css:24`（`url(icons/…)`）、
+`tools-testing/cross-browser-testing/javascript/fetch-broken/script.js:5`（脚本里的 `requestURL`）、
+`html/forms/sending-form-data/python-example.py:8`（Flask 路由）。代理另记的两条约定：`</body>` 之后的 `<script>` 仍被解析器
+插进 body 取回；`<audio>` / `<video>` 回退内容里的 `<a>` 是真实 DOM 元素。
+
+门随本节加三处（子仓）：`it/eval_lang_parts/tree.rs` = 树档的生成器（`--ignored lang_tree`）与核对（信封、路径严格升序、宇宙文件
+全在树上、其余按宇宙自己的排除计数逐类对上），`it/eval_lang.rs` 两腿（每份树档核对；删一个宇宙文件、塞一页、调换两行、改方法句、
+换 tip 五种篡改各拒）；`review.rs` 的真值与 `scope_gaps` 改绑 `targets`（够得到树的考题绑树，其余绑宇宙），`it/eval_lang_review.rs`
+新腿 `a_truth_beyond_the_tree_is_refused`（宇宙外、树内的真值通过，树外的拒），「包目录真值」的探针改读核对器自己的分类（一条图片
+路径不再被当成包）；精度册生成器有克隆时把树重导一遍（`assert_frozen_tree`）。考题表的两个布尔旗（`audited` / `scored`）合成一个
+有序的 `Stage`（sampled → audited → scored，「已判分 ⇒ 已审阅」由构造保证），HTML 的 stage 翻为 audited。

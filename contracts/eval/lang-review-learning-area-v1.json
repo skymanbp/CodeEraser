@@ -1,0 +1,937 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "learning-area",
+ "tip": "dbed6bcb8284634c7549c4da596ec30b0cfc6e7e",
+ "lang": "html",
+ "auditor": "four independent Opus subagents, one batch of 25 primaries each in the sample's audit order, reading only the two clones at their pinned tips (this repository at d4b7f1f, mdn/learning-area at dbed6bc; html5-boilerplate drew no primary) and their batch - never the product's parse, no ce, no resolver; each judged the file the corpus's deployment serves behind a reference, the deployment read from the tree itself (codeeraser: Cloudflare Pages rooted at site/, scripts/deploy_site.js; learning-area: the GitHub Pages project site under /learning-area/, inferred from the absolute URLs its own pages fetch), then re-checked every row under the coordinator's correction of nth (the brief had defined it per kind; the sample counts every site of the line in document order - one row moved, c79709bd, from mismatch to site/icon-256.png) (booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched)",
+ "summary": {
+  "dynamic": 1,
+  "external": 9,
+  "file": 51,
+  "member": 1,
+  "none": 1
+ },
+ "rows": [
+  {
+   "rank": "02fc8abdf84126318ac8a24803eb4dd5c311854b83ef696b7b2c1e0613df0347",
+   "path": "javascript/apis/drawing-graphics/threejs-video-cube/index.html",
+   "line": 9,
+   "nth": 0,
+   "kind": "src",
+   "spec": "three.min.js",
+   "batch": 1,
+   "truth": "javascript/apis/drawing-graphics/threejs-video-cube/three.min.js",
+   "why": "<script src defer> on line 9; the document has no <base>. Base = https://mdn.github.io/learning-area/javascript/apis/drawing-graphics/threejs-video-cube/index.html, so the bare relative name resolves in that directory. three.min.js exists beside index.html (424,407 bytes, a three.js build)."
+  },
+  {
+   "rank": "168779f27fb8c938de893b5120ec653acf4c910a27c76a584b8fbcd887d32d61",
+   "path": "css/web-fonts/fonts/zantroke-demo.html",
+   "line": 34,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#layout",
+   "batch": 1,
+   "truth": "css/web-fonts/fonts/zantroke-demo.html#layout",
+   "why": "A fragment-only <a href> in the tab list on line 34 resolves to this same document. <div id='layout'> (the Sample Layout tab panel; its siblings are ids specimen, glyphs and installing) exists at line 227. The easyTabs script only toggles which panel shows; the target element is unchanged."
+  },
+  {
+   "rank": "09acd7544c16913003e3db0bf3d9565bef08eb1e2dd4e65de859de30d8ec51ca",
+   "path": "javascript/apis/client-side-storage/indexeddb/notes/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 1,
+   "truth": "javascript/apis/client-side-storage/indexeddb/notes/style.css",
+   "why": "<link href rel='stylesheet'> on line 7, with no <base>. It resolves against the page's own directory, https://mdn.github.io/learning-area/javascript/apis/client-side-storage/indexeddb/notes/. style.css exists beside index.html at the tip."
+  },
+  {
+   "rank": "03adb26a37a4e781088599760d359577af172e7f6aadb40694def00d9434f03b",
+   "path": "javascript/oojs/json/heroes-finished-json-parse.html",
+   "line": 8,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css?family=Faster+One",
+   "batch": 1,
+   "truth": "external",
+   "why": "<link rel='stylesheet'> on line 8 is an absolute URL on fonts.googleapis.com, Google's font service. That is a different host from mdn.github.io/learning-area/, which serves this corpus."
+  },
+  {
+   "rank": "f623de9d37b53a42bcbcbe3cb77820f91267a753ab6d5506787b726c70cbd6f7",
+   "path": "html/forms/your-first-HTML-form/first-form-styled.html",
+   "line": 71,
+   "nth": 0,
+   "kind": "action",
+   "spec": "/my-handling-form-page",
+   "batch": 1,
+   "truth": "external",
+   "why": "<form action method='post'> on line 71 is root-relative. Against the document URL https://mdn.github.io/learning-area/html/forms/your-first-HTML-form/first-form-styled.html it resolves to https://mdn.github.io/my-handling-form-page, outside the /learning-area/ prefix that serves this corpus. It is the tutorial's placeholder endpoint, and no corpus file has that name in any case."
+  },
+  {
+   "rank": "1daa5543ebf613e209e21576e663556301bd907e29912ef77ba7956a6d6313e0",
+   "path": "javascript/apis/video-audio/start/index.html",
+   "line": 27,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://studio.blender.org/films/sintel/",
+   "batch": 1,
+   "truth": "external",
+   "why": "The <a href> credit link on line 27 is an absolute https URL on studio.blender.org, the Blender Foundation's film page. That is another host, not mdn.github.io/learning-area/."
+  },
+  {
+   "rank": "15d571e5ee8bf831fb348b4da29634c15b9cf3de770fc29f24e1c64d058f91fb",
+   "path": "accessibility/assessment-finished/index.html",
+   "line": 86,
+   "nth": 0,
+   "kind": "src",
+   "spec": "media/urban-bear.jpg",
+   "batch": 1,
+   "truth": "accessibility/assessment-finished/media/urban-bear.jpg",
+   "why": "<img src> on line 86, with no <base>. It resolves under the page's directory, https://mdn.github.io/learning-area/accessibility/assessment-finished/. media/urban-bear.jpg exists (a real JPEG, 74,062 bytes)."
+  },
+  {
+   "rank": "0d40be797a1fbec9945b41378190d21c925f2b24e4acb1c6030f10ad0335f87a",
+   "path": "tools-testing/cross-browser-testing/javascript/fetch-broken/index.html",
+   "line": 13,
+   "nth": 0,
+   "kind": "src",
+   "spec": "script.js",
+   "batch": 1,
+   "truth": "tools-testing/cross-browser-testing/javascript/fetch-broken/script.js",
+   "why": "<script src defer> on line 13, with no <base>. It resolves in the page's directory, https://mdn.github.io/learning-area/tools-testing/cross-browser-testing/javascript/fetch-broken/, and script.js exists there."
+  },
+  {
+   "rank": "152d63af05a1293b44e7f3616011ece7d4fbd9692722f62881f8519da637359f",
+   "path": "javascript/oojs/bouncing-balls/index-finished.html",
+   "line": 14,
+   "nth": 0,
+   "kind": "src",
+   "spec": "main-finished.js",
+   "batch": 1,
+   "truth": "javascript/oojs/bouncing-balls/main-finished.js",
+   "why": "<script src> on line 14, with no <base>. It resolves against the document's directory, https://mdn.github.io/learning-area/javascript/oojs/bouncing-balls/, and main-finished.js exists there."
+  },
+  {
+   "rank": "0fc351f9f53b82801dd1c7d7db0fd220445996b01788054ff9de19fecab8ac73",
+   "path": "javascript/introduction-to-js-1/tasks/math/math1-download.html",
+   "line": 16,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "../styles.css",
+   "batch": 1,
+   "truth": "javascript/introduction-to-js-1/tasks/styles.css",
+   "why": "<link rel='stylesheet'> on line 16, with no <base>. The base directory is https://mdn.github.io/learning-area/javascript/introduction-to-js-1/tasks/math/, and '../' climbs to .../tasks/, which gives javascript/introduction-to-js-1/tasks/styles.css. That file exists."
+  },
+  {
+   "rank": "18b74c65929c1e080da3e099342a66f1910bb5ee37c5e45472d72bc014beaacf",
+   "path": "accessibility/multimedia/custom-controls-OOJS/index.html",
+   "line": 28,
+   "nth": 0,
+   "kind": "href",
+   "spec": "../rabbit320.mp4",
+   "batch": 1,
+   "truth": "accessibility/multimedia/rabbit320.mp4",
+   "why": "The fallback <a href> inside <video> on line 28 has base directory https://mdn.github.io/learning-area/accessibility/multimedia/custom-controls-OOJS/. '../' resolves to .../accessibility/multimedia/rabbit320.mp4, which exists (834,563 bytes, a real MP4 rather than an LFS pointer)."
+  },
+  {
+   "rank": "910481b1bbc9e638191699cd126d7c9be26baee02ee039981f8aaf1c73f7a206",
+   "path": "html/forms/your-first-HTML-form/first-form.html",
+   "line": 9,
+   "nth": 0,
+   "kind": "action",
+   "spec": "/my-handling-form-page",
+   "batch": 1,
+   "truth": "external",
+   "why": "<form action method='post'> on line 9 is root-relative. Against https://mdn.github.io/learning-area/html/forms/your-first-HTML-form/first-form.html it resolves to https://mdn.github.io/my-handling-form-page, outside the /learning-area/ prefix that serves this corpus. It is a placeholder endpoint, and no corpus file has that name."
+  },
+  {
+   "rank": "02168dabf70955122e8fc76450973748a7e487e9fcdd6145465922e6f193a6b3",
+   "path": "accessibility/assessment-start/assessment-files/index.html",
+   "line": 19,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#",
+   "batch": 1,
+   "truth": "accessibility/assessment-start/assessment-files/index.html",
+   "why": "The placeholder nav link <a href='#'> on line 19 resolves to this document with an empty fragment. No element can carry an empty id, and HTML's indicated-element rule reads an empty fragment as the top of the document, so the answer is the path alone with no named target."
+  },
+  {
+   "rank": "195e27fd48dd85729ede03039649424326485d09bee37435ac186d5456b6bb1c",
+   "path": "accessibility/assessment-finished/index.html",
+   "line": 99,
+   "nth": 0,
+   "kind": "href",
+   "spec": "bear.mp3",
+   "batch": 2,
+   "truth": "none",
+   "why": "Line 99 has one <a href='bear.mp3'> (inside the <audio> fallback content, still a parsed hyperlink). Base = the page URL https://mdn.github.io/learning-area/accessibility/assessment-finished/ (no <base>), so it resolves to .../assessment-finished/bear.mp3; the corpus has no accessibility/assessment-finished/bear.mp3 (the clip is media/bear.mp3, used by the <source> tags on lines 97-98), so GitHub Pages would answer 404."
+  },
+  {
+   "rank": "181abf44d6e28f97e3728b6955feef5d51fb7292f5b45074584f25faab57db56",
+   "path": "tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html",
+   "line": 9,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "",
+   "batch": 2,
+   "truth": "tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html",
+   "why": "Line 9 is <link rel='stylesheet' href=''>: the empty value resolves to the base, the document's own URL https://mdn.github.io/learning-area/tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html, so under the empty-value rule the target is this file. Browsers skip fetching an external-resource link with an empty href, so in practice no stylesheet loads (the sibling style.css is never referenced)."
+  },
+  {
+   "rank": "03ff2ae459dde2bc4c56c348a15057930d007994635f3b898a7bc830016d29fd",
+   "path": "accessibility/multimedia/custom-controls-OOJS/index.html",
+   "line": 26,
+   "nth": 0,
+   "kind": "src",
+   "spec": "../rabbit320.mp4",
+   "batch": 2,
+   "truth": "accessibility/multimedia/rabbit320.mp4",
+   "why": "<video><source src='../rabbit320.mp4'> on line 26; base = https://mdn.github.io/learning-area/accessibility/multimedia/custom-controls-OOJS/ (index.html, no <base>); the dot segment climbs to /learning-area/accessibility/multimedia/rabbit320.mp4, which GitHub Pages serves from the repo root; the file exists and main.js never rewrites src."
+  },
+  {
+   "rank": "654bf474e3bcd4d1c3c7af7e8794122bf12495e89723f6baf48e5259cc5849a6",
+   "path": "html/multimedia-and-embedding/responsive-images/srcset-resolutions.html",
+   "line": 16,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-fairy-320w.jpg",
+   "batch": 2,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-fairy-320w.jpg",
+   "why": "The img srcset attribute opens on line 15 and its first candidate 'elva-fairy-320w.jpg,' is the only one on line 16 (nth 0; the srcset parser strips the trailing comma, no descriptor means 1x). Relative to https://mdn.github.io/learning-area/html/multimedia-and-embedding/responsive-images/srcset-resolutions.html it names the sibling file, which exists."
+  },
+  {
+   "rank": "06cdaad80275ec241017f3108dacc41b9cab21768b8d1afcd81591b1ab51a92a",
+   "path": "javascript/building-blocks/tasks/conditionals/conditionals2-download.html",
+   "line": 16,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "../styles.css",
+   "batch": 2,
+   "truth": "javascript/building-blocks/tasks/styles.css",
+   "why": "<link rel='stylesheet' href='../styles.css'> on line 16; base = https://mdn.github.io/learning-area/javascript/building-blocks/tasks/conditionals/conditionals2-download.html, so '../' climbs from conditionals/ to tasks/ and the URL /learning-area/javascript/building-blocks/tasks/styles.css maps under the served repo root to an existing file."
+  },
+  {
+   "rank": "8bc1eb82d34229b93e084f175807e9fa18c25b900e4437d8835c2b4080b682b7",
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 52,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-800w.jpg",
+   "batch": 2,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-800w.jpg",
+   "why": "<picture><source media='(width >= 800px)' srcset='elva-800w.jpg'> on line 52, a single candidate (nth 0); relative to https://mdn.github.io/learning-area/html/multimedia-and-embedding/responsive-images/responsive.html it is the sibling elva-800w.jpg, which exists (the <img src> fallback on line 53 names the same file)."
+  },
+  {
+   "rank": "129f767cf40ffbc9e5b5faf578e42081db5357de299f53b0f6c13ac19569592b",
+   "path": "html/multimedia-and-embedding/other-embedding-technologies/iframe-detail.html",
+   "line": 11,
+   "nth": 0,
+   "kind": "src",
+   "spec": "https://developer.mozilla.org/en-US/docs/Glossary",
+   "batch": 2,
+   "truth": "external",
+   "why": "<iframe src> on line 11 is the absolute URL https://developer.mozilla.org/en-US/docs/Glossary; the corpus is served only under https://mdn.github.io/learning-area/, so the frame loads MDN Web Docs on another host, not a corpus file."
+  },
+  {
+   "rank": "1a832901a483e4ab5c00115ee3fc578e9a13b68019cbff8448a8e368b6d1811f",
+   "path": "accessibility/assessment-start/index.html",
+   "line": 158,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#",
+   "batch": 2,
+   "truth": "accessibility/assessment-start/index.html",
+   "why": "href='#' on line 158 is fragment-only with an empty fragment: it resolves to the document's own URL https://mdn.github.io/learning-area/accessibility/assessment-start/ and an empty fragment designates the top of the document rather than any id, so the target is this page and nothing dangles."
+  },
+  {
+   "rank": "08310ace6d2add927427ccd4cce0c963b0a626e9573f8d2935c59e53d92aa608",
+   "path": "javascript/asynchronous/sequencing-animations/finished/index.html",
+   "line": 15,
+   "nth": 0,
+   "kind": "src",
+   "spec": "alice.svg",
+   "batch": 2,
+   "truth": "javascript/asynchronous/sequencing-animations/finished/alice.svg",
+   "why": "<img id='alice2' src='alice.svg'> on line 15; base = https://mdn.github.io/learning-area/javascript/asynchronous/sequencing-animations/finished/ (index.html, no <base>), so it is the sibling finished/alice.svg, which exists; main.js only animates the images and never changes src."
+  },
+  {
+   "rank": "03534ae223a9c0a5acae70972f71c9c9e5d65a00ba2c3062738b63c6bf6be9de",
+   "path": "javascript/introduction-to-js-1/tasks/variables/variables3.html",
+   "line": 6,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "../styles.css",
+   "batch": 2,
+   "truth": "javascript/introduction-to-js-1/tasks/styles.css",
+   "why": "<link rel='stylesheet' href='../styles.css'> on line 6; base = https://mdn.github.io/learning-area/javascript/introduction-to-js-1/tasks/variables/variables3.html, so '../' climbs from variables/ to tasks/ and the URL maps under the served repo root to javascript/introduction-to-js-1/tasks/styles.css (exists)."
+  },
+  {
+   "rank": "191f8ce1acd8c5cef266dd51cb7be96379632583e4357d90621837ef30a69956",
+   "path": "javascript/asynchronous/sequencing-animations/start/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "src",
+   "spec": "main.js",
+   "batch": 2,
+   "truth": "javascript/asynchronous/sequencing-animations/start/main.js",
+   "why": "<script type='text/javascript' src='main.js' defer> on line 7; base = https://mdn.github.io/learning-area/javascript/asynchronous/sequencing-animations/start/ (index.html, no <base>), so it is the sibling start/main.js, which exists (not the finished/ copy)."
+  },
+  {
+   "rank": "0f141ba3caa6722fb72635b5b89f1fe9461e803f8da83081d97b0cc9977780c3",
+   "path": "javascript/apis/fetching-data/can-store-xhr/index.html",
+   "line": 48,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://thenounproject.com/smashicons/",
+   "batch": 2,
+   "truth": "external",
+   "why": "Footer credit <a href='https://thenounproject.com/smashicons/'> on line 48 is an absolute URL on thenounproject.com, a third-party host outside https://mdn.github.io/learning-area/."
+  },
+  {
+   "rank": "189d4fb6350f0e6c8741d8ceafbbdf9f2398cd47c18097892bcb70809cd5f0ce",
+   "path": "accessibility/multimedia/native-controls.html",
+   "line": 12,
+   "nth": 0,
+   "kind": "src",
+   "spec": "viper.mp3",
+   "batch": 3,
+   "truth": "accessibility/multimedia/viper.mp3",
+   "why": "<source src> inside <audio> (lines 11-15); no <base>, so the base is the page URL https://mdn.github.io/learning-area/accessibility/multimedia/native-controls.html and viper.mp3 resolves to .../accessibility/multimedia/viper.mp3, served from the repo root: accessibility/multimedia/viper.mp3 exists."
+  },
+  {
+   "rank": "01c8bdb274517346b0764fb701f165ef75b25c83d7e91d1d1f2bc72794d1275b",
+   "path": "accessibility/assessment-start/assessment-files/index.html",
+   "line": 82,
+   "nth": 0,
+   "kind": "src",
+   "spec": "media/wild-bear.jpg",
+   "batch": 3,
+   "truth": "accessibility/assessment-start/assessment-files/media/wild-bear.jpg",
+   "why": "<img src> with no <base>; base = https://mdn.github.io/learning-area/accessibility/assessment-start/assessment-files/ (index.html), so media/wild-bear.jpg resolves to .../assessment-files/media/wild-bear.jpg, which exists. The duplicate under assessment-start/media/ is a different URL and not the target."
+  },
+  {
+   "rank": "0d1613d9348f77b1e5440d05fbe6af75fc983b01ee525dbbbbafa35268b64a1f",
+   "path": "javascript/introduction-to-js-1/tasks/variables/variables2.html",
+   "line": 45,
+   "nth": 0,
+   "kind": "src",
+   "spec": "../playable.js",
+   "batch": 3,
+   "truth": "javascript/introduction-to-js-1/tasks/playable.js",
+   "why": "<script src> after </body> (the parser still inserts it into body and fetches it); base = https://mdn.github.io/learning-area/javascript/introduction-to-js-1/tasks/variables/variables2.html, so ../playable.js climbs to .../tasks/playable.js = javascript/introduction-to-js-1/tasks/playable.js (exists)."
+  },
+  {
+   "rank": "199bb024484b212732f7c30437e9ff781e709a903b8f2baf12f11ea75c8a4c08",
+   "path": "javascript/apis/drawing-graphics/loops_animation/8_canvas_drawing_app/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "src",
+   "spec": "script.js",
+   "batch": 3,
+   "truth": "javascript/apis/drawing-graphics/loops_animation/8_canvas_drawing_app/script.js",
+   "why": "<script src=script.js defer> in <head>, no <base>; resolved against https://mdn.github.io/learning-area/javascript/apis/drawing-graphics/loops_animation/8_canvas_drawing_app/ (index.html) it names the sibling script.js in that directory, which exists."
+  },
+  {
+   "rank": "066fbf34f45328d6282f9ee09fbb6f04e7d082cab0bdbbdb1c20b2f3150d2b31",
+   "path": "javascript/apis/drawing-graphics/loops_animation/6_canvas_for_loop/index.html",
+   "line": 8,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 3,
+   "truth": "javascript/apis/drawing-graphics/loops_animation/6_canvas_for_loop/style.css",
+   "why": "<link href=style.css rel=stylesheet> (a fetching rel), no <base>; resolved against https://mdn.github.io/learning-area/javascript/apis/drawing-graphics/loops_animation/6_canvas_for_loop/ (index.html) it names the sibling style.css in that directory, which exists."
+  },
+  {
+   "rank": "00e7b5f8ac7d107a9ab1384534add2e3b25305054c271bdb514cb7833169549e",
+   "path": "javascript/oojs/json/heroes-finished.html",
+   "line": 9,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 3,
+   "truth": "javascript/oojs/json/style.css",
+   "why": "<link rel=stylesheet href=style.css>; base = https://mdn.github.io/learning-area/javascript/oojs/json/heroes-finished.html, the same deployment named by the URL the page's own script fetches (line 26), so it resolves to .../javascript/oojs/json/style.css = javascript/oojs/json/style.css (exists)."
+  },
+  {
+   "rank": "008aa8fc301d7ad73efd58853092d132c330e257a8c4d2a06e178e311f464336",
+   "path": "accessibility/assessment-start/index.html",
+   "line": 8,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300%7CSonsie+One",
+   "batch": 3,
+   "truth": "external",
+   "why": "Absolute https URL to the Google Fonts CSS API (fonts.googleapis.com; %7C is an encoded | between the two families). That origin does not serve this corpus, which is published at https://mdn.github.io/learning-area/, so the target is external."
+  },
+  {
+   "rank": "17ecc3272f021d08ac2c140675da4b22d09ad16f8f39808918cfa6cc69ad5ad4",
+   "path": "html/introduction-to-html/document_and_website_structure/index.html",
+   "line": 94,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#",
+   "batch": 3,
+   "truth": "html/introduction-to-html/document_and_website_structure/index.html",
+   "why": "href=# parses to the document URL with an empty fragment: this same page. The empty fragment names no element (none can carry an empty id, and the page has no ids at all); HTML scrolls to the top of the document instead, so the answer is the bare path."
+  },
+  {
+   "rank": "6748887bc7ec5cc4885a2fc8ca7d6b1915bb50d4746433a0b398111498a37d93",
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 59,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-fairy-800w.jpg",
+   "batch": 3,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-fairy-800w.jpg",
+   "why": "Line 59 continues the <img srcset> opened on line 58; its first candidate is elva-fairy-800w.jpg 800w. Candidate URLs resolve against the document URL (.../responsive-images/responsive.html), giving the sibling html/multimedia-and-embedding/responsive-images/elva-fairy-800w.jpg, which exists."
+  },
+  {
+   "rank": "049ed62b46c5f29fba3bb8aabb49052858ff16ae1f21745b4ee385790ab03c78",
+   "path": "javascript/apis/video-audio/finished/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 3,
+   "truth": "javascript/apis/video-audio/finished/style.css",
+   "why": "<link rel=stylesheet type=text/css href=style.css>, no <base>; resolved against https://mdn.github.io/learning-area/javascript/apis/video-audio/finished/ (index.html) it is the sibling javascript/apis/video-audio/finished/style.css, which exists."
+  },
+  {
+   "rank": "174b83ec5beed4f079c0a3499112d057c971d4caff92eda51a59a73178b3573a",
+   "path": "tools-testing/cross-browser-testing/automation/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 3,
+   "truth": "tools-testing/cross-browser-testing/automation/style.css",
+   "why": "<link href=style.css rel=stylesheet>, no <base>; resolved against https://mdn.github.io/learning-area/tools-testing/cross-browser-testing/automation/ (index.html) it names the sibling tools-testing/cross-browser-testing/automation/style.css, which exists."
+  },
+  {
+   "rank": "0079052e33737d54b7b669a28c984199fa6132cf5edcd1283eaadb97b4a328a6",
+   "path": "javascript/introduction-to-js-1/tasks/strings/strings4.html",
+   "line": 48,
+   "nth": 0,
+   "kind": "src",
+   "spec": "../playable.js",
+   "batch": 3,
+   "truth": "javascript/introduction-to-js-1/tasks/playable.js",
+   "why": "<script src> after </body> (still inserted into body and fetched); base = https://mdn.github.io/learning-area/javascript/introduction-to-js-1/tasks/strings/strings4.html, so ../playable.js goes up one level to javascript/introduction-to-js-1/tasks/playable.js (exists)."
+  },
+  {
+   "rank": "134001ac976e7239c0e4d271290c9536b78e83006b7b07a1db04e23a1d74dafb",
+   "path": "javascript/apis/fetching-data/can-store-xhr/index.html",
+   "line": 8,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "can-style.css",
+   "batch": 3,
+   "truth": "javascript/apis/fetching-data/can-store-xhr/can-style.css",
+   "why": "<link href=can-style.css rel=stylesheet>, no <base>; resolved against https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store-xhr/ (index.html) it names the sibling can-style.css, which exists at that corpus path."
+  },
+  {
+   "rank": "12f690acf51c8276aadcb53399e50188e0cdbe182d537abd15c472765c475e44",
+   "path": "html/multimedia-and-embedding/video-and-audio-content/multiple-video-formats.html",
+   "line": 14,
+   "nth": 0,
+   "kind": "href",
+   "spec": "rabbit320.mp4",
+   "batch": 3,
+   "truth": "html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4",
+   "why": "<a href> in the <video> fallback content, which the parser still builds into the DOM; relative to https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/multiple-video-formats.html, rabbit320.mp4 is the sibling file, which exists."
+  },
+  {
+   "rank": "074a5ac060874ad863a79e8be9299904a00d34c4c35513470b53fee701474a54",
+   "path": "javascript/apis/document-manipulation/dom-example-manipulated.html",
+   "line": 19,
+   "nth": 0,
+   "kind": "src",
+   "spec": "dinosaur.png",
+   "batch": 3,
+   "truth": "javascript/apis/document-manipulation/dinosaur.png",
+   "why": "<img src=dinosaur.png>; the page's inline script rewrites only the <a> href (line 26), never this src. Relative to https://mdn.github.io/learning-area/javascript/apis/document-manipulation/dom-example-manipulated.html it names javascript/apis/document-manipulation/dinosaur.png (exists)."
+  },
+  {
+   "rank": "0d4540864af11c0a52f6e76edc3a70f1edbe8a8be71a905a155e733883e313b3",
+   "path": "html/introduction-to-html/document_and_website_structure/index.html",
+   "line": 24,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#",
+   "batch": 3,
+   "truth": "html/introduction-to-html/document_and_website_structure/index.html",
+   "why": "href=# (the Our team nav link) parses to the document URL with an empty fragment: this same page. The empty fragment names no element (none can have an empty id and the page has no ids); HTML scrolls to the top of the document, so the answer is the bare path."
+  },
+  {
+   "rank": "0018b69da0125e91532ba4c1b5d5bb75cddbcd660f72ac9873a7d1a9bb7991b3",
+   "path": "accessibility/multimedia/audio-transcript-ui/index.html",
+   "line": 36,
+   "nth": 0,
+   "kind": "href",
+   "spec": "../viper.mp3",
+   "batch": 3,
+   "truth": "accessibility/multimedia/viper.mp3",
+   "why": "<a href> in the <audio> fallback; base = https://mdn.github.io/learning-area/accessibility/multimedia/audio-transcript-ui/ (index.html), so ../viper.mp3 climbs one level to .../accessibility/multimedia/viper.mp3 = accessibility/multimedia/viper.mp3 (exists)."
+  },
+  {
+   "rank": "16b67ab17ed270c894b70d080d3ca19a4cf482d2c4aee9d14fc337af948dec84",
+   "path": "javascript/building-blocks/tasks/events/events2.html",
+   "line": 6,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "../styles.css",
+   "batch": 3,
+   "truth": "javascript/building-blocks/tasks/styles.css",
+   "why": "<link rel=stylesheet href=../styles.css>; base = https://mdn.github.io/learning-area/javascript/building-blocks/tasks/events/events2.html, so ../ climbs from events/ to tasks/: javascript/building-blocks/tasks/styles.css, which exists."
+  },
+  {
+   "rank": "09e86f8c644d558dea4b50fb994aa325af5c448957ed663d8a291e81ff339e69",
+   "path": "javascript/introduction-to-js-1/tasks/arrays/arrays1.html",
+   "line": 6,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "../styles.css",
+   "batch": 3,
+   "truth": "javascript/introduction-to-js-1/tasks/styles.css",
+   "why": "<link rel=stylesheet href=../styles.css>; base = https://mdn.github.io/learning-area/javascript/introduction-to-js-1/tasks/arrays/arrays1.html, so ../ climbs from arrays/ to tasks/: javascript/introduction-to-js-1/tasks/styles.css, which exists."
+  },
+  {
+   "rank": "1bc97f6707f72847923fed5edf0b865339797a12205bfe2e541ef939502e1ae5",
+   "path": "html/forms/sending-form-data/templates/form.html",
+   "line": 28,
+   "nth": 0,
+   "kind": "action",
+   "spec": "{{ url_for('hello') }}",
+   "batch": 3,
+   "truth": "dynamic",
+   "why": "The action is a Jinja2 placeholder, not a URL: python-example.py:4-6 renders templates/form.html through Flask, which at request time turns url_for('hello') into the /hello route (python-example.py:8-10), a backend endpoint rather than a corpus file. The static GitHub Pages copy keeps the braces literal, which would name no file."
+  },
+  {
+   "rank": "ad56b9aa2818c199a4bba44e87c5efc7613fef35b2d743de9526439efc727bdd",
+   "path": "html/multimedia-and-embedding/responsive-images/srcset-resolutions.html",
+   "line": 17,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-fairy-480w.jpg",
+   "batch": 3,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-fairy-480w.jpg",
+   "why": "Line 17 lies inside the multi-line <img srcset> opened on line 15; its first candidate is elva-fairy-480w.jpg 1.5x. Resolved against the document URL (.../responsive-images/srcset-resolutions.html) it names html/multimedia-and-embedding/responsive-images/elva-fairy-480w.jpg (exists)."
+  },
+  {
+   "rank": "09a4a5967445c3124812678fea9bbc6c41ce47679163464efaa99589f774d237",
+   "path": "javascript/asynchronous/sequencing-animations/finished/index.html",
+   "line": 14,
+   "nth": 0,
+   "kind": "src",
+   "spec": "alice.svg",
+   "batch": 4,
+   "truth": "javascript/asynchronous/sequencing-animations/finished/alice.svg",
+   "why": "Line 14 img#alice1 src 'alice.svg' resolved against the document URL https://mdn.github.io/learning-area/javascript/asynchronous/sequencing-animations/finished/ (its index.html) gives .../finished/alice.svg, served from the corpus file finished/alice.svg; main.js only animates the images and never rewrites src."
+  },
+  {
+   "rank": "06b02a3d88e2fe2334c8d500370ad1b1c69e97917db65186666197de52b3761a",
+   "path": "javascript/building-blocks/gallery/index.html",
+   "line": 16,
+   "nth": 0,
+   "kind": "src",
+   "spec": "images/pic1.jpg",
+   "batch": 4,
+   "truth": "javascript/building-blocks/gallery/images/pic1.jpg",
+   "why": "Line 16 img.displayed-img src 'images/pic1.jpg' resolved against https://mdn.github.io/learning-area/javascript/building-blocks/gallery/ (index.html) gives .../gallery/images/pic1.jpg, the corpus file; main.js:26 swaps this src only on a thumbnail click, after the parser-time fetch."
+  },
+  {
+   "rank": "6375071a943dbc6653d2d3a0f44073783d6cf0b7e09ca0c9b1be426eabdaf538",
+   "path": "html/forms/sending-form-data/php-example.html",
+   "line": 29,
+   "nth": 0,
+   "kind": "action",
+   "spec": "php-example.php",
+   "batch": 4,
+   "truth": "html/forms/sending-form-data/php-example.php",
+   "why": "Form action 'php-example.php' on line 29 (method post), resolved against https://mdn.github.io/learning-area/html/forms/sending-form-data/php-example.html, gives .../sending-form-data/php-example.php, the corpus file beside the page; GitHub Pages serves it only as a static file (no PHP runs, the POST is not processed), see notes."
+  },
+  {
+   "rank": "8da671fe468f38c50eab5f1d8c42366ff5ab4f14caadbbbe08942b49b8529a11",
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 58,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-fairy-480w.jpg",
+   "batch": 4,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-fairy-480w.jpg",
+   "why": "The first srcset candidate, on line 58 ('elva-fairy-480w.jpg 480w'; the 800w candidate is on line 59), resolved against https://mdn.github.io/learning-area/html/multimedia-and-embedding/responsive-images/responsive.html gives the sibling file elva-fairy-480w.jpg, which exists."
+  },
+  {
+   "rank": "079136b5a0f4509734071ece6c1ca2ade616db254bf6aa1fe49ed1a560c1e23a",
+   "path": "javascript/oojs/assessment/index.html",
+   "line": 15,
+   "nth": 0,
+   "kind": "src",
+   "spec": "main.js",
+   "batch": 4,
+   "truth": "javascript/oojs/assessment/main.js",
+   "why": "Script src 'main.js' on line 15 resolved against the document URL https://mdn.github.io/learning-area/javascript/oojs/assessment/ (index.html) gives .../assessment/main.js, the corpus file javascript/oojs/assessment/main.js."
+  },
+  {
+   "rank": "10a920492906397e3ef18256f0bbe62d130dd5d8dc8145e086a8dcaa3aa0db0f",
+   "path": "javascript/oojs/json/heroes.html",
+   "line": 9,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 4,
+   "truth": "javascript/oojs/json/style.css",
+   "why": "Line 9 <link rel='stylesheet' href='style.css'> resolved against https://mdn.github.io/learning-area/javascript/oojs/json/heroes.html gives .../oojs/json/style.css, the corpus file javascript/oojs/json/style.css (the Google Fonts stylesheet link is on line 8)."
+  },
+  {
+   "rank": "134c0f6a714db0f031270c3247ed5a578c135599e7300ed0e0a90ed5c4cf0857",
+   "path": "javascript/apis/drawing-graphics/loops_animation/7_canvas_walking_animation/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "src",
+   "spec": "script.js",
+   "batch": 4,
+   "truth": "javascript/apis/drawing-graphics/loops_animation/7_canvas_walking_animation/script.js",
+   "why": "Script src 'script.js' on line 7 resolved against https://mdn.github.io/learning-area/javascript/apis/drawing-graphics/loops_animation/7_canvas_walking_animation/ (index.html) gives the sibling script.js, which exists in that directory."
+  },
+  {
+   "rank": "139e7236951af76c9c4f0898d1ced25f2cd4ca0d09fef4698f38b1810d44cb1f",
+   "path": "javascript/oojs/tasks/json/json1-download.html",
+   "line": 16,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "../styles.css",
+   "batch": 4,
+   "truth": "javascript/oojs/tasks/styles.css",
+   "why": "Line 16 stylesheet href '../styles.css' resolved against https://mdn.github.io/learning-area/javascript/oojs/tasks/json/json1-download.html climbs one directory to .../oojs/tasks/styles.css, the corpus file javascript/oojs/tasks/styles.css."
+  },
+  {
+   "rank": "7ca6e9667c8f4e7581f5b6380ae420bdf041142e8072cb401f343068c91f56f5",
+   "path": "html/forms/sending-form-data/get-method.html",
+   "line": 30,
+   "nth": 0,
+   "kind": "action",
+   "spec": "http://example.com",
+   "batch": 4,
+   "truth": "external",
+   "why": "The form action on line 30 is the absolute URL http://example.com (method get): the IANA example host, a different origin from https://mdn.github.io/learning-area/, so the submission leaves the corpus's served tree."
+  },
+  {
+   "rank": "16aca3bfb1d459033713609244fad31fc67814a9dadb9541b3e5588f18fabd52",
+   "path": "javascript/apis/third-party-apis/mapquest/start/index.html",
+   "line": 8,
+   "nth": 0,
+   "kind": "src",
+   "spec": "script.js",
+   "batch": 4,
+   "truth": "javascript/apis/third-party-apis/mapquest/start/script.js",
+   "why": "Script src 'script.js' on line 8 (line 7 is the api.mqcdn.com SDK) resolved against https://mdn.github.io/learning-area/javascript/apis/third-party-apis/mapquest/start/ (index.html) gives the sibling start/script.js, which exists."
+  },
+  {
+   "rank": "13ff287db0fb187ce59effa1ca43d01d59f5840c0eb810233f80cb1058f94605",
+   "path": "tools-testing/cross-browser-testing/javascript/fetch-fixed/index.html",
+   "line": 12,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 4,
+   "truth": "tools-testing/cross-browser-testing/javascript/fetch-fixed/style.css",
+   "why": "Line 12 stylesheet href 'style.css' resolved against the document URL https://mdn.github.io/learning-area/tools-testing/cross-browser-testing/javascript/fetch-fixed/ (index.html) gives fetch-fixed/style.css; the parent directory's style.css is not selected because the base is fetch-fixed/."
+  },
+  {
+   "rank": "05526cd1ba02b03b1c1919aaf90c38adb1fe9f9411eae8c1569e4512076f8ec9",
+   "path": "javascript/asynchronous/sequencing-animations/finished/index.html",
+   "line": 16,
+   "nth": 0,
+   "kind": "src",
+   "spec": "alice.svg",
+   "batch": 4,
+   "truth": "javascript/asynchronous/sequencing-animations/finished/alice.svg",
+   "why": "Line 16 img#alice3 src 'alice.svg' resolved against https://mdn.github.io/learning-area/javascript/asynchronous/sequencing-animations/finished/ (index.html) gives .../finished/alice.svg, the corpus file finished/alice.svg; the script never rewrites it."
+  },
+  {
+   "rank": "130dfe0a5a24cf71469607ecb160eabd5775024dbdda5f26e53014fac26da594",
+   "path": "javascript/asynchronous/workers/start/index.html",
+   "line": 7,
+   "nth": 0,
+   "kind": "src",
+   "spec": "main.js",
+   "batch": 4,
+   "truth": "javascript/asynchronous/workers/start/main.js",
+   "why": "Script src 'main.js' on line 7 resolved against https://mdn.github.io/learning-area/javascript/asynchronous/workers/start/ (index.html) gives the sibling start/main.js (not finished/main.js), which exists."
+  },
+  {
+   "rank": "ab22c1f6d0bad45b04e4081151dacf35e81db185088c20df0861d0b68d8e6001",
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 51,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-480w-close-portrait.jpg",
+   "batch": 4,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-480w-close-portrait.jpg",
+   "why": "The source element's srcset on line 51 has one candidate, 'elva-480w-close-portrait.jpg', resolved against https://mdn.github.io/learning-area/html/multimedia-and-embedding/responsive-images/responsive.html to the sibling file of that name, which exists."
+  },
+  {
+   "rank": "c41c563342c1404368d309cf4f1a4982166fcbcb28e53615eb2250acdb526195",
+   "path": "html/multimedia-and-embedding/responsive-images/srcset-resolutions.html",
+   "line": 18,
+   "nth": 0,
+   "kind": "srcset",
+   "spec": "elva-fairy-640w.jpg",
+   "batch": 4,
+   "truth": "html/multimedia-and-embedding/responsive-images/elva-fairy-640w.jpg",
+   "why": "Line 18 holds the srcset's third candidate 'elva-fairy-640w.jpg 2x', the only one on that line (nth 0); resolved against .../responsive-images/srcset-resolutions.html it is the sibling file elva-fairy-640w.jpg, which exists."
+  },
+  {
+   "rank": "0d367fd18ad9cdb8ef228a7b15d2ed1965e3860cdc11d9133a31312801279640",
+   "path": "javascript/asynchronous/workers/start/index.html",
+   "line": 8,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 4,
+   "truth": "javascript/asynchronous/workers/start/style.css",
+   "why": "Line 8 <link href='style.css' rel='stylesheet'> resolved against https://mdn.github.io/learning-area/javascript/asynchronous/workers/start/ (index.html) gives the sibling start/style.css, which exists."
+  },
+  {
+   "rank": "759e5bad02d73bf2ad25eb6991d14a0f078dd367a31dbb8488393e78627e58d3",
+   "path": "html/forms/sending-form-data/post-method.html",
+   "line": 30,
+   "nth": 0,
+   "kind": "action",
+   "spec": "http://example.com",
+   "batch": 4,
+   "truth": "external",
+   "why": "The form action on line 30 is the absolute URL http://example.com (method post): the IANA example host, a different origin from https://mdn.github.io/learning-area/, so the submission leaves the corpus's served tree."
+  }
+ ],
+ "site_gaps": [
+  {
+   "batch": 1,
+   "path": "javascript/oojs/json/heroes-finished-json-parse.html",
+   "line": 26,
+   "note": "The inline <script> (opened at line 22) sets requestURL = 'https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json' and fetches it via new Request (line 27) and fetch (line 29). The URL is inside the corpus's served prefix: javascript/oojs/json/superheroes.json."
+  },
+  {
+   "batch": 2,
+   "path": "tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html",
+   "line": 24,
+   "note": "Inline classic <script> calls fetch('flowers.jpg'), resolved against the document URL to tools-testing/cross-browser-testing/javascript/flowers.jpg (exists); line 27 then assigns the response's blob: object URL to the <img class='my-image' src=''> of line 15, so that img's src is rewritten at run time."
+  },
+  {
+   "batch": 2,
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 20,
+   "note": "<style> rule 'header { background: url(header.jpg) ... }': an inline stylesheet resolves against the document base, giving html/multimedia-and-embedding/responsive-images/header.jpg (exists)."
+  },
+  {
+   "batch": 3,
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 20,
+   "note": "learning-area: CSS url(header.jpg) inside the <style> element (header background); against the document it names html/multimedia-and-embedding/responsive-images/header.jpg, which exists."
+  },
+  {
+   "batch": 3,
+   "path": "javascript/oojs/json/heroes-finished.html",
+   "line": 26,
+   "note": "learning-area: an inline classic <script> holds the URL https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json and passes it to new Request() and fetch() (lines 27, 29); it lands back in the corpus deployment at javascript/oojs/json/superheroes.json."
+  },
+  {
+   "batch": 3,
+   "path": "javascript/apis/document-manipulation/dom-example-manipulated.html",
+   "line": 26,
+   "note": "learning-area: the inline script sets link.href = https://developer.mozilla.org, rewriting at run time the <a href=https://www.mozilla.org/> written on line 20 (external either way)."
+  },
+  {
+   "batch": 4,
+   "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+   "line": 20,
+   "note": "url(header.jpg) inside the <style> element (header background). Against the document URL it resolves to .../responsive-images/header.jpg, the corpus file html/multimedia-and-embedding/responsive-images/header.jpg."
+  },
+  {
+   "batch": 4,
+   "path": "javascript/oojs/tasks/json/json1-download.html",
+   "line": 35,
+   "note": "Inline <script> string requestURL = 'https://mdn.github.io/learning-area/javascript/oojs/tasks/json/sample.json', passed to fetch() on line 37: an absolute URL into this corpus's own served tree, i.e. javascript/oojs/tasks/json/sample.json."
+  }
+ ],
+ "scope_gaps": [
+  {
+   "batch": 1,
+   "path": "tools-testing/cross-browser-testing/javascript/fetch-broken/script.js",
+   "line": 5,
+   "note": "This is the target of row 39c12024. Its requestURL (lines 4-5) = 'https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json' is fetched at line 7 (fetch(requestURL)), so it reaches corpus file javascript/oojs/json/superheroes.json. The example is deliberately broken: the returned promise is then used as if it were the JSON."
+  },
+  {
+   "batch": 3,
+   "path": "javascript/apis/video-audio/finished/style.css",
+   "line": 3,
+   "note": "Row 948ad35a: this stylesheet's @font-face src (lines 3-7) loads fonts/heydings_controls-webfont.eot/.woff/.ttf, resolved against the stylesheet to javascript/apis/video-audio/finished/fonts/, all three present."
+  },
+  {
+   "batch": 3,
+   "path": "javascript/apis/fetching-data/can-store-xhr/can-style.css",
+   "line": 24,
+   "note": "Row a579d53f: background url(icons/...) at lines 24, 165, 170, 175 load icons/bean_can.png, vegetable.png, meat.png and soup.png under javascript/apis/fetching-data/can-store-xhr/icons/, all present."
+  },
+  {
+   "batch": 3,
+   "path": "html/forms/sending-form-data/python-example.py",
+   "line": 8,
+   "note": "Row c7ab339c: the Flask app serves templates/form.html at route / (lines 4-6) and registers url_for('hello') as route /hello (lines 8-10), which renders templates/greeting.html from the posted say and to fields."
+  },
+  {
+   "batch": 4,
+   "path": "javascript/building-blocks/gallery/main.js",
+   "line": 26,
+   "note": "Script-built references: line 22 creates thumbnail imgs with src images/${image} (images/pic1.jpg to images/pic5.jpg) and line 26 copies a clicked thumbnail's src into .displayed-img. Relevant to row ce009bac: the parser-time value images/pic1.jpg is what loads first; the swap happens only on a click."
+  }
+ ],
+ "notes": [
+  {
+   "batch": 1,
+   "note": "codeeraser deployment: codeeraser.dev is the Cloudflare Pages project 'codeeraser', deployed from the corpus directory site/. Evidence: scripts/deploy_site.js:1 says 'codeeraser.dev is a Cloudflare Pages project', :29 sets PROJECT = 'codeeraser', and :70 runs `wrangler pages deploy site --project-name codeeraser`. README.md:3 (site badge) and README.md:199 link https://codeeraser.dev with /how/, /stack/ and /bench/. Every batch page's og:url meta at line 12 names its own address (site/X/index.html <-> https://codeeraser.dev/X/). Mapping: URL path /P -> site/P, and a trailing '/' -> P/index.html. The tree has no _redirects, _headers, 404.html, CNAME or wrangler config, and no site/ page has a <base>."
+  },
+  {
+   "batch": 1,
+   "note": "Cloudflare Pages treats a project with no top-level 404.html as a SPA and answers unknown paths with /index.html. No row in this batch depends on that, because every in-origin target exists."
+  },
+  {
+   "batch": 1,
+   "note": "learning-area deployment: a GitHub Pages project site at https://mdn.github.io/learning-area/, serving the repository root of main (the only branch; tip dbed6bc). Evidence: javascript/oojs/json/heroes-finished-json-parse.html:26 and heroes-finished.html:26 fetch https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json, which is the corpus file javascript/oojs/json/superheroes.json. javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json (also a corpus file). tools-testing/cross-browser-testing/selenium/quick_test.js:9 opens http://mdn.github.io/learning-area/tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html, which also exists in the corpus. README.md states no URL."
+  },
+  {
+   "batch": 1,
+   "note": "learning-area has no CNAME (so no custom domain) and no Pages workflow (.github holds only CODEOWNERS). It also has no .nojekyll or _config.yml, so Pages runs a default Jekyll branch build: files without front matter are copied verbatim and only '_' / '.' paths are dropped. No target in this batch is affected. A root-relative URL therefore leaves the corpus unless it begins with /learning-area/; that is why both '/my-handling-form-page' form actions are external."
+  },
+  {
+   "batch": 1,
+   "note": "Uncertain: the Pages source branch and folder are a repository setting not visible in the clone. I inferred them from the in-repo absolute URLs, which map one-to-one onto main's tree."
+  },
+  {
+   "batch": 1,
+   "note": "Conventions applied: each document URL is its served address, and an index.html page may be addressed by its directory, which gives the same relative resolution. No batch file has a <base> element. Query strings are ignored for file mapping. Fragments are checked against id attributes in the same file. '#' is an empty fragment: the top of the document, answered with the path alone. github.com blob pages, fonts.googleapis.com and studio.blender.org are external."
+  },
+  {
+   "batch": 1,
+   "note": "Existence of every target was checked with git cat-file -e at the pinned tips. The binary targets (rabbit320.mp4, urban-bear.jpg, three.min.js) are real content, not LFS pointers: learning-area has no .gitattributes, and codeeraser's has no lfs filter."
+  },
+  {
+   "batch": 1,
+   "note": "Not listed as site gaps: zantroke-demo.html:556-560 url('WebFont.*') sit inside a <code> sample (lines 553-562), not live CSS. Its inline <style> (12-16) and <script> (21-25) contain no URLs, and its DOCTYPE DTD URL and xmlns are identifiers that are never fetched. site/assets/stack.svg (row 3c2b3113) holds only same-document url(#arrow) marker references and loads nothing further. site/viewer.js has no URL, fetch or import."
+  },
+  {
+   "batch": 1,
+   "note": "Re-check under the corrected nth definition (position among ALL reference sites on the line, every kind, document order): I re-checked all 25 rows by listing every href / link_asset / src / srcset / action site on each recorded line. No line holds sites of more than one kind, so none of the 25 rows falls under the correction. Only two lines hold several sites, both all-href: site/zh/how/index.html:50 has #f01 #f02 #f03 #f04 #f05, so row 1832dd0d nth 0 is #f01; site/how/index.html:69 has three #honesty links, so row 36584a97 nth 1 is the second. At every row, the site at position nth has the row's kind and spec and is the site judged. No row had been marked mismatch, and no judgment changed."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, codeeraser (website): codeeraser.dev is a Cloudflare Pages project with no git integration (scripts/deploy_site.js:1); scripts/deploy_site.js:29 sets PROJECT = 'codeeraser' and :70-73 run 'npx wrangler pages deploy site --project-name codeeraser', so the corpus directory site/ is served at the root path / of https://codeeraser.dev. Corroborated by README.md:199 (Website: codeeraser.dev, https://codeeraser.dev/how/, /stack/, /bench/) and by each page's og:url (site/how/index.html:12 = https://codeeraser.dev/how/, site/zh/bench/index.html:12 = https://codeeraser.dev/zh/bench/). site/ has no _redirects, _headers or _routes.json and the repository has no wrangler config (git ls-tree), so Pages' default static routing applies: a path ending in / is served as that directory's index.html, and a query string does not change the file."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, codeeraser (desktop GUI): gui/ui/ is the frontend of the Tauri 2 app (gui/src-tauri/tauri.conf.json:7 'frontendDist': '../ui', relative to gui/src-tauri); the webview loads gui/ui/index.html at the root of the app's own asset origin (tauri://localhost or http://tauri.localhost by Tauri's defaults, which the repository does not spell out), so relative URLs in gui/ui/index.html resolve inside gui/ui/. gui/ui is not uploaded to codeeraser.dev (only site/ is)."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, learning-area: GitHub Pages project site https://mdn.github.io/learning-area/ serving the repository root (path prefix /learning-area/). The repository has no CNAME, no .nojekyll and no workflow files (.github holds only CODEOWNERS), i.e. a branch deploy. README.md does not state the URL, but in-repo code does: javascript/oojs/json/heroes-finished.html:26 fetches https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json (= corpus file javascript/oojs/json/superheroes.json), javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json, and tools-testing/cross-browser-testing/selenium/quick_test.js:9 loads http://mdn.github.io/learning-area/tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html (= that corpus file). GitHub Pages serves a directory URL as its index.html (redirecting a slash-less directory URL to the slash form), there is no custom 404.html, and Jekyll's default exclusions (path segments starting with '_' or '.', plus a few names such as node_modules and vendor) touch none of the answered paths."
+  },
+  {
+   "batch": 2,
+   "note": "Bases: no batch file (nor anything under site/, gui/ui/ or demo/) contains a <base> element (git grep -i '<base' returned nothing), so every base URL is the document's own served URL."
+  },
+  {
+   "batch": 2,
+   "note": "Conventions: an empty href is the document itself per the exam rule; '#' is the top of the same document (empty fragment, no id needed, so the bare path); a '#fragment' answer only when an element with that id exists (checked by grep); srcset candidates counted per line, trailing comma stripped per the srcset parser, a missing descriptor is 1x; query strings ignored for the file lookup; absolute URLs on hosts other than codeeraser.dev (codeeraser) or mdn.github.io/learning-area/ (learning-area) are external, including github.com repository pages; character references checked (the only '&' in any row spec is in the Google Fonts URL, where '&family' and '&display' are not references)."
+  },
+  {
+   "batch": 2,
+   "note": "Verification: both clones clean at the pinned tips (codeeraser d4b7f1f37aa50b61ecd21816204bb7f5b06d673c, learning-area dbed6bcb8284634c7549c4da596ec30b0cfc6e7e); every answered path passed git cat-file -e HEAD:<path>; all 19 batch HTML files are LF-only (no CR bytes), so the recorded line numbers are the HTML parser's line numbers; each row's spec was confirmed on its line as the stated kind and nth; no row was a mismatch."
+  },
+  {
+   "batch": 2,
+   "note": "Scripts and dependants checked, none changes an answer: site/viewer.js sets only role/aria attributes; accessibility/assessment-finished/main.js, accessibility/multimedia/custom-controls-OOJS/main.js and javascript/asynchronous/sequencing-animations/finished/main.js never touch src or href; the answered stylesheets (site/style.css, gui/ui/style.css, both tasks/styles.css) contain no @import or url(), and the answered SVGs reference only in-document fragments or data: URLs, hence no scope_gaps."
+  },
+  {
+   "batch": 2,
+   "note": "Uncertain, recalled rather than re-read this session (no web access used): the HTML Standard's rule that an external-resource link with an empty href is not fetched (row 491f3459) and that an empty fragment indicates the top of the document (row 5b12a812); Tauri's default app-origin names; and Cloudflare Pages also serving every deployment at <project>.pages.dev (not evidenced in the repository, not needed for any row). None of these changes a truth value."
+  },
+  {
+   "batch": 2,
+   "note": "Read scope in the codeeraser clone: site/** (the batch pages; viewer.js and two SVGs by grep), gui/ui/index.html, gui/ui/style.css (grep), gui/src-tauri/tauri.conf.json (the GUI's deployment config), scripts/deploy_site.js, README.md lines about the website (grep) and file-name listings; nothing under cli/, core/, docs/, contracts/, plugin/, CHANGELOG*, other scripts or tests. In learning-area, besides the batch pages: README.md, .github/CODEOWNERS, .gitignore, folder listings, a repo-wide git grep for the published github.io URL, the pages' main.js files and the two tasks/styles.css (grep)."
+  },
+  {
+   "batch": 2,
+   "note": "nth re-check under the coordinator's correction (nth = 0-based position among ALL reference sites on the line, every kind, in document order): all 25 rows were re-checked by re-scanning each recorded line for every URL-bearing attribute. 24 recorded lines hold exactly one reference site (for row 4aba2ae9 it is the single srcset candidate elva-fairy-320w.jpg on continuation line 16), so nth 0 is unchanged; site/zh/how/index.html:57 (row 6e7ad526) holds three sites, all href '#honesty', so nth 1 is still the second of them, the first list link. No recorded line mixes kinds; no row changed, and no row was or is a mismatch."
+  },
+  {
+   "batch": 3,
+   "note": "Deployment, codeeraser: scripts/deploy_site.js:70 runs npx wrangler pages deploy site --project-name codeeraser with cwd = the repository root (deploy_site.js:24, 74), so the site/ directory is the root of the Cloudflare Pages project; deploy_site.js:1 names the domain codeeraser.dev, and the pages' own og:url values (site/zh/index.html:12 https://codeeraser.dev/zh/, site/bench/index.html:12, site/zh/how/index.html:12) plus README.md:199 (Website: codeeraser.dev) fix the origin https://codeeraser.dev with no path prefix. A URL path P on that origin maps to site/P. No _headers, _redirects, CNAME or wrangler config exists in the tree, so default static serving applies (a path ending in / serves that directory's index.html)."
+  },
+  {
+   "batch": 3,
+   "note": "Deployment, learning-area: the repository is the GitHub Pages project site of mdn/learning-area, served from the repository root at https://mdn.github.io/learning-area/. There is no Pages workflow (.github holds only CODEOWNERS), no CNAME, no _config.yml and no .nojekyll, and Pages settings live outside git, so the deployment is inferred from in-repo URLs that map corpus path P to https://mdn.github.io/learning-area/P: javascript/oojs/json/heroes-finished.html:26 and heroes-finished-json-parse.html:26 fetch .../javascript/oojs/json/superheroes.json, javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json, and tools-testing/cross-browser-testing/selenium/quick_test.js:9 and mocha_test.js:15 drive .../tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html; all three targets exist at those corpus paths. Without .nojekyll the default Jekyll build copies files lacking front matter verbatim; no answer path begins with _ or ., so none is excluded."
+  },
+  {
+   "batch": 3,
+   "note": "No learning-area row in this batch is root-relative (they are document-relative, fragment-only, absolute or a template), so the /learning-area/ prefix never came into play; the two root-relative rows (7d2f5ed2, c79709bd) are codeeraser rows, and that site has no prefix."
+  },
+  {
+   "batch": 3,
+   "note": "No document in this batch has a <base> element (checked for every file), so each reference resolves against the document's own URL. Directory pages are taken at their trailing-slash URL, which gives the same base directory as .../index.html."
+  },
+  {
+   "batch": 3,
+   "note": "All 25 recorded lines were read from the committed blobs (git show HEAD:path) of clean clones at d4b7f1f37aa50b61ecd21816204bb7f5b06d673c and dbed6bcb8284634c7549c4da596ec30b0cfc6e7e; every batch file is LF-only, so line numbers are unambiguous. Each answer path was confirmed by exact-match lookup in git ls-tree -r --name-only HEAD."
+  },
+  {
+   "batch": 3,
+   "note": "srcset rows: the candidate is counted on its physical line, so on a continuation line of a multi-line srcset attribute the first candidate written there is nth 0 (responsive.html:59, srcset-resolutions.html:17)."
+  },
+  {
+   "batch": 3,
+   "note": "Scripts placed after </body> (variables2.html:45, strings4.html:48) are still inserted into body by the HTML parser and fetched. Links inside audio/video fallback content (multiple-video-formats.html:14, audio-transcript-ui/index.html:36) are real DOM elements."
+  },
+  {
+   "batch": 3,
+   "note": "href=# rows: the URL parser yields the document URL with an empty fragment. HTML's indicated-part rule sends an empty fragment to the top of the document, and no element can carry an empty id, so the answer is the bare path of the same file, with no #fragment."
+  },
+  {
+   "batch": 3,
+   "note": "Re-check after the coordinator's correction (nth = 0-based position among all reference sites on the line, every kind, document order): all 25 recorded lines were re-scanned for href, src, srcset, action, poster and data sites. Only c79709bd sits on a line with more than one kind (site/zh/how/index.html:31: href /zh/ at position 0, img src /icon-256.png at position 1), so its nth 1 is the img src and its truth changes from mismatch (the verdict under the brief's same-kind rule) to site/icon-256.png. Each of the other 24 rows is the only reference site on its line (942abfdb and c94b49d0 are srcset continuation lines holding one candidate each), so none of them changed."
+  },
+  {
+   "batch": 3,
+   "note": "Row c7ab339c is judged dynamic because the value is a template placeholder: Flask rendering yields /hello, a backend route, while the static copy keeps the literal braces. Neither deployment serves a corpus file for it. If the graders prefer to score the static GitHub Pages copy literally, the equivalent answer would be none: a nonexistent .../templates/%7B%7B%20url_for('hello')%20%7D%7D path."
+  },
+  {
+   "batch": 4,
+   "note": "codeeraser deployment: Cloudflare Pages project 'codeeraser' behind https://codeeraser.dev, serving the repository's site/ directory at the origin root. Evidence: scripts/deploy_site.js:1 (codeeraser.dev is a Cloudflare Pages project), :29 (PROJECT = 'codeeraser'), :70 (wrangler pages deploy site --project-name codeeraser); README.md:3 (site badge links https://codeeraser.dev) and README.md:199 (codeeraser.dev, /how/, /stack/, /bench/); each page's og:url on line 12 names its own served URL (site/how/index.html -> https://codeeraser.dev/how/, site/zh/how/index.html -> /zh/how/, site/zh/index.html -> /zh/, site/stack/index.html -> /stack/, site/index.html -> /). No _redirects, _headers, _routes.json or 404.html anywhere under site/ (git ls-tree -r), so Pages defaults apply: a dir/ URL serves dir/index.html. None of the five codeeraser pages in this batch has a <base> element."
+  },
+  {
+   "batch": 4,
+   "note": "learning-area deployment: GitHub Pages project site of mdn/learning-area at https://mdn.github.io/learning-area/, serving the repository root 1:1 under the /learning-area/ prefix. Evidence: the repository's own files request URLs under that prefix that map exactly onto corpus files at the tip: javascript/oojs/json/heroes-finished.html:26 -> javascript/oojs/json/superheroes.json; javascript/oojs/tasks/json/json1-download.html:35 -> javascript/oojs/tasks/json/sample.json; tools-testing/cross-browser-testing/selenium/quick_test.js:9 -> tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html. README.md:1-4 identifies the repo as the MDN Learning Area example code but prints no URL; there is no CNAME, _config.yml, .nojekyll or Pages workflow (.github/ holds only CODEOWNERS), so the Pages source setting itself is not visible in the repo and the prefix rests on the in-repo URLs above. Default branch publishing drops only names beginning with '.' or '_'; no row path does. Every learning-area row in this batch is document-relative or absolute to another host, so the /learning-area/ prefix changes no answer here."
+  },
+  {
+   "batch": 4,
+   "note": "Conventions applied: an index.html is served at its directory URL with a trailing slash (both hosts serve dir/ from index.html and redirect a slashless directory URL to the slash form), any other .html at its own file URL; the base directory is the same either way. Relative values resolve against that directory, root-relative values against the origin root (codeeraser: site/). Query strings are ignored for the file mapping. A fragment answer carries #id only when an element with that id exists in the served HTML (checked by grep: site/how/index.html:162 id='f04', site/zh/how/index.html:412 id='acting', each unique). srcset nth counts candidates on the given line. A script that changes an element's src only after load (on a click) does not make the parser-time value dynamic."
+  },
+  {
+   "batch": 4,
+   "note": "Checked and found nothing to change an answer: site/viewer.js never assigns src or href (grep); the sequencing-animations main.js only calls animate(); the four stylesheets named by link_asset rows (javascript/oojs/json/style.css, javascript/oojs/tasks/styles.css, fetch-fixed/style.css, workers/start/style.css) contain no @import or url(). No codeeraser page in this batch has an inline script, an inline style attribute with url(), a <style> element, an SVG <image> or xlink:href."
+  },
+  {
+   "batch": 4,
+   "note": "Uncertain, row d1c91a41 (php-example.php): answered with the corpus file the action URL maps to, because a file of the corpus is served at that exact URL. GitHub Pages is a static host: it does not execute PHP, and a POST form submission there is not processed by the script (I believe Pages answers non-GET methods with an error status, but I could not verify that from the repository). If the exam counts only endpoints that can actually answer the submission, this row would be 'none' instead."
+  },
+  {
+   "batch": 4,
+   "note": "Scope kept: in the codeeraser clone I read only site/**, scripts/deploy_site.js and README.md lines about the website; deploy_site.js cites docs/RELEASE.md section 3 and scripts/verify_site.js, which I did not open. Both clones confirmed clean at d4b7f1f37aa50b61ecd21816204bb7f5b06d673c and dbed6bcb8284634c7549c4da596ec30b0cfc6e7e."
+  },
+  {
+   "batch": 4,
+   "note": "nth re-check under the coordinator's correction (nth = 0-based position among ALL reference sites on the line, every kind, document order): I re-listed every href, src, srcset, action, poster, data and xlink:href attribute on all 25 recorded lines. No recorded line in this batch holds sites of more than one kind. Rows cfd2e7e9 (site/how/index.html:62, five hrefs #f01 to #f05, #f04 at position 3) and e1559a15 (site/zh/how/index.html:54, three hrefs #acting, #f12, #f13, #acting at position 0) carry several sites, all of kind href, so their all-kinds positions equal the same-kind positions. Rows d43429d6 (responsive.html:58) and f0d16472 (srcset-resolutions.html:18) sit inside multi-line srcset attributes, and each of those lines holds exactly one candidate. Every other recorded line holds exactly one site. No row had been marked mismatch, and no answer changed."
+  }
+ ]
+}

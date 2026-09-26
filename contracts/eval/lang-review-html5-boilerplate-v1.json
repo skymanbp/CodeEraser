@@ -1,0 +1,157 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "html5-boilerplate",
+ "tip": "b6597338e695dc4a8165c5abcb2bfffa586c3ee5",
+ "lang": "html",
+ "auditor": "four independent Opus subagents, one batch of 25 primaries each in the sample's audit order, reading only the two clones at their pinned tips (this repository at d4b7f1f, mdn/learning-area at dbed6bc; html5-boilerplate drew no primary) and their batch - never the product's parse, no ce, no resolver; each judged the file the corpus's deployment serves behind a reference, the deployment read from the tree itself (codeeraser: Cloudflare Pages rooted at site/, scripts/deploy_site.js; learning-area: the GitHub Pages project site under /learning-area/, inferred from the absolute URLs its own pages fetch), then re-checked every row under the coordinator's correction of nth (the brief had defined it per kind; the sample counts every site of the line in document order - one row moved, c79709bd, from mismatch to site/icon-256.png) (booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched) - no auditor read this corpus: its six sites all ranked below the exam's hundred primaries, so the frozen sample draws none from it and this table holds no row; filed because an audited exam files every corpus (Exam::filed), its universe still scored in full by the precision doc's ledger",
+ "summary": {},
+ "rows": [],
+ "site_gaps": [],
+ "scope_gaps": [],
+ "notes": [
+  {
+   "batch": 1,
+   "note": "codeeraser deployment: codeeraser.dev is the Cloudflare Pages project 'codeeraser', deployed from the corpus directory site/. Evidence: scripts/deploy_site.js:1 says 'codeeraser.dev is a Cloudflare Pages project', :29 sets PROJECT = 'codeeraser', and :70 runs `wrangler pages deploy site --project-name codeeraser`. README.md:3 (site badge) and README.md:199 link https://codeeraser.dev with /how/, /stack/ and /bench/. Every batch page's og:url meta at line 12 names its own address (site/X/index.html <-> https://codeeraser.dev/X/). Mapping: URL path /P -> site/P, and a trailing '/' -> P/index.html. The tree has no _redirects, _headers, 404.html, CNAME or wrangler config, and no site/ page has a <base>."
+  },
+  {
+   "batch": 1,
+   "note": "Cloudflare Pages treats a project with no top-level 404.html as a SPA and answers unknown paths with /index.html. No row in this batch depends on that, because every in-origin target exists."
+  },
+  {
+   "batch": 1,
+   "note": "learning-area deployment: a GitHub Pages project site at https://mdn.github.io/learning-area/, serving the repository root of main (the only branch; tip dbed6bc). Evidence: javascript/oojs/json/heroes-finished-json-parse.html:26 and heroes-finished.html:26 fetch https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json, which is the corpus file javascript/oojs/json/superheroes.json. javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json (also a corpus file). tools-testing/cross-browser-testing/selenium/quick_test.js:9 opens http://mdn.github.io/learning-area/tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html, which also exists in the corpus. README.md states no URL."
+  },
+  {
+   "batch": 1,
+   "note": "learning-area has no CNAME (so no custom domain) and no Pages workflow (.github holds only CODEOWNERS). It also has no .nojekyll or _config.yml, so Pages runs a default Jekyll branch build: files without front matter are copied verbatim and only '_' / '.' paths are dropped. No target in this batch is affected. A root-relative URL therefore leaves the corpus unless it begins with /learning-area/; that is why both '/my-handling-form-page' form actions are external."
+  },
+  {
+   "batch": 1,
+   "note": "Uncertain: the Pages source branch and folder are a repository setting not visible in the clone. I inferred them from the in-repo absolute URLs, which map one-to-one onto main's tree."
+  },
+  {
+   "batch": 1,
+   "note": "Conventions applied: each document URL is its served address, and an index.html page may be addressed by its directory, which gives the same relative resolution. No batch file has a <base> element. Query strings are ignored for file mapping. Fragments are checked against id attributes in the same file. '#' is an empty fragment: the top of the document, answered with the path alone. github.com blob pages, fonts.googleapis.com and studio.blender.org are external."
+  },
+  {
+   "batch": 1,
+   "note": "Existence of every target was checked with git cat-file -e at the pinned tips. The binary targets (rabbit320.mp4, urban-bear.jpg, three.min.js) are real content, not LFS pointers: learning-area has no .gitattributes, and codeeraser's has no lfs filter."
+  },
+  {
+   "batch": 1,
+   "note": "Not listed as site gaps: zantroke-demo.html:556-560 url('WebFont.*') sit inside a <code> sample (lines 553-562), not live CSS. Its inline <style> (12-16) and <script> (21-25) contain no URLs, and its DOCTYPE DTD URL and xmlns are identifiers that are never fetched. site/assets/stack.svg (row 3c2b3113) holds only same-document url(#arrow) marker references and loads nothing further. site/viewer.js has no URL, fetch or import."
+  },
+  {
+   "batch": 1,
+   "note": "Re-check under the corrected nth definition (position among ALL reference sites on the line, every kind, document order): I re-checked all 25 rows by listing every href / link_asset / src / srcset / action site on each recorded line. No line holds sites of more than one kind, so none of the 25 rows falls under the correction. Only two lines hold several sites, both all-href: site/zh/how/index.html:50 has #f01 #f02 #f03 #f04 #f05, so row 1832dd0d nth 0 is #f01; site/how/index.html:69 has three #honesty links, so row 36584a97 nth 1 is the second. At every row, the site at position nth has the row's kind and spec and is the site judged. No row had been marked mismatch, and no judgment changed."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, codeeraser (website): codeeraser.dev is a Cloudflare Pages project with no git integration (scripts/deploy_site.js:1); scripts/deploy_site.js:29 sets PROJECT = 'codeeraser' and :70-73 run 'npx wrangler pages deploy site --project-name codeeraser', so the corpus directory site/ is served at the root path / of https://codeeraser.dev. Corroborated by README.md:199 (Website: codeeraser.dev, https://codeeraser.dev/how/, /stack/, /bench/) and by each page's og:url (site/how/index.html:12 = https://codeeraser.dev/how/, site/zh/bench/index.html:12 = https://codeeraser.dev/zh/bench/). site/ has no _redirects, _headers or _routes.json and the repository has no wrangler config (git ls-tree), so Pages' default static routing applies: a path ending in / is served as that directory's index.html, and a query string does not change the file."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, codeeraser (desktop GUI): gui/ui/ is the frontend of the Tauri 2 app (gui/src-tauri/tauri.conf.json:7 'frontendDist': '../ui', relative to gui/src-tauri); the webview loads gui/ui/index.html at the root of the app's own asset origin (tauri://localhost or http://tauri.localhost by Tauri's defaults, which the repository does not spell out), so relative URLs in gui/ui/index.html resolve inside gui/ui/. gui/ui is not uploaded to codeeraser.dev (only site/ is)."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, learning-area: GitHub Pages project site https://mdn.github.io/learning-area/ serving the repository root (path prefix /learning-area/). The repository has no CNAME, no .nojekyll and no workflow files (.github holds only CODEOWNERS), i.e. a branch deploy. README.md does not state the URL, but in-repo code does: javascript/oojs/json/heroes-finished.html:26 fetches https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json (= corpus file javascript/oojs/json/superheroes.json), javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json, and tools-testing/cross-browser-testing/selenium/quick_test.js:9 loads http://mdn.github.io/learning-area/tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html (= that corpus file). GitHub Pages serves a directory URL as its index.html (redirecting a slash-less directory URL to the slash form), there is no custom 404.html, and Jekyll's default exclusions (path segments starting with '_' or '.', plus a few names such as node_modules and vendor) touch none of the answered paths."
+  },
+  {
+   "batch": 2,
+   "note": "Bases: no batch file (nor anything under site/, gui/ui/ or demo/) contains a <base> element (git grep -i '<base' returned nothing), so every base URL is the document's own served URL."
+  },
+  {
+   "batch": 2,
+   "note": "Conventions: an empty href is the document itself per the exam rule; '#' is the top of the same document (empty fragment, no id needed, so the bare path); a '#fragment' answer only when an element with that id exists (checked by grep); srcset candidates counted per line, trailing comma stripped per the srcset parser, a missing descriptor is 1x; query strings ignored for the file lookup; absolute URLs on hosts other than codeeraser.dev (codeeraser) or mdn.github.io/learning-area/ (learning-area) are external, including github.com repository pages; character references checked (the only '&' in any row spec is in the Google Fonts URL, where '&family' and '&display' are not references)."
+  },
+  {
+   "batch": 2,
+   "note": "Verification: both clones clean at the pinned tips (codeeraser d4b7f1f37aa50b61ecd21816204bb7f5b06d673c, learning-area dbed6bcb8284634c7549c4da596ec30b0cfc6e7e); every answered path passed git cat-file -e HEAD:<path>; all 19 batch HTML files are LF-only (no CR bytes), so the recorded line numbers are the HTML parser's line numbers; each row's spec was confirmed on its line as the stated kind and nth; no row was a mismatch."
+  },
+  {
+   "batch": 2,
+   "note": "Scripts and dependants checked, none changes an answer: site/viewer.js sets only role/aria attributes; accessibility/assessment-finished/main.js, accessibility/multimedia/custom-controls-OOJS/main.js and javascript/asynchronous/sequencing-animations/finished/main.js never touch src or href; the answered stylesheets (site/style.css, gui/ui/style.css, both tasks/styles.css) contain no @import or url(), and the answered SVGs reference only in-document fragments or data: URLs, hence no scope_gaps."
+  },
+  {
+   "batch": 2,
+   "note": "Uncertain, recalled rather than re-read this session (no web access used): the HTML Standard's rule that an external-resource link with an empty href is not fetched (row 491f3459) and that an empty fragment indicates the top of the document (row 5b12a812); Tauri's default app-origin names; and Cloudflare Pages also serving every deployment at <project>.pages.dev (not evidenced in the repository, not needed for any row). None of these changes a truth value."
+  },
+  {
+   "batch": 2,
+   "note": "Read scope in the codeeraser clone: site/** (the batch pages; viewer.js and two SVGs by grep), gui/ui/index.html, gui/ui/style.css (grep), gui/src-tauri/tauri.conf.json (the GUI's deployment config), scripts/deploy_site.js, README.md lines about the website (grep) and file-name listings; nothing under cli/, core/, docs/, contracts/, plugin/, CHANGELOG*, other scripts or tests. In learning-area, besides the batch pages: README.md, .github/CODEOWNERS, .gitignore, folder listings, a repo-wide git grep for the published github.io URL, the pages' main.js files and the two tasks/styles.css (grep)."
+  },
+  {
+   "batch": 2,
+   "note": "nth re-check under the coordinator's correction (nth = 0-based position among ALL reference sites on the line, every kind, in document order): all 25 rows were re-checked by re-scanning each recorded line for every URL-bearing attribute. 24 recorded lines hold exactly one reference site (for row 4aba2ae9 it is the single srcset candidate elva-fairy-320w.jpg on continuation line 16), so nth 0 is unchanged; site/zh/how/index.html:57 (row 6e7ad526) holds three sites, all href '#honesty', so nth 1 is still the second of them, the first list link. No recorded line mixes kinds; no row changed, and no row was or is a mismatch."
+  },
+  {
+   "batch": 3,
+   "note": "Deployment, codeeraser: scripts/deploy_site.js:70 runs npx wrangler pages deploy site --project-name codeeraser with cwd = the repository root (deploy_site.js:24, 74), so the site/ directory is the root of the Cloudflare Pages project; deploy_site.js:1 names the domain codeeraser.dev, and the pages' own og:url values (site/zh/index.html:12 https://codeeraser.dev/zh/, site/bench/index.html:12, site/zh/how/index.html:12) plus README.md:199 (Website: codeeraser.dev) fix the origin https://codeeraser.dev with no path prefix. A URL path P on that origin maps to site/P. No _headers, _redirects, CNAME or wrangler config exists in the tree, so default static serving applies (a path ending in / serves that directory's index.html)."
+  },
+  {
+   "batch": 3,
+   "note": "Deployment, learning-area: the repository is the GitHub Pages project site of mdn/learning-area, served from the repository root at https://mdn.github.io/learning-area/. There is no Pages workflow (.github holds only CODEOWNERS), no CNAME, no _config.yml and no .nojekyll, and Pages settings live outside git, so the deployment is inferred from in-repo URLs that map corpus path P to https://mdn.github.io/learning-area/P: javascript/oojs/json/heroes-finished.html:26 and heroes-finished-json-parse.html:26 fetch .../javascript/oojs/json/superheroes.json, javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json, and tools-testing/cross-browser-testing/selenium/quick_test.js:9 and mocha_test.js:15 drive .../tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html; all three targets exist at those corpus paths. Without .nojekyll the default Jekyll build copies files lacking front matter verbatim; no answer path begins with _ or ., so none is excluded."
+  },
+  {
+   "batch": 3,
+   "note": "No learning-area row in this batch is root-relative (they are document-relative, fragment-only, absolute or a template), so the /learning-area/ prefix never came into play; the two root-relative rows (7d2f5ed2, c79709bd) are codeeraser rows, and that site has no prefix."
+  },
+  {
+   "batch": 3,
+   "note": "No document in this batch has a <base> element (checked for every file), so each reference resolves against the document's own URL. Directory pages are taken at their trailing-slash URL, which gives the same base directory as .../index.html."
+  },
+  {
+   "batch": 3,
+   "note": "All 25 recorded lines were read from the committed blobs (git show HEAD:path) of clean clones at d4b7f1f37aa50b61ecd21816204bb7f5b06d673c and dbed6bcb8284634c7549c4da596ec30b0cfc6e7e; every batch file is LF-only, so line numbers are unambiguous. Each answer path was confirmed by exact-match lookup in git ls-tree -r --name-only HEAD."
+  },
+  {
+   "batch": 3,
+   "note": "srcset rows: the candidate is counted on its physical line, so on a continuation line of a multi-line srcset attribute the first candidate written there is nth 0 (responsive.html:59, srcset-resolutions.html:17)."
+  },
+  {
+   "batch": 3,
+   "note": "Scripts placed after </body> (variables2.html:45, strings4.html:48) are still inserted into body by the HTML parser and fetched. Links inside audio/video fallback content (multiple-video-formats.html:14, audio-transcript-ui/index.html:36) are real DOM elements."
+  },
+  {
+   "batch": 3,
+   "note": "href=# rows: the URL parser yields the document URL with an empty fragment. HTML's indicated-part rule sends an empty fragment to the top of the document, and no element can carry an empty id, so the answer is the bare path of the same file, with no #fragment."
+  },
+  {
+   "batch": 3,
+   "note": "Re-check after the coordinator's correction (nth = 0-based position among all reference sites on the line, every kind, document order): all 25 recorded lines were re-scanned for href, src, srcset, action, poster and data sites. Only c79709bd sits on a line with more than one kind (site/zh/how/index.html:31: href /zh/ at position 0, img src /icon-256.png at position 1), so its nth 1 is the img src and its truth changes from mismatch (the verdict under the brief's same-kind rule) to site/icon-256.png. Each of the other 24 rows is the only reference site on its line (942abfdb and c94b49d0 are srcset continuation lines holding one candidate each), so none of them changed."
+  },
+  {
+   "batch": 3,
+   "note": "Row c7ab339c is judged dynamic because the value is a template placeholder: Flask rendering yields /hello, a backend route, while the static copy keeps the literal braces. Neither deployment serves a corpus file for it. If the graders prefer to score the static GitHub Pages copy literally, the equivalent answer would be none: a nonexistent .../templates/%7B%7B%20url_for('hello')%20%7D%7D path."
+  },
+  {
+   "batch": 4,
+   "note": "codeeraser deployment: Cloudflare Pages project 'codeeraser' behind https://codeeraser.dev, serving the repository's site/ directory at the origin root. Evidence: scripts/deploy_site.js:1 (codeeraser.dev is a Cloudflare Pages project), :29 (PROJECT = 'codeeraser'), :70 (wrangler pages deploy site --project-name codeeraser); README.md:3 (site badge links https://codeeraser.dev) and README.md:199 (codeeraser.dev, /how/, /stack/, /bench/); each page's og:url on line 12 names its own served URL (site/how/index.html -> https://codeeraser.dev/how/, site/zh/how/index.html -> /zh/how/, site/zh/index.html -> /zh/, site/stack/index.html -> /stack/, site/index.html -> /). No _redirects, _headers, _routes.json or 404.html anywhere under site/ (git ls-tree -r), so Pages defaults apply: a dir/ URL serves dir/index.html. None of the five codeeraser pages in this batch has a <base> element."
+  },
+  {
+   "batch": 4,
+   "note": "learning-area deployment: GitHub Pages project site of mdn/learning-area at https://mdn.github.io/learning-area/, serving the repository root 1:1 under the /learning-area/ prefix. Evidence: the repository's own files request URLs under that prefix that map exactly onto corpus files at the tip: javascript/oojs/json/heroes-finished.html:26 -> javascript/oojs/json/superheroes.json; javascript/oojs/tasks/json/json1-download.html:35 -> javascript/oojs/tasks/json/sample.json; tools-testing/cross-browser-testing/selenium/quick_test.js:9 -> tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html. README.md:1-4 identifies the repo as the MDN Learning Area example code but prints no URL; there is no CNAME, _config.yml, .nojekyll or Pages workflow (.github/ holds only CODEOWNERS), so the Pages source setting itself is not visible in the repo and the prefix rests on the in-repo URLs above. Default branch publishing drops only names beginning with '.' or '_'; no row path does. Every learning-area row in this batch is document-relative or absolute to another host, so the /learning-area/ prefix changes no answer here."
+  },
+  {
+   "batch": 4,
+   "note": "Conventions applied: an index.html is served at its directory URL with a trailing slash (both hosts serve dir/ from index.html and redirect a slashless directory URL to the slash form), any other .html at its own file URL; the base directory is the same either way. Relative values resolve against that directory, root-relative values against the origin root (codeeraser: site/). Query strings are ignored for the file mapping. A fragment answer carries #id only when an element with that id exists in the served HTML (checked by grep: site/how/index.html:162 id='f04', site/zh/how/index.html:412 id='acting', each unique). srcset nth counts candidates on the given line. A script that changes an element's src only after load (on a click) does not make the parser-time value dynamic."
+  },
+  {
+   "batch": 4,
+   "note": "Checked and found nothing to change an answer: site/viewer.js never assigns src or href (grep); the sequencing-animations main.js only calls animate(); the four stylesheets named by link_asset rows (javascript/oojs/json/style.css, javascript/oojs/tasks/styles.css, fetch-fixed/style.css, workers/start/style.css) contain no @import or url(). No codeeraser page in this batch has an inline script, an inline style attribute with url(), a <style> element, an SVG <image> or xlink:href."
+  },
+  {
+   "batch": 4,
+   "note": "Uncertain, row d1c91a41 (php-example.php): answered with the corpus file the action URL maps to, because a file of the corpus is served at that exact URL. GitHub Pages is a static host: it does not execute PHP, and a POST form submission there is not processed by the script (I believe Pages answers non-GET methods with an error status, but I could not verify that from the repository). If the exam counts only endpoints that can actually answer the submission, this row would be 'none' instead."
+  },
+  {
+   "batch": 4,
+   "note": "Scope kept: in the codeeraser clone I read only site/**, scripts/deploy_site.js and README.md lines about the website; deploy_site.js cites docs/RELEASE.md section 3 and scripts/verify_site.js, which I did not open. Both clones confirmed clean at d4b7f1f37aa50b61ecd21816204bb7f5b06d673c and dbed6bcb8284634c7549c4da596ec30b0cfc6e7e."
+  },
+  {
+   "batch": 4,
+   "note": "nth re-check under the coordinator's correction (nth = 0-based position among ALL reference sites on the line, every kind, document order): I re-listed every href, src, srcset, action, poster, data and xlink:href attribute on all 25 recorded lines. No recorded line in this batch holds sites of more than one kind. Rows cfd2e7e9 (site/how/index.html:62, five hrefs #f01 to #f05, #f04 at position 3) and e1559a15 (site/zh/how/index.html:54, three hrefs #acting, #f12, #f13, #acting at position 0) carry several sites, all of kind href, so their all-kinds positions equal the same-kind positions. Rows d43429d6 (responsive.html:58) and f0d16472 (srcset-resolutions.html:18) sit inside multi-line srcset attributes, and each of those lines holds exactly one candidate. Every other recorded line holds exactly one site. No row had been marked mismatch, and no answer changed."
+  }
+ ]
+}

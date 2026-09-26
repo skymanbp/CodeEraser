@@ -1,0 +1,822 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "codeeraser",
+ "tip": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c",
+ "lang": "html",
+ "auditor": "four independent Opus subagents, one batch of 25 primaries each in the sample's audit order, reading only the two clones at their pinned tips (this repository at d4b7f1f, mdn/learning-area at dbed6bc; html5-boilerplate drew no primary) and their batch - never the product's parse, no ce, no resolver; each judged the file the corpus's deployment serves behind a reference, the deployment read from the tree itself (codeeraser: Cloudflare Pages rooted at site/, scripts/deploy_site.js; learning-area: the GitHub Pages project site under /learning-area/, inferred from the absolute URLs its own pages fetch), then re-checked every row under the coordinator's correction of nth (the brief had defined it per kind; the sample counts every site of the line in document order - one row moved, c79709bd, from mismatch to site/icon-256.png) (booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched)",
+ "summary": {
+  "external": 12,
+  "file": 20,
+  "member": 5
+ },
+ "rows": [
+  {
+   "rank": "165be8f21b74d3dca6942faf112ab6821859e696e148c88cae77ef9e178ef588",
+   "path": "site/stack/index.html",
+   "line": 18,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://codeeraser.dev/zh/stack/",
+   "batch": 1,
+   "truth": "site/zh/stack/index.html",
+   "why": "Line 18 is <link rel='alternate' hreflang='zh'> (a non-fetching rel, so kind href). The absolute URL is on https://codeeraser.dev, the Cloudflare Pages project whose root is the corpus's site/ directory (scripts/deploy_site.js:1 and :70; README.md:199; og:url at site/zh/stack/index.html:12 names this exact address). /zh/stack/ ends in '/', so the directory index site/zh/stack/index.html is served."
+  },
+  {
+   "rank": "146128f4dfc91fa2d8d71c38c2fd2167f78447dae702f8419e6137956c3a7f1c",
+   "path": "site/zh/how/index.html",
+   "line": 385,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md",
+   "batch": 1,
+   "truth": "external",
+   "why": "The only <a href> on line 385 is an absolute URL to github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md, which is GitHub's own page about the repository. codeeraser.dev deploys only site/ (scripts/deploy_site.js:70), so docs/ is never in the served tree."
+  },
+  {
+   "rank": "1d6cf554e6d4b7752a94ee68006ca8a98c4bc08606799a9e6d248e21d09da3d8",
+   "path": "site/zh/index.html",
+   "line": 25,
+   "nth": 0,
+   "kind": "src",
+   "spec": "/viewer.js?v=1",
+   "batch": 1,
+   "truth": "site/viewer.js",
+   "why": "<script src defer> on line 25. It is root-relative, so it resolves to https://codeeraser.dev/viewer.js?v=1 on the origin whose root is site/ (scripts/deploy_site.js:70). The ?v=1 cache-busting query does not change the file, and site/viewer.js exists."
+  },
+  {
+   "rank": "011ff49d70b6b201bf8d4f78ae0e2d3e42f0aa0d8a9c5ffaf75b0e3f71813d60",
+   "path": "site/zh/how/index.html",
+   "line": 50,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#f01",
+   "batch": 1,
+   "truth": "site/zh/how/index.html#f01",
+   "why": "The first <a href> on line 50 (the page's contents panel) is fragment-only, so it resolves to this same document, https://codeeraser.dev/zh/how/. <h3 id='f01'> exists at line 70."
+  },
+  {
+   "rank": "0fa1e18c2163d6e237f04080626cb723f0c54f49d9bd99a2ac0e2bb65d6391ec",
+   "path": "site/zh/stack/index.html",
+   "line": 22,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap",
+   "batch": 1,
+   "truth": "external",
+   "why": "<link rel='stylesheet'> on line 22 is an absolute css2 URL on fonts.googleapis.com (IBM Plex Mono / Sans, Noto Sans SC). That is a third-party font service, not the codeeraser.dev origin that serves site/."
+  },
+  {
+   "rank": "14bfb3118d33874a8171cc0adeb437f9f3720299437e9ec2b8673f363aafa1d6",
+   "path": "site/how/index.html",
+   "line": 22,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap",
+   "batch": 1,
+   "truth": "external",
+   "why": "<link rel='stylesheet'> on line 22 is an absolute css2 URL on fonts.googleapis.com (IBM Plex Mono / Sans). That is Google's font service, not the codeeraser.dev origin that serves site/ (scripts/deploy_site.js:70)."
+  },
+  {
+   "rank": "008d25320697b7d6015e4520a928232091083734d42480fa6a0a359102de50ba",
+   "path": "site/zh/bench/index.html",
+   "line": 17,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "/favicon.png",
+   "batch": 1,
+   "truth": "site/favicon.png",
+   "why": "<link rel='icon'> on line 17 is root-relative, so it resolves to https://codeeraser.dev/favicon.png. The Pages deploy serves site/ at the origin root (scripts/deploy_site.js:70), so site/favicon.png (2,081 bytes) is returned."
+  },
+  {
+   "rank": "02ef09f745f540e5356c2e04662cb72f4af0869b1d826c954934f6402a1a13a6",
+   "path": "site/how/index.html",
+   "line": 202,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md",
+   "batch": 1,
+   "truth": "external",
+   "why": "The <a href> inside <h3 id='f05'> on line 202 is an absolute URL to github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md, GitHub's page about the repository. Only site/ is deployed to codeeraser.dev."
+  },
+  {
+   "rank": "16b84909c1725b47080535756dc1f2441463231af5448ac7d61288ba72431cf8",
+   "path": "site/how/index.html",
+   "line": 69,
+   "nth": 1,
+   "kind": "href",
+   "spec": "#honesty",
+   "batch": 1,
+   "truth": "site/how/index.html#honesty",
+   "why": "Line 69 carries three <a href='#honesty'>; nth 1 is the second, the 'not a security boundary' link. Being fragment-only, it resolves to this document, https://codeeraser.dev/how/. <h2 id='honesty'> exists at line 700."
+  },
+  {
+   "rank": "14c99ed14f86ffc1f386ce26c09be0edf60fb13dcd328344f48a3bb27aa5de55",
+   "path": "site/index.html",
+   "line": 153,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/bench/",
+   "batch": 1,
+   "truth": "site/bench/index.html",
+   "why": "<a href> on line 153 is root-relative and resolves to https://codeeraser.dev/bench/. The trailing slash serves the directory index from the site/ root, site/bench/index.html. README.md:199 names that URL as the bench page."
+  },
+  {
+   "rank": "0e028394278b219d99c15b7f46b2733150c76e1d2f150aecd03ef1e800920561",
+   "path": "site/stack/index.html",
+   "line": 60,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/assets/stack.svg",
+   "batch": 1,
+   "truth": "site/assets/stack.svg",
+   "why": "The <a href> 'full-size SVG' link on line 60 is root-relative and resolves to https://codeeraser.dev/assets/stack.svg. site/ is the served root (scripts/deploy_site.js:70), so site/assets/stack.svg is returned."
+  },
+  {
+   "rank": "10e077f7cb2310e9cba73ce7fe3bf95b2dff3645404cd1f28c3e09f159218d1e",
+   "path": "site/zh/index.html",
+   "line": 31,
+   "nth": 0,
+   "kind": "src",
+   "spec": "/icon-256.png",
+   "batch": 1,
+   "truth": "site/icon-256.png",
+   "why": "The header <img src> on line 31 is root-relative and resolves to https://codeeraser.dev/icon-256.png. site/ is served at the origin root (scripts/deploy_site.js:70), and site/icon-256.png (21,143 bytes) exists."
+  },
+  {
+   "rank": "0d6d7abc6e7a73e18b5ece229d0767301ef3dfc9c0daa5f25c81d0396451e645",
+   "path": "site/how/index.html",
+   "line": 19,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://codeeraser.dev/how/",
+   "batch": 2,
+   "truth": "site/how/index.html",
+   "why": "<link rel='alternate' hreflang='en'> on line 19 (non-fetching rel, href kind) holds the absolute URL https://codeeraser.dev/how/. codeeraser.dev serves the corpus's site/ directory at / (Cloudflare Pages, scripts/deploy_site.js:70 'wrangler pages deploy site'), and a path ending in / is served as that directory's index.html, so this is the page itself."
+  },
+  {
+   "rank": "0bfc7b3fade9d7c399aa0c43b15292fd41b475c0aedc9bb65d70d4f93220755c",
+   "path": "gui/ui/index.html",
+   "line": 11,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "style.css",
+   "batch": 2,
+   "truth": "gui/ui/style.css",
+   "why": "<link rel='stylesheet' href='style.css'> on line 11 of the desktop GUI page. gui/src-tauri/tauri.conf.json:7 sets frontendDist '../ui', so the Tauri webview loads gui/ui/index.html at the root of its app origin and 'style.css' resolves beside it to /style.css = gui/ui/style.css, which exists; gui/ui is not part of the codeeraser.dev deployment (only site/ is)."
+  },
+  {
+   "rank": "12891a0ff8a9b4b269bcdfcaa5ceab082be575f1c4469f48fc5bd5f7a79d93e9",
+   "path": "site/index.html",
+   "line": 38,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://github.com/skymanbp/CodeEraser",
+   "batch": 2,
+   "truth": "external",
+   "why": "Header nav <a href='https://github.com/skymanbp/CodeEraser'> on line 38 is GitHub's own page for the repository on github.com; the corpus's served tree is https://codeeraser.dev/ (site/), so this lands on another origin."
+  },
+  {
+   "rank": "024e10690e578235b366ef3a5282be10adcd01628787ecabfdf1d7fefa3b5c05",
+   "path": "site/index.html",
+   "line": 102,
+   "nth": 0,
+   "kind": "src",
+   "spec": "/assets/gui-structure.png",
+   "batch": 2,
+   "truth": "site/assets/gui-structure.png",
+   "why": "<img src='/assets/gui-structure.png'> on line 102 is root-relative, so it resolves to https://codeeraser.dev/assets/gui-structure.png; codeeraser.dev serves site/ at / (scripts/deploy_site.js:70), so the file is site/assets/gui-structure.png, which exists; site/viewer.js never rewrites src or href."
+  },
+  {
+   "rank": "00810f342ab90d1bf41029d6dd90bf20e9b353cb869f009bc4f1d63614736ac2",
+   "path": "site/zh/index.html",
+   "line": 155,
+   "nth": 0,
+   "kind": "src",
+   "spec": "/assets/architecture.zh.svg",
+   "batch": 2,
+   "truth": "site/assets/architecture.zh.svg",
+   "why": "<img src='/assets/architecture.zh.svg'> on line 155 of the /zh/ page; being root-relative it ignores the /zh/ directory and resolves to https://codeeraser.dev/assets/architecture.zh.svg, which maps under the served site/ directory to site/assets/architecture.zh.svg (exists)."
+  },
+  {
+   "rank": "06f01c3aa0e7c461467c0ca2efa29c8fd7aeaae8ecf372c090ed926d8ca3ca9f",
+   "path": "site/zh/how/index.html",
+   "line": 456,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/assets/methodology.zh.svg",
+   "batch": 2,
+   "truth": "site/assets/methodology.zh.svg",
+   "why": "<a href='/assets/methodology.zh.svg'> in the figcaption on line 456; root-relative against https://codeeraser.dev/zh/how/ it becomes https://codeeraser.dev/assets/methodology.zh.svg, served from site/assets/methodology.zh.svg (exists)."
+  },
+  {
+   "rank": "015636c4944808c1f92548f28a7d04be6d9d5131320b294871b56fb47b431d9c",
+   "path": "site/zh/index.html",
+   "line": 166,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/zh/stack/",
+   "batch": 2,
+   "truth": "site/zh/stack/index.html",
+   "why": "Footer <a href='/zh/stack/'> on line 166; root-relative to https://codeeraser.dev/zh/stack/, a directory URL that Cloudflare Pages answers with that directory's index.html under the served site/ tree, i.e. site/zh/stack/index.html (exists)."
+  },
+  {
+   "rank": "01ee4b1d844e809c4ed3972bec6f4dfd72153aa17aef0cfe6dda0e96d4f744ce",
+   "path": "site/zh/how/index.html",
+   "line": 57,
+   "nth": 1,
+   "kind": "href",
+   "spec": "#honesty",
+   "batch": 2,
+   "truth": "site/zh/how/index.html#honesty",
+   "why": "Line 57 carries three href='#honesty' (the section link, then two list links); nth 1 is the first list link. A fragment-only value targets the same document, and site/zh/how/index.html has <h2 id='honesty'> at line 517 (the only element with that id), so the fragment resolves."
+  },
+  {
+   "rank": "0153cda148377e4f6749344f4add57954cbaeec9acb95be798e5e17c1c041d59",
+   "path": "site/stack/index.html",
+   "line": 22,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap",
+   "batch": 2,
+   "truth": "external",
+   "why": "<link href=... rel='stylesheet'> on line 22 (fetching rel, link_asset) is an absolute https://fonts.googleapis.com/css2?... URL, a font service on another origin; '&family' and '&display' are not character references, so the value is used as written and never lands on codeeraser.dev."
+  },
+  {
+   "rank": "0ff24b5a7862b8eb8976af51c79a968137257d6c5396c6c658b7ac0b308c09db",
+   "path": "site/how/index.html",
+   "line": 414,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md",
+   "batch": 2,
+   "truth": "external",
+   "why": "The <a href> in the family-10 heading on line 414 is https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md, GitHub's blob view on github.com, not the codeeraser.dev origin that serves site/, so it is external."
+  },
+  {
+   "rank": "1819f6223274480896637d4271a43e92bc26c39afafc328042dd361d23c1eb69",
+   "path": "site/stack/index.html",
+   "line": 85,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/",
+   "batch": 2,
+   "truth": "site/index.html",
+   "why": "Footer <a href='/'> on line 85 resolves to https://codeeraser.dev/, the root of the served site/ directory, which Cloudflare Pages answers with its index.html, i.e. site/index.html (exists)."
+  },
+  {
+   "rank": "04d8febd32030f605392bf5dc220655781cb77e1d5dfe8413d2a15e706cf225c",
+   "path": "site/zh/bench/index.html",
+   "line": 19,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://codeeraser.dev/zh/bench/",
+   "batch": 2,
+   "truth": "site/zh/bench/index.html",
+   "why": "<link rel='alternate' hreflang='zh'> on line 19 (non-fetching rel, href kind) points at https://codeeraser.dev/zh/bench/; with site/ served at / and directory URLs served as index.html, that is this very file, site/zh/bench/index.html."
+  },
+  {
+   "rank": "1258cd59958ddcc5fae3ca9521e942b5b1351000359b26d38f2baed4f24bada7",
+   "path": "site/how/index.html",
+   "line": 23,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "/style.css?v=6",
+   "batch": 2,
+   "truth": "site/style.css",
+   "why": "<link rel='stylesheet' href='/style.css?v=6'> on line 23 is root-relative, giving https://codeeraser.dev/style.css?v=6; the ?v=6 cache-busting query does not change the file, and site/ is served at /, so the stylesheet is site/style.css (exists)."
+  },
+  {
+   "rank": "0085c45b434cb3c47281a8187fa984bd2c9ba3e246bc70cda2949ba413ebba60",
+   "path": "site/zh/index.html",
+   "line": 36,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/zh/bench/",
+   "batch": 3,
+   "truth": "site/zh/bench/index.html",
+   "why": "Root-relative href on the zh home page, which is served at https://codeeraser.dev/zh/ (og:url, line 12); it resolves to https://codeeraser.dev/zh/bench/. deploy_site.js:70 uploads site/ as the Cloudflare Pages root and a path ending in / serves that directory's index.html: site/zh/bench/index.html (exists)."
+  },
+  {
+   "rank": "00f9012ec808f6127dc280431c67cc9e48c85f4bbf03ab983ca73227837afe9d",
+   "path": "site/zh/index.html",
+   "line": 22,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap",
+   "batch": 3,
+   "truth": "external",
+   "why": "Absolute https URL to the Google Fonts css2 API on fonts.googleapis.com, a font service; the corpus is served only at https://codeeraser.dev (deploy_site.js:70 uploads site/; og:url line 12). The bare & separators are not character references. External."
+  },
+  {
+   "rank": "0ba80d2c2bd41b8cd6686f004342b858e9508fef6a4fd100524b046bcc048e6c",
+   "path": "site/bench/index.html",
+   "line": 22,
+   "nth": 0,
+   "kind": "link_asset",
+   "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap",
+   "batch": 3,
+   "truth": "external",
+   "why": "Absolute https URL to fonts.googleapis.com/css2, a font service origin; this page is served at https://codeeraser.dev/bench/ (og:url line 12) from the site/ upload of deploy_site.js:70, and nothing in the corpus is served on fonts.googleapis.com. External."
+  },
+  {
+   "rank": "03aac8dea6e622a71b414be4fe001452a1137c87b6a93a01d62e796f2281e06a",
+   "path": "site/zh/how/index.html",
+   "line": 31,
+   "nth": 1,
+   "kind": "src",
+   "spec": "/icon-256.png",
+   "batch": 3,
+   "truth": "site/icon-256.png",
+   "why": "Line 31 holds two reference sites in document order, <a href=/zh/> at position 0 and <img src=/icon-256.png> at position 1, so nth 1 is this img src. Root-relative, it resolves against the page URL https://codeeraser.dev/zh/how/ (og:url line 12) to https://codeeraser.dev/icon-256.png; deploy_site.js:70 uploads site/ as the Pages root, so the file served is site/icon-256.png (exists)."
+  },
+  {
+   "rank": "0cb74a2bc6f0ac96688c22be444b04ff2f9f565fd49a6bf155d280a4051d6338",
+   "path": "site/how/index.html",
+   "line": 62,
+   "nth": 3,
+   "kind": "href",
+   "spec": "#f04",
+   "batch": 4,
+   "truth": "site/how/index.html#f04",
+   "why": "The fourth href (nth 3) on line 62 of the page's table of contents is the fragment-only '#f04': same document https://codeeraser.dev/how/, and site/how/index.html:162 has <h3 id='f04'> (Structure judgment), so the fragment lands."
+  },
+  {
+   "rank": "15faa9b2b477b62758a292914f2e9ce4a259f8ab7f2b143c4fd95f34c17435f8",
+   "path": "site/zh/how/index.html",
+   "line": 34,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/zh/stack/",
+   "batch": 4,
+   "truth": "site/zh/stack/index.html",
+   "why": "Nav link '/zh/stack/' on line 34 is root-relative; against the document https://codeeraser.dev/zh/how/ it becomes https://codeeraser.dev/zh/stack/, which Cloudflare Pages serves from the deployed site/ directory (deploy_site.js:70) as the directory index site/zh/stack/index.html."
+  },
+  {
+   "rank": "0e6e61d156868549dbfe376332a32a17c18a5452a3d6330c2e7d018de5da658a",
+   "path": "site/zh/index.html",
+   "line": 53,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://github.com/skymanbp/CodeEraser/releases/latest",
+   "batch": 4,
+   "truth": "external",
+   "why": "The only href on line 53 is the absolute URL https://github.com/skymanbp/CodeEraser/releases/latest: GitHub's own releases page for the repository, a different origin from codeeraser.dev, which serves site/, so it is external."
+  },
+  {
+   "rank": "0b31c7e24ff98512ea0c95ddbac66c52c2a86d6e3385e88abf21ca76113ff207",
+   "path": "site/stack/index.html",
+   "line": 21,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://fonts.gstatic.com",
+   "batch": 4,
+   "truth": "external",
+   "why": "Line 21 is <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>: an absolute URL to Google's font-file host, a different origin from codeeraser.dev; preconnect only opens a connection there, and no corpus file is served at that origin."
+  },
+  {
+   "rank": "16a3cd4801d9f0ebb1a19371760b692214cb45249f445a4a95dd9a2dd5024a90",
+   "path": "site/zh/how/index.html",
+   "line": 54,
+   "nth": 0,
+   "kind": "href",
+   "spec": "#acting",
+   "batch": 4,
+   "truth": "site/zh/how/index.html#acting",
+   "why": "The first href on line 54 is the fragment-only '#acting' (the section link of the page's table of contents): same document https://codeeraser.dev/zh/how/, and site/zh/how/index.html:412 has <h2 id='acting'>, so the fragment lands."
+  },
+  {
+   "rank": "13a918d69209f4653f2ebfe3beb09fe138b945b31270d91c38fdce124976188a",
+   "path": "site/index.html",
+   "line": 110,
+   "nth": 0,
+   "kind": "src",
+   "spec": "/assets/gui-candidates.png",
+   "batch": 4,
+   "truth": "site/assets/gui-candidates.png",
+   "why": "img src '/assets/gui-candidates.png' on line 110 is root-relative: https://codeeraser.dev/assets/gui-candidates.png, and the origin root is the deployed site/ directory (deploy_site.js:70), so the served file is site/assets/gui-candidates.png; viewer.js never rewrites src."
+  },
+  {
+   "rank": "179d760c66296cd4dd8085774ed64e368338b6e179a2ba25faad221a35fba005",
+   "path": "site/zh/index.html",
+   "line": 151,
+   "nth": 0,
+   "kind": "href",
+   "spec": "/zh/bench/",
+   "batch": 4,
+   "truth": "site/zh/bench/index.html",
+   "why": "Link href '/zh/bench/' on line 151 is root-relative: https://codeeraser.dev/zh/bench/, served from the deployed site/ directory as the directory index site/zh/bench/index.html (Cloudflare Pages default; no _redirects under site/)."
+  },
+  {
+   "rank": "18f8693607b46fab33a9552be0871fa167e52c75ed0f056340157b1fadb85d52",
+   "path": "site/how/index.html",
+   "line": 621,
+   "nth": 0,
+   "kind": "href",
+   "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md",
+   "batch": 4,
+   "truth": "external",
+   "why": "The href inside <h3 id='f14'> on line 621 is https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md: GitHub's rendered view of a repository file, a different origin from codeeraser.dev."
+  }
+ ],
+ "site_gaps": [
+  {
+   "batch": 1,
+   "path": "site/stack/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/stack/'>: this page's own address (site/stack/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/stack/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/how/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/how/'>: this page's own address (site/zh/how/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/how/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/'>: this page's own address (site/zh/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/stack/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/stack/'>: this page's own address (site/zh/stack/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/stack/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 1,
+   "path": "site/how/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/how/'>: this page's own address (site/how/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/how/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/bench/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/bench/'>: this page's own address (site/zh/bench/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/zh/bench/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 1,
+   "path": "site/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/'>: this page's own address (site/index.html)."
+  },
+  {
+   "batch": 1,
+   "path": "site/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'> -> site/icon-256.png."
+  },
+  {
+   "batch": 2,
+   "path": "site/how/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/how/'>: Open Graph URL of the page itself, resolving to site/how/index.html."
+  },
+  {
+   "batch": 2,
+   "path": "site/how/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: resolves to site/icon-256.png (exists)."
+  },
+  {
+   "batch": 2,
+   "path": "site/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/'>: the page itself, site/index.html."
+  },
+  {
+   "batch": 2,
+   "path": "site/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: site/icon-256.png."
+  },
+  {
+   "batch": 2,
+   "path": "site/zh/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/'>: the page itself, site/zh/index.html."
+  },
+  {
+   "batch": 2,
+   "path": "site/zh/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: site/icon-256.png."
+  },
+  {
+   "batch": 2,
+   "path": "site/zh/how/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/how/'>: the page itself, site/zh/how/index.html."
+  },
+  {
+   "batch": 2,
+   "path": "site/zh/how/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: site/icon-256.png."
+  },
+  {
+   "batch": 2,
+   "path": "site/stack/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/stack/'>: the page itself, site/stack/index.html."
+  },
+  {
+   "batch": 2,
+   "path": "site/stack/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: site/icon-256.png."
+  },
+  {
+   "batch": 2,
+   "path": "site/zh/bench/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/bench/'>: the page itself, site/zh/bench/index.html."
+  },
+  {
+   "batch": 2,
+   "path": "site/zh/bench/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: site/icon-256.png."
+  },
+  {
+   "batch": 3,
+   "path": "site/zh/index.html",
+   "line": 12,
+   "note": "codeeraser: meta property=og:url content=https://codeeraser.dev/zh/ is a URL in meta content; on the corpus origin it names this page, site/zh/index.html."
+  },
+  {
+   "batch": 3,
+   "path": "site/zh/index.html",
+   "line": 15,
+   "note": "codeeraser: meta property=og:image content=https://codeeraser.dev/icon-256.png is a URL in meta content; on the corpus origin it names site/icon-256.png."
+  },
+  {
+   "batch": 3,
+   "path": "site/bench/index.html",
+   "line": 12,
+   "note": "codeeraser: meta property=og:url content=https://codeeraser.dev/bench/ is a URL in meta content; it names this page, site/bench/index.html."
+  },
+  {
+   "batch": 3,
+   "path": "site/bench/index.html",
+   "line": 15,
+   "note": "codeeraser: meta property=og:image content=https://codeeraser.dev/icon-256.png is a URL in meta content; it names site/icon-256.png."
+  },
+  {
+   "batch": 3,
+   "path": "site/zh/how/index.html",
+   "line": 12,
+   "note": "codeeraser: meta property=og:url content=https://codeeraser.dev/zh/how/ is a URL in meta content; it names this page, site/zh/how/index.html."
+  },
+  {
+   "batch": 3,
+   "path": "site/zh/how/index.html",
+   "line": 15,
+   "note": "codeeraser: meta property=og:image content=https://codeeraser.dev/icon-256.png is a URL in meta content; it names site/icon-256.png."
+  },
+  {
+   "batch": 4,
+   "path": "site/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/'>: the page's own URL, served from site/index.html."
+  },
+  {
+   "batch": 4,
+   "path": "site/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: served from site/icon-256.png."
+  },
+  {
+   "batch": 4,
+   "path": "site/zh/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/'>: the page's own URL, served from site/zh/index.html."
+  },
+  {
+   "batch": 4,
+   "path": "site/zh/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: served from site/icon-256.png."
+  },
+  {
+   "batch": 4,
+   "path": "site/how/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/how/'>: the page's own URL, served from site/how/index.html."
+  },
+  {
+   "batch": 4,
+   "path": "site/how/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: served from site/icon-256.png."
+  },
+  {
+   "batch": 4,
+   "path": "site/zh/how/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/zh/how/'>: the page's own URL, served from site/zh/how/index.html."
+  },
+  {
+   "batch": 4,
+   "path": "site/zh/how/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: served from site/icon-256.png."
+  },
+  {
+   "batch": 4,
+   "path": "site/stack/index.html",
+   "line": 12,
+   "note": "<meta property='og:url' content='https://codeeraser.dev/stack/'>: the page's own URL, served from site/stack/index.html."
+  },
+  {
+   "batch": 4,
+   "path": "site/stack/index.html",
+   "line": 15,
+   "note": "<meta property='og:image' content='https://codeeraser.dev/icon-256.png'>: served from site/icon-256.png."
+  }
+ ],
+ "scope_gaps": [],
+ "notes": [
+  {
+   "batch": 1,
+   "note": "codeeraser deployment: codeeraser.dev is the Cloudflare Pages project 'codeeraser', deployed from the corpus directory site/. Evidence: scripts/deploy_site.js:1 says 'codeeraser.dev is a Cloudflare Pages project', :29 sets PROJECT = 'codeeraser', and :70 runs `wrangler pages deploy site --project-name codeeraser`. README.md:3 (site badge) and README.md:199 link https://codeeraser.dev with /how/, /stack/ and /bench/. Every batch page's og:url meta at line 12 names its own address (site/X/index.html <-> https://codeeraser.dev/X/). Mapping: URL path /P -> site/P, and a trailing '/' -> P/index.html. The tree has no _redirects, _headers, 404.html, CNAME or wrangler config, and no site/ page has a <base>."
+  },
+  {
+   "batch": 1,
+   "note": "Cloudflare Pages treats a project with no top-level 404.html as a SPA and answers unknown paths with /index.html. No row in this batch depends on that, because every in-origin target exists."
+  },
+  {
+   "batch": 1,
+   "note": "learning-area deployment: a GitHub Pages project site at https://mdn.github.io/learning-area/, serving the repository root of main (the only branch; tip dbed6bc). Evidence: javascript/oojs/json/heroes-finished-json-parse.html:26 and heroes-finished.html:26 fetch https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json, which is the corpus file javascript/oojs/json/superheroes.json. javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json (also a corpus file). tools-testing/cross-browser-testing/selenium/quick_test.js:9 opens http://mdn.github.io/learning-area/tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html, which also exists in the corpus. README.md states no URL."
+  },
+  {
+   "batch": 1,
+   "note": "learning-area has no CNAME (so no custom domain) and no Pages workflow (.github holds only CODEOWNERS). It also has no .nojekyll or _config.yml, so Pages runs a default Jekyll branch build: files without front matter are copied verbatim and only '_' / '.' paths are dropped. No target in this batch is affected. A root-relative URL therefore leaves the corpus unless it begins with /learning-area/; that is why both '/my-handling-form-page' form actions are external."
+  },
+  {
+   "batch": 1,
+   "note": "Uncertain: the Pages source branch and folder are a repository setting not visible in the clone. I inferred them from the in-repo absolute URLs, which map one-to-one onto main's tree."
+  },
+  {
+   "batch": 1,
+   "note": "Conventions applied: each document URL is its served address, and an index.html page may be addressed by its directory, which gives the same relative resolution. No batch file has a <base> element. Query strings are ignored for file mapping. Fragments are checked against id attributes in the same file. '#' is an empty fragment: the top of the document, answered with the path alone. github.com blob pages, fonts.googleapis.com and studio.blender.org are external."
+  },
+  {
+   "batch": 1,
+   "note": "Existence of every target was checked with git cat-file -e at the pinned tips. The binary targets (rabbit320.mp4, urban-bear.jpg, three.min.js) are real content, not LFS pointers: learning-area has no .gitattributes, and codeeraser's has no lfs filter."
+  },
+  {
+   "batch": 1,
+   "note": "Not listed as site gaps: zantroke-demo.html:556-560 url('WebFont.*') sit inside a <code> sample (lines 553-562), not live CSS. Its inline <style> (12-16) and <script> (21-25) contain no URLs, and its DOCTYPE DTD URL and xmlns are identifiers that are never fetched. site/assets/stack.svg (row 3c2b3113) holds only same-document url(#arrow) marker references and loads nothing further. site/viewer.js has no URL, fetch or import."
+  },
+  {
+   "batch": 1,
+   "note": "Re-check under the corrected nth definition (position among ALL reference sites on the line, every kind, document order): I re-checked all 25 rows by listing every href / link_asset / src / srcset / action site on each recorded line. No line holds sites of more than one kind, so none of the 25 rows falls under the correction. Only two lines hold several sites, both all-href: site/zh/how/index.html:50 has #f01 #f02 #f03 #f04 #f05, so row 1832dd0d nth 0 is #f01; site/how/index.html:69 has three #honesty links, so row 36584a97 nth 1 is the second. At every row, the site at position nth has the row's kind and spec and is the site judged. No row had been marked mismatch, and no judgment changed."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, codeeraser (website): codeeraser.dev is a Cloudflare Pages project with no git integration (scripts/deploy_site.js:1); scripts/deploy_site.js:29 sets PROJECT = 'codeeraser' and :70-73 run 'npx wrangler pages deploy site --project-name codeeraser', so the corpus directory site/ is served at the root path / of https://codeeraser.dev. Corroborated by README.md:199 (Website: codeeraser.dev, https://codeeraser.dev/how/, /stack/, /bench/) and by each page's og:url (site/how/index.html:12 = https://codeeraser.dev/how/, site/zh/bench/index.html:12 = https://codeeraser.dev/zh/bench/). site/ has no _redirects, _headers or _routes.json and the repository has no wrangler config (git ls-tree), so Pages' default static routing applies: a path ending in / is served as that directory's index.html, and a query string does not change the file."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, codeeraser (desktop GUI): gui/ui/ is the frontend of the Tauri 2 app (gui/src-tauri/tauri.conf.json:7 'frontendDist': '../ui', relative to gui/src-tauri); the webview loads gui/ui/index.html at the root of the app's own asset origin (tauri://localhost or http://tauri.localhost by Tauri's defaults, which the repository does not spell out), so relative URLs in gui/ui/index.html resolve inside gui/ui/. gui/ui is not uploaded to codeeraser.dev (only site/ is)."
+  },
+  {
+   "batch": 2,
+   "note": "Deployment, learning-area: GitHub Pages project site https://mdn.github.io/learning-area/ serving the repository root (path prefix /learning-area/). The repository has no CNAME, no .nojekyll and no workflow files (.github holds only CODEOWNERS), i.e. a branch deploy. README.md does not state the URL, but in-repo code does: javascript/oojs/json/heroes-finished.html:26 fetches https://mdn.github.io/learning-area/javascript/oojs/json/superheroes.json (= corpus file javascript/oojs/json/superheroes.json), javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json, and tools-testing/cross-browser-testing/selenium/quick_test.js:9 loads http://mdn.github.io/learning-area/tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html (= that corpus file). GitHub Pages serves a directory URL as its index.html (redirecting a slash-less directory URL to the slash form), there is no custom 404.html, and Jekyll's default exclusions (path segments starting with '_' or '.', plus a few names such as node_modules and vendor) touch none of the answered paths."
+  },
+  {
+   "batch": 2,
+   "note": "Bases: no batch file (nor anything under site/, gui/ui/ or demo/) contains a <base> element (git grep -i '<base' returned nothing), so every base URL is the document's own served URL."
+  },
+  {
+   "batch": 2,
+   "note": "Conventions: an empty href is the document itself per the exam rule; '#' is the top of the same document (empty fragment, no id needed, so the bare path); a '#fragment' answer only when an element with that id exists (checked by grep); srcset candidates counted per line, trailing comma stripped per the srcset parser, a missing descriptor is 1x; query strings ignored for the file lookup; absolute URLs on hosts other than codeeraser.dev (codeeraser) or mdn.github.io/learning-area/ (learning-area) are external, including github.com repository pages; character references checked (the only '&' in any row spec is in the Google Fonts URL, where '&family' and '&display' are not references)."
+  },
+  {
+   "batch": 2,
+   "note": "Verification: both clones clean at the pinned tips (codeeraser d4b7f1f37aa50b61ecd21816204bb7f5b06d673c, learning-area dbed6bcb8284634c7549c4da596ec30b0cfc6e7e); every answered path passed git cat-file -e HEAD:<path>; all 19 batch HTML files are LF-only (no CR bytes), so the recorded line numbers are the HTML parser's line numbers; each row's spec was confirmed on its line as the stated kind and nth; no row was a mismatch."
+  },
+  {
+   "batch": 2,
+   "note": "Scripts and dependants checked, none changes an answer: site/viewer.js sets only role/aria attributes; accessibility/assessment-finished/main.js, accessibility/multimedia/custom-controls-OOJS/main.js and javascript/asynchronous/sequencing-animations/finished/main.js never touch src or href; the answered stylesheets (site/style.css, gui/ui/style.css, both tasks/styles.css) contain no @import or url(), and the answered SVGs reference only in-document fragments or data: URLs, hence no scope_gaps."
+  },
+  {
+   "batch": 2,
+   "note": "Uncertain, recalled rather than re-read this session (no web access used): the HTML Standard's rule that an external-resource link with an empty href is not fetched (row 491f3459) and that an empty fragment indicates the top of the document (row 5b12a812); Tauri's default app-origin names; and Cloudflare Pages also serving every deployment at <project>.pages.dev (not evidenced in the repository, not needed for any row). None of these changes a truth value."
+  },
+  {
+   "batch": 2,
+   "note": "Read scope in the codeeraser clone: site/** (the batch pages; viewer.js and two SVGs by grep), gui/ui/index.html, gui/ui/style.css (grep), gui/src-tauri/tauri.conf.json (the GUI's deployment config), scripts/deploy_site.js, README.md lines about the website (grep) and file-name listings; nothing under cli/, core/, docs/, contracts/, plugin/, CHANGELOG*, other scripts or tests. In learning-area, besides the batch pages: README.md, .github/CODEOWNERS, .gitignore, folder listings, a repo-wide git grep for the published github.io URL, the pages' main.js files and the two tasks/styles.css (grep)."
+  },
+  {
+   "batch": 2,
+   "note": "nth re-check under the coordinator's correction (nth = 0-based position among ALL reference sites on the line, every kind, in document order): all 25 rows were re-checked by re-scanning each recorded line for every URL-bearing attribute. 24 recorded lines hold exactly one reference site (for row 4aba2ae9 it is the single srcset candidate elva-fairy-320w.jpg on continuation line 16), so nth 0 is unchanged; site/zh/how/index.html:57 (row 6e7ad526) holds three sites, all href '#honesty', so nth 1 is still the second of them, the first list link. No recorded line mixes kinds; no row changed, and no row was or is a mismatch."
+  },
+  {
+   "batch": 3,
+   "note": "Deployment, codeeraser: scripts/deploy_site.js:70 runs npx wrangler pages deploy site --project-name codeeraser with cwd = the repository root (deploy_site.js:24, 74), so the site/ directory is the root of the Cloudflare Pages project; deploy_site.js:1 names the domain codeeraser.dev, and the pages' own og:url values (site/zh/index.html:12 https://codeeraser.dev/zh/, site/bench/index.html:12, site/zh/how/index.html:12) plus README.md:199 (Website: codeeraser.dev) fix the origin https://codeeraser.dev with no path prefix. A URL path P on that origin maps to site/P. No _headers, _redirects, CNAME or wrangler config exists in the tree, so default static serving applies (a path ending in / serves that directory's index.html)."
+  },
+  {
+   "batch": 3,
+   "note": "Deployment, learning-area: the repository is the GitHub Pages project site of mdn/learning-area, served from the repository root at https://mdn.github.io/learning-area/. There is no Pages workflow (.github holds only CODEOWNERS), no CNAME, no _config.yml and no .nojekyll, and Pages settings live outside git, so the deployment is inferred from in-repo URLs that map corpus path P to https://mdn.github.io/learning-area/P: javascript/oojs/json/heroes-finished.html:26 and heroes-finished-json-parse.html:26 fetch .../javascript/oojs/json/superheroes.json, javascript/oojs/tasks/json/json1.html:33 fetches .../javascript/oojs/tasks/json/sample.json, and tools-testing/cross-browser-testing/selenium/quick_test.js:9 and mocha_test.js:15 drive .../tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html; all three targets exist at those corpus paths. Without .nojekyll the default Jekyll build copies files lacking front matter verbatim; no answer path begins with _ or ., so none is excluded."
+  },
+  {
+   "batch": 3,
+   "note": "No learning-area row in this batch is root-relative (they are document-relative, fragment-only, absolute or a template), so the /learning-area/ prefix never came into play; the two root-relative rows (7d2f5ed2, c79709bd) are codeeraser rows, and that site has no prefix."
+  },
+  {
+   "batch": 3,
+   "note": "No document in this batch has a <base> element (checked for every file), so each reference resolves against the document's own URL. Directory pages are taken at their trailing-slash URL, which gives the same base directory as .../index.html."
+  },
+  {
+   "batch": 3,
+   "note": "All 25 recorded lines were read from the committed blobs (git show HEAD:path) of clean clones at d4b7f1f37aa50b61ecd21816204bb7f5b06d673c and dbed6bcb8284634c7549c4da596ec30b0cfc6e7e; every batch file is LF-only, so line numbers are unambiguous. Each answer path was confirmed by exact-match lookup in git ls-tree -r --name-only HEAD."
+  },
+  {
+   "batch": 3,
+   "note": "srcset rows: the candidate is counted on its physical line, so on a continuation line of a multi-line srcset attribute the first candidate written there is nth 0 (responsive.html:59, srcset-resolutions.html:17)."
+  },
+  {
+   "batch": 3,
+   "note": "Scripts placed after </body> (variables2.html:45, strings4.html:48) are still inserted into body by the HTML parser and fetched. Links inside audio/video fallback content (multiple-video-formats.html:14, audio-transcript-ui/index.html:36) are real DOM elements."
+  },
+  {
+   "batch": 3,
+   "note": "href=# rows: the URL parser yields the document URL with an empty fragment. HTML's indicated-part rule sends an empty fragment to the top of the document, and no element can carry an empty id, so the answer is the bare path of the same file, with no #fragment."
+  },
+  {
+   "batch": 3,
+   "note": "Re-check after the coordinator's correction (nth = 0-based position among all reference sites on the line, every kind, document order): all 25 recorded lines were re-scanned for href, src, srcset, action, poster and data sites. Only c79709bd sits on a line with more than one kind (site/zh/how/index.html:31: href /zh/ at position 0, img src /icon-256.png at position 1), so its nth 1 is the img src and its truth changes from mismatch (the verdict under the brief's same-kind rule) to site/icon-256.png. Each of the other 24 rows is the only reference site on its line (942abfdb and c94b49d0 are srcset continuation lines holding one candidate each), so none of them changed."
+  },
+  {
+   "batch": 3,
+   "note": "Row c7ab339c is judged dynamic because the value is a template placeholder: Flask rendering yields /hello, a backend route, while the static copy keeps the literal braces. Neither deployment serves a corpus file for it. If the graders prefer to score the static GitHub Pages copy literally, the equivalent answer would be none: a nonexistent .../templates/%7B%7B%20url_for('hello')%20%7D%7D path."
+  },
+  {
+   "batch": 4,
+   "note": "codeeraser deployment: Cloudflare Pages project 'codeeraser' behind https://codeeraser.dev, serving the repository's site/ directory at the origin root. Evidence: scripts/deploy_site.js:1 (codeeraser.dev is a Cloudflare Pages project), :29 (PROJECT = 'codeeraser'), :70 (wrangler pages deploy site --project-name codeeraser); README.md:3 (site badge links https://codeeraser.dev) and README.md:199 (codeeraser.dev, /how/, /stack/, /bench/); each page's og:url on line 12 names its own served URL (site/how/index.html -> https://codeeraser.dev/how/, site/zh/how/index.html -> /zh/how/, site/zh/index.html -> /zh/, site/stack/index.html -> /stack/, site/index.html -> /). No _redirects, _headers, _routes.json or 404.html anywhere under site/ (git ls-tree -r), so Pages defaults apply: a dir/ URL serves dir/index.html. None of the five codeeraser pages in this batch has a <base> element."
+  },
+  {
+   "batch": 4,
+   "note": "learning-area deployment: GitHub Pages project site of mdn/learning-area at https://mdn.github.io/learning-area/, serving the repository root 1:1 under the /learning-area/ prefix. Evidence: the repository's own files request URLs under that prefix that map exactly onto corpus files at the tip: javascript/oojs/json/heroes-finished.html:26 -> javascript/oojs/json/superheroes.json; javascript/oojs/tasks/json/json1-download.html:35 -> javascript/oojs/tasks/json/sample.json; tools-testing/cross-browser-testing/selenium/quick_test.js:9 -> tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html. README.md:1-4 identifies the repo as the MDN Learning Area example code but prints no URL; there is no CNAME, _config.yml, .nojekyll or Pages workflow (.github/ holds only CODEOWNERS), so the Pages source setting itself is not visible in the repo and the prefix rests on the in-repo URLs above. Default branch publishing drops only names beginning with '.' or '_'; no row path does. Every learning-area row in this batch is document-relative or absolute to another host, so the /learning-area/ prefix changes no answer here."
+  },
+  {
+   "batch": 4,
+   "note": "Conventions applied: an index.html is served at its directory URL with a trailing slash (both hosts serve dir/ from index.html and redirect a slashless directory URL to the slash form), any other .html at its own file URL; the base directory is the same either way. Relative values resolve against that directory, root-relative values against the origin root (codeeraser: site/). Query strings are ignored for the file mapping. A fragment answer carries #id only when an element with that id exists in the served HTML (checked by grep: site/how/index.html:162 id='f04', site/zh/how/index.html:412 id='acting', each unique). srcset nth counts candidates on the given line. A script that changes an element's src only after load (on a click) does not make the parser-time value dynamic."
+  },
+  {
+   "batch": 4,
+   "note": "Checked and found nothing to change an answer: site/viewer.js never assigns src or href (grep); the sequencing-animations main.js only calls animate(); the four stylesheets named by link_asset rows (javascript/oojs/json/style.css, javascript/oojs/tasks/styles.css, fetch-fixed/style.css, workers/start/style.css) contain no @import or url(). No codeeraser page in this batch has an inline script, an inline style attribute with url(), a <style> element, an SVG <image> or xlink:href."
+  },
+  {
+   "batch": 4,
+   "note": "Uncertain, row d1c91a41 (php-example.php): answered with the corpus file the action URL maps to, because a file of the corpus is served at that exact URL. GitHub Pages is a static host: it does not execute PHP, and a POST form submission there is not processed by the script (I believe Pages answers non-GET methods with an error status, but I could not verify that from the repository). If the exam counts only endpoints that can actually answer the submission, this row would be 'none' instead."
+  },
+  {
+   "batch": 4,
+   "note": "Scope kept: in the codeeraser clone I read only site/**, scripts/deploy_site.js and README.md lines about the website; deploy_site.js cites docs/RELEASE.md section 3 and scripts/verify_site.js, which I did not open. Both clones confirmed clean at d4b7f1f37aa50b61ecd21816204bb7f5b06d673c and dbed6bcb8284634c7549c4da596ec30b0cfc6e7e."
+  },
+  {
+   "batch": 4,
+   "note": "nth re-check under the coordinator's correction (nth = 0-based position among ALL reference sites on the line, every kind, document order): I re-listed every href, src, srcset, action, poster, data and xlink:href attribute on all 25 recorded lines. No recorded line in this batch holds sites of more than one kind. Rows cfd2e7e9 (site/how/index.html:62, five hrefs #f01 to #f05, #f04 at position 3) and e1559a15 (site/zh/how/index.html:54, three hrefs #acting, #f12, #f13, #acting at position 0) carry several sites, all of kind href, so their all-kinds positions equal the same-kind positions. Rows d43429d6 (responsive.html:58) and f0d16472 (srcset-resolutions.html:18) sit inside multi-line srcset attributes, and each of those lines holds exactly one candidate. Every other recorded line holds exactly one site. No row had been marked mismatch, and no answer changed."
+  }
+ ]
+}
