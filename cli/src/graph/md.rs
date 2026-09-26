@@ -11,8 +11,9 @@
 //! equal length (CommonMark), not single backticks (the Opus review
 //! caught the first draft masking nothing inside ``double`` spans),
 //! and indented code is modeled since plan v2.17 L round step 8
-//! (O57) on the conservative side: four columns where no paragraph is
-//! open, outside a list context. Nested brackets are depth-matched,
+//! (O57): four columns where no paragraph is open, past the content
+//! column of the innermost open list item (CommonMark §5.2, plan
+//! v2.30 step 5b). Nested brackets are depth-matched,
 //! so a badge `[![alt](img)](url)` emits the link (url) AND the image
 //! (img) instead of one mislabeled site. ONE angle-bracket pair
 //! around a destination is stripped (CommonMark); percent escapes are
@@ -21,8 +22,8 @@
 //! fragment before its lookups (ladder/md_slug.rs).
 
 use super::sites::RawSite;
-pub(crate) use mask::merge_code_spans;
 use mask::{Blocks, comment_mask};
+pub(crate) use mask::{list_item, merge_code_spans};
 
 #[path = "md_mask.rs"]
 mod mask;

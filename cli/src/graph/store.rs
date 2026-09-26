@@ -97,6 +97,15 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
+/// 17 = plan v2.30 step 5b's boundary fixes move stored rows: a
+/// Markdown document's sites and section units follow the
+/// list-aware indented-code mask and its setext headings
+/// (graph/md_mask.rs, ladder/md_head.rs), an anchor tag spread over
+/// lines or bare-valued joins the slug set, Go package-level `const`
+/// / `var` names become symbols with their own visibility bit
+/// (fourclass/kinds.rs PACKAGE_LEVEL), and a Python `__all__`
+/// extended or appended to at top level narrows the module's exports
+/// (visibility/py.rs) — every site and symbol re-detected once.
 /// 16 = the C family, Java, Lua and R enter the graph (plan v2.30
 /// steps 2–4, one release): `include`, `import_star`, `type_ref`,
 /// `require`, `load`, `source` and `library` join KINDS (a Java
@@ -112,7 +121,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 16;
+pub const GRAPH_REV: i64 = 17;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

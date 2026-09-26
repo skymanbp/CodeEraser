@@ -119,6 +119,16 @@ pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
     }
 }
 
+/// The word of one of the names a declaration binds: a Go `var a, B =
+/// …` binds two, each exported by its own initial (plan v2.30 step
+/// 5b); every other declaration binds one name and answers `bits`.
+pub fn bits_of(node: Node<'_>, name: Option<Node<'_>>, src: &[u8], lang: Lang) -> i64 {
+    match (lang, name) {
+        (Lang::Go, Some(name)) => word(initial_upper(&text(name, src)), go_scope_open(node)),
+        _ => bits(node, src, lang),
+    }
+}
+
 /// Bits 0 and 1 from the two facts they stand on: bit 1 is only ever
 /// set beside bit 0 (module doc).
 fn word(exported: bool, scope_open: bool) -> i64 {
@@ -167,10 +177,11 @@ fn rust_scope_open(node: Node<'_>, src: &[u8]) -> bool {
 /// Go: an identifier's first rune decides. Upper case is exported —
 /// the whole rule, checked on the declaration's own name.
 fn go_exported(node: Node<'_>, src: &[u8]) -> bool {
-    match name_text(node, src) {
-        Some(name) => name.chars().next().is_some_and(char::is_uppercase),
-        None => false,
-    }
+    name_text(node, src).is_some_and(|name| initial_upper(&name))
+}
+
+fn initial_upper(name: &str) -> bool {
+    name.chars().next().is_some_and(char::is_uppercase)
 }
 
 /// Go's scope chain: a function body closes it — a `type` declared

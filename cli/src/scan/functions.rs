@@ -198,15 +198,17 @@ fn field_for(parent_kind: &str) -> &'static str {
 /// survey (probe 2026-08-14): Go/Rust/Python/TS carry `parameters`
 /// naming exactly the node the kind scan found — identical counts —
 /// while Go methods name the REAL list past the receiver; Haskell has
-/// no such field and keeps the `patterns` kind fallback. Go's grouped
-/// `a, b int` stays ONE declaration — arity counts declarations, the
-/// pre-existing stance, untouched here. The C family names no such
-/// field on the definition: its list hangs off the innermost
-/// function_declarator (declarator::chain), and `(void)` spells an
-/// EMPTY list (register D12). A Java receiver parameter (`void m(K
-/// this)`) is no formal parameter either (JLS 8.4.1): the kinds
-/// Overloads::ignored names, which take no argument, count for neither
-/// reading.
+/// no such field and keeps the `patterns` kind fallback. A Go grouped
+/// `a, b int` is ONE declaration naming TWO parameters (the Go spec's
+/// ParameterDecl: each name is a parameter), so an entry counts once
+/// per name it binds (`names_of`; plan v2.30 step 5b — the count used
+/// to be one per declaration). The C family names no such field on
+/// the definition: its list hangs off the innermost
+/// function_declarator (declarator::chain), `(void)` spells an EMPTY
+/// list and a K&R list spells its parameters as bare identifiers
+/// (register D12). A Java receiver parameter (`void m(K this)`) is no
+/// formal parameter either (JLS 8.4.1): the kinds Overloads::ignored
+/// names, which take no argument, count for neither reading.
 fn param_count(node: Node<'_>, src: &[u8], spec: &LangSpec) -> usize {
     let Some(params) = param_list(node, spec.param_list_kinds) else {
         return 0;
@@ -216,7 +218,23 @@ fn param_count(node: Node<'_>, src: &[u8], spec: &LangSpec) -> usize {
         return 0;
     }
     let ignored = spec.overloads.map_or(&[][..], |o| o.ignored);
-    kids.iter().filter(|k| !ignored.contains(&k.kind())).count()
+    kids.iter()
+        .filter(|k| !ignored.contains(&k.kind()))
+        .map(|k| names_of(*k))
+        .sum()
+}
+
+/// The parameters one list entry declares: one per `name` field it
+/// carries (Go's grouped declaration carries several), and one where
+/// it carries none or one — every other grammar's entry declares
+/// exactly one parameter whatever field spells it (`pattern`,
+/// `declarator`, a bare identifier).
+fn names_of(entry: Node<'_>) -> usize {
+    let mut cursor = entry.walk();
+    entry
+        .children_by_field_name("name", &mut cursor)
+        .count()
+        .max(1)
 }
 
 /// The parameter list a unit declares: its `parameters` field, else

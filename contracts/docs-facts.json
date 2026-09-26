@@ -396,13 +396,13 @@
       "id": "ver:docdup_rev#digits",
       "source": "cli/src/docdup/mod.rs::DOCDUP_REV",
       "tier": "linked",
-      "value": "6"
+      "value": "7"
     },
     {
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "16"
+      "value": "17"
     },
     {
       "id": "ver:mention_rev#digits",
@@ -439,7 +439,7 @@
       "id": "ver:tokenizer_rev#digits",
       "source": "cli/src/dedup/tokens.rs::TOKENIZER_REV",
       "tier": "linked",
-      "value": "3"
+      "value": "4"
     }
   ],
   "schema": "ce.docs-facts/0.1.0",

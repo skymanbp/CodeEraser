@@ -495,148 +495,160 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1640d969ccad876c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 108,
+    "line": 150,
     "text": "fn classify(kind: &str, spec: &LangSpec) -> Class {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|171ac8edd4c19f94|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 158,
+    "text": "}\n\n/// Literal pieces across the grammars (probe-derived): whole literals,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1c30cf58e5583678|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 69,
+    "line": 81,
     "text": "}\nmatch classify(node.kind(), spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1c7dce5fb9062090|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 106,
+    "line": 148,
     "text": "}\n\nfn classify(kind: &str, spec: &LangSpec) -> Class {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|227629f256b666bf|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 93,
+    "line": 105,
     "text": "Class::Text => kind.as_bytes(),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|310ac55b91af4a11|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 123,
+    "line": 168,
     "text": "pub(crate) fn is_literal(kind: &str, spec: &LangSpec) -> bool {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|395c721de71a8391|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 28,
+    "text": "pub const TOKENIZER_REV: i64 = 4;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|3cd7baf5c7a4584c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 66,
+    "line": 78,
     "text": "if node.child_count() > 0 {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4043b6bdd581b062|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 132,
+    "end": 148,
+    "text": "fn whole_literal(node: Node<'_>, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|46408540c4d32c8c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 132,
+    "line": 185,
     "text": "}\n\n/// FNV-1a: tiny, dependency-free, stable across runs (index persists)."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|471c40c0b6619ae4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 31,
+    "line": 38,
     "text": "const ID_MARK: &[u8] = b\"\\x01ID\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 135,
+    "line": 188,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4d032b82895954e2|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 71,
+    "line": 83,
     "text": "Class::Lit => {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|504e1857b50781a4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 32,
+    "line": 39,
     "text": "const LIT_MARK: &[u8] = b\"\\x02LIT\";"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|5105ac07c75a2849|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 112,
+    "line": 154,
     "text": "if is_literal(kind, spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|65c85db61f029727|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 109,
+    "line": 151,
     "text": "if kind.ends_with(\"identifier\") {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|6b59d2da04b0a563|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 6,
+    "line": 7,
     "text": "//! deliberate): booleans/None are NOT collapsed (their identity is"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|704f90d8eac8f679|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 142,
+    "line": 195,
     "head": 3,
     "text": "h = h.wrapping_mul(0x0000_0100_0000_01b3);\n}\nh\n}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|86c909cd702d30ac|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 79,
+    "line": 91,
     "text": "}\nclass => {\nlit_parent = None;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|891fbed043c45717|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 29,
+    "line": 36,
     "text": "}\n\nconst ID_MARK: &[u8] = b\"\\x01ID\";"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|8b07b0cb7a9e59e7|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 116,
-    "text": "}\n\n/// Literal pieces across the four grammars (probe-derived): whole"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|96775608fcd4b371|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 65,
+    "line": 77,
     "text": "}\nif node.child_count() > 0 {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|9acfb64892039b8c|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 73,
+    "end": 81,
+    "text": "if whole_literal(node, spec) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ac32eb56804c01cf|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 8,
+    "line": 9,
     "text": "//! normalizes to ID like any identifier."
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b533a5573df87dff|0": {
+    "target": "../../../cli/src/dedup/tokens.rs",
+    "line": 164,
+    "text": "/// `kind` is a LEAF kind (composite kinds like Go `composite_literal`"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 24,
+    "line": 31,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|cb675dae93f5970c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 63,
+    "line": 70,
     "text": "if spec.comment_kinds.contains(&node.kind()) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ccbe521930534218|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 122,
-    "text": "/// `composite_literal` never reach here — tokenize recurses first)."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d691461b7dc2e716|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 58,
+    "line": 65,
     "text": "pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d79f5ced4fa0d091|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 102,
+    "line": 114,
     "text": "fn extend_last(out: &mut [Token], node: Node<'_>) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d9671b76536d6a08|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 87,
+    "line": 99,
     "text": "}\n\nfn token(class: &Class, kind: &str, node: Node<'_>) -> Token {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|eb23972bdbd6302e|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|eda5e3aefdae8234|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 121,
-    "text": "/// Precondition: `kind` is a LEAF kind (composite kinds like Go"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ecf4e084dea9236c|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 21,
-    "text": "pub const TOKENIZER_REV: i64 = 3;"
+    "line": 167,
+    "text": "/// of every piece)."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|f13e91d15cb652f1|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 115,
+    "line": 157,
     "text": "Class::Text\n}"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|0211250c62de4a09|0": {
@@ -1641,8 +1653,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 135,
-    "end": 142,
+    "line": 188,
+    "end": 195,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/dedup/winnow.rs|61828f98f0a3db21|0": {
@@ -1900,19 +1912,19 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|18db33163c95b3ca|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 123,
+    "line": 127,
     "text": "fn shingle_blob(set: &[u64]) -> Vec<u8> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|66f7febe338dcdf3|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 80,
-    "end": 83,
+    "line": 84,
+    "end": 87,
     "text": "if words.len() < spec::MIN_DOC_TOKENS {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|7d2c5d39ed50f773|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 38,
-    "end": 43,
+    "line": 42,
+    "end": 47,
     "text": "/// exempt::EXEMPT_NAMES; `shingles` = sorted deduped shingle u64s LE."
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|a6960b0205c782d5|0": {
@@ -1928,7 +1940,7 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|080a01bb1dcd5a4a|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 65,
+    "line": 67,
     "text": "fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1346a67d5862dd19|0": {
@@ -1939,56 +1951,56 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|15ed3284af3f4c03|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 94,
-    "end": 101,
+    "line": 96,
+    "end": 103,
     "text": "fn visible(line: &str, mask: &[bool]) -> String {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 194,
-    "end": 212,
+    "line": 196,
+    "end": 214,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|3633378bbdbc1b93|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 75,
-    "end": 77,
+    "line": 77,
+    "end": 79,
     "text": "if !cur.is_empty() && no != last + 1 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|596723b90d527bf0|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 177,
-    "end": 185,
+    "line": 179,
+    "end": 187,
     "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|af4198dae65b1993|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 214,
-    "end": 221,
+    "line": 216,
+    "end": 223,
     "text": "fn last_row(node: Node<'_>) -> usize {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b623f07650ed2a1f|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 127,
-    "end": 133,
+    "line": 129,
+    "end": 135,
     "text": "fn bare_marker(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b66256554ecf30f7|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 108,
-    "end": 114,
+    "line": 110,
+    "end": 116,
     "text": "fn paragraph_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|ce98856effa52be8|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 149,
-    "end": 172,
+    "line": 151,
+    "end": 174,
     "text": "fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|dc27f70bed6c0773|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 119,
-    "end": 125,
+    "line": 121,
+    "end": 127,
     "text": "fn html_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|f066a6bc6f5f72a4|0": {
@@ -2095,8 +2107,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/graph/md.rs|1a6861d272727d30|0": {
     "target": "../../../cli/src/graph/md.rs",
-    "line": 50,
-    "end": 56,
+    "line": 51,
+    "end": 57,
     "text": "/// content_lines PLUS the inline-code mask merged in — the full"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|8498184ed1508afd|0": {
@@ -3636,6 +3648,12 @@
     "line": 149,
     "text": "anyhow::ensure!("
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
+    "target": "../../../cli/src/fourclass/units.rs",
+    "line": 204,
+    "end": 223,
+    "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
     "target": "../../../cli/src/graph/cabal.rs",
     "line": 91,
@@ -3653,6 +3671,12 @@
     "line": 109,
     "end": 128,
     "text": "fn auto_targets<'f>("
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/compdb.rs|ebb38dc82ed66e1a|0": {
+    "target": "../../../cli/src/graph/compdb.rs",
+    "line": 72,
+    "end": 86,
+    "text": "fn include_dirs(argv: &[String]) -> impl Iterator<Item = &str> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|01ba091166cd9815|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -3781,6 +3805,30 @@
     "end": 119,
     "text": "/// One pass over the walked set: nearest Cargo.toml and nearest"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|4fc9ef9a8c07d250|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 45,
+    "end": 52,
+    "text": "/// R1: the including file's own directory."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|799dd1c7c8a6a304|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 17,
+    "end": 21,
+    "text": "//!   R4 External: the system form with no hit is a toolchain or system"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|9b9ef387b9fef01e|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 54,
+    "end": 58,
+    "text": "/// R2: every declared root joined with the name; one distinct hit"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|e3f5927c8782922a|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 60,
+    "end": 73,
+    "text": "/// R3: the including file's own compile entries, first hit in"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/go.rs|2b185a984bae9292|0": {
     "target": "../../../cli/src/graph/ladder/go.rs",
     "line": 44,
@@ -3841,93 +3889,248 @@
     "end": 15,
     "text": "/// (package name, its exposed modules, space-separated) — the"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|0c3b69fde5bce823|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 13,
+    "end": 25,
+    "text": "//! (two is ambiguous_root, none out_of_scope). An absolute URL on the"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|17c00c50e6443d79|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 104,
+    "end": 111,
+    "text": "fn base_dir(from: &str, base: &str, doc: &Document, scope: &Scope) -> Result<String, Outcome> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|3d3da5f2512b5b76|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 7,
+    "end": 13,
+    "text": "//! reference (`/x`) needs the deployment root, which no join knows: R2"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|66efdd5d98103b68|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 178,
+    "end": 181,
+    "text": "fn directory(dir: &str, scope: &Scope) -> bool {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|7dd89f56a40a77e4|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 88,
+    "end": 96,
+    "text": "fn relative(from: &str, path: &str, doc: &Document, scope: &Scope) -> Found {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|988a042e045d2dd7|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 194,
+    "end": 210,
+    "text": "fn sectioned(target: String, frag: Option<&str>, rung: Rung, scope: &Scope) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|db0033ea2b0110b0|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 130,
+    "end": 141,
+    "text": "fn rooted(\nfrom: &str,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html_head.rs|115286029cd4d85c|0": {
+    "target": "../../../cli/src/graph/ladder/html_head.rs",
+    "line": 201,
+    "end": 206,
+    "text": "pub fn ids(text: &str) -> Vec<String> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html_head.rs|77bdaa0c17839608|0": {
+    "target": "../../../cli/src/graph/ladder/html_head.rs",
+    "line": 33,
+    "end": 57,
+    "text": "pub fn read(from: &str, text: &str) -> Document {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html_head.rs|d2a4a5088ea91376|0": {
+    "target": "../../../cli/src/graph/ladder/html_head.rs",
+    "line": 155,
+    "end": 165,
+    "text": "pub fn decode_refs(value: &str) -> String {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|5015d966071428f8|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! Java rungs (plan v2.30 step 3; design booklet §8 row Java). Java"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|51011f5b653bca7a|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 171,
+    "end": 177,
+    "text": "fn type_ref(&self, segs: &[&str]) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|5d82db0a63e41457|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 100,
+    "end": 108,
+    "text": "fn index_of(scope: &Scope) -> Index {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|731209d92c9c4e81|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 128,
+    "end": 134,
+    "text": "fn class_of(&self, segs: &[&str], exact: Rung, nested: Rung) -> Option<Outcome> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|80962dc2ebf5945b|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 197,
+    "end": 216,
+    "text": "fn simple(&self, name: &str, header: &Header) -> Option<Outcome> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|8a5117df77f661f6|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 149,
+    "end": 159,
+    "text": "fn package_dir(&self, package: &str) -> Option<Outcome> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|e6eed451d228cb6b|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 285,
+    "end": 290,
+    "text": "fn jdk(segs: &[&str]) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|f567dfa66e6b8fee|0": {
+    "target": "../../../cli/src/graph/ladder/java.rs",
+    "line": 80,
+    "end": 84,
+    "text": "fn own_unit(from: &str, found: Outcome) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_jdk.rs|277e00e3bb8ab648|0": {
+    "target": "../../../cli/src/graph/ladder/java_jdk.rs",
+    "line": 1,
+    "end": 10,
+    "text": "//! The Java ladder's External evidence (plan v2.30 step 3; booklet §8"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_sets.rs|1c275b690af7b668|0": {
+    "target": "../../../cli/src/graph/ladder/java_sets.rs",
+    "line": 29,
+    "end": 33,
+    "text": "pub fn visible(from: &str, candidate: &str) -> bool {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|29c7ea6b102596fc|0": {
+    "target": "../../../cli/src/graph/ladder/lua.rs",
+    "line": 62,
+    "end": 70,
+    "text": "/// R1: the module's path in every search directory the requiring file"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|41e2c9a56a088701|0": {
+    "target": "../../../cli/src/graph/ladder/lua.rs",
+    "line": 126,
+    "end": 133,
+    "text": "/// R2: the path beside the loading file, then under the tree root; the"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|7d4349575977e605|0": {
+    "target": "../../../cli/src/graph/ladder/lua.rs",
+    "line": 42,
+    "end": 43,
+    "text": "const STDLIB: &str = \"string table math io os coroutine debug package bit32 utf8 \\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|fcde8e78b3bf24af|0": {
+    "target": "../../../cli/src/graph/ladder/lua.rs",
+    "line": 55,
+    "text": "\"require\" if listed(STDLIB, spec) => Outcome::External { rung: 3 },"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua_path.rs|71fd461eb1c40703|0": {
+    "target": "../../../cli/src/graph/ladder/lua_path.rs",
+    "line": 36,
+    "end": 39,
+    "text": "pub fn read(text: &str) -> Vec<Template> {"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|4958a697755af595|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 68,
-    "end": 99,
+    "line": 70,
+    "end": 101,
     "text": "fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|821c0d1a92e98934|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 159,
-    "end": 191,
+    "line": 161,
+    "end": 193,
     "text": "fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|84d22bd6cf0b9ab5|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 120,
-    "end": 134,
+    "line": 122,
+    "end": 136,
     "text": "fn directory(target: String, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|86e1e6d0aca9e802|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 61,
+    "line": 63,
     "text": "\"url\" => Outcome::External { rung: 5 },"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|9ac5c6c57e5ddd1f|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 69,
-    "end": 74,
+    "line": 71,
+    "end": 76,
     "text": "if is_scheme(spec) {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|b237ffb535f30cdb|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 140,
-    "end": 155,
+    "line": 142,
+    "end": 157,
     "text": "pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|b237ffb535f30cdb|1": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 140,
-    "end": 155,
+    "line": 142,
+    "end": 157,
     "text": "pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|f53063b1a15fb6bc|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 104,
-    "end": 116,
+    "line": 106,
+    "end": 118,
     "text": "pub(super) fn fragment(from: &str, frag: Option<&str>) -> Outcome {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|228f57aa6d479601|0": {
-    "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 43,
-    "end": 48,
-    "text": "if let Some(head) = atx_heading(line.trim_start()) {"
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_head.rs|3ceee37d3e11045d|0": {
+    "target": "../../../cli/src/graph/ladder/md_head.rs",
+    "line": 30,
+    "end": 61,
+    "text": "pub(crate) fn headings(text: &str) -> Vec<Heading> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_head.rs|a38cffabc8b01dfe|0": {
+    "target": "../../../cli/src/graph/ladder/md_head.rs",
+    "line": 126,
+    "end": 150,
+    "text": "pub(crate) fn anchors(text: &str) -> Vec<(usize, String)> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|39e070c539d76c93|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 36,
-    "end": 51,
+    "line": 41,
+    "end": 56,
     "text": "pub(super) fn slug_set(text: &str) -> Vec<String> {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|4a204cb9db0efafc|0": {
-    "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 198,
-    "end": 219,
-    "text": "fn html_anchors(line: &str, mask: &[bool]) -> Vec<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|4cf1f7d9f34d8f4f|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 251,
-    "end": 276,
+    "line": 200,
+    "end": 225,
     "text": "pub(crate) fn percent_decode(s: &str) -> String {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|6dfd785bbe308d29|0": {
+    "target": "../../../cli/src/graph/ladder/md_slug.rs",
+    "line": 47,
+    "end": 51,
+    "text": "let base = slugify(render_text(&heading.text).trim());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|8b614dd2fee5f0ad|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 235,
-    "end": 246,
+    "line": 184,
+    "end": 194,
     "text": "fn slugify(text: &str) -> String {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|d29df820fa601d8a|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 79,
-    "end": 102,
+    "line": 65,
+    "end": 91,
     "text": "pub(crate) fn render_text(head: &str) -> String {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|dfb32cfe237ce281|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 19,
-    "end": 27,
+    "line": 23,
+    "end": 30,
     "text": "pub fn slug_hash(text: &str) -> u64 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
@@ -4006,6 +4209,30 @@
     "line": 37,
     "end": 48,
     "text": "fn relative(from: &str, spec: &str, files: &BTreeSet<String>) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/r/description.rs|dc1a95b618b1bd08|0": {
+    "target": "../../../cli/src/graph/ladder/r/description.rs",
+    "line": 25,
+    "end": 32,
+    "text": "pub fn read(text: &str, dir: &str) -> Option<Description> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/r/mod.rs|1cdd9b701a3b372e|0": {
+    "target": "../../../cli/src/graph/ladder/r/mod.rs",
+    "line": 27,
+    "end": 37,
+    "text": "pub fn resolve(site: &Site, scope: &Scope) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/r/mod.rs|7cbc1fac6ac5c991|0": {
+    "target": "../../../cli/src/graph/ladder/r/mod.rs",
+    "line": 42,
+    "end": 53,
+    "text": "fn package(spec: &str, scope: &Scope) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/r/mod.rs|809ea67835195d86|0": {
+    "target": "../../../cli/src/graph/ladder/r/mod.rs",
+    "line": 16,
+    "end": 18,
+    "text": "//!   R3 External: a package no in-scope DESCRIPTION declares — base R,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs.rs|1ab2a9cf99e4b826|0": {
     "target": "../../../cli/src/graph/ladder/rs.rs",
@@ -4130,9 +4357,15 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/md_mask.rs|9551917adc7cb5c4|0": {
     "target": "../../../cli/src/graph/md_mask.rs",
-    "line": 22,
-    "end": 64,
+    "line": 28,
+    "end": 38,
     "text": "pub(super) struct Blocks {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/md_mask.rs|9d1180021f74c445|0": {
+    "target": "../../../cli/src/graph/md_mask.rs",
+    "line": 137,
+    "end": 155,
+    "text": "pub(crate) fn list_item(trimmed: &str) -> Option<usize> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/nodes.rs|5eceac305c65d702|0": {
     "target": "../../../cli/src/graph/nodes.rs",
@@ -4209,15 +4442,15 @@
     "line": 42,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|b7ec742e36bb0247|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|5f9e077918950054|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 115,
-    "text": "pub const GRAPH_REV: i64 = 16;"
+    "line": 124,
+    "text": "pub const GRAPH_REV: i64 = 17;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 155,
-    "end": 157,
+    "line": 164,
+    "end": 166,
     "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
@@ -4321,8 +4554,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/unit/graph/ladder/md_tests.rs|7888a8dfa6029cde|0": {
     "target": "../../../cli/tests/unit/graph/ladder/md_tests.rs",
-    "line": 12,
-    "end": 31,
+    "line": 13,
+    "end": 32,
     "text": "fn hash_moves_exactly_when_the_consulted_projection_moves() {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/unit/graph/ladder/rs_reexport.rs|99b6fa93444078a2|0": {
@@ -5022,46 +5255,46 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|00b8ff188d9d7498|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 136,
+    "line": 138,
     "text": "legBits = [(legSim, [1]), (legGraph, [2, 3, 4, 5, 6]), (legChurn, [7, 8])]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|0d4aafdc0967176c|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 147,
-    "end": 149,
+    "line": 149,
+    "end": 151,
     "text": "-- | (verdict, legsMask, reasonBits) under the production table."
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|277fc90c247bf871|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 179,
+    "line": 181,
     "text": "cochangeHot = maybe False (>= kCochangeFloor k) (lCochange l)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|2c7aa776765d2084|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 175,
-    "end": 179,
+    "line": 177,
+    "end": 181,
     "text": "(apA, rwA) = lChurnA l"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|3ea70b9dc687da09|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 97,
-    "end": 101,
+    "line": 99,
+    "end": 103,
     "text": "-- | legsMask bits: which signals were actually present."
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|4ba36c412c10a370|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 194,
+    "line": 196,
     "text": ", (7, cochangeHot)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|4f24d96bc3312a74|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 62,
-    "end": 63,
+    "line": 64,
+    "end": 65,
     "text": ", lChurnA :: (Integer, Integer)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|4f34581cb5a09c6f|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 195,
+    "line": 197,
     "text": ", (8, rewriteHot)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|510548647da53931|0": {
@@ -5072,126 +5305,126 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|55f8653ca04a0336|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 192,
+    "line": 194,
     "text": ", (5, deadFlank)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|5d7a9450cf2c7312|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 180,
-    "end": 182,
+    "line": 182,
+    "end": 184,
     "text": "code = case [c | (c, _, req, forb) <- table, all (testBit reasons) req, not (any (testBit reasons) forb)] of"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|5db6015f4bc895c9|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 167,
-    "end": 174,
+    "line": 169,
+    "end": 176,
     "text": "bothRef = maybe False (\\(a, b) -> pIndeg a >= 1 && pIndeg b >= 1) pair"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|5dbb53ee3f46e81a|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 142,
+    "line": 144,
     "text": "confidence :: Integer -> Integer -> Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|60274b709b485d26|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 163,
-    "end": 166,
+    "line": 165,
+    "end": 168,
     "text": "pair = (,) <$> lGraphA l <*> lGraphB l"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|6c01a2034c51dc8c|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 43,
-    "end": 48,
+    "line": 45,
+    "end": 50,
     "text": "data Pos = Pos\n{ pIndeg :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|6e6d9463c2d53adf|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 10,
-    "end": 13,
+    "line": 12,
+    "end": 15,
     "text": "-- Verdict codes are the design table's own numbering:"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|73fd3b42b4f24cb2|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 191,
+    "line": 193,
     "text": ", (4, sccDistinct)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|8c06f8edbdc9f66a|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 13,
-    "end": 16,
+    "line": 15,
+    "end": 18,
     "text": "-- Nothing (unit tier — import granularity has no unit nodes) can"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|9722de86ef59b98c|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 184,
-    "end": 198,
+    "line": 186,
+    "end": 200,
     "text": "reasons =\nsum\n[ bit n"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|b327b33b945aabdd|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 193,
+    "line": 195,
     "text": ", (6, publicGuard)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|b7955f4c063c3800|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 53,
-    "end": 55,
+    "line": 55,
+    "end": 57,
     "text": "-- honestly lack it. lCochange is Maybe: Nothing = the pair sits"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|caf6546b0ac4c1b5|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 190,
+    "line": 192,
     "text": ", (3, bothRef)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|cfff149d35c47f6c|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 160,
-    "end": 162,
+    "line": 162,
+    "end": 164,
     "text": "simOver = case kind of"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|d5421e2370a0e19d|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 188,
+    "line": 190,
     "text": "[ (1 :: Int, simOver)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|d8e6e8ad7e8edab1|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 38,
-    "end": 42,
+    "line": 40,
+    "end": 44,
     "text": "-- | One side's graph position (the Position.hs row minus its echoed"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|e614702cf94babbd|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 110,
-    "end": 114,
+    "line": 112,
+    "end": 116,
     "text": "-- copy and watches a crafted pair flip. delete's row is EXACTLY the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|e69fc758dbc9848a|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 120,
-    "end": 125,
+    "line": 122,
+    "end": 127,
     "text": "verdictTable :: [(Integer, Integer, [Int], [Int])]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|eacfdedb30c6ae9b|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 183,
+    "line": 185,
     "text": "legsMask = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|eb7ebc04617b03e3|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 80,
-    "end": 95,
+    "line": 82,
+    "end": 97,
     "text": "-- | The Cost binding the wire boundary passes. The similarity"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|ec7b091ab96f9777|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 189,
+    "line": 191,
     "text": ", (2, graphBoth)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Join.hs|f091c01c06f6ce07|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
-    "line": 57,
-    "end": 59,
+    "line": 59,
+    "end": 61,
     "text": "{ lSim :: (Integer, Integer, Integer)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Knobs.hs|528e12b08eff93a5|0": {
@@ -5880,8 +6113,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|34a1176370ed9e32|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 75,
-    "end": 97,
+    "line": 83,
+    "end": 105,
     "text": "pub fn extra(lang: Lang) -> &'static [&'static str] {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
@@ -5999,32 +6232,32 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 252,
-    "end": 257,
+    "line": 277,
+    "end": 282,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 157,
-    "end": 170,
+    "line": 182,
+    "end": 195,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 68,
-    "end": 73,
+    "line": 69,
+    "end": 74,
     "text": "let unit = Unit {\nkey: format!(\"{}/{}\", f.name, f.params),"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 174,
-    "end": 196,
+    "line": 204,
+    "end": 223,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|f782ffb638135d5f|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 200,
-    "end": 225,
+    "line": 225,
+    "end": 250,
     "text": "/// HTML sections (plan v2.30 step 5, booklet §5): an element carrying"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {
@@ -7515,8 +7748,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/py.rs|411a2c6aae78ef2d|0": {
     "target": "../../../cli/src/fourclass/visibility/py.rs",
-    "line": 27,
-    "end": 37,
+    "line": 30,
+    "end": 40,
     "text": "pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/gitmodules.rs|73c8fed302fc0c73|0": {
@@ -8181,8 +8414,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 194,
-    "end": 221,
+    "line": 196,
+    "end": 223,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/say.rs|7de3ded125c17f93|0": {
@@ -8336,20 +8569,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|6ad978eff21c4ad2|0": {
     "target": "../../../cli/src/tombstone/marked.rs",
-    "line": 119,
-    "end": 124,
+    "line": 120,
+    "end": 125,
     "text": "/// A Markdown document's marked texts: each heading as rendered and"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|6c8acec707091b77|0": {
     "target": "../../../cli/src/tombstone/marked.rs",
-    "line": 37,
-    "end": 43,
+    "line": 38,
+    "end": 44,
     "text": "/// A code file's marked texts: every identifier on a line no comment"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|f7b9bedc4d4f917d|0": {
     "target": "../../../cli/src/tombstone/marked.rs",
-    "line": 70,
-    "end": 84,
+    "line": 71,
+    "end": 85,
     "text": "/// The text with every literal blanked to spaces (newlines kept, so"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|0694bd7785d6f8d4|0": {
@@ -8504,8 +8737,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|2b006cd2f8ae1074|0": {
     "target": "../../../cli/src/tombstone/surfaces.rs",
-    "line": 71,
-    "end": 91,
+    "line": 72,
+    "end": 92,
     "text": "/// S⁺: Markdown reads its added headings (a section IS its heading,"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|61e388b4df37dabb|0": {
@@ -8516,20 +8749,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|ce17ddf914bdc253|0": {
     "target": "../../../cli/src/tombstone/surfaces.rs",
-    "line": 141,
-    "end": 157,
+    "line": 142,
+    "end": 158,
     "text": "/// P⁺: the SENTENCES this change wrote into every docdup segment of"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|edc90b0007955ca7|0": {
     "target": "../../../cli/src/tombstone/surfaces.rs",
-    "line": 52,
-    "end": 61,
+    "line": 53,
+    "end": 62,
     "text": "/// The after-side lines this change added or rewrote (1-based), off"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|edc90b0007955ca7|1": {
     "target": "../../../cli/src/tombstone/surfaces.rs",
-    "line": 52,
-    "end": 61,
+    "line": 53,
+    "end": 62,
     "text": "/// The after-side lines this change added or rewrote (1-based), off"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|f2bf6b3873c4f111|0": {
@@ -8540,8 +8773,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/surfaces.rs|f96d44e2b69c375a|0": {
     "target": "../../../cli/src/tombstone/surfaces.rs",
-    "line": 158,
-    "end": 191,
+    "line": 159,
+    "end": 192,
     "text": "/// One segment's touched sentences: its lines joined by a space, each"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/texts.rs|048b13f996806aa1|0": {
@@ -9050,17 +9283,17 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|3fd9786ee83f067a|0": {
     "target": "../../../cli/tests/it/eval_similar_precision.rs",
-    "line": 162,
+    "line": 165,
     "text": "fn similar_oracle_floors() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|74f9f9453210f75e|0": {
     "target": "../../../cli/tests/it/eval_similar_precision.rs",
-    "line": 34,
+    "line": 37,
     "text": "const GENERATIONS: [(u32, u64); 2] = [(1, 60), (2, 40)];"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/eval_similar_precision.rs|84da349508d0e98c|0": {
     "target": "../../../cli/tests/it/eval_similar_precision.rs",
-    "line": 62,
+    "line": 65,
     "text": "fn similar_oracle_consistent() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/face_parity.rs|5a4bc4e95b316259|0": {
@@ -9148,39 +9381,39 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|1c370a37e8d2642f|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 222,
+    "line": 225,
     "text": "### 裁定（调优与联想，2026-09-05）"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|2374d52a68d6c8d8|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 314,
+    "line": 318,
     "text": "### 裁定（留出集复测，2026-09-05）"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|3a93317b81c49a4c|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 285,
+    "text": "| all | 667 | 89 | 90 | 71 | 417 | 89/179 = 49.7 % | 89/160 = 55.6 % |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|5b784ff115a5b6ad|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 276,
+    "text": "| all | 115 | 45/115 = 39.1 % | 41/115 = 35.7 % | 29/57 = 50.9 % | 16/58 = 27.6 % | 28/98 = 28.6 % | 69/115 = 60.0 % | 66/115 = 57.4 % |"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|6f2f3da27ec8cd27|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 77,
-    "end": 80,
+    "line": 80,
+    "end": 83,
     "text": "## 结果（`contracts/eval/similar-oracle-v1.json` `summary`，CI 门从行重导必须相等）"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|701cd1980d92a19e|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|915d970925e035dd|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 85,
-    "text": "| all | 118 | 67/118 = 56.8 % | 63/118 = 53.4 % | 39/59 = 66.1 % | 28/59 = 47.5 % | 38/89 = 42.7 % | 74/118 = 62.7 % | 75/118 = 63.6 % |"
+    "line": 97,
+    "text": "| all | 695 | 100 | 65 | 80 | 450 | 100/165 = 60.6 % | 100/180 = 55.6 % |"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|7afea72e73130df6|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|daf761ab85f5e997|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 94,
-    "text": "| all | 700 | 101 | 64 | 76 | 459 | 101/165 = 61.2 % | 101/177 = 57.1 % |"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|e32561623b71ecff|0": {
-    "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 281,
-    "text": "| all | 668 | 86 | 91 | 65 | 426 | 86/177 = 48.6 % | 86/151 = 57.0 % |"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|ee2f174f1ba74444|0": {
-    "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 272,
-    "text": "| all | 115 | 46/115 = 40.0 % | 42/115 = 36.5 % | 30/56 = 53.6 % | 16/59 = 27.1 % | 29/98 = 29.6 % | 69/115 = 60.0 % | 66/115 = 57.4 % |"
+    "line": 88,
+    "text": "| all | 118 | 68/118 = 57.6 % | 66/118 = 55.9 % | 39/59 = 66.1 % | 29/59 = 49.2 % | 39/89 = 43.8 % | 75/118 = 63.6 % | 77/118 = 65.3 % |"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",

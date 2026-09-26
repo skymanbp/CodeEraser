@@ -15,7 +15,7 @@
 //! file narrates nothing by job. Deliberately no regex: every matcher
 //! is a digit walk.
 
-use crate::graph::ladder::md::slug::atx_heading;
+use crate::graph::ladder::md::head::atx_heading;
 use crate::graph::md::content_lines;
 use crate::scan::lang::Lang;
 use std::path::Path;

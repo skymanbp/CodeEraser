@@ -61,11 +61,11 @@ existed is never re-judged. The diff's own `degraded` bit travels with the set: 
 diff's caps every trimmed line counts as added, so such a pair is measured, counted as
 degraded, and never enforced on (§7)
 ([surfaces.rs:1-7](../../../cli/src/tombstone/surfaces.rs#L1),
-[surfaces.rs:52-61](../../../cli/src/tombstone/surfaces.rs#L52)):
+[surfaces.rs:53-62](../../../cli/src/tombstone/surfaces.rs#L53)):
 
 - **S⁺, the naming surface** — headings this change added (Markdown), unit names the after
   side declares and the before side did not (code), the stem of a brand-new file
-  ([surfaces.rs:71-91](../../../cli/src/tombstone/surfaces.rs#L71)).
+  ([surfaces.rs:72-92](../../../cli/src/tombstone/surfaces.rs#L72)).
 - **P⁺, the prose surface** — the SENTENCES this change wrote into every comment, docstring
   and paragraph segment docdup extracts: the boundaries are cut in the whole segment's text
   and a sentence is kept when an added line is among its lines (so an unchanged line between
@@ -75,7 +75,7 @@ degraded, and never enforced on (§7)
   no longer needed` is a whole tombstone. Fenced and indented code never become segments, so
   an example's `(no X)` stays an example
   ([surfaces.rs:9-12](../../../cli/src/tombstone/surfaces.rs#L9),
-  [surfaces.rs:141-157](../../../cli/src/tombstone/surfaces.rs#L141)).
+  [surfaces.rs:142-158](../../../cli/src/tombstone/surfaces.rs#L142)).
 
 ### 2. R — the names a change erased
 
@@ -85,11 +85,11 @@ as rendered, a list item's lead. An inline code span only MENTIONS: it keeps a n
 declares none — the third self-replay round said why, when a 5,000-character narrative line
 rewritten in place dropped its own spans and re-mentioned them, and nothing had been removed
 ([marked.rs:1-9](../../../cli/src/tombstone/marked.rs#L1),
-[marked.rs:37-43](../../../cli/src/tombstone/marked.rs#L37),
-[marked.rs:119-124](../../../cli/src/tombstone/marked.rs#L119)). Literals are blanked to
+[marked.rs:38-44](../../../cli/src/tombstone/marked.rs#L38),
+[marked.rs:120-125](../../../cli/src/tombstone/marked.rs#L120)). Literals are blanked to
 spaces before the identifiers are read: the fifth round had bound `independent` out of a
 caveat message and `linux` out of a cfg string
-([marked.rs:70-84](../../../cli/src/tombstone/marked.rs#L70)).
+([marked.rs:71-85](../../../cli/src/tombstone/marked.rs#L71)).
 
 Each marked text offers every **window** of 1..=`JOIN_MAX` adjacent words — the word cut
 lower-cases ASCII, splits at `_`, `-`, any non-alphanumeric and a camel rise, and keeps a
@@ -159,7 +159,7 @@ follows (so `ce.toml` and `a.rs` stay whole) and after any full-width `。！？
 WHOLE text, and the conjunction is read per sentence this change touched: the fourth
 self-replay round had bound a name mentioned 3,000 characters away from its mark on one
 5,000-character line ([frames.rs:231-255](../../../cli/src/tombstone/frames.rs#L231),
-[surfaces.rs:158-191](../../../cli/src/tombstone/surfaces.rs#L158)). Each sentence yields
+[surfaces.rs:159-192](../../../cli/src/tombstone/surfaces.rs#L159)). Each sentence yields
 one row when it carries a retrospective mark or an erased name at all: `marks` counts every
 English phrase of the mark table at word boundaries (`previously` must not match inside
 `previously_seen`) and every Chinese one by substring, overlapping phrases both counting — the
@@ -333,7 +333,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   mark on one line with the name on the next was two sentences about two things; the rule now
   reads the node's last content row, so a Rust doc sentence broken across lines is one sentence
   here as it is to docdup (the merge rule is docdup's, not this class's)
-  ([segments.rs:194-221](../../../cli/src/docdup/segments.rs#L194)).
+  ([segments.rs:196-223](../../../cli/src/docdup/segments.rs#L196)).
 - **Only judged languages are measured.** A pair whose after path is not a judged language is
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
@@ -344,7 +344,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   unread and not measured, so a name erased there cannot bind; a pair whose line diff was
   bounded is measured and counted as degraded; on either count the legs record and never
   enforce ([texts.rs:15-24](../../../cli/src/tombstone/texts.rs#L15),
-  [surfaces.rs:52-61](../../../cli/src/tombstone/surfaces.rs#L52)).
+  [surfaces.rs:53-62](../../../cli/src/tombstone/surfaces.rs#L53)).
 - **Intent is not read.** A frame is a frame: `no_std` is an absence word whole and spells
   nothing, but a genuinely new `(no cache)` heading written in the same change that removed a
   `cache` module is a site by construction, and the way out is the reason's — say what

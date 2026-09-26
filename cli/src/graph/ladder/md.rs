@@ -29,17 +29,17 @@
 //! protocol-relative (//x) forms are domain-relative in rendered
 //! contexts, never repo-relative.
 //!
-//! Honest limits (plan v2.17 L round step 8, O57, closed four: the
-//! slug is the rendered heading's, the heading walk is
-//! indented-code-aware, raw-HTML anchors enter the set, percent
-//! escapes decode — md_slug.rs): what remains — setext headings,
-//! attribute forms the one-line tag reader does not parse — degrades
-//! an anchor to file level, never invents a section. Cross-file
-//! staleness is closed at the key (M5 close, repaying the 2f wiring
-//! debt): the ONLY target-content fact this ladder consults is the
-//! anchor set (anchor() below), so every md file's slug_hash is a
-//! resolve_key input — a heading edit anywhere shifts the key and
-//! the phase-2 sweep re-validates every anchor.
+//! The anchor set is the rendered heading's slug (ATX and setext —
+//! md_head.rs, plan v2.17 L round step 8 and v2.30 step 5b), the
+//! heading walk is block-aware, raw-HTML anchors enter the set from a
+//! tag read across lines and attribute spellings, and percent escapes
+//! decode (md_slug.rs); a fragment that matches no anchor degrades to
+//! file level, never invents a section. Cross-file staleness is
+//! closed at the key (M5 close, repaying the 2f wiring debt): the
+//! ONLY target-content fact this ladder consults is the anchor set
+//! (anchor() below), so every md file's slug_hash is a resolve_key
+//! input — a heading edit anywhere shifts the key and the phase-2
+//! sweep re-validates every anchor.
 
 use super::{Outcome, Reason, Scope, Site};
 use crate::graph::md::{content_lines, detect, ref_definition};
@@ -48,6 +48,8 @@ use slug::{percent_decode, slug_set};
 use std::collections::{BTreeMap, BTreeSet};
 use std::rc::Rc;
 
+#[path = "md_head.rs"]
+pub(crate) mod head;
 #[path = "md_slug.rs"]
 pub(crate) mod slug;
 pub use slug::slug_hash;

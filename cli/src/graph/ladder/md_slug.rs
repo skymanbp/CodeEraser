@@ -7,10 +7,14 @@
 //! (md_mask.rs), raw-HTML anchors — `<h1..6 id=…>`, `<a name=…>`,
 //! `<a id=…>` — enter the set verbatim (they are GitHub targets, the
 //! audited FAQ.md row's shape), and a fragment or path is
-//! percent-decoded before the lookup. Every remaining approximation
-//! still degrades an anchor to file level, never invents a section.
+//! percent-decoded before the lookup. Plan v2.30 step 5b closed the
+//! two that remained: setext headings slug like ATX ones, and an
+//! anchor tag is read across lines and attribute spellings — which
+//! lines are headings and which tags are anchors is md_head.rs's one
+//! reading, shared with the section units.
 
-use crate::graph::md::{content_lines, matching_close, merge_code_spans};
+use super::head::{anchors, headings};
+use crate::graph::md::matching_close;
 use std::collections::BTreeMap;
 
 /// The slug set folded to one resolve_key input (module header):
@@ -25,48 +29,30 @@ pub fn slug_hash(text: &str) -> u64 {
     crate::dedup::tokens::fnv1a(&buf)
 }
 
-/// GitHub-slugged ATX headings in document order, -N suffixes for
-/// duplicates, plus every raw-HTML anchor id verbatim (an explicit id
-/// sits outside the heading counter; two equal ids simply match
-/// twice and degrade); block- and comment-aware via the detector's
-/// walk, and an anchor tag inside an inline code span is text, not a
-/// target (the step-8 review: the comment-only mask let it in). A
-/// heading line can carry an anchor tag too — its own slug drops the
-/// tag, the id still enters.
+/// GitHub-slugged headings in document order (ATX and setext, the one
+/// reading in md_head.rs), -N suffixes for duplicates, plus every
+/// raw-HTML anchor id verbatim at the row its tag opens on (an
+/// explicit id sits outside the heading counter; two equal ids simply
+/// match twice and degrade); block- and comment-aware via the
+/// detector's walk, and an anchor tag inside an inline code span is
+/// text, not a target (the step-8 review: the comment-only mask let
+/// it in). A heading line can carry an anchor tag too — its own slug
+/// drops the tag, the id still enters, after the slug.
 pub(super) fn slug_set(text: &str) -> Vec<String> {
     let mut seen: BTreeMap<String, usize> = BTreeMap::new();
-    let mut out = Vec::new();
-    for (_, line, mask) in content_lines(text) {
-        if mask.first().copied().unwrap_or(false) {
-            continue;
-        }
-        if let Some(head) = atx_heading(line.trim_start()) {
-            // the rendered text is trimmed like GitHub trims it — a
-            // dropped trailing tag must not leave a hyphen behind
-            let base = slugify(render_text(head).trim());
-            let n = seen.entry(base.clone()).or_insert(0usize);
-            out.push(if *n == 0 { base } else { format!("{base}-{n}") });
-            *n += 1;
-        }
-        let mut spans = mask;
-        merge_code_spans(line, &mut spans);
-        out.extend(html_anchors(line, &spans));
+    let mut rows: Vec<(usize, u8, String)> = Vec::new();
+    for heading in headings(text) {
+        // the rendered text is trimmed like GitHub trims it — a
+        // dropped trailing tag must not leave a hyphen behind
+        let base = slugify(render_text(&heading.text).trim());
+        let n = seen.entry(base.clone()).or_insert(0usize);
+        let slug = if *n == 0 { base } else { format!("{base}-{n}") };
+        rows.push((heading.line, 0, slug));
+        *n += 1;
     }
-    out
-}
-
-/// ATX heading text: 1-6 leading #, then a space, a tab or the end;
-/// the space-separated closing sequence strips (CommonMark).
-pub(crate) fn atx_heading(trimmed: &str) -> Option<&str> {
-    let hashes = trimmed.chars().take_while(|&c| c == '#').count();
-    if hashes == 0 || hashes > 6 {
-        return None;
-    }
-    let rest = &trimmed[hashes..];
-    if !rest.is_empty() && !rest.starts_with([' ', '\t']) {
-        return None;
-    }
-    Some(rest.trim().trim_end_matches('#').trim_end())
+    rows.extend(anchors(text).into_iter().map(|(row, id)| (row, 1, id)));
+    rows.sort_by_key(|(row, rank, _)| (*row, *rank));
+    rows.into_iter().map(|(_, _, slug)| slug).collect()
 }
 
 /// The heading as rendered: a backslash escape unescapes, a code
@@ -190,43 +176,6 @@ fn emphasis_underscores(bytes: &[u8]) -> Vec<bool> {
         }
     }
     paired
-}
-
-/// `<a name="x">`, `<a id="x">`, `<h1..6 id="x">` (name too) on one
-/// line, unmasked bytes only: the tag body up to `>` is read for an
-/// `id=`/`name=` attribute, quoted either way or bare.
-fn html_anchors(line: &str, mask: &[bool]) -> Vec<String> {
-    let mut out = Vec::new();
-    let mut i = 0;
-    while let Some(p) = line[i..].find('<') {
-        let open = i + p;
-        i = open + 1;
-        if mask[open] {
-            continue;
-        }
-        let Some(end) = line[open..].find('>') else {
-            break;
-        };
-        let mut words = line[open + 1..open + end].split_whitespace();
-        let tag = words.next().unwrap_or("").to_ascii_lowercase();
-        let heading =
-            tag.len() == 2 && tag.starts_with('h') && tag.ends_with(['1', '2', '3', '4', '5', '6']);
-        if tag == "a" || heading {
-            out.extend(words.filter_map(attr_id));
-        }
-    }
-    out
-}
-
-/// `id=…` / `name=…` → the value, a self-closing slash and one quote
-/// pair stripped.
-fn attr_id(word: &str) -> Option<String> {
-    let (key, value) = word.split_once('=')?;
-    if !matches!(key.to_ascii_lowercase().as_str(), "id" | "name") {
-        return None;
-    }
-    let value = value.trim_end_matches('/').trim_matches(['"', '\'']);
-    (!value.is_empty()).then(|| value.to_string())
 }
 
 /// GitHub slug: lowercase, keep letters/digits/_/-, spaces become

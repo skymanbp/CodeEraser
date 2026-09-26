@@ -32,14 +32,16 @@ pub struct RawSeg {
 
 /// Md extraction's visibility ledger — two different fates. `html`
 /// lines are SHED (markup never reaches a segment); `indented` lines
-/// are counted but KEPT: indented code is deliberately not modeled
-/// (block context is list-sensitive — graph/md.rs:14-16 `list context`),
-/// so those
-/// lines stay prose and this count keeps that approximation visible
-/// instead of silent (2026-08-14 attainment-line-B amendment, ccm
-/// #842). The HTML walk (html.rs) ledgers here too: `code` counts the
-/// `pre` / `code` / `textarea` elements it masked or skipped, `script`
-/// the `script` / `style` elements.
+/// are counted but KEPT: a line indented four columns or more that the
+/// block model reads as prose — a list item's continuation paragraph,
+/// indented to the item's content column (graph/md_mask.rs Blocks;
+/// indented CODE, inside a list item or outside one, never reaches
+/// this walk since plan v2.30 step 5b) — so the count says how many
+/// deeply indented lines were judged as prose (2026-08-14
+/// attainment-line-B amendment, ccm #842). The HTML walk (html.rs)
+/// ledgers here too: `code` counts the `pre` / `code` / `textarea`
+/// elements it masked or skipped, `script` the `script` / `style`
+/// elements.
 #[derive(Default)]
 pub struct MdShed {
     pub indented: u64,

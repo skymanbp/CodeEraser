@@ -2,7 +2,7 @@
   "constants": {
     "doc_line_cap": 200,
     "doc_shingle": 5,
-    "docdup_rev": 6,
+    "docdup_rev": 7,
     "exempt": [
       "live",
       "license_header",
@@ -279,15 +279,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 7
+        "below_floor": 6
       },
-      "live": 2,
+      "live": 4,
       "path": "cli/src/dedup/tokens.rs",
-      "seg_sha256": "76ea4a5685022bc854227fe8c3b8c19a3bfc3e401fdb7a69030e1f849b92a21c",
+      "seg_sha256": "1ccc635ed990cc5deaa1e163d58ac976c6304aafc408836515cf6c1762d0dc66",
       "segs_by": {
-        "comment_block": 2
+        "comment_block": 4
       },
-      "sha256": "3341f471e148aa7ae7bfa19036b8c74a7e193e669061dedf6195240bc4400fac"
+      "sha256": "6ac972adf5bbd4f0be51f9e5dcb20dcf1ae4bca7017246349873a3dc5ec53290"
     },
     {
       "exempt_by": {},
@@ -1927,7 +1927,7 @@
   ],
   "generated_from": {
     "ce": "1.7.4",
-    "commit": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c",
+    "commit": "a5ac21f5ed1801109174622dfe2401677432fbd1",
     "dirty": true
   },
   "method": "document-segment universe of the pinned tree: every in-scope file's admitted segments (>= 50 post-strip words) by kind — md paragraphs off the detector's ONE mask (fence, HTML-comment and inline-code text is invisible by construction), comment blocks merged by column adjacency, Python docstrings via the host-body convention — with the four-route exemption ledger: license headers and well-formed inline allows exempt whole segments, skeleton template rows strip line-level, and the two structurally-zero routes state why in constants.route_notes. docstring is nonzero only where Python exists (requests); indented md code blocks are not modeled and ride the indented_code_lines gap counter. Frozen before any docdup judge exists. DOC_SHINGLE provenance (decided, not derived): the self-corpus k-window scout (115 live segments) emits 4/4/3 oracle J>=0.30 pairs at k=4/5/6 — k=5 sits on the stable plateau and k+1 already loses a true pair.",
@@ -1951,15 +1951,15 @@
     },
     "files_with_segments": 95,
     "ledger": {
-      "below_floor": 1561,
+      "below_floor": 1560,
       "fenced_code_line": 52,
       "html_line": 2,
       "indented_code_lines": 12,
       "skeleton_line": 60
     },
-    "live": 260,
+    "live": 262,
     "segs_by": {
-      "comment_block": 185,
+      "comment_block": 187,
       "docstring": 16,
       "md_para": 64
     }

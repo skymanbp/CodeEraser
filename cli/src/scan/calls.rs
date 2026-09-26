@@ -78,7 +78,12 @@
 //! class: a bare `g()` inside `M.f` is whichever `g` the block sees.
 //! And a Lua local reaches only the calls past its declaration: `local
 //! f = function() f() end` calls the `f` that was there before, and a
-//! local declared further down is not yet in scope above it.
+//! local declared further down is not yet in scope above it. A local
+//! bound to anything else (`local helper = other.helper`) is Lua's
+//! import: it shadows a same-named callable of the file for the body
+//! that declares it (LangSpec::call_import_kinds, plan v2.30 step 5b),
+//! while a local bound to a function value is a callable the index
+//! seats, never a shadow.
 
 use super::ast;
 use super::callees::{Named, Owner, container_of, owner_key};
@@ -225,19 +230,30 @@ fn owner_tail<'c>(caller: &'c Caller<'_>) -> Option<&'c str> {
 /// an item counts: with no resolver, an alias, a list member and a
 /// path segment are indistinguishable, and vetoing one name too many
 /// only costs an edge, which is the direction this module errs in.
+/// An item that binds a callable (a Lua `local f = function() … end`)
+/// binds no shadow: the unit inside it is seated by the index with its
+/// own visibility (Named::visible), and its names stay reachable. The
+/// declaration's position is not read — a local declared below a call
+/// shadows it all the same, the undercount side.
 fn shadowed<'s>(own: &[Node<'_>], src: &'s [u8], spec: &LangSpec) -> HashSet<&'s str> {
     let mut out = HashSet::new();
     let imports = own
         .iter()
         .filter(|n| spec.call_import_kinds.contains(&n.kind()));
     for import in imports {
+        let mut names = Vec::new();
         let mut stack = vec![*import];
         while let Some(node) = stack.pop() {
+            if node.id() != import.id() && functions::is_unit_node(node, src, spec) {
+                names.clear();
+                break;
+            }
             if spec.call_name_kinds.contains(&node.kind()) {
-                out.extend(text(node, src));
+                names.extend(text(node, src));
             }
             stack.extend(ast::children(node));
         }
+        out.extend(names);
     }
     out
 }

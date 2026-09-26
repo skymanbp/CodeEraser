@@ -10,32 +10,40 @@
 /// backticks or tildes and only the SAME marker in a run AT LEAST AS
 /// LONG closes it (``` inside a ~~~ block is content, and so is ```
 /// inside a ```` block — CommonMark's run rule, the step-8 review's
-/// counterexample). An indented code block (CommonMark: four columns
-/// of indent where a paragraph is not open — at the document start,
-/// after a blank line or a fence) opens only outside a list context,
-/// since a list item's continuation paragraph is indented the same
-/// way and is prose; it runs while lines stay indented or blank.
-/// Neither opens inside an HTML comment. The conservative side is
-/// deliberate: a block this walk does not recognise keeps the
-/// reading it had (its link-shaped content stays a site, its `#`
-/// lines stay headings), never the reverse.
+/// counterexample). An indented code block (CommonMark §4.4: four
+/// columns of indent where a paragraph is not open — at the document
+/// start, after a blank line or a fence) opens four columns past the
+/// content column of the innermost open list item (§5.2: an item's
+/// content starts after its marker and the one to four spaces
+/// following it, so its continuation paragraph, indented to that
+/// column, is prose and a line four columns deeper is code — plan
+/// v2.30 step 5b; the block used to open outside a list context
+/// only); it runs while lines stay at that indent or blank. A
+/// non-blank line indented short of an item's content column after a
+/// blank line closes the item (a lazy continuation of an open
+/// paragraph does not). Neither block opens inside an HTML comment.
+/// The conservative side is deliberate: a block this walk does not
+/// recognise keeps the reading it had (its link-shaped content stays
+/// a site, its `#` lines stay headings), never the reverse.
 pub(super) struct Blocks {
     /// The open fence's marker and run length.
     fence: Option<(char, usize)>,
-    indented: bool,
+    /// The open indented block's column: the code column it opened at.
+    indented: Option<usize>,
     /// No paragraph is open: nothing yet, or the previous line was
     /// blank or a fence.
     open: bool,
-    list: bool,
+    /// Content columns of the open list items, innermost last.
+    lists: Vec<usize>,
 }
 
 impl Default for Blocks {
     fn default() -> Self {
         Blocks {
             fence: None,
-            indented: false,
+            indented: None,
             open: true,
-            list: false,
+            lists: Vec::new(),
         }
     }
 }
@@ -47,33 +55,61 @@ impl Blocks {
         let trimmed = line.trim_start();
         let blank = trimmed.is_empty();
         let indent = columns(line);
-        if self.indented {
-            if blank || indent >= 4 {
+        if let Some(col) = self.indented {
+            if blank || indent >= col {
                 return true;
             }
-            self.indented = false;
+            self.indented = None;
         }
         if !in_comment && let Some((mark, len)) = fence_marker(trimmed) {
-            match self.fence {
-                Some((open, run)) if open == mark && len >= run => self.fence = None,
-                Some(_) => {}
-                None => self.fence = Some((mark, len)),
-            }
-            self.open = true;
+            self.toggle_fence(mark, len);
             return true;
         }
         if self.fence.is_some() {
             return true;
         }
-        if !in_comment && indent >= 4 && self.open && !self.list {
-            self.indented = true;
+        if blank {
+            self.open = true;
+            return false;
+        }
+        let code = self.code_column(indent, trimmed);
+        if !in_comment && self.open && indent >= code {
+            self.indented = Some(code);
             return true;
         }
-        if !blank {
-            self.list = list_item(trimmed) || (indent > 0 && self.list);
+        if let Some(width) = list_item(trimmed) {
+            self.lists.push(indent + width);
         }
-        self.open = blank;
+        self.open = false;
         false
+    }
+
+    /// A fence marker line: it closes the open fence when it matches the
+    /// opening run (same character, at least as long), is text inside a
+    /// fence of the other character, and opens a fence otherwise; either
+    /// way no paragraph is open after it.
+    fn toggle_fence(&mut self, mark: char, len: usize) {
+        match self.fence {
+            Some((open, run)) if open == mark && len >= run => self.fence = None,
+            Some(_) => {}
+            None => self.fence = Some((mark, len)),
+        }
+        self.open = true;
+    }
+
+    /// The column where indented code starts for a non-blank line at
+    /// `indent`, after closing the list items the line leaves: every
+    /// item whose content column it falls short of, when no paragraph
+    /// is open or the line is itself a list marker (a marker at an
+    /// outer level interrupts the paragraph; any other short line is a
+    /// lazy continuation and closes nothing).
+    fn code_column(&mut self, indent: usize, trimmed: &str) -> usize {
+        if self.open || list_item(trimmed).is_some() {
+            while self.lists.last().is_some_and(|&col| indent < col) {
+                self.lists.pop();
+            }
+        }
+        self.lists.last().map_or(0, |col| *col) + 4
     }
 }
 
@@ -92,8 +128,13 @@ fn columns(line: &str) -> usize {
 }
 
 /// A bullet (`-`, `*`, `+`) or ordered (`1.`, `1)`) list marker
-/// followed by whitespace or the end of the line.
-fn list_item(trimmed: &str) -> bool {
+/// followed by whitespace or the end of the line: the width of the
+/// item's marker plus the spaces its content sits after (CommonMark
+/// §5.2: one to four; five or more, or the end of the line, read as
+/// one, the rest being the item's own indented code or nothing).
+/// pub(crate): the heading reader asks whether a line is a list item
+/// (ladder/md_head.rs).
+pub(crate) fn list_item(trimmed: &str) -> Option<usize> {
     let digits = trimmed.chars().take_while(char::is_ascii_digit).count();
     let marker = if digits > 0 {
         trimmed[digits..]
@@ -101,8 +142,16 @@ fn list_item(trimmed: &str) -> bool {
             .then_some(digits + 1)
     } else {
         trimmed.starts_with(['-', '*', '+']).then_some(1)
-    };
-    marker.is_some_and(|n| trimmed.len() == n || trimmed[n..].starts_with([' ', '\t']))
+    }?;
+    let rest = &trimmed[marker..];
+    if rest.is_empty() {
+        return Some(marker + 1);
+    }
+    if !rest.starts_with([' ', '\t']) {
+        return None;
+    }
+    let gap = columns(rest);
+    Some(marker + if gap > 4 { 1 } else { gap })
 }
 
 /// Three-or-more backticks or tildes open/close a fence: the marker

@@ -250,14 +250,14 @@
       "bands": {
         "below_floor": 6,
         "l": 1,
-        "m": 3,
+        "m": 4,
         "s": 3
       },
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "3341f471e148aa7ae7bfa19036b8c74a7e193e669061dedf6195240bc4400fac",
-      "symbols": 13,
-      "units": 13
+      "sha256": "6ac972adf5bbd4f0be51f9e5dcb20dcf1ae4bca7017246349873a3dc5ec53290",
+      "symbols": 14,
+      "units": 14
     },
     {
       "bands": {
@@ -1366,20 +1366,20 @@
     },
     {
       "bands": {
-        "below_floor": 4,
+        "below_floor": 16,
         "l": 2,
         "m": 2,
-        "s": 6
+        "s": 7
       },
       "lang": "go",
       "path": "contracts/fixtures/crosscheck/go/cobra.go",
       "sha256": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
-      "symbols": 14,
-      "units": 14
+      "symbols": 27,
+      "units": 27
     },
     {
       "bands": {
-        "below_floor": 0,
+        "below_floor": 1,
         "l": 0,
         "m": 1,
         "s": 0
@@ -1387,12 +1387,12 @@
       "lang": "go",
       "path": "contracts/fixtures/crosscheck/go/command_win.go",
       "sha256": "a9f85ba76b54df4b2589546562b325c7b1225388d5b177214d4b193516556390",
-      "symbols": 1,
-      "units": 1
+      "symbols": 2,
+      "units": 2
     },
     {
       "bands": {
-        "below_floor": 8,
+        "below_floor": 27,
         "l": 4,
         "m": 8,
         "s": 8
@@ -1400,8 +1400,8 @@
       "lang": "go",
       "path": "contracts/fixtures/crosscheck/go/completions.go",
       "sha256": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-      "symbols": 28,
-      "units": 28
+      "symbols": 47,
+      "units": 47
     },
     {
       "bands": {
@@ -1686,7 +1686,7 @@
       "lang": "md",
       "path": "docs/T1-INTERCEPT.md",
       "sha256": "eda6bc17b91900173791cb130c7bdeca898c1ec07503fb3d2cdc4fc41156a505",
-      "symbols": 9,
+      "symbols": 6,
       "units": 0
     },
     {
@@ -1842,13 +1842,13 @@
       "lang": "md",
       "path": "plugin/README.md",
       "sha256": "e66048e82a3485d0081d73cf85aa2e6232327a91986335aa39b39f214201181e",
-      "symbols": 3,
+      "symbols": 2,
       "units": 0
     }
   ],
   "generated_from": {
-    "ce": "0.0.1",
-    "commit": "a7c267293d1aa18982c0f6420d8207391ab630bd",
+    "ce": "1.7.4",
+    "commit": "a5ac21f5ed1801109174622dfe2401677432fbd1",
     "dirty": true
   },
   "method": "unit universe of the pinned tree: every in-scope file inventoried with its symbols identity count (the detect_with_units + with_nth throat the graph store writes) and its code-unit count by named-node sizeband (the unitcache::unit_facts throat the unitsig cache writes; markdown carries zero units by design — text duplication is docdup's domain). below_floor units are structurally invisible to the T3 candidate pass, so candidate recall is an upper bound. Frozen before any candidate generator or TED judge exists; sizeband constants pre-registered before any measurement.",
@@ -1868,10 +1868,10 @@
   },
   "summary": {
     "bands_by": {
-      "go/below_floor": 15,
+      "go/below_floor": 47,
       "go/l": 6,
       "go/m": 15,
-      "go/s": 23,
+      "go/s": 24,
       "md/below_floor": 0,
       "md/l": 0,
       "md/m": 0,
@@ -1882,7 +1882,7 @@
       "py/s": 41,
       "rs/below_floor": 624,
       "rs/l": 132,
-      "rs/m": 506,
+      "rs/m": 507,
       "rs/s": 606,
       "ts/below_floor": 12,
       "ts/l": 6,
@@ -1891,19 +1891,19 @@
     },
     "files": 141,
     "symbols_by": {
-      "go": 59,
-      "md": 127,
+      "go": 92,
+      "md": 123,
       "py": 126,
-      "rs": 1868,
+      "rs": 1869,
       "ts": 26
     },
-    "total_symbols": 2206,
-    "total_units": 2079,
+    "total_symbols": 2236,
+    "total_units": 2113,
     "units_by": {
-      "go": 59,
+      "go": 92,
       "md": 0,
       "py": 126,
-      "rs": 1868,
+      "rs": 1869,
       "ts": 26
     }
   }

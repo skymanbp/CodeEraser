@@ -56,10 +56,22 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 必须**整族连审计一起**按新 epoch 重立。churn 台账零 .go 行（实测），
 活体重放门零冲击。
 
+**第二道 epoch 边界（2026-09-26，计划 v2.30 步 5b 第 3 / 25 条）**：Go 分组形参按名计数
+（`a, b int` = 2）与包级 `const` / `var` 成单元（一名一单元，与 Rust 的 `const_item` / `static_item`
+同座）——探测器再换 epoch。活门 `self_universe_tracks_units` 要求 self 宇宙与当下行喉一致，故 self 册按
+冻结 sha 重导 5 行：Go 夹具 `cobra.go` 14→27 / `command_win.go` 1→2 / `completions.go` 28→47 单元（新单元
+几乎全在 24 结点地板下，admitted go 44→45），md 两行 `docs/T1-INTERCEPT.md` 9→6、`plugin/README.md` 3→2 节
+是同批的标题规则（围栏里的 `#`、闭合 `#` 串、setext）；候选册 `admitted_by_lang` go 44→45 / rs 1244→1245
+（后者 = `tokens.rs` 具名续冻多出一个 m 带单元）手改同增，`pairs_sha256` 与 `pool_digests` 不动。四份外部
+宇宙按上段拍板整族不重冻、冻结对冻结：若按当下行喉重导会动 requests 1 / ripgrep 14 / cobra 19（含 epoch 前
+已在的 8 行 Go arity）/ zod 2 行——md 行只动 `symbols`（节数），Go 行只在 cobra；同一探针在 a5ac21f 的
+二进制上对同一批冻结文件复读，四册 md 行零差、cobra 恰是那 8 行，故差额全归本批。graph-slice 五册
+零新漂移（requests 13 / ripgrep 2 / zod 12 行的差在 a5ac21f 上同样存在，是 GRAPH_REV 13–14 的旧账）。
+
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于
-`051a730` 工作树，rev 6 于 `d4b7f1f` 工作树重生成，DOCDUP_REV **6**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
+`051a730` 工作树，rev 6 于 `d4b7f1f`、rev 7 于 `a5ac21f` 工作树重生成，DOCDUP_REV **7**（rev 2→3 修正案后重冻结；rev 3→4 = NFC 组字修复
 （2026-08-21，M9 批 1）；rev 4→5 = `///` 合段修复（2026-09-04，计划 v2.28）——两次都按
 EVAL-SET.md 复活协议重冻结：3→4 五语料逐文件字段与 summary 零漂移；4→5 Rust 树的段几何
 整体变了（self 114→259、ripgrep 251→568；self 有八行 2026-09-04 曾按名改签，重冻结按兄弟锚
@@ -73,7 +85,12 @@ precision 32 行普查零漂移、只有计数回声与 `docdup_rev` 变）；re
 `packages/zod/src/v4/classic/tests/to-json-schema.test.ts` 第 7 行的 `/** @see … */` 成了骨架行
 （该文件 ledger 多 `skeleton_line` 1、summary 13→14），它的 live 段与段哈希不动；其余只变常量回声与
 kind 表；self 精度档的 `segments` 回声 259→260 不是本次的移动：`96702a6` 按名续冻 `tokens.rs` 时段宇宙
-多出一段 live 注释段，精度档到本次重生成才对上；oracle 与普查不动；门 `eval_docdup_universe`）：
+多出一段 live 注释段，精度档到本次重生成才对上；oracle 与普查不动；rev 6→7 = 列表项内缩进到内容列 + 4 的
+代码块离开 md 散文走查（2026-09-26，计划 v2.30 步 5b 第 22 / 23 条，`graph/md_mask.rs` `Blocks` 记着打开的列表项
+内容列）：五份段宇宙 770 行按冻结 sha 用当下的行喉重导——逐文件字段零漂移（self 141 / requests 50 / ripgrep 133 /
+cobra 53 / zod 393：冻结语料里没有列表项内缩进代码成段的文档），只变常量回声与 `generated_from`；精度档五份的
+判决行与 D1 在重物化的冻结树上跑完整产品判决逐格相同后只改签常量，self 的 universe 回声 segments 260→262 /
+judged 80→83 是同批 `tokens.rs` 具名续冻多出的两段 live 注释段；oracle 与普查不动；门 `eval_docdup_universe`）：
 live 段 self 260 / requests 98 / ripgrep 568 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
 verbatim_floor 50、DOC_LINE_CAP 200、license 头 5 行豁免、SEGCAP 8192。
 
@@ -92,7 +109,7 @@ population = report_floor 23 + margin 9。census v2 = v1 的严格子集
 （retired 15 对冻结存证）。
 
 **精度 = 达标线 B 修正案**（`docdup-precision-*-v1.json`，
-`ce.eval-docdup-precision/1.0.0`，生成于 `90cbdb8`，rev 5 于 `051a730`、rev 6 于 `d4b7f1f` 工作树重生成；门
+`ce.eval-docdup-precision/1.0.0`，生成于 `90cbdb8`，rev 5 于 `051a730`、rev 6 于 `d4b7f1f`、rev 7 于 `a5ac21f` 工作树重生成；门
 `eval_docdup_precision`）：
 D3 scoped **17/17** correct（ripgrep 7 + cobra 4 + zod 6）+ docstring **6/6**
 （self 3 + requests 3，不设门）+ not_reported 9 台账化；D1 oracle 召回

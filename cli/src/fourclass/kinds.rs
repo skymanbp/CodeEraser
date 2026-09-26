@@ -17,10 +17,11 @@
 //! Go's `type_spec`/`type_alias` nest inside a `type_declaration`,
 //! which the walker descends anyway, and Haskell's six type forms
 //! carry `name` like a `bind`, as Java's five type declarations do.
-//! Go `const_spec`/`var_spec` stay out — they are as often a
-//! function-local as a package-level declaration, and a local is never
-//! a cross-file identifier; a Java field stays out likewise, its
-//! references being the class's own.
+//! Go `const_spec`/`var_spec` enter at PACKAGE level only (plan v2.30
+//! step 5b): a package-level constant is a cross-file identifier like
+//! Rust's `const_item`, while the same node kinds inside a function
+//! body declare locals no other file can name (PACKAGE_LEVEL); a Java
+//! field stays out, its references being the class's own.
 
 use crate::scan::lang::Lang;
 
@@ -40,6 +41,13 @@ pub const KIND_SECTION: i64 = 4;
 /// family (the step-8 review's duplicate-row catch). `type instance`
 /// is its own kind and never keyed.
 pub const REDECLARING: [&str; 1] = ["data_instance"];
+
+/// Kinds that declare only at package level — under the file root's
+/// own `const_declaration` / `var_declaration` (grandparent = root):
+/// the same node inside a function body declares a local, which is
+/// never a cross-file identifier (plan v2.30 step 5b). A spec may name
+/// several (`var a, b int`): each name is a unit of its own.
+pub const PACKAGE_LEVEL: [&str; 2] = ["const_spec", "var_spec"];
 
 /// Kinds that declare only with a `body`: `struct K { … }` declares K,
 /// while `struct K x;`, a `struct K *` parameter type and a forward
@@ -88,7 +96,7 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
             "interface_declaration",
             "enum_declaration",
         ],
-        Lang::Go => &["type_spec", "type_alias"],
+        Lang::Go => &["type_spec", "type_alias", "const_spec", "var_spec"],
         // tree-sitter-haskell 0.23.1 spells the synonym kind
         // `type_synomym` (sic) — the grammar's own name, probed
         Lang::Haskell => &[

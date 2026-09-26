@@ -4,8 +4,8 @@
 //! no judge picks its own denominator). Two provably admissible
 //! prunes (§4.3) shrink the future TED workload with zero false
 //! negatives; every drop lands in the tally, never in silence.
-//! Lives beside the future t3/ on purpose: the T-G13 ancestry gate
-//! requires the frozen sample to PRECEDE any file under dedup/t3 or
+//! Lives beside t3/ on purpose: the T-G13 ancestry gate requires the
+//! frozen sample to PRECEDE, in history, every file under dedup/t3 and
 //! CE/Clone, and the sample is drawn from what this module produces.
 //! The four source walks live in sources.rs (300-line gate).
 

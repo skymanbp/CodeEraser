@@ -1,6 +1,7 @@
 //! Function-boundary segmentation for L1 (plan §4.3: tree-sitter
 //! symbol table). Code languages reuse the scan module's extractor;
-//! Markdown segments on ATX headings, HTML on elements carrying an
+//! Markdown segments on headings (ATX and setext — the ladder's own
+//! reader, graph/ladder/md_head.rs), HTML on elements carrying an
 //! `id`; lines outside any unit belong to the file's top level.
 
 use super::visibility;
@@ -98,15 +99,21 @@ fn extra_units<'t>(
     }
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        let named = named_key(node, src, kinds).map(|k| (k, super::kinds::KIND_NAMED));
-        let keyed =
-            named.or_else(|| impl_key(node, src, lang).map(|k| (k, super::kinds::KIND_IMPL)));
-        if let Some((key, kind)) = keyed {
+        let mut keyed: Vec<(String, i64, Option<tree_sitter::Node<'t>>)> = named_keys(node, kinds)
+            .into_iter()
+            .map(|name| (key_text(name, src), super::kinds::KIND_NAMED, Some(name)))
+            .collect();
+        if keyed.is_empty()
+            && let Some(key) = impl_key(node, src, lang)
+        {
+            keyed.push((key, super::kinds::KIND_IMPL, None));
+        }
+        for (key, kind, name) in keyed {
             let unit = Unit {
                 key,
                 start_line: node.start_position().row + 1,
                 end_line: node.end_position().row + 1,
-                vis: visibility::bits(node, src, lang),
+                vis: visibility::bits_of(node, name, src, lang),
                 conv: conv::ast_bits(node, src, lang, facts),
                 kind,
             };
@@ -121,29 +128,47 @@ fn extra_units<'t>(
     out
 }
 
-fn named_key(node: tree_sitter::Node, src: &[u8], kinds: &[&str]) -> Option<String> {
-    if !kinds.contains(&node.kind()) {
-        return None;
+/// The name nodes a registered declaration keys by — every `name`
+/// field it carries (a Go `var a, b int` carries two, plan v2.30 step
+/// 5b), or the leaf of a C typedef's declarator chain (`typedef int
+/// (*fp)(int);` names `fp`); none where the node is not a declaration
+/// of its own (`declares`).
+fn named_keys<'t>(node: tree_sitter::Node<'t>, kinds: &[&str]) -> Vec<tree_sitter::Node<'t>> {
+    if !kinds.contains(&node.kind()) || !declares(node) {
+        return Vec::new();
     }
-    // an instance of a family names the family, never a new type
-    if node
+    if node.kind() == "type_definition" {
+        return crate::scan::declarator::chain(node)
+            .map(|(leaf, _)| leaf)
+            .into_iter()
+            .collect();
+    }
+    let mut cursor = node.walk();
+    node.children_by_field_name("name", &mut cursor).collect()
+}
+
+/// Whether a registered kind declares here: an instance of a family
+/// names the family, never a new type (kinds::REDECLARING); a C
+/// `struct K x;` spells K by the node kind that declares it and only
+/// the form with a body declares (kinds::BODIED); a Go const or var
+/// spec declares a cross-file name at package level alone
+/// (kinds::PACKAGE_LEVEL — its grandparent is the file root).
+fn declares(node: tree_sitter::Node) -> bool {
+    let redeclares = node
         .parent()
-        .is_some_and(|p| super::kinds::REDECLARING.contains(&p.kind()))
-    {
-        return None;
-    }
-    // a C `struct K x;` spells K by the node kind that declares it —
-    // only the form with a body is a declaration (kinds::BODIED)
-    if super::kinds::BODIED.contains(&node.kind()) && node.child_by_field_name("body").is_none() {
-        return None;
-    }
-    let name = match node.kind() {
-        // a C typedef names the new type at the leaf of its declarator
-        // chain: `typedef int (*fp)(int);` names `fp`
-        "type_definition" => crate::scan::declarator::chain(node)?.0,
-        _ => node.child_by_field_name("name")?,
-    };
-    Some(String::from_utf8_lossy(&src[name.byte_range()]).into_owned())
+        .is_some_and(|p| super::kinds::REDECLARING.contains(&p.kind()));
+    let bodiless =
+        super::kinds::BODIED.contains(&node.kind()) && node.child_by_field_name("body").is_none();
+    let local = super::kinds::PACKAGE_LEVEL.contains(&node.kind())
+        && node
+            .parent()
+            .and_then(|p| p.parent())
+            .is_none_or(|g| g.parent().is_some());
+    !(redeclares || bodiless || local)
+}
+
+fn key_text(name: tree_sitter::Node, src: &[u8]) -> String {
+    String::from_utf8_lossy(&src[name.byte_range()]).into_owned()
 }
 
 /// Key for a Rust impl block: `impl Foo`, or `impl Advisor for Foo`
@@ -169,30 +194,30 @@ fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {
     })
 }
 
-/// ATX headings open a section that runs to the next heading of any
-/// level (nesting by level is a reporting nicety L1 does not need).
+/// Headings open sections that run to the next heading of any level
+/// (nesting by level is a reporting nicety L1 does not need): ATX and
+/// setext, read by the ladder's own reader (graph/ladder/md_head.rs,
+/// plan v2.30 step 5b) so that a fenced `# x` opens nothing, a
+/// closing `#` run drops only after a space and a setext section
+/// starts on its text's first row — the section a page can link to
+/// and the section the register keys are one reading.
 fn markdown_segments(text: &str) -> Vec<Unit> {
     let mut out: Vec<Unit> = Vec::new();
-    let mut total = 0;
-    for (i, line) in text.lines().enumerate() {
-        total = i + 1;
-        let t = line.trim_start();
-        if t.starts_with('#') && t.trim_start_matches('#').starts_with(' ') {
-            if let Some(prev) = out.last_mut() {
-                prev.end_line = i; // previous section ends above this heading
-            }
-            out.push(Unit {
-                key: t.trim_matches('#').trim().to_string(),
-                start_line: i + 1,
-                end_line: i + 1,
-                vis: visibility::MARKDOWN_VIS,
-                conv: 0, // a heading is outside the mention domain (RG9)
-                kind: super::kinds::KIND_SECTION,
-            });
+    for heading in crate::graph::ladder::md::head::headings(text) {
+        if let Some(prev) = out.last_mut() {
+            prev.end_line = heading.line - 1; // previous section ends above this heading
         }
+        out.push(Unit {
+            key: heading.text,
+            start_line: heading.line,
+            end_line: heading.line,
+            vis: visibility::MARKDOWN_VIS,
+            conv: 0, // a heading is outside the mention domain (RG9)
+            kind: super::kinds::KIND_SECTION,
+        });
     }
     if let Some(last) = out.last_mut() {
-        last.end_line = total;
+        last.end_line = text.lines().count();
     }
     out
 }

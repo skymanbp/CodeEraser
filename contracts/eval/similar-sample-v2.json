@@ -47,6 +47,17 @@
   "generation": 2,
   "holdout_of": "similar-oracle-v1",
   "method": "every unit of each corpus (the product's unitsig universe, bagged from the text the index saw) queries the rest of its corpus; bare arm = the unit's own bag at channel weights, widened arm = the same plus each spelled word term's top-m PPMI neighbours at a capped fraction of its weight; integer BM25, fixed-point idf; role = (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shape equal). Sample = per corpus the sha256-rank prefix of role = 1 and of role = 0 bare top-1 queries up to the quotas, a generation ≥ 2 skipping every rank an earlier generation's oracle arbitrated (the holdout); candidates = the union of both arms' top-k with one evidence row each. Arbitration labels every candidate; precision at 1 and hit at 5 are computed over the arbitrated rows only — no oracle here knows every same-role partner, so recall has no denominator and is not claimed.",
+  "remeasured": {
+    "ce": "1.7.4",
+    "corpus": "go",
+    "date": "2026-09-26",
+    "reason": "plan v2.30 step 5b items 3 and 25 changed the Go fixture's unit universe (grouped parameters count per name, package-level const / var declarations are units): the 13 drawn queries stand, their candidate lists, units.go and summary.go are the live measurement; the other corpora keep their frozen rows",
+    "rows": 13,
+    "tree": {
+      "dirty": true,
+      "tip": "a5ac21f5ed1801109174622dfe2401677432fbd1"
+    }
+  },
   "rows": [
     {
       "bag": {
@@ -15693,16 +15704,43 @@
         {
           "bare": {
             "rank": 1,
-            "score": 1900668
+            "score": 4525714
+          },
+          "end_line": 28,
+          "hits": [
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "key": "preExecHookFn",
+          "nth": 0,
+          "path": "command_win.go",
+          "role": false,
+          "same_file": true,
+          "sha": "a9f85ba76b54df4b2589546562b325c7b1225388d5b177214d4b193516556390",
+          "shape_equal": false,
+          "start_line": 28,
+          "widened": {
+            "rank": 1,
+            "score": 4525714
+          }
+        },
+        {
+          "bare": {
+            "rank": 2,
+            "score": 3328529
           },
           "end_line": 240,
           "hits": [
             0,
-            2,
+            3,
             1,
             0,
-            4,
-            0
+            10,
+            2
           ],
           "key": "CheckErr/1",
           "nth": 0,
@@ -15713,14 +15751,14 @@
           "shape_equal": true,
           "start_line": 235,
           "widened": {
-            "rank": 1,
-            "score": 1900668
+            "rank": 2,
+            "score": 3328529
           }
         },
         {
           "bare": {
-            "rank": 2,
-            "score": 916533
+            "rank": 3,
+            "score": 2158365
           },
           "end_line": 306,
           "hits": [
@@ -15728,8 +15766,8 @@
             2,
             0,
             0,
-            4,
-            0
+            10,
+            2
           ],
           "key": "(*Command) initCompleteCmd/1",
           "nth": 0,
@@ -15740,23 +15778,23 @@
           "shape_equal": false,
           "start_line": 231,
           "widened": {
-            "rank": 2,
-            "score": 916533
+            "rank": 5,
+            "score": 2158365
           }
         },
         {
           "bare": {
-            "rank": 3,
-            "score": 842391
+            "rank": 4,
+            "score": 2089451
           },
           "end_line": 974,
           "hits": [
             0,
-            1,
+            2,
             0,
             0,
-            4,
-            0
+            10,
+            2
           ],
           "key": "CompDebug/2",
           "nth": 0,
@@ -15766,63 +15804,78 @@
           "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
           "shape_equal": false,
           "start_line": 955,
+          "widened": null
+        },
+        {
+          "bare": {
+            "rank": 5,
+            "score": 1961714
+          },
+          "end_line": 585,
+          "hits": [
+            0,
+            1,
+            0,
+            0,
+            10,
+            2
+          ],
+          "key": "(*Command) getCompletions/1",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 316,
+          "widened": null
+        },
+        {
+          "bare": null,
+          "end_line": 49,
+          "hits": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "key": "defaultTraverseRunHooks",
+          "nth": 0,
+          "path": "cobra.go",
+          "role": false,
+          "same_file": false,
+          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+          "shape_equal": false,
+          "start_line": 49,
           "widened": {
             "rank": 3,
-            "score": 842391
+            "score": 2926628
           }
         },
         {
-          "bare": {
-            "rank": 4,
-            "score": 803153
-          },
-          "end_line": 993,
+          "bare": null,
+          "end_line": 66,
           "hits": [
+            1,
             0,
-            2,
             0,
             0,
-            2,
+            0,
             0
           ],
-          "key": "CompErrorln/1",
+          "key": "EnableTraverseRunHooks",
           "nth": 0,
-          "path": "completions.go",
+          "path": "cobra.go",
           "role": false,
           "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": true,
-          "start_line": 991,
+          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+          "shape_equal": false,
+          "start_line": 66,
           "widened": {
             "rank": 4,
-            "score": 803153
-          }
-        },
-        {
-          "bare": {
-            "rank": 5,
-            "score": 788966
-          },
-          "end_line": 988,
-          "hits": [
-            0,
-            2,
-            0,
-            0,
-            2,
-            0
-          ],
-          "key": "CompError/1",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": true,
-          "start_line": 985,
-          "widened": {
-            "rank": 5,
-            "score": 788966
+            "score": 2544894
           }
         }
       ],
@@ -15850,15 +15903,15 @@
         {
           "bare": {
             "rank": 1,
-            "score": 5184716
+            "score": 6120852
           },
           "end_line": 114,
           "hits": [
             2,
-            1,
+            3,
             0,
             7,
-            0,
+            4,
             0
           ],
           "key": "ExactArgs/1",
@@ -15871,21 +15924,21 @@
           "start_line": 107,
           "widened": {
             "rank": 2,
-            "score": 5184716
+            "score": 6120852
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 4745865
+            "score": 5324277
           },
           "end_line": 66,
           "hits": [
             2,
-            0,
+            2,
             0,
             9,
-            0,
+            4,
             0
           ],
           "key": "OnlyValidArgs/2",
@@ -15898,21 +15951,21 @@
           "start_line": 51,
           "widened": {
             "rank": 1,
-            "score": 5433111
+            "score": 6238302
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 3142823
+            "score": 4044627
           },
           "end_line": 104,
           "hits": [
             1,
-            1,
+            3,
             0,
             5,
-            0,
+            4,
             0
           ],
           "key": "MaximumNArgs/1",
@@ -15925,21 +15978,21 @@
           "start_line": 97,
           "widened": {
             "rank": 3,
-            "score": 3733399
+            "score": 4829212
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 3142823
+            "score": 4044627
           },
           "end_line": 94,
           "hits": [
             1,
-            1,
+            3,
             0,
             5,
-            0,
+            4,
             0
           ],
           "key": "MinimumNArgs/1",
@@ -15952,21 +16005,21 @@
           "start_line": 87,
           "widened": {
             "rank": 4,
-            "score": 3733399
+            "score": 4829212
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 2665204
+            "score": 3311933
           },
           "end_line": 79,
           "hits": [
             1,
-            0,
+            2,
             0,
             5,
-            0,
+            4,
             0
           ],
           "key": "NoDuplicateArgs/2",
@@ -15981,26 +16034,26 @@
         },
         {
           "bare": null,
-          "end_line": 39,
+          "end_line": 47,
           "hits": [
             1,
-            0,
+            2,
             0,
             3,
-            0,
+            4,
             0
           ],
-          "key": "legacyArgs/2",
+          "key": "NoArgs/2",
           "nth": 0,
           "path": "args.go",
           "role": false,
           "same_file": true,
           "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
           "shape_equal": false,
-          "start_line": 28,
+          "start_line": 42,
           "widened": {
             "rank": 5,
-            "score": 2858838
+            "score": 3513641
           }
         }
       ],
@@ -16028,16 +16081,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 9647947
+            "score": 10308166
           },
           "end_line": 478,
           "hits": [
             6,
-            2,
+            3,
             3,
             8,
-            1,
-            0
+            6,
+            1
           ],
           "key": "(*Command) GenBashCompletionFileV2/2",
           "nth": 0,
@@ -16049,22 +16102,22 @@
           "start_line": 470,
           "widened": {
             "rank": 1,
-            "score": 10541095
+            "score": 11279137
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 4626055
+            "score": 5305604
           },
           "end_line": 29,
           "hits": [
             4,
-            2,
+            3,
             2,
             0,
-            3,
-            0
+            8,
+            1
           ],
           "key": "(*Command) genBashCompletion/2",
           "nth": 0,
@@ -16076,13 +16129,13 @@
           "start_line": 24,
           "widened": {
             "rank": 2,
-            "score": 4626055
+            "score": 5305604
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 2127484
+            "score": 2310520
           },
           "end_line": 467,
           "hits": [
@@ -16090,7 +16143,7 @@
             0,
             0,
             0,
-            2,
+            5,
             0
           ],
           "key": "genBashComp/3",
@@ -16103,49 +16156,22 @@
           "start_line": 31,
           "widened": {
             "rank": 3,
-            "score": 2127484
+            "score": 2310520
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 1514678
-          },
-          "end_line": 930,
-          "hits": [
-            2,
-            1,
-            3,
-            2,
-            1,
-            0
-          ],
-          "key": "(*Command) InitDefaultCompletionCmd/1",
-          "nth": 0,
-          "path": "completions.go",
-          "role": true,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 748,
-          "widened": {
-            "rank": 5,
-            "score": 1756182
-          }
-        },
-        {
-          "bare": {
-            "rank": 5,
-            "score": 1458869
+            "score": 1734661
           },
           "end_line": 183,
           "hits": [
             2,
-            2,
+            3,
             0,
             2,
-            1,
-            0
+            6,
+            1
           ],
           "key": "(*Command) RegisterFlagCompletionFunc/2",
           "nth": 0,
@@ -16158,15 +16184,18 @@
           "widened": null
         },
         {
-          "bare": null,
+          "bare": {
+            "rank": 5,
+            "score": 1661169
+          },
           "end_line": 197,
           "hits": [
             2,
-            1,
+            2,
             0,
             1,
-            1,
-            0
+            6,
+            1
           ],
           "key": "(*Command) GetFlagCompletionFunc/1",
           "nth": 0,
@@ -16178,7 +16207,31 @@
           "start_line": 186,
           "widened": {
             "rank": 4,
-            "score": 1824255
+            "score": 2297709
+          }
+        },
+        {
+          "bare": null,
+          "end_line": 41,
+          "hits": [
+            1,
+            0,
+            0,
+            2,
+            2,
+            0
+          ],
+          "key": "flagCompletionMutex",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 41,
+          "widened": {
+            "rank": 5,
+            "score": 1891973
           }
         }
       ],
@@ -16865,205 +16918,6 @@
     },
     {
       "bag": {
-        "C": 1,
-        "D": 16,
-        "L": 1,
-        "N": 4,
-        "P": 3,
-        "S": 17
-      },
-      "candidates": [
-        {
-          "bare": {
-            "rank": 1,
-            "score": 3180559
-          },
-          "end_line": 157,
-          "hits": [
-            0,
-            0,
-            0,
-            12,
-            1,
-            0
-          ],
-          "key": "Eq/2",
-          "nth": 0,
-          "path": "cobra.go",
-          "role": false,
-          "same_file": true,
-          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
-          "shape_equal": false,
-          "start_line": 144,
-          "widened": {
-            "rank": 1,
-            "score": 3326528
-          }
-        },
-        {
-          "bare": {
-            "rank": 2,
-            "score": 1278582
-          },
-          "end_line": 982,
-          "hits": [
-            0,
-            0,
-            0,
-            4,
-            1,
-            0
-          ],
-          "key": "CompDebugln/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 980,
-          "widened": {
-            "rank": 2,
-            "score": 1705559
-          }
-        },
-        {
-          "bare": {
-            "rank": 3,
-            "score": 1002509
-          },
-          "end_line": 597,
-          "hits": [
-            1,
-            1,
-            0,
-            0,
-            2,
-            0
-          ],
-          "key": "helpOrVersionFlagPresent/1",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": true,
-          "start_line": 587,
-          "widened": {
-            "rank": 4,
-            "score": 1002509
-          }
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 673486
-          },
-          "end_line": 741,
-          "hits": [
-            1,
-            0,
-            0,
-            1,
-            2,
-            0
-          ],
-          "key": "checkIfFlagCompletion/3",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 657,
-          "widened": null
-        },
-        {
-          "bare": {
-            "rank": 5,
-            "score": 637006
-          },
-          "end_line": 484,
-          "hits": [
-            0,
-            0,
-            0,
-            2,
-            0,
-            0
-          ],
-          "key": "(*Command) GenBashCompletionV2/2",
-          "nth": 0,
-          "path": "bash_completionsV2.go",
-          "role": false,
-          "same_file": false,
-          "sha": "906f68743cdae6ddb3228ca42e4b56d2a51371d7f135f67e4476342abffc6215",
-          "shape_equal": false,
-          "start_line": 482,
-          "widened": null
-        },
-        {
-          "bare": null,
-          "end_line": 478,
-          "hits": [
-            0,
-            0,
-            0,
-            2,
-            1,
-            0
-          ],
-          "key": "(*Command) GenBashCompletionFileV2/2",
-          "nth": 0,
-          "path": "bash_completionsV2.go",
-          "role": false,
-          "same_file": false,
-          "sha": "906f68743cdae6ddb3228ca42e4b56d2a51371d7f135f67e4476342abffc6215",
-          "shape_equal": false,
-          "start_line": 470,
-          "widened": {
-            "rank": 3,
-            "score": 1050965
-          }
-        },
-        {
-          "bare": null,
-          "end_line": 993,
-          "hits": [
-            0,
-            1,
-            0,
-            1,
-            1,
-            0
-          ],
-          "key": "CompErrorln/1",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 991,
-          "widened": {
-            "rank": 5,
-            "score": 878407
-          }
-        }
-      ],
-      "corpus": "go",
-      "end_line": 171,
-      "key": "appendIfNotPresent/1",
-      "lang": "go",
-      "nth": 0,
-      "path": "cobra.go",
-      "rank": "42c430bd858849d1f85e873270d1d7933fe46a0a6de9035f59cd407869e98009",
-      "role_bare": false,
-      "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
-      "start_line": 166
-    },
-    {
-      "bag": {
         "C": 7,
         "D": 8,
         "L": 1,
@@ -17075,16 +16929,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 10632721
+            "score": 11742151
           },
           "end_line": 484,
           "hits": [
             6,
-            2,
+            3,
             3,
             8,
-            1,
-            0
+            6,
+            1
           ],
           "key": "(*Command) GenBashCompletionV2/2",
           "nth": 0,
@@ -17096,22 +16950,22 @@
           "start_line": 482,
           "widened": {
             "rank": 1,
-            "score": 10632721
+            "score": 11742151
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 4241969
+            "score": 5087016
           },
           "end_line": 29,
           "hits": [
             4,
-            2,
+            3,
             2,
             0,
-            2,
-            0
+            7,
+            1
           ],
           "key": "(*Command) genBashCompletion/2",
           "nth": 0,
@@ -17123,97 +16977,49 @@
           "start_line": 24,
           "widened": {
             "rank": 2,
-            "score": 4241969
+            "score": 5087016
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 2092520
+            "score": 2488345
           },
-          "end_line": 153,
+          "end_line": 183,
           "hits": [
             2,
+            3,
             0,
-            0,
             2,
-            1,
-            0
+            11,
+            1
           ],
-          "key": "NoFileCompletions/3",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 151,
-          "widened": {
-            "rank": 4,
-            "score": 2092520
-          }
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 1912378
-          },
-          "end_line": 930,
-          "hits": [
-            2,
-            1,
-            5,
-            2,
-            4,
-            0
-          ],
-          "key": "(*Command) InitDefaultCompletionCmd/1",
+          "key": "(*Command) RegisterFlagCompletionFunc/2",
           "nth": 0,
           "path": "completions.go",
           "role": true,
           "same_file": false,
           "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 748,
+          "shape_equal": true,
+          "start_line": 170,
           "widened": {
             "rank": 5,
-            "score": 1970215
+            "score": 2488345
           }
         },
         {
           "bare": {
-            "rank": 5,
-            "score": 1825898
+            "rank": 4,
+            "score": 2474436
           },
-          "end_line": 467,
-          "hits": [
-            2,
-            0,
-            0,
-            0,
-            2,
-            0
-          ],
-          "key": "genBashComp/3",
-          "nth": 0,
-          "path": "bash_completionsV2.go",
-          "role": false,
-          "same_file": true,
-          "sha": "906f68743cdae6ddb3228ca42e4b56d2a51371d7f135f67e4476342abffc6215",
-          "shape_equal": false,
-          "start_line": 31,
-          "widened": null
-        },
-        {
-          "bare": null,
           "end_line": 197,
           "hits": [
             2,
-            1,
+            2,
             0,
             1,
-            5,
-            0
+            11,
+            1
           ],
           "key": "(*Command) GetFlagCompletionFunc/1",
           "nth": 0,
@@ -17225,7 +17031,55 @@
           "start_line": 186,
           "widened": {
             "rank": 3,
-            "score": 2214374
+            "score": 3037270
+          }
+        },
+        {
+          "bare": {
+            "rank": 5,
+            "score": 2298264
+          },
+          "end_line": 930,
+          "hits": [
+            2,
+            1,
+            5,
+            2,
+            10,
+            1
+          ],
+          "key": "(*Command) InitDefaultCompletionCmd/1",
+          "nth": 0,
+          "path": "completions.go",
+          "role": true,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 748,
+          "widened": null
+        },
+        {
+          "bare": null,
+          "end_line": 73,
+          "hits": [
+            1,
+            0,
+            0,
+            3,
+            0,
+            0
+          ],
+          "key": "ShellCompDirectiveFilterFileExt",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 73,
+          "widened": {
+            "rank": 4,
+            "score": 2852535
           }
         }
       ],
@@ -17724,16 +17578,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 3601678
+            "score": 4431702
           },
           "end_line": 79,
           "hits": [
             2,
-            1,
+            3,
             4,
             3,
-            5,
-            0
+            12,
+            2
           ],
           "key": "NoDuplicateArgs/2",
           "nth": 0,
@@ -17744,23 +17598,23 @@
           "shape_equal": true,
           "start_line": 69,
           "widened": {
-            "rank": 1,
-            "score": 3743305
+            "rank": 3,
+            "score": 4621920
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 2976209
+            "score": 4064423
           },
           "end_line": 66,
           "hits": [
             1,
-            1,
+            3,
             4,
             4,
-            6,
-            0
+            14,
+            2
           ],
           "key": "OnlyValidArgs/2",
           "nth": 0,
@@ -17772,22 +17626,22 @@
           "start_line": 51,
           "widened": {
             "rank": 2,
-            "score": 3631584
+            "score": 4850183
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 2789395
+            "score": 4001144
           },
           "end_line": 39,
           "hits": [
             1,
-            1,
+            3,
             4,
             1,
-            6,
-            0
+            14,
+            2
           ],
           "key": "legacyArgs/2",
           "nth": 0,
@@ -17798,23 +17652,47 @@
           "shape_equal": true,
           "start_line": 28,
           "widened": {
-            "rank": 3,
-            "score": 3610132
+            "rank": 1,
+            "score": 5035882
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 1869385
+            "score": 3104875
+          },
+          "end_line": 124,
+          "hits": [
+            1,
+            3,
+            2,
+            3,
+            12,
+            2
+          ],
+          "key": "RangeArgs/2",
+          "nth": 0,
+          "path": "args.go",
+          "role": true,
+          "same_file": true,
+          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+          "shape_equal": true,
+          "start_line": 117,
+          "widened": null
+        },
+        {
+          "bare": {
+            "rank": 5,
+            "score": 3089492
           },
           "end_line": 114,
           "hits": [
             1,
-            0,
+            2,
             2,
             3,
-            4,
-            0
+            12,
+            2
           ],
           "key": "ExactArgs/1",
           "nth": 0,
@@ -17826,22 +17704,19 @@
           "start_line": 107,
           "widened": {
             "rank": 4,
-            "score": 2199765
+            "score": 3520150
           }
         },
         {
-          "bare": {
-            "rank": 5,
-            "score": 1856464
-          },
+          "bare": null,
           "end_line": 104,
           "hits": [
             1,
-            0,
+            2,
             2,
             3,
-            4,
-            0
+            12,
+            2
           ],
           "key": "MaximumNArgs/1",
           "nth": 0,
@@ -17853,7 +17728,7 @@
           "start_line": 97,
           "widened": {
             "rank": 5,
-            "score": 2052852
+            "score": 3323695
           }
         }
       ],
@@ -17881,16 +17756,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 6776040
+            "score": 8961625
           },
           "end_line": 39,
           "hits": [
             1,
-            1,
+            3,
             6,
             4,
-            8,
-            0
+            16,
+            2
           ],
           "key": "legacyArgs/2",
           "nth": 0,
@@ -17902,21 +17777,75 @@
           "start_line": 28,
           "widened": {
             "rank": 1,
-            "score": 7281553
+            "score": 9615020
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 5530436
+            "score": 7379321
+          },
+          "end_line": 47,
+          "hits": [
+            1,
+            3,
+            4,
+            4,
+            14,
+            2
+          ],
+          "key": "NoArgs/2",
+          "nth": 0,
+          "path": "args.go",
+          "role": true,
+          "same_file": true,
+          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+          "shape_equal": true,
+          "start_line": 42,
+          "widened": {
+            "rank": 3,
+            "score": 7379321
+          }
+        },
+        {
+          "bare": {
+            "rank": 3,
+            "score": 7225432
+          },
+          "end_line": 79,
+          "hits": [
+            1,
+            3,
+            5,
+            5,
+            16,
+            2
+          ],
+          "key": "NoDuplicateArgs/2",
+          "nth": 0,
+          "path": "args.go",
+          "role": true,
+          "same_file": true,
+          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+          "shape_equal": true,
+          "start_line": 69,
+          "widened": {
+            "rank": 4,
+            "score": 7225432
+          }
+        },
+        {
+          "bare": {
+            "rank": 4,
+            "score": 6784505
           },
           "end_line": 144,
           "hits": [
             2,
-            0,
+            2,
             0,
             9,
-            0,
+            4,
             0
           ],
           "key": "ExactValidArgs/1",
@@ -17929,67 +17858,13 @@
           "start_line": 142,
           "widened": {
             "rank": 2,
-            "score": 6222567
-          }
-        },
-        {
-          "bare": {
-            "rank": 3,
-            "score": 5231748
-          },
-          "end_line": 79,
-          "hits": [
-            1,
-            1,
-            5,
-            5,
-            9,
-            0
-          ],
-          "key": "NoDuplicateArgs/2",
-          "nth": 0,
-          "path": "args.go",
-          "role": true,
-          "same_file": true,
-          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
-          "shape_equal": true,
-          "start_line": 69,
-          "widened": {
-            "rank": 3,
-            "score": 5231748
-          }
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 4975829
-          },
-          "end_line": 47,
-          "hits": [
-            1,
-            1,
-            4,
-            4,
-            6,
-            0
-          ],
-          "key": "NoArgs/2",
-          "nth": 0,
-          "path": "args.go",
-          "role": true,
-          "same_file": true,
-          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
-          "shape_equal": true,
-          "start_line": 42,
-          "widened": {
-            "rank": 4,
-            "score": 4975829
+            "score": 7608585
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 3908342
+            "score": 5288643
           },
           "end_line": 306,
           "hits": [
@@ -17997,8 +17872,8 @@
             0,
             5,
             1,
-            13,
-            0
+            19,
+            2
           ],
           "key": "(*Command) initCompleteCmd/1",
           "nth": 0,
@@ -18010,7 +17885,7 @@
           "start_line": 231,
           "widened": {
             "rank": 5,
-            "score": 4557017
+            "score": 5947030
           }
         }
       ],
@@ -18038,43 +17913,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 58961149
-          },
-          "end_line": 655,
-          "hits": [
-            1,
-            0,
-            11,
-            0,
-            14,
-            1
-          ],
-          "key": "completeRequireFlags/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": true,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 632,
-          "widened": {
-            "rank": 1,
-            "score": 59036999
-          }
-        },
-        {
-          "bare": {
-            "rank": 2,
-            "score": 54953756
+            "score": 79515110
           },
           "end_line": 630,
           "hits": [
             2,
-            0,
+            1,
             9,
             0,
-            13,
-            1
+            20,
+            3
           ],
           "key": "getFlagNameCompletions/2",
           "nth": 0,
@@ -18085,23 +17933,50 @@
           "shape_equal": false,
           "start_line": 599,
           "widened": {
+            "rank": 1,
+            "score": 79515110
+          }
+        },
+        {
+          "bare": {
             "rank": 2,
-            "score": 55030274
+            "score": 77348145
+          },
+          "end_line": 655,
+          "hits": [
+            1,
+            1,
+            11,
+            0,
+            19,
+            2
+          ],
+          "key": "completeRequireFlags/2",
+          "nth": 0,
+          "path": "completions.go",
+          "role": true,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 632,
+          "widened": {
+            "rank": 2,
+            "score": 77348145
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 47033991
+            "score": 73714176
           },
           "end_line": 741,
           "hits": [
             1,
-            0,
+            1,
             8,
             1,
-            20,
-            2
+            27,
+            4
           ],
           "key": "checkIfFlagCompletion/3",
           "nth": 0,
@@ -18113,13 +17988,13 @@
           "start_line": 657,
           "widened": {
             "rank": 3,
-            "score": 47663512
+            "score": 73714176
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 42931373
+            "score": 65396854
           },
           "end_line": 306,
           "hits": [
@@ -18127,8 +18002,8 @@
             2,
             14,
             1,
-            18,
-            2
+            24,
+            4
           ],
           "key": "(*Command) initCompleteCmd/1",
           "nth": 0,
@@ -18140,22 +18015,43 @@
           "start_line": 231,
           "widened": {
             "rank": 4,
-            "score": 45103288
+            "score": 67001097
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 40151499
+            "score": 58146891
           },
+          "end_line": 949,
+          "hits": [
+            0,
+            1,
+            4,
+            0,
+            14,
+            1
+          ],
+          "key": "findFlag/2",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 932,
+          "widened": null
+        },
+        {
+          "bare": null,
           "end_line": 930,
           "hits": [
             2,
             2,
             12,
             1,
-            20,
-            2
+            27,
+            4
           ],
           "key": "(*Command) InitDefaultCompletionCmd/1",
           "nth": 0,
@@ -18167,7 +18063,7 @@
           "start_line": 748,
           "widened": {
             "rank": 5,
-            "score": 42168050
+            "score": 59262691
           }
         }
       ],
@@ -18666,7 +18562,7 @@
         {
           "bare": {
             "rank": 1,
-            "score": 2325315
+            "score": 2297088
           },
           "end_line": 1024,
           "hits": [
@@ -18675,7 +18571,7 @@
             0,
             3,
             0,
-            0
+            1
           ],
           "key": "getEnvConfig/2",
           "nth": 0,
@@ -18687,40 +18583,67 @@
           "start_line": 1018,
           "widened": {
             "rank": 1,
-            "score": 2428995
+            "score": 3561814
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 1291842
+            "score": 2035780
           },
-          "end_line": 45,
+          "end_line": 997,
           "hits": [
             0,
             1,
             0,
             2,
-            2,
+            0,
             0
           ],
-          "key": "ShellCompDirective",
+          "key": "configEnvVarGlobalPrefix",
           "nth": 0,
           "path": "completions.go",
           "role": false,
           "same_file": true,
           "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
           "shape_equal": true,
-          "start_line": 45,
+          "start_line": 997,
           "widened": {
-            "rank": 4,
-            "score": 1487668
+            "rank": 2,
+            "score": 3419439
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 1278268
+            "score": 1828652
+          },
+          "end_line": 90,
+          "hits": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          "key": "shellCompDirectiveMaxValue",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": true,
+          "start_line": 90,
+          "widened": {
+            "rank": 3,
+            "score": 1828652
+          }
+        },
+        {
+          "bare": {
+            "rank": 4,
+            "score": 1420844
           },
           "end_line": 232,
           "hits": [
@@ -18743,101 +18666,74 @@
         },
         {
           "bare": {
-            "rank": 4,
-            "score": 1158774
-          },
-          "end_line": 136,
-          "hits": [
-            0,
-            1,
-            0,
-            3,
-            1,
-            0
-          ],
-          "key": "Completion",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": true,
-          "start_line": 136,
-          "widened": {
             "rank": 5,
-            "score": 1384641
-          }
-        },
-        {
-          "bare": {
-            "rank": 5,
-            "score": 1134057
+            "score": 1365760
           },
-          "end_line": 121,
+          "end_line": 59,
           "hits": [
             0,
             1,
             0,
             1,
-            3,
+            0,
             0
           ],
-          "key": "CompletionOptions",
+          "key": "EnableCommandSorting",
           "nth": 0,
-          "path": "completions.go",
+          "path": "cobra.go",
           "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "same_file": false,
+          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
           "shape_equal": true,
-          "start_line": 107,
+          "start_line": 59,
           "widened": null
         },
         {
           "bare": null,
-          "end_line": 183,
+          "end_line": 73,
           "hits": [
             0,
-            0,
+            1,
             0,
             4,
             0,
             0
           ],
-          "key": "(*Command) RegisterFlagCompletionFunc/2",
+          "key": "ShellCompDirectiveFilterFileExt",
           "nth": 0,
           "path": "completions.go",
           "role": false,
           "same_file": true,
           "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 170,
+          "shape_equal": true,
+          "start_line": 73,
           "widened": {
-            "rank": 2,
-            "score": 1961460
+            "rank": 4,
+            "score": 1756346
           }
         },
         {
           "bare": null,
-          "end_line": 164,
+          "end_line": 1011,
           "hits": [
             0,
             0,
             0,
-            4,
+            2,
             1,
             0
           ],
-          "key": "FixedCompletions/2",
+          "key": "configEnvVar/2",
           "nth": 0,
           "path": "completions.go",
           "role": false,
           "same_file": true,
           "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
           "shape_equal": false,
-          "start_line": 160,
+          "start_line": 1006,
           "widened": {
-            "rank": 3,
-            "score": 1573127
+            "rank": 5,
+            "score": 1660452
           }
         }
       ],
@@ -19325,226 +19221,6 @@
     },
     {
       "bag": {
-        "C": 6,
-        "D": 28,
-        "L": 1,
-        "N": 3,
-        "P": 3,
-        "S": 18
-      },
-      "candidates": [
-        {
-          "bare": {
-            "rank": 1,
-            "score": 8767440
-          },
-          "end_line": 1024,
-          "hits": [
-            2,
-            0,
-            0,
-            19,
-            2,
-            0
-          ],
-          "key": "getEnvConfig/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 1018,
-          "widened": {
-            "rank": 1,
-            "score": 8877145
-          }
-        },
-        {
-          "bare": {
-            "rank": 2,
-            "score": 2093010
-          },
-          "end_line": 982,
-          "hits": [
-            0,
-            0,
-            1,
-            6,
-            1,
-            0
-          ],
-          "key": "CompDebugln/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 980,
-          "widened": {
-            "rank": 2,
-            "score": 2746918
-          }
-        },
-        {
-          "bare": {
-            "rank": 3,
-            "score": 1316765
-          },
-          "end_line": 930,
-          "hits": [
-            0,
-            1,
-            1,
-            4,
-            4,
-            0
-          ],
-          "key": "(*Command) InitDefaultCompletionCmd/1",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 748,
-          "widened": null
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 1290644
-          },
-          "end_line": 974,
-          "hits": [
-            0,
-            0,
-            2,
-            2,
-            4,
-            0
-          ],
-          "key": "CompDebug/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 955,
-          "widened": null
-        },
-        {
-          "bare": {
-            "rank": 5,
-            "score": 1116210
-          },
-          "end_line": 144,
-          "hits": [
-            0,
-            1,
-            1,
-            3,
-            0,
-            0
-          ],
-          "key": "ExactValidArgs/1",
-          "nth": 0,
-          "path": "args.go",
-          "role": false,
-          "same_file": false,
-          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
-          "shape_equal": true,
-          "start_line": 142,
-          "widened": null
-        },
-        {
-          "bare": null,
-          "end_line": 136,
-          "hits": [
-            0,
-            0,
-            0,
-            2,
-            0,
-            0
-          ],
-          "key": "Completion",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 136,
-          "widened": {
-            "rank": 3,
-            "score": 2241855
-          }
-        },
-        {
-          "bare": null,
-          "end_line": 144,
-          "hits": [
-            0,
-            0,
-            0,
-            3,
-            0,
-            0
-          ],
-          "key": "CompletionWithDesc/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 142,
-          "widened": {
-            "rank": 4,
-            "score": 2177500
-          }
-        },
-        {
-          "bare": null,
-          "end_line": 655,
-          "hits": [
-            0,
-            0,
-            1,
-            0,
-            3,
-            0
-          ],
-          "key": "completeRequireFlags/2",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 632,
-          "widened": {
-            "rank": 5,
-            "score": 1975068
-          }
-        }
-      ],
-      "corpus": "go",
-      "end_line": 1011,
-      "key": "configEnvVar/1",
-      "lang": "go",
-      "nth": 0,
-      "path": "completions.go",
-      "rank": "6d51374a71b89b6ff3dd09f2fa9f66df95e95797244de36e8b57ca9458a3fe9b",
-      "role_bare": false,
-      "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-      "start_line": 1006
-    },
-    {
-      "bag": {
         "C": 3,
         "D": 7,
         "L": 2,
@@ -19556,16 +19232,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 3784611
+            "score": 4119960
           },
           "end_line": 993,
           "hits": [
             1,
-            2,
+            3,
             2,
             6,
-            2,
-            0
+            7,
+            1
           ],
           "key": "CompErrorln/1",
           "nth": 0,
@@ -19577,22 +19253,22 @@
           "start_line": 991,
           "widened": {
             "rank": 1,
-            "score": 4151468
+            "score": 4561522
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 3512663
+            "score": 3675146
           },
           "end_line": 982,
           "hits": [
             1,
-            1,
+            2,
             3,
             4,
-            2,
-            0
+            7,
+            1
           ],
           "key": "CompDebugln/2",
           "nth": 0,
@@ -19604,13 +19280,40 @@
           "start_line": 980,
           "widened": {
             "rank": 2,
-            "score": 4049688
+            "score": 4310796
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 1970640
+            "score": 2238077
+          },
+          "end_line": 58,
+          "hits": [
+            2,
+            0,
+            0,
+            3,
+            0,
+            0
+          ],
+          "key": "ShellCompDirectiveError",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 58,
+          "widened": {
+            "rank": 3,
+            "score": 2349124
+          }
+        },
+        {
+          "bare": {
+            "rank": 4,
+            "score": 1934371
           },
           "end_line": 54,
           "hits": [
@@ -19618,8 +19321,8 @@
             0,
             0,
             0,
-            1,
-            0
+            3,
+            1
           ],
           "key": "(*flagCompError) Error/0",
           "nth": 0,
@@ -19630,50 +19333,23 @@
           "shape_equal": false,
           "start_line": 52,
           "widened": {
-            "rank": 3,
-            "score": 2145516
-          }
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 1921120
-          },
-          "end_line": 50,
-          "hits": [
-            2,
-            0,
-            0,
-            0,
-            0,
-            0
-          ],
-          "key": "flagCompError",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 47,
-          "widened": {
-            "rank": 4,
-            "score": 2118027
+            "rank": 5,
+            "score": 1934371
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 1747182
+            "score": 1852645
           },
           "end_line": 974,
           "hits": [
             1,
-            1,
+            2,
             1,
             4,
-            3,
-            0
+            8,
+            1
           ],
           "key": "CompDebug/2",
           "nth": 0,
@@ -19683,30 +19359,9 @@
           "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
           "shape_equal": false,
           "start_line": 955,
-          "widened": null
-        },
-        {
-          "bare": null,
-          "end_line": 45,
-          "hits": [
-            1,
-            0,
-            0,
-            2,
-            0,
-            0
-          ],
-          "key": "ShellCompDirective",
-          "nth": 0,
-          "path": "completions.go",
-          "role": false,
-          "same_file": true,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 45,
           "widened": {
-            "rank": 5,
-            "score": 1875743
+            "rank": 4,
+            "score": 1988325
           }
         }
       ],
@@ -19734,15 +19389,15 @@
         {
           "bare": {
             "rank": 1,
-            "score": 2440820
+            "score": 2866819
           },
           "end_line": 240,
           "hits": [
             1,
-            1,
+            2,
             0,
             3,
-            1,
+            5,
             0
           ],
           "key": "CheckErr/1",
@@ -19755,21 +19410,21 @@
           "start_line": 235,
           "widened": {
             "rank": 2,
-            "score": 2440820
+            "score": 2866819
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 2224801
+            "score": 2666968
           },
           "end_line": 467,
           "hits": [
             0,
-            1,
+            2,
             3,
             0,
-            4,
+            8,
             0
           ],
           "key": "genBashComp/3",
@@ -19782,21 +19437,21 @@
           "start_line": 31,
           "widened": {
             "rank": 1,
-            "score": 2799098
+            "score": 3332298
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 1745269
+            "score": 2078195
           },
           "end_line": 974,
           "hits": [
             0,
-            2,
+            3,
             3,
             1,
-            2,
+            6,
             0
           ],
           "key": "CompDebug/2",
@@ -19809,40 +19464,13 @@
           "start_line": 955,
           "widened": {
             "rank": 4,
-            "score": 2016714
+            "score": 2349555
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 1218074
-          },
-          "end_line": 157,
-          "hits": [
-            0,
-            1,
-            1,
-            2,
-            2,
-            0
-          ],
-          "key": "Eq/2",
-          "nth": 0,
-          "path": "cobra.go",
-          "role": false,
-          "same_file": true,
-          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
-          "shape_equal": false,
-          "start_line": 144,
-          "widened": {
-            "rank": 3,
-            "score": 2161218
-          }
-        },
-        {
-          "bare": {
-            "rank": 5,
-            "score": 1195306
+            "score": 1543419
           },
           "end_line": 29,
           "hits": [
@@ -19850,7 +19478,7 @@
             1,
             1,
             0,
-            4,
+            7,
             0
           ],
           "key": "(*Command) genBashCompletion/2",
@@ -19864,27 +19492,54 @@
           "widened": null
         },
         {
-          "bare": null,
-          "end_line": 139,
+          "bare": {
+            "rank": 5,
+            "score": 1526560
+          },
+          "end_line": 157,
           "hits": [
             0,
-            1,
-            1,
             2,
             1,
+            2,
+            6,
             0
           ],
-          "key": "Gt/2",
+          "key": "Eq/2",
           "nth": 0,
           "path": "cobra.go",
           "role": false,
           "same_file": true,
           "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
           "shape_equal": false,
-          "start_line": 114,
+          "start_line": 144,
+          "widened": {
+            "rank": 3,
+            "score": 2477705
+          }
+        },
+        {
+          "bare": null,
+          "end_line": 41,
+          "hits": [
+            0,
+            0,
+            0,
+            1,
+            2,
+            0
+          ],
+          "key": "flagCompletionMutex",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 41,
           "widened": {
             "rank": 5,
-            "score": 1564751
+            "score": 1934712
           }
         }
       ],
@@ -19912,15 +19567,42 @@
         {
           "bare": {
             "rank": 1,
-            "score": 725109
+            "score": 1453714
+          },
+          "end_line": 62,
+          "hits": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "key": "ShellCompDirectiveNoSpace",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 62,
+          "widened": {
+            "rank": 1,
+            "score": 1453714
+          }
+        },
+        {
+          "bare": {
+            "rank": 2,
+            "score": 972193
           },
           "end_line": 189,
           "hits": [
             0,
-            1,
+            3,
             1,
             0,
-            0,
+            5,
             0
           ],
           "key": "tmpl/1",
@@ -19932,14 +19614,14 @@
           "shape_equal": true,
           "start_line": 179,
           "widened": {
-            "rank": 1,
-            "score": 725109
+            "rank": 2,
+            "score": 972193
           }
         },
         {
           "bare": {
-            "rank": 2,
-            "score": 315654
+            "rank": 3,
+            "score": 361470
           },
           "end_line": 306,
           "hits": [
@@ -19947,7 +19629,7 @@
             1,
             1,
             0,
-            0,
+            3,
             0
           ],
           "key": "(*Command) initCompleteCmd/1",
@@ -19959,89 +19641,62 @@
           "shape_equal": false,
           "start_line": 231,
           "widened": {
-            "rank": 2,
-            "score": 315654
+            "rank": 3,
+            "score": 361470
           }
         },
         {
           "bare": {
-            "rank": 3,
-            "score": 69349
+            "rank": 4,
+            "score": 315359
           },
-          "end_line": 125,
+          "end_line": 114,
           "hits": [
             0,
-            1,
+            3,
             0,
             0,
-            0,
+            5,
             0
           ],
-          "key": "(*CompletionOptions) SetDefaultShellCompDirective/1",
+          "key": "ExactArgs/1",
           "nth": 0,
-          "path": "completions.go",
+          "path": "args.go",
           "role": false,
           "same_file": false,
-          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
-          "shape_equal": false,
-          "start_line": 123,
-          "widened": {
-            "rank": 3,
-            "score": 69349
-          }
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 68712
-          },
-          "end_line": 107,
-          "hits": [
-            0,
-            1,
-            0,
-            0,
-            0,
-            0
-          ],
-          "key": "OnFinalize/1",
-          "nth": 0,
-          "path": "cobra.go",
-          "role": false,
-          "same_file": true,
-          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
-          "shape_equal": false,
-          "start_line": 105,
+          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+          "shape_equal": true,
+          "start_line": 107,
           "widened": {
             "rank": 4,
-            "score": 68712
+            "score": 315359
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 68712
+            "score": 312621
           },
-          "end_line": 101,
+          "end_line": 104,
           "hits": [
             0,
-            1,
+            3,
             0,
             0,
-            0,
+            5,
             0
           ],
-          "key": "OnInitialize/1",
+          "key": "MaximumNArgs/1",
           "nth": 0,
-          "path": "cobra.go",
+          "path": "args.go",
           "role": false,
-          "same_file": true,
-          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
-          "shape_equal": false,
-          "start_line": 99,
+          "same_file": false,
+          "sha": "15b870d1e8a0a10341675ddee8e20bef92a21883257b6b3b11110944a573a2e7",
+          "shape_equal": true,
+          "start_line": 97,
           "widened": {
             "rank": 5,
-            "score": 68712
+            "score": 312621
           }
         }
       ],
@@ -20055,18 +19710,353 @@
       "role_bare": false,
       "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
       "start_line": 159
+    },
+    {
+      "bag": {
+        "C": 6,
+        "D": 28,
+        "L": 1,
+        "N": 3,
+        "P": 3,
+        "S": 18
+      },
+      "candidates": [
+        {
+          "bare": {
+            "rank": 1,
+            "score": 8661133
+          },
+          "end_line": 1024,
+          "hits": [
+            2,
+            3,
+            0,
+            19,
+            8,
+            1
+          ],
+          "key": "getEnvConfig/2",
+          "nth": 0,
+          "path": "completions.go",
+          "role": true,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": true,
+          "start_line": 1018,
+          "widened": {
+            "rank": 1,
+            "score": 8781872
+          }
+        },
+        {
+          "bare": {
+            "rank": 2,
+            "score": 5509973
+          },
+          "end_line": 997,
+          "hits": [
+            3,
+            0,
+            0,
+            5,
+            2,
+            1
+          ],
+          "key": "configEnvVarGlobalPrefix",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 997,
+          "widened": {
+            "rank": 2,
+            "score": 5509973
+          }
+        },
+        {
+          "bare": {
+            "rank": 3,
+            "score": 4030449
+          },
+          "end_line": 998,
+          "hits": [
+            3,
+            0,
+            0,
+            0,
+            2,
+            1
+          ],
+          "key": "configEnvVarSuffixDescriptions",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 998,
+          "widened": {
+            "rank": 3,
+            "score": 4030449
+          }
+        },
+        {
+          "bare": {
+            "rank": 4,
+            "score": 3678703
+          },
+          "end_line": 1001,
+          "hits": [
+            3,
+            0,
+            0,
+            0,
+            3,
+            1
+          ],
+          "key": "configEnvVarPrefixSubstRegexp",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 1001,
+          "widened": {
+            "rank": 4,
+            "score": 3678703
+          }
+        },
+        {
+          "bare": {
+            "rank": 5,
+            "score": 2623904
+          },
+          "end_line": 982,
+          "hits": [
+            0,
+            2,
+            1,
+            6,
+            6,
+            1
+          ],
+          "key": "CompDebugln/2",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": true,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 980,
+          "widened": {
+            "rank": 5,
+            "score": 3332018
+          }
+        }
+      ],
+      "corpus": "go",
+      "end_line": 1011,
+      "key": "configEnvVar/2",
+      "lang": "go",
+      "nth": 0,
+      "path": "completions.go",
+      "rank": "bd621cfe0fb84a55bd9d3ebb9f4de93469ee7a3396be2462649a2894103a6740",
+      "role_bare": true,
+      "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+      "start_line": 1006
+    },
+    {
+      "bag": {
+        "C": 1,
+        "D": 16,
+        "L": 1,
+        "N": 4,
+        "P": 3,
+        "S": 17
+      },
+      "candidates": [
+        {
+          "bare": {
+            "rank": 1,
+            "score": 3499880
+          },
+          "end_line": 157,
+          "hits": [
+            0,
+            3,
+            0,
+            12,
+            8,
+            1
+          ],
+          "key": "Eq/2",
+          "nth": 0,
+          "path": "cobra.go",
+          "role": false,
+          "same_file": true,
+          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+          "shape_equal": true,
+          "start_line": 144,
+          "widened": {
+            "rank": 1,
+            "score": 3575505
+          }
+        },
+        {
+          "bare": {
+            "rank": 2,
+            "score": 1539478
+          },
+          "end_line": 597,
+          "hits": [
+            1,
+            2,
+            0,
+            0,
+            9,
+            1
+          ],
+          "key": "helpOrVersionFlagPresent/1",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 587,
+          "widened": {
+            "rank": 4,
+            "score": 1539478
+          }
+        },
+        {
+          "bare": {
+            "rank": 3,
+            "score": 1532471
+          },
+          "end_line": 982,
+          "hits": [
+            0,
+            2,
+            0,
+            4,
+            6,
+            1
+          ],
+          "key": "CompDebugln/2",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 980,
+          "widened": {
+            "rank": 2,
+            "score": 2052470
+          }
+        },
+        {
+          "bare": {
+            "rank": 4,
+            "score": 1116744
+          },
+          "end_line": 741,
+          "hits": [
+            1,
+            2,
+            0,
+            1,
+            9,
+            1
+          ],
+          "key": "checkIfFlagCompletion/3",
+          "nth": 0,
+          "path": "completions.go",
+          "role": false,
+          "same_file": false,
+          "sha": "b28a4f6c509acde7367323e835cfb4f4939fe656dd3214320d76f53e91743c89",
+          "shape_equal": false,
+          "start_line": 657,
+          "widened": null
+        },
+        {
+          "bare": {
+            "rank": 5,
+            "score": 1099978
+          },
+          "end_line": 478,
+          "hits": [
+            0,
+            2,
+            0,
+            2,
+            6,
+            0
+          ],
+          "key": "(*Command) GenBashCompletionFileV2/2",
+          "nth": 0,
+          "path": "bash_completionsV2.go",
+          "role": false,
+          "same_file": false,
+          "sha": "906f68743cdae6ddb3228ca42e4b56d2a51371d7f135f67e4476342abffc6215",
+          "shape_equal": false,
+          "start_line": 470,
+          "widened": {
+            "rank": 3,
+            "score": 1630480
+          }
+        },
+        {
+          "bare": null,
+          "end_line": 81,
+          "hits": [
+            0,
+            0,
+            0,
+            2,
+            2,
+            0
+          ],
+          "key": "MousetrapDisplayDuration",
+          "nth": 0,
+          "path": "cobra.go",
+          "role": false,
+          "same_file": true,
+          "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+          "shape_equal": false,
+          "start_line": 81,
+          "widened": {
+            "rank": 5,
+            "score": 1505348
+          }
+        }
+      ],
+      "corpus": "go",
+      "end_line": 171,
+      "key": "appendIfNotPresent/2",
+      "lang": "go",
+      "nth": 0,
+      "path": "cobra.go",
+      "rank": "d7e8741abaa8b7979c5a5aef3f1efdbceca748d9d7c4786003b81dd1d3324ead",
+      "role_bare": false,
+      "sha": "aae7502e789e42469bcb2fc110af87fd02451d3b509c5b0bed782ada17338c5f",
+      "start_line": 166
     }
   ],
   "summary": {
     "go": {
-      "answered": 59,
-      "avg_len": 127,
+      "answered": 92,
+      "avg_len": 90,
       "ppmi_capped_units": 0,
-      "role_top1_bare": 29,
-      "role_top1_widened": 27,
-      "top1_agree": 47,
-      "top1_same_file_bare": 53,
-      "units": 59
+      "role_top1_bare": 57,
+      "role_top1_widened": 54,
+      "top1_agree": 73,
+      "top1_same_file_bare": 85,
+      "units": 92
     },
     "python": {
       "answered": 125,
@@ -20110,7 +20100,7 @@
     }
   },
   "units": {
-    "go": 59,
+    "go": 92,
     "python": 125,
     "rust": 426,
     "self": 5458,

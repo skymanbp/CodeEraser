@@ -4,8 +4,10 @@
 -- the M5-2a graph stub → 2g replacement pattern. The similarity leg
 -- speaks the wire's own vocabulary: (simKind, num, den), judged
 -- against the OWNING family's threshold (clone 85/100, docdup
--- 80/100) by cross-multiplication — the 3h token-count floor was the
--- pre-wire approximation and died with the hookup.
+-- 80/100) by cross-multiplication and by nothing else: no token floor
+-- applies here, since every Tier F row already cleared dedup's own
+-- admission floor upstream (Params::guarantee, cli/src/dedup/mod.rs)
+-- and the join neither re-applies nor relaxes it.
 --
 -- Verdict codes are the design table's own numbering:
 -- 0 report_only / 1 merge_candidate / 2 delete_candidate /

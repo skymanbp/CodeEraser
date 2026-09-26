@@ -38,9 +38,10 @@
 //! - string_literal lexes as `"` + string_content + `"`, char_literal
 //!   as `'` + character + `'`, a raw string as `R"` + `(` +
 //!   raw_string_content + `)` + `"`: the anonymous quote tokens are
-//!   the delimiter pieces under literal_delims; the raw string's
-//!   parentheses stay text tokens, so a raw literal is five tokens
-//!   where a plain one is one (a dedup undercount, register D23)
+//!   the delimiter pieces under literal_delims, and the whole node is
+//!   ONE token however it is spelled — prefixed, raw, delimited or
+//!   user-defined (dedup/tokens.rs whole_literal, plan v2.30 step 5b;
+//!   a raw literal used to weigh five where a plain one weighs one)
 //! - the callee is the `function` field of call_expression; a member
 //!   callee is a field_expression (`this->m`, `obj.m`) or a
 //!   qualified_identifier (`K::m`); a class body is a

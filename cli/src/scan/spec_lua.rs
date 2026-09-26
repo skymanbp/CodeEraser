@@ -82,8 +82,11 @@ pub static LUA: LangSpec = LangSpec {
     // scan/binding.rs), not a type declaration around it
     owner_kinds: &[],
     overloads: None,
-    // a local binding shadowing a callable is not modelled (register
-    // D21): the recursion increment may overcount on that shape
-    call_import_kinds: &[],
+    // a local binding is Lua's import: `local helper = other.helper`
+    // inside a body shadows a same-named callable of the file for the
+    // calls that body makes (register D21, closed in plan v2.30 step
+    // 5b); one bound to a function value is a unit the index seats and
+    // shadows nothing (scan/calls.rs shadowed)
+    call_import_kinds: &["variable_declaration"],
     opaque_fields: &[],
 };

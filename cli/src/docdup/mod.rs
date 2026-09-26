@@ -20,7 +20,11 @@ use anyhow::Result;
 use rusqlite::Transaction;
 
 /// Bump when segment-extraction semantics change: it sits in the meta
-/// cache key (schema v5), so stale docsegs rows are wiped. 6 = HTML
+/// cache key (schema v5), so stale docsegs rows are wiped. 7 = an
+/// indented code block inside a list item — four columns past the
+/// item's content column — leaves the Markdown prose walk like one
+/// outside a list (graph/md_mask.rs Blocks, plan v2.30 step 5b), so
+/// every document holding one loses those md_para lines. 6 = HTML
 /// text is a segment kind of its own (html.rs, plan v2.30 step 5) and
 /// the skeleton table strips the Javadoc / Doxygen / roxygen / LDoc
 /// tags (spec.rs), which changes a tagged comment's words. 5 = a
@@ -31,7 +35,7 @@ use rusqlite::Transaction;
 /// 2026-08-19), which changes every shingle hash. 3 = the 2026-08-14
 /// attainment-line-B amendment (ccm #842): html_line /
 /// fenced_code_line / overlong_line masks.
-pub const DOCDUP_REV: i64 = 6;
+pub const DOCDUP_REV: i64 = 7;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs). `kind`
 /// and `exempt` are the frozen position codes in spec::KIND_NAMES /

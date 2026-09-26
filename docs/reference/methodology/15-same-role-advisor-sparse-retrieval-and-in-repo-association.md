@@ -147,9 +147,9 @@ outvote what the unit itself spells. No corpus but this one is consulted and no 
 written. The step-2 tuning verdict made the widened arm **an opt-in association view, never
 the default and never evidence**: on the frozen sample it re-ranked the same 84 configurations
 the way the bare arm did and crossed no significance line (widened 63/118 against bare 67/118
-on the first generation), so the faces show the widened rows as a second page, tagged, and the
+on the first generation as first arbitrated; the Go fixture's re-measurement of 2026-09-26 moved the same oracle to 66/118 against 68/118), so the faces show the widened rows as a second page, tagged, and the
 role bit is read off the six channels only
-([EVAL-SET-SIMILAR.md:222](../../EVAL-SET-SIMILAR.md#L222),
+([EVAL-SET-SIMILAR.md:225](../../EVAL-SET-SIMILAR.md#L225),
 [face.rs:44-45](../../../cli/src/similar/face.rs#L44)).
 
 ### 5. The wire — `similar/1`, and what Haskell judges
@@ -226,7 +226,7 @@ family without a deny tier has nothing to say there (spec §2).
 There is no oracle that knows every same-role partner of a unit, so **recall is not reported**;
 the ledger reports p@1 — the arm's top-1 arbitrated `same_role` — and hit@5, per arm and per
 corpus, plus the confusion of the role bit over every candidate pair
-([EVAL-SET-SIMILAR.md:77-80](../../EVAL-SET-SIMILAR.md#L77)). The instrument is
+([EVAL-SET-SIMILAR.md:80-83](../../EVAL-SET-SIMILAR.md#L80)). The instrument is
 `similar_replay`: five corpora (this repository and the four cross-check fixtures) each become
 their own database, every unit is queried against the rest of its corpus on both arms, and the
 row identity is the sha256 of the text with CRLF folded to LF — the checkout must not change who
@@ -236,25 +236,25 @@ and frozen as oracles.
 
 | generation | queries · pairs | p@1 bare | p@1 widened | p@1 bare, role = 1 | hit@5 bare | role-bit precision | floor |
 |---|---|---|---|---|---|---|---|
-| v1 (`similar-oracle-v1.json`) | 118 · 700 | 67/118 = 56.8 % | 63/118 = 53.4 % | 39/59 = 66.1 % | 74/118 = 62.7 % | 101/165 = 61.2 % | 60 % |
-| v2 holdout (`similar-oracle-v2.json`) | 115 · 668 | 46/115 = 40.0 % | 42/115 = 36.5 % | 30/56 = 53.6 % | 69/115 = 60.0 % | 86/177 = 48.6 % | 40 % |
+| v1 (`similar-oracle-v1.json`) | 118 · 695 | 68/118 = 57.6 % | 66/118 = 55.9 % | 39/59 = 66.1 % | 75/118 = 63.6 % | 100/165 = 60.6 % | 60 % |
+| v2 holdout (`similar-oracle-v2.json`) | 115 · 667 | 45/115 = 39.1 % | 41/115 = 35.7 % | 29/57 = 50.9 % | 69/115 = 60.0 % | 89/179 = 49.7 % | 40 % |
 
-([EVAL-SET-SIMILAR.md:85](../../EVAL-SET-SIMILAR.md#L85), [EVAL-SET-SIMILAR.md:94](../../EVAL-SET-SIMILAR.md#L94),
-[EVAL-SET-SIMILAR.md:272](../../EVAL-SET-SIMILAR.md#L272), [EVAL-SET-SIMILAR.md:281](../../EVAL-SET-SIMILAR.md#L281)).
+([EVAL-SET-SIMILAR.md:88](../../EVAL-SET-SIMILAR.md#L88), [EVAL-SET-SIMILAR.md:97](../../EVAL-SET-SIMILAR.md#L97),
+[EVAL-SET-SIMILAR.md:276](../../EVAL-SET-SIMILAR.md#L276), [EVAL-SET-SIMILAR.md:285](../../EVAL-SET-SIMILAR.md#L285)).
 The second generation is a **holdout by construction** — same instrument, same quotas, same
 order, skipping every rank the first oracle arbitrated — and it read one step lower across the
 board. That is the finding the tuning had to survive: the three candidates the first sample
 favoured (per-channel normalisation, query tf clipped to 1, `spec ∧ 2N ≥ QN`) were retested on
 the holdout and none was adopted — the best gained three queries with a 5 : 2 paired split, one
 made this repository worse, one lost three true positives — so `SIMILAR_REV` stayed at 1 and the
-conjunction entered the core in its spec form ([EVAL-SET-SIMILAR.md:314](../../EVAL-SET-SIMILAR.md#L314)).
+conjunction entered the core in its spec form ([EVAL-SET-SIMILAR.md:318](../../EVAL-SET-SIMILAR.md#L318)).
 The gate `eval_similar_precision` is not ignored: every generation's oracle must be consistent
 with the live constants and re-derived from its rows, the four fixture corpora replay byte for
 byte, later generations must not overlap earlier ones, and each generation holds the floor its
 own ledger set — 60 % for v1, 40 % for v2 — floors that only rise
-([eval_similar_precision.rs:34](../../../cli/tests/it/eval_similar_precision.rs#L34),
-[eval_similar_precision.rs:62](../../../cli/tests/it/eval_similar_precision.rs#L62),
-[eval_similar_precision.rs:162](../../../cli/tests/it/eval_similar_precision.rs#L162)).
+([eval_similar_precision.rs:37](../../../cli/tests/it/eval_similar_precision.rs#L37),
+[eval_similar_precision.rs:65](../../../cli/tests/it/eval_similar_precision.rs#L65),
+[eval_similar_precision.rs:165](../../../cli/tests/it/eval_similar_precision.rs#L165)).
 
 ### 8. Residual risks, stated
 
