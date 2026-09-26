@@ -163,7 +163,7 @@
 > 两对（25 mask 内 lang 20 判并回显 / 26 缺席拒）。此键是语言扩展（设计册 `docs/reference/language-expansion.md`）
 > 的接线：新语言在各自的步翻 `scan_only` 位即入集，核不必再改。步 2（C / C++，同一未发布 minor 内加性）：核
 > `CE.Graph.Cost.roleBits` 加第九行 `(8, 1)`——编译单元角色（Rust 侧 `ROLE_UNIT = 1 << 8`，`.c/.cc/.cpp/.cxx`，
-> 设计册 D18）落在可执行位，请求不带该位时字节同前；Rust 侧另有三件存储与配置事实、皆不过线：`store::KINDS`
+> 设计册 D18）落在可执行位，请求不带该位时字节同前；步 5（HTML，同一未发布 minor 内加性）再加第十行 `(9, 4)`——资产角色（Rust 侧 `ROLE_ASSET = 1 << 9`：走查读到而索引不持有的文件——页面的 `src` / `href` / `link` 目标，样式表、脚本、图片；`nodes.rs` 按构造标出、`node_row` 单独发送）落在 dyn-referenced 位 4，此前该位没有生产者：样式表的 `url()`、脚本的取回、manifest 的图标是图看不见的引用，资产结点永不成候选，请求不带该位时字节同前；Rust 侧另有三件存储与配置事实、皆不过线：`store::KINDS`
 > 追加 `include` 站点标签（GRAPH_REV 15 → 16）、`compile_commands.json` 入解析器配置、`[graph.search_roots]`
 > 入 resolve_key。
 

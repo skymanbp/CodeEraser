@@ -17,6 +17,16 @@ pub struct Node {
     /// references count, and it is never a candidate of any verdict
     /// (plan v2.18 step #12).
     pub foreign: bool,
+    /// A walked ASSET (plan v2.30 step 5): a file the walk read and
+    /// the index holds no parse of — a stylesheet, a script, an image,
+    /// a font, a document of no judged language — named by a page's
+    /// `src` / `href` / `link`. The graph reads neither what it
+    /// references (a stylesheet's `url()`, a script's fetch, a
+    /// manifest's icons) nor every reference to it, so it is never a
+    /// candidate of any verdict (its role lands on the core's
+    /// dyn-referenced bit, roleBits row 9) and never a measured node
+    /// (deadcode::measured_nodes).
+    pub asset: bool,
 }
 
 /// Dense node identities: every walked file plus every edge target —
@@ -25,7 +35,12 @@ pub struct Node {
 /// granularity codes; PACKAGE is taken from the edges' STORED
 /// granularity, never inferred from absence — the old "not a walked
 /// file ⇒ package" guess minted image assets and dangling doc refs
-/// as package nodes (M5-close review LOW). `foreign` is the index's
+/// as package nodes (M5-close review LOW). A file-kind target the
+/// index does not hold is an ASSET by construction, not by inference:
+/// the ladder's candidate set is the walked files the index holds
+/// plus the walked files it does not (ladder::Scope::assets, plan
+/// v2.30 step 5), and a package target carries its stored
+/// granularity, so nothing else reaches that arm. `foreign` is the index's
 /// per-file fact; a package or section node is foreign when it sits
 /// under (or on) a foreign file's path, so a submodule's package rows
 /// never surface as this tree's `reported` verdicts.
@@ -51,14 +66,14 @@ pub fn nodes_of(files: &[String], edges: &[GraphEdge], foreign: &BTreeSet<String
     }
     set.into_iter()
         .map(|(path, unit)| {
-            let kind = if !unit.is_empty() {
-                super::wire::GRAN_SECTION
+            let (kind, asset) = if !unit.is_empty() {
+                (super::wire::GRAN_SECTION, false)
             } else if file_set.contains(path.as_str()) {
-                super::wire::GRAN_FILE
+                (super::wire::GRAN_FILE, false)
             } else if pkg_dsts.contains(path.as_str()) {
-                super::wire::GRAN_PACKAGE
+                (super::wire::GRAN_PACKAGE, false)
             } else {
-                super::wire::GRAN_FILE
+                (super::wire::GRAN_FILE, true)
             };
             // the root package "" holds own files too, so a foreign
             // file never makes the ROOT foreign — only real prefixes
@@ -71,6 +86,7 @@ pub fn nodes_of(files: &[String], edges: &[GraphEdge], foreign: &BTreeSet<String
                 unit,
                 kind,
                 foreign,
+                asset,
             }
         })
         .collect()

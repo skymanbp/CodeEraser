@@ -22,6 +22,11 @@ use std::path::Path;
 /// phase-2 key derived from the walked paths + config bytes.
 pub(super) struct WalkIndex {
     pub live: BTreeSet<String>,
+    /// The walked files the index never holds — no judged language —
+    /// by path only: the HTML rungs' asset candidates (plan v2.30 step
+    /// 5), hashed into the resolve_key like `live`, so an asset added
+    /// or removed re-fires the sweep and a content edit does not.
+    pub assets: BTreeSet<String>,
     pub configs: Vec<String>,
     pub tokenized: usize,
     pub dirty: BTreeSet<String>,
@@ -47,6 +52,7 @@ pub(super) struct WalkIndex {
 pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) -> Result<WalkIndex> {
     let mut out = WalkIndex {
         live: BTreeSet::new(),
+        assets: BTreeSet::new(),
         configs: Vec::new(),
         tokenized: 0,
         dirty: BTreeSet::new(),
@@ -71,6 +77,10 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     let mut key_inputs = configs.clone();
     key_inputs.extend(declarations(config, &mut out)?);
     key_inputs.extend(md_facts);
+    key_inputs.push((
+        "walk:assets".to_string(),
+        tokens::fnv1a(roots_bytes(out.assets.iter()).as_slice()),
+    ));
     key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live));
     out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
@@ -104,8 +114,10 @@ fn refresh_tree(
             continue;
         }
         // judged_path: the scan-only arm (plan v2.5) never enters the
-        // index — it feeds only judgment surfaces
+        // index — it feeds only judgment surfaces; every other walked
+        // file is an asset a page may name (WalkIndex::assets)
         let Some(lang) = Lang::judged_path(&path) else {
+            out.assets.insert(rel);
             continue;
         };
         let Some(src) = walk::read_surviving(&path)? else {
@@ -181,10 +193,10 @@ fn roots_bytes<'r>(roots: impl Iterator<Item = &'r String>) -> Vec<u8> {
 }
 
 /// Cross-file resolver INPUTS per language (split from index_all at
-/// the E01 fn gate): md heading slugs, the Rust pub-use surface, a
-/// Java file's declared package and the templates a Lua file assigns
-/// to `package.path` all join the resolve_key — the same discipline,
-/// one throat. A Java header's imports stay out of the key: they steer
+/// the E01 fn gate): md heading slugs, a page's id set, the Rust
+/// pub-use surface, a Java file's declared package and the templates a
+/// Lua file assigns to `package.path` all join the resolve_key — the
+/// same discipline, one throat. A Java header's imports stay out of the key: they steer
 /// only the file's own sites, which a change to them re-resolves as
 /// the file's refresh does. A Lua file without templates adds no key
 /// input, so a tree without them keys as it did before step 4.
@@ -198,6 +210,10 @@ fn lang_fact(
     let text = String::from_utf8_lossy(src);
     match lang {
         Lang::Markdown => facts.push((rel.to_string(), crate::graph::ladder::md::slug_hash(&text))),
+        Lang::Html => facts.push((
+            rel.to_string(),
+            crate::graph::ladder::html_head::id_hash(&text),
+        )),
         Lang::Rust => facts.push((
             rel.to_string(),
             crate::graph::ladder::rs_reexport::pubuse_hash(&text),

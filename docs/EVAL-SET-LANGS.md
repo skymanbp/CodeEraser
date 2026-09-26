@@ -42,7 +42,11 @@
   阶梯的答案。生成器冻结前先跑 CI 的核对。档 `contracts/eval/lang-precision-<语料>-v<代>.json`；它是冻结档里唯一依赖产品代码的：
   阶梯的改动挪动了答案就重判——删档、在干净的树上重生成、在本册具名记一条。判分同样只问走查读的文件：真值指向走查拒读
   的文件（如 luarocks 的 `vendor/`）按站外判分，审阅者的原话另记在 `audit_truth`；样本行与候选漏检不得落在拒读的文件里；
-  档多一节 `walk`（拒读的文件与它们的站点计数，台账不含它们）。CI 门（`cli/tests/it/eval_lang_precision.rs`，不跑 git、不要
+  档多一节 `walk`（拒读的文件与它们的站点计数，台账不含它们）。真值够得到整棵树的考题（HTML）另记 `walk.unreached`——
+  宇宙之外、走查拒读的树内路径（内建排除的 `*.min.js`、构建产物）——真值指向它同样按站外判分；门核它每条都在树上、
+  不在宇宙里，并把这样的真值也照改判（塞进一条真值指向的树内路径，冻结行上审阅者的原话就对不上，档拒）。判分对着的文件集
+  是走查读到的全部被判决文件（页面可以指向任何语言的文档或代码）加走查读到的资产（`Scope::assets`），不再只是该语言的宇宙。
+  CI 门（`cli/tests/it/eval_lang_precision.rs`，不跑 git、不要
   克隆）：冻结集 = 已判分考题的语料（考题表的 `scored` 旗标与盘上的档逐语料相符，判分前必须已审阅）；每行按样本顺序回显身份
   与审阅真值、答案只能是三种形状之一、判词从行本身重算；摘要从行重算；台账的比率从两张计数表重算、逐类合计等于冻结宇宙；
   首级占比过触发线须带书面处置；候选漏检与审阅表逐条对应；精度不低于 0.90（整体，与站内真值不少于 5 道的每个语料；M5-2 的
@@ -473,3 +477,18 @@ URL 字符串（`fetch()` / `new Request()` / `link.href =`）——内嵌脚本
 新腿 `a_truth_beyond_the_tree_is_refused`（宇宙外、树内的真值通过，树外的拒），「包目录真值」的探针改读核对器自己的分类（一条图片
 路径不再被当成包）；精度册生成器有克隆时把树重导一遍（`assert_frozen_tree`）。考题表的两个布尔旗（`audited` / `scored`）合成一个
 有序的 `Stage`（sampled → audited → scored，「已判分 ⇒ 已审阅」由构造保证），HTML 的 stage 翻为 audited。
+
+### 阶梯（提交 B，2026-09-26）
+
+`cli/src/graph/ladder/html.rs` 与 `html_head.rs`（设计册 §8 HTML 行是权威，这里只记与考题有关的三件事）。**候选集**：一页指向的是
+站点服务的东西，所以目标是走查读到的任何文件——被判决的页面 / 文档 / 代码，加走查读到而索引不持有的**资产**（`WalkIndex::assets`，
+与每页的 `id` 集一起进 `resolve_key`，资产增删即全量重扫）；判分的 `Scope` 照此拼（`score::tree`）。**部署根**：根相对的 `/x`
+先问 `[graph.search_roots] html`，无声明则由页面自己的服务 URL 推出——canonical、`og:url`、本页语言的 hreflang alternate
+（本仓每页第 12 行的 `og:url` 正是审阅简报读部署的证据；learning-area 的页面没有这些，靠祖先目录推断：`/x` 在页面的哪个祖先
+目录下恰好存在）。**空值**按元素的取回算法分读：`href` / `action` 的空值是本页（空 URL 即文档自身），`src` / `srcset` /
+`link_asset` 的空值什么也不取（HTML 的 img / script / link 算法遇空值即返回），留台账行 `empty`。审阅简报按 URL 解析定义
+真值，于是 learning-area 有一道 `link_asset` 空值（`tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html:9`）
+的真值是本页；产品按取回算法答 `empty`，这一道按冻结真值记 `missed`——真值不改（审阅者按简报判得对），分歧记在这里。
+**走查拒读的资产**：learning-area 一道 `src` 的真值 `javascript/apis/drawing-graphics/threejs-video-cube/three.min.js`
+落在内建排除 `*.min.js` 上（`scan/walk.rs`），产品没有它的结点；判分对这种真值的读法与拒读的宇宙文件相同——按站外判分、原话另记
+（`walk.unreached`，本节上文「判分」一条）。精度册与读数随 B′ 在干净的树上生成，记在下一节。

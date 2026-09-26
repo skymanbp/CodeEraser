@@ -249,6 +249,7 @@ fn resolve_edges(
     let memo = ladder::Memo::default();
     let scope = ladder::Scope {
         files: &walked.live,
+        assets: &walked.assets,
         configs: &walked.configs,
         root,
         memo: &memo,

@@ -13,7 +13,10 @@
 //! (CE.Graph.Cost.roleBits), this side only measures. The
 //! design's "no entry rule = every doc trivially dies" stance is
 //! deliberate: an unlinked doc IS reported. Asset edges never count
-//! as references (design §4 Markdown row); a package node gets
+//! as references (design §4 Markdown row), and an asset NODE — a
+//! walked file the index holds no parse of, a page's stylesheet or
+//! image (plan v2.30 step 5) — is never a candidate: its role lands
+//! on the core's dyn-referenced bit; a package node gets
 //! SYNTHETIC containment arcs to every file under it, or to the code
 //! its manifest declares when it is an R package — reaching a
 //! package reaches what it holds (the self-repo disposition run
@@ -180,9 +183,13 @@ pub fn file_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
 /// the join, the score and the structure family assemble their pos
 /// requests and tier universes through this ONE selector (the ratchet
 /// caught the second copy growing), so a foreign reader is never a
-/// row of a verdict here (plan v2.18 step #12).
+/// row of a verdict here (plan v2.18 step #12), and neither is a
+/// walked asset (plan v2.30 step 5): the index holds no parse of it,
+/// the size and clone tiers never saw it, and the structure family
+/// has no directory row to place it in (it refused the first one as
+/// "outside the walked tree").
 pub fn measured_nodes(w: &GraphWire) -> Vec<(i64, &str)> {
-    files_where(w, |n| !n.foreign)
+    files_where(w, |n| !n.foreign && !n.asset)
 }
 
 fn files_where(w: &GraphWire, keep: impl Fn(&Node) -> bool) -> Vec<(i64, &str)> {
@@ -303,10 +310,13 @@ pub fn edge_wire(
         .collect()
 }
 
-/// [lang, kind, roles] — only file nodes carry entry facts, with ONE
-/// exception since 6.3.0: a foreign node of ANY kind carries role 7
+/// [lang, kind, roles] — only file nodes carry entry facts, with TWO
+/// exceptions: since 6.3.0 a foreign node of ANY kind carries role 7
 /// alone (a submodule's package or section is a reader exactly like
-/// its files, and must never surface as a `reported` row here). The
+/// its files, and must never surface as a `reported` row here), and
+/// since 7.2.0 (plan v2.30 step 5) a walked asset carries role 9
+/// alone (a file the index holds no parse of is nobody's main or
+/// test, and the allow-claim read would only cost the bytes). The
 /// roles column is the 2.28.0 authority (the core derives the entry
 /// bits through its role table, where an ablation can perturb them);
 /// the pre-2.28 legacy flags column that used to sit between kind
@@ -325,6 +335,8 @@ fn node_row(
         .unwrap_or(crate::scan::lang::Lang::LangUnknown as i64);
     let roles = if n.foreign {
         flags::ROLE_FOREIGN
+    } else if n.asset {
+        flags::ROLE_ASSET
     } else if n.kind == super::wire::GRAN_FILE {
         flags::roles_of(root, &n.path, entries, declared)
     } else {

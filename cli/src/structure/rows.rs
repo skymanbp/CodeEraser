@@ -85,7 +85,8 @@ type FileJoin = (Vec<(usize, usize)>, Vec<usize>);
 /// both reference tables read.
 fn file_join(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<FileJoin> {
     // the measured tier: a foreign reader has no directory in the
-    // walked (own) tree and is not this family's to place
+    // walked (own) tree and is not this family's to place, and a
+    // walked asset (a page's stylesheet or image) has no row in it
     let fnodes = crate::graph::deadcode::measured_nodes(w);
     let mut file_dirs = Vec::with_capacity(fnodes.len());
     let mut index_of: BTreeMap<i64, usize> = BTreeMap::new();

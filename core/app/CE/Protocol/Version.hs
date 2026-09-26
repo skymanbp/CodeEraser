@@ -21,7 +21,9 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- fact, never a core release. No capability name changes. Step 2 of
 -- the same plan (C / C++) adds, inside this unreleased minor, roleBits
 -- row 8: a C-family compilation unit — a `.c` file nothing includes —
--- lands on the executable bit (CE.Graph.Cost).
+-- lands on the executable bit (CE.Graph.Cost); step 5 (HTML) adds row
+-- 9 the same way: a walked asset — a page's stylesheet or image, a
+-- file the index holds no parse of — lands on the dyn-referenced bit.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's

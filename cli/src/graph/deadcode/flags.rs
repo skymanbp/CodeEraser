@@ -2,7 +2,7 @@
 //! the 300-line dogfood wall). Since proto 2.28.0 (batch-7 slice 3
 //! main body) this side measures ROLE FACTS — named main, executable
 //! dir, test convention, entry glob, doc entry, allow claim, declared
-//! build target — and the entry DECISION is the core's role table
+//! build target, compilation unit, asset — and the entry DECISION is the core's role table
 //! (CE.Graph.Cost.roleBits). The pre-2.28 legacy flags column this
 //! module also produced retired at 5.0.0, once the symbols table
 //! gave visibility a producer; nothing here measures bit 0, because
@@ -39,6 +39,14 @@ pub(super) const ROLE_FOREIGN: i64 = 1 << 7;
 /// one would be a dead candidate the moment its tree names no main.
 /// The core lands it on the executable bit (roleBits row 8, 7.2.0).
 const ROLE_UNIT: i64 = 1 << 8;
+/// A walked asset (plan v2.30 step 5): a file the index holds no
+/// parse of, named by a page — nodes.rs marks it, and this side
+/// measures no other role on it (an image is nobody's main, and the
+/// allow-claim read would only cost the bytes). The core lands it on
+/// the dyn-referenced bit (roleBits row 9): the references the graph
+/// cannot read — a stylesheet's `url()`, a script's fetch, a
+/// manifest's icons — keep it alive, so it is never a candidate.
+pub(super) const ROLE_ASSET: i64 = 1 << 9;
 
 /// Files a runtime or a build starts by their own name, which nothing
 /// imports: Rust's `main.rs` and `build.rs`, Go's `main.go`, Python's

@@ -85,7 +85,8 @@ minRung = 5
 -- | Which flag bits make a node an entry root — the single constant
 -- that drives deadcode FPR (design §2). Bits: 1 main, 2 test,
 -- 3 entry-glob, 4 dyn-referenced (RG11: dynamic dispatch keeps its
--- target alive and the cost stays visible here), 5 doc-entry,
+-- target alive and the cost stays visible here; the asset role is
+-- its producer since 7.2.0, roleBits row 9), 5 doc-entry,
 -- 6 ce:allow(deadcode) (an exemption IS a liveness claim, so an
 -- exempt node also keeps its dependencies — the FPR-safe fold).
 -- Bit 0 (exported) is deliberately absent: exported-ness is the
@@ -139,9 +140,15 @@ assetKind = 3
 -- target is a root, where before only the name conventions were.
 -- Role 8 (7.2.0, plan v2.30 step 2) is a C-family compilation unit —
 -- a `.c` / `.cc` / `.cpp` / `.cxx` file nothing includes, compiled on
--- its own by the build — and lands beside roles 0, 1 and 6.
+-- its own by the build — and lands beside roles 0, 1 and 6. Role 9
+-- (7.2.0, plan v2.30 step 5) is a walked asset — a file the index
+-- holds no parse of, named by a page's src / href / link: a
+-- stylesheet, a script, an image. The references the graph cannot
+-- read (a stylesheet's url(), a script's fetch, a manifest's icons)
+-- are exactly what bit 4 stands for, so it lands there alone: alive
+-- by references the ladder does not read, never a candidate.
 roleBits :: [(Integer, Integer)]
-roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2), (8, 1)]
+roleBits = [(0, 1), (1, 1), (2, 2), (3, 3), (4, 5), (5, 6), (6, 1), (7, 2), (8, 1), (9, 4)]
 -- | The dead-row confidence (H3, 2.32.0): how far the dead node's
 -- OWN language can vouch for its verdict, judged from the request's
 -- per-language site ledger [[lang, unresolvedSites, totalSites]].

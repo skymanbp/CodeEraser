@@ -37,6 +37,7 @@ battery =
     , ("shuffled edge table is refused (200 seeded graphs)", allGraphs shuffledRefused)
     , ("no inert-kind edge keeps its target alive (asset, unused ref-def)", inertNeverAlive)
     , ("roles derive the entry bits through the table (2.28.0)", rolesDerive)
+    , ("an asset role is never judged, a bare asset node is (7.2.0)", assetNeverJudged)
     , ("the role table is a live knob (a dropped row empties the seeds)", roleKnob)
     , ("both export knobs are live (visibility bit, flag bit)", exportKnobs)
     ]
@@ -77,7 +78,8 @@ inertNeverAlive =
 -- bit — the named-main, executable-dir and declared-target roles all
 -- on bit 1, test/glob/doc/allow on theirs, the 6.4.0 foreign reader
 -- beside the test convention on bit 2, the 7.2.0 compilation unit
--- beside the executables on bit 1 — and a combined mask ORs.
+-- beside the executables on bit 1, the step-5 asset alone on bit 4 —
+-- and a combined mask ORs.
 rolesDerive :: Bool
 rolesDerive =
   and
@@ -90,8 +92,21 @@ rolesDerive =
     , deriveFlags roleBits 64 == 2
     , deriveFlags roleBits 128 == 4
     , deriveFlags roleBits 256 == 2
+    , deriveFlags roleBits 512 == 16
     , deriveFlags roleBits (1 + 4 + 64) == 6
     ]
+
+-- | 7.2.0 (plan v2.30 step 5): a node reached only through an inert
+-- asset edge is never a dead row when it carries the asset role, and
+-- IS one without it — the ROW is the lever (inertNeverAlive above
+-- already pins that the edge kind alone keeps nothing alive).
+assetNeverJudged :: Bool
+assetNeverJudged = deadWith (deriveFlags roleBits 512) == [] && deadWith 0 == [1]
+ where
+  deadWith f =
+    let b = build minRung [assetKind, refdefKind] 2 [[0, 1, assetKind, 1]]
+        flagses = [2, f]
+     in map fst (verdicts b (reachFrom b (entries entryMask flagses)) flagses)
 
 -- | Dropping the named-main row from the table must empty the entry
 -- set that role seeded — the dead-knob discipline applied to DATA.

@@ -114,7 +114,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 297,
+    "line": 298,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|3c4c22af6667dce2|0": {
@@ -144,7 +144,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|757b0378afa2499a|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 266,
+    "line": 267,
     "text": "idx.resolve_refreshed(&dirty, &mut resolver)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|764cfb44238d1148|0": {
@@ -154,22 +154,22 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 287,
+    "line": 288,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 305,
+    "line": 306,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|1": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 305,
+    "line": 306,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|c97285682ec824a2|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 310,
+    "line": 311,
     "text": "kgram: 25,\nwindow: 26,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|0": {
@@ -931,14 +931,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 297,
-    "end": 301,
+    "line": 298,
+    "end": 302,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 305,
-    "end": 313,
+    "line": 306,
+    "end": 314,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -2997,7 +2997,7 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Graph/Cost.hs|95e8c5ffea66fc74|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 103,
+    "line": 104,
     "text": "sccFloor = 2\n\n-- | The node kind whose dead verdicts FAIL (batch-7 slice 4, RG9:"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|13f33461aefff164|0": {
@@ -3633,7 +3633,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
     "target": "../../../cli/src/dedup/walkidx.rs",
-    "line": 137,
+    "line": 149,
     "text": "anyhow::ensure!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
@@ -3656,18 +3656,18 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|01ba091166cd9815|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 311,
+    "line": 321,
     "text": "/// bits through its role table, where an ablation can perturb them);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|0afbf65a97ab5f7b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 431,
+    "line": 443,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|26d7b0c0bb2a5058|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 47,
-    "end": 52,
+    "line": 50,
+    "end": 55,
     "text": "pub const VERDICT_NAMES: [&str; 4] = ["
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|2fa668f1a15fb7d1|0": {
@@ -3678,78 +3678,84 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|47e6b9dce7af0f78|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 473,
-    "end": 477,
+    "line": 485,
+    "end": 489,
     "text": "// bit is wire skew, refused by name like every other absent key"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 346,
-    "end": 349,
+    "line": 358,
+    "end": 361,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|6ef7187cdb7a96c3|0": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 191,
+    "end": 193,
+    "text": "pub fn measured_nodes(w: &GraphWire) -> Vec<(i64, &str)> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|7530c14d4504672d|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 500,
+    "line": 512,
     "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|86dc4520a4549390|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 250,
+    "line": 257,
     "text": "rows,\nedges: wire,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|a612b2e0c056a92d|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 24,
-    "end": 26,
+    "line": 27,
+    "end": 29,
     "text": "//! (RG10); the unresolved-site count travels with the report — the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|b48e4a45d7fa65e9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 276,
-    "end": 287,
+    "line": 283,
+    "end": 294,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|bcb4fab990e9b345|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 293,
-    "end": 311,
+    "line": 300,
+    "end": 318,
     "text": ".map(|&i| i as i64)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c18af790a198146f|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 504,
-    "end": 508,
+    "line": 516,
+    "end": 520,
     "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c89240bb0aef2f0a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 490,
-    "end": 497,
+    "line": 502,
+    "end": 509,
     "text": "degraded,\nfail,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|cfcd49a1f86410c9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 535,
-    "end": 549,
+    "line": 547,
+    "end": 561,
     "text": "/// The informational table, labelled `path#unit` for sections. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f0d7ab62d8583e7e|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 444,
-    "end": 453,
+    "line": 456,
+    "end": 465,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f88de50d7b234cc0|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 278,
-    "end": 282,
+    "line": 285,
+    "end": 289,
     "text": "/// rule now (CE.Graph.Cost.assetKind), applied where the cut table"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|445bf00701224a12|0": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 75,
-    "end": 110,
+    "line": 83,
+    "end": 118,
     "text": "/// Role facts of one file node; the declared-target role covers the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|533cea80c55142f9|0": {
@@ -3835,40 +3841,22 @@
     "end": 15,
     "text": "/// (package name, its exposed modules, space-separated) — the"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|114964dd151a5e7c|0": {
-    "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 103,
-    "end": 117,
-    "text": "fn fragment(from: &str, frag: Option<&str>) -> Outcome {"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|4958a697755af595|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
     "line": 68,
     "end": 99,
     "text": "fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|5756a5ead18663ee|0": {
-    "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 138,
-    "end": 153,
-    "text": "fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|5756a5ead18663ee|1": {
-    "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 138,
-    "end": 153,
-    "text": "fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|821c0d1a92e98934|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 157,
-    "end": 189,
+    "line": 159,
+    "end": 191,
     "text": "fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|84d22bd6cf0b9ab5|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
-    "line": 119,
-    "end": 133,
+    "line": 120,
+    "end": 134,
     "text": "fn directory(target: String, scope: &Scope) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|86e1e6d0aca9e802|0": {
@@ -3882,11 +3870,23 @@
     "end": 74,
     "text": "if is_scheme(spec) {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|068e8bc34c863c47|0": {
-    "target": "../../../cli/src/graph/ladder/md_slug.rs",
-    "line": 251,
-    "end": 275,
-    "text": "pub(super) fn percent_decode(s: &str) -> String {"
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|b237ffb535f30cdb|0": {
+    "target": "../../../cli/src/graph/ladder/md.rs",
+    "line": 140,
+    "end": 155,
+    "text": "pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|b237ffb535f30cdb|1": {
+    "target": "../../../cli/src/graph/ladder/md.rs",
+    "line": 140,
+    "end": 155,
+    "text": "pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|f53063b1a15fb6bc|0": {
+    "target": "../../../cli/src/graph/ladder/md.rs",
+    "line": 104,
+    "end": 116,
+    "text": "pub(super) fn fragment(from: &str, frag: Option<&str>) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|228f57aa6d479601|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
@@ -3905,6 +3905,12 @@
     "line": 198,
     "end": 219,
     "text": "fn html_anchors(line: &str, mask: &[bool]) -> Vec<String> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|4cf1f7d9f34d8f4f|0": {
+    "target": "../../../cli/src/graph/ladder/md_slug.rs",
+    "line": 251,
+    "end": 276,
+    "text": "pub(crate) fn percent_decode(s: &str) -> String {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md_slug.rs|8b614dd2fee5f0ad|0": {
     "target": "../../../cli/src/graph/ladder/md_slug.rs",
@@ -3926,8 +3932,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 254,
-    "end": 258,
+    "line": 264,
+    "end": 268,
     "text": "// The sentinel is never walked, and the scan-only arm (plan"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -3938,13 +3944,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 61,
-    "end": 76,
+    "line": 64,
+    "end": 79,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|e63f76e53c783474|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 55,
+    "line": 58,
     "text": "pub type Rung = u8;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|04440d166e5d3c04|0": {
@@ -4130,26 +4136,26 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/nodes.rs|5eceac305c65d702|0": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 24,
-    "end": 50,
+    "line": 34,
+    "end": 60,
     "text": "/// the wire bytes are shuffle-proof (G11). Kind reuses the wire"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/nodes.rs|9bf38c7b352b6de1|0": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 104,
-    "end": 112,
+    "line": 120,
+    "end": 128,
     "text": "// A package at the REPO ROOT has path \"\", and `format!(\"{}/\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/nodes.rs|bf82f93224b38b1d|0": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 88,
-    "end": 111,
+    "line": 104,
+    "end": 127,
     "text": "/// Synthetic containment arcs: package node → every file under its"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/nodes.rs|e8a9fcb002b0c43d|0": {
     "target": "../../../cli/src/graph/nodes.rs",
-    "line": 25,
-    "end": 28,
+    "line": 35,
+    "end": 38,
     "text": "/// granularity codes; PACKAGE is taken from the edges' STORED"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/roots.rs|4ebb247a9a862b22|0": {
@@ -4483,8 +4489,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|0482f5b9a84ffd99|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 95,
-    "end": 96,
+    "line": 96,
+    "end": 97,
     "text": "entryMask :: Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|1d7e2f21c97192c5|0": {
@@ -4507,37 +4513,37 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|5cba7297f841c0fc|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 159,
-    "end": 166,
+    "line": 166,
+    "end": 173,
     "text": "((_, t) : _) | t > 0 -> 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|5cba7297f841c0fc|1": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 159,
-    "end": 166,
+    "line": 166,
+    "end": 173,
     "text": "((_, t) : _) | t > 0 -> 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|6a9be8a2f50faaaa|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 143,
-    "end": 144,
+    "line": 150,
+    "end": 151,
     "text": "roleBits :: [(Integer, Integer)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|8e109241e1417c7b|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 91,
-    "end": 94,
+    "line": 92,
+    "end": 95,
     "text": "-- Bit 0 (exported) is deliberately absent: exported-ness is the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|95c8a6f74a7e6e44|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 153,
+    "line": 160,
     "text": "-- fully resolved reference population. An absent language row reads"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|95e8c5ffea66fc74|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 103,
-    "end": 114,
+    "line": 104,
+    "end": 115,
     "text": "sccFloor = 2\n\n-- | The node kind whose dead verdicts FAIL (batch-7 slice 4, RG9:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|a6383677b3933f1b|0": {
@@ -4554,14 +4560,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|efcdc143914cf767|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 98,
-    "end": 103,
+    "line": 99,
+    "end": 104,
     "text": "-- | Smallest SCC reported as a cycle: 2 = only true multi-node"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|f6bf4dedf1546011|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 116,
-    "end": 124,
+    "line": 117,
+    "end": 125,
     "text": "-- | The edge kind that NEVER counts as a reference (batch-7 slice"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cycles.hs|28135420f787320a|0": {
@@ -4918,8 +4924,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Graph/Cost.hs|0482f5b9a84ffd99|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 95,
-    "end": 96,
+    "line": 96,
+    "end": 97,
     "text": "entryMask :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Graph/Cost.hs|be4424241053cca0|0": {
@@ -6724,8 +6730,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 287,
-    "end": 313,
+    "line": 288,
+    "end": 314,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|98cd5d387767c13a|0": {
@@ -7527,14 +7533,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|1ebf67098c072c48|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 84,
-    "end": 87,
+    "line": 87,
+    "end": 90,
     "text": "pub enum Advisory {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|64995790ae4f0f45|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 190,
-    "end": 235,
+    "line": 197,
+    "end": 242,
     "text": ".iter()\n.enumerate()\n.filter(|(_, n)| n.kind == super::wire::GRAN_FILE && keep(n))"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|3aaf569eab67efa7|0": {
@@ -8023,12 +8029,12 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|1ad97326f59c570c|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 197,
+    "line": 204,
     "text": "-- and not a public-surface question. The ablation 1<<2 alone narrows"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|68004a2583dc91ca|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",
-    "line": 211,
+    "line": 218,
     "text": "-- word never exempts (K36 pins that a row with an empty category"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|e9399251f9a18f6c|0": {

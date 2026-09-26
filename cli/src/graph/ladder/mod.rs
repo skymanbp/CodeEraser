@@ -9,12 +9,12 @@
 //!
 //! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
 //! the C family's followed in plan v2.30 step 2 (c.rs), Java's in
-//! step 3 (java.rs), Lua's and R's in step 4 (lua.rs, r/); a language
-//! without rungs must return Unresolved(Unsupported) — an honest
-//! ledger row, never a silent skip. Dispatch carries the site's
-//! frozen kind label (store::KINDS): the TS/Py rungs are kind-uniform,
-//! Rust's mod_decl and use walk different rungs, and Markdown routes
-//! five kinds through one chain.
+//! step 3 (java.rs), Lua's and R's in step 4 (lua.rs, r/), HTML's in
+//! step 5 (html.rs); a language without rungs must return
+//! Unresolved(Unsupported) — an honest ledger row, never a silent
+//! skip. Dispatch carries the site's frozen kind label (store::KINDS):
+//! the TS/Py rungs are kind-uniform, Rust's mod_decl and use walk
+//! different rungs, and Markdown routes five kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
@@ -35,6 +35,9 @@ mod java_sets;
 // once re-derived it retired with the one-shot instruments (git
 // history), taking the pub with it
 mod hs_boot;
+pub mod html;
+// pub: the walk hashes every page's id set with it (dedup/walkidx.rs)
+pub mod html_head;
 pub mod lua;
 // pub: the walk reads every Lua file's package.path templates with it
 // (dedup/walkidx.rs)
@@ -170,8 +173,14 @@ impl Outcome {
 /// declares and the imports it writes, read by the walk so the Java
 /// ladder reads no file (plan v2.30 step 3); `lua` the templates the
 /// walked Lua files assign to `package.path` (lua_path.rs, step 4).
+/// `assets` are the walked files the index never holds — no judged
+/// language: images, styles, scripts, fonts, data — the second
+/// candidate set of the HTML rungs, since a page names what the site
+/// serves (step 5; the walk lists them and the key hashes them, so a
+/// target is still never minted from the filesystem).
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
+    pub assets: &'a BTreeSet<String>,
     pub configs: &'a [String],
     pub root: &'a Path,
     pub memo: &'a Memo,
@@ -232,12 +241,12 @@ pub struct Site<'a> {
 /// Dispatch one site to its language ladder. An empty specifier is
 /// refused here by name before any ladder sees it — a bare-package
 /// rung or a package-root lookup would otherwise read `""` as a
-/// name; Markdown keeps its own reading of an empty target (a
-/// fragment link into the same document). A ladder that branches on
-/// the site's kind takes the site; the others read its path and
-/// specifier.
+/// name; Markdown and HTML keep their own reading of an empty target
+/// (the document itself; html.rs tells a page reference from an asset
+/// fetch of nothing). A ladder that branches on the site's kind takes
+/// the site; the others read its path and specifier.
 pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
-    if site.spec.is_empty() && lang != Lang::Markdown {
+    if site.spec.is_empty() && !matches!(lang, Lang::Markdown | Lang::Html) {
         return Outcome::Unresolved(Reason::Empty);
     }
     match lang {
@@ -251,6 +260,7 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Java => java::resolve(site, scope),
         Lang::Lua => lua::resolve(site, scope),
         Lang::R => r::resolve(site, scope),
+        Lang::Html => html::resolve(site, scope),
         // The sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — if either ever arrives, the honest
         // answer is the documented no-rungs stance, never a guess.

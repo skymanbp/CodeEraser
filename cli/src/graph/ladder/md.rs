@@ -100,7 +100,8 @@ fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {
 
 /// R4: a bare fragment names a section of the linking document, as
 /// written — there is nothing to validate against (module header).
-fn fragment(from: &str, frag: Option<&str>) -> Outcome {
+/// The HTML rungs read a bare fragment the same way (html.rs).
+pub(super) fn fragment(from: &str, frag: Option<&str>) -> Outcome {
     match frag {
         Some(f) if !f.is_empty() => Outcome::ResolvedSection {
             path: from.to_string(),
@@ -134,8 +135,9 @@ fn directory(target: String, scope: &Scope) -> Outcome {
 
 /// R2: the fragment, percent-decoded, against the target's anchor
 /// set; anything but exactly one match degrades to the file (slug:
-/// None).
-fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
+/// None). A page linking into a Markdown document asks here too
+/// (html.rs), so one slug memo serves both ladders.
+pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
     // per-sweep: one read + slug pass per TARGET file, not one per
     // anchored link pointing at it (review MED)
     let slugs = scope.memo.cached("md_slugs", &target, || {
@@ -230,8 +232,9 @@ fn fold(label: &str) -> String {
 
 /// An RFC 3986 scheme head (or a protocol-relative // form) leaves
 /// the corpus before any join runs — join_rel would silently
-/// normalize "//host/x" into a bogus in-tree path.
-fn is_scheme(spec: &str) -> bool {
+/// normalize "//host/x" into a bogus in-tree path. The HTML rungs
+/// share the reading (html.rs).
+pub(super) fn is_scheme(spec: &str) -> bool {
     if spec.starts_with("//") {
         return true;
     }

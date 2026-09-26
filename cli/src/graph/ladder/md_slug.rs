@@ -248,7 +248,7 @@ fn slugify(text: &str) -> String {
 /// source and plain in the tree; an escape that is not two hex digits
 /// stays as written, and a result that is not UTF-8 leaves the whole
 /// text untouched — never a guess.
-pub(super) fn percent_decode(s: &str) -> String {
+pub(crate) fn percent_decode(s: &str) -> String {
     if !s.contains('%') {
         return s.to_string();
     }
