@@ -275,6 +275,10 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
         // every Lua site is a call (`calls`)
         Lang::Lua => &[],
         Lang::R => &R,
+        // HTML's sites are (element, attribute) pairs — a `<link>` reads
+        // its `rel` too — a pass of their own like Java's type_ref
+        // (graph/sites/html.rs); no row can spell them
+        Lang::Html => &[],
         // Markdown scans line-wise in graph/md.rs (no grammar); the
         // sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — no site vocabulary either way.

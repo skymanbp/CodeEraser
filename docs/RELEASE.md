@@ -18,6 +18,9 @@
   Cargo.toml`、`npm/package.json`（版本镜像门在测试电池里，drift 即红；
   两个 Cargo.lock 由 --locked 兜住）；握手 golden `contracts/fixtures/handshake/
   hello-ok.ndjson` 的 version 回显同批重钉。
+- 语言考题重放（v2.30 起）：`cargo test --test it -- --ignored eval_lang_parts::replay --nocapture`（读
+  `.ce-eval/corpora/` 下每份钉住的语料克隆），每份精度册与重判逐键相等；不等 = 答案挪了——删档、在干净的树上
+  重生成、在 `docs/EVAL-SET-LANGS.md` 具名记一条，再起发版。
 - 守卫档位有变 → CHANGELOG 按既有先例格式记 FPR 依据。
 - **判决语义有变（轴语义/阈值/量纲）→ release notes 必须声明分数迁移**
   （先例：v0.5.0 的轴 3 目录计数修正案——同一仓库结构分会变）。

@@ -1,7 +1,7 @@
 //! Function-boundary segmentation for L1 (plan §4.3: tree-sitter
 //! symbol table). Code languages reuse the scan module's extractor;
-//! Markdown segments on ATX headings; lines outside any unit belong
-//! to the file's top level.
+//! Markdown segments on ATX headings, HTML on elements carrying an
+//! `id`; lines outside any unit belong to the file's top level.
 
 use super::visibility;
 use crate::mention::conv;
@@ -30,6 +30,9 @@ pub struct Unit {
 }
 
 pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
+    if lang == Lang::Html {
+        return html_sections(text);
+    }
     if lang.grammar().is_none() {
         return markdown_segments(text);
     }
@@ -192,6 +195,33 @@ fn markdown_segments(text: &str) -> Vec<Unit> {
         last.end_line = total;
     }
     out
+}
+
+/// HTML sections (plan v2.30 step 5, booklet §5): an element carrying
+/// an `id` is an anchor any page may link to — the section is the
+/// element's own extent, keyed `#id` (the spelling a page's
+/// `href="#id"` uses), nested where elements nest (owner takes the
+/// innermost), and public by construction like a Markdown heading
+/// (HTML_VIS). No other consumer of the grammar reads an id.
+fn html_sections(text: &str) -> Vec<Unit> {
+    use crate::scan::html::{attribute, tag_of};
+    ast::with_tree(text, Lang::Html, |tree| {
+        let src = text.as_bytes();
+        ast::preorder(tree.root_node(), |_| true, ast::children)
+            .into_iter()
+            .filter_map(|node| {
+                let id = attribute(tag_of(node)?, src, "id")?;
+                (!id.is_empty()).then(|| Unit {
+                    key: format!("#{id}"),
+                    start_line: node.start_position().row + 1,
+                    end_line: node.end_position().row + 1,
+                    vis: visibility::HTML_VIS,
+                    conv: 0, // an anchor is outside the mention domain (RG9)
+                    kind: super::kinds::KIND_SECTION,
+                })
+            })
+            .collect()
+    })
 }
 
 /// THE nth assignment (schema v5, F2): occurrence order by

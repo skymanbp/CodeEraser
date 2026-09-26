@@ -13,6 +13,7 @@
 //! guessed shallow (ladder/rs.rs module header).
 
 mod call;
+mod html;
 mod java;
 
 use super::md;
@@ -34,7 +35,10 @@ pub struct RawSite {
 }
 
 impl RawSite {
-    pub fn md(kind: &'static str, line: usize, spec: String) -> Self {
+    /// A site at a line, nth assigned centrally in detect(): the
+    /// detectors that read lines and attributes rather than fields
+    /// (Markdown, HTML) construct through here.
+    pub fn at(kind: &'static str, line: usize, spec: String) -> Self {
         RawSite {
             kind,
             line,
@@ -91,13 +95,16 @@ fn code_sites(text: &str, lang: Lang) -> Vec<RawSite> {
     ast::with_tree(text, lang, |tree| {
         let (root, src) = (tree.root_node(), text.as_bytes());
         let mut found = walk_sites(root, src, lang);
-        if lang == Lang::Java {
+        match lang {
             // imports precede every type in a compilation unit (JLS 7.3),
             // so the pass's sites follow the table's in document order on
             // any line the two share; the stable sort keeps that order
-            found.extend(java::type_refs(root, src));
-            found.sort_by_key(|s| s.line);
+            Lang::Java => found.extend(java::type_refs(root, src)),
+            // every HTML site is an attribute pair (graph/sites/html.rs)
+            Lang::Html => found.extend(html::sites(root, src)),
+            _ => {}
         }
+        found.sort_by_key(|s| s.line);
         found
     })
 }

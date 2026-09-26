@@ -32,9 +32,9 @@
         <text x="616" y="284">引用、历史与擦除事实</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="185">判决语言：Python · TypeScript · TSX · Rust · Go</text>
-        <text x="66" y="202">Markdown · Haskell（Markdown 无语法树）</text>
-        <text x="66" y="224">仅扫描：JS · CSS · HTML · Vue · Svelte · Shell · YAML</text>
+        <text x="66" y="185">判决语言：Python · TypeScript · TSX · Rust · Go · Haskell · C · C++</text>
+        <text x="66" y="202">Java · Lua · R · Markdown（无语法树）· HTML（不算指纹）</text>
+        <text x="66" y="224">仅扫描：JS · CSS · Vue · Svelte · Shell · YAML</text>
 
         <text x="616" y="185">归一化 token 指纹 → SQLite WAL</text>
         <text x="616" y="202">逐文件按内容哈希增量失效</text>

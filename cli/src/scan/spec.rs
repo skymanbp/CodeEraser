@@ -205,6 +205,7 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
         Lang::Java => &super::spec_java::JAVA,
         Lang::Lua => &super::spec_lua::LUA,
         Lang::R => &super::spec_r::R,
+        Lang::Html => &HTML,
         // The sentinel is never walked; the scan-only arm (plan
         // v2.5) is size-only like Markdown — grammar() is None for
         // all of them, so measure_file never reaches these tables:
@@ -213,7 +214,7 @@ pub fn spec(lang: Lang) -> &'static LangSpec {
     }
 }
 
-static MARKDOWN: LangSpec = LangSpec {
+const MARKDOWN: LangSpec = LangSpec {
     fn_kinds: &[],
     fn_required_fields: &[],
     param_list_kinds: &[],
@@ -240,4 +241,13 @@ static MARKDOWN: LangSpec = LangSpec {
     overloads: None,
     call_import_kinds: &[],
     opaque_fields: &[],
+};
+
+/// HTML (plan v2.30 step 5): a document language like Markdown — no
+/// functions, no metrics — whose one grammar fact a spec reader wants
+/// is its comment node kind (booklet §4; the second-interpreter
+/// reader's comment test). Everything else is Markdown's empty table.
+static HTML: LangSpec = LangSpec {
+    comment_kinds: &["comment"],
+    ..MARKDOWN
 };

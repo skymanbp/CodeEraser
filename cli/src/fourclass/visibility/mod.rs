@@ -99,6 +99,10 @@ pub const VIS_RESTRICTED: i64 = 1 << 2;
 /// heading, so bit 1 mirrors bit 0 as it does for Go and Haskell.
 pub const MARKDOWN_VIS: i64 = VIS_EXPORTED | VIS_SCOPE_EXPORTED;
 
+/// HTML sections (plan v2.30 step 5): an element's `id` is an anchor
+/// any page may address, and nothing scopes it — Markdown's word.
+pub const HTML_VIS: i64 = MARKDOWN_VIS;
+
 /// The visibility word of one declaration node.
 pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
     match lang {

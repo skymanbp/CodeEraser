@@ -13,7 +13,7 @@
   },
   "components": [
     {"id": "repo", "type": "external", "label": "Repository", "sublabel": "source · docs · git", "pos": [30, 280], "size": [140, 64]},
-    {"id": "scan", "type": "backend", "label": "Parse & size", "sublabel": "tree-sitter · eleven grammars", "pos": [230, 280], "size": [150, 64], "sources": [{"path": "cli/src/scan/lang.rs"}, {"path": "cli/src/scan/ast.rs"}]},
+    {"id": "scan", "type": "backend", "label": "Parse & size", "sublabel": "tree-sitter · twelve grammars", "pos": [230, 280], "size": [150, 64], "sources": [{"path": "cli/src/scan/lang.rs"}, {"path": "cli/src/scan/ast.rs"}]},
     {"id": "daemon", "type": "backend", "label": "Warm daemon", "sublabel": "lazy · per project", "pos": [480, 60], "size": [150, 64], "sources": [{"path": "cli/src/daemon/server.rs"}, {"path": "cli/src/daemon/coldstart.rs"}]},
     {"id": "index", "type": "database", "label": "Fingerprint index", "sublabel": ".ce/index.db · SQLite WAL", "pos": [480, 170], "size": [150, 64], "sources": [{"path": "cli/src/dedup/winnow.rs"}, {"path": "cli/src/dedup/schema.rs"}]},
     {"id": "graph", "type": "backend", "label": "Reference graph", "sublabel": "ladders · SCC · mentions", "pos": [480, 280], "size": [150, 64], "sources": [{"path": "cli/src/graph/sites.rs"}, {"path": "cli/src/mention/walk.rs"}]},

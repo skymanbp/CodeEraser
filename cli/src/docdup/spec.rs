@@ -45,43 +45,36 @@ pub const DOC_SHINGLE: usize = 5;
 pub const DOC_LINE_CAP: usize = 200;
 
 /// Segment kinds as frozen position codes (the wire.rs edge-code
-/// discipline: reordering is a DOCDUP_REV bump).
-pub const KIND_NAMES: [&str; 3] = ["md_para", "comment_block", "docstring"];
+/// discipline: reordering is a DOCDUP_REV bump; `html_text` — a block
+/// element's prose, docdup/html.rs — appended at rev 6, plan v2.30
+/// step 5).
+pub const KIND_NAMES: [&str; 4] = ["md_para", "comment_block", "docstring", "html_text"];
 pub const KIND_MD_PARA: i64 = 0;
 pub const KIND_COMMENT: i64 = 1;
 pub const KIND_DOCSTRING: i64 = 2;
+pub const KIND_HTML_TEXT: i64 = 3;
 
-/// License-header markers (design vol.2 §5.2). Any one on any line of
-/// the first comment block inside the head window exempts the block.
-pub const LICENSE_MARKERS: [&str; 5] = [
-    "SPDX-License-Identifier",
-    "Licensed under the Apache License",
-    "Copyright (c)",
-    "Permission is hereby granted",
-    "MIT License",
-];
+/// License-header markers (design vol.2 §5.2), `|`-separated. Any one
+/// on any line of the first comment block inside the head window
+/// exempts the block. Both marker tables are one literal rather than
+/// an array: a run of string literals is one repeated token under the
+/// clone gate.
+pub const LICENSE_MARKERS: &str = "SPDX-License-Identifier|Licensed under the Apache License|\
+                                   Copyright (c)|Permission is hereby granted|MIT License";
 
-/// Structured-docstring skeleton line prefixes (plan :79 "template
-/// rows", stripped line-level from comment/docstring segments — the
-/// Google/Sphinx/NumPy/JSDoc section vocabulary, not prose).
-pub const SKELETON_PREFIXES: [&str; 16] = [
-    "Args:",
-    "Arguments:",
-    "Returns:",
-    "Raises:",
-    "Yields:",
-    "Parameters",
-    "Attributes:",
-    "Example:",
-    "Examples:",
-    "Note:",
-    ":param ",
-    ":return",
-    ":rtype",
-    "@param",
-    "@returns",
-    "@throws",
-];
+/// Structured-docstring skeleton line prefixes, `|`-separated (plan
+/// :79 "template rows", stripped line-level from comment/docstring
+/// segments): the Google/Sphinx/NumPy/JSDoc section vocabulary, not
+/// prose, and since plan v2.30 step 5 the Javadoc / Doxygen / roxygen /
+/// LDoc tags (booklet §9) — `@return` covers `@returns` and `@throw`
+/// covers `@throws` (a prefix), `@exception` is Javadoc's synonym, and
+/// a Doxygen command reads the same under `\` as under `@`.
+pub const SKELETON_PREFIXES: &str = "\
+    Args:|Arguments:|Returns:|Raises:|Yields:|Parameters|Attributes:|Example:|Examples:|Note:|\
+    :param |:return|:rtype|\
+    @param|@return|@throw|@brief|@see|@since|@author|@version|@exception|@tparam|@treturn|\
+    @usage|@examples|@export|@importFrom|@rdname|@details|@inheritParams|@describeIn|\
+    \\brief|\\details|\\param|\\tparam|\\return|\\throw|\\exception|\\see|\\since|\\author|\\version";
 
 /// The inline exemption marker (plan :79-80). Without a ` -- <why>`
 /// tail it exempts NOTHING — a bare marker is a violation, ledgered.

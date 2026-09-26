@@ -174,7 +174,8 @@ fn strays(anchor: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
                         found.0.push(path);
                     }
                 }
-                ".git" | "target" | "node_modules" | "dist-newstyle" => {}
+                ".git" | "node_modules" => {}
+                _ if crate::scan::outputs::is_output(&path) => {}
                 _ if crate::root::project_root(&path) == path => found.1.push(path),
                 _ => queue.push(path),
             }

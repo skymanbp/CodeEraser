@@ -1,0 +1,2134 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "html",
+    "name": "learning-area",
+    "tip": "dbed6bcb8284634c7549c4da596ec30b0cfc6e7e"
+  },
+  "excluded": {
+    "other_extension": 325
+  },
+  "files": [
+    {
+      "lang": "html",
+      "path": "accessibility/aria/form-validation-checkbox-disabled.html",
+      "sha256": "7e126426025f2e721ce07c804f5a47c2f2a85c20dbaef2e63e65b54748d51ba0",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/aria/form-validation-updated.html",
+      "sha256": "5a92f200fdd93451311ac3fa95c945c939199571a560dbf03d1ec8520ec6cfbd",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/assessment-finished/index.html",
+      "sha256": "fd32c1e42285f01145087af48257e16407f31901b3708f777c5beb8c82d39bf8",
+      "sites": {
+        "href": 11,
+        "link_asset": 2,
+        "src": 5
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/assessment-finished/transcript.html",
+      "sha256": "e15a716d8bc8dff18e2efe543508073e1084ec3636e80598e45451cf87de4fb3",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/assessment-start/assessment-files/index.html",
+      "sha256": "5c7c09a47a805041981a43eabd2d6ea52d0a02c47981ac7ac841ab008f91face",
+      "sites": {
+        "href": 9,
+        "link_asset": 2,
+        "src": 5
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/assessment-start/index.html",
+      "sha256": "5c7c09a47a805041981a43eabd2d6ea52d0a02c47981ac7ac841ab008f91face",
+      "sites": {
+        "href": 9,
+        "link_asset": 2,
+        "src": 5
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/css/form-css.html",
+      "sha256": "2b8e99e957e681714d3382a74588847cbb7e58c8749c607681f0d4a0f81b388b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/css/form-validation.html",
+      "sha256": "941a6555b61c8c9563c2f10013c61d36b1f2561c2bf5f13b378e6942e5efa2da",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/css/mouse-and-keyboard-events.html",
+      "sha256": "973e2741531ed28807c3f6dafee8567565fba4a2edc4191e9a988fffdc7d2aa6",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/css/table-css.html",
+      "sha256": "8ddc6a8eda0f56178318add291f226e323f1418e6598abb1ba9117da62fdfa7a",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/accessible-image.html",
+      "sha256": "06b16c6908b7c87882c66c159a5ec5cfb3daa739f67a1b69ca9af39157938fcc",
+      "sites": {
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/bad-form.html",
+      "sha256": "21b394e4f882c8a6fc4c59b680211ee4e6b11b293074be3fc4a100b9db8efa05",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/bad-links.html",
+      "sha256": "4604ae1767af96b4fc195bd3997ed045309262575bc974719e46bb76108d8c05",
+      "sites": {
+        "href": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/bad-semantics.html",
+      "sha256": "1d6904d4d99207b73db257d3935d52ac7d30dc2ce81fd3ff25444aea1b776e05",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/bad-table.html",
+      "sha256": "30f21674d901129d5872f05c6d8284484d9740c57a034e58dfbc0319e89e4999",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/dino-info.html",
+      "sha256": "e2d59e10be2e67079e4a29a33169cf6434087c9477ddf2571f31130924c0ccb0",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/good-form.html",
+      "sha256": "6fcbfd59fbdbedb4db3f64eacf081979e608f46833904626c5edd75fa84140df",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/good-links.html",
+      "sha256": "2cb03205272b90376008a46f39d7f57a252ca9abd59d78f38608a69d8bdde74d",
+      "sites": {
+        "href": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/html/good-semantics.html",
+      "sha256": "cea07b86f560d5dd547a535ecb9065bb3385b45ccb74dba5a78b4b6a3896842f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/multimedia/audio-transcript-ui/index.html",
+      "sha256": "ff35ad4f0ce1b0be87a840fa626be91872e90c2c22e8594bba1bc3f8fff986a8",
+      "sites": {
+        "href": 1,
+        "link_asset": 1,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/multimedia/custom-controls-OOJS/index.html",
+      "sha256": "0cc19f21dbaa7b56513f90e17288780d0a9f4070dbdac9e34735d37f44ff02f6",
+      "sites": {
+        "href": 2,
+        "link_asset": 1,
+        "src": 5
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/multimedia/custom-controls-start.html",
+      "sha256": "1dabd54bcccfd9e9925d61d8749f895a0983a35af4163aa912232df22474f78d",
+      "sites": {
+        "href": 1,
+        "link_asset": 1,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "accessibility/multimedia/native-controls.html",
+      "sha256": "d66541430e826ac4f89918e9ef0d71674736e165a8642800ba0fa094ecb001a7",
+      "sites": {
+        "href": 2,
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/css-layout/legacy/html-skeleton-finished.html",
+      "sha256": "9320a4971e55c7ddc65f0c7e411288ccac03217e5fdb08800626ddd2e65f2a3b",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/css-layout/practical-positioning-examples/fixed-info-box.html",
+      "sha256": "d913a12014e00cc1a3103d169889a2ac45c465659125e461b1d46de07b1379f7",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/css-layout/practical-positioning-examples/hidden-info-panel-start.html",
+      "sha256": "d9a1cb44df030accc337ff45b0baf95f89ebb3ac2ec15942e8650b83abb32e9f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "css/css-layout/practical-positioning-examples/hidden-info-panel.html",
+      "sha256": "92a6f983dbb6ad1c0de15dc76891ea8a1561a91be384424a7c0eacedf8522002",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "css/css-layout/practical-positioning-examples/tabbed-info-box-start.html",
+      "sha256": "deb38fccd26901672d16a5440c7ef86a1f87900df970843cb443902f795b8c97",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/css-layout/practical-positioning-examples/tabbed-info-box.html",
+      "sha256": "ec3f42639f1f103ccab3173daeac840c90bbc6469f7777be31a28d3b3c5fa3f1",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/styling-boxes/advanced_box_effects/blend-modes.html",
+      "sha256": "ef56295a04fe2b478a18c8a910b98784045765528013515970b99c16d82bfb2f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "css/styling-boxes/advanced_box_effects/filters.html",
+      "sha256": "fc9bda1f08f9f5fbc1ee8d31985431467bc5b787f995ce7e4b3a6d7c0e3f58d7",
+      "sites": {
+        "src": 9
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/styling-boxes/styling-tables/punk-bands-complete.html",
+      "sha256": "528120ffaa446476bb47aa9a8919d2d98e7b8b7e454cdd2346026cdc57fa74de",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/styling-boxes/styling-tables/punk-bands-unstyled.html",
+      "sha256": "ad94b880e9f585a71d9e4811aed9606a80b8819c55db168c4476415a367eaa01",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "css/web-fonts/fonts/cicle_fina-demo.html",
+      "sha256": "6e52f30e4278da1ed051d38de7ff33720cae2ec0f57ae6281fdd73331807e69c",
+      "sites": {
+        "href": 6,
+        "link_asset": 2,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/web-fonts/fonts/zantroke-demo.html",
+      "sha256": "85f3d282c9fe1aea9c0d3ac07952efc8dc68884a4afef27120248144d78ac1fa",
+      "sites": {
+        "href": 6,
+        "link_asset": 2,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/web-fonts/google-font.html",
+      "sha256": "5b7e88863d4b5cbe448c90477ef1581ffd7b24132b13cb9f402b1e618de7ab37",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/web-fonts/web-font-finished.html",
+      "sha256": "032c8bae1d4d5e981e5be16469d35ff9f3e4e8092e921ae26d399e99a005a5c5",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "css/web-fonts/web-font-start.html",
+      "sha256": "7c8b81f1d68bab6632d26125c9c046b05a60c84949ea62ac169e5b90a728cac7",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/custom-radio-styles/index.html",
+      "sha256": "77fb195cab1c4bde7bdb338e4704e53f74d503d072f8cb7f723415126ddecc30",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/image-type-xy-coords/index.html",
+      "sha256": "c594dde08c63ee9450cc6ca9def79be56e30c77fd631596fd20312c05db8c3e9",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/postcard-example/index.html",
+      "sha256": "89c96de529c8c631c87702ad45124e1e0843683d67a761660d7691d021e6e15b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/postcard-example/postcard-start.html",
+      "sha256": "d1e3bd698f62953f8cb09a34ab502dc8c40ed37759dd6bd6c4ac13891b8facd4",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/sending-form-data/get-method.html",
+      "sha256": "8a98e5138ded59fdae45a625109061359d56a36249e221ddfae71cfa4a38178e",
+      "sites": {
+        "action": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/sending-form-data/php-example.html",
+      "sha256": "b076094e693d7b56dfea6c1d3560d9d17e735b7c7b449ab95abc29be66e9efeb",
+      "sites": {
+        "action": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/sending-form-data/post-method.html",
+      "sha256": "d695f7e69bd983feb5eeceb1f99a3d680ae7b7d8a4da19788129cbaeec0b2043",
+      "sites": {
+        "action": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/sending-form-data/templates/form.html",
+      "sha256": "31fbbfc2a51058bbda2635b040d6404525b251738440b5c77b5428353dbaf25c",
+      "sites": {
+        "action": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/sending-form-data/templates/greeting.html",
+      "sha256": "b68d8532b2808090cf8f9c42e808ea06907e2902a5a044eaf9e5cf4cfcb3b7e1",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/toggle-switch-example/index.html",
+      "sha256": "ccc64e5f5399ba6984a0aa44012a604847a6ba8362c66bbe73e6217a26afd42f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/your-first-HTML-form/first-form-styled.html",
+      "sha256": "cd7c192dc6e230737064e053f92947a5159e82e72cd8740d2529c4f1a8abad06",
+      "sites": {
+        "action": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/forms/your-first-HTML-form/first-form.html",
+      "sha256": "f936ae1ce09defdd1d8494b10777341d2849306d34e3bceecc2005e398a175ac",
+      "sites": {
+        "action": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/document_and_website_structure/index.html",
+      "sha256": "8623d0ff8d0696128844a2315d8c23840cf839d52fab09fcd06eabb3e5e966ec",
+      "sites": {
+        "href": 9,
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/getting-started/index.html",
+      "sha256": "fd7f1f3a8acffe21225a31986b1af90a267ce5cb1a827ad1e69ab3e961e1ea3c",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/html-text-formatting/text-complete.html",
+      "sha256": "d20d6f8f830587fdfeaf9330fbab333a3d2997ceed2f20c4909beafaba64cebb",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/html-text-formatting/text-start.html",
+      "sha256": "78352f627a439bf263a0e6b423d98a600524289b123cb92336a0bb736f12c75d",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-marked-up/index.html",
+      "sha256": "35860e718cd4dc10b13706e6dd22a20842b042e61fb16f4bd7359bb033dc113b",
+      "sites": {
+        "href": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-marked-up/pictures.html",
+      "sha256": "a8ca228fa25c6c5b34d06f8dcde817a48b03fc4fcd59075760ffba694ebdd1e0",
+      "sites": {
+        "href": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-marked-up/projects.html",
+      "sha256": "86339182e1020d076500f555aa6ef7dde6c6cfa124b3723682576df70960076e",
+      "sites": {
+        "href": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-marked-up/social.html",
+      "sha256": "4d3f3c9906f21cfd26d02be454c2100a965647eac332505b67c668b8833aae4e",
+      "sites": {
+        "href": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-start/index.html",
+      "sha256": "51769ca8a86bacd7848b2f960f6904504c84de84516d34f72410b4f27db00371",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-start/pictures.html",
+      "sha256": "c4ef678bed2dbbd38d2adf5d762781becf4c4d6e9f47c293d4aaee31f541ee51",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-start/projects.html",
+      "sha256": "ee35b3871660a54927501d0b77506a30b4c62c2daf7c04bcc2592d70222c66fe",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/navigation-menu-start/social.html",
+      "sha256": "33c06bb5a6e13c56bdc865a4218e1112d73eeeb4f2cbf39f5511669615d8f698",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/the-html-head/css-and-js.html",
+      "sha256": "ba0452a7b811bea3c900e4b0682a5773d3476aef5c4df951958d2d8398fa3852",
+      "sites": {
+        "link_asset": 2,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/the-html-head/meta-example.html",
+      "sha256": "52b47f566ea8b064bdbd93277bb16306ec320b4e8ce6c70a59d2c7bc95a05d73",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/introduction-to-html/the-html-head/title-example.html",
+      "sha256": "47e43594bea6ac6ed5cac0afee1e75256a74f57450364b032e530f0481eba73c",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/other-embedding-technologies/iframe-detail.html",
+      "sha256": "5d5c488c71bd99848987e9281ad6adbf59bd7a4c20c784d7fd57ae5b15954124",
+      "sites": {
+        "href": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/other-embedding-technologies/object-pdf.html",
+      "sha256": "1fe6e399ca188bee49f8a505ae8e779882e0f11dca8ee8e60a608c35f8d3e07b",
+      "sites": {
+        "href": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/responsive-images/not-responsive.html",
+      "sha256": "6dab518d1269aad384d16bf74480839d70200e2e1da9e92ee253aaa2adea6a57",
+      "sites": {
+        "href": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/responsive-images/responsive.html",
+      "sha256": "4c2ea27d61587e74c0b0dcf5cf3011a0edd93695a71680dadd775b18989d87f0",
+      "sites": {
+        "href": 1,
+        "src": 2,
+        "srcset": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/responsive-images/srcset-resolutions.html",
+      "sha256": "fb87689853dc8c88aedf4b7c29ca27761b1c80f7e60547037d1f0fa547626ed4",
+      "sites": {
+        "src": 1,
+        "srcset": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/video-and-audio-content/extra-video-features.html",
+      "sha256": "bb5bc5b81edf64e9b090abbde30e200a34f117124cb05974b3b7f35448316b14",
+      "sites": {
+        "href": 1,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/video-and-audio-content/multiple-audio-formats.html",
+      "sha256": "87425a64856d157a034ea22166ba5f475fc61ebda7a816c9ac054b6551a60c36",
+      "sites": {
+        "href": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/video-and-audio-content/multiple-video-formats-no-controls.html",
+      "sha256": "a2e633eb2804e029854190c19513bd8e7ecd372ac00fc5e5f75dcd7656e33c01",
+      "sites": {
+        "href": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/video-and-audio-content/multiple-video-formats.html",
+      "sha256": "c8e5e9e0b238ea864398da91c9c272c69e0177853a4eb8b9aabe90ed9d496cd7",
+      "sites": {
+        "href": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/multimedia-and-embedding/video-and-audio-content/simple-video.html",
+      "sha256": "2b73cc2873c4866a63855747c6e58ba243b881f94cd08415c3c70fcac35c919c",
+      "sites": {
+        "href": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/items-sold-headers.html",
+      "sha256": "596e16d053290d570f90078a7776bee55a1e87a011ed369b1d46f3336823f677",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/items-sold-scope.html",
+      "sha256": "a99ef840137cd1d905c0129cb2e177298f3ee7c59501440b6f160a91bcc22d54",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/items-sold.html",
+      "sha256": "ad584189485298c446d7b0ef588605d3d90ed0f82a1974104afca2769d615466",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/nested-tables.html",
+      "sha256": "8ee2d0e15ae171e9bbab716a6011739fb79eee1943c0855dc848a2b1b5119641",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/spending-record-finished.html",
+      "sha256": "a8150ad3b9dfdcecc8833afda5d86b5e41c028648b82007b998ffa39684f2807",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/spending-record.html",
+      "sha256": "92ec192c702b351eff28deae4bf4798925385682a3dec9f3ce3a89cc1bd828ca",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/advanced/timetable-caption.html",
+      "sha256": "4bd40caabd196b48506000f053e59836409fa97961e6c9a3939961c2e2fd7db7",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/basic/blank-template.html",
+      "sha256": "ed12223069f63c71f0e6f4ca427fa6d4031d354dcf1937775847aec4acac941a",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "html/tables/planets-data/index.html",
+      "sha256": "c6026ae2b296ecd13926b139d65bbe60aa20efeb542a8d7e0993651c780ea215",
+      "sites": {
+        "href": 2,
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/client-side-storage/cache-sw/video-store-offline/index.html",
+      "sha256": "eeefc560f7b606d29f051baecdedae2b85310ec12d7c108b06177538a26b4462",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/client-side-storage/indexeddb/notes/index.html",
+      "sha256": "984f6d2d1d5a60d0e362d8e99ba8c5017a07786af6418d19a57a3451b275cdce",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/client-side-storage/indexeddb/video-store/index.html",
+      "sha256": "9abbca8c67a51a52551f8d130fcca0e48ca5b5c341ee293e58c172548ccaec81",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/client-side-storage/web-storage/index.html",
+      "sha256": "a26dc9638765ee7788cf67c1be39bb9790edaab48cd77b375807c8a50b7909c9",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/client-side-storage/web-storage/personal-greeting.html",
+      "sha256": "2cc2d4076cd8097a11342fa5fc0602c297904355f5b2f5a276eae6886b8fb142",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/document-manipulation/dom-example-manipulated.html",
+      "sha256": "ae3afb3c55950a12683bf6abced9e5669772d9c4a89c227d5a2b97de3a4c07c5",
+      "sites": {
+        "href": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/document-manipulation/dom-example.html",
+      "sha256": "e6200bc14e4a05748ce8656d200b52af421180258550636ae342e4867fc27c94",
+      "sites": {
+        "href": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/document-manipulation/shopping-list-finished.html",
+      "sha256": "0a48f23009475e60cf5cf1805612ab01dc4280e17e0d0df8bb5cc609428898e4",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/document-manipulation/shopping-list.html",
+      "sha256": "34f3c53b755e7111ebf27b2a65e4282a94938d76b51b35ac4c3da01aef470804",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/getting-started/0_canvas_start/index.html",
+      "sha256": "c8a45c5461fa65e70bf33ce83ed31db8dac510ed525ceaea731c9571c1c984f7",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/getting-started/1_canvas_template/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/getting-started/2_canvas_rectangles/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/getting-started/3_canvas_paths/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/getting-started/4_canvas_text/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/getting-started/5_canvas_images/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/loops_animation/6_canvas_for_loop/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/loops_animation/7_canvas_walking_animation/index.html",
+      "sha256": "0bb0ed6357f0457b8d78a08b8334f71951ed13bf98c8eb4d4085fafe928f78ee",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/loops_animation/8_canvas_drawing_app/index.html",
+      "sha256": "ba7a9d802616aa3d7a22c7d86ee89b13a737c27947c24e454013c7456d210b49",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/threejs-cube/index.html",
+      "sha256": "355d65f8c7b745d5e7d45a66bad8a7c897fb44fe9c63847706d2f7699f4acd42",
+      "sites": {
+        "link_asset": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/drawing-graphics/threejs-video-cube/index.html",
+      "sha256": "6fa4f0df181b856a3c73f4e0a33a54a1991c6df6388243c2a939fb70d033f024",
+      "sites": {
+        "link_asset": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/fetching-data/can-store-xhr/index.html",
+      "sha256": "e43832dc0d9a1575bfcf636e9a19e3679a268bdd069b45c47faf92df46ae8e9e",
+      "sites": {
+        "href": 4,
+        "link_asset": 2,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/fetching-data/can-store/index.html",
+      "sha256": "782147f341c3370e369d16b03e825f05f90195243bee595866b3d9397104f7dd",
+      "sites": {
+        "href": 4,
+        "link_asset": 2,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/fetching-data/fetch-finish.html",
+      "sha256": "9f290d092f2611e68176ba3b73634066b9cbba4c5883a4c1fffb47ece7c32ead",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/fetching-data/fetch-start.html",
+      "sha256": "14c1e749f71247ebaf05d09af8adb9c679082a82e936b29e41f20541d9ce58d8",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/introduction/bouncing-balls.html",
+      "sha256": "dbcaf7356c35cce61101e2f7a2579924c9b85efcf1a2440acf7985c5632ac3f6",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/introduction/web-audio/index.html",
+      "sha256": "da081b02d06c8923aaddf8f231665af8f9e4b279ce5846b7da0a9b2ac045557b",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/third-party-apis/mapquest/finished/index.html",
+      "sha256": "01f167163e033c0ce5e2ae43a1216460c559726b7009ce25c680764fbb9e6a9d",
+      "sites": {
+        "link_asset": 2,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/third-party-apis/mapquest/start/index.html",
+      "sha256": "01f167163e033c0ce5e2ae43a1216460c559726b7009ce25c680764fbb9e6a9d",
+      "sites": {
+        "link_asset": 2,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/third-party-apis/nytimes/finished/index.html",
+      "sha256": "ffe45a0b9332f3abbb74766462ebc59770c8360f64cf3f4a2fa45deca2a3fcbe",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/third-party-apis/nytimes/start/index.html",
+      "sha256": "eb5d6a72ac4cb9e61b6dcef630a396e55a5e7a3e759c0b9c2dc5f409a10b8650",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/third-party-apis/youtube/index.html",
+      "sha256": "6a6d07a323bcb2dca959b7e5cc1b2315113c1666237c101df22c8263d1ae9c41",
+      "sites": {
+        "link_asset": 1,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/video-audio/finished/index.html",
+      "sha256": "9ce5d7730774ea5e29fcf84db61bcfbd21356fb5e2a18c98e242fa792b9c8c95",
+      "sites": {
+        "href": 1,
+        "link_asset": 1,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/apis/video-audio/start/index.html",
+      "sha256": "31f49f988cc9de1e8876c7f04e392ee9ad495a8f6de3be06da308b10befbf021",
+      "sites": {
+        "href": 1,
+        "link_asset": 1,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/asynchronous/sequencing-animations/finished/index.html",
+      "sha256": "c74a6e21e6365f2465dbebb104d64172b1ed81123a0ae951eaed7ffe6c8e44a3",
+      "sites": {
+        "link_asset": 1,
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/asynchronous/sequencing-animations/start/index.html",
+      "sha256": "4dfbaece56a0a0296388b93eac951654387b3d8e3c16eb1591e8a63d29fe74e7",
+      "sites": {
+        "link_asset": 1,
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/asynchronous/workers/finished/index.html",
+      "sha256": "bced420ffc4fd067aca69618b1ecca29b860aef7ab1fa9abbd028c4c11efb84a",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/asynchronous/workers/start/index.html",
+      "sha256": "2c9475376627b9115d5661f20149f2278e3642dce18ea1af6fedc0ecf2d97977",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/allowance-updater.html",
+      "sha256": "57aba1070390e6d2fc85a16fd9d2c956ac314c351ba27defbdca68d956e516c0",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/calendar-finished.html",
+      "sha256": "8b620284165572d69ed43aa090d99ea753b5f0fecc270321569d6e59a6ec19cc",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/preventdefault-validation.html",
+      "sha256": "c75ea3e74830d761e1dc9730930a0c15e025a0b16e277c5f670dff7482657b3b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/random-color-addeventlistener.html",
+      "sha256": "9f360eba4fc06394f24ff8e6f12682646222dafcc5e1302bdc95df8f41c6cc05",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/random-color-eventhandlerattributes.html",
+      "sha256": "bb48bbb32b808316dd8533f3fd0022c4f6ee7c7c983228f28f196569cf4bce72",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/random-color-eventhandlerproperty.html",
+      "sha256": "2d47d34b469b2d52c022fa2d4d1111c65875b5ff181ddb08073ab71e40e4c74a",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/random-color-eventobject.html",
+      "sha256": "d7410ccba5d198557cae8171845c9d038336c150244ad686079a0800a7c856b4",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/show-video-box-fixed.html",
+      "sha256": "163c9085fdd929b2149d864cbc852dadc36104733500c26f28bd035e3120bb42",
+      "sites": {
+        "href": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/show-video-box.html",
+      "sha256": "cdeb84cda66fb96737b15a91afe35a8486a8331281e98007325f0092a0c45286",
+      "sites": {
+        "href": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/events/useful-eventtarget.html",
+      "sha256": "42625beae6a6f1e33b4d086a7de59381c14187cb5e970c154cfe541d98bfafcf",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/conflict.html",
+      "sha256": "0e1aac0c7bb42554d88e2f4e0c7196d610f3a20e3cee630f521033c33605dfce",
+      "sites": {
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-library-finished.html",
+      "sha256": "7a372c9b7f9948a0ddc6480949b7100d32d0ee18be8efc01462917f2ff29d1b0",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-library.html",
+      "sha256": "a7f0ae688a189862421ba5f3ec85afa6de0a5d609174f12292a086c522f9914b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-scope.html",
+      "sha256": "b103d3b4c3ae8e80081eb89bd50adcaf4ef80983a7b086eb2653a154b45db19b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-stage-2.html",
+      "sha256": "2b6d701e6932113ded3511e4c05dc728e58767d2f2566018c21c2221f14404a7",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-stage-3.html",
+      "sha256": "c41d95c422b0a2bb6e9bc0c933a8f28f657c812aa40ed189d5feb3d97167b664",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-stage-4.html",
+      "sha256": "967ac2e313f8c53a628ff32f22649fc100b000b10c6d40fac34165fe332cb3cd",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/functions/function-start.html",
+      "sha256": "3a471200dcf6dae61cc8f09cf1bb1885a725e98b7b1e2ae46a3f0bd58d3149b2",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/gallery/index.html",
+      "sha256": "061c25281cb5a779aed2f01be5afc5a44462d60d0b7b680acbe48068970bbc17",
+      "sites": {
+        "link_asset": 1,
+        "src": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/basic-for-improved.html",
+      "sha256": "33a83436bf69f957881095b6c22281689e55d26f8e68ab0f6ada52447decc719",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/basic-for.html",
+      "sha256": "a682f52998cf3e09d3b9303eb26aebf1191f00aa74ce01b08e0cdd4793d7d4e5",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/contact-search.html",
+      "sha256": "32c923e5c8eb0a5cce5cc607aa3ccd87198cffa337e014a481f2f4310f7bb92e",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/do-while.html",
+      "sha256": "5e585d976dd71920280082fea4acd36a59b2dcf8b7eb8f8402454552fbec920c",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/guest-list.html",
+      "sha256": "3397b4723f31793d29d6400e8d64ce951b45a4285a03fc309102d38f99ce7fcd",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/integer-squares.html",
+      "sha256": "e5f24f9d63f7ce49849bbcc2bcc3d3619e4ca73be17abed6fa951cc20f2c65ec",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/launch-countdown.html",
+      "sha256": "1376e146460f92d7b9e57eb2255d249bc5fd397242d3efb1253d5ef6d88fcf63",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/random-canvas-circles.html",
+      "sha256": "35065b91f4b2ea9836205641b8889ac6ebcaa2ed44fb3314b6e3c29511ab2e27",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/loops/while.html",
+      "sha256": "ab071ad42955104600393f2992901559e1a93e5e44b3181613d10841a82414ae",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/more-color-choices-finished.html",
+      "sha256": "512a260191b959e11b84fed5fc3fd9bc5a759f4b7e401824cb123de250a3aba2",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/simple-else-if.html",
+      "sha256": "c14cbd7cb13fe3272696728a0079ac4e93c762279ca450d366a941dd25a86702",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/simple-switch.html",
+      "sha256": "4b3bfd6402c9c065da4fad946abcf0b6c0d7d6bb6afe986d4dbde65be020485c",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/simple-ternary.html",
+      "sha256": "df329d97af67ff793317eb426d3ba7bc0b5835b4dcd0a1012f97fbda40bd437a",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/conditionals/conditionals1-download.html",
+      "sha256": "c8f446237da8faac95c89f03d0f38e22b94333a10a1296bef112f98f1e6fdf72",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/conditionals/conditionals1.html",
+      "sha256": "a46f865f4a9ffe4d39dfc47b0cefc05d94e9ab2787302eea3a46d2a03d10f9be",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/conditionals/conditionals2-download.html",
+      "sha256": "63678cbd7d158c1bfd370f74009159c1642c9391fe14390249465cde20b701c2",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/conditionals/conditionals2.html",
+      "sha256": "40ba1982e6bb6d27aa0d2806358aaa87382453f7dfb17e7920b3f2e441c9f708",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/conditionals/conditionals3-download.html",
+      "sha256": "a99da5055143f202b2699706f7a1279a9789b6479df0a273cb7102ae1d1a9f21",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/conditionals/conditionals3.html",
+      "sha256": "d7305fe292c6a0c68deba3e09902f8ecfb6855317937db0f68041cb101f63f01",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/events/events1-download.html",
+      "sha256": "22d386e14938fb906ebbc047d5af8d81583c04c2e05fd3220b388ac272f7db7b",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/events/events1.html",
+      "sha256": "cb651359e50b520ea9db1592ff2274b558298f6adb451dfb98c18e8363a60975",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/events/events2-download.html",
+      "sha256": "8aea2aa3b491c338fa09c502ffea824db6653cd6a4c891edab5b1f614abe4e96",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/events/events2.html",
+      "sha256": "ce0f8a07e15b20fa4e2b76fd17377bd131282ddf2467d2545929d321f25c9320",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/events/events3-download.html",
+      "sha256": "3ee936a72a52b5b7a8920f3706ecd0042a7d94899cb92f03324f9f143526147c",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/events/events3.html",
+      "sha256": "6f5765440943baad3ab62a0c89daab483a29a37f43754d0d159eefd9eae7b1cf",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions1-download.html",
+      "sha256": "e388655568371768a365d95b0ab4cf3ec24f0bbf1d702701fdc6f8ce6ddcaef6",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions1.html",
+      "sha256": "4347439ab526d1940b3b02a7c3c68257e8f9269a90cdf6b26d979aef21f2402e",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions2-download.html",
+      "sha256": "3216deda63322cba6dccafe569633337f0f94667961776dcfc1182f5085e6074",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions2.html",
+      "sha256": "ad1d00e5880a5c17f34eb2a5b0c2b879f06450301b3f9494032f7135af2ded64",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions3-download.html",
+      "sha256": "a6833f157dd98014e43b5e308f4aa46fd1535ed92673e41a6746591d2a231bbb",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions3.html",
+      "sha256": "1e07b898d9131af2551c6ee41252e206478874f10a03ef2c34be72c010fbda5e",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions4-download.html",
+      "sha256": "3d97a9ac0699d6c6b6ddcc9836859c379e80ec04852c19c1de6271e2443fb75b",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/functions/functions4.html",
+      "sha256": "2b90f31396e8067efbf2fe88cd0306d1baba70c854c95dadc487462ea9a7b499",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/loops/loops1-download.html",
+      "sha256": "553d7e86975b8d6c332fce936e0995e0759b694cfe9af1187445acb4b29cff80",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/loops/loops2-download.html",
+      "sha256": "e11b010f745b58f2ad083bb295d88b5275150aec68486add08b2dd7a5b976cc3",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/building-blocks/tasks/loops/loops3-download.html",
+      "sha256": "079fc96d75329a004e70078ffc8811478b5a6cc43c788b7acaf991b0674a3e29",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/assessment-finished/index.html",
+      "sha256": "d7155d62867682ad2bcd78df659bfc55b3e953d1b50fc3ab91d247e27d2de7f1",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/assessment-start/index.html",
+      "sha256": "19db9bb3687e378d5911bb6f49498fb476fcb10235e01103a333331080976a94",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/first-splash/number-guessing-game-start.html",
+      "sha256": "af1e7fd4b07d2cdb91334a0dec2e2fc647f94b7a3aa2dc66c582a648bd6c1f18",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/first-splash/number-guessing-game.html",
+      "sha256": "b1184deef6c8370f58d61dc48d7d06340f70abf788b8c6d2ef0805fa6073ae4c",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/maths/conditional.html",
+      "sha256": "62b2a0c49b0332f725aff7ec5cd2bf72de9d601a03fbb71461799efcc1de079f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/maths/editable_canvas.html",
+      "sha256": "f0929e9934abba9a7d4834f5a510d15f475d3c2c7211eb1a5bdfdcb122e1bdd6",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays1-download.html",
+      "sha256": "41aa150461c232e56f8a2c9a2a20ee5d2c729db595623a2fe1b2291fc5961bd0",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays1.html",
+      "sha256": "bd1ebf3d5c002ab3a06bc701cf12eae020e6e8bf3d5b40867052af1a30027da7",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays2-download.html",
+      "sha256": "f7b54c95d0012d988991e5b65dd768bff7bf00cc8a5feda11e8ff43e120a6409",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays2.html",
+      "sha256": "b318dd9beddc99943613feb8cf6bfc367c9962e390fd938d6aabe85b66c6245c",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays3-download.html",
+      "sha256": "7029a3b8b09331394d4f5c3f9632a75ffd6418c1b03e420fdccb9cb6c202f26a",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays3.html",
+      "sha256": "1d76ea81a43eaa2bbf42e0c56b69894298279e87ceccfb907897a8a52470fac7",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays4-download.html",
+      "sha256": "ce29a53896d4f737b71ec5fc84d628cc03e7b0f4cfaeb53b268153da7f16a915",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/arrays/arrays4.html",
+      "sha256": "3e308484bc5ce643f71249968aabb723bfc0cb15107ee759c2c33d74d3ecf423",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/math/math1-download.html",
+      "sha256": "5110e4ca9918474961689001b435600a6d0aa9429c935b9a4ffe355bfa4b34dc",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/math/math1.html",
+      "sha256": "a1698a0cbaacc112d99f61fa0cb7a8e12d29d657f4757dc8bea4617471788188",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/math/math2-download.html",
+      "sha256": "0e5aeb1b37071c9c263805d3902754c75701b4266721c92abcc3cc36fbdf7d48",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/math/math2.html",
+      "sha256": "b5056fd4d7c7a4b8fa90b956a18c9d95d10fa026665dc0b3a2655364b55c72c2",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/math/math3-download.html",
+      "sha256": "5154b07fa2b4fd151918e1650f7105e56dd992a54492ba100b8dd2366ee1a480",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/math/math3.html",
+      "sha256": "87438a502b036d58aff9550aceb63e3c91de9326616cd86c12fb3f9923afb04d",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings1-download.html",
+      "sha256": "ea9bb2f8c7ca49add73eed8d439ffad1be69a6f0e2ec68e3d09ef4446ec87a6b",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings1.html",
+      "sha256": "4af2c178f88e036c73429c0e10f8dfd5b2da0e1e820cd48b46f217a1876e8fa2",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings2-download.html",
+      "sha256": "0fd6d47207a6aeb70ad6e8b76c69b905ddf6d108dbd7dfb67bad0985e7ee7344",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings2.html",
+      "sha256": "aa4bd918e245ba32558a860065033bee8de6d92a908c3addf78a24421c729c42",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings3-download.html",
+      "sha256": "859dd7730f9b5d0ad4a9360ecf85f8a7cf1240ea144c8b9ce274d9a66f319454",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings3.html",
+      "sha256": "46a1760e8e656707acb610ec28040c63c5ae40d68c24ef6d2236cf387da73a7f",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings4-download.html",
+      "sha256": "dfc73df73b77d979138c0d11fc7d912b4c4ab5202ed66b238901b4b6d2b65f5c",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/strings/strings4.html",
+      "sha256": "24d92c7e9a3acc8073abd9fb7dba720d9a4f5025e71f8715b5448b70c6fedeb4",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/variables/variables1-download.html",
+      "sha256": "ddafed4a529ff6a54c88d1019cf5dfb5f93b1a4c2657887c97b7d209c182ddf8",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/variables/variables1.html",
+      "sha256": "bd02501ee23b5bc3a8388f16987cb2ca4cd57ba9740fad5304150e73e38542db",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/variables/variables2-download.html",
+      "sha256": "ad2faf96f2679af47f297d620ee496a7cf3382beba9200d025b31a199582c406",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/variables/variables2.html",
+      "sha256": "2af1d1b2c767b1cefa26dfde79708d60a5f485d507e71d628d3026640b67cd7a",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/variables/variables3-download.html",
+      "sha256": "35f88cb937a01a7883960de71b9e4240ea7d521f26f7f60ca1f5ba34b3bfe737",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/tasks/variables/variables3.html",
+      "sha256": "bd02453d5ba03a280cb8df795bac5e7af34afcd505dba842ca703167b3bb4f09",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/troubleshooting/number-game-errors.html",
+      "sha256": "48c0a03948ca2838980ea3a0980032f3a67c6fcd10f70fe4aef8ed83caf1aafb",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/what-is-js/apply-javascript-external.html",
+      "sha256": "708a2396588a15cf670d0e1069a895d56f17ff1c1a75db5e13226fc8fa976421",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/what-is-js/apply-javascript-internal.html",
+      "sha256": "e0098f4aa0193c0788d5d68d0e5c88a64bbe80e98309625a6de594d8adec882d",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/what-is-js/apply-javascript.html",
+      "sha256": "00a67c2e26b192a9fea60eb76b1720b2fd63f25eca556204a6bf522e35eedb4d",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/introduction-to-js-1/what-is-js/javascript-label.html",
+      "sha256": "ce3a68eb4c36bcdb074ec25029b45f014d464e18bc10bc4d12901952171a715f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/advanced/es2015-class-inheritance.html",
+      "sha256": "061e23cdc5b3f84b76f1393e8d85ae2518a246ce07bce08f6d28dcc1ce8f33e6",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/advanced/es2015-getters-setters.html",
+      "sha256": "ce4f7a865e7b3053b7a3341c9632634c77c123fc9e725f6ad61bfc8e22b92dd9",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/advanced/oojs-class-inheritance-finished.html",
+      "sha256": "22b66a27a5b70cb10bb86bf1095e0dfc7074580d6806380ca48c376d7b2e990f",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/advanced/oojs-class-inheritance-start.html",
+      "sha256": "4be57b18aa32e95b3fedc9c8f8b114c3451aa55cee969498aa7d2e8d7ec877ea",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/advanced/oojs-class-inheritance-student.html",
+      "sha256": "774e43757c3468a95c5b3a5d2b8dc06174b1d68180c500bae78d2652bf854f26",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/advanced/oojs-class-prototype.html",
+      "sha256": "3657918d958d327108a8434307d45fa526370b1a5804efb9a90094d6367fbbf3",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/assessment/index.html",
+      "sha256": "112fe1c4bb07fc3cdf342dd9320e250cc8b39afa0da5ab2092ce036547ce0973",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/bouncing-balls/index-finished.html",
+      "sha256": "70f6593280a6ef1bd305d2608f7814ecd4ee04dd240d2abed3e8cc1762021d1e",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/bouncing-balls/index.html",
+      "sha256": "bbafdc6c9c07417966826b46c8f2026fc4b1c6e846d18e43528da6864b2ba637",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/introduction/oojs-class-finished.html",
+      "sha256": "bb688e3175f1005b4852262e1a2805323c05ba3b1f08c5573a941fe21f555ba1",
+      "sites": {
+        "href": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/introduction/oojs-class-further-exercises.html",
+      "sha256": "5947d3849d4dcfeb952c1867d4928c4811a4c884720e96c988d40be65620730b",
+      "sites": {
+        "href": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/introduction/oojs-finished.html",
+      "sha256": "d0cf74d327ec56d5855b6d4c3afa3901e21bedf6b59dbc66c00e987c7120ca77",
+      "sites": {
+        "href": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/introduction/oojs.html",
+      "sha256": "a793963efd7e742b761eaa502071f49d1580da82692c9a44d8ad3edfaa438926",
+      "sites": {
+        "href": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/json/JSONTest.html",
+      "sha256": "ad8e266b3f0ea6d2867913688967218beffe2e01a13a13c3e38f5b3db6a90dec",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/json/heroes-finished-json-parse.html",
+      "sha256": "431aaf2ab805bf1fed02356bb14e7db564778ae42cb687ba7ac8dead8e3305b8",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/json/heroes-finished.html",
+      "sha256": "f1467cf0ecceb943e2d2e423d4adb632d35560b36479b971b5e647cb517690b3",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/json/heroes.html",
+      "sha256": "1bd2aa7473e39725e27439ed5a0b404e86f11bbb594223209991e8a9170b3cd6",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/json/json1-download.html",
+      "sha256": "74c45ad9b788a27e003b478bd0ccce3f37ab80cf523c03a3e1d24e9b1ba29a9c",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/json/json1.html",
+      "sha256": "bb560fd3d3309dc11da61c86fcf5648e7770294f1298abcd9bd3b1d159f753ff",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics1-download.html",
+      "sha256": "420bdac267a18b3cad9b2eb1e30391f3118952cb0a1f57d73139fb80a8795137",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics1.html",
+      "sha256": "a4be435bf7c1383900fbea25b861ca0fb0ed4c475130b72dd05b851ee5e30f6e",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics2-download.html",
+      "sha256": "ddd6e0a2ee0d4c3cbeadaa94c259ebb4bbf8e7b26360407b45933941f8b2c6ce",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics2.html",
+      "sha256": "54ba9686d21b12d8ba84606bc3f5b7e561aac4be32498ac15c774a5b2bb55dbb",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics3-download.html",
+      "sha256": "bde606330cccfc8bd36b848938c478ef18790bdb406aa8a70cceeb6c88ca267c",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics3.html",
+      "sha256": "f6a3ed0a22a7229ab084586be334ba35de7c583de1155846fca2ee6625d4f665",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics4-download.html",
+      "sha256": "6a26b02f24f5afa1490f4473fb45e49cc1d05a221a227a948f86332b225d3619",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/object-basics/object-basics4.html",
+      "sha256": "9313ade4a98948606e573b3a5680867a9c5c559dc65b01a665f609bab41c8857",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/oojs/oojs1-download.html",
+      "sha256": "f9d33a0f7f37071206af0d0bae7fe504ec11c215bc5aeed97a376b0d9078414f",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/oojs/oojs1.html",
+      "sha256": "16504e5c55658b45bc202c55a6513582f8e730a4a46144ab1af7a56b4f9eb2eb",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/oojs/oojs2-download.html",
+      "sha256": "645570c7123a9dac1f93d6f0c56cf9a2adfd45f68c463bd1249e468fe43001ec",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "javascript/oojs/tasks/oojs/oojs2.html",
+      "sha256": "ae39c7c63edfe8c16a8078969b63c1a0acfbb1569144b0f2219f9df86837ecac",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/accessibility/bad-semantics.html",
+      "sha256": "5f95d383336ce05352cdac7641fc06699e88c965276e7837da212907a6f4d78b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/accessibility/fake-div-buttons.html",
+      "sha256": "0a35854ee712a8318393427d067c6eb9f91375d169e2e1266791e1aebf797be6",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/accessibility/good-semantics.html",
+      "sha256": "abdf5d5dcb3406103aec21b2de1d198c7b8e9ce19eacf7727f1bbd5439e6d5de",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/accessibility/native-keyboard-accessibility.html",
+      "sha256": "02bc3679016482b82dfa686ed1e71f1073519e1edf9daf69b444c2c14d26658e",
+      "sites": {
+        "href": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/automation/index.html",
+      "sha256": "550826a56018ec4fa8c21304ce0cf53f6dee78f28853bda97b9df1b74dfab1c6",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/feature-detection/css-feature-detect-finished.html",
+      "sha256": "2c46f0ba4d0c761c0a1d356fa45d6182a2a166ba0cbc609ed13a37192b363dba",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/feature-detection/css-feature-detect.html",
+      "sha256": "785a7a00af4b87ac0b302f07bb0bc73b38dd9c1e1a5bba3ec3300b38e03b0885",
+      "sites": {
+        "link_asset": 2
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/feature-detection/modernizr-css.html",
+      "sha256": "f17b01bdf49036bc364e97fd5f90fd20c17b3844156baf465de0eca75ae816a3",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/feature-detection/modernizr-js.html",
+      "sha256": "afd9ae368d5bbdd7872d887fd08558bda4ff492c8f33b2e1f89a788bc9872f2c",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/feature-detection/supports-feature-detect.html",
+      "sha256": "7cd57ffd0ac0e2e59592aa65a4267bd399f888053ac6f6a3e53974b60f8f4ca3",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/html-css/button-with-fallback.html",
+      "sha256": "3810f059af5ea2bc2ba766390d0fbec3d8dfba4a3e9fd423b32cdd15eef7aca6",
+      "sites": {
+        "link_asset": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/html-css/forms-test.html",
+      "sha256": "e969818ef12f600d487a2cbd951cab4db7582eb5008277d2d171e27933f9339e",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/html-css/selectivizr-example-start.html",
+      "sha256": "7c526490d6a61bb0a9f0e62d372462f856dd6f3dc21d95f7de17e6205e49b866",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/html-css/selectivizr-example.html",
+      "sha256": "3139444c0d0ff74fcaee4e8c0b53c3f463e2f845d1d8381d7bf6464bada0ce55",
+      "sites": {
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/arrow-function.html",
+      "sha256": "13521792fca6b3b13d222c17921f71e85b5ed7ad9a5658c3c8dcdb2ba4757c42",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/bad-for-loop.html",
+      "sha256": "b223e36d235a0ba9a425d373a78bcae05cc18ca60e62cbcb3396f41e7c47e64b",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/fetch-broken/index.html",
+      "sha256": "62a04746f64c1ea1d64a57861a80e4cb676dc40c794f5d15a9afee7daecb7259",
+      "sites": {
+        "link_asset": 2,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/fetch-fixed/index.html",
+      "sha256": "62a04746f64c1ea1d64a57861a80e4cb676dc40c794f5d15a9afee7daecb7259",
+      "sites": {
+        "link_asset": 2,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html",
+      "sha256": "5b504c4f78c116a64d8332ed8c8c44b50654d2f74970b7a8651db2d92de87d81",
+      "sites": {
+        "link_asset": 1,
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/fetch-polyfill-only-when-needed.html",
+      "sha256": "103eb75fbbc2a614703d48d16665b9e0e291d3bd30dadf512faf79105c37af0b",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/fetch-polyfill.html",
+      "sha256": "dfae2cb2c068125dfaf8e7d080cd4d3b24c7ad0ea2d284bcafcc108d53489d43",
+      "sites": {
+        "link_asset": 1,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/javascript/good-for-loop.html",
+      "sha256": "59dff14ac9c2cbc022385c76b53bf780243a083eba4c01b0aceab83f9fefbd68",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "tools-testing/cross-browser-testing/strategies/hidden-info-panel.html",
+      "sha256": "f8f45b72ed0fc5869b4d4e261b009a222a680b2e3ca92e3c262fcd3fa11c7f83",
+      "sites": {
+        "href": 1
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope and that the product's own walk reads at the pinned tip (a tracked file the walk refuses is tallied, never asked about), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "html",
+      "htm"
+    ]
+  },
+  "summary": {
+    "files": 269,
+    "sites_by": {
+      "html/action": 6,
+      "html/href": 106,
+      "html/link_asset": 158,
+      "html/src": 176,
+      "html/srcset": 7
+    },
+    "total_sites": 453
+  }
+}

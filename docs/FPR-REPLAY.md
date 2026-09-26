@@ -163,7 +163,7 @@ Edit 减 `old_string` 的自有匹配（基线探针仅首探命中才发；基�
 **口径**（每一条都由仪器实测，本节无人工仲裁）：
 
 - **事件** = 某个第一父提交里，一个改动文件（`A`/`M`；`D` 不写入）的一次 Write。范围与钩子完全同读：
-  有语言臂（`Lang::from_path`，含 md 与纯尺寸臂 js/yml/html/css/sh）**且** 在父提交那棵树的
+  有语言臂（`Lang::from_path`，含 md、html 与纯尺寸臂 js/yml/css/sh；html 测量时还在纯尺寸臂，计划 v2.30 步 5 升为判决语言）**且** 在父提交那棵树的
   walk 作用域内（`ce.toml` 的 `exclude`、各级 `.gitignore` / `.ceignore`、`.gitmodules` 声明的
   submodule 路径按 `Owner::Foreign` 出局）。另记 `与 fpr_replay 同分母的事件` = 有语法的判决语言
   子集，两册据此可并读；**率按事件全集算**，那才是这条规则真正看见的总体。

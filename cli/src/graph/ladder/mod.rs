@@ -30,6 +30,7 @@ pub mod java;
 // pub: the walk reads every Java header with it (dedup/walkidx.rs)
 pub mod java_header;
 mod java_jdk;
+mod java_sets;
 // hs.rs consumes its BOOT table; the regen_tables drift check that
 // once re-derived it retired with the one-shot instruments (git
 // history), taking the pub with it
@@ -72,6 +73,11 @@ pub enum Reason {
     /// nothing, and says so in the ledger rather than vanishing at
     /// detection (L step #15, O60).
     Empty,
+    /// The name is declared in the referencing file itself — Java's
+    /// own compilation unit (java.rs `own_unit`): no other file is
+    /// referenced, so no edge is drawn, and the ledger says why
+    /// (plan v2.30 step 5).
+    OwnUnit,
 }
 
 /// Terminal state of one site.

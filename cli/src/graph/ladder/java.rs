@@ -24,13 +24,19 @@
 //! Two files answering one rung is one class in two places —
 //! ambiguous_root, or ambiguous_paths across star-imported packages —
 //! unless the declared `[graph.search_roots] java` directories hold
-//! exactly one of them. Anything else is out_of_scope: a third-party
-//! import, a nested type reached by inheritance, a class declared in a
-//! file of another name (a second top-level class) — misses, never a
-//! guessed edge.
+//! exactly one of them. A file in a standard-layout main source set
+//! sees no test code, and a package split across source sets answers
+//! the importing file's own part (java_sets.rs). A name the file
+//! declares itself — `import static a.b.C.Nested.*` inside C.java —
+//! reaches no other file: own_unit, as the detector already drops a
+//! type_ref to one (graph/sites/java.rs). Anything else is
+//! out_of_scope: a third-party import, a nested type reached by
+//! inheritance, a class declared in a file of another name (a second
+//! top-level class) — misses, never a guessed edge.
 
 use super::java_header::{self, Header};
 use super::java_jdk::{LANG, PACKAGES};
+use super::java_sets::{own_root_dir, visible};
 use super::{Outcome, Reason, Rung, Scope, Site};
 use crate::graph::roots;
 use std::collections::{BTreeMap, BTreeSet};
@@ -52,17 +58,30 @@ pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
         return Outcome::Unresolved(Reason::OutOfScope);
     }
     let index = scope.memo.cached("java-packages", "", || index_of(scope));
+    let at = At {
+        from,
+        index: &index,
+        scope,
+    };
     let found = match kind {
-        "import" if is_static => class_of(&segs[..segs.len() - 1], 2, 2, &index, scope),
-        "import" => class_of(&segs, 1, 2, &index, scope),
-        "import_star" if is_static => class_of(&segs, 2, 2, &index, scope),
-        "import_star" => {
-            package_dir(&name, &index, scope).or_else(|| class_of(&segs, 2, 2, &index, scope))
-        }
-        "type_ref" => return type_ref(from, &segs, &index, scope),
+        "import" if is_static => at.class_of(&segs[..segs.len() - 1], 2, 2),
+        "import" => at.class_of(&segs, 1, 2),
+        "import_star" if is_static => at.class_of(&segs, 2, 2),
+        "import_star" => at.package_dir(&name).or_else(|| at.class_of(&segs, 2, 2)),
+        "type_ref" => Some(at.type_ref(&segs)),
         _ => return Outcome::Unresolved(Reason::Unsupported),
     };
-    found.unwrap_or_else(|| jdk(&segs))
+    own_unit(from, found.unwrap_or_else(|| jdk(&segs)))
+}
+
+/// A name the referencing file declares itself reaches no other file:
+/// JLS 7.3 puts a compilation unit's own types in scope without an
+/// import, so importing one names no other unit and draws no edge.
+fn own_unit(from: &str, found: Outcome) -> Outcome {
+    match found {
+        Outcome::Resolved { path, .. } if path == from => Outcome::Unresolved(Reason::OwnUnit),
+        other => other,
+    }
 }
 
 /// A name without its type annotations: `a.b.@Tag C` names `a.b.C`
@@ -91,45 +110,128 @@ fn index_of(scope: &Scope) -> Index {
     index
 }
 
-/// The file declaring the class a fully qualified name names: the
-/// longest prefix `p.C` whose package `p` holds a `C.java` — the whole
-/// name at `exact`, a shorter prefix (an enclosing class) at `nested`.
-/// A package segment is required: the unnamed package imports nothing.
-fn class_of(
-    segs: &[&str],
-    exact: Rung,
-    nested: Rung,
-    index: &Index,
-    scope: &Scope,
-) -> Option<Outcome> {
-    (2..=segs.len()).rev().find_map(|k| {
-        let rung = if k == segs.len() { exact } else { nested };
-        let hits = class_files(index, &segs[..k - 1].join("."), segs[k - 1]);
-        settle(hits, rung, Reason::AmbiguousRoot, scope)
-    })
+/// One site's question to the index: the referencing file, the
+/// index and the scope — every candidate it hands out is one the file
+/// can see (java_sets.rs).
+struct At<'a> {
+    from: &'a str,
+    index: &'a Index,
+    scope: &'a Scope<'a>,
 }
 
-fn class_files(index: &Index, package: &str, class: &str) -> Vec<String> {
-    let file = format!("{class}.java");
-    index
-        .get(package)
-        .into_iter()
-        .flatten()
-        .filter(|f| f.rsplit('/').next() == Some(file.as_str()))
-        .cloned()
-        .collect()
-}
+impl At<'_> {
+    /// The file declaring the class a fully qualified name names: the
+    /// longest prefix `p.C` whose package `p` holds a `C.java` — the
+    /// whole name at `exact`, a shorter prefix (an enclosing class) at
+    /// `nested`. A package segment is required: the unnamed package
+    /// imports nothing.
+    fn class_of(&self, segs: &[&str], exact: Rung, nested: Rung) -> Option<Outcome> {
+        (2..=segs.len()).rev().find_map(|k| {
+            let rung = if k == segs.len() { exact } else { nested };
+            let hits = self.class_files(&segs[..k - 1].join("."), segs[k - 1]);
+            settle(hits, rung, Reason::AmbiguousRoot, self.scope)
+        })
+    }
 
-/// `import a.b.*`: the one directory holding package a.b's files.
-fn package_dir(package: &str, index: &Index, scope: &Scope) -> Option<Outcome> {
-    let dirs = index
-        .get(package)?
-        .iter()
-        .map(|f| roots::parent_dir(f))
-        .collect();
-    match declared_one(dirs, scope) {
-        Ok(dir) => Some(Outcome::ResolvedPackage { dir, rung: 2 }),
-        Err(_) => Some(Outcome::Unresolved(Reason::AmbiguousRoot)),
+    fn class_files(&self, package: &str, class: &str) -> Vec<String> {
+        let file = format!("{class}.java");
+        self.index
+            .get(package)
+            .into_iter()
+            .flatten()
+            .filter(|f| f.rsplit('/').next() == Some(file.as_str()) && visible(self.from, f))
+            .cloned()
+            .collect()
+    }
+
+    /// `import a.b.*`: the one directory holding the package's files
+    /// this file can see — its own source root's part of a split one.
+    fn package_dir(&self, package: &str) -> Option<Outcome> {
+        let dirs: BTreeSet<String> = self
+            .index
+            .get(package)?
+            .iter()
+            .filter(|f| visible(self.from, f))
+            .map(|f| roots::parent_dir(f))
+            .collect();
+        if dirs.is_empty() {
+            return None;
+        }
+        let picked = match own_root_dir(self.from, dirs.iter()) {
+            Some(dir) => Ok(dir),
+            None => declared_one(dirs, self.scope),
+        };
+        Some(match picked {
+            Ok(dir) => Outcome::ResolvedPackage { dir, rung: 2 },
+            Err(()) => Outcome::Unresolved(Reason::AmbiguousRoot),
+        })
+    }
+
+    /// R3, then R4 for what no rung holds.
+    fn type_ref(&self, segs: &[&str]) -> Outcome {
+        let Some(header) = self.scope.java.get(self.from) else {
+            return Outcome::Unresolved(Reason::OutOfScope);
+        };
+        if let Some(found) = self.simple(segs[0], header) {
+            return found;
+        }
+        if let Some(found) = self.class_of(segs, 3, 3) {
+            return found;
+        }
+        if LANG.split_whitespace().any(|t| t == segs[0]) {
+            return Outcome::External { rung: 4 };
+        }
+        if segs.len() > 1 {
+            return jdk(segs);
+        }
+        if star_jdk(header, self.index) {
+            return Outcome::External { rung: 4 };
+        }
+        Outcome::Unresolved(Reason::OutOfScope)
+    }
+
+    /// A simple type name in the JLS 6.4.1 order: a single-type import
+    /// of it (static ones included — `import static a.b.C.N` brings a
+    /// static nested N), the file's own package, then its star-imported
+    /// packages.
+    fn simple(&self, name: &str, header: &Header) -> Option<Outcome> {
+        // a type and a static member may share a name (two namespaces):
+        // the type import answers first
+        let single = |wanted: bool| {
+            header.imports.iter().find(|i| {
+                !i.star && i.is_static == wanted && i.name.rsplit('.').next() == Some(name)
+            })
+        };
+        if let Some(import) = single(false).or_else(|| single(true)) {
+            let segs: Vec<&str> = import.name.split('.').collect();
+            let cut = if import.is_static {
+                segs.len() - 1
+            } else {
+                segs.len()
+            };
+            return Some(
+                self.class_of(&segs[..cut], 3, 3)
+                    .unwrap_or_else(|| jdk(&segs)),
+            );
+        }
+        let own = self.class_files(&header.package, name);
+        let beside = roots::join_dir(&roots::parent_dir(self.from), &format!("{name}.java"));
+        if own.contains(&beside) {
+            return Some(Outcome::Resolved {
+                path: beside,
+                rung: 3,
+            });
+        }
+        if let Some(found) = settle(own, 3, Reason::AmbiguousRoot, self.scope) {
+            return Some(found);
+        }
+        let starred = header
+            .imports
+            .iter()
+            .filter(|i| i.star && !i.is_static)
+            .flat_map(|i| self.class_files(&i.name, name))
+            .collect();
+        settle(starred, 3, Reason::AmbiguousPaths, self.scope)
     }
 }
 
@@ -163,77 +265,6 @@ fn declared_one(set: BTreeSet<String>, scope: &Scope) -> Result<String, ()> {
         (Some(one), None) => Ok(one),
         _ => Err(()),
     }
-}
-
-/// R3, then R4 for what no rung holds.
-fn type_ref(from: &str, segs: &[&str], index: &Index, scope: &Scope) -> Outcome {
-    let Some(header) = scope.java.get(from) else {
-        return Outcome::Unresolved(Reason::OutOfScope);
-    };
-    if let Some(found) = simple(from, segs[0], header, index, scope) {
-        return found;
-    }
-    if let Some(found) = class_of(segs, 3, 3, index, scope) {
-        return found;
-    }
-    if LANG.split_whitespace().any(|t| t == segs[0]) {
-        return Outcome::External { rung: 4 };
-    }
-    if segs.len() > 1 {
-        return jdk(segs);
-    }
-    if star_jdk(header, index) {
-        return Outcome::External { rung: 4 };
-    }
-    Outcome::Unresolved(Reason::OutOfScope)
-}
-
-/// A simple type name in the JLS 6.4.1 order: a single-type import of
-/// it (static ones included — `import static a.b.C.N` brings a static
-/// nested N), the file's own package, then its star-imported packages.
-fn simple(
-    from: &str,
-    name: &str,
-    header: &Header,
-    index: &Index,
-    scope: &Scope,
-) -> Option<Outcome> {
-    // a type and a static member may share a name (two namespaces):
-    // the type import answers first
-    let single = |wanted: bool| {
-        header
-            .imports
-            .iter()
-            .find(|i| !i.star && i.is_static == wanted && i.name.rsplit('.').next() == Some(name))
-    };
-    if let Some(import) = single(false).or_else(|| single(true)) {
-        let segs: Vec<&str> = import.name.split('.').collect();
-        let cut = if import.is_static {
-            segs.len() - 1
-        } else {
-            segs.len()
-        };
-        let found = class_of(&segs[..cut], 3, 3, index, scope).unwrap_or_else(|| jdk(&segs));
-        return Some(found);
-    }
-    let own = class_files(index, &header.package, name);
-    let beside = roots::join_dir(&roots::parent_dir(from), &format!("{name}.java"));
-    if own.contains(&beside) {
-        return Some(Outcome::Resolved {
-            path: beside,
-            rung: 3,
-        });
-    }
-    if let Some(found) = settle(own, 3, Reason::AmbiguousRoot, scope) {
-        return Some(found);
-    }
-    let starred = header
-        .imports
-        .iter()
-        .filter(|i| i.star && !i.is_static)
-        .flat_map(|i| class_files(index, &i.name, name))
-        .collect();
-    settle(starred, 3, Reason::AmbiguousPaths, scope)
 }
 
 /// Whether a simple name no rung holds can only come from the JDK: the

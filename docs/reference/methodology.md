@@ -52,7 +52,7 @@ does not get an exemption from the rule it argues for.
 |---|---|---|
 | 1 | [T1/T2 clone detection — winnowing fingerprint index](methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md) | exact and parameterized duplicate blocks |
 | 2 | [T3 near-miss clones — Tree Edit Distance (TSED)](methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md) | structurally similar implementations |
-| 3 | [Documentation duplication — shingling + MinHash/LSH](methodology/03-documentation-duplication-shingling-minhash.md) | repeated paragraphs, comments and docstrings |
+| 3 | [Documentation duplication — shingling + MinHash/LSH](methodology/03-documentation-duplication-shingling-minhash.md) | repeated paragraphs, comments, docstrings and HTML page text |
 | 4 | [Structure judgment — tree-scale entropy, eight axes](methodology/04-structure-judgment-tree-scale-entropy-seven.md) | tree-scale structure, axes S0-S7 |
 | 5 | [Scoring and the ADR-006 ratchet](methodology/05-scoring-and-the-adr-006-ratchet.md) | the composite score and the only-tightens baseline |
 | 6 | [Graph liveness and dead-code verdicts](methodology/06-graph-liveness-and-dead-code-verdicts.md) | import edges, in-degree, dead symbols |

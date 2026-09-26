@@ -7,7 +7,8 @@
 //! and never its precision.
 //!
 //! From a key (`name/arity`, `(T) method/arity`, `impl X`, a heading):
-//!   - Markdown is out (RG9: a heading is an anchor, not an identifier);
+//!   - Markdown and HTML are out (RG9: a heading or an element id is an
+//!     anchor, not an identifier);
 //!   - the arity suffix goes; a Go receiver goes with `rsplit_once(") ")`
 //!     — a generic receiver `(*Cache[K, V]) M` holds no `") "` inside
 //!     its brackets, so the last one is always the receiver's close; a
@@ -36,7 +37,8 @@ use std::path::Path;
 /// file `rel`, or None when the declaration is out of the domain.
 pub fn mention_name(rel: &str, key: &str) -> Option<String> {
     let lang = Lang::judged_path(Path::new(rel))?;
-    if lang == Lang::Markdown {
+    // an HTML `#id` is an anchor like a heading (plan v2.30 step 5)
+    if matches!(lang, Lang::Markdown | Lang::Html) {
         return None;
     }
     let bare = match lang {

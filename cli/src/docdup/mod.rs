@@ -9,6 +9,7 @@
 //! exemption classify → store; raw == below_floor + stored.
 
 pub mod exempt;
+mod html;
 pub mod judge;
 pub mod segments;
 pub mod shingle;
@@ -19,7 +20,10 @@ use anyhow::Result;
 use rusqlite::Transaction;
 
 /// Bump when segment-extraction semantics change: it sits in the meta
-/// cache key (schema v5), so stale docsegs rows are wiped. 5 = a
+/// cache key (schema v5), so stale docsegs rows are wiped. 6 = HTML
+/// text is a segment kind of its own (html.rs, plan v2.30 step 5) and
+/// the skeleton table strips the Javadoc / Doxygen / roxygen / LDoc
+/// tags (spec.rs), which changes a tagged comment's words. 5 = a
 /// comment node's adjacency and end_line read its last content row,
 /// so `///` / `//!` runs merge like `//` runs (v2.28 amendment,
 /// 2026-09-04) — every Rust doc block changes geometry. 4 = words are
@@ -27,7 +31,7 @@ use rusqlite::Transaction;
 /// 2026-08-19), which changes every shingle hash. 3 = the 2026-08-14
 /// attainment-line-B amendment (ccm #842): html_line /
 /// fenced_code_line / overlong_line masks.
-pub const DOCDUP_REV: i64 = 5;
+pub const DOCDUP_REV: i64 = 6;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs). `kind`
 /// and `exempt` are the frozen position codes in spec::KIND_NAMES /

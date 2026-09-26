@@ -8,7 +8,7 @@
 
 use super::segments::{RawSeg, SegLine};
 use super::spec::{
-    ALLOW_MARKER, DOC_LINE_CAP, KIND_MD_PARA, LICENSE_HEAD_LINES, LICENSE_MARKERS,
+    ALLOW_MARKER, DOC_LINE_CAP, KIND_HTML_TEXT, KIND_MD_PARA, LICENSE_HEAD_LINES, LICENSE_MARKERS,
     SKELETON_PREFIXES,
 };
 
@@ -42,11 +42,11 @@ pub struct Ledger {
 /// spec.rs); the bare-marker rule's authority is the same module's
 /// written ruling (batch-7 slice 9).
 pub fn classify(seg: &RawSeg, first_comment: bool, ledger: &mut Ledger) -> i64 {
-    if first_comment && seg.start_line <= LICENSE_HEAD_LINES && has_any(seg, &LICENSE_MARKERS) {
+    if first_comment && seg.start_line <= LICENSE_HEAD_LINES && has_any(seg, LICENSE_MARKERS) {
         ledger.license_header += 1;
         return EXEMPT_LICENSE;
     }
-    if has_any(seg, &[ALLOW_MARKER]) {
+    if has_any(seg, ALLOW_MARKER) {
         if allow_has_why(seg) {
             ledger.inline_allow += 1;
             return EXEMPT_ALLOW;
@@ -58,10 +58,11 @@ pub fn classify(seg: &RawSeg, first_comment: bool, ledger: &mut Ledger) -> i64 {
     EXEMPT_LIVE
 }
 
-fn has_any(seg: &RawSeg, markers: &[&str]) -> bool {
+/// Whether any line holds any marker of a `|`-separated table.
+fn has_any(seg: &RawSeg, markers: &str) -> bool {
     seg.lines
         .iter()
-        .any(|l| markers.iter().any(|m| l.text.contains(m)))
+        .any(|l| markers.split('|').any(|m| l.text.contains(m)))
 }
 
 /// The one claim grammar (crate::allow), line by line: the why must
@@ -77,15 +78,16 @@ fn allow_has_why(seg: &RawSeg) -> bool {
 /// code regions (```/~~~ toggling, fence lines included — the F3
 /// "the judge sees prose" contract extended to documentation text
 /// wherever it lives) and overlong data/regex lines (DOC_LINE_CAP).
-/// md paragraphs are untouched by ALL three: a `---` there is a
-/// thematic break, md fences were masked by the detector already,
-/// and a single long md line is legitimate unwrapped prose. Returns
-/// the surviving lines.
+/// md paragraphs and HTML text are untouched by ALL three: a `---`
+/// there is a thematic break, md fences and HTML code were masked by
+/// the detector already, and a single long line of either is
+/// legitimate unwrapped prose (an HTML source line is masked markup
+/// around it). Returns the surviving lines.
 pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLine> {
     let mut keep = Vec::new();
     let mut fenced = false;
     for line in &seg.lines {
-        if seg.kind == KIND_MD_PARA {
+        if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT) {
             keep.push(line);
             continue;
         }
@@ -114,7 +116,10 @@ fn fence_line(text: &str) -> bool {
 }
 
 /// A skeleton line, matched after stripping the comment decoration
-/// prefix (`#`, `//`, `*`, `/*`, `!`, quotes for docstring openers).
+/// prefix (`#`, `//`, `*`, `/*`, `!`, quotes for docstring openers,
+/// roxygen's `#'`), and after the separator rule a leading `--` run,
+/// the Lua and Haskell comment marker: a single `-` is a list bullet,
+/// and `- Note: ...` is prose, not a template row.
 fn skeleton_line(text: &str) -> bool {
     let bare = text
         .trim()
@@ -123,7 +128,10 @@ fn skeleton_line(text: &str) -> bool {
     if !bare.is_empty() && bare.chars().all(|c| c == '-') && bare.len() >= 3 {
         return true;
     }
-    SKELETON_PREFIXES.iter().any(|p| bare.starts_with(p))
+    let bare = bare
+        .strip_prefix("--")
+        .map_or(bare, |rest| rest.trim_start_matches(['-', ' ']));
+    SKELETON_PREFIXES.split('|').any(|p| bare.starts_with(p))
 }
 
 #[cfg(test)]

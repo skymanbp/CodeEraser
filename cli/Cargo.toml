@@ -52,10 +52,11 @@ tree-sitter = "0.27.0"
 # Every grammar below must speak an ABI the 0.27 core accepts (13–15):
 # tests/it/grammar_pins.rs parses a sample under each one and reads
 # abi_version() back, so a bump that breaks a grammar fails loudly
-# instead of degrading scan output. The six crates after Haskell are
-# the plan v2.30 language expansion (docs/reference/language-expansion.md
-# §1, versions as probed in scripts/tsprobe): pinned and gated here since
-# step 1, wired into `Lang::grammar` by each language's own step.
+# instead of degrading scan output. Six of them (c, cpp, html, java,
+# lua, r) are the plan v2.30 language expansion
+# (docs/reference/language-expansion.md §1, versions as probed in
+# scripts/tsprobe): pinned and gated here since step 1, each wired into
+# `Lang::grammar` by its language's own step (HTML, the last, at step 5).
 tree-sitter-c = "0.24.2"
 tree-sitter-cpp = "0.23.4"
 tree-sitter-go = "0.25.0"

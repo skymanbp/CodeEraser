@@ -222,8 +222,12 @@ pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
         .iter()
         .enumerate()
         .filter_map(|(i, path)| {
-            (crate::scan::lang::Lang::from_path(Path::new(path))
-                == Some(crate::scan::lang::Lang::Markdown))
+            // a Markdown or HTML page (plan v2.30 step 5): the files
+            // the docdup axis counts over
+            matches!(
+                crate::scan::lang::Lang::from_path(Path::new(path)),
+                Some(crate::scan::lang::Lang::Markdown | crate::scan::lang::Lang::Html)
+            )
             .then_some(i as i64)
         })
         .collect()

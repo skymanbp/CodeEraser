@@ -46,11 +46,14 @@ const ROLE_UNIT: i64 = 1 << 8;
 /// `main` file, the class a Java launcher names, what LÖVE runs
 /// (`main.lua`, and `conf.lua` before it) and what Shiny's `runApp`
 /// reads from an app directory (`app.R`, or `ui.R` and `server.R`, and
-/// `global.R`). Neovim's `init.lua` is one only at the root, where a
+/// `global.R`), and the pages a web server serves by name — a
+/// directory's `index.html`, the not-found page `404.html` (plan v2.30
+/// step 5). Neovim's `init.lua` is one only at the root, where a
 /// config keeps it: anywhere else the name is a module's own file
 /// (`require "a"` reads `a/init.lua`), which the graph reaches.
 const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c main.cc \
-                           main.cpp Main.java main.lua conf.lua app.R ui.R server.R global.R";
+                           main.cpp Main.java main.lua conf.lua app.R ui.R server.R global.R \
+                           index.html 404.html";
 
 /// Directories whose files a runtime starts by where they sit, never
 /// by an import — one row per language (`*` every judged one), each

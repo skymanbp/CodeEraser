@@ -1,0 +1,141 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "html",
+    "name": "codeeraser",
+    "tip": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c"
+  },
+  "excluded": {
+    "other_extension": 745,
+    "walk_refused": 1
+  },
+  "files": [
+    {
+      "lang": "html",
+      "path": "demo/out/scoreboard.html",
+      "sha256": "679772eb13a2c48085d0b75cda51eec27b3786099216772ec2a735155d5725b9",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "demo/out/scoreboard.zh.html",
+      "sha256": "cc7194522b04171c0cba8db4aa7bfcb4f3d40f014a485465a8f0b2a6ff41cc95",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "gui/ui/index.html",
+      "sha256": "d3208db1eac6b2d28e458870ca2fbbee2b4ea8b499de704bb3e8bedb98dab33b",
+      "sites": {
+        "link_asset": 4,
+        "src": 15
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/bench/index.html",
+      "sha256": "7e3a70e9f8ef1202dbf8e247ed532c93c8069b177ad70442efc626982691db4e",
+      "sites": {
+        "href": 17,
+        "link_asset": 3,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/how/index.html",
+      "sha256": "2832cb22cac2db744c5dc430b2c35de99b203237627cf9a9a80e420dabc6e774",
+      "sites": {
+        "href": 58,
+        "link_asset": 4,
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/index.html",
+      "sha256": "e0c4c906f506136b7ed0fb9f084a77418b8f9ed7db9d054f57d425870a548f4e",
+      "sites": {
+        "href": 19,
+        "link_asset": 4,
+        "src": 7
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/stack/index.html",
+      "sha256": "c081b892a2c1a53557cb79dc7ed700cda0f6b5dd7bb897ffcffa5ed3e51f2f6d",
+      "sites": {
+        "href": 21,
+        "link_asset": 4,
+        "src": 3
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/zh/bench/index.html",
+      "sha256": "532ca1bfb14999b41ae04f90426136fe844ea1235a03257a91fef314325e9a4c",
+      "sites": {
+        "href": 17,
+        "link_asset": 3,
+        "src": 1
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/zh/how/index.html",
+      "sha256": "6b9150c047d22d62f308f3e306c03b99ff0f523155e971abc3e8c0fd864b00c6",
+      "sites": {
+        "href": 58,
+        "link_asset": 4,
+        "src": 4
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/zh/index.html",
+      "sha256": "a7dfb41df6c29fa8c9c1870560496fc994f2e972b22b45526cc674c936d3870e",
+      "sites": {
+        "href": 19,
+        "link_asset": 4,
+        "src": 7
+      }
+    },
+    {
+      "lang": "html",
+      "path": "site/zh/stack/index.html",
+      "sha256": "fc4857ed76f6f2dd90a46ca726f16d7b431893eee49a463a51e8373083fec834",
+      "sites": {
+        "href": 21,
+        "link_asset": 4,
+        "src": 3
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope and that the product's own walk reads at the pinned tip (a tracked file the walk refuses is tallied, never asked about), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "html",
+      "htm"
+    ]
+  },
+  "summary": {
+    "files": 11,
+    "sites_by": {
+      "html/href": 230,
+      "html/link_asset": 34,
+      "html/src": 45
+    },
+    "total_sites": 309
+  }
+}

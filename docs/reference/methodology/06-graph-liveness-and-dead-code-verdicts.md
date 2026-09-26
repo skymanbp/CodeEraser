@@ -21,10 +21,14 @@ Phase 1 detection is **resolution-free by construction**: which tree-sitter node
 site, and where the specifier lives, is a frozen table per language
 ([spec.rs:240-283](../../../cli/src/graph/spec.rs#L240)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:278](../../../cli/src/graph/spec.rs#L278)). The eighteen frozen site
+grammar and scans line-wise ([spec.rs:282](../../../cli/src/graph/spec.rs#L282)); HTML's sites are
+(element, attribute) pairs read off each tag in a pass of their own — a `<link>` reads its `rel` to tell a
+stylesheet, icon or preload (`link_asset`) from a page (`href`), and a `srcset` opens one site per candidate
+URL ([sites/html.rs:19-45](../../../cli/src/graph/sites/html.rs#L19),
+[sites/html.rs:113-130](../../../cli/src/graph/sites/html.rs#L113)). The twenty-three frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
-include, import_star, type_ref, require, load, source, library` ([store.rs:148-167](../../../cli/src/graph/store.rs#L148)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:110](../../../cli/src/graph/store.rs#L110), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS
+include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:155-157](../../../cli/src/graph/store.rs#L155)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:115](../../../cli/src/graph/store.rs#L115), currently <!--ce:ver:graph_rev#digits-->`16`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -40,13 +44,13 @@ candidate resolves it, and more than one candidate at a rung is `Unresolved(ambi
 picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph/ladder/mod.rs#L1)).
 `External` (stdlib, registry, `node_modules`) is a **correct terminal answer, not a miss**
 (same lines). Every resolved edge stores the rung that answered it
-([ladder/mod.rs:54](../../../cli/src/graph/ladder/mod.rs#L54)), which is what makes per-level precision
+([ladder/mod.rs:55](../../../cli/src/graph/ladder/mod.rs#L55)), which is what makes per-level precision
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported, Empty`
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
-([ladder/mod.rs:60-75](../../../cli/src/graph/ladder/mod.rs#L60)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:248-252](../../../cli/src/graph/ladder/mod.rs#L248)).
+([ladder/mod.rs:61-76](../../../cli/src/graph/ladder/mod.rs#L61)); a language without rungs must return
+`Unsupported`, never a silent skip ([ladder/mod.rs:254-258](../../../cli/src/graph/ladder/mod.rs#L254)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -104,7 +108,12 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:60-93](../../../cli/src/graph/wire.rs#L60)). Edge kinds
+ledger-visible as sites *without* edges ([wire.rs:60-93](../../../cli/src/graph/wire.rs#L60)). An edge's
+kind follows its site's: code kinds import; the Markdown link family and HTML's page references (`href`, a
+form's `action`) split doc_link / doc_ref by whether the target is a page (Markdown or HTML); an image, a
+`src` / `srcset` resource and an asset `<link>` are always assets
+([wire.rs:104-121](../../../cli/src/graph/wire.rs#L104), [wire.rs:123-132](../../../cli/src/graph/wire.rs#L123)).
+Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
 reference definition's in-scope target, which resolves and travels as an edge while the core
@@ -252,7 +261,7 @@ role 8  a C-family compilation unit (.c / .cc / .cpp / .cxx)        [flags.rs:35
 ```
 
 ([flags.rs:24-41](../../../cli/src/graph/deadcode/flags.rs#L24),
-[flags.rs:72-107](../../../cli/src/graph/deadcode/flags.rs#L72)). The role→bit landing is the
+[flags.rs:75-110](../../../cli/src/graph/deadcode/flags.rs#L75)). The role→bit landing is the
 core's data: roles 0, 1, 6 and 8 (7.2.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, and role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has. **Role 6 closes

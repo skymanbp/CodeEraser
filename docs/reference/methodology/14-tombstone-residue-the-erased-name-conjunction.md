@@ -333,7 +333,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   mark on one line with the name on the next was two sentences about two things; the rule now
   reads the node's last content row, so a Rust doc sentence broken across lines is one sentence
   here as it is to docdup (the merge rule is docdup's, not this class's)
-  ([segments.rs:188-215](../../../cli/src/docdup/segments.rs#L188)).
+  ([segments.rs:194-221](../../../cli/src/docdup/segments.rs#L194)).
 - **Only judged languages are measured.** A pair whose after path is not a judged language is
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees

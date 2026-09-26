@@ -35,6 +35,9 @@ pub(crate) const SECRET_GLOBS: [&str; 8] = [
 /// Built-in excludes: lockfiles, minified/generated, vendored (Lua's
 /// and R's project trees since plan v2.30 step 4), snapshots, migrations
 /// (plan §4.1); the secret globs above join them in build_overrides.
+/// Build outputs are not globs: a `target/` or `build/` is one only
+/// beside its tool's project file (outputs.rs), asked at each
+/// directory's door by the walk and by `Scope` alike.
 const BUILTIN_EXCLUDES: &[&str] = &[
     "!package-lock.json",
     "!yarn.lock",
@@ -53,10 +56,6 @@ const BUILTIN_EXCLUDES: &[&str] = &[
     "!__snapshots__/",
     "!*.snap",
     "!migrations/",
-    "!dist/",
-    "!build/",
-    "!target/",
-    "!dist-newstyle/",
 ];
 
 /// Config plus language-tagged candidate files — the shared opening
@@ -200,7 +199,8 @@ pub fn collect_unignored(root: &Path) -> Result<Vec<Walked>, String> {
 }
 
 /// The walk loop both collectors share: owner pruning at a nested
-/// repository's door, the owner word per file, sorted output.
+/// repository's door and at a build output's (outputs.rs), the owner
+/// word per file, sorted output.
 fn walk_files(root: &Path, walker: WalkBuilder) -> Result<Vec<Walked>, String> {
     let mut walker = walker;
     let mut owners = Owners::new(root);
@@ -208,12 +208,14 @@ fn walk_files(root: &Path, walker: WalkBuilder) -> Result<Vec<Walked>, String> {
     let mut files = Vec::new();
     for entry in walker
         // a nested repository is pruned at its door: its files are
-        // nobody's here, and walking them would only cost the reads
+        // nobody's here, and walking them would only cost the reads;
+        // a build tool's output is pruned the same way
         .filter_entry(move |e| {
             e.depth() == 0
                 || !e.file_type().is_some_and(|t| t.is_dir())
-                || crate::gitmodules::owner(&home, &declared, &rel_str(&home, e.path()))
+                || (crate::gitmodules::owner(&home, &declared, &rel_str(&home, e.path()))
                     != Owner::Cut
+                    && !super::outputs::is_output(e.path()))
         })
         .build()
     {
@@ -309,14 +311,26 @@ impl Scope {
         };
         !rel.as_os_str().is_empty()
             && !self.matcher.matched(rel, false).is_ignore()
+            && !rel
+                .parent()
+                .is_some_and(|dir| under_output(&self.root, dir))
             && crate::gitmodules::owner(&self.root, &self.declared, &rel_str(&self.root, &full))
                 == Owner::Own
     }
 
     /// A root-relative DIRECTORY the walk would descend into.
     fn contains_dir(&mut self, rel: &str) -> bool {
-        !self.matcher.matched(rel, true).is_ignore()
+        !self.matcher.matched(rel, true).is_ignore() && !under_output(&self.root, Path::new(rel))
     }
+}
+
+/// Whether `dir` (root-relative) or a directory above it is a build
+/// tool's output — the walk prunes that one at its door, so nothing
+/// below it is walked.
+fn under_output(root: &Path, dir: &Path) -> bool {
+    dir.ancestors()
+        .filter(|a| !a.as_os_str().is_empty())
+        .any(|a| super::outputs::is_output(&root.join(a)))
 }
 
 /// One-shot `Scope` for the surfaces that ask about a single write.

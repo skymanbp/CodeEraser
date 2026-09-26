@@ -13,8 +13,9 @@
 ## 仪器与门
 
 - **站点宇宙**（`cli/tests/it/eval_lang_parts/generate.rs` 的 `lang_slice`，`#[ignore]`，读 `.ce-eval/corpora/<名>`
-  的钉住克隆，别的树按名拒绝）：按考题表 `eval_lang_parts::EXAMS` 的扩展名走一遍钉住的树，逐文件记检测器看到的
-  文本 sha256 与各站点类的计数（`graph::sites`——只读文法 kind 表与文件内事实，不查任何路径，所以能先于阶梯冻结）。
+  的钉住克隆，别的树按名拒绝）：按考题表 `eval_lang_parts::EXAMS` 的扩展名走一遍钉住的树，只取产品自己的走查读的
+  文件（`scan::walk::Scope`，语料自己的 ignore 文件与内建排除照读；走查拒读的被追踪文件只计 `walk_refused`，不出题——
+  考题只问产品读得到的东西），逐文件记检测器看到的文本 sha256 与各站点类的计数（`graph::sites`——只读文法 kind 表与文件内事实，不查任何路径，所以能先于阶梯冻结）。
   档 `contracts/eval/lang-slice-<语料>-v<代>.json`（代 = 考题表的 `generation`，同一门考题的档同一代）。
 - **抽样**（同文件 `lang_sample`）：一个语言的全部冻结宇宙合成一个池，逐文件先复现它的冻结行再取站点——池等于
   冻结宇宙靠核对、不靠信任。秩 = `sha256(域|corpus|commit|path|line|nth|kind|spec)`（M5-2 的载荷顺序，spec 居末
@@ -34,16 +35,25 @@
   否则 missed。摘要 = M5-2 的 rescore（含按级截断表）加每个站点类一行（`type_ref` 单独可归因）；宇宙台账对冻结宇宙的每个站点
   都解一遍（逐类逐级、逐类逐拒答原因计数），解出率是召回的上限；审阅者记下的候选漏检逐条附上检测器在那一行读到的每个站点与
   阶梯的答案。生成器冻结前先跑 CI 的核对。档 `contracts/eval/lang-precision-<语料>-v<代>.json`；它是冻结档里唯一依赖产品代码的：
-  阶梯的改动挪动了答案就重判——删档、重生成、在本册具名记一条。CI 门（`cli/tests/it/eval_lang_precision.rs`，不跑 git、不要
+  阶梯的改动挪动了答案就重判——删档、在干净的树上重生成、在本册具名记一条。判分同样只问走查读的文件：真值指向走查拒读
+  的文件（如 luarocks 的 `vendor/`）按站外判分，审阅者的原话另记在 `audit_truth`；样本行与候选漏检不得落在拒读的文件里；
+  档多一节 `walk`（拒读的文件与它们的站点计数，台账不含它们）。CI 门（`cli/tests/it/eval_lang_precision.rs`，不跑 git、不要
   克隆）：冻结集 = 已判分考题的语料（考题表的 `scored` 旗标与盘上的档逐语料相符，判分前必须已审阅）；每行按样本顺序回显身份
   与审阅真值、答案只能是三种形状之一、判词从行本身重算；摘要从行重算；台账的比率从两张计数表重算、逐类合计等于冻结宇宙；
   首级占比过触发线须带书面处置；候选漏检与审阅表逐条对应；精度不低于 0.90（整体，与站内真值不少于 5 道的每个语料；M5-2 的
   G2）。篡改（伪路径、伪 spec、伪真值、伪判词、非布尔的 external、缺一行、调换两行、翻转答案、改摘要、改台账计数、改比率、
-  挪候选漏检的行号）一律拒绝，首级占比的触发线两个方向各有一腿。三份冻结档（样本、审阅表、精度册）的篡改电池共用一个框架
-  （`eval_lang_parts/tamper.rs`）。
+  挪候选漏检的行号；走查记录里多一个宇宙外的文件、少一个拒读的文件、改拒读计数、把改判的真值记回站内、给没改判的真值
+  配原话）一律拒绝，首级占比的触发线两个方向各有一腿。三份冻结档（样本、审阅表、精度册）的篡改电池共用一个框架
+  （`eval_lang_parts/tamper.rs`）；精度册的电池篡改的是神谕档——只用冻结输入（样本、审阅表、宇宙）拼出、每道题都答它的真值的
+  档（`oracle_precision`）。核对只把档对照冻结输入、从不对照阶梯，所以神谕档能过核对，篡改门也就不依赖哪门语言此刻判了分：
+  阶梯一动，真的精度册就退役到重生成为止。
 - **顺序门**（`cli/tests/it/lang_provenance.rs`，要完整 git 历史）：审阅表未提交时，任何提交都不得碰过该语言的
   阶梯路径，精度册不得存在；审阅表提交后，样本 ≺ 每张审阅表 ≺ 每份精度册，阶梯的首个提交严格晚于每张审阅表，
-  且样本到审阅之间的盲窗里没有任何 `cli/src/graph` 文件落地（与 `graph_provenance.rs` 共用两层绊线）。
+  且样本到审阅之间的盲窗里没有任何 `cli/src/graph` 文件落地（与 `graph_provenance.rs` 共用两层绊线）。最后一腿（步 5）
+  把每份精度册钉在回答它的代码上：生成时树是干净的、生成它的提交在本历史里、此后没有提交碰过它的阶梯或答案所依赖的
+  代码（`ANSWERED_BY`：共用的阶梯与路径助手、站点检测器、解析配置名、走查、语言表、文法钉版）——阶梯一动，门就红到
+  重生成为止。别处的改动若也挪了答案，由发版前的重放找出（`eval_lang_parts::replay`，`#[ignore]`，读全部钉住克隆，
+  逐键比对；`docs/RELEASE.md` §0）。
 
 ## 预登记常量（测量前写进每份档的 `constants`，改一个即换一套仪器）
 
@@ -380,3 +390,24 @@ stringr 的 R2 一道是 `tests/testthat.R:2` 的 `library(stringr)`，答包根
 R2 全指 `covid19AgeModel/`（唯一的 `DESCRIPTION`；`library(covid19AgeModel)` 60、`require(covid19AgeModel)` 16、
 `covid19AgeModel::` 1）；3 道拒答是 `source` 指向语料里没有的文件。首级占比 stringr 0 %、covid19model 2.8 %，远低于 0.80，不需要
 书面处置。
+
+## 步 5：Java、Lua、R 的精度册退役待重判
+
+步 5 的提交 A 挪动了这三门考题的答案所依赖的代码：走查不再按名字排除 `target/ build/ dist/`（只在旁边有产出它的工具的
+项目文件时才算产物），Java 的 `main` 源集只看得见 `main` 源集、文件自己声明的名字是 `own_unit`，Lua 的 `require` 多找引用
+文件自己的目录；判分也改为只问产品自己的走查读的文件（站点宇宙一节）。六份精度册因此在同一提交里删档、考题表的
+`scored` 翻回 false；等 HTML 的阶梯落地后与 HTML 的精度册一起重生成一次——新的一代读数与每处答案的移动在那时记在本节。
+
+## HTML（步 5）
+
+### 站点宇宙与抽样（2026-09-26 冻结）
+
+- 语料三份（设计册 §11；第三份是用户的裁定）：本仓 `codeeraser`@`d4b7f1f`（收步 4 的那个提交：官网八页、GUI 页、两张 demo
+  记分板，11 页 309 站点；`scripts/tsprobe/snippets/probe.html` 被走查的 `snippets/` 模式拒读，计 `walk_refused` 1）、
+  `h5bp/html5-boilerplate`@`b659733`（`src/` 两页 6 站点；`dist/` 的两份构建产物旁边站着 `package.json`，走查拒读，计 2）、
+  `mdn/learning-area`@`dbed6bc`（269 页 453 站点——前两份一个表单、一个 `srcset` 候选都没有，这份两样都有）。
+- 站点（设计册 §8 HTML 行）：`href` 336、`src` 222、`link_asset` 197、`srcset` 7、`action` 6，共 768。
+- 抽样：100 道主样本，`href` 34、`src` 27、`link_asset` 26，`srcset` 7 与 `action` 6 两类池不满地板、整类取尽；按语料
+  learning-area 63、codeeraser 37、html5-boilerplate 0（6 个站点没有一个被秩选中）；备用题 60（`href`、`src`、`link_asset`
+  各 20，另两类池已空）。档 `contracts/eval/lang-slice-{codeeraser,html5-boilerplate,learning-area}-v1.json`、
+  `contracts/eval/lang-sample-html-v1.json`。

@@ -1,0 +1,213 @@
+<!doctype html>
+<!-- CodeEraser GUI: renders the report documents and nothing else —
+     no framework, no build step, judgment zero-leak into JS (webview
+     layer is rendering glue by user ruling). Labels come from i18n.js
+     (en default, zh switch); data-i18n marks every static label. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CodeEraser</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="screens.css" />
+  <link rel="stylesheet" href="reports.css" />
+</head>
+<body>
+  <header>
+    <span id="brand"><img src="icon.png" alt="" />CodeEraser<span class="tm">.</span></span>
+    <input id="root" type="text" spellcheck="false" />
+    <button id="pick" data-i18n-title="pickRoot"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" /></svg></button>
+    <span id="rootecho"></span>
+    <nav id="tabs">
+      <button class="tab on" data-tab="structure" data-i18n="tabStructure"></button>
+      <button class="tab" data-tab="score" data-i18n="tabScore"></button>
+      <button class="tab" data-tab="erase" data-i18n="tabErase"></button>
+      <button class="tab" data-tab="trend" data-i18n="tabTrend"></button>
+      <button class="tab" data-tab="candidates" data-i18n="tabCandidates"></button>
+      <button class="tab" data-tab="graph" data-i18n="tabGraph"></button>
+      <button class="tab" data-tab="similar" data-i18n="tabSimilar"></button>
+      <button class="tab" data-tab="reports" data-i18n="tabReports"></button>
+      <button class="tab" data-tab="bench" data-i18n="tabBench"></button>
+      <button class="tab" data-tab="doctor" data-i18n="tabDoctor"></button>
+      <button class="tab" data-tab="update" data-i18n="tabUpdate"></button>
+    </nav>
+    <button id="lang" title="English / 中文"></button>
+    <span id="status"></span>
+  </header>
+
+  <div id="view-structure" class="view">
+    <section class="bar">
+      <label><input id="deep" type="checkbox" /> <span data-i18n="deep"></span></label>
+      <label><span data-i18n="days"></span> <input id="days" type="number" min="1" data-i18n-ph="off" /></label>
+      <label><input id="split" type="checkbox" /> <span data-i18n="split"></span></label>
+      <button id="scan" data-i18n="scan"></button>
+    </section>
+    <section id="summary" hidden>
+      <div class="stat" id="scorewrap">
+        <span id="score"></span><small id="scale"></small>
+        <!-- named, because the score screen shows a DIFFERENT number
+             out of 1000 and the console has always said which is which -->
+        <small class="kind" data-i18n="scoreStructure"></small>
+        <div id="scorebar"><div id="scorefill"></div></div>
+      </div>
+      <div class="stat" id="entropy"></div>
+      <div class="stat" id="axes"></div>
+      <div class="stat" id="divergence"></div>
+      <div class="stat" id="legend" hidden></div>
+      <div id="vswitch" hidden>
+        <button data-v="map" data-i18n="viewMap"></button>
+        <button data-v="tree" data-i18n="viewTree"></button>
+      </div>
+    </section>
+    <section id="splitpanel" hidden></section>
+    <main>
+      <svg id="treemap" preserveAspectRatio="none"></svg>
+      <div id="structree" hidden></div>
+      <aside id="detail"></aside>
+      <div class="empty" id="empty-structure" data-i18n="emptyStructure"></div>
+    </main>
+  </div>
+
+  <div id="view-score" class="view" hidden>
+    <section class="bar">
+      <label><span data-i18n="verdict"></span>
+        <input id="check-floor" type="number" min="0" placeholder="—" data-i18n-title="floorHint" /></label>
+      <button id="check-load" data-i18n="load"></button>
+    </section>
+    <main class="col">
+      <div id="check-hero"></div>
+      <div class="stat" id="check-axes"></div>
+      <section id="check-ratchet"></section>
+      <div id="check-candidates"></div>
+      <div id="check-named"></div>
+      <div class="empty" id="empty-score" data-i18n="emptyScore"></div>
+    </main>
+  </div>
+
+  <div id="view-erase" class="view" hidden>
+    <section class="bar">
+      <button id="erase-preview" data-i18n="erasePreview"></button>
+      <button id="erase-apply" class="danger" hidden data-i18n="eraseApply"></button>
+      <button id="erase-log" data-i18n="eraseLog"></button>
+      <div class="stat" id="erase-summary"></div>
+    </section>
+    <main class="col">
+      <div id="erase-rows"></div>
+      <pre id="erase-diff" hidden></pre>
+      <div id="erase-log-rows" hidden></div>
+      <div class="empty" id="empty-erase" data-i18n="emptyErase"></div>
+    </main>
+  </div>
+
+  <div id="view-trend" class="view" hidden>
+    <section class="bar">
+      <label><span data-i18n="commits"></span> <input id="trend-commits" type="number" min="2" value="30" /></label>
+      <button id="trend-load" data-i18n="load"></button>
+      <button id="trend-more" hidden></button>
+    </section>
+    <main>
+      <svg id="trendchart" preserveAspectRatio="none"></svg>
+      <aside id="trend-detail"></aside>
+      <div class="empty" id="empty-trend" data-i18n="emptyTrend"></div>
+    </main>
+  </div>
+
+  <div id="view-candidates" class="view" hidden>
+    <section class="bar">
+      <label><span data-i18n="days"></span> <input id="cand-days" type="number" min="1" value="14" /></label>
+      <button id="cand-load" data-i18n="load"></button>
+    </section>
+    <main>
+      <div id="cand-list"></div>
+      <aside id="cand-detail"></aside>
+      <div class="empty" id="empty-candidates" data-i18n="emptyCandidates"></div>
+    </main>
+  </div>
+
+  <div id="view-graph" class="view" hidden>
+    <section class="bar">
+      <button id="graph-load" data-i18n="load"></button>
+    </section>
+    <main>
+      <canvas id="graphcanvas"></canvas>
+      <aside id="graph-detail"></aside>
+      <div class="empty" id="empty-graph" data-i18n="emptyGraph"></div>
+    </main>
+  </div>
+
+  <div id="view-similar" class="view" hidden>
+    <section class="bar">
+      <label><span data-i18n="similarAt"></span> <input id="similar-at" type="text" spellcheck="false" placeholder="src/lib.rs:42" /></label>
+      <label><span data-i18n="similarText"></span> <input id="similar-text" type="text" spellcheck="false" /></label>
+      <label><input id="similar-widen" type="checkbox" /> <span data-i18n="widen"></span></label>
+      <button id="similar-load" data-i18n="load"></button>
+      <div class="stat" id="similar-summary"></div>
+    </section>
+    <main class="col">
+      <div id="similar-rows"></div>
+      <div class="empty" id="empty-similar" data-i18n="emptySimilar"></div>
+    </main>
+  </div>
+
+  <div id="view-reports" class="view" hidden>
+    <section class="bar">
+      <select id="hub-family"></select>
+      <label id="hub-days-wrap" hidden><span data-i18n="days"></span> <input id="hub-days" type="number" min="1" value="14" /></label>
+      <button id="hub-load" data-i18n="load"></button>
+      <div class="stat" id="hub-chips"></div>
+    </section>
+    <main class="col">
+      <div id="hub-tables"></div>
+      <div class="empty" id="empty-reports" data-i18n="emptyReports"></div>
+    </main>
+  </div>
+
+  <div id="view-bench" class="view" hidden>
+    <section class="bar">
+      <div class="stat" id="bench-legend" data-i18n="benchUnit"></div>
+    </section>
+    <main class="col">
+      <div id="bench-series"></div>
+      <div id="bench-frozen"></div>
+      <div class="empty" id="empty-bench" data-i18n="emptyBench"></div>
+    </main>
+  </div>
+
+  <div id="view-doctor" class="view" hidden>
+    <section class="bar">
+      <button id="doctor-load" data-i18n="load"></button>
+    </section>
+    <main class="col">
+      <div id="doctor-body"></div>
+      <div class="empty" id="empty-doctor" data-i18n="emptyDoctor"></div>
+    </main>
+  </div>
+
+  <div id="view-update" class="view" hidden>
+    <section class="bar">
+      <button id="update-check" data-i18n="updateCheck"></button>
+      <button id="update-apply" class="danger" hidden data-i18n="updateApply"></button>
+      <label id="update-installer-wrap" hidden><input id="update-installer" type="checkbox" /> <span data-i18n="updateInstaller"></span></label>
+    </section>
+    <main class="col">
+      <div id="update-body"></div>
+      <div class="empty" id="empty-update" data-i18n="emptyUpdate"></div>
+    </main>
+  </div>
+
+  <script src="i18n.js" defer></script>
+  <script src="app.js" defer></script>
+  <script src="structure.js" defer></script>
+  <script src="structree.js" defer></script>
+  <script src="trend.js" defer></script>
+  <script src="candidates.js" defer></script>
+  <script src="graph.js" defer></script>
+  <script src="similar.js" defer></script>
+  <script src="score.js" defer></script>
+  <script src="erase.js" defer></script>
+  <script src="reports.js" defer></script>
+  <script src="bench.js" defer></script>
+  <script src="doctor.js" defer></script>
+  <script src="update.js" defer></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
-//! Segment extraction — the three document-text kinds (design vol.2
-//! §5.1), geometry and lines ONLY: exemption policy lives in
+//! Segment extraction — the four document-text kinds (design vol.2
+//! §5.1; HTML text since plan v2.30 step 5, html.rs), geometry and
+//! lines ONLY: exemption policy lives in
 //! exempt.rs, wordization in shingle.rs. md_para may come from
 //! nothing but `md::masked_content_lines` (F3/RM8): a judge seeing
 //! text the detector masks — fence bodies, HTML comments, inline
@@ -36,11 +37,15 @@ pub struct RawSeg {
 /// so those
 /// lines stay prose and this count keeps that approximation visible
 /// instead of silent (2026-08-14 attainment-line-B amendment, ccm
-/// #842).
+/// #842). The HTML walk (html.rs) ledgers here too: `code` counts the
+/// `pre` / `code` / `textarea` elements it masked or skipped, `script`
+/// the `script` / `style` elements.
 #[derive(Default)]
 pub struct MdShed {
     pub indented: u64,
     pub html: u64,
+    pub code: u64,
+    pub script: u64,
 }
 
 /// All raw segments of one file in line order, plus the md shed
@@ -48,6 +53,7 @@ pub struct MdShed {
 pub fn extract(text: &str, lang: Lang) -> (Vec<RawSeg>, MdShed) {
     match lang {
         Lang::Markdown => md_paragraphs(text),
+        Lang::Html => super::html::segments(text),
         _ => (tree_segments(text, lang), MdShed::default()),
     }
 }

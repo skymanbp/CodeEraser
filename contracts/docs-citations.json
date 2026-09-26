@@ -761,7 +761,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 193,
+    "line": 198,
     "text": "pub fn fingerprints(self) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
@@ -1668,27 +1668,27 @@
     "line": 17,
     "text": "const BASE: u64 = 1_000_003;"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|24ffc93a5d856278|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|21488f3e3015a022|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
     "line": 49,
     "end": 58,
-    "text": "if has_any(seg, &[ALLOW_MARKER]) {"
+    "text": "if has_any(seg, ALLOW_MARKER) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|2abe9730a2ccdd4a|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 100,
+    "line": 102,
     "text": "} else if line.text.trim().chars().count() > DOC_LINE_CAP {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|31906d7fe45733c4|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 111,
-    "end": 114,
+    "line": 113,
+    "end": 116,
     "text": "fn fence_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|5621b762259badab|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 69,
-    "end": 73,
+    "line": 70,
+    "end": 74,
     "text": "fn allow_has_why(seg: &RawSeg) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|59f1048c98527f9a|0": {
@@ -1703,16 +1703,22 @@
     "end": 19,
     "text": "pub const EXEMPT_NAMES: [&str; 3] = [\"live\", \"license_header\", \"inline_allow\"];"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|7440dd51453a1d2e|0": {
+    "target": "../../../cli/src/docdup/exempt.rs",
+    "line": 45,
+    "end": 48,
+    "text": "if first_comment && seg.start_line <= LICENSE_HEAD_LINES && has_any(seg, LICENSE_MARKERS) {"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|af692af8415a028b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 118,
-    "end": 127,
+    "line": 123,
+    "end": 135,
     "text": "fn skeleton_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|b7e6e8d95e21e27b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 92,
-    "end": 97,
+    "line": 94,
+    "end": 99,
     "text": "let opens = fence_line(&line.text);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|ba371dd84f0cee25|0": {
@@ -1721,16 +1727,10 @@
     "end": 7,
     "text": "//! Four-way category exemption (plan :74-76, design vol.2 §5.2) as a"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|e77e07a1c20eef4b|0": {
-    "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 42,
-    "end": 45,
-    "text": "/// spec.rs); the bare-marker rule's authority is the same module's"
-  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|eeb40d69d0b4cb1e|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 87,
-    "end": 91,
+    "line": 89,
+    "end": 93,
     "text": "for line in &seg.lines {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|f167799f784e2377|0": {
@@ -1738,6 +1738,30 @@
     "line": 27,
     "end": 36,
     "text": "pub struct Ledger {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/html.rs|3b080f13e7285e8b|0": {
+    "target": "../../../cli/src/docdup/html.rs",
+    "line": 28,
+    "end": 29,
+    "text": "const BLOCK: &str ="
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/html.rs|4faed499613c0437|0": {
+    "target": "../../../cli/src/docdup/html.rs",
+    "line": 39,
+    "end": 65,
+    "text": "pub(super) fn segments(text: &str) -> (Vec<RawSeg>, MdShed) {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/html.rs|721e3ac9cb1731bf|0": {
+    "target": "../../../cli/src/docdup/html.rs",
+    "line": 9,
+    "end": 13,
+    "text": "//! `script`, `style`). The document's own comments are masked like a"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/html.rs|a8a2391037ea8b98|0": {
+    "target": "../../../cli/src/docdup/html.rs",
+    "line": 70,
+    "end": 97,
+    "text": "fn block(element: Node, src: &[u8], lines: &Lines) -> RawSeg {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|11081afa57cc4ee5|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
@@ -1876,25 +1900,25 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|18db33163c95b3ca|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 119,
+    "line": 123,
     "text": "fn shingle_blob(set: &[u64]) -> Vec<u8> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|66f7febe338dcdf3|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 76,
-    "end": 79,
+    "line": 80,
+    "end": 83,
     "text": "if words.len() < spec::MIN_DOC_TOKENS {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|7d2c5d39ed50f773|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 34,
-    "end": 39,
+    "line": 38,
+    "end": 43,
     "text": "/// exempt::EXEMPT_NAMES; `shingles` = sorted deduped shingle u64s LE."
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|a6960b0205c782d5|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 21,
-    "end": 30,
+    "line": 22,
+    "end": 31,
     "text": "/// Bump when segment-extraction semantics change: it sits in the meta"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|acb33abf44d7bee6|0": {
@@ -1904,68 +1928,74 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|080a01bb1dcd5a4a|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 59,
+    "line": 65,
     "text": "fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1346a67d5862dd19|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 4,
-    "end": 6,
+    "line": 5,
+    "end": 7,
     "text": "//! nothing but `md::masked_content_lines` (F3/RM8): a judge seeing"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|15ed3284af3f4c03|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 88,
-    "end": 95,
+    "line": 94,
+    "end": 101,
     "text": "fn visible(line: &str, mask: &[bool]) -> String {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 188,
-    "end": 206,
+    "line": 194,
+    "end": 212,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|3633378bbdbc1b93|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 69,
-    "end": 71,
+    "line": 75,
+    "end": 77,
     "text": "if !cur.is_empty() && no != last + 1 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|596723b90d527bf0|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 171,
-    "end": 179,
+    "line": 177,
+    "end": 185,
     "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|af4198dae65b1993|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 208,
-    "end": 215,
+    "line": 214,
+    "end": 221,
     "text": "fn last_row(node: Node<'_>) -> usize {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b623f07650ed2a1f|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 121,
-    "end": 127,
+    "line": 127,
+    "end": 133,
     "text": "fn bare_marker(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b66256554ecf30f7|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 102,
-    "end": 108,
+    "line": 108,
+    "end": 114,
     "text": "fn paragraph_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|ce98856effa52be8|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 143,
-    "end": 166,
+    "line": 149,
+    "end": 172,
     "text": "fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|dc27f70bed6c0773|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 113,
-    "end": 119,
+    "line": 119,
+    "end": 125,
     "text": "fn html_line(vis: &str) -> bool {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|f066a6bc6f5f72a4|0": {
+    "target": "../../../cli/src/docdup/segments.rs",
+    "line": 33,
+    "end": 49,
+    "text": "/// Md extraction's visibility ledger — two different fates. `html`"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/shingle.rs|81495f633501e11c|0": {
     "target": "../../../cli/src/docdup/shingle.rs",
@@ -1997,6 +2027,12 @@
     "end": 39,
     "text": "pub fn line_words(line: &str, mask: Option<&[bool]>, out: &mut Vec<u64>) {"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|053ba463dbf330ef|0": {
+    "target": "../../../cli/src/docdup/spec.rs",
+    "line": 72,
+    "end": 77,
+    "text": "pub const SKELETON_PREFIXES: &str = \"\\"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|107444d508abc9eb|0": {
     "target": "../../../cli/src/docdup/spec.rs",
     "line": 22,
@@ -2006,12 +2042,6 @@
     "target": "../../../cli/src/docdup/spec.rs",
     "line": 45,
     "text": "pub const DOC_LINE_CAP: usize = 200;"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|3e09115a1ebd37b3|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 56,
-    "end": 62,
-    "text": "pub const LICENSE_MARKERS: [&str; 5] = ["
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|4738e7dbc18c5851|0": {
     "target": "../../../cli/src/docdup/spec.rs",
@@ -2030,27 +2060,27 @@
     "end": 27,
     "text": "/// Verbatim hard-hit floor in words (same provenance as"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|9010c644f621dc05|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 49,
-    "text": "pub const KIND_NAMES: [&str; 3] = [\"md_para\", \"comment_block\", \"docstring\"];"
-  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 50,
-    "end": 52,
+    "line": 52,
+    "end": 55,
     "text": "pub const KIND_MD_PARA: i64 = 0;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|92118c9e45fefaec|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 88,
+    "line": 81,
     "text": "pub const ALLOW_MARKER: &str = \"ce:allow(docdup)\";"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|bf848419e91547b9|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|99855187c109972b|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 67,
-    "end": 84,
-    "text": "pub const SKELETON_PREFIXES: [&str; 16] = ["
+    "line": 51,
+    "text": "pub const KIND_NAMES: [&str; 4] = [\"md_para\", \"comment_block\", \"docstring\", \"html_text\"];"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|bc4932867788a336|0": {
+    "target": "../../../cli/src/docdup/spec.rs",
+    "line": 62,
+    "end": 63,
+    "text": "pub const LICENSE_MARKERS: &str = \"SPDX-License-Identifier|Licensed under the Apache License|\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|e128e6057f8400eb|0": {
     "target": "../../../cli/src/docdup/spec.rs",
@@ -2059,8 +2089,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|f5c2efa037e4bd0c|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 91,
-    "end": 100,
+    "line": 84,
+    "end": 93,
     "text": "/// Only Python has a docstring convention (module/function/class body"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/graph/md.rs|1a6861d272727d30|0": {
@@ -3718,8 +3748,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|445bf00701224a12|0": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 72,
-    "end": 107,
+    "line": 75,
+    "end": 110,
     "text": "/// Role facts of one file node; the declared-target role covers the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|533cea80c55142f9|0": {
@@ -3896,8 +3926,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 248,
-    "end": 252,
+    "line": 254,
+    "end": 258,
     "text": "// The sentinel is never walked, and the scan-only arm (plan"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -3908,13 +3938,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 60,
-    "end": 75,
+    "line": 61,
+    "end": 76,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|e63f76e53c783474|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 54,
+    "line": 55,
     "text": "pub type Rung = u8;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|04440d166e5d3c04|0": {
@@ -4134,6 +4164,18 @@
     "end": 31,
     "text": "/// chain the ladder must refuse (depth > 8 / cycle / non-string"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/sites/html.rs|5a885ae798c92977|0": {
+    "target": "../../../cli/src/graph/sites/html.rs",
+    "line": 19,
+    "end": 45,
+    "text": "/// `element attribute label` per row: the attributes that reference a"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/sites/html.rs|6712ff86b382c978|0": {
+    "target": "../../../cli/src/graph/sites/html.rs",
+    "line": 113,
+    "end": 130,
+    "text": "/// One site per `srcset` candidate: the URL before the candidate's"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|3e0121921e556557|0": {
     "target": "../../../cli/src/graph/spec.rs",
     "line": 240,
@@ -4142,7 +4184,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|43216d5bb511435f|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 278,
+    "line": 282,
     "text": "// Markdown scans line-wise in graph/md.rs (no grammar); the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|a00b6f2b83aa3291|0": {
@@ -4161,22 +4203,28 @@
     "line": 42,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|8d38434be5ab313d|0": {
-    "target": "../../../cli/src/graph/store.rs",
-    "line": 148,
-    "end": 167,
-    "text": "const KINDS: &[&str] = &["
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|b7ec742e36bb0247|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 110,
+    "line": 115,
     "text": "pub const GRAPH_REV: i64 = 16;"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
+    "target": "../../../cli/src/graph/store.rs",
+    "line": 155,
+    "end": 157,
+    "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
     "target": "../../../cli/src/graph/symwire.rs",
     "line": 1,
     "end": 27,
     "text": "//! The export surface on the wire (plan v2.14, proto 4.1.0): which"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|0d326540934ffa41|0": {
+    "target": "../../../cli/src/graph/wire.rs",
+    "line": 104,
+    "end": 121,
+    "text": "/// Code kinds import; the doc kinds — Markdown's link family and"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|201ccd65b3bae451|0": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -4195,6 +4243,12 @@
     "line": 60,
     "end": 93,
     "text": "fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|8db1fe7ae025a171|0": {
+    "target": "../../../cli/src/graph/wire.rs",
+    "line": 123,
+    "end": 132,
+    "text": "/// A page — a Markdown or HTML document — as an edge target, the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|e47a7e60502158f5|0": {
     "target": "../../../cli/src/graph/wire.rs",
@@ -4772,38 +4826,38 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 232,
-    "end": 248,
+    "line": 236,
+    "end": 252,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 285,
-    "end": 290,
+    "line": 289,
+    "end": 294,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6e6e351ef11fb49b|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 438,
-    "end": 444,
+    "line": 442,
+    "end": 448,
     "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 425,
-    "end": 428,
+    "line": 429,
+    "end": 432,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|b5ae71bae3b1d60d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 334,
-    "end": 337,
+    "line": 338,
+    "end": 341,
     "text": "fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|ddb3e784660bcd82|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 268,
-    "end": 269,
+    "line": 272,
+    "end": 273,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/report.rs|87b0f1d7db238a67|0": {
@@ -5939,27 +5993,33 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 222,
-    "end": 227,
+    "line": 252,
+    "end": 257,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 154,
-    "end": 167,
+    "line": 157,
+    "end": 170,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 65,
-    "end": 70,
+    "line": 68,
+    "end": 73,
     "text": "let unit = Unit {\nkey: format!(\"{}/{}\", f.name, f.params),"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 171,
-    "end": 193,
+    "line": 174,
+    "end": 196,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|f782ffb638135d5f|0": {
+    "target": "../../../cli/src/fourclass/units.rs",
+    "line": 200,
+    "end": 225,
+    "text": "/// HTML sections (plan v2.30 step 5, booklet §5): an element carrying"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {
     "target": "../../../core/app/CE/FourClass.hs",
@@ -7686,13 +7746,13 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|13ffd4191b66779e|0": {
     "target": "../../../cli/src/mention/name.rs",
-    "line": 37,
-    "end": 52,
+    "line": 38,
+    "end": 53,
     "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|d826aab6108efd42|0": {
     "target": "../../../cli/src/mention/name.rs",
-    "line": 72,
+    "line": 74,
     "text": "fn single_token(rel: &str, name: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/rates.rs|92c605251b67836d|0": {
@@ -8115,8 +8175,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 188,
-    "end": 215,
+    "line": 194,
+    "end": 221,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/say.rs|7de3ded125c17f93|0": {

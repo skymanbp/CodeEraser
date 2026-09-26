@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How CodeEraser works: deterministic judgment, fifteen families</title>
+<meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: fifteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
+<meta name="theme-color" content="#10141d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://codeeraser.dev/how/">
+<meta property="og:title" content="How CodeEraser works">
+<meta property="og:description" content="Deterministic judgment over measured facts: every verdict is arithmetic, and every constant is cited to the source line that implements it.">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=6">
+<link rel="stylesheet" href="/viewer.css?v=1">
+<script src="/viewer.js?v=1" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <a class="home" href="/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
+  <nav>
+    <a href="/">Overview</a>
+    <a href="/stack/">Stack</a>
+    <a href="/bench/">Benchmarks</a>
+    <a href="/zh/how/">中文</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="lede">
+  <h1>How it works</h1>
+  <p>CodeEraser applies <em>deterministic</em> computation to the non-deterministic
+  output of language models. A model writing into a long-lived repository drifts toward
+  stacking rather than editing: the same function implemented twice, the same fact
+  restated in a third file, an update that arrives as an append. The tempting fix is to
+  audit that drift with a second model. This is the opposite commitment.</p>
+  <p>Every verdict below is arithmetic over facts extracted from the tree: token
+  fingerprints, tree edit distances, graph in-degrees, git-window counts, integer and
+  rational comparisons against thresholds that are <strong>written down</strong>. There is
+  no sampling temperature anywhere between the evidence and the verdict, no floating
+  point in the judgment layer, and no model in the loop. The same tree yields the same
+  bytes on any machine at any hour, so a disagreement about code health is settled by
+  re-running the number and reading the <code>file:line</code> it points at.</p>
+  <p>Each section below is the short form. The full derivation (every constant traced
+  to the source line that implements it) lives in
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
+  which every heading here links into.</p>
+  <nav class="toc" aria-label="Sections">
+    <p class="k">On this page</p>
+    <div class="row"><a class="sec" href="#families">Families</a><ul>
+      <li><a href="#f01"><b>01</b>T1/T2 clones</a></li><li><a href="#f02"><b>02</b>T3 near-miss clones</a></li><li><a href="#f03"><b>03</b>Documentation duplication</a></li><li><a href="#f04"><b>04</b>Structure judgment</a></li><li><a href="#f05"><b>05</b>Scoring and ratchet</a></li>
+      <li><a href="#f06"><b>06</b>Dead code</a></li><li><a href="#f07"><b>07</b>Three-signal join</a></li><li><a href="#f08"><b>08</b>Split-ROI pricing</a></li><li><a href="#f09"><b>09</b>Edit classes</a></li><li><a href="#f10"><b>10</b>Trend slope</a></li>
+    </ul></div>
+    <div class="row"><a class="sec" href="#fpr">FPR discipline</a><ul><li><a href="#f11"><b>11</b>Guard tier ladder</a></li></ul></div>
+    <div class="row"><a class="sec" href="#acting">Acting on verdicts</a><ul><li><a href="#f12"><b>12</b>Deterministic erase</a></li><li><a href="#f13"><b>13</b>Mention veto</a></li></ul></div>
+    <div class="row"><a class="sec" href="#residue">Change-time residue</a><ul><li><a href="#f14"><b>14</b>Tombstone residue</a></li></ul></div>
+    <div class="row"><a class="sec" href="#advisor">Same-role advisor</a><ul><li><a href="#f15"><b>15</b>Sparse retrieval</a></li></ul></div>
+    <div class="row"><a class="sec" href="#honesty">Honesty boundaries</a><ul><li><a href="#honesty">not a security boundary</a></li><li><a href="#honesty">fail-open</a></li></ul></div>
+  </nav>
+</section>
+
+<figure class="arch deep" id="verdict">
+  <div class="stage"><img src="/assets/judgment.en.svg" width="650" height="760" alt="How a verdict is made: Rust measures syntax units, token fingerprints, documentation shingles, git windows, the reference graph and a change's surfaces; Haskell judges structure and score, clones and same-role advice, documentation duplication, trajectory and audit, liveness and erase, and tombstone residue, one wire family per row; the gate and the per-family reports deliver the verdicts" loading="lazy"></div>
+  <figcaption>One row per wire family: what Rust measures on the left, the Haskell verdict it feeds in the middle, and what leaves (an exit code or report rows) on the right. Open the <a href="/assets/judgment.en.svg">full-size SVG</a>.</figcaption>
+</figure>
+
+<h2 id="families">The <!--ce:count:booklets#word-->fifteen<!--/ce--> judgment families</h2>
+<p class="note">Three counts of "family" ship across this site and they measure different things. Below there are <b><!--ce:count:booklets#word-->fifteen<!--/ce--></b> booklets, one per judgment whose math is worth its own derivation. On the wire there are <b><!--ce:count:families#word-->twelve<!--/ce--></b> capabilities (the stack diagram's count; the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request). And there are <b><!--ce:count:mcp_tools#word-->sixteen<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire: <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>erase_log</code> reads the applied-erase audit trail, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only).</p>
+
+<div class="fam">
+  <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
+  <p class="job">Finds exact and parameterized duplicate token runs: renamed variables and
+  changed constants are clones, changed syntax is not.</p>
+  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
+  <p class="note">Any common substring of at least <code>t</code> normalized tokens contains
+  <code>t - k + 1 = w</code> consecutive k-grams (one complete window) and window
+  selection depends only on that window's contents, so both copies select the same
+  minimum. Hence at least one shared fingerprint, always: the Schleimer et al. SIGMOD'03
+  no-miss lower bound as a correctness contract, not an estimate. The rolling hash is
+  Rabin-Karp, <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes.</p>
+  <ul class="consts">
+    <li><b>kgram</b> 25</li>
+    <li><b>window</b> 26</li>
+    <li><b>guarantee t</b> 50</li>
+    <li><b>BASE</b> 1_000_003</li>
+    <li><b>HOT_CAP</b> 64</li>
+    <li><b>DEFAULT_MIN_DISTINCT</b> 7</li>
+    <li><b>near-miss band</b> 25 &lt;= len &lt; 50</li>
+    <li><b>TOKENIZER_REV</b> 3</li>
+    <li><b>schema</b> ce.dedup-report/0.5.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f02"><span class="n">02</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">T3 near-miss clones — tree edit distance (TSED)</a></h3>
+  <p class="job">Judges two units whose ASTs are structurally almost the same but whose
+  token streams are not: reshaped and rewritten copies.</p>
+  <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
+clone      ⇔ TSED &gt;= 0.85</pre>
+  <pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den &gt;= num * mx  where mx = max n1 n2</pre>
+  <p class="note"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1,
+  relabel = 0 on matching kind codes, else 1) and is always integral, so the comparison
+  is an exact cross-multiplication and the boundary is decidable in both directions: at
+  <code>max = 100</code>, <code>ted 15</code> is a clone and <code>ted 16</code> is not.
+  Two provably admissible O(1) prefilters cut pairs before any TED runs:
+  <code>q · tsedDen &lt; tsedNum · max</code> for <code>q ∈ {min(n1,n2), I}</code>, where
+  <code>I = Σ_label min(c1, c2)</code>, using the <em>same</em> 85/100 the judgment will,
+  which is exactly what makes them admissible.</p>
+  <ul class="consts">
+    <li><b>tsedNum</b> 85</li>
+    <li><b>tsedDen</b> 100</li>
+    <li><b>T3_MIN_NODES</b> 24</li>
+    <li><b>unitNodeCap</b> 256</li>
+    <li><b>pairCap</b> 4096</li>
+    <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
+    <li><b>HOT_GROUP_CAP</b> 64</li>
+    <li><b>schema</b> ce.clone-report/0.2.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f03"><span class="n">03</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">Documentation duplication — shingling + MinHash/LSH</a></h3>
+  <p class="job">Decides whether two blocks of documentation text (markdown paragraphs,
+  comment blocks, docstrings) are near-duplicates of each other.</p>
+  <pre>dupDecidesWith num den inter union  =  inter * den &gt;= num * union
+
+dupVerdictWith (num, den, vfloor) inter union run
+  =  dupDecidesWith num den inter union  ||  run &gt;= vfloor</pre>
+  <p class="note">Bound in production to <code>(80, 100, 50)</code>: Jaccard at or above
+  0.80, decided exactly in integers, <em>or</em> a verbatim run of at least 50 words. The
+  core computes <code>inter</code> and <code>union</code> itself from the ascending
+  deduped shingle sets; raw counts cross the wire, never a ratio, or "the re-check lives
+  in Haskell" would be an empty claim. MinHash/LSH is only a coarse filter and is
+  RNG-free: the permutation index is the salt. A run of <code>R</code> shingles spans
+  <code>R + k - 1</code> words.</p>
+  <ul class="consts">
+    <li><b>jaccardNum</b> 80</li>
+    <li><b>jaccardDen</b> 100</li>
+    <li><b>DOC_SHINGLE</b> 5</li>
+    <li><b>MIN_DOC_TOKENS</b> 50</li>
+    <li><b>VERBATIM_FLOOR</b> 50</li>
+    <li><b>DOC_LINE_CAP</b> 200</li>
+    <li><b>LICENSE_HEAD_LINES</b> 5</li>
+    <li><b>DOC_SET_CAP</b> 8192</li>
+    <li><b>DOC_PAIR_CAP</b> 4096</li>
+    <li><b>DOCDUP_REV</b> 5</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f04"><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">Structure judgment — tree-scale entropy, <!--ce:count:structure_axes#word-->eight<!--/ce--> axes</a></h3>
+  <p class="job">Judges the tree rather than the file: directory geometry, naming
+  distributions, reference locality, documentation coverage, doc staleness, redundancy, modularity.</p>
+  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
+perMille r      = floor (r * 1000)</pre>
+  <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = flagged dirs, N = dir total
+raw      = Σ_axes (charge_i * violCost)
+score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
+  <p class="note">Shannon entropy and KL divergence need logarithms (irrational, therefore
+  not exactly decidable), so the family publishes the rational-closed members of the same
+  families instead: Tsallis-2 diversity and the χ² f-divergence, all over
+  <code>Data.Ratio</code>. A χ² with observed mass on a zero-reference bin returns
+  <code>Nothing</code>, a refusal rather than a zero: the report names those directories.
+  Each axis's violation mass <code>v</code> is its flagged-<em>directory</em> count, charged
+  through the verdict family's density law into ‰ of scale, so the axis rows carry charges,
+  not counts, folded through <code>structViolCostNeutral = 10</code>;
+  <code>judgedAxisCount</code> is 5 to 8
+  depending on which optional fact tables rode the wire.</p>
+  <ul class="consts">
+    <li><b>violCost</b> 10</li>
+    <li><b>scale</b> 1000</li>
+    <li><b>depthCeil</b> 8</li>
+    <li><b>fanoutCeil</b> 30</li>
+    <li><b>namingMin</b> 5</li>
+    <li><b>namingCeil</b> 600‰</li>
+    <li><b>mixRefFloor</b> 5</li>
+    <li><b>misplaceMin</b> 3</li>
+    <li><b>bigDirFloor</b> 8</li>
+    <li><b>staleMin</b> 1</li>
+    <li><b>dupMin</b> 1</li>
+    <li><b>deadMin</b> 1</li>
+    <li><b>structNodeCap</b> 524288</li>
+    <li><b>modFloor</b> 1</li>
+    <li><b>modMassFloor</b> 4</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f05"><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">Scoring and the ADR-006 ratchet</a></h3>
+  <p class="job">Folds <!--ce:count:axes#word-->seven<!--/ce--> axes into one 0–1000 score and gates it against a banked
+  baseline that is only allowed to tighten.</p>
+  <pre>raw     = sum_i (w_i * p_i * violCost)
+wTotal  = sum_i w_i                            -- derived, never a literal
+score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
+  <pre>p(x) = 0                              if x &lt;= S
+     = pMax                           if H &lt;= S          -- degenerate fallback
+     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
+     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm
+
+m = median(x)
+r = median( max(x/m, m/x) )                    -- &gt;= 1 by construction
+S = clamp(floor(m * r^k), [softMin, softMax])</pre>
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+
+added   = current \ baseline        -- non-empty =&gt; fail
+removed = baseline \ current        -- informational; drives the shrink</pre>
+  <p class="note">Axis 0 is the only axis that is not a count: a convex penalty on file
+  size, exact <code>Rational</code>, monotone past the hard line. <code>pMax</code> is the
+  value <em>at</em> <code>H</code>, not a ceiling. The soft line <code>S</code> is a
+  statistic of the repository's own frozen LOC distribution, the identity
+  <code>S = clamp(median + k·MAD, …)</code> re-expressed multiplicatively so no logarithm
+  is ever taken; it is derived only at establish and then frozen into the baseline. The
+  fail bit is a disjunction of <!--ce:count:fail_conditions#word-->six<!--/ce--> <em>named</em> conditions:
+  <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
+  <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>. The reply carries the
+  list of names that held; the console prints them after <code>FAIL</code> in that order.</p>
+  <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column, the file's <em>path class</em>:
+  the 1-based index of the first <code>[[rules.class]]</code>
+  whose globs match, <code>0</code> for none. Beside it rides an additive <code>classKnobs</code> table
+  whose codes are the ceilings' own <code>0 / 1 / 2</code> plus <code>3</code> (proto 5.1.0), the
+  class's own ADR-006 ratchet allowance in lines, and <code>4</code> (proto 6.4.0), its own
+  cognitive-complexity allowance. Those two knobs are the ones whose value <code>0</code> is meaningful, so the
+  table's value floor is judged per code. A classed row is charged against its
+  class's soft line, hard line and CoC ceiling and falls back to the global line wherever the
+  class declares none; the charge law itself is untouched. The ratchet reads the fourth column
+  only to pick that allowance, asked per (class, metric), so code <code>4</code> answers cognitive
+  complexity where declared and code <code>3</code> answers the rest; declared, it <em>replaces</em>
+  both global legs, so <code>0</code> means any growth is over. It writes a three-column
+  baseline back, so a class is a charging
+  parameter for this run and never a baseline fact. Names and globs stay on the client: only the
+  index and its knobs cross.</p>
+  <ul class="consts">
+    <li><b>scoreScale</b> 1000</li>
+    <li><b>violCost</b> 10</li>
+    <li><b>defaultWeight</b> 1</li>
+    <li><b>sizeHard H</b> 750</li>
+    <li><b>sizePMax</b> 10</li>
+    <li><b>softLineK</b> 2</li>
+    <li><b>[softMin, softMax]</b> [200, 500]</li>
+    <li><b>sizeCeil fallback</b> 300</li>
+    <li><b>cocCeil</b> 15</li>
+    <li><b>deadIndegCeil</b> 0</li>
+    <li><b>rewriteNum/Den</b> 50/100</li>
+    <li><b>sccFloor</b> 2</li>
+    <li><b>tolNum/tolDen</b> 102/100</li>
+    <li><b>tolAbs</b> 10</li>
+    <li><b>legs cross at</b> 500</li>
+    <li><b>verdictNodeCap</b> 131072</li>
+    <li><b>verdictRowCap</b> 524288</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f06"><span class="n">06</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">Graph liveness and dead-code verdicts</a></h3>
+  <p class="job">Answers one question ("which files does nothing live reach?") over a
+  reference graph whose node identity is the row index, with no text on the wire.</p>
+  <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
+reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
+  <pre>public     = testBit flags 0
+referenced = indeg &gt;= 1 over kept arcs
+judged     = i ∉ reach
+code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
+  <p class="note"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes, structurally separated so an exported-but-unreferenced API
+  can never collapse into plain dead: <code>1 unref_private</code>,
+  <code>2 unref_public</code>, <code>3 unreach_private</code>, <code>4 unreach_public</code>.
+  Resolution never guesses: a site walks its language's rungs in order and the first rung
+  producing <em>exactly one</em> in-scope candidate wins; more than one is
+  <code>Unresolved</code>, and <code>External</code> is a correct terminal answer, not a
+  miss. Cycles are reported, never judged; a cyclic island with no entry seed is dead by
+  reachability alone. The kind column is the formula's second filter, not baggage:
+  <code>inert</code> = {3 asset, 5 unused ref-def}, because an image link renders bytes and an unused
+  reference definition renders nothing, neither counts as a reference, and the exclusion is
+  executed by the core itself. Since proto 2.32.0 each dead row carries a confidence column judged from
+  the per-language site ledger the request ships: 0 unvouched (the language still has
+  unresolved sites), 1 vacuous, 2 vouched. That column is the erase family's trust boundary, executed
+  by the family that owns the ledger. Import-edge precision measured
+  <strong>38/40 = 0.95</strong> across five pinned corpora against a ≥ 0.90 gate, on a
+  sample frozen before any resolver existed.</p>
+  <ul class="consts">
+    <li><b>minRung</b> 5</li>
+    <li><b>entryMask</b> 126 (bits 1–6)</li>
+    <li><b>sccFloor</b> 2</li>
+    <li><b>nodeCap</b> 131072</li>
+    <li><b>edgeCap</b> 524288</li>
+    <li><b>GRAPH_REV</b> 16</li>
+    <li><b>tsconfig extends</b> ≤ 8 hops</li>
+    <li><b>precision gate</b> ≥ 0.90</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f07"><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">The three-signal join</a></h3>
+  <p class="job">Combines similarity × graph position × churn into one of <!--ce:count:join_codes#word-->four<!--/ce--> candidate
+  codes, and then deliberately declines to act on it.</p>
+  <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
+(2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
+(3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
+  <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen &gt;= total * rewriteNum
+cochangeHot = cochange &gt;= cochangeFloor
+legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
+  <p class="note">Priority is <em>data</em>, not guard order: the first row whose required
+  bits all hold and whose forbidden bits all stay clear wins, else code 0. Making the
+  order data is what lets the property battery falsify it by rotating the table. Every
+  gating row requires the graph bit, so a mask of 5 (graph leg absent) can only carry code
+  0; a missing graph leg refuses to gate rather than pretending indegree 0. Since
+  proto 2.33.0 every candidate row carries a leg-agreement <em>confidence</em> (how many
+  present legs contributed a held condition), and the table's severity face ships once
+  as <code>joinSeverity</code>; <code>ce join</code> judges its pairs over the SAME
+  verdict/1 road the check gate uses. The join still produces <em>candidates</em>; no
+  verdict code appears in the fail bit, so <code>ce join</code> never gates on
+  its own verdicts; it exits 0 unless the run itself fails, and a missing or
+  refusing core is a run failure (exit 2), not a quiet pass.</p>
+  <ul class="consts">
+    <li><b>rewriteNum/Den</b> 50/100</li>
+    <li><b>cochangeFloor</b> 2</li>
+    <li><b>entryMask</b> 126</li>
+    <li><b>legSim</b> 1</li>
+    <li><b>legGraph</b> 2</li>
+    <li><b>legChurn</b> 4</li>
+    <li><b>COCHANGE_FILE_CAP</b> 20</li>
+    <li><b>schema</b> ce.join-report/0.3.0</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f08"><span class="n">08</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">Split-ROI seam pricing (four legs)</a></h3>
+  <p class="job">Answers "is this long file worth splitting, and where?" with a number
+  instead of a slogan, as an advisory that never contributes to the structure score or the fail bit.</p>
+  <pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
+
+costMilli(u)    = crossRefs(u)      * roiRefMilli
+                + cutClones(end_u)  * roiCloneMilli
+                + crossChurn(u)     * roiChurnMilli
+                + roiPhiMilli
+
+viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without division</pre>
+  <p class="note">Benefit is the graded-zone penalty a split gives back, computed on the
+  <em>same</em> convex curve the verdict family judges with, imported rather than
+  re-derived; because <code>p</code> is convex with <code>p(0) = 0</code> it is
+  superadditive, so the bracket is non-negative. Best-seam selection is the exact rational
+  argmax over ROI, compared by cross-multiplied <code>b % c</code>. A file with
+  <code>n</code> top-level units yields <code>n - 1</code> seams. Long-and-cohesive
+  becomes an exemption <em>with numbers attached</em>; long-and-splittable gets a cut
+  line.</p>
+  <ul class="consts">
+    <li><b>seamSoft S</b> 300</li>
+    <li><b>seamHard H</b> 750</li>
+    <li><b>seamPMax</b> 10</li>
+    <li><b>roiRefMilli</b> 250</li>
+    <li><b>roiCloneMilli</b> 500</li>
+    <li><b>roiChurnMilli</b> 150</li>
+    <li><b>roiPhiMilli</b> 500</li>
+    <li><b>NAME_FLOOR</b> 3</li>
+    <li><b>CHURN_WINDOW_DAYS</b> 14</li>
+    <li><b>knob codes</b> 12–18</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f09"><span class="n">09</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/09-edit-four-classification-update-supervision.md">Edit four-classification (update supervision)</a></h3>
+  <p class="job">Reduces every supervised edit to four integer counts per file pair:
+  matched, novel, moved, deleted. That makes "this update was stacked, not applied" a
+  measurement.</p>
+  <pre>siteOpens s n  =  n * movedCost + s  &lt;  n * plainCost
+
+destFloor      =  least n with siteOpens siteCostCross n   =  2</pre>
+  <pre>accepted   = isStart &amp;&amp; distinctEvidence &gt;= destFloor &amp;&amp; anchored
+anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
+  <p class="note">The cross-file evidence floor is <em>derived</em>, not tuned:
+  <code>siteCostCross = 2</code> makes a single cross line a tie
+  (<code>1*1 + 2 = 3 = 1*3</code>), ties do not open, so <code>destFloor</code> evaluates
+  to 2, and that tie <em>is</em> the coincidence rejection. Only
+  <code>anchorFloor = 19</code> is decided rather than derived: in the dual-corpus shadow
+  ablation the invented station's widest anchor measured 16 alnum characters and the
+  thinnest real anchor 19, so 19 is the top of the window that kills every measured
+  coincidence while keeping every measured real site. The L2 delta is monotone in one
+  direction only: plain lines may become moved, never the reverse. Since proto 7.1.0 a
+  second, coarser stage rides beside the line delta: paired <code>declRem</code> /
+  <code>declAdd</code> tables of declaration keys that vanish on one side and appear on
+  exactly one other, accepted when the two spans share at least <code>declFloor = 1</code>
+  leftover hash; the key pays the cross-site cost itself
+  (<code>declCredit = siteCostCross</code>), so one shared line opens an edge where a line
+  would need two. It appends relocations with <code>lines = 0</code>; no line
+  classification, block, suspicion or score moves.</p>
+  <ul class="consts">
+    <li><b>movedCost</b> 1</li>
+    <li><b>plainCost</b> 3</li>
+    <li><b>siteCostWithin</b> 0</li>
+    <li><b>siteCostCross</b> 2</li>
+    <li><b>destFloor</b> 2</li>
+    <li><b>anchorFloor</b> 19</li>
+    <li><b>MAX_D</b> 3000</li>
+    <li><b>MAX_BRIDGE</b> 7</li>
+    <li><b>bucketCap</b> 64</li>
+    <li><b>stackingNovelFloor</b> 20</li>
+    <li><b>stackingRatio</b> 10</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f10"><span class="n">10</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">Score trajectory — the trend slope verdict</a></h3>
+  <p class="job">Answers one question about a repository's history: is the check score
+  going up, flat, or down, and by how much per day.</p>
+  <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
+y_i   = (score_i * 1000000) % scale_i
+
+slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre>
+  <pre>slope &lt; -band  → 2  (degrading)
+slope &gt;  band  → 0  (improving)
+otherwise      → 1  (flat)        where band = floorMicro</pre>
+  <p class="note"><code>%</code> here is <code>Data.Ratio</code>'s exact-ratio
+  constructor, not modulo; <code>y</code> renormalizes every commit onto a fixed 10⁶
+  full-scale grid so rows measured under different <code>scoreScale</code> values are
+  commensurable. The slope is the median of pairwise slopes (trend/2): one wild point,
+  a broken commit that still measured, drags a least-squares mean anywhere and cannot
+  move the median past its neighbors. Row order is deliberately unconstrained: the
+  judged view sorts by timestamp and caps at the tsWindow most recent points, so rebased
+  commits are legal input. The steepest single-step fall ships as <code>cliff</code> and
+  the longest strictly-falling run as <code>declineRun</code>, each naming its commit by
+  request index; hashes never cross. Below <code>minPoints</code>, or with no
+  timestamp-distinct pair, the slope is <code>Nothing</code> (absence, never a
+  fabricated flat) and the fail bit stays false. With the default floor 0, degrading
+  can be reported and cannot fail.</p>
+  <ul class="consts">
+    <li><b>minPoints</b> 3 (knob 0)</li>
+    <li><b>declineFloorMicro</b> 0 (knob 1)</li>
+    <li><b>row + knob cap</b> 4096</li>
+    <li><b>tsWindow</b> 512</li>
+    <li><b>full-scale grid</b> 10⁶</li>
+    <li><b>schema</b> ce.trend-report/0.3.0</li>
+  </ul>
+</div>
+
+<h2 id="fpr">The FPR discipline: what earns a rule the right to deny</h2>
+
+<div class="fam">
+  <h3 id="f11"><span class="n">11</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md">FPR discipline and the guard tier ladder</a></h3>
+  <p class="job">A deterministic gate over a non-deterministic writer: the guard sits on
+  <code>PreToolUse</code> for <code>Write|Edit</code> and answers each pending write with
+  exact arithmetic, and a rule class may only enforce once it has paid for the right.</p>
+  <pre>TIERS = ["observe", "warn", "ask", "deny"]
+PROMOTED_DEFAULT = "deny"</pre>
+  <div class="tablewrap">
+  <table class="ladder">
+    <thead><tr><th>tier</th><th>permissionDecision</th><th>effect</th></tr></thead>
+    <tbody>
+      <tr><td>observe</td><td><em>none, returns before printing</em></td><td>feed line only, no injected text</td></tr>
+      <tr><td>warn</td><td><code>allow</code></td><td>edit proceeds, reason surfaces as a visible warning</td></tr>
+      <tr><td>ask</td><td><code>ask</code></td><td>the user is prompted</td></tr>
+      <tr><td>deny</td><td><code>deny</code></td><td>write is refused, reason points at the existing <code>file:line</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Determinism is bought by <em>replaying the write</em> rather than
+  estimating it: <code>resulting_lines</code> computes the exact post-write line count,
+  and any case where the tool call would fail on its own (missing file, ambiguous
+  non-<code>replace_all</code> match) returns <code>None</code> and the rule stays
+  silent. The gate never judges a write that will not land. An unrecognized
+  <code>[guard] mode</code> resolves to an <code>observe (ce.toml ERROR: …)</code> string
+  rather than being passed through, because a pass-through typo once disarmed every
+  enforcement path while the session banner still printed the mode as armed.</p>
+  <p class="note"><strong>Why a rule class may not simply be set to deny.</strong> The
+  ladder is a route written into the plan, so the default can neither stay at
+  <code>warn</code> forever nor start at <code>deny</code>. Admission is quantitative:
+  the M3 acceptance criterion is <strong>≤ 1 mis-block in 500 real normal edits</strong>
+  with <code>N=1</code> demonstrations explicitly disallowed, and the M4 main gate is
+  <strong>FPR ≤ 1% over 500 real normal edits</strong> on an evaluation set pre-registered
+  before implementation, ≥ 200 edit samples, ≥ 50% drawn from real agent transcripts.
+  Sample purity is part of the gate: only observe-mode and pre-guard sessions may be
+  sampled and edits the guard already intervened in are excluded, otherwise FPR is biased
+  downward by the guard's own shaping and the deny admission becomes self-certifying.
+  Exactly two classes have paid: T1/T2 exact duplicate write, and hard-budget breach at
+  <code>file &gt; its hard line</code>, 750 by default, or the line the file's
+  <code>[[rules.class]]</code> declares, so the hook denies exactly where the CI wall fails.
+  <em>Every other rule stays at observe for want of its
+  own record.</em></p>
+  <p class="note"><strong>Since CodeEraser 1.2.0 the duplicate-write rule charges novel duplication
+  only.</strong> The K-round replay resurrected the retired instrument over 2,761 real
+  edit events (this repository's full history plus the pinned <code>requests</code>
+  tail), and arbitration split the raw intercepts into genuine duplication landings,
+  re-fires on files already carrying budgeted blocks, and split/fold mid-states: the
+  write-first ordering of exactly the extract-to-a-leaf refactors a 300-line discipline
+  produces. The fix subtracts the matches the <em>replaced</em> content already carried
+  (Write replaces the on-disk file, Edit replaces <code>old_string</code>): a rewrite
+  that carries its debt is silent, an introduction still denies, and a split to a new
+  file, indistinguishable from a copy at the instant of the write, still denies while
+  the denial teaches the ordering that passes (trim the source first). Both framings of
+  the resulting rate are ledgered in
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY.md</a>.</p>
+  <p class="note">The recorded replay treats git linear history as a real edit stream:
+  probe first, then apply, at the shipped default knobs <code>t = 50</code> and
+  <code>min_distinct = 7</code>: <strong>630 events, 35 blocks, 0 false after
+  arbitration → 0.00 per 500</strong>. That was the M3 round; the standing instrument
+  (<code>cli/tests/it/fpr_replay.rs</code>) re-measured on 2026-09-05: requests 365 events
+  / 0 intercepts, and 3164 self-repo events raising 178 landed introductions plus 79
+  write-first mid-states. Both readings live in FPR-REPLAY.md. The 35 self-repo blocks
+  arbitrated as true positives and were remediated, stepping the clone-block budget
+  251 → 211 → 209 → 205 → 202 in lockstep.</p>
+  <pre>cap      = lines_for(file).file_lines_fail     // the file's class table; 750 for class 0
+breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
+
+permille = (lines - S) * 1000 / (H - S)
+0   ..= 249  →  observe
+250 ..= 750  →  warn
+751 ..       →  ask</pre>
+  <p class="note">The graded zone reads its <code>S</code> fallback and its <code>H</code> off the
+  same per-file table as the hard budget. The map is the same discipline applied to itself:
+  <code>[guard] zone_tiers</code> is <strong>off by default</strong>, so the zone rule is
+  feed-only and injects nothing. Its ledger now exists and it still does not enforce: the
+  pre-registered rule armed the default only if <em>every</em> corpus measured at or under
+  1 %, and the first run read self 0.54 % but requests 2.46 %; variant B,
+  <code>zone_tiers</code> stays <code>false</code>, with
+  <code>cli/tests/it/fpr_zone_gate.rs</code> holding the shipped default equal to what
+  that arithmetic licenses. Warns are rate-limited to once per
+  (rule, file, session) and clipped at a token budget; enforcement is not rate-limited,
+  because a deny is not context bloat.</p>
+  <ul class="consts">
+    <li><b>file_lines_warn S</b> 300</li>
+    <li><b>file_lines_fail H</b> 750</li>
+    <li><b>zone_tiers</b> false</li>
+    <li><b>FPR gate</b> ≤ 1% / 500 edits</li>
+    <li><b>WARN_BUDGET_TOKENS</b> 200</li>
+    <li><b>STOP_BUDGET_TOKENS</b> 400</li>
+    <li><b>CHARS_PER_TOKEN</b> 4</li>
+    <li><b>feed schema</b> ce.observe/0.10.0</li>
+  </ul>
+</div>
+
+<h2 id="acting">Acting on the verdicts: erasure and advice</h2>
+
+<div class="fam">
+  <h3 id="f12"><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">Deterministic erase — the safety predicate</a></h3>
+  <p class="job">Judges erase-plan rows for <!--ce:count:erase_classes#word-->three<!--/ce--> provable classes (<code>dead_file</code>,
+  <code>verbatim_doc</code>, and <code>t1_twin</code>) and refuses every unsafe
+  row with a named reason code.</p>
+  <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
+         3 dead_file (confidence road, 2.32.0)
+reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
+         3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
+         6 public_surface (6.1.0)</pre>
+  <p class="note">Rust assembles integer facts from the three source families;
+  Haskell applies the fixed first-failure predicate. Since proto 2.32.0 the dead-file
+  family rides class 3, whose trust fact is the graph family's own per-row
+  confidence; since proto 6.1.0 a public dead verdict (2 unref_public or 4
+  unreach_public) is refused as public_surface <em>before</em> that confidence
+  is weighed, so an exported API is never eraseable however well vouched, and
+  only then does an unvouched confidence refuse the row. Class 0, the same
+  family on the local-count road, retired at proto 4.0.0 when its grace window
+  closed: the position stays frozen and the core refuses it by name. A degraded
+  over-cap reply authorizes nothing, and the safety surface has no knobs.</p>
+  <ul class="consts">
+    <li><b>classes</b> 4</li>
+    <li><b>reason codes</b> 7</li>
+    <li><b>eraseRowCap</b> 4096</li>
+    <li><b>since proto</b> 2.16.0</li>
+    <li><b>wire</b> erase/1</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f13"><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">Unmentioned-declaration advisory — the mention veto</a></h3>
+  <p class="job">Lists, beside the graph family's verdicts, every judged declaration whose
+  name no <em>other</em> file in the tree spells, a negative instrument that reports
+  with a visibility code and never judges.</p>
+  <pre>veto  = another file spells it | fold (Rust, ≥2 segments ∧ ≥7 chars)
+        | the file's own exception regions spell it
+row   = [node, vis, conv]      (integers only — a name never rides the wire)
+emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
+code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
+  <p class="note">U is a walk of its own: hidden files enter, <code>.git</code>/<code>.ce</code>
+  are cut by name, an <em>undeclared</em> nested repository is cut whole while a path the root's
+  <code>.gitmodules</code> declares stays in U as foreign, where it can spell a name and is never
+  measured. Only <code>.gitignore</code> and <code>.ceignore</code> are
+  honoured, so one commit yields one U on any machine, and every parameter of the walk is a
+  <code>MENTION_REV</code> input. The mentions store keeps 64-bit hashes, never text. Rust
+  extracts each declaration's mention name and category word and asks the three veto questions
+  cheapest first; Haskell reads only the visibility word and the mounts row (how many of the
+  file's <code>mod</code> mounts are private, whether a façade re-exports it, whether its own
+  package keeps it private), and assigns the frozen total order above. Both tables ride
+  <code>graph.request</code> together or not at all: a request without them gets the ten-key
+  reply byte for byte, and the dead set is the same either way. Past <code>unmentionedCap</code>
+  the core still judges the graph, drops the table and says so. The advisory never turns a gate
+  red and never enters <code>ce erase</code>.</p>
+  <ul class="consts">
+    <li><b>MENTION_REV</b> 3</li>
+    <li><b>FOLD_MIN_CHARS</b> 7</li>
+    <li><b>unmentionedVisMask</b> 3</li>
+    <li><b>unmentionedCap</b> 131072</li>
+    <li><b>unmentionedHardCap</b> 524288</li>
+    <li><b>since proto</b> 6.2.0</li>
+    <li><b>wire</b> graph/1</li>
+  </ul>
+</div>
+
+<figure class="arch" id="constants">
+  <div class="stage"><img src="/assets/methodology.svg" width="1200" height="820" alt="Three lanes (measured facts in Rust, judgment computations in Haskell with their formulas, and the gates that decide the exit code) with the constants the sections above cite written on the diagram" loading="lazy"></div>
+  <figcaption>The constant sheet. Lane 1 extracts facts in Rust; lane 2 turns them into
+  verdicts in Haskell with the formulas shown; lane 3 decides the exit code. Every number
+  on the diagram is a constant the sections above cite. Open the <a href="/assets/methodology.svg">full-size SVG</a>.</figcaption>
+</figure>
+
+<h2 id="residue">The change-time family: what an erasure leaves behind</h2>
+<p class="note">The families above read a tree. The fourteenth reads a <em>change</em>, the pairs one
+edit, one session or one commit wrote, at the PreToolUse hook, at the Stop audit and at
+<code>ce precommit</code> / <code>ce commitmsg</code>.</p>
+
+<div class="fam">
+  <h3 id="f14"><span class="n">14</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md">Tombstone residue — the erased-name conjunction</a></h3>
+  <p class="job">Finds the shape an agent leaves when told to remove X: X is gone from the code, and
+  the same change writes X back as an absence: a heading <code>(no X)</code>, an identifier
+  <code>without_x</code>, a sentence <code>X is no longer needed</code>.</p>
+  <pre>R     = ⋃ names(before) \ ⋃ alive(after)      (structural positions only; keys, never text)
+row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
+site  ⇔ names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
+over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
+  <p class="note">A name is what a text <em>declares</em>: an identifier outside comments and literals, a
+  unit name, a heading, a list lead; an inline code span only mentions, and keeps a name alive.
+  Rust reads the two surfaces the change added (new headings, unit names and file stems; the
+  added lines of comments, docstrings and paragraphs) and sends one row of three integers per
+  candidate; Haskell seats the sites and judges the budget, so no name and no path ever crosses
+  the wire. A document in the changelog role is exempt whole and counted by path convention,
+  by the shape of a version-indexed ledger, or by <code>[tombstone] ledger</code>, and a quote
+  run or section that is a ledger by itself exempts only itself. The class ships at
+  <code>observe</code> and writes every measurement to the feed; the nine-round FPR replay over
+  two histories, recorded in <code>docs/FPR-TOMBSTONE.md</code>, is what any promotion would
+  have to argue from.</p>
+  <ul class="consts">
+    <li><b>TOMBSTONE_REV</b> 1</li>
+    <li><b>MIN_ASCII_NAME</b> 3</li>
+    <li><b>MIN_WIDE_NAME</b> 2</li>
+    <li><b>JOIN_MAX</b> 3</li>
+    <li><b>SEGMENT_TOKENS</b> 3</li>
+    <li><b>minName</b> 1</li>
+    <li><b>minMarks</b> 1</li>
+    <li><b>tombstoneRowCap</b> 65536</li>
+    <li><b>HASH_CAP</b> 256</li>
+    <li><b>SITE_CAP</b> 10</li>
+    <li><b>since proto</b> 6.6.0</li>
+    <li><b>wire</b> tombstone/1</li>
+  </ul>
+</div>
+
+<h2 id="advisor">The advisor family: the units that play the same part</h2>
+<p class="note">The clone families need two units to look alike. The fifteenth answers "file 2 now has a
+function that plays the same part as one in file 1" when the two share no line, through a sparse
+retrieval over the index's own facts, judged as advice at <code>ce similar</code>, the MCP tool
+<code>similar_units</code>, the GUI's <code>similar</code> screen and one line of the Stop audit.</p>
+
+<div class="fam">
+  <h3 id="f15"><span class="n">15</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">Same-role advisor — sparse retrieval and in-repo association</a></h3>
+  <p class="job">Ranks the units most like one unit (or a text) by integer BM25 over six-channel term
+  bags read off facts the index already carries, and asks the core which of them play the query's
+  role: a deterministic, offline "code RAG" with no model and no float, advisory only.</p>
+  <pre>bag    = six channels N P C D S L        (facts the parse already carries; hashes, never words)
+score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
+widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
+role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
+  <p class="note">Every unit of the T3 universe gets one bag: name pieces, shape, callee spellings, its own
+  doc segment, the node-kind histogram and literal <em>kinds</em>, each word stemmed and hashed with its
+  channel letter, so a shared name and a shared callee are different evidence. The bags persist as two
+  tables inside the one content-hash-gated refresh (<code>bag</code> is its own posting list; the pair
+  table the spec first drew was measured at 7–10× the cold index and not built, so the reader derives
+  co-occurrence at query time). Ranking is written once against a trait, so the in-memory corpus the
+  instruments build and the SQL reader the product runs agree on every unit of five corpora. Rust sends
+  the query bag and one nine-integer row per candidate; Haskell orders them as exact rationals and
+  applies the role conjunction; names, words and paths never cross the wire. Two arbitrated oracle
+  generations hold the floors: 60 % on the first sample, 40 % on the holdout that read one step lower
+  and retired every tuning candidate the first sample had favoured. The family never reddens a gate
+  and never enters <code>ce erase</code>.</p>
+  <ul class="consts">
+    <li><b>SIMILAR_REV</b> 1</li>
+    <li><b>K</b> 5</li>
+    <li><b>W_UNIT</b> 256</li>
+    <li><b>TERM_CAP</b> 96</li>
+    <li><b>TOP_M</b> 3</li>
+    <li><b>MIN_COOC</b> 2</li>
+    <li><b>roleMinName</b> 1</li>
+    <li><b>roleMinCallee</b> 1</li>
+    <li><b>roleMinNameShape</b> 2</li>
+    <li><b>similarCap</b> 65536</li>
+    <li><b>since proto</b> 6.7.0</li>
+    <li><b>wire</b> similar/1</li>
+  </ul>
+</div>
+
+
+<h2 id="honesty">Two honesty boundaries</h2>
+<p class="trust"><code>PreToolUse</code> is a behavior-shaping layer, <strong>not a
+security boundary</strong>: an agent can bypass it with <code>Bash: echo &gt;&gt;</code>
+or <code>sed -i</code>; the backstop is the <code>Stop</code> audit over
+<code>git diff</code>, which is write-tool agnostic, plus the CI gate. And the hook is
+deliberately <strong>fail-open</strong>: any internal failure allows the edit, and the
+degraded run lands in the observe feed rather than being silently read as "no
+duplicates". Neither property is a gap to be patched later; both are written into the
+plan, because a gate that lies about its own reach is worse than one that states it.</p>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/">Overview</a> ·
+     <a href="/stack/">Stack</a> ·
+     <a href="/bench/">Benchmarks</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
+  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,
+     the license does not grant trademark rights. © 2026 skymanbp.</p>
+</footer>
+
+</div>
+</body>
+</html>

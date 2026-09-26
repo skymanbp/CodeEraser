@@ -101,14 +101,16 @@ fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
     }]
 }
 
-/// Code kinds import; the md kinds split doc_link / doc_ref by
-/// target (the md::is_md_path throat, so `.markdown` labels like
-/// `.md`), and an image is always an asset.
+/// Code kinds import; the doc kinds — Markdown's link family and
+/// HTML's page references (`href`, a form's `action`) — split
+/// doc_link / doc_ref by target (a page, else a code file); an image,
+/// a `src` / `srcset` resource and an asset `<link>` are always
+/// assets (plan v2.30 step 5, booklet §8).
 fn edge_kind(kind: &str, dst: &str) -> i64 {
     match kind {
-        "image" => EDGE_ASSET,
-        "link" | "ref_link" | "ref_def" | "url" => {
-            if crate::graph::md::is_md_path(dst) {
+        "image" | "src" | "srcset" | "link_asset" => EDGE_ASSET,
+        "link" | "ref_link" | "ref_def" | "url" | "href" | "action" => {
+            if doc_page(dst) {
                 EDGE_DOC_LINK
             } else {
                 EDGE_DOC_REF
@@ -116,4 +118,15 @@ fn edge_kind(kind: &str, dst: &str) -> i64 {
         }
         _ => EDGE_IMPORT,
     }
+}
+
+/// A page — a Markdown or HTML document — as an edge target, the
+/// doc→doc kind (`.markdown` labels like `.md`: the walker's own
+/// extension table answers). md::is_md_path stays the one answer for
+/// Markdown itself, which anchor validation asks.
+fn doc_page(dst: &str) -> bool {
+    matches!(
+        Lang::from_path(Path::new(dst)),
+        Some(Lang::Markdown | Lang::Html)
+    )
 }

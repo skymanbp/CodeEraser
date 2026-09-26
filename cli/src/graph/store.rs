@@ -105,8 +105,13 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// compile_commands.json and an R package's DESCRIPTION become
 /// resolver configs, and Java's packages and the Lua `package.path`
 /// templates a file writes join the resolve_key — new kind codes and
-/// stored rows, so every site is re-detected; steps 3–4 kept 16: step
-/// 2 shipped in no release.
+/// stored rows, so every site is re-detected; steps 3–5 kept 16: step
+/// 2 shipped in no release, and step 5's HTML kinds (`href`, `src`,
+/// `srcset`, `action`, `link_asset`) append to KINDS for files the
+/// index never held, so no stored row moves. Step 5's resolution
+/// changes (Java's source sets and own units, Lua's own directory)
+/// ride the same one-release bump: only an index a development build
+/// of an earlier step wrote could still hold the old edges.
 pub const GRAPH_REV: i64 = 16;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
@@ -142,29 +147,14 @@ CREATE INDEX idx_edge_dst ON edges(dst_path);
 CREATE INDEX idx_edge_site ON edges(site_id);
 ";
 
-/// Frozen site-kind storage codes: label -> row position. Appending
-/// is cheap; renaming or reordering is a GRAPH_REV bump because
-/// stored kinds are positions.
-const KINDS: &[&str] = &[
-    "import",
-    "import_from",
-    "export_from",
-    "use",
-    "mod_decl",
-    "link",
-    "image",
-    "ref_link",
-    "ref_def",
-    "url",
-    "export_star",
-    "include",
-    "import_star",
-    "type_ref",
-    "require",
-    "load",
-    "source",
-    "library",
-];
+/// Frozen site-kind storage codes: label -> position in this
+/// whitespace-separated table. Appending is cheap; renaming or
+/// reordering is a GRAPH_REV bump because stored kinds are positions.
+/// One literal rather than an array: a run of string literals is one
+/// repeated token under the clone gate.
+const KINDS: &str = "import import_from export_from use mod_decl link image ref_link ref_def url \
+                     export_star include import_star type_ref require load source library \
+                     href src srcset action link_asset";
 
 /// The frozen code for one site kind. KINDS is the single owner of
 /// these positions: the writer below looks a code up here rather than
@@ -173,8 +163,8 @@ const KINDS: &[&str] = &[
 /// the mounts producer (graph/mounts.rs), which selects sites by kind.
 pub(crate) fn kind_code(label: &str) -> Result<i64> {
     KINDS
-        .iter()
-        .position(|k| *k == label)
+        .split_ascii_whitespace()
+        .position(|k| k == label)
         .map(|i| i as i64)
         .with_context(|| {
             format!("site kind {label:?} not in store::KINDS — add it and bump GRAPH_REV")
@@ -184,7 +174,7 @@ pub(crate) fn kind_code(label: &str) -> Result<i64> {
 pub(crate) fn kind_label(code: i64) -> Option<&'static str> {
     usize::try_from(code)
         .ok()
-        .and_then(|i| KINDS.get(i).copied())
+        .and_then(|i| KINDS.split_ascii_whitespace().nth(i))
 }
 
 /// Phase 1: replace one file's symbol + site rows (stale edges go

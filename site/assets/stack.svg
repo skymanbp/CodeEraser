@@ -32,9 +32,9 @@
         <text x="616" y="284">reference, history and erase facts</text>
       </g>
       <g font-size="10" fill="#8593ad">
-        <text x="66" y="185">judged: Python · TypeScript · TSX · Rust · Go</text>
-        <text x="66" y="202">Markdown · Haskell (Markdown is grammar-less)</text>
-        <text x="66" y="224">scan-only: JS · CSS · HTML · Vue · Svelte · Shell · YAML</text>
+        <text x="66" y="185">judged: Python · TypeScript · TSX · Rust · Go · Haskell · C · C++</text>
+        <text x="66" y="202">Java · Lua · R · Markdown (grammar-less) · HTML (no fingerprints)</text>
+        <text x="66" y="224">scan-only: JS · CSS · Vue · Svelte · Shell · YAML</text>
 
         <text x="616" y="185">normalized token fingerprints → SQLite WAL</text>
         <text x="616" y="202">content-hash incremental invalidation per file</text>

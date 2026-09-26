@@ -21,7 +21,9 @@
 //! Step 2 turned C and C++ (spec_c.rs; `.h` is C++ by the 2026-09-24
 //! ruling — a header parsed as C loses every class body); step 3 turned
 //! Java (spec_java.rs); step 4 turned Lua and R (spec_lua.rs, spec_r.rs;
-//! R takes both `.R` and `.r`, the extension match being exact).
+//! R takes both `.R` and `.r`, the extension match being exact); step 5
+//! turned HTML (spec.rs HTML — a document language: section units,
+//! attribute sites and docdup text, never a fingerprint).
 
 use std::path::Path;
 use tree_sitter_language::LanguageFn;
@@ -78,7 +80,9 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
         true,
     ),
     (Lang::Css, &["css", "scss", "less"], "css", true),
-    (Lang::Html, &["html", "htm"], "html", true),
+    // judged since plan v2.30 step 5 — a document language like
+    // Markdown, with a grammar (fingerprints() says no)
+    (Lang::Html, &["html", "htm"], "html", false),
     (Lang::Vue, &["vue"], "vue", true),
     (Lang::Svelte, &["svelte"], "svelte", true),
     (Lang::Shell, &["sh", "bash"], "shell", true),
@@ -107,7 +111,7 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
 /// eighth arm on (tests/it/grammar_pins.rs stores its pins the same
 /// way, for the same reason). The plan v2.30 reserved codes join as
 /// their steps land.
-const GRAMMARS: [(Lang, LanguageFn); 11] = [
+const GRAMMARS: [(Lang, LanguageFn); 12] = [
     (Lang::Python, tree_sitter_python::LANGUAGE),
     (
         Lang::TypeScript,
@@ -122,6 +126,7 @@ const GRAMMARS: [(Lang, LanguageFn); 11] = [
     (Lang::Java, tree_sitter_java::LANGUAGE),
     (Lang::Lua, tree_sitter_lua::LANGUAGE),
     (Lang::R, tree_sitter_r::LANGUAGE),
+    (Lang::Html, tree_sitter_html::LANGUAGE),
 ];
 
 impl Lang {

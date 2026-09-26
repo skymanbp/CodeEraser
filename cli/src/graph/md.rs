@@ -87,7 +87,7 @@ fn scan_line(line: &str, lineno: usize, mut mask: Vec<bool>, out: &mut Vec<RawSi
     if !mask.first().copied().unwrap_or(false)
         && let Some((_, target)) = ref_definition(line)
     {
-        out.push(RawSite::md("ref_def", lineno, target.to_string()));
+        out.push(RawSite::at("ref_def", lineno, target.to_string()));
         return;
     }
     let bytes = line.as_bytes();
@@ -163,7 +163,7 @@ fn bracket_site(line: &str, start: usize, lineno: usize, out: &mut Vec<RawSite>)
                     None => run.split_whitespace().next().unwrap_or(""),
                 };
                 if !target.is_empty() {
-                    out.push(RawSite::md(label, lineno, target.to_string()));
+                    out.push(RawSite::at(label, lineno, target.to_string()));
                 }
             }
         }
@@ -171,7 +171,7 @@ fn bracket_site(line: &str, start: usize, lineno: usize, out: &mut Vec<RawSite>)
             if let Some(end) = find_from(line, close + 2, b']') {
                 let id = &line[close + 2..end];
                 if !id.is_empty() {
-                    out.push(RawSite::md("ref_link", lineno, id.to_string()));
+                    out.push(RawSite::at("ref_link", lineno, id.to_string()));
                 }
             }
         }
@@ -188,7 +188,7 @@ fn autolink_site(line: &str, start: usize, lineno: usize, out: &mut Vec<RawSite>
     let inner = &line[start + 1..end];
     if inner.starts_with("http://") || inner.starts_with("https://") || inner.starts_with("mailto:")
     {
-        out.push(RawSite::md("url", lineno, inner.to_string()));
+        out.push(RawSite::at("url", lineno, inner.to_string()));
     }
     end + 1
 }

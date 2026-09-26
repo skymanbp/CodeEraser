@@ -1,0 +1,54 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "html",
+    "name": "html5-boilerplate",
+    "tip": "b6597338e695dc4a8165c5abcb2bfffa586c3ee5"
+  },
+  "excluded": {
+    "other_extension": 76,
+    "walk_refused": 2
+  },
+  "files": [
+    {
+      "lang": "html",
+      "path": "src/404.html",
+      "sha256": "57f3228f1361508362003ac5eb25cc8303b0b8fd19bf2470e462b2b8e97eef78",
+      "sites": {}
+    },
+    {
+      "lang": "html",
+      "path": "src/index.html",
+      "sha256": "1dacff6e4b61aa96a8b6b94ba2280eb9a767f0d688775a088b430994c1f9ebb0",
+      "sites": {
+        "link_asset": 5,
+        "src": 1
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope and that the product's own walk reads at the pinned tip (a tracked file the walk refuses is tallied, never asked about), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "html",
+      "htm"
+    ]
+  },
+  "summary": {
+    "files": 2,
+    "sites_by": {
+      "html/link_asset": 5,
+      "html/src": 1
+    },
+    "total_sites": 6
+  }
+}
