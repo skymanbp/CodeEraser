@@ -13,6 +13,12 @@
 
 use crate::scan::lang::Lang;
 
+/// The calls that open a site — CallSite and its tables — live beside
+/// the node-kind tables in spec/calls.rs, split out on the file-length
+/// line (plan v2.30 step 5b); one door for both vocabularies.
+mod calls;
+pub use calls::{CallSite, calls, formals, protected};
+
 /// How to pull the specifier string out of a matched node.
 pub enum Specifier {
     /// Text of `child_by_field_name(field)`, quotes trimmed — a
@@ -49,6 +55,19 @@ pub enum Specifier {
     /// `star` picks the form the entry matches — the star entry listed
     /// first, as FieldIfStar's is.
     FirstNamed { star: bool },
+    /// A Rust `use` (plan v2.30 step 5b): a group with no path before
+    /// its brace — `use {a::b, c::d};` — opens one site per entry, each
+    /// a complete path on its own line; any other argument shape is one
+    /// site spelled by the argument's first line (graph/sites.rs).
+    UseTargets,
+    /// Text from the start of an optional `from` field to the end of
+    /// the `to` field, never quote-trimmed: Haskell's `import "pkg" M`
+    /// (PackageImports, plan v2.30 step 5b) keeps the package in front
+    /// of the module, and the quotes are what tell the two apart.
+    Spanned {
+        from: &'static str,
+        to: &'static str,
+    },
 }
 
 /// (tree-sitter node kind, stable doc/wire label, specifier source).
@@ -73,11 +92,19 @@ macro_rules! site {
 
 /// The anon `import` keyword token and foreign_import's inner token
 /// share this kind name (the 3k D11 collision class, AST-probed
-/// 2026-08-14) but carry no `module` field, so the Field specifier
-/// drops them by construction. Housed outside sites() for the E01
-/// fn-length line — a lone table, not the 3k statics trap (that
-/// extraction PAIRED two isomorphic tables into a new T2 block).
-const HASKELL: [SiteKind; 1] = [site!("import", "import", Specifier::Field("module"))];
+/// 2026-08-14) but carry no `module` field, so the specifier drops
+/// them by construction; a `package` child (PackageImports) leads the
+/// spec when present. Housed outside sites() for the E01 fn-length
+/// line — a lone table, not the 3k statics trap (that extraction
+/// PAIRED two isomorphic tables into a new T2 block).
+const HASKELL: [SiteKind; 1] = [site!(
+    "import",
+    "import",
+    Specifier::Spanned {
+        from: "package",
+        to: "module"
+    }
+)];
 
 /// `from __future__ import …` is its own grammar node without a
 /// module field; the site names the literal module (plan v2.17 L
@@ -142,98 +169,6 @@ const R: [SiteKind; 1] = [site!(
     Specifier::Field("lhs")
 )];
 
-/// A call naming its target by an argument (plan v2.30 step 4): Lua's
-/// `require` and file loaders, R's `source` and `library` family —
-/// neither language has an import statement. Its own table, not a
-/// SiteKind row: which node is a call and where its callee hangs are
-/// the grammar's facts (LangSpec::call_kinds / call_fields, the
-/// spelling the recursion arcs read), so a row names only what varies
-/// — the bare callee names, and the argument naming the target: the
-/// one passed as `formal` (R matches names first; a Lua call passes
-/// none) or else the first unnamed one. That argument must be a string
-/// literal — or an identifier, where the callee reads one unevaluated:
-/// `unquoted` names the argument that turns that off
-/// (graph/sites/call.rs).
-pub struct CallSite {
-    pub label: &'static str,
-    pub callees: &'static [&'static str],
-    pub formal: &'static str,
-    pub unquoted: Option<&'static str>,
-}
-
-/// Lua: a module by `require` (a dotted name, the package.path search),
-/// a file by `dofile` / `loadfile` (a path) — called directly or under
-/// protection (LUA_PROTECTED).
-const LUA_CALLS: [CallSite; 2] = [
-    CallSite {
-        label: "require",
-        callees: &["require"],
-        formal: "",
-        unquoted: None,
-    },
-    CallSite {
-        label: "load",
-        callees: &["dofile", "loadfile"],
-        formal: "",
-        unquoted: None,
-    },
-];
-
-/// Lua calls a loader under protection too: `pcall(require, "x")` runs
-/// `require("x")` and hands back its error instead of raising it — the
-/// idiom for an optional module. The wrapper's first argument is the
-/// protected function, spelled as a bare name, and that function's own
-/// arguments follow the `leading` ones: the function for `pcall`, the
-/// function and the message handler for `xpcall` (Lua 5.2 on, and
-/// LuaJIT, pass the rest on; 5.1's `xpcall` takes none). A function
-/// named any other way (`pcall(m.require, "x")`) is no row's callee.
-const LUA_PROTECTED: [(&str, usize); 2] = [("pcall", 1), ("xpcall", 2)];
-
-/// R: a file by `source` (its first formal is `file`), a package by the
-/// `library` family (`package`). `library` and `require` read a bare
-/// name as the package unless the call passes `character.only`;
-/// `requireNamespace` and `loadNamespace` evaluate the argument, so a
-/// bare name there is a variable (R's own help pages, base `library`
-/// and `ns-load`).
-const R_CALLS: [CallSite; 3] = [
-    CallSite {
-        label: "source",
-        callees: &["source", "sys.source"],
-        formal: "file",
-        unquoted: None,
-    },
-    CallSite {
-        label: "library",
-        callees: &["library", "require"],
-        formal: "package",
-        unquoted: Some("character.only"),
-    },
-    CallSite {
-        label: "library",
-        callees: &["requireNamespace", "loadNamespace"],
-        formal: "package",
-        unquoted: None,
-    },
-];
-
-/// The calls that open a site in one language (CallSite).
-pub fn calls(lang: Lang) -> &'static [CallSite] {
-    match lang {
-        Lang::Lua => &LUA_CALLS,
-        Lang::R => &R_CALLS,
-        _ => &[],
-    }
-}
-
-/// The protected-call wrappers of one language, each with the count of
-/// arguments before the protected function's own (LUA_PROTECTED).
-pub fn protected(lang: Lang) -> &'static [(&'static str, usize)] {
-    match lang {
-        Lang::Lua => &LUA_PROTECTED,
-        _ => &[],
-    }
-}
-
 /// The site vocabulary of one language, its calls' aside (`calls`).
 /// Labels are frozen doc/wire identity — renaming one is a contract
 /// change.
@@ -265,7 +200,7 @@ pub fn sites(lang: Lang) -> &'static [SiteKind] {
             ),
         ],
         Lang::Rust => &[
-            site!("use_declaration", "use", Specifier::Field("argument")),
+            site!("use_declaration", "use", Specifier::UseTargets),
             site!("mod_item", "mod_decl", Specifier::NameIfNoBody),
         ],
         Lang::Go => &[site!("import_spec", "import", Specifier::Field("path"))],

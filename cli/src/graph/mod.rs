@@ -20,6 +20,7 @@ pub mod md;
 pub mod mounts;
 pub mod nodes;
 pub mod roots;
+pub mod roots_ts;
 pub mod sites;
 pub mod spec;
 pub mod store;

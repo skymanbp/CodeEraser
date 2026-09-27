@@ -1,10 +1,10 @@
 //! The use-family rungs (R2 crate / R3 self+super+local module / R4
-//! extern) and the R5 binder hookup — split from rs.rs at the 300
-//! gate as a `#[path]` CHILD module: the parent's private items stay
-//! reachable and the mount is exactly the construct the clearance-1
-//! slice taught the ladder to see (dogfood by construction).
+//! extern) — split from rs.rs at the 300 gate as a `#[path]` CHILD
+//! module (the parent's private items stay reachable); its own child
+//! rs_bind.rs (same line, plan v2.30 step 5b) holds the whole-item
+//! read behind a cut spec and the R5 binder hookup.
 
-use super::{ctx_for, inline_depth};
+use super::inline_depth;
 use crate::graph::cargo;
 use crate::graph::ladder::rs_reexport;
 use crate::graph::ladder::rs_tree::{
@@ -12,7 +12,11 @@ use crate::graph::ladder::rs_tree::{
     walk_hits,
 };
 use crate::graph::ladder::{Outcome, Reason, Scope, Site};
+use std::borrow::Cow;
 use std::collections::BTreeSet;
+
+#[path = "rs_bind.rs"]
+mod bind;
 
 /// Crates the toolchain provides without any declaration.
 const BUILTIN: [&str; 5] = ["std", "core", "alloc", "proc_macro", "test"];
@@ -23,18 +27,36 @@ pub(super) fn use_rungs(
     roots_set: &BTreeSet<String>,
     scope: &Scope,
 ) -> Outcome {
-    let Some((global, segs)) = use_path(site.spec) else {
-        return Outcome::Unresolved(Reason::OutOfScope); // hand-folded fragment
+    let Some(spec) = whole_spec(site, scope) else {
+        return Outcome::Unresolved(Reason::OutOfScope); // no item on the line opens so
+    };
+    let Some((global, segs)) = use_path(&spec) else {
+        return Outcome::Unresolved(Reason::OutOfScope); // cut mid-path in the tree too
     };
     let (out, used, walked) = use_walk(site, &segs, global, pkg, roots_set, scope);
-    bound(scope, walked, out, used)
+    bind::bound(scope, walked, out, used)
+}
+
+/// The spec the walk reads: the site's own — or, when a hand fold cut
+/// it mid-path (`use crate::a::\n    b::c;` leaves `crate::a::`, which
+/// `use_path` refuses), the whole argument of the item the site stands
+/// on, read back off the tree (rs_bind::use_text_at, step 5b); None
+/// when no `use` on the site's line opens with the fragment.
+fn whole_spec<'s>(site: &Site<'s>, scope: &Scope) -> Option<Cow<'s, str>> {
+    if use_path(site.spec).is_some() {
+        return Some(Cow::Borrowed(site.spec));
+    }
+    let parsed = cached_tree(scope, site.from);
+    let (text, tree) = parsed.as_ref().as_ref()?;
+    bind::use_text_at(tree, text, site.line.saturating_sub(1), site.spec).map(Cow::Owned)
 }
 
 /// The module-path prefix of a use spec, and whether it is the global
 /// form (`::foo::Bar` — a crate name outright, never a local module;
 /// the step-8 review: a same-named local module used to capture it).
-/// None = a fragment cut mid-path by a hand fold (module header) —
-/// refuse, never guess.
+/// None = a fragment cut mid-path by a hand fold (module header): the
+/// tree is asked for the whole item (`whole_spec`), and a whole item
+/// that still ends so is refused, never guessed.
 fn use_path(spec: &str) -> Option<(bool, Vec<&str>)> {
     let cut = [spec.find('{'), spec.find('*'), spec.find(" as ")]
         .into_iter()
@@ -69,7 +91,7 @@ fn use_walk<'a>(
 ) -> (Outcome, usize, &'a [&'a str]) {
     let from = site.from;
     let Some((head, rest)) = segs.split_first() else {
-        // `use {…}` group only
+        // an empty path (`use {};`): nothing to walk
         return (Outcome::Unresolved(Reason::OutOfScope), 0, segs);
     };
     match *head {
@@ -226,48 +248,6 @@ fn super_walk<'a>(
     let anchors = climb(from, ups - depth, roots_set, scope.files);
     let (o, u) = walk_all(anchors, tail, 3, roots_set, scope.files);
     (o, u, tail)
-}
-
-/// §4 R5 as amended 2026-08-18: a single-terminal walk that left
-/// segments unconsumed consults the terminal's re-export surface for
-/// ONE hop and answers the DEFINITION file (the frozen GT's stance);
-/// an unbound, ambiguous or self-pointing hop keeps the file-level
-/// edge — refinement only, never a downgrade, never a guess.
-fn bound(scope: &Scope, walked: &[&str], out: Outcome, used: usize) -> Outcome {
-    let Outcome::Resolved { path, rung } = &out else {
-        return out;
-    };
-    if used >= walked.len() {
-        return out;
-    }
-    let Some((hop_segs, row)) = rs_reexport::binds_to(scope, path, walked[used]) else {
-        return out;
-    };
-    // a global `pub use ::foo::Bar` carries an empty first segment
-    let global = hop_segs.first().is_some_and(String::is_empty);
-    let seg_refs: Vec<&str> = hop_segs
-        .iter()
-        .skip(usize::from(global))
-        .map(String::as_str)
-        .collect();
-    let hop_site = Site {
-        kind: "use",
-        from: path,
-        spec: "",
-        // the pub use's own line: flatten is top-level-only, and a
-        // fixed line 1 read whatever bodied `mod` opened the file as
-        // the hop's namespace (the step-8 review's shadow block)
-        line: row + 1,
-    };
-    let ctx = ctx_for(scope, path);
-    let (hop_out, _, _) = use_walk(&hop_site, &seg_refs, global, ctx.0.as_ref(), &ctx.1, scope);
-    match hop_out {
-        Outcome::Resolved { path: g, .. } if g != *path => Outcome::ResolvedVia {
-            path: g,
-            rung: *rung,
-        },
-        _ => out,
-    }
 }
 
 /// R4: a crate the toolchain provides ⇒ External; an in-scope Cargo

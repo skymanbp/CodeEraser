@@ -1,8 +1,11 @@
 //! Markdown rungs (design §4 row 5). Doc targets resolve at FILE and
 //! SECTION granularity. R1 joins a relative target against the
-//! linking file's directory; a directory holding in-scope files
-//! resolves as a package — the audited fourclass row: a tree
-//! reference collapsed to one file would be a guess. R2 validates a
+//! linking file's directory — a judged file, or a walked asset the
+//! index never parsed (an image, a stylesheet; plan v2.30 step 5b,
+//! the HTML rungs' second candidate set); a directory holding
+//! in-scope files resolves as a package — the audited fourclass row:
+//! a tree reference collapsed to one file would be a guess. R2
+//! validates a
 //! cross-file anchor, percent-decoded, against the target's anchor
 //! set (md_slug.rs: rendered-text slugs of the ATX headings by GitHub
 //! rules — lowercase, punctuation dropped, spaces to hyphens, -N
@@ -95,6 +98,16 @@ fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {
                 path: target,
                 rung: 1,
             },
+        };
+    }
+    // a walked asset (step 5b): the walk lists it and the key hashes
+    // it, so it is never minted from the filesystem — a link to it is
+    // a file-level edge, an image an asset edge (graph/wire.rs
+    // edge_kind), and its node stands as an asset (graph/nodes.rs)
+    if scope.assets.contains(&target) {
+        return Outcome::Resolved {
+            path: target,
+            rung: 1,
         };
     }
     directory(target, scope)

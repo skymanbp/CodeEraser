@@ -52,11 +52,17 @@ impl Default for Walk {
 /// block, or a line to skip; returns the next line index.
 pub(super) fn step(out: &mut Cabal, walk: &mut Walk, dir: &str, lines: &[&str], i: usize) -> usize {
     let trimmed = lines[i].trim();
-    if !lines[i].starts_with([' ', '\t']) && !trimmed.is_empty() && !trimmed.starts_with("--") {
-        walk.region = open(out, trimmed);
+    if trimmed.is_empty() || trimmed.starts_with("--") {
         return i + 1;
     }
     let Some((field, first)) = split_field(trimmed) else {
+        // a column-0 line that is no field is a stanza header; a field
+        // is a field at any column (plan v2.30 step 5b: every column-0
+        // line used to open a region, so a top-level `name:` opened a
+        // dead one and was never read)
+        if !lines[i].starts_with([' ', '\t']) {
+            walk.region = open(out, trimmed);
+        }
         return i + 1;
     };
     let mut values = vec![first.to_string()];
@@ -82,6 +88,7 @@ fn open(out: &mut Cabal, trimmed: &str) -> Region {
     out.stanzas.push(Stanza {
         roots: Vec::new(),
         main_is: None,
+        is_library: head == "library" && name.is_none(),
     });
     Region::Live
 }
@@ -119,6 +126,7 @@ pub(super) fn finish(out: &mut Cabal, dir: &str) {
         out.stanzas.push(Stanza {
             roots: vec![dir.to_string()],
             main_is: None,
+            is_library: false,
         });
     }
     for s in &mut out.stanzas {
@@ -155,6 +163,12 @@ fn consume(out: &mut Cabal, walk: &mut Walk, dir: &str, field: &str, values: &[S
         }
         "exposed-modules" => block.exposed = words(values).map(str::to_string).collect(),
         "other-modules" => block.other = words(values).map(str::to_string).collect(),
+        // the package name (plan v2.30 step 5b): a top-level field, so
+        // only before any stanza header
+        "name" if out.stanzas.is_empty() => {
+            out.name = values.first().cloned().unwrap_or_default();
+            return;
+        }
         "import" => return import_commons(out, walk, values),
         "main-is" => return set_main(out, walk, values),
         "build-depends" => {

@@ -402,7 +402,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "17"
+      "value": "18"
     },
     {
       "id": "ver:mention_rev#digits",

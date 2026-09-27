@@ -3,7 +3,10 @@
 //! bytes in resolve_key so answers cannot go stale). Only the facts
 //! the rungs and the mounts table consume are modeled: per-stanza
 //! `hs-source-dirs` (the R1 root set), the union of `build-depends`
-//! package names (the R2 external gate), and since plan v2.17 piece
+//! package names (the external gate), the package `name` and which
+//! stanza is the public library (plan v2.30 step 5b: the R2
+//! cross-package rung reads a depended package's exposed modules
+//! under its library roots), and since plan v2.17 piece
 //! (5) the two package-privacy facts the sealed criterion §4 reads —
 //! whether a `library` stanza exists at all, and which modules are
 //! listed only under other-modules. A `common` stanza's roots and
@@ -34,6 +37,9 @@ pub struct Stanza {
     /// The stanza's main-is file, verbatim (relative to each source
     /// root) — the declared-target role's cabal leg (2.28.0).
     pub main_is: Option<String>,
+    /// The bare `library` stanza — the package's public library,
+    /// whose roots hold the modules it exposes (plan v2.30 step 5b).
+    pub is_library: bool,
 }
 
 /// Clone: the sweep memo hands out per-config parses once and
@@ -42,6 +48,9 @@ pub struct Stanza {
 pub struct Cabal {
     /// Repo-relative directory of the .cabal file ("" = repo root).
     pub dir: String,
+    /// The package's `name:` field ("" when the file states none) —
+    /// what another package's build-depends names (step 5b).
+    pub name: String,
     /// Always at least one stanza (a pre-2.0 top-level-fields file
     /// parses as zero headers and degrades to one package-dir root).
     pub stanzas: Vec<Stanza>,
@@ -67,6 +76,7 @@ pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
     let dir = roots::parent_dir(rel);
     let mut out = Cabal {
         dir: dir.clone(),
+        name: String::new(),
         stanzas: Vec::new(),
         deps: Vec::new(),
         has_library: false,
@@ -116,6 +126,22 @@ fn cabal_in(root: &Path, dir: &str) -> Option<String> {
 }
 
 impl Cabal {
+    /// Whether the package's public library exposes `module` (plan
+    /// v2.30 step 5b): a library stanza exists and the module is under
+    /// exposed-modules — what another package may import from it.
+    pub fn exposes(&self, module: &str) -> bool {
+        self.has_library && self.exposed.contains(module)
+    }
+
+    /// The public library's source roots (step 5b): where its exposed
+    /// modules live.
+    pub fn library_roots(&self) -> impl Iterator<Item = &String> {
+        self.stanzas
+            .iter()
+            .filter(|s| s.is_library)
+            .flat_map(|s| s.roots.iter())
+    }
+
     /// Whether the package keeps `path` private (the mounts table's
     /// bit 1): no library stanza at all (then every file of the
     /// package, roots or not), or — with a library — the module the

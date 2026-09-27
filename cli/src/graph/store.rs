@@ -97,6 +97,10 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
+/// 18 = plan v2.30 step 5b's second sub-batch moves stored rows again:
+/// a brace-only Rust `use {a, b};` opens one site per entry, a Haskell
+/// PackageImports import keeps its package in the spec, a qualified R
+/// `base::source` opens a site (graph/sites) — every site re-detected.
 /// 17 = plan v2.30 step 5b's boundary fixes move stored rows: a
 /// Markdown document's sites and section units follow the
 /// list-aware indented-code mask and its setext headings
@@ -121,7 +125,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 17;
+pub const GRAPH_REV: i64 = 18;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

@@ -33,14 +33,16 @@
 //! first-line fragments (sites.rs), but rustfmt folds `use` only at
 //! brace groups, so the pre-`{` prefix — all the walk consumes — is
 //! complete whenever a brace is present; a fragment ending in `::`
-//! with NO brace is a hand-folded cut, refused rather than guessed
-//! shallow. Symbol binding landed 2026-08-18 (§4 R5 amendment,
-//! user-ratified): a single unambiguous top-level `pub use` binds
-//! ONE hop to the definition file — rs_reexport.rs owns the surface
-//! facts, rs_use::bound owns the hop, and every refusal (glob,
-//! ambiguity, local definition, pub extern crate) keeps the
-//! file-level edge. The audited BinaryDetection row's façade answer
-//! is thereby repaid at the definition point.
+//! with NO brace is a hand-folded cut, read back whole off the tree
+//! at the site's line (rs_use::whole_spec, plan v2.30 step 5b) and
+//! never guessed shallow. Symbol binding landed 2026-08-18 (§4 R5
+//! amendment, user-ratified): a single unambiguous top-level `pub
+//! use` binds ONE hop to the definition file — rs_reexport.rs owns
+//! the surface facts, rs_bind::bound owns the hop; since step 5b a
+//! glob is followed when the module it names exports the name and a
+//! `pub extern crate` binds its crate, while ambiguity and a local
+//! definition keep the file-level edge. The audited BinaryDetection
+//! row's façade answer is thereby repaid at the definition point.
 
 use super::{Outcome, Reason, Scope, Site};
 use crate::graph::{cargo, roots};

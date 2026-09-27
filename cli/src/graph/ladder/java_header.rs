@@ -1,36 +1,52 @@
 //! A Java compilation unit's header (JLS 7.3–7.5), read lexically: the
-//! package it declares and the imports it writes. Both precede every
-//! type declaration, and only whitespace, comments and the package's
-//! own annotations (package-info.java) may come before them, so the
-//! scan stops at the first other token. The walk reads every Java file
+//! package it declares and the imports it writes, each import with the
+//! line its keyword sits on. Both precede every type declaration, and
+//! only whitespace, comments and the package's own annotations
+//! (package-info.java) may come before them, so the scan stops at the
+//! first other token. The unit's type declarations — names, supertypes,
+//! member types, lines — are the child java_types.rs's second pass over
+//! the whole text (plan v2.30 step 5b). The walk reads every Java file
 //! this way on every run (dedup/walkidx.rs) — a tree-sitter parse per
 //! file per run is what the lexer saves — and hands the headers to the
 //! Java ladder (Scope::java), which never reads a file itself.
 
-/// What the header declares: the package (`""` = the unnamed package)
-/// and the imports in document order.
+#[path = "java_types.rs"]
+mod types;
+pub use types::TypeDecl;
+use types::ident_char;
+
+/// What the header declares: the package (`""` = the unnamed package),
+/// the imports in document order and the unit's type declarations.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Header {
     pub package: String,
     pub imports: Vec<Import>,
+    pub types: Vec<TypeDecl>,
 }
 
 /// One import declaration: the dotted name as written (whitespace
-/// between its tokens dropped), whether it ends `.*` and whether it is
-/// `import static`.
+/// between its tokens dropped), whether it ends `.*`, whether it is
+/// `import static`, and the 1-based line of its `import` keyword — the
+/// line the detector's site stands on (ladder/java.rs header_name).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Import {
     pub name: String,
     pub star: bool,
     pub is_static: bool,
+    pub line: usize,
 }
 
 /// Read one file's header. A declaration the lexer cannot finish (no
 /// closing `;`, a stray token inside it) ends the header there: what
-/// was read before it stands, nothing after it is guessed.
+/// was read before it stands, nothing after it is guessed; the types
+/// are read whatever the header did.
 pub fn read(text: &str) -> Header {
-    let mut lex = Lexer(text.strip_prefix('\u{feff}').unwrap_or(text));
-    let mut header = Header::default();
+    let text = text.strip_prefix('\u{feff}').unwrap_or(text);
+    let mut lex = Lexer(text);
+    let mut header = Header {
+        types: types::read_types(text),
+        ..Header::default()
+    };
     while lex.eat('@') {
         lex.annotation();
     }
@@ -40,7 +56,11 @@ pub fn read(text: &str) -> Header {
             _ => return header,
         }
     }
+    let (mut line, mut counted) = (1, 0);
     while lex.keyword("import") {
+        let at = text.len() - lex.0.len();
+        line += text[counted..at].matches('\n').count();
+        counted = at;
         let is_static = lex.keyword("static");
         let Some((name, star)) = lex.name() else {
             break;
@@ -52,6 +72,7 @@ pub fn read(text: &str) -> Header {
             name,
             star,
             is_static,
+            line,
         });
     }
     header
@@ -184,12 +205,6 @@ impl<'t> Lexer<'t> {
         }
         self.0 = chars.as_str();
     }
-}
-
-/// A Java identifier character (JLS 3.8: letters and digits of any
-/// script, `_` and `$`).
-fn ident_char(c: char) -> bool {
-    c.is_alphanumeric() || c == '_' || c == '$'
 }
 
 #[cfg(test)]

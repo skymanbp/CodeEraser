@@ -32,6 +32,10 @@ use anyhow::{Result, ensure};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
+#[path = "mounts_go.rs"]
+mod go;
+pub(crate) use go::go_private;
+
 /// bit 0: a re-export target — an edge crossed a terminal's `pub use`
 /// to reach the file, or a TS `export *` names it.
 pub const MOUNT_REEXPORTED: i64 = 1;
@@ -239,62 +243,6 @@ pub(crate) fn py_private(path: &str) -> bool {
     path.trim_end_matches(".py")
         .split('/')
         .any(|seg| seg.starts_with('_') && !(seg.starts_with("__") && seg.ends_with("__")))
-}
-
-/// The Go arm: `package main` is never importable, and an `internal/`
-/// directory is importable only from its parent tree; `_test.go` is a
-/// test file and out of this fact (its word carries TEST).
-pub(crate) fn go_private(root: &Path, path: &str) -> bool {
-    if path.ends_with("_test.go") {
-        return false;
-    }
-    let internal = path.split('/').rev().skip(1).any(|seg| seg == "internal");
-    internal || go_package(root, path).as_deref() == Some("main")
-}
-
-/// The package clause: the first line OUTSIDE comments that opens with
-/// `package `, its next word. Block comments carry state across lines
-/// because both misreadings are wrong answers, not safe ones — a
-/// gofmt-indented `package main` example inside a doc comment must not
-/// win (bit 1 raises the row to code 1), and a comment naming another
-/// package must not hide a real `package main`. A clause sharing its
-/// line with the end of a block comment is not read: one bounded
-/// refusal, a shape gofmt never writes.
-fn go_package(root: &Path, path: &str) -> Option<String> {
-    let text = std::fs::read_to_string(root.join(path)).ok()?;
-    let mut in_block = false;
-    for raw in text.lines() {
-        let Some(line) = outside_block(raw.trim(), &mut in_block) else {
-            continue;
-        };
-        if let Some(rest) = line.strip_prefix("package ") {
-            return Some(
-                rest.split([' ', '\t', '/'])
-                    .next()
-                    .unwrap_or("")
-                    .to_string(),
-            );
-        }
-    }
-    None
-}
-
-/// The code prefix of one line under the block-comment state: None
-/// inside a `/* … */` region, the text before a `/*` that opens one,
-/// the whole line otherwise. Go comments do not nest, so one flag is
-/// the whole state.
-fn outside_block<'a>(line: &'a str, in_block: &mut bool) -> Option<&'a str> {
-    if *in_block {
-        *in_block = !line.contains("*/");
-        return None;
-    }
-    match line.find("/*") {
-        Some(open) => {
-            *in_block = !line[open + 2..].contains("*/");
-            Some(line[..open].trim_end())
-        }
-        None => Some(line),
-    }
 }
 
 #[cfg(test)]

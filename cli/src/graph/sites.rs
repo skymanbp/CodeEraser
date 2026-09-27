@@ -5,12 +5,12 @@
 //! spec-table node kinds; no path is ever consulted.
 //!
 //! Multi-line specifiers (a rustfmt-folded `use x::{a, b, …}`) keep
-//! ONE site whose spec is the first line's fragment: the spec string
-//! is a location anchor and an anti-invention check (the self-corpus
-//! drift gate in eval_graph.rs re-detects and substring-checks it).
-//! Resolution consumes only the pre-`{` prefix, which formatting
-//! folds never cut; a fragment cut mid-path is refused, never
-//! guessed shallow (ladder/rs.rs module header).
+//! ONE site whose spec is the first line's fragment — a location
+//! anchor and anti-invention check (eval_graph.rs re-detects and
+//! substring-checks it); a fragment cut mid-path is read whole from
+//! the file by the ladder (rs_bind::use_text_at, plan v2.30 step 5b),
+//! never guessed shallow. A group with no path before its brace
+//! (`use {a::b, c::d};`) opens one site per entry (Specifier::UseTargets).
 
 mod call;
 mod html;
@@ -177,6 +177,8 @@ fn specs<'t>(
                 .then(|| import_name(node, src))
                 .flatten(),
         ),
+        Specifier::UseTargets => use_targets(node, src),
+        Specifier::Spanned { from, to } => here(spanned(node, src, from, to)),
     }
 }
 
@@ -202,8 +204,52 @@ fn import_name(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
         .iter()
         .find(|c| c.kind() == "static")
         .map_or(name.start_byte(), |s| s.start_byte());
-    let raw = std::str::from_utf8(src.get(start..name.end_byte())?).ok()?;
+    first_line(src, start, name.end_byte())
+}
+
+/// Text from the start of an optional `from` field to the end of the
+/// `to` field (Specifier::Spanned): Haskell's `import "pkg" M` keeps
+/// its package in front of the module name. Cut at a line break like
+/// every spec, never quote-trimmed — the quotes are what tell a
+/// package from a module.
+fn spanned(node: tree_sitter::Node, src: &[u8], from: &str, to: &str) -> Option<String> {
+    let to = node.child_by_field_name(to)?;
+    let start = node
+        .child_by_field_name(from)
+        .map_or(to.start_byte(), |f| f.start_byte());
+    first_line(src, start, to.end_byte())
+}
+
+/// A source slice as a spec: its first line, whitespace-trimmed,
+/// quotes kept.
+fn first_line(src: &[u8], start: usize, end: usize) -> Option<String> {
+    let raw = std::str::from_utf8(src.get(start..end)?).ok()?;
     Some(raw.split('\n').next().unwrap_or("").trim().to_string())
+}
+
+/// Rust `use {a::b, c::d};` (Specifier::UseTargets): a group with no
+/// path before its brace is the one statement whose entries are whole
+/// paths, so each entry opens its own site on its own line, spelled by
+/// its first line — the ladder walks each as it walks a plain `use`.
+/// Any other argument shape (`a::b`, `a::{b, c}`, `x as y`, `a::*`) is
+/// one site spelled by the argument's first line, on the statement.
+fn use_targets<'t>(
+    node: tree_sitter::Node<'t>,
+    src: &[u8],
+) -> Vec<(tree_sitter::Node<'t>, String)> {
+    let Some(arg) = node.child_by_field_name("argument") else {
+        return Vec::new();
+    };
+    if arg.kind() != "use_list" {
+        return node_text(arg, src)
+            .map(|spec| (node, spec))
+            .into_iter()
+            .collect();
+    }
+    ast::entries(arg)
+        .into_iter()
+        .filter_map(|entry| node_text(entry, src).map(|spec| (entry, spec)))
+        .collect()
 }
 
 /// Python `import a.b, c as d`: dotted_name children are targets;

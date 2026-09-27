@@ -950,7 +950,7 @@
       "path": "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
       "sha256": "a81c751dc22763d8efda6fb88fd77c0e03c42fb17538a94497a5737ba8b4b919",
       "sites": {
-        "use": 25
+        "use": 27
       }
     },
     {
@@ -959,7 +959,7 @@
       "sha256": "8887b066987643638d822ec53ebd44f10b9d1a1bab00d9152579a56dfad284fb",
       "sites": {
         "mod_decl": 1,
-        "use": 11
+        "use": 12
       }
     },
     {
@@ -976,7 +976,7 @@
       "path": "contracts/fixtures/crosscheck/rust/crates__printer__src__util.rs",
       "sha256": "59d984c9b7586592faaa8fc146a67346ece2aed3365f8ccc8a211c12744d9484",
       "sites": {
-        "use": 6
+        "use": 8
       }
     },
     {
@@ -1155,8 +1155,8 @@
     }
   ],
   "generated_from": {
-    "ce": "0.0.1",
-    "commit": "e40c0fb3c1f1823c9d40bd1c211468be654b5549",
+    "ce": "1.7.4",
+    "commit": "cf59b2d6934d7d881f1ccdab83df19685f03b7b9",
     "dirty": true
   },
   "method": "site universe of the pinned tree: every in-scope file (canonical extensions minus machine-local memory/; the crosscheck islands deliberately in scope as the negative control), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables only, no path ever consulted). Frozen before any resolver exists; the falsification constants are pre-registered here, before any measurement.",
@@ -1184,10 +1184,10 @@
       "py/import": 21,
       "py/import_from": 50,
       "rs/mod_decl": 135,
-      "rs/use": 415,
+      "rs/use": 420,
       "ts/export_star": 1,
       "ts/import": 12
     },
-    "total_sites": 701
+    "total_sites": 706
   }
 }

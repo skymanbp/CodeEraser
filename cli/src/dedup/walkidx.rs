@@ -81,7 +81,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         "walk:assets".to_string(),
         tokens::fnv1a(roots_bytes(out.assets.iter()).as_slice()),
     ));
-    key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live));
+    key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live, &configs));
     out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)

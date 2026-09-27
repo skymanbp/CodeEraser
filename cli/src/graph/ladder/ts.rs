@@ -1,23 +1,34 @@
 //! TS/TSX rungs (design §4 row 1). R1 relative + extension order —
 //! the order IS the norm, so multiple hits are not ambiguous; R2 the
 //! ESM `.js` → `.ts` rewrite, only when the TS twin exists and the
-//! JS twin does not; R3 nearest tsconfig baseUrl+paths (extends
-//! chain ≤ 8 with cycle check, else config_depth; two distinct paths
-//! hits are ambiguous_paths); R4 workspace member by name/exports
-//! subpath — membership is derived from the in-scope package.json
-//! set (both the file set and config bytes sit in resolve_key, so
-//! membership can never go stale), duplicate names are ambiguous;
-//! R5 bare specifier declared in dependencies or present under
-//! node_modules/ ⇒ External. Everything else is Unresolved — a
-//! relative spec with no in-scope target is out_of_scope, and a
-//! unique member whose export target is not a lang file terminates
-//! there too (falling to R5 would call an in-corpus package
+//! JS twin does not; R3 nearest tsconfig baseUrl+paths (the whole
+//! extends chain, arrays included, a cycle or unreadable target being
+//! config_depth; two distinct paths hits are ambiguous_paths); R4
+//! workspace member by name/exports subpath — membership is derived
+//! from the in-scope package.json set (both the file set and config
+//! bytes sit in resolve_key, so membership can never go stale), a
+//! subpath through the exports map's exact key or its one matching
+//! pattern (Node's PACKAGE_EXPORTS_RESOLVE, plan v2.30 step 5b),
+//! duplicate names are ambiguous; R5 bare specifier: a Node builtin
+//! (`fs`, `node:fs`; ts_node.rs, step 5b), a name declared in
+//! dependencies, or one present under a node_modules/ of the
+//! importer's directory or any ancestor (step 5b) ⇒ External.
+//! Everything else is Unresolved — a relative spec with no in-scope
+//! target is out_of_scope, a `node:` name Node has no module for too,
+//! and a unique member whose export target is not a lang file
+//! terminates there too (falling to R5 would call an in-corpus package
 //! External).
 
 use super::{Outcome, Reason, Scope};
-use crate::graph::roots::{self, TsChain};
+use crate::graph::{
+    roots,
+    roots_ts::{TsChain, ts_options},
+};
 use serde_json::Value;
 use std::collections::BTreeSet;
+
+#[path = "ts_node.rs"]
+mod node;
 
 /// Extension order — normative, first hit wins (design §4).
 const EXTS: [&str; 5] = ["ts", "tsx", "d.ts", "mts", "cts"];
@@ -37,6 +48,14 @@ pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome {
         Ok(Some(outcome)) => return outcome,
         Ok(None) => {}
         Err(reason) => return Outcome::Unresolved(reason),
+    }
+    // a builtin is Node's before any package's (module doc); a `node:`
+    // name outside the tables is nothing Node loads
+    if node::is_builtin(spec) {
+        return Outcome::External { rung: 5 };
+    }
+    if spec.starts_with("node:") {
+        return Outcome::Unresolved(Reason::OutOfScope);
     }
     match workspace_rung(spec, scope) {
         Some(outcome) => outcome,
@@ -87,7 +106,7 @@ fn esm_rewrite(dir: &str, spec: &str, scope: &Scope) -> Option<String> {
 /// collected; two distinct in-scope hits ⇒ ambiguous_paths), then
 /// the baseUrl join for bare specifiers.
 fn tsconfig_rung(dir: &str, spec: &str, scope: &Scope) -> Result<Option<Outcome>, Reason> {
-    let opts = match roots::ts_options(scope.root, dir) {
+    let opts = match ts_options(scope.root, dir) {
         TsChain::None => return Ok(None),
         TsChain::Broken => return Err(Reason::ConfigDepth),
         TsChain::Ok(opts) => opts,
@@ -161,17 +180,21 @@ fn workspace_rung(spec: &str, scope: &Scope) -> Option<Outcome> {
 }
 
 /// Resolve a subpath through one member's exports: every string leaf
-/// of the subpath entry is a candidate; exactly one distinct
-/// in-scope hit resolves, several are ambiguous, none terminates as
-/// out_of_scope (module doc: never fall through to R5 here).
+/// of the subpath entry is a candidate, a pattern's capture put in
+/// place of every `*`; exactly one distinct in-scope hit resolves,
+/// several are ambiguous, none terminates as out_of_scope (module doc:
+/// never fall through to R5 here).
 fn member_target(member: &roots::Package, subpath: &str, scope: &Scope) -> Outcome {
     let mut leaves = Vec::new();
-    if let Some(entry) = member
+    if let Some((entry, captured)) = member
         .exports
         .as_ref()
         .and_then(|e| exports_entry(e, subpath))
     {
         string_leaves(entry, &mut leaves);
+        for leaf in &mut leaves {
+            *leaf = leaf.replace('*', &captured);
+        }
     }
     let cands: Vec<(String, String)> = leaves
         .into_iter()
@@ -188,19 +211,39 @@ fn member_target(member: &roots::Package, subpath: &str, scope: &Scope) -> Outco
     }
 }
 
-/// The exports entry for a subpath: a top-level map keyed by "./…"
-/// selects the entry; a bare (non-map or condition-only) exports
-/// value IS the "." entry.
-fn exports_entry<'a>(exports: &'a Value, subpath: &str) -> Option<&'a Value> {
+/// The exports entry for a subpath, with the text a pattern captured
+/// (Node's PACKAGE_EXPORTS_RESOLVE; plan v2.30 step 5b): a top-level
+/// map keyed by "./…" selects the entry — the exact key first, else the
+/// one pattern key (a single `*`, `"./lib/*"`) whose prefix and suffix
+/// enclose the subpath with something between them, the longest prefix
+/// then the longest key winning. A `null` entry exports nothing (its
+/// leaves are none). A bare (non-map or condition-only) exports value
+/// IS the "." entry.
+fn exports_entry<'a>(exports: &'a Value, subpath: &str) -> Option<(&'a Value, String)> {
     let key = if subpath.is_empty() {
         ".".to_string()
     } else {
         format!("./{subpath}")
     };
-    match exports {
-        Value::Object(map) if map.keys().any(|k| k.starts_with('.')) => map.get(&key),
-        other => (key == ".").then_some(other),
+    let map = match exports {
+        Value::Object(map) if map.keys().any(|k| k.starts_with('.')) => map,
+        other => return (key == ".").then(|| (other, String::new())),
+    };
+    if let Some(exact) = map.get(&key) {
+        return Some((exact, String::new()));
     }
+    map.iter()
+        .filter_map(|(pattern, target)| {
+            let (pre, post) = pattern.split_once('*')?;
+            if post.contains('*') {
+                return None;
+            }
+            let captured = key.strip_prefix(pre)?.strip_suffix(post)?;
+            (!captured.is_empty())
+                .then(|| ((pre.len(), pattern.len()), target, captured.to_string()))
+        })
+        .max_by_key(|(rank, _, _)| *rank)
+        .map(|(_, target, captured)| (target, captured))
 }
 
 /// All string leaves under an exports entry (conditions nest).
@@ -217,9 +260,10 @@ fn string_leaves(value: &Value, out: &mut Vec<String>) {
 }
 
 /// R5: bare specifier declared in the nearest package.json deps, or
-/// physically present under the root node_modules/ ⇒ External.
-/// Both facts ride the sweep memo — the walk-up parse and the fs
-/// stat used to repeat per SITE (review MED class).
+/// physically present under a node_modules/ of the importer's
+/// directory or any ancestor (Node's own lookup order; step 5b) ⇒
+/// External. Both facts ride the sweep memo — the walk-up parse and
+/// the fs stats used to repeat per SITE (review MED class).
 fn bare_rung(dir: &str, spec: &str, scope: &Scope) -> Outcome {
     let (name, _) = split_bare(spec);
     let declared = scope
@@ -228,8 +272,8 @@ fn bare_rung(dir: &str, spec: &str, scope: &Scope) -> Outcome {
         .as_ref()
         .as_ref()
         .is_some_and(|p| p.deps.iter().any(|d| d == name));
-    let vendored = *scope.memo.cached("ts_nm", name, || {
-        scope.root.join("node_modules").join(name).is_dir()
+    let vendored = *scope.memo.cached("ts_nm", &format!("{dir}\0{name}"), || {
+        roots::ancestors(dir).any(|d| scope.root.join(d).join("node_modules").join(name).is_dir())
     });
     if declared || vendored {
         return Outcome::External { rung: 5 };

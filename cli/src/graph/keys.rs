@@ -4,6 +4,7 @@
 //! hotfix landed; store.rs re-exports both names, so callers keep
 //! the `store::` spelling.
 
+use crate::graph::{roots, roots_ts};
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -11,12 +12,12 @@ use std::path::Path;
 /// tsconfig arm is a basename pattern because `extends` targets
 /// conventionally read tsconfig.<flavor>.json and participate in
 /// resolution — leaving them out of the key would serve stale edges
-/// (2f refinement); an extends target under an arbitrary name stays
-/// a documented boundary. compile_commands.json (plan v2.30 step 2)
-/// is the C-family ladder's third rung wherever it sits — a build
-/// directory inside the tree is the common home; an R package's
-/// DESCRIPTION (step 4) names the package the R ladder's second rung
-/// reaches.
+/// (2f refinement); an extends target under any other name joins the
+/// key through the chain walk instead (`ts_fs_facts`, plan v2.30 step
+/// 5b). compile_commands.json (plan v2.30 step 2) is the C-family
+/// ladder's third rung wherever it sits — a build directory inside the
+/// tree is the common home; an R package's DESCRIPTION (step 4) names
+/// the package the R ladder's second rung reaches.
 const CONFIG_NAMES: &[&str] = &[
     "Cargo.toml",
     "go.mod",
@@ -30,11 +31,14 @@ const CONFIG_NAMES: &[&str] = &[
 /// ce-core.cabal); cabal.project stays out — the hs ladder anchors
 /// by directory prefix and never reads a workspace list (hs.rs).
 pub fn is_resolver_config(path: &Path) -> bool {
-    path.file_name().and_then(|n| n.to_str()).is_some_and(|n| {
-        CONFIG_NAMES.contains(&n)
-            || (n.starts_with("tsconfig") && n.ends_with(".json"))
-            || n.ends_with(".cabal")
-    })
+    path.file_name()
+        .and_then(|n| n.to_str())
+        .is_some_and(|n| CONFIG_NAMES.contains(&n) || is_tsconfig(n) || n.ends_with(".cabal"))
+}
+
+/// `tsconfig.json` and its conventional flavours (`tsconfig.base.json`).
+fn is_tsconfig(name: &str) -> bool {
+    name.starts_with("tsconfig") && name.ends_with(".json")
 }
 
 /// Phase-2 cache key: fnv1a over the sorted in-scope paths plus each
@@ -74,14 +78,22 @@ const TWIN_EXTS: [(&str, &[&str]); 4] = [
 ];
 
 /// TS-resolver filesystem facts that can never enter the walked set
-/// — compiled-JS twins of in-scope TS files (esm_rewrite stats them)
-/// and the node_modules entry names (bare_rung stats them). They are
+/// — compiled-JS twins of in-scope TS files (esm_rewrite stats them),
+/// the node_modules entry names under every ancestor directory of an
+/// in-scope TS file (bare_rung stats them; plan v2.30 step 5b, the
+/// root's alone before) and the extends targets of every walked
+/// tsconfig under a name the walk reads as no config (`./shared/
+/// base.json`: the chain reads its compilerOptions, step 5b). They are
 /// resolve-key INPUTS exactly like md slug hashes (the M5-close
 /// precedent): mutate one and the phase-2 sweep must re-fire —
 /// before this, those edges were cached across the mutation forever
 /// (clearance review MED).
-pub fn ts_fs_facts(root: &Path, live: &BTreeSet<String>) -> Vec<(String, u64)> {
-    let mut twins = Vec::new();
+pub fn ts_fs_facts(
+    root: &Path,
+    live: &BTreeSet<String>,
+    configs: &[(String, u64)],
+) -> Vec<(String, u64)> {
+    let (mut twins, mut dirs) = (Vec::new(), BTreeSet::new());
     for p in live {
         let Some((stem, exts)) = TWIN_EXTS
             .iter()
@@ -89,6 +101,7 @@ pub fn ts_fs_facts(root: &Path, live: &BTreeSet<String>) -> Vec<(String, u64)> {
         else {
             continue;
         };
+        dirs.extend(roots::ancestors(&roots::parent_dir(p)).map(str::to_string));
         for ext in exts {
             let twin = format!("{stem}.{ext}");
             if root.join(&twin).is_file() {
@@ -97,20 +110,25 @@ pub fn ts_fs_facts(root: &Path, live: &BTreeSet<String>) -> Vec<(String, u64)> {
         }
     }
     twins.sort();
-    let mut nm = node_modules_names(root);
+    let mut nm: Vec<String> = dirs
+        .iter()
+        .flat_map(|dir| node_modules_names(root, dir))
+        .collect();
     nm.sort();
     let h = |v: &[String]| crate::dedup::tokens::fnv1a(v.join("\n").as_bytes());
     vec![
         ("ts:js_twins".into(), h(&twins)),
         ("ts:node_modules".into(), h(&nm)),
+        ("ts:extends".into(), h(&extends_bases(root, configs))),
     ]
 }
 
-/// Top-level node_modules entries, @scope dirs expanded one level —
-/// the exact shapes bare_rung's `is_dir` probes can name.
-fn node_modules_names(root: &Path) -> Vec<String> {
+/// The node_modules entries under one directory, @scope dirs expanded
+/// one level, each under the directory's name — the exact shapes
+/// bare_rung's `is_dir` probes can name.
+fn node_modules_names(root: &Path, dir: &str) -> Vec<String> {
     let mut out = Vec::new();
-    let Ok(entries) = std::fs::read_dir(root.join("node_modules")) else {
+    let Ok(entries) = std::fs::read_dir(root.join(dir).join("node_modules")) else {
         return out;
     };
     for e in entries.flatten() {
@@ -118,14 +136,38 @@ fn node_modules_names(root: &Path) -> Vec<String> {
         if name.starts_with('@') {
             if let Ok(inner) = std::fs::read_dir(e.path()) {
                 for s in inner.flatten() {
-                    out.push(format!("{name}/{}", s.file_name().to_string_lossy()));
+                    out.push(format!("{dir}:{name}/{}", s.file_name().to_string_lossy()));
                 }
             }
         } else {
-            out.push(name);
+            out.push(format!("{dir}:{name}"));
         }
     }
     out
+}
+
+/// Every file the extends chain of a walked tsconfig reaches under a
+/// name the walk reads as no config, with its content hash (step 5b):
+/// the chain reads its compilerOptions, so an edit to it must re-fire
+/// the sweep — a `tsconfig*.json` base already sits in `configs`.
+fn extends_bases(root: &Path, configs: &[(String, u64)]) -> Vec<String> {
+    let mut out = BTreeSet::new();
+    let walked = configs
+        .iter()
+        .filter(|(c, _)| c.rsplit('/').next().is_some_and(is_tsconfig));
+    for (config, _) in walked {
+        for reached in roots_ts::ts_extends_files(root, config) {
+            if is_resolver_config(Path::new(&reached)) {
+                continue;
+            }
+            let bytes = std::fs::read(root.join(&reached)).unwrap_or_default();
+            out.insert(format!(
+                "{reached}={:016x}",
+                crate::dedup::tokens::fnv1a(&bytes)
+            ));
+        }
+    }
+    out.into_iter().collect()
 }
 
 #[cfg(test)]
