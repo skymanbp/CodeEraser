@@ -15,23 +15,28 @@ import CE.Verdict.Soft (softLine, zonePenalty)
 import Data.List (nub)
 import Data.Ratio ((%))
 import qualified Data.Set as S
+import WireHarness (runChecks)
 
 battery :: IO Bool
-battery = do
-  a <- check "precondition: every axis penalty nonzero and pairwise distinct" preNonzero
-  b <- check "precondition: battery weights pairwise distinct" preWeights
-  c <- check "each weight +1 moves the (score, violations) tuple" weightKnobs
-  d <- check "each axis threshold knob moves the score" axisKnobs
-  e <- check "tolerance-over sets shrink as tolAbs grows (inclusion)" overMono
-  f <- check "the soft line derives by order statistics and clamps both ends" softDerive
-  g <- check "the zone curve is hand-exact, monotone past H, degenerate-safe" zoneCurve
-  h <- check "docFiles narrows cycle mass and opportunity; absent preserves charge" docFilesCycle
-  pure (and [a, b, c, d, e, f, g, h])
-
-check :: String -> Bool -> IO Bool
-check name ok = do
-  putStrLn ((if ok then "ok   " else "FAIL ") <> name)
-  pure ok
+battery = runChecks (preconditions <> knobProbes <> softZone <> universes)
+ where
+  preconditions =
+    [ ("precondition: every axis penalty nonzero and pairwise distinct", preNonzero)
+    , ("precondition: battery weights pairwise distinct", preWeights)
+    ]
+  knobProbes =
+    [ ("each weight +1 moves the (score, violations) tuple", weightKnobs)
+    , ("each axis threshold knob moves the score", axisKnobs)
+    ]
+  softZone =
+    [ ("tolerance-over sets shrink as tolAbs grows (inclusion)", overMono)
+    , ("the soft line derives by order statistics and clamps both ends", softDerive)
+    , ("the zone curve is hand-exact, monotone past H, degenerate-safe", zoneCurve)
+    ]
+  universes =
+    [ ("docFiles narrows cycle mass and opportunity; absent preserves charge", docFilesCycle)
+    , ("a doc index without a pos row widens the docdup opportunity and no code count", proseUniverse)
+    ]
 
 -- | The score fixture, refit for the density scoring (M9 batch 6)
 -- and again for the file-touched clone/docdup axes (7.0.0, O22): per
@@ -189,3 +194,26 @@ docFilesCycle =
   oneDoc = cycleFacts [0]
   absent = cycleFacts []
   axis6 = maybe (-1) id . lookup 6
+
+-- | Plan v2.30 step 5b-8: a document that is no graph node — a
+-- plain-text file — rides the file universe with no pos row. It
+-- widens the docdup opportunity (axis 3: two touched files over two
+-- documents) and leaves the code-file count where the tree without
+-- it had it (axis 2: two clone files over the two code nodes); the
+-- retired `nodes − docFiles` would have read one code file there.
+proseUniverse :: Bool
+proseUniverse =
+  and
+    [ axis 2 withText == axis 2 without
+    , axis 2 without == chargeAt scale 2 2
+    , axis 3 withText == chargeAt scale 2 2
+    , axis 3 without == 0
+    ]
+ where
+  scale = sScoreScale scoreBound
+  -- nodes 0 and 1 (code) and 2 (a doc) hold positions; 3 holds none
+  pos = [[0, 1, 1, 0, 1, 1], [1, 1, 1, 1, 1, 1], [2, 1, 0, 2, 1, 1]]
+  tree docs sim = penalties scoreBound Nothing (Facts sim pos [] [] docs (classKnobsOf []) [])
+  without = tree [2] [[0, 1, 0, 100, 100]]
+  withText = tree [2, 3] [[0, 1, 0, 100, 100], [2, 3, 2, 100, 100]]
+  axis c = maybe (-1) id . lookup c

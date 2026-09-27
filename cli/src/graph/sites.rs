@@ -62,9 +62,9 @@ pub fn detect_with_units(text: &str, lang: Lang) -> (Vec<RawSite>, Vec<units::Un
     // The scan-only arm (plan v2.5) carries no graph semantics and
     // must not fall through to the markdown detector below — a .css
     // file "detected" as markdown invented link sites on the
-    // standalone --sites face (review 2026-08-20 #4). Markdown stays
-    // the ONLY grammarless judged language.
-    if lang.scan_only() {
+    // standalone --sites face (review 2026-08-20 #4); the prose-only
+    // arm (plan v2.30 step 5b-8) has no sites and no units either.
+    if lang.scan_only() || lang.prose_only() {
         return (Vec::new(), Vec::new());
     }
     let mut found = if lang.grammar().is_some() {

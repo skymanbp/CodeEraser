@@ -48,7 +48,9 @@ impl ZoneLines {
 /// for a file it is about to declare out of scope.
 pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<usize> {
     let path = Path::new(&env.tool_input.file_path);
-    crate::scan::lang::Lang::from_path(path)?;
+    // sized_path (plan v2.30 step 5b-8): a prose-only file has no size
+    // budget, exactly like an unknown extension
+    crate::scan::lang::Lang::sized_path(path)?;
     if !crate::scan::walk::in_scope(root, path, &cfg.exclude) {
         return None;
     }

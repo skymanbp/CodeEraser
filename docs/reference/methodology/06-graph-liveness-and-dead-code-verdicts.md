@@ -87,7 +87,7 @@ Numeric details that are policy, not taste:
   duplicates take `-N` suffixes in document order ([md_slug.rs:47-51](../../../cli/src/graph/ladder/md_slug.rs#L47)).
   A setext heading — a paragraph under `===` or `---` — slugs like an ATX one, its lines joined, from
   its first row ([md_head.rs:30-61](../../../cli/src/graph/ladder/md_head.rs#L30)), and the section units
-  read the same headings ([units.rs:204-223](../../../cli/src/fourclass/units.rs#L204)) — plan v2.30 step 5b.
+  read the same headings ([units.rs:209-228](../../../cli/src/fourclass/units.rs#L209)) — plan v2.30 step 5b.
   Raw-HTML anchors (`<a name=…>`, `<a id=…>`, `<h1..6 id=…>`) enter the set verbatim, the tag read across
   lines and its attribute with or without spaces around `=`, quoted or bare
   ([md_head.rs:126-150](../../../cli/src/graph/ladder/md_head.rs#L126)); a fragment is percent-decoded
@@ -168,8 +168,8 @@ Two transformations happen on the way to the wire:
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
-never saw ([load.rs:82-88](../../../cli/src/graph/load.rs#L82)). `unresolved_sites` is the count of sites
-with no edge row ([load.rs:110-115](../../../cli/src/graph/load.rs#L110)) and travels with the report so
+never saw ([load.rs:96-102](../../../cli/src/graph/load.rs#L96)). `unresolved_sites` is the count of sites
+with no edge row ([load.rs:124-129](../../../cli/src/graph/load.rs#L124)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:27-29](../../../cli/src/graph/deadcode.rs#L27)).
 
@@ -298,7 +298,7 @@ crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for t
 Rust ladder's `mod` and `crate::` rungs alike
 ([rs.rs:81](../../../cli/src/graph/ladder/rs.rs#L81)), one normalizer serving both readers
 ([graph.rs:77](../../../cli/src/config/graph.rs#L77)); a declared path the walk does not hold, or that
-is no Rust file, is refused by name ([walkidx.rs:154](../../../cli/src/dedup/walkidx.rs#L154)). The legacy flags column this
+is no Rust file, is refused by name ([walkidx.rs:178](../../../cli/src/dedup/walkidx.rs#L178)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.
@@ -415,7 +415,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:262](../../../cli/src/graph/deadcode.rs#L262)), fences every returned index and bounds the column ([deadcode.rs:517](../../../cli/src/graph/deadcode.rs#L517)), and renders the trust word beside each dead file ([deadcode.rs:448](../../../cli/src/graph/deadcode.rs#L448)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
+([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:130](../../../cli/src/graph/load.rs#L130), [deadcode.rs:262](../../../cli/src/graph/deadcode.rs#L262)), fences every returned index and bounds the column ([deadcode.rs:517](../../../cli/src/graph/deadcode.rs#L517)), and renders the trust word beside each dead file ([deadcode.rs:448](../../../cli/src/graph/deadcode.rs#L448)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
 
 ### 9. Acceptance
 

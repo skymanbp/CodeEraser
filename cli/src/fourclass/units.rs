@@ -31,6 +31,11 @@ pub struct Unit {
 }
 
 pub fn segments(text: &str, lang: Lang) -> Vec<Unit> {
+    // the prose-only arm (plan v2.30 step 5b-8) declares nothing: no
+    // line of plain text is a heading, none a unit
+    if lang.prose_only() {
+        return Vec::new();
+    }
     if lang == Lang::Html {
         return html_sections(text);
     }

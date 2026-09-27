@@ -20,7 +20,11 @@ use anyhow::Result;
 use rusqlite::Transaction;
 
 /// Bump when segment-extraction semantics change: it sits in the meta
-/// cache key (schema v5), so stale docsegs rows are wiped. 7 = an
+/// cache key (schema v5), so stale docsegs rows are wiped. 8 = plain
+/// text (`.txt`, `Lang::Text`) enters the corpus as a fifth segment
+/// kind `text_para` (segments.rs text_paragraphs, plan v2.30 step
+/// 5b-8): every document holding one gains rows, no other kind's
+/// geometry moves. 7 = an
 /// indented code block inside a list item — four columns past the
 /// item's content column — leaves the Markdown prose walk like one
 /// outside a list (graph/md_mask.rs Blocks, plan v2.30 step 5b), so
@@ -35,7 +39,7 @@ use rusqlite::Transaction;
 /// 2026-08-19), which changes every shingle hash. 3 = the 2026-08-14
 /// attainment-line-B amendment (ccm #842): html_line /
 /// fenced_code_line / overlong_line masks.
-pub const DOCDUP_REV: i64 = 7;
+pub const DOCDUP_REV: i64 = 8;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs). `kind`
 /// and `exempt` are the frozen position codes in spec::KIND_NAMES /

@@ -23,7 +23,10 @@
 //! Java (spec_java.rs); step 4 turned Lua and R (spec_lua.rs, spec_r.rs;
 //! R takes both `.R` and `.r`, the extension match being exact); step 5
 //! turned HTML (spec.rs HTML — a document language: section units,
-//! attribute sites and docdup text, never a fingerprint).
+//! attribute sites and docdup text, never a fingerprint). Step 5b-8
+//! (2026-09-27) adds the PROSE-ONLY arm: plain text (`.txt`) enters
+//! the index for the docdup family alone (prose_only) — no size row,
+//! no judgment, no graph file node.
 
 use std::path::Path;
 use tree_sitter_language::LanguageFn;
@@ -59,6 +62,10 @@ pub enum Lang {
     Java, // 18
     Ruby, // 19
     R,    // 20
+    // ---- plan v2.30 step 5b-8: the prose-only arm (prose_only) ----
+    /// Plain text: a docdup corpus member and nothing else — no
+    /// grammar, no unit, no site, no fingerprint, no graph file node.
+    Text, // 21
 }
 
 /// ONE row per language: variant, extensions, report name, scan-only
@@ -102,6 +109,9 @@ const LANGS: &[(Lang, &[&str], &str, bool)] = &[
     (Lang::Java, &["java"], "java", false),
     (Lang::Ruby, &[], "ruby", true),
     (Lang::R, &["R", "r"], "r", false),
+    // the prose-only arm (plan v2.30 step 5b-8): not scan-only — it
+    // enters no size gate either; prose_only is its own predicate
+    (Lang::Text, &["txt"], "text", false),
 ];
 
 /// The grammar of every AST-backed language, as the `LanguageFn`
@@ -139,8 +149,23 @@ impl Lang {
             .expect("every Lang variant has a LANGS row")
     }
 
+    /// The `.txt` names a specification reserves for a machine format
+    /// (plan v2.30 step 5b-8) — no prose and no language of ours,
+    /// outside every arm like a Makefile: CMake's list file (the CMake
+    /// language; cmake-language(7) fixes the name), clang's flat
+    /// compilation database (one argument per line; the
+    /// JSONCompilationDatabase page fixes the name, graph/compdb_find.rs
+    /// reads it) and the robots exclusion file (RFC 9309 §2.3 fixes the
+    /// path). A name only a convention suggests — `requirements.txt`,
+    /// which pip reads under any name handed to `-r` — stays prose.
+    const MACHINE_TXT: [&str; 3] = ["CMakeLists.txt", "compile_flags.txt", "robots.txt"];
+
     pub fn from_path(path: &Path) -> Option<Self> {
         let ext = path.extension()?.to_str()?;
+        let machine = |n: &std::ffi::OsStr| Self::MACHINE_TXT.iter().any(|m| n == *m);
+        if path.file_name().is_some_and(machine) {
+            return None;
+        }
         LANGS
             .iter()
             .find(|(_, exts, ..)| exts.contains(&ext))
@@ -148,11 +173,34 @@ impl Lang {
     }
 
     /// from_path in the judgment surfaces' form: None for unknown
-    /// extensions AND for the scan-only arm. fourclass, churn and
-    /// structure inputs come through here; the scan and the guard's
-    /// budget stay on from_path (the plan v2.5 boundary).
+    /// extensions, for the scan-only arm AND for the prose-only arm
+    /// (plan v2.30 step 5b-8). fourclass, churn, structure, mention
+    /// and tombstone inputs come through here; the scan and the
+    /// guard's budget read sized_path, the index walk indexed_path.
     pub fn judged_path(path: &Path) -> Option<Self> {
+        Self::from_path(path).filter(|l| !l.scan_only() && !l.prose_only())
+    }
+
+    /// from_path in the size surfaces' form (plan v2.30 step 5b-8):
+    /// the judged set and the scan-only arm — every file the scan
+    /// measures — and never the prose-only arm, which no size gate,
+    /// hard budget, ratchet row or provenance entity counts.
+    pub fn sized_path(path: &Path) -> Option<Self> {
+        Self::from_path(path).filter(|l| !l.prose_only())
+    }
+
+    /// from_path in the index walk's form (plan v2.30 step 5b-8): the
+    /// judged set and the prose-only arm — every file the index holds
+    /// a row for — and never the scan-only arm.
+    pub fn indexed_path(path: &Path) -> Option<Self> {
         Self::from_path(path).filter(|l| !l.scan_only())
+    }
+
+    /// A path of the prose-only arm (plan v2.30 step 5b-8): the graph
+    /// loader's file-universe filter and the check universe's second
+    /// tier ask by path.
+    pub fn prose_path(path: &Path) -> bool {
+        Self::from_path(path).is_some_and(Self::prose_only)
     }
 
     /// The judged-language set as a wire bitmask (H1 slice 2,
@@ -161,11 +209,12 @@ impl Lang {
     /// names it); the mask only makes the set core-visible and
     /// drift-detectable through the verdict knobs echo. The wire
     /// sentinel is excluded: from_path never produces it, so it is
-    /// in no population S derives from.
+    /// in no population S derives from — and so is the prose-only
+    /// arm, which no judgment reads (plan v2.30 step 5b-8).
     pub fn judged_mask() -> i64 {
         LANGS
             .iter()
-            .filter(|&&(l, ..)| l != Lang::LangUnknown && !l.scan_only())
+            .filter(|&&(l, ..)| l != Lang::LangUnknown && !l.scan_only() && !l.prose_only())
             .fold(0, |m, &(l, ..)| m | (1 << (l as i64)))
     }
 
@@ -178,8 +227,21 @@ impl Lang {
         self.row().3
     }
 
-    /// Grammar for AST-backed languages; None = size-only (Markdown,
-    /// the scan-only arm), the wire sentinel (never walked) or a plan
+    /// The plan v2.30 step 5b-8 boundary predicate: a prose-only
+    /// language is read by the docdup family alone. Its files enter
+    /// the index as docsegs rows and the check's file universe as
+    /// docdup opportunities — and never the scan's size gates, the
+    /// guard's budget, the ratchet, the graph's file nodes (a page
+    /// naming one lands an asset node, as before), churn, fourclass,
+    /// the mention domain, the tombstone reading or the audit's LOC
+    /// ledger: it has no unit, no site, no name and no fingerprint.
+    /// Plain text is the one member.
+    pub fn prose_only(self) -> bool {
+        self == Self::Text
+    }
+
+    /// Grammar for AST-backed languages; None = grammar-less (Markdown,
+    /// plain text, the scan-only arm), the wire sentinel (never walked) or a plan
     /// v2.30 reserved code whose grammar lands with its own step.
     pub fn grammar(self) -> Option<tree_sitter::Language> {
         GRAMMARS

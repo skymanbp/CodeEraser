@@ -149,7 +149,9 @@ pub fn analyze(
     let mut idx = index::Index::open(&db_path, p)?;
     let seen = idx.indexed_paths()?;
     let walked = walkidx::index_all(root, &config, &mut idx)?;
-    let removed = idx.remove_missing(&walked.live, &seen)?;
+    // the keep set is every indexed path — live files and the prose-
+    // only arm (plan v2.30 step 5b-8) — not `live` alone
+    let removed = idx.remove_missing(&walked.indexed(), &seen)?;
     let filter = pairs::Filter {
         min_tokens: min_tokens.unwrap_or(p.guarantee()),
         min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),

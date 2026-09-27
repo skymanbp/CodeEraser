@@ -27,6 +27,12 @@ pub(super) struct WalkIndex {
     /// 5), hashed into the resolve_key like `live`, so an asset added
     /// or removed re-fires the sweep and a content edit does not.
     pub assets: BTreeSet<String>,
+    /// The indexed files that are no graph file (plan v2.30 step
+    /// 5b-8): the prose-only arm's — docdup corpus members the index
+    /// holds beside `live`, listed in `assets` too so a page naming
+    /// one lands the asset edge it did before, and never in `live`,
+    /// so no rung reads one as a target and the resolve key holds.
+    pub prose: BTreeSet<String>,
     pub configs: Vec<String>,
     pub tokenized: usize,
     pub dirty: BTreeSet<String>,
@@ -49,6 +55,15 @@ pub(super) struct WalkIndex {
     pub includes: BTreeMap<String, Vec<String>>,
 }
 
+impl WalkIndex {
+    /// Every path this walk left in the index — `live` and the
+    /// prose-only arm — the sweep's keep set: a row outside it is a
+    /// file the walk no longer holds.
+    pub fn indexed(&self) -> BTreeSet<String> {
+        self.live.union(&self.prose).cloned().collect()
+    }
+}
+
 /// One full-tree pass: the walk (refresh_tree) and then the phase-2
 /// key over every resolver input — config bytes, the `[graph]`
 /// declarations, md slug sets, TS fs facts, the compile databases.
@@ -56,6 +71,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     let mut out = WalkIndex {
         live: BTreeSet::new(),
         assets: BTreeSet::new(),
+        prose: BTreeSet::new(),
         configs: Vec::new(),
         tokenized: 0,
         dirty: BTreeSet::new(),
@@ -118,10 +134,10 @@ fn refresh_tree(
             configs.extend(walk::read_surviving(&path)?.map(|b| (rel, tokens::fnv1a(&b))));
             continue;
         }
-        // judged_path: the scan-only arm (plan v2.5) never enters the
+        // indexed_path: the scan-only arm (plan v2.5) never enters the
         // index — it feeds only judgment surfaces; every other walked
         // file is an asset a page may name (WalkIndex::assets)
-        let Some(lang) = Lang::judged_path(&path) else {
+        let Some(lang) = Lang::indexed_path(&path) else {
             out.assets.insert(rel);
             continue;
         };
@@ -135,7 +151,15 @@ fn refresh_tree(
         if lang.fingerprints() {
             out.tokenized += 1;
         }
-        out.live.insert(rel);
+        if lang.prose_only() {
+            // the prose-only arm (plan v2.30 step 5b-8): indexed for
+            // its docsegs rows, an asset for the pages that name it,
+            // never live — no rung reads it as a target
+            out.assets.insert(rel.clone());
+            out.prose.insert(rel);
+        } else {
+            out.live.insert(rel);
+        }
     }
     Ok(configs)
 }
@@ -309,9 +333,10 @@ pub(super) fn read_streams(root: &Path, files: &BTreeSet<String>) -> pairs::Stre
     out
 }
 
-/// rel → absolute path + language; None for non-lang paths AND for
-/// the scan-only arm (the shared gate of this walk and the probe's
-/// candidate loop — index files are judged by construction, so the
+/// rel → absolute path + language; None for non-lang paths, the
+/// scan-only arm AND the prose-only arm (the shared gate of this
+/// walk's stream reload and the probe's candidate loop — a
+/// fingerprint-sharing index file is judged by construction, so the
 /// judged_path form here is defense in depth, not a behavior change).
 pub(super) fn lang_path(root: &Path, rel: &str) -> Option<(std::path::PathBuf, Lang)> {
     let path = root.join(rel);

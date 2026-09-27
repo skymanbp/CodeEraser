@@ -109,12 +109,12 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|20fa5e5d34020a2d|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 153,
+    "line": 155,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 299,
+    "line": 301,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|3c4c22af6667dce2|0": {
@@ -124,7 +124,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|43b03086c81217ee|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 155,
+    "line": 157,
     "text": "min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|4e0cd4185a41b141|0": {
@@ -144,42 +144,42 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|757b0378afa2499a|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 268,
+    "line": 270,
     "text": "idx.resolve_refreshed(&dirty, &mut resolver)"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|764cfb44238d1148|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 230,
+    "line": 232,
     "text": "min_tokens: filter.min_tokens,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 289,
+    "line": 291,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 307,
+    "line": 309,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|1": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 307,
+    "line": 309,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|c97285682ec824a2|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 312,
+    "line": 314,
     "text": "kgram: 25,\nwindow: 26,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 217,
+    "line": 219,
     "text": "Summary {\n// has_tokens files only: Markdown rows are graph cache, and"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 154,
+    "line": 156,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|0664aacf9171f163|0": {
@@ -773,7 +773,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 198,
+    "line": 260,
     "text": "pub fn fingerprints(self) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
@@ -943,14 +943,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 299,
-    "end": 303,
+    "line": 301,
+    "end": 305,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 307,
-    "end": 315,
+    "line": 309,
+    "end": 317,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -1680,6 +1680,12 @@
     "line": 17,
     "text": "const BASE: u64 = 1_000_003;"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|052a14feff0411b1|0": {
+    "target": "../../../cli/src/docdup/exempt.rs",
+    "line": 91,
+    "end": 94,
+    "text": "if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT | KIND_TEXT_PARA) {"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|21488f3e3015a022|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
     "line": 49,
@@ -1688,13 +1694,13 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|2abe9730a2ccdd4a|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 102,
+    "line": 103,
     "text": "} else if line.text.trim().chars().count() > DOC_LINE_CAP {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|31906d7fe45733c4|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 113,
-    "end": 116,
+    "line": 114,
+    "end": 117,
     "text": "fn fence_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|5621b762259badab|0": {
@@ -1723,14 +1729,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|af692af8415a028b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 123,
-    "end": 135,
+    "line": 124,
+    "end": 136,
     "text": "fn skeleton_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|b7e6e8d95e21e27b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 94,
-    "end": 99,
+    "line": 95,
+    "end": 100,
     "text": "let opens = fence_line(&line.text);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|ba371dd84f0cee25|0": {
@@ -1738,12 +1744,6 @@
     "line": 1,
     "end": 7,
     "text": "//! Four-way category exemption (plan :74-76, design vol.2 §5.2) as a"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|eeb40d69d0b4cb1e|0": {
-    "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 89,
-    "end": 93,
-    "text": "for line in &seg.lines {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|f167799f784e2377|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
@@ -1777,49 +1777,49 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|11081afa57cc4ee5|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 60,
-    "end": 68,
+    "line": 75,
+    "end": 83,
     "text": "/// Every LIVE admitted segment of an OWN file in identity order,"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|1253aef84ba5cbb0|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 132,
+    "line": 147,
     "text": "let mut cand: BTreeSet<(usize, usize)> = BTreeSet::new();"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|6c1beb6aeb60531d|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 184,
-    "end": 188,
+    "line": 199,
+    "end": 203,
     "text": "};\nfor (a, b) in pairs {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|8e3f1800b61d1f1e|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 126,
-    "end": 128,
+    "line": 141,
+    "end": 143,
     "text": "/// LSH bucket pairs ∪ shared-shingle seed pairs, with hot groups"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|95257870e025e5f7|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 148,
-    "end": 154,
+    "line": 163,
+    "end": 169,
     "text": "tally.lsh_pairs = group_pairs(buckets.values(), &mut tally.hot_bands, &mut cand);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|ba094a8dc0aac38b|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 134,
-    "end": 140,
+    "line": 149,
+    "end": 155,
     "text": "let mut buckets: BTreeMap<(usize, u64), Vec<usize>> = BTreeMap::new();"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|f00a85b3c547dcc2|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 92,
-    "end": 105,
+    "line": 107,
+    "end": 120,
     "text": "/// Decode one docsegs shingle blob (u64 LE rows): `chunks_exact`"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|fd251ffb64597066|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 176,
-    "end": 183,
+    "line": 191,
+    "end": 198,
     "text": "for list in groups {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates/runs.rs|120173a4842950c2|0": {
@@ -1912,19 +1912,19 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|18db33163c95b3ca|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 127,
+    "line": 131,
     "text": "fn shingle_blob(set: &[u64]) -> Vec<u8> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|66f7febe338dcdf3|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 84,
-    "end": 87,
+    "line": 88,
+    "end": 91,
     "text": "if words.len() < spec::MIN_DOC_TOKENS {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|7d2c5d39ed50f773|0": {
     "target": "../../../cli/src/docdup/mod.rs",
-    "line": 42,
-    "end": 47,
+    "line": 46,
+    "end": 51,
     "text": "/// exempt::EXEMPT_NAMES; `shingles` = sorted deduped shingle u64s LE."
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|a6960b0205c782d5|0": {
@@ -1938,75 +1938,81 @@
     "line": 9,
     "text": "//! exemption classify → store; raw == below_floor + stored."
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|00c78cdfdaf3feb8|0": {
+    "target": "../../../cli/src/docdup/segments.rs",
+    "line": 96,
+    "end": 103,
+    "text": "/// Plain-text paragraphs (plan v2.30 step 5b-8): maximal runs of"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|080a01bb1dcd5a4a|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 67,
+    "line": 69,
     "text": "fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1346a67d5862dd19|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 5,
-    "end": 7,
+    "line": 6,
+    "end": 8,
     "text": "//! nothing but `md::masked_content_lines` (F3/RM8): a judge seeing"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|15ed3284af3f4c03|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 96,
-    "end": 103,
+    "line": 119,
+    "end": 126,
     "text": "fn visible(line: &str, mask: &[bool]) -> String {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 196,
-    "end": 214,
+    "line": 222,
+    "end": 240,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|3633378bbdbc1b93|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 77,
-    "end": 79,
+    "line": 79,
+    "end": 81,
     "text": "if !cur.is_empty() && no != last + 1 {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|596723b90d527bf0|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 179,
-    "end": 187,
+    "line": 205,
+    "end": 213,
     "text": "fn docstring_node(host: Node<'_>) -> Option<Node<'_>> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|af4198dae65b1993|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 216,
-    "end": 223,
+    "line": 242,
+    "end": 249,
     "text": "fn last_row(node: Node<'_>) -> usize {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b623f07650ed2a1f|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 129,
-    "end": 135,
+    "line": 152,
+    "end": 158,
     "text": "fn bare_marker(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|b66256554ecf30f7|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 110,
-    "end": 116,
+    "line": 133,
+    "end": 139,
     "text": "fn paragraph_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|ce98856effa52be8|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 151,
-    "end": 174,
+    "line": 177,
+    "end": 200,
     "text": "fn tree_segments(text: &str, lang: Lang) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|dc27f70bed6c0773|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 121,
-    "end": 127,
+    "line": 144,
+    "end": 150,
     "text": "fn html_line(vis: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/segments.rs|f066a6bc6f5f72a4|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 33,
-    "end": 49,
+    "line": 34,
+    "end": 50,
     "text": "/// Md extraction's visibility ledger — two different fates. `html`"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/shingle.rs|81495f633501e11c|0": {
@@ -2041,8 +2047,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|053ba463dbf330ef|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 72,
-    "end": 77,
+    "line": 80,
+    "end": 85,
     "text": "pub const SKELETON_PREFIXES: &str = \"\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|107444d508abc9eb|0": {
@@ -2074,24 +2080,25 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 52,
-    "end": 55,
+    "line": 59,
+    "end": 62,
+    "text": "pub const KIND_MD_PARA: i64 = 0;"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|1": {
+    "target": "../../../cli/src/docdup/spec.rs",
+    "line": 59,
+    "end": 63,
     "text": "pub const KIND_MD_PARA: i64 = 0;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|92118c9e45fefaec|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 81,
+    "line": 89,
     "text": "pub const ALLOW_MARKER: &str = \"ce:allow(docdup)\";"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|99855187c109972b|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 51,
-    "text": "pub const KIND_NAMES: [&str; 4] = [\"md_para\", \"comment_block\", \"docstring\", \"html_text\"];"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|bc4932867788a336|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 62,
-    "end": 63,
+    "line": 70,
+    "end": 71,
     "text": "pub const LICENSE_MARKERS: &str = \"SPDX-License-Identifier|Licensed under the Apache License|\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|e128e6057f8400eb|0": {
@@ -2101,8 +2108,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|f5c2efa037e4bd0c|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 84,
-    "end": 93,
+    "line": 92,
+    "end": 101,
     "text": "/// Only Python has a docstring convention (module/function/class body"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/graph/md.rs|1a6861d272727d30|0": {
@@ -2121,6 +2128,18 @@
     "target": "../../../cli/src/lockstep.rs",
     "line": 54,
     "text": "for c in pairs.chunks(fam.chunk) {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|689c8fc33de77ed4|0": {
+    "target": "../../../cli/src/scan/lang.rs",
+    "line": 230,
+    "end": 241,
+    "text": "/// The plan v2.30 step 5b-8 boundary predicate: a prose-only"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|d6da7db0d6bd5bb9|0": {
+    "target": "../../../cli/src/scan/lang.rs",
+    "line": 152,
+    "end": 161,
+    "text": "/// The `.txt` names a specification reserves for a machine format"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/tests/unit/docdup/judge.rs|0f11a15e2aec729c|0": {
     "target": "../../../cli/tests/unit/docdup/judge.rs",
@@ -2785,7 +2804,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Verdict/Score.hs|d905740cc99e57ad|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 158,
+    "line": 161,
     "text": "chargeAt :: Integer -> Rational -> Integer -> Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/EntropyProps.hs|b06af21d08a58f16|0": {
@@ -2957,8 +2976,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|71cb5dc9ffd38839|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 165,
-    "end": 169,
+    "line": 178,
+    "end": 182,
     "text": "let baseline = match (opts.establish, opts.pinned_soft) {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -2969,8 +2988,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/provenance.rs|b553e52c609441c7|0": {
     "target": "../../../cli/src/score/provenance.rs",
-    "line": 57,
-    "end": 70,
+    "line": 58,
+    "end": 71,
     "text": "pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/report.rs|33b0b22a34abf6e7|0": {
@@ -3371,30 +3390,30 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|0047c55e846ad4db|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 210,
+    "line": 213,
     "text": "dupFiles k f = touched [(u, v) | [u, v, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|07869a65a6a23383|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 186,
-    "end": 192,
+    "line": 189,
+    "end": 195,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|07869a65a6a23383|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 186,
-    "end": 192,
+    "line": 189,
+    "end": 195,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|14fb74480fd1eb86|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 221,
+    "line": 224,
     "text": "count [() | [_, rw, ap] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|3636fd2f7c9eb1b1|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 194,
-    "end": 204,
+    "line": 197,
+    "end": 207,
     "text": "-- | Axis 2 / axis 3 mass (7.0.0, O22): the FILES a verified pair"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|398835d61e497791|0": {
@@ -3405,44 +3424,44 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|49a9c5a3b2637360|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 263,
-    "end": 270,
+    "line": 270,
+    "end": 277,
     "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|49a9c5a3b2637360|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 263,
-    "end": 270,
+    "line": 270,
+    "end": 277,
     "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|53ce9d036606538c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 205,
-    "end": 207,
+    "line": 208,
+    "end": 210,
     "text": "cloneFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 176,
-    "end": 182,
+    "line": 179,
+    "end": 185,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 176,
-    "end": 182,
+    "line": 179,
+    "end": 185,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|2": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 176,
-    "end": 184,
+    "line": 179,
+    "end": 187,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|57124610f8b6b134|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 228,
-    "end": 235,
+    "line": 231,
+    "end": 238,
     "text": "cycleMembers :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|5b3ad397752d9911|0": {
@@ -3453,30 +3472,31 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6507a526d9217ff6|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 145,
-    "end": 146,
+    "line": 148,
+    "end": 149,
     "text": "docFiles = toInteger (length (fDocFiles f))"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6507a526d9217ff6|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 145,
+    "line": 148,
+    "end": 153,
     "text": "docFiles = toInteger (length (fDocFiles f))"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|656b9739094cc571|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 184,
+    "line": 187,
     "text": "s = maybe (sSizeCeil k) id soft"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 148,
-    "end": 153,
+    "line": 151,
+    "end": 156,
     "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 148,
-    "end": 153,
+    "line": 151,
+    "end": 156,
     "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|67ae4563ca2c76a8|0": {
@@ -3487,14 +3507,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|87e11f21877ed3c2|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 219,
-    "end": 221,
+    "line": 222,
+    "end": 224,
     "text": "churnHeavy :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|993827d7e86e206a|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 216,
-    "end": 217,
+    "line": 219,
+    "end": 220,
     "text": "deadFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|9a33567040c58443|0": {
@@ -3505,25 +3525,25 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|aa447550ddf1042c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 209,
-    "end": 216,
+    "line": 212,
+    "end": 219,
     "text": "dupFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|aacc4ec38599f419|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 234,
+    "line": 237,
     "text": ", size > 1 || IS.member (fromInteger u) loops"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|b9b5ad04a3a3c78b|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 213,
-    "end": 214,
+    "line": 216,
+    "end": 217,
     "text": "touched :: [(Integer, Integer)] -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|e53c6ab8a40735d4|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 246,
-    "end": 249,
+    "line": 253,
+    "end": 256,
     "text": "effWeight :: ScoreKnobs -> [[Integer]] -> Integer -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|f51a2f3edddd803b|0": {
@@ -3534,13 +3554,13 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|fc5edbc46f904ee6|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 252,
-    "end": 253,
+    "line": 259,
+    "end": 260,
     "text": "effectiveWeights :: ScoreKnobs -> [[Integer]] -> [[Integer]]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|ffed7fc4a3ab3316|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 207,
+    "line": 210,
     "text": "touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|37ae4657ff314060|0": {
@@ -3645,13 +3665,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
     "target": "../../../cli/src/dedup/walkidx.rs",
-    "line": 154,
+    "line": 178,
     "text": "anyhow::ensure!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 204,
-    "end": 223,
+    "line": 209,
+    "end": 228,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
@@ -4477,19 +4497,19 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|0d4b0b0be629773b|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 116,
+    "line": 130,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|21167c49dd173eee|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 82,
-    "end": 88,
+    "line": 96,
+    "end": 102,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|a5fe474ab9784b27|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 110,
-    "end": 115,
+    "line": 124,
+    "end": 129,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/md_mask.rs|9551917adc7cb5c4|0": {
@@ -5071,7 +5091,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 154,
+    "line": 156,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/probe.rs|5959c3e2b25fe5a1|0": {
@@ -5231,38 +5251,38 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 236,
-    "end": 252,
+    "line": 254,
+    "end": 270,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 289,
-    "end": 294,
+    "line": 307,
+    "end": 312,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6e6e351ef11fb49b|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 442,
-    "end": 448,
+    "line": 460,
+    "end": 466,
     "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 429,
-    "end": 432,
+    "line": 447,
+    "end": 450,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|b5ae71bae3b1d60d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 338,
-    "end": 341,
+    "line": 356,
+    "end": 359,
     "text": "fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|ddb3e784660bcd82|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 272,
-    "end": 273,
+    "line": 290,
+    "end": 291,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/report.rs|87b0f1d7db238a67|0": {
@@ -6410,32 +6430,32 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 277,
-    "end": 282,
+    "line": 282,
+    "end": 287,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 182,
-    "end": 195,
+    "line": 187,
+    "end": 200,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 69,
-    "end": 74,
+    "line": 74,
+    "end": 79,
     "text": "let unit = Unit {\nkey: format!(\"{}/{}\", f.name, f.params),"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 204,
-    "end": 223,
+    "line": 209,
+    "end": 228,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|f782ffb638135d5f|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 225,
-    "end": 250,
+    "line": 230,
+    "end": 255,
     "text": "/// HTML sections (plan v2.30 step 5, booklet §5): an element carrying"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/guard/probe.rs|0ee176e5cec95e69|0": {
@@ -7159,8 +7179,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 289,
-    "end": 315,
+    "line": 291,
+    "end": 317,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|98cd5d387767c13a|0": {
@@ -7269,55 +7289,55 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|48681a886ec2a600|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 69,
-    "end": 75,
+    "line": 71,
+    "end": 77,
     "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|48681a886ec2a600|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 69,
-    "end": 71,
+    "line": 71,
+    "end": 73,
     "text": "// cap 0 = no hard line exists (the P3 grade-table contract) —"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|494fe770a988b909|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 95,
-    "end": 117,
+    "line": 97,
+    "end": 119,
     "text": "pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|49f4f255016a7c4c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 253,
+    "line": 255,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|4db43f2d1c8ed9c7|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 135,
-    "end": 139,
+    "line": 137,
+    "end": 141,
     "text": "pub(super) fn resulting_text(env: &Envelope) -> Option<String> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 263,
-    "end": 269,
+    "line": 265,
+    "end": 271,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 263,
-    "end": 265,
+    "line": 265,
+    "end": 267,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|9d8c7a2bab92d81b|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 210,
-    "end": 223,
+    "line": 212,
+    "end": 225,
     "text": "/// Budget firings get their own feed line (accounting for the §4.2"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|be781c1e8236ee46|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 196,
-    "end": 207,
+    "line": 198,
+    "end": 209,
     "text": "let t = lines_for(root, c, &env.tool_input.file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|c3a17e14adb4fbe0|0": {
@@ -7328,20 +7348,20 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|d3e01c9814558493|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 140,
-    "end": 157,
+    "line": 142,
+    "end": 159,
     "text": "let on_disk = std::fs::read_to_string(&t.file_path)"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|da65a5617b60ffd5|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 160,
-    "end": 162,
+    "line": 162,
+    "end": 164,
     "text": "fn resulting_lines(env: &Envelope) -> Option<usize> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|fc6bb4e1a17bf3b8|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 250,
-    "end": 253,
+    "line": 252,
+    "end": 255,
     "text": "// the B4 suppression consults the feed BEFORE this event lands"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/envelope.rs|2c33cc85a000c037|0": {
@@ -8622,8 +8642,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
     "target": "../../../cli/src/docdup/segments.rs",
-    "line": 196,
-    "end": 223,
+    "line": 222,
+    "end": 249,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/say.rs|7de3ded125c17f93|0": {

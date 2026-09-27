@@ -402,7 +402,7 @@
       "id": "ver:docdup_rev#digits",
       "source": "cli/src/docdup/mod.rs::DOCDUP_REV",
       "tier": "linked",
-      "value": "7"
+      "value": "8"
     },
     {
       "id": "ver:graph_rev#digits",

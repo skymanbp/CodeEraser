@@ -51,9 +51,10 @@ impl Keys {
 /// The ascending, deduplicated file entities present under `root`
 /// and absent from `measured` (the file rows this run produced).
 /// Candidate = the walker's own file (never a foreign reader's) in a
-/// scan language; the language rule is the same `Lang::from_path`
-/// the measured walk applies, so the two sets differ ONLY by the
-/// ignore roads.
+/// scan language; the language rule is the same `Lang::sized_path`
+/// the measured walk applies (plan v2.30 step 5b-8: the prose-only
+/// arm owns no size row, so it is no candidate either), so the two
+/// sets differ ONLY by the ignore roads.
 pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>> {
     let keys = Keys::of(root);
     let walked = walk::collect_unignored(root).map_err(anyhow::Error::msg)?;
@@ -69,5 +70,5 @@ pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>>
 }
 
 fn candidate(w: &Walked) -> bool {
-    !w.foreign && crate::scan::lang::Lang::from_path(&w.path).is_some()
+    !w.foreign && crate::scan::lang::Lang::sized_path(&w.path).is_some()
 }

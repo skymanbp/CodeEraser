@@ -90,7 +90,7 @@ kind 表；self 精度档的 `segments` 回声 259→260 不是本次的移动�
 内容列）：五份段宇宙 770 行按冻结 sha 用当下的行喉重导——逐文件字段零漂移（self 141 / requests 50 / ripgrep 133 /
 cobra 53 / zod 393：冻结语料里没有列表项内缩进代码成段的文档），只变常量回声与 `generated_from`；精度档五份的
 判决行与 D1 在重物化的冻结树上跑完整产品判决逐格相同后只改签常量，self 的 universe 回声 segments 260→262 /
-judged 80→83 是同批 `tokens.rs` 具名续冻多出的两段 live 注释段；oracle 与普查不动；门 `eval_docdup_universe`）：
+judged 80→83 是同批 `tokens.rs` 具名续冻多出的两段 live 注释段；oracle 与普查不动；rev 7→8 = 纯文本 `.txt` 进语料成第五种段 `text_para`（2026-09-27，步 5b-8）：冻结语料的走查范围是 go/md/py/rs/ts、不含 txt，五份段宇宙 770 行按冻结 sha 重导零漂移、五份精度档在重物化的冻结树上跑完整产品判决逐格相同，两处只改常量回声（kinds 五个、`docdup_rev` 8）与 `generated_from`；oracle 与普查不动；门 `eval_docdup_universe`）：
 live 段 self 260 / requests 98 / ripgrep 568 / cobra 59 / zod 117；常数 DOC_SHINGLE 5、
 verbatim_floor 50、DOC_LINE_CAP 200、license 头 5 行豁免、SEGCAP 8192。
 

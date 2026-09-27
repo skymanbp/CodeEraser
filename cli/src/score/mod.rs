@@ -100,13 +100,13 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // charge is also what a clean repository earns
     let (segs, dups, _) = crate::docdup::judge::rows_of(root, &snap, &opts.core)?;
     let anchors = anchor::Anchors::from_index(&snap)?;
-    drop(snap);
     // the verdict universe is this tree's OWN files: a foreign reader
-    // seeds liveness in the graph above and owns no row down here
+    // seeds liveness in the graph above and owns no row down here —
+    // the graph's measured nodes, then the prose-only arm (universe)
     let fnodes = deadcode::measured_nodes(&w);
+    let files = universe(&fnodes, snap)?;
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
     let (posmap, loops) = judged_positions(&opts.core, &w, &pos_req)?;
-    let files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();
     let idx: HashMap<&str, i64> = files
         .iter()
         .enumerate()
@@ -135,6 +135,19 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         skipped_self,
         anchors,
     })
+}
+
+/// The verdict universe (plan v2.30 step 5b-8): this tree's measured
+/// graph nodes first — their indices are the pos table's — then its
+/// prose-only files, docdup corpus members no graph judgment ever
+/// positions: a docdup pair may touch one, the core's docdup axis
+/// counts it as an opportunity, and the code-file count reads the pos
+/// rows outside the doc set rather than `nodes − docFiles`
+/// (Score.hs codeFiles). The snapshot is dropped here, as it was.
+fn universe(fnodes: &[(i64, &str)], snap: dedup::index::Index) -> Result<Vec<String>> {
+    let mut files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();
+    files.extend(crate::docdup::judge::candidates::prose_files(&snap)?);
+    Ok(files)
 }
 
 /// Judge the repo against the committed baseline: measure, window
@@ -222,11 +235,16 @@ pub(crate) fn doc_file_indices(files: &[String]) -> Vec<i64> {
         .iter()
         .enumerate()
         .filter_map(|(i, path)| {
-            // a Markdown or HTML page (plan v2.30 step 5): the files
-            // the docdup axis counts over
+            // a Markdown or HTML page (plan v2.30 step 5) or a plain-
+            // text file (step 5b-8): the files the docdup axis counts
+            // over
             matches!(
                 crate::scan::lang::Lang::from_path(Path::new(path)),
-                Some(crate::scan::lang::Lang::Markdown | crate::scan::lang::Lang::Html)
+                Some(
+                    crate::scan::lang::Lang::Markdown
+                        | crate::scan::lang::Lang::Html
+                        | crate::scan::lang::Lang::Text
+                )
             )
             .then_some(i as i64)
         })

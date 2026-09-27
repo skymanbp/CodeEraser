@@ -8,8 +8,8 @@
 
 use super::segments::{RawSeg, SegLine};
 use super::spec::{
-    ALLOW_MARKER, DOC_LINE_CAP, KIND_HTML_TEXT, KIND_MD_PARA, LICENSE_HEAD_LINES, LICENSE_MARKERS,
-    SKELETON_PREFIXES,
+    ALLOW_MARKER, DOC_LINE_CAP, KIND_HTML_TEXT, KIND_MD_PARA, KIND_TEXT_PARA, LICENSE_HEAD_LINES,
+    LICENSE_MARKERS, SKELETON_PREFIXES,
 };
 
 /// Exemption classes as frozen position codes; 0 = live.
@@ -78,16 +78,17 @@ fn allow_has_why(seg: &RawSeg) -> bool {
 /// code regions (```/~~~ toggling, fence lines included — the F3
 /// "the judge sees prose" contract extended to documentation text
 /// wherever it lives) and overlong data/regex lines (DOC_LINE_CAP).
-/// md paragraphs and HTML text are untouched by ALL three: a `---`
-/// there is a thematic break, md fences and HTML code were masked by
-/// the detector already, and a single long line of either is
+/// md paragraphs, HTML text and plain-text paragraphs (plan v2.30
+/// step 5b-8) are untouched by ALL three: a `---` there is a thematic
+/// break, md fences and HTML code were masked by the detector already,
+/// plain text has no code to fence, and a single long line of any is
 /// legitimate unwrapped prose (an HTML source line is masked markup
 /// around it). Returns the surviving lines.
 pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLine> {
     let mut keep = Vec::new();
     let mut fenced = false;
     for line in &seg.lines {
-        if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT) {
+        if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT | KIND_TEXT_PARA) {
             keep.push(line);
             continue;
         }

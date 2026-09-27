@@ -1,6 +1,7 @@
-//! Segment extraction — the four document-text kinds (design vol.2
-//! §5.1; HTML text since plan v2.30 step 5, html.rs), geometry and
-//! lines ONLY: exemption policy lives in
+//! Segment extraction — the five document-text kinds (design vol.2
+//! §5.1; HTML text since plan v2.30 step 5, html.rs; plain text since
+//! step 5b-8, text_paragraphs), geometry and lines ONLY: exemption
+//! policy lives in
 //! exempt.rs, wordization in shingle.rs. md_para may come from
 //! nothing but `md::masked_content_lines` (F3/RM8): a judge seeing
 //! text the detector masks — fence bodies, HTML comments, inline
@@ -9,7 +10,7 @@
 //! own additive parse (RM7): sharing the tokenizer's tree would
 //! couple TOKENIZER_REV to comment semantics.
 
-use super::spec::{self, KIND_COMMENT, KIND_DOCSTRING, KIND_MD_PARA};
+use super::spec::{self, KIND_COMMENT, KIND_DOCSTRING, KIND_MD_PARA, KIND_TEXT_PARA};
 use crate::graph::md;
 use crate::scan::lang::Lang;
 use crate::scan::{ast, spec as scan_spec};
@@ -56,6 +57,7 @@ pub fn extract(text: &str, lang: Lang) -> (Vec<RawSeg>, MdShed) {
     match lang {
         Lang::Markdown => md_paragraphs(text),
         Lang::Html => super::html::segments(text),
+        Lang::Text => (text_paragraphs(text), MdShed::default()),
         _ => (tree_segments(text, lang), MdShed::default()),
     }
 }
@@ -71,11 +73,11 @@ fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {
         let vis = visible(line, &mask);
         if !paragraph_line(&vis) {
             shed.html += u64::from(html_line(&vis));
-            flush(&mut cur, &mut segs);
+            flush(&mut cur, &mut segs, KIND_MD_PARA);
             continue;
         }
         if !cur.is_empty() && no != last + 1 {
-            flush(&mut cur, &mut segs);
+            flush(&mut cur, &mut segs, KIND_MD_PARA);
         }
         if line.starts_with("    ") || line.starts_with('\t') {
             shed.indented += 1;
@@ -87,8 +89,29 @@ fn md_paragraphs(text: &str) -> (Vec<RawSeg>, MdShed) {
         cur.push((no, seg_line));
         last = no;
     }
-    flush(&mut cur, &mut segs);
+    flush(&mut cur, &mut segs, KIND_MD_PARA);
     (segs, shed)
+}
+
+/// Plain-text paragraphs (plan v2.30 step 5b-8): maximal runs of
+/// non-blank lines — a blank (whitespace-only) line is the one
+/// separator plain text has. No line is structure to this kind and
+/// nothing is masked, so every line rides whole with no mask.
+fn text_paragraphs(text: &str) -> Vec<RawSeg> {
+    let (mut segs, mut cur) = (Vec::new(), Vec::<(usize, SegLine)>::new());
+    for (i, line) in text.lines().enumerate() {
+        if line.trim().is_empty() {
+            flush(&mut cur, &mut segs, KIND_TEXT_PARA);
+            continue;
+        }
+        let seg_line = SegLine {
+            text: line.to_string(),
+            mask: None,
+        };
+        cur.push((i + 1, seg_line));
+    }
+    flush(&mut cur, &mut segs, KIND_TEXT_PARA);
+    segs
 }
 
 /// The unmasked chars of a line, trimmed — classification must not
@@ -134,13 +157,16 @@ fn bare_marker(vis: &str) -> bool {
     digits > 0 && matches!(&vis[digits..], "." | ")")
 }
 
-fn flush(cur: &mut Vec<(usize, SegLine)>, segs: &mut Vec<RawSeg>) {
+/// Close the open paragraph run as one segment of `kind` (nothing
+/// when no run is open) — the Markdown and plain-text walks' one
+/// emitter.
+fn flush(cur: &mut Vec<(usize, SegLine)>, segs: &mut Vec<RawSeg>, kind: i64) {
     if cur.is_empty() {
         return;
     }
     let (start, end) = (cur[0].0 as i64, cur[cur.len() - 1].0 as i64);
     segs.push(RawSeg {
-        kind: KIND_MD_PARA,
+        kind,
         start_line: start,
         end_line: end,
         lines: cur.drain(..).map(|(_, l)| l).collect(),

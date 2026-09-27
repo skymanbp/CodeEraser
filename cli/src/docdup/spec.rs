@@ -47,12 +47,20 @@ pub const DOC_LINE_CAP: usize = 200;
 /// Segment kinds as frozen position codes (the wire.rs edge-code
 /// discipline: reordering is a DOCDUP_REV bump; `html_text` — a block
 /// element's prose, docdup/html.rs — appended at rev 6, plan v2.30
-/// step 5).
-pub const KIND_NAMES: [&str; 4] = ["md_para", "comment_block", "docstring", "html_text"];
+/// step 5; `text_para` — a plain-text file's paragraph, segments.rs
+/// text_paragraphs — at rev 8, step 5b-8).
+pub const KIND_NAMES: [&str; 5] = [
+    "md_para",
+    "comment_block",
+    "docstring",
+    "html_text",
+    "text_para",
+];
 pub const KIND_MD_PARA: i64 = 0;
 pub const KIND_COMMENT: i64 = 1;
 pub const KIND_DOCSTRING: i64 = 2;
 pub const KIND_HTML_TEXT: i64 = 3;
+pub const KIND_TEXT_PARA: i64 = 4;
 
 /// License-header markers (design vol.2 §5.2), `|`-separated. Any one
 /// on any line of the first comment block inside the head window

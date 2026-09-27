@@ -57,6 +57,21 @@ pub fn exempt_counts(idx: &Index) -> Result<(u64, u64)> {
     ))
 }
 
+/// The prose-only files of the index (plan v2.30 step 5b-8): this
+/// tree's own `.txt` files — docdup corpus members that are no graph
+/// node, which the check score seats after the graph's files.
+pub fn prose_files(idx: &Index) -> Result<Vec<String>> {
+    let paths: Vec<String> = crate::graph::load::rows(
+        idx.raw(),
+        "SELECT path FROM files WHERE owner = 0 ORDER BY path",
+        |r| r.get(0),
+    )?;
+    Ok(paths
+        .into_iter()
+        .filter(|p| crate::scan::lang::Lang::prose_path(Path::new(p)))
+        .collect())
+}
+
 /// Every LIVE admitted segment of an OWN file in identity order,
 /// straight off the docsegs cache (exempt segments are outside the
 /// corpus by definition — the D6 zero-survival claim is structural

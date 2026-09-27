@@ -75,7 +75,10 @@ fn scoped_lang_files(
     let files = collect(root, &config.exclude)?
         .into_iter()
         .filter(|w| !w.foreign)
-        .filter_map(|w| crate::scan::lang::Lang::from_path(&w.path).map(|l| (w.path, l)))
+        // sized_path (plan v2.30 step 5b-8): the scan measures the
+        // judged set and the scan-only arm; a prose-only file is the
+        // docdup family's alone and takes no size row here
+        .filter_map(|w| crate::scan::lang::Lang::sized_path(&w.path).map(|l| (w.path, l)))
         .collect();
     Ok((config, files))
 }

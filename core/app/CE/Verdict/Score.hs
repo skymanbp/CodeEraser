@@ -141,9 +141,12 @@ penalties k soft f =
   nodes = toInteger (length (fPos f))
   churned = toInteger (length (fChurn f))
   -- the two halves of the verdict universe (7.0.0, O22): the clone
-  -- and cycle axes read the code files, the docdup axis the doc files
+  -- and cycle axes read the code files, the docdup axis the doc files.
+  -- A document with no graph position — a plain-text file (plan v2.30
+  -- step 5b-8) — is a docdup opportunity and no node, so the code
+  -- files are the pos rows outside the doc set, never `nodes − docFiles`
   docFiles = toInteger (length (fDocFiles f))
-  codeFiles = nodes - docFiles
+  codeFiles = count [() | (u : _) <- fPos f, IS.notMember (fromInteger u) (docSet f)]
 
 -- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means
 -- no opportunity table (churn without --days) — no evidence charges
@@ -232,11 +235,15 @@ cycleMembers k f =
     | [u, _, _, _, size, _] <- fPos f
     , size >= sCycleFloor k
     , size > 1 || IS.member (fromInteger u) loops
-    , IS.notMember (fromInteger u) docs
+    , IS.notMember (fromInteger u) (docSet f)
     ]
  where
-  docs = IS.fromList (map fromInteger (fDocFiles f))
   loops = IS.fromList (map fromInteger (fSelfLoops f))
+
+-- | The doc-file indices as a set — the code-file count and the cycle
+-- axis read it alike.
+docSet :: Facts -> IS.IntSet
+docSet f = IS.fromList (map fromInteger (fDocFiles f))
 
 -- | One axis's effective weight: wire rows [axisCode, numerator]
 -- override; unlisted axes weigh sDefaultWeight. ONE lookup, two

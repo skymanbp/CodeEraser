@@ -77,6 +77,20 @@ pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
 /// sites) — the trust ledger raw material (2.32.0, H3).
 pub type PathSites = Vec<(String, i64, i64)>;
 
+/// The graph's file universe: every indexed file less the prose-only
+/// arm (plan v2.30 step 5b-8) — a `.txt` is a docdup corpus member and
+/// no graph file, so a page naming one lands the asset node nodes_of
+/// mints for a walked file outside this set, and an unnamed one is no
+/// node at all.
+fn graph_files(conn: &rusqlite::Connection) -> Result<Vec<String>> {
+    Ok(
+        rows::<String>(conn, "SELECT path FROM files ORDER BY path", |r| r.get(0))?
+            .into_iter()
+            .filter(|p| !crate::scan::lang::Lang::prose_path(std::path::Path::new(p)))
+            .collect(),
+    )
+}
+
 pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, PathSites)> {
     let conn = idx.raw();
     // ONE read snapshot for one graph: as three autocommit statements
@@ -86,7 +100,7 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Path
     // indexes nodes by source (review 2026-08-19, codex lane).
     let txn = conn.unchecked_transaction()?;
     let conn = &*txn;
-    let files = rows(conn, "SELECT path FROM files ORDER BY path", |r| r.get(0))?;
+    let files = graph_files(conn)?;
     let edges = rows(
         conn,
         "SELECT f.path, e.dst_path, e.dst_unit, e.kind, e.rung, e.granularity
