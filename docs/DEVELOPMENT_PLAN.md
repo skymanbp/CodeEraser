@@ -46,8 +46,8 @@
 
 | 形态 | 载体 | 里程碑 |
 |---|---|---|
-| **主动**：`ce` CLI | 单二进制（Rust），`codeeraser` 为等价 alias；23 个子命令——判决族、运行时面与 `update`，完整清单见 [reference/cli.md](reference/cli.md) | M1 起（`check`/`baseline` 落地于 M5-3B、`structure` M6、`eject` M7——2026-08-13 拍板⑩；`update` v1.3.0） |
-| **被动**：Claude Code 插件 | hooks（as-built 三钩：SessionStart/PreToolUse/Stop）+ skills（erase 删除引导，2026-08-19）+ `bin/` 垫片；PostToolUse 深判**退役**（职责归 Stop 审计+CI） | M3 |
+| **主动**：`ce` CLI | 单二进制（Rust），`codeeraser` 为等价 alias；24 个子命令——判决族、运行时面与 `update`，完整清单见 [reference/cli.md](reference/cli.md) | M1 起（`check`/`baseline` 落地于 M5-3B、`structure` M6、`eject` M7——2026-08-13 拍板⑩；`update` v1.3.0） |
+| **被动**：Claude Code 插件 | hooks（as-built 四钩：SessionStart/PreToolUse/PostToolUse/Stop——PostToolUse 只记 `ask` 档写入的落地、不判不说，v2.30 步 5b）+ skills（erase 删除引导，2026-08-19）+ `bin/` 垫片；PostToolUse 深判**退役**（职责归 Stop 审计+CI） | M3 |
 | **被动**：通用 agent 集成 | pre-commit、CI（退出码 + `--fail-under`）、**最小 MCP server（M3）**、完整 MCP（M7） | M3/M7 |
 | GUI | Tauri（复用 Rust 前端） | M6 |
 | 分发 | M3 后 0.x 预览（air-gapped 手动放置，D2-3）；M7 起已公开（as-built 2026-08-19）：marketplace + GitHub Releases + crates.io（`cargo install codeeraser`）+ npm 指针 + 官网 codeeraser.dev | M3/M7 |
@@ -84,7 +84,7 @@ PostToolUse 不能阻断工具执行，但可反馈；强制阻断点 = PreToolU
 | Hook | 职责（与 ADR-004 混合强制点一致） |
 |---|---|
 | `PreToolUse`（`Edit\|Write`） | 只做**无需 AST 的廉价检查**：路径排除、目标文件当前 LOC 预算、`new_string` 片段对指纹索引的 T1/T2 探针。超限 → `permissionDecision:"deny"/"ask"` + 指回既有 `file:line`。不做 AST diff（避免重放 Edit 落盘语义这一隐藏子系统，评审 A2a）。**v2.26 第三条**：墓碑残留度量（feed-only）——本次被抹除名字集 R（盘上 / 应用后）∪ 会话级 R（feed 尾窗内本 session 的被删名哈希并集）对本次新增标题 / 单元名 / 散文段匹配否定框与回溯标记，仅当 R ≠ ∅ 写 `tombstone` 事件；不出决定，晋级只走 §6 M4 FPR 门 |
-| `PostToolUse`（`Edit\|Write`）/ `FileChanged` | **退役（裁定 2026-08-19）**——官方语义不能阻断只能反馈，深判职责由 Stop 审计（git diff 净效果）与 CI 门承担；再加一层反馈面即上下文熵源（B4 立场） |
+| `PostToolUse`（`Edit\|Write`）/ `FileChanged` | 深判**退役（裁定 2026-08-19）**——官方语义不能阻断只能反馈，深判职责由 Stop 审计（git diff 净效果）与 CI 门承担；再加一层反馈面即上下文熵源（B4 立场）。**只记不说的 `settle` 腿（2026-09-27 用户裁，v2.30 步 5b）**：PreToolUse 答 `ask` 后工具真跑了，PostToolUse 以同一 `tool_use_id` 触发，`ce settle --hook` 只往 feed 追加一行 `settled`、零输出——`ask` 档下 `applied` 为 null 的记录由此闭合；`FileChanged` 仍不用 |
 | `Stop` | 本轮净效果审计（基于 **git diff**，因此对 Bash/`>>` 写入同样生效）：净 LOC、新增重复块、（M4 起）四分类汇总。引入净冗余而声称完成 → `decision:"block"` 要求返工。**v2.26**：加墓碑残留度量——按改动集（基准 blob / 工作树，含未跟踪新文件；外来所有者与 `.ce/` 除外）算被抹除名字集 R，标签残留 L 与论证残留 J 以加性键 `tombstone` 入 `stop_audit` / `precommit` 行；changelog 定位文档（路径约定 / 版本-日期标题台账形两见证）整体豁免且每次入账；第一段只报告不阻断 |
 | `SessionStart` | 引导二进制（见 §5.9）；注入 guard 健康状态一行（daemon 是否存活、索引 freshness、guard 档位；降级计数归 `ce doctor`，§5.9-5） |
 | `UserPromptSubmit`（可选） | 廉价启发式标记本轮意图（更新 vs 新增），仅作 §4.3 的可选辅助信号，非判定前提——**未实现，随 M 束经 v2.22 结项令裁定不做（O08）** |

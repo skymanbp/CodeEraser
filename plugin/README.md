@@ -1,11 +1,12 @@
 # codeeraser plugin
 
-被动 guard <!--ce:count:hooks#word-->三<!--/ce-->钩（全部 fail-open，内部失败一律放行）+ <!--ce:count:skills#word-->一<!--/ce-->个主动 skill + <!--ce:count:commands#word-->一<!--/ce-->条命令：
+被动 guard <!--ce:count:hooks#word-->四<!--/ce-->钩（全部 fail-open，内部失败一律放行）+ <!--ce:count:skills#word-->一<!--/ce-->个主动 skill + <!--ce:count:commands#word-->一<!--/ce-->条命令：
 
 | hook | 命令 | 行为 |
 |---|---|---|
 | SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
 | PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后行数超本文件那条硬线）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声 |
+| PostToolUse (Write\|Edit) | `ce settle --hook` | 只记不说：本会话的 PreToolUse 对同一次工具调用（同一 `tool_use_id`）答过 `ask`、而工具真跑完了，就往观察账本追加一行 `settled`——人放行了这次写入；拒绝不触发任何钩子，所以没有这一行就是拒绝的记录 |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块，仅 deny 档拦停；墓碑腿同样在核里按 `[tombstone] tier` 与 budget 判、也只有 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)；同角色顾问行（本会话新增的单元其 top-1 带角色位时）只落进 observe 账本，永不拦停 |
 
 skill：[`skills/erase/`](skills/erase/SKILL.md)，把 dedup/deadcode/join
@@ -50,7 +51,7 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。
 源码安装（`cargo install codeeraser` 或 `--path cli`）依然可用。
 
-**Windows 前置：`sh` 要在 Windows PATH 上。** 三个钩子与 `.mcp.json` 都以裸 `sh`
+**Windows 前置：`sh` 要在 Windows PATH 上。** 四个钩子与 `.mcp.json` 都以裸 `sh`
 起头去跑 `bin/ce.sh`，而 Claude Code 是原生 Windows 进程，按 Windows PATH 找第一个
 token。Git for Windows 默认只把 `Git\cmd` 放进 PATH，那里有 `git.exe` 没有 `sh.exe`；
 `sh.exe` 在 `Git\bin` 与 `Git\usr\bin`。PATH 上没有 `sh` 时钩子与 MCP 面都起不来，
@@ -85,7 +86,7 @@ precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部
 观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
 每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`，版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
 `tombstone` 事件行（PreToolUse 一次写入删掉了名字、或它的标题 / 标识符 / 散文把本会话删掉的名字
-写回成「无 X」时才落一行，只记名字的哈希）与 Stop / precommit / commitmsg 行上的 `tombstone` 对象
+写回成「无 X」时才落一行，只记名字的哈希）、`settled` 事件行（PostToolUse 腿：PreToolUse 答 `ask` 后工具真跑了才落一行，只带 `file` 与 `tool_use_id`；同一次工具调用的各行都带 `tool_use_id`，`probe` 行另带钩子对这次事件的决定 `decision`，墓碑行的 `applied` 为 null 时按有无对应的 `settled` 行读）与 Stop / precommit / commitmsg 行上的 `tombstone` 对象
 （本次改动集的度量：删掉的名字数、候选面数 `rows`、changelog 定位豁免（整文件按路径、台账形或 `[tombstone] ledger` 声明，或只豁免一段而段条目带起始 `line`）与核的判决 `judged`：前几处站点 `file:line kind`、标签 / 散文分账、`over`）
 按类自己的 `[tombstone] tier`（默认 observe）出声，且只在核答 `over`（站点数超过 `[tombstone] budget`）时；observe 只记不拦，FPR 账本见 [docs/FPR-TOMBSTONE.md](../docs/FPR-TOMBSTONE.md)；
 `fourclass` 对象（跨文件搬迁与堆叠嫌疑）永不出声：它不属于任何档位，其改动集级

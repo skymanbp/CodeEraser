@@ -206,7 +206,7 @@ pub fn dedup_cmd(a: DedupArgs) -> ExitCode {
     }
 }
 
-/// The three hook entries share one contract: --hook or nothing.
+/// The four hook entries share one contract: --hook or nothing.
 ///
 /// The usage error exits 1, NOT 2: exit 2 IS the hook protocol's DENY
 /// (PreToolUse blocks the call and feeds stderr to the model), so a

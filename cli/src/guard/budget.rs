@@ -161,19 +161,61 @@ fn resulting_lines(env: &Envelope) -> Option<usize> {
     resulting_text(env).map(|text| text.lines().count())
 }
 
+/// What the two size classes leave for the decision: their feed lines
+/// (a budget line, or a zone line — the hook writes them after the
+/// probe's, 0.11.0), the budget reason unless the breach was warned
+/// this session already, and the zone's own-tier firing.
+pub(super) struct SizeClasses {
+    pub lines: Vec<serde_json::Value>,
+    pub budget: Option<String>,
+    pub zone: Option<(&'static str, String)>,
+}
+
+/// Both size classes over one write, measured once: the hard budget
+/// against the lines THIS file is measured against — its class's, or
+/// the global table (plan v2.13 ① P4) — and, under it, the graded
+/// zone. No config, or a write outside the scan's scope, is nothing.
+pub(super) fn size_classes(
+    root: &Path,
+    env: &Envelope,
+    cfg: Option<&(Config, Option<&'static str>)>,
+    mode: &str,
+    budget_seen: bool,
+) -> SizeClasses {
+    let mut out = SizeClasses {
+        lines: Vec::new(),
+        budget: None,
+        zone: None,
+    };
+    let Some((c, fence)) = cfg else {
+        return out;
+    };
+    let Some(lines) = sized_write(root, c, env) else {
+        return out;
+    };
+    let t = lines_for(root, c, &env.tool_input.file_path);
+    if let Some(why) = budget_breach(&t, env, lines, *fence) {
+        out.lines.push(budget_line(env, mode, lines));
+        out.budget = (!budget_seen).then_some(why);
+    } else {
+        // sub-H writes: the zone observer, plus the v2.7 ① OPT-IN
+        // tier map (default stays feed-only)
+        let (line, fired) = zone_assess(root, &ZoneLines::of(&t, c), env, mode, lines);
+        out.lines.extend(line);
+        out.zone = fired;
+    }
+    out
+}
+
 /// Budget firings get their own feed line (accounting for the §4.2
 /// step-3 decision at 1.0 needs per-rule records), in every tier.
-pub(super) fn budget_log(root: &Path, env: &Envelope, mode: &str, lines: usize) {
-    crate::hookio::observe_append(
-        root,
-        Some(&env.session_id),
-        serde_json::json!({
-            "event": "budget",
-            "file": env.tool_input.file_path,
-            "mode": mode,
-            "resulting_lines": lines,
-        }),
-    );
+fn budget_line(env: &Envelope, mode: &str, lines: usize) -> serde_json::Value {
+    serde_json::json!({
+        "event": "budget",
+        "file": env.tool_input.file_path,
+        "mode": mode,
+        "resulting_lines": lines,
+    })
 }
 
 /// plan v2.6 §A observe leg + the v2.7 ① OPT-IN tier map: a write
@@ -189,17 +231,21 @@ pub(super) fn budget_log(root: &Path, env: &Envelope, mode: &str, lines: usize) 
 /// score's size axis uses; H is the file's hard line likewise; a
 /// degenerate zone (H <= S, or no hard line) logs nothing rather
 /// than a made-up position.
-pub(super) fn zone_assess(
+fn zone_assess(
     root: &Path,
     z: &ZoneLines,
     env: &Envelope,
     mode: &str,
     lines: usize,
-) -> Option<(&'static str, String)> {
+) -> (Option<serde_json::Value>, Option<(&'static str, String)>) {
     let (cap, armed) = (z.cap, z.armed);
     let (frozen, tiers) = committed(root);
     let soft = frozen.unwrap_or(z.warn);
-    let super::zone::Landing { permille, tier } = super::zone::landing(lines, soft, cap, tiers)?;
+    let Some(super::zone::Landing { permille, tier }) =
+        super::zone::landing(lines, soft, cap, tiers)
+    else {
+        return (None, None);
+    };
     let file = &env.tool_input.file_path;
     // the B4 suppression consults the feed BEFORE this event lands
     // in it (the probe rule's ordering — a warn must not read its
@@ -217,14 +263,13 @@ pub(super) fn zone_assess(
     if armed {
         line["zone_tier"] = tier.into();
     }
-    crate::hookio::observe_append(root, Some(&env.session_id), line);
-    if !armed || tier == "observe" || seen {
-        return None;
-    }
-    Some((
-        tier,
-        super::say::graded_zone(file, lines, permille, soft, cap),
-    ))
+    let fired = (armed && tier != "observe" && !seen).then(|| {
+        (
+            tier,
+            super::say::graded_zone(file, lines, permille, soft, cap),
+        )
+    });
+    (Some(line), fired)
 }
 
 /// The zone's two core-authored inputs off the committed

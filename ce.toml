@@ -536,4 +536,17 @@ entry_globs = [
 # (step 3 added four that way). Declined. Row set diffed against the
 # HEAD worktree: exactly these five new, none gone. Measured on the
 # formatted tree.
-budget = 59
+# 59 -> 58 (v2.30 step 5b-7, the PostToolUse leg): the leg's entry
+# point restated the PreToolUse hook's prelude -- the throat's gated
+# envelope, the Write|Edit filter, the judging root -- and the gate
+# named the pair twice (72 tokens against guard.rs, 54 against the
+# audit hook's prelude, whose rhyme with guard.rs was one of the 59).
+# Both write hooks now read one gate, guard::write_event, and the
+# audit <-> guard row left with the restatement: taken at the
+# mechanism, not bought. The envelope's two field lists, which rhymed
+# once at 83 tokens, rhymed at a second alignment once the tool id
+# joined; `#[serde(default)]` said once per struct leaves them one row
+# again (61 tokens), so that row neither came nor went. Row set diffed
+# against the HEAD run: the audit <-> guard row gone, none new.
+# Measured on the formatted tree.
+budget = 58

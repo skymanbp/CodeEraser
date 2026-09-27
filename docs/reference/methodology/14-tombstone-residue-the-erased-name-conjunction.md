@@ -27,7 +27,7 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
 
 - **PreToolUse** — this Write/Edit's on-disk pair, the applied text the budget rule already
   computes, for a judged language inside the config's walk
-  ([guard/tombstone.rs:35-53](../../../cli/src/guard/tombstone.rs#L35)). It is the only leg
+  ([guard/tombstone.rs:38-56](../../../cli/src/guard/tombstone.rs#L38)). It is the only leg
   that sees one file at a time, so it carries the session with it (§7).
 - **Stop** — the working tree against `HEAD`, plus the audit's untracked files: a name that
   moved into a brand-new file is alive, and a new CHANGELOG is a changelog. Pairs outside the
@@ -260,19 +260,23 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
 - **PreToolUse** measures the pair against R ∪ the session union: the keys every earlier
   `tombstone` line of the same session recorded, folded in feed order — a line's erased keys
   join, the keys its after side declared again (`revived_hashes`) leave, and a line whose
-  write the hook denied (`applied` false) does neither, because that erasure never happened.
+  write never reached the tree does neither, because that erasure never happened — the hook
+  denied it (`applied` false), or left it to the person (`applied` null) and no `settled` line
+  followed.
   The observe feed IS the accumulator, as it is for the warn suppression, so an X deleted
   three edits ago still binds the heading written now, and an X written back two edits ago
   does not. A `tombstone` line lands only when there is something to record (this edit erased
   a name, a surface bound a name the session erased, or the edit revived one), and it waits
-  for the hook's decision to carry `applied` (`null` under `ask`: the person decided, the hook
-  cannot see what); the judgment travels over the daemon's core link as rows and budget only;
+  for the hook's decision to carry `applied` (`null` under `ask`: the person decides, and the
+  PostToolUse leg records what — `ce settle --hook` appends a `settled` line under the same
+  `tool_use_id` once the tool has run, plan v2.30 step 5b); the judgment travels over the
+  daemon's core link as rows and budget only;
   the hook speaks only when its tier is not `observe`, a budget is declared, the core said
   `over` and the measurement was whole — no pair with a bounded diff
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
-  [guard/tombstone.rs:74-84](../../../cli/src/guard/tombstone.rs#L74),
-  [guard/tombstone.rs:154-172](../../../cli/src/guard/tombstone.rs#L154),
-  [hookio.rs:256-272](../../../cli/src/hookio.rs#L256),
+  [guard/tombstone.rs:77-87](../../../cli/src/guard/tombstone.rs#L77),
+  [guard/tombstone.rs:159-177](../../../cli/src/guard/tombstone.rs#L159),
+  [hookio.rs:265-281](../../../cli/src/hookio.rs#L265),
   [proto.rs:60-67](../../../cli/src/daemon/proto.rs#L60),
   [say.rs:68-79](../../../cli/src/guard/say.rs#L68)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
@@ -297,12 +301,13 @@ Every producer writes ONE feed shape, the `tombstone` object (its shape since `c
 first `SITE_CAP` sites as `file:line kind`, the label / prose split and `over` — or
 `judged.degraded` naming why there is none, and `degraded_pairs` when any pair's diff was
 bounded. The per-edit leg adds the erased keys, capped at `HASH_CAP`, the session union's
-size, `applied` and, when any, `revived_hashes`; the audit lines add `unread_pairs`; the
-git-hook faces write theirs with `session_id` null.
+size, `applied`, `tool_use_id` and, when any, `revived_hashes`; the audit lines add `unread_pairs`;
+the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `settled` line
+carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:33-52](../../../cli/src/hookio.rs#L33),
-[hookio.rs:88](../../../cli/src/hookio.rs#L88)). The feed is the FPR ledger's raw material
+[hookio.rs:42-61](../../../cli/src/hookio.rs#L42),
+[hookio.rs:97](../../../cli/src/hookio.rs#L97)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated
@@ -326,7 +331,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   (`restored_on_disk`: one bounded read of each erasing file; a file that cannot be read
   restores nothing), so a still-later `(no X)` binds no name the tree carries; the Stop leg,
   which reads the whole session's diff at once with an empty union, sees the same survival
-  ([guard/tombstone.rs:154-212](../../../cli/src/guard/tombstone.rs#L154),
+  ([guard/tombstone.rs:159-217](../../../cli/src/guard/tombstone.rs#L159),
   [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167)).
 - **A `///` doc comment is one paragraph to docdup since `DOCDUP_REV` 5.** Its tree-sitter
   node ends at column 0 of the next row, and until the v2.28 amendment (2026-09-04) the merge
@@ -339,7 +344,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
   ([texts.rs:56-64](../../../cli/src/tombstone/texts.rs#L56),
-  [guard/tombstone.rs:46-50](../../../cli/src/guard/tombstone.rs#L46)).
+  [guard/tombstone.rs:49-53](../../../cli/src/guard/tombstone.rs#L49)).
 - **Bounded reads under-count, never over-count — and stand a leg down.** Pairs past
   `PAIR_CAP`, and pairs with a side the batch or the bounded read refused, are counted back as
   unread and not measured, so a name erased there cannot bind; a pair whose line diff was

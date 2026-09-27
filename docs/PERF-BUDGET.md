@@ -283,6 +283,20 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 1.1 s 只由要它的人付，而库不为它多长 40 MB、冷索引不慢 7–10×（步 3 节的 A/B）。一文件 Δ ≈ 0.3 s 与步 3 节「暖不变、差分只付净变化的词」一致。
 复跑：`perf_similar.ps1` 形——`git worktree add --detach <tmp> HEAD` → `ce dedup .` 两次 → 三臂各预热一次 → 5 轮交错 → 追加 / 撤回一行各三次 → 删 worktree。
 
+## v2.30 步 5b-7 PostToolUse 记录腿 `ce settle --hook` 代价（实测 2026-09-27，release 本树，同一台机，夹具 = 本仓当日 `.ce/observe.ndjson` 副本 2,996 行 / 880 KB 再追加三行 `ask` 探针行，二进制预热后 n=30，`python` `perf_counter` 夹 `subprocess.run`、含进程起）
+
+口径：`ce settle --hook` 端到端 = 进程起 + 读信封 + `judging_root` + 读一次本会话的 feed 窗口（`hookio::session_lines`，逐行找同 `tool_use_id` 的 `probe` 行与 `settled` 行）+ 至多追加一行；不问 daemon、不问核、零输出。三条路各量：本会话答过 `ask` 且未记（追加一行）、已记过（只读）、从未答过 `ask`（只读）。
+
+| 项 | 预算 | 实测（毫秒） | 状态 |
+|---|---|---|---|
+| 追加路（首次为该 `tool_use_id` 落 `settled`，n=2） | 与 PreToolUse 探针同量级（M3 节 median 64 ms） | 41.2 / 39.7 | ✅ |
+| 已记路（同 id 再触发，n=30） | 同上 | median 40.5 / p95 51.2 / max 232.2（30 次中 1 次离群，原因未查；紧随其后的 30 次 max 48.3） | ✅ |
+| 从未 `ask` 路（n=30） | 同上 | median 39.4 / p95 47.0 / max 48.3 | ✅ |
+| 新编译二进制冷首呼 | —（M3 节同一口径单列） | 857 | 记录 |
+
+读法：三条路打平，说明大头是进程起 + 把 880 KB 的 feed 读成 JSON 行——追加那一行与找那一行都在噪声内；feed 按会话读，长会话的窗口就是它的代价上限，与墓碑腿的会话并集（同一读法）一样。**PostToolUse 只在人放行之后触发**，这 40 ms 不在任何写入的前面。
+复跑：空目录 `git init` + 出厂 `ce.toml`，把一份真 feed 拷成 `.ce/observe.ndjson` 并追加三行 `{"event":"probe","session_id":"timing","tool_use_id":"toolu_time_N","decision":"ask",…}`；信封 = PostToolUse JSON（`hook_event_name` / `session_id` timing / `tool_name` Write / `tool_input.file_path` / `tool_use_id` toolu_time_N / `cwd`）；先用一个从未 `ask` 的 id 预热五次，再各路计时，每次看 feed 行数只在追加路 +1。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

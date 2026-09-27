@@ -158,8 +158,8 @@
         <text x="280" y="1010">只做渲染</text>
         <text x="496" y="994">报告工具</text>
         <text x="496" y="1010">不写基线</text>
-        <text x="712" y="994">PreToolUse · Stop</text>
-        <text x="712" y="1010">SessionStart 健康</text>
+        <text x="712" y="994">PreToolUse · PostToolUse</text>
+        <text x="712" y="1010">Stop · SessionStart 健康</text>
         <text x="928" y="994">通过 · 违规 · 内部错误</text>
         <text x="928" y="1010">棘轮 + 显式地板 939</text>
       </g>

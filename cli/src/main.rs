@@ -134,6 +134,7 @@ fn infra(cmd: Cmd) -> ExitCode {
             cmds::doctor(&core, &cmds::or_cwd(root), json(format))
         }
         Cmd::Probe { hook } => cmds::hook_cmd(hook, "probe", codeeraser::guard::run_hook),
+        Cmd::Settle { hook } => cmds::hook_cmd(hook, "settle", codeeraser::guard::run_settle_hook),
         Cmd::Audit { hook } => cmds::hook_cmd(hook, "audit", codeeraser::audit::run_hook),
         Cmd::Health { hook } => cmds::hook_cmd(hook, "health", codeeraser::health::run_hook),
         Cmd::Precommit { root } => codeeraser::audit::run_precommit(&cmds::or_cwd(root)),

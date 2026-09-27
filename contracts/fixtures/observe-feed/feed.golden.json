@@ -1,13 +1,15 @@
 [
   {
+    "decision": "observe",
     "degraded": false,
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -32,20 +34,23 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_erased": 0,
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
+    "decision": "observe",
     "degraded": false,
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -53,8 +58,9 @@
     "file": "<file>",
     "mode": "observe",
     "resulting_lines": 751,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -85,20 +91,23 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_erased": 0,
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
+    "decision": "observe",
     "degraded": false,
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -107,9 +116,10 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 400,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
     "soft": 300,
+    "tool_use_id": "t",
     "ts_ms": 0,
     "zone_permille": 222
   },
@@ -141,20 +151,23 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_erased": 0,
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
+    "decision": "warn",
     "degraded": false,
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -163,9 +176,10 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 600,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
     "soft": 300,
+    "tool_use_id": "t",
     "ts_ms": 0,
     "zone_permille": 666,
     "zone_tier": "warn"
@@ -198,20 +212,92 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_erased": 0,
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
+    "decision": "ask",
     "degraded": false,
     "elapsed_ms": 0,
     "event": "probe",
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
+    "tool_use_id": "toolu_ask",
+    "ts_ms": 0
+  },
+  {
+    "event": "zone",
+    "file": "<file>",
+    "hard": 750,
+    "mode": "observe",
+    "resulting_lines": 700,
+    "schema": "ce.observe/0.11.0",
+    "session_id": "t",
+    "soft": 300,
+    "tool_use_id": "toolu_ask",
+    "ts_ms": 0,
+    "zone_permille": 888,
+    "zone_tier": "ask"
+  },
+  {
+    "applied": null,
+    "erased": 11,
+    "erased_hashes": [
+      8095481971928999360,
+      11891235285474208685,
+      2214555572463777371,
+      9189746967005824922,
+      3089943341986682694,
+      8506593440268130132,
+      5853010229714592665,
+      3300820206774538237,
+      12467694635301975324,
+      8999596768310594794,
+      11808070890281293351
+    ],
+    "event": "tombstone",
+    "exempt": [],
+    "file": "<file>",
+    "judged": {
+      "label": 0,
+      "over": false,
+      "prose": 0,
+      "sites": []
+    },
+    "mode": "observe",
+    "rev": 1,
+    "rows": 0,
+    "schema": "ce.observe/0.11.0",
+    "session_erased": 0,
+    "session_id": "t",
+    "tool_use_id": "toolu_ask",
+    "ts_ms": 0
+  },
+  {
+    "event": "settled",
+    "file": "<file>",
+    "schema": "ce.observe/0.11.0",
+    "session_id": "t",
+    "tool_use_id": "toolu_ask",
+    "ts_ms": 0
+  },
+  {
+    "decision": "observe",
+    "degraded": false,
+    "elapsed_ms": 0,
+    "event": "probe",
+    "file": "<file>",
+    "matches": 0,
+    "mode": "observe",
+    "schema": "ce.observe/0.11.0",
+    "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -245,9 +331,10 @@
     "mode": "observe",
     "rev": 1,
     "rows": 2,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_erased": 0,
     "session_id": "t",
+    "tool_use_id": "t",
     "ts_ms": 0
   },
   {
@@ -260,7 +347,7 @@
     },
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": "t",
     "tombstone": {
       "erased": 0,
@@ -283,7 +370,7 @@
     "event": "precommit",
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": null,
     "tombstone": {
       "erased": 0,
@@ -306,7 +393,7 @@
     "event": "commitmsg",
     "mode": "observe",
     "net_loc": 0,
-    "schema": "ce.observe/0.10.0",
+    "schema": "ce.observe/0.11.0",
     "session_id": null,
     "tombstone": {
       "erased": 5,

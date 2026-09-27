@@ -8,9 +8,12 @@
 //! edit erased a name, one of its surfaces bound a name the session
 //! erased before, or it declared such a name again (a REVIVAL, which
 //! the union subtracts). The line waits for the hook's decision and
-//! carries it as `applied`: a denied write erased nothing, and a key
-//! the erasing file declares again on disk (restored outside the hook
-//! path) has stopped being erased. The class
+//! carries it as `applied`: a denied write erased nothing, a write
+//! left to the person (`ask`) erased something only once the
+//! PostToolUse leg recorded the tool running (a `settled` line under
+//! the same `tool_use_id`, settle.rs), and a key the erasing file
+//! declares again on disk (restored outside the hook path) has stopped
+//! being erased. The class
 //! speaks at its OWN tier (`[tombstone] tier`, default observe), only
 //! when the core says the declared budget is exceeded, and only over a
 //! WHOLE measurement (a bounded diff reads untouched lines as written);
@@ -109,7 +112,9 @@ fn spoken(
 /// The feed line, once the hook has decided at `decided`: `applied` is
 /// true when the write goes through, false under deny (that erasure
 /// never happened, and session_keys skips the line), null under ask —
-/// the person decides, and the hook cannot see what.
+/// the person decides, and the PostToolUse leg records what: a
+/// `settled` line under the same `tool_use_id` once the tool has run
+/// (settle.rs), which `landed` reads.
 pub(super) fn record(root: &Path, env: &Envelope, pending: Option<Pending>, decided: &str) {
     let Some(mut p) = pending else {
         return;
@@ -119,7 +124,7 @@ pub(super) fn record(root: &Path, env: &Envelope, pending: Option<Pending>, deci
         "ask" => serde_json::Value::Null,
         _ => serde_json::json!(true),
     };
-    crate::hookio::observe_append(root, Some(&env.session_id), p.line);
+    super::feed(root, env, p.line);
 }
 
 /// The class's tier and budget as declared (valid by load), or the
@@ -154,7 +159,7 @@ fn judge(root: &Path, f: &tombstone::Findings, budget: Option<u32>) -> Judgment 
 /// The session's erased keys as its earlier `tombstone` lines left
 /// them, folded in feed order: a line's erased keys join the union,
 /// the keys it revived (declared again on its after side) leave it,
-/// a line whose write the hook denied (`applied` false) did neither —
+/// a line whose write never reached the tree (`landed`) did neither —
 /// that erasure never happened — and a key some file it was erased
 /// from declares again ON DISK leaves it too (plan v2.30 step 5b): a
 /// `git checkout` or another tool restored the name outside the hook
@@ -164,8 +169,14 @@ fn judge(root: &Path, f: &tombstone::Findings, budget: Option<u32>) -> Judgment 
 fn session_keys(root: &Path, session: &str, policy: &Policy) -> BTreeSet<u64> {
     let mut keys = BTreeSet::new();
     let mut erased_in: BTreeMap<u64, BTreeSet<String>> = BTreeMap::new();
-    for v in crate::hookio::session_lines(root, session) {
-        if v["event"] != "tombstone" || v["applied"] == false {
+    let lines = crate::hookio::session_lines(root, session);
+    let settled: BTreeSet<&str> = lines
+        .iter()
+        .filter(|v| v["event"] == "settled")
+        .filter_map(|v| v["tool_use_id"].as_str())
+        .collect();
+    for v in &lines {
+        if v["event"] != "tombstone" || !landed(v, &settled) {
             continue;
         }
         for k in hashes(&v["revived_hashes"]) {
@@ -179,6 +190,21 @@ fn session_keys(root: &Path, session: &str, policy: &Policy) -> BTreeSet<u64> {
     }
     let restored = restored_on_disk(&keys, &erased_in, policy);
     keys.difference(&restored).copied().collect()
+}
+
+/// Whether a `tombstone` line's write reached the tree: the hook let
+/// it through (`applied` true), or left it to the person (`applied`
+/// null) and the PostToolUse leg then recorded the tool running under
+/// the same `tool_use_id` — a `settled` line, which lands after the
+/// tombstone line and so is gathered first. A denied write, and an
+/// asked one no `settled` line answers, erased nothing.
+fn landed(v: &serde_json::Value, settled: &BTreeSet<&str>) -> bool {
+    match v["applied"].as_bool() {
+        Some(applied) => applied,
+        None => v["tool_use_id"]
+            .as_str()
+            .is_some_and(|id| settled.contains(id)),
+    }
 }
 
 /// The union keys one of their erasing files declares again right now

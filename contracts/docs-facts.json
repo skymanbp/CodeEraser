@@ -85,7 +85,7 @@
       "id": "count:hooks#word",
       "source": "plugin/hooks/hooks.json::hooks (events)",
       "tier": "linked",
-      "value": "3"
+      "value": "4"
     },
     {
       "id": "count:installers#word",
@@ -142,7 +142,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "59"
+      "value": "58"
     },
     {
       "id": "gate:dedup.tests#digits",
@@ -279,7 +279,7 @@
       "id": "report:observe#schemaver",
       "source": "cli/src/hookio.rs (typed)",
       "tier": "linked",
-      "value": "ce.observe/0.10.0"
+      "value": "ce.observe/0.11.0"
     },
     {
       "id": "report:scan#schemaver",

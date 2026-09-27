@@ -191,6 +191,14 @@ pub(crate) enum Cmd {
         #[arg(long)]
         hook: bool,
     },
+    /// PostToolUse record: read the hook envelope on stdin and, when this
+    /// session's PreToolUse answered `ask` for the same tool call, record
+    /// that the tool ran — the person let the write through. Never speaks
+    Settle {
+        /// Hook mode: read the JSON envelope on stdin (required)
+        #[arg(long)]
+        hook: bool,
+    },
     /// Stop audit: net LOC + duplicate blocks touching changed files +
     /// tombstone tier/budget + same-role advisory (blocks the stop only in deny mode)
     Audit {

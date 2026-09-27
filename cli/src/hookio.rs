@@ -20,6 +20,15 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.11.0 (plan v2.30 step 5b): every line the PreToolUse hook writes
+/// carries `tool_use_id` (Claude Code's identity for the tool call, when
+/// the envelope has one); the `probe` line carries `decision`, the tier
+/// the hook decided the event at (`observe` when nothing was emitted,
+/// else `warn` / `ask` / `deny`); the `settled` event (`file`,
+/// `tool_use_id`) is the PostToolUse leg's record that the tool ran after
+/// an `ask` — the person let the write through — and a `tombstone` line's
+/// `applied` null is read through it. Every prior key keeps its shape.
+///
 /// 0.10.0 (plan v2.29 step 6): the OPTIONAL `similar` object on
 /// `stop_audit` lines — the same-role advisor asked about every unit
 /// the session added (`new_units`, `queried`), `rows` of `{unit, twin,
@@ -85,7 +94,7 @@ use std::path::Path;
 /// in — needs the same partition. Measured before the bump: 49
 /// entries, all from one hour, with no way to tell whether that was
 /// one session or ten.
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.10.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.11.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a

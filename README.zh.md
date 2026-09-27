@@ -10,7 +10,7 @@
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行（或超过其 `[[rules.class]]` 声明的那条线）的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 与 `ce commitmsg` 拒绝提交，CI 退出码拒绝合入。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown、HTML（<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十三<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->三<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十六<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown、HTML（<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十三<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->十六<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现，以及它的不同之处
 
@@ -156,6 +156,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 更新检查 | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
 | 更新执行 | `ce update --yes` | `update`, `update_apply` | — 插件副本由 `/plugin update codeeraser` 重钉 |
 | 写入时守卫 | `ce probe --hook` | — 钩子即插件之面 | hook `PreToolUse` |
+| ask 档写入的落地记录 | `ce settle --hook` | — 钩子即插件之面 | hook `PostToolUse` |
 | Stop 审计 / git 钩子 | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — 钩子即插件之面；precommit 与 commitmsg 挂在 git 里 | hook `Stop` |
 | 会话健康行 | `ce health --hook` | — 钩子即插件之面 | hook `SessionStart` |
 | 项目 daemon | `ce daemon`, `ce ping` | — 每一面惰性启动 | — |

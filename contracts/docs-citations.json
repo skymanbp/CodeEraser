@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|a03aa24774fa7c7f|0": {
     "target": "../../README.md",
-    "line": 180,
+    "line": 181,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fifteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|0081591ba7c6acec|0": {
@@ -7169,21 +7169,32 @@
     "end": 118,
     "text": "// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice"
   },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|09daf68fe2d59e38|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 223,
+    "text": "\"mode\": mode,"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|34a3df276d1a2cae|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 96,
+    "end": 99,
+    "text": "// the third class speaks at its own tier (`[tombstone] tier`); its"
+  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|36288e5d5436f6eb|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 185,
-    "end": 202,
+    "line": 177,
+    "end": 194,
     "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|42113203b8445fa4|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 82,
-    "end": 101,
+    "line": 87,
+    "end": 106,
     "text": "let mut reasons = Vec::new();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4644d41f5beb9e75|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 58,
+    "line": 74,
     "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|526b9bbfd38078b6|0": {
@@ -7194,54 +7205,48 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|5c21d22558ace789|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 134,
-    "end": 172,
+    "line": 126,
+    "end": 164,
     "text": "fn emit_reasons<'a>("
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|616767f83450e8a2|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 225,
-    "text": "\"degraded\": ev.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|75ba8e43bbd2ba6d|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 192,
+    "line": 184,
     "text": "_ => return, // observe: log only, no output"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|83a25b7ceeea26a9|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 96,
-    "end": 105,
-    "text": "let t = budget::lines_for(root, c, file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|936605a46cb5f869|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 174,
-    "end": 178,
+    "line": 166,
+    "end": 170,
     "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|956d5eb1339b8c17|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 224,
+    "text": "\"degraded\": p.matches.is_none(),"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|99d6346852a745fc|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 212,
+    "end": 230,
+    "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|a858072dafe20007|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 28,
-    "end": 37,
+    "line": 27,
+    "end": 36,
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|ab386b0206e74c7e|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 67,
-    "end": 69,
+    "line": 82,
+    "end": 84,
     "text": "// not context bloat, and repeat every time they hold"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|bbbddea1d1329200|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 216,
-    "end": 230,
-    "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|c1a8185a714ee541|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 65,
-    "end": 72,
+    "line": 80,
+    "end": 87,
     "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db6bfd272e069abc|0": {
@@ -7250,21 +7255,10 @@
     "end": 6,
     "text": "//! build. FAIL-OPEN: any internal failure allows the edit — a guard"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db9140e34d4295c6|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 210,
-    "text": "mode: &'a str,\nsession: &'a str,"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e210cd8b91b887db|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 107,
-    "end": 110,
-    "text": "}\n// the third class speaks at its own tier (`[tombstone] tier`); its"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e3cae5ea62eb7092|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 165,
-    "end": 169,
+    "line": 157,
+    "end": 161,
     "text": "if let Some(e) = broken {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|1932d340806c453c|0": {
@@ -7293,7 +7287,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|49f4f255016a7c4c|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 207,
+    "line": 253,
     "text": "let seen = tier == \"warn\" && crate::hookio::already_warned(root, &env.session_id, \"zone\", file);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|4db43f2d1c8ed9c7|0": {
@@ -7304,21 +7298,27 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 217,
-    "end": 223,
+    "line": 263,
+    "end": 269,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|91f5f76b706335e3|1": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 217,
-    "end": 219,
+    "line": 263,
+    "end": 265,
     "text": "if armed {\nline[\"zone_tier\"] = tier.into();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|9d8c7a2bab92d81b|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 164,
-    "end": 177,
+    "line": 210,
+    "end": 223,
     "text": "/// Budget firings get their own feed line (accounting for the §4.2"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|be781c1e8236ee46|0": {
+    "target": "../../../cli/src/guard/budget.rs",
+    "line": 196,
+    "end": 207,
+    "text": "let t = lines_for(root, c, &env.tool_input.file_path);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|c3a17e14adb4fbe0|0": {
     "target": "../../../cli/src/guard/budget.rs",
@@ -7340,13 +7340,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|fc6bb4e1a17bf3b8|0": {
     "target": "../../../cli/src/guard/budget.rs",
-    "line": 204,
-    "end": 207,
+    "line": 250,
+    "end": 253,
     "text": "// the B4 suppression consults the feed BEFORE this event lands"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/envelope.rs|2c33cc85a000c037|0": {
     "target": "../../../cli/src/guard/envelope.rs",
-    "line": 16,
+    "line": 19,
     "text": "/// Claude Code stamps this on every hook event. Carried into the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/probe.rs|0328fd60d100783a|0": {
@@ -7404,43 +7404,43 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|147dbd779a4128ca|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 77,
-    "end": 78,
+    "line": 86,
+    "end": 87,
     "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 195,
-    "end": 197,
+    "line": 204,
+    "end": 206,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|62c207bd4204d2d8|0": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3e6d516c593ebca6|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 88,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.10.0\";"
+    "line": 97,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.11.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 211,
-    "end": 224,
+    "line": 220,
+    "end": 233,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|754ce8b7872981c0|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 80,
-    "end": 87,
+    "line": 89,
+    "end": 96,
     "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 265,
-    "end": 276,
+    "line": 274,
+    "end": 285,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 72,
-    "end": 75,
+    "line": 81,
+    "end": 84,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
@@ -7451,14 +7451,14 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 67,
-    "end": 70,
+    "line": 76,
+    "end": 79,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 274,
-    "end": 290,
+    "line": 283,
+    "end": 299,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {
@@ -8634,32 +8634,32 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|296961069691d05d|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 46,
-    "end": 50,
+    "line": 49,
+    "end": 53,
     "text": "let path = Path::new(&env.tool_input.file_path);"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b3f155fc0aa8b166|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 35,
-    "end": 53,
+    "line": 38,
+    "end": 56,
     "text": "/// Measure and judge one Write/Edit. Scope is the budget rule's (a"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 154,
-    "end": 172,
+    "line": 159,
+    "end": 177,
     "text": "/// The session's erased keys as its earlier `tombstone` lines left"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|1": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 154,
-    "end": 212,
+    "line": 159,
+    "end": 217,
     "text": "/// The session's erased keys as its earlier `tombstone` lines left"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b70fd425a12f96af|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 74,
-    "end": 84,
+    "line": 77,
+    "end": 87,
     "text": "let (tier, budget) = knobs(cfg);"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|c2c53e8e5dfcb4ba|0": {
@@ -8670,19 +8670,19 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 33,
-    "end": 52,
+    "line": 42,
+    "end": 61,
     "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|62c207bd4204d2d8|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|3e6d516c593ebca6|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 88,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.10.0\";"
+    "line": 97,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.11.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 256,
-    "end": 272,
+    "line": 265,
+    "end": 281,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
@@ -9190,10 +9190,10 @@
     "end": 10,
     "text": "//! The Stop audit's similar leg (plan v2.29 step 6, spec §六): every"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|62c207bd4204d2d8|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|3e6d516c593ebca6|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 88,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.10.0\";"
+    "line": 97,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.11.0\";"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|72c10c59b78ec5d9|0": {
     "target": "../../../cli/src/main_similar.rs",
