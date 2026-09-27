@@ -17,9 +17,11 @@
 //! non-judged file enters the database — `ident_hash`/`folded_hash`
 //! are 64-bit unkeyed FNV-1a. That hash is a CONFIRMATION oracle (a
 //! guessed low-entropy secret can be membership-tested), accepted as
-//! the residue. The existing plaintext faces are `symbols.key` and
-//! `sites.spec` (a `url` site with `?token=` lands verbatim) — named,
-//! not repaired, in this batch.
+//! the residue. The plaintext columns are `symbols.key` — a judged
+//! unit's own name, the identity every face prints — and `sites.spec`,
+//! stored since plan v2.30 step 5b item 24 without its userinfo and
+//! its query content (graph/stored.rs: the two RFC 3986 parts no rung
+//! reads, so a `?token=` never lands).
 
 use crate::dedup::schema::{ignore_no_rows, replace_file_rows};
 use anyhow::Result;

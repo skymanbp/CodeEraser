@@ -9,14 +9,12 @@
 //! mentioning it.
 
 use super::frames::words;
-use crate::dedup::tokens::is_literal;
 use crate::docdup::segments;
 use crate::fourclass::units;
 use crate::graph::ladder::md::head::atx_heading;
 use crate::graph::ladder::md::slug::render_text;
 use crate::graph::md::{content_lines, merge_code_spans};
 use crate::mention::token::runs;
-use crate::scan::ast::children;
 use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
 
@@ -68,47 +66,11 @@ fn code_marked(text: &str, lang: Lang) -> Vec<Marked> {
     out
 }
 
-/// The text with every literal blanked to spaces (newlines kept, so
-/// lines still count): the dedup tokenizer's grammar walk finds them
-/// — a whole `string`/`char` node, or a literal leaf (the tokenizer's
-/// own `is_literal`) — and a source no grammar parses masks nothing.
+/// The text with every literal blanked to spaces, newlines kept
+/// (scan::opaque, the grammar walk the dedup tokenizer makes); a
+/// source no grammar parses masks nothing.
 fn without_literals(text: &str, lang: Lang) -> String {
-    let mut bytes = text.as_bytes().to_vec();
-    for (a, b) in literal_spans(text, lang) {
-        for c in &mut bytes[a..b] {
-            if *c != b'\n' {
-                *c = b' ';
-            }
-        }
-    }
-    String::from_utf8(bytes).unwrap_or_else(|_| text.to_string())
-}
-
-fn literal_spans(text: &str, lang: Lang) -> Vec<(usize, usize)> {
-    let Some(grammar) = lang.grammar() else {
-        return Vec::new();
-    };
-    let spec = crate::scan::spec::spec(lang);
-    let mut parser = tree_sitter::Parser::new();
-    let tree = parser
-        .set_language(&grammar)
-        .ok()
-        .and_then(|()| parser.parse(text, None));
-    let Some(tree) = tree else {
-        return Vec::new();
-    };
-    let mut out = Vec::new();
-    let mut stack = vec![tree.root_node()];
-    while let Some(node) = stack.pop() {
-        let kind = node.kind();
-        let leaf = node.child_count() == 0;
-        if matches!(kind, "string" | "char") || (leaf && is_literal(kind, spec)) {
-            out.push((node.start_byte(), node.end_byte()));
-        } else if !leaf {
-            stack.extend(children(node).into_iter().rev());
-        }
-    }
-    out
+    crate::scan::opaque::blanked(text, lang, crate::scan::opaque::Opaque::Literals)
 }
 
 /// A unit key's name half (`alpha/2` → `alpha`; a Rust impl key has

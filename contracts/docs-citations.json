@@ -2878,6 +2878,12 @@
     "end": 132,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/fourclass/anchor.rs|bc424b68d386ad1f|0": {
+    "target": "../../../cli/src/fourclass/anchor.rs",
+    "line": 1,
+    "end": 22,
+    "text": "//! The §7.2 container-chain identity of a unit (7.0.0, C-nth): what"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5257d56ada2d008b|0": {
     "target": "../../../cli/src/main_score.rs",
     "line": 123,
@@ -2907,17 +2913,11 @@
     "end": 53,
     "text": "pub fn fail_suffix(failed: &[String]) -> String {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|072302f94e01214a|0": {
-    "target": "../../../cli/src/score/anchor.rs",
-    "line": 18,
-    "end": 20,
-    "text": "//! index's `nth` column is untouched: the join and churn ledgers still key on"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|5056146d0b57b0a1|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|cc9ee924c20278e7|0": {
     "target": "../../../cli/src/score/anchor.rs",
     "line": 1,
-    "end": 20,
-    "text": "//! §7.2 member-identity anchors (7.0.0, C-nth): what tells two"
+    "end": 10,
+    "text": "//! §7.2 member-identity anchors in the BASELINE (7.0.0, C-nth): the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/baseline.rs|9ae6be972602062d|0": {
     "target": "../../../cli/src/score/baseline.rs",
@@ -3704,12 +3704,12 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|01ba091166cd9815|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 325,
+    "line": 326,
     "text": "/// bits through its role table, where an ablation can perturb them);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|0afbf65a97ab5f7b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 447,
+    "line": 448,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|26d7b0c0bb2a5058|0": {
@@ -3726,30 +3726,30 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|47e6b9dce7af0f78|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 489,
-    "end": 493,
+    "line": 490,
+    "end": 494,
     "text": "// bit is wire skew, refused by name like every other absent key"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 362,
-    "end": 365,
+    "line": 363,
+    "end": 366,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|6ef7187cdb7a96c3|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 191,
-    "end": 193,
+    "line": 192,
+    "end": 194,
     "text": "pub fn measured_nodes(w: &GraphWire) -> Vec<(i64, &str)> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|7530c14d4504672d|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 516,
+    "line": 517,
     "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|86dc4520a4549390|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 261,
+    "line": 262,
     "text": "rows,\nedges: wire,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|a612b2e0c056a92d|0": {
@@ -3760,44 +3760,44 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|b48e4a45d7fa65e9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 287,
-    "end": 298,
+    "line": 288,
+    "end": 299,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|bcb4fab990e9b345|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 304,
-    "end": 322,
+    "line": 305,
+    "end": 323,
     "text": ".map(|&i| i as i64)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c18af790a198146f|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 520,
-    "end": 524,
+    "line": 521,
+    "end": 525,
     "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c89240bb0aef2f0a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 506,
-    "end": 513,
+    "line": 507,
+    "end": 514,
     "text": "degraded,\nfail,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|cfcd49a1f86410c9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 551,
-    "end": 565,
+    "line": 552,
+    "end": 566,
     "text": "/// The informational table, labelled `path#unit` for sections. The"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f0d7ab62d8583e7e|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 460,
-    "end": 469,
+    "line": 461,
+    "end": 470,
     "text": "/// One core verdict row resolved to its node and name — shared by"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f88de50d7b234cc0|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 289,
-    "end": 293,
+    "line": 290,
+    "end": 294,
     "text": "/// rule now (CE.Graph.Cost.assetKind), applied where the cut table"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|445bf00701224a12|0": {
@@ -4597,15 +4597,15 @@
     "line": 48,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|684295cbb66ce4d5|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|2f506258fbf3522c|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 128,
-    "text": "pub const GRAPH_REV: i64 = 18;"
+    "line": 133,
+    "text": "pub const GRAPH_REV: i64 = 19;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 168,
-    "end": 170,
+    "line": 173,
+    "end": 175,
     "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
@@ -5054,14 +5054,14 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|a6cae4e7dac804e4|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 89,
-    "end": 99,
+    "line": 92,
+    "end": 102,
     "text": "// the wire floor follows the CONFIGURED knob when one is set"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|daf5ed578a3c4511|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 260,
-    "end": 278,
+    "line": 269,
+    "end": 287,
     "text": "}\n\n/// Every pair at or over the floor, count-descending — NO rank cut"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/report.rs|cbf39343337962e0|0": {
@@ -5079,52 +5079,63 @@
     "line": 113,
     "text": "if len < f.min_tokens"
   },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/fourclass/anchor.rs|bc424b68d386ad1f|0": {
+    "target": "../../../cli/src/fourclass/anchor.rs",
+    "line": 1,
+    "end": 22,
+    "text": "//! The §7.2 container-chain identity of a unit (7.0.0, C-nth): what"
+  },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/graph/symwire.rs|94feb5c25e6a2312|0": {
     "target": "../../../cli/src/graph/symwire.rs",
     "line": 76,
     "end": 86,
     "text": "/// The same surface under the verdict family's universe (6.1.0):"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|52b6a23a81959035|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|0741993b6d62aebb|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 139,
-    "end": 144,
-    "text": "let churn_of = |u: &UnitId| {"
+    "line": 152,
+    "end": 155,
+    "text": "/// Assemble the Tier U rows: one per clone block, both sides"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|4610453a9abd25ca|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 123,
+    "text": "None => (String::new(), 0, String::new()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|5992300f38f4e723|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 46,
-    "end": 50,
+    "line": 60,
+    "end": 64,
     "text": "#[derive(Debug, Clone, Copy, Default, Serialize, PartialEq, Eq)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|61032d8295705051|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 35,
+    "line": 38,
     "text": "pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|6576f8ca0df6f134|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|8dd271e4c7931b7c|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 93,
-    "end": 97,
-    "text": ".table(path)"
+    "line": 116,
+    "end": 120,
+    "text": "let hit = self\n.table(path)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|7b0a6b618039b919|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|90c66a60f36c2171|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 124,
-    "end": 126,
-    "text": "/// unit-attributed, churn joined on the ledger identity. An absent"
+    "line": 168,
+    "end": 173,
+    "text": "let churn_of = |o: &Owner| {"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|db4aa6c88e547603|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|dd26ec65941b7c62|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 37,
-    "end": 43,
-    "text": "#[derive(Debug, Clone, Serialize, PartialEq, Eq, Hash)]"
+    "line": 50,
+    "end": 57,
+    "text": "/// A span's owner: the report identity and the §7.2 anchor the churn"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|e03bb9cb2aa5bb4e|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|ff9ea0fd14051ba7|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 103,
-    "end": 107,
-    "text": "None => UnitId {"
+    "line": 40,
+    "end": 48,
+    "text": "/// The report identity of a unit: the index's persisted (path, key,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1a382c06c9d6184a|0": {
     "target": "../../../cli/src/join/mod.rs",
@@ -5276,11 +5287,11 @@
     "end": 23,
     "text": "/// sorted — the caller builds it from the graph wire's own node"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/tests/unit/join/churn_unit.rs|208bd59bc6f3c497|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/tests/unit/join/churn_unit.rs|5e4e2e0f35ad5b68|0": {
     "target": "../../../cli/tests/unit/join/churn_unit.rs",
-    "line": 20,
-    "end": 21,
-    "text": "let crossing = map.id_of(\"x.rs\", 4, 7);"
+    "line": 26,
+    "end": 27,
+    "text": "assert_eq!(crossing.id.key, \"\", \"cross-unit span is not guessed\");"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Clone/Cost.hs|5cad32f8a4cc001c|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -5666,6 +5677,18 @@
     "end": 136,
     "text": "-- | K15 (6.1.0): RG10 on the verdict road. Pair (2,3) is a dead"
   },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/scan/opaque.rs|78e9a6cb3c67711e|0": {
+    "target": "../../../cli/src/scan/opaque.rs",
+    "line": 27,
+    "end": 38,
+    "text": "/// The text with every opaque span blanked to spaces, newlines kept."
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
+    "target": "../../../cli/src/scan/opaque.rs",
+    "line": 1,
+    "end": 14,
+    "text": "//! What a grammar reads as opaque to names: the spans of every literal"
+  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|207d68f078cec302|0": {
     "target": "../../../cli/src/structure/judge.rs",
     "line": 178,
@@ -5692,15 +5715,21 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|005c173dd605b093|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 150,
-    "end": 164,
+    "line": 151,
+    "end": 165,
     "text": "let since = format!(\"{CHURN_WINDOW_DAYS} days ago\");"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|115da39e5377117c|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 237,
-    "end": 255,
+    "line": 245,
+    "end": 263,
     "text": "/// Word-bounded containment: the name with no identifier character"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|16cddbf1ce3c8d52|0": {
+    "target": "../../../cli/src/structure/seams.rs",
+    "line": 215,
+    "end": 243,
+    "text": "/// One mention edge per (from, to) unit pair where `to`'s bare name"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|1f1c9651d4bc18a4|0": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5710,7 +5739,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2349130d2081cba4|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 203,
+    "line": 205,
     "text": "let end = (u.end_line as u64).min(total);"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2e89520f8fc057f5|0": {
@@ -5718,6 +5747,12 @@
     "line": 51,
     "end": 56,
     "text": "for f in files {"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|3eb1197a1630aff5|0": {
+    "target": "../../../cli/src/structure/seams.rs",
+    "line": 222,
+    "end": 243,
+    "text": "fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str, lang: Lang) {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|51dde1bfb2cad0a0|0": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5743,23 +5778,11 @@
     "end": 107,
     "text": "/// span over two files)."
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|a9a1f3e8b560ebd4|0": {
-    "target": "../../../cli/src/structure/seams.rs",
-    "line": 217,
-    "end": 236,
-    "text": "let lines: Vec<&str> = text.lines().collect();"
-  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|adcd3022195c7dcb|0": {
     "target": "../../../cli/src/structure/seams.rs",
     "line": 115,
     "end": 144,
     "text": "if out.files.is_empty() {\nreturn;\n}\nlet ids: BTreeMap<&str, u64> = out"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|b0e65250bf3e69c1|0": {
-    "target": "../../../cli/src/structure/seams.rs",
-    "line": 216,
-    "end": 235,
-    "text": "fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str) {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|d0ada7ad3365a2e6|0": {
     "target": "../../../cli/src/structure/seams.rs",
@@ -5769,13 +5792,13 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|ee6577134b4b67bd|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 227,
+    "line": 235,
     "text": "if i == j || name.len() < NAME_FLOOR {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|fe03c940e631e227|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 184,
-    "end": 198,
+    "line": 186,
+    "end": 200,
     "text": "fn top_level(all: &[units::Unit]) -> Vec<units::Unit> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/tests/it/structure_knobs.rs|618d30c6681b777f|0": {
@@ -6030,6 +6053,12 @@
     "end": 58,
     "text": "-- | p(x) for one file: 0 at or under the soft line; the convex"
   },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|0c01dba9739e23a9|0": {
+    "target": "../size-advisory.md",
+    "line": 107,
+    "end": 111,
+    "text": "- **自仓首跑实证**（S=294 口径复核 2026-08-20）：graph_ladder.rs"
+  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|329075613142ec37|0": {
     "target": "../size-advisory.md",
     "line": 94,
@@ -6038,21 +6067,15 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|34258d75cd93294a|0": {
     "target": "../size-advisory.md",
-    "line": 113,
-    "end": 116,
+    "line": 115,
+    "end": 118,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4ea3a6ec3001bf79|0": {
     "target": "../size-advisory.md",
-    "line": 109,
-    "end": 112,
+    "line": 111,
+    "end": 114,
     "text": "候选——豁免与候选语义都以数字落地。"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|711e99e0f273753a|0": {
-    "target": "../size-advisory.md",
-    "line": 96,
-    "end": 97,
-    "text": "**切穿克隆块**×roiCloneMilli(500) + 跨缝**共变对**×"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|788886e8d1332f29|0": {
     "target": "../size-advisory.md",
@@ -6067,19 +6090,19 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
-    "line": 121,
+    "line": 123,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|d080ada365348f88|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|d9dffcd08eba8db2|0": {
     "target": "../size-advisory.md",
-    "line": 101,
-    "end": 105,
-    "text": "计边——顾问面非强制面，可容。"
+    "line": 98,
+    "end": 103,
+    "text": "- **共引代理**：真·文件内符号共引不存在于任何缓存（v0.6 映射实证）；"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|e77a0b42e14cb13a|0": {
     "target": "../size-advisory.md",
-    "line": 117,
-    "end": 120,
+    "line": 119,
+    "end": 122,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|fc9206488f44c39d|0": {
@@ -7919,16 +7942,22 @@
     "end": 132,
     "text": "/// Who a root-relative path belongs to, read off the declarations and"
   },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/canvas.rs|0aa66a3e55fbca5e|0": {
+    "target": "../../../cli/src/graph/canvas.rs",
+    "line": 24,
+    "end": 40,
+    "text": "/// The graph screen's document (plan v2.30 step 5b item 31): the"
+  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|1ebf67098c072c48|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 87,
-    "end": 90,
+    "line": 88,
+    "end": 91,
     "text": "pub enum Advisory {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|64995790ae4f0f45|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 197,
-    "end": 242,
+    "line": 198,
+    "end": 243,
     "text": ".iter()\n.enumerate()\n.filter(|(_, n)| n.kind == super::wire::GRAN_FILE && keep(n))"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|3aaf569eab67efa7|0": {
@@ -8187,19 +8216,19 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/store.rs|295d30e8a6dc7f2e|0": {
     "target": "../../../cli/src/mention/store.rs",
-    "line": 225,
-    "end": 227,
+    "line": 227,
+    "end": 229,
     "text": "pub fn mentioned_by_other(conn: &Connection, ident: i64, own_path: &str) -> Result<bool> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/store.rs|3fba07055d10286d|0": {
     "target": "../../../cli/src/mention/store.rs",
-    "line": 231,
-    "end": 233,
+    "line": 233,
+    "end": 235,
     "text": "pub fn folded_by_other(conn: &Connection, folded: i64, own_path: &str) -> Result<bool> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/store.rs|97dc59197bdc0a06|0": {
     "target": "../../../cli/src/mention/store.rs",
-    "line": 32,
+    "line": 34,
     "text": "pub const MENTION_SCHEMA: &str = \""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|6da1b50673a56044|0": {
@@ -8431,22 +8460,22 @@
     "end": 74,
     "text": "-- | Caps for the two advisory tables (6.2.0), each its own literal:"
   },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|7378483969f4bd7b|0": {
+    "target": "../../../gui/ui/graph.js",
+    "line": 193,
+    "end": 264,
+    "text": "// The advisory's two states the rows cannot show for themselves: the"
+  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|78087d139fbb9fef|0": {
     "target": "../../../gui/ui/graph.js",
-    "line": 34,
-    "end": 69,
+    "line": 33,
+    "end": 60,
     "text": "async function loadGraph() {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|80227c4e9e2e4604|0": {
-    "target": "../../../gui/ui/graph.js",
-    "line": 202,
-    "end": 275,
-    "text": "// The advisory's three states the rows cannot show for themselves:"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
     "line": 105,
-    "end": 115,
+    "end": 114,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {
@@ -8471,17 +8500,23 @@
     "end": 33,
     "text": "/// The face: the message file, its comment lines blanked, into the"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|bfe8709bdb06df8e|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|4bda451d97705272|0": {
+    "target": "../../../cli/src/audit/commitmsg.rs",
+    "line": 107,
+    "end": 132,
+    "text": "/// The message with every comment line blanked — blanked, not removed,"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|91af10177ff15b67|0": {
+    "target": "../../../cli/src/audit/commitmsg.rs",
+    "line": 66,
+    "end": 105,
+    "text": "/// The characters git tries for `auto`, in its order (builtin/commit.c"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|9fc01277f0152f4b|0": {
     "target": "../../../cli/src/audit/commitmsg.rs",
     "line": 35,
-    "end": 59,
-    "text": "/// What a comment line of the message starts with: the repository's"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|c14a4d25da8b8a64|0": {
-    "target": "../../../cli/src/audit/commitmsg.rs",
-    "line": 64,
-    "end": 69,
-    "text": "fn uncommented(text: &str, comment: &str) -> String {"
+    "end": 64,
+    "text": "/// What blanks a comment line of the message: the repository's"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/precommit.rs|8eea5f37e474adc0|0": {
     "target": "../../../cli/src/audit/precommit.rs",
@@ -8632,6 +8667,12 @@
     "end": 272,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
   },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
+    "target": "../../../cli/src/scan/opaque.rs",
+    "line": 1,
+    "end": 14,
+    "text": "//! What a grammar reads as opaque to names: the spans of every literal"
+  },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/candidates.rs|2de959edc2eec3a9|0": {
     "target": "../../../cli/src/tombstone/candidates.rs",
     "line": 31,
@@ -8724,21 +8765,21 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|6ad978eff21c4ad2|0": {
     "target": "../../../cli/src/tombstone/marked.rs",
-    "line": 120,
-    "end": 125,
+    "line": 82,
+    "end": 87,
     "text": "/// A Markdown document's marked texts: each heading as rendered and"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|6c8acec707091b77|0": {
     "target": "../../../cli/src/tombstone/marked.rs",
-    "line": 38,
-    "end": 44,
+    "line": 36,
+    "end": 42,
     "text": "/// A code file's marked texts: every identifier on a line no comment"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|f7b9bedc4d4f917d|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|ad9171c7a6b09026|0": {
     "target": "../../../cli/src/tombstone/marked.rs",
-    "line": 71,
-    "end": 85,
-    "text": "/// The text with every literal blanked to spaces (newlines kept, so"
+    "line": 69,
+    "end": 74,
+    "text": "/// The text with every literal blanked to spaces, newlines kept"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/mod.rs|0694bd7785d6f8d4|0": {
     "target": "../../../cli/src/tombstone/mod.rs",

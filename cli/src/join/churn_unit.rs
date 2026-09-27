@@ -2,7 +2,10 @@
 //! side to its owning unit — the innermost unit containing the WHOLE
 //! span; a span no single unit contains belongs to the file top
 //! level (key ""), the same refusal-to-guess the t3 Forest ledger
-//! practices — then join the churn ledger on (path, key, nth). The
+//! practices — then join the churn ledger on (path, key, anchor), the
+//! §7.2 container-chain anchor (fourclass/anchor.rs) that survives a
+//! sibling's deletion between the commit and HEAD (plan v2.30 step 5b
+//! item 29; the report's own identity stays the index's nth). The
 //! graph leg at unit tier is null BY DESIGN: import granularity has
 //! no unit nodes (unit indegree is constant 0, design §6.2), so any
 //! number here would be fabricated; [`GRAPH_NULL_IMPORT_GRANULARITY`]
@@ -34,12 +37,23 @@ use std::path::{Path, PathBuf};
 ///     fabricated number this whole design refuses.
 pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;
 
+/// The report identity of a unit: the index's persisted (path, key,
+/// nth), what every face prints.
 #[derive(Debug, Clone, Serialize, PartialEq, Eq, Hash)]
 pub struct UnitId {
     pub path: String,
     /// "" = file top level (no single unit contains the span).
     pub key: String,
     pub nth: i64,
+}
+
+/// A span's owner: the report identity and the §7.2 anchor the churn
+/// ledger is joined on. The anchor never rides the report — the
+/// index's nth is the identity every face prints; the anchor is the
+/// join key that survives a sibling's deletion.
+pub struct Owner {
+    pub id: UnitId,
+    pub anchor: String,
 }
 
 /// Window churn of one entity (lines appended / rewritten).
@@ -62,12 +76,22 @@ pub struct UnitRow {
     pub churn_b: Lines,
 }
 
-/// Lazy per-file unit table (key, nth, start, end) from the same
-/// segments + with_nth throat the unitsig/symbols caches persist —
-/// a second nth derivation is exactly what that throat forbids.
+/// One HEAD unit of one file: key, nth, span and anchor, off the same
+/// segments + with_nth throat the unitsig/symbols caches persist — a
+/// second nth derivation is exactly what that throat forbids — and the
+/// same anchor function the ledger keys with.
+struct Seat {
+    key: String,
+    nth: i64,
+    start: usize,
+    end: usize,
+    anchor: String,
+}
+
+/// Lazy per-file unit table.
 pub struct UnitMap {
     root: PathBuf,
-    by_file: HashMap<String, Vec<(String, i64, usize, usize)>>,
+    by_file: HashMap<String, Vec<Seat>>,
 }
 
 impl UnitMap {
@@ -78,54 +102,59 @@ impl UnitMap {
         }
     }
 
-    fn table(&mut self, path: &str) -> &[(String, i64, usize, usize)] {
+    fn table(&mut self, path: &str) -> &[Seat] {
         let root = &self.root;
         self.by_file
             .entry(path.to_string())
             .or_insert_with(|| load_table(root, path))
     }
 
-    /// Identity of the innermost unit containing the WHOLE span, or
-    /// the file's top level when no single unit does (a cross-unit
-    /// span is not guessed into either side).
-    pub fn id_of(&mut self, path: &str, start: usize, end: usize) -> UnitId {
+    /// The innermost unit containing the WHOLE span, or the file's top
+    /// level when no single unit does (a cross-unit span is not
+    /// guessed into either side): its report identity and its anchor.
+    pub fn id_of(&mut self, path: &str, start: usize, end: usize) -> Owner {
         let hit = self
             .table(path)
             .iter()
-            .filter(|(_, _, s, e)| *s <= start && end <= *e)
-            .min_by_key(|(_, _, s, e)| e - s);
-        match hit {
-            Some((key, nth, _, _)) => UnitId {
-                path: path.to_string(),
-                key: key.clone(),
-                nth: *nth,
-            },
-            None => UnitId {
-                path: path.to_string(),
-                key: String::new(),
-                nth: 0,
-            },
+            .filter(|s| s.start <= start && end <= s.end)
+            .min_by_key(|s| s.end - s.start);
+        let (key, nth, anchor) = match hit {
+            Some(s) => (s.key.clone(), s.nth, s.anchor.clone()),
+            None => (String::new(), 0, String::new()),
+        };
+        let path = path.to_string();
+        Owner {
+            id: UnitId { path, key, nth },
+            anchor,
         }
     }
 }
 
-fn load_table(root: &Path, path: &str) -> Vec<(String, i64, usize, usize)> {
+fn load_table(root: &Path, path: &str) -> Vec<Seat> {
     let Ok((text, lang)) = dedup::walked_text(root, path) else {
         return Vec::new(); // vanished since the pass: no units to own
     };
     let segs = units::segments(&text, lang);
+    let anchors = crate::fourclass::anchor::for_units(&segs);
     units::with_nth(&segs)
         .into_iter()
-        .map(|(u, nth)| (u.key.clone(), nth, u.start_line, u.end_line))
+        .zip(anchors)
+        .map(|((u, nth), anchor)| Seat {
+            key: u.key.clone(),
+            nth,
+            start: u.start_line,
+            end: u.end_line,
+            anchor,
+        })
         .collect()
 }
 
 /// Assemble the Tier U rows: one per clone block, both sides
-/// unit-attributed, churn joined on the ledger identity. An absent
-/// ledger row means the unit genuinely saw no window edits — a real
-/// zero, not a fabricated leg.
+/// unit-attributed, churn joined on the ledger identity (path, key,
+/// anchor). An absent ledger row means the unit genuinely saw no
+/// window edits — a real zero, not a fabricated leg.
 pub fn rows(root: &Path, blocks: &[Block], ledger: &churn::Report) -> Vec<UnitRow> {
-    let by_id: HashMap<(&str, &str, i64), Lines> = ledger
+    let by_id: HashMap<(&str, &str, &str), Lines> = ledger
         .units
         .iter()
         .map(|u| {
@@ -133,12 +162,12 @@ pub fn rows(root: &Path, blocks: &[Block], ledger: &churn::Report) -> Vec<UnitRo
                 appended: u.appended,
                 rewrote: u.rewrote,
             };
-            ((u.path.as_str(), u.key.as_str(), u.nth), lines)
+            ((u.path.as_str(), u.key.as_str(), u.anchor.as_str()), lines)
         })
         .collect();
-    let churn_of = |u: &UnitId| {
+    let churn_of = |o: &Owner| {
         by_id
-            .get(&(u.path.as_str(), u.key.as_str(), u.nth))
+            .get(&(o.id.path.as_str(), o.id.key.as_str(), o.anchor.as_str()))
             .copied()
             .unwrap_or_default()
     };
@@ -152,8 +181,8 @@ pub fn rows(root: &Path, blocks: &[Block], ledger: &churn::Report) -> Vec<UnitRo
                 tokens: blk.tokens,
                 churn_a: churn_of(&a),
                 churn_b: churn_of(&b),
-                a,
-                b,
+                a: a.id,
+                b: b.id,
             }
         })
         .collect()

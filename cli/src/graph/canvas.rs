@@ -21,22 +21,39 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 /// `why`, so a face can render the reason in its own language.
 pub const SCHEMA_ID: &str = "ce.graph-canvas/0.4.0";
 
+/// The graph screen's document (plan v2.30 step 5b item 31): the
+/// canvas and the deadcode report off ONE judgment. The GUI used to
+/// make two runs — the canvas without the advisory, `ce deadcode`
+/// with it — and join them by file path, best effort across two
+/// snapshots; one refreshed index, one wire and one core reply now
+/// answer both halves, so the map and the symbol rows describe the
+/// same tree by construction, and the advisory is paid for once.
+pub const SCREEN_SCHEMA_ID: &str = "ce.graph-screen/0.1.0";
+
+pub fn screen(root: &std::path::Path, core: &str) -> Result<Value> {
+    let (report, canvas) = drawn(root, core)?;
+    Ok(json!({
+        "schema": SCREEN_SCHEMA_ID,
+        "canvas": canvas,
+        "deadcode": crate::report::deadcode_json(&report),
+    }))
+}
+
 /// The one-judgment assembly (P10 half-doors end to end): refreshed
-/// index → wire → judge with the full file-tier pos request →
-/// verdicts + positions + cycles → document. The face layer only
-/// delegates here, so the canvas road has one owner.
-pub fn run(root: &std::path::Path, core: &str) -> Result<Value> {
+/// index → wire, with the advisory the screen's deadcode half renders
+/// → judge with the full file-tier pos request → verdicts, positions
+/// and cycles → the canvas document, the Report beside it. The face
+/// layer only delegates here, so the graph screen has one owner.
+fn drawn(root: &std::path::Path, core: &str) -> Result<(Report, Value)> {
     let (idx, db_path) = crate::dedup::refreshed_index(root, None)?;
-    // the canvas draws liveness and position; the symbol advisory is
-    // the deadcode face's (W4-F2: a road that cannot render it pays
-    // nothing for it)
-    let w = super::deadcode::wire_of(root, &idx, &db_path, super::deadcode::Advisory::No)?;
+    let w = super::deadcode::wire_of(root, &idx, &db_path, super::deadcode::Advisory::Yes)?;
     drop(idx);
     let pos_req: Vec<i64> = file_nodes(&w).iter().map(|x| x.0).collect();
     let (report, reply) = super::deadcode::judged(root, core, &w, &pos_req)?;
     let pos = crate::join::pos_map(&reply, &w)?;
     let cycles = file_cycles(&reply, &w)?;
-    Ok(document(&w, &report, &pos, &cycles))
+    let doc = document(&w, &report, &pos, &cycles);
+    Ok((report, doc))
 }
 
 /// The core's cycle report restricted to the file tier (RG9: cycles

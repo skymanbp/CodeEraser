@@ -112,7 +112,6 @@ const CE_I18N = {
     },
     advisoryDropped: "the core dropped the unmentioned table — over its row cap, nothing judged at symbol level",
     advisoryCut: "the candidate table was cut at the producer's row cap — these rows are a prefix, the same prefix every run",
-    advisoryUnavailable: "the advisory road failed — the map is drawn, no symbol-level reading is shown",
     // Judgment vocabulary (K round step 6). Every one of these labels
     // names a number the core produced and this screen used to drop:
     // the trend judgment, the join lattice's verdict/severity/legs,
@@ -266,7 +265,6 @@ const CE_I18N = {
     },
     advisoryDropped: "核已丢弃未提及表——超出行上限，符号层一行未判",
     advisoryCut: "候选表已在生产者侧行上限截断——以上各行是前缀，每次运行同一前缀",
-    advisoryUnavailable: "顾问路失败——图已绘出，不显示符号层读数",
     verdict: "判决", severity: "严重度", legsAgree: "佐证腿数",
     trendVerdictNames: ["上行", "持平", "恶化"],
     unjudged: "未判——低于最小点数",

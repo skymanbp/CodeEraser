@@ -97,6 +97,11 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
+/// 19 = plan v2.30 step 5b's fourth sub-batch (item 24) changes what a
+/// reference site's row holds: `stored::spec` keeps the path, a bare
+/// `?` for a query and the fragment, never the userinfo or the query's
+/// content — every stored reference site re-derived once so no index
+/// keeps a credential a rung never read.
 /// 18 = plan v2.30 step 5b's second sub-batch moves stored rows again:
 /// a brace-only Rust `use {a, b};` opens one site per entry, a Haskell
 /// PackageImports import keeps its package in the spec, a qualified R
@@ -125,7 +130,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 18;
+pub const GRAPH_REV: i64 = 19;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -236,8 +241,9 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
     write_sites(tx, file_id, &found)
 }
 
-/// Phase 1's site half: one row per site. Split from refresh_graph at
-/// the E01 fn-length line.
+/// Phase 1's site half: one row per site, the spec as `stored::spec`
+/// keeps it (no userinfo, no query content). Split from refresh_graph
+/// at the E01 fn-length line.
 fn write_sites(
     tx: &Transaction<'_>,
     file_id: i64,
@@ -251,7 +257,7 @@ fn write_sites(
             file_id,
             kind_code(s.kind)?,
             s.line as i64,
-            &s.spec,
+            super::stored::spec(s.kind, &s.spec),
             s.owner.as_deref(),
         ))?;
     }

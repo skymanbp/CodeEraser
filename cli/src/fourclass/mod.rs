@@ -15,6 +15,7 @@
 //! it left and the unit it joined (the guard's 指回位置), and
 //! summarizes intact unit relocations.
 
+pub mod anchor;
 pub mod batch;
 pub mod decls;
 pub mod diff;

@@ -92,7 +92,7 @@ of at least seven literal characters — the fnv1a64 of its fold key (`_`, `-` a
 filtered, lower-cased), a second chance for a Rust `zod_string` spelled `$ZodString`
 elsewhere ([token.rs:109-120](../../../cli/src/mention/token.rs#L109),
 [mod.rs:283-290](../../../cli/src/mention/mod.rs#L283)). No plaintext token enters the
-database ([store.rs:32](../../../cli/src/mention/store.rs#L32)); the pass has its own
+database ([store.rs:34](../../../cli/src/mention/store.rs#L34)); the pass has its own
 version row and any change to a frozen input re-derives every row
 ([mod.rs:89](../../../cli/src/mention/mod.rs#L89)). Two caps bound the store — 65,536
 distinct tokens per file (a function of the bytes: the clip is final and the file's hash
@@ -115,11 +115,11 @@ The veto asks three questions in a fixed order, cheapest first, and stops at the
 yes ([candidates.rs:89-111](../../../cli/src/mention/candidates.rs#L89)):
 
 1. **another file spells it** — the identity hash occurs in a file other than the
-   declaring one ([store.rs:225-227](../../../cli/src/mention/store.rs#L225));
+   declaring one ([store.rs:227-229](../../../cli/src/mention/store.rs#L227));
 2. **the fold second chance** — Rust only, and only for names with ≥ 2 segments
    (`_`/camel boundaries, an all-caps run one segment) and ≥ 7 characters
    ([token.rs:127-144](../../../cli/src/mention/token.rs#L127),
-   [store.rs:231-233](../../../cli/src/mention/store.rs#L231));
+   [store.rs:233-235](../../../cli/src/mention/store.rs#L233));
 3. **the file's own exception regions spell it** — Go template actions, TS string and
    template literals, Python doctests, Rust macro definitions and fenced or indented doc
    blocks, Haskell haddock fences, C / C++ string literals and Doxygen code blocks, Java
@@ -222,8 +222,8 @@ the same with or without them ([VERSIONING.md:277-279](../../../contracts/VERSIO
 Only `ce deadcode` and the GUI/MCP deadcode faces ask for the advisory; the five other
 consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, the canvas)
 pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:87-90](../../../cli/src/graph/deadcode.rs#L87),
-[deadcode.rs:197-242](../../../cli/src/graph/deadcode.rs#L197)). The reply is consumed once:
+([deadcode.rs:88-91](../../../cli/src/graph/deadcode.rs#L88),
+[deadcode.rs:198-243](../../../cli/src/graph/deadcode.rs#L198)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -235,13 +235,14 @@ producer's cut, which the core cannot see ([advisory.rs:31-50](../../../cli/src/
 census line by code and, on either degradation, one local line saying which
 ([report.rs:58-114](../../../cli/src/graph/deadcode/report.rs#L58)); the MCP `deadcode`
 tool returns the same document ([tools.rs:78-82](../../../cli/src/mcp/tools.rs#L78)); the GUI
-graph screen loads that document as a second judgment beside the canvas one, joins the
-two by file path (a rendering join on a shared string, never a verdict, and best-effort
-by path since they are separate runs) and lists a selected file's rows with the
-root-level census and the notices — the two the document carries, and a third when the
-advisory road failed while the canvas drew (a pre-6.2.0 core), so "no advisory" and "not
-judged" never look alike ([graph.js:34-69](../../../gui/ui/graph.js#L34),
-[graph.js:202-275](../../../gui/ui/graph.js#L202), [i18n.js:105-115](../../../gui/ui/i18n.js#L105)).
+graph screen receives that document beside the canvas one in a single `ce.graph-screen`
+reply off ONE judgment (plan v2.30 step 5b item 31 — it used to run the report a second time
+and join the two across two snapshots), joins the two by file path (a rendering join on a
+shared string, never a verdict) and lists a selected file's rows with the root-level census
+and the two notices the document carries, so "no advisory" and "not judged" never look alike
+([canvas.rs:24-40](../../../cli/src/graph/canvas.rs#L24),
+[graph.js:33-60](../../../gui/ui/graph.js#L33),
+[graph.js:193-264](../../../gui/ui/graph.js#L193), [i18n.js:105-114](../../../gui/ui/i18n.js#L105)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -289,7 +290,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1205 (1229 − 12 pattern-ignored − 12 early-NUL) | rust | 3117 (1651) | 354 (0) | 11.4 % | 4 / 354 = 1.1 % | 4 / 2742 |
+| self @ this commit | 1211 (1235 − 12 pattern-ignored − 12 early-NUL) | rust | 3137 (1661) | 354 (0) | 11.3 % | 4 / 354 = 1.1 % | 4 / 2762 |
 | | | haskell | 1561 (352) | 270 (0) | 17.3 % | 20 / 270 = 7.4 % | 20 / 1291 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
@@ -304,7 +305,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1651<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->0<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1661<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

@@ -113,12 +113,11 @@ pub fn trend(root: &Path, core: &str, commits: usize, batch: Option<usize>) -> R
     )?))
 }
 
-/// The graph canvas document (batch 9 P18): ONE deadcode-family
-/// judgment answers verdicts AND position — the assembly and the
-/// file-tier projection live in graph::canvas. Read-only like every
-/// face.
-pub fn graph_canvas(root: &Path, core: &str) -> Result<Value> {
-    crate::graph::canvas::run(root, core)
+/// The GUI's graph screen (plan v2.30 step 5b item 31): the canvas
+/// document and the deadcode report off ONE deadcode-family judgment
+/// — the assembly lives in graph::canvas. Read-only like every face.
+pub fn graph_screen(root: &Path, core: &str) -> Result<Value> {
+    crate::graph::canvas::screen(root, core)
 }
 
 /// The cached unit universe (`ce clone --units`): the document used

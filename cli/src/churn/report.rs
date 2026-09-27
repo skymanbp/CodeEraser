@@ -20,20 +20,22 @@ pub(crate) const COCHANGE_FILE_CAP: usize = 20;
 const SCHEMA: &str = "ce.churn-report/0.2.0";
 
 /// One ledger row: lines the window added inside this unit. `key` ""
-/// (with nth 0) is the file's top level — `owner()` found no
-/// containing unit, which is a real place, not an error.
+/// (with anchor "") is the file's top level — `owner()` found no
+/// containing unit, which is a real place, not an error; `anchor` is
+/// the unit's §7.2 container-chain anchor (fourclass/anchor.rs), the
+/// identity a HEAD-side join reads.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UnitRow {
     pub path: String,
     pub key: String,
-    pub nth: i64,
+    pub anchor: String,
     pub appended: usize,
     pub rewrote: usize,
 }
 
 pub struct Report {
     pub commits: usize,
-    /// Per-unit ledger, sorted by (path, key, nth).
+    /// Per-unit ledger, sorted by (path, key, anchor).
     pub units: Vec<UnitRow>,
     pub surviving: usize,
     pub cochange: Vec<(String, String, usize)>,

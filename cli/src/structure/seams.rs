@@ -47,7 +47,7 @@ pub fn seam_facts(
     found: &crate::dedup::pairs::Blocks,
 ) -> Result<SeamFacts> {
     let mut out = SeamFacts::default();
-    let mut key_maps: Vec<BTreeMap<(String, i64), u64>> = Vec::new();
+    let mut key_maps: Vec<BTreeMap<(String, String), u64>> = Vec::new();
     for f in files {
         let Some(lang) = Lang::judged_path(Path::new(&f.path)) else {
             continue;
@@ -66,7 +66,7 @@ pub fn seam_facts(
         out.files.push((f.path.clone(), f.total_lines as u64));
         key_maps.push(key_map(&all, &tops));
         push_units(&mut out, fid, &tops, f.total_lines as u64);
-        push_refs(&mut out, fid, &tops, &text);
+        push_refs(&mut out, fid, &tops, &text, lang);
     }
     push_clones(&mut out, found);
     push_churn(&mut out, root, &key_maps);
@@ -107,11 +107,11 @@ fn push_clones(out: &mut SeamFacts, found: &crate::dedup::pairs::Blocks) {
 
 /// Unit co-change pairs off the churn family's own commit ledger
 /// over the window — [fileId, a, b] rows, a < b, distinct. Ledger
-/// rows join on the ledger's OWN (key, nth) identity; unmatched rows
-/// (renames, top level) drop rather than fold onto occurrence 0, and
-/// a tree without git history prices the leg at zero rather than
+/// rows join on the ledger's OWN (key, anchor) identity; unmatched
+/// rows (renames, top level) drop rather than fold onto a neighbour,
+/// and a tree without git history prices the leg at zero rather than
 /// failing the advisory.
-fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, i64), u64>]) {
+fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, String), u64>]) {
     if out.files.is_empty() {
         return;
     }
@@ -126,7 +126,8 @@ fn push_churn(out: &mut SeamFacts, root: &Path, key_maps: &[BTreeMap<(String, i6
         let mut touched: BTreeMap<u64, BTreeSet<u64>> = BTreeMap::new();
         for row in crate::churn::commit_ledger(root, &sha) {
             if let Some(&fid) = ids.get(row.path.as_str())
-                && let Some(&top) = key_maps[fid as usize].get(&(row.key.clone(), row.nth))
+                && let Some(&top) =
+                    key_maps[fid as usize].get(&(row.key.clone(), row.anchor.clone()))
             {
                 touched.entry(fid).or_default().insert(top);
             }
@@ -162,17 +163,18 @@ fn seam_commits(root: &Path, files: &[(String, u64)]) -> Result<Vec<String>> {
     Ok(stdout.split_whitespace().map(str::to_string).collect())
 }
 
-/// Current-snapshot (unit key, nth) -> owning top-level unit index:
-/// the churn-ledger join surface at the ledger's FULL identity, nth
-/// off the same `with_nth` throat the ledger took it from.
-fn key_map(all: &[units::Unit], tops: &[units::Unit]) -> BTreeMap<(String, i64), u64> {
+/// Current-snapshot (unit key, anchor) -> owning top-level unit
+/// index: the churn-ledger join surface at the ledger's FULL identity,
+/// the anchor off the same fourclass::anchor function the ledger took
+/// it from (a sibling deleted since the commit moves neither side).
+fn key_map(all: &[units::Unit], tops: &[units::Unit]) -> BTreeMap<(String, String), u64> {
     let mut m = BTreeMap::new();
-    for (u, nth) in units::with_nth(all) {
+    for (u, anchor) in all.iter().zip(crate::fourclass::anchor::for_units(all)) {
         let owner = tops
             .iter()
             .position(|t| t.start_line <= u.start_line && u.end_line <= t.end_line);
         if let Some(t) = owner {
-            m.insert((u.key.clone(), nth), t as u64);
+            m.insert((u.key.clone(), anchor), t as u64);
         }
     }
     m
@@ -212,9 +214,15 @@ fn push_units(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], total: u64) {
 
 /// One mention edge per (from, to) unit pair where `to`'s bare name
 /// appears word-bounded inside `from`'s span — the measurable v1
-/// proxy for "internal references a seam would sever" (§C cost).
-fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str) {
-    let lines: Vec<&str> = text.lines().collect();
+/// proxy for "internal references a seam would sever" (§C cost) —
+/// searched over the source with every literal and comment blanked
+/// (scan::opaque, exact tree-sitter spans): a name in a string or a
+/// comment is not a reference a seam would sever (plan v2.30 step
+/// 5b item 30; it counted one until then).
+fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str, lang: Lang) {
+    let masked =
+        crate::scan::opaque::blanked(text, lang, crate::scan::opaque::Opaque::LiteralsAndComments);
+    let lines: Vec<&str> = masked.lines().collect();
     let span = |u: &units::Unit| {
         let lo = u.start_line.saturating_sub(1).min(lines.len());
         let hi = u.end_line.min(lines.len());

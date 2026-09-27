@@ -258,6 +258,12 @@
       "value": "ce.graph-canvas/0.4.0"
     },
     {
+      "id": "report:graph-screen#schemaver",
+      "source": "cli/src/graph/canvas.rs (typed)",
+      "tier": "linked",
+      "value": "ce.graph-screen/0.1.0"
+    },
+    {
       "id": "report:join#schemaver",
       "source": "cli/src/join/mod.rs (typed)",
       "tier": "linked",
@@ -402,7 +408,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "18"
+      "value": "19"
     },
     {
       "id": "ver:mention_rev#digits",

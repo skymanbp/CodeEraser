@@ -149,9 +149,9 @@ face_cmd!(erase_log_report, "erase_log", |r, _| {
     codeeraser::faces::erase_log(r)
 });
 face_cmd!(
-    graphcanvas_report,
-    "graphcanvas",
-    codeeraser::faces::graph_canvas
+    graphscreen_report,
+    "graphscreen",
+    codeeraser::faces::graph_screen
 );
 /// The one face that takes an OPT-IN gate knob rather than a
 /// measurement window, so it does not fit either macro arm: `floor`

@@ -4,7 +4,7 @@
 //! 300-line dogfood ceiling without a ratchet-breaking growth step.
 //!
 //! The clock basis and why it changed are recorded in the churn
-//! module header, beside the nth caveat — one statement, not two.
+//! module header, beside the ledger's identity — one statement, not two.
 
 use super::gitio::git;
 use anyhow::{Context, Result};

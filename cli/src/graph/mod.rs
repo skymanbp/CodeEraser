@@ -27,6 +27,7 @@ pub mod roots_ts;
 pub mod sites;
 pub mod spec;
 pub mod store;
+pub mod stored;
 pub mod symbols;
 pub mod symwire;
 pub mod wire;

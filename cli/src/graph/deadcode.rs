@@ -81,8 +81,9 @@ pub struct Report {
 /// candidate table and the mounts table are measured together or not
 /// at all, and a wire built with them is judged with them — a
 /// `wire_of(Yes) + judge(No)` state is not representable (W4-F3).
-/// Only the faces that render the advisory ask for it; the erase,
-/// canvas, score, structure and join roads pay nothing.
+/// Only the faces that render the advisory ask for it — `ce deadcode`
+/// and the GUI's graph screen, once for both of its halves — and the
+/// erase, score, structure and join roads pay nothing.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Advisory {
     No,

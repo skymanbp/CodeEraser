@@ -29,7 +29,7 @@ fn main() {
             commands::deadcode_report,
             commands::clone_report,
             commands::docdup_report,
-            commands::graphcanvas_report,
+            commands::graphscreen_report,
             commands::check_report,
             commands::similar_report,
             commands::erase_preview,

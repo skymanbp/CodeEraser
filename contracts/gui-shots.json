@@ -5,11 +5,11 @@
     892
   ],
   "shots": {
-    "gui-structure.png": "79e23754405039199ec04f57341ad992b8c0890625c861838d72cde36ce25b3b",
-    "gui-tree.png": "213aec060011811e80f57dae499e2eb77dd199cfcead882ff6b7303969b02994",
-    "gui-candidates.png": "6445dc7d3304d6428c491bcbd9b9f3a283cbfd8ac00d0b52b609ffac1db32ffb"
+    "gui-structure.png": "945fe31b095cb4aee4f665330629dc07878d4b16cf8ffde31cf30927e85ef179",
+    "gui-tree.png": "6836608a1457b27e5215bf59477ab8fc05e2754fd7967db67e502275c92729e0",
+    "gui-candidates.png": "6917591eda67ddaf9ff70505eed8852d9294c3f1b8171f207cec7002feecde0a"
   },
-  "ui": "05bb549f0976ccd5ae01386ef76d6e39077e2d9e16c8c196776fc197c1a4f706",
+  "ui": "6137125ad4026330c631a026e06c28c93cb66d60c25b242a49006f8cfbce89d5",
   "schemas": {
     "structure": "ce.structure-report/0.6.0",
     "join": "ce.join-report/0.3.0",

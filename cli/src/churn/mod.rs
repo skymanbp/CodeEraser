@@ -13,16 +13,19 @@
 //! 3. co-change pairs: files repeatedly changing in the same commits.
 //!
 //! M5-3h: attribution is a per-unit LEDGER keyed (path, unit key,
-//! nth), key "" for top-level lines, and the report's window totals
-//! are SUMS over that ledger — conservation by construction, there
-//! is no second bookkeeping to drift. The ledger reuses the commit's
-//! existing `show` + `units::segments` surfaces and adds ZERO git
-//! calls (PERF-BUDGET M5-3h: blame alone already costs 155 s on the
-//! self window). Known degradation: nth is taken in each commit's
-//! own after-snapshot, so deleting an earlier same-key sibling later
-//! in the window shifts nth for its survivors (the §7.2 caveat the
-//! baseline retired at 7.0.0 with container anchors, score/anchor.rs;
-//! this ledger still keys on nth) — recorded, not masked.
+//! anchor) — the §7.2 container-chain anchor (fourclass/anchor.rs),
+//! key "" and anchor "" for top-level lines — and the report's window
+//! totals are SUMS over that ledger — conservation by construction,
+//! there is no second bookkeeping to drift. The ledger reuses the
+//! commit's existing `show` + `units::segments` surfaces and adds ZERO
+//! git calls (PERF-BUDGET M5-3h: blame alone already costs 155 s on
+//! the self window). The key was (path, key, nth) until plan v2.30
+//! step 5b item 29, nth taken in each commit's own after-snapshot, so
+//! deleting an earlier same-key sibling later in the window shifted
+//! nth for its survivors and the HEAD-side joins (the join, the seam
+//! pricer) found no row; the anchor is what the baseline retired that
+//! caveat with at 7.0.0, and a deletion elsewhere in the file moves
+//! it not.
 //!
 //! Recorded basis, beside that caveat: the window has exactly ONE
 //! clock on BOTH sides — COMMITTER time. window_commits selects with
@@ -57,8 +60,8 @@ use anyhow::Result;
 use std::collections::HashMap;
 use std::path::Path;
 
-/// (path, unit key, nth) → (appended, rewrote) line counts.
-type Ledger = HashMap<(String, String, i64), (usize, usize)>;
+/// (path, unit key, anchor) → (appended, rewrote) line counts.
+type Ledger = HashMap<(String, String, String), (usize, usize)>;
 
 pub fn run(root: &Path, days: u32) -> Result<Report> {
     // three git subprocesses deep per commit, then one blame per
@@ -149,15 +152,15 @@ pub fn commit_ledger(root: &Path, sha: &str) -> Vec<UnitRow> {
 fn sorted_rows(ledger: Ledger) -> Vec<UnitRow> {
     let mut rows: Vec<UnitRow> = ledger
         .into_iter()
-        .map(|((path, key, nth), (appended, rewrote))| UnitRow {
+        .map(|((path, key, anchor), (appended, rewrote))| UnitRow {
             path,
             key,
-            nth,
+            anchor,
             appended,
             rewrote,
         })
         .collect();
-    rows.sort_by(|a, b| (&a.path, &a.key, a.nth).cmp(&(&b.path, &b.key, b.nth)));
+    rows.sort_by(|a, b| (&a.path, &a.key, &a.anchor).cmp(&(&b.path, &b.key, &b.anchor)));
     rows
 }
 
@@ -200,9 +203,10 @@ pub fn pair_texts<'p>(
 }
 
 /// Append vs rewrite per added line, attributed into the ledger by
-/// the owning unit of the commit's after-snapshot. nth comes from
-/// the same `with_nth` throat the unitsig/symbols caches persist,
-/// so a HEAD-side join on (path, key, nth) names the same unit.
+/// the owning unit of the commit's after-snapshot. The anchor comes
+/// from the same container-chain function the baseline's members
+/// carry (fourclass/anchor.rs), so a HEAD-side join on (path, key,
+/// anchor) names the same unit whatever was deleted in between.
 fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: &mut Ledger) {
     for pair in pairs {
         let Some((after_path, before, after, lang)) = pair_texts(root, sha, pair) else {
@@ -211,11 +215,12 @@ fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: 
         let c = crate::fourclass::classify(&before, &after, lang);
         let before_units = units::segments(&before, lang);
         let after_units = units::segments(&after, lang);
-        let nths = units::with_nth(&after_units);
+        let anchors = crate::fourclass::anchor::for_units(&after_units);
         for &l in &c.changed.added {
             let owner = units::owner(&after_units, l);
             let rewrite = owner.is_some_and(|u| before_units.iter().any(|b| b.key == u.key));
-            let row = ledger.entry(unit_id(after_path, owner, &nths)).or_default();
+            let id = unit_id(after_path, owner, &after_units, &anchors);
+            let row = ledger.entry(id).or_default();
             if rewrite {
                 row.1 += 1;
             } else {
@@ -225,19 +230,23 @@ fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: 
     }
 }
 
-/// Ledger identity of `owner`: pointer-match into the `with_nth`
-/// view of the SAME unit slice (both borrow after_units, so a miss
-/// is a bug worth a loud stop, not a silent nth 0).
-fn unit_id(path: &str, owner: Option<&Unit>, nths: &[(&Unit, i64)]) -> (String, String, i64) {
+/// Ledger identity of `owner`: pointer-match into the SAME unit slice
+/// the anchors were taken over (both borrow after_units, so a miss is
+/// a bug worth a loud stop, not a silent top level).
+fn unit_id(
+    path: &str,
+    owner: Option<&Unit>,
+    all: &[Unit],
+    anchors: &[String],
+) -> (String, String, String) {
     let Some(u) = owner else {
-        return (path.to_string(), String::new(), 0);
+        return (path.to_string(), String::new(), String::new());
     };
-    let nth = nths
+    let i = all
         .iter()
-        .find(|(w, _)| std::ptr::eq(*w, u))
-        .expect("owner and with_nth walk the same slice")
-        .1;
-    (path.to_string(), u.key.clone(), nth)
+        .position(|w| std::ptr::eq(w, u))
+        .expect("owner and the anchors walk the same slice");
+    (path.to_string(), u.key.clone(), anchors[i].clone())
 }
 
 fn count_cochange(

@@ -6,19 +6,18 @@
 // degree), never a printed number. Rendering only: every verdict on
 // this screen came from the one core judgment the CLI also prints.
 //
-// The symbol-level drill-down (plan v2.17 L round piece (7)) reads a
-// SECOND judgment's document beside the canvas one: the
-// ce.deadcode-report's `unmentioned` advisory rows, grouped here by
-// file path — a rendering join on a string the two documents share,
-// never a verdict, and best-effort by path since the two are separate
-// runs. The advisory has one home (that report); this screen only
-// shows it beside the file it names.
+// The symbol-level drill-down (plan v2.17 L round piece (7)) reads
+// the ce.deadcode-report's `unmentioned` advisory rows beside the
+// canvas, grouped here by file path — a rendering join on a string
+// the two documents share, never a verdict. Both documents arrive in
+// ONE ce.graph-screen reply off one judgment (plan v2.30 step 5b item
+// 31), so the rows a file lists describe the tree the map draws; the
+// advisory has one home (that report), this screen only shows it
+// beside the file it names.
 "use strict";
 
 let graphDoc = null;
 let advDoc = null;
-// why the advisory road failed while the map drew — its third state
-let advWhy = "";
 let advByPath = new Map();
 let gpos = null, gsel = -1;
 
@@ -35,23 +34,15 @@ async function loadGraph() {
   $("graph-load").disabled = true;
   setStatus(tr("judging"));
   try {
-    // The canvas road is authoritative: the map commits on it alone,
-    // and both documents commit together so a failure never leaves
-    // the map on a new run beside an advisory from the old one. The
-    // advisory road settles on its own — a pre-6.2.0 core refuses it
-    // by name while the canvas (Advisory::No) still draws — and its
-    // failure is a third state the aside names, never a silent zero.
+    // One reply carries both documents off one judgment: the map and
+    // the advisory commit together, so a failure never leaves the map
+    // on a new run beside symbol rows from an old one.
     const root = $("root").value;
-    const [g, d] = await Promise.allSettled([
-      invoke("graphcanvas_report", { root }),
-      invoke("deadcode_report", { root }),
-    ]);
-    if (g.status === "rejected") throw g.reason;
-    graphDoc = g.value;
-    advDoc = d.status === "fulfilled" ? d.value : null;
-    advWhy = d.status === "fulfilled" ? "" : String(d.reason);
+    const doc = await invoke("graphscreen_report", { root });
+    graphDoc = doc.canvas;
+    advDoc = doc.deadcode;
     advByPath = new Map();
-    for (const a of advDoc?.unmentioned ?? []) {
+    for (const a of advDoc.unmentioned ?? []) {
       if (!advByPath.has(a.name)) advByPath.set(a.name, []);
       advByPath.get(a.name).push(a);
     }
@@ -199,13 +190,11 @@ function graphClick(evt) {
   renderGraphAside(gsel);
 }
 
-// The advisory's three states the rows cannot show for themselves:
-// the road itself failed (no document — the map still drew), the core
-// dropped the table (nothing judged at symbol level), or the producer
-// cut the candidate set (the rows are a prefix). The last two come off
-// the report document's own flags, as the CLI prints them.
+// The advisory's two states the rows cannot show for themselves: the
+// core dropped the table (nothing judged at symbol level), or the
+// producer cut the candidate set (the rows are a prefix). Both come
+// off the report document's own flags, as the CLI prints them.
 function advisoryNotices() {
-  if (!advDoc) return `<div class="notice"><b>${esc(tr("advisoryUnavailable"))}</b><small>${esc(advWhy)}</small></div>`;
   let html = "";
   if (advDoc.unmentioned_dropped) html += `<div class="notice"><b>${esc(tr("advisoryDropped"))}</b></div>`;
   if (advDoc.unmentioned_cut) html += `<div class="notice"><b>${esc(tr("advisoryCut"))}</b></div>`;
@@ -215,7 +204,6 @@ function advisoryNotices() {
 // The whole-tree census of the advisory, by the core's code: counting
 // is not judging, every code came off the wire.
 function advisoryCensus() {
-  if (!advDoc) return advisoryNotices();
   const rows = advDoc.unmentioned ?? [];
   const words = tr("advisoryWords");
   const by = new Map();
@@ -262,10 +250,9 @@ function renderGraphAside(i) {
 // The file's own unmentioned declarations (the symbol-level
 // drill-down): line, name and the core's code word, the code's
 // reading on the tooltip. A file with none says so in one quiet row
-// rather than showing nothing — "no advisory", "not loaded" and "the
-// road failed" must not look alike.
+// rather than showing nothing — "no advisory" and "not loaded" must
+// not look alike.
 function advisoryOf(path) {
-  if (!advDoc) return advisoryNotices();
   const rows = advByPath.get(path) ?? [];
   const words = tr("advisoryWords");
   let html = `<div class="row zero">${esc(tr("advisoryHead", rows.length, rows.length ? 1 : 0))}</div>`;

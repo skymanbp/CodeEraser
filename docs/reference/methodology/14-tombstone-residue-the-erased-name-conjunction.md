@@ -44,7 +44,7 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
   alive) — its comment lines blanked in place so a site's line is the file's own
   ([audit/tombstone.rs:26-28](../../../cli/src/audit/tombstone.rs#L26),
   [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167),
-  [commitmsg.rs:64-69](../../../cli/src/audit/commitmsg.rs#L64)).
+  [commitmsg.rs:107-132](../../../cli/src/audit/commitmsg.rs#L107)).
 
 Every git side comes through ONE `cat-file --batch` process — its reply read as a stream, so
 an over-cap blob is skipped and never held — and the working tree through one bounded read: a
@@ -85,11 +85,11 @@ as rendered, a list item's lead. An inline code span only MENTIONS: it keeps a n
 declares none — the third self-replay round said why, when a 5,000-character narrative line
 rewritten in place dropped its own spans and re-mentioned them, and nothing had been removed
 ([marked.rs:1-9](../../../cli/src/tombstone/marked.rs#L1),
-[marked.rs:38-44](../../../cli/src/tombstone/marked.rs#L38),
-[marked.rs:120-125](../../../cli/src/tombstone/marked.rs#L120)). Literals are blanked to
+[marked.rs:36-42](../../../cli/src/tombstone/marked.rs#L36),
+[marked.rs:82-87](../../../cli/src/tombstone/marked.rs#L82)). Literals are blanked to
 spaces before the identifiers are read: the fifth round had bound `independent` out of a
 caveat message and `linux` out of a cfg string
-([marked.rs:71-85](../../../cli/src/tombstone/marked.rs#L71)).
+([marked.rs:69-74](../../../cli/src/tombstone/marked.rs#L69), [opaque.rs:1-14](../../../cli/src/scan/opaque.rs#L1)).
 
 Each marked text offers every **window** of 1..=`JOIN_MAX` adjacent words — the word cut
 lower-cases ASCII, splits at `_`, `-`, any non-alphanumeric and a camel rise, and keeps a
@@ -353,9 +353,12 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   ([tombstone_guard.rs:202-214](../../../cli/tests/it/tombstone_guard.rs#L202)).
 - **The message is Markdown by fiat**, and its comment prefix is the repository's
   `core.commentChar` / `core.commentString` — matched by their exact names, taken byte for
-  byte, the last one set winning; `auto` reads as `#`, and the lines git would have picked
-  another character for are measured as the prose they look like
-  ([commitmsg.rs:35-59](../../../cli/src/audit/commitmsg.rs#L35)).
+  byte, the last one set winning ([commitmsg.rs:35-64](../../../cli/src/audit/commitmsg.rs#L35)). The
+  deprecated `auto` (gone with git 3.0) is read back from what git wrote, since git records its
+  pick nowhere: the scissors line, else the status block — the trailing run of two or more lines
+  opening with one of `#;@!$%^&|:`, git's own order — names the character; a file with neither
+  had no editor run, and git's cleanup then strips nothing, so every line is measured, `#`-led
+  ones included ([commitmsg.rs:66-105](../../../cli/src/audit/commitmsg.rs#L66)).
 
 ### 9. Acceptance
 

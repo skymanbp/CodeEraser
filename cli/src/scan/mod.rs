@@ -18,6 +18,7 @@ pub mod globs;
 pub mod html;
 pub mod lang;
 pub mod metrics;
+pub mod opaque;
 pub mod outputs;
 pub mod report;
 pub mod spec;
