@@ -27,8 +27,8 @@ stylesheet, icon or preload (`link_asset`) from a page (`href`), and a `srcset` 
 URL ([sites/html.rs:19-45](../../../cli/src/graph/sites/html.rs#L19),
 [sites/html.rs:113-130](../../../cli/src/graph/sites/html.rs#L113)). The twenty-three frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
-include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:173-175](../../../cli/src/graph/store.rs#L173)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:133](../../../cli/src/graph/store.rs#L133), currently <!--ce:ver:graph_rev#digits-->`19`<!--/ce-->); `export_star` (a TS
+include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:179-181](../../../cli/src/graph/store.rs#L179)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:139](../../../cli/src/graph/store.rs#L139), currently <!--ce:ver:graph_rev#digits-->`20`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`

@@ -8,7 +8,9 @@
 //! edit erased a name, one of its surfaces bound a name the session
 //! erased before, or it declared such a name again (a REVIVAL, which
 //! the union subtracts). The line waits for the hook's decision and
-//! carries it as `applied`: a denied write erased nothing. The class
+//! carries it as `applied`: a denied write erased nothing, and a key
+//! the erasing file declares again on disk (restored outside the hook
+//! path) has stopped being erased. The class
 //! speaks at its OWN tier (`[tombstone] tier`, default observe), only
 //! when the core says the declared budget is exceeded, and only over a
 //! WHOLE measurement (a bounded diff reads untouched lines as written);
@@ -19,7 +21,7 @@ use crate::config::{Config, TIERS, TOMBSTONE_DEFAULT};
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use crate::tombstone::{self, HASH_CAP, Judgment, PairText, Policy, Row, wire};
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 /// What the leg leaves for the hook: the feed line to append once the
@@ -50,14 +52,14 @@ pub(super) fn observe(
     let before =
         tombstone::texts::read_capped(path).or_else(|| (!path.exists()).then(String::new))?;
     let rel = crate::scan::walk::rel_str(root, path);
-    let session = session_keys(root, &env.session_id);
+    let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
+    let session = session_keys(root, &env.session_id, &policy);
     let pair = PairText {
         rel: &rel,
         before: &before,
         after: &after,
         lang,
     };
-    let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
     let f = tombstone::measure(&[pair], &session, &policy);
     // the session keys this edit declares again are alive after all
     let declared = tombstone::declared_keys(&after, lang, &policy);
@@ -152,11 +154,16 @@ fn judge(root: &Path, f: &tombstone::Findings, budget: Option<u32>) -> Judgment 
 /// The session's erased keys as its earlier `tombstone` lines left
 /// them, folded in feed order: a line's erased keys join the union,
 /// the keys it revived (declared again on its after side) leave it,
-/// and a line whose write the hook denied (`applied` false) did
-/// neither — that erasure never happened. Each list is capped at
-/// tombstone::HASH_CAP; the union is as wide as the feed window.
-fn session_keys(root: &Path, session: &str) -> BTreeSet<u64> {
+/// a line whose write the hook denied (`applied` false) did neither —
+/// that erasure never happened — and a key some file it was erased
+/// from declares again ON DISK leaves it too (plan v2.30 step 5b): a
+/// `git checkout` or another tool restored the name outside the hook
+/// path, no feed line could see it, and a `(no X)` must not bind a
+/// name the tree carries. Each list is capped at tombstone::HASH_CAP;
+/// the union is as wide as the feed window.
+fn session_keys(root: &Path, session: &str, policy: &Policy) -> BTreeSet<u64> {
     let mut keys = BTreeSet::new();
+    let mut erased_in: BTreeMap<u64, BTreeSet<String>> = BTreeMap::new();
     for v in crate::hookio::session_lines(root, session) {
         if v["event"] != "tombstone" || v["applied"] == false {
             continue;
@@ -164,9 +171,44 @@ fn session_keys(root: &Path, session: &str) -> BTreeSet<u64> {
         for k in hashes(&v["revived_hashes"]) {
             keys.remove(&k);
         }
-        keys.extend(hashes(&v["erased_hashes"]));
+        let file = v["file"].as_str().unwrap_or_default();
+        for k in hashes(&v["erased_hashes"]) {
+            keys.insert(k);
+            erased_in.entry(k).or_default().insert(file.to_string());
+        }
     }
-    keys
+    let restored = restored_on_disk(&keys, &erased_in, policy);
+    keys.difference(&restored).copied().collect()
+}
+
+/// The union keys one of their erasing files declares again right now
+/// — restored outside the hook, which the feed cannot record. One
+/// bounded read per file (texts::read_capped, as every side is read);
+/// a file that cannot be read — deleted, binary, past the cap — or
+/// that no judged language claims restores nothing.
+fn restored_on_disk(
+    keys: &BTreeSet<u64>,
+    erased_in: &BTreeMap<u64, BTreeSet<String>>,
+    policy: &Policy,
+) -> BTreeSet<u64> {
+    let mut declared: BTreeMap<&str, BTreeSet<u64>> = BTreeMap::new();
+    let mut out = BTreeSet::new();
+    for k in keys {
+        for file in erased_in.get(k).into_iter().flatten() {
+            let now = declared.entry(file.as_str()).or_insert_with(|| {
+                let path = Path::new(file);
+                crate::scan::lang::Lang::judged_path(path)
+                    .zip(tombstone::texts::read_capped(path))
+                    .map(|(lang, text)| tombstone::declared_keys(&text, lang, policy))
+                    .unwrap_or_default()
+            });
+            if now.contains(k) {
+                out.insert(*k);
+                break;
+            }
+        }
+    }
+    out
 }
 
 /// The u64s of a JSON array (anything else = none).

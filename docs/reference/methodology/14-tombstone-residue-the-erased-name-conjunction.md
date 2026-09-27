@@ -27,7 +27,7 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
 
 - **PreToolUse** — this Write/Edit's on-disk pair, the applied text the budget rule already
   computes, for a judged language inside the config's walk
-  ([guard/tombstone.rs:33-51](../../../cli/src/guard/tombstone.rs#L33)). It is the only leg
+  ([guard/tombstone.rs:35-53](../../../cli/src/guard/tombstone.rs#L35)). It is the only leg
   that sees one file at a time, so it carries the session with it (§7).
 - **Stop** — the working tree against `HEAD`, plus the audit's untracked files: a name that
   moved into a brand-new file is alive, and a new CHANGELOG is a changelog. Pairs outside the
@@ -270,8 +270,8 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   the hook speaks only when its tier is not `observe`, a budget is declared, the core said
   `over` and the measurement was whole — no pair with a bounded diff
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
-  [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
-  [guard/tombstone.rs:152-170](../../../cli/src/guard/tombstone.rs#L152),
+  [guard/tombstone.rs:74-84](../../../cli/src/guard/tombstone.rs#L74),
+  [guard/tombstone.rs:154-172](../../../cli/src/guard/tombstone.rs#L154),
   [hookio.rs:256-272](../../../cli/src/hookio.rs#L256),
   [proto.rs:60-67](../../../cli/src/daemon/proto.rs#L60),
   [say.rs:68-79](../../../cli/src/guard/say.rs#L68)).
@@ -319,13 +319,14 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   an ASCII name ([frames.rs:12-15](../../../cli/src/tombstone/frames.rs#L12),
   [names.rs:38-40](../../../cli/src/tombstone/names.rs#L38),
   [DEVELOPMENT_PLAN.md:125](../../DEVELOPMENT_PLAN.md#L125)).
-- **The session union forgets only what the hook itself saw.** A name written back by a
-  later Write/Edit leaves it (`revived_hashes`) and a denied write's erasure never enters it,
-  but a name restored outside the hook path — a `git checkout`, another tool — stays in the
-  union until the session ends, so a still-later `(no X)` binds it at PreToolUse; the Stop
-  leg, which reads the whole session's diff at once with an empty union, sees the move as
-  survival and seats no site
-  ([guard/tombstone.rs:152-178](../../../cli/src/guard/tombstone.rs#L152),
+- **The session union forgets what the tree shows restored.** A name written back by a
+  later Write/Edit leaves it (`revived_hashes`), a denied write's erasure never enters it,
+  and since plan v2.30 step 5b a key the erasing file declares again on disk — put back by a
+  `git checkout` or another tool, outside the hook path — leaves it at the next PreToolUse
+  (`restored_on_disk`: one bounded read of each erasing file; a file that cannot be read
+  restores nothing), so a still-later `(no X)` binds no name the tree carries; the Stop leg,
+  which reads the whole session's diff at once with an empty union, sees the same survival
+  ([guard/tombstone.rs:154-212](../../../cli/src/guard/tombstone.rs#L154),
   [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167)).
 - **A `///` doc comment is one paragraph to docdup since `DOCDUP_REV` 5.** Its tree-sitter
   node ends at column 0 of the next row, and until the v2.28 amendment (2026-09-04) the merge
@@ -338,7 +339,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
   ([texts.rs:56-64](../../../cli/src/tombstone/texts.rs#L56),
-  [guard/tombstone.rs:44-48](../../../cli/src/guard/tombstone.rs#L44)).
+  [guard/tombstone.rs:46-50](../../../cli/src/guard/tombstone.rs#L46)).
 - **Bounded reads under-count, never over-count — and stand a leg down.** Pairs past
   `PAIR_CAP`, and pairs with a side the batch or the bounded read refused, are counted back as
   unread and not measured, so a name erased there cannot bind; a pair whose line diff was
@@ -350,7 +351,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   `cache` module is a site by construction, and the way out is the reason's — say what
   replaced it. `ce:allow(tombstone)` is deliberately unwired: a residue class that a pragma in
   the residue itself could wave through would measure nothing
-  ([tombstone_guard.rs:202-214](../../../cli/tests/it/tombstone_guard.rs#L202)).
+  ([tombstone_guard.rs:204-216](../../../cli/tests/it/tombstone_guard.rs#L204)).
 - **The message is Markdown by fiat**, and its comment prefix is the repository's
   `core.commentChar` / `core.commentString` — matched by their exact names, taken byte for
   byte, the last one set winning ([commitmsg.rs:35-64](../../../cli/src/audit/commitmsg.rs#L35)). The

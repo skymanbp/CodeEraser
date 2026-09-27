@@ -31,18 +31,40 @@
 //! OUTERMOST member must too when the file is a module (a top-level
 //! import or export makes it one), and need not when the file is a
 //! script — a script's top-level namespace merges into the global one,
-//! so its exported members really do leave the file. `declare global`
-//! has no `internal_module` and is no chain member: a global
-//! augmentation's declarations are judged on an empty chain, which
-//! under-reports on the safe side.
+//! so its exported members really do leave the file.
+//!
+//! Ambient contexts (plan v2.30 step 5b, UNSURE item 4) read the
+//! spec, not the keyword: the elements of an ambient namespace or
+//! module — anything under a `declare namespace` / `declare module`
+//! body, nested namespaces included — "always declare exported
+//! entities regardless of whether they include the optional export
+//! modifier" (TypeScript spec 12.1.4), so such an element is exported
+//! (bit 0) and opens its chain (bit 1) without spelling `export`; the
+//! `declare namespace` itself still needs `export` at a module file's
+//! top level, as any namespace does. `declare module "m"` (a string
+//! name) declares or augments the external module `m` and is open to
+//! that module's importers whatever the file is. `declare global` is
+//! a global augmentation: its declarations are exported and the block
+//! is no chain member, so a declaration directly under it sits on the
+//! empty chain and reads global.
 
 use super::{ancestors, root_of, word};
 use crate::scan::{ast, functions};
 use tree_sitter::Node;
 
 pub(super) fn bits(node: Node<'_>, src: &[u8]) -> i64 {
-    let exported = climbs_to_export(node, src) || two_hops_to_export(node);
+    let exported = climbs_to_export(node, src) || two_hops_to_export(node) || ambient_element(node);
     word(exported, scope_exported(node))
+}
+
+/// An element of an ambient namespace, module or global augmentation:
+/// some `ambient_declaration` stands ABOVE the node's own wrapper (a
+/// top-level `declare namespace N` is itself no element — its parent is
+/// the wrapper, and the spec's rule is about what N contains).
+fn ambient_element(node: Node<'_>) -> bool {
+    ancestors(node)
+        .skip(1)
+        .any(|a| a.kind() == "ambient_declaration")
 }
 
 /// Declaration wrappers the guarded climb passes through freely.
@@ -79,7 +101,7 @@ fn scope_exported(node: Node<'_>) -> bool {
     let module_file = is_module_file(root_of(node));
     chain.iter().enumerate().all(|(i, member)| {
         let outermost = i + 1 == chain.len();
-        (outermost && !module_file) || carries_export(*member)
+        (outermost && !module_file) || carries_export(*member) || ambient_element(*member)
     })
 }
 
@@ -91,8 +113,17 @@ fn is_chain_member(n: Node<'_>) -> bool {
 }
 
 /// `export namespace N { … }`, or `export declare namespace N { … }`
-/// with the `declare` wrapper between the member and its `export`.
+/// with the `declare` wrapper between the member and its `export`; a
+/// string-named `declare module "m"` is open by construction — it
+/// declares the external module `m` for whoever imports it.
 fn carries_export(member: Node<'_>) -> bool {
+    if member.kind() == "module"
+        && member
+            .child_by_field_name("name")
+            .is_some_and(|n| n.kind() == "string")
+    {
+        return true;
+    }
     let mut up = ancestors(member);
     match up.next() {
         Some(p) if p.kind() == "export_statement" => true,

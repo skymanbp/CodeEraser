@@ -4597,15 +4597,15 @@
     "line": 48,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|2f506258fbf3522c|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|3a75f8567dd3f5aa|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 133,
-    "text": "pub const GRAPH_REV: i64 = 19;"
+    "line": 139,
+    "text": "pub const GRAPH_REV: i64 = 20;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 173,
-    "end": 175,
+    "line": 179,
+    "end": 181,
     "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
@@ -6071,22 +6071,22 @@
     "end": 118,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|3ba2981147276636|0": {
+    "target": "../size-advisory.md",
+    "line": 55,
+    "text": "φ（`roiPhiMilli`）。设计初稿的「基线重键噪声」并入 φ：搬走的成员换键、基线具名重立一次，是每个新文件付一次的固定代价，不另立项（同批退役）。"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4601876c535f456f|0": {
+    "target": "../size-advisory.md",
+    "line": 51,
+    "end": 52,
+    "text": "- 收益 B = **渐进区罚分回收**，模型唯一一项。设计初稿另列的「dedup 预算效应」与「热/冷单元隔离」已于 v2.30 步 5b 退役、不再是「未实现」："
+  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4ea3a6ec3001bf79|0": {
     "target": "../size-advisory.md",
     "line": 111,
     "end": 114,
     "text": "候选——豁免与候选语义都以数字落地。"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|788886e8d1332f29|0": {
-    "target": "../size-advisory.md",
-    "line": 55,
-    "text": "φ（`roiPhiMilli`）。「基线重键噪声」未实现。"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|81fba25e4c40f4b4|0": {
-    "target": "../size-advisory.md",
-    "line": 51,
-    "end": 52,
-    "text": "- 收益 B = **渐进区罚分回收**，as-built 唯一一项（dedup 预算效应与"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
@@ -6437,6 +6437,24 @@
     "line": 225,
     "end": 250,
     "text": "/// HTML sections (plan v2.30 step 5, booklet §5): an element carrying"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/guard/probe.rs|0ee176e5cec95e69|0": {
+    "target": "../../../cli/src/guard/probe.rs",
+    "line": 23,
+    "end": 43,
+    "text": "pub(super) fn novel_matches(root: &Path, env: &Envelope) -> Option<Vec<serde_json::Value>> {"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 29,
+    "end": 30,
+    "text": "jaccardNum :: Integer"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Docdup/Cost.hs|cd940d209736dc34|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 32,
+    "end": 33,
+    "text": "jaccardDen :: Integer"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass.hs|642f3005586d0a53|0": {
     "target": "../../../core/app/CE/FourClass.hs",
@@ -8616,32 +8634,32 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|296961069691d05d|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 44,
-    "end": 48,
+    "line": 46,
+    "end": 50,
     "text": "let path = Path::new(&env.tool_input.file_path);"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b3f155fc0aa8b166|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 33,
-    "end": 51,
+    "line": 35,
+    "end": 53,
     "text": "/// Measure and judge one Write/Edit. Scope is the budget rule's (a"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 152,
-    "end": 170,
+    "line": 154,
+    "end": 172,
     "text": "/// The session's erased keys as its earlier `tombstone` lines left"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|1": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 152,
-    "end": 178,
+    "line": 154,
+    "end": 212,
     "text": "/// The session's erased keys as its earlier `tombstone` lines left"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b70fd425a12f96af|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 72,
-    "end": 82,
+    "line": 74,
+    "end": 84,
     "text": "let (tier, budget) = knobs(cfg);"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|c2c53e8e5dfcb4ba|0": {
@@ -9047,8 +9065,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/tests/it/tombstone_guard.rs|5944ce094f5f8f01|0": {
     "target": "../../../cli/tests/it/tombstone_guard.rs",
-    "line": 202,
-    "end": 214,
+    "line": 204,
+    "end": 216,
     "text": "#[test]\nfn the_allow_pragma_is_deliberately_unwired() {"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/tests/it/tombstone_replay.rs|bdf02674d239bc13|0": {
@@ -9116,15 +9134,15 @@
     "end": 36,
     "text": "[ \"the conjunction matches its truth table\""
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|33908d0853609694|0": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|3babd162644b2e1e|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 125,
-    "text": "- 文档编辑中新增段落与既有段落 MinHash 相似 → **重复陈述嫌疑**；**v2.26 墓碑残留嫌疑**：改动集抹除名字 X（R 只收文本自己**声明**为名字的 run——单元键、非注释行且字面量之外的标识符、md 标题 / 列表首项；md 代码跨度只保活不声明；否定框内的窗口两侧都不是名字；中文名字只在这些边界处可测，如实写进已知限制）**且**同一改动新增的标题 / 单元名 / 文件名以否定框重新命名 X（标签残留 L），或新增散文**句**同时含回溯标记与 X（论证残留 J，合取即精度；六轮回放逐轮修定义见 FPR-TOMBSTONE.md）；出处叙事按用户裁定算残留，changelog 定位文档按两见证整体豁免并入账；**v2.27**：第三见证 = **段级**（被触段自身 ≥ K 个版本 / ISO 日期 / 短哈希记号，K 由回放定，只豁免该段并入账）+ `[tombstone] ledger` 声明路径兑底（整文件、入账）；单词名字继续算，ASCII 3 字符地板不动；"
+    "text": "- 文档编辑中新增段落与既有段落 MinHash 相似 → **重复陈述嫌疑**（as-built = docdup 族，MinHash/LSH 候选 + shingle 精确 Jaccard 80/100，`ce docdup` / `ce check` 读，不在四分类）；**v2.26 墓碑残留嫌疑**：改动集抹除名字 X（R 只收文本自己**声明**为名字的 run——单元键、非注释行且字面量之外的标识符、md 标题 / 列表首项；md 代码跨度只保活不声明；否定框内的窗口两侧都不是名字；中文名字只在这些边界处可测，如实写进已知限制）**且**同一改动新增的标题 / 单元名 / 文件名以否定框重新命名 X（标签残留 L），或新增散文**句**同时含回溯标记与 X（论证残留 J，合取即精度；六轮回放逐轮修定义见 FPR-TOMBSTONE.md）；出处叙事按用户裁定算残留，changelog 定位文档按两见证整体豁免并入账；**v2.27**：第三见证 = **段级**（被触段自身 ≥ K 个版本 / ISO 日期 / 短哈希记号，K 由回放定，只豁免该段并入账）+ `[tombstone] ledger` 声明路径兑底（整文件、入账）；单词名字继续算，ASCII 3 字符地板不动；"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|33908d0853609694|1": {
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|3babd162644b2e1e|1": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 125,
-    "text": "- 文档编辑中新增段落与既有段落 MinHash 相似 → **重复陈述嫌疑**；**v2.26 墓碑残留嫌疑**：改动集抹除名字 X（R 只收文本自己**声明**为名字的 run——单元键、非注释行且字面量之外的标识符、md 标题 / 列表首项；md 代码跨度只保活不声明；否定框内的窗口两侧都不是名字；中文名字只在这些边界处可测，如实写进已知限制）**且**同一改动新增的标题 / 单元名 / 文件名以否定框重新命名 X（标签残留 L），或新增散文**句**同时含回溯标记与 X（论证残留 J，合取即精度；六轮回放逐轮修定义见 FPR-TOMBSTONE.md）；出处叙事按用户裁定算残留，changelog 定位文档按两见证整体豁免并入账；**v2.27**：第三见证 = **段级**（被触段自身 ≥ K 个版本 / ISO 日期 / 短哈希记号，K 由回放定，只豁免该段并入账）+ `[tombstone] ledger` 声明路径兑底（整文件、入账）；单词名字继续算，ASCII 3 字符地板不动；"
+    "text": "- 文档编辑中新增段落与既有段落 MinHash 相似 → **重复陈述嫌疑**（as-built = docdup 族，MinHash/LSH 候选 + shingle 精确 Jaccard 80/100，`ce docdup` / `ce check` 读，不在四分类）；**v2.26 墓碑残留嫌疑**：改动集抹除名字 X（R 只收文本自己**声明**为名字的 run——单元键、非注释行且字面量之外的标识符、md 标题 / 列表首项；md 代码跨度只保活不声明；否定框内的窗口两侧都不是名字；中文名字只在这些边界处可测，如实写进已知限制）**且**同一改动新增的标题 / 单元名 / 文件名以否定框重新命名 X（标签残留 L），或新增散文**句**同时含回溯标记与 X（论证残留 J，合取即精度；六轮回放逐轮修定义见 FPR-TOMBSTONE.md）；出处叙事按用户裁定算残留，changelog 定位文档按两见证整体豁免并入账；**v2.27**：第三见证 = **段级**（被触段自身 ≥ K 个版本 / ISO 日期 / 短哈希记号，K 由回放定，只豁免该段并入账）+ `[tombstone] ledger` 声明路径兑底（整文件、入账）；单词名字继续算，ASCII 3 字符地板不动；"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../DEVELOPMENT_PLAN.md|596c6b9cbf5bbbac|0": {
     "target": "../../DEVELOPMENT_PLAN.md",

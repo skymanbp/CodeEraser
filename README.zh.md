@@ -172,7 +172,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 <sub>在 [codeeraser.dev/zh/#architecture](https://codeeraser.dev/zh/#architecture) 可缩放、拖动查看此图。</sub>
 
-- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）。`codeeraser` crate 里有 tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十二<!--/ce-->套已接线的语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->16<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->19<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->3<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
+- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）。`codeeraser` crate 里有 tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十二<!--/ce-->套已接线的语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->16<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->20<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->3<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`，每个判决家族、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
 - **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->7.2.0<!--/ce-->，<!--ce:count:families#word-->十二<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.1.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。

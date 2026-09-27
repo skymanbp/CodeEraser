@@ -97,6 +97,12 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
+/// 20 = plan v2.30 step 5b's UNSURE batch (item 4, TypeScript ambient
+/// contexts): an element of a `declare namespace` / `declare module`
+/// body or of a `declare global` block carries the spec's exported
+/// bit and opens its chain without spelling `export`
+/// (visibility/ts.rs ambient_element), so the stored visibility word
+/// moves for such files — every symbols row re-derived once.
 /// 19 = plan v2.30 step 5b's fourth sub-batch (item 24) changes what a
 /// reference site's row holds: `stored::spec` keeps the path, a bare
 /// `?` for a query and the fragment, never the userinfo or the query's
@@ -130,7 +136,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 19;
+pub const GRAPH_REV: i64 = 20;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

@@ -239,10 +239,17 @@ computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#
 
 ### Not found in source
 
-The design contract §C lists two benefit terms and one cost term that the **as-built code does
-not implement**: benefit "dedup budget effect" and "hot/cold unit isolation", and cost
-"baseline re-key noise" [size-advisory.md:51-52](../size-advisory.md#L51), [size-advisory.md:55](../size-advisory.md#L55). The
-shipped benefit is the soft-zone recovery term alone
-[Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199) and the shipped cost is exactly the
-four legs above [Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). No constant for
-either omitted term exists in `Cost.hs`.
+The design contract §C once listed two benefit terms and one cost term beyond the four legs —
+benefit "dedup budget effect" and "hot/cold unit isolation", cost "baseline re-key noise" — and
+plan v2.30 step 5b retired them from the model with reasons, in place of a standing "not
+implemented" ([size-advisory.md:51-52](../size-advisory.md#L51), [size-advisory.md:55](../size-advisory.md#L55)):
+a clone block is judged on content fingerprints, and a seam either cuts it (priced by
+`roiCloneMilli`) or leaves it whole on one side, so no split lowers the dedup ledger by a line;
+a seam between hot and cold units is a seam severing no co-change pair, which the
+`roiChurnMilli` leg already prices at zero, so a benefit term would count the same churn fact
+twice (the model stays on the conservative side); and re-keying the moved members' baseline
+identity is paid once per new file, which is what φ is. The shipped benefit is the soft-zone
+recovery term alone [Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199) and the
+shipped cost is exactly the four legs above
+[Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). No constant for a retired
+term exists in `Cost.hs`, and none is owed.
