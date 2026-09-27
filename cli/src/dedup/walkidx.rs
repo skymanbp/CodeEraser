@@ -8,7 +8,7 @@
 
 use super::{Params, index, pairs, tokens};
 use crate::config::Config;
-use crate::graph::ladder::{java_header, lua_path};
+use crate::graph::ladder::{c_head, java_header, lua_path};
 use crate::graph::store;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
@@ -44,11 +44,14 @@ pub(super) struct WalkIndex {
     /// (plan v2.30 step 4): search directories the Lua ladder adds to
     /// its defaults, handed over through ladder::Scope.
     pub lua: BTreeSet<lua_path::Template>,
+    /// Every walked C-family file's include list — the compile database
+    /// closure's input (ladder/c_index.rs; plan v2.30 step 5b).
+    pub includes: BTreeMap<String, Vec<String>>,
 }
 
 /// One full-tree pass: the walk (refresh_tree) and then the phase-2
 /// key over every resolver input — config bytes, the `[graph]`
-/// declarations, md slug sets, TS fs facts.
+/// declarations, md slug sets, TS fs facts, the compile databases.
 pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) -> Result<WalkIndex> {
     let mut out = WalkIndex {
         live: BTreeSet::new(),
@@ -61,6 +64,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         search_roots: BTreeMap::new(),
         java: BTreeMap::new(),
         lua: BTreeSet::new(),
+        includes: BTreeMap::new(),
     };
     // md slug sets are resolver INPUTS like config bytes (the anchor
     // rung reads the target's headings), so they join the key — a
@@ -82,6 +86,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         tokens::fnv1a(roots_bytes(out.assets.iter()).as_slice()),
     ));
     key_inputs.extend(crate::graph::keys::ts_fs_facts(root, &out.live, &configs));
+    key_inputs.extend(crate::graph::compdb_find::facts(root, out.live.iter()));
     out.resolve_key = store::resolve_key(&out.live, &key_inputs);
     out.configs = configs.into_iter().map(|(path, _)| path).collect();
     Ok(out)
@@ -194,9 +199,10 @@ fn roots_bytes<'r>(roots: impl Iterator<Item = &'r String>) -> Vec<u8> {
 
 /// Cross-file resolver INPUTS per language (split from index_all at
 /// the E01 fn gate): md heading slugs, a page's id set, the Rust
-/// pub-use surface, a Java file's declared package and the templates a
-/// Lua file assigns to `package.path` all join the resolve_key — the
-/// same discipline, one throat. A Java header's imports stay out of the key: they steer
+/// pub-use surface, a Java file's declared package, the templates a
+/// Lua file assigns to `package.path` and a C-family file's include
+/// list (another file's chains follow it) all join the resolve_key —
+/// one throat. A Java header's imports stay out of the key: they steer
 /// only the file's own sites, which a change to them re-resolves as
 /// the file's refresh does. A Lua file without templates adds no key
 /// input, so a tree without them keys as it did before step 4.
@@ -233,6 +239,11 @@ fn lang_fact(
                 facts.push((rel.to_string(), tokens::fnv1a(&bytes)));
                 out.lua.extend(templates);
             }
+        }
+        Lang::C | Lang::Cpp => {
+            let specs = c_head::read(&text);
+            facts.push((rel.to_string(), tokens::fnv1a(specs.join("\0").as_bytes())));
+            out.includes.insert(rel.to_string(), specs);
         }
         _ => {}
     }

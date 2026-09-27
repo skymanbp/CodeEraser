@@ -44,13 +44,13 @@ candidate resolves it, and more than one candidate at a rung is `Unresolved(ambi
 picking a "best" would invent a path ([ladder/mod.rs:1-8](../../../cli/src/graph/ladder/mod.rs#L1)).
 `External` (stdlib, registry, `node_modules`) is a **correct terminal answer, not a miss**
 (same lines). Every resolved edge stores the rung that answered it
-([ladder/mod.rs:58](../../../cli/src/graph/ladder/mod.rs#L58)), which is what makes per-level precision
+([ladder/mod.rs:63](../../../cli/src/graph/ladder/mod.rs#L63)), which is what makes per-level precision
 attributable. The refusal vocabulary is frozen: `Dynamic, AmbiguousPaths, AmbiguousRoot,
 AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupported, Empty`
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
-([ladder/mod.rs:64-79](../../../cli/src/graph/ladder/mod.rs#L64)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:264-268](../../../cli/src/graph/ladder/mod.rs#L264)).
+([ladder/mod.rs:69-84](../../../cli/src/graph/ladder/mod.rs#L69)); a language without rungs must return
+`Unsupported`, never a silent skip ([ladder/mod.rs:271-275](../../../cli/src/graph/ladder/mod.rs#L271)).
 
 | Lang | R1 | R2 | R3 | R4 | R5 |
 |---|---|---|---|---|---|
@@ -60,7 +60,7 @@ dispatcher before any rung could read the empty string as a name — O60, L roun
 | Go | longest in-scope `go.mod` module prefix ([go.rs:44-71](../../../cli/src/graph/ladder/go.rs#L44)) | importer's module `replace` directives ([go.rs:85-110](../../../cli/src/graph/ladder/go.rs#L85)) | stdlib table, or a dotted first segment with no local match ⇒ External ([go.rs:143-149](../../../cli/src/graph/ladder/go.rs#L143)) | — | — |
 | Markdown | relative join, the path percent-decoded after the `#` split; a directory holding in-scope files is a package ([md.rs:73-104](../../../cli/src/graph/ladder/md.rs#L73), [md.rs:135-149](../../../cli/src/graph/ladder/md.rs#L135)); a walked asset the index holds no parse of (an image, a data file) is a file-level edge, its node standing as an asset ([md.rs:103-107](../../../cli/src/graph/ladder/md.rs#L103)) | anchor, percent-decoded, validated against the target's anchor set — rendered-text ATX and setext slugs plus raw-HTML anchor ids ([md.rs:155-170](../../../cli/src/graph/ladder/md.rs#L155), [md_slug.rs:41-56](../../../cli/src/graph/ladder/md_slug.rs#L41)) | reference-link definition substituted, chain rerun relabeled ([md.rs:174-206](../../../cli/src/graph/ladder/md.rs#L174)) | bare fragment = in-file section claim, taken as written ([md.rs:119-131](../../../cli/src/graph/ladder/md.rs#L119)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([md.rs:66](../../../cli/src/graph/ladder/md.rs#L66), [md.rs:74-79](../../../cli/src/graph/ladder/md.rs#L74)) |
 | Haskell | module name dots→slashes under the owning cabal's stanza source roots ([hs.rs:76-85](../../../cli/src/graph/ladder/hs.rs#L76)) — a stanza's roots include the `common` blocks it `import:`s ([cabal_parse.rs:215-221](../../../cli/src/graph/cabal_parse.rs#L215)), and an `import {-# SOURCE #-} M` answers `M.hs` like any import ([hs.rs:24-29](../../../cli/src/graph/ladder/hs.rs#L24)) | a module another in-corpus package exposes — the package a PackageImports spec names (`import "pkg" M`, the spec keeping the quoted package, [hs.rs:66](../../../cli/src/graph/ladder/hs.rs#L66)), else any package the owner's `build-depends` declares — under that package's library roots; two such packages ⇒ ambiguous_workspace ([hs.rs:11-16](../../../cli/src/graph/ladder/hs.rs#L11), [hs.rs:187-193](../../../cli/src/graph/ladder/hs.rs#L187)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([hs.rs:216-218](../../../cli/src/graph/ladder/hs.rs#L216)) | — | — |
-| C / C++ | the including file's own directory, quoted form only ([c.rs:45-52](../../../cli/src/graph/ladder/c.rs#L45)) | the declared `[graph.search_roots] c` directories (C++ shares the key); two holding two files ⇒ ambiguous_root ([c.rs:54-58](../../../cli/src/graph/ladder/c.rs#L54)) | the including file's own `compile_commands.json` entry: its `-I` / `-iquote` / `-isystem` directories in invocation order, first hit — a header has no entry ([c.rs:60-73](../../../cli/src/graph/ladder/c.rs#L60), [compdb.rs:72-86](../../../cli/src/graph/compdb.rs#L72)) | `<x>` with no hit ⇒ External, `"x"` with no hit ⇒ Unresolved(OutOfScope); never a basename search of the tree ([c.rs:17-21](../../../cli/src/graph/ladder/c.rs#L17)) | — |
+| C / C++ | the including file's own directory, quoted form only — unless every chain compiling the file passes `-I-` ([c.rs:7-10](../../../cli/src/graph/ladder/c.rs#L7), [c.rs:41-47](../../../cli/src/graph/ladder/c.rs#L41)) | the declared `[graph.search_roots] c` directories (C++ shares the key); two holding two files ⇒ ambiguous_root ([c.rs:64-68](../../../cli/src/graph/ladder/c.rs#L64)) | the compile databases clangd would find — `compile_commands.json`, `build/compile_commands.json`, `compile_flags.txt`, probed from each C-family file's directory upward whatever the ignore rules say ([compdb_find.rs:1-14](../../../cli/src/graph/compdb_find.rs#L1), [compdb_find.rs:24-28](../../../cli/src/graph/compdb_find.rs#L24)); each entry's `command` read as clang reads it ([cmdline.rs:1-13](../../../cli/src/graph/cmdline.rs#L1)) and its flags sorted into the preprocessor's classes — `-iquote` before `-I` before the system class, `-I-` and the prefix families as GCC reads them ([compdb_flags.rs:1-28](../../../cli/src/graph/compdb_flags.rs#L1), [compdb_flags.rs:43-56](../../../cli/src/graph/compdb_flags.rs#L43)); a file is searched along every chain it compiles under — its own entries, else the chains of the translation units whose include closure reaches it, else the nearest `compile_flags.txt` ([c_index.rs:1-13](../../../cli/src/graph/ladder/c_index.rs#L1), [c_index.rs:208-218](../../../cli/src/graph/ladder/c_index.rs#L208)) — first hit per chain in class order ([c_search.rs:56-90](../../../cli/src/graph/ladder/c_search.rs#L56)); one file ⇒ Resolved, two ⇒ ambiguous_root ([c.rs:70-93](../../../cli/src/graph/ladder/c.rs#L70)) | `<x>` with no hit ⇒ External, `"x"` with no hit ⇒ Unresolved(OutOfScope); never a basename search of the tree ([c.rs:26-30](../../../cli/src/graph/ladder/c.rs#L26)) | — |
 | Java | `import a.b.C` ⇒ the file that DECLARES `package a.b` and a top-level type `C` — the index is what each header declares, never where the file sits, and a second top-level type in a file of another name counts ([java.rs:1-10](../../../cli/src/graph/ladder/java.rs#L1), [java.rs:173-176](../../../cli/src/graph/ladder/java.rs#L173), [java_types.rs:1-6](../../../cli/src/graph/ladder/java_types.rs#L1)); an import a hand fold cut is completed from the header's reading of the line ([java.rs:96-102](../../../cli/src/graph/ladder/java.rs#L96)) | a shorter prefix naming such a file (a nested type, a static member), `a.b.*` ⇒ the package's directory, `a.b.C.*` ⇒ `C.java` ([java.rs:154-160](../../../cli/src/graph/ladder/java.rs#L154), [java.rs:185-195](../../../cli/src/graph/ladder/java.rs#L185)) | `type_ref` in the JLS 6.4.1 order: a member type the class enclosing the site inherits from a supertype another walked file declares — enclosing types innermost first, the nearest supertype level declaring it wins, two supertypes each declaring one ⇒ ambiguous_paths ([java_inherit.rs:1-14](../../../cli/src/graph/ladder/java_inherit.rs#L1), [java.rs:229-234](../../../cli/src/graph/ladder/java.rs#L229)); then the file's own single-type import, the name's file in its own package (own directory first), then the star-imported packages; a qualified name is whatever its head names, else a fully qualified name ([java.rs:206-227](../../../cli/src/graph/ladder/java.rs#L206)) | a name the JDK answers — a package prefix it exports, a `java.lang` type, a simple name under JDK-only star imports ⇒ External ([java_pick.rs:87-92](../../../cli/src/graph/ladder/java_pick.rs#L87), [java_jdk.rs:1-10](../../../cli/src/graph/ladder/java_jdk.rs#L1)) | a `main` source set sees no test code and a split package answers the importer's own part ([java_sets.rs:29-33](../../../cli/src/graph/ladder/java_sets.rs#L29)); a name the file declares itself ⇒ own_unit ([java_pick.rs:12-20](../../../cli/src/graph/ladder/java_pick.rs#L12)) |
 | Lua | `require "a.b"` ⇒ `a/b.lua` then `a/b/init.lua` under every search directory — the root, `src`, `lua`, the declared `[graph.search_roots] lua`, the requiring file's own directory and every `package.path` template the tree's own files assign; two directories answering two files ⇒ ambiguous_root ([lua.rs:62-70](../../../cli/src/graph/ladder/lua.rs#L62), [lua_path.rs:36-39](../../../cli/src/graph/ladder/lua_path.rs#L36)) | `dofile` / `loadfile` ⇒ the path beside the loading file, then under the root; first hit ([lua.rs:126-133](../../../cli/src/graph/ladder/lua.rs#L126)) | a standard-library or LuaJIT built-in name ⇒ External, whatever files the tree holds ([lua.rs:42-43](../../../cli/src/graph/ladder/lua.rs#L42), [lua.rs:55](../../../cli/src/graph/ladder/lua.rs#L55)) | — | — |
 | R | `source("x.R")` ⇒ beside the sourcing file, then under the root, then the declared `[graph.search_roots] r` (two answering two files ⇒ ambiguous_root); a URL ⇒ External ([r/mod.rs:27-37](../../../cli/src/graph/ladder/r/mod.rs#L27)) | `library` / `requireNamespace` / `pkg::` ⇒ the directory of the in-scope `DESCRIPTION` whose `Package:` names it — a package node contains its declared code only ([r/mod.rs:42-53](../../../cli/src/graph/ladder/r/mod.rs#L42), [r/description.rs:25-32](../../../cli/src/graph/ladder/r/description.rs#L25)) | a package no in-scope `DESCRIPTION` declares ⇒ External — base R, CRAN and Bioconductor live outside the corpus by construction, so no name table is needed ([r/mod.rs:16-18](../../../cli/src/graph/ladder/r/mod.rs#L16)) | — | — |
@@ -73,7 +73,7 @@ Numeric details that are policy, not taste:
   never a guess ([roots_ts.rs:64-68](../../../cli/src/graph/roots_ts.rs#L64),
   [roots_ts.rs:100-103](../../../cli/src/graph/roots_ts.rs#L100)). The chain's every file, and the
   presence of a `node_modules/` under any ancestor of a TS file, are resolve-key inputs
-  ([keys.rs:91-94](../../../cli/src/graph/keys.rs#L91)).
+  ([keys.rs:95-98](../../../cli/src/graph/keys.rs#L95)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
   ([py.rs:131-138](../../../cli/src/graph/ladder/py.rs#L131)); within one root, package-before-module is
   CPython's own finder order and therefore **not** ambiguity — only cross-root disagreement is
@@ -154,8 +154,8 @@ Two transformations happen on the way to the wire:
    ([Cost.hs:166-173](../../../core/app/CE/Graph/Cost.hs#L166)) since 2.29.0 — the two riding one
    inert list into the same comprehension as the rung filter
    ([Graph.hs:132](../../../core/app/CE/Graph.hs#L132), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
-   ([deadcode.rs:283-294](../../../cli/src/graph/deadcode.rs#L283)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:285-289](../../../cli/src/graph/deadcode.rs#L285)).
+   ([deadcode.rs:287-298](../../../cli/src/graph/deadcode.rs#L287)). An endpoint that is not a node
+   is a *named error*, never a panic ([deadcode.rs:289-293](../../../cli/src/graph/deadcode.rs#L289)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory — or, for a package whose code its manifest declares (an R package's `DESCRIPTION`,
    plan v2.30 step 4: the `Collate` files, else the files directly in `R/`), to that code alone,
@@ -200,7 +200,7 @@ degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = tru
 by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:162-185](../../../core/app/CE/Graph.hs#L162), [Graph.hs:162-185](../../../core/app/CE/Graph.hs#L162)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:547-561](../../../cli/src/graph/deadcode.rs#L547)) and `ce deadcode --check` relays the
+([deadcode.rs:551-565](../../../cli/src/graph/deadcode.rs#L551)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:127-147](../../../cli/src/main_cmds.rs#L127)).
 
 ### 5. Kept arcs and liveness
@@ -236,9 +236,9 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 ([Cost.hs:92-95](../../../core/app/CE/Graph/Cost.hs#L92)).
 
 Only file nodes carry entry facts; section and package rows get `0`
-([deadcode.rs:300-318](../../../cli/src/graph/deadcode.rs#L300)). Since proto **2.28.0**
+([deadcode.rs:304-322](../../../cli/src/graph/deadcode.rs#L304)). Since proto **2.28.0**
 (batch-7 slice 3 main body) the node row's last column carries **role facts** — the third and
-last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:321](../../../cli/src/graph/deadcode.rs#L321)) — and the
+last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:325](../../../cli/src/graph/deadcode.rs#L325)) — and the
 category membership Rust used to fuse into the flags column is decided by the core's
 **role table** `roleBits` ([Graph/Cost.hs:150-151](../../../core/app/CE/Graph/Cost.hs#L150)):
 the row's entry bits derive through `deriveFlags`
@@ -290,7 +290,7 @@ keep an asset alive, so it is never a candidate and never a measured node
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
 ([targets.rs:74-119](../../../cli/src/graph/deadcode/targets.rs#L74),
-[cabal.rs:101-126](../../../cli/src/graph/cabal.rs#L101)). A tree whose manifest lives
+[cabal.rs:100-125](../../../cli/src/graph/cabal.rs#L100)). A tree whose manifest lives
 elsewhere — the test-suite submodule is a slice of the `cli` package, its binaries cargo
 targets only in the superproject's Cargo.toml — declares its roots in `ce.toml [graph]
 crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for this role
@@ -298,7 +298,7 @@ crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for t
 Rust ladder's `mod` and `crate::` rungs alike
 ([rs.rs:81](../../../cli/src/graph/ladder/rs.rs#L81)), one normalizer serving both readers
 ([graph.rs:77](../../../cli/src/config/graph.rs#L77)); a declared path the walk does not hold, or that
-is no Rust file, is refused by name ([walkidx.rs:149](../../../cli/src/dedup/walkidx.rs#L149)). The legacy flags column this
+is no Rust file, is refused by name ([walkidx.rs:154](../../../cli/src/dedup/walkidx.rs#L154)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.
@@ -349,7 +349,7 @@ The per-node join surface, computed only for the requested `pos` indices, is
 [Position.hs:14-32](../../../core/app/CE/Graph/Position.hs#L14)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
-([deadcode.rs:358-361](../../../cli/src/graph/deadcode.rs#L358)).
+([deadcode.rs:362-365](../../../cli/src/graph/deadcode.rs#L362)).
 
 ### 7. The four-way verdict
 
@@ -380,11 +380,11 @@ over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead
 
 Naming back on the Rust side is by position — `VERDICT_NAMES[code - 1]`
 ([deadcode.rs:50-55](../../../cli/src/graph/deadcode.rs#L50),
-[deadcode.rs:456-465](../../../cli/src/graph/deadcode.rs#L456)) — and a code past the four this side
+[deadcode.rs:460-469](../../../cli/src/graph/deadcode.rs#L460)) — and a code past the four this side
 knows is treated as wire-version skew, not a panic (same lines). The `why` string is a two-way
 split on the same axis: codes 1–2 read *"no kept in-edge and no entry flag"*, codes 3–4 read
 *"referenced only from dead code; no entry flag"*
-([deadcode.rs:516-520](../../../cli/src/graph/deadcode.rs#L516)).
+([deadcode.rs:520-524](../../../cli/src/graph/deadcode.rs#L520)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
@@ -394,10 +394,10 @@ the node kind column it always received ([Graph.hs:149-151](../../../core/app/CE
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
 arriving in `dead` refuses as wire skew, never a directory erase
-([deadcode.rs:502-509](../../../cli/src/graph/deadcode.rs#L502)); an absent `fail` bit or
+([deadcode.rs:506-513](../../../cli/src/graph/deadcode.rs#L506)); an absent `fail` bit or
 `reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
 core away, so the client's old fallback conjunction was unreachable and was retired (L round
-step #15, O62; [deadcode.rs:485-489](../../../cli/src/graph/deadcode.rs#L485)). Both lists, the counts, and
+step #15, O62; [deadcode.rs:489-493](../../../cli/src/graph/deadcode.rs#L489)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document
 ([report.rs:116-130](../../../cli/src/report.rs#L116)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
@@ -415,7 +415,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:257](../../../cli/src/graph/deadcode.rs#L257)), fences every returned index and bounds the column ([deadcode.rs:512](../../../cli/src/graph/deadcode.rs#L512)), and renders the trust word beside each dead file ([deadcode.rs:443](../../../cli/src/graph/deadcode.rs#L443)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
+([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:116](../../../cli/src/graph/load.rs#L116), [deadcode.rs:261](../../../cli/src/graph/deadcode.rs#L261)), fences every returned index and bounds the column ([deadcode.rs:516](../../../cli/src/graph/deadcode.rs#L516)), and renders the trust word beside each dead file ([deadcode.rs:447](../../../cli/src/graph/deadcode.rs#L447)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
 
 ### 9. Acceptance
 

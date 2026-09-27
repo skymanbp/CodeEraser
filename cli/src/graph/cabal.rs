@@ -72,8 +72,7 @@ pub struct Cabal {
 const HEADS: [&str; 4] = ["library", "executable", "test-suite", "benchmark"];
 
 pub fn parse(root: &Path, rel: &str) -> Option<Cabal> {
-    let text = std::fs::read_to_string(root.join(rel)).ok()?;
-    let dir = roots::parent_dir(rel);
+    let (text, dir) = roots::beside(root, rel)?;
     let mut out = Cabal {
         dir: dir.clone(),
         name: String::new(),

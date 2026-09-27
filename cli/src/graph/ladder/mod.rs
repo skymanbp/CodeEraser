@@ -24,6 +24,11 @@ use std::path::Path;
 use std::rc::Rc;
 
 pub mod c;
+// pub: the walk reads every C-family file's include list with it
+pub mod c_head;
+// pub: the deadcode request reads the forced-include arcs with it
+pub mod c_index;
+mod c_search;
 pub mod go;
 pub mod hs;
 pub mod java;
@@ -174,10 +179,11 @@ impl Outcome {
 /// ladder reads no file (plan v2.30 step 3); `lua` the templates the
 /// walked Lua files assign to `package.path` (lua_path.rs, step 4).
 /// `assets` are the walked files the index never holds — no judged
-/// language: images, styles, scripts, fonts, data — the second
-/// candidate set of the HTML rungs, since a page names what the site
-/// serves (step 5; the walk lists them and the key hashes them, so a
-/// target is still never minted from the filesystem).
+/// language: images, styles, scripts, fonts, data — the HTML rungs'
+/// second candidate set (step 5; the walk lists them and the key
+/// hashes them, so a target is still never minted from the
+/// filesystem). `includes` is each walked C-family file's include
+/// list (c_head.rs), the compile database closure's input (step 5b).
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
     pub assets: &'a BTreeSet<String>,
@@ -188,6 +194,7 @@ pub struct Scope<'a> {
     pub search_roots: &'a BTreeMap<String, BTreeSet<String>>,
     pub java: &'a BTreeMap<String, java_header::Header>,
     pub lua: &'a BTreeSet<lua_path::Template>,
+    pub includes: &'a BTreeMap<String, Vec<String>>,
 }
 
 /// The memo's slot table, aliased so the shape reads once.

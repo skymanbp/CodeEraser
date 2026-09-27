@@ -14,16 +14,20 @@ use std::path::Path;
 /// resolution — leaving them out of the key would serve stale edges
 /// (2f refinement); an extends target under any other name joins the
 /// key through the chain walk instead (`ts_fs_facts`, plan v2.30 step
-/// 5b). compile_commands.json (plan v2.30 step 2) is the C-family
-/// ladder's third rung wherever it sits — a build directory inside the
-/// tree is the common home; an R package's DESCRIPTION (step 4) names
-/// the package the R ladder's second rung reaches.
+/// 5b). compile_commands.json and compile_flags.txt (step 2, completed
+/// in step 5b item 14) join the key wherever the walk reads them; the
+/// C-family ladder itself finds its databases by clangd's probe
+/// (compdb_find.rs) — a gitignored build directory's database never
+/// reaches the walk, so the probe's own facts join the key beside these
+/// (dedup/walkidx.rs). An R package's DESCRIPTION (step 4) names the
+/// package the R ladder's second rung reaches.
 const CONFIG_NAMES: &[&str] = &[
     "Cargo.toml",
     "go.mod",
     "package.json",
     "pyproject.toml",
     "compile_commands.json",
+    "compile_flags.txt",
     "DESCRIPTION",
 ];
 

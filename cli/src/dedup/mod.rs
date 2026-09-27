@@ -257,6 +257,7 @@ fn resolve_edges(
         search_roots: &walked.search_roots,
         java: &walked.java,
         lua: &walked.lua,
+        includes: &walked.includes,
     };
     let mut resolver = |s: &store::CachedSite| wire::edges(s, &scope);
     if idx.ensure_edges_resolved(walked.resolve_key, &mut resolver)? {

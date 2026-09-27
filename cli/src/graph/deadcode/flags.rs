@@ -88,10 +88,8 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     if listed(ENTRY_NAMES, base) || path == "init.lua" {
         r |= ROLE_ENTRY_NAMED;
     }
-    if matches!(
-        base.rsplit_once('.').map(|(_, ext)| ext),
-        Some("c" | "cc" | "cpp" | "cxx")
-    ) {
+    // one table with the compile database's coverage (compdb_find.rs)
+    if crate::graph::compdb_find::is_unit(base) {
         r |= ROLE_UNIT;
     }
     if entry_dir(path, declared) {

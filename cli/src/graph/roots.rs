@@ -70,6 +70,15 @@ pub(crate) fn parent_dir(rel: &str) -> String {
         .map_or(String::new(), |i| rel[..i].to_string())
 }
 
+/// A config file's text with the directory it speaks for: the opening
+/// every reader of a per-directory file shares (a cabal file, a
+/// `compile_flags.txt`) - one throat, or the two openings read as
+/// clones of each other.
+pub(crate) fn beside(root: &Path, rel: &str) -> Option<(String, String)> {
+    let text = std::fs::read_to_string(root.join(rel)).ok()?;
+    Some((text, parent_dir(rel)))
+}
+
 /// A directory and every ancestor of it up to the repo root (""),
 /// nearest first — the order Node walks node_modules in (ladder/ts.rs,
 /// keys.rs; plan v2.30 step 5b).

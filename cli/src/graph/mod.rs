@@ -9,7 +9,10 @@
 pub mod cabal;
 pub mod canvas;
 pub mod cargo;
+pub mod cmdline;
 pub mod compdb;
+pub mod compdb_find;
+pub mod compdb_flags;
 pub mod deadcode;
 pub mod gomod;
 pub mod jsonc;
