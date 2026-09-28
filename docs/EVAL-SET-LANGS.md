@@ -699,3 +699,17 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 `luac.c`；fmt 28 = 20 处引号形的 `gtest/gtest.h` / `gmock/gmock.h`（`test/*.cc`、`test/*.h`，以及 gtest 自己的 `gmock/gmock.h:303` 与
 `gtest/gtest-spi.h:39`，真值都在 `test/gtest/`，与上面两道 missed 同类）+ 8 处引号形的 absl 头（`gtest.h` 四处、`gmock-gtest-all.cc` 四处，
 未内置于树、真值 external）。两类都是构建脚本声明的目录：经编译数据库（R3）或 `[graph.search_roots]`（R2）到阶梯，设计册 §8 的立场不变。
+
+## 步 7 之后：十一份精度册退役并重生成（2026-09-28）
+
+步 7（3e3daa27，文档与事实）给语言表 `cli/src/scan/lang.rs` 加了一个只读面 `Lang::with_grammar()`（文法计数从此读它、不再刮取源码文本），
+答案不动一处；但 `lang.rs` 在精度册的「答案出自哪些代码」清单里（`lang_provenance.rs` 的 `ANSWERED_BY`：共用阶梯、路径助手、站点检测器、
+解析器配置名、选宇宙的走查、语言登记表、钉住的文法），门只按路径读提交历史、分不出只读面与表的改动，CI 在该提交上按名拒了全部十一份（gson 第一个
+被点名："the code its answers come from moved after 92ed92e - regenerate it"）。本地收尾链没看见——门读的是提交，未提交的 `lang.rs` 改动对它不存在，
+全量跑那一腿是绿的。两件事随之落下：
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`（与步 5 提交 A 的先例同形——档在不在与旗一致，`Exam::filed` 按每个语料核）；
+  门 `lang_docs_answer_the_code_they_name` 补一条工作树腿：`ANSWERED_BY` 与各阶梯的路径在工作树里有未提交的改动（暂存或未暂存、含未跟踪）就按名拒，
+  本地先于提交看见同一件事。
+- **重生成**（下一提交）：在本提交的干净树上按语料逐份生成、每份生成后挪出树再生成下一份（生成器把 `git status --porcelain` 非空读作 dirty），
+  十一份齐了放回，六门 `stage` 翻回 `Scored`；读数与退役前逐份比对，记在下文。
