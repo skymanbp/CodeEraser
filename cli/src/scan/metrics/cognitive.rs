@@ -14,6 +14,9 @@
 //! kind spelled `if…` as one. An `else if` never pays double: the
 //! wrapping clause yields to the inner if, which scores flat +1 and
 //! keeps its children at the chain's nesting level (Sonar Appendix B).
+//! Both table readings are proved on the grammars, beyond the
+//! batteries' rows: the tests repo's it/coc_if_kinds_proof.rs walks
+//! every pinned node-types.json (plan v2.30 step 6).
 //!
 //! Headers do not nest (user ruling 2026-09-24, all languages): a
 //! structure's condition, loop clause, switch value or catch parameter
