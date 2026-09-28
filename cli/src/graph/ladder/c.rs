@@ -1,5 +1,6 @@
 //! C / C++ rungs (plan v2.30 step 2; the compile database completed
-//! in step 5b, item 14; design booklet §8 row C / C++). The site is a
+//! in step 5b, item 14; the `include` rung in step 6; design booklet
+//! §8 row C / C++). The site is a
 //! `preproc_include`, and its spec keeps the delimiter form the
 //! detector left it — `x.h` for `"x.h"` (quotes trimmed like every
 //! string specifier), `<x.h>` for the system form — because the form
@@ -23,15 +24,35 @@
 //!      stack's directories before `/I`), first hit per chain; two
 //!      chains answering two files is ambiguous_root — a name the build
 //!      compiles as two files;
-//!   R4 External: the system form with no hit is a toolchain or system
+//!   R4 the `include` directory beside the including file's own
+//!      directory or beside any ancestor of it, the tree root among
+//!      them — the layout a build compiles with `-I include` so that an
+//!      in-tree `#include <lib/x.h>` spells the way the installed header
+//!      under `$(includedir)` does (fmt's CMake declares that one
+//!      directory for its library and every test target: the step 6
+//!      audit's truths, docs/EVAL-SET-LANGS.md); both forms, and only
+//!      for a file no compile chain reaches — a tree that carries its
+//!      build configuration has said what its include directories are,
+//!      and a name that build does not find is not found; a directory a
+//!      build script alone declares (a makefile's `-I`, a
+//!      `target_include_directories`) reaches the ladder as a compile
+//!      database (R3) or a declared root (R2), never by reading the
+//!      script; two `include` directories on the ancestry holding two
+//!      files is ambiguous_root — which `-I` came first is the build's,
+//!      no fact of the tree;
+//!   R5 External: the system form with no hit is a toolchain or system
 //!      header. The quoted form with no hit is out_of_scope.
 //! NEVER a basename search of the tree: two `util.h` in one repository
 //! are two files, and picking one would invent an edge (the register's
-//! "no basename search" row).
+//! "no basename search" row); R4 joins one fixed directory name onto
+//! the includer's own ancestry and searches for nothing.
 
 use super::{Outcome, Reason, Scope, c_index, c_search, paths};
 use crate::graph::roots;
 use std::collections::BTreeSet;
+
+/// The one directory name R4 joins onto the includer's ancestry.
+const INCLUDE_DIR: &str = "include";
 
 pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome {
     let (name, system) = c_search::form(spec);
@@ -45,11 +66,28 @@ pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome {
         .flatten()
         .or_else(|| declared_rung(name, scope))
         .or_else(|| database_rung(&idx, &chains, from, name, system, scope))
+        .or_else(|| {
+            chains
+                .is_empty()
+                .then(|| include_rung(from, name, scope))
+                .flatten()
+        })
         .unwrap_or(if system {
-            Outcome::External { rung: 4 }
+            Outcome::External { rung: 5 }
         } else {
             Outcome::Unresolved(Reason::OutOfScope)
         })
+}
+
+/// R4: `include` beside the including file's own directory and beside
+/// each ancestor of it, the tree root among them; one distinct file
+/// resolves, two refuse.
+fn include_rung(from: &str, name: &str, scope: &Scope) -> Option<Outcome> {
+    let dir = roots::parent_dir(from);
+    let hits: BTreeSet<String> = roots::ancestors(&dir)
+        .filter_map(|d| c_search::in_scope(&roots::join_dir(d, INCLUDE_DIR), name, scope.files))
+        .collect();
+    paths::one_of(hits, 4)
 }
 
 /// R1: the including file's own directory.

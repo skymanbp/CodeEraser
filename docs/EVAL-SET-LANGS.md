@@ -640,3 +640,21 @@ PUBLIC 目录给每个测试目标声明的唯一包含目录），2 道 `gtest/
 **代理另记的语料约定**（`notes`，逐条带批号）：根 makefile 编译每个根级 `.c`（`CORE_O / LIB_O / LUA_O`），不声明任何包含目录，
 引号形一律在引用者自己的目录解出；`testes/libs/makefile` 自己声明 `-I`；fmt 的每个库目标只有 `include/` 一个声明目录
 （`setup_target`），每个 `add_fmt_test` 目标经 `test-main` 的 PUBLIC 目录到 `include/`、经 gtest 的 SYSTEM 目录到 `test/gtest`。
+
+### 阶梯（提交 B′，2026-09-28）
+
+`cli/src/graph/ladder/c.rs` 加第四级（设计册 §8 C/C++ 行是权威，这里只记与考题有关的部分）。**为什么加**：上一小节记下 fmt 17 道
+文件真值里 11 道要 `include/`，阶梯对其中 12 道引号形答 out_of_scope、对 `<fmt/chrono.h>` 答 external（判分会记一道 `wrong`）。
+`include/` 不是 fmt 一家的写法：构建用 `-I include` 让树内的 `#include <fmt/chrono.h>` 与装好之后 `$(includedir)` 下的拼法一致，
+头文件才能在树内与装机后用同一句话引用；按约定读它是 join 一个固定的目录名，不是按 basename 搜树。**加的是什么**：R4 = 引用文件自己的
+目录及其每级祖先（含仓根）旁的 `include/` 与名字 join，两种形都问，只问没有任何编译链到达的文件——树带了 `compile_commands.json` /
+`compile_flags.txt` 就由它说了算，构建找不到的名字就是找不到；两个祖先的 `include/` 各持一个文件 = ambiguous_root（哪个 `-I` 在前是
+构建的事，树上没有这个事实）；External 从 R4 挪到 R5；`graph/store.rs` 的 `GRAPH_REV` 21 → 22，已建的索引（考题跑在里面的语料克隆）
+把 include 边与级号重算一次。**仍然不读构建脚本**：`test/gtest/CMakeLists.txt` 给 gtest 的 SYSTEM 目录、`testes/libs/makefile` 的
+`-I$(LUA_DIR)`，都要经编译数据库（R3）或声明根（R2）到阶梯——读 Makefile / CMake 是第二个构建系统读者，变量与生成器表达式让它永远
+只对一半，而编译数据库是每个构建系统都会吐出的同一份机器格式。**按真值表推算**（判分前的推算，读数以提交 C 的精度册为准）：lua 74 道
+文件真值 73 道仍由 R1 答出，`testes/libs/lib2.c:2` 仍 out_of_scope（lua 的树没有 `include/`）；fmt 17 道 = R1 4 + R4 11，
+`test/no-builtin-types-test.cc:8` 与 `test/core-test.cc:29` 的 gtest 头仍 out_of_scope（`test/gtest` 不叫 `include`，也没人声明它：
+在带 ce.toml 的树上 `[graph.search_roots] c = ["test/gtest"]` 答得出，考题判的是钉住的树本身）。**顺序门**：阶梯改动落在两张审阅表的
+提交（dea7914f）之后，`lang_provenance` 核的盲窗（抽样 515071b → 审阅表）里阶梯零提交的事实不变；C / C++ 两行仍是 `Audited`，
+精度册随提交 C 在这个提交之后的干净树上生成。

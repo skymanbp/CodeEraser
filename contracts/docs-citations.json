@@ -3971,35 +3971,47 @@
     "end": 98,
     "text": "pub fn ts_fs_facts("
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|172ad781aa1141fc|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 43,
+    "end": 48,
+    "text": "//!   R5 External: the system form with no hit is a toolchain or system"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|1ece2b8ba9b80d54|0": {
     "target": "../../../cli/src/graph/ladder/c.rs",
-    "line": 70,
-    "end": 93,
+    "line": 108,
+    "end": 131,
     "text": "/// R3: the first hit along each chain the file compiles under; one"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|2bc9bec327cff447|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 27,
+    "end": 42,
+    "text": "//!   R4 the `include` directory beside the including file's own"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|6d3d1147499e4da4|0": {
     "target": "../../../cli/src/graph/ladder/c.rs",
-    "line": 7,
-    "end": 10,
+    "line": 8,
+    "end": 11,
     "text": "//!   R1 the including file's own directory, for the quoted form only —"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|799dd1c7c8a6a304|0": {
-    "target": "../../../cli/src/graph/ladder/c.rs",
-    "line": 26,
-    "end": 30,
-    "text": "//!   R4 External: the system form with no hit is a toolchain or system"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|9b9ef387b9fef01e|0": {
     "target": "../../../cli/src/graph/ladder/c.rs",
-    "line": 64,
-    "end": 68,
+    "line": 102,
+    "end": 106,
     "text": "/// R2: every declared root joined with the name; one distinct hit"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|b46cdcde5e03f57c|0": {
     "target": "../../../cli/src/graph/ladder/c.rs",
-    "line": 41,
-    "end": 47,
+    "line": 62,
+    "end": 74,
     "text": "let idx = c_index::index(scope);"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|e9b7837dda63680b|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 82,
+    "end": 91,
+    "text": "/// R4: `include` beside the including file's own directory and beside"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c_index.rs|7b50f4fdea5e869c|0": {
     "target": "../../../cli/src/graph/ladder/c_index.rs",
@@ -4733,15 +4745,15 @@
     "line": 48,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|7fc0dcedbf775f0b|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|15a085b97e7326c6|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 144,
-    "text": "pub const GRAPH_REV: i64 = 21;"
+    "line": 152,
+    "text": "pub const GRAPH_REV: i64 = 22;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 184,
-    "end": 186,
+    "line": 192,
+    "end": 194,
     "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {

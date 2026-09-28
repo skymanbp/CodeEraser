@@ -97,6 +97,14 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// TS `import ""` / Go `import ""` keeps its site with an empty spec
 /// for the unresolved ledger (`Reason::Empty`) instead of being
 /// dropped at detection — stored site rows move.
+/// 22 = plan v2.30 step 6's ladder commit gives the C family a fourth
+/// rung — the `include` directory beside the including file's own
+/// directory or any ancestor of it, for a file no compile chain
+/// reaches (ladder/c.rs) — and moves its External rung to 5: stored
+/// include edges and their rungs are re-derived once. The revision is
+/// part of the storage key, so an index a development build of an
+/// earlier step wrote (a corpus clone the exams run in) cannot keep
+/// the out_of_scope rows the new rung answers.
 /// 21 = plan v2.30 step 5b-6 widens the declaration domain by rule: a
 /// Java `static` field or interface constant, a C / C++ file-scope
 /// variable definition and a TypeScript module-level `const` / `let` /
@@ -141,7 +149,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 21;
+pub const GRAPH_REV: i64 = 22;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
