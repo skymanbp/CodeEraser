@@ -1,0 +1,356 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "c",
+    "name": "lua",
+    "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+  },
+  "excluded": {
+    "other_extension": 71
+  },
+  "files": [
+    {
+      "lang": "c",
+      "path": "lapi.c",
+      "sha256": "d744084bfec5049f6eaa509f4f353886a8c4fa8c8ef875d9f5bd3783caa46e09",
+      "sites": {
+        "include": 18
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lauxlib.c",
+      "sha256": "12479bc0ada905452185278dc681d72eb865e1fc247a0143227c210bc3f9dd78",
+      "sites": {
+        "include": 11
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lbaselib.c",
+      "sha256": "c86efd0ab819c08a4d253d2071ba6ef58bd63d0d1a8b8b383c3bc6b661167028",
+      "sites": {
+        "include": 9
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lcode.c",
+      "sha256": "9ad73605143555e094f00bd87b0dadb3002c440e7ed743bdd09637e73466cbb6",
+      "sites": {
+        "include": 19
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lcorolib.c",
+      "sha256": "14ab32084fafe825b6dca8c2d69fbbfd68e6a5c442acf4b18cc78f9dc15a820a",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lctype.c",
+      "sha256": "2b8e4894b6cff2afc111c1c996de4b78b4db2cf0c83d485d396806baa9e5b28b",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ldblib.c",
+      "sha256": "af19f54caa086a202d017a46233d7ee20c3709ae1a30548ac0ebcff5ef3023a9",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ldebug.c",
+      "sha256": "25b9076aeeedab05797e28ace203e101fe1a50238a374ff76f1297d9d41420bb",
+      "sites": {
+        "include": 17
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ldo.c",
+      "sha256": "6dd1265ccbc686073580a49de19e7fb5af80133d5decee104fc012dbfaaab3b8",
+      "sites": {
+        "include": 21
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ldump.c",
+      "sha256": "8571aa21018d50033e32ad2ee28ecf28db303125d472a8fdf6bb9bc57335d978",
+      "sites": {
+        "include": 10
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lfunc.c",
+      "sha256": "033d3511a16e3c0947a69c12d47f54a7d48acf41060355e72779f6459c7f75f3",
+      "sites": {
+        "include": 10
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lgc.c",
+      "sha256": "137e646f2e240311a58312fa024d5426a7138132b4bb6af7e6ec2a037adc0f9f",
+      "sites": {
+        "include": 13
+      }
+    },
+    {
+      "lang": "c",
+      "path": "linit.c",
+      "sha256": "76225baba77ef9abfc8e06919cb83e34b7c6f65292a200bffa95513782984696",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "c",
+      "path": "liolib.c",
+      "sha256": "7e941581f34a8443e4ffbe690e9ee68332c7431a3a27e1d35b2312437459241c",
+      "sites": {
+        "include": 12
+      }
+    },
+    {
+      "lang": "c",
+      "path": "llex.c",
+      "sha256": "f24fe0ca1cd3c1050c8b229c26a4d31b4abd21bf3b352234efb6b0d7059e1c56",
+      "sites": {
+        "include": 15
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lmathlib.c",
+      "sha256": "287de525bdd80db74bdec1abe000eb0c5af972f87ad451b1c281e7841d69395c",
+      "sites": {
+        "include": 10
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lmem.c",
+      "sha256": "7a63908f22ac826f3eb6826bd106d4eed40a7df749da8a87c06713e980fad099",
+      "sites": {
+        "include": 9
+      }
+    },
+    {
+      "lang": "c",
+      "path": "loadlib.c",
+      "sha256": "234e1f3495fe86344ad9e3014b05f4f5a7b9e57370062c01c6b415add7efd9e9",
+      "sites": {
+        "include": 10
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lobject.c",
+      "sha256": "56b90d71d3bf45f98be32f1ebe2423d49451efbf4487793df1817825e10303e2",
+      "sites": {
+        "include": 17
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lopcodes.c",
+      "sha256": "fc4036555d17e68bbf4d49de9e0762c0da42886ad7caed10cc9862ed7926ba18",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "c",
+      "path": "loslib.c",
+      "sha256": "5cf35fb57b905492b93b7e053b53ccf00a77a33e8034488b91ea622f1e35b0b2",
+      "sites": {
+        "include": 11
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lparser.c",
+      "sha256": "918436a59eb67e22e08cc0aede69926a9af9ee106c97ce6bd9568b05c728a8c6",
+      "sites": {
+        "include": 16
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lstate.c",
+      "sha256": "19335bd0c9c3ea691cf0cbadcae4b40c08116aa8477bf661c7fa951e5874af1e",
+      "sites": {
+        "include": 15
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lstring.c",
+      "sha256": "440700ccb68929ae30339b0837c5e8063e53760a6ce65dca281d9d8e8ffde559",
+      "sites": {
+        "include": 9
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lstrlib.c",
+      "sha256": "a8de67c6e3dfb773fdc0a599f887f559864a7061c1e633ec48a4e093fbd5dd72",
+      "sites": {
+        "include": 14
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ltable.c",
+      "sha256": "a271ba45de53d05c7b47cf8ad86628f2c35c85e920c9d29f6c7e133c5b7664f2",
+      "sites": {
+        "include": 14
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ltablib.c",
+      "sha256": "4bde576ca5012b03161d4bf38b4d8fc2aab1bbed1993eb6e629620f1f5eb0f4c",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ltests.c",
+      "sha256": "62a7015b036d366addd131e4f046f38557d66b8f48aae120e8aad992f3d90199",
+      "sites": {
+        "include": 24
+      }
+    },
+    {
+      "lang": "c",
+      "path": "ltm.c",
+      "sha256": "86e85bbb147f63fbbc67dc451f401fe4bb9b7ecc8c05e003f664dfe9717d860b",
+      "sites": {
+        "include": 12
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lua.c",
+      "sha256": "17ce8e73dd3586b84076ceaad9d638887723a1c60945c6ee086d723a6e61453f",
+      "sites": {
+        "include": 15
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lundump.c",
+      "sha256": "4567fbd6689304ae675337805ddb5d13ecda6df0323655bf498978da1a93862c",
+      "sites": {
+        "include": 13
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lutf8lib.c",
+      "sha256": "7c44f0b2a6ce5f54991baa1bcb643bf563e2dcd7a59be0cd0b0eefe0936ea04a",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lvm.c",
+      "sha256": "67976742c598700cba2c7898a9a7ca8a8ebfae8b32d273f71b90cfb33c88d786",
+      "sites": {
+        "include": 22
+      }
+    },
+    {
+      "lang": "c",
+      "path": "lzio.c",
+      "sha256": "9495c7396d04a857e4e6ae917a72ab6906855d30f7dc851527a87cc16d01fcc1",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "c",
+      "path": "onelua.c",
+      "sha256": "71d27fe16e09425f14b5daca83622e0f1396c05e07724b771afb06d62eadd2d4",
+      "sites": {
+        "include": 52
+      }
+    },
+    {
+      "lang": "c",
+      "path": "testes/libs/lib1.c",
+      "sha256": "9c33618ee10c5415a1ba3472dda923c10d3e3a1fcff82da596ab0d0502c0e13a",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "c",
+      "path": "testes/libs/lib11.c",
+      "sha256": "dde226889405638e8c71da9c1d156c473f179dbab99fc5cd3ea38609756d6545",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "c",
+      "path": "testes/libs/lib2.c",
+      "sha256": "4066f55ac4944015d2c3139ccbc51e7aef897ff81bb694223a568880debc925b",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "c",
+      "path": "testes/libs/lib21.c",
+      "sha256": "29f15be9dda895dbd70f4bd6ce489cf704c23a7305ddec6550e72858c2708f24",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "c",
+      "path": "testes/libs/lib22.c",
+      "sha256": "841412145e4d6150e2323a95f78c1833595a8e0e315daf21777ae42351ea3e02",
+      "sites": {
+        "include": 3
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "37d9772d192339e7cb341253bcfab5a42d76892f",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope and that the product's own walk reads at the pinned tip (a tracked file the walk refuses is tallied, never asked about), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "c"
+    ]
+  },
+  "summary": {
+    "files": 40,
+    "sites_by": {
+      "c/include": 476
+    },
+    "total_sites": 476
+  }
+}

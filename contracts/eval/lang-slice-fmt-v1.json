@@ -1,0 +1,627 @@
+{
+  "constants": {
+    "min_per_kind": 15,
+    "r0_share_trigger": 0.8
+  },
+  "corpus": {
+    "lang": "cpp",
+    "name": "fmt",
+    "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+  },
+  "excluded": {
+    "other_extension": 72
+  },
+  "files": [
+    {
+      "lang": "cpp",
+      "path": "include/fmt/args.h",
+      "sha256": "b105f72e62d7eb403c12c4c0ba22a94d42344b20206664814bf9568c6785fc83",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/base.h",
+      "sha256": "2f5945de9d42002ded554467ae6411927b25dae678f8588113e820cb4370004a",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/chrono.h",
+      "sha256": "092c61932f3a53f771e9d4c65f625a72767b3adf3b669bda2c32f0b49298abcd",
+      "sites": {
+        "include": 10
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/color.h",
+      "sha256": "80db3364b9f5b8247f4012d05d1353be1d0aed7c1b5bd65bdcd2817d50b64e7c",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/compile.h",
+      "sha256": "c8d933b1cdf923d2d39295a402c17488dd1afc96456185465e15155ef4255dfd",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/core.h",
+      "sha256": "3aa917f6c2907ccd6e1ac06acf4b489501199c4e8812aaa025b496917202108c",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/enum.h",
+      "sha256": "ff102a9188d281d21212176bcb25ceff95e7b5db625e50027d06d7d2c5580244",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/fmt-c.h",
+      "sha256": "3f2acf7887a3d68e261e3a2ece6777213016348b80520864176f2553e9cf60a2",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/format-inl.h",
+      "sha256": "fcfaa40922543d6ff70579f198974181624f98694248780bdf035e0dfe7daf15",
+      "sites": {
+        "include": 7
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/format.h",
+      "sha256": "3e98640d587dd283248a8656e22cc1d3c0ae54c90dfc73302fc1b8ca9cdeaa07",
+      "sites": {
+        "include": 14
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/os.h",
+      "sha256": "812c0d7e95991caef7e6ef1bd4e8508dc930f615600e78e1121b3eb5dbc8bf20",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/ostream.h",
+      "sha256": "b7870ed6c831e07c9ddc5b4c9ec189a8e2de63b0681a0cec3d6ec0dbfd73ded9",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/printf.h",
+      "sha256": "380cbb6439d294988da719795ca4e8fe57a5f6a1c9fa9badf5e708fb649dd74e",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/ranges.h",
+      "sha256": "e81bb7b20aa884db81143fea8eac41e4da82f9c4f54694ce6a89905de9383928",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/std.h",
+      "sha256": "bd35c6c89b2ab577e2300ef62ec8093bc0842ee097635cc655fd2598dea1f8f7",
+      "sites": {
+        "include": 17
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "include/fmt/xchar.h",
+      "sha256": "84d263074870c4fe3cb663df2102dddf12a34e8e2032c46757f3274502daacd9",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "src/fmt-c.cc",
+      "sha256": "379195df3c22ebfa74e663c01e23e3564fa5cff062d54cd837414468a24057aa",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "src/fmt.cc",
+      "sha256": "cfd30492a209b0d068a4f73f45e907e15421392ffdd2a4863bd75097007fd822",
+      "sites": {
+        "include": 68
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "src/format.cc",
+      "sha256": "5ccc4d8a363bd5c570782bc3dd92020664b1aa89de2d48b3b87d040c8c7bcc02",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "src/os.cc",
+      "sha256": "16906d8fa90bc17952a091d4d696232a431c79f3be8b707b1972e997853fae5b",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/add-subdirectory-test/main.cc",
+      "sha256": "a1dffad8659518d3afc6ec6a76f0ceeff7a978b73e8ac56229298bdd61723f4e",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/args-test.cc",
+      "sha256": "488129bd9c4083f3e1a641e57dca68a67266778818cd7a1e0d9f2d5d9bf5f245",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/assert-test.cc",
+      "sha256": "49305211b5d48d4e0fe20a4cf4b8f6a9c833e9e0172b0ba6be365cf8045c1b46",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/chrono-test.cc",
+      "sha256": "332aead890adf8ddc093a241e563ffe11562add644d0c7d221fec0f6bcebb196",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/color-test.cc",
+      "sha256": "978d8c89099f7a98abc40c4f24516b111ef50630c9163ea6e54c41eec0c2df78",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/compile-test.cc",
+      "sha256": "31e63ba7bfe275d869a000f75556bca98d0cce51d2aaf6ebf0a3e859f7c04c4e",
+      "sites": {
+        "include": 12
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/core-test.cc",
+      "sha256": "b2c7af75673cad9e064aa8f051df7231ae6317a3351d30c5c07a3726745978f0",
+      "sites": {
+        "include": 12
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/cuda-test/cpp14.cc",
+      "sha256": "eead20f766c7b92118e4270712ab4cd67cd1a1f6e806120eb3b07c9dfe55a54b",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/detect-stdfs.cc",
+      "sha256": "628f373d5bec4f2bd76cdc685445840abea25a4e39880da40f23afeca8678114",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/enforce-checks-test.cc",
+      "sha256": "3b102c0cfbd1264f42b5254249a34b4a7f5b9977a0afc8bd770a7cd4662ff1c7",
+      "sites": {
+        "include": 8
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/enum-test.cc",
+      "sha256": "4e4ff27ed3841719bc3d4542b65664df781a2bc49bd4cee2f8f151923544b060",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/find-package-test/main.cc",
+      "sha256": "9d18781837ea0373de73f68a6b569033526d4e601e1da0553da42f2d00603383",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/format-impl-test.cc",
+      "sha256": "abfc05a73a90b937fcc43906e97ec4495cf2476bca41c848712c6ea8fc06f195",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/format-test.cc",
+      "sha256": "c990c8ffc1e53917eaa15f7dfff268264a7de446310f584812daed3a40ceef0a",
+      "sites": {
+        "include": 20
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/chrono-duration.cc",
+      "sha256": "b397e86bd326eac60a5d39c98c4b3482fb4309253867ac975aa42d752fb20373",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/chrono-timepoint.cc",
+      "sha256": "2238b277d8c4248927e7a3278b93246dc1a707171bca31d5de1e38e81db692ca",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/float.cc",
+      "sha256": "6bcf73b39b26b59ea2542f64b38104fda54c644c0e918035cb0c990e82672dd8",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/fuzzer-common.h",
+      "sha256": "febe7f954b1e3b33e31a36bf2b4a301660cff0c8c06bb68f9bea3dcc102bcdb3",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/main.cc",
+      "sha256": "8328d417518b8dd2203e51c1b0346e9cefc2327a97b124db589937835ec0f1b4",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/named-arg.cc",
+      "sha256": "7752e1dfd95ccbe29fa3c63492a7697b54c2be63f57ca189e7a0d89989986c5f",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/one-arg.cc",
+      "sha256": "5e4a8d3dbdeaab85d8731ed66cc35db694a2382806119d57a691246390eb3dc8",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/fuzzing/two-args.cc",
+      "sha256": "745d0eabf68dda4ed271623dc8ad4dcae265b90e20686215643228e081488ed5",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest-extra-test.cc",
+      "sha256": "0f143adc523f4c77652af2c50124fa391939e11e9f1402b8c850f50a26661865",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest-extra.cc",
+      "sha256": "a88f5287ce7416f9756b977c9f78e55265d41887f103836e4b435c7f7dbc9758",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest-extra.h",
+      "sha256": "51edc47b635bddc1cfc767dcaaa92fa7261fa26e24dc67bb8db3e000bee1635c",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest/gmock-gtest-all.cc",
+      "sha256": "880ddcab57683f54c8b4263ba591f4fb20ce402ce80ac1a1907756287c39ff85",
+      "sites": {
+        "include": 144
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest/gmock/gmock.h",
+      "sha256": "fe5c9ce9bca0725bcd6f6ceaa24b179b0ed322fc9c87efc4b67d862e56a17b32",
+      "sites": {
+        "include": 49
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest/gtest/gtest-spi.h",
+      "sha256": "bc7de52471740743412a62784af636375d05bf913302c74fc50483f20eff45f4",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/gtest/gtest/gtest.h",
+      "sha256": "a61461e558fa54e29fd5a7764d386b8861093ebd47665f347d3b54cdb9419038",
+      "sites": {
+        "include": 101
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/header-only-test.cc",
+      "sha256": "e6e170175b47a2d6f2432a34af136867ec9f8c1c5e24c9d420d2181776cb3326",
+      "sites": {
+        "include": 3
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/mock-allocator.h",
+      "sha256": "d2bb12f4f7af883fcb7e760e358b5ce2794469113044bc842b15e0c139577264",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/module-test.cc",
+      "sha256": "594c1a8689babada88e6c380bc6040a941723a04d4fbc10a7938ff407599c15d",
+      "sites": {
+        "include": 14
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/no-builtin-types-test.cc",
+      "sha256": "5066b6e9e2078e2b6d815e6bf529c7f5a422233cad35925a9fd796b926219c0a",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/noexception-test.cc",
+      "sha256": "6e20ab6fff11078c0053d1910cd1fef80050b9ca6c6e5e2d7245c056e857b3cf",
+      "sites": {
+        "include": 11
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/os-test.cc",
+      "sha256": "a62a31cf0ad7747dd28e6b3e8e7e010092bfef0be69b1f0a79846e102fa63a92",
+      "sites": {
+        "include": 7
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/ostream-test.cc",
+      "sha256": "0cfe3fa78c400dff1c0a6f3fe63c3c36b703b30f4d4114297ea52792e80049cc",
+      "sites": {
+        "include": 9
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/perf-sanity.cc",
+      "sha256": "afed1501a3a03e8868eb2e07712609ce7823ec1368e4e9c9e21ab9c1d285b3e1",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/posix-mock-test.cc",
+      "sha256": "961cbe2e0500335870edf7de2f70c1bf0d5e411245d8537e548197aee0a797b4",
+      "sites": {
+        "include": 9
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/posix-mock.h",
+      "sha256": "972723adec114a9fe21ea1d2e7d5744f7d73948be66db07cead83c33ee0ae375",
+      "sites": {
+        "include": 7
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/printf-test.cc",
+      "sha256": "f546a61baf9bc4f4b805a6e9af9a4388f3dea64b1e419f46ccaa0c12f9ccb5d9",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/ranges-odr-test.cc",
+      "sha256": "f6cc10d2042dd00ae3a770e6c33ce41008b7662060c84f3e5bde636d50e0c83d",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/ranges-test.cc",
+      "sha256": "2ff39aa90e354fd28a0e38b27154c0236a9d78b117d35ccccd42a67f2ba5ef85",
+      "sites": {
+        "include": 12
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/scan-test.cc",
+      "sha256": "43a993e21c9c5dbd49630f887b50c07f157e4c3fed2256b4289278d3ff47a3ca",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/scan.h",
+      "sha256": "f67c306f5397625198c91fc53430498813dfb8d10065cb08d94827adbaaa5f86",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/static-export-test/library.cc",
+      "sha256": "c29971cd8eeb091a28906d62c86fe494b10827ac570c2216b26e5fe953d9a592",
+      "sites": {
+        "include": 1
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/static-export-test/main.cc",
+      "sha256": "7d67e1f228ea02492c02e4ab517f1bf19b1b03a675eea559f8c1b0955ea088c8",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/std-test.cc",
+      "sha256": "a2733fabf0d450b62fe0179cc081f2c8c6a1f3bd09a45a70340d2495a65e2dda",
+      "sites": {
+        "include": 9
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/test-assert.h",
+      "sha256": "d3c3dc2081800251089c996036cb165805b11c3cd6ec1b012572f4ced672bd1b",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/test-main.cc",
+      "sha256": "d8d151d9df27282e5ea1dbf6c4fb5af5c88b2fdb279a44a83e1a279033113889",
+      "sites": {
+        "include": 4
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/unicode-test.cc",
+      "sha256": "dc13630e56b283dd0988190e7b5caceb01c754c8d45119e6cd83a3154656795e",
+      "sites": {
+        "include": 6
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/util.cc",
+      "sha256": "ecd7eb40c5a1846b2c77224d37ee06efac95c7358963a637a7227138572433f7",
+      "sites": {
+        "include": 2
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/util.h",
+      "sha256": "1643ce91de3b0733e45beff3c09579c691f8c9f4e28b3762fde4025d4afeb9e4",
+      "sites": {
+        "include": 5
+      }
+    },
+    {
+      "lang": "cpp",
+      "path": "test/xchar-test.cc",
+      "sha256": "58c8078f6ef83ed0663596055bab9e13fd3d83711b43b46c42dff9afd222d77c",
+      "sites": {
+        "include": 10
+      }
+    }
+  ],
+  "generated_from": {
+    "ce": "1.7.4",
+    "commit": "37d9772d192339e7cb341253bcfab5a42d76892f",
+    "dirty": true
+  },
+  "method": "site universe of one pinned corpus for one v2.30 language: every file whose extension is in scope and that the product's own walk reads at the pinned tip (a tracked file the walk refuses is tallied, never asked about), inventoried with the sha256 of the text the detector saw and its resolution-free per-kind site counts (graph::sites — grammar kind tables and file-local facts only, no path ever consulted). Frozen before the language's ladder exists; the falsification constants are pre-registered here, before any measurement.",
+  "schema": "ce.eval-lang-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "cpp",
+      "cc",
+      "cxx",
+      "hpp",
+      "hh",
+      "hxx",
+      "h",
+      "inl"
+    ]
+  },
+  "summary": {
+    "files": 73,
+    "sites_by": {
+      "cpp/include": 740
+    },
+    "total_sites": 740
+  }
+}
