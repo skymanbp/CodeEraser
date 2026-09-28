@@ -1,0 +1,1185 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "fmt",
+ "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+ "lang": "cpp",
+ "auditor": "four independent Opus subagents, one batch of 25 primaries each in the sample's audit order, reading only the pinned clone (fmtlib/fmt at 6d71f74) and their batch - never the product's parse, no ce, no resolver; each resolved an include as the corpus's own build configures the preprocessor (C11 6.10.2 as C++ reads it: a quoted operand in the includer's directory, then the include directories the build declares for the target compiling that file, then the angle search; an angle operand in the declared directories, then the system), the build read from the clone's CMake files - the library's and the tests' target_include_directories - and the truth named as `git ls-files` prints the path (booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched)",
+ "summary": {
+  "external": 83,
+  "file": 17
+ },
+ "rows": [
+  {
+   "rank": "10155332573d597bfdb70305eb7ca3068d1bf08c0b48b3496934c09735a5b062",
+   "path": "test/gtest/gmock/gmock.h",
+   "line": 2798,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<utility>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 2798 reads `#include <utility>` (fused gmock function-mocker section, guard at gmock.h:2794). The targets that pull gmock.h in declare test/gtest (test/gtest/CMakeLists.txt:9 `target_include_directories(gtest SYSTEM PUBLIC .)`) and include/ (CMakeLists.txt:250-253 setup_target); neither holds a tracked file named utility, so the search falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "1e66ff1e327ae00860d987b10f09c3e252dbb55da963be95a03959a156c907ed",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 12511,
+   "nth": 0,
+   "kind": "include",
+   "spec": "gmock/gmock.h",
+   "batch": 1,
+   "truth": "test/gtest/gmock/gmock.h",
+   "why": "Quoted rule 1: line 12511 is the quoted include of gmock/gmock.h; the includer's own directory test/gtest/ holds the tracked test/gtest/gmock/gmock.h, which wins at the first step. That directory is also the gtest target's declared dir (test/gtest/CMakeLists.txt:9 `target_include_directories(gtest SYSTEM PUBLIC .)`; gtest compiles this file, test/gtest/CMakeLists.txt:6), so every step names the same single file."
+  },
+  {
+   "rank": "047ebb115ed1bcb565922a29a00e496ff8db0a4fda76ae98e4704f9bd3e39a8e",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 11777,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdio.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 11777 reads `#include <stdio.h>` (fused universal-value-printer implementation, comment at line 11765). The gtest target compiling this file (test/gtest/CMakeLists.txt:6) declares only test/gtest (test/gtest/CMakeLists.txt:9), and no stdio.h is tracked there or anywhere, so it falls to the system: C standard library header."
+  },
+  {
+   "rank": "0c731b146d7d1981ae3515df5b2020192dbffc4ea533f4eea9700f3ecf372fa7",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 386,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<arpa/inet.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 386 reads `# include <arpa/inet.h>` under `#if GTEST_CAN_STREAM_RESULTS_` (line 385). The gtest target (test/gtest/CMakeLists.txt:6) declares only test/gtest (test/gtest/CMakeLists.txt:9), and no arpa/ directory is tracked anywhere in the tree, so it falls to the system: the POSIX socket-address header."
+  },
+  {
+   "rank": "12a90f533c27d70e53b17367f7c444e3581078f63fe92c6103f5cf86aa9ab61c",
+   "path": "test/format-test.cc",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cmath>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 20 reads `#include <cmath>`. format-test is add_fmt_test(format-test mock-allocator.h) (test/CMakeLists.txt:50) linking test-main and fmt (test/CMakeLists.txt:24, 27), whose declared dirs are include/ (CMakeLists.txt:250-253; test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); neither holds a tracked cmath, so it is the C++ standard library header."
+  },
+  {
+   "rank": "115802f0cd5eb00fb0d18d9ced3cedd263954e9cfe5858b1b79a23a0c8b660de",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2713,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<memory>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 2713 reads `#include <memory>` (fused gtest-message section, guard at gtest.h:2709). The targets that pull gtest.h in declare test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253); neither holds a tracked file named memory, so the search falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "0d91de2dc3618ee934b96e0b63bff0393b797c4e3a8752c275541cb09d557837",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2658,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<set>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 2658 reads `#include <set>` in the fused gtest.h. The targets that pull gtest.h in declare test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253); neither holds a tracked file named set, so the search falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "243d0e4df3bd96d92656f96f11bff84ec57acf2493345580ab45113be58fbd43",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 5169,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<utility>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 5169 reads `#include <utility>` (fused gtest-printers section, guard defined at gtest.h:5160). Declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold no tracked file named utility, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "0f6ca32e583120c8ab9a7bba0c467796abcab03c9bffa0c465e6441e7880f891",
+   "path": "test/fuzzing/named-arg.cc",
+   "line": 8,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 8 reads `#include <vector>`. The fuzzer target (add_fuzzer, test/fuzzing/CMakeLists.txt:15-27, named-arg.cc listed at :29-30) links fmt privately (:22), whose declared dir is include/ (CMakeLists.txt:250-253); include/ holds no tracked file named vector, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "0edb73adb03b375f031de1c54d0bfb5d98b900c151ca6b879b231c4dde5e20dd",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 805,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<pthread.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 805 reads `# include <pthread.h>` under `#if GTEST_HAS_PTHREAD` (gtest.h:802). Declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold no pthread.h, and none is tracked anywhere, so it falls to the system: the POSIX threads header."
+  },
+  {
+   "rank": "1dbef6a00c952e900299253eddbae59a43eb0c8b155908a9971b6efd80b16644",
+   "path": "test/gtest/gmock/gmock.h",
+   "line": 2797,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<type_traits>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 2797 reads `#include <type_traits>` (fused gmock function-mocker section, guard at gmock.h:2794). Declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold no tracked type_traits, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "1cf16dc85a56998b176f3daccad256834d554c565d3e811c501c9e1c8256c0a8",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 8281,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<errno.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 8281 reads `# include <errno.h>` under `#if GTEST_HAS_DEATH_TEST` (line 8275). The gtest target (test/gtest/CMakeLists.txt:6) declares only test/gtest (test/gtest/CMakeLists.txt:9), and no errno.h is tracked anywhere, so it falls to the system: C standard library header."
+  },
+  {
+   "rank": "16addee7fc764de264e3b315bdb86e244c664fe28f182455837ad8c504311157",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 55,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cstddef>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 55 reads `#include <cstddef>` (top of the fused gtest.h, guard at gtest.h:52). Declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold no tracked cstddef, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "063772403deaa53a856f4439c3bbb1ea5ef9d4264009808b1335944d2d71de24",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2527,
+   "nth": 0,
+   "kind": "include",
+   "spec": "absl/types/any.h",
+   "batch": 1,
+   "truth": "external",
+   "why": "Quoted rule 1 then system: line 2527 is the quoted include of absl/types/any.h under `#if GTEST_HAS_ABSL` (gtest.h:2523). Neither the includer's directory test/gtest/gtest/ nor the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold it, and the tree vendors no absl/ at all, so it is the third-party Abseil header (no build file defines GTEST_HAS_ABSL)."
+  },
+  {
+   "rank": "0ebb2d61cc95437fa7db462b94d70d2c9b0c560d2f7bee6896c8ed73357681c7",
+   "path": "test/gtest/gmock/gmock.h",
+   "line": 292,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cstdint>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 292 reads `#include <cstdint>` (fused gmock-port section, guard at gmock.h:287). Declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold no tracked cstdint, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "055da0c1d0655f021d18441dfb82c265b6d0907d7a8ad0454700d99f9abee0bf",
+   "path": "include/fmt/args.h",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<memory>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 13 reads `#  include <memory>` under `#ifndef FMT_MODULE` (args.h:11). The fmt library's declared dir is include/ (CMakeLists.txt:250-253, applied by setup_target(fmt PUBLIC) at CMakeLists.txt:298); include/ holds only the fmt/ subdirectory and no file named memory, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "230d4358d0cd2e1236035b8b63e0bce5a8c7cad0ea4b1ce608e8a5f612e1a3e7",
+   "path": "test/ranges-test.cc",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<queue>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 13 reads `#include <queue>`. ranges-test is add_fmt_test(ranges-test ranges-odr-test.cc) (test/CMakeLists.txt:60) linking test-main and fmt, with declared dirs include/ (CMakeLists.txt:250-253; test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); neither holds a tracked queue, so it is the C++ standard library header."
+  },
+  {
+   "rank": "0043163419bfd32aa0c75a7b91349b4a6144d995634c3addfb7356b03e79408c",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 8312,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<zircon/syscalls/policy.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 8312 reads `#  include <zircon/syscalls/policy.h>` under `# if GTEST_OS_FUCHSIA` (line 8302). The gtest target declares only test/gtest (test/gtest/CMakeLists.txt:9) and no zircon/ directory is tracked anywhere, so it falls to the system: a Fuchsia (Zircon kernel) system header."
+  },
+  {
+   "rank": "0c6f1fd096f5a15d1db8cb17758286fe329f91aedbd54382f213aab7c5ff90be",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 1622,
+   "nth": 0,
+   "kind": "include",
+   "spec": "absl/debugging/failure_signal_handler.h",
+   "batch": 1,
+   "truth": "external",
+   "why": "Quoted rule 1 then system: line 1622 is the quoted include of absl/debugging/failure_signal_handler.h under `#if GTEST_HAS_ABSL` (line 1621). Neither the includer's directory test/gtest/ nor the gtest target's declared dir (test/gtest/CMakeLists.txt:9, the same directory) holds it, and no absl/ is vendored in the tree, so it is the third-party Abseil header."
+  },
+  {
+   "rank": "0d52cdb955be2e2dacadb85ac38cfe33aa1c7db74e1b259c544f57183e9f98a2",
+   "path": "test/xchar-test.cc",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/std.h",
+   "batch": 1,
+   "truth": "include/fmt/std.h",
+   "why": "Quoted rule 1: line 17 is the quoted include of fmt/std.h. The includer's directory test/ has no fmt/std.h; xchar-test is add_fmt_test(xchar-test) (test/CMakeLists.txt:76) linking test-main and fmt (test/CMakeLists.txt:24, 27), whose declared dir include/ (CMakeLists.txt:250-253 setup_target BEFORE PUBLIC; test/CMakeLists.txt:5-6) holds the tracked include/fmt/std.h; the other declared dir test/gtest has no fmt/std.h, so there is one candidate."
+  },
+  {
+   "rank": "1335e1e4de0d44bb0f04ce21f35d9446afdf8bcdeda7a881dfaf11acc96a77e8",
+   "path": "src/fmt.cc",
+   "line": 51,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<thread>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 51 reads `#  include <thread>` in the module's global fragment under `#ifndef FMT_IMPORT_STD` (fmt.cc:20). src/fmt.cc is compiled by fmt-module (CMakeLists.txt:448-451) whose declared dir is include/ (CMakeLists.txt:250-253 via setup_target); include/ holds no tracked file named thread, so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "122f9e3a6cb9c9aed34d6262caa43f80c3a5ade3588644e5d8a91479510ca18c",
+   "path": "test/ostream-test.cc",
+   "line": 26,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sstream>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 26 reads `#include <sstream>`. ostream-test is add_fmt_test(ostream-test) (test/CMakeLists.txt:57) linking test-main and fmt, with declared dirs include/ (CMakeLists.txt:250-253; test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); neither holds a tracked sstream, so it is the C++ standard library header."
+  },
+  {
+   "rank": "1532eb9dcb713bda95dc2cb668258555a1126c1cc7e0030c515e4db3df37143a",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2585,
+   "nth": 0,
+   "kind": "include",
+   "spec": "absl/strings/string_view.h",
+   "batch": 1,
+   "truth": "external",
+   "why": "Quoted rule 1 then system: line 2585 is the quoted include of absl/strings/string_view.h under `#if GTEST_HAS_ABSL` (gtest.h:2581). Neither the includer's directory test/gtest/gtest/ nor the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) hold it, and no absl/ is vendored in the tree, so it is the third-party Abseil header."
+  },
+  {
+   "rank": "128c0ff40d79e35e1823115695062a8f78338b92287193d3238c7ef30616b0b7",
+   "path": "test/os-test.cc",
+   "line": 11,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<memory>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 11 reads `#include <memory>`. os-test is add_fmt_test(os-test) (test/CMakeLists.txt:112) linking test-main and fmt, with declared dirs include/ (CMakeLists.txt:250-253; test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); neither holds a tracked file named memory, so it is the C++ standard library header."
+  },
+  {
+   "rank": "17459947daaa9a82b397f5e212f5c7d2e0b5fb4277007d481754c8eeaf7b41c6",
+   "path": "test/perf-sanity.cc",
+   "line": 5,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<chrono>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Angle rule 2: line 5 reads `#include <chrono>`. perf-sanity (test/CMakeLists.txt:81-82) links fmt::fmt, whose declared dir is include/ (CMakeLists.txt:250-253); include/ holds no file named chrono (fmt's own include/fmt/chrono.h is reachable only as fmt/chrono.h), so it falls to the system: C++ standard library header."
+  },
+  {
+   "rank": "13d0eda8d1326fb1cf7867bf69e9748876280e0ce6a4436a12944a2d267c9555",
+   "path": "test/gtest-extra-test.cc",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdexcept>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target gtest-extra-test (test/CMakeLists.txt:49 add_fmt_test) sees only include/ (test-main PUBLIC dir, test/CMakeLists.txt:5-6) and test/gtest (gtest SYSTEM PUBLIC ., test/gtest/CMakeLists.txt:9); neither has a file named stdexcept, so this is the C++ standard library header."
+  },
+  {
+   "rank": "01bb243a9cb88844822e26d512c4a9a12a565484442f4e47cb98cf814a11358e",
+   "path": "src/fmt.cc",
+   "line": 52,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<type_traits>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): src/fmt.cc is compiled by fmt-module (CMakeLists.txt:448-451), whose only declared dir is include/ via setup_target (CMakeLists.txt:250-253), holding only fmt/*.h; <type_traits> is the C++ standard library header (global module fragment, #ifndef FMT_IMPORT_STD at src/fmt.cc:20)."
+  },
+  {
+   "rank": "141004df5930e1e361e57f68873181eceb9ce9a42c81bf8ae378a8fcdfd23b60",
+   "path": "src/fmt.cc",
+   "line": 94,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<unistd.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): fmt-module (CMakeLists.txt:448-451) declares only include/ (setup_target, CMakeLists.txt:250-253), which has no unistd.h; <unistd.h> is the POSIX system header, taken under the #if at src/fmt.cc:87 and #ifndef _WIN32 at src/fmt.cc:93."
+  },
+  {
+   "rank": "1e03680b9bd06e6798c3d0c51bd59a1fbb3284a34ffdd506360c9d23d109c9c4",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 340,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<unistd.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): gmock-gtest-all.cc is compiled by target gtest (test/gtest/CMakeLists.txt:6), whose one declared dir is test/gtest itself (:9 SYSTEM PUBLIC .); no tracked unistd.h there, so this is the POSIX system header (under #if GTEST_OS_LINUX at gmock-gtest-all.cc:331)."
+  },
+  {
+   "rank": "09937ac3ca5eb1cdd16c7f5958a00347b48781a98cdf135f355864d1463d6171",
+   "path": "test/color-test.cc",
+   "line": 8,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/color.h",
+   "batch": 2,
+   "truth": "include/fmt/color.h",
+   "why": "Rule 1 (quoted): the includer's directory test/ has no fmt/color.h (there is no test/fmt/); next the declared dirs of target color-test (test/CMakeLists.txt:47 add_fmt_test, libs test-main + fmt at :24): include/ from test/CMakeLists.txt:5-6 and setup_target CMakeLists.txt:250-253 gives include/fmt/color.h; test/gtest has no fmt/."
+  },
+  {
+   "rank": "1a831da963f1b7f4dba6537ab918ce8aaf6c70038f361c9b9cc372d92a96b016",
+   "path": "test/test-main.cc",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<crtdbg.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target test-main (test/CMakeLists.txt:3-7) declares include/ (:5-6) and inherits test/gtest from gtest (test/gtest/CMakeLists.txt:9); neither holds crtdbg.h, the MSVC C runtime debug header (guarded by #ifdef _MSC_VER at test/test-main.cc:16)."
+  },
+  {
+   "rank": "11d155295b919cb1c77504780edd2b75f5092af563b0cce55e0fa080e6a33432",
+   "path": "test/fuzzing/one-arg.cc",
+   "line": 9,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fuzzer-common.h",
+   "batch": 2,
+   "truth": "test/fuzzing/fuzzer-common.h",
+   "why": "Rule 1 (quoted): same directory as the includer - test/fuzzing/fuzzer-common.h is tracked and found first; the compiling target one-arg-fuzzer (test/fuzzing/CMakeLists.txt:15-31, add_executable(... fuzzer-common.h) at :18, enabled by FMT_FUZZ at CMakeLists.txt:628-629) lists that very header."
+  },
+  {
+   "rank": "204b7b30f6d216bfccc8ea0302598d398a66d72497af7b0cccbe1fa3af728b72",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 333,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<fcntl.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target gtest (test/gtest/CMakeLists.txt:6) declares only test/gtest (:9 SYSTEM PUBLIC .); no tracked fcntl.h there or anywhere in the tree, so this is the POSIX system header (under #if GTEST_OS_LINUX at gmock-gtest-all.cc:331)."
+  },
+  {
+   "rank": "1013a92ce6c294f45f529d1eeec21652e2aa642623797368c78865430827dd04",
+   "path": "test/no-builtin-types-test.cc",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/compile.h",
+   "batch": 2,
+   "truth": "include/fmt/compile.h",
+   "why": "Rule 1 (quoted): test/fmt/compile.h does not exist; target no-builtin-types-test is HEADER_ONLY (test/CMakeLists.txt:61, libs gtest + fmt-header-only at :15-17), and fmt-header-only's INTERFACE dir include/ (CMakeLists.txt:454-458 via setup_target :250-253) gives include/fmt/compile.h."
+  },
+  {
+   "rank": "1c0878d0fb77cdf46a36723dc02c0c522607667d7372b4b80b1fcc10ef88b25f",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2642,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/types.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): gtest.h's consumers (target gtest and every test target) declare test/gtest (test/gtest/CMakeLists.txt:9) and include/ (test/CMakeLists.txt:5-6); neither holds sys/types.h, the POSIX system header (under #if GTEST_OS_LINUX at gtest.h:2640)."
+  },
+  {
+   "rank": "0aef906d753f260b880ea7a2e72b9d53ba23a25012768c981f56471d13a4ccaf",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 8278,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<crt_externs.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target gtest declares only test/gtest (test/gtest/CMakeLists.txt:9), which has no crt_externs.h; it is the Apple macOS SDK system header, guarded by # if GTEST_OS_MAC at gmock-gtest-all.cc:8277 inside #if GTEST_HAS_DEATH_TEST at :8275."
+  },
+  {
+   "rank": "16237153561de3ec30fb965693f738661f8a835480f5ea70655600abcc13f0d4",
+   "path": "test/no-builtin-types-test.cc",
+   "line": 8,
+   "nth": 0,
+   "kind": "include",
+   "spec": "gtest/gtest.h",
+   "batch": 2,
+   "truth": "test/gtest/gtest/gtest.h",
+   "why": "Rule 1 (quoted): the includer's directory test/ has no gtest/gtest.h (test/gtest/gtest.h is absent); next the HEADER_ONLY target's declared dirs (test/CMakeLists.txt:61, :15-17): include/ has no gtest/, then gtest's SYSTEM PUBLIC . = test/gtest (test/gtest/CMakeLists.txt:9) gives test/gtest/gtest/gtest.h."
+  },
+  {
+   "rank": "174819bf2c817f5cd3b44bdb79c976db44a9a28fbcb126439c13b7983010ad49",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 10403,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/procfs.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target gtest declares only test/gtest (test/gtest/CMakeLists.txt:9), and no procfs header exists in the tree; <sys/procfs.h> is the QNX system header, guarded by #if GTEST_OS_QNX at gmock-gtest-all.cc:10400."
+  },
+  {
+   "rank": "0890eb1e0f84a6cbffe4947c419c1415c4f81d110f75c1a4f8be331be47761be",
+   "path": "test/assert-test.cc",
+   "line": 12,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/core.h",
+   "batch": 2,
+   "truth": "include/fmt/core.h",
+   "why": "Rule 1 (quoted): test/fmt/core.h does not exist; target assert-test (test/CMakeLists.txt:45 add_fmt_test, libs test-main + fmt at :24) declares include/ (test/CMakeLists.txt:5-6; setup_target CMakeLists.txt:250-253), giving include/fmt/core.h."
+  },
+  {
+   "rank": "100a1c6edb0e463e089dd044ba243fc64f8d9108cd33916c41e7bc0f4c632ecd",
+   "path": "test/xchar-test.cc",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<complex>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target xchar-test (test/CMakeLists.txt:76 add_fmt_test) sees include/ and test/gtest (test/CMakeLists.txt:5-7, test/gtest/CMakeLists.txt:9); neither has a file named complex, so this is the C++ standard library header <complex>."
+  },
+  {
+   "rank": "0f59afc7ce32369503f69b7e4bcb37a4bd4f1dbfd1afbd7608b4adbfc3e7f250",
+   "path": "src/fmt.cc",
+   "line": 49,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string_view>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): fmt-module (CMakeLists.txt:448-451) declares only include/ (setup_target CMakeLists.txt:250-253), holding only fmt/*.h; <string_view> is the C++17 standard library header (global module fragment, #ifndef FMT_IMPORT_STD at src/fmt.cc:20)."
+  },
+  {
+   "rank": "2523bf5c57e8a22893704a66a253b39a7ef2810ba6f86b0c567fa2010473a2f8",
+   "path": "include/fmt/format.h",
+   "line": 62,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<system_error>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): format.h compiles under targets whose declared dirs are include/ (setup_target CMakeLists.txt:250-253) and, for tests, test/gtest (test/gtest/CMakeLists.txt:9); neither has a file named system_error, so this is the C++ standard library header (under #ifndef FMT_MODULE at format.h:49)."
+  },
+  {
+   "rank": "17c85a1fead9360ac60075e9a49eca16e5af27fc5bacf90c4333687ff9944777",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2660,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<type_traits>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): gtest.h's consumers declare test/gtest (test/gtest/CMakeLists.txt:9) and include/ (test/CMakeLists.txt:5-6); neither holds a file named type_traits, so this is the C++ standard library header."
+  },
+  {
+   "rank": "020edd155a8cf24384d803d5bf61e27a63703e56a506af4e0e6d77e97bcdf7f1",
+   "path": "test/noexception-test.cc",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/ranges.h",
+   "batch": 2,
+   "truth": "include/fmt/ranges.h",
+   "why": "Rule 1 (quoted): test/fmt/ranges.h does not exist; target noexception-test (test/CMakeLists.txt:124-127, built under FMT_PEDANTIC with -fno-exceptions) declares PRIVATE ${PROJECT_SOURCE_DIR}/include at :125-126, giving include/fmt/ranges.h."
+  },
+  {
+   "rank": "0d20a46a1e5b042fec5c93c44062278192e381b5a69a09a8ebf98c2d0449032a",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 322,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cstdint>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target gtest (test/gtest/CMakeLists.txt:6) declares only test/gtest (:9), which has no file named cstdint; this is the C++ standard library header <cstdint>."
+  },
+  {
+   "rank": "05e4a13f97064ea690b00050444f20d1b29c70da15eaa64e4ffc2a754b83fdc9",
+   "path": "include/fmt/std.h",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<exception>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): std.h's consumers declare include/ (setup_target CMakeLists.txt:250-253) and, for tests, test/gtest (test/gtest/CMakeLists.txt:9); neither has a file named exception, so this is the C++ standard library header (under #ifndef FMT_MODULE at std.h:14)."
+  },
+  {
+   "rank": "1db7be4625ec836d5e7e350c8d836c3639e9356eb63e24a581053b39ef7ab776",
+   "path": "src/fmt.cc",
+   "line": 45,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<ostream>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): fmt-module (CMakeLists.txt:448-451) declares only include/ (setup_target CMakeLists.txt:250-253); <ostream> joins to include/ostream, which does not exist (include/fmt/ostream.h is a different path), so this is the C++ standard library header."
+  },
+  {
+   "rank": "1e86241e3ed471bfc32cae19af541e4bfd2f3a7b8e22d9839e6c0d4c346e1f33",
+   "path": "test/perf-sanity.cc",
+   "line": 6,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<iterator>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target perf-sanity (test/CMakeLists.txt:81-82) links fmt::fmt, so its only declared dir is include/ (setup_target CMakeLists.txt:250-253); no file named iterator there, so this is the C++ standard library header."
+  },
+  {
+   "rank": "0ff8348d177b4dd321d9d764d6a24cb1da801c1ee497e6d8ff3888463b9321ab",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 8306,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<lib/zx/channel.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): target gtest declares only test/gtest (test/gtest/CMakeLists.txt:9) and the tree has no lib/zx/ directory; this is the Fuchsia Zircon SDK header, under # if GTEST_OS_FUCHSIA at gmock-gtest-all.cc:8302, not vendored."
+  },
+  {
+   "rank": "0b99acb9aadec10fe71587cee50e7d7fab379337edf4d6a811b0df2a56fedc7b",
+   "path": "test/posix-mock.h",
+   "line": 11,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<errno.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle form): posix-mock.h is pulled in by test/posix-mock-test.cc:13, compiled by target posix-mock-test (test/CMakeLists.txt:100-104: PRIVATE include/ plus gtest's test/gtest); neither holds errno.h, the C standard library header."
+  },
+  {
+   "rank": "127bda30aa8c449cd518b9a9bcc39c855b83899d741b8ea156a82b5503c33753",
+   "path": "include/fmt/base.h",
+   "line": 8,
+   "nth": 0,
+   "kind": "include",
+   "spec": "core.h",
+   "batch": 3,
+   "truth": "include/fmt/core.h",
+   "why": "Quoted include (rule 1): the includer's own directory include/fmt/ holds the tracked include/fmt/core.h, found first before any declared dir; base.h is a one-line compat header listed in FMT_HEADERS (CMakeLists.txt:279)."
+  },
+  {
+   "rank": "15b1ec71db5a961350349607aad496e08f7cd2c19a947b6ee99b4067f9904fdb",
+   "path": "include/fmt/args.h",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): args.h is a library header of fmt / fmt-header-only / fmt-module, whose only declared dir is ${PROJECT_SOURCE_DIR}/include (setup_target, CMakeLists.txt:250-253); no tracked 'vector' there or anywhere in the tree, so it is the C++ standard library header."
+  },
+  {
+   "rank": "110128357b035e13f1bf253fee5e9e9212a582610e62a277a9994451c087c5dd",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 9912,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<io.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2) under #elif GTEST_OS_WINDOWS: the gtest target declares only test/gtest (target_include_directories(gtest SYSTEM PUBLIC .), test/gtest/CMakeLists.txt:9), which holds no io.h; io.h is the MSVC/UCRT Windows CRT system header."
+  },
+  {
+   "rank": "04491eb749a317e45f254bc3850f352fc35475a142dc6d31008775305404c80d",
+   "path": "include/fmt/std.h",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<atomic>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): std.h is a library header; its targets declare ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253), test targets add test/gtest (test/gtest/CMakeLists.txt:9); no tracked 'atomic' in either, so it is the C++ standard library header."
+  },
+  {
+   "rank": "1fc1fb9b54cad89e3e6c09b2c854594f70a9a12c681fb9e404c4318306115ec7",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 435,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<algorithm>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): gmock-gtest-all.cc compiles in the gtest target (test/gtest/CMakeLists.txt:6), whose only declared dir is test/gtest (test/gtest/CMakeLists.txt:9); no 'algorithm' there, so it is the C++ standard library header."
+  },
+  {
+   "rank": "0e27bb0e1956fee2a4807eed501b30a4dcb119d09dff5b1c1574b4af78e02134",
+   "path": "include/fmt/format.h",
+   "line": 55,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<limits>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): format.h compiles into target fmt (src/format.cc, CMakeLists.txt:297) whose declared dir is ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253); no tracked 'limits' there, so it is the C++ standard library header."
+  },
+  {
+   "rank": "0fdae7d56d4cb92a659e10fe53ed58b1887704edf72b47ce7c9893ad98139f6a",
+   "path": "test/core-test.cc",
+   "line": 23,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<limits>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): core-test (add_fmt_test, test/CMakeLists.txt:44) links test-main + fmt, so its declared dirs are include/ (test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); neither holds 'limits'; C++ standard library header."
+  },
+  {
+   "rank": "225f477c4c5896b29fea071a33f0ed95af0b5c89b5be3bc12985c203f7ccb7d7",
+   "path": "test/compile-test.cc",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): compile-test (test/CMakeLists.txt:58) searches include/ (test-main PUBLIC dir, test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); no tracked 'vector' in either, so it is the C++ standard library header."
+  },
+  {
+   "rank": "05d8c0c041028ead6bcba16d6af4fcb93c3444dbaeacd49c12d04122a44c2d2a",
+   "path": "test/scan.h",
+   "line": 9,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cassert>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): scan.h is pulled in by test/scan-test.cc:8; scan-test is HEADER_ONLY (test/CMakeLists.txt:62) with dirs include/ (fmt-header-only, CMakeLists.txt:250-253,458) and test/gtest (test/gtest/CMakeLists.txt:9); no 'cassert' there; C++ standard library."
+  },
+  {
+   "rank": "15de2301ce8b97c3f98213153d6a9d8d07a97e1194c494f4a774bc82524ace9c",
+   "path": "test/noexception-test.cc",
+   "line": 8,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/args.h",
+   "batch": 3,
+   "truth": "include/fmt/args.h",
+   "why": "Quoted include (rule 1): test/fmt/args.h does not exist beside the includer; the noexception-test target declares PRIVATE ${PROJECT_SOURCE_DIR}/include (test/CMakeLists.txt:125-126), and joining fmt/args.h onto it gives the tracked include/fmt/args.h."
+  },
+  {
+   "rank": "1c4fbb7df1e03af1a297b1cf51d36352cf463cb88c94349d4036e260aab0f223",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 326,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<map>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): the gtest target declares only test/gtest (target_include_directories(gtest SYSTEM PUBLIC .), test/gtest/CMakeLists.txt:9), which has no 'map'; it is the C++ standard library header."
+  },
+  {
+   "rank": "1f323e094f44c2af77c81e14fdefa7b4131b157d1e97b941fb41ce2162319b31",
+   "path": "include/fmt/os.h",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<xlocale.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2), guarded by FMT_HAS_INCLUDE(<xlocale.h>): os.h's targets (fmt via src/os.cc, CMakeLists.txt:302) declare only ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253), which has no xlocale.h; it is the macOS/BSD libc system header."
+  },
+  {
+   "rank": "00c66e74b1641c7e3f67c621d867c68954dbe8bc4af90c040b22095935b693a0",
+   "path": "test/posix-mock-test.cc",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<errno.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): posix-mock-test declares PRIVATE include/ (test/CMakeLists.txt:102-103) and links gtest whose PUBLIC dir is test/gtest (test/CMakeLists.txt:104, test/gtest/CMakeLists.txt:9); no errno.h in either; it is the C standard library header."
+  },
+  {
+   "rank": "0e7e52cbe82d33c0ee63b9185f149fc8d100d394a86186279249b409b05544d5",
+   "path": "include/fmt/xchar.h",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ranges.h",
+   "batch": 3,
+   "truth": "include/fmt/ranges.h",
+   "why": "Quoted include (rule 1): same directory as the includer - include/fmt/ holds the tracked include/fmt/ranges.h, found before any declared include dir (include/ has no bare ranges.h anyway)."
+  },
+  {
+   "rank": "0fbf813cf827e8c44c7b73ce83462f4a176f0bb9e8f7db98b223773ab58cef41",
+   "path": "test/mock-allocator.h",
+   "line": 11,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<assert.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): mock-allocator.h is pulled in by test/format-test.cc:38 (format-test, test/CMakeLists.txt:50) whose dirs are include/ (test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); no assert.h there; C standard library header."
+  },
+  {
+   "rank": "14c9dacb1a7e607100bb88357cb29354eadf30129803b283bee77660fc8b06d4",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 13362,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): the gtest target declares only test/gtest (test/gtest/CMakeLists.txt:9), which holds no file named 'string'; it is the C++ standard library header."
+  },
+  {
+   "rank": "0e04247dc297e9154e0caf0fc9cbf011558648722f8ce8299e6e7757d1920e37",
+   "path": "test/posix-mock-test.cc",
+   "line": 16,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<fcntl.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): posix-mock-test's declared dirs are include/ (test/CMakeLists.txt:102-103) and test/gtest via gtest (test/gtest/CMakeLists.txt:9); no fcntl.h is tracked anywhere; it is the POSIX system header."
+  },
+  {
+   "rank": "2519e86caa7043bd0991437b7abc1d4c9c62193048cda1e75ea77979d6395ff2",
+   "path": "include/fmt/xchar.h",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cwchar>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): xchar.h is a library header whose targets declare only ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253); no tracked 'cwchar' there, so it is the C++ standard library header."
+  },
+  {
+   "rank": "0750f1be2e2f7847b687f386375878df5f2cc9e2ee01866e8bab1d366afd096d",
+   "path": "test/xchar-test.cc",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/chrono.h",
+   "batch": 3,
+   "truth": "include/fmt/chrono.h",
+   "why": "Quoted include (rule 1): test/fmt/chrono.h is absent beside the includer; xchar-test (test/CMakeLists.txt:76) links test-main whose PUBLIC dir is ${PROJECT_SOURCE_DIR}/include (test/CMakeLists.txt:5-6; also fmt's, CMakeLists.txt:250-253), giving include/fmt/chrono.h."
+  },
+  {
+   "rank": "17b86f2d51c19266f51a0f1fbbdb3dfaf4e31cbd4c991ca273a98508115b89ad",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 7825,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): gtest.h belongs to gtest (test/gtest/CMakeLists.txt:6-7); its declared dir test/gtest (test/gtest/CMakeLists.txt:9), plus include/ for the test targets pulling it in, holds no 'vector'; C++ standard library header."
+  },
+  {
+   "rank": "2070e60d736d01899f78c1a8662907ea351c375953f63dc05966d2589c3df8d4",
+   "path": "include/fmt/printf.h",
+   "line": 12,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<algorithm>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): printf.h is a library header (FMT_HEADERS, CMakeLists.txt:289) whose targets declare only ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253); no 'algorithm' there, so it is the C++ standard library header."
+  },
+  {
+   "rank": "03b3b6ba3fdbe8497976841aa215acfdf102efb4c61092f0d524a5dfc2853898",
+   "path": "test/ranges-test.cc",
+   "line": 18,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): ranges-test (test/CMakeLists.txt:60) searches include/ (test/CMakeLists.txt:5-6) and test/gtest (test/gtest/CMakeLists.txt:9); no tracked 'vector' in either, so it is the C++ standard library header."
+  },
+  {
+   "rank": "20aa02a4ee248bf64fe2bf2287b51005cddd3090ad29e4b0e5697fb337e2ccf3",
+   "path": "test/enforce-checks-test.cc",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/xchar.h",
+   "batch": 3,
+   "truth": "include/fmt/xchar.h",
+   "why": "Quoted include (rule 1): test/fmt/xchar.h is absent beside the includer; enforce-checks-test (test/CMakeLists.txt:77) links test-main with PUBLIC ${PROJECT_SOURCE_DIR}/include (test/CMakeLists.txt:5-6), giving the tracked include/fmt/xchar.h."
+  },
+  {
+   "rank": "2487d39d46a472ed7c52b8ce7938d21282d1d6e2c69be8d74b9797b4b0edddec",
+   "path": "src/fmt.cc",
+   "line": 144,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/ranges.h",
+   "batch": 3,
+   "truth": "include/fmt/ranges.h",
+   "why": "Quoted include (rule 1): src/fmt/ranges.h is absent beside the includer; fmt.cc compiles in fmt-module (CMakeLists.txt:449-451) whose setup_target declares ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253), giving include/fmt/ranges.h."
+  },
+  {
+   "rank": "1564f080278d54dfb9c84d61fe1dde726ee99418420f4e7c480c3ed9eea405aa",
+   "path": "include/fmt/format-inl.h",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cerrno>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Angle include (rule 2): format-inl.h compiles via src/format.cc:8 in target fmt (CMakeLists.txt:297) whose declared dir is ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253); no 'cerrno' there, so it is the C++ standard library header."
+  },
+  {
+   "rank": "1e65c9f0c7f718cda97ecbcaccf65ea9c4f7894a981a4485db4b087c861d9de4",
+   "path": "src/fmt.cc",
+   "line": 138,
+   "nth": 0,
+   "kind": "include",
+   "spec": "fmt/format.h",
+   "batch": 4,
+   "truth": "include/fmt/format.h",
+   "why": "Quoted include (rule 1): the includer's directory src/ tracks no fmt/format.h; src/fmt.cc is the fmt-module target's source (CMakeLists.txt:449) and setup_target(fmt-module PUBLIC) (CMakeLists.txt:451) declares ${PROJECT_SOURCE_DIR}/include via target_include_directories (CMakeLists.txt:250-253), where include/fmt/format.h is tracked."
+  },
+  {
+   "rank": "06dd6b23392a085554f16a75a1ea3a6f15abfbf4f41102a8b6f30f617ee27034",
+   "path": "test/module-test.cc",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<system_error>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): module-test (add_fmt_test(module-test MODULE), test/CMakeLists.txt:84-86, libs test-main fmt-module at :22) sees include/ (CMakeLists.txt:250-253) and test/gtest (test/gtest/CMakeLists.txt:9); neither tracks system_error, so it is the C++ standard library header <system_error>."
+  },
+  {
+   "rank": "032f55219d00d24bed923bbbc5e8621cb15aa1c6107334f3550110f3eb9708d9",
+   "path": "include/fmt/printf.h",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<limits>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in a library header, under #ifndef FMT_MODULE: the declared dirs of the targets that pull printf.h in are include/ (CMakeLists.txt:250-253) and, for tests, test/gtest (test/gtest/CMakeLists.txt:9); no tracked 'limits' in either, so it is the C++ standard library <limits>."
+  },
+  {
+   "rank": "1c8f2c47d9437b86eecb755ce39b1c064b7239eb298fd71d60bfb7915de3fc26",
+   "path": "test/fuzzing/chrono-duration.cc",
+   "line": 6,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cstdint>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): the chrono-duration-fuzzer target (add_fuzzer, test/fuzzing/CMakeLists.txt:15-32) links fmt PRIVATE (:22) and so sees only include/ (CMakeLists.txt:250-253), which tracks no cstdint; it is the C++ standard library header <cstdint>."
+  },
+  {
+   "rank": "02524b92319555070aa671e134db0c21fecb489dad49e3e23aa2b457cecd87bf",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 13360,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<memory>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): gmock-gtest-all.cc is the gtest target's source (test/gtest/CMakeLists.txt:6) whose only declared dir is test/gtest (target_include_directories(gtest SYSTEM PUBLIC .), :9); no tracked 'memory' there, so it is the C++ standard library <memory>."
+  },
+  {
+   "rank": "1433190fa5366e6137af271dea1ef16eee0548e5482800337306bd08aada44b9",
+   "path": "test/fuzzing/float.cc",
+   "line": 9,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdexcept>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): the float-fuzzer target (add_fuzzer, test/fuzzing/CMakeLists.txt:15-32) links fmt PRIVATE (:22); its declared dir include/ (CMakeLists.txt:250-253) tracks no stdexcept, so it is the C++ standard library header <stdexcept>."
+  },
+  {
+   "rank": "08fb890a409230e3ba16928236ec347e2f38b64aaae8f720cb387d54c085aa16",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 365,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/types.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the GTEST_OS_WINDOWS branch: the gtest target's only declared dir is test/gtest (test/gtest/CMakeLists.txt:9), which tracks no sys/types.h; it is the system (POSIX / Windows CRT) header <sys/types.h>."
+  },
+  {
+   "rank": "171f5a20b3197fac9ec0ba2a7e465c24cb64d4c88be0b178241ca52952802adb",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 60,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the vendored gtest header: the declared dirs of the targets that pull gtest.h in are test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253); neither tracks 'vector', so it is the C++ standard library <vector>."
+  },
+  {
+   "rank": "23e09f1b371ab179e8b8df57257d5f647a8a4217d691b4c4bca20ac85f10874d",
+   "path": "src/fmt.cc",
+   "line": 31,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<cstring>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the global module fragment under #ifndef FMT_IMPORT_STD: fmt-module's only declared dir is include/ (CMakeLists.txt:250-253 via setup_target at :451), which tracks no cstring; it is the C++ standard library <cstring>."
+  },
+  {
+   "rank": "005d0024b63f4d9b9a63a6425a17b045e788949e958ea1997d195c9bef63c814",
+   "path": "test/ranges-test.cc",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<utility>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): ranges-test (add_fmt_test, test/CMakeLists.txt:60) sees include/ (test/CMakeLists.txt:5-6, CMakeLists.txt:250-253) and test/gtest (test/gtest/CMakeLists.txt:9); no tracked 'utility' in either, so it is the C++ standard library <utility>."
+  },
+  {
+   "rank": "0e4cfba69ee909266b99ade3fc896028391f0890a4302b95a854bff2a287583a",
+   "path": "src/fmt.cc",
+   "line": 91,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/stat.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) guarded by the __has_include(<fcntl.h>) / platform condition at lines 87-89: fmt-module's declared dir include/ (CMakeLists.txt:250-253 via :451) tracks no sys/stat.h; it is the POSIX / CRT system header <sys/stat.h>."
+  },
+  {
+   "rank": "01d8ed186410bd9fb8c89af7efb177514c6c7feebc9bee8d478590c5faad88f7",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 2643,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/wait.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) under #if GTEST_OS_LINUX: the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) track no sys/wait.h; it is the POSIX system header <sys/wait.h>."
+  },
+  {
+   "rank": "00dad08fc8be683635e5066cad1adee0b3f6b3c705d4218597b8226e1680c16f",
+   "path": "test/unicode-test.cc",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<vector>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): unicode-test (add_fmt_test(unicode-test HEADER_ONLY), test/CMakeLists.txt:72) links gtest and fmt-header-only (:17), so its dirs are test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253, :458); no tracked 'vector': C++ standard library."
+  },
+  {
+   "rank": "215de153aa844fab04609fc24e2cb46a840ff4c0d66b9bc5557b0bd06d3996d5",
+   "path": "test/core-test.cc",
+   "line": 29,
+   "nth": 0,
+   "kind": "include",
+   "spec": "gmock/gmock.h",
+   "batch": 4,
+   "truth": "test/gtest/gmock/gmock.h",
+   "why": "Quoted include (rule 1): the includer's directory test/ tracks no gmock/gmock.h; core-test (add_fmt_test, test/CMakeLists.txt:44, libs test-main fmt at :24) gets include/ (test/CMakeLists.txt:5-6), which has no gmock/, and test/gtest from gtest's target_include_directories(gtest SYSTEM PUBLIC .) (test/gtest/CMakeLists.txt:9) via target_link_libraries(test-main gtest fmt) (test/CMakeLists.txt:7); test/gtest/gmock/gmock.h is the first and only hit."
+  },
+  {
+   "rank": "1431727745d181e71470d6ea187cb2ec10ffc31cc20d52a46b69604923a71058",
+   "path": "test/ranges-test.cc",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stack>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): ranges-test's declared dirs are include/ (test/CMakeLists.txt:5-6, CMakeLists.txt:250-253) and test/gtest (test/gtest/CMakeLists.txt:9), neither tracking 'stack'; it is the C++ standard library header <stack>."
+  },
+  {
+   "rank": "13567f71f9e82dde8ba56c7cacdc4473fd8c2812741e5e93bdb4bee4bbfd8de7",
+   "path": "test/gtest/gmock/gmock.h",
+   "line": 2870,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<type_traits>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the vendored gmock header (gmock-spec-builders section): the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) track no type_traits; it is the C++ standard library <type_traits>."
+  },
+  {
+   "rank": "16ff2e38bc68ffd325cbe736525a7e49ae6d8a836920560f60ebb5a0e58bd6a8",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 8294,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/mman.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the non-Windows death-test branch (#if GTEST_HAS_DEATH_TEST / # else): gtest's declared dir test/gtest (test/gtest/CMakeLists.txt:9) tracks no sys/mman.h; it is the POSIX system header <sys/mman.h>."
+  },
+  {
+   "rank": "19bf51c86c32b597792b9dd1516a448c9db898a9c0e1ef9e676d0b5b10a530d0",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 443,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<arpa/inet.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) under #if GTEST_CAN_STREAM_RESULTS_: gtest's declared dir test/gtest (test/gtest/CMakeLists.txt:9) tracks no arpa/inet.h; it is the POSIX sockets system header <arpa/inet.h>."
+  },
+  {
+   "rank": "21e947f31b765a9fa11378bb7b3a112e41dd5aa76e3e47b2328a6b87b498a673",
+   "path": "test/gtest/gmock/gmock.h",
+   "line": 10728,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<memory>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the vendored gmock header (gmock-more-actions section): the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) track no 'memory'; it is the C++ standard library <memory>."
+  },
+  {
+   "rank": "15368676fa2430c6f5b47c0a8fc1ad4617182c69c754f7a5e9c7015bda25b6ed",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 361,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdio.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2) in the vendored gtest header (gtest-port section): the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) track no stdio.h; it is the C standard library header <stdio.h>."
+  },
+  {
+   "rank": "06b4db1fc1df9bf7ab5922b424fb6f72caed0a2b8964aada0c9b7dd1c22d035a",
+   "path": "test/gtest/gtest/gtest.h",
+   "line": 7776,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<iterator>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2), live code right after the #if 0 ... #endif // 0 block at lines 7644-7774: the declared dirs test/gtest (test/gtest/CMakeLists.txt:9) and include/ (CMakeLists.txt:250-253) track no 'iterator'; C++ standard library <iterator>."
+  },
+  {
+   "rank": "132a7c3b535eed4f987351a70ad0d3b47b0a4dd04afd32d6f4cb8c67eed67164",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 8272,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<utility>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): gmock-gtest-all.cc compiles in the gtest target (test/gtest/CMakeLists.txt:6) whose only declared dir is test/gtest (:9), which tracks no 'utility'; it is the C++ standard library header <utility>."
+  },
+  {
+   "rank": "01fae038a7f0534d4073f610584c8bef9a87890df1a9efd99902e2ddae0e1778",
+   "path": "test/core-test.cc",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<list>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): core-test (add_fmt_test, test/CMakeLists.txt:44) sees include/ (test/CMakeLists.txt:5-6, CMakeLists.txt:250-253) and test/gtest (test/gtest/CMakeLists.txt:9); no tracked 'list' in either, so it is the C++ standard library <list>."
+  },
+  {
+   "rank": "04177db9e45524ffe91e101d21be29dcaa7e67c58ee9edc85cd8cd44c9c16c7f",
+   "path": "test/gtest/gmock-gtest-all.cc",
+   "line": 324,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<limits>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Angle include (rule 2): gmock-gtest-all.cc compiles in the gtest target (test/gtest/CMakeLists.txt:6) with test/gtest as its only declared dir (:9), which tracks no 'limits'; it is the C++ standard library header <limits>."
+  },
+  {
+   "rank": "22227dbba2120eb57d10286bbd597e3536541a86027abd1d3685fd890c25c6c2",
+   "path": "test/fuzzing/one-arg.cc",
+   "line": 4,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<fmt/chrono.h>",
+   "batch": 4,
+   "truth": "include/fmt/chrono.h",
+   "why": "Angle include (rule 2): one-arg-fuzzer (add_fuzzer, test/fuzzing/CMakeLists.txt:15-32; the directory is built under FMT_FUZZ, CMakeLists.txt:628-629 and test/fuzzing/build.sh:23) links fmt PRIVATE (:22) and inherits fmt's PUBLIC ${PROJECT_SOURCE_DIR}/include (CMakeLists.txt:250-253, setup_target(fmt PUBLIC) at :298); include/fmt/chrono.h is tracked there."
+  }
+ ],
+ "site_gaps": [],
+ "scope_gaps": [],
+ "notes": [
+  {
+   "batch": 1,
+   "note": "The only include directories the build declares for the targets in this batch are include/ (CMakeLists.txt:250-253, setup_target on fmt :298, fmt-module :451 and fmt-header-only :458; also test/CMakeLists.txt:5-6 on test-main) and test/gtest/ (test/gtest/CMakeLists.txt:9 on gtest, reaching every add_fmt_test target through test-main's link at test/CMakeLists.txt:7); CMAKE_INCLUDE_CURRENT_DIR is set nowhere."
+  },
+  {
+   "batch": 1,
+   "note": "No tracked file anywhere in the pinned tree is named like a standard or system header (utility, memory, set, vector, queue, cmath, cstddef, cstdint, type_traits, thread, sstream, chrono, stdio.h, errno.h, pthread.h), and no arpa/, zircon/ or absl/ directory is tracked, so every such angle include and every absl/ include falls through to the system and is external."
+  },
+  {
+   "batch": 1,
+   "note": "googletest and googlemock are vendored as the fused single headers test/gtest/gtest/gtest.h and test/gtest/gmock/gmock.h plus the fused implementation test/gtest/gmock-gtest-all.cc, so their internal headers are not separate files and each row inside them sits at its fused position."
+  },
+  {
+   "batch": 1,
+   "note": "The working tree is checked out with CRLF line endings (core.autocrlf=true, index LF), which leaves line numbers unchanged; all 25 directives sit on their stated lines with the stated spec and one directive per line."
+  },
+  {
+   "batch": 1,
+   "note": "Gap scan over the twelve batch files: the three `#if 0` blocks in gtest.h (7644-7774, 9333-9395, 9411-9462) hold no include, and there is no macro-operand, backslash-continued, comment-split, #include_next or #import include; the #include mentions at gtest.h:600, 782 and 803 sit inside // comments and are not directives."
+  },
+  {
+   "batch": 2,
+   "note": "Every add_fmt_test target reaches include/ through test-main's PUBLIC include dir (test/CMakeLists.txt:5-6) and fmt's setup_target (CMakeLists.txt:250-253), or through fmt-header-only's INTERFACE dir for HEADER_ONLY tests (test/CMakeLists.txt:15-17), and reaches test/gtest through gtest's SYSTEM PUBLIC . (test/gtest/CMakeLists.txt:9)."
+  },
+  {
+   "batch": 2,
+   "note": "There is no test/fmt/ directory, so every quoted fmt/... include in a test/ file misses the includer's directory and resolves through the declared include/ directory."
+  },
+  {
+   "batch": 2,
+   "note": "The only declared include directories in the tree are include/ (holding only fmt/*.h) and test/gtest (holding gtest/ and gmock/), so no standard, POSIX, MSVC, Apple, QNX or Fuchsia angle header in this batch collides with a tracked file (for example <ostream> would be include/ostream, not include/fmt/ostream.h)."
+  },
+  {
+   "batch": 2,
+   "note": "Includes under platform or option guards (_MSC_VER, GTEST_OS_LINUX/MAC/QNX/FUCHSIA, FMT_PEDANTIC for noexception-test, FMT_FUZZ for the fuzzers) were judged as if their branch were active, since the guard does not change what the directive names."
+  },
+  {
+   "batch": 3,
+   "note": "Every library target (fmt, fmt-header-only, fmt-module) gets exactly one declared include dir, ${PROJECT_SOURCE_DIR}/include, from setup_target (CMakeLists.txt:250-253), and the fmt headers include their siblings with bare quoted names resolved in the includer's own directory include/fmt/."
+  },
+  {
+   "batch": 3,
+   "note": "Test targets built by add_fmt_test link test-main (PUBLIC include/, test/CMakeLists.txt:5-6) and gtest (SYSTEM PUBLIC test/gtest, test/gtest/CMakeLists.txt:9), so a quoted fmt/x.h from test/ misses test/fmt/ and lands on include/fmt/x.h; posix-mock-test and noexception-test declare include/ PRIVATE themselves (test/CMakeLists.txt:102-103, 125-126)."
+  },
+  {
+   "batch": 3,
+   "note": "No tracked file in the pinned tree carries a standard-library or platform header name (git ls-files checked for every angle spec in this batch), and no CMake file sets CMAKE_INCLUDE_CURRENT_DIR, so each angle include of a standard or system header resolves external whichever target's declared dirs are searched."
+  },
+  {
+   "batch": 3,
+   "note": "The batch's files were scanned for missed sites: no macro-operand include, no backslash-split directive, no comment-prefixed directive, and the three #if 0 blocks in test/gtest/gtest/gtest.h (7644-7774, 9333-9395, 9411-9462) hold no #include."
+  },
+  {
+   "batch": 4,
+   "note": "Every fmt library target (fmt, fmt-header-only, fmt-module) receives ${PROJECT_SOURCE_DIR}/include from setup_target's target_include_directories (CMakeLists.txt:250-253), propagated PUBLIC/INTERFACE to the tests (test/CMakeLists.txt:5-7, :17, :22, :24) and the fuzzers (test/fuzzing/CMakeLists.txt:22) that link them."
+  },
+  {
+   "batch": 4,
+   "note": "The vendored googletest directory test/gtest is declared as the gtest target's SYSTEM PUBLIC include dir (test/gtest/CMakeLists.txt:9) and reaches every unit test through target_link_libraries(test-main gtest fmt) (test/CMakeLists.txt:7, plain signature, transitive) or directly for HEADER_ONLY tests (test/CMakeLists.txt:17)."
+  },
+  {
+   "batch": 4,
+   "note": "No tracked file under either declared include directory (include/ holds only fmt/*.h, test/gtest only gmock/gmock.h and gtest/*.h) shadows a standard-library, POSIX or Windows header name, so every such angle include in this batch is external."
+  },
+  {
+   "batch": 4,
+   "note": "No #include in the batch's twelve files is macro-operand, line-split, #import / #include_next, or inside an #if 0 block (gtest.h's three #if 0 blocks at 7644, 9333 and 9411 carry no #include), hence site_gaps is empty."
+  }
+ ]
+}

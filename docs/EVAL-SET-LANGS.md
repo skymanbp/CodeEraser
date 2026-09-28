@@ -599,3 +599,44 @@ Java / Lua / R 的宇宙台账（本代）：
 
 四份档的 `generated_from` 记 ce 1.7.4、树 `37d9772`、dirty = true：冻结时考题表的两行本身还没提交（它和这四份档在同一个
 提交里落地），与 Java 那三份同理。
+
+### 真值（2026-09-28 冻结）
+
+档 `contracts/eval/lang-review-lua-v1.json`（C，100 行）与 `lang-review-fmt-v1.json`（C++，100 行）。切批与读法同 Java 一节：
+每门 100 道主样本按审阅序切成四批，每批 25 道交给一个独立的 Opus 代理；代理只读一个语料在钉住 tip 的干净克隆（lua/lua `0b29f40`、
+fmtlib/fmt `6d71f74`）和自己那一批，不跑 `ce`、不看产品的任何解析；装配逐字照录，判决不动。200 道的 spec 全在记录的行上，
+零失配，没有动用备用题。
+
+**词表在 `include` 上的读法**（简报给的定义，代理照此判）：真值 = 该语料**自己的构建**让预处理器找到的那个被追踪文件——引号形先在
+引用文件的目录找，再按构建给编译该文件的目标声明的包含目录（Makefile 的 `-I`、CMake 的 `target_include_directories`）依次找，
+再走尖括号的搜索；尖括号形只走声明目录再到系统（C11 6.10.2）；路径按 `git ls-files` 的写法；树里没有、是标准库 / 系统 / 未 vendor
+的第三方头 = `external`；树里没有、也不是系统头（如构建生成的头）= `none`；两个不同的被追踪文件都能命中 = `ambiguous`；宏作操作数
+= `dynamic`。
+
+| 语料 | 主样本 | external | 文件 | none | ambiguous / dynamic |
+|---|---|---|---|---|---|
+| lua/lua（C） | 100 | 25（全是尖括号形） | 74（`.h` 68、`.c` 6） | 1 | 0 |
+| fmtlib/fmt（C++） | 100 | 83（尖括号形 80、引号形 3 = 未 vendor 的 absl 头） | 17（`include/fmt/` 13、`test/gtest/` 3、`test/fuzzing/` 1） | 0 | 0 |
+
+**C 的真值够得到钉住的树**：`.h` 按产品扩展名表是 C++，不在 C 的 `*.c` 宇宙里，而 74 道文件真值里 68 道正是解释器的头文件；
+考题表的 C 行因此改 `reach: Tree`（与 HTML 同），多冻一份 `contracts/eval/lang-tree-lua-v1.json`（111 条路径，钉住 tip 的
+`git ls-tree`），真值与 `scope_gaps` 必须落在树上。C++ 的八个扩展名把 fmt 的头文件、源文件与测试收进同一个宇宙，17 道文件真值全在
+宇宙内，`reach` 仍是宇宙。
+
+**真值对阶梯的含义**（判分前的观察，不是判分）：C 的 74 道文件真值里 73 道由引用文件自己的目录答出（根目录的 `.c` 引根目录的
+`.h`；根 makefile 一个 `-I` 也没声明），只有 `testes/libs/lib2.c:2` 的 `lauxlib.h` 靠 `testes/libs/makefile:8` 的
+`-I$(LUA_DIR)`（`../../`）——阶梯今天没有这一级（语料无 `compile_commands.json`、无 ce.toml），答 out_of_scope；唯一的 `none`
+是 `onelua.c:135` 在 `#ifdef MAKE_LUAC` 下引的 `luac.c`，仓库树里没有这个文件。C++ 的 17 道里只有 4 道由引用文件自己的目录答出，
+10 道引号形 `fmt/*.h` 与 1 道尖括号形 `<fmt/chrono.h>` 要 `include/`（`CMakeLists.txt` 的 `setup_target` 给库目标、`test-main` 的
+PUBLIC 目录给每个测试目标声明的唯一包含目录），2 道 `gtest/gtest.h` / `gmock/gmock.h` 要 `test/gtest`（`test/gtest/CMakeLists.txt`
+的 SYSTEM 包含目录）——这 13 道里 12 道引号形今天答 out_of_scope，那 1 道尖括号形今天答 external、与真值相左。判分前阶梯要不要
+按约定读 `include/`，由下一个提交定；本节只记真值。
+
+**候选漏检**：C 的四个代理里三个各报了同两处 `lvm.c:1211`（`#if LUA_USE_JUMPTABLE` 下、函数体内的 `#include "ljumptab.h"`）与
+`lvm.c:1228`（`#if 0` 块里缩进的 `#include "lopnames.h"`），落 `site_gaps`（带批号，6 条）；第三批另报 `lua.h:150` 的
+`#include LUA_USER_H`（宏作操作数）——`lua.h` 不在 C 的宇宙里而在树上，按门的两侧规则落 `scope_gaps`。C++ 零漏检。判分时逐条核实：
+检测器读不读函数体内与 `#if 0` 下的 include，是判分要回答的问题。
+
+**代理另记的语料约定**（`notes`，逐条带批号）：根 makefile 编译每个根级 `.c`（`CORE_O / LIB_O / LUA_O`），不声明任何包含目录，
+引号形一律在引用者自己的目录解出；`testes/libs/makefile` 自己声明 `-I`；fmt 的每个库目标只有 `include/` 一个声明目录
+（`setup_target`），每个 `add_fmt_test` 目标经 `test-main` 的 PUBLIC 目录到 `include/`、经 gtest 的 SYSTEM 目录到 `test/gtest`。

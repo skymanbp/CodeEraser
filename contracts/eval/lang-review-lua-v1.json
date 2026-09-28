@@ -1,0 +1,1238 @@
+{
+ "schema": "ce.eval-lang-review/1.0.0",
+ "corpus": "lua",
+ "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+ "lang": "c",
+ "auditor": "four independent Opus subagents, one batch of 25 primaries each in the sample's audit order, reading only the pinned clone (lua/lua at 0b29f40) and their batch - never the product's parse, no ce, no resolver; each resolved an include as the corpus's own build configures the preprocessor (C11 6.10.2: a quoted operand in the includer's directory, then the include directories the build declares for the target compiling that file, then the angle search; an angle operand in the declared directories, then the system), the build read from the clone's makefile and the truth named as `git ls-files` prints the path (booklet language-expansion.md section 14 item 14; RG15: assembled verbatim, judgments untouched)",
+ "summary": {
+  "external": 25,
+  "file": 74,
+  "none": 1
+ },
+ "rows": [
+  {
+   "rank": "0d42bddd45246b1868a2d75089d8e4bb5a36ee79c63a38a55fee014128497eb5",
+   "path": "ldebug.c",
+   "line": 30,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lvm.h",
+   "batch": 1,
+   "truth": "lvm.h",
+   "why": "Rule 1 (quoted): same directory as the includer - ldebug.c and lvm.h both sit at the repo root; the root makefile that compiles ldebug.o (CORE_O, makefile:98) declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); its gcc -MM line ldebug.o (makefile:163-165) lists lvm.h."
+  },
+  {
+   "rank": "3447512e5c5aae06cfa154e01b753d6998fef8fccce1dfdfba85aea7601c26af",
+   "path": "ldblib.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lauxlib.h",
+   "batch": 1,
+   "truth": "lauxlib.h",
+   "why": "Rule 1 (quoted): same directory as the includer - ldblib.c and lauxlib.h both sit at the repo root; ldblib.o is a LIB_O object (makefile:102) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line ldblib.o (makefile:162) lists lauxlib.h."
+  },
+  {
+   "rank": "09b2617175d7a932531df4bc5e7237cbde1597c1ccac30c22926a82a3bf3143e",
+   "path": "lcode.c",
+   "line": 1929,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lopnames.h",
+   "batch": 1,
+   "truth": "lopnames.h",
+   "why": "Rule 1 (quoted): same directory as the includer - an unconditional file-scope include just before luaK_finish; lopnames.h sits at the repo root beside lcode.c (CORE_O, makefile:98) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lcode.o (makefile:156-158) lists lopnames.h."
+  },
+  {
+   "rank": "0b6ead0952f334bdf06119b4dffe6a751bf461bd047b263d01a1636c79957c61",
+   "path": "onelua.c",
+   "line": 84,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lzio.c",
+   "batch": 1,
+   "truth": "lzio.c",
+   "why": "Rule 1 (quoted): same directory as the includer - onelua.c is no makefile target; its own build line (onelua.c:6, gcc -O2 -std=c99 -o lua onelua.c -lm) passes no -I, so the unconditional core include of lzio.c is found beside it at the repo root."
+  },
+  {
+   "rank": "0ede05530ea3ff7d8590c7d78fb4d8136fbcde3eedce47f81b5b318ae56083f0",
+   "path": "ltests.c",
+   "line": 22,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lauxlib.h",
+   "batch": 1,
+   "truth": "lauxlib.h",
+   "why": "Rule 1 (quoted): same directory as the includer - ltests.c and lauxlib.h both sit at the repo root; ltests.o is a CORE_O object (makefile:100) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line ltests.o (makefile:206-209) lists lauxlib.h."
+  },
+  {
+   "rank": "292b42f375522d721b349c0c9e9b755e4b4f7f5dfa1a77cdd7e5157a826e3208",
+   "path": "lobject.c",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lprefix.h",
+   "batch": 1,
+   "truth": "lprefix.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lobject.c and lprefix.h both sit at the repo root; lobject.o is a CORE_O object (makefile:99) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lobject.o (makefile:186-188) lists lprefix.h."
+  },
+  {
+   "rank": "26acdc2c9603c133511999c7dc7fc884aeb6de303f2e848a44139d75cf957a1d",
+   "path": "llex.c",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<locale.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <locale.h> is searched only in the system directories - it is the ISO C standard library locale header; no tracked file is named locale.h, and gcc -MM line llex.o (makefile:177-179) does not list it."
+  },
+  {
+   "rank": "0997f82e5148b56903a65cc0bff40a08b09ffc8f57e231b7a3d17a02d0ea3a60",
+   "path": "lcorolib.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "llimits.h",
+   "batch": 1,
+   "truth": "llimits.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lcorolib.c and llimits.h both sit at the repo root; lcorolib.o is a LIB_O object (makefile:103) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lcorolib.o (makefile:159-160) lists llimits.h."
+  },
+  {
+   "rank": "1f7307c9b1f3083280d2d81a7fe173268824baf9bac008133fccabcc6edf7929",
+   "path": "lmem.c",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 1,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lmem.c and lua.h both sit at the repo root; lmem.o is a CORE_O object (makefile:99) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lmem.o (makefile:182-183) lists lua.h."
+  },
+  {
+   "rank": "2694864302396a3cc7bbf57e5a837251174d607635746110e341261dcaa0642b",
+   "path": "lmathlib.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 1,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lmathlib.c and lua.h both sit at the repo root; lmathlib.o is a LIB_O object (makefile:102) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lmathlib.o (makefile:180-181) lists lua.h."
+  },
+  {
+   "rank": "34353578cbb7c9368daac8005f336ab984f038e062e09df3b03f6c2cb2f120ea",
+   "path": "lua.c",
+   "line": 431,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<unistd.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile building lua.o (LUA_O, makefile:106) declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <unistd.h> resolves in the system directories - it is the POSIX header, included under #if defined(LUA_USE_POSIX) (lua.c:429); no tracked unistd.h, and gcc -MM line lua.o (makefile:212) does not list it."
+  },
+  {
+   "rank": "1a598a808715f09e22bcc13a4de5e559c7f13e497ca7a722de4bd648d77bc68e",
+   "path": "llex.c",
+   "line": 21,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lgc.h",
+   "batch": 1,
+   "truth": "lgc.h",
+   "why": "Rule 1 (quoted): same directory as the includer - llex.c and lgc.h both sit at the repo root; llex.o is a CORE_O object (makefile:98) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line llex.o (makefile:177-179) lists lgc.h."
+  },
+  {
+   "rank": "2be3ba2c10fbd2e0da2a960eddd1ad25c161053fe85976d0ba5d36aefbeac7e9",
+   "path": "onelua.c",
+   "line": 96,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lfunc.c",
+   "batch": 1,
+   "truth": "lfunc.c",
+   "why": "Rule 1 (quoted): same directory as the includer - onelua.c is no makefile target; its own build line (onelua.c:6, gcc -O2 -std=c99 -o lua onelua.c -lm) passes no -I, so the unconditional core include of lfunc.c is found beside it at the repo root."
+  },
+  {
+   "rank": "22b9fc24b28ac6830eef4d9b07006da5a604aa45c4a8498a9f4b75ffeaea1852",
+   "path": "ltable.c",
+   "line": 28,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <string.h> is searched only in the system directories - it is the ISO C standard library string header; no tracked string.h, and gcc -MM line ltable.o (makefile:202-203) does not list it."
+  },
+  {
+   "rank": "0aaaede5819a9e11c49e87d5bcb0fc48e7a27a44a60bcf4e1fd1f87a7491bc8c",
+   "path": "lvm.c",
+   "line": 28,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstate.h",
+   "batch": 1,
+   "truth": "lstate.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lvm.c and lstate.h both sit at the repo root; lvm.o is a CORE_O object (makefile:100) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lvm.o (makefile:218-220) lists lstate.h."
+  },
+  {
+   "rank": "28551ecdf647b126ffe3f69de199199ae4f83787cc1918bf8915f3948b5e5c07",
+   "path": "ldump.c",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stddef.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <stddef.h> is searched only in the system directories - it is the ISO C standard header the compiler supplies; no tracked stddef.h, and gcc -MM line ldump.o (makefile:169-170) does not list it."
+  },
+  {
+   "rank": "0339f64c3be3c7a1ab7e4b8572e06685359ca96a2c23ec2557e98f94a8e3bbd6",
+   "path": "ltm.c",
+   "line": 18,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldo.h",
+   "batch": 1,
+   "truth": "ldo.h",
+   "why": "Rule 1 (quoted): same directory as the includer - ltm.c and ldo.h both sit at the repo root; ltm.o is a CORE_O object (makefile:100) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line ltm.o (makefile:210-211) lists ldo.h."
+  },
+  {
+   "rank": "240cca9b3e4886c1f406bba315189118b45f13a53f85d4920790e31a4175471d",
+   "path": "lobject.c",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdio.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <stdio.h> is searched only in the system directories - it is the ISO C standard library I/O header; no tracked stdio.h, and gcc -MM line lobject.o (makefile:186-188) does not list it."
+  },
+  {
+   "rank": "2cff1fd8985e3ca1c4bbaf65478e3eb788f578e57f063b56715a63f39e7fcc22",
+   "path": "ltests.c",
+   "line": 31,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstate.h",
+   "batch": 1,
+   "truth": "lstate.h",
+   "why": "Rule 1 (quoted): same directory as the includer - ltests.c and lstate.h both sit at the repo root; ltests.o is a CORE_O object (makefile:100) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line ltests.o (makefile:206-209) lists lstate.h."
+  },
+  {
+   "rank": "07134ceabd56521d4401e8f24a183a6a3648e051a10b1519c408d16a54c0b55e",
+   "path": "lgc.c",
+   "line": 22,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lobject.h",
+   "batch": 1,
+   "truth": "lobject.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lgc.c and lobject.h both sit at the repo root; lgc.o is a CORE_O object (makefile:98) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lgc.o (makefile:173-174) lists lobject.h."
+  },
+  {
+   "rank": "1a843c010d017968459536c3806c3b79112c17f51f11b782407551ff24fcbb9b",
+   "path": "ltests.c",
+   "line": 2151,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<unistd.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <unistd.h> resolves in the system directories - it is the POSIX header, in the #else branch of #if !defined(LUA_USE_POSIX) (ltests.c:2145, :2149); no tracked unistd.h, and gcc -MM line ltests.o (makefile:206-209) does not list it."
+  },
+  {
+   "rank": "001c4a38286c506d1a190fc7912e9374595d3e010906cdae60265e6a77a448c3",
+   "path": "onelua.c",
+   "line": 112,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldblib.c",
+   "batch": 1,
+   "truth": "ldblib.c",
+   "why": "Rule 1 (quoted): same directory as the includer - onelua.c's own build line (onelua.c:6) passes no -I, so ldblib.c is found beside it at the repo root; the include sits in the #ifndef MAKE_LUAC block (onelua.c:109-121), active in the default MAKE_LUA build (onelua.c:19-25)."
+  },
+  {
+   "rank": "0ce7b97708acdd9ef6d9ba80ed689684fad1fc5c7bc619040169543a17293ed2",
+   "path": "ltests.c",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdio.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85), so <stdio.h> is searched only in the system directories - it is the ISO C standard library I/O header; no tracked stdio.h, and gcc -MM line ltests.o (makefile:206-209) does not list it."
+  },
+  {
+   "rank": "03770a42f2d38df44868c32b5557d40624e06a2cf62e413cde5b5031cdeadd8f",
+   "path": "onelua.c",
+   "line": 65,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdlib.h>",
+   "batch": 1,
+   "truth": "external",
+   "why": "Rule 2 (angle): onelua.c's own build line (onelua.c:6, gcc -O2 -std=c99 -o lua onelua.c -lm) declares no include directory, so <stdlib.h> is searched only in the system directories - it is the ISO C standard library header; no tracked stdlib.h."
+  },
+  {
+   "rank": "04c82f7a94c6146f9fbd881e2ebd54a4ae0b012048ee16394b7ed3ca8946798f",
+   "path": "lstate.c",
+   "line": 26,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstring.h",
+   "batch": 1,
+   "truth": "lstring.h",
+   "why": "Rule 1 (quoted): same directory as the includer - lstate.c and lstring.h both sit at the repo root; lstate.o is a CORE_O object (makefile:99) and the root makefile declares no -I (MYCFLAGS makefile:78, CFLAGS makefile:85); gcc -MM line lstate.o (makefile:195-197) lists lstring.h."
+  },
+  {
+   "rank": "011d432f33aecdc50c97bebbfe0fda9d72d307675ec96ddfdc0bbdf4f5071e06",
+   "path": "lzio.c",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lapi.h",
+   "batch": 2,
+   "truth": "lapi.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lzio.c:17 reads #include 'lapi.h' and the repo root holds tracked lapi.h; lzio.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); the gcc -MM line makefile:221 lists lapi.h for lzio.o."
+  },
+  {
+   "rank": "26fa730568b56374a6817ddb3aa82482adf13ac7578678448844343927549324",
+   "path": "lua.c",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lauxlib.h",
+   "batch": 2,
+   "truth": "lauxlib.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lua.c:20 reads #include 'lauxlib.h' and the repo root holds tracked lauxlib.h; lua.c is LUA_O (makefile:106), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:212 lists lauxlib.h for lua.o."
+  },
+  {
+   "rank": "2af77d417e42e261801bcbb4ea4ddf9166199eeeb36c4c812e78dd581d28095e",
+   "path": "ldebug.c",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 2,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted), same directory as the includer: ldebug.c:17 reads #include 'lua.h' and the repo root holds tracked lua.h; ldebug.c is in CORE_O (makefile:98), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:163 lists lua.h for ldebug.o."
+  },
+  {
+   "rank": "020ea264897abba9bf4db698f0a88b53922eeb483c88dd41bd00a14a6c2dc483",
+   "path": "lzio.c",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lprefix.h",
+   "batch": 2,
+   "truth": "lprefix.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lzio.c:10 reads #include 'lprefix.h' and the repo root holds tracked lprefix.h; lzio.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:221 lists lprefix.h for lzio.o."
+  },
+  {
+   "rank": "285399439629009a2bc392b9e106e2ee2044d25f3429951e08cb5b1d0c43ad64",
+   "path": "ltm.c",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 2,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted), same directory as the includer: ltm.c:15 reads #include 'lua.h' and the repo root holds tracked lua.h; ltm.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:210 lists lua.h for ltm.o."
+  },
+  {
+   "rank": "10ee8cc44a6ef4a6bbdaffdcc94cdcffc8c7b1c39587deafd67ef7463cefde9b",
+   "path": "lparser.c",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lobject.h",
+   "batch": 2,
+   "truth": "lobject.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lparser.c:24 reads #include 'lobject.h' and the repo root holds tracked lobject.h; lparser.c is in CORE_O (makefile:99), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:192 lists lobject.h for lparser.o."
+  },
+  {
+   "rank": "0287ff0f7235d2932e762724c10381d7821ddc818f0febc8c64d0b059de1cf1e",
+   "path": "lvm.c",
+   "line": 29,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstring.h",
+   "batch": 2,
+   "truth": "lstring.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lvm.c:29 reads #include 'lstring.h' and the repo root holds tracked lstring.h; lvm.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:220 lists lstring.h for lvm.o."
+  },
+  {
+   "rank": "32ee9f5bd30af87f7d213821aea1e033e9762095adb95e736688a30258f4d8bd",
+   "path": "lundump.c",
+   "line": 16,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 2,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lundump.c:16 reads #include 'lua.h' and the repo root holds tracked lua.h; lundump.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:213 lists lua.h for lundump.o."
+  },
+  {
+   "rank": "247f025414ae838d80dbe460cbf9f28d996c80c7d19f8b1feea7556cc6789701",
+   "path": "ltable.c",
+   "line": 40,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lvm.h",
+   "batch": 2,
+   "truth": "lvm.h",
+   "why": "Rule 1 (quoted), same directory as the includer: ltable.c:40 reads #include 'lvm.h' and the repo root holds tracked lvm.h; ltable.c is in CORE_O (makefile:99), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:202-203 lists lvm.h for ltable.o."
+  },
+  {
+   "rank": "2a4b17a3c5a2cdfd33c4a86b7c98687a6989a8658b8a3949586fb0972dedd2d3",
+   "path": "lvm.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 2,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lvm.c:19 reads #include 'lua.h' and the repo root holds tracked lua.h; lvm.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:218 lists lua.h for lvm.o."
+  },
+  {
+   "rank": "2e9d99b87fb42c46d37202dd9559ceefe9c26f62951e5664d82edacb96e2b69d",
+   "path": "lgc.c",
+   "line": 18,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldo.h",
+   "batch": 2,
+   "truth": "ldo.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lgc.c:18 reads #include 'ldo.h' and the repo root holds tracked ldo.h; lgc.c is in CORE_O (makefile:98), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:173-174 lists ldo.h for lgc.o."
+  },
+  {
+   "rank": "24815bc63202ae55f0c4d2dcd45e62f8ee9eaea18c53e7594b6f7e5534b88fcf",
+   "path": "lzio.c",
+   "line": 21,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lzio.h",
+   "batch": 2,
+   "truth": "lzio.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lzio.c:21 reads #include 'lzio.h' and the repo root holds tracked lzio.h; lzio.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:221-222 lists lzio.h for lzio.o."
+  },
+  {
+   "rank": "2529dac9e2b744f6c12ac57ff95a481ce9e71236f188148bbb383ebcef773b0c",
+   "path": "ltable.c",
+   "line": 26,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<math.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle): ltable.c:26 reads #include <math.h>; the root makefile declares no include directory (CFLAGS makefile:85 and MYCFLAGS makefile:78 carry no -I), so the search goes to the system: <math.h> is the C standard library header (C11 7.12); no math.h is tracked, and the gcc -MM line makefile:202-203 omits it as a system header."
+  },
+  {
+   "rank": "1489840773bc1c38f4e4eee1e9ff5df6439c39df7abb32d0e2253770a6f8c92f",
+   "path": "linit.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lualib.h",
+   "batch": 2,
+   "truth": "lualib.h",
+   "why": "Rule 1 (quoted), same directory as the includer: linit.c:19 reads #include 'lualib.h' and the repo root holds tracked lualib.h; linit.c is in LIB_O (makefile:103), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:175 lists lualib.h for linit.o."
+  },
+  {
+   "rank": "268881cef8e05caca87d977dcb63ef2aa5407519b6841c75a3ac8e732193cf19",
+   "path": "lvm.c",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lfunc.h",
+   "batch": 2,
+   "truth": "lfunc.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lvm.c:24 reads #include 'lfunc.h' and the repo root holds tracked lfunc.h; lvm.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:219 lists lfunc.h for lvm.o."
+  },
+  {
+   "rank": "2bd2317b06e0ddbe7760097a218b56ba55ed999cda696dc87c8121baf2622c17",
+   "path": "testes/libs/lib2.c",
+   "line": 2,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lauxlib.h",
+   "batch": 2,
+   "truth": "lauxlib.h",
+   "why": "Rule 1 (quoted): lib2.c:2 reads #include 'lauxlib.h'; the includer's directory testes/libs tracks no lauxlib.h (only P1/dummy, lib*.c, makefile), so the next candidate is the declared directory: testes/libs/makefile:8 CFLAGS -I$(LUA_DIR) with LUA_DIR = ../../ (line 3), make run inside testes/libs (lib2.so rule lines 20-21; the all script line 2 does cd testes/libs), i.e. the repo root, which holds tracked lauxlib.h."
+  },
+  {
+   "rank": "127594ac74ad023cc36a62121152fb8cdd2455655a47ae71cde7dcdd7daad06b",
+   "path": "lapi.c",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lprefix.h",
+   "batch": 2,
+   "truth": "lprefix.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lapi.c:10 reads #include 'lprefix.h' and the repo root holds tracked lprefix.h; lapi.c is in CORE_O (makefile:98), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:150 lists lprefix.h for lapi.o."
+  },
+  {
+   "rank": "1521daae9cce337208dfdd909fdfa508c80200ede87a55c7b7155f5c5577cd8c",
+   "path": "ltests.c",
+   "line": 28,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lmem.h",
+   "batch": 2,
+   "truth": "lmem.h",
+   "why": "Rule 1 (quoted), same directory as the includer: ltests.c:28 reads #include 'lmem.h' and the repo root holds tracked lmem.h; ltests.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:206-207 lists lmem.h for ltests.o."
+  },
+  {
+   "rank": "26bfbe0fd18f74995f3c1920a70cef6a58d77d6015de6d52f6162a0514d5ae4e",
+   "path": "lcode.c",
+   "line": 27,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lopcodes.h",
+   "batch": 2,
+   "truth": "lopcodes.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lcode.c:27 reads #include 'lopcodes.h' and the repo root holds tracked lopcodes.h; lcode.c is in CORE_O (makefile:98), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:156-157 lists lopcodes.h for lcode.o."
+  },
+  {
+   "rank": "0c21f3eefc7d87b954a61f6a9557f36e472d2230b358549f669d9d646db46c51",
+   "path": "lauxlib.c",
+   "line": 27,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lauxlib.h",
+   "batch": 2,
+   "truth": "lauxlib.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lauxlib.c:27 reads #include 'lauxlib.h' and the repo root holds tracked lauxlib.h; lauxlib.c is AUX_O (makefile:101), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:153 lists lauxlib.h for lauxlib.o."
+  },
+  {
+   "rank": "124e5333749015a4b249b7c0b327d6aaa8d0229e9bc0510fb89aa65e5693ad60",
+   "path": "lmathlib.c",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<limits.h>",
+   "batch": 2,
+   "truth": "external",
+   "why": "Rule 2 (angle): lmathlib.c:14 reads #include <limits.h>; lmathlib.c is in LIB_O (makefile:102) and the root makefile declares no include directory (CFLAGS makefile:85, MYCFLAGS makefile:78), so the search goes to the system: <limits.h> is the C standard library header (C11 7.10); no limits.h is tracked (llimits.h is a different name) and the gcc -MM line makefile:180-181 omits it as a system header."
+  },
+  {
+   "rank": "15dc185732b5202f012f0f386213d879e87fde05b65972fe865b36cf071367b0",
+   "path": "onelua.c",
+   "line": 110,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lbaselib.c",
+   "batch": 2,
+   "truth": "lbaselib.c",
+   "why": "Rule 1 (quoted), same directory as the includer: onelua.c:110 reads #include 'lbaselib.c' (inside #ifndef MAKE_LUAC, active by default) and the repo root holds tracked lbaselib.c; onelua.c is absent from the makefile's object lists and is built by the command in its own header (onelua.c:6, gcc -O2 -std=c99 -o lua onelua.c -lm), which declares no -I."
+  },
+  {
+   "rank": "246ecf627cc794831956efdf16f90b49caa28a2831ddbc745f5514120d57949b",
+   "path": "lundump.c",
+   "line": 21,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lmem.h",
+   "batch": 2,
+   "truth": "lmem.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lundump.c:21 reads #include 'lmem.h' and the repo root holds tracked lmem.h; lundump.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:214 lists lmem.h for lundump.o."
+  },
+  {
+   "rank": "0202fef818b72c0168845f588eadbcccba58e70004d687de9d4efc68b397fd8d",
+   "path": "lobject.c",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldebug.h",
+   "batch": 2,
+   "truth": "ldebug.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lobject.c:24 reads #include 'ldebug.h' and the repo root holds tracked ldebug.h; lobject.c is in CORE_O (makefile:99), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:186-187 lists ldebug.h for lobject.o."
+  },
+  {
+   "rank": "089753952ef2235d92b3555dd87167d71bad35f50d6092e9df060e4edd462655",
+   "path": "lvm.c",
+   "line": 27,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lopcodes.h",
+   "batch": 2,
+   "truth": "lopcodes.h",
+   "why": "Rule 1 (quoted), same directory as the includer: lvm.c:27 reads #include 'lopcodes.h' and the repo root holds tracked lopcodes.h; lvm.c is in CORE_O (makefile:100), compiled with CFLAGS that declare no -I (makefile:78, makefile:85); makefile:219 lists lopcodes.h for lvm.o."
+  },
+  {
+   "rank": "1ebd7fc7d71dcec6b134f42721985e62a87cd2f5efa2bf1821f86c0c76c767d3",
+   "path": "onelua.c",
+   "line": 99,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstring.c",
+   "batch": 3,
+   "truth": "lstring.c",
+   "why": "Rule 1 (quoted): directive confirmed at onelua.c:99. onelua.c is in no makefile object list; its own build lines (onelua.c:6, :10, :14, a single `gcc ... onelua.c`) pass no -I, so the file is found in the same directory as the includer, the repo root, where lstring.c is tracked."
+  },
+  {
+   "rank": "1fc9ed3993e1d3a4c580f044b1f762283d5668863899b056538519338791ce1b",
+   "path": "loslib.c",
+   "line": 16,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at loslib.c:16. loslib.o (LIB_O, makefile:102) is compiled with CFLAGS (makefile:85, MYCFLAGS makefile:78) that declare no -I directory, so only the system is searched; <string.h> is a C standard library header, the tree tracks no string.h, and the generated gcc -MM line makefile:191 lists no such project header."
+  },
+  {
+   "rank": "14120635c4bf0a6eaf4482f87e52b1421821c89b521e33474c6745327cbd1313",
+   "path": "ltests.c",
+   "line": 30,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lopnames.h",
+   "batch": 3,
+   "truth": "lopnames.h",
+   "why": "Rule 1 (quoted): directive confirmed at ltests.c:30. ltests.o is in CORE_O (makefile:100) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lopnames.h is tracked; the gcc -MM line makefile:208 lists lopnames.h."
+  },
+  {
+   "rank": "33594ee7fe8aa797cad6c25416cd381c98ae077953160af62e8cfc39c68aa944",
+   "path": "ltests.c",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lctype.h",
+   "batch": 3,
+   "truth": "lctype.h",
+   "why": "Rule 1 (quoted): directive confirmed at ltests.c:24. ltests.o is in CORE_O (makefile:100) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lctype.h is tracked; the gcc -MM line makefile:208 lists lctype.h."
+  },
+  {
+   "rank": "17835c9bbb2a96cf3fd5ee716b601402d3166661d0a4b731f7b80e2071358b4f",
+   "path": "ltests.c",
+   "line": 286,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<assert.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at ltests.c:286, inside the `#if defined(LUA_DEBUG)` block opened at ltests.c:41 (which does not change resolution). ltests.o (CORE_O, makefile:100) gets no -I from CFLAGS (makefile:85/:78), so only the system is searched; <assert.h> is a C standard library header and the tree tracks no assert.h."
+  },
+  {
+   "rank": "2526594e0b7a26cfd828579d51f39d5b304c67723920cfb264e0dc00b1e6eeca",
+   "path": "lobject.c",
+   "line": 27,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lobject.h",
+   "batch": 3,
+   "truth": "lobject.h",
+   "why": "Rule 1 (quoted): directive confirmed at lobject.c:27. lobject.o is in CORE_O (makefile:99) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lobject.h is tracked; the gcc -MM line makefile:187 lists lobject.h."
+  },
+  {
+   "rank": "26469534c6b4e9d754cef13fbc7292bc9b8e81e0c4142fdb5a445f4fa631ee98",
+   "path": "liolib.c",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "llimits.h",
+   "batch": 3,
+   "truth": "llimits.h",
+   "why": "Rule 1 (quoted): directive confirmed at liolib.c:24. liolib.o is in LIB_O (makefile:102) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where llimits.h is tracked; the gcc -MM line makefile:176 lists llimits.h."
+  },
+  {
+   "rank": "2a355e071413998417e0bed3744d449181ca1fa47f5c16d7198c31cfc2954db6",
+   "path": "lcode.c",
+   "line": 25,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lmem.h",
+   "batch": 3,
+   "truth": "lmem.h",
+   "why": "Rule 1 (quoted): directive confirmed at lcode.c:25. lcode.o is in CORE_O (makefile:98) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lmem.h is tracked; the gcc -MM line makefile:157 lists lmem.h."
+  },
+  {
+   "rank": "09ed063dbe65f2b85dfd8f50db580818aacc880dbcf3029c06f805d7253830d2",
+   "path": "lfunc.c",
+   "line": 23,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstate.h",
+   "batch": 3,
+   "truth": "lstate.h",
+   "why": "Rule 1 (quoted): directive confirmed at lfunc.c:23. lfunc.o is in CORE_O (makefile:98) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lstate.h is tracked; the gcc -MM line makefile:171 lists lstate.h."
+  },
+  {
+   "rank": "27e97abb10e3ae0f2201dbda0b472e50572bfbcf1a7d3aa4822a4fea75bbe559",
+   "path": "lobject.c",
+   "line": 18,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdlib.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at lobject.c:18. lobject.o (CORE_O, makefile:99) gets no -I from CFLAGS (makefile:85/:78), so only the system is searched; <stdlib.h> is a C standard library header, the tree tracks no stdlib.h, and the gcc -MM lines makefile:186-188 list no such project header."
+  },
+  {
+   "rank": "29149f33c120d20e075b9fb1ebced791a1df1a8e686acc10c74fb0a77a5513f0",
+   "path": "lua.c",
+   "line": 16,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<signal.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at lua.c:16. lua.o (LUA_O, makefile:106) gets no -I from CFLAGS (makefile:85/:78), so only the system is searched; <signal.h> is a C standard library header, the tree tracks no signal.h, and the gcc -MM line makefile:212 lists no such project header."
+  },
+  {
+   "rank": "04b03e19977ad7b5098e44c140baa5c57c41a331ad9ae2cb92e30677730dcd69",
+   "path": "lopcodes.c",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lprefix.h",
+   "batch": 3,
+   "truth": "lprefix.h",
+   "why": "Rule 1 (quoted): directive confirmed at lopcodes.c:10. lopcodes.o is in CORE_O (makefile:99) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lprefix.h is tracked; the gcc -MM line makefile:189 lists lprefix.h."
+  },
+  {
+   "rank": "1801928013e76b57684605464577a736283d9ec88a4b418a28f5f6b4e5f29290",
+   "path": "ltests.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 3,
+   "truth": "lua.h",
+   "why": "Rule 1 (quoted): directive confirmed at ltests.c:19. ltests.o is in CORE_O (makefile:100) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lua.h is tracked; the gcc -MM line makefile:206 lists lua.h."
+  },
+  {
+   "rank": "2a33a324dc3912c82a90ed9b06eca15b2265bc4da152d7534908024e647f7dc5",
+   "path": "loadlib.c",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lprefix.h",
+   "batch": 3,
+   "truth": "lprefix.h",
+   "why": "Rule 1 (quoted): directive confirmed at loadlib.c:14. loadlib.o is in LIB_O (makefile:103) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lprefix.h is tracked; the gcc -MM line makefile:184 lists lprefix.h."
+  },
+  {
+   "rank": "06eae3bb938e140e4603f656151a5effe019f0f71131a95cc833bfb9498a8d7d",
+   "path": "lua.c",
+   "line": 21,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lualib.h",
+   "batch": 3,
+   "truth": "lualib.h",
+   "why": "Rule 1 (quoted): directive confirmed at lua.c:21. lua.o is LUA_O (makefile:106) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lualib.h is tracked; the gcc -MM line makefile:212 lists lualib.h."
+  },
+  {
+   "rank": "23d0900dafde30e54dc381750a4f249500f19e7a15a6d56be0c2716f44f4e5b6",
+   "path": "llex.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldebug.h",
+   "batch": 3,
+   "truth": "ldebug.h",
+   "why": "Rule 1 (quoted): directive confirmed at llex.c:19. llex.o is in CORE_O (makefile:98) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where ldebug.h is tracked; the gcc -MM line makefile:177 lists ldebug.h."
+  },
+  {
+   "rank": "0227f32acad676f88bedf09be1bec180117fa6b1ea4b19a67936a7a6aa78e95c",
+   "path": "loslib.c",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<locale.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at loslib.c:14. loslib.o (LIB_O, makefile:102) gets no -I from CFLAGS (makefile:85/:78), so only the system is searched; <locale.h> is a C standard library header, the tree tracks no locale.h, and the gcc -MM line makefile:191 lists no such project header."
+  },
+  {
+   "rank": "079906897f53c6563248bec0fd199b0cb7570f9e99387c1bfbfd84066824c98d",
+   "path": "liolib.c",
+   "line": 119,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<sys/types.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at liolib.c:119, inside `#if defined(LUA_USE_POSIX) || defined(LUA_USE_OFF_T)` (liolib.c:117). liolib.o (LIB_O, makefile:102) gets no -I from CFLAGS (makefile:85/:78), so only the system is searched; <sys/types.h> is a POSIX system header and the tree tracks no sys/ directory."
+  },
+  {
+   "rank": "31f91cd8e20b235c7753eef1d9d1282eff2f8844acfaca370fd6cefa3d4a3ecb",
+   "path": "lgc.c",
+   "line": 21,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lmem.h",
+   "batch": 3,
+   "truth": "lmem.h",
+   "why": "Rule 1 (quoted): directive confirmed at lgc.c:21. lgc.o is in CORE_O (makefile:98) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lmem.h is tracked; the gcc -MM line makefile:174 lists lmem.h."
+  },
+  {
+   "rank": "21fe43f82b8e9608c486c33cb89fdc00bffe395cd98a62f141f63fb42caf7115",
+   "path": "lzio.c",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 3,
+   "truth": "external",
+   "why": "Rule 2 (angle): directive confirmed at lzio.c:13. lzio.o (CORE_O, makefile:100) gets no -I from CFLAGS (makefile:85/:78), so only the system is searched; <string.h> is a C standard library header, the tree tracks no string.h, and the gcc -MM lines makefile:221-222 list no such project header."
+  },
+  {
+   "rank": "0fdf9f41b91977d367d482f898d812c990d223d75dcdffa54c417e1e49fdb9f8",
+   "path": "lfunc.c",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldebug.h",
+   "batch": 3,
+   "truth": "ldebug.h",
+   "why": "Rule 1 (quoted): directive confirmed at lfunc.c:17. lfunc.o is in CORE_O (makefile:98) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where ldebug.h is tracked; the gcc -MM line makefile:171 lists ldebug.h."
+  },
+  {
+   "rank": "264b096c5d96ad84553d12955f258be80812c1e294503907e7072dc0ebf18531",
+   "path": "lstring.c",
+   "line": 18,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldo.h",
+   "batch": 3,
+   "truth": "ldo.h",
+   "why": "Rule 1 (quoted): directive confirmed at lstring.c:18. lstring.o is in CORE_O (makefile:99) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where ldo.h is tracked; the gcc -MM line makefile:199 lists ldo.h."
+  },
+  {
+   "rank": "04b357f06edd52a85636e9be1385062fb4536d325228d3e8a72ab9f2623b7721",
+   "path": "lstate.c",
+   "line": 19,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldebug.h",
+   "batch": 3,
+   "truth": "ldebug.h",
+   "why": "Rule 1 (quoted): directive confirmed at lstate.c:19. lstate.o is in CORE_O (makefile:99) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where ldebug.h is tracked; the gcc -MM line makefile:196 lists ldebug.h."
+  },
+  {
+   "rank": "1433b4cf8f0fe00b2d6f5781fc0d22165d5435b1f48d11f77d41eb341b370e29",
+   "path": "lutf8lib.c",
+   "line": 10,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lprefix.h",
+   "batch": 3,
+   "truth": "lprefix.h",
+   "why": "Rule 1 (quoted): directive confirmed at lutf8lib.c:10. lutf8lib.o is in LIB_O (makefile:103) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lprefix.h is tracked; the gcc -MM line makefile:216 lists lprefix.h."
+  },
+  {
+   "rank": "18dc63c27565ed63bcb8fee2869c07af9cdd760230b38ebca2c60b864cd3726e",
+   "path": "lundump.c",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lfunc.h",
+   "batch": 3,
+   "truth": "lfunc.h",
+   "why": "Rule 1 (quoted): directive confirmed at lundump.c:20. lundump.o is in CORE_O (makefile:100) and CFLAGS (makefile:85/:78) declare no -I, so the header is found in the same directory as the includer, the repo root, where lfunc.h is tracked; the gcc -MM line makefile:214 lists lfunc.h."
+  },
+  {
+   "rank": "01d2510e9dbee14e9ab9e779bf8a91ba5e70e8f59b0744a9ea4a31f2b96e0ee0",
+   "path": "llex.c",
+   "line": 14,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header string.h. llex.c builds as a core object (CORE_O makefile:98) and the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so only the system headers are searched; git ls-files lists no string.h anywhere in the tree, and the generated gcc -MM line (makefile:177-179), which omits system headers, does not list it."
+  },
+  {
+   "rank": "174f08ba2cac34c3876b59e4699d8ce1bb09d255c28931d75e88845281c50af5",
+   "path": "lua.c",
+   "line": 18,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 4,
+   "truth": "lua.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lua.c sits in the repo root and builds as the interpreter object (LUA_O makefile:106); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lua.h. The generated gcc -MM dependency line for this object (makefile:212) lists lua.h."
+  },
+  {
+   "rank": "2531b78fb2886fc33cfc7409a37e05fad0bb81ad3190409077e3050bb393769f",
+   "path": "lstring.c",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lobject.h",
+   "batch": 4,
+   "truth": "lobject.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lstring.c sits in the repo root and builds as a core object (CORE_O makefile:99); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lobject.h. The generated gcc -MM dependency line for this object (makefile:198-199) lists lobject.h."
+  },
+  {
+   "rank": "290c9957383535b60ed1cabb0599435e0668ed3e9b81a8aca53a701a0f7b5d2c",
+   "path": "ltests.c",
+   "line": 33,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ltable.h",
+   "batch": 4,
+   "truth": "ltable.h",
+   "why": "Rule 1, quoted include: same directory as the includer. ltests.c sits in the repo root and builds as a core object (CORE_O makefile:100); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked ltable.h. The generated gcc -MM dependency line for this object (makefile:206-209) lists ltable.h."
+  },
+  {
+   "rank": "2079ae459d364b24ab185883277b7effbdc654f01a2bc2ad90ee47c46c3d1a28",
+   "path": "lcode.c",
+   "line": 24,
+   "nth": 0,
+   "kind": "include",
+   "spec": "llex.h",
+   "batch": 4,
+   "truth": "llex.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lcode.c sits in the repo root and builds as a core object (CORE_O makefile:98); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked llex.h. The generated gcc -MM dependency line for this object (makefile:156-158) lists llex.h."
+  },
+  {
+   "rank": "0b62e96b452020428fa7f7d247d647a71c9e62871cbfb3283b18fe6038e9c161",
+   "path": "onelua.c",
+   "line": 58,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<locale.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header locale.h. onelua.c is no makefile target; its own documented build commands (onelua.c:6, :10, :14) add no -I flag and run from the repo root, so only the system headers are searched; git ls-files lists no locale.h anywhere in the tree."
+  },
+  {
+   "rank": "2d228325431be43a432dec4f08e610d8b2b99fd10f9ac2ab49e002ea69cab269",
+   "path": "lopcodes.c",
+   "line": 13,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lopcodes.h",
+   "batch": 4,
+   "truth": "lopcodes.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lopcodes.c sits in the repo root and builds as a core object (CORE_O makefile:99); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lopcodes.h. The generated gcc -MM dependency line for this object (makefile:189-190) lists lopcodes.h."
+  },
+  {
+   "rank": "17b8bcd0350a94bd06fa76eddc0bdaaf875e1abbebf1570691a272e8018003cf",
+   "path": "ltests.c",
+   "line": 32,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstring.h",
+   "batch": 4,
+   "truth": "lstring.h",
+   "why": "Rule 1, quoted include: same directory as the includer. ltests.c sits in the repo root and builds as a core object (CORE_O makefile:100); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lstring.h. The generated gcc -MM dependency line for this object (makefile:206-209) lists lstring.h."
+  },
+  {
+   "rank": "0c3a3482fc3530de8571e89f44c9bf3ecfe6b6c9c59894ca044efd37939d4909",
+   "path": "lauxlib.c",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header string.h. lauxlib.c builds as the auxiliary-library object (AUX_O makefile:101) and the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so only the system headers are searched; git ls-files lists no string.h anywhere in the tree, and the generated gcc -MM line (makefile:153), which omits system headers, does not list it."
+  },
+  {
+   "rank": "12b3f31dfe8ab18376bfc18039ff0eb5b288f475416465e48649e5a1961fc147",
+   "path": "lzio.c",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstate.h",
+   "batch": 4,
+   "truth": "lstate.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lzio.c sits in the repo root and builds as a core object (CORE_O makefile:100); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lstate.h. The generated gcc -MM dependency line for this object (makefile:221-222) lists lstate.h."
+  },
+  {
+   "rank": "0f9ca44379e4a1e857858afaaea1d89e4bc41f96e62e79cb960d1861134f2448",
+   "path": "lapi.c",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header string.h. lapi.c builds as a core object (CORE_O makefile:98) and the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so only the system headers are searched; git ls-files lists no string.h anywhere in the tree, and the generated gcc -MM line (makefile:150-152), which omits system headers, does not list it."
+  },
+  {
+   "rank": "207c11ca97acd8388c81724fe5b1cc491ae9c0241b889ed1df361e33cb074a93",
+   "path": "ltm.c",
+   "line": 17,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ldebug.h",
+   "batch": 4,
+   "truth": "ldebug.h",
+   "why": "Rule 1, quoted include: same directory as the includer. ltm.c sits in the repo root and builds as a core object (CORE_O makefile:100); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked ldebug.h. The generated gcc -MM dependency line for this object (makefile:210-211) lists ldebug.h."
+  },
+  {
+   "rank": "1200b8e851af4eed7abded6b8e04c3351d403cf843e6993bc9398fefb3791f2d",
+   "path": "lobject.c",
+   "line": 26,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lmem.h",
+   "batch": 4,
+   "truth": "lmem.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lobject.c sits in the repo root and builds as a core object (CORE_O makefile:99); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lmem.h. The generated gcc -MM dependency line for this object (makefile:186-188) lists lmem.h."
+  },
+  {
+   "rank": "1f5964adb92c65f57171633238d2ab78cb3d6560a3178731daa6052165399cd2",
+   "path": "lundump.c",
+   "line": 22,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lobject.h",
+   "batch": 4,
+   "truth": "lobject.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lundump.c sits in the repo root and builds as a core object (CORE_O makefile:100); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lobject.h. The generated gcc -MM dependency line for this object (makefile:213-215) lists lobject.h."
+  },
+  {
+   "rank": "21d8bb9565aff0a2d88732cc558c3c04cd21d9d958f2c21fa71b82305db0e8aa",
+   "path": "lmem.c",
+   "line": 22,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lstate.h",
+   "batch": 4,
+   "truth": "lstate.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lmem.c sits in the repo root and builds as a core object (CORE_O makefile:99); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lstate.h. The generated gcc -MM dependency line for this object (makefile:182-183) lists lstate.h."
+  },
+  {
+   "rank": "2064c5a8b7ae8659b82883b311cf49b414193ec88bed8b263122dc3878172db6",
+   "path": "ldo.c",
+   "line": 30,
+   "nth": 0,
+   "kind": "include",
+   "spec": "ltable.h",
+   "batch": 4,
+   "truth": "ltable.h",
+   "why": "Rule 1, quoted include: same directory as the includer. ldo.c sits in the repo root and builds as a core object (CORE_O makefile:98); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked ltable.h. The generated gcc -MM dependency line for this object (makefile:166-168) lists ltable.h."
+  },
+  {
+   "rank": "2d2c201fd1612e5a9532df008b220af8d3ebef5ead46808e05537b7c83d0b664",
+   "path": "lgc.c",
+   "line": 15,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lua.h",
+   "batch": 4,
+   "truth": "lua.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lgc.c sits in the repo root and builds as a core object (CORE_O makefile:98); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lua.h. The generated gcc -MM dependency line for this object (makefile:173-174) lists lua.h."
+  },
+  {
+   "rank": "12597be54b9bb078d607205d656460577b2f8374b46d14d321502f5307d9943a",
+   "path": "testes/libs/lib22.c",
+   "line": 3,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header string.h. lib22.c is compiled by testes/libs/makefile:26-27 (target lib2-v2.so) with CFLAGS -I$(LUA_DIR) (testes/libs/makefile:8), LUA_DIR = ../../ (testes/libs/makefile:3), i.e. the repo root; the root tracks no string.h (git ls-files lists none anywhere in the tree), so the search falls through to the system header."
+  },
+  {
+   "rank": "207f707cdd4716e8475d964388cf02f4174cd0a095d24a53131beda96a691f77",
+   "path": "lcode.c",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lcode.h",
+   "batch": 4,
+   "truth": "lcode.h",
+   "why": "Rule 1, quoted include: same directory as the includer. lcode.c sits in the repo root and builds as a core object (CORE_O makefile:98); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lcode.h. The generated gcc -MM dependency line for this object (makefile:156-158) lists lcode.h."
+  },
+  {
+   "rank": "028c448620d0630782276a226230045e0296b24a20efaed1743ab178ec133979",
+   "path": "ldblib.c",
+   "line": 20,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lualib.h",
+   "batch": 4,
+   "truth": "lualib.h",
+   "why": "Rule 1, quoted include: same directory as the includer. ldblib.c sits in the repo root and builds as a standard-library object (LIB_O makefile:102); the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so the directory of the includer is the only project directory searched and it holds the tracked lualib.h. The generated gcc -MM dependency line for this object (makefile:162) lists lualib.h."
+  },
+  {
+   "rank": "2c6aecb5f3b8ac45f545b2048d830892810d374cf2c5aba1f578651f7be001f9",
+   "path": "lstrlib.c",
+   "line": 21,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<string.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header string.h. lstrlib.c builds as a standard-library object (LIB_O makefile:102) and the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so only the system headers are searched; git ls-files lists no string.h anywhere in the tree, and the generated gcc -MM line (makefile:200-201), which omits system headers, does not list it."
+  },
+  {
+   "rank": "2581a5399cf21633cedc01e6fda02aa7c5da5a53241ff8191c3936b5b0927c2c",
+   "path": "onelua.c",
+   "line": 135,
+   "nth": 0,
+   "kind": "include",
+   "spec": "luac.c",
+   "batch": 4,
+   "truth": "none",
+   "why": "Rule 1, quoted include of luac.c, guarded by #ifdef MAKE_LUAC (onelua.c:134-136; the default build defines MAKE_LUA instead, onelua.c:19-25). The directory of the includer (repo root) holds no luac.c, and onelua.c is no makefile target: its own documented build commands (onelua.c:6, :10, :14) add no -I flag, so no other project directory is searched. luac.c is tracked nowhere in the pinned tree, git log --all -- luac.c '*/luac.c' returns 0 of the 5,931 commits on any ref, and the only mention of the name in the tree is this line. It is the Lua team's own source for the stand-alone luac compiler (the MAKE_LUAC variant, onelua.c:108 and :133), which this development repository (README.md:3) does not track; it is no system and no third-party header."
+  },
+  {
+   "rank": "01dd44465d7e7f3bc313fb08e9c6caac310b7fc15b6544ea99f220181e59f6f9",
+   "path": "lvm.c",
+   "line": 16,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<stdlib.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header stdlib.h. lvm.c builds as a core object (CORE_O makefile:100) and the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so only the system headers are searched; git ls-files lists no stdlib.h anywhere in the tree, and the generated gcc -MM line (makefile:218-220), which omits system headers, does not list it."
+  },
+  {
+   "rank": "33350def357ecc6b629a3c22f9b2c5022aec59f196a467431b1b45d877db6345",
+   "path": "lstrlib.c",
+   "line": 16,
+   "nth": 0,
+   "kind": "include",
+   "spec": "<locale.h>",
+   "batch": 4,
+   "truth": "external",
+   "why": "Rule 2, angle include of the C standard library header locale.h. lstrlib.c builds as a standard-library object (LIB_O makefile:102) and the top-level makefile declares no -I directory (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85), so only the system headers are searched; git ls-files lists no locale.h anywhere in the tree, and the generated gcc -MM line (makefile:200-201), which omits system headers, does not list it."
+  },
+  {
+   "rank": "16c539df39e1adec2462d080487a1212b80e74e37afaf0782d6929ff898c741f",
+   "path": "onelua.c",
+   "line": 93,
+   "nth": 0,
+   "kind": "include",
+   "spec": "lcode.c",
+   "batch": 4,
+   "truth": "lcode.c",
+   "why": "Rule 1, quoted include: same directory as the includer. onelua.c, the single-file amalgamation, sits in the repo root and is no makefile target; its own documented build commands (onelua.c:6, :10, :14) add no -I flag and run from the repo root, so the directory of the includer is the only project directory searched, and it holds the tracked lcode.c, which this directive textually includes."
+  }
+ ],
+ "site_gaps": [
+  {
+   "batch": 1,
+   "path": "lvm.c",
+   "line": 1228,
+   "note": "Quoted include of lopnames.h indented six spaces inside an indented #if 0 block (lvm.c:1226-1233) in the body of luaV_execute: dead under the preprocessor, and a detector that reads only column-0 or file-scope directives would miss it."
+  },
+  {
+   "batch": 1,
+   "path": "lvm.c",
+   "line": 1211,
+   "note": "Quoted include of ljumptab.h inside the body of luaV_execute under #if LUA_USE_JUMPTABLE (lvm.c:1210-1212), set to 1 for GCC by lvm.c:39-41 (the gcc -MM line lvm.o, makefile:218-220, lists ljumptab.h); a detector that reads only file-scope directives would miss it."
+  },
+  {
+   "batch": 2,
+   "path": "lvm.c",
+   "line": 1211,
+   "note": "#include 'ljumptab.h' sits inside the body of luaV_execute under #if LUA_USE_JUMPTABLE (lines 1210-1212), a function-scope include a file-scope reader could miss; it resolves to the root's ljumptab.h (same directory as the includer; makefile:220 lists ljumptab.h for lvm.o)."
+  },
+  {
+   "batch": 2,
+   "path": "lvm.c",
+   "line": 1228,
+   "note": "#include 'lopnames.h' is indented inside a { } block within #if 0 ... #endif (lines 1226-1233) in luaV_execute's main loop; dead code that a reader may skip or may still count; its target lopnames.h exists at the repo root."
+  },
+  {
+   "batch": 4,
+   "path": "lvm.c",
+   "line": 1228,
+   "note": "The directive #include \"lopnames.h\" is indented with leading spaces and sits inside an #if 0 block (lvm.c:1226-1233) inside the main for loop of luaV_execute (the function starts at lvm.c:1204); a reader that skips dead #if 0 regions, directives not at column 0, or directives inside function bodies might have missed it."
+  },
+  {
+   "batch": 4,
+   "path": "lvm.c",
+   "line": 1211,
+   "note": "The directive #include \"ljumptab.h\" sits inside the body of luaV_execute under #if LUA_USE_JUMPTABLE (lvm.c:1210-1212); a reader that only collects file-scope includes might have missed it."
+  }
+ ],
+ "scope_gaps": [
+  {
+   "batch": 3,
+   "path": "lua.h",
+   "line": 150,
+   "note": "`#include LUA_USER_H` is a macro-operand (dynamic) include guarded by `#if defined(LUA_USER_H)` at lua.h:149; the makefile's commented TESTS line (makefile:69) would define LUA_USER_H as the quoted name ltests.h, a tracked root file. lua.h is not itself an includer in this batch (every batch includer includes it); found by a grep over the clone's .c/.h files, where it is the only macro-operand include. The batch includers' own `#if 0` blocks (onelua.c:33-37, :43-46, ltests.c:762-777) hold no #include, and every include line in them is a single-line directive."
+  }
+ ],
+ "notes": [
+  {
+   "batch": 1,
+   "note": "The root makefile builds every root-level .c file of the batch except onelua.c (CORE_O / LIB_O / LUA_O, makefile:98-106) and declares no include directory - neither MYCFLAGS (makefile:78) nor CFLAGS (makefile:85) nor any rule carries an -I - so a quoted include resolves in the includer's own directory, the repo root, and an angle include goes straight to the system directories."
+  },
+  {
+   "batch": 1,
+   "note": "The makefile's recorded 'gcc -MM l*.c' dependency block (makefile:147-222) lists for each object only the project headers gcc resolved and never an angle-bracket header; I used it to corroborate every quoted header row of a makefile-built file (header listed) and every angle row (header absent)."
+  },
+  {
+   "batch": 1,
+   "note": "onelua.c is no makefile target; its header comment gives its build commands (onelua.c:6, :10, :14), none with -I, so its quoted includes of the core .c files resolve beside it at the repo root."
+  },
+  {
+   "batch": 1,
+   "note": "All 28 tracked headers sit at the repo root with one copy each, and no tracked file bears a standard C or POSIX header name (git ls-files), so no quoted row can be ambiguous and no angle row can be captured by a tracked file."
+  },
+  {
+   "batch": 2,
+   "note": "The root makefile compiles every root .c listed in CORE_O / AUX_O / LIB_O / LUA_O (makefile:97-106) through make's implicit rule with CFLAGS (makefile:85, MYCFLAGS makefile:78, TESTS commented out at makefile:69) that declare no -I directory, so quoted includes resolve in the includer's own directory, the repo root, and angle includes go straight to the system."
+  },
+  {
+   "batch": 2,
+   "note": "The makefile's generated gcc -MM dependency block (makefile:147-222) lists each root object's project headers as root-relative files and omits system headers, which corroborates the same-directory resolution and the external reading of <math.h> and <limits.h>."
+  },
+  {
+   "batch": 2,
+   "note": "The test C modules under testes/libs are built by testes/libs/makefile with -I$(LUA_DIR), LUA_DIR = ../../ (lines 3 and 8), from inside testes/libs (the all script line 2), so their Lua headers resolve to the repo root."
+  },
+  {
+   "batch": 2,
+   "note": "Every tracked .h in the pinned tree sits at the repo root (git ls-files shows none elsewhere), so no quoted include in this batch can reach two different tracked files."
+  },
+  {
+   "batch": 2,
+   "note": "Quoted-include operands are written with single quotes inside the why texts only to keep the JSON free of escaped double quotes; each directive in the file uses ordinary double quotes."
+  },
+  {
+   "batch": 3,
+   "note": "The root makefile builds every includer in this batch except onelua.c (CORE_O makefile:98-100, LIB_O :102-103, LUA_O :106) with CFLAGS = -Wall -O2 $(MYCFLAGS) ... (makefile:85; MYCFLAGS :78, LOCAL :71, CWARNS :42), and none of these variables carries an -I or -iquote flag, so a quoted include is looked up in the includer's own directory (the repo root) and then the system, and an angle include goes straight to the system headers."
+  },
+  {
+   "batch": 3,
+   "note": "The tree's only declared include directory is testes/libs/makefile:8 (-I$(LUA_DIR) = ../../), which applies only to testes/libs/*.c, none of which is an includer in this batch."
+  },
+  {
+   "batch": 3,
+   "note": "onelua.c is in no makefile object list; its own header comment (onelua.c:6, :10, :14) gives its build as a single gcc command on onelua.c with no -I, so its quoted .c includes resolve beside it in the repo root."
+  },
+  {
+   "batch": 3,
+   "note": "Every quoted target in this batch is a tracked file at the repo root beside its includer (git ls-files at 0b29f408433e92953cc72b1d3e06c7ac8139e439) and no tracked file elsewhere in the tree shares its name, so no row is ambiguous."
+  },
+  {
+   "batch": 3,
+   "note": "The generated dependency block (makefile:147-222, made with gcc -MM l*.c per makefile:148) names each object's project headers by bare root-relative name and lists none of the angle-included headers, corroborating both the same-directory reading of the quoted rows and the external reading of the angle rows."
+  },
+  {
+   "batch": 4,
+   "note": "The top-level makefile (LOCAL makefile:71, MYCFLAGS :78, CFLAGS :85) declares no -I directory and every core, library and interpreter source lives in the repo root, so each quoted include of a root .c file resolves against the root itself and every angle include falls through to the system headers."
+  },
+  {
+   "batch": 4,
+   "note": "The makefile's generated dependency block (makefile:147-222, 'automatically made with gcc -MM l*.c') lists per object exactly the project headers gcc found and omits system headers; I used it to corroborate every quoted and angle row of a makefile-built source."
+  },
+  {
+   "batch": 4,
+   "note": "onelua.c is not a makefile target; its own header comment (onelua.c:6, :10, :14) documents the build as a plain gcc call from the root with no -I flag, which I applied to its three rows."
+  },
+  {
+   "batch": 4,
+   "note": "The test C libraries under testes/libs are built by testes/libs/makefile with -I$(LUA_DIR), LUA_DIR = ../../ (lines 3 and 8), i.e. the repo root, which tracks no C standard library header names, so their angle includes still resolve to the system."
+  },
+  {
+   "batch": 4,
+   "note": "No tracked file anywhere in the pinned tree shadows a C standard library header name (git ls-files lists no string.h, locale.h or stdlib.h), so no angle row in this batch can resolve inside the tree."
+  }
+ ]
+}
