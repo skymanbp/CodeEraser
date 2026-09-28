@@ -312,6 +312,23 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 读法：T3 进门让本仓每次 `ce check` 多付 ≈ 1.2 s（2,155 可发对、1,737 棵不同的树）——留下的是候选生成、S5 扩展、建树与回放，核那 2.7–3.1 s 被缓存拿掉；`ce trend` 每个点与 `ce join` 同付这 1.2 s。缓存空的一跑与 A 臂同价（4.40 vs 4.34–4.55 s），即记住判决本身不额外收费；第二跑起 `ce clone` 由 4.4 s 降到 1.6 s，且报告逐字节同（`cached` 2,155、`judged` 0）。**一个提醒**：同一天早些时候在有并发负载的窗口读到 `ce check` 暖 5.33 / 5.20 / 4.95 s、`ce clone` 暖 2.18 / 1.86 s——与本节差 20–30 %，按「量前量中查负载」的规矩作废，只留在这里说明为什么要重量。
 复跑：`git worktree add <lane>/perf-5b9 2263995 && git -C <lane>/perf-5b9 submodule update --init`；A = 在该 worktree 里 `CARGO_TARGET_DIR=<lane>/perf-5b8-target cargo build --release`，B = 本树 `cargo build --release`；对同一 worktree 按块序 A B A B 各跑四次 `ce check --format json .` / `ce clone --format json .`，每跑前读 `pragma user_version` 与 `select count(*) from t3ted`，首跑（user_version 与上一跑不同）单列；缓存空 = 两条 DELETE 后再跑一次。
 
+## v2.30 步 6 提交 E 新文法 release 体积（实测 2026-09-28，同一台机、同一工具链 rustc 1.94.1 / cargo 1.94.1，`cargo build --release --locked`，两棵树各自独立的 target 目录）
+
+> 设计册 §11「性能」行要求新文法的 release 体积增量记进本册。A = v1.7.4 tag 的树（2377b3c，本机 worktree），B = 本树（提交 C 7020f41；`cli/src` 与 `core/app` 无未提交改动）。两者只差 v2.30 步 1–6：六套文法（tree-sitter-c 0.24.2 / cpp 0.23.4 / lua 0.5.0 / java 0.23.5 / r 1.3.0 / html 0.23.2）与驱动它们的 Rust 代码；Haskell 核不带文法，`ce-core` 不在本节。
+
+| 制品 | A（v1.7.4） | B（本树） | 增量 |
+|---|---|---|---|
+| `ce.exe`（release） | 19,914,752 B | 25,662,976 B | +5,748,224 B（+28.9 %） |
+
+六套新文法 crate 的 rlib（`target/release/deps`，B 独有）：cpp 3,775,158 · c 812,510 · r 660,996 · java 616,872 · lua 138,172 · html 49,982，合计 6,053,690 B——C++ 一套占六套的 62 %。两树共有的七个 crate（tree-sitter 运行时 1,281,050 与 go / haskell / python / rust / typescript / language）版本与 rlib 尺寸相同。新 Rust 代码（阶梯、LangSpec 表、可见性、提及）与文法表在二进制里的份额未分开量——分开得再编一版只带 crate 不带代码的树，本节不做；rlib 合计与增量同量级，文法表是大头，与 2026-09-24 探针二进制（运行时 + 含 Ruby 的七套文法 7.6 MB）的读法一致。
+
+参照：Release v1.7.4 的 Windows 资产 `ce-1.7.4-x86_64-windows.exe` 18,548,736 B（Actions 矩阵的工具链），比本机同树的 A 小 1,366,016 B——跨工具链的读数只作界，A/B 才是同口径；1.8.0 发出后按资产复核一次（步 8）。
+
+复现（本机；worktree 与两个 target 目录都在 `.worktrees` 车道下，`<lane>` 即该目录）：`git worktree add <lane>/wt-174 v1.7.4`，
+`CARGO_TARGET_DIR=<lane>/rel-174 cargo build --release --locked --manifest-path <lane>/wt-174/cli/Cargo.toml`，
+`CARGO_TARGET_DIR=<lane>/rel-head cargo build --release --locked --manifest-path cli/Cargo.toml`，
+再读 `<lane>/rel-*/release/ce.exe` 与 `<lane>/rel-head/release/deps/libtree_sitter_*.rlib` 的字节数。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。
