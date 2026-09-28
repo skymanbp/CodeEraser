@@ -658,3 +658,44 @@ PUBLIC 目录给每个测试目标声明的唯一包含目录），2 道 `gtest/
 在带 ce.toml 的树上 `[graph.search_roots] c = ["test/gtest"]` 答得出，考题判的是钉住的树本身）。**顺序门**：阶梯改动落在两张审阅表的
 提交（dea7914f）之后，`lang_provenance` 核的盲窗（抽样 515071b → 审阅表）里阶梯零提交的事实不变；C / C++ 两行仍是 `Audited`，
 精度册随提交 C 在这个提交之后的干净树上生成。
+
+### 判分（提交 C，2026-09-28）
+
+档 `contracts/eval/lang-precision-lua-v1.json` 与 `lang-precision-fmt-v1.json`，在阶梯提交 B′（`95521640`）的干净树上逐份生成、随下一个
+提交落地：生成器把 `dirty` 读成 `git status --porcelain` 非空，先生成的档会让后生成的读成脏的，所以每份单独生成在没有别的档的树上、
+生成完挪出、两份齐了再放回；两份档的 `generated_from` 都记树 `95521640`、dirty = false。顺序门（`lang_provenance`）：两张审阅表的提交
+dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗（抽样 515071b → 审阅表 dea7914f）内零提交的事实不变。
+
+| 语料 | 主样本 | correct | wrong | missed | external_ok | unresolved_ok | 精度 | 召回 |
+|---|---|---|---|---|---|---|---|---|
+| lua（C） | 100 | 73 | 0 | 1 | 25 | 1 | 73/73 | 73/74 |
+| fmt（C++） | 100 | 15 | 0 | 2 | 80 | 3 | 15/15 | 15/17 |
+| 合计 | 200 | 88 | 0 | 3 | 105 | 4 | 88/88 = 1.000 | 88/91 |
+
+按级截断：lua 的 73 道全在 R1；fmt 收到 R3 为止 4 对 0 错，收到 R4 起 15 对 0 错——`include/` 级答出的正是真值一节点名的那 11 道，
+上一小节按真值表的推算一道不差。门是 M5-2 的 G2：整体与站内真值不少于 5 道的每个语料都不低于 0.90——两个语料与整体都过。
+
+- lua 唯一的 missed：`testes/libs/lib2.c:2` 的 `lauxlib.h`，真值在仓根；引用者在 `testes/libs/`，树里没有 `include/`、没人声明根、也没有
+  编译数据库，`testes/libs/makefile` 的 `-I$(LUA_DIR)` 只有经这两条路才到阶梯，阶梯按设计不猜。unresolved_ok：`onelua.c:135` 的 `luac.c`
+  （`#ifdef MAKE_LUAC` 之下），真值 none——树里没有这个文件。25 道 external_ok 全是尖括号形的标准库头（R5）。
+- fmt 两道 missed：`test/no-builtin-types-test.cc:8` 的 `gtest/gtest.h` 与 `test/core-test.cc:29` 的 `gmock/gmock.h`，真值在 `test/gtest/`——
+  `test/gtest/CMakeLists.txt` 把它声明成 gtest 目标的 SYSTEM 目录，一个不叫 `include`、也没人在 ce.toml 里声明的目录（带 ce.toml 的树上
+  `[graph.search_roots] c = ["test/gtest"]` 答得出，考题判的是钉住的树本身）。三道 unresolved_ok 是 gtest 源码里引号形的 absl 头
+  （`test/gtest/gtest/gtest.h:2527` / `:2585`、`test/gtest/gmock-gtest-all.cc:1622`），真值 external，阶梯答 out_of_scope 不算错、也不进召回的
+  分母。80 道 external_ok 是尖括号形的标准库与 absl 头（R5）。
+- 候选漏检：C 审阅表的六行（三个代理各报 `lvm.c:1211` 与 `:1228`——函数体内 `#if LUA_USE_JUMPTABLE` 之下的 include 与 `#if 0` 之下缩进的
+  include）检测器都读到了并在 R1 答出 `ljumptab.h` / `lopnames.h`，不是漏检；范围外的那一行（`lua.h:150` 的宏操作数 `#include LUA_USER_H`，
+  `.h` 不在 `*.c` 宇宙里）只在审阅表的 `scope_gaps` 里；C++ 零。走查：lua 树档 111 条里只有 `.gitignore` 没被走到（点文件），fmt 零。
+
+宇宙台账（对冻结宇宙的每个站点都解一遍，解出率是召回的上限）：
+
+| 语料 | 站点 | 解出 | R1 | R4（`include/`） | R5（External） | 拒答 |
+|---|---|---|---|---|---|---|
+| lua | 476 | 98.1 % | 333 | 0 | 134 | 9，全是 out_of_scope |
+| fmt | 740 | 96.2 % | 60 | 89 | 563 | 28，全是 out_of_scope |
+
+首级（R1）在解出里的占比 lua 71.3 %、fmt 8.4 %，都不过 0.80 的触发线（RG1），两份档不带处置。拒答逐条有名（按站点表与树档推得，与档里的
+计数逐格相符）：lua 9 = `testes/libs/` 五个测试库的 `lua.h` × 5 与 `lauxlib.h` × 3（真值都在仓根，与上面那道 missed 同类）+ `onelua.c:135` 的
+`luac.c`；fmt 28 = 20 处引号形的 `gtest/gtest.h` / `gmock/gmock.h`（`test/*.cc`、`test/*.h`，以及 gtest 自己的 `gmock/gmock.h:303` 与
+`gtest/gtest-spi.h:39`，真值都在 `test/gtest/`，与上面两道 missed 同类）+ 8 处引号形的 absl 头（`gtest.h` 四处、`gmock-gtest-all.cc` 四处，
+未内置于树、真值 external）。两类都是构建脚本声明的目录：经编译数据库（R3）或 `[graph.search_roots]`（R2）到阶梯，设计册 §8 的立场不变。
