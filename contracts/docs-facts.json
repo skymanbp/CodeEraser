@@ -75,10 +75,9 @@
       "value": "135"
     },
     {
-      "debt": "Lang has no variant iterator; promote = Lang::judged() + grammar().is_some()",
       "id": "count:grammars#word",
-      "source": "cli/src/scan/lang.rs::GRAMMARS (rows)",
-      "tier": "scraped",
+      "source": "cli/src/scan/lang.rs::Lang::with_grammar (GRAMMARS rows)",
+      "tier": "linked",
       "value": "12"
     },
     {
@@ -449,5 +448,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 21
+  "scraped": 20
 }

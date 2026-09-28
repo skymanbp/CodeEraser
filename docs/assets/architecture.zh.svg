@@ -413,8 +413,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">十六个只读工具</text>
         </g>
 
-        <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="聚焦 Claude Code hooks, PreToolUse · Stop, 面 — 五种渲染" aria-pressed="false" data-node-kind="security" data-node-sublabel="PreToolUse · Stop" data-node-context="面 — 五种渲染">
-          <title>Claude Code hooks · PreToolUse · Stop · 面 — 五种渲染</title>
+        <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="聚焦 Claude Code hooks, PreToolUse · PostToolUse · Stop, 面 — 五种渲染" aria-pressed="false" data-node-kind="security" data-node-sublabel="PreToolUse · PostToolUse · Stop" data-node-context="面 — 五种渲染">
+          <title>Claude Code hooks · PreToolUse · PostToolUse · Stop · 面 — 五种渲染</title>
           <rect x="1250" y="390" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="390" width="150" height="64" rx="6" class="c-security" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(1256 396) scale(0.6875)">
@@ -422,7 +422,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <path d="m5.8 8 1.5 1.5 3-3" />
           </g>
           <text x="1325" y="420" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Claude Code hooks</text>
-        <text x="1325" y="436" class="t-muted" font-size="9" text-anchor="middle">PreToolUse · Stop</text>
+        <text x="1325" y="436" class="t-muted" font-size="7.6" text-anchor="middle">PreToolUse · PostToolUse · Stop</text>
         </g>
 
         <g id="node-ci" data-node-id="ci" data-node-label="CI · pre-commit" tabindex="0" role="button" aria-label="聚焦 CI · pre-commit, ce check --fail-under, 面 — 五种渲染" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="ce check --fail-under" data-node-context="面 — 五种渲染">

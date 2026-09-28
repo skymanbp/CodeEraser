@@ -64,7 +64,7 @@ degraded, and never enforced on (§7)
 [surfaces.rs:53-62](../../../cli/src/tombstone/surfaces.rs#L53)):
 
 - **S⁺, the naming surface** — headings this change added (Markdown), unit names the after
-  side declares and the before side did not (code), the stem of a brand-new file
+  side declares and the before side did not (code, and an HTML page's `id` elements, its units), the stem of a brand-new file
   ([surfaces.rs:72-92](../../../cli/src/tombstone/surfaces.rs#L72)).
 - **P⁺, the prose surface** — the SENTENCES this change wrote into every comment, docstring
   and paragraph segment docdup extracts: the boundaries are cut in the whole segment's text

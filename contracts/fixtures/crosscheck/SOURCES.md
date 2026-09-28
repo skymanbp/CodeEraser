@@ -40,7 +40,7 @@ stringr 取 `*.R` 与 `*.r`（R 的两个扩展名），67 个排除 `tests/test
 与 `R/detect.R`。两者各是本语言精度考题的第一个语料（`lang-slice-luarocks-v2.json`——Lua 考题
 2026-09-25 升为第二代——与 `lang-slice-stringr-v1.json`），同一 tip，同一条门复核。
 
-html 行是 2026-09-25（计划 v2.30 步 5）按同一规则加入的：本仓在 `d4b7f1f` 取 `*.html` 与
+html 行是 2026-09-26（计划 v2.30 步 5）按同一规则加入的：本仓在 `d4b7f1f` 取 `*.html` 与
 `*.htm`（HTML 的两个扩展名），12 个无一落在测试路径里，抽中两种语言的 how 页
 （`site/how/index.html`、`site/zh/how/index.html`）、中文 stack 页、GUI 的 `gui/ui/index.html`
 与 demo 生成的 `demo/out/scoreboard.html`——后者零站点，与 zod 的 locale 文件同理保留。本仓在
@@ -70,7 +70,7 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 
 - lizard 1.23.0（CC：python/typescript/rust 兜底，C/C++、java、lua 与 r 的对照物——
   C/C++、Lua、R 没有认知复杂度对照物，CoC 只对白皮书电池 `cli/tests/it/coc_c.rs`、
-  `coc_lua.rs`、`coc_r.rs`。它的 R reader（`lizard_languages/r.py`）是步 4 对拍时发现的：
+  `coc_lua.rs`、`coc_r.rs` 与例题移植表 `sonar_whitepaper_{c,cpp,lua,r}.rs`（步 6 提交 D）。它的 R reader（`lizard_languages/r.py`）是步 4 对拍时发现的：
   设计册原把 R 记作「无外部对照」（D0），钉版时核对 reader 列表漏了它）
 - PMD 7.27.0（CoC：java，`category/java/design.xml/CognitiveComplexity` 设
   `reportLevel` 为 1，报出每个非零方法；跑在 Temurin JDK 25.0.4.1 上；规则集与
@@ -81,7 +81,7 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 - rust-code-analysis-cli 0.0.25，`cargo install --locked`（CC：rust；
   不带 --locked 会因新依赖编译失败——安装须知）
 
-## CoC 规范原文钉定（cli/tests/it/sonar_whitepaper.rs 判分依据）
+## CoC 规范原文钉定（cli/tests/it/sonar_whitepaper.rs 与 sonar_whitepaper_{java,c,cpp,lua,r}.rs 判分依据）
 
 - SonarSource《Cognitive Complexity》白皮书 **v1.7（2023-08-29）**，
   <https://www.sonarsource.com/docs/CognitiveComplexity.pdf>，

@@ -67,7 +67,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 916/1000</span> | axes 0:83 1:0 2:286 3:0 4:0 5:0 6:219 | 256 candidates
+<span class="s">check score 916/1000</span> | axes 0:85 1:0 2:286 3:0 4:0 5:0 6:219 | 256 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 179 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -136,7 +136,7 @@ note: 10 blocks collapsed into existing members, 179 intra-file pairs off the si
   <div class="card"><h3>ce churn</h3><p>Change heat over a git window, attributed per unit, so you see how much of a file is being rewritten rather than added to.</p></div>
   <div class="card"><h3>ce join</h3><p>The three-signal join: churn, duplication and liveness folded into one verdict, so a hot duplicated dead corner names itself.</p></div>
   <div class="card"><h3>ce similar</h3><p>The same-role advisor: integer BM25 over term bags the index already holds, with the core deciding which candidates play the query's role. A deterministic offline retrieval, advice only, never a gate.</p></div>
-  <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, audits at stop, health at session start.</p></div>
+  <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, a write you let through at ask recorded once it lands, audits at stop, health at session start.</p></div>
 </div>
 
 <!-- bench:begin -->

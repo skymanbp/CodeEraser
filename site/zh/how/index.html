@@ -232,7 +232,9 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <code>External</code> 是正确的终局答案、不是漏判。环只报不判；没有入口种子的环岛仅凭可达性就已判死，无需特例。kind 列是公式的第二道过滤器、不是废柱：<code>inert</code> =
   {3 资产, 5 未用 ref-def}，因为图片链接渲染字节、未用的引用定义什么也不渲染，都不算引用，排除由核心亲自执行。自 proto 2.32.0 起，每条死件行带一列置信，由请求携带的按语言点位台账判出：
   0 未担保（该语言尚有未解析点位）、1 空担保、2 已担保。这是擦除家族的信任边界，由持有台账的家族亲自执行。import 边精度实测 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着
-  ≥ 0.90 的门；样本在任何解析器存在之前就已冻结。</p>
+  ≥ 0.90 的门；样本在任何解析器存在之前就已冻结。计划 v2.30 新增的六种语言各有自己冻结的考题，对着盲评真值按同一公式判分：C 73/73、C++ 15/15、Java 36/36、Lua 86/86、R 18/18、HTML 75/75 全部答对（召回 73/74、15/17、36/36、86/86、18/18、75/76）；逐语言误拦台账（六语料各 400 提交）六种全过、误拦 0；两者都记在
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/EVAL-SET-LANGS.md">EVAL-SET-LANGS</a> 与
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY</a>。</p>
   <ul class="consts">
     <li><b>minRung</b> 5</li>
     <li><b>entryMask</b> 126（bits 1–6）</li>

@@ -153,19 +153,21 @@
 > **以下按版本倒序（最新在前），至 2.15.0 止；上方 2.0.0–2.14.0 是最初的顺序段。**
 > **7.2.0**（判决语言集上线，加性 minor，计划 v2.30 步 1，2026-09-24）：`scan.request` 与 `graph.request`
 > 各加一个可选整数键 `judgedMask`——Rust 侧 `Lang::judged_mask()` 从 LANGS 表按 `scan_only` 列推出的位集
-> （今日 `0x7F` = 码 0..6），ce 恒发。核此前把「lang 在判决集内」写死为 `lang ≤ 6`（`CE.Scan.Contract.namingShape` 与
+> （落码时 `0x7F` = 码 0..6；各语言随自己的步翻位，今日十三位 `0x17847F` = 码 0..6、10、15..18、20——纯散文臂 21 与哨兵 7 不在集内），ce 恒发。核此前把「lang 在判决集内」写死为 `lang ≤ 6`（`CE.Scan.Contract.namingShape` 与
 > `CE.Graph.Contract.unresRow` 各一份常量）；自本版起两处同读 `CE.Wire.judgedLang`：`naming` 行与 `unres` 行的
 > lang 位在 mask 内即合法，否则仍按行点名 `lang outside the judged set`。缺席 = `CE.Wire.legacyJudged` 127，
 > 行为与 7.1.0 逐字节同；负值 / ≥ 2^63 按名拒绝（`judgedMask: negative` / `judgedMask: outside i64`），位序
 > ≥ 63 的 lang 永不在集内。回显：`scan.result` 在 mask 上过线且未降级时携同值 `judgedMask`，`graph.result`
-> 在上过线时恒携——Rust 两侧据此钉漂移（无回显 = 7.2.0 之前的核，按名拒绝）。判决字节零变化：既有 135 对
+> 在上过线时恒携——Rust 两侧据此钉漂移（无回显 = 7.2.0 之前的核，按名拒绝）。判决字节零变化：既有 130 对
 > golden 只有 proto 字面动；新增 scan 三对（16 mask 内 lang 15 判并回显 / 17 缺席拒 / 18 负值拒）与 graph
 > 两对（25 mask 内 lang 20 判并回显 / 26 缺席拒）。此键是语言扩展（设计册 `docs/reference/language-expansion.md`）
 > 的接线：新语言在各自的步翻 `scan_only` 位即入集，核不必再改。步 2（C / C++，同一未发布 minor 内加性）：核
 > `CE.Graph.Cost.roleBits` 加第九行 `(8, 1)`——编译单元角色（Rust 侧 `ROLE_UNIT = 1 << 8`，`.c/.cc/.cpp/.cxx`，
 > 设计册 D18）落在可执行位，请求不带该位时字节同前；步 5（HTML，同一未发布 minor 内加性）再加第十行 `(9, 4)`——资产角色（Rust 侧 `ROLE_ASSET = 1 << 9`：走查读到而索引不持有的文件——页面的 `src` / `href` / `link` 目标，样式表、脚本、图片；`nodes.rs` 按构造标出、`node_row` 单独发送）落在 dyn-referenced 位 4，此前该位没有生产者：样式表的 `url()`、脚本的取回、manifest 的图标是图看不见的引用，资产结点永不成候选，请求不带该位时字节同前；Rust 侧另有三件存储与配置事实、皆不过线：`store::KINDS`
-> 追加 `include` 站点标签（GRAPH_REV 15 → 16）、`compile_commands.json` 入解析器配置、`[graph.search_roots]`
-> 入 resolve_key。
+> 追加 `include` 站点标签（GRAPH_REV 15 → 16）、clangd 的三个探名 `compile_commands.json` / `build/compile_commands.json` / `compile_flags.txt` 入解析器配置、`[graph.search_roots]`
+> 入 resolve_key。步 5b-8（纯散文臂 `.txt`，同一未发布 minor 内，wire 零改动）：`verdict/1` 轴 2 的代码文件数改读「有位置行且不在
+> `docFiles` 集内的文件」（`Score.hs` 的 `codeFiles`）——纯文本文件是 docdup 机会而不是结点，`docFiles` 自此可以点名一个没有位置行的
+> 文件，7.0.0 条的 `nodes − docFiles` 是历史读法。
 
 > **7.1.0**（structure/1 模块度轴 + fourclass/2 声明级搬迁，加性 minor，计划 v2.29 步 10 批 C3 O54 / O48，2026-09-06）：
 > `structure.request` 加性可选表 `dirEdges=[[fromDir,toDir,count]]`（**只载跨目录**有向边，
@@ -201,7 +203,7 @@
 > `dupSpans=[[hash,start,end]…]`（每个 after 侧出现一行，1 基闭区间；旧键不再读——请求形状变 = major），堆叠规则据此
 > 改为「≥ `stackingNovelFloor` 条 novel 行落在新重复单元的跨度内」（O47；`start < 1 ∨ end < start` 按对点名拒绝）。同批
 > 随行三条判决改动不改形状：`verdict/1` 轴 2 / 3 的质量改为**被判定对触及的互异文件数**、分母改为各自的机会宇宙——
-> 轴 2 = 代码文件 `nodes − docFiles`、轴 3 = 文档文件 `docFiles`（O22；此前两轴数对、分母全体节点，分数与 1.6.0 不可比随
+> 轴 2 = 代码文件 `nodes − docFiles`（5b-8 起改读有位置行且不在文档集内的文件，见 7.2.0 条）、轴 3 = 文档文件 `docFiles`（O22；此前两轴数对、分母全体节点，分数与 1.6.0 不可比随
 > CHANGELOG 声明）；`ce check` 起送 kind = 2 的 docdup 对行（O46；此前该轴在产品里恒零）；`erase/1` 第 2 类第 3 事实由
 > 死亡位改为**死亡判决码 0..4**（0 = 不死；2 / 4 命中 `publicDeadVerdicts` 按 reason 6 拒绝——O51，RG10 自此真的到达
 > 孪生路；`> 4` 按行点名拒绝）。golden 全族 request 行随 major 机器重写为 7.0.0（§3 锚 7.0.0）。

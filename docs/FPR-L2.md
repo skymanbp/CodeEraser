@@ -121,7 +121,7 @@ PowerShell 5.1，先按项目构建说明编译 ce-core，再完整跑三份语�
 ```powershell
 Set-Location 'D:\Projects\CodeEraser\cli'
 $env:PATH = 'C:\ghcup\bin;' + $env:PATH
-$env:CE_CORE_BIN = 'D:\Projects\CodeEraser\core\dist-newstyle\build\x86_64-windows\ghc-9.14.1\ce-core-1.6.0\x\ce-core\build\ce-core\ce-core.exe'
+$env:CE_CORE_BIN = 'D:\Projects\CodeEraser\core\dist-newstyle\build\x86_64-windows\ghc-9.14.1\ce-core-<core/ce-core.cabal 的 version>\x\ce-core\build\ce-core\ce-core.exe'
 $env:RUST_TEST_THREADS = '8'
 Remove-Item Env:CE_L2FPR_CORPUS,Env:CE_L2FPR_LIMIT -ErrorAction SilentlyContinue
 $env:CE_BLESS = '1'
@@ -139,7 +139,7 @@ Remove-Item Env:CE_BLESS -ErrorAction SilentlyContinue
 ```powershell
 Set-Location 'D:\Projects\CodeEraser\cli'
 $env:PATH = 'C:\ghcup\bin;' + $env:PATH
-$env:CE_CORE_BIN = 'D:\Projects\CodeEraser\core\dist-newstyle\build\x86_64-windows\ghc-9.14.1\ce-core-1.6.0\x\ce-core\build\ce-core\ce-core.exe'
+$env:CE_CORE_BIN = 'D:\Projects\CodeEraser\core\dist-newstyle\build\x86_64-windows\ghc-9.14.1\ce-core-<core/ce-core.cabal 的 version>\x\ce-core\build\ce-core\ce-core.exe'
 $env:RUST_TEST_THREADS = '8'
 Remove-Item Env:CE_BLESS,Env:CE_L2FPR_CORPUS,Env:CE_L2FPR_LIMIT -ErrorAction SilentlyContinue
 cargo test -j 8 --test it -- l2_fpr

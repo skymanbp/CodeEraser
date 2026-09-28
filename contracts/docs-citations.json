@@ -26,11 +26,11 @@
     "end": 161,
     "text": "**职责边界（B1 采纳后）**：延迟敏感的热路径（PreToolUse 廉价检查、索引探针）完全在"
   },
-  "docs/reference/methodology.md|size-advisory.md|043f13208d084192|0": {
+  "docs/reference/methodology.md|size-advisory.md|d2b53e03d12ebc60|0": {
     "target": "size-advisory.md",
-    "line": 26,
-    "end": 30,
-    "text": "（`zoneWarnPermille=250` / `zoneAskPermille=750`）——`ce.toml [guard]"
+    "line": 36,
+    "end": 39,
+    "text": "- 软线随仓库自身分布浮动：`S = clamp(median + k×MAD(log-LOC),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/budget.rs|b076d7328122f9cb|0": {
     "target": "../../../cli/src/dedup/budget.rs",
@@ -45,36 +45,19 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|4941b6562b468902|0": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 145,
+    "end": 162,
     "text": "let toks = if lang.fingerprints() {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|5e1b6f2f364b8f2e|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 162,
-    "text": "i64::from(lang.fingerprints()),"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|7693117b0ef98faa|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 139,
-    "text": "}\n// Markdown (no grammar) — and any grammar that does not"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|889b25a08aa9a02d|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 185,
-    "text": "tx.commit()?;\nOk(true)"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|c124b5aeb74c361c|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 151,
-    "text": "let fps = winnow::fingerprints(&hashes, p);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|cd3b9b36ea3bf35e|0": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 152,
+    "end": 185,
     "text": "let tx = self.conn.transaction()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|d4d0ef2ed905d0c6|0": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 150,
+    "end": 151,
     "text": "let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|df57b763e96f63e4|0": {
@@ -85,17 +68,14 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|e3dd79e176b2419e|0": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 394,
+    "end": 395,
     "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|eb8666897ba361c5|0": {
     "target": "../../../cli/src/dedup/index.rs",
     "line": 137,
+    "end": 139,
     "text": "if stored == Some((chash, foreign)) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|f2467acf48754aa2|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 395,
-    "text": "let end = toks[f.start + p.kgram - 1].end_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|fd08efb186625299|0": {
     "target": "../../../cli/src/dedup/index.rs",
@@ -110,17 +90,14 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|20fa5e5d34020a2d|0": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 155,
+    "end": 158,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 301,
+    "end": 309,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|3c4c22af6667dce2|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 151,
-    "text": "let walked = walkidx::index_all(root, &config, &mut idx)?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|43b03086c81217ee|0": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -130,71 +107,48 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|4e0cd4185a41b141|0": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 54,
+    "end": 57,
     "text": "/// `min_tokens` lowers the report filter below the guarantee t for"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|597992f0f434bc71|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|9233707cb765c827|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 57,
-    "text": "/// ratchet gate against ce.toml [dedup] budget."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|5be381aaaea02030|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 150,
-    "text": "let seen = idx.indexed_paths()?;"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|757b0378afa2499a|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 270,
-    "text": "idx.resolve_refreshed(&dirty, &mut resolver)"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|764cfb44238d1148|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 232,
-    "text": "min_tokens: filter.min_tokens,"
+    "line": 275,
+    "end": 289,
+    "text": "#[derive(Serialize)]"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 291,
+    "end": 294,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 309,
+    "end": 314,
     "text": "impl Default for Params {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|1": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 309,
-    "text": "impl Default for Params {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|c97285682ec824a2|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 314,
-    "text": "kgram: 25,\nwindow: 26,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|0": {
     "target": "../../../cli/src/dedup/mod.rs",
     "line": 219,
     "text": "Summary {\n// has_tokens files only: Markdown rows are graph cache, and"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|1": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 156,
-    "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|0664aacf9171f163|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 182,
-    "text": ".into_iter()"
+    "line": 219,
+    "end": 234,
+    "text": "Summary {\n// has_tokens files only: Markdown rows are graph cache, and"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|099592add4f62dbb|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 289,
+    "end": 293,
     "text": "let distinct = sa[a0..a0 + len]"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|0a68609577f48f7f|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 257,
+    "end": 261,
     "text": "/// Maximal exact common run around the anchor. For same-stream pairs"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|0ae84c60b995084d|0": {
@@ -205,122 +159,73 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|0b83199be3e3be09|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 73,
+    "end": 78,
     "text": "/// Unique token hashes in the run — the literal-degeneracy signal:"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|0b9338582e5b39cf|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 261,
-    "text": "/// (dedup::probe) reuses the same verified-extension semantics."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|19f21b24fb7f1219|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 136,
+    "end": 138,
     "text": "/// Collects verified runs plus the transparency counters. `t` is the"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|2d72027bfc03a22b|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 281,
-    "text": "len += 1;\n}\n(len > 0).then_some((a0, b0, len))"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|2f8694c715558e2a|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 262,
+    "end": 272,
     "text": "pub(crate) fn extend("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|357a54eb927e104b|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 41,
+    "end": 45,
     "text": "let mut by_hash: BTreeMap<u64, Vec<&Instance>> = BTreeMap::new();\nfor inst in instances {\nby_hash.entry(inst.hash).or_default().push(inst);\n}\nfor group in by_hash.values_mut().filter(|g| g.len() > 1) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|399fdc6187111201|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 36,
+    "end": 39,
     "text": "/// Group instances by fingerprint hash and visit every candidate"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|3b8b411347fb2dfe|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 20,
+    "end": 26,
     "text": "/// Above this group size, pairing switches from full pairwise"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|3db77d71b22a281e|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 272,
-    "text": "b0 -= 1;\n}\nlet mut len = 0;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|43469c580f7cc703|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 1,
+    "end": 7,
     "text": "//! Clone extraction, SIGMOD'03 two-phase: shared fingerprints are"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 248,
+    "end": 254,
     "text": "if let Some((a0, b0, len)) = extend(sa, a.start_tok, sb, b.start_tok, a.file == b.file) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|4749622d8c4b3efb|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 129,
-    "text": "by_hash\n.values()"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|507bc8149885cd58|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 92,
+    "end": 94,
     "text": "/// Blocks suppressed by the diversity floor — counted, never"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|5a0302ccfc3ec848|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 51,
-    "text": "}\n} else {\nfor (i, a) in group.iter().enumerate() {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|5c8af8507eb257ff|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 283,
     "text": "(len > 0).then_some((a0, b0, len))"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|5ef996b560407cc2|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 249,
-    "text": "if len >= ctx.t {"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|6480e858c6b16cc0|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 159,
+    "end": 162,
     "text": "/// candidate source cannot disagree about what was verified; the"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|68cefaf29f056bdf|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 286,
-    "text": "fn to_block(run: (&str, usize, &str, usize, usize), streams: &Streams) -> Block {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|68cefaf29f056bdf|1": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 286,
-    "text": "fn to_block(run: (&str, usize, &str, usize, usize), streams: &Streams) -> Block {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|720c05ec6b1f4b13|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 235,
-    "text": "};\nlet (Some((af, sa)), Some((bf, sb))) = ("
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|7771184c26dce772|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 216,
-    "text": "&& k.b_start <= b.b_start"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|79a4bb2fcd661e0f|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 270,
+    "end": 273,
     "text": "while a0 > 0 && b0 > 0 && sa[a0 - 1].hash == sb[b0 - 1].hash {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|79a4bb2fcd661e0f|1": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 270,
-    "text": "while a0 > 0 && b0 > 0 && sa[a0 - 1].hash == sb[b0 - 1].hash {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|81c8183850a6f456|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 39,
-    "text": "/// disagree about which anchors exist."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|86bb9c62e66b43dc|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -330,27 +235,26 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|8cdd7f1906c0561b|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 207,
+    "end": 228,
     "text": "fn dominant(mut blocks: Vec<Block>) -> Vec<Block> {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|971e0b260b86d1db|0": {
+    "target": "../../../cli/src/dedup/pairs.rs",
+    "line": 294,
+    "end": 300,
+    "text": "Block {\na_file: a_file.to_string(),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|988d8b054d4e6374|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 231,
+    "end": 235,
     "text": "let (a, b) = if (&a.file, a.start_tok) <= (&b.file, b.start_tok) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|9eee67f28714959b|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 45,
-    "text": "for group in by_hash.values_mut().filter(|g| g.len() > 1) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|a518bf10c2fc49c7|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 180,
+    "end": 182,
     "text": "let mut blocks = dominant("
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|ae2e5be4cbc75262|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 58,
-    "text": "}\n}\n}\n\n/// A verified maximal common token run, mapped back to lines."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|b8359b996fc2d56a|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -360,102 +264,56 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|bea8e67cbaf506e8|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 102,
-    "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|bea8e67cbaf506e8|1": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 102,
+    "end": 107,
     "text": "/// Report filters. `min_distinct` defaults to 7: across the fixture"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|c21fa071de993633|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 153,
+    "end": 162,
     "text": "/// clone_blocks plus the near-miss sink: verified runs BELOW the"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|c361c33c82588933|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 91,
-    "text": "pub stale_skipped: usize,"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|c776cfb3d3b906a8|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 223,
-    "text": "kept.sort_by(|x, y| {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|cc384e84a5b87583|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 94,
-    "text": "pub low_diversity_suppressed: usize,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|ce02216836f9bcfe|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 276,
+    "end": 282,
     "text": "while a0 + len < sa.len()"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|d07cd843c171f13e|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 162,
-    "text": "pub fn clone_blocks_near("
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|d07cd843c171f13e|1": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 162,
-    "text": "pub fn clone_blocks_near("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|dadf264e748bc430|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 52,
+    "end": 58,
     "text": "} else {\nfor (i, a) in group.iter().enumerate() {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|dcb45da8842ad203|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 46,
+    "end": 51,
     "text": "if group.len() > HOT_CAP {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|df225617809e929f|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 242,
+    "end": 247,
     "text": "// a stored offset beyond the live stream = the file changed after"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|df225617809e929f|1": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 242,
-    "text": "// a stored offset beyond the live stream = the file changed after"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|e5fe45f8ab26eddb|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 7,
-    "text": "//! walked as an adjacent chain, so the non-adjacent pairs inside it"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|ebacb4b771e96a06|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
     "line": 88,
+    "end": 91,
     "text": "/// Anchors whose stored token offset exceeded the live stream"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|f191c527d7e26a1a|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 26,
-    "text": "/// the same cap (one binding)."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|fdbd388786aec96b|0": {
-    "target": "../../../cli/src/dedup/pairs.rs",
-    "line": 78,
-    "text": "pub distinct: usize,"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/report.rs|a1d31f7e0523a0ef|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/report.rs|a0251a677b0ad973|0": {
     "target": "../../../cli/src/dedup/report.rs",
-    "line": 16,
-    "text": "groups: &found.groups,\nsummary: s,\n})?)"
+    "line": 12,
+    "end": 18,
+    "text": "pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<serde_json::Value> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|075fec6cbcf4c10d|0": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 89,
+    "end": 97,
     "text": "CREATE TABLE fingerprints ("
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|202a8c95b30280c7|0": {
-    "target": "../../../cli/src/dedup/schema.rs",
-    "line": 55,
-    "text": "/// v16 (plan v2.29 step 3): the same-role advisor's bag tables"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|27a7c776f82a7121|0": {
     "target": "../../../cli/src/dedup/schema.rs",
@@ -466,27 +324,19 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|0": {
     "target": "../../../cli/src/dedup/schema.rs",
     "line": 182,
+    "end": 204,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|1": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|41f41e9c4daadc13|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 182,
-    "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
+    "line": 191,
+    "end": 201,
+    "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 7] {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|413ea62c96e5ef70|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|659deda6c25737e8|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 204,
-    "text": "// a pre-meta database (or a foreign file) is a mismatch, not an"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|dac5a67b5dee8629|0": {
-    "target": "../../../cli/src/dedup/schema.rs",
-    "line": 97,
-    "text": "CREATE INDEX idx_fp_file ON fingerprints(file_id);"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|f733ec08fed99de0|0": {
-    "target": "../../../cli/src/dedup/schema.rs",
-    "line": 187,
-    "text": "let version: i64 = conn.query_row(\"PRAGMA user_version\", [], |r| r.get(0))?;"
+    "line": 62,
+    "text": "const SCHEMA_VERSION: i64 = 17; // 9: trend rows carry their measuring toolchain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema/parser.rs|393a9b6adcd8c25e|0": {
     "target": "../../../cli/src/dedup/schema/parser.rs",
@@ -496,22 +346,8 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1640d969ccad876c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 150,
+    "end": 158,
     "text": "fn classify(kind: &str, spec: &LangSpec) -> Class {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|171ac8edd4c19f94|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 158,
-    "text": "}\n\n/// Literal pieces across the grammars (probe-derived): whole literals,"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1c30cf58e5583678|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 81,
-    "text": "}\nmatch classify(node.kind(), spec) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1c7dce5fb9062090|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 148,
-    "text": "}\n\nfn classify(kind: &str, spec: &LangSpec) -> Class {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|227629f256b666bf|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -521,6 +357,7 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|310ac55b91af4a11|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 168,
+    "end": 185,
     "text": "pub(crate) fn is_literal(kind: &str, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|395c721de71a8391|0": {
@@ -531,6 +368,7 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|3cd7baf5c7a4584c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 78,
+    "end": 81,
     "text": "if node.child_count() > 0 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4043b6bdd581b062|0": {
@@ -539,10 +377,11 @@
     "end": 148,
     "text": "fn whole_literal(node: Node<'_>, spec: &LangSpec) -> bool {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|46408540c4d32c8c|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4043b6bdd581b062|1": {
     "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 185,
-    "text": "}\n\n/// FNV-1a: tiny, dependency-free, stable across runs (index persists)."
+    "line": 132,
+    "end": 148,
+    "text": "fn whole_literal(node: Node<'_>, spec: &LangSpec) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|471c40c0b6619ae4|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -552,11 +391,13 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|49e6012b6f4020a9|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 188,
+    "end": 195,
     "text": "pub fn fnv1a(bytes: &[u8]) -> u64 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|4d032b82895954e2|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 83,
+    "end": 91,
     "text": "Class::Lit => {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|504e1857b50781a4|0": {
@@ -577,28 +418,8 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|6b59d2da04b0a563|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 7,
+    "end": 9,
     "text": "//! deliberate): booleans/None are NOT collapsed (their identity is"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|704f90d8eac8f679|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 195,
-    "head": 3,
-    "text": "h = h.wrapping_mul(0x0000_0100_0000_01b3);\n}\nh\n}"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|86c909cd702d30ac|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 91,
-    "text": "}\nclass => {\nlit_parent = None;"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|891fbed043c45717|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 36,
-    "text": "}\n\nconst ID_MARK: &[u8] = b\"\\x01ID\";"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|96775608fcd4b371|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 77,
-    "text": "}\nif node.child_count() > 0 {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|9acfb64892039b8c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
@@ -606,64 +427,45 @@
     "end": 81,
     "text": "if whole_literal(node, spec) {"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|ac32eb56804c01cf|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 9,
-    "text": "//! normalizes to ID like any identifier."
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b533a5573df87dff|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 164,
+    "end": 167,
     "text": "/// `kind` is a LEAF kind (composite kinds like Go `composite_literal`"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 31,
+    "end": 36,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|cb675dae93f5970c|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 70,
+    "end": 72,
     "text": "if spec.comment_kinds.contains(&node.kind()) {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d691461b7dc2e716|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 65,
+    "end": 98,
     "text": "pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d79f5ced4fa0d091|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 114,
+    "end": 118,
     "text": "fn extend_last(out: &mut [Token], node: Node<'_>) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|d9671b76536d6a08|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 99,
-    "text": "}\n\nfn token(class: &Class, kind: &str, node: Node<'_>) -> Token {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|eda5e3aefdae8234|0": {
-    "target": "../../../cli/src/dedup/tokens.rs",
-    "line": 167,
-    "text": "/// of every piece)."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|f13e91d15cb652f1|0": {
     "target": "../../../cli/src/dedup/tokens.rs",
     "line": 157,
     "text": "Class::Text\n}"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|0211250c62de4a09|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 6,
-    "text": "//! match shorter than kgram tokens is ever reported."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|02e9762caddc0f61|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 15,
-    "text": "}\n\nconst BASE: u64 = 1_000_003;"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|194a15fa0825a2b6|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 34,
+    "end": 38,
     "text": "let mut h: u64 = 0;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|31939a688d186537|0": {
@@ -674,27 +476,20 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|327587531cd04635|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 73,
+    "end": 79,
     "text": "if min_idx != last_recorded {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|349d6d97976165c0|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 4,
+    "end": 6,
     "text": "//! (rightmost on ties, recorded once). Correctness bound: any match of"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|3caf38c55300ea0e|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 39,
+    "end": 45,
     "text": "for i in k..tokens.len() {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|57f79c45e170be71|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 31,
-    "text": "}\nlet top = BASE.wrapping_pow(k as u32 - 1);"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|5dd14c252bf223d4|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 24,
-    "text": "pub(crate) fn kgram_hashes(tokens: &[u64], k: usize) -> Vec<u64> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|61828f98f0a3db21|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
@@ -704,6 +499,7 @@
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|6dc1580fb2505d18|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 67,
+    "end": 72,
     "text": "let mut min_idx = w;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|7fecc60996386d0d|0": {
@@ -716,34 +512,22 @@
     "line": 33,
     "text": "let mut hashes = Vec::with_capacity(tokens.len() - k + 1);"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|85bec5e58d0dae55|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 45,
-    "text": "}\nhashes\n}\n\n/// Robust winnowing: in each window take the minimal hash, preferring"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|99d4efafae290471|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 72,
-    "text": "}\nif min_idx != last_recorded {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|9ab3614ca1402b08|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 38,
-    "text": "hashes.push(h);\nfor i in k..tokens.len() {"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|a014f67f8b1fa2d9|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 29,
+    "end": 31,
     "text": "if k == 0 || tokens.len() < k {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|a2bb253a43f3ab59|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 10,
+    "end": 15,
     "text": "/// A selected fingerprint: `hash` covers tokens `[start, start+kgram)`."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|cfb2dd5f3a19aeff|0": {
     "target": "../../../cli/src/dedup/winnow.rs",
     "line": 19,
+    "end": 24,
     "text": "/// Rolling k-gram hashes of the token-hash sequence (wrapping u64"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|db2e9998b2e069d4|0": {
@@ -756,39 +540,55 @@
     "line": 64,
     "text": "let windows = grams.len().saturating_sub(p.window - 1).max(1);"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/winnow.rs|f7fb2625d0991630|0": {
-    "target": "../../../cli/src/dedup/winnow.rs",
-    "line": 79,
-    "text": "}\n}\nout\n}\n\n#[cfg(test)]"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/ast.rs|678db13e27dcda54|0": {
-    "target": "../../../cli/src/scan/ast.rs",
-    "line": 45,
-    "text": "}\n\npub fn named_children<'t>(node: Node<'t>) -> Vec<Node<'t>> {"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/ast.rs|932b8014a06eb291|0": {
     "target": "../../../cli/src/scan/ast.rs",
     "line": 43,
+    "end": 45,
     "text": "pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 260,
+    "line": 268,
+    "end": 270,
     "text": "pub fn fingerprints(self) -> bool {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|b2fad6b56ef76b35|0": {
+    "target": "../../../cli/src/scan/lang.rs",
+    "line": 195,
+    "end": 197,
+    "text": "pub fn indexed_path(path: &Path) -> Option<Self> {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|62105facb0b61d1c|0": {
+    "target": "../../../cli/src/scan/spec.rs",
+    "line": 233,
+    "text": "literal_delims: &[],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|fc743759d6a46e43|0": {
+    "target": "../../../cli/src/scan/spec.rs",
+    "line": 250,
+    "end": 253,
+    "text": "static HTML: LangSpec = LangSpec {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_c.rs|2462416f3738af1a|0": {
+    "target": "../../../cli/src/scan/spec_c.rs",
+    "line": 122,
+    "text": "literal_delims: &[\"\\\"\", \"'\", \"character\", \"R\\\"\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
     "target": "../../../cli/src/scan/spec_hs.rs",
     "line": 81,
+    "end": 83,
     "text": "// string literals lex as ONE `string` leaf (quotes inside the"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|62105facb0b61d1c|0": {
-    "target": "../../../cli/src/scan/spec_hs.rs",
-    "line": 83,
-    "text": "literal_delims: &[],"
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_java.rs|40673afc7febb683|0": {
+    "target": "../../../cli/src/scan/spec_java.rs",
+    "line": 88,
+    "text": "literal_delims: &[\"\\\"\", \"\\\"\\\"\\\"\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|2f99cfba7853fa18|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
     "line": 50,
+    "end": 51,
     "text": "// Python quotes surface as named string_start/string_end kinds."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|6102e94730fc5ddf|0": {
@@ -796,30 +596,27 @@
     "line": 111,
     "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|62105facb0b61d1c|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 51,
-    "text": "literal_delims: &[],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|8f2d953fe270d4e3|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 217,
-    "text": "literal_delims: &[\"\\\"\", \"`\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|94c43c67b19eccdd|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 163,
-    "text": "literal_delims: &[\"\\\"\"],"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|b778be50cc3e9751|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
     "line": 161,
+    "end": 163,
     "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|d5dc8ea61e1a0a65|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
     "line": 216,
+    "end": 217,
     "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_lua.rs|00c6e85335b2fa43|0": {
+    "target": "../../../cli/src/scan/spec_lua.rs",
+    "line": 72,
+    "text": "literal_delims: &[\"\\\"\", \"'\", \"[[\", \"]]\"],"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_r.rs|6f412a5d66f86ac9|0": {
+    "target": "../../../cli/src/scan/spec_r.rs",
+    "line": 71,
+    "text": "literal_delims: &[\"string_open\", \"string_close\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/trend/mod.rs|452a1b52cbdfe32a|0": {
     "target": "../../../cli/src/trend/mod.rs",
@@ -827,14 +624,10 @@
     "end": 8,
     "text": "//! (trend_rebuild.rs pins exactly that). Parser-only invalidation"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../DEVELOPMENT_PLAN.md|1f91856ca2808b4b|0": {
-    "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 203,
-    "text": "③避免 Node 运行时依赖。代价：自研索引正确性风险，用\"增量 ≡ 全量重建\"property 覆盖（§7）。"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../DEVELOPMENT_PLAN.md|48459eec53d72c4f|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
     "line": 199,
+    "end": 203,
     "text": "**ADR-005 克隆检测两层；自研 winnowing 而非复用 jscpd（否决理由记录，B3b）。**"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/candidates.rs|0b8594cdaabdfc78|0": {
@@ -4126,6 +3919,12 @@
     "end": 13,
     "text": "//! reference (`/x`) needs the deployment root, which no join knows: R2"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|61980c214a91f68c|0": {
+    "target": "../../../cli/src/graph/ladder/html.rs",
+    "line": 190,
+    "end": 210,
+    "text": "/// The fragment on a found target: a page's `id` set (or a Markdown"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|66efdd5d98103b68|0": {
     "target": "../../../cli/src/graph/ladder/html.rs",
     "line": 178,
@@ -4138,11 +3937,11 @@
     "end": 96,
     "text": "fn relative(from: &str, path: &str, doc: &Document, scope: &Scope) -> Found {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|988a042e045d2dd7|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|8bac2534022c7fbe|0": {
     "target": "../../../cli/src/graph/ladder/html.rs",
-    "line": 194,
-    "end": 210,
-    "text": "fn sectioned(target: String, frag: Option<&str>, rung: Rung, scope: &Scope) -> Outcome {"
+    "line": 15,
+    "end": 17,
+    "text": "//! host or scheme is External (R5, md's reading). R4 is md's too: a"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|db0033ea2b0110b0|0": {
     "target": "../../../cli/src/graph/ladder/html.rs",
@@ -4274,6 +4073,12 @@
     "line": 36,
     "end": 39,
     "text": "pub fn read(text: &str) -> Vec<Template> {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|2c1bfd98d4f88662|0": {
+    "target": "../../../cli/src/graph/ladder/md.rs",
+    "line": 116,
+    "end": 128,
+    "text": "/// R4: a bare fragment names a section of the linking document, as"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/md.rs|4958a697755af595|0": {
     "target": "../../../cli/src/graph/ladder/md.rs",
@@ -4464,6 +4269,11 @@
     "line": 27,
     "end": 37,
     "text": "pub fn resolve(site: &Site, scope: &Scope) -> Outcome {"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/r/mod.rs|755b42e18514ffdb|0": {
+    "target": "../../../cli/src/graph/ladder/r/mod.rs",
+    "line": 30,
+    "text": "\"source\" if spec.contains(\"://\") => Outcome::External { rung: 3 },"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/r/mod.rs|7cbc1fac6ac5c991|0": {
     "target": "../../../cli/src/graph/ladder/r/mod.rs",
@@ -4839,6 +4649,12 @@
     "end": 94,
     "text": "const SPEC: eval_support::FamilySpec = eval_support::FamilySpec {"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_lang_parts/precision.rs|cd36c3a1f5f419a8|0": {
+    "target": "../../../cli/tests/it/eval_lang_parts/precision.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The frozen precision-doc verifier of the v2.30 language exams: one"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_support/precision.rs|47344f83250b5715|0": {
     "target": "../../../cli/tests/it/eval_support/precision.rs",
     "line": 70,
@@ -4854,6 +4670,12 @@
     "target": "../../../cli/tests/it/eval_support/precision.rs",
     "line": 48,
     "text": "let p = c as f64 / (c + w) as f64;"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/fpr_lang_gate.rs|22d470f0050afdc3|0": {
+    "target": "../../../cli/tests/it/fpr_lang_gate.rs",
+    "line": 1,
+    "end": 9,
+    "text": "//! The per-language ledger's EXECUTOR (plan v2.30 step 6 commit E;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/unit/graph/ladder/md_tests.rs|7888a8dfa6029cde|0": {
     "target": "../../../cli/tests/unit/graph/ladder/md_tests.rs",
@@ -4908,6 +4730,72 @@
     "line": 509,
     "end": 513,
     "text": "\"in_corpus_truths\": 22,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-codeeraser-v1.json|4cf0588d19541461|0": {
+    "target": "../../../contracts/eval/lang-precision-codeeraser-v1.json",
+    "line": 850,
+    "end": 852,
+    "text": "\"in_corpus_truths\": 25,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-covid19model-v1.json|1f024ad5a5fd5a1e|0": {
+    "target": "../../../contracts/eval/lang-precision-covid19model-v1.json",
+    "line": 1608,
+    "end": 1610,
+    "text": "\"in_corpus_truths\": 18,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-fmt-v1.json|313f7b579914d9a8|0": {
+    "target": "../../../contracts/eval/lang-precision-fmt-v1.json",
+    "line": 1571,
+    "end": 1573,
+    "text": "\"in_corpus_truths\": 17,\n\"precision\": 1.0,\n\"recall\": 0.8823529411764706,\n\"verdicts\": {\n\"correct\": 15,\n\"external_ok\": 80,\n\"missed\": 2,\n\"unresolved_ok\": 3\n}\n},"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-gson-v1.json|2e06ac00efdb3231|0": {
+    "target": "../../../contracts/eval/lang-precision-gson-v1.json",
+    "line": 689,
+    "end": 691,
+    "text": "\"in_corpus_truths\": 12,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-html5-boilerplate-v1.json|c9f28f98b826a713|0": {
+    "target": "../../../contracts/eval/lang-precision-html5-boilerplate-v1.json",
+    "line": 51,
+    "end": 53,
+    "text": "\"in_corpus_truths\": 0,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-jsoup-v1.json|c5b1452bb6710015|0": {
+    "target": "../../../contracts/eval/lang-precision-jsoup-v1.json",
+    "line": 1083,
+    "end": 1085,
+    "text": "\"in_corpus_truths\": 24,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-koreader-v2.json|337dd847fffeab63|0": {
+    "target": "../../../contracts/eval/lang-precision-koreader-v2.json",
+    "line": 1409,
+    "end": 1411,
+    "text": "\"in_corpus_truths\": 76,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-learning-area-v1.json|c7dddda76d5259f4|0": {
+    "target": "../../../contracts/eval/lang-precision-learning-area-v1.json",
+    "line": 1095,
+    "end": 1097,
+    "text": "\"in_corpus_truths\": 51,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-lua-v1.json|3b3ba25833712ebd|0": {
+    "target": "../../../contracts/eval/lang-precision-lua-v1.json",
+    "line": 1662,
+    "end": 1664,
+    "text": "\"in_corpus_truths\": 74,\n\"precision\": 1.0,\n\"recall\": 0.9864864864864865,\n\"verdicts\": {\n\"correct\": 73,\n\"external_ok\": 25,\n\"missed\": 1,\n\"unresolved_ok\": 1\n}\n},"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-luarocks-v2.json|12efc3a8acad77b2|0": {
+    "target": "../../../contracts/eval/lang-precision-luarocks-v2.json",
+    "line": 296,
+    "end": 298,
+    "text": "\"in_corpus_truths\": 10,\n\"precision\": 1.0,\n\"recall\": 1.0,\n\"verdicts\": {\n\"correct\": 10,\n\"unresolved_ok\": 2\n}\n},"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../contracts/eval/lang-precision-stringr-v1.json|320addc6f1b9839c|0": {
+    "target": "../../../contracts/eval/lang-precision-stringr-v1.json",
+    "line": 95,
+    "end": 97,
+    "text": "\"in_corpus_truths\": 0,\n\"precision\": null,\n\"recall\": null,\n\"verdicts\": {\n\"external_ok\": 2\n}\n},"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|16d9f55e08d25b48|0": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -6462,6 +6350,12 @@
     "line": 40,
     "text": "fn named_already(line_level: &[Relocation], from: usize, to: usize, key: &str) -> bool {"
   },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/declared.rs|8aa3e19a3eeeb857|0": {
+    "target": "../../../cli/src/fourclass/declared.rs",
+    "line": 1,
+    "end": 32,
+    "text": "//! Which names a registered declaration node declares (plan v2.30 step"
+  },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/decls.rs|551562ea3f5b0b46|0": {
     "target": "../../../cli/src/fourclass/decls.rs",
     "line": 76,
@@ -6484,11 +6378,11 @@
     "end": 45,
     "text": "let (removed, added, degraded) = if a_t.is_empty() || b_t.is_empty() {"
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|34a1176370ed9e32|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|74d3ccd17b6aee59|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 114,
-    "end": 136,
-    "text": "pub fn extra(lang: Lang) -> &'static [&'static str] {"
+    "line": 101,
+    "end": 157,
+    "text": "const C_FAMILY: [&str; 10] = ["
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
     "target": "../../../cli/src/fourclass/mod.rs",
@@ -7908,31 +7802,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 549,
-    "end": 551,
+    "line": 551,
+    "end": 553,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 545,
+    "line": 547,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 537,
-    "end": 551,
+    "line": 539,
+    "end": 553,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 540,
-    "end": 541,
+    "line": 542,
+    "end": 543,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 540,
-    "end": 544,
+    "line": 542,
+    "end": 546,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
@@ -8268,11 +8162,23 @@
     "end": 191,
     "text": "/// Every judged declaration of an OWN file with a mention name, folded"
   },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/c.rs|fe62f56c2f8fc84c|0": {
+    "target": "../../../cli/src/mention/conv/c.rs",
+    "line": 1,
+    "end": 14,
+    "text": "//! C and C++: one fact, `Ffi` — the declaration is handed to a foreign"
+  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|46d157f7613a2c08|0": {
     "target": "../../../cli/src/mention/conv/mod.rs",
     "line": 40,
     "end": 72,
     "text": "pub enum Conv {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|70371eda9cde2f33|0": {
+    "target": "../../../cli/src/mention/conv/mod.rs",
+    "line": 244,
+    "end": 253,
+    "text": "fn java_bits(node: Node<'_>) -> i64 {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/mod.rs|e2ac031b7a1e5cdc|0": {
     "target": "../../../cli/src/mention/conv/mod.rs",
@@ -8380,11 +8286,23 @@
     "end": 13,
     "text": "//! The `mentioned` veto's corpus pass (plan v2.17 L round piece (3);"
   },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|0877b01e399a103a|0": {
+    "target": "../../../cli/src/mention/name.rs",
+    "line": 9,
+    "end": 27,
+    "text": "//! From a key (`name/arity`, `(T) method/arity`, `impl X`, a heading):"
+  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|13ffd4191b66779e|0": {
     "target": "../../../cli/src/mention/name.rs",
     "line": 38,
     "end": 53,
     "text": "pub fn mention_name(rel: &str, key: &str) -> Option<String> {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|c0ff25a93680a798|0": {
+    "target": "../../../cli/src/mention/name.rs",
+    "line": 40,
+    "end": 47,
+    "text": "// an HTML `#id` is an anchor like a heading (plan v2.30 step 5)"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/name.rs|d826aab6108efd42|0": {
     "target": "../../../cli/src/mention/name.rs",
@@ -8611,8 +8529,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 277,
-    "end": 279,
+    "line": 279,
+    "end": 281,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9709,6 +9627,12 @@
     "target": "../../../cli/tests/it/face_parity.rs",
     "line": 39,
     "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | tab:similar, similar_report | mcp:similar_units | |"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|9fed053bd656e1c4|0": {
+    "target": "../../../cli/tests/it/observe_feed.rs",
+    "line": 1,
+    "end": 10,
+    "text": "//! Observe-feed contract (ce.observe/0.11.0): the NDJSON feed is the"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|55926dc0727ec714|0": {
     "target": "../../../cli/tests/it/similar_face.rs",

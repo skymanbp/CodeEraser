@@ -18,7 +18,7 @@
   考题只问产品读得到的东西），逐文件记检测器看到的文本 sha256 与各站点类的计数（`graph::sites`——只读文法 kind 表与文件内事实，不查任何路径，所以能先于阶梯冻结）。
   档 `contracts/eval/lang-slice-<语料>-v<代>.json`（代 = 考题表的 `generation`，同一门考题的档同一代）。
 - **钉住的树**（`cli/tests/it/eval_lang_parts/tree.rs` 的 `lang_tree`，`#[ignore]`，读钉住克隆）：只给真值够得到整棵树的考题
-  （考题表 `reach = Tree`，今为 HTML——页面取的是站点服务的东西，不限于页面）：`git ls-tree` 在钉住 tip 列出的每个路径，按字节序，
+  （考题表 `reach = Tree`，今为 HTML 与 C——页面取的是站点服务的东西，不限于页面；C 的头文件按扩展名表归 C++、在 `*.c` 宇宙之外）：`git ls-tree` 在钉住 tip 列出的每个路径，按字节序，
   只是 tip 的函数、不含任何产品判断。审阅门用它把真值与 `scope_gaps` 绑到真实文件上而不必有克隆；门把树对着宇宙核：宇宙的文件全在
   树上，其余按宇宙自己的排除计数（另一种扩展名 / 走查拒读）逐类对上；判分的生成器有克隆在手，判分前把树重导一遍。
   档 `contracts/eval/lang-tree-<语料>-v<代>.json`。
@@ -300,7 +300,7 @@ R1 的答案是 69 对 0 错，收到 R2 起 85 对 0 错。门是 M5-2 的 G2�
 - 三道 missed 都是搜索目录不在文本里的情形，阶梯按设计不猜：luarocks 两处 `compat53.module` 前言（`src/luarocks/build/cmake.lua:1`、
   `src/luarocks/fetch/cvs.lua:1`），真值 `vendor/compat53/module.lua`——`vendor/` 只由 `GNUmakefile` 写进包装脚本的 `LUA_PATH`
   （`src/?.lua;vendor/?.lua`），语料里没有哪个 Lua 文件把它写进 `package.path`；声明 `[graph.search_roots] lua = ["vendor"]`
-  即答对。koreader `spec/unit/readersearch_spec.lua:7` 的 `require("commonrequire")`，真值 `spec/unit/commonrequire.lua`——
+  即答对（这一句在 B′ 的口径下不再成立：`vendor/` 是走查按名排除的目录，阶梯答不到它，见「B′」一节）。koreader `spec/unit/readersearch_spec.lua:7` 的 `require("commonrequire")`，真值 `spec/unit/commonrequire.lua`——
   `spec/unit/` 由测试运行器的配置加进路径，那份配置在未检出的 koreader-base 子模块里。
 - 11 道 unresolved_ok 的真值都是 `external`，阶梯答 out_of_scope：koreader-base 提供的 `ffi/*` 与 `libs/libkoreader-lfs`、
   LuaSocket 的 `socket.url`、Android 启动器的 `android`；拒答不算错，也不进召回的分母。1 道 external_ok：`bit`（LuaJIT 内建，R3）。
@@ -402,12 +402,12 @@ R2 全指 `covid19AgeModel/`（唯一的 `DESCRIPTION`；`library(covid19AgeMode
 `covid19AgeModel::` 1）；3 道拒答是 `source` 指向语料里没有的文件。首级占比 stringr 0 %、covid19model 2.8 %，远低于 0.80，不需要
 书面处置。
 
-## 步 5：Java、Lua、R 的精度册退役待重判
+## 步 5：Java、Lua、R 的精度册退役（B′ 已重判）
 
 步 5 的提交 A 挪动了这三门考题的答案所依赖的代码：走查不再按名字排除 `target/ build/ dist/`（只在旁边有产出它的工具的
 项目文件时才算产物），Java 的 `main` 源集只看得见 `main` 源集、文件自己声明的名字是 `own_unit`，Lua 的 `require` 多找引用
 文件自己的目录；判分也改为只问产品自己的走查读的文件（站点宇宙一节）。六份精度册因此在同一提交里删档、考题表的
-`scored` 翻回 false；等 HTML 的阶梯落地后与 HTML 的精度册一起重生成一次——新的一代读数与每处答案的移动记在文末「B′」一节（2026-09-28）。
+`scored` 翻回 false；等 HTML 的阶梯落地后与 HTML 的精度册一起重生成一次——新的一代读数与每处答案的移动记在下文「B′」一节（2026-09-28）。
 
 ## HTML（步 5）
 
@@ -584,7 +584,7 @@ Java / Lua / R 的宇宙台账（本代）：
 两门的三件套在步 6 补做（设计册 §14 第 14 条：阶梯已随步 2 提交 b7e78c7，先于任何考题；顺序门对这两门改核这一反转本身，
 见「仪器与门」的顺序门一条；考题表两行的 `ladder_first` 记反转与理由）。每门一个语料，就是交叉核对语料（SOURCES.md 的 c / cpp
 行，五个夹具与宇宙同一 tip、逐字节相同）；站点类只有 `include`；`.h` 按产品扩展名表是 C++，故 Lua 解释器的 28 个头文件不在 C 的
-宇宙里，fmt 的头文件、源文件与测试同属一个宇宙。阶梯只读 C 族的 `include` 站点（含者同目录 → 声明根 → 编译数据库 → 站外），
+宇宙里，fmt 的头文件、源文件与测试同属一个宇宙。阶梯只读 C 族的 `include` 站点（含者同目录 → 声明根 → 编译数据库 → `include/` 惯例 → 站外，B′ 起五级），
 两个语料都没有 `compile_commands.json`，也没有 ce.toml。
 
 | 语料 | 语言（范围） | tip | 许可 | 文件 | 站点（`include`） | 排除（其他扩展名） |

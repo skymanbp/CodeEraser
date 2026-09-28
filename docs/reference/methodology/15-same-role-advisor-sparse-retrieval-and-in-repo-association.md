@@ -63,7 +63,7 @@ queries ([mod.rs:33-43](../../../cli/src/similar/mod.rs#L33)).
 
 ### 2. The inverted tables — bags persisted as postings, pairs not stored
 
-Two tables, index schema 16, holding only hashes and counts
+Two tables, added at index schema 16 (17 today), holding only hashes and counts
 ([store.rs:1-6](../../../cli/src/similar/store.rs#L1),
 [store.rs:45-58](../../../cli/src/similar/store.rs#L45)). `bag(term_hash, unit, tf, channel)`
 is keyed by the unit's own `unitsig` row — the bag universe *is* the unitsig universe by
@@ -292,5 +292,7 @@ holds both oracle generations to their floors. The advisor is one row of the thr
 table — CLI, GUI tab and Tauri command, MCP tool — and the fifteenth tool in the MCP catalogue
 ([face_parity.rs:39](../../../cli/tests/it/face_parity.rs#L39)). Docs cite implementation lines
 (this booklet is under the citations gate), the constants above bind to their source names
-under `docs_consts`, and the feed golden carries the `similar` key at `ce.observe/0.10.0`
-([feed.golden.json](../../../contracts/fixtures/observe-feed/feed.golden.json)).
+under `docs_consts`, and the feed golden (`ce.observe/0.11.0`) carries no `similar` object by design: its
+staged twin shares one name word where the core's role bit wants two, so `similar_face.rs` seeds the pair
+that earns the key ([feed.golden.json](../../../contracts/fixtures/observe-feed/feed.golden.json),
+[observe_feed.rs:1-10](../../../cli/tests/it/observe_feed.rs#L1)).

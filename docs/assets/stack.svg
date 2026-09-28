@@ -34,7 +34,7 @@
       <g font-size="10" fill="#8593ad">
         <text x="66" y="185">judged: Python · TypeScript · TSX · Rust · Go · Haskell · C · C++</text>
         <text x="66" y="202">Java · Lua · R · Markdown (grammar-less) · HTML (no fingerprints)</text>
-        <text x="66" y="224">scan-only: JS · CSS · Vue · Svelte · Shell · YAML</text>
+        <text x="66" y="224">scan-only: JS · CSS · Vue · Svelte · Shell · YAML · prose-only: TXT</text>
 
         <text x="616" y="185">normalized token fingerprints → SQLite WAL</text>
         <text x="616" y="202">content-hash incremental invalidation per file</text>
@@ -45,8 +45,8 @@
         <text x="66" y="339">pre-hello and post-hello silence deadlines</text>
         <text x="66" y="356">warm index + long-lived ce-core child</text>
 
-        <text x="616" y="305">resolver ladder: relative · alias · package · re-export</text>
-        <text x="616" y="322">Markdown file/section anchors · unresolved-site ledger</text>
+        <text x="616" y="305">resolver ladder: relative · alias · package · re-export · include · require</text>
+        <text x="616" y="322">Markdown / HTML file and section anchors · unresolved-site ledger</text>
         <text x="616" y="339">git churn window · score facts · structure seam facts</text>
         <text x="616" y="356">erase gather: graph death · byte equality · full coverage</text>
       </g>
@@ -77,8 +77,8 @@
         <text x="66" y="564">integer rows · class index, no names</text>
 
         <text x="338" y="513">hello discovery</text>
-        <text x="338" y="530">ten judgment families: fourclass · graph · clone · docdup · verdict</text>
-        <text x="338" y="547">scan · structure · trend · erase · audit</text>
+        <text x="338" y="530">twelve judgment families: fourclass · graph · clone · docdup · verdict</text>
+        <text x="338" y="547">scan · structure · trend · erase · audit · tombstone · similar</text>
         <text x="338" y="564">each family has request/result shapes and bounded refusal</text>
 
         <text x="866" y="513">shared golden fixtures</text>
@@ -154,7 +154,7 @@
       <g font-size="9.5" fill="#8593ad">
         <text x="64" y="994">console · JSON · SARIF</text>
         <text x="64" y="1010">English / Chinese rows</text>
-        <text x="280" y="994">ten screens</text>
+        <text x="280" y="994">eleven screens</text>
         <text x="280" y="1010">rendering only</text>
         <text x="496" y="994">report tools</text>
         <text x="496" y="1010">no baseline writes</text>

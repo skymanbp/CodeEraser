@@ -250,6 +250,14 @@ impl Lang {
             .map(|&(_, f)| f.into())
     }
 
+    /// The languages that parse, in GRAMMARS order — one per
+    /// tree-sitter grammar (TypeScript and TSX are two grammars from
+    /// one crate). The docs' grammar count reads this face (plan v2.30
+    /// step 7); before it the registry scraped this file's text.
+    pub fn with_grammar() -> impl Iterator<Item = Lang> {
+        GRAMMARS.iter().map(|&(l, _)| l)
+    }
+
     /// The T1/T2/T3 population (plan v2.30 §2): a grammar to tokenize
     /// with AND a code language. HTML parses — docdup segments, the
     /// reference ladder, section anchors — but never fingerprints: its

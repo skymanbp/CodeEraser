@@ -12,10 +12,12 @@
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
 | Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（harness 已随 M7.5 封册退役，复跑从 git 历史复活；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
-| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 | **6/6** | ✅ `cli/tests/it/sonar_whitepaper.rs`（页码内注，含 p.8 括号断链） |
+| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 + Java 9 行 + C 5 / C++ 8 / Lua 5 / R 4 行 | **37/37** | ✅ `cli/tests/it/sonar_whitepaper.rs` 与 `sonar_whitepaper_{java,c,cpp,lua,r}.rs`（页码内注，含 p.8 括号断链；四种新语言的移植与不可移植登记见下文「四种新语言的例题移植」） |
 | CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见「递归增量」节） |
 | C CC | lizard 1.23.0 | 118 | **116/118** | 2 条归因保留（`default:`，D2；2026-09-24 计划 v2.30 步 2，详见 C / C++ 节） |
 | C++ CC | lizard 1.23.0 | 420 join（lizard 430 起始行 / ce 428 单位） | 394/420 | 26 条 + 两侧独有 18 条全归因：D1 20、D2 3、局部类 1 + 4、解析器恢复 1 + 14、lizard 三类缺陷 1 + 1 + 10 重复行（详见 C / C++ 节） |
+| Lua CC | lizard 1.23.0 | 22 join（lizard 22 行 / ce 28 单位） | **22/22** | 零分歧；ce 独有 6 条 = busted 回调，lizard 的 Ruby 状态机在 `it` 上吞掉此后的记号（详见 Lua / R 节） |
+| R CC | lizard 1.23.0 | 43 join（lizard 43 行 / ce 44 单位） | 34/43 | 9 条差 + 1 条 ce 独有全归因：D8 以调用承担的控制流 5、原生管道 `\|>` 1、嵌套函数截断宿主 3、匿名函数 D3 1（详见 Lua / R 节） |
 | Java CC | lizard 1.23.0 | 33 join（按结束行；lizard 34 行 / ce 38 单位） | **33/33** | 零数值分歧；ce 独有 5 条 = 带类型实参的匿名类方法，lizard 并进宿主或整段不报（D29，详见 Java 节） |
 | Java CoC | PMD 7.27.0 | 38 join（PMD 46 方法，8 个无体） | **37/38** | 匿名类方法并进宿主（D29，归因保留）1；`if` 条件里的三元那条随「条件不抬嵌套」（D31）落码两侧一致 |
 | CoC 条件不抬嵌套（D31） | 七个对拍语料重跑（新旧二进制同树） | 1,098 单元 | 2 条移动 | Java `checkAccessible` 3 → 2（与 PMD 相符）、C++ `do_write_float` 16 → 15，都是 `if` 条件里的三元（详见「条件不抬嵌套」节） |
@@ -169,7 +171,7 @@ fn symlink<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) {
 ## C / C++ 对拍（2026-09-24，计划 v2.30 步 2；fixtures 见 SOURCES.md 的 c / cpp 行）
 
 对照物只有 lizard 1.23.0 的 CCN：C/C++ 没有认知复杂度对照物，CoC 的执行者是
-白皮书电池 `cli/tests/it/coc_c.rs`（每条 D 表立场各一行）。join 键 = 文件 +
+白皮书电池 `cli/tests/it/coc_c.rs`（每条 D 表立场各一行）与例题移植表 `sonar_whitepaper_{c,cpp}.rs`（步 6 提交 D）。join 键 = 文件 +
 起始行；lizard 在同一起始行重复报出的两行算一个单位（见下）。复现：
 
 ```
@@ -328,7 +330,7 @@ PMD 2、lizard 与 ce 1），控制流条件之外的 `&&` / `||` 不计（`BagO
 ## Lua / R 对拍（2026-09-25，计划 v2.30 步 4；fixtures 见 SOURCES.md 的 lua / r 行）
 
 对照物是 lizard 1.23.0 的 CCN 与形参数：Lua 与 R 都没有认知复杂度对照物，CoC 的执行者是白皮书电池
-`cli/tests/it/coc_lua.rs` 与 `coc_r.rs`。R 原登记为「无外部对照」（D0）——钉版时核对 lizard 的 reader
+`cli/tests/it/coc_lua.rs` 与 `coc_r.rs`，以及例题移植表 `sonar_whitepaper_{lua,r}.rs`（步 6 提交 D）。R 原登记为「无外部对照」（D0）——钉版时核对 lizard 的 reader
 列表漏了 `lizard_languages/r.py`，步 4 对拍时发现并启用。join 键 = 文件 + 起始行：lizard 的 R reader
 把函数的结束行记在函数之后第一个代码记号所在的行（函数后隔几行空行与注释，结束行就落在下一个函数
 那一行），两侧只有起始行可比。复现：

@@ -18,10 +18,10 @@
 
 <sub>在 [codeeraser.dev/zh/how/#verdict](https://codeeraser.dev/zh/how/#verdict) 可缩放、拖动查看此图。</sub>
 
-- **在写入的瞬间拦截。** 每个文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->46<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->52<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，在墓碑腿加入之前）。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）；两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)。
+- **在写入的瞬间拦截。** 每个解析过的代码文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->46<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->52<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，在墓碑腿加入之前）。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）；两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)，1.8.0 起那里另有计划 v2.30 新增语言各一行（六语料各 400 提交，误拦 0）。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。1.8.0 起，判过线的对自成一类进入 `ce check` 的克隆轴与 `ce join` 的相似腿；核对每一对树的判决记在索引里——问一次，两棵树、核或旋钮任一变了才重问。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
-- **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙（每个文本文件里的每个标识符，只以 fnv1a64 哈希存储）产出**未被提及的声明**顾问，它永不把门翻红。
+- **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、include、require、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙（每个文本文件里的每个标识符，只以 fnv1a64 哈希存储）产出**未被提及的声明**顾问，它永不把门翻红。
 - **只用本仓事实的同角色建议，零模型。** 索引里已有的事实拼成词袋（名字、形状、被调用者、文档、结构、字面量），以整数 BM25（k1 = 6/5、b = 3/4）打分、在核里判决：候选只有一个精确顺序，外加一个只在名字、被调用者与形状三条证据通道合取时才为真的角色位。`--widen` 加仓内 PPMI 联想视图。由构造只当顾问：无退出码、无门、不拦钩子。
 - **被度量的结构。** <!--ce:count:structure_axes#word-->八<!--/ce-->轴（几何、命名多样性、混杂、错位、文档覆盖、过期文档、冗余、模块度）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
 - **挪几行骗不过的检查分数。** 门自己的各轴（尺寸、复杂度、克隆、文档重复、死码、变动、环）各计违规质量占机会数的份额 floor(1000·v/(v+n))，加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`），改一个旋钮会让 `ce check` 具名停下而非挪动所有线。
@@ -100,7 +100,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.7.4 沿用 v1.7.3 的数值：按规则它算新程序，但本版的改动落在这七项指标所计时的范围之外，故未重新测量。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
 <!-- bench:end -->
 
-延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)），渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
+延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)；逐语言阶梯的在 [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md)），五语料的那些渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
 
 ## 安装、运行与更新
 
@@ -182,7 +182,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 已知限制
 
-**v1.7.0 的范围。** 计划 v2.29 把 2026-08-31 收口时裁定不做的后置工作（计划 v2.22，三个后置束共 45 条）逐条重开，只留代价划得来的那些。以下限制就是留存下来的立场。
+**1.8.0 的范围。** 计划 v2.29 把 2026-08-31 收口时裁定不做的后置工作（计划 v2.22，三个后置束共 45 条）逐条重开，只留代价划得来的那些；计划 v2.30 随后把判决语言集扩到 C、C++、Java、Lua、R 与 HTML，每种语言都带着自己冻结的精度考题与误拦台账进门（[language-expansion](docs/reference/language-expansion.md)）。以下限制就是留存下来的立场。
 
 **限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。二进制未签名。
 
@@ -191,12 +191,12 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **本产品不替你画的线。** 复杂度轴出厂不带任何硬线。`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。
 - **分发与接线。** v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）；以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。
 - **墓碑残留。** 把单词名字也算名字：一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表。中文名字只在词边界处可测：宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。
-- **分数可比性。** 跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）的分数不可比。`ce structure` 自己那个 0–1000 同样跨 v1.6.0 → v1.7.0 不可比：模块度轴是新的，而每一轴都进等权折叠。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线自 v0.7.3 的 304 起随每次具名重立挪动（v1.4.1 时 372，把两条线同时套在 v1.4.1 的树上差三分）。
+- **分数可比性。** 跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）、跨 v1.7.4 → v1.8.0 扩语言（C、C++、Java、Lua、R、HTML 与纯文本进各轴的宇宙，核实过的近似克隆对进克隆轴）的分数不可比。`ce structure` 自己那个 0–1000 同样跨 v1.6.0 → v1.7.0 不可比：模块度轴是新的，而每一轴都进等权折叠；跨 v1.7.4 → v1.8.0 也不可比：新语言的边进了它的图。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线自 v0.7.3 的 304 起随每次具名重立挪动（v1.4.1 时 372，把两条线同时套在 v1.4.1 的树上差三分）。
 
 ## 文档
 
 - [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)（由二进制与配置 schema 生成，漂移即 CI 变红）· [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十五<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
-- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [EVAL-SET-SIMILAR](docs/EVAL-SET-SIMILAR.md) · [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md) · [FPR-L2](docs/FPR-L2.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)（wire SemVer 与两段式发布 runbook）
+- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [EVAL-SET-SIMILAR](docs/EVAL-SET-SIMILAR.md) · [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md) · [language-expansion](docs/reference/language-expansion.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md) · [FPR-L2](docs/FPR-L2.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)（wire SemVer 与两段式发布 runbook）
 - 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [技术栈](https://codeeraser.dev/zh/stack/) · [实测](https://codeeraser.dev/zh/bench/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->
 
 ## 许可证

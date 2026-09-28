@@ -24,7 +24,7 @@ use std::process::{Child, Stdio};
 /// the judged reply echoes the mask exactly when it rode, and this
 /// side refuses a reply without the echo as a pre-7.2.0 core, by
 /// name. What it buys: a language row flipping to judged in lang.rs
-/// (each of the seven plan v2.30 languages does, in its own step) is
+/// (each of the six plan v2.30 languages does, in its own step) is
 /// a Rust-side fact the core learns from the request, never a core
 /// release. No family changes its capability name.
 /// The per-version change ledger lives in contracts/VERSIONING.md and

@@ -34,7 +34,7 @@
       <g font-size="10" fill="#8593ad">
         <text x="66" y="185">判决语言：Python · TypeScript · TSX · Rust · Go · Haskell · C · C++</text>
         <text x="66" y="202">Java · Lua · R · Markdown（无语法树）· HTML（不算指纹）</text>
-        <text x="66" y="224">仅扫描：JS · CSS · Vue · Svelte · Shell · YAML</text>
+        <text x="66" y="224">仅扫描：JS · CSS · Vue · Svelte · Shell · YAML · 纯散文：TXT</text>
 
         <text x="616" y="185">归一化 token 指纹 → SQLite WAL</text>
         <text x="616" y="202">逐文件按内容哈希增量失效</text>
@@ -45,8 +45,8 @@
         <text x="66" y="339">hello 前后的静默截止时限</text>
         <text x="66" y="356">暖索引 + 常驻 ce-core 子进程</text>
 
-        <text x="616" y="305">解析阶梯：相对 · 别名 · 包 · 再导出</text>
-        <text x="616" y="322">Markdown 文件/章节锚点 · 未解析站点台账</text>
+        <text x="616" y="305">解析阶梯：相对 · 别名 · 包 · 再导出 · include · require</text>
+        <text x="616" y="322">Markdown / HTML 文件与章节锚点 · 未解析站点台账</text>
         <text x="616" y="339">git 变动窗口 · 评分事实 · 结构缝事实</text>
         <text x="616" y="356">擦除采集：图上判死 · 字节相等 · 全覆盖</text>
       </g>
@@ -77,8 +77,8 @@
         <text x="66" y="564">整数行 · 只过类下标，不过名字</text>
 
         <text x="338" y="513">hello 发现</text>
-        <text x="338" y="530">十个判决家族：fourclass · graph · clone · docdup · verdict</text>
-        <text x="338" y="547">scan · structure · trend · erase · audit</text>
+        <text x="338" y="530">十二个判决家族：fourclass · graph · clone · docdup · verdict</text>
+        <text x="338" y="547">scan · structure · trend · erase · audit · tombstone · similar</text>
         <text x="338" y="564">每个家族有自己的请求/结果形状与有界拒绝</text>
 
         <text x="866" y="513">共享的 golden 夹具</text>
@@ -154,7 +154,7 @@
       <g font-size="9.5" fill="#8593ad">
         <text x="64" y="994">控制台 · JSON · SARIF</text>
         <text x="64" y="1010">英文 / 中文行</text>
-        <text x="280" y="994">十个屏</text>
+        <text x="280" y="994">十一个屏</text>
         <text x="280" y="1010">只做渲染</text>
         <text x="496" y="994">报告工具</text>
         <text x="496" y="1010">不写基线</text>

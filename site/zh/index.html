@@ -66,7 +66,7 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 916/1000</span> | 判轴 0:83 1:0 2:286 3:0 4:0 5:0 6:219 | 候选 256
+<span class="s">检查分数 916/1000</span> | 判轴 0:85 1:0 2:286 3:0 4:0 5:0 6:219 | 候选 256
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：10 块并入既有成员，179 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -134,7 +134,7 @@
   <div class="card"><h3>ce churn</h3><p>git 窗口内的改动热度，逐单元归属，看得出一个文件是在被重写，还是只在被追加。</p></div>
   <div class="card"><h3>ce join</h3><p>三信号联判：把改动、重复与存活性折成一条判决，热的、重复的、已死的那个角落会自己报名。</p></div>
   <div class="card"><h3>ce similar</h3><p>同角色顾问：在索引已有的词袋上做整数 BM25，由核判定哪些候选扮演查询的角色。确定性、离线的检索，只当顾问，永不把门翻红。</p></div>
-  <div class="card band"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，停止时审计，会话开始报健康。</p></div>
+  <div class="card band"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，你在 ask 档放行的写入落地后记账，停止时审计，会话开始报健康。</p></div>
 </div>
 
 <!-- bench:begin -->
