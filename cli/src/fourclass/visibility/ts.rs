@@ -141,3 +141,7 @@ fn is_module_file(root: Node<'_>) -> bool {
         .iter()
         .any(|c| matches!(c.kind(), "import_statement" | "export_statement"))
 }
+
+#[cfg(test)]
+#[path = "../../../tests/unit/fourclass/visibility/tests_ts.rs"]
+mod tests;

@@ -90,7 +90,8 @@ pub fn node_segments<'t>(
 /// register — relocation reporting needs their names too; the M1
 /// function metrics do not, which is why this list lives in
 /// fourclass::kinds and not scan/spec. The named register and the
-/// Rust impl form are disjoint, so a node keys at most once.
+/// Rust impl form are disjoint, so a node keys at most once; which
+/// names a registered node binds here is declared.rs's answer.
 fn extra_units<'t>(
     root: tree_sitter::Node<'t>,
     src: &[u8],
@@ -104,10 +105,11 @@ fn extra_units<'t>(
     }
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        let mut keyed: Vec<(String, i64, Option<tree_sitter::Node<'t>>)> = named_keys(node, kinds)
-            .into_iter()
-            .map(|name| (key_text(name, src), super::kinds::KIND_NAMED, Some(name)))
-            .collect();
+        let mut keyed: Vec<(String, i64, Option<tree_sitter::Node<'t>>)> =
+            super::declared::keys(node, kinds, src, lang)
+                .into_iter()
+                .map(|name| (key_text(name, src), super::kinds::KIND_NAMED, Some(name)))
+                .collect();
         if keyed.is_empty()
             && let Some(key) = impl_key(node, src, lang)
         {
@@ -131,45 +133,6 @@ fn extra_units<'t>(
         }
     }
     out
-}
-
-/// The name nodes a registered declaration keys by — every `name`
-/// field it carries (a Go `var a, b int` carries two, plan v2.30 step
-/// 5b), or the leaf of a C typedef's declarator chain (`typedef int
-/// (*fp)(int);` names `fp`); none where the node is not a declaration
-/// of its own (`declares`).
-fn named_keys<'t>(node: tree_sitter::Node<'t>, kinds: &[&str]) -> Vec<tree_sitter::Node<'t>> {
-    if !kinds.contains(&node.kind()) || !declares(node) {
-        return Vec::new();
-    }
-    if node.kind() == "type_definition" {
-        return crate::scan::declarator::chain(node)
-            .map(|(leaf, _)| leaf)
-            .into_iter()
-            .collect();
-    }
-    let mut cursor = node.walk();
-    node.children_by_field_name("name", &mut cursor).collect()
-}
-
-/// Whether a registered kind declares here: an instance of a family
-/// names the family, never a new type (kinds::REDECLARING); a C
-/// `struct K x;` spells K by the node kind that declares it and only
-/// the form with a body declares (kinds::BODIED); a Go const or var
-/// spec declares a cross-file name at package level alone
-/// (kinds::PACKAGE_LEVEL — its grandparent is the file root).
-fn declares(node: tree_sitter::Node) -> bool {
-    let redeclares = node
-        .parent()
-        .is_some_and(|p| super::kinds::REDECLARING.contains(&p.kind()));
-    let bodiless =
-        super::kinds::BODIED.contains(&node.kind()) && node.child_by_field_name("body").is_none();
-    let local = super::kinds::PACKAGE_LEVEL.contains(&node.kind())
-        && node
-            .parent()
-            .and_then(|p| p.parent())
-            .is_none_or(|g| g.parent().is_some());
-    !(redeclares || bodiless || local)
 }
 
 fn key_text(name: tree_sitter::Node, src: &[u8]) -> String {

@@ -27,8 +27,8 @@ stylesheet, icon or preload (`link_asset`) from a page (`href`), and a `srcset` 
 URL ([sites/html.rs:19-45](../../../cli/src/graph/sites/html.rs#L19),
 [sites/html.rs:113-130](../../../cli/src/graph/sites/html.rs#L113)). The twenty-three frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
-include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:179-181](../../../cli/src/graph/store.rs#L179)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:139](../../../cli/src/graph/store.rs#L139), currently <!--ce:ver:graph_rev#digits-->`20`<!--/ce-->); `export_star` (a TS
+include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:184-186](../../../cli/src/graph/store.rs#L184)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:144](../../../cli/src/graph/store.rs#L144), currently <!--ce:ver:graph_rev#digits-->`21`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -87,7 +87,7 @@ Numeric details that are policy, not taste:
   duplicates take `-N` suffixes in document order ([md_slug.rs:47-51](../../../cli/src/graph/ladder/md_slug.rs#L47)).
   A setext heading — a paragraph under `===` or `---` — slugs like an ATX one, its lines joined, from
   its first row ([md_head.rs:30-61](../../../cli/src/graph/ladder/md_head.rs#L30)), and the section units
-  read the same headings ([units.rs:209-228](../../../cli/src/fourclass/units.rs#L209)) — plan v2.30 step 5b.
+  read the same headings ([units.rs:172-191](../../../cli/src/fourclass/units.rs#L172)) — plan v2.30 step 5b.
   Raw-HTML anchors (`<a name=…>`, `<a id=…>`, `<h1..6 id=…>`) enter the set verbatim, the tag read across
   lines and its attribute with or without spaces around `=`, quoted or bare
   ([md_head.rs:126-150](../../../cli/src/graph/ladder/md_head.rs#L126)); a fragment is percent-decoded

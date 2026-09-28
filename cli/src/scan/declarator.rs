@@ -115,12 +115,20 @@ fn absorbed(node: Node<'_>, src: &[u8]) -> bool {
 /// operator_cast leaf whose abstract_function_declarator child is its
 /// list. None where the node has no declarator field.
 pub(crate) fn chain(node: Node<'_>) -> Option<(Node<'_>, Option<Node<'_>>)> {
-    let mut here = node.child_by_field_name("declarator")?;
+    Some(chain_from(node.child_by_field_name("declarator")?))
+}
+
+/// The chain below one declarator node — what `chain` runs from a
+/// node's `declarator` field, exposed for a `declaration` that carries
+/// several (`int a, *b;`; fourclass/declared.rs walks each, plan v2.30
+/// step 5b-6).
+pub(crate) fn chain_from(declarator: Node<'_>) -> (Node<'_>, Option<Node<'_>>) {
+    let mut here = declarator;
     let mut params = None;
     loop {
         match here.kind() {
             "function_declarator" => params = Some(here),
-            "operator_cast" => return Some((here, here.child_by_field_name("declarator"))),
+            "operator_cast" => return (here, here.child_by_field_name("declarator")),
             _ => {}
         }
         let inner = here.child_by_field_name("declarator").or_else(|| {
@@ -133,7 +141,7 @@ pub(crate) fn chain(node: Node<'_>) -> Option<(Node<'_>, Option<Node<'_>>)> {
         });
         match inner {
             Some(inner) => here = inner,
-            None => return Some((here, params)),
+            None => return (here, params),
         }
     }
 }

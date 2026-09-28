@@ -3786,8 +3786,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 209,
-    "end": 228,
+    "line": 172,
+    "end": 191,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
@@ -4733,15 +4733,15 @@
     "line": 48,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|3a75f8567dd3f5aa|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|7fc0dcedbf775f0b|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 139,
-    "text": "pub const GRAPH_REV: i64 = 20;"
+    "line": 144,
+    "text": "pub const GRAPH_REV: i64 = 21;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 179,
-    "end": 181,
+    "line": 184,
+    "end": 186,
     "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
@@ -6474,8 +6474,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|34a1176370ed9e32|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 83,
-    "end": 105,
+    "line": 114,
+    "end": 136,
     "text": "pub fn extra(lang: Lang) -> &'static [&'static str] {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
@@ -6593,14 +6593,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 282,
-    "end": 287,
+    "line": 245,
+    "end": 250,
     "text": "pub fn owner(units: &[Unit], line: usize) -> Option<&Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|2442391d9fe5d41c|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 187,
-    "end": 200,
+    "line": 150,
+    "end": 163,
     "text": "fn impl_key(node: tree_sitter::Node, src: &[u8], lang: Lang) -> Option<String> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|371cf990de3ad9f4|0": {
@@ -6611,14 +6611,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 209,
-    "end": 228,
+    "line": 172,
+    "end": 191,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|f782ffb638135d5f|0": {
     "target": "../../../cli/src/fourclass/units.rs",
-    "line": 230,
-    "end": 255,
+    "line": 193,
+    "end": 218,
     "text": "/// HTML sections (plan v2.30 step 5, booklet §5): an element carrying"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/guard/probe.rs|0ee176e5cec95e69|0": {
@@ -9776,41 +9776,41 @@
     "end": 31,
     "text": "-- | The candidate row: [nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual,"
   },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|0d4f123892f57f55|0": {
+    "target": "../../EVAL-SET-SIMILAR.md",
+    "line": 100,
+    "text": "| all | 695 | 100 | 65 | 78 | 452 | 100/165 = 60.6 % | 100/178 = 56.2 % |"
+  },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|1c370a37e8d2642f|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 225,
+    "line": 228,
     "text": "### 裁定（调优与联想，2026-09-05）"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|2374d52a68d6c8d8|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 318,
+    "line": 322,
     "text": "### 裁定（留出集复测，2026-09-05）"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|3a93317b81c49a4c|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|64255057302d6b8d|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 285,
-    "text": "| all | 667 | 89 | 90 | 71 | 417 | 89/179 = 49.7 % | 89/160 = 55.6 % |"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|5b784ff115a5b6ad|0": {
-    "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 276,
-    "text": "| all | 115 | 45/115 = 39.1 % | 41/115 = 35.7 % | 29/57 = 50.9 % | 16/58 = 27.6 % | 28/98 = 28.6 % | 69/115 = 60.0 % | 66/115 = 57.4 % |"
+    "line": 91,
+    "text": "| all | 118 | 66/118 = 55.9 % | 64/118 = 54.2 % | 39/59 = 66.1 % | 27/59 = 45.8 % | 40/92 = 43.5 % | 75/118 = 63.6 % | 77/118 = 65.3 % |"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|6f2f3da27ec8cd27|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 80,
-    "end": 83,
+    "line": 83,
+    "end": 86,
     "text": "## 结果（`contracts/eval/similar-oracle-v1.json` `summary`，CI 门从行重导必须相等）"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|915d970925e035dd|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|83458f6e2f7f8b93|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 97,
-    "text": "| all | 695 | 100 | 65 | 80 | 450 | 100/165 = 60.6 % | 100/180 = 55.6 % |"
+    "line": 289,
+    "text": "| all | 667 | 89 | 90 | 70 | 418 | 89/179 = 49.7 % | 89/159 = 56.0 % |"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|daf761ab85f5e997|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|dd1b36339a71303d|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
-    "line": 88,
-    "text": "| all | 118 | 68/118 = 57.6 % | 66/118 = 55.9 % | 39/59 = 66.1 % | 29/59 = 49.2 % | 39/89 = 43.8 % | 75/118 = 63.6 % | 77/118 = 65.3 % |"
+    "line": 280,
+    "text": "| all | 115 | 44/115 = 38.3 % | 40/115 = 34.8 % | 29/57 = 50.9 % | 15/58 = 25.9 % | 27/97 = 27.8 % | 69/115 = 60.0 % | 66/115 = 57.4 % |"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",

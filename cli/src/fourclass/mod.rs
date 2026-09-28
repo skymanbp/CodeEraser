@@ -17,6 +17,7 @@
 
 pub mod anchor;
 pub mod batch;
+mod declared;
 pub mod decls;
 pub mod diff;
 pub mod kinds;

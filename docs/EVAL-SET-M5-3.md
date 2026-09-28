@@ -68,6 +68,18 @@ sample 行内嵌 unit key 且抽样为 key 哈希序 → 重冻 candidates 必�
 二进制上对同一批冻结文件复读，四册 md 行零差、cobra 恰是那 8 行，故差额全归本批。graph-slice 五册
 零新漂移（requests 13 / ripgrep 2 / zod 12 行的差在 a5ac21f 上同样存在，是 GRAPH_REV 13–14 的旧账）。
 
+**第三道 epoch 边界（2026-09-27，计划 v2.30 步 5b-6）**：声明域按规则扩——TS 模块级 `const` / `let` / `var`
+（解构的每个绑定名各一单元，函数值已由函数抽取器命名的不再造第二个）、Java `static` 字段与接口常量、C / C++
+文件级变量成单元，与 Go 的包级 `const` / `var` 同座——探测器第三次换 epoch。self 册按冻结 sha 重导 1 行：TS 夹具
+`packages__zod__src__v3__benchmarks__object.ts` 12→18 单元（六个模块级 const：三个 `Benchmark.Suite` 与三个
+`z.object` 形状，bands below_floor 7→12 / s 5→6），三个 locale 夹具与 `mini__index.ts` 零差（locale 文件在模块级只有
+函数值的 `const error`，早已是单元 `error/0`），ts 单元 26→32；候选册 `admitted_by_lang` ts 14→15 手改同增，
+`pairs_sha256` 与 `pool_digests` 不动。本仓没有 Java / C / C++ 的冻结行（那三个夹具语料 2026-09-24 之后才入库，
+晚于冻结）。四份外部宇宙按上段拍板整族不重冻、冻结对冻结：同一探针对 zod@912f0f5 的冻结树复读，若按当下行喉
+重导会动 393 行里的 171——169 行 ts 全是单元只增不减（7078→8102，其中 ≥ 24 结点的可准入单元 +402，sha 零动）、
+2 行 md（`AGENTS.md` 15→7、`packages/docs-v3/MIGRATION.md` 8→7 节）是第二道 epoch 已记的标题规则；requests /
+ripgrep / cobra 没有这三种语言，零行。graph-slice 五册零新漂移（`eval_graph` 绿）。
+
 ## Docdup 仪器链（3d 段宇宙/oracle → 3g 普查/修正案/精度）
 
 **段宇宙**（`docdup-segments-*-v1.json`，`ce.eval-docdup-segments/1.0.0`，生成于

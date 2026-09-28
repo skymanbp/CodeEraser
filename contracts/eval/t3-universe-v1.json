@@ -1535,16 +1535,16 @@
     },
     {
       "bands": {
-        "below_floor": 7,
+        "below_floor": 12,
         "l": 0,
         "m": 0,
-        "s": 5
+        "s": 6
       },
       "lang": "ts",
       "path": "contracts/fixtures/crosscheck/typescript/packages__zod__src__v3__benchmarks__object.ts",
       "sha256": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
-      "symbols": 12,
-      "units": 12
+      "symbols": 18,
+      "units": 18
     },
     {
       "bands": {
@@ -1884,10 +1884,10 @@
       "rs/l": 132,
       "rs/m": 507,
       "rs/s": 606,
-      "ts/below_floor": 12,
+      "ts/below_floor": 17,
       "ts/l": 6,
       "ts/m": 1,
-      "ts/s": 7
+      "ts/s": 8
     },
     "files": 141,
     "symbols_by": {
@@ -1895,16 +1895,16 @@
       "md": 123,
       "py": 126,
       "rs": 1869,
-      "ts": 26
+      "ts": 32
     },
-    "total_symbols": 2236,
-    "total_units": 2113,
+    "total_symbols": 2242,
+    "total_units": 2119,
     "units_by": {
       "go": 92,
       "md": 0,
       "py": 126,
       "rs": 1869,
-      "ts": 26
+      "ts": 32
     }
   }
 }

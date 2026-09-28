@@ -20,8 +20,12 @@
 //! Go `const_spec`/`var_spec` enter at PACKAGE level only (plan v2.30
 //! step 5b): a package-level constant is a cross-file identifier like
 //! Rust's `const_item`, while the same node kinds inside a function
-//! body declare locals no other file can name (PACKAGE_LEVEL); a Java
-//! field stays out, its references being the class's own.
+//! body declare locals no other file can name (PACKAGE_LEVEL). Step
+//! 5b-6 widened the domain by the same rule to the other languages'
+//! file-level variables — a Java `static` field (JAVA_FIELDS), a C /
+//! C++ file-scope variable definition (C_VARIABLE) and a TypeScript
+//! module-level `const` / `let` / `var` (TS_LEXICAL); which node
+//! declares here, and which names, is fourclass/declared.rs's question.
 
 use crate::scan::lang::Lang;
 
@@ -49,6 +53,31 @@ pub const REDECLARING: [&str; 1] = ["data_instance"];
 /// several (`var a, b int`): each name is a unit of its own.
 pub const PACKAGE_LEVEL: [&str; 2] = ["const_spec", "var_spec"];
 
+/// Java's field forms (plan v2.30 step 5b-6): a `field_declaration`
+/// declares only when `static` is among its modifiers — JLS 8.3.1.1
+/// makes a static field one variable of the class, named across files
+/// as `Type.NAME`, where an instance field is every object's own; an
+/// interface's or annotation type's `constant_declaration` is
+/// implicitly `public static final` (JLS 9.3). Each declarator is a
+/// unit of its own (declared.rs).
+pub const JAVA_FIELDS: [&str; 2] = ["field_declaration", "constant_declaration"];
+
+/// The C family's variable form (plan v2.30 step 5b-6): a `declaration`
+/// declares only at file scope — the translation unit, a namespace or
+/// linkage body, through preprocessor conditionals and a template head
+/// — and only the variables it defines (C11 6.9.2: an `extern` without
+/// an initializer is a reference, a prototype names a function); one
+/// unit per declarator (declared.rs).
+pub const C_VARIABLE: &str = "declaration";
+
+/// TypeScript's lexical forms (plan v2.30 step 5b-6): `const` / `let`
+/// (`lexical_declaration`) and `var` (`variable_declaration`) declare
+/// only at module level — under the program, an `export` / `declare`
+/// wrapper, or a namespace / module / `declare global` body; the same
+/// kinds inside a function, a loop head or a bare block bind locals.
+/// One unit per bound identifier (declared.rs).
+pub const TS_LEXICAL: [&str; 2] = ["lexical_declaration", "variable_declaration"];
+
 /// Kinds that declare only with a `body`: `struct K { … }` declares K,
 /// while `struct K x;`, a `struct K *` parameter type and a forward
 /// `class Fwd;` reference or promise it by the SAME node kind and are
@@ -64,17 +93,19 @@ pub const BODIED: [&str; 4] = [
 /// macro is a real declaration, the type specifiers and a typedef name
 /// types, and the three C++ forms at the end never occur in a C parse
 /// (tree-sitter-c has no such kinds), so sharing the table costs
-/// nothing. A prototype `declaration` is not a unit — a header spelling
-/// the name is itself the mention (booklet §6). The specifiers declare
-/// only with a body (BODIED), and the typedef keys by its declarator
-/// leaf (units.rs).
-const C_FAMILY: [&str; 9] = [
+/// nothing. A `declaration` is a unit per variable it defines at file
+/// scope (C_VARIABLE, declared.rs) — never per prototype: a header
+/// spelling a name is itself the mention (booklet §6). The specifiers
+/// declare only with a body (BODIED), and the typedef keys by its
+/// declarator leaf (declared.rs).
+const C_FAMILY: [&str; 10] = [
     "preproc_def",
     "preproc_function_def",
     "struct_specifier",
     "union_specifier",
     "enum_specifier",
     "type_definition",
+    "declaration",
     "class_specifier",
     "namespace_definition",
     "alias_declaration",
@@ -95,6 +126,8 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
             "class_declaration",
             "interface_declaration",
             "enum_declaration",
+            "lexical_declaration",
+            "variable_declaration",
         ],
         Lang::Go => &["type_spec", "type_alias", "const_spec", "var_spec"],
         // tree-sitter-haskell 0.23.1 spells the synonym kind
@@ -114,6 +147,8 @@ pub fn extra(lang: Lang) -> &'static [&'static str] {
             "enum_declaration",
             "record_declaration",
             "annotation_type_declaration",
+            "field_declaration",
+            "constant_declaration",
         ],
         // the sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never four-classified

@@ -26,7 +26,7 @@
       "go": 45,
       "py": 105,
       "rs": 1245,
-      "ts": 14
+      "ts": 15
     },
     "cross_lang_dropped": 1258,
     "identical_struct_pairs": 105,

@@ -234,7 +234,10 @@ fn target<'t>(op: Node<'t>, value: Node<'t>, src: &[u8]) -> Option<Node<'t>> {
         .filter(|n| matches!(n.kind(), "identifier" | "string" | "extract_operator"))
 }
 
-fn fielded<'t>(node: Node<'t>, field: &str) -> Vec<Node<'t>> {
+/// Every child reached through `field`, in order — shared with
+/// fourclass/declared.rs, which reads a declaration's `name` and
+/// `declarator` fields through it (plan v2.30 step 5b-6).
+pub(crate) fn fielded<'t>(node: Node<'t>, field: &str) -> Vec<Node<'t>> {
     let mut cursor = node.walk();
     node.children_by_field_name(field, &mut cursor).collect()
 }

@@ -48,26 +48,37 @@
   "generation": 2,
   "holdout_of": "similar-oracle-v1",
   "method": "every unit of each corpus (the product's unitsig universe, bagged from the text the index saw) queries the rest of its corpus; bare arm = the unit's own bag at channel weights, widened arm = the same plus each spelled word term's top-m PPMI neighbours at a capped fraction of its weight; integer BM25, fixed-point idf; role = (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shape equal). Sample = per corpus the sha256-rank prefix of role = 1 and of role = 0 bare top-1 queries up to the quotas, a generation ≥ 2 skipping every rank an earlier generation's oracle arbitrated (the holdout); candidates = the union of both arms' top-k with one evidence row each. Arbitration labels every candidate; precision at 1 and hit at 5 are computed over the arbitrated rows only — no oracle here knows every same-role partner, so recall has no denominator and is not claimed. Oracle = the sample rows joined with the arbiter's per-candidate truth; p_at_1 = arbitrated same_role at an arm's rank 1 over answered queries (all / role-bit-1 / role-bit-0 / non-clone top-1); hit_at_5 = a same_role candidate anywhere in the arm's top-k; role_bit_over_candidates = the role conjunction's confusion against truth over every arbitrated candidate. No recall is claimed: the oracle knows only the candidates it was shown.",
-  "rearbitrated": {
-    "arbiter": "codex exec gpt-6-astra (reasoning max, read-only sandbox), one batch per generation; the prompt carried identities and verbatim source only - no scores, no role bits, no arm placements (RM18)",
-    "corpus": "go",
-    "date": "2026-09-26",
-    "reason": "plan v2.30 step 5b items 3 and 25: grouped Go parameters count per name and package-level const / var declarations are units, so the Go fixture's unit universe (and every candidate list over it) changed; the 13 queries are the frozen draw, re-measured live and re-arbitrated whole",
-    "renamed_queries": [
-      {
-        "key": "appendIfNotPresent/2",
-        "path": "cobra.go",
-        "rank": "d7e8741abaa8b7979c5a5aef3f1efdbceca748d9d7c4786003b81dd1d3324ead"
-      },
-      {
-        "key": "configEnvVar/2",
-        "path": "completions.go",
-        "rank": "bd621cfe0fb84a55bd9d3ebb9f4de93469ee7a3396be2462649a2894103a6740"
-      }
-    ],
-    "rows": 13,
-    "transcription_repairs": []
-  },
+  "rearbitrated": [
+    {
+      "arbiter": "codex exec gpt-6-astra (reasoning max, read-only sandbox), one batch per generation; the prompt carried identities and verbatim source only - no scores, no role bits, no arm placements (RM18)",
+      "corpus": "go",
+      "date": "2026-09-26",
+      "reason": "plan v2.30 step 5b items 3 and 25: grouped Go parameters count per name and package-level const / var declarations are units, so the Go fixture's unit universe (and every candidate list over it) changed; the 13 queries are the frozen draw, re-measured live and re-arbitrated whole",
+      "renamed_queries": [
+        {
+          "key": "appendIfNotPresent/2",
+          "path": "cobra.go",
+          "rank": "d7e8741abaa8b7979c5a5aef3f1efdbceca748d9d7c4786003b81dd1d3324ead"
+        },
+        {
+          "key": "configEnvVar/2",
+          "path": "completions.go",
+          "rank": "bd621cfe0fb84a55bd9d3ebb9f4de93469ee7a3396be2462649a2894103a6740"
+        }
+      ],
+      "rows": 13,
+      "transcription_repairs": []
+    },
+    {
+      "arbiter": "codex exec gpt-6-astra (reasoning max, read-only sandbox), one batch per generation; the prompt carried identities and verbatim source only - no scores, no role bits, no arm placements (RM18)",
+      "corpus": "typescript",
+      "date": "2026-09-27",
+      "reason": "plan v2.30 step 5b-6: TypeScript module-level const / let / var declarations are units (the declaration domain widened by rule), so the typescript fixture's unit universe (26 -> 32, the six module-level consts of benchmarks/object.ts) and every candidate list over it changed; the 6 queries are the frozen draw, re-measured live and re-arbitrated whole",
+      "renamed_queries": [],
+      "rows": 6,
+      "transcription_repairs": []
+    }
+  ],
   "rows": [
     {
       "bag": {
@@ -18094,7 +18105,7 @@
         {
           "bare": {
             "rank": 1,
-            "score": 2984697
+            "score": 4102859
           },
           "clone": false,
           "end_line": 122,
@@ -18103,7 +18114,7 @@
             1,
             0,
             0,
-            8,
+            11,
             1
           ],
           "key": "error/0",
@@ -18115,76 +18126,16 @@
           "shape_equal": false,
           "start_line": 5,
           "truth": "related",
-          "why": "getRussianPlural selects one of three noun forms using a count's final digits; the Bulgarian error factory defines localization dictionaries and returns a mapper from validation issues to complete messages.",
+          "why": "The query selects Russian noun forms by count, while the candidate constructs a Bulgarian validation error formatter within the same localization family.",
           "widened": {
             "rank": 1,
-            "score": 2984697
+            "score": 4102859
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 2922223
-          },
-          "clone": false,
-          "end_line": 121,
-          "hits": [
-            0,
-            0,
-            0,
-            0,
-            6,
-            1
-          ],
-          "key": "(anonymous)/1",
-          "nth": 0,
-          "path": "packages__zod__src__v4__locales__bg.ts",
-          "role": false,
-          "same_file": false,
-          "sha": "1ceb9a24c1237ac105cb03dd2931bf0a01adb02910fcc4d370b0ea86b9e12c0b",
-          "shape_equal": false,
-          "start_line": 58,
-          "truth": "related",
-          "why": "getRussianPlural chooses a count-dependent grammatical form; the Bulgarian callback switches on validation issue codes and formats full error messages, including limits and invalid formats.",
-          "widened": {
-            "rank": 2,
-            "score": 2922223
-          }
-        },
-        {
-          "bare": {
-            "rank": 3,
-            "score": 2883984
-          },
-          "clone": false,
-          "end_line": 169,
-          "hits": [
-            0,
-            0,
-            0,
-            0,
-            6,
-            1
-          ],
-          "key": "(anonymous)/1",
-          "nth": 0,
-          "path": "packages__zod__src__v4__locales__ru.ts",
-          "role": false,
-          "same_file": true,
-          "sha": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934",
-          "shape_equal": false,
-          "start_line": 114,
-          "truth": "related",
-          "why": "getRussianPlural implements noun-form selection; the Russian issue callback calls it for minimum and maximum units while constructing complete validation-error messages.",
-          "widened": {
-            "rank": 3,
-            "score": 2883984
-          }
-        },
-        {
-          "bare": {
-            "rank": 4,
-            "score": 2866443
+            "score": 3927144
           },
           "clone": false,
           "end_line": 111,
@@ -18193,7 +18144,7 @@
             1,
             0,
             0,
-            8,
+            11,
             1
           ],
           "key": "error/0",
@@ -18205,16 +18156,46 @@
           "shape_equal": false,
           "start_line": 5,
           "truth": "related",
-          "why": "getRussianPlural performs Russian count-based inflection; the ota error factory initializes localized type, format, and sizing vocabulary and returns a full validation-issue message mapper.",
+          "why": "The query supplies Russian plural selection, while the candidate builds an Ottoman Turkish error map, serving different parts of validation localization.",
           "widened": {
-            "rank": 4,
-            "score": 2866443
+            "rank": 2,
+            "score": 3927144
           }
         },
         {
           "bare": {
-            "rank": 5,
-            "score": 2832759
+            "rank": 3,
+            "score": 3865128
+          },
+          "clone": false,
+          "end_line": 121,
+          "hits": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            1
+          ],
+          "key": "(anonymous)/1",
+          "nth": 0,
+          "path": "packages__zod__src__v4__locales__bg.ts",
+          "role": false,
+          "same_file": false,
+          "sha": "1ceb9a24c1237ac105cb03dd2931bf0a01adb02910fcc4d370b0ea86b9e12c0b",
+          "shape_equal": false,
+          "start_line": 58,
+          "truth": "related",
+          "why": "The query chooses a count-dependent noun form, while the candidate translates complete validation issues into Bulgarian messages.",
+          "widened": {
+            "rank": 3,
+            "score": 3865128
+          }
+        },
+        {
+          "bare": {
+            "rank": 4,
+            "score": 3750382
           },
           "clone": false,
           "end_line": 170,
@@ -18223,7 +18204,7 @@
             1,
             0,
             0,
-            8,
+            11,
             1
           ],
           "key": "error/0",
@@ -18235,10 +18216,40 @@
           "shape_equal": false,
           "start_line": 33,
           "truth": "related",
-          "why": "getRussianPlural selects among supplied one/few/many strings; the Russian error factory defines those strings and other dictionaries, then creates the issue renderer that uses the helper.",
+          "why": "The candidate constructs the Russian error map whose size-error branches call the query to select the appropriate unit form.",
+          "widened": {
+            "rank": 4,
+            "score": 3750382
+          }
+        },
+        {
+          "bare": {
+            "rank": 5,
+            "score": 3721755
+          },
+          "clone": false,
+          "end_line": 169,
+          "hits": [
+            0,
+            0,
+            0,
+            0,
+            8,
+            1
+          ],
+          "key": "(anonymous)/1",
+          "nth": 0,
+          "path": "packages__zod__src__v4__locales__ru.ts",
+          "role": false,
+          "same_file": true,
+          "sha": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934",
+          "shape_equal": false,
+          "start_line": 114,
+          "truth": "related",
+          "why": "The candidate calls the query when formatting minimum and maximum size errors, making them the message formatter and its pluralization helper.",
           "widened": {
             "rank": 5,
-            "score": 2832759
+            "score": 3721755
           }
         }
       ],
@@ -19174,16 +19185,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 1549894
+            "score": 2021715
           },
           "clone": true,
           "end_line": 128,
           "hits": [
             0,
-            1,
+            2,
             1,
             0,
-            7,
+            10,
             0
           ],
           "key": "(anonymous)/0",
@@ -19195,25 +19206,25 @@
           "shape_equal": true,
           "start_line": 124,
           "truth": "same_role",
-          "why": "The Russian and Bulgarian default exports have identical bodies that call their local error factory and return its callback in a localeError configuration object.",
+          "why": "Both identical exported functions construct a locale configuration object containing the error map returned by their local error factory.",
           "widened": {
             "rank": 1,
-            "score": 1549894
+            "score": 2021715
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 1549894
+            "score": 2021715
           },
           "clone": true,
           "end_line": 117,
           "hits": [
             0,
-            1,
+            2,
             1,
             0,
-            7,
+            10,
             0
           ],
           "key": "(anonymous)/0",
@@ -19225,16 +19236,16 @@
           "shape_equal": true,
           "start_line": 113,
           "truth": "same_role",
-          "why": "The Russian and Ottoman Turkish default exports identically construct a configuration object whose localeError property is supplied by their local error factory.",
+          "why": "Both use identical code to expose their locale's initialized error map through the localeError configuration property.",
           "widened": {
             "rank": 2,
-            "score": 1549894
+            "score": 2021715
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 350933
+            "score": 607073
           },
           "clone": false,
           "end_line": 15,
@@ -19243,7 +19254,7 @@
             1,
             0,
             0,
-            2,
+            4,
             0
           ],
           "key": "getSizing/1",
@@ -19255,16 +19266,16 @@
           "shape_equal": false,
           "start_line": 13,
           "truth": "related",
-          "why": "The Russian default export packages an error-map callback into locale configuration, while Bulgarian getSizing looks up an origin's sizing words and returns null when absent.",
+          "why": "The query exports a Russian locale configuration, while the candidate looks up sizing vocabulary used inside the Bulgarian localization mechanism.",
           "widened": {
             "rank": 3,
-            "score": 350933
+            "score": 607073
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 350933
+            "score": 607073
           },
           "clone": false,
           "end_line": 15,
@@ -19273,7 +19284,7 @@
             1,
             0,
             0,
-            2,
+            4,
             0
           ],
           "key": "getSizing/1",
@@ -19285,25 +19296,25 @@
           "shape_equal": false,
           "start_line": 13,
           "truth": "related",
-          "why": "The Russian default export returns a localeError configuration object, while Ottoman Turkish getSizing retrieves sizing vocabulary from Sizable for use when formatting size errors.",
+          "why": "The query packages an error map as locale configuration, while the candidate retrieves origin-specific sizing vocabulary for another locale's formatter.",
           "widened": {
             "rank": 4,
-            "score": 350933
+            "score": 607073
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 245466
+            "score": 491825
           },
           "clone": false,
           "end_line": 111,
           "hits": [
             0,
+            1,
             0,
             0,
-            0,
-            5,
+            8,
             0
           ],
           "key": "error/0",
@@ -19315,10 +19326,10 @@
           "shape_equal": false,
           "start_line": 5,
           "truth": "related",
-          "why": "The Russian default export wraps an already-created error map in configuration, while Ottoman Turkish error initializes translation dictionaries and constructs the issue-to-message callback itself.",
+          "why": "The query wraps an initialized error map in configuration, while the candidate constructs the underlying kind of issue formatter for another locale.",
           "widened": {
             "rank": 5,
-            "score": 245466
+            "score": 491825
           }
         }
       ],
@@ -19910,16 +19921,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 692158
+            "score": 941930
           },
           "clone": true,
           "end_line": 30,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            3,
+            4,
             0
           ],
           "key": "(anonymous)/0",
@@ -19931,25 +19942,25 @@
           "shape_equal": true,
           "start_line": 26,
           "truth": "same_role",
-          "why": "Both benchmark rejection of null by an object schema using identical try/catch bodies; the query calls long.parse(null), while the candidate calls empty.parse(null).",
+          "why": "Both benchmark rejection of null by an object schema and swallow the resulting exception, differing only in the schema receiver.",
           "widened": {
             "rank": 1,
-            "score": 692158
+            "score": 941930
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 692158
+            "score": 941930
           },
           "clone": true,
           "end_line": 46,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            3,
+            4,
             0
           ],
           "key": "(anonymous)/0",
@@ -19961,100 +19972,100 @@
           "shape_equal": true,
           "start_line": 42,
           "truth": "same_role",
-          "why": "Both benchmark invalid null parsing and swallow the resulting exception, with the duplicated callback differing only between long.parse and short.parse.",
+          "why": "Both execute the same null-rejection benchmark with an empty catch block, substituting the short schema for the long schema.",
           "widened": {
             "rank": 2,
-            "score": 692158
+            "score": 941930
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 104511
+            "score": 198800
           },
           "clone": false,
-          "end_line": 71,
+          "end_line": 22,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             1,
             0
           ],
-          "key": "getSizing/1",
+          "key": "(anonymous)/0",
           "nth": 0,
-          "path": "packages__zod__src__v4__locales__ru.ts",
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934",
-          "shape_equal": false,
-          "start_line": 69,
-          "truth": "unrelated",
-          "why": "The query benchmarks long.parse(null) inside try/catch, while Russian getSizing retrieves an origin's sizing vocabulary from a table and falls back to null.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 20,
+          "truth": "related",
+          "why": "The query benchmarks failed parsing of null with exception handling, while the candidate benchmarks successful parsing of an empty object.",
           "widened": {
             "rank": 3,
-            "score": 104511
+            "score": 198800
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 102400
+            "score": 194652
           },
           "clone": false,
-          "end_line": 15,
+          "end_line": 25,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             1,
             0
           ],
-          "key": "getSizing/1",
-          "nth": 0,
-          "path": "packages__zod__src__v4__locales__bg.ts",
+          "key": "(anonymous)/0",
+          "nth": 1,
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "1ceb9a24c1237ac105cb03dd2931bf0a01adb02910fcc4d370b0ea86b9e12c0b",
-          "shape_equal": false,
-          "start_line": 13,
-          "truth": "unrelated",
-          "why": "The query measures failed null parsing with the long object schema, while Bulgarian getSizing performs a table lookup for localized sizing words.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 23,
+          "truth": "related",
+          "why": "The query measures null rejection, while the candidate measures successful object parsing with an extra key in the same benchmark family.",
           "widened": {
             "rank": 4,
-            "score": 102400
+            "score": 194652
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 102400
+            "score": 194652
           },
           "clone": false,
-          "end_line": 15,
+          "end_line": 38,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             1,
             0
           ],
-          "key": "getSizing/1",
-          "nth": 0,
-          "path": "packages__zod__src__v4__locales__ota.ts",
+          "key": "(anonymous)/0",
+          "nth": 3,
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "6196c2f66a1c6064fae606cf7ae7454e3aa7fb264650daaebfe34506dfbb9e9b",
-          "shape_equal": false,
-          "start_line": 13,
-          "truth": "unrelated",
-          "why": "The query catches exceptions from long.parse(null) as a benchmark workload, while Ottoman Turkish getSizing returns sizing metadata indexed by origin.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 36,
+          "truth": "related",
+          "why": "The query measures an object schema's null-error path, while the candidate measures the short schema's successful string-field parsing path.",
           "widened": {
             "rank": 5,
-            "score": 102400
+            "score": 194652
           }
         }
       ],
@@ -20082,7 +20093,7 @@
         {
           "bare": {
             "rank": 1,
-            "score": 23087663
+            "score": 26536891
           },
           "clone": false,
           "end_line": 110,
@@ -20091,7 +20102,7 @@
             1,
             11,
             0,
-            18,
+            21,
             1
           ],
           "key": "(anonymous)/1",
@@ -20103,16 +20114,16 @@
           "shape_equal": true,
           "start_line": 59,
           "truth": "same_role",
-          "why": "Both callbacks switch on Zod issue codes to produce localized validation messages; the Russian callback selects plural sizing units, while the Ottoman Turkish callback uses its own translated templates and sizing words.",
+          "why": "Both convert validation issues into localized messages by issue code, with Russian count-dependent unit selection and different Ottoman Turkish wording.",
           "widened": {
             "rank": 1,
-            "score": 23087663
+            "score": 26536891
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 22444317
+            "score": 25870778
           },
           "clone": false,
           "end_line": 121,
@@ -20121,7 +20132,7 @@
             1,
             11,
             0,
-            18,
+            21,
             1
           ],
           "key": "(anonymous)/1",
@@ -20133,16 +20144,16 @@
           "shape_equal": true,
           "start_line": 58,
           "truth": "same_role",
-          "why": "Both map Zod issues to localized error text through issue-code switches; Russian size messages select plural forms, while Bulgarian format messages additionally choose grammatical adjective forms.",
+          "why": "Both format validation issues for their locales, with the query handling Russian unit plurals and the candidate adjusting Bulgarian format adjectives.",
           "widened": {
             "rank": 2,
-            "score": 22444317
+            "score": 25870778
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 14472419
+            "score": 17702402
           },
           "clone": false,
           "end_line": 122,
@@ -20151,7 +20162,7 @@
             0,
             0,
             0,
-            18,
+            21,
             1
           ],
           "key": "error/0",
@@ -20163,16 +20174,16 @@
           "shape_equal": false,
           "start_line": 5,
           "truth": "related",
-          "why": "The Russian callback consumes an issue and returns its message, while Bulgarian error initializes translation tables and returns a callback that performs that mapping later.",
+          "why": "The query formats an individual issue, while the candidate initializes Bulgarian dictionaries and returns an issue-formatting callback.",
           "widened": {
             "rank": 3,
-            "score": 14472419
+            "score": 17702402
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 14292941
+            "score": 17437622
           },
           "clone": false,
           "end_line": 111,
@@ -20181,7 +20192,7 @@
             0,
             0,
             0,
-            18,
+            21,
             1
           ],
           "key": "error/0",
@@ -20193,16 +20204,16 @@
           "shape_equal": false,
           "start_line": 5,
           "truth": "related",
-          "why": "The Russian query directly formats an individual issue, while Ottoman Turkish error builds sizing, format, and type dictionaries and returns an issue-formatting closure.",
+          "why": "The query consumes validation issues to produce messages, while the candidate constructs the dictionaries and callback implementing another locale's error map.",
           "widened": {
             "rank": 4,
-            "score": 14292941
+            "score": 17437622
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 14253700
+            "score": 17167936
           },
           "clone": false,
           "end_line": 170,
@@ -20211,7 +20222,7 @@
             0,
             0,
             0,
-            18,
+            21,
             1
           ],
           "key": "error/0",
@@ -20223,10 +20234,10 @@
           "shape_equal": false,
           "start_line": 33,
           "truth": "related",
-          "why": "The query is the issue-to-message callback, while Russian error is its enclosing factory that initializes the lookup dictionaries and returns that callback.",
+          "why": "The candidate is the enclosing factory that initializes Russian localization tables and returns the query as its issue-formatting callback.",
           "widened": {
             "rank": 5,
-            "score": 14253700
+            "score": 17167936
           }
         }
       ],
@@ -20818,16 +20829,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 692158
+            "score": 941930
           },
           "clone": true,
           "end_line": 30,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            3,
+            4,
             0
           ],
           "key": "(anonymous)/0",
@@ -20839,25 +20850,25 @@
           "shape_equal": true,
           "start_line": 26,
           "truth": "same_role",
-          "why": "Both callbacks benchmark rejection of null and suppress the exception with identical try/catch code, differing only between short.parse(null) and empty.parse(null).",
+          "why": "Both benchmark object-schema rejection of null using identical try-and-catch logic with only the schema receiver changed.",
           "widened": {
             "rank": 1,
-            "score": 692158
+            "score": 941930
           }
         },
         {
           "bare": {
             "rank": 2,
-            "score": 692158
+            "score": 941930
           },
           "clone": true,
           "end_line": 62,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            3,
+            4,
             0
           ],
           "key": "(anonymous)/0",
@@ -20869,100 +20880,100 @@
           "shape_equal": true,
           "start_line": 58,
           "truth": "same_role",
-          "why": "Both benchmark invalid null input using the same try/catch callback, with only the schema receiver changing from short to long.",
+          "why": "Both measure null parsing failures and suppress the exception, differing only between the short and long object schemas.",
           "widened": {
             "rank": 2,
-            "score": 692158
+            "score": 941930
           }
         },
         {
           "bare": {
             "rank": 3,
-            "score": 104511
+            "score": 198800
           },
           "clone": false,
-          "end_line": 71,
+          "end_line": 22,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             1,
             0
           ],
-          "key": "getSizing/1",
+          "key": "(anonymous)/0",
           "nth": 0,
-          "path": "packages__zod__src__v4__locales__ru.ts",
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934",
-          "shape_equal": false,
-          "start_line": 69,
-          "truth": "unrelated",
-          "why": "The query benchmarks short.parse(null) and catches its exception, while Russian getSizing performs an origin-indexed lookup of sizing vocabulary.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 20,
+          "truth": "related",
+          "why": "The query exercises null rejection with exception handling, while the candidate exercises successful empty-object parsing in the same benchmark suite.",
           "widened": {
             "rank": 3,
-            "score": 104511
+            "score": 198800
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 102400
+            "score": 194652
           },
           "clone": false,
-          "end_line": 15,
+          "end_line": 25,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             1,
             0
           ],
-          "key": "getSizing/1",
-          "nth": 0,
-          "path": "packages__zod__src__v4__locales__bg.ts",
+          "key": "(anonymous)/0",
+          "nth": 1,
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "1ceb9a24c1237ac105cb03dd2931bf0a01adb02910fcc4d370b0ea86b9e12c0b",
-          "shape_equal": false,
-          "start_line": 13,
-          "truth": "unrelated",
-          "why": "The query measures failed parsing of null by the short schema, while Bulgarian getSizing returns a sizing-table entry or null.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 23,
+          "truth": "related",
+          "why": "The query benchmarks an invalid null input, while the candidate benchmarks an accepted object containing a key beyond the empty schema.",
           "widened": {
             "rank": 4,
-            "score": 102400
+            "score": 194652
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 102400
+            "score": 194652
           },
           "clone": false,
-          "end_line": 15,
+          "end_line": 38,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             1,
             0
           ],
-          "key": "getSizing/1",
-          "nth": 0,
-          "path": "packages__zod__src__v4__locales__ota.ts",
+          "key": "(anonymous)/0",
+          "nth": 3,
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "6196c2f66a1c6064fae606cf7ae7454e3aa7fb264650daaebfe34506dfbb9e9b",
-          "shape_equal": false,
-          "start_line": 13,
-          "truth": "unrelated",
-          "why": "The query catches the failure of short.parse(null) as a benchmark workload, while Ottoman Turkish getSizing retrieves localized size units and verbs by origin.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 36,
+          "truth": "related",
+          "why": "Both exercise the short schema, but the query measures null rejection and the candidate measures successful parsing of its declared string field.",
           "widened": {
             "rank": 5,
-            "score": 102400
+            "score": 194652
           }
         }
       ],
@@ -20990,46 +21001,16 @@
         {
           "bare": {
             "rank": 1,
-            "score": 117504
+            "score": 270473
           },
-          "clone": false,
-          "end_line": 57,
-          "hits": [
-            0,
-            0,
-            1,
-            0,
-            2,
-            0
-          ],
-          "key": "(anonymous)/0",
-          "nth": 7,
-          "path": "packages__zod__src__v3__benchmarks__object.ts",
-          "role": false,
-          "same_file": true,
-          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
-          "shape_equal": true,
-          "start_line": 55,
-          "truth": "same_role",
-          "why": "Both benchmark successful object parsing with extra keys: the query gives an undeclared string key to empty, while the candidate gives an undeclared list key alongside long's required fields.",
-          "widened": {
-            "rank": 1,
-            "score": 117504
-          }
-        },
-        {
-          "bare": {
-            "rank": 2,
-            "score": 116500
-          },
-          "clone": false,
+          "clone": true,
           "end_line": 54,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            2,
+            3,
             0
           ],
           "key": "(anonymous)/0",
@@ -21041,25 +21022,25 @@
           "shape_equal": true,
           "start_line": 52,
           "truth": "related",
-          "why": "The query benchmarks extra-key handling by parsing a nonempty object with the empty schema, while the candidate benchmarks ordinary successful parsing of exactly long's three declared fields.",
+          "why": "The callbacks share the same single-parse structure, but the query benchmarks surplus keys and the candidate benchmarks the long schema's matching fields.",
           "widened": {
-            "rank": 2,
-            "score": 116500
+            "rank": 1,
+            "score": 270473
           }
         },
         {
           "bare": {
-            "rank": 3,
-            "score": 114465
+            "rank": 2,
+            "score": 270171
           },
           "clone": true,
           "end_line": 41,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            2,
+            3,
             0
           ],
           "key": "(anonymous)/0",
@@ -21071,25 +21052,55 @@
           "shape_equal": true,
           "start_line": 39,
           "truth": "same_role",
-          "why": "Both use near-identical successful extra-key benchmark callbacks: the query calls empty.parse with an extra string field, while the candidate calls short.parse with an additional number field.",
+          "why": "Both use nearly identical callbacks to benchmark accepted objects with an extra key, changing the schema and its corresponding input fixture.",
+          "widened": {
+            "rank": 2,
+            "score": 270171
+          }
+        },
+        {
+          "bare": {
+            "rank": 3,
+            "score": 270111
+          },
+          "clone": true,
+          "end_line": 57,
+          "hits": [
+            0,
+            1,
+            1,
+            0,
+            3,
+            0
+          ],
+          "key": "(anonymous)/0",
+          "nth": 7,
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
+          "role": false,
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 55,
+          "truth": "same_role",
+          "why": "Both benchmark valid object parsing with surplus keys through the same callback structure, varying the schema and supplied properties.",
           "widened": {
             "rank": 3,
-            "score": 114465
+            "score": 270111
           }
         },
         {
           "bare": {
             "rank": 4,
-            "score": 108261
+            "score": 264758
           },
           "clone": true,
           "end_line": 38,
           "hits": [
             0,
-            0,
+            1,
             1,
             0,
-            2,
+            3,
             0
           ],
           "key": "(anonymous)/0",
@@ -21100,41 +21111,41 @@
           "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
           "shape_equal": true,
           "start_line": 36,
-          "truth": "same_role",
-          "why": "Both callback bodies parse the identical string-field object and differ only in the schema receiver; the benchmark labels distinguish an extra key for empty from a declared key for short, but the code is a near-verbatim duplicate.",
+          "truth": "related",
+          "why": "The nearly identical callbacks parse the same object literal, but its string property is extra for the query's schema and declared for the candidate's schema.",
           "widened": {
             "rank": 4,
-            "score": 108261
+            "score": 264758
           }
         },
         {
           "bare": {
             "rank": 5,
-            "score": 78873
+            "score": 216400
           },
-          "clone": false,
-          "end_line": 170,
+          "clone": true,
+          "end_line": 22,
           "hits": [
             0,
-            0,
-            0,
+            1,
+            1,
             0,
             2,
             0
           ],
-          "key": "error/0",
+          "key": "(anonymous)/0",
           "nth": 0,
-          "path": "packages__zod__src__v4__locales__ru.ts",
+          "path": "packages__zod__src__v3__benchmarks__object.ts",
           "role": false,
-          "same_file": false,
-          "sha": "9417a6d2b84b0900325251da249cc14ab33e49bebb71b75e92f554c24a12e934",
-          "shape_equal": false,
-          "start_line": 33,
-          "truth": "unrelated",
-          "why": "The query benchmarks successful parsing with an extra key in Zod v3, while Russian error constructs translation dictionaries and an issue-to-message callback for Zod v4.",
+          "same_file": true,
+          "sha": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+          "shape_equal": true,
+          "start_line": 20,
+          "truth": "related",
+          "why": "Both use nearly identical calls to the empty schema, but the query benchmarks an extra property and the candidate benchmarks an empty input object.",
           "widened": {
             "rank": 5,
-            "score": 78873
+            "score": 216400
           }
         }
       ],
@@ -22070,15 +22081,15 @@
         115
       ],
       "p_at_1_bare": [
-        45,
+        44,
         115
       ],
       "p_at_1_bare_nonclone": [
-        28,
-        98
+        27,
+        97
       ],
       "p_at_1_bare_role0": [
-        16,
+        15,
         58
       ],
       "p_at_1_bare_role1": [
@@ -22086,15 +22097,15 @@
         57
       ],
       "p_at_1_widened": [
-        41,
+        40,
         115
       ],
       "p_at_1_widened_nonclone": [
-        26,
-        100
+        25,
+        99
       ],
       "p_at_1_widened_role0": [
-        16,
+        15,
         64
       ],
       "p_at_1_widened_role1": [
@@ -22103,9 +22114,9 @@
       ],
       "queries": 115,
       "role_bit_over_candidates": {
-        "fn": 71,
+        "fn": 70,
         "fp": 90,
-        "tn": 417,
+        "tn": 418,
         "tp": 89
       }
     },
@@ -22320,15 +22331,15 @@
         6
       ],
       "p_at_1_bare": [
-        5,
+        4,
         6
       ],
       "p_at_1_bare_nonclone": [
-        2,
-        3
+        1,
+        2
       ],
       "p_at_1_bare_role0": [
-        5,
+        4,
         6
       ],
       "p_at_1_bare_role1": [
@@ -22336,15 +22347,15 @@
         0
       ],
       "p_at_1_widened": [
-        5,
+        4,
         6
       ],
       "p_at_1_widened_nonclone": [
-        2,
-        3
+        1,
+        2
       ],
       "p_at_1_widened_role0": [
-        5,
+        4,
         6
       ],
       "p_at_1_widened_role1": [
@@ -22353,9 +22364,9 @@
       ],
       "queries": 6,
       "role_bit_over_candidates": {
-        "fn": 11,
+        "fn": 10,
         "fp": 0,
-        "tn": 19,
+        "tn": 20,
         "tp": 0
       }
     }
