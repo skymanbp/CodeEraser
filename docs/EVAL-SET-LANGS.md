@@ -405,7 +405,7 @@ R2 全指 `covid19AgeModel/`（唯一的 `DESCRIPTION`；`library(covid19AgeMode
 步 5 的提交 A 挪动了这三门考题的答案所依赖的代码：走查不再按名字排除 `target/ build/ dist/`（只在旁边有产出它的工具的
 项目文件时才算产物），Java 的 `main` 源集只看得见 `main` 源集、文件自己声明的名字是 `own_unit`，Lua 的 `require` 多找引用
 文件自己的目录；判分也改为只问产品自己的走查读的文件（站点宇宙一节）。六份精度册因此在同一提交里删档、考题表的
-`scored` 翻回 false；等 HTML 的阶梯落地后与 HTML 的精度册一起重生成一次——新的一代读数与每处答案的移动在那时记在本节。
+`scored` 翻回 false；等 HTML 的阶梯落地后与 HTML 的精度册一起重生成一次——新的一代读数与每处答案的移动记在文末「B′」一节（2026-09-28）。
 
 ## HTML（步 5）
 
@@ -492,3 +492,85 @@ URL 字符串（`fetch()` / `new Request()` / `link.href =`）——内嵌脚本
 **走查拒读的资产**：learning-area 一道 `src` 的真值 `javascript/apis/drawing-graphics/threejs-video-cube/three.min.js`
 落在内建排除 `*.min.js` 上（`scan/walk.rs`），产品没有它的结点；判分对这种真值的读法与拒读的宇宙文件相同——按站外判分、原话另记
 （`walk.unreached`，本节上文「判分」一条）。精度册与读数随 B′ 在干净的树上生成，记在下一节。
+
+## B′：九份精度册在 5b 收口后的树上生成（2026-09-28）
+
+档 `contracts/eval/lang-precision-{gson,jsoup,stringr,covid19model,codeeraser,html5-boilerplate,learning-area}-v1.json` 与
+`lang-precision-{luarocks,koreader}-v2.json`，九份都在 `92ed92e`（步 5b 的最后一个提交，5b-6）之上生成、`dirty = false`：生成器把
+`dirty` 读成 `git status --porcelain` 非空，同批先生成的档会让后生成的档读成脏的，所以每份档单独生成在一棵没有别的档的树上、生成完
+挪出树、九份齐了再放回；每张审阅表的首个提交都是 `92ed92e` 的严格祖先（顺序门 `lang_provenance`）。Lua 两份档先用临时处置生成一遍
+取数、删档、再用引用了新数字的最终处置生成（RG1 处置要引用档自己的数字，而它在生成前不存在）。考题表四门 stage 全翻为 `scored`。
+
+### 读数
+
+| 语料 | 主样本 | correct | wrong | missed | external_ok | unresolved_ok | 精度 | 召回 |
+|---|---|---|---|---|---|---|---|---|
+| gson | 38 | 12 | 0 | 0 | 17 | 9 | 12/12 | 12/12 |
+| jsoup | 62 | 24 | 0 | 0 | 19 | 19 | 24/24 | 24/24 |
+| luarocks | 12 | 10 | 0 | 0 | 0 | 2 | 10/10 | 10/10 |
+| koreader | 88 | 76 | 0 | 0 | 1 | 11 | 76/76 | 76/76 |
+| stringr | 2 | 0 | 0 | 0 | 2 | 0 | — | — |
+| covid19model | 98 | 18 | 0 | 0 | 79 | 1 | 18/18 | 18/18 |
+| codeeraser | 37 | 25 | 0 | 0 | 12 | 0 | 25/25 | 25/25 |
+| html5-boilerplate | 0 | 0 | 0 | 0 | 0 | 0 | — | — |
+| learning-area | 63 | 50 | 0 | 1 | 7 | 5 | 50/50 | 50/51 |
+
+门 G2（整体与站内真值不少于 5 道的每个语料都不低于 0.90）：Java 36/36、Lua 86/86、R 18/18、HTML 75/75 = 1.000，全过；召回
+Java 36/36、Lua 86/86、R 18/18、HTML 75/76。
+
+**Java / Lua / R 对上一代的移动**（gson、stringr、covid19model 三份的 rows 逐行同上一代；移动全出自步 5 提交 A 的三处根修与「只问走查
+读的文件」的判分口径，阶梯本身在 B′ 之前没有为哪一道改过）：
+
+- jsoup 22/23 → 24/24：上一代唯一的 wrong（`HtmlTreeBuilderState.java:22` 的 `import static …HtmlTreeBuilderState.Constants.*`，本文件
+  自己的嵌套类）现由阶梯答 `own_unit`（文件自己声明的名字不是别的文件的引用），真值 `none`，按拒答计 unresolved_ok；两道 missed（测试根的
+  `TokeniserTest.java:4` / `HtmlParserTest.java:7` 的 `import org.jsoup.nodes.*`）现答 correct——Java 源集规则（`java_sets.rs`）让测试根的
+  导入者在自己的源集里先找，拆分包不再 ambiguous_root。宇宙台账随之：解出 86.7 % → 86.8 %（`import` R2 136 → 134、`import_star` R2
+  10 → 12、`type_ref` R3 11,659 → 11,682），拒答 3,226 → 3,203（`ambiguous_root` 3 → 0、新增 `own_unit` 3）。
+- luarocks 10/12 → 10/10：上一代两道 missed 的真值 `vendor/compat53/module.lua` 落在走查按名排除的 `vendor/`（`scan/walk.rs` 内建排除），
+  判分按「只问走查读的文件」把真值记作站外（`audit_truth` 保留审阅原话）、拒答计 unresolved_ok；`vendor/` 的 5 个文件 10 个站点进
+  `walk.refused`（上一代里 9 道 out_of_scope 与那一道 R3 标准库名），台账 702 → 692 站点、解出 79.8 % → 80.8 %。上一代写的「声明
+  `[graph.search_roots] lua = ["vendor"]` 即答对」在这个口径下不再成立：走查不读的文件没有结点，阶梯答不到它。
+- koreader 75/76 → 76/76：上一代唯一的 missed（`spec/unit/readersearch_spec.lua:7` 的 `require("commonrequire")`）现由「引用文件自己的
+  目录」答出；宇宙 R1 4,105 → 4,231、out_of_scope 801 → 675、解出 84.1 % → 86.6 %。两份 Lua 档的 `r0_disposition` 按新数字重写（首级
+  占比 luarocks 100 %、koreader 96.6 %，仍过 0.80 的触发线）。
+
+### HTML 判分
+
+按站点类：`href` 34 道 correct 24、external_ok 9、unresolved_ok 1（`页#id` 与根相对全答在 R2、裸 `#` 在 R4）；`src` 27 道 correct 25、
+external_ok 1、unresolved_ok 1；`link_asset` 26 道 correct 18、external_ok 7、missed 1；`srcset` 7 道 correct 7；`action` 6 道 correct 1、
+external_ok 2、unresolved_ok 3。按级截断：codeeraser 只收 R1 是 1 对 0 错、收到 R2 是 20 对、收到 R4 起 25 对；learning-area 只收 R1 是
+45 对 0 错、收到 R4 起 50 对。门 G2 两个有站内真值的语料与整体都过。
+
+- 唯一的 missed 是阶梯一节预告的那一道：learning-area `tools-testing/cross-browser-testing/javascript/fetch-polyfill-finished.html:9` 的空
+  `link_asset`，真值按简报的 URL 解析定义是本页，产品按取回算法答 `empty`；真值不改、阶梯不为它改。
+- 5 道 unresolved_ok：`javascript/apis/drawing-graphics/threejs-video-cube/index.html:9` 的 `src="three.min.js"`（真值是走查内建排除
+  `*.min.js` 上的文件，按站外判分，在 `walk.unreached`）、两道 `action="/my-handling-form-page"`（真值 external：GitHub Pages 项目站的
+  根相对路径出了项目前缀）、`accessibility/assessment-finished/index.html:99` 的 `href="bear.mp3"`（真值 `none`）、Flask 模板
+  `html/forms/sending-form-data/templates/form.html:28` 的 `action="{{ url_for('hello') }}"`（真值 `dynamic`）；阶梯都答 out_of_scope，拒答
+  不算错。
+- 候选漏检：codeeraser 42 条（16 处不同行）检测器在那些行上一个站点都没读到——全是 `<meta property="og:url" | "og:image">` 的
+  `content`，不在站点表里；learning-area 8 条（6 处不同行）同样零站点——内联 `<style>` 与 `<script>` 是 `raw_text`。都不是漏检。
+
+宇宙台账（HTML 的级：R1 相对文档目录、R2 根相对经声明根或页面自己的服务 URL〔`页#id` 也记在 R2〕、R3 根相对经祖先目录、R4 裸片段、
+R5 External）：
+
+| 语料 | 站点 | 解出 | R1 | R2 | R3 | R4 | R5（External） | 拒答 |
+|---|---|---|---|---|---|---|---|---|
+| codeeraser | 309 | 100 % | 19 | 146 | 0 | 46 | 98 | 0 |
+| html5-boilerplate | 6 | 83.3 % | 3 | 0 | 2 | 0 | 0 | 1，out_of_scope |
+| learning-area | 453 | 94.7 % | 320 | 0 | 0 | 46 | 63 | 24 = out_of_scope 17 + `empty` 7 |
+
+首级占比 codeeraser 6.1 %、html5-boilerplate 60 %、learning-area 74.6 %，都在 0.80 之下，不需要书面处置。走查记录：codeeraser
+`unreached` 75 条（`.github/`、`cli/tests` 子模块、锁文件、对拍夹具等树内、宇宙外、走查不读的路径）、html5-boilerplate 51 条、learning-area
+12 条（含两份 `three.min.js`、两份 `html5shiv*.min.js`）；三份的 `refused` 都为空。
+
+Java / Lua / R 的宇宙台账（本代）：
+
+| 语料 | 站点 | 解出 | 拒答 |
+|---|---|---|---|
+| gson | 22,698 | 87.0 % | 2,945，全是 out_of_scope |
+| jsoup | 24,210 | 86.8 % | 3,203（out_of_scope 3,200、own_unit 3） |
+| luarocks | 692 | 80.8 % | 133，全是 out_of_scope |
+| koreader | 5,058 | 86.6 % | 677（out_of_scope 675、ambiguous_root 2） |
+| stringr | 55 | 100 % | 0 |
+| covid19model | 1,697 | 99.8 % | 3，全是 out_of_scope |
