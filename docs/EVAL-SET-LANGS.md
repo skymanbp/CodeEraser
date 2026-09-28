@@ -713,3 +713,12 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
   本地先于提交看见同一件事。
 - **重生成**（下一提交）：在本提交的干净树上按语料逐份生成、每份生成后挪出树再生成下一份（生成器把 `git status --porcelain` 非空读作 dirty），
   十一份齐了放回，六门 `stage` 翻回 `Scored`；读数与退役前逐份比对，记在下文。
+
+### 读数（重生成，2026-09-28）
+
+十一份在退役提交 813f4976 的干净树上逐份生成（gson → jsoup → luarocks → koreader → stringr → covid19model → codeeraser → html5-boilerplate →
+learning-area → lua → fmt，每份生成后挪出树、`git status --porcelain` 回到空再生成下一份；两份 Lua 档带退役前那两段 RG1 处置原文），
+全部记 `generated_from` = 813f4976 / dirty = false。逐份与退役前的档（3e3daa27 上的 blob）比对：除 `generated_from`
+（92ed92e，lua / fmt 两份为 95521640 → 813f4976）外**逐字节相同**——判分行、宇宙台账、站点缺口、走查记录、处置一字未动，行数不变，
+册 06 §9 引的十一处 summary 行号照旧。这正是只读面的预期：`Lang::with_grammar()` 不改语言表的任何一行，答案没有理由移动；门按路径拒、
+重生成按字节证，两者各守各的。六门考题的 `stage` 随本提交翻回 `Scored`。
