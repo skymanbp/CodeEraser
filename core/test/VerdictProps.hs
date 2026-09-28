@@ -36,6 +36,7 @@ battery = runChecks (preconditions <> knobProbes <> softZone <> universes)
   universes =
     [ ("docFiles narrows cycle mass and opportunity; absent preserves charge", docFilesCycle)
     , ("a doc index without a pos row widens the docdup opportunity and no code count", proseUniverse)
+    , ("a kind-1 (t3) sim row is the clone axis's fact as a kind-0 row is, and no docdup fact", nearMissKind)
     ]
 
 -- | The score fixture, refit for the density scoring (M9 batch 6)
@@ -204,16 +205,36 @@ docFilesCycle =
 proseUniverse :: Bool
 proseUniverse =
   and
-    [ axis 2 withText == axis 2 without
-    , axis 2 without == chargeAt scale 2 2
-    , axis 3 withText == chargeAt scale 2 2
-    , axis 3 without == 0
+    [ axisOf 2 withText == axisOf 2 without
+    , axisOf 2 without == chargeAt (sScoreScale scoreBound) 2 2
+    , axisOf 3 withText == chargeAt (sScoreScale scoreBound) 2 2
+    , axisOf 3 without == 0
     ]
  where
-  scale = sScoreScale scoreBound
-  -- nodes 0 and 1 (code) and 2 (a doc) hold positions; 3 holds none
+  without = probeTree [2] [[0, 1, 0, 100, 100]]
+  withText = probeTree [2, 3] [[0, 1, 0, 100, 100], [2, 3, 2, 100, 100]]
+
+-- | Plan v2.30 step 5b-9: the T3 family's verified pairs enter the sim
+-- table live as kind 1. A kind-1 row is the clone axis's fact exactly
+-- as a kind-0 row is — the same two touched files over the same code
+-- files — and no docdup fact; a kind-2 row over the same two files
+-- charges the clone axis nothing.
+nearMissKind :: Bool
+nearMissKind =
+  (axisOf 2 t3, axisOf 3 t3, axisOf 2 dup) == (axisOf 2 t1t2, 0, 0)
+    && axisOf 2 t1t2 == chargeAt (sScoreScale scoreBound) 2 2
+ where
+  t1t2 = probeTree [2] [[0, 1, 0, 100, 100]]
+  t3 = probeTree [2] [[0, 1, 1, 100, 100]]
+  dup = probeTree [2] [[0, 1, 2, 100, 100]]
+
+-- | The universe legs' probe tree: nodes 0 and 1 (code) and 2 (a
+-- doc) hold positions, a node past them holds none; the docs and
+-- the sim table are the leg's own.
+probeTree :: [Integer] -> [[Integer]] -> [(Integer, Integer)]
+probeTree docs sim = penalties scoreBound Nothing (Facts sim pos [] [] docs (classKnobsOf []) [])
+ where
   pos = [[0, 1, 1, 0, 1, 1], [1, 1, 1, 1, 1, 1], [2, 1, 0, 2, 1, 1]]
-  tree docs sim = penalties scoreBound Nothing (Facts sim pos [] [] docs (classKnobsOf []) [])
-  without = tree [2] [[0, 1, 0, 100, 100]]
-  withText = tree [2, 3] [[0, 1, 0, 100, 100], [2, 3, 2, 100, 100]]
-  axis c = maybe (-1) id . lookup c
+
+axisOf :: Integer -> [(Integer, Integer)] -> Integer
+axisOf c = maybe (-1) id . lookup c

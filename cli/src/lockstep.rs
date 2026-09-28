@@ -39,17 +39,20 @@ pub fn open_family(core: &str, cap: &str) -> anyhow::Result<Link> {
     Ok(link)
 }
 
-/// Chunked lockstep judging over ONE link: capability gate, chunk,
-/// build a request-local body, one request per chunk, map each wire
-/// row's endpoints through its chunk's rank order, accumulate the two
+/// Chunked lockstep judging over ONE link the caller opened through
+/// `open_family` (plan v2.30 step 5b-9: the T3 family reads the
+/// core's proto off the link before deciding what its verdict cache
+/// may answer, then sends only the rest): chunk, build a
+/// request-local body, one request per chunk, map each wire row's
+/// endpoints through its chunk's rank order, accumulate the two
 /// family counters, sort.
 pub fn lockstep_scores<P, E: Ord>(
+    link: &mut Link,
     fam: &Family<'_>,
     pairs: &[P],
     build: impl Fn(&[P]) -> (Vec<usize>, Value),
     parse: impl Fn(&Value) -> anyhow::Result<Scored<E>>,
 ) -> anyhow::Result<Judged<E>> {
-    let mut link = open_family(fam.core, fam.cap)?;
     let (mut rows, mut c0, mut c1, mut requests) = (Vec::new(), 0, 0, 0);
     for c in pairs.chunks(fam.chunk) {
         let (order, body) = build(c);

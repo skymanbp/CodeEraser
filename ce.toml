@@ -549,4 +549,13 @@ entry_globs = [
 # again (61 tokens), so that row neither came nor went. Row set diffed
 # against the HEAD run: the audit <-> guard row gone, none new.
 # Measured on the formatted tree.
-budget = 58
+# 58 -> 57 (v2.30 step 5b-9, T3 in the gate and the verdict cache):
+# score::measure and the join's judge_pairs each spelled the same
+# path -> row map and the first lines of the clone-row seating after
+# it, and the gate held the pair (58 tokens, join/verdicts.rs against
+# score/mod.rs). The seating is one function both roads read,
+# score::clone_rows (kind 0 then kind 1), and the map another,
+# score::row_index -- the row left with the restatement: taken at the
+# mechanism, not bought. Row set diffed against the 5b-8 run: that
+# row gone, none new. Measured on the formatted tree.
+budget = 57

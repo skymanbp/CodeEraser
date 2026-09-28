@@ -297,6 +297,21 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 读法：三条路打平，说明大头是进程起 + 把 880 KB 的 feed 读成 JSON 行——追加那一行与找那一行都在噪声内；feed 按会话读，长会话的窗口就是它的代价上限，与墓碑腿的会话并集（同一读法）一样。**PostToolUse 只在人放行之后触发**，这 40 ms 不在任何写入的前面。
 复跑：空目录 `git init` + 出厂 `ce.toml`，把一份真 feed 拷成 `.ce/observe.ndjson` 并追加三行 `{"event":"probe","session_id":"timing","tool_use_id":"toolu_time_N","decision":"ask",…}`；信封 = PostToolUse JSON（`hook_event_name` / `session_id` timing / `tool_name` Write / `tool_input.file_path` / `tool_use_id` toolu_time_N / `cwd`）；先用一个从未 `ask` 的 id 预热五次，再各路计时，每次看 feed 行数只在追加路 +1。
 
+## v2.30 步 5b-9 T3 进门 + 判决缓存 A/B（实测 2026-09-27，release，同一台机、同一棵树、同一窗口：树 = 2263995 的干净检出〔子模块就位〕，A = 2263995 的二进制〔索引 schema 16，T3 不进门〕，B = 本批〔schema 17，T3 进门 + `t3ted` 判决缓存〕；块序 A B A B、每块 4 跑，换二进制后的首跑是整库重建、单列不计；量前 `Get-CimInstance` CPU 8 %、无 cargo / 对拍进程；`python` `perf_counter` 夹 `subprocess.run`、含进程起）
+
+口径：两臂读同一棵树的同一份 `.ce/index.db`（schema 16 / 17 交替时各自整库重建一次——正是交替使用两个版本时索引会做的事，首跑因此单列）；B 的缓存暖 = 上一跑已把这棵树的每一对判决记进 `t3ted`，缓存空 = 用 `DELETE FROM t3ted; DELETE FROM meta WHERE k = 't3_cache'` 清掉后的一跑。判决面：两臂 `ce clone` 命中同为 444 对；`ce check` A 944 / B 917、sim 对 36 → 255——那是 kind 1 进了 sim 表，是判决变化不是代价，见 CHANGELOG。
+
+| 项 | A（5b-8） | B（5b-9，缓存暖） | B（缓存空，索引暖） | 状态 |
+|---|---|---|---|---|
+| `ce check .`（暖索引，n=6 / 6 / 1） | 3.00–3.04 s | 4.04–4.40 s | 6.99 s | 记录：进门 +1.2 s；缓存省下核判决 ≈ 2.7 s |
+| `ce clone .`（暖索引，n=6 / 6 / 1） | 4.34–4.55 s（每跑判 2,155 对） | 1.59–1.64 s（2,155 对全回放） | 4.40 s（判 2,155 对） | ✅ −2.8 s；缓存空的一跑与不缓存同价 |
+| 换二进制后的整库重建首跑（n=2 / 2） | 16.0–17.8 s | 17.2–20.3 s | — | 记录：一次性 T3 全判 +2–3 s |
+| 缓存表 | — | 1,737 槽 / 2,155 可发对（`tree_key` 相同的单元对同一槽） | — | 记录 |
+| 分相（临时探针，同日早些时候、有并发负载，实测后回退） | — | 候选 0.6 s / S5 扩展 0.08 s / 建树 0.35 s / 核 TED 2,155 对 3.1 s | — | 记录：册 02 引的就是这一行 |
+
+读法：T3 进门让本仓每次 `ce check` 多付 ≈ 1.2 s（2,155 可发对、1,737 棵不同的树）——留下的是候选生成、S5 扩展、建树与回放，核那 2.7–3.1 s 被缓存拿掉；`ce trend` 每个点与 `ce join` 同付这 1.2 s。缓存空的一跑与 A 臂同价（4.40 vs 4.34–4.55 s），即记住判决本身不额外收费；第二跑起 `ce clone` 由 4.4 s 降到 1.6 s，且报告逐字节同（`cached` 2,155、`judged` 0）。**一个提醒**：同一天早些时候在有并发负载的窗口读到 `ce check` 暖 5.33 / 5.20 / 4.95 s、`ce clone` 暖 2.18 / 1.86 s——与本节差 20–30 %，按「量前量中查负载」的规矩作废，只留在这里说明为什么要重量。
+复跑：`git worktree add <lane>/perf-5b9 2263995 && git -C <lane>/perf-5b9 submodule update --init`；A = 在该 worktree 里 `CARGO_TARGET_DIR=<lane>/perf-5b8-target cargo build --release`，B = 本树 `cargo build --release`；对同一 worktree 按块序 A B A B 各跑四次 `ce check --format json .` / `ce clone --format json .`，每跑前读 `pragma user_version` 与 `select count(*) from t3ted`，首跑（user_version 与上一跑不同）单列；缓存空 = 两条 DELETE 后再跑一次。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

@@ -67,9 +67,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 944/1000</span> | axes 0:85 1:0 2:91 3:0 4:0 5:0 6:217 | 36 candidates
+<span class="s">check score 916/1000</span> | axes 0:85 1:0 2:284 3:0 4:0 5:0 6:219 | 251 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
-note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim table
+note: 10 blocks collapsed into existing members, 179 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
 <!-- roast:end -->
   <p class="cap">Real output: CodeEraser judging its own repository. The ratchet only shrinks:
@@ -115,7 +115,7 @@ note: 10 blocks collapsed into existing members, 15 intra-file pairs off the sim
 <h2>Wire it in</h2>
 <div class="installs">
   <div class="install"><span class="k">CI gate</span>
-    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->939<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
+    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->911<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
   <div class="install"><span class="k">pre-commit</span>
     <code>ce precommit&nbsp;&nbsp;# staged net LOC + touched duplicates</code></div>
   <div class="install"><span class="k">MCP</span>

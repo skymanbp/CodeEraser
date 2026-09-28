@@ -40,7 +40,7 @@ pub fn judge_pairs(
     root: &std::path::Path,
     core: &str,
     w: &GraphWire,
-    blocks: &[crate::dedup::pairs::Block],
+    sim: &score::Similar<'_>,
     (posmap, self_loops): (&HashMap<String, Pos>, Vec<i64>),
     ch: &crate::churn::Report,
 ) -> Result<Judged> {
@@ -48,13 +48,11 @@ pub fn judge_pairs(
         .iter()
         .map(|&(_, p)| p.to_string())
         .collect();
-    let idx: HashMap<&str, i64> = files
-        .iter()
-        .enumerate()
-        .map(|(i, p)| (p.as_str(), i as i64))
-        .collect();
-    let mut sim = Vec::new();
-    score::sim_rows(blocks, &idx, &mut sim);
+    let idx = score::row_index(&files);
+    let mut rows = Vec::new();
+    score::clone_rows(sim, &idx, &mut rows);
+    // two clone families on this road too (5b-9): one row per pair
+    score::one_row_per_pair(&mut rows);
     let (churn_t, cochange_t) = score::churn_tables(ch, &idx);
     let pos = score::pos_rows(&files, posmap);
     // RG10's fact on this road too (6.1.0): `ce join` is the face
@@ -64,19 +62,31 @@ pub fn judge_pairs(
     let req = request(
         root,
         files,
-        sim,
+        rows,
         pos,
         (symbols, self_loops),
         (churn_t, cochange_t),
     )?;
     let reply = wire::judge(core, &req)?;
+    Ok(Judged {
+        pairs: pair_verdicts(&req.files, &reply)?,
+        degraded: reply.degraded,
+    })
+}
+
+/// The reply's candidate rows keyed by file pair, each with its
+/// verdict name and the severity rank the reply gave its code.
+fn pair_verdicts(
+    files: &[String],
+    reply: &wire::Reply,
+) -> Result<HashMap<(String, String), PairVerdict>> {
     let sev: HashMap<i64, i64> = reply.join_severity.iter().map(|&[c, s]| (c, s)).collect();
     let mut pairs = HashMap::new();
     for &[u, v, code, _reasons, _legs_mask, confidence] in &reply.candidates {
         let path_of = |i: i64| -> Result<String> {
             usize::try_from(i)
                 .ok()
-                .and_then(|i| req.files.get(i))
+                .and_then(|i| files.get(i))
                 .cloned()
                 .context("candidate index outside the file universe — wire skew")
         };
@@ -94,10 +104,7 @@ pub fn judge_pairs(
             },
         );
     }
-    Ok(Judged {
-        pairs,
-        degraded: reply.degraded,
-    })
+    Ok(pairs)
 }
 
 /// The join road's verdict request (split from judge_pairs at the

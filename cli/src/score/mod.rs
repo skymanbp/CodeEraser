@@ -1,6 +1,7 @@
 //! `ce check` / `ce baseline` (M5-3i, ADR-006): assemble the fact
 //! tables — file tier from the SAME graph wire deadcode judges, sim
-//! pairs from the T1/T2 blocks, graph positions, optional churn,
+//! pairs from the T1/T2 blocks and the T3 clones (plan v2.30 step
+//! 5b-9), graph positions, optional churn,
 //! fingerprinted continuous metrics, the discrete clone-member set —
 //! send ONE verdict.request with the committed baseline VERBATIM,
 //! and relay the core's judgment. Rust computes no policy: score,
@@ -99,6 +100,11 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     // constant zero — one of seven axes dead, unnoticed because a zero
     // charge is also what a clean repository earns
     let (segs, dups, _) = crate::docdup::judge::rows_of(root, &snap, &opts.core)?;
+    // the T3 family over the same snapshot (plan v2.30 step 5b-9):
+    // its verified pairs are the sim table's kind-1 rows — until then
+    // kind 1 was dead on every live road, the table taking the free
+    // T1/T2 blocks with nobody paying for T3 in the gate
+    let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;
     let anchors = anchor::Anchors::from_index(&snap)?;
     // the verdict universe is this tree's OWN files: a foreign reader
     // seeds liveness in the graph above and owns no row down here —
@@ -107,21 +113,15 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
     let files = universe(&fnodes, snap)?;
     let pos_req: Vec<i64> = fnodes.iter().map(|&(i, _)| i).collect();
     let (posmap, loops) = judged_positions(&opts.core, &w, &pos_req)?;
-    let idx: HashMap<&str, i64> = files
+    let idx = row_index(&files);
+    let clones = Similar {
+        blocks: &found.blocks,
+        t3: &t3,
+    };
+    let dup_pairs = dups
         .iter()
-        .enumerate()
-        .map(|(i, p)| (p.as_str(), i as i64))
-        .collect();
-    let mut sim = Vec::new();
-    let skipped_self = sim_rows(&found.blocks, &idx, &mut sim)
-        + pair_rows(
-            dups.iter()
-                .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str())),
-            &idx,
-            2,
-            &mut sim,
-        );
-    one_row_per_pair(&mut sim);
+        .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str()));
+    let (sim, skipped_self) = sim_table(&clones, dup_pairs, &idx);
     let (members, collapsed) = member_set(&anchors, &found.blocks);
     Ok(Measured {
         pos: pos_rows(&files, &posmap),
@@ -135,6 +135,18 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         skipped_self,
         anchors,
     })
+}
+
+/// Each universe file's row index by path: the key the sim rows, the
+/// churn tables and the symbol table are all re-keyed on, read by
+/// `ce check` and `ce join` alike (5b-9) so the two roads spell the
+/// row identity once.
+pub(crate) fn row_index(files: &[String]) -> HashMap<&str, i64> {
+    files
+        .iter()
+        .enumerate()
+        .map(|(i, p)| (p.as_str(), i as i64))
+        .collect()
 }
 
 /// The verdict universe (plan v2.30 step 5b-8): this tree's measured
@@ -287,21 +299,45 @@ pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) ->
         .collect()
 }
 
-/// File pairs with at least one verified clone block, kind 0 (t1t2)
-/// — the join face's leg (join/verdicts.rs) and half of check's.
-pub(crate) fn sim_rows(
-    blocks: &[dedup::pairs::Block],
+/// The sim table off one snapshot: the two clone families' rows
+/// (kind 0, then kind 1), the docdup family's (kind 2), one row per
+/// pair; returns it with the self pairs counted out.
+fn sim_table<'a>(
+    clones: &Similar<'_>,
+    dup_pairs: impl Iterator<Item = (&'a str, &'a str)>,
+    idx: &HashMap<&str, i64>,
+) -> (Vec<[i64; 5]>, usize) {
+    let mut sim = Vec::new();
+    let skipped_self = clone_rows(clones, idx, &mut sim) + pair_rows(dup_pairs, idx, 2, &mut sim);
+    one_row_per_pair(&mut sim);
+    (sim, skipped_self)
+}
+
+/// The two clone families' findings, as the join face's similarity
+/// leg (join/verdicts.rs) and two thirds of check's sim table read
+/// them: the T1/T2 blocks and the T3 judgment off ONE snapshot.
+pub struct Similar<'a> {
+    pub blocks: &'a [dedup::pairs::Block],
+    pub t3: &'a dedup::t3::Judged,
+}
+
+/// File pairs with at least one verified clone block, kind 0 (t1t2),
+/// then the pairs the T3 family verified, kind 1 (plan v2.30 step
+/// 5b-9). Each family's set is ascending alone; the caller merges
+/// them to one row per pair (`one_row_per_pair`).
+pub(crate) fn clone_rows(
+    sim: &Similar<'_>,
     idx: &HashMap<&str, i64>,
     out: &mut Vec<[i64; 5]>,
 ) -> usize {
     pair_rows(
-        blocks
+        sim.blocks
             .iter()
             .map(|b| (b.a_file.as_str(), b.b_file.as_str())),
         idx,
         0,
         out,
-    )
+    ) + pair_rows(sim.t3.file_pairs(), idx, 1, out)
 }
 
 /// File pairs with at least one verified finding of one family, as
@@ -343,6 +379,8 @@ fn pair_rows<'a>(
 /// sent rows. It arises on any tree where two files share code AND
 /// prose, which is the ordinary shape of sibling modules — ten such
 /// pairs in one 55-file directory of the first repository that hit it.
+/// Since plan v2.30 step 5b-9 the join road merges as well: a pair
+/// both clone families found arrives once per family there too.
 ///
 /// The survivor is the STRONGER finding: the sort orders kind within
 /// a pair and the kind enum is ordered by strength (0 t1t2, 1 t3,
@@ -353,7 +391,7 @@ fn pair_rows<'a>(
 /// (clone 85/100, docdup 80/100, both cleared) — which is exactly why
 /// the unit test pins it: nothing downstream would redden if it
 /// flipped.
-fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {
+pub(crate) fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {
     sim.sort_unstable();
     sim.dedup_by(|a, b| a[0] == b[0] && a[1] == b[1]);
 }

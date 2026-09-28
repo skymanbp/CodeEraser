@@ -155,7 +155,7 @@ table as “nothing to erase”: `wire.rs` calls `refuse_degraded` before decodi
 rows and checks that the decoded count equals the candidate count
 ([wire.rs:29-40](../../../cli/src/erase/wire.rs#L29)). The shared refusal helper
 requires `degraded == false` and reports cap-mirror drift when it is not
-([lockstep.rs:103-109](../../../cli/src/lockstep.rs#L103)).
+([lockstep.rs:106-112](../../../cli/src/lockstep.rs#L106)).
 
 ### 5. `--apply`: predicates before writes
 

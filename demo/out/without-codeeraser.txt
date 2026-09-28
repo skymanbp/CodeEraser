@@ -26,7 +26,7 @@ the tree, measured (the CI face):
 $ ce check .
 check score 871/1000 | axes 0:0 1:0 2:307 3:400 4:200 5:0 6:0 | 3 candidates
 ratchet: 4 added, 0 removed, 3 over, 0 tolerance drawn -> FAIL (failed: ratchet_over, discrete_added)
-note: 0 blocks collapsed into existing members, 2 intra-file pairs off the sim table
+note: 0 blocks collapsed into existing members, 3 intra-file pairs off the sim table
 $ ce dedup . --check
 dup invoicer/discount.py:1-18 <-> invoicer/money.py:1-18 (89 tokens)
 dup invoicer/report.py:18-25 <-> invoicer/report.py:43-50 (61 tokens)
@@ -39,7 +39,7 @@ clone invoicer/discount.py:scale_cents/3#0 <-> invoicer/money.py:scale_cents/3#0
 clone invoicer/discount.py:to_cents/1#0 <-> invoicer/money.py:to_cents/1#0  ted 0 (nodes 43/43)
 clone invoicer/report.py:render/1#0 <-> invoicer/report.py:render_compact/1#0  ted 0 (nodes 34/34)
 clone web/api.ts:formatCents/2#0 <-> web/format.ts:formatCents/2#0  ted 1 (nodes 91/92)
-clones: 4 near-miss clone pair(s) over 32 unit(s) — 7 judged, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 6, s5_new 1, s5_pruned_label 59, s5_windowed 66, sent 7, survivors 6
+clones: 4 near-miss clone pair(s) over 32 unit(s) — 0 judged, 7 replayed from the verdict cache, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 0, s5_already 6, s5_new 1, s5_pruned_label 59, s5_windowed 66, sent 7, survivors 6
 $ ce docdup . --check
 docdup docs/DISCOUNTS.md:3-10 md_para <-> docs/PRICING.md:3-10 md_para  J 98/98 verbatim 102
 dups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 1, over_cap_segments 0, requests 1, seed_pairs 0, sent 1

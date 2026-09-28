@@ -10,10 +10,11 @@
 //! no unit nodes (unit indegree is constant 0, design §6.2), so any
 //! number here would be fabricated; [`GRAPH_NULL_IMPORT_GRANULARITY`]
 //! rides every emitted row instead, so absence can never read as zero
-//! indegree.
+//! indegree. Since plan v2.30 step 5b-9 the tier also carries the T3
+//! family's pairs, seated by the identity that family already names.
 
 use crate::churn;
-use crate::dedup::{self, pairs::Block};
+use crate::dedup;
 use crate::fourclass::units;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -71,9 +72,23 @@ pub struct Lines {
 pub struct UnitRow {
     pub a: UnitId,
     pub b: UnitId,
-    pub tokens: usize,
+    #[serde(flatten)]
+    pub sim: UnitSim,
     pub churn_a: Lines,
     pub churn_b: Lines,
+}
+
+/// The similarity a unit row carries (plan v2.30 step 5b-9): which
+/// clone family found the pair, with that family's own metric —
+/// `kind` on the wire, the metric fields beside it.
+#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum UnitSim {
+    /// A T1/T2 clone block: its token count.
+    T1t2 { tokens: usize },
+    /// A T3 near-miss pair: the core's tree edit distance and the two
+    /// node counts.
+    T3 { ted: i64, n1: i64, n2: i64 },
 }
 
 /// One HEAD unit of one file: key, nth, span and anchor, off the same
@@ -128,6 +143,23 @@ impl UnitMap {
             anchor,
         }
     }
+
+    /// The unit itself, by the report identity the T3 family already
+    /// carries (5b-9): its anchor for the churn join. A unit the pass
+    /// saw that the table no longer holds joins no churn (anchor "").
+    pub fn seat(&mut self, path: &str, key: &str, nth: i64) -> Owner {
+        let anchor = self
+            .table(path)
+            .iter()
+            .find(|s| s.key == key && s.nth == nth)
+            .map_or(String::new(), |s| s.anchor.clone());
+        let id = UnitId {
+            path: path.to_string(),
+            key: key.to_string(),
+            nth,
+        };
+        Owner { id, anchor }
+    }
 }
 
 fn load_table(root: &Path, path: &str) -> Vec<Seat> {
@@ -149,11 +181,11 @@ fn load_table(root: &Path, path: &str) -> Vec<Seat> {
         .collect()
 }
 
-/// Assemble the Tier U rows: one per clone block, both sides
-/// unit-attributed, churn joined on the ledger identity (path, key,
-/// anchor). An absent ledger row means the unit genuinely saw no
-/// window edits — a real zero, not a fabricated leg.
-pub fn rows(root: &Path, blocks: &[Block], ledger: &churn::Report) -> Vec<UnitRow> {
+/// Assemble the Tier U rows: one per clone block and one per T3 pair
+/// (5b-9), both sides unit-attributed, churn joined on the ledger
+/// identity (path, key, anchor). An absent ledger row means the unit
+/// genuinely saw no window edits — a real zero, not a fabricated leg.
+pub fn rows(root: &Path, sim: &crate::score::Similar<'_>, ledger: &churn::Report) -> Vec<UnitRow> {
     let by_id: HashMap<(&str, &str, &str), Lines> = ledger
         .units
         .iter()
@@ -172,20 +204,31 @@ pub fn rows(root: &Path, blocks: &[Block], ledger: &churn::Report) -> Vec<UnitRo
             .unwrap_or_default()
     };
     let mut map = UnitMap::new(root);
-    blocks
-        .iter()
-        .map(|blk| {
-            let a = map.id_of(&blk.a_file, blk.a_start, blk.a_end);
-            let b = map.id_of(&blk.b_file, blk.b_start, blk.b_end);
-            UnitRow {
-                tokens: blk.tokens,
-                churn_a: churn_of(&a),
-                churn_b: churn_of(&b),
-                a: a.id,
-                b: b.id,
-            }
-        })
-        .collect()
+    let row = |a: Owner, b: Owner, sim: UnitSim| UnitRow {
+        sim,
+        churn_a: churn_of(&a),
+        churn_b: churn_of(&b),
+        a: a.id,
+        b: b.id,
+    };
+    let mut out = Vec::new();
+    for blk in sim.blocks {
+        let a = map.id_of(&blk.a_file, blk.a_start, blk.a_end);
+        let b = map.id_of(&blk.b_file, blk.b_start, blk.b_end);
+        out.push(row(a, b, UnitSim::T1t2 { tokens: blk.tokens }));
+    }
+    for &(a, b, m) in &sim.t3.clones {
+        let (ua, ub) = (&sim.t3.units[a], &sim.t3.units[b]);
+        let a = map.seat(&ua.path, &ua.key, ua.nth);
+        let b = map.seat(&ub.path, &ub.key, ub.nth);
+        let sim = UnitSim::T3 {
+            ted: m.ted,
+            n1: m.n1,
+            n2: m.n2,
+        };
+        out.push(row(a, b, sim));
+    }
+    out
 }
 
 #[cfg(test)]

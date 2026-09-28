@@ -31,6 +31,7 @@ pub(super) fn invalidate(tx: &Transaction<'_>, epoch: i64) -> Result<()> {
          DELETE FROM mention_files;
          DELETE FROM resolve_pending;
          DELETE FROM result_cache;
+         DELETE FROM t3ted;
          DELETE FROM docsegs;
          DELETE FROM unitsig;
          DELETE FROM edges;
@@ -38,7 +39,7 @@ pub(super) fn invalidate(tx: &Transaction<'_>, epoch: i64) -> Result<()> {
          DELETE FROM symbols;
          DELETE FROM fingerprints;
          DELETE FROM files;
-         DELETE FROM meta WHERE k IN ('full_build', 'resolve_key', 'mention_rev');",
+         DELETE FROM meta WHERE k IN ('full_build', 'resolve_key', 'mention_rev', 't3_cache');",
     )?;
     for (key, value) in [(KEY, TOKENIZER_REV), ("epoch", epoch)] {
         tx.execute(

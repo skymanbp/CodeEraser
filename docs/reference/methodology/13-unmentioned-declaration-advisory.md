@@ -242,7 +242,7 @@ shared string, never a verdict) and lists a selected file's rows with the root-l
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:24-40](../../../cli/src/graph/canvas.rs#L24),
 [graph.js:33-60](../../../gui/ui/graph.js#L33),
-[graph.js:193-264](../../../gui/ui/graph.js#L193), [i18n.js:105-114](../../../gui/ui/i18n.js#L105)).
+[graph.js:193-264](../../../gui/ui/graph.js#L193), [i18n.js:107-116](../../../gui/ui/i18n.js#L107)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -290,8 +290,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1214 (1238 − 12 pattern-ignored − 12 early-NUL) | rust | 3160 (1670) | 357 (1) | 11.3 % | 4 / 357 = 1.1 % | 4 / 2781 |
-| | | haskell | 1570 (352) | 272 (0) | 17.3 % | 22 / 272 = 8.1 % | 22 / 1298 |
+| self @ this commit | 1219 (1243 − 12 pattern-ignored − 12 early-NUL) | rust | 3189 (1693) | 360 (1) | 11.3 % | 4 / 360 = 1.1 % | 4 / 2807 |
+| | | haskell | 1574 (352) | 274 (0) | 17.4 % | 22 / 274 = 8.0 % | 22 / 1300 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -305,7 +305,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->1<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1670<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.1<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->1<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1693<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.1<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

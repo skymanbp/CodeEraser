@@ -57,7 +57,9 @@ mod parser;
 /// difference inside refresh_file's transaction) and `similar_rev` in
 /// the cache key. Storage-key mismatches clear trend; parser-only
 /// changes preserve it under a separate gate (schema/parser.rs).
-const SCHEMA_VERSION: i64 = 16; // 9: trend rows carry their measuring toolchain
+/// v17 (plan v2.30 step 5b-9): the T3 verdict cache `t3ted`
+/// (dedup/t3/cache.rs) beside its generation row in meta.
+const SCHEMA_VERSION: i64 = 17; // 9: trend rows carry their measuring toolchain
 
 const SCHEMA: &str = "
 DROP TABLE IF EXISTS df;
@@ -66,6 +68,7 @@ DROP TABLE IF EXISTS mentions;
 DROP TABLE IF EXISTS mention_files;
 DROP TABLE IF EXISTS resolve_pending;
 DROP TABLE IF EXISTS result_cache;
+DROP TABLE IF EXISTS t3ted;
 DROP TABLE IF EXISTS trend;
 DROP TABLE IF EXISTS docsegs;
 DROP TABLE IF EXISTS unitsig;
@@ -129,13 +132,18 @@ fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
     if storage_current(tx, p)? {
         return parser::invalidate(tx, new_epoch());
     }
-    tx.execute_batch(SCHEMA)?;
-    tx.execute_batch(store::GRAPH_SCHEMA)?;
-    tx.execute_batch(super::unitcache::UNITSIG_SCHEMA)?;
-    tx.execute_batch(crate::docdup::DOCSEGS_SCHEMA)?;
-    tx.execute_batch(crate::trend::TREND_SCHEMA)?;
-    tx.execute_batch(crate::mention::store::MENTION_SCHEMA)?;
-    tx.execute_batch(crate::similar::store::SIMILAR_SCHEMA)?;
+    for ddl in [
+        SCHEMA,
+        store::GRAPH_SCHEMA,
+        super::unitcache::UNITSIG_SCHEMA,
+        super::t3::cache::T3TED_SCHEMA,
+        crate::docdup::DOCSEGS_SCHEMA,
+        crate::trend::TREND_SCHEMA,
+        crate::mention::store::MENTION_SCHEMA,
+        crate::similar::store::SIMILAR_SCHEMA,
+    ] {
+        tx.execute_batch(ddl)?;
+    }
     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
     let mut stmt = tx.prepare("INSERT INTO meta (k, v) VALUES (?1, ?2)")?;
     for (k, v) in meta_entries(p) {

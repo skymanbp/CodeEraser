@@ -96,7 +96,8 @@ clone      ⇔ TSED &gt;= 0.85</pre>
   <p class="note"><code>ted</code> 是单位代价的 Zhang-Shasha（删 = 插 = 1，kind 码相同时
   relabel = 0，否则 1），恒为整数，所以比较是精确的交叉相乘，边界两侧都可判定：在
   <code>max = 100</code> 时 <code>ted 15</code> 是克隆、<code>ted 16</code> 不是。两条<em>可证可采纳</em>的 O(1) 预筛在任何 TED 之前就砍掉候选对：对 <code>q ∈ {min(n1,n2), I}</code> 有
-  <code>q · tsedDen &lt; tsedNum · max</code>，其中 <code>I = Σ_label min(c1, c2)</code>，而预筛用的正是判决将要用的那个 85/100，这个同一性恰恰就是它可采纳的原因。</p>
+  <code>q · tsedDen &lt; tsedNum · max</code>，其中 <code>I = Σ_label min(c1, c2)</code>，而预筛用的正是判决将要用的那个 85/100，这个同一性恰恰就是它可采纳的原因。1.8.0 起，过线的对以 sim kind 1 进入
+  <code>ce check</code> 的克隆轴与 <code>ce join</code> 的相似腿；核对每一对树的判决按两棵树的内容键记在索引里，核的 proto 或旋钮一变即整表清空。</p>
   <ul class="consts">
     <li><b>tsedNum</b> 85</li>
     <li><b>tsedDen</b> 100</li>
@@ -105,7 +106,7 @@ clone      ⇔ TSED &gt;= 0.85</pre>
     <li><b>pairCap</b> 4096</li>
     <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
     <li><b>HOT_GROUP_CAP</b> 64</li>
-    <li><b>schema</b> ce.clone-report/0.2.0</li>
+    <li><b>schema</b> ce.clone-report/0.3.0</li>
   </ul>
 </div>
 
@@ -265,7 +266,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legGraph</b> 2</li>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
-    <li><b>schema</b> ce.join-report/0.3.0</li>
+    <li><b>schema</b> ce.join-report/0.4.0</li>
   </ul>
 </div>
 

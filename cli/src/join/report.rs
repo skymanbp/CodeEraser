@@ -19,14 +19,17 @@ pub fn report_json(r: &Report) -> Value {
         "commits": r.commits,
         "degraded": r.degraded,
         "files": r.files,
-        "units": r.units.iter().map(|u| json!({
-            "a": u.a, "b": u.b, "tokens": u.tokens,
-            "churn_a": u.churn_a, "churn_b": u.churn_b,
-            "graph": Value::Null,
-            // the CODE, not the sentence (plan v2.15): the reader
-            // that renders this row owns the words for it
-            "caveatCode": churn_unit::GRAPH_NULL_IMPORT_GRANULARITY,
-        })).collect::<Vec<_>>(),
+        "units": r.units.iter().map(|u| {
+            // the row's own fields (a, b, kind with its metric, churn),
+            // then the null graph leg and the CODE, not the sentence
+            // (plan v2.15): the reader that renders this row owns the
+            // words for it
+            let mut row = serde_json::to_value(u).expect("unit row");
+            let o = row.as_object_mut().expect("unit row object");
+            o.insert("graph".into(), Value::Null);
+            o.insert("caveatCode".into(), json!(churn_unit::GRAPH_NULL_IMPORT_GRANULARITY));
+            row
+        }).collect::<Vec<_>>(),
     })
 }
 
@@ -39,13 +42,14 @@ fn print_console(r: &Report) {
         println!(
             "{}",
             line(
-                "join {} <-> {}: {} blocks / {} tokens | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {} | {}",
-                "联判 {} <-> {}：{} 块 / {} tokens | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {} | {}",
+                "join {} <-> {}: {} blocks / {} tokens / {} near-miss | graph {} | {} | churn +{}/~{} | +{}/~{} | cochange {} | {}",
+                "联判 {} <-> {}：{} 块 / {} tokens / {} 近似对 | 图 {} | {} | 改动 +{}/~{} | +{}/~{} | 共变 {} | {}",
                 &[
                     &f.a,
                     &f.b,
                     &f.blocks,
                     &f.tokens,
+                    &f.near_miss,
                     &pos_str(f.graph_a),
                     &pos_str(f.graph_b),
                     &f.churn_a.appended,
@@ -80,8 +84,8 @@ fn print_unit_tail(r: &Report) {
         println!(
             "{}",
             line(
-                "unit {}#{}~{} <-> {}#{}~{}: {} tokens | churn +{}/~{} | +{}/~{} | graph null (R6 locked)",
-                "单元 {}#{}~{} <-> {}#{}~{}：{} tokens | 改动 +{}/~{} | +{}/~{} | 图 null（R6 锁定）",
+                "unit {}#{}~{} <-> {}#{}~{}: {} | churn +{}/~{} | +{}/~{} | graph null (R6 locked)",
+                "单元 {}#{}~{} <-> {}#{}~{}：{} | 改动 +{}/~{} | +{}/~{} | 图 null（R6 锁定）",
                 &[
                     &u.a.path,
                     &u.a.key,
@@ -89,7 +93,7 @@ fn print_unit_tail(r: &Report) {
                     &u.b.path,
                     &u.b.key,
                     &u.b.nth,
-                    &u.tokens,
+                    &sim_str(u.sim),
                     &u.churn_a.appended,
                     &u.churn_a.rewrote,
                     &u.churn_b.appended,
@@ -116,6 +120,18 @@ fn print_unit_tail(r: &Report) {
             &[&r.days, &r.files.len(), &r.units.len(), &r.commits],
         )
     );
+}
+
+/// The unit row's similarity in its family's own words (5b-9).
+fn sim_str(sim: churn_unit::UnitSim) -> String {
+    match sim {
+        churn_unit::UnitSim::T1t2 { tokens } => line("{} tokens", "{} tokens", &[&tokens]),
+        churn_unit::UnitSim::T3 { ted, n1, n2 } => line(
+            "t3 ted {} (nodes {}/{})",
+            "t3 ted {}（节点 {}/{}）",
+            &[&ted, &n1, &n2],
+        ),
+    }
 }
 
 fn pos_str(p: Option<Pos>) -> String {

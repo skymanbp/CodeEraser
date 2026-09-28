@@ -86,8 +86,11 @@ pub fn rows_of(root: &Path, idx: &crate::dedup::index::Index, core: &str) -> Res
     let cand = candidates::collect(root, &segs)?;
     // the family's lockstep bindings, inline: this judge is thin
     // enough that a separate fn was pure scaffolding (bite 17 tail)
+    let fam = wire::family(core);
+    let mut link = crate::lockstep::open_family(fam.core, fam.cap)?;
     let (rows, judged, jaccard_dups, requests) = crate::lockstep::lockstep_scores(
-        &wire::family(core),
+        &mut link,
+        &fam,
         &cand.pairs,
         |chunk| wire::chunk_request(chunk, |g| &segs[g].set),
         wire::parse_result,

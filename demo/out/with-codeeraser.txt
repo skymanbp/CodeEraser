@@ -37,7 +37,7 @@ ratchet: 0 added, 0 removed, 1 over, 1 tolerance drawn -> FAIL (failed: ratchet_
 $ ce dedup . --check
 indexed 8 files (0 refreshed, 0 removed) — 0 clone blocks in 0 groups (min 50 tokens, distinct >= 7), 0 low-diversity suppressed, 0 hot chained, 0 stale skipped
 $ ce clone .
-clones: 0 near-miss clone pair(s) over 25 unit(s) — 1 judged, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 0, s5_new 1, s5_pruned_label 38, s5_windowed 39, sent 1, survivors 0
+clones: 0 near-miss clone pair(s) over 25 unit(s) — 0 judged, 1 replayed from the verdict cache, 0 provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 0, s5_already 0, s5_new 1, s5_pruned_label 38, s5_windowed 39, sent 1, survivors 0
 $ ce docdup . --check
 dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0, seed_pairs 0, sent 0
 $ ce deadcode . --check

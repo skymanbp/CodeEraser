@@ -449,7 +449,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|075fec6cbcf4c10d|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 86,
+    "line": 89,
     "text": "CREATE TABLE fingerprints ("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|202a8c95b30280c7|0": {
@@ -459,33 +459,33 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|27a7c776f82a7121|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 109,
-    "end": 119,
+    "line": 112,
+    "end": 122,
     "text": "/// check — CI caught two autocommit rebuilds interleaving statement"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 174,
+    "line": 182,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|1": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 174,
+    "line": 182,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|413ea62c96e5ef70|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 196,
+    "line": 204,
     "text": "// a pre-meta database (or a foreign file) is a mismatch, not an"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|dac5a67b5dee8629|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 94,
+    "line": 97,
     "text": "CREATE INDEX idx_fp_file ON fingerprints(file_id);"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|f733ec08fed99de0|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 179,
+    "line": 187,
     "text": "let version: i64 = conn.query_row(\"PRAGMA user_version\", [], |r| r.get(0))?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema/parser.rs|393a9b6adcd8c25e|0": {
@@ -964,6 +964,17 @@
     "line": 27,
     "text": "pub(crate) const HOT_CAP: usize = 64;"
   },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/schema.rs|fb4073f780501984|0": {
+    "target": "../../../cli/src/dedup/schema.rs",
+    "line": 60,
+    "end": 71,
+    "text": "/// v17 (plan v2.30 step 5b-9): the T3 verdict cache `t3ted`"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/schema/parser.rs|95a6d7067bf206ae|0": {
+    "target": "../../../cli/src/dedup/schema/parser.rs",
+    "line": 34,
+    "text": "DELETE FROM t3ted;"
+  },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|1bbd364e753f838f|0": {
     "target": "../../../cli/src/dedup/sources.rs",
     "line": 117,
@@ -1076,64 +1087,118 @@
     "end": 113,
     "text": "pub fn label_intersection(h1: &[(u64, u32)], h2: &[(u64, u32)]) -> i64 {"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|10ed4726de5ac62e|0": {
-    "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 44,
-    "end": 61,
-    "text": "#[derive(Serialize)]\npub struct Counts {"
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|2c7efb3bdae7207e|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 114,
+    "end": 133,
+    "text": "/// The generation the table must carry to be read; any other empties"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|1b6e384ab3ee556a|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|5281b7c48da08e78|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 203,
+    "end": 233,
+    "text": "/// Remember the fresh outcomes and sweep the held rows whose trees"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|67c9f24c63beed6f|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 65,
+    "end": 76,
+    "text": "/// A tree's identity: fnv1a over its postorder kind codes and lld"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|8f547be4f3032f6a|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 94,
+    "end": 106,
+    "text": "/// The slot a pair of built units reads, whether the pair reads it"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|9b1c06ef44dc407d|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 154,
+    "end": 177,
+    "text": "/// Partition the sendable pairs: the ones the table answers become"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/cache.rs|da03c295af3e2e18|0": {
+    "target": "../../../cli/src/dedup/t3/cache.rs",
+    "line": 38,
+    "end": 47,
+    "text": "/// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one wipe"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|0789f406982be40c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 20,
-    "text": "pub const SCHEMA_ID: &str = \"ce.clone-report/0.2.0\";"
+    "line": 23,
+    "text": "pub const SCHEMA_ID: &str = \"ce.clone-report/0.3.0\";"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|32b8e9b3637d6a8d|0": {
+    "target": "../../../cli/src/dedup/t3/mod.rs",
+    "line": 50,
+    "end": 69,
+    "text": "#[derive(Serialize, Clone)]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|3463d97af9d18071|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 121,
-    "end": 125,
+    "line": 175,
+    "end": 179,
     "text": "for &(_, _, (ted, n1, n2, v)) in rows {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|403f2523fefd45be|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 159,
-    "end": 160,
+    "line": 209,
+    "end": 210,
     "text": "if u.nodes > wire::UNIT_NODE_CAP {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|515005aa37685ad3|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 155,
-    "end": 194,
+    "line": 205,
+    "end": 244,
     "text": "fn build_trees(root: &Path, units: &[Unit]) -> Result<Vec<Outcome>> {"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5a22db522a5d590c|0": {
+    "target": "../../../cli/src/dedup/t3/mod.rs",
+    "line": 64,
+    "end": 68,
+    "text": "pub prefiltered: u64,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5b4d9b675153bd48|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 47,
-    "end": 56,
+    "line": 53,
+    "end": 62,
     "text": "pub over_cap_units: usize,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5c764fdd8cc06d4d|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 198,
-    "end": 215,
+    "line": 248,
+    "end": 265,
     "text": "fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairRow>, u64, u64) {"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|75be95ae80742e4a|0": {
+    "target": "../../../cli/src/dedup/t3/mod.rs",
+    "line": 116,
+    "end": 118,
+    "text": "/// The judgment over an already-refreshed index: identity gate,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|845196f1fcbaf13b|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 177,
-    "end": 185,
+    "line": 227,
+    "end": 235,
     "text": "if let tree::Built::Tree(t) = &b {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|9c84e006f068e6e5|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 138,
-    "end": 147,
+    "line": 188,
+    "end": 197,
     "text": "/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — since ADR-008 P1 a"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|a4bf30c9a25404df|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 73,
-    "end": 77,
+    "line": 125,
+    "end": 127,
     "text": "// the product judgment sees the exhaustive S5 extension; the"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|d5d73f05f598a93c|0": {
+    "target": "../../../cli/src/dedup/t3/mod.rs",
+    "line": 167,
+    "end": 186,
+    "text": "/// The reported set from the CORE's verdict bits (ADR-008 P1), with"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|0abf5f23e88f2f40|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
@@ -1212,6 +1277,23 @@
     "line": 64,
     "end": 71,
     "text": "pub fn family(core: &str) -> crate::lockstep::Family<'_> {"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/join/mod.rs|bb493d56a8b2eca6|0": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 97,
+    "end": 104,
+    "text": "// the T3 family off the same snapshot (plan v2.30 step 5b-9): its"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 107,
+    "text": "let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 324,
+    "end": 341,
+    "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/tests/unit/dedup/t3.rs|004a6ba98c9dbbe0|0": {
     "target": "../../../cli/tests/unit/dedup/t3.rs",
@@ -1444,6 +1526,17 @@
     "line": 95,
     "text": "when aligned $ writeArray td (i * tSize b + j) v"
   },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Verdict/Join.hs|cfff149d35c47f6c|0": {
+    "target": "../../../core/app/CE/Verdict/Join.hs",
+    "line": 162,
+    "end": 164,
+    "text": "simOver = case kind of"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Verdict/Score.hs|ffed7fc4a3ab3316|0": {
+    "target": "../../../core/app/CE/Verdict/Score.hs",
+    "line": 210,
+    "text": "touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
+  },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/CloneProps.hs|17669273100e771c|0": {
     "target": "../../../core/test/CloneProps.hs",
     "line": 34,
@@ -1495,6 +1588,12 @@
     "line": 97,
     "end": 103,
     "text": "triangle :: [T] -> Bool"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/VerdictProps.hs|94000713a90044f4|0": {
+    "target": "../../../core/test/VerdictProps.hs",
+    "line": 217,
+    "end": 229,
+    "text": "-- | Plan v2.30 step 5b-9: the T3 family's verified pairs enter the sim"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -1854,8 +1953,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|0e9696e33e5abd05|0": {
     "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 126,
-    "end": 128,
+    "line": 129,
+    "end": 131,
     "text": "let run = *runs"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|992b962b93a06b9c|0": {
@@ -1866,8 +1965,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|bf6617dc2a663b82|0": {
     "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 129,
-    "end": 132,
+    "line": 132,
+    "end": 135,
     "text": "ensure!(\nv == is_dup(inter, union, run),"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/wire.rs|4e21d98c92494a2d|0": {
@@ -2120,13 +2219,13 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|8498184ed1508afd|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 78,
-    "end": 88,
+    "line": 81,
+    "end": 91,
     "text": "pub fn sorted_rank("
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|d0ed92deaf34ad50|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 54,
+    "line": 57,
     "text": "for c in pairs.chunks(fam.chunk) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|689c8fc33de77ed4|0": {
@@ -2968,17 +3067,34 @@
     "end": 68,
     "text": "/// The core's cycle floor when none is declared"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|0c23d0b57111da01|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 116,
-    "end": 124,
-    "text": "let skipped_self = sim_rows(&found.blocks, &idx, &mut sim)"
+    "line": 107,
+    "text": "let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 98,
+    "end": 102,
+    "text": "// the docdup family's verified pairs (7.0.0, O46): until then this"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|71cb5dc9ffd38839|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 178,
-    "end": 182,
+    "line": 190,
+    "end": 194,
     "text": "let baseline = match (opts.establish, opts.pinned_soft) {"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|b0a71c3df04991be|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 399,
+    "end": 414,
+    "text": "/// The discrete clone-member set: every block's sides attributed to"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 324,
+    "end": 341,
+    "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
     "target": "../../../cli/src/score/pinned.rs",
@@ -5111,69 +5227,99 @@
     "end": 86,
     "text": "/// The same surface under the verdict family's universe (6.1.0):"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|0741993b6d62aebb|0": {
-    "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 152,
-    "end": 155,
-    "text": "/// Assemble the Tier U rows: one per clone block, both sides"
-  },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|4610453a9abd25ca|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 123,
+    "line": 138,
     "text": "None => (String::new(), 0, String::new()),"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|48bfa7dfdcf40054|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 220,
+    "end": 229,
+    "text": "for &(a, b, m) in &sim.t3.clones {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|5992300f38f4e723|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 60,
-    "end": 64,
+    "line": 61,
+    "end": 65,
     "text": "#[derive(Debug, Clone, Copy, Default, Serialize, PartialEq, Eq)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|61032d8295705051|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 38,
+    "line": 39,
     "text": "pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|62f0bc0f5de0f007|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 84,
+    "end": 92,
+    "text": "#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|8dd271e4c7931b7c|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 116,
-    "end": 120,
+    "line": 131,
+    "end": 135,
     "text": "let hit = self\n.table(path)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|90c66a60f36c2171|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 168,
-    "end": 173,
+    "line": 200,
+    "end": 205,
     "text": "let churn_of = |o: &Owner| {"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|9234a6afac2962d5|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 184,
+    "end": 187,
+    "text": "/// Assemble the Tier U rows: one per clone block and one per T3 pair"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|d45fd60de23dc11b|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 147,
+    "end": 162,
+    "text": "/// The unit itself, by the report identity the T3 family already"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|dd26ec65941b7c62|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 50,
-    "end": 57,
+    "line": 51,
+    "end": 58,
     "text": "/// A span's owner: the report identity and the §7.2 anchor the churn"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|ff9ea0fd14051ba7|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 40,
-    "end": 48,
+    "line": 41,
+    "end": 49,
     "text": "/// The report identity of a unit: the index's persisted (path, key,"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|0151757927f5f2a1|0": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 99,
+    "end": 104,
+    "text": "let t3 = dedup::t3::judge_index(root, &idx, core)?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1a382c06c9d6184a|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 184,
-    "end": 194,
+    "line": 216,
+    "end": 226,
     "text": ".collect()\n}\n\n/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1ec1874c10d90282|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 48,
-    "end": 49,
+    "line": 51,
+    "end": 55,
     "text": "pub blocks: usize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1f31a5fd7011eef0|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 129,
-    "end": 143,
+    "line": 151,
+    "end": 165,
     "text": "/// index names a node in OUR dense assignment (F19: one id space),"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|372999982735fb78|0": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 53,
+    "end": 55,
+    "text": "/// T3 near-miss unit pairs between the two files (5b-9): a pair"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|3b01dfc3adfb5a03|0": {
     "target": "../../../cli/src/join/mod.rs",
@@ -5184,106 +5330,123 @@
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|492df516457aaf2d|0": {
     "target": "../../../cli/src/join/mod.rs",
     "line": 30,
-    "end": 35,
+    "end": 38,
     "text": "/// JSON output schema id; bump on shape change (plan §7.1)."
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|5641101658a9a52c|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 94,
-    "end": 97,
+    "line": 107,
+    "end": 110,
     "text": ".map(|&(i, _)| i)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|a56585168f8dad8a|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|cc940108857cdb8a|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 156,
-    "end": 158,
-    "text": "} else {\n(b.b_file.clone(), b.a_file.clone())"
+    "line": 191,
+    "end": 193,
+    "text": "for (a, b) in sim.t3.file_pairs() {"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|b24cde209d61fa64|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|d4d81ac2b58387ca|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 151,
-    "end": 155,
-    "text": "fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report) -> Vec<FileRow> {"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|dd2fe14216b11a41|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 106,
-    "end": 114,
-    "text": "// the judgment leg (2.33.0, H4): the same verdict/1 road the"
+    "line": 185,
+    "end": 190,
+    "text": "let mut by_pair: BTreeMap<(String, String), (usize, usize, usize)> = BTreeMap::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|dfdd0b9189164f9f|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 37,
-    "end": 41,
+    "line": 40,
+    "end": 44,
     "text": "/// Graph position of one file: [indeg, outdeg, sccId, sccSize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|e3607d3e504e3bb6|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 54,
-    "end": 56,
+    "line": 60,
+    "end": 62,
     "text": "/// None = the pair is outside the churn report's co-change table"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|e478ae21f72ddeba|0": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 132,
+    "end": 148,
+    "text": "/// Tier F with the core's verdict on each pair it judged."
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|f6ee24a95adbb5c2|0": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 178,
+    "end": 184,
+    "text": "let ordered = |a: &str, b: &str| {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|14ebb8074e19e8cd|0": {
     "target": "../../../cli/src/join/report.rs",
-    "line": 114,
+    "line": 118,
     "text": "\"join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|4c27878cfe0b7e07|0": {
     "target": "../../../cli/src/join/report.rs",
-    "line": 105,
+    "line": 109,
     "text": "\"join graph leg degraded: {}\","
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|f7cc4631c1dc8a28|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|6f4b405470ff13b9|0": {
     "target": "../../../cli/src/join/report.rs",
-    "line": 28,
-    "text": "\"caveatCode\": churn_unit::GRAPH_NULL_IMPORT_GRANULARITY,"
+    "line": 30,
+    "text": "o.insert(\"caveatCode\".into(), json!(churn_unit::GRAPH_NULL_IMPORT_GRANULARITY));"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/verdicts.rs|c007bf2e97512afa|0": {
     "target": "../../../cli/src/join/verdicts.rs",
     "line": 39,
     "text": "pub fn judge_pairs("
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|0c23d0b57111da01|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/verdicts.rs|d6af8640f36b0d3b|0": {
+    "target": "../../../cli/src/join/verdicts.rs",
+    "line": 51,
+    "end": 55,
+    "text": "let idx = score::row_index(&files);"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 116,
-    "end": 124,
-    "text": "let skipped_self = sim_rows(&found.blocks, &idx, &mut sim)"
+    "line": 107,
+    "text": "let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 254,
-    "end": 270,
+    "line": 266,
+    "end": 282,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 98,
+    "end": 102,
+    "text": "// the docdup family's verified pairs (7.0.0, O46): until then this"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 307,
-    "end": 312,
+    "line": 343,
+    "end": 369,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6e6e351ef11fb49b|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 460,
-    "end": 466,
+    "line": 498,
+    "end": 504,
     "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 447,
-    "end": 450,
+    "line": 485,
+    "end": 488,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|b5ae71bae3b1d60d|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 356,
-    "end": 359,
-    "text": "fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {"
+    "line": 324,
+    "end": 341,
+    "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|ddb3e784660bcd82|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cd401e3b9371f9ac|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 290,
-    "end": 291,
-    "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2)"
+    "line": 385,
+    "end": 397,
+    "text": "/// The survivor is the STRONGER finding: the sort orders kind within"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/report.rs|87b0f1d7db238a67|0": {
     "target": "../../../cli/src/score/report.rs",
@@ -7727,8 +7890,8 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/lockstep.rs|a7f7cc8708bdb89f|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 103,
-    "end": 109,
+    "line": 106,
+    "end": 112,
     "text": "/// A degraded reply to a client-sized request means the Rust cap"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
@@ -8512,8 +8675,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 105,
-    "end": 114,
+    "line": 107,
+    "end": 116,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {

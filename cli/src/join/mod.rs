@@ -1,5 +1,5 @@
 //! `ce join` (M5-3h): the three-signal assembly — similarity (clone
-//! blocks), graph position (the SAME wire deadcode judges, answered
+//! blocks and, since plan v2.30 step 5b-9, T3 near-miss pairs), graph position (the SAME wire deadcode judges, answered
 //! through graph.result's pos rows), and per-unit window churn —
 //! joined into file-tier and unit-tier rows, each file pair judged
 //! by the SAME verdict/1 lattice `ce check` gates with (2.33.0,
@@ -19,7 +19,7 @@ pub mod verdicts;
 pub use report::{print, report_json};
 
 use crate::churn;
-use crate::dedup::{self, pairs::Block};
+use crate::dedup;
 use crate::graph::deadcode;
 use anyhow::{Context, Result};
 use serde::Serialize;
@@ -32,7 +32,10 @@ use std::path::{Path, PathBuf};
 /// prose; file rows carry the core's join verdict — name, severity,
 /// leg-agreement confidence (the reply's legsMask/reasons stay on the
 /// wire, unrendered) — from the SAME verdict/1 judgment `ce check` gates with.
-pub const SCHEMA_ID: &str = "ce.join-report/0.3.0";
+/// 0.4.0 (plan v2.30 step 5b-9, additive): file rows carry
+/// `near_miss`, the T3 pairs between the two files; unit rows carry
+/// `kind` (`t1t2` with `tokens`, `t3` with `ted` / `n1` / `n2`).
+pub const SCHEMA_ID: &str = "ce.join-report/0.4.0";
 
 /// Graph position of one file: [indeg, outdeg, sccId, sccSize,
 /// reachIn] (the Position.hs row minus its echoed index). None =
@@ -47,6 +50,9 @@ pub struct FileRow {
     pub b: String,
     pub blocks: usize,
     pub tokens: usize,
+    /// T3 near-miss unit pairs between the two files (5b-9): a pair
+    /// the T3 family alone found rides with `blocks` 0 and `tokens` 0.
+    pub near_miss: usize,
     pub graph_a: Option<Pos>,
     pub graph_b: Option<Pos>,
     pub churn_a: churn_unit::Lines,
@@ -88,7 +94,14 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     // the join reads positions and the degraded bit alone: the
     // symbol advisory has no seat in its lattice (W4-F17)
     let w = deadcode::wire_of(root, &idx, &db_path, deadcode::Advisory::No)?;
+    // the T3 family off the same snapshot (plan v2.30 step 5b-9): its
+    // pairs are sim rows of kind 1, file rows and unit rows here
+    let t3 = dedup::t3::judge_index(root, &idx, core)?;
     drop(idx);
+    let sim = crate::score::Similar {
+        blocks: &found.blocks,
+        t3: &t3,
+    };
     let pos_req: Vec<i64> = deadcode::measured_nodes(&w)
         .iter()
         .map(|&(i, _)| i)
@@ -106,9 +119,24 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     // the judgment leg (2.33.0, H4): the same verdict/1 road the
     // check gate uses, over this run's own measurement
     crate::progress::step(crate::progress::Phase::Assemble);
-    let judged = verdicts::judge_pairs(root, core, &w, &found.blocks, (&posmap, loops), &ch)?;
-    let degraded = degraded.or(judged.degraded);
-    let mut files = file_rows(&found.blocks, &posmap, &ch);
+    let judged = verdicts::judge_pairs(root, core, &w, &sim, (&posmap, loops), &ch)?;
+    Ok(Report {
+        days,
+        commits: ch.commits,
+        files: judged_files(&sim, &posmap, &ch, &judged),
+        units: churn_unit::rows(root, &sim, &ch),
+        degraded: degraded.or(judged.degraded),
+    })
+}
+
+/// Tier F with the core's verdict on each pair it judged.
+fn judged_files(
+    sim: &crate::score::Similar<'_>,
+    posmap: &HashMap<String, Pos>,
+    ch: &churn::Report,
+    judged: &verdicts::Judged,
+) -> Vec<FileRow> {
+    let mut files = file_rows(sim, posmap, ch);
     for f in &mut files {
         if let Some(v) = judged.pairs.get(&(f.a.clone(), f.b.clone())) {
             f.verdict = Some(v.verdict);
@@ -116,13 +144,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
             f.confidence = Some(v.confidence);
         }
     }
-    Ok(Report {
-        days,
-        commits: ch.commits,
-        files,
-        units: churn_unit::rows(root, &found.blocks, &ch),
-        degraded,
-    })
+    files
 }
 
 /// path → position from the reply's pos rows; each row's echoed
@@ -145,25 +167,34 @@ pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<
     Ok(map)
 }
 
-/// Tier F: aggregate blocks per unordered file pair, attach both
-/// sides' graph position and window churn, and the co-change count
-/// where the pair made the churn report's table.
-fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report) -> Vec<FileRow> {
-    let mut by_pair: BTreeMap<(String, String), (usize, usize)> = BTreeMap::new();
-    for b in blocks {
-        let key = if b.a_file <= b.b_file {
-            (b.a_file.clone(), b.b_file.clone())
+/// Tier F: aggregate blocks and T3 pairs per unordered file pair,
+/// attach both sides' graph position and window churn, and the
+/// co-change count where the pair made the churn report's table.
+fn file_rows(
+    sim: &crate::score::Similar<'_>,
+    posmap: &HashMap<String, Pos>,
+    ch: &churn::Report,
+) -> Vec<FileRow> {
+    let ordered = |a: &str, b: &str| {
+        if a <= b {
+            (a.to_string(), b.to_string())
         } else {
-            (b.b_file.clone(), b.a_file.clone())
-        };
-        let e = by_pair.entry(key).or_default();
+            (b.to_string(), a.to_string())
+        }
+    };
+    let mut by_pair: BTreeMap<(String, String), (usize, usize, usize)> = BTreeMap::new();
+    for b in sim.blocks {
+        let e = by_pair.entry(ordered(&b.a_file, &b.b_file)).or_default();
         e.0 += 1;
         e.1 += b.tokens;
+    }
+    for (a, b) in sim.t3.file_pairs() {
+        by_pair.entry(ordered(a, b)).or_default().2 += 1;
     }
     let by_file = file_churn(ch);
     by_pair
         .into_iter()
-        .map(|((a, b), (blocks, tokens))| FileRow {
+        .map(|((a, b), (blocks, tokens, near_miss))| FileRow {
             graph_a: posmap.get(&a).copied(),
             graph_b: posmap.get(&b).copied(),
             churn_a: by_file.get(&a).copied().unwrap_or_default(),
@@ -177,6 +208,7 @@ fn file_rows(blocks: &[Block], posmap: &HashMap<String, Pos>, ch: &churn::Report
             b,
             blocks,
             tokens,
+            near_miss,
             verdict: None,
             severity: None,
             confidence: None,

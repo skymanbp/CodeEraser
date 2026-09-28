@@ -116,7 +116,10 @@ clone      ⇔ TSED &gt;= 0.85</pre>
   Two provably admissible O(1) prefilters cut pairs before any TED runs:
   <code>q · tsedDen &lt; tsedNum · max</code> for <code>q ∈ {min(n1,n2), I}</code>, where
   <code>I = Σ_label min(c1, c2)</code>, using the <em>same</em> 85/100 the judgment will,
-  which is exactly what makes them admissible.</p>
+  which is exactly what makes them admissible. Since 1.8.0 the verified pairs ride
+  <code>ce check</code>'s clone axis and <code>ce join</code>'s similarity leg as sim kind 1, and the
+  core's verdict per tree pair is remembered in the index under the two trees' content keys,
+  emptied whenever the core's proto or a knob changes.</p>
   <ul class="consts">
     <li><b>tsedNum</b> 85</li>
     <li><b>tsedDen</b> 100</li>
@@ -125,7 +128,7 @@ clone      ⇔ TSED &gt;= 0.85</pre>
     <li><b>pairCap</b> 4096</li>
     <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
     <li><b>HOT_GROUP_CAP</b> 64</li>
-    <li><b>schema</b> ce.clone-report/0.2.0</li>
+    <li><b>schema</b> ce.clone-report/0.3.0</li>
   </ul>
 </div>
 
@@ -331,7 +334,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legGraph</b> 2</li>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
-    <li><b>schema</b> ce.join-report/0.3.0</li>
+    <li><b>schema</b> ce.join-report/0.4.0</li>
   </ul>
 </div>
 

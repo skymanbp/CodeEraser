@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 849 1261" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 849 1280" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', monospace" font-size="13">
 <title>the same task — with CodeEraser</title>
-<rect width="849" height="1261" rx="8" fill="#0d1117"/>
+<rect width="849" height="1280" rx="8" fill="#0d1117"/>
 <rect width="849" height="32" rx="8" fill="#161b22"/>
 <rect y="16" width="849" height="16" fill="#161b22"/>
 <circle cx="18" cy="16" r="5" fill="#ff5f57"/><circle cx="36" cy="16" r="5" fill="#febc2e"/><circle cx="54" cy="16" r="5" fill="#28c840"/>
@@ -52,20 +52,21 @@
 <text x="18" y="896" fill="#c9d1d9" xml:space="preserve">indexed 8 files (0 refreshed, 0 removed) — 0 clone blocks in 0 groups (min 50 tokens, distinct &gt;= 7), 0</text>
 <text x="18" y="915" fill="#c9d1d9" xml:space="preserve">    low-diversity suppressed, 0 hot chained, 0 stale skipped</text>
 <text x="18" y="934" fill="#58a6ff" xml:space="preserve">$ ce clone .</text>
-<text x="18" y="953" fill="#c9d1d9" xml:space="preserve">clones: 0 near-miss clone pair(s) over 25 unit(s) — 1 judged, 0 provably below threshold | forest_units</text>
-<text x="18" y="972" fill="#c9d1d9" xml:space="preserve">    0, over_cap_units 0, pairs_dropped_forest 0, pairs_dropped_over_cap 0, requests 1, s5_already 0,</text>
-<text x="18" y="991" fill="#c9d1d9" xml:space="preserve">    s5_new 1, s5_pruned_label 38, s5_windowed 39, sent 1, survivors 0</text>
-<text x="18" y="1010" fill="#58a6ff" xml:space="preserve">$ ce docdup . --check</text>
-<text x="18" y="1029" fill="#c9d1d9" xml:space="preserve">dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | exempt_allow 0,</text>
-<text x="18" y="1048" fill="#c9d1d9" xml:space="preserve">    exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0,</text>
-<text x="18" y="1067" fill="#c9d1d9" xml:space="preserve">    seed_pairs 0, sent 0</text>
-<text x="18" y="1086" fill="#58a6ff" xml:space="preserve">$ ce deadcode . --check</text>
-<text x="18" y="1105" fill="#ff7b72" xml:space="preserve">dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
-<text x="18" y="1124" fill="#ff7b72" xml:space="preserve">dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites</text>
-<text x="18" y="1143" fill="#ff7b72" xml:space="preserve">    in this language]</text>
-<text x="18" y="1162" fill="#ff7b72" xml:space="preserve">deadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 5 unresolved sites (verdicts assume none</text>
-<text x="18" y="1181" fill="#ff7b72" xml:space="preserve">    lands in-corpus)</text>
-<text x="18" y="1200" fill="#ff7b72" xml:space="preserve">deadcode check: 2 dead file(s) — disposition or entry_globs them</text>
-<text x="18" y="1219" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
-<text x="18" y="1238" fill="#c9d1d9" xml:space="preserve">erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)</text>
+<text x="18" y="953" fill="#c9d1d9" xml:space="preserve">clones: 0 near-miss clone pair(s) over 25 unit(s) — 0 judged, 1 replayed from the verdict cache, 0</text>
+<text x="18" y="972" fill="#c9d1d9" xml:space="preserve">    provably below threshold | forest_units 0, over_cap_units 0, pairs_dropped_forest 0,</text>
+<text x="18" y="991" fill="#c9d1d9" xml:space="preserve">    pairs_dropped_over_cap 0, requests 0, s5_already 0, s5_new 1, s5_pruned_label 38, s5_windowed 39,</text>
+<text x="18" y="1010" fill="#c9d1d9" xml:space="preserve">    sent 1, survivors 0</text>
+<text x="18" y="1029" fill="#58a6ff" xml:space="preserve">$ ce docdup . --check</text>
+<text x="18" y="1048" fill="#c9d1d9" xml:space="preserve">dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | exempt_allow 0,</text>
+<text x="18" y="1067" fill="#c9d1d9" xml:space="preserve">    exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0,</text>
+<text x="18" y="1086" fill="#c9d1d9" xml:space="preserve">    seed_pairs 0, sent 0</text>
+<text x="18" y="1105" fill="#58a6ff" xml:space="preserve">$ ce deadcode . --check</text>
+<text x="18" y="1124" fill="#ff7b72" xml:space="preserve">dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]</text>
+<text x="18" y="1143" fill="#ff7b72" xml:space="preserve">dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites</text>
+<text x="18" y="1162" fill="#ff7b72" xml:space="preserve">    in this language]</text>
+<text x="18" y="1181" fill="#ff7b72" xml:space="preserve">deadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 5 unresolved sites (verdicts assume none</text>
+<text x="18" y="1200" fill="#ff7b72" xml:space="preserve">    lands in-corpus)</text>
+<text x="18" y="1219" fill="#ff7b72" xml:space="preserve">deadcode check: 2 dead file(s) — disposition or entry_globs them</text>
+<text x="18" y="1238" fill="#58a6ff" xml:space="preserve">$ ce erase . --check</text>
+<text x="18" y="1257" fill="#c9d1d9" xml:space="preserve">erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)</text>
 </svg>

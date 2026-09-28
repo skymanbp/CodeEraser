@@ -68,6 +68,8 @@ const CE_I18N = {
     blocksTokens: "blocks / tokens",
     blockTokens: (b, t) => `${b} block${b === 1 ? "" : "s"} · ${t} tokens`,
     tokensOnly: (t) => `${t} tokens`, tokens: "tokens",
+    nearMiss: (n) => `${n} near-miss pair${n === 1 ? "" : "s"}`, nearMissRow: "near-miss pairs",
+    tedNodes: (t, a, b) => `T3 · ted ${t} · nodes ${a}/${b}`, tedRow: "ted / nodes", kind: "family",
     graphA: "graph a", graphB: "graph b", churnA: "churn a", churnB: "churn b",
     // the unit tier's graph leg and WHY it is null, keyed by the
     // wire's caveat code (ce.join-report/0.3.0) — the sentence used
@@ -233,6 +235,8 @@ const CE_I18N = {
     degraded: (why) => `图腿降级：${why}`,
     blocksTokens: "块数 / token 数", blockTokens: (b, t) => `${b} 块 · ${t} tokens`,
     tokensOnly: (t) => `${t} tokens`, tokens: "token 数",
+    nearMiss: (n) => `${n} 对近似克隆`, nearMissRow: "近似克隆对",
+    tedNodes: (t, a, b) => `T3 · ted ${t} · 节点 ${a}/${b}`, tedRow: "ted / 节点", kind: "家族",
     graphA: "图位 a", graphB: "图位 b", churnA: "变动 a", churnB: "变动 b",
     graphNull: "图位", graphNullWhy: {
       1: "null——图判的是文件不是单元；单元的符号层读数是引用图屏的死码顾问，不是入度",

@@ -81,6 +81,19 @@ const barStyle = (v, max) => ` style="--w:${((100 * v) / (max || 1)).toFixed(1)}
 const verdictBadge = (v, sev) =>
   v == null ? "" : `<span class="vpill ${sev >= 3 ? "bad" : sev >= 2 ? "mid" : "quiet"}">${esc(v)}</span>`;
 
+// A unit row's similarity in its family's own words (ce.join-report
+// 0.4.0, plan v2.30 step 5b-9): a T1/T2 block prints its tokens, a T3
+// pair the core's tree edit distance over the two node counts. The
+// bar is that family's own printed number too — tokens over the
+// section's largest block, or TSED over 100 for a near-miss pair.
+const unitSim = (u) =>
+  u.kind === "t3" ? tr("tedNodes", u.ted, u.n1, u.n2) : tr("tokensOnly", u.tokens);
+const unitBar = (u, uMax) => {
+  if (u.kind !== "t3") return barStyle(u.tokens, uMax);
+  const max = Math.max(u.n1, u.n2);
+  return barStyle(100 * (max - u.ted), 100 * max);
+};
+
 function renderCandidates() {
   $("empty-candidates").hidden = true;
   const parts = [];
@@ -91,16 +104,16 @@ function renderCandidates() {
     parts.push(
       `<div class="cand" data-kind="file" data-i="${i}"${barStyle(f.tokens, fMax)}>` +
       `<span class="pair">${pairHtml(f.a, f.b)}</span>` +
-      `<span>${verdictBadge(f.verdict, f.severity)}${tr("blockTokens", f.blocks, f.tokens)}</span></div>`
+      `<span>${verdictBadge(f.verdict, f.severity)}${tr("blockTokens", f.blocks, f.tokens)}${f.near_miss ? ` · ${tr("nearMiss", f.near_miss)}` : ""}</span></div>`
     );
   });
   parts.push(`<h2>${tr("unitPairs")} — ${joinDoc.units.length}</h2>`);
-  const uMax = maxOf(joinDoc.units, (u) => u.tokens);
+  const uMax = maxOf(joinDoc.units, (u) => (u.kind === "t3" ? 0 : u.tokens));
   joinDoc.units.forEach((u, i) => {
     parts.push(
-      `<div class="cand" data-kind="unit" data-i="${i}"${barStyle(u.tokens, uMax)}>` +
+      `<div class="cand" data-kind="unit" data-i="${i}"${unitBar(u, uMax)}>` +
       `<span class="pair">${pairHtml(u.a.path, u.b.path)}<span class="dir">#${esc(u.a.key)}</span></span>` +
-      `<span>${tr("tokensOnly", u.tokens)}</span></div>`
+      `<span>${unitSim(u)}</span></div>`
     );
   });
   parts.push(`<h2>${tr("cloneBlocks")} — ${dedupDoc.blocks.length}</h2>`);
@@ -178,6 +191,7 @@ function candDetail(kind, i) {
     const f = joinDoc.files[i];
     rows.push(`<h2>${esc(f.a)} ↔ ${esc(f.b)}</h2>`);
     rows.push(row(tr("blocksTokens"), `${f.blocks} / ${f.tokens}`));
+    rows.push(row(tr("nearMissRow"), f.near_miss));
     // absent is honest absence, not report_only: a self-pair cannot
     // cross the u < v wire, and a degraded judgment judged nothing
     rows.push(row(tr("verdict"), f.verdict ?? tr("posNull")));
@@ -189,7 +203,8 @@ function candDetail(kind, i) {
   } else if (kind === "unit") {
     const u = joinDoc.units[i];
     rows.push(`<h2>${esc(u.a.path)}#${esc(u.a.key)}~${u.a.nth} ↔ ${esc(u.b.path)}#${esc(u.b.key)}~${u.b.nth}</h2>`);
-    rows.push(row(tr("tokens"), u.tokens));
+    rows.push(row(tr("kind"), u.kind));
+    rows.push(u.kind === "t3" ? row(tr("tedRow"), `${u.ted} / ${u.n1} / ${u.n2}`) : row(tr("tokens"), u.tokens));
     rows.push(row(tr("churnA"), churnStr(u.churn_a)), row(tr("churnB"), churnStr(u.churn_b)));
     // the wire carries the CODE since ce.join-report/0.3.0 (plan
     // v2.15); the words are this face's, which is what makes them

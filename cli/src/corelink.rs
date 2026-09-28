@@ -73,6 +73,9 @@ pub struct Link {
     replies: std::sync::mpsc::Receiver<std::io::Result<String>>,
     deadline: std::time::Duration,
     caps: Vec<String>,
+    /// The core's own proto from its hello: what a verdict replayed
+    /// from a cache was judged under (dedup/t3/cache.rs).
+    proto: String,
     next_id: u64,
 }
 
@@ -86,6 +89,7 @@ impl Link {
             replies,
             deadline: pipe::deadline(),
             caps: Vec::new(),
+            proto: String::new(),
             next_id: 0,
         };
         let hello = Hello {
@@ -100,11 +104,17 @@ impl Link {
             .map_err(|e| format!("bad hello reply: {e}"))?;
         let reply = validate(parsed)?;
         link.caps = reply.capabilities.clone();
+        link.proto = reply.proto.clone();
         Ok((link, reply))
     }
 
     pub fn has(&self, capability: &str) -> bool {
         self.caps.iter().any(|c| c == capability)
+    }
+
+    /// The proto the core answered its hello with.
+    pub fn proto(&self) -> &str {
+        &self.proto
     }
 
     /// One `{kind}.request` line out, one `{kind}.result` line in.
