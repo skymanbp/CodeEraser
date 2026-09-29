@@ -54,7 +54,7 @@
 > where the release it names holds none — so the claim is checkable, and
 > the diff it rests on is public.
 
-The current release, v1.7.4, carries v1.7.3's numbers: the rule counts it as a new program, but what it changed sits outside what these seven metrics time, so it was not measured again.
+The current release, v1.8.0, earns a row and does not have one yet: it is measured after the tag.
 
 ## Latency series (self repository)
 

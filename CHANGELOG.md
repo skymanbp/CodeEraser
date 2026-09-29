@@ -9,6 +9,15 @@
 
 ## [Unreleased]
 
+## [v1.8.0] — 2026-09-29 — 语言扩展 v2.30：C / C++ / Java / Lua / R 进判决集、HTML 升为文档类判决语言、纯文本查重臂，每种语言各自的引用精度考题与 FPR 台账；35 条已知边界清零；T3 近似克隆进门与判决缓存；三件判决回迁进核（wire 7.2.0）；**分数与 1.7.x 不可比**
+
+**无默认档位变更。** 发版 1.8.0（2026-09-29；判决代码零改动——本提交只动版本号、核重编、精度册出处门的读法与派生面）：
+
+- **版本六处一致**：`cli/Cargo.toml` 与它的锁行、`gui/src-tauri` 的 Cargo.toml / tauri.conf.json / 两条锁行、`core/ce-core.cabal`、`plugin.json`、`npm/package.json`、`manifest.env` 的 `CE_MANIFEST_VERSION` / `CE_BASE_URL`、握手 golden 的版本回显；核重编为 ce-core 1.8.0（`cabal test` 419 ok，对 golden 请求逐字节同答），`ce doctor` 读 ce 1.8.0 / ce-core 1.8.0（proto 7.2.0）握手 OK；`packaging/` 由生成器重生成（winget 目录 1.7.4 → 1.8.0；十五枚 pin 仍是 1.7.4 的，随 pin 提交换成 draft 量出的值）。
+- **精度册出处门按 pins 读锁文件**（子仓 `lang_provenance.rs` + `eval_support::lock_pins` / `blob_at`）：`cli/Cargo.lock` 在 `ANSWERED_BY` 里是为了依赖钉版（文法在内），而版本号一动它就动——按路径读历史会让每次发版都退役十一份精度册，重生成后除 `generated_from` 逐字节相同（步 7 的先例）。现在锁文件按内容比：去掉 crate 自己那一行 `version`，其余每一行逐字节比，工作树腿与提交历史腿同读（`pins_moved`），其余八条路径照旧按历史；新腿 `the_lockfile_answers_through_its_pins`（版本号不算挪、文法钉版一动算挪、块里别的行不动）；登记册 `EVAL-SET-LANGS.md` 顺序门一段同改。本树的锁文件只动那一行，十一份档在座不退役；发版前重放 `eval_lang_parts::replay` 十一份逐键相等（301 s，RELEASE.md §0）。
+- **派生面**：bench 七个面改说「v1.8.0 该有一行、尚无——tag 之后测量」（`cli/src` 与 `core/app` 自 v1.7.4 起都动了，不再申报沿用），docs-facts `ver:ce#v` / `ver:pin#v`、RELEASE.md 两枚版本芯片、首页两块 roast、册 13 普查随祝福。
+- 门：主 check 918 / dedup 50 / scan 87 warn 0 fail（deadcode 0 / docdup 0 / erase 0 可擦 9 顾问），子仓 952 / 91 / 41 warn 0 fail（deadcode 0 / docdup 0 / erase 0 可擦 5 顾问）；lib 446 / it 470（18 ign）；`cabal test` 419 ok、clippy（cli 全目标 + gui `--locked`）+ fmt 清、四道 node 门 + bootstrap_e2e 17 态 PASS、`packaging.js --check` 清；提交前全量跑（release）首跑即绿：lib 446、it 470 绿 0 红 18 ign、corelink_deadline 1、daemon_conn_deadline 2。收尾链脱离跑的那一遍把 bootstrap_e2e 读成第 8 态红（「ce resolved a core other than the pinned path」，握手却答 ce-core 1.8.0）——不是产品：链脚本用裸 `bash` 起套件，cmd 起的 Git bash 里裸 `bash` 是 WSL 的，套件在 Linux 侧 `unset` 掉的 `CE_CORE_BIN` 仍留在 Windows 侧环境块里、经互操作原样交给 ce.exe，钉住的 `data8/ce-core` 路径于是被它盖过；同一套件在 Git bash 里（仓根、中立目录、链的原样参数各一次）与脱离跑改用 `"$BASH"` 后都 17 态 PASS，链脚本改按 `"$BASH"` 起子脚本。
+
 **无默认档位变更。** bench 入列规则加第三种情形：申报沿用（2026-09-19，用户裁「更新规则，如果核心部件没动，那该版本沿用先前的数值」）：
 
 - **规则本身一个字不动**。它按路径判「算不算新程序」——改到 `cli/src` 或 `core/app` 就该有一行——而七项指标计时的**正是这两处**。任何窄到能放过 v1.7.4（判决请求生产侧的一个小函数）的机器判据，同时也会放过真正让 `ce check` 变慢的改动。把规则拧窄到不再看见这一类，等于让它以后也看不见。
