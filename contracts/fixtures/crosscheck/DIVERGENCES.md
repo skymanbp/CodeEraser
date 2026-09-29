@@ -12,7 +12,7 @@
 | TS CC | lizard 1.23.0 | 22 | 13/22 | 9 条全归因为 lizard reader 缺陷（详下） |
 | Rust CC | rust-code-analysis 0.0.25（JSON 通路，harness 固化） | 322 | **322/322 (100%)** | ✅ 零分歧（harness 已随 M7.5 封册退役，复跑从 git 历史复活；同 span 闭包多重集合比较） |
 | Go CoC | gocognit | 32 非零 | 29/32 | 3 条归因保留（gocognit 的 else 块不提升嵌套，实验实锤，详下） |
-| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 + Java 9 行 + C 5 / C++ 8 / Lua 5 / R 4 行 | **37/37** | ✅ `cli/tests/it/sonar_whitepaper.rs` 与 `sonar_whitepaper_{java,c,cpp,lua,r}.rs`（页码内注，含 p.8 括号断链；四种新语言的移植与不可移植登记见下文「四种新语言的例题移植」） |
+| CoC 白皮书例题 | Sonar v1.7 原文页边判分 | 6 例题 + 递归锚 1 + Java 9 行 + C 5 / C++ 8 / Lua 5 / R 4 行 | **38/38** | ✅ 例题册 `contracts/fixtures/scan/whitepaper.ndjson`（页码在每行的 `why` 内注，含 p.8 括号断链）经两半读者：`cli/tests/it/sonar_whitepaper.rs`（Rust 事件 + 经核结清）与 `core/test/ScanEventsProps.hs`（Haskell 折叠，无解析器）；四种新语言的移植与不可移植登记见下文「四种新语言的例题移植」 |
 | CoC 递归增量 | 四语料重跑（新旧二进制同树） | 514 单位 | **0 条移动** | ✅ 既有对拍全部不受影响（2026-08-31，详见「递归增量」节） |
 | C CC | lizard 1.23.0 | 118 | **116/118** | 2 条归因保留（`default:`，D2；2026-09-24 计划 v2.30 步 2，详见 C / C++ 节） |
 | C++ CC | lizard 1.23.0 | 420 join（lizard 430 起始行 / ce 428 单位） | 394/420 | 26 条 + 两侧独有 18 条全归因：D1 20、D2 3、局部类 1 + 4、解析器恢复 1 + 14、lizard 三类缺陷 1 + 1 + 10 重复行（详见 C / C++ 节） |
@@ -96,7 +96,7 @@ Rust `break value` 不误计为 labeled jump。递归 +1 当时未实现，**已
 2026-08-31（计划 v2.23 步 4）补齐**，见下节。
 
 **四种新语言的例题移植（2026-09-28，计划 v2.30 步 6）**：白皮书例题按页边注逐值移植到 C / C++ / Lua / R
-（`cli/tests/it/sonar_whitepaper_{c,cpp,lua,r}.rs`，Java 版 `sonar_whitepaper_java.rs` 是引文原件）——C 5 行
+（步 7b ③ 起在例题册 `contracts/fixtures/scan/whitepaper.ndjson` 的 c / cpp / lua / R 行，Java 行是引文原件）——C 5 行
 （sumOfPrimes 以 `goto` 到外层循环体末尾的标签代 `continue OUT`、sequences、negated、overriddenSymbolFrom、
 toRegexp）、C++ 8 行（另有 getWords〔cc 5 = D2〕、myMethod〔单 catch〕、addVersion〔`synchronized` 作带锁卫的
 块〕）、Lua 5 行、R 4 行，22 行全过。Lua 与 R 的 toRegexp 把三元换成嵌套层 0 的 `if`（两语言没有条件运算符；
@@ -104,8 +104,8 @@ Lua 的 `a and b or c` 是两个算子，R 的 `ifelse` 是调用 D8），那一
 myMethod / myMethod2 / addVersion（无 try、无 lambda）、Lua 的 getWords / myMethod / addVersion（无 switch、
 `pcall` 是调用 D8）、R 的 sumOfPrimes / getWords / myMethod / addVersion（`next` / `break` 不带标签 D5、`switch`
 与 `tryCatch` 是调用 D8）、Lua 与 R 的 myMethod2（函数值是独立单元 D3，宿主 + lambda 的合计没有一个单元可落，
-拆分本身由各自电池的 units 行钉住）。cognitive.rs 两处泛化（else 加分改读「非 if 类、非扁平结点」、if 按精确表）
-对启动五语言零移动的证明在测试子仓 `it/coc_if_kinds_proof.rs`：十一套文法的 node-types 上逐种同判。
+拆分本身由各自电池的 units 行钉住）。步 6 在 Rust 走查器上做的两处泛化（else 加分改读「非 if 类、非扁平结点」、if 按精确表；
+步 7b ③ 起由事件流的 alternative 类别位与核 `CE.Scan.Complexity` 承担）对启动五语言零移动的证明在测试子仓 `it/coc_if_kinds_proof.rs`：十一套文法的 node-types 上逐种同判。
 
 ## 递归增量与它带来的系统性分歧（2026-08-31，计划 v2.23 步 4）
 
@@ -171,7 +171,7 @@ fn symlink<P: AsRef<Path>, Q: AsRef<Path>>(src: P, dst: Q) {
 ## C / C++ 对拍（2026-09-24，计划 v2.30 步 2；fixtures 见 SOURCES.md 的 c / cpp 行）
 
 对照物只有 lizard 1.23.0 的 CCN：C/C++ 没有认知复杂度对照物，CoC 的执行者是
-白皮书电池 `cli/tests/it/coc_c.rs`（每条 D 表立场各一行）与例题移植表 `sonar_whitepaper_{c,cpp}.rs`（步 6 提交 D）。join 键 = 文件 +
+白皮书电池 `cli/tests/it/coc_c.rs`（每条 D 表立场各一行）与例题册的 c / cpp 行（`contracts/fixtures/scan/whitepaper.ndjson`，步 6 提交 D 移植）。join 键 = 文件 +
 起始行；lizard 在同一起始行重复报出的两行算一个单位（见下）。复现：
 
 ```
@@ -330,7 +330,7 @@ PMD 2、lizard 与 ce 1），控制流条件之外的 `&&` / `||` 不计（`BagO
 ## Lua / R 对拍（2026-09-25，计划 v2.30 步 4；fixtures 见 SOURCES.md 的 lua / r 行）
 
 对照物是 lizard 1.23.0 的 CCN 与形参数：Lua 与 R 都没有认知复杂度对照物，CoC 的执行者是白皮书电池
-`cli/tests/it/coc_lua.rs` 与 `coc_r.rs`，以及例题移植表 `sonar_whitepaper_{lua,r}.rs`（步 6 提交 D）。R 原登记为「无外部对照」（D0）——钉版时核对 lizard 的 reader
+`cli/tests/it/coc_lua.rs` 与 `coc_r.rs`，以及例题册的 lua / R 行（`contracts/fixtures/scan/whitepaper.ndjson`，步 6 提交 D 移植）。R 原登记为「无外部对照」（D0）——钉版时核对 lizard 的 reader
 列表漏了 `lizard_languages/r.py`，步 4 对拍时发现并启用。join 键 = 文件 + 起始行：lizard 的 R reader
 把函数的结束行记在函数之后第一个代码记号所在的行（函数后隔几行空行与注释，结束行就落在下一个函数
 那一行），两侧只有起始行可比。复现：

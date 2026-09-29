@@ -54,6 +54,11 @@ data RowsReq = RowsReq
     -- groups rows by. Nothing = a client that closes for itself
     -- (legacy bytes: no `kept` key rides back).
     targetsOf :: Maybe [[Integer]]
+  , -- scan/1's events table (7.2.0, plan v2.30 step 7b ③): each
+    -- unit's structural events, keyed by its cognitive row, the
+    -- three complexity rows derived from them. Nothing = a client
+    -- that measured for itself (legacy bytes: no `derived` echo).
+    eventsOf :: Maybe [[Integer]]
   }
 
 -- | scan/1's rulepack channel (3.2.0), read off the SAME object: each
@@ -83,6 +88,7 @@ instance FromJSON RowsReq where
       <*> pure (KM.lookup "knobsFence" o)
       <*> o .:? "judgedMask"
       <*> o .:? "targets"
+      <*> o .:? "events"
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family

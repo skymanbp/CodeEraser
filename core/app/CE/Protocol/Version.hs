@@ -28,7 +28,10 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- same way: erase/1 reads the rows' `targets` and answers the closure
 -- as `kept` (CE.Erase.Cost.keptRows); structure/1 reads
 -- `patternShapes` and classifies the stems itself
--- (CE.Structure.Shape), echoing the row count it folded.
+-- (CE.Structure.Shape), echoing the row count it folded. Item 3
+-- does the same for the complexity rules: scan/1 reads each unit's
+-- `events` and answers the three numbers as `derived`
+-- (CE.Scan.Complexity), refusing a pre-judged row by name.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's

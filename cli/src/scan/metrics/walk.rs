@@ -1,7 +1,11 @@
-//! The one function-subtree walk the per-metric visitors share.
-//! Split to its own leaf in the headroom sprint: cyclo.rs importing
-//! it THROUGH the metrics hub made the module pair a cycle the
-//! graph axis itself billed on the self-scan.
+//! The one function-subtree walk every reader of a unit's own nodes
+//! shares: the event emitter (events.rs) descends through `measured`,
+//! and `own_nodes` serves the call-arc prover (scan/calls.rs) and the
+//! term bags (similar/bag.rs) — the two complexity walkers that read
+//! it retired into the core with plan v2.30 step 7b ③. Split to its
+//! own leaf in the headroom sprint: a walker importing it THROUGH the
+//! metrics hub made the module pair a cycle the graph axis itself
+//! billed on the self-scan.
 
 use crate::scan::spec::LangSpec;
 use tree_sitter::Node;
@@ -21,8 +25,8 @@ pub fn own_nodes<'t>(fn_node: Node<'t>, src: &[u8], spec: &LangSpec) -> Vec<Node
 /// A node's children minus those reached through one of the spec's
 /// opaque fields (a `#if` condition): the parser types them as
 /// expressions, the metrics read them as text. The walk's one throat
-/// for children, so the cognitive walker and own_nodes cannot differ
-/// on what a function contains.
+/// for children, so the event emitter and own_nodes cannot differ on
+/// what a function contains.
 pub fn measured<'t>(node: Node<'t>, spec: &LangSpec) -> Vec<Node<'t>> {
     let opaque: Vec<&str> = spec
         .opaque_fields

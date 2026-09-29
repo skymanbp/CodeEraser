@@ -11,7 +11,7 @@ pub mod callees;
 pub mod calls;
 pub mod chunk;
 pub mod classes;
-pub mod coc;
+pub mod complexity;
 pub mod declarator;
 pub mod functions;
 pub mod globs;
@@ -85,11 +85,13 @@ type Judged = (
 );
 
 /// A measured tree with the core's verdict on it, and the ONE road a
-/// cognitive value takes: the recursion increment is settled here and
-/// nowhere else, so `rows` below already carry the numbers the core
-/// judged with. `measure` alone still answers the pre-cycle number,
-/// which is exactly what the structure family — the one reader that
-/// never looks at complexity — should keep getting.
+/// complexity value takes: the three numbers are derived from each
+/// unit's structural events and the recursion increment is charged
+/// here and nowhere else (plan v2.30 step 7b ③), so `rows` below
+/// already carry the numbers the core judged with. `measure` alone
+/// answers no complexity at all — its units read 0 there — which
+/// is exactly what the structure family, the one reader that never
+/// looks at complexity, should keep getting.
 pub struct Settled {
     pub config: crate::config::Config,
     pub files: Vec<FileMetrics>,
@@ -106,60 +108,101 @@ pub struct Settled {
 pub fn settle(root: &Path, core: &str) -> Result<Settled> {
     let (config, mut files) = measure(root)?;
     let blocks = report::blocks_of(&files);
-    // the call table (6.5.0): arcs this side proved inside one parse
-    // unit, projected onto row indices — the core finds the cycles
-    let calls = coc::arcs(&files, &blocks);
+    // the call table (6.5.0): the arcs this side proved inside one
+    // parse unit, on row indices — the core finds the cycles; the
+    // events table (7.2.0): each unit's classified structure, keyed
+    // by its cognitive row — the core folds the three numbers
+    let calls = complexity::arcs(&files, &blocks);
+    let events = complexity::events(&files, &blocks);
     let rows = report::rows_of(&files);
-    let grades = wire::grade_rows(&config.thresholds)?;
-    // The facts road (2.30.0, ADR-008 slice 14): the fn-naming
-    // verdict never crosses — every code-6 row carries 0, and its
-    // naming facts ride the aligned table (one row per function, in
-    // the same files×functions order rows_of walks the code-6 rows).
-    let wire_rows: Vec<[u64; 2]> = rows
-        .iter()
-        .map(|r| [r.code, if r.code == 6 { 0 } else { r.value as u64 }])
-        .collect();
-    let naming: Vec<[i64; 5]> = files
-        .iter()
-        .flat_map(|f| &f.functions)
-        .map(|f| f.naming)
-        .collect();
-    // The rulepack channel (3.2.0): each row's class, assigned here
-    // where its path is still known, beside the per-class overrides;
-    // an unclassed repo sends neither and its bytes never move.
-    let classes = classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
-    let row_classes: Vec<u64> = rows.iter().map(|r| classes.class_of(&r.file)).collect();
-    let overrides = wire::class_grade_rows(&config.rules, &config.thresholds);
-    // the fence (6.4.0, O33): the scan judges under the config the
-    // committed baseline was established with, or names the drift —
-    // a `[thresholds]` edit used to move the scan gate in silence
-    let fence = crate::score::baseline::fence_status(root, &config)?;
+    let sent = wire_rows(&rows);
+    let t = tables(root, &config, &files, &rows)?;
     let req = wire::ScanRequest {
-        rows: &wire_rows,
-        grades: &grades,
-        naming: &naming,
-        row_classes: classes.declared().then_some(row_classes.as_slice()),
-        overrides: &overrides,
-        fence: fence.wire(),
+        rows: &sent,
+        grades: &t.grades,
+        naming: &t.naming,
+        row_classes: t.classes.declared().then_some(t.row_classes.as_slice()),
+        overrides: &t.overrides,
+        fence: t.fence,
         blocks: &blocks,
         calls: &calls,
+        events: &events,
     };
-    let (levels, fail, failed, bumped) = wire::judge(core, &req)?;
-    coc::apply(&mut files, &blocks, &bumped)?;
-    // rebuilt AFTER the increment: these are the values that were
+    let j = wire::judge(core, &req)?;
+    complexity::apply(&mut files, &blocks, &j.derived, &j.bumped)?;
+    // rebuilt AFTER the derivation: these are the values that were
     // graded, so the report, the mirror and the core read one number
     let rows = report::rows_of(&files);
     Ok(Settled {
         config,
         files,
-        classes,
+        classes: t.classes,
         rows,
-        grades,
-        row_classes,
-        overrides,
-        levels,
-        fail,
-        failed,
+        grades: t.grades,
+        row_classes: t.row_classes,
+        overrides: t.overrides,
+        levels: j.levels,
+        fail: j.fail,
+        failed: j.failed,
+    })
+}
+
+/// The rows as they cross — the facts roads: the fn-naming verdict
+/// never does (2.30.0, ADR-008 slice 14) — every code-6 row carries 0
+/// and its naming facts ride the aligned table, one row per function
+/// in the files×functions order rows_of walks the code-6 rows — and
+/// neither do the three complexity numbers (7.2.0): codes 3..5 carry
+/// 0 and the core refuses a pre-judged value there by name.
+fn wire_rows(rows: &[report::Row]) -> Vec<[u64; 2]> {
+    rows.iter()
+        .map(|r| {
+            [
+                r.code,
+                if (3..=6).contains(&r.code) {
+                    0
+                } else {
+                    r.value as u64
+                },
+            ]
+        })
+        .collect()
+}
+
+/// The tables a judged scan sends beside its rows, each built where
+/// its facts are still known: the grade table ce.toml speaks, the
+/// naming facts aligned to the code-6 rows (2.30.0), the rulepack
+/// channel (3.2.0) — each row's class beside the per-class overrides,
+/// neither riding on an unclassed repo — and the fence (6.4.0, O33)
+/// the scan judges under: the config the committed baseline was
+/// established with, or the drift by name (a `[thresholds]` edit used
+/// to move the scan gate in silence).
+struct Tables {
+    classes: classes::Classes,
+    grades: Vec<[u64; 3]>,
+    naming: Vec<[i64; 5]>,
+    row_classes: Vec<u64>,
+    overrides: Vec<[u64; 4]>,
+    fence: serde_json::Value,
+}
+
+fn tables(
+    root: &Path,
+    config: &crate::config::Config,
+    files: &[FileMetrics],
+    rows: &[report::Row],
+) -> Result<Tables> {
+    let classes = classes::Classes::compile(root, &config.rules).map_err(anyhow::Error::msg)?;
+    Ok(Tables {
+        grades: wire::grade_rows(&config.thresholds)?,
+        naming: files
+            .iter()
+            .flat_map(|f| &f.functions)
+            .map(|f| f.naming)
+            .collect(),
+        row_classes: rows.iter().map(|r| classes.class_of(&r.file)).collect(),
+        overrides: wire::class_grade_rows(&config.rules, &config.thresholds),
+        fence: crate::score::baseline::fence_status(root, config)?.wire(),
+        classes,
     })
 }
 
@@ -240,19 +283,19 @@ fn measure_functions(
     units
         .into_iter()
         .map(|unit| {
-            let cog = metrics::cognitive::measure(unit.node, src, sp);
             let naming = metrics::naming::facts(language, sp.name_style, &unit.name);
             FnMetrics {
                 name_ok: metrics::naming::conforms(naming),
                 naming,
+                events: metrics::events::emit(unit.node, src, sp),
                 name: unit.name,
                 start_line: unit.start_line,
                 end_line: unit.end_line,
                 lines: unit.end_line - unit.start_line + 1,
                 params: unit.params,
-                cyclomatic: metrics::cyclo::measure(unit.node, src, sp),
-                cognitive: cog.score,
-                max_nesting: cog.max_nesting,
+                cyclomatic: 0,
+                cognitive: 0,
+                max_nesting: 0,
             }
         })
         .collect()

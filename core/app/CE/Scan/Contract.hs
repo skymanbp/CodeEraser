@@ -15,6 +15,7 @@
 module CE.Scan.Contract (violation) where
 
 import CE.Scan.Cycles (callBattery)
+import CE.Scan.Events (eventBattery)
 import CE.Scan.Fence (fenceOffence)
 import CE.Wire (RowsReq (..), Rulepack (..), rowCheck, tableOffence)
 import CE.Wire.Mask (judgedLang, maskOffence)
@@ -40,6 +41,7 @@ violation req =
     , tableOffence "grade" (take 1) gradeShape (gradesOf req)
     , namingBattery req
     , callBattery (rowsOf req) (callsOf req)
+    , eventBattery (rowsOf req) (eventsOf req)
     , classBattery req
     , fenceOffence (fenceOf req)
     ]

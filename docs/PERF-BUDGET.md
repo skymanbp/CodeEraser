@@ -329,6 +329,19 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 `CARGO_TARGET_DIR=<lane>/rel-head cargo build --release --locked --manifest-path cli/Cargo.toml`，
 再读 `<lane>/rel-*/release/ce.exe` 与 `<lane>/rel-head/release/deps/libtree_sitter_*.rlib` 的字节数。
 
+## v2.30 步 7b ③ 复杂度规则进核 A/B（实测 2026-09-29，release，同一台机、同一棵树、同一窗口：树 = c60e6a97 的干净 worktree〔子模块就位〕，A = c60e6a97 的 ce + 核〔三数在 Rust 走查器里算〕，B = 本批的 ce + 核〔Rust 只送事件流，核折三数〕；各臂预热一跑后 ABAB ×5，`bash` `EPOCHREALTIME` 夹整个进程、含进程起；量前无 cargo / 对拍进程）
+
+口径：`ce scan --format json .` 与 `ce check --format json .` 暖跑（索引已建、核复用系统缓存），中位数（最小–最大）。两坐：首坐是核的事件契约首稿，第二坐在契约索引之后（见下）。
+
+| 面 | A（旧，首坐） | B（首坐，契约首稿） | A（第二坐） | B（第二坐，契约索引后） | 状态 |
+|---|---|---|---|---|---|
+| `ce scan .` | 1.40 s（1.05–1.52） | 3.86 s（3.60–4.10） | 1.17 s（1.05–1.23） | 1.12 s（1.03–1.14） | ✅ 打平 |
+| `ce check .` | 6.23 s（5.30–6.77） | 8.57 s（8.02–8.71） | 5.42 s（5.18–5.72） | 5.96 s（5.38–6.17） | 记录：+0.5 s 中位，在首坐 A 自己的离散之内 |
+
+- 首坐的 +2.4 s 全在核：把自仓的真请求录下来（一个代核的记流壳，`CE_CORE_BIN` 指向它、它把每行转给真核；35,067 行 / 8,276 事件 / 2,139 弧 / 473 KB）单喂核 ×3——带事件表 2.60–2.65 s、去掉事件表 0.25–0.30 s。`CE.Scan.Events` 首稿的契约检查对每一行读邻位、对每个事件读所在行，都从列表头 `drop` 过去，按行数平方付钱。改为一次建 `IntMap` 索引（码按行下标）后同一请求 0.32–0.35 s，应答逐字节同，`cabal test` PASS。
+- 事件路留下的固定成本 = 事件表的编码、核的解码与折叠：自仓请求核侧 0.32 − 0.26 ≈ 0.06 s；`ce scan` 两臂第二坐打平（差 0.05 s 在噪声内）。
+- 复跑：两臂各自 `cargo build --release --locked` 到独立 target 目录（`--manifest-path <树>/cli/Cargo.toml --target-dir <lane>/…`），`CE_CORE_BIN` 各指自己的核；同一棵干净 worktree 里 `rm -rf .ce` 后各臂预热一跑，再 ABAB ×5 取中位。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

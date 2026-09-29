@@ -576,4 +576,15 @@ entry_globs = [
 # parallel lists, the grown battery lists as above. Row set diffed
 # against the HEAD (e1a6b520) run: six rows gone, none new. Measured
 # on the formatted tree.
-budget = 51
+# 51 -> 50 (v2.30 step 7b (3), the complexity rules into the core): one
+# row left with the restatement it was made of, none bought. Scan.hs's
+# reply rhymed with Audit.hs's (51 tokens: the same encode-and-object
+# head over the same first keys); the scan reply now takes its echo as
+# one record and answers the named conditions through a helper, so the
+# run is not there to rhyme. The three rows the step first landed went
+# before the count was read: the event-bit table (a `1 << n` line per
+# name, a clone of itself twice) is a `bits!` list, and the derived
+# and cocBumped readers (82 tokens of the same from_value-then-lift
+# body) are one `lifted`. Row set diffed against the HEAD (c60e6a97)
+# worktree: that row gone, none new. Measured on the formatted tree.
+budget = 50

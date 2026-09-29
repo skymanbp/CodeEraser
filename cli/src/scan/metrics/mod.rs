@@ -1,9 +1,9 @@
 //! Metric data model + shared AST walking helpers.
 
-pub mod cognitive;
-pub mod cyclo;
+pub mod events;
 pub mod naming;
 pub mod size;
+pub mod vocab;
 pub mod walk;
 
 pub use walk::own_nodes;
@@ -17,6 +17,11 @@ pub struct FnMetrics {
     pub end_line: usize,
     pub lines: usize,
     pub params: usize,
+    /// The three complexity numbers are the core's (plan v2.30 step
+    /// 7b ③): `measure` leaves them 0 and `scan::settle` writes
+    /// the values the core derived from `events` and judged with, so a
+    /// measured-only tree reports no complexity at all rather than a
+    /// second reading of it.
     pub cyclomatic: u32,
     pub cognitive: u32,
     pub max_nesting: u32,
@@ -29,6 +34,12 @@ pub struct FnMetrics {
     /// not report vocabulary (schema §7.1 unchanged).
     #[serde(skip)]
     pub naming: [i64; 5],
+    /// The structural event stream the core folds the three numbers
+    /// from (stated by metrics::events in metrics::vocab's terms).
+    /// Skipped: wire shape, not report vocabulary (schema §7.1
+    /// unchanged).
+    #[serde(skip)]
+    pub events: Vec<vocab::Event>,
 }
 
 #[derive(Debug, Serialize)]

@@ -604,8 +604,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|d5dc8ea61e1a0a65|0": {
     "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 216,
-    "end": 217,
+    "line": 217,
+    "end": 218,
     "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_lua.rs|00c6e85335b2fa43|0": {
@@ -2230,8 +2230,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Wire.hs|6c6e6a1e762976b9|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 187,
-    "end": 200,
+    "line": 193,
+    "end": 206,
     "text": "-- | decode → cap check (a complete degraded reply, never a"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../ce.toml|509b429c9ce82c99|0": {
@@ -5086,8 +5086,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Wire.hs|cb5765da5377654d|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 202,
-    "end": 207,
+    "line": 208,
+    "end": 213,
     "text": "-- | Strictly-ascending row check with the family's label vocabulary"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/test/GraphWireProps.hs|13d8ff795a63a163|0": {
@@ -6889,14 +6889,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|3511fafd14f9a99b|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 154,
-    "end": 157,
+    "line": 156,
+    "end": 159,
     "text": "c <-\ncheck\n\"floor tracks the site cost (ablation table)\""
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/Spec.hs|6688a4e51b1f09e6|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 152,
-    "end": 153,
+    "line": 154,
+    "end": 155,
     "text": "a <- check \"cross floor derives to 2\" (destFloor == 2)"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../DEVELOPMENT_PLAN.md|13b48102ab91505e|0": {
@@ -7159,12 +7159,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|25ec30a05fd96d35|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 145,
+    "line": 151,
     "text": "knobbedRows name cap rowShape knobShape deg jud proto ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|27cf496b88cbf446|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 151,
+    "line": 157,
     "text": ", tableOffence \"knob\" (take 1) knobShape (knobsOf req)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/test/TrendProps.hs|05522fba8966ee03|0": {
@@ -7820,31 +7820,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 567,
-    "end": 569,
+    "line": 442,
+    "end": 444,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 563,
+    "line": 438,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 555,
-    "end": 569,
+    "line": 430,
+    "end": 444,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 558,
-    "end": 559,
+    "line": 433,
+    "end": 434,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 558,
-    "end": 562,
+    "line": 433,
+    "end": 437,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8559,8 +8559,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 295,
-    "end": 297,
+    "line": 170,
+    "end": 172,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9267,8 +9267,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Wire.hs|7ce9998aa97b3b95|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 126,
-    "end": 151,
+    "line": 132,
+    "end": 157,
     "text": "tableCap :: Integer -> RowsReq -> Bool"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/test/TombstoneProps.hs|897b6f6807378652|0": {

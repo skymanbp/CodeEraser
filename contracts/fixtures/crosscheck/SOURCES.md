@@ -70,7 +70,7 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 
 - lizard 1.23.0（CC：python/typescript/rust 兜底，C/C++、java、lua 与 r 的对照物——
   C/C++、Lua、R 没有认知复杂度对照物，CoC 只对白皮书电池 `cli/tests/it/coc_c.rs`、
-  `coc_lua.rs`、`coc_r.rs` 与例题移植表 `sonar_whitepaper_{c,cpp,lua,r}.rs`（步 6 提交 D）。它的 R reader（`lizard_languages/r.py`）是步 4 对拍时发现的：
+  `coc_lua.rs`、`coc_r.rs` 与例题册 `contracts/fixtures/scan/whitepaper.ndjson` 的 c / cpp / lua / R 行（步 6 提交 D 移植，步 7b ③ 成册）。它的 R reader（`lizard_languages/r.py`）是步 4 对拍时发现的：
   设计册原把 R 记作「无外部对照」（D0），钉版时核对 reader 列表漏了它）
 - PMD 7.27.0（CoC：java，`category/java/design.xml/CognitiveComplexity` 设
   `reportLevel` 为 1，报出每个非零方法；跑在 Temurin JDK 25.0.4.1 上；规则集与
@@ -81,7 +81,7 @@ git ls-files '*.py' | ?{ $_ -notmatch 'test|_test\.|\.d\.ts$|testdata' } |
 - rust-code-analysis-cli 0.0.25，`cargo install --locked`（CC：rust；
   不带 --locked 会因新依赖编译失败——安装须知）
 
-## CoC 规范原文钉定（cli/tests/it/sonar_whitepaper.rs 与 sonar_whitepaper_{java,c,cpp,lua,r}.rs 判分依据）
+## CoC 规范原文钉定（例题册 contracts/fixtures/scan/whitepaper.ndjson 与它的两半读者 cli/tests/it/sonar_whitepaper.rs / core/test/ScanEventsProps.hs 的判分依据）
 
 - SonarSource《Cognitive Complexity》白皮书 **v1.7（2023-08-29）**，
   <https://www.sonarsource.com/docs/CognitiveComplexity.pdf>，

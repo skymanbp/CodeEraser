@@ -16,8 +16,8 @@
 //!   binding (HAS a `name` field), a do-statement `x <- act`, and a
 //!   pattern bind (both name-less) — hence the fn_required_fields gate
 //! - `infix` carries fields left_operand/operator/right_operand (the
-//!   `operator` field is what cyclo/cognitive match on; the operand
-//!   alias is handled in cognitive.rs)
+//!   `operator` field is what the event emitter matches on; the
+//!   operand alias is handled in metrics/events.rs::collect_in_order)
 //! - guard alternatives are `guards` nodes; each condition inside is
 //!   a `boolean` / `pattern_guard` / `let` qualifier
 //! - if-then-else is the `conditional` EXPRESSION — the ternary

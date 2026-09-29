@@ -204,7 +204,8 @@ pub static GO: LangSpec = LangSpec {
     ],
     if_kinds: &["if_statement"],
     // Go has no else node kind: else lives in the if's `alternative`
-    // field and is scored by the field-aware logic in cognitive.rs.
+    // field, which the emitter states as the if's alternative class
+    // and the core scores (CE.Scan.Complexity).
     coc_flat_kinds: &[],
     coc_nest_only_kinds: &["func_literal"],
     coc_operators: &["&&", "||"],

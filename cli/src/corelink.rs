@@ -32,6 +32,10 @@ use std::process::{Child, Stdio};
 /// reads the closure back as `kept`; `structure.request` carries
 /// `patternShapes` and reads the fold's row count back — each echo
 /// pinned by its family, each absence refused as a pre-7.2.0 core.
+/// Item 3 of that step sends the complexity rules the same way:
+/// `scan.request` carries each unit's structural `events` and reads
+/// the three numbers back as `derived`; the walkers that computed
+/// them on this side are gone.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted

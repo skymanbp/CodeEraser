@@ -5,7 +5,8 @@
 -- | scan.request handler (ADR-008 P3): decode measurement rows
 -- [code, value] plus optional grade overrides [code, warn, fail]
 -- and the optional naming-facts table (2.30.0, aligned to the
--- code-6 rows), enforce the row cap (over-cap = a complete degraded
+-- code-6 rows) and events table (7.2.0, each unit's structure, from
+-- which its three complexity rows are derived), enforce the row cap (over-cap = a complete degraded
 -- reply that FAILS — the P1 posture), machine-check the boundary
 -- contract in request order (CE.Scan.Contract, split out at the
 -- 300-line wall) — then grade every row through the ONE graded
@@ -20,6 +21,7 @@ module CE.Scan (respond) where
 import CE.Scan.Contract (violation)
 import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
 import CE.Scan.Cycles (withCycles)
+import CE.Scan.Events (derivedRows, withEvents)
 import CE.Scan.Fence (Fence (..), drifted, readFence)
 import CE.Wire (RowsReq (..), Rulepack (..), rowsFamily)
 import Data.Aeson
@@ -32,11 +34,12 @@ import Data.Maybe (fromMaybe, isJust)
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto =
-  rowsFamily "scan" overCap violation (\req -> reply proto req [] [] True) (judged proto)
+  rowsFamily "scan" overCap violation (\req -> reply proto req (Echo [] [] []) True) (judged proto)
 
 -- | Every request dimension counts toward the cap (review C15: the
 -- declared ceiling missed the second dimension; the third arrived
--- with 2.30.0, the fourth and fifth with the 3.2.0 rulepack tables).
+-- with 2.30.0, the fourth and fifth with the 3.2.0 rulepack tables,
+-- the seventh with the 7.2.0 events table).
 overCap :: RowsReq -> Bool
 overCap req = toInteger (sum dims) > scanRowCap
  where
@@ -48,6 +51,7 @@ overCap req = toInteger (sum dims) > scanRowCap
     , length (overridesOf rp)
     , maybe 0 length (rowClassesOf rp)
     , maybe 0 length (callsOf req)
+    , maybe 0 length (eventsOf req)
     ]
 
 -- | Every row through the ONE graded table — its class's line where
@@ -55,16 +59,17 @@ overCap req = toInteger (sum dims) > scanRowCap
 -- line — with the code-6 values derived from the facts when they
 -- ride.
 judged :: String -> RowsReq -> B8.ByteString
-judged proto req = reply proto req (zipWith (grade eff over) classes rows) moved False
+judged proto req = reply proto req (Echo (zipWith (grade eff over) classes rows) moved (derivedRows rows)) False
  where
   rp = rulepackOf req
   eff = effective (gradesOf req)
   over = M.fromList [((c, code), (w, f)) | [c, code, w, f] <- overridesOf rp]
   classes = fromMaybe (repeat 0) (rowClassesOf rp)
-  -- the two derivations that produce EFFECTIVE values, in the order
-  -- they compose: the naming facts settle each code-6 row, then the
-  -- call cycles raise the cognitive rows they contain
-  (rows, moved) = withCycles (callsOf req) (withFacts (namingOf req) (rowsOf req))
+  -- the three derivations that produce EFFECTIVE values, in the order
+  -- they compose: the events fold each unit's three complexity rows,
+  -- the naming facts settle each code-6 row, then the call cycles
+  -- raise the cognitive rows they contain
+  (rows, moved) = withCycles (callsOf req) (withFacts (namingOf req) (withEvents (eventsOf req) (rowsOf req)))
 
 -- | The naming table as sent, [] when absent — the cap's view; road
 -- selection stays on namingOf's Maybe.
@@ -108,29 +113,27 @@ grade table over cls row = case row of
   [code, v] | Just wf <- lookup code table -> gradeWith (M.findWithDefault wf (cls, code) over) v
   _ -> error "row shape enforced by violation"
 
+-- | What a judged reply echoes beside its grades: the levels, the
+-- cognitive rows the recursion increment raised (6.5.0) and the
+-- derived complexity rows (7.2.0) — all empty on the degraded face.
+data Echo = Echo [Integer] [[Integer]] [[Integer]]
+
 -- | levels ride positionally; the effective grade table is echoed
 -- whole so the Rust client asserts the round trip (the P4 knob-echo
 -- pattern, table form). A degraded reply carries fail=true — a gate
 -- that could not judge must never pass, said by the core. Since
--- 6.4.0 (O33) the fail bit is the disjunction of NAMED conditions
--- and the names ride as `failed` exactly when `knobsFence` rode —
--- `hard_line` (a row at the FAIL tier), `knobs_digest` (the fence
--- pair disagrees), `degraded` (which stands alone, the verdict
--- tooLarge posture: nothing else was judged). A legacy request
--- keeps its bytes: the same bit, no names.
-reply :: String -> RowsReq -> [Integer] -> [[Integer]] -> Bool -> B8.ByteString
-reply proto req levels moved degraded =
+-- 6.4.0 (O33) the fail bit is the disjunction of the NAMED
+-- conditions (`conditions`), which ride as `failed` exactly when
+-- `knobsFence` rode; a legacy request keeps its bytes: the same bit,
+-- no names.
+reply :: String -> RowsReq -> Echo -> Bool -> B8.ByteString
+reply proto req (Echo levels moved derived) degraded =
   BL.toStrict . encode . object $
     [ "proto" .= proto
     , "type" .= ("scan.result" :: String)
     , "id" .= rowsId req
     , "levels" .= levels
-    , "counts"
-        .= object
-          [ "rows" .= length (rowsOf req)
-          , "warns" .= count 1
-          , "fails" .= count 2
-          ]
+    , "counts" .= object ["rows" .= length (rowsOf req), "warns" .= count 1, "fails" .= count 2]
     , "fail" .= any snd conds
     , -- a degraded reply echoes the DEFAULTS: its overrides were
       -- never validated, and an unvalidated table must not be
@@ -147,21 +150,33 @@ reply proto req levels moved degraded =
       <> ["gradeOverrides" .= overrides | not degraded && not (null overrides)]
       -- the recursion increment echoes what it raised, and only when
       -- the arcs rode (6.5.0): [rowIndex, effectiveValue], ascending
-      -- — the measuring side renders the judged number without ever
-      -- deriving the cycle, or the increment, for itself
       <> ["cocBumped" .= moved | not degraded && isJust (callsOf req)]
-      -- the judged-language mask echoes exactly when it rode and was
-      -- judged with (7.2.0): the client pins it like the grade table;
-      -- a legacy or degraded reply keeps its byte shape
+      -- the judged-language mask echoes exactly when it rode (7.2.0):
+      -- the client pins it like the grade table
       <> ["judgedMask" .= m | not degraded, Just m <- [maskOf req]]
+      -- the derived complexity rows echo exactly when the events rode
+      -- (7.2.0): [rowIndex, value] for every cyclomatic, cognitive and
+      -- nesting row, post recursion — the measuring side renders the
+      -- numbers without deriving one
+      <> ["derived" .= derived | not degraded, isJust (eventsOf req)]
  where
   overrides = overridesOf (rulepackOf req)
   count l = length (filter (== l) levels)
-  -- validated by fenceOffence before any reply is judged; the
-  -- degraded reply reads it too, and a malformed pair on that road
-  -- reads as unfenced — nothing was judged, `degraded` names why
-  fence = either (const Unfenced) id . readFence <$> fenceOf req
-  conds :: [(String, Bool)]
-  conds
-    | degraded = [("degraded", True)]
-    | otherwise = [("hard_line", count 2 > 0), ("knobs_digest", maybe False drifted fence)]
+  fence = fenced req
+  conds = conditions fence levels degraded
+
+-- | The fence as sent (6.4.0): validated by fenceOffence before any
+-- reply is judged; the degraded reply reads it too, and a malformed
+-- pair on that road reads as unfenced — nothing was judged,
+-- `degraded` names why.
+fenced :: RowsReq -> Maybe Fence
+fenced req = either (const Unfenced) id . readFence <$> fenceOf req
+
+-- | The named conditions the fail bit is the disjunction of (6.4.0,
+-- O33): `hard_line` (a row at the FAIL tier), `knobs_digest` (the
+-- fence pair disagrees), `degraded` (which stands alone, the verdict
+-- tooLarge posture: nothing else was judged).
+conditions :: Maybe Fence -> [Integer] -> Bool -> [(String, Bool)]
+conditions _ _ True = [("degraded", True)]
+conditions fence levels False =
+  [("hard_line", any (== 2) levels), ("knobs_digest", maybe False drifted fence)]

@@ -21,7 +21,7 @@
 | D8 | `bind` 三义性 | 具名 bind（顶层/where/let）是独立单元（Rust closure 先例）；do 语句 `x <- act` 与模式绑定**不是**（name 门控）；箭头类型 `A -> B` 的 kind 也是 `function`（电池抓获：三参签名曾铸出三个伪单元）同受 name 门控 | —（无条款） | main 行 fns 1；p/where 行 fns 2 |
 | D9 | 列表推导 | `generator` 与过滤 `boolean` 计 CC（真分支路径）、不计 CoC（声明式无嵌套代价） | Python for_in_clause/if_clause 先例（M1 立场） | spec_hs cc_kinds（电池未逐钉，M1 Python 行同立场） |
 | D10 | `multi_way_if` | 按 case 嵌套（+1 带罚），臂内守卫走 D1 | p.10 switch 类比 | spec_hs coc_nesting（结构探针实证 match/guards 形） |
-| D11 | 关键字 token 撞名 | 该文法 anon 关键字 token 与结构结点同 kind 名（`case`）：度量步进器只对 **named** 结点做表匹配——对既有五语言零语义变化（其表全用长名，由既有电池同批复验绿证明） | —（文法事实） | cyclo.rs/cognitive.rs 守卫 + 三电池同批绿 |
+| D11 | 关键字 token 撞名 | 该文法 anon 关键字 token 与结构结点同 kind 名（`case`）：度量步进器只对 **named** 结点做表匹配——对既有五语言零语义变化（其表全用长名，由既有电池同批复验绿证明） | —（文法事实） | 事件发射器 `metrics/events.rs` 只访问 named 结点（步 7b ③ 前是 cyclo.rs/cognitive.rs 的守卫）+ 三电池同批绿 |
 | D12 | 命名规范 | camelCase → MixedCaps 检查（撇号 `'` 无下划线不受罚） | —（社区惯例） | spec_hs name_style |
 
 ## 范围声明

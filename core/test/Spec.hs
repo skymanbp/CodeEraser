@@ -28,6 +28,7 @@ import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
 import qualified ScanCyclesProps
+import qualified ScanEventsProps
 import qualified ScanProps
 import qualified StructureModularityProps
 import qualified StructureProps
@@ -100,6 +101,7 @@ batteries =
   , JoinProps.battery
   , ScanProps.battery
   , ScanCyclesProps.battery
+  , ScanEventsProps.battery
   , StructureProps.battery
   , StructureModularityProps.battery
   , TrendProps.battery

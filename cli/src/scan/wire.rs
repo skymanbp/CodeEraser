@@ -10,7 +10,11 @@
 //! facts cross the wire; subjects, names and paths never do
 //! (§5.9.2 index privacy). Since 7.2.0 every request also carries
 //! `judgedMask` — the judged-language set the naming rows' codes are
-//! checked against, echoed back and pinned here like the grade table.
+//! checked against, echoed back and pinned here like the grade table —
+//! and `events`, each unit's structural event stream (plan v2.30 step
+//! 7b ③): the three complexity rows cross as 0 and come back derived,
+//! so the numbers the report renders are the core's, never a second
+//! reading of the rules here.
 
 use super::chunk;
 use crate::config::{RulesCfg, Thresholds};
@@ -24,9 +28,18 @@ pub const CAP: &str = "scan/1";
 pub const SCAN_ROW_CAP: usize = 524288;
 
 /// One judged scan: the levels positionally, the fail bit, the named
-/// conditions it is the disjunction of, and the cognitive rows the
-/// recursion increment raised (6.5.0) as [rowIndex, effectiveValue].
-pub type Judgment = (Vec<u8>, bool, Vec<String>, Vec<[u64; 2]>);
+/// conditions it is the disjunction of, the three complexity rows of
+/// every unit as the core derived and judged them (7.2.0, `derived`:
+/// [rowIndex, value], ascending) and the cognitive rows the recursion
+/// increment raised (6.5.0, `cocBumped`: [rowIndex, effectiveValue]).
+#[derive(Default)]
+pub struct Judgment {
+    pub levels: Vec<u8>,
+    pub fail: bool,
+    pub failed: Vec<String>,
+    pub derived: Vec<[u64; 2]>,
+    pub bumped: Vec<[u64; 2]>,
+}
 
 /// The grade rows ce.toml speaks: all seven codes every time, warn
 /// and fail per row (fail 0 = no hard line), straight from
@@ -115,8 +128,14 @@ pub struct ScanRequest<'a> {
     /// unit a chunk boundary must fall between, so no call arc is
     /// ever cut in half.
     pub blocks: &'a [usize],
-    /// The call arcs as global row indices (6.5.0, coc::arcs).
+    /// The call arcs as global row indices (6.5.0, complexity::arcs).
     pub calls: &'a [[u64; 2]],
+    /// Each unit's structural events keyed by its cognitive row
+    /// (7.2.0, complexity::events): `[row, seq, parent, pos, flags,
+    /// aux, op…]`, ascending by (row, seq). Sent on every request —
+    /// the key's presence puts every unit on the derived road, a
+    /// unit without structure included.
+    pub events: &'a [Vec<i64>],
 }
 
 /// Chunked scan judging over ONE link (review C5: the single-request
@@ -132,71 +151,88 @@ pub struct ScanRequest<'a> {
 /// canonical order, and the fail bit is their disjunction.
 pub fn judge(core: &str, r: &ScanRequest) -> Result<Judgment> {
     let mut link = crate::lockstep::open_family(core, CAP)?;
-    let (mut levels, mut held) = (Vec::new(), std::collections::BTreeSet::new());
-    let mut bumped = Vec::new();
+    let mut j = Judgment::default();
+    let mut held = std::collections::BTreeSet::new();
     let reserved = r.grades.len() + r.overrides.len();
     for c in chunk::plan(r, SCAN_ROW_CAP - reserved)? {
-        let mut body = json!({
-            "rows": c.rows, "grades": r.grades, "naming": c.naming, "knobsFence": r.fence,
-            "judgedMask": crate::scan::lang::Lang::judged_mask(),
-        });
-        // the optional tables ride only when they carry something: an
-        // absent key and an empty one ask the core different questions
-        let optional = [
-            (!c.calls.is_empty()).then(|| ("callEdges", json!(c.calls))),
-            r.row_classes
-                .map(|classes| ("rowClasses", json!(&classes[c.span.clone()]))),
-            (!r.overrides.is_empty()).then(|| ("gradeOverrides", json!(r.overrides))),
-        ];
-        for (key, table) in optional.into_iter().flatten() {
-            body[key] = table;
-        }
-        let reply = link.request("scan", body).map_err(anyhow::Error::msg)?;
+        let reply = link
+            .request("scan", request_body(r, &c))
+            .map_err(anyhow::Error::msg)?;
         ensure!(
             reply["degraded"] == json!(false),
             "core degraded a chunk-sized request ({}) — cap mirror drift (scan/wire.rs vs Scan/Cost.hs)",
             reply["reason"]
         );
         assert_echo(&reply, r)?;
-        let chunk_levels: Vec<u8> =
-            serde_json::from_value(reply["levels"].clone()).context("levels")?;
-        ensure!(
-            chunk_levels.len() == c.rows.len(),
-            "core sent {} levels for {} rows",
-            chunk_levels.len(),
-            c.rows.len()
-        );
-        levels.extend(chunk_levels);
+        j.levels.extend(levels_of(&reply, c.rows.len())?);
         held.extend(failed_of(&reply)?);
-        bumped.extend(bumped_of(&reply, &c)?);
+        j.derived.extend(lifted(&reply, "derived", "7.2.0", &c)?);
+        if !c.calls.is_empty() {
+            j.bumped.extend(lifted(&reply, "cocBumped", "6.5.0", &c)?);
+        }
     }
     // the canonical order is the core's (CE.Scan conds), not the
     // set's; a name outside the vocabulary is a wire drift
-    let failed: Vec<String> = ["hard_line", "knobs_digest", "degraded"]
+    j.failed = ["hard_line", "knobs_digest", "degraded"]
         .into_iter()
         .filter(|n| held.contains(*n))
         .map(String::from)
         .collect();
     ensure!(
-        failed.len() == held.len(),
+        j.failed.len() == held.len(),
         "core named a condition outside the scan/1 vocabulary: {held:?}"
     );
-    Ok((levels, !failed.is_empty(), failed, bumped))
+    j.fail = !j.failed.is_empty();
+    Ok(j)
 }
 
-/// One chunk's raised cognitive rows (6.5.0), lifted back to global
-/// row indices. The key is required exactly when the arcs rode, so a
-/// core that judged them and answered nothing is a pre-6.5.0 one,
-/// refused by name rather than read as "no cycles".
-fn bumped_of(reply: &Value, c: &chunk::Chunk<'_>) -> Result<Vec<[u64; 2]>> {
-    if c.calls.is_empty() {
-        return Ok(Vec::new());
+/// One chunk's request body: the tables that ride every time, then
+/// the optional ones only when they carry something — an absent key
+/// and an empty one ask the core different questions.
+fn request_body(r: &ScanRequest, c: &chunk::Chunk<'_>) -> Value {
+    let mut body = json!({
+        "rows": c.rows, "grades": r.grades, "naming": c.naming, "knobsFence": r.fence,
+        "judgedMask": crate::scan::lang::Lang::judged_mask(), "events": c.events,
+    });
+    let optional = [
+        (!c.calls.is_empty()).then(|| ("callEdges", json!(c.calls))),
+        r.row_classes
+            .map(|classes| ("rowClasses", json!(&classes[c.span.clone()]))),
+        (!r.overrides.is_empty()).then(|| ("gradeOverrides", json!(r.overrides))),
+    ];
+    for (key, table) in optional.into_iter().flatten() {
+        body[key] = table;
     }
-    let moved: Vec<[u64; 2]> = serde_json::from_value(reply["cocBumped"].clone()).context(
-        "cocBumped — a pre-6.5.0 core judges call edges silently; this ce needs scan/1 6.5.0",
-    )?;
+    body
+}
+
+/// One chunk's levels, positional: one per row sent, or the reply is
+/// no verdict at all.
+fn levels_of(reply: &Value, rows: usize) -> Result<Vec<u8>> {
+    let levels: Vec<u8> = serde_json::from_value(reply["levels"].clone()).context("levels")?;
+    ensure!(
+        levels.len() == rows,
+        "core sent {} levels for {rows} rows",
+        levels.len()
+    );
+    Ok(levels)
+}
+
+/// One echoed `[rowIndex, value]` table, lifted back to global row
+/// indices: the derived complexity rows (7.2.0) on every reply — this
+/// side always sends the events — and the raised cognitive rows
+/// (6.5.0) exactly when the arcs rode. A reply without the key is a
+/// core older than the table it is answering, refused by the version
+/// it lacks rather than read as "no complexity anywhere" or "no
+/// cycles".
+fn lifted(reply: &Value, key: &str, since: &str, c: &chunk::Chunk<'_>) -> Result<Vec<[u64; 2]>> {
+    let rows: Vec<[u64; 2]> = serde_json::from_value(reply[key].clone()).with_context(|| {
+        format!(
+            "{key} — a pre-{since} core answers this table silently; this ce needs scan/1 {since}"
+        )
+    })?;
     let base = c.span.start as u64;
-    Ok(moved.into_iter().map(|[i, v]| [i + base, v]).collect())
+    Ok(rows.into_iter().map(|[i, v]| [i + base, v]).collect())
 }
 
 /// One chunk's named conditions (6.4.0, O33). The key is required
