@@ -224,10 +224,10 @@ rows sent, counts that do not add up to it, or an `over` that is no boolean: no 
 no malformed reply, is ever read as "no sites" or "not over"
 ([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
 [judged.rs:17-28](../../../cli/src/corelink/judged.rs#L17)). The core registers the family as the
-eleventh ([Protocol.hs:103](../../../core/app/CE/Protocol.hs#L103)) and answers it through
+eleventh ([Protocol.hs:104](../../../core/app/CE/Protocol.hs#L104)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
-knob ([Wire.hs:132-157](../../../core/app/CE/Wire.hs#L132),
+knob ([Wire.hs:138-163](../../../core/app/CE/Wire.hs#L138),
 [Tombstone.hs:29-53](../../../core/app/CE/Tombstone.hs#L29)). The judgment is three lines
 ([Cost.hs:47-58](../../../core/app/CE/Tombstone/Cost.hs#L47),
 [Tombstone.hs:55-61](../../../core/app/CE/Tombstone.hs#L55)):

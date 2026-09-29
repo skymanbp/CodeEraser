@@ -28,7 +28,7 @@
 
 | 家族 | proto | 请求表 | 应答表 | 上限（`Cost`）与降级 |
 |---|---|---|---|---|
-| `query/1` | 7.3.0 | `program=[[kind,value]]` 记号流；`facts={<table>:[[…]]}` 只含程序引用到的表，每表按首列升序；`sets=[[S,F]]` | `answers=[[goal,args…]]`、`goals=[[goal,kind,sorts…]]`、`proof=[[node,parent,rule,pred,args…]]`、`errors=[[token,code]]`、`counts={rules,strata,derived,answers,proofNodes}` | 记号 65,536 / 事实行 4,194,304 / 派生元组 2,097,152 / 推导结点 16,384；`query_too_large` |
+| `query/1` | 7.3.0 | `program=[[kind,value]]` 记号流；`facts={"<code>":[[…]]}` 只含程序引用到的表（键 = 谓词码的十进制，`set` 表是其中一张），每表按元组严格升序；`prelude` 前奏子句数；`why` / `schema` 两个布尔 | `goals=[[goal,kind,sorts…]]`、`answers=[[goal,args…]]`、`proof=[[goal,answer,node,parent,rule,pred,args…]]`、`errors=[[token,code]]`、`counts={rules,queries,asserts,strata,facts,derived,answers,violations,proofNodes,proofTruncated}`、`schema=[[code,arity,sorts…]]`（只在请求要时） | 记号 65,536 / 事实行 4,194,304 / 派生元组 2,097,152 / 推导结点 16,384；`query_too_large` |
 | `flow/1` | 7.4.0 | `units=[[u,lang,params]]`、`stmts=[[u,seq,parent,kind,flags,aux]]`、`vars=[[u,v,declSeq,flags]]`、`uses=[[u,seq,v,mode]]` | `findings=[[u,kind,seq,v,seqEnd]]`、`counts={units,stmts,vars,uses,findings}` | 行 524,288（四表合计）；`flow_too_large` |
 | `merge/1` | 7.5.0 | `groups=[[g,family]]`、`members=[[g,m,unit,lines,fileIndeg]]`、`trees=[{lab,lld,leaf,slot}]`（按成员序） | `suggestions=[[g,params,kept,savings,feasible,reason]]`、`holes=[[g,hole,param,m,post]]`、`counts` | 组 4,096 / 结点 1,048,576；`merge_too_large` |
 | `arch/1` | 7.6.0 | `files=[[F,D,lines]]`、`dirs=[[D,parent]]`、`edges=[[F,G,w]]`、`pkgEdges=[[F,D,w]]`、`focus=[F…]` | `layers=[[D,level]]`、`cuts=[[F,G,w,exact]]`、`clusters=[[F,cluster]]`、`misplaced=[[F,D]]`、`impact=[[F,depth]]`、`metrics=[[D,fanIn,fanOut,instability]]`、`counts` | 文件 131,072 / 边 524,288；`arch_too_large` |
@@ -51,18 +51,18 @@ body     := lit (',' lit)*
 lit      := atom | 'not' atom | cond | bind
 atom     := pred '(' term (',' term)* ')'
 term     := Var | '_' | int | "string" | enum
-cond     := term ('=' | '!=' | '<' | '<=' | '>' | '>=') term
+cond     := expr ('=' | '!=' | '<' | '<=' | '>' | '>=') expr
 bind     := Var '=' expr | Var '=' agg
 expr     := term (('+' | '-' | '*' | '/' | '%') term)*
 agg      := ('count' | 'min' | 'max' | 'sum') '(' Var (',' Var)* ':' body ')'
 ```
 
-- 谓词名与枚举常量小写开头；变量大写开头；`_` 每次出现是新变量；`%` 到行尾是注释。
+- 谓词名与枚举常量小写开头；变量大写开头；`_` 每次出现是新变量；`#` 到行尾是注释（`%` 是取余算子，不能兼作注释符——落码时改定）。
 - 字符串常量的类别由所在实参的类别决定（§4.2）：路径类位置 = 路径或 glob（Rust 展开成文件集，线上只有集合号）；名字类位置 = 名字（线上只有 fnv1a64）；用户谓词位置 = 原子（同样只有哈希；回标时 Rust 用请求图例还原拼写）。类别不合 = 程序错误，按 `行:列` 点名。
 - `assert` 的头部列出见证列；违规行 = 头部元组；断言通过 ⇔ 零元组。`?-` 的答案 = 体内变量的绑定，按首次出现序列出。
 - 安全性：头部、否定、比较、算式里的每个变量必须先被同一体内的正原子（或 `=` 绑定）绑定；否则程序错误。
 - 分层：谓词依赖图上否定与聚合的边是负边；负边落在强连通分量内 = 不可分层 → 程序错误，点名那条规则。递归只经正原子。
-- 语义：集合语义、最小模型、逐层半朴素求值，每层建索引；无函数符号；算式只在体内、两侧已绑定，结果可绑定新变量（推导量受派生元组上限保护）。
+- 语义：集合语义、最小模型、逐层半朴素求值，每层建索引；无函数符号；算式只在体内、两侧已绑定，结果可绑定新变量（推导量受派生元组上限保护）；`Var = expr` 在 `Var` 已绑定时是比较。比较的两侧须同一类别——同类 id 也按编号比大小（`F < G` 打破对称对），算式只在整数上；除以零让那条文字不成立而不是报错。
 - 聚合：`N = count(Y : body)` 对外层已绑定变量分组；`min` / `max` / `sum` 取第一个变量的值；聚合体属更低层。
 
 ### 4.2 事实库（EDB；Rust 装配，只送程序引用到的表）
@@ -105,13 +105,13 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 4.4 记号流编码（Rust 词法，核解析）
 
-`program=[[kind, value]]`：0 谓词码（EDB 固定码，IDB 按首次出现 ≥ 1000）/ 1 变量（每条子句内编号，`_` 每次新号）/ 2 整数 / 3 集合号 / 4 名字哈希 / 5 枚举码 / 10 以上标点与关键字（`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/` `%` `count` `min` `max` `sum` `:`）。Rust 记每个记号的 `行:列`；核的解析器手写（递归下降，无解析库——核依赖只有 base / aeson / array / bytestring / containers）。这样分工：词法与解析错误的位置回标是文本活（Rust），文法、类别、安全性、分层是判决活（核）。
+`program=[[kind, value]]`：0 谓词码（EDB 固定码，IDB 按首次出现 ≥ 1000）/ 1 变量（每条子句内编号，`_` 每次新号）/ 2 整数 / 3 集合号 / 4 名字哈希（枚举常量也走这一路——`entry` 与 `"entry"` 同一个 fnv1a64，事实表的枚举列送的就是名字哈希；5 空着不用）/ 6 匿名 / 10 以上标点与关键字（`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/` `%` `count` `min` `max` `sum` `:`）。Rust 记每个记号的 `行:列`；核的解析器手写（递归下降，无解析库——核依赖只有 base / aeson / array / bytestring / containers）。这样分工：词法与解析错误的位置回标是文本活（Rust），文法、类别、安全性、分层是判决活（核）。
 
 ### 4.5 应答
 
 - `answers` 按 goal 序再按元组升序；`goals` 给每个目标的种类（0 查询 / 1 断言）与列类别。
-- `proof`：每个答案元组的第一条推导（规则下标 + 体内各原子的元组），只在 `?-` 带 `--why` 或断言违规时展开；结点数超 `proofCap` 时 `counts.proofTruncated` 计数，答案不截。
-- `errors`：程序错误按记号下标 + 码（1 语法 / 2 未知谓词 / 3 元数不一 / 4 类别不合 / 5 未绑定 / 6 不可分层 / 7 前奏重定义 / 8 聚合形不合）；有错误即不求值、`answers` 空。
+- `proof`：每个答案元组的第一条推导——行 `[goal, answer, node, parent, rule, pred, args…]`，结点按前序编号、根的 parent = −1，`rule` = 子句下标（发送的事实行 −1），`pred` = 结点的谓词码（查询的根 −1）；只在 `?-` 带 `--why` 或断言违规时展开；一棵树装不下预算 `proofCap` 就整棵不出并记 `counts.proofTruncated`，答案不截。
+- `errors`：程序错误按记号下标 + 码（1 语法 / 2 未知谓词 / 3 元数不一 / 4 类别不合 / 5 未绑定 / 6 不可分层 / 7 前奏重定义 / 8 聚合形不合 / 9 头部匿名）；检查按这个顺序分阶段，第一个出错的阶段报出它的全部错误；有错误即不求值、`answers` 空。
 - 超派生上限 = 完整降级应答 `query_too_large`（`counts.derived` 给到达上限时的值）。
 
 ### 4.6 面与配置
@@ -224,7 +224,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ## 8. 核的模块布局与尺寸
 
-每个家族 = `CE/<Family>.hs`（respond、解码、应答）+ `CE/<Family>/Cost.hs`（上限、地板、码域）+ 判决模块若干（`Query`: `Lex`（记号流 → 子句）、`Check`（安全性 / 类别 / 分层）、`Eval`（半朴素 + 索引）、`Proof`；`Flow`: `Cfg`、`Reach`、`Live`；`Merge`: `Align`、`Holes`、`Ted` 的映射扩展；`Arch`: `Layers`、`Fas`、`Louvain`、`Impact`），每文件 ≤ 290 行（`core_size_gate` 的真实上限）。电池 `core/test/<Family>Props.hs` 各一（`WireHarness.runLegs` 两条平行列表形，避开查重门的表同韵）。`core/test/Spec.hs` 现 289 行，每加一家族 +3 行——步 1 先把电池清单拆到 `core/test/Batteries.hs`（`fixture_contract.rs` 读的那三行形不变、只换文件）。
+每个家族 = `CE/<Family>.hs`（respond、解码、应答）+ `CE/<Family>/Cost.hs`（上限、地板、码域）+ 判决模块若干（`Query`: `Contract`（请求形与拒绝）、`Syntax` / `Parse`（记号流 → 子句）、`Check`（安全性 / 类别 / 分层；`Check/Sorts`、`Check/Safety`）、`Eval`（半朴素 + 索引；`Eval/Index`、`Eval/Join`）、`Proof`、`Schema`；`Flow`: `Cfg`、`Reach`、`Live`；`Merge`: `Align`、`Holes`、`Ted` 的映射扩展；`Arch`: `Layers`、`Fas`、`Louvain`、`Impact`），每文件 ≤ 290 行（`core_size_gate` 的真实上限）。电池 `core/test/<Family>Props.hs` 各一（`WireHarness.runLegs` 两条平行列表形，避开查重门的表同韵）。`core/test/Spec.hs` 现 289 行，每加一家族 +3 行——步 1 先把电池清单拆到 `core/test/Batteries.hs`（`fixture_contract.rs` 读的那三行形不变、只换文件）。
 
 ## 9. 验收与门（每步共用）
 
@@ -247,7 +247,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 | 步 | 内容 | 门 |
 |---|---|---|
 | 0 | 细则与立项（2026-09-29）：本册 + 计划书 v2.31（横幅细则句、ADR-008 细则第七期、§6 T 轨十二步）+ CHANGELOG `[Unreleased]` 块 + cc-memory 十二步锁定 | docs 门全绿、基线具名重立、CI 绿 |
-| 1 | 查询 A：核 `CE.Query.*`（Lex / Check / Eval / Proof / Cost）+ `QueryProps` 电池 + golden 六对 + proto 7.3.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条）+ `Spec.hs` 拆 `Batteries.hs` + golden 重生腿入子仓 | `cabal test`、参考求值器等价、既有 golden 只动 proto |
+| 1 | 查询 A（2026-09-29 已交付）：核 `CE.Query.*`（Contract / Syntax / Parse / Check〔Sorts · Safety〕/ Eval〔Index · Join〕/ Proof / Schema / Cost，十三模块 1,501 行）+ `QueryProps` 十二腿 + `ReferenceQuery` 朴素参考 200 例 + golden 六对 + proto 7.3.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条）+ `Spec.hs` 拆 `SpecProbes.hs`（四条探针腿；设计名 `Batteries.hs` 按搬出的内容改，电池表留在 `Spec.hs`）+ 子仓 `fixture_contract::regen` 腿（`LineSession` 三件套同供 MCP 会话与 golden 往返） | `cabal test` 439 ok、参考求值器等价 200/200、既有 golden 只动 proto |
 | 2 | 查询 B：Rust `cli/src/query/`（词法、图例、glob 展开、事实装配、wire、回标）+ `ce query` / `ce rules` + `[rules] file` + 前奏 + MCP 两工具 + GUI Query 屏 + 自仓 `ce.rules` + CI 狗粮腿 + 册 16 + 事实与 parity | 三面字节同、`ce rules` 自仓绿、十语料十面对拍同 |
 | 3 | 死代码 A：核 `CE.Flow.*`（Cfg / Reach / Live / Cost）+ `FlowProps` + golden + 7.4.0 | 参考实现等价、十六种拒绝按名 |
 | 4 | 死代码 B：Rust `FlowSpec` 十语言表（实探建表）+ 降表 + wire + 考题冻结（每语言）→ 盲判 → 精度册 + 回放台账 + `judged` 掩码 | 逐语言精度 ≥ 99 %、顺序门 |

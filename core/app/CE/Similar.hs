@@ -18,7 +18,7 @@
 module CE.Similar (respond) where
 
 import CE.Similar.Cost (isRole, ratio, rowWidth, similarCap)
-import CE.Wire (Family (..), respondWith, rowCheck, tableOffence)
+import CE.Wire (family, rowCheck, tableOffence)
 import Data.Aeson (FromJSON (..), Value, encode, object, withObject, (.!=), (.:), (.:?), (.=))
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -42,16 +42,7 @@ instance FromJSON SimilarReq where
 -- table first: shape then strictly ascending hashes — a bag is a set;
 -- then every row) → judge.
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto =
-  respondWith
-    Family
-      { famName = "similar"
-      , famId = simId
-      , famOverCap = overCap
-      , famOffence = offence
-      , famDegraded = degraded proto
-      , famJudged = judged proto
-      }
+respond proto = family "similar" simId overCap offence (degraded proto) (judged proto)
 
 -- | Query terms and candidate rows are priced together (the scan C15
 -- discipline: every request dimension counts against the cap).

@@ -13,29 +13,17 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 7.2.0 = the judged-language set rides the wire (plan v2.30
-/// step 1), additive: every `scan.request` and `graph.request` this
-/// side sends carries `judgedMask` — `Lang::judged_mask()`, the same
-/// summary of the LANGS table the verdict family has echoed as a knob
-/// since 2.29.0 — and the core checks the language code of a naming
-/// row or an unres row against THAT set instead of the constant `6`
-/// two validators used to spell. A request without the key is judged
-/// against the pre-7.2.0 set (codes 0..6), byte for byte as before;
-/// the judged reply echoes the mask exactly when it rode, and this
-/// side refuses a reply without the echo as a pre-7.2.0 core, by
-/// name. What it buys: a language row flipping to judged in lang.rs
-/// (each of the six plan v2.30 languages does, in its own step) is
-/// a Rust-side fact the core learns from the request, never a core
-/// release. No family changes its capability name. Plan v2.30 step 7b
-/// (inside the same unreleased minor) moves two client-side judgments
-/// behind the wire the same way: `erase.request` carries `targets` and
-/// reads the closure back as `kept`; `structure.request` carries
-/// `patternShapes` and reads the fold's row count back — each echo
-/// pinned by its family, each absence refused as a pre-7.2.0 core.
-/// Item 3 of that step sends the complexity rules the same way:
-/// `scan.request` carries each unit's structural `events` and reads
-/// the three numbers back as `derived`; the walkers that computed
-/// them on this side are gone.
+/// §1). 7.3.0 = the thirteenth judgment family, `query/1` (plan v2.31
+/// step 1; ADR-008 seventh instalment, design booklet
+/// docs/reference/analysis-track.md §4), additive: a new request type
+/// `query.request` carries a program as a `[kind, value]` token
+/// stream plus the fact tables it names, keyed by schema code, and
+/// reads back `query.result` — goals, answers, proof rows, the
+/// program's errors at their tokens, counts. This side's lexer, fact
+/// assembly and faces (`ce query` / `ce rules`, the MCP tools, the
+/// GUI screen) land in step 2 of the same plan; a core without the
+/// capability is named as "pre-7.3.0" by `judged::ask`, never
+/// blocked on. Every existing family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -47,7 +35,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.2.0";
+pub const PROTO: &str = "7.3.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

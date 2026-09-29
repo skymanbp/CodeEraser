@@ -10,35 +10,23 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 7.2.0 = the judged-language set rides the wire (plan v2.30 step 1),
--- additive: `scan.request` and `graph.request` accept `judgedMask`,
--- the producer's own bitmask of judged language codes, and the two
--- validators that used to bound a naming row's or an unres row's
--- code with the constant 6 now test the bit (CE.Wire.Mask.judgedLang). A
--- request without the key is judged against the legacy seven, byte
--- for byte; a judged reply echoes the mask exactly when it rode. A
--- language turning judged on the Rust side is thereby a request
--- fact, never a core release. No capability name changes. Step 2 of
--- the same plan (C / C++) adds, inside this unreleased minor, roleBits
--- row 8: a C-family compilation unit — a `.c` file nothing includes —
--- lands on the executable bit (CE.Graph.Cost); step 5 (HTML) adds row
--- 9 the same way: a walked asset — a page's stylesheet or image, a
--- file the index holds no parse of — lands on the dyn-referenced bit.
--- Step 7b (the same minor) takes two judgments off the client the
--- same way: erase/1 reads the rows' `targets` and answers the closure
--- as `kept` (CE.Erase.Cost.keptRows); structure/1 reads
--- `patternShapes` and classifies the stems itself
--- (CE.Structure.Shape), echoing the row count it folded. Item 3
--- does the same for the complexity rules: scan/1 reads each unit's
--- `events` and answers the three numbers as `derived`
--- (CE.Scan.Complexity), refusing a pre-judged row by name.
--- The per-version ledger lives in contracts/VERSIONING.md and nowhere
--- else; only THIS version's entry stays beside the constant. The
--- reason the mirrors were retired is written once, at the client's
--- constant (cli/src/corelink.rs::PROTO) -- it is not repeated here.
+-- 7.3.0 = the thirteenth judgment family, `query/1` (plan v2.31 step
+-- 1; ADR-008 seventh instalment, design booklet
+-- docs/reference/analysis-track.md §4), additive: a new request type
+-- `query.request` — the program as a `[kind, value]` token stream,
+-- the fact tables it names keyed by schema code, a prelude clause
+-- count, the `why` and `schema` flags — answered by `query.result`:
+-- the goals with their sorts, the answers, the proof rows, the
+-- program's errors at their tokens, the counts (CE.Query and its
+-- modules). Every existing family answers byte for byte as before;
+-- the hello's capability list grows by one name. The per-version
+-- ledger lives in contracts/VERSIONING.md and nowhere else; only
+-- THIS version's entry stays beside the constant. The reason the
+-- mirrors were retired is written once, at the client's constant
+-- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "7.2.0"
+proto = "7.3.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

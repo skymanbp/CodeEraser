@@ -11,7 +11,7 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knobbedRows, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, family, knobbedRows, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
 
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
@@ -101,11 +101,26 @@ data Family req = Family
   , famJudged :: req -> B8.ByteString
   }
 
--- | The whole cascade for a RowsReq family — cap, offence, degraded
--- and judged stay per-family ARGUMENTS (one authority per family),
--- while the Family-literal plumbing lives once: after RowsReq
--- landed, that literal was the last per-family clone the ratchet
--- still charged the table families for.
+-- | The whole cascade for a family with a request type of its own —
+-- cap, offence, degraded and judged stay per-family ARGUMENTS (one
+-- authority per family), while the Family-literal plumbing lives
+-- once: after RowsReq landed, that literal was the last per-family
+-- clone the ratchet still charged the table families for, and the
+-- thirteenth family (query/1) would have reminted similar/1's copy
+-- of it — the write gate named the block, so it moved here.
+family ::
+  (FromJSON req) =>
+  String ->
+  (req -> Value) ->
+  (req -> Bool) ->
+  (req -> Maybe String) ->
+  (req -> B8.ByteString) ->
+  (req -> B8.ByteString) ->
+  B8.ByteString ->
+  Either (Maybe Value, String, String) B8.ByteString
+family name ident overCap offence deg jud = respondWith (Family name ident overCap offence deg jud)
+
+-- | A RowsReq family: the shared request type's own id.
 rowsFamily ::
   String ->
   (RowsReq -> Bool) ->
@@ -114,16 +129,7 @@ rowsFamily ::
   (RowsReq -> B8.ByteString) ->
   B8.ByteString ->
   Either (Maybe Value, String, String) B8.ByteString
-rowsFamily name overCap offence deg jud =
-  respondWith
-    Family
-      { famName = name
-      , famId = rowsId
-      , famOverCap = overCap
-      , famOffence = offence
-      , famDegraded = deg
-      , famJudged = jud
-      }
+rowsFamily name = family name rowsId
 
 -- | The cap a KNOBBED table family counts against: rows and knob
 -- rows together (review C15's stance — every request dimension

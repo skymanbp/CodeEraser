@@ -162,8 +162,8 @@ over its unit, so the core compares the ratio and never learns the width
 [Cost.hs:29-31](../../../core/app/CE/Similar/Cost.hs#L29)). The reply is `order` — the candidate
 indices by score descending as exact rationals, ties by request index — `roles`, one bit per
 row in request order, and `counts{rows, queryTerms, role}`
-([Similar.hs:95-101](../../../core/app/CE/Similar.hs#L95),
-[Similar.hs:110-127](../../../core/app/CE/Similar.hs#L110)). The role rule is a two-arm
+([Similar.hs:86-92](../../../core/app/CE/Similar.hs#L86),
+[Similar.hs:101-118](../../../core/app/CE/Similar.hs#L101)). The role rule is a two-arm
 conjunction over one row, and it lives in Haskell:
 
     role ⇔ (nHit ≥ roleMinName ∧ cHit ≥ roleMinCallee) ∨ (nHit ≥ roleMinNameShape ∧ shapeEqual)
@@ -177,7 +177,7 @@ A request whose query terms plus rows exceed `similarCap` = 65536 gets a complet
 reply with empty tables and the reason `similar_too_large` — a query the core refused to judge
 has no order and no roles, and the faces name the degradation instead of showing the measuring
 side's order ([Cost.hs:26-27](../../../core/app/CE/Similar/Cost.hs#L26),
-[Similar.hs:104-107](../../../core/app/CE/Similar.hs#L104)). There is no knob and no fail tier:
+[Similar.hs:95-98](../../../core/app/CE/Similar.hs#L95)). There is no knob and no fail tier:
 a knobless family whose one table is not the shared `RowsReq` — the query bag is its own key —
 so it binds the cascade directly. On the Rust side `consume` is strict: the order must be a
 permutation of the rows sent, one role bit per row, counts agreeing with the tables; any skew
