@@ -54,7 +54,7 @@
 > where the release it names holds none — so the claim is checkable, and
 > the diff it rests on is public.
 
-The current release, v1.8.0, earns a row and does not have one yet: it is measured after the tag.
+The newest row, v1.8.0, is the release this build is.
 
 ## Latency series (self repository)
 
@@ -200,6 +200,13 @@ The current release, v1.8.0, earns a row and does not have one yet: it is measur
 | 1.7.3 | docdup_warm | 1417 | 1420 | 3 | windows/x86_64/16cpu | 2026-09-12 |
 | 1.7.3 | hook_probe | 46 | 52 | 30 | windows/x86_64/16cpu | 2026-09-12 |
 | 1.7.3 | scan | 671 | 2778 | 5 | windows/x86_64/16cpu | 2026-09-12 |
+| 1.8.0 | check_warm | 4643 | 8340 | 3 | windows/x86_64/16cpu | 2026-09-29 |
+| 1.8.0 | deadcode_warm | 1482 | 4550 | 3 | windows/x86_64/16cpu | 2026-09-29 |
+| 1.8.0 | dedup_cold | 13929 | 14144 | 3 | windows/x86_64/16cpu | 2026-09-29 |
+| 1.8.0 | dedup_warm | 650 | 655 | 5 | windows/x86_64/16cpu | 2026-09-29 |
+| 1.8.0 | docdup_warm | 2137 | 2149 | 3 | windows/x86_64/16cpu | 2026-09-29 |
+| 1.8.0 | hook_probe | 50 | 57 | 30 | windows/x86_64/16cpu | 2026-09-29 |
+| 1.8.0 | scan | 907 | 2896 | 5 | windows/x86_64/16cpu | 2026-09-29 |
 
 ## Frozen evaluation points
 
