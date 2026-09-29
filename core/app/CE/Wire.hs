@@ -11,18 +11,17 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, judgedLang, knobbedRows, knoblessRows, legacyJudged, maskOffence, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
+module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, knobbedRows, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
 
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
-import Data.Bits (testBit)
 import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
-import Data.Maybe (fromMaybe)
 
 -- | The [[Integer]]-rows request the table families share: id, the
 -- fact rows, and the optional side tables — Trend/Erase read knobs,
--- Scan reads grades and naming facts (2.30.0), and each family
+-- Scan reads grades and naming facts (2.30.0), Erase its target
+-- table (7.2.0), and each family
 -- ignores the keys it does not own exactly as the envelope's
 -- unknown-field rule already demands (§1). Promoted here when the NINTH family (erase/1)
 -- minted the record + FromJSON pair verbatim for the third time —
@@ -50,6 +49,11 @@ data RowsReq = RowsReq
     -- seven codes the constant bound used to spell — so its bytes
     -- never move.
     maskOf :: Maybe Integer
+  , -- erase/1's target table (7.2.0, plan v2.30 step 7b): one
+    -- [pathId, start, end] per fact row, the key the target closure
+    -- groups rows by. Nothing = a client that closes for itself
+    -- (legacy bytes: no `kept` key rides back).
+    targetsOf :: Maybe [[Integer]]
   }
 
 -- | scan/1's rulepack channel (3.2.0), read off the SAME object: each
@@ -78,29 +82,7 @@ instance FromJSON RowsReq where
       <*> parseJSON (Object o)
       <*> pure (KM.lookup "knobsFence" o)
       <*> o .:? "judgedMask"
-
--- | The judged-language set before it rode the wire (7.2.0): codes
--- 0..6, the bound `lang > 6` two validators spelled until plan v2.30
--- made the set a request fact. A request that declares no mask is
--- judged against exactly this one, byte for byte as before.
-legacyJudged :: Integer
-legacyJudged = 127
-
--- | Is @lang@ in the judged set the request declared (the legacy set
--- when it declared none)? A negative code is in no set, and a code
--- past bit 62 could be in no i64 mask a producer can send.
-judgedLang :: Maybe Integer -> Integer -> Bool
-judgedLang mask lang =
-  lang >= 0 && lang < 63 && testBit (fromMaybe legacyJudged mask) (fromInteger lang)
-
--- | The mask's own contract: absent is the legacy road, else a
--- non-negative i64 — the only shape the producer's `judged_mask`
--- can take, so anything else is a foreign client, refused by name.
-maskOffence :: Maybe Integer -> Maybe String
-maskOffence (Just m)
-  | m < 0 = Just "judgedMask: negative"
-  | m >= 9223372036854775808 = Just "judgedMask: outside i64"
-maskOffence _ = Nothing
+      <*> o .:? "targets"
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family
@@ -180,11 +162,14 @@ knoblessRows ::
   String ->
   Integer ->
   (Int -> [Integer] -> Maybe String) ->
+  -- | the family's own contract past the rows (erase/1's target
+  -- table, 7.2.0); a family with none passes `const Nothing`
+  (RowsReq -> Maybe String) ->
   (RowsReq -> B8.ByteString) ->
   (RowsReq -> B8.ByteString) ->
   B8.ByteString ->
   Either (Maybe Value, String, String) B8.ByteString
-knoblessRows name cap rowShape =
+knoblessRows name cap rowShape more =
   rowsFamily
     name
     (\req -> toInteger (length (rowsOf req)) > cap)
@@ -194,6 +179,7 @@ knoblessRows name cap rowShape =
     asum
       [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
       , asum (zipWith noKnob [0 :: Int ..] (knobsOf req))
+      , more req
       ]
   noKnob i _ =
     Just ("knob " <> show i <> ": " <> name <> "/1 declares no knob codes")

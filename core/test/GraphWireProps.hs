@@ -76,7 +76,7 @@ refusedGraph req want = case respond "7.0.0" req of
 -- legacy seven plus bit 20) — vouched, dead row [0,1,2] — and
 -- refuses by name without one; the mask echoes on every result it
 -- rode on, ledger or none, never on a request without it; a negative
--- value refuses by name (CE.Wire.maskOffence, the read scan/1 makes).
+-- value refuses by name (CE.Wire.Mask.maskOffence, the read scan/1 makes).
 maskRoad :: Bool
 maskRoad =
   and

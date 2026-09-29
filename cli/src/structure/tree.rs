@@ -1,7 +1,9 @@
 //! Tree aggregation from walked relative paths: dense directory
 //! nodes with parent links, per-directory fanout and depth, the
-//! sibling-set NAME-PATTERN distributions (S1 axis input — pattern
-//! CODES cross the wire, names never do), and the convention bits
+//! sibling-set NAME-SHAPE distributions (S1 axis input — since 7.2.0
+//! the seven character-class facts of each stem cross the wire as
+//! shape bits and the style decision is the core's,
+//! CE.Structure.Shape; names never cross), and the convention bits
 //! (S4: README / config presence). Deterministic by construction:
 //! directories are discovered in sorted path order and numbered
 //! densely, so the same walk always yields the same shape.
@@ -16,8 +18,9 @@ pub struct Dir {
     pub subdirs: u32,
     /// Immediate files.
     pub files: u32,
-    /// S1 input: file-name pattern counts, indexed by PATTERNS code.
-    pub patterns: [u32; PATTERN_COUNT],
+    /// S1 input: file count per stem shape (the `shape_bits` key),
+    /// ascending by construction — the `patternShapes` rows.
+    pub shapes: BTreeMap<u8, u32>,
     /// S4 input: convention bits (see CONVENTIONS).
     pub conventions: u8,
 }
@@ -30,16 +33,6 @@ pub struct Tree {
     pub dirs: Vec<Dir>,
     pub ids: BTreeMap<String, usize>,
 }
-
-/// Name-pattern codes, index = wire code (frozen positions, the
-/// wire.rs edge-code discipline). Classification looks at the file
-/// STEM (up to the first dot); the style vocabulary covers the
-/// conventions the scanned ecosystems actually use. Codes 0..6 =
-/// lower_snake / lower_kebab / camel / pascal / upper_snake /
-/// digit_led / other — dense positions on the wire; the label
-/// STRINGS never travel and had no reader anywhere (the sweep's one
-/// clean kill), so the vocabulary lives here as prose.
-const PATTERN_COUNT: usize = 7;
 
 /// Convention bits (S4): bit 0 = a README.* lives here, bit 1 = a
 /// recognized config basename lives here.
@@ -72,7 +65,7 @@ pub fn build(paths: &[String]) -> Tree {
         let (dir_path, name) = split_dir(path);
         let dir = ensure_dir(&mut ids, &mut dirs, dir_path);
         dirs[dir].files += 1;
-        dirs[dir].patterns[pattern_code(stem(name)) as usize] += 1;
+        *dirs[dir].shapes.entry(shape_bits(stem(name))).or_insert(0) += 1;
         let upper = name.to_ascii_uppercase();
         if upper == "README" || upper.starts_with("README.") {
             dirs[dir].conventions |= CONV_README;
@@ -99,7 +92,7 @@ fn root() -> Dir {
         depth: 0,
         subdirs: 0,
         files: 0,
-        patterns: [0; PATTERN_COUNT],
+        shapes: BTreeMap::new(),
         conventions: 0,
     }
 }
@@ -134,7 +127,7 @@ fn ensure_dir(ids: &mut BTreeMap<String, usize>, dirs: &mut Vec<Dir>, dir_path: 
         depth: dirs[parent].depth + 1,
         subdirs: 0,
         files: 0,
-        patterns: [0; PATTERN_COUNT],
+        shapes: BTreeMap::new(),
         conventions: 0,
     });
     dirs[parent].subdirs += 1;
@@ -142,68 +135,33 @@ fn ensure_dir(ids: &mut BTreeMap<String, usize>, dirs: &mut Vec<Dir>, dir_path: 
     id
 }
 
-/// The stem's character-class flags — COLLECTION only; the decision
-/// lives in pattern_code (split keeps both halves under the repo's
-/// own cyclomatic gate, which caught the fused form at CC 25).
-struct StemFlags {
-    upper: bool,
-    lower: bool,
-    digit: bool,
-    dash: bool,
-    under: bool,
-    ascii: bool,
-}
-
-fn flags_of(s: &str) -> StemFlags {
-    let mut f = StemFlags {
-        upper: false,
-        lower: false,
-        digit: false,
-        dash: false,
-        under: false,
-        ascii: true,
-    };
+/// The seven stem facts as shape bits (7.2.0, plan v2.30 step 7b —
+/// frozen positions, the same seven CE.Structure.Shape reads): 0 an
+/// underscore / 1 a dash / 2 a lowercase letter / 3 an uppercase
+/// letter / 4 digit-led / 5 first char uppercase / 6 unclassifiable
+/// (an empty stem, or a char outside letters, digits, dash and
+/// underscore). Collection only: the style decision these used to
+/// feed here — a STYLE table over the low four bits, camel split from
+/// pascal by the first char, digit-led and unclassifiable first — is
+/// judgment and moved to the core with its truth table.
+pub fn shape_bits(s: &str) -> u8 {
+    let mut bits = 0u8;
     for c in s.chars() {
-        match c {
-            'A'..='Z' => f.upper = true,
-            'a'..='z' => f.lower = true,
-            '0'..='9' => f.digit = true,
-            '-' => f.dash = true,
-            '_' => f.under = true,
-            _ => f.ascii = false,
-        }
+        bits |= match c {
+            '_' => 1,
+            '-' => 2,
+            'a'..='z' => 4,
+            'A'..='Z' => 8,
+            '0'..='9' => 0,
+            _ => 64,
+        };
     }
-    f
-}
-
-/// The style decision as a TABLE (the DSL stance at home): index =
-/// upper<<3 | lower<<2 | dash<<1 | under, value = pattern code.
-/// Key 0b1100 encodes 3 (pascal) and is split to camel by first
-/// char in pattern_code; every mixed-signal key answers 6 — the
-/// repo's own scan gate caught the fused (CC 25), nested (CoC 16)
-/// and flat-guard (CC 18) forms of this decision before it became
-/// data.
-const STYLE: [u8; 16] = [6, 0, 1, 6, 0, 0, 1, 6, 4, 4, 6, 6, 3, 6, 6, 6];
-
-/// Pattern code of one stem (index into PATTERNS). Empty and
-/// unclassifiable stems land on "other" — never a guess.
-pub fn pattern_code(s: &str) -> u8 {
-    let f = flags_of(s);
-    if s.is_empty() || !f.ascii {
-        return 6;
+    match s.chars().next() {
+        None => bits | 64,
+        Some(c) if c.is_ascii_digit() => bits | 16,
+        Some(c) if c.is_ascii_uppercase() => bits | 32,
+        Some(_) => bits,
     }
-    if f.digit && s.starts_with(|c: char| c.is_ascii_digit()) {
-        return 5;
-    }
-    let key = (usize::from(f.upper) << 3)
-        | (usize::from(f.lower) << 2)
-        | (usize::from(f.dash) << 1)
-        | usize::from(f.under);
-    let code = STYLE[key];
-    if code == 3 && !s.starts_with(|c: char| c.is_ascii_uppercase()) {
-        return 2; // same flag key as pascal; camel splits by first char
-    }
-    code
 }
 
 #[cfg(test)]

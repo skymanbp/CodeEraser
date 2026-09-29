@@ -16,7 +16,8 @@ module CE.Scan.Contract (violation) where
 
 import CE.Scan.Cycles (callBattery)
 import CE.Scan.Fence (fenceOffence)
-import CE.Wire (RowsReq (..), Rulepack (..), judgedLang, maskOffence, rowCheck, tableOffence)
+import CE.Wire (RowsReq (..), Rulepack (..), rowCheck, tableOffence)
+import CE.Wire.Mask (judgedLang, maskOffence)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (find)

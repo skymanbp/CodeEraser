@@ -19,7 +19,12 @@ pub const STRUCT_NODE_CAP: usize = 524288;
 /// The assembled request tables (dense ids; names never cross).
 pub struct Request {
     pub nodes: Vec<[u64; 5]>,
-    pub patterns: Vec<[u64; 3]>,
+    /// The S1 fact table (7.2.0, plan v2.30 step 7b): [dirId,
+    /// shapeBits, count] stem facts, ascending — the core classifies
+    /// them (CE.Structure.Shape). The legacy `patterns` road, codes
+    /// chosen on this side, is never sent again; the core refuses a
+    /// request on both roads.
+    pub shapes: Vec<[u64; 3]>,
     pub conventions: Vec<[u64; 2]>,
     pub file_refs: Vec<[u64; 4]>,
     /// The A-layer template (S3a): [dirId, weight] rows compiled
@@ -129,17 +134,14 @@ fn priced_rows(r: &Request) -> usize {
     r.nodes.len() + seams + r.dir_edges.as_ref().map_or(0, Vec::len)
 }
 
-/// One structure.request over one link.
-pub fn judge(core: &str, r: &Request) -> Result<Reply> {
-    ensure!(
-        priced_rows(r) <= STRUCT_NODE_CAP,
-        "{} structure/1 request rows exceed the cap {STRUCT_NODE_CAP}",
-        priced_rows(r)
-    );
-    let mut link = crate::lockstep::open_family(core, CAP)?;
+/// The request body: the four tables every request carries, then
+/// each optional table exactly when its measurement rode — absence
+/// is the core's "unjudged", never a zero (the redundancy / dir-edge
+/// / seam semantics on `Request`).
+fn request_body(r: &Request) -> serde_json::Value {
     let mut body = json!({
         "nodes": r.nodes,
-        "patterns": r.patterns,
+        "patternShapes": r.shapes,
         "conventions": r.conventions,
         "fileRefs": r.file_refs,
     });
@@ -166,12 +168,38 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     if !r.knobs.is_empty() {
         body["knobs"] = json!(r.knobs);
     }
+    body
+}
+
+/// The shape road's own echo (7.2.0): the core says how many shape
+/// rows it folded — a pre-7.2.0 core drops the table under the
+/// unknown-field rule and would judge S1 on nothing, silently.
+fn shape_echo(reply: &serde_json::Value, sent: usize) -> Result<()> {
+    let folded = reply["patternShapes"].as_u64().context(
+        "structure reply carries no patternShapes echo — a core older than 7.2.0 judged the name patterns on nothing",
+    )?;
+    ensure!(
+        folded == sent as u64,
+        "structure reply echoes {folded} of {sent} shape rows — cap mirror drift"
+    );
+    Ok(())
+}
+
+/// One structure.request over one link.
+pub fn judge(core: &str, r: &Request) -> Result<Reply> {
+    ensure!(
+        priced_rows(r) <= STRUCT_NODE_CAP,
+        "{} structure/1 request rows exceed the cap {STRUCT_NODE_CAP}",
+        priced_rows(r)
+    );
+    let mut link = crate::lockstep::open_family(core, CAP)?;
     let reply = link
-        .request("structure", body)
+        .request("structure", request_body(r))
         .map_err(anyhow::Error::msg)?;
     crate::lockstep::refuse_degraded(&reply, "structure/wire.rs vs Structure/Cost.hs")?;
     let rows = crate::lockstep::reply_rows::<Vec<[i64; 2]>>;
     let echoed = pinned_echo(&reply, &r.knobs)?;
+    shape_echo(&reply, r.shapes.len())?;
     // the A-layer keys exist exactly when a layout was declared —
     // a missing key on a declared request (or the reverse) is
     // contract drift, surfaced by the decode throat's named error

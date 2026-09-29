@@ -14,7 +14,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- additive: `scan.request` and `graph.request` accept `judgedMask`,
 -- the producer's own bitmask of judged language codes, and the two
 -- validators that used to bound a naming row's or an unres row's
--- code with the constant 6 now test the bit (CE.Wire.judgedLang). A
+-- code with the constant 6 now test the bit (CE.Wire.Mask.judgedLang). A
 -- request without the key is judged against the legacy seven, byte
 -- for byte; a judged reply echoes the mask exactly when it rode. A
 -- language turning judged on the Rust side is thereby a request
@@ -24,6 +24,11 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- lands on the executable bit (CE.Graph.Cost); step 5 (HTML) adds row
 -- 9 the same way: a walked asset — a page's stylesheet or image, a
 -- file the index holds no parse of — lands on the dyn-referenced bit.
+-- Step 7b (the same minor) takes two judgments off the client the
+-- same way: erase/1 reads the rows' `targets` and answers the closure
+-- as `kept` (CE.Erase.Cost.keptRows); structure/1 reads
+-- `patternShapes` and classifies the stems itself
+-- (CE.Structure.Shape), echoing the row count it folded.
 -- The per-version ledger lives in contracts/VERSIONING.md and nowhere
 -- else; only THIS version's entry stays beside the constant. The
 -- reason the mirrors were retired is written once, at the client's

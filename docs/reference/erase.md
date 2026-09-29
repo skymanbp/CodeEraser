@@ -38,9 +38,12 @@ user files; it may create or refresh the `.ce/` cache):
 
 1. runs the source families exactly as their own commands do (same
    caches, same cores, same knobs);
-2. sends the fact tables to the core's `erase/1`, which answers the
-   eraseable-row set — the PREDICATE is Haskell's (ADR-008: which rows
-   are safe is judgment; the bytes are measurement);
+2. sends the fact tables — and, since proto 7.2.0, the rows' targets
+   beside them — to the core's `erase/1`, which answers the
+   eraseable-row set and which row stands for each target — the
+   PREDICATE and the closure are Haskell's (ADR-008: which rows are
+   safe is judgment; the bytes are measurement; see *The target
+   closure* below);
 3. renders a unified diff (`--format json`: machine rows with
    file/span/class/provenance), each hunk carrying its verdict
    provenance (family, member/segment id, evidence `file:line`) and a
@@ -80,6 +83,38 @@ user files; it may create or refresh the `.ce/` cache):
    MCP tool `erase_log` and the GUI erase screen's audit-log section
    (one document, `ce.erase-trail-report`; a line the reader cannot parse
    is named by number and fails `--log`'s exit code).
+
+## The target closure (proto 7.2.0)
+
+A target is one (path, span): the whole file, or one line span in it.
+Several candidate rows may name one target — a dead file that is also
+a byte-identical twin of a live unit names its path twice, once per
+class — and the plan holds ONE row per target. Which row stands is
+judgment and lives in the core (`CE.Erase.Cost.keptRows`) since plan
+v2.30 step 7b; until then the planner closed the set for itself
+(`close_targets`, 7.0.0 O51). The request carries
+`targets=[[pathId,start,end]]` aligned with `rows` (dense path ids —
+names never cross; `0/0` = the whole file; a `verbatim_doc` row names
+a span, the other two classes a whole file; the table in key order),
+and the reply carries `kept`, one bit per row:
+
+1. an eraseable whole-file row owns its path — every span row on that
+   path is closed out (an apply that deleted the file and then spliced
+   lines out of it would refuse on the hash it can no longer read);
+2. within one target the eraseable row with the richest `licence`
+   stands: `t1_twin` (names the live unit it duplicates) over
+   `dead_file` (names only its death) over `verbatim_doc`;
+3. with no eraseable row the `dead_file` row stands over the `t1_twin`
+   row (`advisoryFirst`): its reason is about the file — the
+   categorical `public_surface` bar or the trust fact — where the
+   twin's is about the copy;
+4. ties inside one class break to the EARLIEST row, which is why the
+   contract asks for key order: the planner sends its rows sorted by
+   (path, span, class name), so two producers sending the same rows in
+   the same order close the same way.
+
+A reply without `kept` is refused by name as a pre-7.2.0 core: a plan
+closed on this side would hold two rows per target.
 
 ## Boundaries
 

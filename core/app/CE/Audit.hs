@@ -25,7 +25,7 @@ import qualified Data.ByteString.Lazy as BL
 -- strict booleans — a count smuggled in as a bit would judge
 -- as touched and must refuse by name instead.
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = knoblessRows "audit" auditBlockCap rowShape (degraded proto) (judged proto)
+respond proto = knoblessRows "audit" auditBlockCap rowShape (const Nothing) (degraded proto) (judged proto)
 
 rowShape :: Int -> [Integer] -> Maybe String
 rowShape i row = case row of

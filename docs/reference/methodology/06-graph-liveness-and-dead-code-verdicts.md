@@ -5,7 +5,7 @@
 The `deadcode` family answers one question — *which files does nothing live reach?* — by
 building a **reference graph** over dense node indices in Rust and handing the whole graph to
 the Haskell core for judgment. No text crosses the wire: node identity **is** the row index
-([Contract.hs:25-31](../../../core/app/CE/Graph/Contract.hs#L25)). Every number below is a constant in
+([Contract.hs:26-32](../../../core/app/CE/Graph/Contract.hs#L26)). Every number below is a constant in
 `CE.Graph.Cost` or a frozen storage code, so the computation is a pure function of the edge
 set and the flag column.
 
@@ -179,17 +179,17 @@ the reader sees what the graph refuses to know
 
 `graph.request` carries `nodes: [[lang, kind, roles]]`, `edges: [[src, dst, kind, rung]]`, and
 an optional `pos: [idx]`. The core machine-checks, in request order so the message is
-deterministic ([Contract.hs:76-98](../../../core/app/CE/Graph/Contract.hs#L76)):
+deterministic ([Contract.hs:77-99](../../../core/app/CE/Graph/Contract.hs#L77)):
 
-- node rows are exactly 3 fields — `[lang, kind, roles]`, all `≥ 0`; ONE arity since 5.0.0 retired the pre-2.28 legacy flags column, so a wrong-width row is malformed and says which row ([Contract.hs:193-208](../../../core/app/CE/Graph/Contract.hs#L193));
+- node rows are exactly 3 fields — `[lang, kind, roles]`, all `≥ 0`; ONE arity since 5.0.0 retired the pre-2.28 legacy flags column, so a wrong-width row is malformed and says which row ([Contract.hs:194-209](../../../core/app/CE/Graph/Contract.hs#L194));
 - edge rows are exactly 4 fields, all `≥ 0`, with `src < n` and `dst < n`
-  ([Contract.hs:210-218](../../../core/app/CE/Graph/Contract.hs#L210));
+  ([Contract.hs:211-219](../../../core/app/CE/Graph/Contract.hs#L211));
 - the edge table is **strictly ascending** lexicographically, hence duplicate-free
-  ([Contract.hs:90](../../../core/app/CE/Graph/Contract.hs#L90), [Wire.hs:216-221](../../../core/app/CE/Wire.hs#L216));
+  ([Contract.hs:91](../../../core/app/CE/Graph/Contract.hs#L91), [Wire.hs:202-207](../../../core/app/CE/Wire.hs#L202));
 - `pos` indices lie in `[0, n)` and are strictly ascending — which is also the reply *bound*,
   since a repeated-index list would make the reply larger than the request without limit
-  ([Contract.hs:91-95](../../../core/app/CE/Graph/Contract.hs#L91),
-  [Contract.hs:215-218](../../../core/app/CE/Graph/Contract.hs#L215)).
+  ([Contract.hs:92-96](../../../core/app/CE/Graph/Contract.hs#L92),
+  [Contract.hs:216-219](../../../core/app/CE/Graph/Contract.hs#L216)).
 
 Oversize protection is by row count, not bytes (the envelope precheck is relaxed for the
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
@@ -409,7 +409,7 @@ dies"* stance is deliberate: an unlinked doc **is** reported
 
 ### 8. The dead-row confidence (2.32.0)
 
-Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Contract.hs:182](../../../core/app/CE/Graph/Contract.hs#L182)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:106](../../../core/app/CE/Graph.hs#L106)):
+Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lang, unresolvedSites, totalSites], ...]`, langs judged-set-bounded, counts coherent (`unresolved <= total`), strictly ascending hence duplicate-free ([Contract.hs:183](../../../core/app/CE/Graph/Contract.hs#L183)). Unlike the old scalar count (an unvalidated honest ledger), this table is an INPUT to judgment: when it rides, every dead row grows a third column, the confidence the dead node's OWN language can lend its verdict ([Graph.hs:106](../../../core/app/CE/Graph.hs#L106)):
 
 ```
 0  unvouched — the language still carries unresolved sites: "nothing

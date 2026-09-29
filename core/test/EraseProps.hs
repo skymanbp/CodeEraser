@@ -6,25 +6,32 @@
 -- against an enumerated truth table (exact tuples — a wrong REASON
 -- is as red as a wrong verdict), the mixed request through the REAL
 -- respond with count conservation, refusal-by-name for every
--- malformed fact, the knobless stance, and the degraded-fails
--- posture with an EMPTY verdict table (a refused plan licenses
--- nothing). Scaffolding lives in WireHarness.
+-- malformed fact, the knobless stance, the degraded-fails posture
+-- with an EMPTY verdict table (a refused plan licenses nothing), and
+-- since 7.2.0 (plan v2.30 step 7b) the target closure — the rule
+-- that says which judged row stands for a target — against its own
+-- hand-written table, through the real respond, with its refusals.
+-- Scaffolding lives in WireHarness.
 module EraseProps (battery) where
 
 import CE.Erase (respond)
-import CE.Erase.Cost (eraseRowCap, judgeRow)
+import CE.Erase.Cost (eraseRowCap, judgeRow, keptRows)
 import Data.Aeson
-import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
+import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runLegs, setKey)
 
 battery :: IO Bool
-battery =
-  runChecks
-    [ ("the predicate matches the enumerated truth table, reasons included", truthTable)
-    , ("a mixed request judges every row in order and conserves counts", mixed)
-    , ("erase refusals name the offender", refusals)
-    , ("the family is knobless: any knob row refuses by name", knobless)
-    , ("an over-cap erase request degrades to an EMPTY table that FAILS", degradedFails)
+battery = runLegs names probes
+ where
+  names =
+    [ "the predicate matches the enumerated truth table, reasons included"
+    , "a mixed request judges every row in order and conserves counts"
+    , "erase refusals name the offender"
+    , "the family is knobless: any knob row refuses by name"
+    , "an over-cap erase request degrades to an EMPTY table that FAILS"
+    , "the target closure keeps the richest eraseable row, else the categorical advisory"
+    , "kept rides exactly when targets ride, and target refusals name the offender"
     ]
+  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace]
 
 -- | Exact expected (eraseable, reason) per fact combination — the
 -- independent second derivation is this literal table, written from
@@ -134,3 +141,83 @@ degradedFails :: Bool
 degradedFails = degradedFace respond (req big) "rows" "erase_too_large"
  where
   big = replicate (fromInteger eraseRowCap + 1) [3, 1, 0, 0, 0]
+
+-- | The closure's own truth table (erase.md §closure), written from
+-- the contract: (fact rows, targets, the kept bits) — an eraseable
+-- twin over an eraseable dead file for one whole-file target, and
+-- that eraseable whole-file row closing the span row on its path;
+-- an eraseable dead file over an advisory twin; an eraseable twin
+-- over an advisory dead file; both advisory, the dead file's
+-- categorical refusal stands; a span on a path whose whole-file row
+-- is ADVISORY stays; two rows of one class on one target break to
+-- the earliest; two paths close independently. Fact rows, targets
+-- and kept bits ride as three PARALLEL lists (the truthTable
+-- discipline: a tuple row per case was a T2 clone chain by this
+-- repo's own measure; the length conjuncts guard zipWith3's silent
+-- truncation).
+closure :: Bool
+closure =
+  length facts == length targets
+    && length targets == length wants
+    && and (zipWith3 (\r t w -> keptRows t r (map judgeRow r) == w) facts targets wants)
+ where
+  facts =
+    [ [[3, 1, 2, 0, 0], [2, 1, 1, 1, 0], [1, 80, 80, 80, 1]]
+    , [[3, 1, 2, 0, 0], [2, 1, 0, 1, 0]]
+    , [[3, 1, 0, 0, 0], [2, 1, 1, 1, 0]]
+    , [[3, 2, 2, 0, 0], [2, 1, 1, 2, 0]]
+    , [[3, 2, 2, 0, 0], [1, 80, 80, 80, 1]]
+    , [[1, 80, 80, 80, 1], [1, 90, 90, 90, 1]]
+    , [[3, 1, 2, 0, 0], [1, 80, 80, 80, 1]]
+    ]
+  targets =
+    [ [[0, 0, 0], [0, 0, 0], [0, 4, 9]]
+    , [[0, 0, 0], [0, 0, 0]]
+    , [[0, 0, 0], [0, 0, 0]]
+    , [[0, 0, 0], [0, 0, 0]]
+    , [[0, 0, 0], [0, 3, 5]]
+    , [[2, 3, 5], [2, 3, 5]]
+    , [[0, 0, 0], [1, 3, 5]]
+    ]
+  wants =
+    [ [False, True, False]
+    , [True, False]
+    , [False, True]
+    , [True, False]
+    , [True, True]
+    , [True, False]
+    , [True, True]
+    ]
+
+-- | The wire face of the closure: `kept` rides one bit per row when
+-- the target table rode (the counts stay the whole table's), never
+-- when it did not, never on a degraded reply; and every target
+-- refusal names its row and reason.
+targetsFace :: Bool
+targetsFace =
+  and
+    [ fmap (`field` "kept") (replyObjWith respond withTargets) == Just (Just (toJSON [0, 1, 0 :: Integer]))
+    , fmap (`field` "kept") (replyObjWith respond (req rows)) == Just Nothing
+    , fmap (`field` "kept") (replyObjWith respond (targeted big (replicate (length big) [0, 0, 0]))) == Just Nothing
+    , length refusedRows == length refusedTargets && length refusedTargets == length whys
+    , and (zipWith3 (\r t why -> refusedBy respond (targeted r t) why) refusedRows refusedTargets whys)
+    ]
+ where
+  rows = [[3, 1, 2, 0, 0], [2, 1, 1, 1, 0], [1, 80, 80, 80, 1]]
+  withTargets = targeted rows [[0, 0, 0], [0, 0, 0], [0, 4, 9]]
+  targeted r t = setKey "targets" (toJSON (t :: [[Integer]])) (req r)
+  big = replicate (fromInteger eraseRowCap + 1) [3, 1, 0, 0, 0]
+  -- the refusal probes as three PARALLEL lists — fact rows, targets,
+  -- the named reason — read in step (the truthTable discipline)
+  refusedRows =
+    [ [[3, 1, 2, 0, 0]], [[3, 1, 2, 0, 0]], [[3, 1, 2, 0, 0]], [[3, 1, 2, 0, 0]]
+    , [[1, 80, 80, 80, 1]], [[1, 80, 80, 80, 1]], [[2, 1, 1, 1, 0]], [[3, 1, 2, 0, 0], [3, 1, 2, 0, 0]]
+    ]
+  refusedTargets =
+    [ [], [[0, 0]], [[-1, 0, 0]], [[0, 0, 4]]
+    , [[0, 9, 4]], [[0, 0, 0]], [[0, 4, 9]], [[1, 0, 0], [0, 0, 0]]
+    ]
+  whys =
+    [ "targets: 0 rows for 1 fact rows", "target 0: malformed row", "target 0: negative field", "target 0: half-open span"
+    , "target 0: span end before start", "target 0: verbatim_doc row names a whole file", "target 0: whole-file class names a span", "target 1: out of key order"
+    ]

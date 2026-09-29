@@ -18,7 +18,8 @@
 module CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation) where
 
 import CE.Graph.Advisory (mountRow, unmentionedRow)
-import CE.Wire (judgedLang, maskOffence, rowCheck, tableOffence)
+import CE.Wire (rowCheck, tableOffence)
+import CE.Wire.Mask (judgedLang, maskOffence)
 import Data.Aeson
 import Data.Foldable (asum)
 
@@ -53,7 +54,7 @@ data GraphReq = GraphReq
     reqSccFloor :: Maybe Integer
   , -- the judged-language set as sent (7.2.0, plan v2.30): the
     -- bitmask the unres ledger's language codes are checked against
-    -- — absent = the legacy seven (CE.Wire.legacyJudged), echoed
+    -- — absent = the legacy seven (CE.Wire.Mask.legacyJudged), echoed
     -- exactly when it rode. The node rows carry a code too, but only
     -- its sign was ever checked (the sentinel 7 rides there).
     reqJudgedMask :: Maybe Integer

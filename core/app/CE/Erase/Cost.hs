@@ -32,10 +32,17 @@
 -- v1 has NO knobs: the safety predicate is not tunable — a knob that
 -- loosens "safe" would be a licence to guess (contract §boundaries).
 module CE.Erase.Cost (
+  advisoryFirst,
+  classOf,
   eraseRowCap,
   judgeRow,
+  keptRows,
+  licence,
   publicDeadVerdicts,
 ) where
+
+import qualified Data.Map.Strict as M
+import qualified Data.Set as S
 
 -- | The dead verdicts an erase plan may never act on (6.1.0): 2
 -- unref_public and 4 unreach_public. CE.Graph.Dead splits dead along
@@ -78,3 +85,72 @@ judgeRow [3, verdict, conf, _, _]
   | conf == 0 = (False, 1)
   | otherwise = (True, 0)
 judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase
+
+-- | A fact row's class — its first field; an empty row (unreachable
+-- behind famOffence) reads as the retired class 0, which no rule
+-- below licenses.
+classOf :: [Integer] -> Integer
+classOf row = case row of
+  (cls : _) -> cls
+  [] -> 0
+
+-- | How much a class's ERASEABLE row tells the reader (7.0.0, O51;
+-- judged here since 7.2.0, plan v2.30 step 7b): a twin names the live
+-- unit it duplicates, a dead file names only its death, a verbatim
+-- segment never shares a target with either. The richer row stands
+-- for the target — before 7.0.0 the dead-file row won by class-name
+-- order and the twin class could never reach apply.
+licence :: Integer -> Integer
+licence cls = case cls of
+  2 -> 2
+  3 -> 1
+  _ -> 0
+
+-- | Which ADVISORY row stands when no row of a target is eraseable:
+-- the dead file's — its reason names the file's own verdict, the
+-- categorical bar (public_surface) or the trust fact
+-- (language_unresolved) — over the twin's, whose reason is about the
+-- copy. The reader sees the refusal that is about the file.
+advisoryFirst :: Integer -> Integer
+advisoryFirst cls = case cls of
+  3 -> 2
+  2 -> 1
+  _ -> 0
+
+-- | The target closure (7.2.0, plan v2.30 step 7b): which judged row
+-- STANDS for its target. A target is one (path, span) — the whole
+-- file, or one line span in it — and several rows may name it: a
+-- dead file that is also a byte-identical twin of a live unit names
+-- one target twice, once per class. The planner closed the set for
+-- itself until this step (erase/mod.rs `close_targets`); which
+-- verdict the reader acts on is judgment, so the rule lives here.
+--
+-- Three rules, in order: (1) an eraseable whole-file row owns its
+-- path, and every span row on that path is closed out — an apply
+-- that deleted the file and then spliced lines out of it would
+-- refuse on the hash it can no longer read; (2) within one target
+-- the eraseable row with the richest `licence` stands; (3) with no
+-- eraseable row the `advisoryFirst` row stands. Ties inside one
+-- class break to the EARLIEST row — which is why the contract asks
+-- for key order: two producers sending the same rows in the same
+-- order close the same way. Targets, fact rows and verdicts are
+-- parallel lists in request order; the answer is one bit per row.
+keptRows :: [[Integer]] -> [[Integer]] -> [(Bool, Integer)] -> [Bool]
+keptRows targets rows verdicts = [i `S.member` winners | i <- [0 .. length rows - 1]]
+ where
+  judged = zip3 [0 :: Int ..] (zip targets rows) (map fst verdicts)
+  owned = S.fromList [p | (_, ([p, 0, 0], _), True) <- judged]
+  subsumed [p, s, _] = s > 0 && p `S.member` owned
+  subsumed _ = False
+  standing cls eraseable
+    | eraseable = (1 :: Integer, licence cls)
+    | otherwise = (0, advisoryFirst cls)
+  open =
+    [ (take 3 t, (standing (classOf r) e, i))
+    | (i, (t, r), e) <- judged
+    , not (subsumed t)
+    ]
+  -- fromListWith applies `better new old`, so a strictly better
+  -- standing replaces and an equal one keeps the earlier row
+  better new old = if fst new > fst old then new else old
+  winners = S.fromList (map snd (M.elems (M.fromListWith better open)))

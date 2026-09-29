@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, setKey, tabledRequest) where
+module WireHarness (degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -30,6 +30,16 @@ runChecks checks = fmap and (mapM one checks)
   one (name, ok) = do
     putStrLn ((if ok then "ok   " else "FAIL ") <> name)
     pure ok
+
+-- | The table runner on two PARALLEL lists — names and probes — with
+-- the alignment leg first. A (name, probe) row per leg is a T2 clone
+-- of every sibling battery past six rows by this repo's own measure
+-- (the erase and structure batteries met the gate at 7.2.0), while a
+-- list of names and a list of probes each sit below the distinct-
+-- token floor; zip's silent truncation is what the first leg guards.
+runLegs :: [String] -> [Bool] -> IO Bool
+runLegs names probes =
+  runChecks (("every leg names one probe", length names == length probes) : zip names probes)
 
 -- | A request envelope carrying NAMED [[Integer]] fact tables — the
 -- structure family's wireReq shape. Promoted when the modularity

@@ -2230,8 +2230,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Wire.hs|6c6e6a1e762976b9|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 201,
-    "end": 214,
+    "line": 187,
+    "end": 200,
     "text": "-- | decode → cap check (a complete degraded reply, never a"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../ce.toml|509b429c9ce82c99|0": {
@@ -2265,107 +2265,101 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|cc93c4aa52f4e818|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 172,
+    "line": 199,
     "text": "crate::lockstep::refuse_degraded(&reply, \"structure/wire.rs vs Structure/Cost.hs\")?;"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 189,
-    "end": 203,
+    "line": 138,
+    "end": 152,
     "text": "-- | depth == parent.depth + 1 for every non-root row. nodeRow's"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|228575861056e64a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 108,
-    "end": 113,
+    "line": 47,
+    "end": 52,
     "text": ", -- the seam tables count toward the same cap (C15: a declared"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3b211773751c150d|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 156,
-    "end": 160,
-    "text": "patternOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3d54266a3b6aab2f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 169,
-    "end": 172,
+    "line": 118,
+    "end": 121,
     "text": "declOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4437845c220d08fa|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 248,
+    "line": 201,
     "text": ", \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 205,
-    "end": 218,
+    "line": 154,
+    "end": 167,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 205,
-    "end": 218,
+    "line": 154,
+    "end": 167,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 227,
-    "end": 229,
+    "line": 176,
+    "end": 178,
     "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 229,
-    "end": 233,
+    "line": 178,
+    "end": 182,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 229,
-    "end": 249,
+    "line": 178,
+    "end": 198,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|69c5155f32c757cf|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 106,
-    "end": 121,
+    "line": 45,
+    "end": 60,
     "text": "{ famName = \"structure\""
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 129,
+    "line": 72,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|82207190ce81caf3|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 174,
-    "end": 187,
+    "line": 123,
+    "end": 136,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 161,
-    "end": 164,
+    "line": 110,
+    "end": 113,
     "text": "convOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|b48a97004c2921f5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 125,
-    "end": 132,
+    "line": 67,
+    "end": 74,
     "text": "violation req ="
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|cd614b0e3b0462c4|0": {
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|d7485a21f49c6c3c|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 147,
-    "end": 171,
-    "text": "dirTables =\n[ ((3, \"pattern\", patternOk), take 2, reqPatterns req)"
+    "line": 93,
+    "end": 109,
+    "text": "dirTables =\n[ ((3, \"pattern\", capOk \"unknown pattern code\" 6), take 2, fromMaybe [] (reqPatterns req))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ddfc9813db49d347|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 277,
-    "end": 288,
+    "line": 231,
+    "end": 242,
     "text": "-- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ebd15a1b8f029b6d|0": {
@@ -2373,6 +2367,12 @@
     "line": 12,
     "end": 15,
     "text": "-- tables ride the wire — and the headline entropy rows. Names and"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ee88d766f5a5854b|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 103,
+    "end": 109,
+    "text": "-- the two [dir, key, count] tables share one reading: the key"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|1ce45d9f1e01be3f|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
@@ -2688,6 +2688,18 @@
     "end": 59,
     "text": "knobTable :: [(Integer, Knobs -> Integer, Integer -> Knobs -> Knobs)]"
   },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|a72de1873007894c|0": {
+    "target": "../../../core/app/CE/Structure/Request.hs",
+    "line": 84,
+    "end": 89,
+    "text": "-- | The [dirId, code, count] distribution the axes read, whichever"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Shape.hs|04ef9ff20f51e83d|0": {
+    "target": "../../../core/app/CE/Structure/Shape.hs",
+    "line": 31,
+    "end": 44,
+    "text": "styleTable :: [Integer]"
+  },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Stale.hs|45b17da0e54adb55|0": {
     "target": "../../../core/app/CE/Structure/Stale.hs",
     "line": 26,
@@ -2707,44 +2719,44 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|07fa44600b6597f6|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 139,
-    "end": 147,
+    "line": 153,
+    "end": 161,
     "text": "declaredOverlay ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|14d346ea6dcd4fce|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 31,
-    "end": 41,
+    "line": 39,
+    "end": 49,
     "text": "-- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|180053ab236a6370|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 227,
-    "end": 236,
+    "line": 241,
+    "end": 250,
     "text": "-- | P1 posture on the newest family: one node past the cap"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|4ee7ed4b7ebf46f2|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 172,
-    "end": 209,
+    "line": 186,
+    "end": 223,
     "text": "[ probeAt [] \"score\" == Just (toJSON (867 :: Integer))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|885bffb28ea698ca|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 62,
-    "end": 70,
+    "line": 76,
+    "end": 84,
     "text": "fixtureJudged :: Bool"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|b1d82d591529dd0b|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 103,
-    "end": 107,
+    "line": 117,
+    "end": 121,
     "text": ", -- the forged-depth probe (review 2026-08-20 #6): nodeRow's old"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|cc7cfe47d20e7add|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 127,
-    "end": 157,
+    "line": 141,
+    "end": 171,
     "text": "refused = refusedBy respond"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|2206ab3c881c25e7|0": {
@@ -4867,48 +4879,48 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|218b48ca3a9e695a|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 90,
+    "line": 91,
     "text": ", tableOffence \"edge\" id (edgeRow n) es"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|3387c02ebee80a49|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 210,
-    "end": 218,
+    "line": 211,
+    "end": 219,
     "text": "nonNegative row = if any (< 0) row then Just \"negative field\" else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|6782f370920e2abe|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 215,
-    "end": 218,
+    "line": 216,
+    "end": 219,
     "text": "posRow :: Integer -> Int -> Integer -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|7af31fbd5801de44|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 193,
-    "end": 208,
+    "line": 194,
+    "end": 209,
     "text": "-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|83b3d1c7a8a7681b|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 91,
-    "end": 95,
+    "line": 92,
+    "end": 96,
     "text": ", -- ascending pos is also the reply BOUND (M5-close review MED:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|93cec9aca650cd49|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 25,
-    "end": 31,
+    "line": 26,
+    "end": 32,
     "text": "-- | Wire shape (design brief §2): index = node identity, nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|9c522356ed628d7f|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 76,
-    "end": 98,
+    "line": 77,
+    "end": 99,
     "text": "-- | First boundary-contract offender, if any — checked in request"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|f9794f7ca8482a30|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 182,
+    "line": 183,
     "text": "where\nfields [lang, unres, total]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|0482f5b9a84ffd99|0": {
@@ -5074,8 +5086,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Wire.hs|cb5765da5377654d|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 216,
-    "end": 221,
+    "line": 202,
+    "end": 207,
     "text": "-- | Strictly-ascending row check with the family's label vocabulary"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/test/GraphWireProps.hs|13d8ff795a63a163|0": {
@@ -5897,8 +5909,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 269,
-    "end": 276,
+    "line": 223,
+    "end": 230,
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|1c6da934c477c2cd|0": {
@@ -7147,12 +7159,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|25ec30a05fd96d35|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 163,
+    "line": 145,
     "text": "knobbedRows name cap rowShape knobShape deg jud proto ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|27cf496b88cbf446|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 169,
+    "line": 151,
     "text": ", tableOffence \"knob\" (take 1) knobShape (knobsOf req)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/test/TrendProps.hs|05522fba8966ee03|0": {
@@ -7754,15 +7766,9 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 58,
-    "end": 89,
+    "line": 67,
+    "end": 98,
     "text": "/// The destructive phase: preconditions + writes + audit log"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|a72ddff5ab2ef26f|0": {
-    "target": "../../../cli/src/erase/mod.rs",
-    "line": 104,
-    "end": 134,
-    "text": "fn close_targets(rows: Vec<Row>) -> Vec<Row> {"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|0": {
     "target": "../../../cli/src/erase/model.rs",
@@ -7784,15 +7790,27 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|555fc245631410bd|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 29,
-    "end": 40,
+    "line": 35,
+    "end": 46,
     "text": "let reply = link"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|5df7975db4f3a3e3|0": {
+    "target": "../../../cli/src/erase/wire.rs",
+    "line": 60,
+    "end": 63,
+    "text": ".collect()\n}\n\n/// The two reply tables, each length-locked to the request and read"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|90a6cd9f2a1ed699|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 21,
-    "end": 40,
+    "line": 27,
+    "end": 46,
     "text": "let mut link = crate::lockstep::open_family(core, \"erase/1\")?;"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|99d157d580d3df1e|0": {
+    "target": "../../../cli/src/erase/wire.rs",
+    "line": 42,
+    "end": 58,
+    "text": "decode(&reply, cands.len())"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/lockstep.rs|a7f7cc8708bdb89f|0": {
     "target": "../../../cli/src/lockstep.rs",
@@ -7802,43 +7820,55 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 551,
-    "end": 553,
+    "line": 567,
+    "end": 569,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 547,
+    "line": 563,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 539,
-    "end": 553,
+    "line": 555,
+    "end": 569,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 542,
-    "end": 543,
+    "line": 558,
+    "end": 559,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 542,
-    "end": 546,
+    "line": 558,
+    "end": 562,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
+    "target": "../../../core/app/CE/Erase.hs",
+    "line": 51,
+    "end": 57,
+    "text": "-- | The target table's contract (7.2.0): aligned 1:1 with the fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|7cc064b21796b525|0": {
     "target": "../../../core/app/CE/Erase.hs",
-    "line": 34,
-    "end": 37,
+    "line": 40,
+    "end": 43,
     "text": "| any (< 0) [w, x, y, z] -> Just (label <> \"negative fact\")"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|d30566b9876389cf|0": {
     "target": "../../../core/app/CE/Erase.hs",
-    "line": 32,
+    "line": 38,
     "text": "| cls == 0 -> Just (label <> \"retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)\")"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|03de824997b99f52|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 120,
+    "end": 155,
+    "text": "-- | The target closure (7.2.0, plan v2.30 step 7b): which judged row"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1bfad10134ba1290|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -7848,38 +7878,38 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 66,
-    "end": 72,
+    "line": 73,
+    "end": 79,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 66,
-    "end": 72,
+    "line": 73,
+    "end": 79,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|2": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 66,
-    "end": 72,
+    "line": 73,
+    "end": 79,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|3": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 66,
-    "end": 72,
+    "line": 73,
+    "end": 79,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|4": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 66,
-    "end": 80,
+    "line": 73,
+    "end": 87,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|5": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 66,
-    "end": 67,
+    "line": 73,
+    "end": 74,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|306177f05792370c|0": {
@@ -7889,8 +7919,8 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|318f342a0b5d4722|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 49,
-    "end": 50,
+    "line": 56,
+    "end": 57,
     "text": "publicDeadVerdicts :: [Integer]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|594f1387f601fdb4|0": {
@@ -7901,26 +7931,26 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|6d26e1504e9be3b4|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 58,
-    "end": 60,
+    "line": 65,
+    "end": 67,
     "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|6d26e1504e9be3b4|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 58,
-    "end": 61,
+    "line": 65,
+    "end": 68,
     "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|98fc97d92b653fca|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 63,
-    "end": 64,
+    "line": 70,
+    "end": 71,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|98fc97d92b653fca|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 63,
-    "end": 64,
+    "line": 70,
+    "end": 71,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ad3fe900cfbb9e59|0": {
@@ -7943,77 +7973,77 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 62,
-    "end": 65,
+    "line": 69,
+    "end": 72,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 62,
-    "end": 78,
+    "line": 69,
+    "end": 85,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|2": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 62,
-    "end": 63,
+    "line": 69,
+    "end": 70,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|3": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 62,
-    "end": 68,
+    "line": 69,
+    "end": 75,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|4": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 62,
-    "end": 75,
+    "line": 69,
+    "end": 82,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|c935b83409ce2bdd|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 70,
+    "line": 77,
     "text": "| copyDead `elem` publicDeadVerdicts = (False, 6)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|d032e6912cc2b7a4|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 40,
-    "end": 50,
+    "line": 47,
+    "end": 57,
     "text": "-- | The dead verdicts an erase plan may never act on (6.1.0): 2"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ed64fa1cc784f706|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 80,
+    "line": 87,
     "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 52,
+    "line": 59,
     "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 52,
-    "end": 56,
+    "line": 59,
+    "end": 63,
     "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 76,
-    "end": 79,
+    "line": 83,
+    "end": 86,
     "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 76,
-    "end": 79,
+    "line": 83,
+    "end": 86,
     "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|2": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 76,
-    "end": 77,
+    "line": 83,
+    "end": 84,
     "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|30ccbd2d9190022f|0": {
@@ -8529,8 +8559,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 279,
-    "end": 281,
+    "line": 295,
+    "end": 297,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -8559,14 +8589,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|57a6c65bff23e598|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 120,
-    "end": 127,
+    "line": 121,
+    "end": 128,
     "text": "-- | The advisory tables are one fact in two halves: `unmentioned`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|8c8ee6d34f3f3fe6|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 71,
-    "end": 72,
+    "line": 72,
+    "end": 73,
     "text": "<*> o .:? \"unmentioned\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|007fe87498837f89|0": {
@@ -9237,8 +9267,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Wire.hs|7ce9998aa97b3b95|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 144,
-    "end": 169,
+    "line": 126,
+    "end": 151,
     "text": "tableCap :: Integer -> RowsReq -> Bool"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/test/TombstoneProps.hs|897b6f6807378652|0": {

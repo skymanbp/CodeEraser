@@ -167,7 +167,23 @@
 > 追加 `include` 站点标签（GRAPH_REV 15 → 16）、clangd 的三个探名 `compile_commands.json` / `build/compile_commands.json` / `compile_flags.txt` 入解析器配置、`[graph.search_roots]`
 > 入 resolve_key。步 5b-8（纯散文臂 `.txt`，同一未发布 minor 内，wire 零改动）：`verdict/1` 轴 2 的代码文件数改读「有位置行且不在
 > `docFiles` 集内的文件」（`Score.hs` 的 `codeFiles`）——纯文本文件是 docdup 机会而不是结点，`docFiles` 自此可以点名一个没有位置行的
-> 文件，7.0.0 条的 `nodes − docFiles` 是历史读法。
+> 文件，7.0.0 条的 `nodes − docFiles` 是历史读法。步 7b（判决回迁，同一未发布 minor 内加性；v2.30 修正案 2026-09-24
+> 用户裁「搬前两处，随 1.8.0」，2026-09-28）：① `erase.request` 加性可选表 `targets=[[pathId,start,end]]`——与 `rows`
+> 一一对齐（行数不等按名拒 `targets: N rows for M fact rows`）；pathId 按路径首现稠密编号（名不过线）、`0/0` = 整文件、
+> 否则 1 基闭区间；每类只能点名一种形（verbatim_doc 须为区间、t1_twin / dead_file 须为整文件）、半开与倒序按名拒、整表按键序
+> （`[pathId,start,end]` 字典序不降，否则 `target i: out of key order`）；上过线且未降级时 `erase.result` 多一键 `kept`
+> （与 `rows` 同长的 0/1 表）= 目标闭包的答案（`CE.Erase.Cost.keptRows`：可擦的整文件行拥有其路径、同路径区间行出局；
+> 同一目标里可擦行按 `licence` 择富〔t1_twin 2 > dead_file 1 > verbatim_doc 0〕；无可擦行时按 `advisoryFirst`
+> 〔dead_file > t1_twin〕；同类并列取最早行——键序因此是契约的一部分）；此前这套闭包住在 Rust `erase/mod.rs::close_targets`。
+> 缺席 = 7.1.0 字节同、无 `kept`；ce 恒发（候选先按 path / span / 类名排序，故键序即渲染序），无 `kept` 的应答按名拒
+> （「7.2.0 之前的核」）。② `structure.request` 加性可选表 `patternShapes=[[dirId,bits,count]]`（bits 0..127 = 词干的七位
+> 事实：0 下划线 / 1 连字符 / 2 小写字母 / 3 大写字母 / 4 数字打头 / 5 首字母大写 / 6 不可分类〔空词干或非字母数字连字符下划线〕；
+> `count ≥ 1`、按 `(dirId,bits)` 严格升序、越界按名拒 `shape bits outside 0..127`），核按 `CE.Structure.Shape` 的 STYLE 表
+> 折成 `[dirId,code,count]` 分布再判 S1——此前分类住在 Rust `structure/tree.rs::pattern_code`；与 `patterns` 同上线按名拒
+> （`patternShapes: rides beside patterns (one road)`）；上过线且未降级时 `structure.result` 回显 `patternShapes=<行数>`，
+> ce 恒发形状表、不再发 `patterns`，无回显按名拒。golden：既有对不动，新增 erase 六对（9–11 闭包三例〔孪生胜死文件且同路径
+> 区间出局 / 两行皆顾问时死文件的类别拒绝立 / 可擦孪生胜顾问死文件〕/ 12 行数不等 / 13 整文件类点名区间 / 14 键序）与 structure
+> 三对（18 形状路与 1 号对同判并回显 3 / 19 双路拒 / 20 位越界拒）。
 
 > **7.1.0**（structure/1 模块度轴 + fourclass/2 声明级搬迁，加性 minor，计划 v2.29 步 10 批 C3 O54 / O48，2026-09-06）：
 > `structure.request` 加性可选表 `dirEdges=[[fromDir,toDir,count]]`（**只载跨目录**有向边，
@@ -708,7 +724,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->135<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.2.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->144<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.2.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

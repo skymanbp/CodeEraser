@@ -558,4 +558,22 @@ entry_globs = [
 # score::row_index -- the row left with the restatement: taken at the
 # mechanism, not bought. Row set diffed against the 5b-8 run: that
 # row gone, none new. Measured on the formatted tree.
-budget = 57
+# 57 -> 51 (v2.30 step 7b, the erase closure and the structure shape
+# road into the core): six rows left with the restatements they were
+# made of, none bought. Erase.hs's head rhymed with Audit.hs's (94
+# tokens: the same knobless import list and respond line) and
+# Structure.hs's request record with Verdict/Wire.hs's (56); the
+# erase head now imports the closure and names the target battery in
+# its cascade, and the structure request record lives in
+# Structure/Request.hs, so neither run is there to rhyme. The other
+# four were the (name, probe) battery tables every Props module
+# spells -- StructureProps against AuditProps, SplitProps and
+# TrendProps, EraseProps against TrendProps -- and the two batteries
+# that grew at 7.2.0 read WireHarness.runLegs' two parallel lists
+# instead, each below the distinct floor. The eight rows the step
+# first landed went the same way before the count was read: the
+# closure's tuple table and the refusal probes (self-clone chains) as
+# parallel lists, the grown battery lists as above. Row set diffed
+# against the HEAD (e1a6b520) run: six rows gone, none new. Measured
+# on the formatted tree.
+budget = 51

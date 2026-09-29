@@ -27,13 +27,15 @@ pub fn node_rows(t: &tree::Tree) -> Vec<[u64; 5]> {
         .collect()
 }
 
-pub fn pattern_rows(t: &tree::Tree) -> Vec<[u64; 3]> {
+/// The S1 fact table (7.2.0): [dirId, shapeBits, count] rows,
+/// ascending by (dir, bits) as the wire asks — the core folds them to
+/// the style distribution it judges (CE.Structure.Shape); no code is
+/// chosen on this side.
+pub fn shape_rows(t: &tree::Tree) -> Vec<[u64; 3]> {
     let mut rows = Vec::new();
     for (i, d) in t.dirs.iter().enumerate() {
-        for (code, &n) in d.patterns.iter().enumerate() {
-            if n > 0 {
-                rows.push([i as u64, code as u64, n as u64]);
-            }
+        for (&bits, &n) in &d.shapes {
+            rows.push([i as u64, u64::from(bits), u64::from(n)]);
         }
     }
     rows

@@ -26,7 +26,12 @@ use std::process::{Child, Stdio};
 /// name. What it buys: a language row flipping to judged in lang.rs
 /// (each of the six plan v2.30 languages does, in its own step) is
 /// a Rust-side fact the core learns from the request, never a core
-/// release. No family changes its capability name.
+/// release. No family changes its capability name. Plan v2.30 step 7b
+/// (inside the same unreleased minor) moves two client-side judgments
+/// behind the wire the same way: `erase.request` carries `targets` and
+/// reads the closure back as `kept`; `structure.request` carries
+/// `patternShapes` and reads the fold's row count back — each echo
+/// pinned by its family, each absence refused as a pre-7.2.0 core.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted

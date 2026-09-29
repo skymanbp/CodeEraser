@@ -206,9 +206,9 @@ fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<Sp
 /// Judged languages only (plan v2.5): letting the scan-only arm in
 /// would change every axis the TREE feeds — geometry (S0), naming
 /// (S1), docs (S4) and both entropy rows all shift with the file
-/// population (S2 mixing reads pattern distributions, not file
-/// language — the old comment blamed the wrong axis; batch-7 defect
-/// sweep).
+/// population (S2 mixing reads the style distributions the core
+/// folds from the shape rows, not file language — the old comment
+/// blamed the wrong axis; batch-7 defect sweep).
 fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
     files
         .iter()
@@ -285,7 +285,7 @@ fn assemble(
     let (file_refs, dir_edges) = rows::ref_rows(w, t)?;
     Ok(wire::Request {
         nodes: rows::node_rows(t),
-        patterns: rows::pattern_rows(t),
+        shapes: rows::shape_rows(t),
         conventions: rows::convention_rows(t),
         file_refs,
         declared: rows::declared_rows(&cfg.structure.layout, t)?,

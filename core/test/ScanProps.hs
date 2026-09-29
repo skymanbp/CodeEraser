@@ -232,7 +232,7 @@ degradedFails = case replyObj (wireReq [[0, 0] | _ <- [0 .. scanRowCap]]) of
 -- that names it (32895 = the seven plus bit 15) and refuses by name
 -- without one — absent and an explicit 127 are one legacy road; the
 -- mask echoes exactly when it rode and the reply is not degraded; a
--- negative or over-wide value refuses by name (CE.Wire.maskOffence,
+-- negative or over-wide value refuses by name (CE.Wire.Mask.maskOffence,
 -- the same read graph/1 makes).
 maskRoad :: Bool
 maskRoad =

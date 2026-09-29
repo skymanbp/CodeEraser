@@ -82,6 +82,17 @@ pub struct Candidate {
     pub sites: i64,
 }
 
+/// One judged row as the wire returns it (erase/1): the predicate's
+/// pair and, since 7.2.0, the target closure's bit — whether this
+/// row STANDS for its target (CE.Erase.Cost.keptRows; plan v2.30
+/// step 7b). A row that does not stand never becomes a plan row.
+#[derive(Debug)]
+pub struct Verdict {
+    pub eraseable: bool,
+    pub reason: i64,
+    pub kept: bool,
+}
+
 /// One judged plan row.
 #[derive(Serialize, Clone)]
 pub struct Row {

@@ -8,25 +8,33 @@
 -- 0..8 levered in knobLevers below, 9/10 in the redundancy leg and
 -- 11 in the staleness leg; 19/20 belong to axis 7 and are levered in
 -- StructureModularityProps, which the E01 300-line wall split off),
--- the refusals by name, and the degraded-fails posture.
+-- the refusals by name, the degraded-fails posture, and (7.2.0, plan
+-- v2.30 step 7b) the name-pattern shape road: the same fixture sent
+-- as stem facts judges to the same digit, the classifier's vocabulary
+-- is pinned stem by stem, and the road's refusals name the offender.
 module StructureProps (battery) where
 
 import CE.Structure (respond)
 import CE.Structure.Cost (structNodeCap)
+import CE.Structure.Shape (foldShapes, shapeCode)
 import Data.Aeson
-import WireHarness (field, refusedBy, replyObjWith, runChecks, setKey, tabledRequest)
+import WireHarness (field, refusedBy, replyObjWith, runLegs, setKey, tabledRequest)
 
 battery :: IO Bool
-battery =
-  runChecks
-    [ ("the fixture tree judges to the hand-computed digit", fixtureJudged)
-    , ("every structure knob is a live lever", knobLevers)
-    , ("structure refusals name the offender", refusals)
-    , ("an over-cap structure request degrades and FAILS", degradedFails)
-    , ("the declared layout overlays by hand-computed digit", declaredOverlay)
-    , ("the redundancy axis judges present, absent and clean apart", redundancyAxis)
-    , ("the staleness axis judges by hand-computed digit", staleAxis)
+battery = runLegs names probes
+ where
+  names =
+    [ "the fixture tree judges to the hand-computed digit"
+    , "every structure knob is a live lever"
+    , "structure refusals name the offender"
+    , "an over-cap structure request degrades and FAILS"
+    , "the declared layout overlays by hand-computed digit"
+    , "the redundancy axis judges present, absent and clean apart"
+    , "the staleness axis judges by hand-computed digit"
+    , "the shape road judges to the pattern road's digit and echoes its rows"
+    , "the classifier's vocabulary judges from shape bits, stem by stem"
     ]
+  probes = [fixtureJudged, knobLevers, refusals, degradedFails, declaredOverlay, redundancyAxis, staleAxis, shapeRoad, shapeVocabulary]
 
 -- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1
 -- (9 files, 5 snake + 4 pascal names, 2 files with 4 outside refs
@@ -40,12 +48,18 @@ battery =
 -- (0+200·4)·10 div (10·5) = 840. Entropy: global patterns [11,4]
 -- → 782‰; dir files [3,9,6] (zero-file dir 3 filtered) → 916‰.
 wireReq :: Value
-wireReq =
+wireReq = wireReqWith ("patterns", [[1, 0, 5], [1, 3, 4], [2, 0, 6]])
+
+-- | The fixture with its name-pattern table named by the caller: the
+-- pattern road above, the shape road in shapeRoad (7.2.0) — one
+-- fixture, two spellings of the same distribution.
+wireReqWith :: (String, [[Integer]]) -> Value
+wireReqWith names =
   tabledRequest
     "7.0.0"
     "structure.request"
     [ ("nodes", [[0, 0, 0, 2, 3], [1, 0, 1, 0, 9], [2, 0, 1, 1, 6], [3, 2, 2, 0, 0]])
-    , ("patterns", [[1, 0, 5], [1, 3, 4], [2, 0, 6]])
+    , names
     , ("conventions", [[0, 3]])
     , ("fileRefs", [[1, 0, 4, 2]])
     ]
@@ -234,3 +248,41 @@ degradedFails = case replyObj overCap of
       && field o "fail" == Just (Bool True)
  where
   overCap = setKey "nodes" (toJSON [[0, 0, 0, 0, 0 :: Integer] | _ <- [0 .. structNodeCap]]) wireReq
+
+-- | The shape road (7.2.0): the fixture's 5 snake stems ride as bits
+-- 5 (lower + underscore), its 4 pascal stems as 44 (upper + lower +
+-- first char upper) and dir 2's 6 snake stems as 5 again — the same
+-- distribution the pattern road spells as codes 0 / 3 / 0 — so the
+-- four judged keys must read the pattern road's digits, and the reply
+-- echoes the three rows it folded; the pattern road echoes nothing.
+-- Refusals: both roads at once, bits past 127, a zero count, an
+-- out-of-order pair, a dir out of range — each by name.
+shapeRoad :: Bool
+shapeRoad =
+  and
+    [ judgedKeys (replyObj shapeReq) == judgedKeys (replyObj wireReq)
+    , (replyObj shapeReq >>= (`field` "patternShapes")) == Just (Number 3)
+    , (replyObj wireReq >>= (`field` "patternShapes")) == Nothing
+    , refusedBy respond (setKey "patternShapes" (toJSON shapes) wireReq) "patternShapes: rides beside patterns (one road)"
+    , refusedBy respond (shapesAt [[1, 128, 1]]) "patternShapes 0: shape bits outside 0..127"
+    , refusedBy respond (shapesAt [[1, 5, 0]]) "patternShapes 0: count below 1"
+    , refusedBy respond (shapesAt [[1, 44, 4], [1, 5, 5]]) "patternShapes 1: not strictly ascending"
+    , refusedBy respond (shapesAt [[9, 5, 1]]) "patternShapes 0: dir out of range"
+    ]
+ where
+  shapes = [[1, 5, 5], [1, 44, 4], [2, 5, 6]] :: [[Integer]]
+  shapeReq = shapesAt shapes
+  shapesAt rows = wireReqWith ("patternShapes", rows)
+  judgedKeys o = [o >>= (`field` k) | k <- ["axes", "score", "entropy", "findings"]]
+
+-- | The ten stems the producer's own vocabulary test names, as shape
+-- bits (0 under / 1 dash / 2 lower / 3 upper / 4 digit-led / 5 first
+-- upper / 6 unclassifiable) against their frozen codes: parse_result
+-- 0, mod 0, my-file 1, parseResult 2, ParseResult 3, README 4,
+-- MAX_LIMIT 4, 2026-08-17-notes 5, mixed-and_under 6, and a
+-- non-ASCII stem 6. The fold sums two stems of one code in one dir
+-- (bits 5 and 4 are both lower_snake) and keeps the rows ascending.
+shapeVocabulary :: Bool
+shapeVocabulary =
+  map shapeCode [5, 4, 6, 12, 44, 40, 41, 22, 7, 64] == [0, 0, 1, 2, 3, 4, 4, 5, 6, 6]
+    && foldShapes [[1, 5, 5], [1, 44, 4], [2, 5, 6], [1, 4, 2]] == [[1, 0, 7], [1, 3, 4], [2, 0, 6]]

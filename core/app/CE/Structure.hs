@@ -14,7 +14,9 @@
 -- vocabulary is dense ids, codes and counts, re-labelled by the
 -- Rust side that kept the names. Knob rows ride the established
 -- [code, value] grammar; ce.toml is the source, Cost.hs the
--- defaults, and the reply echoes the effective set whole.
+-- defaults, and the reply echoes the effective set whole. The
+-- request record and its decoder live in CE.Structure.Request
+-- (split at the 300-line wall, plan v2.30 step 7b).
 module CE.Structure (respond) where
 
 import CE.Structure.Axes (Facts (..), Knobs (kScale, kViolCost), axes, entropyRows, findings)
@@ -23,6 +25,8 @@ import qualified CE.Structure.Modularity as Mod
 import CE.Verdict.Score (chargeAt)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
+import CE.Structure.Request (StructReq (..), patternsOf, seamTables)
+import CE.Structure.Shape (shapeBitsCap)
 import CE.Structure.Split (splitOffence, splitRows)
 import qualified CE.Structure.Stale as Stale
 import CE.Wire (Family (..), respondWith, tableOffence)
@@ -31,72 +35,7 @@ import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
-
-data StructReq = StructReq
-  { reqId :: Value
-  , reqNodes :: [[Integer]]
-  , reqPatterns :: [[Integer]]
-  , reqConventions :: [[Integer]]
-  , reqFileRefs :: [[Integer]]
-  , reqDeclared :: [[Integer]]
-  , -- the RAW staleness facts (2.23.0, additive; the pre-judged
-    -- staleDocs table's one-minor grace expired and its arm retired
-    -- at 2.29.0 — a legacy key is ignored per the §1 unknown-field
-    -- rule): one row per md
-    -- doc that HAS reference targets — [dirId, docTs], docTs = the
-    -- doc's newest change inside the churn window, 0 = unchanged
-    -- (the one sentinel, documented); doc identity = row index
-    -- (dense by construction, the graph node discipline). Edges
-    -- [docIdx, targetTs] exist only for targets that CHANGED in the
-    -- window (targetTs >= 1) — an unchanged target can never make a
-    -- doc stale, so shipping it would be dead weight.
-    reqStaleDocRows :: Maybe [[Integer]]
-  , reqStaleEdges :: [[Integer]]
-  , reqRedundancy :: Maybe [[Integer]]
-  -- ^ Both Maybe, not defaulted: an absent table means its axis is
-  -- not judged, an empty one that it judged clean — the churn-table
-  -- honesty (absence is spoken, never zero-filled).
-  , reqDirEdges :: Maybe [[Integer]]
-  -- ^ 7.1.0 (O54): the directed CROSSING dir-edge table, same Maybe
-  -- stance. The intra mass is fileRefs' `inside` sum halved and never
-  -- rides twice; Mod.crossTableOffence holds the pair to one graph.
-  , -- the split-ROI advisory tables (plan v2.6 §C 2.14.0, clones/
-    -- churn v2.7 ② 2.15.0 — all additive): seamFiles is the
-    -- presence anchor — the two reply keys exist exactly when it
-    -- rides; the four unit/edge tables default empty
-    reqSeamFiles :: Maybe [[Integer]]
-  , reqSeamUnits :: [[Integer]]
-  , reqSeamRefs :: [[Integer]]
-  , reqSeamClones :: [[Integer]]
-  , reqSeamChurn :: [[Integer]]
-  , reqKnobs :: [[Integer]]
-  }
-
-instance FromJSON StructReq where
-  parseJSON = withObject "StructReq" $ \o ->
-    StructReq
-      <$> o .: "id"
-      <*> o .: "nodes"
-      <*> o .:? "patterns" .!= []
-      <*> o .:? "conventions" .!= []
-      <*> o .:? "fileRefs" .!= []
-      <*> o .:? "declared" .!= []
-      <*> o .:? "staleDocRows"
-      <*> o .:? "staleEdgeRows" .!= []
-      <*> o .:? "redundancy"
-      <*> o .:? "dirEdges"
-      <*> o .:? "seamFiles"
-      <*> o .:? "seamUnits" .!= []
-      <*> o .:? "seamRefs" .!= []
-      <*> o .:? "seamClones" .!= []
-      <*> o .:? "seamChurn" .!= []
-      <*> o .:? "knobs" .!= []
-
--- | The four unit/edge tables as ONE bundle — the same tuple
--- CE.Structure.Split consumes on both its faces (offence + rows).
-seamTables :: StructReq -> ([[Integer]], [[Integer]], [[Integer]], [[Integer]])
-seamTables req =
-  (reqSeamUnits req, reqSeamRefs req, reqSeamClones req, reqSeamChurn req)
+import Data.Maybe (fromMaybe)
 
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
@@ -120,12 +59,16 @@ respond proto =
 -- | First boundary-contract offender in request order — the three
 -- dir-keyed tables walk ONE loop over their spec rows (the twelfth
 -- bite's repayment shape: the per-table asum/ascending pair was the
--- clone).
+-- clone). The name-pattern distribution rides ONE road (7.2.0): a
+-- request carrying both `patterns` and `patternShapes` is refused
+-- before either table is read — one judgment, one road (the naming
+-- facts' stance at 2.30.0).
 violation :: StructReq -> Maybe String
 violation req =
   asum
     ( asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
         : depthChain (reqNodes req)
+        : oneRoad
         : [ tableOffence nm proj (dirRow n spec) rows
           | (spec@(_, nm, _), proj, rows) <- dirTables
           ]
@@ -144,8 +87,12 @@ violation req =
  where
   n = toInteger (length (reqNodes req))
   docRows = concat (reqStaleDocRows req)
+  oneRoad = case (reqPatterns req, reqShapes req) of
+    (Just _, Just _) -> Just "patternShapes: rides beside patterns (one road)"
+    _ -> Nothing
   dirTables =
-    [ ((3, "pattern", patternOk), take 2, reqPatterns req)
+    [ ((3, "pattern", capOk "unknown pattern code" 6), take 2, fromMaybe [] (reqPatterns req))
+    , ((3, "patternShapes", capOk "shape bits outside 0..127" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))
     , ((2, "convention", convOk), take 1, reqConventions req)
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
     , ((2, "declared", declOk), take 1, reqDeclared req)
@@ -153,10 +100,12 @@ violation req =
     , (Mod.edgeRowSpec n, take 2, concat (reqDirEdges req))
     ]
   noExtra _ = Nothing
-  patternOk row = case row of
-    [_, code, count] | code > 6 -> Just "unknown pattern code"
-                     | count < 1 -> Just "count below 1"
-                     | otherwise -> Nothing
+  -- the two [dir, key, count] tables share one reading: the key
+  -- under its cap, the count at least one
+  capOk why cap row = case row of
+    [_, v, count] | v > cap -> Just why
+                  | count < 1 -> Just "count below 1"
+                  | otherwise -> Nothing
     _ -> Nothing
   convOk row = case row of
     [_, bits] | bits < 1 || bits > 3 -> Just "bits outside 1..3"
@@ -230,7 +179,11 @@ dirRow n (arity, name, extra) i row = case row of
 -- A-layer keys (divergence + deviations) exist ONLY when the
 -- request declares a layout — an undeclared request answers the
 -- S2 shape byte for byte, and a degraded reply drops the
--- declaration with the rest of the facts.
+-- declaration with the rest of the facts. The shape road (7.2.0)
+-- echoes its row count as `patternShapes` exactly when it rode and
+-- was judged, so the producer can pin that a core read the facts —
+-- a pre-7.2.0 core would drop the table under the unknown-field rule
+-- and judge S1 on nothing.
 reply :: String -> StructReq -> Knobs -> Bool -> B8.ByteString
 reply proto req k degraded =
   BL.toStrict . encode . object $
@@ -249,6 +202,7 @@ reply proto req k degraded =
          , "degraded" .= degraded
          ]
       <> ["reason" .= ("structure_too_large" :: String) | degraded]
+      <> ["patternShapes" .= length rows | not degraded, Just rows <- [reqShapes req]]
  where
   facts =
     if degraded
@@ -256,7 +210,7 @@ reply proto req k degraded =
       else
         Facts
           (reqNodes req)
-          (reqPatterns req)
+          (patternsOf req)
           (reqConventions req)
           (reqFileRefs req)
           (Stale.effectiveStale (reqStaleDocRows req) (reqStaleEdges req))
