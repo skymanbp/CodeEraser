@@ -1,0 +1,2165 @@
+{
+  "constants": {
+    "min_per_stratum": 15
+  },
+  "corpus": {
+    "lang": "tsx",
+    "name": "zod",
+    "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+  },
+  "excluded": {
+    "other_extension": 554
+  },
+  "files": [
+    {
+      "path": "packages/docs/app/(doc)/[[...slug]]/page.tsx",
+      "sha256": "c39517331f63df814ee465a1d6611a223c45597435f3eac6cefd9324ad930399",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            15,
+            73
+          ],
+          "name": "Page",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 1,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 6,
+            "2/A": 0,
+            "2/B": 6,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            9,
+            7,
+            21
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            27,
+            27
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            28,
+            30
+          ],
+          "name": "(anonymous)",
+          "nth": 2,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            62,
+            62
+          ],
+          "name": "h1",
+          "nth": 3,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            63,
+            63
+          ],
+          "name": "h2",
+          "nth": 4,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            64,
+            64
+          ],
+          "name": "h3",
+          "nth": 5,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            65,
+            65
+          ],
+          "name": "h4",
+          "nth": 6,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            66,
+            66
+          ],
+          "name": "h5",
+          "nth": 7,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            67,
+            67
+          ],
+          "name": "h6",
+          "nth": 8,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            75,
+            77
+          ],
+          "name": "generateStaticParams",
+          "nth": 9,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            79,
+            116
+          ],
+          "name": "generateMetadata",
+          "nth": 10,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 1,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 5,
+            "2/A": 0,
+            "2/B": 5,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            8,
+            6,
+            22
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/(doc)/layout.tsx",
+      "sha256": "97930d860aaf2e029dda85ec1c025758088ea2ba316bb9bbb9b1e23bf29c47ab",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            68,
+            74
+          ],
+          "name": "Layout",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/blog/[slug]/page.tsx",
+      "sha256": "c261813758eee1145399fa29f7230b85c692229385a068e3df3fd39f211fe0c9",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            9,
+            72
+          ],
+          "name": "Page",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 1,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 6,
+            "2/A": 0,
+            "2/B": 6,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            9,
+            7,
+            26
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            74,
+            78
+          ],
+          "name": "generateStaticParams",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            75,
+            77
+          ],
+          "name": "(anonymous)",
+          "nth": 2,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            80,
+            90
+          ],
+          "name": "generateMetadata",
+          "nth": 3,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 1,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 2,
+            "2/A": 0,
+            "2/B": 2,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            5,
+            3,
+            8
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/blog/layout.tsx",
+      "sha256": "e2eff8ec6972b209984351310afa9089b0c92fdd76591cfc6d878c15cce4ab69",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            5,
+            7
+          ],
+          "name": "BlogLayout",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/blog/page.tsx",
+      "sha256": "a5692b11e64eb7c290bbba1fb9fb239650274cbd54e11b040dcc7c3c90a02d0c",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            6,
+            38
+          ],
+          "name": "BlogIndexPage",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            16,
+            34
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 4,
+            "2/A": 0,
+            "2/B": 4,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            5,
+            5,
+            17
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/layout.config.tsx",
+      "sha256": "cbd81c7e2e81f211cf01321c2d29a70b81559f97c1caf8a45abb89326c6dda00",
+      "units": [],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/layout.tsx",
+      "sha256": "0502a2c1662357d266ea7e2bcfcbf7c5347dcbd264f716f5167f0ed72f2d3dd8",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            16,
+            53
+          ],
+          "name": "Layout",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/not-found.tsx",
+      "sha256": "55a852bc61e14f164e49a060e80fa364ff926e97bb697ae5b2705aaf02ea4868",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            7,
+            18
+          ],
+          "name": "NotFound",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/app/og.png/route.tsx",
+      "sha256": "9aeee8671371fd9a6459a6ffcfe8232332b3bd5ed27ef8b30fa9f1e3acdf6dfc",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            15,
+            105
+          ],
+          "name": "GET",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 5,
+            "2/A": 0,
+            "2/B": 5,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            11,
+            6,
+            14
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/accordion.tsx",
+      "sha256": "f351178747de83ee72402681f045fbe8af50bd9f4718590cf8a1d9d5f4e65370",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            12,
+            34
+          ],
+          "name": "(anonymous)",
+          "nth": 0,
+          "params": 5,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 5
+          },
+          "rows": [
+            1,
+            5,
+            6
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/bronze.tsx",
+      "sha256": "3e7715198faaa7ef7ec5fd6646d097b35646a7e6dca7e78f9348426e360b7795",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            1,
+            57
+          ],
+          "name": "Bronze",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            33,
+            52
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            6
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/codec-image.tsx",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            12,
+            38
+          ],
+          "name": "ThemedImage",
+          "nth": 0,
+          "params": 4,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 4
+          },
+          "rows": [
+            1,
+            4,
+            5
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/copy-markdown-button.tsx",
+      "sha256": "22778c1683b173b636ff58addf5ffdc41d51def3c6206991b82ecefd21a00b86",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            11,
+            37
+          ],
+          "name": "CopyMarkdownButton",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 2,
+            "2/A": 0,
+            "2/B": 2,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            14,
+            22
+          ],
+          "name": "handleCopy",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            8,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            18,
+            18
+          ],
+          "name": "(anonymous)",
+          "nth": 2,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/ecosystem.tsx",
+      "sha256": "edceabeeea2209aa42e9b80cc6e2986906b2db68ffab3fe35a435a93ad681141",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            343,
+            370
+          ],
+          "name": "Table",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            355,
+            366
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            5
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            376,
+            380
+          ],
+          "name": "ResourceTable",
+          "nth": 2,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            382,
+            384
+          ],
+          "name": "ApiLibraries",
+          "nth": 3,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            386,
+            388
+          ],
+          "name": "FormIntegrations",
+          "nth": 4,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            390,
+            392
+          ],
+          "name": "ZodToX",
+          "nth": 5,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            394,
+            396
+          ],
+          "name": "XToZod",
+          "nth": 6,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            398,
+            400
+          ],
+          "name": "MockingLibraries",
+          "nth": 7,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            402,
+            404
+          ],
+          "name": "PoweredByZod",
+          "nth": 8,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            406,
+            408
+          ],
+          "name": "ZodUtilities",
+          "nth": 9,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/featured.tsx",
+      "sha256": "ab0c2a4e9ec9429a5216ac5087a793f94abb4236511b786106b9bbe90d01e894",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            8,
+            37
+          ],
+          "name": "Featured",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            2,
+            2,
+            7
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/gold.tsx",
+      "sha256": "64f8af6861df70372e2177e7b237baf5b9bc5d15b558e88d527d7bf65c96d55f",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            11,
+            78
+          ],
+          "name": "Gold",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            45,
+            73
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            11
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/heading.tsx",
+      "sha256": "5ab895539f3b168d78a91c408736ed580f9bd3f38b3affbaf2b8ffe139187afe",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            12,
+            48
+          ],
+          "name": "Heading",
+          "nth": 0,
+          "params": 3,
+          "pools": {
+            "0/A": 0,
+            "0/B": 1,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 3
+          },
+          "rows": [
+            4,
+            4,
+            13
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/hero-logo.tsx",
+      "sha256": "785a539cf75e6f3421413b474a10d240692e57d3dda67d03c1cb2340db4ccdab",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            10,
+            44
+          ],
+          "name": "HeroLogo",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            2,
+            3,
+            5
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            25,
+            25
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            39,
+            39
+          ],
+          "name": "(anonymous)",
+          "nth": 2,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/if.tsx",
+      "sha256": "770713a4d177df7ced37736ca49643c325ec4002502462a0b0b4c361294cd1f2",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            3,
+            11
+          ],
+          "name": "If",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 1,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            6,
+            2,
+            6
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/inkeep-bubble.tsx",
+      "sha256": "776dd717c14fa3b9469123c061e15bfd44df6aa8e6c65c77ed8b9a1f4ca09427",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            6,
+            58
+          ],
+          "name": "InkeepBubble",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 2,
+            "2/A": 0,
+            "2/B": 2,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            4,
+            3,
+            5
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            11,
+            13
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            25,
+            25
+          ],
+          "name": "isDarkMode",
+          "nth": 2,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/inkeep-search.tsx",
+      "sha256": "63d815a9ba38aef8ec8e595ee74f86760904ca276f369e5af6a1638538c342f4",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            7,
+            46
+          ],
+          "name": "InkeepSearchBox",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 4,
+            "2/A": 0,
+            "2/B": 4,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            5,
+            6,
+            10
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            11,
+            13
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            27,
+            27
+          ],
+          "name": "isDarkMode",
+          "nth": 2,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/platinum.tsx",
+      "sha256": "b31c56a8366194cc53873bba708e64db64c218a963ed4bd2776b3d90895febbe",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            1,
+            53
+          ],
+          "name": "Platinum",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            24,
+            49
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            9
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/scroller.tsx",
+      "sha256": "83601e8acd1978334c91d85843b1097c880ace2cf3882ebf2ab6b4b14bf93c1c",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            7,
+            32
+          ],
+          "name": "Scroller",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            6,
+            2,
+            4
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            14,
+            18
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            23,
+            29
+          ],
+          "name": "handleScroll",
+          "nth": 2,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 2,
+            "2/A": 0,
+            "2/B": 2,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            4,
+            2,
+            5
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/sidebar-item.tsx",
+      "sha256": "254e634b0bb08871afd203466b220139510e4b88b1dfdf74dd7ef12975e0ab0e",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            12,
+            34
+          ],
+          "name": "SidebarItem",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 2,
+            "2/A": 0,
+            "2/B": 2,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            3,
+            3,
+            11
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            36,
+            50
+          ],
+          "name": "SidebarSeparator",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            2
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/sidebar-logo.tsx",
+      "sha256": "ec0be393cf14dcd3bbaed8ddffbf61070df2677bdb54052145d932488a79ddb0",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            6,
+            23
+          ],
+          "name": "SidebarLogo",
+          "nth": 0,
+          "params": 2,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 2
+          },
+          "rows": [
+            2,
+            4,
+            5
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            18,
+            18
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            1,
+            0,
+            0
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/silver.tsx",
+      "sha256": "9c279cd0bf6a740a9e2436f4f9aa3e7dcdfd5c78d30a9d17d572495437b13cbe",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            1,
+            126
+          ],
+          "name": "Silver",
+          "nth": 0,
+          "params": 0,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 0
+          },
+          "rows": [
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            105,
+            121
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            5
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/tabs.tsx",
+      "sha256": "052887048bf403cf65f39443b49aa8837614d5b6aa4cd6fbe4632bb5094cf6e1",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            11,
+            59
+          ],
+          "name": "Tabs",
+          "nth": 0,
+          "params": 2,
+          "pools": {
+            "0/A": 0,
+            "0/B": 1,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 2,
+            "2/A": 0,
+            "2/B": 2,
+            "3/A": 0,
+            "3/B": 2
+          },
+          "rows": [
+            7,
+            4,
+            10
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            14,
+            14
+          ],
+          "name": "(anonymous)",
+          "nth": 1,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            21,
+            24
+          ],
+          "name": "(anonymous)",
+          "nth": 2,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            2,
+            2,
+            3
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            29,
+            40
+          ],
+          "name": "(anonymous)",
+          "nth": 3,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 1,
+            "2/A": 0,
+            "2/B": 1,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            2,
+            2,
+            5
+          ]
+        },
+        {
+          "dynamic": false,
+          "lines": [
+            42,
+            56
+          ],
+          "name": "(anonymous)",
+          "nth": 4,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 3,
+            "2/A": 0,
+            "2/B": 3,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            2,
+            4,
+            8
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/components/themed-image.tsx",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            12,
+            38
+          ],
+          "name": "ThemedImage",
+          "nth": 0,
+          "params": 4,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 0,
+            "2/A": 0,
+            "2/B": 0,
+            "3/A": 0,
+            "3/B": 4
+          },
+          "rows": [
+            1,
+            4,
+            5
+          ]
+        }
+      ],
+      "unlowered": []
+    },
+    {
+      "path": "packages/docs/pages/api/_og.tsx",
+      "sha256": "af92e7907c949c4563470e525e2f3e1d701dea3b367e46cbe719ce32036043d1",
+      "units": [
+        {
+          "dynamic": false,
+          "lines": [
+            32,
+            125
+          ],
+          "name": "(anonymous)",
+          "nth": 0,
+          "params": 1,
+          "pools": {
+            "0/A": 0,
+            "0/B": 0,
+            "0/C": 0,
+            "1/A": 0,
+            "1/B": 0,
+            "1/C": 6,
+            "2/A": 0,
+            "2/B": 6,
+            "3/A": 0,
+            "3/B": 1
+          },
+          "rows": [
+            12,
+            7,
+            18
+          ]
+        }
+      ],
+      "unlowered": []
+    }
+  ],
+  "generated_from": {
+    "ce": "1.8.0",
+    "commit": "5278e747f65687f8afa457395b82594f5f2978d1",
+    "dirty": true
+  },
+  "method": "unit universe of one pinned corpus for one v2.31 flow language: every file whose extension is in scope and that the product's own walk reads at the pinned tip (a tracked file the walk refuses is tallied, never asked about), each unit scan extracts lowered into the flow family's four tables (flow::lower - grammar tables and file-local facts only, the core never asked), inventoried with the sha256 of the text, the unit's place and size, and its candidate pool per (kind, stratum) cell read off those tables alone (pools.rs); a unit the lowering could not shape is listed with its reason. Frozen before any verdict is read; the constants are pre-registered here.",
+  "schema": "ce.eval-flow-slice/1.0.0",
+  "scope": {
+    "excludes": [],
+    "extensions": [
+      "tsx"
+    ]
+  },
+  "summary": {
+    "dynamic": 0,
+    "files": 29,
+    "pools": {
+      "0/A": 0,
+      "0/B": 3,
+      "0/C": 4,
+      "1/A": 0,
+      "1/B": 0,
+      "1/C": 65,
+      "2/A": 0,
+      "2/B": 65,
+      "3/A": 0,
+      "3/B": 58
+    },
+    "units": 71,
+    "unlowered": 0
+  }
+}

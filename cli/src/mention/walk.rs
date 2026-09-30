@@ -45,7 +45,8 @@
 //!
 //! The binary rule lives here too: a UTF-16 BOM decodes; otherwise a
 //! NUL in the first 8000 bytes (git's rule) skips the file — a late
-//! NUL stays in U, exactly as `contracts/VERSIONING.md` does.
+//! NUL stays in U, exactly as `contracts/VERSIONING.md` does. A document
+//! the product signed leaves U when read (`signed` below).
 
 use crate::gitmodules::Owner;
 use crate::scan::walk::{SECRET_GLOBS, contained, rel_str};
@@ -259,6 +260,32 @@ pub fn decode(bytes: &[u8]) -> Option<String> {
         _ if early_nul(bytes) => None,
         _ => Some(String::from_utf8_lossy(bytes).into_owned()),
     }
+}
+
+/// A document the product signed: a JSON object whose top-level
+/// `schema` is under `ce.` (reports, `ce.observe`, `ce.baseline/2`,
+/// `ce.eval-*`) or whose `generated_from` has a `ce` key. It leaves U
+/// beside the binary rule: the product's derivative of the corpus, not
+/// a reference into it — an inventory of every unit is an
+/// omni-mentioner (the class of `tags`). By content, never by path.
+pub fn signed(text: &str) -> bool {
+    if !text.trim_start().starts_with('{') {
+        return false;
+    }
+    let Ok(s) = serde_json::from_str::<Signed>(text) else {
+        return false;
+    };
+    let id = s.schema.as_ref().and_then(serde_json::Value::as_str);
+    let stamp = s.generated_from.as_ref().map(|g| &g["ce"]);
+    id.is_some_and(|id| id.starts_with("ce.")) || stamp.is_some_and(|c| !c.is_null())
+}
+
+/// The two signature fields as values (a `generated_from` that is a
+/// commit string is no signature, not a failed read); the rest ignored.
+#[derive(serde::Deserialize)]
+struct Signed {
+    schema: Option<serde_json::Value>,
+    generated_from: Option<serde_json::Value>,
 }
 
 /// git's rule.

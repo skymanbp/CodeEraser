@@ -51,7 +51,7 @@ pub use rates::LangRates;
 // instruments (tests/it/mention_universe.rs, eval_mention.rs) count
 // with the walk's rules and never with a second reading of them —
 // two instruments reading one commit differently was the L7-F6 lesson
-pub use walk::{FILE_CAP, cut, decode, excluded};
+pub use walk::{FILE_CAP, cut, decode, excluded, signed};
 
 use crate::dedup::index::Index;
 use crate::dedup::tokens::fnv1a;
@@ -75,7 +75,8 @@ use std::path::Path;
 ///   - walk.rs: every walker parameter, the nested-repository cut
 ///     (with the `.gitmodules` reading it exempts by, gitmodules.rs),
 ///     the file-symlink rule, the 4 MiB cap, the exclusion table
-///     (shared secret globs + omni-mentioners), the binary rule;
+///     (shared secret globs + omni-mentioners), the binary rule, the
+///     product's signature;
 ///   - this file: the per-file distinct-token cap and the table cap.
 ///
 /// 1 = the pass as sealed (spec v9); 2 = the declared-submodule
@@ -83,8 +84,10 @@ use std::path::Path;
 /// case, quoted values, comments, continuations — spec erratum ⑮)
 /// and an unseated declared submodule refuses instead of shrinking U;
 /// 3 = `.java` joins the `$` arm (plan v2.30 step 3), so a stored Java
-/// file's `Outer$Inner` stops emitting `Outer` and `Inner`.
-pub const MENTION_REV: i64 = 3;
+/// file's `Outer$Inner` stops emitting `Outer` and `Inner`;
+/// 4 = the product's signature rule (walk.rs `signed`): a JSON document
+/// the product signed leaves U when read.
+pub const MENTION_REV: i64 = 4;
 
 /// Distinct tokens one file may store; the rest are clipped and
 /// counted. The table cap bounds the whole database (a 500 MB tree
@@ -143,6 +146,7 @@ pub struct Stats {
 pub struct Skipped {
     pub oversize: usize,
     pub binary: usize,
+    pub signed: usize,
     pub walk_errors: usize,
 }
 
@@ -238,6 +242,10 @@ impl Pass {
             self.stats.skipped.binary += 1;
             return Ok(false);
         };
+        if walk::signed(&text) {
+            self.stats.skipped.signed += 1;
+            return Ok(false);
+        }
         if witness {
             self.stats.dist_js_dedup_runs += token::runs(&text)
                 .filter(|r| token::dedup_suffixed(r))

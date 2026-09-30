@@ -272,7 +272,7 @@
       "id": "report:mentions#schemaver",
       "source": "cli/src/mention/face.rs (typed)",
       "tier": "linked",
-      "value": "ce.mentions-report/0.2.0"
+      "value": "ce.mentions-report/0.3.0"
     },
     {
       "id": "report:observe#schemaver",
@@ -425,7 +425,7 @@
       "id": "ver:mention_rev#digits",
       "source": "cli/src/mention/mod.rs::MENTION_REV",
       "tier": "linked",
-      "value": "3"
+      "value": "4"
     },
     {
       "id": "ver:pin#v",

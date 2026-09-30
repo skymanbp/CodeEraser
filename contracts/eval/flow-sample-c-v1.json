@@ -1,0 +1,2234 @@
+{
+  "allocation": {
+    "0/A": 15,
+    "0/B": 15,
+    "0/C": 15,
+    "1/A": 15,
+    "1/B": 15,
+    "1/C": 15,
+    "2/A": 0,
+    "2/B": 15,
+    "3/A": 2,
+    "3/B": 15
+  },
+  "constants": {
+    "domains": {
+      "audit": "ce-flow-audit-v1",
+      "site": "ce-flow-site-v1"
+    },
+    "min_per_stratum": 15
+  },
+  "generated_from": {
+    "ce": "1.8.0",
+    "commit": "5278e747f65687f8afa457395b82594f5f2978d1",
+    "dirty": true
+  },
+  "lang": "c",
+  "method": "hash-ranked stratified draw over the language's frozen unit universes, reconstructed file by file against their frozen rows. rank id = sha256(domain|corpus|commit|path|unit|kind|stratum|line|nth|name). Per (kind, stratum) cell the min(min_per_stratum, pool) lowest site-domain ranks; rows stored in audit-domain order; no backups. The stratum stays in this doc for the gate to re-rank by - it is a source fact, not an answer - and the batch handed to an auditor carries neither the stratum nor any product answer.",
+  "rows": [
+    {
+      "audit": "0137f133f85d8fcfdfeb73daf6f5dd096866d86d0bef5ba205e158c4ee93d11b",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 312,
+      "name": "stm",
+      "nth": 1,
+      "path": "loslib.c",
+      "rank": "0082d8db78c56b6fae8817febe2ce2df7c81659fd0da5a653b33e0a85f3d4182",
+      "stratum": "A",
+      "unit": 13,
+      "unit_lines": [
+        305,
+        345
+      ],
+      "unit_name": "os_date"
+    },
+    {
+      "audit": "040ea99f00d550dc4727e0884adeb32e6e07d85fbae2aae6c4b37ef5c375fc90",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1053,
+      "name": "",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "1563f30467e0fd72e51f4c7babdbc5644bbe85f03575d0f08bc46ac1607927e2",
+      "stratum": "B",
+      "unit": 57,
+      "unit_lines": [
+        1030,
+        1056
+      ],
+      "unit_name": "constructor"
+    },
+    {
+      "audit": "0477229a7feca433d98621fa9ff16df44252a1e329e0bfb0f5dbad1e13ee7743",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 596,
+      "name": "",
+      "nth": 1,
+      "path": "lua.c",
+      "rank": "088fda303c35db920233a38ec7930f835d55a316170a9019412b7a59e48ac962",
+      "stratum": "B",
+      "unit": 26,
+      "unit_lines": [
+        588,
+        602
+      ],
+      "unit_name": "pushline"
+    },
+    {
+      "audit": "05d1175bc97dbce41cb879eb1cf2fcf8e0583afea6ba7b13ea21191c3fc50995",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 411,
+      "name": "",
+      "nth": 1,
+      "path": "loadlib.c",
+      "rank": "171830844fa047a3c85ae7c50ea80a6c0176ffdb62daa82c18b4cb2f6da82158",
+      "stratum": "A",
+      "unit": 18,
+      "unit_lines": [
+        405,
+        417
+      ],
+      "unit_name": "ll_loadlib"
+    },
+    {
+      "audit": "069dd905799c1d8b6929e361aca09e3dc83446f018c7259d78cfc32fa795429d",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 451,
+      "name": "len",
+      "nth": 1,
+      "path": "lobject.c",
+      "rank": "02722659c97c44f05493d431ea83b1890ca541f3b029dfcfc36f783b563d16d7",
+      "stratum": "B",
+      "unit": 16,
+      "unit_lines": [
+        450,
+        459
+      ],
+      "unit_name": "luaO_tostringbuff"
+    },
+    {
+      "audit": "0721274c70d6a6d86b6774efb7ea08f8fbb6a58d9b073c054a43484db271d807",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 313,
+      "name": "up",
+      "nth": 1,
+      "path": "ldo.c",
+      "rank": "01ea61c0eea4c44db4a18e5d07e36cbbfe260001b84e090d24bc0497750e358f",
+      "stratum": "C",
+      "unit": 10,
+      "unit_lines": [
+        305,
+        321
+      ],
+      "unit_name": "correctstack"
+    },
+    {
+      "audit": "097ad8ee67cb325ac2d735fe98570868918a86982111e34a35bdf8718bf87a50",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1382,
+      "name": "",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "10bbd7acb2ad8299200e57557f01212d678eab3c37bdd732d504b9921bfa607f",
+      "stratum": "B",
+      "unit": 61,
+      "unit_lines": [
+        1283,
+        1388
+      ],
+      "unit_name": "str_format"
+    },
+    {
+      "audit": "0a095f02948d59f159d6f3c3d146f13c2676ad7b5699206beb30be820cac3004",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 618,
+      "name": "n2",
+      "nth": 1,
+      "path": "lmathlib.c",
+      "rank": "0018b0f88b60df75a4369fee0791e415941414db99a55d2de6203ab0f6c9bfa4",
+      "stratum": "B",
+      "unit": 42,
+      "unit_lines": [
+        617,
+        628
+      ],
+      "unit_name": "setseed"
+    },
+    {
+      "audit": "0e31209cef1b1cf5b78b428f6321145efa661108e3a243b6afc62224f7e66dfa",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 182,
+      "name": "oldsize",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "02eda0092ce4e99414dcdc9d5eca300dfb6c7b0e9ebc2800039e91f4f48b4227",
+      "stratum": "B",
+      "unit": 11,
+      "unit_lines": [
+        175,
+        187
+      ],
+      "unit_name": "registerlocalvar"
+    },
+    {
+      "audit": "10db56feb3a99bebae0b789bfe2b6054f0169ee2551fd381989be1f05b7da28b",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 278,
+      "name": "",
+      "nth": 2,
+      "path": "lstring.c",
+      "rank": "1585538703759bf46478d13024f10ec466e3abecb747844eb2d970c117df15fa",
+      "stratum": "B",
+      "unit": 14,
+      "unit_lines": [
+        269,
+        283
+      ],
+      "unit_name": "luaS_new"
+    },
+    {
+      "audit": "10ff06a51c1331c91e98a5fa21ea63ec6a193a4ec44be2dd81059dbec66daf78",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 488,
+      "name": "idx",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "01ad99de9b7805fd3a80d206a851d98ee293c292b98e9f8a09936161954e269a",
+      "stratum": "B",
+      "unit": 28,
+      "unit_lines": [
+        476,
+        499
+      ],
+      "unit_name": "singlevaraux"
+    },
+    {
+      "audit": "1109e5a2328090fd967e19ae8472620a5e6cc7e892d95deb05f7bf8aacc0a7b6",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 489,
+      "name": "",
+      "nth": 1,
+      "path": "liolib.c",
+      "rank": "0376f5c4fc5c3a32321c4f884611e526e8702e3fb4ab67cee697ca64a0bf3fd6",
+      "stratum": "C",
+      "unit": 26,
+      "unit_lines": [
+        479,
+        510
+      ],
+      "unit_name": "read_number"
+    },
+    {
+      "audit": "116ce4a7c7dbf82eeeb320cc1fa42671e79650600cc0cd311d3dd49639326a90",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1444,
+      "name": "",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "05710617f6c6c341f5f08119375086c02aed2d2fe3fbbc93d593a39f4c9dcf6e",
+      "stratum": "C",
+      "unit": 60,
+      "unit_lines": [
+        1440,
+        1452
+      ],
+      "unit_name": "luaC_changemode"
+    },
+    {
+      "audit": "12331efc181aeb4571a779a042133fcc240e6bf616e5c35fb41f9116352e2f12",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 419,
+      "name": "c",
+      "nth": 1,
+      "path": "llex.c",
+      "rank": "07b8272a2c97e41643344cce1bc54c493cc96f0009650cd495ce484a67e3ed71",
+      "stratum": "A",
+      "unit": 21,
+      "unit_lines": [
+        404,
+        464
+      ],
+      "unit_name": "read_string"
+    },
+    {
+      "audit": "18aa769ef0b9b4ce5e4299c20672edc8bdb050e4f44d2f52d4149843ccb39a7b",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1651,
+      "name": "stepresult",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "0d5c8c25c0e1153dafdff839e4c07e1e43bcd01c21c62a314a9cfc4e487d1e11",
+      "stratum": "A",
+      "unit": 68,
+      "unit_lines": [
+        1618,
+        1687
+      ],
+      "unit_name": "singlestep"
+    },
+    {
+      "audit": "191710a12aa93d29315d05d7d969a4a8a468ec5fbe51a3eec1a5eacd72a0e8f5",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1050,
+      "name": "n",
+      "nth": 2,
+      "path": "lstrlib.c",
+      "rank": "006e1c851444941ae357e9a3ab4d715f02a302c9a4b348d5c3282c243da0f42a",
+      "stratum": "C",
+      "unit": 52,
+      "unit_lines": [
+        1034,
+        1063
+      ],
+      "unit_name": "num2straux"
+    },
+    {
+      "audit": "1a3942924975e75a66df8819283550d63099be3deb0767de8df130d2cc0d9b58",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 483,
+      "name": "",
+      "nth": 1,
+      "path": "llex.c",
+      "rank": "07185c5abfd40844e7c6012df1baa362fc346b41b089fca840081efb277f9e30",
+      "stratum": "B",
+      "unit": 22,
+      "unit_lines": [
+        467,
+        585
+      ],
+      "unit_name": "llex"
+    },
+    {
+      "audit": "1ab1163b601f62f3b7e32c90ff95c24d87eb50de620c9ea39e9de2870716d534",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 1338,
+      "name": "psurvival",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "0263fc1c44b2c9e8cb0806da5e7fe567ee680669976e2c9130a06d94f1af3f7d",
+      "stratum": "B",
+      "unit": 56,
+      "unit_lines": [
+        1335,
+        1380
+      ],
+      "unit_name": "youngcollection"
+    },
+    {
+      "audit": "1b18bea5607c372991fa55305e7093f9163b04e9ad953e0d5183ec7b80e17e36",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 450,
+      "name": "",
+      "nth": 1,
+      "path": "loadlib.c",
+      "rank": "01f9ad9e16ffa1b13065c53270ddf510e9c4ec93fbb98cc9eb0c1de1798fc4a9",
+      "stratum": "B",
+      "unit": 20,
+      "unit_lines": [
+        441,
+        456
+      ],
+      "unit_name": "getnextfilename"
+    },
+    {
+      "audit": "1c30fbb45e5867f261119b0b9969abb1799c104f2df424e3ced73259a169cb6b",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 454,
+      "name": "twotoi",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "00497fc407045b88c948aea7c0e3ac1ceb398fd9aa07797db441ed4162c84291",
+      "stratum": "C",
+      "unit": 12,
+      "unit_lines": [
+        446,
+        467
+      ],
+      "unit_name": "computesizes"
+    },
+    {
+      "audit": "1c50462c78756eacf4e3905efd25d61aa17083e6ff3f359844262b30cf475c15",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 261,
+      "name": "",
+      "nth": 1,
+      "path": "loslib.c",
+      "rank": "05f8e2a54ad5d6827baac1700c8ad706f385a93b2a3a18fb5d869a38099a470d",
+      "stratum": "A",
+      "unit": 10,
+      "unit_lines": [
+        254,
+        272
+      ],
+      "unit_name": "getfield"
+    },
+    {
+      "audit": "1d5b64faf0189bbea5ada9648aae10880c9d1dd54586853cdc6f53035fdcf818",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 224,
+      "name": "",
+      "nth": 1,
+      "path": "lvm.c",
+      "rank": "06546bd58251fc6458aaf7d21f430c1ca7a62780fac7ff4884bddaf28b4046fb",
+      "stratum": "C",
+      "unit": 6,
+      "unit_lines": [
+        214,
+        265
+      ],
+      "unit_name": "forprep"
+    },
+    {
+      "audit": "1db16d72985cc695e8038c28e1526df3b07a487f9fcfd42e066934150ae76cbd",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 504,
+      "name": "i",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "0939b19454c76b49abdfa1855e2a017a70589b3f31143af64e64181a81fa27d3",
+      "stratum": "B",
+      "unit": 15,
+      "unit_lines": [
+        488,
+        513
+      ],
+      "unit_name": "numusearray"
+    },
+    {
+      "audit": "1facd8819f2cb122938fb9e8e8acb42f4f6a237d6e029a9ab9f47d1a7f635266",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 416,
+      "name": "i",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "014d66bf5428fff563e318dca112ebe8b76b8c41942a83a7320b35829b1b068e",
+      "stratum": "C",
+      "unit": 25,
+      "unit_lines": [
+        414,
+        444
+      ],
+      "unit_name": "searchvar"
+    },
+    {
+      "audit": "20de92e710383048e70f187e8458f2313f590d0dca251c26c0356a0dbb1bd2ce",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 21,
+      "name": "ud",
+      "nth": 1,
+      "path": "testes/libs/lib22.c",
+      "rank": "fff9c1c1d1f37066e9a754d5333dc15581ef89533b537ab96ced7adc7f6beddc",
+      "stratum": "A",
+      "unit": 1,
+      "unit_lines": [
+        21,
+        25
+      ],
+      "unit_name": "t_freestr"
+    },
+    {
+      "audit": "2478372d918ce11cd25b3049e8589f412ef988d30cb8536f2ef4d24f8b2c162f",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 212,
+      "name": "",
+      "nth": 1,
+      "path": "lmem.c",
+      "rank": "0012c4bdd03dfea8c9164e2fa9bca1cb67d9e3c4a3c8d767ac2999c562445c5f",
+      "stratum": "C",
+      "unit": 8,
+      "unit_lines": [
+        201,
+        215
+      ],
+      "unit_name": "luaM_malloc_"
+    },
+    {
+      "audit": "282b6672b61f19bb4e217bd7d259788fa1366fb697f943aaa63db2043abc2a46",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 414,
+      "name": "",
+      "nth": 1,
+      "path": "loslib.c",
+      "rank": "1189c7fe09427eaf4288432550eeab5b3ac8715461fb3c6fc5ed911d6a0f609b",
+      "stratum": "B",
+      "unit": 18,
+      "unit_lines": [
+        405,
+        415
+      ],
+      "unit_name": "os_exit"
+    },
+    {
+      "audit": "2b24f980340f4f3374a0407a82e740f470421369de962b9e7c63e9da1b21e632",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 195,
+      "name": "i",
+      "nth": 2,
+      "path": "lua.c",
+      "rank": "137c449d1d0eefaca4da6113d64794fcb9b178a1685f0670cf2f7831440b2845",
+      "stratum": "B",
+      "unit": 9,
+      "unit_lines": [
+        191,
+        200
+      ],
+      "unit_name": "createargtable"
+    },
+    {
+      "audit": "2c110cc42a2392a1f442be02405c34c05bb72dbecccb385a292594a6e77f3149",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 115,
+      "name": "i",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "004a4590aca2ea773efe91992c89c96d3387b09da0bfd9b97f9864b18985da77",
+      "stratum": "C",
+      "unit": 5,
+      "unit_lines": [
+        109,
+        119
+      ],
+      "unit_name": "str_lower"
+    },
+    {
+      "audit": "2d1e331c1d27af62a4ec44c8b4225eb4428ed6aea0c5295245131f7e627498cc",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1250,
+      "name": "j",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "0bb2f8b683f12e6ad10c486098f8d25d13814e1c54bc1574ce5c6dc8899aceb6",
+      "stratum": "A",
+      "unit": 55,
+      "unit_lines": [
+        1239,
+        1268
+      ],
+      "unit_name": "hash_search"
+    },
+    {
+      "audit": "2e072ac0bc5d0e4439ab99b8ac7c50f07ba7a66cacb09cf51f09bee99a35f5c2",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 174,
+      "name": "n1",
+      "nth": 1,
+      "path": "lobject.c",
+      "rank": "00d1a3bb9cc1f7d56a9befe416374d768498185cf57855ee46aa335b06d1b857",
+      "stratum": "B",
+      "unit": 5,
+      "unit_lines": [
+        152,
+        186
+      ],
+      "unit_name": "luaO_rawarith"
+    },
+    {
+      "audit": "3372326f4d13761f607876d2dbfc026f9fa2d42829ca1d39d2aa1644d540cb73",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 792,
+      "name": "",
+      "nth": 1,
+      "path": "ldebug.c",
+      "rank": "001ee215e4ab08ce10538a2299c415a077e8f50b1b38ff298a0b532127ad58a4",
+      "stratum": "C",
+      "unit": 39,
+      "unit_lines": [
+        788,
+        793
+      ],
+      "unit_name": "luaG_opinterror"
+    },
+    {
+      "audit": "33b7b2115c576affd86e9b92cc2956172733e18c45a4447ecda7e7f69dae0ee6",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 39,
+      "name": "reader",
+      "nth": 1,
+      "path": "lzio.c",
+      "rank": "007c2968a57150102b95a47c594e7631bb12e9f53e1455a52d69415856bd98d3",
+      "stratum": "B",
+      "unit": 1,
+      "unit_lines": [
+        39,
+        45
+      ],
+      "unit_name": "luaZ_init"
+    },
+    {
+      "audit": "3454e44d3f8e055d7076398bc8cbb68703d56690e524b75e9d71a96e9d51d50e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1275,
+      "name": "j",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "021d90aa6b96fe415445889b0298dba3c68b89d9302394d2cff713eab98ded95",
+      "stratum": "B",
+      "unit": 56,
+      "unit_lines": [
+        1271,
+        1279
+      ],
+      "unit_name": "binsearch"
+    },
+    {
+      "audit": "376a9fd92593b004e829044f29b16bec2a84790b8602a6eb63b3f1e23ab9c0dd",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 542,
+      "name": "hasclears",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "0035b6dcc40951e6d14c99012bb79a5fb4de3721e665bc0ef7d1353d7b96801e",
+      "stratum": "A",
+      "unit": 19,
+      "unit_lines": [
+        541,
+        573
+      ],
+      "unit_name": "traverseephemeron"
+    },
+    {
+      "audit": "384fb64fb52c7a4a94fc4a67abca9d8a077ce03fc2a64302901790dc468d8278",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 639,
+      "name": "",
+      "nth": 1,
+      "path": "loadlib.c",
+      "rank": "0060b4c54fc53c7a44d046b7eb7113335e2280fd4bdd2c88fa20d552bff3930a",
+      "stratum": "A",
+      "unit": 31,
+      "unit_lines": [
+        618,
+        647
+      ],
+      "unit_name": "findloader"
+    },
+    {
+      "audit": "3a8a8c605af88e63dbeba4fc687b6d917ea33938c402a0119d2081e433cd77a7",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 320,
+      "name": "args",
+      "nth": 1,
+      "path": "lua.c",
+      "rank": "007293fab1b8e017506612fd4124747aeb3311aa4fae8f834dda9153c70eaf4c",
+      "stratum": "C",
+      "unit": 16,
+      "unit_lines": [
+        293,
+        348
+      ],
+      "unit_name": "collectargs"
+    },
+    {
+      "audit": "3b33da88ab1e9abb38301dc8d58b0d189f2b18ddda014d8cb422d24d25ab5430",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 350,
+      "name": "",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "08b8c7215b820424426cb2253cee8618d2985d15d9c7bc40365e16056f825914",
+      "stratum": "A",
+      "unit": 8,
+      "unit_lines": [
+        343,
+        358
+      ],
+      "unit_name": "findindex"
+    },
+    {
+      "audit": "3dfb8f76f08edd7f09958575d0ebb75eb076b5c9fa933a3b76ec76e32712179b",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 556,
+      "name": "hasww",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "012b7a83f0e74a7920c448a04ac37c5ea710b61ef13720ae476396ee8e93222a",
+      "stratum": "C",
+      "unit": 19,
+      "unit_lines": [
+        541,
+        573
+      ],
+      "unit_name": "traverseephemeron"
+    },
+    {
+      "audit": "3ff7cc885fe3d601da42512cd54a5cfe8e5972f9ff45597d6d160863223dd062",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 615,
+      "name": "i",
+      "nth": 2,
+      "path": "lparser.c",
+      "rank": "1b803ef1efb52666e7b7cb58f70a894448f8f641f44ab608cfeabbfd4d95c222",
+      "stratum": "B",
+      "unit": 34,
+      "unit_lines": [
+        597,
+        618
+      ],
+      "unit_name": "closegoto"
+    },
+    {
+      "audit": "420710c039fa60a31cfb8d0570d3754b198b9990cd5275c95deffbc459f7b6e5",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1134,
+      "name": "len",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "115a3a6da2589f0f49cdf71e56b0c114a655a20414652ebaf509b3410219dc71",
+      "stratum": "B",
+      "unit": 54,
+      "unit_lines": [
+        1132,
+        1152
+      ],
+      "unit_name": "addquoted"
+    },
+    {
+      "audit": "4512cf4842281714d01f275a56d84b97fda516f58ec98268175317ac537d334e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 223,
+      "name": "",
+      "nth": 1,
+      "path": "ltm.c",
+      "rank": "01e74bdf8cc1f19d3308f3a332e44d44e3df825c90307f891d1c60a42e3d2b03",
+      "stratum": "C",
+      "unit": 12,
+      "unit_lines": [
+        210,
+        224
+      ],
+      "unit_name": "luaT_callorderiTM"
+    },
+    {
+      "audit": "4603969e19f7f6770e1de66f2a8aa8a72f89cbffdb195ca323c4c9574d3fbfee",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 651,
+      "name": "",
+      "nth": 1,
+      "path": "liolib.c",
+      "rank": "00fce4d0afb2e4e7c28ec54b37faa9652f5b221dc9109873176a6ead20cf8ff5",
+      "stratum": "B",
+      "unit": 34,
+      "unit_lines": [
+        632,
+        658
+      ],
+      "unit_name": "io_readline"
+    },
+    {
+      "audit": "46984f976e5dd6a12cb6b6bcebd7549c7569a73257ec7092955f82f5bac2c4c7",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 418,
+      "name": "p",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "01777bf39d64cbf6510bd5d3d0ab52c6a6b3a6b137d2c94db31055c8a6d28e36",
+      "stratum": "C",
+      "unit": 25,
+      "unit_lines": [
+        405,
+        426
+      ],
+      "unit_name": "classend"
+    },
+    {
+      "audit": "47cb8d65757f696937dfb9e724fba886a359ea8458542ebc2e93698715c4775f",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 892,
+      "name": "",
+      "nth": 1,
+      "path": "ldo.c",
+      "rank": "04d88f852463d38b409f733fc5534ad0c3584fc07362e2d6d45c894d692ffb41",
+      "stratum": "B",
+      "unit": 32,
+      "unit_lines": [
+        886,
+        893
+      ],
+      "unit_name": "findpcall"
+    },
+    {
+      "audit": "4a5919351c699db3ee0b81dd38f4991b07775c72738645748fa202a07a8e48da",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 433,
+      "name": "res",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "0a51c97e1f83571fa5d5b042cd664874bab7e86520af206df59638a2519286f6",
+      "stratum": "A",
+      "unit": 26,
+      "unit_lines": [
+        429,
+        446
+      ],
+      "unit_name": "match_class"
+    },
+    {
+      "audit": "4d0eb89914ae2396c9fe035b049151bc8d3eaff7a4fdea3f700745f2cd8d7cef",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 305,
+      "name": "i",
+      "nth": 2,
+      "path": "lfunc.c",
+      "rank": "182c7dbdfed96b0da0ba427b42957ed8f07bbe4cad9aca92a8108338138312f1",
+      "stratum": "B",
+      "unit": 16,
+      "unit_lines": [
+        303,
+        313
+      ],
+      "unit_name": "luaF_getlocalname"
+    },
+    {
+      "audit": "4f8ea4c1030a327c7dce12215d0936c271784458733fea701bff106ae5f3096e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 500,
+      "name": "o",
+      "nth": 2,
+      "path": "ltests.c",
+      "rank": "0c32b56803027c92d63667665ce93e6c14bb7ad355a6ca74b261ca66e559524e",
+      "stratum": "B",
+      "unit": 20,
+      "unit_lines": [
+        483,
+        502
+      ],
+      "unit_name": "check_stack"
+    },
+    {
+      "audit": "522143df588b272ee9743b2e9f30313e853d45e712d5cdcdd8cac9853983867f",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 516,
+      "name": "marked",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "03c6d0289202edc53bf4586c3690efc70e38d1109391fbdeacf18aaebc3f505c",
+      "stratum": "A",
+      "unit": 18,
+      "unit_lines": [
+        514,
+        526
+      ],
+      "unit_name": "traversearray"
+    },
+    {
+      "audit": "541bdf6839451a96385ab2349222086ecac6b4ff23e906fcb036ab8a77df4268",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 574,
+      "name": "",
+      "nth": 1,
+      "path": "ldebug.c",
+      "rank": "1913ed71a9d172ab7e38af04b18e44176c263d8b5b519309b2dbe069abcb3c80",
+      "stratum": "A",
+      "unit": 27,
+      "unit_lines": [
+        569,
+        606
+      ],
+      "unit_name": "getobjname"
+    },
+    {
+      "audit": "5597ca502c822d430d8b3d9f14415c1fda70fb8ada4843f93ed12714ef54e1d4",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 475,
+      "name": "",
+      "nth": 1,
+      "path": "ldebug.c",
+      "rank": "03779c4a6f3a55404185879a22cca6768a5ee2ac80194a8f3f0f7e2713791654",
+      "stratum": "C",
+      "unit": 22,
+      "unit_lines": [
+        443,
+        486
+      ],
+      "unit_name": "findsetreg"
+    },
+    {
+      "audit": "56a5f05038d1367ac20ba8291a2b2fb4c269793a0472c345350887f4b35990d1",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 242,
+      "name": "",
+      "nth": 2,
+      "path": "lobject.c",
+      "rank": "0c3392273e43c215de3022577f3dbdfd85e9f31aae6cbbef8cd12f5e38634b01",
+      "stratum": "B",
+      "unit": 9,
+      "unit_lines": [
+        229,
+        276
+      ],
+      "unit_name": "lua_strx2number"
+    },
+    {
+      "audit": "57dde9121ee79a6d3b451d5691d8a9ebfc47bde00f556e38e5605c6c0fe99270",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 393,
+      "name": "s",
+      "nth": 1,
+      "path": "lbaselib.c",
+      "rank": "011bc3b57dd0fe8d58e0abcd14589f3dd8f2859fccb82a4f827e52c3bff8c00d",
+      "stratum": "C",
+      "unit": 23,
+      "unit_lines": [
+        390,
+        407
+      ],
+      "unit_name": "luaB_load"
+    },
+    {
+      "audit": "5b15f64068a1645d52996e530df6da274d7232b6284ddddc801e16b44faafa84",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1070,
+      "name": "",
+      "nth": 1,
+      "path": "ldo.c",
+      "rank": "14a49959ed69fccd8e9414954a6866954c0d90fa4c479945c19655f2b1e56e10",
+      "stratum": "A",
+      "unit": 40,
+      "unit_lines": [
+        1061,
+        1075
+      ],
+      "unit_name": "luaD_closeprotected"
+    },
+    {
+      "audit": "63af5400af2136509dd7227496d1b51ac14f3ef2546571440cc312f0745628a0",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 124,
+      "name": "",
+      "nth": 1,
+      "path": "lbaselib.c",
+      "rank": "0647fe727e6f67dee884b545427b200c698abd093cff1954810ad8b2be9435c4",
+      "stratum": "C",
+      "unit": 4,
+      "unit_lines": [
+        116,
+        125
+      ],
+      "unit_name": "luaB_error"
+    },
+    {
+      "audit": "65deb1024a3ced0d4c93c151a4ca767b2cb0c687a11e1e844e6ef7785ab7e24e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 242,
+      "name": "",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "0286bf12a3a8fb259c127dcf42dd57eff36b0dcebf36a3316c6855c2cda4b828",
+      "stratum": "B",
+      "unit": 15,
+      "unit_lines": [
+        236,
+        243
+      ],
+      "unit_name": "reglevel"
+    },
+    {
+      "audit": "673a2a9396c9ee50c109a36c691db07b0c856011c43fd07874032ac2c8332a4d",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 212,
+      "name": "op",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "0779abf4abb97d63789c95378443720939501351bcb2764b2a18c8c792258db8",
+      "stratum": "A",
+      "unit": 10,
+      "unit_lines": [
+        208,
+        217
+      ],
+      "unit_name": "luaK_ret"
+    },
+    {
+      "audit": "6835bd749716d9fc97a0895dad6d634a1c86e255916cd6efead26f8814bbd7f2",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 178,
+      "name": "status",
+      "nth": 1,
+      "path": "lcorolib.c",
+      "rank": "023f62e7a85908ca20ffe42c685996abeceb827b892d453e7c583a3ef4231422",
+      "stratum": "B",
+      "unit": 12,
+      "unit_lines": [
+        176,
+        204
+      ],
+      "unit_name": "luaB_close"
+    },
+    {
+      "audit": "6b5e3b43f5940168a59f7045b49df726d42e37cf74b837511cafee177107c41e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 657,
+      "name": "o",
+      "nth": 2,
+      "path": "ltests.c",
+      "rank": "0726d5f4091eaca518a4b00e2988ef90e5ad243319f2289dbff01ba852738db0",
+      "stratum": "A",
+      "unit": 26,
+      "unit_lines": [
+        643,
+        668
+      ],
+      "unit_name": "checklist"
+    },
+    {
+      "audit": "6e7747509f0b7683a6d74f82147fd48840043b740b4f2c5c0df09c675acba44f",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 1565,
+      "name": "e2",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "00562d909ce191bbadb9ad35f8e03814efefdde27d51a44decb7a9ce08895a5e",
+      "stratum": "B",
+      "unit": 92,
+      "unit_lines": [
+        1565,
+        1567
+      ],
+      "unit_name": "swapexps"
+    },
+    {
+      "audit": "6f60dda4bdcb97d2811fb6a68d775ce20058925ff77ee3dd6092360518c5b626",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1023,
+      "name": "",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "1a1cd4c507b7c468684a0f778c49723df1b0d28d0443e41f610378f31e27e29a",
+      "stratum": "A",
+      "unit": 56,
+      "unit_lines": [
+        1019,
+        1027
+      ],
+      "unit_name": "maxtostore"
+    },
+    {
+      "audit": "70d64f68dbf20ee19428bca40257fcd689109f74592d38fc54f1ef71236d7904",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 853,
+      "name": "",
+      "nth": 1,
+      "path": "lvm.c",
+      "rank": "002ae6f3a4c23ab3c67c6fdffbb5a86b95e0d81c9fd1d3583e7d504290cbc67d",
+      "stratum": "C",
+      "unit": 29,
+      "unit_lines": [
+        840,
+        855
+      ],
+      "unit_name": "pushclosure"
+    },
+    {
+      "audit": "7702c99202c98c06b80034b5e174bb0a3cff7662fe534a8d528b069d301df421",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 200,
+      "name": "name",
+      "nth": 1,
+      "path": "ldebug.c",
+      "rank": "0cf0fe9b2076f6458621959cce70fc550f25b5e32b4bfd406979f123f083a36a",
+      "stratum": "A",
+      "unit": 12,
+      "unit_lines": [
+        198,
+        219
+      ],
+      "unit_name": "luaG_findlocal"
+    },
+    {
+      "audit": "77477beb9e7e48418eabf4d619c8e9e885b4b11beebe45bf682805ac43d6267e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 73,
+      "name": "",
+      "nth": 1,
+      "path": "lapi.c",
+      "rank": "0c32b34fc58f2ca5e2eab3adc1202265175782028e296db2cc33ef8bf18a58df",
+      "stratum": "A",
+      "unit": 0,
+      "unit_lines": [
+        58,
+        86
+      ],
+      "unit_name": "index2value"
+    },
+    {
+      "audit": "7806dad763d0672b5a7081130328afa6edf25316e7825ad262b370146377aceb",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 168,
+      "name": "s",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "012f9d9c3998347b0e58b63e5b6e2df48dd1aada842116f5caa3ee0f52633c76",
+      "stratum": "B",
+      "unit": 8,
+      "unit_lines": [
+        166,
+        181
+      ],
+      "unit_name": "str_byte"
+    },
+    {
+      "audit": "7986e5bb5a6e80d29dcd7b00173028475f15ae9d6721ef35ab65d3fd2158b054",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 693,
+      "name": "t",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "003d22cad81de8f19ea39b4a457e6b6769ca8ad916046c7f12f5b6ec32d8733c",
+      "stratum": "B",
+      "unit": 23,
+      "unit_lines": [
+        693,
+        696
+      ],
+      "unit_name": "clearNewSlice"
+    },
+    {
+      "audit": "7dc1a379bfb4c4fafe20e2ebdd740c3425b07ad69910a88d0d6b59c919f4e28e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 261,
+      "name": "get",
+      "nth": 1,
+      "path": "ldblib.c",
+      "rank": "01001f7521e05fc7d80dc25702ebe3fbb67da13438873fdcf4925b5f824e521b",
+      "stratum": "B",
+      "unit": 14,
+      "unit_lines": [
+        261,
+        270
+      ],
+      "unit_name": "auxupvalue"
+    },
+    {
+      "audit": "7ecd852ac6f72ef3a4261669a0f08d665ae24ec24b01b5f262c1d3087472dbf9",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 142,
+      "name": "",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "0215bdef48aff5846dfdc359c6063bdc8efe373a998c728970c521c1904b8376",
+      "stratum": "C",
+      "unit": 5,
+      "unit_lines": [
+        132,
+        148
+      ],
+      "unit_name": "luaK_nil"
+    },
+    {
+      "audit": "7f5668d8e36b532514cfcac1a2d63b584fae0c2f013fd115fa4b1e1fdf9549ed",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 62,
+      "name": "count",
+      "nth": 1,
+      "path": "lutf8lib.c",
+      "rank": "0199d84a0a21e703bae12ba5bd5c3de2fcd33393196a6b2f4a67c93bc30e5e43",
+      "stratum": "B",
+      "unit": 1,
+      "unit_lines": [
+        52,
+        82
+      ],
+      "unit_name": "utf8_decode"
+    },
+    {
+      "audit": "7f9701281417b58a5892cba15e1ea1cb73df71bc893763e53f3e4133158333d3",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 145,
+      "name": "S",
+      "nth": 1,
+      "path": "lundump.c",
+      "rank": "00120d8259ef7f4441280811b204a82b3c99e74f8aeaf02bcf856694d440e7bf",
+      "stratum": "B",
+      "unit": 10,
+      "unit_lines": [
+        145,
+        184
+      ],
+      "unit_name": "loadString"
+    },
+    {
+      "audit": "8000ce3d1e71ea13ffc0c7a6b17e7dc25e043e111a0b95bbc7b5f88cf5080bf4",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1656,
+      "name": "stepresult",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "02e23ae79328bd3663f83ead586fe4bdd7d88426db3b2518dedb37fc173f19af",
+      "stratum": "A",
+      "unit": 68,
+      "unit_lines": [
+        1618,
+        1687
+      ],
+      "unit_name": "singlestep"
+    },
+    {
+      "audit": "8559e4c33887331a9bde0ff2c0c0a0971367f75f0fb989aa3fd7ea6eec6a7839",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 102,
+      "name": "b",
+      "nth": 1,
+      "path": "lundump.c",
+      "rank": "00467b78ab39546354c7c463f54e7e14d01af062ef028e7e2c56909cab139056",
+      "stratum": "C",
+      "unit": 5,
+      "unit_lines": [
+        97,
+        108
+      ],
+      "unit_name": "loadVarint"
+    },
+    {
+      "audit": "866729d59fb658c93e8808c1991778276966840c7ecc0b5857eda42c8de51b5c",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 1570,
+      "name": "szmoda",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "016b1ee29ce6b411d65fdb9a123ddd72533a13fe724fa00e5c8ba1dae93cceac",
+      "stratum": "B",
+      "unit": 67,
+      "unit_lines": [
+        1551,
+        1575
+      ],
+      "unit_name": "getdetails"
+    },
+    {
+      "audit": "89707806ea6094e92202b0bf8701561de41f599e683440d13e8a1b3685c09fc2",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 297,
+      "name": "",
+      "nth": 1,
+      "path": "lbaselib.c",
+      "rank": "0285d19333177a690e4f09ecd2e4ca1e78b11f94fa3b1b29846856c88b7571cc",
+      "stratum": "C",
+      "unit": 16,
+      "unit_lines": [
+        285,
+        298
+      ],
+      "unit_name": "luaB_pairs"
+    },
+    {
+      "audit": "89b96ec2f63a00b24ac77062bb0a6aa5c62d7738660ffc0877a8434176a170ed",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 397,
+      "name": "init",
+      "nth": 1,
+      "path": "lua.c",
+      "rank": "018dbe1a2e0a16ac184d5ae68cb423b70227f55152b83e5e875f8afc5b8d040a",
+      "stratum": "C",
+      "unit": 19,
+      "unit_lines": [
+        392,
+        404
+      ],
+      "unit_name": "handle_luainit"
+    },
+    {
+      "audit": "8f93dd05fb92427cb23420af72ac4529fa6081c91171201213f9371a46b41b45",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 640,
+      "name": "line",
+      "nth": 1,
+      "path": "lua.c",
+      "rank": "0082da4e4918f4df38d95dbca7ba31ec0347581c24f2d0f7c3e8277f8d329460",
+      "stratum": "C",
+      "unit": 29,
+      "unit_lines": [
+        638,
+        652
+      ],
+      "unit_name": "multiline"
+    },
+    {
+      "audit": "90ac2310eb0a0754758afdde533a209eb841c0f2088a79643e7ab56e61985904",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1809,
+      "name": "",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "0a538f9075c77e8de76cf431363f9b04bb3f85b48b4f98a3461a2f62e1fc33bf",
+      "stratum": "B",
+      "unit": 90,
+      "unit_lines": [
+        1796,
+        1810
+      ],
+      "unit_name": "getvarattribute"
+    },
+    {
+      "audit": "91af54ad4520cdf617ac5c09d01fa20e22f08cce862ba71fc1ad2ab3747b088a",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 535,
+      "name": "e2",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "0056d437ef1515e2fecab6c821fcdaa0a3bd6b46181c817dedcffba927e9ab6d",
+      "stratum": "B",
+      "unit": 35,
+      "unit_lines": [
+        535,
+        539
+      ],
+      "unit_name": "freeexps"
+    },
+    {
+      "audit": "931cf2efb9199ba9814958e10082079d70d7218a841b34a14633ea7c55d19b73",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 123,
+      "name": "j",
+      "nth": 2,
+      "path": "lstring.c",
+      "rank": "125a7568eb5e7bd381af6193343aafde7edaf148836217e68296dfb7f7d3950e",
+      "stratum": "B",
+      "unit": 5,
+      "unit_lines": [
+        120,
+        127
+      ],
+      "unit_name": "luaS_clearcache"
+    },
+    {
+      "audit": "942295e7e571b1f5f7d1f37c91ccba8b2885a03db75e95a68775fb26bd333fe4",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 191,
+      "name": "",
+      "nth": 1,
+      "path": "lvm.c",
+      "rank": "0cf4eb1f98a234df377879af1aed5557b6654e8c37b3c109019edaa6bec75cc4",
+      "stratum": "B",
+      "unit": 5,
+      "unit_lines": [
+        181,
+        199
+      ],
+      "unit_name": "forlimit"
+    },
+    {
+      "audit": "9947f02b2d31089ce472b821c4dabcada4d2a94887cb003b923c51001ea4876f",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 957,
+      "name": "i",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "006b10ede9b799ca1fbc8dd2fc884f89d8d15e78ed60f0367a3176987a67c773",
+      "stratum": "B",
+      "unit": 58,
+      "unit_lines": [
+        955,
+        961
+      ],
+      "unit_name": "need_value"
+    },
+    {
+      "audit": "99a102fb294c1f087e44f53234f07047c82705318cae449dcf49259bee4949d3",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 459,
+      "name": "",
+      "nth": 1,
+      "path": "liolib.c",
+      "rank": "0add12edf3f295dc32f2e62f638239308a580fa7c0895e3e63c2754764210a85",
+      "stratum": "A",
+      "unit": 24,
+      "unit_lines": [
+        456,
+        460
+      ],
+      "unit_name": "test2"
+    },
+    {
+      "audit": "99cad84ac3d988837d396b536472b420d06082c00a86040790292fe545429a76",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 120,
+      "name": "",
+      "nth": 1,
+      "path": "lmathlib.c",
+      "rank": "0637251f27dfd2144307eb98edfbc57e23f5205339fceb8dbf8d18faf82d25c8",
+      "stratum": "C",
+      "unit": 10,
+      "unit_lines": [
+        113,
+        121
+      ],
+      "unit_name": "math_ceil"
+    },
+    {
+      "audit": "9a9201ddc36bbcc351905533421781481a12d7e4a05cf6eb8ba774a6995a1c66",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 111,
+      "name": "",
+      "nth": 1,
+      "path": "lbaselib.c",
+      "rank": "10631d0feeb143faafe9766951afd95e3855c89afa98e9067864494bca8c2a2f",
+      "stratum": "B",
+      "unit": 3,
+      "unit_lines": [
+        83,
+        113
+      ],
+      "unit_name": "luaB_tonumber"
+    },
+    {
+      "audit": "9b8d863448f94ab9a3beec17003f6818f956be84990b5918ff120b3d1136be13",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 806,
+      "name": "L",
+      "nth": 1,
+      "path": "ldo.c",
+      "rank": "00194d8b581f16b7641549e844855f34987e93817a590fb28633030ee3f7dc89",
+      "stratum": "B",
+      "unit": 29,
+      "unit_lines": [
+        806,
+        823
+      ],
+      "unit_name": "finishpcallk"
+    },
+    {
+      "audit": "9e5de20fd3c40e84cbc6dced3e8b39518b9140e192b711d8e8bc88874cc480c9",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 230,
+      "name": "L",
+      "nth": 1,
+      "path": "lstate.c",
+      "rank": "01008a79446209475bf76e55029b9e0b2d91c9d25d8f2514216c5d8a9617ef4c",
+      "stratum": "B",
+      "unit": 11,
+      "unit_lines": [
+        230,
+        248
+      ],
+      "unit_name": "preinit_thread"
+    },
+    {
+      "audit": "a2b0b7bc6a8f70566f4a23d6c6729bf2846155c61875827fcfa1e4a008846cfa",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1521,
+      "name": "p",
+      "nth": 1,
+      "path": "lgc.c",
+      "rank": "014c433e620eb97a69576ddb9f9ff7db2ac2017c2f8e091f19729b43f5607669",
+      "stratum": "B",
+      "unit": 64,
+      "unit_lines": [
+        1517,
+        1523
+      ],
+      "unit_name": "deletelist"
+    },
+    {
+      "audit": "a4464dd0dbc5071f4c9df4adffbdf5d71ce9d8d080426cc95fa41d613d3a6799",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 506,
+      "name": "",
+      "nth": 1,
+      "path": "liolib.c",
+      "rank": "0612470d983a144f41e7d3556abc8b563e5913792f5dece66885c2280f0f76e6",
+      "stratum": "A",
+      "unit": 26,
+      "unit_lines": [
+        479,
+        510
+      ],
+      "unit_name": "read_number"
+    },
+    {
+      "audit": "ab486aa2811f326c30bbc25417cb18c0ad6611e4e2a4f680ad3410dac56f1145",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1164,
+      "name": "s",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "0afd80843bc715e12ba81e81850378388cbac9cac86a6206d55c024e9b47b0a9",
+      "stratum": "A",
+      "unit": 55,
+      "unit_lines": [
+        1161,
+        1182
+      ],
+      "unit_name": "quotefloat"
+    },
+    {
+      "audit": "ad97bb0aed06118ef3dac8756d26ae99f0bab6232bc8f84017f2520dad1a955b",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 61,
+      "name": "debt",
+      "nth": 1,
+      "path": "lstate.c",
+      "rank": "00ef514f42c9bd4e230551352c77267206fa3b31bf700a51128be50503af87b4",
+      "stratum": "B",
+      "unit": 0,
+      "unit_lines": [
+        61,
+        68
+      ],
+      "unit_name": "luaE_setdebt"
+    },
+    {
+      "audit": "ae62d07217a32e8b4d64e00ddc1f93c4598cc6a6b21e714750f3831fd5d5d000",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 211,
+      "name": "b",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "00757e8a9be1e04aa99d67968849505c9f31deebab89d7fb3995b14891a178e4",
+      "stratum": "B",
+      "unit": 10,
+      "unit_lines": [
+        211,
+        224
+      ],
+      "unit_name": "writer"
+    },
+    {
+      "audit": "af4a3de4af154f809fda3ae3e375bb52162ae4de2df159b07afc41839771b2b0",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 41,
+      "name": "",
+      "nth": 1,
+      "path": "lutf8lib.c",
+      "rank": "1b42b688484d7ca37281b87832c7357d272764539127d98e91d4f12ad6263f12",
+      "stratum": "A",
+      "unit": 0,
+      "unit_lines": [
+        38,
+        42
+      ],
+      "unit_name": "u_posrelat"
+    },
+    {
+      "audit": "b0401368c5a7796b53e357f5547b595bf06827ad46773b5eb85ac6f975a03b45",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 436,
+      "name": "",
+      "nth": 1,
+      "path": "ldebug.c",
+      "rank": "11f43a335f8bdca9b34c35bbd5a754b9faeb029e9f03ee3739ffd5b7ce8e0c5e",
+      "stratum": "A",
+      "unit": 21,
+      "unit_lines": [
+        433,
+        437
+      ],
+      "unit_name": "filterpc"
+    },
+    {
+      "audit": "b3f2f75b502a8737edb4eef71f7f566f734226a21bf9fe9092b3c4581860e1b0",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 808,
+      "name": "cp",
+      "nth": 1,
+      "path": "lauxlib.c",
+      "rank": "009f74a4c0fb8dcc6be2beafbe789586aa7e6fb76d6948fb56bd578f85b5fbd7",
+      "stratum": "B",
+      "unit": 46,
+      "unit_lines": [
+        808,
+        818
+      ],
+      "unit_name": "skipcomment"
+    },
+    {
+      "audit": "b4d8a0b5a4842043dc90af2d5e92a537f365259277d0d07a0d68ab217c37e9dd",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 954,
+      "name": "",
+      "nth": 1,
+      "path": "ltable.c",
+      "rank": "00712735fed8456e0328a6beb788bf8dc5c8e25eaf42ad3cf07b29583d3ebbe8",
+      "stratum": "C",
+      "unit": 36,
+      "unit_lines": [
+        950,
+        955
+      ],
+      "unit_name": "finishnodeget"
+    },
+    {
+      "audit": "b5c8a8ac83ac5d99e0b9d318e079a12d358e721ab84b198a8d8290d269096212",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 239,
+      "name": "i",
+      "nth": 2,
+      "path": "lmathlib.c",
+      "rank": "19b833e3ffee8890f21f9f43f76f4a2d820bfec422ef0ad99062c92a762d9ed5",
+      "stratum": "B",
+      "unit": 21,
+      "unit_lines": [
+        234,
+        245
+      ],
+      "unit_name": "math_min"
+    },
+    {
+      "audit": "bce0762a425417f2081eb030e951316a292bd2ff66ec677e348df410f622f3ca",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 346,
+      "name": "mask",
+      "nth": 1,
+      "path": "ldblib.c",
+      "rank": "0138c3d25d16b3de42e6a6514be4b40ab4799179ee2bf3f9534174ecf47026ba",
+      "stratum": "B",
+      "unit": 21,
+      "unit_lines": [
+        345,
+        352
+      ],
+      "unit_name": "makemask"
+    },
+    {
+      "audit": "be0dc91932ee0231e1d0ade739b7b6a5d73b979b3f857a7485cf1845603ed175",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 672,
+      "name": "",
+      "nth": 1,
+      "path": "ldebug.c",
+      "rank": "057faf0d3e0e978b3a3eac077a0ec2f5546be7e4c689d1d62815543311719e59",
+      "stratum": "A",
+      "unit": 29,
+      "unit_lines": [
+        659,
+        673
+      ],
+      "unit_name": "funcnamefromcall"
+    },
+    {
+      "audit": "c63feda1c5cd639dea3421472c4609c2fcd30db2078af4dc9cb22c945bc1231f",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 321,
+      "name": "L",
+      "nth": 1,
+      "path": "ltm.c",
+      "rank": "0080e39ee8fd0a34a19f50dde39d0ea0486cdbb8f5bb91bf003d21d5c34e61ed",
+      "stratum": "B",
+      "unit": 17,
+      "unit_lines": [
+        321,
+        331
+      ],
+      "unit_name": "getnumargs"
+    },
+    {
+      "audit": "c8972c488ac40b4523a7a39892298249a429aa986e2739c36b107268b19d5d21",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 664,
+      "name": "msg",
+      "nth": 1,
+      "path": "lobject.c",
+      "rank": "00e08b307c927c51746792cabd52522e243b75f0831c2d5af39fd380db69c8d3",
+      "stratum": "B",
+      "unit": 24,
+      "unit_lines": [
+        663,
+        672
+      ],
+      "unit_name": "luaO_pushfstring"
+    },
+    {
+      "audit": "cb596258cc54c6598dc7e8a891766343a295efafda8a92bdb487fb52407e4212",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 280,
+      "name": "list",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "19f508a970eee86ae09e820e2345832d4734ece82591ebdbf22813ad556a8c81",
+      "stratum": "B",
+      "unit": 15,
+      "unit_lines": [
+        279,
+        282
+      ],
+      "unit_name": "removevalues"
+    },
+    {
+      "audit": "ce0b45b0e02fc4fd3d37877dd7088bd6de663c2033dda82eea2117c8ad778202",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 259,
+      "name": "",
+      "nth": 1,
+      "path": "llex.c",
+      "rank": "121c968c41311a040500dbd9966ae8c34bac6c241444dd47134bf78e83530327",
+      "stratum": "A",
+      "unit": 12,
+      "unit_lines": [
+        244,
+        273
+      ],
+      "unit_name": "read_numeral"
+    },
+    {
+      "audit": "d0968e91b0eccfba1f8ddf893e94ee5e6b0ca8340bf78c4d334a439c15d2a9d4",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1323,
+      "name": "nb",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "0654893ebdbfcefd12a2c2943a2786134ff39740ffdde377a840a32e01a07880",
+      "stratum": "A",
+      "unit": 61,
+      "unit_lines": [
+        1283,
+        1388
+      ],
+      "unit_name": "str_format"
+    },
+    {
+      "audit": "d95cc1a774f9ac543fa8ef46110b27d65ca580a0a045739868ab6d6e69a3d4f9",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 1849,
+      "name": "",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "045c6d97601ce25d2abb7cd08498929b56df526da1372eacb04481d5738c7856",
+      "stratum": "B",
+      "unit": 73,
+      "unit_lines": [
+        1778,
+        1851
+      ],
+      "unit_name": "str_unpack"
+    },
+    {
+      "audit": "daa4b32944463432dbb85c4350b24aef019f2d2c33e47cd54bf4b64310f35322",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 128,
+      "name": "cx",
+      "nth": 1,
+      "path": "ldump.c",
+      "rank": "024c0309b1f97dd88bf24ed1f8bd13c3eb686a3ec6758d318ab79ed69ba368f0",
+      "stratum": "B",
+      "unit": 7,
+      "unit_lines": [
+        127,
+        131
+      ],
+      "unit_name": "dumpInteger"
+    },
+    {
+      "audit": "dcaf62fbe22d993c182c32471b2f790ba874fd5379bb8b9843ca78e02e409c51",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 262,
+      "name": "exp1",
+      "nth": 1,
+      "path": "lobject.c",
+      "rank": "0055871bf1ccd394e5e3063eb9ab9cf0d6138bcb0efe48ec13d0139c78d21602",
+      "stratum": "B",
+      "unit": 9,
+      "unit_lines": [
+        229,
+        276
+      ],
+      "unit_name": "lua_strx2number"
+    },
+    {
+      "audit": "dd56e262b54c1daa692a30a943f41ea3c518d7755d9e41e97492e3f1c3c5c3a8",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 211,
+      "name": "L",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "0097db1aeb96119797ef3c0d91434c300dd4123627c0856ca3f16b28d1ac0d6d",
+      "stratum": "B",
+      "unit": 10,
+      "unit_lines": [
+        211,
+        224
+      ],
+      "unit_name": "writer"
+    },
+    {
+      "audit": "dff109281a6b415e284ba6c343e8c2c3bff1921a054d6a27fa587433dc987830",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 21,
+      "name": "nsize",
+      "nth": 1,
+      "path": "testes/libs/lib22.c",
+      "rank": "4332d6118b6e28172118f95ecec265a8060380255d9548ef0fb6f0e9e73281a8",
+      "stratum": "A",
+      "unit": 1,
+      "unit_lines": [
+        21,
+        25
+      ],
+      "unit_name": "t_freestr"
+    },
+    {
+      "audit": "e11ac423aa3c0ddb53528bfbc9939454570f13ee7584ff42570740569c42ef21",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 678,
+      "name": "i",
+      "nth": 2,
+      "path": "ltable.c",
+      "rank": "18a8964d110eba1c1d491375901e3f0781a1b3da2ec2f7a43b1a42ab72028f0e",
+      "stratum": "B",
+      "unit": 22,
+      "unit_lines": [
+        675,
+        687
+      ],
+      "unit_name": "reinsertOldSlice"
+    },
+    {
+      "audit": "e1ef30fb8f3611d405e117fbc622b2815dd5e84cb5be5dab98a408e59dd80c30",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 599,
+      "name": "",
+      "nth": 1,
+      "path": "lua.c",
+      "rank": "059f97bf224b43123763e8ed355d44d6b396b8bfafd65fcd6866a8f586b9ff28",
+      "stratum": "C",
+      "unit": 26,
+      "unit_lines": [
+        588,
+        602
+      ],
+      "unit_name": "pushline"
+    },
+    {
+      "audit": "e73a9204132b05cd0883ade5b1ae02ec0e8d068b698bfd3db139600894032cac",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1060,
+      "name": "info",
+      "nth": 1,
+      "path": "lcode.c",
+      "rank": "07c3ff807607f1c84b197408642aabf6628b8c6f52a471812f31411c275cab71",
+      "stratum": "A",
+      "unit": 64,
+      "unit_lines": [
+        1055,
+        1076
+      ],
+      "unit_name": "luaK_exp2K"
+    },
+    {
+      "audit": "e8f3f6b697f4428215496b12201ee84e0affd43580e4018fcc88db881e1c487d",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1528,
+      "name": "res",
+      "nth": 1,
+      "path": "ltests.c",
+      "rank": "030214ef7a7e0611b13ea13ab4465ed66f906b4d8251f79ebdcf4b32535398c6",
+      "stratum": "A",
+      "unit": 83,
+      "unit_lines": [
+        1510,
+        1543
+      ],
+      "unit_name": "getnum_aux"
+    },
+    {
+      "audit": "ececcfd99133487b7ee1bc1bb69a41d1cf7d4d43714a5f1ec63d72576f39f20a",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1168,
+      "name": "s",
+      "nth": 1,
+      "path": "lstrlib.c",
+      "rank": "00677d9477baa9260988cb263354bc8463a6960ef1e2024c58503d9a04249c34",
+      "stratum": "C",
+      "unit": 55,
+      "unit_lines": [
+        1161,
+        1182
+      ],
+      "unit_name": "quotefloat"
+    },
+    {
+      "audit": "ee203e2c24127db03cdd2e09c48fb00a29918e53b4febec34ea11ad4718dd564",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 583,
+      "name": "up",
+      "nth": 1,
+      "path": "lmathlib.c",
+      "rank": "027883a0c4f8794234d02fe5fdbf4a3ca5c6283edf829015a56629e3d9f69b51",
+      "stratum": "B",
+      "unit": 41,
+      "unit_lines": [
+        582,
+        614
+      ],
+      "unit_name": "math_random"
+    },
+    {
+      "audit": "f6ca670f06a7c24917e7ac54dd237a98dc4e0e91f2ce2fdc1c8c6e6b8723c7ee",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 2,
+      "line": 402,
+      "name": "mask",
+      "nth": 1,
+      "path": "ldblib.c",
+      "rank": "018a87284d3f55a1788b713a93930d7361706731ac36205c383e781a6951e035",
+      "stratum": "B",
+      "unit": 24,
+      "unit_lines": [
+        398,
+        420
+      ],
+      "unit_name": "db_gethook"
+    },
+    {
+      "audit": "f7e88469a5cec66a0e785a715db8903c6e73d193f5439e9472fdf46cc003d2d8",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 107,
+      "name": "",
+      "nth": 1,
+      "path": "lundump.c",
+      "rank": "0265b6d28d469ec321c5326dc5b53876c21e04dbbe72c0b3fbb19237acfdc088",
+      "stratum": "C",
+      "unit": 5,
+      "unit_lines": [
+        97,
+        108
+      ],
+      "unit_name": "loadVarint"
+    },
+    {
+      "audit": "f80f3e085dd7ff052f5c8168ac3a1062f4d1cd9e86595e0d14388e49ec1902ad",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1307,
+      "name": "status",
+      "nth": 1,
+      "path": "ltests.c",
+      "rank": "018dc8fc362a5beb63224f856dc8f06d5d21be8294c7fc270c4c4ebd5baa5348",
+      "stratum": "C",
+      "unit": 67,
+      "unit_lines": [
+        1301,
+        1310
+      ],
+      "unit_name": "doonnewstack"
+    },
+    {
+      "audit": "fb056fbadae3d25ef6263faeafb679ef61465710af60ea5904a8e6f06acc581e",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 416,
+      "name": "i",
+      "nth": 2,
+      "path": "lparser.c",
+      "rank": "18c743cc0c394e9504416e37540375f904d1fa06ec32b7424955f19783d2c820",
+      "stratum": "B",
+      "unit": 25,
+      "unit_lines": [
+        414,
+        444
+      ],
+      "unit_name": "searchvar"
+    },
+    {
+      "audit": "fe7c42759157c3e27e1d168d3baf5073eba6cbb437d9977dd1918cf933adf4ce",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 0,
+      "line": 533,
+      "name": "",
+      "nth": 1,
+      "path": "llex.c",
+      "rank": "16ce3b1881d1771e75c1b115a029b3373a685edb3f46adb9db7d20a72e037dac",
+      "stratum": "A",
+      "unit": 22,
+      "unit_lines": [
+        467,
+        585
+      ],
+      "unit_name": "llex"
+    },
+    {
+      "audit": "fe87b7c4261abfd1401f073da1075bab1ebd535f236f8395174db9baebe79bed",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 3,
+      "line": 95,
+      "name": "c",
+      "nth": 1,
+      "path": "lparser.c",
+      "rank": "00ce3c3e64b64e67a91563e7cfa59aa573a63f9747e75ee5af8254812b5833fe",
+      "stratum": "B",
+      "unit": 3,
+      "unit_lines": [
+        95,
+        101
+      ],
+      "unit_name": "testnext"
+    },
+    {
+      "audit": "ff3936b2de86fadf460af885b60e3346b9409e43b395f8e9d48a32f84fec27db",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 100,
+      "name": "n",
+      "nth": 1,
+      "path": "ldump.c",
+      "rank": "012ccc7b3608338adf1847cfb4876ff65a22877e9fd4f0db8ffb7fcedd0bf70a",
+      "stratum": "C",
+      "unit": 3,
+      "unit_lines": [
+        95,
+        102
+      ],
+      "unit_name": "dumpVarint"
+    },
+    {
+      "audit": "ff9d3500d584bbcb43e82d10081a660f3e1001af41a86e6cbcdeb76719b4fdf6",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "kind": 1,
+      "line": 1769,
+      "name": "i",
+      "nth": 2,
+      "path": "lstrlib.c",
+      "rank": "0b46f289148fb0e4608e40ea1893061c93f0671d9cb86fbb887fc99c4b265ab9",
+      "stratum": "B",
+      "unit": 72,
+      "unit_lines": [
+        1752,
+        1775
+      ],
+      "unit_name": "unpackint"
+    }
+  ],
+  "schema": "ce.eval-flow-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "lua",
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "units": 1307
+    }
+  ]
+}

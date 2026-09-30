@@ -272,6 +272,14 @@ impl Lang {
     pub fn name(self) -> &'static str {
         self.row().2
     }
+
+    /// The extensions this language's LANGS row claims — the face an
+    /// exam table's scope is held to (plan v2.31 step 4: the flow
+    /// exams walk one language's files, and their extension list must
+    /// be this row's, not a hand copy of it).
+    pub fn extensions(self) -> &'static [&'static str] {
+        self.row().1
+    }
 }
 
 /// The mention tokenizer's `$` arm (sealed criterion §2, frozen beside

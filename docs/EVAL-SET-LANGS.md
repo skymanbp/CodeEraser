@@ -4,7 +4,7 @@
 > 每个新语言的图精度照 M5-2 的仪器优先脊柱走三步，顺序由提交先后证明：**站点宇宙 + 抽样冻结并提交 →
 > 没看过解析结果的独立代理逐站判真值（GT）并提交 → 该语言的阶梯与精度册提交**（顺序门
 > `cli/tests/it/lang_provenance.rs`）。母册链：[EVAL-SET.md](EVAL-SET.md) → [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) →
-> [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md) → [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → 本册。本册与前四册同入
+> [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md) → [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → 本册 → [EVAL-SET-FLOW.md](EVAL-SET-FLOW.md)（第五次拆册，2026-09-30）。本册与前四册同入
 > 冻结集（`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。一个语言在它自己的步里加一节，
 > 三步各记一段；重冻结 = 该语言考题的代数加一（考题表的 `generation`：检测器多读了一种写法、或换 tip），新一代
 > 用新文件名，旧一代的档按名退役并在本册具名记一条——顺序门读一份档的首个提交，原地重写的档会留着旧一代的
@@ -724,3 +724,10 @@ learning-area → lua → fmt，每份生成后挪出树、`git status --porcela
 （92ed92e，lua / fmt 两份为 95521640 → 813f4976）外**逐字节相同**——判分行、宇宙台账、站点缺口、走查记录、处置一字未动，行数不变，
 册 06 §9 引的十一处 summary 行号照旧。这正是只读面的预期：`Lang::with_grammar()` 不改语言表的任何一行，答案没有理由移动；门按路径拒、
 重生成按字节证，两者各守各的。六门考题的 `stage` 随本提交翻回 `Scored`。
+
+## 步 4 提交 B 之后：十一份精度册第二次退役并重生成（2026-09-30）
+
+分析轨 v2.31 步 4 提交 B（flow 考题冻结）给语言表 `cli/src/scan/lang.rs` 加了第二个只读面 `Lang::extensions()`（flow 考题表的扩展名列由门与产品的行相等地钉住、不再手抄），答案不动一处；`lang.rs` 仍在 `ANSWERED_BY` 清单里，门按路径读，2026-09-28 加的工作树腿在本地先于提交按名拒了十一份——与那次同一机制、同一处置：
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，十一份齐了放回，六门 `stage` 翻回 `Scored`；读数与退役前逐份比对，记在下文。

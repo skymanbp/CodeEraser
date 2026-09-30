@@ -1,0 +1,2054 @@
+{
+  "allocation": {
+    "0/A": 1,
+    "0/B": 15,
+    "0/C": 15,
+    "1/A": 15,
+    "1/B": 5,
+    "1/C": 15,
+    "2/A": 1,
+    "2/B": 15,
+    "3/A": 15,
+    "3/B": 15
+  },
+  "constants": {
+    "domains": {
+      "audit": "ce-flow-audit-v1",
+      "site": "ce-flow-site-v1"
+    },
+    "min_per_stratum": 15
+  },
+  "generated_from": {
+    "ce": "1.8.0",
+    "commit": "5278e747f65687f8afa457395b82594f5f2978d1",
+    "dirty": true
+  },
+  "lang": "python",
+  "method": "hash-ranked stratified draw over the language's frozen unit universes, reconstructed file by file against their frozen rows. rank id = sha256(domain|corpus|commit|path|unit|kind|stratum|line|nth|name). Per (kind, stratum) cell the min(min_per_stratum, pool) lowest site-domain ranks; rows stored in audit-domain order; no backups. The stratum stays in this doc for the gate to re-rank by - it is a source fact, not an answer - and the batch handed to an auditor carries neither the stratum nor any product answer.",
+  "rows": [
+    {
+      "audit": "0567adf6fde79b12df2b2fb1d67c282d1d679810333b4d0a81eb701bd5ac1dd8",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 2159,
+      "name": "i",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "a406b398e6fa869ce3b0bb6082ad110d8cadf338f373cc331d94881b1eebd85a",
+      "stratum": "B",
+      "unit": 204,
+      "unit_lines": [
+        2153,
+        2159
+      ],
+      "unit_name": "test_requests_history_is_saved"
+    },
+    {
+      "audit": "061afe845871c7dd16bb36b11c9a4a6bc504c733b201dc480165d81072865f18",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 804,
+      "name": "gen",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "02cd3943e9fd42a0da3dafcbc8e52eab116e4e4844a03d9b31168619ee618ca5",
+      "stratum": "C",
+      "unit": 21,
+      "unit_lines": [
+        752,
+        829
+      ],
+      "unit_name": "send"
+    },
+    {
+      "audit": "06b0a76145b56db1d7712eb4d276c65aace354d6336ffd58a70b2754fb75c06f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 558,
+      "name": "query",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "414fa13b026b8e2d093ef3c48ba8f87a581e7dd9e86f722b94f4bcad9948c6e7",
+      "stratum": "A",
+      "unit": 18,
+      "unit_lines": [
+        483,
+        563
+      ],
+      "unit_name": "prepare_url"
+    },
+    {
+      "audit": "0767146452add2f2d16befa08dc535848c7a6271a8247de564f1a11ac6bce673",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 223,
+      "name": "ft",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "0ae6ac557d416cc0b16a771acf731958f16c6c974885449c1e463292bfc4a3c1",
+      "stratum": "A",
+      "unit": 6,
+      "unit_lines": [
+        183,
+        251
+      ],
+      "unit_name": "_encode_files"
+    },
+    {
+      "audit": "07d3d62945684149f1d1084defb9ba71e8b4e5de9e7d79fcaf47e3fc1a7b557b",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 22,
+      "name": "",
+      "nth": 1,
+      "path": "tests/testserver/server.py",
+      "rank": "82f998440b1a9ab02d3590459165cab405258b948cde26af06cbf8abfc9f1cc3",
+      "stratum": "A",
+      "unit": 0,
+      "unit_lines": [
+        7,
+        22
+      ],
+      "unit_name": "consume_socket_content"
+    },
+    {
+      "audit": "0997cb4fb5c37f555c6b1205f7045a80ea8a249ba09431d74b0f6d820e804a51",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 1559,
+      "name": "p",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "013b763168b2eb3cec01fbe077fca870f855e3fdb1776d5bcb635d4bb6086e7e",
+      "stratum": "C",
+      "unit": 146,
+      "unit_lines": [
+        1558,
+        1570
+      ],
+      "unit_name": "test_prepared_request_is_pickleable"
+    },
+    {
+      "audit": "0d7cf3d36dfd8c1cc555cf07e1dac24380a7a194c17ce71aff21cb7bf7e932ee",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 1076,
+      "name": "parsed",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "029533c5fbd826b3b1bd800405197a7e55b8eccd46c3a99fb3703c36eb91eda3",
+      "stratum": "B",
+      "unit": 42,
+      "unit_lines": [
+        1070,
+        1084
+      ],
+      "unit_name": "get_auth_from_url"
+    },
+    {
+      "audit": "1059cc029fafaaeb835f0f6bf72ac264ad9d802b372e5ec8efcf1de2e9cd0b5b",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 1119,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "0b8287fd40790902de0174775b71e8520060d3dae23b93d220411b2e3c50a29a",
+      "stratum": "B",
+      "unit": 48,
+      "unit_lines": [
+        1091,
+        1124
+      ],
+      "unit_name": "json"
+    },
+    {
+      "audit": "11a6383b05db2c72924c470769ce9127a75386955aeab9e1a1c6ec594abce757",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 374,
+      "name": "value",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "3835b3bb5eee45f3d2eaaed9b5590e4fc266a814a3fcc1c0101205497bc8bb95",
+      "stratum": "A",
+      "unit": 10,
+      "unit_lines": [
+        373,
+        375
+      ],
+      "unit_name": "to_key_val_list"
+    },
+    {
+      "audit": "161e61805f2191fdff2176df12e9e49c03c8bec4835a70c01b4d0f7ade61d8cb",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 858,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "00e4a93923887958c8e9715e5e2e9b23862bbfa1a5c2b718529a79ac813b7f1f",
+      "stratum": "C",
+      "unit": 76,
+      "unit_lines": [
+        851,
+        858
+      ],
+      "unit_name": "read"
+    },
+    {
+      "audit": "1672df3f09e050fa0a97516ad269659be1269f19fc9fa1b704718dcb173f1045",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 942,
+      "name": "name",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "03337c3d1de2ccd849adddd76d2a999b4809321ed844f4d478fb34b09ed993c5",
+      "stratum": "B",
+      "unit": 37,
+      "unit_lines": [
+        942,
+        948
+      ],
+      "unit_name": "default_user_agent"
+    },
+    {
+      "audit": "180957ebe58fde254a72041f1ae0e7c4cfed6a6602d85e7dd655aacdeb4569b5",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 352,
+      "name": "path",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "0118ed0e174db58aa3b750aa595e37fe2642aae71231bc41733a0ad99c88c9eb",
+      "stratum": "B",
+      "unit": 37,
+      "unit_lines": [
+        352,
+        353
+      ],
+      "unit_name": "test_unzipped_paths_unchanged"
+    },
+    {
+      "audit": "195a4614b943895a3c3f2f5a23c4a2594743bd3d6b0c3ef6e001c9ee44cd46bb",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 715,
+      "name": "kwargs",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "02f718cb93e4b884cbb31bbcbd40fd13d3d432e059a621bec9546154b6ed8488",
+      "stratum": "B",
+      "unit": 18,
+      "unit_lines": [
+        714,
+        726
+      ],
+      "unit_name": "put"
+    },
+    {
+      "audit": "19a559479605b94aa717e1846505a25fcb198e3cbb06b6f161f97feed5e217cd",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 901,
+      "name": "subkey",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "36996dd6e1c6b5cc7a6ddce8c87c6ce81913d2030307924bf02cd048a4671abd",
+      "stratum": "A",
+      "unit": 67,
+      "unit_lines": [
+        901,
+        902
+      ],
+      "unit_name": "OpenKey"
+    },
+    {
+      "audit": "1c35b615a523aa20f4991416cd5839741f10fbf324d4b7b2e3230b64bcc913a9",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 695,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "20ef2696552dd95821c0dc46b0d1f4db4a625d94588a38d2416bc68a63d2069b",
+      "stratum": "B",
+      "unit": 25,
+      "unit_lines": [
+        680,
+        701
+      ],
+      "unit_name": "unquote_unreserved"
+    },
+    {
+      "audit": "21131536e8d4548adcc6077135bb00cb9a185026fc88c73e11534cfa964f743c",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 121,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "11c0a2423332b8b78d858d2739eb3c58a69e9111fbe0ba01e3fcbfa33b491a0f",
+      "stratum": "B",
+      "unit": 1,
+      "unit_lines": [
+        108,
+        124
+      ],
+      "unit_name": "merge_hooks"
+    },
+    {
+      "audit": "2335aacf9988661826dc280418e71dc76873b4eda2ec41d17800f2494c6bdb12",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 2270,
+      "name": "r",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "00959fa65da04c9710236c38dfc97032e1fd7a64126e132d15dc5be0813649f2",
+      "stratum": "C",
+      "unit": 217,
+      "unit_lines": [
+        2263,
+        2273
+      ],
+      "unit_name": "test_stream_with_auth_does_not_set_transfer_encoding_header"
+    },
+    {
+      "audit": "23fbc93c3b8b9038bf8ac156b9ad44b93a234696697b8e9dc5d70199ec31dead",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 227,
+      "name": "fp",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "0b2feb74452b782ec0a78792c8e58bb6d23bb9494244fdbfe94b76fc2b149d8c",
+      "stratum": "A",
+      "unit": 6,
+      "unit_lines": [
+        183,
+        251
+      ],
+      "unit_name": "_encode_files"
+    },
+    {
+      "audit": "258ec3495e2fd896ed678f53ad4b4e621d474e59bde52933c571718ec241cd6d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 132,
+      "name": "request",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "2e6075cd54168f754b1d36d483f914075faa26419dee13adcd913a2ec75aee62",
+      "stratum": "A",
+      "unit": 2,
+      "unit_lines": [
+        132,
+        132
+      ],
+      "unit_name": "send"
+    },
+    {
+      "audit": "2a344ba5ab17fcccb53352596a600cc13af8eb0d672f335ed0f68fc693595b35",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 32,
+      "name": "r",
+      "nth": 1,
+      "path": "tests/test_lowlevel.py",
+      "rank": "038fc079ab615219f1b6fd1f1ac9d7c1333ff37811aa646ecbdf0999eb2b3677",
+      "stratum": "C",
+      "unit": 1,
+      "unit_lines": [
+        24,
+        36
+      ],
+      "unit_name": "test_chunked_upload"
+    },
+    {
+      "audit": "2ae39abfb91dfe31e87ed61b0a28f8ca434b63b539de56f749476e96499c4cc4",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 534,
+      "name": "expires",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "02dac19b79084c90bf8164fb2dda2402e305bc577aadbcade31dbd570a86581c",
+      "stratum": "A",
+      "unit": 47,
+      "unit_lines": [
+        531,
+        557
+      ],
+      "unit_name": "morsel_to_cookie"
+    },
+    {
+      "audit": "2c05986520dd606c28cb1630686dd17d4e1d55afa0626f0cce865af0e3865102",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 2476,
+      "name": "cid_copy",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "022029a3792195e005262833ab89d425774662cdfbf8e3cdfe20fae5e256fdb4",
+      "stratum": "B",
+      "unit": 237,
+      "unit_lines": [
+        2469,
+        2479
+      ],
+      "unit_name": "test_copy"
+    },
+    {
+      "audit": "2c76bbaa76dab43128f3a1c352039ddc2b24b78c1344f4e9df23c2a95a19be7c",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 1212,
+      "name": "args",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "144d0f9960840e96ff1d85d0e6e24302ed61277d7d6df7bc20177fe5b07edc78",
+      "stratum": "A",
+      "unit": 118,
+      "unit_lines": [
+        1212,
+        1213
+      ],
+      "unit_name": "hook1"
+    },
+    {
+      "audit": "2e2886a7005b31db386f0a1efe03d4416021986471d5544f3bb6c6b165756be0",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 166,
+      "name": "netrc_path",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "020b760a7bbd5ad52d7c33c4a1d79e7526a7a2d4fc2ece34a72ba88e8f5a1526",
+      "stratum": "B",
+      "unit": 18,
+      "unit_lines": [
+        165,
+        171
+      ],
+      "unit_name": "test_not_vulnerable_to_bad_url_parsing"
+    },
+    {
+      "audit": "2feeea06c9c374eec978d208846f614aa68168c71486eb587f3389378bfd4899",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 2127,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "07639721511e7dc6807e08fc6d7298bd7ecadbeb1f9932308b71b63941eebe84",
+      "stratum": "C",
+      "unit": 201,
+      "unit_lines": [
+        2122,
+        2127
+      ],
+      "unit_name": "build_response"
+    },
+    {
+      "audit": "315a06f43a0ad5d7fb12d12ad6078b3062b936a1e98bb7d0ac89bb9919a0f4c7",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 977,
+      "name": "value",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "037ffabe6bebbed47635306930a2f8ff31d22400501ddf1b51260dace5ca0515",
+      "stratum": "C",
+      "unit": 39,
+      "unit_lines": [
+        965,
+        999
+      ],
+      "unit_name": "parse_header_links"
+    },
+    {
+      "audit": "319c807bc1911b176c630f17fb5f3d39aaa1867818b3e1ef25bc14227c9d5a0e",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 1835,
+      "name": "invalid_header",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "02c5768d3b3c78ec11604e4836ae81c3a4483c58ffabc16637b999b12dc4a3e6",
+      "stratum": "B",
+      "unit": 166,
+      "unit_lines": [
+        1835,
+        1840
+      ],
+      "unit_name": "test_header_no_return_chars"
+    },
+    {
+      "audit": "3309aca4a5a8ae440f24802447ecb5160271f39b2a13692cfad9c32c5f1f666e",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 942,
+      "name": "httpbin",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "02cbe8da1911c02f177934e6002764a05f063abbf4ef232d28d5d2e411562a72",
+      "stratum": "B",
+      "unit": 90,
+      "unit_lines": [
+        942,
+        944
+      ],
+      "unit_name": "test_decompress_gzip"
+    },
+    {
+      "audit": "34ce578b54eba6d78f73fa29f5f02cbf108b6e29f8d3f468ae367d8ee0048b6d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 1215,
+      "name": "kwargs",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "20125c26e2800ec4a61dc49c0ca65e85646e0a9c5f0aa89c5beaa008e290db3b",
+      "stratum": "A",
+      "unit": 119,
+      "unit_lines": [
+        1215,
+        1216
+      ],
+      "unit_name": "hook2"
+    },
+    {
+      "audit": "379a987d52df0eb4995a163049c196abad026bd62cddbf1da342c47e3aa2ae85",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 229,
+      "name": "fn",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "0c180449f6b2f1d1a59ab266cdaa02c79753e537e527ba04f006fd76f2086d57",
+      "stratum": "A",
+      "unit": 6,
+      "unit_lines": [
+        183,
+        251
+      ],
+      "unit_name": "_encode_files"
+    },
+    {
+      "audit": "3965ec277216f353c26db13a893412be9fda711ea5cdf024fb5823063e3a9dae",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 1036,
+      "name": "host",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "6c4dd67d07d704a4f75ea92989548a987710a46912ee4450e3c8a93b68251516",
+      "stratum": "A",
+      "unit": 98,
+      "unit_lines": [
+        1034,
+        1057
+      ],
+      "unit_name": "test_https_warnings"
+    },
+    {
+      "audit": "3b2f742c223158df4daf9c720acb8904270dfcf9452850600b57dbacc43f02b0",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 669,
+      "name": "url",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "006133a4e3b0bec0daf2039c378ac1fa10eac1e869bf7405ddae0addf8de7659",
+      "stratum": "C",
+      "unit": 19,
+      "unit_lines": [
+        634,
+        748
+      ],
+      "unit_name": "send"
+    },
+    {
+      "audit": "3c40540023aec9432cfb34b22d9df7d175b16793d7448ec3d211493cb4c27031",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 149,
+      "name": "res",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "01e71d3da71c57d025f50572683f14647c4c4be32a87e9fea18bc7b7c107b52f",
+      "stratum": "B",
+      "unit": 17,
+      "unit_lines": [
+        135,
+        150
+      ],
+      "unit_name": "extract_cookies_to_jar"
+    },
+    {
+      "audit": "3c9c8c932b64c07ca32157430f1de64aff0ea20bd7fcfa04678efc5a881ac89f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 1161,
+      "name": "http_error_msg",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "32a1cea060bb04f6e7c3e71d227a7f2b34dbef3a74756489fb39dfab9db1820a",
+      "stratum": "A",
+      "unit": 50,
+      "unit_lines": [
+        1144,
+        1171
+      ],
+      "unit_name": "raise_for_status"
+    },
+    {
+      "audit": "43a021af6634f75bf46e4b09bad5a84b16f57a668638d0e7361ae52de17ff564",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 838,
+      "name": "monkeypatch",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "03fd27e006abec22e79787a6cad73be146b78d36ace2b0ceb734f93093dfbf92",
+      "stratum": "A",
+      "unit": 63,
+      "unit_lines": [
+        838,
+        844
+      ],
+      "unit_name": "test_should_bypass_proxies_no_proxy"
+    },
+    {
+      "audit": "44374f93e90683ab49cc5254eb01b37991332e8ec309ba2bf31308c6401b126d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 123,
+      "name": "traceback",
+      "nth": 1,
+      "path": "tests/testserver/server.py",
+      "rank": "175deb9c10042a5270a090e349f0291d1cb96526b32f2a82eb71c1621f97133f",
+      "stratum": "A",
+      "unit": 11,
+      "unit_lines": [
+        123,
+        135
+      ],
+      "unit_name": "__exit__"
+    },
+    {
+      "audit": "462d192b23348f42e40bb9939c97f8228ec92c75d6d9a2359f547f9451861f10",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 528,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "1f0aef7ae23bf04f7d6cb80983b2381550249a45b07ec2ea2f31978f035d315a",
+      "stratum": "B",
+      "unit": 18,
+      "unit_lines": [
+        483,
+        563
+      ],
+      "unit_name": "prepare_url"
+    },
+    {
+      "audit": "46ff26f6342df6cc218c5400be6e82df98a514f2fcd65255e66df84fae3c40cc",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 1201,
+      "name": "kwargs",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "1292be9e781bf3bd3c227344a239fa62c0217985780c4e2bb6c234ed16c95cf5",
+      "stratum": "A",
+      "unit": 116,
+      "unit_lines": [
+        1201,
+        1202
+      ],
+      "unit_name": "hook"
+    },
+    {
+      "audit": "4afd2e357a3e7e5539ffb56a3c0d8a6e56b44cf864ab955ccc15892f362b36a1",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 1163,
+      "name": "prep",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "0058b0bbb39b1dacefa7c3d962326e1da2379b08bfc8db06e42cc9edf308ce1b",
+      "stratum": "B",
+      "unit": 110,
+      "unit_lines": [
+        1158,
+        1168
+      ],
+      "unit_name": "test_unicode_method_name_with_request_object"
+    },
+    {
+      "audit": "4bea814710212d3443ff92f04d0bee173f85bf4662f3d0234d52b1ed2a8940fe",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 92,
+      "name": "r",
+      "nth": 1,
+      "path": "tests/test_testserver.py",
+      "rank": "036b9a56397ca2a3035d2eb69d88902ccb244d18c8b65e7275da4a05e7ce0eb2",
+      "stratum": "B",
+      "unit": 6,
+      "unit_lines": [
+        78,
+        92
+      ],
+      "unit_name": "test_multiple_requests"
+    },
+    {
+      "audit": "51d7b8337e2199b244cce198985640a756006a16895c200b28554aa775c83177",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 368,
+      "name": "name",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "00f1d30749894291bd567e7057378fc9e5176995fcf7a8166e482eaddb7ed669",
+      "stratum": "B",
+      "unit": 35,
+      "unit_lines": [
+        367,
+        374
+      ],
+      "unit_name": "__setitem__"
+    },
+    {
+      "audit": "53aad5fb7763d45f0a78c72ddb13356df19e39706ac7f343b4d341f3ca8a8787",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 585,
+      "name": "body",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "0851d531bd441e88a1013123ad4da92e502c6caa3f1e91084a36064221df9216",
+      "stratum": "A",
+      "unit": 20,
+      "unit_lines": [
+        576,
+        652
+      ],
+      "unit_name": "prepare_body"
+    },
+    {
+      "audit": "53d3f102c3a35de43817e6af4133c0a40f50caa7ab87014869788e4a6e2a34de",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 248,
+      "name": "netrc_path",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "2aa794eaaf9d875d8ea52fadba9b267554bd3a858edec4f86bbbb3e613d4d3b3",
+      "stratum": "A",
+      "unit": 4,
+      "unit_lines": [
+        231,
+        280
+      ],
+      "unit_name": "get_netrc_auth"
+    },
+    {
+      "audit": "5cc80c367584396bea14c79a3ddb429744d4762d5423a66d417d1487061d9b34",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 367,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "035fec5c403ee32beb4a16d92dea5dda2e8cfddf604275841888a5ade80a859c",
+      "stratum": "B",
+      "unit": 8,
+      "unit_lines": [
+        341,
+        367
+      ],
+      "unit_name": "from_key_val_list"
+    },
+    {
+      "audit": "60d88ad6a7a850c52de2f4776251426b6593c752aaa9681f70e7dbc13990442f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 402,
+      "name": "path",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "0349ba1cd548ac2c8efb6323302eaba63f9a8f06b1b2820e5f27231fe8163c46",
+      "stratum": "B",
+      "unit": 39,
+      "unit_lines": [
+        401,
+        421
+      ],
+      "unit_name": "_find"
+    },
+    {
+      "audit": "664f9de0e3c2f1d123f625ab2366035dd522d2ffb60f2777d877770f26672c23",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 586,
+      "name": "content_type",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "37f82cecda2001d4a719490087b0d0fa245211dd7e891dbd08e92b839c70484f",
+      "stratum": "A",
+      "unit": 20,
+      "unit_lines": [
+        576,
+        652
+      ],
+      "unit_name": "prepare_body"
+    },
+    {
+      "audit": "665bdebc791b42b77ef5db3dd1de2676777a47242cade23e347ef73f20919196",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 234,
+      "name": "previous_fragment",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "1b72569f807674c08978ceb92778f40fe546b942ddb5d48f4ba2e0ac1ad5ef31",
+      "stratum": "B",
+      "unit": 5,
+      "unit_lines": [
+        186,
+        307
+      ],
+      "unit_name": "resolve_redirects"
+    },
+    {
+      "audit": "6a4d2fded95c02bd2e3c83b50bfaa3423e5c54c55c2c4a5f432f89b9d37e707f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 656,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "1636ed7bae77a3ab6729dfd3893f3af788844857580f81efc949f941d3900531",
+      "stratum": "B",
+      "unit": 24,
+      "unit_lines": [
+        633,
+        671
+      ],
+      "unit_name": "get_unicode_from_response"
+    },
+    {
+      "audit": "6a4d716e94f37288a8d20e4cad7b347819f1f4de34a41986f39c0781c18dd576",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 2263,
+      "name": "httpbin",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "02637c5106756489bb0cda06137e9e646a4deac531d26e3b649944128f8e8238",
+      "stratum": "B",
+      "unit": 217,
+      "unit_lines": [
+        2263,
+        2273
+      ],
+      "unit_name": "test_stream_with_auth_does_not_set_transfer_encoding_header"
+    },
+    {
+      "audit": "6cd65571b2d3938b27dfd44b82fbfae2bc8304f972bec21190e30fdb23563819",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 2197,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "07ad34696faf62f846ee61e1c8fc3d7a6ef27de4555c38ca1b3c7e20fc1de158",
+      "stratum": "C",
+      "unit": 209,
+      "unit_lines": [
+        2191,
+        2198
+      ],
+      "unit_name": "test_unconsumed_session_response_closes_connection"
+    },
+    {
+      "audit": "71eef32d928620cbfe955696834f24040a8167d70d65d49e71f19d974af5d81c",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 977,
+      "name": "exception",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "0173ee1c510d6f9c13f9654d96f11968dbfe188acf59b9a73ead14b69a41457b",
+      "stratum": "B",
+      "unit": 74,
+      "unit_lines": [
+        974,
+        981
+      ],
+      "unit_name": "test_set_environ_raises_exception"
+    },
+    {
+      "audit": "757d08a1219cc685f79961a2ed892447d59c67effae23a75fef5204814681473",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 341,
+      "name": "hooks",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "0240398c607980dd89d08ffb3a96ff01e2e2793d5c787016e9aea49efcf24ddd",
+      "stratum": "C",
+      "unit": 9,
+      "unit_lines": [
+        323,
+        355
+      ],
+      "unit_name": "__init__"
+    },
+    {
+      "audit": "758a4327b5a8e68c94b201b0aab9b14957c7919a1aea5fd99cd33c90e3adf258",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 691,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "051c0f3da4ab5408db395265d702d0030b05bc38d888702eda8b734a7887a133",
+      "stratum": "C",
+      "unit": 22,
+      "unit_lines": [
+        670,
+        697
+      ],
+      "unit_name": "prepare_auth"
+    },
+    {
+      "audit": "786afeda51faac9b42afebeebb87df744c09bed4a16c9c9980d57c4743b912bc",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 908,
+      "name": "chunk_size",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "16200a0ed544c6c06aa32e88bb5f33a95fce3092c4b02e7f6757b42aa0ac5732",
+      "stratum": "A",
+      "unit": 39,
+      "unit_lines": [
+        907,
+        909
+      ],
+      "unit_name": "iter_content"
+    },
+    {
+      "audit": "7b377ad46bddb5c54410402179d98b2f6752da497aa55d46660660b90ef4bd54",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 137,
+      "name": "username",
+      "nth": 1,
+      "path": "src/requests/auth.py",
+      "rank": "1aea4383c1d8b2ce7be99340f210501ecd2e9384260474411fbf83f780d7c06e",
+      "stratum": "A",
+      "unit": 9,
+      "unit_lines": [
+        137,
+        137
+      ],
+      "unit_name": "__init__"
+    },
+    {
+      "audit": "7bd8bf49b85431099278fe1fcde6af8fc656aa5a1a624444b526bca90e9d9e2d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 592,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "013c93e9357f6b21353200d71f25c46e932003281702998d5ab528ed8e750ef6",
+      "stratum": "C",
+      "unit": 16,
+      "unit_lines": [
+        565,
+        597
+      ],
+      "unit_name": "request_url"
+    },
+    {
+      "audit": "7e1a9bb5df13b9781b73f5f48bfe4669e3e4cc1671aa1bd5476ef22c5b256e47",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 59,
+      "name": "value",
+      "nth": 1,
+      "path": "src/requests/structures.py",
+      "rank": "0401c5b81f83c8b2ea7c3ec6d5bca1e4ff45ef9844471a35df81454b89d38b28",
+      "stratum": "B",
+      "unit": 1,
+      "unit_lines": [
+        59,
+        62
+      ],
+      "unit_name": "__setitem__"
+    },
+    {
+      "audit": "7e211b7d9584d35e6ee2fbd8a44534fce3fe5b598aade8d323f3073ef9921701",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 179,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/auth.py",
+      "rank": "0b255e9689b697d0418cafb9f3836ec11e002b8495e0201039feae11092329db",
+      "stratum": "C",
+      "unit": 14,
+      "unit_lines": [
+        176,
+        179
+      ],
+      "unit_name": "md5_utf8"
+    },
+    {
+      "audit": "8166e7860ad487cfe0f9b6ba99599c67ad30ae0ba98396439698012ae90f9e6c",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 652,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "09d8e9d2ebb1b401f5fd20a755938cc72ac198bd324db0ba9b3ef0a1998f5f55",
+      "stratum": "B",
+      "unit": 20,
+      "unit_lines": [
+        576,
+        652
+      ],
+      "unit_name": "prepare_body"
+    },
+    {
+      "audit": "88789cada0be89128cd9e8273ed14fdaa9787c5f91644b8c248c528609f5b693",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 359,
+      "name": "password",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "100909ba2cf3cfe02f00f1ba93f85ec8e06c6edc90020282123a1185ebcf774e",
+      "stratum": "A",
+      "unit": 7,
+      "unit_lines": [
+        334,
+        368
+      ],
+      "unit_name": "rebuild_proxies"
+    },
+    {
+      "audit": "8b95115dc9515ce7135e94cff74c96cd17cca32bd9c975856edb3d3578bf206b",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 565,
+      "name": "cookie_dict",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "0db141bc0c245852458a51a79414c82d16ef84c402e7d2def4fe0471d110e466",
+      "stratum": "A",
+      "unit": 48,
+      "unit_lines": [
+        564,
+        568
+      ],
+      "unit_name": "cookiejar_from_dict"
+    },
+    {
+      "audit": "8cfa4073d66527e5f294cefdc4be976578cea169b1ee24ec1b33c04832ab4aa3",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 983,
+      "name": "url",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "433178e076d3ff6fe5d319ba4a6f1af717e3e7ef1924fd4e117d572a36eeb3f7",
+      "stratum": "A",
+      "unit": 39,
+      "unit_lines": [
+        965,
+        999
+      ],
+      "unit_name": "parse_header_links"
+    },
+    {
+      "audit": "8fc0158496154295cf29fd5dd2ff3d1486abb92806c7ad9e021917b5756394e7",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 545,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "09e1d219daac307843b9d5f154540c758ad4f25fcb1f1c0791414a6174dfa42c",
+      "stratum": "C",
+      "unit": 18,
+      "unit_lines": [
+        483,
+        563
+      ],
+      "unit_name": "prepare_url"
+    },
+    {
+      "audit": "91917e278fce1a2dd211a148c4b3055745be5887ef725b1d0616e2dd253b0aa9",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 177,
+      "name": "server",
+      "nth": 1,
+      "path": "tests/test_lowlevel.py",
+      "rank": "0317f269e1f40e3ce2defbf1c88872f84de6d58923463f89ea659d9ce8ac058c",
+      "stratum": "B",
+      "unit": 8,
+      "unit_lines": [
+        127,
+        189
+      ],
+      "unit_name": "test_digestauth_401_count_reset_on_redirect"
+    },
+    {
+      "audit": "95e2b3d4257ba3fc0da9e54e7009936e71dbd3fdebeac653264dc52fbe02246f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 244,
+      "name": "c",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "0e68598c0570a825560af44079c35a434dfba35efb4bd0ec9138de5f7d0a7af2",
+      "stratum": "A",
+      "unit": 21,
+      "unit_lines": [
+        229,
+        248
+      ],
+      "unit_name": "set"
+    },
+    {
+      "audit": "96d2055575c2e8cbc13b0bfe129ec7c2454e298a9855c9b2339bef80f45eb4fd",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 1375,
+      "name": "key1",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "032a87b3fef61ca8f9769caa40370b64b7a7148201292b479bea5bcd18616e67",
+      "stratum": "B",
+      "unit": 131,
+      "unit_lines": [
+        1371,
+        1385
+      ],
+      "unit_name": "test_cookie_as_dict_values"
+    },
+    {
+      "audit": "970efa569a2b6c45263735de33b1890f25cd5df734f438cb6b2b14c8accf4544",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 177,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "1a93f15304b4e3084e31b8ea0adb8efe3652353ca1d3a48c37ad6b2770714ad8",
+      "stratum": "B",
+      "unit": 19,
+      "unit_lines": [
+        164,
+        182
+      ],
+      "unit_name": "remove_cookie_by_name"
+    },
+    {
+      "audit": "97dc235191f500f221cf73f69d826ea78c8ab88b3ed2485b6e997ac37cbf2edb",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 2957,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "0aa2f84b8ed4e4eae438955f2d89e8300d6d7bcb0574145a31f09b9c12467f60",
+      "stratum": "C",
+      "unit": 271,
+      "unit_lines": [
+        2928,
+        2957
+      ],
+      "unit_name": "test_different_connection_pool_for_tls_settings_verify_True"
+    },
+    {
+      "audit": "99302b86b0e6d0d519005edf2925fe6a06723d366c3a59e8f6ba26af453613d7",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 2919,
+      "name": "r6",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "01fb76bec2b79f4c1989599e61cce3180958028d2473498fcb88840dceea19a1",
+      "stratum": "B",
+      "unit": 270,
+      "unit_lines": [
+        2913,
+        2926
+      ],
+      "unit_name": "test_status_code_425"
+    },
+    {
+      "audit": "9dd03bbe9ec7c3135a78d958a5a1dcda6ddb5fa5628afb4e4cfdf4cc1685b4bf",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 803,
+      "name": "cookiejar",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "00c84ae3d849924f76f0b6bc6c52c54c6a951200180d199cc2e47e49ad5fa4be",
+      "stratum": "B",
+      "unit": 61,
+      "unit_lines": [
+        803,
+        810
+      ],
+      "unit_name": "test_add_dict_to_cookiejar"
+    },
+    {
+      "audit": "9f0948c502cf42c767a486268bb1d76e1a90f3b7b8532d3f76b0bcdfd600ebdd",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 2258,
+      "name": "r",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "014646b335bfefea8bbfadc127a6e2cb74c8a42caff11e8765dedc23837c5709",
+      "stratum": "C",
+      "unit": 216,
+      "unit_lines": [
+        2251,
+        2261
+      ],
+      "unit_name": "test_empty_stream_with_auth_does_not_set_content_length_header"
+    },
+    {
+      "audit": "a2417b51cedeb3fb3c831f0fb345e12681c36645a1abc820b463fdbd0331f380",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 679,
+      "name": "chunked",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "0205ec4ac60fe4c54c89db9f4715f4adfce4aae22cfb73551f20db7ca9e9cc35",
+      "stratum": "B",
+      "unit": 19,
+      "unit_lines": [
+        634,
+        748
+      ],
+      "unit_name": "send"
+    },
+    {
+      "audit": "a4e2d817057951005c88bb79807dc0dbf8c80c7d44d2d9fb40e380ba88d9d989",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 471,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "0626e98baef46bdc81a0dbfe3635b7cdc8753b8dddf0517d9ca0ed579538912d",
+      "stratum": "B",
+      "unit": 13,
+      "unit_lines": [
+        440,
+        471
+      ],
+      "unit_name": "parse_dict_header"
+    },
+    {
+      "audit": "a5cc021838cc5e843f061d6e21a5cf3dce03283168922ff2e2b969d8226472d1",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 346,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "0355729ca80d1818f673c1b36543abfc907cc7192e59cf8040bdf9d8a99bff2a",
+      "stratum": "C",
+      "unit": 31,
+      "unit_lines": [
+        331,
+        346
+      ],
+      "unit_name": "get_dict"
+    },
+    {
+      "audit": "a6e0acaa69c7122a0cafba35698096edf5075d92e17fe236166e6afc8f48c897",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 124,
+      "name": "member",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "039733695a84f5fe0b486f821017daefd1ed789063548dc1d8a12a68b9b00327",
+      "stratum": "C",
+      "unit": 10,
+      "unit_lines": [
+        115,
+        125
+      ],
+      "unit_name": "test_tarfile_member"
+    },
+    {
+      "audit": "a85c25c132f10af08f6fc5223021183e8ce7742142b90615be5faa4759f7121d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 834,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "1dcd2bbaf6c0c064a28a0a406639e6210077344241bcc406238a3ef86aaedcb6",
+      "stratum": "B",
+      "unit": 32,
+      "unit_lines": [
+        810,
+        870
+      ],
+      "unit_name": "should_bypass_proxies"
+    },
+    {
+      "audit": "accdccd06a5840090996573d59523cd02317c85fbc21c6cef8da30711d0d1b1d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 969,
+      "name": "content",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "036ffda072395cbe6a7e5d56c343e6f8ebf2e57ff28e2b4bf5b1ba8a32f479b4",
+      "stratum": "B",
+      "unit": 41,
+      "unit_lines": [
+        914,
+        977
+      ],
+      "unit_name": "iter_content"
+    },
+    {
+      "audit": "af04bc56322334fe635a39b05c989b5ca509f11158754d9e30828c2382e182ec",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 627,
+      "name": "password",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "0168b6eb219d7c01a296038d05556f761ee3b29325f925bcb6a9deb2464f22c2",
+      "stratum": "B",
+      "unit": 18,
+      "unit_lines": [
+        613,
+        632
+      ],
+      "unit_name": "proxy_headers"
+    },
+    {
+      "audit": "b01609fbf85c0406088dabb8e117b08f4d936d1238783716938646508fa0cc3a",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 136,
+      "name": "response",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "00afbd429335caf4e1891abdcf049de00d83a3c128db7f1e4da26745e5b56653",
+      "stratum": "B",
+      "unit": 17,
+      "unit_lines": [
+        135,
+        150
+      ],
+      "unit_name": "extract_cookies_to_jar"
+    },
+    {
+      "audit": "b1a7311cdbc9be78a4c1a6761e92ef9ebde643a7b366f32afb486bce2da9c247",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 997,
+      "name": "subkey",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "3681eeba5b0c4cdd155a905156ad1fa47f3175d222518918d6dc4439ce26571d",
+      "stratum": "A",
+      "unit": 77,
+      "unit_lines": [
+        997,
+        998
+      ],
+      "unit_name": "OpenKey"
+    },
+    {
+      "audit": "b3f8b4ae3ba314dae541440e070777a5ab62bfd307a2d4cc8d949cd490274378",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 409,
+      "name": "sock",
+      "nth": 1,
+      "path": "tests/test_lowlevel.py",
+      "rank": "03dfdf5c4c84aad083c3395f3abfdbeb7d015734dbd473342ccb47bff0592573",
+      "stratum": "B",
+      "unit": 21,
+      "unit_lines": [
+        409,
+        415
+      ],
+      "unit_name": "response_handler"
+    },
+    {
+      "audit": "b46cb4621e86208dbcc1cb1c4326074c07ac8bb110f8bed9040042a8cd5385bd",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 1348,
+      "name": "d2",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "01480c7beee416ecc1698aff1ec934b3030bbb9d91d4afc25433f00069f449e8",
+      "stratum": "C",
+      "unit": 129,
+      "unit_lines": [
+        1336,
+        1353
+      ],
+      "unit_name": "test_cookie_as_dict_keeps_items"
+    },
+    {
+      "audit": "b81c3a61fb1a24337a1299b0772c16dd90a68635e88d61b984a43aceaf4fee8a",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 83,
+      "name": "chardet_info",
+      "nth": 1,
+      "path": "src/requests/help.py",
+      "rank": "1705ff6cfb7998450ab6587be21fd02722d62c5fd0642aca927e8f90f1b77ccf",
+      "stratum": "A",
+      "unit": 1,
+      "unit_lines": [
+        67,
+        123
+      ],
+      "unit_name": "info"
+    },
+    {
+      "audit": "b992bd0623a9dcfa65408d07443377ff098dc4f26ba9b017ab914bd355dc34e3",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 124,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "1e22a43ebc750f32f10debb43d91a88b6224e7b52b8b1a76fac75ebc6439d85a",
+      "stratum": "B",
+      "unit": 1,
+      "unit_lines": [
+        108,
+        124
+      ],
+      "unit_name": "merge_hooks"
+    },
+    {
+      "audit": "bc6b890424addcc374a820f13ed0a2193d2b85f13630737a0b4054afaa5762cf",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 268,
+      "name": "kwargs",
+      "nth": 1,
+      "path": "src/requests/auth.py",
+      "rank": "2be45b2f3373740ac0899108bae5bcdef3359806fe9705b2df6fd5d7c2ce7e44",
+      "stratum": "A",
+      "unit": 19,
+      "unit_lines": [
+        268,
+        271
+      ],
+      "unit_name": "handle_redirect"
+    },
+    {
+      "audit": "bf82efd93e5286427cdadfd1f7070231e2c6f8cbc4f1312cc2fe8513d3cb01a9",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 873,
+      "name": "url",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "00e8b6ab131c684e63ec132541612a0927d2ede2c118e7aa3a27d576b61aa7cf",
+      "stratum": "B",
+      "unit": 34,
+      "unit_lines": [
+        873,
+        882
+      ],
+      "unit_name": "get_environ_proxies"
+    },
+    {
+      "audit": "c31bf7b64f6d27bc512dcc884921d6c9f80841dbfd5cef7ed47cb79d922b0fc4",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 365,
+      "name": "req",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "022246767bc5ca56ea1a113303f55f5486bfb3380dbd13815c780aec26e34b4f",
+      "stratum": "B",
+      "unit": 11,
+      "unit_lines": [
+        365,
+        401
+      ],
+      "unit_name": "build_response"
+    },
+    {
+      "audit": "c38608d668ccc904583653125894461a9662c3d8672408fb7bcab2c7ef11734e",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 241,
+      "name": "netrc_locations",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "19165bad8ee2725676e53cbebfe574961989969369e1938ba10031b84dd846db",
+      "stratum": "A",
+      "unit": 4,
+      "unit_lines": [
+        231,
+        280
+      ],
+      "unit_name": "get_netrc_auth"
+    },
+    {
+      "audit": "c4dcd7230cccb8b8676396dc5348c445e0e5b3b5b7908c17d17e7b23abd5a21f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 991,
+      "name": "value",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "006bc01d1437498598e046febc0f61571bfa8384dc97dfdd0afdbe3b926ab7cb",
+      "stratum": "C",
+      "unit": 39,
+      "unit_lines": [
+        965,
+        999
+      ],
+      "unit_name": "parse_header_links"
+    },
+    {
+      "audit": "c6e4e0fc77000f2eac540ae47d3309efa00a7e9916aa66edd69370d2819d2f7c",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 2735,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "0c2382e5eb258325d77d2b92445ede5eb80c7326cd346cfb544412eb9a53079f",
+      "stratum": "C",
+      "unit": 258,
+      "unit_lines": [
+        2731,
+        2737
+      ],
+      "unit_name": "test_prepared_copy"
+    },
+    {
+      "audit": "c7899ad5460f925b3a6b97c7af82cb47afd69b20df9320c0b2a2e68e338fe6f0",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 1112,
+      "name": "r",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "0376a888bbbae3933796b78a5e870d473bfef3c725c19571972b2e3a1b03510f",
+      "stratum": "C",
+      "unit": 104,
+      "unit_lines": [
+        1101,
+        1114
+      ],
+      "unit_name": "test_post_getattr_proxy_read_only"
+    },
+    {
+      "audit": "c9b7cfe05fb96c4e9d0ab6985288a8ace67de1b912a4dd00425bad822cf93bab",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 2414,
+      "name": "cid",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "035aa9900806b9a6b1c6ae9027d18e4ca0085f81039f4370a7c6133a3056baff",
+      "stratum": "B",
+      "unit": 231,
+      "unit_lines": [
+        2413,
+        2416
+      ],
+      "unit_name": "test_iter"
+    },
+    {
+      "audit": "cdbf101aea879e5606b24687262ff35e4042371c59fc4580cfc1341e9143072b",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 908,
+      "name": "decode_unicode",
+      "nth": 1,
+      "path": "src/requests/models.py",
+      "rank": "24a22ec08add7abebe5c9c53a5c025ad25670bec52fcd2f19b7eaec584c6ae1f",
+      "stratum": "A",
+      "unit": 39,
+      "unit_lines": [
+        907,
+        909
+      ],
+      "unit_name": "iter_content"
+    },
+    {
+      "audit": "d07fcd8fd623a2491c125f76711aaf651c2c8b1eb6d942eb80f6c8cf8f0cc4f3",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 306,
+      "name": "url",
+      "nth": 1,
+      "path": "src/requests/sessions.py",
+      "rank": "57fb2ee0d17507d77fa069087aae8412dbbca177cd22ccaa6f7ef8d7480de092",
+      "stratum": "B",
+      "unit": 5,
+      "unit_lines": [
+        186,
+        307
+      ],
+      "unit_name": "resolve_redirects"
+    },
+    {
+      "audit": "d094c3cae2f76028c77680865f31f289ab25964398c17842da37a7003d86bb2d",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 239,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "0b6a0ad3d139ecf29409e9f0068fb002044cf708f983a005b4a2284bec0d21cc",
+      "stratum": "C",
+      "unit": 4,
+      "unit_lines": [
+        231,
+        280
+      ],
+      "unit_name": "get_netrc_auth"
+    },
+    {
+      "audit": "d2eed87083482752eb3311e8ed2628639d1ad8dc009af55f42e44b8aacc48061",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 313,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "04b393b44590187d0b24f40e17c073cf5b01c632da26ec949c770fdbd8d2add6",
+      "stratum": "B",
+      "unit": 6,
+      "unit_lines": [
+        290,
+        325
+      ],
+      "unit_name": "extract_zipped_paths"
+    },
+    {
+      "audit": "d503e9cbc7156962ea7bfbf8e00d9f76563fa24ec1e70e108cc7699f289f743f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 2357,
+      "name": "cid",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "0101f622dd3b6f2c84479ae80ec11c35a5ce8907adc37ee43d6a3b8a467d42ef",
+      "stratum": "C",
+      "unit": 224,
+      "unit_lines": [
+        2356,
+        2359
+      ],
+      "unit_name": "test_getitem"
+    },
+    {
+      "audit": "d7d84fa47a8872f12638f7775880ff3cb973297535d35154dec0e6388c213a8f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 312,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/auth.py",
+      "rank": "0b3e06994df1779d0c0ddf1f22f7a64a2b3119c364f82aa986f769d9d12fbf0b",
+      "stratum": "C",
+      "unit": 20,
+      "unit_lines": [
+        273,
+        319
+      ],
+      "unit_name": "handle_401"
+    },
+    {
+      "audit": "e8939b32c1443679598f34b357552ab7aa359bb2f969259c307578c601fcb026",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 158,
+      "name": "netrc_path",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "0230f419cd617d913354b4a6909a399526c0dcbfb96ab7b7f62ee97f0a610680",
+      "stratum": "B",
+      "unit": 17,
+      "unit_lines": [
+        157,
+        163
+      ],
+      "unit_name": "test_works"
+    },
+    {
+      "audit": "ea2266c0e1ec40be0218582ff89bba4c5e6c589a6a6241e2f26bd74e0ab32eb7",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 1145,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "074e1ecd0c74a42a9435e13857842c9a7560131c9e4f2dd9e5a7b00fafb2f5e4",
+      "stratum": "C",
+      "unit": 108,
+      "unit_lines": [
+        1134,
+        1146
+      ],
+      "unit_name": "test_unicode_multipart_post_fieldnames"
+    },
+    {
+      "audit": "ea96d7750790f313204a6b6317a74c175119de5300a6d674861eefb679e4756c",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 2,
+      "line": 1182,
+      "name": "files",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "005dff12bca88d2b51a4ec364b6d9fb1c2fc39dc35e625c88cde80b06a7e9dbd",
+      "stratum": "B",
+      "unit": 112,
+      "unit_lines": [
+        1178,
+        1188
+      ],
+      "unit_name": "test_custom_content_type"
+    },
+    {
+      "audit": "ee1654c183986b6095160e95f21bf11edd6ce7017fa4da3f3967a89839405a18",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 896,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "14c40461d26282884d2f0e58ec4479d532d7c1e587e72272ee02ae1c61a50b22",
+      "stratum": "B",
+      "unit": 35,
+      "unit_lines": [
+        885,
+        908
+      ],
+      "unit_name": "select_proxy"
+    },
+    {
+      "audit": "ef710e798a151316f7db879609bce76c60dc76d66a617d742a1dfb97024a4b49",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 308,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/cookies.py",
+      "rank": "0592aa95148dd17b849e2f5393bbb0eb8123f285bf4097cf95dbab2fc9d52ed7",
+      "stratum": "C",
+      "unit": 28,
+      "unit_lines": [
+        302,
+        308
+      ],
+      "unit_name": "list_domains"
+    },
+    {
+      "audit": "f03419b86e9bf5effb6d641740c8aa2f91254f2e21f8376db6b0b3c17036bd03",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 284,
+      "name": "password",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "0029c425e1417d69b2da4aaad84abe3975852a22aad7a8dd888f96cdeaab1b6e",
+      "stratum": "C",
+      "unit": 9,
+      "unit_lines": [
+        269,
+        305
+      ],
+      "unit_name": "proxy_manager_for"
+    },
+    {
+      "audit": "f2e63e3e047727202a7eec6f8610aa24c916abbed223389fe6f43a264d0df0d2",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 132,
+      "name": "timeout",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "17e6f66a6a0068ed2cb1f94545e7edd8a45918c5643b0e28477a70b603f0d571",
+      "stratum": "A",
+      "unit": 3,
+      "unit_lines": [
+        128,
+        151
+      ],
+      "unit_name": "send"
+    },
+    {
+      "audit": "f3e85b3b7f794097d0464f3f3619d73526fea378998e060090c0946ccdfc5be3",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 545,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/adapters.py",
+      "rank": "1181323ffb995e8be8515a1e99dc901e8911e709eee4bdc47f5927f8de95dcf3",
+      "stratum": "B",
+      "unit": 14,
+      "unit_lines": [
+        512,
+        553
+      ],
+      "unit_name": "get_connection"
+    },
+    {
+      "audit": "f4f576317ed8f9840361820558f4bfdefcb0174dd85fbf02ee6cb84113c8044f",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 401,
+      "name": "",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "1df4040058c1b7032d220b491ce559bdda8a2ea724a601407f62992897986cf3",
+      "stratum": "B",
+      "unit": 11,
+      "unit_lines": [
+        376,
+        404
+      ],
+      "unit_name": "to_key_val_list"
+    },
+    {
+      "audit": "f5f7cdfaf0b8fc1c54364be041fdb27edf63d76eb6e5bc5b0f414c17278194ea",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 0,
+      "line": 971,
+      "name": "",
+      "nth": 1,
+      "path": "tests/test_utils.py",
+      "rank": "0ba8e2b40370b8b4fc33e75f6f60b6e449121f602ed121b3f809e11fd404fb23",
+      "stratum": "C",
+      "unit": 73,
+      "unit_lines": [
+        965,
+        971
+      ],
+      "unit_name": "test_set_environ"
+    },
+    {
+      "audit": "f6755cc9255a3eb168e01e99ed50615492967e48ceb3befea527aa8556f0aa01",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 3,
+      "line": 176,
+      "name": "x",
+      "nth": 1,
+      "path": "src/requests/auth.py",
+      "rank": "03fd3171da7fcb69f91eeeb1bdc13414c35e25f3b8a3505c575a443a9e46b6b7",
+      "stratum": "B",
+      "unit": 14,
+      "unit_lines": [
+        176,
+        179
+      ],
+      "unit_name": "md5_utf8"
+    },
+    {
+      "audit": "f9257c172e7922f3de929c707c2ad3e4b34fa435c5a514778885b11472a8fdfc",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 630,
+      "name": "pos",
+      "nth": 1,
+      "path": "src/requests/utils.py",
+      "rank": "e3fc929d892da86744f371abe19a31513b3a83859a4c932cc8a98439cdfb72da",
+      "stratum": "B",
+      "unit": 23,
+      "unit_lines": [
+        621,
+        630
+      ],
+      "unit_name": "iter_slices"
+    },
+    {
+      "audit": "fcf9110b6d5e2343d71324dc4d7d212de46d3e8da6abe6c71a97b4d81cf8f6da",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 82,
+      "name": "charset_normalizer_info",
+      "nth": 1,
+      "path": "src/requests/help.py",
+      "rank": "38cbffc800194db8b4367f859ad6fd946adda6df5c8172887643fbf10fd89252",
+      "stratum": "A",
+      "unit": 1,
+      "unit_lines": [
+        67,
+        123
+      ],
+      "unit_name": "info"
+    },
+    {
+      "audit": "fdc06d933ba47b82e734d838aae7568829087787c9230d7d826d3bfe9bb324ea",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "kind": 1,
+      "line": 168,
+      "name": "param_ordered_dict",
+      "nth": 1,
+      "path": "tests/test_requests.py",
+      "rank": "0247626db4e93ca83ba2f3bcf690192099cbf2dd90065ba3d9a88f29e570d167",
+      "stratum": "C",
+      "unit": 9,
+      "unit_lines": [
+        167,
+        176
+      ],
+      "unit_name": "test_params_original_order_is_preserved_by_default"
+    }
+  ],
+  "schema": "ce.eval-flow-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "requests",
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "units": 711
+    }
+  ]
+}

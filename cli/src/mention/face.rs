@@ -11,8 +11,9 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// The document's version identity — every report face carries one.
-/// 0.2.0: the `rates` census rides beside the header (additive).
-pub const SCHEMA_ID: &str = "ce.mentions-report/0.2.0";
+/// 0.2.0: the `rates` census rides beside the header (additive);
+/// 0.3.0: `skipped.signed`, the product's signature rule (additive).
+pub const SCHEMA_ID: &str = "ce.mentions-report/0.3.0";
 
 pub fn run(root: &Path, db: Option<PathBuf>, json: bool) -> ExitCode {
     match refreshed(root, db) {
@@ -56,6 +57,7 @@ pub fn report_json(stats: &super::Stats, rates: &BTreeMap<&'static str, LangRate
 }
 
 fn console(s: &super::Stats) -> Vec<String> {
+    let k = &s.skipped;
     let rescan = if s.run.rescanned {
         " (rev changed: full rescan)"
     } else {
@@ -74,13 +76,9 @@ fn console(s: &super::Stats) -> Vec<String> {
             ],
         ),
         line(
-            "  skipped: {} over 4 MiB, {} binary, {} walk errors",
-            "  跳过：{} 超 4 MiB，{} 二进制，{} walk 错误",
-            &[
-                &s.skipped.oversize,
-                &s.skipped.binary,
-                &s.skipped.walk_errors,
-            ],
+            "  skipped: {} over 4 MiB, {} binary, {} signed, {} walk errors",
+            "  跳过：{} 超 4 MiB，{} 二进制，{} 产品签名，{} walk 错误",
+            &[&k.oversize, &k.binary, &k.signed, &k.walk_errors],
         ),
         line(
             "  this run: {} refreshed, {} removed, {} rows clipped, {} files starved by the table cap{}",

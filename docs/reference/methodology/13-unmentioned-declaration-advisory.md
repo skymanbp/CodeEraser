@@ -44,8 +44,16 @@ root, identity being the canonical relative path, so a link and its target enter
 counted ([walk.rs:59](../../../cli/src/mention/walk.rs#L59)); the exclusion table is the
 scan's secret globs plus four omni-mentioners (`*.map`, `tags`, `TAGS`, `*.po`) — files
 whose purpose is to name every symbol ([walk.rs:64](../../../cli/src/mention/walk.rs#L64),
-[walk.rs:241-258](../../../cli/src/mention/walk.rs#L241)). Generated and vendored trees are
-NOT excluded: they are in U and outside the judged domain, which is the safe side.
+[walk.rs:241-258](../../../cli/src/mention/walk.rs#L241)). A document the product signed — a
+JSON object whose top-level `schema` is under `ce.` or whose top-level `generated_from`
+carries a `ce` key, the two spellings of the product's signature on its reports, feeds,
+contracts and frozen instruments — leaves U when it is read, beside the binary rule, and is
+counted (`skipped.signed`; [walk.rs:265-281](../../../cli/src/mention/walk.rs#L265)): it is a
+derivative of the corpus, and a file that inventories every unit of a tree — the flow exam's
+universe of this repository, plan v2.31 step 4 — is an omni-mentioner by construction that
+no by-name table could keep up with. Generated and vendored trees are
+NOT excluded: they are in U and outside the judged domain, which is the safe side. A signed
+document is not a generated tree but the product's own reading of one.
 
 The binary rule is git's: a UTF-16 BOM decodes, otherwise a NUL in the first 8000 bytes
 skips the file; a later NUL keeps it, decoded lossily so one stray byte cannot lose a
@@ -60,8 +68,8 @@ term per rule of the walk: the by-name cut, the nested-repository cut (git lists
 tree as one `sub/` entry), the tracked files a `.gitignore` pattern matches (the walk
 reads patterns and never the index, so such a file is outside U — zod has one), the
 exclusion table, the entries no regular file backs (deleted unstaged, a link to a
-directory), the size cap and the binary rule — each computed with the walk's own
-published predicate (`cut`, `excluded`, `FILE_CAP`, `decode`), never a second reading of
+directory), the size cap, the binary rule and the product's signature — each computed with the walk's own
+published predicate (`cut`, `excluded`, `FILE_CAP`, `decode`, `signed`), never a second reading of
 it ([mention_universe.rs:33-63](../../../cli/tests/it/mention_universe.rs#L33),
 [mention_universe.rs:99-146](../../../cli/tests/it/mention_universe.rs#L99)). Every term is witnessed once on a scratch
 repository where the walk's count and the formula agree
@@ -297,8 +305,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1363 (1397 − 22 pattern-ignored − 12 early-NUL) | rust | 3636 (1947) | 424 (2) | 11.7 % | 7 / 424 = 1.7 % | 7 / 3183 |
-| | | haskell | 2329 (558) | 440 (6) | 18.9 % | 44 / 440 = 10.0 % | 44 / 1889 |
+| self @ this commit | 1254 (1417 − 22 pattern-ignored − 12 early-NUL − 129 signed) | rust | 3639 (1949) | 433 (2) | 11.9 % | 9 / 433 = 2.1 % | 9 / 3178 |
+| | | haskell | 2329 (558) | 458 (6) | 19.7 % | 48 / 458 = 10.5 % | 48 / 1871 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -312,7 +320,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->2<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1947<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.1<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->2<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1949<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.1<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
@@ -373,7 +381,7 @@ HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet wind
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
 scratch repository ([mention_universe.rs:209-245](../../../cli/tests/it/mention_universe.rs#L209)); the self
-pre-registered zeros; the mentions face schema <!--ce:report:mentions#schemaver-->`ce.mentions-report/0.2.0`<!--/ce--> with its
+pre-registered zeros; the mentions face schema <!--ce:report:mentions#schemaver-->`ce.mentions-report/0.3.0`<!--/ce--> with its
 `rates` key ([face.rs:15](../../../cli/src/mention/face.rs#L15)) and the face run as a
 reader would — field names, the fold channel on a fixture, the console's nine holes in
 both languages ([mentions_face.rs](../../../cli/tests/it/mentions_face.rs)); the census
