@@ -40,6 +40,20 @@
   缺一行、伪单元、伪类、调换两行、行数超池、抽中 dynamic 单元）一律拒绝。
 - **盲判**与**精度册**：另两个提交（B′ / C）各记一段；门 = 每语言每种非顾问发现（0 / 1 / 2）fp / (tp + fp) ≤ 1 %（样本内即 0 个 fp），
   且每种至少有一道被产品标出的题，池空的类具名记 vacuous；达门的语言进 `flow::judged_mask()`，未达的只 observe。
+- **盲判仪器**（提交 B′，`cli/tests/it/eval_flow_parts/` 下三件 + 门一件）：`batches.rs` 的批次渲染是冻结样本的纯函数（同一样本
+  两次渲染逐字节同），先按语料分组、再按审阅序切成每批至多 25 道，提示模板常量 `PROMPT` 逐字取自判官提示模板
+  `audit_prompt_template.md`，每批另写 `manifest.json`（批号、语料、题 id；不入库）；`answers.rs` 读每批一个 `answers-<n>.jsonl`，
+  id 不在该批、一题多答或无答、truth 不在该类词表、理由长度越界、多余字段或非 JSON 行，每条拒绝按批按题点名；`review.rs` 逐字归档成
+  `contracts/eval/flow-review-<语言>-v<代>.json` 并提供 `verify_review`（行与样本按审阅序一一对应、身份字段逐个相等、批号是批次计划的、
+  摘要重算）；`cli/tests/it/eval_flow_review.rs` 五腿门（渲染纯度、合成答案全收、每种拒绝点名、档与考题 stage 同真同假、合成档的篡改）
+  外加对每份已归档的档跑六形篡改（外来秩、空理由、缺一行、翻一个 truth、调换两行、伪批号）。判官协议：53 个独立 Opus 子代理、每批一个，
+  只读钉住的克隆与自己的批次文件，任何工具的答案都不在场，每题写一行 JSON；十份档共 1,197 行。十份档的 `auditor` 是同一句（各语言的「盲判」节只指到这里），逐字如下：
+
+  > fifty-three independent Opus subagents, one batch each (at most 25 questions, one corpus per batch) in the sample's audit order, reading only the pinned clone under .ce-eval/corpora at its tip and their own batch file - never the product's lowering, no ce, no core, no tool answer anywhere in reach; each answered the four kinds from the source alone under the batch prompt's reading rules (a call that may throw does not end a path; a read is any use of the value, nested closures included; a member write reads the base) and wrote one JSON line per question in the batch's order; the coordinator assembled verbatim, judgments untouched (booklet analysis-track.md section 5.5; RG15); the batch prompt counts a question's nth from 0 while the sample stores it from 1, so every row echoes the sample's nth
+
+  两处口径：批次提示里的 nth 从 0 数，
+  档与样本一律从 1 数（档回显样本的 nth）；同一批只装一个语料。审阅档的 `generated_from` 记 ce 1.8.0、树 `2ea957d`、dirty = true，
+  与提交 B 的宇宙与样本同一读法：归档工具与这十份档在同一个提交里落地。
 
 ## 预登记常量（测量前写进每份档的 `constants`，改一个即换一套仪器）
 
@@ -68,6 +82,21 @@
 
 样本共 112 道，落在 13 个文件、94 个单元上。
 
+### 盲判（2026-09-30）
+
+112 道分 5 批（每批一个语料、至多 25 道，按语料 requests 112），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 31 | 0 |
+| 1 死存储 | dead 1 | live 34 | 0 |
+| 2 未用局部量 | unread 1 | read 15 | 0 |
+| 3 未用形参 | unread 15 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
 ## TypeScript（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -87,6 +116,21 @@
 
 样本共 127 道，落在 61 个文件、99 个单元上。
 
+### 盲判（2026-09-30）
+
+127 道分 6 批（每批一个语料、至多 25 道，按语料 zod 127），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 30 | 0 |
+| 1 死存储 | dead 1 | live 44 | 0 |
+| 2 未用局部量 | unread 0 | read 30 | 0 |
+| 3 未用形参 | unread 0 | read 22 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
 ## TSX（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -105,6 +149,21 @@
 | 3 未用形参 | 0 → 0 | 58 → 15 | — |
 
 样本共 52 道，落在 18 个文件、29 个单元上。
+
+### 盲判（2026-09-30）
+
+52 道分 3 批（每批一个语料、至多 25 道，按语料 zod 52），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 7 | 0 |
+| 1 死存储 | dead 0 | live 15 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 0 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
 
 ## Rust（步 4 提交 B）
 
@@ -126,6 +185,21 @@
 
 样本共 136 道，落在 91 个文件、118 个单元上，按语料分是 ripgrep 59 / codeeraser-flow 77。
 
+### 盲判（2026-09-30）
+
+136 道分 7 批（每批一个语料、至多 25 道，按语料 ripgrep 59 / codeeraser-flow 77），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 37 | 0 |
+| 1 死存储 | dead 0 | live 45 | 0 |
+| 2 未用局部量 | unread 0 | read 30 | 0 |
+| 3 未用形参 | unread 7 | read 17 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
 ## Go（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -144,6 +218,21 @@
 | 3 未用形参 | 19 → 15 | 644 → 15 | — |
 
 样本共 120 道，落在 22 个文件、93 个单元上。
+
+### 盲判（2026-09-30）
+
+120 道分 5 批（每批一个语料、至多 25 道，按语料 cobra 120），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 30 | 0 |
+| 1 死存储 | dead 0 | live 45 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 15 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
 
 ## C（步 4 提交 B）
 
@@ -164,6 +253,21 @@
 
 样本共 122 道，落在 31 个文件、110 个单元上。
 
+### 盲判（2026-09-30）
+
+122 道分 5 批（每批一个语料、至多 25 道，按语料 lua 122），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 45 | 0 |
+| 1 死存储 | dead 0 | live 45 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 2 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
 ## C++（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -182,6 +286,21 @@
 | 3 未用形参 | 286 → 15 | 2,093 → 15 | — |
 
 样本共 146 道，落在 27 个文件、133 个单元上。
+
+### 盲判（2026-09-30）
+
+146 道分 6 批（每批一个语料、至多 25 道，按语料 fmt 146），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 1 | reachable 40 | 0 |
+| 1 死存储 | dead 4 | live 41 | 0 |
+| 2 未用局部量 | unread 14 | read 16 | 0 |
+| 3 未用形参 | unread 0 | read 30 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
 
 ## Java（步 4 提交 B）
 
@@ -202,6 +321,21 @@
 
 样本共 140 道，落在 67 个文件、126 个单元上。
 
+### 盲判（2026-09-30）
+
+140 道分 6 批（每批一个语料、至多 25 道，按语料 gson 140），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 35 | 0 |
+| 1 死存储 | dead 0 | live 45 | 0 |
+| 2 未用局部量 | unread 15 | read 15 | 0 |
+| 3 未用形参 | unread 15 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
 ## Lua（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -220,6 +354,21 @@
 | 3 未用形参 | 22 → 15 | 1,556 → 15 | — |
 
 样本共 142 道，落在 62 个文件、120 个单元上。
+
+### 盲判（2026-09-30）
+
+142 道分 6 批（每批一个语料、至多 25 道，按语料 luarocks 142），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 1 | reachable 36 | 0 |
+| 1 死存储 | dead 4 | live 41 | 0 |
+| 2 未用局部量 | unread 15 | read 15 | 0 |
+| 3 未用形参 | unread 15 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
 
 ## R（步 4 提交 B）
 
@@ -240,8 +389,25 @@
 
 样本共 100 道，落在 20 个文件、58 个单元上。
 
+### 盲判（2026-09-30）
+
+100 道分 4 批（每批一个语料、至多 25 道，按语料 stringr 100），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 30 | 0 |
+| 1 死存储 | dead 0 | live 28 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 9 | read 18 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
 ## 出处
 
 十一份宇宙与十份样本的 `generated_from` 都记 ce 1.8.0、树 `5278e74`、dirty = true：冻结时考题仪器本身还没提交（它和
 这二十一份档在同一个提交里落地），与 EVAL-SET-LANGS.md 记 `bac6169` 同理；降表（提交 A）已在 `5278e74` 上，本仓的 Rust 语料
 `codeeraser-flow` 钉的正是这个提交。
+
+十份审阅档 `contracts/eval/flow-review-<语言>-v1.json`（提交 B′）的 `generated_from` 记 ce 1.8.0、树 `2ea957d`、dirty = true：归档时审阅仪器本身还没提交；53 批的批次文件、`manifest.json` 与答案文件在仓库外的车道目录里，不入库，答案的每个字经归档逐字进档。
