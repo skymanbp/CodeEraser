@@ -342,12 +342,13 @@ CHANGELOG 写「无默认档位变更」并点名本节。**区间如实说**：
 逐语言台账腿（`CE_FPR_CORPUS` 只认六个语料名，语料与 tip 由考题登记表钉住，不读 `CE_FPR_REPO` / `CE_FPR_TIP` /
 `CE_FPR_LIMIT`）：PowerShell 逐句设 `$env:CE_FPR_CORPUS='lua'`（或 fmt / gson / luarocks / stringr / codeeraser）与
 `$env:CE_BLESS='1'`，执行 `cargo test --release -j 8 --test it -- --ignored fpr_lang_replay --nocapture`；六个语料各跑一次，
-每次只重写自己那一行。
+每次只重写自己那一行（`$env:CE_FPR_OUT='<目录>'` 时读写都在那个目录，三份台账同读这一条规则）。
 
 `flow/1` 回放腿（`CE_FPR_FLOW_CORPUS` 只认十个 flow 考题语言名，语料与 tip 由 flow 考题表钉住；克隆读 `CE_FLOW_CLONE_ROOT`，缺省
 `.ce-eval/corpora`，只读不写；要 `CE_CORE_BIN`）：PowerShell 逐句设 `$env:CE_FPR_FLOW_CORPUS='python'`（或 typescript / tsx / rust / go /
 c / cpp / java / lua / r）与 `$env:CE_BLESS='1'`，执行 `cargo test --release -j 4 --test it -- --ignored fpr_flow_replay --nocapture`；
-十个语言各跑一次，每次只重写自己那一行。
+十个语言各跑一次，每次只重写自己那一行；`$env:CE_FPR_OUT='<目录>'` 让十次 bless 都写到树外、度量树保持干净，十行齐了再把档拷进
+`contracts/eval/`（同 flow 考题档的 `CE_FLOW_OUT`）。
 
 ### 历史复现（退役期 2026-08-18～2026-09-05）
 
