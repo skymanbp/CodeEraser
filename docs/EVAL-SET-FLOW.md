@@ -8,8 +8,8 @@
 > [EVAL-SET.md](EVAL-SET.md) → [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) → [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md) →
 > [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → [EVAL-SET-LANGS.md](EVAL-SET-LANGS.md) → 本册。本册与前五册同入冻结集
 > （`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。一个语言在它自己的步里加一节，三步各记一段；
-> 重冻结 = 该语言考题的代数加一（考题表的 `generation`：降表多读了一种写法、或换 tip），新一代用新文件名，旧一代的档按名
-> 退役并在本册具名记一条；生成器拒绝覆写已冻结的档。
+> 重冻结 = 该语言考题的代数加一（考题表的 `generation`：降表多读了一种写法、或换 tip），新一代用新文件名，旧一代的宇宙 /
+> 样本 / 审阅档留在盘上作那一代的记录（门只读考题表指向的代），本册在该语言下具名加一节「第二代」；生成器拒绝覆写已冻结的档。
 
 ## 仪器与门
 
@@ -31,24 +31,26 @@
   冻结宇宙靠核对、不靠信任。秩 = `sha256(域|corpus|commit|path|unit|kind|stratum|line|nth|name)`（名居末保单射：同一行的两个
   声明只差名字）；每格取 min(15, 该格的池) 个秩最小者，无备用题；样本按审阅域哈希排列（审阅者看不到秩序）。层留在样本档里
   （门用它重算秩；层是源码事实，不是答案），交给审阅代理的那一批不带层、不带产品的答案。档 `contracts/eval/flow-sample-<语言>-v<代>.json`。
-- **CI 门**（`cli/tests/it/eval_flow.rs`，不跑 git、不要语料克隆）：冻结宇宙的集合恰为考题表的 `<语言>-<语料>` 键（多一份少一份都点名）、
+- **CI 门**（`cli/tests/it/eval_flow.rs`，不跑 git、不要语料克隆）：冻结宇宙的集合恰为考题表的 `<语言>-<语料>` 键（按考题表第五列 `generation` 的代读：每个键在它考题的代上恰一份，更早一代的档是那一代的记录，更晚一代、不属任何键的档与缺的一份都点名；样本同读）、
   每份过共用信封（摘要从文件行重算、常量、行序、钉 tip）、语料与范围是考题的、排除只有「其他扩展名 / 走查拒读」两键、每个单元的
   三张表行数非负且池键合法；考题扩展名 = 产品路径表对该语言的扩展名行（`Lang::extensions`）；阶梯常量指向盘上的降表目录与
   它唯一的具名例外（`mod.rs`：模块表与判决掩码是政策不是答案）；样本的每格取数从冻结宇宙的摘要重算、每行两个哈希从自身字段重导、
   身份是考题的（语料在表内、commit = 该语料 tip）、（类，层）合法、(路径，单元) 在宇宙里并回显单元名与行段、行号落在行段内、
   同一单元同一格被抽中的数不超过它冻结行的池、不落在 dynamic 单元上；每份宇宙里 dynamic 单元的池全 0；篡改（伪路径、伪层、伪秩、伪审阅哈希、
   缺一行、伪单元、伪类、调换两行、行数超池、抽中 dynamic 单元）一律拒绝。
+- **第二代**（提交 F，2026-09-30；设计册 §13 第 28 条）：降表改动挪了一门考题的候选池（逐（单元，格）比池计数，见「步 4 提交 E」一节的宇宙漂移表），这门的第一代样本就不再是新降表下的同一次抽样，于是这一门出第二代：考题表该行第五列 `generation` 1 → 2、stage 回 `sampled`，宇宙与样本在改动之后的树上按同一套仪器、同一组预登记常量重导（`CE_FLOW_OUT` 写到仓外、九份齐了一次拷入，样本读同一目录下的宇宙），全部题交新一批独立判官重判（F′），不复用第一代真值；池一格没动的门保留第一代。题的身份是 `audit` 哈希（它哈希的是题的全部身份字段），两代的共有 / 新增 / 消失按它数，不按秩。
+- **第二代的读法**：第二代的批次提示在 `cannot_tell` 段与答案格式之间多一节 `## Language readings`（英文原文在 `prompt.rs` 的 `READINGS_TEXT`），把降表自提交 E 起读的隐式读写成题义，判官与产品按同一读法读同一段源码——此后留下的分歧只能是降表缺陷或真值争议，不再是没写明的约定。四组规则的中文复述：**TypeScript / TSX**，类型位置（注解、类型别名、泛型实参、`keyof typeof X`）的 `typeof X` 是对变量 X 的读；嵌套函数、箭头函数、类方法与对象字面量的 getter / setter / 方法提到 X 就读 X，不论离 X 的声明多远、是否被调用；带 `public` / `private` / `protected` / `readonly` 的构造器形参声明同名字段并从形参赋值，该形参被读。**Rust**，格式类宏（`format!`、`println!`、`write!`、`panic!`、`assert!` 系的消息、`format_args!` 等）的字符串字面量（raw 字符串也算）在花括号里点名的变量被读——`{name}`、`{name:?}`、`{name:>8}`，以及作宽度或精度的 `{:width$}`、`{:.prec$}`；`{{` 与 `}}` 是字面花括号、什么也不读。**C++**，构造器的成员初始化列表（`: m(x), n(y)`）读 x 与 y；带括号初始化的声明（`T v(x, y);`）像调用读实参那样读 x 与 y。**R**，`UseMethod`、`NextMethod`、`standardGeneric`、`callNextMethod` 调用读它所在函数的全部形参。第一代没写明这些，判官凭常识判；C2 的读数说明六个池未动的语言与这四组规则相容（类 0–2 fp 0，fn 逐条有归因），它们不重判。
 - **盲判**与**精度册**：另两个提交（B′ / C）各记一段；门 = 每语言每种非顾问发现（0 / 1 / 2）读四态——`fail`（fp ≥ 1）、
   `pass`（fp = 0 ∧ tp ≥ 1）、`vacuous`（fp = tp = fn = 0：样本里没有正例可找，准入靠负例上的零误报，各节照抄「0 / n 个负例」；零行也归此态）、
   `silent`（fp = tp = 0 ∧ fn ≥ 1：有正例而一个没报，不准入）；三门各 ∈ {pass, vacuous} 的语言进 `flow::judged_mask()`，其余只 observe
   （设计册 §13 第 25 条：原判据让无正例可找的类 fail、却让零行判 vacuous，证据更多反判更差）。
 - **盲判仪器**（提交 B′，`cli/tests/it/eval_flow_parts/` 下三件 + 门一件）：`batches.rs` 的批次渲染是冻结样本的纯函数（同一样本
   两次渲染逐字节同），先按语料分组、再按审阅序切成每批至多 25 道，提示模板常量 `PROMPT` 逐字取自判官提示模板
-  `audit_prompt_template.md`，每批另写 `manifest.json`（批号、语料、题 id；不入库）；`answers.rs` 读每批一个 `answers-<n>.jsonl`，
+  `audit_prompt_template.md`，每批另写 `manifest.json`（批号、语料、题 id；不入库；第二代另带 `"readings": 2`，第一代无此键、读作 1）；提示模板与第二代的读法一节（`PROMPT` / `READINGS_TEXT`）住在同目录 `prompt.rs`，读法一节只在第二代渲染、第一代的批次逐字节不变；`answers.rs` 读每批一个 `answers-<n>.jsonl`，
   id 不在该批、一题多答或无答、truth 不在该类词表、理由长度越界、多余字段或非 JSON 行，每条拒绝按批按题点名；`review.rs` 逐字归档成
   `contracts/eval/flow-review-<语言>-v<代>.json` 并提供 `verify_review`（行与样本按审阅序一一对应、身份字段逐个相等、批号是批次计划的、
-  摘要重算）；`cli/tests/it/eval_flow_review.rs` 五腿门（渲染纯度、合成答案全收、每种拒绝点名、档与考题 stage 同真同假、合成档的篡改）
-  外加对每份已归档的档跑六形篡改（外来秩、空理由、缺一行、翻一个 truth、调换两行、伪批号）。判官协议：53 个独立 Opus 子代理、每批一个，
+  摘要重算；信封的 `readings` 由 manifest 抄入，第二代档要 = 2、第一代缺席或 1）；`cli/tests/it/eval_flow_review.rs` 五腿门（渲染纯度、合成答案全收、每种拒绝点名、档与考题 stage 同真同假、合成档的篡改）
+  外加对每份已归档的档跑七形篡改（外来秩、空理由、缺一行、翻一个 truth、调换两行、伪批号、伪 `readings`）。判官协议：53 个独立 Opus 子代理、每批一个，
   只读钉住的克隆与自己的批次文件，任何工具的答案都不在场，每题写一行 JSON；十份档共 1,197 行。十份档的 `auditor` 是同一句（各语言的「盲判」节只指到这里），逐字如下：
 
   > fifty-three independent Opus subagents, one batch each (at most 25 questions, one corpus per batch) in the sample's audit order, reading only the pinned clone under .ce-eval/corpora at its tip and their own batch file - never the product's lowering, no ce, no core, no tool answer anywhere in reach; each answered the four kinds from the source alone under the batch prompt's reading rules (a call that may throw does not end a path; a read is any use of the value, nested closures included; a member write reads the base) and wrote one JSON line per question in the batch's order; the coordinator assembled verbatim, judgments untouched (booklet analysis-track.md section 5.5; RG15); the batch prompt counts a question's nth from 0 while the sample stores it from 1, so every row echoes the sample's nth
@@ -69,7 +71,7 @@
   （不跑 git、不要克隆与核）：档与考题 stage 同真同假（`scored` 才在盘上），已归档的逐行对审阅档重算并跑六形篡改（翻判词、翻答案、伪门、
   伪 `judged`、缺一行、把 silent 读成 vacuous——档里没有 silent 时，把某个有正例的类的真答案全改假、计数全重算、只让门写 vacuous）；
   `flow::judged_mask()` 的每一位 ⇔ 该语言精度册 `judged`（tsx 与 typescript 各一位）；四态在手写计数上钉住；篡改电池另在门自己的合成档
-  （python / rust）上先跑。出处门 `cli/tests/it/flow_provenance.rs`（跑 git，浅克隆拒）：三档 `generated_from` 的提交都在本历史上且严格先后；
+  （python / rust；rust 的第二代审阅档归档之前，读审阅门自己的合成审阅档）上先跑。出处门 `cli/tests/it/flow_provenance.rs`（跑 git，浅克隆拒）：三档 `generated_from` 的提交都在本历史上且严格先后；
   降表的首个提交是抽样提交的祖先或就是它，抽样到审阅之间降表零提交；精度册从自己的提交起到 HEAD，降表与 `scan/functions.rs` /
   `scan/walk.rs` / `scan/lang.rs` 无提交、工作树无未提交改动、`cli/Cargo.lock` 按钉版不动；反向探针两条（首个提交在抽样之后的路径、
   盲窗内动过的 `scan/lang.rs`）各按自己的句子红。读数见各语言「精度（2026-09-30）」一节（提交 C2）。
@@ -209,6 +211,12 @@ notes：无。
 
 unjudged 0 道。
 
+### 第二代（F，2026-09-30）
+
+- 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：colinhacks/zod 文件 375 → 375、单元 6,356 → 6,356、dynamic 0 → 0、unlowered 0 → 0、排除 other_extension 208 → 208，池动的单元 52。
+- 池 v1 → v2 → 取数（按类按层）：0 不可达 A 0 → 0 → 0 · B 1,000 → 1,000 → 15 · C 467 → 467 → 15；1 死存储 A 59 → 59 → 15 · B 41 → 41 → 15 · C 4,668 → 4,627 → 15；2 未用局部量 A 27 → 0 → 0 · B 4,527 → 4,486 → 15；3 未用形参 A 7 → 0 → 0 · B 2,929 → 2,936 → 15。
+- `flow-sample-typescript-v2.json`：105 道（第一代 127），落在 55 个文件、88 个单元上；与第一代共有 105、新增 0、消失 22（2/A 共有 0 / 新增 0 / 消失 15、3/A 共有 0 / 新增 0 / 消失 7）。批次 5 批：25 / 25 / 25 / 25 / 5。
+
 ## TSX（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -328,6 +336,12 @@ notes：无。
 - 类 3 层 A `ripgrep:crates/core/flags/doc/mod.rs:20` `render_custom_markup` 变量 `tag`：tag is read through the inline format capture in `let tag_prefix = format!(r"\{tag}{{");`.
 
 漏报（类 0–2）0 条、unjudged 0 道。
+
+### 第二代（F，2026-09-30）
+
+- 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：BurntSushi/ripgrep 文件 110 → 110、单元 3,345 → 3,345、dynamic 0 → 0、unlowered 0 → 0、排除 other_extension 127 → 127，池动的单元 6；skymanbp/CodeEraser（本仓，克隆名 `codeeraser-flow`） 文件 361 → 361、单元 4,619 → 4,619、dynamic 0 → 0、unlowered 0 → 0、排除 other_extension 548 → 548 / walk_refused 6 → 6，池动的单元 3。
+- 池 v1 → v2 → 取数（按类按层）：0 不可达 A 7 → 7 → 7 · B 1,432 → 1,432 → 15 · C 1,034 → 1,034 → 15；1 死存储 A 36 → 36 → 15 · B 61 → 61 → 15 · C 8,617 → 8,632 → 15；2 未用局部量 A 15 → 0 → 0 · B 8,414 → 8,429 → 15；3 未用形参 A 9 → 7 → 7 · B 7,615 → 7,617 → 15。
+- `flow-sample-rust-v2.json`：119 道（第一代 136），落在 87 个文件、109 个单元上，按语料分是 ripgrep 45 / codeeraser-flow 74；与第一代共有 119、新增 0、消失 17（2/A 共有 0 / 新增 0 / 消失 15、3/A 共有 7 / 新增 0 / 消失 2）。批次 5 批：25 / 20 / 25 / 25 / 24。
 
 ## Go（步 4 提交 B）
 
@@ -505,6 +519,12 @@ notes：无。
 
 unjudged 0 道。
 
+### 第二代（F，2026-09-30）
+
+- 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：fmtlib/fmt 文件 73 → 73、单元 4,654 → 4,654、dynamic 550 → 550、unlowered 0 → 0、排除 other_extension 72 → 72，池动的单元 188。
+- 池 v1 → v2 → 取数（按类按层）：0 不可达 A 11 → 11 → 11 · B 532 → 532 → 15 · C 498 → 498 → 15；1 死存储 A 95 → 95 → 15 · B 229 → 226 → 15 · C 2,344 → 2,349 → 15；2 未用局部量 A 38 → 32 → 15 · B 2,059 → 2,065 → 15；3 未用形参 A 286 → 3 → 3 · B 2,093 → 2,375 → 15。
+- `flow-sample-cpp-v2.json`：134 道（第一代 146），落在 26 个文件、121 个单元上；与第一代共有 128、新增 6、消失 18（1/B 共有 14 / 新增 1 / 消失 1、2/A 共有 14 / 新增 1 / 消失 1、3/A 共有 0 / 新增 3 / 消失 15、3/B 共有 14 / 新增 1 / 消失 1）。批次 6 批：25 / 25 / 25 / 25 / 25 / 9。
+
 ## Java（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -660,6 +680,12 @@ notes：无。
 
 误报（类 0–2）0 条、漏报（类 0–2）0 条、unjudged 0 道。
 
+### 第二代（F，2026-09-30）
+
+- 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：tidyverse/stringr 文件 67 → 67、单元 200 → 200、dynamic 5 → 5、unlowered 0 → 0、排除 other_extension 114 → 114，池动的单元 3。
+- 池 v1 → v2 → 取数（按类按层）：0 不可达 A 0 → 0 → 0 · B 69 → 69 → 15 · C 30 → 30 → 15；1 死存储 A 12 → 12 → 12 · B 1 → 1 → 1 · C 196 → 196 → 15；2 未用局部量 A 0 → 0 → 0 · B 143 → 143 → 15；3 未用形参 A 12 → 8 → 8 · B 438 → 442 → 15。
+- `flow-sample-r-v2.json`：96 道（第一代 100），落在 20 个文件、55 个单元上；与第一代共有 96、新增 0、消失 4（3/A 共有 8 / 新增 0 / 消失 4）。批次 4 批：25 / 25 / 25 / 21。
+
 ## 步 4 提交 E：降表回修与第一代精度册退役（2026-09-30）
 
 **退役**：提交 E 改了 `cli/src/flow/` 下的降表文件，它们在精度册的 `ANSWERED_BY` 里，十份第一代精度册
@@ -713,5 +739,7 @@ c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法
 `codeeraser-flow` 钉的正是这个提交。
 
 十份审阅档 `contracts/eval/flow-review-<语言>-v1.json`（提交 B′）的 `generated_from` 记 ce 1.8.0、树 `2ea957d`、dirty = true：归档时审阅仪器本身还没提交；53 批的批次文件、`manifest.json` 与答案文件在仓库外的车道目录里，不入库，答案的每个字经归档逐字进档。
+
+第二代九份档（提交 F：`flow-slice-<键>-v2.json` 五份——cpp-fmt、r-stringr、rust-ripgrep、rust-codeeraser-flow、typescript-zod——与 `flow-sample-<语言>-v2.json` 四份）的 `generated_from` 记 ce 1.8.0、树 `399291d`（提交 E）、dirty = true：生成时测试子仓的代际列与仪器改动还没提交，与提交 B / B′ 同一读法（设计册 §13 第 24 条）；九份先写到仓外、齐了一次拷入。TSX 与 TypeScript 共用 zod 克隆，但 TSX 的池一格没动：同一棵树上把 `tsx-zod` 宇宙重导到仓外，与冻结的第一代逐文件行相同、摘要相同（`generated_from` 之外整档相同），不出第二代、不拷入。第二代四门 20 批 454 道的批次文件与 `manifest.json` 在仓库外的车道目录里，不入库。
 
 十份精度册 `contracts/eval/flow-precision-<语言>-v1.json`（提交 C2）的 `generated_from` 记 ce 1.8.0、树 `bb9bdc8`、dirty = false：C1 提交了仪器与门之后，在那棵干净树上逐语言生成到车道目录、十份齐了一次拷进 `contracts/eval/`，生成期间仓库树里不建任何文件；judged = Python / TSX / Go / C / Java / Lua / R，掩码 `flow::judged_mask()` 按此填入。提交 E 起十份按名退役（删出树、历史里仍在），掩码随之清空。
