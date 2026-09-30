@@ -25,6 +25,7 @@ pub mod mcp;
 pub mod mention;
 pub mod proc;
 pub mod progress;
+pub mod query;
 pub mod report;
 pub mod root;
 pub mod sarif;

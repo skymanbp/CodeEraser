@@ -1,0 +1,15 @@
+# CodeEraser's built-in prelude (plan v2.31 step 2, design booklet
+# §4.3): the rules every program starts with. Their predicates are
+# reserved — a program that redefines one is a program error (7).
+# `dead` mirrors `ce deadcode`'s file-tier verdict: an entry is a node
+# with any role bit (every role lands in the core's entry mask), and a
+# reference of any rung is followed except the two liveness-inert
+# kinds (asset, refdef) the graph judgment drops the same way.
+entry(N) :- role(N, _).
+reach(N) :- entry(N).
+reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
+dead(F) :- file(F), not reach(F).
+depends(N, M) :- ref(N, M, _, _).
+depends(N, M) :- depends(N, K), ref(K, M, _, _).
+same_dir(F, G) :- in_dir(F, D), in_dir(G, D), F != G.
+dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.

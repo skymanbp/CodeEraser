@@ -11,6 +11,7 @@
 use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
 use crate::main_erase::EraseArgs;
 use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
+use crate::main_query::{QueryArgs, RulesArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
 use crate::main_setup::SetupArgs;
 use crate::main_similar::SimilarArgs;
@@ -153,6 +154,16 @@ pub(crate) enum Cmd {
     /// term bags; --widen adds the PPMI associative view (advisory,
     /// never a verdict)
     Similar(SimilarArgs),
+    /// Code query: one question in CE Datalog over the index's facts
+    /// (files, references, units, clones, mentions, classes), answered
+    /// by the core's query/1 with every answer's derivation under
+    /// --why; a program error exits 2 (report-only)
+    Query(QueryArgs),
+    /// Architecture rules as a gate: every `assert` in the rules file
+    /// (ce.rules at the root, or `[rules] file`) judged by the core's
+    /// query/1, each violation with its witness and derivation; any
+    /// violation exits 1, a program error 2
+    Rules(RulesArgs),
     /// Deterministic two-phase eraser: plan what is provably safe to
     /// erase via the core's erase/1; dry-run by default
     Erase(EraseArgs),

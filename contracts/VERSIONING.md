@@ -16,7 +16,8 @@
 > `unknown fact predicate`；每行恰为该谓词的元数、值非负、整表按元组严格升序，各按 `facts <code> <i>` 点名）+
 > `prelude`（前奏子句数，负值拒）+ `why` / `schema` 两个布尔；应答 `query.result`：`goals=[[goal,kind,sorts…]]`
 > （0 查询 / 1 断言；列类别 0 node / 1 dir / 2 unit / 3 int / 4 sym / 5 set / −1 无约束）、`answers=[[goal,args…]]`
-> （goal 序、元组升序）、`proof=[[goal,answer,node,parent,rule,pred,args…]]`（前序编号、根 parent −1、`rule` = 子句
+> （goal 序、元组升序）、`preds=[[code,sorts…]]`（每个程序谓词各位置推导出的类别，按码升序；有错误或空程序时为空——
+> 步 2 加进 7.3.0 未发布的应答形，回标推导链结点的实参用）、`proof=[[goal,answer,node,parent,rule,pred,args…]]`（前序编号、根 parent −1、`rule` = 子句
 > 下标或 −1 = 发送的事实、查询根 pred −1；`?-` 只在 `why` 时展开、断言违规恒展开；整棵装不下 `proofCap` 16384 就整棵
 > 不出并计 `counts.proofTruncated`）、`errors=[[token,code]]`（1 语法 / 2 未知谓词 / 3 元数 / 4 类别 / 5 未绑定 /
 > 6 不可分层 / 7 前奏重定义 / 8 聚合形 / 9 头部匿名；分阶段，第一个出错阶段报它的全部；有错即不求值）、
@@ -27,9 +28,9 @@
 > 比较两侧同类别（同类 id 可比大小）、算式只在整数上、除零使文字不成立、空 `count` / `sum` = 0、空 `min` / `max`
 > 不成立（`CE.Query` 与 `CE.Query.{Contract,Cost,Schema,Syntax,Parse,Check,Check.Sorts,Check.Safety,Eval,Eval.Index,Eval.Join,Proof}`）。
 > 无旋钮、无 fail 档、无条件位：`assert` 的违规数由面（`ce rules`）读成门。既有十二族字节零变化（152 对 golden 只动
-> proto 字面与 hello 能力表）；新增 `contracts/fixtures/query/golden.ndjson` 六对（前奏 + schema 回显 / 断言违规 /
-> 带 `why` 的查询 / 语法 / 未绑定 / 不可分层）。旧核无此能力 = 测量侧具名降级「core offers no query/1 (pre-7.3.0)」
-> （步 2 落 Rust 面时接线）。
+> proto 字面与 hello 能力表）；新增 `contracts/fixtures/query/golden.ndjson` 八对（步 1 六对：前奏 + schema 回显 / 断言违规 /
+> 带 `why` 的查询 / 语法 / 未绑定 / 不可分层；步 2 加算术 / 集合上的聚合两对）。旧核无此能力 = 测量侧具名降级「core offers no query/1 (pre-7.3.0)」
+> （步 2 已接线：Rust `cli/src/query/wire.rs` 经 `corelink::judged::ask` 的能力门，缺席 = 文档里的具名未判决）。
 > **7.2.0**（判决语言集上线，加性 minor，计划 v2.30 步 1，2026-09-24）：`scan.request` 与 `graph.request`
 > 各加一个可选整数键 `judgedMask`——Rust 侧 `Lang::judged_mask()` 从 LANGS 表按 `scan_only` 列推出的位集
 > （落码时 `0x7F` = 码 0..6；各语言随自己的步翻位，今日十三位 `0x17847F` = 码 0..6、10、15..18、20——纯散文臂 21 与哨兵 7 不在集内），ce 恒发。核此前把「lang 在判决集内」写死为 `lang ≤ 6`（`CE.Scan.Contract.namingShape` 与
@@ -624,7 +625,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->158<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.3.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->160<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.3.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

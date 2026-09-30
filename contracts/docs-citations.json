@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|a03aa24774fa7c7f|0": {
+  "docs/reference/methodology.md|../../README.md|662956795e0de916|0": {
     "target": "../../README.md",
-    "line": 181,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->fifteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->six<!--/ce--> product gates on this tree."
+    "line": 184,
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->sixteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -2797,8 +2797,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|b1fd070c83dda0e1|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 109,
-    "end": 132,
+    "line": 114,
+    "end": 137,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/fourclass/anchor.rs|bc424b68d386ad1f|0": {
@@ -4447,19 +4447,19 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|0d4b0b0be629773b|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 130,
+    "line": 129,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|21167c49dd173eee|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 96,
-    "end": 102,
+    "line": 95,
+    "end": 101,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|a5fe474ab9784b27|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 124,
-    "end": 129,
+    "line": 123,
+    "end": 128,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/md_mask.rs|9551917adc7cb5c4|0": {
@@ -4567,15 +4567,15 @@
     "line": 48,
     "text": "Literal(&'static str),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|15a085b97e7326c6|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|d5350aafcc5c6a41|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 152,
-    "text": "pub const GRAPH_REV: i64 = 22;"
+    "line": 155,
+    "text": "pub const GRAPH_REV: i64 = 23;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 192,
-    "end": 194,
+    "line": 195,
+    "end": 197,
     "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
@@ -7820,31 +7820,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 465,
-    "end": 467,
+    "line": 466,
+    "end": 468,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 461,
+    "line": 462,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 453,
-    "end": 467,
+    "line": 454,
+    "end": 468,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 456,
-    "end": 457,
+    "line": 457,
+    "end": 458,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 456,
-    "end": 460,
+    "line": 457,
+    "end": 461,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8559,8 +8559,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 193,
-    "end": 195,
+    "line": 194,
+    "end": 196,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9323,8 +9323,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
     "target": "../ce-toml.md",
-    "line": 86,
-    "end": 93,
+    "line": 87,
+    "end": 94,
     "text": "## [tombstone]"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/audit/similar.rs|4dbfefaca8311860|0": {
@@ -9783,5 +9783,720 @@
     "line": 247,
     "end": 266,
     "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
+    "target": "../../../.github/workflows/ci.yml",
+    "line": 289,
+    "text": "cargo run --locked -- rules tests --core \"$CORE_BIN\"\n\n# The churn axis (score axis 5) needs the git-subprocess walk —"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|622eb8e30e1a9137|0": {
+    "target": "../../../.github/workflows/ci.yml",
+    "line": 266,
+    "text": "cargo run --locked -- rules .. --core \"$CORE_BIN\"\n\n# The test suite is a READER of this tree (plan v2.18 step #12):\n# its files feed the graph's edges and the advisory's mention\n# universe above and are measured by nobody there. What measures\n# them is the submodule's own ce.toml + baseline — the same seven\n# gates, rooted at cli/tests (root resolution stops at its\n# ce.toml). 978 at the split, floor 975: the same bite; 987 once\n# the crate's unit tests rode in as unit/ (step #13), floor 983;\n# 983 once the clone axis re-denominated (v2.29 step 8), floor 979;\n# 953 once the T3 near-miss pairs entered the sim table (v2.30 step\n# 5b-9), floor 949.\n- name: Dogfood the test suite (its own ce.toml + baseline)"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|0abbb9a52b13c833|0": {
+    "target": "../../../ce.rules",
+    "line": 32,
+    "text": "assert top_level_cycle(D, E) :- parent(D, R), parent(E, R), dir_name(R, \".\"), dir_ref(D, E), dir_ref(E, D), D < E."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|65afd0249387d880|0": {
+    "target": "../../../ce.rules",
+    "line": 29,
+    "text": "assert orphan_page(F) :- in(F, \"site/**\"), lang(F, html), N = count(G : ref(G, F, _, _)), N = 0."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|93f248e1b594b4d5|0": {
+    "target": "../../../ce.rules",
+    "line": 10,
+    "end": 12,
+    "text": "assert rust_reads_core(F, G) :- in(F, \"cli/src/**\"), ref(F, G, _, _), in(G, \"core/**\")."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|b4eefbdd4dee8e84|0": {
+    "target": "../../../ce.rules",
+    "line": 1,
+    "end": 6,
+    "text": "# CodeEraser's own architecture rules (plan v2.31 step 2, design"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|c4c30ad83bba0d27|0": {
+    "target": "../../../ce.rules",
+    "line": 16,
+    "text": "assert scan_reads_graph(F, G) :- in(F, \"cli/src/scan/**\"), ref(F, G, _, _), in(G, \"cli/src/graph/**\")."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|c52d9f13b76790a5|0": {
+    "target": "../../../ce.rules",
+    "line": 21,
+    "end": 22,
+    "text": "assert product_reads_tests(F, G) :- in(F, \"cli/src/**\"), ref(F, G, _, _), in(G, \"cli/tests/it/**\")."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|d34ea3f8bc8e5b53|0": {
+    "target": "../../../ce.rules",
+    "line": 26,
+    "text": "assert dead_file(F) :- dead(F)."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/canonical.rs|9ae7fb2196f32953|0": {
+    "target": "../../../cli/src/config/canonical.rs",
+    "line": 79,
+    "end": 82,
+    "text": "// rule 7: the rules file is a path the query family reads, never"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/rules.rs|223a93993213ddf8|0": {
+    "target": "../../../cli/src/config/rules.rs",
+    "line": 25,
+    "end": 29,
+    "text": "/// The rules file `ce rules` judges and `ce query` builds on,"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|097f5d56f167eb0a|0": {
+    "target": "../../../cli/src/faces.rs",
+    "line": 206,
+    "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|f50a981a429e80a8|0": {
+    "target": "../../../cli/src/faces.rs",
+    "line": 190,
+    "text": "pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>) -> Result<Value> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
+    "target": "../../../cli/src/main_lang.rs",
+    "line": 64,
+    "text": "query\t代码查询：用 CE Datalog 对索引里的事实（文件、引用、单元、克隆、提及、路径类）提一个问题，由核的 query/1 作答，--why 时每个答案带推导链；程序错误退出 2（仅报告）"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|1008c68889e0874d|0": {
+    "target": "../../../cli/src/main_query.rs",
+    "line": 70,
+    "text": "pub fn rules_cmd(a: RulesArgs) -> ExitCode {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|9055b071dad993d6|0": {
+    "target": "../../../cli/src/main_query.rs",
+    "line": 50,
+    "text": "pub fn query_cmd(a: QueryArgs) -> ExitCode {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|e5325963d09827f3|0": {
+    "target": "../../../cli/src/main_query.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! `ce query` and `ce rules` — the code-query family's CLI faces"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
+    "target": "../../../cli/src/mcp/adapters.rs",
+    "line": 173,
+    "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
+    "target": "../../../cli/src/mcp/tools.rs",
+    "line": 188,
+    "text": "\"query\",\nquery,"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|e24234656aa40c40|0": {
+    "target": "../../../cli/src/mcp/tools.rs",
+    "line": 209,
+    "text": "\"rules\",\nrules,"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|0b5c5c7ec7c0f040|0": {
+    "target": "../../../cli/src/query/columns.rs",
+    "line": 115,
+    "text": "fn outer_vars(toks: &[Token]) -> Vec<String> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|54f2baebfbbe808c|0": {
+    "target": "../../../cli/src/query/columns.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The goals' column names (design booklet §4.5): the core answers a"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/console.rs|25dca994341b1b4e|0": {
+    "target": "../../../cli/src/query/console.rs",
+    "line": 13,
+    "text": "pub fn console(r: &Report) -> Vec<String> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/console.rs|bcd95cdadd2f156b|0": {
+    "target": "../../../cli/src/query/console.rs",
+    "line": 70,
+    "text": "fn chain(proof: &[ProofFace], goal: usize, answer: usize) -> Vec<String> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/console.rs|edcd4bda1ec57129|0": {
+    "target": "../../../cli/src/query/console.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The console face of the query document (booklet §4.6): the"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|17c2cd076411feb1|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 28,
+    "text": "const ERROR_NAMES: [&str; 10] = ["
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|38995ca156c29327|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The one document of `ce query`, `ce rules`, the MCP tools and the"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|45825c30a462a15f|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 182,
+    "text": "fn glob_faults(root: &Path, program: &Program) -> Vec<ErrorFace> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|5d60f2b763d13eb1|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 206,
+    "text": "fn label(r: &mut Report, program: &Program, labels: &Labels, j: wire::Judged) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|600e2973b205f045|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 121,
+    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Report> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|6d479bd5450d53e7|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 113,
+    "text": "pub fn question(text: &str) -> String {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|eaa6f8f262a4aeeb|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 23,
+    "end": 24,
+    "text": "pub const SCHEMA_ID: &str = \"ce.query-report/0.1.0\";"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|1dddd95dd80f8269|0": {
+    "target": "../../../cli/src/query/facts/graph.rs",
+    "line": 30,
+    "text": "pub fn build(w: &GraphWire, idx: &Index) -> Result<Nodes> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|5b75789cf73756c4|0": {
+    "target": "../../../cli/src/query/facts/graph.rs",
+    "line": 87,
+    "text": "pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|83fe4f9274f978b2|0": {
+    "target": "../../../cli/src/query/facts/graph.rs",
+    "line": 154,
+    "text": "fn tree_tables(nodes: &Nodes, sink: &mut Sink, labels: &mut Labels) {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|f2f974f576dc2712|0": {
+    "target": "../../../cli/src/query/facts/graph.rs",
+    "line": 137,
+    "text": "fn line_counts(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|179260bdca83ea10|0": {
+    "target": "../../../cli/src/query/facts/mod.rs",
+    "line": 68,
+    "text": "pub struct Sink {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|1a30fb51b76de4e1|0": {
+    "target": "../../../cli/src/query/facts/mod.rs",
+    "line": 123,
+    "text": "pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Program) -> Result<Facts> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|f9803ac8e916bbe8|0": {
+    "target": "../../../cli/src/query/facts/mod.rs",
+    "line": 36,
+    "text": "pub fn render(&self, sort: i64, v: i128) -> String {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|fe5603408107d945|0": {
+    "target": "../../../cli/src/query/facts/mod.rs",
+    "line": 1,
+    "end": 7,
+    "text": "//! The fact tables (design booklet §4.2): the request half the"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/pairs.rs|17d3df1846b2eaff|0": {
+    "target": "../../../cli/src/query/facts/pairs.rs",
+    "line": 1,
+    "end": 6,
+    "text": "//! The judged-pair tables: `dup` off the T1/T2 blocks the snapshot"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/pairs.rs|7b1c40f74b1aa863|0": {
+    "target": "../../../cli/src/query/facts/pairs.rs",
+    "line": 62,
+    "text": "fn near_misses(ctx: &Ctx<'_>, units: &Units, sink: &mut Sink) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/pairs.rs|d9e5c2d4c8391c4f|0": {
+    "target": "../../../cli/src/query/facts/pairs.rs",
+    "line": 45,
+    "text": "fn twins(ctx: &Ctx<'_>, units: &Units, sink: &mut Sink) {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|34916d3db1241f86|0": {
+    "target": "../../../cli/src/query/facts/text.rs",
+    "line": 59,
+    "text": "fn classes(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|6d0ff0a89c422b18|0": {
+    "target": "../../../cli/src/query/facts/text.rs",
+    "line": 42,
+    "text": "fn mentions(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|fbf57485ec7f69c8|0": {
+    "target": "../../../cli/src/query/facts/text.rs",
+    "line": 13,
+    "text": "pub fn fill(ctx: &Ctx<'_>, program: &Program, sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/units.rs|8ff8db07b8fa222c|0": {
+    "target": "../../../cli/src/query/facts/units.rs",
+    "line": 42,
+    "text": "pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<Units> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/units.rs|fb7f4c270e05a21a|0": {
+    "target": "../../../cli/src/query/facts/units.rs",
+    "line": 115,
+    "text": "fn complexity(ctx: &Ctx<'_>, units: &Units, sink: &mut Sink) -> Result<()> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|6485672f3fce63de|0": {
+    "target": "../../../cli/src/query/legend.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The query family's legend (plan v2.31 step 2, design booklet §4.2):"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|92dae6b55a12f01a|0": {
+    "target": "../../../cli/src/query/legend.rs",
+    "line": 132,
+    "text": "pub const NODE_KINDS: [&str; 5] = [\"file\", \"pkg\", \"section\", \"asset\", \"prose\"];"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|b5035c66204fb898|0": {
+    "target": "../../../cli/src/query/legend.rs",
+    "line": 137,
+    "text": "pub const ROLE_NAMES: [&str; 10] = ["
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|bb3c0c8e97f327d5|0": {
+    "target": "../../../cli/src/query/legend.rs",
+    "line": 14,
+    "text": "const SCHEMA: &str = \"\\"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|be239a13651dc5ec|0": {
+    "target": "../../../cli/src/query/legend.rs",
+    "line": 151,
+    "text": "pub const REF_KINDS: [&str; 6] = ["
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|f889b58f0a66303a|0": {
+    "target": "../../../cli/src/query/legend.rs",
+    "line": 125,
+    "text": "pub fn sym(name: &str) -> u64 {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|3e77fbd57dee3395|0": {
+    "target": "../../../cli/src/query/lexer.rs",
+    "line": 349,
+    "text": "fn sugar(&mut self, line: u32, col: u32) -> Result<(), Fault> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|8a5cf2b211b7dddf|0": {
+    "target": "../../../cli/src/query/lexer.rs",
+    "line": 44,
+    "text": "const PUNCT: &str = \":- 10\\n, 11\\n. 12\\n( 13\\n) 14\\nnot 15\\n?- 16\\nassert 17\\n= 18\\n!= 19\\n\\"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|ab259b560c786b46|0": {
+    "target": "../../../cli/src/query/lexer.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! The query language's scanner (design booklet §4.4): the text of a"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|f538e69a9f6d36a3|0": {
+    "target": "../../../cli/src/query/lexer.rs",
+    "line": 293,
+    "text": "fn variable(&mut self, w: String, line: u32, col: u32) {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|23bcba3c1722e495|0": {
+    "target": "../../../cli/src/query/mod.rs",
+    "line": 26,
+    "text": "pub const PRELUDE: &str = include_str!(\"prelude.rules\");"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|2df12d0d7494a4a5|0": {
+    "target": "../../../cli/src/query/mod.rs",
+    "line": 1,
+    "end": 13,
+    "text": "//! The code-query family (plan v2.31 step 2; ADR-008 seventh"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|d79179f736e4d4c2|0": {
+    "target": "../../../cli/src/query/mod.rs",
+    "line": 36,
+    "text": "pub fn rules_source("
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/prelude.rules|5891a3eb263ddd54|0": {
+    "target": "../../../cli/src/query/prelude.rules",
+    "line": 8,
+    "end": 15,
+    "text": "entry(N) :- role(N, _)."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/program.rs|4d3b1ce8fe15441c|0": {
+    "target": "../../../cli/src/query/program.rs",
+    "line": 131,
+    "text": "pub fn locate(&self, idx: usize) -> String {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/program.rs|7ad404834329de0f|0": {
+    "target": "../../../cli/src/query/program.rs",
+    "line": 115,
+    "text": "pub(super) fn idb_code(&mut self, name: &str) -> u32 {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/program.rs|8424bc45010209e5|0": {
+    "target": "../../../cli/src/query/program.rs",
+    "line": 101,
+    "text": "pub fn lex(prelude: &str, rules: Option<&str>, query: Option<&str>) -> Result<Program, Fault> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|3330a64bd12a7a96|0": {
+    "target": "../../../cli/src/query/wire.rs",
+    "line": 103,
+    "text": "pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|da3bb2dec2173e71|0": {
+    "target": "../../../cli/src/query/wire.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The query/1 leg (design booklet §3, §4.5): the request — the"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/ce.rules|d34ea3f8bc8e5b53|0": {
+    "target": "../../../cli/tests/ce.rules",
+    "line": 7,
+    "end": 13,
+    "text": "assert dead_file(F) :- dead(F)."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/face_parity.rs|7e3193208646bf01|0": {
+    "target": "../../../cli/tests/it/face_parity.rs",
+    "line": 40,
+    "text": "code query and architecture rules | 代码查询与架构规则 | query, rules | tab:query, query_report, rules_report | mcp:query, mcp:rules | |"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
+    "target": "../../../cli/tests/it/query_face.rs",
+    "line": 151,
+    "text": "fn sugar_aggregates_arithmetic_and_every_program_error_go_the_same_road() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|b01bf384f3002998|0": {
+    "target": "../../../cli/tests/it/query_face.rs",
+    "line": 242,
+    "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|0": {
+    "target": "../../../cli/tests/it/query_face.rs",
+    "line": 98,
+    "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|1": {
+    "target": "../../../cli/tests/it/query_face.rs",
+    "line": 98,
+    "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|e86b28abce63cf8a|0": {
+    "target": "../../../cli/tests/it/query_face.rs",
+    "line": 183,
+    "text": "fn rules_is_a_gate_on_the_documents_violations() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
+    "target": "../../../cli/tests/it/query_golden.rs",
+    "line": 26,
+    "text": "const PROGRAMS: &str = \"\\"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|d650078f6324fbb1|0": {
+    "target": "../../../cli/tests/it/query_golden.rs",
+    "line": 112,
+    "text": "fn every_request_line_is_the_prelude_then_its_program_through_the_lexer() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|a47e4986df442e86|0": {
+    "target": "../../../cli/tests/unit/query/face.rs",
+    "line": 32,
+    "text": "fn a_lexical_fault_is_error_zero_at_its_place_and_no_judgment_before_any_core() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/legend.rs|83d614986f8f8dbb|0": {
+    "target": "../../../cli/tests/unit/query/legend.rs",
+    "line": 12,
+    "text": "fn the_schema_rows_are_the_cores_echo() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/legend.rs|83d614986f8f8dbb|1": {
+    "target": "../../../cli/tests/unit/query/legend.rs",
+    "line": 12,
+    "text": "fn the_schema_rows_are_the_cores_echo() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/program.rs|e6573e0034c086e6|0": {
+    "target": "../../../cli/tests/unit/query/program.rs",
+    "line": 19,
+    "text": "fn the_prelude_is_eight_clauses_over_six_reserved_predicates() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/wire.rs|ceb2e7c5ab25b666|0": {
+    "target": "../../../cli/tests/unit/query/wire.rs",
+    "line": 63,
+    "text": "fn consume_names_the_degraded_reply_and_every_skew() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|0e2ab9480d5e8f13|0": {
+    "target": "../../../core/app/CE/Query.hs",
+    "line": 82,
+    "text": "predRows :: Checked -> [[Integer]]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|84a2efcc5da58d86|0": {
+    "target": "../../../core/app/CE/Query.hs",
+    "line": 5,
+    "end": 18,
+    "text": "-- | query.request handler (plan v2.31 step 1; ADR-008 seventh"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|c7f4b2ee90b22583|0": {
+    "target": "../../../core/app/CE/Query.hs",
+    "line": 125,
+    "text": "degraded :: String -> QueryReq -> B8.ByteString"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|c995105bfbb32abd|0": {
+    "target": "../../../core/app/CE/Query.hs",
+    "line": 91,
+    "text": "answered :: QueryReq -> [Clause] -> Checked -> (Db, Prov, Integer) -> Answered"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|70f3b3e93369e1c1|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 30,
+    "end": 39,
+    "text": "data Checked = Checked"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|737dff05a7885263|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 60,
+    "text": "predSorts :: Sorts -> [RuleC] -> [(Int, [Integer])]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|90f543781fd5cf30|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 42,
+    "text": "check :: Int -> [Clause] -> Either [(Int, Integer)] Checked"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|9e97ea98c9f3b9eb|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 121,
+    "text": "fixLevels :: [(Int, Int, Bool)] -> IM.IntMap Int -> IM.IntMap Int"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|b842ea3861ccd559|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 104,
+    "text": "stratify :: [RuleC] -> Either [(Int, Integer)] [[Int]]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Safety.hs|0d89e4e62a80445c|0": {
+    "target": "../../../core/app/CE/Query/Check/Safety.hs",
+    "line": 23,
+    "text": "outerVars :: [Lit] -> [Int]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Safety.hs|122e5135511aefb2|0": {
+    "target": "../../../core/app/CE/Query/Check/Safety.hs",
+    "line": 55,
+    "text": "litErrors :: IS.IntSet -> Lit -> [(Int, Integer)]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Safety.hs|4a30ea474f45d53d|0": {
+    "target": "../../../core/app/CE/Query/Check/Safety.hs",
+    "line": 82,
+    "text": "headCheck :: IS.IntSet -> Atom -> [(Int, Integer)]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Safety.hs|aa6b45411a5c9473|0": {
+    "target": "../../../core/app/CE/Query/Check/Safety.hs",
+    "line": 1,
+    "end": 8,
+    "text": "-- | Range restriction for a parsed program (design booklet §4.1,"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Sorts.hs|25eb09ca287cc263|0": {
+    "target": "../../../core/app/CE/Query/Check/Sorts.hs",
+    "line": 63,
+    "text": "termKey :: Int -> TermV -> Maybe Key"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Sorts.hs|5939c87d7ffd74aa|0": {
+    "target": "../../../core/app/CE/Query/Check/Sorts.hs",
+    "line": 94,
+    "text": "sameSort :: Int -> Int -> Expr -> Expr -> Sorts -> Either (Int, Integer) Sorts"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Sorts.hs|664263e818af7cd4|0": {
+    "target": "../../../core/app/CE/Query/Check/Sorts.hs",
+    "line": 1,
+    "end": 8,
+    "text": "-- | Sort inference for a parsed program (design booklet §4.2): every"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|3cb2149f4ff674fa|0": {
+    "target": "../../../core/app/CE/Query/Contract.hs",
+    "line": 49,
+    "text": "overCap :: QueryReq -> Bool"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|9551146ad3aeee22|0": {
+    "target": "../../../core/app/CE/Query/Contract.hs",
+    "line": 5,
+    "end": 13,
+    "text": "-- | The query.request shape and its boundary contract (design"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|d27383d18075f614|0": {
+    "target": "../../../core/app/CE/Query/Contract.hs",
+    "line": 56,
+    "text": "offence :: QueryReq -> Maybe String"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|0f2ba5f8addc02bf|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 140,
+    "text": "sortNode, sortDir, sortUnit, sortInt, sortSym, sortSet, sortOpen :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|152676cf191cebf9|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 152,
+    "end": 153,
+    "text": "errSyntax, errUnknownPred, errArity, errSort, errUnsafe, errUnstratified, errPrelude, errAggregate, errHead :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|361927163b0ab109|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 72,
+    "end": 76,
+    "text": "tokenCap, factCap, derivedCap, proofCap :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|3aa3975185a2f5d2|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 81,
+    "end": 82,
+    "text": "idbFloor :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 88,
+    "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|1": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 88,
+    "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|7ae381ed02bd7ae3|0": {
+    "target": "../../../core/app/CE/Query/Eval.hs",
+    "line": 50,
+    "text": "stratumFix :: Integer -> [RuleC] -> State -> Either Integer State"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|8b9708d9f9f46137|0": {
+    "target": "../../../core/app/CE/Query/Eval.hs",
+    "line": 1,
+    "end": 11,
+    "text": "-- | Bottom-up evaluation of a checked program (design booklet §4.1,"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|8bfd37d927611d8e|0": {
+    "target": "../../../core/app/CE/Query/Eval.hs",
+    "line": 73,
+    "text": "derive :: IM.IntMap Indexed -> (State, Prov) -> (RuleC, Maybe (Int, Indexed)) -> (State, Prov)"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|cd56c7d729404a17|0": {
+    "target": "../../../core/app/CE/Query/Eval.hs",
+    "line": 93,
+    "text": "goalAnswers :: Db -> Goal -> [(Tuple, [Fact])]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Index.hs|40702a583479336f|0": {
+    "target": "../../../core/app/CE/Query/Eval/Index.hs",
+    "line": 1,
+    "end": 7,
+    "text": "-- | A relation with lazily built lookup indexes (design booklet"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Index.hs|fe26076829368463|0": {
+    "target": "../../../core/app/CE/Query/Eval/Index.hs",
+    "line": 36,
+    "text": "lookupBound :: Indexed -> [Maybe Integer] -> [Tuple]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Join.hs|abb36240968aa503|0": {
+    "target": "../../../core/app/CE/Query/Eval/Join.hs",
+    "line": 76,
+    "text": "evalExpr :: Subst -> Expr -> Maybe Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Join.hs|b09bbe137f505293|0": {
+    "target": "../../../core/app/CE/Query/Eval/Join.hs",
+    "line": 109,
+    "text": "aggregate :: (Int -> Indexed) -> Integer -> [(Int, Int)] -> [Lit] -> Subst -> Maybe Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Join.hs|c62fb05b628c497b|0": {
+    "target": "../../../core/app/CE/Query/Eval/Join.hs",
+    "line": 95,
+    "text": "compareBy :: Integer -> Integer -> Integer -> Bool"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Join.hs|c9600d51071fc100|0": {
+    "target": "../../../core/app/CE/Query/Eval/Join.hs",
+    "line": 1,
+    "end": 9,
+    "text": "-- | One body against one database state (design booklet §4.1): the"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Join.hs|fbe2a639dc07870f|0": {
+    "target": "../../../core/app/CE/Query/Eval/Join.hs",
+    "line": 28,
+    "text": "joinBody :: Look -> (Int -> Indexed) -> [Lit] -> Subst -> [(Subst, [Fact])]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Parse.hs|1978e2d612d5a6c0|0": {
+    "target": "../../../core/app/CE/Query/Parse.hs",
+    "line": 1,
+    "end": 8,
+    "text": "-- | The query language's parser (design booklet §4.1 / §4.4): a"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Parse.hs|9462e5c60ab31280|0": {
+    "target": "../../../core/app/CE/Query/Parse.hs",
+    "line": 37,
+    "text": "parseProgram :: [(Integer, Integer)] -> Either Int [Clause]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Parse.hs|a024df31eb926863|0": {
+    "target": "../../../core/app/CE/Query/Parse.hs",
+    "line": 120,
+    "text": "assignOrCompare :: Int -> Int -> P Lit"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Proof.hs|21eeac239f741e61|0": {
+    "target": "../../../core/app/CE/Query/Proof.hs",
+    "line": 56,
+    "text": "expand :: Prov -> [Integer] -> Integer -> Integer -> Node -> ([[Integer]], Integer)"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Proof.hs|23d8c8a00a387423|0": {
+    "target": "../../../core/app/CE/Query/Proof.hs",
+    "line": 38,
+    "text": "proofRows :: Prov -> Integer -> [Root] -> ([[Integer]], Integer, Integer)"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Proof.hs|e268962055b05e6c|0": {
+    "target": "../../../core/app/CE/Query/Proof.hs",
+    "line": 1,
+    "end": 7,
+    "text": "-- | Proof trees (design booklet §4.5): for an answer, the rule that"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Schema.hs|e0dd6cbfe7cf2db5|0": {
+    "target": "../../../core/app/CE/Query/Schema.hs",
+    "line": 18,
+    "text": "rows :: [String]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Syntax.hs|8bcab2b94ca5e202|0": {
+    "target": "../../../core/app/CE/Query/Syntax.hs",
+    "line": 88,
+    "text": "litAtoms :: Lit -> [(Bool, Atom)]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Syntax.hs|bee3645028fa22a4|0": {
+    "target": "../../../core/app/CE/Query/Syntax.hs",
+    "line": 48,
+    "end": 54,
+    "text": "data Lit\n= LPos Atom"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Syntax.hs|eb0dc9b9b2ab7ac2|0": {
+    "target": "../../../core/app/CE/Query/Syntax.hs",
+    "line": 58,
+    "end": 61,
+    "text": "data Clause\n= Rule Atom [Lit] Int"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/QueryProps.hs|40c6531da695f911|0": {
+    "target": "../../../core/test/QueryProps.hs",
+    "line": 65,
+    "text": "names :: [String]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/QueryProps.hs|a68b504b8043733a|0": {
+    "target": "../../../core/test/QueryProps.hs",
+    "line": 5,
+    "end": 14,
+    "text": "-- | The query family's battery (plan v2.31 step 1): the prelude's"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|47d5e319b39163b9|0": {
+    "target": "../../../core/test/ReferenceQuery.hs",
+    "line": 1,
+    "end": 12,
+    "text": "-- | An independently written reference for the query family's"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|dad56a2cf8d08e5a|0": {
+    "target": "../../../core/test/ReferenceQuery.hs",
+    "line": 34,
+    "text": "naive :: Checked -> Db -> Db"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
+    "target": "../../../core/test/Spec.hs",
+    "line": 86,
+    "text": ", goldenPairs \"query/golden.ndjson\""
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
+    "target": "../../../gui/src-tauri/src/commands_query.rs",
+    "line": 14,
+    "text": "pub async fn query_report("
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|0dee44a1532a2581|0": {
+    "target": "../../../gui/ui/query.js",
+    "line": 61,
+    "text": "function goalTable(d, g) {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|828631c729cf096e|0": {
+    "target": "../../../gui/ui/query.js",
+    "line": 85,
+    "text": "function proofLine(p, rows) {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|8f8d2688348ba2ec|0": {
+    "target": "../../../gui/ui/query.js",
+    "line": 21,
+    "text": "async function loadQuery(rules) {"
   }
 }

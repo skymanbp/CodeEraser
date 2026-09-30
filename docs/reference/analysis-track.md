@@ -67,41 +67,43 @@ agg      := ('count' | 'min' | 'max' | 'sum') '(' Var (',' Var)* ':' body ')'
 
 ### 4.2 事实库（EDB；Rust 装配，只送程序引用到的表）
 
-结点宇宙 = `graph/1` 请求同一份结点集（文件、包、资产，同一稠密下标；`cli/src/graph/nodes.rs` 一处权威），目录树 = `structure/1` 同法在全部结点路径上建的稠密树（根 0）。
+结点宇宙 = `graph/1` 请求同一份结点集（文件、包、节、走查到的资产，同一稠密下标；`cli/src/graph/nodes.rs` 一处权威）后接 docdup 族读的纯散文文件；目录树 = `structure/1` 同法在全部结点路径上建的稠密树（根 0 读 `.`，包坐在自己的目录）。落码 = `cli/src/query/legend.rs::SCHEMA`（27 个谓词，码 = 行位）与核 `CE.Query.Schema` 逐行镜像，`schema` 回显钉住。
 
 | 谓词 | 实参类别 | 来源 |
 |---|---|---|
-| `node(N, K)` `file(F)` `pkg(P)` `asset(A)` | node, enum kind | 图结点表；`file` / `pkg` / `asset` 是 kind 的三条视图 |
-| `in_dir(N, D)` `dir(D)` `parent(D, P)` | node, dir | 路径的目录前缀；`parent(0, _)` 无行 |
-| `lang(F, L)` | file, enum lang | `Lang` 码 |
-| `role(N, R)` | node, enum role | 角色位（entry / test / declared / unit / asset / foreign …）每位一行 |
-| `lines(F, N)` | file, int | 文件行数 |
-| `ref(N, M, K, R)` | node, node, enum refkind, int | 解出的引用边（import / doc_link / doc_ref / asset / contain / refdef，rung 1–5）；External / Unresolved 无行，`unresolved(F, K, N)` 另表 |
-| `unit(U, F)` `unit_kind(U, K)` `unit_lines(U, N)` `unit_at(U, L)` | unit, file, enum unitkind, int | 单元表（请求内稠密 id，序 = 文件、起行、nth） |
-| `named(U, "name")` | unit, name | 声明名（简单名的哈希） |
-| `exported(U)` | unit | 可见性位 0 |
-| `coc(U, N)` `cyclo(U, N)` `nesting(U, N)` `params(U, N)` | unit, int | 度量（引用到才量） |
-| `clone(U, V, K)` | unit, unit, enum clonekind | 已判克隆对（T1/T2 块的整单元孪生、T3 判 1 的对） |
-| `docdup(F, G)` | file, file | 已判文档重复对 |
-| `mention("name", F)` | name, file | 提及表 |
-| `class(F, "name")` | file, class | `[[rules.class]]` 路径类 |
-| `in(F, "glob")` | file, path-set | 语法糖：Rust 展开 glob（与 exclude 同一解析器）为 `set(S, F)`，`in` 改写成 `set(s, F)` |
+| `node(N, K)` `file(F)` | node, sym | 图结点表 + 散文文件；K = `file` / `pkg` / `section` / `asset` / `prose`，`file` 是 kind `file` 的视图 |
+| `in_dir(N, D)` `dir(D)` `parent(D, P)` `dir_name(D, "name")` | node, dir, sym | 目录树；`parent(0, _)` 无行 |
+| `lang(F, L)` | node, sym | 文件形结点的 `Lang::name`，无语言认领 = `unknown` |
+| `role(N, R)` | node, sym | 角色位每位一行：`entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` |
+| `lines(F, N)` | node, int | 文件行数（引用到才读） |
+| `ref(N, M, K, R)` `unresolved(F, N)` | node, node, sym, int | 解出的引用边（import / doc_link / doc_ref / asset / contain / refdef，rung）；External / Unresolved 无边，`unresolved` 按文件计未解析站点数 |
+| `unit(U, F)` `unit_kind(U, K)` `unit_lines(U, N)` `unit_at(U, L)` | unit, node, sym, int | 单元表（请求内稠密 id，序 = 文件、起行、末行、键、nth）；kind = `fn` / `named` / `impl` / `section` |
+| `named(U, "name")` `exported(U)` `params(U, N)` | unit, sym, int | 提及规约会拼的声明名、可见性位、键上的元数 |
+| `coc(U, N)` `cyclo(U, N)` `nesting(U, N)` | unit, int | 核为 `ce scan` 推导的三数，按文件与跨度落座（引用到才量） |
+| `clone(U, V, K)` | unit, unit, sym | 已判克隆对：`t1t2` = T1/T2 块两侧整单元按序配对、`t3` = 核判为克隆的对 |
+| `dup(F, G, N)` `docdup(F, G)` | node, node, int | T1/T2 块的文件对（记号数）；核判的文档重复段背后的文件对 |
+| `mention("name", F)` | sym, node | 提及表（同一 fnv1a64） |
+| `class(F, "name")` | node, sym | `[[rules.class]]` 路径类 |
+| `set(S, F)` ← `in(F, "glob")` | set, node | 语法糖：Rust 把 glob（与 exclude 同一解析器）展开成 `set(S, F)` |
 
-类别（sort）在核里推导：变量类别取自首次出现的正原子；冲突 = 程序错误 `sort mismatch`。用户谓词的实参类别按各条规则合一；答案与见证列的类别随应答回给 Rust（回标用）。
+类别（sort）在核里推导（并查集：子句变量 / 程序谓词位置 / 常量类别）：整数字面量 int、字符串 sym（集合位置 set）、比较两侧同类、算子操作数与聚合结果 int；冲突 = 程序错误 `sort mismatch` 按记号点名。用户谓词的实参类别按各条规则合一，随应答的 `preds` 回给 Rust（回标推导链结点用）；答案与见证列的类别随 `goals` 回。
 
 ### 4.3 内置前奏
 
 随二进制的一份 `.rules` 文本（`include_str!`），与用户程序同一条词法路走上线，核不区分来源；前奏谓词名保留，用户程序重定义 = 程序错误。`ce query --prelude` 打印原文。
 
 ```
-reach(N) :- role(N, entry).
-reach(M) :- reach(N), ref(N, M, _, _).
+entry(N) :- role(N, _).
+reach(N) :- entry(N).
+reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
 dead(F) :- file(F), not reach(F).
 depends(N, M) :- ref(N, M, _, _).
 depends(N, M) :- depends(N, K), ref(K, M, _, _).
 same_dir(F, G) :- in_dir(F, D), in_dir(G, D), F != G.
 dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 ```
+
+落码 `cli/src/query/prelude.rules`（八条）：`dead` 逐字镜像 `ce deadcode` 的文件级判决——入口 = 带任一角色位的结点（每个角色都落在核的入口掩码里），任一 rung 的引用都沿、只跳 asset / refdef 两种对存活性无效的边；前奏谓词码 1000–1005，用户谓词自 1006 起。
 
 ### 4.4 记号流编码（Rust 词法，核解析）
 
@@ -110,21 +112,22 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 ### 4.5 应答
 
 - `answers` 按 goal 序再按元组升序；`goals` 给每个目标的种类（0 查询 / 1 断言）与列类别。
+- `preds` 按码升序给每个程序谓词各位置推导出的类别（无约束位 −1）；有错误或空程序时为空——步 2 加进 7.3.0 未发布的应答形，回标推导链结点的实参用。
 - `proof`：每个答案元组的第一条推导——行 `[goal, answer, node, parent, rule, pred, args…]`，结点按前序编号、根的 parent = −1，`rule` = 子句下标（发送的事实行 −1），`pred` = 结点的谓词码（查询的根 −1）；只在 `?-` 带 `--why` 或断言违规时展开；一棵树装不下预算 `proofCap` 就整棵不出并记 `counts.proofTruncated`，答案不截。
 - `errors`：程序错误按记号下标 + 码（1 语法 / 2 未知谓词 / 3 元数不一 / 4 类别不合 / 5 未绑定 / 6 不可分层 / 7 前奏重定义 / 8 聚合形不合 / 9 头部匿名）；检查按这个顺序分阶段，第一个出错的阶段报出它的全部错误；有错误即不求值、`answers` 空。
 - 超派生上限 = 完整降级应答 `query_too_large`（`counts.derived` 给到达上限时的值）。
 
 ### 4.6 面与配置
 
-- `ce query '<body>' [--why] [--file <path>] [--prelude] [--format json]`：即席查询（体 = 一条 `?-`），叠加规则文件里的规则。
-- `ce rules [--file <path>] [--why]`：求值文件里全部 `assert`；每条违规印见证与推导链；有违规退 1，程序错误退 2。默认文件 = 仓根 `ce.rules`（无文件 = 零断言、退 0 并说明）；`[rules] file` 改路径（与 `[[rules.class]]` 同节；`docs_gate.rs` 的键表加行、`ce-toml.md` 再生）。
-- MCP `query` / `rules`；GUI Query 屏（输入框 + 答案表 + 断言状态 + 推导链折叠）；报告 `ce.query-report/0.1.0` / `ce.rules-report/0.1.0`。
-- 自食：仓根 `ce.rules` 写本仓的架构断言（例：`core/app` 不引用仓内 Haskell 之外的文件、`cli/src/scan` 不依赖 `cli/src/graph`、`site/` 无孤页、无跨目录环——每条按当日事实写、先跑绿再入库），CI 两根狗粮各加 `ce rules` 腿，`count:gates` 六 → 七。
+- `ce query '<body>' [--why] [--file <path>] [--prelude] [--format json]`：即席查询（体 = 一条 `?-`，`?-` 与结尾 `.` 可省），叠加规则文件里的规则；判出退 0，程序错误或核未判退 2（只报告：所叠加文件里断言的违规不动它的退出码）。
+- `ce rules [--file <path>] [--why]`：求值文件里全部 `assert`；每条违规印见证与推导链；有违规退 1，程序错误或核未判退 2。文件 = 命令行 / MCP 点名的（相对根、须存在）> `[rules] file`（须存在）> 仓根存在的 `ce.rules` > 无（零断言、退 0 并说明）；`[rules] file` 是路径不是旋钮，指纹丢弃（canonical 规则 7）。
+- MCP `query`（`body` / `why` / `file`）/ `rules`（`file` / `why`）；GUI Query 屏（第十二屏：输入框 + why 开关 + 每目标一张表 + 答案下的推导行 + Rules 按钮）；报告 `ce.query-report/0.1.0` / `ce.rules-report/0.1.0`，三面经 `faces::query` / `faces::rules` 同一份文档。
+- 自食（已落）：仓根 `ce.rules` 九条断言（ADR-008 分界三条、scan 不依赖 graph、产品不依赖集成测试与 GUI 不读测试、无死文件、`site/` 无孤页、顶层目录无双向引用），子仓 `cli/tests/ce.rules` 三条；CI 两根狗粮各加 `ce rules` 腿（第七门），`count:gates` 六 → 七。
 
 ### 4.7 门
 
-- 核：朴素不动点参考求值器与半朴素 + 索引求值器在随机程序 / 随机事实上逐元组等价；分层 / 安全性 / 类别每种程序错误按名；推导链每结点重放规则体得回该元组；聚合与参考实现等价；派生上限降级；golden 六对（前奏 + 一条断言 + 一条带 `--why` 的查询 + 三种程序错误）。
-- Rust：词法与错误位置回标；glob 展开与 exclude 同一解析器（负向探针）；事实装配与索引逐表对拍（`ref` 表 = `graph/1` 请求的边表逐行同）；三面字节同（parity）。
+- 核：朴素不动点参考求值器与半朴素 + 索引求值器在枚举程序 × 种子事实集（200 例）上逐元组等价；分层 / 安全性 / 类别每种程序错误按名；推导链每结点重放规则体得回该元组；聚合与参考实现等价；派生上限降级；golden 八对（步 1 六对：前奏 + schema 回显 / 断言违规 / 带 `why` 的查询 / 语法 / 未绑定 / 不可分层；步 2 加算术 / 集合上的聚合两对，子仓 `query_golden.rs` 钉每条请求行 = 前奏 + 程序经真词法）。
+- Rust：词法编号与故障位置（`unit/query/program.rs` 六腿）、图例与核回显同表（`unit/query/legend.rs`）、glob 读不出 = 该记号处的程序错误（`unit/query/face.rs` 负向探针）、`consume` 对健康 / 降级 / 偏斜应答（`unit/query/wire.rs`）；集成：`dead(F)` 与 `ce deadcode` 同一文件、糖 / 聚合 / 算术 / 九种错误同一条路、`ce rules` 退出码与控制台、规则文件三种来源（`it/query_face.rs` 四腿）；三面字节同 = CLI JSON 对库面逐字节、GUI 与 MCP 经同两个库函数（`face_parity` 一行）。
 - 精度：无统计门（语义精确）；自仓 `ce.rules` CI 常绿即验收。
 
 ## 5. 功能 ②：函数内死代码（`flow/1`）
@@ -228,7 +231,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ## 9. 验收与门（每步共用）
 
-- 两仓 `cargo test / clippy --all-targets -- -D warnings / fmt --check`、`cabal test`、六条产品腿（主根与 `cli/tests`）、golden 重生（`CE_BLESS=1`）、`fixture_contract` 的 golden 清单、`core_wire` 往返、`face_parity`、`facts_*`、`docs_*`、`site_*`；两仓 ADR-006 具名重立；dedup 预算只降不升（新块先消后入账）。
+- 两仓 `cargo test / clippy --all-targets -- -D warnings / fmt --check`、`cabal test`、七条产品腿（主根与 `cli/tests`，含 `ce rules`）、golden 重生（`CE_BLESS=1`）、`fixture_contract` 的 golden 清单、`core_wire` 往返、`face_parity`、`facts_*`、`docs_*`、`site_*`；两仓 ADR-006 具名重立；dedup 预算只降不升（新块先消后入账）。
 - 既有判决不动：每步旧二进制 / 新二进制在十语料十面 + 自仓干净树十面对拍逐字节同（步 7b 的形）。
 - 全量 it 在每步提交前跑一次（release 或 debug 按步的重活定），红先单跑读 panic 再定抖动 / 真红。
 
@@ -248,7 +251,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 |---|---|---|
 | 0 | 细则与立项（2026-09-29）：本册 + 计划书 v2.31（横幅细则句、ADR-008 细则第七期、§6 T 轨十二步）+ CHANGELOG `[Unreleased]` 块 + cc-memory 十二步锁定 | docs 门全绿、基线具名重立、CI 绿 |
 | 1 | 查询 A（2026-09-29 已交付）：核 `CE.Query.*`（Contract / Syntax / Parse / Check〔Sorts · Safety〕/ Eval〔Index · Join〕/ Proof / Schema / Cost，十三模块 1,501 行）+ `QueryProps` 十二腿 + `ReferenceQuery` 朴素参考 200 例 + golden 六对 + proto 7.3.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条）+ `Spec.hs` 拆 `SpecProbes.hs`（四条探针腿；设计名 `Batteries.hs` 按搬出的内容改，电池表留在 `Spec.hs`）+ 子仓 `fixture_contract::regen` 腿（`LineSession` 三件套同供 MCP 会话与 golden 往返） | `cabal test` 439 ok、参考求值器等价 200/200、既有 golden 只动 proto |
-| 2 | 查询 B：Rust `cli/src/query/`（词法、图例、glob 展开、事实装配、wire、回标）+ `ce query` / `ce rules` + `[rules] file` + 前奏 + MCP 两工具 + GUI Query 屏 + 自仓 `ce.rules` + CI 狗粮腿 + 册 16 + 事实与 parity | 三面字节同、`ce rules` 自仓绿、十语料十面对拍同 |
+| 2 | 查询 B（2026-09-29 已交付）：Rust `cli/src/query/`（lexer / program / legend / columns / facts〔graph · units · pairs · text〕/ wire / face / console，前奏 `prelude.rules` 八条）+ `ce query` / `ce rules`（`main_query.rs`）+ `[rules] file`（canonical 规则 7 丢弃）+ MCP `query` / `rules` + GUI Query 屏（第十二屏）+ 自仓 `ce.rules` 九条与子仓三条 + CI 两根第七腿 + 册 16 + 官网 `site/how/analysis/` 页对 + 事实与 parity；golden 六 → 八对 | 三面字节同、`ce rules` 自仓绿、十语料十面对拍同 |
 | 3 | 死代码 A：核 `CE.Flow.*`（Cfg / Reach / Live / Cost）+ `FlowProps` + golden + 7.4.0 | 参考实现等价、十六种拒绝按名 |
 | 4 | 死代码 B：Rust `FlowSpec` 十语言表（实探建表）+ 降表 + wire + 考题冻结（每语言）→ 盲判 → 精度册 + 回放台账 + `judged` 掩码 | 逐语言精度 ≥ 99 %、顺序门 |
 | 5 | 死代码 C：`ce flow` + 守卫腿（daemon 2.2.0）+ Stop 行 + `[flow] tier` + MCP + GUI + 册 17 | 三面字节同、FPR 台账 |

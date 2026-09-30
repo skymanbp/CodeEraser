@@ -183,6 +183,12 @@ const CE_I18N = {
     similarNeedsQuery: "name a unit as file:line, or type a text",
     similarDegraded: (why) => `degraded: ${why} — measured order, no role bits`,
     emptySimilar: "name a unit (file:line relative to the root) or type a text and load — the same document `ce similar` prints: candidates in the core's order, its same-role bit, the six-channel evidence; widen adds the PPMI associative view",
+    tabQuery: "query", queryPlaceholder: "a question, e.g. dead(F)", queryWhy: "derivations",
+    queryRun: "ask", queryRules: "judge ce.rules", queryNeedsText: "type a question first",
+    queryAnswers: "answer(s)", queryViolations: "violation(s)", queryErrors: "error(s)",
+    queryOk: "ok", queryClause: (n) => `clause ${n}`, queryFact: "fact",
+    queryDegraded: (why) => `degraded: ${why} — no judgment`,
+    emptyQuery: "type a question in CE Datalog (`dead(F)`, `depends(A, B), not same_dir(A, B)`, `N = count(F : in(F, \"src/**\"))`) and ask — the same document `ce query` prints, every answer labelled and its derivation under derivations; judge ce.rules runs the project's rules file the way `ce rules` does",
   },
   zh: {
     tabStructure: "结构", tabTrend: "趋势", tabCandidates: "删除候选", tabGraph: "引用图",
@@ -323,6 +329,12 @@ const CE_I18N = {
     similarNeedsQuery: "请以 file:line 指定一个单元，或输入一段文本",
     similarDegraded: (why) => `已降级：${why} — 按度量序、无角色位`,
     emptySimilar: "以 file:line（相对根目录）指定一个单元，或输入文本后点加载——与 `ce similar` 打印的是同一份文档：候选按核的排序、核给的同角色位、六通道证据；勾选联想加 PPMI 扩展视图",
+    tabQuery: "查询", queryPlaceholder: "问题，如 dead(F)", queryWhy: "推导链",
+    queryRun: "提问", queryRules: "判 ce.rules", queryNeedsText: "先输入问题",
+    queryAnswers: "个答案", queryViolations: "条违规", queryErrors: "个错误",
+    queryOk: "通过", queryClause: (n) => `第 ${n} 条子句`, queryFact: "事实",
+    queryDegraded: (why) => `已降级：${why}——未判决`,
+    emptyQuery: "用 CE Datalog 输入一个问题（`dead(F)`、`depends(A, B), not same_dir(A, B)`、`N = count(F : in(F, \"src/**\"))`）后点提问——与 `ce query` 打印的是同一份文档：每个答案回标成路径与名字，勾选推导链看每个答案怎么推出来；「判 ce.rules」按 `ce rules` 的方式跑仓库自己的规则文件",
   },
 };
 

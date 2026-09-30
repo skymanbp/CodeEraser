@@ -1,0 +1,32 @@
+# CodeEraser's own architecture rules (plan v2.31 step 2, design
+# booklet docs/reference/analysis-track.md §4.6): `ce rules .` judges
+# every `assert` below over the index's facts and exits 1 on the first
+# violation, so CI's dogfood step reads this file as its seventh gate.
+# Each assertion was written against the day's facts and ran green
+# before it entered; a witness row names the file pair that broke it.
+
+# ADR-008: the measuring side never reads the judging side, and the
+# core reads nothing outside its own Haskell.
+assert rust_reads_core(F, G) :- in(F, "cli/src/**"), ref(F, G, _, _), in(G, "core/**").
+assert core_reads_cli(F, G) :- in(F, "core/app/**"), ref(F, G, _, _), in(G, "cli/**").
+assert core_reads_non_haskell(F, G) :- in(F, "core/app/**"), ref(F, G, _, _), not lang(G, haskell).
+
+# The scan (metrics over one file) stays below the graph (references
+# across files): the graph reads scan's parse, never the reverse.
+assert scan_reads_graph(F, G) :- in(F, "cli/src/scan/**"), ref(F, G, _, _), in(G, "cli/src/graph/**").
+
+# The product never depends on its integration tests (the unit tree
+# is mounted from cli/src by `#[path]`, so it is the one exception,
+# and the GUI crate reads no test at all).
+assert product_reads_tests(F, G) :- in(F, "cli/src/**"), ref(F, G, _, _), in(G, "cli/tests/it/**").
+assert gui_reads_tests(F, G) :- in(F, "gui/**"), ref(F, G, _, _), in(G, "cli/tests/**").
+
+# No dead file: `dead` is the prelude's mirror of `ce deadcode`'s
+# file tier, so this is that gate restated as a rule.
+assert dead_file(F) :- dead(F).
+
+# Every page of the site is reached from some other page or document.
+assert orphan_page(F) :- in(F, "site/**"), lang(F, html), N = count(G : ref(G, F, _, _)), N = 0.
+
+# No two top-level directories reference each other both ways.
+assert top_level_cycle(D, E) :- parent(D, R), parent(E, R), dir_name(R, "."), dir_ref(D, E), dir_ref(E, D), D < E.

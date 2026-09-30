@@ -23,6 +23,8 @@ Commands:
   structure  Tree-scale structure judgment: entropy, axes and findings via the core's structure/1 (report-only)
   trend      Score trajectory over mainline history: per-commit absolute check score, cached in the index, rebuildable. Each uncached commit is a full check in a temp worktree — bound a cold run with --batch; progress rides stderr
   similar    Same-role advisor: the units most like one unit (or a text), ranked and role-bitted by the core's similar/1 over the index's term bags; --widen adds the PPMI associative view (advisory, never a verdict)
+  query      Code query: one question in CE Datalog over the index's facts (files, references, units, clones, mentions, classes), answered by the core's query/1 with every answer's derivation under --why; a program error exits 2 (report-only)
+  rules      Architecture rules as a gate: every `assert` in the rules file (ce.rules at the root, or `[rules] file`) judged by the core's query/1, each violation with its witness and derivation; any violation exits 1, a program error 2
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails, and the console names the held conditions; a subdirectory scopes the measurement (nothing is persisted)
   baseline   Persist the core's newBaseline as ce-baseline.json, at the project root only. Three named acts: none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition alone (knobs_digest, rows_dropped) is re-pinned under the declared knobs; CE_ACCEPT_BASELINE=1 — re-establish from the current tree, the one act that creates a missing file. A degraded judgment is never persisted
@@ -253,6 +255,48 @@ Options:
       --text <TEXT>      Free text: its words as name and doc evidence (no shape or callee, so the core's role bit stays false)
       --unit <UNIT>      A unit by key (`name/arity`); an ambiguous key refuses by name
       --widen            Add the associative view: candidates the PPMI-widened query reaches that the bare query does not, tagged
+  -h, --help             Print help
+```
+
+## ce query
+
+```text
+Code query: one question in CE Datalog over the index's facts (files, references, units, clones, mentions, classes), answered by the core's query/1 with every answer's derivation under --why; a program error exits 2 (report-only)
+
+Usage: ce query [OPTIONS] [BODY] [ROOT]
+
+Arguments:
+  [BODY]  The question, a query body (`dead(F)`; `?-` and the final `.` may be left out); required unless --prelude
+  [ROOT]  Directory to analyze (default: current directory)
+
+Options:
+      --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
+      --why              Carry every answer's derivation (a violation always does)
+      --file <FILE>      The rules file whose rules the question builds on (default: `[rules] file`, else ce.rules at the root when it exists)
+      --prelude          Print the built-in prelude and exit
+  -h, --help             Print help
+```
+
+## ce rules
+
+```text
+Architecture rules as a gate: every `assert` in the rules file (ce.rules at the root, or `[rules] file`) judged by the core's query/1, each violation with its witness and derivation; any violation exits 1, a program error 2
+
+Usage: ce rules [OPTIONS] [ROOT]
+
+Arguments:
+  [ROOT]  Directory to analyze (default: current directory)
+
+Options:
+      --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
+      --file <FILE>      The rules file to judge (default: `[rules] file`, else ce.rules at the root; absent = zero assertions)
+      --why              Carry every query answer's derivation too
   -h, --help             Print help
 ```
 

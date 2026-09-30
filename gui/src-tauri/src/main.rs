@@ -9,6 +9,7 @@
 //! the root field's browse button) and the handler roster.
 
 mod commands;
+mod commands_query;
 
 fn main() {
     tauri::Builder::default()
@@ -32,6 +33,8 @@ fn main() {
             commands::graphscreen_report,
             commands::check_report,
             commands::similar_report,
+            commands_query::query_report,
+            commands_query::rules_report,
             commands::erase_preview,
             commands::erase_apply,
             commands::erase_log_report,

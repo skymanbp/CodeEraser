@@ -27,8 +27,8 @@ stylesheet, icon or preload (`link_asset`) from a page (`href`), and a `srcset` 
 URL ([sites/html.rs:19-45](../../../cli/src/graph/sites/html.rs#L19),
 [sites/html.rs:113-130](../../../cli/src/graph/sites/html.rs#L113)). The twenty-three frozen site
 kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_link, ref_def, url, export_star,
-include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:192-194](../../../cli/src/graph/store.rs#L192)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:152](../../../cli/src/graph/store.rs#L152), currently <!--ce:ver:graph_rev#digits-->`22`<!--/ce-->); `export_star` (a TS
+include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset` ([store.rs:195-197](../../../cli/src/graph/store.rs#L195)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:155](../../../cli/src/graph/store.rs#L155), currently <!--ce:ver:graph_rev#digits-->`23`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -170,8 +170,8 @@ Two transformations happen on the way to the wire:
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
-never saw ([load.rs:96-102](../../../cli/src/graph/load.rs#L96)). `unresolved_sites` is the count of sites
-with no edge row ([load.rs:124-129](../../../cli/src/graph/load.rs#L124)) and travels with the report so
+never saw ([load.rs:95-101](../../../cli/src/graph/load.rs#L95)). `unresolved_sites` is the count of sites
+with no edge row ([load.rs:123-128](../../../cli/src/graph/load.rs#L123)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:27-29](../../../cli/src/graph/deadcode.rs#L27)).
 
@@ -419,7 +419,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:130](../../../cli/src/graph/load.rs#L130), [deadcode.rs:262](../../../cli/src/graph/deadcode.rs#L262)), fences every returned index and bounds the column ([deadcode.rs:517](../../../cli/src/graph/deadcode.rs#L517)), and renders the trust word beside each dead file ([deadcode.rs:448](../../../cli/src/graph/deadcode.rs#L448)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
+([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:129](../../../cli/src/graph/load.rs#L129), [deadcode.rs:262](../../../cli/src/graph/deadcode.rs#L262)), fences every returned index and bounds the column ([deadcode.rs:517](../../../cli/src/graph/deadcode.rs#L517)), and renders the trust word beside each dead file ([deadcode.rs:448](../../../cli/src/graph/deadcode.rs#L448)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:132](../../../core/test/GraphWireProps.hs#L132)).
 
 ### 9. Acceptance
 

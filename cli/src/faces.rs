@@ -181,6 +181,40 @@ pub fn similar(
     ))
 }
 
+/// One question over the index's facts (plan v2.31 step 2): the
+/// rules file's rules (the one named, else the project's) under the
+/// question, judged by the core's query/1 and labelled back — the
+/// SAME document `ce query --format json` prints. Report-only: a
+/// program error or a core that could not judge is named in the
+/// document, never a verdict this side reached.
+pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>) -> Result<Value> {
+    let ask = crate::query::face::Ask {
+        rules: crate::query::rules_source(root, file)?,
+        query: Some(body.to_string()),
+        why,
+    };
+    Ok(crate::query::face::report_json(
+        &crate::query::face::run(root, None, core, &ask)?,
+        false,
+    ))
+}
+
+/// The rules file judged (plan v2.31 step 2): every assertion's
+/// violations with their derivations — the document `ce rules`
+/// prints and exits on; here it is a report, the exit code is the
+/// CLI's own reading of `counts.violations`.
+pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {
+    let ask = crate::query::face::Ask {
+        rules: crate::query::rules_source(root, file)?,
+        query: None,
+        why,
+    };
+    Ok(crate::query::face::report_json(
+        &crate::query::face::run(root, None, core, &ask)?,
+        true,
+    ))
+}
+
 /// The machine's own state. Unlike every sibling it cannot fail: a
 /// core that will not answer IS the finding, and it rides inside the
 /// document (health::doctor).

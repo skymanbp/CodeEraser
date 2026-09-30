@@ -70,7 +70,7 @@ names =
   , "proof trees replay node by node against the naive reference"
   , "aggregates: count, sum, min and max, the empty count is 0, the empty min fails, groups follow the outer binding"
   , "arithmetic binds, `=` on a bound variable compares, division by zero fails the literal, `<` on ids breaks a symmetric pair"
-  , "goals carry their kind and column sorts; a position nothing constrains echoes the open sort"
+  , "goals carry their kind and column sorts, preds every program predicate's position sorts; a position nothing constrains echoes the open sort"
   , "the schema rides back only when asked"
   , "query refusals name the offender"
   , "an over-cap token stream degrades to empty tables; fact rows are priced at the cap; the derived cap aborts with the count reached"
@@ -160,7 +160,12 @@ goalsAndSorts =
   and
     [ answersOf "?- p8 ( v0 , v1 ) ." [] ["goals"] == Just [rows [[0, 0, 0, 3]]]
     , answersOf "assert p1000 ( v0 , i7 ) :- p1 ( v0 ) ." [] ["goals", "answers"] == Just [rows [[0, 1, 0, 3]], rows [[0, 0, 7], [0, 1, 7], [0, 2, 7], [0, 3, 7]]]
-    , answersOf "p1000 ( v0 ) :- p1001 ( v0 ) . p1001 ( v0 ) :- p1000 ( v0 ) . ?- p1000 ( v0 ) ." [] ["goals", "answers"] == Just [rows [[0, 0, -1]], rows []]
+    , answersOf "p1000 ( v0 ) :- p1001 ( v0 ) . p1001 ( v0 ) :- p1000 ( v0 ) . ?- p1000 ( v0 ) ." [] ["goals", "answers", "preds"] == Just [rows [[0, 0, -1]], rows [], rows [[1000, -1], [1001, -1]]]
+    , -- two rules of one predicate resolve ONE row; a fact-sorted
+      -- position and an int-sorted one read back by name
+      answersOf "p1000 ( v0 , v1 ) :- p8 ( v0 , v1 ) . p1000 ( v0 , i0 ) :- p1 ( v0 ) . ?- p1000 ( v0 , v1 ) ." [] ["preds", "answers"] == Just [rows [[1000, 0, 3]], rows [[0, 0, 0], [0, 0, 3], [0, 1, 0], [0, 1, 9], [0, 2, 0], [0, 2, 12], [0, 3, 0], [0, 3, 40]]]
+    , -- an erroring program and an empty one carry no preds
+      answersOf "?- p1 ( v0 ) , v1 != v0 ." [] ["preds"] == Just [rows []]
     ]
 
 schemaEcho :: Bool

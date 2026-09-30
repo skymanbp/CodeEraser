@@ -48,10 +48,11 @@ main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: va
 /* ---- erase screen (batch 4): plan rows read as a ledger — the
    kill mark is semantic (will act), advisory rows recede; the diff
    is the CLI's unified diff verbatim in mono ---- */
-#erase-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
+#erase-summary, #query-summary { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); align-self: center; }
 #erase-summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#erase-summary .ok b { color: var(--ok); }
-#erase-summary .zero, #erase-summary .zero b { color: var(--ink-min); }
+#erase-summary .ok b, #query-summary .ok b { color: var(--ok); }
+#query-summary .bad b { color: var(--err); }
+#erase-summary .zero, #erase-summary .zero b, #query-summary .zero { color: var(--ink-min); }
 .erow {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto;
@@ -94,16 +95,16 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
    counts as chips, row arrays as real tables ---- */
 #hub-chips { display: flex; gap: var(--s3); flex-wrap: wrap; color: var(--ink-low); font-size: var(--t-xs); align-self: center; }
 #hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
-#hub-tables h3, #bench-series h3, #bench-frozen h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
+#hub-tables h3, #bench-series h3, #bench-frozen h3, #query-rows h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
 #hub-tables h3 small, #bench-series h3 small { color: var(--ink-min); margin-left: var(--s2); }
-#hub-tables table, #bench-series table, #similar-rows table {
+#hub-tables table, #bench-series table, #similar-rows table, #query-rows table {
   border-collapse: collapse;
   font-family: var(--mono);
   font-size: var(--t-sm);
   width: 100%;
   max-width: 1080px;
 }
-#hub-tables th, #bench-series th, #similar-rows th {
+#hub-tables th, #bench-series th, #similar-rows th, #query-rows th {
   text-align: left;
   color: var(--ink-min);
   font-weight: 400;
@@ -112,7 +113,7 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
   padding: var(--s1) var(--s3) var(--s1) 0;
   border-bottom: 1px solid var(--line);
 }
-#hub-tables td, #bench-series td, #similar-rows td {
+#hub-tables td, #bench-series td, #similar-rows td, #query-rows td {
   padding: var(--s1) var(--s3) var(--s1) 0;
   border-bottom: 1px solid var(--line);
   color: var(--ink-mid);
@@ -120,6 +121,19 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
   overflow-wrap: anywhere;
 }
 #hub-tables td:first-child, #bench-series td:first-child { color: var(--ink); }
+
+/* ---- query screen (plan v2.31 step 2): a goal is a table under its
+   own column names (the sort beside each), an answer's derivation
+   sits indented under its row, an error or an empty goal is one
+   mono line ---- */
+#query-rows h3 { text-transform: none; letter-spacing: 0; font-family: var(--mono); }
+#query-rows th em { font-style: normal; color: var(--ink-low); margin-left: var(--s1); }
+#query-rows .qline { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-mid); padding: var(--s1) 0; }
+#query-rows .qline.bad { color: var(--err); }
+#query-rows .qline.ok { color: var(--ok); }
+#query-rows tr.proof td { padding-left: var(--s4); border-bottom: 1px dashed var(--line); }
+#query-rows .proof-line { color: var(--ink-min); font-size: var(--t-xs); }
+#query-rows .proof-line em { font-style: normal; margin-left: var(--s2); color: var(--ink-low); }
 
 /* ---- typed columns + sticky heads (batch 9 P17): digits align right,
    headers stick on --bg (the page ground, no card) — the tree's idiom ---- */

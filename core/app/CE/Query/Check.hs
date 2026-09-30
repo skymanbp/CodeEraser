@@ -7,7 +7,7 @@
 module CE.Query.Check (Checked (..), Goal (..), RuleC (..), check) where
 
 import CE.Query.Check.Safety (outerVars, safetyErrors)
-import CE.Query.Check.Sorts (Sorts, inferSorts, variableSort)
+import CE.Query.Check.Sorts (Sorts, inferSorts, positionSort, variableSort)
 import CE.Query.Cost (errArity, errPrelude, errUnknownPred, errUnstratified, sortInt, sortSym, sortSet)
 import CE.Query.Schema (arityOf)
 import CE.Query.Syntax
@@ -32,6 +32,10 @@ data Checked = Checked
   , chkStrata :: [[Int]]
   -- ^ rule indices (into chkRules) per stratum, lowest first
   , chkGoals :: [Goal]
+  , chkPreds :: [(Int, [Integer])]
+  -- ^ every program predicate a rule defines, with the sort each of
+  -- its positions resolved to (open where nothing constrained it),
+  -- ascending by code — the reply's `preds` table
   }
 
 -- | Phases in order; the first faulty phase answers.
@@ -43,12 +47,19 @@ check prelude clauses = do
   phase (unknownErrors clauses)
   phase (preludeErrors prelude clauses)
   strata <- stratify rules
-  Right (Checked rules strata (goals sorts))
+  Right (Checked rules strata (goals sorts) (predSorts sorts rules))
  where
   rules = [RuleC i h b | (i, Rule h b _) <- zip [0 ..] clauses]
   goals sorts = [goal sorts i cl | (i, cl) <- zip [0 ..] clauses, isGoal cl]
   isGoal cl = case cl of Rule {} -> False; _ -> True
   phase errs = if null errs then Right () else Left errs
+
+-- | The program predicates and their position sorts, one row per
+-- predicate however many rules define it (the checker unified every
+-- rule's head into one position node per argument).
+predSorts :: Sorts -> [RuleC] -> [(Int, [Integer])]
+predSorts sorts rules =
+  M.toAscList (M.fromList [(p, [positionSort sorts p i | i <- [0 .. length (atomArgs h) - 1]]) | RuleC _ h _ <- rules, let p = atomPred h])
 
 -- | Every atom's arity against the schema, or against the first
 -- appearance of a program predicate.

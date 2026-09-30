@@ -1,6 +1,6 @@
 # Same-role advisor — sparse retrieval and in-repo association
 
-[index](../methodology.md) · [← 14 Tombstone residue — the erased-name conjunction](14-tombstone-residue-the-erased-name-conjunction.md)
+[index](../methodology.md) · [← 14 Tombstone residue — the erased-name conjunction](14-tombstone-residue-the-erased-name-conjunction.md) · [→ 16 Code query and architecture rules — Datalog over the index's facts](16-code-query-and-architecture-rules-datalog-over-the-index.md)
 
 The three clone families read text: fingerprints (booklet 01), tree edit distance (02) and
 shingles (03) all need the two units to *look* alike. This family answers a different

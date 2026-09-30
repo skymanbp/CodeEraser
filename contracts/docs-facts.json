@@ -22,7 +22,7 @@
       "id": "count:booklets#word",
       "source": "docs/reference/methodology/*.md",
       "tier": "linked",
-      "value": "15"
+      "value": "16"
     },
     {
       "id": "count:commands#word",
@@ -66,13 +66,13 @@
       "id": "count:gates#word",
       "source": ".github/workflows/ci.yml::Dogfood step (cargo run lines)",
       "tier": "scraped",
-      "value": "6"
+      "value": "7"
     },
     {
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "158"
+      "value": "160"
     },
     {
       "id": "count:grammars#word",
@@ -109,7 +109,7 @@
       "id": "count:mcp_tools#word",
       "source": "cli/src/mcp/tools.rs::TOOLS (tool! rows)",
       "tier": "scraped",
-      "value": "16"
+      "value": "18"
     },
     {
       "id": "count:platforms#word",
@@ -122,7 +122,7 @@
       "id": "count:screens#word",
       "source": "gui/ui/index.html::data-tab",
       "tier": "scraped",
-      "value": "11"
+      "value": "12"
     },
     {
       "id": "count:skills#word",
@@ -281,6 +281,18 @@
       "value": "ce.observe/0.11.0"
     },
     {
+      "id": "report:query#schemaver",
+      "source": "cli/src/query/face.rs (typed)",
+      "tier": "linked",
+      "value": "ce.query-report/0.1.0"
+    },
+    {
+      "id": "report:rules#schemaver",
+      "source": "cli/src/query/face.rs (typed)",
+      "tier": "linked",
+      "value": "ce.rules-report/0.1.0"
+    },
+    {
       "id": "report:scan#schemaver",
       "source": "cli/src/scan/report.rs (typed)",
       "tier": "linked",
@@ -407,7 +419,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "22"
+      "value": "23"
     },
     {
       "id": "ver:mention_rev#digits",

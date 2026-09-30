@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser 工作原理：分析轨</title>
+<meta name="description" content="分析轨的判决家族：索引事实上的 Datalog，回答问题时附带推导链，把架构规则变成一道门，在 Haskell 核里判决，无模型无浮点。">
+<meta name="theme-color" content="#10141d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:url" content="https://codeeraser.dev/zh/how/analysis/">
+<meta property="og:title" content="CodeEraser 工作原理：分析轨">
+<meta property="og:description" content="索引事实上的代码查询与架构规则：每个答案带推导链，每条规则即一道门。">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/analysis/">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/analysis/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=6">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <a class="home" href="/zh/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
+  <nav>
+    <a href="/zh/">概览</a>
+    <a href="/zh/how/">工作原理</a>
+    <a href="/zh/stack/">技术栈</a>
+    <a href="/zh/bench/">实测</a>
+    <a href="/how/analysis/">English</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="lede">
+  <h1>分析轨</h1>
+  <p><a href="/zh/how/">工作原理</a>页上的每个家族各判一种树上已有的熵：一处克隆、一个死文件、一段重复的散文、一个扮演别人角色的单元。分析轨让读者<em>发问</em>——在同一份索引上、同一个核里判决、守同一套承诺：每个答案都是对实测事实的算术，证据与判决之间没有模型也没有浮点数，每个常数都钉在实现它的源码行上。</p>
+  <p>它的家族从第十五族往后续编号，每族一册；下面是短版，完整推导在
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，本页每个小标题都直接链进去。</p>
+  <nav class="toc" aria-label="章节">
+    <p class="k">本页内容</p>
+    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li></ul></div>
+    <div class="row"><a class="sec" href="/zh/how/">判决家族</a><ul><li><a href="/zh/how/#families">01–15 族</a></li><li><a href="/zh/how/#honesty">诚实边界</a></li></ul></div>
+  </nav>
+</section>
+
+<h2 id="analysis">分析家族：索引答得出的问题</h2>
+<p class="note">判决家族量一个事实、拿它比一条写下来的阈值。分析家族拿的是一个<em>程序</em>——一个问题，或一份规则文件——在索引已有的事实上作答，阈值就是读者自己写的那句话。分工不动：Rust 度量与回标，Haskell 核判决，两者之间过线的只有整数。</p>
+
+<div class="fam">
+  <h3 id="f16"><span class="n">16</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">代码查询与架构规则——索引事实上的 Datalog</a></h3>
+  <p class="job">用 CE Datalog 对索引已有的事实——文件、目录、引用、单元、复杂度、已判的克隆对与文档重复对、提及、路径类——提一个问题，每个答案带推导链；把规则文件里的断言当门判：一条违规就是一行见证加它的推导，<code>ce rules</code> 见第一条即退 1。</p>
+  <pre>clause := atom ':-' body '.'  |  '?-' body '.'  |  'assert' atom ':-' body '.'
+lit    := atom | 'not' atom | expr op expr | Var '=' expr | Var '=' agg(Vars : body)
+prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
+         dead(F) :- file(F), not reach(F).   depends · same_dir · dir_ref
+strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
+eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
+  <p class="note">度量侧把文本词法成 <code>[kind, value]</code> 记号流，只从自己的索引装配程序点名的事实表，两者一起送出；名字以 fnv1a64 哈希与请求内 id 上线、从不以文本，回来时也是同样的 id，再经请求自己的表回标。核解析（手写递归下降）、检查元数、类别（变量、谓词位置与常量类别上的并查集）、安全性（域界：变量只在正原子或绑定先绑定它之后才可读）与分层，逐层求值，回答每个目标的元组、每条断言的违规、推导行与程序错误——每个错误落在一个记号上，度量侧把它映回 <code>line:column</code>。推导树要么整棵、要么不出：结点预算下装不下的整棵不出并计数，从不截断。记号与事实行在判决前定价，超限即完整的降级应答；派生元组超限让整次求值作废；没有这个家族的核在文档里是具名的未判决。内置的 <code>dead(F)</code> 就是 <code>ce deadcode</code> 的文件级判决改写成规则，本仓以 <code>ce.rules</code> 里的九条断言给自己把门，作 CI 的第七条狗粮腿。</p>
+  <ul class="consts">
+    <li><b>tokenCap</b> 65536</li>
+    <li><b>factCap</b> 4194304</li>
+    <li><b>derivedCap</b> 2097152</li>
+    <li><b>proofCap</b> 16384</li>
+    <li><b>idbFloor</b> 1000</li>
+    <li><b>schema</b> ce.query-report/0.1.0</li>
+    <li><b>入 wire 版本</b> 7.3.0</li>
+    <li><b>wire</b> query/1</li>
+  </ul>
+</div>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/zh/">概览</a> ·
+     <a href="/zh/how/">工作原理</a> ·
+     <a href="/zh/stack/">技术栈</a> ·
+     <a href="/zh/bench/">实测</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法学</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
+  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
+</footer>
+
+</div>
+</body>
+</html>

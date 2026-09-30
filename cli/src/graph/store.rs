@@ -121,6 +121,9 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// `?` for a query and the fragment, never the userinfo or the query's
 /// content — every stored reference site re-derived once so no index
 /// keeps a credential a rung never read.
+/// 23 = the symbols table stores each unit's fourclass kind code
+/// (plan v2.31 step 2, the query family's `unit_kind` table): a new
+/// column on every row, so every symbol is re-detected once.
 /// 18 = plan v2.30 step 5b's second sub-batch moves stored rows again:
 /// a brace-only Rust `use {a, b};` opens one site per entry, a Haskell
 /// PackageImports import keeps its package in the spec, a qualified R
@@ -149,7 +152,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 22;
+pub const GRAPH_REV: i64 = 23;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -168,7 +171,7 @@ CREATE TABLE symbols (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   key TEXT NOT NULL, nth INTEGER NOT NULL,
   start_line INTEGER NOT NULL, end_line INTEGER NOT NULL,
-  flags INTEGER NOT NULL, conv INTEGER NOT NULL);
+  flags INTEGER NOT NULL, conv INTEGER NOT NULL, kind INTEGER NOT NULL);
 CREATE TABLE sites (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT);
@@ -239,9 +242,13 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
     // guess. flags was reserved and zero until a producer existed,
     // which is why nothing read it before; the wire reads bit 0 of it
     // (symwire), and conv waits for the advisory table (piece (6)).
+    // kind is the unit's fourclass kind code (fn / named / impl /
+    // section), stored since GRAPH_REV 23 for the query family's
+    // `unit_kind` table (plan v2.31 step 2) — the same value the
+    // segmenter already computed and the unitsig cache never kept
     let mut sym = tx.prepare(
-        "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags, conv)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        "INSERT INTO symbols (file_id, key, nth, start_line, end_line, flags, conv, kind)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     )?;
     // nth comes from the ONE assignment throat (units::with_nth) the
     // unitsig cache also calls; the UNIQUE(file_id, key, nth) index
@@ -255,6 +262,7 @@ pub fn refresh_graph(tx: &Transaction<'_>, file_id: i64, text: &str, lang: Lang)
             u.end_line as i64,
             u.vis,
             u.conv,
+            u.kind,
         ))?;
     }
     write_sites(tx, file_id, &found)

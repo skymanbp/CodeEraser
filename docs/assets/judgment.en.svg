@@ -254,12 +254,12 @@ rect.c-bg-rect { fill: var(--bg); }
         <path data-edge-from="tokens" data-edge-to="clones" data-edge-label="k-grams" data-edge-key="2" data-edge-id="tokens-clones" data-composition-points="162,271;249,271" d="M 162 271 L 249 271" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="shingles" data-edge-to="docdup" data-edge-label="shingle sets" data-edge-key="3" data-edge-id="shingles-docdup" data-composition-points="162,385;253,385" d="M 162 385 L 253 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="windows" data-edge-to="trend" data-edge-label="windows · diffs" data-edge-key="4" data-edge-id="windows-trend" data-composition-points="162,499;253,499" d="M 162 499 L 253 499" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="edges · mentions" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;253,613" d="M 162 613 L 253 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
+        <path data-edge-from="refs" data-edge-to="liveness" data-edge-label="edges · mentions" data-edge-key="5" data-edge-id="refs-liveness" data-composition-points="162,613;249,613" d="M 162 613 L 249 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="score" data-edge-to="gate" data-edge-label="score · bits" data-edge-key="6" data-edge-id="score-gate" data-composition-points="377,157;468,157" d="M 377 157 L 468 157" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)" />
         <path data-edge-from="clones" data-edge-to="reports" data-edge-label="rows" data-edge-key="7" data-edge-id="clones-reports" data-composition-points="381,271;422.5,271;422.5,385;468,385" d="M 381 271 L 422.5 271 L 422.5 385 L 468 385" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)" />
         <path data-edge-from="docdup" data-edge-to="reports" data-edge-label="rows" data-edge-key="8" data-edge-id="docdup-reports" data-composition-points="377,385;468,385" d="M 377 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
         <path data-edge-from="trend" data-edge-to="reports" data-edge-label="rows" data-edge-key="9" data-edge-id="trend-reports" data-composition-points="377,499;422.5,499;422.5,385;468,385" d="M 377 499 L 422.5 499 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
-        <path data-edge-from="liveness" data-edge-to="reports" data-edge-label="rows" data-edge-key="10" data-edge-id="liveness-reports" data-composition-points="377,613;422.5,613;422.5,385;468,385" d="M 377 613 L 422.5 613 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
+        <path data-edge-from="liveness" data-edge-to="reports" data-edge-label="rows" data-edge-key="10" data-edge-id="liveness-reports" data-composition-points="381,613;422.5,613;422.5,385;468,385" d="M 381 613 L 422.5 613 L 422.5 385 L 468 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)" />
 
         <!-- Nodes -->
         <g id="node-units" data-node-id="units" data-node-label="Syntax units" tabindex="0" role="button" aria-label="Focus Syntax units, postorder AST · MinHash/LSH, 01 / Measure · Rust" aria-pressed="false" data-node-kind="backend" data-node-sublabel="postorder AST · MinHash/LSH" data-node-context="01 / Measure · Rust">
@@ -365,16 +365,16 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="315" y="517" class="t-backend" font-size="6.2" text-anchor="middle">trend/2 · audit/1 · tombstone/1</text>
         </g>
 
-        <g id="node-liveness" data-node-id="liveness" data-node-label="Liveness &amp; erase" tabindex="0" role="button" aria-label="Focus Liveness &amp; erase, four-way verdict · unmentioned, 02 / Judge · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="four-way verdict · unmentioned" data-node-tag="graph/1 · erase/1" data-node-context="02 / Judge · Haskell">
-          <title>Liveness &amp; erase · four-way verdict · unmentioned · 02 / Judge · Haskell · graph/1 · erase/1</title>
-          <rect x="253" y="584" width="124" height="58" rx="6" class="c-mask" />
-          <rect x="253" y="584" width="124" height="58" rx="6" class="c-backend" stroke-width="1.5" />
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(259 590) scale(0.6875)">
+        <g id="node-liveness" data-node-id="liveness" data-node-label="Liveness &amp; erase" tabindex="0" role="button" aria-label="Focus Liveness &amp; erase, four-way · unmentioned · rules, 02 / Judge · Haskell" aria-pressed="false" data-node-kind="backend" data-node-sublabel="four-way · unmentioned · rules" data-node-tag="graph/1 · erase/1 · query/1" data-node-context="02 / Judge · Haskell">
+          <title>Liveness &amp; erase · four-way · unmentioned · rules · 02 / Judge · Haskell · graph/1 · erase/1 · query/1</title>
+          <rect x="249" y="584" width="132" height="58" rx="6" class="c-mask" />
+          <rect x="249" y="584" width="132" height="58" rx="6" class="c-backend" stroke-width="1.5" />
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(255 590) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="315" y="605" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Liveness &amp; erase</text>
-          <text x="315" y="621" class="t-muted" font-size="6.4" text-anchor="middle">four-way verdict · unmentioned</text>
-        <text x="315" y="631" class="t-backend" font-size="7" text-anchor="middle">graph/1 · erase/1</text>
+          <text x="315" y="621" class="t-muted" font-size="6.8" text-anchor="middle">four-way · unmentioned · rules</text>
+        <text x="315" y="631" class="t-backend" font-size="7" text-anchor="middle">graph/1 · erase/1 · query/1</text>
         </g>
 
         <g id="node-gate" data-node-id="gate" data-node-label="Gate" tabindex="0" role="button" aria-label="Focus Gate, exit code · six fail conditions, 03 / Deliver" aria-pressed="false" data-node-kind="security" data-node-sublabel="exit code · six fail conditions" data-node-context="03 / Deliver">
@@ -423,8 +423,8 @@ rect.c-bg-rect { fill: var(--bg); }
           <text x="207.5" y="489" class="t-muted" font-size="8" text-anchor="middle">windows · diffs</text>
         </g>
         <g data-edge-from="refs" data-edge-to="liveness" data-edge-label="edges · mentions" data-edge-key="5" data-edge-id="refs-liveness">
-          <rect x="162.3" y="592" width="90.4" height="16" rx="4" class="c-mask" />
-          <text x="207.5" y="603" class="t-muted" font-size="8" text-anchor="middle">edges · mentions</text>
+          <rect x="160.3" y="592" width="90.4" height="16" rx="4" class="c-mask" />
+          <text x="205.5" y="603" class="t-muted" font-size="8" text-anchor="middle">edges · mentions</text>
         </g>
         <g data-edge-from="score" data-edge-to="gate" data-edge-label="score · bits" data-edge-key="6" data-edge-id="score-gate">
           <rect x="387.1" y="136" width="70.8" height="16" rx="4" class="c-mask" />

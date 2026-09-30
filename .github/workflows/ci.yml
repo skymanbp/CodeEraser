@@ -252,7 +252,7 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" = Windows ]; then powershell -NoProfile -Command "Get-CimInstance Win32_Process | Where-Object { \$_.CommandLine -like '*CodeEraser*' } | Select-Object ProcessId,ParentProcessId,Name,CreationDate,CommandLine | Format-List | Out-String -Width 400"; else ps -eo pid,ppid,etime,cmd | grep -i codeeraser | grep -v grep || true; fi
-      - name: Dogfood (scan + dedup ratchet + check floor + deadcode + docdup + erase)
+      - name: Dogfood (scan + dedup ratchet + check floor + deadcode + docdup + erase + rules)
         shell: bash
         working-directory: cli
         run: |
@@ -263,11 +263,12 @@ jobs:
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check
+          cargo run --locked -- rules .. --core "$CORE_BIN"
 
       # The test suite is a READER of this tree (plan v2.18 step #12):
       # its files feed the graph's edges and the advisory's mention
       # universe above and are measured by nobody there. What measures
-      # them is the submodule's own ce.toml + baseline — the same six
+      # them is the submodule's own ce.toml + baseline — the same seven
       # gates, rooted at cli/tests (root resolution stops at its
       # ce.toml). 978 at the split, floor 975: the same bite; 987 once
       # the crate's unit tests rode in as unit/ (step #13), floor 983;
@@ -285,6 +286,7 @@ jobs:
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check
+          cargo run --locked -- rules tests --core "$CORE_BIN"
 
       # The churn axis (score axis 5) needs the git-subprocess walk —
       # 216s measured locally at --days 14, so it runs on ONE matrix
@@ -451,7 +453,7 @@ jobs:
           node cli/tests/gui/i18n_gate.js
           node cli/tests/gui/hub_projection.js
           node cli/tests/gui/installer_wiring.js
-      - name: Dogfood (macOS coverage — the six self-gates)
+      - name: Dogfood (macOS coverage — the seven self-gates)
         shell: bash
         working-directory: cli
         run: |
@@ -462,11 +464,12 @@ jobs:
           cargo run --locked -- deadcode .. --core "$CORE_BIN" --check
           cargo run --locked -- docdup .. --core "$CORE_BIN" --check
           cargo run --locked -- erase .. --core "$CORE_BIN" --check
+          cargo run --locked -- rules .. --core "$CORE_BIN"
 
       # The test suite is a READER of this tree (plan v2.18 step #12):
       # its files feed the graph's edges and the advisory's mention
       # universe above and are measured by nobody there. What measures
-      # them is the submodule's own ce.toml + baseline — the same six
+      # them is the submodule's own ce.toml + baseline — the same seven
       # gates, rooted at cli/tests (root resolution stops at its
       # ce.toml). 978 at the split, floor 975: the same bite; 987 once
       # the crate's unit tests rode in as unit/ (step #13), floor 983;
@@ -484,6 +487,7 @@ jobs:
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check
+          cargo run --locked -- rules tests --core "$CORE_BIN"
 
   # The real transport (O78): every other leg feeds the starter file://
   # URLs, so the https download — curl's flags, the redirect GitHub

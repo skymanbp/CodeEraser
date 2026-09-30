@@ -61,6 +61,14 @@ similar.at	持有 `file:line` 的单元（路径相对根目录）
 similar.text	自由文本：其词作为名字与文档证据（无形状无被调者，核给的角色位保持为假）
 similar.unit	按键指定单元（`name/arity`）；二义的键按名拒绝
 similar.widen	加联想视图：PPMI 扩展查询才到达、裸查询没到的候选，打标
+query	代码查询：用 CE Datalog 对索引里的事实（文件、引用、单元、克隆、提及、路径类）提一个问题，由核的 query/1 作答，--why 时每个答案带推导链；程序错误退出 2（仅报告）
+query.body	问题：一条查询体（如 `dead(F)`；`?-` 与结尾的 `.` 可省）；除非 --prelude 否则必填
+query.why	每个答案带推导链（违规恒带）
+query.file	问题所叠加的规则文件（缺省 = `[rules] file`，否则仓根存在的 ce.rules）
+query.prelude	打印内置前奏并退出
+rules	架构规则当门：规则文件（仓根 ce.rules 或 `[rules] file`）里每条 `assert` 由核的 query/1 判决，每条违规带见证与推导链；有违规退出 1，程序错误退出 2
+rules.file	要判决的规则文件（缺省 = `[rules] file`，否则仓根的 ce.rules；不存在 = 零断言）
+rules.why	查询答案也带推导链
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）
@@ -114,7 +122,7 @@ fn zh_map() -> &'static HashMap<&'static str, &'static str> {
 }
 
 /// One arg's zh help: the command's own key, else the shared
-/// `judge.<id>` fallback. JudgeArgs is flattened into SEVEN commands
+/// `judge.<id>` fallback. JudgeArgs is flattened into NINE commands
 /// and the table carried a private copy of each of its three help
 /// lines per command — twenty-one strings, and every copy of --core
 /// had dropped the resolution order (CE_CORE_BIN, sibling, PATH) the

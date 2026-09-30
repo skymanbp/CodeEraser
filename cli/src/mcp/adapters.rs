@@ -170,6 +170,28 @@ pub(super) fn similar_units(root: &Path, a: &Value) -> Result<String> {
     Ok(crate::faces::similar(root, &core(), &ask, widen)?.to_string())
 }
 
+pub(super) fn query(root: &Path, a: &Value) -> Result<String> {
+    let body = a["body"]
+        .as_str()
+        .ok_or_else(|| anyhow::anyhow!("query: `body` (the question) is required"))?;
+    let (file, why) = file_why(a);
+    Ok(crate::faces::query(root, &core(), body, why, file)?.to_string())
+}
+
+pub(super) fn rules(root: &Path, a: &Value) -> Result<String> {
+    let (file, why) = file_why(a);
+    Ok(crate::faces::rules(root, &core(), file, why)?.to_string())
+}
+
+/// The two arguments both query tools take: the rules file (root-
+/// relative, optional) and whether every answer carries its derivation.
+fn file_why(a: &Value) -> (Option<&Path>, bool) {
+    (
+        a["file"].as_str().map(Path::new),
+        a["why"].as_bool().unwrap_or(false),
+    )
+}
+
 pub(super) fn trend(root: &Path, a: &Value) -> Result<String> {
     let commits = count(a, "commits", crate::trend::DEFAULT_COMMITS);
     // absent = measure every uncached commit, but a PRESENT batch of 0

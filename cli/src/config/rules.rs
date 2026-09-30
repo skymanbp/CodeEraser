@@ -22,6 +22,11 @@ pub const CLASS_CAP: usize = 64;
 #[serde(default, deny_unknown_fields)]
 pub struct RulesCfg {
     pub class: Vec<ClassCfg>,
+    /// The rules file `ce rules` judges and `ce query` builds on,
+    /// root-relative; absent = `ce.rules` at the root when it exists
+    /// (plan v2.31 step 2). A path, never a knob: the knob
+    /// fingerprint drops it (config::canonical rule 7).
+    pub file: Option<String>,
 }
 
 /// name and globs are REQUIRED keys — serde names the missing one;

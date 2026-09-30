@@ -26,6 +26,7 @@
       <button class="tab" data-tab="candidates" data-i18n="tabCandidates"></button>
       <button class="tab" data-tab="graph" data-i18n="tabGraph"></button>
       <button class="tab" data-tab="similar" data-i18n="tabSimilar"></button>
+      <button class="tab" data-tab="query" data-i18n="tabQuery"></button>
       <button class="tab" data-tab="reports" data-i18n="tabReports"></button>
       <button class="tab" data-tab="bench" data-i18n="tabBench"></button>
       <button class="tab" data-tab="doctor" data-i18n="tabDoctor"></button>
@@ -149,6 +150,20 @@
     </main>
   </div>
 
+  <div id="view-query" class="view" hidden>
+    <section class="bar">
+      <input id="query-text" type="text" spellcheck="false" data-i18n-ph="queryPlaceholder" />
+      <label><input id="query-why" type="checkbox" /> <span data-i18n="queryWhy"></span></label>
+      <button id="query-run" data-i18n="queryRun"></button>
+      <button id="query-rules" data-i18n="queryRules"></button>
+      <div class="stat" id="query-summary"></div>
+    </section>
+    <main class="col">
+      <div id="query-rows"></div>
+      <div class="empty" id="empty-query" data-i18n="emptyQuery"></div>
+    </main>
+  </div>
+
   <div id="view-reports" class="view" hidden>
     <section class="bar">
       <select id="hub-family"></select>
@@ -203,6 +218,7 @@
   <script src="candidates.js" defer></script>
   <script src="graph.js" defer></script>
   <script src="similar.js" defer></script>
+  <script src="query.js" defer></script>
   <script src="score.js" defer></script>
   <script src="erase.js" defer></script>
   <script src="reports.js" defer></script>

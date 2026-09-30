@@ -86,6 +86,14 @@ pub fn dir_of(tree: &Tree, path: &str) -> Option<usize> {
     tree.ids.get(dir_path).copied()
 }
 
+/// The id of a DIRECTORY path (root-relative, no trailing slash, ""
+/// the root), entered with every ancestor when absent — the query
+/// family seats a package node at its own directory through this
+/// (plan v2.31 step 2); it holds no file and moves no aggregate.
+pub fn dir_id(tree: &mut Tree, dir_path: &str) -> usize {
+    ensure_dir(&mut tree.ids, &mut tree.dirs, dir_path)
+}
+
 fn root() -> Dir {
     Dir {
         parent: 0,

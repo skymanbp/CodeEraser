@@ -76,6 +76,11 @@ pub fn canonical(cfg: &Config) -> Value {
     if let Some(top) = declared.as_object_mut() {
         top.remove("ui");
     }
+    // rule 7: the rules file is a path the query family reads, never
+    // a knob — dropped whole (plan v2.31 step 2)
+    if let Some(rules) = declared.get_mut("rules").and_then(Value::as_object_mut) {
+        rules.remove("file");
+    }
     // rule 5: the class name is a label, never a knob
     if let Some(classes) = declared
         .get_mut("rules")

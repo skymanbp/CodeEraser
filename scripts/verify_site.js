@@ -27,10 +27,12 @@ const BASE = "https://codeeraser.dev";
 const PAGES = [
   ["site/index.html", "/"],
   ["site/how/index.html", "/how/"],
+  ["site/how/analysis/index.html", "/how/analysis/"],
   ["site/stack/index.html", "/stack/"],
   ["site/bench/index.html", "/bench/"],
   ["site/zh/index.html", "/zh/"],
   ["site/zh/how/index.html", "/zh/how/"],
+  ["site/zh/how/analysis/index.html", "/zh/how/analysis/"],
   ["site/zh/stack/index.html", "/zh/stack/"],
   ["site/zh/bench/index.html", "/zh/bench/"],
 ];

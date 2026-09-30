@@ -8,7 +8,7 @@
 
 use super::adapters::{
     check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, erase_log,
-    graph_sites, join, scan, similar_units, structure, trend, update_check,
+    graph_sites, join, query, rules, scan, similar_units, structure, trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -182,6 +182,46 @@ pub const TOOLS: &[Tool] = &[
             ("text", "string", "free text as name and doc evidence"),
             ("unit", "string", "a unit by key (`name/arity`)"),
             ("widen", "boolean", "add the associative view, tagged"),
+        ]
+    ),
+    tool!(
+        "query",
+        query,
+        "One question in CE Datalog over the index's facts (ce.query-report schema): \
+         files, references, units, clones, mentions, path classes, with the built-in \
+         prelude (`dead`, `reach`, `depends`, `same_dir`, `dir_ref`) and the project's \
+         rules file; every answer labelled, its derivation under `why`. Report-only.",
+        &[
+            (
+                "body",
+                "string",
+                "the question (`dead(F)`; `?-` and the final `.` optional)"
+            ),
+            ("why", "boolean", "carry every answer's derivation"),
+            (
+                "file",
+                "string",
+                "a rules file to build on (path relative to the root)"
+            ),
+        ]
+    ),
+    tool!(
+        "rules",
+        rules,
+        "The project's architecture rules judged (ce.rules-report schema): every \
+         `assert` in the rules file with its violations, each carrying its witness and \
+         derivation. The CLI exits on `counts.violations`; here it is a report.",
+        &[
+            (
+                "file",
+                "string",
+                "the rules file (default: `[rules] file`, else ce.rules)"
+            ),
+            (
+                "why",
+                "boolean",
+                "carry every query answer's derivation too"
+            ),
         ]
     ),
     tool!(

@@ -20,28 +20,30 @@ pub struct SymbolRow {
     pub vis: i64,
     /// The AST half of its convention-category word (mention::conv).
     pub conv: i64,
+    /// Its fourclass kind code (kinds.rs: fn 1, named 2, impl 3,
+    /// section 4), stored since GRAPH_REV 23.
+    pub kind: i64,
 }
 
 /// Every cached symbol, deterministically ordered by identity.
 pub fn symbol_rows(idx: &Index) -> Result<Vec<SymbolRow>> {
-    Ok(super::load::rows(
+    super::load::rows(
         idx.raw(),
-        "SELECT f.path, s.key, s.nth, s.start_line, s.end_line, s.flags, s.conv
+        "SELECT f.path, s.key, s.nth, s.start_line, s.end_line, s.flags, s.conv, s.kind
          FROM symbols s JOIN files f ON f.id = s.file_id
          ORDER BY f.path, s.key, s.nth",
-        super::load::t7,
-    )?
-    .into_iter()
-    .map(
-        |(path, key, nth, start_line, end_line, vis, conv)| SymbolRow {
-            path,
-            key,
-            nth,
-            start_line,
-            end_line,
-            vis,
-            conv,
+        |r| {
+            let int = |i: usize| r.get::<_, i64>(i);
+            Ok(SymbolRow {
+                path: r.get(0)?,
+                key: r.get(1)?,
+                nth: int(2)?,
+                start_line: int(3)?,
+                end_line: int(4)?,
+                vis: int(5)?,
+                conv: int(6)?,
+                kind: int(7)?,
+            })
         },
     )
-    .collect())
 }

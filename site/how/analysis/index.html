@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How CodeEraser works: the analysis track</title>
+<meta name="description" content="The analysis track's judgment families: a Datalog over the index's facts that answers questions with their derivations and turns architecture rules into a gate, judged in the Haskell core with no model and no float.">
+<meta name="theme-color" content="#10141d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://codeeraser.dev/how/analysis/">
+<meta property="og:title" content="How CodeEraser works: the analysis track">
+<meta property="og:description" content="Code queries and architecture rules over the index's facts: every answer with its derivation, every rule a gate.">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/how/analysis/">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/how/analysis/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v=6">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <a class="home" href="/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
+  <nav>
+    <a href="/">Overview</a>
+    <a href="/how/">How it works</a>
+    <a href="/stack/">Stack</a>
+    <a href="/bench/">Benchmarks</a>
+    <a href="/zh/how/analysis/">中文</a>
+    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
+  </nav>
+</header>
+
+<section class="lede">
+  <h1>The analysis track</h1>
+  <p>The families on the <a href="/how/">how page</a> each judge one shape of entropy the tree
+  already carries: a clone, a dead file, a duplicated paragraph, a unit that plays another's
+  part. The analysis track lets the reader <em>ask</em> — over the same index, judged in the same
+  core, under the same commitments: every answer is arithmetic over measured facts, there is no
+  model and no floating point between the evidence and the verdict, and every constant is cited
+  to the source line that implements it.</p>
+  <p>Its families continue the numbering from the fifteenth and get a booklet each; the short
+  form is below, the full derivation lives in
+  <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
+  which every heading here links into.</p>
+  <nav class="toc" aria-label="Sections">
+    <p class="k">On this page</p>
+    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li></ul></div>
+    <div class="row"><a class="sec" href="/how/">Judgment families</a><ul><li><a href="/how/#families">Families 01–15</a></li><li><a href="/how/#honesty">Honesty boundaries</a></li></ul></div>
+  </nav>
+</section>
+
+<h2 id="analysis">The analysis families: questions the index can answer</h2>
+<p class="note">A judgment family measures a fact and compares it with a threshold that is written down.
+An analysis family takes a <em>program</em> — a question, or a file of rules — and answers it over the
+facts the index already holds, so the threshold is the reader's own sentence. The division of labour
+does not move: Rust measures and labels, the Haskell core judges, and nothing but integers crosses
+the wire between them.</p>
+
+<div class="fam">
+  <h3 id="f16"><span class="n">16</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">Code query and architecture rules — Datalog over the index's facts</a></h3>
+  <p class="job">Answers a question in CE Datalog over the facts the index already holds — files, directories,
+  references, units, complexity, judged clone and docdup pairs, mentions, path classes — with every
+  answer's derivation, and judges a rules file's assertions as a gate: a violation is a witness row
+  with its proof, and <code>ce rules</code> exits 1 on the first.</p>
+  <pre>clause := atom ':-' body '.'  |  '?-' body '.'  |  'assert' atom ':-' body '.'
+lit    := atom | 'not' atom | expr op expr | Var '=' expr | Var '=' agg(Vars : body)
+prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
+         dead(F) :- file(F), not reach(F).   depends · same_dir · dir_ref
+strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
+eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
+  <p class="note">The measuring side lexes the text into a <code>[kind, value]</code> token stream, assembles only the
+  fact tables the program names from its own index, and sends both; names go up as fnv1a64 hashes and
+  request-local ids, never as text, and come back the same way to be labelled through the request's own
+  tables. The core parses (a hand-written recursive descent), checks arity, sorts (a union-find over
+  variables, predicate positions and constant sorts), safety (range restriction: a variable is read only
+  after a positive atom or a binding bound it) and stratification, evaluates one stratum at a time, and
+  answers every goal's tuples, every assertion's violations, the proof rows and the program's errors —
+  each error at a token the measuring side maps back to <code>line:column</code>. A proof is a whole tree
+  or nothing: under the node budget a tree that would not fit is left out and counted, never cut. Tokens
+  and fact rows are priced before judging and answer a complete degraded reply; derived tuples abort the
+  evaluation whole; a core without the family is a named non-judgment in the document. The built-in
+  <code>dead(F)</code> is <code>ce deadcode</code>'s file-tier verdict restated as a rule, and this repository
+  judges itself with nine assertions in <code>ce.rules</code> as CI's seventh dogfood leg.</p>
+  <ul class="consts">
+    <li><b>tokenCap</b> 65536</li>
+    <li><b>factCap</b> 4194304</li>
+    <li><b>derivedCap</b> 2097152</li>
+    <li><b>proofCap</b> 16384</li>
+    <li><b>idbFloor</b> 1000</li>
+    <li><b>schema</b> ce.query-report/0.1.0</li>
+    <li><b>since proto</b> 7.3.0</li>
+    <li><b>wire</b> query/1</li>
+  </ul>
+</div>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/">Overview</a> ·
+     <a href="/how/">How it works</a> ·
+     <a href="/stack/">Stack</a> ·
+     <a href="/bench/">Benchmarks</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
+  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,
+     the license does not grant trademark rights. © 2026 skymanbp.</p>
+</footer>
+
+</div>
+</body>
+</html>

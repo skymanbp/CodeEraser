@@ -115,7 +115,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   color: var(--ink-low);
   border: 0;
   border-radius: var(--r-sm);
-  padding: 0 var(--s4);
+  padding: 0 var(--s3);
   height: calc(var(--ctl-h) - var(--s2));
 }
 #tabs .tab:hover { color: var(--ink); }
@@ -157,40 +157,44 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   text-align: right;
 }
 #status.err { color: var(--err); }
-/* Below 1205px the header cannot seat the eleven-tab strip beside the
+/* Below 1205px the header cannot seat the twelve-tab strip beside the
    brand, the root field at its 120px minimum, the folder button and
    the language button even with the echo and the status column
    squeezed to nothing — it spills. Measured, not estimated: `node
    scripts/measure_header.js` in headless Edge (the engine the app
    ships on), with this query disabled so the number is the one-row
-   layout's own floor and not the query's — 2026-09-10, one row fits
-   from 1205px in English and 1082px in Chinese, so English binds and
-   the wrap sits one pixel below it. The folder button (2026-09-10)
-   moved both floors up by its own 42px — 34px of button and one 8px
-   gap — from the 1163px / 1040px measured on 2026-09-06. The batch-9
-   proposal's 1120px was a glyph-width guess (plan v2.29 step 9, O25).
+   layout's own floor and not the query's — 2026-09-29, one row fits
+   from 1205px in English and in Chinese alike, so the wrap sits one
+   pixel below. The tabs hold 12px of padding a side (--s3) at every
+   width: the twelfth tab (Query, plan v2.31 step 2) at the 16px the
+   strip carried until then measured 1274px / 1205px, which would have
+   left the status column 0px at the 1280px default window in English;
+   at 12px — the padding the strip already took below this line — the
+   twelve seat where the eleven did (English 1205px on 2026-09-10, the
+   folder button having moved it by its own 42px from the 1163px of
+   2026-09-06) and the status column keeps 77px (English) / 207px
+   (Chinese) at the default window. The batch-9 proposal's 1120px was
+   a glyph-width guess (plan v2.29 step 9, O25).
 
    The 1150px/844px pinned here until 2026-09-06 were artefacts of the
    label-wrapping bug the `white-space: nowrap` rule above fixes: the
-   language button and, in Chinese, all eleven tabs were answering a
-   squeeze by breaking their labels across two lines instead of holding
-   their width, so the header measured 13px (English) and 196px
-   (Chinese) narrower than it truly is, and the probe — which then
-   asked only `scrollWidth > clientWidth` — called that a fit.
+   language button and, in Chinese, all the tabs (eleven then) were
+   answering a squeeze by breaking their labels across two lines
+   instead of holding their width, so the header measured 13px
+   (English) and 196px (Chinese) narrower than it truly is, and the
+   probe — which then asked only `scrollWidth > clientWidth` — called
+   that a fit.
 
-   Above the line the status column keeps shrinking as designed
-   (0–50px between 1205 and the 1280px default window in English); a
-   wrap at the unsqueezed natural width would put the strip on its own
-   row at the default window and was not taken. Below it the strip
-   takes a row of its own; its tabs give up 4px of padding a side so
-   the eleven fit that row down to the app's 860px minimum window
-   (measured: 828px of tabs in both languages against the 828px the row
-   has there), and the strip wraps inside its row rather than clip if a
-   narrower window ever shows it. */
+   Above the line the status column keeps shrinking as designed (17px
+   at 1220px, 77px at the 1280px default window in English); a wrap at
+   the unsqueezed natural width would put the strip on its own row at
+   the default window and was not taken. Below it the strip takes a
+   row of its own and wraps inside that row rather than clip: the
+   twelve tabs measure 828px in both languages at the app's 860px
+   minimum window, exactly the 828px the row has there. */
 @media (max-width: 1204px) {
   header { flex-wrap: wrap; }
   #tabs { order: 5; flex-basis: 100%; flex-wrap: wrap; }
-  #tabs .tab { padding: 0 var(--s3); }
 }
 
 /* ---- per-view control bar ---- */

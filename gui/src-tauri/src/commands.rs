@@ -47,7 +47,7 @@ fn core_path() -> String {
 /// first catch; the measurement-only faces ride the same shape and
 /// simply ignore the core argument (resolving is a string lookup —
 /// only spawning can fail, and they never spawn it).
-async fn task<F>(
+pub(crate) async fn task<F>(
     win: tauri::Window,
     name: &'static str,
     root: String,

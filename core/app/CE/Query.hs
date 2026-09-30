@@ -11,8 +11,9 @@
 -- ids, name hashes; no name, path or source text crosses, §5.9.2) and
 -- sends both; this side parses, checks, stratifies, evaluates and
 -- answers every query's tuples, every assertion's violations, the
--- proof trees and the program's errors — each at a token index the
--- measuring side maps back to `line:column`. A capped family: tokens
+-- proof trees, the program predicates' resolved sorts and the
+-- program's errors — each error at a token index the measuring side
+-- maps back to `line:column`. A capped family: tokens
 -- and fact rows are priced before judging, derived tuples while
 -- judging, proof nodes never degrade (they stop and count).
 module CE.Query (respond) where
@@ -37,10 +38,11 @@ import qualified Data.Set as S
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
 respond proto = family "query" reqId overCap offence (degraded proto) (judged proto)
 
--- | Everything a reply carries besides the envelope: the four
+-- | Everything a reply carries besides the envelope: the five
 -- tables, the counts, the degraded bit.
 data Answered = Answered
   { ansGoals :: [[Integer]]
+  , ansPreds :: [[Integer]]
   , ansRows :: [[Integer]]
   , ansProof :: [[Integer]]
   , ansErrors :: [[Integer]]
@@ -68,9 +70,17 @@ judged proto req = reply proto req $ case parseProgram (tokens req) of
       Left n -> blank req clauses (Just chk) zeroTally {tDerived = n} True
       Right out -> answered req clauses chk out
 
--- | Empty tables under the counts the phases reached.
+-- | Empty tables under the counts the phases reached — the
+-- predicate sorts still ride once the checker resolved them (a
+-- derived-cap abort keeps them; an erroring program has none).
 blank :: QueryReq -> [Clause] -> Maybe Checked -> Tally -> Bool -> Answered
-blank req clauses chk tally = Answered [] [] [] [] (countsOf req clauses chk tally)
+blank req clauses chk tally = Answered [] (maybe [] predRows chk) [] [] [] (countsOf req clauses chk tally)
+
+-- | `[code, sorts…]` per program predicate, ascending by code: the
+-- measuring side labels a proof node's arguments by these, the way
+-- it labels a goal's columns by `goals`.
+predRows :: Checked -> [[Integer]]
+predRows chk = [toInteger p : sorts | (p, sorts) <- chkPreds chk]
 
 withErrors :: QueryReq -> [Clause] -> [[Integer]] -> Answered
 withErrors req clauses errs = (blank req clauses Nothing zeroTally False) {ansErrors = errs}
@@ -80,7 +90,7 @@ withErrors req clauses errs = (blank req clauses Nothing zeroTally False) {ansEr
 -- — a violation without its derivation is a bare accusation.
 answered :: QueryReq -> [Clause] -> Checked -> (Db, Prov, Integer) -> Answered
 answered req clauses chk (db, prov, derived) =
-  Answered goalRows rows proof [] (countsOf req clauses (Just chk) tally) False
+  Answered goalRows (predRows chk) rows proof [] (countsOf req clauses (Just chk) tally) False
  where
   answersOf = [(g, goal, goalAnswers db goal) | (g, goal) <- zip [0 :: Int ..] (chkGoals chk)]
   goalRows = [toInteger g : goalKind goal : goalSorts goal | (g, goal, _) <- answersOf]
@@ -123,6 +133,7 @@ reply proto req a =
     , "type" .= ("query.result" :: String)
     , "id" .= reqId req
     , "goals" .= ansGoals a
+    , "preds" .= ansPreds a
     , "answers" .= ansRows a
     , "proof" .= ansProof a
     , "errors" .= ansErrors a
