@@ -9,6 +9,15 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 分析轨 v2.31 步 4 死代码 B 提交 C2（2026-09-30；判决代码只动 `cli/src/flow/mod.rs` 的 `JUDGED` 掩码——`flow::judged_mask()` 至今没有产品读者，三个面随步 5 落地；核与既有十四家族的字节都不动，分数与 1.8.0 可比）：十份 `flow/1` 精度册在 C1 提交 bb9bdc8a 的干净树上生成，七种语言进判决掩码。
+
+- **十份精度册** `contracts/eval/flow-precision-<语言>-v1.json`（`generated_from` 皆 bb9bdc8a / dirty = false：逐语言生成到车道目录、十份齐了一次拷入，生成期间仓库树里不建文件）；unjudged 与 cannot_tell 十份皆 0；子仓 `exams.rs` 十门 stage 翻 `scored`（judged 真假都翻）。
+- **四态读数**（类 0 / 1 / 2 → judged）：python vacuous / pass / pass → true；typescript vacuous / silent / fail → false；tsx 三门 vacuous → true；rust vacuous / vacuous / fail → false；go、c、r 三门 vacuous → true；cpp pass / fail / fail → false；java vacuous / vacuous / pass → true；lua 三门 pass → true。
+- **掩码** `JUDGED` = Python / Tsx / Go / C / Java / Lua / R（7/10，考题表序；注释点名 `it/eval_flow_precision.rs` 的掩码腿）；子仓 `unit/flow/wire.rs` 的空掩码腿改为按七个 `Lang` 码钉位。
+- **误报与漏报**（类 0–2；逐条见登记册各节，本提交不修降表——修降表是新一代考题）：typescript fp 15（类 2：`const` / `let` 在自己的初始化式或更早的闭包 / getter 里被读，猜后绑定只给 `var`）+ silent fn 1（类 1：类型位置的 `typeof x` 被降成读）；rust fp 15（类 2：格式宏格式串里的内联捕获 `{name}` / `{:pad$}` 没降成读，含本仓 `progress.rs:195` 的 `pad` 与 `report.rs:169` 的 `k`）；cpp fp 2（类 1 / 2：`T x(args);` 直接初始化声明的实参没降成读）+ fn 2（类 1：do-while 体可跳过的已知少报）；lua fn 1（类 1：条件相关性不进控制流图）。顾问类 3 误报 27：cpp 15（成员初始化列表）、typescript 7（参数属性）、r 3（`NextMethod` / `UseMethod`）、rust 2（格式串捕获）。
+- **文档**：登记册十节「精度（2026-09-30）」由档渲染、脚本核对（`subsections checked: 10 bad: 0`），「仪器与门」读数句指向各节、「出处」加 C2 一行；计划书横幅步 4 句、设计册 §12 第 4 行同改。
+- **门**：main check 914（地板 911；axes 0:86 2:286 6:234——第 0 轴 77 → 86 是登记册 432 → 671 行过软线）/ dedup 50 / scan 101 warn 0 fail / deadcode 0 / docdup 0 / erase 0 / rules 9 ok，tests 949（地板 949；axes 0:7 2:268 6:87）/ 91 / 44 warn 0 fail / rules 3 ok；lib 493 / it 500（26 ign）；clippy `--all-targets -D warnings` + fmt 清；ADR-006 两根具名重立（main：`docs/EVAL-SET-FLOW.md` 432 → 671 超容差，`cli/src/flow/mod.rs` 50 → 59 与 `CHANGELOG.md` 520 → 529 容差内，softLine 368 不动；tests：`unit/flow/wire.rs` 197 → 210 超容差，第 1 轴 +2 / −1，softLine 328 → 332）；册 13 普查行重签（U 1262 不动，listed 1446 → 1456、signed 150 → 160：十份精度册带产品签名、入档即出 U）；两首页 roast 块重签（915 → 914、第 0 轴 77 → 86）。
+
 **无默认档位变更。** 分析轨 v2.31 步 4 死代码 B 提交 C1（2026-09-30；判决代码零改动——只动子仓仪器与三份文档，`cli/src/**` 一个字节不动；核与既有家族的字节都不动，分数与 1.8.0 可比）：`flow/1` 精度册的仪器与两道门；十份精度册由下一提交（C2）在本提交的干净树上生成。
 
 - **精度仪器**（子仓 `it/flow_precision/{mod,flagged}.rs`，放在 `eval_flow_parts` 之外：放进去这两个文件会入该目录的导入环，子仓 check 第 6 轴 88 → 91、分数 948 低于地板 949；移出后 87 / 949）：`flow_precision`（`#[ignore]`，`CE_FLOW_LANG`，要 `CE_CORE_BIN`）对审阅档的每道题在钉住的 tip 上取文件、降表、整文件经 `flow::wire::judge` 送真核（每文件一次请求）；题按它被抽出时的池项回映（`pools.rs` 的池项加 `seq` / `v` 两个字段——同一个锚，不另推一遍；类 0 = 不可达段覆盖该语句、类 1 = 核点名该（写，变量）、类 2 / 3 = 核点名该变量）；单元未降出 / 被核拒 / dynamic 答 `unjudged` 并记原因；判词、`per_kind`（含 `positives` / `negatives`）、`gate`、`judged` 由一组函数重算，生成器与验证器共读；档 `flow-precision-<语言>-v1.json`（`ce.eval-flow-precision/1.0.0`），`CE_FLOW_OUT` 改写出目录，拒绝覆写，写档前要求干净树。

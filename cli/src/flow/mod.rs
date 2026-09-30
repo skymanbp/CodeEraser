@@ -40,10 +40,19 @@ mod wire_batch;
 use crate::scan::lang::Lang;
 
 /// The languages whose flow findings are judged, not advised: a
-/// language enters when its precision doc passes the §5.5 gate
-/// (plan v2.31 step 4 commit C fills it; the gate in the tests repo
-/// checks the two agree). Empty until then: every finding is advisory.
-const JUDGED: &[Lang] = &[];
+/// language enters when its precision doc passes the §5.5 gate (every
+/// kind 0 / 1 / 2 pass or vacuous; plan v2.31 step 4 commit C2), in the
+/// exam table's order. Pinned by the mask leg of
+/// it/eval_flow_precision.rs.
+const JUDGED: &[Lang] = &[
+    Lang::Python,
+    Lang::Tsx,
+    Lang::Go,
+    Lang::C,
+    Lang::Java,
+    Lang::Lua,
+    Lang::R,
+];
 
 pub fn judged_mask() -> i64 {
     JUDGED.iter().fold(0, |m, &l| m | (1 << l as i64))
