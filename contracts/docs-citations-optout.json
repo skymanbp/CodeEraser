@@ -11,5 +11,6 @@
   "docs/EVAL-SET-SIMILAR.md": "frozen evaluation record (v2.29 similar): same standing as EVAL-SET.md",
   "docs/EVAL-SET-LANGS.md": "frozen evaluation record (v2.30 language exams): same standing as EVAL-SET.md",
   "docs/EVAL-SET-FLOW.md": "frozen evaluation record (v2.31 flow exams): same standing as EVAL-SET.md",
+  "docs/EVAL-SET-FLOW-GEN1.md": "frozen evaluation record (v2.31 flow exams, first generation): the TypeScript, Rust, C++ and R first-generation sections moved out of EVAL-SET-FLOW.md byte for byte on 2026-09-30 (F'); same standing as EVAL-SET.md",
   "docs/FIELD-TEST.md": "frozen field-test record: the two real repositories' line numbers are theirs, at their pinned commits"
 }

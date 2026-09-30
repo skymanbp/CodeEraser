@@ -6,10 +6,10 @@
 > `cli/tests/it/flow_provenance.rs`；题是从降出的四表里按类按层抽的，降表不先落地就没有池可抽，所以是 C / C++ 阶梯先于考题的那种
 > `ladder_first` 形——盲判的独立性靠题不带答案、盲窗内 `cli/src/flow`（`mod.rs` 除外）零提交、精度册钉在回答它的代码上）。母册链：
 > [EVAL-SET.md](EVAL-SET.md) → [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) → [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md) →
-> [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → [EVAL-SET-LANGS.md](EVAL-SET-LANGS.md) → 本册。本册与前五册同入冻结集
+> [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → [EVAL-SET-LANGS.md](EVAL-SET-LANGS.md) → 本册。本册与它的第一代归档册 [EVAL-SET-FLOW-GEN1.md](EVAL-SET-FLOW-GEN1.md)、前五册同入冻结集
 > （`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。一个语言在它自己的步里加一节，三步各记一段；
 > 重冻结 = 该语言考题的代数加一（考题表的 `generation`：降表多读了一种写法、或换 tip），新一代用新文件名，旧一代的宇宙 /
-> 样本 / 审阅档留在盘上作那一代的记录（门只读考题表指向的代），本册在该语言下具名加一节「第二代」；生成器拒绝覆写已冻结的档。
+> 样本 / 审阅档留在盘上作那一代的记录（门只读考题表指向的代），本册在该语言下具名加一节「第二代」，该门第一代的各节逐字节搬进归档册、主册该门只留一行指向（F′）；生成器拒绝覆写已冻结的档。
 
 ## 仪器与门
 
@@ -58,6 +58,7 @@
   两处口径：批次提示里的 nth 从 0 数，
   档与样本一律从 1 数（档回显样本的 nth）；同一批只装一个语料。审阅档的 `generated_from` 记 ce 1.8.0、树 `2ea957d`、dirty = true，
   与提交 B 的宇宙与样本同一读法：归档工具与这十份档在同一个提交里落地。
+  第二代（F′）：四门 20 批 454 道由 20 个独立子代理各判一批，批次提示带上面「第二代的读法」一节；第二代审阅档带 `readings` = 2（由 manifest 抄入）。四份 `flow-review-<语言>-v2.json` 的 `auditor` 是同一句（原文在档的信封里，不在此重引——它与上面第一代那句大半同文，两句并引即成一对重复段；各语言的「盲判（第二代）」节只指到这里），与第一代同一体例，逐项说的是：二十个独立子代理、每批一个（至多 25 道、每批一个语料）、按样本审阅序；只读钉住的克隆与自己的批次文件，产品的降表、ce、核与任何工具的答案都不在场；按批次提示的读法规则与它的 Language readings 一节作答（括注 readings 2 与四组读法的名目）；每题一行 JSON；零 `cannot_tell`；协调者逐字归档、判词不动（设计册 §5.5 与 §13 第 28 条，RG15）；批次提示的 nth 从 0 数、样本从 1 数，档回显样本的 nth。
 - **精度仪器**（提交 C，`cli/tests/it/flow_precision/` 的 `mod.rs` / `flagged.rs` + 门两件；放在 `eval_flow_parts` 之外——那里没有模块
   读回它，不入该目录的导入环）：`flow_precision`
   （`#[ignore]`，`CE_FLOW_LANG=<语言>`，要 `CE_CORE_BIN`）对审阅档的每道题，在钉住的 tip 上取题所在的文件、经 `flow::lower::lower_file`
@@ -71,7 +72,7 @@
   （不跑 git、不要克隆与核）：档与考题 stage 同真同假（`scored` 才在盘上），已归档的逐行对审阅档重算并跑六形篡改（翻判词、翻答案、伪门、
   伪 `judged`、缺一行、把 silent 读成 vacuous——档里没有 silent 时，把某个有正例的类的真答案全改假、计数全重算、只让门写 vacuous）；
   `flow::judged_mask()` 的每一位 ⇔ 该语言精度册 `judged`（tsx 与 typescript 各一位）；四态在手写计数上钉住；篡改电池另在门自己的合成档
-  （python / rust；rust 的第二代审阅档归档之前，读审阅门自己的合成审阅档）上先跑。出处门 `cli/tests/it/flow_provenance.rs`（跑 git，浅克隆拒）：三档 `generated_from` 的提交都在本历史上且严格先后；
+  （python / rust；rust 读 F′ 归档的第二代审阅档，一门的当代尚无审阅档时读审阅门自己的合成审阅档）上先跑。出处门 `cli/tests/it/flow_provenance.rs`（跑 git，浅克隆拒）：三档 `generated_from` 的提交都在本历史上且严格先后；
   降表的首个提交是抽样提交的祖先或就是它，抽样到审阅之间降表零提交；精度册从自己的提交起到 HEAD，降表与 `scan/functions.rs` /
   `scan/walk.rs` / `scan/lang.rs` 无提交、工作树无未提交改动、`cli/Cargo.lock` 按钉版不动；反向探针两条（首个提交在抽样之后的路径、
   盲窗内动过的 `scan/lang.rs`）各按自己的句子红。读数见各语言「精度（2026-09-30）」一节（提交 C2）。
@@ -135,87 +136,32 @@ notes：无。
 
 ## TypeScript（步 4 提交 B）
 
-### 宇宙与抽样（2026-09-30 冻结）
-
-范围 = `*.ts *.mts *.cts`；排除计「其他扩展名 / 走查拒读」；层的定义见「候选池」一段：
-
-| 语料 | tip | 许可 | 文件 | 单元 | dynamic | unlowered | 排除 |
-|---|---|---|---|---|---|---|---|
-| colinhacks/zod | `912f0f5` | MIT | 375 | 6,356 | 0 | 0 | other_extension 208 |
-
-| 类 | 层 A 池 → 取数 | 层 B 池 → 取数 | 层 C 池 → 取数 |
-|---|---|---|---|
-| 0 不可达 | 0 → 0 | 1,000 → 15 | 467 → 15 |
-| 1 死存储 | 59 → 15 | 41 → 15 | 4,668 → 15 |
-| 2 未用局部量 | 27 → 15 | 4,527 → 15 | — |
-| 3 未用形参 | 7 → 7 | 2,929 → 15 | — |
-
-样本共 127 道，落在 61 个文件、99 个单元上。
-
-### 盲判（2026-09-30）
-
-127 道分 6 批（每批一个语料、至多 25 道，按语料 zod 127），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
-
-| 类 | 发现词 | 反面词 | cannot_tell |
-|---|---|---|---|
-| 0 不可达 | unreachable 0 | reachable 30 | 0 |
-| 1 死存储 | dead 1 | live 44 | 0 |
-| 2 未用局部量 | unread 0 | read 30 | 0 |
-| 3 未用形参 | unread 0 | read 22 | 0 |
-
-`cannot_tell` 0 道。
-
-notes：无。
-
-### 精度（第一代，2026-09-30；提交 E 退役）
-
-`flow-precision-typescript-v1.json`：127 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
-
-| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 0 不可达 | 0 | 0 | 30 | 0 | 0 | 0 | 0 | 30 | — | — |
-| 1 死存储 | 0 | 0 | 44 | 1 | 0 | 0 | 1 | 44 | — | 0 / 1 |
-| 2 未用局部量 | 0 | 15 | 15 | 0 | 0 | 0 | 0 | 30 | 0 / 15 | — |
-| 3 未用形参 | 0 | 7 | 15 | 0 | 0 | 0 | 0 | 22 | 0 / 7 | — |
-
-门：类 0 vacuous（0 / 30 个负例） · 类 1 silent（fn 1） · 类 2 fail（fp 15）；`judged` = false（类 3 顾问只记不判）。
-
-误报（类 0–2）15 条，归因：降表缺陷（猜：后绑定只给 Python / R / TS `var`，见设计册拍板记录的 A2 裁定）——`const` / `let` 的名字在它自己的初始化式里、或在更早声明的闭包 / 对象字面量 getter 里被读，读先于声明降表、解析不到这个变量，既没记读也没标 `captured`：
-- 类 2 层 A `zod:packages/zod/src/v4/mini/tests/recursive-types.test.ts:246` `(anonymous)` 变量 `I`：I is mentioned by the nested getter on line 248 `return z.optional(I);`, a closure that reads it.
-- 类 2 层 A `zod:packages/zod/src/v4/mini/tests/recursive-types.test.ts:258` `(anonymous)` 变量 `L`：L is mentioned by the nested getter on line 260 `return z.optional(L);`, a closure that reads it.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/recursive-types.test.ts:435` `(anonymous)` 变量 `A`：The getters nested in the object literal mention A, e.g. 'get array() { return A.array(); }' on lines 436-437.
-- 类 2 层 A `zod:packages/zod/src/v4/mini/tests/recursive-types.test.ts:216` `(anonymous)` 变量 `D`：The nested getter reads D: 'return z.union([D, z.string()]);' on line 218.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/lazy.test.ts:212` `(anonymous)` 变量 `c`：The closure in its own initializer reads c: 'const c: any = z.lazy(() => c).default({} as any);'.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/lazy.test.ts:216` `(anonymous)` 变量 `g`：The closure reads g via a shorthand property: 'const g: any = z.lazy(() => z.object({ g })).readonly();'.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/lazy.test.ts:211` `(anonymous)` 变量 `b`：`const b: any = z.lazy(() => b).nullable();` - the closure `() => b` mentions b, which counts as a read.
-- 类 2 层 A `zod:packages/zod/src/v4/mini/tests/recursive-types.test.ts:234` `(anonymous)` 变量 `G`：G is mentioned in the nested getter on line 236, return z.map(z.string(), G);, and a closure mentioning G counts as a read.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/recursive-types.test.ts:405` `(anonymous)` 变量 `Node`：Node is mentioned in nested getters of the same function, e.g. line 356 return z.array(Node).optional(); and line 385 return Node.optional();
-- 类 2 层 A `zod:packages/zod/src/v4/mini/tests/recursive-types.test.ts:252` `(anonymous)` 变量 `J`：J is mentioned in the nested getter on line 254, return z.nullable(J);, and a closure mentioning J counts as a read.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/lazy.test.ts:210` `(anonymous)` 变量 `a`：a is mentioned in the closure on line 210, const a: any = z.lazy(() => a).optional();, and a closure mentioning a counts as a read.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/lazy.test.ts:224` `(anonymous)` 变量 `categorySchema`：categorySchema is mentioned in the closure on line 225, z.lazy(() => categorySchema.array()), and a closure mentioning it counts as a read.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/to-json-schema.test.ts:1794` `(anonymous)` 变量 `FileSchema`：FileSchema is read by the nested getter of FolderSchema on line 1790: `return z.array(FileSchema);`.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/to-json-schema.test.ts:3104` `(anonymous)` 变量 `B`：B is read by A's nested getter on line 3100: `return z.array(B);`.
-- 类 2 层 A `zod:packages/zod/src/v4/classic/tests/lazy.test.ts:215` `(anonymous)` 变量 `f`：f is mentioned by the closure on its own line: `const f: any = z.lazy(() => f).catch({} as any);`, which reads it.
-
-漏报（类 0–2）1 条，归因：真值与产品读法之差：类型位置的 `typeof requiredObject` 被降成一次读（偏安全侧、少报），判官按编译期擦除判 dead；记录，不改真值：
-- 类 1 层 C `zod:packages/zod/src/v3/tests/partials.test.ts:152` `(anonymous)` 变量 `requiredObject`：Only later mention is `type required = z.infer<typeof requiredObject>;` (line 154), a type-level query erased at compile time; the value is never read before the function ends.
-
-顾问误报（类 3）7 条，归因：降表缺陷（猜）：构造器的参数属性（`public x: T`）隐含 `this.x = x`，这次读没降：
-- 类 3 层 A `zod:packages/bench/instanceof.ts:10` `constructor` 变量 `value`：'constructor(public value: string) {}' is a parameter property: the language assigns this.value = value, reading the parameter.
-- 类 3 层 A `zod:packages/zod/src/v4/classic/tests/instanceof.test.ts:8` `constructor` 变量 `val`：`constructor(public val: string) {}` is a parameter property: TS emits `this.val = val`, so val's value is stored and later read via `bar.val` (line 22).
-- 类 3 层 A `zod:packages/bench/metabench.ts:69` `constructor` 变量 `name`：`public name: string` is a parameter property: TS emits `this.name = name`, and this.name is read elsewhere (e.g. `this.name` in run()).
-- 类 3 层 A `zod:packages/bench/metabench.ts:70` `constructor` 变量 `benchmarks`：public benchmarks: Benchmarks<D> (line 70) is a TypeScript parameter property, so the constructor implicitly runs this.benchmarks = benchmarks, reading its value.
-- 类 3 层 A `zod:packages/bench/object-creation.ts:5` `constructor` 变量 `value`：`constructor(public value: string) {}` declares a parameter property, which implicitly assigns this.value = value, reading the parameter.
-- 类 3 层 A `zod:packages/bench/safe.ts:6` `constructor` 变量 `value`：`constructor(public value: string) {` declares a parameter property, which implicitly assigns this.value = value, reading the parameter.
-- 类 3 层 A `zod:packages/zod/src/v3/tests/instanceof.test.ts:11` `constructor` 变量 `val`：`constructor(public val: string) {}` is a parameter property that assigns this.val = val, read back by `expect(bar.val).toEqual("asdf")` on line 25.
-
-unjudged 0 道。
+第一代的「宇宙与抽样」「盲判」「精度（第一代，提交 E 退役）」三节已于 F′（2026-09-30）逐字节搬进归档册 [EVAL-SET-FLOW-GEN1.md](EVAL-SET-FLOW-GEN1.md) 的同名一节；本节只记第二代。
 
 ### 第二代（F，2026-09-30）
 
 - 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：colinhacks/zod 文件 375 → 375、单元 6,356 → 6,356、dynamic 0 → 0、unlowered 0 → 0、排除 other_extension 208 → 208，池动的单元 52。
 - 池 v1 → v2 → 取数（按类按层）：0 不可达 A 0 → 0 → 0 · B 1,000 → 1,000 → 15 · C 467 → 467 → 15；1 死存储 A 59 → 59 → 15 · B 41 → 41 → 15 · C 4,668 → 4,627 → 15；2 未用局部量 A 27 → 0 → 0 · B 4,527 → 4,486 → 15；3 未用形参 A 7 → 0 → 0 · B 2,929 → 2,936 → 15。
 - `flow-sample-typescript-v2.json`：105 道（第一代 127），落在 55 个文件、88 个单元上；与第一代共有 105、新增 0、消失 22（2/A 共有 0 / 新增 0 / 消失 15、3/A 共有 0 / 新增 0 / 消失 7）。批次 5 批：25 / 25 / 25 / 25 / 5。
+
+### 盲判（第二代，2026-09-30）
+
+105 道分 5 批（每批一个语料、至多 25 道，按语料 zod 105），逐字归档自各批答案文件，档 `flow-review-typescript-v2.json`（`readings` = 2）；审阅者句见「仪器与门」（第二代四份档的 `auditor` 是同一句，在那里逐项复述）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 30 | 0 |
+| 1 死存储 | dead 0 | live 45 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 0 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
+与第一代比（同一题 = `audit` 哈希相同）：共有 105 道，真值一致 104 道（104 / 105），不一致 1 道，真值以第二代为准（档不改）：
+
+- 类 1 层 C `zod:packages/zod/src/v3/tests/partials.test.ts:152` `(anonymous)` 变量 `requiredObject`：第一代 `dead`（Only later mention is `type required = z.infer<typeof requiredObject>;` (line 154), a type-level query erased at compile time; the value is never read before the function ends.）→ 第二代 `live`（Line 154 type required = z.infer<typeof requiredObject>; reads requiredObject (typeof in a type position).）。归因：第二代读法规则使然——第二代提示的 TypeScript 读法写明类型位置的 `typeof X` 是对变量 X 的读（设计册 §13 第 27 条 TS-2 的裁定、第 28 条读法即题义），这次写入之后唯一再提到它的 `type required = z.infer<typeof requiredObject>;` 因此读了它；第一代没写这条读法，判官按编译期擦除判 `dead`，正是第一代精度册里记为真值争议的那道漏报。源码在 tip 上核过，两代判官都读对了各自题义下的源码，不算判错。
 
 ## TSX（步 4 提交 B）
 
@@ -268,80 +214,30 @@ notes：无。
 
 ## Rust（步 4 提交 B）
 
-### 宇宙与抽样（2026-09-30 冻结）
-
-范围 = `*.rs`；排除计「其他扩展名 / 走查拒读」；层的定义见「候选池」一段：
-
-| 语料 | tip | 许可 | 文件 | 单元 | dynamic | unlowered | 排除 |
-|---|---|---|---|---|---|---|---|
-| BurntSushi/ripgrep | `3fce3b5` | Unlicense OR MIT | 110 | 3,345 | 0 | 0 | other_extension 127 |
-| skymanbp/CodeEraser（本仓，克隆名 `codeeraser-flow`） | `5278e74` | Apache-2.0 | 361 | 4,619 | 0 | 0 | other_extension 548 / walk_refused 6 |
-
-| 类 | 层 A 池 → 取数 | 层 B 池 → 取数 | 层 C 池 → 取数 |
-|---|---|---|---|
-| 0 不可达 | 7 → 7 | 1,432 → 15 | 1,034 → 15 |
-| 1 死存储 | 36 → 15 | 61 → 15 | 8,617 → 15 |
-| 2 未用局部量 | 15 → 15 | 8,414 → 15 | — |
-| 3 未用形参 | 9 → 9 | 7,615 → 15 | — |
-
-样本共 136 道，落在 91 个文件、118 个单元上，按语料分是 ripgrep 59 / codeeraser-flow 77。
-
-### 盲判（2026-09-30）
-
-136 道分 7 批（每批一个语料、至多 25 道，按语料 ripgrep 59 / codeeraser-flow 77），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
-
-| 类 | 发现词 | 反面词 | cannot_tell |
-|---|---|---|---|
-| 0 不可达 | unreachable 0 | reachable 37 | 0 |
-| 1 死存储 | dead 0 | live 45 | 0 |
-| 2 未用局部量 | unread 0 | read 30 | 0 |
-| 3 未用形参 | unread 7 | read 17 | 0 |
-
-`cannot_tell` 0 道。
-
-notes：无。
-
-### 精度（第一代，2026-09-30；提交 E 退役）
-
-`flow-precision-rust-v1.json`：136 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
-
-| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 0 不可达 | 0 | 0 | 37 | 0 | 0 | 0 | 0 | 37 | — | — |
-| 1 死存储 | 0 | 0 | 45 | 0 | 0 | 0 | 0 | 45 | — | — |
-| 2 未用局部量 | 0 | 15 | 15 | 0 | 0 | 0 | 0 | 30 | 0 / 15 | — |
-| 3 未用形参 | 7 | 2 | 15 | 0 | 0 | 0 | 7 | 17 | 7 / 9 | 7 / 7 |
-
-门：类 0 vacuous（0 / 37 个负例） · 类 1 vacuous（0 / 45 个负例） · 类 2 fail（fp 15）；`judged` = false（类 3 顾问只记不判）。
-
-误报（类 0–2）15 条，归因：降表缺陷：格式宏（`write!` / `writeln!` / `format!` / `unreachable!`）格式串里的内联捕获 `{name}` / `{:pad$}` 没降成读（宏实参按记号树读，字符串字面量内部不看）：
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:76` `generate_short_flag` 变量 `name`：`let name = char::from(byte);` is read by the inline format capture on line 77, `write!(col1, r"-{name}");`.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/man.rs:56` `generate_flag` 变量 `var`：The binding from `if let Some(var) = flag.doc_variable()` is read by the inline capture on line 57, `write!(out, r" \fI{var}\fP");`.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/man.rs:64` `generate_flag` 变量 `var`：The binding from `if let Some(var) = flag.doc_variable()` on line 64 is read by the inline capture on line 65, `write!(out, r"=\fI{var}\fP");`.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:161` `generate_long_flag` 变量 `name`：`let name = flag.name_long();` is read by the inline capture on line 162, `write!(out, r"--{name}");`.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:81` `generate_short_flag` 变量 `var`：The var bound by `if let Some(var) = var.as_ref() {` is read by the inline capture on line 82, `write!(col1, r"={var}");`.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:153` `generate_long_flag` 变量 `var`：Bound by `if let Some(var) = flag.doc_variable()`; the format string of the write! on line 154 captures `{var}`, reading it.
-- 类 2 层 A `codeeraser-flow:cli/src/progress.rs:195` `paint` 变量 `pad`：pad is read as the captured named width `{:pad$}` in the format string of `write!(e, ...)` on line 197.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/man.rs:62` `generate_flag` 变量 `name`：`let name = flag.name_long().replace(...)` is read by the `{name}` inline capture in the `write!(out, ...)` on line 63.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:151` `generate_long_flag` 变量 `name`：`let name = char::from(byte);` is read by the `{name}` inline capture in the `write!(out, ...)` on line 152.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/man.rs:54` `generate_flag` 变量 `name`：`let name = char::from(byte);` is read by the `{name}` inline capture in the `write!(out, ...)` on line 55.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:163` `generate_long_flag` 变量 `var`：Bound by `if let Some(var) = flag.doc_variable()`; the format string of the write! on line 164 captures `{var}`, reading it.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/man.rs:102` `generate_flag` 变量 `negated`：Bound by `if let Some(negated) = flag.name_negated()`; the `writeln!` on lines 109-112 captures `{negated}` in its format string.
-- 类 2 层 A `codeeraser-flow:cli/src/report.rs:169` `render` 变量 `k`：`for (k, val) in v.as_object()...` binds k, interpolated by `out = out.replace(&format!("{{{k}}}"), &s);`.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/help.rs:184` `(anonymous)` 变量 `name`：Line 184 binds name via `let Some(name) = flag.name_negated() else {`; line 191 write! uses the format string --{name}, an inline format argument that reads name.
-- 类 2 层 A `ripgrep:crates/core/flags/doc/man.rs:90` `(anonymous)` 变量 `name`：Line 90 binds name via `let Some(name) = flag.name_negated() else {`; line 98 write! uses a format string ending in {name}, an inline format argument that reads name.
-
-顾问误报（类 3）2 条，归因：同上：格式串内联捕获没降成读：
-- 类 3 层 A `codeeraser-flow:cli/src/report.rs:86` `(anonymous)` 变量 `k`：In `.filter(|(k, _)| !summary.contains(&format!("{{{k}}}")))` the inner `{k}` is an inline format capture that reads k.
-- 类 3 层 A `ripgrep:crates/core/flags/doc/mod.rs:20` `render_custom_markup` 变量 `tag`：tag is read through the inline format capture in `let tag_prefix = format!(r"\{tag}{{");`.
-
-漏报（类 0–2）0 条、unjudged 0 道。
+第一代的「宇宙与抽样」「盲判」「精度（第一代，提交 E 退役）」三节已于 F′（2026-09-30）逐字节搬进归档册 [EVAL-SET-FLOW-GEN1.md](EVAL-SET-FLOW-GEN1.md) 的同名一节；本节只记第二代。
 
 ### 第二代（F，2026-09-30）
 
 - 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：BurntSushi/ripgrep 文件 110 → 110、单元 3,345 → 3,345、dynamic 0 → 0、unlowered 0 → 0、排除 other_extension 127 → 127，池动的单元 6；skymanbp/CodeEraser（本仓，克隆名 `codeeraser-flow`） 文件 361 → 361、单元 4,619 → 4,619、dynamic 0 → 0、unlowered 0 → 0、排除 other_extension 548 → 548 / walk_refused 6 → 6，池动的单元 3。
 - 池 v1 → v2 → 取数（按类按层）：0 不可达 A 7 → 7 → 7 · B 1,432 → 1,432 → 15 · C 1,034 → 1,034 → 15；1 死存储 A 36 → 36 → 15 · B 61 → 61 → 15 · C 8,617 → 8,632 → 15；2 未用局部量 A 15 → 0 → 0 · B 8,414 → 8,429 → 15；3 未用形参 A 9 → 7 → 7 · B 7,615 → 7,617 → 15。
 - `flow-sample-rust-v2.json`：119 道（第一代 136），落在 87 个文件、109 个单元上，按语料分是 ripgrep 45 / codeeraser-flow 74；与第一代共有 119、新增 0、消失 17（2/A 共有 0 / 新增 0 / 消失 15、3/A 共有 7 / 新增 0 / 消失 2）。批次 5 批：25 / 20 / 25 / 25 / 24。
+
+### 盲判（第二代，2026-09-30）
+
+119 道分 5 批（每批一个语料、至多 25 道，按语料 ripgrep 45 / codeeraser-flow 74），逐字归档自各批答案文件，档 `flow-review-rust-v2.json`（`readings` = 2）；审阅者句见「仪器与门」（第二代四份档的 `auditor` 是同一句，在那里逐项复述）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 37 | 0 |
+| 1 死存储 | dead 0 | live 45 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 7 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
+与第一代比（同一题 = `audit` 哈希相同）：共有 119 道，真值一致 119 道（119 / 119），不一致 0 道。
 
 ## Go（步 4 提交 B）
 
@@ -443,87 +339,30 @@ notes：无。
 
 ## C++（步 4 提交 B）
 
-### 宇宙与抽样（2026-09-30 冻结）
-
-范围 = `*.cpp *.cc *.cxx *.hpp *.hh *.hxx *.h *.inl`；排除计「其他扩展名 / 走查拒读」；层的定义见「候选池」一段：
-
-| 语料 | tip | 许可 | 文件 | 单元 | dynamic | unlowered | 排除 |
-|---|---|---|---|---|---|---|---|
-| fmtlib/fmt | `6d71f74` | MIT | 73 | 4,654 | 550 | 0 | other_extension 72 |
-
-| 类 | 层 A 池 → 取数 | 层 B 池 → 取数 | 层 C 池 → 取数 |
-|---|---|---|---|
-| 0 不可达 | 11 → 11 | 532 → 15 | 498 → 15 |
-| 1 死存储 | 95 → 15 | 229 → 15 | 2,344 → 15 |
-| 2 未用局部量 | 38 → 15 | 2,059 → 15 | — |
-| 3 未用形参 | 286 → 15 | 2,093 → 15 | — |
-
-样本共 146 道，落在 27 个文件、133 个单元上。
-
-### 盲判（2026-09-30）
-
-146 道分 6 批（每批一个语料、至多 25 道，按语料 fmt 146），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
-
-| 类 | 发现词 | 反面词 | cannot_tell |
-|---|---|---|---|
-| 0 不可达 | unreachable 1 | reachable 40 | 0 |
-| 1 死存储 | dead 4 | live 41 | 0 |
-| 2 未用局部量 | unread 14 | read 16 | 0 |
-| 3 未用形参 | unread 0 | read 30 | 0 |
-
-`cannot_tell` 0 道。
-
-notes：无。
-
-### 精度（第一代，2026-09-30；提交 E 退役）
-
-`flow-precision-cpp-v1.json`：146 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
-
-| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 0 不可达 | 1 | 0 | 40 | 0 | 0 | 0 | 1 | 40 | 1 / 1 | 1 / 1 |
-| 1 死存储 | 2 | 1 | 40 | 2 | 0 | 0 | 4 | 41 | 2 / 3 | 2 / 4 |
-| 2 未用局部量 | 14 | 1 | 15 | 0 | 0 | 0 | 14 | 16 | 14 / 15 | 14 / 14 |
-| 3 未用形参 | 0 | 15 | 15 | 0 | 0 | 0 | 0 | 30 | 0 / 15 | — |
-
-门：类 0 pass（1 / 1） · 类 1 fail（fp 1） · 类 2 fail（fp 1）；`judged` = false（类 3 顾问只记不判）。
-
-误报（类 0–2）2 条：
-
-归因：降表缺陷（猜）：`T x(args);` 形的直接初始化声明，实参没降成读（`data_to_string format_str(data, size);`）：
-- 类 1 层 B `fmt:test/fuzzing/chrono-timepoint.cc:19` `doit` 变量 `data`：'data += N;' is followed by 'data_to_string format_str(data, size);' on line 21, which passes data as an argument.
-
-归因：同上：`mock_buffer<char> buffer(data, sizeof(data));` 的实参没降成读：
-- 类 2 层 A `fmt:test/core-test.cc:208` `TEST` 变量 `data`：`mock_buffer<char> buffer(data, sizeof(data));` passes data (decayed to a pointer) as a constructor argument.
-
-漏报（类 0–2）2 条，归因：A2 裁定（设计册拍板记录）的已知少报：do-while 的条件挂在循环结点上，体可跳过的多出路径让循环前的写读成活：
-- 类 1 层 A `fmt:test/scan.h:401` `read` 变量 `prev_digit`：`char prev_digit = c;` is overwritten by `prev_digit = c;` on line 405 in the do-while body, which always runs first; lines 403-404 do not read prev_digit.
-- 类 1 层 A `fmt:include/fmt/core.h:1311` `parse_nonnegative_int` 变量 `prev`：`unsigned value = 0, prev = 0;` is overwritten by `prev = value;` at the top of the do-while body (line 1314) before any read; line 1312 does not read prev.
-
-顾问误报（类 3）15 条，归因：降表缺陷（猜）：构造器的成员初始化列表（`: m_(x)`、基类初始化）与 `T x(args);` 直接初始化的实参没降成读：
-- 类 3 层 A `fmt:include/fmt/core.h:855` `parse_context::parse_context` 变量 `fmt`：fmt is read in the member initializer ': fmt_(fmt), next_arg_id_(next_arg_id) {}' on line 857.
-- 类 3 层 A `fmt:include/fmt/os.h:350` `ostream_params::ostream_params` 变量 `new_oflag`：The member initializer in `ostream_params(int new_oflag) : oflag(new_oflag) {}` uses new_oflag's value to initialize oflag.
-- 类 3 层 A `fmt:test/gtest/gmock/gmock.h:5497` `QuantifierMatcherImpl::QuantifierMatcherImpl` 变量 `inner_matcher`：The member initializer `inner_matcher_(testing::SafeMatcherCast<const Element&>(inner_matcher))` passes inner_matcher as a call argument.
-- 类 3 层 A `fmt:test/gtest/gmock/gmock.h:4488` `FloatingEqMatcher::Impl::Impl` 变量 `expected`：expected is read in the member initializer on line 4489: `: expected_(expected),`.
-- 类 3 层 A `fmt:test/gtest/gtest/gtest.h:6905` `MatchesRegexMatcher::MatchesRegexMatcher` 变量 `regex`：regex is read in the member initializer on line 6906: `: regex_(regex), full_match_(full_match) {}`.
-- 类 3 层 A `fmt:test/gtest/gtest/gtest.h:1974` `GTestMutexLock::GTestMutexLock` 变量 `mutex`：mutex is read in the member initializer on line 1975: `: mutex_(mutex) { mutex_->Lock(); }`.
-- 类 3 层 A `fmt:test/gtest/gmock/gmock.h:4939` `PropertyMatcher::PropertyMatcher` 变量 `property`：property is read in the member initializer on line 4940: `: property_(property),`.
-- 类 3 层 A `fmt:test/gtest/gmock/gmock.h:5830` `PairMatcher::PairMatcher` 变量 `first_matcher`：first_matcher is read in the member initializer on line 5831: `: first_matcher_(first_matcher), second_matcher_(second_matcher) {}`.
-- 类 3 层 A `fmt:include/fmt/compile.h:232` `spec_field::format` 变量 `out`：`basic_format_context<OutputIt, Char> ctx(out, vargs);` passes out as a constructor argument.
-- 类 3 层 A `fmt:test/gtest/gmock-gtest-all.cc:8883` `WindowsDeathTest::WindowsDeathTest` 变量 `a_statement`：a_statement is passed to the base initializer `DeathTestImpl(a_statement, std::move(matcher))`.
-- 类 3 层 A `fmt:include/fmt/color.h:218` `color_type::color_type` 变量 `term_color`：term_color is read in the member initializer `value_(static_cast<uint32_t>(term_color) | (3 << 24))` on line 219.
-- 类 3 层 A `fmt:include/fmt/core.h:1955` `iterator_buffer::iterator_buffer` 变量 `out`：out is read in the member initializer list `out_(out)` on line 1956.
-- 类 3 层 A `fmt:include/fmt/chrono.h:1249` `tm_writer::tm_writer` 变量 `out`：out is read in the member initializer `out_(out),` on line 1254.
-- 类 3 层 A `fmt:include/fmt/os.h:351` `ostream_params::ostream_params` 变量 `bs`：`ostream_params(detail::buffer_size bs) : buffer_size(bs.value) {}` reads bs through the member access in the initializer.
-- 类 3 层 A `fmt:test/gtest/gmock/gmock.h:9118` `TypedExpectation::TypedExpectation` 变量 `a_line`：The mem-initializer `: ExpectationBase(a_file, a_line, a_source_text)` passes a_line to the base-class constructor.
-
-unjudged 0 道。
+第一代的「宇宙与抽样」「盲判」「精度（第一代，提交 E 退役）」三节已于 F′（2026-09-30）逐字节搬进归档册 [EVAL-SET-FLOW-GEN1.md](EVAL-SET-FLOW-GEN1.md) 的同名一节；本节只记第二代。
 
 ### 第二代（F，2026-09-30）
 
 - 宇宙 v1 → v2（池动的单元 = 逐（单元，格）比池计数）：fmtlib/fmt 文件 73 → 73、单元 4,654 → 4,654、dynamic 550 → 550、unlowered 0 → 0、排除 other_extension 72 → 72，池动的单元 188。
 - 池 v1 → v2 → 取数（按类按层）：0 不可达 A 11 → 11 → 11 · B 532 → 532 → 15 · C 498 → 498 → 15；1 死存储 A 95 → 95 → 15 · B 229 → 226 → 15 · C 2,344 → 2,349 → 15；2 未用局部量 A 38 → 32 → 15 · B 2,059 → 2,065 → 15；3 未用形参 A 286 → 3 → 3 · B 2,093 → 2,375 → 15。
 - `flow-sample-cpp-v2.json`：134 道（第一代 146），落在 26 个文件、121 个单元上；与第一代共有 128、新增 6、消失 18（1/B 共有 14 / 新增 1 / 消失 1、2/A 共有 14 / 新增 1 / 消失 1、3/A 共有 0 / 新增 3 / 消失 15、3/B 共有 14 / 新增 1 / 消失 1）。批次 6 批：25 / 25 / 25 / 25 / 25 / 9。
+
+### 盲判（第二代，2026-09-30）
+
+134 道分 6 批（每批一个语料、至多 25 道，按语料 fmt 134），逐字归档自各批答案文件，档 `flow-review-cpp-v2.json`（`readings` = 2）；审阅者句见「仪器与门」（第二代四份档的 `auditor` 是同一句，在那里逐项复述）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 1 | reachable 40 | 0 |
+| 1 死存储 | dead 4 | live 41 | 0 |
+| 2 未用局部量 | unread 15 | read 15 | 0 |
+| 3 未用形参 | unread 2 | read 16 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
+与第一代比（同一题 = `audit` 哈希相同）：共有 128 道，真值一致 128 道（128 / 128），不一致 0 道；第二代新增的 6 道没有第一代真值可比。
 
 ## Java（步 4 提交 B）
 
@@ -628,57 +467,7 @@ notes：无。
 
 ## R（步 4 提交 B）
 
-### 宇宙与抽样（2026-09-30 冻结）
-
-范围 = `*.R *.r`；排除计「其他扩展名 / 走查拒读」；层的定义见「候选池」一段：
-
-| 语料 | tip | 许可 | 文件 | 单元 | dynamic | unlowered | 排除 |
-|---|---|---|---|---|---|---|---|
-| tidyverse/stringr | `ae054b1` | MIT | 67 | 200 | 5 | 0 | other_extension 114 |
-
-| 类 | 层 A 池 → 取数 | 层 B 池 → 取数 | 层 C 池 → 取数 |
-|---|---|---|---|
-| 0 不可达 | 0 → 0 | 69 → 15 | 30 → 15 |
-| 1 死存储 | 12 → 12 | 1 → 1 | 196 → 15 |
-| 2 未用局部量 | 0 → 0 | 143 → 15 | — |
-| 3 未用形参 | 12 → 12 | 438 → 15 | — |
-
-样本共 100 道，落在 20 个文件、58 个单元上。
-
-### 盲判（2026-09-30）
-
-100 道分 4 批（每批一个语料、至多 25 道，按语料 stringr 100），逐字归档自各批答案文件；审阅者句见「仪器与门」（十份档的 `auditor` 是同一句，只在那里逐字引一次）。
-
-| 类 | 发现词 | 反面词 | cannot_tell |
-|---|---|---|---|
-| 0 不可达 | unreachable 0 | reachable 30 | 0 |
-| 1 死存储 | dead 0 | live 28 | 0 |
-| 2 未用局部量 | unread 0 | read 15 | 0 |
-| 3 未用形参 | unread 9 | read 18 | 0 |
-
-`cannot_tell` 0 道。
-
-notes：无。
-
-### 精度（第一代，2026-09-30；提交 E 退役）
-
-`flow-precision-r-v1.json`：100 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
-
-| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 0 不可达 | 0 | 0 | 30 | 0 | 0 | 0 | 0 | 30 | — | — |
-| 1 死存储 | 0 | 0 | 28 | 0 | 0 | 0 | 0 | 28 | — | — |
-| 2 未用局部量 | 0 | 0 | 15 | 0 | 0 | 0 | 0 | 15 | — | — |
-| 3 未用形参 | 9 | 3 | 15 | 0 | 0 | 0 | 9 | 18 | 9 / 12 | 9 / 9 |
-
-门：类 0 vacuous（0 / 30 个负例） · 类 1 vacuous（0 / 28 个负例） · 类 2 vacuous（0 / 15 个负例）；`judged` = true（类 3 顾问只记不判）。
-
-顾问误报（类 3）3 条，归因：降表缺陷（猜）：`NextMethod()` / `UseMethod()` 隐式转发形参，这次读没降：
-- 类 3 层 A `stringr:R/modifiers.R:245` ``[.stringr_pattern`` 变量 `i`：Line 247 `NextMethod()` forwards the formals x and i as promises evaluated in this frame to the default `[` method, which uses i as the index.
-- 类 3 层 A `stringr:R/modifiers.R:254` ``[[.stringr_pattern`` 变量 `i`：Line 256 `NextMethod()` forwards the formals x and i as promises evaluated in this frame to the default `[[` method, which uses i as the index.
-- 类 3 层 A `stringr:R/modifiers.R:198` `type` 变量 `x`：`UseMethod("type")` (line 199) dispatches on the class of the enclosing function's first argument x, so x is evaluated and passed on to the method.
-
-误报（类 0–2）0 条、漏报（类 0–2）0 条、unjudged 0 道。
+第一代的「宇宙与抽样」「盲判」「精度（第一代，提交 E 退役）」三节已于 F′（2026-09-30）逐字节搬进归档册 [EVAL-SET-FLOW-GEN1.md](EVAL-SET-FLOW-GEN1.md) 的同名一节；本节只记第二代。
 
 ### 第二代（F，2026-09-30）
 
@@ -686,13 +475,30 @@ notes：无。
 - 池 v1 → v2 → 取数（按类按层）：0 不可达 A 0 → 0 → 0 · B 69 → 69 → 15 · C 30 → 30 → 15；1 死存储 A 12 → 12 → 12 · B 1 → 1 → 1 · C 196 → 196 → 15；2 未用局部量 A 0 → 0 → 0 · B 143 → 143 → 15；3 未用形参 A 12 → 8 → 8 · B 438 → 442 → 15。
 - `flow-sample-r-v2.json`：96 道（第一代 100），落在 20 个文件、55 个单元上；与第一代共有 96、新增 0、消失 4（3/A 共有 8 / 新增 0 / 消失 4）。批次 4 批：25 / 25 / 25 / 21。
 
+### 盲判（第二代，2026-09-30）
+
+96 道分 4 批（每批一个语料、至多 25 道，按语料 stringr 96），逐字归档自各批答案文件，档 `flow-review-r-v2.json`（`readings` = 2）；审阅者句见「仪器与门」（第二代四份档的 `auditor` 是同一句，在那里逐项复述）。
+
+| 类 | 发现词 | 反面词 | cannot_tell |
+|---|---|---|---|
+| 0 不可达 | unreachable 0 | reachable 30 | 0 |
+| 1 死存储 | dead 0 | live 28 | 0 |
+| 2 未用局部量 | unread 0 | read 15 | 0 |
+| 3 未用形参 | unread 8 | read 15 | 0 |
+
+`cannot_tell` 0 道。
+
+notes：无。
+
+与第一代比（同一题 = `audit` 哈希相同）：共有 96 道，真值一致 96 道（96 / 96），不一致 0 道。
+
 ## 步 4 提交 E：降表回修与第一代精度册退役（2026-09-30）
 
 **退役**：提交 E 改了 `cli/src/flow/` 下的降表文件，它们在精度册的 `ANSWERED_BY` 里，十份第一代精度册
 `flow-precision-<语言>-v1.json` 按名退役（删出树、历史里仍在）；十门考题的 `stage` 翻回 `audited`，`flow::judged_mask()` 随门清空
-（每一位 ⇔ 一份 judged 的精度册）。各语言「精度（第一代，…）」一节照留，是第一代的记录。宇宙、样本与审阅档不动。
+（每一位 ⇔ 一份 judged 的精度册）。各语言「精度（第一代，…）」一节照留，是第一代的记录（池动的四门的这一节连同它们第一代的宇宙与盲判两节，F′ 起在归档册 [EVAL-SET-FLOW-GEN1.md](EVAL-SET-FLOW-GEN1.md)）。宇宙、样本与审阅档不动。
 
-**回修**（设计册 §5.1 第 8–10 条与图例句、§13 第 26 条；每类一条规则、一份探针样本 `scripts/tsprobe/snippets/flow.<语言>`、子仓
+**回修**（设计册 §5.1 第 8–10 条与图例句、§13 第 27 条；每类一条规则、一份探针样本 `scripts/tsprobe/snippets/flow.<语言>`、子仓
 `unit/flow/reads.rs` 一块期望表）：RS-1 宏里字符串字面量（含 raw）的占位符按 std 文法读；TS-1 TypeScript 嵌套作用域提到稍后
 声明的块级绑定即置 `captured`；TS-2 类型位置的 `typeof x` 是读（注解、别名、声明的类型）；TS-3 参数属性与 CPP-1 成员初始化列表
 在单元入口的合成语句里读；CPP-2 被读成原型的声明读它形参表里解析到变量的类型名；R-1 派发调用读全部形参；LEG-1 图例每条语句
@@ -714,7 +520,7 @@ notes：无。
 | r | 0 / 0 / 30 / 0 | 0 / 0 / 28 / 0 | 0 / 0 / 15 / 0 | 8 / 0 / 18 / 1 | vacuous / vacuous / vacuous | 4 |
 
 十语言四类 fp 皆 0。余下的 fn 五条：typescript 类 1 `zod:packages/zod/src/v3/tests/partials.test.ts:152` `requiredObject`（真值争议，
-§13 第 26 条）；cpp 类 1 `fmt:test/scan.h:401` `prev_digit` 与 `fmt:include/fmt/core.h:1311` `prev`（do-while 少报）；lua 类 1
+§13 第 27 条）；cpp 类 1 `fmt:test/scan.h:401` `prev_digit` 与 `fmt:include/fmt/core.h:1311` `prev`（do-while 少报）；lua 类 1
 `luarocks:src/luarocks/fetch.lua:248` `errcode`（路径不敏感）；r 类 3 `stringr:R/modifiers.R:198` `error_call`（R-1 的代价，顾问）。
 
 **宇宙漂移**（新降表下十语料重导到仓外，与冻结宇宙逐（单元，格）比池计数；单元集合与行段两边相同）：
@@ -748,3 +554,5 @@ c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法
 第二代九份档（提交 F：`flow-slice-<键>-v2.json` 五份——cpp-fmt、r-stringr、rust-ripgrep、rust-codeeraser-flow、typescript-zod——与 `flow-sample-<语言>-v2.json` 四份）的 `generated_from` 记 ce 1.8.0、树 `399291d`（提交 E）、dirty = true：生成时测试子仓的代际列与仪器改动还没提交，与提交 B / B′ 同一读法（设计册 §13 第 24 条）；九份先写到仓外、齐了一次拷入。TSX 与 TypeScript 共用 zod 克隆，但 TSX 的池一格没动：同一棵树上把 `tsx-zod` 宇宙重导到仓外，与冻结的第一代逐文件行相同、摘要相同（`generated_from` 之外整档相同），不出第二代、不拷入。第二代四门 20 批 454 道的批次文件与 `manifest.json` 在仓库外的车道目录里，不入库。
 
 十份精度册 `contracts/eval/flow-precision-<语言>-v1.json`（提交 C2）的 `generated_from` 记 ce 1.8.0、树 `bb9bdc8`、dirty = false：C1 提交了仪器与门之后，在那棵干净树上逐语言生成到车道目录、十份齐了一次拷进 `contracts/eval/`，生成期间仓库树里不建任何文件；judged = Python / TSX / Go / C / Java / Lua / R，掩码 `flow::judged_mask()` 按此填入。提交 E 起十份按名退役（删出树、历史里仍在），掩码随之清空。
+
+第二代四份审阅档 `contracts/eval/flow-review-<语言>-v2.json`（F′：cpp、r、rust、typescript）的 `generated_from` 记 ce 1.8.0、树 `dc4f4ec`（提交 F）、dirty = false：归档腿逐份写进仓库、写完即挪到车道目录，四份齐了一次拷入，所以每份生成时树是干净的；20 批的批次文件、`manifest.json` 与答案文件在仓库外的车道目录里，不入库，答案的每个字经归档逐字进档。
