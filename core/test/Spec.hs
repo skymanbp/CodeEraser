@@ -17,6 +17,7 @@ import qualified ClassProps
 import qualified CloneProps
 import qualified EntropyProps
 import qualified EraseProps
+import qualified FlowProps
 import qualified GraphWireProps
 import qualified GraphProps
 import qualified JoinProps
@@ -84,6 +85,7 @@ batteries =
   , goldenPairs "tombstone/golden.ndjson"
   , goldenPairs "similar/golden.ndjson"
   , goldenPairs "query/golden.ndjson"
+  , goldenPairs "flow/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -109,6 +111,7 @@ batteries =
   , TombstoneProps.battery
   , SimilarProps.battery
   , QueryProps.battery
+  , FlowProps.battery
   , VerdictProps.battery
   , VerdictWireProps.battery
   , VerdictFenceProps.battery

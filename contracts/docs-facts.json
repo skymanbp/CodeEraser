@@ -59,7 +59,7 @@
       "id": "count:families#word",
       "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello)",
       "tier": "linked",
-      "value": "13"
+      "value": "14"
     },
     {
       "debt": "promote = one gate list CI and the docs both read",
@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "160"
+      "value": "166"
     },
     {
       "id": "count:grammars#word",
@@ -437,7 +437,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "7.3.0"
+      "value": "7.4.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",

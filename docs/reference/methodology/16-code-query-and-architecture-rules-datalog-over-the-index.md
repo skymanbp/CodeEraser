@@ -337,7 +337,7 @@ wire bytes — the prelude with the schema echo, an assertion's violation, a `wh
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
 aggregate over a set — and a tests-repo leg regenerates them through the real lexer so every
 request line is the prelude followed by its program
-([Spec.hs:86](../../../core/test/Spec.hs#L86), [query_golden.rs:26](../../../cli/tests/it/query_golden.rs#L26),
+([Spec.hs:87](../../../core/test/Spec.hs#L87), [query_golden.rs:26](../../../cli/tests/it/query_golden.rs#L26),
 [query_golden.rs:112](../../../cli/tests/it/query_golden.rs#L112)).
 
 On the measuring side the unit legs hold the legend to the core's echo and the vocabulary to the

@@ -29,7 +29,7 @@
 | 家族 | proto | 请求表 | 应答表 | 上限（`Cost`）与降级 |
 |---|---|---|---|---|
 | `query/1` | 7.3.0 | `program=[[kind,value]]` 记号流；`facts={"<code>":[[…]]}` 只含程序引用到的表（键 = 谓词码的十进制，`set` 表是其中一张），每表按元组严格升序；`prelude` 前奏子句数；`why` / `schema` 两个布尔 | `goals=[[goal,kind,sorts…]]`、`answers=[[goal,args…]]`、`proof=[[goal,answer,node,parent,rule,pred,args…]]`、`errors=[[token,code]]`、`counts={rules,queries,asserts,strata,facts,derived,answers,violations,proofNodes,proofTruncated}`、`schema=[[code,arity,sorts…]]`（只在请求要时） | 记号 65,536 / 事实行 4,194,304 / 派生元组 2,097,152 / 推导结点 16,384；`query_too_large` |
-| `flow/1` | 7.4.0 | `units=[[u,lang,params]]`、`stmts=[[u,seq,parent,kind,flags,aux]]`、`vars=[[u,v,declSeq,flags]]`、`uses=[[u,seq,v,mode]]` | `findings=[[u,kind,seq,v,seqEnd]]`、`counts={units,stmts,vars,uses,findings}` | 行 524,288（四表合计）；`flow_too_large` |
+| `flow/1` | 7.4.0 | `units=[[u,lang,params]]`、`stmts=[[u,seq,parent,kind,flags,aux]]`、`vars=[[u,v,declSeq,flags]]`、`uses=[[u,seq,v,mode]]` | `findings=[[u,kind,seq,v,seqEnd]]`、`counts={units,stmts,vars,uses,findings,dynamicUnits}` | 行 524,288（四表合计）；`flow_too_large` |
 | `merge/1` | 7.5.0 | `groups=[[g,family]]`、`members=[[g,m,unit,lines,fileIndeg]]`、`trees=[{lab,lld,leaf,slot}]`（按成员序） | `suggestions=[[g,params,kept,savings,feasible,reason]]`、`holes=[[g,hole,param,m,post]]`、`counts` | 组 4,096 / 结点 1,048,576；`merge_too_large` |
 | `arch/1` | 7.6.0 | `files=[[F,D,lines]]`、`dirs=[[D,parent]]`、`edges=[[F,G,w]]`、`pkgEdges=[[F,D,w]]`、`focus=[F…]` | `layers=[[D,level]]`、`cuts=[[F,G,w,exact]]`、`clusters=[[F,cluster]]`、`misplaced=[[F,D]]`、`impact=[[F,depth]]`、`metrics=[[D,fanIn,fanOut,instability]]`、`counts` | 文件 131,072 / 边 524,288；`arch_too_large` |
 
@@ -137,15 +137,16 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 - `stmts=[[u, seq, parent, kind, flags, aux]]`：单元内语句按前序编号；`kind`：0 block / 1 stmt / 2 if / 3 loop / 4 switch / 5 case / 6 try / 7 catch / 8 finally / 9 return / 10 throw / 11 break / 12 continue / 13 goto / 14 label / 15 noreturn-call；`flags` 位：0 has_else / 1 infinite（常真循环头：Rust `loop`、Go `for {}`、Python `while True`、C `for(;;)`）/ 2 fallthrough / 3 dynamic（单元含 `eval` / `exec` / `load` 一类名的调用，按语言表）/ 4 empty；`aux` = break / continue / goto 的目标 seq（无标签 = 最近的循环或 switch）。
 - `vars=[[u, v, declSeq, flags]]`：局部量与形参；`flags`：0 param / 1 captured（被嵌套单元或闭包引用；嵌套单元是独立单元，捕获在宿主侧记位）/ 2 ignored（以 `_` 开头、或语言的丢弃名）/ 3 address_taken（C 族 `&x`、Rust `&mut x` 传出）。
 - `uses=[[u, seq, v, mode]]`：按求值序，`mode`：0 read / 1 write / 2 readwrite（复合赋值、`x++`）。
+- 树形约定（步 3 定；核 `CE.Flow.Tree` / `CE.Flow.Shape` 按名拒，每条点名行）：`parent` −1 = 单元体，同单元 `seq` 自 0 连续、父在前、单元按序出现；if 的子结点 = then〔+ else〕，`has_else` 位 = 第二个子结点在；switch 的子结点全是 case，`has_else` 位 = 有 default（空 switch 不得带）；try 的子结点顺序 = 体 · catch* · finally?（至多一个 finally）；case 只在 switch 下、catch / finally 只在 try 下；stmt / return / throw / break / continue / goto / noreturn 无子结点；`has_else` 只在 if / switch、`infinite` 只在 loop、`fallthrough` 只在 case，`dynamic` / `empty` 任意；`aux` 只在 break / continue / goto 上（break 指包围它的 loop 或 switch、continue 指包围它的 loop、goto 指本单元的 label），其余为 0；`units` 行的 `params` = 该单元 var 表里形参的个数；`vars` 每单元 `v` 自 0 连续，形参 `declSeq` −1 且位 0 为 1、局部量 `declSeq` 指本单元某语句；`uses` 按 `(u, seq)` 不降、`v` 须已声明。
 - 不入表的：表达式内部结构、名字、字面量；只有 `kind` / `flags` / 序号。
 
 ### 5.2 判决（核 `CE.Flow.*`）
 
-- 建控制流图：结构化控制流按 `kind` 展开；`try` → `catch` 保守（`try` 体每条语句都可能跳到 `catch`）；`finally` 在每条离开边上；`goto` / `label` 按 `aux`；`noreturn-call` 与 `throw` / `return` 是出口。
+- 建控制流图（`CE.Flow.Cfg`）：结构化控制流按 `kind` 展开；`try` → `catch` 保守（`try` 体每条语句都可能跳到本 try 的每个 `catch`）；`finally` 在每条离开 try 体或 catch 的边上——return / throw / noreturn / break / continue / goto 一律先经 finally 再到目标或出口，finally 的汇合点接所有待续目标的并集（只加路径不减，比逐目标复制 finally 多出的路径只会让判决更保守）；`infinite` 位的循环头不出去；`goto` / `label` 按 `aux`；`noreturn-call` 与 `throw` / `return` 是出口。
 - 可达性 → `unreachable`（kind 0）：从入口不可达的语句，一条极大连续段报一条（`seq`…`seqEnd`）。
-- 反向活性 → `dead_store`（kind 1）：写入后在所有路径上被覆盖或到出口前从未读（`address_taken` / `captured` 的变量不判）。
-- `unused_local`（kind 2）：声明后无任何读（`ignored` 不判）；`unused_param`（kind 3，顾问）：形参无读（接口 / 重载 / 覆写的形参本就可能不用——只报不门）。
-- `dynamic` 位为 1 的单元整体不判（记 `counts.dynamicUnits`）。
+- 反向活性 → `dead_store`（kind 1）：写入后在所有路径上被覆盖或到出口前从未读（同语句内的访问按求值序倒走——`x = x + 1` 先读后写，`readwrite` 的读也算读；同一语句对同一变量的多次写各自判，任一为死即报该 `(seq, v)` 行一条；`address_taken` / `captured` 的变量不判；无任何读的变量只报未用、不报死存储；不可达语句里的写已由不可达段覆盖，不重复报）。
+- `unused_local`（kind 2）：声明后无任何读（`ignored` / `captured` / `address_taken` 不判）；`unused_param`（kind 3，顾问）：形参无读（同三种豁免；接口 / 重载 / 覆写的形参本就可能不用——只报不门）。
+- 任一语句带 `dynamic` 位的单元整体不判（记 `counts.dynamicUnits`；`counts` 的其余五个数照记）。
 
 ### 5.3 语言对照（每语言先按 tree-sitter 实探建表，与 v2.30 §4 同法）
 
@@ -168,7 +169,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 5.5 门
 
-- 核：CFG 与参考实现（朴素传递闭包）在随机结构化程序上逐语句等价；活性与参考（逐路径枚举，小程序）等价；十六种拒绝按名；golden 六对（四种发现各一 + try/finally 一 + 降级一）。
+- 核：判决与**不建控制流图**的轨迹参考（`ReferenceFlow`：树遍历枚举每条执行轨迹——每个分支、每个 case、循环头至多两次、try 体内每条语句都可交给 catch、finally 后按待续完成的并集续走——从轨迹读发现）在 `ReferenceFlowGen` 的 200 个有籽随机结构化程序上逐条同；契约拒绝 42 条按名（`FlowRefusals` 文本表逐条钉：行形与域值 14、表间一致 14、树形 14）；golden 六对（四种发现各一 + 经 finally 的 return〔不可达 + 死存储〕+ 树形拒绝一；请求行按 §5.1 手写、步 4 起由 Rust 降表重生；降级面由电池以 524,289 行的运行时请求探——夹具不装 7 MB）。
 - 精度考题（每语言）：语料 = v2.30 考题登记表的第一个语料 + 本仓（Rust / TypeScript / Python 用既有对拍语料）；抽样冻结（每语言每种发现 ≥ 15 道，池不满整类取尽）→ 没看过判决的独立代理盲判 → 精度册 `contracts/eval/flow-precision-<lang>-v1.json`；顺序由提交先后证明（v2.30 §14 第 14 条同法）。**门 = 每语言每种非顾问发现的精度 ≥ 99 %（误报 ≤ 1 %）**，达门的语言进 `flow` 的 `judged` 掩码，未达门的语言只 observe（逐语言发布门，v2.30 §14 第 9 条先例）。
 - 回放台账（每语言）：常设台账的 `replay` 加 flow 腿——窗口内每个提交对改动单元判决，一条发现在后来的提交里随该单元被改而消失 = 真阳，随该单元被改却留下 = 误拦（严格口径），窗口末仍在且单元未再被改 = 未定（不计）；读数写进 `FPR-REPLAY.md` 新节，两口径并记，门读精度考题。
 
@@ -227,7 +228,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ## 8. 核的模块布局与尺寸
 
-每个家族 = `CE/<Family>.hs`（respond、解码、应答）+ `CE/<Family>/Cost.hs`（上限、地板、码域）+ 判决模块若干（`Query`: `Contract`（请求形与拒绝）、`Syntax` / `Parse`（记号流 → 子句）、`Check`（安全性 / 类别 / 分层；`Check/Sorts`、`Check/Safety`）、`Eval`（半朴素 + 索引；`Eval/Index`、`Eval/Join`）、`Proof`、`Schema`；`Flow`: `Cfg`、`Reach`、`Live`；`Merge`: `Align`、`Holes`、`Ted` 的映射扩展；`Arch`: `Layers`、`Fas`、`Louvain`、`Impact`），每文件 ≤ 290 行（`core_size_gate` 的真实上限）。电池 `core/test/<Family>Props.hs` 各一（`WireHarness.runLegs` 两条平行列表形，避开查重门的表同韵）。`core/test/Spec.hs` 现 289 行，每加一家族 +3 行——步 1 先把电池清单拆到 `core/test/Batteries.hs`（`fixture_contract.rs` 读的那三行形不变、只换文件）。
+每个家族 = `CE/<Family>.hs`（respond、解码、应答）+ `CE/<Family>/Cost.hs`（上限、地板、码域）+ 判决模块若干（`Query`: `Contract`（请求形与拒绝）、`Syntax` / `Parse`（记号流 → 子句）、`Check`（安全性 / 类别 / 分层；`Check/Sorts`、`Check/Safety`）、`Eval`（半朴素 + 索引；`Eval/Index`、`Eval/Join`）、`Proof`、`Schema`；`Flow`: `Contract`（请求形与拒绝）、`Tree`（四表 → 单元树）、`Shape`（树形契约）、`Cfg`、`Reach`、`Live`；`Merge`: `Align`、`Holes`、`Ted` 的映射扩展；`Arch`: `Layers`、`Fas`、`Louvain`、`Impact`），每文件 ≤ 290 行（`core_size_gate` 的真实上限）。电池 `core/test/<Family>Props.hs` 各一（`WireHarness.runLegs` 两条平行列表形，避开查重门的表同韵）。`core/test/Spec.hs` 现 289 行，每加一家族 +3 行——步 1 先把电池清单拆到 `core/test/Batteries.hs`（`fixture_contract.rs` 读的那三行形不变、只换文件）。
 
 ## 9. 验收与门（每步共用）
 
@@ -252,7 +253,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 | 0 | 细则与立项（2026-09-29）：本册 + 计划书 v2.31（横幅细则句、ADR-008 细则第七期、§6 T 轨十二步）+ CHANGELOG `[Unreleased]` 块 + cc-memory 十二步锁定 | docs 门全绿、基线具名重立、CI 绿 |
 | 1 | 查询 A（2026-09-29 已交付）：核 `CE.Query.*`（Contract / Syntax / Parse / Check〔Sorts · Safety〕/ Eval〔Index · Join〕/ Proof / Schema / Cost，十三模块 1,501 行）+ `QueryProps` 十二腿 + `ReferenceQuery` 朴素参考 200 例 + golden 六对 + proto 7.3.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条）+ `Spec.hs` 拆 `SpecProbes.hs`（四条探针腿；设计名 `Batteries.hs` 按搬出的内容改，电池表留在 `Spec.hs`）+ 子仓 `fixture_contract::regen` 腿（`LineSession` 三件套同供 MCP 会话与 golden 往返） | `cabal test` 439 ok、参考求值器等价 200/200、既有 golden 只动 proto |
 | 2 | 查询 B（2026-09-29 已交付）：Rust `cli/src/query/`（lexer / program / legend / columns / facts〔graph · units · pairs · text〕/ wire / face / console，前奏 `prelude.rules` 八条）+ `ce query` / `ce rules`（`main_query.rs`）+ `[rules] file`（canonical 规则 7 丢弃）+ MCP `query` / `rules` + GUI Query 屏（第十二屏）+ 自仓 `ce.rules` 九条与子仓三条 + CI 两根第七腿 + 册 16 + 官网 `site/how/analysis/` 页对 + 事实与 parity；golden 六 → 八对 | 三面字节同、`ce rules` 自仓绿、十语料十面对拍同 |
-| 3 | 死代码 A：核 `CE.Flow.*`（Cfg / Reach / Live / Cost）+ `FlowProps` + golden + 7.4.0 | 参考实现等价、十六种拒绝按名 |
+| 3 | 死代码 A（2026-09-29 已交付）：核 `CE.Flow.*`（Contract / Tree / Shape / Cfg / Reach / Live / Cost + `Flow.hs`，八模块 890 行）+ `FlowProps` 六十腿（`FlowCases` 十三例判决 + `FlowRefusals` 四十二条拒绝——两张文本表，一例一腿——+ 四探针） + `ReferenceFlow` 轨迹参考 200 例（`ReferenceFlowGen` 有籽生成，两文件各在 290 行墙内）+ golden 六对 + proto 7.4.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条、子仓 `core_wire.rs` 阶梯与 `fixture_contract` 清单各一行） | `cabal test` 507 ok、轨迹参考等价 200/200、契约拒绝 42 条按名、既有 golden 只动 proto |
 | 4 | 死代码 B：Rust `FlowSpec` 十语言表（实探建表）+ 降表 + wire + 考题冻结（每语言）→ 盲判 → 精度册 + 回放台账 + `judged` 掩码 | 逐语言精度 ≥ 99 %、顺序门 |
 | 5 | 死代码 C：`ce flow` + 守卫腿（daemon 2.2.0）+ Stop 行 + `[flow] tier` + MCP + GUI + 册 17 | 三面字节同、FPR 台账 |
 | 6 | 合并 A：核 `CE.Merge.*`（Align / Holes / Ted 映射）+ `MergeProps` + golden + 7.5.0（`clone/1` 可选 `leaf` 列） | 定律电池、TED 距离不变 |

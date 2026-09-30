@@ -67,9 +67,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 917/1000</span> | axes 0:79 1:0 2:287 3:0 4:0 5:0 6:218 | 306 candidates
+<span class="s">check score 918/1000</span> | axes 0:79 1:0 2:284 3:0 4:0 5:0 6:214 | 312 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
-note: 10 blocks collapsed into existing members, 191 intra-file pairs off the sim table
+note: 10 blocks collapsed into existing members, 193 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
 <!-- roast:end -->
   <p class="cap">Real output: CodeEraser judging its own repository. The ratchet only shrinks:
@@ -155,7 +155,7 @@ note: 10 blocks collapsed into existing members, 191 intra-file pairs off the si
 
 <h2>Under the hood</h2>
 <figure class="arch deep" id="architecture">
-  <div class="stage"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of thirteen families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></div>
+  <div class="stage"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of fourteen families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></div>
   <figcaption>Measurement in Rust, judgment in Haskell: one wire, one report schema per family, five faces. Rendered from <code>docs/diagrams/architecture.en.json</code>; every component cites its source files. Open the <a href="/assets/architecture.en.svg">full-size SVG</a>.</figcaption>
 </figure>
 <p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>

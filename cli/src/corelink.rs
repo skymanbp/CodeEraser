@@ -13,17 +13,19 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 7.3.0 = the thirteenth judgment family, `query/1` (plan v2.31
-/// step 1; ADR-008 seventh instalment, design booklet
-/// docs/reference/analysis-track.md §4), additive: a new request type
-/// `query.request` carries a program as a `[kind, value]` token
-/// stream plus the fact tables it names, keyed by schema code, and
-/// reads back `query.result` — goals, answers, proof rows, the
-/// program's errors at their tokens, counts. This side's lexer, fact
-/// assembly and faces (`ce query` / `ce rules`, the MCP tools, the
-/// GUI screen) land in step 2 of the same plan; a core without the
-/// capability is named as "pre-7.3.0" by `judged::ask`, never
-/// blocked on. Every existing family's bytes stand.
+/// §1). 7.4.0 = the fourteenth judgment family, `flow/1` (plan v2.31
+/// step 3; ADR-008 seventh instalment, design booklet
+/// docs/reference/analysis-track.md §5), additive: a new request type
+/// `flow.request` carries every unit's statements as a pre-order tree
+/// of kinds and flags, its variables with their declaring statement
+/// and exemption flags, and its accesses in evaluation order, and
+/// reads back `flow.result` — the findings (unreachable runs, dead
+/// stores, unused locals, unused parameters as advice) and counts.
+/// This side's FlowSpec tables, lowering and faces (`ce flow`, the
+/// guard leg, the MCP tool, the GUI screen) land in steps 4 and 5 of
+/// the same plan; a core without the capability is named as
+/// "pre-7.4.0" by `judged::ask`, never blocked on. Every existing
+/// family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -35,7 +37,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.3.0";
+pub const PROTO: &str = "7.4.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

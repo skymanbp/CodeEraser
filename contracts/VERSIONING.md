@@ -7,6 +7,30 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 2.15.0 止；2.1.0–2.14.0 的最初顺序段已于 2026-09-29 逐字节迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)（正册过了 `ce scan` 的 750 行硬线），2.0.0 仍在上方导语段。**
+> **7.4.0**（函数内死代码族，加性 minor，计划 v2.31 步 3，2026-09-29；ADR-008 细则第七期，设计册
+> `docs/reference/analysis-track.md` §5）：第十四判决族 `flow/1`——请求 `flow.request`：`units=[[u,lang,params]]`
+> （按 u 严格升序；`params` = 该单元 var 表里形参的个数，不符按名拒 `params disagree with the var table`）+
+> `stmts=[[u,seq,parent,kind,flags,aux]]`（每单元前序编号：同单元 seq 自 0 连续、父在前〔−1 = 单元体〕、单元按序出现；
+> kind 0 block / 1 stmt / 2 if / 3 loop / 4 switch / 5 case / 6 try / 7 catch / 8 finally / 9 return / 10 throw / 11 break /
+> 12 continue / 13 goto / 14 label / 15 noreturn-call；flags 五位 0 has_else〔if 的第二个子结点是 else、switch 有 default〕/
+> 1 infinite / 2 fallthrough / 3 dynamic / 4 empty；aux 只在 break / continue / goto 上 = 目标 seq〔break 要包围它的 loop 或
+> switch、continue 要包围它的 loop、goto 要本单元的 label〕、其余为 0；树形按名拒：if 的子结点数 = 1 + has_else、switch 的子结点
+> 全是 case、case 只在 switch 下、catch / finally 只在 try 下且顺序 = 体 · catch* · finally?、stmt 与出口与跳转无子结点）+
+> `vars=[[u,v,declSeq,flags]]`（v 每单元自 0 连续；declSeq −1 ⇔ 形参〔flags 位 0〕，否则本单元某语句；位 1 captured / 2 ignored /
+> 3 address_taken）+ `uses=[[u,seq,v,mode]]`（按 (u,seq) 不降、同语句内按求值序可重复；mode 0 read / 1 write / 2 readwrite）；
+> 应答 `flow.result`：`findings=[[u,kind,seq,v,seqEnd]]`（0 unreachable 极大连续段〔v −1〕/ 1 dead_store / 2 unused_local
+> 〔seq = declSeq〕/ 3 unused_param〔seq −1，顾问〕；整表按元组升序）、`counts{units,stmts,vars,uses,findings,dynamicUnits}`；
+> 四表合计 > 524,288 行 → 完整降级应答 `degraded:true, reason:"flow_too_large"`（空表）。判决 = 结构化控制流建图
+> （`CE.Flow.Cfg`：try 体内每条语句都可能跳到本 try 的每个 catch、离开 try 的每条边先经 finally〔finally 的汇合点接所有待续目标的
+> 并集——只加路径不减〕、return / throw / noreturn 经 finally 到出口、break / continue / goto 经 finally 到目标）→ 可达性
+> （`CE.Flow.Reach`）→ 反向活性（`CE.Flow.Live`：同语句内按求值序倒走，同一语句对同一变量的多次写各自判、任一为死即报该行，写后无路径读到即死存储；captured / address_taken
+> 不判死存储，ignored / captured / address_taken 不判未用；无任何读的变量只报未用不报死存储；不可达语句的写不重复报）；任一语句
+> 带 dynamic 位的单元整体不判并计 `dynamicUnits`。无旋钮、无 fail 档、无条件位（`ce flow --check` 与守卫腿按 `[flow] tier`
+> 读发现，步 5）。既有十三族字节零变化（既有 golden 只动 proto 字面与 hello 能力表）；新增 `contracts/fixtures/flow/golden.ndjson`
+> 六对（不可达段 / 死存储 / 未用局部量 / 未用形参 / 经 finally 的 return〔不可达 + 死存储〕/ 树形拒绝一例；降级面由电池以
+> 524,289 行的运行时请求探——夹具不装 7 MB）；契约拒绝 42 条按名（`FlowRefusals` 逐条钉）；随机结构化程序 200 例与不依赖控制流图的
+> 轨迹参考（`ReferenceFlow`：树遍历枚举每条执行轨迹、每个循环头至多两次、try 体内每条语句都可交给 catch）逐条同。旧核无此能力 =
+> 测量侧具名降级「core offers no flow/1 (pre-7.4.0)」（步 4 接线）。
 > **7.3.0**（代码查询与架构规则族，加性 minor，计划 v2.31 步 1，2026-09-29；ADR-008 细则第七期，设计册
 > `docs/reference/analysis-track.md` §4）：第十三判决族 `query/1`——请求 `query.request`：`program=[[kind,value]…]`
 > 记号流（0 谓词码：事实谓词 0..26 / 程序谓词 ≥ 1000 按首现编号；1 变量按子句编号；2 整数；3 集合号；4 名字哈希
@@ -488,7 +512,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.3.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.4.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -507,12 +531,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
-  "similar/1","query/1"]`；fourclass/2 =
+  "similar/1","query/1","flow/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -625,11 +649,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->160<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.3.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->166<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.4.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->7.3.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  server 走 <!--ce:ver:proto#v-->7.4.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -641,5 +665,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->7.3.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->7.4.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.1.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

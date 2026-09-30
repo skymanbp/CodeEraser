@@ -13,6 +13,7 @@ import qualified CE.Audit as Audit
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
 import qualified CE.Erase as Erase
+import qualified CE.Flow as Flow
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
@@ -104,6 +105,7 @@ families =
   , Fam "tombstone/1" "tombstone.request" Tombstone.respond
   , Fam "similar/1" "similar.request" Similar.respond
   , Fam "query/1" "query.request" Query.respond
+  , Fam "flow/1" "flow.request" Flow.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's
