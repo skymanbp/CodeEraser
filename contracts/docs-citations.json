@@ -8269,28 +8269,22 @@
     "end": 70,
     "text": "fn type_checking_only(node: Node<'_>, src: &[u8]) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/face.rs|b50317c4e6784c57|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/face.rs|07e01f0b4e5d62a1|0": {
     "target": "../../../cli/src/mention/face.rs",
-    "line": 15,
-    "text": "pub const SCHEMA_ID: &str = \"ce.mentions-report/0.2.0\";"
+    "line": 16,
+    "text": "pub const SCHEMA_ID: &str = \"ce.mentions-report/0.3.0\";"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|0362eb6b6f6329cc|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 283,
-    "end": 290,
+    "line": 291,
+    "end": 298,
     "text": "fn row_of(token: &str) -> store::Row {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|07d5e0db6ab16b79|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 252,
-    "end": 280,
+    "line": 260,
+    "end": 288,
     "text": "/// Tokens de-duplicated and written under the file's own hash. The"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|233de814113c2a65|0": {
-    "target": "../../../cli/src/mention/mod.rs",
-    "line": 87,
-    "end": 92,
-    "text": "pub const MENTION_REV: i64 = 3;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|48346051f9dbd2a6|0": {
     "target": "../../../cli/src/mention/mod.rs",
@@ -8300,9 +8294,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|8ea54e2f462b95c5|0": {
     "target": "../../../cli/src/mention/mod.rs",
-    "line": 89,
-    "end": 94,
+    "line": 92,
+    "end": 97,
     "text": "/// Distinct tokens one file may store; the rest are clipped and"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|96f01c230645c5a2|0": {
+    "target": "../../../cli/src/mention/mod.rs",
+    "line": 90,
+    "text": "pub const MENTION_REV: i64 = 4;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|ad600be7b31d9b23|0": {
     "target": "../../../cli/src/mention/mod.rs",
@@ -8428,38 +8427,44 @@
     "end": 35,
     "text": "fn opens(c: char) -> bool {"
   },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|04bb12f3f5614923|0": {
+    "target": "../../../cli/src/mention/walk.rs",
+    "line": 265,
+    "end": 281,
+    "text": "/// A document the product signed: a JSON object whose top-level"
+  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|05b9247f569e5ef4|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 254,
-    "end": 271,
+    "line": 255,
+    "end": 272,
     "text": "/// the module root for the same pin as `FILE_CAP`."
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|8ff8b15a2b1c7b44|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 59,
+    "line": 60,
     "text": "/// The single-file ceiling, judged on metadata in the loop below"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|a79869f7d34f83f7|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 84,
-    "end": 87,
+    "line": 85,
+    "end": 88,
     "text": "}\n\npub(super) fn universe(root: &Path) -> Result<Universe> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|b0999835ef10c2a4|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 64,
+    "line": 65,
     "text": "/// minified bundles keep their export names and are exactly the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|c466b9c89fda6f85|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 90,
-    "end": 101,
+    "line": 91,
+    "end": 102,
     "text": "let mut gate = Gate::open(root)?;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|d70c07448c222daf|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 175,
-    "end": 185,
+    "line": 176,
+    "end": 186,
     "text": "}\n\n/// The identity pass: the exclusion table and the set of files already"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|df1c9dcc43a49522|0": {
@@ -8470,20 +8475,20 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|e25475c680a2435b|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 134,
-    "end": 173,
+    "line": 135,
+    "end": 174,
     "text": "}\n\n/// The names cut by name: the repository's own metadata and the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|e64226e1d907edc0|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 241,
-    "end": 258,
+    "line": 242,
+    "end": 259,
     "text": "});\n\n/// Whether the exclusion table leaves `rel` out of U — the third of"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|ea1f7c5bc70db7d2|0": {
     "target": "../../../cli/src/mention/walk.rs",
-    "line": 187,
-    "end": 235,
+    "line": 188,
+    "end": 236,
     "text": "}\n\nimpl Gate {\nfn open(root: &Path) -> Result<Gate> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
@@ -8518,31 +8523,31 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/mention_universe.rs|295fdf9c6bdcabc9|0": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 209,
-    "end": 245,
+    "line": 221,
+    "end": 257,
     "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/mention_universe.rs|295fdf9c6bdcabc9|1": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 209,
-    "end": 245,
+    "line": 221,
+    "end": 257,
     "text": "fn the_formula_names_every_rule_the_walk_has() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/mention_universe.rs|387f09d3589b608d|0": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 99,
-    "end": 146,
+    "line": 105,
+    "end": 152,
     "text": "/// One listed entry, placed under the first rule that takes it."
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/mention_universe.rs|5195cdbeea5c68d3|0": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 33,
-    "end": 63,
+    "line": 35,
+    "end": 65,
     "text": "pub struct Formula {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/mention_universe.rs|e3c552b8a32f20c8|0": {
     "target": "../../../cli/tests/it/mention_universe.rs",
-    "line": 195,
+    "line": 205,
     "text": "fn the_self_universe_is_gits_listing_minus_the_walks_own_rules() {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/unit/mention/conv/tests.rs|218b7599538b1c89|0": {
@@ -8646,8 +8651,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a2c3821eca59417f|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 188,
-    "end": 197,
+    "line": 189,
+    "end": 198,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a6700d086855d460|0": {
@@ -9780,8 +9785,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 247,
-    "end": 266,
+    "line": 248,
+    "end": 267,
     "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {

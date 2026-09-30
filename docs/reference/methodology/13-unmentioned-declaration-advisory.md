@@ -31,20 +31,20 @@ owner predicate shared with the measurement walk and the guard's scope
 part of its score); an undeclared nested repository is **cut** whole. One reader parses the
 declaration with git's own config grammar
 ([gitmodules.rs:1-23](../../../cli/src/gitmodules.rs#L1)), and a declared checkout that is not
-seated refuses by name rather than letting U shrink ([walk.rs:84-87](../../../cli/src/mention/walk.rs#L84)),
+seated refuses by name rather than letting U shrink ([walk.rs:85-88](../../../cli/src/mention/walk.rs#L85)),
 `.gitignore` and `.ceignore` are honoured and nothing else — not the walker's `.ignore`,
 not global or parent ignore files, and `.git` is not required, so one commit yields one
-U on any machine ([walk.rs:90-101](../../../cli/src/mention/walk.rs#L90)); the cut is one published predicate,
+U on any machine ([walk.rs:91-102](../../../cli/src/mention/walk.rs#L91)); the cut is one published predicate,
 `cut`, that the walk's entry filter, the census and the formula below all read
-([walk.rs:134-173](../../../cli/src/mention/walk.rs#L134)). Directory symlinks are not
+([walk.rs:135-174](../../../cli/src/mention/walk.rs#L135)). Directory symlinks are not
 followed; a file symlink is read through when its target is a regular file inside the
 root, identity being the canonical relative path, so a link and its target enter once
-([walk.rs:175-185](../../../cli/src/mention/walk.rs#L175),
-[walk.rs:187-235](../../../cli/src/mention/walk.rs#L187)). Files over 4 MiB are skipped and
-counted ([walk.rs:59](../../../cli/src/mention/walk.rs#L59)); the exclusion table is the
+([walk.rs:176-186](../../../cli/src/mention/walk.rs#L176),
+[walk.rs:188-236](../../../cli/src/mention/walk.rs#L188)). Files over 4 MiB are skipped and
+counted ([walk.rs:60](../../../cli/src/mention/walk.rs#L60)); the exclusion table is the
 scan's secret globs plus four omni-mentioners (`*.map`, `tags`, `TAGS`, `*.po`) — files
-whose purpose is to name every symbol ([walk.rs:64](../../../cli/src/mention/walk.rs#L64),
-[walk.rs:241-258](../../../cli/src/mention/walk.rs#L241)). A document the product signed — a
+whose purpose is to name every symbol ([walk.rs:65](../../../cli/src/mention/walk.rs#L65),
+[walk.rs:242-259](../../../cli/src/mention/walk.rs#L242)). A document the product signed — a
 JSON object whose top-level `schema` is under `ce.` or whose top-level `generated_from`
 carries a `ce` key, the two spellings of the product's signature on its reports, feeds,
 contracts and frozen instruments — leaves U when it is read, beside the binary rule, and is
@@ -57,7 +57,7 @@ document is not a generated tree but the product's own reading of one.
 
 The binary rule is git's: a UTF-16 BOM decodes, otherwise a NUL in the first 8000 bytes
 skips the file; a later NUL keeps it, decoded lossily so one stray byte cannot lose a
-file's mentions ([walk.rs:254-271](../../../cli/src/mention/walk.rs#L254)). The consequence
+file's mentions ([walk.rs:255-272](../../../cli/src/mention/walk.rs#L255)). The consequence
 is stated, not hidden: PDF-disguised `.ai` assets whose first NUL falls past byte 8000
 are in U (zod holds eight, requests one), and §8 prices what they add.
 
@@ -70,11 +70,11 @@ reads patterns and never the index, so such a file is outside U — zod has one)
 exclusion table, the entries no regular file backs (deleted unstaged, a link to a
 directory), the size cap, the binary rule and the product's signature — each computed with the walk's own
 published predicate (`cut`, `excluded`, `FILE_CAP`, `decode`, `signed`), never a second reading of
-it ([mention_universe.rs:33-63](../../../cli/tests/it/mention_universe.rs#L33),
-[mention_universe.rs:99-146](../../../cli/tests/it/mention_universe.rs#L99)). Every term is witnessed once on a scratch
+it ([mention_universe.rs:35-65](../../../cli/tests/it/mention_universe.rs#L35),
+[mention_universe.rs:105-152](../../../cli/tests/it/mention_universe.rs#L105)). Every term is witnessed once on a scratch
 repository where the walk's count and the formula agree
-([mention_universe.rs:209-245](../../../cli/tests/it/mention_universe.rs#L209)); the self corpus is pinned in CI
-([mention_universe.rs:195](../../../cli/tests/it/mention_universe.rs#L195)); the four external corpora are pinned by the same
+([mention_universe.rs:221-257](../../../cli/tests/it/mention_universe.rs#L221)); the self corpus is pinned in CI
+([mention_universe.rs:205](../../../cli/tests/it/mention_universe.rs#L205)); the four external corpora are pinned by the same
 formula in the `--ignored` instrument leg, whose printed line carries every term so
 `listed − Σ terms = U` closes inside it (§8).
 
@@ -99,15 +99,15 @@ Two hashes are stored per distinct token: the fnv1a64 of the token, and — for 
 of at least seven literal characters — the fnv1a64 of its fold key (`_`, `-` and `$`
 filtered, lower-cased), a second chance for a Rust `zod_string` spelled `$ZodString`
 elsewhere ([token.rs:109-120](../../../cli/src/mention/token.rs#L109),
-[mod.rs:283-290](../../../cli/src/mention/mod.rs#L283)). No plaintext token enters the
+[mod.rs:291-298](../../../cli/src/mention/mod.rs#L291)). No plaintext token enters the
 database ([store.rs:34](../../../cli/src/mention/store.rs#L34)); the pass has its own
 version row and any change to a frozen input re-derives every row
-([mod.rs:89](../../../cli/src/mention/mod.rs#L89)). Two caps bound the store — 65,536
+([mod.rs:90](../../../cli/src/mention/mod.rs#L90)). Two caps bound the store — 65,536
 distinct tokens per file (a function of the bytes: the clip is final and the file's hash
 is stored) and 4,194,304 rows per table (a function of the whole store: a starved file
 gets neither rows nor hash and is retried every run) — and both are counted in the
-header the operator sees ([mod.rs:87-92](../../../cli/src/mention/mod.rs#L87),
-[mod.rs:252-280](../../../cli/src/mention/mod.rs#L252)).
+header the operator sees ([mod.rs:92-97](../../../cli/src/mention/mod.rs#L92),
+[mod.rs:260-288](../../../cli/src/mention/mod.rs#L260)).
 
 ### 3. The domain and the veto
 
@@ -305,7 +305,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1254 (1417 − 22 pattern-ignored − 12 early-NUL − 129 signed) | rust | 3639 (1949) | 433 (2) | 11.9 % | 9 / 433 = 2.1 % | 9 / 3178 |
+| self @ this commit | 1254 (1428 − 22 pattern-ignored − 12 early-NUL − 140 signed) | rust | 3639 (1949) | 433 (2) | 11.9 % | 9 / 433 = 2.1 % | 9 / 3178 |
 | | | haskell | 2329 (558) | 458 (6) | 19.7 % | 48 / 458 = 10.5 % | 48 / 1871 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
@@ -376,13 +376,13 @@ consumers that never ask must not pay. A/B medians, n = 9 interleaved on two ide
 HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet window:
 `ce audit --hook` 1.186 s → 0.954 s, `ce erase` (plan) 1.526 s → 1.493 s, `ce check`
 1.786 s → 1.802 s (spread 1.729–1.928) — no consumer slower
-([PERF-BUDGET.md:188-197](../../PERF-BUDGET.md#L188)). The pass itself: cold ≈ 1.95 s, warm ≈
+([PERF-BUDGET.md:189-198](../../PERF-BUDGET.md#L189)). The pass itself: cold ≈ 1.95 s, warm ≈
 0.54 s on the self corpus ([PERF-BUDGET.md:54](../../PERF-BUDGET.md#L54)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
-scratch repository ([mention_universe.rs:209-245](../../../cli/tests/it/mention_universe.rs#L209)); the self
+scratch repository ([mention_universe.rs:221-257](../../../cli/tests/it/mention_universe.rs#L221)); the self
 pre-registered zeros; the mentions face schema <!--ce:report:mentions#schemaver-->`ce.mentions-report/0.3.0`<!--/ce--> with its
-`rates` key ([face.rs:15](../../../cli/src/mention/face.rs#L15)) and the face run as a
+`rates` key ([face.rs:16](../../../cli/src/mention/face.rs#L16)) and the face run as a
 reader would — field names, the fold channel on a fixture, the console's nine holes in
 both languages ([mentions_face.rs](../../../cli/tests/it/mentions_face.rs)); the census
 counted on a synthetic tree with a collision told apart from a reference

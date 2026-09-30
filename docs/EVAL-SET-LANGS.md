@@ -731,3 +731,7 @@ learning-area → lua → fmt，每份生成后挪出树、`git status --porcela
 
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，十一份齐了放回，六门 `stage` 翻回 `Scored`；读数与退役前逐份比对，记在下文。
+
+### 读数（重生成，2026-09-30）
+
+十一份在退役提交 2ea957d8 的干净树上逐份生成（gson → jsoup → luarocks → koreader → stringr → covid19model → codeeraser → html5-boilerplate → learning-area → lua → fmt，每份生成后挪出树、`git status --porcelain` 回到空再生成下一份；两份 Lua 档带退役前那两段 RG1 处置原文），全部记 `generated_from` = 2ea957d8 / dirty = false。逐份与退役前的档（5278e747 上的 blob，`generated_from` = 813f4976）比对：除 `generated_from`（ce 1.7.4 → 1.8.0、commit 813f4976 → 2ea957d8，dirty 前后皆 false）外逐字节相同——判分行、宇宙台账、站点缺口、走查记录、处置一字未动，行数不变，册 06 §9 引的十一处 summary 行号照旧。`Lang::extensions()` 只读语言表的一行、不改它，答案没有理由移动；门按路径拒、重生成按字节证，两者各守各的。六门考题的 `stage` 随本提交翻回 `Scored`。

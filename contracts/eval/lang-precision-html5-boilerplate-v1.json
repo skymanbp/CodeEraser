@@ -1,0 +1,126 @@
+{
+  "corpus": {
+    "lang": "html",
+    "name": "html5-boilerplate",
+    "tip": "b6597338e695dc4a8165c5abcb2bfffa586c3ee5"
+  },
+  "generated_from": {
+    "ce": "1.8.0",
+    "commit": "2ea957d8dd74958025d1f6aea11a788a56e1cd1c",
+    "dirty": false
+  },
+  "method": "the frozen sample rows of one corpus, resolved by the shipped ladder against what the product's own walk reads at the pinned tip - every judged file of the tree (the frozen universe among them, each file re-read there and reproduced against its frozen row first; a drifted tree never scores), every other walked path as an asset a page may name, the resolver configs it reads - with no declared root, judged against the frozen blind audit — a truth naming a path the walk refuses (a universe file, or any path of the pinned tree where the truths reach the tree) is scored as outside the corpus, the audit's word kept beside it, and no sampled site may lie in a refused file. An in-corpus answer matches its truth exactly, or at file level when the ladder made no unit claim; a package answer matches a package truth; External is an answer, so external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over every site of the frozen universe: its resolution rate is a recall ceiling. Each audit site gap is answered with every site the detector reads off its line. Pre-registered: the per-rung cut table and one line per site kind are published; precision >= 0.90 overall and per corpus where the in-corpus truths reach 5 (the M5-2 G2 contract). The walk record lists the refused files and their sites, which the ledger leaves out.",
+  "rows": [],
+  "schema": "ce.eval-lang-precision/1.1.0",
+  "site_gaps": [],
+  "summary": {
+    "by_kind": {},
+    "by_lang": {},
+    "cut": [
+      [
+        1,
+        0,
+        0,
+        null
+      ],
+      [
+        2,
+        0,
+        0,
+        null
+      ],
+      [
+        3,
+        0,
+        0,
+        null
+      ],
+      [
+        4,
+        0,
+        0,
+        null
+      ],
+      [
+        5,
+        0,
+        0,
+        null
+      ]
+    ],
+    "in_corpus_truths": 0,
+    "precision": null,
+    "recall": null,
+    "verdicts": {}
+  },
+  "universe": {
+    "r0_share": 0.6,
+    "resolution_by": {
+      "html/link_asset/r1": 2,
+      "html/link_asset/r3": 2,
+      "html/src/r1": 1
+    },
+    "resolution_rate": 0.8333333333333334,
+    "total_sites": 6,
+    "unresolved_by": {
+      "html/link_asset/out_of_scope": 1
+    }
+  },
+  "walk": {
+    "refused": [],
+    "refused_sites_by": {},
+    "unreached": [
+      ".cspell.json",
+      ".editorconfig",
+      ".gitattributes",
+      ".github/CODE_OF_CONDUCT.md",
+      ".github/CONTRIBUTING.md",
+      ".github/ISSUE_TEMPLATE/bug_report.yml",
+      ".github/ISSUE_TEMPLATE/config.yml",
+      ".github/ISSUE_TEMPLATE/feature_request.yml",
+      ".github/PROPOSAL_GUIDELINES.md",
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      ".github/SUPPORT.md",
+      ".github/dependabot.yml",
+      ".github/workflows/build-dist.yml",
+      ".github/workflows/codeql-analysis.yml",
+      ".github/workflows/dependency-review.yml",
+      ".github/workflows/ossf-scorecard.yml",
+      ".github/workflows/publish.yml",
+      ".github/workflows/push-to-template.yml",
+      ".github/workflows/spellcheck.yml",
+      ".github/workflows/test.yml",
+      ".gitignore",
+      ".npmrc",
+      ".prettierignore",
+      ".prettierrc.json",
+      ".vscode/extensions.json",
+      ".vscode/settings.json",
+      "dist/.editorconfig",
+      "dist/.gitattributes",
+      "dist/.gitignore",
+      "dist/404.html",
+      "dist/LICENSE.txt",
+      "dist/css/style.css",
+      "dist/favicon.ico",
+      "dist/icon.png",
+      "dist/icon.svg",
+      "dist/img/.gitkeep",
+      "dist/index.html",
+      "dist/js/app.js",
+      "dist/js/vendor/.gitkeep",
+      "dist/package.json",
+      "dist/robots.txt",
+      "dist/site.webmanifest",
+      "dist/webpack.common.js",
+      "dist/webpack.config.dev.js",
+      "dist/webpack.config.prod.js",
+      "package-lock.json",
+      "src/.editorconfig",
+      "src/.gitattributes",
+      "src/.gitignore",
+      "src/img/.gitkeep",
+      "src/js/vendor/.gitkeep"
+    ]
+  }
+}
