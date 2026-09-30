@@ -25,13 +25,14 @@ Commands:
   similar    Same-role advisor: the units most like one unit (or a text), ranked and role-bitted by the core's similar/1 over the index's term bags; --widen adds the PPMI associative view (advisory, never a verdict)
   query      Code query: one question in CE Datalog over the index's facts (files, references, units, clones, mentions, classes), answered by the core's query/1 with every answer's derivation under --why; a program error exits 2 (report-only)
   rules      Architecture rules as a gate: every `assert` in the rules file (ce.rules at the root, or `[rules] file`) judged by the core's query/1, each violation with its witness and derivation; any violation exits 1, a program error 2
+  flow       Dead code inside functions (unreachable statements, dead stores, unused locals and parameters) judged by the core's flow/1; --check is its own gate at `[flow] tier` deny (never part of `ce check`); unused parameters stay advisory
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails, and the console names the held conditions; a subdirectory scopes the measurement (nothing is persisted)
   baseline   Persist the core's newBaseline as ce-baseline.json, at the project root only. Three named acts: none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition alone (knobs_digest, rows_dropped) is re-pinned under the declared knobs; CE_ACCEPT_BASELINE=1 — re-establish from the current tree, the one act that creates a missing file. A degraded judgment is never persisted
   dedup      Detect T1/T2 clones via the winnowing fingerprint index
   daemon     Run the per-project daemon in the foreground; normally lazy-started by `ce ping` / hook probes
   ping       Round-trip a ping through the project daemon (lazy-starts it)
-  probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone class at its own [tombstone] tier
+  probe      PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone and flow classes at their own [tombstone] and [flow] tiers
   settle     PostToolUse record: read the hook envelope on stdin and, when this session's PreToolUse answered `ask` for the same tool call, record that the tool ran — the person let the write through. Never speaks
   audit      Stop audit: net LOC + duplicate blocks touching changed files + tombstone tier/budget + same-role advisory (blocks the stop only in deny mode)
   health     SessionStart health line + daemon warm-up
@@ -300,6 +301,26 @@ Options:
   -h, --help             Print help
 ```
 
+## ce flow
+
+```text
+Dead code inside functions (unreachable statements, dead stores, unused locals and parameters) judged by the core's flow/1; --check is its own gate at `[flow] tier` deny (never part of `ce check`); unused parameters stay advisory
+
+Usage: ce flow [OPTIONS] [ROOT]
+
+Arguments:
+  [ROOT]  Directory to analyze (default: current directory)
+
+Options:
+      --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
+      --check            Exit 1 when `[flow] tier` is deny and a judged finding stands (unused parameters are advisory and never count)
+      --kind <KIND>      Show only these kinds, comma-separated (unreachable, dead_store, unused_local, unused_param); the counts stay whole
+  -h, --help             Print help
+```
+
 ## ce erase
 
 ```text
@@ -415,7 +436,7 @@ Options:
 ## ce probe
 
 ```text
-PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone class at its own [tombstone] tier
+PreToolUse cheap gate: read the hook envelope on stdin, probe the daemon, emit a permission decision per ce.toml [guard] — and record the tombstone and flow classes at their own [tombstone] and [flow] tiers
 
 Usage: ce probe [OPTIONS]
 

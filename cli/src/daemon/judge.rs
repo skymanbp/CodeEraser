@@ -130,13 +130,36 @@ impl Judge {
     /// not (it is healthy, only older than this ce).
     pub fn tombstone(&mut self, rows: &[[u64; 3]], budget: Option<u32>) -> serde_json::Value {
         use crate::tombstone::wire;
+        let body = wire::body(rows, budget);
+        self.family((wire::CAP, "pre-6.6.0 core"), wire::KIND, body)
+    }
+
+    /// The flow verdict over the same link, the same way (plan v2.31
+    /// step 5): the hook's tables forwarded as sent.
+    pub fn flow(&mut self, tables: &crate::daemon::proto::FlowTables) -> serde_json::Value {
+        use crate::flow::wire;
+        match serde_json::to_value(tables) {
+            Ok(body) => self.family((wire::CAP, "pre-7.4.0 core"), wire::KIND, body),
+            Err(e) => degraded(&e.to_string()),
+        }
+    }
+
+    /// One family's request behind its capability, every failure a
+    /// named degraded object; a failed request counts against the
+    /// link's budget, a missing capability does not.
+    fn family(
+        &mut self,
+        (cap, older): (&str, &str),
+        kind: &str,
+        body: serde_json::Value,
+    ) -> serde_json::Value {
         let Some(link) = self.link_mut() else {
             return degraded("core_unavailable");
         };
-        if !link.has(wire::CAP) {
-            return degraded("pre-6.6.0 core");
+        if !link.has(cap) {
+            return degraded(older);
         }
-        match link.request(wire::KIND, wire::body(rows, budget)) {
+        match link.request(kind, body) {
             Ok(reply) => reply,
             Err(why) => {
                 self.note_failure();

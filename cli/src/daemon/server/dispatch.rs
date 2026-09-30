@@ -59,6 +59,12 @@ pub(super) fn build(shared: &Shared, req: Request) -> (Response, bool) {
             },
             true,
         ),
+        Request::Flow(tables) => (
+            Response::FlowReport {
+                reply: judge.flow(&tables),
+            },
+            true,
+        ),
         Request::Shutdown => (Response::Bye, false),
     }
 }

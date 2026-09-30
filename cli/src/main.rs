@@ -7,6 +7,7 @@
 mod main_cli;
 mod main_cmds;
 mod main_erase;
+mod main_flow;
 mod main_judge;
 mod main_lang;
 mod main_query;
@@ -122,6 +123,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Similar(a) => main_similar::similar_cmd(a),
         Cmd::Query(a) => main_query::query_cmd(a),
         Cmd::Rules(a) => main_query::rules_cmd(a),
+        Cmd::Flow(a) => main_flow::flow_cmd(a),
         Cmd::Erase(a) => main_erase::erase_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),

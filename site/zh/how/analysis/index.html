@@ -44,7 +44,7 @@
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，本页每个小标题都直接链进去。</p>
   <nav class="toc" aria-label="章节">
     <p class="k">本页内容</p>
-    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li></ul></div>
+    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="#f17"><b>17</b>函数内死代码</a></li></ul></div>
     <div class="row"><a class="sec" href="/zh/how/">判决家族</a><ul><li><a href="/zh/how/#families">01–15 族</a></li><li><a href="/zh/how/#honesty">诚实边界</a></li></ul></div>
   </nav>
 </section>
@@ -71,6 +71,24 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
     <li><b>schema</b> ce.query-report/0.1.0</li>
     <li><b>入 wire 版本</b> 7.3.0</li>
     <li><b>wire</b> query/1</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f17"><span class="n">17</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md">函数内死代码——控制流图、可达性与活性</a></h3>
+  <p class="job">找一个函数内部的死代码：没有路径到达的语句、没有路径读到的存储、没人读的局部量，没人读的形参只作顾问。<code>ce flow</code> 列出它们，守卫数一次写入带进来的那几条，Stop 行只记、从不拦停。</p>
+  <pre>tables : stmts [u, seq, parent, kind, flags, aux] · vars [u, v, declSeq, flags] · uses [u, seq, v, mode]
+cfg    : structured kinds unfolded; a try body's every statement may reach each catch; one finally hub per try
+kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
+kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
+kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
+skip   : a unit with a dynamic statement is not judged in part, and counted</pre>
+  <p class="note">度量侧按每个语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表；名字、路径、源码文本一样都不过线。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行，由度量侧回标。每一处近似都只加路径——finally 是一个汇合点、后继取待续目标的并集，表达式位置的出口不降表——所以发现只可能漏报、不可能凭空捏造。一条发现只在精度考题过门的语言里才算判决（盲评，门读的每一类都零误报）：Python、TSX、Go、C、Java、Lua、R；TypeScript、Rust、C++ 的发现一律是顾问，未用形参在哪个语言都只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增发现，挪了位置的发现不算这次写入干的。</p>
+  <ul class="consts">
+    <li><b>rowCap</b> 524288</li>
+    <li><b>schema</b> ce.flow-report/0.1.0</li>
+    <li><b>入 wire 版本</b> 7.4.0</li>
+    <li><b>wire</b> flow/1</li>
   </ul>
 </div>
 

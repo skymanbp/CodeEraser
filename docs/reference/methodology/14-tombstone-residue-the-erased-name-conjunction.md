@@ -255,7 +255,7 @@ at `observe` until the FPR ledger argues a promotion, §4.2's route discipline s
 default. A tier outside the four is refused by name at load; every key of the table is a knob
 of the canonical form, so spelled at its default it is silence and spelled elsewhere it moves
 `knobs_digest` ([config/tombstone.rs:1-29](../../../cli/src/config/tombstone.rs#L1),
-[config/tombstone.rs:41-59](../../../cli/src/config/tombstone.rs#L41)).
+[config/tombstone.rs:40-58](../../../cli/src/config/tombstone.rs#L40)).
 
 - **PreToolUse** measures the pair against R ∪ the session union: the keys every earlier
   `tombstone` line of the same session recorded, folded in feed order — a line's erased keys
@@ -274,11 +274,11 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   the hook speaks only when its tier is not `observe`, a budget is declared, the core said
   `over` and the measurement was whole — no pair with a bounded diff
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
-  [guard/tombstone.rs:77-87](../../../cli/src/guard/tombstone.rs#L77),
-  [guard/tombstone.rs:159-177](../../../cli/src/guard/tombstone.rs#L159),
+  [guard/tombstone.rs:71-81](../../../cli/src/guard/tombstone.rs#L71),
+  [guard/tombstone.rs:149-167](../../../cli/src/guard/tombstone.rs#L149),
   [hookio.rs:265-281](../../../cli/src/hookio.rs#L265),
-  [proto.rs:60-67](../../../cli/src/daemon/proto.rs#L60),
-  [say.rs:68-79](../../../cli/src/guard/say.rs#L68)).
+  [proto.rs:73-80](../../../cli/src/daemon/proto.rs#L73),
+  [say.rs:69-80](../../../cli/src/guard/say.rs#L69)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
   Stop sees the session's diff at once), judge over the audit's own core link, and block only
   when three things agree — the tier is `deny`, the core said `over`, and the measurement was
@@ -306,7 +306,7 @@ the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `s
 carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:42-61](../../../cli/src/hookio.rs#L42),
+[hookio.rs:48-67](../../../cli/src/hookio.rs#L48),
 [hookio.rs:97](../../../cli/src/hookio.rs#L97)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
@@ -331,7 +331,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   (`restored_on_disk`: one bounded read of each erasing file; a file that cannot be read
   restores nothing), so a still-later `(no X)` binds no name the tree carries; the Stop leg,
   which reads the whole session's diff at once with an empty union, sees the same survival
-  ([guard/tombstone.rs:159-217](../../../cli/src/guard/tombstone.rs#L159),
+  ([guard/tombstone.rs:149-207](../../../cli/src/guard/tombstone.rs#L149),
   [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167)).
 - **A `///` doc comment is one paragraph to docdup since `DOCDUP_REV` 5.** Its tree-sitter
   node ends at column 0 of the next row, and until the v2.28 amendment (2026-09-04) the merge
@@ -344,7 +344,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   dropped before any text is read, and the prose surface is whatever docdup extracts segments
   for; a scan-only file can hold a tombstone this class never sees
   ([texts.rs:56-64](../../../cli/src/tombstone/texts.rs#L56),
-  [guard/tombstone.rs:49-53](../../../cli/src/guard/tombstone.rs#L49)).
+  [guard/envelope.rs:57-62](../../../cli/src/guard/envelope.rs#L57)).
 - **Bounded reads under-count, never over-count — and stand a leg down.** Pairs past
   `PAIR_CAP`, and pairs with a side the batch or the bounded read refused, are counted back as
   unread and not measured, so a name erased there cannot bind; a pair whose line diff was

@@ -5,8 +5,7 @@
 // what the CLI's --format json prints is exactly what appears.
 "use strict";
 
-// family → invoke command + whether it takes a days window. The
-// names are the machine vocabulary (schema ids), untranslated.
+// family → invoke command, whether it takes a days window, the argument name of an optional path list (paths), and an optional custom renderer — a family whose document is more than flat row arrays registers one from its own file (hub_arch.js); the generic renderer stays the default.
 const HUB = {
   scan: { cmd: "scan_report" },
   dedup: { cmd: "dedup_report" },
@@ -16,6 +15,8 @@ const HUB = {
   churn: { cmd: "churn_report", days: true },
   sites: { cmd: "sites_report" },
 };
+
+function registerHub(name, spec) { HUB[name] = spec; const o = document.createElement("option"); o.value = name; o.textContent = name; $("hub-family").appendChild(o); }
 
 let hubDoc = null;
 
@@ -27,6 +28,7 @@ let hubDoc = null;
     .join("");
   sel.addEventListener("change", () => {
     $("hub-days-wrap").hidden = !HUB[sel.value].days;
+    $("hub-paths-wrap").hidden = !HUB[sel.value].paths;
   });
   $("hub-load").addEventListener("click", loadHub);
 })();
@@ -38,6 +40,7 @@ async function loadHub() {
   try {
     const args = { root: $("root").value };
     if (fam.days) args.days = posInt($("hub-days").value, 1, 14);
+    if (fam.paths) args[fam.paths] = $("hub-paths").value.split(",").map((s) => s.trim()).filter(Boolean);
     hubDoc = await invoke(fam.cmd, args);
     renderHub();
     setStatus(hubDoc.schema ?? "", false);
@@ -53,6 +56,7 @@ async function loadHub() {
 // columns, capped so a 3k-row scan stays scrollable, with the cap
 // SAID (a truncated list that reads as complete would be a lie).
 function renderHub() {
+  const custom = HUB[$("hub-family").value].render; if (custom) { $("empty-reports").hidden = true; custom(hubDoc); return; }
   $("empty-reports").hidden = true;
   const chips = [];
   const tables = [];

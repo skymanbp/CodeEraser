@@ -20,7 +20,7 @@
 //! no core = a degraded line, never a decision.
 
 use super::envelope::Envelope;
-use crate::config::{Config, TIERS, TOMBSTONE_DEFAULT};
+use crate::config::{Config, TOMBSTONE_DEFAULT};
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use crate::tombstone::{self, HASH_CAP, Judgment, PairText, Policy, Row, wire};
@@ -46,15 +46,9 @@ pub(super) fn observe(
     cfg: Option<&Config>,
     fence: Option<&str>,
 ) -> Option<Pending> {
-    let path = Path::new(&env.tool_input.file_path);
-    let lang = crate::scan::lang::Lang::judged_path(path)?;
-    if cfg.is_some_and(|c| !crate::scan::walk::in_scope(root, path, &c.exclude)) {
-        return None;
-    }
+    let (lang, before) = env.judged_pair(root, cfg)?;
     let after = super::budget::resulting_text(env)?;
-    let before =
-        tombstone::texts::read_capped(path).or_else(|| (!path.exists()).then(String::new))?;
-    let rel = crate::scan::walk::rel_str(root, path);
+    let rel = crate::scan::walk::rel_str(root, Path::new(&env.tool_input.file_path));
     let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
     let session = session_keys(root, &env.session_id, &policy);
     let pair = PairText {
@@ -131,11 +125,7 @@ pub(super) fn record(root: &Path, env: &Envelope, pending: Option<Pending>, deci
 /// route defaults when there is no config to read.
 fn knobs(cfg: Option<&Config>) -> (&'static str, Option<u32>) {
     let declared = cfg.map_or(TOMBSTONE_DEFAULT, |c| c.tombstone.tier());
-    let tier = TIERS
-        .iter()
-        .find(|t| **t == declared)
-        .copied()
-        .unwrap_or(TOMBSTONE_DEFAULT);
+    let tier = crate::config::static_tier(declared, TOMBSTONE_DEFAULT);
     (tier, cfg.and_then(|c| c.tombstone.budget))
 }
 

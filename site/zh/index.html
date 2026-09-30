@@ -66,9 +66,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 914/1000</span> | 判轴 0:86 1:0 2:286 3:0 4:0 5:0 6:234 | 候选 392
+<span class="s">检查分数 914/1000</span> | 判轴 0:86 1:0 2:286 3:0 4:0 5:0 6:233 | 候选 405
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
-注：10 块并入既有成员，203 个文件内对不入相似表
+注：10 块并入既有成员，209 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
 <!-- roast:end -->
   <p class="cap">真实输出：CodeEraser 判决它自己的仓库。棘轮只收不放：违规集入基线银行，新增熵直接判负。</p>
@@ -135,6 +135,7 @@
   <div class="card"><h3>ce join</h3><p>三信号联判：把改动、重复与存活性折成一条判决，热的、重复的、已死的那个角落会自己报名。</p></div>
   <div class="card"><h3>ce similar</h3><p>同角色顾问：在索引已有的词袋上做整数 BM25，由核判定哪些候选扮演查询的角色。确定性、离线的检索，只当顾问，永不把门翻红。</p></div>
   <div class="card"><h3>ce query · ce rules</h3><p>索引自有事实上的 Datalog：提一个问题，每个答案带推导链；把架构约束写成断言，<code>ce rules</code> 就是一道门，第一条违规即退出。核里判决，CLI 回标名字。</p></div>
+  <div class="card"><h3>ce flow</h3><p>一个函数内部的死代码：没有路径到达的语句、没有路径读到的存储、没人读的局部量。核走控制流图；只有盲评精度考题过门的语言里，发现才算判决，未用形参永远只是顾问。</p></div>
   <div class="card band"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，你在 ask 档放行的写入落地后记账，停止时审计，会话开始报健康。</p></div>
 </div>
 

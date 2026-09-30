@@ -22,7 +22,6 @@
 //! it moves `knobs_digest` by name — the tier included, the way
 //! `[guard] mode` already does.
 
-use super::tier::TIERS;
 use serde::{Deserialize, Serialize};
 
 /// The class's route default (§4.2: no FPR record, no promotion).
@@ -43,13 +42,7 @@ impl TombstoneCfg {
     /// through `config::tier_of`, a command exits 2) — nothing runs
     /// with a tier it cannot read, and nothing looks armed by one.
     pub(crate) fn fault(&self) -> Option<String> {
-        match self.tier.as_deref() {
-            Some(t) if !TIERS.contains(&t) => Some(format!(
-                "ce.toml [tombstone] tier {t:?}: expected one of {}",
-                TIERS.join(" | ")
-            )),
-            _ => None,
-        }
+        super::tier::tier_fault("[tombstone]", self.tier.as_deref())
     }
 
     /// The class's tier — declared, or the route default. Valid by

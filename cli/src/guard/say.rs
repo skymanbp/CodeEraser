@@ -17,6 +17,7 @@
 //! same order, which is why each row takes typed parameters rather
 //! than a caller-ordered argument list.
 
+use crate::flow_report::Placed;
 use crate::i18n::{line, t};
 
 /// The T1/T2 rule: this content duplicates indexed regions.
@@ -76,6 +77,26 @@ pub(super) fn tombstone_over(sites: usize, budget: u32, shown: &str) -> String {
          被删的名字不该以「无 X」标签或缺席论证的形式留下——去掉标签，或写清替代物。",
         &[&sites, &budget, &shown],
     )
+}
+
+/// The flow class (plan v2.31 step 5): this write brings judged
+/// dead-code findings its file did not carry before, the first named
+/// by its unit, kind and line; None when it brings none.
+pub(super) fn flow_novel(file: &str, novel: &[&Placed]) -> Option<String> {
+    let first = novel.first()?;
+    Some(line(
+        "ce: this write brings {} new dead-code finding(s) into {} (first: {} {} \
+         at line {}); `ce flow` lists them. Delete the dead code, or use what it computes.",
+        "ce：这次写入带来 {} 条新的函数内死代码发现，落在 {}（第一条：{} {}，\
+         第 {} 行）；`ce flow` 会列出全部。请删去死代码，或用上它算出的值。",
+        &[
+            &novel.len(),
+            &file,
+            &first.unit,
+            &crate::flow_report::kind_name(first.kind),
+            &first.line,
+        ],
+    ))
 }
 
 /// Fail-open, but never silent: a ce.toml that will not parse.

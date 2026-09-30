@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|662956795e0de916|0": {
+  "docs/reference/methodology.md|../../README.md|0ba78184a21254fb|0": {
     "target": "../../README.md",
-    "line": 184,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->sixteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
+    "line": 187,
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->seventeen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -2242,14 +2242,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 76,
-    "end": 82,
+    "line": 78,
+    "end": 84,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|1": {
     "target": "../../../cli/src/config.rs",
-    "line": 76,
-    "end": 87,
+    "line": 78,
+    "end": 89,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/graph/ladder/hs_boot.rs|ee30d3794dcc0d6c|0": {
@@ -2791,14 +2791,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|76b28420c94d7237|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 72,
-    "end": 100,
+    "line": 76,
+    "end": 104,
     "text": "pub fn canonical(cfg: &Config) -> Value {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|b1fd070c83dda0e1|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 114,
-    "end": 137,
+    "line": 118,
+    "end": 141,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/fourclass/anchor.rs|bc424b68d386ad1f|0": {
@@ -6966,8 +6966,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/config.rs|ade4e98fb475f753|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 96,
-    "end": 98,
+    "line": 98,
+    "end": 100,
     "text": "pub(crate) struct TrendCfg {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -7238,8 +7238,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/config/tier.rs|752adc75595dedd9|0": {
     "target": "../../../cli/src/config/tier.rs",
-    "line": 71,
-    "end": 79,
+    "line": 94,
+    "end": 102,
     "text": "pub fn tier_of(loaded: &Result<Config, String>, route_default: &str) -> String {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/config/tier.rs|9d4adc6f06c264f3|0": {
@@ -7272,30 +7272,24 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|09daf68fe2d59e38|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 223,
+    "line": 246,
     "text": "\"mode\": mode,"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|34a3df276d1a2cae|0": {
-    "target": "../../../cli/src/guard.rs",
-    "line": 96,
-    "end": 99,
-    "text": "// the third class speaks at its own tier (`[tombstone] tier`); its"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|36288e5d5436f6eb|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 177,
-    "end": 194,
+    "line": 200,
+    "end": 217,
     "text": "/// Decision JSON on stdout — the exact shape proven by cc-enforcer's"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|42113203b8445fa4|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 87,
-    "end": 106,
+    "line": 90,
+    "end": 109,
     "text": "let mut reasons = Vec::new();"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|4644d41f5beb9e75|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 74,
+    "line": 77,
     "text": "let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|526b9bbfd38078b6|0": {
@@ -7306,48 +7300,54 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|5c21d22558ace789|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 126,
-    "end": 164,
+    "line": 149,
+    "end": 187,
     "text": "fn emit_reasons<'a>("
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|75ba8e43bbd2ba6d|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 184,
+    "line": 207,
     "text": "_ => return, // observe: log only, no output"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|87ded68f86fe8c06|0": {
+    "target": "../../../cli/src/guard.rs",
+    "line": 113,
+    "end": 136,
+    "text": "/// The classes that speak at their OWN tiers (`[tombstone] tier`,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|936605a46cb5f869|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 166,
-    "end": 170,
+    "line": 189,
+    "end": 193,
     "text": "/// §4.4 B4: every injected reason rides the warn token budget (the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|956d5eb1339b8c17|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 224,
+    "line": 247,
     "text": "\"degraded\": p.matches.is_none(),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|99d6346852a745fc|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 212,
-    "end": 230,
+    "line": 235,
+    "end": 253,
     "text": "/// One NDJSON line per probed event, all modes (M4 evaluation feed),"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|a858072dafe20007|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 27,
-    "end": 36,
+    "line": 29,
+    "end": 38,
     "text": "pub fn run_hook() -> ExitCode {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|ab386b0206e74c7e|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 82,
-    "end": 84,
+    "line": 85,
+    "end": 87,
     "text": "// not context bloat, and repeat every time they hold"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|c1a8185a714ee541|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 80,
-    "end": 87,
+    "line": 83,
+    "end": 90,
     "text": "// B4 suppression consults the feed BEFORE this event lands in it;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|db6bfd272e069abc|0": {
@@ -7358,8 +7358,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard.rs|e3cae5ea62eb7092|0": {
     "target": "../../../cli/src/guard.rs",
-    "line": 157,
-    "end": 161,
+    "line": 180,
+    "end": 184,
     "text": "if let Some(e) = broken {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/budget.rs|1932d340806c453c|0": {
@@ -7447,7 +7447,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/envelope.rs|2c33cc85a000c037|0": {
     "target": "../../../cli/src/guard/envelope.rs",
-    "line": 19,
+    "line": 22,
     "text": "/// Claude Code stamps this on every hook event. Carried into the"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/probe.rs|0328fd60d100783a|0": {
@@ -7464,8 +7464,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/say.rs|2ac7cf2af55c8a59|0": {
     "target": "../../../cli/src/guard/say.rs",
-    "line": 26,
-    "end": 28,
+    "line": 27,
+    "end": 29,
     "text": "Reuse the existing implementation instead of re-writing it. \\"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/say.rs|4cacfe52f94465d3|0": {
@@ -7503,11 +7503,11 @@
     "line": 59,
     "text": "let mode = crate::config::tier_of(&Config::load(root), crate::config::PROMOTED_DEFAULT);"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|147dbd779a4128ca|0": {
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|0b512b5851758714|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 86,
-    "end": 87,
-    "text": "/// 0.4.0 adds the `budget` event (the §4.2 step-2 hard-budget rule"
+    "line": 94,
+    "end": 96,
+    "text": "/// 0.2.0 adds `session_id`: without it the D2-2 session count and"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
@@ -7515,22 +7515,11 @@
     "end": 206,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3e6d516c593ebca6|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 97,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.11.0\";"
-  },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
     "line": 220,
     "end": 233,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|754ce8b7872981c0|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 89,
-    "end": 96,
-    "text": "/// 0.2.0 adds `session_id`. 0.1.0 carried no session identity at all,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
@@ -7540,9 +7529,14 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 81,
-    "end": 84,
+    "line": 87,
+    "end": 90,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|cfd91ad7337d1de8|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 92,
+    "text": "/// 0.4.0 adds the `budget` event (§4.2 step-2 per-rule firing records)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
     "target": "../../../cli/src/hookio.rs",
@@ -7552,8 +7546,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 76,
-    "end": 79,
+    "line": 82,
+    "end": 85,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
@@ -7561,6 +7555,11 @@
     "line": 283,
     "end": 299,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 97,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.12.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -8153,8 +8152,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mcp/tools.rs|8ef4edac0142a307|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 78,
-    "end": 82,
+    "line": 79,
+    "end": 83,
     "text": "tool!(\n\"deadcode\","
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/candidates.rs|2203179c0b1eb61a|0": {
@@ -8640,8 +8639,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 107,
-    "end": 116,
+    "line": 115,
+    "end": 124,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {
@@ -8752,8 +8751,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/config/tombstone.rs|b3b12163b3504ccc|0": {
     "target": "../../../cli/src/config/tombstone.rs",
-    "line": 41,
-    "end": 59,
+    "line": 40,
+    "end": 58,
     "text": "/// The load-throat refusal: a tier outside the four is a typo,"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/corelink/judged.rs|2fd0e4ba91e5d008|0": {
@@ -8764,8 +8763,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/daemon/proto.rs|ac33dd3ebaabd544|0": {
     "target": "../../../cli/src/daemon/proto.rs",
-    "line": 60,
-    "end": 67,
+    "line": 73,
+    "end": 80,
     "text": "/// The tombstone verdict (plan v2.27): the measuring hook's"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/docdup/segments.rs|1cd8da4e23af7a9c|0": {
@@ -8774,17 +8773,17 @@
     "end": 249,
     "text": "fn merge_comments(nodes: &[Node<'_>], text: &str) -> Vec<RawSeg> {"
   },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/envelope.rs|bd53382139d2df00|0": {
+    "target": "../../../cli/src/guard/envelope.rs",
+    "line": 57,
+    "end": 62,
+    "text": "pub(super) fn judged_pair(&self, root: &Path, cfg: Option<&Config>) -> Option<(Lang, String)> {"
+  },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/say.rs|7de3ded125c17f93|0": {
     "target": "../../../cli/src/guard/say.rs",
-    "line": 68,
-    "end": 79,
+    "line": 69,
+    "end": 80,
     "text": "/// The tombstone class (plan v2.27): the core judged more sites than"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|296961069691d05d|0": {
-    "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 49,
-    "end": 53,
-    "text": "let path = Path::new(&env.tool_input.file_path);"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b3f155fc0aa8b166|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
@@ -8794,20 +8793,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 159,
-    "end": 177,
+    "line": 149,
+    "end": 167,
     "text": "/// The session's erased keys as its earlier `tombstone` lines left"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b52bd9cf0115c845|1": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 159,
-    "end": 217,
+    "line": 149,
+    "end": 207,
     "text": "/// The session's erased keys as its earlier `tombstone` lines left"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|b70fd425a12f96af|0": {
     "target": "../../../cli/src/guard/tombstone.rs",
-    "line": 77,
-    "end": 87,
+    "line": 71,
+    "end": 81,
     "text": "let (tier, budget) = knobs(cfg);"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/guard/tombstone.rs|c2c53e8e5dfcb4ba|0": {
@@ -8818,20 +8817,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 42,
-    "end": 61,
+    "line": 48,
+    "end": 67,
     "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|3e6d516c593ebca6|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 97,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.11.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
     "line": 265,
     "end": 281,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 97,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.12.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
     "target": "../../../cli/src/scan/opaque.rs",
@@ -9338,10 +9337,10 @@
     "end": 10,
     "text": "//! The Stop audit's similar leg (plan v2.29 step 6, spec §六): every"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|3e6d516c593ebca6|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
     "target": "../../../cli/src/hookio.rs",
     "line": 97,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.11.0\";"
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.12.0\";"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|72c10c59b78ec5d9|0": {
     "target": "../../../cli/src/main_similar.rs",
@@ -9350,7 +9349,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 171,
+    "line": 172,
     "text": "\"similar_units\","
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {
@@ -9663,11 +9662,11 @@
     "line": 39,
     "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | tab:similar, similar_report | mcp:similar_units | |"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|9fed053bd656e1c4|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|b9ce43214e76429d|0": {
     "target": "../../../cli/tests/it/observe_feed.rs",
     "line": 1,
     "end": 10,
-    "text": "//! Observe-feed contract (ce.observe/0.11.0): the NDJSON feed is the"
+    "text": "//! Observe-feed contract (ce.observe/0.12.0): the NDJSON feed is the"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|55926dc0727ec714|0": {
     "target": "../../../cli/tests/it/similar_face.rs",
@@ -9839,8 +9838,8 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/canonical.rs|9ae7fb2196f32953|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 79,
-    "end": 82,
+    "line": 83,
+    "end": 86,
     "text": "// rule 7: the rules file is a path the query family reads, never"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/rules.rs|223a93993213ddf8|0": {
@@ -9887,12 +9886,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 188,
+    "line": 189,
     "text": "\"query\",\nquery,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|e24234656aa40c40|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 209,
+    "line": 210,
     "text": "\"rules\",\nrules,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|0b5c5c7ec7c0f040|0": {
@@ -10503,5 +10502,235 @@
     "target": "../../../gui/ui/query.js",
     "line": 21,
     "text": "async function loadQuery(rules) {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/audit/flow.rs|3e4d07aceeaab9e5|0": {
+    "target": "../../../cli/src/audit/flow.rs",
+    "line": 17,
+    "text": "pub(super) fn leg(loaded: &[Loaded], link: Option<&mut Link>) -> Option<Value> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/config/flow.rs|f397172dd3730c2c|0": {
+    "target": "../../../cli/src/config/flow.rs",
+    "line": 20,
+    "end": 25,
+    "text": "pub struct FlowCfg {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/daemon/proto.rs|566d0d3b3fcf378d|0": {
+    "target": "../../../cli/src/daemon/proto.rs",
+    "line": 30,
+    "text": "pub struct FlowTables {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/lower.rs|781cc0b73892d887|0": {
+    "target": "../../../cli/src/flow/lower.rs",
+    "line": 70,
+    "text": "pub fn lower_file(text: &str, lang: Lang) -> Option<Lowered> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|12d5fd933d46fae5|0": {
+    "target": "../../../cli/src/flow/mod.rs",
+    "line": 42,
+    "end": 59,
+    "text": "/// The languages whose flow findings are judged, not advised: a"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|5a6154b13acdf234|0": {
+    "target": "../../../cli/src/flow/mod.rs",
+    "line": 40,
+    "end": 59,
+    "text": "use crate::scan::lang::Lang;"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/spec.rs|319494f634313359|0": {
+    "target": "../../../cli/src/flow/spec.rs",
+    "line": 226,
+    "end": 229,
+    "text": "/// The table of a language whose units the family lowers (§5.3): the"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|10e7f3e0dbe6a0ad|0": {
+    "target": "../../../cli/src/flow/wire_batch.rs",
+    "line": 126,
+    "text": "fn refused_unit(error: &str, sent: &Sent) -> Option<(usize, String)> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|32903890f16e9327|0": {
+    "target": "../../../cli/src/flow/wire_batch.rs",
+    "line": 80,
+    "text": "pub fn judge(link: &mut Link, files: &[Lowered]) -> Result<Verdict, String> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|7a44f3f578cbe7c2|0": {
+    "target": "../../../cli/src/flow/wire_batch.rs",
+    "line": 39,
+    "text": "pub fn plan(files: &[Lowered]) -> (Vec<Sent<'_>>, Vec<Unsent>) {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|0fe93a99598ca424|0": {
+    "target": "../../../cli/src/flow_report/face.rs",
+    "line": 65,
+    "text": "pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Report> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ce1747c9095bbd55|0": {
+    "target": "../../../cli/src/flow_report/face.rs",
+    "line": 21,
+    "text": "pub const SCHEMA_ID: &str = \"ce.flow-report/0.1.0\";"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|f6f4aef3ae9814ac|0": {
+    "target": "../../../cli/src/flow_report/face.rs",
+    "line": 124,
+    "text": "pub fn assemble("
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|5150f690006b8d0b|0": {
+    "target": "../../../cli/src/flow_report/mod.rs",
+    "line": 63,
+    "text": "pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|98dfcfb680e6d525|0": {
+    "target": "../../../cli/src/flow_report/mod.rs",
+    "line": 33,
+    "text": "pub fn judged(lang: Lang, kind: u8) -> bool {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|aa6492df5ec3eede|0": {
+    "target": "../../../cli/src/flow_report/mod.rs",
+    "line": 21,
+    "end": 38,
+    "text": "pub const KINDS: [&str; 4] = [\"unreachable\", \"dead_store\", \"unused_local\", \"unused_param\"];"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/guard/flow.rs|a968908f87affff4|0": {
+    "target": "../../../cli/src/guard/flow.rs",
+    "line": 35,
+    "text": "pub(super) fn observe(root: &Path, env: &Envelope, cfg: Option<&Config>) -> Option<Pending> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/guard/flow.rs|e147c520a5b04e8a|0": {
+    "target": "../../../cli/src/guard/flow.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! The PreToolUse leg of the flow class (plan v2.31 step 5; design"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/guard/flow.rs|fa6f16b5ef67d183|0": {
+    "target": "../../../cli/src/guard/flow.rs",
+    "line": 114,
+    "text": "fn tier(cfg: Option<&Config>) -> &'static str {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/guard/flow_novel.rs|e850699aa95e7ef5|0": {
+    "target": "../../../cli/src/guard/flow_novel.rs",
+    "line": 15,
+    "end": 22,
+    "text": "pub fn key(p: &Placed) -> Key {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|afd06019b3c84ab5|0": {
+    "target": "../../../cli/src/main_flow.rs",
+    "line": 30,
+    "end": 56,
+    "text": "pub fn flow_cmd(a: FlowArgs) -> ExitCode {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/daemon_flow.rs|4e9632f41b3e85e1|0": {
+    "target": "../../../cli/tests/it/daemon_flow.rs",
+    "line": 18,
+    "text": "fn a_flow_request_round_trips_through_the_daemon() {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_audit.rs|509af1eda962ef69|0": {
+    "target": "../../../cli/tests/it/flow_audit.rs",
+    "line": 46,
+    "text": "fn the_stop_line_carries_the_flow_counts_and_never_blocks() {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_face.rs|86b3095f4c308d00|0": {
+    "target": "../../../cli/tests/it/flow_face.rs",
+    "line": 75,
+    "text": "fn the_cli_prints_the_library_face_and_kind_narrows_only_the_listing() {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_guard.rs|c1d69d926211c89b|0": {
+    "target": "../../../cli/tests/it/flow_guard.rs",
+    "line": 64,
+    "text": "fn an_introduced_unreachable_statement_is_one_novel_finding_in_observe() {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/unit/guard/flow_novel.rs|231ba8c0761c6fd4|0": {
+    "target": "../../../cli/tests/unit/guard/flow_novel.rs",
+    "line": 17,
+    "text": "fn a_moved_finding_is_not_novel() {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow.hs|29c0e0efa2696f51|0": {
+    "target": "../../../core/app/CE/Flow.hs",
+    "line": 67,
+    "end": 75,
+    "text": "unitFindings :: Unit -> [[Integer]]"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow.hs|744148ec738b2af7|0": {
+    "target": "../../../core/app/CE/Flow.hs",
+    "line": 5,
+    "end": 18,
+    "text": "-- | flow.request handler (plan v2.31 step 3; ADR-008 seventh"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow.hs|f05168562ff4172b|0": {
+    "target": "../../../core/app/CE/Flow.hs",
+    "line": 45,
+    "text": "answer :: String -> Bool -> FlowReq -> ByteString"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow.hs|f38255140f232e43|0": {
+    "target": "../../../core/app/CE/Flow.hs",
+    "line": 62,
+    "end": 63,
+    "text": "dynamic :: Unit -> Bool"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cfg.hs|5385685dfe41e6e3|0": {
+    "target": "../../../core/app/CE/Flow/Cfg.hs",
+    "line": 40,
+    "text": "cfg :: Unit -> Cfg"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cfg.hs|98af2af0f2c67611|0": {
+    "target": "../../../core/app/CE/Flow/Cfg.hs",
+    "line": 1,
+    "end": 14,
+    "text": "-- | The control-flow graph of one unit (design booklet §5.2):"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Contract.hs|6487ef1c58466e09|0": {
+    "target": "../../../core/app/CE/Flow/Contract.hs",
+    "line": 47,
+    "text": "overCap :: FlowReq -> Bool"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cost.hs|49828cb959cf10bd|0": {
+    "target": "../../../core/app/CE/Flow/Cost.hs",
+    "line": 53,
+    "text": "rowCap :: Integer"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|010f702fd264722d|0": {
+    "target": "../../../core/app/CE/Flow/Live.hs",
+    "line": 54,
+    "text": "deadStores :: Unit -> Cfg -> IS.IntSet -> [(Int, Int)]"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|4198322d174c6622|0": {
+    "target": "../../../core/app/CE/Flow/Live.hs",
+    "line": 45,
+    "text": "transfer :: [Use] -> IS.IntSet -> IS.IntSet"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|44c0fe461b0d52ce|0": {
+    "target": "../../../core/app/CE/Flow/Live.hs",
+    "line": 70,
+    "end": 82,
+    "text": "readVars :: Unit -> IS.IntSet"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|9c9fb63f16ee4a34|0": {
+    "target": "../../../core/app/CE/Flow/Live.hs",
+    "line": 30,
+    "text": "liveIn :: Unit -> Cfg -> IM.IntMap IS.IntSet"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Reach.hs|892a15c653d7d74a|0": {
+    "target": "../../../core/app/CE/Flow/Reach.hs",
+    "line": 13,
+    "text": "reachable :: Cfg -> IS.IntSet"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Reach.hs|f59e0b8faf17ac37|0": {
+    "target": "../../../core/app/CE/Flow/Reach.hs",
+    "line": 23,
+    "text": "runs :: Int -> IS.IntSet -> [(Int, Int)]"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/FlowProps.hs|eede1fc1fcfceaf6|0": {
+    "target": "../../../core/test/FlowProps.hs",
+    "line": 5,
+    "end": 12,
+    "text": "-- | The flow family's battery (plan v2.31 step 3): the hand-written"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/ReferenceFlow.hs|64a9ec174e646769|0": {
+    "target": "../../../core/test/ReferenceFlow.hs",
+    "line": 1,
+    "end": 12,
+    "text": "-- | An independently written reference for the flow family (design"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
+    "target": "../../../core/test/Spec.hs",
+    "line": 88,
+    "text": ", goldenPairs \"flow/golden.ndjson\""
   }
 }

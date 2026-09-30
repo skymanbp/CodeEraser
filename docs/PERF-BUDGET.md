@@ -343,6 +343,20 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - 事件路留下的固定成本 = 事件表的编码、核的解码与折叠：自仓请求核侧 0.32 − 0.26 ≈ 0.06 s；`ce scan` 两臂第二坐打平（差 0.05 s 在噪声内）。
 - 复跑：两臂各自 `cargo build --release --locked` 到独立 target 目录（`--manifest-path <树>/cli/Cargo.toml --target-dir <lane>/…`），`CE_CORE_BIN` 各指自己的核；同一棵干净 worktree 里 `rm -rf .ce` 后各臂预热一跑，再 ABAB ×5 取中位。
 
+## v2.31 步 5 PreToolUse flow 腿 A/B（实测 2026-09-30，release，同一台机、同一棵树内容、同一窗口：两份相同的树 = 本批 `cli/src` 的副本 364 个 `.rs`〔`git init`、各先 `ce dedup .` 建满索引，两臂各自一份免得两代 daemon 互相重建〕，A = 21d3aa28 的 ce〔无 flow 腿〕，B = 本批的 ce〔flow 腿在场，`[flow] tier` 不写 = observe〕，核同一个 ce-core 1.8.0；各臂预热两跑后 ABAB ×10，`python` `perf_counter` 夹 `subprocess.run`、含进程起；第一坐量时另两个车道在编译〔`Get-CimInstance` 80 → 65 %〕，第二坐 21 → 25 %）
+
+口径：一次 `Write` 信封写 `src/mention/walk.rs`（299 行）并在末尾追加一段——`clean` = 一行注释（flow 腿两侧都降表、经 daemon 判，都无发现，不落 flow 行）、`finding` = 一个带不可达语句的新单元（flow 腿落一行，`novel` 1）；整个钩子进程的墙钟，中位数（最小–最大），毫秒。
+
+| 面 | A（无 flow 腿） | B（flow 腿在场） | 状态 |
+|---|---|---|---|
+| `clean`，第一坐 | 86.1（81.7–113.0） | 97.2（90.6–113.3） | 记录：中位 +11.1 ms |
+| `clean`，第二坐 | 84.8（82.6–132.7） | 95.3（91.4–157.1） | 记录：中位 +10.5 ms |
+| `finding`，第二坐 | 89.7（84.6–145.2） | 100.3（96.5–110.3） | 记录：中位 +10.6 ms；B 的 flow 行 `{units: 25, before: 0, after: 1, novel: 1, judged: false}`（Rust 不在判决掩码里，只记不说） |
+
+- 读法与任务书不同的一处：feed 探针行的 `elapsed_ms` 只计重复探针自己（`guard.rs::probed` 夹的是 `probe::novel_matches`），flow 腿不在里面——两臂二十跑的中位都是 18 ms、全部 `degraded: false`；flow 腿的代价只在整个进程的墙钟里看得见，故表读墙钟。
+- flow 腿的固定成本 = 两侧各降一次表 + 两次 daemon 往返（核判 `flow/1`）：299 行的文件每次写入中位 +10.5–11.1 ms，三组读数一致；找到发现时多落一行 feed，不另加可见成本。
+- 复跑：`cargo build --release` 各出一个二进制拷到车道目录；两份树各 `git init` + `ce dedup .`（daemon 的冷启动在第一次探针时还没盖完「全量已建」戳，探针会答 `degraded: true`——先用 CLI 建一次满索引）；各臂预热两跑后 ABAB ×10，`clean` 与 `finding` 各一坐。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

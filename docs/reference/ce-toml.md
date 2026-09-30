@@ -93,6 +93,12 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | `ledger` | *(absent)* | Files declared to hold the changelog role, in the exclude list's dialect (`dir/` the directory's files): exempt whole and counted `declared` in the feed — the backstop for a ledger neither the path, the shape nor the segment witness reads |
 | `terms` | *(absent)* | The repository's own vocabulary: words that never spell a name, whole or as a word of a compound (`pork` declared keeps `braise_pork` out and leaves `braise` in); matched case-insensitively |
 
+## [flow]
+
+| key | default | meaning |
+|---|---|---|
+| `tier` | *(absent)* | The intra-function dead-code class's own hook tier (plan v2.31 step 5): observe / warn / ask / deny; unset = observe. `[guard] mode` does not reach this class, and a tier speaks only for a finding in a language the precision gate admitted (`flow::judged_mask`: the languages whose blind-reviewed exam passed), so a finding in any other language, and every unused parameter, stays advisory; the Stop leg never blocks at any tier, and `ce flow --check` exits 1 only at `deny` with a judged finding. Any other value is refused at load by name, so a mistyped tier can never look armed |
+
 ## [ui]
 
 | key | default | meaning |

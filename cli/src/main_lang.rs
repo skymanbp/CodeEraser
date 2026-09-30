@@ -69,6 +69,9 @@ query.prelude	打印内置前奏并退出
 rules	架构规则当门：规则文件（仓根 ce.rules 或 `[rules] file`）里每条 `assert` 由核的 query/1 判决，每条违规带见证与推导链；有违规退出 1，程序错误退出 2
 rules.file	要判决的规则文件（缺省 = `[rules] file`，否则仓根的 ce.rules；不存在 = 零断言）
 rules.why	查询答案也带推导链
+flow	函数内死代码（不可达语句、死存储、未用局部量与形参），由核的 flow/1 判决；--check 是它自己的门，在 `[flow] tier` 为 deny 时生效（从不进 `ce check`）；未用形参永远只当顾问
+flow.check	`[flow] tier` 为 deny 且存在被判决的发现时退出 1（未用形参只当顾问，永不计入）
+flow.kind	只显示这些种类，逗号分隔（unreachable、dead_store、unused_local、unused_param）；计数照全量报
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）
@@ -90,7 +93,7 @@ daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰
 daemon.root	要服务的项目根
 ping	经项目守护进程往返一次 ping（会惰启它）
 ping.root	项目根（默认当前目录）
-probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定；墓碑类按它自己的 [tombstone] tier 记账
+probe	PreToolUse 廉价门：从 stdin 读钩子信封，探守护进程，按 ce.toml [guard] 发权限决定；墓碑类与函数内死代码类各按自己的 [tombstone] tier、[flow] tier 记账
 probe.hook	钩子模式：从 stdin 读 JSON 信封（必带）
 settle	PostToolUse 记录：从 stdin 读钩子信封；本会话的 PreToolUse 对同一次工具调用答过 ask 时，记下工具已跑——人放行了这次写入。从不出声
 settle.hook	钩子模式：从 stdin 读 JSON 信封（必带）

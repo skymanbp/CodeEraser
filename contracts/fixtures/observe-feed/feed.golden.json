@@ -7,7 +7,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -34,7 +34,7 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_erased": 0,
     "session_id": "t",
     "tool_use_id": "t",
@@ -48,7 +48,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -58,7 +58,7 @@
     "file": "<file>",
     "mode": "observe",
     "resulting_lines": 751,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -91,7 +91,7 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_erased": 0,
     "session_id": "t",
     "tool_use_id": "t",
@@ -105,7 +105,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -116,7 +116,7 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 400,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "soft": 300,
     "tool_use_id": "t",
@@ -151,7 +151,7 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_erased": 0,
     "session_id": "t",
     "tool_use_id": "t",
@@ -165,7 +165,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -176,7 +176,7 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 600,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "soft": 300,
     "tool_use_id": "t",
@@ -212,7 +212,7 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_erased": 0,
     "session_id": "t",
     "tool_use_id": "t",
@@ -226,7 +226,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "toolu_ask",
     "ts_ms": 0
@@ -237,7 +237,7 @@
     "hard": 750,
     "mode": "observe",
     "resulting_lines": 700,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "soft": 300,
     "tool_use_id": "toolu_ask",
@@ -273,7 +273,7 @@
     "mode": "observe",
     "rev": 1,
     "rows": 0,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_erased": 0,
     "session_id": "t",
     "tool_use_id": "toolu_ask",
@@ -282,7 +282,7 @@
   {
     "event": "settled",
     "file": "<file>",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "toolu_ask",
     "ts_ms": 0
@@ -295,7 +295,7 @@
     "file": "<file>",
     "matches": 0,
     "mode": "observe",
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -331,8 +331,43 @@
     "mode": "observe",
     "rev": 1,
     "rows": 2,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_erased": 0,
+    "session_id": "t",
+    "tool_use_id": "t",
+    "ts_ms": 0
+  },
+  {
+    "event": "flow",
+    "file": "<file>",
+    "flow": {
+      "after": 1,
+      "before": 0,
+      "judged": false,
+      "kinds": {
+        "dead_store": 0,
+        "unreachable": 1,
+        "unused_local": 0,
+        "unused_param": 0
+      },
+      "novel": 1,
+      "units": 1
+    },
+    "mode": "observe",
+    "schema": "ce.observe/0.12.0",
+    "session_id": "t",
+    "tool_use_id": "t",
+    "ts_ms": 0
+  },
+  {
+    "decision": "observe",
+    "degraded": false,
+    "elapsed_ms": 0,
+    "event": "probe",
+    "file": "<file>",
+    "matches": 0,
+    "mode": "observe",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tool_use_id": "t",
     "ts_ms": 0
@@ -342,12 +377,24 @@
     "degraded": false,
     "dup_blocks": 1,
     "event": "stop_audit",
+    "flow": {
+      "files": 1,
+      "findings": 0,
+      "judged": 0,
+      "kinds": {
+        "dead_store": 0,
+        "unreachable": 0,
+        "unused_local": 0,
+        "unused_param": 0
+      },
+      "units": 1
+    },
     "fourclass": {
       "degraded": "daemon_unavailable"
     },
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": "t",
     "tombstone": {
       "erased": 0,
@@ -368,9 +415,21 @@
     "degraded": false,
     "dup_blocks": 1,
     "event": "precommit",
+    "flow": {
+      "files": 1,
+      "findings": 0,
+      "judged": 0,
+      "kinds": {
+        "dead_store": 0,
+        "unreachable": 0,
+        "unused_local": 0,
+        "unused_param": 0
+      },
+      "units": 1
+    },
     "mode": "observe",
     "net_loc": 11,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": null,
     "tombstone": {
       "erased": 0,
@@ -391,9 +450,21 @@
     "degraded": false,
     "dup_blocks": 0,
     "event": "commitmsg",
+    "flow": {
+      "files": 1,
+      "findings": 0,
+      "judged": 0,
+      "kinds": {
+        "dead_store": 0,
+        "unreachable": 0,
+        "unused_local": 0,
+        "unused_param": 0
+      },
+      "units": 1
+    },
     "mode": "observe",
     "net_loc": 0,
-    "schema": "ce.observe/0.11.0",
+    "schema": "ce.observe/0.12.0",
     "session_id": null,
     "tombstone": {
       "erased": 5,

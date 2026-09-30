@@ -11,6 +11,7 @@
 
 mod changes;
 mod commitmsg;
+mod flow;
 mod observe;
 mod precommit;
 mod similar;
@@ -140,6 +141,9 @@ fn gather(
         .as_ref()
         .filter(|_| event == "stop_audit")
         .and_then(|(loaded, _)| similar::leg(root, loaded, link.as_mut()));
+    let flow = texts
+        .as_ref()
+        .and_then(|(loaded, _)| flow::leg(loaded, link.as_mut()));
     observe_log(
         root,
         AuditEvent {
@@ -152,6 +156,7 @@ fn gather(
             fourclass,
             tombstone: tombstone.as_ref().map(|t| t.feed.clone()),
             similar,
+            flow,
             skipped: None, // this leg MEASURED — see AuditEvent::skipped
             unmeasured: crate::gitmodules::unseated(root),
         },
@@ -233,6 +238,7 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) {
             fourclass: None,
             tombstone: None,
             similar: None,
+            flow: None,
             skipped,
             unmeasured: Vec::new(),
         },

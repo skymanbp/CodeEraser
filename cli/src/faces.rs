@@ -215,6 +215,17 @@ pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<
     ))
 }
 
+/// The dead code inside functions (plan v2.31 step 5): every unit
+/// of the tree judged over flow/1 and placed back through its legend
+/// — the SAME document `ce flow --format json` prints, `kinds`
+/// narrowing the listed findings as `--kind` does. Report-only: the
+/// CLI's `--check` is its own reading of `counts.judged`.
+pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
+    Ok(crate::flow_report::face::report_json(
+        &crate::flow_report::face::run(root, core, kinds)?,
+    ))
+}
+
 /// The machine's own state. Unlike every sibling it cannot fail: a
 /// core that will not answer IS the finding, and it rides inside the
 /// document (health::doctor).

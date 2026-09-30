@@ -18,8 +18,21 @@ use std::path::Path;
 /// major, so a 1.x client meets `restart` and respawns; 2.1.0 (plan
 /// v2.27 step 4) adds the `tombstone` request — additive: a 2.1.0
 /// client asks a 2.0.0 daemon to leave (client.rs `stale`, same major
-/// and older minor) before it ever sends one.
-pub const DAEMON_PROTO: &str = "2.1.0";
+/// and older minor) before it ever sends one; 2.2.0 (plan v2.31 step
+/// 5) adds the `flow` request the same additive way.
+pub const DAEMON_PROTO: &str = "2.2.0";
+
+/// The flow/1 request's four integer tables, exactly as
+/// `flow::wire::body` assembles them (a unit's rows led by its request
+/// index): the hook deserializes that body into this, the daemon
+/// serializes it back — one assembly, and only integers cross.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FlowTables {
+    pub units: Vec<Vec<i64>>,
+    pub stmts: Vec<Vec<i64>>,
+    pub vars: Vec<Vec<i64>>,
+    pub uses: Vec<Vec<i64>>,
+}
 
 // Clone: the client's deadline wrapper moves the request into the
 // worker thread that owns the connection (plan v2.16-era #85 close);
@@ -65,6 +78,10 @@ pub enum Request {
         rows: Vec<[u64; 3]>,
         budget: Option<u32>,
     },
+    /// The flow verdict (plan v2.31 step 5): one side of a write's
+    /// lowered units, judged over the daemon-owned core link (flow/1).
+    /// The hook places the reply's findings through its own legend.
+    Flow(FlowTables),
     Shutdown,
 }
 
@@ -97,6 +114,10 @@ pub enum Response {
     /// The raw tombstone.result, or a degraded object naming why there
     /// is none (`{"degraded": true, "reason": …}`) — never silent (A9f).
     TombstoneReport {
+        reply: serde_json::Value,
+    },
+    /// The raw flow.result, or the same degraded object (A9f).
+    FlowReport {
         reply: serde_json::Value,
     },
     Error {

@@ -65,6 +65,29 @@ impl Guard {
     }
 }
 
+/// A class table's own `tier` against the four (`[tombstone]`,
+/// `[flow]`): a value outside them is a typo, refused at load by name
+/// — nothing runs with a tier it cannot read.
+pub(crate) fn tier_fault(table: &str, tier: Option<&str>) -> Option<String> {
+    match tier {
+        Some(t) if !TIERS.contains(&t) => Some(format!(
+            "ce.toml {table} tier {t:?}: expected one of {}",
+            TIERS.join(" | ")
+        )),
+        _ => None,
+    }
+}
+
+/// A class's declared tier as the static spelling a decision carries:
+/// the TIERS entry it names, else the class's route default.
+pub fn static_tier(declared: &str, route_default: &'static str) -> &'static str {
+    TIERS
+        .iter()
+        .find(|t| **t == declared)
+        .copied()
+        .unwrap_or(route_default)
+}
+
 /// The effective tier from a load RESULT — the ONE renderer for every
 /// surface that reports or enforces it, so an unreadable ce.toml can
 /// never print byte-identically to a deliberate observe.

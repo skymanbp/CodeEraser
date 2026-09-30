@@ -8,7 +8,10 @@
 //! two field lists a periodic pair the clone gate billed at two
 //! alignments once the id joined (plan v2.30 step 5b-7).
 
+use crate::config::Config;
+use crate::scan::lang::Lang;
 use serde::Deserialize;
+use std::path::Path;
 
 #[derive(Deserialize, Default)]
 #[serde(default)]
@@ -43,4 +46,22 @@ pub(super) struct ToolInput {
     /// edit in memory for an exact post-write line count.
     pub(super) old_string: String,
     pub(super) replace_all: bool,
+}
+
+impl Envelope {
+    /// The write's target as a text class measures it (the tombstone
+    /// and the flow class alike): a judged language, inside the
+    /// config's walk; and its text before this write — on disk through
+    /// the bounded read, empty for a file that does not exist yet.
+    /// None = not this class's write, or a before side it cannot read.
+    pub(super) fn judged_pair(&self, root: &Path, cfg: Option<&Config>) -> Option<(Lang, String)> {
+        let path = Path::new(&self.tool_input.file_path);
+        let lang = Lang::judged_path(path)?;
+        if cfg.is_some_and(|c| !crate::scan::walk::in_scope(root, path, &c.exclude)) {
+            return None;
+        }
+        let before = crate::tombstone::texts::read_capped(path)
+            .or_else(|| (!path.exists()).then(String::new))?;
+        Some((lang, before))
+    }
 }

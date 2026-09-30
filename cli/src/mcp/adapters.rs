@@ -183,6 +183,11 @@ pub(super) fn rules(root: &Path, a: &Value) -> Result<String> {
     Ok(crate::faces::rules(root, &core(), file, why)?.to_string())
 }
 
+pub(super) fn flow(root: &Path, a: &Value) -> Result<String> {
+    let kinds: Vec<String> = a["kind"].as_str().map(String::from).into_iter().collect();
+    Ok(crate::faces::flow(root, &core(), &kinds)?.to_string())
+}
+
 /// The two arguments both query tools take: the rules file (root-
 /// relative, optional) and whether every answer carries its derivation.
 fn file_why(a: &Value) -> (Option<&Path>, bool) {

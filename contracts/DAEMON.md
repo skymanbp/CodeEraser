@@ -28,8 +28,10 @@
   每连接一线程（静默连接只占住自己，卡不住 accept 循环；线程上限
   64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
   纪律不变。
-- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.1.0<!--/ce-->**：
-  2.1.0 = 加性 `tombstone{rows,budget}` 请求与 `tombstone_report{reply}` 应答〔计划 v2.27 步 4，
+- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.2.0<!--/ce-->**：
+  2.2.0 = 加性 `flow{units,stmts,vars,uses}` 请求与 `flow_report{reply}` 应答〔计划 v2.31 步 5；
+  四表即 `flow::wire::body` 组装的原样，钩子反序列化进 `FlowTables`、daemon 原样送核；2.2.0 客户端遇
+  2.1.0 daemon 同走 §2 回执校验的 stale 路〕；2.1.0 = 加性 `tombstone{rows,budget}` 请求与 `tombstone_report{reply}` 应答〔计划 v2.27 步 4，
   2026-09-04；2.1.0 客户端遇 2.0.0 daemon 按 §2 回执校验判 stale、请退后 respawn——该条自此有实例〕；
   2.0.0 = `hello_ok` 砍去无读者的 `version` 字段〔I 轮 D8，2026-08-24，用户拍板
   「现在就删」；删字段 = major，1.x 客户端得 `restart` 后自 respawn〕；1.1.0 =
@@ -118,6 +120,7 @@
 | `probe{file_path,content}` | M3 廉价门：即将写入内容的 T1/T2 证实匹配（排除自身路径，零刷新） | `probe_report{matches,elapsed_ms}` |
 | `four_class{pairs}` | M4 判决：(before,after) 路径对走 daemon 持有的 ce-core link；只有**路径**过 socket，内容 daemon 侧读（ADR-002） | `four_class_report{report}` |
 | `tombstone{rows,budget?}` | v2.27 墓碑判决：度量钩子的 `[kind,marks,erasedNames]` 行与声明预算走同一条 ce-core link（tombstone/1）；只有**整数**过 socket，行序由钩子回贴成站点 | `tombstone_report{reply}`（原样 `tombstone.result`，或 `{degraded:true,reason}`——核缺席 / 无此能力 / 链断各具名） |
+| `flow{units,stmts,vars,uses}` | v2.31 函数内死代码判决：写入一侧的降表四表（`flow::wire::body` 的原样）走同一条 ce-core link（flow/1）；只有**整数**过 socket，发现由钩子按自己的图例回标 | `flow_report{reply}`（原样 `flow.result`，或 `{degraded:true,reason}`——同上具名） |
 | `shutdown` | 退出 | `bye` |
 
 - 任何请求的失败面 → `error{message}`；降级信息在 report **内部**
@@ -134,13 +137,14 @@
   `cargo test --test it daemon_proto::`（CE_BLESS=1 蓄意重生成）守护。
 - **覆盖边界（清零批审查注记）**：golden 冻结的是 enum 变体的**信封
   形状**；`dedup_report.report`、`probe_report.matches`、
-  `four_class_report.report`、`tombstone_report.reply` 四个嵌套载荷是 `serde_json::Value` 直通，
+  `four_class_report.report`、`tombstone_report.reply`、`flow_report.reply` 五个嵌套载荷是 `serde_json::Value` 直通，
   其内部键**不在**本门覆盖内（fixture 里的载荷是示意占位）。各自的
   权威与钉点：dedup report = `dedup::report_json`（report_schema
   golden `fixtures/dedup-report/` + daemon_e2e 消费）、fourclass
   report = `fourclass::session` 形状（daemon_e2e 断言 + wire_indices
   索引钉；7.0.0 起核链退避恢复后的首份报告可带加性 `recovered: n`，daemon/judge.rs）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =
-  ce-core 的 `tombstone.result`（wire golden `fixtures/tombstone/` + `tombstone::wire::consume` 单元腿）。
+  ce-core 的 `tombstone.result`（wire golden `fixtures/tombstone/` + `tombstone::wire::consume` 单元腿）、flow reply =
+  ce-core 的 `flow.result`（wire golden `fixtures/flow/` + `flow::wire::consume`，经 daemon 一腿 `daemon_flow`）。
 
 ## 5. 复跑
 

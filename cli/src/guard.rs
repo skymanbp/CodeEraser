@@ -10,6 +10,8 @@
 //! cannot write: what the person did with an `ask`.
 
 mod budget;
+mod flow;
+mod flow_novel;
 mod probe;
 mod say;
 mod settle;
@@ -61,8 +63,9 @@ pub fn run_settle_hook() -> ExitCode {
 /// unreadable ce.toml downgrades everything to observe (fail-open);
 /// an absent one resolves to the §4.2 route defaults via tier().
 /// Every feed line of the event waits for the decision (0.11.0): the
-/// probe line carries the tier the hook decided at, the size classes'
-/// lines follow it, the tombstone line carries `applied`.
+/// flow line lands first (0.12.0), the probe line carries the tier the
+/// hook decided at, the size classes' lines follow it, the tombstone
+/// line carries `applied`.
 fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let loaded = Config::load(root);
     let broken = loaded.as_ref().err().cloned();
@@ -93,23 +96,43 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     }
     let sized = budget::size_classes(root, env, cfg.as_ref(), &mode, budget_seen);
     reasons.extend(sized.budget);
-    // the third class speaks at its own tier (`[tombstone] tier`); its
-    // feed line waits for the decision and records it as `applied`
-    let (c, fence) = cfg.as_ref().map_or((None, None), |(c, f)| (Some(c), *f));
-    let tomb: Option<tombstone::Pending> = tombstone::observe(root, env, c, fence);
-    let spoken = tomb.as_ref().and_then(|p| p.speak.clone());
-    let decided = emit_reasons(
-        &mode,
-        reasons,
-        sized.zone.into_iter().chain(spoken).collect(),
-        &broken,
-    );
+    let own = Tiered::observe(root, env, cfg.as_ref());
+    let spoken = sized.zone.into_iter().chain(own.spoken()).collect();
+    let decided = emit_reasons(&mode, reasons, spoken, &broken);
+    if let Some(p) = own.flow {
+        feed(root, env, p.line);
+    }
     observe_log(root, env, &probed, &mode, decided);
     for line in sized.lines {
         feed(root, env, line);
     }
-    tombstone::record(root, env, tomb, decided);
+    tombstone::record(root, env, own.tomb, decided);
     ExitCode::SUCCESS
+}
+
+/// The classes that speak at their OWN tiers (`[tombstone] tier`,
+/// `[flow] tier`) and leave their own feed lines: the tombstone line
+/// waits for the decision and records it as `applied`; the flow line
+/// lands ahead of the probe's, so the probe line stays the event's.
+struct Tiered {
+    tomb: Option<tombstone::Pending>,
+    flow: Option<flow::Pending>,
+}
+
+impl Tiered {
+    fn observe(root: &Path, env: &Envelope, cfg: Option<&(Config, Option<&'static str>)>) -> Self {
+        let (c, fence) = cfg.map_or((None, None), |(c, f)| (Some(c), *f));
+        Self {
+            tomb: tombstone::observe(root, env, c, fence),
+            flow: flow::observe(root, env, c),
+        }
+    }
+
+    fn spoken(&self) -> impl Iterator<Item = (&'static str, String)> {
+        let tomb = self.tomb.as_ref().and_then(|p| p.speak.clone());
+        tomb.into_iter()
+            .chain(self.flow.as_ref().and_then(|p| p.speak.clone()))
+    }
 }
 
 /// Fired reasons → one decision line, at the STRONGEST tier among

@@ -8,7 +8,7 @@
 
 use super::adapters::{
     check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, erase_log,
-    graph_sites, join, query, rules, scan, similar_units, structure, trend, update_check,
+    flow, graph_sites, join, query, rules, scan, similar_units, structure, trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -24,6 +24,7 @@ pub struct Tool {
 }
 
 const DAYS: (&str, &str, &str) = ("days", "integer", "git history window in days (default 14)");
+const KIND: (&str, &str, &str) = ("kind", "string", "comma-separated kinds to show");
 
 /// One catalog row. The field names spelled out per tool were the
 /// same eight tokens fifteen times over, and at thirteen tools this
@@ -223,6 +224,15 @@ pub const TOOLS: &[Tool] = &[
                 "carry every query answer's derivation too"
             ),
         ]
+    ),
+    tool!(
+        "flow",
+        flow,
+        "Dead code inside functions (ce.flow-report schema): unreachable statements, \
+         dead stores, unused locals and parameters, judged by the core over flow/1 and \
+         placed by path, unit, kind, lines and variable; each finding says whether it is \
+         judged or advisory (unused parameters always are). Report-only.",
+        &[KIND]
     ),
     tool!(
         "update_check",

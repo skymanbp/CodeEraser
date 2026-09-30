@@ -95,6 +95,9 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
    counts as chips, row arrays as real tables ---- */
 #hub-chips { display: flex; gap: var(--s3); flex-wrap: wrap; color: var(--ink-low); font-size: var(--t-xs); align-self: center; }
 #hub-chips b { color: var(--ink); font-variant-numeric: tabular-nums; }
+/* the flow family's kind filter (hub_flow.js): one chip per kind, `on` = shown */
+#hub-chips .flow-kind { padding: 0 var(--s2); font-size: var(--t-xs); color: var(--ink-min); }
+#hub-chips .flow-kind.on { color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
 #hub-tables h3, #bench-series h3, #bench-frozen h3, #query-rows h3 { font-size: var(--t-xs); color: var(--ink-low); letter-spacing: 0.06em; text-transform: uppercase; margin: var(--s4) 0 var(--s2); }
 #hub-tables h3 small, #bench-series h3 small { color: var(--ink-min); margin-left: var(--s2); }
 #hub-tables table, #bench-series table, #similar-rows table, #query-rows table {

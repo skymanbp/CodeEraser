@@ -1,6 +1,6 @@
 # Code query and architecture rules — Datalog over the index's facts
 
-[index](../methodology.md) · [← 15 Same-role advisor — sparse retrieval and in-repo association](15-same-role-advisor-sparse-retrieval-and-in-repo-association.md)
+[index](../methodology.md) · [← 15 Same-role advisor — sparse retrieval and in-repo association](15-same-role-advisor-sparse-retrieval-and-in-repo-association.md) · [→ 17 Intra-function dead code — the flow graph, reachability and liveness](17-intra-function-dead-code-flow-graph-reachability-and-liveness.md)
 
 Every family before this one judges one shape of entropy the tree already carries: a clone, a
 dead file, a duplicated paragraph, a unit that plays another's part. This family lets the reader
@@ -267,7 +267,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
   alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
   so declaring it moves no baseline ([mod.rs:36](../../../cli/src/query/mod.rs#L36),
-  [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:79-82](../../../cli/src/config/canonical.rs#L79)).
+  [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:83-86](../../../cli/src/config/canonical.rs#L83)).
 - **The console** prints the errors first, then the degraded reason if any, then each goal —
   `?- F: 1 answer(s)` with its rows, `assert no_dead(F): ok` or `: N violation(s)` with its
   witnesses — every proof node indented under its answer, and one counts line; every sentence
@@ -276,7 +276,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [main_lang.rs:64](../../../cli/src/main_lang.rs#L64)).
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
-  ([tools.rs:188](../../../cli/src/mcp/tools.rs#L188), [tools.rs:209](../../../cli/src/mcp/tools.rs#L209),
+  ([tools.rs:189](../../../cli/src/mcp/tools.rs#L189), [tools.rs:210](../../../cli/src/mcp/tools.rs#L210),
   [adapters.rs:173](../../../cli/src/mcp/adapters.rs#L173)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch,
   answers it as one table per goal under its own column names with the derivation rows under an

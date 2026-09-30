@@ -9,6 +9,7 @@
 //! the root field's browse button) and the handler roster.
 
 mod commands;
+mod commands_flow;
 mod commands_query;
 
 fn main() {
@@ -35,6 +36,7 @@ fn main() {
             commands::similar_report,
             commands_query::query_report,
             commands_query::rules_report,
+            commands_flow::flow_report,
             commands::erase_preview,
             commands::erase_apply,
             commands::erase_log_report,

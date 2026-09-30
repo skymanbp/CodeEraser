@@ -51,7 +51,7 @@
   which every heading here links into.</p>
   <nav class="toc" aria-label="Sections">
     <p class="k">On this page</p>
-    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li></ul></div>
+    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li><li><a href="#f17"><b>17</b>Intra-function dead code</a></li></ul></div>
     <div class="row"><a class="sec" href="/how/">Judgment families</a><ul><li><a href="/how/#families">Families 01–15</a></li><li><a href="/how/#honesty">Honesty boundaries</a></li></ul></div>
   </nav>
 </section>
@@ -97,6 +97,36 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
     <li><b>schema</b> ce.query-report/0.1.0</li>
     <li><b>since proto</b> 7.3.0</li>
     <li><b>wire</b> query/1</li>
+  </ul>
+</div>
+
+<div class="fam">
+  <h3 id="f17"><span class="n">17</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md">Intra-function dead code — the flow graph, reachability and liveness</a></h3>
+  <p class="job">Finds the dead code inside one function: statements no path reaches, stores no path reads,
+  locals nothing reads, and parameters nothing reads as advice. <code>ce flow</code> lists them, the guard
+  counts the ones a write brings in, and the Stop line records them without ever blocking.</p>
+  <pre>tables : stmts [u, seq, parent, kind, flags, aux] · vars [u, v, declSeq, flags] · uses [u, seq, v, mode]
+cfg    : structured kinds unfolded; a try body's every statement may reach each catch; one finally hub per try
+kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
+kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
+kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
+skip   : a unit with a dynamic statement is not judged in part, and counted</pre>
+  <p class="note">The measuring side lowers every unit of ten languages (Python, TypeScript and TSX, Rust, Go, C,
+  C++, Java, Lua, R) into four integer tables by a <code>FlowSpec</code> table per language; no name, path or
+  source text crosses. The core builds the control-flow graph, walks reachability from the entry and
+  backward liveness to a fixpoint, and answers <code>[unit, kind, seq, var, seqEnd]</code> rows the
+  measuring side labels again. Every approximation only adds paths — a finally is one hub whose
+  successors are the union of the pending targets, expression-position exits are not lowered — so a
+  finding can be missed, never invented. A finding is judged only in a language whose precision exam
+  passed (blind review, no false positive in any kind the gate reads): Python, TSX, Go, C, Java, Lua and R;
+  in TypeScript, Rust and C++ every finding is advice, and an unused parameter is advice everywhere. The
+  guard class <code>[flow] tier</code> ships at observe, counting novel findings as a multiset
+  difference on (unit, kind, variable) so a moved finding is not the write's doing.</p>
+  <ul class="consts">
+    <li><b>rowCap</b> 524288</li>
+    <li><b>schema</b> ce.flow-report/0.1.0</li>
+    <li><b>since proto</b> 7.4.0</li>
+    <li><b>wire</b> flow/1</li>
   </ul>
 </div>
 

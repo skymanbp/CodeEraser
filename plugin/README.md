@@ -5,7 +5,7 @@
 | hook | 命令 | 行为 |
 |---|---|---|
 | SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
-| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后行数超本文件那条硬线）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声 |
+| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后行数超本文件那条硬线）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声；函数内死代码类按自己的 `[flow] tier`（出厂 observe）只在这次写入带来新的被判决发现时出声 |
 | PostToolUse (Write\|Edit) | `ce settle --hook` | 只记不说：本会话的 PreToolUse 对同一次工具调用（同一 `tool_use_id`）答过 `ask`、而工具真跑完了，就往观察账本追加一行 `settled`——人放行了这次写入；拒绝不触发任何钩子，所以没有这一行就是拒绝的记录 |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块，仅 deny 档拦停；墓碑腿同样在核里按 `[tombstone] tier` 与 budget 判、也只有 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)；同角色顾问行（本会话新增的单元其 top-1 带角色位时）只落进 observe 账本，永不拦停 |
 
@@ -18,7 +18,7 @@ skill：[`skills/erase/`](skills/erase/SKILL.md)，把 dedup/deadcode/join
 所以它的更新动作永远是 `/plugin update codeeraser`（新清单带新 pin，下一会话
 启动器重验重下载）；`ce update --yes` 只替换手工放置或安装包随附的副本。
 
-MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:count:mcp_tools#word-->十八<!--/ce-->个工具随插件
+MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:count:mcp_tools#word-->十九<!--/ce-->个工具随插件
 一起到位：装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
 由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
 `erase` 工具只到**计划**为止、`erase_log` 只读它的审计轨迹：`apply` 没有 face、也不会有，因为一个能凭自己
@@ -94,6 +94,7 @@ precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部
 `fourclass` 对象（跨文件搬迁与堆叠嫌疑）永不出声：它不属于任何档位，其改动集级
 FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格 0/125、宽读法 0/820；唯一 copy 正例 `1035f6b1` 漏过（召回 0/1），本批无默认档位变更；
 `similar` 对象（本会话新增的单元逐个问过同角色顾问：`rev`、`new_units`、`queried`，以及核的 top-1 带角色位时的 `rows` 行 `{unit,twin,score}`；无核或读不到索引时只记 `degraded`）同样永不出声：顾问不判决，评估台账见 [docs/EVAL-SET-SIMILAR.md](../docs/EVAL-SET-SIMILAR.md)；
+`flow` 事件行（PreToolUse 一次写入的前后两侧各降表经核 flow/1 判一次，后侧有发现才落一行：`before` / `after` 发现数、按 `(单元名, 种类, 变量名)` 多重集相减得的 `novel`、按种类计数的 `kinds`、语言是否在判决掩码 `judged`；`mode` 是类自己的 `[flow] tier`，出厂 observe）与 Stop / precommit / commitmsg 行上的 `flow` 对象（改动集里有单元的文件数、单元数、发现数、`kinds`、被判决的条数）自 feed 0.12.0 起加性出现；Stop 腿在任何档位都不拦停，站点清单在 `ce flow` 里；
 `session_id` 为 `null` 表示该条不属于任何会话；`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
 不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

@@ -6,4 +6,5 @@
 {"type":"probe","file_path":"src/a.rs","content":"fn x() {}\n"}
 {"type":"four_class","pairs":[["a.rs","a.rs"],[null,"new.rs"]]}
 {"type":"tombstone","rows":[[0,0,1],[2,1,1]],"budget":3}
+{"type":"flow","units":[[0,5,0]],"stmts":[[0,0,-1,1,0,0],[0,1,-1,0,0,0]],"vars":[],"uses":[]}
 {"type":"shutdown"}

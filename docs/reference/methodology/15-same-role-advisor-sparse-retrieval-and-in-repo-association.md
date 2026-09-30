@@ -205,7 +205,7 @@ request per arm over one core link ([face.rs:58-75](../../../cli/src/similar/fac
   line and one line per candidate, `at key  N P C D S L  role`; `--format json` is the document
   ([main_similar.rs:34](../../../cli/src/main_similar.rs#L34), [face.rs:165](../../../cli/src/similar/face.rs#L165)).
 - **MCP** `similar_units` — the fifteenth read-only tool, `{at, text, unit, widen}`, relaying
-  the same document ([tools.rs:171](../../../cli/src/mcp/tools.rs#L171)).
+  the same document ([tools.rs:172](../../../cli/src/mcp/tools.rs#L172)).
 - **GUI** the eleventh screen, `similar`: an input for `at` or text, the widen switch, the
   candidate table with the six evidence columns ([similar.js](../../../gui/ui/similar.js),
   [commands.rs](../../../gui/src-tauri/src/commands.rs)).
@@ -292,7 +292,7 @@ holds both oracle generations to their floors. The advisor is one row of the thr
 table — CLI, GUI tab and Tauri command, MCP tool — and the fifteenth tool in the MCP catalogue
 ([face_parity.rs:39](../../../cli/tests/it/face_parity.rs#L39)). Docs cite implementation lines
 (this booklet is under the citations gate), the constants above bind to their source names
-under `docs_consts`, and the feed golden (`ce.observe/0.11.0`) carries no `similar` object by design: its
+under `docs_consts`, and the feed golden (`ce.observe/0.12.0`) carries no `similar` object by design: its
 staged twin shares one name word where the core's role bit wants two, so `similar_face.rs` seeds the pair
 that earns the key ([feed.golden.json](../../../contracts/fixtures/observe-feed/feed.golden.json),
 [observe_feed.rs:1-10](../../../cli/tests/it/observe_feed.rs#L1)).

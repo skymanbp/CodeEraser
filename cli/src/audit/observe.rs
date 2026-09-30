@@ -35,6 +35,11 @@ pub(super) struct AuditEvent<'a> {
     /// `degraded` naming why the core did not judge; ABSENT when the
     /// session added no unit or nothing was same-role.
     pub similar: Option<serde_json::Value>,
+    /// WRITER CONTRACT — OPTIONAL, additive (0.12.0): the flow class's
+    /// object on every audit line (audit/flow.rs) — `files`, `units`,
+    /// `findings`, `kinds` by name, `judged`, or `degraded` naming why
+    /// the core did not judge; ABSENT when no changed file holds a unit.
+    pub flow: Option<serde_json::Value>,
     /// WRITER CONTRACT — OPTIONAL, additive: present only on a
     /// stop_audit line whose audit measured NOTHING, where the
     /// net_loc / changed_files / dup_blocks zeros are placeholders,
@@ -75,6 +80,9 @@ pub(super) fn observe_log(root: &Path, ev: AuditEvent) {
     }
     if let Some(s) = ev.similar {
         line["similar"] = s;
+    }
+    if let Some(f) = ev.flow {
+        line["flow"] = f;
     }
     crate::hookio::observe_append(root, ev.session, line);
 }

@@ -13,6 +13,7 @@ pub mod eject;
 pub mod erase;
 pub mod faces;
 pub mod flow;
+pub mod flow_report;
 pub mod fourclass;
 pub mod gitmodules;
 pub mod graph;

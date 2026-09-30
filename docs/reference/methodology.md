@@ -31,7 +31,7 @@ normalized IR; the **judgment** side is Haskell (`ce-core`) — the rule
 engine, the four-classification, TSED, graph analysis, scoring and the
 ratchet — and turns those facts into verdicts
 ([DEVELOPMENT_PLAN.md:158-161](../DEVELOPMENT_PLAN.md#L158),
-[README.md:184](../../README.md#L184)). The boundary has a one-line
+[README.md:187](../../README.md#L187)). The boundary has a one-line
 test, from ADR-008: if a rule needs source text or line-level content to
 cross the wire, it is measurement and stays in Rust
 ([DEVELOPMENT_PLAN.md:239](../DEVELOPMENT_PLAN.md#L239)). So read each
@@ -66,3 +66,4 @@ does not get an exemption from the rule it argues for.
 | 14 | [Tombstone residue — the erased-name conjunction](methodology/14-tombstone-residue-the-erased-name-conjunction.md) | names a change erased that the same change writes back as an absence |
 | 15 | [Same-role advisor — sparse retrieval and in-repo association](methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md) | the units that play the same part as one unit (advisory, never a verdict) |
 | 16 | [Code query and architecture rules — Datalog over the index's facts](methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md) | a question over the index's facts answered with its derivations; architecture assertions judged as a gate |
+| 17 | [Intra-function dead code — the flow graph, reachability and liveness](methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md) | unreachable statements, dead stores and unread locals inside one function (unread parameters as advice) |
