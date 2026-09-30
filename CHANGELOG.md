@@ -9,6 +9,16 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 分析轨 v2.31 步 4 死代码 B 提交 C1（2026-09-30；判决代码零改动——只动子仓仪器与三份文档，`cli/src/**` 一个字节不动；核与既有家族的字节都不动，分数与 1.8.0 可比）：`flow/1` 精度册的仪器与两道门；十份精度册由下一提交（C2）在本提交的干净树上生成。
+
+- **精度仪器**（子仓 `it/flow_precision/{mod,flagged}.rs`，放在 `eval_flow_parts` 之外：放进去这两个文件会入该目录的导入环，子仓 check 第 6 轴 88 → 91、分数 948 低于地板 949；移出后 87 / 949）：`flow_precision`（`#[ignore]`，`CE_FLOW_LANG`，要 `CE_CORE_BIN`）对审阅档的每道题在钉住的 tip 上取文件、降表、整文件经 `flow::wire::judge` 送真核（每文件一次请求）；题按它被抽出时的池项回映（`pools.rs` 的池项加 `seq` / `v` 两个字段——同一个锚，不另推一遍；类 0 = 不可达段覆盖该语句、类 1 = 核点名该（写，变量）、类 2 / 3 = 核点名该变量）；单元未降出 / 被核拒 / dynamic 答 `unjudged` 并记原因；判词、`per_kind`（含 `positives` / `negatives`）、`gate`、`judged` 由一组函数重算，生成器与验证器共读；档 `flow-precision-<语言>-v1.json`（`ce.eval-flow-precision/1.0.0`），`CE_FLOW_OUT` 改写出目录，拒绝覆写，写档前要求干净树。
+- **四态门**（设计册 §13 第 25 条）：`fail`（fp ≥ 1）/ `pass`（fp = 0 ∧ tp ≥ 1）/ `vacuous`（fp = tp = fn = 0，准入靠负例上的零误报）/ `silent`（fp = tp = 0 ∧ fn ≥ 1，不准入）；`judged` = 类 0 / 1 / 2 各 ∈ {pass, vacuous}，类 3 只记不判。原判据让无正例可找的类 fail、却让零行判 vacuous——证据更多反判更差。
+- **门** `it/eval_flow_precision.rs` 四腿：档与 stage 同真同假并逐行重算、跑六形篡改（翻判词 / 翻答案 / 伪门 / 伪 `judged` / 缺一行 / silent 读成 vacuous）；`flow::judged_mask()` 每一位 ⇔ 精度册 `judged`；四态在手写计数上钉住；篡改电池在门自己的合成档（python / rust）上先跑。本提交十门 stage 仍 `audited`、盘上无精度册、掩码为空。
+- **出处门** `it/flow_provenance.rs` 四腿：三档 `generated_from` 提交严格先后且在本历史上；降表首提交是抽样提交的祖先或就是它（同为 5278e747）、抽样到审阅之间 `LOWERING` 零提交（盲窗不读 `ANSWERED_BY`：提交 B 在窗内改过 `scan/lang.rs`）；精度册从自己的提交起钉在 `LOWERING` ∪ `ANSWERED_BY` 上；反向探针两条（`contracts/eval/flow-sample-*` 读成「不先于抽样」、`scan/lang.rs` 读成「盲窗内动过」）各按自己的句子红。
+- **共用**：`eval_support/provenance.rs` 收 `LOCK` / `pins_moved` / `uncommitted` / `assert_tree_holds` / `assert_doc_answers`（`lang_provenance.rs` 改读它们，语言考题那腿的判据不变）；`eval_flow_parts::each_filed` 由审阅门与精度门共读（查重门点名两门的「按 stage 归档」段同形后提出）；`review.rs` 的 `corpora` / `row_list` 改 `pub` 供精度册共读。
+- **文档**：设计册 §5.5 精度册 / 门 / 顺序三处按四态与出处三口径就地改、§13 第 25 条；登记册「仪器与门」门段就地改四态、加精度仪器一段（读数留 C2）。
+- **门**：main check 915（地板 911；axes 0:77 2:286 6:234）/ dedup 50 / scan 101 warn 0 fail / deadcode 0 / docdup 0 / erase 0 / rules 9 ok，tests 949（地板 949；axes 0:7 2:268 6:87）/ 91 / 44 warn 0 fail / rules 3 ok；lib 493 / it 500（26 ign）；clippy `--all-targets -D warnings` + fmt 清；ADR-006 两根具名重立（main：`docs/EVAL-SET-FLOW.md` 413 → 432 超容差，`CHANGELOG.md` 510 → 520 与 `analysis-track.md` 307 → 308 容差内，softLine 不动；tests：`it/eval_support/provenance.rs` 230 → 294、`it/eval_flow_parts/mod.rs` 205 → 224、`it/eval_flow_parts/pools.rs` 201 → 213 超容差，`it/main.rs` 209 → 212 容差内，`it/lang_provenance.rs` 257 → 207 与 `it/eval_flow_review.rs` 239 → 229 收缩，四个新文件入列、第 1 轴 +77 / −2，softLine 329 → 328）。
+
 **无默认档位变更。** 分析轨 v2.31 步 4 死代码 B 提交 B′（2026-09-30；判决代码零改动——只动子仓仪器、十份审阅档与登记册；核与既有家族的字节都不动，分数与 1.8.0 可比）：十语言 `flow/1` 考题的盲判——1,197 道题由没看过任何判决的独立代理判出、归档成审阅档。
 
 - **盲判仪器四件**（子仓 `it/eval_flow_parts/{batches,answers,review}.rs` + 门 `it/eval_flow_review.rs`）：`batches.rs` 的批次渲染是冻结样本的纯函数（先按语料分组、再按审阅序每批 ≤ 25 题，提示模板是一个字面量常量 `PROMPT`，逐字等于 `audit_prompt_template.md`；同一样本两次渲染逐字节同由测试钉）；`answers.rs` 读每批 `answers-<n>.jsonl`，每条拒绝（id 不在该批 / 一题多答 / 一题无答 / 词不在该类词表 / 理由不在 20..=240 字符 / 多余字段或非 JSON 行）按批按题点名；`review.rs` 归档成审阅档（`freeze` 拒绝覆写）+ `verify_review`（行与样本按审阅序一一对应、身份字段逐个相等、批号连续不降、summary 重算、语料 tip 等于考题）；门 `eval_flow_review` 五腿 + 篡改电池六式（改一个 truth / 调换两行 / 删一行 / 外来 rank / 空 why / 伪 batch），`stage < Audited` 的考题盘上不得有审阅档。

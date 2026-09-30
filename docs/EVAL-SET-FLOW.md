@@ -4,7 +4,7 @@
 > 每个语言的 `flow/1` 精度照 v2.30 语言考题的仪器走，顺序由提交先后证明，只是抽样之前多一步：**降表与语言表先落（提交 A）→
 > 单元宇宙 + 候选池 + 抽样冻结并提交（提交 B，本册第一节）→ 没看过判决的独立代理逐题盲判并提交 → 精度册提交**（顺序门
 > `cli/tests/it/flow_provenance.rs`；题是从降出的四表里按类按层抽的，降表不先落地就没有池可抽，所以是 C / C++ 阶梯先于考题的那种
-> `ladder_first` 形——盲判的独立性靠题不带答案、盲窗内 `cli/src/flow` 零提交、精度册钉在回答它的代码上）。母册链：
+> `ladder_first` 形——盲判的独立性靠题不带答案、盲窗内 `cli/src/flow`（`mod.rs` 除外）零提交、精度册钉在回答它的代码上）。母册链：
 > [EVAL-SET.md](EVAL-SET.md) → [EVAL-SET-M5-3.md](EVAL-SET-M5-3.md) → [EVAL-SET-M5-CLOSE.md](EVAL-SET-M5-CLOSE.md) →
 > [EVAL-SET-SIMILAR.md](EVAL-SET-SIMILAR.md) → [EVAL-SET-LANGS.md](EVAL-SET-LANGS.md) → 本册。本册与前五册同入冻结集
 > （`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。一个语言在它自己的步里加一节，三步各记一段；
@@ -38,8 +38,10 @@
   身份是考题的（语料在表内、commit = 该语料 tip）、（类，层）合法、(路径，单元) 在宇宙里并回显单元名与行段、行号落在行段内、
   同一单元同一格被抽中的数不超过它冻结行的池、不落在 dynamic 单元上；每份宇宙里 dynamic 单元的池全 0；篡改（伪路径、伪层、伪秩、伪审阅哈希、
   缺一行、伪单元、伪类、调换两行、行数超池、抽中 dynamic 单元）一律拒绝。
-- **盲判**与**精度册**：另两个提交（B′ / C）各记一段；门 = 每语言每种非顾问发现（0 / 1 / 2）fp / (tp + fp) ≤ 1 %（样本内即 0 个 fp），
-  且每种至少有一道被产品标出的题，池空的类具名记 vacuous；达门的语言进 `flow::judged_mask()`，未达的只 observe。
+- **盲判**与**精度册**：另两个提交（B′ / C）各记一段；门 = 每语言每种非顾问发现（0 / 1 / 2）读四态——`fail`（fp ≥ 1）、
+  `pass`（fp = 0 ∧ tp ≥ 1）、`vacuous`（fp = tp = fn = 0：样本里没有正例可找，准入靠负例上的零误报，各节照抄「0 / n 个负例」；零行也归此态）、
+  `silent`（fp = tp = 0 ∧ fn ≥ 1：有正例而一个没报，不准入）；三门各 ∈ {pass, vacuous} 的语言进 `flow::judged_mask()`，其余只 observe
+  （设计册 §13 第 25 条：原判据让无正例可找的类 fail、却让零行判 vacuous，证据更多反判更差）。
 - **盲判仪器**（提交 B′，`cli/tests/it/eval_flow_parts/` 下三件 + 门一件）：`batches.rs` 的批次渲染是冻结样本的纯函数（同一样本
   两次渲染逐字节同），先按语料分组、再按审阅序切成每批至多 25 道，提示模板常量 `PROMPT` 逐字取自判官提示模板
   `audit_prompt_template.md`，每批另写 `manifest.json`（批号、语料、题 id；不入库）；`answers.rs` 读每批一个 `answers-<n>.jsonl`，
@@ -54,6 +56,23 @@
   两处口径：批次提示里的 nth 从 0 数，
   档与样本一律从 1 数（档回显样本的 nth）；同一批只装一个语料。审阅档的 `generated_from` 记 ce 1.8.0、树 `2ea957d`、dirty = true，
   与提交 B 的宇宙与样本同一读法：归档工具与这十份档在同一个提交里落地。
+- **精度仪器**（提交 C，`cli/tests/it/flow_precision/` 的 `mod.rs` / `flagged.rs` + 门两件；放在 `eval_flow_parts` 之外——那里没有模块
+  读回它，不入该目录的导入环）：`flow_precision`
+  （`#[ignore]`，`CE_FLOW_LANG=<语言>`，要 `CE_CORE_BIN`）对审阅档的每道题，在钉住的 tip 上取题所在的文件、经 `flow::lower::lower_file`
+  降表、整文件经 `flow::wire::judge` 送真核（一条链路、每文件一次请求）；题按它被抽出时的池项回映——`pools.rs` 的池项带它代表的语句 seq
+  与变量 v，同一个锚、不另推一遍：类 0 = 有一段不可达覆盖该语句、类 1 = 核点名该（写，变量）、类 2 / 3 = 核在该类点名该变量。单元未降出、
+  被核拒或 dynamic 答 `unjudged`，逐单元记原因（`unjudged_reasons`）；抽样单元的名或行段与降表不符即按名停（抽样与降表不是同一棵树）。
+  判词由（真值，答案）重算：真值正 = `unreachable` / `dead` / `unread`，`cannot_tell` 不入率；`per_kind` 每类记 tp / fp / tn / fn /
+  unjudged / cannot_tell、`positives` / `negatives` 与 precision / recall 两个整数对，`gate` 读类 0 / 1 / 2 的四态，`judged` = 三门各 ∈
+  {pass, vacuous}。档 `contracts/eval/flow-precision-<语言>-v<代>.json`（`ce.eval-flow-precision/1.0.0`；`CE_FLOW_OUT=<目录>` 改写出目录；
+  拒绝覆写；`CE_FLOW_PRECISION_DRY=1` 只印读数不写档；写档前要求 `generated_from.dirty` = false）。门 `cli/tests/it/eval_flow_precision.rs`
+  （不跑 git、不要克隆与核）：档与考题 stage 同真同假（`scored` 才在盘上），已归档的逐行对审阅档重算并跑六形篡改（翻判词、翻答案、伪门、
+  伪 `judged`、缺一行、把 silent 读成 vacuous——档里没有 silent 时，把某个有正例的类的真答案全改假、计数全重算、只让门写 vacuous）；
+  `flow::judged_mask()` 的每一位 ⇔ 该语言精度册 `judged`（tsx 与 typescript 各一位）；四态在手写计数上钉住；篡改电池另在门自己的合成档
+  （python / rust）上先跑。出处门 `cli/tests/it/flow_provenance.rs`（跑 git，浅克隆拒）：三档 `generated_from` 的提交都在本历史上且严格先后；
+  降表的首个提交是抽样提交的祖先或就是它，抽样到审阅之间降表零提交；精度册从自己的提交起到 HEAD，降表与 `scan/functions.rs` /
+  `scan/walk.rs` / `scan/lang.rs` 无提交、工作树无未提交改动、`cli/Cargo.lock` 按钉版不动；反向探针两条（首个提交在抽样之后的路径、
+  盲窗内动过的 `scan/lang.rs`）各按自己的句子红。读数由下一提交（C2）在干净树上生成后各语言一节记。
 
 ## 预登记常量（测量前写进每份档的 `constants`，改一个即换一套仪器）
 
