@@ -584,10 +584,10 @@ jobs:
       matrix:
         include:
           - { os: windows-latest, key: x86_64-windows, triple: x86_64-pc-windows-msvc, ext: ".exe" }
-          - { os: ubuntu-latest, key: x86_64-linux, triple: x86_64-unknown-linux-gnu, ext: "" }
+          - { os: ubuntu-22.04, key: x86_64-linux, triple: x86_64-unknown-linux-gnu, ext: "" } # glibc 2.35 floor: built on 24.04 the binaries asked for 2.39, so Debian 12 (2.36) and Ubuntu 22.04 could not run them
           - { os: macos-latest, key: aarch64-macos, triple: aarch64-apple-darwin, ext: "" }
           - { os: macos-15-intel, key: x86_64-macos, triple: x86_64-apple-darwin, ext: "" }
-          - { os: ubuntu-24.04-arm, key: aarch64-linux, triple: aarch64-unknown-linux-gnu, ext: "" }
+          - { os: ubuntu-22.04-arm, key: aarch64-linux, triple: aarch64-unknown-linux-gnu, ext: "" } # glibc 2.35 floor, as the x86_64-linux row
     uses: ./.github/workflows/build-target.yml
     with:
       os: ${{ matrix.os }}

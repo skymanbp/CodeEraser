@@ -12,7 +12,7 @@ on:
   workflow_call:
     inputs:
       os:
-        description: "runs-on label: windows-latest, ubuntu-latest, macos-latest, macos-15-intel, ubuntu-24.04-arm"
+        description: "runs-on label: windows-latest, ubuntu-22.04, macos-latest, macos-15-intel, ubuntu-22.04-arm"
         type: string
         required: true
       key:
@@ -40,6 +40,18 @@ on:
 # at all (2026-08-19 review) — read-only, whatever the caller holds.
 permissions:
   contents: read
+
+# linuxdeploy's AppRun launcher as tauri-bundler downloads it
+# (binary-releases tag apprun-old), one sha256 per linux arch; the seed
+# step and the AppImage mode gate below both read these two, nowhere
+# else. x86_64 is byte-identical to 1.8.0's shipped AppRun.wrapped.
+env:
+  APPRUN_SHA256_X86_64: f30140a43a0a59e46db21bdefdf749b9e9f2c6946e92afabbacf98b8ae73fb4f
+  APPRUN_SHA256_AARCH64: 072f17c0895a85c490282fe5395c5007e5fc75da727e553b3b8fb680feb11578
+  # the highest glibc symbol version a Linux binary may ask for: the
+  # same number docs/RELEASE.md states, so when a runner moves to a
+  # newer image the glibc step below goes red before users do
+  GLIBC_FLOOR: "2.35"
 
 jobs:
   build-target:
@@ -75,8 +87,13 @@ jobs:
           [ "$CRATE" = "$RELEASE_VERSION" ] || {
             echo "input $RELEASE_VERSION != cli/Cargo.toml $CRATE"; exit 1; }
       - uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable branch, pinned 2026-08-19; version comes from rust-toolchain.toml (repo root, both workspaces)
+      # every cache below is keyed by the runner label too: objects built
+      # on another image (a 24.04 GHC bindist, C code compiled against
+      # glibc 2.39 headers, a ce-core cabal reports up to date) would
+      # carry that image's glibc floor into this build
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
         with:
+          key: ${{ inputs.os }}
           workspaces: |
             cli
             gui/src-tauri
@@ -112,7 +129,7 @@ jobs:
         if: runner.os != 'Windows'
         with:
           path: ~/.ghcup
-          key: ghcup-${{ inputs.key }}-ghc9.14.1
+          key: ghcup-${{ inputs.key }}-${{ inputs.os }}-ghc9.14.1
       - uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2
         with:
           ghc-version: "9.14.1"
@@ -122,7 +139,7 @@ jobs:
           path: |
             ~/.cabal/store
             core/dist-newstyle
-          key: cecore-${{ inputs.key }}-${{ hashFiles('core/cabal.project.freeze') }}
+          key: cecore-${{ inputs.key }}-${{ inputs.os }}-${{ hashFiles('core/cabal.project.freeze') }}
       - name: Build ce-core (release)
         shell: bash
         working-directory: core
@@ -152,6 +169,38 @@ jobs:
              "gui/src-tauri/binaries/ce-$TARGET_TRIPLE$TARGET_EXT"
           CORE=$(cd core && cabal list-bin ce-core)
           cp "$CORE" "gui/src-tauri/binaries/ce-core-$TARGET_TRIPLE$TARGET_EXT"
+      # tauri-bundler 2.9.4 (tauri-cli 2.11.4) downloads the AppRun
+      # launcher into its tool cache (dirs::cache_dir()/tauri) only when
+      # the cached file is ABSENT (linuxdeploy.rs::prepare_tools), and
+      # writes it 0770 (appimage/mod.rs:22 write_and_make_executable);
+      # fs::copy keeps that mode in the AppDir, where the GTK plugin
+      # renames it AppRun.wrapped - so 1.8.0's AppImage refused every
+      # non-root user (tauri-apps/tauri#16155; AppImage directory
+      # submission #8967). tauri-bundler 2.10.0's source still writes
+      # 0770, so an upgrade does not fix it: this step puts the pinned
+      # launcher in the cache at 0755 and the bundler reads that copy.
+      - name: Seed the AppImage launcher at 0755
+        if: endsWith(inputs.key, '-linux')
+        shell: bash
+        run: |
+          ARCH="${TARGET_TRIPLE%%-*}"
+          case "$ARCH" in
+            x86_64) WANT="$APPRUN_SHA256_X86_64" ;;
+            aarch64) WANT="$APPRUN_SHA256_AARCH64" ;;
+            *) echo "no pinned AppRun sha256 for $ARCH"; exit 1 ;;
+          esac
+          echo "APPRUN_SHA256=$WANT" >> "$GITHUB_ENV"
+          # essential location, because it is where tauri-bundler looks:
+          # dirs::cache_dir() on Linux, joined with tauri
+          DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tauri"
+          F="$DIR/AppRun-$ARCH"
+          mkdir -p "$DIR"
+          curl -fsSL -o "$F" \
+            "https://github.com/tauri-apps/binary-releases/releases/download/apprun-old/AppRun-$ARCH"
+          echo "$WANT  $F" | sha256sum -c - || {
+            echo "pinned $WANT"; echo "got    $(sha256sum "$F" | cut -d' ' -f1)"; exit 1; }
+          chmod 0755 "$F"
+          ls -l "$F"
       # externalBin is injected HERE, not in tauri.conf.json:
       # tauri-build validates the sidecar files at COMPILE time, so a
       # static declaration would break every compile gate that has no
@@ -174,6 +223,58 @@ jobs:
             [ "$attempt" = 1 ] || exit 1
             echo "::warning::cargo tauri build failed on attempt $attempt; retrying once (DMG bundling flaked on run 34021025544 attempt 1)"
           done
+      # the launcher's mode as the user receives it: the type-2 runtime
+      # extracts itself (no FUSE on the runner) and every file that only
+      # its owner may run or that others may not read is named
+      - name: Check the AppImage's file modes
+        if: endsWith(inputs.key, '-linux')
+        shell: bash
+        run: |
+          set -- "$GITHUB_WORKSPACE"/gui/src-tauri/target/release/bundle/appimage/*.AppImage
+          [ "$#" -eq 1 ] && [ -f "$1" ] || { echo "expected one AppImage, found $#: $*"; exit 1; }
+          A="$1"
+          chmod +x "$A"
+          cd "$(mktemp -d)"
+          "$A" --appimage-extract >/dev/null
+          S=squashfs-root
+          echo "APPIMAGE_ROOT=$PWD/$S" >> "$GITHUB_ENV"
+          fail() { echo "::error::$1"; ls -l "$S"; exit 1; }
+          for f in AppRun.wrapped AppRun; do
+            m=$(stat -c %a "$S/$f")
+            [ "$m" = 755 ] || fail "$f mode $m, want 755"
+          done
+          got=$(sha256sum "$S/AppRun.wrapped" | cut -d' ' -f1)
+          [ "$got" = "$APPRUN_SHA256" ] || fail "AppRun.wrapped sha256 $got, pinned $APPRUN_SHA256"
+          owner_only=$(find "$S" -type f -perm -u+x ! -perm -o+x)
+          [ -z "$owner_only" ] || fail "executable by the owner only: $owner_only"
+          unreadable=$(find "$S" -type f ! -perm -o+r)
+          [ -z "$unreadable" ] || fail "not readable by others: $unreadable"
+          echo "AppImage modes ok: launcher 755, sha256 $got"
+      # the glibc floor, held on the three binaries a Linux user runs:
+      # ce and ce-core as built above, and the GUI binary as the
+      # AppImage carries it (the only file in usr/bin besides the two
+      # sidecars). A binary missing or with no GLIBC_ symbol at all is a
+      # failure, not a pass.
+      - name: Check the glibc floor of the Linux binaries
+        if: endsWith(inputs.key, '-linux')
+        shell: bash
+        run: |
+          CORE=$(cd core && cabal list-bin ce-core)
+          GUI=$(find "$APPIMAGE_ROOT/usr/bin" -maxdepth 1 -type f ! -name ce ! -name ce-core)
+          if [ -z "$GUI" ] || [ "$(printf '%s\n' "$GUI" | wc -l)" -ne 1 ]; then
+            echo "expected one GUI binary in usr/bin besides ce and ce-core, found: ${GUI:-none}"
+            ls -l "$APPIMAGE_ROOT/usr/bin"; exit 1
+          fi
+          bad=0
+          for b in "cli/target/release/ce" "$CORE" "$GUI"; do
+            [ -f "$b" ] || { echo "::error::missing $b"; bad=1; continue; }
+            top=$(objdump -T "$b" | grep -oE 'GLIBC_[0-9]+\.[0-9]+' | sort -uV | tail -1) || true
+            [ -n "$top" ] || { echo "::error::$b: no GLIBC_ symbols"; bad=1; continue; }
+            echo "$b: $top"
+            last=$(printf '%s\n' "GLIBC_$GLIBC_FLOOR" "$top" | sort -V | tail -1)
+            [ "$last" = "GLIBC_$GLIBC_FLOOR" ] || { echo "::error::$b needs $top, above the floor GLIBC_$GLIBC_FLOOR"; bad=1; }
+          done
+          exit "$bad"
       # the asset names scripts/roster.js derives: <what>-<ver>-<key><ext>
       # for the binaries, CodeEraser-<ver>-<key><bundle> for the installer
       # whose kind follows the key's os half

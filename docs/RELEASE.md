@@ -34,6 +34,8 @@
    x86_64-macos / aarch64-linux，v1.7.0 起五个，此前三个；每个目标走同一份可复用
    workflow `build-target.yml`，ci.yml 每周的 `release-rehearsal` 也跑它、不上传），
    <!--ce:count:binaries#word-->十五<!--/ce-->工件 + `SHA256SUMS` 共<!--ce:count:assets#word-->十六<!--/ce-->资产上传为 **draft** Release。
+   Linux 两个目标在 `ubuntu-22.04` / `ubuntu-22.04-arm` 上构建（glibc 2.35 地板），
+   AppImage 打包后经权限门（启动器 `AppRun` / `AppRun.wrapped` 0755、无只有属主可执行或他人不可读的文件）。
    **铁则（用户令 2026-08-28）**：任何渠道分发的二进制——Release 资产、
    plugin manifest 所 pin 的下载物——只能来自本 workflow 的矩阵产物；
    本地构建的二进制永不上传、永不 pin、永不作为「补位」放行。
