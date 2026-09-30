@@ -407,3 +407,9 @@ requests `8068356`、ripgrep `3fce3b5`、zod `912f0f5`、junit4 `890f3c9`、mock
   RustReader 因 match_arm/`?`/闭包三重定义差异不适合作 Rust 对照物
   （57/226 分歧，弃用）。
 - PowerShell 管道会注入 UTF-8 BOM，两次破坏对拍通道——对拍一律走 bash/文件。
+
+## Haskell 文法与 CRLF 里的字符串空隙（2026-09-29，计划 v2.31 步 3）
+
+| 现象 | 触发 | 出处 | 处置 |
+|---|---|---|---|
+| ce 的 Haskell 文法（tree-sitter-haskell，`cli/src/scan/lang.rs` 钉版）把**含回车的字符串空隙**（`\` … `\` 让一个字面量跨行，Haskell 2010 §2.6 允许空隙里有任何空白，GHC 照编译）读成错误，该绑定整条从解析里消失、其后的记号随之移位——单元计数、提及普查、克隆窗口三面同时变 | 文件以 CRLF 检出且字面量用了空隙；LF 检出无此事 | `core/test/FlowCases.hs` / `FlowRefusals.hs` 六张用例表：探针库 LF 59 函数 / CRLF 53，主根 `git clone -c core.autocrlf=true` 上 dedup 50 → 51、check 的离散集多一员、册 13 自仓 haskell 声明 2329 → 2323；CI 36661220515 Windows 腿 | 本仓 `.gitattributes` `*.hs text eol=lf`（检出一律 LF）；文法本身的行为归因保留——用户仓库里 CRLF + 空隙的 Haskell 文件会少计那些绑定，改 `unlines` 列表形能解析但查重门把六张表读成 15 块，故不采 |

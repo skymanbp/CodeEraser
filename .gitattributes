@@ -10,6 +10,16 @@
 *.sh text eol=lf
 manifest.env text eol=lf
 
+# Haskell sources are parsed by ce's own Haskell grammar (tree-sitter-
+# haskell): a string gap — the `\` … `\` pair that lets one literal span
+# lines, the shape the flow battery's case tables take — is legal with a
+# CR inside it for GHC but not for that grammar, which drops the whole
+# binding and shifts every token after it (plan v2.31 step 3, CI
+# 36661220515: the Windows checkout made the self census, the clone
+# gate and the roast block disagree with ubuntu by exactly those six
+# bindings). LF on every checkout: the ndjson rule's fifth application.
+*.hs text eol=lf
+
 # The demo corpus is byte-gated end to end (demo_replay): the seed tree
 # is written verbatim, steps.js cuts the seed at LF markers, and the
 # committed outputs plus the READMEs' generated blocks (demo / bench /
