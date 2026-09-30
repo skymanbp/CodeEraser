@@ -76,3 +76,7 @@ checked <- function(x) {
   if (is.null(x)) return(NULL)
   rlang::abort("bad")
 }
+
+describe <- function(x, ...) {
+  UseMethod("describe")
+}

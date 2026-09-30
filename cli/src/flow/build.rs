@@ -43,6 +43,8 @@ pub(super) struct TNode {
     pub children: Vec<usize>,
     pub aux: Option<usize>,
     pub at: (u32, u32),
+    /// The 1-based line the source node ends on (LEG-1).
+    pub end: u32,
     pub text: String,
     pub uses: Vec<(usize, i64)>,
 }
@@ -154,6 +156,7 @@ impl<'s> Lowerer<'s> {
             }
         }
         self.defaults(unit);
+        self.entry_reads(unit);
         match unit.child_by_field_name("body") {
             None => {}
             Some(body) if self.flow.block_kinds.iter().any(|k| k == body.kind()) => {
@@ -178,15 +181,15 @@ impl<'s> Lowerer<'s> {
     /// A node from source, attached to its parent (None = the unit body).
     pub fn add(&mut self, parent: Option<usize>, kind: i64, src: Node<'_>) -> usize {
         let text = at::first_line(src, self.src);
-        self.make(parent, kind, at::place(src), text)
+        self.make(parent, kind, src, text)
     }
 
     /// A synthetic node standing at a source node's place.
     pub fn synth(&mut self, parent: Option<usize>, kind: i64, src: Node<'_>, text: &str) -> usize {
-        self.make(parent, kind, at::place(src), text.to_owned())
+        self.make(parent, kind, src, text.to_owned())
     }
 
-    fn make(&mut self, parent: Option<usize>, kind: i64, at: (u32, u32), text: String) -> usize {
+    fn make(&mut self, parent: Option<usize>, kind: i64, src: Node<'_>, text: String) -> usize {
         let idx = self.nodes.len();
         self.nodes.push(TNode {
             kind,
@@ -194,7 +197,8 @@ impl<'s> Lowerer<'s> {
             parent: None,
             children: Vec::new(),
             aux: None,
-            at,
+            at: at::place(src),
+            end: src.end_position().row as u32 + 1,
             text,
             uses: Vec::new(),
         });

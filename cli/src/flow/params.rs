@@ -10,7 +10,7 @@ use std::collections::HashSet;
 use tree_sitter::Node;
 
 impl Lowerer<'_> {
-    fn param_entries<'t>(&self, unit: Node<'t>) -> Vec<Node<'t>> {
+    pub(super) fn param_entries<'t>(&self, unit: Node<'t>) -> Vec<Node<'t>> {
         match functions::param_list(unit, self.scan.param_list_kinds) {
             Some(list) => crate::scan::ast::entries(list),
             None => unit.child_by_field_name("parameter").into_iter().collect(),
@@ -18,7 +18,7 @@ impl Lowerer<'_> {
     }
 
     /// The binder nodes of one parameter entry, as `param_entry` binds them.
-    fn entry_binders<'t>(&self, entry: Node<'t>) -> Vec<Node<'t>> {
+    pub(super) fn entry_binders<'t>(&self, entry: Node<'t>) -> Vec<Node<'t>> {
         match self.flow.params.iter().find(|(k, _)| k == entry.kind()) {
             Some((_, pos)) => self.at(entry, pos, &[]),
             None if self.bindable(entry) => vec![entry],

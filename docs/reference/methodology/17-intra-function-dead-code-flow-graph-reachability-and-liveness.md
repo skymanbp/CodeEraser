@@ -11,7 +11,7 @@ any more. The split is ADR-008's, seventh instalment: Rust lowers every unit of 
 `FlowSpec` table knows into four integer tables, and the core builds the control-flow graph,
 walks reachability and backward liveness and answers the findings over the fourteenth wire family,
 `flow/1`, since proto 7.4.0 ([Flow.hs:5-18](../../../core/app/CE/Flow.hs#L5),
-[mod.rs:40-59](../../../cli/src/flow/mod.rs#L40)). No name, path or source text crosses the wire:
+[mod.rs:43-55](../../../cli/src/flow/mod.rs#L43)). No name, path or source text crosses the wire:
 a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
 through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
 [mod.rs:63](../../../cli/src/flow_report/mod.rs#L63)).
@@ -19,7 +19,7 @@ through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
 ### 1. The lowering — four tables per unit
 
 A unit is the scan's own unit (`scan::functions::extract`: the same kinds, names and order), and
-its body is the grammar's body field ([lower.rs:70](../../../cli/src/flow/lower.rs#L70)). The four
+its body is the grammar's body field ([lower.rs:73](../../../cli/src/flow/lower.rs#L73)). The four
 tables are the whole of what the core sees (the design booklet's §5.1,
 [analysis-track.md](../analysis-track.md)):
 
@@ -116,9 +116,10 @@ reports hub read the same document through `faces::flow`; the hub registers its 
 the kind chips, the judged / advisory mark and the unjudged units.
 
 A finding is **judged** when its language is in `flow::judged_mask()` and its kind is not 3. The
-mask holds the languages whose precision doc passed the gate of §8: Python, TSX, Go, C, Java, Lua
-and R since step 4's commit C2, while TypeScript, Rust and C++ stay advice until a later exam
-generation passes ([mod.rs:42-59](../../../cli/src/flow/mod.rs#L42), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
+mask holds the languages whose precision doc passed the gate of §8. Step 4's commit C2 admitted
+Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
+retired all ten, so the mask is empty and every finding is advice until a doc on the fixed
+lowering passes ([mod.rs:45-55](../../../cli/src/flow/mod.rs#L45), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
 
 ### 7. The guard class — novel findings at write time
 
@@ -172,9 +173,10 @@ and at least one true positive), `vacuous` (no positive in the sample to find, s
 on zero false positives over the negatives) and `silent` (positives present and none reported,
 not admitted); a language is judged when kinds 0, 1 and 2 each pass or are vacuous, kind 3 is
 recorded only, and recall is recorded and not gated. The frozen exams hold 1,549 files and
-27,118 units across ten languages, 792 of them dynamic, and 1,197 questions; the ten precision
-docs admit Python, TSX, Go, C, Java, Lua and R, and every false positive the other three carry is
-attributed in the registry to the lowering or to a disputed truth, none to the core. A replay
+27,118 units across ten languages, 792 of them dynamic, and 1,197 questions; the first ten precision
+docs admitted Python, TSX, Go, C, Java, Lua and R, and every false positive the other three carried
+was attributed in the registry to the lowering or to a disputed truth, none to the core — commit E
+fixed those lowering classes and retired the ten docs for the next generation. A replay
 ledger over each exam corpus's last 400 first-parent commits reads, per language, how often a
 finding disappears with its unit's next edit (a true positive) or survives it (a false stop,
 strict reading), both readings recorded.
@@ -185,7 +187,7 @@ strict reading), both readings recorded.
   read is never judged in part; the count is in every report and every feed line.
 - **`unused_param` is advice forever.** No tier and no mask entry turns it into a verdict.
 - **Haskell is not a flow language.** No `FlowSpec` table exists for it (nor for Markdown or
-  HTML), so its files lower to no units ([spec.rs:226-229](../../../cli/src/flow/spec.rs#L226)).
+  HTML), so its files lower to no units ([spec.rs:250-253](../../../cli/src/flow/spec.rs#L250)).
 - **The judgment is intra-procedural.** A store read only through a callee's side effect the
   graph cannot see is covered by the address-taken and captured exemptions, not by a call model.
 

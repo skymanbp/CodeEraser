@@ -56,6 +56,9 @@ pub struct Legend {
     /// Each seq's 1-based (line, column); a synthetic statement takes
     /// the place of the source node it stands for.
     pub stmt_at: Vec<(u32, u32)>,
+    /// Each seq's last source line, 1-based: where an unreachable run
+    /// ending at it ends (LEG-1; a face's lineEnd).
+    pub stmt_end: Vec<u32>,
     /// Each seq's first source line, trimmed, at most 80 characters; a
     /// synthetic statement reads `<synthetic:…>`.
     pub stmt_text: Vec<String>,

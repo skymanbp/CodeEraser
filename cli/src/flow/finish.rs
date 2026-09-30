@@ -68,6 +68,7 @@ pub(super) fn finish(
         uses: Vec::new(),
         legend: Legend {
             stmt_at: Vec::new(),
+            stmt_end: Vec::new(),
             stmt_text: Vec::new(),
             var_name: Vec::new(),
             var_at: Vec::new(),
@@ -97,6 +98,7 @@ fn push_stmts(
         unit.stmts.push([seq[n], parent, t.kind, t.flags, aux]);
         unit.dynamic |= t.flags >> DYNAMIC & 1 == 1;
         unit.legend.stmt_at.push(t.at);
+        unit.legend.stmt_end.push(t.end);
         unit.legend.stmt_text.push(t.text.clone());
         unit.uses
             .extend(t.uses.iter().map(|&(v, m)| [seq[n], v as i64, m]));

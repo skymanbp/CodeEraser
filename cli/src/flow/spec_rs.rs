@@ -24,7 +24,7 @@ break_kinds = ["break_expression"]
 continue_kinds = ["continue_expression"]
 self_label = "@label"
 noreturn = ["panic!", "unreachable!", "todo!", "unimplemented!", "std::process::exit", "process::exit"]
-macros = [{kind = "macro_invocation", name = "macro", args = "@token_tree", strings = "string_literal"}]
+macros = [{kind = "macro_invocation", name = "macro", args = "@token_tree", strings = ["string_literal", "raw_string_literal"]}]
 const_true = [["boolean_literal", "true"]]
 int_kinds = ["integer_literal"]
 params = [["parameter", "pattern"]]

@@ -10521,25 +10521,25 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/lower.rs|781cc0b73892d887|0": {
     "target": "../../../cli/src/flow/lower.rs",
-    "line": 70,
+    "line": 73,
     "text": "pub fn lower_file(text: &str, lang: Lang) -> Option<Lowered> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|12d5fd933d46fae5|0": {
     "target": "../../../cli/src/flow/mod.rs",
-    "line": 42,
-    "end": 59,
+    "line": 45,
+    "end": 55,
     "text": "/// The languages whose flow findings are judged, not advised: a"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|5a6154b13acdf234|0": {
     "target": "../../../cli/src/flow/mod.rs",
-    "line": 40,
-    "end": 59,
+    "line": 43,
+    "end": 55,
     "text": "use crate::scan::lang::Lang;"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/spec.rs|319494f634313359|0": {
     "target": "../../../cli/src/flow/spec.rs",
-    "line": 226,
-    "end": 229,
+    "line": 250,
+    "end": 253,
     "text": "/// The table of a language whose units the family lowers (§5.3): the"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|10e7f3e0dbe6a0ad|0": {

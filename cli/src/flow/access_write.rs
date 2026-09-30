@@ -65,8 +65,8 @@ impl Lowerer<'_> {
         true
     }
 
-    /// A macro call: every name in its arguments read, and every
-    /// `{name}` in a string there (rule 9).
+    /// A macro call: every name in its arguments read, and every name
+    /// a placeholder of a string there reads (rule 9, format.rs).
     pub(super) fn macro_(&mut self, node: Node<'_>) -> bool {
         let Some(row) = self.flow.macros.iter().find(|m| m.kind == node.kind()) else {
             return false;
@@ -75,8 +75,10 @@ impl Lowerer<'_> {
             for n in crate::scan::ast::preorder(args, |_| true, crate::scan::ast::children) {
                 if self.is(&self.flow.ident_kinds, n) {
                     self.read_name(&self.text(n));
-                } else if n.kind() == row.strings {
-                    self.read_braced(n);
+                } else if self.is(&row.strings, n) {
+                    for name in super::format::format_names(&self.text(n)) {
+                        self.read_name(&name);
+                    }
                 }
             }
         }

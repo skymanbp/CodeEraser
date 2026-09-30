@@ -263,11 +263,12 @@ rows! {
     }
     /// A macro form (rules 3 and 9): the name with its `!` is the callee
     /// the name tables match; every identifier in the arguments is read,
-    /// and so is every `{name}` in a string of kind `strings` there.
+    /// and so is every name a placeholder of a string of a `strings`
+    /// kind there reads (format.rs).
     Macro {
         kind: String,
         name,
         args,
-        strings: String,
+        strings: Kinds,
     }
 }

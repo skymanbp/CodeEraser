@@ -157,7 +157,10 @@ impl Lowerer<'_> {
         if let Some(t) = self.frames[i].trailing {
             return t;
         }
-        let at = self.nodes[self.frames[i].node].at;
+        let (at, end) = {
+            let frame = &self.nodes[self.frames[i].node];
+            (frame.at, frame.end)
+        };
         let t = self.nodes.len();
         self.nodes.push(super::build::TNode {
             kind: LABEL,
@@ -166,6 +169,7 @@ impl Lowerer<'_> {
             children: Vec::new(),
             aux: None,
             at,
+            end,
             text: "<synthetic:break-label>".to_owned(),
             uses: Vec::new(),
         });

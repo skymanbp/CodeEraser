@@ -3,12 +3,12 @@
 //! source order, an assignment right before left; a write in a
 //! conditional position is a read-write; a member, index or deref
 //! target reads its base; a nested unit or scope only marks the host
-//! names it mentions captured. Every choice here adds reads or drops
+//! names it mentions captured (capture.rs). Every choice here adds reads or drops
 //! writes when in doubt — the side on which a finding is lost, never
 //! invented.
 
 use super::access_write::braced;
-use super::build::{ADDRESS, CAPTURED, Lowerer, READ, WRITE};
+use super::build::{ADDRESS, Lowerer, READ, WRITE};
 use crate::scan::functions;
 use tree_sitter::Node;
 
@@ -99,13 +99,14 @@ impl Lowerer<'_> {
             return true;
         }
         if self.whole_name_position(node) {
+            self.type_reads(node);
             return true;
         }
-        if self
-            .callee(node)
-            .is_some_and(|name| self.dynamic_name(&name))
-        {
-            self.dynamic_here();
+        if let Some(name) = self.callee(node) {
+            if self.dynamic_name(&name) {
+                self.dynamic_here();
+            }
+            self.dispatch(&name);
         }
         if self.is(&f.ident_kinds, node) || self.is(&f.shorthand_kinds, node) {
             self.read_name(&self.text(node));
@@ -187,7 +188,7 @@ impl Lowerer<'_> {
         again.into_iter().for_each(|v| self.access(v, READ));
     }
 
-    fn marked(&self, node: Node<'_>, mark: &str) -> bool {
+    pub(super) fn marked(&self, node: Node<'_>, mark: &str) -> bool {
         match mark.strip_prefix('@') {
             Some(kind) => self.kids(node).iter().any(|c| c.kind() == kind),
             None => super::at::holds(node, mark),
@@ -205,33 +206,7 @@ impl Lowerer<'_> {
         }
     }
 
-    /// A nested unit or scope: every host name it mentions — as a name,
-    /// a shorthand or a `{name}` in a string — is captured (rule 10).
-    pub(super) fn capture(&mut self, node: Node<'_>) {
-        let f = self.flow;
-        let own = self.own_params(node);
-        for n in crate::scan::ast::preorder(node, |_| true, crate::scan::ast::children) {
-            let mut names = Vec::new();
-            if self.is(&f.ident_kinds, n)
-                || self.is(&f.shorthand_kinds, n)
-                || self.is(&f.pattern_idents, n)
-            {
-                names.push(self.text(n));
-            }
-            let strings = f.macros.iter().any(|m| m.strings == n.kind())
-                || self.is(&f.interpolated_strings, n);
-            if strings {
-                names.extend(braced(&self.text(n)));
-            }
-            for name in names.into_iter().filter(|n| !own.contains(n)) {
-                if let Some(v) = self.resolve(&name) {
-                    self.vars[v].flags |= 1 << CAPTURED;
-                }
-            }
-        }
-    }
-
-    pub(super) fn read_braced(&mut self, node: Node<'_>) {
+    fn read_braced(&mut self, node: Node<'_>) {
         for name in braced(&self.text(node)) {
             self.read_name(&name);
         }

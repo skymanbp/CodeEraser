@@ -99,8 +99,7 @@ impl Lowerer<'_> {
         {
             return Some(v);
         }
-        let v = self.new_var(name, self.cur, at);
-        self.scopes[idx].insert(name.to_owned(), v);
+        let v = self.new_local(name, idx, at);
         if let (0, Some(c)) = (idx, self.cur) {
             self.found.push((name.to_owned(), c, at));
         }
@@ -241,6 +240,7 @@ impl Lowerer<'_> {
                     row.init.as_str(),
                     row.alternative.as_str(),
                 ];
+                self.decl_types(item, &others);
                 (
                     self.at(item, &row.binder, &others),
                     self.at(item, &row.init, &others),
@@ -265,8 +265,9 @@ impl Lowerer<'_> {
             ..Bind::local(idx, !inits.is_empty())
         };
         for binder in binders {
-            if !self.prototype(binder) {
-                self.bind(binder, b, &[]);
+            match self.prototype(binder) {
+                true => self.prototype_args(binder),
+                false => self.bind(binder, b, &[]),
             }
         }
     }

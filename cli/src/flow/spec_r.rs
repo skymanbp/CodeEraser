@@ -21,6 +21,7 @@ break_kinds = ["break"]
 continue_kinds = ["next"]
 noreturn = ["stop", "quit", "q", "abort", "cli_abort", "rlang::abort", "cli::cli_abort"]
 return_calls = ["return"]
+dispatch_calls = ["UseMethod", "NextMethod", "standardGeneric", "callNextMethod"]
 const_true = [["true", ""]]
 int_kinds = ["integer", "float"]
 dynamic_names = [

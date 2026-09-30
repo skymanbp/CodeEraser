@@ -172,3 +172,12 @@ class Shape {
     return this.area;
   }
 }
+
+function forward(z: Zod): Zod {
+  const a = z.lazy(() => a);
+  const A = z.object({ get next() { return B; } });
+  const B = z.object({ back: A });
+  let t: typeof B;
+  type T = typeof A;
+  return a;
+}

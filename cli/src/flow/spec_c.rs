@@ -44,6 +44,7 @@ decls = [
 ]
 lasting_storage = ["static", "extern"]
 prototype_kinds = ["function_declarator"]
+prototype_reads = ["type_identifier"]
 pattern_kinds = ["structured_binding_declarator"]
 binder_paths = [
   ["pointer_declarator", "declarator"], ["array_declarator", "declarator"],
@@ -63,6 +64,7 @@ conditional_ctx = [
   ["conditional_expression", "consequence", []], ["conditional_expression", "alternative", []],
 ]
 default_arg_fields = [["optional_parameter_declaration", "default_value"]]
+head_reads = ["field_initializer_list"]
 capture_kinds = ["lambda_expression", "function_definition"]
 address_ops = [["pointer_expression", "&"]]
 ref_binding_kinds = ["reference_declarator"]

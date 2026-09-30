@@ -19,7 +19,7 @@
   抽出的每个单元经 `flow::lower::lower_file` 降成四表，记文本 sha256、每个单元的序号 / 名 / 行段 / 形参数 / `dynamic` 位 /
   三张表的行数 / 每个（类，层）格的候选池大小，降不出合法树形的单元按名记 `unlowered` 与原因。池只读降出的表与图例，不问核，
   所以能先于任何判决冻结。档 `contracts/eval/flow-slice-<语言>-<语料>-v<代>.json`（zod 在 TypeScript 与 TSX 两门考题里各出一份，
-  同一个克隆目录，只有扩展名表不同）。
+  同一个克隆目录，只有扩展名表不同；`CE_FLOW_OUT=<目录>` 改写出目录——降表改动后在仓外重导一份、与冻结档逐格比池）。
 - **候选池**（同目录 `pools.rs`，对一个单元的纯函数）：类 0 不可达 = 有前一兄弟（同父、seq 最大且更小）的源语句，前一兄弟本身是
   终结叶（return / throw / break / continue / goto / noreturn 调用）或带 `infinite` 位的循环为层 A、是子树含终结叶的 if / loop /
   switch / try 为层 B、是其余这四种结构语句为层 C，合成语句不作题；类 1 死存储 = 有读的非豁免变量（含形参）上的每次写
@@ -65,7 +65,7 @@
   判词由（真值，答案）重算：真值正 = `unreachable` / `dead` / `unread`，`cannot_tell` 不入率；`per_kind` 每类记 tp / fp / tn / fn /
   unjudged / cannot_tell、`positives` / `negatives` 与 precision / recall 两个整数对，`gate` 读类 0 / 1 / 2 的四态，`judged` = 三门各 ∈
   {pass, vacuous}。档 `contracts/eval/flow-precision-<语言>-v<代>.json`（`ce.eval-flow-precision/1.0.0`；`CE_FLOW_OUT=<目录>` 改写出目录；
-  拒绝覆写；`CE_FLOW_PRECISION_DRY=1` 只印读数不写档；写档前要求 `generated_from.dirty` = false）。门 `cli/tests/it/eval_flow_precision.rs`
+  拒绝覆写；`CE_FLOW_PRECISION_DRY=1` 只印读数与判为 fp / fn 的行、不写档——干跑读的降表若晚于样本（回修降表之后、下一代之前），池项换了层或变量被新降表豁免的题按锚（类、行、nth、名）回映并逐题印 `re-anchored`，核从不点名豁免变量，所以答案仍是产品的，写档的一路照旧按名停；写档前要求 `generated_from.dirty` = false）。门 `cli/tests/it/eval_flow_precision.rs`
   （不跑 git、不要克隆与核）：档与考题 stage 同真同假（`scored` 才在盘上），已归档的逐行对审阅档重算并跑六形篡改（翻判词、翻答案、伪门、
   伪 `judged`、缺一行、把 silent 读成 vacuous——档里没有 silent 时，把某个有正例的类的真答案全改假、计数全重算、只让门写 vacuous）；
   `flow::judged_mask()` 的每一位 ⇔ 该语言精度册 `judged`（tsx 与 typescript 各一位）；四态在手写计数上钉住；篡改电池另在门自己的合成档
@@ -116,7 +116,7 @@
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-python-v1.json`：112 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -165,7 +165,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-typescript-v1.json`：127 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -243,7 +243,7 @@ unjudged 0 道。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-tsx-v1.json`：52 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -293,7 +293,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-rust-v1.json`：136 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -363,7 +363,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-go-v1.json`：120 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -412,7 +412,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-c-v1.json`：122 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -461,7 +461,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-cpp-v1.json`：146 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -539,7 +539,7 @@ unjudged 0 道。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-java-v1.json`：140 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -588,7 +588,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-lua-v1.json`：142 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -640,7 +640,7 @@ notes：无。
 
 notes：无。
 
-### 精度（2026-09-30）
+### 精度（第一代，2026-09-30；提交 E 退役）
 
 `flow-precision-r-v1.json`：100 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
 
@@ -660,6 +660,52 @@ notes：无。
 
 误报（类 0–2）0 条、漏报（类 0–2）0 条、unjudged 0 道。
 
+## 步 4 提交 E：降表回修与第一代精度册退役（2026-09-30）
+
+**退役**：提交 E 改了 `cli/src/flow/` 下的降表文件，它们在精度册的 `ANSWERED_BY` 里，十份第一代精度册
+`flow-precision-<语言>-v1.json` 按名退役（删出树、历史里仍在）；十门考题的 `stage` 翻回 `audited`，`flow::judged_mask()` 随门清空
+（每一位 ⇔ 一份 judged 的精度册）。各语言「精度（第一代，…）」一节照留，是第一代的记录。宇宙、样本与审阅档不动。
+
+**回修**（设计册 §5.1 第 8–10 条与图例句、§13 第 26 条；每类一条规则、一份探针样本 `scripts/tsprobe/snippets/flow.<语言>`、子仓
+`unit/flow/reads.rs` 一块期望表）：RS-1 宏里字符串字面量（含 raw）的占位符按 std 文法读；TS-1 TypeScript 嵌套作用域提到稍后
+声明的块级绑定即置 `captured`；TS-2 类型位置的 `typeof x` 是读（注解、别名、声明的类型）；TS-3 参数属性与 CPP-1 成员初始化列表
+在单元入口的合成语句里读；CPP-2 被读成原型的声明读它形参表里解析到变量的类型名；R-1 派发调用读全部形参；LEG-1 图例每条语句
+记终点行。CPP-3（do-while 少报，§13 第 20 条）与 LUA-1（路径不敏感）核实为既有登记、不改。
+
+**干跑读数**（新降表、第一代审阅档，`CE_FLOW_PRECISION_DRY=1`；tp / fp / tn / fn；「重锚」= 按锚回映的题数）：
+
+| 语言 | 类 0 | 类 1 | 类 2 | 类 3 | 门 0 / 1 / 2 | 重锚 |
+|---|---|---|---|---|---|---|
+| python | 0 / 0 / 31 / 0 | 1 / 0 / 34 / 0 | 1 / 0 / 15 / 0 | 15 / 0 / 15 / 0 | vacuous / pass / pass | 0 |
+| typescript | 0 / 0 / 30 / 0 | 0 / 0 / 44 / 1 | 0 / 0 / 30 / 0 | 0 / 0 / 22 / 0 | vacuous / silent / vacuous | 22 |
+| tsx | 0 / 0 / 7 / 0 | 0 / 0 / 15 / 0 | 0 / 0 / 15 / 0 | 0 / 0 / 15 / 0 | vacuous / vacuous / vacuous | 0 |
+| rust | 0 / 0 / 37 / 0 | 0 / 0 / 45 / 0 | 0 / 0 / 30 / 0 | 7 / 0 / 17 / 0 | vacuous / vacuous / vacuous | 17 |
+| go | 0 / 0 / 30 / 0 | 0 / 0 / 45 / 0 | 0 / 0 / 15 / 0 | 15 / 0 / 15 / 0 | vacuous / vacuous / vacuous | 0 |
+| c | 0 / 0 / 45 / 0 | 0 / 0 / 45 / 0 | 0 / 0 / 15 / 0 | 2 / 0 / 15 / 0 | vacuous / vacuous / vacuous | 0 |
+| cpp | 1 / 0 / 40 / 0 | 2 / 0 / 41 / 2 | 14 / 0 / 16 / 0 | 0 / 0 / 30 / 0 | pass / pass / pass | 17 |
+| java | 0 / 0 / 35 / 0 | 0 / 0 / 45 / 0 | 15 / 0 / 15 / 0 | 15 / 0 / 15 / 0 | vacuous / vacuous / pass | 0 |
+| lua | 1 / 0 / 36 / 0 | 3 / 0 / 41 / 1 | 15 / 0 / 15 / 0 | 15 / 0 / 15 / 0 | pass / pass / pass | 0 |
+| r | 0 / 0 / 30 / 0 | 0 / 0 / 28 / 0 | 0 / 0 / 15 / 0 | 8 / 0 / 18 / 1 | vacuous / vacuous / vacuous | 4 |
+
+十语言四类 fp 皆 0。余下的 fn 五条：typescript 类 1 `zod:packages/zod/src/v3/tests/partials.test.ts:152` `requiredObject`（真值争议，
+§13 第 26 条）；cpp 类 1 `fmt:test/scan.h:401` `prev_digit` 与 `fmt:include/fmt/core.h:1311` `prev`（do-while 少报）；lua 类 1
+`luarocks:src/luarocks/fetch.lua:248` `errcode`（路径不敏感）；r 类 3 `stringr:R/modifiers.R:198` `error_call`（R-1 的代价，顾问）。
+
+**宇宙漂移**（新降表下十语料重导到仓外，与冻结宇宙逐（单元，格）比池计数；单元集合与行段两边相同）：
+
+| 宇宙 | 池动的单元 | 动的格（冻结 → 新） |
+|---|---|---|
+| cpp-fmt | 188 | 1/B 229 → 226 · 1/C 2344 → 2349 · 2/A 38 → 32 · 2/B 2059 → 2065 · 3/A 286 → 3 · 3/B 2093 → 2375 |
+| r-stringr | 3 | 3/A 12 → 8 · 3/B 438 → 442 |
+| rust-ripgrep | 6 | 1/C 3399 → 3412 · 2/A 13 → 0 · 2/B 3315 → 3328 · 3/A 8 → 7 · 3/B 1853 → 1854 |
+| rust-codeeraser-flow | 3 | 1/C 5218 → 5220 · 2/A 2 → 0 · 2/B 5099 → 5101 · 3/A 1 → 0 · 3/B 5762 → 5763 |
+| typescript-zod | 52 | 1/C 4668 → 4627 · 2/A 27 → 0 · 2/B 4527 → 4486 · 3/A 7 → 0 · 3/B 2929 → 2936 |
+| python-requests、tsx-zod、go-cobra、c-lua、java-gson、lua-luarocks | 0 | — |
+
+c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法把 C++ 的 `try { f(L, ud); }` 读成原型，CPP-2 读出两个形参），
+它是 dynamic 单元，不入池。池动的四门（cpp、r、rust、typescript）出第二代考题；其余六门的池一格没动，第一代宇宙 / 样本 / 审阅档照用，
+在新降表的干净树上重生成精度册即可。
+
 ## 出处
 
 十一份宇宙与十份样本的 `generated_from` 都记 ce 1.8.0、树 `5278e74`、dirty = true：冻结时考题仪器本身还没提交（它和
@@ -668,4 +714,4 @@ notes：无。
 
 十份审阅档 `contracts/eval/flow-review-<语言>-v1.json`（提交 B′）的 `generated_from` 记 ce 1.8.0、树 `2ea957d`、dirty = true：归档时审阅仪器本身还没提交；53 批的批次文件、`manifest.json` 与答案文件在仓库外的车道目录里，不入库，答案的每个字经归档逐字进档。
 
-十份精度册 `contracts/eval/flow-precision-<语言>-v1.json`（提交 C2）的 `generated_from` 记 ce 1.8.0、树 `bb9bdc8`、dirty = false：C1 提交了仪器与门之后，在那棵干净树上逐语言生成到车道目录、十份齐了一次拷进 `contracts/eval/`，生成期间仓库树里不建任何文件；judged = Python / TSX / Go / C / Java / Lua / R，掩码 `flow::judged_mask()` 按此填入。
+十份精度册 `contracts/eval/flow-precision-<语言>-v1.json`（提交 C2）的 `generated_from` 记 ce 1.8.0、树 `bb9bdc8`、dirty = false：C1 提交了仪器与门之后，在那棵干净树上逐语言生成到车道目录、十份齐了一次拷进 `contracts/eval/`，生成期间仓库树里不建任何文件；judged = Python / TSX / Go / C / Java / Lua / R，掩码 `flow::judged_mask()` 按此填入。提交 E 起十份按名退役（删出树、历史里仍在），掩码随之清空。

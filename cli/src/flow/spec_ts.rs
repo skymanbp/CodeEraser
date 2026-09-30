@@ -50,6 +50,11 @@ pattern_kinds = ["object_pattern", "array_pattern", "rest_pattern", "pair_patter
 pattern_idents = ["shorthand_property_identifier_pattern"]
 ident_kinds = ["identifier"]
 name_positions = [["type_annotation", "."]]
+type_reads = ["type_query"]
+field_params = [
+  ["required_parameter", "@accessibility_modifier"], ["required_parameter", "readonly"],
+  ["optional_parameter", "@accessibility_modifier"], ["optional_parameter", "readonly"],
+]
 shorthand_kinds = ["shorthand_property_identifier"]
 member_write_bases = ["member_expression", "subscript_expression"]
 assigns = [
@@ -63,6 +68,7 @@ conditional_ctx = [
 ]
 default_arg_fields = [["required_parameter", "value"]]
 capture_kinds = ["class_declaration"]
+forward_captures = true
 "#],
 );
 

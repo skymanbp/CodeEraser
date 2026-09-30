@@ -14,10 +14,13 @@ mod access;
 mod access_write;
 mod at;
 mod build;
+mod capture;
 mod finish;
+mod format;
 pub mod lower;
 mod params;
 pub mod pos;
+mod reads;
 pub mod rows;
 mod scope;
 pub mod spec;
@@ -41,18 +44,11 @@ use crate::scan::lang::Lang;
 
 /// The languages whose flow findings are judged, not advised: a
 /// language enters when its precision doc passes the §5.5 gate (every
-/// kind 0 / 1 / 2 pass or vacuous; plan v2.31 step 4 commit C2), in the
-/// exam table's order. Pinned by the mask leg of
-/// it/eval_flow_precision.rs.
-const JUDGED: &[Lang] = &[
-    Lang::Python,
-    Lang::Tsx,
-    Lang::Go,
-    Lang::C,
-    Lang::Java,
-    Lang::Lua,
-    Lang::R,
-];
+/// kind 0 / 1 / 2 pass or vacuous), in the exam table's order. Empty
+/// since commit E retired the first-generation docs (the lowering they
+/// answered by moved); each language comes back with its doc on the
+/// fixed lowering. Pinned by the mask leg of it/eval_flow_precision.rs.
+const JUDGED: &[Lang] = &[];
 
 pub fn judged_mask() -> i64 {
     JUDGED.iter().fold(0, |m, &l| m | (1 << l as i64))

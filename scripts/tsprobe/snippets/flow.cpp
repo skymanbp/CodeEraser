@@ -148,3 +148,12 @@ void fatal(int code) {
     quit_now(code);
     code = 0;
 }
+
+struct Holder {
+    Holder(int a, int b) : a_(a), b_(b + 1) {}
+    int a_, b_;
+};
+
+void vexing(int data, int size) {
+    wrapper w(data, sizeof(size));
+}

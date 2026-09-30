@@ -144,6 +144,12 @@ rows! {
         /// whose own declarator is a bare name declares a function (a
         /// prototype in a body), no local.
         prototype_kinds: Kinds,
+        /// Rule 8 (ruling 7, CPP-2): in such a prototype a name of one of
+        /// these kinds that resolves to a variable is read — the most
+        /// vexing parse: `T x(a, b);` is a declaration of x built from a
+        /// and b, the grammar's parameter types (the ambiguity read as a
+        /// read, the safe side).
+        prototype_reads: Kinds,
         /// Rule 8: (kind, pattern) of an expression that binds (Rust
         /// `if let`, Java `instanceof T t`), declared at its statement.
         pattern_binders: Pairs,
@@ -168,6 +174,19 @@ rows! {
         /// Rule 9: string kinds whose `{name}` pieces are read — R's glue
         /// and cli strings interpolate the caller's locals by name.
         interpolated_strings: Kinds,
+        /// Rule 9 (TS-2): kinds read inside a name position — a type
+        /// taken from a value (TypeScript `typeof x`) needs the value.
+        type_reads: Kinds,
+        /// Rule 9 (TS-3): (kind, `@kind` or token) of a parameter that
+        /// also declares a field (TypeScript `constructor(public v: T)`):
+        /// its names are read in the unit's synthetic entry statement.
+        field_params: Pairs,
+        /// Rule 9 (CPP-1): children of the unit read in that entry
+        /// statement (a C++ constructor's member-initializer list).
+        head_reads: Kinds,
+        /// Rule 9 (R-1): callee names that hand the whole call on (R
+        /// `UseMethod`, `NextMethod`): every parameter is read there.
+        dispatch_calls: Names,
         /// Rule 9: an assignment target of one of these writes nothing, its
         /// names are read (`a.b = v`, `*p = v`).
         member_write_bases: Kinds,
@@ -184,6 +203,11 @@ rows! {
         /// Rule 10: nested scopes that are no units: a host local they name
         /// is captured.
         capture_kinds: Kinds,
+        /// Rule 10 (TS-1): a nested scope may name a binding declared
+        /// after it (a TypeScript `const` read by an earlier closure, or
+        /// by its own initializer's): a name that resolves to nothing
+        /// yet is captured when a scope still open declares it.
+        forward_captures: bool,
         /// Rule 10: (kind, operator token or `@kind`) taking an address.
         address_ops: Pairs,
         /// Rule 10: declarators binding a reference: the names bound are

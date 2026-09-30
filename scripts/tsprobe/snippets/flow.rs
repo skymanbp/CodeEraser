@@ -175,3 +175,8 @@ impl Point {
         self.x
     }
 }
+
+fn placeholders(name: &str, pad: usize) -> String {
+    let k = 1;
+    format!(r"-{name}{:pad$}{{{k}}}")
+}
