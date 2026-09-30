@@ -30,7 +30,7 @@
 > 六对（不可达段 / 死存储 / 未用局部量 / 未用形参 / 经 finally 的 return〔不可达 + 死存储〕/ 树形拒绝一例；降级面由电池以
 > 524,289 行的运行时请求探——夹具不装 7 MB）；契约拒绝 42 条按名（`FlowRefusals` 逐条钉）；随机结构化程序 200 例与不依赖控制流图的
 > 轨迹参考（`ReferenceFlow`：树遍历枚举每条执行轨迹、每个循环头至多两次、try 体内每条语句都可交给 catch）逐条同。旧核无此能力 =
-> 测量侧具名降级「core offers no flow/1 (pre-7.4.0)」（步 4 接线）。
+> 测量侧具名降级「core offers no flow/1 (pre-7.4.0)」（步 4 提交 A 已接线 2026-09-30：`cli/src/flow/wire.rs` 四表请求与严格 consume、`wire_batch.rs` 按 `rowCap` 分批与拒绝驱动的剔除；golden 六对的请求行改由真源码降出，应答只动 seq / v / 计数）。
 > **7.3.0**（代码查询与架构规则族，加性 minor，计划 v2.31 步 1，2026-09-29；ADR-008 细则第七期，设计册
 > `docs/reference/analysis-track.md` §4）：第十三判决族 `query/1`——请求 `query.request`：`program=[[kind,value]…]`
 > 记号流（0 谓词码：事实谓词 0..26 / 程序谓词 ≥ 1000 按首现编号；1 变量按子句编号；2 整数；3 集合号；4 名字哈希

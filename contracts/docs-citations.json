@@ -10174,12 +10174,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 26,
+    "line": 25,
     "text": "const PROGRAMS: &str = \"\\"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|d650078f6324fbb1|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 112,
+    "line": 111,
     "text": "fn every_request_line_is_the_prelude_then_its_program_through_the_lexer() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|a47e4986df442e86|0": {

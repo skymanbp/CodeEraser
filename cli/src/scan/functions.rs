@@ -242,7 +242,7 @@ fn names_of(entry: Node<'_>) -> usize {
 /// or, for a Java record's compact constructor, which spells no list,
 /// the record header's: its components are the constructor's
 /// implicitly declared parameters (JLS 8.10.4.2).
-fn param_list<'t>(node: Node<'t>, kinds: &[&str]) -> Option<Node<'t>> {
+pub(crate) fn param_list<'t>(node: Node<'t>, kinds: &[&str]) -> Option<Node<'t>> {
     node.child_by_field_name("parameters")
         .or_else(|| chain_params(node))
         .or_else(|| child_of_kinds(node, kinds))

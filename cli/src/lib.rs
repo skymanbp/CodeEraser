@@ -12,6 +12,7 @@ pub mod docdup;
 pub mod eject;
 pub mod erase;
 pub mod faces;
+pub mod flow;
 pub mod fourclass;
 pub mod gitmodules;
 pub mod graph;

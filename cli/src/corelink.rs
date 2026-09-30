@@ -21,9 +21,9 @@ use std::process::{Child, Stdio};
 /// and exemption flags, and its accesses in evaluation order, and
 /// reads back `flow.result` — the findings (unreachable runs, dead
 /// stores, unused locals, unused parameters as advice) and counts.
-/// This side's FlowSpec tables, lowering and faces (`ce flow`, the
-/// guard leg, the MCP tool, the GUI screen) land in steps 4 and 5 of
-/// the same plan; a core without the capability is named as
+/// This side's FlowSpec tables, lowering and wire landed in step 4
+/// (cli/src/flow/, 2026-09-30); the faces (`ce flow`, the guard leg,
+/// the MCP tool, the GUI screen) land in step 5; a core without it is named as
 /// "pre-7.4.0" by `judged::ask`, never blocked on. Every existing
 /// family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
