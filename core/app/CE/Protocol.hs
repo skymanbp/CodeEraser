@@ -17,6 +17,7 @@ import qualified CE.Flow as Flow
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
+import qualified CE.Merge as Merge
 import qualified CE.Query as Query
 import CE.Protocol.Version (majorMatches, proto)
 import qualified CE.Scan as Scan
@@ -106,6 +107,7 @@ families =
   , Fam "similar/1" "similar.request" Similar.respond
   , Fam "query/1" "query.request" Query.respond
   , Fam "flow/1" "flow.request" Flow.respond
+  , Fam "merge/1" "merge.request" Merge.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

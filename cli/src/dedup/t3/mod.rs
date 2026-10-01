@@ -22,8 +22,9 @@ use std::path::{Path, PathBuf};
 /// additive) = `cached`, the pairs the verdict cache answered.
 pub const SCHEMA_ID: &str = "ce.clone-report/0.3.0";
 
-/// One unit's judged fate on the way to the wire.
-enum Outcome {
+/// One unit's judged fate on the way to the wire (merge/1 reads the
+/// same fates for its whole-unit members, step 7).
+pub(crate) enum Outcome {
     Tree(tree::UnitTree),
     OverCap,
     Forest,
@@ -125,7 +126,8 @@ pub fn judge_index(root: &Path, idx: &super::index::Index, core: &str) -> Result
     // the product judgment sees the exhaustive S5 extension; the
     // frozen-instrument path calls collect() alone (candidates.rs)
     candidates::extend_exhaustive(&mut cand);
-    let built = build_trees(root, &cand.units)?;
+    let units: Vec<&Unit> = cand.units.iter().collect();
+    let built = build_trees(root, &units, tree::Extras::With)?;
     let (sendable, dropped_over_cap, dropped_forest) = sendable_pairs(&cand.pairs, &built);
     let (rows, [judged, prefiltered, cached], requests) =
         judge::judge(core, idx.raw(), &built, &sendable)?;
@@ -201,8 +203,14 @@ pub fn is_clone(ted: i64, n1: i64, n2: i64) -> bool {
 /// ensure per built tree is the same-source counterfactual living in
 /// the product path: tree.rs selects by the unit_seq predicate, so a
 /// mismatch means the disk drifted from the cache mid-run or the two
-/// walks diverged — an error, never a silently wrong judgment.
-fn build_trees(root: &Path, units: &[Unit]) -> Result<Vec<Outcome>> {
+/// walks diverged — an error, never a silently wrong judgment. A tree
+/// built without extras (merge/1's) holds that count less its comments:
+/// never more.
+pub(crate) fn build_trees(
+    root: &Path,
+    units: &[&Unit],
+    extras: tree::Extras,
+) -> Result<Vec<Outcome>> {
     let mut out: Vec<Option<Outcome>> = units.iter().map(|_| None).collect();
     let mut by_file: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
     for (i, u) in units.iter().enumerate() {
@@ -218,7 +226,7 @@ fn build_trees(root: &Path, units: &[Unit]) -> Result<Vec<Outcome>> {
             .iter()
             .map(|&i| (units[i].start_line as usize, units[i].end_line as usize))
             .collect();
-        let trees = tree::file_trees(&text, lang, &spans);
+        let trees = tree::file_trees(&text, lang, &spans, extras);
         ensure!(
             trees.len() == spans.len(),
             "{path}: parse failed under cached unitsig rows — disk drifted from the index"
@@ -226,7 +234,7 @@ fn build_trees(root: &Path, units: &[Unit]) -> Result<Vec<Outcome>> {
         for (&i, b) in ids.iter().zip(trees) {
             if let tree::Built::Tree(t) = &b {
                 ensure!(
-                    t.lab.len() as i64 == units[i].nodes,
+                    extras.agrees(t.lab.len() as i64, units[i].nodes),
                     "{path} {}#{}: tree walk found {} nodes, unitsig cached {} — predicate drift",
                     units[i].key,
                     units[i].nth,

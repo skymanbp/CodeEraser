@@ -12,7 +12,7 @@
 -- those normalise to one token run and the clone gate named forty
 -- pairs on the first draft; each literal stays under the function
 -- wall in turn.
-module FlowCases (Case (..), casesOf, judgments) where
+module FlowCases (Case (..), casesOf, judgments, sections) where
 
 import Data.Aeson (Value)
 import WireHarness (tabledRequest)
@@ -22,13 +22,17 @@ data Case = Case {caseName :: String, caseRequest :: Value, caseExpect :: [[Inte
 judgments :: [Case]
 judgments = casesOf (judgmentsA <> judgmentsB <> judgmentsC)
 
--- | A header line opens a case; the lines up to the next header are
--- its rows.
 casesOf :: String -> [Case]
-casesOf text = go (lines text)
+casesOf = map (uncurry caseOf) . sections
+
+-- | A header line (`#` or `!`) opens a case; the lines up to the next
+-- header are its rows. Shared with the merge tables (MergeCases),
+-- which read the same header grammar with rows of their own.
+sections :: String -> [(String, [String])]
+sections text = go (lines text)
  where
   go [] = []
-  go (header : rest) = let (body, next) = break isHeader rest in caseOf header body : go next
+  go (header : rest) = let (body, next) = break isHeader rest in (header, body) : go next
   isHeader l = take 1 l `elem` ["#", "!"]
 
 caseOf :: String -> [String] -> Case

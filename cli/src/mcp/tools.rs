@@ -8,7 +8,8 @@
 
 use super::adapters::{
     check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, erase_log,
-    flow, graph_sites, join, query, rules, scan, similar_units, structure, trend, update_check,
+    flow, graph_sites, join, merge_suggestions, query, rules, scan, similar_units, structure,
+    trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -233,6 +234,14 @@ pub const TOOLS: &[Tool] = &[
          placed by path, unit, kind, lines and variable; each finding says whether it is \
          judged or advisory (unused parameters always are). Report-only.",
         &[KIND]
+    ),
+    tool!(
+        "merge_suggestions",
+        merge_suggestions,
+        "Clone-merge suggestions (ce.merge-report schema): every clone group — T1/T2 \
+         families, T3 pairs — anti-unified by the core's merge/1: the parameters a merged \
+         function takes with each member's text at them, the member kept, the lines \
+         saved, feasible or why not. Advisory."
     ),
     tool!(
         "update_check",

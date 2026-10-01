@@ -72,6 +72,8 @@ rules.why	查询答案也带推导链
 flow	函数内死代码（不可达语句、死存储、未用局部量与形参），由核的 flow/1 判决；--check 是它自己的门，在 `[flow] tier` 为 deny 时生效（从不进 `ce check`）；未用形参永远只当顾问
 flow.check	`[flow] tier` 为 deny 且存在被判决的发现时退出 1（未用形参只当顾问，永不计入）
 flow.kind	只显示这些种类，逗号分隔（unreachable、dead_store、unused_local、unused_param）；计数照全量报
+merge	克隆合并建议：每个克隆组（T1/T2 族、T3 对）由核的 merge/1 做反统一——合并后函数的参数、保留的成员、省下的行数、可行与否及原因（只当顾问，永不判决）
+merge.group	控制台只印这一组（文档里的组号）；JSON 文档永远整份
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）

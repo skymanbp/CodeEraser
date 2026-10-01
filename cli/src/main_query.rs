@@ -7,13 +7,10 @@
 //! violation and 0 when every one passes — a missing default file is
 //! zero assertions and 0, said aloud.
 
-use crate::main_cmds::{fail, json, or_cwd};
-use crate::main_judge::JudgeArgs;
+use crate::main_prelude::*;
 use codeeraser::query::face::{self, Ask, Report};
 use codeeraser::query::{PRELUDE, console, rules_source};
-use codeeraser::report::print_doc;
 use std::path::PathBuf;
-use std::process::ExitCode;
 
 #[derive(clap::Args)]
 pub struct QueryArgs {

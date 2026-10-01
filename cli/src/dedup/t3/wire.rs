@@ -26,22 +26,31 @@ pub const PAIR_CAP: usize = 4096;
 /// caller's sorted-rank locals keep the wire's strictly-ascending
 /// row order).
 pub fn request_body(trees: &[&UnitTree], pairs: &[[usize; 2]]) -> Value {
+    let rows: Vec<Value> = dense(trees)
+        .into_iter()
+        .zip(trees)
+        .map(|(lab, t)| json!({"lab": lab, "lld": t.lld}))
+        .collect();
+    json!({"trees": rows, "pairs": pairs})
+}
+
+/// Each tree's labels mapped request-locally to dense codes in
+/// first-seen order across the trees — one mapping for every family
+/// whose trees ride clone/1's encoding (merge/1 compares them too).
+pub fn dense(trees: &[&UnitTree]) -> Vec<Vec<i64>> {
     let mut dense: BTreeMap<u64, i64> = BTreeMap::new();
-    let rows: Vec<Value> = trees
+    trees
         .iter()
         .map(|t| {
-            let lab: Vec<i64> = t
-                .lab
+            t.lab
                 .iter()
                 .map(|k| {
                     let next = dense.len() as i64;
                     *dense.entry(*k).or_insert(next)
                 })
-                .collect();
-            json!({"lab": lab, "lld": t.lld})
+                .collect()
         })
-        .collect();
-    json!({"trees": rows, "pairs": pairs})
+        .collect()
 }
 
 /// One chunk's request-local layout: global unit ids by the shared

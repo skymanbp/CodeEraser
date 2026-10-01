@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|0ba78184a21254fb|0": {
+  "docs/reference/methodology.md|../../README.md|68c6cfa0dd08437d|0": {
     "target": "../../README.md",
-    "line": 187,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->seventeen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
+    "line": 190,
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->eighteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -770,108 +770,108 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|1bbd364e753f838f|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 117,
-    "end": 131,
+    "line": 122,
+    "end": 136,
     "text": "fn fingerprint_pairs(&mut self, instances: &[Instance]) -> BTreeSet<(usize, usize)> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|1fca18363d514fa4|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 70,
-    "end": 73,
+    "line": 75,
+    "end": 78,
     "text": "if x == y {\nself.tally.self_pair_dropped += 1;"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|20fa5e5d34020a2d|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 147,
-    "end": 151,
+    "line": 152,
+    "end": 156,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|23f10646b5109742|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 75,
-    "end": 78,
+    "line": 80,
+    "end": 83,
     "text": "if self.units[a].lang != self.units[b].lang {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|309a455a1a9afb08|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 74,
+    "line": 79,
     "text": "let (a, b) = (x.min(y), x.max(y));"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|3410fa2418530bec|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 136,
-    "end": 138,
+    "line": 141,
+    "end": 143,
     "text": "/// never write the index — its load_streams predecessor silently"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|4bd7b3e82751aef4|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 87,
-    "end": 92,
+    "line": 92,
+    "end": 97,
     "text": "fn push_lines(&mut self, set: &mut BTreeSet<(usize, usize)>, ab: [(&str, i64); 2], src: &str) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|59ad89d86ba602e8|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 149,
+    "line": 154,
     "text": "min_distinct: 0,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|5ac5528597870d18|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 166,
-    "end": 169,
+    "line": 171,
+    "end": 174,
     "text": "/// S4: MinHash/LSH over the structural shingle sets. Kept only as"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|61d6d665f9cd9c39|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 170,
-    "end": 188,
+    "line": 175,
+    "end": 193,
     "text": "fn structural_pairs(&mut self) -> BTreeSet<(usize, usize)> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|72210ffec1afce6a|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 139,
-    "end": 164,
+    "line": 144,
+    "end": 169,
     "text": "fn near_pairs("
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|88d68fe69dc21d65|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 69,
-    "end": 83,
+    "line": 74,
+    "end": 88,
     "text": "fn push(&mut self, set: &mut BTreeSet<(usize, usize)>, x: usize, y: usize, src: &str) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|8992fdbb12a1f2e7|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 59,
-    "end": 66,
+    "line": 64,
+    "end": 71,
     "text": "fn owner(&self, file: &str, line: i64) -> Option<usize> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|9df2d5a50dff9e9b|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 191,
-    "end": 209,
+    "line": 196,
+    "end": 214,
     "text": "fn band_group(&mut self, out: &mut BTreeSet<(usize, usize)>, ids: &[usize]) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|bd1e4dee01bf199d|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 37,
-    "end": 56,
+    "line": 42,
+    "end": 61,
     "text": "pub(super) fn union("
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|c33ee6b448777129|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 79,
-    "end": 82,
+    "line": 84,
+    "end": 87,
     "text": "if set.insert((a, b)) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|c3485ddc6f9f5b64|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 96,
-    "end": 112,
+    "line": 101,
+    "end": 117,
     "text": "fn same_key(&mut self) -> BTreeSet<(usize, usize)> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|d40676f45c1426ce|0": {
     "target": "../../../cli/src/dedup/sources.rs",
-    "line": 178,
-    "end": 180,
+    "line": 183,
+    "end": 185,
     "text": "let sig = minhash::signature(&u.sig, LSH_SHAPE.0);"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/struct_fp.rs|e04ea082c6b989ba|0": {
@@ -923,92 +923,92 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|32b8e9b3637d6a8d|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 50,
-    "end": 69,
+    "line": 51,
+    "end": 70,
     "text": "#[derive(Serialize, Clone)]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|3463d97af9d18071|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 175,
-    "end": 179,
+    "line": 177,
+    "end": 181,
     "text": "for &(_, _, (ted, n1, n2, v)) in rows {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|403f2523fefd45be|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 209,
-    "end": 210,
+    "line": 217,
+    "end": 218,
     "text": "if u.nodes > wire::UNIT_NODE_CAP {"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|515005aa37685ad3|0": {
-    "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 205,
-    "end": 244,
-    "text": "fn build_trees(root: &Path, units: &[Unit]) -> Result<Vec<Outcome>> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5a22db522a5d590c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 64,
-    "end": 68,
+    "line": 65,
+    "end": 69,
     "text": "pub prefiltered: u64,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5b4d9b675153bd48|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 53,
-    "end": 62,
+    "line": 54,
+    "end": 63,
     "text": "pub over_cap_units: usize,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5c764fdd8cc06d4d|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 248,
-    "end": 265,
+    "line": 256,
+    "end": 273,
     "text": "fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairRow>, u64, u64) {"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|677740f654b911ca|0": {
+    "target": "../../../cli/src/dedup/t3/mod.rs",
+    "line": 209,
+    "end": 210,
+    "text": "pub(crate) fn build_trees("
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|75be95ae80742e4a|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 116,
-    "end": 118,
+    "line": 117,
+    "end": 119,
     "text": "/// The judgment over an already-refreshed index: identity gate,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|845196f1fcbaf13b|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 227,
-    "end": 235,
+    "line": 235,
+    "end": 243,
     "text": "if let tree::Built::Tree(t) = &b {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|9c84e006f068e6e5|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 188,
-    "end": 197,
+    "line": 190,
+    "end": 199,
     "text": "/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — since ADR-008 P1 a"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|a4bf30c9a25404df|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 125,
-    "end": 127,
+    "line": 126,
+    "end": 128,
     "text": "// the product judgment sees the exhaustive S5 extension; the"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|d5d73f05f598a93c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 167,
-    "end": 186,
+    "line": 169,
+    "end": 188,
     "text": "/// The reported set from the CORE's verdict bits (ADR-008 P1), with"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|0abf5f23e88f2f40|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 108,
-    "end": 123,
+    "line": 234,
+    "end": 249,
     "text": "/// A node's named children, looking through anonymous intermediates"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|2b3a3e29b93de7f2|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|16d3e2bc93e406cf|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 93,
-    "end": 106,
-    "text": "fn emit(node: Node, t: &mut UnitTree) {"
+    "line": 74,
+    "end": 87,
+    "text": "pub fn file_trees(text: &str, lang: Lang, spans: &[(usize, usize)], extras: Extras) -> Vec<Built> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|3065f4197f1de2c3|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 58,
-    "end": 78,
+    "line": 173,
+    "end": 193,
     "text": "/// The maximal selected nodes: named nodes inside [start, end] whose"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|3a9fdb2c81f43ed9|0": {
@@ -1017,17 +1017,17 @@
     "end": 20,
     "text": "/// One wire-ready tree. `lab` holds raw fnv1a kind codes — the"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|3cd6e309a7c43bac|0": {
-    "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 42,
-    "end": 56,
-    "text": "fn build(root: Node, start: usize, end: usize) -> Built {"
-  },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|892e863bd64371a7|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 82,
-    "end": 84,
+    "line": 198,
+    "end": 200,
     "text": "fn lines(node: Node) -> (usize, usize) {"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|8ea567f5e3dfcd77|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 213,
+    "end": 232,
+    "text": "fn emit<'t>(\nnode: Node<'t>,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|7ab8cb85fc52662f|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
@@ -1049,8 +1049,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|b16418f5083876d4|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
-    "line": 76,
-    "end": 79,
+    "line": 85,
+    "end": 88,
     "text": "/// admissibility argument collapses if the judge's ratio drifts from"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|beab3aab213f3f90|0": {
@@ -1061,14 +1061,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|f1e45f3032c6a22f|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
-    "line": 81,
-    "end": 87,
+    "line": 90,
+    "end": 96,
     "text": "pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|f383eee515bec7ba|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
-    "line": 64,
-    "end": 71,
+    "line": 73,
+    "end": 80,
     "text": "pub fn family(core: &str) -> crate::lockstep::Family<'_> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/join/mod.rs|bb493d56a8b2eca6|0": {
@@ -1096,71 +1096,71 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/tests/unit/dedup/t3/wire.rs|852d91320c904172|0": {
     "target": "../../../cli/tests/unit/dedup/t3/wire.rs",
-    "line": 30,
-    "end": 32,
+    "line": 32,
+    "end": 34,
     "text": "let mut drifted = ok;"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|05f0b6d67debe7e3|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 54,
-    "end": 58,
+    "line": 59,
+    "end": 63,
     "text": ", famOverCap = \\req ->"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|08e7a0898e53e736|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 112,
-    "end": 121,
+    "line": 120,
+    "end": 129,
     "text": "pairRow :: Int -> Int -> [Int] -> Maybe String"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|17dccaf044384732|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 86,
-    "end": 109,
+    "line": 93,
+    "end": 116,
     "text": "treeShape :: Int -> WireTree -> Maybe String"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|26f81675d1fb376d|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 159,
-    "end": 160,
+    "line": 167,
+    "end": 168,
     "text": ", \"scores\" .= map fst scored"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|476cc87c555360a1|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 134,
+    "line": 142,
     "text": "| provablyBelowH (tSize a, tHisto a) (tSize b, tHisto b) = (rows, judged, pre + 1)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|4fc447705b7382ef|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 173,
+    "line": 181,
     "text": "<> [\"reason\" .= (\"clone_too_large\" :: String) | degraded]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|552d4dca9984b4fa|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 80,
+    "line": 85,
     "text": ", tableOffence \"pair\" id (pairRow (length ts)) ps"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|86f00026b50bf754|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 165,
-    "end": 166,
+    "line": 173,
+    "end": 174,
     "text": ", \"judged\" .= judged"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|b5e0d87d203831ee|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 168,
-    "end": 170,
+    "line": 176,
+    "end": 178,
     "text": ", \"knobs\"\n.= object"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|c27989dcb52ac94f|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 116,
-    "end": 118,
+    "line": 124,
+    "end": 126,
     "text": "-- a unit is not a clone of itself (review C11: [0,0] passed and"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|c5342721867ecdd1|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 124,
-    "end": 141,
+    "line": 132,
+    "end": 149,
     "text": "-- | Judge every pair: the admissible prefilter proves \"below"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|d16a8e60833eb4b3|0": {
@@ -1171,8 +1171,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone.hs|f869e08b3c6de2ea|0": {
     "target": "../../../core/app/CE/Clone.hs",
-    "line": 135,
-    "end": 140,
+    "line": 143,
+    "end": 148,
     "text": "| otherwise =\n( ( [fromIntegral i, fromIntegral j, d, size a, size b]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Cost.hs|1a9b8682691beeeb|0": {
@@ -1247,12 +1247,6 @@
     "end": 38,
     "text": "-- | True ⇔ provably below the clone threshold — the O(1) size"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|031ba455a630a8a0|0": {
-    "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 90,
-    "end": 93,
-    "text": "else do\nsub <- readArray fd (fkey (tLld a ! i - l1) (tLld b ! j - l2))"
-  },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|0a1b8903b7c17785|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
     "line": 1,
@@ -1265,26 +1259,32 @@
     "end": 4,
     "text": "-- | Zhang-Shasha tree edit distance over the wire's postorder form:"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|0a5575fa410a7027|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|4bd86b2662f64380|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 82,
-    "text": "del <- (+ 1) <$> readArray fd (fkey (di - 1) dj)"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|119415f46be00854|0": {
-    "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 81,
-    "end": 89,
-    "text": "aligned = tLld a ! i == l1 && tLld b ! j == l2"
+    "line": 73,
+    "end": 74,
+    "text": "rootCell :: Tree -> Tree -> Int"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|504caa6c32e8a687|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 42,
+    "line": 48,
     "text": "| tSize a == 0 || tSize b == 0 = fromIntegral (max (tSize a) (tSize b))"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|6750530a86db9442|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|57e64a83435be5c9|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 47,
-    "text": "readArray td ((tSize a - 1) * tSize b + (tSize b - 1))"
+    "line": 112,
+    "end": 126,
+    "text": "-- | One forest pass: fills the forest-distance table for the span"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|603cc5d4817f9f06|0": {
+    "target": "../../../core/app/CE/Clone/Ted.hs",
+    "line": 140,
+    "text": "ins <- (+ 1) <$> readArray fd (fkey sp di (dj - 1))"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|787d49eb51260906|0": {
+    "target": "../../../core/app/CE/Clone/Ted.hs",
+    "line": 139,
+    "text": "del <- (+ 1) <$> readArray fd (fkey sp (di - 1) dj)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|8b12f9aa1ad98346|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
@@ -1292,32 +1292,32 @@
     "end": 9,
     "text": "-- the 3e measured exit caught per-cell IntMap inserts pushing"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|abb1a30e3b062637|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|c3a763fded18372c|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 83,
-    "text": "ins <- (+ 1) <$> readArray fd (fkey di (dj - 1))"
+    "line": 143,
+    "text": "then (+ fromEnum (tLab a ! i /= tLab b ! j)) <$> readArray fd (fkey sp (di - 1) (dj - 1))"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|cc3d5c1cc01387bf|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|d561645d801e6fbb|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 87,
-    "text": "let rel = if tLab a ! i == tLab b ! j then 0 else 1"
+    "line": 125,
+    "text": "when (aligned sp i j) $ writeArray td (i * tSize b + j) v"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|cd7a96223262b912|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|dcdea016f368387b|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 67,
-    "end": 90,
-    "text": "-- | One keyroot-pair forest pass: fills the forest-distance table"
+    "line": 144,
+    "text": "else (+) <$> readArray fd (fkey sp (tLld a ! i - sL1 sp) (tLld b ! j - sL2 sp)) <*> readArray td (i * tSize b + j)"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|ebfe333ae4eb588f|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 57,
-    "end": 65,
+    "line": 84,
+    "end": 92,
     "text": "-- | Keyroots: for every distinct lld value, the highest postorder"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|f7d14543eb2c5f13|0": {
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Ted.hs|f619cbd82e41940c|0": {
     "target": "../../../core/app/CE/Clone/Ted.hs",
-    "line": 95,
-    "text": "when aligned $ writeArray td (i * tSize b + j) v"
+    "line": 141,
+    "end": 143,
+    "text": "third <-\nif aligned sp i j"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Verdict/Join.hs|cfff149d35c47f6c|0": {
     "target": "../../../core/app/CE/Verdict/Join.hs",
@@ -5902,10 +5902,10 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|2005276aa1c41a8c|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|69e6116432504de7|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.4.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.5.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -7819,31 +7819,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 490,
-    "end": 492,
+    "line": 510,
+    "end": 512,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 486,
+    "line": 506,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 478,
-    "end": 492,
+    "line": 498,
+    "end": 512,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 481,
-    "end": 482,
+    "line": 501,
+    "end": 502,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 481,
-    "end": 485,
+    "line": 501,
+    "end": 505,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8152,8 +8152,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mcp/tools.rs|8ef4edac0142a307|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 79,
-    "end": 83,
+    "line": 80,
+    "end": 84,
     "text": "tool!(\n\"deadcode\","
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/candidates.rs|2203179c0b1eb61a|0": {
@@ -8563,8 +8563,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 218,
-    "end": 220,
+    "line": 238,
+    "end": 240,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9224,7 +9224,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
-    "line": 105,
+    "line": 106,
     "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|454df31193049ba3|0": {
@@ -9344,12 +9344,12 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|72c10c59b78ec5d9|0": {
     "target": "../../../cli/src/main_similar.rs",
-    "line": 34,
+    "line": 31,
     "text": "pub fn similar_cmd(a: SimilarArgs) -> ExitCode {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 172,
+    "line": 173,
     "text": "\"similar_units\","
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {
@@ -9865,12 +9865,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|1008c68889e0874d|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 70,
+    "line": 67,
     "text": "pub fn rules_cmd(a: RulesArgs) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|9055b071dad993d6|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 50,
+    "line": 47,
     "text": "pub fn query_cmd(a: QueryArgs) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|e5325963d09827f3|0": {
@@ -9881,17 +9881,17 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 173,
+    "line": 175,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 189,
+    "line": 190,
     "text": "\"query\",\nquery,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|e24234656aa40c40|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 210,
+    "line": 211,
     "text": "\"rules\",\nrules,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|0b5c5c7ec7c0f040|0": {
@@ -10153,27 +10153,27 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 151,
+    "line": 141,
     "text": "fn sugar_aggregates_arithmetic_and_every_program_error_go_the_same_road() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|b01bf384f3002998|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 242,
+    "line": 232,
     "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 98,
+    "line": 88,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|1": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 98,
+    "line": 88,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|e86b28abce63cf8a|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 183,
+    "line": 173,
     "text": "fn rules_is_a_gate_on_the_documents_violations() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
@@ -10480,7 +10480,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 87,
+    "line": 88,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -10612,8 +10612,8 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|afd06019b3c84ab5|0": {
     "target": "../../../cli/src/main_flow.rs",
-    "line": 30,
-    "end": 56,
+    "line": 27,
+    "end": 53,
     "text": "pub fn flow_cmd(a: FlowArgs) -> ExitCode {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/daemon_flow.rs|4e9632f41b3e85e1|0": {
@@ -10730,7 +10730,466 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 88,
+    "line": 89,
     "text": ", goldenPairs \"flow/golden.ndjson\""
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 58,
+    "text": "pub struct Top {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|25b4f4b7648d6f7a|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 96,
+    "text": "pub fn file_fragments("
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|8ea567f5e3dfcd77|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 213,
+    "text": "fn emit<'t>(\nnode: Node<'t>,"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|9c1418f6a3235dce|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 127,
+    "text": "pub fn fragment_of(tops: &[Top]) -> Option<(UnitTree, (usize, usize))> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|9dfb2c9446793799|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 157,
+    "text": "fn tree_of(tops: &[Node], text: &str, lang: Lang, extras: Extras) -> UnitTree {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|c96a5b8b7725c5da|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 255,
+    "text": "fn skipped(node: Node, extras: Extras) -> bool {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|cba7458185d5179c|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 31,
+    "end": 53,
+    "text": "/// Whether a tree carries the grammar's extras (comments): clone/1's"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/wire.rs|7ab8cb85fc52662f|0": {
+    "target": "../../../cli/src/dedup/t3/wire.rs",
+    "line": 28,
+    "text": "pub fn request_body(trees: &[&UnitTree], pairs: &[[usize; 2]]) -> Value {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/main_merge.rs|a2c7d991bd8087b0|0": {
+    "target": "../../../cli/src/main_merge.rs",
+    "line": 25,
+    "text": "Ok(r) => r,\nErr(err) => return fail(\"merge\", err),"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/console.rs|bfd9df855dbc9cf1|0": {
+    "target": "../../../cli/src/merge/console.rs",
+    "line": 16,
+    "text": "pub fn console(r: &Report, only: Option<usize>) -> Vec<String> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|0accec698d4018a3|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 40,
+    "text": "pub const REASONS: [&str; 6] = ["
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|0d49da5218038a2d|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 182,
+    "text": "/// text at the parameter's first hole."
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|259b9f695e7c79f8|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 120,
+    "text": "/// The whole leg: measured, gathered, judged chunk by chunk, labelled."
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|39c8477982b58025|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 241,
+    "text": "/// (−1: nothing on this side)."
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|8acf28239d333bb2|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 1,
+    "end": 16,
+    "text": "//! The one document of `ce merge`, the MCP tool and the GUI hub (plan"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|9f7d58911284bdf3|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 163,
+    "text": "/// node they land on (the same graph `ce deadcode` judges)."
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|fd290255edafa2c8|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 29,
+    "text": "pub const SCHEMA_ID: &str = \"ce.merge-report/0.1.0\";"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|243bc494e8f3468c|0": {
+    "target": "../../../cli/src/merge/groups.rs",
+    "line": 216,
+    "text": "fn settle(\np: Plan,"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|dc94b8fad341b797|0": {
+    "target": "../../../cli/src/merge/groups.rs",
+    "line": 159,
+    "text": "pub fn filling(start: usize, end: usize, ids: &[usize], units: &[Unit]) -> Option<usize> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|e7868c0809365657|0": {
+    "target": "../../../cli/src/merge/groups.rs",
+    "line": 271,
+    "text": "fn trimmed(spans: &[Span], frags: &BTreeMap<Span, Option<Tops>>) -> Result<Vec<Member>, Counter> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|fe715f4a73f45dd3|0": {
+    "target": "../../../cli/src/merge/groups.rs",
+    "line": 78,
+    "text": "pub fn one_per_member_set(groups: &mut Vec<Group>) -> u64 {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups_trim.rs|5b2eb76a99e403f0|0": {
+    "target": "../../../cli/src/merge/groups_trim.rs",
+    "line": 1,
+    "end": 11,
+    "text": "//! A T1/T2 fragment family trimmed to its members' common shape (plan"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups_trim.rs|a16ce8760b7b51b1|0": {
+    "target": "../../../cli/src/merge/groups_trim.rs",
+    "line": 35,
+    "text": "pub fn trim(members: &[&[Top]]) -> Option<Vec<(UnitTree, (usize, usize))>> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups_trim.rs|f28f1efee32f77cd|0": {
+    "target": "../../../cli/src/merge/groups_trim.rs",
+    "line": 95,
+    "text": "pub fn isomorphic(trees: &[&UnitTree]) -> bool {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|15a3f850eab6ad92|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 58,
+    "text": "const TABLES: [(Lang, &[&str]); 11] = ["
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|796f0d2218b5460b|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 38,
+    "text": "pub struct SlotSpec {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 125,
+    "text": "fn compile(lang: Lang) -> Option<Classes> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|1": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 125,
+    "text": "fn compile(lang: Lang) -> Option<Classes> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|c7d9a7464697d810|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 201,
+    "text": "pub fn slot_of(c: &Classes, node: Node) -> u8 {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|e4b6420b866203cb|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 1,
+    "end": 20,
+    "text": "//! The position-class tables of the merge family (plan v2.31 step 7;"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot_hs.rs|15fd89336dbbdeb9|0": {
+    "target": "../../../cli/src/merge/slot_hs.rs",
+    "line": 1,
+    "end": 14,
+    "text": "//! The Haskell slot table (plan v2.31 step 7, step-7 ruling 8), beside"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2009808f635dadc6|0": {
+    "target": "../../../cli/src/merge/wire.rs",
+    "line": 1,
+    "end": 11,
+    "text": "//! The merge/1 leg (design booklet §3's row, §6.2; plan v2.31 step 7):"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2c7f61f8d970ef98|0": {
+    "target": "../../../cli/src/merge/wire.rs",
+    "line": 70,
+    "text": "pub fn chunks(groups: &[Group]) -> Vec<Range<usize>> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|7d8aac6440e2ce0f|0": {
+    "target": "../../../cli/src/merge/wire.rs",
+    "line": 128,
+    "text": "pub fn consume(reply: &Value, sent: &[&Group]) -> Result<Judged, String> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|ba386e1bf8065c7f|0": {
+    "target": "../../../cli/src/merge/wire.rs",
+    "line": 112,
+    "text": "let lines = member.run.1 + 1 - member.run.0;"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|0a4f414f8ac5f110|0": {
+    "target": "../../../cli/tests/it/eval_merge_review.rs",
+    "line": 100,
+    "text": "fn the_review_scores_when_filed() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|83a994327f935520|0": {
+    "target": "../../../cli/tests/it/eval_merge_review.rs",
+    "line": 32,
+    "text": "fn the_sample_is_the_draw_of_the_frozen_set() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|d92160582ecefe97|0": {
+    "target": "../../../cli/tests/it/eval_merge_review.rs",
+    "line": 56,
+    "text": "fn readings(set: &Value, sample: &Value, review: &Value) -> Value {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_suggestions.rs|2a22b02f7e3414bf|0": {
+    "target": "../../../cli/tests/it/eval_merge_suggestions.rs",
+    "line": 21,
+    "text": "fn the_self_tree_answers_its_frozen_rows() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_suggestions.rs|ae28d2373de8f8e6|0": {
+    "target": "../../../cli/tests/it/eval_merge_suggestions.rs",
+    "line": 47,
+    "text": "fn every_member_set_is_suggested_once() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|2e643b22f14570f7|0": {
+    "target": "../../../cli/tests/it/merge_face.rs",
+    "line": 214,
+    "text": "fn the_mcp_tool_relays_the_face_and_an_absent_core_degrades() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|9255ede4c445553c|0": {
+    "target": "../../../cli/tests/it/merge_face.rs",
+    "line": 183,
+    "text": "fn one_group_prints_alone_and_the_clone_report_is_unmoved() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|b65ec27abf0ff93f|0": {
+    "target": "../../../cli/tests/it/merge_face.rs",
+    "line": 118,
+    "text": "fn the_cli_prints_the_library_face_and_every_group_shape_is_judged() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/dedup/t3/tree.rs|3e5e1f58c59d94ef|0": {
+    "target": "../../../cli/tests/unit/dedup/t3/tree.rs",
+    "line": 47,
+    "text": "fn the_merge_columns_ride_the_walk() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/dedup/t3/tree.rs|df3377a46f57e337|0": {
+    "target": "../../../cli/tests/unit/dedup/t3/tree.rs",
+    "line": 76,
+    "text": "fn a_tree_without_extras_is_the_tree_less_its_comments() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|1f627f086cea3f8c|0": {
+    "target": "../../../cli/tests/unit/merge/groups.rs",
+    "line": 29,
+    "text": "fn a_whole_unit_fills_nine_tenths_of_its_member() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|2cffb0c6414e62ab|0": {
+    "target": "../../../cli/tests/unit/merge/groups.rs",
+    "line": 142,
+    "text": "fn a_boundary_statement_on_one_side_is_trimmed_off() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|98e86e1cd48de9c8|0": {
+    "target": "../../../cli/tests/unit/merge/groups.rs",
+    "line": 156,
+    "text": "fn a_trimmed_member_is_priced_by_its_run() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|f236cbb5e558a39d|0": {
+    "target": "../../../cli/tests/unit/merge/groups.rs",
+    "line": 182,
+    "text": "fn every_group_not_sent_is_counted_by_why() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|fcdc15103348b3d0|0": {
+    "target": "../../../cli/tests/unit/merge/groups.rs",
+    "line": 224,
+    "text": "fn one_member_set_is_one_suggestion_and_t1t2_covers_t3() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|26002d5fe7b572a5|0": {
+    "target": "../../../cli/tests/unit/merge/slot.rs",
+    "line": 39,
+    "text": "fn every_kind_and_field_is_in_the_grammar() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|55c7b9c558a4993d|0": {
+    "target": "../../../cli/tests/unit/merge/slot.rs",
+    "line": 70,
+    "text": "fn every_other_answer_on_the_probe_is_named_other() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|ca9f58a0e1aa95ba|0": {
+    "target": "../../../cli/tests/unit/merge/slot.rs",
+    "line": 96,
+    "text": "fn the_sets_are_disjoint() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/wire.rs|6fc7eafe6c2009d2|0": {
+    "target": "../../../cli/tests/unit/merge/wire.rs",
+    "line": 74,
+    "text": "fn a_degraded_reply_is_cap_mirror_drift() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/wire.rs|af744993b6d9b202|0": {
+    "target": "../../../cli/tests/unit/merge/wire.rs",
+    "line": 44,
+    "text": "fn the_body_carries_every_table() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Clone/Ted.hs|04f119f97a0e8680|0": {
+    "target": "../../../core/app/CE/Clone/Ted.hs",
+    "line": 14,
+    "end": 18,
+    "text": "-- Since 7.5.0 (plan v2.31 step 6, merge/1) the same tables also give"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Clone/Ted.hs|78aff2e7f2d42b07|0": {
+    "target": "../../../core/app/CE/Clone/Ted.hs",
+    "line": 56,
+    "text": "tedMapping :: Tree -> Tree -> (Integer, [(Int, Int)])"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge.hs|0877807d6c20944d|0": {
+    "target": "../../../core/app/CE/Merge.hs",
+    "line": 5,
+    "end": 19,
+    "text": "-- | merge.request handler (plan v2.31 step 6; ADR-008 seventh"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge.hs|11465461ae21cd05|0": {
+    "target": "../../../core/app/CE/Merge.hs",
+    "line": 36,
+    "end": 60,
+    "text": "-- | The merge.result object. Judged (no reason): one suggestion row"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge.hs|8cb6cc8bb2016372|0": {
+    "target": "../../../core/app/CE/Merge.hs",
+    "line": 33,
+    "text": "respond :: String -> ByteString -> Either (Maybe Value, String, String) ByteString"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Align.hs|b0cc8cf144e9c440|0": {
+    "target": "../../../core/app/CE/Merge/Align.hs",
+    "line": 20,
+    "text": "isomorphic :: [MTree] -> Bool"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Align.hs|e7ad3dca3886da01|0": {
+    "target": "../../../core/app/CE/Merge/Align.hs",
+    "line": 1,
+    "end": 9,
+    "text": "-- | Family 0, a T1/T2 group (plan v2.31 step 6, design booklet §6.3;"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Align.hs|fa86806b903f9e88|0": {
+    "target": "../../../core/app/CE/Merge/Align.hs",
+    "line": 30,
+    "text": "align :: [MTree] -> (Skel, [Hole])"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Contract.hs|3aaba7ca4d57029c|0": {
+    "target": "../../../core/app/CE/Merge/Contract.hs",
+    "line": 60,
+    "text": ", asum [Just (\"group \" <> show i <> \": members are not isomorphic\") | (i, g) <- zip [0 :: Int ..] (groupsOf req), gFamily g == familyExact, not (isomorphic (gTrees g))]"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Contract.hs|86682932012ee5c8|0": {
+    "target": "../../../core/app/CE/Merge/Contract.hs",
+    "line": 115,
+    "text": "treeOffence :: Int -> MergeTree -> Maybe String"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Contract.hs|92936972a08baef4|0": {
+    "target": "../../../core/app/CE/Merge/Contract.hs",
+    "line": 51,
+    "text": "offence :: MergeReq -> Maybe String"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|06fcecd45dac10ab|0": {
+    "target": "../../../core/app/CE/Merge/Cost.hs",
+    "line": 38,
+    "end": 41,
+    "text": "-- | A merged function taking more than six parameters is not a"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|1133089ee3f8b3dd|0": {
+    "target": "../../../core/app/CE/Merge/Cost.hs",
+    "line": 43,
+    "end": 46,
+    "text": "-- | Each member left behind becomes one call line (step-6 ruling 7:"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|513f88eee622c1ac|0": {
+    "target": "../../../core/app/CE/Merge/Cost.hs",
+    "line": 28,
+    "end": 36,
+    "text": "-- | Groups and tree nodes are the request's two dimensions (§3's"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|5db5363ddb3643cd|0": {
+    "target": "../../../core/app/CE/Merge/Cost.hs",
+    "line": 55,
+    "end": 61,
+    "text": "-- | A node's position class, the `slot` column (§6.2): a statement,"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|a041038499897953|0": {
+    "target": "../../../core/app/CE/Merge/Cost.hs",
+    "line": 67,
+    "end": 80,
+    "text": "-- | A suggestion's reason (step-6 ruling 6), the first infeasible"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|2c4b1b02e8132fe8|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 69,
+    "end": 72,
+    "text": "-- | The member kept (step-6 ruling 8): the greatest file in-degree,"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|396cda14e26d9d7c|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 90,
+    "end": 105,
+    "text": "-- | A member rebuilt from the skeleton and its values: postorder"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|3e6d56f32a814fe1|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 37,
+    "end": 58,
+    "text": "-- | The suggestion row [g,params,kept,savings,feasible,reason] and"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|7330e8d6bc74c031|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 53,
+    "text": "savings = sum (map linesOf (gRows g)) - (skeletonLines g kept pairs + toInteger (length (gRows g)) * callLines)"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|9ac59406239261dc|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 21,
+    "end": 35,
+    "text": "skeletonOf :: Group -> (Skel, [Hole], Int)"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|9afbf4671d3426e5|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 77,
+    "end": 88,
+    "text": "-- | The merged function's lines (step-6 ruling 7): a T1/T2 skeleton"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|e8a9ccfceb1e8897|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 62,
+    "text": "holeReason :: Hole -> Integer"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|f01253eebbf75e01|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 46,
+    "end": 51,
+    "text": "reason = case filter (/= reasonNone) (map holeReason holes) of"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|6da9c38baf00de2b|0": {
+    "target": "../../../core/app/CE/Merge/Mapped.hs",
+    "line": 28,
+    "text": "mappedWith :: S.Set (Int, Int) -> MTree -> MTree -> (Skel, [Hole], Int)"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|93029e16a6f726bc|0": {
+    "target": "../../../core/app/CE/Merge/Mapped.hs",
+    "line": 1,
+    "end": 12,
+    "text": "-- | Family 1, a T3 pair (plan v2.31 step 6, design booklet §6.3;"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|93f898f92c41139c|0": {
+    "target": "../../../core/app/CE/Merge/Mapped.hs",
+    "line": 52,
+    "text": "gap :: MTree -> MTree -> [Int] -> [Int] -> ([Skel], [Hole])"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|a2ef9618d3829eed|0": {
+    "target": "../../../core/app/CE/Merge/Mapped.hs",
+    "line": 38,
+    "text": "kept :: S.Set (Int, Int) -> MTree -> MTree -> Int -> Int -> (Skel, [Hole], Int)"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Tree.hs|879e9c24d499c482|0": {
+    "target": "../../../core/app/CE/Merge/Tree.hs",
+    "line": 66,
+    "end": 77,
+    "text": "-- | One hole: its order key, each member's first and last root — a"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|03270fc24b90ed3c|0": {
+    "target": "../../../core/test/MergeProps.hs",
+    "line": 146,
+    "text": "reasonsCohere :: Bool"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|40c6531da695f911|0": {
+    "target": "../../../core/test/MergeProps.hs",
+    "line": 46,
+    "end": 59,
+    "text": "names :: [String]"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|e0c28ce5d146cdc1|0": {
+    "target": "../../../core/test/MergeProps.hs",
+    "line": 163,
+    "text": "postsHold :: Group -> Bool"
   }
 }

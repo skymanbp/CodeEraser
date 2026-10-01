@@ -16,7 +16,7 @@
 -- refused here; this batch replaced exactly that refusal, and the
 -- computation lives behind the exhaustive reference harness
 -- (core/test/CloneProps.hs ≡ ReferenceTed).
-module CE.Clone (respond) where
+module CE.Clone (WireTree (..), decodeTree, respond, treeShape) where
 
 import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (histo, provablyBelowH)
@@ -29,10 +29,15 @@ import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
 
-data WireTree = WireTree {wLab :: [Int], wLld :: [Int]}
+-- | One wire tree. `leaf` (7.5.0, additive): the fnv1a64 of each
+-- node's source text (identifiers and literals; internal nodes 0) —
+-- merge/1 reads it, `ted` never does, so a clone request judges the
+-- same bytes with or without it. Integer, not Int: a u64 hash does
+-- not fit a signed machine word.
+data WireTree = WireTree {wLab :: [Int], wLld :: [Int], wLeaf :: Maybe [Integer]}
 
 instance FromJSON WireTree where
-  parseJSON = withObject "tree" $ \o -> WireTree <$> o .: "lab" <*> o .: "lld"
+  parseJSON = withObject "tree" $ \o -> WireTree <$> o .: "lab" <*> o .: "lld" <*> o .:? "leaf"
 
 data CloneReq = CloneReq
   { reqId :: Value
@@ -83,10 +88,13 @@ violation req =
   ts = reqTrees req
   ps = reqPairs req
 
+-- | One tree's shape contract, the first offence by name — shared
+-- with merge/1 (CE.Merge.Contract), which reads the same encoding.
 treeShape :: Int -> WireTree -> Maybe String
 treeShape t tree
   | null lab = Just (label <> "empty tree")
   | length lab /= length lld = Just (label <> "lab/lld length mismatch")
+  | Just leaf <- wLeaf tree, length leaf /= length lab = Just (label <> "leaf length mismatch")
   | Just i <- badLld = Just (label <> "node " <> show i <> ": lld out of range")
   -- per-node tiling alone admits forests; a single tree's root must
   -- reach the first postorder node

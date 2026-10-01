@@ -5,7 +5,7 @@
 -- form. Also owns the exhaustive small-tree family generator the
 -- property battery walks (the Reference.hs set-phrased-independence
 -- posture, tree edition).
-module ReferenceTed (refTed, family, labelInterOf) where
+module ReferenceTed (Rose (..), refTed, family, labelInterOf, lldOf, taiConsistent) where
 
 -- | A tree as its wire arrays: postorder labels and leftmost-leaf
 -- descendant indices.
@@ -27,21 +27,26 @@ refTed (lab1, lld1) (lab2, lld2) = go 0 [] best0
    where
     try acc j
       | j `elem` map snd m = acc
-      | all (consistent (i, j)) m = go (i + 1) ((i, j) : m) acc
+      | all (taiConsistent lld1 lld2 (i, j)) m = go (i + 1) ((i, j) : m) acc
       | otherwise = acc
   -- even mapping every remaining first-tree node cannot go below this
   bound i m = cost m - 2 * fromIntegral (min (n1 - i) (n2 - length m))
   cost m =
     fromIntegral (n1 + n2 - 2 * length m)
       + fromIntegral (length [() | (i, j) <- m, lab1 !! i /= lab2 !! j])
-  -- Tai validity: order preserved both ways, ancestry preserved in
-  -- BOTH directions (postorder: a sits in b's subtree ⇔
-  -- lld b ≤ a ≤ b). The one-directional first draft admitted invalid
-  -- mappings and under-counted — the equivalence battery caught it.
-  consistent (i1, j1) (i2, j2) =
-    (i1 < i2) == (j1 < j2)
-      && inSub lld1 i1 i2 == inSub lld2 j1 j2
-      && inSub lld1 i2 i1 == inSub lld2 j2 j1
+
+-- | Tai validity of two mapped pairs over the two lld arrays: order
+-- preserved both ways, ancestry preserved in BOTH directions
+-- (postorder: a sits in b's subtree ⇔ lld b ≤ a ≤ b). The
+-- one-directional first draft admitted invalid mappings and
+-- under-counted — the equivalence battery caught it. Exported since
+-- plan v2.31 step 6: MergeProps holds tedMapping's pairs to it.
+taiConsistent :: [Int] -> [Int] -> (Int, Int) -> (Int, Int) -> Bool
+taiConsistent lld1 lld2 (i1, j1) (i2, j2) =
+  (i1 < i2) == (j1 < j2)
+    && inSub lld1 i1 i2 == inSub lld2 j1 j2
+    && inSub lld1 i2 i1 == inSub lld2 j2 j1
+ where
   inSub lld a b = lld !! b <= a && a <= b
 
 -- | I = Σ_label min(c1,c2) — the reference's own tally (the product

@@ -1,6 +1,6 @@
 # Intra-function dead code — the flow graph, reachability and liveness
 
-[index](../methodology.md) · [← 16 Code query and architecture rules — Datalog over the index's facts](16-code-query-and-architecture-rules-datalog-over-the-index.md)
+[index](../methodology.md) · [← 16 Code query and architecture rules — Datalog over the index's facts](16-code-query-and-architecture-rules-datalog-over-the-index.md) · [→ 18 Clone merge suggestions — anti-unification over the clone families' trees](18-clone-merge-suggestions-anti-unification.md)
 
 Booklet 06 judges dead code between files: a file no edge reaches. This family judges it inside
 one function: a statement no path from the entry reaches, a store no path reads before the next
@@ -111,7 +111,7 @@ generation carries the end. `--kind` narrows the listing and
 never the counts, so a filtered run cannot move the gate. The exit codes are the family's own: 2
 when the core is missing or lacks the family (the report names the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
-([main_flow.rs:30-56](../../../cli/src/main_flow.rs#L30)). The MCP tool `flow` and the GUI's
+([main_flow.rs:27-53](../../../cli/src/main_flow.rs#L27)). The MCP tool `flow` and the GUI's
 reports hub read the same document through `faces::flow`; the hub registers its own renderer for
 the kind chips, the judged / advisory mark and the unjudged units.
 
@@ -162,7 +162,7 @@ traces; the shipped judgment must agree finding for finding on 200 seeded random
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:88](../../../core/test/Spec.hs#L88)).
+([Spec.hs:89](../../../core/test/Spec.hs#L89)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

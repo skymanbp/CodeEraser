@@ -12,6 +12,7 @@ use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
 use crate::main_erase::EraseArgs;
 use crate::main_flow::FlowArgs;
 use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
+use crate::main_merge::MergeArgs;
 use crate::main_query::{QueryArgs, RulesArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
 use crate::main_setup::SetupArgs;
@@ -170,6 +171,11 @@ pub(crate) enum Cmd {
     /// flow/1; --check is its own gate at `[flow] tier` deny (never
     /// part of `ce check`); unused parameters stay advisory
     Flow(FlowArgs),
+    /// Clone-merge suggestions: every clone group (T1/T2 families,
+    /// T3 pairs) anti-unified by the core's merge/1 — the parameters a
+    /// merged function takes, the member kept, the lines saved, and
+    /// feasible or why not (advisory, never a verdict)
+    Merge(MergeArgs),
     /// Deterministic two-phase eraser: plan what is provably safe to
     /// erase via the core's erase/1; dry-run by default
     Erase(EraseArgs),

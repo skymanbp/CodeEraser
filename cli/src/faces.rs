@@ -226,6 +226,16 @@ pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
     ))
 }
 
+/// The clone-merge suggestions (plan v2.31 step 7): every clone
+/// group anti-unified by the core's merge/1 and labelled back — the
+/// SAME document `ce merge --format json` prints. Advisory: a core
+/// that cannot judge is named in the document, and no gate reads it.
+pub fn merge(root: &Path, core: &str) -> Result<Value> {
+    Ok(crate::merge::face::report_json(&crate::merge::face::run(
+        root, None, core,
+    )?))
+}
+
 /// The machine's own state. Unlike every sibling it cannot fail: a
 /// core that will not answer IS the finding, and it rides inside the
 /// document (health::doctor).

@@ -44,7 +44,7 @@
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，本页每个小标题都直接链进去。</p>
   <nav class="toc" aria-label="章节">
     <p class="k">本页内容</p>
-    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="#f17"><b>17</b>函数内死代码</a></li></ul></div>
+    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="#f17"><b>17</b>函数内死代码</a></li><li><a href="#f18"><b>18</b>克隆合并建议</a></li></ul></div>
     <div class="row"><a class="sec" href="/zh/how/">判决家族</a><ul><li><a href="/zh/how/#families">01–15 族</a></li><li><a href="/zh/how/#honesty">诚实边界</a></li></ul></div>
   </nav>
 </section>
@@ -91,6 +91,27 @@ skip   : a unit with a dynamic statement is not judged in part, and counted</pre
     <li><b>wire</b> flow/1</li>
   </ul>
 </div>
+
+<div class="fam">
+  <h3 id="f18"><span class="n">18</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md">克隆合并建议——克隆族语法树上的反统一</a></h3>
+  <p class="job">读每个克隆组怎样合并成一个函数：成员之间不同的地方成为参数，答案是参数个数、值得保留的成员、合并能省的行数，以及可不可行——不可行时给出原因。只当顾问：没有门读它，<code>ce merge</code> 出文档即退 0。</p>
+  <pre>groups : T1/T2 dedup families (whole units when one unit fills ≥ 9/10 of each member, else fragments trimmed to the members' common shape) · T3 judged pairs
+trees  : clone/1's postorder (lab, lld), extras (comments) left out, + leaf = fnv1a64 of a leaf's bytes (0 inside) + slot 0 stmt · 1 expr · 2 type · 3 name · 4 other
+align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
+params : one per distinct value vector; feasible iff every hole is an expression or a name, params ≤ 6 and savings > 0
+reason : 3 a gap across statements, 1 position (a statement or other), 2 a type position, 4 more than six parameters, 5 no line saved
+kept   : the member whose file has the greatest in-degree; savings = Σ lines − (skeleton lines + members × 1), a fragment's lines its kept run's</pre>
+  <p class="note">度量侧收集克隆组，为每个成员按 <code>clone/1</code> 的编码建树并多带两列整数——叶结点原文的哈希与它的位置类（每语言一张表，读流表的语句类）——再把答案回标成每个参数上每个成员的原文，间隙洞给整段森林。树里不带注释；片段族只送每个成员都有的那一段顶层结点，所以边界行上被截断的半条语句不会让成员变成两种形状，合并也按保留那一段的行数定价。核对齐成员、找出洞、给参数编号、给合并定价；名字、路径、源文本都不上线。核会拒收的组——没有函数可合并的 Markdown 与 HTML、没建成的树、形状不一的成员——按原因计数，不送。T3 骨架的行数是诚实的整数估计，不是实测。本仓在一个钉住提交上与四个钉住外部语料上的建议集被冻结，并从中抽一百条交盲判审可行性。</p>
+  <ul class="consts">
+    <li><b>groupCap</b> 4096</li>
+    <li><b>treeNodeCap</b> 1048576</li>
+    <li><b>paramCap</b> 6</li>
+    <li><b>schema</b> ce.merge-report/0.1.0</li>
+    <li><b>入 wire 版本</b> 7.5.0</li>
+    <li><b>wire</b> merge/1</li>
+  </ul>
+</div>
+
 
 <footer class="site">
   <p>Apache-2.0 · <a href="/zh/">概览</a> ·

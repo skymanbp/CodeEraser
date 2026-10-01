@@ -51,7 +51,7 @@
   which every heading here links into.</p>
   <nav class="toc" aria-label="Sections">
     <p class="k">On this page</p>
-    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li><li><a href="#f17"><b>17</b>Intra-function dead code</a></li></ul></div>
+    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li><li><a href="#f17"><b>17</b>Intra-function dead code</a></li><li><a href="#f18"><b>18</b>Clone merge suggestions</a></li></ul></div>
     <div class="row"><a class="sec" href="/how/">Judgment families</a><ul><li><a href="/how/#families">Families 01–15</a></li><li><a href="/how/#honesty">Honesty boundaries</a></li></ul></div>
   </nav>
 </section>
@@ -132,6 +132,41 @@ skip   : a unit with a dynamic statement is not judged in part, and counted</pre
     <li><b>wire</b> flow/1</li>
   </ul>
 </div>
+
+<div class="fam">
+  <h3 id="f18"><span class="n">18</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md">Clone merge suggestions — anti-unification over the clone families' trees</a></h3>
+  <p class="job">Reads how each clone group would fold into one function: the places its members differ
+  become parameters, and the answer is the parameter count, the member worth keeping, the lines the merge
+  would save, and whether it is feasible — with the reason when it is not. Advice: no gate reads it,
+  <code>ce merge</code> exits 0 with a document.</p>
+  <pre>groups : T1/T2 dedup families (whole units when one unit fills ≥ 9/10 of each member, else fragments trimmed to the members' common shape) · T3 judged pairs
+trees  : clone/1's postorder (lab, lld), extras (comments) left out, + leaf = fnv1a64 of a leaf's bytes (0 inside) + slot 0 stmt · 1 expr · 2 type · 3 name · 4 other
+align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
+params : one per distinct value vector; feasible iff every hole is an expression or a name, params ≤ 6 and savings > 0
+reason : 3 a gap across statements, 1 position (a statement or other), 2 a type position, 4 more than six parameters, 5 no line saved
+kept   : the member whose file has the greatest in-degree; savings = Σ lines − (skeleton lines + members × 1), a fragment's lines its kept run's</pre>
+  <p class="note">The measuring side gathers the groups, builds each member's tree in <code>clone/1</code>'s
+  encoding with two more integer columns — a leaf's source hash and its position class, read off one
+  table per language that reads the flow tables — and labels the answer back with every member's text at
+  every parameter, a gap's whole forest included. Its trees leave comments out, and a fragment family
+  keeps only the run of top nodes every member holds, so a boundary line cut mid-statement does not make
+  two shapes, and the merge is priced by the kept run's lines. The core lines the members up, finds the holes, numbers the parameters and prices the
+  merge; no name, path or source text crosses the wire. A group the core would refuse — Markdown and
+  HTML, with no function to fold into, a tree not built, members not one shape — is counted by why and
+  never sent.
+  A T3 skeleton's line count is an honest integer estimate, never a measured one. The suggestion sets of
+  this repository at one pinned commit and of four pinned external corpora are frozen, and a hundred of
+  them are drawn for a blind audit of the feasibility.</p>
+  <ul class="consts">
+    <li><b>groupCap</b> 4096</li>
+    <li><b>treeNodeCap</b> 1048576</li>
+    <li><b>paramCap</b> 6</li>
+    <li><b>schema</b> ce.merge-report/0.1.0</li>
+    <li><b>since proto</b> 7.5.0</li>
+    <li><b>wire</b> merge/1</li>
+  </ul>
+</div>
+
 
 <footer class="site">
   <p>Apache-2.0 · <a href="/">Overview</a> ·

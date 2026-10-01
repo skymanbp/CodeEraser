@@ -67,9 +67,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 914/1000</span> | axes 0:89 1:0 2:285 3:0 4:0 5:0 6:234 | 405 candidates
+<span class="s">check score 914/1000</span> | axes 0:87 1:0 2:289 3:0 4:0 5:0 6:228 | 447 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
-note: 10 blocks collapsed into existing members, 212 intra-file pairs off the sim table
+note: 10 blocks collapsed into existing members, 253 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
 <!-- roast:end -->
   <p class="cap">Real output: CodeEraser judging its own repository. The ratchet only shrinks:
@@ -138,6 +138,7 @@ note: 10 blocks collapsed into existing members, 212 intra-file pairs off the si
   <div class="card"><h3>ce similar</h3><p>The same-role advisor: integer BM25 over term bags the index already holds, with the core deciding which candidates play the query's role. A deterministic offline retrieval, advice only, never a gate.</p></div>
   <div class="card"><h3>ce query · ce rules</h3><p>A Datalog over the index’s own facts: ask a question and every answer comes with its derivation; write architecture constraints as assertions and <code>ce rules</code> is a gate that exits on the first violation. Judged in the core, labelled back by the CLI.</p></div>
   <div class="card"><h3>ce flow</h3><p>Dead code inside one function: statements no path reaches, stores no path reads, locals nothing reads. The core walks the control-flow graph; a finding is a verdict only in a language whose blind-reviewed precision exam passed, and an unused parameter is always advice.</p></div>
+  <div class="card"><h3>ce merge</h3><p>How a clone group would fold into one function: the places its members differ become parameters, and the core answers the parameter count, the member worth keeping, the lines saved, and feasible or why not. Advice only, never a gate.</p></div>
   <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, a write you let through at ask recorded once it lands, audits at stop, health at session start.</p></div>
 </div>
 
@@ -156,7 +157,7 @@ note: 10 blocks collapsed into existing members, 212 intra-file pairs off the si
 
 <h2>Under the hood</h2>
 <figure class="arch deep" id="architecture">
-  <div class="stage"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of fourteen families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></div>
+  <div class="stage"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of fifteen families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></div>
   <figcaption>Measurement in Rust, judgment in Haskell: one wire, one report schema per family, five faces. Rendered from <code>docs/diagrams/architecture.en.json</code>; every component cites its source files. Open the <a href="/assets/architecture.en.svg">full-size SVG</a>.</figcaption>
 </figure>
 <p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>

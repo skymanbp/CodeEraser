@@ -23,6 +23,14 @@ pub async fn query_report(
     .await
 }
 
+/// The clone-merge suggestions (plan v2.31 step 7) — the SAME document
+/// `ce merge --format json` prints, rendered by the reports hub's own
+/// merge card (hub_merge.js).
+#[tauri::command]
+pub async fn merge_report(win: tauri::Window, root: String) -> Result<Value, String> {
+    task(win, "merge", root, codeeraser::faces::merge).await
+}
+
 #[tauri::command]
 pub async fn rules_report(win: tauri::Window, root: String, why: bool) -> Result<Value, String> {
     task(win, "rules", root, move |r, c| {

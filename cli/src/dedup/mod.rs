@@ -13,7 +13,7 @@ pub mod probe;
 mod report;
 mod rescache;
 pub(crate) mod schema;
-mod sources;
+pub(crate) mod sources;
 pub mod struct_fp;
 pub mod t3;
 pub mod tokens;

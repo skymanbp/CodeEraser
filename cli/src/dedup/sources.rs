@@ -18,15 +18,20 @@ pub(super) struct Gen<'u> {
     pub(super) tally: Tally,
 }
 
+/// Each file's unit ids, in unit order.
+pub(crate) fn by_file(units: &[Unit]) -> BTreeMap<&str, Vec<usize>> {
+    let mut out: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
+    for (id, u) in units.iter().enumerate() {
+        out.entry(&u.path).or_default().push(id);
+    }
+    out
+}
+
 impl<'u> Gen<'u> {
     pub(super) fn new(units: &'u [Unit]) -> Self {
-        let mut by_file: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
-        for (id, u) in units.iter().enumerate() {
-            by_file.entry(&u.path).or_default().push(id);
-        }
         Gen {
             units,
-            by_file,
+            by_file: by_file(units),
             tally: Tally::default(),
         }
     }

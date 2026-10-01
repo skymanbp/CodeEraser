@@ -10,7 +10,7 @@
 -- rows each one sends. Split from the interpreter so both stand
 -- below the core's file wall (the Reference.hs posture: deterministic,
 -- no RNG inside a byte-determinism contract).
-module ReferenceFlowGen (Ctx (..), Node (..), Prog (..), programs, request, walk) where
+module ReferenceFlowGen (Ctx (..), G, Node (..), Prog (..), S (..), programs, rand, request, runG, walk) where
 
 import CE.Flow.Cost
 import Data.Aeson (Value)

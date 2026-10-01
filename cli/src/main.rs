@@ -10,6 +10,8 @@ mod main_erase;
 mod main_flow;
 mod main_judge;
 mod main_lang;
+mod main_merge;
+mod main_prelude;
 mod main_query;
 mod main_score;
 mod main_setup;
@@ -124,6 +126,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Query(a) => main_query::query_cmd(a),
         Cmd::Rules(a) => main_query::rules_cmd(a),
         Cmd::Flow(a) => main_flow::flow_cmd(a),
+        Cmd::Merge(a) => main_merge::merge_cmd(a),
         Cmd::Erase(a) => main_erase::erase_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),

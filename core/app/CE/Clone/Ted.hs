@@ -10,7 +10,13 @@
 -- the mapping-definition brute force (ReferenceTed) over the
 -- exhaustive small-tree family (R2) — the battery that already
 -- caught two real defects of the first draft.
-module CE.Clone.Ted (Tree (..), ted) where
+--
+-- Since 7.5.0 (plan v2.31 step 6, merge/1) the same tables also give
+-- back an optimal mapping (`tedMapping`): its distance is `ted`'s
+-- because both read one cell recurrence (`candidates` + `choose`),
+-- and the traceback only re-walks it (MergeProps holds the mapping a
+-- valid Tai mapping whose cost is the distance).
+module CE.Clone.Ted (Tree (..), ted, tedMapping) where
 
 import Control.Monad (forM_, when)
 import Control.Monad.ST (ST, runST)
@@ -41,10 +47,31 @@ ted :: Tree -> Tree -> Integer
 ted a b
   | tSize a == 0 || tSize b == 0 = fromIntegral (max (tSize a) (tSize b))
   | otherwise = fromIntegral $ runST $ do
-      td <- newIntArray (tSize a * tSize b)
-      forM_ [(i, j) | i <- keyroots a, j <- keyroots b] $ \(i, j) ->
-        forestPass a b i j td
-      readArray td ((tSize a - 1) * tSize b + (tSize b - 1))
+      td <- distances a b
+      readArray td (rootCell a b)
+
+-- | The distance and one optimal mapping — (node of a, node of b)
+-- pairs, ascending — whose cost n1 + n2 − 2|M| + relabels is that
+-- distance. The empty tree maps nothing.
+tedMapping :: Tree -> Tree -> (Integer, [(Int, Int)])
+tedMapping a b
+  | tSize a == 0 || tSize b == 0 = (ted a b, [])
+  | otherwise = runST $ do
+      td <- distances a b
+      d <- readArray td (rootCell a b)
+      m <- trace a b td (tSize a - 1) (tSize b - 1)
+      pure (fromIntegral d, sort m)
+
+-- | Every keyroot pass; the tree-distance table they fill.
+distances :: Tree -> Tree -> ST s (STUArray s Int Int)
+distances a b = do
+  td <- newIntArray (tSize a * tSize b)
+  forM_ [(i, j) | i <- keyroots a, j <- keyroots b] $ \(i, j) ->
+    forestPass a b i j td
+  pure td
+
+rootCell :: Tree -> Tree -> Int
+rootCell a b = (tSize a - 1) * tSize b + (tSize b - 1)
 
 -- | The one array-allocation throat (also pins the STUArray element
 -- type, which `newArray` alone leaves ambiguous). Zero-initialized;
@@ -64,32 +91,90 @@ keyroots :: Tree -> [Int]
 keyroots t =
   sort (IM.elems (IM.fromListWith max [(tLld t ! i, i) | i <- [0 .. tSize t - 1]]))
 
--- | One keyroot-pair forest pass: fills the forest-distance table
--- for spans [lld i1 .. i1] × [lld j1 .. j1] and harvests tree
--- distances at left-aligned cells (the Zhang-Shasha recurrence).
--- The forest table is a fresh (w1+1)×(w2+1) rectangle per pass.
-forestPass :: Tree -> Tree -> Int -> Int -> STUArray s Int Int -> ST s ()
+-- | A forest pass's rectangle for spans [lld i1 .. i1] × [lld j1 ..
+-- j1]: the two trees, the two first nodes and the (w1+1)×(w2+1)
+-- table's widths. Strict: every cell of the hot loop reads it.
+data Span = Span {sA :: !Tree, sB :: !Tree, sL1 :: !Int, sL2 :: !Int, sW1 :: !Int, sW2 :: !Int}
+
+spanOf :: Tree -> Tree -> Int -> Int -> Span
+spanOf a b i1 j1 = Span a b (tLld a ! i1) (tLld b ! j1) (i1 - tLld a ! i1 + 1) (j1 - tLld b ! j1 + 1)
+
+{-# INLINE fkey #-}
+fkey :: Span -> Int -> Int -> Int
+fkey sp di dj = di * (sW2 sp + 1) + dj
+
+-- | Both nodes sit on their span's leftmost leaf: a tree-distance
+-- cell.
+{-# INLINE aligned #-}
+aligned :: Span -> Int -> Int -> Bool
+aligned sp i j = tLld (sA sp) ! i == sL1 sp && tLld (sB sp) ! j == sL2 sp
+
+-- | One forest pass: fills the forest-distance table for the span
+-- pair and harvests tree distances at left-aligned cells (the
+-- Zhang-Shasha recurrence). The forest table is a fresh rectangle
+-- per pass, handed back for the traceback; `distances` drops it.
+forestPass :: Tree -> Tree -> Int -> Int -> STUArray s Int Int -> ST s (STUArray s Int Int)
 forestPass a b i1 j1 td = do
-  let (l1, l2) = (tLld a ! i1, tLld b ! j1)
-      (w1, w2) = (i1 - l1 + 1, j1 - l2 + 1)
-      fkey di dj = di * (w2 + 1) + dj
-  fd <- newIntArray ((w1 + 1) * (w2 + 1))
-  forM_ [1 .. w1] $ \di -> writeArray fd (fkey di 0) di
-  forM_ [1 .. w2] $ \dj -> writeArray fd (fkey 0 dj) dj
-  forM_ [(i, j) | i <- [l1 .. i1], j <- [l2 .. j1]] $ \(i, j) -> do
-    let (di, dj) = (i - l1 + 1, j - l2 + 1)
-        aligned = tLld a ! i == l1 && tLld b ! j == l2
-    del <- (+ 1) <$> readArray fd (fkey (di - 1) dj)
-    ins <- (+ 1) <$> readArray fd (fkey di (dj - 1))
-    v <-
-      if aligned
-        then do
-          let rel = if tLab a ! i == tLab b ! j then 0 else 1
-          diag <- readArray fd (fkey (di - 1) (dj - 1))
-          pure (minimum [del, ins, diag + rel])
-        else do
-          sub <- readArray fd (fkey (tLld a ! i - l1) (tLld b ! j - l2))
-          t <- readArray td (i * tSize b + j)
-          pure (minimum [del, ins, sub + t])
-    writeArray fd (fkey di dj) v
-    when aligned $ writeArray td (i * tSize b + j) v
+  let sp = spanOf a b i1 j1
+  fd <- newIntArray ((sW1 sp + 1) * (sW2 sp + 1))
+  forM_ [1 .. sW1 sp] $ \di -> writeArray fd (fkey sp di 0) di
+  forM_ [1 .. sW2 sp] $ \dj -> writeArray fd (fkey sp 0 dj) dj
+  forM_ [(i, j) | i <- [sL1 sp .. i1], j <- [sL2 sp .. j1]] $ \(i, j) -> do
+    v <- fst . choose <$> candidates sp td fd i j
+    writeArray fd (fkey sp (i - sL1 sp + 1) (j - sL2 sp + 1)) v
+    when (aligned sp i j) $ writeArray td (i * tSize b + j) v
+  pure fd
+
+-- | One cell's three candidate costs: delete node i, insert node j,
+-- and either match the two nodes (aligned: the diagonal plus the
+-- relabel) or take the two subtrees whole (the forests left of them
+-- plus their tree distance) — the one recurrence the distance and
+-- the traceback both read. Inlined into both, so the distance's hot
+-- loop keeps no call and no tuple per cell (the 3e budget's path).
+{-# INLINE candidates #-}
+candidates :: Span -> STUArray s Int Int -> STUArray s Int Int -> Int -> Int -> ST s (Int, Int, Int)
+candidates sp td fd i j = do
+  let (a, b) = (sA sp, sB sp)
+      (di, dj) = (i - sL1 sp + 1, j - sL2 sp + 1)
+  del <- (+ 1) <$> readArray fd (fkey sp (di - 1) dj)
+  ins <- (+ 1) <$> readArray fd (fkey sp di (dj - 1))
+  third <-
+    if aligned sp i j
+      then (+ fromEnum (tLab a ! i /= tLab b ! j)) <$> readArray fd (fkey sp (di - 1) (dj - 1))
+      else (+) <$> readArray fd (fkey sp (tLld a ! i - sL1 sp) (tLld b ! j - sL2 sp)) <*> readArray td (i * tSize b + j)
+  pure (del, ins, third)
+
+-- | What an optimal cell did.
+data Move = Delete | Insert | Take
+
+-- | The cell's value — the least of the three — and the move that
+-- reached it; a tie prefers taking the pair, then deleting.
+{-# INLINE choose #-}
+choose :: (Int, Int, Int) -> (Int, Move)
+choose (del, ins, third)
+  | third <= del && third <= ins = (third, Take)
+  | del <= ins = (del, Delete)
+  | otherwise = (ins, Insert)
+
+-- | The mapping of subtrees i1 × j1: re-run their forest pass (the
+-- tree-distance table is complete, so any pair's rectangle can be
+-- rebuilt, and its aligned cells rewrite the values they already
+-- hold) and walk back from the corner. A taken aligned cell maps the
+-- two nodes; a taken subtree pair recurses into its own rectangle
+-- and continues left of both subtrees; a border cell is all deletes
+-- or all inserts, which map nothing.
+trace :: Tree -> Tree -> STUArray s Int Int -> Int -> Int -> ST s [(Int, Int)]
+trace a b td i1 j1 = do
+  fd <- forestPass a b i1 j1 td
+  let sp = spanOf a b i1 j1
+      walk i j
+        | i < sL1 sp || j < sL2 sp = pure []
+        | otherwise = do
+            (_, move) <- choose <$> candidates sp td fd i j
+            case move of
+              Delete -> walk (i - 1) j
+              Insert -> walk i (j - 1)
+              Take
+                | aligned sp i j -> ((i, j) :) <$> walk (i - 1) (j - 1)
+                | otherwise -> (<>) <$> trace a b td i j <*> walk (tLld a ! i - 1) (tLld b ! j - 1)
+  walk i1 j1

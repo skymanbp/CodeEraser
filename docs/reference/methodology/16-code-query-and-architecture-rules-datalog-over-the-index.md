@@ -114,7 +114,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 `dead` mirrors `ce deadcode`'s file-tier verdict by construction: an entry is a node with any
 role bit (every role lands in the core's entry mask), and a reference of any rung is followed
 except the two liveness-inert kinds the graph judgment drops the same way. The integration leg
-holds the two roads to one file ([query_face.rs:98](../../../cli/tests/it/query_face.rs#L98)).
+holds the two roads to one file ([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)).
 `ce query --prelude` prints the text verbatim.
 
 ### 4. The token stream
@@ -257,11 +257,11 @@ the exclude dialect cannot read is a program error at the glob's token before an
 - **`ce query <body> [--why] [--file <rules>] [--prelude]`** answers one question built on the
   rules file's rules; exit 0 when judged, 2 on a program error or a core that could not judge.
   It is a report: an assertion's violations in the file it builds on do not move its exit code
-  ([main_query.rs:50](../../../cli/src/main_query.rs#L50)).
+  ([main_query.rs:47](../../../cli/src/main_query.rs#L47)).
 - **`ce rules [--file <rules>] [--why]`** judges every `assert` in the file: exit 1 when any
   assertion holds a violation, 2 when the program did not judge, 0 otherwise — and a missing
   default file is zero assertions and 0, said aloud
-  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:70](../../../cli/src/main_query.rs#L70)).
+  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:67](../../../cli/src/main_query.rs#L67)).
 - **The rules file** is the one named on the command line or by the MCP argument (root-relative
   unless absolute, and it must exist), else `[rules] file` from the config (it must exist), else
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
@@ -276,8 +276,8 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [main_lang.rs:64](../../../cli/src/main_lang.rs#L64)).
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
-  ([tools.rs:189](../../../cli/src/mcp/tools.rs#L189), [tools.rs:210](../../../cli/src/mcp/tools.rs#L210),
-  [adapters.rs:173](../../../cli/src/mcp/adapters.rs#L173)).
+  ([tools.rs:190](../../../cli/src/mcp/tools.rs#L190), [tools.rs:211](../../../cli/src/mcp/tools.rs#L211),
+  [adapters.rs:175](../../../cli/src/mcp/adapters.rs#L175)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch,
   answers it as one table per goal under its own column names with the derivation rows under an
   answer, and judges the project's rules file with one button; rendering only, a core without the
@@ -288,7 +288,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
 All three go through two library functions, so the document cannot differ by face
 ([faces.rs:190](../../../cli/src/faces.rs#L190), [faces.rs:206](../../../cli/src/faces.rs#L206)); the
 integration leg holds the CLI's JSON to the library's byte for byte
-([query_face.rs:98](../../../cli/tests/it/query_face.rs#L98)), and the parity table claims the
+([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).
 
 ### 10. The repository's own rules
@@ -337,7 +337,7 @@ wire bytes — the prelude with the schema echo, an assertion's violation, a `wh
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
 aggregate over a set — and a tests-repo leg regenerates them through the real lexer so every
 request line is the prelude followed by its program
-([Spec.hs:87](../../../core/test/Spec.hs#L87), [query_golden.rs:25](../../../cli/tests/it/query_golden.rs#L25),
+([Spec.hs:88](../../../core/test/Spec.hs#L88), [query_golden.rs:25](../../../cli/tests/it/query_golden.rs#L25),
 [query_golden.rs:111](../../../cli/tests/it/query_golden.rs#L111)).
 
 On the measuring side the unit legs hold the legend to the core's echo and the vocabulary to the
@@ -349,8 +349,8 @@ a degraded and a skewed reply ([legend.rs:12](../../../cli/tests/unit/query/lege
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or
-default ([query_face.rs:151](../../../cli/tests/it/query_face.rs#L151), [query_face.rs:183](../../../cli/tests/it/query_face.rs#L183),
-[query_face.rs:242](../../../cli/tests/it/query_face.rs#L242)). The family is one row of the parity
+default ([query_face.rs:141](../../../cli/tests/it/query_face.rs#L141), [query_face.rs:173](../../../cli/tests/it/query_face.rs#L173),
+[query_face.rs:232](../../../cli/tests/it/query_face.rs#L232)). The family is one row of the parity
 table, one screen of the GUI roster and two tools of the MCP catalogue; docs cite implementation
 lines (this booklet is under the citations gate), and the caps above bind to their source names
 under `docs_consts`.

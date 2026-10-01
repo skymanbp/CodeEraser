@@ -164,3 +164,7 @@ button.danger:hover { background: rgba(224, 138, 130, 0.12); }
 }
 .notice b { font-weight: 600; }
 .notice small { color: var(--ink-low); font-size: var(--t-xs); }
+/* the merge card (hub_merge.js): one group, its members and its
+   parameter table; a text cell keeps its spaces, cut on screen */
+.merge-card { margin-bottom: var(--s5); }
+.merge-card td code { white-space: pre; }

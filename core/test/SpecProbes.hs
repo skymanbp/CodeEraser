@@ -148,11 +148,20 @@ refusalProbes = do
       , ("duplicate fourclass pair index refused", dupPairReply, "message", String "duplicate pair index: 3")
       , ("barrier reply carries code internal", Protocol.internalError "boom", "code", String "internal")
       , ("barrier id stays null", Protocol.internalError "boom", "id", Null)
+      , ("a clone leaf column of the wrong length refused (7.5.0)", cloneReply "[11]", "message", String "tree 0: leaf length mismatch")
       ]
-  pure (and results)
+  -- the leaf column is merge/1's: clone/1 judges the same bytes with it
+  same <- check "a clone request with a leaf column answers the bytes it answers without" (cloneReply "[11,0]" == cloneReply "")
+  pure (and results && same)
  where
   probe (name, bytes, key, want) = check name (field bytes key == Just want)
   badEnvReply = Protocol.respond coreVersion "{\"proto\":\"7.0.0\",\"id\":42}"
+  -- two two-node trees, one pair; a `leaf` of "" leaves the key out
+  cloneReply leaf =
+    Protocol.respond coreVersion $
+      "{\"proto\":\"7.0.0\",\"type\":\"clone.request\",\"id\":8,\"trees\":[{\"lab\":[1,9],\"lld\":[0,0]"
+        <> (if B8.null leaf then "" else ",\"leaf\":" <> leaf)
+        <> "},{\"lab\":[1,9],\"lld\":[0,0]}],\"pairs\":[[0,1]]}"
   dupPosReply =
     Protocol.respond
       coreVersion

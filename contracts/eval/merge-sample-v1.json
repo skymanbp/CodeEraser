@@ -1,0 +1,4237 @@
+{
+  "from": "contracts/eval/merge-suggestions-v1.json",
+  "rows": [
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00008b8418de3441be409dc45da8ec8999ae2fb05b823f849048795540954bf0",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/bg.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/no.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0032b169f8226986d9de2c4b265ae73837c29904c42d3ad640bbabdb41195c87",
+      "members": [
+        {
+          "at": "crates/printer/src/standard.rs:per_match_multi_line1_only_first_line/0#0",
+          "run": [
+            3380,
+            3406
+          ],
+          "source": "    fn per_match_multi_line1_only_first_line() {\n        let matcher =\n            RegexMatcher::new(r\"(?s:.{0})(Doctor Watsons|Sherlock)\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .per_match(true)\n            .per_match_one_line(true)\n            .column(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .multi_line(true)\n            .line_number(true)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\n1:9:For the Doctor Watsons of this world, as opposed to the Sherlock\n1:57:For the Doctor Watsons of this world, as opposed to the Sherlock\n3:49:be, to a very large extent, the result of luck. Sherlock Holmes\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/standard.rs:per_match_multi_line3_only_first_line/0#0",
+          "run": [
+            3437,
+            3462
+          ],
+          "source": "    fn per_match_multi_line3_only_first_line() {\n        let matcher =\n            RegexMatcher::new(r\"(?s)Watson.+?Holmeses|always.+?be\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .per_match(true)\n            .per_match_one_line(true)\n            .column(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .multi_line(true)\n            .line_number(true)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\n1:16:For the Doctor Watsons of this world, as opposed to the Sherlock\n2:58:Holmeses, success in the province of detective work must always\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "per_match_multi_line1_only_first_line",
+          "per_match_multi_line3_only_first_line"
+        ],
+        [
+          "(?s:.{0})(Doctor Watsons|Sherlock)",
+          "(?s)Watson.+?Holmeses|always.+?be"
+        ],
+        [
+          "\n1:9:For the Doctor Watsons of this world, as opposed to the Sherlock\r\n1:57:For the Doctor Watsons of this world, as opposed to the Sherlock\r\n3:49:be, to a very large extent, the result of luck. Sherlock Holmes\r\n",
+          "\n1:16:For the Doctor Watsons of this world, as opposed to the Sherlock\r\n2:58:Holmeses, success in the province of detective work must always\r\n"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "003c9327d0e74f6cb16c16df988abfb4b0170acfe6045189adeb040f5af07bf4",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/ko.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/sl.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0050cba7c2c468bd962933a166ca5b63cc8d87173f763c96cd280e3456237a5e",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/core/tests/locales/es.test.ts:(anonymous)/0#2",
+          "run": [
+            73,
+            107
+          ],
+          "source": "test(\"Spanish locale - type name translations in invalid_type errors\", () => {\n  z.config(es());\n\n  // Test string expected, number received\n  const stringSchema = z.string();\n  const stringResult = stringSchema.safeParse(123);\n  expect(stringResult.success).toBe(false);\n  if (!stringResult.success) {\n    expect(stringResult.error.issues[0].message).toBe(\"Entrada inválida: se esperaba texto, recibido número\");\n  }\n\n  // Test number expected, string received\n  const numberSchema = z.number();\n  const numberResult = numberSchema.safeParse(\"abc\");\n  expect(numberResult.success).toBe(false);\n  if (!numberResult.success) {\n    expect(numberResult.error.issues[0].message).toBe(\"Entrada inválida: se esperaba número, recibido texto\");\n  }\n\n  // Test boolean expected, null received\n  const booleanSchema = z.boolean();\n  const booleanResult = booleanSchema.safeParse(null);\n  expect(booleanResult.success).toBe(false);\n  if (!booleanResult.success) {\n    expect(booleanResult.error.issues[0].message).toBe(\"Entrada inválida: se esperaba booleano, recibido nulo\");\n  }\n\n  // Test array expected, object received\n  const arraySchema = z.array(z.string());\n  const arrayResult = arraySchema.safeParse({});\n  expect(arrayResult.success).toBe(false);\n  if (!arrayResult.success) {\n    expect(arrayResult.error.issues[0].message).toBe(\"Entrada inválida: se esperaba arreglo, recibido objeto\");\n  }\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/core/tests/locales/hr.test.ts:(anonymous)/0#2",
+          "run": [
+            69,
+            103
+          ],
+          "source": "test(\"Croatian locale - type name translations in invalid_type errors\", () => {\n  z.config(hr());\n\n  // Test string expected, number received\n  const stringSchema = z.string();\n  const stringResult = stringSchema.safeParse(123);\n  expect(stringResult.success).toBe(false);\n  if (!stringResult.success) {\n    expect(stringResult.error.issues[0].message).toBe(\"Neispravan unos: očekuje se tekst, a primljeno je broj\");\n  }\n\n  // Test number expected, string received\n  const numberSchema = z.number();\n  const numberResult = numberSchema.safeParse(\"abc\");\n  expect(numberResult.success).toBe(false);\n  if (!numberResult.success) {\n    expect(numberResult.error.issues[0].message).toBe(\"Neispravan unos: očekuje se broj, a primljeno je tekst\");\n  }\n\n  // Test boolean expected, null received\n  const booleanSchema = z.boolean();\n  const booleanResult = booleanSchema.safeParse(null);\n  expect(booleanResult.success).toBe(false);\n  if (!booleanResult.success) {\n    expect(booleanResult.error.issues[0].message).toBe(\"Neispravan unos: očekuje se boolean, a primljeno je null\");\n  }\n\n  // Test array expected, object received\n  const arraySchema = z.array(z.string());\n  const arrayResult = arraySchema.safeParse({});\n  expect(arrayResult.success).toBe(false);\n  if (!arrayResult.success) {\n    expect(arrayResult.error.issues[0].message).toBe(\"Neispravan unos: očekuje se niz, a primljeno je objekt\");\n  }\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "Spanish locale - type name translations in invalid_type errors",
+          "Croatian locale - type name translations in invalid_type errors"
+        ],
+        [
+          "es",
+          "hr"
+        ],
+        [
+          "Entrada inválida: se esperaba texto, recibido número",
+          "Neispravan unos: očekuje se tekst, a primljeno je broj"
+        ],
+        [
+          "Entrada inválida: se esperaba número, recibido texto",
+          "Neispravan unos: očekuje se broj, a primljeno je tekst"
+        ],
+        [
+          "Entrada inválida: se esperaba booleano, recibido nulo",
+          "Neispravan unos: očekuje se boolean, a primljeno je null"
+        ],
+        [
+          "Entrada inválida: se esperaba arreglo, recibido objeto",
+          "Neispravan unos: očekuje se niz, a primljeno je objekt"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00586a26325403cb218c07ca0e06d01243c5fec66b04c04d696cdccc702fdce6",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/es.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/ko.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "005e005dbe0355cdd042076b00537d17c6da3a0848d4e4930276e9087a4ef814",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#27",
+          "run": [
+            164,
+            167
+          ],
+          "source": "test(\"parse stringSchema null\", () => {\n  const f = () => stringSchema.parse(val.null);\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#63",
+          "run": [
+            346,
+            349
+          ],
+          "source": "test(\"parse undefinedSchema null\", () => {\n  const f = () => undefinedSchema.parse(val.null);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "parse stringSchema null",
+          "parse undefinedSchema null"
+        ],
+        [
+          "stringSchema",
+          "undefinedSchema"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "0061354024d639873fee4bcc0a52f6632b139d744517234fd9772a8ee1729705",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/index.test.ts:327-400",
+          "run": [
+            330,
+            400
+          ],
+          "source": "  });\n});\n\ntest(\"z.map\", () => {\n  const a = z.map(z.string(), z.number());\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<Map<string, number>>();\n  expect(z.parse(a, new Map([[\"hello\", 123]]))).toEqual(new Map([[\"hello\", 123]]));\n  expect(() => z.parse(a, new Map([[\"hello\", \"world\"]]))).toThrow();\n  expect(() => z.parse(a, new Map([[1243, \"world\"]]))).toThrow();\n  expect(() => z.parse(a, \"hello\")).toThrow();\n\n  const r1 = z.safeParse(a, new Map([[123, 123]]));\n  expect(r1.error?.issues[0].code).toEqual(\"invalid_type\");\n  expect(r1.error?.issues[0].path).toEqual([123]);\n\n  const r2: any = z.safeParse(a, new Map([[BigInt(123), 123]]));\n  expect(r2.error!.issues[0].code).toEqual(\"invalid_key\");\n  expect(r2.error!.issues[0].path).toEqual([]);\n\n  const r3: any = z.safeParse(a, new Map([[\"hello\", \"world\"]]));\n  expect(r3.error!.issues[0].code).toEqual(\"invalid_type\");\n  expect(r3.error!.issues[0].path).toEqual([\"hello\"]);\n});\n\ntest(\"z.map invalid_element\", () => {\n  const a = z.map(z.bigint(), z.number());\n  const r1 = z.safeParse(a, new Map([[BigInt(123), BigInt(123)]]));\n\n  expect(r1.error!.issues[0].code).toEqual(\"invalid_element\");\n  expect(r1.error!.issues[0].path).toEqual([]);\n});\n\ntest(\"z.map async\", async () => {\n  const a = z.map(z.string().check(z.refine(async () => true)), z.number().check(z.refine(async () => true)));\n  const d1 = new Map([[\"hello\", 123]]);\n  expect(await z.parseAsync(a, d1)).toEqual(d1);\n\n  await expect(z.parseAsync(a, new Map([[123, 123]]))).rejects.toThrow();\n  await expect(z.parseAsync(a, new Map([[\"hi\", \"world\"]]))).rejects.toThrow();\n  await expect(z.parseAsync(a, new Map([[1243, \"world\"]]))).rejects.toThrow();\n  await expect(z.parseAsync(a, \"hello\")).rejects.toThrow();\n\n  const r = await z.safeParseAsync(a, new Map([[123, 123]]));\n  expect(r.success).toEqual(false);\n  expect(r.error!.issues[0].code).toEqual(\"invalid_type\");\n  expect(r.error!.issues[0].path).toEqual([123]);\n});\n\ntest(\"z.set\", () => {\n  const a = z.set(z.string());\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<Set<string>>();\n  expect(z.parse(a, new Set([\"hello\", \"world\"]))).toEqual(new Set([\"hello\", \"world\"]));\n  expect(() => z.parse(a, new Set([123]))).toThrow();\n  expect(() => z.parse(a, [\"hello\", \"world\"])).toThrow();\n  expect(() => z.parse(a, \"hello\")).toThrow();\n\n  const b = z.set(z.number());\n  expect(z.parse(b, new Set([1, 2, 3]))).toEqual(new Set([1, 2, 3]));\n  expect(() => z.parse(b, new Set([\"hello\"]))).toThrow();\n  expect(() => z.parse(b, [1, 2, 3])).toThrow();\n  expect(() => z.parse(b, 123)).toThrow();\n});\n\ntest(\"z.enum\", () => {\n  const a = z.enum([\"A\", \"B\", \"C\"]);\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<\"A\" | \"B\" | \"C\">();\n  expect(z.parse(a, \"A\")).toEqual(\"A\");\n  expect(z.parse(a, \"B\")).toEqual(\"B\");\n  expect(z.parse(a, \"C\")).toEqual(\"C\");\n  expect(() => z.parse(a, \"D\")).toThrow();\n  expect(() => z.parse(a, 123)).toThrow();"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/tests/index.test.ts:351-424",
+          "run": [
+            354,
+            424
+          ],
+          "source": "  expect(z.parse(f, { a: 1, b: 2 })).toEqual({ a: 1, b: 2 });\n});\n\ntest(\"z.map\", () => {\n  const a = z.map(z.string(), z.number());\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<Map<string, number>>();\n  expect(z.parse(a, new Map([[\"hello\", 123]]))).toEqual(new Map([[\"hello\", 123]]));\n  expect(() => z.parse(a, new Map([[\"hello\", \"world\"]]))).toThrow();\n  expect(() => z.parse(a, new Map([[1243, \"world\"]]))).toThrow();\n  expect(() => z.parse(a, \"hello\")).toThrow();\n\n  const r1 = z.safeParse(a, new Map([[123, 123]]));\n  expect(r1.error?.issues[0].code).toEqual(\"invalid_type\");\n  expect(r1.error?.issues[0].path).toEqual([123]);\n\n  const r2: any = z.safeParse(a, new Map([[BigInt(123), 123]]));\n  expect(r2.error!.issues[0].code).toEqual(\"invalid_key\");\n  expect(r2.error!.issues[0].path).toEqual([]);\n\n  const r3: any = z.safeParse(a, new Map([[\"hello\", \"world\"]]));\n  expect(r3.error!.issues[0].code).toEqual(\"invalid_type\");\n  expect(r3.error!.issues[0].path).toEqual([\"hello\"]);\n});\n\ntest(\"z.map invalid_element\", () => {\n  const a = z.map(z.bigint(), z.number());\n  const r1 = z.safeParse(a, new Map([[BigInt(123), BigInt(123)]]));\n\n  expect(r1.error!.issues[0].code).toEqual(\"invalid_element\");\n  expect(r1.error!.issues[0].path).toEqual([]);\n});\n\ntest(\"z.map async\", async () => {\n  const a = z.map(z.string().check(z.refine(async () => true)), z.number().check(z.refine(async () => true)));\n  const d1 = new Map([[\"hello\", 123]]);\n  expect(await z.parseAsync(a, d1)).toEqual(d1);\n\n  await expect(z.parseAsync(a, new Map([[123, 123]]))).rejects.toThrow();\n  await expect(z.parseAsync(a, new Map([[\"hi\", \"world\"]]))).rejects.toThrow();\n  await expect(z.parseAsync(a, new Map([[1243, \"world\"]]))).rejects.toThrow();\n  await expect(z.parseAsync(a, \"hello\")).rejects.toThrow();\n\n  const r = await z.safeParseAsync(a, new Map([[123, 123]]));\n  expect(r.success).toEqual(false);\n  expect(r.error!.issues[0].code).toEqual(\"invalid_type\");\n  expect(r.error!.issues[0].path).toEqual([123]);\n});\n\ntest(\"z.set\", () => {\n  const a = z.set(z.string());\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<Set<string>>();\n  expect(z.parse(a, new Set([\"hello\", \"world\"]))).toEqual(new Set([\"hello\", \"world\"]));\n  expect(() => z.parse(a, new Set([123]))).toThrow();\n  expect(() => z.parse(a, [\"hello\", \"world\"])).toThrow();\n  expect(() => z.parse(a, \"hello\")).toThrow();\n\n  const b = z.set(z.number());\n  expect(z.parse(b, new Set([1, 2, 3]))).toEqual(new Set([1, 2, 3]));\n  expect(() => z.parse(b, new Set([\"hello\"]))).toThrow();\n  expect(() => z.parse(b, [1, 2, 3])).toThrow();\n  expect(() => z.parse(b, 123)).toThrow();\n});\n\ntest(\"z.enum\", () => {\n  const a = z.enum([\"A\", \"B\", \"C\"]);\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<\"A\" | \"B\" | \"C\">();\n  expect(z.parse(a, \"A\")).toEqual(\"A\");\n  expect(z.parse(a, \"B\")).toEqual(\"B\");\n  expect(z.parse(a, \"C\")).toEqual(\"C\");\n  expect(() => z.parse(a, \"D\")).toThrow();\n  expect(() => z.parse(a, 123)).toThrow();"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "cobra",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "007acd7cec85aa59b8d4ffc006546afada206c004233239c724781dbbaa72a94",
+      "members": [
+        {
+          "at": "command_test.go:48-54",
+          "run": [
+            48,
+            52
+          ],
+          "source": "func executeCommandC(root *Command, args ...string) (c *Command, output string, err error) {\n\tbuf := new(bytes.Buffer)\n\troot.SetOut(buf)\n\troot.SetErr(buf)\n\troot.SetArgs(args)\n\n\tc, err = root.ExecuteC()"
+        },
+        {
+          "at": "command_test.go:59-65",
+          "run": [
+            59,
+            63
+          ],
+          "source": "func executeCommandWithContextC(ctx context.Context, root *Command, args ...string) (c *Command, output string, err error) {\n\tbuf := new(bytes.Buffer)\n\troot.SetOut(buf)\n\troot.SetErr(buf)\n\troot.SetArgs(args)\n\n\tc, err = root.ExecuteContextC(ctx)"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "cobra",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "0086ba868740130547a81ba373e01b6fed33729773125674e5e4b06d7950ee18",
+      "members": [
+        {
+          "at": "completions_test.go:970-984",
+          "run": [
+            971,
+            976
+          ],
+          "source": "\t\t\"--subNotRequired\",\n\t\t\":4\",\n\t\t\"Completion ended with directive: ShellCompDirectiveNoFileComp\", \"\"}, \"\\n\")\n\n\tif output != expected {\n\t\tt.Errorf(\"expected: %q, got: %q\", expected, output)\n\t}\n\n\t// Test that when a required flag is present, it is not suggested anymore\n\toutput, err = executeCommand(rootCmd, ShellCompNoDescRequestCmd, \"--requiredFlag\", \"1\", \"\")\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\t// Reset the flag for the next command\n\trequiredFlag.Changed = false"
+        },
+        {
+          "at": "completions_test.go:1851-1865",
+          "run": [
+            1852,
+            1857
+          ],
+          "source": "\t\t\"--string\\ttest string flag\",\n\t\t\":4\",\n\t\t\"Completion ended with directive: ShellCompDirectiveNoFileComp\", \"\"}, \"\\n\")\n\n\tif output != expected {\n\t\tt.Errorf(\"expected: %q, got: %q\", expected, output)\n\t}\n\n\t// Test that no flags are completed after the -- arg\n\toutput, err = executeCommand(rootCmd, ShellCompRequestCmd, \"child\", \"--\", \"-\")\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\n\texpected = strings.Join([]string{"
+        },
+        {
+          "at": "completions_test.go:1918-1932",
+          "run": [
+            1919,
+            1924
+          ],
+          "source": "\t\t\"test\",\n\t\t\":0\",\n\t\t\"Completion ended with directive: ShellCompDirectiveDefault\", \"\"}, \"\\n\")\n\n\tif output != expected {\n\t\tt.Errorf(\"expected: %q, got: %q\", expected, output)\n\t}\n\n\t// Check that args are still completed after --\n\toutput, err = executeCommand(rootCmd, ShellCompRequestCmd, \"child\", \"--\", \"\")\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\n\texpected = strings.Join([]string{"
+        },
+        {
+          "at": "completions_test.go:1950-1964",
+          "run": [
+            1951,
+            1956
+          ],
+          "source": "\t\t\"test\",\n\t\t\":0\",\n\t\t\"Completion ended with directive: ShellCompDirectiveDefault\", \"\"}, \"\\n\")\n\n\tif output != expected {\n\t\tt.Errorf(\"expected: %q, got: %q\", expected, output)\n\t}\n\n\t// Check that args are still completed even if flagname with ValidArgsFunction exists\n\toutput, err = executeCommand(rootCmd, ShellCompRequestCmd, \"child2\", \"--\", \"a\")\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\n\texpected = strings.Join([]string{"
+        },
+        {
+          "at": "completions_test.go:2427-2441",
+          "run": [
+            2428,
+            2433
+          ],
+          "source": "\t\t\"help\", // \"<program> help help\" is a valid command, so should be completed\n\t\t\":4\",\n\t\t\"Completion ended with directive: ShellCompDirectiveNoFileComp\", \"\"}, \"\\n\")\n\n\tif output != expected {\n\t\tt.Errorf(\"expected: %q, got: %q\", expected, output)\n\t}\n\n\t// Test sub-commands are completed on first level of help command\n\toutput, err = executeCommand(rootCmd, ShellCompNoDescRequestCmd, \"help\", \"child1\", \"\")\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\n\texpected = strings.Join([]string{"
+        }
+      ],
+      "param_texts": [
+        [
+          ":4",
+          ":4",
+          ":0",
+          ":0",
+          ":4"
+        ],
+        [
+          "Completion ended with directive: ShellCompDirectiveNoFileComp",
+          "Completion ended with directive: ShellCompDirectiveNoFileComp",
+          "Completion ended with directive: ShellCompDirectiveDefault",
+          "Completion ended with directive: ShellCompDirectiveDefault",
+          "Completion ended with directive: ShellCompDirectiveNoFileComp"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00886e42ff03e1dd0c87e3727d63225a1b8f0fb472b25f3d2d9c234f1278182c",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/fa.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/ps.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "00888c8b0b52b4c737384ba12db286a60e2490b15d4eba0ea7ce1e57408b6b11",
+      "members": [
+        {
+          "at": "crates/printer/src/standard.rs:per_match_multi_line1_only_first_line/0#0",
+          "run": [
+            3380,
+            3406
+          ],
+          "source": "    fn per_match_multi_line1_only_first_line() {\n        let matcher =\n            RegexMatcher::new(r\"(?s:.{0})(Doctor Watsons|Sherlock)\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .per_match(true)\n            .per_match_one_line(true)\n            .column(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .multi_line(true)\n            .line_number(true)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\n1:9:For the Doctor Watsons of this world, as opposed to the Sherlock\n1:57:For the Doctor Watsons of this world, as opposed to the Sherlock\n3:49:be, to a very large extent, the result of luck. Sherlock Holmes\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/standard.rs:per_match_multi_line2_only_first_line/0#0",
+          "run": [
+            3409,
+            3434
+          ],
+          "source": "    fn per_match_multi_line2_only_first_line() {\n        let matcher =\n            RegexMatcher::new(r\"(?s)Watson.+?(Holmeses|clearly)\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .per_match(true)\n            .per_match_one_line(true)\n            .column(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .multi_line(true)\n            .line_number(true)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\n1:16:For the Doctor Watsons of this world, as opposed to the Sherlock\n5:12:but Doctor Watson has to have it taken out for him and dusted,\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "per_match_multi_line1_only_first_line",
+          "per_match_multi_line2_only_first_line"
+        ],
+        [
+          "(?s:.{0})(Doctor Watsons|Sherlock)",
+          "(?s)Watson.+?(Holmeses|clearly)"
+        ],
+        [
+          "\n1:9:For the Doctor Watsons of this world, as opposed to the Sherlock\r\n1:57:For the Doctor Watsons of this world, as opposed to the Sherlock\r\n3:49:be, to a very large extent, the result of luck. Sherlock Holmes\r\n",
+          "\n1:16:For the Doctor Watsons of this world, as opposed to the Sherlock\r\n5:12:but Doctor Watson has to have it taken out for him and dusted,\r\n"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "009d3f23c0d23bca51d3b5597e5b4f941827b3e956dc9ff3ecbf8ee4d9c14a8f",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/hr.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/it.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "cobra",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "009eb27797da5363d6d07c5f0c423eafecee24e832ef10406d1c0294b7c43403",
+      "members": [
+        {
+          "at": "command_test.go:115-121",
+          "run": [
+            115,
+            120
+          ],
+          "source": "\trootCmd := &Command{Use: \"root\", Args: NoArgs, Run: emptyRun}\n\tchild1Cmd := &Command{\n\t\tUse:  \"child1\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { child1CmdArgs = args },\n\t}\n\tchild2Cmd := &Command{Use: \"child2\", Args: NoArgs, Run: emptyRun}"
+        },
+        {
+          "at": "command_test.go:309-315",
+          "run": [
+            309,
+            314
+          ],
+          "source": "\trootCmd := &Command{Use: \"root\", Args: NoArgs, Run: emptyRun}\n\taCmd := &Command{\n\t\tUse:  \"aCmd\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { aCmdArgs = args },\n\t}\n\tbCmd := &Command{Use: \"bCmd\", Args: NoArgs, Run: emptyRun}"
+        },
+        {
+          "at": "command_test.go:439-445",
+          "run": [
+            439,
+            444
+          ],
+          "source": "\trootCmd := &Command{Use: \"foo\", Args: NoArgs, Run: emptyRun}\n\tfooCmd := &Command{\n\t\tUse:  \"foo\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { fooCmdArgs = args },\n\t}\n\tbarCmd := &Command{Use: \"bar\", Args: NoArgs, Run: emptyRun}"
+        },
+        {
+          "at": "command_test.go:468-474",
+          "run": [
+            468,
+            473
+          ],
+          "source": "\tbarCmd := &Command{Use: \"bar\", Args: NoArgs, Run: emptyRun}\n\tfooCmd := &Command{\n\t\tUse:  \"foo\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { fooCmdArgs = args },\n\t}\n\tbarCmd.AddCommand(fooCmd)"
+        }
+      ],
+      "param_texts": [
+        [
+          "rootCmd",
+          "rootCmd",
+          "rootCmd",
+          "barCmd"
+        ],
+        [
+          "root",
+          "root",
+          "foo",
+          "bar"
+        ],
+        [
+          "child1Cmd",
+          "aCmd",
+          "fooCmd",
+          "fooCmd"
+        ],
+        [
+          "child1",
+          "aCmd",
+          "foo",
+          "foo"
+        ],
+        [
+          "child1CmdArgs",
+          "aCmdArgs",
+          "fooCmdArgs",
+          "fooCmdArgs"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "00b769e4dabedfe717dfe7816ccd3108dce33191fa801007dcf6fd36bf532087",
+      "members": [
+        {
+          "at": "crates/matcher/src/interpolate.rs:220-234",
+          "run": [
+            220,
+            234
+          ],
+          "source": "    interp!(\n        interp1,\n        vec![(\"foo\", 2)],\n        vec![\"\", \"\", \"xxx\"],\n        \"test $foo test\",\n        \"test xxx test\",\n    );\n\n    interp!(\n        interp2,\n        vec![(\"foo\", 2)],\n        vec![\"\", \"\", \"xxx\"],\n        \"test$footest\",\n        \"test\",\n    );"
+        },
+        {
+          "at": "crates/matcher/src/interpolate.rs:236-250",
+          "run": [
+            236,
+            250
+          ],
+          "source": "    interp!(\n        interp3,\n        vec![(\"foo\", 2)],\n        vec![\"\", \"\", \"xxx\"],\n        \"test${foo}test\",\n        \"testxxxtest\",\n    );\n\n    interp!(\n        interp4,\n        vec![(\"foo\", 2)],\n        vec![\"\", \"\", \"xxx\"],\n        \"test$2test\",\n        \"test\",\n    );"
+        }
+      ],
+      "param_texts": [
+        [
+          "interp1",
+          "interp3"
+        ],
+        [
+          "test $foo test",
+          "test${foo}test"
+        ],
+        [
+          "test xxx test",
+          "testxxxtest"
+        ],
+        [
+          "interp2",
+          "interp4"
+        ],
+        [
+          "test$footest",
+          "test$2test"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00d0e8d185aca3f5a9f548cbd4e35f22ee949f3dd340265168a0e4e398a0d2eb",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#11",
+          "run": [
+            159,
+            170
+          ],
+          "source": "test(\"array async parse\", async () => {\n  const goodData = [\"XXX\"];\n  const badData = \"XXX\";\n\n  const goodResult = await arraySchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await arraySchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/async-parsing.test.ts:(anonymous)/0#13",
+          "run": [
+            188,
+            199
+          ],
+          "source": "test(\"union async parse\", async () => {\n  const goodData = undefined;\n  const badData = null;\n\n  const goodResult = await unionSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await unionSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "array async parse",
+          "union async parse"
+        ],
+        [
+          "\"XXX\"",
+          ""
+        ],
+        [
+          "[\"XXX\"]",
+          "undefined"
+        ],
+        [
+          "XXX",
+          ""
+        ],
+        [
+          "\"XXX\"",
+          "null"
+        ],
+        [
+          "arraySchema",
+          "unionSchema"
+        ]
+      ]
+    },
+    {
+      "corpus": "requests",
+      "family": "t3",
+      "fragment": false,
+      "id": "00d38cb805f3bfc48907cbe8a78717de078e868e03464da3ee8cb3822bc12bc0",
+      "members": [
+        {
+          "at": "tests/test_requests.py:test_cookie_as_dict_items/1#0",
+          "run": [
+            1387,
+            1401
+          ],
+          "source": "    def test_cookie_as_dict_items(self):\n        key = \"some_cookie\"\n        value = \"some_value\"\n\n        key1 = \"some_cookie1\"\n        value1 = \"some_value1\"\n\n        jar = requests.cookies.RequestsCookieJar()\n        jar.set(key, value)\n        jar.set(key1, value1)\n\n        items = jar.items()\n        assert items == list(items)\n        # make sure one can use items multiple times\n        assert list(items) == list(items)"
+        },
+        {
+          "at": "tests/test_requests.py:test_cookie_as_dict_keys/1#0",
+          "run": [
+            1355,
+            1369
+          ],
+          "source": "    def test_cookie_as_dict_keys(self):\n        key = \"some_cookie\"\n        value = \"some_value\"\n\n        key1 = \"some_cookie1\"\n        value1 = \"some_value1\"\n\n        jar = requests.cookies.RequestsCookieJar()\n        jar.set(key, value)\n        jar.set(key1, value1)\n\n        keys = jar.keys()\n        assert keys == list(keys)\n        # make sure one can use keys multiple times\n        assert list(keys) == list(keys)"
+        }
+      ],
+      "param_texts": [
+        [
+          "test_cookie_as_dict_items",
+          "test_cookie_as_dict_keys"
+        ],
+        [
+          "items",
+          "keys"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00d53d6e64b264725a5f07eee06e06129af0e288e057c8f1397ee2b45f12dfa0",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#3",
+          "run": [
+            54,
+            65
+          ],
+          "source": "test(\"boolean async parse\", async () => {\n  const goodData = true;\n  const badData = 1;\n\n  const goodResult = await booleanSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await booleanSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/async-parsing.test.ts:(anonymous)/0#2",
+          "run": [
+            38,
+            49
+          ],
+          "source": "test(\"bigInt async parse\", async () => {\n  const goodData = BigInt(145);\n  const badData = 134;\n\n  const goodResult = await bigIntSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await bigIntSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "boolean async parse",
+          "bigInt async parse"
+        ],
+        [
+          "true",
+          "BigInt(145)"
+        ],
+        [
+          "1",
+          "134"
+        ],
+        [
+          "booleanSchema",
+          "bigIntSchema"
+        ],
+        [
+          "",
+          "BigInt(145)"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "00e40466c1b4fd2d41cd7918111edef6bf7f1c0b9e804846283d30a5c0e40df7",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:928-935",
+          "run": [
+            932,
+            935
+          ],
+          "source": "  return util.extend(schema, shape);\n}\n\n// @__NO_SIDE_EFFECTS__\nexport function pick<T extends ZodMiniObject, M extends util.Mask<keyof T[\"shape\"]>>(\n  schema: T,\n  mask: M & Record<Exclude<keyof M, keyof T[\"shape\"]>, never>\n): ZodMiniObject<util.Flatten<Pick<T[\"shape\"], keyof T[\"shape\"] & keyof M>>, T[\"_zod\"][\"config\"]> {"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:936-945",
+          "run": [
+            942,
+            945
+          ],
+          "source": "  return util.pick(schema, mask as any);\n}\n\n// .omit\n\n// @__NO_SIDE_EFFECTS__\nexport function omit<T extends ZodMiniObject, M extends util.Mask<keyof T[\"shape\"]>>(\n  schema: T,\n  mask: M & Record<Exclude<keyof M, keyof T[\"shape\"]>, never>\n): ZodMiniObject<util.Flatten<Omit<T[\"shape\"], keyof M>>, T[\"_zod\"][\"config\"]> {"
+        }
+      ],
+      "param_texts": [
+        [
+          "pick",
+          "omit"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00e49bb8d1a3cb94d5ee91e441d8a7bed20be66f2dcb08c731d7e463a1ddc3b8",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#15",
+          "run": [
+            110,
+            113
+          ],
+          "source": "test(\"literal boolean object\", () => {\n  const f = () => literalBooleanSchema.parse({});\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#47",
+          "run": [
+            263,
+            266
+          ],
+          "source": "test(\"parse dateSchema boolean\", () => {\n  const f = () => dateSchema.parse(val.boolean);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal boolean object",
+          "parse dateSchema boolean"
+        ],
+        [
+          "literalBooleanSchema",
+          "dateSchema"
+        ],
+        [
+          "{}",
+          "val.boolean"
+        ],
+        [
+          "",
+          "val.boolean"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "00ebe95dd929fcbd85d740f76afbe4dc6c596d7fe4096d992dba7c050f98fcc5",
+      "members": [
+        {
+          "at": "crates/printer/src/summary.rs:count_path_without_zero/0#0",
+          "run": [
+            915,
+            932
+          ],
+          "source": "    fn count_path_without_zero() {\n        let matcher = RegexMatcher::new(r\"NO MATCH\").unwrap();\n        let mut printer = SummaryBuilder::new()\n            .kind(SummaryKind::Count)\n            .exclude_zero(true)\n            .build_no_color(vec![]);\n        SearcherBuilder::new()\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK,\n                printer.sink_with_path(&matcher, \"sherlock\"),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        assert_eq_printed!(\"\", got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/summary.rs:path_without_match_found/0#0",
+          "run": [
+            1068,
+            1084
+          ],
+          "source": "    fn path_without_match_found() {\n        let matcher = RegexMatcher::new(r\"ZZZZZZZZZ\").unwrap();\n        let mut printer = SummaryBuilder::new()\n            .kind(SummaryKind::PathWithoutMatch)\n            .build_no_color(vec![]);\n        SearcherBuilder::new()\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK,\n                printer.sink_with_path(&matcher, \"sherlock\"),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        assert_eq_printed!(\"sherlock\\n\", got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "count_path_without_zero",
+          "path_without_match_found"
+        ],
+        [
+          "NO MATCH",
+          "ZZZZZZZZZ"
+        ],
+        [
+          "SummaryBuilder::new()\r\n            .kind(SummaryKind::Count)\r\n            .exclude_zero(true)",
+          "SummaryBuilder::new()\r\n            .kind(SummaryKind::PathWithoutMatch)"
+        ],
+        [
+          "\"\"",
+          "\"sherlock\\n\""
+        ],
+        [
+          "",
+          "sherlock\\n"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00f1c152b07c38e34ca9276e68c14f054e179e24b867b6efb94244b8a336fb9f",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#12",
+          "run": [
+            95,
+            98
+          ],
+          "source": "test(\"literal boolean incorrect\", () => {\n  const f = () => literalBooleanSchema.parse(false);\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#13",
+          "run": [
+            100,
+            103
+          ],
+          "source": "test(\"literal boolean number\", () => {\n  const f = () => literalBooleanSchema.parse(\"asdf\");\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal boolean incorrect",
+          "literal boolean number"
+        ],
+        [
+          "false",
+          "\"asdf\""
+        ],
+        [
+          "",
+          "asdf"
+        ]
+      ]
+    },
+    {
+      "corpus": "cobra",
+      "family": "t3",
+      "fragment": false,
+      "id": "00fe2f72ad8f3da4eac693a3303e6a8527a8be1305c01851694b97b67034f77e",
+      "members": [
+        {
+          "at": "args_test.go:TestArbitraryArgs/1#0",
+          "run": [
+            195,
+            199
+          ],
+          "source": "func TestArbitraryArgs(t *testing.T) {\n\tc := getCommand(ArbitraryArgs, false)\n\toutput, err := executeCommand(c, \"a\", \"b\")\n\texpectSuccess(output, err, t)\n}"
+        },
+        {
+          "at": "args_test.go:TestExactArgs_WithValid/1#0",
+          "run": [
+            327,
+            331
+          ],
+          "source": "func TestExactArgs_WithValid(t *testing.T) {\n\tc := getCommand(ExactArgs(3), true)\n\toutput, err := executeCommand(c, \"three\", \"one\", \"two\")\n\texpectSuccess(output, err, t)\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "TestArbitraryArgs",
+          "TestExactArgs_WithValid"
+        ],
+        [
+          "ArbitraryArgs",
+          "ExactArgs(3)"
+        ],
+        [
+          "false",
+          "true"
+        ],
+        [
+          "a",
+          "one"
+        ],
+        [
+          "b",
+          "two"
+        ],
+        [
+          "",
+          "\"three\""
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "01065248b5e7453ef68ff4a7be7a6a85362e0062bb4abcd53a3b6b06737a96cb",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#5",
+          "run": [
+            62,
+            65
+          ],
+          "source": "test(\"literal string object\", () => {\n  const f = () => literalStringSchema.parse({});\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#10",
+          "run": [
+            86,
+            89
+          ],
+          "source": "test(\"literal number object\", () => {\n  const f = () => literalStringSchema.parse({});\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal string object",
+          "literal number object"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "0110f0ec9a0fcc571fd0892c76cb4761770a2cbdb71061a78206727907d49eff",
+      "members": [
+        {
+          "at": "tests/binary.rs:133-164",
+          "run": [
+            162,
+            164
+          ],
+          "source": "rgtest!(mmap_after_nul_match, |dir: Dir, mut cmd: TestCommand| {\n    dir.create_bytes(\"hay\", HAY);\n    // Use explicit file path.\n    cmd.args(&[\"--mmap\", \"-n\", \"medical student\", \"hay\"]);\n\n    // With explicit file and memory maps, all matches are shown\n    let expected = \"\\\n176:\\\"A medical student, I suppose?\\\" said I.\n409:\\\"A medical student, I suppose?\\\" said I.\n642:\\\"A medical student, I suppose?\\\" said I.\n875:\\\"A medical student, I suppose?\\\" said I.\n1108:\\\"A medical student, I suppose?\\\" said I.\n1341:\\\"A medical student, I suppose?\\\" said I.\n1574:\\\"A medical student, I suppose?\\\" said I.\n1807:\\\"A medical student, I suppose?\\\" said I.\n1867:\\\"And yet you say he is not a medical student?\\\"\n\";\n    eqnice!(expected, cmd.stdout());\n});\n\n// This tests that ripgrep prints a warning message if it finds and prints a\n// match in a binary file before detecting that it is a binary file. The point\n// here is to notify that user that the search of the file is only partially\n// complete.\n//\n// This applies to files that are *implicitly* searched via a recursive\n// directory traversal. In particular, this results in a WARNING message being\n// printed. We make our file \"implicit\" by doing a recursive search with a glob\n// that matches our file.\nrgtest!(after_match1_implicit, |dir: Dir, mut cmd: TestCommand| {\n    dir.create_bytes(\"hay\", HAY);\n    cmd.args(&[\"--no-mmap\", \"-n\", \"Project Gutenberg EBook\", \"-g\", \"hay\"]);"
+        },
+        {
+          "at": "tests/binary.rs:363-378",
+          "run": [
+            376,
+            378
+          ],
+          "source": "rgtest!(before_match1_explicit, |dir: Dir, mut cmd: TestCommand| {\n    dir.create_bytes(\"hay\", HAY);\n    cmd.args(&[\"--no-mmap\", \"-n\", \"Heaven\", \"hay\"]);\n\n    let expected = \"\\\nbinary file matches (found \\\"\\\\0\\\" byte around offset 77041)\n\";\n    eqnice!(expected, cmd.stdout());\n});\n\n// Like before_match1_implicit, but enables the --binary flag, which\n// disables binary filtering. Thus, this matches the behavior of ripgrep as if\n// the file were given explicitly.\nrgtest!(before_match1_implicit_binary, |dir: Dir, mut cmd: TestCommand| {\n    dir.create_bytes(\"hay\", HAY);\n    cmd.args(&[\"--no-mmap\", \"-n\", \"--binary\", \"Heaven\", \"-g\", \"hay\"]);"
+        },
+        {
+          "at": "tests/binary.rs:411-425",
+          "run": [
+            423,
+            425
+          ],
+          "source": "rgtest!(before_match2_explicit, |dir: Dir, mut cmd: TestCommand| {\n    dir.create_bytes(\"hay\", HAY);\n    cmd.args(&[\"--no-mmap\", \"-n\", \"a medical student\", \"hay\"]);\n\n    let expected = \"\\\nbinary file matches (found \\\"\\\\0\\\" byte around offset 77041)\n\";\n    eqnice!(expected, cmd.stdout());\n});\n\n// Like before_match1_implicit, but enables -a/--text, so no binary\n// detection should be performed.\nrgtest!(before_match2_implicit_text, |dir: Dir, mut cmd: TestCommand| {\n    dir.create_bytes(\"hay\", HAY);\n    cmd.args(&[\"--no-mmap\", \"-n\", \"--text\", \"a medical student\", \"-g\", \"hay\"]);"
+        },
+        {
+          "at": "tests/misc.rs:199-217",
+          "run": [
+            211,
+            213
+          ],
+          "source": "rgtest!(replace_groups, |dir: Dir, mut cmd: TestCommand| {\n    dir.create(\"sherlock\", SHERLOCK);\n    cmd.args(&[\"-r\", \"$2, $1\", \"([A-Z][a-z]+) ([A-Z][a-z]+)\", \"sherlock\"]);\n\n    let expected = \"\\\nFor the Watsons, Doctor of this world, as opposed to the Sherlock\nbe, to a very large extent, the result of luck. Holmes, Sherlock\nbut Watson, Doctor has to have it taken out for him and dusted,\n\";\n    eqnice!(expected, cmd.stdout());\n});\n\nrgtest!(replace_named_groups, |dir: Dir, mut cmd: TestCommand| {\n    dir.create(\"sherlock\", SHERLOCK);\n    cmd.args(&[\n        \"-r\",\n        \"$last, $first\",\n        \"(?P<first>[A-Z][a-z]+) (?P<last>[A-Z][a-z]+)\",\n        \"sherlock\","
+        }
+      ],
+      "param_texts": [
+        [
+          "after_match1_implicit",
+          "before_match1_implicit_binary",
+          "before_match2_implicit_text",
+          "replace_named_groups"
+        ],
+        [
+          "create_bytes",
+          "create_bytes",
+          "create_bytes",
+          "create"
+        ],
+        [
+          "hay",
+          "hay",
+          "hay",
+          "sherlock"
+        ],
+        [
+          "HAY",
+          "HAY",
+          "HAY",
+          "SHERLOCK"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0116334e9e0498d6245522f92e2344a0b5d1ab4505e379dab93722de83970711",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/types.ts:maxLength/0#0",
+          "run": [
+            1319,
+            1327
+          ],
+          "source": "  get maxLength() {\n    let max: number | null = null;\n    for (const ch of this._def.checks) {\n      if (ch.kind === \"max\") {\n        if (max === null || ch.value < max) max = ch.value;\n      }\n    }\n    return max;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v3/types.ts:minDate/0#0",
+          "run": [
+            1966,
+            1975
+          ],
+          "source": "  get minDate() {\n    let min: number | null = null;\n    for (const ch of this._def.checks) {\n      if (ch.kind === \"min\") {\n        if (min === null || ch.value > min) min = ch.value;\n      }\n    }\n\n    return min != null ? new Date(min) : null;\n  }"
+        }
+      ],
+      "param_texts": [
+        [
+          "maxLength",
+          "minDate"
+        ],
+        [
+          "max",
+          "min"
+        ],
+        [
+          "max",
+          "min"
+        ],
+        [
+          "max",
+          "min != null ? new Date(min) : null"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "01172e8d5d80a6cb50499e88189f523bf12323546cedc3c4547a3f8f20693f3f",
+      "members": [
+        {
+          "at": "crates/printer/src/jsont.rs:27-34",
+          "run": [
+            27,
+            34
+          ],
+          "source": "            Message::Begin(ref msg) => {\n                state.serialize_field(\"type\", &\"begin\")?;\n                state.serialize_field(\"data\", msg)?;\n            }\n            Message::End(ref msg) => {\n                state.serialize_field(\"type\", &\"end\")?;\n                state.serialize_field(\"data\", msg)?;\n            }"
+        },
+        {
+          "at": "crates/printer/src/jsont.rs:35-42",
+          "run": [
+            35,
+            42
+          ],
+          "source": "            Message::Match(ref msg) => {\n                state.serialize_field(\"type\", &\"match\")?;\n                state.serialize_field(\"data\", msg)?;\n            }\n            Message::Context(ref msg) => {\n                state.serialize_field(\"type\", &\"context\")?;\n                state.serialize_field(\"data\", msg)?;\n            }"
+        }
+      ],
+      "param_texts": [
+        [
+          "Begin",
+          "Match"
+        ],
+        [
+          "begin",
+          "match"
+        ],
+        [
+          "End",
+          "Context"
+        ],
+        [
+          "end",
+          "context"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0121c483b57bc50244c53d1483466296d0743b6d4b8e6b13476f154c3c93a440",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:doc_choices/1#0",
+          "run": [
+            837,
+            839
+          ],
+          "source": "    fn doc_choices(&self) -> &'static [&'static str] {\n        &[\"never\", \"auto\", \"always\", \"ansi\"]\n    }"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:doc_choices/1#4",
+          "run": [
+            6729,
+            6731
+          ],
+          "source": "    fn doc_choices(&self) -> &'static [&'static str] {\n        &[\"none\", \"path\", \"modified\", \"accessed\", \"created\"]\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "never",
+          "path"
+        ],
+        [
+          "auto",
+          "modified"
+        ],
+        [
+          "always",
+          "accessed"
+        ],
+        [
+          "ansi",
+          "created"
+        ],
+        [
+          "",
+          "\"none\""
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0127e644be689afde57ce39682b58fb072db559f2e9aaddc6049e724d1e39259",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#5",
+          "run": [
+            62,
+            65
+          ],
+          "source": "test(\"literal string object\", () => {\n  const f = () => literalStringSchema.parse({});\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/record.test.ts:(anonymous)/0#6",
+          "run": [
+            55,
+            61
+          ],
+          "source": "test(\"string record parse - fail\", () => {\n  const badCheck = () =>\n    booleanRecord.parse({\n      asdf: [],\n    } as any);\n  expect(badCheck).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal string object",
+          "string record parse - fail"
+        ],
+        [
+          "f",
+          "badCheck"
+        ],
+        [
+          "literalStringSchema",
+          "booleanRecord"
+        ],
+        [
+          "{}",
+          "{\r\n      asdf: [],\r\n    } as any"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "012d58419339344586af1578c05cced5f5a001838e4b7b4ab2926ce0cb71ab95",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/hr.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/id.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "01468222d99b0d269d9dcf578298074a4df03254a52ed2479c9e1690f01db540",
+      "members": [
+        {
+          "at": "crates/printer/src/standard.rs:2749-2771",
+          "run": [
+            2750,
+            2771
+          ],
+          "source": "        let matcher = RegexMatcher::new(\"Doctor Watsons|but Doctor\").unwrap();\n        let mut printer = StandardBuilder::new().build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .max_matches(Some(2))\n            .line_number(false)\n            .after_context(1)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nFor the Doctor Watsons of this world, as opposed to the Sherlock\nHolmeses, success in the province of detective work must always\n--\nbut Doctor Watson has to have it taken out for him and dusted,\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);"
+        },
+        {
+          "at": "crates/printer/src/standard.rs:2771-2796",
+          "run": [
+            2774,
+            2796
+          ],
+          "source": "        assert_eq_printed!(expected, got);\n\n        // after context: 4, max matches: 2\n        let mut printer = StandardBuilder::new().build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .max_matches(Some(2))\n            .line_number(false)\n            .after_context(4)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nFor the Doctor Watsons of this world, as opposed to the Sherlock\nHolmeses, success in the province of detective work must always\nbe, to a very large extent, the result of luck. Sherlock Holmes\ncan extract a clew from a wisp of straw or a flake of cigar ash;\nbut Doctor Watson has to have it taken out for him and dusted,\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);"
+        }
+      ],
+      "param_texts": [
+        [
+          "1",
+          "4"
+        ],
+        [
+          "\nFor the Doctor Watsons of this world, as opposed to the Sherlock\r\nHolmeses, success in the province of detective work must always\r\n--\r\nbut Doctor Watson has to have it taken out for him and dusted,\r\nand exhibited clearly, with a label attached.\r\n",
+          "\nFor the Doctor Watsons of this world, as opposed to the Sherlock\r\nHolmeses, success in the province of detective work must always\r\nbe, to a very large extent, the result of luck. Sherlock Holmes\r\ncan extract a clew from a wisp of straw or a flake of cigar ash;\r\nbut Doctor Watson has to have it taken out for him and dusted,\r\nand exhibited clearly, with a label attached.\r\n"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0156e474be1290fad373d1a91e32548c13ea8707f14c32bfa9ac7daf24ae6077",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:test_no_ignore_vcs/0#0",
+          "run": [
+            5099,
+            5108
+          ],
+          "source": "fn test_no_ignore_vcs() {\n    let args = parse_low_raw(None::<&str>).unwrap();\n    assert_eq!(false, args.no_ignore_vcs);\n\n    let args = parse_low_raw([\"--no-ignore-vcs\"]).unwrap();\n    assert_eq!(true, args.no_ignore_vcs);\n\n    let args = parse_low_raw([\"--no-ignore-vcs\", \"--ignore-vcs\"]).unwrap();\n    assert_eq!(false, args.no_ignore_vcs);\n}"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:test_no_pcre2_unicode/0#0",
+          "run": [
+            5193,
+            5203
+          ],
+          "source": "fn test_no_pcre2_unicode() {\n    let args = parse_low_raw(None::<&str>).unwrap();\n    assert_eq!(false, args.no_unicode);\n\n    let args = parse_low_raw([\"--no-pcre2-unicode\"]).unwrap();\n    assert_eq!(true, args.no_unicode);\n\n    let args =\n        parse_low_raw([\"--no-pcre2-unicode\", \"--pcre2-unicode\"]).unwrap();\n    assert_eq!(false, args.no_unicode);\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "test_no_ignore_vcs",
+          "test_no_pcre2_unicode"
+        ],
+        [
+          "no_ignore_vcs",
+          "no_unicode"
+        ],
+        [
+          "--no-ignore-vcs",
+          "--no-pcre2-unicode"
+        ],
+        [
+          "--ignore-vcs",
+          "--pcre2-unicode"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "0164bed5a39c3fa1d6f22290375bf449f10fa72d503a07193a84441336a6e075",
+      "members": [
+        {
+          "at": "crates/ignore/src/dir.rs:1402-1407",
+          "run": [
+            1403,
+            1406
+          ],
+          "source": "        let ig0 = IgnoreBuilder::new().build();\n        let (ig1, err) = ig0.add_parents(td.path().join(\"foo\"));\n        assert!(err.is_none());\n        let (ig2, err) = ig1.add_child(td.path().join(\"foo\"));\n        assert!(err.is_none());\n        assert!(ig2.matched(\"bar\", false).is_ignore());"
+        },
+        {
+          "at": "crates/ignore/src/dir.rs:1442-1448",
+          "run": [
+            1443,
+            1446
+          ],
+          "source": "        assert!(err.is_none());\n        let (tests_parents, err) = ig0.add_parents(td.path().join(\"tests\"));\n        assert!(err.is_none());\n        let (tests, err) = tests_parents.add_child(td.path().join(\"tests\"));\n        assert!(err.is_none());\n\n        assert!(Arc::ptr_eq(&src_parents.inner, &tests_parents.inner));"
+        }
+      ],
+      "param_texts": [
+        [
+          "ig1",
+          "tests_parents"
+        ],
+        [
+          "foo",
+          "tests"
+        ],
+        [
+          "ig2",
+          "tests"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0167de49fb93a856e16aa090329bdb8289d03390312b70999d6589d0a1467632",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/core/tests/locales/he.test.ts:(anonymous)/0#29",
+          "run": [
+            222,
+            229
+          ],
+          "source": "    test(\"invalid_union\", () => {\n      const schema = z.union([z.string(), z.number()]);\n      const result = schema.safeParse(true);\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error.issues[0].message).toBe(\"קלט לא תקין\");\n      }\n    });"
+        },
+        {
+          "at": "packages/zod/src/v4/core/tests/locales/he.test.ts:(anonymous)/0#38",
+          "run": [
+            289,
+            296
+          ],
+          "source": "    test(\"url\", () => {\n      const schema = z.string().url();\n      const result = schema.safeParse(\"not-a-url\");\n      expect(result.success).toBe(false);\n      if (!result.success) {\n        expect(result.error.issues[0].message).toBe(\"כתובת רשת לא תקינה\");\n      }\n    });"
+        }
+      ],
+      "param_texts": [
+        [
+          "invalid_union",
+          "url"
+        ],
+        [
+          "z.union([z.string(), z.number()])",
+          "z.string().url()"
+        ],
+        [
+          "true",
+          "\"not-a-url\""
+        ],
+        [
+          "קלט לא תקין",
+          "כתובת רשת לא תקינה"
+        ],
+        [
+          "",
+          "not-a-url"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "016cbe688a438c66908171b73c6d8404d5a24fdb896db1ec70f773d015caa65c",
+      "members": [
+        {
+          "at": "crates/printer/src/summary.rs:count_no_path_even_with_path/0#0",
+          "run": [
+            856,
+            873
+          ],
+          "source": "    fn count_no_path_even_with_path() {\n        let matcher = RegexMatcher::new(r\"Watson\").unwrap();\n        let mut printer = SummaryBuilder::new()\n            .kind(SummaryKind::Count)\n            .path(false)\n            .build_no_color(vec![]);\n        SearcherBuilder::new()\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK,\n                printer.sink_with_path(&matcher, \"sherlock\"),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        assert_eq_printed!(\"2\\n\", got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/summary.rs:path_without_match_not_found/0#0",
+          "run": [
+            1087,
+            1103
+          ],
+          "source": "    fn path_without_match_not_found() {\n        let matcher = RegexMatcher::new(r\"Watson\").unwrap();\n        let mut printer = SummaryBuilder::new()\n            .kind(SummaryKind::PathWithoutMatch)\n            .build_no_color(vec![]);\n        SearcherBuilder::new()\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK,\n                printer.sink_with_path(&matcher, \"sherlock\"),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        assert_eq_printed!(\"\", got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "count_no_path_even_with_path",
+          "path_without_match_not_found"
+        ],
+        [
+          "SummaryBuilder::new()\r\n            .kind(SummaryKind::Count)\r\n            .path(false)",
+          "SummaryBuilder::new()\r\n            .kind(SummaryKind::PathWithoutMatch)"
+        ],
+        [
+          "2\\n",
+          ""
+        ],
+        [
+          "\"2\\n\"",
+          "\"\""
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0171fded667b572a9185d6e9048f95511b4fdf03d3701631684e672b42937495",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:test_include_zero/0#0",
+          "run": [
+            3442,
+            3451
+          ],
+          "source": "fn test_include_zero() {\n    let args = parse_low_raw(None::<&str>).unwrap();\n    assert_eq!(false, args.include_zero);\n\n    let args = parse_low_raw([\"--include-zero\"]).unwrap();\n    assert_eq!(true, args.include_zero);\n\n    let args = parse_low_raw([\"--include-zero\", \"--no-include-zero\"]).unwrap();\n    assert_eq!(false, args.include_zero);\n}"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:test_no_ignore_global/0#0",
+          "run": [
+            4944,
+            4954
+          ],
+          "source": "fn test_no_ignore_global() {\n    let args = parse_low_raw(None::<&str>).unwrap();\n    assert_eq!(false, args.no_ignore_global);\n\n    let args = parse_low_raw([\"--no-ignore-global\"]).unwrap();\n    assert_eq!(true, args.no_ignore_global);\n\n    let args =\n        parse_low_raw([\"--no-ignore-global\", \"--ignore-global\"]).unwrap();\n    assert_eq!(false, args.no_ignore_global);\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "test_include_zero",
+          "test_no_ignore_global"
+        ],
+        [
+          "include_zero",
+          "no_ignore_global"
+        ],
+        [
+          "--include-zero",
+          "--no-ignore-global"
+        ],
+        [
+          "--no-include-zero",
+          "--ignore-global"
+        ]
+      ]
+    },
+    {
+      "corpus": "cobra",
+      "family": "t3",
+      "fragment": false,
+      "id": "0173d31a603e06fcf658482fb42d21b9ee7eecbc110bb19e27fcc6f79fe7c72b",
+      "members": [
+        {
+          "at": "args_test.go:TestExactArgs/1#0",
+          "run": [
+            321,
+            325
+          ],
+          "source": "func TestExactArgs(t *testing.T) {\n\tc := getCommand(ExactArgs(3), false)\n\toutput, err := executeCommand(c, \"a\", \"b\", \"c\")\n\texpectSuccess(output, err, t)\n}"
+        },
+        {
+          "at": "args_test.go:TestExactArgs_WithInvalidCount/1#0",
+          "run": [
+            345,
+            349
+          ],
+          "source": "func TestExactArgs_WithInvalidCount(t *testing.T) {\n\tc := getCommand(ExactArgs(2), false)\n\t_, err := executeCommand(c, \"a\", \"b\", \"c\")\n\texactArgsWithInvalidCount(err, t)\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "TestExactArgs",
+          "TestExactArgs_WithInvalidCount"
+        ],
+        [
+          "3",
+          "2"
+        ],
+        [
+          "output",
+          "_"
+        ],
+        [
+          "expectSuccess",
+          "exactArgsWithInvalidCount"
+        ],
+        [
+          "output",
+          ""
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "017cb023791ad2ec9de4b3391077703713ffa20f973a5cbcbee35596bd360ddb",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/types.ts:email/1#0",
+          "run": [
+            1057,
+            1059
+          ],
+          "source": "  email(message?: errorUtil.ErrMessage) {\n    return this._addCheck({ kind: \"email\", ...errorUtil.errToObj(message) });\n  }"
+        },
+        {
+          "at": "packages/zod/src/v3/types.ts:nanoid/1#0",
+          "run": [
+            1072,
+            1074
+          ],
+          "source": "  nanoid(message?: errorUtil.ErrMessage) {\n    return this._addCheck({ kind: \"nanoid\", ...errorUtil.errToObj(message) });\n  }"
+        }
+      ],
+      "param_texts": [
+        [
+          "email",
+          "nanoid"
+        ],
+        [
+          "email",
+          "nanoid"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "018ff13300f4696c38aace59388aada4d8a2c3cec8364fb8ff9d044c83977b6f",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#19",
+          "run": [
+            129,
+            132
+          ],
+          "source": "test(\"literal bigint boolean\", () => {\n  const f = () => literalBigIntSchema.parse(123);\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#52",
+          "run": [
+            291,
+            294
+          ],
+          "source": "test(\"parse symbolSchema string\", () => {\n  const f = () => symbolSchema.parse(val.string);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal bigint boolean",
+          "parse symbolSchema string"
+        ],
+        [
+          "literalBigIntSchema",
+          "symbolSchema"
+        ],
+        [
+          "123",
+          "val.string"
+        ],
+        [
+          "",
+          "val.string"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "01d39c44b0ff63e1b6622fb08052d1b890561ea25f6cc8e7dc11c9ec9eed6c2b",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/async-parsing.test.ts:(anonymous)/0#1",
+          "run": [
+            23,
+            34
+          ],
+          "source": "test(\"number async parse\", async () => {\n  const goodData = 1234.2353;\n  const badData = \"1234\";\n\n  const goodResult = await numberSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await numberSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/async-parsing.test.ts:(anonymous)/0#2",
+          "run": [
+            38,
+            49
+          ],
+          "source": "test(\"bigInt async parse\", async () => {\n  const goodData = BigInt(145);\n  const badData = 134;\n\n  const goodResult = await bigIntSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await bigIntSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "number async parse",
+          "bigInt async parse"
+        ],
+        [
+          "1234.2353",
+          "BigInt(145)"
+        ],
+        [
+          "1234",
+          ""
+        ],
+        [
+          "\"1234\"",
+          "134"
+        ],
+        [
+          "numberSchema",
+          "bigIntSchema"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "01f6d0c959c23df6149b25ce4b3e2394f437eb52427b7a67ed2b4111b7ad2bd7",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#11",
+          "run": [
+            159,
+            170
+          ],
+          "source": "test(\"array async parse\", async () => {\n  const goodData = [\"XXX\"];\n  const badData = \"XXX\";\n\n  const goodResult = await arraySchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await arraySchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#17",
+          "run": [
+            249,
+            260
+          ],
+          "source": "test(\"enum async parse\", async () => {\n  const goodData = \"whale\";\n  const badData = \"leopard\";\n\n  const goodResult = await enumSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await enumSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "array async parse",
+          "enum async parse"
+        ],
+        [
+          "[\"XXX\"]",
+          "\"whale\""
+        ],
+        [
+          "XXX",
+          "leopard"
+        ],
+        [
+          "arraySchema",
+          "enumSchema"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "01f7fed286fbd5b883602ecbf2ce6752eeab25eb57aaa55407cafe1105f1e638",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/ca.ts:84-91",
+          "run": [
+            86,
+            90
+          ],
+          "source": "        return `Massa petit: s'esperava que ${issue.origin} fos ${adj} ${issue.minimum.toString()}`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `Format invàlid: ha de començar amb \"${_issue.prefix}\"`;\n        }\n        if (_issue.format === \"ends_with\") return `Format invàlid: ha d'acabar amb \"${_issue.suffix}\"`;"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/fa.ts:88-95",
+          "run": [
+            90,
+            94
+          ],
+          "source": "        return `خیلی کوچک: ${issue.origin} باید ${adj}${issue.minimum.toString()} باشد`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `رشته نامعتبر: باید با \"${_issue.prefix}\" شروع شود`;\n        }\n        if (_issue.format === \"ends_with\") {"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/km.ts:87-94",
+          "run": [
+            89,
+            93
+          ],
+          "source": "        return `តូចពេក៖ ត្រូវការ ${issue.origin} ${adj} ${issue.minimum.toString()}`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `ខ្សែអក្សរមិនត្រឹមត្រូវ៖ ត្រូវចាប់ផ្តើមដោយ \"${_issue.prefix}\"`;\n        }\n        if (_issue.format === \"ends_with\") return `ខ្សែអក្សរមិនត្រឹមត្រូវ៖ ត្រូវបញ្ចប់ដោយ \"${_issue.suffix}\"`;"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/nl.ts:89-96",
+          "run": [
+            91,
+            95
+          ],
+          "source": "        return `Te ${shortName}: verwacht dat ${issue.origin} ${adj}${issue.minimum.toString()} is`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `Ongeldige tekst: moet met \"${_issue.prefix}\" beginnen`;\n        }\n        if (_issue.format === \"ends_with\") return `Ongeldige tekst: moet op \"${_issue.suffix}\" eindigen`;"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/ps.ts:88-95",
+          "run": [
+            90,
+            94
+          ],
+          "source": "        return `ډیر کوچنی: ${issue.origin} باید ${adj}${issue.minimum.toString()} وي`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `ناسم متن: باید د \"${_issue.prefix}\" سره پیل شي`;\n        }\n        if (_issue.format === \"ends_with\") {"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/sv.ts:87-94",
+          "run": [
+            89,
+            93
+          ],
+          "source": "        return `För lite(t): förväntade ${issue.origin ?? \"värdet\"} att ha ${adj}${issue.minimum.toString()}`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `Ogiltig sträng: måste börja med \"${_issue.prefix}\"`;\n        }\n        if (_issue.format === \"ends_with\") return `Ogiltig sträng: måste sluta med \"${_issue.suffix}\"`;"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/th.ts:87-94",
+          "run": [
+            89,
+            93
+          ],
+          "source": "        return `น้อยกว่ากำหนด: ${issue.origin} ควรมี${adj} ${issue.minimum.toString()}`;\n      }\n      case \"invalid_format\": {\n        const _issue = issue as errors.$ZodStringFormatIssues;\n        if (_issue.format === \"starts_with\") {\n          return `รูปแบบไม่ถูกต้อง: ข้อความต้องขึ้นต้นด้วย \"${_issue.prefix}\"`;\n        }\n        if (_issue.format === \"ends_with\") return `รูปแบบไม่ถูกต้อง: ข้อความต้องลงท้ายด้วย \"${_issue.suffix}\"`;"
+        }
+      ],
+      "param_texts": [
+        [
+          "Format invàlid: ha de començar amb \"",
+          "رشته نامعتبر: باید با \"",
+          "ខ្សែអក្សរមិនត្រឹមត្រូវ៖ ត្រូវចាប់ផ្តើមដោយ \"",
+          "Ongeldige tekst: moet met \"",
+          "ناسم متن: باید د \"",
+          "Ogiltig sträng: måste börja med \"",
+          "รูปแบบไม่ถูกต้อง: ข้อความต้องขึ้นต้นด้วย \""
+        ],
+        [
+          "\"",
+          "\" شروع شود",
+          "\"",
+          "\" beginnen",
+          "\" سره پیل شي",
+          "\"",
+          "\""
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0200c526dc6fd1add2740c398e3cb8ade0e539889059895ca9817558246d3d27",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#18",
+          "run": [
+            124,
+            127
+          ],
+          "source": "test(\"literal bigint number\", () => {\n  const f = () => literalBigIntSchema.parse(\"asdf\");\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#52",
+          "run": [
+            291,
+            294
+          ],
+          "source": "test(\"parse symbolSchema string\", () => {\n  const f = () => symbolSchema.parse(val.string);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal bigint number",
+          "parse symbolSchema string"
+        ],
+        [
+          "literalBigIntSchema",
+          "symbolSchema"
+        ],
+        [
+          "asdf",
+          "string"
+        ],
+        [
+          "\"asdf\"",
+          "val.string"
+        ],
+        [
+          "",
+          "val"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "020252c159c8d1612cd32366b42a935ea42315545eb65b71a0977ca88c485380",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/de.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/mk.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0205c1a08e406eb8cfdf365b077bedd6333fb1fb8f8e860c855708cc21f7b952",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#7",
+          "run": [
+            71,
+            74
+          ],
+          "source": "test(\"literal number incorrect\", () => {\n  const f = () => literalNumberSchema.parse(13);\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#49",
+          "run": [
+            272,
+            275
+          ],
+          "source": "test(\"parse dateSchema undefined\", () => {\n  const f = () => dateSchema.parse(val.undefined);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal number incorrect",
+          "parse dateSchema undefined"
+        ],
+        [
+          "literalNumberSchema",
+          "dateSchema"
+        ],
+        [
+          "13",
+          "val.undefined"
+        ],
+        [
+          "",
+          "val.undefined"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "020775ba060d4b01f8d38f9402ba31c7b658372c6e1f207a1ff63326cc160818",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/index.test.ts:(anonymous)/0#93",
+          "run": [
+            545,
+            560
+          ],
+          "source": "test(\"z.catch\", () => {\n  const a = z.catch(z.string(), \"default\");\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<string>();\n  expect(z.parse(a, \"hello\")).toEqual(\"hello\");\n  expect(z.parse(a, 123)).toEqual(\"default\");\n\n  const b = z.catch(z.string(), () => \"default\");\n  expect(z.parse(b, \"hello\")).toEqual(\"hello\");\n  expect(z.parse(b, 123)).toEqual(\"default\");\n\n  const c = z.catch(z.string(), (ctx) => {\n    return `${ctx.error.issues.length}issues`;\n  });\n  expect(z.parse(c, 1234)).toEqual(\"1issues\");\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/tests/index.test.ts:(anonymous)/0#95",
+          "run": [
+            571,
+            586
+          ],
+          "source": "test(\"z.catch\", () => {\n  const a = z.catch(z.string(), \"default\");\n  type a = z.output<typeof a>;\n  expectTypeOf<a>().toEqualTypeOf<string>();\n  expect(z.parse(a, \"hello\")).toEqual(\"hello\");\n  expect(z.parse(a, 123)).toEqual(\"default\");\n\n  const b = z.catch(z.string(), () => \"default\");\n  expect(z.parse(b, \"hello\")).toEqual(\"hello\");\n  expect(z.parse(b, 123)).toEqual(\"default\");\n\n  const c = z.catch(z.string(), (ctx) => {\n    return `${ctx.error.issues.length}issues`;\n  });\n  expect(z.parse(c, 1234)).toEqual(\"1issues\");\n});"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0208a232a77ef6820ffc5e941912a7d28517aa242f51edb71cff02aed6ca27d1",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#10",
+          "run": [
+            86,
+            89
+          ],
+          "source": "test(\"literal number object\", () => {\n  const f = () => literalStringSchema.parse({});\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#60",
+          "run": [
+            332,
+            335
+          ],
+          "source": "test(\"parse undefinedSchema number\", () => {\n  const f = () => undefinedSchema.parse(val.number);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal number object",
+          "parse undefinedSchema number"
+        ],
+        [
+          "literalStringSchema",
+          "undefinedSchema"
+        ],
+        [
+          "{}",
+          "val.number"
+        ],
+        [
+          "",
+          "val.number"
+        ]
+      ]
+    },
+    {
+      "corpus": "cobra",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "021851ac1d3766eec95834f4d5b3852051903e5408cfeb7f03715590464fc963",
+      "members": [
+        {
+          "at": "command_test.go:124-139",
+          "run": [
+            125,
+            138
+          ],
+          "source": "\toutput, err := executeCommand(rootCmd, \"child1\", \"one\", \"two\")\n\tif output != \"\" {\n\t\tt.Errorf(\"Unexpected output: %v\", output)\n\t}\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\n\tgot := strings.Join(child1CmdArgs, \" \")\n\tif got != onetwo {\n\t\tt.Errorf(\"child1CmdArgs expected: %q, got: %q\", onetwo, got)\n\t}\n}\n\nfunc TestCallCommandWithoutSubcommands(t *testing.T) {\n\trootCmd := &Command{Use: \"root\", Args: NoArgs, Run: emptyRun}"
+        },
+        {
+          "at": "command_test.go:291-306",
+          "run": [
+            292,
+            305
+          ],
+          "source": "\toutput, err := executeCommand(rootCmd, \"tell\", \"times\", \"one\", \"two\")\n\tif output != \"\" {\n\t\tt.Errorf(\"Unexpected output: %v\", output)\n\t}\n\tif err != nil {\n\t\tt.Errorf(\"Unexpected error: %v\", err)\n\t}\n\n\tgot := strings.Join(timesCmdArgs, \" \")\n\tif got != onetwo {\n\t\tt.Errorf(\"timesCmdArgs expected: %v, got: %v\", onetwo, got)\n\t}\n}\n\nfunc TestEnablePrefixMatching(t *testing.T) {\n\tEnablePrefixMatching = true"
+        }
+      ],
+      "param_texts": [
+        [
+          "child1CmdArgs",
+          "timesCmdArgs"
+        ],
+        [
+          "child1CmdArgs expected: %q, got: %q",
+          "timesCmdArgs expected: %v, got: %v"
+        ],
+        [
+          "TestCallCommandWithoutSubcommands",
+          "TestEnablePrefixMatching"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0223d65830c615920fefeda62e49d4678773c35949ba1032bd011a8f7bfdd9c6",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/locales/th.ts:getSizing/1#0",
+          "run": [
+            13,
+            15
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/locales/uz.ts:getSizing/1#0",
+          "run": [
+            14,
+            16
+          ],
+          "source": "  function getSizing(origin: string): { unit: string; verb: string } | null {\n    return Sizable[origin] ?? null;\n  }"
+        }
+      ],
+      "param_texts": []
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "02312117b903d8120f6da9071eb23b6a30ddbdc2b8a4a2301fce80fa620350cf",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#10",
+          "run": [
+            86,
+            89
+          ],
+          "source": "test(\"literal number object\", () => {\n  const f = () => literalStringSchema.parse({});\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#43",
+          "run": [
+            241,
+            244
+          ],
+          "source": "test(\"parse booleanSchema undefined\", () => {\n  const f = () => booleanSchema.parse(val.undefined);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "literal number object",
+          "parse booleanSchema undefined"
+        ],
+        [
+          "literalStringSchema",
+          "booleanSchema"
+        ],
+        [
+          "{}",
+          "val.undefined"
+        ],
+        [
+          "",
+          "val.undefined"
+        ]
+      ]
+    },
+    {
+      "corpus": "cobra",
+      "family": "t3",
+      "fragment": false,
+      "id": "02d40d331eeefc5197af1184fbe30ce9e9a5b69aba5dbfdf03d518b229b114af",
+      "members": [
+        {
+          "at": "args_test.go:maximumNArgsWithMoreArgs/2#0",
+          "run": [
+            77,
+            86
+          ],
+          "source": "func maximumNArgsWithMoreArgs(err error, t *testing.T) {\n\tif err == nil {\n\t\tt.Fatal(\"Expected an error\")\n\t}\n\tgot := err.Error()\n\texpected := \"accepts at most 2 arg(s), received 3\"\n\tif got != expected {\n\t\tt.Fatalf(\"Expected %q, got %q\", expected, got)\n\t}\n}"
+        },
+        {
+          "at": "args_test.go:rangeArgsWithInvalidCount/2#0",
+          "run": [
+            99,
+            108
+          ],
+          "source": "func rangeArgsWithInvalidCount(err error, t *testing.T) {\n\tif err == nil {\n\t\tt.Fatal(\"Expected an error\")\n\t}\n\tgot := err.Error()\n\texpected := \"accepts between 2 and 4 arg(s), received 1\"\n\tif got != expected {\n\t\tt.Fatalf(\"Expected %q, got %q\", expected, got)\n\t}\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "maximumNArgsWithMoreArgs",
+          "rangeArgsWithInvalidCount"
+        ],
+        [
+          "accepts at most 2 arg(s), received 3",
+          "accepts between 2 and 4 arg(s), received 1"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0003206e2776642f904b1c3ad0d6373f135aaaab1fef121a9b07a995ccde4480",
+      "members": [
+        {
+          "at": "crates/pcre2/src/matcher.rs:dotall/2#0",
+          "run": [
+            127,
+            130
+          ],
+          "source": "    pub fn dotall(&mut self, yes: bool) -> &mut RegexMatcherBuilder {\n        self.builder.dotall(yes);\n        self\n    }"
+        },
+        {
+          "at": "crates/pcre2/src/matcher.rs:ucp/2#0",
+          "run": [
+            205,
+            208
+          ],
+          "source": "    pub fn ucp(&mut self, yes: bool) -> &mut RegexMatcherBuilder {\n        self.builder.ucp(yes);\n        self\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "dotall",
+          "ucp"
+        ],
+        [
+          "dotall",
+          "ucp"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0003afa9ec9b6d1a708a4c8343c98763452bd52cfdbdfc68df3946caf1763782",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#32",
+          "run": [
+            877,
+            881
+          ],
+          "source": "export const ZodMAC: core.$constructor<ZodMAC> = /*@__PURE__*/ core.$constructor(\"ZodMAC\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodMAC.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodGUID#1",
+          "run": [
+            668,
+            672
+          ],
+          "source": "export const ZodGUID: core.$constructor<ZodGUID> = /*@__PURE__*/ core.$constructor(\"ZodGUID\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodGUID.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMAC",
+          "ZodGUID"
+        ],
+        [
+          "ZodMAC",
+          "ZodGUID"
+        ],
+        [
+          "ZodMAC",
+          "ZodGUID"
+        ],
+        [
+          "$ZodMAC",
+          "$ZodGUID"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0005f31d7c72596c9b452833979e366aedb86167669ab9201f2304886972bbb8",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#60",
+          "run": [
+            1328,
+            1332
+          ],
+          "source": "export const ZodNever: core.$constructor<ZodNever> = /*@__PURE__*/ core.$constructor(\"ZodNever\", (inst, def) => {\n  core.$ZodNever.init(inst, def);\n  ZodType.init(inst, def);\n  inst._zod.processJSONSchema = (ctx, json, params) => processors.neverProcessor(inst, ctx, json, params);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodNaN#1",
+          "run": [
+            2350,
+            2354
+          ],
+          "source": "export const ZodNaN: core.$constructor<ZodNaN> = /*@__PURE__*/ core.$constructor(\"ZodNaN\", (inst, def) => {\n  core.$ZodNaN.init(inst, def);\n  ZodType.init(inst, def);\n  inst._zod.processJSONSchema = (ctx, json, params) => processors.nanProcessor(inst, ctx, json, params);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodNever",
+          "ZodNaN"
+        ],
+        [
+          "ZodNever",
+          "ZodNaN"
+        ],
+        [
+          "ZodNever",
+          "ZodNaN"
+        ],
+        [
+          "$ZodNever",
+          "$ZodNaN"
+        ],
+        [
+          "neverProcessor",
+          "nanProcessor"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00074bfdc1b5f85e473c52755734c7296e136b3bb0c11e5441253cbf7dec74d8",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#31",
+          "run": [
+            863,
+            867
+          ],
+          "source": "export const ZodIPv4: core.$constructor<ZodIPv4> = /*@__PURE__*/ core.$constructor(\"ZodIPv4\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodIPv4.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodBase64URL#1",
+          "run": [
+            942,
+            949
+          ],
+          "source": "export const ZodBase64URL: core.$constructor<ZodBase64URL> = /*@__PURE__*/ core.$constructor(\n  \"ZodBase64URL\",\n  (inst, def) => {\n    // ZodStringFormat.init(inst, def);\n    core.$ZodBase64URL.init(inst, def);\n    ZodStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodIPv4",
+          "ZodBase64URL"
+        ],
+        [
+          "ZodIPv4",
+          "ZodBase64URL"
+        ],
+        [
+          "ZodIPv4",
+          "ZodBase64URL"
+        ],
+        [
+          "$ZodIPv4",
+          "$ZodBase64URL"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "000798365c5c3da4927f64f1af41014e3ca21b0e639fe850e77415fa57774c39",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#36",
+          "run": [
+            929,
+            933
+          ],
+          "source": "export const ZodBase64: core.$constructor<ZodBase64> = /*@__PURE__*/ core.$constructor(\"ZodBase64\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodBase64.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniCUID#1",
+          "run": [
+            261,
+            267
+          ],
+          "source": "export const ZodMiniCUID: core.$constructor<ZodMiniCUID> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniCUID\",\n  (inst, def) => {\n    core.$ZodCUID.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodBase64",
+          "ZodMiniCUID"
+        ],
+        [
+          "ZodBase64",
+          "ZodMiniCUID"
+        ],
+        [
+          "ZodBase64",
+          "ZodMiniCUID"
+        ],
+        [
+          "$ZodBase64",
+          "$ZodCUID"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0008be82423df1c7b1033bf78d664f133bdbf041350ad31481cab87128f6250a",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#28",
+          "run": [
+            807,
+            811
+          ],
+          "source": "export const ZodULID: core.$constructor<ZodULID> = /*@__PURE__*/ core.$constructor(\"ZodULID\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodULID.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniNumber#1",
+          "run": [
+            548,
+            554
+          ],
+          "source": "export const ZodMiniNumber: core.$constructor<ZodMiniNumber> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniNumber\",\n  (inst, def) => {\n    core.$ZodNumber.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodULID",
+          "ZodMiniNumber"
+        ],
+        [
+          "ZodULID",
+          "ZodMiniNumber"
+        ],
+        [
+          "ZodULID",
+          "ZodMiniNumber"
+        ],
+        [
+          "$ZodULID",
+          "$ZodNumber"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00099668bc0b742a9a26908006861766c976dff8b835359dc1b91f116189a96e",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodCustomStringFormat#1",
+          "run": [
+            989,
+            996
+          ],
+          "source": "export const ZodCustomStringFormat: core.$constructor<ZodCustomStringFormat> = /*@__PURE__*/ core.$constructor(\n  \"ZodCustomStringFormat\",\n  (inst, def) => {\n    // ZodStringFormat.init(inst, def);\n    core.$ZodCustomStringFormat.init(inst, def);\n    ZodStringFormat.init(inst, def);\n  }\n);"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniUnion#1",
+          "run": [
+            1024,
+            1030
+          ],
+          "source": "export const ZodMiniUnion: core.$constructor<ZodMiniUnion> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniUnion\",\n  (inst, def) => {\n    core.$ZodUnion.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodCustomStringFormat",
+          "ZodMiniUnion"
+        ],
+        [
+          "ZodCustomStringFormat",
+          "ZodMiniUnion"
+        ],
+        [
+          "ZodCustomStringFormat",
+          "ZodMiniUnion"
+        ],
+        [
+          "$ZodCustomStringFormat",
+          "$ZodUnion"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00100b64ecfb87be8ad5df921e722bd4614bdc3689c637174d911e6da68a5ef4",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodPreprocess#1",
+          "run": [
+            2439,
+            2445
+          ],
+          "source": "export const ZodPreprocess: core.$constructor<ZodPreprocess> = /*@__PURE__*/ core.$constructor(\n  \"ZodPreprocess\",\n  (inst, def) => {\n    ZodPipe.init(inst, def);\n    core.$ZodPreprocess.init(inst, def);\n  }\n);"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniBigInt#1",
+          "run": [
+            627,
+            633
+          ],
+          "source": "export const ZodMiniBigInt: core.$constructor<ZodMiniBigInt> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniBigInt\",\n  (inst, def) => {\n    core.$ZodBigInt.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodPreprocess",
+          "ZodMiniBigInt"
+        ],
+        [
+          "ZodPreprocess",
+          "ZodMiniBigInt"
+        ],
+        [
+          "ZodPreprocess",
+          "ZodMiniBigInt"
+        ],
+        [
+          "ZodPipe",
+          "core.$ZodBigInt"
+        ],
+        [
+          "core.$ZodPreprocess",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0011ff1e283102ddb7cb45d39e96e0a7ce678ecf21ccbf0cd515ac3f0b597574",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#92",
+          "run": [
+            2323,
+            2330
+          ],
+          "source": "export const ZodCatch: core.$constructor<ZodCatch> = /*@__PURE__*/ core.$constructor(\"ZodCatch\", (inst, def) => {\n  core.$ZodCatch.init(inst, def);\n  ZodType.init(inst, def);\n  inst._zod.processJSONSchema = (ctx, json, params) => processors.catchProcessor(inst, ctx, json, params);\n\n  inst.unwrap = () => inst._zod.def.innerType;\n  inst.removeCatch = inst.unwrap;\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodPrefault#1",
+          "run": [
+            2240,
+            2248
+          ],
+          "source": "export const ZodPrefault: core.$constructor<ZodPrefault> = /*@__PURE__*/ core.$constructor(\n  \"ZodPrefault\",\n  (inst, def) => {\n    core.$ZodPrefault.init(inst, def);\n    ZodType.init(inst, def);\n    inst._zod.processJSONSchema = (ctx, json, params) => processors.prefaultProcessor(inst, ctx, json, params);\n    inst.unwrap = () => inst._zod.def.innerType;\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodCatch",
+          "ZodPrefault"
+        ],
+        [
+          "ZodCatch",
+          "ZodPrefault"
+        ],
+        [
+          "ZodCatch",
+          "ZodPrefault"
+        ],
+        [
+          "$ZodCatch",
+          "$ZodPrefault"
+        ],
+        [
+          "catchProcessor",
+          "prefaultProcessor"
+        ],
+        [
+          "inst.removeCatch = inst.unwrap;",
+          ""
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0015619b6dc14ae75afbacc9b498b89f307623044cfc2228b24a38064fa47a9a",
+      "members": [
+        {
+          "at": "crates/printer/src/standard.rs:max_columns_with_count_preview_one_match/0#0",
+          "run": [
+            2571,
+            2594
+          ],
+          "source": "    fn max_columns_with_count_preview_one_match() {\n        let matcher = RegexMatcher::new(\"exhibited|dusted\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .stats(true)\n            .max_columns(Some(46))\n            .max_columns_preview(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nbut Doctor Watson has to have it taken out for [... 1 more match]\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/standard.rs:trim_ascii/0#0",
+          "run": [
+            2248,
+            2268
+          ],
+          "source": "    fn trim_ascii() {\n        let matcher = RegexMatcher::new(\"Watson\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .trim_ascii(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                \"   Watson\".as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nWatson\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "max_columns_with_count_preview_one_match",
+          "trim_ascii"
+        ],
+        [
+          "exhibited|dusted",
+          "Watson"
+        ],
+        [
+          "StandardBuilder::new()\r\n            .stats(true)\r\n            .max_columns",
+          "StandardBuilder::new"
+        ],
+        [
+          "Some(46)",
+          ""
+        ],
+        [
+          "(Some(46))",
+          "()"
+        ],
+        [
+          "max_columns_preview",
+          "trim_ascii"
+        ],
+        [
+          "SHERLOCK",
+          "\"   Watson\""
+        ],
+        [
+          "\nbut Doctor Watson has to have it taken out for [... 1 more match]\r\nand exhibited clearly, with a label attached.\r\n",
+          "\nWatson\r\n"
+        ],
+        [
+          "",
+          "   Watson"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0019e5a270e34acbbca0d600379f92dab4a2538789ea70aea9b13d9d6a3714f1",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#95",
+          "run": [
+            2398,
+            2401
+          ],
+          "source": "export const ZodCodec: core.$constructor<ZodCodec> = /*@__PURE__*/ core.$constructor(\"ZodCodec\", (inst, def) => {\n  ZodPipe.init(inst, def);\n  core.$ZodCodec.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodUUID#1",
+          "run": [
+            682,
+            686
+          ],
+          "source": "export const ZodUUID: core.$constructor<ZodUUID> = /*@__PURE__*/ core.$constructor(\"ZodUUID\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodUUID.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodCodec",
+          "ZodUUID"
+        ],
+        [
+          "ZodCodec",
+          "ZodUUID"
+        ],
+        [
+          "ZodCodec",
+          "ZodUUID"
+        ],
+        [
+          "ZodPipe",
+          "core.$ZodUUID"
+        ],
+        [
+          "core.$ZodCodec",
+          "ZodStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001a2c1754a15debbd171afb317c09e9e7538b9396e06facb7f0d8be58ceca1c",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#5",
+          "run": [
+            84,
+            95
+          ],
+          "source": "test(\"undefined async parse\", async () => {\n  const goodData = undefined;\n  const badData = \"XXX\";\n\n  const goodResult = await undefinedSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(undefined);\n\n  const badResult = await undefinedSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#14",
+          "run": [
+            204,
+            215
+          ],
+          "source": "test(\"record async parse\", async () => {\n  const goodData = { adsf: {}, asdf: {} };\n  const badData = [{}];\n\n  const goodResult = await recordSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await recordSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "undefined async parse",
+          "record async parse"
+        ],
+        [
+          "undefined",
+          "{ adsf: {}, asdf: {} }"
+        ],
+        [
+          "XXX",
+          "{}"
+        ],
+        [
+          "\"XXX\"",
+          "[{}]"
+        ],
+        [
+          "undefinedSchema",
+          "recordSchema"
+        ],
+        [
+          "undefined",
+          "goodData"
+        ],
+        [
+          "",
+          "adsf: {}, asdf: {}"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001a4b41036e725f98a440a8405fd4679a0793cb7c725a434b7a2c96be098893",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniE164#1",
+          "run": [
+            464,
+            470
+          ],
+          "source": "export const ZodMiniE164: core.$constructor<ZodMiniE164> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniE164\",\n  (inst, def) => {\n    core.$ZodE164.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniNonOptional#1",
+          "run": [
+            1519,
+            1525
+          ],
+          "source": "export const ZodMiniNonOptional: core.$constructor<ZodMiniNonOptional> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniNonOptional\",\n  (inst, def) => {\n    core.$ZodNonOptional.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMiniE164",
+          "ZodMiniNonOptional"
+        ],
+        [
+          "ZodMiniE164",
+          "ZodMiniNonOptional"
+        ],
+        [
+          "ZodMiniE164",
+          "ZodMiniNonOptional"
+        ],
+        [
+          "$ZodE164",
+          "$ZodNonOptional"
+        ],
+        [
+          "ZodMiniStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001babd14e218b6b9a639061d960c96beeb1c3af3e48a48c75076b04067bcaf6",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:nullable/1#0",
+          "run": [
+            2190,
+            2195
+          ],
+          "source": "export function nullable<T extends core.SomeType>(innerType: T): ZodNullable<T> {\n  return new ZodNullable({\n    type: \"nullable\",\n    innerType: innerType as any as core.$ZodType,\n  }) as any;\n}"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:readonly/1#0",
+          "run": [
+            1684,
+            1689
+          ],
+          "source": "export function readonly<T extends SomeType>(innerType: T): ZodMiniReadonly<T> {\n  return new ZodMiniReadonly({\n    type: \"readonly\",\n    innerType: innerType as any as core.$ZodType,\n  }) as any;\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "nullable",
+          "readonly"
+        ],
+        [
+          "core.SomeType",
+          "SomeType"
+        ],
+        [
+          "ZodNullable",
+          "ZodMiniReadonly"
+        ],
+        [
+          "ZodNullable",
+          "ZodMiniReadonly"
+        ],
+        [
+          "nullable",
+          "readonly"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001badff73a2b4c392e480b17a4aa5faecfbf9bf437ddf0d7b67848942739bde",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/validations.test.ts:(anonymous)/0#8",
+          "run": [
+            185,
+            203
+          ],
+          "source": "test(\"number lt\", async () => {\n  try {\n    await z.number().lt(3).parseAsync(3);\n  } catch (err) {\n    // (\"Number must be less than or equal to 3\");\n    expect((err as z.ZodError).issues).toMatchInlineSnapshot(`\n      [\n        {\n          \"code\": \"too_big\",\n          \"inclusive\": false,\n          \"maximum\": 3,\n          \"message\": \"Too big: expected number to be <3\",\n          \"origin\": \"number\",\n          \"path\": [],\n        },\n      ]\n    `);\n  }\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/validations.test.ts:(anonymous)/0#12",
+          "run": [
+            265,
+            283
+          ],
+          "source": "test(\"number positive\", async () => {\n  try {\n    await z.number().positive().parseAsync(-1);\n  } catch (err) {\n    // (\"Number must be greater than 0\");\n    expect((err as z.ZodError).issues).toMatchInlineSnapshot(`\n      [\n        {\n          \"code\": \"too_small\",\n          \"inclusive\": false,\n          \"message\": \"Too small: expected number to be >0\",\n          \"minimum\": 0,\n          \"origin\": \"number\",\n          \"path\": [],\n        },\n      ]\n    `);\n  }\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "number lt",
+          "number positive"
+        ],
+        [
+          "lt",
+          "positive"
+        ],
+        [
+          "3",
+          ""
+        ],
+        [
+          "(3)",
+          "()"
+        ],
+        [
+          "3",
+          "-1"
+        ],
+        [
+          "\r\n      [\r\n        {\r\n          \"code\": \"too_big\",\r\n          \"inclusive\": false,\r\n          \"maximum\": 3,\r\n          \"message\": \"Too big: expected number to be <3\",\r\n          \"origin\": \"number\",\r\n          \"path\": [],\r\n        },\r\n      ]\r\n    ",
+          "\r\n      [\r\n        {\r\n          \"code\": \"too_small\",\r\n          \"inclusive\": false,\r\n          \"message\": \"Too small: expected number to be >0\",\r\n          \"minimum\": 0,\r\n          \"origin\": \"number\",\r\n          \"path\": [],\r\n        },\r\n      ]\r\n    "
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001c172e6d0d925e82407659b72c59cb9d8e8e42bd89334646c4ece72c30cc5f",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#20",
+          "run": [
+            654,
+            658
+          ],
+          "source": "export const ZodEmail: core.$constructor<ZodEmail> = /*@__PURE__*/ core.$constructor(\"ZodEmail\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodEmail.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodNanoID#1",
+          "run": [
+            748,
+            752
+          ],
+          "source": "export const ZodNanoID: core.$constructor<ZodNanoID> = /*@__PURE__*/ core.$constructor(\"ZodNanoID\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodNanoID.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodEmail",
+          "ZodNanoID"
+        ],
+        [
+          "ZodEmail",
+          "ZodNanoID"
+        ],
+        [
+          "ZodEmail",
+          "ZodNanoID"
+        ],
+        [
+          "$ZodEmail",
+          "$ZodNanoID"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "001e5f83c730d01206ca6ec30b5cb39e53c295bf975a66fb46527e2cc6d571b0",
+      "members": [
+        {
+          "at": "crates/cli/src/escape.rs:empty/0#0",
+          "run": [
+            90,
+            93
+          ],
+          "source": "    fn empty() {\n        assert_eq!(b(b\"\"), unescape(r\"\"));\n        assert_eq!(r\"\", escape(b\"\"));\n    }"
+        },
+        {
+          "at": "crates/cli/src/escape.rs:nl/0#0",
+          "run": [
+            109,
+            112
+          ],
+          "source": "    fn nl() {\n        assert_eq!(b(b\"\\n\"), unescape(r\"\\n\"));\n        assert_eq!(r\"\\n\", escape(b\"\\n\"));\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "empty",
+          "nl"
+        ],
+        [
+          "b\"\"",
+          "b\"\\n\""
+        ],
+        [
+          "",
+          "\\n"
+        ],
+        [
+          "",
+          "\\n"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "001e93a9327598dc24b6dfdd04e62fa8ddda248dacf992cd096b4e8fecb0f491",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/record.test.ts:285-291",
+          "run": [
+            286,
+            286
+          ],
+          "source": "  );\n  expect(multi.parse({ a: 1, b: 2 })).toEqual({ A: 1, B: 2 });\n\n  // required-key semantics still hold when the keyType has a known value set\n  expect(multi.safeParse({ a: 1 }).success).toBe(false);\n\n  const en = z.record("
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/record.test.ts:699-705",
+          "run": [
+            701,
+            701
+          ],
+          "source": "  expect(schema.valueType._zod.def.type).toEqual(\"number\");\n\n  expect(schema.parse({ a: 1, b: 2 })).toEqual({ a: 1, b: 2 });\n  expect(schema.safeParse({ a: \"x\" }).success).toBe(false);\n\n  // params still flow through in the single-arg form\n  const withMessage = (z.record as any)(z.number(), \"must be a number record\");"
+        }
+      ],
+      "param_texts": [
+        [
+          "multi",
+          "schema"
+        ],
+        [
+          "A",
+          "a"
+        ],
+        [
+          "B",
+          "b"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001fd6b5128e6ad872e55abe303c75c52920c55f3bea20f0cd95ff70b2f77275",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/3#4",
+          "run": [
+            1266,
+            1266
+          ],
+          "source": "  inst._zod.processJSONSchema = (ctx, json, params) => processors.symbolProcessor(inst, ctx, json, params);"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/3#20",
+          "run": [
+            1893,
+            1893
+          ],
+          "source": "  inst._zod.processJSONSchema = (ctx, json, params) => processors.setProcessor(inst, ctx, json, params);"
+        }
+      ],
+      "param_texts": [
+        [
+          "symbolProcessor",
+          "setProcessor"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00229974058495f505b6861deb957f8e0a03a853e049c33cb55bde2ecca3ab15",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodIPv4#1",
+          "run": [
+            863,
+            867
+          ],
+          "source": "export const ZodIPv4: core.$constructor<ZodIPv4> = /*@__PURE__*/ core.$constructor(\"ZodIPv4\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodIPv4.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/iso.ts:ZodMiniISOTime#1",
+          "run": [
+            40,
+            46
+          ],
+          "source": "export const ZodMiniISOTime: core.$constructor<ZodMiniISOTime> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniISOTime\",\n  (inst, def) => {\n    core.$ZodISOTime.init(inst, def);\n    schemas.ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodIPv4",
+          "ZodMiniISOTime"
+        ],
+        [
+          "ZodIPv4",
+          "ZodMiniISOTime"
+        ],
+        [
+          "ZodIPv4",
+          "ZodMiniISOTime"
+        ],
+        [
+          "$ZodIPv4",
+          "$ZodISOTime"
+        ],
+        [
+          "ZodStringFormat",
+          "schemas.ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "0022b455f7eba1ec3616efd729fe2a193615561f3315089eb6ba120d6a3bd229",
+      "members": [
+        {
+          "at": "crates/printer/src/jsont.rs:79-104",
+          "run": [
+            80,
+            104
+          ],
+          "source": "        state.serialize_field(\"path\", &self.path.map(Data::from_path))?;\n        state.serialize_field(\"binary_offset\", &self.binary_offset)?;\n        state.serialize_field(\"stats\", &self.stats)?;\n        state.end()\n    }\n}\n\npub(crate) struct Match<'a> {\n    pub(crate) path: Option<&'a Path>,\n    pub(crate) lines: &'a [u8],\n    pub(crate) line_number: Option<u64>,\n    pub(crate) absolute_offset: u64,\n    pub(crate) submatches: &'a [SubMatch<'a>],\n}\n\nimpl<'a> serde::Serialize for Match<'a> {\n    fn serialize<S: serde::Serializer>(\n        &self,\n        s: S,\n    ) -> Result<S::Ok, S::Error> {\n        use serde::ser::SerializeStruct;\n\n        let mut state = s.serialize_struct(\"Match\", 5)?;\n        state.serialize_field(\"path\", &self.path.map(Data::from_path))?;\n        state.serialize_field(\"lines\", &Data::from_bytes(self.lines))?;\n        state.serialize_field(\"line_number\", &self.line_number)?;"
+        },
+        {
+          "at": "crates/printer/src/jsont.rs:104-129",
+          "run": [
+            105,
+            129
+          ],
+          "source": "        state.serialize_field(\"line_number\", &self.line_number)?;\n        state.serialize_field(\"absolute_offset\", &self.absolute_offset)?;\n        state.serialize_field(\"submatches\", &self.submatches)?;\n        state.end()\n    }\n}\n\npub(crate) struct Context<'a> {\n    pub(crate) path: Option<&'a Path>,\n    pub(crate) lines: &'a [u8],\n    pub(crate) line_number: Option<u64>,\n    pub(crate) absolute_offset: u64,\n    pub(crate) submatches: &'a [SubMatch<'a>],\n}\n\nimpl<'a> serde::Serialize for Context<'a> {\n    fn serialize<S: serde::Serializer>(\n        &self,\n        s: S,\n    ) -> Result<S::Ok, S::Error> {\n        use serde::ser::SerializeStruct;\n\n        let mut state = s.serialize_struct(\"Context\", 5)?;\n        state.serialize_field(\"path\", &self.path.map(Data::from_path))?;\n        state.serialize_field(\"lines\", &Data::from_bytes(self.lines))?;\n        state.serialize_field(\"line_number\", &self.line_number)?;"
+        }
+      ],
+      "param_texts": [
+        [
+          "binary_offset",
+          "absolute_offset"
+        ],
+        [
+          "binary_offset",
+          "absolute_offset"
+        ],
+        [
+          "stats",
+          "submatches"
+        ],
+        [
+          "stats",
+          "submatches"
+        ],
+        [
+          "Match",
+          "Context"
+        ],
+        [
+          "Match",
+          "Context"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0023790df6f77ed9552b4dcb99aed90ca3810ed8646373cc99006481b7b82ab0",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodEmail#1",
+          "run": [
+            654,
+            658
+          ],
+          "source": "export const ZodEmail: core.$constructor<ZodEmail> = /*@__PURE__*/ core.$constructor(\"ZodEmail\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodEmail.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#52",
+          "run": [
+            1260,
+            1263
+          ],
+          "source": "export const ZodMiniSet: core.$constructor<ZodMiniSet> = /*@__PURE__*/ core.$constructor(\"ZodMiniSet\", (inst, def) => {\n  core.$ZodSet.init(inst, def);\n  ZodMiniType.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodEmail",
+          "ZodMiniSet"
+        ],
+        [
+          "ZodEmail",
+          "ZodMiniSet"
+        ],
+        [
+          "ZodEmail",
+          "ZodMiniSet"
+        ],
+        [
+          "$ZodEmail",
+          "$ZodSet"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0026ccf4404baccaaf929bfb176287e434fb676fb78221c9acc555ad950277ec",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#93",
+          "run": [
+            2350,
+            2354
+          ],
+          "source": "export const ZodNaN: core.$constructor<ZodNaN> = /*@__PURE__*/ core.$constructor(\"ZodNaN\", (inst, def) => {\n  core.$ZodNaN.init(inst, def);\n  ZodType.init(inst, def);\n  inst._zod.processJSONSchema = (ctx, json, params) => processors.nanProcessor(inst, ctx, json, params);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodNever#1",
+          "run": [
+            1328,
+            1332
+          ],
+          "source": "export const ZodNever: core.$constructor<ZodNever> = /*@__PURE__*/ core.$constructor(\"ZodNever\", (inst, def) => {\n  core.$ZodNever.init(inst, def);\n  ZodType.init(inst, def);\n  inst._zod.processJSONSchema = (ctx, json, params) => processors.neverProcessor(inst, ctx, json, params);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodNaN",
+          "ZodNever"
+        ],
+        [
+          "ZodNaN",
+          "ZodNever"
+        ],
+        [
+          "ZodNaN",
+          "ZodNever"
+        ],
+        [
+          "$ZodNaN",
+          "$ZodNever"
+        ],
+        [
+          "nanProcessor",
+          "neverProcessor"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0026e501fbaa72160da39f599043f9b7208c2eb9da8a251210731730c4ee3a65",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/core/parse.ts:(anonymous)/3#1",
+          "run": [
+            81,
+            92
+          ],
+          "source": "export const _safeParseAsync: (_Err: $ZodErrorClass) => $SafeParseAsync = (_Err) => async (schema, value, _ctx) => {\n  const ctx: schemas.ParseContextInternal = _ctx ? { ..._ctx, async: true } : { async: true };\n  let result = schema._zod.run({ value, issues: [] }, ctx);\n  if (result instanceof Promise) result = await result;\n\n  return result.issues.length\n    ? {\n        success: false,\n        error: new _Err(result.issues.map((iss) => util.finalizeIssue(iss, ctx, core.config()))),\n      }\n    : ({ success: true, data: result.value } as any);\n};"
+        },
+        {
+          "at": "packages/zod/src/v4/core/parse.ts:_safeParse/1#0",
+          "run": [
+            59,
+            72
+          ],
+          "source": "export const _safeParse: (_Err: $ZodErrorClass) => $SafeParse = (_Err) => (schema, value, _ctx) => {\n  const ctx: schemas.ParseContextInternal = _ctx ? { ..._ctx, async: false } : { async: false };\n  const result = schema._zod.run({ value, issues: [] }, ctx);\n  if (result instanceof Promise) {\n    throw new core.$ZodAsyncError();\n  }\n\n  return result.issues.length\n    ? {\n        success: false,\n        error: new (_Err ?? errors.$ZodError)(result.issues.map((iss) => util.finalizeIssue(iss, ctx, core.config()))),\n      }\n    : ({ success: true, data: result.value } as any);\n};"
+        }
+      ],
+      "param_texts": [
+        [
+          "_safeParseAsync",
+          "_safeParse"
+        ],
+        [
+          "$SafeParseAsync",
+          "$SafeParse"
+        ],
+        [
+          "true",
+          "false"
+        ],
+        [
+          "result",
+          ""
+        ],
+        [
+          "result",
+          "core.$ZodAsyncError()"
+        ],
+        [
+          "await result",
+          "new core.$ZodAsyncError()"
+        ],
+        [
+          "result = await result",
+          "throw new core.$ZodAsyncError();"
+        ],
+        [
+          "result = await result;",
+          "{\r\n    throw new core.$ZodAsyncError();\r\n  }"
+        ],
+        [
+          "_Err",
+          "(_Err ?? errors.$ZodError)"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00295a88f4565aeedeb125e6fd83bf84e4e33da21b979f0eb9cfef35b72832c0",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodCIDRv4#1",
+          "run": [
+            903,
+            906
+          ],
+          "source": "export const ZodCIDRv4: core.$constructor<ZodCIDRv4> = /*@__PURE__*/ core.$constructor(\"ZodCIDRv4\", (inst, def) => {\n  core.$ZodCIDRv4.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniDate#1",
+          "run": [
+            792,
+            798
+          ],
+          "source": "export const ZodMiniDate: core.$constructor<ZodMiniDate> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniDate\",\n  (inst, def) => {\n    core.$ZodDate.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodCIDRv4",
+          "ZodMiniDate"
+        ],
+        [
+          "ZodCIDRv4",
+          "ZodMiniDate"
+        ],
+        [
+          "ZodCIDRv4",
+          "ZodMiniDate"
+        ],
+        [
+          "$ZodCIDRv4",
+          "$ZodDate"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "002ce59fe655f53087b1f3b795f317550d6de1d6be8d2e4a507514137eab2b7b",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#46",
+          "run": [
+            1049,
+            1052
+          ],
+          "source": "export const ZodMiniXor: core.$constructor<ZodMiniXor> = /*@__PURE__*/ core.$constructor(\"ZodMiniXor\", (inst, def) => {\n  ZodMiniUnion.init(inst, def);\n  core.$ZodXor.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniDate#1",
+          "run": [
+            792,
+            798
+          ],
+          "source": "export const ZodMiniDate: core.$constructor<ZodMiniDate> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniDate\",\n  (inst, def) => {\n    core.$ZodDate.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMiniXor",
+          "ZodMiniDate"
+        ],
+        [
+          "ZodMiniXor",
+          "ZodMiniDate"
+        ],
+        [
+          "ZodMiniXor",
+          "ZodMiniDate"
+        ],
+        [
+          "ZodMiniUnion",
+          "core.$ZodDate"
+        ],
+        [
+          "core.$ZodXor",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "002e5318cd291cad722c5562526794e84c380f45bd424ea7c44ea4a1ca1bf3d1",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/3#9",
+          "run": [
+            1331,
+            1331
+          ],
+          "source": "  inst._zod.processJSONSchema = (ctx, json, params) => processors.neverProcessor(inst, ctx, json, params);"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/3#29",
+          "run": [
+            2245,
+            2245
+          ],
+          "source": "    inst._zod.processJSONSchema = (ctx, json, params) => processors.prefaultProcessor(inst, ctx, json, params);"
+        }
+      ],
+      "param_texts": [
+        [
+          "neverProcessor",
+          "prefaultProcessor"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "002f34c76658b55d3e4ce55df9e9c8bb8a3c9c8c3226bebd8598ecf403920015",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodMAC#1",
+          "run": [
+            877,
+            881
+          ],
+          "source": "export const ZodMAC: core.$constructor<ZodMAC> = /*@__PURE__*/ core.$constructor(\"ZodMAC\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodMAC.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniMAC#1",
+          "run": [
+            418,
+            421
+          ],
+          "source": "export const ZodMiniMAC: core.$constructor<ZodMiniMAC> = /*@__PURE__*/ core.$constructor(\"ZodMiniMAC\", (inst, def) => {\n  core.$ZodMAC.init(inst, def);\n  ZodMiniStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMAC",
+          "ZodMiniMAC"
+        ],
+        [
+          "ZodMAC",
+          "ZodMiniMAC"
+        ],
+        [
+          "ZodMAC",
+          "ZodMiniMAC"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "003064137ab39d32bb3087ac3a200286c419e830c75fc3005088836741240558",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#45",
+          "run": [
+            1026,
+            1029
+          ],
+          "source": "  (inst, def) => {\n    core.$ZodUnion.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#56",
+          "run": [
+            1375,
+            1378
+          ],
+          "source": "  (inst, def) => {\n    core.$ZodTransform.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
+        }
+      ],
+      "param_texts": [
+        [
+          "$ZodUnion",
+          "$ZodTransform"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0031f28eaf86684ed221c27ed455bb1e51e157e1d9ffb41f3516c8fc3446edab",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#33",
+          "run": [
+            890,
+            894
+          ],
+          "source": "export const ZodIPv6: core.$constructor<ZodIPv6> = /*@__PURE__*/ core.$constructor(\"ZodIPv6\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodIPv6.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#18",
+          "run": [
+            319,
+            322
+          ],
+          "source": "export const ZodMiniXID: core.$constructor<ZodMiniXID> = /*@__PURE__*/ core.$constructor(\"ZodMiniXID\", (inst, def) => {\n  core.$ZodXID.init(inst, def);\n  ZodMiniStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodIPv6",
+          "ZodMiniXID"
+        ],
+        [
+          "ZodIPv6",
+          "ZodMiniXID"
+        ],
+        [
+          "ZodIPv6",
+          "ZodMiniXID"
+        ],
+        [
+          "$ZodIPv6",
+          "$ZodXID"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0034feb9dda61301491842c3abedc186672665f7dd66bd9d7585c9dc2764bc5e",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#38",
+          "run": [
+            958,
+            962
+          ],
+          "source": "export const ZodE164: core.$constructor<ZodE164> = /*@__PURE__*/ core.$constructor(\"ZodE164\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodE164.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodBase64URL#1",
+          "run": [
+            942,
+            949
+          ],
+          "source": "export const ZodBase64URL: core.$constructor<ZodBase64URL> = /*@__PURE__*/ core.$constructor(\n  \"ZodBase64URL\",\n  (inst, def) => {\n    // ZodStringFormat.init(inst, def);\n    core.$ZodBase64URL.init(inst, def);\n    ZodStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodE164",
+          "ZodBase64URL"
+        ],
+        [
+          "ZodE164",
+          "ZodBase64URL"
+        ],
+        [
+          "ZodE164",
+          "ZodBase64URL"
+        ],
+        [
+          "$ZodE164",
+          "$ZodBase64URL"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0038f0ce52f63ff644af8fb7b8a23773d6e1f5815e56323a758a0cae93f661e4",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniAny#1",
+          "run": [
+            725,
+            728
+          ],
+          "source": "export const ZodMiniAny: core.$constructor<ZodMiniAny> = /*@__PURE__*/ core.$constructor(\"ZodMiniAny\", (inst, def) => {\n  core.$ZodAny.init(inst, def);\n  ZodMiniType.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniCIDRv6#1",
+          "run": [
+            401,
+            407
+          ],
+          "source": "export const ZodMiniCIDRv6: core.$constructor<ZodMiniCIDRv6> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniCIDRv6\",\n  (inst, def) => {\n    core.$ZodCIDRv6.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMiniAny",
+          "ZodMiniCIDRv6"
+        ],
+        [
+          "ZodMiniAny",
+          "ZodMiniCIDRv6"
+        ],
+        [
+          "ZodMiniAny",
+          "ZodMiniCIDRv6"
+        ],
+        [
+          "$ZodAny",
+          "$ZodCIDRv6"
+        ],
+        [
+          "ZodMiniType",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "003a1ee6cfdcf6e0fdf9833409ddc209c4b446fe6ee4cda4922a24dd140dec9a",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/3#6",
+          "run": [
+            1294,
+            1294
+          ],
+          "source": "  inst._zod.processJSONSchema = (ctx, json, params) => processors.nullProcessor(inst, ctx, json, params);"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/3#11",
+          "run": [
+            1366,
+            1366
+          ],
+          "source": "  inst._zod.processJSONSchema = (ctx, json, params) => processors.dateProcessor(inst, ctx, json, params);"
+        }
+      ],
+      "param_texts": [
+        [
+          "nullProcessor",
+          "dateProcessor"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "003a6bee44ce7ec2a65668015d6a30002cba0f05a240f638385b0355b91ce09e",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/detached-methods.test.ts:59-70",
+          "run": [
+            62,
+            70
+          ],
+          "source": "  expect(safeParse(\"hello\").success).toBe(true);\n});\n\ntest(\"detached schema.optional() returns a working ZodOptional\", () => {\n  const schema = z.string();\n  const opt = schema.optional;\n\n  const detached = opt();\n\n  expect(detached).toBeInstanceOf(z.ZodOptional);\n  expect(detached.safeParse(\"hello\").success).toBe(true);\n  expect(detached.safeParse(undefined).success).toBe(true);"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/detached-methods.test.ts:71-82",
+          "run": [
+            74,
+            82
+          ],
+          "source": "  expect(detached.safeParse(123).success).toBe(false);\n});\n\ntest(\"detached schema.nullable() returns a working ZodNullable\", () => {\n  const schema = z.string();\n  const nul = schema.nullable;\n\n  const detached = nul();\n\n  expect(detached).toBeInstanceOf(z.ZodNullable);\n  expect(detached.safeParse(\"hello\").success).toBe(true);\n  expect(detached.safeParse(null).success).toBe(true);"
+        }
+      ],
+      "param_texts": [
+        [
+          "detached schema.optional() returns a working ZodOptional",
+          "detached schema.nullable() returns a working ZodNullable"
+        ],
+        [
+          "opt",
+          "nul"
+        ],
+        [
+          "optional",
+          "nullable"
+        ],
+        [
+          "ZodOptional",
+          "ZodNullable"
+        ],
+        [
+          "undefined",
+          "null"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "003e4cff94345840b927e66fc0fefe7243c04860dcb289a7491a3edb8e892a0f",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniGUID#1",
+          "run": [
+            141,
+            147
+          ],
+          "source": "export const ZodMiniGUID: core.$constructor<ZodMiniGUID> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniGUID\",\n  (inst, def) => {\n    core.$ZodGUID.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniURL#1",
+          "run": [
+            194,
+            197
+          ],
+          "source": "export const ZodMiniURL: core.$constructor<ZodMiniURL> = /*@__PURE__*/ core.$constructor(\"ZodMiniURL\", (inst, def) => {\n  core.$ZodURL.init(inst, def);\n  ZodMiniStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMiniGUID",
+          "ZodMiniURL"
+        ],
+        [
+          "ZodMiniGUID",
+          "ZodMiniURL"
+        ],
+        [
+          "ZodMiniGUID",
+          "ZodMiniURL"
+        ],
+        [
+          "$ZodGUID",
+          "$ZodURL"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0043c3ec81f09092f9c4db036f0259f139494c62924eb9bddc0028ffccacadf4",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniRecord#1",
+          "run": [
+            1172,
+            1178
+          ],
+          "source": "export const ZodMiniRecord: core.$constructor<ZodMiniRecord> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniRecord\",\n  (inst, def) => {\n    core.$ZodRecord.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniULID#1",
+          "run": [
+            302,
+            308
+          ],
+          "source": "export const ZodMiniULID: core.$constructor<ZodMiniULID> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniULID\",\n  (inst, def) => {\n    core.$ZodULID.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMiniRecord",
+          "ZodMiniULID"
+        ],
+        [
+          "ZodMiniRecord",
+          "ZodMiniULID"
+        ],
+        [
+          "ZodMiniRecord",
+          "ZodMiniULID"
+        ],
+        [
+          "$ZodRecord",
+          "$ZodULID"
+        ],
+        [
+          "ZodMiniType",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0043c8c0b0ca8b83e8b93bf611a7829dc0fa262afa8197ad64433ccd762328e5",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#17",
+          "run": [
+            304,
+            307
+          ],
+          "source": "  (inst, def) => {\n    core.$ZodULID.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#43",
+          "run": [
+            813,
+            816
+          ],
+          "source": "  (inst, def) => {\n    core.$ZodArray.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
+        }
+      ],
+      "param_texts": [
+        [
+          "$ZodULID",
+          "$ZodArray"
+        ],
+        [
+          "ZodMiniStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "0047374653c2fb6faeaa2bc4c67425c6f7af3f13a31be0a3d9835845c222497b",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#24",
+          "run": [
+            734,
+            738
+          ],
+          "source": "export const ZodEmoji: core.$constructor<ZodEmoji> = /*@__PURE__*/ core.$constructor(\"ZodEmoji\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodEmoji.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodIPv4#1",
+          "run": [
+            863,
+            867
+          ],
+          "source": "export const ZodIPv4: core.$constructor<ZodIPv4> = /*@__PURE__*/ core.$constructor(\"ZodIPv4\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodIPv4.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodEmoji",
+          "ZodIPv4"
+        ],
+        [
+          "ZodEmoji",
+          "ZodIPv4"
+        ],
+        [
+          "ZodEmoji",
+          "ZodIPv4"
+        ],
+        [
+          "$ZodEmoji",
+          "$ZodIPv4"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00481f9001e5c2b804d922e05cdb0b4aaadd149d5c7ab8be892ecd9e1fc747d3",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#24",
+          "run": [
+            734,
+            738
+          ],
+          "source": "export const ZodEmoji: core.$constructor<ZodEmoji> = /*@__PURE__*/ core.$constructor(\"ZodEmoji\", (inst, def) => {\n  // ZodStringFormat.init(inst, def);\n  core.$ZodEmoji.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniBase64URL#1",
+          "run": [
+            448,
+            454
+          ],
+          "source": "export const ZodMiniBase64URL: core.$constructor<ZodMiniBase64URL> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniBase64URL\",\n  (inst, def) => {\n    core.$ZodBase64URL.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodEmoji",
+          "ZodMiniBase64URL"
+        ],
+        [
+          "ZodEmoji",
+          "ZodMiniBase64URL"
+        ],
+        [
+          "ZodEmoji",
+          "ZodMiniBase64URL"
+        ],
+        [
+          "$ZodEmoji",
+          "$ZodBase64URL"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00485bbb0771d761028da743d0ced78b0dced1cb3b8d2255d1a9fed869ec403c",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniCatch#1",
+          "run": [
+            1563,
+            1569
+          ],
+          "source": "export const ZodMiniCatch: core.$constructor<ZodMiniCatch> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniCatch\",\n  (inst, def) => {\n    core.$ZodCatch.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniKSUID#1",
+          "run": [
+            333,
+            339
+          ],
+          "source": "export const ZodMiniKSUID: core.$constructor<ZodMiniKSUID> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniKSUID\",\n  (inst, def) => {\n    core.$ZodKSUID.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodMiniCatch",
+          "ZodMiniKSUID"
+        ],
+        [
+          "ZodMiniCatch",
+          "ZodMiniKSUID"
+        ],
+        [
+          "ZodMiniCatch",
+          "ZodMiniKSUID"
+        ],
+        [
+          "$ZodCatch",
+          "$ZodKSUID"
+        ],
+        [
+          "ZodMiniType",
+          "ZodMiniStringFormat"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "004959d655bc2ee06ef047280190677ec57d051d24d5fa8c3d4da3f684b06da0",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:1241-1252",
+          "run": [
+            1243,
+            1252
+          ],
+          "source": "  _zod: core.$ZodBigIntFormatInternals;\n}\nexport const ZodBigIntFormat: core.$constructor<ZodBigIntFormat> = /*@__PURE__*/ core.$constructor(\n  \"ZodBigIntFormat\",\n  (inst, def) => {\n    core.$ZodBigIntFormat.init(inst, def);\n    ZodBigInt.init(inst, def);\n  }\n);\n\n// int64\nexport function int64(params?: string | core.$ZodBigIntFormatParams): ZodBigIntFormat {"
+        },
+        {
+          "at": "packages/zod/src/v4/core/schemas.ts:1166-1185",
+          "run": [
+            1169,
+            1185
+          ],
+          "source": "  _zod: $ZodNumberFormatInternals;\n}\n\nexport const $ZodNumberFormat: core.$constructor<$ZodNumberFormat> = /*@__PURE__*/ core.$constructor(\n  \"$ZodNumberFormat\",\n  (inst, def) => {\n    checks.$ZodCheckNumberFormat.init(inst, def);\n    $ZodNumber.init(inst, def); // no format checks\n  }\n);\n\n///////////////////////////////////////////\n///////////////////////////////////////////\n//////////                      ///////////\n//////////      $ZodBoolean      //////////\n//////////                      ///////////\n///////////////////////////////////////////\n///////////////////////////////////////////\n\nexport interface $ZodBooleanDef extends $ZodTypeDef {"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodBigIntFormat",
+          "$ZodNumberFormat"
+        ],
+        [
+          "ZodBigIntFormat",
+          "$ZodNumberFormat"
+        ],
+        [
+          "ZodBigIntFormat",
+          "$ZodNumberFormat"
+        ],
+        [
+          "core",
+          "checks"
+        ],
+        [
+          "$ZodBigIntFormat",
+          "$ZodCheckNumberFormat"
+        ],
+        [
+          "ZodBigInt",
+          "$ZodNumber"
+        ],
+        [
+          "int64",
+          "$ZodBooleanDef"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "004a32a241563c94cbe13fa439b4a73161671f4e1ef3e5619256bb0a84fa6b5e",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#23",
+          "run": [
+            403,
+            406
+          ],
+          "source": "  (inst, def) => {\n    core.$ZodCIDRv6.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#71",
+          "run": [
+            1746,
+            1749
+          ],
+          "source": "  (inst, def) => {\n    core.$ZodPromise.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
+        }
+      ],
+      "param_texts": [
+        [
+          "$ZodCIDRv6",
+          "$ZodPromise"
+        ],
+        [
+          "ZodMiniStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "004b88c1e0952f7fca79de6f71ade68c53327bfeb88a1d6a2be0a24e1fcf6024",
+      "members": [
+        {
+          "at": "crates/printer/src/standard.rs:max_matches/0#0",
+          "run": [
+            2679,
+            2698
+          ],
+          "source": "    fn max_matches() {\n        let matcher = RegexMatcher::new(\"Sherlock\").unwrap();\n        let mut printer = StandardBuilder::new().build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .max_matches(Some(1))\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nFor the Doctor Watsons of this world, as opposed to the Sherlock\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/standard.rs:no_heading/0#0",
+          "run": [
+            2151,
+            2171
+          ],
+          "source": "    fn no_heading() {\n        let matcher = RegexMatcher::new(\"Watson\").unwrap();\n        let mut printer =\n            StandardBuilder::new().heading(false).build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink_with_path(&matcher, \"sherlock\"),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nsherlock:For the Doctor Watsons of this world, as opposed to the Sherlock\nsherlock:but Doctor Watson has to have it taken out for him and dusted,\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "max_matches",
+          "no_heading"
+        ],
+        [
+          "Sherlock",
+          "Watson"
+        ],
+        [
+          "StandardBuilder::new",
+          "StandardBuilder::new().heading"
+        ],
+        [
+          "()",
+          "(false)"
+        ],
+        [
+          "SearcherBuilder::new()\r\n            .line_number(false)\r\n            .max_matches(Some(1))",
+          "SearcherBuilder::new()\r\n            .line_number(false)"
+        ],
+        [
+          "sink",
+          "sink_with_path"
+        ],
+        [
+          "\nFor the Doctor Watsons of this world, as opposed to the Sherlock\r\n",
+          "\nsherlock:For the Doctor Watsons of this world, as opposed to the Sherlock\r\nsherlock:but Doctor Watson has to have it taken out for him and dusted,\r\n"
+        ],
+        [
+          "",
+          "false"
+        ],
+        [
+          "",
+          "\"sherlock\""
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "004b98f56894a2f8ab021d5bdcd8f67d8f4de362d318deb1600d749ab8930981",
+      "members": [
+        {
+          "at": "tests/feature.rs:633-649",
+          "run": [
+            635,
+            649
+          ],
+          "source": "    cmd.args(&[\"-n\", \"-B1\", \"-A2\", \"--trim\", \"Holmeses\", \"sherlock\"]);\n\n    let expected = \"\\\n2-For the Doctor Watsons of this world, as opposed to the Sherlock\n3:Holmeses, success in the province of detective work must always\n4-be, to a very large extent, the result of luck. Sherlock Holmes\n5-can extract a clew from a wisp of straw or a flake of cigar ash;\n\";\n    eqnice!(expected, cmd.stdout());\n});\n\n// See: https://github.com/BurntSushi/ripgrep/issues/917\n//\n// This is like f917_trim, except this tests that trimming occurs even when the\n// whitespace is part of a match.\nrgtest!(f917_trim_match, |dir: Dir, mut cmd: TestCommand| {\n    const SHERLOCK: &'static str = \"\\"
+        },
+        {
+          "at": "tests/feature.rs:673-680",
+          "run": [
+            675,
+            680
+          ],
+          "source": "    cmd.args(&[\"--multiline\", \"--trim\", \"-r$0\", \"--no-filename\", r\"a\\n?bc\"]);\n\n    let expected = \"0123456789abcdefghijklmnopqrstuvwxyz\\n\";\n    eqnice!(expected, cmd.stdout());\n});\n\nrgtest!(f917_trim_max_columns_normal, |dir: Dir, mut cmd: TestCommand| {\n    const HAYSTACK: &str = \"     0123456789abcdefghijklmnopqrstuvwxyz\";"
+        }
+      ],
+      "param_texts": [
+        [
+          "\\\r",
+          "0123456789abcdefghijklmnopqrstuvwxyz"
+        ],
+        [
+          "\n2-For the Doctor Watsons of this world, as opposed to the Sherlock\r\n3:Holmeses, success in the province of detective work must always\r\n4-be, to a very large extent, the result of luck. Sherlock Holmes\r\n5-can extract a clew from a wisp of straw or a flake of cigar ash;\r\n",
+          "\\n"
+        ],
+        [
+          "f917_trim_match",
+          "f917_trim_max_columns_normal"
+        ],
+        [
+          "SHERLOCK",
+          "HAYSTACK"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "006b09254ee3c302a7501bf6443ea9c89a2ec6a036fee571d366423bc8b022f7",
+      "members": [
+        {
+          "at": "crates/ignore/src/types.rs:inner/1#0",
+          "run": [
+            216,
+            221
+          ],
+          "source": "    fn inner(&self) -> &T {\n        match *self {\n            Selection::Select(_, ref inner) => inner,\n            Selection::Negate(_, ref inner) => inner,\n        }\n    }"
+        },
+        {
+          "at": "crates/ignore/src/types.rs:name/1#1",
+          "run": [
+            198,
+            203
+          ],
+          "source": "    fn name(&self) -> &str {\n        match *self {\n            Selection::Select(ref name, _) => name,\n            Selection::Negate(ref name, _) => name,\n        }\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "inner",
+          "name"
+        ],
+        [
+          "T",
+          "str"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "00768018a7fcd1530d9822e3c0ec3ec8f46fc225a4dff005498c152cc2a71168",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:update/3#25",
+          "run": [
+            2391,
+            2394
+          ],
+          "source": "    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        args.fixed_strings = v.unwrap_switch();\n        Ok(())\n    }"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:update/3#68",
+          "run": [
+            5185,
+            5188
+          ],
+          "source": "    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        args.no_unicode = v.unwrap_switch();\n        Ok(())\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "fixed_strings",
+          "no_unicode"
+        ]
+      ]
+    },
+    {
+      "corpus": "cobra",
+      "family": "t3",
+      "fragment": false,
+      "id": "008aca0cdd175e834bfa6f8464edd3ef2ab9769a4060c495f94e1b1bad527637",
+      "members": [
+        {
+          "at": "shell_completions.go:(*Command) MarkFlagFilename/2#0",
+          "run": [
+            44,
+            46
+          ],
+          "source": "func (c *Command) MarkFlagFilename(name string, extensions ...string) error {\n\treturn MarkFlagFilename(c.Flags(), name, extensions...)\n}"
+        },
+        {
+          "at": "shell_completions.go:(*Command) MarkPersistentFlagFilename/2#0",
+          "run": [
+            61,
+            63
+          ],
+          "source": "func (c *Command) MarkPersistentFlagFilename(name string, extensions ...string) error {\n\treturn MarkFlagFilename(c.PersistentFlags(), name, extensions...)\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "MarkFlagFilename",
+          "MarkPersistentFlagFilename"
+        ],
+        [
+          "Flags",
+          "PersistentFlags"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "008cec664c1f1560c273f9479fee99e1e78cf38ae14d42dd44de9eb4dad5bdfd",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:impl Flag for InvertMatch#0",
+          "run": [
+            3755,
+            3791
+          ],
+          "source": "impl Flag for InvertMatch {\n    fn is_switch(&self) -> bool {\n        true\n    }\n    fn name_short(&self) -> Option<u8> {\n        Some(b'v')\n    }\n    fn name_long(&self) -> &'static str {\n        \"invert-match\"\n    }\n    fn name_negated(&self) -> Option<&'static str> {\n        Some(\"no-invert-match\")\n    }\n    fn doc_category(&self) -> Category {\n        Category::Search\n    }\n    fn doc_short(&self) -> &'static str {\n        r\"Invert matching.\"\n    }\n    fn doc_long(&self) -> &'static str {\n        r\"\nThis flag inverts matching. That is, instead of printing lines that match,\nripgrep will print lines that don't match.\n.sp\nNote that this only inverts line-by-line matching. For example, combining this\nflag with \\flag{files-with-matches} will emit files that contain any lines\nthat do not match the patterns given. That's not the same as, for example,\n\\flag{files-without-match}, which will emit files that do not contain any\nmatching lines.\n\"\n    }\n\n    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        args.invert_match = v.unwrap_switch();\n        Ok(())\n    }\n}"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:impl Flag for NoMessages#0",
+          "run": [
+            5114,
+            5142
+          ],
+          "source": "impl Flag for NoMessages {\n    fn is_switch(&self) -> bool {\n        true\n    }\n    fn name_long(&self) -> &'static str {\n        \"no-messages\"\n    }\n    fn name_negated(&self) -> Option<&'static str> {\n        Some(\"messages\")\n    }\n    fn doc_category(&self) -> Category {\n        Category::Logging\n    }\n    fn doc_short(&self) -> &'static str {\n        r\"Suppress some error messages.\"\n    }\n    fn doc_long(&self) -> &'static str {\n        r\"\nThis flag suppresses some error messages. Specifically, messages related to\nthe failed opening and reading of files. Error messages related to the syntax\nof the pattern are still shown.\n\"\n    }\n\n    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        args.no_messages = v.unwrap_switch();\n        Ok(())\n    }\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "InvertMatch",
+          "NoMessages"
+        ],
+        [
+          "fn name_short(&self) -> Option<u8> {\r\n        Some(b'v')\r\n    }",
+          ""
+        ],
+        [
+          "invert-match",
+          "no-messages"
+        ],
+        [
+          "no-invert-match",
+          "messages"
+        ],
+        [
+          "Search",
+          "Logging"
+        ],
+        [
+          "Invert matching.",
+          "Suppress some error messages."
+        ],
+        [
+          "This flag inverts matching. That is, instead of printing lines that match,\r\nripgrep will print lines that don't match.\r\n.sp\r\nNote that this only inverts line-by-line matching. For example, combining this\r\nflag with \\flag{files-with-matches} will emit files that contain any lines\r\nthat do not match the patterns given. That's not the same as, for example,\r\n\\flag{files-without-match}, which will emit files that do not contain any\r\nmatching lines.\r\n",
+          "This flag suppresses some error messages. Specifically, messages related to\r\nthe failed opening and reading of files. Error messages related to the syntax\r\nof the pattern are still shown.\r\n"
+        ],
+        [
+          "invert_match",
+          "no_messages"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0093f6ecedfb5f9d4b926cec2ee5d0dc41a28a56983daa9d2e45a4a90ece94f3",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:impl Flag for Column#0",
+          "run": [
+            1024,
+            1055
+          ],
+          "source": "impl Flag for Column {\n    fn is_switch(&self) -> bool {\n        true\n    }\n    fn name_long(&self) -> &'static str {\n        \"column\"\n    }\n    fn name_negated(&self) -> Option<&'static str> {\n        Some(\"no-column\")\n    }\n    fn doc_category(&self) -> Category {\n        Category::Output\n    }\n    fn doc_short(&self) -> &'static str {\n        \"Show column numbers.\"\n    }\n    fn doc_long(&self) -> &'static str {\n        r\"\nShow column numbers (1-based). This only shows the column numbers for the first\nmatch on each line. This does not try to account for Unicode. One byte is equal\nto one column. This implies \\flag{line-number}.\n.sp\nWhen \\flag{only-matching} is used, then the column numbers written correspond\nto the start of each match.\n\"\n    }\n\n    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        args.column = Some(v.unwrap_switch());\n        Ok(())\n    }\n}"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:impl Flag for NoIgnoreGlobal#0",
+          "run": [
+            4912,
+            4940
+          ],
+          "source": "impl Flag for NoIgnoreGlobal {\n    fn is_switch(&self) -> bool {\n        true\n    }\n    fn name_long(&self) -> &'static str {\n        \"no-ignore-global\"\n    }\n    fn name_negated(&self) -> Option<&'static str> {\n        Some(\"ignore-global\")\n    }\n    fn doc_category(&self) -> Category {\n        Category::Filter\n    }\n    fn doc_short(&self) -> &'static str {\n        r\"Don't use global ignore files.\"\n    }\n    fn doc_long(&self) -> &'static str {\n        r#\"\nDon't respect filter rules from ignore files that come from \"global\" sources\nsuch as \\fBgit\\fP's \\fBcore.excludesFile\\fP configuration option (which\ndefaults to \\fB$HOME/.config/git/ignore\\fP).\n\"#\n    }\n\n    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        args.no_ignore_global = v.unwrap_switch();\n        Ok(())\n    }\n}"
+        }
+      ],
+      "param_texts": [
+        [
+          "Column",
+          "NoIgnoreGlobal"
+        ],
+        [
+          "column",
+          "no-ignore-global"
+        ],
+        [
+          "no-column",
+          "ignore-global"
+        ],
+        [
+          "Output",
+          "Filter"
+        ],
+        [
+          "Show column numbers.",
+          "Don't use global ignore files."
+        ],
+        [
+          "\"Show column numbers.\"",
+          "r\"Don't use global ignore files.\""
+        ],
+        [
+          "Show column numbers (1-based). This only shows the column numbers for the first\r\nmatch on each line. This does not try to account for Unicode. One byte is equal\r\nto one column. This implies \\flag{line-number}.\r\n.sp\r\nWhen \\flag{only-matching} is used, then the column numbers written correspond\r\nto the start of each match.\r\n",
+          "Don't respect filter rules from ignore files that come from \"global\" sources\r\nsuch as \\fBgit\\fP's \\fBcore.excludesFile\\fP configuration option (which\r\ndefaults to \\fB$HOME/.config/git/ignore\\fP).\r\n"
+        ],
+        [
+          "column",
+          "no_ignore_global"
+        ],
+        [
+          "Some(v.unwrap_switch())",
+          "v.unwrap_switch()"
+        ]
+      ]
+    },
+    {
+      "corpus": "codeeraser",
+      "family": "t3",
+      "fragment": false,
+      "id": "00da78204f7c6aae904c176bb1eb55a3ea8899575314f43d5d7288b3a84553c7",
+      "members": [
+        {
+          "at": "cli/src/score/mod.rs:(anonymous)/1#4",
+          "run": [
+            160,
+            160
+          ],
+          "source": "    let mut files: Vec<String> = fnodes.iter().map(|&(_, p)| p.to_string()).collect();"
+        },
+        {
+          "at": "cli/src/similar/bag.rs:(anonymous)/1#3",
+          "run": [
+            79,
+            79
+          ],
+          "source": "    let flat: Vec<Unit> = seated.iter().map(|(u, _)| u.clone()).collect();"
+        }
+      ],
+      "param_texts": [
+        [
+          "mut",
+          ""
+        ],
+        [
+          "files",
+          "flat"
+        ],
+        [
+          "String",
+          "Unit"
+        ],
+        [
+          "fnodes",
+          "seated"
+        ],
+        [
+          "&(_, p)",
+          "(u, _)"
+        ],
+        [
+          "p",
+          "u"
+        ],
+        [
+          "to_string",
+          "clone"
+        ]
+      ]
+    }
+  ],
+  "schema": "ce.eval-merge-sample/1.0.0"
+}

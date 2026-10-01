@@ -3,12 +3,9 @@
 //! the associative view under `--widen`, the document under
 //! `--format json`. Split from main_judge.rs at its own size gate.
 
-use crate::main_cmds::{fail, json, or_cwd};
-use crate::main_judge::JudgeArgs;
-use codeeraser::report::print_doc;
+use crate::main_prelude::*;
 use codeeraser::similar::face;
 use codeeraser::similar::query::Ask;
-use std::process::ExitCode;
 
 #[derive(clap::Args)]
 #[command(group(clap::ArgGroup::new("ask").required(true).args(["at", "text", "unit"])))]

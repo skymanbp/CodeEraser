@@ -6,12 +6,9 @@
 //! everywhere and never counts). Exit 2 = a core that could not judge,
 //! a malformed reply, an unknown `--kind`, an unreadable ce.toml.
 
-use crate::main_cmds::{fail, json, or_cwd};
-use crate::main_judge::JudgeArgs;
+use crate::main_prelude::*;
 use codeeraser::config::Config;
 use codeeraser::flow_report::{console, face};
-use codeeraser::report::print_doc;
-use std::process::ExitCode;
 
 #[derive(clap::Args)]
 pub struct FlowArgs {

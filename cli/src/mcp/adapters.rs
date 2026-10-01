@@ -81,15 +81,16 @@ pub(super) fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
 /// the caller reading it learns the state instead of an exception.
 fn plain_face(root: &Path, which: &str) -> Result<String> {
     let doc = match which {
-        "deadcode" => crate::faces::deadcode(root, &core())?,
-        "clone" => crate::faces::clone_t3(root, &core())?,
-        "docdup" => crate::faces::docdup(root, &core())?,
-        "erase" => crate::faces::erase(root, &core())?,
-        "erase_log" => crate::faces::erase_log(root)?,
-        "doctor" => crate::faces::doctor(root, &core())?,
-        other => anyhow::bail!("not a plain face: {other}"),
+        "deadcode" => crate::faces::deadcode(root, &core()),
+        "clone" => crate::faces::clone_t3(root, &core()),
+        "docdup" => crate::faces::docdup(root, &core()),
+        "erase" => crate::faces::erase(root, &core()),
+        "erase_log" => crate::faces::erase_log(root),
+        "doctor" => crate::faces::doctor(root, &core()),
+        "merge" => crate::faces::merge(root, &core()),
+        other => Err(anyhow::anyhow!("not a plain face: {other}")),
     };
-    Ok(doc.to_string())
+    Ok(doc?.to_string())
 }
 
 /// The adapters that differ by ONE string. The catalog needs a
@@ -112,6 +113,7 @@ plain!(
     erase => "erase",
     erase_log => "erase_log",
     doctor => "doctor",
+    merge_suggestions => "merge",
 );
 
 /// Not plain: `units` switches this row to the OTHER document its own

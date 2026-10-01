@@ -21,6 +21,7 @@ import qualified FlowProps
 import qualified GraphWireProps
 import qualified GraphProps
 import qualified JoinProps
+import qualified MergeProps
 import qualified QueryProps
 import qualified Reference
 import qualified ReferenceGraph
@@ -86,6 +87,7 @@ batteries =
   , goldenPairs "similar/golden.ndjson"
   , goldenPairs "query/golden.ndjson"
   , goldenPairs "flow/golden.ndjson"
+  , goldenPairs "merge/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -112,6 +114,7 @@ batteries =
   , SimilarProps.battery
   , QueryProps.battery
   , FlowProps.battery
+  , MergeProps.battery
   , VerdictProps.battery
   , VerdictWireProps.battery
   , VerdictFenceProps.battery
