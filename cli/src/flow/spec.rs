@@ -1,10 +1,9 @@
 //! The flow family's per-language tables (plan v2.31 step 4; design
 //! booklet docs/reference/analysis-track.md §5.1 and §5.3). This file is
-//! the CONTRACT — the struct, the table type and the dispatch — with the
-//! tables beside it, one file per language family as scan::spec keeps
-//! its own. A table is TOML text read once into a FlowSpec, a misspelt
-//! key refused by name: to the clone gate one table is one string, so
-//! ten tables of one shape cannot read as copies of one another.
+//! the CONTRACT — the struct and the dispatch. The tables are the
+//! core's since plan v2.32 step 2: each language's `[flow]` table in
+//! CE.Lang.<Language>.Flow, read off `tables/1` (crate::tables), a
+//! misspelt key refused by name when the package is read.
 //!
 //! What scan's LangSpec already answers is read from
 //! scan::spec::spec(lang), never copied: fn_kinds, param_list_kinds,
@@ -17,9 +16,7 @@ use super::rows::{
     Assign, Case, Catch, Decl, If, Kinds, Loop, Macro, Names, Ops, Pairs, Scope, Switch, Triples,
     Try, With, rows,
 };
-use super::{spec_c, spec_go, spec_java, spec_lua, spec_py, spec_r, spec_rs, spec_ts};
 use crate::scan::lang::Lang;
-use std::sync::OnceLock;
 
 rows! {
     /// One language's flow table (§5.3's rows, as its grammar spells them).
@@ -219,51 +216,11 @@ rows! {
     }
 }
 
-/// A table: TOML text in pieces (C and C++ share every piece but the
-/// noreturn names), read into its FlowSpec on first use.
-pub struct Table {
-    name: &'static str,
-    pieces: &'static [&'static str],
-    read: OnceLock<FlowSpec>,
-}
-
-impl Table {
-    pub const fn new(name: &'static str, pieces: &'static [&'static str]) -> Self {
-        Self {
-            name,
-            pieces,
-            read: OnceLock::new(),
-        }
-    }
-
-    /// The table, read once. The text is this crate's own, so a table
-    /// that does not read is a build defect the unit legs name — never
-    /// an input the caller could have avoided.
-    pub fn get(&self) -> &FlowSpec {
-        self.read.get_or_init(|| {
-            toml::from_str(&self.pieces.concat())
-                .unwrap_or_else(|e| panic!("flow table `{}` does not read: {e}", self.name))
-        })
-    }
-}
-
 /// The table of a language whose units the family lowers (§5.3): the
 /// judged languages less Markdown, Haskell and HTML. None for those
 /// three, the scan-only arm, Text and the sentinel.
 pub fn spec(lang: Lang) -> Option<&'static FlowSpec> {
-    let table = match lang {
-        Lang::Python => &spec_py::PYTHON,
-        Lang::TypeScript | Lang::Tsx => &spec_ts::TYPESCRIPT,
-        Lang::Rust => &spec_rs::RUST,
-        Lang::Go => &spec_go::GO,
-        Lang::C => &spec_c::C,
-        Lang::Cpp => &spec_c::CPP,
-        Lang::Java => &spec_java::JAVA,
-        Lang::Lua => &spec_lua::LUA,
-        Lang::R => &spec_r::R,
-        _ => return None,
-    };
-    Some(table.get())
+    crate::tables::get().flow.get(lang)?.as_ref()
 }
 
 #[cfg(test)]

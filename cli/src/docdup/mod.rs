@@ -85,7 +85,7 @@ pub fn doc_facts(text: &str, lang: Lang) -> DocFacts {
         for line in kept {
             shingle::line_words(&line.text, line.mask.as_deref(), &mut words);
         }
-        if words.len() < spec::MIN_DOC_TOKENS {
+        if words.len() < spec::table().min_doc_tokens {
             ledger.below_floor += 1;
             continue;
         }

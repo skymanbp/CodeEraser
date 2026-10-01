@@ -113,18 +113,13 @@ fn forwarded(argv: &[String], msvc: bool) -> Vec<&str> {
     out
 }
 
-/// Recognized GNU joined spellings, longest conflicting spelling first,
-/// as one space-separated literal like SKIP below: a slice of a dozen
-/// `&str` rows is the clone gate's most-rhyming shape (it read these
-/// two against the tombstone role's stems and the walk's built-in
-/// excludes).
-pub(crate) const GNU: &str = "-include-pch -iwithprefixbefore -isystem-after -iwithprefix -iframework \
-                   -idirafter -isystem -isysroot -iquote -iprefix --include= --include \
-                   -include --imacros -imacros --sysroot= -I -F";
-
-/// GNU separate operands that cannot themselves open include options.
-pub(crate) const SKIP: &str = "-o -MF -MT -MQ -x -arch -target -mllvm -D -U -L -l -z -u -e -T -B -b -V \
-                    --sysroot";
+/// Recognized GNU joined spellings (longest conflicting spelling first)
+/// and the GNU separate operands that cannot themselves open include
+/// options: the core's since plan v2.32 step 2 (CE.Lang.Common.Graph
+/// `compdb`, read off `tables/1`).
+fn flags() -> &'static crate::tables::Compdb {
+    &crate::tables::get().compdb
+}
 
 /// One option spelling, leaving unknown arguments inert.
 fn spelling(arg: &str, msvc: bool) -> Option<&str> {
@@ -133,10 +128,14 @@ fn spelling(arg: &str, msvc: bool) -> Option<&str> {
             .into_iter()
             .find(|flag| arg.starts_with(flag));
     }
-    if arg == "-I-" || SKIP.split(' ').any(|skip| skip == arg) {
+    if arg == "-I-" || flags().skip.contains(&arg) {
         return Some(arg);
     }
-    GNU.split(' ').find(|flag| arg.starts_with(flag))
+    flags()
+        .gnu
+        .iter()
+        .copied()
+        .find(|flag| arg.starts_with(flag))
 }
 
 /// Operand pairs in order; a recognized option without an operand ends the scan.

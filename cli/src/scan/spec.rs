@@ -7,18 +7,16 @@
 //! rust-code-analysis (Rust), gocyclo/gocognit (Go). Known divergences
 //! are recorded in contracts/ during the M1 cross-check, not hidden.
 //!
-//! This file is the CONTRACT — the struct, the dispatch and the empty
-//! table. The tables live beside it, one file per language family
-//! (spec_launch.rs holds the M1 launch set, spec_hs.rs, spec_c.rs,
-//! spec_java.rs, spec_lua.rs and spec_r.rs the later ones): a table is
-//! data a reader compares against its grammar, and the contract read
-//! past the 300-line line once plan v2.30 step 3 added the mechanisms
-//! Java needs (RM16).
+//! This file is the CONTRACT — the struct and the dispatch. The tables
+//! are the core's since plan v2.32 step 2: each judged language's
+//! `[scan]` table in CE.Lang.<Language>, read off `tables/1`
+//! (crate::tables), where a reader compares it against its grammar.
 
 use super::lang::Lang;
+use crate::tables::leak::leaked;
 
 /// Function-name convention for the readability naming check (§4.1).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum NameStyle {
     /// snake_case — PEP 8 (Python), RFC 430 (Rust): no uppercase.
@@ -34,6 +32,7 @@ pub enum NameStyle {
 /// because the table repeats it for nearly every entry.
 pub type Kinds = &'static [&'static str];
 
+leaked! {
 /// How overload resolution (LangSpec::overloads) counts. A unit's
 /// parameter list bounds the arguments a call may pass: every named
 /// parameter child counts toward both bounds except an `optional` one
@@ -47,7 +46,6 @@ pub type Kinds = &'static [&'static str];
 /// all — a Java constructor is reached by `new` and `this(…)`, neither
 /// of them a call kind, and a method named like its class must not
 /// resolve to it.
-#[derive(serde::Serialize)]
 pub struct Overloads {
     pub optional: Kinds,
     pub variadic: Kinds,
@@ -55,8 +53,9 @@ pub struct Overloads {
     pub spread: Kinds,
     pub unreachable: Kinds,
 }
+}
 
-#[derive(serde::Serialize)]
+leaked! {
 pub struct LangSpec {
     /// Node kinds counted as standalone function units. Anything not
     /// listed here (Go func_literal, Python lambda) is absorbed into
@@ -194,63 +193,15 @@ pub struct LangSpec {
     /// grammar has no preprocessor.
     pub opaque_fields: &'static [(&'static str, &'static str)],
 }
-
-pub fn spec(lang: Lang) -> &'static LangSpec {
-    match lang {
-        Lang::Python => &super::spec_launch::PYTHON,
-        Lang::TypeScript | Lang::Tsx => &super::spec_launch::TYPESCRIPT,
-        Lang::Rust => &super::spec_launch::RUST,
-        Lang::Go => &super::spec_launch::GO,
-        Lang::Markdown => &MARKDOWN,
-        Lang::Haskell => &super::spec_hs::HASKELL,
-        Lang::C => &super::spec_c::C,
-        Lang::Cpp => &super::spec_c::CPP,
-        Lang::Java => &super::spec_java::JAVA,
-        Lang::Lua => &super::spec_lua::LUA,
-        Lang::R => &super::spec_r::R,
-        Lang::Html => &HTML,
-        // The sentinel is never walked; the scan-only arm (plan
-        // v2.5) is size-only like Markdown — grammar() is None for
-        // all of them, so measure_file never reaches these tables:
-        // the empty MARKDOWN spec is the honest degenerate.
-        _ => &MARKDOWN,
-    }
 }
 
-const MARKDOWN: LangSpec = LangSpec {
-    fn_kinds: &[],
-    fn_required_fields: &[],
-    param_list_kinds: &[],
-    cc_kinds: &[],
-    cc_operators: &[],
-    chain_kinds: &[],
-    coc_nesting_kinds: &[],
-    if_kinds: &[],
-    coc_flat_kinds: &[],
-    coc_nest_only_kinds: &[],
-    coc_operators: &[],
-    coc_jump_kinds: &[],
-    label_kinds: &[],
-    comment_kinds: &[],
-    name_style: NameStyle::Any,
-    literal_delims: &[],
-    call_kinds: &[],
-    call_fields: ("function", None),
-    call_name_kinds: &[],
-    call_member_kinds: &[],
-    call_self_words: &[],
-    call_member_scopes: &[],
-    owner_kinds: &[],
-    overloads: None,
-    call_import_kinds: &[],
-    opaque_fields: &[],
-};
-
-/// HTML (plan v2.30 step 5): a document language like Markdown — no
-/// functions, no metrics — whose one grammar fact a spec reader wants
-/// is its comment node kind (booklet §4; the second-interpreter
-/// reader's comment test). Everything else is Markdown's empty table.
-static HTML: LangSpec = LangSpec {
-    comment_kinds: &["comment"],
-    ..MARKDOWN
-};
+/// A language's scan table. A language the package does not judge —
+/// the sentinel, never walked, and the scan-only arm (plan v2.5),
+/// size-only like Markdown, grammar-less so measure_file never reaches
+/// this — reads Markdown's empty table, the honest degenerate.
+pub fn spec(lang: Lang) -> &'static LangSpec {
+    let scan = &crate::tables::get().scan;
+    scan.get(lang)
+        .or_else(|| scan.get(Lang::Markdown))
+        .expect("the package judges Markdown")
+}

@@ -34,12 +34,14 @@ jaccardDen = 100
 
 -- | The estimator's shingle width, ECHOED not computed: sets arrive
 -- pre-shingled, so this module never windows anything — the constant
--- is the protocol's record of the alphabet geometry, and the Rust
--- mirror (docdup/spec.rs DOC_SHINGLE, backed by the measured k-window
--- in the frozen docdup-segments method line) is pinned to it at every
--- reply parse (D13/F29). Two sides shingling at different widths
--- would compare incommensurable alphabets and no gate downstream
--- could tell.
+-- is the protocol's record of the alphabet geometry. Since plan
+-- v2.32 step 2 the measuring side shingles at the width it reads from
+-- the definition package (`docdup.doc_shingle`, this number), and the
+-- reply echo still pins the two equal at every parse (D13/F29): two
+-- sides shingling at different widths would compare incommensurable
+-- alphabets and no gate downstream could tell. Decided, not derived
+-- (instruments §9.6): the measured k-window and its counterfactual
+-- live in the frozen docdup-segments doc's method line.
 shingleK :: Integer
 shingleK = 5
 
@@ -65,9 +67,10 @@ docPairCap = 4096
 -- Lee et al. 2107.06499, verbatim lower bound 50 tokens). The
 -- EXECUTION stays in Rust before persistence (sub-floor segments
 -- have no row and never cross the wire — shipping them was priced
--- and declined); this constant is the AUTHORITY the echo pins the
--- Rust mirror to, so the recall floor is core-visible, ablatable
--- and drift-detectable.
+-- and declined); this constant is the AUTHORITY — the measuring
+-- side reads it from the definition package (`docdup.min_doc_tokens`)
+-- and the echo pins the two equal, so the recall floor is
+-- core-visible, ablatable and drift-detectable.
 minDocTokens :: Integer
 minDocTokens = 50
 
@@ -75,33 +78,39 @@ minDocTokens = 50
 -- defect sweep): an overlong line is masked as data/generated
 -- before shingling (md_para is exempt — prose legitimately writes
 -- one long line per paragraph). Execution stays in Rust at
--- segmentation; this constant is the authority the echo pins the
--- mirror to. The SKELETON_PREFIXES string table stays unpinned by
--- decision: the echo grammar is numeric, and the table's drift
--- guard is DOCDUP_REV (a semantic change there re-freezes the
--- evaluation set by protocol).
+-- segmentation; this constant is the authority (the package's
+-- `docdup.doc_line_cap`, echo-pinned). Decided, not derived
+-- (2026-08-14 attainment-line-B amendment, ccm #842): hard-wrapped
+-- comment prose runs under ~120 chars by convention, while the
+-- audited false-positive lines — regex literals and inline snapshots
+-- — ran 300+/600+. The skeleton-prefix table (CE.Lang.Common.Prose
+-- `skeleton_prefixes`) stays unpinned by decision: the echo grammar
+-- is numeric, and the table's drift guard is DOCDUP_REV (a semantic
+-- change there re-freezes the evaluation set by protocol).
 docLineCap :: Integer
 docLineCap = 200
 
--- | Verbatim hard-hit floor in words. Same provenance as the Rust
--- mirror it now owns (spec.rs VERBATIM_FLOOR: plan :68, Lee et al.
--- 2107.06499, verbatim lower bound 50 tokens). ADR-008 P1 moves the
--- floor's VERDICT home here: the run lengths already ride each
--- request row ([i,j,run] — F26), the texts never cross the wire
--- (§5.9.2), and the knobs echo pins the Rust mirror to this number.
+-- | Verbatim hard-hit floor in words (plan :68, Lee et al.
+-- 2107.06499, verbatim lower bound 50 tokens): a common word run this
+-- long is a duplicate regardless of what Jaccard says about the rest
+-- of the segment. ADR-008 P1 moved the floor's VERDICT home here: the
+-- run lengths already ride each request row ([i,j,run] — F26), the
+-- texts never cross the wire (§5.9.2), and the knobs echo pins the
+-- measuring side's copy (`docdup.verbatim_floor`) to this number.
 verbatimFloor :: Integer
 verbatimFloor = 50
 
 -- | License-header window in lines (batch-7 slice 9): only a
 -- file's FIRST comment block starting at or above this line can
--- be a license header, and only then do the LICENSE_MARKERS
+-- be a license header, and only then do the license markers
 -- excuse it from the corpus. Execution stays in Rust at
 -- segmentation (exemption is decided before persistence — an
 -- exempt segment has no row and never crosses the wire, the
 -- minDocTokens stance); this constant is the AUTHORITY the echo
--- pins the Rust mirror to. The marker STRING tables
--- (LICENSE_MARKERS, the ce:allow(docdup) marker) stay unpinned
--- by the same decision as SKELETON_PREFIXES: the echo grammar is
+-- pins the package's `docdup.license_head_lines` to. The marker
+-- STRING tables (CE.Lang.Common.Prose `license_markers` and
+-- `allow_marker`) stay unpinned by the same decision as
+-- `skeleton_prefixes`: the echo grammar is
 -- numeric and their drift guard is DOCDUP_REV. The bare-marker
 -- rule — an allow WITHOUT a ` -- <why>` tail exempts NOTHING
 -- and is ledgered as a violation (plan :79-80) — is part of

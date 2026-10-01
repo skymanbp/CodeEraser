@@ -18,9 +18,6 @@ use std::collections::BTreeSet;
 #[path = "rs_bind.rs"]
 mod bind;
 
-/// Crates the toolchain provides without any declaration.
-pub(crate) const BUILTIN: [&str; 5] = ["std", "core", "alloc", "proc_macro", "test"];
-
 pub(super) fn use_rungs(
     site: &Site,
     pkg: Option<&cargo::Package>,
@@ -268,7 +265,8 @@ fn extern_rung(
     roots_set: &BTreeSet<String>,
     scope: &Scope,
 ) -> (Outcome, usize) {
-    if BUILTIN.contains(&name) {
+    // crates the toolchain provides without any declaration
+    if crate::tables::get().ladder.rs.builtin.contains(&name) {
         return (Outcome::External { rung: 4 }, 0);
     }
     let members = crate::graph::ladder::members(scope, "Cargo.toml", cargo::package, |p| {

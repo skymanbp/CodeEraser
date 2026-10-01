@@ -587,4 +587,19 @@ entry_globs = [
 # and cocBumped readers (82 tokens of the same from_value-then-lift
 # body) are one `lifted`. Row set diffed against the HEAD (c60e6a97)
 # worktree: that row gone, none new. Measured on the formatted tree.
-budget = 50
+# 50 -> 42 (v2.32 step 2, the definition tables read off the core):
+# eight rows left with the text they were made of, none bought. The
+# scan tables' pieces rhymed with one another across spec_c.rs,
+# spec_launch.rs, spec_lua.rs and spec_r.rs (seven rows) and
+# docdup/spec.rs's constants with graph/wire.rs's (one); the text is
+# the core's now (CE.Lang.*), so neither run is there to rhyme. The
+# sixteen rows the step first landed went before the count was read:
+# the nine per-language lowering mounts are one mount whose file names
+# its children (unit/flow/lang.rs), the code-order list of the
+# languages names the variants bare, the PATH lookup the core fetch
+# and `ce setup` both spelled is proc::on_path, and the package's
+# table records are one compact `leaked!` list read as one Tables
+# record, so the field-by-field leak is gone. Row set diffed against
+# the step-1 (e6731bb7) run: eight rows gone, none new. Measured on
+# the formatted tree.
+budget = 42

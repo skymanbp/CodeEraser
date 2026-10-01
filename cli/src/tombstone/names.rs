@@ -5,7 +5,7 @@
 //! (deleting a comment that said `downtime` must not let `without
 //! downtime` in a new heading fire), and never an inline code span,
 //! which only mentions. A compound spells every window of up to
-//! JOIN_MAX of its words: `braise_dongpo_pork` names `dongpo_pork`
+//! `join_max` of its words: `braise_dongpo_pork` names `dongpo_pork`
 //! too, which is what `(no Dongpo Pork)` binds.
 //!
 //! ERASED means: a name of some before side that SURVIVES on no after
@@ -23,7 +23,7 @@
 use super::frames::{Word, label_candidates, windows, words};
 use super::marked::{Marked, marked};
 use super::surfaces::Added;
-use super::vocab::{JOIN_MAX, KEYWORDS, MIN_ASCII_NAME, MIN_WIDE_NAME, NEGATIONS, has, vocabulary};
+use super::vocab::{has, v, vocabulary};
 use super::{PairText, Policy};
 use crate::dedup::tokens::fnv1a;
 use crate::mention::token::{fold, runs};
@@ -64,7 +64,7 @@ fn spellings(text: &str) -> Vec<String> {
 fn long_runs(text: &str) -> impl Iterator<Item = String> + '_ {
     runs(text)
         .map(canon)
-        .filter(|c| c.matches('_').count() >= JOIN_MAX)
+        .filter(|c| c.matches('_').count() >= v().join_max)
 }
 
 /// Every known name a text spells, one spelling per key — the count
@@ -88,13 +88,17 @@ pub fn spelled_all(text: &str, known: impl Fn(u64) -> bool) -> Vec<String> {
 /// reserved words alone (`user_data` is a name; `data` is not).
 fn admitted(s: &str, policy: &Policy) -> bool {
     let wide = !s.is_ascii();
-    let floor = if wide { MIN_WIDE_NAME } else { MIN_ASCII_NAME };
+    let floor = if wide {
+        v().min_wide_name
+    } else {
+        v().min_ascii_name
+    };
     let ws: Vec<&str> = s.split('_').collect();
     s.chars().any(char::is_alphabetic)
         && s.chars().filter(|c| *c != '_').count() >= floor
         && !policy.term(s)
         && ws.iter().all(|w| !vocabulary(w) && !policy.term(w))
-        && ws.iter().any(|w| !has(KEYWORDS, w))
+        && ws.iter().any(|w| !has(v().keywords, w))
 }
 
 /// The spellings of one marked text outside the slots an absence
@@ -128,7 +132,7 @@ pub fn names_of(text: &str, lang: Lang, policy: &Policy) -> Vec<Name> {
     let positions: Vec<Marked> = marked(text, lang);
     positions
         .iter()
-        .filter(|m| m.structural && !has(NEGATIONS, &fold(&m.text)))
+        .filter(|m| m.structural && !has(v().negations, &fold(&m.text)))
         .flat_map(|m| free_spellings(&m.text))
         .filter(|s| admitted(s, policy))
         .filter_map(|s| {

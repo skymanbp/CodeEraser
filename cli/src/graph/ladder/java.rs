@@ -26,7 +26,8 @@
 //!      directory first), then in the packages it star-imports; a
 //!      qualified `A.B` is whatever `A` names, else a fully qualified
 //!      name — its type annotations dropped (`a.b.@Tag C` names a.b.C);
-//!   R4 External: a name the JDK answers (java_jdk.rs) — an import or
+//!   R4 External: a name the JDK answers (the core's
+//!      CE.Lang.Common.Ladder `java`, read off `tables/1`) — an import or
 //!      qualified name under a package it exports, a `java.lang` type,
 //!      or a simple name no rung holds in a file whose out-of-scope
 //!      star imports are all JDK packages.
@@ -44,7 +45,6 @@
 //! The settling rules and the JDK readings are the child java_pick.rs.
 
 use super::java_header::{Header, Import};
-use super::java_jdk::LANG;
 use super::java_sets::{own_root_dir, visible};
 use super::{Outcome, Reason, Rung, Scope, Site};
 use crate::graph::roots;
@@ -214,7 +214,7 @@ impl At<'_> {
         if let Some(found) = self.class_of(segs, 3, 3) {
             return found;
         }
-        if LANG.split_whitespace().any(|t| t == segs[0]) {
+        if crate::tables::get().ladder.java.lang.contains(&segs[0]) {
             return Outcome::External { rung: 4 };
         }
         if segs.len() > 1 {

@@ -132,6 +132,14 @@ pub fn gated_envelope<T: serde::de::DeserializeOwned>(
     if !crate::root::is_anchored(&root) {
         return None;
     }
+    // no package (no core, a pre-7.7.0 core) = nothing to measure
+    // with: the hook stays inert and says why on stderr — exit 2 here
+    // would read as a PreToolUse deny
+    crate::tables::anchor(&root);
+    if let Err(why) = crate::tables::load() {
+        eprintln!("ce: {why}");
+        return None;
+    }
     Some((env, root))
 }
 

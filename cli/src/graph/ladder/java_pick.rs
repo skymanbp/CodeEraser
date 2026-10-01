@@ -2,11 +2,10 @@
 //! the settling rules every Java rung shares — one hit resolves, the
 //! declared `[graph.search_roots] java` directories pick among several,
 //! a file's own name draws no edge — and the JDK tables' readings
-//! (java_jdk.rs).
+//! (the core's CE.Lang.Common.Ladder `java`, read off `tables/1`).
 
 use super::{Index, Outcome, Reason, Rung, Scope};
 use crate::graph::ladder::java_header::Header;
-use crate::graph::ladder::java_jdk::PACKAGES;
 use std::collections::BTreeSet;
 
 /// A name the referencing file declares itself reaches no other file:
@@ -93,5 +92,5 @@ pub(super) fn jdk(segs: &[&str]) -> Outcome {
 }
 
 fn exported(package: &str) -> bool {
-    PACKAGES.split_whitespace().any(|p| p == package)
+    crate::tables::get().ladder.java.packages.contains(&package)
 }

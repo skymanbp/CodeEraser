@@ -11,7 +11,7 @@
 > 第十七族 `tables/1`——不是判决族：不读仓库事实、不判任何东西，答的是核判决所用的全部语言与产品定义。请求 `tables.request`
 > 只有信封三键（`type` / `id` / `proto`），多出任何键按名拒（code `contract`，「tables: unexpected key <k>」，只点名第一个）；
 > 应答 `tables.result`：信封 + `digest`（包的规范字节——aeson 有序键、无空白——的 fnv1a64，JSON 整数）+ 十六个顶层键：
-> `languages`（`rows` 每码一行 `{code,name,exts,scan_only,prose_only,judged,document}`、码 0..21；`machine_txt`；
+> `languages`（`rows` 每码一行 `{code,name,exts,scan_only,prose_only,judged,document,flow_judged}`、码 0..21；`machine_txt`；
 > `mention_whole_run_exts`）、按语言报告名分的 `scan` / `flow` / `slot` / `sites`（无表的语言 `flow` / `slot` 为 `null`）、
 > `calls`（`calls` / `protected` 按语言分 + `r_formals`）、`fourclass`、`ladder`（`hs.boot` / `java.packages`·`lang` /
 > `ts.builtins`·`prefix_only` / `go.std` / `py.stdlib` / `lua.stdlib` / `rs.builtin`）、`walk`（`secret_globs` / `builtin_excludes`）、
@@ -22,8 +22,15 @@
 > `[头, [词…]]`。hello 应答加性 `tablesDigest`（同一个数），能力表加 `tables/1`。整数过线（§5.9.2，保护的是仓库数据）不受影响：
 > 包里每个值都是产品常量，从核流向测量侧。既有十六族字节零变化（既有 golden 只动 proto 字面与 hello 能力表 / `tablesDigest`）；
 > 新增 `contracts/fixtures/tables/golden.ndjson` 两对（全包 / 多一个键被拒）；电池 `LangProps`（码 0..21、扩展名唯一、判决掩码
-> 0x17847F、nest-only 种类不是单元种类、slot 种类集两两不交、flow 名表、C / C++ 只在 noreturn 上分、`digest` 是数据的纯函数、
-> 族答全包且与 hello 同数）。本版测量侧不读包（子仓 `it/tables_equivalence.rs` 只证核的转录与 Rust 原文逐键相等），改读在步 2。
+> 0x17847F、flow 判决掩码 1540127 且蕴含判决、nest-only 种类不是单元种类、slot 种类集两两不交、flow 名表、C / C++ 只在 noreturn 上分、`digest` 是数据的纯函数、
+> 族答全包且与 hello 同数）。步 1 时测量侧还不读包（子仓 `it/tables_equivalence.rs` 证核的转录与 Rust 原文逐键相等，步 2 随原文一起退役）。
+> **步 2：测量侧改读**（同一未发布 minor，2026-10-01；设计册 §4.5）：既有十六族的请求、应答与 golden 一个字节不动；`tables.result` 的语言行加性一列 `flow_judged`——flow 家族的判决语言集（盲评精度考题过门的十门：python、typescript、tsx、rust、go、c、cpp、java、lua、r，掩码 1540127，蕴含 `judged`），原是 `cli/src/flow/mod.rs` 的 `JUDGED`，tables golden 与 hello-ok 的 `tablesDigest` 随之重答。`ce` 的每张定义表
+> 改从 `tables.result` 读（`cli/src/tables/`），Rust 侧的表文本删除；包按「进程内存 → 缓存文件 `<根>/.ce/tables-<ce 版本>-<proto>.json`
+> → 核」三级取，缓存以答包那份核二进制的 `{path, len, mtime_ns}` 加 `ce` / `proto` 为身份、以 Rust 自己对包字节算的 fnv1a64 验完整，
+> 任一不符即重取、永不因旧缓存拒绝。三条具名拒绝（退 2）：无核（「core unavailable: … to answer tables/1」）、核无 `tables/1` 能力
+> （「pre-7.7.0 core …: no tables/1」）、包缺键（「tables/1 from core <版本> (…) lacks a table: missing field `<键>`」）；此后每条核链的
+> hello 若点名的 `tablesDigest` 不等于本次读到的包的 `digest`，按名拒（「core … names tables digest <n>, but this run read <m> from <缓存>」）。
+> 请求里的 `judgedMask` 照发，值改由包的语言行算出。
 > **7.6.0**（架构分析族，加性 minor，计划 v2.31 步 8 / 9，2026-09-30；ADR-008 细则第七期，设计册
 > `docs/reference/analysis-track.md` §7）：第十六判决族 `arch/1`——请求 `arch.request`：`files=[[F,D,lines]]`
 > （F = 行号自 0 连续，D = 所在目录，`lines` ≥ 0）+ `dirs=[[D,parent]]`（D = 行号；第 0 行是根、父 −1，其余父是更早的行，

@@ -129,7 +129,7 @@ names its language's helper lines — the head and closing lines a merged functi
 fragment: 1 in Python and Haskell, 2 elsewhere ([slot.rs:72](../../../cli/src/merge/slot.rs#L72)). A table is
 read in pieces: TSX reads TypeScript's shared piece and its JSX kinds while TypeScript adds the one
 kind only its grammar has, and C and C++ share a piece the same way — so a shared piece never names
-a kind the other grammar lacks ([slot.rs:85](../../../cli/src/merge/slot.rs#L85)).
+a kind the other grammar lacks ([slot.rs:24-28](../../../cli/src/merge/slot.rs#L24)).
 
 Haskell has no flow table, and it is this repository's core language, so its slot table carries
 the two lists a flow table would give: `stmt_kinds`, its statement forms (the do block's `bind`,
@@ -137,7 +137,7 @@ the two lists a flow table would give: `stmt_kinds`, its statement forms (the do
 instances, imports and the rest), and `container_kinds`, the kinds whose children stand in a
 statement position (`do`, `declarations`, `local_binds`, the class and instance bodies). A
 language with a flow table never fills either list — the unit leg holds both ways
-([slot_hs.rs:1-14](../../../cli/src/merge/slot_hs.rs#L1), [slot.rs:166](../../../cli/src/merge/slot.rs#L166)).
+([Haskell.hs:126-141](../../../core/app/CE/Lang/Haskell.hs#L126), [slot.rs:166](../../../cli/src/merge/slot.rs#L166)).
 The Haskell grammar spells an expression, a pattern and a type with the same kinds (`apply`,
 `variable`, `tuple`…), so its type class holds only the kinds that are types alone — a type
 constructor's `name`, the arrow, `forall`, `context` and the like — and a shared kind reads as an

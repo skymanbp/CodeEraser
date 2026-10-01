@@ -4,10 +4,7 @@
 //! prose. Nothing here knows what was erased — the hub (mod.rs) joins
 //! these readings with names.rs.
 
-use super::vocab::{
-    CLOSE, EN_PREFIX, EN_SUFFIX, JOIN_MAX, MARKS_EN, MARKS_ZH, OPEN, ZH_PREFIX, ZH_SUFFIX, entries,
-    has,
-};
+use super::vocab::{entries, has, v};
 
 /// One token of a surface: a bracket, an ASCII word (lower-cased; cut
 /// at `_` `-` `$`, at any non-alphanumeric, and at a camel rise), or
@@ -95,9 +92,9 @@ pub fn words(s: &str) -> Vec<Word> {
             cut.wide(c, &mut out);
         } else {
             cut.flush(&mut out);
-            if OPEN.contains(&c) {
+            if v().open.contains(&c) {
                 out.push(Word::Open);
-            } else if CLOSE.contains(&c) {
+            } else if v().close.contains(&c) {
                 out.push(Word::Close);
             }
         }
@@ -125,11 +122,11 @@ fn span(w: &[Word], at: usize, len: usize) -> Option<Span> {
     })
 }
 
-/// Every window of 1..=JOIN_MAX adjacent words; a bracket or the end
+/// Every window of 1..=`join_max` adjacent words; a bracket or the end
 /// cuts a window short.
 pub fn windows(w: &[Word]) -> Vec<Span> {
     (0..w.len())
-        .flat_map(|at| (1..=JOIN_MAX).filter_map(move |len| span(w, at, len)))
+        .flat_map(|at| (1..=v().join_max).filter_map(move |len| span(w, at, len)))
         .collect()
 }
 
@@ -143,7 +140,7 @@ pub struct Candidate {
 
 /// A word that belongs to a frame, never to a name.
 pub fn frame_word(w: &str) -> bool {
-    has(EN_PREFIX, w) || has(EN_SUFFIX, w) || has(ZH_PREFIX, w) || has(ZH_SUFFIX, w)
+    has(v().en_prefix, w) || has(v().en_suffix, w) || has(v().zh_prefix, w) || has(v().zh_suffix, w)
 }
 
 /// Where the X slot of a prefix frame at `j` starts: the next word,
@@ -152,8 +149,8 @@ pub fn frame_word(w: &str) -> bool {
 /// `无cache`): inside one run (`无东坡肉`) it is wide_frames' job.
 fn slot_after(w: &[Word], j: usize) -> Option<usize> {
     let opens = match &w[j] {
-        Word::Ascii(a) => has(EN_PREFIX, a),
-        Word::Wide(r) => has(ZH_PREFIX, r),
+        Word::Ascii(a) => has(v().en_prefix, a),
+        Word::Wide(r) => has(v().zh_prefix, r),
         _ => false,
     };
     if !opens {
@@ -168,8 +165,8 @@ fn slot_after(w: &[Word], j: usize) -> Option<usize> {
 /// of `无 cache`); inside one run (`东坡肉已移除`) it is wide_frames' job.
 fn closes(w: &Word) -> bool {
     match w {
-        Word::Ascii(a) => has(EN_SUFFIX, a),
-        Word::Wide(r) => has(super::vocab::ZH_SUFFIX, r),
+        Word::Ascii(a) => has(v().en_suffix, a),
+        Word::Wide(r) => has(v().zh_suffix, r),
         _ => false,
     }
 }
@@ -177,7 +174,7 @@ fn closes(w: &Word) -> bool {
 /// Every name a label's absence frames bind: `(no Dongpo Pork)`
 /// yields `dongpo` and `dongpo_pork` (bracketed), `cook_without_dongpo`
 /// yields `dongpo` (bare), `番茄炒蛋（无东坡肉）` yields `东坡肉`
-/// (bracketed). A prefix binds the 1..=JOIN_MAX words after it (`no
+/// (bracketed). A prefix binds the 1..=`join_max` words after it (`no
 /// more` counts as one prefix), a suffix the words before it, and a
 /// Chinese prefix or suffix form binds the rest of its own run. The
 /// candidates are spellings; the hub keys them (names::key) and asks
@@ -188,10 +185,11 @@ pub fn label_candidates(w: &[Word]) -> Vec<Candidate> {
         let bracketed = inside_brackets(w, j);
         let mut push = |s: Option<Span>| out.extend(s.map(|span| Candidate { span, bracketed }));
         if let Some(from) = slot_after(w, j) {
-            (1..=JOIN_MAX).for_each(|len| push(span(w, from, len)));
+            (1..=v().join_max).for_each(|len| push(span(w, from, len)));
         }
         if closes(&w[j]) {
-            (1..=JOIN_MAX).for_each(|len| push(j.checked_sub(len).and_then(|at| span(w, at, len))));
+            (1..=v().join_max)
+                .for_each(|len| push(j.checked_sub(len).and_then(|at| span(w, at, len))));
         }
         if let Word::Wide(r) = &w[j] {
             let own = |text| {
@@ -219,8 +217,8 @@ fn inside_brackets(w: &[Word], i: usize) -> bool {
 /// A wide run as a frame: a Chinese prefix form opens it or a suffix
 /// form closes it, and the rest of the run is the name.
 fn wide_frames(r: &str) -> Vec<String> {
-    let heads = entries(ZH_PREFIX).filter_map(|p| r.strip_prefix(p));
-    let tails = entries(ZH_SUFFIX).filter_map(|s| r.strip_suffix(s));
+    let heads = entries(v().zh_prefix).filter_map(|p| r.strip_prefix(p));
+    let tails = entries(v().zh_suffix).filter_map(|s| r.strip_suffix(s));
     heads
         .chain(tails)
         .filter(|x| !x.is_empty())
@@ -261,8 +259,8 @@ pub fn sentences(text: &str) -> Vec<&str> {
 /// both count: the number is the floor's input, not a tally.
 pub fn marks(text: &str) -> usize {
     let lower = text.to_lowercase();
-    let en: usize = entries(MARKS_EN).map(|m| phrase_count(&lower, m)).sum();
-    let zh: usize = entries(MARKS_ZH).map(|m| text.matches(m).count()).sum();
+    let en: usize = entries(v().marks_en).map(|m| phrase_count(&lower, m)).sum();
+    let zh: usize = entries(v().marks_zh).map(|m| text.matches(m).count()).sum();
     en + zh
 }
 

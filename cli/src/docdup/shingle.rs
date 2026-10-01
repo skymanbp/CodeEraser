@@ -7,7 +7,7 @@
 //! comment / inline code spans inside md lines) never contribute —
 //! the F3 contract that the judge sees nothing the detector masks.
 
-use super::spec::DOC_SHINGLE;
+use super::spec::table;
 use crate::dedup::tokens::fnv1a;
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::is_combining_mark;
@@ -46,11 +46,11 @@ fn push_word(buf: &mut String, out: &mut Vec<u64>) {
     buf.clear();
 }
 
-/// Sorted deduplicated DOC_SHINGLE-gram set over a word sequence —
+/// Sorted deduplicated `doc_shingle`-gram set over a word sequence —
 /// the Jaccard alphabet. Sequences shorter than the width have no
-/// shingles (admission's MIN_DOC_TOKENS floor sits far above it).
+/// shingles (admission's `min_doc_tokens` floor sits far above it).
 pub fn shingle_set(words: &[u64]) -> Vec<u64> {
-    shingle_set_k(words, DOC_SHINGLE)
+    shingle_set_k(words, table().doc_shingle)
 }
 
 /// The width-parameterized throat. It stays `pub` for the RETIRED
@@ -65,9 +65,9 @@ pub fn shingle_set_k(words: &[u64], k: usize) -> Vec<u64> {
 
 /// The UNSORTED shingle sequence — verbatim runs need order (design
 /// §5.3: a common contiguous shingle run of length R spans
-/// R + DOC_SHINGLE − 1 words).
+/// R + doc_shingle − 1 words).
 pub fn shingle_seq(words: &[u64]) -> Vec<u64> {
-    crate::dedup::winnow::kgram_hashes(words, DOC_SHINGLE)
+    crate::dedup::winnow::kgram_hashes(words, table().doc_shingle)
 }
 
 #[cfg(test)]

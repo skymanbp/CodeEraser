@@ -1,112 +1,51 @@
 //! DocSpec and the docdup constants (design vol.2 §5, instruments
-//! §9.6): every number written before any corpus number is seen.
-//! Marker tables are language-independent; the per-language surface
-//! is the docstring host list.
+//! §9.6): every number written before any corpus number is seen. Since
+//! plan v2.32 step 2 the numbers and the marker tables are the core's
+//! (CE.Lang.Common.Prose `docdup`, read off `tables/1`, crate::tables): the
+//! admission floor and verbatim floor (Lee et al. 2107.06499, 50
+//! words), the five-word shingle, the 200-char prose line cap, the
+//! five-line license window, the license markers, the skeleton line
+//! prefixes and the inline allow marker. The numbers are the very
+//! values CE.Docdup.Cost judges by, so the docdup reply's knob echo
+//! still pins the two sides equal on every judged run. Marker tables
+//! are language-independent; the per-language surface is the docstring
+//! host list.
 
 use crate::scan::lang::Lang;
+use crate::tables::Docdup;
+use crate::tables::leak::leaked;
 
-/// Admission floor in words. Provenance: plan :68 (Lee et al.
-/// 2107.06499, verbatim lower bound 50 tokens). The declared MIRROR
-/// of CE.Docdup.Cost.minDocTokens since batch-7 slice 10: the
-/// authority is the core's, this copy gates segments before
-/// persistence, and the docdup reply's knob echo pins the two equal
-/// on every judged run.
-pub const MIN_DOC_TOKENS: usize = 50;
-
-/// License-header window: only a file's FIRST comment block starting
-/// at or above this line can be a license header. The declared
-/// MIRROR of CE.Docdup.Cost.licHeadLines since batch-7 slice 9: the
-/// authority is the core's, this copy decides exemption before
-/// persistence, and the docdup reply's knob echo pins the two equal
-/// on every judged run.
-pub const LICENSE_HEAD_LINES: i64 = 5;
-
-/// Verbatim hard-hit floor in words (same provenance as
-/// MIN_DOC_TOKENS). A common word run this long is a duplicate
-/// regardless of what Jaccard says about the rest of the segment.
-pub const VERBATIM_FLOOR: usize = 50;
-
-/// Word-shingle width. Decided, not derived (instruments §9.6): the
-/// measured k-window and its counterfactual live in the frozen
-/// docdup-segments doc's method line — the constant's backing is a
-/// generation-time measurement, not a remembered citation.
-pub const DOC_SHINGLE: usize = 5;
-
-/// Longest comment/docstring line still treated as prose, in visible
-/// chars. Decided, not derived (2026-08-14 attainment-line-B
-/// amendment, ccm #842): hard-wrapped comment prose runs under ~120
-/// chars by convention, while the audited FP lines — regex literals
-/// and inline snapshots — ran 300+/600+; lines past this cap are
-/// data/generated/code, masked with an overlong_line ledger count.
-/// md_para is exempt: markdown legitimately writes one long prose
-/// line per paragraph.
-// The declared MIRROR of CE.Docdup.Cost.docLineCap (batch-7 defect
-// sweep), pinned by the reply echo on every judged run.
-pub const DOC_LINE_CAP: usize = 200;
+/// The docdup numbers and marker tables (`docdup` in the package).
+pub fn table() -> &'static Docdup {
+    &crate::tables::get().docdup
+}
 
 /// Segment kinds as frozen position codes (the wire.rs edge-code
 /// discipline: reordering is a DOCDUP_REV bump; `html_text` — a block
 /// element's prose, docdup/html.rs — appended at rev 6, plan v2.30
 /// step 5; `text_para` — a plain-text file's paragraph, segments.rs
-/// text_paragraphs — at rev 8, step 5b-8).
-pub const KIND_NAMES: [&str; 5] = [
-    "md_para",
-    "comment_block",
-    "docstring",
-    "html_text",
-    "text_para",
-];
+/// text_paragraphs — at rev 8, step 5b-8). Their names are the package's
+/// `kind_names`, in this order.
 pub const KIND_MD_PARA: i64 = 0;
 pub const KIND_COMMENT: i64 = 1;
 pub const KIND_DOCSTRING: i64 = 2;
 pub const KIND_HTML_TEXT: i64 = 3;
 pub const KIND_TEXT_PARA: i64 = 4;
 
-/// License-header markers (design vol.2 §5.2), `|`-separated. Any one
-/// on any line of the first comment block inside the head window
-/// exempts the block. Both marker tables are one literal rather than
-/// an array: a run of string literals is one repeated token under the
-/// clone gate.
-pub const LICENSE_MARKERS: &str = "SPDX-License-Identifier|Licensed under the Apache License|\
-                                   Copyright (c)|Permission is hereby granted|MIT License";
-
-/// Structured-docstring skeleton line prefixes, `|`-separated (plan
-/// :79 "template rows", stripped line-level from comment/docstring
-/// segments): the Google/Sphinx/NumPy/JSDoc section vocabulary, not
-/// prose, and since plan v2.30 step 5 the Javadoc / Doxygen / roxygen /
-/// LDoc tags (booklet §9) — `@return` covers `@returns` and `@throw`
-/// covers `@throws` (a prefix), `@exception` is Javadoc's synonym, and
-/// a Doxygen command reads the same under `\` as under `@`.
-pub const SKELETON_PREFIXES: &str = "\
-    Args:|Arguments:|Returns:|Raises:|Yields:|Parameters|Attributes:|Example:|Examples:|Note:|\
-    :param |:return|:rtype|\
-    @param|@return|@throw|@brief|@see|@since|@author|@version|@exception|@tparam|@treturn|\
-    @usage|@examples|@export|@importFrom|@rdname|@details|@inheritParams|@describeIn|\
-    \\brief|\\details|\\param|\\tparam|\\return|\\throw|\\exception|\\see|\\since|\\author|\\version";
-
-/// The inline exemption marker (plan :79-80). Without a ` -- <why>`
-/// tail it exempts NOTHING — a bare marker is a violation, ledgered.
-pub const ALLOW_MARKER: &str = "ce:allow(docdup)";
-
+leaked! {
 /// Per-language document spec: which AST node kinds host docstrings.
 /// Only Python has a docstring convention (module/function/class body
 /// whose first statement is a bare string); JSDoc and Rust `///` are
 /// lexically comments and arrive via comment_kinds.
-#[derive(serde::Serialize)]
-pub struct DocSpec {
-    pub docstring_hosts: &'static [&'static str],
+    pub struct DocSpec {
+        pub docstring_hosts: &'static [&'static str],
+    }
 }
 
-static PYTHON: DocSpec = DocSpec {
-    docstring_hosts: &["module", "function_definition", "class_definition"],
-};
 static NONE: DocSpec = DocSpec {
     docstring_hosts: &[],
 };
 
 pub fn doc_spec(lang: Lang) -> &'static DocSpec {
-    match lang {
-        Lang::Python => &PYTHON,
-        _ => &NONE,
-    }
+    table().doc_spec.get(lang).unwrap_or(&NONE)
 }

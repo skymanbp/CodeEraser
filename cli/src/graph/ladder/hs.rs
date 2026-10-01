@@ -14,7 +14,8 @@
 //! package, graph/spec.rs), else any package the owner's
 //! build-depends declares — under that package's library roots; two
 //! such packages refuse as ambiguous_workspace. R3 External: the
-//! machine-generated global-package-db table (hs_boot.rs), gated by
+//! machine-generated global-package-db table (the core's
+//! CE.Lang.Common.Boot1–3, read off `tables/1`), gated by
 //! the owner cabal's build-depends — under cabal a package's modules
 //! are importable only if declared; with no cabal every db package is
 //! default-visible (bare-ghc semantics), so the whole table answers.
@@ -38,7 +39,6 @@
 //! core, so the class fires for .hs on the same terms as every other
 //! judged language.
 
-use super::hs_boot::BOOT;
 use super::paths;
 use super::{Outcome, Reason, Scope};
 use crate::graph::cabal::{self, Cabal};
@@ -216,10 +216,11 @@ fn depended_rung(
 /// R3: the global-db table, build-depends-gated under a cabal; a
 /// package the import names must be the module's own.
 fn external_rung(module: &str, package: Option<&str>, owner: Option<&Cabal>) -> Outcome {
-    let hit = BOOT.iter().any(|(pkg, modules)| {
+    let boot = crate::tables::get().ladder.hs.boot;
+    let hit = boot.iter().any(|(pkg, modules)| {
         package.is_none_or(|p| p == *pkg)
             && owner.is_none_or(|c| c.deps.iter().any(|d| d == pkg))
-            && modules.split_whitespace().any(|m| m == module)
+            && modules.contains(&module)
     });
     if hit {
         Outcome::External { rung: 3 }

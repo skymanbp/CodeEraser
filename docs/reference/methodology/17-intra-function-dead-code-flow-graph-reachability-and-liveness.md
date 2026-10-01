@@ -11,7 +11,7 @@ any more. The split is ADR-008's, seventh instalment: Rust lowers every unit of 
 `FlowSpec` table knows into four integer tables, and the core builds the control-flow graph,
 walks reachability and backward liveness and answers the findings over the fourteenth wire family,
 `flow/1`, since proto 7.4.0 ([Flow.hs:5-18](../../../core/app/CE/Flow.hs#L5),
-[mod.rs:43-55](../../../cli/src/flow/mod.rs#L43)). No name, path or source text crosses the wire:
+[mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). No name, path or source text crosses the wire:
 a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
 through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
 [mod.rs:63](../../../cli/src/flow_report/mod.rs#L63)).
@@ -120,7 +120,7 @@ mask holds the languages whose precision doc passed the gate of §8. Step 4's co
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
 retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
 generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
-all ten ([mod.rs:45-63](../../../cli/src/flow/mod.rs#L45), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
+all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
 
 ### 7. The guard class — novel findings at write time
 
@@ -192,7 +192,7 @@ strict reading), both readings recorded.
   read is never judged in part; the count is in every report and every feed line.
 - **`unused_param` is advice forever.** No tier and no mask entry turns it into a verdict.
 - **Haskell is not a flow language.** No `FlowSpec` table exists for it (nor for Markdown or
-  HTML), so its files lower to no units ([spec.rs:250-253](../../../cli/src/flow/spec.rs#L250)).
+  HTML), so its files lower to no units ([spec.rs:219-222](../../../cli/src/flow/spec.rs#L219)).
 - **The judgment is intra-procedural.** A store read only through a callee's side effect the
   graph cannot see is covered by the address-taken and captured exemptions, not by a call model.
 

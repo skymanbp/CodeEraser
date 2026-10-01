@@ -24,7 +24,8 @@
 //!      loading file, then under the tree root — a path is relative to
 //!      the working directory, the script's own or the project root by
 //!      convention; the first hit;
-//!   R3 External: a standard library or built-in name (STDLIB) — it
+//!   R3 External: a standard library or built-in name (the package's
+//!      `ladder.lua.stdlib`, CE.Lang.Common.Ladder2) — it
 //!      never reaches the searchers, whatever files the tree holds.
 //! Anything else is out_of_scope: a module a rock or a C library
 //! provides, any other directory a run adds by computing it
@@ -34,13 +35,6 @@ use super::{Outcome, Reason, Scope, Site, paths};
 use crate::graph::roots;
 use crate::mention::conv::protocol::listed;
 use std::collections::{BTreeMap, BTreeSet};
-
-/// The names `package.loaded` holds before any searcher runs: Lua
-/// 5.1–5.4's standard libraries (manual §6; `bit32` is 5.2's, `utf8`
-/// 5.3's) and LuaJIT's built-in extension modules
-/// (luajit.org/extensions.html).
-pub(crate) const STDLIB: &str = "string table math io os coroutine debug package bit32 utf8 \
-                      ffi bit jit jit.util jit.profile table.new table.clear string.buffer";
 
 /// The search directories every tree has: its root and the two layouts
 /// booklet §8 names.
@@ -52,7 +46,9 @@ const STANDARD: [&str; 2] = [".lua", "/init.lua"];
 pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
     let (from, spec) = (site.from, site.spec);
     match site.kind {
-        "require" if listed(STDLIB, spec) => Outcome::External { rung: 3 },
+        "require" if listed(crate::tables::get().ladder.lua.stdlib, spec) => {
+            Outcome::External { rung: 3 }
+        }
         "require" => module(from, spec, scope),
         "load" => loaded(from, spec, scope),
         _ => Outcome::Unresolved(Reason::Unsupported),

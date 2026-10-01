@@ -7,10 +7,7 @@
 //! exemption stock does not exist until `ce baseline` (3i).
 
 use super::segments::{RawSeg, SegLine};
-use super::spec::{
-    ALLOW_MARKER, DOC_LINE_CAP, KIND_HTML_TEXT, KIND_MD_PARA, KIND_TEXT_PARA, LICENSE_HEAD_LINES,
-    LICENSE_MARKERS, SKELETON_PREFIXES,
-};
+use super::spec::{KIND_HTML_TEXT, KIND_MD_PARA, KIND_TEXT_PARA, table};
 
 /// Exemption classes as frozen position codes; 0 = live.
 pub const EXEMPT_NAMES: [&str; 3] = ["live", "license_header", "inline_allow"];
@@ -42,11 +39,12 @@ pub struct Ledger {
 /// spec.rs); the bare-marker rule's authority is the same module's
 /// written ruling (batch-7 slice 9).
 pub fn classify(seg: &RawSeg, first_comment: bool, ledger: &mut Ledger) -> i64 {
-    if first_comment && seg.start_line <= LICENSE_HEAD_LINES && has_any(seg, LICENSE_MARKERS) {
+    let t = table();
+    if first_comment && seg.start_line <= t.license_head_lines && has_any(seg, t.license_markers) {
         ledger.license_header += 1;
         return EXEMPT_LICENSE;
     }
-    if has_any(seg, ALLOW_MARKER) {
+    if has_any(seg, &[t.allow_marker]) {
         if allow_has_why(seg) {
             ledger.inline_allow += 1;
             return EXEMPT_ALLOW;
@@ -58,11 +56,11 @@ pub fn classify(seg: &RawSeg, first_comment: bool, ledger: &mut Ledger) -> i64 {
     EXEMPT_LIVE
 }
 
-/// Whether any line holds any marker of a `|`-separated table.
-fn has_any(seg: &RawSeg, markers: &str) -> bool {
+/// Whether any line holds any marker of a table.
+fn has_any(seg: &RawSeg, markers: &[&str]) -> bool {
     seg.lines
         .iter()
-        .any(|l| markers.split('|').any(|m| l.text.contains(m)))
+        .any(|l| markers.iter().any(|m| l.text.contains(m)))
 }
 
 /// The one claim grammar (crate::allow), line by line: the why must
@@ -70,14 +68,14 @@ fn has_any(seg: &RawSeg, markers: &str) -> bool {
 fn allow_has_why(seg: &RawSeg) -> bool {
     seg.lines
         .iter()
-        .any(|l| crate::allow::allow_claim(&l.text, ALLOW_MARKER))
+        .any(|l| crate::allow::allow_claim(&l.text, table().allow_marker))
 }
 
 /// Line-level strip for comment/docstring segments: skeleton rows
 /// (plan :75 — the Google/Sphinx/JSDoc section vocabulary), fenced
 /// code regions (```/~~~ toggling, fence lines included — the F3
 /// "the judge sees prose" contract extended to documentation text
-/// wherever it lives) and overlong data/regex lines (DOC_LINE_CAP).
+/// wherever it lives) and overlong data/regex lines (`doc_line_cap`).
 /// md paragraphs, HTML text and plain-text paragraphs (plan v2.30
 /// step 5b-8) are untouched by ALL three: a `---` there is a thematic
 /// break, md fences and HTML code were masked by the detector already,
@@ -87,6 +85,7 @@ fn allow_has_why(seg: &RawSeg) -> bool {
 pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLine> {
     let mut keep = Vec::new();
     let mut fenced = false;
+    let cap = table().doc_line_cap;
     for line in &seg.lines {
         if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT | KIND_TEXT_PARA) {
             keep.push(line);
@@ -100,7 +99,7 @@ pub fn strip_skeleton<'a>(seg: &'a RawSeg, ledger: &mut Ledger) -> Vec<&'a SegLi
             fenced = fenced != opens; // XOR: toggle on fence lines
         } else if skeleton_line(&line.text) {
             ledger.skeleton_line += 1;
-        } else if line.text.trim().chars().count() > DOC_LINE_CAP {
+        } else if line.text.trim().chars().count() > cap {
             ledger.overlong_line += 1;
         } else {
             keep.push(line);
@@ -132,7 +131,10 @@ fn skeleton_line(text: &str) -> bool {
     let bare = bare
         .strip_prefix("--")
         .map_or(bare, |rest| rest.trim_start_matches(['-', ' ']));
-    SKELETON_PREFIXES.split('|').any(|p| bare.starts_with(p))
+    table()
+        .skeleton_prefixes
+        .iter()
+        .any(|p| bare.starts_with(p))
 }
 
 #[cfg(test)]

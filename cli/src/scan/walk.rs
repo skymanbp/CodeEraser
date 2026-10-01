@@ -20,17 +20,12 @@ use std::path::{Path, PathBuf};
 /// override set also prunes a matching DIRECTORY (a `.env/`
 /// virtualenv), while the mention walk tests file basenames only.
 /// Privacy fails safe: `id_*` or `*credentials*` over-matching a code
-/// file costs coverage, never leaks a key into the index.
-pub(crate) const SECRET_GLOBS: [&str; 8] = [
-    ".env*",
-    "*.pem",
-    "*.key",
-    "id_*",
-    ".npmrc",
-    ".pypirc",
-    ".netrc",
-    "*credentials*",
-];
+/// file costs coverage, never leaks a key into the index. The table is
+/// the core's since plan v2.32 step 2 (CE.Lang.Common `walk`, read off
+/// `tables/1`), as are the built-in excludes below.
+pub(crate) fn secret_globs() -> &'static [&'static str] {
+    crate::tables::get().walk.secret_globs
+}
 
 /// Built-in excludes: lockfiles, minified/generated, vendored (Lua's
 /// and R's project trees since plan v2.30 step 4), snapshots, migrations
@@ -38,25 +33,9 @@ pub(crate) const SECRET_GLOBS: [&str; 8] = [
 /// Build outputs are not globs: a `target/` or `build/` is one only
 /// beside its tool's project file (outputs.rs), asked at each
 /// directory's door by the walk and by `Scope` alike.
-pub(crate) const BUILTIN_EXCLUDES: &[&str] = &[
-    "!package-lock.json",
-    "!yarn.lock",
-    "!pnpm-lock.yaml",
-    "!Cargo.lock",
-    "!*.min.js",
-    "!*.min.css",
-    "!*.pb.go",
-    "!*_pb2.py",
-    "!*.generated.*",
-    "!vendor/",
-    "!node_modules/",
-    "!lua_modules/",
-    "!renv/",
-    "!packrat/",
-    "!__snapshots__/",
-    "!*.snap",
-    "!migrations/",
-];
+fn builtin_excludes() -> &'static [&'static str] {
+    crate::tables::get().walk.builtin_excludes
+}
 
 /// Config plus language-tagged candidate files — the shared opening
 /// of every whole-tree MEASUREMENT (scan metrics, graph sites); the
@@ -361,8 +340,8 @@ fn canon(p: &Path) -> PathBuf {
 
 fn build_overrides(root: &Path, extra: &[String]) -> Result<ignore::overrides::Override, String> {
     let mut builder = OverrideBuilder::new(root);
-    let secrets = SECRET_GLOBS.iter().map(|g| format!("!{g}"));
-    for glob in BUILTIN_EXCLUDES
+    let secrets = secret_globs().iter().map(|g| format!("!{g}"));
+    for glob in builtin_excludes()
         .iter()
         .map(|g| (*g).to_string())
         .chain(secrets)

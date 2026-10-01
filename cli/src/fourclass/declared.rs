@@ -55,12 +55,12 @@ pub(super) fn keys<'t>(node: Node<'t>, table: &[&str], src: &[u8], lang: Lang) -
             .map(|(leaf, _)| leaf)
             .into_iter()
             .collect(),
-        k if k == kinds::C_VARIABLE => c_variables(node, src),
-        k if kinds::JAVA_FIELDS.contains(&k) => binding::fielded(node, "declarator")
+        k if k == kinds::shared().c_variable => c_variables(node, src),
+        k if kinds::shared().java_fields.contains(&k) => binding::fielded(node, "declarator")
             .into_iter()
             .filter_map(|d| d.child_by_field_name("name"))
             .collect(),
-        k if kinds::TS_LEXICAL.contains(&k) => ts_bindings(node, src, lang),
+        k if kinds::shared().ts_lexical.contains(&k) => ts_bindings(node, src, lang),
         _ => binding::fielded(node, "name"),
     }
 }
@@ -76,12 +76,13 @@ fn declares(node: Node<'_>) -> bool {
     let kind = node.kind();
     let redeclares = node
         .parent()
-        .is_some_and(|p| kinds::REDECLARING.contains(&p.kind()));
-    let bodiless = kinds::BODIED.contains(&kind) && node.child_by_field_name("body").is_none();
-    let local = kinds::PACKAGE_LEVEL.contains(&kind) && !package_level(node);
+        .is_some_and(|p| kinds::shared().redeclaring.contains(&p.kind()));
+    let bodiless =
+        kinds::shared().bodied.contains(&kind) && node.child_by_field_name("body").is_none();
+    let local = kinds::shared().package_level.contains(&kind) && !package_level(node);
     let instance = kind == "field_declaration" && !java_static(node);
-    let scoped = kind == kinds::C_VARIABLE && !c_file_scope(node);
-    let block = kinds::TS_LEXICAL.contains(&kind) && !ts_module_level(node);
+    let scoped = kind == kinds::shared().c_variable && !c_file_scope(node);
+    let block = kinds::shared().ts_lexical.contains(&kind) && !ts_module_level(node);
     !(redeclares || bodiless || local || instance || scoped || block)
 }
 

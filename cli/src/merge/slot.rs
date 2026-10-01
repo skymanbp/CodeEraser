@@ -21,18 +21,12 @@
 //! (Haskell, step-7 ruling 8) names its own statement forms and
 //! containers here; a language with one never does.
 //!
-//! A table is TOML text in pieces (TSX is TypeScript's plus the JSX
-//! kinds, C++ is C's plus its own); each piece reads alone and the
-//! pieces' lists join, so a shared piece never names a kind the other
-//! grammar lacks.
+//! The tables are the core's since plan v2.32 step 2: each language's
+//! `[[slot]]` pieces in CE.Lang.<Language>, joined list by list there
+//! (TSX is TypeScript's plus the JSX kinds, C++ is C's plus its own;
+//! the helper lines by the larger) and read off `tables/1`
+//! (crate::tables).
 
-use super::slot_c::{C, C_ONLY, CPP};
-use super::slot_hs::HASKELL;
-use super::slot_java::JAVA;
-use super::slot_launch::{GO, PYTHON, RUST};
-use super::slot_lua::LUA;
-use super::slot_r::R;
-use super::slot_ts::{JSX, TS_ONLY, TYPESCRIPT};
 use crate::scan::lang::Lang;
 use std::collections::{HashMap, HashSet};
 use std::sync::LazyLock;
@@ -81,54 +75,11 @@ pub struct SlotSpec {
     pub container_kinds: Vec<String>,
 }
 
-/// The pieces of every table, by the language it answers.
-const TABLES: [(Lang, &[&str]); 11] = [
-    (Lang::Python, &[PYTHON]),
-    (Lang::TypeScript, &[TYPESCRIPT, TS_ONLY]),
-    (Lang::Tsx, &[TYPESCRIPT, JSX]),
-    (Lang::Rust, &[RUST]),
-    (Lang::Go, &[GO]),
-    (Lang::C, &[C, C_ONLY]),
-    (Lang::Cpp, &[C, CPP]),
-    (Lang::Java, &[JAVA]),
-    (Lang::Lua, &[LUA]),
-    (Lang::R, &[R]),
-    (Lang::Haskell, &[HASKELL]),
-];
-
-/// Every table read once, with its classes compiled. The text is this
-/// crate's own: a piece that does not read is a build defect the unit
-/// legs name.
-static READ: LazyLock<HashMap<Lang, SlotSpec>> = LazyLock::new(|| {
-    TABLES
-        .iter()
-        .map(|(lang, pieces)| (*lang, pieces.iter().fold(SlotSpec::default(), join)))
-        .collect()
-});
-
-fn join(mut acc: SlotSpec, piece: &&str) -> SlotSpec {
-    let more: SlotSpec =
-        toml::from_str(piece).unwrap_or_else(|e| panic!("slot table piece does not read: {e}"));
-    acc.expr_kinds.extend(more.expr_kinds);
-    acc.type_kinds.extend(more.type_kinds);
-    acc.name_fields.extend(more.name_fields);
-    acc.target_fields.extend(more.target_fields);
-    acc.target_ops.extend(more.target_ops);
-    acc.target_lists.extend(more.target_lists);
-    acc.part_fields.extend(more.part_fields);
-    acc.part_kinds.extend(more.part_kinds);
-    acc.helper_lines = acc.helper_lines.max(more.helper_lines);
-    acc.other_kinds.extend(more.other_kinds);
-    acc.stmt_kinds.extend(more.stmt_kinds);
-    acc.container_kinds.extend(more.container_kinds);
-    acc
-}
-
 /// A language's slot table: the flow family's languages, whose
 /// statement class the flow tables give, and Haskell, whose table
 /// gives its own; Markdown and HTML have none (no function to fold).
 pub fn slot_spec(lang: Lang) -> Option<&'static SlotSpec> {
-    READ.get(&lang)
+    crate::tables::get().slot.get(lang)?.as_ref()
 }
 
 /// One language's classes as sets: the statement forms and containers
@@ -152,9 +103,9 @@ pub struct Classes {
 type Pairs = HashSet<(&'static str, &'static str)>;
 
 static CLASSES: LazyLock<HashMap<Lang, Classes>> = LazyLock::new(|| {
-    TABLES
+    Lang::ALL
         .iter()
-        .filter_map(|(lang, _)| Some((*lang, compile(*lang)?)))
+        .filter_map(|&lang| Some((lang, compile(lang)?)))
         .collect()
 });
 

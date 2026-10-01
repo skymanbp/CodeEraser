@@ -50,13 +50,16 @@ languages =
   \# judged: the language is in the judged set (the scan-only arm, the\n\
   \# prose-only arm and the wire sentinel are not); document: a document\n\
   \# language (Markdown, HTML) — the two columns the measuring side derived\n\
-  \# from the arms and from its own matches.\n\
+  \# from the arms and from its own matches. flow_judged: the language's\n\
+  \# flow findings are verdicts, not advice — its blind-reviewed flow\n\
+  \# precision exam passed (plan v2.31 step 4 commit G; the set moved here\n\
+  \# from cli/src/flow/mod.rs at plan v2.32 step 2). Implies judged.\n\
   \rows = [\n\
-  \  {code = 0, name = 'python', exts = ['py'], judged = true},\n\
-  \  {code = 1, name = 'typescript', exts = ['ts', 'mts', 'cts'], judged = true},\n\
-  \  {code = 2, name = 'tsx', exts = ['tsx'], judged = true},\n\
-  \  {code = 3, name = 'rust', exts = ['rs'], judged = true},\n\
-  \  {code = 4, name = 'go', exts = ['go'], judged = true},\n\
+  \  {code = 0, name = 'python', exts = ['py'], judged = true, flow_judged = true},\n\
+  \  {code = 1, name = 'typescript', exts = ['ts', 'mts', 'cts'], judged = true, flow_judged = true},\n\
+  \  {code = 2, name = 'tsx', exts = ['tsx'], judged = true, flow_judged = true},\n\
+  \  {code = 3, name = 'rust', exts = ['rs'], judged = true, flow_judged = true},\n\
+  \  {code = 4, name = 'go', exts = ['go'], judged = true, flow_judged = true},\n\
   \  {code = 5, name = 'markdown', exts = ['md', 'markdown'], judged = true, document = true},\n\
   \  {code = 6, name = 'haskell', exts = ['hs'], judged = true},\n\
   \  {code = 7, name = 'unknown', exts = []},\n\
@@ -67,12 +70,12 @@ languages =
   \  {code = 12, name = 'svelte', exts = ['svelte'], scan_only = true},\n\
   \  {code = 13, name = 'shell', exts = ['sh', 'bash'], scan_only = true},\n\
   \  {code = 14, name = 'yaml', exts = ['yml', 'yaml'], scan_only = true},\n\
-  \  {code = 15, name = 'c', exts = ['c'], judged = true},\n\
-  \  {code = 16, name = 'cpp', exts = ['cpp', 'cc', 'cxx', 'hpp', 'hh', 'hxx', 'h', 'inl'], judged = true},\n\
-  \  {code = 17, name = 'lua', exts = ['lua'], judged = true},\n\
-  \  {code = 18, name = 'java', exts = ['java'], judged = true},\n\
+  \  {code = 15, name = 'c', exts = ['c'], judged = true, flow_judged = true},\n\
+  \  {code = 16, name = 'cpp', exts = ['cpp', 'cc', 'cxx', 'hpp', 'hh', 'hxx', 'h', 'inl'], judged = true, flow_judged = true},\n\
+  \  {code = 17, name = 'lua', exts = ['lua'], judged = true, flow_judged = true},\n\
+  \  {code = 18, name = 'java', exts = ['java'], judged = true, flow_judged = true},\n\
   \  {code = 19, name = 'ruby', exts = [], scan_only = true},\n\
-  \  {code = 20, name = 'r', exts = ['R', 'r'], judged = true},\n\
+  \  {code = 20, name = 'r', exts = ['R', 'r'], judged = true, flow_judged = true},\n\
   \  {code = 21, name = 'text', exts = ['txt'], prose_only = true},\n\
   \]\n"
 

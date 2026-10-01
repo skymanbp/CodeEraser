@@ -68,7 +68,7 @@ pub(super) fn runs_for(
 }
 
 /// Longest common contiguous shingle run in WORDS (R shingles span
-/// R + DOC_SHINGLE − 1 words), by seed-extension: start only where a
+/// R + doc_shingle − 1 words), by seed-extension: start only where a
 /// run cannot extend left, walk right — each maximal run measured
 /// once. The oracle's independent DP is what D2 checks this against.
 fn run_words((a, _): &Seq, (b, pos): &Seq) -> u64 {
@@ -89,7 +89,7 @@ fn run_words((a, _): &Seq, (b, pos): &Seq) -> u64 {
     if best == 0 {
         0
     } else {
-        (best + spec::DOC_SHINGLE - 1) as u64
+        (best + spec::table().doc_shingle - 1) as u64
     }
 }
 

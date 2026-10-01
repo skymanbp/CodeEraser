@@ -548,81 +548,82 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|27141209d58f60c9|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 268,
-    "end": 270,
+    "line": 243,
+    "end": 245,
     "text": "pub fn fingerprints(self) -> bool {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/lang.rs|b2fad6b56ef76b35|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 195,
-    "end": 197,
+    "line": 176,
+    "end": 178,
     "text": "pub fn indexed_path(path: &Path) -> Option<Self> {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|62105facb0b61d1c|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 236,
-    "text": "literal_delims: &[],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|fc743759d6a46e43|0": {
-    "target": "../../../cli/src/scan/spec.rs",
-    "line": 253,
-    "end": 256,
-    "text": "static HTML: LangSpec = LangSpec {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_c.rs|2462416f3738af1a|0": {
-    "target": "../../../cli/src/scan/spec_c.rs",
-    "line": 122,
-    "text": "literal_delims: &[\"\\\"\", \"'\", \"character\", \"R\\\"\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_hs.rs|1f8a45d21e166ddb|0": {
-    "target": "../../../cli/src/scan/spec_hs.rs",
-    "line": 81,
-    "end": 83,
-    "text": "// string literals lex as ONE `string` leaf (quotes inside the"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_java.rs|40673afc7febb683|0": {
-    "target": "../../../cli/src/scan/spec_java.rs",
-    "line": 88,
-    "text": "literal_delims: &[\"\\\"\", \"\\\"\\\"\\\"\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|2f99cfba7853fa18|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 50,
-    "end": 51,
-    "text": "// Python quotes surface as named string_start/string_end kinds."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|6102e94730fc5ddf|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 111,
-    "text": "literal_delims: &[\"\\\"\", \"'\", \"`\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|b778be50cc3e9751|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 161,
-    "end": 163,
-    "text": "// NOT `'`: that is the lifetime/label tick (char_literal is one"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_launch.rs|d5dc8ea61e1a0a65|0": {
-    "target": "../../../cli/src/scan/spec_launch.rs",
-    "line": 217,
-    "end": 218,
-    "text": "// `'` is Go's rune delimiter but rune_literal is a single token."
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_lua.rs|00c6e85335b2fa43|0": {
-    "target": "../../../cli/src/scan/spec_lua.rs",
-    "line": 72,
-    "text": "literal_delims: &[\"\\\"\", \"'\", \"[[\", \"]]\"],"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_r.rs|6f412a5d66f86ac9|0": {
-    "target": "../../../cli/src/scan/spec_r.rs",
-    "line": 71,
-    "text": "literal_delims: &[\"string_open\", \"string_close\"],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/trend/mod.rs|452a1b52cbdfe32a|0": {
     "target": "../../../cli/src/trend/mod.rs",
     "line": 4,
     "end": 8,
     "text": "//! (trend_rebuild.rs pins exactly that). Parser-only invalidation"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/C.hs|55d5fc58a01a310f|0": {
+    "target": "../../../core/app/CE/Lang/C.hs",
+    "line": 126,
+    "text": "\\literal_delims = ['\\\"', \\\"'\\\", 'character', 'R\\\"']\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Go.hs|8d3bd939589ad9c9|0": {
+    "target": "../../../core/app/CE/Lang/Go.hs",
+    "line": 64,
+    "end": 65,
+    "text": "\"# `'` is Go's rune delimiter but rune_literal is a single token.\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Haskell.hs|b56dac16e6c77bdc|0": {
+    "target": "../../../core/app/CE/Lang/Haskell.hs",
+    "line": 103,
+    "end": 105,
+    "text": "\"# string literals lex as ONE `string` leaf (quotes inside the\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Html.hs|c07cbff8ddf58880|0": {
+    "target": "../../../core/app/CE/Lang/Html.hs",
+    "line": 12,
+    "end": 16,
+    "text": "\"# HTML (plan v2.30 step 5): a document language like Markdown — no\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Java.hs|80547b912593c621|0": {
+    "target": "../../../core/app/CE/Lang/Java.hs",
+    "line": 112,
+    "text": "\\literal_delims = ['\\\"', '\\\"\\\"\\\"']\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Lua.hs|c9ea44642547ec1a|0": {
+    "target": "../../../core/app/CE/Lang/Lua.hs",
+    "line": 93,
+    "text": "\\literal_delims = ['\\\"', \\\"'\\\", '[[', ']]']\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Markdown.hs|9fcb750b26121aaa|0": {
+    "target": "../../../core/app/CE/Lang/Markdown.hs",
+    "line": 12,
+    "end": 15,
+    "text": "\"# Markdown (and HTML after it) states no unit, metric or call kind:\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Python.hs|3e1ffbdac2000b13|0": {
+    "target": "../../../core/app/CE/Lang/Python.hs",
+    "line": 69,
+    "end": 70,
+    "text": "\"# Python quotes surface as named string_start/string_end kinds.\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/R.hs|79f05a6fc773e75f|0": {
+    "target": "../../../core/app/CE/Lang/R.hs",
+    "line": 95,
+    "text": "\\literal_delims = ['string_open', 'string_close']\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Rust.hs|f0eca80123ed670f|0": {
+    "target": "../../../core/app/CE/Lang/Rust.hs",
+    "line": 58,
+    "end": 60,
+    "text": "\\# NOT `'`: that is the lifetime/label tick (char_literal is one\\n\\"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/TypeScript.hs|835413f8bf678f86|0": {
+    "target": "../../../core/app/CE/Lang/TypeScript.hs",
+    "line": 74,
+    "text": "\\literal_delims = ['\\\"', \\\"'\\\", '`']\\n\\"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../DEVELOPMENT_PLAN.md|48459eec53d72c4f|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -1574,31 +1575,26 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|052a14feff0411b1|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 91,
-    "end": 94,
+    "line": 90,
+    "end": 93,
     "text": "if matches!(seg.kind, KIND_MD_PARA | KIND_HTML_TEXT | KIND_TEXT_PARA) {"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|21488f3e3015a022|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|30e8313b177c7d48|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 49,
-    "end": 58,
-    "text": "if has_any(seg, ALLOW_MARKER) {"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|2abe9730a2ccdd4a|0": {
-    "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 103,
-    "text": "} else if line.text.trim().chars().count() > DOC_LINE_CAP {"
+    "line": 47,
+    "end": 55,
+    "text": "if has_any(seg, &[t.allow_marker]) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|31906d7fe45733c4|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 114,
-    "end": 117,
+    "line": 113,
+    "end": 116,
     "text": "fn fence_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|5621b762259badab|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 70,
-    "end": 74,
+    "line": 68,
+    "end": 72,
     "text": "fn allow_has_why(seg: &RawSeg) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|59f1048c98527f9a|0": {
@@ -1609,26 +1605,31 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|72fb3385a082f6ba|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 16,
-    "end": 19,
+    "line": 13,
+    "end": 16,
     "text": "pub const EXEMPT_NAMES: [&str; 3] = [\"live\", \"license_header\", \"inline_allow\"];"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|7440dd51453a1d2e|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|94024abd2596c8dc|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 45,
-    "end": 48,
-    "text": "if first_comment && seg.start_line <= LICENSE_HEAD_LINES && has_any(seg, LICENSE_MARKERS) {"
+    "line": 43,
+    "end": 46,
+    "text": "if first_comment && seg.start_line <= t.license_head_lines && has_any(seg, t.license_markers) {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|a41860374884b65f|0": {
+    "target": "../../../cli/src/docdup/exempt.rs",
+    "line": 102,
+    "text": "} else if line.text.trim().chars().count() > cap {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|af692af8415a028b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 124,
-    "end": 136,
+    "line": 123,
+    "end": 135,
     "text": "fn skeleton_line(text: &str) -> bool {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|b7e6e8d95e21e27b|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 95,
-    "end": 100,
+    "line": 94,
+    "end": 99,
     "text": "let opens = fence_line(&line.text);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|ba371dd84f0cee25|0": {
@@ -1639,8 +1640,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/exempt.rs|f167799f784e2377|0": {
     "target": "../../../cli/src/docdup/exempt.rs",
-    "line": 27,
-    "end": 36,
+    "line": 24,
+    "end": 33,
     "text": "pub struct Ledger {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/html.rs|3b080f13e7285e8b|0": {
@@ -1792,8 +1793,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/wire.rs|f383eee515bec7ba|0": {
     "target": "../../../cli/src/docdup/judge/wire.rs",
-    "line": 82,
-    "end": 89,
+    "line": 79,
+    "end": 86,
     "text": "pub fn family(core: &str) -> crate::lockstep::Family<'_> {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/wire.rs|fde05f3bdd6e620e|0": {
@@ -1807,11 +1808,11 @@
     "line": 131,
     "text": "fn shingle_blob(set: &[u64]) -> Vec<u8> {"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|66f7febe338dcdf3|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|5b2baab9f1a15e55|0": {
     "target": "../../../cli/src/docdup/mod.rs",
     "line": 88,
     "end": 91,
-    "text": "if words.len() < spec::MIN_DOC_TOKENS {"
+    "text": "if words.len() < spec::table().min_doc_tokens {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/mod.rs|7d2c5d39ed50f773|0": {
     "target": "../../../cli/src/docdup/mod.rs",
@@ -1937,71 +1938,22 @@
     "end": 39,
     "text": "pub fn line_words(line: &str, mask: Option<&[bool]>, out: &mut Vec<u64>) {"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|053ba463dbf330ef|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 80,
-    "end": 85,
-    "text": "pub const SKELETON_PREFIXES: &str = \"\\"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|107444d508abc9eb|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 22,
-    "text": "pub const LICENSE_HEAD_LINES: i64 = 5;"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|137c050b5aa83f5a|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 45,
-    "text": "pub const DOC_LINE_CAP: usize = 200;"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|4738e7dbc18c5851|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 36,
-    "end": 40,
-    "text": "/// chars. Decided, not derived (2026-08-14 attainment-line-B"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|56ba7fd7a10c1b06|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 14,
-    "text": "pub const MIN_DOC_TOKENS: usize = 50;"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|67819fb033cbfc2d|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 24,
-    "end": 27,
-    "text": "/// Verbatim hard-hit floor in words (same provenance as"
-  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 59,
-    "end": 62,
+    "line": 29,
+    "end": 32,
     "text": "pub const KIND_MD_PARA: i64 = 0;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|901d06499d167964|1": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 59,
-    "end": 63,
+    "line": 29,
+    "end": 33,
     "text": "pub const KIND_MD_PARA: i64 = 0;"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|92118c9e45fefaec|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 89,
-    "text": "pub const ALLOW_MARKER: &str = \"ce:allow(docdup)\";"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|bc4932867788a336|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 70,
-    "end": 71,
-    "text": "pub const LICENSE_MARKERS: &str = \"SPDX-License-Identifier|Licensed under the Apache License|\\"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|e128e6057f8400eb|0": {
-    "target": "../../../cli/src/docdup/spec.rs",
-    "line": 33,
-    "text": "pub const DOC_SHINGLE: usize = 5;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/spec.rs|f5c2efa037e4bd0c|0": {
     "target": "../../../cli/src/docdup/spec.rs",
-    "line": 92,
-    "end": 101,
+    "line": 37,
+    "end": 46,
     "text": "/// Only Python has a docstring convention (module/function/class body"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/graph/md.rs|1a6861d272727d30|0": {
@@ -2023,15 +1975,9 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|689c8fc33de77ed4|0": {
     "target": "../../../cli/src/scan/lang.rs",
-    "line": 230,
-    "end": 241,
+    "line": 205,
+    "end": 216,
     "text": "/// The plan v2.30 step 5b-8 boundary predicate: a prose-only"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|d6da7db0d6bd5bb9|0": {
-    "target": "../../../cli/src/scan/lang.rs",
-    "line": 152,
-    "end": 161,
-    "text": "/// The `.txt` names a specification reserves for a machine format"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/tests/unit/docdup/judge.rs|0f11a15e2aec729c|0": {
     "target": "../../../cli/tests/unit/docdup/judge.rs",
@@ -2045,10 +1991,10 @@
     "end": 29,
     "text": "let mut drifted = ok;"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/tests/unit/docdup/shingle.rs|dec64ce3a2d0832a|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/tests/unit/docdup/shingle.rs|a3160c949e791c51|0": {
     "target": "../../../cli/tests/unit/docdup/shingle.rs",
     "line": 47,
-    "text": "assert_eq!(shingle_seq(&w1).len(), 8 - DOC_SHINGLE + 1);"
+    "text": "assert_eq!(shingle_seq(&w1).len(), 8 - table().doc_shingle + 1);"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup.hs|05f0b6d67debe7e3|0": {
     "target": "../../../core/app/CE/Docdup.hs",
@@ -2116,39 +2062,51 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|04095f398254c692|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 52,
-    "end": 53,
+    "line": 54,
+    "end": 55,
     "text": "docSetCap :: Integer"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|06e671714f9f72fb|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 83,
+    "end": 86,
+    "text": "-- (2026-08-14 attainment-line-B amendment, ccm #842): hard-wrapped"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|0f720e8840bb98a1|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 125,
-    "end": 126,
+    "line": 134,
+    "end": 135,
     "text": "dupDecidesWith :: Integer -> Integer -> Integer -> Integer -> Bool"
-  },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|48379397643e1dc0|0": {
-    "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 86,
-    "end": 91,
-    "text": "-- | Verbatim hard-hit floor in words. Same provenance as the Rust"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|51679bdf31a2efb9|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 55,
-    "end": 58,
+    "line": 57,
+    "end": 60,
     "text": "-- | Per-request pair ceiling, the clone pairCap anchor carried over:"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|5450871a63e3fe61|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 90,
+    "end": 91,
+    "text": "docLineCap :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|56bd8ca4d0fb0245|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
     "line": 35,
-    "end": 44,
+    "end": 46,
     "text": "-- | The estimator's shingle width, ECHOED not computed: sets arrive"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7559273dd66da9de|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 59,
-    "end": 60,
+    "line": 61,
+    "end": 62,
     "text": "docPairCap :: Integer"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7b6f22f080b3ccba|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 96,
+    "end": 99,
+    "text": "-- of the segment. ADR-008 P1 moved the floor's VERDICT home here: the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
@@ -2156,11 +2114,11 @@
     "end": 30,
     "text": "jaccardNum :: Integer"
   },
-  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|844cc03bbf5532ae|0": {
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7cc2b00c6f5f13e5|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 89,
-    "end": 91,
-    "text": "-- floor's VERDICT home here: the run lengths already ride each"
+    "line": 120,
+    "end": 121,
+    "text": "licHeadLines :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|9700dd4f43343265|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
@@ -2170,26 +2128,38 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|980d7b79ef3e48cd|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 132,
-    "end": 133,
+    "line": 141,
+    "end": 142,
     "text": "dupVerdict :: Integer -> Integer -> Integer -> Bool"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|9e3cf4c46bebf063|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 45,
+    "end": 46,
+    "text": "shingleK :: Integer"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|a0090a5f4797c21f|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 74,
+    "end": 75,
+    "text": "minDocTokens :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|a744556afc6e920a|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 46,
-    "end": 49,
+    "line": 48,
+    "end": 51,
     "text": "-- | Per-set element ceiling. Sizing anchor (Clone.Cost posture):"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|abeb04d82b8a450d|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 121,
-    "end": 124,
+    "line": 130,
+    "end": 133,
     "text": "-- | The threshold-parameterized form — ONE formula, so the reference"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|bbc3e3298c695141|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 137,
-    "end": 139,
+    "line": 146,
+    "end": 148,
     "text": "dupVerdictWith :: (Integer, Integer, Integer) -> Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|cd940d209736dc34|0": {
@@ -2198,16 +2168,22 @@
     "end": 33,
     "text": "jaccardDen :: Integer"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|d1be99e472f277d8|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 93,
+    "end": 96,
+    "text": "-- | Verbatim hard-hit floor in words (plan :68, Lee et al."
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|d7f215c88d63ebd3|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 135,
-    "end": 136,
+    "line": 144,
+    "end": 145,
     "text": "-- | The knob-parameterized disjunction — ONE formula, so the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|f43c6ab4e318a162|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 92,
-    "end": 93,
+    "line": 100,
+    "end": 101,
     "text": "verbatimFloor :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Jaccard.hs|444b1933ffc9e82d|0": {
@@ -2227,6 +2203,36 @@
     "line": 14,
     "end": 18,
     "text": "-- | (|A∩B|, |A∪B|) of two ascending deduped lists. The ascending"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang.hs|3deecfb8d7add250|0": {
+    "target": "../../../core/app/CE/Lang.hs",
+    "line": 147,
+    "end": 151,
+    "text": ", (\"docdup.min_doc_tokens\", toJSON Doc.minDocTokens)"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common.hs|4bff64707e0d1aba|0": {
+    "target": "../../../core/app/CE/Lang/Common.hs",
+    "line": 84,
+    "end": 95,
+    "text": "\"# The `.txt` names a specification reserves for a machine format\\n\\"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common/Prose.hs|58b50a2cf06c5b02|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 117,
+    "end": 119,
+    "text": "\\# The inline exemption marker (plan :79-80). Without a ` -- <why>`\\n\\"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common/Prose.hs|8574a1cd22a1144f|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 102,
+    "end": 116,
+    "text": "\\# Structured-docstring skeleton line prefixes, `|`-separated (plan\\n\\"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common/Prose.hs|ebc155351a85d80c|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 98,
+    "end": 101,
+    "text": "\\license_markers = [\\n\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Wire.hs|6c6e6a1e762976b9|0": {
     "target": "../../../core/app/CE/Wire.hs",
@@ -2252,10 +2258,10 @@
     "end": 89,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/graph/ladder/hs_boot.rs|ee30d3794dcc0d6c|0": {
-    "target": "../../../cli/src/graph/ladder/hs_boot.rs",
-    "line": 237,
-    "text": "Control.Applicative Control.Arrow Control.Category Control.Concurrent \\"
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/graph/ladder/c.rs|37133fd3f3339020|0": {
+    "target": "../../../cli/src/graph/ladder/c.rs",
+    "line": 3,
+    "text": "//! §8 row C / C++). The site is a"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/judge.rs|71db14cfaff0abb0|0": {
     "target": "../../../cli/src/structure/judge.rs",
@@ -2267,6 +2273,11 @@
     "target": "../../../cli/src/structure/wire.rs",
     "line": 199,
     "text": "crate::lockstep::refuse_degraded(&reply, \"structure/wire.rs vs Structure/Cost.hs\")?;"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Lang/Common/Boot2.hs|ecbfee15e57c3ad1|0": {
+    "target": "../../../core/app/CE/Lang/Common/Boot2.hs",
+    "line": 46,
+    "text": "\\  Control.Applicative Control.Arrow Control.Category Control.Concurrent\\n\\"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -3743,8 +3754,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|445bf00701224a12|0": {
     "target": "../../../cli/src/graph/deadcode/flags.rs",
-    "line": 83,
-    "end": 118,
+    "line": 68,
+    "end": 103,
     "text": "/// Role facts of one file node; the declared-target role covers the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|533cea80c55142f9|0": {
@@ -3772,8 +3783,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/keys.rs|6d73353ef02f7aba|0": {
     "target": "../../../cli/src/graph/keys.rs",
-    "line": 95,
-    "end": 98,
+    "line": 89,
+    "end": 92,
     "text": "pub fn ts_fs_facts("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/c.rs|172ad781aa1141fc|0": {
@@ -3842,12 +3853,6 @@
     "end": 71,
     "text": "fn module_rung(spec: &str, mods: &[GoMod], scope: &Scope) -> Option<Outcome> {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/go.rs|3ed468d1c69dddb2|0": {
-    "target": "../../../cli/src/graph/ladder/go.rs",
-    "line": 151,
-    "end": 156,
-    "text": "/// Go 1.26.4 importable standard-library packages — machine-generated"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/go.rs|52f032dee070fdbd|0": {
     "target": "../../../cli/src/graph/ladder/go.rs",
     "line": 85,
@@ -3880,8 +3885,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|5ab82d2ff47c6667|0": {
     "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 24,
-    "end": 29,
+    "line": 25,
+    "end": 30,
     "text": "//! out_of_scope — module→package needs evidence. An `import {-#"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|a648f19823c58b71|0": {
@@ -3903,15 +3908,9 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|df989deedb405f73|0": {
     "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 31,
-    "end": 39,
+    "line": 32,
+    "end": 40,
     "text": "//! R6/RG10 re-review (3l exit row): a module's export list is a"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs_boot.rs|dfbe14ba2dd8e08c|0": {
-    "target": "../../../cli/src/graph/ladder/hs_boot.rs",
-    "line": 14,
-    "end": 15,
-    "text": "/// (package name, its exposed modules, space-separated) — the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|0c3b69fde5bce823|0": {
     "target": "../../../cli/src/graph/ladder/html.rs",
@@ -4027,22 +4026,16 @@
     "end": 14,
     "text": "//! The inheritance rung of a simple type name — java.rs's child (plan"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_jdk.rs|277e00e3bb8ab648|0": {
-    "target": "../../../cli/src/graph/ladder/java_jdk.rs",
-    "line": 1,
-    "end": 10,
-    "text": "//! The Java ladder's External evidence (plan v2.30 step 3; booklet §8"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_pick.rs|2808a808380a9bbc|0": {
     "target": "../../../cli/src/graph/ladder/java_pick.rs",
-    "line": 87,
-    "end": 92,
+    "line": 86,
+    "end": 91,
     "text": "pub(super) fn jdk(segs: &[&str]) -> Outcome {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_pick.rs|7bfd50639e5c1947|0": {
     "target": "../../../cli/src/graph/ladder/java_pick.rs",
-    "line": 12,
-    "end": 20,
+    "line": 11,
+    "end": 19,
     "text": "/// A name the referencing file declares itself reaches no other file:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_sets.rs|1c275b690af7b668|0": {
@@ -4057,28 +4050,23 @@
     "end": 6,
     "text": "//! The type declarations of a Java compilation unit, read lexically —"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|20997ea78b44bc0d|0": {
+    "target": "../../../cli/src/graph/ladder/lua.rs",
+    "line": 49,
+    "end": 51,
+    "text": "\"require\" if listed(crate::tables::get().ladder.lua.stdlib, spec) => {"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|29c7ea6b102596fc|0": {
     "target": "../../../cli/src/graph/ladder/lua.rs",
-    "line": 62,
-    "end": 70,
+    "line": 58,
+    "end": 66,
     "text": "/// R1: the module's path in every search directory the requiring file"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|41e2c9a56a088701|0": {
     "target": "../../../cli/src/graph/ladder/lua.rs",
-    "line": 126,
-    "end": 133,
+    "line": 122,
+    "end": 129,
     "text": "/// R2: the path beside the loading file, then under the tree root; the"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|467cd4d37f29f442|0": {
-    "target": "../../../cli/src/graph/ladder/lua.rs",
-    "line": 42,
-    "end": 43,
-    "text": "pub(crate) const STDLIB: &str = \"string table math io os coroutine debug package bit32 utf8 \\"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|fcde8e78b3bf24af|0": {
-    "target": "../../../cli/src/graph/ladder/lua.rs",
-    "line": 55,
-    "text": "\"require\" if listed(STDLIB, spec) => Outcome::External { rung: 3 },"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua_path.rs|71fd461eb1c40703|0": {
     "target": "../../../cli/src/graph/ladder/lua_path.rs",
@@ -4195,8 +4183,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 271,
-    "end": 275,
+    "line": 266,
+    "end": 270,
     "text": "// The sentinel is never walked, and the scan-only arm (plan"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -4207,20 +4195,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|b8583103b0cd77b5|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 69,
-    "end": 84,
+    "line": 64,
+    "end": 79,
     "text": "#[derive(Debug, Clone, Copy, PartialEq, Eq)]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|e63f76e53c783474|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 63,
+    "line": 58,
     "text": "pub type Rung = u8;"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|04440d166e5d3c04|0": {
-    "target": "../../../cli/src/graph/ladder/py.rs",
-    "line": 140,
-    "end": 144,
-    "text": "/// CPython 3.13 public top-level stdlib modules — machine-generated"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|3f1e8e1a1abee67a|0": {
     "target": "../../../cli/src/graph/ladder/py.rs",
@@ -4254,8 +4236,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|cba85c9744321ab9|0": {
     "target": "../../../cli/src/graph/ladder/py.rs",
-    "line": 131,
-    "end": 138,
+    "line": 132,
+    "end": 139,
     "text": "fn source_roots(scope: &Scope) -> Vec<String> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/py.rs|f1c388b873727f0a|0": {
@@ -4354,43 +4336,38 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|0e6a881855c85fa0|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 234,
-    "end": 251,
+    "line": 231,
+    "end": 248,
     "text": "fn super_walk<'a>("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|48249de1aedb80ca|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 22,
-    "text": "pub(crate) const BUILTIN: [&str; 5] = [\"std\", \"core\", \"alloc\", \"proc_macro\", \"test\"];"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|4a7d86f308685ec4|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 177,
-    "end": 208,
+    "line": 174,
+    "end": 205,
     "text": "fn local_module("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|979a92271a9e5c97|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 102,
-    "end": 106,
+    "line": 99,
+    "end": 103,
     "text": "\"crate\" => {\nlet anchors = covering_roots(from, roots_set);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|a9d4b6a70b86d44a|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 139,
-    "end": 165,
+    "line": 136,
+    "end": 162,
     "text": "fn crate_walk("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|ab5bbdddf5dcd792|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 264,
-    "end": 297,
+    "line": 261,
+    "end": 294,
     "text": "fn extern_rung("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|c1910536a643a1f6|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 107,
-    "end": 121,
+    "line": 104,
+    "end": 118,
     "text": "\"self\" => {\nif inline_depth(scope, from, site.line) > 0 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/ts.rs|1b10b3ce9bd6a41a|0": {
@@ -4542,30 +4519,27 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|3e0121921e556557|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 181,
-    "end": 224,
+    "line": 92,
+    "end": 97,
     "text": "pub fn sites(lang: Lang) -> &'static [SiteKind] {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|43216d5bb511435f|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|748aa4dd5a69640f|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 223,
-    "text": "// Markdown scans line-wise in graph/md.rs (no grammar); the"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|a00b6f2b83aa3291|0": {
-    "target": "../../../cli/src/graph/spec.rs",
-    "line": 131,
-    "text": "const IMPORT_REQUIRE: SiteKind = site!("
+    "line": 90,
+    "end": 91,
+    "text": "/// (graph/sites/java.rs, graph/sites/html.rs); Markdown scans line-wise"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|e57213347ad2937a|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 8,
-    "end": 11,
+    "line": 10,
+    "end": 13,
     "text": "//! Sites are resolution-FREE: detection needs only these tables, so"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|fa931bad2a419584|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|f12413defb42d9ee|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 53,
-    "text": "Literal(&'static str),"
+    "line": 49,
+    "end": 55,
+    "text": "/// A fixed specifier the node carries as a keyword, not a field:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|d5350aafcc5c6a41|0": {
     "target": "../../../cli/src/graph/store.rs",
@@ -4622,14 +4596,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|40df88eaa1148ef9|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 127,
-    "end": 147,
+    "line": 128,
+    "end": 148,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|8de58f87dea9366e|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 147,
-    "end": 153,
+    "line": 148,
+    "end": 154,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
@@ -5083,6 +5057,59 @@
     "line": 14,
     "end": 32,
     "text": "positions :: Built -> IS.IntSet -> [Integer] -> [[Integer]]"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Boot1.hs|7b663a48a79a2b05|0": {
+    "target": "../../../core/app/CE/Lang/Common/Boot1.hs",
+    "line": 20,
+    "end": 21,
+    "text": "\\# (package name, its exposed modules, space-separated) — the\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Ladder.hs|3fc42a9859244c4b|0": {
+    "target": "../../../core/app/CE/Lang/Common/Ladder.hs",
+    "line": 9,
+    "end": 21,
+    "text": "\"[ladder.java]\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Ladder2.hs|0eefd55b603b3001|0": {
+    "target": "../../../core/app/CE/Lang/Common/Ladder2.hs",
+    "line": 89,
+    "end": 98,
+    "text": "\"[ladder.lua]\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Ladder2.hs|18b585d42e0227ff|0": {
+    "target": "../../../core/app/CE/Lang/Common/Ladder2.hs",
+    "line": 103,
+    "end": 106,
+    "text": "\\# Crates the toolchain provides without any declaration.\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Ladder2.hs|90d96f2b09e3b14f|0": {
+    "target": "../../../core/app/CE/Lang/Common/Ladder2.hs",
+    "line": 10,
+    "end": 15,
+    "text": "\\# Go 1.26.4 importable standard-library packages — machine-generated\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Ladder2.hs|f0421264faa8f092|0": {
+    "target": "../../../core/app/CE/Lang/Common/Ladder2.hs",
+    "line": 54,
+    "end": 58,
+    "text": "\\# CPython 3.13 public top-level stdlib modules — machine-generated\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Python.hs|cf2d48d100de07a3|0": {
+    "target": "../../../core/app/CE/Lang/Python.hs",
+    "line": 17,
+    "end": 22,
+    "text": "\\sites = [\\n\\\n\\  {node = 'import_statement', label = 'import', via = {form = 'each_import_target'}},\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Python.hs|e5c6410ad3506ae7|0": {
+    "target": "../../../core/app/CE/Lang/Python.hs",
+    "line": 20,
+    "end": 21,
+    "text": "\\  # `from __future__ import` has no module field: the site names it\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/TypeScript.hs|bac5a6c39bdeee05|0": {
+    "target": "../../../core/app/CE/Lang/TypeScript.hs",
+    "line": 16,
+    "text": "\\  {node = 'import_require_clause', label = 'import', via = {form = 'field', arg = 'source'}},\\n\\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Wire.hs|cb5765da5377654d|0": {
     "target": "../../../core/app/CE/Wire.hs",
@@ -6390,11 +6417,11 @@
     "end": 45,
     "text": "let (removed, added, degraded) = if a_t.is_empty() || b_t.is_empty() {"
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|74d3ccd17b6aee59|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/kinds.rs|db0ed51bcd1ee1d1|0": {
     "target": "../../../cli/src/fourclass/kinds.rs",
-    "line": 101,
-    "end": 157,
-    "text": "const C_FAMILY: [&str; 10] = ["
+    "line": 30,
+    "end": 33,
+    "text": "//! The kind tables are the core's since plan v2.32 step 2 — each"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/mod.rs|51f4e649547bf734|0": {
     "target": "../../../cli/src/fourclass/mod.rs",
@@ -6886,6 +6913,18 @@
     "line": 30,
     "end": 32,
     "text": "-- fourclass/2 = the anchor-width request shape (proto 2.0.0). An"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Lang/C.hs|2340ee0483df6b36|0": {
+    "target": "../../../core/app/CE/Lang/C.hs",
+    "line": 13,
+    "end": 17,
+    "text": "\"extra = [\\n\\\n\\  'preproc_def', 'preproc_function_def', 'struct_specifier', 'union_specifier',\\n\\"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Lang/Common/Graph.hs|3090ef852405dfea|0": {
+    "target": "../../../core/app/CE/Lang/Common/Graph.hs",
+    "line": 10,
+    "end": 45,
+    "text": "\"[fourclass]\\n\\"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/SpecProbes.hs|3511fafd14f9a99b|0": {
     "target": "../../../core/test/SpecProbes.hs",
@@ -7511,20 +7550,20 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 204,
-    "end": 206,
+    "line": 212,
+    "end": 214,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 220,
-    "end": 233,
+    "line": 228,
+    "end": 241,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 274,
-    "end": 285,
+    "line": 282,
+    "end": 293,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
@@ -7552,8 +7591,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 283,
-    "end": 299,
+    "line": 291,
+    "end": 307,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
@@ -7819,31 +7858,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 546,
-    "end": 548,
+    "line": 553,
+    "end": 555,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 542,
+    "line": 549,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 534,
-    "end": 548,
+    "line": 541,
+    "end": 555,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 537,
-    "end": 538,
+    "line": 544,
+    "end": 545,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 537,
-    "end": 541,
+    "line": 544,
+    "end": 548,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8252,15 +8291,15 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/protocol.rs|796cc949b5af37ef|0": {
     "target": "../../../cli/src/mention/conv/protocol.rs",
-    "line": 95,
-    "end": 127,
+    "line": 31,
+    "end": 63,
     "text": "pub(super) fn protocol(lang: Lang, rel: &str, name: &str) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/protocol.rs|9517578b1cd1ae8c|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/protocol.rs|97fc534b86d81187|0": {
     "target": "../../../cli/src/mention/conv/protocol.rs",
-    "line": 19,
-    "end": 89,
-    "text": "pub(crate) const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
+    "line": 17,
+    "end": 25,
+    "text": "/// The name tables are the core's since plan v2.32 step 2"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/py.rs|cba48a2d1cbb6671|0": {
     "target": "../../../cli/src/mention/conv/py.rs",
@@ -8392,38 +8431,38 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|6da1b50673a56044|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 109,
-    "end": 120,
+    "line": 113,
+    "end": 124,
     "text": "pub fn fold(token: &str) -> String {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|8ad4c5ba8e153340|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 92,
-    "end": 96,
+    "line": 91,
+    "end": 95,
     "text": "/// The `$` arm's table lookup: extension lower-cased before the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|b034c724c14b349d|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 97,
-    "end": 103,
+    "line": 96,
+    "end": 102,
     "text": "pub fn whole_run_only(rel: &str) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|d54a6fd0f9d4f0a1|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 127,
-    "end": 144,
+    "line": 131,
+    "end": 148,
     "text": "/// `HTTPServer` is two and `RULES` one) and ≥ FOLD_MIN_CHARS literal"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|df28ad3bc1b70341|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 72,
-    "end": 80,
+    "line": 71,
+    "end": 79,
     "text": "pub fn emit<'t>(text: &'t str, whole_run_only: bool, sink: &mut impl FnMut(&'t str)) {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/token.rs|ecc1d9e0d0ddabe9|0": {
     "target": "../../../cli/src/mention/token.rs",
-    "line": 29,
-    "end": 35,
+    "line": 28,
+    "end": 34,
     "text": "fn opens(c: char) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/walk.rs|04bb12f3f5614923|0": {
@@ -8569,8 +8608,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 274,
-    "end": 276,
+    "line": 281,
+    "end": 283,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -8630,6 +8669,12 @@
     "line": 41,
     "end": 74,
     "text": "-- | Caps for the two advisory tables (6.2.0), each its own literal:"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Lang/Common/Protocol.hs|d3330c3a110e0933|0": {
+    "target": "../../../core/app/CE/Lang/Common/Protocol.hs",
+    "line": 6,
+    "end": 102,
+    "text": "protocol :: String"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|7378483969f4bd7b|0": {
     "target": "../../../gui/ui/graph.js",
@@ -8829,8 +8874,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 265,
-    "end": 281,
+    "line": 273,
+    "end": 289,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
@@ -8882,50 +8927,50 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|1d180596b257ee65|0": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 177,
-    "end": 208,
+    "line": 174,
+    "end": 205,
     "text": "/// Every name a label's absence frames bind: `(no Dongpo Pork)`"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|4833c20b4012fa06|0": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 12,
-    "end": 15,
+    "line": 9,
+    "end": 12,
     "text": "/// One token of a surface: a bracket, an ASCII word (lower-cased; cut"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|4833c20b4012fa06|1": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 12,
-    "end": 15,
+    "line": 9,
+    "end": 12,
     "text": "/// One token of a surface: a bracket, an ASCII word (lower-cased; cut"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|98de27a23768b77b|0": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 219,
-    "end": 229,
+    "line": 217,
+    "end": 227,
     "text": "/// A wide run as a frame: a Chinese prefix form opens it or a suffix"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|ad527c36d22bf83a|0": {
-    "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 128,
-    "end": 134,
-    "text": "/// Every window of 1..=JOIN_MAX adjacent words; a bracket or the end"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|c3d9919d5c34288a|0": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 210,
-    "end": 217,
+    "line": 208,
+    "end": 215,
     "text": "/// Inside a bracket pair: the nearest bracket before `i` opens and"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|d055e4d7de1c6a9a|0": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 231,
-    "end": 255,
+    "line": 229,
+    "end": 253,
     "text": "/// The sentences of a prose text: cut after `.`, `!`, `?`, `;` when"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|ed62bc0747a08fdd|0": {
+    "target": "../../../cli/src/tombstone/frames.rs",
+    "line": 125,
+    "end": 131,
+    "text": "/// Every window of 1..=`join_max` adjacent words; a bracket or the end"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/frames.rs|f6df483390c6e092|0": {
     "target": "../../../cli/src/tombstone/frames.rs",
-    "line": 257,
-    "end": 284,
+    "line": 255,
+    "end": 282,
     "text": "/// The retrospective marks a prose sentence carries: every English"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/marked.rs|51a26ff19e0c3f88|0": {
@@ -8990,20 +9035,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|49ce2b0323816e50|0": {
     "target": "../../../cli/src/tombstone/names.rs",
-    "line": 122,
-    "end": 126,
+    "line": 126,
+    "end": 130,
     "text": "/// The names one text declares (its structural positions), keyed and"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|4d1d0f8dc05a790e|0": {
     "target": "../../../cli/src/tombstone/names.rs",
-    "line": 100,
-    "end": 120,
+    "line": 104,
+    "end": 124,
     "text": "/// The spellings of one marked text outside the slots an absence"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|68087a7fa494b688|0": {
     "target": "../../../cli/src/tombstone/names.rs",
-    "line": 181,
-    "end": 203,
+    "line": 185,
+    "end": 207,
     "text": "/// R over a changeset (`added[i]` = the after-side lines pair `i`"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|6971f85f9e6fd7b9|0": {
@@ -9014,14 +9059,14 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|6e75859752c57566|0": {
     "target": "../../../cli/src/tombstone/names.rs",
-    "line": 170,
-    "end": 178,
+    "line": 174,
+    "end": 182,
     "text": "/// Every wide erased name occurring in `text` as a substring —"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|969d792a6b92b9f7|0": {
     "target": "../../../cli/src/tombstone/names.rs",
-    "line": 145,
-    "end": 156,
+    "line": 149,
+    "end": 160,
     "text": "/// The keys under which a name survives on one after side (module"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/names.rs|a3b8948a5d328016|0": {
@@ -9168,35 +9213,11 @@
     "end": 24,
     "text": "/// Files past this many bytes read as absent. The audit's untracked"
   },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|719662f2a568389b|0": {
-    "target": "../../../cli/src/tombstone/vocab.rs",
-    "line": 60,
-    "end": 66,
-    "text": "/// Retrospective marks a prose segment carries: lower-cased English"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|77a6051f70057bf6|0": {
-    "target": "../../../cli/src/tombstone/vocab.rs",
-    "line": 31,
-    "end": 35,
-    "text": "/// V₀ — absence words that are never names (lower-cased; the wide"
-  },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|b8bd1d1f0bc539d7|0": {
     "target": "../../../cli/src/tombstone/vocab.rs",
-    "line": 79,
-    "end": 91,
+    "line": 34,
+    "end": 46,
     "text": "/// Whether `w` is a word of the instrument's own vocabulary — a frame,"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|b9217842f069fb52|0": {
-    "target": "../../../cli/src/tombstone/vocab.rs",
-    "line": 14,
-    "end": 19,
-    "text": "/// Fewest chars an ASCII name has (`ab` is a preposition, not a name)."
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|c2f121ad59313c7f|0": {
-    "target": "../../../cli/src/tombstone/vocab.rs",
-    "line": 50,
-    "end": 58,
-    "text": "/// English absence frames: a prefix binds the words after it, a"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|132d1988f574ae82|0": {
     "target": "../../../cli/src/tombstone/wire.rs",
@@ -9227,6 +9248,30 @@
     "line": 1,
     "end": 12,
     "text": "//! FPR replay for the tombstone class (plan v2.26 step 6; the ledger"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|4c151cb1ff97b241|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 9,
+    "end": 16,
+    "text": "\\# V₀ — absence words that are never names (lower-cased; the wide\\n\\"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|7059d0771533dce5|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 35,
+    "end": 53,
+    "text": "\\# English absence frames: a prefix binds the words after it, a\\n\\"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|e6e8d810b3c5ad28|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 80,
+    "end": 85,
+    "text": "\\# Fewest chars an ASCII name has (`ab` is a preposition, not a name).\\n\\"
+  },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|f55874f52532ebe5|0": {
+    "target": "../../../core/app/CE/Lang/Common/Prose.hs",
+    "line": 54,
+    "end": 64,
+    "text": "\\# Retrospective marks a prose segment carries: lower-cased English\\n\\"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
@@ -10530,22 +10575,22 @@
     "line": 73,
     "text": "pub fn lower_file(text: &str, lang: Lang) -> Option<Lowered> {"
   },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|12d5fd933d46fae5|0": {
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|2df97945a0236a94|0": {
     "target": "../../../cli/src/flow/mod.rs",
-    "line": 45,
-    "end": 63,
-    "text": "/// The languages whose flow findings are judged, not advised: a"
+    "line": 1,
+    "end": 11,
+    "text": "//! The flow family's measuring side (plan v2.31 step 4; ADR-008"
   },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|5a6154b13acdf234|0": {
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/mod.rs|d94b3f6a0ebc4477|0": {
     "target": "../../../cli/src/flow/mod.rs",
-    "line": 43,
-    "end": 55,
-    "text": "use crate::scan::lang::Lang;"
+    "line": 35,
+    "end": 45,
+    "text": "/// The languages whose flow findings are judged, not advised, as a"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/spec.rs|319494f634313359|0": {
     "target": "../../../cli/src/flow/spec.rs",
-    "line": 250,
-    "end": 253,
+    "line": 219,
+    "end": 222,
     "text": "/// The table of a language whose units the family lowers (§5.3): the"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|10e7f3e0dbe6a0ad|0": {
@@ -10722,6 +10767,12 @@
     "line": 23,
     "text": "runs :: Int -> IS.IntSet -> [(Int, Int)]"
   },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Lang/Common.hs|ce1041f77630cc79|0": {
+    "target": "../../../core/app/CE/Lang/Common.hs",
+    "line": 53,
+    "end": 56,
+    "text": "\\# from the arms and from its own matches. flow_judged: the language's\\n\\"
+  },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/FlowProps.hs|eede1fc1fcfceaf6|0": {
     "target": "../../../core/test/FlowProps.hs",
     "line": 5,
@@ -10877,29 +10928,30 @@
     "line": 95,
     "text": "pub fn isomorphic(trees: &[&UnitTree]) -> bool {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|15a3f850eab6ad92|0": {
-    "target": "../../../cli/src/merge/slot.rs",
-    "line": 85,
-    "text": "const TABLES: [(Lang, &[&str]); 11] = ["
-  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|796f0d2218b5460b|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 45,
+    "line": 31,
     "text": "pub struct SlotSpec {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 166,
+    "line": 81,
     "text": "fn compile(lang: Lang) -> Option<Classes> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|1": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 166,
+    "line": 81,
     "text": "fn compile(lang: Lang) -> Option<Classes> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|c3684e61d12cc482|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 17,
+    "end": 20,
+    "text": "//! The tables are the core's since plan v2.32 step 2: each language's"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|c7d9a7464697d810|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 209,
+    "line": 157,
     "text": "pub fn slot_of(c: &Classes, node: Node) -> u8 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|e4b6420b866203cb|0": {
@@ -10912,12 +10964,6 @@
     "target": "../../../cli/src/merge/slot.rs",
     "line": 72,
     "text": "pub helper_lines: u8,"
-  },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot_hs.rs|15fd89336dbbdeb9|0": {
-    "target": "../../../cli/src/merge/slot_hs.rs",
-    "line": 1,
-    "end": 14,
-    "text": "//! The Haskell slot table (plan v2.31 step 7, step-7 ruling 8), beside"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2c7f61f8d970ef98|0": {
     "target": "../../../cli/src/merge/wire.rs",
@@ -11027,17 +11073,17 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|26002d5fe7b572a5|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 53,
+    "line": 44,
     "text": "fn every_kind_and_field_is_in_the_grammar() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|55c7b9c558a4993d|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 104,
+    "line": 75,
     "text": "fn every_other_answer_on_the_probe_is_named_other() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|ca9f58a0e1aa95ba|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 142,
+    "line": 101,
     "text": "fn the_sets_are_disjoint() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/wire.rs|6fc7eafe6c2009d2|0": {
@@ -11060,6 +11106,12 @@
     "target": "../../../core/app/CE/Clone/Ted.hs",
     "line": 56,
     "text": "tedMapping :: Tree -> Tree -> (Integer, [(Int, Int)])"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Lang/Haskell.hs|ce773f8bdfa6e731|0": {
+    "target": "../../../core/app/CE/Lang/Haskell.hs",
+    "line": 126,
+    "end": 141,
+    "text": "slot =\n\"[[slot]]\\n\\"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge.hs|0877807d6c20944d|0": {
     "target": "../../../core/app/CE/Merge.hs",

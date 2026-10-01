@@ -9,7 +9,7 @@
 //! pinned mirror — verbatimFloor joined the pinned set at ADR-008 P1
 //! when its verdict home moved to the core).
 
-use crate::docdup::spec::{DOC_SHINGLE, VERBATIM_FLOOR};
+use crate::docdup::spec::table;
 use anyhow::Result;
 use serde_json::{Value, json};
 
@@ -51,11 +51,11 @@ pub fn chunk_request<'s>(
 /// union, verdict))` plus `[judged, jaccardDups]` — the shared
 /// parse_scores throat with this family's knob list, which pins
 /// every single-owner number: the 80/100 ratio, shingleK ==
-/// DOC_SHINGLE (D13 — two sides shingling at different widths would
+/// the package's doc_shingle (D13 — two sides shingling at different widths would
 /// compare incommensurable alphabets and no downstream gate could
-/// tell), and since ADR-008 P1 verbatimFloor == VERBATIM_FLOOR (the
-/// floor's verdict home moved to Docdup/Cost.hs; the Rust constant
-/// is the instruments' mirror). The rows zip with the core's
+/// tell), and since ADR-008 P1 verbatimFloor == verbatim_floor (the
+/// floor's verdict home moved to Docdup/Cost.hs; since plan v2.32
+/// step 2 the measuring side reads its copy from the package). The rows zip with the core's
 /// per-row verdict bits — the reported set is the core's decision.
 pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, bool)>> {
     crate::lockstep::parse_scores(
@@ -63,14 +63,11 @@ pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, 
         &[
             ("jaccardNum", json!(JACCARD_NUM)),
             ("jaccardDen", json!(JACCARD_DEN)),
-            ("shingleK", json!(DOC_SHINGLE)),
-            ("verbatimFloor", json!(VERBATIM_FLOOR)),
-            ("minDocTokens", json!(crate::docdup::spec::MIN_DOC_TOKENS)),
-            ("docLineCap", json!(crate::docdup::spec::DOC_LINE_CAP)),
-            (
-                "licHeadLines",
-                json!(crate::docdup::spec::LICENSE_HEAD_LINES),
-            ),
+            ("shingleK", json!(table().doc_shingle)),
+            ("verbatimFloor", json!(table().verbatim_floor)),
+            ("minDocTokens", json!(table().min_doc_tokens)),
+            ("docLineCap", json!(table().doc_line_cap)),
+            ("licHeadLines", json!(table().license_head_lines)),
         ],
         "judge/wire.rs vs Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
         &["judged", "jaccardDups"],

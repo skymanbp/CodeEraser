@@ -92,8 +92,9 @@ judges against. Absent = the self-referential floor alone (row C)". *Caveat for 
 the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in the tree — the
 booklet was distilled into `structure-axes.md` and its full text lives only in git history
 ([structure-axes.md:3-6](../structure-axes.md#L3)). No other definition of "row C"
-or of "self-referential floor" exists in the repository (verified by grep this run: the only other hit in tracked source is
-[hs_boot.rs:237](../../../cli/src/graph/ladder/hs_boot.rs#L237), a Haskell module list where
+or of "self-referential floor" exists in the repository (verified by grep this run: the other hits in tracked source are
+[c.rs:3](../../../cli/src/graph/ladder/c.rs#L3), the language-expansion booklet's unrelated "§8 row C / C++", and
+[Boot2.hs:46](../../../core/app/CE/Lang/Common/Boot2.hs#L46), a Haskell module list where
 "Arrow Control.Category" spells the substring by accident).
 
 Mechanically the floor is a shape guarantee: the A-layer keys `divergence` and `deviations`

@@ -91,37 +91,37 @@ spaces before the identifiers are read: the fifth round had bound `independent` 
 caveat message and `linux` out of a cfg string
 ([marked.rs:69-74](../../../cli/src/tombstone/marked.rs#L69), [opaque.rs:1-14](../../../cli/src/scan/opaque.rs#L1)).
 
-Each marked text offers every **window** of 1..=`JOIN_MAX` adjacent words — the word cut
+Each marked text offers every **window** of 1..=`join_max` adjacent words — the word cut
 lower-cases ASCII, splits at `_`, `-`, any non-alphanumeric and a camel rise, and keeps a
 non-ASCII run whole — plus each run wider than a window, so `braise_dongpo_pork` names
 `dongpo_pork` too, which is what `(no Dongpo Pork)` binds
-([frames.rs:12-15](../../../cli/src/tombstone/frames.rs#L12),
-[frames.rs:128-134](../../../cli/src/tombstone/frames.rs#L128),
+([frames.rs:9-12](../../../cli/src/tombstone/frames.rs#L9),
+[frames.rs:125-131](../../../cli/src/tombstone/frames.rs#L125),
 [names.rs:54-68](../../../cli/src/tombstone/names.rs#L54)). A spelling is keyed by its
 canonical form — words `_`-joined — through the dedup family's fnv1a, so `DongpoPork`,
 `dongpo_pork` and `Dongpo Pork` are one name, and keys are all the hub compares and all the
 feed stores ([names.rs:43-52](../../../cli/src/tombstone/names.rs#L43)).
 
-The **name floor** admits a spelling that has a letter, is at least `MIN_ASCII_NAME`
-characters (`MIN_WIDE_NAME` for a CJK one — `ab` is a preposition, not a name), has no word
+The **name floor** admits a spelling that has a letter, is at least `min_ascii_name`
+characters (`min_wide_name` for a CJK one — `ab` is a preposition, not a name), has no word
 of the instrument's own vocabulary among its words (a frame, an absence word, a function
 word, a word of a retrospective mark) nor of the repository's own `[tombstone] terms`, and is
 not made of reserved words alone — `user_data` is a name, `data` is not
 ([names.rs:83-98](../../../cli/src/tombstone/names.rs#L83),
-[vocab.rs:14-19](../../../cli/src/tombstone/vocab.rs#L14),
-[vocab.rs:79-91](../../../cli/src/tombstone/vocab.rs#L79)). A text that is an absence word
+[Prose.hs:80-85](../../../core/app/CE/Lang/Common/Prose.hs#L80),
+[vocab.rs:34-46](../../../cli/src/tombstone/vocab.rs#L34)). A text that is an absence word
 WHOLE (`NotFound`, `no_std`) spells no name at all: its `found` half must not enter R just
-because the word is compound ([names.rs:122-126](../../../cli/src/tombstone/names.rs#L122),
-[vocab.rs:31-35](../../../cli/src/tombstone/vocab.rs#L31)).
+because the word is compound ([names.rs:126-130](../../../cli/src/tombstone/names.rs#L126),
+[Prose.hs:9-16](../../../core/app/CE/Lang/Common/Prose.hs#L9)).
 
 ERASED means: a name of some before side that SURVIVES on no after side. A name survives in
 every marked text this change did not add — a code span included — and in a structural one
 it did add, outside the slots an absence frame binds there; a mention this change wrote into
 prose or a code span is not survival, because that is where residue is written
 ([names.rs:11-16](../../../cli/src/tombstone/names.rs#L11),
-[names.rs:145-156](../../../cli/src/tombstone/names.rs#L145)). So a name moved to another
+[names.rs:149-160](../../../cli/src/tombstone/names.rs#L149)). So a name moved to another
 changed file is alive, and a name that only recurs inside `(no X)` is erased
-([names.rs:181-203](../../../cli/src/tombstone/names.rs#L181)):
+([names.rs:185-207](../../../cli/src/tombstone/names.rs#L185)):
 
     R = ⋃ᵢ names(beforeᵢ)  \  ⋃ᵢ alive(afterᵢ, addedᵢ)          (compared as keys)
 
@@ -131,14 +131,14 @@ A label fires when an absence frame in it binds an erased name. The frames are f
 English prefixes (`no`, `not`, `non`, `without`, `sans`, `minus`), English suffixes (`free`,
 `less`, `removed`, `dropped`, `gone`), and the Chinese forms, read inside one run
 (`无东坡肉`) or as a word before an ASCII name (`无cache`)
-([vocab.rs:50-58](../../../cli/src/tombstone/vocab.rs#L50)). A prefix binds the
-1..=`JOIN_MAX` words after it (`no more` counts as one prefix), a suffix the words before it,
+([Prose.hs:35-53](../../../core/app/CE/Lang/Common/Prose.hs#L35)). A prefix binds the
+1..=`join_max` words after it (`no more` counts as one prefix), a suffix the words before it,
 a Chinese form the rest of its own run; the candidates are spellings, the hub keys them and
 asks the erased set — a candidate that names nothing erased is nothing
-([frames.rs:177-208](../../../cli/src/tombstone/frames.rs#L177),
-[frames.rs:219-229](../../../cli/src/tombstone/frames.rs#L219)). A frame inside a bracket
+([frames.rs:174-205](../../../cli/src/tombstone/frames.rs#L174),
+[frames.rs:217-227](../../../cli/src/tombstone/frames.rs#L217)). A frame inside a bracket
 pair is kind 0, `bracketed`; a bare one is kind 1 — the two label kinds the wire carries and
-the feed names ([frames.rs:210-217](../../../cli/src/tombstone/frames.rs#L210),
+the feed names ([frames.rs:208-215](../../../cli/src/tombstone/frames.rs#L208),
 [mod.rs:60-67](../../../cli/src/tombstone/mod.rs#L60)). The label row's `names` is how many
 DISTINCT names the bound candidates spell — a name written twice is one name — among those
 known: erased by this changeset, or by an earlier edit of the session
@@ -149,7 +149,7 @@ the same door, so a window an absence frame binds is neither erased nor alive �
 `fn no_return_chars` declares nothing named `return_chars` on either side of a change. The
 second self-replay round found the asymmetric form: a moved `def test_header_no_return_chars`
 read as "removed `return_chars` and wrote it back", the whole source of the requests corpus's
-two false sites ([names.rs:100-120](../../../cli/src/tombstone/names.rs#L100),
+two false sites ([names.rs:104-124](../../../cli/src/tombstone/names.rs#L104),
 [FPR-TOMBSTONE.md:27](../../FPR-TOMBSTONE.md#L27)).
 
 ### 4. The prose conjunction — per sentence
@@ -158,7 +158,7 @@ A prose segment is cut into sentences — after `.`, `!`, `?`, `;` when whitespa
 follows (so `ce.toml` and `a.rs` stay whole) and after any full-width `。！？；` — in its
 WHOLE text, and the conjunction is read per sentence this change touched: the fourth
 self-replay round had bound a name mentioned 3,000 characters away from its mark on one
-5,000-character line ([frames.rs:231-255](../../../cli/src/tombstone/frames.rs#L231),
+5,000-character line ([frames.rs:229-253](../../../cli/src/tombstone/frames.rs#L229),
 [surfaces.rs:159-192](../../../cli/src/tombstone/surfaces.rs#L159)). Each sentence yields
 one row when it carries a retrospective mark or an erased name at all: `marks` counts every
 English phrase of the mark table at word boundaries (`previously` must not match inside
@@ -166,10 +166,10 @@ English phrase of the mark table at word boundaries (`previously` must not match
 number is the floor's input, not a tally; `names` counts the known names it spells — every
 window and every wide erased name it contains as a substring (a Chinese sentence is one
 word), once per key across both scripts
-([frames.rs:257-284](../../../cli/src/tombstone/frames.rs#L257),
-[vocab.rs:60-66](../../../cli/src/tombstone/vocab.rs#L60),
+([frames.rs:255-282](../../../cli/src/tombstone/frames.rs#L255),
+[Prose.hs:54-64](../../../core/app/CE/Lang/Common/Prose.hs#L54),
 [names.rs:70-81](../../../cli/src/tombstone/names.rs#L70),
-[names.rs:170-178](../../../cli/src/tombstone/names.rs#L170),
+[names.rs:174-182](../../../cli/src/tombstone/names.rs#L174),
 [candidates.rs:72-101](../../../cli/src/tombstone/candidates.rs#L72)). Which of those rows is a site is
 not decided here: a mark alone is a sentence about something else, a name alone is a mention
 or a migration guide, and the conjunction that makes a tombstone is the core's (§6).
@@ -276,7 +276,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:71-81](../../../cli/src/guard/tombstone.rs#L71),
   [guard/tombstone.rs:149-167](../../../cli/src/guard/tombstone.rs#L149),
-  [hookio.rs:265-281](../../../cli/src/hookio.rs#L265),
+  [hookio.rs:273-289](../../../cli/src/hookio.rs#L273),
   [proto.rs:73-80](../../../cli/src/daemon/proto.rs#L73),
   [say.rs:69-80](../../../cli/src/guard/say.rs#L69)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
@@ -321,7 +321,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   the segmentation limit the spec states rather than solves — so a wide name is spelled only
   where a run is a heading, a list lead or an identifier by itself, survives only as a whole
   word, and is bound in prose by substring; a Chinese frame is read inside one run or before
-  an ASCII name ([frames.rs:12-15](../../../cli/src/tombstone/frames.rs#L12),
+  an ASCII name ([frames.rs:9-12](../../../cli/src/tombstone/frames.rs#L9),
   [names.rs:38-40](../../../cli/src/tombstone/names.rs#L38),
   [DEVELOPMENT_PLAN.md:125](../../DEVELOPMENT_PLAN.md#L125)).
 - **The session union forgets what the tree shows restored.** A name written back by a

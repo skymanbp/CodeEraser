@@ -49,7 +49,7 @@
 //! the product signed leaves U when read (`signed` below).
 
 use crate::gitmodules::Owner;
-use crate::scan::walk::{SECRET_GLOBS, contained, rel_str};
+use crate::scan::walk::{contained, rel_str, secret_globs};
 use anyhow::{Context, Result};
 use globset::{Glob, GlobSet, GlobSetBuilder};
 use ignore::{DirEntry, WalkBuilder};
@@ -235,7 +235,7 @@ fn basename(rel: &str) -> &str {
 /// literals, so a build failure is a programming error, not a run.
 static EXCLUDED: LazyLock<GlobSet> = LazyLock::new(|| {
     let mut b = GlobSetBuilder::new();
-    for glob in SECRET_GLOBS.iter().chain(OMNI_MENTIONERS.iter()) {
+    for glob in secret_globs().iter().chain(OMNI_MENTIONERS.iter()) {
         b.add(Glob::new(glob).expect(glob));
     }
     b.build().expect("mention exclusion table")

@@ -42,7 +42,9 @@ serde = { version = "1", features = ["derive"] }
 # (the default parser is best-effort, one ULP off at times) — the frozen
 # eval docs re-derive every stored ratio exactly (lang-precision's
 # 559/607 read back one ULP low without it)
-serde_json = { version = "1", features = ["float_roundtrip"] }
+# raw_value: the definition package's cache file holds the package bytes
+# as written, read back unparsed for their fnv1a64 (tables/cache.rs)
+serde_json = { version = "1", features = ["float_roundtrip", "raw_value"] }
 # the updater's pin check (update/apply.rs): the same SHA-256 ce.sh
 # asks sha256sum for — already in both lockfiles transitively, so no
 # new build node

@@ -19,10 +19,10 @@ use std::process::{Child, Stdio};
 /// `tables.result` — every language and product definition the core
 /// now holds, one key per table family, with `digest`, the fnv1a64 of
 /// the package's canonical bytes — and the hello reply gains
-/// `tablesDigest`, the same number. This side reads neither yet: the
-/// consumers switch in step 2, and until then cli/src/tables/native.rs
-/// renders today's Rust tables in the package's shape for the
-/// equivalence gate. Every judgment family's bytes stand.
+/// `tablesDigest`, the same number. Since step 2 every table this side
+/// measures with is read off that package (crate::tables), and a hello
+/// naming another digest than the package this run read is refused by
+/// name. Every judgment family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -59,8 +59,10 @@ pub struct HelloReply {
     #[serde(default)]
     pub capabilities: Vec<String>,
     /// The fnv1a64 of the core's definition package (7.7.0): a core
-    /// answering `tables/1` names it here. Absent = an older core;
-    /// nothing refuses on it until the consumers read the package.
+    /// answering `tables/1` names it here. Absent = an older core (the
+    /// package fetch refuses it by its missing capability); present
+    /// and unequal to the package this run read = refused by name
+    /// (crate::tables::check_hello).
     #[serde(default, rename = "tablesDigest")]
     pub tables_digest: Option<u64>,
 }
@@ -104,6 +106,7 @@ impl Link {
         let parsed = serde_json::from_str(&link.read_line()?)
             .map_err(|e| format!("bad hello reply: {e}"))?;
         let reply = validate(parsed)?;
+        crate::tables::check_hello(core, reply.tables_digest)?;
         link.caps = reply.capabilities.clone();
         link.proto = reply.proto.clone();
         Ok((link, reply))

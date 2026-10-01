@@ -61,6 +61,13 @@
 
 Rust −≈ 235 KB，Haskell +≈ 250 KB（record 语法比 TOML 略长）。
 
+### 4.5 已交付（步 2，2026-10-01）
+
+- **Rust 的形**：`cli/src/tables.rs` + `tables/{fetch,cache,pack,leak}.rs`。包读进 `Tables` 一个记录（`Pack` 解引用到它，另带 `digest`、来源文件与扩展名 → 码的索引），每个表结构是 `leaked!` 的紧凑声明：serde 读它的所有权孪生、再把每个字段泄漏成消费者原来的 `&'static` 形——包有 JSON 转义（Doxygen 的 `\brief`、`"` 定界符），借用读不出，泄漏一次活到进程结束，消费者签名不变（`scan::spec::spec(lang)` 仍答 `&'static LangSpec`，阶梯名表、墓碑词表、docdup 的五个数各一个读者函数）。三级来源：进程内存 → `<根>/.ce/tables-<ce 版本>-<proto>.json` → 核；缓存身份 = `ce` / `proto` + 答包那份核二进制的 `{path, len, mtime_ns}`（一次 stat），完整性 = Rust 自己对包字节算的 fnv1a64；任一不符、文件坏了都重取并覆盖，写 = 临时名 + rename、写失败不是错。根由每个入口设：CLI 的 `main_cmds::or_cwd`（所有带根参数的命令与 MCP）、钩子的 `hookio::gated_envelope`、daemon 的 `serve`（离开根之前）、GUI 的 `commands::task`；没设时回落 `root::project_root(当前目录)`。`ce eject` 只读不写缓存（`tables::transient`）：它的活是删 `.ce/`，不能顺手建一个。
+- **拒绝**（都退 2，都具名）：无核、核无 `tables/1`、包缺键（serde 的「missing field `<键>`」）；此后每条核链的 hello 若点名的 `tablesDigest` 与本次读到的包不等，按名拒（`corelink::Link::open` 里一处）。钩子拿不到包时不退 2（那在 PreToolUse 里读作拒写），而是在 stderr 说一句、照无钩子放行；GUI 把同一句作为任务的错误显示。
+- **删除**：`scan/spec_{c,hs,java,launch,lua,r}.rs`、`flow/spec_{c,go,java,lua,py,r,rs,ts}.rs`、`merge/slot_{c,hs,java,launch,lua,r,ts}.rs`、`graph/ladder/{hs_boot,java_jdk}.rs`、`tables/native.rs` 二十四个文件，`lang.rs` 的 `LANGS` / `MACHINE_TXT` / `MENTION_WHOLE_RUN_EXTS`、`graph/spec.rs` 与 `spec/calls.rs` 的站点表与调用表、`fourclass/kinds.rs` 的种类表、`walk.rs` 的两张排除表、`outputs.rs`、`keys.rs`、`deadcode/flags.rs`、`compdb_flags.rs`、`docdup/spec.rs`、`tombstone/vocab.rs`、`mention/conv/protocol.rs` 与五个阶梯的名表的文本；子仓 `it/tables_equivalence.rs` 随镜像退役。语言条（§11 口径，`git ls-tree -l`、`cli/tests` / `contracts` / `site` 除外、CRLF 折 LF）：Rust 2,542,860 → 2,395,767 B（−147,093），Haskell 1,156,888 → 1,158,791 B（`CE.Lang.Toml` 头注一段、`CE.Docdup.Cost` 接过被删 Rust 注释里的出处、语言行的 `flow_judged` 列与它的 `LangProps` 腿），Haskell 占全部 28.62 % → 29.74 %、占 Rust + Haskell 31.27 % → 32.60 %。
+- **门**：十个对拍语料与 baa4f8af 的自仓工作树（测试子仓就位）各十三面（scan / dedup / docdup / deadcode / clone / structure / erase / check / graph --sites / graph --mentions / flow / merge / arch），baa4f8af 与本步的 release 两臂 143 对逐字节同、`ce flow` 在内；子仓新腿 `it/tables_package.rs` 两条（无核 / 旧核 / 缺键三种拒绝；缓存的写、命中不再问核、核换了重取、`ce` / `proto` 不符重取、文件坏了重取、hello digest 不符拒绝）；代价见 PERF-BUDGET「v2.32 步 2」一节（暖跑三面与钩子探针量不出，未命中的第一跑多付 ≈ 131 ms）。
+
 ## 5. 件 ②：文档骨架进核（每族应答加 `document`）
 
 **那句话**：报告文档的形状（字段、排序、计数、schema id）是判决的陈述，应当只有一处权威；三面只是三种打印。
@@ -175,7 +182,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 |---|---|---|
 | 0 | 计划修正案与立项（2026-10-01）：本册 + 计划书 v2.32（横幅立项句、ADR-008 细则第八期、§6 T 轨 v2.32 行）+ CHANGELOG `[Unreleased]` 块 + cc-memory 重锁（硬约束 2） | docs 门全绿、基线具名重立 |
 | 1 | 定义进核 A（2026-10-01 已交付）：核 `CE.Lang.*` 三十五个模块（`Toml` / `Table` 两个读者、`Spec` / `Spec.Flow` 两个模式、`Contract`、十三个语言模块与八个 `.Flow` 模块、`Common` 九模块）+ `CE.Lang` 汇总 + `CE.Tables`，转录自 a378e78c 的 Rust 表；`LangProps` 十一腿 + `tables/1` golden 两对（全包 / 多一个键被拒）+ proto 7.7.0（hello 加性 `tablesDigest`）；子仓 `it/tables_equivalence.rs` 三腿证核的包与 Rust 临时镜像 `cli/src/tables/native.rs` 逐键相等、三方同数、多键被拒 | `cabal test` 全绿、`tables/1` golden 一对、既有 golden 只动 proto |
-| 2 | 定义进核 B：Rust `tables.rs` + 缓存 + 消费者改读 + 定义文本删除 | 十语料十面旧 / 新二进制字节同、子仓表对钉版文法腿改读、无核具名拒绝 |
+| 2 | 定义进核 B（2026-10-01 已交付，§4.5）：Rust `tables.rs` + 缓存 + 消费者改读 + 定义文本删除（二十四个文件）；精度册两族（语言十一份、flow 十份）退役再在干净树上重生成，两个提交 | 十语料 + 自仓十三面旧 / 新二进制 143 对字节同、子仓表对钉版文法腿改读、无核 / 旧核 / 缺键具名拒绝 |
 | 3 | 文档骨架样板：新五族（query / rules / flow / merge / arch）+ 绑定器 + 切换门 | 旧装配产物 == 新 `bind` 产物逐字节（十语料 × 五族 × 三面） |
 | 4 | 骨架 (a)(b)：check / score / structure / join；graph 的 deadcode / mentions / sites / canvas | 同步 3 的切换门 |
 | 5 | 骨架 (c)(d) + `CE.Text` 双语目录 + 守卫句：scan / dedup / clone / docdup / erase；churn / trend / tombstone / similar / audit / update / health | 同步 3 的切换门 + `lines` en / zh 逐字节同、`zh_surface` 绿 |
@@ -200,3 +207,8 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 9. **参考实现换一种写法**（主会话按原则自答）：foldM / 运算符表 / mapMaybe 等第二种写法，语义等价靠生成的 200 例对拍，查重门不把它当克隆（memory `reference-evaluators-need-a-second-spelling` 的先例）。
 10. **件 ④ 按实改为六族**（2026-10-01，主会话自答）：设计稿写「老家族没有参考实现」是盘点漏了 `core/test` 的四个 Reference 模块（`Reference.hs` / `ReferenceGraph.hs` / `ReferenceJaccard.hs` / `ReferenceTed.hs`，§7.1），立项时按实改为六族，估算 38.5 % → 37.4 %；那四族不再加参考（备选「十族照做」= 为已有穷举参考的判决再写一份抽样参考，只为占比）。
 11. **整数过线保护的是仓库数据，不是产品常量**（2026-10-01，主会话按原则自答）：§5.9.2 不让被度量仓库的名字、路径、源码文本进核；`tables/1` 的内容（kind 名、标准库名、扩展名、产物目录名、协议词表）是产品定义，方向核 → Rust，没有一个字节来自用户仓库，故不触这条不变量；骨架里来自仓库的字符串位仍是符号引用（§2、第 5 条）。
+12. **判决掩码分两步换主**（主会话按原则自答，步 2 落码）：`judgedMask` 照发、值改由包的语言行算出——掩码的内容已由核声明，线上那一列与核的读法（`CE.Wire.Mask`）不动；把这一列从请求里拿掉是 wire 断代，留给 8.0.0 与骨架退役一起做（§12 步 6），不为它单开一次 major。flow 家族的判决语言集同一道理进核（主会话 2026-10-01 补入步 2）：步 1 的盘点漏了 `cli/src/flow/mod.rs` 的 `JUDGED`，它是一张定义表——哪几门语言的 flow 发现算判决——唯一诚实的主人是语言表；语言行加 `flow_judged` 列（十门，掩码 1540127，`LangProps` 一腿钉住且蕴含 `judged`），`flow::judged_mask()` 改折包里的这一列，步 3 的文档骨架在核里算每条发现的 `judged` 时读同一列。
+13. **缓存的身份是三件加一个 Rust 自己的数**（主会话按原则自答）：`ce` 版本、`proto`、核二进制的 `{path, len, mtime_ns}` 决定「这份缓存是不是这份核答的」，Rust 对包字节的 fnv1a64 决定「文件有没有坏」；`digest` 是核的数，Rust 不重算它，只在之后每条核链的 hello 上对照——身份对上而 digest 不对，是缓存检查漏了一次换核，按名拒而不是读过去。
+14. **`query/prelude.rules` 不进包**（主会话按原则自答）：它是 `ce query` 的前奏规则，用户可读可改的程序文本，不是语言或产品的定义表；§4.2 的判据第三条（改一处就改判决）对它不成立——它不改任何家族的判决。
+15. **冻结的降表只守输出**（主会话按原则自答）：flow 的降表读的仍是核那份表，表进核后精度册的出处门照旧按路径守 `cli/src/flow/` 与 `scan/{functions,walk,lang}.rs`；表文本不在那些路径里了，门守的是读者与降表——一份表改了而读者没动，由十语料十三面的字节门与 `LangProps` 抓，不由出处门抓。
+16. **精度册退役与重生成是两个提交**（主会话按原则自答，813f4976 / e1a6b520 先例）：生成器把 `git status --porcelain` 非空读作 dirty、拒绝覆盖冻结档，所以「在步 2 的树上重生成」按构造是两步——退役提交删档、考题翻回审阅档阶段，下一提交在退役提交的干净树上逐份生成；flow 的判决掩码在退役提交上不清（判决零改动是本步的不变量，提交 E 清掩码的理由——降表改了——这里不成立），掩码腿在那一个提交上按构造红。

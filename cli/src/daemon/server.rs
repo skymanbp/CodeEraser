@@ -76,6 +76,7 @@ fn leave_root() -> std::path::PathBuf {
 /// latter two exit from the connection thread — dispatch::exit_daemon).
 pub fn serve(root: &Path) -> Result<()> {
     let root = std::fs::canonicalize(root).with_context(|| format!("root {}", root.display()))?;
+    crate::tables::anchor(&root); // before leaving it: the cache is the root's
     let cwd = leave_root();
     let name = socket_name(&root);
     let listener = bind::bind(&name)?;

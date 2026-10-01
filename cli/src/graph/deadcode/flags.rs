@@ -59,33 +59,18 @@ pub(super) const ROLE_ASSET: i64 = 1 << 9;
 /// step 5). Neovim's `init.lua` is one only at the root, where a
 /// config keeps it: anywhere else the name is a module's own file
 /// (`require "a"` reads `a/init.lua`), which the graph reaches.
-pub(crate) const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c main.cc \
-                           main.cpp Main.java main.lua conf.lua app.R ui.R server.R global.R \
-                           index.html 404.html";
-
-/// Directories whose files a runtime starts by where they sit, never
-/// by an import — one row per language (`*` every judged one), each
-/// under the tree root except R's, which sit under each package root
-/// (a DESCRIPTION's directory, targets.rs): Cargo's `src/bin/`
-/// `examples/` `benches/` and Go's
-/// `cmd/`; the Neovim runtime directories a Lua file is sourced from by
-/// path (`plugin/` at startup; `ftplugin/` `indent/` `syntax/`
-/// `colors/` `compiler/` `ftdetect/` `lsp/` on demand; `after/`
-/// holding the same — `autoload/` is Vim script's alone, `lua/` is
-/// `require`'s); the directories of an R package whose scripts R and
-/// its tools run by path (`inst/` installed as it is, `vignettes/`,
-/// `data-raw/`, `exec/`, `demo/`).
-pub(crate) const ENTRY_DIRS: &str = "\
-* src/bin/ examples/ benches/ cmd/
-lua plugin/ ftplugin/ indent/ syntax/ colors/ compiler/ ftdetect/ lsp/ after/
-r inst/ vignettes/ data-raw/ exec/ demo/";
+/// The names are the core's since plan v2.32 step 2 (CE.Lang.Common.Graph
+/// `flags.entry_names`, read off `tables/1`).
+fn entry_names() -> &'static [&'static str] {
+    crate::tables::get().flags.entry_names
+}
 
 /// Role facts of one file node; the declared-target role covers the
 /// manifests' OWN declarations beside the name and place conventions.
 pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: &Declared) -> i64 {
     let base = path.rsplit('/').next().unwrap_or(path);
     let mut r = 0i64;
-    if listed(ENTRY_NAMES, base) || path == "init.lua" {
+    if listed(entry_names(), base) || path == "init.lua" {
         r |= ROLE_ENTRY_NAMED;
     }
     // one table with the compile database's coverage (compdb_find.rs)
@@ -115,26 +100,31 @@ pub(super) fn roles_of(root: &Path, path: &str, entries: &Inclusions, declared: 
     r
 }
 
-/// Whether a row of ENTRY_DIRS for the file's language, or for every
-/// language, holds a prefix of the path — R's rows under each package
-/// root, the others under the tree root.
+/// Whether a row of the entry directories for the file's language, or
+/// for every language (`*`), holds a prefix of the path — R's rows
+/// under each package root, the others under the tree root. The rows
+/// are the core's (CE.Lang.Common.Graph `flags.entry_dirs`): Cargo's
+/// `src/bin/` `examples/` `benches/` and Go's `cmd/`, the Neovim runtime
+/// directories a Lua file is sourced from by path, the R package
+/// directories whose scripts R and its tools run by path.
 fn entry_dir(path: &str, declared: &Declared) -> bool {
     let lang = Lang::judged_path(Path::new(path)).map_or("", Lang::name);
-    ENTRY_DIRS.lines().any(|row| {
-        let mut words = row.split_whitespace();
-        let Some(scope) = words.next().filter(|s| *s == "*" || *s == lang) else {
-            return false;
-        };
-        let bases: Vec<&str> = match scope {
-            "r" => declared.packages().collect(),
-            _ => vec![""],
-        };
-        words.any(|dir| {
-            bases
-                .iter()
-                .any(|b| path.starts_with(&roots::join_dir(b, dir)))
+    crate::tables::get()
+        .flags
+        .entry_dirs
+        .iter()
+        .filter(|(scope, _)| *scope == "*" || *scope == lang)
+        .any(|&(scope, dirs)| {
+            let bases: Vec<&str> = match scope {
+                "r" => declared.packages().collect(),
+                _ => vec![""],
+            };
+            dirs.iter().any(|dir| {
+                bases
+                    .iter()
+                    .any(|b| path.starts_with(&roots::join_dir(b, dir)))
+            })
         })
-    })
 }
 
 /// `ce:allow(deadcode) -- <why>` anywhere in the file claims

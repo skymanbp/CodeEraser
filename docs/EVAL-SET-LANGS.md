@@ -735,3 +735,10 @@ learning-area → lua → fmt，每份生成后挪出树、`git status --porcela
 ### 读数（重生成，2026-09-30）
 
 十一份在退役提交 2ea957d8 的干净树上逐份生成（gson → jsoup → luarocks → koreader → stringr → covid19model → codeeraser → html5-boilerplate → learning-area → lua → fmt，每份生成后挪出树、`git status --porcelain` 回到空再生成下一份；两份 Lua 档带退役前那两段 RG1 处置原文），全部记 `generated_from` = 2ea957d8 / dirty = false。逐份与退役前的档（5278e747 上的 blob，`generated_from` = 813f4976）比对：除 `generated_from`（ce 1.7.4 → 1.8.0、commit 813f4976 → 2ea957d8，dirty 前后皆 false）外逐字节相同——判分行、宇宙台账、站点缺口、走查记录、处置一字未动，行数不变，册 06 §9 引的十一处 summary 行号照旧。`Lang::extensions()` 只读语言表的一行、不改它，答案没有理由移动；门按路径拒、重生成按字节证，两者各守各的。六门考题的 `stage` 随本提交翻回 `Scored`。
+
+## 计划 v2.32 步 2 之后：十一份精度册第三次退役并重生成（2026-10-01）
+
+权威轨 v2.32 步 2（定义进核 B）把测量侧的每张定义表改从核的 `tables/1` 定义包读（设计册 `docs/reference/authority-track.md` §4.5），语言表 `cli/src/scan/lang.rs`、走查 `scan/walk.rs`、产物规则 `scan/outputs.rs`、解析器配置名 `graph/keys.rs`、Java 阶梯与 JDK 名表 `graph/ladder/java*`、站点检测器 `graph/sites/call.rs` 都在 `ANSWERED_BY` 清单里，表的文本删除、读者改读包；十个对拍语料与本仓 baa4f8af 干净工作树（测试子仓就位）各十三面、新 / 旧二进制 143 对逐字节同（读数在设计册 §4.5），答案没有理由移动。门按路径读、工作树腿在本地先于提交按名拒了十一份（java 第一个被点名）——与 2026-09-28、2026-09-30 两次同一机制、同一处置：
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`；读数与退役前逐份比对，记在下文。

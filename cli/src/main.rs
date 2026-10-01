@@ -152,7 +152,10 @@ fn infra(cmd: Cmd) -> ExitCode {
             codeeraser::audit::run_commitmsg(&cmds::or_cwd(root), &file)
         }
         Cmd::Mcp { root } => cmds::serve_cmd("mcp", codeeraser::mcp::serve(&cmds::or_cwd(root))),
-        Cmd::Eject { root, yes } => codeeraser::eject::run(&cmds::or_cwd(root), yes),
+        Cmd::Eject { root, yes } => {
+            codeeraser::tables::transient(); // eject removes .ce/, never creates it
+            codeeraser::eject::run(&cmds::or_cwd(root), yes)
+        }
         Cmd::Daemon { root } => cmds::serve_cmd("daemon", daemon::server::serve(&root)),
         Cmd::Ping { root } => cmds::ping_cmd(root),
         Cmd::Update {

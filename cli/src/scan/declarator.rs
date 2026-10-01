@@ -195,7 +195,7 @@ fn split_qualified(node: Node<'_>, src: &[u8]) -> (Option<String>, String) {
 /// The named class_specifier / struct_specifier / union_specifier
 /// ancestors, outermost first. Namespaces are deliberately not in the
 /// chain: a namespace body is a lexical scope bare names resolve in,
-/// not a member scope (spec_c.rs call_member_scopes), so a definition
+/// not a member scope (C's `call_member_scopes`, CE.Lang.C), so a definition
 /// inside one spells the same name it would at the top level.
 fn class_chain(node: Node<'_>, src: &[u8]) -> Option<String> {
     let mut names = Vec::new();

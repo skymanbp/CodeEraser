@@ -10,7 +10,8 @@
 //! (`require(prefix .. name)`) holds no target in the text, so it opens
 //! no site — naming what it would load is a guess (the ladder's rule).
 //! A protected call is the call it protects: Lua's `pcall(require,
-//! "a.b")` loads `a.b` (LUA_PROTECTED).
+//! "a.b")` loads `a.b` (CE.Lang.Lua `protected`, the package's
+//! `calls.protected`).
 
 use crate::graph::spec::{CallSite, calls, formals, protected};
 use crate::scan::ast;
@@ -65,8 +66,8 @@ pub(super) fn site<'t>(
 /// addressing the callee's first formal by name (`formal_is`), else
 /// the first unnamed one — R's positional matching after the named
 /// arguments are taken; a Lua list has no names.
-fn target_arg<'t>(args: &[Node<'t>], formals: &str, src: &[u8]) -> Option<Node<'t>> {
-    let target = formals.split(' ').next().unwrap_or("");
+fn target_arg<'t>(args: &[Node<'t>], formals: &[&str], src: &[u8]) -> Option<Node<'t>> {
+    let target = formals.first().copied().unwrap_or("");
     let arg = args
         .iter()
         .find(|a| formal_is(a, target, formals, src))
@@ -137,7 +138,7 @@ fn unprotected<'a, 't>(
 /// Whether the call reads an identifier argument as a name: the callee
 /// reads one unevaluated (`unquoted` is Some) and no argument passes
 /// that flag as anything but a literal `FALSE`.
-fn reads_names(args: &[Node<'_>], row: &CallSite, formals: &str, src: &[u8]) -> bool {
+fn reads_names(args: &[Node<'_>], row: &CallSite, formals: &[&str], src: &[u8]) -> bool {
     row.unquoted.is_some_and(|flag| {
         !args.iter().any(|a| {
             formal_is(a, flag, formals, src)
@@ -156,7 +157,7 @@ fn formal_of<'t>(arg: &Node<'t>) -> Option<Node<'t>> {
 }
 
 /// Whether the argument is passed under a name that lands on `formal`.
-fn formal_is(arg: &Node<'_>, formal: &str, formals: &str, src: &[u8]) -> bool {
+fn formal_is(arg: &Node<'_>, formal: &str, formals: &[&str], src: &[u8]) -> bool {
     formal_of(arg).is_some_and(|n| {
         n.utf8_text(src)
             .is_ok_and(|given| formal_matches(given, formal, formals))
@@ -170,10 +171,10 @@ fn formal_is(arg: &Node<'_>, formal: &str, formals: &str, src: &[u8]) -> bool {
 /// `exprs` and `encoding` all begin so (R itself refuses the call). A
 /// Lua row lists no formals and a Lua argument carries no name, so the
 /// question never arises there.
-fn formal_matches(given: &str, formal: &str, formals: &str) -> bool {
+fn formal_matches(given: &str, formal: &str, formals: &[&str]) -> bool {
     given == formal
         || (formal.starts_with(given)
-            && formals.split(' ').filter(|f| f.starts_with(given)).count() == 1)
+            && formals.iter().filter(|f| f.starts_with(given)).count() == 1)
 }
 
 #[cfg(test)]

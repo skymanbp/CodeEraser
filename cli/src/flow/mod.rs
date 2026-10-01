@@ -24,14 +24,6 @@ mod reads;
 pub mod rows;
 mod scope;
 pub mod spec;
-pub mod spec_c;
-pub mod spec_go;
-pub mod spec_java;
-pub mod spec_lua;
-pub mod spec_py;
-pub mod spec_r;
-pub mod spec_rs;
-pub mod spec_ts;
 mod tree;
 mod tree_arms;
 mod tree_jumps;
@@ -40,28 +32,14 @@ mod tree_try;
 pub mod wire;
 mod wire_batch;
 
-use crate::scan::lang::Lang;
-
-/// The languages whose flow findings are judged, not advised: a
-/// language enters when its precision doc passes the §5.5 gate (every
-/// kind 0 / 1 / 2 pass or vacuous), in the exam table's order. All ten
-/// since step 4 commit G: the docs regenerated on the lowering commit E
-/// fixed (second-generation exams for C++, R, Rust and TypeScript) read
-/// judged in every language. Pinned by the mask leg of
+/// The languages whose flow findings are judged, not advised, as a
+/// bitmask at their wire codes: a language enters when its precision
+/// doc passes the §5.5 gate (every kind 0 / 1 / 2 pass or vacuous). All
+/// ten code languages since step 4 commit G. The set is the package's
+/// `flow_judged` column since plan v2.32 step 2 (CE.Lang.Common's
+/// language rows, crate::tables), the one owner of which languages'
+/// flow findings are verdicts. Pinned by the mask leg of
 /// it/eval_flow_precision.rs.
-const JUDGED: &[Lang] = &[
-    Lang::Python,
-    Lang::TypeScript,
-    Lang::Tsx,
-    Lang::Rust,
-    Lang::Go,
-    Lang::C,
-    Lang::Cpp,
-    Lang::Java,
-    Lang::Lua,
-    Lang::R,
-];
-
 pub fn judged_mask() -> i64 {
-    JUDGED.iter().fold(0, |m, &l| m | (1 << l as i64))
+    crate::tables::get().languages.mask(|row| row.flow_judged)
 }

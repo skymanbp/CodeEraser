@@ -21,23 +21,18 @@
 //! convention rather than a default (CMake's `-B build`) is no row: a
 //! build tree the table does not name is excluded the declarative way,
 //! by the tree's `.gitignore` — where such trees live in practice — or
-//! a ce.toml `exclude`.
+//! a ce.toml `exclude`. The rows are the core's since plan v2.32 step 2
+//! (CE.Lang.Common `outputs`, read off `tables/1`).
 
 use std::path::Path;
-
-pub(crate) const OUTPUTS: &str = "\
-target Cargo.toml pom.xml build.sbt project.clj
-build build.gradle build.gradle.kts settings.gradle settings.gradle.kts setup.py setup.cfg pyproject.toml pubspec.yaml
-dist package.json setup.py setup.cfg pyproject.toml *.cabal
-dist-newstyle cabal.project *.cabal";
 
 /// The project files that make a directory of this name a build
 /// output, or None when no row names it.
 fn manifests(name: &str) -> Option<impl Iterator<Item = &'static str>> {
-    OUTPUTS.lines().find_map(|row| {
-        let mut words = row.split_ascii_whitespace();
-        (words.next() == Some(name)).then_some(words)
-    })
+    crate::tables::get()
+        .outputs
+        .iter()
+        .find_map(|&(dir, files)| (dir == name).then(|| files.iter().copied()))
 }
 
 /// Whether `dir` is a build tool's output: a row names it and the

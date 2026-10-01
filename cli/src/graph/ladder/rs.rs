@@ -51,7 +51,7 @@ use std::collections::BTreeSet;
 // the use-family rungs ride a #[path] child mount — the very
 // construct the ladder learned to read in clearance 1
 #[path = "rs_use.rs"]
-pub(crate) mod rs_use;
+mod rs_use;
 
 pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
     let ctx = ctx_for(scope, site.from);

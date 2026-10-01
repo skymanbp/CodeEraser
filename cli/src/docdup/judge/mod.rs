@@ -49,14 +49,14 @@ pub struct Doc {
 pub type Report = crate::report::Report<Doc, Counts>;
 
 /// dup ⇔ inter·JACCARD_DEN ≥ JACCARD_NUM·union ∨ verbatim ≥
-/// VERBATIM_FLOOR — since ADR-008 P1 a MIRROR of the core's verdict
+/// verbatim_floor (the package's) — since ADR-008 P1 a MIRROR of the core's verdict
 /// (CE.Docdup.Cost.dupVerdict), not an authority: the reported set
 /// is built from the wire's per-row bits, and this binding remains
 /// for run()'s per-row drift ensure. All three numbers are pinned by
 /// the knobs echo.
 pub fn is_dup(inter: u64, union: u64, verbatim: u64) -> bool {
     inter * wire::JACCARD_DEN >= wire::JACCARD_NUM * union
-        || verbatim >= crate::docdup::spec::VERBATIM_FLOOR as u64
+        || verbatim >= crate::docdup::spec::table().verbatim_floor as u64
 }
 
 /// The whole judgment: refresh, live rows, coarse candidates, chunked
@@ -170,7 +170,8 @@ fn name(s: &candidates::SegRow) -> String {
     // stale or corrupt `.ce/index.db` carrying a kind past this
     // side's vocabulary would abort a report rather than name the
     // row (the deadcode VERDICT_NAMES sibling, same class).
-    let kind = crate::docdup::spec::KIND_NAMES
+    let kind = crate::docdup::spec::table()
+        .kind_names
         .get(s.kind as usize)
         .copied()
         .unwrap_or("kind?");

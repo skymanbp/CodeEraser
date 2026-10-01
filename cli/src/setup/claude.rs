@@ -18,14 +18,10 @@ pub fn locate() -> Option<PathBuf> {
     } else {
         &["claude"]
     };
-    let path = std::env::var_os("PATH").unwrap_or_default();
-    std::env::split_paths(&path)
-        .flat_map(|dir| names.iter().map(move |n| dir.join(n)))
-        .find(|p| p.is_file())
-        .or_else(|| {
-            let bin = home()?.join(".local").join("bin");
-            names.iter().map(|n| bin.join(n)).find(|p| p.is_file())
-        })
+    crate::proc::on_path(names).or_else(|| {
+        let bin = home()?.join(".local").join("bin");
+        names.iter().map(|n| bin.join(n)).find(|p| p.is_file())
+    })
 }
 
 /// The user's home: `USERPROFILE` on Windows, `HOME` elsewhere.

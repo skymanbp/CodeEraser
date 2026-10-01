@@ -9,6 +9,11 @@
 -- any two tokens. A language's whole definition is one document, so
 -- thirteen languages of one shape never read as copies of one another
 -- under the clone gate (the reason the Rust side wrote its tables so).
+-- Not JSON text read by Aeson, though Aeson is already here: a JSON
+-- string escapes every quote, so the tables' own quoted kinds and
+-- delimiters (`"\""`, `'"'`) would read as escape soup, and comments
+-- have nowhere to sit; TOML is already the repository's configuration
+-- language (ce.toml), so a reader of one reads the other.
 module CE.Lang.Toml (toml) where
 
 import Control.Monad (foldM)

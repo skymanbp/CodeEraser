@@ -23,7 +23,6 @@
 //! so nothing is lost. The three run independently on the run; none
 //! feeds another.
 
-use crate::scan::lang::MENTION_WHOLE_RUN_EXTS;
 use std::path::Path;
 
 fn opens(c: char) -> bool {
@@ -99,7 +98,12 @@ pub fn whole_run_only(rel: &str) -> bool {
         .extension()
         .and_then(|e| e.to_str())
         .map(str::to_ascii_lowercase)
-        .is_some_and(|e| MENTION_WHOLE_RUN_EXTS.contains(&e.as_str()))
+        .is_some_and(|e| {
+            crate::tables::get()
+                .languages
+                .mention_whole_run_exts
+                .contains(&e.as_str())
+        })
 }
 
 /// Second-chance key: `_`, `-` and `$` filtered, then lower-cased —

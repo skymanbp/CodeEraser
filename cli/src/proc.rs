@@ -8,10 +8,11 @@
 //! child's stdio, so no child ever needed the console this flag
 //! suppresses; console parents (the CLI, hooks) are unaffected —
 //! their children attach to the existing console and never created a
-//! window to begin with.
+//! window to begin with. Finding a bare program name on PATH lives
+//! here too (`on_path`).
 
 use std::ffi::OsStr;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Output, Stdio};
 
 /// `Command::new` with the no-console flag on Windows. Shipped spawn
@@ -81,3 +82,13 @@ fn git_command(root: &Path, args: &[&str]) -> Command {
 #[cfg(test)]
 #[path = "../tests/unit/proc.rs"]
 mod tests;
+
+/// The first of `names` found as a file in a PATH directory, in PATH
+/// order: how a bare program name is found (the core the definition
+/// package comes from, the `claude` setup drives).
+pub fn on_path(names: &[&str]) -> Option<PathBuf> {
+    let path = std::env::var_os("PATH").unwrap_or_default();
+    std::env::split_paths(&path)
+        .flat_map(|dir| names.iter().map(move |n| dir.join(n)))
+        .find(|p| p.is_file())
+}

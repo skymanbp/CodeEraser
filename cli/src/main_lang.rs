@@ -3,7 +3,7 @@
 //! English surface stays the derive's own doc comments (zero
 //! normalized tokens by construction). The zh side travels as ONE
 //! tab-separated literal: the tuple-table first cut T2-matched two
-//! unrelated data tables in the corpus (hs_boot's module rows,
+//! unrelated data tables in the corpus (the GHC boot table's module rows,
 //! notice_gate's census rows) — under literal abstraction any
 //! homogeneous tuple list matches any other, so the data is one
 //! token instead. The completeness test at the bottom is the

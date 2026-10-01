@@ -29,6 +29,7 @@ battery =
     [ "language codes run 0..21 in order"
     , "no extension names two languages"
     , "the judged mask is 0x17847F and the tables are the judged languages"
+    , "the flow-judged mask is 1540127, inside the judged set"
     , "no nest-only kind is a unit kind"
     , "the slot sets are disjoint and the name pairs single"
     , "flow name tables are plain and single"
@@ -38,7 +39,7 @@ battery =
     , "tables/1 answers the package and the hello's digest"
     , "tables/1 refuses a key beyond the envelope by name"
     ]
-    [codes, extensions, judged, nestOnly, slots, flowNames, flowShape, dispatch, digest, reply, refusal]
+    [codes, extensions, judged, flowJudged, nestOnly, slots, flowNames, flowShape, dispatch, digest, reply, refusal]
 
 codes :: Bool
 codes = map lgCode languages == [0 .. 21]
@@ -51,6 +52,14 @@ judged =
   mask == 0x17847F && map ltName allTables == [lgName l | l <- languages, lgJudged l]
  where
   mask = foldl' (.|.) (0 :: Integer) [1 `shiftL` lgCode l | l <- languages, lgJudged l]
+
+-- | The flow family's verdict languages (the ten whose flow precision
+-- exams passed): a flow-judged language is a judged one.
+flowJudged :: Bool
+flowJudged =
+  mask == 1540127 && and [lgJudged l | l <- languages, lgFlowJudged l]
+ where
+  mask = foldl' (.|.) (0 :: Integer) [1 `shiftL` lgCode l | l <- languages, lgFlowJudged l]
 
 -- | A nest-only kind that is also a unit kind could never fire.
 nestOnly :: Bool

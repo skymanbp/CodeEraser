@@ -41,9 +41,10 @@ fn core_path() -> String {
     codeeraser::corelink::resolve_core("ce-core")
 }
 
-/// The one task body: anchor the root, resolve the core, run the
-/// library closure off the async runtime, and bracket it with
-/// `ce-task` events. Four spawn_blocking twins were the P4 ratchet's
+/// The one task body: anchor the root, read the definition package
+/// (its absence is the task's named error, shown as any other), resolve
+/// the core, run the library closure off the async runtime, and bracket
+/// it with `ce-task` events. Four spawn_blocking twins were the P4 ratchet's
 /// first catch; the measurement-only faces ride the same shape and
 /// simply ignore the core argument (resolving is a string lookup —
 /// only spawning can fail, and they never spawn it).
@@ -59,6 +60,8 @@ where
     let _ = win.emit("ce-task", json!({"command": name, "state": "start"}));
     let out = tauri::async_runtime::spawn_blocking(move || {
         let root = codeeraser::root::project_root(Path::new(&root));
+        codeeraser::tables::anchor(&root);
+        codeeraser::tables::load()?;
         f(&root, &core_path()).map_err(|e| format!("{e:#}"))
     })
     .await

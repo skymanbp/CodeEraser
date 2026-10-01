@@ -81,16 +81,16 @@ formula in the `--ignored` instrument leg, whose printed line carries every term
 ### 2. Tokens — one run, three emitters
 
 A run opens on a Unicode letter, `_` or `$` and continues over Unicode alphanumerics, `_`
-and `$` ([token.rs:29-35](../../../cli/src/mention/token.rs#L29)). Three emitters read each
+and `$` ([token.rs:28-34](../../../cli/src/mention/token.rs#L28)). Three emitters read each
 run and none feeds another: (i) the whole run; (ii) the script split — the run's maximal
 ASCII-identifier pieces, so `调用$graph函数` yields `$graph` and never a bare `graph`;
 (iii) the `$` arm — the run's maximal `$`-free pieces, for every extension OUTSIDE the
 JS family and Java, whose identifiers take `$` too (`Outer$Inner` is not `Inner`)
-([token.rs:72-80](../../../cli/src/mention/token.rs#L72),
-[token.rs:97-103](../../../cli/src/mention/token.rs#L97)). A piece that does not open a run
+([token.rs:71-79](../../../cli/src/mention/token.rs#L71),
+[token.rs:96-102](../../../cli/src/mention/token.rs#L96)). A piece that does not open a run
 (digit-led) is dropped; a piece equal to the run is the run. The arm table is
 `MENTION_WHOLE_RUN_EXTS`, looked up lower-cased, and no extension is the union arm
-([token.rs:92-96](../../../cli/src/mention/token.rs#L92)). The reason the arm exists is a
+([token.rs:91-95](../../../cli/src/mention/token.rs#L91)). The reason the arm exists is a
 cost the spec measured before sealing: in a `.ts` file `$ZodString` must stay whole (a
 bare `ZodString` would mention its twin), while `exec $ce_entry_main` in a shell script
 must keep `ce_entry_main`.
@@ -98,7 +98,7 @@ must keep `ce_entry_main`.
 Two hashes are stored per distinct token: the fnv1a64 of the token, and — for tokens
 of at least seven literal characters — the fnv1a64 of its fold key (`_`, `-` and `$`
 filtered, lower-cased), a second chance for a Rust `zod_string` spelled `$ZodString`
-elsewhere ([token.rs:109-120](../../../cli/src/mention/token.rs#L109),
+elsewhere ([token.rs:113-124](../../../cli/src/mention/token.rs#L113),
 [mod.rs:291-298](../../../cli/src/mention/mod.rs#L291)). No plaintext token enters the
 database ([store.rs:34](../../../cli/src/mention/store.rs#L34)); the pass has its own
 version row and any change to a frozen input re-derives every row
@@ -130,7 +130,7 @@ yes ([candidates.rs:89-111](../../../cli/src/mention/candidates.rs#L89)):
    declaring one ([store.rs:227-229](../../../cli/src/mention/store.rs#L227));
 2. **the fold second chance** — Rust only, and only for names with ≥ 2 segments
    (`_`/camel boundaries, an all-caps run one segment) and ≥ 7 characters
-   ([token.rs:127-144](../../../cli/src/mention/token.rs#L127),
+   ([token.rs:131-148](../../../cli/src/mention/token.rs#L131),
    [store.rs:233-235](../../../cli/src/mention/store.rs#L233));
 3. **the file's own exception regions spell it** — Go template actions, TS string and
    template literals, Python doctests, Rust macro definitions and fenced or indented doc
@@ -179,8 +179,8 @@ Haskell, C, C++ and Java ([conv/name.rs:151-167](../../../cli/src/mention/conv/n
 the framework `Protocol` names a loader spells for the author — Python unittest/xunit/
 pluggy/Django hooks, TS file-form × export-name rows, Haskell `Paths_*` and hspec, and the
 tables plan v2.30 added for the C family, Java, Lua and R
-([conv/protocol.rs:19-89](../../../cli/src/mention/conv/protocol.rs#L19),
-[conv/protocol.rs:95-127](../../../cli/src/mention/conv/protocol.rs#L95)); a Go method's
+([Protocol.hs:6-102](../../../core/app/CE/Lang/Common/Protocol.hs#L6), read by [protocol.rs:17-25](../../../cli/src/mention/conv/protocol.rs#L17),
+[conv/protocol.rs:31-63](../../../cli/src/mention/conv/protocol.rs#L31)); a Go method's
 receiver exportedness ([conv/name.rs:187-199](../../../cli/src/mention/conv/name.rs#L187));
 and a file-level `ce:allow(unmentioned) -- <why>` claim
 ([conv/name.rs:171-177](../../../cli/src/mention/conv/name.rs#L171)). Every bit is silence,

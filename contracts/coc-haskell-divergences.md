@@ -6,7 +6,7 @@
 > 引白皮书最近似条款 + 记录我们的裁定 + 指向执行它的电池行
 > （[cli/tests/it/coc_haskell.rs](../cli/tests/it/coc_haskell.rs)，表即登记册的机检半身；
 > 表格 kind 全部实探自 tree-sitter-haskell 0.23.1，探针记录 2026-08-14 两轮）。
-> 表体=[cli/src/scan/spec_hs.rs](../cli/src/scan/spec_hs.rs)。
+> 表体=[core/app/CE/Lang/Haskell.hs](../core/app/CE/Lang/Haskell.hs)（v2.32 步 2 起测量侧从核的定义包读它，此前在 `cli/src/scan/spec_hs.rs`）。
 
 | # | 构造 | 裁定 | S3776 依据 / 先例 | 执行 |
 |---|---|---|---|---|

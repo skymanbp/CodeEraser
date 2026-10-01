@@ -124,11 +124,11 @@ dupVerdictWith (num, den, vfloor) inter union run
   <ul class="consts">
     <li><b>jaccardNum</b> 80</li>
     <li><b>jaccardDen</b> 100</li>
-    <li><b>DOC_SHINGLE</b> 5</li>
-    <li><b>MIN_DOC_TOKENS</b> 50</li>
-    <li><b>VERBATIM_FLOOR</b> 50</li>
-    <li><b>DOC_LINE_CAP</b> 200</li>
-    <li><b>LICENSE_HEAD_LINES</b> 5</li>
+    <li><b>shingleK</b> 5</li>
+    <li><b>minDocTokens</b> 50</li>
+    <li><b>verbatimFloor</b> 50</li>
+    <li><b>docLineCap</b> 200</li>
+    <li><b>licHeadLines</b> 5</li>
     <li><b>DOC_SET_CAP</b> 8192</li>
     <li><b>DOC_PAIR_CAP</b> 4096</li>
     <li><b>DOCDUP_REV</b> 8</li>
@@ -474,9 +474,9 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
   Haskell 落座站点并判预算，名字与路径从不过线。changelog 定位的文档整体豁免并入账，按路径约定、按版本索引台账的形状、或按 <code>[tombstone] ledger</code> 声明；自身即台账的引用块或小节只豁免自己。本类出厂即 <code>observe</code>，每次度量都写进 feed；两段历史上的九轮 FPR 回放（<code>docs/FPR-TOMBSTONE.md</code>）是任何晋级都必须据以论证的记录。</p>
   <ul class="consts">
     <li><b>TOMBSTONE_REV</b> 1</li>
-    <li><b>MIN_ASCII_NAME</b> 3</li>
-    <li><b>MIN_WIDE_NAME</b> 2</li>
-    <li><b>JOIN_MAX</b> 3</li>
+    <li><b>min_ascii_name</b> 3</li>
+    <li><b>min_wide_name</b> 2</li>
+    <li><b>join_max</b> 3</li>
     <li><b>SEGMENT_TOKENS</b> 3</li>
     <li><b>minName</b> 1</li>
     <li><b>minMarks</b> 1</li>

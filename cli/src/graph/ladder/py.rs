@@ -120,7 +120,8 @@ fn init_prefix(root: &str, dotted: &str, files: &BTreeSet<String>) -> Option<Str
 fn stdlib_or_deps(spec: &str, scope: &Scope) -> Outcome {
     let top = spec.split('.').next().unwrap_or(spec);
     let declared = roots::pyproject(scope.root).is_some_and(|p| p.deps.iter().any(|d| d == top));
-    if declared || top == "__future__" || STDLIB.split_whitespace().any(|m| m == top) {
+    let stdlib = crate::tables::get().ladder.py.stdlib;
+    if declared || top == "__future__" || stdlib.contains(&top) {
         return Outcome::External { rung: 4 };
     }
     Outcome::Unresolved(Reason::OutOfScope)
@@ -136,30 +137,3 @@ fn source_roots(scope: &Scope) -> Vec<String> {
     out.dedup();
     out
 }
-
-/// CPython 3.13 public top-level stdlib modules — machine-generated
-/// from `sys.stdlib_module_names` (2026-08-12), never hand-typed.
-/// A missing name degrades to Unresolved (precision-safe), visible
-/// in the ledger, and is repaid by regenerating this list (the
-/// one-shot regen_tables drift check retired to git history).
-pub(crate) const STDLIB: &str = "\
-abc antigravity argparse array ast asyncio atexit base64 bdb binascii
-bisect builtins bz2 cProfile calendar cmath cmd code codecs codeop collections
-colorsys compileall concurrent configparser contextlib contextvars copy
-copyreg csv ctypes curses dataclasses datetime dbm decimal difflib dis
-doctest email encodings ensurepip enum errno faulthandler fcntl filecmp
-fileinput fnmatch fractions ftplib functools gc genericpath getopt getpass
-gettext glob graphlib grp gzip hashlib heapq hmac html http idlelib imaplib
-importlib inspect io ipaddress itertools json keyword linecache locale
-logging lzma mailbox marshal math mimetypes mmap modulefinder msvcrt multiprocessing
-netrc nt ntpath nturl2path numbers opcode operator optparse os pathlib
-pdb pickle pickletools pkgutil platform plistlib poplib posix posixpath
-pprint profile pstats pty pwd py_compile pyclbr pydoc pydoc_data pyexpat
-queue quopri random re readline reprlib resource rlcompleter runpy sched
-secrets select selectors shelve shlex shutil signal site smtplib socket
-socketserver sqlite3 sre_compile sre_constants sre_parse ssl stat statistics
-string stringprep struct subprocess symtable sys sysconfig syslog tabnanny
-tarfile tempfile termios textwrap this threading time timeit tkinter token
-tokenize tomllib trace traceback tracemalloc tty turtle turtledemo types
-typing unicodedata unittest urllib uuid venv warnings wave weakref webbrowser
-winreg winsound wsgiref xml xmlrpc zipapp zipfile zipimport zlib zoneinfo";

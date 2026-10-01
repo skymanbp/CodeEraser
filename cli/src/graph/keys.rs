@@ -21,15 +21,11 @@ use std::path::Path;
 /// reaches the walk, so the probe's own facts join the key beside these
 /// (dedup/walkidx.rs). An R package's DESCRIPTION (step 4) names the
 /// package the R ladder's second rung reaches.
-pub(crate) const CONFIG_NAMES: &[&str] = &[
-    "Cargo.toml",
-    "go.mod",
-    "package.json",
-    "pyproject.toml",
-    "compile_commands.json",
-    "compile_flags.txt",
-    "DESCRIPTION",
-];
+/// The names are the core's since plan v2.32 step 2 (CE.Lang.Common.Graph
+/// `keys.config_names`, read off `tables/1`).
+fn config_names() -> &'static [&'static str] {
+    crate::tables::get().keys.config_names
+}
 
 /// `.cabal` is a basename SUFFIX (the file carries the package name:
 /// ce-core.cabal); cabal.project stays out — the hs ladder anchors
@@ -37,7 +33,7 @@ pub(crate) const CONFIG_NAMES: &[&str] = &[
 pub fn is_resolver_config(path: &Path) -> bool {
     path.file_name()
         .and_then(|n| n.to_str())
-        .is_some_and(|n| CONFIG_NAMES.contains(&n) || is_tsconfig(n) || n.ends_with(".cabal"))
+        .is_some_and(|n| config_names().contains(&n) || is_tsconfig(n) || n.ends_with(".cabal"))
 }
 
 /// `tsconfig.json` and its conventional flavours (`tsconfig.base.json`).
@@ -74,12 +70,10 @@ pub fn resolve_key(live: &BTreeSet<String>, configs: &[(String, u64)]) -> i64 {
 /// scan-only, hence never judged. The .ts/.tsx row stays a superset
 /// of R2's single "js" probe: a surplus stat fact costs one spurious
 /// sweep, a missing one costs a permanently wrong edge.
-pub(crate) const TWIN_EXTS: [(&str, &[&str]); 4] = [
-    (".ts", &["js", "mjs", "cjs"]),
-    (".tsx", &["js", "mjs", "cjs"]),
-    (".mts", &["mjs"]),
-    (".cts", &["cjs"]),
-];
+/// The rows are the core's (`keys.twin_exts`).
+fn twin_exts() -> &'static [(&'static str, &'static [&'static str])] {
+    crate::tables::get().keys.twin_exts
+}
 
 /// TS-resolver filesystem facts that can never enter the walked set
 /// — compiled-JS twins of in-scope TS files (esm_rewrite stats them),
@@ -99,7 +93,7 @@ pub fn ts_fs_facts(
 ) -> Vec<(String, u64)> {
     let (mut twins, mut dirs) = (Vec::new(), BTreeSet::new());
     for p in live {
-        let Some((stem, exts)) = TWIN_EXTS
+        let Some((stem, exts)) = twin_exts()
             .iter()
             .find_map(|(src, exts)| Some((p.strip_suffix(src)?, *exts)))
         else {

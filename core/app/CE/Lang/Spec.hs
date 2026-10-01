@@ -164,7 +164,7 @@ data CallSite = CallSite {csLabel, csPackage :: String, csCallees :: Kinds, csUn
 data Language = Language
   { lgCode :: Int
   , lgName :: String
-  , lgScanOnly, lgProseOnly, lgJudged, lgDocument :: Bool
+  , lgScanOnly, lgProseOnly, lgJudged, lgDocument, lgFlowJudged :: Bool
   , lgExts :: Kinds
   }
   deriving stock (Eq, Generic)

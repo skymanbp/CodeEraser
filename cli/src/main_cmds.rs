@@ -36,6 +36,7 @@ pub fn json(format: OutFormat) -> bool {
 pub fn or_cwd(root: Option<PathBuf>) -> PathBuf {
     let root = root.unwrap_or_else(|| PathBuf::from("."));
     codeeraser::i18n::pin_project(&root);
+    codeeraser::tables::anchor(&root);
     root
 }
 

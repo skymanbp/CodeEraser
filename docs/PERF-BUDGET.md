@@ -357,6 +357,23 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - flow 腿的固定成本 = 两侧各降一次表 + 两次 daemon 往返（核判 `flow/1`）：299 行的文件每次写入中位 +10.5–11.1 ms，三组读数一致；找到发现时多落一行 feed，不另加可见成本。
 - 复跑：`cargo build --release` 各出一个二进制拷到车道目录；两份树各 `git init` + `ce dedup .`（daemon 的冷启动在第一次探针时还没盖完「全量已建」戳，探针会答 `degraded: true`——先用 CLI 建一次满索引）；各臂预热两跑后 ABAB ×10，`clean` 与 `finding` 各一坐。
 
+## v2.32 步 2 定义包改读 A/B（实测 2026-10-01，release，同一台机、同一窗口：两棵 baa4f8af 的 git 工作树〔测试子仓就位，两臂各一棵，免得两代索引互相重建〕，A = baa4f8af 的 ce〔`git archive` 构建，表在二进制里〕，B = 本批的 ce〔表读自 `.ce/tables-1.8.0-7.7.0.json`，缓存命中〕，核同一个 ce-core 1.8.0〔proto 7.7.0〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；量前 `Get-CimInstance` 处理器负载 8 %）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒；`hook_probe` = bench 的同名形（`ce probe --hook` 对两文件夹具〔`a.rs` / `c.rs` 一对 T2 孪生〕写第三个文件的 PreToolUse 信封，stdout 落文件），ABAB ×30。
+
+| 面 | A（表在二进制里） | B（表读自缓存） | 状态 |
+|---|---|---|---|
+| `ce scan .` 暖 | 1300.4（1253.4–1333.3） | 1262.0（1248.5–1296.9） | 噪声内 |
+| `ce check .` 暖 | 6419.5（6181.6–6608.1） | 6459.8（6123.7–6905.7） | 噪声内（+40 ms，区间互相覆盖） |
+| `ce dedup .` 暖 | 801.2（760.7–866.1） | 807.2（762.8–826.7） | 噪声内 |
+| `hook_probe`（n = 30） | 53.8（48.3–276.8） | 54.5（50.1–260.9） | +0.7 ms；p50 预算 50 ms 两臂都不达，A 也不达——是本机此窗口的底，不是包的代价 |
+
+缓存未命中的第一跑（B 自己 ABAB ×7：每对先删 `.ce/tables-*.json` 再跑、随即缓存命中再跑，`ce scan .`）：未命中 1381.7（1305.3–1513.9）、命中 1250.8（1199.3–1341.8），**未命中多付 ≈ 131 ms**——起一个核进程问一次 `tables/1`、读 135 KB 应答、写缓存文件；每份核二进制（`{path, len, mtime_ns}`）每个项目付一次。
+
+- 缓存命中时每个 `ce` 进程多做的事 = 读 135,472 B 的缓存文件、对包字节算一次 fnv1a64、serde 读成 `'static` 表（泄漏进进程，活到进程结束）；暖跑三面与钩子探针都量不出来，故缓存保持 JSON、不换二进制格式。
+- release 体积：A 27,388,416 B → B 27,470,336 B（+81,920 B）：删掉的表文本（Rust 源码净 −147,093 B，见设计册 §4.5）在二进制里只是字符串常量，新加的是 serde 读包的派生代码（每个表结构一份所有权孪生）。
+- 复跑：A 臂的树由 `git archive`（baa4f8af，子仓 123b1bce 同法）解到车道目录，`cargo build --release --locked`（独立 `CARGO_TARGET_DIR`）出 A；本车道 `cargo build --release --locked` 出 B；`git worktree add --detach <dir> baa4f8af` 两次、各 `submodule update --init`（`protocol.file.allow=always`）；脚本 `s9_flow/v232s2_gen/perf.py`（车道目录，不入库）。
+
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
 
 口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。

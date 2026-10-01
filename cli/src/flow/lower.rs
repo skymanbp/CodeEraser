@@ -102,3 +102,7 @@ pub fn lower_file(text: &str, lang: Lang) -> Option<Lowered> {
 #[cfg(test)]
 #[path = "../../tests/unit/flow/shape.rs"]
 pub(crate) mod shape;
+
+#[cfg(test)]
+#[path = "../../tests/unit/flow/lang.rs"]
+mod lang;
