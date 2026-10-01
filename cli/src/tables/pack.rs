@@ -104,9 +104,10 @@ leaked! {
     Protocol { py_names: Names, py_prefixes: Names, ts_by_stem: Pairs, ts_pages: Names,
                ts_routes: Names, java_names: Names, c_names: Names, c_prefixes: Names,
                lua_names: Names, love_names: Names, r_names: Names }
-    /// The flow document's catalogue entry: the kind names `--kind` is
-    /// read against.
-    DocFlow { kinds: Names }
+    /// The flow document's catalogue entry: the kinds by code, each
+    /// `[name, advisory]` — the names `--kind` and the feeds read, and
+    /// whether a kind is advisory in every language.
+    DocFlow { kinds: &'static [(&'static str, bool)] }
     /// What this side reads of the report documents' catalogue (7.8.0):
     /// the schema ids and empty documents are the core's statement and
     /// never bound here.

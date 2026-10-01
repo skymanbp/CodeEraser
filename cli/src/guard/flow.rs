@@ -18,7 +18,7 @@ use crate::daemon::client;
 use crate::daemon::proto::{FlowTables, Request, Response};
 use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire;
-use crate::flow_report::{self as fr, ADVISORY, Placed};
+use crate::flow_report::{self as fr, Placed};
 use serde_json::{Value, json};
 use std::path::Path;
 
@@ -60,7 +60,7 @@ pub(super) fn observe(root: &Path, env: &Envelope, cfg: Option<&Config>) -> Opti
 fn measured(b: &[Placed], a: &[Placed], after: &Lowered) -> (Value, Vec<Placed>) {
     let novel: Vec<Placed> = flow_novel::novel(b, a)
         .into_iter()
-        .filter(|p| p.kind != ADVISORY)
+        .filter(|p| !fr::advisory(p.kind))
         .cloned()
         .collect();
     let obj = json!({

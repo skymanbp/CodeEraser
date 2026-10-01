@@ -52,7 +52,7 @@ pub fn shown_kinds(kinds: &[String]) -> Option<Vec<(String, i64)>> {
     let names = kinds.iter().flat_map(|k| k.split(',')).map(str::trim);
     for name in names.filter(|k| !k.is_empty()) {
         if shown.iter().all(|(seen, _)| seen != name) {
-            let code = known.iter().position(|k| *k == name);
+            let code = known.iter().position(|(k, _)| *k == name);
             shown.push((name.to_string(), code.map_or(-1, |i| i as i64)));
         }
     }

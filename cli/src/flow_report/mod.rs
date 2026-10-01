@@ -18,21 +18,29 @@ use crate::flow::wire::Finding;
 use crate::scan::lang::Lang;
 use serde_json::{Value, json};
 
-/// The kind that is advisory in every language (booklet §13 item 8):
-/// an unused parameter is often an interface's, never a verdict.
-pub const ADVISORY: u8 = 3;
+/// The kinds by code as the package's flow catalogue lists them
+/// (CE.Flow.Document): `(name, advisory)`.
+fn kinds() -> &'static [(&'static str, bool)] {
+    crate::tables::get().document.flow.kinds
+}
 
-/// A kind's name by code, as the package's flow catalogue lists it
-/// (CE.Flow.Document); "?" for a code the catalogue does not list.
+/// A kind's name by code; "?" for a code the catalogue does not list.
 pub fn kind_name(kind: u8) -> &'static str {
-    let kinds = crate::tables::get().document.flow.kinds;
-    kinds.get(usize::from(kind)).copied().unwrap_or("?")
+    kinds()
+        .get(usize::from(kind))
+        .map_or("?", |(name, _)| *name)
+}
+
+/// Whether the catalogue marks the kind advisory in every language
+/// (booklet §13 item 8: an unused parameter is often an interface's).
+pub fn advisory(kind: u8) -> bool {
+    kinds().get(usize::from(kind)).is_some_and(|(_, a)| *a)
 }
 
 /// A finding is judged when its language passed the precision gate
-/// (`flow::judged_mask`) and its kind is not the advisory one.
+/// (`flow::judged_mask`) and its kind is not an advisory one.
 pub fn judged(lang: Lang, kind: u8) -> bool {
-    kind != ADVISORY && lang_judged(lang)
+    !advisory(kind) && lang_judged(lang)
 }
 
 /// Whether the precision gate admitted `lang` at all.
@@ -72,7 +80,8 @@ pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {
     let var = usize::try_from(f.v)
         .ok()
         .and_then(|v| legend.var_name.get(v));
-    let (line, line_end) = if f.kind == ADVISORY {
+    // a parameter's finding names no statement (declSeq −1, CE.Flow.Cost)
+    let (line, line_end) = if f.seq < 0 {
         let v = usize::try_from(f.v).ok()?;
         let l = legend.var_at.get(v)?.0;
         (l, l)
@@ -92,14 +101,17 @@ pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {
 /// Findings counted by kind under the catalogue's kind names, every
 /// kind present (zeros kept), as the feeds carry them.
 pub fn kinds_json(kinds: impl IntoIterator<Item = u8>) -> Value {
-    let names = crate::tables::get().document.flow.kinds;
+    let names = self::kinds();
     let mut n = vec![0u64; names.len()];
     for k in kinds {
         if let Some(slot) = n.get_mut(usize::from(k)) {
             *slot += 1;
         }
     }
-    let counted = names.iter().zip(n).map(|(k, c)| (k.to_string(), json!(c)));
+    let counted = names
+        .iter()
+        .zip(n)
+        .map(|((k, _), c)| (k.to_string(), json!(c)));
     Value::Object(counted.collect())
 }
 

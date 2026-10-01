@@ -23,7 +23,7 @@ import qualified Data.IntMap.Strict as IM
 import Data.List (intercalate, sortOn)
 
 doc :: DocFamily
-doc = docFamily "flow" schemaId statement known assemble ["kinds" .= kinds, "judged" .= judgedLangs]
+doc = docFamily "flow" schemaId statement known assemble ["kinds" .= kindTable, "judged" .= judgedLangs]
 
 schemaId :: String
 schemaId = "ce.flow-report/0.1.0"
@@ -42,15 +42,19 @@ statement =
   \rows findings 6 judged files - - - - -\nrows refused 3 judged files - why\n\
   \ref path files\nref unit files -\nref var files - -\nref why why\n"
 
--- | The finding kinds by code (CE.Flow.Cost): the one spelling every
--- face, feed and `--kind` uses.
-kinds :: [String]
-kinds = ["unreachable", "dead_store", "unused_local", "unused_param"]
+-- | The finding kinds by code (CE.Flow.Cost), each with whether it is
+-- advisory in every language (an unused parameter is often an
+-- interface's): the one table every face, feed and `--kind` reads,
+-- answered as the catalogue's `kinds` rows `[name, advisory]`.
+kindTable :: [(String, Bool)]
+kindTable = [("unreachable", False), ("dead_store", False), ("unused_local", False), ("unused_param", True)]
 
--- | The kind that is advisory in every language: an unused parameter
--- is often an interface's.
-advisory :: Integer
-advisory = 3
+kinds :: [String]
+kinds = map fst kindTable
+
+-- | The advisory kinds' codes, read off the table.
+advisoryKinds :: [Integer]
+advisoryKinds = [code | (code, (_, True)) <- zip [0 ..] kindTable]
 
 -- | The languages whose findings are judged, by wire code: the
 -- language table's `flow_judged` column (CE.Lang.Common), where each
@@ -92,7 +96,7 @@ assemble req =
   langOf = IM.fromList [(fromInteger f, l) | [f, l] <- rows req "langs"]
   rankOf = IM.fromList [(fromInteger f, r) | [f, r] <- rows req "rankFiles"]
   rank f = IM.findWithDefault (-1) (fromInteger f) rankOf
-  judgedAt [f, _, k, _, _, _] = k /= advisory && IM.findWithDefault (-1) (fromInteger f) langOf `elem` judgedLangs
+  judgedAt [f, _, k, _, _, _] = k `notElem` advisoryKinds && IM.findWithDefault (-1) (fromInteger f) langOf `elem` judgedLangs
   judgedAt _ = False
   found = sortOn (\r -> (rank (head' r), take 3 (drop 1 r))) (rows req "findings")
   shown = [k | [k] <- rows req "shown"]

@@ -276,7 +276,7 @@ catalogued =
     && tablesDigest == digestOf package
     && tablesDigest /= digestOf pack
     && all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) families
-    && path ["flow", "kinds"] catalogue == Just (toJSON (words "unreachable dead_store unused_local unused_param"))
+    && path ["flow", "kinds"] catalogue == Just (toJSON (zip (words "unreachable dead_store unused_local unused_param") [False, False, False, True]))
     && path ["flow", "judged"] catalogue == Just (toJSON flowJudgedRows)
     && BL.length (encode catalogue) > 0
  where

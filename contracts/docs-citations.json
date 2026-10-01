@@ -10606,20 +10606,20 @@
     "line": 162,
     "text": "fn placed(files: &[Lowered], verdict: &Verdict) -> Vec<[i64; 6]> {"
   },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|26e3f6ff7ae4851d|0": {
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|293f47b7fd646bc0|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 23,
-    "end": 36,
-    "text": "pub const ADVISORY: u8 = 3;"
+    "line": 21,
+    "end": 44,
+    "text": "/// The kinds by code as the package's flow catalogue lists them"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|5150f690006b8d0b|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 64,
+    "line": 72,
     "text": "pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|98dfcfb680e6d525|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 34,
+    "line": 42,
     "text": "pub fn judged(lang: Lang, kind: u8) -> bool {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/report.rs|f2ac495bc01d8be6|0": {
@@ -10726,17 +10726,17 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|2136c600ab188a42|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 78,
+    "line": 82,
     "text": "unnamed = case [i | (i, [-1]) <- zip [0 :: Int ..] (rows req \"shown\")] of"
   },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|2c29d72534159ba4|0": {
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|755af730645c5866|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 52,
-    "text": "advisory :: Integer"
+    "line": 49,
+    "text": "kindTable :: [(String, Bool)]"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 82,
+    "line": 86,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|010f702fd264722d|0": {
