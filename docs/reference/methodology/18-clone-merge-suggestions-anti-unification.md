@@ -400,8 +400,22 @@ core's rulings in the judge's words. A tenth came of the review of that commit (
 gap filled on one side only under an expression on both sides widens like a relabelled leaf, and the
 prompt's structural rule names the same exception. The core and the tables changed; the frozen set, the sample and
 the batches were drawn again as the second generation (`-v2`), the first generation's four docs kept
-on disk as the record and still checked as one; the gates read the newest generation, and the
-second generation's review and precision land with its audit.
+on disk as the record and still checked as one; the gates read the newest generation.
+
+**The second generation's precision.** Four new judges, one batch of twenty-five each, answered the second sample
+under the batch prompt's reading rules, and their files are filed verbatim as `merge-review-v2.json`; the precision doc
+`merge-precision-v2.json` is again the three frozen docs' readings and lands with the review (design booklet §13 items
+36 and 53). The core's feasibility agrees with the audit on 96 of the 100 rows, its reason on 92 and its parameter
+count on 87 (zod 74 / 72 / 71 of 74, ripgrep 17 / 16 / 12 of 20, cobra 4 / 4 / 3 of 5, this repository 1 / 0 / 1 of 1).
+Read as a classifier of feasibility, the core calls 50 rows feasible and the judges 46, all among the 50: precision
+46 / 50, recall 46 / 46. The four rows the core alone calls feasible are T1/T2 groups whose difference the
+second-generation rulings do not reach (an element or a parameter one member lacks, a match pattern, a const's type);
+the parameter count is higher than the judges' on 9 rows and lower on 4. On the 73 questions both samples share (the
+same member pairs under the same ids) the two generations' judges agree on feasibility 67 times and on the reason 66
+times; against them the core agreed on feasibility 60 times and on the reason 54 times in the first generation, 69 and
+66 times in the second. The readings still gate nothing; the registry
+[EVAL-SET-MERGE.md](../../EVAL-SET-MERGE.md) lists the eight reason disagreements and the seven questions whose judges
+changed, each with both verdicts.
 
 ### 7. Design boundaries
 

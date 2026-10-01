@@ -9,6 +9,14 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 分析轨 v2.31 步 6 / 7 合并家族第二代第二部分（2026-10-01；第二代的盲判、审阅档与精度册，设计册 §13 第 53 条；判决代码、wire、golden 零改动，`cli/src` / `core/app` / `cli/tests` 一个字节不动，分数与 1.8.0 可比）。
+
+- **盲判**：四个新的独立判官（general-purpose，Opus）各判第二代一批 25 题，只读自己那批、只写自己的答案档，批次提示带 `## Reading rules`；清单形检批 4 / 答 100 / 缺陷 0，`eval_merge_review::assemble` 原样组装成 `contracts/eval/merge-review-v2.json`（generated_from 7b3b43e0、dirty false）；判官答可行 46、不可行 54（type 39、position 11、no_savings 4）。
+- **精度册** `contracts/eval/merge-precision-v2.json`（三档的纯函数、与审阅档同一提交，第 36 条）：feasible_agree 96 / 100、reason_agree 92 / 100、params_agree 87 / 100（zod 74 / 72 / 71 of 74、ripgrep 17 / 16 / 12 of 20、cobra 4 / 4 / 3 of 5、本仓 1 / 0 / 1 of 1）；把可行性读成分类器，核答可行 50、判官 46 全在其内，精度 46 / 50、召回 46 / 46；参数核多 9 行、少 4 行。第一代 83 / 77 / 45 留作历史。
+- **与第一代对照**：共有 73 题、同一对成员同一 id；两代判官 feasible 一致 67、reason 一致 66、参数一致 57；同 73 题上核对判官 feasible / reason 一致，第一代 60 / 54、第二代 69 / 66；判官改答的七题四题改到核第二代的理由上、三题离开。
+- **文档**：登记册 `docs/EVAL-SET-MERGE.md` 加「Generation 2: the blind review / precision / against generation 1」三节（批次分布、参数分布、混淆表、八条理由分歧与七条改答逐条带两边答案与判官 note）与出处一条；设计册 §12 第 7 行、§13 第 53 条；册 18 §6 第二代精度段；计划横幅与 T 轨步 7 行。
+- **门**：主 check 913（地板 911；轴 0:90 2:305 6:217）/ dedup 50 / scan 104 warn 0 fail（+1 = 登记册过 300 行软线）/ docdup 0 / deadcode 0 / erase 0 / rules ok，子 949（轴 0:7 2:269 6:83）/ 91 / 45 warn 0 fail / docdup 0 / deadcode 0 / erase 0 / rules ok；点名腿 eval_merge / merge_ / dedup_ / clone_ / frozen_set / fixture_contract / docs_ / site_ / facts_ / eval_mention / baseline_ / mention_universe / source_citations 全绿（`cli/src` / `core/app` / `cli/tests` 未动，全量 lib / it / cabal 未重跑）；docdup 第一跑抓出登记册第二代节原样复述了第一代的审核句（两段 61 词同文），改写成「与第一代那句的四处不同」，审阅档里仍是原句；祝福：册 13 普查自仓行 signed 179 → 181，两首页 roast 块与 HEAD 同（913、轴不变）；ADR-006 主根具名重立（超容差两处：册 18 415 → 429、`docs/EVAL-SET-MERGE.md` 266 → 365；容差内 CHANGELOG 与设计册同定），子根无动用不重立。
+
 **无默认档位变更。** 分析轨 v2.31 步 6 / 7 合并家族第二代第一部分的续修（2026-10-01；主会话审阅上一提交后的两条裁定，设计册 §13 第 51–52 条；7.5.0 未发布，同一 minor 内判决定义修订，wire 形状不动；`clone/1` 不动、分数与 1.8.0 可比）。
 
 - **R3b 一侧为空的间隙拓宽到表达式父对**（第 52 条；起因 `001e5f83c730` 的 `b""` 对 `b"\n"`——空字节串没有内容结点，第 45 条把它读成间隙结构差）：T3 对的保留对两侧都在表达式位、且子结点序里有一段间隙一侧有子树另一侧没有 → 与 R3 同形一级拓宽（洞覆盖保留对整棵子树、类 1、参数文本 = 两侧的整条记号流，同文本成空洞，内部洞被吸收）；两侧都有子树的间隙、父对不全是表达式位的间隙（实参表之下的 `foo(a, b)` 对 `foo(a)`）仍是结构差。落在 `CE.Merge.Widen.bare` + `CE.Merge.Mapped.kept`；`MergeRulings` 三腿（拓上去 / 拓不上去 / 拓宽后同文本成空洞），关掉 R3b 的探针让前后两腿转红；`cabal test` 685 → 688。

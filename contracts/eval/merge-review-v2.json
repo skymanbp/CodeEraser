@@ -1,0 +1,712 @@
+{
+  "auditor": "four independent subagents (general-purpose, Opus), one batch each (25 questions, in the batches' rehashed order), each reading only its own batch-<n>.md - the members' identities, runs and source and the tool's parameterisation, never the feasibility, the reason, the savings or the member kept - and writing only its answers-<n>.jsonl; no git, no search, no product report, no ce and no core in reach; each answered feasible, reason, params and a note from the source as shown, under the batch prompt's reason order (the first that applies: spans_statements, position, type, too_many_params, no_savings, else ok); the coordinator ran the form check on the manifest (batches 4, answers 100, defects 0) and assembled verbatim, judgments untouched (booklet analysis-track.md sections 6.5 and 13 items 36 and 53)",
+  "batches": 4,
+  "generated_from": {
+    "ce": "1.8.0",
+    "commit": "7b3b43e067538775603cc22d0dfc2025f1dcf5eb",
+    "dirty": false
+  },
+  "rows": [
+    {
+      "feasible": true,
+      "id": "00008b8418de3441be409dc45da8ec8999ae2fb05b823f849048795540954bf0",
+      "note": "Both getSizing functions are textually identical, no parameter; 6 run lines against 3 kept plus 2 calls still saves 1.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0003206e2776642f904b1c3ad0d6373f135aaaab1fef121a9b07a995ccde4480",
+      "note": "Only the declared name dotall/ucp and the callee self.builder.dotall vs self.builder.ucp differ; 8 lines less the 4-line function and two calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0015619b6dc14ae75afbacc9b498b89f307623044cfc2228b24a38064fa47a9a",
+      "note": "Only the test name, the regex literal, the builder expression before .build, the haystack receiver and the expected string differ; five parameters and lines saved.",
+      "params": 5,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "001a2c1754a15debbd171afb317c09e9e7538b9396e06facb7f0d8be58ceca1c",
+      "note": "Only values differ: the test name, the good and bad data, the schema identifier and the toEqual argument; five parameters, and 24 - 12 - 2 = 10 lines are saved.",
+      "params": 5,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "001e5f83c730d01206ca6ec30b5cb39e53c295bf975a66fb46527e2cc6d571b0",
+      "note": "Differences are the declared name empty vs nl and the literals b\"\" vs b\"\\n\" and r\"\" vs r\"\\n\", each repeated pair one value parameter; saves 2 lines.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "003064137ab39d32bb3087ac3a200286c419e830c75fc3005088836741240558",
+      "note": "Only core.$ZodUnion vs core.$ZodTransform differs, one value parameter; 8 run lines fold into 4 plus 2 calls.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0032b169f8226986d9de2c4b265ae73837c29904c42d3ad640bbabdb41195c87",
+      "note": "Only the function name, the regex literal and the expected string literal differ, three parameters; 53 run lines fold into 27 plus 2 calls.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "003a6bee44ce7ec2a65668015d6a30002cba0f05a240f638385b0355b91ce09e",
+      "note": "Only the test title, the local opt vs nul, schema.optional vs schema.nullable, z.ZodOptional vs z.ZodNullable and undefined vs null differ: five parameters, saves 5.",
+      "params": 5,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "003c9327d0e74f6cb16c16df988abfb4b0170acfe6045189adeb040f5af07bf4",
+      "note": "The two functions are textually identical, so no parameter is needed, and 6 - 3 - 2 = 1 line is saved.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0043c8c0b0ca8b83e8b93bf611a7829dc0fa262afa8197ad64433ccd762328e5",
+      "note": "core.$ZodULID vs core.$ZodArray and ZodMiniStringFormat vs ZodMiniType are value places; 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "004a32a241563c94cbe13fa439b4a73161671f4e1ef3e5619256bb0a84fa6b5e",
+      "note": "Only the values core.$ZodCIDRv6 vs core.$ZodPromise and ZodMiniStringFormat vs ZodMiniType differ; 8 lines less 4 kept and two calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": false,
+      "id": "004b98f56894a2f8ab021d5bdcd8f67d8f4de362d318deb1600d749ab8930981",
+      "note": "In the const declaration the type &'static str vs &str differs, a type place reached before the string values; the names and the expected literal are values or names.",
+      "params": 5,
+      "reason": "type"
+    },
+    {
+      "feasible": true,
+      "id": "0050cba7c2c468bd962933a166ca5b63cc8d87173f763c96cd280e3456237a5e",
+      "note": "Only values differ: the test-name string, the callee es vs hr and the four expected message strings, six parameters; 70 lines less 35 and two calls saves 33.",
+      "params": 6,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00586a26325403cb218c07ca0e06d01243c5fec66b04c04d696cdccc702fdce6",
+      "note": "The two functions are textually identical, so no parameter is needed, and 6 - 3 - 2 = 1 line is saved.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "005e005dbe0355cdd042076b00537d17c6da3a0848d4e4930276e9087a4ef814",
+      "note": "Only the test name and stringSchema vs undefinedSchema differ, both value places; 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0061354024d639873fee4bcc0a52f6632b139d744517234fd9772a8ee1729705",
+      "note": "The two 71-line runs are textually identical, so no parameter is needed; 142 run lines fold into 73 plus 2 calls.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "006ed46fede8f45a99ba949fb87296004e0191422cbae5f2bd8e733b4c3cea17",
+      "note": "Test name, literalNumberSchema vs bigintSchema and val.boolean vs val.null are value places; 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "006fc3e3dab394e74e70fb4550a3737cdef44b6df6417b76ff11339d637b3bb6",
+      "note": "Only core.$ZodDate vs core.$ZodOptional differs; one parameter, and 8 - 4 - 2 = 2 lines are saved.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0077ea0a9d796ea95a076acf9529e988dc961760856b71d85d0732c526c40ff6",
+      "note": "Two value places differ, core.$ZodBase64URL vs core.$ZodBigIntFormat and ZodStringFormat vs ZodMiniBigInt; the comment line is not code; saves at least 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": false,
+      "id": "007acd7cec85aa59b8d4ffc006546afada206c004233239c724781dbbaa72a94",
+      "note": "The run includes the function header line, where member 1 declares a ctx context.Context parameter that member 0 lacks, a structural difference.",
+      "params": 1,
+      "reason": "position"
+    },
+    {
+      "feasible": true,
+      "id": "0083d87b8d44c9fbb989de9159023df049eb3051a9a5fc82a7d6edf24e815585",
+      "note": "Only the receiver core.$ZodFile vs core.$ZodPipe differs, one value parameter; 8 run lines against 4 kept plus 2 calls saves 2.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0086ba868740130547a81ba373e01b6fed33729773125674e5e4b06d7950ee18",
+      "note": "Inside the runs only two string literals differ (:4 vs :0 and the directive text); 30 run lines less 6 kept, 2 helper and 5 call lines saves 17.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00886e42ff03e1dd0c87e3727d63225a1b8f0fb472b25f3d2d9c234f1278182c",
+      "note": "The two functions are textually identical, so no parameter is needed; 6 run lines less the 3-line kept function and two calls saves 1 line.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00888c8b0b52b4c737384ba12db286a60e2490b15d4eba0ea7ce1e57408b6b11",
+      "note": "Only the fn name, the regex raw string and the expected string literal differ, all name or value places; 53 run lines less at most 27 merged and 2 calls saves 24 or more.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "008aca0cdd175e834bfa6f8464edd3ef2ab9769a4060c495f94e1b1bad527637",
+      "note": "Only the declared method name and the selector c.Flags vs c.PersistentFlags differ; two parameters, and 6 - 3 - 2 = 1 line is saved.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "009d3f23c0d23bca51d3b5597e5b4f941827b3e956dc9ff3ecbf8ee4d9c14a8f",
+      "note": "The two functions are textually identical, so no parameter is needed; 6 run lines less the 3-line kept function and two calls saves 1 line.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00a607ca3987c861011c82f4740b2cbba15157cb3c018110e29f9e06fa685379",
+      "note": "Only values differ: regexes.base64 vs regexes.base64url, the string base64 vs base64url (both places, one parameter) and the callee isValidBase64 vs isValidBase64URL.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00b769e4dabedfe717dfe7816ccd3108dce33191fa801007dcf6fd36bf532087",
+      "note": "Only the two test names and three string literals differ between the paired macro invocations; five parameters, and 30 - 17 - 2 = 11 lines are saved.",
+      "params": 5,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00ba36b967a75bbb75ba7581bf419215401063e585b8e719ec4532cbdbc3af02",
+      "note": "Two value places differ, core.$ZodISODateTime vs core.$ZodRecord and ZodStringFormat vs ZodMiniType; 8 lines fold into 4 plus 2 calls.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00c5e082b069714cc3fd07edc5fa3344f570185b28122577961b74f843f68dbc",
+      "note": "Two value places differ, core.$ZodEmoji vs core.$ZodNull and ZodMiniStringFormat vs ZodMiniType; 8 lines fold into 4 plus 2 calls.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00d0e8d185aca3f5a9f548cbd4e35f22ee949f3dd340265168a0e4e398a0d2eb",
+      "note": "Members differ only at value places (test name, goodData and badData initialisers, arraySchema vs unionSchema twice); 24 run lines less 12 merged and 2 calls saves 10.",
+      "params": 4,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00d53d6e64b264725a5f07eee06e06129af0e288e057c8f1397ee2b45f12dfa0",
+      "note": "Only values differ: the title, true vs BigInt(145), 1 vs 134 and booleanSchema vs bigIntSchema used twice; four parameters, saves 10 lines.",
+      "params": 4,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00e445990c41fc6d61df2fcc7af0d3916fdcca19d842f26c50e9e683890741d6",
+      "note": "Only values differ: the test-name string, the member expression z.object(...).passthrough vs .strip, and data vs { points: 2314 }; 10 lines less 5 and two calls saves 3.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00e49bb8d1a3cb94d5ee91e441d8a7bed20be66f2dcb08c731d7e463a1ddc3b8",
+      "note": "Test name, literalBooleanSchema vs dateSchema and the parse argument {} vs val.boolean are value places; 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "00f1c152b07c38e34ca9276e68c14f054e179e24b867b6efb94244b8a336fb9f",
+      "note": "Test name and the parse argument false vs the string asdf are value places; 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0104bcc3357acf982b5ea76996b6741ee7e6d7f1b5238e743998663e10171cb8",
+      "note": "Only the receivers checks.$ZodCheckBigIntFormat vs core.$ZodFunction and $ZodBigInt vs ZodMiniType differ; two parameters, and 8 - 4 - 2 = 2 lines are saved.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "01065248b5e7453ef68ff4a7be7a6a85362e0062bb4abcd53a3b6b06737a96cb",
+      "note": "Only the test-name string literal differs, both bodies calling literalStringSchema.parse({}); 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": false,
+      "id": "0110f0ec9a0fcc571fd0892c76cb4761770a2cbdb71061a78206727907d49eff",
+      "note": "The cmd.args array has five elements in member 0 and six in members 1-2, and member 3's run stops at &[; an element one member lacks is structural.",
+      "params": 5,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "01172e8d5d80a6cb50499e88189f523bf12323546cedc3c4547a3f8f20693f3f",
+      "note": "The match-arm patterns Message::Begin vs Message::Match are patterns, neither expressions nor declared names, so the first difference is a structural position.",
+      "params": 4,
+      "reason": "position"
+    },
+    {
+      "feasible": true,
+      "id": "01238f1b031adcb552e13762b206a390ac75a0267f0c776fe54441d61c10dbdb",
+      "note": "Only the value core.$ZodEmoji vs core.$ZodIPv4 differs; 8 run lines less the 4-line kept function and two calls saves 2.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "012d58419339344586af1578c05cced5f5a001838e4b7b4ab2926ce0cb71ab95",
+      "note": "The two getSizing functions are textually identical, so no parameter is needed; 6 run lines less 3 merged and 2 calls saves 1.",
+      "params": 0,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "012e93cef8a3827034aea7fe4023ff2b91424b74e98d8a744535ae1265900531",
+      "note": "Only the receiver of the first init call differs, core.$ZodString vs core.$ZodUnion, one value parameter; 8 run lines fold into 4 plus 2 calls.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "013c2f39593788f22f39717943c43f5d13bf519ab1a4c90df032f36110bde5da",
+      "note": "core.$ZodKSUID vs core.$ZodExactOptional and ZodMiniStringFormat vs ZodMiniType are value places; 8 run lines less 4 merged and 2 calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "013c50cf0db6f947c9c1417f6bc1102f2ac13a69c14da8a6839a77a7f3ba1b56",
+      "note": "Across the five runs only the three banner strings, gen.generate vs gen.generateExtendChain and gen.ZOD3 vs gen.ZOD differ; five parameters and 50 - 12 - 5 = 33 lines saved.",
+      "params": 5,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "0156e4d0eb2a873970cf213b70e00537cbdf6224ad16c7fa9311f90acc412769",
+      "note": "Only the values core.$ZodIPv4 vs core.$ZodDiscriminatedUnion and ZodMiniStringFormat vs ZodMiniType differ; 8 lines less 4 kept and two calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "016b1924f90ba82d9ac6cf220183ab3453acf71db7017856ba6d88c6266c17fd",
+      "note": "Only values differ: the test title, dateSchema vs undefinedSchema and val.string vs val.null, three parameters; 8 lines fold into 4 plus 2 calls.",
+      "params": 3,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "016d26156bbbbd7662647924661cd5445b8a451164fa5d6570be38925a7c0177",
+      "note": "Only the values core.$ZodBigIntFormat vs core.$ZodIntersection and ZodMiniBigInt vs ZodMiniType differ; 8 lines less 4 kept and two calls saves 2.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "01769ff2456c97c8d0ee3496ac9b7b7c4fdc71920e8e0c40510624cbd20b406d",
+      "note": "Only core.$ZodUnknown vs core.$ZodPrefault differs, one value parameter; 8 run lines fold into 4 plus 2 calls.",
+      "params": 1,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "017a941252116ad04a9b4158562c54b171497c75571f537d97cf0e048095a7d0",
+      "note": "All six differences are values: title, receiver, argument, expect(..).toEqual vs .toBe, the snapshot matcher vs .toEqual member expression, and the snapshot vs \"bound\".",
+      "params": 6,
+      "reason": "ok"
+    },
+    {
+      "feasible": true,
+      "id": "017cb023791ad2ec9de4b3391077703713ffa20f973a5cbcbee35596bd360ddb",
+      "note": "Only the declared method name and the kind string literal differ; two parameters, and 6 - 3 - 2 = 1 line is saved.",
+      "params": 2,
+      "reason": "ok"
+    },
+    {
+      "feasible": false,
+      "id": "0003afa9ec9b6d1a708a4c8343c98763452bd52cfdbdfc68df3946caf1763782",
+      "note": "The generic argument in the type annotation core.$constructor<ZodMAC> vs core.$constructor<ZodGUID> differs, a type place reached right after the declared name.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0005f31d7c72596c9b452833979e366aedb86167669ab9201f2304886972bbb8",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodNever> vs <ZodNaN>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00074bfdc1b5f85e473c52755734c7296e136b3bb0c11e5441253cbf7dec74d8",
+      "note": "The generic argument core.$constructor<ZodIPv4> vs <ZodBase64URL> in the const's type annotation is a type difference; the rest are names and values.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "000798365c5c3da4927f64f1af41014e3ca21b0e639fe850e77415fa57774c39",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodBase64> vs <ZodMiniCUID>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0008be82423df1c7b1033bf78d664f133bdbf041350ad31481cab87128f6250a",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodULID> vs <ZodMiniNumber>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00099668bc0b742a9a26908006861766c976dff8b835359dc1b91f116189a96e",
+      "note": "The type annotation's generic argument core.$constructor<ZodCustomStringFormat> vs core.$constructor<ZodMiniUnion> is a type place, walked right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00100b64ecfb87be8ad5df921e722bd4614bdc3689c637174d911e6da68a5ef4",
+      "note": "The type annotation's generic argument core.$constructor<ZodPreprocess> vs core.$constructor<ZodMiniBigInt> is a type place, walked right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0011ff1e283102ddb7cb45d39e96e0a7ce678ecf21ccbf0cd515ac3f0b597574",
+      "note": "The generic argument core.$constructor<ZodCatch> vs <ZodPrefault> is a type and precedes in tree order the extra statement inst.removeCatch = inst.unwrap;.",
+      "params": 5,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0019e5a270e34acbbca0d600379f92dab4a2538789ea70aea9b13d9d6a3714f1",
+      "note": "The generic argument in the type annotation core.$constructor<ZodCodec> vs core.$constructor<ZodUUID> differs, a type place reached right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "001a4b41036e725f98a440a8405fd4679a0793cb7c725a434b7a2c96be098893",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodMiniE164> vs <ZodMiniNonOptional>), a type place walked right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "001babd14e218b6b9a639061d960c96beeb1c3af3e48a48c75076b04067bcaf6",
+      "note": "The type-parameter constraint core.SomeType vs SomeType is a type place, walked right after the declared function name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "001badff73a2b4c392e480b17a4aa5faecfbf9bf437ddf0d7b67848942739bde",
+      "note": "z.number().lt(3) passes an argument that z.number().positive() lacks; a missing argument is structural, not a value.",
+      "params": 6,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "001c172e6d0d925e82407659b72c59cb9d8e8e42bd89334646c4ece72c30cc5f",
+      "note": "The generic argument in the type annotation core.$constructor<ZodEmail> vs core.$constructor<ZodNanoID> differs, a type place reached right after the declared name.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "001e93a9327598dc24b6dfdd04e62fa8ddda248dacf992cd096b4e8fecb0f491",
+      "note": "multi vs schema and the object literal (keys A, B vs a, b fold into it) are two value params, but two one-line runs less 3 helper and 2 call lines save nothing.",
+      "params": 2,
+      "reason": "no_savings"
+    },
+    {
+      "feasible": false,
+      "id": "001fd6b5128e6ad872e55abe303c75c52920c55f3bea20f0cd95ff70b2f77275",
+      "note": "processors.symbolProcessor vs processors.setProcessor is one value parameter, but two one-line runs less 1 merged line and 2 calls save nothing.",
+      "params": 1,
+      "reason": "no_savings"
+    },
+    {
+      "feasible": false,
+      "id": "00229974058495f505b6861deb957f8e0a03a853e049c33cb55bde2ecca3ab15",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodIPv4> vs <ZodMiniISOTime>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0022b455f7eba1ec3616efd729fe2a193615561f3315089eb6ba120d6a3bd229",
+      "note": "The impl target type Match<'a> vs Context<'a> differs, a type place; the earlier differences are strings, field expressions and the struct's declared name.",
+      "params": 6,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0023790df6f77ed9552b4dcb99aed90ca3810ed8646373cc99006481b7b82ab0",
+      "note": "The generic argument in the type annotation core.$constructor<ZodEmail> vs core.$constructor<ZodMiniSet> differs, a type place reached before any body difference.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0026ccf4404baccaaf929bfb176287e434fb676fb78221c9acc555ad950277ec",
+      "note": "The generic argument core.$constructor<ZodNaN> vs <ZodNever> in the const's type annotation is a type, the first non-value difference.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0026e501fbaa72160da39f599043f9b7208c2eb9da8a251210731730c4ee3a65",
+      "note": "The return type in the const's type annotation, $SafeParseAsync vs $SafeParse, is the first non-value difference, before async, let vs const and the if-body statement.",
+      "params": 7,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00295a88f4565aeedeb125e6fd83bf84e4e33da21b979f0eb9cfef35b72832c0",
+      "note": "The type annotation's generic argument core.$constructor<ZodCIDRv4> vs core.$constructor<ZodMiniDate> is a type place, walked right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "002ce59fe655f53087b1f3b795f317550d6de1d6be8d2e4a507514137eab2b7b",
+      "note": "The generic argument in the type annotation core.$constructor<ZodMiniXor> vs core.$constructor<ZodMiniDate> differs, a type place reached right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "002e5318cd291cad722c5562526794e84c380f45bd424ea7c44ea4a1ca1bf3d1",
+      "note": "Only processors.neverProcessor vs processors.prefaultProcessor differs, but two one-line members give 2 - 1 - 2 = -1 lines saved.",
+      "params": 1,
+      "reason": "no_savings"
+    },
+    {
+      "feasible": false,
+      "id": "002f34c76658b55d3e4ce55df9e9c8bb8a3c9c8c3226bebd8598ecf403920015",
+      "note": "The generic argument in the type annotation core.$constructor<ZodMAC> vs core.$constructor<ZodMiniMAC> differs, a type place reached right after the declared name.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0031f28eaf86684ed221c27ed455bb1e51e157e1d9ffb41f3516c8fc3446edab",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodIPv6> vs <ZodMiniXID>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0034feb9dda61301491842c3abedc186672665f7dd66bd9d7585c9dc2764bc5e",
+      "note": "The type annotation's generic argument core.$constructor<ZodE164> vs core.$constructor<ZodBase64URL> is a type place, walked right after the declared name.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0038f0ce52f63ff644af8fb7b8a23773d6e1f5815e56323a758a0cae93f661e4",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodMiniAny> vs <ZodMiniCIDRv6>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "003a1ee6cfdcf6e0fdf9833409ddc209c4b446fe6ee4cda4922a24dd140dec9a",
+      "note": "The one difference is the value processors.nullProcessor vs processors.dateProcessor, but two 1-line members less a 1-line function and two calls save -1 lines.",
+      "params": 1,
+      "reason": "no_savings"
+    },
+    {
+      "feasible": false,
+      "id": "003e4cff94345840b927e66fc0fefe7243c04860dcb289a7491a3edb8e892a0f",
+      "note": "The type annotation's generic argument core.$constructor<ZodMiniGUID> vs <ZodMiniURL> differs, a type place after the declared name.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0043c3ec81f09092f9c4db036f0259f139494c62924eb9bddc0028ffccacadf4",
+      "note": "The generic argument of the type annotation, core.$constructor<ZodMiniRecord> vs <ZodMiniULID>, is a type and the first non-value difference after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0047374653c2fb6faeaa2bc4c67425c6f7af3f13a31be0a3d9835845c222497b",
+      "note": "The type annotation's generic argument core.$constructor<ZodEmoji> vs <ZodIPv4> differs, a type place reached right after the declared name.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00481f9001e5c2b804d922e05cdb0b4aaadd149d5c7ab8be892ecd9e1fc747d3",
+      "note": "The generic argument in the type annotation core.$constructor<ZodEmoji> vs core.$constructor<ZodMiniBase64URL> differs, a type place reached right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00485bbb0771d761028da743d0ced78b0dced1cb3b8d2255d1a9fed869ec403c",
+      "note": "The type annotation's generic argument differs (core.$constructor<ZodMiniCatch> vs <ZodMiniKSUID>), a type place walked right after the declared const name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "004959d655bc2ee06ef047280190677ec57d051d24d5fa8c3d4da3f684b06da0",
+      "note": "The generic argument core.$constructor<ZodBigIntFormat> vs core.$constructor<$ZodNumberFormat> is a type place, reached before the trailing function vs interface declaration.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "004b88c1e0952f7fca79de6f71ade68c53327bfeb88a1d6a2be0a24e1fcf6024",
+      "note": "Member 1's StandardBuilder::new().heading(false) passes an argument false that member 0's StandardBuilder::new() lacks; a missing argument is structural.",
+      "params": 8,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "004d339dbedf9a314635496cd50228f1d58bb54d77361f85afda331b1ed263f2",
+      "note": "The type parameter constraint differs (T extends schemas.$ZodDate vs schemas.$ZodNever), a type place walked right after the function name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "005013dbcee7b147cdac1ffacf9d0e23eb40f71db44c7aebbdad703d16a0c521",
+      "note": "The type annotation's generic argument core.$constructor<ZodMiniMap> vs core.$constructor<ZodMiniULID> is a type place, walked right after the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "005312666451df6addde0ef8b481f1ad4aa64fadbbd98a894aee321a7a0fbbdf",
+      "note": "The generic argument core.$constructor<ZodCIDRv4> vs <ZodMiniSuccess> in the type annotation is a type difference following the declared name.",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "006b09254ee3c302a7501bf6443ea9c89a2ec6a036fee571d366423bc8b022f7",
+      "note": "The return type &T vs &str differs at T vs str, a type place walked before the swapped match patterns (_, ref inner) vs (ref name, _).",
+      "params": 4,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00768018a7fcd1530d9822e3c0ec3ec8f46fc225a4dff005498c152cc2a71168",
+      "note": "The field name differs inside args.fixed_strings vs args.no_unicode, which is the target of an assignment, so the difference is a position.",
+      "params": 0,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "008cec664c1f1560c273f9479fee99e1e78cf38ae14d42dd44de9eb4dad5bdfd",
+      "note": "The impl's self type InvertMatch vs NoMessages is a type place, walked before the body's extra name_short method.",
+      "params": 8,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "0093f6ecedfb5f9d4b926cec2ee5d0dc41a28a56983daa9d2e45a4a90ece94f3",
+      "note": "The impl's self type Column vs NoIgnoreGlobal is a type place, walked before the body's assignment-target difference args.column vs args.no_ignore_global.",
+      "params": 8,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00b35351de84459ea586c1cc8d7682dd21fcb6d5ebea79af4f4c5c8893de74f2",
+      "note": "The impl's self type differs (impl Flag for BeforeContext vs impl Flag for PCRE2), a type place walked before any difference inside the method bodies.",
+      "params": 10,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00b7d66a756fc6518dee521c313a08f736b5689c22cd9db3e1069972b1e75122",
+      "note": "The parameter type Glob vs bool differs, a type place reached before the return types GlobSetBuilder vs OverrideBuilder and the body.",
+      "params": 3,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00be28adeebc8c3fba86baf0c00c9110933a7579ee19934475f68f93c92e9d63",
+      "note": "The visibility modifier pub(crate) vs pub is the first difference walked and is a keyword piece, neither an expression nor a name.",
+      "params": 8,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "00bf80e095fc2feeb59d5e80ded08cf140da60ab68a796c31abaaaa1ca812d19",
+      "note": "Member 0's run line 258 holds the element *.bashrc beyond member 1's last element *.timer, an array element one member has and the other lacks.",
+      "params": 17,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "00da78204f7c6aae904c176bb1eb55a3ea8899575314f43d5d7288b3a84553c7",
+      "note": "The let's type annotation differs in its generic argument (Vec<String> vs Vec<Unit>), a type place walked before the let's own mut keyword and the closure.",
+      "params": 6,
+      "reason": "type"
+    },
+    {
+      "feasible": false,
+      "id": "00dfb0d50266cc4d9143eaf3d34e8628bc5b04e825121e8c34c262748aaeb394",
+      "note": "The differing field expression args.null vs args.only_matching is the target of an assignment, which reads as a position difference.",
+      "params": 2,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "00fe2f72ad8f3da4eac693a3303e6a8527a8be1305c01851694b97b67034f77e",
+      "note": "executeCommand gets three arguments in member 0 and four in member 1; an argument one member lacks is structural, not a value.",
+      "params": 7,
+      "reason": "position"
+    },
+    {
+      "feasible": false,
+      "id": "013b6a9a2d5bd5340d1c5fa24141d5960afdbabb78a31ff840964e8bdcc06f75",
+      "note": "MinimumNArgs(2) vs RangeArgs(2, 4) has an argument member 0 lacks, a structural difference reached first; later calls also differ in argument count.",
+      "params": 5,
+      "reason": "position"
+    }
+  ],
+  "schema": "ce.eval-merge-review/1.0.0"
+}

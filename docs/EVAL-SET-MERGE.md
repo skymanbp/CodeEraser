@@ -251,14 +251,113 @@ generation's four docs stay on disk as the record; the gates read the second.
   `004b98f56894` position 4 -> ok 3 / type; `001e93a93275` position 3 -> position 3 / no_savings;
   `001fd6b5128e`, `002e5318cd29`, `003a1ee6cfdc` position 1 -> no_savings 1 / no_savings.
 - **The batches** (`eval_merge_batches::merge_batches`, written outside the tree): 4 batches of 25 under
-  `merge-batches-v2`, each with the `## Reading rules` section; the second generation's blind review and
-  precision doc are filed by the next commit.
+  `merge-batches-v2`, each with the `## Reading rules` section; the review and the precision doc below.
+
+### Generation 2: the blind review
+
+Four new independent judges, one batch of 25 each, answered all 100 rows of the second sample; the coordinator ran
+the form check on the manifest (batches 4, answers 100, defects 0) and `eval_merge_review::assemble` filed the
+answers verbatim (`contracts/eval/merge-review-v2.json`). The auditor sentence the review doc carries is the
+first generation's above with four differences: the subagents are named (general-purpose, Opus); the parenthesis
+on the first batch's judge's draft is gone; "the coordinator ran the form check on the manifest (batches 4, answers
+100, defects 0) and assembled verbatim"; and the citation reads "13 items 36 and 53".
+
+The answers: feasible 46, infeasible 54; by reason and by batch:
+
+| batch | ok | position | type | spans_statements | too_many_params | no_savings |
+|---|---|---|---|---|---|---|
+| 1 | 15 | 1 | 9 | 0 | 0 | 0 |
+| 2 | 10 | 4 | 10 | 0 | 0 | 1 |
+| 3 | 10 | 3 | 11 | 0 | 0 | 1 |
+| 4 | 11 | 3 | 9 | 0 | 0 | 2 |
+| all | 46 | 11 | 39 | 0 | 0 | 4 |
+
+The audited parameter counts run from 0 to 17 (0: 8, 1: 11, 2: 17, 3: 16, 4: 26, 5: 9, 6: 5, 7: 2, 8: 4, 10: 1,
+17: 1); the eight rows over six all answer `type` or `position`, the prompt's earlier reasons.
+
+### Generation 2: precision
+
+The precision doc (`contracts/eval/merge-precision-v2.json`), agreeing rows / rows:
+
+| corpus | rows | feasible_agree | reason_agree | params_agree |
+|---|---|---|---|---|
+| zod | 74 | 74 / 74 | 72 / 74 | 71 / 74 |
+| ripgrep | 20 | 17 / 20 | 16 / 20 | 12 / 20 |
+| cobra | 5 | 4 / 5 | 4 / 5 | 3 / 5 |
+| codeeraser | 1 | 1 / 1 | 0 / 1 | 1 / 1 |
+| all | 100 | 96 / 100 | 92 / 100 | 87 / 100 |
+
+Read as a classifier of feasibility against the judges: the tool calls 50 rows feasible and the judges 46, every
+one of those 46 among the tool's 50 - precision 46 / 50, recall 46 / 46. The tool's reason (rows) against the
+audited reason (columns):
+
+| core \ audit | ok | position | type | spans_statements | too_many_params | no_savings | rows |
+|---|---|---|---|---|---|---|---|
+| ok | 46 | 3 | 1 | 0 | 0 | 0 | 50 |
+| position | 0 | 7 | 2 | 0 | 0 | 1 | 10 |
+| type | 0 | 0 | 36 | 0 | 0 | 0 | 36 |
+| too_many_params | 0 | 1 | 0 | 0 | 0 | 0 | 1 |
+| no_savings | 0 | 0 | 0 | 0 | 0 | 3 | 3 |
+| rows | 46 | 11 | 39 | 0 | 0 | 4 | 100 |
+
+Parameter counts: equal on 87 rows, the tool's higher on 9, lower on 4. The eight reason disagreements, the
+judge's note verbatim:
+
+- `004b98f56894` ripgrep t1t2 - tool `ok` (params 3) / judge `type` (params 5): "In the const declaration the type
+  &'static str vs &str differs, a type place reached before the string values; the names and the expected literal
+  are values or names."
+- `007acd7cec85` cobra t1t2 - tool `ok` (params 0) / judge `position` (params 1): "The run includes the function
+  header line, where member 1 declares a ctx context.Context parameter that member 0 lacks, a structural
+  difference."
+- `0110f0ec9a0f` ripgrep t1t2 - tool `ok` (params 4) / judge `position` (params 5): "The cmd.args array has five
+  elements in member 0 and six in members 1-2, and member 3's run stops at &[; an element one member lacks is
+  structural."
+- `01172e8d5d80` ripgrep t1t2 - tool `ok` (params 4) / judge `position` (params 4): "The match-arm patterns
+  Message::Begin vs Message::Match are patterns, neither expressions nor declared names, so the first difference is
+  a structural position."
+- `001babd14e21` zod t3 - tool `position` (params 4) / judge `type` (params 4): "The type-parameter constraint
+  core.SomeType vs SomeType is a type place, walked right after the declared function name."
+- `001e93a93275` zod t1t2 - tool `position` (params 3) / judge `no_savings` (params 2): "multi vs schema and the
+  object literal (keys A, B vs a, b fold into it) are two value params, but two one-line runs less 3 helper and 2
+  call lines save nothing."
+- `00bf80e095fc` ripgrep t1t2 - tool `too_many_params` (params 17) / judge `position` (params 17): "Member 0's run
+  line 258 holds the element *.bashrc beyond member 1's last element *.timer, an array element one member has and
+  the other lacks."
+- `00da78204f7c` codeeraser t3 - tool `position` (params 6) / judge `type` (params 6): "The let's type annotation
+  differs in its generic argument (Vec<String> vs Vec<Unit>), a type place walked before the let's own mut keyword
+  and the closure."
+
+The four rows the tool calls feasible and the judges do not are the first four, all T1/T2 groups: an element
+or a parameter one member lacks (two), a match pattern, and a const whose type differs. They are
+recorded as the readings are; nothing is gated on them (design booklet section 13 item 53).
+
+### Generation 2 against generation 1
+
+73 questions are in both samples, the same pair (member identities) under the same id. The two generations' judges
+agree on feasibility on 67 of them and on the reason on 66 (on the parameter count on 57). On the same 73 the tool
+agreed with the judges on feasibility 60 times and on the reason 54 times in generation 1, 69 and 66 times in
+generation 2. The seven questions whose judges differ (generation 1 judge -> generation 2 judge; the tool's answer
+in each generation alongside):
+
+- `0015619b6dc1` ripgrep t3 - judges `position` (7) -> `ok` (5); tool `position` (9) -> `ok` (5).
+- `0110f0ec9a0f` ripgrep t1t2 - judges `ok` (5) -> `position` (5); tool `ok` (4) -> `ok` (4).
+- `01172e8d5d80` ripgrep t1t2 - judges `ok` (4) -> `position` (4); tool `ok` (4) -> `ok` (4).
+- `001badff73a2` zod t3 - judges `ok` (4) -> `position` (6); tool `position` (6) -> `position` (6).
+- `004b88c1e095` ripgrep t3 - judges `ok` (6) -> `position` (8); tool `position` (9) -> `position` (10).
+- `00768018a7fc` ripgrep t3 - judges `ok` (1) -> `position` (0); tool `position` (1) -> `position` (1).
+- `00da78204f7c` codeeraser t3 - judges `position` (5) -> `type` (6); tool `position` (7) -> `position` (6).
+
+Four of the seven moved onto the tool's second-generation reason (`0015619b6dc1`, `001badff73a2`,
+`004b88c1e095`, `00768018a7fc`); three moved away from it (`0110f0ec9a0f`, `01172e8d5d80`, `00da78204f7c`) and
+are among the eight reason disagreements above.
 
 ## Provenance
 
 - The review doc's `generated_from` is the tree it was assembled on: ce 1.8.0, commit `63041c544060b0e599309e73c8a7e347e9c308e2`,
   dirty true - the assembly leg and the doc land in one commit, the reading design booklet
   section 13 item 24 gave the flow reviews.
+- The second generation's review doc was assembled on ce 1.8.0, commit `7b3b43e067538775603cc22d0dfc2025f1dcf5eb`,
+  dirty false (the tree the first part of generation 2 landed on), and lands with its precision doc in one commit.
 - The precision doc has no `generated_from`: it reads no product, only the three frozen docs it names, so it
   computes the same on any tree, and it lands in the review's commit (section 13 item 36).
 - The suggestion set and the sample landed in steps 6-7's first landing commit; the manifest the batches were
