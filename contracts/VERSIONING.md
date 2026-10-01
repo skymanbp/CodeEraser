@@ -51,8 +51,8 @@
 > 非空洞同一参数当且仅当文本向量相同〕
 > 200 个生成的 T1/T2 组、`tedMapping` 与 `ted` 同距离且是合法 Tai 映射、洞的首末根、理由一致性〔可行恰为 0、0 必有省行、5 必无省行〕、
 > 等缺口折叠、两道上限与两道上限下最宽的请求在行内、空请求）。既有十四族字节零变化（既有 golden 只动 proto 字面与 hello 能力表）；新增
-> `contracts/fixtures/merge/golden.ndjson` 六对（无洞可行 / 三成员叶洞一个参数 / T3 缺口洞 / 语句位置洞 reason 1 / 七个参数 reason 4 /
-> 不同构拒绝）。旧核无此能力 = 测量侧具名降级：`ce merge` 的文档带 `degraded`「core offers no merge/1」，`judged::ask` 点名「pre-7.5.0」。
+> `contracts/fixtures/merge/golden.ndjson` 七对（无洞可行 / 三成员叶洞一个参数 / T3 缺口洞 / 语句位置洞 reason 1 / 七个参数 reason 4 /
+> 不同构拒绝 / T3 一侧为空的间隙在表达式父对下拓宽为一个可行参数〔R3b〕）。旧核无此能力 = 测量侧具名降级：`ce merge` 的文档带 `degraded`「core offers no merge/1」，`judged::ask` 点名「pre-7.5.0」。
 > **7.4.0**（函数内死代码族，加性 minor，计划 v2.31 步 3，2026-09-29；ADR-008 细则第七期，设计册
 > `docs/reference/analysis-track.md` §5）：第十四判决族 `flow/1`——请求 `flow.request`：`units=[[u,lang,params]]`
 > （按 u 严格升序；`params` = 该单元 var 表里形参的个数，不符按名拒 `params disagree with the var table`）+
@@ -695,7 +695,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->179<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.6.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->180<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.6.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

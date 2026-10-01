@@ -326,7 +326,7 @@ in member 0's postorder, a fragment's helper lines, one parameter per text
 counts and feasibility, the reasons' coherence over every judged
 and generated suggestion — feasible exactly at 0, 0 only with a line saved, 5 only without one
 ([MergeProps.hs:169](../../../core/test/MergeProps.hs#L169)) —, the equal-gap fold, both caps, the
-empty request and the counts each have their leg, and six request–reply pairs are golden
+empty request and the counts each have their leg, and seven request–reply pairs are golden
 ([golden.ndjson](../../../contracts/fixtures/merge/golden.ndjson)).
 
 On the measuring side the unit legs hold the slot tables (§4 ruling 2), the nine-tenths rule, the
