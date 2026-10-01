@@ -2818,28 +2818,28 @@
     "end": 22,
     "text": "//! The §7.2 container-chain identity of a unit (7.0.0, C-nth): what"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5257d56ada2d008b|0": {
-    "target": "../../../cli/src/main_score.rs",
-    "line": 123,
-    "end": 137,
-    "text": "pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {"
-  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5932094aee58af08|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 184,
-    "end": 202,
+    "line": 189,
+    "end": 207,
     "text": "fn preflight(given: &Path) -> Result<(), ExitCode> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|91a6c3124e3ed609|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 172,
-    "end": 176,
+    "line": 177,
+    "end": 181,
     "text": "let fence_only = o.reply.failed.iter().all(|c| FENCE.contains(&c.as_str()));"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|e3855c398244a566|0": {
     "target": "../../../cli/src/main_score.rs",
     "line": 48,
     "text": "const FENCE: [&str; 2] = [\"knobs_digest\", \"rows_dropped\"];"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|f414078af6b9f3d0|0": {
+    "target": "../../../cli/src/main_score.rs",
+    "line": 128,
+    "end": 142,
+    "text": "pub fn baseline_cmd(a: BaselineArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/report.rs|72eedfdd1ae101de|0": {
     "target": "../../../cli/src/report.rs",
@@ -9387,10 +9387,10 @@
     "line": 104,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|72c10c59b78ec5d9|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|42203d6f2fb5a593|0": {
     "target": "../../../cli/src/main_similar.rs",
     "line": 31,
-    "text": "pub fn similar_cmd(a: SimilarArgs) -> ExitCode {"
+    "text": "pub fn similar_cmd(a: SimilarArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
     "target": "../../../cli/src/mcp/tools.rs",
@@ -9905,18 +9905,18 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
     "target": "../../../cli/src/main_lang.rs",
-    "line": 79,
+    "line": 76,
     "text": "query\t代码查询：用 CE Datalog 对索引里的事实（文件、引用、单元、克隆、提及、路径类）提一个问题，由核的 query/1 作答，--why 时每个答案带推导链；程序错误退出 2（仅报告）"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|1008c68889e0874d|0": {
-    "target": "../../../cli/src/main_query.rs",
-    "line": 67,
-    "text": "pub fn rules_cmd(a: RulesArgs) -> ExitCode {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|9055b071dad993d6|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|4350583dd45e803c|0": {
     "target": "../../../cli/src/main_query.rs",
     "line": 47,
-    "text": "pub fn query_cmd(a: QueryArgs) -> ExitCode {"
+    "text": "pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|d07418fdeecbdc85|0": {
+    "target": "../../../cli/src/main_query.rs",
+    "line": 67,
+    "text": "pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|e5325963d09827f3|0": {
     "target": "../../../cli/src/main_query.rs",
@@ -10655,11 +10655,11 @@
     "end": 22,
     "text": "pub fn key(p: &Placed) -> Key {"
   },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|afd06019b3c84ab5|0": {
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|50350e88ad9ffccd|0": {
     "target": "../../../cli/src/main_flow.rs",
     "line": 27,
     "end": 53,
-    "text": "pub fn flow_cmd(a: FlowArgs) -> ExitCode {"
+    "text": "pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/daemon_flow.rs|4e9632f41b3e85e1|0": {
     "target": "../../../cli/tests/it/daemon_flow.rs",
@@ -11017,7 +11017,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|2e643b22f14570f7|0": {
     "target": "../../../cli/tests/it/merge_face.rs",
-    "line": 214,
+    "line": 215,
     "text": "fn the_mcp_tool_relays_the_face_and_an_absent_core_degrades() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|9255ede4c445553c|0": {

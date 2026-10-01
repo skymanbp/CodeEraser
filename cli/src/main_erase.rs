@@ -26,12 +26,12 @@ pub struct EraseArgs {
     pub(crate) log: bool,
 }
 
-pub fn erase_cmd(a: EraseArgs) -> ExitCode {
+pub fn erase_cmd(a: EraseArgs, core: &str) -> ExitCode {
     let root = or_cwd(a.judge.root);
     if a.log {
         return log_cmd(&root, json(a.judge.format));
     }
-    let plan = match erase::plan(&root, a.judge.db.clone(), &a.judge.core) {
+    let plan = match erase::plan(&root, a.judge.db.clone(), core) {
         Ok(p) => p,
         Err(e) => return fail("erase", e),
     };
@@ -46,7 +46,7 @@ pub fn erase_cmd(a: EraseArgs) -> ExitCode {
         return ExitCode::FAILURE;
     }
     if a.apply {
-        return match erase::apply_plan(&root, a.judge.db, &a.judge.core, &plan) {
+        return match erase::apply_plan(&root, a.judge.db, core, &plan) {
             Ok(n) => {
                 println!(
                     "{}",

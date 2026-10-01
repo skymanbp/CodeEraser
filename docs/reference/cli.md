@@ -48,6 +48,7 @@ Commands:
 
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
   -V, --version      Print version
 ```
@@ -63,9 +64,9 @@ Arguments:
   [ROOT]  Project root to report on (default: current directory)
 
 Options:
-      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
-      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help             Print help
 ```
 
@@ -99,6 +100,7 @@ Arguments:
 Options:
       --days <DAYS>      History window in days [default: 14]
       --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --format <FORMAT>  [default: console] [possible values: console, json]
   -h, --help             Print help
 ```
@@ -116,6 +118,7 @@ Arguments:
 Options:
       --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --sites            List reference sites
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --mentions         Refresh the mention universe (every text file the tree could reference a name from) and report what it holds
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --format <FORMAT>  [default: console] [possible values: console, json]
@@ -435,11 +438,11 @@ Arguments:
 Options:
       --format <FORMAT>              [default: console] [possible values: console, json, sarif]
       --lang <LANG>                  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>                  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>                      Index database path (default: <path>/.ce/index.db)
       --min-tokens <MIN_TOKENS>      Report threshold in normalized tokens (default: the winnowing guarantee threshold, 50; with --check: default or tighter only)
       --min-distinct <MIN_DISTINCT>  Diversity floor: suppress blocks with fewer unique tokens (default 7, from measured calibration; 0 disables; with --check: default or tighter only)
       --check                        Only-shrink ratchet: exit 1 when clone blocks exceed the ce.toml [dedup] budget (the comparison is the core's verdict; a degraded judgment refuses to gate at all and exits 2)
-      --core <CORE>                  Path to the ce-core executable, consulted by --check alone (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help                         Print help
 ```
 
@@ -455,6 +458,7 @@ Arguments:
 
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -470,6 +474,7 @@ Arguments:
 
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -483,6 +488,7 @@ Usage: ce probe [OPTIONS]
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -496,6 +502,7 @@ Usage: ce settle [OPTIONS]
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -509,6 +516,7 @@ Usage: ce audit [OPTIONS]
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -522,6 +530,7 @@ Usage: ce health [OPTIONS]
 Options:
       --hook         Hook mode: read the JSON envelope on stdin (required)
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -537,6 +546,7 @@ Arguments:
 
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -553,6 +563,7 @@ Arguments:
 
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -568,6 +579,7 @@ Arguments:
 
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -584,6 +596,7 @@ Arguments:
 Options:
       --lang <LANG>  Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --yes          Actually remove (default: dry run naming every target)
+      --core <CORE>  Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
   -h, --help         Print help
 ```
 
@@ -597,6 +610,7 @@ Usage: ce update [OPTIONS]
 Options:
       --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --yes              Download and place the verified binaries (default: report only)
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --installer        With --yes: also save the verified GUI installer to the temp dir and print its path (running it is your click)
       --format <FORMAT>  [default: console] [possible values: console, json]
   -h, --help             Print help
@@ -612,6 +626,7 @@ Usage: ce setup [OPTIONS]
 Options:
       --lang <LANG>       Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --unwire            Remove exactly what a previous `ce setup` added (keyed on its marker file); a registration you made yourself is never touched
+      --core <CORE>       Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --marker-dir <DIR>  Directory holding the `claude-plugin-wired` marker (default: this binary's directory — the installer's $INSTDIR)
       --format <FORMAT>   [default: console] [possible values: console, json]
   -h, --help              Print help

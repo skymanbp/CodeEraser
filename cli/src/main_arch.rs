@@ -26,11 +26,11 @@ fn spelled(root: &Path, path: &Path) -> String {
     rel.strip_prefix("./").map_or(rel.clone(), str::to_string)
 }
 
-pub fn arch_cmd(a: ArchArgs) -> ExitCode {
+pub fn arch_cmd(a: ArchArgs, core: &str) -> ExitCode {
     let j = a.judge;
     let root = or_cwd(j.root);
     let focus: Vec<String> = a.impact.iter().map(|p| spelled(&root, p)).collect();
-    let r = match face::run(&root, j.db, &j.core, &focus) {
+    let r = match face::run(&root, j.db, core, &focus) {
         Ok(r) => r,
         Err(err) => return fail("arch", err),
     };

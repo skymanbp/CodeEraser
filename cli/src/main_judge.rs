@@ -11,19 +11,15 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 /// The flag set every core-judgment family shares: root, output
-/// format, core path, cache db. Families flatten this and add their
-/// own switches (pub(crate): the score family lives in its own
-/// module and reads the same set).
+/// format, cache db (the core is the process's global `--core`).
+/// Families flatten this and add their own switches (pub(crate): the
+/// score family lives in its own module and reads the same set).
 #[derive(clap::Args)]
 pub struct JudgeArgs {
     /// Directory to analyze (default: current directory)
     pub(crate) root: Option<PathBuf>,
     #[arg(long, value_enum, default_value_t = OutFormat::Console)]
     pub(crate) format: OutFormat,
-    /// Path to the ce-core executable (default: CE_CORE_BIN, a
-    /// ce-core beside this binary, then PATH)
-    #[arg(long, default_value = "ce-core")]
-    pub(crate) core: String,
     /// Index database path (default: <root>/.ce/index.db)
     #[arg(long)]
     pub(crate) db: Option<PathBuf>,
@@ -91,14 +87,14 @@ pub struct TrendArgs {
 }
 
 /// The one flag-unpack + emit stanza for report families: unpack
-/// JudgeArgs, run with (root, db, core), print with as_json, seat a
+/// JudgeArgs beside the process's core, run with (root, db, core), print with as_json, seat a
 /// veto (`|_| None` for a family with no fail bit). structure/join
 /// were shape twins and `ce trend` would have been the third — the
 /// P4 ratchet caught the stanza; it exists once, and the no-veto
 /// wrapper that once fronted it was itself a counted clone of this
 /// signature (v2.18 subtraction batch).
 fn family_checked<R>(
-    j: JudgeArgs,
+    (j, core): (JudgeArgs, &str),
     name: &str,
     run: impl FnOnce(&Path, Option<PathBuf>, &str) -> anyhow::Result<R>,
     print: impl FnOnce(&R, bool),
@@ -107,7 +103,7 @@ fn family_checked<R>(
     let as_json = json(j.format);
     emit_checked(
         name,
-        || run(&or_cwd(j.root), j.db, &j.core),
+        || run(&or_cwd(j.root), j.db, core),
         |r| print(r, as_json),
         veto,
     )
@@ -115,9 +111,9 @@ fn family_checked<R>(
 
 /// `ce trend` (M7-P4): the score trajectory over mainline history —
 /// cached in the index db, rebuildable from git at will.
-pub fn trend_cmd(a: TrendArgs) -> ExitCode {
+pub fn trend_cmd(a: TrendArgs, core: &str) -> ExitCode {
     family_checked(
-        a.judge,
+        (a.judge, core),
         "trend",
         move |r, db, c| codeeraser::trend::run(r, db, c, a.commits, a.batch),
         codeeraser::trend::print,
@@ -170,9 +166,9 @@ pub fn trend_cmd(a: TrendArgs) -> ExitCode {
 /// `ce structure` (M6 S2): the tree-scale entropy judgment —
 /// aggregates to the core's structure/1, dense verdicts re-labelled
 /// with local names. Report-only by ruling — no score floor (v2.22, O53).
-pub fn structure_cmd(a: StructureArgs) -> ExitCode {
+pub fn structure_cmd(a: StructureArgs, core: &str) -> ExitCode {
     family_checked(
-        a.judge,
+        (a.judge, core),
         "structure",
         move |r, db, c| {
             codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))
@@ -185,9 +181,9 @@ pub fn structure_cmd(a: StructureArgs) -> ExitCode {
 /// `ce join` (M5-3h): assemble the three signal legs — similarity,
 /// graph position, per-unit churn — report-only; the verdict lattice
 /// judges them on the verdict/1 wire via `ce check` (M5-3i).
-pub fn join_cmd(a: JoinArgs) -> ExitCode {
+pub fn join_cmd(a: JoinArgs, core: &str) -> ExitCode {
     family_checked(
-        a.judge,
+        (a.judge, core),
         "join",
         move |r, db, c| join::run(r, db, c, a.days),
         join::print,
@@ -222,12 +218,12 @@ fn emit_checked<R>(
 /// `ce docdup` (M5-3g): the documentation-duplication judgment over
 /// the live cached segments — shingle sets to the core in chunks,
 /// raw inter/union plus the core's verdict bits back (ADR-008 P1).
-pub fn docdup_cmd(a: DocdupArgs) -> ExitCode {
+pub fn docdup_cmd(a: DocdupArgs, core: &str) -> ExitCode {
     let j = a.judge;
     let as_json = json(j.format);
     emit_checked(
         "docdup",
-        || docdup::judge::run(&or_cwd(j.root), j.db, &j.core),
+        || docdup::judge::run(&or_cwd(j.root), j.db, core),
         |r| docdup::judge::print(r, as_json),
         |r| {
             (a.check && !r.hits.is_empty()).then(|| {
@@ -247,13 +243,13 @@ pub fn docdup_cmd(a: DocdupArgs) -> ExitCode {
 /// the cached unit universe after asserting the unitsig/symbols
 /// identity agreement (zero orphans — the nth throat is one
 /// function, checked, not assumed).
-pub fn clone_cmd(a: CloneArgs) -> ExitCode {
+pub fn clone_cmd(a: CloneArgs, core: &str) -> ExitCode {
     let j = a.judge;
     let as_json = json(j.format);
     if !a.units {
         return emit_checked(
             "clone",
-            || dedup::t3::run(&or_cwd(j.root), j.db, &j.core),
+            || dedup::t3::run(&or_cwd(j.root), j.db, core),
             |r| dedup::t3::print(r, as_json),
             |_| None,
         );

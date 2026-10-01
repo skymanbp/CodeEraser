@@ -6,6 +6,11 @@
 //! as one package, `tables/1` (proto 7.7.0). This side holds none of
 //! them: every reader asks `get()`.
 //!
+//! The core is the one this process names: the `ce` global `--core`
+//! flag (set once, by `core`), else CE_CORE_BIN, a ce-core beside this
+//! binary, then PATH — the same answer every judgment family and the
+//! daemon resolver give (`corelink::resolve_core`, `core_bin`).
+//!
 //! Three sources, in order: this process's memory, the cache file
 //! `<root>/.ce/tables-<ce>-<proto>.json` (cache.rs), the core. The
 //! cache is a copy of one core's answer, kept beside the identity of
@@ -34,6 +39,10 @@ use std::sync::atomic::{AtomicBool, Ordering};
 /// the GUI's task body); the first one set wins.
 static ANCHOR: OnceLock<PathBuf> = OnceLock::new();
 
+/// The core this process names (the CLI's global `--core`); the first
+/// one set wins.
+static CORE: OnceLock<String> = OnceLock::new();
+
 /// The package, or why there is none — read once per process.
 static PACK: OnceLock<Result<Pack, String>> = OnceLock::new();
 
@@ -52,6 +61,27 @@ pub fn transient() {
 /// directory.
 pub fn anchor(root: &Path) {
     let _ = ANCHOR.set(root.to_path_buf());
+}
+
+/// Name the core for the whole process: the CLI's global `--core`
+/// value, set before any command runs. `"ce-core"` (the flag's
+/// default) names none, and the default chain answers.
+pub fn core(flag: &str) {
+    let _ = CORE.set(flag.to_string());
+}
+
+/// The `--core` value the package loader resolves (`"ce-core"` when
+/// the process never named one).
+pub(crate) fn core_flag() -> &'static str {
+    CORE.get().map_or("ce-core", String::as_str)
+}
+
+/// The core named by the flag, when one was named: first in the
+/// daemon resolver's chain, so one process gives one answer.
+pub(crate) fn named_core() -> Option<String> {
+    Some(core_flag())
+        .filter(|c| *c != "ce-core")
+        .map(str::to_string)
 }
 
 /// The package, read on first use; Err = the named reason there is

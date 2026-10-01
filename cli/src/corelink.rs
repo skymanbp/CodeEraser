@@ -184,9 +184,10 @@ pub fn run(core: &str) -> Result<HelloReply, String> {
 
 /// The effective core binary for a `--core` flag value: an explicit
 /// path is used verbatim; the untouched default routes through the
-/// daemon's resolver chain — CE_CORE_BIN, a ce-core SIBLING of this
-/// executable (the installed layout drops both binaries side by
-/// side), then PATH. One authority with daemon/MCP (core_bin), and
+/// daemon's resolver chain — the process's global `--core` (when it
+/// named one), then CE_CORE_BIN, a ce-core SIBLING of this executable
+/// (the installed layout drops both binaries side by side), then
+/// PATH. One authority with daemon/MCP (core_bin), and
 /// applied at the ONE spawn throat below, so every judgment family
 /// resolves identically with no per-flag plumbing.
 pub fn resolve_core(core: &str) -> String {

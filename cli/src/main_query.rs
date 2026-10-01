@@ -44,7 +44,7 @@ pub struct RulesArgs {
     why: bool,
 }
 
-pub fn query_cmd(a: QueryArgs) -> ExitCode {
+pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {
     if a.prelude {
         print!("{PRELUDE}");
         return ExitCode::SUCCESS;
@@ -55,7 +55,7 @@ pub fn query_cmd(a: QueryArgs) -> ExitCode {
             anyhow::anyhow!("a question is required (or --prelude)"),
         );
     };
-    judge("query", a.judge, a.file, Some(body), a.why, |r| {
+    judge("query", (a.judge, core), a.file, Some(body), a.why, |r| {
         if r.judged() {
             ExitCode::SUCCESS
         } else {
@@ -64,8 +64,8 @@ pub fn query_cmd(a: QueryArgs) -> ExitCode {
     })
 }
 
-pub fn rules_cmd(a: RulesArgs) -> ExitCode {
-    judge("rules", a.judge, a.file, None, a.why, |r| {
+pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {
+    judge("rules", (a.judge, core), a.file, None, a.why, |r| {
         if !r.judged() {
             ExitCode::from(2)
         } else if r.violations() > 0 {
@@ -81,7 +81,7 @@ pub fn rules_cmd(a: RulesArgs) -> ExitCode {
 /// the face's own rule.
 fn judge(
     name: &str,
-    j: JudgeArgs,
+    (j, core): (JudgeArgs, &str),
     file: Option<PathBuf>,
     query: Option<String>,
     why: bool,
@@ -94,7 +94,7 @@ fn judge(
     };
     let rules_face = query.is_none();
     let ask = Ask { rules, query, why };
-    match face::run(&root, j.db, &j.core, &ask) {
+    match face::run(&root, j.db, core, &ask) {
         Ok(r) => {
             show(&r, json(j.format), rules_face);
             exit(&r)

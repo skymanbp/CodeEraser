@@ -36,6 +36,10 @@ pub(crate) struct Cli {
     /// Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`)
     #[arg(long, global = true, value_parser = ["en", "zh"])]
     pub(crate) lang: Option<String>,
+    /// Path to the ce-core executable (default: CE_CORE_BIN, a
+    /// ce-core beside this binary, then PATH)
+    #[arg(long, global = true, default_value = "ce-core")]
+    pub(crate) core: String,
     #[command(subcommand)]
     pub(crate) cmd: Cmd,
 }
@@ -45,10 +49,6 @@ pub(crate) enum Cmd {
     /// Environment + project health: ce-core handshake, project
     /// status line, degradation counter (never starts the daemon)
     Doctor {
-        /// Path to the ce-core executable (default: CE_CORE_BIN, a
-        /// ce-core beside this binary, then PATH)
-        #[arg(long, default_value = "ce-core")]
-        core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
         /// Project root to report on (default: current directory)
@@ -61,10 +61,6 @@ pub(crate) enum Cmd {
         path: Option<PathBuf>,
         #[arg(long, value_enum, default_value_t = FindingsFormat::Console)]
         format: FindingsFormat,
-        /// Path to the ce-core executable (default: CE_CORE_BIN, a
-        /// ce-core beside this binary, then PATH)
-        #[arg(long, default_value = "ce-core")]
-        core: String,
     },
     /// Time-dimension metrics: append vs rewrite, windowed churn,
     /// co-change pairs (report-only; the join consumes them). Costs
@@ -107,10 +103,6 @@ pub(crate) enum Cmd {
         /// Index database path (default: <root>/.ce/index.db)
         #[arg(long)]
         db: Option<PathBuf>,
-        /// Path to the ce-core executable (default: CE_CORE_BIN, a
-        /// ce-core beside this binary, then PATH)
-        #[arg(long, default_value = "ce-core")]
-        core: String,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,
         /// Exit 1 when any file-tier dead verdict lands, or when the

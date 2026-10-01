@@ -52,13 +52,18 @@ fn act(var: &str) -> bool {
 }
 
 /// The shared head of both commands — the scope, the output mode and
-/// the wire options from one JudgeArgs (the ratchet caught the second
-/// copy of this shape growing). The baseline is the caller's ONE read
-/// (O31): score::run never reads the file itself.
-fn head(judge: JudgeArgs, days: Option<u32>, floor: Option<u32>) -> (PathBuf, bool, score::Opts) {
+/// the wire options from one JudgeArgs and the process's core (the
+/// ratchet caught the second copy of this shape growing). The baseline
+/// is the caller's ONE read (O31): score::run never reads the file
+/// itself.
+fn head(
+    (judge, core): (JudgeArgs, &str),
+    days: Option<u32>,
+    floor: Option<u32>,
+) -> (PathBuf, bool, score::Opts) {
     let opts = score::Opts {
         db: judge.db,
-        core: judge.core,
+        core: core.to_string(),
         days,
         floor,
         establish: false,
@@ -99,8 +104,8 @@ fn judged(
 /// `|| degraded` disjunct here retired as re-derived policy. A
 /// subdirectory scopes the measurement — it under-reports, and
 /// persists nothing.
-pub fn check_cmd(a: CheckArgs) -> ExitCode {
-    let (root, as_json, mut opts) = head(a.judge, a.days, a.fail_under);
+pub fn check_cmd(a: CheckArgs, core: &str) -> ExitCode {
+    let (root, as_json, mut opts) = head((a.judge, core), a.days, a.fail_under);
     opts.baseline = match score::baseline::read(&root) {
         Ok(committed) => committed,
         Err(err) => return fail("check", err),
@@ -120,8 +125,8 @@ pub fn check_cmd(a: CheckArgs) -> ExitCode {
 /// ceiling rises, the discrete set is the current one, the digest is
 /// the declared one); anything else held refuses by name unless the
 /// judgment was the wholesale one (a NULL baseline: nothing holds).
-pub fn baseline_cmd(a: BaselineArgs) -> ExitCode {
-    let (root, as_json, mut opts) = head(a.judge, a.days, None);
+pub fn baseline_cmd(a: BaselineArgs, core: &str) -> ExitCode {
+    let (root, as_json, mut opts) = head((a.judge, core), a.days, None);
     if let Err(code) = preflight(&root) {
         return code;
     }

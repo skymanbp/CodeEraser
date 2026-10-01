@@ -19,9 +19,9 @@ pub struct MergeArgs {
     group: Option<usize>,
 }
 
-pub fn merge_cmd(a: MergeArgs) -> ExitCode {
+pub fn merge_cmd(a: MergeArgs, core: &str) -> ExitCode {
     let root = or_cwd(a.judge.root);
-    let r = match face::run(&root, a.judge.db, &a.judge.core) {
+    let r = match face::run(&root, a.judge.db, core) {
         Ok(r) => r,
         Err(err) => return fail("merge", err),
     };

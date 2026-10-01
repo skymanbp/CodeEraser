@@ -24,13 +24,13 @@ pub struct FlowArgs {
     kind: Vec<String>,
 }
 
-pub fn flow_cmd(a: FlowArgs) -> ExitCode {
+pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {
     let root = or_cwd(a.judge.root);
     let tier = match Config::load(&root) {
         Ok(c) => c.flow.tier().to_string(),
         Err(e) => return fail("flow", anyhow::anyhow!(e)),
     };
-    let r = match face::run(&root, &a.judge.core, &a.kind) {
+    let r = match face::run(&root, core, &a.kind) {
         Ok(r) => r,
         Err(e) => return fail("flow", e),
     };

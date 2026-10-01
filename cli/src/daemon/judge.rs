@@ -209,9 +209,13 @@ fn degraded(reason: &str) -> serde_json::Value {
     serde_json::json!({"degraded": true, "reason": reason})
 }
 
-/// CE_CORE_BIN, else a ce-core sibling of this binary, else PATH —
-/// the daemon's resolver, reused by the MCP server (one authority).
+/// The process's `--core` when it named one, else CE_CORE_BIN, else a
+/// ce-core sibling of this binary, else PATH — the daemon's resolver,
+/// reused by the MCP server (one authority, one answer per process).
 pub(crate) fn core_bin() -> Option<String> {
+    if let Some(named) = crate::tables::named_core() {
+        return Some(named);
+    }
     if let Ok(bin) = std::env::var("CE_CORE_BIN") {
         return Some(bin);
     }

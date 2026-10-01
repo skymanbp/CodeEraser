@@ -1,7 +1,7 @@
 //! Reading the package: the cache file when it still holds, else the
 //! core's `tables/1` answer, written back to the cache. The core is the
-//! one every judgment family resolves by default (corelink::resolve_core
-//! — CE_CORE_BIN, a sibling of this executable, PATH).
+//! one this process names (corelink::resolve_core over the global
+//! `--core` flag — then CE_CORE_BIN, a sibling of this executable, PATH).
 
 use super::cache::{self, Identity};
 use super::pack::Pack;
@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 /// The package for the project at `root`, or the named refusal; a
 /// fetched package is written back to the cache when `write`.
 pub(super) fn load(root: &Path, write: bool) -> Result<Pack, String> {
-    let resolved = crate::corelink::resolve_core("ce-core");
+    let resolved = crate::corelink::resolve_core(super::core_flag());
     let core = locate(&resolved).ok_or_else(|| {
         format!(
             "core unavailable: no `{resolved}` to answer tables/1 (export CE_CORE_BIN, or install \

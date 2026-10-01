@@ -273,7 +273,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   witnesses — every proof node indented under its answer, and one counts line; every sentence
   has its Chinese twin and the program's own words stay as written
   ([console.rs:1-8](../../../cli/src/query/console.rs#L1), [console.rs:13](../../../cli/src/query/console.rs#L13),
-  [main_lang.rs:79](../../../cli/src/main_lang.rs#L79)).
+  [main_lang.rs:76](../../../cli/src/main_lang.rs#L76)).
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:195](../../../cli/src/mcp/tools.rs#L195), [tools.rs:216](../../../cli/src/mcp/tools.rs#L216),

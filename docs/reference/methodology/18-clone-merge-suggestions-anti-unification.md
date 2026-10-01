@@ -351,7 +351,7 @@ texts, the T3 pair infeasible across statements with the extra statement as its 
 fragment group marked, `--group` and its refusal, `ce clone`'s report on the same fixture unmoved,
 the MCP relay, and a core that cannot be reached as a degraded document
 ([merge_face.rs:118](../../../cli/tests/it/merge_face.rs#L118),
-[merge_face.rs:183](../../../cli/tests/it/merge_face.rs#L183), [merge_face.rs:214](../../../cli/tests/it/merge_face.rs#L214)).
+[merge_face.rs:183](../../../cli/tests/it/merge_face.rs#L183), [merge_face.rs:215](../../../cli/tests/it/merge_face.rs#L215)).
 
 **The frozen suggestion set.** `contracts/eval/merge-suggestions-v<n>.json` freezes, for this
 repository at one pinned commit (exported with `git archive`, `.gitmodules` removed) and for the four

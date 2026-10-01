@@ -29,23 +29,21 @@ pub(crate) fn lang_from_argv() -> Option<String> {
         })
 }
 
-/// `key<TAB>zh` per line. Keys: `ce` = root about, `ce.lang` = the
-/// global flag, `<cmd>` = a subcommand's about, `<cmd>.<arg id>` =
+/// `key<TAB>zh` per line. Keys: `ce` = root about, `ce.lang` and
+/// `ce.core` = the global flags, `<cmd>` = a subcommand's about, `<cmd>.<arg id>` =
 /// an arg's help, and `judge.<arg id>` = the shared JudgeArgs flag
 /// set's ONE authority, consulted when the command names no key of
 /// its own (see zh_help).
 const ZH_TSV: &str = "\
 ce	CodeEraser — 消除 LLM 引入的代码与文档熵
 ce.lang	控制台语言（优先于 CE_LANG 与项目 ce.toml 的 `[ui] lang`）
+ce.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 judge.root	要分析的目录（默认当前目录）
-judge.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 judge.db	索引数据库路径（默认 <root>/.ce/index.db）
 doctor	环境与项目健康：ce-core 握手、项目状态行、降级计数（绝不启动守护进程）
-doctor.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 doctor.root	要报告的项目根（默认当前目录）
 scan	度量尺寸 / 复杂度 / 可读性指标；级别由核分级
 scan.path	要扫描的目录（默认当前目录）
-scan.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 churn	时间维度指标：追加对重写、窗口改动、共变对（仅报告；联判消费之）。默认窗口需数分钟——逐提交一个 git 子进程、逐触及文件一次 blame；进度走 stderr
 churn.root	仓库根（默认当前目录）
 churn.days	历史窗口天数
@@ -56,7 +54,6 @@ graph.mentions	刷新提及语料宇宙（树中每个可能引用到名字的�
 deadcode	在缓存引用图上判决存活性：阶梯的边，核的四路判决，以及符号层顾问（无他文件拼写其名的声明——永不判决）
 deadcode.root	要判决的目录（默认当前目录）
 deadcode.db	索引数据库路径（默认 <root>/.ce/index.db）
-deadcode.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 deadcode.check	任一文件级死判落地、或判决本身降级即退出 1（判不了的门永不通过）
 clone	T3 近似克隆判决：经核 clone/1 的树编辑距离；--units 改为列出缓存单元宇宙
 clone.units	改为列出单元宇宙而非判决
@@ -107,7 +104,6 @@ dedup.db	索引数据库路径（默认 <path>/.ce/index.db）
 dedup.min_tokens	报告阈值（归一化 token 数；默认 winnowing 保证阈值 50；配合 --check 只准默认或更紧）
 dedup.min_distinct	多样性地板：唯一 token 数更少的块被抑制（默认 7，实测校准；0 关闭；配合 --check 只准默认或更紧）
 dedup.check	只缩棘轮：克隆块超过 ce.toml [dedup] 预算即退出 1（比较即核的判决；判决降级则拒绝把门，退出 2）
-dedup.core	ce-core 可执行文件路径（仅 --check 咨询；默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 daemon	前台运行按项目守护进程；通常由 `ce ping` / 钩子探针惰启
 daemon.root	要服务的项目根
 ping	经项目守护进程往返一次 ping（会惰启它）
@@ -145,12 +141,11 @@ fn zh_map() -> &'static HashMap<&'static str, &'static str> {
 
 /// One arg's zh help: the command's own key, else the shared
 /// `judge.<id>` fallback. JudgeArgs is flattened into NINE commands
-/// and the table carried a private copy of each of its three help
-/// lines per command — twenty-one strings, and every copy of --core
-/// had dropped the resolution order (CE_CORE_BIN, sibling, PATH) the
-/// English derive states once. The `<cmd>.core` keys that remain are
-/// independent clap declarations, not copies of this set, so they
-/// keep their own row.
+/// and the table carried a private copy of each of its help lines
+/// per command — twenty-one strings, and every copy of --core had
+/// dropped the resolution order (CE_CORE_BIN, sibling, PATH) the
+/// English derive states once. `--core` has since become a global
+/// flag of the process (`ce.core`, localized on the root).
 fn zh_help(m: &HashMap<&'static str, &'static str>, cmd: &str, id: &str) -> Option<&'static str> {
     m.get(format!("{cmd}.{id}").as_str())
         .or_else(|| m.get(format!("judge.{id}").as_str()))
@@ -163,7 +158,10 @@ fn zh_help(m: &HashMap<&'static str, &'static str>, cmd: &str, id: &str) -> Opti
 /// here — the completeness test below is the enforcement.
 pub(crate) fn localize(mut cmd: clap::Command) -> clap::Command {
     let m = zh_map();
-    cmd = cmd.about(m["ce"]).mut_arg("lang", |a| a.help(m["ce.lang"]));
+    cmd = cmd
+        .about(m["ce"])
+        .mut_arg("lang", |a| a.help(m["ce.lang"]))
+        .mut_arg("core", |a| a.help(m["ce.core"]));
     let subs: Vec<(String, Vec<String>)> = cmd
         .get_subcommands()
         .map(|s| {

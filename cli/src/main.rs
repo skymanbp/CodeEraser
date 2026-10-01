@@ -36,9 +36,13 @@ fn main() -> ExitCode {
     // same library stay silent without opting out (plan v2.16). After
     // the language pin, because the phase words switch with it.
     codeeraser::progress::arm();
-    match analysis(cli.cmd) {
+    // which core is a process-level question since every command
+    // reads the core's definition package (plan v2.32 step 2):
+    // named once, before any command runs
+    codeeraser::tables::core(&cli.core);
+    match analysis(cli.cmd, &cli.core) {
         Ok(code) => code,
-        Err(cmd) => infra(*cmd),
+        Err(cmd) => infra(*cmd, &cli.core),
     }
 }
 
@@ -95,12 +99,13 @@ fn usage_exit(e: clap::Error) -> ! {
 /// Analysis-family dispatch (the metric/judgment subcommands); hands
 /// back any command it does not own — boxed, because the handoff is
 /// the Err lane and Cmd's largest variant crossed clippy's 128-byte
-/// line when DedupArgs grew its --core (ADR-008 P2); one allocation
-/// on a once-per-process parse path. The two-stage match keeps each
-/// dispatcher under the repo's own complexity gate as families grow.
-fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
+/// line (ADR-008 P2); one allocation on a once-per-process parse
+/// path. `core` is the process's global `--core`. The two-stage match
+/// keeps each dispatcher under the repo's own complexity gate as
+/// families grow.
+fn analysis(cmd: Cmd, core: &str) -> Result<ExitCode, Box<Cmd>> {
     Ok(match cmd {
-        Cmd::Scan { path, format, core } => cmds::scan_cmd(path, format, &core),
+        Cmd::Scan { path, format } => cmds::scan_cmd(path, format, core),
         Cmd::Churn { root, days, format } => {
             cmds::churn_cmd(&cmds::or_cwd(root), days, json(format))
         }
@@ -114,35 +119,32 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Deadcode {
             root,
             db,
-            core,
             format,
             check,
-        } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, &core, json(format), check),
-        Cmd::Clone(a) => main_judge::clone_cmd(a),
-        Cmd::Docdup(a) => main_judge::docdup_cmd(a),
-        Cmd::Join(a) => main_judge::join_cmd(a),
-        Cmd::Structure(a) => main_judge::structure_cmd(a),
-        Cmd::Trend(a) => main_judge::trend_cmd(a),
-        Cmd::Similar(a) => main_similar::similar_cmd(a),
-        Cmd::Query(a) => main_query::query_cmd(a),
-        Cmd::Rules(a) => main_query::rules_cmd(a),
-        Cmd::Flow(a) => main_flow::flow_cmd(a),
-        Cmd::Merge(a) => main_merge::merge_cmd(a),
-        Cmd::Arch(a) => main_arch::arch_cmd(a),
-        Cmd::Erase(a) => main_erase::erase_cmd(a),
-        Cmd::Check(a) => main_score::check_cmd(a),
-        Cmd::Baseline(a) => main_score::baseline_cmd(a),
-        Cmd::Dedup(a) => cmds::dedup_cmd(a),
+        } => cmds::deadcode_cmd(&cmds::or_cwd(root), db, core, json(format), check),
+        Cmd::Clone(a) => main_judge::clone_cmd(a, core),
+        Cmd::Docdup(a) => main_judge::docdup_cmd(a, core),
+        Cmd::Join(a) => main_judge::join_cmd(a, core),
+        Cmd::Structure(a) => main_judge::structure_cmd(a, core),
+        Cmd::Trend(a) => main_judge::trend_cmd(a, core),
+        Cmd::Similar(a) => main_similar::similar_cmd(a, core),
+        Cmd::Query(a) => main_query::query_cmd(a, core),
+        Cmd::Rules(a) => main_query::rules_cmd(a, core),
+        Cmd::Flow(a) => main_flow::flow_cmd(a, core),
+        Cmd::Merge(a) => main_merge::merge_cmd(a, core),
+        Cmd::Arch(a) => main_arch::arch_cmd(a, core),
+        Cmd::Erase(a) => main_erase::erase_cmd(a, core),
+        Cmd::Check(a) => main_score::check_cmd(a, core),
+        Cmd::Baseline(a) => main_score::baseline_cmd(a, core),
+        Cmd::Dedup(a) => cmds::dedup_cmd(a, core),
         other => return Err(Box::new(other)),
     })
 }
 
 /// Infrastructure dispatch: health, daemon, hooks, servers.
-fn infra(cmd: Cmd) -> ExitCode {
+fn infra(cmd: Cmd, core: &str) -> ExitCode {
     match cmd {
-        Cmd::Doctor { core, format, root } => {
-            cmds::doctor(&core, &cmds::or_cwd(root), json(format))
-        }
+        Cmd::Doctor { format, root } => cmds::doctor(core, &cmds::or_cwd(root), json(format)),
         Cmd::Probe { hook } => cmds::hook_cmd(hook, "probe", codeeraser::guard::run_hook),
         Cmd::Settle { hook } => cmds::hook_cmd(hook, "settle", codeeraser::guard::run_settle_hook),
         Cmd::Audit { hook } => cmds::hook_cmd(hook, "audit", codeeraser::audit::run_hook),

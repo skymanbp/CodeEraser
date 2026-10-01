@@ -186,20 +186,16 @@ pub struct DedupArgs {
     /// a degraded judgment refuses to gate at all and exits 2)
     #[arg(long)]
     check: bool,
-    /// Path to the ce-core executable, consulted by --check alone
-    /// (default: CE_CORE_BIN, a ce-core beside this binary, then PATH)
-    #[arg(long, default_value = "ce-core")]
-    core: String,
 }
 
-pub fn dedup_cmd(a: DedupArgs) -> ExitCode {
+pub fn dedup_cmd(a: DedupArgs, core: &str) -> ExitCode {
     let opts = dedup::RunOpts {
         format: findings_fmt(a.format),
         db: a.db,
         min_tokens: a.min_tokens,
         min_distinct: a.min_distinct,
         check: a.check,
-        core: a.core,
+        core: core.to_string(),
     };
     match dedup::run(&or_cwd(a.path), opts) {
         Ok(code) => code,

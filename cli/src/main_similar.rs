@@ -28,13 +28,13 @@ pub struct SimilarArgs {
     widen: bool,
 }
 
-pub fn similar_cmd(a: SimilarArgs) -> ExitCode {
+pub fn similar_cmd(a: SimilarArgs, core: &str) -> ExitCode {
     let ask = match Ask::from_parts(a.at.as_deref(), a.text.as_deref(), a.unit.as_deref()) {
         Ok(ask) => ask,
         Err(err) => return fail("similar", err),
     };
     let j = a.judge;
-    match face::run(&or_cwd(j.root), j.db, &j.core, &ask, a.widen) {
+    match face::run(&or_cwd(j.root), j.db, core, &ask, a.widen) {
         Ok(r) => {
             print_doc(
                 json(j.format),
