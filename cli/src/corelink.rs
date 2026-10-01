@@ -13,7 +13,15 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 7.9.0 = seven more report documents in `document/1` (plan
+/// §1). 7.10.0 = the console form in `document/1` (plan v2.32 step 5;
+/// design booklet docs/reference/authority-track.md §6), additive: a
+/// `document.request` may name a language (`lang`, 0 en / 1 zh) and
+/// the reply carries the family's console `lines` and its veto
+/// (`exit: {fail}`); the guard and the audit sentences are two more
+/// families outside the catalogue, so `tablesDigest` stands. This side
+/// does not read the lines yet: the faces switch in the same step's
+/// second half.
+/// 7.9.0 = seven more report documents in `document/1` (plan
 /// v2.32 step 4: check, structure, join, deadcode, mentions, sites,
 /// graphscreen; additive, the catalogue lists them, so `tablesDigest`
 /// moves). 7.8.0 = the report documents, `document/1` (plan v2.32 step 3;
@@ -40,7 +48,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.9.0";
+pub const PROTO: &str = "7.10.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

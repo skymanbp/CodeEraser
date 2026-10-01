@@ -57,9 +57,10 @@ check = do
   rode <- num 2
   dropped <- if rode == 1 then some 2 [[x, 0, 12] | x <- wide] else pure []
   counts <- (:) <$> num 1001 <*> replicateM 5 (num 40)
+  roast <- num 2
   let tables = [("scale", scale), ("floor", floor'), ("reason", reason), ("axes", axes), ("candidates", cands), ("joinSeverity", [[1, 2], [2, 3], [3, 1]])]
         <> [("added", added), ("removed", removed), ("over", over), ("toleranceDrawn", drawn), ("failed", failed), ("dropped", dropped)]
-      facts = zip (words "score fail simPairs members collapsed skippedSelf") counts <> [("droppedRode", rode)]
+      facts = zip (words "score fail simPairs members collapsed skippedSelf") counts <> [("droppedRode", rode), ("roast", roast)]
       (ts, fs', why) = judgedOr degraded tables (map bit facts)
       bit (k, v) = if k == "fail" then (k, v `mod` 2) else (k, v)
   pure (docRequest "check" [("files", toInteger nf), ("why", 1)] ts fs' why)
@@ -123,8 +124,9 @@ deadParts nodes deadOn = do
   (kept, reason) <- (,) <$> some 2 [[11]] <*> some 6 [[0]]
   unresolved <- num 20
   degraded <- (== 0) <$> rand 6
+  (files, check') <- (,) <$> num (fromInteger nodes + 1) <*> num 2
   let tables = [("kept", kept), ("reason", reason), ("dead", dead), ("reported", reported), ("unmentioned", advisory)]
-      facts = [("unresolvedSites", unresolved), ("asked", asked), ("dropped", dropped), ("cut", cut)]
+      facts = [("unresolvedSites", unresolved), ("asked", asked), ("dropped", dropped), ("cut", cut), ("files", files), ("check", check')]
       (ts, fs, why) = judgedOr degraded tables facts
   pure ([("nodes", nodes), ("advisory", if degraded then 0 else toInteger na), ("why", 1)], ts, fs, why)
 

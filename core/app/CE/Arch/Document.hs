@@ -29,7 +29,9 @@ schemaId = "ce.arch-report/0.1.0"
 
 -- | The request (a `files` row is arch/1's [F, D, lines], a rank row
 -- [slot, place in the joint order of file paths and slashed
--- directories, the root `./`]).
+-- directories, the root `./`], a `widths` row a directory path's [D,
+-- bytes, characters]: the console pads the metrics table to the
+-- widest path, plan v2.32 step 5).
 -- References: path [file], dir [directory], slashed [directory], why [text].
 statement :: String
 statement =
@@ -40,17 +42,17 @@ statement =
   \rows cuts 4 judged dirs dirs - -\nrows clusters 2 judged files -\n\
   \rows misplaced 2 judged files dirs\nrows impact 2 judged files -\n\
   \rows metrics 4 judged dirs - - -\n\
-  \rows rankFiles 2 judged files -\nrows rankDirs 2 judged dirs -\n\
+  \rows rankFiles 2 judged files -\nrows rankDirs 2 judged dirs -\nrows widths 3 judged dirs - -\noptional widths\n\
   \ref path files\nref dir dirs\nref slashed dirs\nref why why\n"
 
 -- | The tables read by slot hold one row per slot (a degraded request
--- holds none).
+-- holds none; an absent optional table is not read by slot).
 slots :: DocReq -> Maybe String
 slots req
   | Just _ <- dDegraded req = Nothing
-  | otherwise = asum [dense req t (range req u) | (t, u) <- perSlot]
+  | otherwise = asum [dense req t (range req u) | (t, u) <- perSlot, maybe False (M.member t) (dRows req)]
  where
-  perSlot = [("files", "files"), ("dirs", "dirs"), ("layers", "dirs"), ("metrics", "dirs"), ("rankFiles", "files"), ("rankDirs", "dirs")]
+  perSlot = [("files", "files"), ("dirs", "dirs"), ("layers", "dirs"), ("metrics", "dirs"), ("rankFiles", "files"), ("rankDirs", "dirs"), ("widths", "dirs")]
 
 
 assemble :: DocReq -> Value

@@ -12,13 +12,19 @@
 -- Names and paths never cross the wire (§5.9.2) — row index is
 -- identity and Rust re-labels on return. One knob, code 0 = the
 -- budget; absent = feed-only, the condition is never evaluated.
-module CE.Tombstone (respond) where
+module CE.Tombstone (kindNames, respond) where
 
 import CE.Tombstone.Cost (budgetCode, isSite, kindProse, overBudget, tombstoneRowCap)
 import CE.Wire (RowsReq (..), knobbedRows, rowCheck)
 import Data.Aeson (Value, encode, object, (.=))
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
+
+-- | The row kinds by code, as a site names its kind (`file:line kind`;
+-- the measuring side's `Kind::name`, read by the guard and audit
+-- sentences, plan v2.32 step 5); the codes are CE.Tombstone.Cost's.
+kindNames :: [String]
+kindNames = ["bracketed", "bare", "prose"]
 
 -- | The declared budget, if any (later rows win, as applyRows would).
 budgetOf :: RowsReq -> Maybe Integer

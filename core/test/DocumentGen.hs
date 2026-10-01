@@ -72,6 +72,7 @@ arch = do
   impact <- some 2 fs >>= mapM (\f -> (\d -> [f, d]) <$> num 3)
   metrics <- forM ds (\d -> (\i o s -> [d, i, o, s - 1]) <$> num 5 <*> num 5 <*> num 1001)
   places <- ranks (nf + nd)
+  widths <- forM ds (\d -> if d == 0 then pure [0, 0, 0] else (\b c -> [d, b + 1, min (b + 1) (c + 1)]) <$> num 12 <*> num 12)
   let (rf, rd) = splitAt nf places
   pure $
     docRequest
@@ -80,6 +81,7 @@ arch = do
       [ ("files", files), ("dirs", dirs), ("edges", edges), ("pkgEdges", pkg), ("focus", focus)
       , ("layers", layers), ("cuts", cuts), ("clusters", clusters), ("misplaced", misplaced)
       , ("impact", impact), ("metrics", metrics), ("rankFiles", zipWith pair fs rf), ("rankDirs", zipWith pair ds rd)
+      , ("widths", widths)
       ]
       []
       Nothing
@@ -142,6 +144,7 @@ flow = do
   findings <- if degraded then pure [] else concat <$> forM fs (\f -> rand 4 >>= \n -> replicateM n (finding f))
   refused <- if degraded then pure [] else some 2 fs >>= mapM (\f -> (\n w -> [f, n + 4, w]) <$> num 4 <*> num (fromInteger why))
   facts <- replicateM 5 (num 30)
+  switches <- replicateM 2 (num 2)
   pure $
     docRequest
       "flow"
@@ -149,7 +152,7 @@ flow = do
       [ ("langs", langs), ("rankFiles", zipWith (\f r -> [f, r]) fs places), ("shown", shown)
       , ("unlowered", unlowered), ("findings", findings), ("refused", refused)
       ]
-      (zip (words "units stmts vars uses dynamicUnits") (if degraded then take 4 facts <> [0] else facts))
+      (zip (words "units stmts vars uses dynamicUnits") (if degraded then take 4 facts <> [0] else facts) <> zip ["check", "deny"] switches)
       (if degraded then Just (why - 1) else Nothing)
  where
   finding f = (\n k l d v -> [f, n, k, l, l + d, v - 1]) <$> num 3 <*> num 4 <*> num 5 <*> num 3 <*> num 4
@@ -163,12 +166,13 @@ merge = do
   groups <- forM (zip [0 ..] sizes) (\(g, n) -> suggestion g n)
   holes <- concat <$> forM (zip [0 ..] sizes) (\(g, n) -> concat <$> forM [0 .. 2] (\h -> (\p -> [[g, h, p, toInteger m, toInteger m - 1, toInteger m] | m <- [0 .. n - 1]]) <$> num 2))
   facts <- replicateM 6 (num 30)
+  only <- num (ng + 2)
   pure $
     docRequest
       "merge"
       [("members", toInteger (length members)), ("why", 1)]
       [("groups", groups), ("members", memberRows), ("holes", holes)]
-      (zip (words "nodes merged_duplicates not_isomorphic no_slot_table unbuilt over_cap") facts)
+      (zip (words "nodes merged_duplicates not_isomorphic no_slot_table unbuilt over_cap") facts <> [("only", only)])
       Nothing
  where
   suggestion g n = do

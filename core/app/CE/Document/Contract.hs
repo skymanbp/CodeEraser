@@ -15,11 +15,12 @@
 -- indexes, and the reference classes its document carries. A string
 -- the measured repository owns never crosses: the document names it
 -- as `{"$": [class, integers…]}` and the measuring side resolves it.
-module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, fact, flag, spelled, offence, optional, range, readSpec, ref, rows, single, totalRows, whyRef) where
+module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, fact, flag, spelled, offence, optional, range, readSpec, ref, rows, single, spoken, totalRows, whyRef) where
 
 import CE.Graph (graphTooLarge)
 import CE.Lang (languages)
 import CE.Lang.Spec (Language (..))
+import CE.Text (Lang, Line)
 import CE.Verdict (verdictTooLarge)
 import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), Value (..), object, toJSON, withObject, (.:), (.:?), (.=))
@@ -42,11 +43,12 @@ data DocReq = DocReq
   , dRows :: Maybe (M.Map String [[Integer]])
   , dFacts :: Maybe (M.Map String Integer)
   , dDegraded :: Maybe Integer
+  , dLang :: Maybe Integer
   }
 
 instance FromJSON DocReq where
   parseJSON = withObject "DocReq" $ \o ->
-    DocReq <$> o .: "id" <*> o .:? "family" <*> o .:? "ranges" <*> o .:? "rows" <*> o .:? "facts" <*> o .:? "degraded"
+    DocReq <$> o .: "id" <*> o .:? "family" <*> o .:? "ranges" <*> o .:? "rows" <*> o .:? "facts" <*> o .:? "degraded" <*> o .:? "lang"
 
 -- | One request table: its width (`open` = at least that many), whether
 -- it may ride beside a `degraded` reason, and the universe each fixed
@@ -60,19 +62,22 @@ data Table = Table
   }
 
 -- | A family's statement: ranges, facts (kept under `degraded` or
--- not), tables, and the reference classes with the universe of each
--- integer.
+-- not), tables, the reference classes with the universe of each
+-- integer, and the facts and tables a request may leave out.
 data Spec = Spec
   { spRanges :: [String]
   , spFacts :: [(String, Bool)]
   , spTables :: [Table]
   , spRefs :: [(String, [Maybe String])]
+  , spOptional :: [String]
   }
 
 -- | One family as the dispatcher holds it: its name, the schema id its
 -- document carries, its statement, the checks its assembly relies on
--- beyond the statement, the assembly, and what else the catalogue
--- lists for it.
+-- beyond the statement, the assembly, what else the catalogue lists
+-- for it, its console lines in a language (step 5: the console form is
+-- part of the statement) and its veto — the exit the face reads, one
+-- bit.
 data DocFamily = DocFamily
   { dfName :: String
   , dfSchema :: String
@@ -80,25 +85,36 @@ data DocFamily = DocFamily
   , dfCheck :: DocReq -> Maybe String
   , dfAssemble :: DocReq -> Value
   , dfCatalogue :: [Pair]
+  , dfLines :: Lang -> DocReq -> [Line]
+  , dfExit :: DocReq -> Bool
   }
 
 -- | A family from its name, schema id, statement text, own checks,
--- assembly and catalogue extras.
+-- assembly and catalogue extras; no console line and no veto until
+-- `spoken` gives it its own.
 docFamily :: String -> String -> String -> (DocReq -> Maybe String) -> (DocReq -> Value) -> [Pair] -> DocFamily
-docFamily name schemaId statement = DocFamily name schemaId (readSpec statement)
+docFamily name schemaId statement check assemble extras =
+  DocFamily name schemaId (readSpec statement) check assemble extras (\_ _ -> []) (const False)
+
+-- | A family with its console lines and its veto.
+spoken :: (Lang -> DocReq -> [Line]) -> (DocReq -> Bool) -> DocFamily -> DocFamily
+spoken ls ex fam = fam {dfLines = ls, dfExit = ex}
 
 -- | The statement text, one line per entry: `range NAME`, `fact NAME
 -- kept|judged`, `rows NAME WIDTH[+] kept|judged COLUMN…` (a COLUMN is a
--- range name or `-`, one per fixed column), `ref CLASS ARG…`. A line
--- that does not read is a defect of the family's source, named.
+-- range name or `-`, one per fixed column), `ref CLASS ARG…`,
+-- `optional NAME…` (facts or tables the request may leave out: absent
+-- reads as 0 / empty, present is held to its statement). A line that
+-- does not read is a defect of the family's source, named.
 readSpec :: String -> Spec
-readSpec text = foldr entry (Spec [] [] [] []) (filter (not . null) (map words (lines text)))
+readSpec text = foldr entry (Spec [] [] [] [] []) (filter (not . null) (map words (lines text)))
  where
   entry ws sp = case ws of
     ["range", n] -> sp {spRanges = n : spRanges sp}
     ["fact", n, m] -> sp {spFacts = (n, mode m) : spFacts sp}
     ("rows" : n : w : m : cols) -> sp {spTables = table n w m cols : spTables sp}
     ("ref" : c : args) -> sp {spRefs = (c, map column args) : spRefs sp}
+    ("optional" : ns) -> sp {spOptional = ns <> spOptional sp}
     _ -> error ("document statement line does not read: " <> unwords ws)
   mode m = m == "kept" || (m /= "judged" && error ("document statement mode: " <> m))
   table n w m cols = case reads w of
@@ -200,11 +216,11 @@ offence fam req = case (dRanges req, dRows req, dFacts req) of
   (_, _, Nothing) -> Just "document: missing facts"
   (Just rs, Just ts, Just fs) ->
     asum
-      [ keyed "ranges" (spRanges sp) rs
+      [ keyed "ranges" (spRanges sp) [] rs
       , negative "ranges" rs
-      , keyed "rows" (map tName (spTables sp)) ts
+      , keyed "rows" (map tName (spTables sp)) (spOptional sp) ts
       , asum [shaped rs t (M.findWithDefault [] (tName t) ts) | t <- spTables sp]
-      , keyed "facts" (map fst (spFacts sp)) fs
+      , keyed "facts" (map fst (spFacts sp)) (spOptional sp) fs
       , negative "facts" fs
       , reason rs
       , asum [judgedWith t | t <- spTables sp, not (tKept t), not (null (rows req (tName t)))]
@@ -224,12 +240,12 @@ offence fam req = case (dRanges req, dRows req, dFacts req) of
     _ <- dDegraded req
     pure ("degraded: with fact " <> n)
 
--- | An object holding exactly the stated keys: the first missing one,
--- else the first unknown one.
-keyed :: String -> [String] -> M.Map String a -> Maybe String
-keyed what stated m =
+-- | An object holding exactly the stated keys (an optional one may be
+-- absent): the first missing one, else the first unknown one.
+keyed :: String -> [String] -> [String] -> M.Map String a -> Maybe String
+keyed what stated optional' m =
   asum
-    [ asum [Just (what <> ": missing " <> k) | k <- stated, isNothing (M.lookup k m)]
+    [ asum [Just (what <> ": missing " <> k) | k <- stated, k `notElem` optional', isNothing (M.lookup k m)]
     , asum [Just (what <> ": unknown key " <> k) | k <- M.keys m, k `notElem` stated]
     ]
 

@@ -8,6 +8,14 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+
+**无默认档位变更。** 权威轨 v2.32 步 5C 控制台文本进核（2026-10-01；核按请求的语言给出每族控制台的每一行与该面的否决位，`document/1` 7.10.0；测量侧还没读它——Rust 照旧自己打印，切换在步 5 的 Rust 半；判决代码零改动，`document` 之外的十九份 golden 只差 proto 字面，`tablesDigest` 不变，分数与 1.8.0 可比）：
+
+- **核**：机制 `CE.Text`（模板按 key 取 `(en, zh)`、`{}` 自左至右填，数字按 Rust `Display`、`{:+}` 一处、`{:.1}` 按除得的 double 的精确二进制值半数取偶，`table` 把一份文本读成目录）+ 十二份目录 `CE.Text.<Fam>`（每份一个文本字面量，逐字节转录自 Rust 打印处，只有英文的句子 zh = en）+ 十个 `CE.<Fam>.Lines`（arch / query 与 rules / flow / merge / check / structure / join / deadcode / mentions / sites，各读核刚装出的文档再加请求事实）+ 两个句子族 `CE.Guard.Document`（`say` 行一条规则一行：重复 / 硬预算 / 分级区 / 墓碑 / 新增死代码 / ce.toml 不可读，围栏是尾句）与 `CE.Audit.Document`（Stop / precommit / commitmsg 三面）+ `CE.Document.Read`（文档读者，一次导入）；`CE.Document.Contract` 的请求多 `lang`、族多 `dfLines` / `dfExit`（`spoken`）；墓碑的 kind 名进 `CE.Tombstone`（`kindNames`）。
+- **wire 7.10.0**（加性）：请求可带 `lang`（0 / 1，其余按名拒），应答多 `lines`（`[stream, text, ref…]`，每个引用一个 `{}`）与 `exit: {fail}`；arch 请求多 `widths` 表、flow 多 `check` / `deny`、merge 多 `only`、check 多 `roast`、deadcode 与图屏多 `files` / `check` 事实，merge 片段截断是新引用类 `clipped`——都只进 `lines`，文档逐字节不变；这几项在请求里可缺省（陈述行 `optional`，缺省读 0 / 空），因为 3B / 4B 的 Rust 已在发这几族的文档请求而还不送它们，Rust 半送齐后可删。`Version.hs` / `corelink.rs::PROTO` / `contracts/VERSIONING.md` 7.10.0 条；`document/golden.ndjson` 二十四对 → 六十七对（既有请求按新键补齐，每族一条 `lang` 1，守卫与审计每句两语，ROI 一位小数电池 id 401）。
+- **等价**：`DocumentProps5` 九腿（每行 `{}` 数 = 引用数、行里的引用落在陈述的宇宙内、每份目录的每个 key 都被用到且无错配、空请求与超 cap 都答 `lines` / `exit`、`lang` 越界按名拒、否决位 = 各面规则的复述、`{:.1}` 对 Rust 的十三个读数、golden 每族有中文请求、去掉可缺省的事实与表文档不变）+ `DocumentGen5`（守卫与审计各 200 个种子请求）；子仓 `it/document_number_format.rs` 用 Rust `format!("{:.1}x", …)` 逐个比 golden 电池的 ROI。
+- **门读数**：见提交说明（车道 `lane/v232-step5a`，变基到 cacc2741 / 子仓 145b62e）。
+
 **无默认档位变更。** 官网把数学摆上台面（2026-10-02；判决代码、生成块与事实芯片一个字节不动）：首页「判决家族」与「实测」之间新增「数学」一节（中英同构），每行一条算法——窗口取指纹、树编辑距离、shingle 上的 Jaccard、Tsallis-2 与 χ²、Newman 模块度、分数与棘轮、认知复杂度的递归增量、可达性与 Tarjan、拆分 ROI、Theil-Sen 斜率、整数 BM25 与 PPMI、分层 Datalog、可达性与活跃性、克隆合并、分层与切割——公式逐字取自 how / analysis 页的 `<pre>` 或方法学册（模块度取册 04、PPMI 取册 15、递归增量取白皮书原句），各自链到推导；how 页十族的定理 / 判定句从「推导与常数」折叠里移出、作为「规则」块紧贴公式可见，守卫阶梯的硬预算与软区公式移出折叠，常数表与长推导仍折叠（行数不变，逐句对拍对改版前零缺句）；技术栈页新增「数学在哪一层」，每层一句、取自站内已有句子；所有公式统一一种样式（等宽、深底、判定运算符用珊瑚色），`theme.css?v=10` / `style.css?v=10` 全站同改。
 
 **无默认档位变更。** 官网与 README 的视觉改版（2026-10-02；判决代码、生成块与事实芯片一个字节不动）：配色收成一套深色底 + 单一珊瑚强调色（取自图标里的橡皮），青与琥珀只留在终端块里当 ok / warn 信号，正文与次要文字对底色的对比度均过 WCAG AA；标题统一改 Plex Sans、立一套字号阶梯（小字 / 正文 / 导语 / h3 / h2 / h1 / 首页大标题），中文行高 1.85、不加字距；正文段落限宽到约 70 个拉丁字符 / 约 40 个汉字；首页第一屏改为「是什么 + 一个下载按钮 + 自测终端」，其余安装方式挪到「安装」一节、每条值一行；一个句子都不删：首页十六张家族卡与技术栈页八张卡只露第一句、其余收进卡内「更多」，安装方式的完整说明收进「安装」一节的折叠块，how 页每族的推导与常数、导语的后几句同样收进原生 `<details>`（不加脚本，文字仍在页内；逐句对拍脚本核过十页对改版前零缺句）；面板统一圆角 / 描边 / 阴影，家族卡悬停微抬，钩子卡改成珊瑚色引言块；节间距 72 / 块间距 32 / 块内 16；README 双语把「三面一体」提为二级标题、命令表前加三级标题「命令」、「更新」一段移到该标题之前（行数不变）；令牌与基础排版拆进新的 `site/theme.css`（每页先于 `style.css` 加载），`theme.css?v=9` / `style.css?v=9` / `viewer.css?v=2` 各自全站同改。

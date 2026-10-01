@@ -156,7 +156,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , rowsSet "misplaced" (toJSON [[99 :: Int, 0]]) arch
     , setKey "degraded" (toJSON (5 :: Int)) arch
     , setKey "degraded" (toJSON (0 :: Int)) arch
-    , setKey "degraded" (toJSON (0 :: Int)) (rowsSet "groups" (toJSON ([] :: [Value])) (rowsSet "members" (toJSON ([] :: [Value])) (rowsSet "holes" (toJSON ([] :: [Value])) (setKey "ranges" (object ["members" .= (0 :: Int), "why" .= (1 :: Int)]) (setKey "facts" (object ["nodes" .= (1 :: Int), "merged_duplicates" .= (0 :: Int), "not_isomorphic" .= (0 :: Int), "no_slot_table" .= (0 :: Int), "unbuilt" .= (0 :: Int), "over_cap" .= (0 :: Int)]) merge)))))
+    , setKey "degraded" (toJSON (0 :: Int)) (rowsSet "groups" (toJSON ([] :: [Value])) (rowsSet "members" (toJSON ([] :: [Value])) (rowsSet "holes" (toJSON ([] :: [Value])) (setKey "ranges" (object ["members" .= (0 :: Int), "why" .= (1 :: Int)]) (setKey "facts" (object ["nodes" .= (1 :: Int), "merged_duplicates" .= (0 :: Int), "not_isomorphic" .= (0 :: Int), "no_slot_table" .= (0 :: Int), "unbuilt" .= (0 :: Int), "over_cap" .= (0 :: Int), "only" .= (0 :: Int)]) merge)))))
     , rowsSet "layers" (toJSON ([] :: [Value])) arch
     , rowsSet "shown" (toJSON [[0 :: Int], [-1]]) flow
     ]
@@ -201,7 +201,7 @@ catalogued =
     && dropDocument package == pack
     && tablesDigest == digestOf package
     && tablesDigest /= digestOf pack
-    && all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) families
+    && all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) (filter (not . null . dfSchema) families)
     && path ["flow", "kinds"] catalogue == Just (toJSON (zip (words "unreachable dead_store unused_local unused_param") [False, False, False, True]))
     && path ["flow", "judged"] catalogue == Just (toJSON flowJudgedRows)
     && BL.length (encode catalogue) > 0

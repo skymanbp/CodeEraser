@@ -228,9 +228,9 @@ eleventh ([Protocol.hs:110](../../../core/app/CE/Protocol.hs#L110)) and answers 
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
 knob ([Wire.hs:138-163](../../../core/app/CE/Wire.hs#L138),
-[Tombstone.hs:29-53](../../../core/app/CE/Tombstone.hs#L29)). The judgment is three lines
+[Tombstone.hs:35-59](../../../core/app/CE/Tombstone.hs#L35)). The judgment is three lines
 ([Cost.hs:47-58](../../../core/app/CE/Tombstone/Cost.hs#L47),
-[Tombstone.hs:55-61](../../../core/app/CE/Tombstone.hs#L55)):
+[Tombstone.hs:61-67](../../../core/app/CE/Tombstone.hs#L61)):
 
     site(kind, marks, names)  ⇔  names ≥ minName  ∧  (kind ≠ kindProse  ∨  marks ≥ minMarks)
     label = |{sites : kind ≠ kindProse}|          prose = |{sites : kind = kindProse}|
@@ -241,7 +241,7 @@ any honest changeset; over the cap the core answers a complete degraded reply wi
 site table, the condition unevaluated and the reason `tombstone_too_large`: a changeset the
 core refused to judge is neither convicted nor cleared
 ([Cost.hs:18-45](../../../core/app/CE/Tombstone/Cost.hs#L18),
-[Tombstone.hs:63-89](../../../core/app/CE/Tombstone.hs#L63)). The reply carries the site
+[Tombstone.hs:69-95](../../../core/app/CE/Tombstone.hs#L69)). The reply carries the site
 indices in request order, the `rows` / `label` / `prose` counts, `over`, the effective knob
 table echoed (empty = no budget declared) and `degraded`. Loosening either floor re-opens the
 replay rounds that measured the conjunction's precision (§9): the floors are the contract,

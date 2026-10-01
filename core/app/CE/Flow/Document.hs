@@ -12,7 +12,7 @@
 -- index), the refusals (its own lowering's, which stand beside a
 -- `degraded` reason, and the core's), each file's language, each
 -- file's place in path order, and the kinds `--kind` showed.
-module CE.Flow.Document (doc) where
+module CE.Flow.Document (doc, kindTable) where
 
 import CE.Document.Contract
 import CE.Lang (languages)
@@ -30,13 +30,15 @@ schemaId = "ce.flow-report/0.1.0"
 
 -- | A finding row is [file, unit nth, kind, line, lineEnd, variable]
 -- (variable −1: none); a refusal [file, nth, reason]; `shown` the kind
--- codes listed (none = every kind).
+-- codes listed (none = every kind); `check` / `deny` the face's
+-- `--check` and the flow tier's deny, read by the veto (step 5).
 -- References: path [file], unit [file, nth], var [file, nth, variable], why [text].
 statement :: String
 statement =
   "range files\nrange why\n\
   \fact units kept\nfact stmts kept\nfact vars kept\nfact uses kept\n\
   \fact dynamicUnits judged\n\
+  \fact check kept\nfact deny kept\noptional check deny\n\
   \rows langs 2 kept files -\nrows rankFiles 2 kept files -\nrows shown 1 kept -\n\
   \rows unlowered 3 kept files - why\n\
   \rows findings 6 judged files - - - - -\nrows refused 3 judged files - why\n\

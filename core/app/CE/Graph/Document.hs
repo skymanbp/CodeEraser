@@ -34,11 +34,13 @@ schemaId = "ce.deadcode-report/0.4.0"
 -- trust], a reported row [node, verdict], an advisory row [k, node,
 -- line, code] — one per name, `k` its place — and the three advisory
 -- bits: whether the road asked, whether the core dropped the table,
--- whether the producer cut the candidates.
+-- whether the producer cut the candidates. `files` (the file nodes)
+-- and `check` (the face's `--check`) are the console lines' (step 5,
+-- CE.Graph.Lines).
 statement :: String
 statement =
   "range nodes\nrange advisory\nrange why\n\
-  \fact unresolvedSites judged\nfact asked judged\nfact dropped judged\nfact cut judged\n\
+  \fact unresolvedSites judged\nfact asked judged\nfact dropped judged\nfact cut judged\nfact files judged\nfact check kept\noptional files check\n\
   \rows kept 1 judged -\nrows reason 1 judged -\n\
   \rows dead 2+ judged nodes -\nrows reported 2 judged nodes -\n\
   \rows unmentioned 4 judged advisory nodes - -\n\

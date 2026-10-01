@@ -31,7 +31,9 @@ schemaId = "ce.merge-report/0.1.0"
 -- member row [k, g, m, first line, last line, run first, run last,
 -- has a unit]; a hole row merge/1's [g, hole, param, m, post,
 -- postEnd]. A degraded document carries nothing, the measuring side's
--- counts included.
+-- counts included. `only` is the console's `--group` (its number plus
+-- one, 0 = every group) and `clipped` a text cut to a cap, both the
+-- console lines' (step 5, CE.Merge.Lines).
 -- References: path [member], unit [member], text [member, post, postEnd], why [text].
 statement :: String
 statement =
@@ -41,7 +43,8 @@ statement =
   \rows groups 8 judged - - - - - - - -\n\
   \rows members 8 judged members - - - - - - -\n\
   \rows holes 6 judged - - - - - -\n\
-  \ref path members\nref unit members\nref text members - -\nref why why\n"
+  \fact only kept\noptional only\n\
+  \ref path members\nref unit members\nref text members - -\nref clipped members - - -\nref why why\n"
 
 -- | The reasons by code (CE.Merge.Cost): feasible, a position no
 -- parameter can stand for, a type position, a gap across statements,

@@ -30,7 +30,7 @@
 | 件 | proto | 请求 | 应答 | 缓存与降级 |
 |---|---|---|---|---|
 | ① `tables/1` | 7.7.0（加性） | 无参（信封之外多一个键按名拒） | `tables.result` 一次答整包：十六个顶层键按表族分（`languages` / `scan` / `flow` / `slot` / `sites` / `calls` / `fourclass` / `ladder` / `walk` / `outputs` / `docdup` / `keys` / `flags` / `tombstone` / `compdb` / `protocol`），每语言的表在表族键下按语言报告名分，另带 `digest`（规范字节的 fnv1a64，hello 回执的 `tablesDigest` 同数；规范字节 135,145 B） | Rust 第一次用到时要一次，按核 `(version, proto)` 入键落盘缓存 `.ce/tables-<ver>-<proto>.json`；握手已知版本 → 命中无往返；持核链的 daemon 内存缓存；缓存损坏 = 重取；无核 / 旧核无 `tables/1` = 具名拒绝，不留内嵌副本 |
-| ② ③ `document/1` | 每批一个 minor（步 3 = 7.8.0，新五族；步 4、步 5 各一） | `document.request`：`family` + `ranges`（可被引用的宇宙大小）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号）+ `facts`（标量）+ `degraded`（null 或 `why` 下标）；每族的键、行宽、每列所指的宇宙写成一张陈述文本表 | `document.result`：`document` = 与今天报告 JSON 同形的骨架（字符串位 `{"$": [类别, 整数…]}`，产品常量直接出字符串；步 5 起句子 `{"$t": key, "args": [...]}` + `lines: {en: [...], zh: [...]}`）；`tables/1` 包加 `document` 目录（每族 schema id 与空文档） | 判决没发生而核够得着 → 照样问，带 `degraded` 与测量侧留下的事实（§13 第 20 条）；文档时刻核够不着、请求被拒、行总数 > 1,048,576（核答该族空文档 + `document_too_large`）= 具名拒绝、不是降级；包里的空文档只作陈述与电池的锚，测量侧永不绑定 |
+| ② ③ `document/1` | 每批一个 minor（步 3 = 7.8.0，新五族；步 4 = 7.9.0；步 5 = 7.10.0，控制台文本） | `document.request`：`family` + `ranges`（可被引用的宇宙大小）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号）+ `facts`（标量）+ `degraded`（null 或 `why` 下标）+ 步 5 起可选 `lang`（0 en / 1 zh，缺省 0，其余按名拒）；每族的键、行宽、每列所指的宇宙写成一张陈述文本表 | `document.result`：`document` = 与今天报告 JSON 同形的骨架（字符串位 `{"$": [类别, 整数…]}`，产品常量直接出字符串）；步 5 起另带 `lines` = 请求语言的控制台每一行 `[stream, text, ref…]`（stream 0 stdout / 1 stderr，数字与产品词已写进 text，每个引用在 text 里留一个 `{}`、按序跟在后面）与 `exit: {fail}`（该面的否决位）；`tables/1` 包加 `document` 目录（每族 schema id 与空文档；`guard` / `audit` 两个句子族没有文档、不进目录） | 判决没发生而核够得着 → 照样问，带 `degraded` 与测量侧留下的事实（§13 第 20 条）；文档时刻核够不着、请求被拒、行总数 > 1,048,576（核答该族空文档 + `document_too_large`）= 具名拒绝、不是降级；包里的空文档只作陈述与电池的锚，测量侧永不绑定 |
 | 退役 | 8.0.0（major） | — | 退役失去一切读者的键（§13 第 18 条：判决应答的行表仍是 `document/1` 的输入；已知一个：请求键 `judgedMask`） | 全部族切完后一次（§12 步 6） |
 
 - 每个 minor 与 8.0.0 各一条 `contracts/VERSIONING.md`（最新在前），`Version.hs` 与 `corelink.rs` 的 `PROTO` 同步；`tables/1` 进 `Protocol.hs` 的 `families` 表（hello 能力表由它派生）。
@@ -83,7 +83,7 @@ Rust −≈ 235 KB，Haskell +≈ 250 KB（record 语法比 TOML 略长）。
 - Rust 一个通用绑定器 `bind(skeleton, resolve)`（遍历 JSON，`{"$": [类别, 整数…]}` → 按类别解出的字符串）；各族的报告装配删除，只剩请求装配 + 解析器。三面等价由构造保证。
 - **降级与空文档**：陈述把表与事实分 `kept` / `judged` 两半，`degraded` 时只留 `kept` 的；判决没发生而核够得着，Rust 照样问 `document/1`、印核答的；核够不着 = 具名拒绝（§13 第 20 条）。每族的空文档（同一个装配函数对空请求的结果）进 `tables/1` 的 `document` 目录，作陈述与电池的锚，测量侧永不绑定。
 - **切换规则**：每批一个 minor（`document/1` 加性；步 3 = 7.8.0）；切换提交以「旧装配产物 == 新 `bind` 产物逐字节」为门（十语料 × 每族 × 三面），然后删旧装配；全部族切完后一次 major 8.0.0 退役失去一切读者的键（范围见 §13 第 18 条）。
-- **分组落地**：(e) 新五族 query / rules / flow / merge / arch 作样板（骨架最简单）→ (a) check / score / structure / join → (b) graph：deadcode / mentions / sites / canvas → (c) scan / dedup / clone / docdup / erase → (d) churn / trend / tombstone / similar / audit / update / health。
+- **分组落地**：(e) 新五族 query / rules / flow / merge / arch 作样板（骨架最简单）→ (a) check / score / structure / join → (b) graph：deadcode / mentions / sites / canvas → (c) scan / dedup / clone / docdup / erase → (d) churn / trend / tombstone / similar / audit / update / health。(d) 里 update / doctor / setup / health 留在 Rust（它们描述的是 Rust 进程自己的环境，`ce doctor` 必须在没有核时也能跑）；audit / probe / precommit / commitmsg 没有 `ce.*` 文档，它们的句子由 `document/1` 的两个句子族 `guard`（PreToolUse 拒绝理由）与 `audit`（Stop / precommit / commitmsg）给出，`document` 为 `{}`。
 
 ### 5.3 门
 
@@ -120,9 +120,10 @@ Rust −≈ 200 KB，Haskell +≈ 180 KB。Rust 的减量在步 6 兑现（旧�
 
 ### 6.2 设计
 
-- 核持有消息目录 `CE.Text`（key → en / zh 模板，槽位 `{0}`）；应答的 `document` 里所有句子是 `{"$t": key, "args": [...]}`，并另给 `lines: {en: [...], zh: [...]}`（控制台每一行，槽位里仍是符号引用）。
-- Rust 按 `[ui] lang` 选语言 + 绑定 + 打印；`console.rs` 整族与 `main_lang.rs` 的 `ZH_TSV` 并入核目录。clap `--help` 文本留在 Rust，`zh_surface` 门照旧；GUI 的 `i18n.js` 不动。
-- 守卫句（`guard/say.rs`）同理进目录，PreToolUse 腿经 daemon 的核链取句——daemon 已持核链，无额外往返。
+- 核持有消息目录：`CE.Text` 是机制（模板按 key 取 `(en, zh)`，槽位 `{}` 自左至右填，与 Rust `i18n::line` 的读法同），每族的模板在 `CE.Text.<Fam>`，逐字节转录自今天的 Rust 打印处（只有英文的句子 zh = en）。文档本身不带句子：应答另给 `lines`（请求 `lang` 那一种语言的控制台每一行 `[stream, text, ref…]`）与 `exit: {fail}`——一次请求只答一种语言，Rust 按 `[ui] lang` 选语言后发请求、把每个 `{}` 按序换成引用解出的字符串、按 stream 打印。
+- 数字与产品词由核写：整数按 Rust `Display`，`{:+}` 一处（`CE.Text.signed`），一位小数按 Rust `{:.1}` 的读法（取除得的 double 的精确二进制值、半数取偶、负零留负号、零分母 `inf` / `-inf` / `NaN`，`CE.Text.fixed`；子仓 `it/document_number_format.rs` 对 golden 的 ROI 电池逐个用 Rust 格式化比对）；按显示宽度对齐的地方（arch 的度量表）宽度是测量侧事实（`widths` 表送每个目录路径的字节数与字符数）；merge 片段的 40 字符截断是新引用类 `clipped`，由 Rust 截。
+- Rust 留下的：clap `--help` 与 `main_lang.rs` 的 `ZH_TSV`（只服务 `--help`，`zh_surface` 门照旧）、SARIF、写入者（observe feed 行、erase 日志记录）、`hookio` 的截断、退出码 2（降级 / 无核 / 程序错误是测量侧自己的拒绝）；GUI 的 `i18n.js` 不动。
+- 守卫句（`guard/say.rs`）与审计句同理进目录（`guard` / `audit` 两个句子族），PreToolUse 腿经 daemon 的核链取句——daemon 已持核链，无额外往返。
 
 ### 6.3 门
 
@@ -203,7 +204,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 | 2 | 定义进核 B（2026-10-01 已交付，§4.5）：Rust `tables.rs` + 缓存 + 消费者改读 + 定义文本删除（二十四个文件）；精度册两族（语言十一份、flow 十份）退役再在干净树上重生成，两个提交 | 十语料 + 自仓十三面旧 / 新二进制 143 对字节同、子仓表对钉版文法腿改读、无核 / 旧核 / 缺键具名拒绝 |
 | 3 | 文档骨架样板：新五族（query / rules / flow / merge / arch）+ 绑定器 + 切换门；3A 核（`CE.Document` + `CE.Document.Contract` + 四个 `CE.<Fam>.Document`、`document/1` 7.8.0、`tables/1` 的 `document` 目录、`DocumentProps` 十腿、golden 十四对）；3B Rust `cli/src/document.rs`（`bind` + `Resolve` + `Held`）、四个 face 只留判决、请求装配与解析器，`<族>/report.rs` 读绑定后的文档、切换门；3C Rust 不留目录副本、`--kind` 的未知名由核拒（golden 加一对）；3D 目录的 kind 行带 advisory（§5.5，§13 第 17–22 条） | 旧装配产物 == 新 `bind` 产物逐字节（十语料 + 自仓 × 五族 × CLI 两面） |
 | 4 | 骨架 (a)(b)：check / score / structure / join；graph 的 deadcode / mentions / sites / canvas；4A 核（七个 `CE.<Fam>.Document`〔`Score` / `Structure` / `Join` / `Graph` / `Graph.Screen` / `Graph.Sites` / `Mention`〕、`document/1` 7.9.0、目录多七项、`DocumentProps4` 九腿 + `DocumentHarness` 共用四腿、golden 十对；裁定后续：名字各回一个所有者、包多 `store` 表、VERSIONING 拆第二册）先在车道提交，4B Rust 绑定与切换门（2026-10-01 已交付，§5.6）：七族的面问 `document/1` 并绑定、七份 Rust 装配与名字表删除、目录多 `failed` / `reasons` 名字表、图屏冻结金样 | 同步 3 的切换门 |
-| 5 | 骨架 (c)(d) + `CE.Text` 双语目录 + 守卫句：scan / dedup / clone / docdup / erase；churn / trend / tombstone / similar / audit / update / health；flow 文档带各 kind 的标签，`gui/ui/hub_flow.js` 的标签表退役、芯片集改读文档的 kind 列表（§13 第 22 条） | 同步 3 的切换门 + `lines` en / zh 逐字节同、`zh_surface` 绿 |
+| 5 | 骨架 (c)(d) + `CE.Text` 双语目录 + 守卫句：scan / dedup / clone / docdup / erase；churn / trend / tombstone / similar / audit / update / health；flow 文档带各 kind 的标签，`gui/ui/hub_flow.js` 的标签表退役、芯片集改读文档的 kind 列表（§13 第 22 条）；5C 核（`CE.Text` + 十二个 `CE.Text.<Fam>` 目录、十个 `CE.<Fam>.Lines`、`guard` / `audit` 两个句子族、`document/1` 7.10.0、`DocumentProps5` 九腿、golden 加三十余对）先在车道提交，Rust 改读 `lines` 在 3B / 4B 落地后接上 | 同步 3 的切换门 + `lines` en / zh 逐字节同、`zh_surface` 绿 |
 | 6 | 删旧 face / console / `ZH_TSV`、major 8.0.0 退役旧键、parity 门改读骨架 | 十语料十面字节同、`face_parity` 改读骨架后绿 |
 | 7 | 老家族参考实现与电池（六族：Verdict / Score、Structure、Erase、Trend、Tombstone、Similar；可与 3–6 并行车道）——**已交付**（§7.5） | `cabal test` 全绿、每族等价 200/200 |
 | 8 | 全量文档 + 语言条读数记账（§11 口径；v2.31 步 10 的文档面一并） | docs / site / facts 门全绿、引文重签 |
@@ -248,3 +249,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 32. **structure 的 S6 汇总只读判决**（步 4B）：`--deep` 的死单元按目录汇总只要死行的结点号（`deadcode::judged`），不要任何名字，所以它不问 deadcode 文档——问了就是为了把名字读回来再按路径查目录，多一次往返、多一份依赖。
 33. **图屏的金样冻在旧码上**（步 4B，任务书 §3）：两棵子仓夹具树（一个带环与孤儿的 crate、一组按节互链的文档与资产）在 b3443723 的 release 与它自己的核上答的 `faces::graph_screen` 写进 `it/golden/graph_screen.b3443723.ndjson`，文件名记来源；腿 `graph_screen_frozen` 只读不写——没有 bless 通道，要重答只能检出名字里那份代码。
 34. **单元测试的去向**（步 4B，一条不无声删）：`unit/graph/canvas.rs` 的 `file_cycles_take_the_core_report_and_restrict_it_to_files` 拆两半——Rust 半（环成员展平、缺键拒绝、节归其文件、包无文件行）进新腿 `graph_rows_name_the_file_and_cycles_flatten`，核半（只含节的 SCC 不计、成员出界拒绝）进 `sections_collapse_packages_drop_and_cycles_count`（改由真核装配）与 `DocumentProps4` 的图屏腿；`unit/graph/deadcode.rs` 的 `every_liveness_reason_has_both_words` 改为 `every_liveness_reason_has_its_chinese`（英文半是核的 `whyCodes`，由 `DocumentProps4` 与 golden 钉）、`reported_rows_and_fail_bit_consume_and_skew_refuses` 改钉判决的码；`unit/graph/deadcode/advisory.rs` 改钉 `Advised`；`unit/graph/store_tests.rs` 读包；`unit/mention/tests.rs` 的 `caps_and_face_identity_are_stated` 改钉请求形（十九个事实、每语言一行，schema id 是核的，由 `it/document_catalogue.rs` 钉）；新 `unit/graph/deadcode/document.rs` 两腿（请求即判决、字符串留在本侧；包里没有的降级原因按名拒）。`unit/score` / `unit/structure` / `unit/join` 无一条读被删的函数，未动。
+35. **控制台的形：一次一种语言，句子不进文档**（步 5C）：§6.2 原稿的 `{"$t": key, "args": [...]}` 与 `lines: {en, zh}` 两份不做——文档的字段集是今天的报告 JSON，加句子键会改变三面都在读的文档；改为请求带 `lang`、应答带那一种语言的 `lines` 与 `exit`，另一种语言再问一次（Rust 一次只印一种）。每行的引用就是文档里那套类别化引用，Rust 的绑定器原样复用。
+36. **控制台要而文档不要的整数作测量侧事实**（步 5C）：arch 的 `widths`（目录路径的字节数与字符数——Rust `{:w$}` 按字节量宽、按字符补齐，核量不了字符串）、flow 的 `check` / `deny`（`--check` 与 `[flow] guard` 档）、merge 的 `only`（`--group` 号加一，0 = 全部）、check 的 `roast`、deadcode 与图屏的 `files`（`--entry` 提示要的文件数）与 `check`；merge 片段截断改为新引用类 `clipped [k, 起, 止, 40]`。这几处都只进 `lines`，文档逐字节不变（既有 golden 的 `document` 只有 arch 的 `counts.rows` 因多一张表而变）。它们在请求里可缺省（陈述行 `optional`，变基到 cacc2741 时补）：3B / 4B 落地的 Rust 发这六族的文档请求却还不送它们，缺省读作 0 / 空表、在场照陈述校验，文档两种情形逐字节同（`DocumentProps5` 第九腿）；Rust 半让面送齐之后，这几行 `optional` 可以删。
+37. **否决位只给「判了且不通过」**（步 5C）：`exit.fail` = rules 判了且有违规、flow `--check` 且 deny 档且有判决发现、check 的 `fail`、deadcode `--check` 且有死文件或降级、审计的拦截（git 收得到、提交说明读得到、墓碑腿 deny 档且核答 over 且度量完整，或去重腿 deny 档且失败）；其余族恒 false。退出码 2（降级 / 无核 / 程序错误）仍由 Rust 读自己的拒绝，不经 `exit`。
+38. **守卫的规则码与围栏**（步 5C）：`say` 行 `[rule, a..f]`，rule 0 重复 / 1 硬预算 / 2 分级区 / 3 墓碑 / 4 新增死代码 / 5 ce.toml 不可读，六种；围栏是 1 / 3 两条的尾句（1 配置偏离基线、2 基线不可读），不另占规则码——任务书写的「0..6、七句」是把两句尾句数成了规则。`guard` / `audit` 的 `document` 为 `{}`、陈述表 schema 为空串，不进 `tables/1` 目录，所以 `tablesDigest` 不动。

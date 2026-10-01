@@ -138,7 +138,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , rowsSet "dead" (rowsOf [[0, 0]]) (base "deadcode")
     , rowsSet "rates" (rowsOf [[99, 0, 0, 0, 0, 0, 0, 0, 0]]) (base "mentions")
     , scratch "sites" [("files", 1), ("sites", 1)] [("rankFiles", [[0, 0]]), ("langs", [[0, 0]]), ("sites", [[0, 0, 99, 1, 0, 0]])] []
-    , scratch "graphscreen" [("nodes", 1), ("advisory", 0), ("why", 1)] (("graph", [[0, 5, -1]]) : blank "dead reported unmentioned edges pos cycles kept reason") (map (\k -> (k, 0)) (words "unresolvedSites asked dropped cut"))
+    , scratch "graphscreen" [("nodes", 1), ("advisory", 0), ("why", 1)] (("graph", [[0, 5, -1]]) : blank "dead reported unmentioned edges pos cycles kept reason") (map (\k -> (k, 0)) (words "unresolvedSites asked dropped cut files check"))
     ]
   scratch fam rs ts fs = docRequest fam rs ts fs Nothing
   blank = map (\t -> (t, [])) . words

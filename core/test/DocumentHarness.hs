@@ -11,7 +11,7 @@
 -- stated class inside its ranges, and the same request assembles to
 -- the same bytes. DocumentProps (step 3's five) and DocumentProps4
 -- (step 4's seven) each add the legs only their families have.
-module DocumentHarness (at, documentOf, emptiesHeld, familiesNamed, fieldsHeld, int, ints, items, judgedBy, path, rankOf, refsHeld, refsIn, sameBytes) where
+module DocumentHarness (at, documentOf, emptiesHeld, emptyRequest, familiesNamed, fieldsHeld, int, ints, items, judgedBy, path, rankOf, refsHeld, refsIn, sameBytes) where
 
 import CE.Document (catalogue, emptyOf, families, respond)
 import CE.Document.Contract (DocFamily (..), Spec (..), Table (..))

@@ -36,12 +36,13 @@ schemaId = "ce.check-report/0.5.0"
 -- columns), the scale / floor / reason tables at most one row each
 -- (null when empty), `failed` the held conditions by code, `dropped`
 -- the provenance rows — present in the document exactly when
--- `droppedRode` is 1.
+-- `droppedRode` is 1; `roast` the console's `--roast` (step 5,
+-- CE.Score.Lines).
 statement :: String
 statement =
   "range files\nrange why\n\
   \fact score judged\nfact fail judged\nfact droppedRode judged\n\
-  \fact simPairs judged\nfact members judged\nfact collapsed judged\nfact skippedSelf judged\n\
+  \fact simPairs judged\nfact members judged\nfact collapsed judged\nfact skippedSelf judged\nfact roast kept\noptional roast\n\
   \rows scale 1 judged -\nrows floor 1 judged -\nrows reason 1 judged -\n\
   \rows axes 2 judged - -\nrows candidates 6 judged files files - - - -\n\
   \rows joinSeverity 2 judged - -\nrows added 1 judged -\nrows removed 1 judged -\n\
