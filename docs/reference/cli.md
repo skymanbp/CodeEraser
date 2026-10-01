@@ -322,7 +322,7 @@ Options:
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --check            Exit 1 when `[flow] tier` is deny and a judged finding stands (unused parameters are advisory and never count)
-      --kind <KIND>      Show only these kinds, comma-separated (unreachable, dead_store, unused_local, unused_param); the counts stay whole
+      --kind <KIND>      Show only these kinds, comma-separated: a kind the core's flow catalogue lists; an unknown name is refused with the list. The counts stay whole
   -h, --help             Print help
 ```
 

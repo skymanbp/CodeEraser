@@ -18,10 +18,6 @@ use anyhow::Result;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 
-/// The schema id the core's arch document carries (CE.Arch.Document);
-/// read here by the facts registry and the tests.
-pub const SCHEMA_ID: &str = "ce.arch-report/0.1.0";
-
 /// The whole leg: the graph wire off a refreshed index, the tree over
 /// its measured files, the tables, the core's judgment and document.
 /// A focus path that names no measured file is an error and no

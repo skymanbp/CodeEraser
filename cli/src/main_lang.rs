@@ -83,7 +83,7 @@ rules.file	要判决的规则文件（缺省 = `[rules] file`，否则仓根的 
 rules.why	查询答案也带推导链
 flow	函数内死代码（不可达语句、死存储、未用局部量与形参），由核的 flow/1 判决；--check 是它自己的门，在 `[flow] tier` 为 deny 时生效（从不进 `ce check`）；未用形参永远只当顾问
 flow.check	`[flow] tier` 为 deny 且存在被判决的发现时退出 1（未用形参只当顾问，永不计入）
-flow.kind	只显示这些种类，逗号分隔（unreachable、dead_store、unused_local、unused_param）；计数照全量报
+flow.kind	只显示这些种类，逗号分隔：须是核的 flow 目录列出的种类；目录里没有的名字会被拒绝，并列出目录。计数照全量报
 merge	克隆合并建议：每个克隆组（T1/T2 族、T3 对）由核的 merge/1 做反统一——合并后函数的参数、保留的成员、省下的行数、可行与否及原因（只当顾问，永不判决）
 merge.group	控制台只印这一组（文档里的组号）；JSON 文档永远整份
 arch	架构分析：目录分层与拆开目录环所需切的边、文件簇与不在本簇多数目录里的文件、各目录的扇入 / 扇出 / 不稳定度，--impact 时给出一处改动波及的文件——由核的 arch/1 判决（只当顾问，永不当门）

@@ -14,7 +14,7 @@ walks reachability and backward liveness and answers the findings over the fourt
 [mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). No name, path or source text crosses the wire:
 a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
 through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
-[mod.rs:65](../../../cli/src/flow_report/mod.rs#L65)).
+[mod.rs:64](../../../cli/src/flow_report/mod.rs#L64)).
 
 ### 1. The lowering — four tables per unit
 
@@ -84,7 +84,7 @@ exemptions (captured, ignored, address-taken) leaving it out
 ([Live.hs:70-82](../../../core/app/CE/Flow/Live.hs#L70)). Kind 3 is advice by construction: a
 parameter an interface, an overload or an override requires is unread for a reason the unit
 cannot show, so no tier, mask or gate ever reads it as a verdict
-([mod.rs:23-40](../../../cli/src/flow_report/mod.rs#L23)).
+([Document.hs:52](../../../core/app/CE/Flow/Document.hs#L52), [mod.rs:23-36](../../../cli/src/flow_report/mod.rs#L23)).
 
 ### 5. Caps and degradation
 
@@ -104,16 +104,18 @@ file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (
 from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit the core refused with its reason
-([Document.hs:76](../../../core/app/CE/Flow/Document.hs#L76), [face.rs:158](../../../cli/src/flow_report/face.rs#L158),
+([Document.hs:82](../../../core/app/CE/Flow/Document.hs#L82), [face.rs:162](../../../cli/src/flow_report/face.rs#L162),
 [report.rs:10](../../../cli/src/flow_report/report.rs#L10)). A finding's `lineEnd` is the line on
 which the run's last statement starts: the legend keeps each statement's first line only, so a
 last statement written over several lines is not followed to its end; the next lowering
 generation carries the end. `--kind` narrows the listing and
-never the counts, so a filtered run cannot move the gate. The exit codes are the family's own: 2
+never the counts, so a filtered run cannot move the gate; a name the package's flow catalogue
+does not list goes as −1, and the core refuses it, the refusal naming the name as given and the
+catalogue's kinds ([Document.hs:78](../../../core/app/CE/Flow/Document.hs#L78)). The exit codes are the family's own: 2
 when the core is missing (refused by name, no document) or lacks the family (the document names
 the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
-([main_flow.rs:28-48](../../../cli/src/main_flow.rs#L28)). The MCP tool `flow` and the GUI's
+([main_flow.rs:29-49](../../../cli/src/main_flow.rs#L29)). The MCP tool `flow` and the GUI's
 reports hub read the same document through `faces::flow`; the hub registers its own renderer for
 the kind chips, the judged / advisory mark and the unjudged units.
 
@@ -122,7 +124,7 @@ mask holds the languages whose precision doc passed the gate of §8. Step 4's co
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
 retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
 generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
-all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:35](../../../cli/src/flow_report/mod.rs#L35)).
+all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:34](../../../cli/src/flow_report/mod.rs#L34)).
 
 ### 7. The guard class — novel findings at write time
 
@@ -208,7 +210,7 @@ own `deny`, the MCP relay to the same document, the guard's novel count, its sen
 and its refusal at `deny` on a judged language's write (Python) and its silence on an unjudged
 one (Rust), a moved finding and an unused parameter as not novel, the Stop line's `flow`
 object, and the daemon round trip
-([flow_face.rs:75](../../../cli/tests/it/flow_face.rs#L75), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
+([flow_face.rs:77](../../../cli/tests/it/flow_face.rs#L77), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
 [flow_audit.rs:46](../../../cli/tests/it/flow_audit.rs#L46), [daemon_flow.rs:18](../../../cli/tests/it/daemon_flow.rs#L18)).
 The family is one row of the parity table, one hub renderer of the GUI and one tool of the MCP
 catalogue; this booklet is under the citations gate.

@@ -20,7 +20,7 @@ import CE.Lang.Spec (Language (..))
 import Data.Aeson (Value (..), object, (.=))
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
-import Data.List (sortOn)
+import Data.List (intercalate, sortOn)
 
 doc :: DocFamily
 doc = docFamily "flow" schemaId statement known assemble ["kinds" .= kinds, "judged" .= judgedLangs]
@@ -61,17 +61,23 @@ judgedLangs :: [Integer]
 judgedLangs = [toInteger (lgCode l) | l <- languages, lgFlowJudged l]
 
 -- | The tables read by file hold one row per file; every kind is one
--- of the four.
+-- of the four. A `shown` row of −1 is a `--kind` name the measuring
+-- side found nowhere in this catalogue: refused, the first such row
+-- named, with the names the catalogue does list.
 known :: DocReq -> Maybe String
 known req =
   asum
     [ dense req "langs" (range req "files")
     , dense req "rankFiles" (range req "files")
     , codes req "findings" 2 0 top
+    , unnamed
     , codes req "shown" 0 0 top
     ]
  where
   top = toInteger (length kinds) - 1
+  unnamed = case [i | (i, [-1]) <- zip [0 :: Int ..] (rows req "shown")] of
+    i : _ -> Just ("shown " <> show i <> ": unknown kind; the catalogue lists " <> intercalate ", " kinds)
+    [] -> Nothing
 
 assemble :: DocReq -> Value
 assemble req =

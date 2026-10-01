@@ -9968,7 +9968,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|24f391b94133166e|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 169,
+    "line": 164,
     "text": "fn glob_faults(root: &Path, program: &Program) -> Vec<(String, String)> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|38995ca156c29327|0": {
@@ -9979,12 +9979,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|6d479bd5450d53e7|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 43,
+    "line": 38,
     "text": "pub fn question(text: &str) -> String {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|b43a275db29321f1|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 229,
+    "line": 224,
     "text": "impl Resolve for Names {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|1dddd95dd80f8269|0": {
@@ -10187,27 +10187,27 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 141,
+    "line": 140,
     "text": "fn sugar_aggregates_arithmetic_and_every_program_error_go_the_same_road() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|b01bf384f3002998|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 232,
+    "line": 231,
     "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 88,
+    "line": 87,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|1": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 88,
+    "line": 87,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|e86b28abce63cf8a|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 173,
+    "line": 172,
     "text": "fn rules_is_a_gate_on_the_documents_violations() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
@@ -10380,12 +10380,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|e8d2a5abc1d0b176|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 56,
+    "line": 61,
     "text": "errorNames :: [String]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|f4c564caae382736|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 94,
+    "line": 99,
     "text": "assemble :: String -> DocReq -> Value"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|7ae381ed02bd7ae3|0": {
@@ -10603,24 +10603,24 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ee74b95db080349c|0": {
     "target": "../../../cli/src/flow_report/face.rs",
-    "line": 158,
+    "line": 162,
     "text": "fn placed(files: &[Lowered], verdict: &Verdict) -> Vec<[i64; 6]> {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|26e3f6ff7ae4851d|0": {
+    "target": "../../../cli/src/flow_report/mod.rs",
+    "line": 23,
+    "end": 36,
+    "text": "pub const ADVISORY: u8 = 3;"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|5150f690006b8d0b|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 65,
+    "line": 64,
     "text": "pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|98dfcfb680e6d525|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 35,
+    "line": 34,
     "text": "pub fn judged(lang: Lang, kind: u8) -> bool {"
-  },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|aa6492df5ec3eede|0": {
-    "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 23,
-    "end": 40,
-    "text": "pub const KINDS: [&str; 4] = [\"unreachable\", \"dead_store\", \"unused_local\", \"unused_param\"];"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/report.rs|f2ac495bc01d8be6|0": {
     "target": "../../../cli/src/flow_report/report.rs",
@@ -10651,8 +10651,8 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|50350e88ad9ffccd|0": {
     "target": "../../../cli/src/main_flow.rs",
-    "line": 28,
-    "end": 48,
+    "line": 29,
+    "end": 49,
     "text": "pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/daemon_flow.rs|4e9632f41b3e85e1|0": {
@@ -10667,7 +10667,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_face.rs|86b3095f4c308d00|0": {
     "target": "../../../cli/tests/it/flow_face.rs",
-    "line": 75,
+    "line": 77,
     "text": "fn the_cli_prints_the_library_face_and_kind_narrows_only_the_listing() {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_guard.rs|c1d69d926211c89b|0": {
@@ -10724,9 +10724,19 @@
     "line": 53,
     "text": "rowCap :: Integer"
   },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|2136c600ab188a42|0": {
+    "target": "../../../core/app/CE/Flow/Document.hs",
+    "line": 78,
+    "text": "unnamed = case [i | (i, [-1]) <- zip [0 :: Int ..] (rows req \"shown\")] of"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|2c29d72534159ba4|0": {
+    "target": "../../../core/app/CE/Flow/Document.hs",
+    "line": 52,
+    "text": "advisory :: Integer"
+  },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 76,
+    "line": 82,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|010f702fd264722d|0": {
@@ -10851,7 +10861,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|39c8477982b58025|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 234,
+    "line": 230,
     "text": "/// (−1: nothing on this side)."
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|8acf28239d333bb2|0": {
@@ -10862,17 +10872,17 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|9f7d58911284bdf3|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 178,
+    "line": 174,
     "text": "/// node they land on (the same graph `ce deadcode` judges)."
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e315de48ee67ed2f|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 91,
+    "line": 87,
     "text": "fn degraded(core: &str, held: Held, why: String) -> Result<Value> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e34b025ba3a30b41|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 112,
+    "line": 108,
     "text": "fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -> Request {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|243bc494e8f3468c|0": {
@@ -11330,17 +11340,17 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|15aeee1b5cbd4f34|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 29,
+    "line": 25,
     "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|4e65db66c3f45cd4|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 82,
+    "line": 78,
     "text": "fn request(t: &Tables, r: &Reply) -> Request {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|e8ebd19464cabd3f|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 56,
+    "line": 52,
     "text": "fn line_count(root: &Path, path: &str) -> Result<i64> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/mod.rs|5ba8ae5afa201208|0": {

@@ -17,18 +17,14 @@ use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire::{self, Verdict};
 use anyhow::{Result, anyhow};
 use serde_json::Value;
-use std::collections::BTreeSet;
 use std::path::Path;
 
-/// The schema id the core's flow document carries (CE.Flow.Document);
-/// read here by the facts registry and the tests.
-pub const SCHEMA_ID: &str = "ce.flow-report/0.1.0";
-
 /// The whole leg: walked, lowered, judged, placed, laid out; `kinds`
-/// narrows the listed findings (empty = all), and an unknown kind name
-/// is refused.
+/// narrows the listed findings (empty = all), and a kind name the
+/// catalogue does not list is the core's refusal, named here by the
+/// name as given.
 pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
-    let shown = shown_kinds(kinds)?;
+    let shown = shown_kinds(kinds);
     let (_, lowered) = crate::scan::walk::each_surviving(root, |path, lang, bytes| {
         let text = String::from_utf8(bytes).ok();
         let rel = crate::scan::walk::rel_str(root, path);
@@ -42,34 +38,42 @@ pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
         files: &files,
         why: Why::default(),
     };
-    let req = request(&mut names, judgment, shown.as_ref());
-    document::assemble_over(core, held, req, &names)
+    let req = request(&mut names, judgment, shown.as_deref());
+    document::assemble_over(core, held, req, &names).map_err(|e| named_kind(e, shown.as_deref()))
 }
 
-/// The kinds a face asked to see, by name (the package's kind names,
-/// the core's); None = every kind.
-pub fn shown_kinds(kinds: &[String]) -> Result<Option<BTreeSet<u8>>> {
+/// The kinds a face asked to see, by name, in the order given and each
+/// once: a name the package's flow catalogue lists as its code, any
+/// other as −1, which the core refuses with the names it does list.
+/// None = every kind.
+pub fn shown_kinds(kinds: &[String]) -> Option<Vec<(String, i64)>> {
     let known = crate::tables::get().document.flow.kinds;
-    let names: Vec<&str> = kinds
-        .iter()
-        .flat_map(|k| k.split(','))
-        .map(str::trim)
-        .filter(|k| !k.is_empty())
-        .collect();
-    if names.is_empty() {
-        return Ok(None);
+    let mut shown: Vec<(String, i64)> = Vec::new();
+    let names = kinds.iter().flat_map(|k| k.split(',')).map(str::trim);
+    for name in names.filter(|k| !k.is_empty()) {
+        if shown.iter().all(|(seen, _)| seen != name) {
+            let code = known.iter().position(|k| *k == name);
+            shown.push((name.to_string(), code.map_or(-1, |i| i as i64)));
+        }
     }
-    names
-        .iter()
-        .map(|n| match known.iter().position(|k| k == n) {
-            Some(i) => Ok(i as u8),
-            None => Err(anyhow!(
-                "unknown kind {n:?}: expected {}",
-                known.join(" | ")
-            )),
-        })
-        .collect::<Result<BTreeSet<u8>>>()
-        .map(Some)
+    (!shown.is_empty()).then_some(shown)
+}
+
+/// The core's refusal of a `shown` row it does not list, named by the
+/// kind as the face was given it; any other error as it is.
+fn named_kind(e: anyhow::Error, shown: Option<&[(String, i64)]>) -> anyhow::Error {
+    let text = e.to_string();
+    let Some((head, listed)) = text.split_once(": unknown kind; ") else {
+        return e;
+    };
+    let row = head
+        .rsplit("shown ")
+        .next()
+        .and_then(|i| i.parse::<usize>().ok());
+    match row.and_then(|i| shown?.get(i)) {
+        Some((name, _)) => anyhow!("flow document: unknown kind {name:?}; {listed}"),
+        None => e,
+    }
 }
 
 /// The core asked once over every lowered unit, over the face's link:
@@ -97,7 +101,7 @@ fn ask(held: &mut Held, files: &[Lowered]) -> Result<Result<Verdict, String>> {
 fn request(
     names: &mut Names,
     judgment: Result<Verdict, String>,
-    shown: Option<&BTreeSet<u8>>,
+    shown: Option<&[(String, i64)]>,
 ) -> Request {
     let files = names.files;
     let (verdict, degraded) = match judgment {
@@ -119,7 +123,7 @@ fn request(
         .rows("rankFiles", numbered(rank))
         .rows(
             "shown",
-            shown.map_or(Vec::new(), |s| s.iter().map(|k| [*k]).collect()),
+            shown.map_or(Vec::new(), |s| s.iter().map(|(_, k)| [*k]).collect()),
         )
         .rows("unlowered", unlowered)
         .rows("findings", found)

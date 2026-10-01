@@ -252,7 +252,7 @@ So a reply the core degraded to a request this side priced within both caps is a
 two sides' cap mirrors — an error naming both owners, never a document; a core without the family,
 or one that stops answering mid-run, gives a document with `degraded`, and a core that cannot be
 started is refused by name, since the document is the core's to lay out
-([wire.rs:149](../../../cli/src/merge/wire.rs#L149), [face.rs:91](../../../cli/src/merge/face.rs#L91)).
+([wire.rs:149](../../../cli/src/merge/wire.rs#L149), [face.rs:87](../../../cli/src/merge/face.rs#L87)).
 
 ### 4. The measuring side's rulings
 
@@ -275,12 +275,12 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
 4. The groups and the local pre-checks of §1; a member row's `unit` is the request-local member
    number (the core echoes it, never reads it), its `lines` the unit's line count or the
    fragment's kept run's (§1), its `fileIndeg` the reference graph's edges landing on the
-   member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:178](../../../cli/src/merge/face.rs#L178)).
+   member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:174](../../../cli/src/merge/face.rs#L174)).
 5. One report, `ce.merge-report/0.1.0`, for all three faces, laid out by the core over every
    chunk's rows joined, its counts tallied there, `merged_duplicates` (§1) beside them; each parameter labelled with every member's text at the parameter's first hole
    ([Document.hs:92](../../../core/app/CE/Merge/Document.hs#L92)). The text runs from the hole's first root
    to its last on that member — a leaf or relabel hole's node, a gap hole's whole forest — and an
-   empty side reads `""` ([face.rs:234](../../../cli/src/merge/face.rs#L234)).
+   empty side reads `""` ([face.rs:230](../../../cli/src/merge/face.rs#L230)).
 6. The T3 trees are built once for both families; `clone/1` never sends the new columns.
 7. The console prints the counts and the groups not sent, then per group a head line, its
    members — a trimmed member's run beside its span — and one line per parameter with every
@@ -293,7 +293,7 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
 
 `ce merge [--group <n>] [--format json]`, the MCP tool `merge_suggestions` and the GUI's merge
 family in the Reports hub all read the one document, which the core lays out (`document/1`) from
-every chunk's answer joined on this side ([Document.hs:73](../../../core/app/CE/Merge/Document.hs#L73), [face.rs:112](../../../cli/src/merge/face.rs#L112)).
+every chunk's answer joined on this side ([Document.hs:73](../../../core/app/CE/Merge/Document.hs#L73), [face.rs:108](../../../cli/src/merge/face.rs#L108)).
 The document holds the counts (the core's, and `merged_duplicates`), `unsendable`, and per group its family (`t1t2` / `t3`), whether it
 is a fragment, its members (`path`, `unit` as `path:key#nth` or null for a fragment, `lines` the
 clone-family span, `run` the lines sent and priced — `lines` again for a whole unit), the

@@ -217,6 +217,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
  where
   arch = head'' (requests "arch")
   merge = head'' (requests "merge")
+  flow = head'' (requests "flow")
   rowsSet t v r = setKey "rows" (setKey t v (orNull (at r "rows"))) r
   orNull = fromMaybe Null
   head'' = foldr const Null
@@ -231,6 +232,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , setKey "degraded" (toJSON (0 :: Int)) arch
     , setKey "degraded" (toJSON (0 :: Int)) (rowsSet "groups" (toJSON ([] :: [Value])) (rowsSet "members" (toJSON ([] :: [Value])) (rowsSet "holes" (toJSON ([] :: [Value])) (setKey "ranges" (object ["members" .= (0 :: Int), "why" .= (1 :: Int)]) (setKey "facts" (object ["nodes" .= (1 :: Int), "merged_duplicates" .= (0 :: Int), "not_isomorphic" .= (0 :: Int), "no_slot_table" .= (0 :: Int), "unbuilt" .= (0 :: Int), "over_cap" .= (0 :: Int)]) merge)))))
     , rowsSet "layers" (toJSON ([] :: [Value])) arch
+    , rowsSet "shown" (toJSON [[0 :: Int], [-1]]) flow
     ]
   wanted =
     [ "document: unknown family nope"
@@ -243,6 +245,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , "degraded: with rows files"
     , "degraded: with fact nodes"
     , "layers: not one row per slot in order"
+    , "shown 1: unknown kind; the catalogue lists unreachable, dead_store, unused_local, unused_param"
     ]
   dropKey k r = case r of
     Object o -> Object (KM.delete (Key.fromString k) o)

@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "196"
+      "value": "197"
     },
     {
       "id": "count:grammars#word",
@@ -178,7 +178,7 @@
     },
     {
       "id": "report:arch#schemaver",
-      "source": "cli/src/arch/face.rs (typed)",
+      "source": "core/app/CE/Arch/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.arch-report/0.1.0"
     },
@@ -258,7 +258,7 @@
     },
     {
       "id": "report:flow#schemaver",
-      "source": "cli/src/flow_report/face.rs (typed)",
+      "source": "core/app/CE/Flow/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.flow-report/0.1.0"
     },
@@ -288,7 +288,7 @@
     },
     {
       "id": "report:merge#schemaver",
-      "source": "cli/src/merge/face.rs (typed)",
+      "source": "core/app/CE/Merge/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.merge-report/0.1.0"
     },
@@ -300,13 +300,13 @@
     },
     {
       "id": "report:query#schemaver",
-      "source": "cli/src/query/face.rs (typed)",
+      "source": "core/app/CE/Query/Document.hs (querySchemaId)",
       "tier": "linked",
       "value": "ce.query-report/0.1.0"
     },
     {
       "id": "report:rules#schemaver",
-      "source": "cli/src/query/face.rs (typed)",
+      "source": "core/app/CE/Query/Document.hs (rulesSchemaId)",
       "tier": "linked",
       "value": "ce.rules-report/0.1.0"
     },

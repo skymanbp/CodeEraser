@@ -25,10 +25,6 @@ use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-/// The schema id the core's merge document carries
-/// (CE.Merge.Document); read here by the facts registry and the tests.
-pub const SCHEMA_ID: &str = "ce.merge-report/0.1.0";
-
 /// Reason names by code (CE.Merge.Cost): feasible, a position no
 /// parameter can stand for (a statement's or any other that is not an
 /// expression or a declared name — hence `position`, not `statement`),

@@ -9,6 +9,13 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 权威轨 v2.32 步 3C 目录不留副本（2026-10-01；Rust 里五族的 schema id 与 flow 的 kind 名常量删除，判决与文档字节不动，分数与 1.8.0 可比；可见变化一处：`ce flow --kind` 给了目录里没有的名字，此前 Rust 在走查前按包拒为 `unknown kind "x": expected a | b …`，此后判决照常走完、文档时刻由核拒，CLI 印 `flow document: unknown kind "x"; the catalogue lists …`，仍退 2）：
+
+- **核**：`CE.Flow.Document` 把 `shown` 行 −1 拒为 `shown <i>: unknown kind; the catalogue lists unreachable, dead_store, unused_local, unused_param`（7.8.0 未发布，同一 minor 内加性）；`CE.Query.Document` 的两个 schema id 成具名常量 `querySchemaId` / `rulesSchemaId`；golden `document/golden` 加一对（第 15 对），`DocumentProps` 的拒绝腿加一例。
+- **Rust**：删 `arch::face` / `flow_report::face` / `merge::face` / `query::face` 的 `SCHEMA_ID`（含 `RULES_SCHEMA_ID`）与 `flow_report::KINDS`；`kind_name` / `kinds_json` 读包的 `document.flow.kinds`；`shown_kinds` 按包译码、目录里没有的名字送 −1，`named_kind` 把核的拒绝换回用户给的名字；`ce flow --kind` 的帮助句改为「须是核的 flow 目录列出的种类；目录里没有的名字按名拒绝并列出目录」，`main_lang.rs` 中文行同改，`docs/reference/cli.md` 重生成。核答出文档之前就要 schema id 的 Rust 路径：没有。
+- **测试**（子仓）：事实登记表 `it/facts/report.rs` 的五族 `report:*#schemaver` 改读核的常量（`core_ids`：一张 `<族> <文件> <常量>` 表；cli/src 再拼同一个 id 即按名拒）；`it/docs_consts.rs` 的 schema 芯片路由改到核的文件与常量名；`it/document_catalogue.rs` 两腿改为包的目录 = 冻结的 `tables/golden`、五族绑定后文档的 `schema` = 目录；`unit/flow_report/face.rs` 新腿 `an_unknown_kind_is_the_cores_refusal_named_by_the_name_given`；`it/flow_face.rs` 断言整句拒绝；各族 face 测试里的 schema id 改为测试自己观察到的字面。
+- **文档**：设计册 §5.4（Rust 的减量在步 6 兑现）、§5.5（3C 一条、门的读法）、§12 行 3、§13 第 21 条；VERSIONING 7.8.0 条补 flow 的 `shown` 拒绝；方法学册 17 的 `--kind` 一句。
+
 **无默认档位变更。** 权威轨 v2.32 步 3B 文档切换（2026-10-01；`ce arch` / `ce query` / `ce rules` / `ce flow` / `ce merge` 与它们的 MCP 工具、GUI 页一律问核的 `document/1` 并绑定，Rust 不再装配这五份文档；判决与文档字节不动，分数与 1.8.0 可比；可见变化只有一类：文档时刻够不着核〔`--core` 指向不存在的路径、只答 hello 的核〕此前印降级文档、此后具名拒绝退 2）：
 
 - **Rust**：新 `cli/src/document.rs`——`Request` 构造器（`empty` / `zero` 补齐陈述要的每个键）、`Held`（一个面一条核链，判决与文档同走；判决请求失败的链作废、文档时刻另起）、`assemble_over` / `assemble`、`bind` + `trait Resolve`、`Why`（类别 `why` 的本侧文本）、`ranks`；四个 `face.rs` 只剩判决、请求装配与解析器，读者结构搬进 `<族>/report.rs`（`Deserialize`，键为 `String`），`query/rows.rs` 装 query 的判决行；四个 CLI 命令经 `main_prelude::document_face` 一条路（读、退出码规则、再印），`faces::flow` 改为 `face::run` 的再导出、`arch::face::document` 删除；`tables/pack.rs` 读包的 `document.flow.kinds`。

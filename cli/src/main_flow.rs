@@ -19,8 +19,9 @@ pub struct FlowArgs {
     /// (unused parameters are advisory and never count)
     #[arg(long)]
     check: bool,
-    /// Show only these kinds, comma-separated (unreachable, dead_store,
-    /// unused_local, unused_param); the counts stay whole
+    /// Show only these kinds, comma-separated: a kind the core's flow
+    /// catalogue lists; an unknown name is refused with the list. The
+    /// counts stay whole
     #[arg(long, value_delimiter = ',')]
     kind: Vec<String>,
 }

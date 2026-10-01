@@ -114,7 +114,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 `dead` mirrors `ce deadcode`'s file-tier verdict by construction: an entry is a node with any
 role bit (every role lands in the core's entry mask), and a reference of any rung is followed
 except the two liveness-inert kinds the graph judgment drops the same way. The integration leg
-holds the two roads to one file ([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)).
+holds the two roads to one file ([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)).
 `ce query --prelude` prints the text verbatim.
 
 ### 4. The token stream
@@ -144,7 +144,7 @@ fault answers every error it found, each at a token; a program with an error ans
 ([Check.hs:42](../../../core/app/CE/Query/Check.hs#L42)). The codes: 1 syntax, 2 unknown
 predicate, 3 arity, 4 sort, 5 unsafe variable, 6 unstratifiable negation, 7 prelude predicate
 redefined, 8 aggregate shape, 9 anonymous head ([Cost.hs:152-153](../../../core/app/CE/Query/Cost.hs#L152),
-[Document.hs:56](../../../core/app/CE/Query/Document.hs#L56)).
+[Document.hs:61](../../../core/app/CE/Query/Document.hs#L61)).
 
 - **Arity.** A fact predicate's arity is the schema's; a program predicate's is fixed by its
   first appearance.
@@ -251,11 +251,11 @@ and the named reason when the core did not judge. The core lays the document out
 since proto 7.8.0) from the program's facts, its answered tables and the goals as spelled, which
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
-([Document.hs:94](../../../core/app/CE/Query/Document.hs#L94), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
-[face.rs:229](../../../cli/src/query/face.rs#L229), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
-`?-` in front, `.` behind — unless written ([face.rs:43](../../../cli/src/query/face.rs#L43)); a glob
+([Document.hs:99](../../../core/app/CE/Query/Document.hs#L99), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
+[face.rs:224](../../../cli/src/query/face.rs#L224), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
+`?-` in front, `.` behind — unless written ([face.rs:38](../../../cli/src/query/face.rs#L38)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
-([face.rs:169](../../../cli/src/query/face.rs#L169)).
+([face.rs:164](../../../cli/src/query/face.rs#L164)).
 
 - **`ce query <body> [--why] [--file <rules>] [--prelude]`** answers one question built on the
   rules file's rules; exit 0 when judged, 2 on a program error or a core that could not judge.
@@ -291,7 +291,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
 All three go through two library functions, so the document cannot differ by face
 ([faces.rs:190](../../../cli/src/faces.rs#L190), [faces.rs:203](../../../cli/src/faces.rs#L203)); the
 integration leg holds the CLI's JSON to the library's byte for byte
-([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)), and the parity table claims the
+([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).
 
 ### 10. The repository's own rules
@@ -352,8 +352,8 @@ a degraded and a skewed reply ([legend.rs:12](../../../cli/tests/unit/query/lege
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or
-default ([query_face.rs:141](../../../cli/tests/it/query_face.rs#L141), [query_face.rs:173](../../../cli/tests/it/query_face.rs#L173),
-[query_face.rs:232](../../../cli/tests/it/query_face.rs#L232)). The family is one row of the parity
+default ([query_face.rs:140](../../../cli/tests/it/query_face.rs#L140), [query_face.rs:172](../../../cli/tests/it/query_face.rs#L172),
+[query_face.rs:231](../../../cli/tests/it/query_face.rs#L231)). The family is one row of the parity
 table, one screen of the GUI roster and two tools of the MCP catalogue; docs cite implementation
 lines (this booklet is under the citations gate), and the caps above bind to their source names
 under `docs_consts`.

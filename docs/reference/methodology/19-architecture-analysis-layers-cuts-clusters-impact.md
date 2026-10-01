@@ -19,7 +19,7 @@ are Haskell's, over the wire family `arch/1` ([Arch.hs:5-19](../../../core/app/C
 
 | table | row | read off |
 |---|---|---|
-| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([tables.rs:54](../../../cli/src/arch/tables.rs#L54), [face.rs:56](../../../cli/src/arch/face.rs#L56)) |
+| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([tables.rs:54](../../../cli/src/arch/tables.rs#L54), [face.rs:52](../../../cli/src/arch/face.rs#L52)) |
 | `dirs` | `[D, parent]` | the structure family's directory tree over those paths: the root row 0 with parent −1, every other parent an earlier row, since the tree enters every ancestor before its child ([tables.rs:129](../../../cli/src/arch/tables.rs#L129)) |
 | `edges` | `[F, G, w]` | every graph arc from one measured file to another — any kind, any rung, through the structure family's own file join — plus an arc to a Markdown section, folded onto the section's file; a self pair is dropped and `w` counts the arcs between the pair ([rows.rs:89](../../../cli/src/structure/rows.rs#L89), [tables.rs:96](../../../cli/src/arch/tables.rs#L96)) |
 | `pkgEdges` | `[F, D, w]` | the arcs whose target is a package node — a Go, R or Java package import, a Markdown directory link — onto the package's directory; a package outside the tree has no row, and a reference into the file's own directory is kept for the core to fold |
@@ -93,7 +93,7 @@ directory ([Layers.hs:35](../../../core/app/CE/Arch/Layers.hs#L35), [Cost.hs:44]
 
 1. The node universe is the structure family's: the deadcode wire of a refreshed index, its
    measured file nodes in path order — so the two families place a file in one tree
-   ([face.rs:29](../../../cli/src/arch/face.rs#L29)).
+   ([face.rs:25](../../../cli/src/arch/face.rs#L25)).
 2. The directories are `structure::tree`'s, which numbers a parent before its child; the table
    checks it by name rather than renumber ([tables.rs:129](../../../cli/src/arch/tables.rs#L129)).
 3. `lines` is `ce scan`'s count of the file's bytes, not a second one.
@@ -111,7 +111,7 @@ arc's), and each cluster's majority directory, read by the rule the misplaced ro
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
 misplaced files never name two majorities. This side sends the tables back with each path's place
 in string order and puts the paths back ([Document.hs:94](../../../core/app/CE/Arch/Document.hs#L94), [Document.hs:120](../../../core/app/CE/Arch/Document.hs#L120),
-[face.rs:82](../../../cli/src/arch/face.rs#L82)).
+[face.rs:78](../../../cli/src/arch/face.rs#L78)).
 
 ### 4. The faces and the document
 

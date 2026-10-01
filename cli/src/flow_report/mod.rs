@@ -18,16 +18,15 @@ use crate::flow::wire::Finding;
 use crate::scan::lang::Lang;
 use serde_json::{Value, json};
 
-/// The kind names by code (the core's finding kinds, CE.Flow.Cost):
-/// the one spelling every face and feed uses.
-pub const KINDS: [&str; 4] = ["unreachable", "dead_store", "unused_local", "unused_param"];
-
 /// The kind that is advisory in every language (booklet §13 item 8):
 /// an unused parameter is often an interface's, never a verdict.
 pub const ADVISORY: u8 = 3;
 
+/// A kind's name by code, as the package's flow catalogue lists it
+/// (CE.Flow.Document); "?" for a code the catalogue does not list.
 pub fn kind_name(kind: u8) -> &'static str {
-    KINDS.get(usize::from(kind)).copied().unwrap_or("?")
+    let kinds = crate::tables::get().document.flow.kinds;
+    kinds.get(usize::from(kind)).copied().unwrap_or("?")
 }
 
 /// A finding is judged when its language passed the precision gate
@@ -90,15 +89,18 @@ pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {
     })
 }
 
-/// Findings counted by kind, as the feeds carry them.
+/// Findings counted by kind under the catalogue's kind names, every
+/// kind present (zeros kept), as the feeds carry them.
 pub fn kinds_json(kinds: impl IntoIterator<Item = u8>) -> Value {
-    let mut n = [0u64; 4];
+    let names = crate::tables::get().document.flow.kinds;
+    let mut n = vec![0u64; names.len()];
     for k in kinds {
         if let Some(slot) = n.get_mut(usize::from(k)) {
             *slot += 1;
         }
     }
-    json!({ KINDS[0]: n[0], KINDS[1]: n[1], KINDS[2]: n[2], KINDS[3]: n[3] })
+    let counted = names.iter().zip(n).map(|(k, c)| (k.to_string(), json!(c)));
+    Value::Object(counted.collect())
 }
 
 #[cfg(test)]

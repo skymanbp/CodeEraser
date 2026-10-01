@@ -22,8 +22,13 @@ import qualified Data.IntMap.Strict as IM
 import Data.Maybe (fromMaybe)
 
 queryDoc, rulesDoc :: DocFamily
-queryDoc = family "query" "ce.query-report/0.1.0"
-rulesDoc = family "rules" "ce.rules-report/0.1.0"
+queryDoc = family "query" querySchemaId
+rulesDoc = family "rules" rulesSchemaId
+
+-- | The two documents' schema ids.
+querySchemaId, rulesSchemaId :: String
+querySchemaId = "ce.query-report/0.1.0"
+rulesSchemaId = "ce.rules-report/0.1.0"
 
 family :: String -> String -> DocFamily
 family name schemaId = docFamily name schemaId statement aligned (assemble schemaId) []

@@ -33,11 +33,6 @@ const TABLES: [&str; 7] = [
     "faults", "heads", "goals", "preds", "answers", "proof", "errors",
 ];
 
-/// The two documents' schema ids (CE.Query.Document); read here by the
-/// facts registry and the tests.
-pub const SCHEMA_ID: &str = "ce.query-report/0.1.0";
-pub const RULES_SCHEMA_ID: &str = "ce.rules-report/0.1.0";
-
 /// A question as the user typed it, in query form: `?-` in front and
 /// `.` behind unless written.
 pub fn question(text: &str) -> String {

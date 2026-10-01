@@ -26,3 +26,5 @@
 {"code":"contract","id":13,"message":"findings 0: column 0 out of range files","proto":"7.8.0","type":"error"}
 {"proto":"7.0.0","type":"document.request","id":14,"family":"arch","ranges":{"files":1,"dirs":1,"why":1},"rows":{"files":[[0,0,1]],"dirs":[[0,-1]],"edges":[],"pkgEdges":[],"focus":[],"layers":[[0,0]],"cuts":[],"clusters":[[0,0]],"misplaced":[],"impact":[],"metrics":[[0,0,0,-1]],"rankFiles":[[0,0]],"rankDirs":[[0,1]]},"facts":{},"degraded":0}
 {"code":"contract","id":14,"message":"degraded: with rows files","proto":"7.8.0","type":"error"}
+{"proto":"7.0.0","type":"document.request","id":15,"family":"flow","ranges":{"files":1,"why":1},"rows":{"langs":[[0,3]],"rankFiles":[[0,0]],"shown":[[0],[-1]],"unlowered":[],"findings":[[0,0,0,1,1,-1]],"refused":[]},"facts":{"units":1,"stmts":1,"vars":0,"uses":0,"dynamicUnits":0},"degraded":null}
+{"code":"contract","id":15,"message":"shown 1: unknown kind; the catalogue lists unreachable, dead_store, unused_local, unused_param","proto":"7.8.0","type":"error"}
