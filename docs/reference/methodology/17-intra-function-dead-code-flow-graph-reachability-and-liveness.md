@@ -142,7 +142,7 @@ judge is named in the line, never a decision ([flow.rs:114](../../../cli/src/gua
 a side the core refuses, even for one unit, is degraded whole and named in the line: the
 drop-and-ask-again of §1 is the batch road `ce flow` walks, and the hook keeps a write's cost to
 one question per side. Promotion follows the plan's §4.2 rule: a
-class with no FPR record of its own stays at observe. The observe feed (`ce.observe/0.12.0`,
+class with no FPR record of its own stays at observe. The observe feed (since `ce.observe/0.12.0`,
 additive) receives a `flow` line when the after side has a finding or a side is degraded: the
 before and after counts, the novel count, the kinds and whether the language is judged.
 

@@ -7539,66 +7539,66 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/health.rs|d99915876390bb87|0": {
     "target": "../../../cli/src/health.rs",
-    "line": 59,
+    "line": 66,
     "text": "let mode = crate::config::tier_of(&Config::load(root), crate::config::PROMOTED_DEFAULT);"
+  },
+  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|0117ef516d0e46ec|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 104,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|0b512b5851758714|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 94,
-    "end": 96,
+    "line": 101,
+    "end": 103,
     "text": "/// 0.2.0 adds `session_id`: without it the D2-2 session count and"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 212,
-    "end": 214,
+    "line": 205,
+    "end": 207,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 228,
-    "end": 241,
+    "line": 221,
+    "end": 234,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|934ce63b17bd172b|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 282,
-    "end": 293,
+    "line": 275,
+    "end": 286,
     "text": "let Ok(feed) = tail(&root.join(\".ce/observe.ndjson\"), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 87,
-    "end": 90,
+    "line": 94,
+    "end": 97,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|cfd91ad7337d1de8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 92,
+    "line": 99,
     "text": "/// 0.4.0 adds the `budget` event (§4.2 step-2 per-rule firing records)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 18,
-    "end": 58,
+    "line": 20,
+    "end": 60,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 82,
-    "end": 85,
+    "line": 89,
+    "end": 92,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 291,
-    "end": 307,
+    "line": 284,
+    "end": 300,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
-  },
-  "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 97,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.12.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -8860,22 +8860,22 @@
     "end": 15,
     "text": "//! The PreToolUse leg of the tombstone class (plan v2.26 step 4,"
   },
+  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|0117ef516d0e46ec|0": {
+    "target": "../../../cli/src/hookio.rs",
+    "line": 104,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
+  },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 48,
-    "end": 67,
+    "line": 55,
+    "end": 74,
     "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 273,
-    "end": 289,
+    "line": 266,
+    "end": 282,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
-  },
-  "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
-    "target": "../../../cli/src/hookio.rs",
-    "line": 97,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.12.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
     "target": "../../../cli/src/scan/opaque.rs",
@@ -9382,10 +9382,10 @@
     "end": 10,
     "text": "//! The Stop audit's similar leg (plan v2.29 step 6, spec §六): every"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|fa3188a6db78884c|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|0117ef516d0e46ec|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 97,
-    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.12.0\";"
+    "line": 104,
+    "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|72c10c59b78ec5d9|0": {
     "target": "../../../cli/src/main_similar.rs",
@@ -9707,11 +9707,11 @@
     "line": 39,
     "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | tab:similar, similar_report | mcp:similar_units | |"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|b9ce43214e76429d|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|007a06c4e5aed4f8|0": {
     "target": "../../../cli/tests/it/observe_feed.rs",
     "line": 1,
     "end": 10,
-    "text": "//! Observe-feed contract (ce.observe/0.12.0): the NDJSON feed is the"
+    "text": "//! Observe-feed contract (ce.observe/0.13.0): the NDJSON feed is the"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|55926dc0727ec714|0": {
     "target": "../../../cli/tests/it/similar_face.rs",

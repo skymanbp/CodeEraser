@@ -215,7 +215,7 @@ request per arm over one core link ([face.rs:58-75](../../../cli/src/similar/fac
   carries the role bit: an advisor's line for the evaluation ledger, never a reason to block.
   No new unit, no role hit and nothing degraded = no key at all; the feed schema moved
   additively to `ce.observe/0.10.0` ([audit/similar.rs:1-10](../../../cli/src/audit/similar.rs#L1),
-  [hookio.rs:97](../../../cli/src/hookio.rs#L97)). The tombstone leg and this leg read the
+  [hookio.rs:104](../../../cli/src/hookio.rs#L104)). The tombstone leg and this leg read the
   session's changed pairs once, through one git batch (booklet 14 §1).
 
 The write-time hook does **not** run it: a PreToolUse budget does not hold a retrieval, and a
@@ -292,7 +292,7 @@ holds both oracle generations to their floors. The advisor is one row of the thr
 table — CLI, GUI tab and Tauri command, MCP tool — and the fifteenth tool in the MCP catalogue
 ([face_parity.rs:39](../../../cli/tests/it/face_parity.rs#L39)). Docs cite implementation lines
 (this booklet is under the citations gate), the constants above bind to their source names
-under `docs_consts`, and the feed golden (`ce.observe/0.12.0`) carries no `similar` object by design: its
+under `docs_consts`, and the feed golden carries no `similar` object by design: its
 staged twin shares one name word where the core's role bit wants two, so `similar_face.rs` seeds the pair
 that earns the key ([feed.golden.json](../../../contracts/fixtures/observe-feed/feed.golden.json),
 [observe_feed.rs:1-10](../../../cli/tests/it/observe_feed.rs#L1)).

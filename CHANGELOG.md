@@ -9,6 +9,14 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 权威轨 v2.32 步 2 后续：钩子读不到核的定义包时不再无声（2026-10-01，主会话裁定）。步 2 起钩子度量用的每张表都来自核的 `tables/1` 包；读不到（没有核、核早于 7.7.0）时 `hookio::gated_envelope` 让钩子不度量、退 0、从不拒写，原先只在 stderr 说一句——而 Claude Code 里退 0 的 stderr 没人看得见。
+
+- **留痕**：新 `cli/src/hookio/inert.rs`，闸门 `gate` 把答案分三态（`Shut` / `Inert(原因)` / `Open`），`gated_envelope` 只是它的包装；不度量的钩子照旧写 stderr，再往 observe feed 落一行——PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`，`degraded` 为真、`reason` 是 CLI 拒绝时的同一句（`tables::load` 的错误文本），信封带 `tool_input.file_path` / `tool_use_id` 时一并记下。feed `ce.observe/0.12.0` → **0.13.0** 加性（`settle` / `health` 两个事件名与 `probe` / `stop_audit` 行上的 `reason` 是新的），既有键形不动；`ce doctor` 的降级计数按 `degraded` 读，自然算进去。
+- **SessionStart 一行**：`health.rs` 走 `hookio::gate`，`Inert` 时那一行写 `[ce <版本> | tables: unavailable — <原因>]`（中文面「定义表：不可用」），每个会话说一次；能度量时字节不变。
+- **子仓腿**：新 `it/hooks_inert.rs` 两条——`CE_CORE_BIN` 指向不存在的路径时 PreToolUse / PostToolUse / Stop 三个钩子退 0、stdout 为空（不拒写）、feed 末行是各自的事件且 `degraded` 真、`reason` 以 `core unavailable` 开头；SessionStart 那一行写出 `tables: unavailable — core unavailable`、feed 末行是 `health`。反向探针：去掉 `trace` 调用后两条都红，还原后逐字节同。`common::session_start_line_env` 收走 `update_e2e.rs` 与新腿各自拼的 SessionStart 信封；feed golden 只动 `schema` 字面（`observe_feed::` 重祝福）；`flow_audit.rs` 改读 `OBSERVE_SCHEMA`。
+- **文档**：`plugin/README.md` feed 一段、`hookio::OBSERVE_SCHEMA` 0.13.0 条、how 页双语 feed schema 芯片、册 15 / 17 两处把 feed 版本写成现状的句子改成不随版本漂移的说法；册 11 / 14 / 15 引 `OBSERVE_SCHEMA` 那一行的三处与册 15 引 `observe_feed.rs` 头行的一处随 0.13.0 失效，重瞄后按名弃（`CE_DROP_VANISHED=fa3188a6db78884c,b9ce43214e76429d`）。
+- **门读数**（车道 `lane/hooks-degraded`，车道核 proto 7.7.0）：`cabal test` 704 ok；主 check 919（地板 911；axes 0:87 2:295 6:187）/ dedup 42 / scan 103 warn 0 fail / docdup 0 / deadcode 0 / erase 0 eraseable 8 advisory / rules 8 ok；子 check 949（地板 949）/ dedup 91 / scan 45 warn 0 fail / docdup 0 / deadcode 0 / erase 0 eraseable 5 advisory / rules ok；clippy `--locked --all-targets -D warnings` + fmt 清（cli 与 `gui/src-tauri`）；全量 lib 537 / it 535 绿 1 红 32 ign（corelink 1、daemon 2 绿），红的是 `layout_tree`（车道没有 `.ccm/`，环境）；ADR-006 两根重立无超容差（主连续 9296 → 9302、软线 347 → 346，子 5310 → 5315），查重预算 42 / 91 未动。
+
 **无默认档位变更。** 权威轨 v2.32 步 2 定义进核 B（2026-10-01；测量侧每张定义表改从核的 `tables/1` 包读，Rust 里不再有定义文本；判决代码零改动，十语料 + 自仓十三面新 / 旧二进制 143 对逐字节同，分数与 1.8.0 可比；两族精度册退役、下一提交在本提交的干净树上重生成）：
 
 - **Rust 的形**（设计册 `docs/reference/authority-track.md` §4.5）：`cli/src/tables.rs` + `tables/{fetch,cache,pack,leak}.rs`——包读进一个 `Tables` 记录，每个表结构由 `leaked!` 声明：serde 读它的所有权孪生、再把每个字段泄漏成消费者原来的 `&'static` 形（包有 JSON 转义，借用读不出），消费者签名不变。三级来源：进程内存 → `<根>/.ce/tables-<ce>-<proto>.json` → 核；缓存身份 = `ce` 版本、`proto`、答包那份核二进制的 `{path, len, mtime_ns}`，完整性 = Rust 对包字节算的 fnv1a64，任一不符或文件坏了就重取覆盖。根由入口设：`main_cmds::or_cwd`（所有带根的命令与 MCP）、`hookio::gated_envelope`、daemon `serve`（离开根之前）、GUI `commands::task`；`ce eject` 只读不写缓存（`tables::transient`）。新共用件 `proc::on_path`（`setup/claude.rs` 同读）。

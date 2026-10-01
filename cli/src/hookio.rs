@@ -7,18 +7,25 @@
 // Root anchoring lives in crate::root (one ascent for the CLI, MCP,
 // GUI and the hooks alike); this is the hooks' own door to it — the
 // envelope cwd arrives as a &str, so the door keeps that shape.
-// Private: gated_envelope below is its only caller (no caller outside
-// this file remains, so there is no path to keep open).
+// Private: the gate (hookio/inert.rs) is its only caller (no caller
+// outside this module remains, so there is no path to keep open).
 fn project_root(cwd: &str) -> std::path::PathBuf {
     crate::root::project_root(Path::new(cwd))
 }
 
+mod inert;
+pub use inert::{Gate, gate};
 use std::path::Path;
 
 /// Observe-feed line schema id, stamped on every entry; bump on any
 /// shape change (plan §7.1 discipline — the feed is the M4
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
+///
+/// 0.13.0 (plan v2.32 step 2 follow-up): a hook left inert by an
+/// unreadable definition package writes one line — `probe` /
+/// `settle` / `stop_audit` / `health` with `degraded` true and
+/// `reason` (hookio/inert.rs). Every prior key keeps its shape.
 ///
 /// 0.12.0 (plan v2.31 step 5): the `flow` event (`mode` = `[flow]
 /// tier`; a `flow` object: `units`, `before` / `after` finding counts,
@@ -94,7 +101,7 @@ use std::path::Path;
 /// 0.2.0 adds `session_id`: without it the D2-2 session count and
 /// the D2-1 sample purity could not be measured (49 entries, one hour,
 /// no way to tell one session from ten).
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.12.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.13.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a
@@ -123,24 +130,10 @@ pub fn gated_envelope<T: serde::de::DeserializeOwned>(
     event: &str,
     base: impl Fn(&T) -> (&str, &str),
 ) -> Option<(T, std::path::PathBuf)> {
-    let env = read_envelope::<T>()?;
-    let (got, cwd) = base(&env);
-    if got != event || cwd.is_empty() {
-        return None;
+    match gate(event, base) {
+        Gate::Open(env, root) => Some((env, root)),
+        Gate::Shut | Gate::Inert(_) => None,
     }
-    let root = project_root(base(&env).1);
-    if !crate::root::is_anchored(&root) {
-        return None;
-    }
-    // no package (no core, a pre-7.7.0 core) = nothing to measure
-    // with: the hook stays inert and says why on stderr — exit 2 here
-    // would read as a PreToolUse deny
-    crate::tables::anchor(&root);
-    if let Err(why) = crate::tables::load() {
-        eprintln!("ce: {why}");
-        return None;
-    }
-    Some((env, root))
 }
 
 /// Read the hook envelope from stdin and deserialize it.

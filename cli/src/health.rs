@@ -23,12 +23,19 @@ struct Envelope {
 
 /// Entry point for `ce health --hook`. Never fails outward.
 pub fn run_hook() -> ExitCode {
-    let gate =
-        crate::hookio::gated_envelope("SessionStart", |e: &Envelope| (&e.hook_event_name, &e.cwd));
-    let Some((_env, root)) = gate else {
-        return ExitCode::SUCCESS;
-    };
-    let line = status_line(&root);
+    use crate::hookio::Gate;
+    let line =
+        match crate::hookio::gate("SessionStart", |e: &Envelope| (&e.hook_event_name, &e.cwd)) {
+            Gate::Open(_, root) => status_line(&root),
+            // the hooks cannot measure this session: said once, here — the
+            // feed line is the gate's (hookio/inert.rs)
+            Gate::Inert(why) => i18n::line(
+                "[ce {} | tables: unavailable — {}]",
+                "〔ce {} | 定义表：不可用——{}〕",
+                &[&env!("CARGO_PKG_VERSION"), &why],
+            ),
+            Gate::Shut => return ExitCode::SUCCESS,
+        };
     let payload = serde_json::json!({
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",

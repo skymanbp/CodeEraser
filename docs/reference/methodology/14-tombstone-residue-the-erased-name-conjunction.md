@@ -276,7 +276,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:71-81](../../../cli/src/guard/tombstone.rs#L71),
   [guard/tombstone.rs:149-167](../../../cli/src/guard/tombstone.rs#L149),
-  [hookio.rs:273-289](../../../cli/src/hookio.rs#L273),
+  [hookio.rs:266-282](../../../cli/src/hookio.rs#L266),
   [proto.rs:73-80](../../../cli/src/daemon/proto.rs#L73),
   [say.rs:69-80](../../../cli/src/guard/say.rs#L69)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
@@ -306,8 +306,8 @@ the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `s
 carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:48-67](../../../cli/src/hookio.rs#L48),
-[hookio.rs:97](../../../cli/src/hookio.rs#L97)). The feed is the FPR ledger's raw material
+[hookio.rs:55-74](../../../cli/src/hookio.rs#L55),
+[hookio.rs:104](../../../cli/src/hookio.rs#L104)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated

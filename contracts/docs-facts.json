@@ -296,7 +296,7 @@
       "id": "report:observe#schemaver",
       "source": "cli/src/hookio.rs (typed)",
       "tier": "linked",
-      "value": "ce.observe/0.12.0"
+      "value": "ce.observe/0.13.0"
     },
     {
       "id": "report:query#schemaver",

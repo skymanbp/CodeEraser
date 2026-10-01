@@ -99,6 +99,7 @@ precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部
 FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格 0/125、宽读法 0/820；唯一 copy 正例 `1035f6b1` 漏过（召回 0/1），本批无默认档位变更；
 `similar` 对象（本会话新增的单元逐个问过同角色顾问：`rev`、`new_units`、`queried`，以及核的 top-1 带角色位时的 `rows` 行 `{unit,twin,score}`；无核或读不到索引时只记 `degraded`）同样永不出声：顾问不判决，评估台账见 [docs/EVAL-SET-SIMILAR.md](../docs/EVAL-SET-SIMILAR.md)；
 `flow` 事件行（PreToolUse 一次写入的前后两侧各降表经核 flow/1 判一次，后侧有发现才落一行：`before` / `after` 发现数、按 `(单元名, 种类, 变量名)` 多重集相减得的 `novel`、按种类计数的 `kinds`、语言是否在判决掩码 `judged`；`mode` 是类自己的 `[flow] tier`，出厂 observe）与 Stop / precommit / commitmsg 行上的 `flow` 对象（改动集里有单元的文件数、单元数、发现数、`kinds`、被判决的条数）自 feed 0.12.0 起加性出现；Stop 腿在任何档位都不拦停，站点清单在 `ce flow` 里；
+核的定义包读不到（没有核、核早于 7.7.0）时钩子不度量、退 0、从不拒写，但每个钩子各落一行（PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`）：`degraded` 为真、`reason` 是 CLI 拒绝时的同一句，PreToolUse / PostToolUse 行另带 `file` 与 `tool_use_id`，自 feed 0.13.0 起加性出现；`ce doctor` 的降级计数把它们算进去，SessionStart 那一行写「tables: unavailable — <原因>」，每个会话说一次；
 `session_id` 为 `null` 表示该条不属于任何会话；`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
 不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。
