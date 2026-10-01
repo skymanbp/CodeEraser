@@ -38,10 +38,10 @@ import qualified CE.Verdict.Cost as Cost
 import Data.Bits (bit, testBit, (.&.), (.|.))
 
 -- | One side's graph position (the Position.hs row minus its echoed
--- index, reduced to the fields the lattice reads). On the verdict/1
--- wire pFlags is structurally 0 (file-granularity flags never cross;
--- entry-ness is implied by reachIn) — the field stays because the
--- lattice's RG10 guard and its battery exercise it.
+-- index, reduced to the fields the lattice reads). pFlags carries the
+-- export axis alone: since 6.1.0 Candidates.hs sets bit 0 from the
+-- request's symbols table (entry-ness is implied by reachIn, so no
+-- other bit crosses), which arms the RG10 guard in production.
 data Pos = Pos
   { pIndeg :: Integer
   , pReach :: Integer

@@ -34,14 +34,16 @@ file total [seams.rs:205](../../../cli/src/structure/seams.rs#L205).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
 list against its own tail, so a file with `n` top-level units yields `n − 1` seams and a
-single-unit file yields none [Split.hs:193-208](../../../core/app/CE/Structure/Split.hs#L193). Seam
+single-unit file yields none [Split.hs:194-209](../../../core/app/CE/Structure/Split.hs#L194). Seam
 `u` cuts the file at line `end_u` into a prefix of `end_u` lines and a suffix of
 `total − end_u` lines.
 
 Each seam is priced to a triple `(u, benefitMilli, costMilli)`. Selection is the exact
 rational argmax over ROI, compared by cross-multiplied `b % c` rather than division —
 `maximumBy (comparing (\(_, b', c') -> b' % c'))`
-[Split.hs:177](../../../core/app/CE/Structure/Split.hs#L177). Cost is never zero because φ ≥ 1 by the
+[Split.hs:178](../../../core/app/CE/Structure/Split.hs#L178). Equal ROIs go to the **last** seam in
+file order: `maximumBy` keeps the later of equals (the reference battery `StructureEquivProps`
+pins it). Cost is never zero because φ ≥ 1 by the
 knob rule, so the ratio is always defined
 [Split.hs:158-160](../../../core/app/CE/Structure/Split.hs#L158).
 
@@ -49,7 +51,7 @@ knob rule, so the ratio is always defined
 
 Benefit is the graded-zone penalty the split gives back, computed on the **same curve the
 verdict family judges with** — `CE.Verdict.Soft.zonePenalty`, imported directly rather than
-re-derived [Split.hs:2-5,24,202](../../../core/app/CE/Structure/Split.hs#L2):
+re-derived [Split.hs:2-5,24,200](../../../core/app/CE/Structure/Split.hs#L2):
 
 ```
 p(x) = 0                              if x <= S
@@ -71,7 +73,7 @@ benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. 
 benefitMilli(u) = max 0 (floor (1000 · (p(total) − p(end_u) − p(total − end_u))))
 ```
 
-[Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199). The `1000·` converts penalty units
+[Split.hs:200-201](../../../core/app/CE/Structure/Split.hs#L200). The `1000·` converts penalty units
 to milli — milli is the one published scale
 [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8). Because `p` is convex with `p(0) = 0`, it
 is superadditive, so the bracket is non-negative for any well-formed zone triple; the
@@ -106,15 +108,15 @@ costMilli(u) = crossRefs(u)  · roiRefMilli
              + roiPhiMilli
 ```
 
-[Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). Three counting legs plus one flat
+[Split.hs:205-209](../../../core/app/CE/Structure/Split.hs#L205). Three counting legs plus one flat
 leg. Both crossing legs charge through one helper — `crossings` folds every edge `(a,b)` into a
 difference map `[(min a b, +1), (max a b, -1)]` and running-sums it, so a seam `u` is charged
 iff `min <= u < max`, exactly "one endpoint at or before `u`"
-([Split.hs:215-218](../../../core/app/CE/Structure/Split.hs#L215), read per seam by `charge`'s
-`lookupLE` at [Split.hs:237-238](../../../core/app/CE/Structure/Split.hs#L237)). The clone leg uses a line-level
+([Split.hs:216-219](../../../core/app/CE/Structure/Split.hs#L216), read per seam by `charge`'s
+`lookupLE` at [Split.hs:238-239](../../../core/app/CE/Structure/Split.hs#L238)). The clone leg uses a line-level
 straddle instead: block `[s,e)` is cut iff `s <= line && line < e`, mapped onto the seam-line
 index by the `lookupGE s` / `lookupLT e` pair
-([Split.hs:228-230](../../../core/app/CE/Structure/Split.hs#L228)).
+([Split.hs:229-231](../../../core/app/CE/Structure/Split.hs#L229)).
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
@@ -198,9 +200,9 @@ by one notch (507‰ vs 500‰) and flipped to a candidate
 ### The ROI auto-exemption
 
 Viability is `ROI >= 1`, evaluated without division as `b >= c`
-[Split.hs:178](../../../core/app/CE/Structure/Split.hs#L178),
+[Split.hs:179](../../../core/app/CE/Structure/Split.hs#L179),
 [Split.hs:7](../../../core/app/CE/Structure/Split.hs#L7). The fold produces exactly one row per file,
-into one of three shapes [Split.hs:174-181](../../../core/app/CE/Structure/Split.hs#L174):
+into one of three shapes [Split.hs:174-182](../../../core/app/CE/Structure/Split.hs#L174):
 
 | condition | row | table |
 |---|---|---|
@@ -249,7 +251,7 @@ a seam between hot and cold units is a seam severing no co-change pair, which th
 `roiChurnMilli` leg already prices at zero, so a benefit term would count the same churn fact
 twice (the model stays on the conservative side); and re-keying the moved members' baseline
 identity is paid once per new file, which is what φ is. The shipped benefit is the soft-zone
-recovery term alone [Split.hs:199-200](../../../core/app/CE/Structure/Split.hs#L199) and the
+recovery term alone [Split.hs:200-201](../../../core/app/CE/Structure/Split.hs#L200) and the
 shipped cost is exactly the four legs above
-[Split.hs:204-208](../../../core/app/CE/Structure/Split.hs#L204). No constant for a retired
+[Split.hs:205-209](../../../core/app/CE/Structure/Split.hs#L205). No constant for a retired
 term exists in `Cost.hs`, and none is owed.

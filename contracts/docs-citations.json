@@ -5999,8 +5999,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|188b5b7ba4f20335|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 228,
-    "end": 230,
+    "line": 229,
+    "end": 231,
     "text": "straddle (s, e) = case (M.lookupGE s lineIx, M.lookupLT e lineIx) of"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|2183f99ab9554111|0": {
@@ -6011,19 +6011,19 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|22464fcabc491ff7|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 215,
-    "end": 218,
+    "line": 216,
+    "end": 219,
     "text": "crossings :: [(Integer, Integer)] -> M.Map Integer Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|2cd27091f375fa10|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 177,
+    "line": 178,
     "text": "let (u, b, c) = maximumBy (comparing (\\(_, b', c') -> b' % c')) priced"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|34d5a565f95d2ae2|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
     "line": 174,
-    "end": 181,
+    "end": 182,
     "text": "step (cs, es) [fid, total] = case seams k (slice fid) total of"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|351809cd25914d8d|0": {
@@ -6039,14 +6039,14 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|5b9e323f73b4397c|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 199,
-    "end": 200,
+    "line": 200,
+    "end": 201,
     "text": "p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|5b9e323f73b4397c|1": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 199,
-    "end": 200,
+    "line": 200,
+    "end": 201,
     "text": "p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|609b31afa4d328e2|0": {
@@ -6074,8 +6074,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|8e0ee7f42328c6f7|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 193,
-    "end": 208,
+    "line": 194,
+    "end": 209,
     "text": "seams :: Knobs -> Slice -> Integer -> [(Integer, Integer, Integer)]"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|995d1de7f671bcc2|0": {
@@ -6092,14 +6092,14 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|be33d2f764dfbb69|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 204,
-    "end": 208,
+    "line": 205,
+    "end": 209,
     "text": "cost u =\ncharge refX u * kRoiRefMilli k"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|be33d2f764dfbb69|1": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 204,
-    "end": 208,
+    "line": 205,
+    "end": 209,
     "text": "cost u =\ncharge refX u * kRoiRefMilli k"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|c518302ca496d69c|0": {
@@ -6122,13 +6122,13 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|e931ad98010910d9|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 178,
+    "line": 179,
     "text": "in if b >= c\nthen ([fid, u, b, c] : cs, es)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|f194033918cbcac6|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 237,
-    "end": 238,
+    "line": 238,
+    "end": 239,
     "text": "charge :: M.Map Integer Integer -> Integer -> Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Verdict/Soft.hs|962d9f0d739396b5|0": {

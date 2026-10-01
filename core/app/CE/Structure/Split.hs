@@ -174,6 +174,7 @@ splitRows k files (units, refs, clones, churn) = (reverse cands, reverse exempts
   step (cs, es) [fid, total] = case seams k (slice fid) total of
     [] -> (cs, [fid, 0, 0] : es)
     priced ->
+      -- Equal ROIs go to the LAST seam: maximumBy keeps the later of equals.
       let (u, b, c) = maximumBy (comparing (\(_, b', c') -> b' % c')) priced
        in if b >= c
             then ([fid, u, b, c] : cs, es)
