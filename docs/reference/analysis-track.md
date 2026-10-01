@@ -258,7 +258,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ## 11. 语言条：量法与记账
 
-读数 = `gh api repos/skymanbp/CodeEraser/languages` 的字节表（`.gitattributes`：`cli/tests/**` 与 `contracts/**` vendored、`site/**` documentation、`core/test` 计入）。立项日 2026-09-29：Rust 2,144,472 / Haskell 592,241 / 其余约 252,000 B，Haskell 19.8 %；40 % 需要 Haskell 约 +1.0–1.2 MB（核与电池各按 ~44 B/行计 ≈ 两万行加八千行电池），Rust 的新增同时抬分母。每步收口写一行读数进 CHANGELOG 该步块；步 10 的读数是发版声明的读数——若低于 40 %，差距与可选路线（都是新功能、不改写）以 AskUserQuestion 上呈，不自行拉伸。
+读数 = `gh api repos/skymanbp/CodeEraser/languages` 的字节表（`.gitattributes`：`cli/tests/**` 与 `contracts/**` vendored、`site/**` documentation、`core/test` 计入）。立项日 2026-09-29：Rust 2,144,472 / Haskell 592,241 / 其余约 252,000 B，Haskell 19.8 %；40 % 需要 Haskell 约 +1.0–1.2 MB（核与电池各按 ~44 B/行计 ≈ 两万行加八千行电池），Rust 的新增同时抬分母。每步收口写一行读数进 CHANGELOG 该步块；发版声明的读数以 v2.32 收口时为准（2026-10-01 用户裁 1.9.0 推迟到 v2.32 做完再发，读数随 [authority-track.md](authority-track.md) 步 8 记账）——若低于 40 %，差距与可选路线以 AskUserQuestion 上呈（已排为 v2.32 步 9），不自行拉伸。
 
 ## 12. 分步（每步自带门，落码顺序）
 
@@ -274,8 +274,8 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 | 7 | 合并 B（落地第一部分 2026-09-30：`cli/src/merge/`〔groups / groups_trim / wire / face / console + slot 表八个文件〕、`dedup/t3/tree.rs` 一次遍历出 `lab` / `lld` / `leaf` / `slot`、`ce merge`〔`main_merge.rs`，头部读 `main_prelude.rs`〕+ MCP `merge_suggestions` + GUI 报告枢纽 merge 族〔`hub_merge.js`〕+ 冻结建议集五语料 + 对判决盲的抽样 100 行与四批批次 + 册 18；落地第二部分 2026-09-30：四个独立判官的盲判〔四批各 25 题、100 行〕、审阅档 `merge-review-v1.json`、精度册 `merge-precision-v1.json`〔由三档按定义算出、与审阅档同一提交，第 36 条〕、登记册 `docs/EVAL-SET-MERGE.md`〔三读数、核 reason × 判官 reason 混淆表与 23 条理由分歧逐条带判官 note〕；读数 feasible_agree 83 / 100、reason_agree 77 / 100、params_agree 45 / 100，只入册不设门） | 三面字节同、冻结集门 |
 | 8 | 架构 A（落地 2026-09-30，与步 9 同一提交）：核 `CE.Arch.*`（Contract / Cost / Dirs / Fas / Layers / Louvain / Impact + `Arch.hs`，八模块 653 行）+ `ArchCases` / `ArchRefusals`（22 条拒绝按名）/ `ArchFasProps` / `ArchProps` + `ReferenceArch` + golden 七对 + proto 7.6.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条；十五份既有 golden 只动 proto 字面与 hello 能力表） | 精确 FAS 对两个参考逐权逐弧等价、贪心 cut 无环且极小、Louvain 确定性、`cabal test` 624 ok |
 | 9 | 架构 B（落地 2026-09-30）：`cli/src/arch/`（tables / wire / face / console）+ `ce arch`（`main_arch.rs`，头部读 `main_prelude.rs`）+ MCP `architecture` + GUI 报告枢纽 arch 族（`hub_arch.js`；枢纽长出 `registerHub`、路径列表参数、自定义渲染器三个钩子）+ 冻结自仓读数 `contracts/eval/arch-self-v1.json`（钉 f2a7a2b4 的 `git archive` 树；在落地提交的干净树上重生成，是落地后的第二个提交）+ 册 19 | 三面字节同、冻结读数门 |
-| 10 | 全量文档与事实（§10）+ 语言条实测记账（§11）+ 官网新页对部署 | docs / site / facts 门全绿、引文重签 |
-| 11 | 发版 1.9.0：分数可比性声明（判决轴不动即与 1.8.0 可比；`flow` 若进 `ce check` 另声明）、基线具名重立、bench 入列 | RELEASE.md 链 |
+| 10 | 全量文档与事实（§10）+ 语言条实测记账（§11）+ 官网新页对部署（排在 v2.32 步 0–7 之后，随 [authority-track.md](authority-track.md) 步 8 一并做） | docs / site / facts 门全绿、引文重签 |
+| 11 | 发版 1.9.0（在 v2.32 之后，即 [authority-track.md](authority-track.md) 步 10）：分数可比性声明（判决轴不动即与 1.8.0 可比；`flow` 若进 `ce check` 另声明）、基线具名重立、bench 入列 | RELEASE.md 链 |
 
 依赖：0 先于一切；1 → 2、3 → 4 → 5、6 → 7、8 → 9 各成链，四条链按序落（一条链收口再开下一条，每链收口时既有家族对拍同）；10 / 11 最后。
 
