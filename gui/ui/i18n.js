@@ -205,6 +205,11 @@ const CE_I18N = {
     mergeReasonParams: "more parameters than six", mergeReasonSavings: "no line saved", mergeRun: "run",
     mergeHoles: "parameters (one row each, one column per member)",
     mergeUnsendable: "not sent:", mergeDegraded: (why) => `degraded: ${why} — no judgment`,
+    archLayers: "layers", archLevel: "level", archCuts: "cuts", archExact: "exact", archGreedy: "greedy",
+    archRefs: "refs", archMisplaced: "misplaced", archClusters: "clusters", archMajority: "majority",
+    archImpact: "impact", archDepth: "depth", archMetrics: "metrics", archFanIn: "fan-in", archFanOut: "fan-out",
+    archInstability: "instability ‰", archNoCycles: "no cycles among directories",
+    archDegraded: (why) => `degraded: ${why} — no answer`,
     emptyQuery: "type a question in CE Datalog (`dead(F)`, `depends(A, B), not same_dir(A, B)`, `N = count(F : in(F, \"src/**\"))`) and ask — the same document `ce query` prints, every answer labelled and its derivation under derivations; judge ce.rules runs the project's rules file the way `ce rules` does",
   },
   zh: {
@@ -366,6 +371,11 @@ const CE_I18N = {
     mergeReasonParams: "参数多于六个", mergeReasonSavings: "省不下行", mergeRun: "合并段",
     mergeHoles: "参数（每个一行，每个成员一列）",
     mergeUnsendable: "未送：", mergeDegraded: (why) => `已降级：${why}——未判决`,
+    archLayers: "分层", archLevel: "层", archCuts: "切边", archExact: "精确", archGreedy: "贪心",
+    archRefs: "引用", archMisplaced: "错位", archClusters: "簇", archMajority: "多数目录",
+    archImpact: "影响面", archDepth: "深度", archMetrics: "度量", archFanIn: "扇入", archFanOut: "扇出",
+    archInstability: "不稳定度 ‰", archNoCycles: "目录之间没有环",
+    archDegraded: (why) => `已降级：${why}——无答案`,
     emptyQuery: "用 CE Datalog 输入一个问题（`dead(F)`、`depends(A, B), not same_dir(A, B)`、`N = count(F : in(F, \"src/**\"))`）后点提问——与 `ce query` 打印的是同一份文档：每个答案回标成路径与名字，勾选推导链看每个答案怎么推出来；「判 ce.rules」按 `ce rules` 的方式跑仓库自己的规则文件",
   },
 };

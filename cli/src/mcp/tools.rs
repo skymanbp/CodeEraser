@@ -7,9 +7,9 @@
 //! resolver instead of growing a second one.
 
 use super::adapters::{
-    check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase, erase_log,
-    flow, graph_sites, join, merge_suggestions, query, rules, scan, similar_units, structure,
-    trend, update_check,
+    architecture, check, check_duplication, churn, clone_report, deadcode, docdup, doctor, erase,
+    erase_log, flow, graph_sites, join, merge_suggestions, query, rules, scan, similar_units,
+    structure, trend, update_check,
 };
 use anyhow::Result;
 use serde_json::{Value, json};
@@ -19,13 +19,18 @@ pub struct Tool {
     pub name: &'static str,
     pub desc: &'static str,
     /// Extra inputSchema properties beyond the shared `path`:
-    /// (name, JSON type, description).
+    /// (name, JSON type, description); an `array` is of strings.
     pub extra: &'static [(&'static str, &'static str, &'static str)],
     pub run: fn(&Path, &Value) -> Result<String>,
 }
 
 const DAYS: (&str, &str, &str) = ("days", "integer", "git history window in days (default 14)");
 const KIND: (&str, &str, &str) = ("kind", "string", "comma-separated kinds to show");
+const IMPACT: (&str, &str, &str) = (
+    "impact",
+    "array",
+    "paths whose dependents to trace (root-relative)",
+);
 
 /// One catalog row. The field names spelled out per tool were the
 /// same eight tokens fifteen times over, and at thirteen tools this
@@ -244,6 +249,15 @@ pub const TOOLS: &[Tool] = &[
          saved, feasible or why not. Advisory."
     ),
     tool!(
+        "architecture",
+        architecture,
+        "The architecture of the tree (ce.arch-report schema): directory layers and the \
+         arcs to cut out of their cycles (each with the file references behind it), file \
+         clusters and the files outside their cluster's directory, per-directory fan-in / \
+         fan-out / instability, and the files a change to `impact` reaches. Advisory.",
+        &[IMPACT]
+    ),
+    tool!(
         "update_check",
         update_check,
         "Whether a newer CodeEraser release exists (ce.update-report schema): the \
@@ -261,7 +275,11 @@ pub fn descriptor(t: &Tool) -> Value {
         json!({"type": "string", "description": "subpath (default: project root)"}),
     );
     for (name, ty, desc) in t.extra {
-        props.insert((*name).into(), json!({"type": ty, "description": desc}));
+        let mut prop = json!({"type": ty, "description": desc});
+        if *ty == "array" {
+            prop["items"] = json!({"type": "string"});
+        }
+        props.insert((*name).into(), prop);
     }
     json!({
         "name": t.name,

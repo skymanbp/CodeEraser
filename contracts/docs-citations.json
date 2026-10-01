@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|68c6cfa0dd08437d|0": {
+  "docs/reference/methodology.md|../../README.md|60823903c040c05e|0": {
     "target": "../../README.md",
-    "line": 190,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->eighteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
+    "line": 193,
+    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -5902,10 +5902,10 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|69e6116432504de7|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|d4bcefdd319ecc19|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.5.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.6.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -7819,31 +7819,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 510,
-    "end": 512,
+    "line": 529,
+    "end": 531,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 506,
+    "line": 525,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 498,
-    "end": 512,
+    "line": 517,
+    "end": 531,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 501,
-    "end": 502,
+    "line": 520,
+    "end": 521,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 501,
-    "end": 505,
+    "line": 520,
+    "end": 524,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8152,8 +8152,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mcp/tools.rs|8ef4edac0142a307|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 80,
-    "end": 84,
+    "line": 85,
+    "end": 89,
     "text": "tool!(\n\"deadcode\","
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/candidates.rs|2203179c0b1eb61a|0": {
@@ -8563,8 +8563,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 238,
-    "end": 240,
+    "line": 257,
+    "end": 259,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9224,7 +9224,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
-    "line": 106,
+    "line": 107,
     "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|454df31193049ba3|0": {
@@ -9349,7 +9349,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 173,
+    "line": 178,
     "text": "\"similar_units\","
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {
@@ -9860,7 +9860,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
     "target": "../../../cli/src/main_lang.rs",
-    "line": 64,
+    "line": 79,
     "text": "query\t代码查询：用 CE Datalog 对索引里的事实（文件、引用、单元、克隆、提及、路径类）提一个问题，由核的 query/1 作答，--why 时每个答案带推导链；程序错误退出 2（仅报告）"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|1008c68889e0874d|0": {
@@ -9886,12 +9886,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 190,
+    "line": 195,
     "text": "\"query\",\nquery,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|e24234656aa40c40|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 211,
+    "line": 216,
     "text": "\"rules\",\nrules,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|0b5c5c7ec7c0f040|0": {
@@ -10480,7 +10480,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 88,
+    "line": 89,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -10730,7 +10730,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 89,
+    "line": 90,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
@@ -11201,5 +11201,280 @@
     "target": "../../../core/test/MergeProps.hs",
     "line": 163,
     "text": "postsHold :: Group -> Bool"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/console.rs|25dca994341b1b4e|0": {
+    "target": "../../../cli/src/arch/console.rs",
+    "line": 13,
+    "text": "pub fn console(r: &Report) -> Vec<String> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|3ba5a5f8ebf9cf14|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 222,
+    "text": "fn clusters(t: &Tables, rows: &[Vec<i64>]) -> Vec<Cluster> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|59c25506251d1237|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 93,
+    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Report> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|bc97dde97e450366|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 78,
+    "text": "pub struct Report {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|e8ebd19464cabd3f|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 112,
+    "text": "fn line_count(root: &Path, path: &str) -> Result<i64> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|f78d7ad5b1203014|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 180,
+    "text": "fn cut(t: &Tables, row: &[i64]) -> Cut {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/mod.rs|5ba8ae5afa201208|0": {
+    "target": "../../../cli/src/arch/mod.rs",
+    "line": 1,
+    "end": 9,
+    "text": "//! The architecture family (plan v2.31 step 9; design booklet"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|2ac8108dcabc988b|0": {
+    "target": "../../../cli/src/arch/tables.rs",
+    "line": 54,
+    "text": "pub fn assemble(w: &GraphWire, t: &Tree, focus: &[String], lines: &[i64]) -> Result<Tables> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|acfaaf9a12383c4f|0": {
+    "target": "../../../cli/src/arch/tables.rs",
+    "line": 129,
+    "text": "fn dir_rows(t: &Tree) -> Result<Rows<2>> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|acfaaf9a12383c4f|1": {
+    "target": "../../../cli/src/arch/tables.rs",
+    "line": 129,
+    "text": "fn dir_rows(t: &Tree) -> Result<Rows<2>> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|ba14db875bf90cf9|0": {
+    "target": "../../../cli/src/arch/tables.rs",
+    "line": 152,
+    "text": "fn focus_rows(focus: &[String], slot: &BTreeMap<&str, usize>) -> Result<Vec<i64>> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|f77585dd9af9c2f6|0": {
+    "target": "../../../cli/src/arch/tables.rs",
+    "line": 96,
+    "text": "fn folded(w: &GraphWire, t: &Tree, slot: &BTreeMap<&str, usize>) -> Folded {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|5dcb977ea419265d|0": {
+    "target": "../../../cli/src/arch/wire.rs",
+    "line": 28,
+    "text": "pub const ARCH_FILE_CAP: usize = 131072;"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|7bc125be9e5ee21a|0": {
+    "target": "../../../cli/src/arch/wire.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! The arch/1 leg (design booklet §3's wire table, §7): the five"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|95df4f4bf3a0b417|0": {
+    "target": "../../../cli/src/arch/wire.rs",
+    "line": 170,
+    "text": "let col: usize = col.parse().context(\"an id column\")?;"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|9e002ae0cba9f447|0": {
+    "target": "../../../cli/src/arch/wire.rs",
+    "line": 119,
+    "text": ");\ntables.insert(key, rows);"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|06aaf305d0592873|0": {
+    "target": "../../../cli/src/faces.rs",
+    "line": 224,
+    "text": "Ok(crate::flow_report::face::report_json("
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
+    "target": "../../../cli/src/main_arch.rs",
+    "line": 31,
+    "text": "let root = or_cwd(j.root);"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
+    "target": "../../../cli/src/mcp/adapters.rs",
+    "line": 197,
+    "text": "a[\"file\"].as_str().map(Path::new),"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {
+    "target": "../../../cli/src/mcp/tools.rs",
+    "line": 234,
+    "text": "tool!(\n\"flow\","
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/structure/rows.rs|64f5dba50d2cfe02|0": {
+    "target": "../../../cli/src/structure/rows.rs",
+    "line": 89,
+    "text": "pub(crate) fn file_join(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<FileJoin> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/it/arch_face.rs|4fe7222019c273f8|0": {
+    "target": "../../../cli/tests/it/arch_face.rs",
+    "line": 1,
+    "end": 8,
+    "text": "//! The architecture family's three faces (plan v2.31 step 9, design"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/it/eval_arch_self.rs|594842d122f4ca05|0": {
+    "target": "../../../cli/tests/it/eval_arch_self.rs",
+    "line": 1,
+    "end": 16,
+    "text": "//! The architecture family's reading of this repository, frozen (plan"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/unit/arch/tables.rs|fa9a0568db9a2660|0": {
+    "target": "../../../cli/tests/unit/arch/tables.rs",
+    "line": 72,
+    "text": "fn the_measured_files_are_dense_in_path_order_under_their_directories() {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../contracts/fixtures/arch/golden.ndjson|5d00bcf10f39349d|0": {
+    "target": "../../../contracts/fixtures/arch/golden.ndjson",
+    "line": 13,
+    "text": "{\"proto\":\"7.0.0\",\"type\":\"arch.request\",\"id\":7,\"files\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,15,1]],\"dirs\":[[0,-1],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0]],\"edges\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,0,1]],\"pkgEdges\":[]}"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch.hs|e06a4723c0a12b56|0": {
+    "target": "../../../core/app/CE/Arch.hs",
+    "line": 5,
+    "end": 19,
+    "text": "-- | arch.request handler (plan v2.31 step 8; ADR-008 seventh"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Contract.hs|798afb348c52be60|0": {
+    "target": "../../../core/app/CE/Arch/Contract.hs",
+    "line": 48,
+    "text": "offence :: ArchReq -> Maybe String"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Cost.hs|490d63f9e9dcf864|0": {
+    "target": "../../../core/app/CE/Arch/Cost.hs",
+    "line": 44,
+    "text": "instabilityScale :: Integer"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Cost.hs|577b1fea1cea4f60|0": {
+    "target": "../../../core/app/CE/Arch/Cost.hs",
+    "line": 24,
+    "text": "fileCap :: Integer"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Cost.hs|b8db998da043676d|0": {
+    "target": "../../../core/app/CE/Arch/Cost.hs",
+    "line": 39,
+    "text": "exactVertexCap :: Int"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Cost.hs|da3d9f48b1c998a0|0": {
+    "target": "../../../core/app/CE/Arch/Cost.hs",
+    "line": 30,
+    "text": "refCap :: Integer"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Dirs.hs|3be3d4359167b026|0": {
+    "target": "../../../core/app/CE/Arch/Dirs.hs",
+    "line": 48,
+    "text": "sccsOf :: Int -> Arcs -> [[Int]]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Dirs.hs|8a5dd1ae7126d68c|0": {
+    "target": "../../../core/app/CE/Arch/Dirs.hs",
+    "line": 38,
+    "text": "fileNeighbours :: [[Integer]] -> IM.IntMap (IM.IntMap Integer)"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Dirs.hs|a4e4e4df37e3cacc|0": {
+    "target": "../../../core/app/CE/Arch/Dirs.hs",
+    "line": 27,
+    "text": "arcsOf :: IM.IntMap Int -> [[Integer]] -> [[Integer]] -> Arcs"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|6685d4ddea6452ac|0": {
+    "target": "../../../core/app/CE/Arch/Fas.hs",
+    "line": 50,
+    "text": "fas :: Arcs -> [(Int, Int, Integer, Integer)]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|9b31e935ea6056de|0": {
+    "target": "../../../core/app/CE/Arch/Fas.hs",
+    "line": 103,
+    "text": "greedyCut :: Int -> [Arc] -> [Arc]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|c35efda728624a67|0": {
+    "target": "../../../core/app/CE/Arch/Fas.hs",
+    "line": 130,
+    "text": "prune :: Int -> [Arc] -> [Arc] -> [Arc]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|e66009b7f467584d|0": {
+    "target": "../../../core/app/CE/Arch/Fas.hs",
+    "line": 84,
+    "text": "exactCut :: Int -> [Arc] -> [Arc]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|e9e9d7755053d874|0": {
+    "target": "../../../core/app/CE/Arch/Fas.hs",
+    "line": 110,
+    "text": "elsOrder :: Int -> [Arc] -> [Int]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Impact.hs|df0293966587d36e|0": {
+    "target": "../../../core/app/CE/Arch/Impact.hs",
+    "line": 13,
+    "text": "impact :: IM.IntMap Int -> [[Integer]] -> [[Integer]] -> [Integer] -> [[Integer]]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Layers.hs|a9bc16fdd6be9f03|0": {
+    "target": "../../../core/app/CE/Arch/Layers.hs",
+    "line": 22,
+    "text": "levels :: Int -> Arcs -> S.Set (Int, Int) -> [[Integer]]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Layers.hs|db30648de66281bd|0": {
+    "target": "../../../core/app/CE/Arch/Layers.hs",
+    "line": 35,
+    "text": "metrics :: Int -> Arcs -> [[Integer]]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Louvain.hs|aaf8e322b40ac77b|0": {
+    "target": "../../../core/app/CE/Arch/Louvain.hs",
+    "line": 56,
+    "text": "move :: Integer -> Graph -> (IM.IntMap Int, IM.IntMap Integer, Bool) -> Int -> (IM.IntMap Int, IM.IntMap Integer, Bool)"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Louvain.hs|ecca388f7c89b31e|0": {
+    "target": "../../../core/app/CE/Arch/Louvain.hs",
+    "line": 28,
+    "text": "clusters :: Int -> IM.IntMap (IM.IntMap Integer) -> IM.IntMap Int"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Louvain.hs|ff2b7793451a0194|0": {
+    "target": "../../../core/app/CE/Arch/Louvain.hs",
+    "line": 85,
+    "text": "-- | Ruling 6 as tightened in the step-8 lane: `[[F, M]]` for every"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ArchCases.hs|6205a2f18f7d1061|0": {
+    "target": "../../../core/test/ArchCases.hs",
+    "line": 1,
+    "end": 12,
+    "text": "-- | The arch battery's hand-written cases (plan v2.31 step 8) as text"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ArchFasProps.hs|cf00e80c945ffbdc|0": {
+    "target": "../../../core/test/ArchFasProps.hs",
+    "line": 1,
+    "end": 16,
+    "text": "-- | The arch battery's feedback-arc-set legs (plan v2.31 step 8, the"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ArchProps.hs|ea2e4de182f6dcd9|0": {
+    "target": "../../../core/test/ArchProps.hs",
+    "line": 5,
+    "end": 9,
+    "text": "-- | The arch family's battery (plan v2.31 step 8): the hand-written"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ArchRefusals.hs|a27a3616c33c7f98|0": {
+    "target": "../../../core/test/ArchRefusals.hs",
+    "line": 1,
+    "end": 7,
+    "text": "-- | Every refusal the arch contract can name (plan v2.31 step 8), in"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ReferenceArch.hs|051b232d01469b8c|0": {
+    "target": "../../../core/test/ReferenceArch.hs",
+    "line": 1,
+    "end": 11,
+    "text": "-- | Independent references for the arch judgment (plan v2.31 step 8),"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/src-tauri/src/commands_query.rs|c4e8f551a8670dae|0": {
+    "target": "../../../gui/src-tauri/src/commands_query.rs",
+    "line": 39,
+    "text": ".await\n}\n\n/// The architecture document (plan v2.31 step 9) — the SAME document"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/ui/hub_arch.js|c73ee86c235fc014|0": {
+    "target": "../../../gui/ui/hub_arch.js",
+    "line": 14,
+    "text": "registerHub(\"arch\", { cmd: \"arch_report\", paths: \"impact\", render: renderArch });"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/ui/reports.js|c3b060be3a39ae44|0": {
+    "target": "../../../gui/ui/reports.js",
+    "line": 21,
+    "text": "let hubDoc = null;"
   }
 }

@@ -4,6 +4,7 @@
 //! (the RG13 plan). The full subcommand roster is main_cli.rs's —
 //! a milestone list here went stale nine subcommands deep.
 
+mod main_arch;
 mod main_cli;
 mod main_cmds;
 mod main_erase;
@@ -27,7 +28,7 @@ fn main() -> ExitCode {
     // pin the language BEFORE clap builds the Command (the help text
     // switches too); the parsed field re-pins the same value, which
     // keeps the flag a real consumer of the declared arg
-    codeeraser::i18n::init(main_cli::lang_from_argv().as_deref());
+    codeeraser::i18n::init(main_lang::lang_from_argv().as_deref());
     let cli = parse_localized();
     codeeraser::i18n::init(cli.lang.as_deref());
     // this process is a console face — the only one that arms
@@ -127,6 +128,7 @@ fn analysis(cmd: Cmd) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Rules(a) => main_query::rules_cmd(a),
         Cmd::Flow(a) => main_flow::flow_cmd(a),
         Cmd::Merge(a) => main_merge::merge_cmd(a),
+        Cmd::Arch(a) => main_arch::arch_cmd(a),
         Cmd::Erase(a) => main_erase::erase_cmd(a),
         Cmd::Check(a) => main_score::check_cmd(a),
         Cmd::Baseline(a) => main_score::baseline_cmd(a),

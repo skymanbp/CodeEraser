@@ -66,9 +66,9 @@
   <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 914/1000</span> | 判轴 0:88 1:0 2:289 3:0 4:0 5:0 6:228 | 候选 447
+<span class="s">检查分数 914/1000</span> | 判轴 0:88 1:0 2:295 3:0 4:0 5:0 6:222 | 候选 465
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
-注：10 块并入既有成员，253 个文件内对不入相似表
+注：10 块并入既有成员，263 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
 <!-- roast:end -->
   <p class="cap">真实输出：CodeEraser 判决它自己的仓库。棘轮只收不放：违规集入基线银行，新增熵直接判负。</p>
@@ -137,6 +137,7 @@
   <div class="card"><h3>ce query · ce rules</h3><p>索引自有事实上的 Datalog：提一个问题，每个答案带推导链；把架构约束写成断言，<code>ce rules</code> 就是一道门，第一条违规即退出。核里判决，CLI 回标名字。</p></div>
   <div class="card"><h3>ce flow</h3><p>一个函数内部的死代码：没有路径到达的语句、没有路径读到的存储、没人读的局部量。核走控制流图；只有盲评精度考题过门的语言里，发现才算判决，未用形参永远只是顾问。</p></div>
   <div class="card"><h3>ce merge</h3><p>克隆组怎样合并成一个函数：成员之间不同的地方变成参数，核答出参数个数、值得保留的成员、省下的行、可不可行及原因。只当顾问，永不成门。</p></div>
+  <div class="card"><h3>ce arch</h3><p>目录之间怎样相互依赖：分层、拆环最省要去掉的弧、文件簇与不在其簇所在目录的文件、每个目录的扇入、扇出与不稳定度，以及改动一个点名文件会波及哪些文件。只当顾问，永不成门。</p></div>
   <div class="card band"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，你在 ask 档放行的写入落地后记账，停止时审计，会话开始报健康。</p></div>
 </div>
 
@@ -155,7 +156,7 @@
 
 <h2>内部构造</h2>
 <figure class="arch deep" id="architecture">
-  <div class="stage"><img src="/assets/architecture.zh.svg" width="1440" height="620" alt="架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十五个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染（终端、GUI、MCP 服务器、Claude Code hooks、CI）" loading="lazy"></div>
+  <div class="stage"><img src="/assets/architecture.zh.svg" width="1440" height="620" alt="架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十六个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染（终端、GUI、MCP 服务器、Claude Code hooks、CI）" loading="lazy"></div>
   <figcaption>度量在 Rust，判决在 Haskell：一条 wire、每家族一份报告 schema、五张面孔。由 <code>docs/diagrams/architecture.zh.json</code> 渲染；每个组件都引用自己的源文件。打开<a href="/assets/architecture.zh.svg">原尺寸 SVG</a>。</figcaption>
 </figure>
 <p><a href="/zh/stack/">查看组件级技术栈与执行门禁 →</a></p>

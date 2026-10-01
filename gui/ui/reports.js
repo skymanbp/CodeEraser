@@ -20,8 +20,6 @@ function registerHub(name, spec) { HUB[name] = spec; const o = document.createEl
 
 let hubDoc = null;
 
-function registerHub(name, spec) { HUB[name] = spec; const o = document.createElement("option"); o.value = name; o.textContent = name; $("hub-family").appendChild(o); }
-
 (function bootReports() {
   i18nRefreshers.push(() => hubDoc && renderHub());
   const sel = $("hub-family");

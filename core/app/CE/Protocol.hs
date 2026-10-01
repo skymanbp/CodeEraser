@@ -9,6 +9,7 @@
 -- never a crash.
 module CE.Protocol (internalError, proto, respond) where
 
+import qualified CE.Arch as Arch
 import qualified CE.Audit as Audit
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
@@ -108,6 +109,7 @@ families =
   , Fam "query/1" "query.request" Query.respond
   , Fam "flow/1" "flow.request" Flow.respond
   , Fam "merge/1" "merge.request" Merge.respond
+  , Fam "arch/1" "arch.request" Arch.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

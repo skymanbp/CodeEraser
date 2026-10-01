@@ -81,11 +81,12 @@ pub fn ref_rows(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result
 
 /// The join's own two halves: file-node edge pairs by dense slot,
 /// and each slot's owning directory.
-type FileJoin = (Vec<(usize, usize)>, Vec<usize>);
+pub(crate) type FileJoin = (Vec<(usize, usize)>, Vec<usize>);
 
 /// File-node edge pairs and each file's owning directory — the join
-/// both reference tables read.
-fn file_join(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<FileJoin> {
+/// both reference tables read, and the arch family's file edges
+/// (arch/tables.rs: one join for the two families' one universe).
+pub(crate) fn file_join(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<FileJoin> {
     // the measured tier: a foreign reader has no directory in the
     // walked (own) tree and is not this family's to place, and a
     // walked asset (a page's stylesheet or image) has no row in it

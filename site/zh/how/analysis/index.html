@@ -44,7 +44,7 @@
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，本页每个小标题都直接链进去。</p>
   <nav class="toc" aria-label="章节">
     <p class="k">本页内容</p>
-    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="#f17"><b>17</b>函数内死代码</a></li><li><a href="#f18"><b>18</b>克隆合并建议</a></li></ul></div>
+    <div class="row"><a class="sec" href="#analysis">分析家族</a><ul><li><a href="#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="#f17"><b>17</b>函数内死代码</a></li><li><a href="#f18"><b>18</b>克隆合并建议</a></li><li><a href="#f19"><b>19</b>架构分析</a></li></ul></div>
     <div class="row"><a class="sec" href="/zh/how/">判决家族</a><ul><li><a href="/zh/how/#families">01–15 族</a></li><li><a href="/zh/how/#honesty">诚实边界</a></li></ul></div>
   </nav>
 </section>
@@ -112,6 +112,30 @@ kept   : the member whose file has the greatest in-degree; savings = Σ lines �
   </ul>
 </div>
 
+<div class="fam">
+  <h3 id="f19"><span class="n">19</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md">架构分析——分层、拆环、簇、影响面</a></h3>
+  <p class="job">读目录之间怎么相互依赖：哪些在最底层，拆开它们的环最省要切哪几条边，哪些文件放到常打交道的文件旁边更合适，
+  每个目录的扇入、扇出与不稳定度，以及改一个文件会波及哪些文件。只当顾问：没有门读它，<code>ce arch</code> 出文档即退 0。</p>
+  <pre>arcs   : dir(F) → dir(G) per file reference, dir(F) → D per package reference; inside one directory uncounted
+cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
+layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
+cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
+impact : breadth-first over the references read backwards, the focus at depth 0
+metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when nothing touches the directory</pre>
+  <p class="note">度量侧送五张整数表——被度量的文件及其目录与行数、目录树、文件到文件的引用、文件到包的引用（落在包所在目录）、
+  <code>--impact</code> 点名的文件——再把答案回标：每条切边带着它背后的文件引用。核把引用折成目录图，逐个强连通分量求反馈弧集，
+  给剩下的图分层，在文件图上聚类，走影响面，度量每个目录。贪心路给出的切边集是极小的、未证最小，行上照实标出。
+  本仓在一个钉住提交上的读数被冻结，漂移就意味着度量或核动了。</p>
+  <ul class="consts">
+    <li><b>fileCap</b> 131072</li>
+    <li><b>refCap</b> 524288</li>
+    <li><b>exactVertexCap</b> 14</li>
+    <li><b>instabilityScale</b> 1000</li>
+    <li><b>schema</b> ce.arch-report/0.1.0</li>
+    <li><b>入 wire 版本</b> 7.6.0</li>
+    <li><b>wire</b> arch/1</li>
+  </ul>
+</div>
 
 <footer class="site">
   <p>Apache-2.0 · <a href="/zh/">概览</a> ·

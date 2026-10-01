@@ -9,6 +9,7 @@
 module Main (main) where
 
 import qualified AdvisoryProps
+import qualified ArchProps
 import qualified AuditProps
 import qualified DeclProps
 import qualified TombstoneProps
@@ -88,6 +89,7 @@ batteries =
   , goldenPairs "query/golden.ndjson"
   , goldenPairs "flow/golden.ndjson"
   , goldenPairs "merge/golden.ndjson"
+  , goldenPairs "arch/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -115,6 +117,7 @@ batteries =
   , QueryProps.battery
   , FlowProps.battery
   , MergeProps.battery
+  , ArchProps.battery
   , VerdictProps.battery
   , VerdictWireProps.battery
   , VerdictFenceProps.battery

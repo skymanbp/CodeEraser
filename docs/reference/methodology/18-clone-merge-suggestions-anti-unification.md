@@ -1,6 +1,6 @@
 # Clone merge suggestions — anti-unification over the clone families' trees
 
-[index](../methodology.md) · [← 17 Intra-function dead code — the flow graph, reachability and liveness](17-intra-function-dead-code-flow-graph-reachability-and-liveness.md)
+[index](../methodology.md) · [← 17 Intra-function dead code — the flow graph, reachability and liveness](17-intra-function-dead-code-flow-graph-reachability-and-liveness.md) · [→ 19 Architecture analysis — layers, cuts, clusters, impact](19-architecture-analysis-layers-cuts-clusters-impact.md)
 
 The clone families say *that* code is repeated: `ce dedup` groups the token runs that recur, and
 `ce clone` pairs the units whose trees sit within a small edit distance. This family says *how*

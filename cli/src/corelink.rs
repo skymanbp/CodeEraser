@@ -13,20 +13,19 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 7.5.0 = the fifteenth judgment family, `merge/1` (plan v2.31
-/// steps 6-7; ADR-008 seventh instalment, design booklet
-/// docs/reference/analysis-track.md §6), additive: a new request type
-/// `merge.request` carries the clone groups, their members' lines and
-/// file in-degree, and one tree per member in clone/1's postorder
-/// encoding with a leaf-hash and a position-class column, and reads
-/// back `merge.result` — per group the parameter count, the member
-/// kept, the lines saved, feasibility and its reason, per hole each
-/// member's first and last root. This side's groups, slot tables, wire
-/// and faces (`ce merge`, the MCP tool, the GUI hub's merge family)
-/// live in cli/src/merge/; clone/1's trees may carry the `leaf` column
-/// but this side never sends it there. A core without the family is
-/// named as "pre-7.5.0" by `judged::ask`, never blocked on. Every
-/// existing family's bytes stand.
+/// §1). 7.6.0 = the sixteenth judgment family, `arch/1` (plan v2.31
+/// steps 8-9; ADR-008 seventh instalment, design booklet
+/// docs/reference/analysis-track.md §7), additive: a new request type
+/// `arch.request` carries the measured files with their directory and
+/// lines, the directory tree, the file-to-file and file-to-directory
+/// references and the focus files, and reads back `arch.result` — the
+/// directory layers, the arcs to cut with their `exact` bit, the file
+/// clusters, the misplaced files, the impact of the focus and each
+/// directory's fan-in, fan-out and instability. This side's tables,
+/// wire and faces (`ce arch`, the MCP tool, the GUI hub's arch family)
+/// live in cli/src/arch/. A core without the family is named as
+/// "pre-7.6.0" by `judged::ask`, never blocked on. Every existing
+/// family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -38,7 +37,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.5.0";
+pub const PROTO: &str = "7.6.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

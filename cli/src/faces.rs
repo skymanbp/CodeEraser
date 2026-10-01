@@ -236,6 +236,16 @@ pub fn merge(root: &Path, core: &str) -> Result<Value> {
     )?))
 }
 
+/// The architecture of the tree (plan v2.31 step 9): layers, the
+/// arcs to cut out of the directory cycles, clusters, misplaced
+/// files, the impact of `impact`'s files and per-directory metrics,
+/// judged by the core's arch/1 — the SAME document `ce arch --format
+/// json` prints. Advisory: a core without the family is named in the
+/// document, and nothing here reaches a gate.
+pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {
+    crate::arch::face::document(root, core, impact)
+}
+
 /// The machine's own state. Unlike every sibling it cannot fail: a
 /// core that will not answer IS the finding, and it rides inside the
 /// document (health::doctor).

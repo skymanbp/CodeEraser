@@ -18,7 +18,7 @@ skill：[`skills/erase/`](skills/erase/SKILL.md)，把 dedup/deadcode/join
 所以它的更新动作永远是 `/plugin update codeeraser`（新清单带新 pin，下一会话
 启动器重验重下载）；`ce update --yes` 只替换手工放置或安装包随附的副本。
 
-MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:count:mcp_tools#word-->二十<!--/ce-->个工具随插件
+MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个工具随插件
 一起到位：装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
 由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
 `erase` 工具只到**计划**为止、`erase_log` 只读它的审计轨迹：`apply` 没有 face、也不会有，因为一个能凭自己
@@ -27,7 +27,9 @@ MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:coun
 `query` / `rules` 是代码查询家族（`ce query` / `ce rules` 的同一份文档，问题或规则文件在核的 `query/1`
 上判决），这里只出报告，退出码是 CLI 自己读 `counts.violations` 的事；
 `merge_suggestions` 是克隆合并建议（`ce merge` 的同一份文档：每个克隆组合并成一个函数要几个参数、保留哪个成员、
-省几行、可不可行及原因，在核的 `merge/1` 上判决），只当顾问。
+省几行、可不可行及原因，在核的 `merge/1` 上判决），只当顾问；
+`architecture` 是架构分析（`ce arch` 的同一份文档：分层、拆环切边、簇与错位文件、目录度量，`impact`
+给出一处改动波及的文件，在核的 `arch/1` 上判决），只当顾问。
 
 ## 安装
 

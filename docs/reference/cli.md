@@ -27,6 +27,7 @@ Commands:
   rules      Architecture rules as a gate: every `assert` in the rules file (ce.rules at the root, or `[rules] file`) judged by the core's query/1, each violation with its witness and derivation; any violation exits 1, a program error 2
   flow       Dead code inside functions (unreachable statements, dead stores, unused locals and parameters) judged by the core's flow/1; --check is its own gate at `[flow] tier` deny (never part of `ce check`); unused parameters stay advisory
   merge      Clone-merge suggestions: every clone group (T1/T2 families, T3 pairs) anti-unified by the core's merge/1 — the parameters a merged function takes, the member kept, the lines saved, and feasible or why not (advisory, never a verdict)
+  arch       Architecture analysis: the directory layers and the arcs to cut out of their cycles, the file clusters and the files outside their cluster's directory, per-directory fan-in / fan-out / instability, and under --impact the files a change reaches — judged by the core's arch/1 (advisory, never a gate)
   erase      Deterministic two-phase eraser: plan what is provably safe to erase via the core's erase/1; dry-run by default
   check      The ratchet gate: judge the repo against ce-baseline.json — ratchet OR --fail-under floor, either alone fails, and the console names the held conditions; a subdirectory scopes the measurement (nothing is persisted)
   baseline   Persist the core's newBaseline as ce-baseline.json, at the project root only. Three named acts: none — the violation set may only shrink; CE_ACCEPT_FENCE=1 — a held fence condition alone (knobs_digest, rows_dropped) is re-pinned under the declared knobs; CE_ACCEPT_BASELINE=1 — re-establish from the current tree, the one act that creates a missing file. A degraded judgment is never persisted
@@ -338,6 +339,25 @@ Options:
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --group <GROUP>    Print one group alone on the console (its number in the document); the JSON document is always whole
+  -h, --help             Print help
+```
+
+## ce arch
+
+```text
+Architecture analysis: the directory layers and the arcs to cut out of their cycles, the file clusters and the files outside their cluster's directory, per-directory fan-in / fan-out / instability, and under --impact the files a change reaches — judged by the core's arch/1 (advisory, never a gate)
+
+Usage: ce arch [OPTIONS] [ROOT]
+
+Arguments:
+  [ROOT]  Directory to analyze (default: current directory)
+
+Options:
+      --format <FORMAT>  [default: console] [possible values: console, json]
+      --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
+      --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
+      --db <DB>          Index database path (default: <root>/.ce/index.db)
+      --impact <IMPACT>  Trace the files that depend on this one (root-relative; repeatable)
   -h, --help             Print help
 ```
 

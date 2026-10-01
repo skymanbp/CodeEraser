@@ -205,7 +205,7 @@ request per arm over one core link ([face.rs:58-75](../../../cli/src/similar/fac
   line and one line per candidate, `at key  N P C D S L  role`; `--format json` is the document
   ([main_similar.rs:31](../../../cli/src/main_similar.rs#L31), [face.rs:165](../../../cli/src/similar/face.rs#L165)).
 - **MCP** `similar_units` — the fifteenth read-only tool, `{at, text, unit, widen}`, relaying
-  the same document ([tools.rs:173](../../../cli/src/mcp/tools.rs#L173)).
+  the same document ([tools.rs:178](../../../cli/src/mcp/tools.rs#L178)).
 - **GUI** the eleventh screen, `similar`: an input for `at` or text, the widen switch, the
   candidate table with the six evidence columns ([similar.js](../../../gui/ui/similar.js),
   [commands.rs](../../../gui/src-tauri/src/commands.rs)).

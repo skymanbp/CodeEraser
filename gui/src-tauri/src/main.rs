@@ -38,6 +38,7 @@ fn main() {
             commands_query::rules_report,
             commands_flow::flow_report,
             commands_query::merge_report,
+            commands_query::arch_report,
             commands::erase_preview,
             commands::erase_apply,
             commands::erase_log_report,

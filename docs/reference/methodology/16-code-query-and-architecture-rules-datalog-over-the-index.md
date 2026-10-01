@@ -273,10 +273,10 @@ the exclude dialect cannot read is a program error at the glob's token before an
   witnesses — every proof node indented under its answer, and one counts line; every sentence
   has its Chinese twin and the program's own words stay as written
   ([console.rs:1-8](../../../cli/src/query/console.rs#L1), [console.rs:13](../../../cli/src/query/console.rs#L13),
-  [main_lang.rs:64](../../../cli/src/main_lang.rs#L64)).
+  [main_lang.rs:79](../../../cli/src/main_lang.rs#L79)).
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
-  ([tools.rs:190](../../../cli/src/mcp/tools.rs#L190), [tools.rs:211](../../../cli/src/mcp/tools.rs#L211),
+  ([tools.rs:195](../../../cli/src/mcp/tools.rs#L195), [tools.rs:216](../../../cli/src/mcp/tools.rs#L216),
   [adapters.rs:175](../../../cli/src/mcp/adapters.rs#L175)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch,
   answers it as one table per goal under its own column names with the derivation rows under an
@@ -337,7 +337,7 @@ wire bytes — the prelude with the schema echo, an assertion's violation, a `wh
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
 aggregate over a set — and a tests-repo leg regenerates them through the real lexer so every
 request line is the prelude followed by its program
-([Spec.hs:88](../../../core/test/Spec.hs#L88), [query_golden.rs:25](../../../cli/tests/it/query_golden.rs#L25),
+([Spec.hs:89](../../../core/test/Spec.hs#L89), [query_golden.rs:25](../../../cli/tests/it/query_golden.rs#L25),
 [query_golden.rs:111](../../../cli/tests/it/query_golden.rs#L111)).
 
 On the measuring side the unit legs hold the legend to the core's echo and the vocabulary to the

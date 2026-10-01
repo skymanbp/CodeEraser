@@ -51,7 +51,7 @@
   which every heading here links into.</p>
   <nav class="toc" aria-label="Sections">
     <p class="k">On this page</p>
-    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li><li><a href="#f17"><b>17</b>Intra-function dead code</a></li><li><a href="#f18"><b>18</b>Clone merge suggestions</a></li></ul></div>
+    <div class="row"><a class="sec" href="#analysis">Analysis families</a><ul><li><a href="#f16"><b>16</b>Code query and architecture rules</a></li><li><a href="#f17"><b>17</b>Intra-function dead code</a></li><li><a href="#f18"><b>18</b>Clone merge suggestions</a></li><li><a href="#f19"><b>19</b>Architecture analysis</a></li></ul></div>
     <div class="row"><a class="sec" href="/how/">Judgment families</a><ul><li><a href="/how/#families">Families 01–15</a></li><li><a href="/how/#honesty">Honesty boundaries</a></li></ul></div>
   </nav>
 </section>
@@ -167,6 +167,36 @@ kept   : the member whose file has the greatest in-degree; savings = Σ lines �
   </ul>
 </div>
 
+<div class="fam">
+  <h3 id="f19"><span class="n">19</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md">Architecture analysis — layers, cuts, clusters, impact</a></h3>
+  <p class="job">Reads how the directories depend on each other: which sit at the bottom, which arcs to cut
+  to break their cycles most cheaply, which files would sit better beside the files they talk to, each
+  directory's fan-in, fan-out and instability, and what a change to a file reaches. Advice: no gate reads
+  it, <code>ce arch</code> exits 0 with a document.</p>
+  <pre>arcs   : dir(F) → dir(G) per file reference, dir(F) → D per package reference; inside one directory uncounted
+cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
+layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
+cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
+impact : breadth-first over the references read backwards, the focus at depth 0
+metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when nothing touches the directory</pre>
+  <p class="note">The measuring side sends five integer tables — the measured files with their directory
+  and line count, the directory tree, the file-to-file references, the file-to-package references at
+  the package's directory, and the <code>--impact</code> files — and labels the answer back: every cut
+  arc carries the file references behind it. The core folds the references onto the directory graph,
+  finds its feedback arc set one strongly connected component at a time, layers what is left, clusters
+  the file graph, walks the impact and measures every directory. A cut from the greedy road is minimal,
+  not proven minimum, and says so. This repository's reading of one pinned commit is frozen, so a drift
+  means the measurement or the core moved.</p>
+  <ul class="consts">
+    <li><b>fileCap</b> 131072</li>
+    <li><b>refCap</b> 524288</li>
+    <li><b>exactVertexCap</b> 14</li>
+    <li><b>instabilityScale</b> 1000</li>
+    <li><b>schema</b> ce.arch-report/0.1.0</li>
+    <li><b>since proto</b> 7.6.0</li>
+    <li><b>wire</b> arch/1</li>
+  </ul>
+</div>
 
 <footer class="site">
   <p>Apache-2.0 · <a href="/">Overview</a> ·

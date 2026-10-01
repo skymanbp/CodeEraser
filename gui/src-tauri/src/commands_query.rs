@@ -38,3 +38,19 @@ pub async fn rules_report(win: tauri::Window, root: String, why: bool) -> Result
     })
     .await
 }
+
+/// The architecture document (plan v2.31 step 9) — the SAME document
+/// `ce arch --format json` prints, rendered in the reports hub by
+/// hub_arch.js; `impact` are the root-relative paths whose dependents
+/// the core traces. Advisory like its CLI face.
+#[tauri::command]
+pub async fn arch_report(
+    win: tauri::Window,
+    root: String,
+    impact: Vec<String>,
+) -> Result<Value, String> {
+    task(win, "arch", root, move |r, c| {
+        codeeraser::faces::arch(r, c, &impact)
+    })
+    .await
+}

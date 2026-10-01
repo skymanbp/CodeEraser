@@ -10,18 +10,18 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 7.5.0 = the fifteenth judgment family, `merge/1` (plan v2.31 step
--- 6; ADR-008 seventh instalment, design booklet
--- docs/reference/analysis-track.md §6), additive: a new request type
--- `merge.request` — the clone groups with their family, the members
--- with their lines and file in-degree, one tree per member in
--- clone/1's postorder encoding with a leaf-hash and a position-class
--- column — answered by `merge.result`: per group the parameter count,
--- the member kept, the lines saved, feasibility and its reason, per
--- hole each member's first and last root, and the counts (CE.Merge
--- and its modules); clone/1's tree gains the optional `leaf` column,
--- which its judgment never reads. Every existing family answers byte
--- for byte as before; the hello's capability list grows by one name.
+-- 7.6.0 = the sixteenth judgment family, `arch/1` (plan v2.31 steps
+-- 8-9; ADR-008 seventh instalment, design booklet
+-- docs/reference/analysis-track.md §7), additive: a new request type
+-- `arch.request` — the measured files with their directory and lines,
+-- the directory tree, the file-to-file and file-to-directory
+-- references, the focus files — answered by `arch.result`: the
+-- directory layers, the arcs to cut out of the directory cycles with
+-- their `exact` bit, the file clusters, the misplaced files, the
+-- impact of the focus and each directory's fan-in, fan-out and
+-- instability, and the counts (CE.Arch and its modules). Every
+-- existing family answers byte for byte as before; the hello's
+-- capability list grows by one name.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the
@@ -29,7 +29,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "7.5.0"
+proto = "7.6.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

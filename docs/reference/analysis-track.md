@@ -31,7 +31,7 @@
 | `query/1` | 7.3.0 | `program=[[kind,value]]` 记号流；`facts={"<code>":[[…]]}` 只含程序引用到的表（键 = 谓词码的十进制，`set` 表是其中一张），每表按元组严格升序；`prelude` 前奏子句数；`why` / `schema` 两个布尔 | `goals=[[goal,kind,sorts…]]`、`answers=[[goal,args…]]`、`proof=[[goal,answer,node,parent,rule,pred,args…]]`、`errors=[[token,code]]`、`counts={rules,queries,asserts,strata,facts,derived,answers,violations,proofNodes,proofTruncated}`、`schema=[[code,arity,sorts…]]`（只在请求要时） | 记号 65,536 / 事实行 4,194,304 / 派生元组 2,097,152 / 推导结点 16,384；`query_too_large` |
 | `flow/1` | 7.4.0 | `units=[[u,lang,params]]`、`stmts=[[u,seq,parent,kind,flags,aux]]`、`vars=[[u,v,declSeq,flags]]`、`uses=[[u,seq,v,mode]]` | `findings=[[u,kind,seq,v,seqEnd]]`、`counts={units,stmts,vars,uses,findings,dynamicUnits}` | 行 524,288（四表合计）；`flow_too_large` |
 | `merge/1` | 7.5.0 | `groups=[[g,family]]`、`members=[[g,m,unit,lines,fileIndeg]]`、`trees=[{lab,lld,leaf,slot}]`（按成员序） | `suggestions=[[g,params,kept,savings,feasible,reason]]`、`holes=[[g,hole,param,m,post,postEnd]]`、`counts` | 组 4,096 / 结点 1,048,576；`merge_too_large` |
-| `arch/1` | 7.6.0 | `files=[[F,D,lines]]`、`dirs=[[D,parent]]`、`edges=[[F,G,w]]`、`pkgEdges=[[F,D,w]]`、`focus=[F…]` | `layers=[[D,level]]`、`cuts=[[F,G,w,exact]]`、`clusters=[[F,cluster]]`、`misplaced=[[F,D]]`、`impact=[[F,depth]]`、`metrics=[[D,fanIn,fanOut,instability]]`、`counts` | 文件 131,072 / 边 524,288；`arch_too_large` |
+| `arch/1` | 7.6.0 | `files=[[F,D,lines]]`、`dirs=[[D,parent]]`、`edges=[[F,G,w]]`、`pkgEdges=[[F,D,w]]`、`focus=[F…]` | `layers=[[D,level]]`、`cuts=[[D,E,w,exact]]`、`clusters=[[F,cluster]]`、`misplaced=[[F,M]]`、`impact=[[F,depth]]`、`metrics=[[D,fanIn,fanOut,instability]]`、`counts` | 文件 131,072（`fileCap`）/ 引用 524,288（`edges` + `pkgEdges` 合计，`refCap`）；`arch_too_large` |
 
 - 四个 minor 各随其步，`contracts/VERSIONING.md` 各一条（最新在前），`Protocol.hs` 的 `families` 表各加一行（hello 能力表由它派生），`Version.hs` 与 `corelink.rs` 的 `PROTO` 同步；旧核缺能力时 Rust 经 `corelink/judged.rs::ask` 具名降级「core offers no `<family>/1` (pre-7.x.0)」。
 - 拒绝（contract）按既有形：表形不合、非严格升序、下标越界、负值、成对表缺一——每条点名行号；程序错误（语法 / 未绑定 / 不可分层 / 类别不合 / 未知谓词 / 元数不一）**不是拒绝**，是正常应答里的 `errors` 表（§4.5）。
@@ -225,20 +225,20 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 7.2 判决（核 `CE.Arch.*`）
 
-- 目录图：文件边按目录聚合（同目录内不计），加 `pkgEdges`。
-- 分层：去掉最小反馈弧集后的拓扑层级（`layers`）；反馈弧集 = `cuts`（拆环最省改法）——强连通分量 ≤ 12 条边穷举精确（`exact = 1`），更大用 Eades–Lin–Smyth 贪心（`exact = 0`）；权 = 边的引用数。
-- 聚类：文件图上的确定性 Louvain（结点按 id 序、并列取小 id，两遍即停）→ `clusters`；文件所在目录与其簇的多数目录不同 = `misplaced`。
-- 影响面：从 `focus` 反向 BFS，`impact=[[F, depth]]`。
-- 度量：每目录 fanIn / fanOut / 不稳定度 I = out / (in + out)（千分整数）。
+- 目录图：结点 = 全部目录；文件边按目录聚合（同目录内不计）、`pkgEdges` 的 F → D 折成 dir(F) → D（同目录不计），同一对目录的两种边合并、权相加。
+- 分层：反馈弧集按目录图的每个强连通分量各算——分量 ≤ 14 顶点用按顶点子集记忆化的排序 DP 精确（线性序的代价 = 后向弧的 (权和, 弧数, 按 (D,E) 排序的弧表) 三元组字典序；`cost(S) = min over v ∈ S of cost(S∖{v}) ⊕ v 排在 S 末尾时 v → S∖{v} 的弧`，2^14 × 14 状态，回溯取序、cuts = 后向弧集），`exact = 1`；更大用 Eades–Lin–Smyth 加权贪心（汇点入尾段、源点入首段、否则取出权 − 入权最大者、并列取 id 小，每摘一点重判）再按 (D,E) 升序逐条试放回、放回不成环即留下，`exact = 0`；权 = 边的引用数；`cuts=[[D,E,w,exact]]` 按目录粒度出（文件级展开归测量侧——包边没有 G，目录粒度是唯一无洞的形）；去掉 cuts 后 level(D) = 0 若无出弧、否则 1 + max level(E)，`layers` 每目录一行。
+- 聚类：文件图（只用 `edges`，无向、两向权相加）上的确定性 Louvain：从单点社区起、按结点 id 升序局部移动，增益按 2m·k_{i,C} − Σ_tot(C)·k_i 的整数形比（留在原社区的增益也按先把 i 摘出算）、并列取社区 id 小、只在严格优于留在原社区时移动，一遍无移动即收敛；只聚合一次（超结点按最小成员 id 编号，第二层再局部移动到收敛）即停；簇号按簇内最小文件 id 升序重编 → `clusters`；簇的多数目录 M = 簇内文件最多的目录（并列取 D 小）；文件 F 错位 ⇔ M 在簇内的文件数**严格大于** dir(F) 在簇内的文件数（并列 = 无证据、不错位；单文件簇由此不错位；2026-09-30 由 golden 第 7 对的环形收紧：15 个单文件目录成环时旧规则判 11/15 错位而无一处有证据）= `misplaced=[[F, M]]`。
+- 影响面：从 `focus` 沿反向文件边 BFS（`pkgEdges` 的 F → D 读作 F 引用 D **直属**的每个文件，不含子目录），`impact=[[F, depth]]`，focus 自身 depth 0。
+- 度量：每目录 fanIn / fanOut = 有弧指向它 / 它指向的互异目录数（去 cuts 前）；不稳定度 I = ⌊1000 · out ÷ (in + out)⌋，in + out = 0 记 −1。
 
 ### 7.3 面
 
-`ce arch [--impact <path>…] [--format json]`：报告 `ce.arch-report/0.1.0`（分层表、拆环建议〔每条边带两端路径与引用数〕、簇、错位文件、影响面、目录度量）；MCP `architecture`；GUI Arch 屏（分层图 + 拆环表 + 影响面输入）。顾问。
+`ce arch [--impact <path>…] [--format json]`：报告 `ce.arch-report/0.1.0`（分层表、拆环建议〔目录对带引用数与 `exact`，其下由 Rust 展开成文件级边——`edges` 里落在该目录对的行加 `pkgEdges` 里落在它的行〕、簇〔簇号是核的，Rust 只回标路径与多数目录〕、错位文件、影响面、目录度量〔−1 → null〕；核起不来或答不了、核不提供家族、本地越上限 = `degraded` 具名、六表空，与查询族同一姿态；核对已计价的请求答 degraded 是上限镜像漂移 = 错误）；MCP `architecture`（`impact` 路径数组）；GUI = reports 枢纽里的 arch 报告（自定义渲染：分层带 + 拆环表 + 错位 / 簇 / 影响面 / 度量表，枢纽的路径输入喂 `impact`；§13 第 26 条的读法）；`--impact` 点名不是 measured 文件的路径按名拒、退 2。顾问。测量侧的表：文件结点 = `structure` 同一条取图路的 measured 文件结点按路径序，目录 = `structure::tree::build` 的树（parent < D），`lines` 与 `structure` 的缝定价同一来源，`edges` 收任何 kind / rung 的文件 → 文件边（section 目标折到其文件，自环丢），`pkgEdges` 收 `GRAN_PACKAGE` 目标且目录在树内的边，两表各按 (F, G) / (F, D) 合并计数。
 
 ### 7.4 门
 
-- 核：分层与「去掉 cuts 后无环」互证；精确 FAS 与穷举参考在随机小图上逐权等价；贪心 FAS 结果无环且 ≤ 穷举的 2 倍（记录界，随机电池）；Louvain 确定性（同图两跑逐字节同）；影响面与朴素闭包等价；golden 六对。
-- 冻结自仓读数：本仓的分层 / cuts / 簇冻结（`contracts/eval/arch-self-v1.json`），改动即漂移门（自仓是活语料，漂移随代码变，按 EVAL-SET 复活协议改签）。
+- 核：分层与「去掉 cuts 后无环」互证；精确 FAS（顶点子集 DP）与两个独立参考——弧子集穷举（≤ 12 弧）与全排列枚举——在 4 顶点全体有向图与两族有籽随机图上逐权、逐弧表等价；贪心 FAS 结果无环且极小，对 DP 最小值的比只记录不断言（ELS 是启发式、无常数界；2026-09-30 首轮电池在 8–10 顶点强连通图上观测到最差 4×，正是把精确范围从 ≤ 12 弧抬到 ≤ 14 顶点的缘由）；`exact` 位 ⇔ 分量 ≤ 14 顶点；Louvain 确定性（同图两跑逐字节同）；影响面与朴素闭包等价；golden 七对。
+- 冻结自仓读数：本仓**一个钉住提交**的分层 / cuts / 目录度量 / 错位 / 簇计数冻结（`contracts/eval/arch-self-v1.json`；门用 `git archive <commit>` 去掉 `.gitmodules` 物化那棵树再量——树不动，读数只随测量或核的行为动，漂移即真漂移；换钉提交 = 按 EVAL-SET 复活协议改签）。
 
 ## 8. 核的模块布局与尺寸
 
@@ -272,8 +272,8 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 | 5 | 死代码 C（2026-09-30 已交付）：`ce flow`（`main_flow.rs` + `cli/src/flow_report/` 面与控制台）+ 守卫腿（`guard/flow.rs` + `guard/flow_novel.rs`，daemon 2.2.0 加性 `flow` 请求）+ Stop / precommit / commitmsg 行的 `flow` 对象（feed `ce.observe` 0.12.0 加性）+ `[flow] tier`（出厂 observe、进指纹）+ MCP `flow` + GUI 报告枢纽 flow 族 + 册 17 + parity 行 | 三面字节同、守卫在判决语言（Python）一侧出声 / 在顾问语言（Rust）一侧静默；FPR 台账随回放台账 |
 | 6 | 合并 A（落地第一部分 2026-09-30，与步 7 同一提交）：核 `CE.Merge.*`（Contract / Tree / Align / Mapped / Holes / Cost + `Merge.hs`，七模块 645 行）+ `CE.Clone.Ted.tedMapping`（与 `ted` 同一单元格递推）+ `MergeCases` / `MergeRefusals`（24 条拒绝按名）/ `MergeProps` + `ReferenceTreeGen` + golden 六对 + proto 7.5.0（`clone/1` 可选 `leaf` 列；十四份既有 golden 只动 proto 字面与 hello 能力表） | 定律电池、TED 距离不变 |
 | 7 | 合并 B（落地第一部分 2026-09-30：`cli/src/merge/`〔groups / groups_trim / wire / face / console + slot 表八个文件〕、`dedup/t3/tree.rs` 一次遍历出 `lab` / `lld` / `leaf` / `slot`、`ce merge`〔`main_merge.rs`，头部读 `main_prelude.rs`〕+ MCP `merge_suggestions` + GUI 报告枢纽 merge 族〔`hub_merge.js`〕+ 冻结建议集五语料 + 对判决盲的抽样 100 行与四批批次 + 册 18；落地第二部分 2026-09-30：四个独立判官的盲判〔四批各 25 题、100 行〕、审阅档 `merge-review-v1.json`、精度册 `merge-precision-v1.json`〔由三档按定义算出、与审阅档同一提交，第 36 条〕、登记册 `docs/EVAL-SET-MERGE.md`〔三读数、核 reason × 判官 reason 混淆表与 23 条理由分歧逐条带判官 note〕；读数 feasible_agree 83 / 100、reason_agree 77 / 100、params_agree 45 / 100，只入册不设门） | 三面字节同、冻结集门 |
-| 8 | 架构 A：核 `CE.Arch.*`（Layers / Fas / Louvain / Impact）+ `ArchProps` + golden + 7.6.0 | 穷举参考等价、确定性 |
-| 9 | 架构 B：Rust 表装配（含 `pkgEdges`）、wire、`ce arch` + MCP + GUI + 冻结自仓读数 + 册 19 | 三面字节同、冻结读数门 |
+| 8 | 架构 A（落地 2026-09-30，与步 9 同一提交）：核 `CE.Arch.*`（Contract / Cost / Dirs / Fas / Layers / Louvain / Impact + `Arch.hs`，八模块 653 行）+ `ArchCases` / `ArchRefusals`（22 条拒绝按名）/ `ArchFasProps` / `ArchProps` + `ReferenceArch` + golden 七对 + proto 7.6.0（`Protocol.hs` 一行、`Version.hs`、`corelink.rs`、VERSIONING 一条；十五份既有 golden 只动 proto 字面与 hello 能力表） | 精确 FAS 对两个参考逐权逐弧等价、贪心 cut 无环且极小、Louvain 确定性、`cabal test` 624 ok |
+| 9 | 架构 B（落地 2026-09-30）：`cli/src/arch/`（tables / wire / face / console）+ `ce arch`（`main_arch.rs`，头部读 `main_prelude.rs`）+ MCP `architecture` + GUI 报告枢纽 arch 族（`hub_arch.js`；枢纽长出 `registerHub`、路径列表参数、自定义渲染器三个钩子）+ 冻结自仓读数 `contracts/eval/arch-self-v1.json`（钉 f2a7a2b4 的 `git archive` 树；在落地提交的干净树上重生成，是落地后的第二个提交）+ 册 19 | 三面字节同、冻结读数门 |
 | 10 | 全量文档与事实（§10）+ 语言条实测记账（§11）+ 官网新页对部署 | docs / site / facts 门全绿、引文重签 |
 | 11 | 发版 1.9.0：分数可比性声明（判决轴不动即与 1.8.0 可比；`flow` 若进 `ce check` 另声明）、基线具名重立、bench 入列 | RELEASE.md 链 |
 
@@ -294,7 +294,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 9. `merge/1` 的树——**`clone/1` 同编码加 `leaf` 与 `slot` 两列**：计划书写的是叶子哈希一列，位置类是可行性判决必需的第二个语法事实，同批加（备选「核从 kind 哈希猜位置类」——核不知道文法）。
 10. T3 对的反统一——**扩 `CE.Clone.Ted` 回映射，距离值不变**（备选「只做 T1/T2」丢掉近似克隆这一半）。
 11. `arch/1` 的包粒度边——**`pkgEdges` 单独一表折进目录图**：`structure/1` 至今丢掉 Go / R / Java 的包导入与 Markdown 目录链接（盘点所见），新家族不继承这个洞（备选「沿用 `dirEdges`」）。
-12. 反馈弧集——**≤ 12 条边穷举精确、更大贪心并标 `exact`**：报告面说清哪条是最优哪条是近似（备选「全贪心」）。
+12. 反馈弧集——**≤ 14 顶点的强连通分量按顶点子集 DP 精确、更大贪心并标 `exact`**（2026-09-30 修正：立项写的是 ≤ 12 条弧穷举；A8 的随机电池量到 ELS 贪心对最优最差 4×，精确范围改按顶点计的排序 DP〔2^14 × 14 状态、三元组并列规则有最优子结构〕，弧子集穷举退为参考；贪心无常数界，电池只记录最大观测比不断言）：报告面说清哪条是最优哪条是近似（备选「全贪心」）。
 13. 官网卡片放哪——**新页对 `site/how/analysis/`**：how 页 732 行贴着 750 硬线，四张卡放不下；页面也不该为了塞卡片而删既有内容（备选「压缩既有卡片」）。
 14. golden 重生器——**测试子仓的 `--ignored` 腿**：会话草稿目录里的脚本随会话消失（盘点所见），daemon golden 已有同形先例（备选「入库 python 脚本」引入第三种工具语言）。
 15. 语言条低于 40 % 时——**上呈用户，不自行拉伸**：占比是副产品、不为占比写代码（§1 第 7 条）。
@@ -319,3 +319,8 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 34. 落地时的位置类归类与表的住处（2026-09-30，主会话复核）——**slot 表住 `cli/src/merge/`**：八个文件原挂在 `cli/src/flow/slot*.rs`，而那个目录去掉 `mod.rs` 就是降表（`flow_provenance` 的 `ANSWERED_BY`），放在那里一落地就退役十份 flow 精度册；`git mv` 到 `cli/src/merge/`、`#[path]` 挂载删除、`use` 路径不变，`cli/src/flow` 与步 4 提交 E 逐字节同。**提交 E 的探针段带进来的三处归类**：Rust `raw_string_literal` = 表达式（与 `string_literal` 并列，Go 的表早已如此）、TypeScript `type_query`（类型位置的 `typeof x`）= 类型、C++ `field_initializer_list` / `field_initializer` = 其他（构造函数的成员初始化表是结构，实参各按自己的类，Rust 表里同名结点同读）。
 35. CLI 面的公共导入一处（2026-09-30，主会话复核）——`main_flow.rs` / `main_query.rs` / `main_similar.rs` / `main_merge.rs`（步 9 的 `main_arch.rs` 同）五个头是同四行公共导入（`main_cmds::{fail, json, or_cwd}`、`main_judge::JudgeArgs`、`report::print_doc`、`std::process::ExitCode`），查重门把两个头读成一块；拆导入行、换记号序是躲门不是消重复，不收——新文件 `cli/src/main_prelude.rs` 承这四行 `pub(crate) use`（`main_judge.rs` 已 292 行，不往里塞），各头改一行 `use crate::main_prelude::*;` 加自己家族的一行。
 36. 合并家族的审阅档与精度册同一提交（2026-09-30，主会话按原则自答）——flow 的精度册要在审阅档之后的干净树上另起一提交，是因为它记产品在生成那一刻的答案（降表一动读数就变，`generated_from` 钉住那棵树）；合并家族的精度册是三份冻结档（建议集、样本、审阅档）的纯函数，不读产品、没有 `generated_from`，在哪棵树上算都一样——为它单开一提交记不下任何可观测的事，`§12` 第 7 行「在审阅档提交之后的干净树上生成」据此改为「由三档按定义算出、与审阅档同一提交」。读数只入册不设门：合并建议是顾问（§6.4 的立场），`feasible_agree` / `reason_agree` / `params_agree` 三读数与分歧表供下一代参数化与理由排序回修；分歧逐条带判官的 note 入册，真值不改、核不改。
+37. `arch/1` 测量侧的六条读法（2026-09-30，A8 / A9 落码时定）——**包边 F → D 只到 D 直属文件、ELS 先摘汇点再摘源点各取 id 最小、Louvain 的留守增益也按摘出后算、三条越界拒绝各具名、拒绝序 = 文件行形 → 目录行形 → 文件的目录范围 → edges → pkgEdges → focus、section 目标折到文件而 package 目标进 `pkgEdges`**：每条都是两种读法里更保守、更可核的那种（备选各条的另一读法都要多一个没人送的事实）。
+38. A9 审阅裁定（2026-09-30，主会话）——**测量侧与三面整体接受**：`tables.rs::folded` 的段折叠按结点 `path`（段结点的 `path` 是文件路径、slug 另存）成立；包引用只在树里有该目录时入 `pkgEdges`（§7.3）；`wire.rs::consume` 按键核每张答表的行数（layers / metrics 每目录一行、cuts / clusters / misplaced / impact 对计数）、宽度与 id 范围，`face.rs::label` 的 zip 不会静默截断；多数目录的读法（最少 id 平局）与核对 misplaced 的读法一致，簇与它的错位行不会各说各的多数。**落地三件**：册 19 §6 不叫「Known limits」而是「设计边界」（与册 18 §7 同形；贪心路的 `exact` 0 是算法边界、包引用到达包目录直属的文件是 Go / Java 的包模型、簇是整树的函数而错位行是顾问、引用只来自阶梯解出的站点是图家族的定义——用户令「不要留已知限制」，四条都是定义句，没有可修的项）；`contracts/eval/arch-self-v1.json` 在落地提交的干净树上重生成、作第二个提交（车道档的 `generated_from` 是变基后不存在的提交且 dirty；amend 会换掉第一个提交的 sha，所以照第 30 条 G 对 F′ 的先例分两个提交）；proto 7.6.0 随落地（备选「车道上先升版」让车道与主干各持一个 7.6.0）。
+39. 车道变基到合并车道后的三个克隆块（2026-09-30，A9b）——**一个所有者，不躲门**：`arch/wire.rs` 的能力常量与计数键对 `merge/wire.rs` 同形 → 计数键改成一张空格分隔的文本表经 `wire::count_keys()` 读（同文件 TABLES / IDS / DENSE 已是此形）；能力门对 `flow_report/face.rs` 同形 → 改经提升过的 `corelink::judged::ask`（同一句具名缺席「core offers no arch/1 (pre-7.6.0)」）；`faces.rs` 里 merge 与 arch 各拼一次 `report_json(&run(…)?)` → `arch::face::document` 持有一个根的 arch 文档、`faces::arch` 只返回它；子仓 MCP 腿对 `flow_face.rs` 同形 → `common::McpSession::relayed`；两根查重回到预算 50 / 91、未动，flow 与 merge 的文件一个没碰。
+40. 上限常量名 `refCap`（2026-09-30，A9）——**`CE.Arch.Cost.edgeCap` 改名 `refCap`**：`docs_consts` 按裸名在全仓找 how 页芯片的唯一源常量，`CE.Graph.Cost` 已导出 `edgeCap`（图家族 06 号卡的芯片）；而这个上限本就数两张引用表（`edges` + `pkgEdges`），`ref` 是更准的名（备选「芯片加限定」让一个裸名在两处各有一义）。
+41. `arch/1` 的三种具名降级与两种错误（2026-09-30，A9）——**降级**：核起不来或答不了、核不提供 `arch/1`（「pre-7.6.0」）、请求在本侧越过 `fileCap` / `refCap` 镜像——三者都出完整文档、`degraded` 具名、六表空、`ce arch` 退 2；**错误**：核对本侧已计价的请求答 degraded（上限镜像漂移）、应答表的行数 / 宽度 / id 范围与请求不符（偏斜应答）——两者不是降级，是本侧或核的缺陷，按名失败（与 `flow/1` 第 21 条、`merge/1` 同一姿态；备选「偏斜按降级读」把缺陷读成正常的不判）。

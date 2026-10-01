@@ -14,6 +14,21 @@
 use std::collections::HashMap;
 use std::sync::OnceLock;
 
+/// Read `--lang` straight off argv (both `--lang zh` and `--lang=zh`)
+/// — the pin must land before clap builds the Command, or the help
+/// text could not switch on the same invocation. The clap arg on
+/// main_cli.rs's `Cli` still declares, documents and validates the flag.
+pub(crate) fn lang_from_argv() -> Option<String> {
+    let args: Vec<String> = std::env::args().collect();
+    args.iter()
+        .position(|a| a == "--lang")
+        .and_then(|i| args.get(i + 1).cloned())
+        .or_else(|| {
+            args.iter()
+                .find_map(|a| a.strip_prefix("--lang=").map(str::to_string))
+        })
+}
+
 /// `key<TAB>zh` per line. Keys: `ce` = root about, `ce.lang` = the
 /// global flag, `<cmd>` = a subcommand's about, `<cmd>.<arg id>` =
 /// an arg's help, and `judge.<arg id>` = the shared JudgeArgs flag
@@ -74,6 +89,8 @@ flow.check	`[flow] tier` 为 deny 且存在被判决的发现时退出 1（未�
 flow.kind	只显示这些种类，逗号分隔（unreachable、dead_store、unused_local、unused_param）；计数照全量报
 merge	克隆合并建议：每个克隆组（T1/T2 族、T3 对）由核的 merge/1 做反统一——合并后函数的参数、保留的成员、省下的行数、可行与否及原因（只当顾问，永不判决）
 merge.group	控制台只印这一组（文档里的组号）；JSON 文档永远整份
+arch	架构分析：目录分层与拆开目录环所需切的边、文件簇与不在本簇多数目录里的文件、各目录的扇入 / 扇出 / 不稳定度，--impact 时给出一处改动波及的文件——由核的 arch/1 判决（只当顾问，永不当门）
+arch.impact	追踪依赖这个文件的文件（相对根目录；可重复）
 erase	确定性两段式擦除：经核 erase/1 只计划可证安全消除的行；默认演练
 erase.apply	真正擦除计划所列内容（要求 git 仓库、干净工作区、目标未变；默认为演练）
 erase.check	门模式：计划含任何可擦行即退出 1（本仓库以此自净）

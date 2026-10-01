@@ -10,7 +10,7 @@
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行（或超过其 `[[rules.class]]` 声明的那条线）的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 与 `ce commitmsg` 拒绝提交，CI 退出码拒绝合入。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown、HTML（<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十三<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。纯散文臂：`.txt`。纯文本只进文档重复语料，别处一概不进——不进尺寸门、不进预算、不进任何别的判决（`CMakeLists.txt`、`compile_flags.txt`、`robots.txt` 是机器格式，不算文本）。面：CLI · GUI（<!--ce:count:screens#word-->十二<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->二十<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown、HTML（<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十三<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。纯散文臂：`.txt`。纯文本只进文档重复语料，别处一概不进——不进尺寸门、不进预算、不进任何别的判决（`CMakeLists.txt`、`compile_flags.txt`、`robots.txt` 是机器格式，不算文本）。面：CLI · GUI（<!--ce:count:screens#word-->十二<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现，以及它的不同之处
 
@@ -26,6 +26,7 @@
 - **索引答得出的问题，索引守得住的规则。** 索引自有事实（文件、引用、单元、克隆、提及、路径类）上的 Datalog：`ce query` 答一个问题、每个答案带推导链；`ce rules` 把规则文件里的断言当门判，一条违规就是一行见证加它的推导。核负责解析、检查（类别、安全性、分层）、半朴素求值与推导；Rust 负责词法、装配事实表与回标 id，名字永不过线。
 - **函数内死代码，从控制流图读出。** Rust 把 `FlowSpec` 表认得的语言的每个单元降成四张整数表（单元、语句、变量、访问）；核建控制流图，答出不可达语句、死存储、未用局部量与形参。`ce flow`、MCP `flow`、GUI 报告枢纽的 flow 族与守卫的 flow 类（`[flow] tier`，出厂 observe）读同一份文档；只有盲评精度考题过门的语言里，发现才算判决，未用形参永远只是顾问。
 - **克隆组怎样合并成一个函数。** 对每个 T1/T2 克隆族与 T3 近似对，Rust 按克隆族的后序编码送出每个成员的树，外加两列整数：叶的源文本哈希与位置类（语句、表达式、类型、名字、其他）；核把成员对齐，把它们不同的地方变成参数（反合一），答出参数个数、保留哪个成员（被引用最多的文件）、省几行、可不可行及原因。`ce merge`、MCP `merge_suggestions` 与 GUI 报告枢纽的 merge 族读同一份文档，每个参数标着各成员的原文；只当顾问，永不成门。
+- **目录之间怎样相互依赖。** Rust 把 measured 文件及其目录与行数、目录树、文件引用、以及文件对整个目录的包粒度引用作为五张整数表送出；核把它们折成目录图，按最省的反馈弧集拆环（≤ 14 个目录的分量精确、更大用贪心序，每条拆掉的弧都标明走的是哪条路），把剩下的分层，在文件图上聚类（确定性 Louvain），点名不在其簇所在目录的文件，沿 `--impact` 点名的文件走影响面，并量出每个目录的扇入、扇出与不稳定度。`ce arch`、MCP 工具 `architecture` 与 GUI 报告枢纽的 arch 族读同一份文档；只当顾问，永不进门。
 - **被度量的结构。** <!--ce:count:structure_axes#word-->八<!--/ce-->轴（几何、命名多样性、混杂、错位、文档覆盖、过期文档、冗余、模块度）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
 - **挪几行骗不过的检查分数。** 门自己的各轴（尺寸、复杂度、克隆、文档重复、死码、变动、环）各计违规质量占机会数的份额 floor(1000·v/(v+n))，加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`），改一个旋钮会让 `ce check` 具名停下而非挪动所有线。
 - **时间是一等信号。** 最近 512 个分数点上的 Theil–Sen 斜率（一个野点拽不动中位数）；变动 = 新增 − 按 blame 存活的行；联判格把相似度、图位置与变动合成 merge / delete / churn-hotspot，带理由位与置信。
@@ -125,6 +126,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | `ce query` / `ce rules` | 对索引事实提一个 CE Datalog 问题，`--why` 带推导链；规则文件里的断言当门判（有违规退 1、程序错误退 2），文件由 `--file` 或 `[rules] file` 指定，否则是仓根的 `ce.rules` |
 | `ce flow` | 函数内死代码（不可达语句、死存储、未用局部量与形参），核在控制流图上判；`--kind` 只筛列表，`--check` 只在 `[flow] tier = "deny"` 且有被判决的发现时退 1，核判不了退 2 |
 | `ce merge` | 克隆合并建议：每个克隆组在核里反合一，给出参数、保留的成员、省下的行、可不可行及原因；`--group n` 只印一组。只当顾问，永不判决 |
+| `ce arch` | 架构分析：目录分层、拆环要去掉的弧（精确或贪心）、文件簇与错位文件、每目录扇入 / 扇出 / 不稳定度；`--impact <path>` 追出一次改动波及的文件。只当顾问，永不判决 |
 | `ce structure` | <!--ce:count:structure_axes#word-->八<!--/ce-->轴；`--split-candidates` 为每个越过软线的文件计最优缝价 |
 | `ce check` / `ce baseline` | ADR-006 棘轮与分数地板，<!--ce:count:fail_conditions#word-->六<!--/ce-->个 fail 条件逐名报在控制台；`baseline` 只在根、且只在具名动作下持久化 |
 | `ce erase` | 确定性两段式擦除；默认演练，`--apply` 有干净工作区前置，`--log` 读已执行擦除的轨迹 |
@@ -157,6 +159,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 代码查询与架构规则 | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
 | 函数内死代码（不可达、死存储、未用局部量与形参） | `ce flow`, `ce flow --check` | `reports`, `flow_report` | MCP `flow` |
 | 克隆合并建议（反统一） | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
+| 架构分析（分层、拆环、簇、影响面） | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
 | 基线写入 | `ce baseline` | — 只在 CLI：机器面永不写基线 | — |
 | 擦除计划 | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
 | 擦除执行 | `ce erase --apply` | `erase`, `erase_apply` | — 无 MCP 面：执行是人类动作 |
@@ -178,16 +181,16 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 技术栈、设计与哲学
 
-![架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十五个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染：终端、GUI、MCP 服务器、Claude Code hooks、CI](docs/assets/architecture.zh.svg)
+![架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十六个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染：终端、GUI、MCP 服务器、Claude Code hooks、CI](docs/assets/architecture.zh.svg)
 
 <sub>在 [codeeraser.dev/zh/#architecture](https://codeeraser.dev/zh/#architecture) 可缩放、拖动查看此图。</sub>
 
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）。`codeeraser` crate 里有 tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十二<!--/ce-->套已接线的语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（内置 SQLite、WAL，索引 schema <!--ce:ver:schema.index#digits-->17<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->23<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->4<!--/ce-->）、`ignore` 遍历器、`interprocess` 命名管道 / Unix socket、clap、serde、更新器 pin 用的 sha2。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->，GHC2021，`-Wall -Werror`）**：`ce-core`，每个判决家族、冻结的依赖图。
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
-- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->7.5.0<!--/ce-->，<!--ce:count:families#word-->十五<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.2.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
+- **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->7.6.0<!--/ce-->，<!--ce:count:families#word-->十六<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.2.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 Haskell 只判决不解析 · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据 · ADR-009 文档事实派生、不手写。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
-- **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十八<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户，每次 push 都在这棵树上跑<!--ce:count:gates#word-->七<!--/ce-->道产品门。
+- **哲学。** 在 Rust 里度量，在 Haskell 里裁决，在其余一切面上渲染。码过线，句子归各面。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十九<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户，每次 push 都在这棵树上跑<!--ce:count:gates#word-->七<!--/ce-->道产品门。
 
 ## 已知限制
 
@@ -204,7 +207,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 文档
 
-- [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)（由二进制与配置 schema 生成，漂移即 CI 变红）· [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十八<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
+- [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)（由二进制与配置 schema 生成，漂移即 CI 变红）· [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十九<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
 - [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [EVAL-SET-SIMILAR](docs/EVAL-SET-SIMILAR.md) · [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md) · [EVAL-SET-FLOW](docs/EVAL-SET-FLOW.md) · [language-expansion](docs/reference/language-expansion.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md) · [FPR-L2](docs/FPR-L2.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)（wire SemVer 与两段式发布 runbook）
 - 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [技术栈](https://codeeraser.dev/zh/stack/) · [实测](https://codeeraser.dev/zh/bench/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->
 

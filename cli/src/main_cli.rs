@@ -8,6 +8,7 @@
 //! whether it can fail the build, and what it costs — never a plan
 //! coordinate the user cannot resolve.
 
+use crate::main_arch::ArchArgs;
 use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
 use crate::main_erase::EraseArgs;
 use crate::main_flow::FlowArgs;
@@ -37,21 +38,6 @@ pub(crate) struct Cli {
     pub(crate) lang: Option<String>,
     #[command(subcommand)]
     pub(crate) cmd: Cmd,
-}
-
-/// Read `--lang` straight off argv (both `--lang zh` and `--lang=zh`)
-/// — the pin must land before clap builds the Command, or the help
-/// text could not switch on the same invocation. The clap arg above
-/// still declares, documents and validates the flag.
-pub(crate) fn lang_from_argv() -> Option<String> {
-    let args: Vec<String> = std::env::args().collect();
-    args.iter()
-        .position(|a| a == "--lang")
-        .and_then(|i| args.get(i + 1).cloned())
-        .or_else(|| {
-            args.iter()
-                .find_map(|a| a.strip_prefix("--lang=").map(str::to_string))
-        })
 }
 
 #[derive(Subcommand)]
@@ -176,6 +162,12 @@ pub(crate) enum Cmd {
     /// merged function takes, the member kept, the lines saved, and
     /// feasible or why not (advisory, never a verdict)
     Merge(MergeArgs),
+    /// Architecture analysis: the directory layers and the arcs to cut
+    /// out of their cycles, the file clusters and the files outside
+    /// their cluster's directory, per-directory fan-in / fan-out /
+    /// instability, and under --impact the files a change reaches —
+    /// judged by the core's arch/1 (advisory, never a gate)
+    Arch(ArchArgs),
     /// Deterministic two-phase eraser: plan what is provably safe to
     /// erase via the core's erase/1; dry-run by default
     Erase(EraseArgs),

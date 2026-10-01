@@ -199,6 +199,17 @@ fn file_why(a: &Value) -> (Option<&Path>, bool) {
     )
 }
 
+/// `impact`: the root-relative paths whose dependents to trace; a
+/// non-string entry is refused by name rather than dropped.
+pub(super) fn architecture(root: &Path, a: &Value) -> Result<String> {
+    let impact = match &a["impact"] {
+        Value::Null => Vec::new(),
+        v => serde_json::from_value::<Vec<String>>(v.clone())
+            .map_err(|e| anyhow::anyhow!("architecture: `impact` must be a list of paths: {e}"))?,
+    };
+    Ok(crate::faces::arch(root, &core(), &impact)?.to_string())
+}
+
 pub(super) fn trend(root: &Path, a: &Value) -> Result<String> {
     let commits = count(a, "commits", crate::trend::DEFAULT_COMMITS);
     // absent = measure every uncached commit, but a PRESENT batch of 0
