@@ -10916,18 +10916,28 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|0a4f414f8ac5f110|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 100,
+    "line": 110,
     "text": "fn the_review_scores_when_filed() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|83a994327f935520|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 32,
+    "line": 41,
     "text": "fn the_sample_is_the_draw_of_the_frozen_set() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|d92160582ecefe97|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 56,
+    "line": 65,
     "text": "fn readings(set: &Value, sample: &Value, review: &Value) -> Value {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|fad178af6e6b4be6|0": {
+    "target": "../../../cli/tests/it/eval_merge_review.rs",
+    "line": 195,
+    "text": "fn regenerate() {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review/answers.rs|f6f4aef3ae9814ac|0": {
+    "target": "../../../cli/tests/it/eval_merge_review/answers.rs",
+    "line": 118,
+    "text": "pub fn assemble("
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_suggestions.rs|2a22b02f7e3414bf|0": {
     "target": "../../../cli/tests/it/eval_merge_suggestions.rs",

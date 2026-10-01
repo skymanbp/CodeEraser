@@ -1,0 +1,46 @@
+{
+  "from": [
+    "contracts/eval/merge-suggestions-v1.json",
+    "contracts/eval/merge-sample-v1.json",
+    "contracts/eval/merge-review-v1.json"
+  ],
+  "readings": {
+    "all": {
+      "feasible_agree": 83,
+      "params_agree": 45,
+      "reason_agree": 77,
+      "rows": 100
+    },
+    "cobra": {
+      "feasible_agree": 4,
+      "params_agree": 7,
+      "reason_agree": 4,
+      "rows": 8
+    },
+    "codeeraser": {
+      "feasible_agree": 1,
+      "params_agree": 0,
+      "reason_agree": 1,
+      "rows": 1
+    },
+    "requests": {
+      "feasible_agree": 1,
+      "params_agree": 1,
+      "reason_agree": 1,
+      "rows": 1
+    },
+    "ripgrep": {
+      "feasible_agree": 17,
+      "params_agree": 11,
+      "reason_agree": 15,
+      "rows": 22
+    },
+    "zod": {
+      "feasible_agree": 60,
+      "params_agree": 26,
+      "reason_agree": 56,
+      "rows": 68
+    }
+  },
+  "schema": "ce.eval-merge-precision/1.0.0"
+}

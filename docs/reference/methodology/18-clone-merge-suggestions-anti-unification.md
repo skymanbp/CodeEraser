@@ -305,7 +305,7 @@ corpora's rows: `the_sample_is_the_draw_of_the_frozen_set` redraws the sample fr
 identity and feasibility, and `readings` reads each drawn row's feasibility, reason and parameter
 count. The CI leg measures the pinned self tree again and holds every row; re-freezing re-measures
 all five ([eval_merge_suggestions.rs:21](../../../cli/tests/it/eval_merge_suggestions.rs#L21),
-[eval_merge_review.rs:32](../../../cli/tests/it/eval_merge_review.rs#L32), [eval_merge_review.rs:56](../../../cli/tests/it/eval_merge_review.rs#L56)).
+[eval_merge_review.rs:41](../../../cli/tests/it/eval_merge_review.rs#L41), [eval_merge_review.rs:65](../../../cli/tests/it/eval_merge_review.rs#L65)).
 
 **The audit.** A hundred suggestions are drawn from the frozen set by the shared identity hash — the
 feasible and the infeasible half each, every half apportioned over the corpora by their share of
@@ -316,7 +316,20 @@ Independent agents who read the sample alone give each row a feasibility, a reas
 names) and a parameter
 count; the readings, overall and per corpus, are how often the core's feasibility and reason agree
 with theirs, and `params_agree` — how often the count given after seeing the core's
-parameterisation equals the core's ([eval_merge_review.rs:100](../../../cli/tests/it/eval_merge_review.rs#L100)).
+parameterisation equals the core's ([eval_merge_review.rs:110](../../../cli/tests/it/eval_merge_review.rs#L110)).
+
+**The precision.** Four judges, one batch of twenty-five each, answered the hundred rows; their answer files are
+filed verbatim, in the sample's order, as the review doc, every line held to the same row check the gate re-runs
+([answers.rs:118](../../../cli/tests/it/eval_merge_review/answers.rs#L118)). The precision doc reads no product: it is
+the three frozen docs' readings by definition, so it carries no tree and lands in the review's commit
+([eval_merge_review.rs:195](../../../cli/tests/it/eval_merge_review.rs#L195)). The core's feasibility agrees with the
+audit on 83 of the 100 rows, its reason on 77 and its parameter count on 45 (zod 60 / 56 / 26 of 68, ripgrep 17 / 15 /
+11 of 22, cobra 4 / 4 / 7 of 8, requests 1 / 1 / 1 of 1, this repository 1 / 1 / 0 of 1). Of the 23 reason
+disagreements, 11 are rows the core answers `position` and the judges find feasible, and 4 more are `position` rows
+saving no line that the judges answer `no_savings`; the core's parameter count exceeds the judges' on 50 rows and falls
+short on 5. The readings gate nothing — the family is advice — and the registry
+[EVAL-SET-MERGE.md](../../EVAL-SET-MERGE.md) lists every disagreement with the judge's note, for the next generation's
+parameterisation and reason order.
 
 ### 7. Design boundaries
 
