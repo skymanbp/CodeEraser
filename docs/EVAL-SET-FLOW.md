@@ -639,7 +639,7 @@ c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法
 ## 回放台账（步 4 提交 D1 / D2，2026-09-30）
 
 十个语言的第二读数（语料作者自己的编辑拿每条发现怎么办了：消失 = 真阳、挺过编辑 = 误拦，严格与窄两口径并记）记在 [FPR-REPLAY.md](FPR-REPLAY.md) 的
-「`flow/1` 逐语言回放」一节，冻结件 `contracts/eval/fpr-flow-v1.json`（D2 落）；读数与归因只写在那一节。它不是门：准入只读精度册（设计册 §13 第 6 条）。
+「`flow/1` 逐语言回放」一节，冻结件 `contracts/eval/fpr-flow-v1.json`（D2 已落：十行 `harness.commit` = 5e02af4a、dirty = false）；读数见那一节的三张表，归因只写在那一节。它不是门：准入只读精度册（设计册 §13 第 6 条）。
 
 ## 出处
 

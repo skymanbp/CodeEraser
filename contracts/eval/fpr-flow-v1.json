@@ -1,0 +1,1016 @@
+{
+  "corpora": [
+    {
+      "commits": 400,
+      "corpus": "requests",
+      "dynamic_skipped": 0,
+      "events": 365,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 9,
+            "removed": 3,
+            "resolved_false": 0,
+            "resolved_tp": 2,
+            "undetermined": 4
+          },
+          "strict": {
+            "findings": 9,
+            "removed": 1,
+            "resolved_false": 7,
+            "resolved_tp": 0,
+            "undetermined": 1
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 17,
+            "removed": 2,
+            "resolved_false": 0,
+            "resolved_tp": 14,
+            "undetermined": 1
+          },
+          "strict": {
+            "findings": 17,
+            "removed": 2,
+            "resolved_false": 4,
+            "resolved_tp": 11,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 84,
+            "removed": 1,
+            "resolved_false": 20,
+            "resolved_tp": 0,
+            "undetermined": 63
+          },
+          "strict": {
+            "findings": 84,
+            "removed": 1,
+            "resolved_false": 22,
+            "resolved_tp": 0,
+            "undetermined": 61
+          }
+        }
+      ],
+      "lang": "python",
+      "measured_at": "2026-09-30",
+      "narrow": {
+        "findings": 26,
+        "removed": 5,
+        "resolved_false": 0,
+        "resolved_tp": 16,
+        "undetermined": 5
+      },
+      "strict": {
+        "findings": 26,
+        "removed": 3,
+        "resolved_false": 11,
+        "resolved_tp": 11,
+        "undetermined": 1
+      },
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "units_judged": 33983,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "zod",
+      "dynamic_skipped": 0,
+      "events": 766,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 3,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 3,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 3,
+            "removed": 0,
+            "resolved_false": 1,
+            "resolved_tp": 2,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 2,
+            "removed": 2,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 2,
+            "removed": 2,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        }
+      ],
+      "lang": "typescript",
+      "measured_at": "2026-09-30",
+      "narrow": {
+        "findings": 3,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 3,
+        "undetermined": 0
+      },
+      "strict": {
+        "findings": 3,
+        "removed": 0,
+        "resolved_false": 1,
+        "resolved_tp": 2,
+        "undetermined": 0
+      },
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "units_judged": 114184,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "zod",
+      "dynamic_skipped": 1,
+      "events": 73,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 1,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 1,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 1,
+            "removed": 0,
+            "resolved_false": 1,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        }
+      ],
+      "lang": "tsx",
+      "measured_at": "2026-09-30",
+      "narrow": {
+        "findings": 1,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 1,
+        "undetermined": 0
+      },
+      "strict": {
+        "findings": 1,
+        "removed": 0,
+        "resolved_false": 1,
+        "resolved_tp": 0,
+        "undetermined": 0
+      },
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "units_judged": 877,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "ripgrep",
+      "dynamic_skipped": 0,
+      "events": 368,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 7,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 7
+          },
+          "strict": {
+            "findings": 7,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 7
+          }
+        }
+      ],
+      "lang": "rust",
+      "measured_at": "2026-09-30",
+      "narrow": {
+        "findings": 0,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 0,
+        "undetermined": 0
+      },
+      "strict": {
+        "findings": 0,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 0,
+        "undetermined": 0
+      },
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "units_judged": 78668,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "cobra",
+      "dynamic_skipped": 0,
+      "events": 534,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 1,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 1
+          },
+          "strict": {
+            "findings": 1,
+            "removed": 0,
+            "resolved_false": 1,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 19,
+            "removed": 0,
+            "resolved_false": 5,
+            "resolved_tp": 0,
+            "undetermined": 14
+          },
+          "strict": {
+            "findings": 19,
+            "removed": 0,
+            "resolved_false": 9,
+            "resolved_tp": 0,
+            "undetermined": 10
+          }
+        }
+      ],
+      "lang": "go",
+      "measured_at": "2026-09-30",
+      "narrow": {
+        "findings": 1,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 0,
+        "undetermined": 1
+      },
+      "strict": {
+        "findings": 1,
+        "removed": 0,
+        "resolved_false": 1,
+        "resolved_tp": 0,
+        "undetermined": 0
+      },
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "units_judged": 34668,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "lua",
+      "dynamic_skipped": 19972,
+      "events": 815,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 4,
+            "removed": 1,
+            "resolved_false": 0,
+            "resolved_tp": 1,
+            "undetermined": 2
+          },
+          "strict": {
+            "findings": 4,
+            "removed": 1,
+            "resolved_false": 2,
+            "resolved_tp": 0,
+            "undetermined": 1
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 2,
+            "removed": 1,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 1
+          },
+          "strict": {
+            "findings": 2,
+            "removed": 1,
+            "resolved_false": 1,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 2,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 2
+          },
+          "strict": {
+            "findings": 2,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 2
+          }
+        }
+      ],
+      "lang": "c",
+      "measured_at": "2026-10-01",
+      "narrow": {
+        "findings": 6,
+        "removed": 2,
+        "resolved_false": 0,
+        "resolved_tp": 1,
+        "undetermined": 3
+      },
+      "strict": {
+        "findings": 6,
+        "removed": 2,
+        "resolved_false": 3,
+        "resolved_tp": 0,
+        "undetermined": 1
+      },
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "units_judged": 68022,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "fmt",
+      "dynamic_skipped": 31175,
+      "events": 446,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 1,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 1
+          },
+          "strict": {
+            "findings": 1,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 1
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 33,
+            "removed": 0,
+            "resolved_false": 1,
+            "resolved_tp": 5,
+            "undetermined": 27
+          },
+          "strict": {
+            "findings": 33,
+            "removed": 0,
+            "resolved_false": 7,
+            "resolved_tp": 5,
+            "undetermined": 21
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 12,
+            "removed": 3,
+            "resolved_false": 1,
+            "resolved_tp": 3,
+            "undetermined": 5
+          },
+          "strict": {
+            "findings": 12,
+            "removed": 3,
+            "resolved_false": 2,
+            "resolved_tp": 3,
+            "undetermined": 4
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 3,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 3
+          },
+          "strict": {
+            "findings": 3,
+            "removed": 0,
+            "resolved_false": 1,
+            "resolved_tp": 0,
+            "undetermined": 2
+          }
+        }
+      ],
+      "lang": "cpp",
+      "measured_at": "2026-10-01",
+      "narrow": {
+        "findings": 46,
+        "removed": 3,
+        "resolved_false": 2,
+        "resolved_tp": 8,
+        "undetermined": 33
+      },
+      "strict": {
+        "findings": 46,
+        "removed": 3,
+        "resolved_false": 9,
+        "resolved_tp": 8,
+        "undetermined": 26
+      },
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "units_judged": 89231,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "gson",
+      "dynamic_skipped": 0,
+      "events": 1102,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 7,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 7
+          },
+          "strict": {
+            "findings": 7,
+            "removed": 0,
+            "resolved_false": 4,
+            "resolved_tp": 0,
+            "undetermined": 3
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 277,
+            "removed": 8,
+            "resolved_false": 8,
+            "resolved_tp": 164,
+            "undetermined": 97
+          },
+          "strict": {
+            "findings": 277,
+            "removed": 4,
+            "resolved_false": 43,
+            "resolved_tp": 149,
+            "undetermined": 81
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 403,
+            "removed": 106,
+            "resolved_false": 27,
+            "resolved_tp": 14,
+            "undetermined": 256
+          },
+          "strict": {
+            "findings": 403,
+            "removed": 103,
+            "resolved_false": 71,
+            "resolved_tp": 14,
+            "undetermined": 215
+          }
+        }
+      ],
+      "lang": "java",
+      "measured_at": "2026-10-01",
+      "narrow": {
+        "findings": 284,
+        "removed": 8,
+        "resolved_false": 8,
+        "resolved_tp": 164,
+        "undetermined": 104
+      },
+      "strict": {
+        "findings": 284,
+        "removed": 4,
+        "resolved_false": 47,
+        "resolved_tp": 149,
+        "undetermined": 84
+      },
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "units_judged": 49751,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "luarocks",
+      "dynamic_skipped": 225,
+      "events": 667,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 29,
+            "removed": 11,
+            "resolved_false": 2,
+            "resolved_tp": 3,
+            "undetermined": 13
+          },
+          "strict": {
+            "findings": 28,
+            "removed": 5,
+            "resolved_false": 11,
+            "resolved_tp": 1,
+            "undetermined": 11
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 109,
+            "removed": 45,
+            "resolved_false": 5,
+            "resolved_tp": 30,
+            "undetermined": 29
+          },
+          "strict": {
+            "findings": 107,
+            "removed": 42,
+            "resolved_false": 18,
+            "resolved_tp": 21,
+            "undetermined": 26
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 50,
+            "removed": 14,
+            "resolved_false": 0,
+            "resolved_tp": 15,
+            "undetermined": 21
+          },
+          "strict": {
+            "findings": 49,
+            "removed": 12,
+            "resolved_false": 3,
+            "resolved_tp": 13,
+            "undetermined": 21
+          }
+        }
+      ],
+      "lang": "lua",
+      "measured_at": "2026-10-01",
+      "narrow": {
+        "findings": 138,
+        "removed": 56,
+        "resolved_false": 7,
+        "resolved_tp": 33,
+        "undetermined": 42
+      },
+      "strict": {
+        "findings": 135,
+        "removed": 47,
+        "resolved_false": 29,
+        "resolved_tp": 22,
+        "undetermined": 37
+      },
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "units_judged": 24137,
+      "unjudged": 0,
+      "window": 400
+    },
+    {
+      "commits": 400,
+      "corpus": "stringr",
+      "dynamic_skipped": 95,
+      "events": 705,
+      "harness": {
+        "ce": "1.8.0",
+        "commit": "5e02af4a4628aa360edf211e17c93401490b76f0",
+        "dirty": false
+      },
+      "kinds": [
+        {
+          "kind": 0,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 1,
+          "narrow": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 0,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 0,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 2,
+          "narrow": {
+            "findings": 2,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 2,
+            "undetermined": 0
+          },
+          "strict": {
+            "findings": 2,
+            "removed": 0,
+            "resolved_false": 0,
+            "resolved_tp": 2,
+            "undetermined": 0
+          }
+        },
+        {
+          "kind": 3,
+          "narrow": {
+            "findings": 18,
+            "removed": 9,
+            "resolved_false": 0,
+            "resolved_tp": 1,
+            "undetermined": 8
+          },
+          "strict": {
+            "findings": 18,
+            "removed": 9,
+            "resolved_false": 0,
+            "resolved_tp": 1,
+            "undetermined": 8
+          }
+        }
+      ],
+      "lang": "r",
+      "measured_at": "2026-10-01",
+      "narrow": {
+        "findings": 2,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 2,
+        "undetermined": 0
+      },
+      "strict": {
+        "findings": 2,
+        "removed": 0,
+        "resolved_false": 0,
+        "resolved_tp": 2,
+        "undetermined": 0
+      },
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe",
+      "units_judged": 4332,
+      "unjudged": 0,
+      "window": 400
+    }
+  ],
+  "generated_from": "cli/tests/it/fpr_flow_replay.rs",
+  "schema": "ce.eval-fpr-flow/1.0.0"
+}
