@@ -7,7 +7,7 @@ pub const C: &str = r#"
 expr_kinds = [
   "binary_expression", "call_expression", "comma_expression", "conditional_expression",
   "field_expression", "identifier", "number_literal", "char_literal", "parenthesized_expression",
-  "pointer_expression", "string_literal", "string_content", "escape_sequence",
+  "pointer_expression", "string_literal", "escape_sequence",
   "concatenated_string", "subscript_expression", "true", "false", "null", "sizeof_expression",
   "cast_expression", "unary_expression",
 ]
@@ -20,6 +20,10 @@ name_fields = [
   ["parameter_declaration", "declarator"], ["pointer_declarator", "declarator"],
   ["array_declarator", "declarator"], ["field_declaration", "declarator"],
 ]
+target_fields = [["assignment_expression", "left"], ["update_expression", "argument"]]
+part_fields = [["field_expression", "field"]]
+part_kinds = ["string_content"]
+helper_lines = 2
 other_kinds = [
   "translation_unit", "function_definition", "function_declarator", "parameter_list",
   "parameter_declaration", "init_declarator", "pointer_declarator",

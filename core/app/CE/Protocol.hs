@@ -7,7 +7,7 @@
 -- @error@ reply. Every failure becomes a well-formed error line —
 -- never a hello-shaped rejection (the M0 defect this module fixes),
 -- never a crash.
-module CE.Protocol (internalError, proto, respond) where
+module CE.Protocol (internalError, maxLineBytes, proto, respond) where
 
 import qualified CE.Arch as Arch
 import qualified CE.Audit as Audit

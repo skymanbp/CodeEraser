@@ -8,7 +8,7 @@ expr_kinds = [
   "attribute", "binary_operator", "boolean_operator", "call", "comparison_operator",
   "conditional_expression", "dictionary_comprehension", "expression_list", "generator_expression",
   "identifier", "integer", "float", "lambda", "list_comprehension", "named_expression", "none",
-  "true", "false", "parenthesized_expression", "set_comprehension", "string", "string_content",
+  "true", "false", "parenthesized_expression", "set_comprehension", "string",
   "interpolation", "concatenated_string", "subscript", "slice", "tuple", "list", "dictionary", "set",
   "unary_operator", "await",
 ]
@@ -17,6 +17,11 @@ name_fields = [
   ["function_definition", "name"], ["class_definition", "name"], ["default_parameter", "name"],
   ["typed_default_parameter", "name"],
 ]
+target_fields = [["assignment", "left"], ["augmented_assignment", "left"]]
+target_lists = ["pattern_list", "tuple_pattern", "list_pattern"]
+part_fields = [["attribute", "attribute"]]
+part_kinds = ["string_content"]
+helper_lines = 1
 other_kinds = [
   "module", "function_definition", "class_definition", "decorated_definition", "decorator", "block",
   "parameters", "lambda_parameters", "default_parameter", "typed_parameter", "typed_default_parameter",
@@ -34,7 +39,7 @@ expr_kinds = [
   "array_expression", "binary_expression", "boolean_literal", "call_expression",
   "closure_expression", "field_expression", "identifier", "index_expression", "integer_literal",
   "float_literal", "negative_literal", "char_literal", "range_expression", "reference_expression",
-  "string_literal", "string_content", "struct_expression", "try_expression", "tuple_expression",
+  "string_literal", "struct_expression", "try_expression", "tuple_expression",
   "type_cast_expression", "unary_expression", "macro_invocation", "scoped_identifier", "self",
   "await_expression", "unit_expression", "parenthesized_expression", "shorthand_field_initializer",
   "raw_string_literal",
@@ -49,6 +54,10 @@ name_fields = [
   ["const_item", "name"], ["static_item", "name"], ["type_item", "name"], ["parameter", "pattern"],
   ["let_declaration", "pattern"], ["field_declaration", "name"],
 ]
+target_fields = [["assignment_expression", "left"], ["compound_assignment_expr", "left"]]
+part_fields = [["field_expression", "field"]]
+part_kinds = ["string_content"]
+helper_lines = 2
 other_kinds = [
   "source_file", "function_item", "struct_item", "impl_item", "declaration_list",
   "field_declaration", "field_declaration_list", "use_declaration", "visibility_modifier",
@@ -66,7 +75,7 @@ pub const GO: &str = r#"
 expr_kinds = [
   "binary_expression", "call_expression", "composite_literal", "func_literal", "identifier",
   "index_expression", "int_literal", "float_literal", "rune_literal", "interpreted_string_literal",
-  "interpreted_string_literal_content", "raw_string_literal", "selector_expression", "true",
+  "raw_string_literal", "selector_expression", "true",
   "false", "nil", "iota", "unary_expression", "expression_list", "parenthesized_expression",
   "slice_expression", "type_assertion_expression",
 ]
@@ -80,6 +89,11 @@ name_fields = [
   ["var_spec", "name"], ["const_spec", "name"], ["type_spec", "name"],
   ["field_declaration", "name"],
 ]
+target_fields = [["assignment_statement", "left"], ["inc_statement", ""], ["dec_statement", ""]]
+target_lists = ["expression_list"]
+part_fields = [["selector_expression", "field"]]
+part_kinds = ["interpreted_string_literal_content", "raw_string_literal_content"]
+helper_lines = 2
 other_kinds = [
   "source_file", "package_clause", "package_identifier", "import_declaration", "import_spec",
   "import_spec_list", "function_declaration", "method_declaration", "type_declaration", "type_spec",

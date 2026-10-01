@@ -27,23 +27,30 @@
 > 七对（两目录环精确拆一条 / 包引用折到目录 / 五目录稠密环 / focus 影响面与错位 / 空目录 / 第二个根拒绝 / 十五目录成环的贪心 `exact` 0）。
 > 旧核无此能力 = 测量侧具名降级：`ce arch` 的文档带 `degraded`「core offers no arch/1」，`judged::ask` 点名「pre-7.6.0」。
 > **7.5.0**（克隆合并建议族，加性 minor，计划 v2.31 步 6 / 7，2026-09-30；ADR-008 细则第七期，设计册
-> `docs/reference/analysis-track.md` §6）：第十五判决族 `merge/1`——请求 `merge.request`：`groups=[[g,family]]`
-> （按 g 严格升序；family 0 = T1/T2 组〔≥ 2 个成员，成员树须同构〕/ 1 = T3 对〔恰 2 个成员，按树编辑映射对齐〕）+
+> `docs/reference/analysis-track.md` §6）：第十五判决族 `merge/1`——请求 `merge.request`：`groups=[[g,family,helper]]`
+> （按 g 严格升序；family 0 = T1/T2 组〔≥ 2 个成员，成员树须同构〕/ 1 = T3 对〔恰 2 个成员，按树编辑映射对齐〕；`helper` = 片段组合并后
+> 辅助函数的头尾行数〔Python / Haskell 1、其余 2〕、整单元组 0，计入骨架行数）+
 > `members=[[g,m,unit,lines,fileIndeg]]`（按 (g,m) 严格升序、m 每组自 0 连续；`unit` = 请求内成员号〔核只回显〕、`lines` =
-> 整单元的行数或片段保留段的行数、`fileIndeg` = 成员文件在引用图上的入边数）+ `trees=[{lab,lld,leaf,slot}]`（按成员序每成员一棵；
+> 整单元的行数或片段保留段的行数、`fileIndeg` = 成员文件在引用图上的入边数）+ `trees=[{lab,lld,leaf,slot,own,text}]`（按成员序每成员一棵；
 > `lab` / `lld` = clone/1 的后序编码并共用它的形状契约，`leaf` = 叶结点源文本的 fnv1a64〔内部结点 0〕，`slot` = 位置类
-> 0 语句 / 1 表达式 / 2 类型 / 3 声明名 / 4 其他；名字、路径、源文本都不过线）；应答 `merge.result`：
+> 0 语句 / 1 表达式 / 2 类型 / 3 声明名或局部赋值的裸目标 / 4 其他，`own` = 结点自己的匿名记号〔运算符 / 关键字 / 标点〕以 0x00 相隔的
+> fnv1a64〔没有 = 0〕，`text` = 子树整条记号流的 fnv1a64；名字、路径、源文本都不过线）；应答 `merge.result`：
 > `suggestions=[[g,params,kept,savings,feasible,reason]]`（每组一行按请求序；`kept` = 文件入度最大的成员、并列取最小 m；
 > `savings` = 成员行数之和 −（骨架行数 + 成员数 × `callLines` 1）；reason 取洞序里第一个不可行洞：0 可行 / 1 洞在语句或其他位置 /
-> 2 洞在类型位置 / 3 缺口洞的森林含语句〔先于 1、2〕/ 4 洞全可行但参数多于 `paramCap` 6 / 5 `no_savings`〔洞与参数都过、省不下一行〕）
+> 2 洞在类型位置 / 3 缺口洞的森林含语句〔先于 1、2〕/ 4 洞全可行但参数多于 `paramCap` 6 / 5 `no_savings`〔洞与参数都过、省不下一行〕；
+> 自己的记号不同的结点是洞〔类其他〕，类其他的叶洞在两侧都是表达式的父结点下拓宽为父结点整棵子树〔类表达式〕，间隙一律类其他，
+> 洞序 = 成员 0 的后序，参数按各成员的文本向量去重，各成员文本全同的洞不成参数也不出洞行）
 > + `holes=[[g,hole,param,m,post,postEnd]]`（每洞每成员一行，`post` .. `postEnd` = 该成员此洞的首末根，叶洞同一结点两次、空侧 −1 −1）
-> + `counts{groups,members,nodes,suggestions,holes,feasible}`；组数 > `groupCap` 4,096 或树结点合计 > `treeNodeCap` 1,048,576 →
+> + `counts{groups,members,nodes,suggestions,holes,feasible}`；组数 > `groupCap` 4,096 或树结点合计 > `treeNodeCap` 131,072〔两道上限
+> 下最宽的请求仍在协议的 32 MiB 行内〕→
 > 完整降级应答 `degraded:true, reason:"merge_too_large"`（空表）。同批 clone/1 加性：树可带 `leaf` 列（`CE.Clone.WireTree` 的可选字段，
 > `ted` 永不读；长度不符按名拒 `leaf length mismatch`），测量侧的 clone/1 请求仍只发 `lab` / `lld`，判决字节不动。顾问族：无旋钮、
-> 无 fail 档、无条件位。契约拒绝 24 条按名（`MergeRefusals` 逐条钉：组行 / 成员行形状、成员对组、组的成员数、树数、每棵树的
-> clone/1 形状契约与两列、T1/T2 组不同构）；电池 `MergeCases` / `MergeProps`（反合一两律〔每个成员由骨架填入自己的值还原、没有参数可删〕
+> 无 fail 档、无条件位。契约拒绝 29 条按名（`MergeRefusals` 逐条钉：组行 / 成员行形状、成员对组、组的成员数、树数、每棵树的
+> clone/1 形状契约与四列〔缺列 / 长度不等 / 位置类越界 / `own`、`text` 为负〕、T1/T2 组不同构）；电池 `MergeCases` / `MergeRulings`
+> 〔合并家族第二代九条裁定各一例与反向探针〕/ `MergeProps`（反合一两律〔每个成员由骨架填入自己的值还原、没有参数可删〕与文本律〔两个
+> 非空洞同一参数当且仅当文本向量相同〕
 > 200 个生成的 T1/T2 组、`tedMapping` 与 `ted` 同距离且是合法 Tai 映射、洞的首末根、理由一致性〔可行恰为 0、0 必有省行、5 必无省行〕、
-> 等缺口折叠、两道上限、空请求）。既有十四族字节零变化（既有 golden 只动 proto 字面与 hello 能力表）；新增
+> 等缺口折叠、两道上限与两道上限下最宽的请求在行内、空请求）。既有十四族字节零变化（既有 golden 只动 proto 字面与 hello 能力表）；新增
 > `contracts/fixtures/merge/golden.ndjson` 六对（无洞可行 / 三成员叶洞一个参数 / T3 缺口洞 / 语句位置洞 reason 1 / 七个参数 reason 4 /
 > 不同构拒绝）。旧核无此能力 = 测量侧具名降级：`ce merge` 的文档带 `degraded`「core offers no merge/1」，`judged::ask` 点名「pre-7.5.0」。
 > **7.4.0**（函数内死代码族，加性 minor，计划 v2.31 步 3，2026-09-29；ADR-008 细则第七期，设计册

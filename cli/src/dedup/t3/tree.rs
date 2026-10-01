@@ -7,6 +7,7 @@
 //! maximal selected nodes are not exactly one is a forest — a
 //! ledgered outcome, never a guessed root.
 
+use super::tree_text::{Tokens, joined_text};
 use crate::dedup::{struct_fp, tokens};
 use crate::scan::ast;
 use crate::scan::lang::Lang;
@@ -14,11 +15,13 @@ use tree_sitter::Node;
 
 /// One wire-ready tree. `lab` holds raw fnv1a kind codes — the
 /// request-local DENSE mapping happens at wire time, per request. The
-/// three columns after them are merge/1's (plan v2.31 step 7, booklet
-/// §6.2), filled by the same walk: a leaf's source-text hash (0 on an
-/// internal node), each node's position class, each node's byte span
-/// (the face reads a hole's text back through it). clone/1 never sends
-/// them — its request is `lab` and `lld` alone.
+/// columns after them are merge/1's (plan v2.31 step 7, booklet §6.2;
+/// merge generation 2 ruling R1), filled by the same walk: a leaf's
+/// source-text hash (0 on an internal node), each node's position
+/// class, each node's byte span (the face reads a hole's text back
+/// through it), and each node's own-token and token-text hashes
+/// (tree_text.rs). clone/1 never sends them — its request is `lab` and
+/// `lld` alone, and its cache keys read nothing else.
 #[derive(Default, Clone)]
 pub struct UnitTree {
     pub lab: Vec<u64>,
@@ -26,6 +29,8 @@ pub struct UnitTree {
     pub leaf: Vec<u64>,
     pub slot: Vec<u8>,
     pub spans: Vec<(usize, usize)>,
+    pub own: Vec<u64>,
+    pub text: Vec<u64>,
 }
 
 /// Whether a tree carries the grammar's extras (comments): clone/1's
@@ -52,12 +57,14 @@ impl Extras {
     }
 }
 
-/// One top node of a fragment span (merge/1): its tree and its 1-based
-/// inclusive line range — the lines a trimmed run is priced by.
+/// One top node of a fragment span (merge/1): its tree, its 1-based
+/// inclusive line range — the lines a trimmed run is priced by — and
+/// its token stream (tree_text.rs), which a run's synthetic root joins.
 #[derive(Clone)]
 pub struct Top {
     pub tree: UnitTree,
     pub lines: (usize, usize),
+    pub stream: Vec<u8>,
 }
 
 /// One span's outcome.
@@ -111,6 +118,7 @@ pub fn file_fragments(
                         .map(|&top| Top {
                             tree: tree_of(&[top], text, lang, extras),
                             lines: lines(top),
+                            stream: Tokens::of(top, text, extras).stream(top),
                         })
                         .collect();
                     (!trees.is_empty()).then_some(trees)
@@ -122,8 +130,9 @@ pub fn file_fragments(
 
 /// A run of top trees under one synthetic root — kind `ce:fragment`,
 /// leaf hash 0, position class 4 (other), its span the first top's
-/// start to the last top's end — and the run's lines, the first top's
-/// first line to the last top's last; None for an empty run.
+/// start to the last top's end, no own token, its text the tops' token
+/// streams joined — and the run's lines, the first top's first line to
+/// the last top's last; None for an empty run.
 pub fn fragment_of(tops: &[Top]) -> Option<(UnitTree, (usize, usize))> {
     let (first, last) = (tops.first()?, tops.last()?);
     let span = (first.tree.spans.last()?.0, last.tree.spans.last()?.1);
@@ -136,12 +145,17 @@ pub fn fragment_of(tops: &[Top]) -> Option<(UnitTree, (usize, usize))> {
         t.leaf.extend(&top.leaf);
         t.slot.extend(&top.slot);
         t.spans.extend(&top.spans);
+        t.own.extend(&top.own);
+        t.text.extend(&top.text);
     }
+    let streams: Vec<&[u8]> = tops.iter().map(|top| top.stream.as_slice()).collect();
     t.lab.push(struct_fp::kind_code("ce:fragment"));
     t.lld.push(0);
     t.leaf.push(0);
     t.slot.push(4);
     t.spans.push(span);
+    t.own.push(0);
+    t.text.push(joined_text(&streams));
     Some((t, run))
 }
 
@@ -153,20 +167,25 @@ fn tops(root: Node, start: usize, end: usize, extras: Extras) -> Vec<Node> {
 
 /// The postorder run of `tops` with every column: the walk emits `lab`
 /// and `lld`, and its visitor fills the rest at the same node — the one
-/// traversal clone/1 and merge/1 share.
+/// traversal clone/1 and merge/1 share (the token columns read one
+/// token walk per top, tree_text.rs).
 fn tree_of(tops: &[Node], text: &str, lang: Lang, extras: Extras) -> UnitTree {
     let classes = crate::merge::slot::classes(lang);
     let mut t = UnitTree::default();
     let (mut leaf, mut slot, mut spans) = (Vec::new(), Vec::new(), Vec::new());
+    let (mut own, mut texts) = (Vec::new(), Vec::new());
     for &top in tops {
+        let toks = Tokens::of(top, text, extras);
         emit(top, &mut t, extras, &mut |n: Node, is_leaf: bool| {
             let bytes = &text.as_bytes()[n.byte_range()];
             leaf.push(if is_leaf { tokens::fnv1a(bytes) } else { 0 });
             slot.push(classes.map_or(4, |c| crate::merge::slot::slot_of(c, n)));
             spans.push((n.start_byte(), n.end_byte()));
+            own.push(toks.own(n));
+            texts.push(toks.text(n));
         });
     }
-    (t.leaf, t.slot, t.spans) = (leaf, slot, spans);
+    (t.leaf, t.slot, t.spans, t.own, t.text) = (leaf, slot, spans, own, texts);
     t
 }
 
@@ -220,7 +239,7 @@ fn emit<'t>(
     while let Some((n, entered_at)) = stack.pop() {
         let Some(base) = entered_at else {
             stack.push((n, Some(t.lab.len() as i64)));
-            let kids = named_kids(n, extras);
+            let (kids, _) = kids(n, extras);
             stack.extend(kids.into_iter().rev().map(|k| (k, None)));
             continue;
         };
@@ -231,28 +250,33 @@ fn emit<'t>(
     }
 }
 
-/// A node's named children, looking through anonymous intermediates
-/// (today's grammars make anonymous nodes terminals, so the descent
-/// costs nothing — it keeps the selected SET identical to the spine's
-/// all-children walk by construction, not by grammar accident).
-fn named_kids(node: Node, extras: Extras) -> Vec<Node> {
-    let mut out = Vec::new();
+/// A node's children as the tree sees them, looking through anonymous
+/// intermediates: its named children (the tree's next nodes) and its
+/// anonymous tokens (merge/1's `own` column, tree_text.rs). Today's
+/// grammars make anonymous nodes terminals, so the descent costs
+/// nothing — it keeps the selected SET identical to the spine's
+/// all-children walk by construction, not by grammar accident.
+pub(super) fn kids(node: Node, extras: Extras) -> (Vec<Node>, Vec<Node>) {
+    let (mut named, mut own) = (Vec::new(), Vec::new());
     let mut stack: Vec<Node> = ast::children(node).into_iter().rev().collect();
     while let Some(c) = stack.pop() {
         if skipped(c, extras) {
             continue;
         }
         if c.is_named() {
-            out.push(c);
+            named.push(c);
         } else {
+            if c.child_count() == 0 {
+                own.push(c);
+            }
             stack.extend(ast::children(c).into_iter().rev());
         }
     }
-    out
+    (named, own)
 }
 
 /// An extra (a comment) left out of a tree built without extras.
-fn skipped(node: Node, extras: Extras) -> bool {
+pub(super) fn skipped(node: Node, extras: Extras) -> bool {
     extras == Extras::Without && node.is_extra()
 }
 

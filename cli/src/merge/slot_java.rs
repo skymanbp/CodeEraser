@@ -6,7 +6,7 @@ expr_kinds = [
   "array_access", "array_creation_expression", "array_initializer", "binary_expression",
   "field_access", "identifier", "instanceof_expression", "lambda_expression", "method_invocation",
   "null_literal", "object_creation_expression", "parenthesized_expression", "string_literal",
-  "string_fragment", "ternary_expression", "this", "true", "false", "unary_expression",
+  "ternary_expression", "this", "true", "false", "unary_expression",
   "decimal_integer_literal", "decimal_floating_point_literal", "hex_integer_literal",
   "character_literal", "cast_expression", "method_reference", "class_literal",
 ]
@@ -19,6 +19,10 @@ name_fields = [
   ["record_declaration", "name"], ["interface_declaration", "name"], ["enum_declaration", "name"],
   ["formal_parameter", "name"], ["catch_formal_parameter", "name"], ["variable_declarator", "name"],
 ]
+target_fields = [["assignment_expression", "left"], ["update_expression", ""]]
+part_fields = [["field_access", "field"], ["method_invocation", "name"]]
+part_kinds = ["string_fragment"]
+helper_lines = 2
 other_kinds = [
   "program", "package_declaration", "import_declaration", "scoped_identifier", "class_declaration",
   "class_body", "record_declaration", "method_declaration", "constructor_declaration",

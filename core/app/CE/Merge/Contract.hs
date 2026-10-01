@@ -3,15 +3,16 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The merge.request shape and its boundary contract (design booklet
--- §3's row and §6.2; plan v2.31 step 6): three tables — the groups
--- with their family, the members with their unit, lines and file
--- in-degree, one tree per member in member order — each absent read
--- as empty; which dimensions the caps price; and the first offender
--- in request order, by name: the group rows, the member rows, the
--- members against their groups, each group's member count, the tree
--- count, each tree (clone/1's own shape contract, shared, then the
--- two columns merge/1 adds) and last a T1/T2 group whose members are
--- not isomorphic (the measuring side promised one token run).
+-- §3's row and §6.2; plan v2.31 step 6, merge generation 2 ruling R1):
+-- three tables — the groups with their family and helper lines, the
+-- members with their unit, lines and file in-degree, one tree per
+-- member in member order — each absent read as empty; which dimensions
+-- the caps price; and the first offender in request order, by name:
+-- the group rows, the member rows, the members against their groups,
+-- each group's member count, the tree count, each tree (clone/1's own
+-- shape contract, shared, then the four columns merge/1 adds) and last
+-- a T1/T2 group whose members are not isomorphic (the measuring side
+-- promised one token run).
 module CE.Merge.Contract (MergeReq (..), MergeTree (..), groupsOf, offence, overCap) where
 
 import CE.Clone (WireTree (..), treeShape)
@@ -20,16 +21,21 @@ import CE.Merge.Cost
 import CE.Merge.Tree (Group (..), mtree)
 import CE.Wire (rowCheck, tableOffence)
 import Data.Aeson
+import Data.Aeson.Types (Parser)
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe)
 
--- | One member's tree: clone/1's wire tree (lab, lld, leaf) and the
--- slot column.
-data MergeTree = MergeTree {tWire :: WireTree, tSlot :: Maybe [Int]}
+-- | One member's tree: clone/1's wire tree (lab, lld, leaf), the slot
+-- column, and the own and text columns (ruling R1: each node's own
+-- anonymous tokens and its subtree's token stream, fnv1a64 hashes).
+data MergeTree = MergeTree {tWire :: WireTree, tSlot :: Maybe [Int], tOwn :: Maybe [Integer], tText :: Maybe [Integer]}
 
 instance FromJSON MergeTree where
-  parseJSON v = MergeTree <$> parseJSON v <*> withObject "tree" (.:? "slot") v
+  parseJSON v = MergeTree <$> parseJSON v <*> column "slot" <*> column "own" <*> column "text"
+   where
+    column :: (FromJSON a) => Key -> Parser (Maybe a)
+    column k = withObject "tree" (.:? k) v
 
 data MergeReq = MergeReq
   { reqId :: Value
@@ -61,17 +67,17 @@ offence req =
     ]
  where
   members = memberRows req
-  families = M.fromList [(g, fam) | [g, fam] <- groupRows req]
+  families = M.fromList [(g, fam) | [g, fam, _] <- groupRows req]
   treeCount
     | length (treeRows req) == length members = Nothing
     | otherwise = Just ("trees: " <> show (length (treeRows req)) <> " trees for " <> show (length members) <> " members")
 
--- | [g, family]: non-negative, a known family.
+-- | [g, family, helper]: non-negative, a known family.
 groupShape :: Int -> [Integer] -> Maybe String
-groupShape = rowCheck "group" "malformed group (need [g,family])" 2 checks
+groupShape = rowCheck "group" "malformed group (need [g,family,helper])" 3 checks
  where
   checks row = case row of
-    [_, fam]
+    [_, fam, _]
       | any (< 0) row -> Just "negative group value"
       | fam > familyNear -> Just "unknown family"
     _ -> Nothing
@@ -101,7 +107,7 @@ memberLink families i prev row = case row of
 -- | Two members at least; a T3 pair exactly two.
 groupSize :: M.Map Integer Int -> Int -> [Integer] -> Maybe String
 groupSize counts i row = case row of
-  [g, fam] -> case M.findWithDefault 0 g counts of
+  [g, fam, _] -> case M.findWithDefault 0 g counts of
     0 -> label "no members"
     1 -> label "one member"
     n | fam == familyNear && n /= 2 -> label "a T3 pair needs exactly two members"
@@ -110,23 +116,30 @@ groupSize counts i row = case row of
  where
   label why = Just ("group " <> show i <> ": " <> why)
 
--- | clone/1's shape contract, then both added columns present, the
--- slot column as long as the tree, every slot a known class.
+-- | clone/1's shape contract, then the four added columns present in
+-- wire order, each as long as the tree, every slot a known class,
+-- every own and text hash non-negative.
 treeOffence :: Int -> MergeTree -> Maybe String
-treeOffence t tree = asum [treeShape t (tWire tree), columns]
+treeOffence t tree = asum [treeShape t (tWire tree), leaf, slot, hashes "own" (tOwn tree), hashes "text" (tText tree)]
  where
   label why = Just ("tree " <> show t <> ": " <> why)
-  columns = case (wLeaf (tWire tree), tSlot tree) of
-    (Nothing, _) -> label "leaf missing"
-    (_, Nothing) -> label "slot missing"
-    (_, Just slots)
-      | length slots /= length (wLab (tWire tree)) -> label "slot length mismatch"
+  size = length (wLab (tWire tree))
+  leaf = maybe (label "leaf missing") (const Nothing) (wLeaf (tWire tree))
+  slot = case tSlot tree of
+    Nothing -> label "slot missing"
+    Just slots
+      | length slots /= size -> label "slot length mismatch"
       | otherwise -> asum [label ("node " <> show n <> ": unknown slot") | (n, s) <- zip [0 :: Int ..] slots, s < 0 || s > slotCeil]
+  hashes what column = case column of
+    Nothing -> label (what <> " missing")
+    Just hs
+      | length hs /= size -> label (what <> " length mismatch")
+      | otherwise -> asum [label ("node " <> show n <> ": negative " <> what) | (n, h) <- zip [0 :: Int ..] hs, h < 0]
 
 -- | The groups in request order, each with its member rows and their
 -- trees (members and trees zip in member order).
 groupsOf :: MergeReq -> [Group]
-groupsOf req = [Group g fam (map fst own) (map snd own) | [g, fam] <- groupRows req, let own = M.findWithDefault [] g byGroup]
+groupsOf req = [Group g fam helper (map fst own) (map snd own) | [g, fam, helper] <- groupRows req, let own = M.findWithDefault [] g byGroup]
  where
   byGroup = M.fromListWith (flip (<>)) [(g, [(row, tree)]) | (row@(g : _), tree) <- zip (memberRows req) trees]
-  trees = [mtree (tWire t) (fromMaybe [] (tSlot t)) | t <- treeRows req]
+  trees = [mtree (tWire t) (fromMaybe [] (tSlot t)) (fromMaybe [] (tOwn t)) (fromMaybe [] (tText t)) | t <- treeRows req]

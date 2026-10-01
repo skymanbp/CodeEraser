@@ -3,16 +3,20 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The merge family's battery (plan v2.31 step 6, design booklet
--- §6.5): the hand-written cases of MergeCases and MergeRefusals (one
--- leg each), then the laws — every suggestion's skeleton and each
--- member's values rebuild that member (instantiation), and no
--- parameter can be dropped (minimality) — over those cases and two
--- hundred generated T1/T2 groups; tedMapping against ted over the
+-- §6.5): the hand-written cases of MergeCases, MergeRulings (the
+-- second generation's rulings, each with its reverse probe) and
+-- MergeRefusals (one leg each), then the laws — every suggestion's
+-- skeleton and each member's values rebuild that member
+-- (instantiation), no parameter can be dropped (minimality), and two
+-- live holes share a parameter exactly when they share their text
+-- vectors — over those cases and two hundred generated T1/T2 groups;
+-- tedMapping against ted over the
 -- exhaustive small-tree family (n ≤ 4, CE_DEEP_TED=1 → 5) and two
 -- hundred generated pairs (same distance, a valid Tai mapping, cost
 -- equal to the distance); the generated groups' parameter counts
 -- and feasibility; the equal-gap fold; each hole's first and last
--- root per member; the caps, the empty request and the counts.
+-- root per member; the caps, the widest request at both caps inside
+-- the protocol's line, the empty request and the counts.
 module MergeProps (battery) where
 
 import CE.Clone (WireTree (..), decodeTree)
@@ -20,16 +24,20 @@ import CE.Clone.Ted (ted, tedMapping)
 import CE.Merge (respond)
 import CE.Merge.Contract (MergeReq (..), MergeTree (..), groupsOf, overCap)
 import CE.Merge.Cost (familyNear, groupCap, treeNodeCap)
-import CE.Merge.Holes (instantiate, paramsOf, skeletonOf)
+import CE.Merge.Holes (instantiate, liveHoles, paramsOf, skeletonOf)
 import CE.Merge.Mapped (mappedWith)
 import CE.Merge.Tree
+import CE.Protocol (maxLineBytes)
 import Data.Aeson
-import Data.List (nub, tails)
+import qualified Data.ByteString.Lazy as BL
+import Data.List (nub, tails, unzip4)
 import qualified Data.Set as S
-import MergeCases (Case (..), judgments, mergeRequest, treeValue)
+import qualified Data.Map.Strict as M
+import MergeCases (Case (..), judgments, mergeRequest, modelTree)
 import MergeRefusals (refusals)
+import MergeRulings (rulings)
 import ReferenceTed (family, taiConsistent)
-import ReferenceTreeGen (Synth (..), synthGroups, treePairs)
+import ReferenceTreeGen (Synth (..), synthGroups, textColumn, treePairs)
 import System.Environment (lookupEnv)
 import WireHarness (fieldsOf, refusedBy, runLegs)
 
@@ -41,19 +49,21 @@ battery = do
   putStrLn ("     merge mapping: " <> show (length exhaustive) <> " exhaustive pairs, " <> show (length treePairs) <> " generated")
   runLegs (map caseName table <> names) (map holds table <> probes exhaustive)
  where
-  table = judgments <> refusals
+  table = judgments <> rulings <> refusals
 
 names :: [String]
 names =
   [ "every judgment and every generated group rebuilds each member from the skeleton and its values"
   , "every parameter is needed: made member 0's constant, some member no longer rebuilds"
+  , "two live holes share a parameter exactly when they share their text vectors, and no reported hole is quiet"
   , "the exhaustive small-tree family: tedMapping's distance is ted's, its mapping a valid Tai mapping costing the distance"
   , "two hundred generated pairs of 8 to 40 nodes: the same three"
-  , "generated T1/T2 groups: the parameters are the distinct vectors, feasible iff every hole is an expression or a name and at most six"
+  , "generated T1/T2 groups: the parameters are the distinct text vectors after the widening, feasible iff every hole is an expression or a name and at most six"
   , "every judgment's and generated group's suggestion: feasible iff reason 0, reason 0 only with a line saved, reason 5 only without; some answers reason 5"
   , "a valid mapping that leaves two equal forests unmapped folds them into the skeleton, no hole"
   , "every hole's roots per member: -1 -1 on an empty side, else post <= postEnd, one node or two siblings under one parent; some gap spans two roots"
-  , "an over-cap request degrades with no rows and its counts; the caps sit at 4096 groups and 1,048,576 nodes"
+  , "an over-cap request degrades with no rows and its counts; the caps sit at 4096 groups and 131,072 nodes"
+  , "the widest request at both caps (every tree one node, every integer at its widest) encodes under the protocol's line"
   , "an empty request answers no rows, not degraded"
   , "the counts name groups, members, nodes, suggestions, holes and feasible"
   ]
@@ -62,6 +72,7 @@ probes :: [(([Int], [Int]), ([Int], [Int]))] -> [Bool]
 probes exhaustive =
   [ all rebuilds lawGroups
   , all minimal lawGroups
+  , all textual lawGroups
   , all (uncurry mappingHolds) exhaustive
   , all (uncurry mappingHolds) treePairs
   , all synthAgrees synthGroups && any synthFeasible synthGroups && not (all synthFeasible synthGroups)
@@ -69,6 +80,7 @@ probes exhaustive =
   , equalGapFolds
   , all postsHold (lawGroups <> nearGroups) && or [p < e | g <- nearGroups, let (_, hs, _) = skeletonOf g, h <- hs, (p, e) <- hPosts h]
   , capped
+  , widestFits
   , emptyRequest
   , countsNamed
   ]
@@ -91,32 +103,43 @@ groupsIn v = case fromJSON v of
 synthRequest :: Synth -> Value
 synthRequest s =
   mergeRequest
-    [[0, 0]]
+    [[0, 0, 0]]
     [[0, m, m, 10, 0] | m <- [0 .. toInteger (length (synthTrees s)) - 1]]
-    [treeValue (ints lab) (ints lld) (Just leaf) (Just (ints slot)) | (lab, lld, leaf, slot) <- synthTrees s]
+    [modelTree (ints lab) (ints lld) (Just leaf) (Just (ints slot)) | (lab, lld, leaf, slot) <- synthTrees s]
  where
   ints = map toInteger
 
 lawGroups :: [Group]
-lawGroups = concatMap (groupsIn . caseRequest) judgments <> concatMap (groupsIn . synthRequest) synthGroups
+lawGroups = concatMap (groupsIn . caseRequest) (judgments <> rulings) <> concatMap (groupsIn . synthRequest) synthGroups
 
--- | A member's own (lab, lld, leaf) columns.
-columns :: MTree -> ([Int], [Int], [Integer])
-columns t = unzip3 [(lab, lldAt t i, leaf) | i <- [0 .. rootOf t], let (lab, leaf) = keyOf t i]
+-- | A member's own (lab, lld, leaf, own) columns.
+columns :: MTree -> ([Int], [Int], [Integer], [Integer])
+columns t = unzip4 [(lab, lldAt t i, leaf, own) | i <- [0 .. rootOf t], let (lab, leaf, own) = atomOf t i]
 
 rebuilds :: Group -> Bool
 rebuilds g = and [instantiate skel holes m == columns t | (m, t) <- zip [0 ..] (gTrees g)]
  where
   (skel, holes, _) = skeletonOf g
 
--- | Each parameter in turn set to member 0's value in every hole it
--- names: some member no longer rebuilds.
+-- | Each parameter in turn set to member 0's value in every live hole
+-- it names: some member no longer rebuilds.
 minimal :: Group -> Bool
-minimal g = and [not (all rebuilt [0 .. length (gTrees g) - 1]) | p <- nub params, let rebuilt m = instantiate skel (constant p) m == columns (gTrees g !! m)]
+minimal g = and [not (all rebuilt [0 .. length (gTrees g) - 1]) | p <- nub (M.elems param), let rebuilt m = instantiate skel (constant p) m == columns (gTrees g !! m)]
  where
   (skel, holes, _) = skeletonOf g
-  params = paramsOf holes
-  constant p = [if q == p then h {hValues = map (const (concat (take 1 (hValues h)))) (hValues h)} else h | (h, q) <- zip holes params]
+  live = liveHoles holes
+  param = M.fromList (zip (map hKey live) (paramsOf live))
+  constant p = [if M.lookup (hKey h) param == Just p then h {hValues = map (const (concat (take 1 (hValues h)))) (hValues h)} else h | h <- holes]
+
+-- | Gen-2 ruling R7: over the live holes, one parameter per distinct
+-- text vector (two holes share one exactly when their vectors are
+-- equal), and none of them quiet.
+textual :: Group -> Bool
+textual g = not (any quiet live) && and [(p == q) == (hTexts h == hTexts k) | (h, p) <- numbered, (k, q) <- numbered]
+ where
+  (_, holes, _) = skeletonOf g
+  live = liveHoles holes
+  numbered = zip live (paramsOf live)
 
 mappingHolds :: ([Int], [Int]) -> ([Int], [Int]) -> Bool
 mappingHolds (la, da) (lb, db) = d == ted ta tb && valid && cost == d
@@ -153,9 +176,9 @@ reasonsCohere = all coheres answered && any ((== [5]) . drop 5) answered
 -- | The two hundred generated pairs as T3 groups, every node an
 -- expression: the gap holes the mapping opens.
 nearGroups :: [Group]
-nearGroups = [Group 0 familyNear [[0, 0, 0, 1, 0], [0, 1, 1, 1, 0]] [member a, member b] | (a, b) <- treePairs]
+nearGroups = [Group 0 familyNear 0 [[0, 0, 0, 1, 0], [0, 1, 1, 1, 0]] [member a, member b] | (a, b) <- treePairs]
  where
-  member (lab, lld) = mtree (WireTree lab lld Nothing) (map (const 1) lab)
+  member (lab, lld) = mtree (WireTree lab lld Nothing) (map (const 1) lab) (map (const 0) lab) (textColumn lab lld (map (const 0) lab))
 
 -- | Each hole's (post, postEnd) on each member: both −1 on an empty
 -- side; else both the member's nodes, post ≤ postEnd, and one node or
@@ -173,7 +196,7 @@ postsHold g = and [rooted t p | let (_, holes, _) = skeletonOf g, h <- holes, (t
 equalGapFolds :: Bool
 equalGapFolds = null holes && kept == 2 && all (\m -> instantiate skel holes m == columns t) [0, 1]
  where
-  t = mtree (WireTree [1, 2, 9] [0, 1, 0] (Just [11, 12, 0])) [1, 1, 4]
+  t = mtree (WireTree [1, 2, 9] [0, 1, 0] (Just [11, 12, 0])) [1, 1, 4] [0, 0, 0] (textColumn [1, 2, 9] [0, 1, 0] [11, 12, 0])
   (skel, holes, kept) = mappedWith (S.fromList [(0, 0), (2, 2)]) t t
 
 -- | 4,097 groups through the real respond; the cap predicate at both
@@ -187,8 +210,21 @@ capped =
     && overCap (sized 0 (treeNodeCap + 1))
     && not (overCap (sized 0 treeNodeCap))
  where
-  big = mergeRequest [[g, 0] | g <- [0 .. groupCap]] [] []
-  sized gs n = MergeReq Null (replicate (fromInteger gs) [0, 0]) [] [MergeTree (WireTree (replicate (fromInteger n) 0) [] Nothing) Nothing]
+  big = mergeRequest [[g, 0, 0] | g <- [0 .. groupCap]] [] []
+  sized gs n = MergeReq Null (replicate (fromInteger gs) [0, 0, 0]) [] [MergeTree (WireTree (replicate (fromInteger n) 0) [] Nothing) Nothing Nothing Nothing]
+
+-- | A request at both caps, as wide as the columns can spell it: 4,096
+-- group rows, then every tree one node — so members are as many as
+-- nodes — each index at the cap's width and each hash at u64's.
+widestFits :: Bool
+widestFits = encodedLength <= toInteger maxLineBytes
+ where
+  n = treeNodeCap
+  wide = 18446744073709551615 :: Integer
+  tree = object ["lab" .= [n - 1], "lld" .= [n - 1], "leaf" .= [wide], "slot" .= [4 :: Int], "own" .= [wide], "text" .= [wide]]
+  members = [[groupCap - 1, n - 1, n - 1, wide, wide] | _ <- [1 .. n]]
+  body = mergeRequest [[g, 1, 2] | g <- [0 .. groupCap - 1]] members (replicate (fromInteger n) tree)
+  encodedLength = toInteger (BL.length (encode body))
 
 counts :: [Integer] -> Value
 counts = object . zipWith (.=) ["groups", "members", "nodes", "suggestions", "holes", "feasible"]

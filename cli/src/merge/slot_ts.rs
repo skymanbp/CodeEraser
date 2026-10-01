@@ -8,7 +8,7 @@ pub const TYPESCRIPT: &str = r#"
 expr_kinds = [
   "array", "arrow_function", "binary_expression", "call_expression", "function_expression",
   "identifier", "member_expression", "new_expression", "number", "object", "parenthesized_expression",
-  "string", "string_fragment", "template_string", "subscript_expression", "ternary_expression",
+  "string", "template_string", "subscript_expression", "ternary_expression",
   "this", "true", "false", "null", "undefined", "unary_expression", "yield_expression",
   "await_expression", "as_expression", "non_null_expression", "shorthand_property_identifier",
 ]
@@ -24,6 +24,13 @@ name_fields = [
   ["interface_declaration", "name"], ["type_alias_declaration", "name"],
   ["public_field_definition", "name"], ["method_signature", "name"], ["property_signature", "name"],
 ]
+target_fields = [
+  ["assignment_expression", "left"], ["augmented_assignment_expression", "left"],
+  ["update_expression", "argument"],
+]
+part_fields = [["member_expression", "property"]]
+part_kinds = ["string_fragment"]
+helper_lines = 2
 other_kinds = [
   "program", "function_declaration", "generator_function_declaration", "class_declaration",
   "class_body", "method_definition", "method_signature", "public_field_definition",

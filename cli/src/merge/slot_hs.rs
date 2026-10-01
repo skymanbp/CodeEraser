@@ -35,6 +35,8 @@ type_kinds = [
   "linear_function", "kind_application", "type_application",
 ]
 name_fields = [["function", "name"], ["bind", "name"], ["signature", "name"]]
+part_fields = [["projection", "field"]]
+helper_lines = 1
 other_kinds = [
   "haskell", "header", "module", "module_id", "exports", "export", "children", "all_names",
   "imports", "import_list", "import_name", "declarations", "class_declarations",

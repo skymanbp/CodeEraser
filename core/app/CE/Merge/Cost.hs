@@ -16,6 +16,7 @@ module CE.Merge.Cost (
   slotExpression,
   slotType,
   slotName,
+  slotOther,
   slotCeil,
   reasonNone,
   reasonPosition,
@@ -30,10 +31,19 @@ module CE.Merge.Cost (
 -- (the scan C15 discipline — every dimension a request has is
 -- priced). The node cap counts every member tree's nodes; it is named
 -- for the trees because CE.Graph.Cost.nodeCap already names the
--- graph's (the how page reads each constant by its bare name).
+-- graph's (the how page reads each constant by its bare name). It
+-- keeps a request at both caps inside the protocol's line
+-- (CE.Protocol.maxLineBytes, 33,554,432 bytes): members never
+-- outnumber nodes (every tree has one), and a one-node tree with its
+-- member row at their widest — indices at the cap's width, hashes and
+-- line counts at u64's — spell 195 bytes, so 131,072 nodes and 4,096
+-- group rows encode to 25.6 MB. Merge generation 2's own
+-- and text columns put 1,048,576 nodes past the line (ripgrep's
+-- request measured 39,165,017 bytes); MergeProps encodes the widest
+-- request at both caps and holds it under the line.
 groupCap, treeNodeCap :: Integer
 groupCap = 4096
-treeNodeCap = 1048576
+treeNodeCap = 131072
 
 -- | A merged function taking more than six parameters is not a
 -- suggestion anyone would take (§6.3; step-6 ruling 6): reason 4.
@@ -53,16 +63,21 @@ familyExact = 0
 familyNear = 1
 
 -- | A node's position class, the `slot` column (§6.2): a statement,
--- an expression, a type, a declared name, anything else.
-slotStatement, slotExpression, slotType, slotName :: Int
+-- an expression, a type, a declared name, anything else. The core
+-- gives two holes class other whatever their node's column says: a
+-- gap (merge generation 2, ruling R4: a run one member has and the
+-- other lacks, or two different runs, is structure) and an own-token
+-- hole (ruling R2: an operator, a keyword, a punctuation mark).
+slotStatement, slotExpression, slotType, slotName, slotOther :: Int
 slotStatement = 0
 slotExpression = 1
 slotType = 2
 slotName = 3
+slotOther = 4
 
 -- | A slot above this is refused by name.
 slotCeil :: Int
-slotCeil = 4
+slotCeil = slotOther
 
 -- | A suggestion's reason (step-6 ruling 6), the first infeasible
 -- hole's in hole order: 0 feasible; 1 a hole at a position no

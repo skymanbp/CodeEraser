@@ -9,6 +9,7 @@
 pub mod cache;
 mod judge;
 pub mod tree;
+pub mod tree_text;
 pub mod wire;
 
 use super::candidates::{self, PairRow, TSED_DEN, TSED_NUM, Unit};

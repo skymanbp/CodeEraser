@@ -918,116 +918,116 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|0789f406982be40c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 23,
+    "line": 24,
     "text": "pub const SCHEMA_ID: &str = \"ce.clone-report/0.3.0\";"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|32b8e9b3637d6a8d|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 51,
-    "end": 70,
+    "line": 52,
+    "end": 71,
     "text": "#[derive(Serialize, Clone)]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|3463d97af9d18071|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 177,
-    "end": 181,
+    "line": 178,
+    "end": 182,
     "text": "for &(_, _, (ted, n1, n2, v)) in rows {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|403f2523fefd45be|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 217,
-    "end": 218,
+    "line": 218,
+    "end": 219,
     "text": "if u.nodes > wire::UNIT_NODE_CAP {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5a22db522a5d590c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 65,
-    "end": 69,
+    "line": 66,
+    "end": 70,
     "text": "pub prefiltered: u64,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5b4d9b675153bd48|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 54,
-    "end": 63,
+    "line": 55,
+    "end": 64,
     "text": "pub over_cap_units: usize,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5c764fdd8cc06d4d|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 256,
-    "end": 273,
+    "line": 257,
+    "end": 274,
     "text": "fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairRow>, u64, u64) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|677740f654b911ca|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 209,
-    "end": 210,
+    "line": 210,
+    "end": 211,
     "text": "pub(crate) fn build_trees("
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|75be95ae80742e4a|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 117,
-    "end": 119,
+    "line": 118,
+    "end": 120,
     "text": "/// The judgment over an already-refreshed index: identity gate,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|845196f1fcbaf13b|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 235,
-    "end": 243,
+    "line": 236,
+    "end": 244,
     "text": "if let tree::Built::Tree(t) = &b {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|9c84e006f068e6e5|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 190,
-    "end": 199,
+    "line": 191,
+    "end": 200,
     "text": "/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — since ADR-008 P1 a"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|a4bf30c9a25404df|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 126,
-    "end": 128,
+    "line": 127,
+    "end": 129,
     "text": "// the product judgment sees the exhaustive S5 extension; the"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|d5d73f05f598a93c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 169,
-    "end": 188,
+    "line": 170,
+    "end": 189,
     "text": "/// The reported set from the CORE's verdict bits (ADR-008 P1), with"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|0abf5f23e88f2f40|0": {
-    "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 234,
-    "end": 249,
-    "text": "/// A node's named children, looking through anonymous intermediates"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|16d3e2bc93e406cf|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 74,
-    "end": 87,
+    "line": 81,
+    "end": 94,
     "text": "pub fn file_trees(text: &str, lang: Lang, spans: &[(usize, usize)], extras: Extras) -> Vec<Built> {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|3065f4197f1de2c3|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 173,
-    "end": 193,
+    "line": 192,
+    "end": 212,
     "text": "/// The maximal selected nodes: named nodes inside [start, end] whose"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|3a9fdb2c81f43ed9|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 15,
-    "end": 20,
+    "line": 16,
+    "end": 21,
     "text": "/// One wire-ready tree. `lab` holds raw fnv1a kind codes — the"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|892e863bd64371a7|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 198,
-    "end": 200,
+    "line": 217,
+    "end": 219,
     "text": "fn lines(node: Node) -> (usize, usize) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|8ea567f5e3dfcd77|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 213,
-    "end": 232,
+    "line": 232,
+    "end": 251,
     "text": "fn emit<'t>(\nnode: Node<'t>,"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|f2d463ac2259b4e8|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 253,
+    "end": 276,
+    "text": "/// A node's children as the tree sees them, looking through anonymous"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/wire.rs|7ab8cb85fc52662f|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
@@ -7819,31 +7819,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 529,
-    "end": 531,
+    "line": 536,
+    "end": 538,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 525,
+    "line": 532,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 517,
-    "end": 531,
+    "line": 524,
+    "end": 538,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 520,
-    "end": 521,
+    "line": 527,
+    "end": 528,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 520,
-    "end": 524,
+    "line": 527,
+    "end": 531,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8561,11 +8561,11 @@
     "end": 53,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 257,
     "end": 259,
-    "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
+    "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -10735,39 +10735,54 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 58,
+    "line": 64,
     "text": "pub struct Top {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|25b4f4b7648d6f7a|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 96,
+    "line": 103,
     "text": "pub fn file_fragments("
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|7987eb0927289c77|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 259,
+    "text": "pub(super) fn kids(node: Node, extras: Extras) -> (Vec<Node>, Vec<Node>) {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|8ea567f5e3dfcd77|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 213,
+    "line": 232,
     "text": "fn emit<'t>(\nnode: Node<'t>,"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|99791cf51d9c6ef1|0": {
+    "target": "../../../cli/src/dedup/t3/tree.rs",
+    "line": 279,
+    "text": "pub(super) fn skipped(node: Node, extras: Extras) -> bool {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|9c1418f6a3235dce|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 127,
+    "line": 136,
     "text": "pub fn fragment_of(tops: &[Top]) -> Option<(UnitTree, (usize, usize))> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|9dfb2c9446793799|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 157,
+    "line": 172,
     "text": "fn tree_of(tops: &[Node], text: &str, lang: Lang, extras: Extras) -> UnitTree {"
-  },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|c96a5b8b7725c5da|0": {
-    "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 255,
-    "text": "fn skipped(node: Node, extras: Extras) -> bool {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|cba7458185d5179c|0": {
     "target": "../../../cli/src/dedup/t3/tree.rs",
-    "line": 31,
-    "end": 53,
+    "line": 36,
+    "end": 58,
     "text": "/// Whether a tree carries the grammar's extras (comments): clone/1's"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree_text.rs|2a3ed72cb0d09c1b|0": {
+    "target": "../../../cli/src/dedup/t3/tree_text.rs",
+    "line": 65,
+    "text": "pub fn own(&self, node: Node) -> u64 {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree_text.rs|634c6b25fa79d353|0": {
+    "target": "../../../cli/src/dedup/t3/tree_text.rs",
+    "line": 57,
+    "text": "pub fn text(&self, node: Node) -> u64 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/wire.rs|7ab8cb85fc52662f|0": {
     "target": "../../../cli/src/dedup/t3/wire.rs",
@@ -10858,27 +10873,27 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|15a3f850eab6ad92|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 58,
+    "line": 85,
     "text": "const TABLES: [(Lang, &[&str]); 11] = ["
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|796f0d2218b5460b|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 38,
+    "line": 45,
     "text": "pub struct SlotSpec {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 125,
+    "line": 166,
     "text": "fn compile(lang: Lang) -> Option<Classes> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|1": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 125,
+    "line": 166,
     "text": "fn compile(lang: Lang) -> Option<Classes> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|c7d9a7464697d810|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 201,
+    "line": 209,
     "text": "pub fn slot_of(c: &Classes, node: Node) -> u8 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|e4b6420b866203cb|0": {
@@ -10887,66 +10902,71 @@
     "end": 20,
     "text": "//! The position-class tables of the merge family (plan v2.31 step 7;"
   },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|fab61c98a7e45b06|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 72,
+    "text": "pub helper_lines: u8,"
+  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot_hs.rs|15fd89336dbbdeb9|0": {
     "target": "../../../cli/src/merge/slot_hs.rs",
     "line": 1,
     "end": 14,
     "text": "//! The Haskell slot table (plan v2.31 step 7, step-7 ruling 8), beside"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2009808f635dadc6|0": {
-    "target": "../../../cli/src/merge/wire.rs",
-    "line": 1,
-    "end": 11,
-    "text": "//! The merge/1 leg (design booklet §3's row, §6.2; plan v2.31 step 7):"
-  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2c7f61f8d970ef98|0": {
     "target": "../../../cli/src/merge/wire.rs",
-    "line": 70,
+    "line": 75,
     "text": "pub fn chunks(groups: &[Group]) -> Vec<Range<usize>> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|35618d0f4191bcfe|0": {
+    "target": "../../../cli/src/merge/wire.rs",
+    "line": 1,
+    "end": 12,
+    "text": "//! The merge/1 leg (design booklet §3's row, §6.2; plan v2.31 step 7,"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|7d8aac6440e2ce0f|0": {
     "target": "../../../cli/src/merge/wire.rs",
-    "line": 128,
+    "line": 149,
     "text": "pub fn consume(reply: &Value, sent: &[&Group]) -> Result<Judged, String> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|ba386e1bf8065c7f|0": {
     "target": "../../../cli/src/merge/wire.rs",
-    "line": 112,
+    "line": 122,
     "text": "let lines = member.run.1 + 1 - member.run.0;"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|0a4f414f8ac5f110|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|1ca4ce56416be027|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 110,
-    "text": "fn the_review_scores_when_filed() {"
+    "line": 65,
+    "text": "#[test]\nfn the_sample_is_the_draw_of_the_frozen_set() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|83a994327f935520|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 41,
+    "line": 66,
     "text": "fn the_sample_is_the_draw_of_the_frozen_set() {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|d92160582ecefe97|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|f93c2dab54198bb7|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 65,
-    "text": "fn readings(set: &Value, sample: &Value, review: &Value) -> Value {"
+    "line": 93,
+    "text": "fn readings(g: &Generation, set: &Value, sample: &Value, review: &Value) -> Value {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|fad178af6e6b4be6|0": {
     "target": "../../../cli/tests/it/eval_merge_review.rs",
-    "line": 195,
+    "line": 229,
     "text": "fn regenerate() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review/answers.rs|f6f4aef3ae9814ac|0": {
     "target": "../../../cli/tests/it/eval_merge_review/answers.rs",
-    "line": 118,
+    "line": 119,
     "text": "pub fn assemble("
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_suggestions.rs|2a22b02f7e3414bf|0": {
     "target": "../../../cli/tests/it/eval_merge_suggestions.rs",
-    "line": 21,
+    "line": 24,
     "text": "fn the_self_tree_answers_its_frozen_rows() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_suggestions.rs|ae28d2373de8f8e6|0": {
     "target": "../../../cli/tests/it/eval_merge_suggestions.rs",
-    "line": 47,
+    "line": 50,
     "text": "fn every_member_set_is_suggested_once() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|2e643b22f14570f7|0": {
@@ -10981,47 +11001,47 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|2cffb0c6414e62ab|0": {
     "target": "../../../cli/tests/unit/merge/groups.rs",
-    "line": 142,
+    "line": 144,
     "text": "fn a_boundary_statement_on_one_side_is_trimmed_off() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|98e86e1cd48de9c8|0": {
     "target": "../../../cli/tests/unit/merge/groups.rs",
-    "line": 156,
+    "line": 158,
     "text": "fn a_trimmed_member_is_priced_by_its_run() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|f236cbb5e558a39d|0": {
     "target": "../../../cli/tests/unit/merge/groups.rs",
-    "line": 182,
+    "line": 184,
     "text": "fn every_group_not_sent_is_counted_by_why() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/groups.rs|fcdc15103348b3d0|0": {
     "target": "../../../cli/tests/unit/merge/groups.rs",
-    "line": 224,
+    "line": 226,
     "text": "fn one_member_set_is_one_suggestion_and_t1t2_covers_t3() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|26002d5fe7b572a5|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 39,
+    "line": 53,
     "text": "fn every_kind_and_field_is_in_the_grammar() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|55c7b9c558a4993d|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 70,
+    "line": 104,
     "text": "fn every_other_answer_on_the_probe_is_named_other() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|ca9f58a0e1aa95ba|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 96,
+    "line": 142,
     "text": "fn the_sets_are_disjoint() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/wire.rs|6fc7eafe6c2009d2|0": {
     "target": "../../../cli/tests/unit/merge/wire.rs",
-    "line": 74,
+    "line": 94,
     "text": "fn a_degraded_reply_is_cap_mirror_drift() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/wire.rs|af744993b6d9b202|0": {
     "target": "../../../cli/tests/unit/merge/wire.rs",
-    "line": 44,
+    "line": 47,
     "text": "fn the_body_carries_every_table() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Clone/Ted.hs|04f119f97a0e8680|0": {
@@ -11043,18 +11063,18 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge.hs|11465461ae21cd05|0": {
     "target": "../../../core/app/CE/Merge.hs",
-    "line": 36,
-    "end": 60,
+    "line": 37,
+    "end": 61,
     "text": "-- | The merge.result object. Judged (no reason): one suggestion row"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge.hs|8cb6cc8bb2016372|0": {
     "target": "../../../core/app/CE/Merge.hs",
-    "line": 33,
+    "line": 34,
     "text": "respond :: String -> ByteString -> Either (Maybe Value, String, String) ByteString"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Align.hs|b0cc8cf144e9c440|0": {
     "target": "../../../core/app/CE/Merge/Align.hs",
-    "line": 20,
+    "line": 26,
     "text": "isomorphic :: [MTree] -> Bool"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Align.hs|e7ad3dca3886da01|0": {
@@ -11065,103 +11085,117 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Align.hs|fa86806b903f9e88|0": {
     "target": "../../../core/app/CE/Merge/Align.hs",
-    "line": 30,
+    "line": 35,
     "text": "align :: [MTree] -> (Skel, [Hole])"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Contract.hs|3aaba7ca4d57029c|0": {
     "target": "../../../core/app/CE/Merge/Contract.hs",
-    "line": 60,
+    "line": 66,
     "text": ", asum [Just (\"group \" <> show i <> \": members are not isomorphic\") | (i, g) <- zip [0 :: Int ..] (groupsOf req), gFamily g == familyExact, not (isomorphic (gTrees g))]"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Contract.hs|86682932012ee5c8|0": {
     "target": "../../../core/app/CE/Merge/Contract.hs",
-    "line": 115,
+    "line": 122,
     "text": "treeOffence :: Int -> MergeTree -> Maybe String"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Contract.hs|92936972a08baef4|0": {
     "target": "../../../core/app/CE/Merge/Contract.hs",
-    "line": 51,
+    "line": 57,
     "text": "offence :: MergeReq -> Maybe String"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|06fcecd45dac10ab|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 38,
-    "end": 41,
+    "line": 48,
+    "end": 51,
     "text": "-- | A merged function taking more than six parameters is not a"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|1133089ee3f8b3dd|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 43,
-    "end": 46,
+    "line": 53,
+    "end": 56,
     "text": "-- | Each member left behind becomes one call line (step-6 ruling 7:"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|513f88eee622c1ac|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 28,
-    "end": 36,
+    "line": 29,
+    "end": 37,
     "text": "-- | Groups and tree nodes are the request's two dimensions (§3's"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|5db5363ddb3643cd|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 55,
-    "end": 61,
+    "line": 65,
+    "end": 71,
     "text": "-- | A node's position class, the `slot` column (§6.2): a statement,"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|a041038499897953|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 67,
-    "end": 80,
+    "line": 82,
+    "end": 95,
     "text": "-- | A suggestion's reason (step-6 ruling 6), the first infeasible"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|16a6f0740012ae5e|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 32,
+    "text": "liveHoles :: [Hole] -> [Hole]"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|2c4b1b02e8132fe8|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 69,
-    "end": 72,
+    "line": 81,
+    "end": 84,
     "text": "-- | The member kept (step-6 ruling 8): the greatest file in-degree,"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|309bafbc7d2df721|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 89,
+    "end": 95,
+    "text": "-- | The merged function's lines (step-6 ruling 7, gen-2 ruling R6): a"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|396cda14e26d9d7c|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 90,
-    "end": 105,
+    "line": 105,
+    "end": 120,
     "text": "-- | A member rebuilt from the skeleton and its values: postorder"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|3cc124d96069bfb3|0": {
+    "target": "../../../core/app/CE/Merge/Holes.hs",
+    "line": 39,
+    "text": "paramsOf :: [Hole] -> [Int]"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|3e6d56f32a814fe1|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 37,
-    "end": 58,
+    "line": 46,
+    "end": 67,
     "text": "-- | The suggestion row [g,params,kept,savings,feasible,reason] and"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|7330e8d6bc74c031|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 53,
+    "line": 64,
     "text": "savings = sum (map linesOf (gRows g)) - (skeletonLines g kept pairs + toInteger (length (gRows g)) * callLines)"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|9ac59406239261dc|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|85a3f0f4c32182da|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 21,
-    "end": 35,
-    "text": "skeletonOf :: Group -> (Skel, [Hole], Int)"
-  },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|9afbf4671d3426e5|0": {
-    "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 77,
-    "end": 88,
-    "text": "-- | The merged function's lines (step-6 ruling 7): a T1/T2 skeleton"
+    "line": 96,
+    "text": "skeletonLines :: Group -> Int -> Int -> Integer"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|e8a9ccfceb1e8897|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 62,
+    "line": 74,
     "text": "holeReason :: Hole -> Integer"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|f01253eebbf75e01|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
-    "line": 46,
-    "end": 51,
+    "line": 57,
+    "end": 62,
     "text": "reason = case filter (/= reasonNone) (map holeReason holes) of"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|06c609b52cc289d9|0": {
+    "target": "../../../core/app/CE/Merge/Mapped.hs",
+    "line": 69,
+    "text": "gap :: MTree -> MTree -> Int -> [Int] -> [Int] -> ([Skel], [Hole])"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|6da9c38baf00de2b|0": {
     "target": "../../../core/app/CE/Merge/Mapped.hs",
-    "line": 28,
+    "line": 36,
     "text": "mappedWith :: S.Set (Int, Int) -> MTree -> MTree -> (Skel, [Hole], Int)"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|93029e16a6f726bc|0": {
@@ -11170,37 +11204,58 @@
     "end": 12,
     "text": "-- | Family 1, a T3 pair (plan v2.31 step 6, design booklet §6.3;"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|93f898f92c41139c|0": {
-    "target": "../../../core/app/CE/Merge/Mapped.hs",
-    "line": 52,
-    "text": "gap :: MTree -> MTree -> [Int] -> [Int] -> ([Skel], [Hole])"
-  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|a2ef9618d3829eed|0": {
     "target": "../../../core/app/CE/Merge/Mapped.hs",
-    "line": 38,
+    "line": 47,
     "text": "kept :: S.Set (Int, Int) -> MTree -> MTree -> Int -> Int -> (Skel, [Hole], Int)"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Tree.hs|879e9c24d499c482|0": {
     "target": "../../../core/app/CE/Merge/Tree.hs",
-    "line": 66,
-    "end": 77,
+    "line": 87,
+    "end": 98,
     "text": "-- | One hole: its order key, each member's first and last root — a"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|5330b911527fdaa4|0": {
+    "target": "../../../core/app/CE/Merge/Widen.hs",
+    "line": 55,
+    "text": "widened :: HoleKey -> [(MTree, Int)] -> Hole"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|60608d07d7beedc5|0": {
+    "target": "../../../core/app/CE/Merge/Widen.hs",
+    "line": 39,
+    "text": "trigger :: [(MTree, Int)] -> Bool"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|823aac45a04115ca|0": {
+    "target": "../../../core/app/CE/Merge/Widen.hs",
+    "line": 23,
+    "text": "nodeHole :: HoleKey -> [(MTree, Int)] -> Maybe Hole"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|03270fc24b90ed3c|0": {
     "target": "../../../core/test/MergeProps.hs",
-    "line": 146,
+    "line": 169,
     "text": "reasonsCohere :: Bool"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|40c6531da695f911|0": {
     "target": "../../../core/test/MergeProps.hs",
-    "line": 46,
-    "end": 59,
+    "line": 54,
+    "end": 67,
     "text": "names :: [String]"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|cd438c406490603b|0": {
+    "target": "../../../core/test/MergeProps.hs",
+    "line": 132,
+    "text": "constant p = [if M.lookup (hKey h) param == Just p then h {hValues = map (const (concat (take 1 (hValues h)))) (hValues h)} else h | h <- holes]"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|e0c28ce5d146cdc1|0": {
     "target": "../../../core/test/MergeProps.hs",
-    "line": 163,
+    "line": 186,
     "text": "postsHold :: Group -> Bool"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeRulings.hs|9b900638ca398e26|0": {
+    "target": "../../../core/test/MergeRulings.hs",
+    "line": 1,
+    "end": 12,
+    "text": "-- | The merge battery's cases for the second generation's rulings"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/console.rs|25dca994341b1b4e|0": {
     "target": "../../../cli/src/arch/console.rs",

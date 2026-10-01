@@ -1,8 +1,9 @@
-//! The merge/1 leg (design booklet §3's row, §6.2; plan v2.31 step 7):
-//! the request — the groups, their members, one tree per member in
-//! clone/1's postorder encoding with the leaf and slot columns — laid
-//! out in chunks the core's two caps admit, and the reply consumed
-//! strictly. Nothing here judges: the alignment, the holes, the
+//! The merge/1 leg (design booklet §3's row, §6.2; plan v2.31 step 7,
+//! merge generation 2 ruling R1): the request — the groups with their
+//! family and helper lines, their members, one tree per member in
+//! clone/1's postorder encoding with the leaf, slot, own and text
+//! columns — laid out in chunks the core's two caps admit, and the reply
+//! consumed strictly. Nothing here judges: the alignment, the holes, the
 //! parameters, the feasibility, the kept member and the savings are the
 //! core's (CE.Merge.*). Every request is priced here within both caps,
 //! so a reply the core degraded is a cap-mirror drift and an error, never
@@ -11,11 +12,14 @@
 //! (A9f).
 
 use super::groups::Group;
+use super::slot::slot_spec;
 use crate::corelink::{Link, judged};
 use crate::dedup::t3::tree::UnitTree;
 use crate::dedup::t3::wire::dense;
+use crate::scan::lang::Lang;
 use serde_json::{Value, json};
 use std::ops::Range;
+use std::path::Path;
 
 /// The capability the core must offer, and the request kind.
 pub const CAP: &str = "merge/1";
@@ -24,8 +28,9 @@ const SINCE: &str = "7.5.0";
 
 /// Groups per request — mirror of CE.Merge.Cost.groupCap.
 pub const GROUP_CAP: usize = 4096;
-/// Tree nodes per request — mirror of CE.Merge.Cost.treeNodeCap.
-pub const TREE_NODE_CAP: usize = 1_048_576;
+/// Tree nodes per request — mirror of CE.Merge.Cost.treeNodeCap (the
+/// cap that keeps a request inside the protocol's line ceiling).
+pub const TREE_NODE_CAP: usize = 131_072;
 
 /// The counts object's keys, in the wire's order.
 pub const COUNTS: [&str; 6] = [
@@ -95,7 +100,10 @@ pub struct Judged {
 /// One chunk's request body: dense labels across its trees, `unit` the
 /// member's request-local number (echoed, never read), `lines` the lines
 /// of the run the member sends (a trimmed fragment's own, not its clone
-/// family's span), `fileIndeg` the references to the member's file.
+/// family's span), `fileIndeg` the references to the member's file, and
+/// per group its `helper` lines (ruling R6: a fragment's merged
+/// function wraps the run in a helper's head and closing lines, its
+/// language's count; a whole unit's merged function is the unit, 0).
 pub fn body(groups: &[&Group], indeg: impl Fn(&str) -> u64) -> Value {
     let trees: Vec<&UnitTree> = groups
         .iter()
@@ -104,7 +112,9 @@ pub fn body(groups: &[&Group], indeg: impl Fn(&str) -> u64) -> Value {
     let rows: Vec<Value> = dense(&trees)
         .into_iter()
         .zip(&trees)
-        .map(|(lab, t)| json!({"lab": lab, "lld": t.lld, "leaf": t.leaf, "slot": t.slot}))
+        .map(|(lab, t)| {
+            json!({"lab": lab, "lld": t.lld, "leaf": t.leaf, "slot": t.slot, "own": t.own, "text": t.text})
+        })
         .collect();
     let mut members = Vec::new();
     for (g, group) in groups.iter().enumerate() {
@@ -114,12 +124,23 @@ pub fn body(groups: &[&Group], indeg: impl Fn(&str) -> u64) -> Value {
             members.push(row);
         }
     }
-    let heads: Vec<[usize; 2]> = groups
+    let heads: Vec<[usize; 3]> = groups
         .iter()
         .enumerate()
-        .map(|(g, x)| [g, usize::from(x.family)])
+        .map(|(g, x)| [g, usize::from(x.family), helper(x)])
         .collect();
     json!({"groups": heads, "members": members, "trees": rows})
+}
+
+/// A group's helper lines: its language's (member 0's file) for a
+/// fragment, none for whole units.
+fn helper(g: &Group) -> usize {
+    let lang = g
+        .members
+        .first()
+        .and_then(|m| Lang::from_path(Path::new(&m.path)));
+    let lines = lang.and_then(slot_spec).map_or(0, |s| s.helper_lines);
+    if g.fragment { usize::from(lines) } else { 0 }
 }
 
 /// The reply consumed against the chunk that was sent: degraded first

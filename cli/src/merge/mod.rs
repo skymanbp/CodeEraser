@@ -20,6 +20,7 @@ pub mod groups;
 pub mod groups_trim;
 pub mod slot;
 mod slot_c;
+mod slot_flow;
 mod slot_hs;
 mod slot_java;
 mod slot_launch;
