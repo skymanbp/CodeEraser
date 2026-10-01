@@ -8,7 +8,7 @@
 -- module holds only the chunks of its document, and this module names
 -- the order they are read in. The docdup numbers are the ones
 -- CE.Docdup.Cost already owns — grafted here, never restated.
-module CE.Lang (allTables, digestOf, languages, pack, tablesDigest) where
+module CE.Lang (allTables, digestOf, languages, pack) where
 
 import qualified CE.Docdup.Cost as Doc
 import qualified CE.Lang.C as C
@@ -163,11 +163,6 @@ graft root (path, v) = go (K.fromString <$> splitDots path) root
   splitDots s = case break (== '.') s of
     (a, _ : rest) -> a : splitDots rest
     (a, []) -> [a]
-
--- | The number the hello names as `tablesDigest` and the reply as
--- `digest`: the package's own.
-tablesDigest :: Integer
-tablesDigest = digestOf pack
 
 -- | The fnv1a64 of a value's canonical bytes (aeson's encoding: keys
 -- in order, no blanks) — a function of the data alone.

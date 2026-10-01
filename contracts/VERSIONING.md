@@ -7,6 +7,11 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 2.15.0 止；2.1.0–2.14.0 的最初顺序段已于 2026-09-29 逐字节迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)（正册过了 `ce scan` 的 750 行硬线），2.0.0 仍在上方导语段。**
+> **7.8.0**（文档族，加性 minor，计划 v2.32 步 3，2026-10-01；设计册 `docs/reference/authority-track.md` §5）：第十八族 `document/1`——不是判决族：不判任何东西，按判决已答的整数把报告文档装出来。
+> 请求 `document.request`：`family`（`arch` / `query` / `rules` / `flow` / `merge` 五选一）+ `ranges`（每个可被引用的宇宙的大小，按族定键，含 `why`）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号……，按族定表名、行宽与每列所指的宇宙）+ `facts`（标量计数，按族定键）+ `degraded`（null 或 `why` 的下标）；三对象各须恰好是本族陈述的键。
+> 缺键、多键、行宽不对、下标出宇宙、`degraded` 越界、`degraded` 旁带判决的行或事实，都按名拒（code `contract`，`<表> <i>: <原因>` / `document: unknown family <名>` / `degraded: with rows <表>`），再加各族自己的检查（按槽一行的表、码表范围）。
+> 应答 `document.result`：`document` = 与该族报告 JSON 同形的文档，被度量仓库的字符串位一律是引用 `{"$": [类别, 整数…]}`（类别按族陈述，如 `path` / `dir` / `unit` / `why`）、产品常量（schema id、kind 名、原因名）直接出字符串；`counts{rows}`；`degraded:false`。行总数 > `docRowCap` 1,048,576 → `degraded:true, reason:"document_too_large"`、`document` 为该族的空文档。
+> 定义包（`tables/1`）加顶层键 `document`：每族 `{schema, empty}`（`flow` 另带 `kinds` 与 `judged`），`tablesDigest` 随之变。既有十六判决族字节零变化（既有 golden 只动 proto 字面与 hello 能力表 / `tablesDigest`）；新增 `contracts/fixtures/document/golden.ndjson`；电池 `DocumentProps`。
 > **7.7.0**（定义包族，加性 minor，计划 v2.32 步 1，2026-10-01；设计册 `docs/reference/authority-track.md` §4）：
 > 第十七族 `tables/1`——不是判决族：不读仓库事实、不判任何东西，答的是核判决所用的全部语言与产品定义。请求 `tables.request`
 > 只有信封三键（`type` / `id` / `proto`），多出任何键按名拒（code `contract`，「tables: unexpected key <k>」，只点名第一个）；
@@ -582,7 +587,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.7.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.8.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -601,12 +606,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
-  "similar/1","query/1","flow/1","merge/1","arch/1"]`；fourclass/2 =
+  "similar/1","query/1","flow/1","merge/1","arch/1","tables/1","document/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -719,11 +724,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->182<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.7.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->196<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.8.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->7.7.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  server 走 <!--ce:ver:proto#v-->7.8.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -735,5 +740,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->7.7.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->7.8.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.2.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

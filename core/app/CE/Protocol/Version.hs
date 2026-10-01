@@ -10,14 +10,16 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 7.7.0 = the definition package, `tables/1` (plan v2.32 step 1;
--- design booklet docs/reference/authority-track.md §4), additive: a
--- bare `tables.request` — the envelope, no other key — answered by
--- `tables.result`, every language and product definition the core
--- now holds (CE.Lang), one key per table family, with `digest`, the
--- fnv1a64 of the package's canonical bytes; the hello reply gains
--- `tablesDigest`, the same number. Every judgment family answers byte
--- for byte as before; the hello's capability list grows by one name.
+-- 7.8.0 = the report documents, `document/1` (plan v2.32 step 3;
+-- design booklet docs/reference/authority-track.md §5), additive: a
+-- `document.request` names a family (arch, query, rules, flow,
+-- merge) and sends the integer tables, ranges and facts its document
+-- is assembled from; `document.result` answers the document with
+-- every repository string a reference `{"$": [class, integers…]}`
+-- (CE.Document). The definition package gains `document`, the
+-- catalogue of each family's schema id and empty document, so
+-- `tablesDigest` moves. Every judgment family answers byte for byte
+-- as before; the hello's capability list grows by one name.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the
@@ -25,7 +27,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "7.7.0"
+proto = "7.8.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

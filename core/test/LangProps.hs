@@ -10,10 +10,10 @@
 module LangProps (battery) where
 
 import qualified CE.Handshake as Handshake
-import CE.Lang (allTables, digestOf, languages, pack, tablesDigest)
+import CE.Lang (allTables, digestOf, languages)
 import CE.Lang.Spec
 import CE.Lang.Spec.Flow
-import CE.Tables (respond)
+import CE.Tables (package, respond, tablesDigest)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import Data.Bits (shiftL, (.|.))
@@ -108,16 +108,16 @@ dispatch =
 
 -- | Same data, same number twice; one name changed, another number.
 digest :: Bool
-digest = digestOf pack == tablesDigest && digestOf pack == digestOf pack && digestOf renamed /= tablesDigest
+digest = digestOf package == tablesDigest && digestOf package == digestOf package && digestOf renamed /= tablesDigest
  where
-  renamed = case pack of
+  renamed = case package of
     Object o -> Object (KM.insert "outputs" (toJSON ["renamed" :: String]) o)
     v -> v
 
 reply :: Bool
 reply = case replyObjWith respond request of
   Just o ->
-    Object (foldr KM.delete o ["proto", "type", "id", "digest"]) == pack
+    Object (foldr KM.delete o ["proto", "type", "id", "digest"]) == package
       && field o "type" == Just "tables.result"
       && field o "digest" == Just (toJSON tablesDigest)
       && hello == Just (toJSON tablesDigest)

@@ -13,18 +13,19 @@ import qualified CE.Arch as Arch
 import qualified CE.Audit as Audit
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
+import qualified CE.Document as Document
 import qualified CE.Erase as Erase
 import qualified CE.Flow as Flow
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
-import CE.Lang (tablesDigest)
 import qualified CE.Merge as Merge
 import qualified CE.Query as Query
 import CE.Protocol.Version (majorMatches, proto)
 import qualified CE.Scan as Scan
 import qualified CE.Similar as Similar
 import qualified CE.Structure as Structure
+import CE.Tables (tablesDigest)
 import qualified CE.Tables as Tables
 import qualified CE.Tombstone as Tombstone
 import qualified CE.Trend as Trend
@@ -113,6 +114,7 @@ families =
   , Fam "merge/1" "merge.request" Merge.respond
   , Fam "arch/1" "arch.request" Arch.respond
   , Fam "tables/1" "tables.request" Tables.respond
+  , Fam "document/1" "document.request" Document.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

@@ -13,16 +13,19 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 7.7.0 = the definition package, `tables/1` (plan v2.32 step 1;
-/// design booklet docs/reference/authority-track.md §4), additive: a
-/// bare `tables.request` (the envelope and nothing else) reads back
-/// `tables.result` — every language and product definition the core
-/// now holds, one key per table family, with `digest`, the fnv1a64 of
-/// the package's canonical bytes — and the hello reply gains
-/// `tablesDigest`, the same number. Since step 2 every table this side
-/// measures with is read off that package (crate::tables), and a hello
-/// naming another digest than the package this run read is refused by
-/// name. Every judgment family's bytes stand.
+/// §1). 7.8.0 = the report documents, `document/1` (plan v2.32 step 3;
+/// design booklet docs/reference/authority-track.md §5), additive: a
+/// `document.request` names one of five families (arch, query, rules,
+/// flow, merge) and sends the integer tables, ranges and facts its
+/// report is assembled from; `document.result` answers the report with
+/// every repository string a reference `{"$": [class, integers…]}`.
+/// The definition package gains `document` (each family's schema id
+/// and empty report), so `tablesDigest` moves. This side does not ask
+/// for documents yet: the faces switch in the same step's second half.
+/// Since step 2 every table this side measures with is read off that
+/// package (crate::tables), and a hello naming another digest than the
+/// package this run read is refused by name.
+/// Every judgment family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -34,7 +37,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.7.0";
+pub const PROTO: &str = "7.8.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

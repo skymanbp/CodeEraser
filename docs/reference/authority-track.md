@@ -18,7 +18,7 @@
 
 ## 2. 不变量（一条不动）
 
-- **整数过线**：这条不变量保护的是**被度量仓库的数据**——仓库里的名字、路径、源码文本永不送进核；它不限制**产品自己的常量**从核送回 Rust。`tables/1` 送的是语法结点 kind 名、标准库名、扩展名、产物目录名、协议词表，都是产品定义、没有一个字节来自用户仓库，方向是核 → Rust（§4）；文档骨架里凡来自仓库的字符串位仍是符号引用 `{"$": k}`，符号表只送**计数** `symbols: N`，符号内容留在 Rust（§5）。
+- **整数过线**：这条不变量保护的是**被度量仓库的数据**——仓库里的名字、路径、源码文本永不送进核；它不限制**产品自己的常量**从核送回 Rust。`tables/1` 送的是语法结点 kind 名、标准库名、扩展名、产物目录名、协议词表，都是产品定义、没有一个字节来自用户仓库，方向是核 → Rust（§4）；文档骨架里凡来自仓库的字符串位仍是**类别化引用** `{"$": [类别, 整数…]}`——类别加判决自己已在用的整数（文件号、目录号、成员号……），字符串内容留在 Rust、由它按类别解出（§5）。
 - **判决在核**、**顾问永非判决**：本轨不新增判决，不改顾问的身份。
 - **解析 / 索引 / 文件系统 / 进程 = Rust**（硬约束 1）：Rust 仍是定义的执行者；`GRAMMARS` 表（链接编译好的文法）与以代码写成的 kind 启发式（`dedup/tokens.rs`、`similar/bag.rs`）留在 Rust。
 - **三面等价**。
@@ -30,8 +30,8 @@
 | 件 | proto | 请求 | 应答 | 缓存与降级 |
 |---|---|---|---|---|
 | ① `tables/1` | 7.7.0（加性） | 无参（信封之外多一个键按名拒） | `tables.result` 一次答整包：十六个顶层键按表族分（`languages` / `scan` / `flow` / `slot` / `sites` / `calls` / `fourclass` / `ladder` / `walk` / `outputs` / `docdup` / `keys` / `flags` / `tombstone` / `compdb` / `protocol`），每语言的表在表族键下按语言报告名分，另带 `digest`（规范字节的 fnv1a64，hello 回执的 `tablesDigest` 同数；规范字节 135,145 B） | Rust 第一次用到时要一次，按核 `(version, proto)` 入键落盘缓存 `.ce/tables-<ver>-<proto>.json`；握手已知版本 → 命中无往返；持核链的 daemon 内存缓存；缓存损坏 = 重取；无核 / 旧核无 `tables/1` = 具名拒绝，不留内嵌副本 |
-| ② ③ `document` | 各族随自己的 minor（7.7.0 之后依次） | 多送文档需要而判决不需要的整数事实（行号、起止行、符号下标）与符号计数 `symbols: N` | 各族应答加性 `document` 键 = 与今天报告 JSON 同形的骨架（字符串位 `{"$": k}`，句子 `{"$t": key, "args": [...]}`）+ `lines: {en: [...], zh: [...]}`（控制台每一行） | 旧行表键先保留给仍读行表的面 |
-| 退役 | 8.0.0（major） | — | 退役不再有读者的旧行表键 | 全部族切完后一次（§12 步 6） |
+| ② ③ `document/1` | 每批一个 minor（步 3 = 7.8.0，新五族；步 4、步 5 各一） | `document.request`：`family` + `ranges`（可被引用的宇宙大小）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号）+ `facts`（标量）+ `degraded`（null 或 `why` 下标）；每族的键、行宽、每列所指的宇宙写成一张陈述文本表 | `document.result`：`document` = 与今天报告 JSON 同形的骨架（字符串位 `{"$": [类别, 整数…]}`，产品常量直接出字符串；步 5 起句子 `{"$t": key, "args": [...]}` + `lines: {en: [...], zh: [...]}`）；`tables/1` 包加 `document` 目录（每族 schema id 与空文档） | 判决没发生 → 包里该族的空文档绑定 `why`；判了却装配不出 = 错误、不是降级；行总数 > 1,048,576 → 该族空文档 + `document_too_large` |
+| 退役 | 8.0.0（major） | — | 退役不再有读者的旧键（范围在步 6 按 §13 第 13 条重定） | 全部族切完后一次（§12 步 6） |
 
 - 每个 minor 与 8.0.0 各一条 `contracts/VERSIONING.md`（最新在前），`Version.hs` 与 `corelink.rs` 的 `PROTO` 同步；`tables/1` 进 `Protocol.hs` 的 `families` 表（hello 能力表由它派生）。
 - golden：`tables/1` 一对；各族切换时既有 golden 随 `document` 键重答（子仓 `fixture_contract::regen` 腿，分析轨 §3 的法子）。
@@ -78,10 +78,11 @@ Rust −≈ 235 KB，Haskell +≈ 250 KB（record 语法比 TOML 略长）。
 
 ### 5.2 设计
 
-- 请求多送**文档需要而判决不需要的整数事实**（行号、起止行、符号下标；符号表只送计数 `symbols: N`，内容留在 Rust）。
-- 核在应答里直接给出**文档骨架** = 与今天的报告 JSON 同形，凡字符串位一律是符号引用 `{"$": k}`。
-- Rust 一个通用绑定器 `bind(skeleton, symbols)`（遍历 JSON，`{"$": k}` → `symbols[k]`）；各族的报告装配删除，只剩请求装配（已有）+ 绑定器（≈ 10 KB）。schema id、字段、排序、计数全由核决定——三面等价由构造保证。
-- **切换规则**：每族一次 minor（应答加性 `document` 键；旧行表键先保留给仍读行表的面）；切换提交以「旧装配产物 == 新 `bind` 产物逐字节」为门（十语料 × 每族 × 三面），然后删旧装配；全部族切完后一次 major 8.0.0 退役不再有读者的旧键。
+- **一个族、一次装配**：文档由独立的 wire 族 `document/1` 装出（`CE.Document` 分派 / 契约 / cap + 每族一个 `CE.<Fam>.Document`），不随各族应答走——flow 按 `rowCap` 分批、merge 按两个 cap 分块判决，文档若在 Rust 侧折叠各批就等于把装配留在 Rust。请求 = `family` + `ranges` + `rows`（判决已答的行原样回送 + **文档需要而判决不需要的整数事实**：秩、行号、成员号）+ `facts` + `degraded`；每族把自己的请求写成一张陈述文本表（`range` / `fact` / `rows` 名、行宽、每列所指的宇宙 / `ref` 类别），契约按它逐条核（`CE.Document.Contract`）。
+- 核直接给出**文档骨架** = 与今天的报告 JSON 同形：字段集、数组内的排序、计数、schema id、`degraded` 位全在核；来自被度量仓库的字符串位一律是**类别化引用** `{"$": [类别, 整数…]}`（类别 + 判决自己已在用的整数；不预建符号表、不送符号计数），产品常量（schema id、kind 名、原因名、error 名、`t1t2` / `t3`、`?-`）核直接出字符串；按字符串排序的地方 Rust 送**秩**、核按秩排。
+- Rust 一个通用绑定器 `bind(skeleton, resolve)`（遍历 JSON，`{"$": [类别, 整数…]}` → 按类别解出的字符串）；各族的报告装配删除，只剩请求装配 + 解析器。三面等价由构造保证。
+- **空文档**：每族判决没发生时的文档（计数全零、表空、`degraded: {"$": ["why", 0]}`）由同一个装配函数对空输入算出，进 `tables/1` 的 `document` 目录——Rust 在判决链路打不开时唯一能印的文档。
+- **切换规则**：每批一个 minor（`document/1` 加性；步 3 = 7.8.0）；切换提交以「旧装配产物 == 新 `bind` 产物逐字节」为门（十语料 × 每族 × 三面），然后删旧装配；全部族切完后一次 major 8.0.0 退役不再有读者的旧键（范围见 §13 第 13 条）。
 - **分组落地**：(e) 新五族 query / rules / flow / merge / arch 作样板（骨架最简单）→ (a) check / score / structure / join → (b) graph：deadcode / mentions / sites / canvas → (c) scan / dedup / clone / docdup / erase → (d) churn / trend / tombstone / similar / audit / update / health。
 
 ### 5.3 门
@@ -183,7 +184,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 | 0 | 计划修正案与立项（2026-10-01）：本册 + 计划书 v2.32（横幅立项句、ADR-008 细则第八期、§6 T 轨 v2.32 行）+ CHANGELOG `[Unreleased]` 块 + cc-memory 重锁（硬约束 2） | docs 门全绿、基线具名重立 |
 | 1 | 定义进核 A（2026-10-01 已交付）：核 `CE.Lang.*` 三十五个模块（`Toml` / `Table` 两个读者、`Spec` / `Spec.Flow` 两个模式、`Contract`、十三个语言模块与八个 `.Flow` 模块、`Common` 九模块）+ `CE.Lang` 汇总 + `CE.Tables`，转录自 a378e78c 的 Rust 表；`LangProps` 十一腿 + `tables/1` golden 两对（全包 / 多一个键被拒）+ proto 7.7.0（hello 加性 `tablesDigest`）；子仓 `it/tables_equivalence.rs` 三腿证核的包与 Rust 临时镜像 `cli/src/tables/native.rs` 逐键相等、三方同数、多键被拒 | `cabal test` 全绿、`tables/1` golden 一对、既有 golden 只动 proto |
 | 2 | 定义进核 B（2026-10-01 已交付，§4.5）：Rust `tables.rs` + 缓存 + 消费者改读 + 定义文本删除（二十四个文件）；精度册两族（语言十一份、flow 十份）退役再在干净树上重生成，两个提交 | 十语料 + 自仓十三面旧 / 新二进制 143 对字节同、子仓表对钉版文法腿改读、无核 / 旧核 / 缺键具名拒绝 |
-| 3 | 文档骨架样板：新五族（query / rules / flow / merge / arch）+ 绑定器 + 切换门 | 旧装配产物 == 新 `bind` 产物逐字节（十语料 × 五族 × 三面） |
+| 3 | 文档骨架样板：新五族（query / rules / flow / merge / arch）+ 绑定器 + 切换门；3A 核（`CE.Document` + `CE.Document.Contract` + 四个 `CE.<Fam>.Document`、`document/1` 7.8.0、`tables/1` 的 `document` 目录、`DocumentProps` 九腿、golden 十四对）先在车道提交，3B Rust 绑定器与切换门在步 2 落地后接上 | 旧装配产物 == 新 `bind` 产物逐字节（十语料 × 五族 × 三面） |
 | 4 | 骨架 (a)(b)：check / score / structure / join；graph 的 deadcode / mentions / sites / canvas | 同步 3 的切换门 |
 | 5 | 骨架 (c)(d) + `CE.Text` 双语目录 + 守卫句：scan / dedup / clone / docdup / erase；churn / trend / tombstone / similar / audit / update / health | 同步 3 的切换门 + `lines` en / zh 逐字节同、`zh_surface` 绿 |
 | 6 | 删旧 face / console / `ZH_TSV`、major 8.0.0 退役旧键、parity 门改读骨架 | 十语料十面字节同、`face_parity` 改读骨架后绿 |
@@ -200,7 +201,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 2. **范围再裁**（2026-10-01，量化后 AskUserQuestion）：「两项 + 老家族参考实现（推荐）」——件 ① ② ③ 加老家族的参考第二实现与等价电池（件 ④；裁时按设计稿的十族估 ≈ 38.5 %，立项按实改为六族、≈ 37.4 %，见第 10 条）；最后的缺口到时再裁（拆 GUI 子仓 +2.3 点或再加一个新家族 +1.8 点）；「统一走查引擎」量下来只换 0.6 点，不做。
 3. **提交署名**（用户令 2026-10-01，常设）：「不要加claude提交署名，署名只写我自己」——本轨起每个提交说明末尾不加任何署名行，作者只有 git 配置里的用户本人。
 4. **不变量一条不动**（主会话按原则自答）：整数过线、判决在核、顾问永非判决、硬约束 1、三面等价、逐字节门、不为占比写代码（§2）——本轨换的是陈述的持有者，不是分工。
-5. **整数过线靠符号引用保持**（主会话按原则自答）：文档骨架的字符串位一律 `{"$": k}`，符号表只送计数，内容留在 Rust；句子是 `{"$t": key, "args": [...]}`，槽位里仍是符号引用（备选「把路径 / 名字送进核让核拼字符串」违反 §5.9.2）。
+5. **整数过线靠符号引用保持**（主会话按原则自答；步 3 细化为类别化引用，见第 12 条）：文档骨架的字符串位一律 `{"$": k}`，符号表只送计数，内容留在 Rust；句子是 `{"$t": key, "args": [...]}`，槽位里仍是符号引用（备选「把路径 / 名字送进核让核拼字符串」违反 §5.9.2）。
 6. **定义文本的判据**（主会话按原则自答）：描述语言或产品语义、与文件系统状态无关、改一处就改判决——三条都满足才进核；`GRAMMARS`（链接编译好的文法）与以代码写成的 kind 启发式不满足「是文本」这一条，留 Rust。
 7. **无核不留内嵌副本**（主会话按原则自答）：无核 / 旧核无 `tables/1` = 具名拒绝；两处权威正是要消掉的东西（备选「Rust 内嵌一份兜底」把一处权威改回两处）。
 8. **三条不做的理由**（主会话按原则自答，数字量过）：统一走查引擎——可折叠的走查器只 64 KB（其余 120 KB 是语言无关算法要留作库代码），+0.6 点，风险大于收益，定义进核已拿走它真正的价值（表）；前端进核（daemon / MCP / 守卫 / update / setup ≈ 530 KB）——用户未选；阶梯即数据——阶梯 211 KB 里是读构建 / 配置 / 文件系统的真逻辑，不是表。
@@ -212,3 +213,6 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 14. **`query/prelude.rules` 不进包**（主会话按原则自答）：它是 `ce query` 的前奏规则，用户可读可改的程序文本，不是语言或产品的定义表；§4.2 的判据第三条（改一处就改判决）对它不成立——它不改任何家族的判决。
 15. **冻结的降表只守输出**（主会话按原则自答）：flow 的降表读的仍是核那份表，表进核后精度册的出处门照旧按路径守 `cli/src/flow/` 与 `scan/{functions,walk,lang}.rs`；表文本不在那些路径里了，门守的是读者与降表——一份表改了而读者没动，由十语料十三面的字节门与 `LangProps` 抓，不由出处门抓。
 16. **精度册退役与重生成是两个提交**（主会话按原则自答，813f4976 / e1a6b520 先例）：生成器把 `git status --porcelain` 非空读作 dirty、拒绝覆盖冻结档，所以「在步 2 的树上重生成」按构造是两步——退役提交删档、考题翻回审阅档阶段，下一提交在退役提交的干净树上逐份生成；flow 的判决掩码在退役提交上不清（判决零改动是本步的不变量，提交 E 清掩码的理由——降表改了——这里不成立），掩码腿在那一个提交上按构造红。
+17. **字符串位按类别引用**（步 3A，落码者按原则自答、待主会话核）：第 5 条的 `{"$": k}` 细化为 `{"$": [class, 整数...]}`——类 = `path` / `dir` / `slashed` / `unit` / `var` / `text` / `value` / `goal_name` / `column` / `pred` / `rules_file` / `query` / `at` / `why`，整数是行里本来就有的下标（文件号、单元序号、变量号、文档内成员号、跨度），Rust 按类与整数从自己的表取字符串；符号表不单独上线，它的计数就是请求的 `ranges`。产品常量（schema id、kind 名、reason 名、错误名、`t1t2` / `t3`、`?-`、sort 名）由核直接写字符串（第 11 条）。与步 3 任务书的引用表有三处不同：flow `var` 带 `(f, nth, v)`（一个单元有多个变量）；merge 的引用用文档内成员号 `k`，不用 `(g, m)`；query 的程序错误位置与消息都是 `why` 文本。
+18. **`document/1` 是独立能力，不是判决族的加性键**（步 3A）：骨架装配不进 `arch/1` / `query/1` / `flow/1` / `merge/1` 的应答，单独成一族——请求送判决应答已有的行表（Rust 按类重编号）与测量侧事实，核按每族一份语句文本（`range` / `fact` / `rows` / `ref` 四种行，`CE.Document.Contract.readSpec` 读）校验并装配。后果有两条。其一，判决族的行表仍是 `document/1` 的输入，§1 原定 8.0.0 退役的「旧键」不再包括判决应答的行表，8.0.0 的范围在步 6 重定。其二，降级规则分两半：语句里标 `judged` 的表与事实在 `degraded` 时必须空 / 为 0，标 `kept` 的可以留（query 的程序字段与 `faults` / `heads`；flow 的 units / stmts / vars / uses 与 `langs` / `rankFiles` / `shown` / `unlowered`）——今天 query 的无核文档带程序字段、flow 的降级文档带计数与 unlowered 拒绝，按「degraded 与 rows 同在即拒」字面会让这两族的降级面无法由核装配。目录里的 `empty` 是空请求的装配结果：核不可达时 Rust 用它只能复原 arch / merge / rules 的降级面，query / flow 的还要测量侧事实——步 3B 待裁。
+19. **每批一个 minor；flow 的判决语言集进目录**（步 3A）：步 3 = 7.8.0（`document/1` 加性 + `tables/1` 加性 `document` 键），以后每切一批族一个 minor。flow 的判决语言集 `[0,1,2,3,4,15,16,17,18,20]` 步 2 没有搬进核（步 2 只搬 `languages[].judged`），本步由 `CE.Flow.Document` 持一份并放进目录 `document.flow.judged`，子仓 `it/tables_equivalence.rs` 新腿对 `flow::judged_mask()` 逐位比；改由语言表派生与否待主会话裁。包多了一个所有者（`CE.Lang.pack` + `CE.Document.catalogue`），`tablesDigest` 因此从 `CE.Lang` 挪到 `CE.Tables`——任务书写「CE.Lang 不动」，这是它唯一的改动（删一个导出与定义）。

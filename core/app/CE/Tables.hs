@@ -8,10 +8,14 @@
 -- digest the hello also names. Every value is a product constant, so
 -- the integers-only wire rule (§5.9.2, which keeps the measured
 -- repository's names out of the core) is untouched: nothing here came
--- from a repository, and it flows core to measuring side.
-module CE.Tables (respond) where
+-- from a repository, and it flows core to measuring side. Since 7.8.0 (plan
+-- v2.32 step 3) the package also carries `document`, the document
+-- catalogue (CE.Document): each report family's schema id and empty
+-- document, the one document a face can print without a judgment.
+module CE.Tables (package, respond, tablesDigest) where
 
-import CE.Lang (pack, tablesDigest)
+import CE.Document (catalogue)
+import CE.Lang (digestOf, pack)
 import CE.Lang.Contract (offence)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
@@ -25,6 +29,18 @@ respond proto line = case decodeStrict line of
     Nothing -> Right (reply proto (KM.lookup "id" o))
   _ -> Left (Nothing, "bad_request", "tables: the request is not an object")
 
+-- | The definition package: the language and product definitions
+-- (CE.Lang) and the document catalogue.
+package :: Value
+package = case pack of
+  Object keys -> Object (KM.insert "document" catalogue keys)
+  v -> v
+
+-- | The number the hello names as `tablesDigest` and the reply as
+-- `digest`: the package's own.
+tablesDigest :: Integer
+tablesDigest = digestOf package
+
 -- | The package's keys beside the envelope's and the digest.
 reply :: String -> Maybe Value -> B8.ByteString
 reply proto rid = BL.toStrict (encode (Object (KM.union envelope content)))
@@ -36,6 +52,6 @@ reply proto rid = BL.toStrict (encode (Object (KM.union envelope content)))
       , ("id", maybe Null id rid)
       , ("digest", toJSON tablesDigest)
       ]
-  content = case pack of
+  content = case package of
     Object keys -> keys
     _ -> KM.empty

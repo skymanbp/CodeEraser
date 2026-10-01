@@ -162,7 +162,7 @@ traces; the shipped judgment must agree finding for finding on 200 seeded random
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:97](../../../core/test/Spec.hs#L97)).
+([Spec.hs:98](../../../core/test/Spec.hs#L98)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

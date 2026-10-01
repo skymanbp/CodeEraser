@@ -12,6 +12,7 @@ import qualified AdvisoryProps
 import qualified ArchProps
 import qualified AuditProps
 import qualified DeclProps
+import qualified DocumentProps
 import qualified StructureEquivProps
 import qualified VerdictEquivProps
 import qualified TrendEquivProps
@@ -98,6 +99,7 @@ batteries =
   , goldenPairs "merge/golden.ndjson"
   , goldenPairs "arch/golden.ndjson"
   , goldenPairs "tables/golden.ndjson"
+  , goldenPairs "document/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -141,6 +143,7 @@ batteries =
   , VerdictEquivProps.battery
   , StructureEquivProps.battery
   , LangProps.battery
+  , DocumentProps.battery
   ]
 
 -- | One named check through the shared runner.
