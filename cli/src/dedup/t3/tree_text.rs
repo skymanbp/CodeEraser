@@ -29,7 +29,14 @@ pub struct Tokens<'a> {
 
 impl<'a> Tokens<'a> {
     /// One walk of `top`'s whole subtree, named and anonymous (an
-    /// explicit stack, like every walker in this crate).
+    /// explicit stack, like every walker in this crate). Its own walk,
+    /// not `ast::preorder` and not tree.rs's `emit`: a node's run is
+    /// the tokens counted between its entry and the end of its subtree,
+    /// and `preorder` reports entries only; recovering the ends from
+    /// byte spans would hand a zero-width token (a missing `;`) to
+    /// whichever sibling starts at its byte; and `emit` steps through
+    /// the named children only, never the anonymous tokens a stream is
+    /// made of.
     pub fn of(top: Node, text: &'a str, extras: Extras) -> Self {
         let mut t = Tokens {
             bytes: text.as_bytes(),

@@ -10776,12 +10776,12 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree_text.rs|2a3ed72cb0d09c1b|0": {
     "target": "../../../cli/src/dedup/t3/tree_text.rs",
-    "line": 65,
+    "line": 72,
     "text": "pub fn own(&self, node: Node) -> u64 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree_text.rs|634c6b25fa79d353|0": {
     "target": "../../../cli/src/dedup/t3/tree_text.rs",
-    "line": 57,
+    "line": 64,
     "text": "pub fn text(&self, node: Node) -> u64 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/wire.rs|7ab8cb85fc52662f|0": {
@@ -11190,12 +11190,12 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|06c609b52cc289d9|0": {
     "target": "../../../core/app/CE/Merge/Mapped.hs",
-    "line": 69,
+    "line": 72,
     "text": "gap :: MTree -> MTree -> Int -> [Int] -> [Int] -> ([Skel], [Hole])"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|6da9c38baf00de2b|0": {
     "target": "../../../core/app/CE/Merge/Mapped.hs",
-    "line": 36,
+    "line": 37,
     "text": "mappedWith :: S.Set (Int, Int) -> MTree -> MTree -> (Skel, [Hole], Int)"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|93029e16a6f726bc|0": {
@@ -11206,7 +11206,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Mapped.hs|a2ef9618d3829eed|0": {
     "target": "../../../core/app/CE/Merge/Mapped.hs",
-    "line": 47,
+    "line": 48,
     "text": "kept :: S.Set (Int, Int) -> MTree -> MTree -> Int -> Int -> (Skel, [Hole], Int)"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Tree.hs|879e9c24d499c482|0": {
@@ -11215,19 +11215,24 @@
     "end": 98,
     "text": "-- | One hole: its order key, each member's first and last root — a"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|5330b911527fdaa4|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|25a504275d86ea94|0": {
     "target": "../../../core/app/CE/Merge/Widen.hs",
     "line": 55,
+    "text": "bare :: [Int] -> [Int] -> Bool"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|5330b911527fdaa4|0": {
+    "target": "../../../core/app/CE/Merge/Widen.hs",
+    "line": 65,
     "text": "widened :: HoleKey -> [(MTree, Int)] -> Hole"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|60608d07d7beedc5|0": {
     "target": "../../../core/app/CE/Merge/Widen.hs",
-    "line": 39,
+    "line": 43,
     "text": "trigger :: [(MTree, Int)] -> Bool"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Widen.hs|823aac45a04115ca|0": {
     "target": "../../../core/app/CE/Merge/Widen.hs",
-    "line": 23,
+    "line": 27,
     "text": "nodeHole :: HoleKey -> [(MTree, Int)] -> Maybe Hole"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeProps.hs|03270fc24b90ed3c|0": {

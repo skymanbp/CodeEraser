@@ -9,6 +9,15 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 分析轨 v2.31 步 6 / 7 合并家族第二代第一部分的续修（2026-10-01；主会话审阅上一提交后的两条裁定，设计册 §13 第 51–52 条；7.5.0 未发布，同一 minor 内判决定义修订，wire 形状不动；`clone/1` 不动、分数与 1.8.0 可比）。
+
+- **R3b 一侧为空的间隙拓宽到表达式父对**（第 52 条；起因 `001e5f83c730` 的 `b""` 对 `b"\n"`——空字节串没有内容结点，第 45 条把它读成间隙结构差）：T3 对的保留对两侧都在表达式位、且子结点序里有一段间隙一侧有子树另一侧没有 → 与 R3 同形一级拓宽（洞覆盖保留对整棵子树、类 1、参数文本 = 两侧的整条记号流，同文本成空洞，内部洞被吸收）；两侧都有子树的间隙、父对不全是表达式位的间隙（实参表之下的 `foo(a, b)` 对 `foo(a)`）仍是结构差。落在 `CE.Merge.Widen.bare` + `CE.Merge.Mapped.kept`；`MergeRulings` 三腿（拓上去 / 拓不上去 / 拓宽后同文本成空洞），关掉 R3b 的探针让前后两腿转红；`cabal test` 685 → 688。
+- **第 51 条**：`0003206e2776` 维持 2 个参数——裸方法名不是能传的值，声明名与被调用表达式 `self.builder.dotall` 文本不同，第一代判官的「1 个」靠的是同拼写的巧合；不改码。
+- **冻结集 / 样本 / 批次按新核在第二代内重出**：同 31677 条建议，可行 8004 → 9321；理由移动全来自 `position`（→ ok 1317、→ `too_many_params` 82、→ `no_savings` 63、→ `spans_statements` 11、→ `type` 2：拓宽吸收了原先记理由的间隙，下一个洞来记），2907 行参数减少、零行增加；`001e5f83c730` → 可行 3 个参数、`001a2c1754a1` → 可行 5 个参数（对象字面量里一侧缺的元素），都与第一代判官一致；样本对上一次抽取留 92、新 8、去 8，对第一代共有 73、新 27、去 27；批次提示的结构差一条加同一例外（第 50 条读法即定义），`merge-batches-v2` 整目录重出、`"readings": 2` 不变。
+- **merge golden** 在新核下 `fixture_contract::regen` 重生：零字节变化（六对请求里没有表达式父对下的一侧空隙）。
+- **文档**：设计册 §6.3 间隙句与一级拓宽句、第 45 条加修订指向、§13 第 51–52 条；册 18 间隙段 / 拓宽段 / 电池句 / 第二代段；VERSIONING 7.5.0 洞定义句；`docs/EVAL-SET-MERGE.md` 规则句与第二代读数表；`dedup/t3/tree_text.rs` 的 `Tokens::of` 头注写明它为何不复用 `ast::preorder` 或 `tree.rs` 的 `emit`（要每个结点子树的终点；按字节区间补会把零宽记号划给相邻兄弟；`emit` 只走命名子结点）。
+- **门**：主 check 913（地板 911；轴 0:90 2:305 6:217；轴 0 89 → 90 是本块与文档的行数）/ dedup 50 / scan 103 warn 0 fail / docdup 0 / deadcode 0 / erase 0 / rules ok，子 949（轴 0:7 2:269 6:83）/ 91 / 45 warn 0 fail / docdup 0 / deadcode 0 / erase 0 / rules ok；`cabal test` 688 ok；clippy `--all-targets -D warnings` 与 fmt 清；`clone/1` 与其余判决不动：baa4f8af 的 release 二进制对本树 release 二进制（同一个核），九个交叉对拍语料各十面、`compare8` 九棵真树各四面、baa4f8af 干净树五面、本车道树 / ripgrep / zod 的 `ce clone`（控制台与 json）/ `ce check`（控制台与 json）/ `ce dedup --check` 各十五面，146 / 146 逐字节同；点名腿 eval_merge / merge_ / dedup_ / clone_ / frozen_set / fixture_contract / docs_ / site_ / facts_ / eval_mention / baseline_ / mention_universe / source_citations 全绿（全量 lib / it 未重跑）；祝福：两首页 roast 块轴 0 89 → 90（913 不动）、册 13 普查自仓 haskell 行 3152 → 3156、册 18 两条 `tree_text.rs` 引文随头注下移重渲；ADR-006 两根具名重立（主 1 超容差：`core/test/MergeRulings.hs` 171 → 195；子无超容差）。
+
 **无默认档位变更。** 分析轨 v2.31 步 6 / 7 合并家族第二代第一部分（2026-10-01；第一代盲判的 23 条理由分歧逐条对源核实后的九条裁定落进核与位置类表，设计册 §13 第 42–50 条；proto 7.5.0 未发布，同一 minor 内加性；`clone/1` 零改动、既有十四族 golden 字节不动，分数与 1.8.0 可比；`cli/src/flow/**`〔`mod.rs` 除外〕、`cli/src/scan/{functions,walk,lang}.rs`、`cli/Cargo.lock` 一个字节不动）：冻结建议集 / 抽样 / 批次第二代，第一代四档留盘作记录；第二代的盲判与精度册由下一提交落。
 
 - **R1 两列新事实**：树结点加 `own`（结点自己的匿名记号——运算符 / 关键字 / 标点——以 0x00 相隔的 fnv1a64，没有 = 0）与 `text`（子树整条记号流的 fnv1a64，空白不是记号）；`tree.rs` 的 `kids` 一次返回命名子结点与匿名叶两半，`emit` 取前一半、新文件 `dedup/t3/tree_text.rs` 取后一半，片段合成根 `own` 0、`text` = 顶层记号流以 0x00 首尾相接；组行加 `helper`。核 `Contract.hs` 缺列 / 长度不等 / 负值按名拒（`MergeRefusals` +6 条，现 29 条）。

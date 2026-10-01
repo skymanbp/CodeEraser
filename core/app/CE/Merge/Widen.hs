@@ -1,5 +1,5 @@
 -- | The holes both alignments open at a node (plan v2.31 step 6,
--- design booklet §6.3; merge generation 2, rulings R2 and R3): a
+-- design booklet §6.3; merge generation 2, rulings R2, R3 and R3b): a
 -- node whose key differs among the members is a relabel, a node whose
 -- key is every member's but whose own anonymous tokens differ (an
 -- operator, a keyword, a punctuation mark) is an own-token hole of
@@ -7,10 +7,14 @@
 -- class other (a member name, a field, a string's content) whose
 -- parent is an expression on every member opens one expression hole
 -- over the parent's whole subtree instead, which absorbs every hole
--- inside it. CE.Merge.Align (T1/T2, many members, one shape) and
+-- inside it; a gap with child subtrees on one side and none on the
+-- other widens its kept parent pair the same way when that pair is an
+-- expression on both sides (R3b: `b""` against `b"\n"`), so a gap
+-- stays a structural difference only where no expression stands above
+-- it. CE.Merge.Align (T1/T2, many members, one shape) and
 -- CE.Merge.Mapped (a T3 pair, the kept pairs of a mapping) read the
--- same four functions over (tree, node) per member.
-module CE.Merge.Widen (nodeHole, trigger, widenable, widened) where
+-- same functions over (tree, node) per member.
+module CE.Merge.Widen (bare, nodeHole, trigger, widenable, widened) where
 
 import CE.Merge.Cost (slotExpression, slotOther)
 import CE.Merge.Tree
@@ -44,6 +48,12 @@ trigger at = case at of
       && any (\(t, n) -> textAt t n /= textAt t0 n0) rest
       && slotAt t0 n0 == slotOther
   [] -> False
+
+-- | A gap that widens its parent (R3b): child subtrees on one side,
+-- none on the other. A gap both sides fill is not one — those two runs
+-- differ in structure, and stay a gap hole (R4).
+bare :: [Int] -> [Int] -> Bool
+bare fa fb = null fa /= null fb
 
 -- | A parent the widening may cover: an expression on every member.
 widenable :: [(MTree, Int)] -> Bool

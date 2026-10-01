@@ -5,7 +5,9 @@
 -- the ruling reads them: R2 an operator that differs is a hole of class
 -- other (the same operator opens none); R3 a member name under an
 -- expression widens to the expression (a target root does not), and a
--- whitespace-only difference is no hole (a token that differs is); R4 a
+-- whitespace-only difference is no hole (a token that differs is); R3b
+-- a gap one side fills under an expression widens to the expression (not
+-- under a class-other parent; a widened pair of equal texts is quiet); R4 a
 -- run one member lacks is structure (an argument that differs in value
 -- is not); R5 a gap sits in member 0's postorder before the kept child
 -- it precedes; R6 a fragment's helper lines enter the savings; R7 one
@@ -15,7 +17,7 @@ module MergeRulings (rulings) where
 import MergeCases (Case, casesOf)
 
 rulings :: [Case]
-rulings = casesOf (operators <> widening <> quietAndTexts <> gapsAndOrder <> helpers)
+rulings = casesOf (operators <> widening <> bareGaps <> quietAndTexts <> gapsAndOrder <> helpers)
 
 -- | Ruling R2: `a < b` against `a > b`, and against itself.
 operators :: String
@@ -68,6 +70,38 @@ widening =
   \= s 0 1 0 3 0 1\n\
   \= h 0 0 0 0 1 1\n\
   \= h 0 0 0 1 1 1\n"
+
+-- | Ruling R3b: `b""` against `b"\n"` - a string literal with no child
+-- on one side and an escape sequence on the other, as a T3 pair.
+bareGaps :: String
+bareGaps =
+  "# R3b: a gap one side fills, under a pair that is an expression on both sides, widens to that pair: one feasible parameter whose texts are the literals'\n\
+  \g 0 1 0\n\
+  \m 0 0 0 5 0\n\
+  \m 0 1 1 5 0\n\
+  \t 7 9 | 0 0 | 71 0 | 1 4 | 0 0 | 701 901\n\
+  \t 8 7 9 | 0 0 0 | 81 0 0 | 4 1 4 | 0 0 0 | 81 702 902\n\
+  \= s 0 1 0 3 1 0\n\
+  \= h 0 0 0 0 0 0\n\
+  \= h 0 0 0 1 1 1\n\
+  \# R3b reverse: under a pair of class other the gap does not widen - it stays a structural difference (R4) beside the pair's relabel: reason 1\n\
+  \g 0 1 0\n\
+  \m 0 0 0 5 0\n\
+  \m 0 1 1 5 0\n\
+  \t 7 9 | 0 0 | 71 0 | 4 4 | 0 0 | 701 901\n\
+  \t 8 7 9 | 0 0 0 | 81 0 0 | 4 4 4 | 0 0 0 | 81 702 902\n\
+  \= s 0 2 0 3 0 1\n\
+  \= h 0 0 0 0 -1 -1\n\
+  \= h 0 0 0 1 0 0\n\
+  \= h 0 1 1 0 0 0\n\
+  \= h 0 1 1 1 1 1\n\
+  \# R3b: a widened pair whose texts are both sides' alike is quiet - no parameter, feasible\n\
+  \g 0 1 0\n\
+  \m 0 0 0 5 0\n\
+  \m 0 1 1 5 0\n\
+  \t 7 9 | 0 0 | 71 0 | 1 4 | 0 0 | 701 901\n\
+  \t 8 7 9 | 0 0 0 | 81 0 0 | 4 1 4 | 0 0 0 | 81 701 901\n\
+  \= s 0 0 0 3 1 0\n"
 
 -- | Rulings R3 (a quiet hole) and R7 (texts, not kinds).
 quietAndTexts :: String

@@ -8,8 +8,9 @@
 -- (an operator, a keyword: class other — ruling R2); a kept pair that
 -- is an expression on both sides with a kept child pair relabelled at
 -- a leaf of class other is one widened expression hole over both
--- subtrees, absorbing every hole inside (ruling R3; CE.Merge.Widen).
--- Between two neighbouring kept child pairs of a kept pair — and
+-- subtrees, absorbing every hole inside (ruling R3; CE.Merge.Widen),
+-- and so is one with a gap holding subtrees on one side only (ruling
+-- R3b). Between two neighbouring kept child pairs of a kept pair — and
 -- before the first, and after the last — the unkept child subtrees on
 -- each side form a gap; a gap whose two forests are node for node the
 -- same (atom and relative lld) joins the skeleton, any other is a gap
@@ -21,7 +22,7 @@ module CE.Merge.Mapped (mapped, mappedWith) where
 import CE.Clone.Ted (tedMapping)
 import CE.Merge.Cost (slotOther, slotStatement)
 import CE.Merge.Tree
-import CE.Merge.Widen (nodeHole, trigger, widenable, widened)
+import CE.Merge.Widen (bare, nodeHole, trigger, widenable, widened)
 import Data.Maybe (maybeToList)
 import qualified Data.Set as S
 
@@ -46,7 +47,7 @@ mappedWith m a b
 -- too: the widened expression still stands on the skeleton's lines.
 kept :: S.Set (Int, Int) -> MTree -> MTree -> Int -> Int -> (Skel, [Hole], Int)
 kept m a b x y
-  | widenable at && any (\(c, d) -> trigger [(a, c), (b, d)]) pairs = (SGap key, [widened key at], count)
+  | widenable at && (any (\(c, d) -> trigger [(a, c), (b, d)]) pairs || or (zipWith bare runsA runsB)) = (SGap key, [widened key at], count)
   | otherwise = (SNode self (concat (weave (map fst gaps) [[s] | (s, _, _) <- subs])), holes, count)
  where
   at = [(a, x), (b, y)]
@@ -57,7 +58,9 @@ kept m a b x y
   -- where a gap empty on member 0's side sits: just before the next
   -- kept child (its leftmost leaf), after the last at x itself
   anchors = map (lldAt a . fst) pairs <> [x]
-  gaps = zipWith3 (gap a b) anchors (segments (kidsOf a x) (map fst pairs)) (segments (kidsOf b y) (map snd pairs))
+  runsA = segments (kidsOf a x) (map fst pairs)
+  runsB = segments (kidsOf b y) (map snd pairs)
+  gaps = zipWith3 (gap a b) anchors runsA runsB
   subs = [kept m a b c d | (c, d) <- pairs]
   count = 1 + sum [n | (_, _, n) <- subs]
   holes = maybeToList own <> concatMap snd gaps <> concat [h | (_, h, _) <- subs]

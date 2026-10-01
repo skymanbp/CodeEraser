@@ -192,10 +192,12 @@ The 23 reason disagreements were checked against the source one by one. Nine rul
 booklet section 13 items 42-50 - and changed the core and the position-class tables: every tree node carries
 its own anonymous tokens (`own`) and its token text (`text`); a node whose own tokens differ is a hole of the
 other class; a leaf of the other class (a member name, a field, a string's content) under an expression on every
-member widens to that expression; a gap is always structural; the holes run in member 0's postorder; a fragment's
+member widens to that expression; a gap is structural, save one filled on one side only under an expression on
+both sides, which widens the same way (items 51-52, from the review of the first draw of this generation: `b""`
+against `b"\n"` has no content node on one side); the holes run in member 0's postorder; a fragment's
 merged function adds its helper's head and closing lines; parameters are counted by text; the tables place
 assignment targets, part names and literal contents; and the batch prompt gains `## Reading rules`, the rulings
-in the judge's words. The node cap fell from 1,048,576 to 131,072 so the widest request at both caps stays inside
+in the judge's words, the structural rule naming the same exception. The node cap fell from 1,048,576 to 131,072 so the widest request at both caps stays inside
 the protocol's 32 MiB line (the own and text columns put ripgrep's first request at 39,165,017 bytes). The first
 generation's four docs stay on disk as the record; the gates read the second.
 
@@ -205,29 +207,34 @@ generation's four docs stay on disk as the record; the gates read the second.
   generation's sample is still held to the draw of its set, and the first generation's review and precision
   doc are still checked as one (the review a review of its sample, the precision doc what its three docs read).
 - **The frozen set** (`contracts/eval/merge-suggestions-v2.json`), measured again on the same five trees: the
-  same 31677 suggestions, every member set in both generations.
+  same 31677 suggestions, every member set in both generations. The set was measured twice inside this
+  generation; the second measurement, after item 52, is the one filed: 1317 rows move from `position` to `ok`,
+  82 to `too_many_params`, 63 to `no_savings`, 11 to `spans_statements` and 2 to `type` (a widening absorbs the
+  gap that named the reason and the next hole names it), 2907 rows lose parameters and none gain one; feasible
+  8004 -> 9321.
 
 | corpus | suggestions | feasible v1 | feasible v2 | ok | position | type | spans_statements | too_many_params | no_savings |
 |---|---|---|---|---|---|---|---|---|---|
-| zod | 22985 | 3660 | 5929 | 5929 | 3386 | 11856 | 198 | 308 | 1308 |
-| ripgrep | 6385 | 1433 | 1387 | 1387 | 2505 | 1756 | 133 | 377 | 227 |
-| cobra | 1593 | 861 | 584 | 584 | 889 | 9 | 23 | 43 | 45 |
-| requests | 138 | 89 | 69 | 69 | 44 | 0 | 11 | 7 | 7 |
-| codeeraser | 576 | 51 | 35 | 35 | 238 | 107 | 68 | 31 | 97 |
-| all | 31677 | 6094 | 8004 | 8004 | 7062 | 13728 | 433 | 766 | 1684 |
+| zod | 22985 | 3660 | 7030 | 7030 | 2211 | 11858 | 203 | 317 | 1366 |
+| ripgrep | 6385 | 1433 | 1564 | 1564 | 2268 | 1756 | 136 | 434 | 227 |
+| cobra | 1593 | 861 | 596 | 596 | 862 | 9 | 26 | 55 | 45 |
+| requests | 138 | 89 | 71 | 71 | 42 | 0 | 11 | 7 | 7 |
+| codeeraser | 576 | 51 | 60 | 60 | 204 | 107 | 68 | 35 | 102 |
+| all | 31677 | 6094 | 9321 | 9321 | 5587 | 13730 | 444 | 848 | 1747 |
 
-- **The sample** (`contracts/eval/merge-sample-v2.json`), drawn by the same rule from the second set: 72 of
-  its 100 ids are in the first sample, 28 are new (zod 24, ripgrep 3, cobra 1) and 28 of the first sample's
-  are gone (zod 19, ripgrep 5, cobra 3, requests 1).
+- **The sample** (`contracts/eval/merge-sample-v2.json`), drawn by the same rule from the second set: 73 of
+  its 100 ids are in the first sample, 27 are new (zod 21, ripgrep 5, cobra 1) and 27 of the first sample's
+  are gone (zod 15, ripgrep 7, cobra 4, requests 1). Against the draw before item 52, 92 ids stay, 8 are new
+  and 8 are gone.
 
 | corpus | sampled | sampled feasible | sampled infeasible | t1t2 | t3 | fragments | shared with v1 |
 |---|---|---|---|---|---|---|---|
-| zod | 73 | 37 | 36 | 5 | 68 | 5 | 49 |
-| ripgrep | 20 | 9 | 11 | 6 | 14 | 6 | 17 |
-| cobra | 6 | 4 | 2 | 3 | 3 | 3 | 5 |
+| zod | 74 | 38 | 36 | 5 | 69 | 5 | 53 |
+| ripgrep | 20 | 9 | 11 | 6 | 14 | 6 | 15 |
+| cobra | 5 | 3 | 2 | 2 | 3 | 2 | 4 |
 | requests | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | codeeraser | 1 | 0 | 1 | 0 | 1 | 0 | 1 |
-| all | 100 | 50 | 50 | 14 | 86 | 14 | 72 |
+| all | 100 | 50 | 50 | 13 | 87 | 13 | 73 |
 
 - **The 23 disagreements in the second set** (the core's reason and parameters, first generation -> second;
   the first generation's audited reason after the slash): `0116334e9e04` ok 4 -> position 5 / position;
@@ -235,11 +242,12 @@ generation's four docs stay on disk as the record; the gates read the second.
   `0164bed5a39c` ok 3 -> no_savings 3 / no_savings; `00e40466c1b4` ok 1 -> no_savings 1 / type;
   `007acd7cec85` ok 0 -> ok 0 / position; `0003206e2776` position 2 -> ok 2 / ok; `003064137ab3`,
   `0043c8c0b0ca`, `004a32a24156`, `008aca0cdd17` position -> ok at the same count / ok; `003a6bee44ce` position 5
-  -> ok 5 / ok; `001a2c1754a1` position 7 -> position 6 / ok (an object literal's elements one member lacks);
+  -> ok 5 / ok; `001a2c1754a1` position 7 -> ok 5 / ok (object literal elements one member lacks, widened to the
+  literal by item 52);
   `001badff73a2` position 6 -> position 6 / ok (an argument one member lacks); `004b88c1e095` position 9 ->
   position 10 / ok (arguments one member lacks); `00768018a7fc` position 1 -> position 1 / ok (the differing
-  field is an assignment's target); `001e5f83c730` position 4 -> position 4 / ok (an empty byte string has no
-  content node, so `b""` against `b"\n"` is a gap); `0022b455f7eb` position 6 -> type 6 / type;
+  field is an assignment's target); `001e5f83c730` position 4 -> ok 3 / ok (an empty byte string has no
+  content node, so `b""` against `b"\n"` is a gap, widened to the literal by item 52); `0022b455f7eb` position 6 -> type 6 / type;
   `004b98f56894` position 4 -> ok 3 / type; `001e93a93275` position 3 -> position 3 / no_savings;
   `001fd6b5128e`, `002e5318cd29`, `003a1ee6cfdc` position 1 -> no_savings 1 / no_savings.
 - **The batches** (`eval_merge_batches::merge_batches`, written outside the tree): 4 batches of 25 under

@@ -61,6 +61,136 @@
       ]
     },
     {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "0015619b6dc14ae75afbacc9b498b89f307623044cfc2228b24a38064fa47a9a",
+      "members": [
+        {
+          "at": "crates/printer/src/standard.rs:max_columns_with_count_preview_one_match/0#0",
+          "run": [
+            2571,
+            2594
+          ],
+          "source": "    fn max_columns_with_count_preview_one_match() {\n        let matcher = RegexMatcher::new(\"exhibited|dusted\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .stats(true)\n            .max_columns(Some(46))\n            .max_columns_preview(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nbut Doctor Watson has to have it taken out for [... 1 more match]\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        },
+        {
+          "at": "crates/printer/src/standard.rs:trim_ascii/0#0",
+          "run": [
+            2248,
+            2268
+          ],
+          "source": "    fn trim_ascii() {\n        let matcher = RegexMatcher::new(\"Watson\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .trim_ascii(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                \"   Watson\".as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nWatson\n\";\n        assert_eq_printed!(expected, got);\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "max_columns_with_count_preview_one_match",
+          "trim_ascii"
+        ],
+        [
+          "\"exhibited|dusted\"",
+          "\"Watson\""
+        ],
+        [
+          "StandardBuilder::new()\r\n            .stats(true)\r\n            .max_columns(Some(46))\r\n            .max_columns_preview",
+          "StandardBuilder::new()\r\n            .trim_ascii"
+        ],
+        [
+          "SHERLOCK",
+          "\"   Watson\""
+        ],
+        [
+          "\"\\\r\nbut Doctor Watson has to have it taken out for [... 1 more match]\r\nand exhibited clearly, with a label attached.\r\n\"",
+          "\"\\\r\nWatson\r\n\""
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "001a2c1754a15debbd171afb317c09e9e7538b9396e06facb7f0d8be58ceca1c",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#5",
+          "run": [
+            84,
+            95
+          ],
+          "source": "test(\"undefined async parse\", async () => {\n  const goodData = undefined;\n  const badData = \"XXX\";\n\n  const goodResult = await undefinedSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(undefined);\n\n  const badResult = await undefinedSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#14",
+          "run": [
+            204,
+            215
+          ],
+          "source": "test(\"record async parse\", async () => {\n  const goodData = { adsf: {}, asdf: {} };\n  const badData = [{}];\n\n  const goodResult = await recordSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await recordSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"undefined async parse\"",
+          "\"record async parse\""
+        ],
+        [
+          "undefined",
+          "{ adsf: {}, asdf: {} }"
+        ],
+        [
+          "\"XXX\"",
+          "[{}]"
+        ],
+        [
+          "undefinedSchema",
+          "recordSchema"
+        ],
+        [
+          "undefined",
+          "goodData"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "001e5f83c730d01206ca6ec30b5cb39e53c295bf975a66fb46527e2cc6d571b0",
+      "members": [
+        {
+          "at": "crates/cli/src/escape.rs:empty/0#0",
+          "run": [
+            90,
+            93
+          ],
+          "source": "    fn empty() {\n        assert_eq!(b(b\"\"), unescape(r\"\"));\n        assert_eq!(r\"\", escape(b\"\"));\n    }"
+        },
+        {
+          "at": "crates/cli/src/escape.rs:nl/0#0",
+          "run": [
+            109,
+            112
+          ],
+          "source": "    fn nl() {\n        assert_eq!(b(b\"\\n\"), unescape(r\"\\n\"));\n        assert_eq!(r\"\\n\", escape(b\"\\n\"));\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "empty",
+          "nl"
+        ],
+        [
+          "b\"\"",
+          "b\"\\n\""
+        ],
+        [
+          "r\"\"",
+          "r\"\\n\""
+        ]
+      ]
+    },
+    {
       "corpus": "zod",
       "family": "t3",
       "fragment": false,
@@ -783,78 +913,6 @@
       "param_texts": []
     },
     {
-      "corpus": "cobra",
-      "family": "t1t2",
-      "fragment": true,
-      "id": "009eb27797da5363d6d07c5f0c423eafecee24e832ef10406d1c0294b7c43403",
-      "members": [
-        {
-          "at": "command_test.go:115-121",
-          "run": [
-            115,
-            120
-          ],
-          "source": "\trootCmd := &Command{Use: \"root\", Args: NoArgs, Run: emptyRun}\n\tchild1Cmd := &Command{\n\t\tUse:  \"child1\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { child1CmdArgs = args },\n\t}\n\tchild2Cmd := &Command{Use: \"child2\", Args: NoArgs, Run: emptyRun}"
-        },
-        {
-          "at": "command_test.go:309-315",
-          "run": [
-            309,
-            314
-          ],
-          "source": "\trootCmd := &Command{Use: \"root\", Args: NoArgs, Run: emptyRun}\n\taCmd := &Command{\n\t\tUse:  \"aCmd\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { aCmdArgs = args },\n\t}\n\tbCmd := &Command{Use: \"bCmd\", Args: NoArgs, Run: emptyRun}"
-        },
-        {
-          "at": "command_test.go:439-445",
-          "run": [
-            439,
-            444
-          ],
-          "source": "\trootCmd := &Command{Use: \"foo\", Args: NoArgs, Run: emptyRun}\n\tfooCmd := &Command{\n\t\tUse:  \"foo\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { fooCmdArgs = args },\n\t}\n\tbarCmd := &Command{Use: \"bar\", Args: NoArgs, Run: emptyRun}"
-        },
-        {
-          "at": "command_test.go:468-474",
-          "run": [
-            468,
-            473
-          ],
-          "source": "\tbarCmd := &Command{Use: \"bar\", Args: NoArgs, Run: emptyRun}\n\tfooCmd := &Command{\n\t\tUse:  \"foo\",\n\t\tArgs: ExactArgs(2),\n\t\tRun:  func(_ *Command, args []string) { fooCmdArgs = args },\n\t}\n\tbarCmd.AddCommand(fooCmd)"
-        }
-      ],
-      "param_texts": [
-        [
-          "rootCmd",
-          "rootCmd",
-          "rootCmd",
-          "barCmd"
-        ],
-        [
-          "\"root\"",
-          "\"root\"",
-          "\"foo\"",
-          "\"bar\""
-        ],
-        [
-          "child1Cmd",
-          "aCmd",
-          "fooCmd",
-          "fooCmd"
-        ],
-        [
-          "\"child1\"",
-          "\"aCmd\"",
-          "\"foo\"",
-          "\"foo\""
-        ],
-        [
-          "child1CmdArgs",
-          "aCmdArgs",
-          "fooCmdArgs",
-          "fooCmdArgs"
-        ]
-      ]
-    },
-    {
       "corpus": "zod",
       "family": "t3",
       "fragment": false,
@@ -1003,6 +1061,200 @@
         [
           "ZodMiniStringFormat",
           "ZodMiniType"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00d0e8d185aca3f5a9f548cbd4e35f22ee949f3dd340265168a0e4e398a0d2eb",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#11",
+          "run": [
+            159,
+            170
+          ],
+          "source": "test(\"array async parse\", async () => {\n  const goodData = [\"XXX\"];\n  const badData = \"XXX\";\n\n  const goodResult = await arraySchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await arraySchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/async-parsing.test.ts:(anonymous)/0#13",
+          "run": [
+            188,
+            199
+          ],
+          "source": "test(\"union async parse\", async () => {\n  const goodData = undefined;\n  const badData = null;\n\n  const goodResult = await unionSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await unionSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"array async parse\"",
+          "\"union async parse\""
+        ],
+        [
+          "[\"XXX\"]",
+          "undefined"
+        ],
+        [
+          "\"XXX\"",
+          "null"
+        ],
+        [
+          "arraySchema",
+          "unionSchema"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00d53d6e64b264725a5f07eee06e06129af0e288e057c8f1397ee2b45f12dfa0",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#3",
+          "run": [
+            54,
+            65
+          ],
+          "source": "test(\"boolean async parse\", async () => {\n  const goodData = true;\n  const badData = 1;\n\n  const goodResult = await booleanSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await booleanSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/async-parsing.test.ts:(anonymous)/0#2",
+          "run": [
+            38,
+            49
+          ],
+          "source": "test(\"bigInt async parse\", async () => {\n  const goodData = BigInt(145);\n  const badData = 134;\n\n  const goodResult = await bigIntSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await bigIntSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"boolean async parse\"",
+          "\"bigInt async parse\""
+        ],
+        [
+          "true",
+          "BigInt(145)"
+        ],
+        [
+          "1",
+          "134"
+        ],
+        [
+          "booleanSchema",
+          "bigIntSchema"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00e445990c41fc6d61df2fcc7af0d3916fdcca19d842f26c50e9e683890741d6",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/tests/object.test.ts:(anonymous)/0#10",
+          "run": [
+            102,
+            106
+          ],
+          "source": "test(\"passthrough unknown\", () => {\n  const val = z.object({ points: z.number() }).passthrough().parse(data);\n\n  expect(val).toEqual(data);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/classic/tests/object.test.ts:(anonymous)/0#11",
+          "run": [
+            108,
+            112
+          ],
+          "source": "test(\"strip unknown\", () => {\n  const val = z.object({ points: z.number() }).strip().parse(data);\n\n  expect(val).toEqual({ points: 2314 });\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"passthrough unknown\"",
+          "\"strip unknown\""
+        ],
+        [
+          "z.object({ points: z.number() }).passthrough",
+          "z.object({ points: z.number() }).strip"
+        ],
+        [
+          "data",
+          "{ points: 2314 }"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00e49bb8d1a3cb94d5ee91e441d8a7bed20be66f2dcb08c731d7e463a1ddc3b8",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#15",
+          "run": [
+            110,
+            113
+          ],
+          "source": "test(\"literal boolean object\", () => {\n  const f = () => literalBooleanSchema.parse({});\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#47",
+          "run": [
+            263,
+            266
+          ],
+          "source": "test(\"parse dateSchema boolean\", () => {\n  const f = () => dateSchema.parse(val.boolean);\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"literal boolean object\"",
+          "\"parse dateSchema boolean\""
+        ],
+        [
+          "literalBooleanSchema",
+          "dateSchema"
+        ],
+        [
+          "{}",
+          "val.boolean"
+        ]
+      ]
+    },
+    {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "00f1c152b07c38e34ca9276e68c14f054e179e24b867b6efb94244b8a336fb9f",
+      "members": [
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#12",
+          "run": [
+            95,
+            98
+          ],
+          "source": "test(\"literal boolean incorrect\", () => {\n  const f = () => literalBooleanSchema.parse(false);\n  expect(f).toThrow();\n});"
+        },
+        {
+          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#13",
+          "run": [
+            100,
+            103
+          ],
+          "source": "test(\"literal boolean number\", () => {\n  const f = () => literalBooleanSchema.parse(\"asdf\");\n  expect(f).toThrow();\n});"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"literal boolean incorrect\"",
+          "\"literal boolean number\""
+        ],
+        [
+          "false",
+          "\"asdf\""
         ]
       ]
     },
@@ -1383,82 +1635,6 @@
       ]
     },
     {
-      "corpus": "ripgrep",
-      "family": "t1t2",
-      "fragment": true,
-      "id": "01468222d99b0d269d9dcf578298074a4df03254a52ed2479c9e1690f01db540",
-      "members": [
-        {
-          "at": "crates/printer/src/standard.rs:2749-2771",
-          "run": [
-            2750,
-            2771
-          ],
-          "source": "        let matcher = RegexMatcher::new(\"Doctor Watsons|but Doctor\").unwrap();\n        let mut printer = StandardBuilder::new().build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .max_matches(Some(2))\n            .line_number(false)\n            .after_context(1)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nFor the Doctor Watsons of this world, as opposed to the Sherlock\nHolmeses, success in the province of detective work must always\n--\nbut Doctor Watson has to have it taken out for him and dusted,\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);"
-        },
-        {
-          "at": "crates/printer/src/standard.rs:2771-2796",
-          "run": [
-            2774,
-            2796
-          ],
-          "source": "        assert_eq_printed!(expected, got);\n\n        // after context: 4, max matches: 2\n        let mut printer = StandardBuilder::new().build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .max_matches(Some(2))\n            .line_number(false)\n            .after_context(4)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nFor the Doctor Watsons of this world, as opposed to the Sherlock\nHolmeses, success in the province of detective work must always\nbe, to a very large extent, the result of luck. Sherlock Holmes\ncan extract a clew from a wisp of straw or a flake of cigar ash;\nbut Doctor Watson has to have it taken out for him and dusted,\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);"
-        }
-      ],
-      "param_texts": [
-        [
-          "1",
-          "4"
-        ],
-        [
-          "\"\\\r\nFor the Doctor Watsons of this world, as opposed to the Sherlock\r\nHolmeses, success in the province of detective work must always\r\n--\r\nbut Doctor Watson has to have it taken out for him and dusted,\r\nand exhibited clearly, with a label attached.\r\n\"",
-          "\"\\\r\nFor the Doctor Watsons of this world, as opposed to the Sherlock\r\nHolmeses, success in the province of detective work must always\r\nbe, to a very large extent, the result of luck. Sherlock Holmes\r\ncan extract a clew from a wisp of straw or a flake of cigar ash;\r\nbut Doctor Watson has to have it taken out for him and dusted,\r\nand exhibited clearly, with a label attached.\r\n\""
-        ]
-      ]
-    },
-    {
-      "corpus": "ripgrep",
-      "family": "t3",
-      "fragment": false,
-      "id": "0156e474be1290fad373d1a91e32548c13ea8707f14c32bfa9ac7daf24ae6077",
-      "members": [
-        {
-          "at": "crates/core/flags/defs.rs:test_no_ignore_vcs/0#0",
-          "run": [
-            5099,
-            5108
-          ],
-          "source": "fn test_no_ignore_vcs() {\n    let args = parse_low_raw(None::<&str>).unwrap();\n    assert_eq!(false, args.no_ignore_vcs);\n\n    let args = parse_low_raw([\"--no-ignore-vcs\"]).unwrap();\n    assert_eq!(true, args.no_ignore_vcs);\n\n    let args = parse_low_raw([\"--no-ignore-vcs\", \"--ignore-vcs\"]).unwrap();\n    assert_eq!(false, args.no_ignore_vcs);\n}"
-        },
-        {
-          "at": "crates/core/flags/defs.rs:test_no_pcre2_unicode/0#0",
-          "run": [
-            5193,
-            5203
-          ],
-          "source": "fn test_no_pcre2_unicode() {\n    let args = parse_low_raw(None::<&str>).unwrap();\n    assert_eq!(false, args.no_unicode);\n\n    let args = parse_low_raw([\"--no-pcre2-unicode\"]).unwrap();\n    assert_eq!(true, args.no_unicode);\n\n    let args =\n        parse_low_raw([\"--no-pcre2-unicode\", \"--pcre2-unicode\"]).unwrap();\n    assert_eq!(false, args.no_unicode);\n}"
-        }
-      ],
-      "param_texts": [
-        [
-          "test_no_ignore_vcs",
-          "test_no_pcre2_unicode"
-        ],
-        [
-          "no_ignore_vcs",
-          "no_unicode"
-        ],
-        [
-          "\"--no-ignore-vcs\"",
-          "\"--no-pcre2-unicode\""
-        ],
-        [
-          "\"--ignore-vcs\"",
-          "\"--pcre2-unicode\""
-        ]
-      ]
-    },
-    {
       "corpus": "zod",
       "family": "t3",
       "fragment": false,
@@ -1675,172 +1851,6 @@
         [
           "\"email\"",
           "\"nanoid\""
-        ]
-      ]
-    },
-    {
-      "corpus": "zod",
-      "family": "t3",
-      "fragment": false,
-      "id": "018d54152950676eadfb21529930a56edf464624d684eaa4ff26d41f693e8965",
-      "members": [
-        {
-          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#27",
-          "run": [
-            164,
-            167
-          ],
-          "source": "test(\"parse stringSchema null\", () => {\n  const f = () => stringSchema.parse(val.null);\n  expect(f).toThrow();\n});"
-        },
-        {
-          "at": "packages/zod/src/v3/tests/primitive.test.ts:(anonymous)/0#55",
-          "run": [
-            306,
-            309
-          ],
-          "source": "test(\"parse symbolSchema date\", () => {\n  const f = () => symbolSchema.parse(val.date);\n  expect(f).toThrow();\n});"
-        }
-      ],
-      "param_texts": [
-        [
-          "\"parse stringSchema null\"",
-          "\"parse symbolSchema date\""
-        ],
-        [
-          "stringSchema",
-          "symbolSchema"
-        ],
-        [
-          "val.null",
-          "val.date"
-        ]
-      ]
-    },
-    {
-      "corpus": "zod",
-      "family": "t3",
-      "fragment": false,
-      "id": "01985d72678006ea424b4676c937d79833f2d1d815399715b7db3f40d5d90abf",
-      "members": [
-        {
-          "at": "packages/zod/src/v3/tests/nullable.test.ts:(anonymous)/0#1",
-          "run": [
-            39,
-            42
-          ],
-          "source": "test(\"unwrap\", () => {\n  const unwrapped = z.string().nullable().unwrap();\n  expect(unwrapped).toBeInstanceOf(z.ZodString);\n});"
-        },
-        {
-          "at": "packages/zod/src/v4/classic/tests/optional.test.ts:(anonymous)/0#1",
-          "run": [
-            15,
-            18
-          ],
-          "source": "test(\"unwrap\", () => {\n  const unwrapped = z.string().optional().unwrap();\n  expect(unwrapped).toBeInstanceOf(z.ZodString);\n});"
-        }
-      ],
-      "param_texts": [
-        [
-          "z.string().nullable",
-          "z.string().optional"
-        ]
-      ]
-    },
-    {
-      "corpus": "zod",
-      "family": "t3",
-      "fragment": false,
-      "id": "01a2b56dc59d7b6c7fca2bd2fe194197a24096e5099e3d7c7dc041544a58aeae",
-      "members": [
-        {
-          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#42",
-          "run": [
-            794,
-            797
-          ],
-          "source": "  (inst, def) => {\n    core.$ZodDate.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
-        },
-        {
-          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#54",
-          "run": [
-            1329,
-            1332
-          ],
-          "source": "  (inst, def) => {\n    core.$ZodLiteral.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
-        }
-      ],
-      "param_texts": [
-        [
-          "core.$ZodDate",
-          "core.$ZodLiteral"
-        ]
-      ]
-    },
-    {
-      "corpus": "zod",
-      "family": "t3",
-      "fragment": false,
-      "id": "01b2be076eddd876ac038f20910ea42d883d1255fdf1c5658f80ee3c650aaa7b",
-      "members": [
-        {
-          "at": "packages/zod/src/v4/classic/schemas.ts:(anonymous)/2#15",
-          "run": [
-            578,
-            581
-          ],
-          "source": "  (inst, def) => {\n    core.$ZodStringFormat.init(inst, def);\n    _ZodString.init(inst, def);\n  }"
-        },
-        {
-          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#29",
-          "run": [
-            499,
-            502
-          ],
-          "source": "  (inst, def) => {\n    core.$ZodCustomStringFormat.init(inst, def);\n    ZodMiniStringFormat.init(inst, def);\n  }"
-        }
-      ],
-      "param_texts": [
-        [
-          "core.$ZodStringFormat",
-          "core.$ZodCustomStringFormat"
-        ],
-        [
-          "_ZodString",
-          "ZodMiniStringFormat"
-        ]
-      ]
-    },
-    {
-      "corpus": "zod",
-      "family": "t3",
-      "fragment": false,
-      "id": "01d060b82dbfb73bc7a67d244ce7862da89366d3098404b1f1716992f217d421",
-      "members": [
-        {
-          "at": "packages/zod/src/v4/core/schemas.ts:(anonymous)/2#32",
-          "run": [
-            1171,
-            1174
-          ],
-          "source": "  (inst, def) => {\n    checks.$ZodCheckNumberFormat.init(inst, def);\n    $ZodNumber.init(inst, def); // no format checks\n  }"
-        },
-        {
-          "at": "packages/zod/src/v4/mini/schemas.ts:(anonymous)/2#54",
-          "run": [
-            1329,
-            1332
-          ],
-          "source": "  (inst, def) => {\n    core.$ZodLiteral.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }"
-        }
-      ],
-      "param_texts": [
-        [
-          "checks.$ZodCheckNumberFormat",
-          "core.$ZodLiteral"
-        ],
-        [
-          "$ZodNumber",
-          "ZodMiniType"
         ]
       ]
     },
@@ -2177,56 +2187,6 @@
       ]
     },
     {
-      "corpus": "ripgrep",
-      "family": "t3",
-      "fragment": false,
-      "id": "0015619b6dc14ae75afbacc9b498b89f307623044cfc2228b24a38064fa47a9a",
-      "members": [
-        {
-          "at": "crates/printer/src/standard.rs:max_columns_with_count_preview_one_match/0#0",
-          "run": [
-            2571,
-            2594
-          ],
-          "source": "    fn max_columns_with_count_preview_one_match() {\n        let matcher = RegexMatcher::new(\"exhibited|dusted\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .stats(true)\n            .max_columns(Some(46))\n            .max_columns_preview(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                SHERLOCK.as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nbut Doctor Watson has to have it taken out for [... 1 more match]\nand exhibited clearly, with a label attached.\n\";\n        assert_eq_printed!(expected, got);\n    }"
-        },
-        {
-          "at": "crates/printer/src/standard.rs:trim_ascii/0#0",
-          "run": [
-            2248,
-            2268
-          ],
-          "source": "    fn trim_ascii() {\n        let matcher = RegexMatcher::new(\"Watson\").unwrap();\n        let mut printer = StandardBuilder::new()\n            .trim_ascii(true)\n            .build(NoColor::new(vec![]));\n        SearcherBuilder::new()\n            .line_number(false)\n            .build()\n            .search_reader(\n                &matcher,\n                \"   Watson\".as_bytes(),\n                printer.sink(&matcher),\n            )\n            .unwrap();\n\n        let got = printer_contents(&mut printer);\n        let expected = \"\\\nWatson\n\";\n        assert_eq_printed!(expected, got);\n    }"
-        }
-      ],
-      "param_texts": [
-        [
-          "max_columns_with_count_preview_one_match",
-          "trim_ascii"
-        ],
-        [
-          "\"exhibited|dusted\"",
-          "\"Watson\""
-        ],
-        [
-          "StandardBuilder::new()\r\n            .stats(true)\r\n            .max_columns(Some(46))\r\n            .max_columns_preview",
-          "StandardBuilder::new()\r\n            .trim_ascii"
-        ],
-        [
-          "",
-          "   Watson"
-        ],
-        [
-          "SHERLOCK",
-          "\"   Watson\""
-        ],
-        [
-          "\"\\\r\nbut Doctor Watson has to have it taken out for [... 1 more match]\r\nand exhibited clearly, with a label attached.\r\n\"",
-          "\"\\\r\nWatson\r\n\""
-        ]
-      ]
-    },
-    {
       "corpus": "zod",
       "family": "t3",
       "fragment": false,
@@ -2265,56 +2225,6 @@
         [
           "core.$ZodCodec",
           "ZodStringFormat"
-        ]
-      ]
-    },
-    {
-      "corpus": "zod",
-      "family": "t3",
-      "fragment": false,
-      "id": "001a2c1754a15debbd171afb317c09e9e7538b9396e06facb7f0d8be58ceca1c",
-      "members": [
-        {
-          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#5",
-          "run": [
-            84,
-            95
-          ],
-          "source": "test(\"undefined async parse\", async () => {\n  const goodData = undefined;\n  const badData = \"XXX\";\n\n  const goodResult = await undefinedSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(undefined);\n\n  const badResult = await undefinedSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
-        },
-        {
-          "at": "packages/zod/src/v3/tests/async-parsing.test.ts:(anonymous)/0#14",
-          "run": [
-            204,
-            215
-          ],
-          "source": "test(\"record async parse\", async () => {\n  const goodData = { adsf: {}, asdf: {} };\n  const badData = [{}];\n\n  const goodResult = await recordSchema.safeParseAsync(goodData);\n  expect(goodResult.success).toBe(true);\n  if (goodResult.success) expect(goodResult.data).toEqual(goodData);\n\n  const badResult = await recordSchema.safeParseAsync(badData);\n  expect(badResult.success).toBe(false);\n  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);\n});"
-        }
-      ],
-      "param_texts": [
-        [
-          "\"undefined async parse\"",
-          "\"record async parse\""
-        ],
-        [
-          "",
-          "adsf: {}, asdf: {}"
-        ],
-        [
-          "undefined",
-          "{ adsf: {}, asdf: {} }"
-        ],
-        [
-          "\"XXX\"",
-          "[{}]"
-        ],
-        [
-          "undefinedSchema",
-          "recordSchema"
-        ],
-        [
-          "undefined",
-          "goodData"
         ]
       ]
     },
@@ -2487,48 +2397,6 @@
         [
           "core.$ZodEmail",
           "core.$ZodNanoID"
-        ]
-      ]
-    },
-    {
-      "corpus": "ripgrep",
-      "family": "t3",
-      "fragment": false,
-      "id": "001e5f83c730d01206ca6ec30b5cb39e53c295bf975a66fb46527e2cc6d571b0",
-      "members": [
-        {
-          "at": "crates/cli/src/escape.rs:empty/0#0",
-          "run": [
-            90,
-            93
-          ],
-          "source": "    fn empty() {\n        assert_eq!(b(b\"\"), unescape(r\"\"));\n        assert_eq!(r\"\", escape(b\"\"));\n    }"
-        },
-        {
-          "at": "crates/cli/src/escape.rs:nl/0#0",
-          "run": [
-            109,
-            112
-          ],
-          "source": "    fn nl() {\n        assert_eq!(b(b\"\\n\"), unescape(r\"\\n\"));\n        assert_eq!(r\"\\n\", escape(b\"\\n\"));\n    }"
-        }
-      ],
-      "param_texts": [
-        [
-          "empty",
-          "nl"
-        ],
-        [
-          "",
-          "\\n"
-        ],
-        [
-          "b\"\"",
-          "b\"\\n\""
-        ],
-        [
-          "r\"\"",
-          "r\"\\n\""
         ]
       ]
     },
@@ -3549,6 +3417,48 @@
       ]
     },
     {
+      "corpus": "zod",
+      "family": "t3",
+      "fragment": false,
+      "id": "005312666451df6addde0ef8b481f1ad4aa64fadbbd98a894aee321a7a0fbbdf",
+      "members": [
+        {
+          "at": "packages/zod/src/v4/classic/schemas.ts:ZodCIDRv4#1",
+          "run": [
+            903,
+            906
+          ],
+          "source": "export const ZodCIDRv4: core.$constructor<ZodCIDRv4> = /*@__PURE__*/ core.$constructor(\"ZodCIDRv4\", (inst, def) => {\n  core.$ZodCIDRv4.init(inst, def);\n  ZodStringFormat.init(inst, def);\n});"
+        },
+        {
+          "at": "packages/zod/src/v4/mini/schemas.ts:ZodMiniSuccess#1",
+          "run": [
+            1543,
+            1549
+          ],
+          "source": "export const ZodMiniSuccess: core.$constructor<ZodMiniSuccess> = /*@__PURE__*/ core.$constructor(\n  \"ZodMiniSuccess\",\n  (inst, def) => {\n    core.$ZodSuccess.init(inst, def);\n    ZodMiniType.init(inst, def);\n  }\n);"
+        }
+      ],
+      "param_texts": [
+        [
+          "ZodCIDRv4",
+          "ZodMiniSuccess"
+        ],
+        [
+          "\"ZodCIDRv4\"",
+          "\"ZodMiniSuccess\""
+        ],
+        [
+          "core.$ZodCIDRv4",
+          "core.$ZodSuccess"
+        ],
+        [
+          "ZodStringFormat",
+          "ZodMiniType"
+        ]
+      ]
+    },
+    {
       "corpus": "ripgrep",
       "family": "t3",
       "fragment": false,
@@ -3915,6 +3825,100 @@
       ]
     },
     {
+      "corpus": "ripgrep",
+      "family": "t1t2",
+      "fragment": true,
+      "id": "00bf80e095fc2feeb59d5e80ded08cf140da60ab68a796c31abaaaa1ca812d19",
+      "members": [
+        {
+          "at": "crates/ignore/src/default_types.rs:249-258",
+          "run": [
+            250,
+            258
+          ],
+          "source": "    (&[\"scdoc\"], &[\"*.scd\", \"*.scdoc\"]),\n    (&[\"seed7\"], &[\"*.sd7\", \"*.s7i\"]),\n    (&[\"sh\"], &[\n        // Portable/misc. init files\n        \".env\", \".login\", \".logout\", \".profile\", \"profile\",\n        // bash-specific init files\n        \".bash_login\", \"bash_login\",\n        \".bash_logout\", \"bash_logout\",\n        \".bash_profile\", \"bash_profile\",\n        \".bashrc\", \"bashrc\", \"*.bashrc\","
+        },
+        {
+          "at": "crates/ignore/src/default_types.rs:287-292",
+          "run": [
+            288,
+            292
+          ],
+          "source": "    (&[\"swift\"], &[\"*.swift\"]),\n    (&[\"swig\"], &[\"*.def\", \"*.i\"]),\n    (&[\"systemd\"], &[\n        \"*.automount\", \"*.conf\", \"*.device\", \"*.link\", \"*.mount\", \"*.path\",\n        \"*.scope\", \"*.service\", \"*.slice\", \"*.socket\", \"*.swap\", \"*.target\",\n        \"*.timer\","
+        }
+      ],
+      "param_texts": [
+        [
+          "\"seed7\"",
+          "\"swig\""
+        ],
+        [
+          "\"*.sd7\"",
+          "\"*.def\""
+        ],
+        [
+          "\"*.s7i\"",
+          "\"*.i\""
+        ],
+        [
+          "\"sh\"",
+          "\"systemd\""
+        ],
+        [
+          "\".env\"",
+          "\"*.automount\""
+        ],
+        [
+          "\".login\"",
+          "\"*.conf\""
+        ],
+        [
+          "\".logout\"",
+          "\"*.device\""
+        ],
+        [
+          "\".profile\"",
+          "\"*.link\""
+        ],
+        [
+          "\"profile\"",
+          "\"*.mount\""
+        ],
+        [
+          "\".bash_login\"",
+          "\"*.path\""
+        ],
+        [
+          "\"bash_login\"",
+          "\"*.scope\""
+        ],
+        [
+          "\".bash_logout\"",
+          "\"*.service\""
+        ],
+        [
+          "\"bash_logout\"",
+          "\"*.slice\""
+        ],
+        [
+          "\".bash_profile\"",
+          "\"*.socket\""
+        ],
+        [
+          "\"bash_profile\"",
+          "\"*.swap\""
+        ],
+        [
+          "\".bashrc\"",
+          "\"*.target\""
+        ],
+        [
+          "\"bashrc\"",
+          "\"*.timer\""
+        ]
+      ]
+    },
+    {
       "corpus": "codeeraser",
       "family": "t3",
       "fragment": false,
@@ -3961,6 +3965,40 @@
         [
           "p.to_string",
           "u.clone"
+        ]
+      ]
+    },
+    {
+      "corpus": "ripgrep",
+      "family": "t3",
+      "fragment": false,
+      "id": "00dfb0d50266cc4d9143eaf3d34e8628bc5b04e825121e8c34c262748aaeb394",
+      "members": [
+        {
+          "at": "crates/core/flags/defs.rs:update/3#71",
+          "run": [
+            5367,
+            5371
+          ],
+          "source": "    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        assert!(v.unwrap_switch(), \"--null has no negation\");\n        args.null = true;\n        Ok(())\n    }"
+        },
+        {
+          "at": "crates/core/flags/defs.rs:update/3#74",
+          "run": [
+            5539,
+            5543
+          ],
+          "source": "    fn update(&self, v: FlagValue, args: &mut LowArgs) -> anyhow::Result<()> {\n        assert!(v.unwrap_switch(), \"--only-matching does not have a negation\");\n        args.only_matching = true;\n        Ok(())\n    }"
+        }
+      ],
+      "param_texts": [
+        [
+          "\"--null has no negation\"",
+          "\"--only-matching does not have a negation\""
+        ],
+        [
+          "null",
+          "only_matching"
         ]
       ]
     },

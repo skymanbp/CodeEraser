@@ -100,10 +100,10 @@ count less its comments, never more ([tree.rs:36-58](../../../cli/src/dedup/t3/t
   punctuation: the unnamed children the tree's child walk steps over, looked through to their
   tokens and never into a named child — joined in source order with one 0x00 between two tokens;
   0 when it has none. `a < b` and `a > b` are one shape and differ here
-  ([tree.rs:259](../../../cli/src/dedup/t3/tree.rs#L259), [tree_text.rs:65](../../../cli/src/dedup/t3/tree_text.rs#L65)).
+  ([tree.rs:259](../../../cli/src/dedup/t3/tree.rs#L259), [tree_text.rs:72](../../../cli/src/dedup/t3/tree_text.rs#L72)).
 - **`text`** — the fnv1a64 of the subtree's whole token stream, named leaves and anonymous tokens
   alike, joined the same way. Whitespace is no token, so `()` and `( )` share their text while
-  their `leaf` hashes differ ([tree_text.rs:57](../../../cli/src/dedup/t3/tree_text.rs#L57)).
+  their `leaf` hashes differ ([tree_text.rs:64](../../../cli/src/dedup/t3/tree_text.rs#L64)).
 - the byte span — kept on this side only, to read a hole's text back.
 
 The position class is a syntactic fact read off one table per language, read beside the flow
@@ -167,27 +167,33 @@ distance is `ted`'s by construction ([Ted.hs:14-18](../../../core/app/CE/Clone/T
 [Ted.hs:56](../../../core/app/CE/Clone/Ted.hs#L56)). The Tai mapping is then narrowed top-down: a
 mapped pair is kept only when its parents are a kept pair, starting from the two roots; roots not
 mapped to each other leave no skeleton and the whole pair is one hole
-([Mapped.hs:36](../../../core/app/CE/Merge/Mapped.hs#L36)). A kept pair whose keys differ is a leaf
-hole — the mapping's relabel, its value the node alone ([Mapped.hs:47](../../../core/app/CE/Merge/Mapped.hs#L47));
+([Mapped.hs:37](../../../core/app/CE/Merge/Mapped.hs#L37)). A kept pair whose keys differ is a leaf
+hole — the mapping's relabel, its value the node alone ([Mapped.hs:48](../../../core/app/CE/Merge/Mapped.hs#L48));
 a kept pair whose keys agree and whose own tokens differ — an operator, a keyword, a punctuation
 mark — is a hole at that node in the other class, so it is never feasible
-([Widen.hs:23](../../../core/app/CE/Merge/Widen.hs#L23)).
+([Widen.hs:27](../../../core/app/CE/Merge/Widen.hs#L27)).
 Between two neighbouring kept child pairs, and before the first and after the last, the unkept
 subtrees on each side form a gap: two gaps node for node the same join the skeleton, any other is a
 gap hole whose value on each side is that side's forest, an empty side an empty value
-([Mapped.hs:69](../../../core/app/CE/Merge/Mapped.hs#L69)). A gap is always a structural
-difference: its class is "other" whichever side is present — an argument, an element or a
-statement one member has and the other lacks is not a value a parameter can stand for — and two
-roots not mapped to each other are one such gap over the whole pair.
+([Mapped.hs:72](../../../core/app/CE/Merge/Mapped.hs#L72)). A gap is a structural difference:
+its class is "other" whichever side is present — an argument, an element or a statement one member
+has and the other lacks is not a value a parameter can stand for — and two roots not mapped to each
+other are one such gap over the whole pair. The one exception is a gap with subtrees on one side
+and none on the other directly under a kept pair that stands in an expression position on both
+sides — `b""` against `b"\n"`, the escape sequence only one string literal holds: it widens that
+pair as the next paragraph widens a relabelled leaf
+([Widen.hs:65](../../../core/app/CE/Merge/Widen.hs#L65)). An argument one member lacks sits under
+an argument list, which is no expression, and stays a gap.
 
 **Widening one level.** A member name, a method name, a field name or a string literal's content
-is never a parameter by itself. A relabel hole on a leaf of class 4 whose parent pair stands in an
-expression position on both sides becomes a hole over the parent's whole subtree: the skeleton
+is never a parameter by itself. A relabel hole on a leaf of class 4 — or, in a T3 pair, a gap
+filled on one side only — whose parent pair stands in an expression position on both sides becomes
+a hole over the parent's whole subtree: the skeleton
 leaves the parent open as a gap, the value is the subtree, the class is expression, and every other
 hole inside the parent — the parent's own-token hole, a gap among its children — is absorbed. One
-level only, leaves only, class 4 only; a parent that is not an expression on both sides — the
+level only, class-4 leaves and one-sided gaps only; a parent that is not an expression on both sides — the
 target of an assignment — leaves the hole where it is, a `position` hole. Both families widen the
-same way ([Widen.hs:39](../../../core/app/CE/Merge/Widen.hs#L39), [Widen.hs:55](../../../core/app/CE/Merge/Widen.hs#L55)).
+same way ([Widen.hs:43](../../../core/app/CE/Merge/Widen.hs#L43), [Widen.hs:55](../../../core/app/CE/Merge/Widen.hs#L55)).
 
 **Holes to parameters.** The holes are ordered by member 0's postorder: a hole at a node keyed by
 the node, a gap present on member 0's side by its first root's leftmost leaf, and a gap empty on
@@ -313,7 +319,8 @@ side, else `post ≤ postEnd`, one node or two children of one parent ([MergePro
 Every reported hole is live and two holes share a parameter exactly when they share their text
 vectors ([MergeProps.hs:132](../../../core/test/MergeProps.hs#L132)); the second generation's
 rulings each have a case and its reverse probe — an operator that differs, a member name widened to
-its expression and a target root left alone, whitespace alone, an argument one member lacks, a gap
+its expression and a target root left alone, a one-sided gap widened to its literal and left alone
+under a class-other parent, whitespace alone, an argument one member lacks, a gap
 in member 0's postorder, a fragment's helper lines, one parameter per text
 ([MergeRulings.hs:1-12](../../../core/test/MergeRulings.hs#L1)). The generated groups' parameter
 counts and feasibility, the reasons' coherence over every judged
@@ -389,7 +396,9 @@ parameterisation and reason order.
 rulings came of it (design booklet §13 items 42–50) — the own and text columns, an own-token
 hole, one-level widening, every gap structural, member 0's postorder, a fragment's helper lines,
 parameters by text, the three table fixes, and the batch prompt's reading rules, which spell the
-core's rulings in the judge's words. The core and the tables changed; the frozen set, the sample and
+core's rulings in the judge's words. A tenth came of the review of that commit (items 51–52): a
+gap filled on one side only under an expression on both sides widens like a relabelled leaf, and the
+prompt's structural rule names the same exception. The core and the tables changed; the frozen set, the sample and
 the batches were drawn again as the second generation (`-v2`), the first generation's four docs kept
 on disk as the record and still checked as one; the gates read the newest generation, and the
 second generation's review and precision land with its audit.
