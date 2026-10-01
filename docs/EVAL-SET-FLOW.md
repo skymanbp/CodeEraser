@@ -659,7 +659,8 @@ c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法
 
 ## 计划 v2.32 步 2 之后：十份精度册退役并重生成（2026-10-01）
 
-权威轨 v2.32 步 2（定义进核 B）把十门的 flow 表、语言表与走查的排除表改从核的 `tables/1` 定义包读（设计册 `docs/reference/authority-track.md` §4.5）：`cli/src/flow/spec_*.rs` 八个表文件删除、`flow/spec.rs` 只留读者，`scan/lang.rs` 与 `scan/walk.rs` 的表文本删除。这几处都在出处门的路径里（提交 G 一节：`cli/src/flow/`〔`mod.rs` 除外〕与 `scan/{functions,walk,lang}.rs`），门在本地按名拒了十份（python 第一个被点名）。降表读的是同一份表——核转录自 a378e78c 的 Rust 原文、步 1 逐键证过相等——十个对拍语料与本仓 baa4f8af 干净工作树各十三面、新 / 旧二进制 143 对逐字节同、`ce flow` 在内（读数在设计册 §4.5），判分没有理由移动。处置与 EVAL-SET-LANGS.md 的三次退役同形：
+权威轨 v2.32 步 2（定义进核 B）把十门的 flow 表、语言表与走查的排除表改从核的 `tables/1` 定义包读（设计册 `docs/reference/authority-track.md` §4.5）：`cli/src/flow/spec_*.rs` 八个表文件删除、`flow/spec.rs` 只留读者，`scan/lang.rs` 与 `scan/walk.rs` 的表文本删除。这几处都在出处门的路径里（提交 G 一节：`cli/src/flow/`〔`mod.rs` 除外〕与 `scan/{functions,walk,lang}.rs`），门在本地按名拒了十份（python 第一个被点名）。降表读的是同一份表——核转录自 a378e78c 的 Rust 原文、步 1 逐键证过相等——十个对拍语料与本仓 e877f389 干净工作树各十三面、新 / 旧二进制 143 对逐字节同、`ce flow` 在内（读数在设计册 §4.5），判分没有理由移动。处置与 EVAL-SET-LANGS.md 的三次退役同形：
 
 - **退役**（本提交）：十份精度册删档、十门考题的 `stage` 列翻回 `audited`。判决掩码 `flow::judged_mask()`（自本步起折的是定义包语言行的 `flow_judged` 列，核 `CE.Lang.Common`）不清空：掩码是判决，本步的不变量是判决零改动，而提交 E 清掩码的理由（降表改了、旧档的判分作废）这里不成立；掩码腿 `the_judged_mask_is_the_precision_docs` 在本提交上按构造红，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐语言经 `CE_FLOW_OUT` 生成到仓外、十份齐了一次拷入（提交 G 的读法），十门 `stage` 翻回 `scored`；读数与退役前逐份比对，记在下文。
+- **读数**（ab16e390 的干净树，2026-10-01）：十份与退役前的 blob 逐字节同，只差 `generated_from`（50232734 → ab16e390，dirty 仍 false）；十门 `stage` 翻回 `scored`，判决掩码 1540127 与精度册相符。

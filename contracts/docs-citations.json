@@ -7856,34 +7856,34 @@
     "end": 112,
     "text": "/// A degraded reply to a client-sized request means the Rust cap"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|25a015df54b1605b|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 553,
-    "end": 555,
-    "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
+    "line": 536,
+    "end": 538,
+    "text": "> 按名拒绝——2.18 前旧核的「客户端按旧合取顶替」回退自 3.0.0 起已被握手"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|3754b20693c388ef|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 549,
-    "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
+    "line": 527,
+    "end": 528,
+    "text": "> （报告面继续免核——测量面契约不破）。"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|3754b20693c388ef|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 541,
-    "end": 555,
-    "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
+    "line": 527,
+    "end": 531,
+    "text": "> （报告面继续免核——测量面契约不破）。"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|4d9aaf3fabd5bebf|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 544,
-    "end": 545,
-    "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
+    "line": 524,
+    "end": 538,
+    "text": "> trend 缺席立场）供客户端逐跑证明本地过滤器等值（scan 镜像 ensure 的"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|b1be7f9eab6b7c26|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 544,
-    "end": 548,
-    "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
+    "line": 532,
+    "text": "> （任一文件级死判决即 fail；降级应答自带 fail=true——verdict 族 P1 立场）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
     "target": "../../../core/app/CE/Erase.hs",
@@ -8602,15 +8602,9 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 257,
-    "end": 259,
-    "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
-    "target": "../../../contracts/VERSIONING.md",
     "line": 281,
     "end": 283,
-    "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
+    "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -10928,31 +10922,31 @@
     "line": 95,
     "text": "pub fn isomorphic(trees: &[&UnitTree]) -> bool {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|796f0d2218b5460b|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|11217baa5ff3a242|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 31,
-    "text": "pub struct SlotSpec {"
+    "line": 45,
+    "text": "/// function's, a class's, a variable's, a parameter's."
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|6183350628c0195b|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 81,
-    "text": "fn compile(lang: Lang) -> Option<Classes> {"
+    "line": 166,
+    "text": "0\n} else if at(&c.names) {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|82515fbcd2b9fe2d|1": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|6183350628c0195b|1": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 81,
-    "text": "fn compile(lang: Lang) -> Option<Classes> {"
+    "line": 166,
+    "text": "0\n} else if at(&c.names) {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|a06853b670c525bd|0": {
+    "target": "../../../cli/src/merge/slot.rs",
+    "line": 209,
+    "text": "if !cursor.goto_next_sibling() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|c3684e61d12cc482|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 17,
-    "end": 20,
+    "line": 24,
+    "end": 28,
     "text": "//! The tables are the core's since plan v2.32 step 2: each language's"
-  },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|c7d9a7464697d810|0": {
-    "target": "../../../cli/src/merge/slot.rs",
-    "line": 157,
-    "text": "pub fn slot_of(c: &Classes, node: Node) -> u8 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|e4b6420b866203cb|0": {
     "target": "../../../cli/src/merge/slot.rs",
@@ -10962,7 +10956,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|fab61c98a7e45b06|0": {
     "target": "../../../cli/src/merge/slot.rs",
-    "line": 72,
+    "line": 66,
     "text": "pub helper_lines: u8,"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2c7f61f8d970ef98|0": {
@@ -11073,17 +11067,17 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|26002d5fe7b572a5|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 44,
+    "line": 58,
     "text": "fn every_kind_and_field_is_in_the_grammar() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|55c7b9c558a4993d|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 75,
+    "line": 109,
     "text": "fn every_other_answer_on_the_probe_is_named_other() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/slot.rs|ca9f58a0e1aa95ba|0": {
     "target": "../../../cli/tests/unit/merge/slot.rs",
-    "line": 101,
+    "line": 147,
     "text": "fn the_sets_are_disjoint() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/unit/merge/wire.rs|6fc7eafe6c2009d2|0": {

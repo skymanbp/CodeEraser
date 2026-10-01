@@ -371,7 +371,7 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 缓存未命中的第一跑（B 自己 ABAB ×7：每对先删 `.ce/tables-*.json` 再跑、随即缓存命中再跑，`ce scan .`）：未命中 1381.7（1305.3–1513.9）、命中 1250.8（1199.3–1341.8），**未命中多付 ≈ 131 ms**——起一个核进程问一次 `tables/1`、读 135 KB 应答、写缓存文件；每份核二进制（`{path, len, mtime_ns}`）每个项目付一次。
 
 - 缓存命中时每个 `ce` 进程多做的事 = 读 135,472 B 的缓存文件、对包字节算一次 fnv1a64、serde 读成 `'static` 表（泄漏进进程，活到进程结束）；暖跑三面与钩子探针都量不出来，故缓存保持 JSON、不换二进制格式。
-- release 体积：A 27,388,416 B → B 27,470,336 B（+81,920 B）：删掉的表文本（Rust 源码净 −147,093 B，见设计册 §4.5）在二进制里只是字符串常量，新加的是 serde 读包的派生代码（每个表结构一份所有权孪生）。
+- release 体积：A 27,388,416 B → B 27,470,336 B（+81,920 B）：删掉的表文本（Rust 源码净 −149,033 B，见设计册 §4.5）在二进制里只是字符串常量，新加的是 serde 读包的派生代码（每个表结构一份所有权孪生）。
 - 复跑：A 臂的树由 `git archive`（baa4f8af，子仓 123b1bce 同法）解到车道目录，`cargo build --release --locked`（独立 `CARGO_TARGET_DIR`）出 A；本车道 `cargo build --release --locked` 出 B；`git worktree add --detach <dir> baa4f8af` 两次、各 `submodule update --init`（`protocol.file.allow=always`）；脚本 `s9_flow/v232s2_gen/perf.py`（车道目录，不入库）。
 
 ## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）

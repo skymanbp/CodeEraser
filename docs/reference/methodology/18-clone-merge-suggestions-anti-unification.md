@@ -126,7 +126,7 @@ then type, then assignment target, then part name or literal content, then expre
 the declared name before the type, so a type's own name is a name; an unknown position holds no
 parameter, the safe side ([slot.rs:209](../../../cli/src/merge/slot.rs#L209)). Every table also
 names its language's helper lines — the head and closing lines a merged function wraps around a
-fragment: 1 in Python and Haskell, 2 elsewhere ([slot.rs:72](../../../cli/src/merge/slot.rs#L72)). A table is
+fragment: 1 in Python and Haskell, 2 elsewhere ([slot.rs:66](../../../cli/src/merge/slot.rs#L66)). A table is
 read in pieces: TSX reads TypeScript's shared piece and its JSX kinds while TypeScript adds the one
 kind only its grammar has, and C and C++ share a piece the same way — so a shared piece never names
 a kind the other grammar lacks ([slot.rs:24-28](../../../cli/src/merge/slot.rs#L24)).
@@ -267,8 +267,8 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
    whatever it missed; the kind sets are pairwise disjoint and none of them a statement form, a
    table's own statement and container lists are filled exactly when its language has no flow
    table, every table names its helper lines, and per table a probe source pins the classes the
-   second generation moved ([slot.rs:53](../../../cli/tests/unit/merge/slot.rs#L53),
-   [slot.rs:104](../../../cli/tests/unit/merge/slot.rs#L104), [slot.rs:142](../../../cli/tests/unit/merge/slot.rs#L142)).
+   second generation moved ([slot.rs:58](../../../cli/tests/unit/merge/slot.rs#L58),
+   [slot.rs:109](../../../cli/tests/unit/merge/slot.rs#L109), [slot.rs:147](../../../cli/tests/unit/merge/slot.rs#L147)).
 3. `leaf`, `slot`, `own` and `text` come out of the one walk that emits `lab` and `lld`; `own`
    reads the very tokens that walk steps over to reach a node's named children.
 4. The groups and the local pre-checks of §1; a member row's `unit` is the request-local member
