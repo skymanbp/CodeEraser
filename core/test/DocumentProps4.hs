@@ -8,15 +8,13 @@
 -- step 3's, read through DocumentHarness (see DocumentProps for what
 -- each holds), plus the ones only these families need: the canvas
 -- edges drop self-loops and package ends, the catalogue lists twelve
--- families and the site kinds, and check's fail-condition names are
--- the verdict face's followed by degraded.
+-- families, and the definition package holds the site kinds the
+-- sites document names.
 module DocumentProps4 (battery) where
 
 import CE.Document (catalogue, respond)
 import CE.Document.Contract (DocFamily (..))
-import CE.Score.Document (failNames)
-import CE.Verdict.Faces (failConditions)
-import CE.Verdict.Ratchet (Ratcheted (..))
+import CE.Lang (pack)
 import Data.Aeson
 import Data.List (nub)
 import Data.Maybe (fromMaybe)
@@ -35,11 +33,10 @@ battery =
     , "join pairs, sites and canvas edges sort by their rank or index"
     , "the same step-4 request assembles to the same bytes"
     , "the step-4 contracts refuse by name"
-    , "the catalogue lists the twelve families and the site kinds"
-    , "check's fail-condition names are the verdict face's, then degraded"
+    , "the catalogue lists the twelve families; the package holds the site kinds"
     , "the seeded step-4 documents are not vacuous"
     ]
-    [emptiesHeld seven, fieldsHeld fieldTable seven, refsHeld judged && length judged == 1400, countsMeasured, ranked, sameBytes (take 70 judged), refusals, catalogued, failNamed, seeded]
+    [emptiesHeld seven, fieldsHeld fieldTable seven, refsHeld judged && length judged == 1400, countsMeasured, ranked, sameBytes (take 70 judged), refusals, catalogued, seeded]
 
 seven :: [DocFamily]
 seven = familiesNamed (words "check structure join deadcode mentions sites graphscreen")
@@ -159,7 +156,7 @@ catalogued :: Bool
 catalogued =
   all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) seven
     && objectKeys catalogue == 12
-    && fmap length (path ["sites", "kinds"] catalogue >>= asList) == Just 23
+    && fmap (\ks -> length ks == 23 && nub ks == ks) (path ["store", "site_kinds"] pack >>= asList) == Just True
  where
   objectKeys v = case v of
     Object o -> length o
@@ -167,9 +164,6 @@ catalogued =
   asList v = case fromJSON v of
     Success xs -> Just (xs :: [String])
     _ -> Nothing
-
-failNamed :: Bool
-failNamed = failNames == map fst (failConditions (Ratcheted [] [] [] [] [] [] []) False False False) <> ["degraded"] && nub failNames == failNames
 
 -- | Each family reaches what the legs above read.
 seeded :: Bool

@@ -17,6 +17,9 @@
 module CE.Score.Document (doc, failNames) where
 
 import CE.Document.Contract
+import CE.Verdict (degradedCondition)
+import CE.Verdict.Faces (failConditions)
+import CE.Verdict.Ratchet (Ratcheted (..))
 import Data.Aeson (Value, object, (.=))
 import Data.Foldable (asum)
 
@@ -44,11 +47,12 @@ statement =
   \ref why why\n"
 
 -- | The ratchet's fail conditions by code: the six the verdict face
--- names (CE.Verdict.Faces.failConditions, in its order) and the
--- degraded reply's own (CE.Verdict) — DocumentProps holds the two
--- spellings equal.
+-- names, in its order (read off CE.Verdict.Faces.failConditions with
+-- every condition unheld — only the names are taken), then the
+-- degraded reply's own (CE.Verdict). One spelling each, in the
+-- modules that answer them.
 failNames :: [String]
-failNames = words "ratchet_over discrete_added floor dedup_budget knobs_digest rows_dropped degraded"
+failNames = map fst (failConditions (Ratcheted [] [] [] [] [] [] []) False False False) <> [degradedCondition]
 
 -- | The nullable tables one row at most, every code inside its table,
 -- the two bits 0 / 1, and no dropped row unless the register rode.

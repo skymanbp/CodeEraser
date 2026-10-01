@@ -17,8 +17,10 @@
 -- as `{"$": [class, integers…]}` and the measuring side resolves it.
 module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, fact, flag, spelled, offence, optional, range, readSpec, ref, rows, single, totalRows, whyRef) where
 
+import CE.Graph (graphTooLarge)
 import CE.Lang (languages)
 import CE.Lang.Spec (Language (..))
+import CE.Verdict (verdictTooLarge)
 import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), Value (..), object, toJSON, withObject, (.:), (.:?), (.=))
 import Data.Aeson.Key (fromString)
@@ -166,10 +168,11 @@ langName :: Integer -> String
 langName c = concat [lgName l | l <- take 1 (filter ((== c) . toInteger . lgCode) languages)]
 
 -- | The reasons a judgment reply names when it degraded, by code: the
--- graph family's and the verdict family's over-cap refusals (CE.Graph,
--- CE.Verdict). A document carries the core's word for them.
+-- graph family's and the verdict family's over-cap refusals, read from
+-- the modules that answer them (CE.Graph, CE.Verdict). A document
+-- carries the core's word for them.
 coreReasons :: [String]
-coreReasons = ["graph_too_large", "verdict_too_large"]
+coreReasons = [graphTooLarge, verdictTooLarge]
 
 -- | The `degraded` field of a family whose judgment may degrade: the
 -- measuring side's reason when the judgment never happened, else the

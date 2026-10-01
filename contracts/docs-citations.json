@@ -2206,8 +2206,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang.hs|3deecfb8d7add250|0": {
     "target": "../../../core/app/CE/Lang.hs",
-    "line": 147,
-    "end": 151,
+    "line": 156,
+    "end": 160,
     "text": ", (\"docdup.min_doc_tokens\", toJSON Doc.minDocTokens)"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common.hs|4bff64707e0d1aba|0": {
@@ -3017,8 +3017,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|cef6924940cf1c0c|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 195,
-    "end": 240,
+    "line": 201,
+    "end": 246,
     "text": "-- | Over-cap refusal: a well-formed degraded result with the FULL"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|e137781e7295add5|0": {
@@ -4812,14 +4812,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|be627d41b9635251|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 162,
-    "end": 185,
+    "line": 167,
+    "end": 190,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|be627d41b9635251|1": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 162,
-    "end": 185,
+    "line": 167,
+    "end": 190,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Build.hs|11d50cd97df21a57|0": {
@@ -6922,8 +6922,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Lang/Common/Graph.hs|3090ef852405dfea|0": {
     "target": "../../../core/app/CE/Lang/Common/Graph.hs",
-    "line": 10,
-    "end": 45,
+    "line": 24,
+    "end": 59,
     "text": "\"[fourclass]\\n\\"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/SpecProbes.hs|3511fafd14f9a99b|0": {

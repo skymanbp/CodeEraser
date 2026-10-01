@@ -8,7 +8,7 @@
 -- module holds only the chunks of its document, and this module names
 -- the order they are read in. The docdup numbers are the ones
 -- CE.Docdup.Cost already owns — grafted here, never restated.
-module CE.Lang (allTables, digestOf, languages, pack) where
+module CE.Lang (allTables, digestOf, languages, pack, siteKinds) where
 
 import qualified CE.Docdup.Cost as Doc
 import qualified CE.Lang.C as C
@@ -96,7 +96,7 @@ common =
   decoded "common" $
     Common.outputs <> Common.languages <> Common.languages2 <> Common.walk
       <> Graph.fourclass <> Graph.fourclass2 <> Graph.keys <> Graph.flags <> Graph.compdb
-      <> Graph.calls <> Prose.tombstone <> Prose.tombstone2 <> Prose.docdup
+      <> Graph.calls <> Graph.store <> Prose.tombstone <> Prose.tombstone2 <> Prose.docdup
       <> Protocol.protocol <> Protocol.protocol2 <> Protocol.protocol3
       <> Ladder.java <> Ladder.java2 <> Ladder.java3 <> Ladder.ts
       <> Ladder2.go <> Ladder2.py <> Ladder2.lua <> Ladder2.rs
@@ -108,6 +108,15 @@ languages = case common of
   _ -> refuse "no languages table"
  where
   rowsOf = withObject "languages" (.: "rows")
+  refuse e = error ("definition document `common` does not read: " <> e)
+
+-- | The site kinds by their frozen storage code (the `store` table),
+-- read like the language rows.
+siteKinds :: [String]
+siteKinds = case common of
+  Object o | Just (Object t) <- KM.lookup "store" o, Just v <- KM.lookup "site_kinds" t -> either refuse id (parseEither parseJSON v)
+  _ -> refuse "no store table"
+ where
   refuse e = error ("definition document `common` does not read: " <> e)
 
 -- | The GHC global package table, a row text.

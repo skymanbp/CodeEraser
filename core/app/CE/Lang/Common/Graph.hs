@@ -1,9 +1,23 @@
 -- | The graph and four-class definition tables (plan v2.32 step 1),
 -- transcribed from cli/src/fourclass/kinds.rs, cli/src/graph/keys.rs,
 -- cli/src/graph/deadcode/flags.rs, cli/src/graph/compdb_flags.rs,
--- cli/src/graph/spec/calls.rs at a378e78c; from this commit on the core is
--- the authority.
+-- cli/src/graph/spec/calls.rs at a378e78c, and the site kinds from
+-- cli/src/graph/store.rs (plan v2.32 step 4A); from this commit on the
+-- core is the authority.
 module CE.Lang.Common.Graph where
+
+store :: String
+store =
+  "[store]\n\
+  \# Frozen site-kind storage codes: a kind's code is its position in\n\
+  \# this table. Appending is cheap; renaming or reordering is a\n\
+  \# GRAPH_REV bump, because the index stores kinds as positions. The\n\
+  \# sites document names each site's kind from this table.\n\
+  \site_kinds = [\n\
+  \  'import', 'import_from', 'export_from', 'use', 'mod_decl', 'link', 'image', 'ref_link',\n\
+  \  'ref_def', 'url', 'export_star', 'include', 'import_star', 'type_ref', 'require', 'load',\n\
+  \  'source', 'library', 'href', 'src', 'srcset', 'action', 'link_asset',\n\
+  \]\n"
 
 fourclass :: String
 fourclass =

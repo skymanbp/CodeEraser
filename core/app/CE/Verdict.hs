@@ -11,7 +11,7 @@
 -- Wire module is its only reader. The M5-3a stub refused here;
 -- M5-3i replaced exactly that refusal with the computation — the
 -- graph family's 2a → 2g path, walked a third time.
-module CE.Verdict (respond) where
+module CE.Verdict (degradedCondition, respond, verdictTooLarge) where
 
 import qualified CE.Dedup.Cost as DedupCost
 import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap)
@@ -192,6 +192,12 @@ dedupLeg req = (floor', derived, over)
 cycleRode :: VerdictReq -> Bool
 cycleRode req = any ((== [7]) . take 1) (reqThresholds req)
 
+-- | The degraded reply's reason and its one fail condition, by name:
+-- this module owns both words (the check document reads them here).
+verdictTooLarge, degradedCondition :: String
+verdictTooLarge = "verdict_too_large"
+degradedCondition = "degraded"
+
 -- | Over-cap refusal: a well-formed degraded result with the FULL
 -- key set, never a truncated judgment.
 tooLarge :: String -> VerdictReq -> B8.ByteString
@@ -217,7 +223,7 @@ tooLarge proto req =
                 -- pass, said by the CORE — the degraded reply carries
                 -- its own fail semantics; Rust relays, never re-derives
                 "fail" .= True
-              , "failed" .= (["degraded"] :: [String])
+              , "failed" .= [degradedCondition]
               ]
                 -- `present` rode (6.4.0): the key answers here too, so
                 -- a reply without it is an older core, never a new one
@@ -236,5 +242,5 @@ tooLarge proto req =
         "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct 0 False
       , "weights" .= effectiveWeights scoreBound []
       , "degraded" .= True
-      , "reason" .= ("verdict_too_large" :: String)
+      , "reason" .= verdictTooLarge
       ]

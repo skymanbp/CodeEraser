@@ -9,7 +9,7 @@
 -- (core/test/) and takes its knobs from CE.Graph.Cost — the only
 -- ablation targets. Decode and contract checking moved out at the
 -- 300-line dogfood wall when the 4.1.0 symbol table arrived.
-module CE.Graph (respond) where
+module CE.Graph (graphTooLarge, respond) where
 
 import qualified CE.Graph.Advisory as Advisory
 import CE.Graph.Build (Built (..), build, reachFrom)
@@ -156,6 +156,11 @@ declaredBits :: [Integer] -> Integer
 declaredBits [_, _, r] = Dead.deriveFlags roleBits r
 declaredBits _ = 0
 
+-- | The degraded reply's reason, by name: this module owns the word
+-- (the report documents read it here, CE.Document.Contract).
+graphTooLarge :: String
+graphTooLarge = "graph_too_large"
+
 -- | Over-cap refusal: a well-formed degraded result, never a
 -- truncated graph. counts echoes what arrived (informational);
 -- kept = 0 because nothing was analyzed.
@@ -181,5 +186,5 @@ tooLarge proto req =
             , "kept" .= (0 :: Int)
             ]
       , "degraded" .= True
-      , "reason" .= ("graph_too_large" :: String)
+      , "reason" .= graphTooLarge
       ]

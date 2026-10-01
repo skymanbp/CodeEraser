@@ -200,7 +200,7 @@ table at its cap — the 6.2.0 advisory tables included — stays under the 32 M
 degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = true`,
 `reason = "graph_too_large"` and `fail = true` — a gate that could not judge never passes, said
 by the core itself since 2.18.0, and never a truncated graph
-([Graph.hs:162-185](../../../core/app/CE/Graph.hs#L162), [Graph.hs:162-185](../../../core/app/CE/Graph.hs#L162)).
+([Graph.hs:167-190](../../../core/app/CE/Graph.hs#L167), [Graph.hs:167-190](../../../core/app/CE/Graph.hs#L167)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:552-566](../../../cli/src/graph/deadcode.rs#L552)) and `ce deadcode --check` relays the
 core's fail bit ([main_cmds.rs:128-148](../../../cli/src/main_cmds.rs#L128)).
