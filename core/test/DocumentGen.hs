@@ -8,7 +8,7 @@
 -- drawn by the flow reference's generator (ReferenceFlowGen's `G`), so
 -- the battery reads every document the core assembles from inputs it
 -- did not hand-pick.
-module DocumentGen (docRequest, requests) where
+module DocumentGen (docRequest, num, ranks, requests, some) where
 
 import Control.Monad (filterM, forM, replicateM)
 import Data.Aeson (Value, object, (.=))

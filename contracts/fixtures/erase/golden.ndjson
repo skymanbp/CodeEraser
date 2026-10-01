@@ -1,28 +1,28 @@
 {"proto":"7.0.0","type":"erase.request","id":1,"rows":[[3,3,2,0,0],[3,1,0,0,0],[1,80,80,80,1],[2,1,0,1,0]]}
-{"counts":{"advisory":2,"eraseable":2,"rows":4},"degraded":false,"fail":false,"id":1,"proto":"7.8.0","rows":[[1,0],[0,1],[1,0],[0,3]],"type":"erase.result"}
+{"counts":{"advisory":2,"eraseable":2,"rows":4},"degraded":false,"fail":false,"id":1,"proto":"7.9.0","rows":[[1,0],[0,1],[1,0],[0,3]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":2,"rows":[[3,0,0,0,0]]}
-{"code":"contract","id":2,"message":"row 0: dead verdict outside 1..4","proto":"7.8.0","type":"error"}
+{"code":"contract","id":2,"message":"row 0: dead verdict outside 1..4","proto":"7.9.0","type":"error"}
 {"proto":"7.0.0","type":"erase.request","id":3,"rows":[[3,1,2,0,0]]}
-{"counts":{"advisory":0,"eraseable":1,"rows":1},"degraded":false,"fail":false,"id":3,"proto":"7.8.0","rows":[[1,0]],"type":"erase.result"}
+{"counts":{"advisory":0,"eraseable":1,"rows":1},"degraded":false,"fail":false,"id":3,"proto":"7.9.0","rows":[[1,0]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":4,"rows":[[2,1,1,0,0]]}
-{"counts":{"advisory":1,"eraseable":0,"rows":1},"degraded":false,"fail":false,"id":4,"proto":"7.8.0","rows":[[0,4]],"type":"erase.result"}
+{"counts":{"advisory":1,"eraseable":0,"rows":1},"degraded":false,"fail":false,"id":4,"proto":"7.9.0","rows":[[0,4]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":5,"rows":[]}
-{"counts":{"advisory":0,"eraseable":0,"rows":0},"degraded":false,"fail":false,"id":5,"proto":"7.8.0","rows":[],"type":"erase.result"}
+{"counts":{"advisory":0,"eraseable":0,"rows":0},"degraded":false,"fail":false,"id":5,"proto":"7.9.0","rows":[],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":6,"rows":[[3,1,0,0,0],[3,2,1,0,0],[3,4,2,0,0]]}
-{"counts":{"advisory":3,"eraseable":0,"rows":3},"degraded":false,"fail":false,"id":6,"proto":"7.8.0","rows":[[0,1],[0,6],[0,6]],"type":"erase.result"}
+{"counts":{"advisory":3,"eraseable":0,"rows":3},"degraded":false,"fail":false,"id":6,"proto":"7.9.0","rows":[[0,1],[0,6],[0,6]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":7,"rows":[[4,1,0,0,0]]}
-{"code":"contract","id":7,"message":"row 0: unknown class","proto":"7.8.0","type":"error"}
+{"code":"contract","id":7,"message":"row 0: unknown class","proto":"7.9.0","type":"error"}
 {"proto":"7.0.0","type":"erase.request","id":8,"rows":[[0,1,0,0,0]]}
-{"code":"contract","id":8,"message":"row 0: retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)","proto":"7.8.0","type":"error"}
+{"code":"contract","id":8,"message":"row 0: retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)","proto":"7.9.0","type":"error"}
 {"proto":"7.0.0","type":"erase.request","id":9,"rows":[[3,1,2,0,0],[2,1,1,1,0],[1,80,80,80,1]],"targets":[[0,0,0],[0,0,0],[0,4,9]]}
-{"counts":{"advisory":0,"eraseable":3,"rows":3},"degraded":false,"fail":false,"id":9,"kept":[0,1,0],"proto":"7.8.0","rows":[[1,0],[1,0],[1,0]],"type":"erase.result"}
+{"counts":{"advisory":0,"eraseable":3,"rows":3},"degraded":false,"fail":false,"id":9,"kept":[0,1,0],"proto":"7.9.0","rows":[[1,0],[1,0],[1,0]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":10,"rows":[[3,2,2,0,0],[2,1,1,2,0]],"targets":[[0,0,0],[0,0,0]]}
-{"counts":{"advisory":2,"eraseable":0,"rows":2},"degraded":false,"fail":false,"id":10,"kept":[1,0],"proto":"7.8.0","rows":[[0,6],[0,6]],"type":"erase.result"}
+{"counts":{"advisory":2,"eraseable":0,"rows":2},"degraded":false,"fail":false,"id":10,"kept":[1,0],"proto":"7.9.0","rows":[[0,6],[0,6]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":11,"rows":[[3,1,0,0,0],[2,1,1,1,0]],"targets":[[0,0,0],[0,0,0]]}
-{"counts":{"advisory":1,"eraseable":1,"rows":2},"degraded":false,"fail":false,"id":11,"kept":[0,1],"proto":"7.8.0","rows":[[0,1],[1,0]],"type":"erase.result"}
+{"counts":{"advisory":1,"eraseable":1,"rows":2},"degraded":false,"fail":false,"id":11,"kept":[0,1],"proto":"7.9.0","rows":[[0,1],[1,0]],"type":"erase.result"}
 {"proto":"7.0.0","type":"erase.request","id":12,"rows":[[3,1,2,0,0]],"targets":[]}
-{"code":"contract","id":12,"message":"targets: 0 rows for 1 fact rows","proto":"7.8.0","type":"error"}
+{"code":"contract","id":12,"message":"targets: 0 rows for 1 fact rows","proto":"7.9.0","type":"error"}
 {"proto":"7.0.0","type":"erase.request","id":13,"rows":[[2,1,1,1,0]],"targets":[[0,4,9]]}
-{"code":"contract","id":13,"message":"target 0: whole-file class names a span","proto":"7.8.0","type":"error"}
+{"code":"contract","id":13,"message":"target 0: whole-file class names a span","proto":"7.9.0","type":"error"}
 {"proto":"7.0.0","type":"erase.request","id":14,"rows":[[3,1,2,0,0],[3,1,2,0,0]],"targets":[[1,0,0],[0,0,0]]}
-{"code":"contract","id":14,"message":"target 1: out of key order","proto":"7.8.0","type":"error"}
+{"code":"contract","id":14,"message":"target 1: out of key order","proto":"7.9.0","type":"error"}

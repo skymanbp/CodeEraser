@@ -2,31 +2,40 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | document.request handler (plan v2.32 step 3; design booklet
+-- | document.request handler (plan v2.32 steps 3-4; design booklet
 -- docs/reference/authority-track.md §5): the report documents of the
--- query, rules, flow, merge and architecture families, assembled here
--- — the fields, their order, the counts, the schema id and the
--- degraded bit are the judge's statement, and every face prints the
--- one document. Not a judgment family: it judges nothing, it lays out
--- what a judgment already answered. Its own family rather than a key
--- on each family's reply, because two of the five judge in batches the
--- measuring side joins (flow by `rowCap`, merge by its two caps) and a
--- document folded over the batches on that side would leave the
--- assembly there. Every repository string is a reference
--- (CE.Document.Contract); the catalogue — each family's schema id and
--- empty document, flow's kind names and judged languages — rides in
--- the definition package (CE.Tables). The empty document is the
--- family's statement and the battery's anchor; the measuring side never
--- binds it: a judgment that did not happen is still asked here, with
--- `degraded` and the facts the measuring side kept, and a core out of
--- reach refuses the face by name.
+-- query, rules, flow, merge and architecture families (step 3) and of
+-- check, structure, join, deadcode, mentions, sites and the graph
+-- screen (step 4), assembled here — the fields, their order, the
+-- counts, the schema id and the degraded bit are the judge's
+-- statement, and every face prints the one document. Not a judgment
+-- family: it judges nothing, it lays out what a judgment already
+-- answered. Its own family rather than a key on each family's reply,
+-- because some judge in batches the measuring side joins (flow by
+-- `rowCap`, merge by its two caps) and a document folded over the
+-- batches on that side would leave the assembly there. Every
+-- repository string is a reference (CE.Document.Contract); the
+-- catalogue — each family's schema id and empty document, flow's kind
+-- names and judged languages, the site kinds — rides in the definition
+-- package (CE.Tables). The empty document is the family's statement
+-- and the battery's anchor; the measuring side never binds it: a
+-- judgment that did not happen is still asked here, with `degraded`
+-- and the facts the measuring side kept, and a core out of reach
+-- refuses the face by name.
 module CE.Document (catalogue, emptyOf, families, respond) where
 
 import qualified CE.Arch.Document as Arch
 import CE.Document.Contract
 import qualified CE.Flow.Document as Flow
+import qualified CE.Graph.Document as Deadcode
+import qualified CE.Graph.Screen as Screen
+import qualified CE.Graph.Sites as Sites
+import qualified CE.Join.Document as Join
+import qualified CE.Mention.Document as Mentions
 import qualified CE.Merge.Document as Merge
 import qualified CE.Query.Document as Query
+import qualified CE.Score.Document as Check
+import qualified CE.Structure.Document as Structure
 import qualified CE.Wire as Wire
 import Data.Aeson (Value, encode, object, (.=))
 import Data.Aeson.Key (fromString)
@@ -34,9 +43,12 @@ import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
 
--- | The five documents, by the name a request gives.
+-- | The documents, by the name a request gives: step 3's five, then
+-- step 4's seven.
 families :: [DocFamily]
-families = [Arch.doc, Query.queryDoc, Query.rulesDoc, Flow.doc, Merge.doc]
+families =
+  [Arch.doc, Query.queryDoc, Query.rulesDoc, Flow.doc, Merge.doc]
+    <> [Check.doc, Structure.doc, Join.doc, Deadcode.doc, Mentions.doc, Sites.doc, Screen.doc]
 
 familyOf :: DocReq -> Maybe DocFamily
 familyOf req = do
@@ -45,7 +57,8 @@ familyOf req = do
 
 -- | A family's document over a blank request: every range and fact
 -- zero, no row, the reason the measuring side's first text — the
--- statement's anchor, never a document a face prints.
+-- statement's anchor, never a document a face prints (a family that
+-- states no `why` range takes no reason).
 emptyOf :: DocFamily -> Value
 emptyOf fam = dfAssemble fam blank
  where
@@ -57,7 +70,7 @@ emptyOf fam = dfAssemble fam blank
       , dRanges = Just (M.fromList [(r, 0) | r <- spRanges sp])
       , dRows = Just (M.fromList [(tName t, []) | t <- spTables sp])
       , dFacts = Just (M.fromList [(n, 0) | (n, _) <- spFacts sp])
-      , dDegraded = Just 0
+      , dDegraded = if "why" `elem` spRanges sp then Just 0 else Nothing
       }
 
 -- | The `document` key of the definition package: per family its

@@ -2,8 +2,9 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The document family's battery (plan v2.32 step 3; design booklet
--- docs/reference/authority-track.md §5): each family's empty document
+-- | The document family's battery for step 3's five families (plan
+-- v2.32 step 3; design booklet docs/reference/authority-track.md §5;
+-- step 4's seven are DocumentProps4's): each family's empty document
 -- is the catalogue's and has the fields its statement table below
 -- names; over two hundred seeded requests per family every reference
 -- names a stated class inside its ranges, every count is its rows'
@@ -15,7 +16,7 @@
 module DocumentProps (battery) where
 
 import CE.Document (catalogue, emptyOf, families, respond)
-import CE.Document.Contract (DocFamily (..), Spec (..), Table (..), docRowCap)
+import CE.Document.Contract (DocFamily (..), docRowCap)
 import CE.Lang (digestOf, pack)
 import CE.Tables (package, tablesDigest)
 import Data.Aeson
@@ -23,9 +24,10 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (toList)
-import Data.Maybe (fromMaybe, mapMaybe)
+import Data.Maybe (fromMaybe)
 import qualified Data.Set as S
 import DocumentGen (docRequest, requests)
+import DocumentHarness (at, emptiesHeld, familiesNamed, fieldsHeld, int, ints, items, judgedBy, path, rankOf, refsHeld, refsIn, sameBytes)
 import WireHarness (field, refusedBy, replyObjWith, runLegs, setKey)
 
 battery :: IO Bool
@@ -42,7 +44,11 @@ battery =
     , "the package carries the catalogue and the digest moves with it"
     , "the seeded documents are not vacuous: every road and every sorted list occurs"
     ]
-    [empties, fieldsStated, referencesHeld, countsMeasured, ranked, deterministic, refusals, capped, catalogued, seeded]
+    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded]
+
+-- | Step 3's families.
+five :: [DocFamily]
+five = familiesNamed (words "arch query rules flow merge")
 
 -- | Each family's fields, `family key type` (a `ref` is the reason, a
 -- reference to the measuring side's text): today's report shape.
@@ -57,85 +63,12 @@ fieldTable =
   \flow schema string\nflow counts object\nflow findings array\nflow refused array\nflow degraded ref\n\
   \merge schema string\nmerge counts object\nmerge unsendable object\nmerge groups array\nmerge degraded ref\n"
 
--- | One request's reply document, through the real respond.
-documentOf :: Value -> Maybe Value
-documentOf r = replyObjWith respond r >>= (`field` "document")
-
--- | The empty request of a family: every range and fact 0 (why 1), no
--- row, the reason 0.
-emptyRequest :: DocFamily -> Value
-emptyRequest f =
-  docRequest
-    (dfName f)
-    [(r, if r == "why" then 1 else 0) | r <- spRanges sp]
-    [(tName t, []) | t <- spTables sp]
-    [(n, 0) | (n, _) <- spFacts sp]
-    (Just 0)
- where
-  sp = dfSpec f
-
-at :: Value -> String -> Maybe Value
-at v k = case v of
-  Object o -> KM.lookup (Key.fromString k) o
-  _ -> Nothing
-
--- | A path of keys down a value.
-path :: [String] -> Value -> Maybe Value
-path ks v = foldl (\acc k -> acc >>= (`at` k)) (Just v) ks
-
-ints :: Maybe Value -> [[Integer]]
-ints = fromMaybe [] . (>>= \v -> case fromJSON v of Success r -> Just r; _ -> Nothing)
-
-int :: Maybe Value -> Integer
-int v = case v >>= \x -> case fromJSON x of Success n -> Just n; _ -> Nothing of
-  Just n -> n
-  Nothing -> -1
-
-empties :: Bool
-empties = all ok families
- where
-  ok f = documentOf (emptyRequest f) == Just (emptyOf f) && path [dfName f, "empty"] catalogue == Just (emptyOf f)
-
-fieldsStated :: Bool
-fieldsStated = all stated families
- where
-  stated f =
-    let want = [(k, t) | [fam, k, t] <- map words (lines fieldTable), fam == dfName f]
-        doc = emptyOf f
-        keys = case doc of Object o -> KM.size o; _ -> 0
-     in keys == length want && all (\(k, t) -> fmap kind (at doc k) == Just t) want
-  kind v = case v of
-    String _ -> "string"
-    Object o | KM.member "$" o -> "ref"
-    Object _ -> "object"
-    Array _ -> "array"
-    Number _ -> "number"
-    Bool _ -> "bool"
-    Null -> "null"
-
 -- | Every request with its document, per family.
 judged :: [(DocFamily, Value, Value)]
-judged = [(f, r, d) | f <- families, r <- requests (dfName f), Just d <- [documentOf r]]
-
--- | Every `{"$": [class, ints…]}` in a value.
-refsIn :: Value -> [(String, [Integer])]
-refsIn v = case v of
-  Object o
-    | [("$", Array xs)] <- KM.toList o, (c : rest) <- toList xs, Success cls <- fromJSON c -> [(cls, mapMaybe asInt rest)]
-    | otherwise -> concatMap refsIn (KM.elems o)
-  Array xs -> concatMap refsIn (toList xs)
-  _ -> []
- where
-  asInt x = case fromJSON x of Success n -> Just n; _ -> Nothing
+judged = judgedBy requests five
 
 referencesHeld :: Bool
-referencesHeld = length judged == 1000 && all held judged
- where
-  held (f, r, d) = all (stated f r) (refsIn d)
-  stated f r (cls, xs) = case lookup cls (spRefs (dfSpec f)) of
-    Just args -> length args == length xs && and (zipWith (inside r) args xs)
-    Nothing -> False
-  inside r u x = maybe True (\name -> x >= 0 && x < int (path ["ranges", name] r)) u
+referencesHeld = length judged == 1000 && refsHeld judged
 
 countsMeasured :: Bool
 countsMeasured = all measured judged
@@ -169,23 +102,20 @@ countsMeasured = all measured judged
 
 -- | A path reference's rank: a file's off `rankFiles`, a slashed
 -- directory's off `rankDirs`.
-rankOf :: Value -> Value -> Integer
-rankOf r ref = case refsIn ref of
-  [("path", [f])] -> look "rankFiles" f
-  [("slashed", [d])] -> look "rankDirs" d
-  _ -> -1
- where
-  look t x = fromMaybe (-1) (lookup x [(s, p) | [s, p] <- ints (path ["rows", t] r)])
+placeOf :: Value -> Value -> Integer
+placeOf r ref = case refsIn ref of
+  [("slashed", _)] -> rankOf "rankDirs" r ref
+  _ -> rankOf "rankFiles" r ref
 
 ranked :: Bool
 ranked = all sorted judged
  where
   sorted (f, r, d) = case dfName f of
     "arch" -> all (\c -> ascending (map (pairOf r) (list c "files"))) (list d "cuts")
-    "flow" -> ascending (map (\x -> rankOf r (orNull (at x "path"))) (list d "findings")) && ascending (map (\x -> rankOf r (orNull (at x "path"))) (list d "refused"))
+    "flow" -> ascending (map (\x -> placeOf r (orNull (at x "path"))) (list d "findings")) && ascending (map (\x -> placeOf r (orNull (at x "path"))) (list d "refused"))
     _ -> True
-  pairOf r x = (rankOf r (orNull (at x "from")), rankOf r (orNull (at x "to")))
-  list v k = case at v k of Just (Array xs) -> toList xs; _ -> []
+  pairOf r x = (placeOf r (orNull (at x "from")), placeOf r (orNull (at x "to")))
+  list = items
   orNull = fromMaybe Null
   ascending xs = and (zipWith (<=) xs (drop 1 xs))
 
@@ -196,7 +126,6 @@ seeded :: Bool
 seeded = all (\(fam, test) -> any (\(f, _, d) -> dfName f == fam && test d) judged) cases
  where
   len v k = case at v k of Just (Array xs) -> length xs; _ -> 0
-  items v k = case at v k of Just (Array xs) -> toList xs; _ -> []
   cases =
     [ ("arch", \d -> any (\c -> len c "files" >= 2) (items d "cuts"))
     , ("flow", \d -> len d "findings" >= 2 && len d "refused" >= 2)
@@ -207,9 +136,6 @@ seeded = all (\(fam, test) -> any (\(f, _, d) -> dfName f == fam && test d) judg
     , ("query", \d -> at d "degraded" /= Just Null)
     , ("merge", \d -> any (\g -> len g "holes" >= 2) (items d "groups"))
     ]
-
-deterministic :: Bool
-deterministic = all (\(_, r, d) -> documentOf r == Just d && (encode <$> documentOf r) == Just (encode d)) (take 50 judged)
 
 -- | Each refusal: the request, edited, and the message it must name.
 refusals :: Bool

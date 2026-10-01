@@ -15,8 +15,10 @@
 -- indexes, and the reference classes its document carries. A string
 -- the measured repository owns never crosses: the document names it
 -- as `{"$": [class, integers…]}` and the measuring side resolves it.
-module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, counted, dense, docFamily, docRowCap, fact, offence, range, readSpec, ref, rows, totalRows, whyRef) where
+module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, fact, flag, spelled, offence, optional, range, readSpec, ref, rows, single, totalRows, whyRef) where
 
+import CE.Lang (languages)
+import CE.Lang.Spec (Language (..))
 import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), Value (..), object, toJSON, withObject, (.:), (.:?), (.=))
 import Data.Aeson.Key (fromString)
@@ -138,6 +140,47 @@ dense :: DocReq -> String -> Integer -> Maybe String
 dense req t n
   | map (take 1) (rows req t) == [[i] | i <- [0 .. n - 1]] = Nothing
   | otherwise = Just (t <> ": not one row per slot in order")
+
+-- | A table of at most one row: the value a nullable field carries.
+single :: DocReq -> String -> Maybe String
+single req t = if length (rows req t) <= 1 then Nothing else Just (t <> ": more than one row")
+
+-- | A nullable field: its one-row table's value, or null.
+optional :: DocReq -> String -> Value
+optional req t = case rows req t of
+  [v : _] -> toJSON v
+  _ -> Null
+
+-- | A 0 / 1 fact as a boolean.
+flag :: DocReq -> String -> Bool
+flag req k = fact req k /= 0
+
+-- | A product name by its code; the contract has held the code inside
+-- the table (`codes`).
+spelled :: [String] -> Integer -> Value
+spelled table c = toJSON (concat (take 1 (drop (fromInteger c) table)))
+
+-- | A language's report name by its wire code (CE.Lang's rows), empty
+-- off the table.
+langName :: Integer -> String
+langName c = concat [lgName l | l <- take 1 (filter ((== c) . toInteger . lgCode) languages)]
+
+-- | The reasons a judgment reply names when it degraded, by code: the
+-- graph family's and the verdict family's over-cap refusals (CE.Graph,
+-- CE.Verdict). A document carries the core's word for them.
+coreReasons :: [String]
+coreReasons = ["graph_too_large", "verdict_too_large"]
+
+-- | The `degraded` field of a family whose judgment may degrade: the
+-- measuring side's reason when the judgment never happened, else the
+-- first reason the named reply tables carry (in the order given), else
+-- null.
+degradedOf :: DocReq -> [String] -> Value
+degradedOf req tables = case dDegraded req of
+  Just _ -> whyRef req
+  Nothing -> case [c | t <- tables, c : _ <- rows req t] of
+    c : _ -> spelled coreReasons c
+    [] -> Null
 
 totalRows :: DocReq -> Integer
 totalRows req = toInteger (sum (map length (M.elems (fromMaybe M.empty (dRows req)))))
