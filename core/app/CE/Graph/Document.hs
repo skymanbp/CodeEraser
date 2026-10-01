@@ -80,7 +80,7 @@ checked req =
     , codes req "reported" 1 1 4
     , dense req "unmentioned" (range req "advisory")
     , codes req "unmentioned" 3 0 3
-    , asum [Just ("facts: " <> k <> " is not 0 or 1") | k <- ["asked", "dropped", "cut"], fact req k > 1]
+    , bits req ["asked", "dropped", "cut"]
     , if flag req "asked" || not (flag req "dropped" || flag req "cut") then Nothing else Just "advisory: bits without the road"
     , if (flag req "asked" && not (flag req "dropped")) || null (rows req "unmentioned") then Nothing else Just "unmentioned: rows the road did not keep"
     ]

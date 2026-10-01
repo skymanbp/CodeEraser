@@ -110,7 +110,7 @@ references under each cut arc (the `edges` and `pkgEdges` rows whose two directo
 arc's), and each cluster's majority directory, read by the rule the misplaced rows are judged by
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
 misplaced files never name two majorities. This side sends the tables back with each path's place
-in string order and puts the paths back ([Document.hs:94](../../../core/app/CE/Arch/Document.hs#L94), [Document.hs:120](../../../core/app/CE/Arch/Document.hs#L120),
+in string order and puts the paths back ([Document.hs:96](../../../core/app/CE/Arch/Document.hs#L96), [Document.hs:122](../../../core/app/CE/Arch/Document.hs#L122),
 [face.rs:78](../../../cli/src/arch/face.rs#L78)).
 
 ### 4. The faces and the document
@@ -119,7 +119,7 @@ One document, `ce.arch-report/0.1.0`: the counts, one layer row per directory, t
 their file references (a package target written as its directory with a trailing slash), the
 clusters with their files, the misplaced files with their directory and their cluster's majority,
 the impact rows and the metrics, instability `null` where the core answered −1
-([Document.hs:76](../../../core/app/CE/Arch/Document.hs#L76), [report.rs:65](../../../cli/src/arch/report.rs#L65)). The arch reply is consumed
+([Document.hs:78](../../../core/app/CE/Arch/Document.hs#L78), [report.rs:65](../../../cli/src/arch/report.rs#L65)). The arch reply is consumed
 strictly before the document is asked for: the five request counts echo what was sent, the four answer counts tally the tables,
 the layers and the metrics carry one row per directory in order, the clusters one per file, every
 id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../cli/src/arch/wire.rs#L124),

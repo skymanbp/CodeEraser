@@ -8,11 +8,12 @@
 module CE.Structure.Lines (lines') where
 
 import CE.Document.Contract
+import CE.Document.Read (Say)
 import CE.Text
-import qualified CE.Text.Structure as T
+import Data.Aeson (Value)
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req =
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say _ req =
   map (line 0) $
     [say "head" [N (fact req "score"), N (fact req "scale"), W (pairs "entropy"), W (pairs "axes"), N (range req "dirs")]]
       <> divergence
@@ -20,7 +21,6 @@ lines' lang req =
       <> [say "finding" [R (ref "dir" [d]), N a] | [d, a] <- rows req "findings"]
       <> (if flag req "split" then candidates <> exempt else [])
  where
-  say = phrase T.catalogue lang
   pairs t = unwords [show k <> ":" <> show v | [k, v] <- rows req t]
   declared = fact req "declaredDirs"
   divergence

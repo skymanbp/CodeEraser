@@ -15,6 +15,7 @@ import qualified DeclProps
 import qualified DocumentProps
 import qualified DocumentProps4
 import qualified DocumentProps5
+import qualified DocumentProps6
 import qualified StructureEquivProps
 import qualified VerdictEquivProps
 import qualified TrendEquivProps
@@ -148,6 +149,7 @@ batteries =
   , DocumentProps.battery
   , DocumentProps4.battery
   , DocumentProps5.battery
+  , DocumentProps6.battery
   ]
 
 -- | One named check through the shared runner.

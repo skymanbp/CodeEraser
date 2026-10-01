@@ -8,12 +8,10 @@
 module CE.Score.Lines (lines', veto) where
 
 import CE.Document.Read
-import qualified CE.Score.Document as Check
-import qualified CE.Text.Check as T
 import Data.List (intercalate)
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req =
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say doc req =
   map (line 0) $
     [ say "head" [N (fact req "score"), N scale, W axes, N (count (arr "candidates" doc))]
     , say "ratchet" (map (N . count . (`arr` ratchet)) (words "added removed over toleranceDrawn") <> [P verdict])
@@ -22,8 +20,6 @@ lines' lang req =
       <> [say "degraded" [fillOf d] | let d = key "degraded" doc, d /= Null]
       <> [say roast [] | flag req "roast"]
  where
-  say = phrase T.catalogue lang
-  doc = dfAssemble Check.doc req
   ratchet = key "ratchet" doc
   -- the effective scale, 1000 when the knob is absent
   scale = case key "scoreScale" doc of
@@ -42,5 +38,5 @@ lines' lang req =
   count = toInteger . length
 
 -- | The verdict's fail bit.
-veto :: DocReq -> Bool
-veto req = flag req "fail"
+veto :: Value -> DocReq -> Bool
+veto _ req = flag req "fail"

@@ -53,7 +53,7 @@ checked req =
   asum
     [ dense req "tree" (range req "dirs")
     , asum [single req t | t <- ["days", "divergence"]]
-    , asum [Just ("facts: " <> k <> " is not 0 or 1") | k <- ["deep", "split"], fact req k > 1]
+    , bits req ["deep", "split"]
     , if flag req "split" || all (null . rows req) ["splitCandidates", "sizeExempt"] then Nothing else Just "split: advisory rows without the advisory"
     ]
 

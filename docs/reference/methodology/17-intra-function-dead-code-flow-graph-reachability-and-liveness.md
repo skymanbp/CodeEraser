@@ -84,7 +84,7 @@ exemptions (captured, ignored, address-taken) leaving it out
 ([Live.hs:70-82](../../../core/app/CE/Flow/Live.hs#L70)). Kind 3 is advice by construction: a
 parameter an interface, an overload or an override requires is unread for a reason the unit
 cannot show, so no tier, mask or gate ever reads it as a verdict
-([Document.hs:49](../../../core/app/CE/Flow/Document.hs#L49), [mod.rs:21-44](../../../cli/src/flow_report/mod.rs#L21)).
+([Document.hs:51](../../../core/app/CE/Flow/Document.hs#L51), [mod.rs:21-44](../../../cli/src/flow_report/mod.rs#L21)).
 
 ### 5. Caps and degradation
 
@@ -104,14 +104,14 @@ file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (
 from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit the core refused with its reason
-([Document.hs:86](../../../core/app/CE/Flow/Document.hs#L86), [face.rs:162](../../../cli/src/flow_report/face.rs#L162),
+([Document.hs:88](../../../core/app/CE/Flow/Document.hs#L88), [face.rs:162](../../../cli/src/flow_report/face.rs#L162),
 [report.rs:10](../../../cli/src/flow_report/report.rs#L10)). A finding's `lineEnd` is the line on
 which the run's last statement starts: the legend keeps each statement's first line only, so a
 last statement written over several lines is not followed to its end; the next lowering
 generation carries the end. `--kind` narrows the listing and
 never the counts, so a filtered run cannot move the gate; a name the package's flow catalogue
 does not list goes as −1, and the core refuses it, the refusal naming the name as given and the
-catalogue's kinds ([Document.hs:82](../../../core/app/CE/Flow/Document.hs#L82)). The exit codes are the family's own: 2
+catalogue's kinds ([Document.hs:84](../../../core/app/CE/Flow/Document.hs#L84)). The exit codes are the family's own: 2
 when the core is missing (refused by name, no document) or lacks the family (the document names
 the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
@@ -166,7 +166,7 @@ traces; the shipped judgment must agree finding for finding on 200 seeded random
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:100](../../../core/test/Spec.hs#L100)).
+([Spec.hs:101](../../../core/test/Spec.hs#L101)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

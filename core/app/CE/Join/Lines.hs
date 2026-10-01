@@ -6,19 +6,15 @@
 module CE.Join.Lines (lines') where
 
 import CE.Document.Read
-import qualified CE.Join.Document as Join
-import qualified CE.Text.Join as T
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req =
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say doc _ =
   map (line 0) $
     map file (arr "files" doc)
       <> map unit (arr "units" doc)
       <> [say "degraded" [fillOf d] | let d = key "degraded" doc, d /= Null]
       <> [say "summary" [N (int "days" doc), N (count (arr "files" doc)), N (count (arr "units" doc)), N (int "commits" doc)]]
  where
-  say = phrase T.catalogue lang
-  doc = dfAssemble Join.doc req
   count = toInteger . length
   churn k v = [N (int "appended" (key k v)), N (int "rewrote" (key k v))]
   file f =

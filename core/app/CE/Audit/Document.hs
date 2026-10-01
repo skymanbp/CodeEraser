@@ -18,14 +18,15 @@
 module CE.Audit.Document (doc) where
 
 import CE.Document.Contract
+import CE.Document.Read (Say, spoken)
 import CE.Text
 import qualified CE.Text.Audit as T
 import CE.Tombstone (kindNames)
-import Data.Aeson (object)
+import Data.Aeson (Value, object)
 import Data.Foldable (asum)
 
 doc :: DocFamily
-doc = spoken lines' blocked (docFamily "audit" "" statement checked (const (object [])) [])
+doc = spoken T.catalogue lines' (const blocked) (docFamily "audit" "" statement checked (const (object [])) [])
 
 -- | `face` 0 stop / 1 precommit / 2 commitmsg; `git` 1 when the change
 -- was gathered; `unreadable` 1 when commitmsg could not read its
@@ -52,7 +53,7 @@ checked req =
   asum
     [ asum [single req t | t <- ["net", "dups", "tomb"]]
     , if fact req "face" > 2 then Just "facts: face is not 0..2" else Nothing
-    , asum [Just ("facts: " <> k <> " is not 0 or 1") | k <- ["git", "unreadable", "mounted"], fact req k > 1]
+    , bits req ["git", "unreadable", "mounted"]
     , if fact req "mode" > 3 then Just "facts: mode is not 0..3" else Nothing
     , codes req "dups" 1 0 1
     , codes req "tomb" 0 1 2
@@ -83,8 +84,8 @@ dupBlocks req = fact req "mode" == 3 && fmap (take 1 . drop 1) (dups req) == Jus
 blocked :: DocReq -> Bool
 blocked req = fact req "git" == 1 && fact req "unreadable" == 0 && (tombBlocks req || dupBlocks req)
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say _ req
   | fact req "unreadable" == 1 = [line 1 (say "unreadable" [R (ref "message" [])])]
   | fact req "git" /= 1 = [line 1 (say "not_git" [faceWord]) | face /= 0]
   | face == 0 = case reasons of
@@ -92,7 +93,6 @@ lines' lang req
       rs -> map (line 0) rs
   | otherwise = map (line 0) (summary <> [tombReason | tombBlocks req] <> [duplicate])
  where
-  say = phrase T.catalogue lang
   face = fact req "face"
   faceWord = W (if face == 2 then "commitmsg" else "precommit")
   net = case rows req "net" of [[n]] -> n; _ -> 0

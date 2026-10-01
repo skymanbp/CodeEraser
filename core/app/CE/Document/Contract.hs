@@ -15,12 +15,12 @@
 -- indexes, and the reference classes its document carries. A string
 -- the measured repository owns never crosses: the document names it
 -- as `{"$": [class, integers…]}` and the measuring side resolves it.
-module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, fact, flag, spelled, offence, optional, range, readSpec, ref, rows, single, spoken, totalRows, whyRef) where
+module CE.Document.Contract (DocFamily (..), DocReq (..), Spec (..), Table (..), codes, coreReasons, counted, langName, degradedOf, dense, docFamily, docRowCap, bits, fact, flag, judgedFacts, nameOf, spelled, offence, optional, range, readSpec, ref, rows, single, totalRows, whyRef) where
 
 import CE.Graph (graphTooLarge)
 import CE.Lang (languages)
 import CE.Lang.Spec (Language (..))
-import CE.Text (Lang, Line)
+import CE.Text (Catalogue, Lang, Line)
 import CE.Verdict (verdictTooLarge)
 import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), Value (..), object, toJSON, withObject, (.:), (.:?), (.=))
@@ -75,9 +75,11 @@ data Spec = Spec
 -- | One family as the dispatcher holds it: its name, the schema id its
 -- document carries, its statement, the checks its assembly relies on
 -- beyond the statement, the assembly, what else the catalogue lists
--- for it, its console lines in a language (step 5: the console form is
--- part of the statement) and its veto — the exit the face reads, one
--- bit.
+-- for it, whether the face prints the document indented (scan and
+-- dedup; every other family one line), its console lines in a language
+-- (step 5: the console form is part of the statement), the text
+-- catalogue they are spoken from and its veto — the exit the face
+-- reads, one bit.
 data DocFamily = DocFamily
   { dfName :: String
   , dfSchema :: String
@@ -85,6 +87,8 @@ data DocFamily = DocFamily
   , dfCheck :: DocReq -> Maybe String
   , dfAssemble :: DocReq -> Value
   , dfCatalogue :: [Pair]
+  , dfPretty :: Bool
+  , dfText :: Catalogue
   , dfLines :: Lang -> DocReq -> [Line]
   , dfExit :: DocReq -> Bool
   }
@@ -94,11 +98,14 @@ data DocFamily = DocFamily
 -- `spoken` gives it its own.
 docFamily :: String -> String -> String -> (DocReq -> Maybe String) -> (DocReq -> Value) -> [Pair] -> DocFamily
 docFamily name schemaId statement check assemble extras =
-  DocFamily name schemaId (readSpec statement) check assemble extras (\_ _ -> []) (const False)
+  DocFamily name schemaId (readSpec statement) check assemble extras False [] (\_ _ -> []) (const False)
 
--- | A family with its console lines and its veto.
-spoken :: (Lang -> DocReq -> [Line]) -> (DocReq -> Bool) -> DocFamily -> DocFamily
-spoken ls ex fam = fam {dfLines = ls, dfExit = ex}
+-- | Statement lines stating each name a judged fact; and the check
+-- that the named facts are bits, each 0 or 1.
+judgedFacts :: [String] -> String
+judgedFacts = concatMap (\k -> "fact " <> k <> " judged\n")
+bits :: DocReq -> [String] -> Maybe String
+bits req ks = asum [Just ("facts: " <> k <> " is not 0 or 1") | k <- ks, fact req k > 1]
 
 -- | The statement text, one line per entry: `range NAME`, `fact NAME
 -- kept|judged`, `rows NAME WIDTH[+] kept|judged COLUMN…` (a COLUMN is a
@@ -176,7 +183,11 @@ flag req k = fact req k /= 0
 -- | A product name by its code; the contract has held the code inside
 -- the table (`codes`).
 spelled :: [String] -> Integer -> Value
-spelled table c = toJSON (concat (take 1 (drop (fromInteger c) table)))
+spelled table c = toJSON (nameOf table c)
+
+-- | The same name as a plain string, empty off the table.
+nameOf :: [String] -> Integer -> String
+nameOf table c = concat (take 1 (drop (fromInteger c) table))
 
 -- | A language's report name by its wire code (CE.Lang's rows), empty
 -- off the table.

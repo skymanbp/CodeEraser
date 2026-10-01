@@ -387,13 +387,13 @@ over every node outside `reach` ([Dead.hs:33-39](../../../core/app/CE/Graph/Dead
 
 The names are the core's too since plan v2.32 step 4: the deadcode document
 (`CE.Graph.Document`, laid out over `document/1`) spells a verdict by position — `verdictNames`
-read at `code - 1` ([Document.hs:47-52](../../../core/app/CE/Graph/Document.hs#L47)) — and the
+read at `code - 1` ([Document.hs:49-54](../../../core/app/CE/Graph/Document.hs#L49)) — and the
 Rust side, which sends the judgment's rows back as codes, refuses a code past the four as
 wire-version skew, not a panic ([deadcode.rs:445-450](../../../cli/src/graph/deadcode.rs#L445)).
 The `why` string is a two-way split on the same axis: codes 1–2 read *"no kept in-edge and no
 entry flag"*, codes 3–4 read *"referenced only from dead code; no entry flag"*
-([Document.hs:54-57](../../../core/app/CE/Graph/Document.hs#L54), placed at
-[Document.hs:113-118](../../../core/app/CE/Graph/Document.hs#L113)).
+([Document.hs:56-59](../../../core/app/CE/Graph/Document.hs#L56), placed at
+[Document.hs:115-120](../../../core/app/CE/Graph/Document.hs#L115)).
 
 **The reporting firewall.** Only file nodes enter `dead`; section and package verdicts go to a
 separate `reported` table and are never called dead — aggregates are not code entities. Since
@@ -408,7 +408,7 @@ arriving in `dead` refuses as wire skew, never a directory erase
 core away, so the client's old fallback conjunction was unreachable and was retired (L round
 step #15, O62; [deadcode.rs:486-490](../../../cli/src/graph/deadcode.rs#L486)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document the core lays out
-([Document.hs:86-102](../../../core/app/CE/Graph/Document.hs#L86)). The design's *"no entry rule ⇒ every doc trivially
+([Document.hs:88-104](../../../core/app/CE/Graph/Document.hs#L88)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
 ([deadcode.rs:13-15](../../../cli/src/graph/deadcode.rs#L13)).
 

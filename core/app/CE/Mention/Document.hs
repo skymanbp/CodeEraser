@@ -49,7 +49,7 @@ statement = concatMap (\k -> "fact " <> k <> " judged\n") header <> "rows rates 
 checked :: DocReq -> Maybe String
 checked req =
   asum
-    [ if fact req "run.rescanned" > 1 then Just "facts: run.rescanned is not 0 or 1" else Nothing
+    [ bits req ["run.rescanned"]
     , asum [Just ("rates " <> show i <> ": no language " <> show c) | (i, c : _) <- zip [0 :: Int ..] (rows req "rates"), null (langName c)]
     , if length (nub codes') == length codes' then Nothing else Just "rates: a language twice"
     ]

@@ -8,12 +8,17 @@
 -- max-args=5, Sonar S3776 CoC=15, lizard CC=15). ce.toml is the
 -- source, these are the DEFAULTS (the 27b9bc2 pattern), and the
 -- reply's grade echo pins the Rust mirror.
-module CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap) where
+module CE.Scan.Cost (conforms, gradeTable, gradeWith, ruleNames, scanRowCap) where
 
 -- | Codes are frozen positions (the wire.rs edge-code discipline):
 --   0 file-lines   1 fn-lines   2 fn-params   3 cyclomatic
 --   4 cognitive    5 nesting    6 fn-naming (value 0/1, warn 0;
 --   derived from the naming facts when they ride — conforms below)
+-- `ruleNames` spells them, by code, for the scan report (plan v2.32
+-- step 5).
+ruleNames :: [String]
+ruleNames = words "file-lines fn-lines fn-params cyclomatic cognitive nesting fn-naming"
+
 gradeTable :: [(Integer, Integer, Integer)]
 gradeTable =
   [ (0, 300, 750)

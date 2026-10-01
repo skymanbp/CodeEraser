@@ -14,15 +14,16 @@
 module CE.Guard.Document (doc) where
 
 import CE.Document.Contract
+import CE.Document.Read (Say, spoken)
 import qualified CE.Flow.Document as Flow
 import CE.Text
 import qualified CE.Text.Guard as T
 import CE.Tombstone (kindNames)
-import Data.Aeson (object)
+import Data.Aeson (Value, object)
 import Data.Foldable (asum)
 
 doc :: DocFamily
-doc = spoken lines' (const False) (docFamily "guard" "" statement checked (const (object [])) [])
+doc = spoken T.catalogue lines' (\_ _ -> False) (docFamily "guard" "" statement checked (const (object [])) [])
 
 -- | A `say` row is [rule, a, b, c, d, e, f]: rule 0 duplicate [file,
 -- regions, first match, matches shown], 1 over the hard budget [file,
@@ -61,10 +62,9 @@ checked req =
     span' u a n = named "out of range" (if a < 0 || n < 0 || a + n > range req u then Just u else Nothing)
     fenced fence = named "not a fence" (if fence < 0 || fence > 2 then Just (show fence) else Nothing)
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req = map (line 0 . sentence) (rows req "say")
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say _ req = map (line 0 . sentence) (rows req "say")
  where
-  say = phrase T.catalogue lang
   file f = R (ref "file" [f])
   slice t a n = take (fromInteger n) (drop (fromInteger a) (rows req t))
   note fence = case fence of

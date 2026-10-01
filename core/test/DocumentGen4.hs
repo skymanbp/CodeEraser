@@ -9,12 +9,12 @@ module DocumentGen4 (requests4) where
 
 import Control.Monad (forM, replicateM)
 import Data.Aeson (Value)
-import DocumentGen (docRequest, num, ranks, some)
-import ReferenceFlowGen (G, S (..), rand, runG)
+import DocumentGen (docRequest, num, ranks, seededBy, some)
+import ReferenceFlowGen (G, rand)
 
 -- | Two hundred requests for a family, by name.
 requests4 :: String -> [Value]
-requests4 fam = [runG gen (S (n * 7919 + 17) 0 0 0) | n <- [1 .. 200]]
+requests4 fam = seededBy 7919 17 gen
  where
   gen = case fam of
     "check" -> check

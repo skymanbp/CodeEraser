@@ -10,19 +10,15 @@
 module CE.Query.Lines (lines', veto) where
 
 import CE.Document.Read
-import qualified CE.Text.Query as T
-import qualified CE.Query.Document as Query
 
-lines' :: Bool -> Lang -> DocReq -> [Line]
-lines' rules lang req =
+lines' :: Bool -> Say -> Value -> DocReq -> [Line]
+lines' rules say doc req =
   map (line 0) $
     [say "no_rules_file" [] | rules, fact req "rulesFile" == 0]
       <> [say "error" [fillOf (key "at" e), fillOf (key "what" e)] | e <- arr "errors" doc]
       <> [say "degraded" [R d] | let d = key "degraded" doc, d /= Null]
       <> (if judged doc then concatMap goal (arr "goals" doc) <> [counts] else [])
  where
-  say = phrase T.catalogue lang
-  doc = dfAssemble (if rules then Query.rulesDoc else Query.queryDoc) req
   goal g =
     let mine = [a | a <- arr "answers" doc, int "goal" a == int "goal" g]
         cols = join ", " (map (piece . R) (arr "columns" g))
@@ -56,5 +52,5 @@ judged :: Value -> Bool
 judged doc = null (arr "errors" doc) && key "degraded" doc == Null
 
 -- | The rules face's exit 1: judged, and a violation found.
-veto :: DocReq -> Bool
-veto req = judged (dfAssemble Query.rulesDoc req) && fact req "violations" > 0
+veto :: Value -> DocReq -> Bool
+veto doc req = judged doc && fact req "violations" > 0

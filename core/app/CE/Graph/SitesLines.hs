@@ -6,18 +6,18 @@
 module CE.Graph.SitesLines (lines') where
 
 import CE.Document.Contract
+import CE.Document.Read (Say)
 import CE.Lang (siteKinds)
 import CE.Text
-import qualified CE.Text.Sites as T
+import Data.Aeson (Value)
 import qualified Data.Map.Strict as M
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req =
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say _ req =
   map (line 0) $
     say "total" [N (toInteger (length sites)), N (toInteger (M.size (M.fromList [(f, ()) | _ : f : _ <- sites])))]
       : [say "count" [W (leftIn 10 l), W (leftIn 12 k), N n] | ((l, k), n) <- M.toAscList counted']
  where
-  say = phrase T.catalogue lang
   sites = rows req "sites"
   langs = M.fromList [(f, l) | [f, l] <- rows req "langs"]
   counted' = M.fromListWith (+) [((langName (M.findWithDefault (-1) f langs), kind k), 1 :: Integer) | _ : f : k : _ <- sites]

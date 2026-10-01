@@ -9,11 +9,11 @@ module DocumentGen5 (requests5) where
 
 import Control.Monad (forM, replicateM)
 import Data.Aeson (Value)
-import DocumentGen (docRequest, num)
-import ReferenceFlowGen (G, S (..), rand, runG)
+import DocumentGen (docRequest, num, seededBy)
+import ReferenceFlowGen (G, rand)
 
 requests5 :: String -> [Value]
-requests5 fam = [runG (if fam == "guard" then guard else audit) (S (n * 6151 + 29) 0 0 0) | n <- [1 .. 200]]
+requests5 fam = seededBy 6151 29 (if fam == "guard" then guard else audit)
 
 guard :: G Value
 guard = do

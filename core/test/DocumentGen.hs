@@ -8,7 +8,7 @@
 -- drawn by the flow reference's generator (ReferenceFlowGen's `G`), so
 -- the battery reads every document the core assembles from inputs it
 -- did not hand-pick.
-module DocumentGen (docRequest, num, ranks, requests, some) where
+module DocumentGen (docRequest, num, ranks, requests, seededBy, some) where
 
 import Control.Monad (filterM, forM, replicateM)
 import Data.Aeson (Value, object, (.=))
@@ -33,13 +33,17 @@ docRequest fam ranges tables facts why =
 
 -- | Two hundred requests for a family, by name.
 requests :: String -> [Value]
-requests fam = [runG (gen fam) (S (n * 104729 + 31) 0 0 0) | n <- [1 .. 200]]
+requests fam = seededBy 104729 31 (gen fam)
  where
   gen f = case f of
     "arch" -> arch
     "flow" -> flow
     "merge" -> merge
     _ -> query f
+
+-- | Two hundred draws of a generator, the n-th seeded n * k + c.
+seededBy :: Int -> Int -> G Value -> [Value]
+seededBy k c g = [runG g (S (n * k + c) 0 0 0) | n <- [1 .. 200]]
 
 num :: Int -> G Integer
 num n = toInteger <$> rand n

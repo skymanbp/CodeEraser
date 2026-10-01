@@ -16,7 +16,7 @@
 -- Measurement and report rendering stay in Rust; only codes, values
 -- and name-shape facts cross the wire — subjects, names and paths
 -- never do (§5.9.2 index privacy).
-module CE.Scan (respond) where
+module CE.Scan (conditionNames, respond) where
 
 import CE.Scan.Contract (violation)
 import CE.Scan.Cost (conforms, gradeTable, gradeWith, scanRowCap)
@@ -180,3 +180,9 @@ conditions :: Maybe Fence -> [Integer] -> Bool -> [(String, Bool)]
 conditions _ _ True = [("degraded", True)]
 conditions fence levels False =
   [("hard_line", any (== 2) levels), ("knobs_digest", maybe False drifted fence)]
+
+-- | The conditions by name in their canonical order — the scan
+-- report's `failed` (plan v2.32 step 5) — read off `conditions`, the
+-- one spelling.
+conditionNames :: [String]
+conditionNames = map fst (conditions Nothing [] False <> conditions Nothing [] True)

@@ -6,7 +6,8 @@
 -- docs/reference/authority-track.md §5): the report documents of the
 -- query, rules, flow, merge and architecture families (step 3) and of
 -- check, structure, join, deadcode, mentions, sites and the graph
--- screen (step 4), assembled here — the fields, their order, the
+-- screen (step 4) and of scan, dedup, clone, docdup, erase, churn,
+-- trend and similar (step 5), assembled here — the fields, their order, the
 -- counts, the schema id and the degraded bit are the judge's
 -- statement, and every face prints the one document. Not a judgment
 -- family: it judges nothing, it lays out what a judgment already
@@ -33,7 +34,18 @@ module CE.Document (blankOf, catalogue, emptyOf, families, respond) where
 import qualified CE.Arch.Document as Arch
 import qualified CE.Arch.Lines as ArchLines
 import qualified CE.Audit.Document as Audit
-import CE.Document.Contract
+import qualified CE.Churn.Document as Churn
+import qualified CE.Churn.Lines as ChurnLines
+import qualified CE.Clone.Document as Clone
+import qualified CE.Clone.Lines as CloneLines
+import qualified CE.Dedup.Document as Dedup
+import qualified CE.Dedup.Lines as DedupLines
+import qualified CE.Docdup.Document as Docdup
+import qualified CE.Docdup.Lines as DocdupLines
+import CE.Document.Read hiding (fields)
+import qualified CE.Erase.Document as Erase
+import qualified CE.Erase.Lines as EraseLines
+import qualified CE.Erase.TrailLines as TrailLines
 import qualified CE.Flow.Document as Flow
 import qualified CE.Flow.Lines as FlowLines
 import qualified CE.Graph.Document as Deadcode
@@ -50,13 +62,36 @@ import qualified CE.Merge.Document as Merge
 import qualified CE.Merge.Lines as MergeLines
 import qualified CE.Query.Document as Query
 import qualified CE.Query.Lines as QueryLines
+import qualified CE.Scan.Document as Scan
+import qualified CE.Scan.Lines as ScanLines
 import qualified CE.Score.Document as Check
 import qualified CE.Score.Lines as CheckLines
+import qualified CE.Similar.Document as Similar
+import qualified CE.Similar.Lines as SimilarLines
 import qualified CE.Structure.Document as Structure
 import qualified CE.Structure.Lines as StructureLines
-import CE.Text (langOf, lineValue)
+import qualified CE.Text.Arch as ArchText
+import qualified CE.Text.Check as CheckText
+import qualified CE.Text.Churn as ChurnText
+import qualified CE.Text.Clone as CloneText
+import qualified CE.Text.Deadcode as DeadcodeText
+import qualified CE.Text.Dedup as DedupText
+import qualified CE.Text.Docdup as DocdupText
+import qualified CE.Text.Erase as EraseText
+import qualified CE.Text.Flow as FlowText
+import qualified CE.Text.Join as JoinText
+import qualified CE.Text.Mentions as MentionText
+import qualified CE.Text.Merge as MergeText
+import qualified CE.Text.Query as QueryText
+import qualified CE.Text.Scan as ScanText
+import qualified CE.Text.Similar as SimilarText
+import qualified CE.Text.Sites as SitesText
+import qualified CE.Text.Structure as StructureText
+import qualified CE.Text.Trend as TrendText
+import qualified CE.Trend.Document as Trend
+import qualified CE.Trend.Lines as TrendLines
 import qualified CE.Wire as Wire
-import Data.Aeson (Value, encode, object, (.=))
+import Data.Aeson (encode, object, (.=))
 import Data.Aeson.Key (fromString)
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -64,26 +99,40 @@ import qualified Data.Map.Strict as M
 
 -- | The documents, by the name a request gives: step 3's five, then
 -- step 4's seven, each with its console lines and veto (step 5; the
--- graph screen has no console), then step 5's two sentence families.
+-- graph screen has no console), then step 5's ten report families —
+-- scan, dedup, clone and its unit listing, docdup, the erase plan and
+-- its trail, churn, trend and similar — then step 5's two sentence
+-- families.
 families :: [DocFamily]
 families =
-  [ spoken ArchLines.lines' never Arch.doc
-  , spoken (QueryLines.lines' False) never Query.queryDoc
-  , spoken (QueryLines.lines' True) QueryLines.veto Query.rulesDoc
-  , spoken FlowLines.lines' FlowLines.veto Flow.doc
-  , spoken MergeLines.lines' never Merge.doc
+  [ spoken ArchText.catalogue ArchLines.lines' never Arch.doc
+  , spoken QueryText.catalogue (QueryLines.lines' False) never Query.queryDoc
+  , spoken QueryText.catalogue (QueryLines.lines' True) QueryLines.veto Query.rulesDoc
+  , spoken FlowText.catalogue FlowLines.lines' FlowLines.veto Flow.doc
+  , spoken MergeText.catalogue MergeLines.lines' never Merge.doc
   ]
-    <> [ spoken CheckLines.lines' CheckLines.veto Check.doc
-       , spoken StructureLines.lines' never Structure.doc
-       , spoken JoinLines.lines' never Join.doc
-       , spoken DeadcodeLines.lines' DeadcodeLines.veto Deadcode.doc
-       , spoken MentionLines.lines' never Mentions.doc
-       , spoken SitesLines.lines' never Sites.doc
+    <> [ spoken CheckText.catalogue CheckLines.lines' CheckLines.veto Check.doc
+       , spoken StructureText.catalogue StructureLines.lines' never Structure.doc
+       , spoken JoinText.catalogue JoinLines.lines' never Join.doc
+       , spoken DeadcodeText.catalogue DeadcodeLines.lines' DeadcodeLines.veto Deadcode.doc
+       , spoken MentionText.catalogue MentionLines.lines' never Mentions.doc
+       , spoken SitesText.catalogue SitesLines.lines' never Sites.doc
        , Screen.doc
+       ]
+    <> [ spoken ScanText.catalogue ScanLines.lines' ScanLines.veto Scan.doc
+       , spoken DedupText.catalogue DedupLines.lines' DedupLines.veto Dedup.doc
+       , spoken CloneText.catalogue CloneLines.lines' never Clone.doc
+       , spoken CloneText.catalogue CloneLines.unitLines never Clone.unitsDoc
+       , spoken DocdupText.catalogue DocdupLines.lines' DocdupLines.veto Docdup.doc
+       , spoken EraseText.catalogue EraseLines.lines' EraseLines.veto Erase.doc
+       , spoken EraseText.catalogue TrailLines.lines' TrailLines.veto Erase.trailDoc
+       , spoken ChurnText.catalogue ChurnLines.lines' never Churn.doc
+       , spoken TrendText.catalogue TrendLines.lines' TrendLines.veto Trend.doc
+       , spoken SimilarText.catalogue SimilarLines.lines' never Similar.doc
        ]
     <> [Guard.doc, Audit.doc]
  where
-  never = const False
+  never _ _ = False
 
 familyOf :: DocReq -> Maybe DocFamily
 familyOf req = do
@@ -113,11 +162,12 @@ blankOf fam lang =
   sp = dfSpec fam
 
 -- | The `document` key of the definition package: per family its
--- schema id, its empty document, and what else it lists.
+-- schema id, its empty document, whether its face prints it indented,
+-- and what else it lists.
 catalogue :: Value
 catalogue =
   object
-    [ fromString (dfName f) .= object (["schema" .= dfSchema f, "empty" .= emptyOf f] <> dfCatalogue f)
+    [ fromString (dfName f) .= object (["schema" .= dfSchema f, "empty" .= emptyOf f, "pretty" .= dfPretty f] <> dfCatalogue f)
     | f <- families
     , not (null (dfSchema f))
     ]

@@ -7,12 +7,13 @@
 module CE.Mention.Lines (lines') where
 
 import CE.Document.Contract
+import CE.Document.Read (Say)
 import CE.Text
-import qualified CE.Text.Mentions as T
+import Data.Aeson (Value)
 import Data.List (sortOn)
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req =
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say _ req =
   map (line 0) $
     [ say "universe" (map f (words "universe sources rows capped mention_rev"))
     , say "skipped" (map f (words "skipped.oversize skipped.binary skipped.signed skipped.walk_errors"))
@@ -22,7 +23,6 @@ lines' lang req =
     ]
       <> [say "rates" [W (langName c), N da, N de, N ua, N ue, N other, N saved, N fold, N self] | [c, da, de, ua, ue, other, fold, self, saved] <- sortOn byName (rows req "rates")]
  where
-  say = phrase T.catalogue lang
   f k = N (fact req k)
   byName r = langName (head' r)
   head' r = case r of

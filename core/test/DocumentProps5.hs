@@ -20,18 +20,6 @@ module DocumentProps5 (battery) where
 import CE.Document (families, respond)
 import CE.Document.Contract (DocFamily (..), DocReq, Spec (..), Table (..), docRowCap)
 import CE.Text (Line (..), Piece (..), fixed, holes, langOf)
-import qualified CE.Text.Arch as Arch
-import qualified CE.Text.Audit as Audit
-import qualified CE.Text.Check as Check
-import qualified CE.Text.Deadcode as Deadcode
-import qualified CE.Text.Flow as Flow
-import qualified CE.Text.Guard as Guard
-import qualified CE.Text.Join as Join
-import qualified CE.Text.Mentions as Mentions
-import qualified CE.Text.Merge as Merge
-import qualified CE.Text.Query as Query
-import qualified CE.Text.Sites as Sites
-import qualified CE.Text.Structure as Structure
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
@@ -43,6 +31,7 @@ import qualified Data.Set as S
 import DocumentGen (requests)
 import DocumentGen4 (requests4)
 import DocumentGen5 (requests5)
+import DocumentGen6 (requests6)
 import DocumentHarness (at, documentOf, emptyRequest, int, ints, items, path, refsHeld)
 import WireHarness (field, refusedBy, replyObjWith, runLegs, setKey)
 
@@ -81,6 +70,7 @@ seeded = concat [gen (dfName f) | f <- families]
   gen n
     | n `elem` words "arch query rules flow merge" = requests n
     | n `elem` words "guard audit" = requests5 n
+    | n `elem` words "scan dedup clone clone-units docdup erase erase-trail churn trend similar" = requests6 n
     | otherwise = requests4 n
 
 -- | Each request in both languages, with its family and lines.
@@ -105,20 +95,21 @@ wire (Line s (Piece t r _)) = toJSON (toJSON s : toJSON t : r)
 holed :: (DocFamily, Value, [Line]) -> Bool
 holed (_, _, ls) = all (\(Line _ (Piece t r _)) -> holes t == length r) ls
 
--- | Each family's catalogue keys; rules shares query's.
+-- | Each text catalogue once, under the first family spoken from it
+-- (rules shares query's, the unit listing clone's and the trail
+-- erase's): twenty.
 catalogues :: [(String, [String])]
-catalogues =
-  zip
-    (words "arch query flow merge check structure join deadcode mentions sites guard audit")
-    (map (map fst) [Arch.catalogue, Query.catalogue, Flow.catalogue, Merge.catalogue, Check.catalogue, Structure.catalogue, Join.catalogue, Deadcode.catalogue, Mentions.catalogue, Sites.catalogue, Guard.catalogue, Audit.catalogue])
+catalogues = [(dfName f, map fst (dfText f)) | f <- families, not (null (dfText f)), owner f == dfName f]
+
+owner :: DocFamily -> String
+owner f = concat (take 1 [dfName g | g <- families, dfText g == dfText f])
 
 -- | No key missed or misfilled (`!key`), no key twice in a catalogue,
 -- and every key reached by a family that reads it.
 covered :: [(DocFamily, Value, [Line])] -> Bool
-covered xs = not (any (("!" `isPrefixOf`) . snd) (S.toList used)) && all reached catalogues && all unique catalogues
+covered xs = length catalogues == 20 && not (any (("!" `isPrefixOf`) . snd) (S.toList used)) && all reached catalogues && all unique catalogues
  where
-  used = S.fromList [(owner (dfName f), k) | (f, _, ls) <- xs, Line _ (Piece _ _ ks) <- ls, k <- ks]
-  owner n = if n == "rules" then "query" else n
+  used = S.fromList [(owner f, k) | (f, _, ls) <- xs, Line _ (Piece _ _ ks) <- ls, k <- ks]
   reached (n, ks) = all (\k -> S.member (n, k) used) ks
   unique (_, ks) = length ks == length (nub ks)
 
@@ -156,6 +147,12 @@ vetoed r = case (familyOf r, replyObjWith respond r) of
     , ("check", const (fact "fail" == 1))
     , ("deadcode", \x -> fact "check" == 1 && (not (null (items x "dead")) || at x "degraded" /= Just Null))
     , ("audit", const (and [fact "git" == 1, fact "unreadable" == 0, tomb || dups]))
+    , ("scan", \x -> not (null (items x "failed")))
+    , ("dedup", const (fact "check" == 1 && fact "fail" == 1))
+    , ("docdup", \x -> fact "check" == 1 && not (null (items x "dups")))
+    , ("erase", \x -> fact "check" == 1 && int (path ["counts", "eraseable"] x) > 0)
+    , ("erase-trail", \x -> not (null (items x "unreadable")))
+    , ("trend", \x -> path ["judgment", "fail"] x == Just (Bool True) || not (null (items x "failed")))
     ]
   tomb = case ints (path ["rows", "tomb"] r) of
     [[1, _, _, _, _, _, 3, 1, unread, bounded]] -> unread + bounded == 0

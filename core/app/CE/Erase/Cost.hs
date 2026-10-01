@@ -33,12 +33,14 @@
 -- loosens "safe" would be a licence to guess (contract §boundaries).
 module CE.Erase.Cost (
   advisoryFirst,
+  classNames,
   classOf,
   eraseRowCap,
   judgeRow,
   keptRows,
   licence,
   publicDeadVerdicts,
+  reasonNames,
 ) where
 
 import qualified Data.Map.Strict as M
@@ -55,6 +57,13 @@ import qualified Data.Set as S
 -- Data, not a guard, so a battery can permute it.
 publicDeadVerdicts :: [Integer]
 publicDeadVerdicts = [2, 4]
+
+-- | The class and reason names by their frozen positions (above) —
+-- the one spelling the erase plan, its console and the trail print
+-- (plan v2.32 step 5).
+classNames, reasonNames :: [String]
+classNames = ["(retired)", "verbatim_doc", "t1_twin", "dead_file"]
+reasonNames = words "eraseable language_unresolved not_full_segment bytes_differ copy_not_dead unit_not_covered public_surface"
 
 -- | Row ceiling: candidates are bounded by dead files + verbatim
 -- pairs + whole-unit twins; 4096 is far above any honest plan.

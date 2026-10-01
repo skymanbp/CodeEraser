@@ -8,20 +8,16 @@
 -- face exits 2 on a degraded document itself (a refusal).
 module CE.Arch.Lines (lines') where
 
-import qualified CE.Arch.Document as Arch
 import CE.Document.Read
-import qualified CE.Text.Arch as T
 import Data.List (sortOn)
 import qualified Data.IntMap.Strict as IM
 import Data.Ord (Down (..))
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req = case dDegraded req of
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say doc req = case dDegraded req of
   Just _ -> [line 0 (say "degraded" [R (whyRef req)])]
   Nothing -> map (line 0) (counts : layers <> cuts <> misplaced <> impact <> metrics)
  where
-  say = phrase T.catalogue lang
-  doc = dfAssemble Arch.doc req
   c k = N (int k (key "counts" doc))
   counts = say "counts" (map c (words "files dirs edges pkgEdges cuts clusters misplaced"))
   widths = IM.fromList [(fromInteger d, (b, n)) | [d, b, n] <- rows req "widths"]

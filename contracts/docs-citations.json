@@ -2206,8 +2206,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang.hs|3deecfb8d7add250|0": {
     "target": "../../../core/app/CE/Lang.hs",
-    "line": 156,
-    "end": 160,
+    "line": 162,
+    "end": 166,
     "text": ", (\"docdup.min_doc_tokens\", toJSON Doc.minDocTokens)"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common.hs|4bff64707e0d1aba|0": {
@@ -5031,26 +5031,26 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|23485230b107e32d|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 113,
-    "end": 118,
+    "line": 115,
+    "end": 120,
     "text": "dead row = case row of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|321449288b91b1d9|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 47,
-    "end": 52,
+    "line": 49,
+    "end": 54,
     "text": "-- | The four verdicts by code 1..4 (CE.Graph.Dead)."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|513eb0e39ef810c0|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 86,
-    "end": 102,
+    "line": 88,
+    "end": 104,
     "text": "-- | The document; the advisory's three keys only when the road asked."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|a97d079ede6dfb44|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 54,
-    "end": 57,
+    "line": 56,
+    "end": 59,
     "text": "-- | The liveness reason by code: 0 the unreferenced verdicts, 1 the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Position.hs|98551ce5f51a2440|0": {
@@ -5472,7 +5472,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Score/Document.hs|c134b00021bc5c56|0": {
     "target": "../../../core/app/CE/Score/Document.hs",
-    "line": 80,
+    "line": 81,
     "text": ", \"candidates\" .= rows req \"candidates\""
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|15998cfcbbcdc99b|0": {
@@ -5949,10 +5949,10 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|454035a18191b557|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|e839bfb454c3aa17|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.9.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.10.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -7930,8 +7930,8 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|03de824997b99f52|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 120,
-    "end": 155,
+    "line": 129,
+    "end": 164,
     "text": "-- | The target closure (7.2.0, plan v2.30 step 7b): which judged row"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1bfad10134ba1290|0": {
@@ -7942,38 +7942,38 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 73,
-    "end": 79,
+    "line": 82,
+    "end": 88,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 73,
-    "end": 79,
+    "line": 82,
+    "end": 88,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|2": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 73,
-    "end": 79,
+    "line": 82,
+    "end": 88,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|3": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 73,
-    "end": 79,
+    "line": 82,
+    "end": 88,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|4": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 73,
-    "end": 87,
+    "line": 82,
+    "end": 96,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1f0fced44e58a098|5": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 73,
-    "end": 74,
+    "line": 82,
+    "end": 83,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|306177f05792370c|0": {
@@ -7983,9 +7983,15 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|318f342a0b5d4722|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 56,
-    "end": 57,
+    "line": 58,
+    "end": 59,
     "text": "publicDeadVerdicts :: [Integer]"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|3a6334b8a25a4eb9|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 47,
+    "end": 57,
+    "text": "import qualified Data.Set as S"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|594f1387f601fdb4|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -7995,26 +8001,26 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|6d26e1504e9be3b4|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 65,
-    "end": 67,
+    "line": 74,
+    "end": 76,
     "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|6d26e1504e9be3b4|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 65,
-    "end": 68,
+    "line": 74,
+    "end": 77,
     "text": "-- | One row's verdict: (eraseable, reason). The first failing fact"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|98fc97d92b653fca|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 70,
-    "end": 71,
+    "line": 79,
+    "end": 80,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|98fc97d92b653fca|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 70,
-    "end": 71,
+    "line": 79,
+    "end": 80,
     "text": "| verbatim < wordsA || verbatim < wordsB = (False, 2)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ad3fe900cfbb9e59|0": {
@@ -8037,78 +8043,72 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 69,
-    "end": 72,
+    "line": 78,
+    "end": 81,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 69,
-    "end": 85,
+    "line": 78,
+    "end": 94,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|2": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 69,
-    "end": 70,
+    "line": 78,
+    "end": 79,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|3": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 69,
-    "end": 75,
+    "line": 78,
+    "end": 84,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|4": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 69,
-    "end": 82,
+    "line": 78,
+    "end": 91,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|c935b83409ce2bdd|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 77,
+    "line": 86,
     "text": "| copyDead `elem` publicDeadVerdicts = (False, 6)"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|d032e6912cc2b7a4|0": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 47,
-    "end": 57,
-    "text": "-- | The dead verdicts an erase plan may never act on (6.1.0): 2"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ed64fa1cc784f706|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 87,
+    "line": 96,
     "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 59,
+    "line": 68,
     "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 59,
-    "end": 63,
+    "line": 68,
+    "end": 72,
     "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 83,
-    "end": 86,
+    "line": 92,
+    "end": 95,
     "text": "judgeRow [3, verdict, conf, _, _]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 83,
-    "end": 86,
+    "line": 92,
+    "end": 93,
     "text": "judgeRow [3, verdict, conf, _, _]"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f5654a3985abe404|2": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|fd15edd515b6de47|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 83,
-    "end": 84,
-    "text": "judgeRow [3, verdict, conf, _, _]"
+    "end": 86,
+    "text": "| unitCovered /= 1 = (False, 5)"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/fourclass/visibility/mod.rs|30ccbd2d9190022f|0": {
     "target": "../../../cli/src/fourclass/visibility/mod.rs",
@@ -8617,8 +8617,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 296,
-    "end": 298,
+    "line": 312,
+    "end": 314,
     "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -8681,14 +8681,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Document.hs|8d7cbf89521eb4ca|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 129,
-    "end": 141,
+    "line": 131,
+    "end": 143,
     "text": "-- | One advisory row: the declaring file, the name, its line, the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Document.hs|93a5c7478da10851|0": {
     "target": "../../../core/app/CE/Graph/Document.hs",
-    "line": 97,
-    "end": 102,
+    "line": 99,
+    "end": 104,
     "text": "<> if flag req \"asked\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Lang/Common/Protocol.hs|d3330c3a110e0933|0": {
@@ -9307,20 +9307,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|454df31193049ba3|0": {
     "target": "../../../core/app/CE/Tombstone.hs",
-    "line": 63,
-    "end": 89,
+    "line": 69,
+    "end": 95,
     "text": "-- | Over-cap: a complete degraded reply with an empty site table and"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|dd7b1a58fb0b0268|0": {
     "target": "../../../core/app/CE/Tombstone.hs",
-    "line": 55,
-    "end": 61,
+    "line": 61,
+    "end": 67,
     "text": "judged :: String -> RowsReq -> B8.ByteString"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|e902b7affb7f2d5a|0": {
     "target": "../../../core/app/CE/Tombstone.hs",
-    "line": 29,
-    "end": 53,
+    "line": 35,
+    "end": 59,
     "text": "-- | The shared knobbed-table cascade with this family's bindings"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone/Cost.hs|0869d0668c3d983e|0": {
@@ -10557,7 +10557,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 98,
+    "line": 100,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -10759,17 +10759,17 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|2136c600ab188a42|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 82,
+    "line": 84,
     "text": "unnamed = case [i | (i, [-1]) <- zip [0 :: Int ..] (rows req \"shown\")] of"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|755af730645c5866|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 49,
+    "line": 51,
     "text": "kindTable :: [(String, Bool)]"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Flow/Document.hs",
-    "line": 86,
+    "line": 88,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|010f702fd264722d|0": {
@@ -10823,7 +10823,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 99,
+    "line": 101,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
@@ -11224,17 +11224,17 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|098932ff40bf8ffc|0": {
     "target": "../../../core/app/CE/Merge/Document.hs",
-    "line": 49,
+    "line": 52,
     "text": "reasons :: [String]"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Merge/Document.hs",
-    "line": 73,
+    "line": 76,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|f4b050621e5f7f5c|0": {
     "target": "../../../core/app/CE/Merge/Document.hs",
-    "line": 92,
+    "line": 95,
     "text": "-- members, and its parameters in first-reach order, each with every"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|16a6f0740012ae5e|0": {
@@ -11538,17 +11538,17 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|bff99090aeb3941c|0": {
     "target": "../../../core/app/CE/Arch/Document.hs",
-    "line": 120,
+    "line": 122,
     "text": "cluster :: (Integer -> Integer) -> Integer -> [Integer] -> Value"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|d12715bb27a944f3|0": {
     "target": "../../../core/app/CE/Arch/Document.hs",
-    "line": 94,
+    "line": 96,
     "text": "folded :: DocReq -> (Integer -> Integer) -> M.Map (Integer, Integer) [((Integer, Integer), Value)]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|f42099fe8c270b43|0": {
     "target": "../../../core/app/CE/Arch/Document.hs",
-    "line": 76,
+    "line": 78,
     "text": "[d, fanIn, fanOut, s] -> object [\"dir\" .= dir d, \"fanIn\" .= fanIn, \"fanOut\" .= fanOut, \"instability\" .= (if s >= 0 then toJSON s else Null)]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|6685d4ddea6452ac|0": {

@@ -66,7 +66,7 @@ checked req =
     [ asum [single req t | t <- ["scale", "floor", "reason"]]
     , codes req "reason" 0 0 (toInteger (length coreReasons) - 1)
     , codes req "failed" 0 0 (toInteger (length failNames) - 1)
-    , asum [Just ("facts: " <> k <> " is not 0 or 1") | k <- ["fail", "droppedRode"], fact req k > 1]
+    , bits req ["fail", "droppedRode"]
     , if flag req "droppedRode" || null (rows req "dropped") then Nothing else Just "dropped: rows without the register"
     ]
 

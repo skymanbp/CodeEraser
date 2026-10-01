@@ -7,7 +7,7 @@
 -- join, deadcode, mentions, sites and the graph screen. The legs are
 -- step 3's, read through DocumentHarness (see DocumentProps for what
 -- each holds), plus the ones only these families need: the canvas
--- edges drop self-loops and package ends, the catalogue lists twelve
+-- edges drop self-loops and package ends, the catalogue lists twenty-two
 -- families with check's fail-condition names and the four degrading
 -- families' reasons, and the definition package holds the site kinds
 -- the sites document names.
@@ -35,7 +35,7 @@ battery =
     , "join pairs, sites and canvas edges sort by their rank or index"
     , "the same step-4 request assembles to the same bytes"
     , "the step-4 contracts refuse by name"
-    , "the catalogue lists the twelve families, the fail names and the reasons; the package holds the site kinds"
+    , "the catalogue lists the twenty-two families, the fail names and the reasons; the package holds the site kinds"
     , "the seeded step-4 documents are not vacuous"
     ]
     [emptiesHeld seven, fieldsHeld fieldTable seven, refsHeld judged && length judged == 1400, countsMeasured, ranked, sameBytes (take 70 judged), refusals, catalogued, seeded]
@@ -157,7 +157,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
 catalogued :: Bool
 catalogued =
   all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) seven
-    && objectKeys catalogue == 12
+    && objectKeys catalogue == 22
     && fmap (\ks -> length ks == 23 && nub ks == ks) (path ["store", "site_kinds"] pack >>= asList) == Just True
     && (path ["check", "failed"] catalogue >>= asList) == Just failNames
     && all (\f -> (path [f, "reasons"] catalogue >>= asList) == Just coreReasons) (words "check join deadcode graphscreen")

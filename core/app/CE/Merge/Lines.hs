@@ -9,20 +9,16 @@
 module CE.Merge.Lines (lines', textCap) where
 
 import CE.Document.Read
-import qualified CE.Merge.Document as Merge
-import qualified CE.Text.Merge as T
 
 -- | A parameter's text on one line: this many characters at most.
 textCap :: Integer
 textCap = 40
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req = case key "degraded" doc of
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say doc req = case key "degraded" doc of
   Null -> map (line 0) (counts : concatMap group shown)
   d -> [line 0 (say "degraded" [R d])]
  where
-  say = phrase T.catalogue lang
-  doc = dfAssemble Merge.doc req
   c k = N (int k (key "counts" doc))
   u k = N (int k (key "unsendable" doc))
   counts = say "counts" ([c "groups", c "feasible", c "holes", c "merged_duplicates"] <> map u (words "not_isomorphic no_slot_table unbuilt over_cap"))

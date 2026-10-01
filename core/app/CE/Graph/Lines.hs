@@ -12,17 +12,13 @@ module CE.Graph.Lines (lines', veto) where
 
 import CE.Document.Read
 import CE.Graph.Cost (unmentionedCap)
-import qualified CE.Graph.Document as Dead
-import qualified CE.Text.Deadcode as T
 import Data.List (nub)
 
-lines' :: Lang -> DocReq -> [Line]
-lines' lang req =
+lines' :: Say -> Value -> DocReq -> [Line]
+lines' say doc req =
   map (line 0) (map dead (arr "dead" doc) <> map aggregate (arr "reported" doc) <> advisory <> tail')
     <> [line 1 l | flag req "check", failed doc, l <- [refusal]]
  where
-  say = phrase T.catalogue lang
-  doc = dfAssemble Dead.doc req
   dead d =
     say
       "dead"
@@ -61,5 +57,5 @@ lines' lang req =
 failed :: Value -> Bool
 failed doc = not (null (arr "dead" doc)) || key "degraded" doc /= Null
 
-veto :: DocReq -> Bool
-veto req = flag req "check" && failed (dfAssemble Dead.doc req)
+veto :: Value -> DocReq -> Bool
+veto doc req = flag req "check" && failed doc

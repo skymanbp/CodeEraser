@@ -9,7 +9,15 @@
 -- tier (methodology 11) is calibrated for exactly this number. The
 -- Rust constant survives as the declared mirror the gated path
 -- proves equal on every run.
-module CE.Dedup.Cost (minDistinct) where
+module CE.Dedup.Cost (dedupKgram, dedupWindow, minDistinct) where
+
+-- | The winnowing operating point the report states (plan v2.32 step
+-- 5): k-gram 25 and window 26, so the guarantee t = window + kgram − 1
+-- = 50 tokens (cli/src/dedup/mod.rs `Params::default`, which measures
+-- with them).
+dedupKgram, dedupWindow :: Integer
+dedupKgram = 25
+dedupWindow = 26
 
 -- | The diversity floor: a T1/T2 block is admitted only when its
 -- token stream carries at least this many DISTINCT token kinds.

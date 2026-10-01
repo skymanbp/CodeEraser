@@ -8,7 +8,7 @@
 -- module holds only the chunks of its document, and this module names
 -- the order they are read in. The docdup numbers are the ones
 -- CE.Docdup.Cost already owns — grafted here, never restated.
-module CE.Lang (allTables, digestOf, languages, pack, siteKinds) where
+module CE.Lang (allTables, digestOf, languages, pack, segmentKinds, siteKinds) where
 
 import qualified CE.Docdup.Cost as Doc
 import qualified CE.Lang.C as C
@@ -110,12 +110,18 @@ languages = case common of
   rowsOf = withObject "languages" (.: "rows")
   refuse e = error ("definition document `common` does not read: " <> e)
 
--- | The site kinds by their frozen storage code (the `store` table),
--- read like the language rows.
-siteKinds :: [String]
-siteKinds = case common of
-  Object o | Just (Object t) <- KM.lookup "store" o, Just v <- KM.lookup "site_kinds" t -> either refuse id (parseEither parseJSON v)
-  _ -> refuse "no store table"
+-- | The site kinds by their frozen storage code (the `store` table)
+-- and the docdup segment kinds by theirs (the `docdup` table), read
+-- like the language rows.
+siteKinds, segmentKinds :: [String]
+siteKinds = names "store" "site_kinds"
+segmentKinds = names "docdup" "kind_names"
+
+-- | A name list at `table.key` of the common document.
+names :: K.Key -> K.Key -> [String]
+names table k = case common of
+  Object o | Just (Object t) <- KM.lookup table o, Just v <- KM.lookup k t -> either refuse id (parseEither parseJSON v)
+  _ -> refuse ("no " <> show table <> " table")
  where
   refuse e = error ("definition document `common` does not read: " <> e)
 
