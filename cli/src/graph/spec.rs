@@ -17,9 +17,14 @@ use crate::scan::lang::Lang;
 /// the node-kind tables in spec/calls.rs, split out on the file-length
 /// line (plan v2.30 step 5b); one door for both vocabularies.
 mod calls;
+pub(crate) use calls::R_FORMALS;
 pub use calls::{CallSite, calls, formals, protected};
 
-/// How to pull the specifier string out of a matched node.
+/// How to pull the specifier string out of a matched node. Serialized
+/// adjacently tagged (`{"form": "field", "arg": "source"}`, a unit
+/// form without `arg`) — the tables/1 shape (VERSIONING 7.7.0).
+#[derive(serde::Serialize)]
+#[serde(tag = "form", content = "arg", rename_all = "snake_case")]
 pub enum Specifier {
     /// Text of `child_by_field_name(field)`, quotes trimmed — a
     /// node without the field is simply not a site (so TS
@@ -71,6 +76,7 @@ pub enum Specifier {
 }
 
 /// (tree-sitter node kind, stable doc/wire label, specifier source).
+#[derive(serde::Serialize)]
 pub struct SiteKind {
     pub node: &'static str,
     pub label: &'static str,

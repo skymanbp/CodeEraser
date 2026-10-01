@@ -38,7 +38,7 @@ pub(crate) const SECRET_GLOBS: [&str; 8] = [
 /// Build outputs are not globs: a `target/` or `build/` is one only
 /// beside its tool's project file (outputs.rs), asked at each
 /// directory's door by the walk and by `Scope` alike.
-const BUILTIN_EXCLUDES: &[&str] = &[
+pub(crate) const BUILTIN_EXCLUDES: &[&str] = &[
     "!package-lock.json",
     "!yarn.lock",
     "!pnpm-lock.yaml",

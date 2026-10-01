@@ -118,12 +118,12 @@ fn forwarded(argv: &[String], msvc: bool) -> Vec<&str> {
 /// `&str` rows is the clone gate's most-rhyming shape (it read these
 /// two against the tombstone role's stems and the walk's built-in
 /// excludes).
-const GNU: &str = "-include-pch -iwithprefixbefore -isystem-after -iwithprefix -iframework \
+pub(crate) const GNU: &str = "-include-pch -iwithprefixbefore -isystem-after -iwithprefix -iframework \
                    -idirafter -isystem -isysroot -iquote -iprefix --include= --include \
                    -include --imacros -imacros --sysroot= -I -F";
 
 /// GNU separate operands that cannot themselves open include options.
-const SKIP: &str = "-o -MF -MT -MQ -x -arch -target -mllvm -D -U -L -l -z -u -e -T -B -b -V \
+pub(crate) const SKIP: &str = "-o -MF -MT -MQ -x -arch -target -mllvm -D -U -L -l -z -u -e -T -B -b -V \
                     --sysroot";
 
 /// One option spelling, leaving unknown arguments inert.

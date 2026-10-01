@@ -28,7 +28,7 @@ use serde_json::Value;
 use std::collections::BTreeSet;
 
 #[path = "ts_node.rs"]
-mod node;
+pub(crate) mod node;
 
 /// Extension order — normative, first hit wins (design §4).
 const EXTS: [&str; 5] = ["ts", "tsx", "d.ts", "mts", "cts"];

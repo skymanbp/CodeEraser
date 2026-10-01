@@ -13,19 +13,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 7.6.0 = the sixteenth judgment family, `arch/1` (plan v2.31
-/// steps 8-9; ADR-008 seventh instalment, design booklet
-/// docs/reference/analysis-track.md §7), additive: a new request type
-/// `arch.request` carries the measured files with their directory and
-/// lines, the directory tree, the file-to-file and file-to-directory
-/// references and the focus files, and reads back `arch.result` — the
-/// directory layers, the arcs to cut with their `exact` bit, the file
-/// clusters, the misplaced files, the impact of the focus and each
-/// directory's fan-in, fan-out and instability. This side's tables,
-/// wire and faces (`ce arch`, the MCP tool, the GUI hub's arch family)
-/// live in cli/src/arch/. A core without the family is named as
-/// "pre-7.6.0" by `judged::ask`, never blocked on. Every existing
-/// family's bytes stand.
+/// §1). 7.7.0 = the definition package, `tables/1` (plan v2.32 step 1;
+/// design booklet docs/reference/authority-track.md §4), additive: a
+/// bare `tables.request` (the envelope and nothing else) reads back
+/// `tables.result` — every language and product definition the core
+/// now holds, one key per table family, with `digest`, the fnv1a64 of
+/// the package's canonical bytes — and the hello reply gains
+/// `tablesDigest`, the same number. This side reads neither yet: the
+/// consumers switch in step 2, and until then cli/src/tables/native.rs
+/// renders today's Rust tables in the package's shape for the
+/// equivalence gate. Every judgment family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -37,7 +34,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "7.6.0";
+pub const PROTO: &str = "7.7.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {
@@ -61,6 +58,11 @@ pub struct HelloReply {
     /// for accept/reject (§1). Absent capability = run L1, degraded.
     #[serde(default)]
     pub capabilities: Vec<String>,
+    /// The fnv1a64 of the core's definition package (7.7.0): a core
+    /// answering `tables/1` names it here. Absent = an older core;
+    /// nothing refuses on it until the consumers read the package.
+    #[serde(default, rename = "tablesDigest")]
+    pub tables_digest: Option<u64>,
 }
 
 /// A live core process past its accepted hello. Replies arrive via

@@ -19,7 +19,7 @@ use std::collections::BTreeSet;
 mod bind;
 
 /// Crates the toolchain provides without any declaration.
-const BUILTIN: [&str; 5] = ["std", "core", "alloc", "proc_macro", "test"];
+pub(crate) const BUILTIN: [&str; 5] = ["std", "core", "alloc", "proc_macro", "test"];
 
 pub(super) fn use_rungs(
     site: &Site,

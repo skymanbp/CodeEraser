@@ -92,6 +92,7 @@ pub const ALLOW_MARKER: &str = "ce:allow(docdup)";
 /// Only Python has a docstring convention (module/function/class body
 /// whose first statement is a bare string); JSDoc and Rust `///` are
 /// lexically comments and arrive via comment_kinds.
+#[derive(serde::Serialize)]
 pub struct DocSpec {
     pub docstring_hosts: &'static [&'static str],
 }

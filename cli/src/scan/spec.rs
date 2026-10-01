@@ -18,7 +18,8 @@
 use super::lang::Lang;
 
 /// Function-name convention for the readability naming check (§4.1).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum NameStyle {
     /// snake_case — PEP 8 (Python), RFC 430 (Rust): no uppercase.
     Snake,
@@ -46,6 +47,7 @@ pub type Kinds = &'static [&'static str];
 /// all — a Java constructor is reached by `new` and `this(…)`, neither
 /// of them a call kind, and a method named like its class must not
 /// resolve to it.
+#[derive(serde::Serialize)]
 pub struct Overloads {
     pub optional: Kinds,
     pub variadic: Kinds,
@@ -54,6 +56,7 @@ pub struct Overloads {
     pub unreachable: Kinds,
 }
 
+#[derive(serde::Serialize)]
 pub struct LangSpec {
     /// Node kinds counted as standalone function units. Anything not
     /// listed here (Go func_literal, Python lambda) is absorbed into

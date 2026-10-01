@@ -29,7 +29,7 @@
 //! symbol-level indegree stays out while call edges are off).
 
 mod advisory;
-mod flags;
+pub(crate) mod flags;
 mod report;
 mod targets;
 mod why;

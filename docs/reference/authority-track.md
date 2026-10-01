@@ -29,7 +29,7 @@
 
 | 件 | proto | 请求 | 应答 | 缓存与降级 |
 |---|---|---|---|---|
-| ① `tables/1` | 7.7.0（加性） | 无参 | 一次答整包 `{lang: {table: value}, common: {…}}`（Aeson 派生 `ToJSON`；≈ 250 KB JSON） | Rust 第一次用到时要一次，按核 `(version, proto)` 入键落盘缓存 `.ce/tables-<ver>-<proto>.json`；握手已知版本 → 命中无往返；持核链的 daemon 内存缓存；缓存损坏 = 重取；无核 / 旧核无 `tables/1` = 具名拒绝，不留内嵌副本 |
+| ① `tables/1` | 7.7.0（加性） | 无参（信封之外多一个键按名拒） | `tables.result` 一次答整包：十六个顶层键按表族分（`languages` / `scan` / `flow` / `slot` / `sites` / `calls` / `fourclass` / `ladder` / `walk` / `outputs` / `docdup` / `keys` / `flags` / `tombstone` / `compdb` / `protocol`），每语言的表在表族键下按语言报告名分，另带 `digest`（规范字节的 fnv1a64，hello 回执的 `tablesDigest` 同数；规范字节 135,145 B） | Rust 第一次用到时要一次，按核 `(version, proto)` 入键落盘缓存 `.ce/tables-<ver>-<proto>.json`；握手已知版本 → 命中无往返；持核链的 daemon 内存缓存；缓存损坏 = 重取；无核 / 旧核无 `tables/1` = 具名拒绝，不留内嵌副本 |
 | ② ③ `document` | 各族随自己的 minor（7.7.0 之后依次） | 多送文档需要而判决不需要的整数事实（行号、起止行、符号下标）与符号计数 `symbols: N` | 各族应答加性 `document` 键 = 与今天报告 JSON 同形的骨架（字符串位 `{"$": k}`，句子 `{"$t": key, "args": [...]}`）+ `lines: {en: [...], zh: [...]}`（控制台每一行） | 旧行表键先保留给仍读行表的面 |
 | 退役 | 8.0.0（major） | — | 退役不再有读者的旧行表键 | 全部族切完后一次（§12 步 6） |
 
@@ -49,7 +49,7 @@
 ### 4.2 设计
 
 - **范围** = 上面盘点的 ≈ 235 KB 纯定义文本。判据：**描述语言或产品语义、与文件系统状态无关、改一处就改判决**（§13 第 6 条）。留在 Rust 的：`GRAMMARS` 表、以代码写成的 kind 启发式（`dedup/tokens.rs`、`similar/bag.rs`）。
-- **核的形**：每语言一个数据模块 `CE.Lang.<Lang>`（record 字面量，字段名 = 今天 TOML 的键，一一对应）+ 跨语言表 `CE.Lang.Common`（secrets 排除、产物规则、协议名、docdup 骨架、tombstone 词表…）+ `CE.Lang`（汇总）+ `CE.Lang.Contract`。
+- **核的形**（步 1 落码定稿）：一门语言的全部定义是一份 TOML 文档（`name` 与顶层名表、`[scan]`、`[flow]`、`[[slot]]` 片），数据模块 `CE.Lang.<Lang>`（流表另放 `CE.Lang.<Lang>.Flow`）只装这份文档的字符串块、每块一个绑定（函数行线内），`CE.Lang` 按顺序拼块、一个读者（`CE.Lang.Toml` + `CE.Lang.Spec` 的`LangTables`）读成记录；跨语言表同形（`CE.Lang.Common` 与 `Common.*`，GHC 全局包表是一段行文本）；TSX 读 TypeScript 的文本加自己的 slot 片，C++ 读 C 的文本加 overloads、三个 `std::` 名与自己的 slot 片——与测量侧原来拼文本的法子一致。十三个同形的 record 模块在查重门下互成克隆（初稿实测主根 85 块），一门一份文档就没有这个形。JSON 键名 = 测量侧字段名 / 常量名的 snake_case。
 - **Rust 的形**：`tables.rs` 按 §3 取包、缓存；消费者（`scan::spec::spec(lang)` / `flow::spec::spec` / `merge::slot::slot_spec` / 阶梯名表 …）签名不变，来源从 `const` 表与 `toml::from_str` 变成 `tables::get(...)`；Rust 的结构体（模式）保留——它们是消费者的形状；定义文本删除。
 - **无兜底副本**：无核 / 旧核无 `tables/1` = 具名拒绝（§13 第 7 条）。
 
@@ -174,7 +174,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 | 步 | 内容 | 门 |
 |---|---|---|
 | 0 | 计划修正案与立项（2026-10-01）：本册 + 计划书 v2.32（横幅立项句、ADR-008 细则第八期、§6 T 轨 v2.32 行）+ CHANGELOG `[Unreleased]` 块 + cc-memory 重锁（硬约束 2） | docs 门全绿、基线具名重立 |
-| 1 | 定义进核 A：核 `CE.Lang.*` 数据模块 + `CE.Lang.Contract` + `LangProps` + `tables/1` golden（proto 7.7.0） | `cabal test` 全绿、`tables/1` golden 一对、既有 golden 只动 proto |
+| 1 | 定义进核 A（2026-10-01 已交付）：核 `CE.Lang.*` 三十五个模块（`Toml` / `Table` 两个读者、`Spec` / `Spec.Flow` 两个模式、`Contract`、十三个语言模块与八个 `.Flow` 模块、`Common` 九模块）+ `CE.Lang` 汇总 + `CE.Tables`，转录自 a378e78c 的 Rust 表；`LangProps` 十一腿 + `tables/1` golden 两对（全包 / 多一个键被拒）+ proto 7.7.0（hello 加性 `tablesDigest`）；子仓 `it/tables_equivalence.rs` 三腿证核的包与 Rust 临时镜像 `cli/src/tables/native.rs` 逐键相等、三方同数、多键被拒 | `cabal test` 全绿、`tables/1` golden 一对、既有 golden 只动 proto |
 | 2 | 定义进核 B：Rust `tables.rs` + 缓存 + 消费者改读 + 定义文本删除 | 十语料十面旧 / 新二进制字节同、子仓表对钉版文法腿改读、无核具名拒绝 |
 | 3 | 文档骨架样板：新五族（query / rules / flow / merge / arch）+ 绑定器 + 切换门 | 旧装配产物 == 新 `bind` 产物逐字节（十语料 × 五族 × 三面） |
 | 4 | 骨架 (a)(b)：check / score / structure / join；graph 的 deadcode / mentions / sites / canvas | 同步 3 的切换门 |

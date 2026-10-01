@@ -39,7 +39,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// 5.1–5.4's standard libraries (manual §6; `bit32` is 5.2's, `utf8`
 /// 5.3's) and LuaJIT's built-in extension modules
 /// (luajit.org/extensions.html).
-const STDLIB: &str = "string table math io os coroutine debug package bit32 utf8 \
+pub(crate) const STDLIB: &str = "string table math io os coroutine debug package bit32 utf8 \
                       ffi bit jit jit.util jit.profile table.new table.clear string.buffer";
 
 /// The search directories every tree has: its root and the two layouts

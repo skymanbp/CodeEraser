@@ -224,7 +224,7 @@ rows sent, counts that do not add up to it, or an `over` that is no boolean: no 
 no malformed reply, is ever read as "no sites" or "not over"
 ([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
 [judged.rs:17-28](../../../cli/src/corelink/judged.rs#L17)). The core registers the family as the
-eleventh ([Protocol.hs:107](../../../core/app/CE/Protocol.hs#L107)) and answers it through
+eleventh ([Protocol.hs:109](../../../core/app/CE/Protocol.hs#L109)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
 knob ([Wire.hs:138-163](../../../core/app/CE/Wire.hs#L138),

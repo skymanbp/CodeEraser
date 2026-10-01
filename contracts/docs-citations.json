@@ -560,13 +560,13 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|62105facb0b61d1c|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 233,
+    "line": 236,
     "text": "literal_delims: &[],"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec.rs|fc743759d6a46e43|0": {
     "target": "../../../cli/src/scan/spec.rs",
-    "line": 250,
-    "end": 253,
+    "line": 253,
+    "end": 256,
     "text": "static HTML: LangSpec = LangSpec {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/scan/spec_c.rs|2462416f3738af1a|0": {
@@ -4069,11 +4069,11 @@
     "end": 133,
     "text": "/// R2: the path beside the loading file, then under the tree root; the"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|7d4349575977e605|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|467cd4d37f29f442|0": {
     "target": "../../../cli/src/graph/ladder/lua.rs",
     "line": 42,
     "end": 43,
-    "text": "const STDLIB: &str = \"string table math io os coroutine debug package bit32 utf8 \\"
+    "text": "pub(crate) const STDLIB: &str = \"string table math io os coroutine debug package bit32 utf8 \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/lua.rs|fcde8e78b3bf24af|0": {
     "target": "../../../cli/src/graph/ladder/lua.rs",
@@ -4358,6 +4358,11 @@
     "end": 251,
     "text": "fn super_walk<'a>("
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|48249de1aedb80ca|0": {
+    "target": "../../../cli/src/graph/ladder/rs_use.rs",
+    "line": 22,
+    "text": "pub(crate) const BUILTIN: [&str; 5] = [\"std\", \"core\", \"alloc\", \"proc_macro\", \"test\"];"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|4a7d86f308685ec4|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
     "line": 177,
@@ -4381,11 +4386,6 @@
     "line": 264,
     "end": 297,
     "text": "fn extern_rung("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|c064ab2e3f5a0a08|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 22,
-    "text": "const BUILTIN: [&str; 5] = [\"std\", \"core\", \"alloc\", \"proc_macro\", \"test\"];"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|c1910536a643a1f6|0": {
     "target": "../../../cli/src/graph/ladder/rs_use.rs",
@@ -4542,18 +4542,18 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|3e0121921e556557|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 175,
-    "end": 218,
+    "line": 181,
+    "end": 224,
     "text": "pub fn sites(lang: Lang) -> &'static [SiteKind] {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|43216d5bb511435f|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 217,
+    "line": 223,
     "text": "// Markdown scans line-wise in graph/md.rs (no grammar); the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|a00b6f2b83aa3291|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 125,
+    "line": 131,
     "text": "const IMPORT_REQUIRE: SiteKind = site!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|e57213347ad2937a|0": {
@@ -4564,7 +4564,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|fa931bad2a419584|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 48,
+    "line": 53,
     "text": "Literal(&'static str),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|d5350aafcc5c6a41|0": {
@@ -5902,10 +5902,10 @@
     "end": 76,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|d4bcefdd319ecc19|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|7386431bcb799d54|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.6.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.7.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -7819,31 +7819,31 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 536,
-    "end": 538,
+    "line": 546,
+    "end": 548,
     "text": "> 行上限 4096，超限=完整降级应答 `fail:true` 且判决表**为空**——被"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|50f4933fa7fac13d|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 532,
+    "line": 542,
     "text": "> **无 knob**——安全谓词不可调，任何 knob 行按名拒绝（`error/contract`）。"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|c8ef4c086ffd9a84|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 524,
-    "end": 538,
+    "line": 534,
+    "end": 548,
     "text": "> **2.16.0**（M9 批 3 擦除族，计划 v2.8 ②，2026-08-21）：新家族"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 527,
-    "end": 528,
+    "line": 537,
+    "end": 538,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING.md|d9e16e6bef1c9425|1": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 527,
-    "end": 531,
+    "line": 537,
+    "end": 541,
     "text": "> `erase.request`：`rows=[[class,w,x,y,z]]` 稠密整数事实行（行序即身份，"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase.hs|24409a0b8d6cdf4d|0": {
@@ -8250,17 +8250,17 @@
     "end": 130,
     "text": "fn test_file(&mut self, rel: &str) -> bool {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/protocol.rs|63d363616b9351ce|0": {
-    "target": "../../../cli/src/mention/conv/protocol.rs",
-    "line": 19,
-    "end": 89,
-    "text": "const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
-  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/protocol.rs|796cc949b5af37ef|0": {
     "target": "../../../cli/src/mention/conv/protocol.rs",
     "line": 95,
     "end": 127,
     "text": "pub(super) fn protocol(lang: Lang, rel: &str, name: &str) -> bool {"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/protocol.rs|9517578b1cd1ae8c|0": {
+    "target": "../../../cli/src/mention/conv/protocol.rs",
+    "line": 19,
+    "end": 89,
+    "text": "pub(crate) const PY_NAMES: &str = \"setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \\"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/conv/py.rs|cba48a2d1cbb6671|0": {
     "target": "../../../cli/src/mention/conv/py.rs",
@@ -8566,6 +8566,12 @@
     "line": 257,
     "end": 259,
     "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
+    "target": "../../../contracts/VERSIONING.md",
+    "line": 274,
+    "end": 276,
+    "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -9224,7 +9230,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
-    "line": 107,
+    "line": 109,
     "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Tombstone.hs|454df31193049ba3|0": {
@@ -10480,7 +10486,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 95,
+    "line": 96,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -10730,7 +10736,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 96,
+    "line": 97,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

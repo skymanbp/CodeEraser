@@ -7,6 +7,23 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 2.15.0 止；2.1.0–2.14.0 的最初顺序段已于 2026-09-29 逐字节迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)（正册过了 `ce scan` 的 750 行硬线），2.0.0 仍在上方导语段。**
+> **7.7.0**（定义包族，加性 minor，计划 v2.32 步 1，2026-10-01；设计册 `docs/reference/authority-track.md` §4）：
+> 第十七族 `tables/1`——不是判决族：不读仓库事实、不判任何东西，答的是核判决所用的全部语言与产品定义。请求 `tables.request`
+> 只有信封三键（`type` / `id` / `proto`），多出任何键按名拒（code `contract`，「tables: unexpected key <k>」，只点名第一个）；
+> 应答 `tables.result`：信封 + `digest`（包的规范字节——aeson 有序键、无空白——的 fnv1a64，JSON 整数）+ 十六个顶层键：
+> `languages`（`rows` 每码一行 `{code,name,exts,scan_only,prose_only,judged,document}`、码 0..21；`machine_txt`；
+> `mention_whole_run_exts`）、按语言报告名分的 `scan` / `flow` / `slot` / `sites`（无表的语言 `flow` / `slot` 为 `null`）、
+> `calls`（`calls` / `protected` 按语言分 + `r_formals`）、`fourclass`、`ladder`（`hs.boot` / `java.packages`·`lang` /
+> `ts.builtins`·`prefix_only` / `go.std` / `py.stdlib` / `lua.stdlib` / `rs.builtin`）、`walk`（`secret_globs` / `builtin_excludes`）、
+> `outputs`、`docdup`、`keys`、`flags`、`tombstone`、`compdb`、`protocol`；表下的键 = 测量侧字段名或常量名的 snake_case，
+> 共用片（TS / TSX、C / C++）只出拼好的每语言最终表。编码：元组为数组、`Option` 为 `null`、`NameStyle` 为 `"snake"` /
+> `"mixed_caps"` / `"any"`；`Specifier` 为相邻标签对象 `{"form": <snake_case 变体名>, "arg": <载荷>}`，无载荷的变体无 `arg`
+> （`first_named` 的载荷 `{"star": bool}`、`spanned` 的载荷 `{"from","to"}`）；空白分隔的名表出为字符串数组，行表出为
+> `[头, [词…]]`。hello 应答加性 `tablesDigest`（同一个数），能力表加 `tables/1`。整数过线（§5.9.2，保护的是仓库数据）不受影响：
+> 包里每个值都是产品常量，从核流向测量侧。既有十六族字节零变化（既有 golden 只动 proto 字面与 hello 能力表 / `tablesDigest`）；
+> 新增 `contracts/fixtures/tables/golden.ndjson` 两对（全包 / 多一个键被拒）；电池 `LangProps`（码 0..21、扩展名唯一、判决掩码
+> 0x17847F、nest-only 种类不是单元种类、slot 种类集两两不交、flow 名表、C / C++ 只在 noreturn 上分、`digest` 是数据的纯函数、
+> 族答全包且与 hello 同数）。本版测量侧不读包（子仓 `it/tables_equivalence.rs` 只证核的转录与 Rust 原文逐键相等），改读在步 2。
 > **7.6.0**（架构分析族，加性 minor，计划 v2.31 步 8 / 9，2026-09-30；ADR-008 细则第七期，设计册
 > `docs/reference/analysis-track.md` §7）：第十六判决族 `arch/1`——请求 `arch.request`：`files=[[F,D,lines]]`
 > （F = 行号自 0 连续，D = 所在目录，`lines` ≥ 0）+ `dirs=[[D,parent]]`（D = 行号；第 0 行是根、父 −1，其余父是更早的行，
@@ -558,7 +575,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.6.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->7.7.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -695,11 +712,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->180<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.6.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->182<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.7.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->7.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->7.6.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  server 走 <!--ce:ver:proto#v-->7.7.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -711,5 +728,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->7.6.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->7.7.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.2.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

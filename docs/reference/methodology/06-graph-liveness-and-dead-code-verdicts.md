@@ -19,9 +19,9 @@ walk → sites (grammar tables)  →  ladder (per-language rungs)  →  edge row
 
 Phase 1 detection is **resolution-free by construction**: which tree-sitter node kinds open a
 site, and where the specifier lives, is a frozen table per language
-([spec.rs:175-218](../../../cli/src/graph/spec.rs#L175)), so the site universe (the precision denominator)
+([spec.rs:181-224](../../../cli/src/graph/spec.rs#L181)), so the site universe (the precision denominator)
 freezes before any resolver exists ([spec.rs:8-11](../../../cli/src/graph/spec.rs#L8)). Markdown has no
-grammar and scans line-wise ([spec.rs:217](../../../cli/src/graph/spec.rs#L217)); HTML's sites are
+grammar and scans line-wise ([spec.rs:223](../../../cli/src/graph/spec.rs#L223)); HTML's sites are
 (element, attribute) pairs read off each tag in a pass of their own — a `<link>` reads its `rel` to tell a
 stylesheet, icon or preload (`link_asset`) from a page (`href`), and a `srcset` opens one site per candidate
 URL ([sites/html.rs:19-45](../../../cli/src/graph/sites/html.rs#L19),
@@ -32,8 +32,8 @@ include, import_star, type_ref, require, load, source, library, href, src, srcse
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
-an `import` site off its require clause ([spec.rs:48](../../../cli/src/graph/spec.rs#L48),
-[spec.rs:125](../../../cli/src/graph/spec.rs#L125)); the rev paid for the stored-fact and ladder changes.
+an `import` site off its require clause ([spec.rs:53](../../../cli/src/graph/spec.rs#L53),
+[spec.rs:131](../../../cli/src/graph/spec.rs#L131)); the rev paid for the stored-fact and ladder changes.
 Rev 16 (plan v2.30, one release for all of it) added C / C++'s `include`, Java's `import_star` and `type_ref`,
 Lua's `require` and `load`, R's `source` and `library`, and HTML's `href`, `src`, `srcset`, `action` and
 `link_asset` (step 5; files the index never held, so no stored row moved); a Java single-type import keeps the

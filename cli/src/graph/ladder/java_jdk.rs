@@ -12,7 +12,7 @@
 //! by regenerating these lists from a newer JDK.
 
 /// The 233 packages the JDK exports unqualified.
-pub(super) const PACKAGES: &str = "\
+pub(crate) const PACKAGES: &str = "\
 com.sun.java.accessibility.util com.sun.jdi com.sun.jdi.connect
 com.sun.jdi.connect.spi com.sun.jdi.event com.sun.jdi.request
 com.sun.management com.sun.net.httpserver com.sun.net.httpserver.spi
@@ -81,7 +81,7 @@ org.xml.sax.ext org.xml.sax.helpers sun.misc sun.reflect";
 
 /// The 108 public top-level types of `java.lang` — the one
 /// package every compilation unit imports implicitly (JLS 7.3).
-pub(super) const LANG: &str = "\
+pub(crate) const LANG: &str = "\
 AbstractMethodError Appendable ArithmeticException
 ArrayIndexOutOfBoundsException ArrayStoreException AssertionError
 AutoCloseable Boolean BootstrapMethodError Byte CharSequence Character Class

@@ -1,0 +1,41 @@
+{-# LANGUAGE OverloadedStrings #-}
+
+-- | tables.request handler (plan v2.32 step 1; design booklet
+-- docs/reference/authority-track.md §4): the definition package. Not a
+-- judgment family — it judges nothing and reads no repository fact —
+-- but the judge's own statement of what it judges with: every language
+-- and product definition, one key per table family (CE.Lang), with the
+-- digest the hello also names. Every value is a product constant, so
+-- the integers-only wire rule (§5.9.2, which keeps the measured
+-- repository's names out of the core) is untouched: nothing here came
+-- from a repository, and it flows core to measuring side.
+module CE.Tables (respond) where
+
+import CE.Lang (pack, tablesDigest)
+import CE.Lang.Contract (offence)
+import Data.Aeson
+import qualified Data.Aeson.KeyMap as KM
+import qualified Data.ByteString.Char8 as B8
+import qualified Data.ByteString.Lazy as BL
+
+respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond proto line = case decodeStrict line of
+  Just (Object o) -> case offence o of
+    Just why -> Left (KM.lookup "id" o, "contract", why)
+    Nothing -> Right (reply proto (KM.lookup "id" o))
+  _ -> Left (Nothing, "bad_request", "tables: the request is not an object")
+
+-- | The package's keys beside the envelope's and the digest.
+reply :: String -> Maybe Value -> B8.ByteString
+reply proto rid = BL.toStrict (encode (Object (KM.union envelope content)))
+ where
+  envelope =
+    KM.fromList
+      [ ("proto", toJSON proto)
+      , ("type", String "tables.result")
+      , ("id", maybe Null id rid)
+      , ("digest", toJSON tablesDigest)
+      ]
+  content = case pack of
+    Object keys -> keys
+    _ -> KM.empty

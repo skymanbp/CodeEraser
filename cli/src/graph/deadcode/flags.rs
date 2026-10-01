@@ -59,7 +59,7 @@ pub(super) const ROLE_ASSET: i64 = 1 << 9;
 /// step 5). Neovim's `init.lua` is one only at the root, where a
 /// config keeps it: anywhere else the name is a module's own file
 /// (`require "a"` reads `a/init.lua`), which the graph reaches.
-const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c main.cc \
+pub(crate) const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c main.cc \
                            main.cpp Main.java main.lua conf.lua app.R ui.R server.R global.R \
                            index.html 404.html";
 
@@ -75,7 +75,7 @@ const ENTRY_NAMES: &str = "main.rs build.rs main.go __main__.py Main.hs main.c m
 /// `require`'s); the directories of an R package whose scripts R and
 /// its tools run by path (`inst/` installed as it is, `vignettes/`,
 /// `data-raw/`, `exec/`, `demo/`).
-const ENTRY_DIRS: &str = "\
+pub(crate) const ENTRY_DIRS: &str = "\
 * src/bin/ examples/ benches/ cmd/
 lua plugin/ ftplugin/ indent/ syntax/ colors/ compiler/ ftdetect/ lsp/ after/
 r inst/ vignettes/ data-raw/ exec/ demo/";

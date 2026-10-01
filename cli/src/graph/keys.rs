@@ -21,7 +21,7 @@ use std::path::Path;
 /// reaches the walk, so the probe's own facts join the key beside these
 /// (dedup/walkidx.rs). An R package's DESCRIPTION (step 4) names the
 /// package the R ladder's second rung reaches.
-const CONFIG_NAMES: &[&str] = &[
+pub(crate) const CONFIG_NAMES: &[&str] = &[
     "Cargo.toml",
     "go.mod",
     "package.json",
@@ -74,7 +74,7 @@ pub fn resolve_key(live: &BTreeSet<String>, configs: &[(String, u64)]) -> i64 {
 /// scan-only, hence never judged. The .ts/.tsx row stays a superset
 /// of R2's single "js" probe: a surplus stat fact costs one spurious
 /// sweep, a missing one costs a permanently wrong edge.
-const TWIN_EXTS: [(&str, &[&str]); 4] = [
+pub(crate) const TWIN_EXTS: [(&str, &[&str]); 4] = [
     (".ts", &["js", "mjs", "cjs"]),
     (".tsx", &["js", "mjs", "cjs"]),
     (".mts", &["mjs"]),

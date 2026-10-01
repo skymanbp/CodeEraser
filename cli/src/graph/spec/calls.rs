@@ -20,6 +20,7 @@ use crate::scan::lang::Lang;
 /// — and a Lua call passes none, so the first unnamed argument is the
 /// target. That argument must be a string literal, or an identifier
 /// where the callee reads one unevaluated.
+#[derive(serde::Serialize)]
 pub struct CallSite {
     pub label: &'static str,
     pub callees: &'static [&'static str],
@@ -89,7 +90,7 @@ const R_CALLS: [CallSite; 3] = [
 /// Definition §4.3.2) and is never a row's target. The first formal is
 /// the target. One literal, not a tuple table — rows of one shape rhyme
 /// under the clone gate.
-const R_FORMALS: &str = "\
+pub(crate) const R_FORMALS: &str = "\
 source: file local echo print.eval exprs spaced verbose prompt.echo max.deparse.length width.cutoff deparseCtrl chdir catch.aborts encoding continue.echo skip.echo keep.source
 sys.source: file envir chdir keep.source keep.parse.data toplevel.env
 library: package help pos lib.loc character.only logical.return warn.conflicts quietly verbose mask.ok exclude include.only attach.required

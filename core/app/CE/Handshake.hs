@@ -51,6 +51,7 @@ data Reply = Reply
   , replyReason :: Maybe String
   , replyVersion :: String
   , replyCaps :: [String]
+  , replyTablesDigest :: Integer
   }
 
 instance ToJSON Reply where
@@ -62,17 +63,20 @@ instance ToJSON Reply where
       , "version" .= replyVersion r
       , "accept" .= replyAccept r
       , "capabilities" .= replyCaps r
+      , "tablesDigest" .= replyTablesDigest r
       ]
         <> maybe [] (\why -> ["reason" .= why]) (replyReason r)
 
--- | Answer one hello line with one response line.
-respond :: String -> [String] -> String -> B8.ByteString -> B8.ByteString
-respond proto caps version line = BL.toStrict . encode $ case eitherDecodeStrict line of
-  Left err -> Reply proto False (Just ("parse error: " <> err)) version caps
+-- | Answer one hello line with one response line. @digest@ is the
+-- definition package's (7.7.0, CE.Lang): named on every hello, so a
+-- client knows the package it would read before it asks for it.
+respond :: String -> [String] -> Integer -> String -> B8.ByteString -> B8.ByteString
+respond proto caps digest version line = BL.toStrict . encode $ case eitherDecodeStrict line of
+  Left err -> Reply proto False (Just ("parse error: " <> err)) version caps digest
   Right h
     | major (helloProto h) /= major proto ->
-        Reply proto False (Just ("incompatible proto: " <> helloProto h)) version caps
-    | otherwise -> Reply proto True Nothing version caps
+        Reply proto False (Just ("incompatible proto: " <> helloProto h)) version caps digest
+    | otherwise -> Reply proto True Nothing version caps digest
 
 major :: String -> String
 major = takeWhile (/= '.')

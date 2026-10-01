@@ -25,7 +25,7 @@
 
 use std::path::Path;
 
-const OUTPUTS: &str = "\
+pub(crate) const OUTPUTS: &str = "\
 target Cargo.toml pom.xml build.sbt project.clj
 build build.gradle build.gradle.kts settings.gradle settings.gradle.kts setup.py setup.cfg pyproject.toml pubspec.yaml
 dist package.json setup.py setup.cfg pyproject.toml *.cabal

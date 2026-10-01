@@ -16,14 +16,14 @@ use crate::scan::lang::Lang;
 
 /// Python names a loader spells: unittest's discovered hooks, pytest's
 /// xunit-style hooks, Django's loader targets. Prefixes follow.
-const PY_NAMES: &str = "setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \
+pub(crate) const PY_NAMES: &str = "setUp tearDown setUpClass tearDownClass setUpModule tearDownModule \
                         asyncSetUp asyncTearDown load_tests runTest \
                         setup teardown setup_module teardown_module setup_function \
                         teardown_function setup_class teardown_class setup_method teardown_method \
                         Command Migration";
 /// pluggy hooks and the fixed-prefix reflection Django/DRF perform
 /// (`clean_<field>`, `validate_<field>`, `perform_<action>`).
-const PY_PREFIXES: [&str; 4] = ["pytest_", "clean_", "validate_", "perform_"];
+pub(crate) const PY_PREFIXES: [&str; 4] = ["pytest_", "clean_", "validate_", "perform_"];
 
 /// TS/TSX file form × export names, one line per form group: the
 /// stem (basename minus extension) on the left, the function- or
@@ -32,7 +32,7 @@ const PY_PREFIXES: [&str; 4] = ["pytest_", "clean_", "validate_", "perform_"];
 /// endpoints, page/layout loads and hooks, Next middleware and
 /// instrumentation. Constant-form exports (`metadata`, `prerender`,
 /// `actions`, `config`) are out of the domain by §3.1 and not rows.
-const TS_BY_STEM: &str = "\
+pub(crate) const TS_BY_STEM: &str = "\
 route : GET POST PUT PATCH DELETE HEAD OPTIONS
 +server : GET POST PUT PATCH DELETE HEAD OPTIONS fallback
 page layout template default loading error not-found global-error : generateStaticParams generateMetadata generateViewport
@@ -43,9 +43,9 @@ instrumentation : register onRequestError
 hooks hooks.server hooks.client : handle handleError handleFetch init reroute";
 /// Directory-scoped forms: Next/Astro `pages/**` (data fetchers and
 /// endpoint verbs), Remix `routes/**` and its `root` module.
-const TS_PAGES: &str =
+pub(crate) const TS_PAGES: &str =
     "getStaticProps getServerSideProps getStaticPaths GET POST PUT PATCH DELETE HEAD OPTIONS ALL";
-const TS_ROUTES: &str = "loader action meta links headers ErrorBoundary HydrateFallback \
+pub(crate) const TS_ROUTES: &str = "loader action meta links headers ErrorBoundary HydrateFallback \
                          shouldRevalidate clientLoader clientAction";
 
 /// Java methods the platform or a container calls for the author (plan
@@ -53,7 +53,7 @@ const TS_ROUTES: &str = "loader action meta links headers ErrorBoundary HydrateF
 /// functional interfaces, iteration, serialization's reflected hooks,
 /// cloning and finalization, the enum's synthesized pair, and the
 /// servlet lifecycle. `main` is `Main`.
-const JAVA_NAMES: &str = "toString equals hashCode compareTo compare run call get accept apply test \
+pub(crate) const JAVA_NAMES: &str = "toString equals hashCode compareTo compare run call get accept apply test \
                           close iterator hasNext next readObject writeObject readResolve \
                           writeReplace finalize clone valueOf values doGet doPost doPut doDelete \
                           init destroy service";
@@ -63,9 +63,9 @@ const JAVA_NAMES: &str = "toString equals hashCode compareTo compare run call ge
 /// the bare-metal entry, the JNI, Node-API and libFuzzer hooks. `main`
 /// is `Main`, the category the criterion keeps for it. Prefixes follow:
 /// CPython, Lua and JNI native modules are looked up by a prefixed name.
-const C_NAMES: &str = "DllMain WinMain wWinMain wmain _start JNI_OnLoad JNI_OnUnload \
+pub(crate) const C_NAMES: &str = "DllMain WinMain wWinMain wmain _start JNI_OnLoad JNI_OnUnload \
                        napi_register_module_v1 LLVMFuzzerTestOneInput LLVMFuzzerInitialize";
-const C_PREFIXES: [&str; 3] = ["PyInit_", "luaopen_", "Java_"];
+pub(crate) const C_PREFIXES: [&str; 3] = ["PyInit_", "luaopen_", "Java_"];
 
 /// Lua names the runtime or a host calls for the author (plan v2.30
 /// step 4): the metamethods the manual lists (§2.4) and the ones the
@@ -73,20 +73,20 @@ const C_PREFIXES: [&str; 3] = ["PyInit_", "luaopen_", "Java_"];
 /// `__mode`), and the entry points a Neovim plugin manager calls.
 /// Reached as `M.setup` too: a member name is judged by its last
 /// segment (mention/name.rs).
-const LUA_NAMES: &str = "__index __newindex __call __tostring __eq __lt __le __add __sub \
+pub(crate) const LUA_NAMES: &str = "__index __newindex __call __tostring __eq __lt __le __add __sub \
                          __mul __div __mod __pow __unm __idiv __band __bor __bxor __shl \
                          __shr __bnot __concat __len __gc __close __mode __name \
                          __metatable __pairs setup config on_attach";
 /// LOVE's callbacks, called by name for the `love` table that
 /// `main.lua` and `conf.lua` fill in.
-const LOVE_NAMES: &str = "load update draw keypressed keyreleased mousepressed \
+pub(crate) const LOVE_NAMES: &str = "load update draw keypressed keyreleased mousepressed \
                           mousereleased mousemoved wheelmoved textinput resize focus \
                           quit conf";
 /// R names a host calls: a Shiny app's `server` and `ui` (and the old
 /// `shinyServer` / `shinyUI` spelling) and golem's `run_app`. The hooks
 /// R itself calls (`.onLoad`, `.onAttach`, `.First`) start with a dot
 /// and never enter the mention domain (mention/name.rs).
-const R_NAMES: &str = "server ui shinyServer shinyUI run_app";
+pub(crate) const R_NAMES: &str = "server ui shinyServer shinyUI run_app";
 
 /// Whether `lang`'s loader, runtime or host calls `name` for the
 /// author in the file at `rel`: a name in the language's table, a name

@@ -18,12 +18,14 @@ import qualified CE.Flow as Flow
 import qualified CE.FourClass as FourClass
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
+import CE.Lang (tablesDigest)
 import qualified CE.Merge as Merge
 import qualified CE.Query as Query
 import CE.Protocol.Version (majorMatches, proto)
 import qualified CE.Scan as Scan
 import qualified CE.Similar as Similar
 import qualified CE.Structure as Structure
+import qualified CE.Tables as Tables
 import qualified CE.Tombstone as Tombstone
 import qualified CE.Trend as Trend
 import qualified CE.Verdict as Verdict
@@ -110,6 +112,7 @@ families =
   , Fam "flow/1" "flow.request" Flow.respond
   , Fam "merge/1" "merge.request" Merge.respond
   , Fam "arch/1" "arch.request" Arch.respond
+  , Fam "tables/1" "tables.request" Tables.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's
@@ -120,7 +123,7 @@ families =
 dispatch :: String -> Envelope -> B8.ByteString -> B8.ByteString
 dispatch version env line
   | envType env == "hello" =
-      Handshake.respond proto ("hello" : map famCap families) version line
+      Handshake.respond proto ("hello" : map famCap families) tablesDigest version line
   | not (majorMatches (envProto env)) =
       errReply (envId env) "bad_request" ("proto missing or major-mismatched (server " <> proto <> ")")
   | (f : _) <- [f | f <- families, famType f == envType env] =

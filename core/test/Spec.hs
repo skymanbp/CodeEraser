@@ -28,6 +28,7 @@ import qualified FlowProps
 import qualified GraphWireProps
 import qualified GraphProps
 import qualified JoinProps
+import qualified LangProps
 import qualified MergeProps
 import qualified QueryProps
 import qualified Reference
@@ -96,6 +97,7 @@ batteries =
   , goldenPairs "flow/golden.ndjson"
   , goldenPairs "merge/golden.ndjson"
   , goldenPairs "arch/golden.ndjson"
+  , goldenPairs "tables/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -138,6 +140,7 @@ batteries =
   , TrendEquivProps.battery
   , VerdictEquivProps.battery
   , StructureEquivProps.battery
+  , LangProps.battery
   ]
 
 -- | One named check through the shared runner.

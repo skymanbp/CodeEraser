@@ -38,6 +38,7 @@ pub mod score;
 pub mod setup;
 pub mod similar;
 pub mod structure;
+pub mod tables;
 pub mod tombstone;
 pub mod trend;
 pub mod update;

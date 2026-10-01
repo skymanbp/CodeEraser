@@ -69,7 +69,7 @@ pub const MARKS_ZH: &str = "不再|此前|原先|曾经|已去掉|已删除|已�
 /// boundary (`the_pre`, `budget_is`, `self_and_nth` — sentence-shaped
 /// test names cut into windows) and is no name. Read only through
 /// `vocabulary` (and the test that walks every table).
-const STOP_EN: &str = "a|an|the|is|are|was|were|be|been|being|am|of|to|in|on|at|by|for|\
+pub(crate) const STOP_EN: &str = "a|an|the|is|are|was|were|be|been|being|am|of|to|in|on|at|by|for|\
     with|as|it|its|this|that|these|those|than|then|and|or|but|so|if|do|does|did|has|have|\
     had|from|into|onto|over|under|up|down|out|off|all|any|each|per|via|vs|we|you|they|\
     our|your|their|my|me|us|him|her|his|who|what|which|when|where|why|how|here|there|\

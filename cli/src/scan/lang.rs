@@ -71,7 +71,7 @@ pub enum Lang {
 /// ONE row per language: variant, extensions, report name, scan-only
 /// bit. This table drives from_path / name / scan_only — as separate
 /// matches each was a cyclomatic-warn-sized copy of the same facts.
-const LANGS: &[(Lang, &[&str], &str, bool)] = &[
+pub(crate) const LANGS: &[(Lang, &[&str], &str, bool)] = &[
     (Lang::Python, &["py"], "python", false),
     (Lang::TypeScript, &["ts", "mts", "cts"], "typescript", false),
     (Lang::Tsx, &["tsx"], "tsx", false),
@@ -158,7 +158,7 @@ impl Lang {
     /// reads it) and the robots exclusion file (RFC 9309 §2.3 fixes the
     /// path). A name only a convention suggests — `requirements.txt`,
     /// which pip reads under any name handed to `-r` — stays prose.
-    const MACHINE_TXT: [&str; 3] = ["CMakeLists.txt", "compile_flags.txt", "robots.txt"];
+    pub(crate) const MACHINE_TXT: [&str; 3] = ["CMakeLists.txt", "compile_flags.txt", "robots.txt"];
 
     pub fn from_path(path: &Path) -> Option<Self> {
         let ext = path.extension()?.to_str()?;

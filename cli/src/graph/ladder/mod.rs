@@ -34,12 +34,12 @@ pub mod hs;
 pub mod java;
 // pub: the walk reads every Java header with it (dedup/walkidx.rs)
 pub mod java_header;
-mod java_jdk;
+pub(crate) mod java_jdk;
 mod java_sets;
 // hs.rs consumes its BOOT table; the regen_tables drift check that
 // once re-derived it retired with the one-shot instruments (git
 // history), taking the pub with it
-mod hs_boot;
+pub(crate) mod hs_boot;
 pub mod html;
 // pub: the walk hashes every page's id set with it (dedup/walkidx.rs)
 pub mod html_head;
