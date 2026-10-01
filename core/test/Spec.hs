@@ -12,6 +12,12 @@ import qualified AdvisoryProps
 import qualified ArchProps
 import qualified AuditProps
 import qualified DeclProps
+import qualified StructureEquivProps
+import qualified VerdictEquivProps
+import qualified TrendEquivProps
+import qualified EraseEquivProps
+import qualified SimilarEquivProps
+import qualified TombstoneEquivProps
 import qualified TombstoneProps
 import qualified SimilarProps
 import qualified ClassProps
@@ -126,6 +132,12 @@ batteries =
   , ClassProps.battery
   , StackingProps.battery
   , DeclProps.battery
+  , TombstoneEquivProps.battery
+  , SimilarEquivProps.battery
+  , EraseEquivProps.battery
+  , TrendEquivProps.battery
+  , VerdictEquivProps.battery
+  , StructureEquivProps.battery
   ]
 
 -- | One named check through the shared runner.

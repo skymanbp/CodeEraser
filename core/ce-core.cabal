@@ -101,7 +101,8 @@ test-suite ce-core-test
                       AuditProps, TombstoneProps, SimilarProps, EntropyProps, JoinProps, ScanProps, ScanCyclesProps, ScanEventsProps,
                       StructureProps, StructureModularityProps, TrendProps, EraseProps, VerdictProps,
                       VerdictWireProps, VerdictFenceProps, VerdictKnobProps, SplitProps, WireHarness,
-                      ClassProps, StackingProps, DeclProps
+                      ClassProps, StackingProps, DeclProps,
+                      ReferenceTombstone, TombstoneEquivProps, ReferenceSimilar, SimilarEquivProps, ReferenceErase, EraseEquivProps, ReferenceTrend, TrendEquivProps, ReferenceContract, ReferenceScore, ReferenceRatchet, VerdictGen, VerdictEquivProps, ReferenceSplit, ReferenceStructure, StructureGen, StructureEquivProps
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,

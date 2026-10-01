@@ -130,6 +130,10 @@ Rust −≈ 40 KB，Haskell +≈ 40 KB。
 
 Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `ReferenceFlowGen.hs` 331 行 14,047 B、`ReferenceQuery.hs` 212 行 9,963 B），每族参考 + 电池 ≈ 14 KB × 6。
 
+### 7.5 已交付（步 7，2026-10-01）
+
+六族的参考第二实现与等价电池在 `core/test`，共十八个新模块、1,809 行、81,829 B（实测比 §7.4 的估算少约 3 KB）：`ReferenceContract`（六族共用的拒绝与应答比较词汇，不 import `core/app`）、`ReferenceScore` + `ReferenceRatchet` + `VerdictGen` + `VerdictEquivProps`（Verdict / Score：七轴计价、加权折叠、软线、区间曲线、单次增长容差、棘轮、join 格与置信、`verdict/1` 应答）、`ReferenceStructure` + `ReferenceSplit` + `StructureGen` + `StructureEquivProps`、`ReferenceErase` + `EraseEquivProps`、`ReferenceTrend` + `TrendEquivProps`、`ReferenceTombstone` + `TombstoneEquivProps`、`ReferenceSimilar` + `SimilarEquivProps`。每份参考只 import 本族入口与本族 `Cost` 常量，按册里的定义换一种写法（计数代替差分折叠、次序统计代替排序、条件表代替守卫链、真值表代替合取式）；每族 200 例种子对拍（`ReferenceFlowGen` 的生成器），域小处另加穷举（Tombstone 27,055 例、Erase 31,975 例、Trend 22,143 例、join 格 39,015 例、模块化轴 13,824 例），每族至少一条拒绝腿与一条上限腿；十条变异探针（每族至少一条）各自让本族电池转红、还原后 sha 逐字节同。`cabal test` 663 ok / 0 FAIL；查重主 50 不动（落码中途最高到 58，共用词汇模块、文本拒绝表、条件表三种写法消回）。
+
 ## 8. 核的模块布局与尺寸
 
 - 件 ①：`CE.Lang`（汇总）+ `CE.Lang.Contract` + 每语言一个数据模块 `CE.Lang.<Lang>` + `CE.Lang.Common`。
@@ -162,6 +166,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 - **只读盘点（Explore 代理，HEAD blob 字节）**：测量侧七目录 999 KB = 表与模式 204 KB（模式 38 KB）+ 表驱动走查 224 KB（其中 120 KB 是语言无关算法：`calls.rs` / `callees.rs`、flow 降表）+ 语言特判 306 KB（阶梯 211 KB）+ 接线 266 KB；可由核持有的纯定义文本 ≈ 235 KB（§4.1）；渲染类（face / console / main_* / say / i18n）≈ 240 KB；GUI Rust 17 KB。
 - **估算**：件 ① + ② + ③ → Haskell ≈ 1,326,000 / Rust ≈ 2,059,000 / 其他 300,000 → **≈ 36.0 %**；加件 ④ → Haskell ≈ 1,411,000 / 总 ≈ 3,770,000 → **≈ 37.4 %**（设计稿按十族记 ≈ 38.5 %，立项时按实改为六族，§13 第 10 条）。
 - **到 40 % 的约 2.6 点**：按用户裁到时再定（步 9）——拆 GUI 子仓（+2.3 点）或再一个新判决家族（+1.8 点）。
+- **步 7 实读**（本仓 `git ls-tree` 按上述口径重算，Rust 与其他未动）：Haskell 855,590 → 937,809 B（+82,219）/ Rust 2,534,369 / 其他 300,362 → Haskell 24.9 %（a0417628 为 23.2 %）。
 - **记账**：每步收口写一行读数进 CHANGELOG 该步块；v2.31 的语言条读数改以本轨收口（步 8）时为准，那是 1.9.0 发版声明的读数。
 
 ## 12. 分步（每步自带门，落码顺序；工作树车道并行开发、按序落地）
@@ -175,7 +180,7 @@ Haskell +≈ 85 KB：按新家族参考的实测密度（`ReferenceFlow.hs` + `R
 | 4 | 骨架 (a)(b)：check / score / structure / join；graph 的 deadcode / mentions / sites / canvas | 同步 3 的切换门 |
 | 5 | 骨架 (c)(d) + `CE.Text` 双语目录 + 守卫句：scan / dedup / clone / docdup / erase；churn / trend / tombstone / similar / audit / update / health | 同步 3 的切换门 + `lines` en / zh 逐字节同、`zh_surface` 绿 |
 | 6 | 删旧 face / console / `ZH_TSV`、major 8.0.0 退役旧键、parity 门改读骨架 | 十语料十面字节同、`face_parity` 改读骨架后绿 |
-| 7 | 老家族参考实现与电池（六族：Verdict / Score、Structure、Erase、Trend、Tombstone、Similar；可与 3–6 并行车道） | `cabal test` 全绿、每族等价 200/200 |
+| 7 | 老家族参考实现与电池（六族：Verdict / Score、Structure、Erase、Trend、Tombstone、Similar；可与 3–6 并行车道）——**已交付**（§7.5） | `cabal test` 全绿、每族等价 200/200 |
 | 8 | 全量文档 + 语言条读数记账（§11 口径；v2.31 步 10 的文档面一并） | docs / site / facts 门全绿、引文重签 |
 | 9 | 口径类裁定（用户：拆 GUI 或加家族） | AskUserQuestion |
 | 10 | 发版 1.9.0（v2.31 步 11 即此步） | RELEASE.md 链 |

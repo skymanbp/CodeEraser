@@ -9,6 +9,14 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 权威轨 v2.32 步 7 老家族参考实现与等价电池（2026-10-01；只动 `core/test`、`core/ce-core.cabal` 测试段与文档——`core/app`、Rust、wire、golden 一个字节不动，判决与分数不动）：
+
+- **六族参考 + 电池**（`authority-track.md` §7.5）：十八个新模块 1,809 行 / 81,829 B——`ReferenceContract`（共用词汇）；Verdict / Score 四件（`ReferenceScore` 七轴计价与折叠、软线次序统计、区间曲线；`ReferenceRatchet` 容差、棘轮、join 格与置信；`VerdictGen` 生成器；`VerdictEquivProps` 八腿）；Structure 四件（`ReferenceStructure` 八轴与形状、`ReferenceSplit` 拆分顾问按计数定价、`StructureGen`、`StructureEquivProps` 七腿）；Erase / Trend / Tombstone / Similar 各两件。每份参考只 import 本族入口与 `Cost` 常量，换一种写法；每族 200 例种子对拍，域小处穷举（Tombstone 27,055、Erase 31,975、Trend 22,143、join 格 39,015、模块化轴 13,824 例），每族至少一条拒绝腿与一条上限腿；十条变异探针各让本族电池转红、还原 sha 逐字节同。`Spec.hs` 158 → 170 行登记六个电池。
+- **对拍中的发现**（未改 `core/app`，记给主会话裁）：`CE.Verdict.Join` 的 `Pos` 注释说 pFlags 在 `verdict/1` 线上「结构上为 0」，而 `Candidates.hs` 自 6.1.0 起从 `symbols` 置位 0、册 07 也这样写；拆分顾问最佳缝的同分取后者（`maximumBy`），册 08 与 `Split` 源注释都没写；册 05「Establish」说「四张报告表全空」，实为五张（含 dropped）。
+- **门读数**（车道 `lane/v232-step7`，车道核 proto 7.6.0）：`cabal test` 663 ok / 0 FAIL；主 check 914（地板 911；axes 0:89 2:302 6:217，候选 486） / dedup 50 / scan 103 warn 0 fail / docdup 0 / deadcode 0 dead / erase 0 eraseable / rules ok；腿 `core_size_gate docs_ site_ facts_ eval_mention baseline_ mention_universe source_citations frozen_set` 71 绿 2 ignored（`docs_diagrams` 首跑因车道 target 无 archify 缓存而红，`node scripts/diagram.mjs --fetch` 后单跑 4/4 绿）；bless 序 `site_roast`（首页两块：axes 2:295 → 302、6:222 → 217、候选 465 → 486）→ `docs_citations`（册 16 / 17 引 `Spec.hs` 两行随登记行下移 89 / 90 → 95 / 96）→ `eval_mention`（册 13 自仓行 U 1367 → 1384、haskell 2781 (671) → 3091 (718)）→ `facts_`（无变）；Rust 未动，clippy / fmt / 全量 it 未跑；子仓零改动。
+- **ADR-006 具名重立**（主根）：`core/test/Spec.hs` 158 → 170 超容差（cap 168）；`CHANGELOG.md` 640 → 648、`docs/reference/authority-track.md` 197 → 202 容差内同定；十八个新模块入基线（连续行 +336）；软线 364 → 358。
+- **语言条**（§11 口径，本步实读）：Haskell 855,590 → 937,809 B / Rust 2,534,369 / 其他 300,362 → 24.9 %（a0417628 为 23.2 %）。
+
 **无默认档位变更。** 权威轨 v2.32 立项（2026-10-01；判决代码零改动——`cli/src/**`、`core/**`、`cli/Cargo.lock`、`gui/**` 一个字节不动，分数与 1.8.0 可比；1.9.0 推迟到本轨做完再发）：
 
 - **设计先于代码**：`docs/reference/authority-track.md`（「一处权威」第二期、ADR-008 细则第八期）——用户令 2026-10-01「想办法减少rust比例或者增加haskell。任何办法。」与三题裁定（真改「报告文档与双语文本进核」+「十三语言的定义表进核」并要更优雅的办法 / 口径类办法做完再定 / 1.9.0 推迟）、范围再裁「两项 + 老家族参考实现」：① 定义进核（语言的定义表由核的 `CE.Lang.*` 持有，`tables/1` proto 7.7.0 加性一次答整包，Rust 只执行，无核具名拒绝、不留内嵌副本）；② 文档骨架进核（各族应答加 `document`，字符串位一律符号引用 `{"$": k}`、符号表只送计数，Rust 一个绑定器；各族随自己的 minor 切换，以旧装配产物 == 新绑定产物逐字节为门，全部切完后 8.0.0 退役旧键）；③ 双语文本进核（消息目录 `CE.Text`，控制台每一行与守卫句随同一应答）；④ 六个老家族（Verdict / Score、Structure、Erase、Trend、Tombstone、Similar）的参考第二实现与 200 例等价电池，只在 `core/test`。设计稿写的「十个老家族」按实改为六族：FourClass / Graph / Docdup / Clone 已有穷举参考（`Reference.hs` / `ReferenceGraph.hs` / `ReferenceJaccard.hs` / `ReferenceTed.hs`），不再加（册 §13 第 10 条）。量过不做的三条（统一走查引擎 +0.6 点、前端进核、阶梯即数据）与十一条拍板记在册 §13。
