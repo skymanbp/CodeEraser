@@ -11,8 +11,8 @@ violations are witness rows, each with its proof, and `ce rules` exits on the fi
 architecture constraint ("the measuring side never reads the core", "no page of the site is an
 orphan") becomes a gate the way the clone budget is one
 ([mod.rs:1-13](../../../cli/src/query/mod.rs#L1)). The split is ADR-008's, seventh instalment:
-Rust lexes the text, assembles the fact tables the program names from its own index and labels
-the answers back; the grammar, the sorts, the safety and stratification checks, the evaluation
+Rust lexes the text, assembles the fact tables the program names from its own index and puts
+the names back into the document the core lays out; the grammar, the sorts, the safety and stratification checks, the evaluation
 and every proof are Haskell's, over the thirteenth wire family, `query/1`, since proto 7.3.0
 ([wire.rs:1-8](../../../cli/src/query/wire.rs#L1), [Query.hs:5-18](../../../core/app/CE/Query.hs#L5)).
 No name, path or source text crosses the wire in either direction: a program's constants go up
@@ -97,7 +97,7 @@ token ([legend.rs:125](../../../cli/src/query/legend.rs#L125), [Cost.hs:88](../.
 
 Eight clauses ship inside the binary as a `.rules` text and go up the same wire as the user's
 program, so the core never distinguishes them; their predicates are reserved, and a program that
-redefines one is a program error ([mod.rs:26](../../../cli/src/query/mod.rs#L26),
+redefines one is a program error ([mod.rs:29](../../../cli/src/query/mod.rs#L29),
 [prelude.rules:8-15](../../../cli/src/query/prelude.rules#L8)):
 
 ```
@@ -144,7 +144,7 @@ fault answers every error it found, each at a token; a program with an error ans
 ([Check.hs:42](../../../core/app/CE/Query/Check.hs#L42)). The codes: 1 syntax, 2 unknown
 predicate, 3 arity, 4 sort, 5 unsafe variable, 6 unstratifiable negation, 7 prelude predicate
 redefined, 8 aggregate shape, 9 anonymous head ([Cost.hs:152-153](../../../core/app/CE/Query/Cost.hs#L152),
-[face.rs:28](../../../cli/src/query/face.rs#L28)).
+[Document.hs:56](../../../core/app/CE/Query/Document.hs#L56)).
 
 - **Arity.** A fact predicate's arity is the schema's; a program predicate's is fixed by its
   first appearance.
@@ -220,7 +220,7 @@ bare accusation ([Query.hs:91](../../../core/app/CE/Query.hs#L91)). One global n
 derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:38](../../../core/app/CE/Query/Proof.hs#L38)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
-row under the answer ([console.rs:70](../../../cli/src/query/console.rs#L70),
+row under the answer ([console.rs:69](../../../cli/src/query/console.rs#L69),
 [query.js:85](../../../gui/ui/query.js#L85)).
 
 ### 8. Caps and degradation
@@ -236,7 +236,7 @@ expanding and counts ([Cost.hs:72-76](../../../core/app/CE/Query/Cost.hs#L72),
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
 that offers no `query/1` reads the same way, and a reply whose tables disagree with what was
 sent — a goal count, an answer's arity, an error index past the stream — is wire skew, never a
-healthy answer ([wire.rs:103](../../../cli/src/query/wire.rs#L103), [face.rs:206](../../../cli/src/query/face.rs#L206)).
+healthy answer ([wire.rs:103](../../../cli/src/query/wire.rs#L103), [rows.rs:17](../../../cli/src/query/rows.rs#L17)).
 The family has no knobs, no fail tier and no condition bit: `ce rules` reads
 `counts.violations` and nothing else.
 
@@ -247,26 +247,29 @@ One document serves the three faces — `ce.query-report/0.1.0` for a question,
 and sorts, every answer labelled through the request's own tables (a node as its path, a dir as
 its path or `.`, a unit as `path:start-end key`, a set as its glob, a name through the reverse
 dictionary), every proof row named, every error at its `where line:column`, the core's counts,
-and the named reason when the core did not judge ([face.rs:1-8](../../../cli/src/query/face.rs#L1),
-[face.rs:23-24](../../../cli/src/query/face.rs#L23), [face.rs:121](../../../cli/src/query/face.rs#L121),
-[mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
-`?-` in front, `.` behind — unless written ([face.rs:113](../../../cli/src/query/face.rs#L113)); a glob
+and the named reason when the core did not judge. The core lays the document out (`document/1`,
+since proto 7.8.0) from the program's facts, its answered tables and the goals as spelled, which
+this side sends back; this side puts every position, name and value back through the request's
+own tables, and a core it cannot reach for the layout is refused by name, exit 2
+([Document.hs:94](../../../core/app/CE/Query/Document.hs#L94), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
+[face.rs:229](../../../cli/src/query/face.rs#L229), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
+`?-` in front, `.` behind — unless written ([face.rs:43](../../../cli/src/query/face.rs#L43)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
-([face.rs:182](../../../cli/src/query/face.rs#L182)).
+([face.rs:169](../../../cli/src/query/face.rs#L169)).
 
 - **`ce query <body> [--why] [--file <rules>] [--prelude]`** answers one question built on the
   rules file's rules; exit 0 when judged, 2 on a program error or a core that could not judge.
   It is a report: an assertion's violations in the file it builds on do not move its exit code
-  ([main_query.rs:47](../../../cli/src/main_query.rs#L47)).
+  ([main_query.rs:48](../../../cli/src/main_query.rs#L48)).
 - **`ce rules [--file <rules>] [--why]`** judges every `assert` in the file: exit 1 when any
   assertion holds a violation, 2 when the program did not judge, 0 otherwise — and a missing
   default file is zero assertions and 0, said aloud
-  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:67](../../../cli/src/main_query.rs#L67)).
+  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:68](../../../cli/src/main_query.rs#L68)).
 - **The rules file** is the one named on the command line or by the MCP argument (root-relative
   unless absolute, and it must exist), else `[rules] file` from the config (it must exist), else
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
   alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
-  so declaring it moves no baseline ([mod.rs:36](../../../cli/src/query/mod.rs#L36),
+  so declaring it moves no baseline ([mod.rs:39](../../../cli/src/query/mod.rs#L39),
   [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:83-86](../../../cli/src/config/canonical.rs#L83)).
 - **The console** prints the errors first, then the degraded reason if any, then each goal —
   `?- F: 1 answer(s)` with its rows, `assert no_dead(F): ok` or `: N violation(s)` with its
@@ -286,7 +289,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [query.js:61](../../../gui/ui/query.js#L61)).
 
 All three go through two library functions, so the document cannot differ by face
-([faces.rs:190](../../../cli/src/faces.rs#L190), [faces.rs:206](../../../cli/src/faces.rs#L206)); the
+([faces.rs:190](../../../cli/src/faces.rs#L190), [faces.rs:203](../../../cli/src/faces.rs#L203)); the
 integration leg holds the CLI's JSON to the library's byte for byte
 ([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).
@@ -345,7 +348,7 @@ graph's codes, the lexer's numbering and its faults at their place, a goal's col
 safety walk's order, the request body's tables and flags, and `consume`'s reading of a healthy,
 a degraded and a skewed reply ([legend.rs:12](../../../cli/tests/unit/query/legend.rs#L12),
 [program.rs:19](../../../cli/tests/unit/query/program.rs#L19), [wire.rs:63](../../../cli/tests/unit/query/wire.rs#L63),
-[face.rs:32](../../../cli/tests/unit/query/face.rs#L32)). The integration legs seed a Cargo package
+[face.rs:68](../../../cli/tests/unit/query/face.rs#L68)). The integration legs seed a Cargo package
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or

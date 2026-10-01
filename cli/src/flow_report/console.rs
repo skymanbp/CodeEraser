@@ -5,7 +5,7 @@
 //! line. Every sentence has its Chinese twin (i18n::line); the kind
 //! names, paths and unit names stay as written.
 
-use super::face::Report;
+use super::report::Report;
 use crate::i18n::{line, t};
 
 pub fn console(r: &Report) -> Vec<String> {

@@ -12,7 +12,8 @@
 //! refused: both are errors.
 
 use super::tables::Tables;
-use crate::corelink::{Link, judged};
+use crate::corelink::judged;
+use crate::document::Held;
 use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -88,18 +89,22 @@ pub fn request_body(t: &Tables) -> Value {
     })
 }
 
-/// One arch.request over one link, its reply consumed.
-pub fn judge(core: &str, t: &Tables) -> Result<Judgment> {
+/// One arch.request over the face's link, its reply consumed; a
+/// request that failed spends the link (crate::document::Held).
+pub fn judge(held: &mut Held, t: &Tables) -> Result<Judgment> {
     if let Some(why) = over_cap(t) {
         return Ok(Err(why));
     }
-    let mut link = match Link::open(core) {
-        Ok((link, _)) => link,
-        Err(why) => return Ok(Err(why)),
+    let link = match held {
+        Ok(link) => link,
+        Err(why) => return Ok(Err(why.clone())),
     };
-    let reply = match judged::ask(&mut link, CAP, SINCE, KIND, request_body(t)) {
+    let reply = match judged::ask(link, CAP, SINCE, KIND, request_body(t)) {
         Ok(reply) => reply,
-        Err(why) => return Ok(Err(why)),
+        Err(why) => {
+            *held = Err(why.clone());
+            return Ok(Err(why));
+        }
     };
     crate::lockstep::refuse_degraded(&reply, "arch/wire.rs vs Arch/Cost.hs")?;
     consume(&reply, t).map(Ok)

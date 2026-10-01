@@ -8,7 +8,8 @@
 //! zero assertions and 0, said aloud.
 
 use crate::main_prelude::*;
-use codeeraser::query::face::{self, Ask, Report};
+use codeeraser::query::face::{self, Ask};
+use codeeraser::query::report::Report;
 use codeeraser::query::{PRELUDE, console, rules_source};
 use std::path::PathBuf;
 
@@ -94,33 +95,23 @@ fn judge(
     };
     let rules_face = query.is_none();
     let ask = Ask { rules, query, why };
-    match face::run(&root, j.db, core, &ask) {
-        Ok(r) => {
-            show(&r, json(j.format), rules_face);
-            exit(&r)
-        }
-        Err(err) => fail(name, err),
-    }
+    document_face(
+        name,
+        face::run(&root, j.db, core, &ask),
+        json(j.format),
+        |r: &Report| lines(r, rules_face),
+        |r| Ok(exit(r)),
+    )
 }
 
-fn show(r: &Report, as_json: bool, rules: bool) {
-    print_doc(
-        as_json,
-        || face::report_json(r, rules),
-        || {
-            if rules && r.rules_file.is_none() {
-                println!(
-                    "{}",
-                    codeeraser::i18n::line(
-                        "rules: no rules file — zero assertions",
-                        "rules：没有规则文件——零断言",
-                        &[]
-                    )
-                );
-            }
-            for l in console::console(r) {
-                println!("{l}");
-            }
-        },
-    );
+/// The console, with the rules face's note when no rules file exists.
+fn lines(r: &Report, rules: bool) -> Vec<String> {
+    let note = (rules && r.program.rules_file.is_none()).then(|| {
+        codeeraser::i18n::line(
+            "rules: no rules file — zero assertions",
+            "rules：没有规则文件——零断言",
+            &[],
+        )
+    });
+    note.into_iter().chain(console::console(r)).collect()
 }

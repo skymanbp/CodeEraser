@@ -274,8 +274,10 @@ catalogued =
     && tablesDigest /= digestOf pack
     && all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) families
     && path ["flow", "kinds"] catalogue == Just (toJSON (words "unreachable dead_store unused_local unused_param"))
+    && path ["flow", "judged"] catalogue == Just (toJSON flowJudgedRows)
     && BL.length (encode catalogue) > 0
  where
+  flowJudgedRows = [code | Just (Array rs) <- [path ["languages", "rows"] pack], Object row <- toList rs, KM.lookup "flow_judged" row == Just (Bool True), Just (Number code) <- [KM.lookup "code" row]]
   dropDocument v = case v of
     Object o -> Object (KM.delete "document" o)
     _ -> v

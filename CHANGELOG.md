@@ -9,6 +9,15 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 权威轨 v2.32 步 3B 文档切换（2026-10-01；`ce arch` / `ce query` / `ce rules` / `ce flow` / `ce merge` 与它们的 MCP 工具、GUI 页一律问核的 `document/1` 并绑定，Rust 不再装配这五份文档；判决与文档字节不动，分数与 1.8.0 可比；可见变化只有一类：文档时刻够不着核〔`--core` 指向不存在的路径、只答 hello 的核〕此前印降级文档、此后具名拒绝退 2）：
+
+- **Rust**：新 `cli/src/document.rs`——`Request` 构造器（`empty` / `zero` 补齐陈述要的每个键）、`Held`（一个面一条核链，判决与文档同走；判决请求失败的链作废、文档时刻另起）、`assemble_over` / `assemble`、`bind` + `trait Resolve`、`Why`（类别 `why` 的本侧文本）、`ranks`；四个 `face.rs` 只剩判决、请求装配与解析器，读者结构搬进 `<族>/report.rs`（`Deserialize`，键为 `String`），`query/rows.rs` 装 query 的判决行；四个 CLI 命令经 `main_prelude::document_face` 一条路（读、退出码规则、再印），`faces::flow` 改为 `face::run` 的再导出、`arch::face::document` 删除；`tables/pack.rs` 读包的 `document.flow.kinds`。
+- **核**：`CE.Flow.Document` 的判决语言集由 `CE.Lang` 的 `flow_judged` 派生（3A 的副本删除），`DocumentProps` 目录腿比对包的语言行；四个 `CE.<Fam>.Document` 的陈述注释各加一行引用类别的参数顺序；`CE.Document` 注释写明空文档只作锚、测量侧永不绑定。golden `handshake/hello-ok` 与 `tables/golden` 随 `tablesDigest` 由 `fixture_contract::regen` 重答。
+- **切换门**（release；三臂同一个车道核）：十个对拍语料 + e877f389 自仓干净树各 21 面（十三个 JSON 面 + query / rules JSON + 五族控制台），变基前对 baa4f8af 231 / 231 逐字节同（自仓 query / rules JSON 的 `rules_file` 是含臂目录名的绝对路径，换名后同）；判决没发生的一腿（中继核从能力表藏掉 `arch/1` / `flow/1` / `merge/1` / `query/1`，python 语料）10 / 10 同；变基到 e1cd85e1 后对 e877f389 的 release 同样 231 / 231 与 10 / 10（对 baa4f8af 213 同、18 不同全在 merge：baa4f8af 没有合并第二代）。
+- **代价**（PERF-BUDGET「v2.32 步 3B」新节，release，e877f389 对本步，自仓干净树，ABAB ×7）：arch −11、flow −21、query −39、rules −47 ms 在噪声内；merge +177 ms（+1.8 %）= 2.8 MB 文档的一来一回（核单问 347–433 ms）。变基前第一坐每个文档另起一核（各面 +108 至 +718 ms），改为沿用判决的链、去掉两次整份克隆。
+- **测试**（子仓）：`unit/document.rs` 四腿（绑定、无解析的引用具名、秩、补齐）；`unit/{flow_report,merge,query}/face.rs` 原有断言全留，改为把请求送真核、读绑定后的文档；`it/document_catalogue.rs` 两腿（五个 schema id = 目录 = 事实登记表 LINKED；flow 的 kind 名与判决语言集 = 包）；`it/{arch,flow,merge}_face.rs` 三条旧「降级文档」腿改断言具名拒绝；`it/eval_arch_self.rs` 读 `arch::report::Report`。
+- **文档**：设计册 §3 / §5.2 / §5.3 / 新 §5.5 / §12 行 3 / §13 第 17–20 条（主会话 2026-10-01 五条裁定）；VERSIONING 7.8.0 条加一句测量侧；方法学册 16–19 里「Rust 装配 / 标注」的句子改为核装配、本侧绑定，引文重瞄到 `CE.<Fam>.Document` 与新的 face / report 行。
+
 **无默认档位变更。** 权威轨 v2.32 步 3A 文档骨架进核（2026-10-01；核按每族一份语句装配 arch / query / rules / flow / merge 五份报告文档，新能力 `document/1`；测量侧还没调用它——Rust 照旧自己装配，切换在 3B；判决代码零改动，既有十九份 golden 只差 proto 与握手 / 目录三处，分数与 1.8.0 可比）：
 
 - **核**：六个新模块。`CE.Document.Contract`（205 行）= 请求记录、语句读者 `readSpec`（`range NAME` / `fact NAME kept|judged` / `rows NAME WIDTH[+] kept|judged COL...` / `ref CLASS ARG...` 四种行）、通用校验 `offence`（缺键、陌生键、负数、行宽、列越界、降级时 `judged` 表非空或 `judged` 事实非零）、类别引用 `ref` = `{"$": [class, 整数...]}`；`CE.Document`（98 行）= 族表、目录、行数上限 `docRowCap` 1,048,576、应答；`CE.{Arch,Query,Flow,Merge}.Document`（124 / 180 / 115 / 125 行，query 模块出 query 与 rules 两族）。每族的字段、顺序与空值规则照 `cli/src/{arch,query,flow_report,merge}/face.rs` 转录；按字符串排序处请求送秩（`rankFiles` / `rankDirs`），核按秩稳定排序。包多了 `document` 键、有了两个所有者，`tablesDigest` 从 `CE.Lang` 挪到 `CE.Tables`。拍板与偏差记在 `authority-track.md` §13 第 12–14 条。

@@ -15,6 +15,8 @@
 module CE.Flow.Document (doc) where
 
 import CE.Document.Contract
+import CE.Lang (languages)
+import CE.Lang.Spec (Language (..))
 import Data.Aeson (Value (..), object, (.=))
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
@@ -29,6 +31,7 @@ schemaId = "ce.flow-report/0.1.0"
 -- | A finding row is [file, unit nth, kind, line, lineEnd, variable]
 -- (variable −1: none); a refusal [file, nth, reason]; `shown` the kind
 -- codes listed (none = every kind).
+-- References: path [file], unit [file, nth], var [file, nth, variable], why [text].
 statement :: String
 statement =
   "range files\nrange why\n\
@@ -49,13 +52,13 @@ kinds = ["unreachable", "dead_store", "unused_local", "unused_param"]
 advisory :: Integer
 advisory = 3
 
--- | The languages whose findings are judged, by wire code (Python,
--- TypeScript, TSX, Rust, Go, C, C++, Lua, Java, R): each entered when
--- its precision doc passed the gate (design booklet
--- docs/reference/analysis-track.md §5.5); all ten since v2.31 step 4
--- commit G.
+-- | The languages whose findings are judged, by wire code: the
+-- language table's `flow_judged` column (CE.Lang.Common), where each
+-- entered when its precision doc passed the gate (design booklet
+-- docs/reference/analysis-track.md §5.5). The catalogue lists the
+-- same codes.
 judgedLangs :: [Integer]
-judgedLangs = [0, 1, 2, 3, 4, 15, 16, 17, 18, 20]
+judgedLangs = [toInteger (lgCode l) | l <- languages, lgFlowJudged l]
 
 -- | The tables read by file hold one row per file; every kind is one
 -- of the four.

@@ -20,12 +20,12 @@ use std::process::{Child, Stdio};
 /// report is assembled from; `document.result` answers the report with
 /// every repository string a reference `{"$": [class, integers…]}`.
 /// The definition package gains `document` (each family's schema id
-/// and empty report), so `tablesDigest` moves. This side does not ask
-/// for documents yet: the faces switch in the same step's second half.
-/// Since step 2 every table this side measures with is read off that
-/// package (crate::tables), and a hello naming another digest than the
-/// package this run read is refused by name.
-/// Every judgment family's bytes stand.
+/// and empty report), so `tablesDigest` moves. The arch, query, rules,
+/// flow and merge faces ask for their documents and bind them
+/// (crate::document). Since step 2 every table this side measures with
+/// is read off the definition package (crate::tables), and a hello
+/// naming another digest than the package this run read is refused by
+/// name. Every judgment family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted

@@ -9895,7 +9895,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|097f5d56f167eb0a|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 206,
+    "line": 203,
     "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|f50a981a429e80a8|0": {
@@ -9910,12 +9910,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|4350583dd45e803c|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 47,
+    "line": 48,
     "text": "pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|d07418fdeecbdc85|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 67,
+    "line": 68,
     "text": "pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|e5325963d09827f3|0": {
@@ -9957,7 +9957,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/console.rs|bcd95cdadd2f156b|0": {
     "target": "../../../cli/src/query/console.rs",
-    "line": 70,
+    "line": 69,
     "text": "fn chain(proof: &[ProofFace], goal: usize, answer: usize) -> Vec<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/console.rs|edcd4bda1ec57129|0": {
@@ -9966,42 +9966,26 @@
     "end": 8,
     "text": "//! The console face of the query document (booklet §4.6): the"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|17c2cd076411feb1|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|24f391b94133166e|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 28,
-    "text": "const ERROR_NAMES: [&str; 10] = ["
+    "line": 169,
+    "text": "fn glob_faults(root: &Path, program: &Program) -> Vec<(String, String)> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|38995ca156c29327|0": {
     "target": "../../../cli/src/query/face.rs",
     "line": 1,
-    "end": 8,
+    "end": 12,
     "text": "//! The one document of `ce query`, `ce rules`, the MCP tools and the"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|45825c30a462a15f|0": {
-    "target": "../../../cli/src/query/face.rs",
-    "line": 182,
-    "text": "fn glob_faults(root: &Path, program: &Program) -> Vec<ErrorFace> {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|5d60f2b763d13eb1|0": {
-    "target": "../../../cli/src/query/face.rs",
-    "line": 206,
-    "text": "fn label(r: &mut Report, program: &Program, labels: &Labels, j: wire::Judged) -> Result<()> {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|600e2973b205f045|0": {
-    "target": "../../../cli/src/query/face.rs",
-    "line": 121,
-    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Report> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|6d479bd5450d53e7|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 113,
+    "line": 43,
     "text": "pub fn question(text: &str) -> String {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|eaa6f8f262a4aeeb|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|b43a275db29321f1|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 23,
-    "end": 24,
-    "text": "pub const SCHEMA_ID: &str = \"ce.query-report/0.1.0\";"
+    "line": 229,
+    "text": "impl Resolve for Names {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|1dddd95dd80f8269|0": {
     "target": "../../../cli/src/query/facts/graph.rs",
@@ -10139,7 +10123,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|23bcba3c1722e495|0": {
     "target": "../../../cli/src/query/mod.rs",
-    "line": 26,
+    "line": 29,
     "text": "pub const PRELUDE: &str = include_str!(\"prelude.rules\");"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|2df12d0d7494a4a5|0": {
@@ -10150,7 +10134,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|d79179f736e4d4c2|0": {
     "target": "../../../cli/src/query/mod.rs",
-    "line": 36,
+    "line": 39,
     "text": "pub fn rules_source("
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/prelude.rules|5891a3eb263ddd54|0": {
@@ -10173,6 +10157,11 @@
     "target": "../../../cli/src/query/program.rs",
     "line": 101,
     "text": "pub fn lex(prelude: &str, rules: Option<&str>, query: Option<&str>) -> Result<Program, Fault> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/rows.rs|67f09ca7906e45e2|0": {
+    "target": "../../../cli/src/query/rows.rs",
+    "line": 17,
+    "text": "\"wire skew: {} goals sent, {} answered\","
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|3330a64bd12a7a96|0": {
     "target": "../../../cli/src/query/wire.rs",
@@ -10231,10 +10220,10 @@
     "line": 111,
     "text": "fn every_request_line_is_the_prelude_then_its_program_through_the_lexer() {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|a47e4986df442e86|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|102e73d797f3f249|0": {
     "target": "../../../cli/tests/unit/query/face.rs",
-    "line": 32,
-    "text": "fn a_lexical_fault_is_error_zero_at_its_place_and_no_judgment_before_any_core() {"
+    "line": 68,
+    "text": "fn a_lexical_fault_is_error_zero_at_its_place_and_no_judgment() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/legend.rs|83d614986f8f8dbb|0": {
     "target": "../../../cli/tests/unit/query/legend.rs",
@@ -10388,6 +10377,16 @@
     "target": "../../../core/app/CE/Query/Cost.hs",
     "line": 88,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|e8d2a5abc1d0b176|0": {
+    "target": "../../../core/app/CE/Query/Document.hs",
+    "line": 56,
+    "text": "errorNames :: [String]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|f4c564caae382736|0": {
+    "target": "../../../core/app/CE/Query/Document.hs",
+    "line": 94,
+    "text": "assemble :: String -> DocReq -> Value"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|7ae381ed02bd7ae3|0": {
     "target": "../../../core/app/CE/Query/Eval.hs",
@@ -10602,36 +10601,31 @@
     "line": 39,
     "text": "pub fn plan(files: &[Lowered]) -> (Vec<Sent<'_>>, Vec<Unsent>) {"
   },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|0fe93a99598ca424|0": {
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ee74b95db080349c|0": {
     "target": "../../../cli/src/flow_report/face.rs",
-    "line": 65,
-    "text": "pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Report> {"
-  },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ce1747c9095bbd55|0": {
-    "target": "../../../cli/src/flow_report/face.rs",
-    "line": 21,
-    "text": "pub const SCHEMA_ID: &str = \"ce.flow-report/0.1.0\";"
-  },
-  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|f6f4aef3ae9814ac|0": {
-    "target": "../../../cli/src/flow_report/face.rs",
-    "line": 124,
-    "text": "pub fn assemble("
+    "line": 158,
+    "text": "fn placed(files: &[Lowered], verdict: &Verdict) -> Vec<[i64; 6]> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|5150f690006b8d0b|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 63,
+    "line": 65,
     "text": "pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|98dfcfb680e6d525|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 33,
+    "line": 35,
     "text": "pub fn judged(lang: Lang, kind: u8) -> bool {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|aa6492df5ec3eede|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 21,
-    "end": 38,
+    "line": 23,
+    "end": 40,
     "text": "pub const KINDS: [&str; 4] = [\"unreachable\", \"dead_store\", \"unused_local\", \"unused_param\"];"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/report.rs|f2ac495bc01d8be6|0": {
+    "target": "../../../cli/src/flow_report/report.rs",
+    "line": 10,
+    "text": "pub struct FindingFace {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/guard/flow.rs|a968908f87affff4|0": {
     "target": "../../../cli/src/guard/flow.rs",
@@ -10657,8 +10651,8 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|50350e88ad9ffccd|0": {
     "target": "../../../cli/src/main_flow.rs",
-    "line": 27,
-    "end": 53,
+    "line": 28,
+    "end": 48,
     "text": "pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/daemon_flow.rs|4e9632f41b3e85e1|0": {
@@ -10729,6 +10723,11 @@
     "target": "../../../core/app/CE/Flow/Cost.hs",
     "line": 53,
     "text": "rowCap :: Integer"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Document.hs|89c255e038efd961|0": {
+    "target": "../../../core/app/CE/Flow/Document.hs",
+    "line": 76,
+    "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|010f702fd264722d|0": {
     "target": "../../../core/app/CE/Flow/Live.hs",
@@ -10840,34 +10839,19 @@
     "line": 28,
     "text": "pub fn request_body(trees: &[&UnitTree], pairs: &[[usize; 2]]) -> Value {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/main_merge.rs|a2c7d991bd8087b0|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/main_merge.rs|92fd2d7664e4dddd|0": {
     "target": "../../../cli/src/main_merge.rs",
-    "line": 25,
-    "text": "Ok(r) => r,\nErr(err) => return fail(\"merge\", err),"
+    "line": 26,
+    "text": "document_face("
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/console.rs|bfd9df855dbc9cf1|0": {
     "target": "../../../cli/src/merge/console.rs",
     "line": 16,
     "text": "pub fn console(r: &Report, only: Option<usize>) -> Vec<String> {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|0accec698d4018a3|0": {
-    "target": "../../../cli/src/merge/face.rs",
-    "line": 40,
-    "text": "pub const REASONS: [&str; 6] = ["
-  },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|0d49da5218038a2d|0": {
-    "target": "../../../cli/src/merge/face.rs",
-    "line": 182,
-    "text": "/// text at the parameter's first hole."
-  },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|259b9f695e7c79f8|0": {
-    "target": "../../../cli/src/merge/face.rs",
-    "line": 120,
-    "text": "/// The whole leg: measured, gathered, judged chunk by chunk, labelled."
-  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|39c8477982b58025|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 241,
+    "line": 234,
     "text": "/// (−1: nothing on this side)."
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|8acf28239d333bb2|0": {
@@ -10878,13 +10862,18 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|9f7d58911284bdf3|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 163,
+    "line": 178,
     "text": "/// node they land on (the same graph `ce deadcode` judges)."
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|fd290255edafa2c8|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e315de48ee67ed2f|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 29,
-    "text": "pub const SCHEMA_ID: &str = \"ce.merge-report/0.1.0\";"
+    "line": 91,
+    "text": "fn degraded(core: &str, held: Held, why: String) -> Result<Value> {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e34b025ba3a30b41|0": {
+    "target": "../../../cli/src/merge/face.rs",
+    "line": 112,
+    "text": "fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -> Request {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|243bc494e8f3468c|0": {
     "target": "../../../cli/src/merge/groups.rs",
@@ -10921,6 +10910,11 @@
     "target": "../../../cli/src/merge/groups_trim.rs",
     "line": 95,
     "text": "pub fn isomorphic(trees: &[&UnitTree]) -> bool {"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/report.rs|c4c328e602dce2d5|0": {
+    "target": "../../../cli/src/merge/report.rs",
+    "line": 38,
+    "text": "pub struct GroupFace {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/slot.rs|11217baa5ff3a242|0": {
     "target": "../../../cli/src/merge/slot.rs",
@@ -11015,10 +11009,10 @@
     "line": 50,
     "text": "fn every_member_set_is_suggested_once() {"
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|2e643b22f14570f7|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|9045e0cec0b29c5b|0": {
     "target": "../../../cli/tests/it/merge_face.rs",
     "line": 215,
-    "text": "fn the_mcp_tool_relays_the_face_and_an_absent_core_degrades() {"
+    "text": "fn the_mcp_tool_relays_the_face_and_an_absent_core_is_refused() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|9255ede4c445553c|0": {
     "target": "../../../cli/tests/it/merge_face.rs",
@@ -11185,6 +11179,21 @@
     "end": 95,
     "text": "-- | A suggestion's reason (step-6 ruling 6), the first infeasible"
   },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|098932ff40bf8ffc|0": {
+    "target": "../../../core/app/CE/Merge/Document.hs",
+    "line": 49,
+    "text": "reasons :: [String]"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|89c255e038efd961|0": {
+    "target": "../../../core/app/CE/Merge/Document.hs",
+    "line": 73,
+    "text": "assemble :: DocReq -> Value"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|f4b050621e5f7f5c|0": {
+    "target": "../../../core/app/CE/Merge/Document.hs",
+    "line": 92,
+    "text": "-- members, and its parameters in first-reach order, each with every"
+  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Holes.hs|16a6f0740012ae5e|0": {
     "target": "../../../core/app/CE/Merge/Holes.hs",
     "line": 32,
@@ -11316,39 +11325,34 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/console.rs|25dca994341b1b4e|0": {
     "target": "../../../cli/src/arch/console.rs",
-    "line": 13,
+    "line": 14,
     "text": "pub fn console(r: &Report) -> Vec<String> {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|3ba5a5f8ebf9cf14|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|15aeee1b5cbd4f34|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 222,
-    "text": "fn clusters(t: &Tables, rows: &[Vec<i64>]) -> Vec<Cluster> {"
+    "line": 29,
+    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Value> {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|59c25506251d1237|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|4e65db66c3f45cd4|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 93,
-    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Report> {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|bc97dde97e450366|0": {
-    "target": "../../../cli/src/arch/face.rs",
-    "line": 78,
-    "text": "pub struct Report {"
+    "line": 82,
+    "text": "fn request(t: &Tables, r: &Reply) -> Request {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|e8ebd19464cabd3f|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 112,
+    "line": 56,
     "text": "fn line_count(root: &Path, path: &str) -> Result<i64> {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|f78d7ad5b1203014|0": {
-    "target": "../../../cli/src/arch/face.rs",
-    "line": 180,
-    "text": "fn cut(t: &Tables, row: &[i64]) -> Cut {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/mod.rs|5ba8ae5afa201208|0": {
     "target": "../../../cli/src/arch/mod.rs",
     "line": 1,
     "end": 9,
     "text": "//! The architecture family (plan v2.31 step 9; design booklet"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/report.rs|bc97dde97e450366|0": {
+    "target": "../../../cli/src/arch/report.rs",
+    "line": 65,
+    "text": "pub struct Report {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|2ac8108dcabc988b|0": {
     "target": "../../../cli/src/arch/tables.rs",
@@ -11377,7 +11381,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|5dcb977ea419265d|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 28,
+    "line": 29,
     "text": "pub const ARCH_FILE_CAP: usize = 131072;"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|7bc125be9e5ee21a|0": {
@@ -11388,22 +11392,22 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|95df4f4bf3a0b417|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 170,
+    "line": 175,
     "text": "let col: usize = col.parse().context(\"an id column\")?;"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|9e002ae0cba9f447|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 119,
+    "line": 124,
     "text": ");\ntables.insert(key, rows);"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|06aaf305d0592873|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|7f6211bb93596e3c|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 224,
-    "text": "Ok(crate::flow_report::face::report_json("
+    "line": 233,
+    "text": "pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
     "target": "../../../cli/src/main_arch.rs",
-    "line": 31,
+    "line": 32,
     "text": "let root = or_cwd(j.root);"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
@@ -11488,6 +11492,21 @@
     "target": "../../../core/app/CE/Arch/Dirs.hs",
     "line": 27,
     "text": "arcsOf :: IM.IntMap Int -> [[Integer]] -> [[Integer]] -> Arcs"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|bff99090aeb3941c|0": {
+    "target": "../../../core/app/CE/Arch/Document.hs",
+    "line": 120,
+    "text": "cluster :: (Integer -> Integer) -> Integer -> [Integer] -> Value"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|d12715bb27a944f3|0": {
+    "target": "../../../core/app/CE/Arch/Document.hs",
+    "line": 94,
+    "text": "folded :: DocReq -> (Integer -> Integer) -> M.Map (Integer, Integer) [((Integer, Integer), Value)]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Document.hs|f42099fe8c270b43|0": {
+    "target": "../../../core/app/CE/Arch/Document.hs",
+    "line": 76,
+    "text": "[d, fanIn, fanOut, s] -> object [\"dir\" .= dir d, \"fanIn\" .= fanIn, \"fanOut\" .= fanOut, \"instability\" .= (if s >= 0 then toJSON s else Null)]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Fas.hs|6685d4ddea6452ac|0": {
     "target": "../../../core/app/CE/Arch/Fas.hs",

@@ -7,7 +7,7 @@
 //! twin (i18n::line); the program's own words (predicates, columns,
 //! paths) stay as written.
 
-use super::face::{ProofFace, Report};
+use super::report::{AnswerFace, ProofFace, Report};
 use crate::i18n::line;
 
 pub fn console(r: &Report) -> Vec<String> {
@@ -26,8 +26,7 @@ pub fn console(r: &Report) -> Vec<String> {
         return out;
     }
     for g in &r.goals {
-        let rows: Vec<&super::face::AnswerFace> =
-            r.answers.iter().filter(|a| a.goal == g.goal).collect();
+        let rows: Vec<&AnswerFace> = r.answers.iter().filter(|a| a.goal == g.goal).collect();
         let cols = g.columns.join(", ");
         out.push(if g.kind == "assert" {
             let name = g.name.clone().unwrap_or_default();

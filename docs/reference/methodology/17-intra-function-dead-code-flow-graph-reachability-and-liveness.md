@@ -14,7 +14,7 @@ walks reachability and backward liveness and answers the findings over the fourt
 [mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). No name, path or source text crosses the wire:
 a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
 through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
-[mod.rs:63](../../../cli/src/flow_report/mod.rs#L63)).
+[mod.rs:65](../../../cli/src/flow_report/mod.rs#L65)).
 
 ### 1. The lowering — four tables per unit
 
@@ -84,7 +84,7 @@ exemptions (captured, ignored, address-taken) leaving it out
 ([Live.hs:70-82](../../../core/app/CE/Flow/Live.hs#L70)). Kind 3 is advice by construction: a
 parameter an interface, an overload or an override requires is unread for a reason the unit
 cannot show, so no tier, mask or gate ever reads it as a verdict
-([mod.rs:21-38](../../../cli/src/flow_report/mod.rs#L21)).
+([mod.rs:23-40](../../../cli/src/flow_report/mod.rs#L23)).
 
 ### 5. Caps and degradation
 
@@ -100,18 +100,20 @@ this side, by the class's tier and the precision mask.
 ### 6. The faces
 
 `ce flow [--check] [--kind …] [--format json]` walks the tree with the scan's walk, lowers each
-file, asks the core and prints `ce.flow-report/0.1.0`: the counts (units, statements, variables,
+file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (`document/1`)
+from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit the core refused with its reason
-([face.rs:21](../../../cli/src/flow_report/face.rs#L21), [face.rs:65](../../../cli/src/flow_report/face.rs#L65),
-[face.rs:124](../../../cli/src/flow_report/face.rs#L124)). A finding's `lineEnd` is the line on
+([Document.hs:76](../../../core/app/CE/Flow/Document.hs#L76), [face.rs:158](../../../cli/src/flow_report/face.rs#L158),
+[report.rs:10](../../../cli/src/flow_report/report.rs#L10)). A finding's `lineEnd` is the line on
 which the run's last statement starts: the legend keeps each statement's first line only, so a
 last statement written over several lines is not followed to its end; the next lowering
 generation carries the end. `--kind` narrows the listing and
 never the counts, so a filtered run cannot move the gate. The exit codes are the family's own: 2
-when the core is missing or lacks the family (the report names the reason), 1 under `--check`
+when the core is missing (refused by name, no document) or lacks the family (the document names
+the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
-([main_flow.rs:27-53](../../../cli/src/main_flow.rs#L27)). The MCP tool `flow` and the GUI's
+([main_flow.rs:28-48](../../../cli/src/main_flow.rs#L28)). The MCP tool `flow` and the GUI's
 reports hub read the same document through `faces::flow`; the hub registers its own renderer for
 the kind chips, the judged / advisory mark and the unjudged units.
 
@@ -120,7 +122,7 @@ mask holds the languages whose precision doc passed the gate of §8. Step 4's co
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
 retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
 generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
-all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
+all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:35](../../../cli/src/flow_report/mod.rs#L35)).
 
 ### 7. The guard class — novel findings at write time
 

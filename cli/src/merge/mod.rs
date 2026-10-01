@@ -5,7 +5,8 @@
 //! (`ce dedup`'s T1/T2 families, `ce clone`'s T3 pairs), builds each
 //! member's tree in clone/1's encoding with two more columns — each
 //! leaf's source-text hash and each node's position class, read off the
-//! slot tables of this module — and labels what comes back; the
+//! slot tables of this module — and puts the paths, unit names and
+//! member texts back into the document the core lays out; the
 //! alignment, the holes, the parameters, the feasibility, the kept
 //! member and the savings are the core's (CE.Merge.*). Advisory: the
 //! document is a report, no gate reads it.
@@ -18,6 +19,7 @@ pub mod console;
 pub mod face;
 pub mod groups;
 pub mod groups_trim;
+pub mod report;
 pub mod slot;
 mod slot_flow;
 pub mod wire;

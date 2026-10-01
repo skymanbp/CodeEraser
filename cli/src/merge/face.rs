@@ -4,39 +4,37 @@
 //! parameters a merged function would take, the member kept, the
 //! lines saved, whether the merge is feasible and why not — each
 //! parameter with every member's text at it, read back through the
-//! tree's spans; the groups not sent, counted by why; the core's counts
-//! summed over the chunks, beside them `merged_duplicates` (the groups
-//! dropped as a second suggestion for a member set, groups.rs); and,
-//! when the core could not judge — none
-//! started, none offering the family, none answering — the named
-//! reason. A core that answers a chunk degraded is a cap-mirror drift
-//! and an error, never a document (step-7 ruling 4). Labelling only:
-//! every number is the core's (wire.rs), and a document with a
-//! `degraded` reason carries no verdict this side reached. Advisory: no
+//! tree's spans; the groups not sent, counted by why; the counts,
+//! beside them `merged_duplicates` (the groups dropped as a second
+//! suggestion for a member set, groups.rs); and, when the core could
+//! not judge — none started, none offering the family, none answering
+//! — the named reason. A core that answers a chunk degraded is a
+//! cap-mirror drift and an error, never a document (step-7 ruling 4).
+//! The core lays the document out (document/1, CE.Merge.Document)
+//! over every chunk's answer joined here; this side puts the paths,
+//! unit names and member texts back (crate::document). Advisory: no
 //! gate reads it.
 
 use super::groups::{self, FAMILY_EXACT, Group, Unsendable};
-use super::wire::{self, COUNTS, HoleRow, Judged, Suggestion};
-use crate::corelink::Link;
+use super::wire::{self, HoleRow, Judged, Suggestion};
 use crate::dedup::{self, t3};
+use crate::document::{self, Held, Request, Resolve, Why};
 use crate::graph::deadcode::{Advisory, wire_of};
 use anyhow::Result;
-use serde::Serialize;
 use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+/// The schema id the core's merge document carries
+/// (CE.Merge.Document); read here by the facts registry and the tests.
 pub const SCHEMA_ID: &str = "ce.merge-report/0.1.0";
-
-/// The count this side adds to the core's: the groups dropped because a
-/// stronger group already suggests their member set.
-pub const MERGED_DUPLICATES: &str = "merged_duplicates";
 
 /// Reason names by code (CE.Merge.Cost): feasible, a position no
 /// parameter can stand for (a statement's or any other that is not an
 /// expression or a declared name — hence `position`, not `statement`),
 /// a type position, a gap across statements, more parameters than the
-/// ceiling, no line saved.
+/// ceiling, no line saved. The document's names are the core's; the
+/// review instrument reads this copy.
 pub const REASONS: [&str; 6] = [
     "ok",
     "position",
@@ -46,117 +44,134 @@ pub const REASONS: [&str; 6] = [
     "no_savings",
 ];
 
-/// A member: its file, its unit (None for a fragment), `lines` its
-/// clone-family span (its identity) and `run` the lines of the run it
-/// sent, which the core priced (a whole unit's are its span).
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct MemberFace {
-    pub path: String,
-    pub unit: Option<String>,
-    pub lines: [usize; 2],
-    pub run: [usize; 2],
-}
+/// The document request's tables and facts.
+const TABLES: [&str; 3] = ["groups", "members", "holes"];
+const FACTS: [&str; 6] = [
+    "nodes",
+    "merged_duplicates",
+    "not_isomorphic",
+    "no_slot_table",
+    "unbuilt",
+    "over_cap",
+];
 
-/// One member's text at a parameter: the source from the hole's first
-/// root to its last on that member (step-7 ruling 6) — a leaf or
-/// relabel hole's one node, a gap hole's whole forest, "" on an empty
-/// side.
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct ValueFace {
-    pub member: usize,
-    pub text: String,
-}
-
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct ParamFace {
-    pub param: usize,
-    pub values: Vec<ValueFace>,
-}
-
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct GroupFace {
-    pub group: usize,
-    pub family: &'static str,
-    pub fragment: bool,
-    pub members: Vec<MemberFace>,
-    pub params: u64,
-    pub kept: usize,
-    pub savings: i64,
-    pub feasible: bool,
-    pub reason: &'static str,
-    pub holes: Vec<ParamFace>,
-}
-
-#[derive(Serialize)]
-pub struct Report {
-    pub counts: BTreeMap<&'static str, u64>,
-    pub unsendable: Unsendable,
-    pub groups: Vec<GroupFace>,
-    pub degraded: Option<String>,
-}
-
-impl Report {
-    fn empty() -> Self {
-        Report {
-            counts: COUNTS
-                .iter()
-                .chain([&MERGED_DUPLICATES])
-                .map(|k| (*k, 0))
-                .collect(),
-            unsendable: Unsendable::default(),
-            groups: Vec::new(),
-            degraded: None,
-        }
-    }
-
-    fn degraded(why: String) -> Self {
-        Report {
-            degraded: Some(why),
-            ..Report::empty()
-        }
-    }
-}
-
-/// The whole leg: measured, gathered, judged chunk by chunk, labelled.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
+/// The whole leg: measured, gathered, judged chunk by chunk, laid out.
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
     let (blocks, idx, db_path) = dedup::snapshot(root, db)?;
-    let mut link = match Link::open(core) {
-        Ok((link, _)) if link.has(wire::CAP) => link,
-        Ok(_) => return Ok(Report::degraded(format!("core offers no {}", wire::CAP))),
-        Err(why) => return Ok(Report::degraded(why)),
+    let mut link = match document::open(core) {
+        Ok(link) if link.has(wire::CAP) => link,
+        Ok(link) => return degraded(core, Ok(link), format!("core offers no {}", wire::CAP)),
+        Err(why) => return degraded(core, Err(why.clone()), why),
     };
     let judged = t3::judge_index(root, &idx, core)?;
     let pairs: Vec<(usize, usize)> = judged.clones.iter().map(|&(a, b, _)| (a, b)).collect();
     let (groups, unsendable, merged) = groups::gather(root, &blocks.groups, &judged.units, &pairs)?;
     let indeg = file_indegree(root, &idx, &db_path)?;
-    let texts = texts_of(root, &groups)?;
-    let mut r = Report {
-        unsendable,
-        ..Report::empty()
-    };
-    r.counts.insert(MERGED_DUPLICATES, merged);
+    let mut answers: Vec<Judged> = Vec::new();
     for range in wire::chunks(&groups) {
         let sent: Vec<&Group> = groups[range].iter().collect();
         let body = wire::body(&sent, |p| indeg.get(p).copied().unwrap_or(0));
         let reply = match wire::ask(&mut link, body) {
             Ok(reply) => reply,
-            Err(why) => return Ok(Report::degraded(why)),
+            Err(why) => return degraded(core, Err(why.clone()), why),
         };
-        let chunk = wire::consume(&reply, &sent).map_err(|e| anyhow::anyhow!("merge: {e}"))?;
-        fold(&mut r, &sent, chunk, &texts);
+        answers.push(wire::consume(&reply, &sent).map_err(|e| anyhow::anyhow!("merge: {e}"))?);
     }
-    Ok(r)
+    let names = Names {
+        members: groups.iter().flat_map(|g| &g.members).collect(),
+        texts: texts_of(root, &groups)?,
+        why: Why::default(),
+    };
+    let req = request(&groups, answers, unsendable, merged).range("members", names.members.len());
+    document::assemble_over(core, Ok(link), req.range("why", 0), &names)
 }
 
-/// One judged chunk folded into the report: its counts added, its
-/// groups labelled.
-fn fold(r: &mut Report, sent: &[&Group], j: Judged, texts: &Texts) {
-    for (k, n) in COUNTS.iter().zip(j.counts) {
-        *r.counts.get_mut(k).expect("a count key") += n;
+/// The judgment did not happen: no row, every fact zero, the reason;
+/// laid out over `held` when the link is still whole.
+fn degraded(core: &str, held: Held, why: String) -> Result<Value> {
+    let mut names = Names {
+        members: Vec::new(),
+        texts: Texts::new(),
+        why: Why::default(),
+    };
+    let reason = names.why.add(why);
+    let req = FACTS
+        .iter()
+        .fold(Request::new("merge").empty(&TABLES), |q, k| q.fact(k, 0));
+    document::assemble_over(
+        core,
+        held,
+        req.range("members", 0).range("why", 1).degraded(reason),
+        &names,
+    )
+}
+
+/// Every chunk's answer joined: the suggestion rows numbered across
+/// chunks with the family and fragment bits, one row per member
+/// numbered across groups, the hole rows, the facts this side counted.
+fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -> Request {
+    let (mut rows, mut members, mut holes) = (Vec::new(), Vec::new(), Vec::new());
+    let mut nodes = 0;
+    let suggested = answers.iter().flat_map(|j| &j.groups);
+    for (g, (group, (s, hs))) in groups.iter().zip(suggested).enumerate() {
+        rows.push(group_row(g, group, s));
+        for (m, x) in group.members.iter().enumerate() {
+            let (a, b, ra, rb) = (x.lines.0, x.lines.1, x.run.0, x.run.1);
+            members.push([
+                members.len(),
+                g,
+                m,
+                a,
+                b,
+                ra,
+                rb,
+                usize::from(x.unit.is_some()),
+            ]);
+        }
+        holes.extend(hs.iter().map(|h| hole_row(g, h)));
     }
-    for (g, (s, holes)) in sent.iter().zip(j.groups) {
-        r.groups.push(label(r.groups.len(), g, &s, &holes, texts));
+    for j in &answers {
+        nodes += j.counts[2];
     }
+    Request::new("merge")
+        .rows("groups", rows)
+        .rows("members", members)
+        .rows("holes", holes)
+        .fact("nodes", nodes)
+        .fact("merged_duplicates", merged)
+        .fact("not_isomorphic", u.not_isomorphic)
+        .fact("no_slot_table", u.no_slot_table)
+        .fact("unbuilt", u.unbuilt)
+        .fact("over_cap", u.over_cap)
+}
+
+/// [g, params, kept, savings, feasible, reason, family, fragment].
+fn group_row(g: usize, group: &Group, s: &Suggestion) -> [i64; 8] {
+    let t3 = i64::from(group.family != FAMILY_EXACT);
+    let (params, kept) = (s.params as i64, s.kept as i64);
+    let (feasible, fragment) = (i64::from(s.feasible), i64::from(group.fragment));
+    [
+        g as i64,
+        params,
+        kept,
+        s.savings,
+        feasible,
+        i64::from(s.reason),
+        t3,
+        fragment,
+    ]
+}
+
+/// [g, hole, param, m, post, postEnd].
+fn hole_row(g: usize, h: &HoleRow) -> [i64; 6] {
+    [
+        g as i64,
+        h.hole as i64,
+        h.param as i64,
+        h.m as i64,
+        h.post,
+        h.post_end,
+    ]
 }
 
 /// The references to each file: the graph's edges counted by the file
@@ -177,53 +192,6 @@ fn file_indegree(
     Ok(out)
 }
 
-/// One judged group labelled: its members, and its parameters in the
-/// order the core's holes first reach them, each with every member's
-/// text at the parameter's first hole.
-fn label(k: usize, g: &Group, s: &Suggestion, holes: &[HoleRow], texts: &Texts) -> GroupFace {
-    let mut first: Vec<(usize, usize)> = Vec::new();
-    for h in holes {
-        if !first.iter().any(|&(p, _)| p == h.param) {
-            first.push((h.param, h.hole));
-        }
-    }
-    let exact = g.family == FAMILY_EXACT;
-    let value = |h: &HoleRow| {
-        let m = &g.members[h.m];
-        ValueFace {
-            member: h.m,
-            text: span_text(&texts[&m.path], &m.tree, h.post, h.post_end),
-        }
-    };
-    GroupFace {
-        group: k,
-        family: if exact { "t1t2" } else { "t3" },
-        fragment: g.fragment,
-        members: g
-            .members
-            .iter()
-            .map(|m| MemberFace {
-                path: m.path.clone(),
-                unit: m.unit.clone(),
-                lines: [m.lines.0, m.lines.1],
-                run: [m.run.0, m.run.1],
-            })
-            .collect(),
-        params: s.params,
-        kept: s.kept,
-        savings: s.savings,
-        feasible: s.feasible,
-        reason: REASONS[usize::from(s.reason)],
-        holes: first
-            .into_iter()
-            .map(|(param, hole)| ParamFace {
-                param,
-                values: holes.iter().filter(|h| h.hole == hole).map(value).collect(),
-            })
-            .collect(),
-    }
-}
-
 /// Every member file's text, read once.
 type Texts = BTreeMap<String, String>;
 
@@ -235,6 +203,31 @@ fn texts_of(root: &Path, groups: &[Group]) -> Result<Texts> {
         }
     }
     Ok(out)
+}
+
+/// The merge document's strings: each member's path, unit and text at
+/// a hole (by its number across groups), and the reason.
+struct Names<'a> {
+    members: Vec<&'a groups::Member>,
+    texts: Texts,
+    why: Why,
+}
+
+impl Resolve for Names<'_> {
+    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
+        let member = |k: &i128| usize::try_from(*k).ok().and_then(|k| self.members.get(k));
+        match (class, ints) {
+            ("why", _) => self.why.at(ints),
+            ("path", [k]) => Some(member(k)?.path.clone()),
+            ("unit", [k]) => member(k)?.unit.clone(),
+            ("text", [k, post, post_end]) => {
+                let m = member(k)?;
+                let (post, post_end) = (i64::try_from(*post).ok()?, i64::try_from(*post_end).ok()?);
+                Some(span_text(&self.texts[&m.path], &m.tree, post, post_end))
+            }
+            _ => None,
+        }
+    }
 }
 
 /// The source text from node `post`'s start to node `post_end`'s end
@@ -251,21 +244,6 @@ fn span_text(
         .and_then(|(&(s, _), &(_, e))| text.get(s..e))
         .unwrap_or("")
         .to_string()
-}
-
-/// The document: the schema id, then the report's own fields.
-pub fn report_json(r: &Report) -> Value {
-    #[derive(Serialize)]
-    struct Document<'a> {
-        schema: &'static str,
-        #[serde(flatten)]
-        report: &'a Report,
-    }
-    let doc = Document {
-        schema: SCHEMA_ID,
-        report: r,
-    };
-    serde_json::to_value(doc).expect("a merge report is plain data")
 }
 
 #[cfg(test)]

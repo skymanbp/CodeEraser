@@ -5,11 +5,13 @@
 //! through its unit's legend. Housed beside cli/src/flow/ rather than
 //! in it: that directory answers the precision docs (the provenance
 //! gate reads it by path), and a face is no answer. Nothing here
-//! judges: every finding is the core's over flow/1, and a finding's
-//! line and variable are labels the lowering's legend supplies.
+//! judges: every finding is the core's over flow/1, the document its
+//! document/1 (CE.Flow.Document), and a finding's line and variable
+//! are what the lowering's legend supplies.
 
 pub mod console;
 pub mod face;
+pub mod report;
 
 use crate::flow::lower::{Lowered, Unit};
 use crate::flow::wire::Finding;

@@ -22,7 +22,7 @@ use crate::dedup::t3::tree::{Extras, Top, UnitTree, file_fragments};
 use crate::dedup::t3::{Outcome, build_trees};
 use crate::scan::lang::Lang;
 use anyhow::{Result, ensure};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
@@ -87,7 +87,7 @@ pub fn one_per_member_set(groups: &mut Vec<Group>) -> u64 {
 /// shape, a language with no slot table, a member whose tree was not
 /// built (over clone/1's per-tree cap, a forest, nothing selected),
 /// and a group whose nodes alone pass merge/1's request cap.
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Unsendable {
     pub not_isomorphic: u64,
     pub no_slot_table: u64,

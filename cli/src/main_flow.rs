@@ -4,7 +4,8 @@
 //! is its own gate, never `ce check`'s — exit 1 when `[flow] tier` is
 //! deny and a judged finding stands (an unused parameter is advisory
 //! everywhere and never counts). Exit 2 = a core that could not judge,
-//! a malformed reply, an unknown `--kind`, an unreadable ce.toml.
+//! a malformed reply, a document the core did not lay out, an unknown
+//! `--kind`, an unreadable ce.toml.
 
 use crate::main_prelude::*;
 use codeeraser::config::Config;
@@ -30,24 +31,18 @@ pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {
         Ok(c) => c.flow.tier().to_string(),
         Err(e) => return fail("flow", anyhow::anyhow!(e)),
     };
-    let r = match face::run(&root, core, &a.kind) {
-        Ok(r) => r,
-        Err(e) => return fail("flow", e),
-    };
-    print_doc(
+    let gate = a.check && tier == "deny";
+    document_face(
+        "flow",
+        face::run(&root, core, &a.kind),
         json(a.judge.format),
-        || face::report_json(&r),
-        || {
-            for l in console::console(&r) {
-                println!("{l}");
-            }
+        console::console,
+        |r: &codeeraser::flow_report::report::Report| {
+            Ok(match (r.degraded.is_some(), gate && r.judged() > 0) {
+                (true, _) => ExitCode::from(2),
+                (false, true) => ExitCode::from(1),
+                (false, false) => ExitCode::SUCCESS,
+            })
         },
-    );
-    if r.degraded.is_some() {
-        ExitCode::from(2)
-    } else if a.check && tier == "deny" && r.judged() > 0 {
-        ExitCode::from(1)
-    } else {
-        ExitCode::SUCCESS
-    }
+    )
 }

@@ -32,6 +32,7 @@ schemaId = "ce.merge-report/0.1.0"
 -- has a unit]; a hole row merge/1's [g, hole, param, m, post,
 -- postEnd]. A degraded document carries nothing, the measuring side's
 -- counts included.
+-- References: path [member], unit [member], text [member, post, postEnd], why [text].
 statement :: String
 statement =
   "range members\nrange why\n\

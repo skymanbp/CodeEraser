@@ -14,9 +14,12 @@
 -- document folded over the batches on that side would leave the
 -- assembly there. Every repository string is a reference
 -- (CE.Document.Contract); the catalogue — each family's schema id and
--- empty document, and flow's kind names — rides in the definition
--- package (CE.Tables), the one document a face can print when the
--- judgment never happened.
+-- empty document, flow's kind names and judged languages — rides in
+-- the definition package (CE.Tables). The empty document is the
+-- family's statement and the battery's anchor; the measuring side never
+-- binds it: a judgment that did not happen is still asked here, with
+-- `degraded` and the facts the measuring side kept, and a core out of
+-- reach refuses the face by name.
 module CE.Document (catalogue, emptyOf, families, respond) where
 
 import qualified CE.Arch.Document as Arch
@@ -40,8 +43,9 @@ familyOf req = do
   name <- dFamily req
   lookup name [(dfName f, f) | f <- families]
 
--- | A family's document when the judgment did not happen: every range
--- and fact zero, no row, the reason the measuring side's first text.
+-- | A family's document over a blank request: every range and fact
+-- zero, no row, the reason the measuring side's first text — the
+-- statement's anchor, never a document a face prints.
 emptyOf :: DocFamily -> Value
 emptyOf fam = dfAssemble fam blank
  where

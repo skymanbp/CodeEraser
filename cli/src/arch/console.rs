@@ -6,7 +6,8 @@
 //! naming why. Every sentence has its Chinese twin (i18n::line); the
 //! paths stay as written.
 
-use super::face::{Report, slashed};
+use super::face::slashed;
+use super::report::Report;
 use crate::i18n::line;
 use std::collections::BTreeMap;
 

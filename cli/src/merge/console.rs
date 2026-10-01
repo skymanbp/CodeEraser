@@ -5,7 +5,7 @@
 //! text at it. Every sentence has its Chinese twin (i18n::line); the
 //! code's own words (paths, units, texts) stay as written.
 
-use super::face::{GroupFace, MemberFace, Report};
+use super::report::{GroupFace, MemberFace, Report};
 use crate::i18n::line;
 
 /// A parameter's text on one line: 40 characters at most.

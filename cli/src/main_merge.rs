@@ -3,7 +3,8 @@
 //! — its parameters, the member kept, the lines saved, feasible or why
 //! not — `--group <n>` for one group on the console (the JSON document
 //! is always whole). Exit codes: 0 with a judged document, 2 when the
-//! core did not judge or an argument is wrong. Advisory: no gate reads
+//! core did not judge, did not lay the document out, or an argument is
+//! wrong. Advisory: no gate reads
 //! it, nothing enters the baseline.
 
 use crate::main_prelude::*;
@@ -21,32 +22,18 @@ pub struct MergeArgs {
 
 pub fn merge_cmd(a: MergeArgs, core: &str) -> ExitCode {
     let root = or_cwd(a.judge.root);
-    let r = match face::run(&root, a.judge.db, core) {
-        Ok(r) => r,
-        Err(err) => return fail("merge", err),
-    };
-    if let Some(k) = a.group
-        && r.degraded.is_none()
-        && k >= r.groups.len()
-    {
-        let err = anyhow::anyhow!(
-            "--group {k}: the document holds {} group(s)",
-            r.groups.len()
-        );
-        return fail("merge", err);
-    }
-    print_doc(
+    let group = a.group;
+    document_face(
+        "merge",
+        face::run(&root, a.judge.db, core),
         json(a.judge.format),
-        || face::report_json(&r),
-        || {
-            for l in console::console(&r, a.group) {
-                println!("{l}");
-            }
+        |r| console::console(r, group),
+        |r: &codeeraser::merge::report::Report| match group {
+            Some(k) if r.degraded.is_none() && k >= r.groups.len() => Err(anyhow::anyhow!(
+                "--group {k}: the document holds {} group(s)",
+                r.groups.len()
+            )),
+            _ => Ok(ExitCode::from(if r.degraded.is_some() { 2 } else { 0 })),
         },
-    );
-    if r.degraded.is_some() {
-        ExitCode::from(2)
-    } else {
-        ExitCode::SUCCESS
-    }
+    )
 }

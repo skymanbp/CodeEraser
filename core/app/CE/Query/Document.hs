@@ -32,6 +32,8 @@ family name schemaId = docFamily name schemaId statement aligned (assemble schem
 -- stream's length plus one: the end of input), `heads` the program's
 -- goals as spelled ([goal, has a name, columns]), `askWhy` / `rulesFile`
 -- / `query` the program block's flags, and the ten counts the core's.
+-- References: at [token], goal_name [goal], column [goal, column], value
+-- [sort, value], pred [predicate code], rules_file [], query [], why [text].
 statement :: String
 statement =
   "range at\nrange why\n\

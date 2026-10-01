@@ -104,6 +104,13 @@ leaked! {
     Protocol { py_names: Names, py_prefixes: Names, ts_by_stem: Pairs, ts_pages: Names,
                ts_routes: Names, java_names: Names, c_names: Names, c_prefixes: Names,
                lua_names: Names, love_names: Names, r_names: Names }
+    /// The flow document's catalogue entry: the kind names `--kind` is
+    /// read against.
+    DocFlow { kinds: Names }
+    /// What this side reads of the report documents' catalogue (7.8.0):
+    /// the schema ids and empty documents are the core's statement and
+    /// never bound here.
+    DocCatalogue { flow: DocFlow }
     /// Every table, as the core answers them less the envelope.
     Tables {
         languages: Languages,
@@ -113,7 +120,7 @@ leaked! {
         sites: ByLang<Vec<crate::graph::spec::SiteKind>>,
         calls: Calls, fourclass: Fourclass, ladder: Ladder, walk: Walk, outputs: Rows,
         docdup: Docdup, keys: Keys, flags: Flags, tombstone: Tombstone, compdb: Compdb,
-        protocol: Protocol,
+        protocol: Protocol, document: DocCatalogue,
     }
 }
 

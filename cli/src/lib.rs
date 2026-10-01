@@ -10,6 +10,7 @@ pub mod corelink;
 pub mod daemon;
 pub mod dedup;
 pub mod docdup;
+pub mod document;
 pub mod eject;
 pub mod erase;
 pub mod faces;

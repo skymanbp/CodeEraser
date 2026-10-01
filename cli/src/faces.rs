@@ -193,10 +193,7 @@ pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>
         query: Some(body.to_string()),
         why,
     };
-    Ok(crate::query::face::report_json(
-        &crate::query::face::run(root, None, core, &ask)?,
-        false,
-    ))
+    crate::query::face::run(root, None, core, &ask)
 }
 
 /// The rules file judged (plan v2.31 step 2): every assertion's
@@ -209,10 +206,7 @@ pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<
         query: None,
         why,
     };
-    Ok(crate::query::face::report_json(
-        &crate::query::face::run(root, None, core, &ask)?,
-        true,
-    ))
+    crate::query::face::run(root, None, core, &ask)
 }
 
 /// The dead code inside functions (plan v2.31 step 5): every unit
@@ -220,20 +214,14 @@ pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<
 /// — the SAME document `ce flow --format json` prints, `kinds`
 /// narrowing the listed findings as `--kind` does. Report-only: the
 /// CLI's `--check` is its own reading of `counts.judged`.
-pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
-    Ok(crate::flow_report::face::report_json(
-        &crate::flow_report::face::run(root, core, kinds)?,
-    ))
-}
+pub use crate::flow_report::face::run as flow;
 
 /// The clone-merge suggestions (plan v2.31 step 7): every clone
 /// group anti-unified by the core's merge/1 and labelled back — the
 /// SAME document `ce merge --format json` prints. Advisory: a core
 /// that cannot judge is named in the document, and no gate reads it.
 pub fn merge(root: &Path, core: &str) -> Result<Value> {
-    Ok(crate::merge::face::report_json(&crate::merge::face::run(
-        root, None, core,
-    )?))
+    crate::merge::face::run(root, None, core)
 }
 
 /// The architecture of the tree (plan v2.31 step 9): layers, the
@@ -243,7 +231,7 @@ pub fn merge(root: &Path, core: &str) -> Result<Value> {
 /// json` prints. Advisory: a core without the family is named in the
 /// document, and nothing here reaches a gate.
 pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {
-    crate::arch::face::document(root, core, impact)
+    crate::arch::face::run(root, None, core, impact)
 }
 
 /// The machine's own state. Unlike every sibling it cannot fail: a

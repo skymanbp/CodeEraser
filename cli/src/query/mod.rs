@@ -6,7 +6,8 @@
 //! and the GUI's Query screen — one document for all three faces.
 //! The division: this side lexes the text (lexer.rs), assembles the
 //! fact tables the program names from its own index (facts/) and
-//! labels the answers back (face.rs); the grammar, the sorts, the
+//! puts the names back into the document the core lays out (face.rs,
+//! rows.rs, report.rs); the grammar, the sorts, the
 //! safety and stratification checks, the evaluation and every proof
 //! are the core's (query/1, wire.rs). The built-in prelude below
 //! goes up the same wire as the user's text, and its predicates are
@@ -19,6 +20,8 @@ pub mod facts;
 pub mod legend;
 pub mod lexer;
 pub mod program;
+pub mod report;
+mod rows;
 pub mod wire;
 
 /// The built-in prelude (booklet §4.3), a `.rules` text: `ce query

@@ -3,7 +3,8 @@
 //! misplaced files and the directory metrics of the tree, and under
 //! `--impact` the files a change to the named ones reaches. Advisory:
 //! exit 0 with a document, 2 when the core could not judge (the
-//! document names why) or a named path is not a measured file.
+//! document names why), could not lay the document out, or a named
+//! path is not a measured file.
 
 use crate::main_prelude::*;
 use codeeraser::arch::{console, face};
@@ -30,18 +31,13 @@ pub fn arch_cmd(a: ArchArgs, core: &str) -> ExitCode {
     let j = a.judge;
     let root = or_cwd(j.root);
     let focus: Vec<String> = a.impact.iter().map(|p| spelled(&root, p)).collect();
-    let r = match face::run(&root, j.db, core, &focus) {
-        Ok(r) => r,
-        Err(err) => return fail("arch", err),
-    };
-    if json(j.format) {
-        println!("{}", face::report_json(&r));
-    } else {
-        console::console(&r).iter().for_each(|l| println!("{l}"));
-    }
-    if r.degraded.is_some() {
-        ExitCode::from(2)
-    } else {
-        ExitCode::SUCCESS
-    }
+    document_face(
+        "arch",
+        face::run(&root, j.db, core, &focus),
+        json(j.format),
+        console::console,
+        |r: &codeeraser::arch::report::Report| {
+            Ok(ExitCode::from(if r.degraded.is_some() { 2 } else { 0 }))
+        },
+    )
 }

@@ -357,6 +357,22 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - flow 腿的固定成本 = 两侧各降一次表 + 两次 daemon 往返（核判 `flow/1`）：299 行的文件每次写入中位 +10.5–11.1 ms，三组读数一致；找到发现时多落一行 feed，不另加可见成本。
 - 复跑：`cargo build --release` 各出一个二进制拷到车道目录；两份树各 `git init` + `ce dedup .`（daemon 的冷启动在第一次探针时还没盖完「全量已建」戳，探针会答 `degraded: true`——先用 CLI 建一次满索引）；各臂预热两跑后 ABAB ×10，`clean` 与 `finding` 各一坐。
 
+## v2.32 步 3B 文档改由核装配 A/B（实测 2026-10-01，release，同一台机、同一窗口：e877f389 干净树〔`git archive` + 测试子仓 74620180，去掉 `.gitmodules`〕的两份拷贝，两臂各一份，A = e877f389 的 release ce〔`git archive` 构建，步 1–3 之前的主线，五族文档在 Rust 里装配〕，B = 本批的 ce〔判决后问 `document/1` 并绑定〕，核同一个 ce-core 1.8.0〔proto 7.8.0〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕、五个面各暖跑一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；`--format json`，stdout 丢弃）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。
+
+| 面 | A（Rust 装配） | B（核装配 + 绑定） | 差 | 状态 |
+|---|---|---|---|---|
+| `ce arch .` | 1578.8（1537.8–1900.7） | 1568.2（1482.1–1733.2） | −10.6 | 噪声内 |
+| `ce flow .` | 2029.7（1997.8–2154.3） | 2009.1（1960.9–2181.2） | −20.6 | 噪声内 |
+| `ce merge .` | 9814.1（9169.1–11588.6） | 9991.1（9401.9–10383.2） | +177.0（+1.8 %） | 文档本身的代价，见下 |
+| `ce query 'dead(F)' .` | 2288.4（2215.5–2468.7） | 2249.4（2185.1–2600.2） | −39.0 | 噪声内 |
+| `ce rules .` | 2177.0（2064.0–2225.0） | 2130.3（2078.1–2188.6） | −46.7 | 噪声内（两臂都退 1：这棵树的 `ce.rules` 有违规） |
+
+- **一个面一个核进程**（变基前的两坐，A = 720283ba〔步 2〕的 ce）：第一坐的 B 每次装配文档都另起一个核（`Link::open`），五个面各多付一次起核（arch +140、flow +108、merge +718、query +117、rules +137 ms，中位数差）；改为文档沿用判决用过的那条链（`document::Held`：判决请求失败的链作废，文档时刻另起一条）后第二坐 arch +6、flow +40、query −6、rules +41、merge +593；再把绑定与读者的两次整份克隆去掉（`Value::take`、`Report::deserialize(&doc)`）后 arch −48、flow +3、merge +287（+3.9 %）、query −4、rules +15。车道变基到 e1cd85e1（带合并第二代）后对 e877f389 重量即上表。
+- **merge 多出的 ≈ 180 ms 是文档本身**：变基后本树 merge 文档 3056 组、6147 个成员、34,529 个洞，`document.request` 857,019 B（43,732 行）、应答 2,815,738 B。经中继核把这条请求录下、单问核五次：hello 47–53 ms，文档 347–433 ms（核读请求、校验、装配、写应答）；其余是 Rust 写请求、读应答、绑定。旧路在 Rust 里直接拼同一份 JSON，没有这一来一回。arch / flow / query 的文档小（arch 8,877 行 / 116 KB、flow 1,923 行 / 9.5 KB），一来一回在 20 ms 以内。
+- 复跑：A 臂的树由 `git archive`（e877f389；变基前的两坐为 720283ba，子仓 53ff829 同法）解到车道目录、`cargo build --release --locked`（独立 `CARGO_TARGET_DIR`）；B 臂本车道 `cargo build --release --locked`；树 = `git archive`（e877f389）加子仓、删 `.gitmodules`；脚本 `s9_flow/v232s3_gen/perf.py`、录请求的中继 `dump_core.py` 与单问核的 `core_alone.py`（车道目录，不入库）。
+
 ## v2.32 步 2 定义包改读 A/B（实测 2026-10-01，release，同一台机、同一窗口：两棵 baa4f8af 的 git 工作树〔测试子仓就位，两臂各一棵，免得两代索引互相重建〕，A = baa4f8af 的 ce〔`git archive` 构建，表在二进制里〕，B = 本批的 ce〔表读自 `.ce/tables-1.8.0-7.7.0.json`，缓存命中〕，核同一个 ce-core 1.8.0〔proto 7.7.0〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；量前 `Get-CimInstance` 处理器负载 8 %）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒；`hook_probe` = bench 的同名形（`ce probe --hook` 对两文件夹具〔`a.rs` / `c.rs` 一对 T2 孪生〕写第三个文件的 PreToolUse 信封，stdout 落文件），ABAB ×30。

@@ -11,7 +11,7 @@
 > 请求 `document.request`：`family`（`arch` / `query` / `rules` / `flow` / `merge` 五选一）+ `ranges`（每个可被引用的宇宙的大小，按族定键，含 `why`）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号……，按族定表名、行宽与每列所指的宇宙）+ `facts`（标量计数，按族定键）+ `degraded`（null 或 `why` 的下标）；三对象各须恰好是本族陈述的键。
 > 缺键、多键、行宽不对、下标出宇宙、`degraded` 越界、`degraded` 旁带判决的行或事实，都按名拒（code `contract`，`<表> <i>: <原因>` / `document: unknown family <名>` / `degraded: with rows <表>`），再加各族自己的检查（按槽一行的表、码表范围）。
 > 应答 `document.result`：`document` = 与该族报告 JSON 同形的文档，被度量仓库的字符串位一律是引用 `{"$": [类别, 整数…]}`（类别按族陈述，如 `path` / `dir` / `unit` / `why`）、产品常量（schema id、kind 名、原因名）直接出字符串；`counts{rows}`；`degraded:false`。行总数 > `docRowCap` 1,048,576 → `degraded:true, reason:"document_too_large"`、`document` 为该族的空文档。
-> 定义包（`tables/1`）加顶层键 `document`：每族 `{schema, empty}`（`flow` 另带 `kinds` 与 `judged`），`tablesDigest` 随之变。既有十六判决族字节零变化（既有 golden 只动 proto 字面与 hello 能力表 / `tablesDigest`）；新增 `contracts/fixtures/document/golden.ndjson`；电池 `DocumentProps`。
+> 定义包（`tables/1`）加顶层键 `document`：每族 `{schema, empty}`（`flow` 另带 `kinds` 与 `judged`），`tablesDigest` 随之变。五族三面都问 `document/1` 并绑定；判决没发生照样问（带 `degraded`），文档答不出 = 具名拒绝、退 2（设计册 §13 第 20 条）。既有十六判决族字节零变化（既有 golden 只动 proto 字面与 hello 能力表 / `tablesDigest`）；新增 `contracts/fixtures/document/golden.ndjson`；电池 `DocumentProps`。
 > **7.7.0**（定义包族，加性 minor，计划 v2.32 步 1，2026-10-01；设计册 `docs/reference/authority-track.md` §4）：
 > 第十七族 `tables/1`——不是判决族：不读仓库事实、不判任何东西，答的是核判决所用的全部语言与产品定义。请求 `tables.request`
 > 只有信封三键（`type` / `id` / `proto`），多出任何键按名拒（code `contract`，「tables: unexpected key <k>」，只点名第一个）；

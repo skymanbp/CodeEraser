@@ -30,6 +30,7 @@ schemaId = "ce.arch-report/0.1.0"
 -- | The request (a `files` row is arch/1's [F, D, lines], a rank row
 -- [slot, place in the joint order of file paths and slashed
 -- directories, the root `./`]).
+-- References: path [file], dir [directory], slashed [directory], why [text].
 statement :: String
 statement =
   "range files\nrange dirs\nrange why\n\

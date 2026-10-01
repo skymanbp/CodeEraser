@@ -2,67 +2,32 @@
 //! hub family (design booklet §5.4): every judged-language file the
 //! walk admits lowered (flow::lower), its units judged over flow/1
 //! (flow::wire::judge, the batches and the refusal-driven exclusion
-//! included), and every finding placed back through its unit's legend
-//! — the path, the unit, the kind by name, the lines, the variable,
-//! and whether the finding is judged or advisory. Labelling only: the
-//! findings and the refusals are the core's, and a document whose
-//! `degraded` names a reason carries no finding this side reached.
+//! included), and every finding placed back through its unit's legend.
+//! The core lays the document out (document/1, CE.Flow.Document): the
+//! kind names, which findings are judged, the order, the `--kind`
+//! filter and the counts are its. This side sends the placed findings
+//! (lines and variable index), the refusals, each file's language and
+//! place in path order, and puts the paths, unit names, variable names
+//! and reasons back (crate::document). A document whose `degraded`
+//! names a reason carries no finding this side reached.
 
-use super::{KINDS, Placed, judged, kind_name, place, unit_at};
-use crate::corelink::Link;
+use super::{place, unit_at};
+use crate::document::{self, Held, Request, Resolve, Why};
 use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire::{self, Verdict};
 use anyhow::{Result, anyhow};
-use serde::Serialize;
 use serde_json::Value;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::path::Path;
 
+/// The schema id the core's flow document carries (CE.Flow.Document);
+/// read here by the facts registry and the tests.
 pub const SCHEMA_ID: &str = "ce.flow-report/0.1.0";
 
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct FindingFace {
-    pub path: String,
-    pub unit: String,
-    pub kind: &'static str,
-    pub line: u32,
-    #[serde(rename = "lineEnd")]
-    pub line_end: u32,
-    pub var: Option<String>,
-    pub judged: bool,
-    #[serde(skip)]
-    pub nth: usize,
-    #[serde(skip)]
-    pub code: u8,
-}
-
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct RefusedFace {
-    pub path: String,
-    pub unit: String,
-    pub reason: String,
-    #[serde(skip)]
-    pub nth: usize,
-}
-
-pub struct Report {
-    pub counts: BTreeMap<&'static str, u64>,
-    pub findings: Vec<FindingFace>,
-    pub refused: Vec<RefusedFace>,
-    pub degraded: Option<String>,
-}
-
-impl Report {
-    /// The findings the gate reads: judged ones, whatever `--kind`
-    /// showed (the filter shapes the listing, never the verdict).
-    pub fn judged(&self) -> u64 {
-        self.counts.get("judged").copied().unwrap_or(0)
-    }
-}
-
-/// The whole leg: walked, lowered, judged, placed; `kinds` narrows the
-/// listed findings (empty = all), and an unknown kind name is refused.
-pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Report> {
+/// The whole leg: walked, lowered, judged, placed, laid out; `kinds`
+/// narrows the listed findings (empty = all), and an unknown kind name
+/// is refused.
+pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
     let shown = shown_kinds(kinds)?;
     let (_, lowered) = crate::scan::walk::each_surviving(root, |path, lang, bytes| {
         let text = String::from_utf8(bytes).ok();
@@ -70,12 +35,21 @@ pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Report> {
         Ok(text.and_then(|t| lower_file(&t, lang)).map(|f| (rel, f)))
     })?;
     let (paths, files): (Vec<String>, Vec<Lowered>) = lowered.into_iter().flatten().unzip();
-    let judgment = ask(core, &files)?;
-    Ok(assemble(&paths, &files, judgment, shown.as_ref()))
+    let mut held = document::open(core);
+    let judgment = ask(&mut held, &files)?;
+    let mut names = Names {
+        paths: &paths,
+        files: &files,
+        why: Why::default(),
+    };
+    let req = request(&mut names, judgment, shown.as_ref());
+    document::assemble_over(core, held, req, &names)
 }
 
-/// The kinds a face asked to see, by name; None = every kind.
+/// The kinds a face asked to see, by name (the package's kind names,
+/// the core's); None = every kind.
 pub fn shown_kinds(kinds: &[String]) -> Result<Option<BTreeSet<u8>>> {
+    let known = crate::tables::get().document.flow.kinds;
     let names: Vec<&str> = kinds
         .iter()
         .flat_map(|k| k.split(','))
@@ -87,144 +61,176 @@ pub fn shown_kinds(kinds: &[String]) -> Result<Option<BTreeSet<u8>>> {
     }
     names
         .iter()
-        .map(|n| match KINDS.iter().position(|k| k == n) {
+        .map(|n| match known.iter().position(|k| k == n) {
             Some(i) => Ok(i as u8),
             None => Err(anyhow!(
                 "unknown kind {n:?}: expected {}",
-                KINDS.join(" | ")
+                known.join(" | ")
             )),
         })
         .collect::<Result<BTreeSet<u8>>>()
         .map(Some)
 }
 
-/// The core asked once over every lowered unit: the outer error is a
-/// wire skew (a malformed reply is never a healthy one), the inner one
-/// a named non-judgment — no core, or a core without the family. A
-/// tree with no unit asks nothing.
-fn ask(core: &str, files: &[Lowered]) -> Result<Result<Verdict, String>> {
+/// The core asked once over every lowered unit, over the face's link:
+/// the outer error is a wire skew (a malformed reply is never a healthy
+/// one), the inner one a named non-judgment — no core, or a core
+/// without the family. A tree with no unit asks nothing.
+fn ask(held: &mut Held, files: &[Lowered]) -> Result<Result<Verdict, String>> {
     if files.iter().all(|f| f.units.is_empty()) {
         return Ok(Ok(Verdict::default()));
     }
-    let mut link = match Link::open(core) {
-        Ok((link, _)) => link,
-        Err(why) => return Ok(Err(why)),
+    let link = match held {
+        Ok(link) => link,
+        Err(why) => return Ok(Err(why.clone())),
     };
     if !link.has(wire::CAP) {
         return Ok(Err(format!("core offers no {}", wire::CAP)));
     }
-    wire::judge(&mut link, files)
-        .map(Ok)
-        .map_err(|e| anyhow!(e))
+    wire::judge(link, files).map(Ok).map_err(|e| anyhow!(e))
 }
 
-/// The report over the placed verdict (or the named degradation):
-/// the counts whole, the findings in (path, unit, kind, line) order
-/// and narrowed to `shown`, the refusals in (path, unit) order.
-pub fn assemble(
-    paths: &[String],
-    files: &[Lowered],
+/// The document request over the verdict (or the named degradation):
+/// every finding a unit's legend places as [file, nth, kind, line,
+/// lineEnd, variable or −1], the refusals as [file, nth, reason], each
+/// file's language and rank, the kinds shown, the measured tallies.
+fn request(
+    names: &mut Names,
     judgment: Result<Verdict, String>,
     shown: Option<&BTreeSet<u8>>,
-) -> Report {
+) -> Request {
+    let files = names.files;
     let (verdict, degraded) = match judgment {
         Ok(v) => (v, None),
-        Err(why) => (Verdict::default(), Some(why)),
+        Err(why) => (Verdict::default(), Some(names.why.add(why))),
     };
-    let mut findings: Vec<FindingFace> = verdict
-        .findings
-        .iter()
-        .filter_map(|(f, nth, x)| {
-            Some(face(
-                &paths[*f],
-                files[*f].lang,
-                place(&files[*f], *nth, x)?,
-            ))
-        })
-        .collect();
-    findings
-        .sort_by(|a, b| (&a.path, a.nth, a.code, a.line).cmp(&(&b.path, b.nth, b.code, b.line)));
-    let refused = refusals(paths, files, &verdict);
-    let mut counts = tables(files);
-    counts.insert("findings", findings.len() as u64);
-    counts.insert("dynamicUnits", verdict.dynamic_units);
-    counts.insert("refused", refused.len() as u64);
-    counts.insert(
-        "judged",
-        findings.iter().filter(|f| f.judged).count() as u64,
-    );
-    findings.retain(|f| shown.is_none_or(|s| s.contains(&f.code)));
-    counts.insert("shown", findings.len() as u64);
-    Report {
-        counts,
-        findings,
-        refused,
-        degraded,
+    let found = placed(files, &verdict);
+    let (unlowered, refused) = reasons(names, &verdict);
+    let rank = document::ranks(names.paths.iter().map(String::as_str));
+    let numbered = |xs: Vec<usize>| -> Vec<[usize; 2]> {
+        xs.into_iter().enumerate().map(|(f, x)| [f, x]).collect()
+    };
+    let req = Request::new("flow")
+        .range("files", files.len())
+        .rows(
+            "langs",
+            numbered(files.iter().map(|x| x.lang as usize).collect()),
+        )
+        .rows("rankFiles", numbered(rank))
+        .rows(
+            "shown",
+            shown.map_or(Vec::new(), |s| s.iter().map(|k| [*k]).collect()),
+        )
+        .rows("unlowered", unlowered)
+        .rows("findings", found)
+        .rows("refused", refused)
+        .fact("dynamicUnits", verdict.dynamic_units);
+    let req = tallies(files)
+        .into_iter()
+        .fold(req, |q, (k, n)| q.fact(k, n));
+    let req = req.range("why", names.why.count());
+    match degraded {
+        Some(i) => req.degraded(i),
+        None => req,
     }
 }
 
-fn face(path: &str, lang: crate::scan::lang::Lang, p: Placed) -> FindingFace {
-    FindingFace {
-        path: path.to_string(),
-        judged: judged(lang, p.kind),
-        kind: kind_name(p.kind),
-        unit: p.unit,
-        line: p.line,
-        line_end: p.line_end,
-        var: p.var,
-        nth: p.nth,
-        code: p.kind,
+/// The units this side could not lower and the units the core refused,
+/// each as [file, nth, reason text].
+fn reasons(names: &mut Names, verdict: &Verdict) -> (Vec<[usize; 3]>, Vec<[usize; 3]>) {
+    let mut unlowered = Vec::new();
+    for (f, file) in names.files.iter().enumerate() {
+        for u in &file.unlowered {
+            unlowered.push([f, u.nth, names.why.add(u.reason.clone())]);
+        }
     }
+    let refused = verdict
+        .refused
+        .iter()
+        .map(|(f, nth, why)| [*f, *nth, names.why.add(why.clone())])
+        .collect();
+    (unlowered, refused)
+}
+
+/// Every finding its unit's legend places, as [file, nth, kind, line,
+/// lineEnd, variable or −1], in the verdict's order (a finding the
+/// legend cannot place is dropped, as it always was).
+fn placed(files: &[Lowered], verdict: &Verdict) -> Vec<[i64; 6]> {
+    let row = |f: usize, nth: usize, x: &crate::flow::wire::Finding| {
+        let p = place(&files[f], nth, x)?;
+        let legend = &unit_at(&files[f], nth)?.legend;
+        let v = usize::try_from(x.v)
+            .ok()
+            .filter(|v| *v < legend.var_name.len())
+            .map_or(-1, |v| v as i64);
+        let (f, nth) = (f as i64, nth as i64);
+        Some([
+            f,
+            nth,
+            i64::from(p.kind),
+            i64::from(p.line),
+            i64::from(p.line_end),
+            v,
+        ])
+    };
+    verdict
+        .findings
+        .iter()
+        .filter_map(|(f, nth, x)| row(*f, *nth, x))
+        .collect()
 }
 
 /// The rows every lowered unit carries into the four tables.
-fn tables(files: &[Lowered]) -> BTreeMap<&'static str, u64> {
+fn tallies(files: &[Lowered]) -> [(&'static str, u64); 4] {
     let units = files.iter().flat_map(|f| &f.units);
     let sum = |rows: fn(&crate::flow::lower::Unit) -> usize| {
         units.clone().map(rows).sum::<usize>() as u64
     };
-    BTreeMap::from([
+    [
         ("units", sum(|_| 1)),
         ("stmts", sum(|u| u.stmts.len())),
         ("vars", sum(|u| u.vars.len())),
         ("uses", sum(|u| u.uses.len())),
-    ])
+    ]
 }
 
-/// Every unit left unjudged, with its reason: the lowering's (a unit
-/// with no legal shape, never sent) and the core's (a unit it refused
-/// by contract, or one heavier than the cap).
-fn refusals(paths: &[String], files: &[Lowered], v: &Verdict) -> Vec<RefusedFace> {
-    let face = |f: usize, nth: usize, unit: &str, reason: &str| RefusedFace {
-        path: paths[f].clone(),
-        unit: unit.to_string(),
-        reason: reason.to_string(),
-        nth,
-    };
-    let mut out = Vec::new();
-    for (f, file) in files.iter().enumerate() {
-        out.extend(
-            file.unlowered
-                .iter()
-                .map(|u| face(f, u.nth, &u.name, &u.reason)),
-        );
-    }
-    for (f, nth, why) in &v.refused {
-        let unit = unit_at(&files[*f], *nth).map_or("", |u| u.name.as_str());
-        out.push(face(*f, *nth, unit, why));
-    }
-    out.sort_by_key(|r| (r.path.clone(), r.nth));
-    out
+/// The flow document's strings: the paths, the unit names (a unit the
+/// lowering left out by its own name; one the core refused that is no
+/// lowered unit, empty), the variable names, the reasons.
+struct Names<'a> {
+    paths: &'a [String],
+    files: &'a [Lowered],
+    why: Why,
 }
 
-pub fn report_json(r: &Report) -> Value {
-    serde_json::json!({
-        "schema": SCHEMA_ID,
-        "counts": r.counts,
-        "findings": r.findings,
-        "refused": r.refused,
-        "degraded": r.degraded,
-    })
+impl Names<'_> {
+    fn file(&self, f: i128) -> Option<&Lowered> {
+        usize::try_from(f).ok().and_then(|f| self.files.get(f))
+    }
+}
+
+impl Resolve for Names<'_> {
+    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
+        match (class, ints) {
+            ("path", _) => document::at(self.paths, ints),
+            ("why", _) => self.why.at(ints),
+            ("unit", [f, nth]) => {
+                let (file, nth) = (self.file(*f)?, usize::try_from(*nth).ok()?);
+                let unit = unit_at(file, nth).map(|u| u.name.clone());
+                let left = file
+                    .unlowered
+                    .iter()
+                    .find(|u| u.nth == nth)
+                    .map(|u| u.name.clone());
+                Some(unit.or(left).unwrap_or_default())
+            }
+            ("var", [f, nth, v]) => {
+                let unit = unit_at(self.file(*f)?, usize::try_from(*nth).ok()?)?;
+                unit.legend.var_name.get(usize::try_from(*v).ok()?).cloned()
+            }
+            _ => None,
+        }
+    }
 }
 
 #[cfg(test)]

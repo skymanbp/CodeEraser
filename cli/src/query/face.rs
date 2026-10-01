@@ -3,110 +3,40 @@
 //! goal with its columns and sorts, every answer labelled through the
 //! request's own tables, every proof row named, every error at its
 //! `where line:column`, the core's counts, and — when the core did
-//! not judge — the named reason. Labelling only: the answers, the
-//! proofs and the errors are the core's (wire.rs), and a document
-//! with a `degraded` reason carries no verdict this side reached.
+//! not judge — the named reason. The core judges (query/1, wire.rs)
+//! and lays the document out (document/1, CE.Query.Document); this
+//! side sends the program's facts, its own faults (a lexical one, a
+//! glob it could not read), the goals as spelled and the core's
+//! tables back, and puts the positions, names and values back
+//! (crate::document). A document with a `degraded` reason carries no
+//! verdict this side reached.
 
 use super::columns::{self, GoalHead};
 use super::facts::{self, Labels};
-use super::program::{Fault, Program, num};
-use super::{PRELUDE, legend, wire};
-use crate::corelink::Link;
+use super::program::Program;
+use super::{PRELUDE, wire};
+use crate::document::{self, Held, Request, Resolve, Why};
 use anyhow::{Result, anyhow};
-use serde::Serialize;
 use serde_json::Value;
-use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-/// The two documents (booklet §4.6): a question answered, a rules
-/// file judged.
-pub const SCHEMA_ID: &str = "ce.query-report/0.1.0";
-pub const RULES_SCHEMA_ID: &str = "ce.rules-report/0.1.0";
-
-/// Error names by code: 0 is this side's lexical fault, 1..9 the
-/// core's (CE.Query.Cost).
-const ERROR_NAMES: [&str; 10] = [
-    "lexical",
-    "syntax error",
-    "unknown predicate",
-    "arity mismatch",
-    "sort mismatch",
-    "unsafe variable",
-    "unstratifiable negation",
-    "prelude predicate redefined",
-    "aggregate shape",
-    "anonymous head",
-];
-
 /// What a face asks: a rules file (its label and text), a question,
-/// whether queries carry proofs.
+/// whether queries carry proofs. No question = the rules document.
 pub struct Ask {
     pub rules: Option<(String, String)>,
     pub query: Option<String>,
     pub why: bool,
 }
 
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct GoalFace {
-    pub goal: usize,
-    pub kind: &'static str,
-    pub name: Option<String>,
-    pub columns: Vec<String>,
-    pub sorts: Vec<&'static str>,
-}
+/// The document request's tables.
+const TABLES: [&str; 7] = [
+    "faults", "heads", "goals", "preds", "answers", "proof", "errors",
+];
 
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct AnswerFace {
-    pub goal: usize,
-    pub values: Vec<String>,
-    pub raw: Vec<Value>,
-}
-
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct ProofFace {
-    pub goal: usize,
-    pub answer: usize,
-    pub node: i64,
-    pub parent: i64,
-    pub rule: i64,
-    pub pred: String,
-    pub args: Vec<String>,
-}
-
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
-pub struct ErrorFace {
-    pub at: String,
-    pub token: Option<usize>,
-    pub code: i64,
-    pub what: String,
-}
-
-pub struct Report {
-    pub rules_file: Option<String>,
-    pub query: Option<String>,
-    pub why: bool,
-    pub tokens: usize,
-    pub clauses: usize,
-    pub prelude: usize,
-    pub goals: Vec<GoalFace>,
-    pub answers: Vec<AnswerFace>,
-    pub proof: Vec<ProofFace>,
-    pub errors: Vec<ErrorFace>,
-    pub counts: BTreeMap<&'static str, u64>,
-    pub degraded: Option<String>,
-}
-
-impl Report {
-    pub fn violations(&self) -> u64 {
-        self.counts.get("violations").copied().unwrap_or(0)
-    }
-
-    /// Whether the document carries a judgment: no lexical or program
-    /// error, and a core that answered.
-    pub fn judged(&self) -> bool {
-        self.errors.is_empty() && self.degraded.is_none()
-    }
-}
+/// The two documents' schema ids (CE.Query.Document); read here by the
+/// facts registry and the tests.
+pub const SCHEMA_ID: &str = "ce.query-report/0.1.0";
+pub const RULES_SCHEMA_ID: &str = "ce.rules-report/0.1.0";
 
 /// A question as the user typed it, in query form: `?-` in front and
 /// `.` behind unless written.
@@ -117,69 +47,126 @@ pub fn question(text: &str) -> String {
     format!("{head}{t}{tail}")
 }
 
-/// The whole leg: lexed, assembled, judged, labelled.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Report> {
+/// The whole leg: lexed, assembled, judged, laid out.
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Value> {
     let query = ask.query.as_deref().map(question);
     let rules = ask.rules.as_ref().map(|(_, text)| text.as_str());
-    let mut r = empty(ask, query.clone());
-    let program = match Program::lex(PRELUDE, rules, query.as_deref()) {
-        Ok(p) => p,
-        Err(f) => {
-            r.errors.push(lexical(&f));
-            return Ok(r);
-        }
-    };
-    r.tokens = program.tokens.len();
-    r.clauses = program.clauses;
-    r.prelude = program.prelude_clauses;
-    r.errors = glob_faults(root, &program);
-    if !r.errors.is_empty() {
-        return Ok(r);
-    }
-    let facts = facts::assemble(root, db, core, &program)?;
-    let body = wire::body(&program.wire(), &facts.tables, r.prelude, ask.why, false);
-    let reply = match Link::open(core).and_then(|(mut link, _)| wire::ask(&mut link, body)) {
-        Ok(reply) => reply,
-        Err(why) => {
-            r.degraded = Some(why);
-            return Ok(r);
-        }
-    };
-    let j = wire::consume(&reply, r.tokens).map_err(|e| anyhow!("{e}"))?;
-    label(&mut r, &program, &facts.labels, j)?;
-    Ok(r)
-}
-
-fn empty(ask: &Ask, query: Option<String>) -> Report {
-    Report {
+    let mut names = Names {
         rules_file: ask.rules.as_ref().map(|(label, _)| label.clone()),
-        query,
+        query: query.clone(),
+        program: None,
+        heads: Vec::new(),
+        labels: None,
+        why: Why::default(),
+    };
+    let family = if ask.query.is_some() {
+        "query"
+    } else {
+        "rules"
+    };
+    let mut req = Request::new(family)
+        .fact("askWhy", u8::from(ask.why))
+        .fact("rulesFile", u8::from(names.rules_file.is_some()))
+        .fact("query", u8::from(query.is_some()));
+    let mut held = Err(String::new());
+    let ground = Ground {
+        root,
+        db,
+        core,
         why: ask.why,
-        tokens: 0,
-        clauses: 0,
-        prelude: 0,
-        goals: Vec::new(),
-        answers: Vec::new(),
-        proof: Vec::new(),
-        errors: Vec::new(),
-        counts: wire::COUNTS.iter().map(|k| (*k, 0)).collect(),
-        degraded: None,
+    };
+    match Program::lex(PRELUDE, rules, query.as_deref()) {
+        Ok(program) => (req, held) = judge(ground, program, &mut names, req)?,
+        Err(f) => {
+            let at = format!("{} {}:{}", f.src.word(), f.line, f.col);
+            req = req.rows("faults", [[names.why.add(at), names.why.add(f.what)]]);
+        }
     }
+    document::assemble_over(core, held, finish(req, &names), &names)
 }
 
-fn lexical(f: &Fault) -> ErrorFace {
-    ErrorFace {
-        at: format!("{} {}:{}", f.src.word(), f.line, f.col),
-        token: None,
-        code: 0,
-        what: f.what.clone(),
+/// Every table and fact the road did not fill, empty or zero, and the
+/// two ranges: the reason texts, and the token positions an error may
+/// name (the stream's length plus one, the end of input).
+fn finish(req: Request, names: &Names) -> Request {
+    let at = names.program.as_ref().map_or(0, |p| p.tokens.len() + 1);
+    req.empty(&TABLES)
+        .zero(&[
+            "tokens",
+            "clauses",
+            "prelude",
+            "askWhy",
+            "rulesFile",
+            "query",
+        ])
+        .zero(&wire::COUNTS)
+        .range("why", names.why.count())
+        .range("at", at)
+}
+
+/// Where a program is judged: the tree, its index, the core, and
+/// whether the queries carry their proofs.
+struct Ground<'a> {
+    root: &'a Path,
+    db: Option<PathBuf>,
+    core: &'a str,
+    why: bool,
+}
+
+/// A lexed program: its faults, or the core's judgment of it, with the
+/// link it was judged over (spent when the request failed).
+fn judge(g: Ground, program: Program, names: &mut Names, req: Request) -> Result<(Request, Held)> {
+    let req = req
+        .fact("tokens", program.tokens.len())
+        .fact("clauses", program.clauses)
+        .fact("prelude", program.prelude_clauses);
+    let faults = glob_faults(g.root, &program);
+    if !faults.is_empty() {
+        let rows: Vec<[usize; 2]> = faults
+            .into_iter()
+            .map(|(at, what)| [names.why.add(at), names.why.add(what)])
+            .collect();
+        names.program = Some(program);
+        return Ok((req.rows("faults", rows), Err(String::new())));
     }
+    let facts = facts::assemble(g.root, g.db, g.core, &program)?;
+    let body = wire::body(
+        &program.wire(),
+        &facts.tables,
+        program.prelude_clauses,
+        g.why,
+        false,
+    );
+    let mut held = document::open(g.core);
+    let reply = match &mut held {
+        Ok(link) => wire::ask(link, body),
+        Err(why) => Err(why.clone()),
+    };
+    names.heads = columns::goals(&program);
+    names.labels = Some(facts.labels);
+    let tokens = program.tokens.len();
+    names.program = Some(program);
+    let reply = match reply {
+        Ok(reply) => reply,
+        Err(why) => return Ok((req.degraded(names.why.add(why)), Err(String::new()))),
+    };
+    let j = wire::consume(&reply, tokens).map_err(|e| anyhow!("{e}"))?;
+    Ok((answered(req, names, j)?, held))
+}
+
+/// The core's answer: its counts, then its named reason or its tables.
+fn answered(req: Request, names: &mut Names, j: wire::Judged) -> Result<Request> {
+    let req = j.counts.iter().fold(req, |q, (k, n)| q.fact(k, *n));
+    if let Some(why) = j.degraded {
+        return Ok(req.degraded(names.why.add(why)));
+    }
+    super::rows::judged(req, &names.heads, &j)
 }
 
 /// Every glob the program spelled, compiled through the exclude
 /// list's dialect before any table is built: a glob it cannot read
-/// is a program error at the glob's token.
-fn glob_faults(root: &Path, program: &Program) -> Vec<ErrorFace> {
+/// is a program error at the glob's token, as (position, message).
+fn glob_faults(root: &Path, program: &Program) -> Vec<(String, String)> {
     let mut out = Vec::new();
     for (id, glob) in program.sets.iter().enumerate() {
         let Err(why) =
@@ -192,123 +179,64 @@ fn glob_faults(root: &Path, program: &Program) -> Vec<ErrorFace> {
             .iter()
             .position(|t| t.kind == super::lexer::Kind::Set.code() && t.value == id as i128)
             .map_or_else(|| "?".to_string(), |i| program.locate(i));
-        out.push(ErrorFace {
-            at,
-            token: None,
-            code: 0,
-            what: why.trim_start_matches("ce.toml ").to_string(),
-        });
+        out.push((at, why.trim_start_matches("ce.toml ").to_string()));
     }
     out
 }
 
-/// The core's tables labelled through the program and the facts.
-fn label(r: &mut Report, program: &Program, labels: &Labels, j: wire::Judged) -> Result<()> {
-    r.counts = j.counts.clone();
-    r.degraded = j.degraded.clone();
-    r.errors = j
-        .errors
-        .iter()
-        .map(|(at, code)| ErrorFace {
-            at: program.locate(*at),
-            token: Some(*at),
-            code: *code,
-            what: ERROR_NAMES[*code as usize].to_string(),
-        })
-        .collect();
-    // an erroring program answers no goal: nothing to label
-    if !r.errors.is_empty() || r.degraded.is_some() {
-        return Ok(());
-    }
-    let heads: Vec<GoalHead> = columns::goals(program);
-    if heads.len() != j.goals.len() {
-        return Err(anyhow!(
-            "wire skew: {} goals sent, {} answered",
-            heads.len(),
-            j.goals.len()
-        ));
-    }
-    r.goals = heads
-        .into_iter()
-        .zip(&j.goals)
-        .enumerate()
-        .map(|(goal, (h, (_, sorts)))| GoalFace {
-            goal,
-            kind: h.kind,
-            name: h.name,
-            columns: h.columns,
-            sorts: sorts.iter().map(|s| legend::sort_name(*s)).collect(),
-        })
-        .collect();
-    let sorts_of = |goal: usize| j.goals[goal].1.clone();
-    r.answers = j
-        .answers
-        .iter()
-        .map(|(goal, values)| AnswerFace {
-            goal: *goal,
-            values: render(labels, &sorts_of(*goal), values),
-            raw: values.iter().map(|v| num(*v)).collect(),
-        })
-        .collect();
-    r.proof = j
-        .proof
-        .iter()
-        .map(|p| ProofFace {
-            goal: p.goal,
-            answer: p.answer,
-            node: p.node,
-            parent: p.parent,
-            rule: p.rule,
-            pred: if p.pred < 0 {
-                "?-".into()
-            } else {
-                program.pred_name(p.pred)
-            },
-            args: render(labels, &pred_sorts(&j, p, &sorts_of(p.goal)), &p.args),
-        })
-        .collect();
-    Ok(())
+/// The query document's strings: the positions, the goals' names and
+/// columns, the values under their sorts, the predicate names, the
+/// rules file, the question, and this side's own texts.
+struct Names {
+    rules_file: Option<String>,
+    query: Option<String>,
+    program: Option<Program>,
+    heads: Vec<GoalHead>,
+    labels: Option<Labels>,
+    why: Why,
 }
 
-/// A proof node's argument sorts: the schema's for a fact, the
-/// core's resolved ones for a program predicate, the goal's own for
-/// a query root.
-fn pred_sorts(j: &wire::Judged, p: &wire::ProofRow, goal_sorts: &[i64]) -> Vec<i64> {
-    if p.pred < 0 {
-        return goal_sorts.to_vec();
+impl Names {
+    fn head(&self, g: i128) -> Option<&GoalHead> {
+        usize::try_from(g).ok().and_then(|g| self.heads.get(g))
     }
-    if let Some(sorts) = j.preds.get(&p.pred) {
-        return sorts.clone();
+
+    /// The classes the program holds: a token's place, a predicate.
+    fn of_program(&self, class: &str, ints: &[i128]) -> Option<String> {
+        let program = self.program.as_ref()?;
+        match (class, ints) {
+            ("at", [t]) => Some(program.locate(usize::try_from(*t).ok()?)),
+            ("pred", [p]) => Some(program.pred_name(i64::try_from(*p).ok()?)),
+            _ => None,
+        }
     }
-    u32::try_from(p.pred)
-        .ok()
-        .and_then(legend::pred_of)
-        .map(|s| s.sorts.clone())
-        .unwrap_or_default()
+
+    /// The classes the goals and their answers hold.
+    fn of_goals(&self, class: &str, ints: &[i128]) -> Option<String> {
+        match (class, ints) {
+            ("goal_name", [g]) => self.head(*g)?.name.clone(),
+            ("column", [g, i]) => self
+                .head(*g)?
+                .columns
+                .get(usize::try_from(*i).ok()?)
+                .cloned(),
+            ("value", [s, v]) => Some(self.labels.as_ref()?.render(i64::try_from(*s).ok()?, *v)),
+            _ => None,
+        }
+    }
 }
 
-fn render(labels: &Labels, sorts: &[i64], values: &[i128]) -> Vec<String> {
-    values
-        .iter()
-        .enumerate()
-        .map(|(i, v)| labels.render(sorts.get(i).copied().unwrap_or(-1), *v))
-        .collect()
-}
-
-pub fn report_json(r: &Report, rules: bool) -> Value {
-    serde_json::json!({
-        "schema": if rules { RULES_SCHEMA_ID } else { SCHEMA_ID },
-        "program": {
-            "rules_file": r.rules_file, "query": r.query, "why": r.why,
-            "tokens": r.tokens, "clauses": r.clauses, "prelude": r.prelude,
-        },
-        "goals": r.goals,
-        "answers": r.answers,
-        "proof": r.proof,
-        "errors": r.errors,
-        "counts": r.counts,
-        "degraded": r.degraded,
-    })
+impl Resolve for Names {
+    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
+        match (class, ints) {
+            ("why", _) => self.why.at(ints),
+            ("rules_file", []) => self.rules_file.clone(),
+            ("query", []) => self.query.clone(),
+            _ => self
+                .of_program(class, ints)
+                .or_else(|| self.of_goals(class, ints)),
+        }
+    }
 }
 
 #[cfg(test)]
