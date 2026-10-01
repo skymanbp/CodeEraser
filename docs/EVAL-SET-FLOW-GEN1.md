@@ -5,8 +5,26 @@
 > 于 F′ 从主册逐字节搬到这里，只搬不改——节内「见『仪器与门』」「见『候选池』一段」「见『步 4 提交 E』一节」指的都是主册的节。
 > 第一代的宇宙 `flow-slice-<键>-v1.json`、样本 `flow-sample-<语言>-v1.json` 与审阅档 `flow-review-<语言>-v1.json` 仍在盘上，
 > 是那一代的记录（门只读考题表指向的代）；第一代的十份精度册自提交 E 起退役（删出树、历史里仍在）。池一格没动的六门（Python、
-> TSX、Go、C、Java、Lua）只有一代，它们的各节留在主册；第二代各节、两代共有题的比对与此后的精度册都在主册。本册与主册同入冻结集
+> TSX、Go、C、Java、Lua）只有一代，它们的「宇宙与抽样」「盲判」两节留在主册，退役的「精度（第一代，提交 E 退役）」一节于 G（2026-09-30）
+> 逐字节搬到这里（只搬不改）；第二代各节、两代共有题的比对与 G 起重生成的精度册都在主册。本册与主册同入冻结集
 > （`frozen_set.rs`：不扫芯片、不生成、退出引文门），行号引文一律不写。
+
+## Python（步 4 提交 B）
+
+### 精度（第一代，2026-09-30；提交 E 退役）
+
+`flow-precision-python-v1.json`：112 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
+
+| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 不可达 | 0 | 0 | 31 | 0 | 0 | 0 | 0 | 31 | — | — |
+| 1 死存储 | 1 | 0 | 34 | 0 | 0 | 0 | 1 | 34 | 1 / 1 | 1 / 1 |
+| 2 未用局部量 | 1 | 0 | 15 | 0 | 0 | 0 | 1 | 15 | 1 / 1 | 1 / 1 |
+| 3 未用形参 | 15 | 0 | 15 | 0 | 0 | 0 | 15 | 15 | 15 / 15 | 15 / 15 |
+
+门：类 0 vacuous（0 / 31 个负例） · 类 1 pass（1 / 1） · 类 2 pass（1 / 1）；`judged` = true（类 3 顾问只记不判）。
+
+误报（类 0–2）0 条、漏报（类 0–2）0 条、顾问误报（类 3）0 条、unjudged 0 道。
 
 ## TypeScript（步 4 提交 B）
 
@@ -86,6 +104,23 @@ notes：无。
 
 unjudged 0 道。
 
+## TSX（步 4 提交 B）
+
+### 精度（第一代，2026-09-30；提交 E 退役）
+
+`flow-precision-tsx-v1.json`：52 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
+
+| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 不可达 | 0 | 0 | 7 | 0 | 0 | 0 | 0 | 7 | — | — |
+| 1 死存储 | 0 | 0 | 15 | 0 | 0 | 0 | 0 | 15 | — | — |
+| 2 未用局部量 | 0 | 0 | 15 | 0 | 0 | 0 | 0 | 15 | — | — |
+| 3 未用形参 | 0 | 0 | 15 | 0 | 0 | 0 | 0 | 15 | — | — |
+
+门：类 0 vacuous（0 / 7 个负例） · 类 1 vacuous（0 / 15 个负例） · 类 2 vacuous（0 / 15 个负例）；`judged` = true（类 3 顾问只记不判）。
+
+误报（类 0–2）0 条、漏报（类 0–2）0 条、顾问误报（类 3）0 条、unjudged 0 道。
+
 ## Rust（步 4 提交 B）
 
 ### 宇宙与抽样（2026-09-30 冻结）
@@ -156,6 +191,40 @@ notes：无。
 - 类 3 层 A `ripgrep:crates/core/flags/doc/mod.rs:20` `render_custom_markup` 变量 `tag`：tag is read through the inline format capture in `let tag_prefix = format!(r"\{tag}{{");`.
 
 漏报（类 0–2）0 条、unjudged 0 道。
+
+## Go（步 4 提交 B）
+
+### 精度（第一代，2026-09-30；提交 E 退役）
+
+`flow-precision-go-v1.json`：120 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
+
+| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 不可达 | 0 | 0 | 30 | 0 | 0 | 0 | 0 | 30 | — | — |
+| 1 死存储 | 0 | 0 | 45 | 0 | 0 | 0 | 0 | 45 | — | — |
+| 2 未用局部量 | 0 | 0 | 15 | 0 | 0 | 0 | 0 | 15 | — | — |
+| 3 未用形参 | 15 | 0 | 15 | 0 | 0 | 0 | 15 | 15 | 15 / 15 | 15 / 15 |
+
+门：类 0 vacuous（0 / 30 个负例） · 类 1 vacuous（0 / 45 个负例） · 类 2 vacuous（0 / 15 个负例）；`judged` = true（类 3 顾问只记不判）。
+
+误报（类 0–2）0 条、漏报（类 0–2）0 条、顾问误报（类 3）0 条、unjudged 0 道。
+
+## C（步 4 提交 B）
+
+### 精度（第一代，2026-09-30；提交 E 退役）
+
+`flow-precision-c-v1.json`：122 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
+
+| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 不可达 | 0 | 0 | 45 | 0 | 0 | 0 | 0 | 45 | — | — |
+| 1 死存储 | 0 | 0 | 45 | 0 | 0 | 0 | 0 | 45 | — | — |
+| 2 未用局部量 | 0 | 0 | 15 | 0 | 0 | 0 | 0 | 15 | — | — |
+| 3 未用形参 | 2 | 0 | 15 | 0 | 0 | 0 | 2 | 15 | 2 / 2 | 2 / 2 |
+
+门：类 0 vacuous（0 / 45 个负例） · 类 1 vacuous（0 / 45 个负例） · 类 2 vacuous（0 / 15 个负例）；`judged` = true（类 3 顾问只记不判）。
+
+误报（类 0–2）0 条、漏报（类 0–2）0 条、顾问误报（类 3）0 条、unjudged 0 道。
 
 ## C++（步 4 提交 B）
 
@@ -234,6 +303,43 @@ notes：无。
 - 类 3 层 A `fmt:test/gtest/gmock/gmock.h:9118` `TypedExpectation::TypedExpectation` 变量 `a_line`：The mem-initializer `: ExpectationBase(a_file, a_line, a_source_text)` passes a_line to the base-class constructor.
 
 unjudged 0 道。
+
+## Java（步 4 提交 B）
+
+### 精度（第一代，2026-09-30；提交 E 退役）
+
+`flow-precision-java-v1.json`：140 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
+
+| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 不可达 | 0 | 0 | 35 | 0 | 0 | 0 | 0 | 35 | — | — |
+| 1 死存储 | 0 | 0 | 45 | 0 | 0 | 0 | 0 | 45 | — | — |
+| 2 未用局部量 | 15 | 0 | 15 | 0 | 0 | 0 | 15 | 15 | 15 / 15 | 15 / 15 |
+| 3 未用形参 | 15 | 0 | 15 | 0 | 0 | 0 | 15 | 15 | 15 / 15 | 15 / 15 |
+
+门：类 0 vacuous（0 / 35 个负例） · 类 1 vacuous（0 / 45 个负例） · 类 2 pass（15 / 15）；`judged` = true（类 3 顾问只记不判）。
+
+误报（类 0–2）0 条、漏报（类 0–2）0 条、顾问误报（类 3）0 条、unjudged 0 道。
+
+## Lua（步 4 提交 B）
+
+### 精度（第一代，2026-09-30；提交 E 退役）
+
+`flow-precision-lua-v1.json`：142 道，生成于 C1 提交 `bb9bdc8` 的干净树（dirty = false）；判词与四态见「仪器与门」。
+
+| 类 | tp | fp | tn | fn | unjudged | cannot_tell | 正例 | 负例 | precision | recall |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0 不可达 | 1 | 0 | 36 | 0 | 0 | 0 | 1 | 36 | 1 / 1 | 1 / 1 |
+| 1 死存储 | 3 | 0 | 41 | 1 | 0 | 0 | 4 | 41 | 3 / 3 | 3 / 4 |
+| 2 未用局部量 | 15 | 0 | 15 | 0 | 0 | 0 | 15 | 15 | 15 / 15 | 15 / 15 |
+| 3 未用形参 | 15 | 0 | 15 | 0 | 0 | 0 | 15 | 15 | 15 / 15 | 15 / 15 |
+
+门：类 0 pass（1 / 1） · 类 1 pass（3 / 3） · 类 2 pass（15 / 15）；`judged` = true（类 3 顾问只记不判）。
+
+漏报（类 0–2）1 条，归因：路径不相关：两处 `if not file` 的条件相关性不进控制流图，`errcode` 沿不可行的路径读成活；判决本就路径不敏感，记录：
+- 类 1 层 A `luarocks:src/luarocks/fetch.lua:248` `fetch.fetch_url_at_temp_dir` 变量 `errcode`：If cachefile is set, file is set and the function returns file, temp_dir without reading errcode; otherwise line 257 `file, err, errcode = fetch.fetch_url(...)` overwrites it.
+
+误报（类 0–2）0 条、顾问误报（类 3）0 条、unjudged 0 道。
 
 ## R（步 4 提交 B）
 

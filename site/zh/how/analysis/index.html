@@ -83,7 +83,7 @@ kind 0 : unreachable  = no path from the entry, one finding per maximal run of s
 kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
 kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
 skip   : a unit with a dynamic statement is not judged in part, and counted</pre>
-  <p class="note">度量侧按每个语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表；名字、路径、源码文本一样都不过线。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行，由度量侧回标。每一处近似都只加路径——finally 是一个汇合点、后继取待续目标的并集，表达式位置的出口不降表——所以发现只可能漏报、不可能凭空捏造。一条发现只在精度考题过门的语言里才算判决（盲评，门读的每一类都零误报）。眼下没有语言在门内：第一代考题放进了 Python、TSX、Go、C、Java、Lua、R，随后的降表回修让这批精度册退役，到下一代过门之前每条发现都是顾问；未用形参在哪个语言都只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增发现，挪了位置的发现不算这次写入干的。</p>
+  <p class="note">度量侧按每个语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表；名字、路径、源码文本一样都不过线。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行，由度量侧回标。每一处近似都只加路径——finally 是一个汇合点、后继取待续目标的并集，表达式位置的出口不降表——所以发现只可能漏报、不可能凭空捏造。一条发现只在精度考题过门的语言里才算判决（盲评，门读的每一类都零误报）。十个语言都在门内：在回修后的降表上重生成的精度册（C++、R、Rust、TypeScript 是第二代考题）十份都过门，门读的每一类零误报；未用形参在哪个语言都只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增发现，挪了位置的发现不算这次写入干的。</p>
   <ul class="consts">
     <li><b>rowCap</b> 524288</li>
     <li><b>schema</b> ce.flow-report/0.1.0</li>

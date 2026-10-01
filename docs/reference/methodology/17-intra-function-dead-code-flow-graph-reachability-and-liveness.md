@@ -118,8 +118,9 @@ the kind chips, the judged / advisory mark and the unjudged units.
 A finding is **judged** when its language is in `flow::judged_mask()` and its kind is not 3. The
 mask holds the languages whose precision doc passed the gate of §8. Step 4's commit C2 admitted
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
-retired all ten, so the mask is empty and every finding is advice until a doc on the fixed
-lowering passes ([mod.rs:45-55](../../../cli/src/flow/mod.rs#L45), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
+retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
+generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
+all ten ([mod.rs:45-63](../../../cli/src/flow/mod.rs#L45), [mod.rs:33](../../../cli/src/flow_report/mod.rs#L33)).
 
 ### 7. The guard class — novel findings at write time
 
@@ -173,10 +174,14 @@ and at least one true positive), `vacuous` (no positive in the sample to find, s
 on zero false positives over the negatives) and `silent` (positives present and none reported,
 not admitted); a language is judged when kinds 0, 1 and 2 each pass or are vacuous, kind 3 is
 recorded only, and recall is recorded and not gated. The frozen exams hold 1,549 files and
-27,118 units across ten languages, 792 of them dynamic, and 1,197 questions; the first ten precision
-docs admitted Python, TSX, Go, C, Java, Lua and R, and every false positive the other three carried
-was attributed in the registry to the lowering or to a disputed truth, none to the core — commit E
-fixed those lowering classes and retired the ten docs for the next generation. A replay
+27,118 units across ten languages, 792 of them dynamic, and 1,142 questions in the current
+generations (1,197 in the first); the first ten precision docs admitted Python, TSX, Go, C, Java,
+Lua and R, and every false positive the other three carried was attributed in the registry to the
+lowering or to a disputed truth, none to the core — commit E fixed those lowering classes and
+retired the ten docs, and commit G's ten docs on the fixed lowering (four of them second-generation
+exams, judged again under the batch prompt's language readings) admitted all ten languages with no
+false positive in kinds 0–2; the one advisory false positive left, a C++ pointer-to-member call
+`(w.*cb)(args...)` whose `cb` the lowering never reads, is registered for the next lowering. A replay
 ledger over each exam corpus's last 400 first-parent commits reads, per language, how often a
 finding disappears with its unit's next edit (a true positive) or survives it (a false stop,
 strict reading), both readings recorded.

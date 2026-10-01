@@ -44,11 +44,23 @@ use crate::scan::lang::Lang;
 
 /// The languages whose flow findings are judged, not advised: a
 /// language enters when its precision doc passes the §5.5 gate (every
-/// kind 0 / 1 / 2 pass or vacuous), in the exam table's order. Empty
-/// since commit E retired the first-generation docs (the lowering they
-/// answered by moved); each language comes back with its doc on the
-/// fixed lowering. Pinned by the mask leg of it/eval_flow_precision.rs.
-const JUDGED: &[Lang] = &[];
+/// kind 0 / 1 / 2 pass or vacuous), in the exam table's order. All ten
+/// since step 4 commit G: the docs regenerated on the lowering commit E
+/// fixed (second-generation exams for C++, R, Rust and TypeScript) read
+/// judged in every language. Pinned by the mask leg of
+/// it/eval_flow_precision.rs.
+const JUDGED: &[Lang] = &[
+    Lang::Python,
+    Lang::TypeScript,
+    Lang::Tsx,
+    Lang::Rust,
+    Lang::Go,
+    Lang::C,
+    Lang::Cpp,
+    Lang::Java,
+    Lang::Lua,
+    Lang::R,
+];
 
 pub fn judged_mask() -> i64 {
     JUDGED.iter().fold(0, |m, &l| m | (1 << l as i64))

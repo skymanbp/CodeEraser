@@ -343,7 +343,7 @@
     "flow": {
       "after": 1,
       "before": 0,
-      "judged": false,
+      "judged": true,
       "kinds": {
         "dead_store": 0,
         "unreachable": 1,
