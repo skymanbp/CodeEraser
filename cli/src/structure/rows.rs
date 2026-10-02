@@ -136,14 +136,16 @@ pub fn redundancy_rows(
             *dup.entry(d).or_insert(0) += 1;
         }
     }
-    let dead_report = crate::graph::deadcode::judge_report(root, core, w)?;
-    if let Some(reason) = &dead_report.degraded {
+    // the judgment's dead rows alone: the rollup names no verdict, so
+    // it asks for no document (plan v2.32 step 4)
+    let (judged, _, _) = crate::graph::deadcode::judged(root, core, w, &[])?;
+    if let Some(reason) = &judged.degraded {
         anyhow::bail!("liveness degraded ({reason}) — refusing a fake-zero S6 rollup");
     }
     let mut dead: BTreeMap<usize, u64> = BTreeMap::new();
-    for row in &dead_report.dead {
-        let name = &row.path;
-        // dead rows are file nodes by Report contract; a name the
+    for row in &judged.dead {
+        let name = &w.nodes[row[0] as usize].path;
+        // dead rows are file nodes by consume's contract; a name the
         // walked tree cannot place is a universe mismatch, an error
         // by name (the file_ref_rows posture), never a guess
         let d = tree::dir_of(t, name)

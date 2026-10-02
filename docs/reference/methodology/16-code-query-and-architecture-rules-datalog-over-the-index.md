@@ -280,7 +280,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:195](../../../cli/src/mcp/tools.rs#L195), [tools.rs:216](../../../cli/src/mcp/tools.rs#L216),
-  [adapters.rs:175](../../../cli/src/mcp/adapters.rs#L175)).
+  [adapters.rs:176](../../../cli/src/mcp/adapters.rs#L176)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch,
   answers it as one table per goal under its own column names with the derivation rows under an
   answer, and judges the project's rules file with one button; rendering only, a core without the
@@ -289,7 +289,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [query.js:61](../../../gui/ui/query.js#L61)).
 
 All three go through two library functions, so the document cannot differ by face
-([faces.rs:190](../../../cli/src/faces.rs#L190), [faces.rs:203](../../../cli/src/faces.rs#L203)); the
+([faces.rs:182](../../../cli/src/faces.rs#L182), [faces.rs:195](../../../cli/src/faces.rs#L195)); the
 integration leg holds the CLI's JSON to the library's byte for byte
 ([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).

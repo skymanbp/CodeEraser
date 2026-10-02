@@ -139,7 +139,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// (visibility/py.rs) — every site and symbol re-detected once.
 /// 16 = the C family, Java, Lua and R enter the graph (plan v2.30
 /// steps 2–4, one release): `include`, `import_star`, `type_ref`,
-/// `require`, `load`, `source` and `library` join KINDS (a Java
+/// `require`, `load`, `source` and `library` join the kinds (a Java
 /// single-type import keeps `import`), the four languages' symbols
 /// carry their own visibility and convention words,
 /// compile_commands.json and an R package's DESCRIPTION become
@@ -147,7 +147,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// templates a file writes join the resolve_key — new kind codes and
 /// stored rows, so every site is re-detected; steps 3–5 kept 16: step
 /// 2 shipped in no release, and step 5's HTML kinds (`href`, `src`,
-/// `srcset`, `action`, `link_asset`) append to KINDS for files the
+/// `srcset`, `action`, `link_asset`) append to the kinds for files the
 /// index never held, so no stored row moves. Step 5's resolution
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
@@ -187,34 +187,34 @@ CREATE INDEX idx_edge_dst ON edges(dst_path);
 CREATE INDEX idx_edge_site ON edges(site_id);
 ";
 
-/// Frozen site-kind storage codes: label -> position in this
-/// whitespace-separated table. Appending is cheap; renaming or
-/// reordering is a GRAPH_REV bump because stored kinds are positions.
-/// One literal rather than an array: a run of string literals is one
-/// repeated token under the clone gate.
-const KINDS: &str = "import import_from export_from use mod_decl link image ref_link ref_def url \
-                     export_star include import_star type_ref require load source library \
-                     href src srcset action link_asset";
+/// The frozen site-kind storage codes: label -> position in the
+/// definition package's `store` table (CE.Lang.Common.Graph.store,
+/// plan v2.32 step 4). Appending is cheap; renaming or reordering is a
+/// GRAPH_REV bump because stored kinds are positions.
+fn kinds() -> &'static [&'static str] {
+    crate::tables::get().store.site_kinds
+}
 
-/// The frozen code for one site kind. KINDS is the single owner of
-/// these positions: the writer below looks a code up here rather than
-/// spelling an integer where the table cannot see it drift, and the
-/// bridge reads the inverse (`kind_label`). The one outside reader is
-/// the mounts producer (graph/mounts.rs), which selects sites by kind.
+/// The frozen code for one site kind. The package's table is the
+/// single owner of these positions: the writer below looks a code up
+/// there rather than spelling an integer where the table cannot see it
+/// drift, the bridge reads the inverse (`kind_label`), and the sites
+/// document names a kind by it. The one outside reader is the mounts
+/// producer (graph/mounts.rs), which selects sites by kind.
 pub(crate) fn kind_code(label: &str) -> Result<i64> {
-    KINDS
-        .split_ascii_whitespace()
-        .position(|k| k == label)
+    kinds()
+        .iter()
+        .position(|k| *k == label)
         .map(|i| i as i64)
         .with_context(|| {
-            format!("site kind {label:?} not in store::KINDS — add it and bump GRAPH_REV")
+            format!("site kind {label:?} not in the store table — add it and bump GRAPH_REV")
         })
 }
 
 pub(crate) fn kind_label(code: i64) -> Option<&'static str> {
     usize::try_from(code)
         .ok()
-        .and_then(|i| KINDS.split_ascii_whitespace().nth(i))
+        .and_then(|i| kinds().get(i).copied())
 }
 
 /// Phase 1: replace one file's symbol + site rows (stale edges go

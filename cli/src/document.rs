@@ -13,7 +13,7 @@
 //! error by name, never a document printed from this side.
 
 use crate::corelink::Link;
-use anyhow::{Result, anyhow, bail};
+use anyhow::{Context, Result, anyhow, bail};
 use serde_json::{Map, Value, json};
 
 /// The capability the core must offer, and the request kind.
@@ -59,6 +59,15 @@ impl Request {
         let v = serde_json::to_value(rows).expect("integer rows serialize");
         self.rows.insert(name.into(), v);
         self
+    }
+
+    /// A one-row table `[[v]]` when the value is there, absent when
+    /// not (a statement's optional single, `rows <t> 1 …`).
+    pub fn single(self, name: &str, v: Option<impl serde::Serialize>) -> Self {
+        match v {
+            Some(v) => self.rows(name, [[v]]),
+            None => self,
+        }
     }
 
     /// Every table of `names` not yet given, sent with no row.
@@ -130,6 +139,13 @@ pub fn assemble_over(core: &str, held: Held, req: Request, r: &dyn Resolve) -> R
         bail!("{family} document: the core did not lay it out: {reason}");
     }
     bind(reply["document"].take(), r)
+}
+
+/// A bound document read as the face's reader `T` (the console, the
+/// exit); a face keeps the document itself beside it for the machine
+/// print.
+pub fn read<T: serde::de::DeserializeOwned>(doc: &Value, family: &str) -> Result<T> {
+    T::deserialize(doc).with_context(|| format!("{family} document"))
 }
 
 /// Every reference replaced by its string; anything else as it is. A

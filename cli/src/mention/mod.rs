@@ -124,7 +124,7 @@ impl Default for Caps {
 /// of it, so a generated mirror or a skipped binary is visible rather
 /// than silently absent. Every field names its scope: the tree, the
 /// store, or this run.
-#[derive(Debug, Default, serde::Serialize)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Stats {
     pub universe: usize,
     pub sources: usize,
@@ -142,7 +142,7 @@ pub struct Stats {
 }
 
 /// What the walk left out, each cause counted where it is decided.
-#[derive(Debug, Default, serde::Serialize)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Skipped {
     pub oversize: usize,
     pub binary: usize,
@@ -154,7 +154,7 @@ pub struct Skipped {
 /// cap counters, which are deltas of this run's writes — a starved
 /// file is retried every run, so starvation stays visible until it
 /// clears.
-#[derive(Debug, Default, serde::Serialize)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Run {
     pub refreshed: usize,
     pub removed: usize,

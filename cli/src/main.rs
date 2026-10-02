@@ -115,7 +115,13 @@ fn analysis(cmd: Cmd, core: &str) -> Result<ExitCode, Box<Cmd>> {
             mentions,
             db,
             format,
-        } => cmds::graph_cmd(&cmds::or_cwd(root), sites, mentions, db, json(format)),
+        } => cmds::graph_cmd(
+            &cmds::or_cwd(root),
+            (sites, mentions),
+            db,
+            core,
+            json(format),
+        ),
         Cmd::Deadcode {
             root,
             db,

@@ -7,7 +7,7 @@
 //! every member file" is the judgment layer's expansion (2g), which
 //! also owns the //go:build exclusion flags: a collapsed fan-out
 //! could not be undone, a package node can be expanded. The storage
-//! codes below are frozen positions like store::KINDS — renaming or
+//! codes below are frozen positions like the store table's kinds — renaming or
 //! reordering is a GRAPH_REV bump.
 
 use super::ladder::{self, Outcome, Scope, Site};

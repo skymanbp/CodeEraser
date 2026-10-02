@@ -9,77 +9,31 @@
 //!
 //! Tier F (files) carries all three legs and is what the lattice
 //! will gate. Tier U (units) carries similarity + churn only; its
-//! graph leg is null by design, with the reason riding as a CODE
-//! (churn_unit::GRAPH_NULL_IMPORT_GRANULARITY, plan v2.15).
+//! graph leg is null by design, with the reason riding as a code
+//! the core names (CE.Join.Document, plan v2.15). The core lays the
+//! document out (document/1, plan v2.32 step 4; document.rs sends
+//! the tables), and `Report` is that document read back.
 
 pub mod churn_unit;
+mod document;
 mod report;
 pub mod verdicts;
 
-pub use report::{print, report_json};
+pub use report::{FileRow, Report};
 
 use crate::churn;
 use crate::dedup;
 use crate::graph::deadcode;
 use anyhow::{Context, Result};
-use serde::Serialize;
 use serde_json::Value;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
-
-/// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.3.0 (v2.15): unit rows dropped the Rust-cast GRAPH_CAVEAT
-/// prose; file rows carry the core's join verdict — name, severity,
-/// leg-agreement confidence (the reply's legsMask/reasons stay on the
-/// wire, unrendered) — from the SAME verdict/1 judgment `ce check` gates with.
-/// 0.4.0 (plan v2.30 step 5b-9, additive): file rows carry
-/// `near_miss`, the T3 pairs between the two files; unit rows carry
-/// `kind` (`t1t2` with `tokens`, `t3` with `ted` / `n1` / `n2`).
-pub const SCHEMA_ID: &str = "ce.join-report/0.4.0";
 
 /// Graph position of one file: [indeg, outdeg, sccId, sccSize,
 /// reachIn] (the Position.hs row minus its echoed index). None =
 /// the graph could not answer (degraded reply, or the file fell off
 /// the graph between passes) — absence, never a fabricated zero.
 pub type Pos = [i64; 5];
-
-/// One Tier F row: a similar file pair with all three legs.
-#[derive(Debug, Serialize)]
-pub struct FileRow {
-    pub a: String,
-    pub b: String,
-    pub blocks: usize,
-    pub tokens: usize,
-    /// T3 near-miss unit pairs between the two files (5b-9): a pair
-    /// the T3 family alone found rides with `blocks` 0 and `tokens` 0.
-    pub near_miss: usize,
-    pub graph_a: Option<Pos>,
-    pub graph_b: Option<Pos>,
-    pub churn_a: churn_unit::Lines,
-    pub churn_b: churn_unit::Lines,
-    /// None = the pair is outside the churn report's co-change table
-    /// (below the configured cochange floor) — unknown-small, not zero.
-    pub cochange: Option<usize>,
-    /// The core's verdict for this pair (2.33.0, H4) — rendering
-    /// vocabulary for verdict/1's candidate row. None for self-pairs
-    /// (the wire's u < v contract cannot carry them — the same
-    /// "intra-file pairs off the sim table" class the check report
-    /// counts) and when the judgment degraded.
-    pub verdict: Option<&'static str>,
-    /// The verdict's severity rank from the core's table face.
-    pub severity: Option<i64>,
-    /// Leg-agreement confidence: how many present legs corroborate.
-    pub confidence: Option<i64>,
-}
-
-#[derive(Debug)]
-pub struct Report {
-    pub days: u32,
-    pub commits: usize,
-    pub files: Vec<FileRow>,
-    pub units: Vec<churn_unit::UnitRow>,
-    pub degraded: Option<String>,
-}
 
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Report> {
     // 265.0 s end to end on a cold db (PERF-BUDGET M5-3h), most of it
@@ -109,7 +63,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     let reply = deadcode::judge(core, &w, &pos_req)?;
     // Degrade reads the wire's boolean, not reason presence (the C9
     // discipline; same throat shape as deadcode::consume).
-    let degraded = (reply["degraded"].as_bool() == Some(true))
+    let graph_degraded = (reply["degraded"].as_bool() == Some(true))
         .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
     let posmap = pos_map(&reply, &w)?;
     // the self-loop projection (6.4.0): the verdict road needs it at
@@ -119,32 +73,18 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
     // the judgment leg (2.33.0, H4): the same verdict/1 road the
     // check gate uses, over this run's own measurement
     crate::progress::step(crate::progress::Phase::Assemble);
-    let judged = verdicts::judge_pairs(root, core, &w, &sim, (&posmap, loops), &ch)?;
-    Ok(Report {
+    let mut judged = verdicts::judge_pairs(root, core, &w, &sim, (&posmap, loops), &ch)?;
+    let held = std::mem::replace(&mut judged.held, Err(String::new()));
+    let parts = document::Parts {
         days,
-        commits: ch.commits,
-        files: judged_files(&sim, &posmap, &ch, &judged),
-        units: churn_unit::rows(root, &sim, &ch),
-        degraded: degraded.or(judged.degraded),
-    })
-}
-
-/// Tier F with the core's verdict on each pair it judged.
-fn judged_files(
-    sim: &crate::score::Similar<'_>,
-    posmap: &HashMap<String, Pos>,
-    ch: &churn::Report,
-    judged: &verdicts::Judged,
-) -> Vec<FileRow> {
-    let mut files = file_rows(sim, posmap, ch);
-    for f in &mut files {
-        if let Some(v) = judged.pairs.get(&(f.a.clone(), f.b.clone())) {
-            f.verdict = Some(v.verdict);
-            f.severity = Some(v.severity);
-            f.confidence = Some(v.confidence);
-        }
-    }
-    files
+        churn: &ch,
+        pairs: &pair_sums(&sim),
+        units: &churn_unit::rows(root, &sim, &ch),
+        posmap: &posmap,
+        graph_degraded,
+        judged: &judged,
+    };
+    crate::report::read_bound(document::assemble(core, held, &parts)?, "join")
 }
 
 /// path → position from the reply's pos rows; each row's echoed
@@ -167,14 +107,9 @@ pub(crate) fn pos_map(reply: &Value, w: &deadcode::GraphWire) -> Result<HashMap<
     Ok(map)
 }
 
-/// Tier F: aggregate blocks and T3 pairs per unordered file pair,
-/// attach both sides' graph position and window churn, and the
-/// co-change count where the pair made the churn report's table.
-fn file_rows(
-    sim: &crate::score::Similar<'_>,
-    posmap: &HashMap<String, Pos>,
-    ch: &churn::Report,
-) -> Vec<FileRow> {
+/// Tier F's sums: blocks and T3 pairs per unordered file pair (the
+/// smaller path first).
+fn pair_sums(sim: &crate::score::Similar<'_>) -> document::Sums {
     let ordered = |a: &str, b: &str| {
         if a <= b {
             (a.to_string(), b.to_string())
@@ -182,7 +117,7 @@ fn file_rows(
             (b.to_string(), a.to_string())
         }
     };
-    let mut by_pair: BTreeMap<(String, String), (usize, usize, usize)> = BTreeMap::new();
+    let mut by_pair = document::Sums::new();
     for b in sim.blocks {
         let e = by_pair.entry(ordered(&b.a_file, &b.b_file)).or_default();
         e.0 += 1;
@@ -191,39 +126,5 @@ fn file_rows(
     for (a, b) in sim.t3.file_pairs() {
         by_pair.entry(ordered(a, b)).or_default().2 += 1;
     }
-    let by_file = file_churn(ch);
     by_pair
-        .into_iter()
-        .map(|((a, b), (blocks, tokens, near_miss))| FileRow {
-            graph_a: posmap.get(&a).copied(),
-            graph_b: posmap.get(&b).copied(),
-            churn_a: by_file.get(&a).copied().unwrap_or_default(),
-            churn_b: by_file.get(&b).copied().unwrap_or_default(),
-            cochange: ch
-                .cochange
-                .iter()
-                .find(|(x, y, _)| *x == a && *y == b)
-                .map(|(_, _, n)| *n),
-            a,
-            b,
-            blocks,
-            tokens,
-            near_miss,
-            verdict: None,
-            severity: None,
-            confidence: None,
-        })
-        .collect()
-}
-
-/// Per-file churn sums over the per-unit ledger — derived the same
-/// way the report totals are (one bookkeeping, summed two ways).
-fn file_churn(ch: &churn::Report) -> HashMap<String, churn_unit::Lines> {
-    let mut map: HashMap<String, churn_unit::Lines> = HashMap::new();
-    for u in &ch.units {
-        let e = map.entry(u.path.clone()).or_default();
-        e.appended += u.appended;
-        e.rewrote += u.rewrote;
-    }
-    map
 }

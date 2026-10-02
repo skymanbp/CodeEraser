@@ -1,8 +1,10 @@
 //! The advisory half of the deadcode road (graph/1 6.2.0, plan v2.17
 //! L round piece (6)): the two request tables read off the refreshed
 //! index under `Advisory::Yes`, and the core's `exportUnmentioned`
-//! rows named back through the table the wire carried beside its
-//! request. Its own face on `Report` — `None` when the road was not
+//! rows put back beside the names the wire carried with its request —
+//! one row per name, the code still the core's integer; the document
+//! names the code and its reading (CE.Graph.Document, plan v2.32 step
+//! 4). Its own state on the judgment — `None` when the road was not
 //! asked (`Advisory::No`), `Dropped` when the core said so, `Rows`
 //! otherwise — so "not asked" and "asked and clean" never share a
 //! shape (W2-F4). A row here is an advisory, never a verdict: nothing
@@ -17,32 +19,23 @@ use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::Path;
 
-/// The core's code vocabulary, by position (CE.Graph.Advisory.code).
-pub const ADVISORY_NAMES: [&str; 4] = [
-    "public_unmentioned",
-    "private_unmentioned",
-    "restricted_unmentioned",
-    "reexported_unmentioned",
-];
-
-/// One rendered advisory row: the declaring file, the declaration,
-/// its line, the core's code by name, and the reading of that code.
+/// One advisory row per name: the declaring node, the declaration,
+/// its line and the core's code (CE.Graph.Advisory.code).
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct AdvisoryRow {
-    pub name: String,
+pub struct Named {
+    pub node: i64,
     pub symbol: String,
     pub line: i64,
-    pub code: &'static str,
-    pub why: &'static str,
+    pub code: i64,
 }
 
 /// The states the road can end in once asked. `cut` is the
 /// producer's own fact (mention/candidates.rs): the rows are the
 /// judged prefix of a larger candidate set, and every face says so.
 #[derive(Debug)]
-pub enum UnmentionedFace {
+pub enum Advised {
     Rows {
-        rows: Vec<AdvisoryRow>,
+        rows: Vec<Named>,
         cut: bool,
     },
     /// The core judged the graph and dropped the table (soft cap).
@@ -84,12 +77,12 @@ pub(super) fn consume(
     reply: &Value,
     nodes: &[Node],
     names: Option<&Unmentioned>,
-) -> Result<Option<UnmentionedFace>> {
+) -> Result<Option<Advised>> {
     let Some(names) = names else {
         return Ok(None);
     };
     if reply.get("unmentionedDropped").is_some() {
-        return Ok(Some(UnmentionedFace::Dropped));
+        return Ok(Some(Advised::Dropped));
     }
     let rows: Vec<[i64; 4]> = match reply.get("exportUnmentioned") {
         Some(rows) => serde_json::from_value(rows.clone()).context("exportUnmentioned rows")?,
@@ -102,22 +95,22 @@ pub(super) fn consume(
     for row in rows {
         out.extend(named(row, nodes, names)?);
     }
-    Ok(Some(UnmentionedFace::Rows {
+    Ok(Some(Advised::Rows {
         rows: out,
         cut: names.cut,
     }))
 }
 
-/// One core row named back. K38's two legs land on this lookup, each
-/// with its own refusal: the key-set subset of 封版后勘误 ⑨ (a core row
-/// whose `(node, vis, conv)` the wire never offered) and W8-F2's value
-/// side (an offered key with no names — the one silent way to render
-/// nothing for a row the core did emit).
+/// One core row put back beside its names. K38's two legs land on
+/// this lookup, each with its own refusal: the key-set subset of
+/// 封版后勘误 ⑨ (a core row whose `(node, vis, conv)` the wire never
+/// offered) and W8-F2's value side (an offered key with no names — the
+/// one silent way to render nothing for a row the core did emit).
 fn named(
     [node, vis, conv, code]: [i64; 4],
     nodes: &[Node],
     names: &Unmentioned,
-) -> Result<Vec<AdvisoryRow>> {
+) -> Result<Vec<Named>> {
     let entries = names.names.get(&[node, vis, conv]).with_context(|| {
         format!("core advisory row [{node},{vis},{conv}] is outside the offered table — wire skew")
     })?;
@@ -125,35 +118,19 @@ fn named(
         !entries.is_empty(),
         "core advisory row [{node},{vis},{conv}] names no local candidate — wire skew"
     );
-    let path = usize::try_from(node)
-        .ok()
-        .and_then(|i| nodes.get(i))
-        .context("advisory node out of range")?;
-    let code_name = usize::try_from(code)
-        .ok()
-        .and_then(|c| ADVISORY_NAMES.get(c))
-        .context("advisory code out of range — wire skew")?;
+    ensure!(
+        usize::try_from(node).is_ok_and(|i| i < nodes.len()),
+        "advisory node out of range"
+    );
     Ok(entries
         .iter()
-        .map(|n| AdvisoryRow {
-            name: path.path.clone(),
+        .map(|n| Named {
+            node,
             symbol: n.symbol.clone(),
             line: n.line,
-            code: code_name,
-            why: why_of(code),
+            code,
         })
         .collect())
-}
-
-/// The reading of each code — how far the declaration's own package
-/// lets it out, for a name nothing outside its file spells.
-fn why_of(code: i64) -> &'static str {
-    match code {
-        1 => "no other file spells it; reachable only inside its own package",
-        2 => "no other file spells it; visible to its crate alone",
-        3 => "no other file spells it; a façade re-exports it",
-        _ => "no other file spells this exported name",
-    }
 }
 
 #[cfg(test)]

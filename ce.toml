@@ -602,4 +602,20 @@ entry_globs = [
 # record, so the field-by-field leak is gone. Row set diffed against
 # the step-1 (e6731bb7) run: eight rows gone, none new. Measured on
 # the formatted tree.
-budget = 42
+# 42 -> 41 (v2.32 step 4, the seven report documents laid out by the
+# core): one row left with the report it was made of, none bought.
+# join/report.rs's file-row console rhymed with trend/report.rs's (60
+# tokens); the join report is the document read back now and its
+# console reads that, so the run is not there to rhyme. The six rows
+# the step first landed went before the count was read: the optional
+# one-row tables the deadcode, structure and check requests each
+# spelled as an `if let` are `Request::single`, the read-back and the
+# json-or-console print the join, structure and check reports each
+# wrote are one `report::Bound` (`bound!`, `read_bound`,
+# `print_bound`), the `ce graph --sites` and `--mentions` faces print
+# through one `report::print_read`, the mentions header goes as facts
+# flattened off the Stats it serializes, and the `code:value` console
+# pairs are `report::colon_pairs`. Row set diffed against the HEAD
+# (093ee88e) tree: that row gone, none new. Measured on the formatted
+# tree.
+budget = 41

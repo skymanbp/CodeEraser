@@ -108,10 +108,19 @@ leaked! {
     /// `[name, advisory]` — the names `--kind` and the feeds read, and
     /// whether a kind is advisory in every language.
     DocFlow { kinds: &'static [(&'static str, bool)] }
+    /// The check document's catalogue entry (7.9.0): the fail-condition
+    /// names and the degraded reasons by code — a face sends the codes.
+    DocCheck { failed: Names, reasons: Names }
+    /// A degrading family's catalogue entry (7.9.0): its reasons by code.
+    DocReasons { reasons: Names }
     /// What this side reads of the report documents' catalogue (7.8.0):
     /// the schema ids and empty documents are the core's statement and
     /// never bound here.
-    DocCatalogue { flow: DocFlow }
+    DocCatalogue { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
+                   graphscreen: DocReasons }
+    /// The index's storage tables (7.9.0): the site kinds by their
+    /// frozen storage code.
+    Store { site_kinds: Names }
     /// Every table, as the core answers them less the envelope.
     Tables {
         languages: Languages,
@@ -121,7 +130,7 @@ leaked! {
         sites: ByLang<Vec<crate::graph::spec::SiteKind>>,
         calls: Calls, fourclass: Fourclass, ladder: Ladder, walk: Walk, outputs: Rows,
         docdup: Docdup, keys: Keys, flags: Flags, tombstone: Tombstone, compdb: Compdb,
-        protocol: Protocol, document: DocCatalogue,
+        protocol: Protocol, document: DocCatalogue, store: Store,
     }
 }
 

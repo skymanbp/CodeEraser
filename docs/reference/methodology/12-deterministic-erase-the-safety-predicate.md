@@ -37,12 +37,12 @@ requires equality of the raw line slices
 ([gather.rs:1-7](../../../cli/src/erase/gather.rs#L1)). Dead-file candidates
 come from the graph report and carry a verdict code plus the graph family's own
 per-row confidence (class 3 since 2.32.0)
-([gather.rs:120-140](../../../cli/src/erase/gather.rs#L120)). Document candidates
+([gather.rs:111-131](../../../cli/src/erase/gather.rs#L111)). Document candidates
 carry both segment word counts and the raw-slice equality bit
-([gather.rs:143-174](../../../cli/src/erase/gather.rs#L143)). T1-twin candidates
+([gather.rs:136-167](../../../cli/src/erase/gather.rs#L136)). T1-twin candidates
 carry whole-unit coverage, byte equality, copy-file liveness, and the locally
 folded per-language unresolved count
-([gather.rs:179-234](../../../cli/src/erase/gather.rs#L179)).
+([gather.rs:172-227](../../../cli/src/erase/gather.rs#L172)).
 
 ### 2. Four frozen class codes, three provable families
 
@@ -81,7 +81,7 @@ reported verbatim length and the two segment word counts; `bytesEqual` is the
 raw-slice equality bit ([Cost.hs:69-72](../../../core/app/CE/Erase/Cost.hs#L69)).
 The client chooses the path-lexicographically later segment as the candidate,
 then computes equality from the two inclusive line slices
-([gather.rs:143-172](../../../cli/src/erase/gather.rs#L143)).
+([gather.rs:136-165](../../../cli/src/erase/gather.rs#L136)).
 
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
@@ -101,7 +101,7 @@ not merely a high similarity score.
 dedup block that covers at least one complete cached unit, then records the
 coverage bit, raw equality, the target file's dead VERDICT code (`0` when the
 graph does not call it dead, else 1–4 in the deadcode family's order), and its
-language unresolved count ([gather.rs:189-242](../../../cli/src/erase/gather.rs#L189)).
+language unresolved count ([gather.rs:182-235](../../../cli/src/erase/gather.rs#L182)).
 Until proto 7.0.0 the third fact was a death bit, so the RG10 bar never reached
 this road: the acceptance fixture's public `copy.py` twin was refused only
 because the `dead_file` row for the same path won the plan's closure by
@@ -127,7 +127,7 @@ the coverage fact is explicit and checked before the other evidence.
 
 #### Class 3 — `dead_file`, the confidence road (2.32.0)
 
-The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:83-86](../../../core/app/CE/Erase/Cost.hs#L83)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:47-57](../../../core/app/CE/Erase/Cost.hs#L47)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:40-43](../../../core/app/CE/Erase.hs#L40)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:130](../../../cli/src/erase/gather.rs#L130)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:21](../../../core/app/CE/Erase/Cost.hs#L21)).
+The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:83-86](../../../core/app/CE/Erase/Cost.hs#L83)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:47-57](../../../core/app/CE/Erase/Cost.hs#L47)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:40-43](../../../core/app/CE/Erase.hs#L40)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:21](../../../core/app/CE/Erase/Cost.hs#L21)).
 
 ### 3. The seven reason codes
 

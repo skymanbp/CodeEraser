@@ -35,6 +35,76 @@ pub fn print_doc(as_json: bool, doc: impl FnOnce() -> serde_json::Value, console
     }
 }
 
+/// A family whose report is its document read back (plan v2.32 step
+/// 4): the document itself is the machine print, the reader's console
+/// the rest. `bound!` writes the impl.
+pub trait Bound: serde::de::DeserializeOwned {
+    fn doc(&self) -> &serde_json::Value;
+    fn keep(&mut self, doc: serde_json::Value);
+    fn console(&self);
+}
+
+macro_rules! bound {
+    ($t:ty, $console:path) => {
+        impl crate::report::Bound for $t {
+            fn doc(&self) -> &serde_json::Value {
+                &self.doc
+            }
+            fn keep(&mut self, doc: serde_json::Value) {
+                self.doc = doc;
+            }
+            fn console(&self) {
+                $console(self)
+            }
+        }
+    };
+}
+pub(crate) use bound;
+
+/// The bound document read back, the document kept beside it.
+pub fn read_bound<T: Bound>(doc: serde_json::Value, family: &str) -> anyhow::Result<T> {
+    let mut r: T = crate::document::read(&doc, family)?;
+    r.keep(doc);
+    Ok(r)
+}
+
+/// `[code, value]` rows as the console's `code:value` list.
+pub fn colon_pairs(rows: &[[i64; 2]]) -> String {
+    let pairs: Vec<String> = rows.iter().map(|[c, v]| format!("{c}:{v}")).collect();
+    pairs.join(" ")
+}
+
+/// The document under --format json, the console otherwise.
+pub fn print_bound<T: Bound>(r: &T, as_json: bool) {
+    print_doc(as_json, || r.doc().clone(), || r.console());
+}
+
+/// A `ce graph` face over a document the core lays out (plan v2.32
+/// step 4): the document itself under --format json, the reader `T`
+/// to the console otherwise; any failure is exit 2, named.
+pub fn print_read<T: serde::de::DeserializeOwned>(
+    doc: anyhow::Result<serde_json::Value>,
+    json: bool,
+    family: &str,
+    console: impl FnOnce(T),
+) -> std::process::ExitCode {
+    let read = doc.and_then(|doc| {
+        if !json {
+            console(crate::document::read(&doc, family)?);
+        } else {
+            println!("{doc}");
+        }
+        Ok(())
+    });
+    match read {
+        Ok(()) => std::process::ExitCode::SUCCESS,
+        Err(err) => {
+            eprintln!("ce graph: {err:#}");
+            std::process::ExitCode::from(2)
+        }
+    }
+}
+
 /// The console's named-failure suffix (plan v2.18 step #14, O36):
 /// the held conditions VERBATIM in the core's own order (Verdict.hs
 /// failConditions — ratchet_over, discrete_added, floor,
@@ -92,58 +162,6 @@ pub fn emit<M: Serialize, C: Serialize>(
         format!(" | {}", rest.join(", "))
     };
     println!("{key}: {}{tail}", render(summary, &v));
-}
-
-/// The deadcode report's schema id. 0.2.0 (2.32.0, H3): dead rows
-/// carry the confidence column (null on a legacy reply without the
-/// ledger); 0.3.0 (6.2.0): the `unmentioned` advisory rows,
-/// `unmentioned_dropped` (the core dropped the table) and
-/// `unmentioned_cut` (the producer cut the candidate set, so the rows
-/// are a prefix), present exactly when the road was asked (K43) — a
-/// document from a road that never asked carries none of the three,
-/// so "not asked", "asked and clean", "cut" and "dropped" stay
-/// distinct; 0.4.0 (plan v2.25, O23): dead rows carry `whyCode`
-/// beside the English `why` — the code every face renders in its own
-/// language. Named, not inline: the derived-fact registry (plan
-/// v2.21) scans cli/src for value-shaped ids.
-const DEADCODE_SCHEMA: &str = "ce.deadcode-report/0.4.0";
-
-/// The deadcode report as its wire JSON document — one serialization
-/// for the CLI's --format json and the MCP report face (lifted out
-/// of the binary at M7-P2 and housed with the other shared report
-/// shapes; a second copy in a consumer is the drift the ratchet
-/// bites).
-pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {
-    use crate::graph::deadcode::UnmentionedFace;
-    use serde_json::json;
-    let mut doc = json!({
-        "schema": DEADCODE_SCHEMA,
-        "dead": r.dead.iter().map(|d| {
-            json!({"name": d.path, "verdict": d.verdict, "why": d.why(), "whyCode": d.why_code, "confidence": d.conf})
-        }).collect::<Vec<_>>(),
-        "reported": r.reported.iter().map(|(n, v)| {
-            json!({"name": n, "verdict": v})
-        }).collect::<Vec<_>>(),
-        "counts": {"nodes": r.nodes, "kept_edges": r.kept},
-        "unresolved_sites": r.unresolved_sites,
-        "degraded": r.degraded,
-    });
-    if let Some(face) = &r.unmentioned {
-        let (rows, dropped, cut) = match face {
-            UnmentionedFace::Rows { rows, cut } => (rows.as_slice(), false, *cut),
-            UnmentionedFace::Dropped => (&[][..], true, false),
-        };
-        let obj = doc.as_object_mut().expect("json! object literal");
-        obj.insert(
-            "unmentioned".into(),
-            rows.iter()
-                .map(|a| json!({"name": a.name, "symbol": a.symbol, "line": a.line, "code": a.code, "why": a.why}))
-                .collect(),
-        );
-        obj.insert("unmentioned_dropped".into(), json!(dropped));
-        obj.insert("unmentioned_cut".into(), json!(cut));
-    }
-    doc
 }
 
 /// The JSON half of emit as a value — the MCP report face returns

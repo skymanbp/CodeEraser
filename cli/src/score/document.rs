@@ -1,0 +1,126 @@
+//! The check document (plan v2.32 step 4; design booklet
+//! docs/reference/authority-track.md §5): the core lays it out
+//! (document/1, CE.Score.Document) from the verdict reply's rows sent
+//! back, the floor this run was armed with, this side's counts, and
+//! the held conditions and the degraded reason by their codes in the
+//! package's lists. `ce check`, `ce baseline`, the MCP tool and the
+//! GUI print it; `Report` is the document read back for the console
+//! and the exit. No repository string rides it, so nothing is bound.
+
+use crate::document::{self, Request, Resolve};
+use crate::score::model::Outcome;
+use anyhow::{Context, Result};
+use serde::Deserialize;
+use serde_json::Value;
+
+/// The tables a check request carries.
+const TABLES: [&str; 12] = [
+    "scale",
+    "floor",
+    "reason",
+    "axes",
+    "candidates",
+    "joinSeverity",
+    "added",
+    "removed",
+    "over",
+    "toleranceDrawn",
+    "failed",
+    "dropped",
+];
+
+/// The check document read back for the console and the exit.
+#[derive(Debug, Deserialize)]
+pub struct Report {
+    pub score: i64,
+    #[serde(rename = "scoreScale")]
+    pub scale: Option<i64>,
+    pub axes: Vec<[i64; 2]>,
+    pub candidates: Vec<Value>,
+    pub ratchet: Ratchet,
+    pub counts: Counts,
+    pub degraded: Option<String>,
+    /// The bound document itself, the machine faces' print.
+    #[serde(skip)]
+    pub doc: Value,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Ratchet {
+    pub added: Vec<Value>,
+    pub removed: Vec<Value>,
+    pub over: Vec<Value>,
+    #[serde(rename = "toleranceDrawn")]
+    pub tolerance_drawn: Vec<Value>,
+    pub fail: bool,
+    pub failed: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Counts {
+    pub collapsed: usize,
+    #[serde(rename = "skippedSelf")]
+    pub skipped_self: usize,
+}
+
+/// The check document over one outcome, laid out by the core at
+/// `core` and read back.
+pub fn document(core: &str, o: &mut Outcome) -> Result<Report> {
+    let held = std::mem::replace(&mut o.held, Err(String::new()));
+    let doc = document::assemble_over(core, held, request(o)?, &Nothing)?;
+    crate::report::read_bound(doc, "check")
+}
+
+/// The verdict reply's rows, this run's floor and counts, and the two
+/// name lists' codes (the package's `document.check`).
+fn request(o: &Outcome) -> Result<Request> {
+    let r = &o.reply;
+    let cat = &crate::tables::get().document.check;
+    let code = |list: &[&str], name: &str, what: &str| {
+        list.iter().position(|n| *n == name).with_context(|| {
+            format!("verdict reply names a {what} the package does not list: {name}")
+        })
+    };
+    let failed = r
+        .failed
+        .iter()
+        .map(|n| code(cat.failed, n, "fail condition").map(|c| [c]))
+        .collect::<Result<Vec<_>>>()?;
+    let column = |xs: &[u64]| xs.iter().map(|x| [*x]).collect::<Vec<_>>();
+    let mut req = Request::new("check")
+        .range("files", o.files)
+        .range("why", 0)
+        .fact("score", r.score)
+        .fact("fail", i64::from(r.fail))
+        .fact("droppedRode", i64::from(r.dropped.is_some()))
+        .fact("simPairs", o.sim_pairs)
+        .fact("members", o.members)
+        .fact("collapsed", o.collapsed)
+        .fact("skippedSelf", o.skipped_self)
+        .rows("axes", &r.axes)
+        .rows("candidates", &r.candidates)
+        .rows("joinSeverity", &r.join_severity)
+        .rows("added", column(&r.added))
+        .rows("removed", column(&r.removed))
+        .rows("over", &r.over)
+        .rows("toleranceDrawn", &r.tolerance_drawn)
+        .rows("failed", failed)
+        .single("scale", r.knobs.get("scoreScale"))
+        .single("floor", o.floor);
+    if let Some(reason) = &r.degraded {
+        req = req.rows("reason", [[code(cat.reasons, reason, "degraded reason")?]]);
+    }
+    if let Some(d) = &r.dropped {
+        req = req.rows("dropped", d);
+    }
+    Ok(req.empty(&TABLES))
+}
+
+/// The check document holds no repository string.
+struct Nothing;
+
+impl Resolve for Nothing {
+    fn resolve(&self, _: &str, _: &[i128]) -> Option<String> {
+        None
+    }
+}

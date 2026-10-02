@@ -12,7 +12,10 @@
 > deadcode 文档）；每族的 `ranges` / `rows` / `facts` 键、行宽与每列的宇宙仍按族陈述，契约照旧按名拒，另加各族自己的检查（一行至多的可空表、
 > 码表范围、按槽一行、`structure` / `mentions` / `sites` 不收 `degraded` 下标——它们今天没有降级文档）。判决应答自己的降级原因
 > （`graph_too_large` / `verdict_too_large`）由核按码直接写进文档的 `degraded`。`tables/1` 的 `document` 目录多七项，包另多 `store` 表
-> （`site_kinds`：站点 kind 名按存储码，转录自 `cli/src/graph/store.rs` 的 `KINDS`），`tablesDigest` 随之变。既有判决族字节零变化（既有 golden 只动 proto 字面与 hello / 包的 digest）；
+> （`site_kinds`：站点 kind 名按存储码，转录自 `cli/src/graph/store.rs` 的 `KINDS`；4B 起测量侧读这一表、`KINDS` 删除），`tablesDigest` 随之变。
+> 目录项另带测量侧送码要用的名字表（4B）：`check` 带 `failed`（fail 条件名，`CE.Verdict.Faces.failConditions` 的次序再加 `degraded`）与 `reasons`，
+> `join` / `deadcode` / `graphscreen` 带 `reasons`（`graph_too_large` / `verdict_too_large`）——判决应答给的是名字，测量侧按名字在包里的位置送码，
+> 包里没有的名字按名拒，不留副本。七族三面都问 `document/1` 并绑定（4B），判决没发生、文档答不出同 7.8.0。既有判决族字节零变化（既有 golden 只动 proto 字面与 hello / 包的 digest）；
 > `contracts/fixtures/document/golden.ndjson` 多十对（七族各一正例 + 三条拒绝）；电池 `DocumentProps4`。
 > **7.8.0**（文档族，加性 minor，计划 v2.32 步 3，2026-10-01；设计册 `docs/reference/authority-track.md` §5）：第十八族 `document/1`——不是判决族：不判任何东西，按判决已答的整数把报告文档装出来。
 > 请求 `document.request`：`family`（`arch` / `query` / `rules` / `flow` / `merge` 五选一）+ `ranges`（每个可被引用的宇宙的大小，按族定键，含 `why`）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号……，按族定表名、行宽与每列所指的宇宙）+ `facts`（标量计数，按族定键）+ `degraded`（null 或 `why` 的下标）；三对象各须恰好是本族陈述的键。

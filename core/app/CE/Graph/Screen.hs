@@ -26,8 +26,10 @@ import qualified Data.IntMap.Strict as IM
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 
+-- | The catalogue lists the degraded reasons the reply is sent by
+-- (plan v2.32 step 4B).
 doc :: DocFamily
-doc = docFamily "graphscreen" screenId statement checked assemble []
+doc = docFamily "graphscreen" screenId statement checked assemble ["reasons" .= coreReasons]
 
 screenId, canvasId :: String
 screenId = "ce.graph-screen/0.1.0"

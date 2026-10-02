@@ -25,8 +25,10 @@ import Data.Foldable (asum)
 import Data.List (sortOn)
 import qualified Data.Map.Strict as M
 
+-- | The catalogue lists the degraded reasons the two legs are sent by
+-- (plan v2.32 step 4B).
 doc :: DocFamily
-doc = docFamily "join" schemaId statement checked assemble []
+doc = docFamily "join" schemaId statement checked assemble ["reasons" .= coreReasons]
 
 schemaId :: String
 schemaId = "ce.join-report/0.4.0"

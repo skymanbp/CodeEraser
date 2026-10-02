@@ -29,51 +29,49 @@
 //! symbol-level indegree stays out while call edges are off).
 
 mod advisory;
+mod document;
 mod flags;
 mod report;
 mod targets;
 mod why;
 
-pub use advisory::{ADVISORY_NAMES, AdvisoryRow, UnmentionedFace};
+pub use advisory::{Advised, Named};
+pub(crate) use document::request as doc_request;
+pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub use report::print;
-pub use why::WHY_CODES;
+pub use why::WHY_ZH;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
 use crate::config::Config;
 use crate::dedup;
-use anyhow::{Context, Result, bail};
+use anyhow::{Context, Result, bail, ensure};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
-pub const VERDICT_NAMES: [&str; 4] = [
-    "unref_private",
-    "unref_public",
-    "unreach_private",
-    "unreach_public",
-];
-
+/// The judgment's own rows, held at the boundary (a verdict 1..4, a
+/// dead row at file granularity with its trust 0..2) before the
+/// document names them (plan v2.32 step 4): what the screen's document
+/// is sent beside the deadcode tables, the codes the readers that act
+/// on a verdict take beside the document, and all structure's rollup
+/// needs.
 #[derive(Debug)]
-pub struct Report {
-    /// File-tier dead verdicts with their trust column.
-    pub dead: Vec<DeadRow>,
-    /// Section/package verdicts: reported, never called dead.
-    pub reported: Vec<(String, &'static str)>,
-    pub nodes: usize,
-    /// File-tier nodes alone — `nodes` counts every granularity, so
-    /// the share of FILES dead (the plugin-shape signal the console
-    /// hint reads) needs its own denominator.
-    pub files: usize,
-    pub kept: u64,
-    pub unresolved_sites: i64,
+pub struct Judged {
+    /// [node, verdict] or, when the ledger rode (2.32.0), [node,
+    /// verdict, trust] — arity is the road, not noise.
+    pub dead: Vec<Vec<i64>>,
+    /// [node, verdict]: sections and packages, reported, never dead.
+    pub reported: Vec<[i64; 2]>,
+    /// The kept edges the reply counted; None on a degraded reply.
+    pub kept: Option<i64>,
     pub degraded: Option<String>,
     /// The core's gate bit (2.18.0): any file-tier dead verdict, or
     /// a degraded run, fails — the exit is a relay, not a policy.
     pub fail: bool,
     /// The symbol-level advisory (6.2.0): None when the wire was built
     /// without it (`Advisory::No`); an advisory, never a verdict.
-    pub unmentioned: Option<UnmentionedFace>,
+    pub advisory: Option<Advised>,
 }
 
 /// Whether the wire carries the two advisory tables (6.2.0). ONE
@@ -96,28 +94,41 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
     judge_report(root, core, &w)
 }
 
-/// The judgment half-door (batch 9 P10): judge + consume + the
-/// degraded observe over a wire already in hand — boundaries
-/// holding the one snapshot call this, never a second measurement.
+/// The judgment and its document over a wire already in hand (batch 9
+/// P10 half-door): the core judges, then lays the deadcode document
+/// out (plan v2.32 step 4) — boundaries holding the one snapshot call
+/// this, never a second measurement.
 pub fn judge_report(root: &Path, core: &str, w: &GraphWire) -> Result<Report> {
-    Ok(judged(root, core, w, &[])?.0)
+    let (j, _, held) = judged(root, core, w, &[])?;
+    let (req, names) = document::request("deadcode", w, &j)?;
+    document::read(
+        crate::document::assemble_over(core, held, req, &names)?,
+        w,
+        &j,
+    )
 }
 
-/// The same half-door, answering position rows too — the canvas
+/// The judgment alone, answering position rows too — the canvas
 /// face (batch 9 P18) needs the verdicts AND the pos table from the
-/// ONE judgment; returning the raw reply beside the Report keeps
-/// consume private and the observe in one owner.
-pub fn judged(root: &Path, core: &str, w: &GraphWire, pos: &[i64]) -> Result<(Report, Value)> {
-    let reply = judge(core, w, pos)?;
-    let report = consume(&reply, &w.nodes, w.unresolved_sites, w.unmentioned.as_ref())?;
-    if let Some(reason) = &report.degraded {
+/// ONE judgment, and structure's rollup reads the dead nodes and no
+/// document; returning the raw reply beside the rows keeps consume
+/// private and the observe in one owner. The link comes back whole,
+/// so a face's document rides the judgment's core process (plan v2.32
+/// step 4).
+pub fn judged(
+    root: &Path,
+    core: &str,
+    w: &GraphWire,
+    pos: &[i64],
+) -> Result<(Judged, Value, crate::document::Held)> {
+    let mut link = crate::lockstep::open_family(core, "graph/1")?;
+    let reply = judge_on(&mut link, w, pos)?;
+    let j = consume(&reply, &w.nodes, w.unmentioned.as_ref())?;
+    if let Some(reason) = &j.degraded {
         observe(root, reason);
     }
-    Ok((report, reply))
+    Ok((j, reply, Ok(link)))
 }
-
-// The report's JSON face lives in report.rs (deadcode_json) with the
-// other shared serializations — lifted out of the binary at M7-P2.
 
 /// Everything one graph.request carries, built once — the request
 /// throat deadcode and the M5-3 join share: same node identity, same
@@ -153,24 +164,6 @@ pub struct GraphWire {
     /// when Some — the verdict road sends the same number as threshold
     /// code 7, so one config key drives both faces.
     pub scc_floor: Option<u32>,
-}
-
-/// One file-tier dead verdict with its trust column (2.32.0, H3):
-/// conf is the core's per-row confidence — 0 unvouched (the file's
-/// language still carries unresolved sites), 1 vacuous (no site of
-/// that language exists), 2 vouched. None only on a legacy reply
-/// whose request carried no ledger.
-#[derive(Debug)]
-pub struct DeadRow {
-    pub path: String,
-    pub verdict: &'static str,
-    /// Index into WHY_CODES — the liveness reason as a CODE (plan
-    /// v2.25, O23): the sentence used to be minted here in English
-    /// and rode into the Chinese console and the GUI's Chinese face
-    /// untranslated. Machine faces still print the English sentence
-    /// (`why()`); presentation faces look the code up in a table.
-    pub why_code: usize,
-    pub conf: Option<i64>,
 }
 
 /// The file-tier slice of the wire's dense assignment: (index, path)
@@ -356,7 +349,11 @@ fn node_row(
 /// a non-degraded reply MUST answer every requested index — a short
 /// pos table would silently starve the join, so it refuses here.
 pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
-    let mut link = crate::lockstep::open_family(core, "graph/1")?;
+    judge_on(&mut crate::lockstep::open_family(core, "graph/1")?, w, pos)
+}
+
+/// The graph.request over a link already open.
+fn judge_on(link: &mut crate::corelink::Link, w: &GraphWire, pos: &[i64]) -> Result<Value> {
     let reply = link
         .request("graph", request_body(w, pos))
         .map_err(anyhow::Error::msg)?;
@@ -458,32 +455,31 @@ pub fn conf_word(conf: Option<i64>) -> &'static str {
     }
 }
 
-/// One core verdict row resolved to its node and name — shared by
-/// the dead and reported loops. A verdict past the four this side
-/// knows about is a wire-version skew, not a panic.
-fn named(nodes: &[Node], idx: usize, verdict: usize) -> Result<(&Node, &'static str)> {
-    let node = nodes.get(idx).context("index out of range")?;
-    let name = *VERDICT_NAMES
-        .get(verdict.checked_sub(1).context("verdict 0")?)
-        .context("verdict out of range")?;
-    Ok((node, name))
+/// One core verdict row's node, the verdict inside the four codes
+/// (CE.Graph.Dead) — shared by the dead and reported tables. A verdict
+/// past them is a wire-version skew, not a panic.
+fn verdict_node(nodes: &[Node], idx: i64, verdict: i64) -> Result<&Node> {
+    let node = usize::try_from(idx)
+        .ok()
+        .and_then(|i| nodes.get(i))
+        .context("index out of range")?;
+    ensure!((1..=4).contains(&verdict), "verdict {verdict} out of range");
+    Ok(node)
 }
 
-/// The reply named back. `names` is the wire's own advisory table
-/// (None = the road was not asked), read by advisory::consume.
+/// The reply's rows held at the boundary. `names` is the wire's own
+/// advisory table (None = the road was not asked), read by
+/// advisory::consume.
 fn consume(
     reply: &Value,
     nodes: &[Node],
-    unresolved_sites: i64,
     names: Option<&crate::mention::Unmentioned>,
-) -> Result<Report> {
+) -> Result<Judged> {
     // The wire's degraded BIT is authoritative (the C9 read-the-
     // real-boolean discipline, contracts/VERSIONING.md); reason
     // is its text, not its signal.
     let degraded = (reply["degraded"].as_bool() == Some(true))
         .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
-    let dead = dead_rows(reply, nodes)?;
-    let reported = reported_rows(reply, nodes)?;
     // the fail bit is the core's (2.18.0); the client's own
     // conjunction stood in for a pre-2.18 core until L step #15
     // (O62) — no such core passes a 3.0.0+ handshake, so a missing
@@ -493,17 +489,11 @@ fn consume(
             "wire skew: graph reply carries no `fail` bit (a pre-2.18.0 core cannot reach this client)"
         )
     };
-    Ok(Report {
-        unmentioned: advisory::consume(reply, nodes, names)?,
-        dead,
-        reported,
-        nodes: nodes.len(),
-        files: nodes
-            .iter()
-            .filter(|n| n.kind == super::wire::GRAN_FILE)
-            .count(),
-        kept: reply["counts"]["kept"].as_u64().unwrap_or(0),
-        unresolved_sites,
+    Ok(Judged {
+        advisory: advisory::consume(reply, nodes, names)?,
+        dead: dead_rows(reply, nodes)?,
+        reported: reported_rows(reply, nodes)?,
+        kept: reply["counts"]["kept"].as_i64(),
         degraded,
         fail,
     })
@@ -512,60 +502,43 @@ fn consume(
 /// The failing table: two-column rows on the legacy road, three when
 /// the ledger rode (2.32.0) — arity is the road, not noise — every
 /// row fenced to the four codes, file granularity and 0..2 trust.
-fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<DeadRow>> {
+fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<Vec<i64>>> {
     let rows: Vec<Vec<i64>> = serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
-    let mut dead = Vec::with_capacity(rows.len());
-    for row in rows {
+    for row in &rows {
         let (idx, verdict, conf) = match row[..] {
-            [i, v] => (i as usize, v as usize, None),
-            [i, v, c] => (i as usize, v as usize, Some(c)),
-            _ => anyhow::bail!("dead row of arity {} — wire skew", row.len()),
+            [i, v] => (i, v, None),
+            [i, v, c] => (i, v, Some(c)),
+            _ => bail!("dead row of arity {} — wire skew", row.len()),
         };
-        let (node, name) = named(nodes, idx, verdict)?;
+        let node = verdict_node(nodes, idx, verdict)?;
         // The RG9 split is the CORE's since 2.18.0; here it survives
         // as a boundary contract, because erase's class-0 licence is
         // minted from this list — an aggregate in the failing table
         // is wire skew and must refuse, never license a directory.
-        anyhow::ensure!(
+        ensure!(
             node.kind == super::wire::GRAN_FILE,
             "core dead row {idx} is not file-granularity — wire skew"
         );
         if let Some(c) = conf {
-            anyhow::ensure!(
+            ensure!(
                 (0..=2).contains(&c),
                 "confidence {c} outside 0..2 — wire skew"
             );
         }
-        dead.push(DeadRow {
-            path: node.path.clone(),
-            verdict: name,
-            // verdict codes 0..=2 are the unreferenced family, 3.. the
-            // unreachable one (VERDICT_NAMES order); the reason follows
-            // that split as a WHY_CODES index
-            why_code: usize::from(verdict > 2),
-            conf,
-        });
     }
-    Ok(dead)
+    Ok(rows)
 }
 
-/// The informational table, labelled `path#unit` for sections. The
-/// key is mandatory since 2.18.0; its absence parsed as empty for
-/// older cores until L step #15 (O62) retired that dead compat.
-fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<(String, &'static str)>> {
-    let rows: Vec<[usize; 2]> = serde_json::from_value(reply["reported"].clone())
+/// The informational table. The key is mandatory since 2.18.0; its
+/// absence parsed as empty for older cores until L step #15 (O62)
+/// retired that dead compat.
+fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<[i64; 2]>> {
+    let rows: Vec<[i64; 2]> = serde_json::from_value(reply["reported"].clone())
         .context("wire skew: graph reply carries no `reported` table (a pre-2.18.0 core cannot reach this client)")?;
-    rows.into_iter()
-        .map(|[idx, verdict]| {
-            let (node, name) = named(nodes, idx, verdict)?;
-            let label = if node.unit.is_empty() {
-                node.path.clone()
-            } else {
-                format!("{}#{}", node.path, node.unit)
-            };
-            Ok((label, name))
-        })
-        .collect()
+    for &[idx, verdict] in &rows {
+        verdict_node(nodes, idx, verdict)?;
+    }
+    Ok(rows)
 }
 
 /// A degraded judgment is a visible event (A9f): one observe-feed

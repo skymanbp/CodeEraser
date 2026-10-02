@@ -3,37 +3,28 @@
 //! measurement — one judgment, two faces. The score-side tables
 //! this face has no stake in (baseline, members, size facts) ride
 //! empty and their axes are ignored; the candidate rows and the
-//! severity face are what it consumes.
+//! severity face are what it consumes, sent on to the join document
+//! as the reply gave them (CE.Join.Document names the verdicts and
+//! ranks them, plan v2.32 step 4).
 
 use crate::graph::deadcode::{self, GraphWire};
 use crate::join::Pos;
 use crate::score::{self, wire};
-use anyhow::{Context, Result};
+use anyhow::Result;
 use std::collections::HashMap;
 
-/// Rendering names for the lattice's codes — the codes are the
-/// core's (CE.Verdict.Join.verdictTable).
-pub const VERDICT_NAMES: [&str; 4] = [
-    "report_only",
-    "merge_candidate",
-    "delete_candidate",
-    "churn_hotspot",
-];
-
-/// One pair's core verdict, keyed for the join rows.
-pub(super) struct PairVerdict {
-    pub verdict: &'static str,
-    pub severity: i64,
-    pub confidence: i64,
-}
-
-/// What the report reads from the judgment: per-pair verdicts (the
-/// reply's reasons/legs columns stay on the wire, unrendered since
-/// 2.33.0 — nothing on this face reads them) plus the degraded note (a refused judgment reports,
-/// never pretends report_only).
+/// What the document reads from the judgment: the verdict universe
+/// the candidates' two columns index, the candidate rows and the
+/// severity face as the reply gave them (the reasons / legs columns
+/// ride along, unrendered since 2.33.0), and the degraded note (a
+/// refused judgment reports, never pretends report_only).
 pub struct Judged {
-    pub(super) pairs: HashMap<(String, String), PairVerdict>,
+    pub(super) files: Vec<String>,
+    pub(super) candidates: Vec<[i64; 6]>,
+    pub(super) join_severity: Vec<[i64; 2]>,
     pub degraded: Option<String>,
+    /// The verdict's core link, whole: the join document rides it.
+    pub(super) held: crate::document::Held,
 }
 
 pub fn judge_pairs(
@@ -67,44 +58,14 @@ pub fn judge_pairs(
         (symbols, self_loops),
         (churn_t, cochange_t),
     )?;
-    let reply = wire::judge(core, &req)?;
+    let (reply, link) = wire::judge(core, &req)?;
     Ok(Judged {
-        pairs: pair_verdicts(&req.files, &reply)?,
+        files: req.files,
+        candidates: reply.candidates,
+        join_severity: reply.join_severity,
         degraded: reply.degraded,
+        held: Ok(link),
     })
-}
-
-/// The reply's candidate rows keyed by file pair, each with its
-/// verdict name and the severity rank the reply gave its code.
-fn pair_verdicts(
-    files: &[String],
-    reply: &wire::Reply,
-) -> Result<HashMap<(String, String), PairVerdict>> {
-    let sev: HashMap<i64, i64> = reply.join_severity.iter().map(|&[c, s]| (c, s)).collect();
-    let mut pairs = HashMap::new();
-    for &[u, v, code, _reasons, _legs_mask, confidence] in &reply.candidates {
-        let path_of = |i: i64| -> Result<String> {
-            usize::try_from(i)
-                .ok()
-                .and_then(|i| files.get(i))
-                .cloned()
-                .context("candidate index outside the file universe — wire skew")
-        };
-        let name = *VERDICT_NAMES
-            .get(usize::try_from(code).unwrap_or(usize::MAX))
-            .context("verdict code outside the table — wire skew")?;
-        pairs.insert(
-            (path_of(u)?, path_of(v)?),
-            PairVerdict {
-                verdict: name,
-                // an unlisted code ranks 0 by the same absence rule
-                // the core's own report_only carries
-                severity: sev.get(&code).copied().unwrap_or(0),
-                confidence,
-            },
-        );
-    }
-    Ok(pairs)
 }
 
 /// The join road's verdict request (split from judge_pairs at the

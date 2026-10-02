@@ -12,6 +12,7 @@
 
 pub mod anchor;
 pub mod baseline;
+pub mod document;
 pub mod knobs;
 pub mod model;
 mod pinned;
@@ -20,8 +21,7 @@ pub mod report;
 pub mod wire;
 pub(crate) mod wire_check;
 
-pub use model::{Outcome, SCHEMA_ID};
-pub use report::{print, report_json};
+pub use model::Outcome;
 
 use crate::graph::deadcode;
 use crate::{churn, dedup, join, scan};
@@ -230,7 +230,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         files: m.files,
         judged_mask: crate::scan::lang::Lang::judged_mask(),
     };
-    let reply = wire::judge(&opts.core, &req)?;
+    let (reply, link) = wire::judge(&opts.core, &req)?;
     Ok(Outcome {
         files: req.files.len(),
         sim_pairs: req.sim.len(),
@@ -239,6 +239,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         skipped_self: m.skipped_self,
         floor: opts.floor,
         reply,
+        held: Ok(link),
     })
 }
 

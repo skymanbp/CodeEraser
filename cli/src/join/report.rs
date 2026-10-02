@@ -1,41 +1,53 @@
-//! The join report's two emitters — the JSON document and the
-//! bilingual console rendering — split from mod.rs at the repo's own
-//! 300-line dogfood gate when the progress spans landed (plan v2.16).
-//! churn/ and trend/ have had this leaf since their own 300-line
-//! walls; join was the family that never got one, so the assembly
-//! and the faces that render it had shared a file since M5-3h.
-//!
+//! The join document read back (plan v2.32 step 4): the core lays it
+//! out (join/document.rs, CE.Join.Document) and this face prints it —
+//! the machine faces the bound document itself, the console its lines.
 //! Rendering only: every code and rank here is the core's or the
 //! measurement's, and the words are this face's (ADR-008).
 
-use super::{FileRow, Pos, Report, SCHEMA_ID, churn_unit};
+use super::Pos;
+use super::churn_unit::{self, Lines};
 use crate::i18n::line;
-use serde_json::{Value, json};
+use serde::Deserialize;
+use serde_json::Value;
 
-pub fn report_json(r: &Report) -> Value {
-    json!({
-        "schema": SCHEMA_ID,
-        "days": r.days,
-        "commits": r.commits,
-        "degraded": r.degraded,
-        "files": r.files,
-        "units": r.units.iter().map(|u| {
-            // the row's own fields (a, b, kind with its metric, churn),
-            // then the null graph leg and the CODE, not the sentence
-            // (plan v2.15): the reader that renders this row owns the
-            // words for it
-            let mut row = serde_json::to_value(u).expect("unit row");
-            let o = row.as_object_mut().expect("unit row object");
-            o.insert("graph".into(), Value::Null);
-            o.insert("caveatCode".into(), json!(churn_unit::GRAPH_NULL_IMPORT_GRANULARITY));
-            row
-        }).collect::<Vec<_>>(),
-    })
+/// The document as the console and the readers take it; `doc` is the
+/// document itself.
+#[derive(Debug, Deserialize)]
+pub struct Report {
+    pub days: u32,
+    pub commits: usize,
+    pub files: Vec<FileRow>,
+    pub units: Vec<churn_unit::UnitRow>,
+    pub degraded: Option<String>,
+    #[serde(skip)]
+    pub doc: Value,
 }
 
-pub fn print(r: &Report, as_json: bool) {
-    crate::report::print_doc(as_json, || report_json(r), || print_console(r));
+/// One Tier F row: a similar file pair with all three legs and the
+/// core's verdict on it.
+#[derive(Debug, Deserialize)]
+pub struct FileRow {
+    pub a: String,
+    pub b: String,
+    pub blocks: usize,
+    pub tokens: usize,
+    /// T3 near-miss unit pairs between the two files (5b-9).
+    pub near_miss: usize,
+    pub graph_a: Option<Pos>,
+    pub graph_b: Option<Pos>,
+    pub churn_a: Lines,
+    pub churn_b: Lines,
+    /// None = the pair is outside the churn report's co-change table.
+    pub cochange: Option<usize>,
+    /// The core's verdict for this pair (2.33.0, H4); None for a
+    /// self-pair (the wire's u < v contract cannot carry it) and when
+    /// the judgment degraded.
+    pub verdict: Option<String>,
+    pub severity: Option<i64>,
+    pub confidence: Option<i64>,
 }
+
+crate::report::bound!(Report, print_console);
 
 fn print_console(r: &Report) {
     for f in &r.files {
@@ -70,7 +82,7 @@ fn print_console(r: &Report) {
 /// the check report's own vocabulary: the wire's u < v contract
 /// cannot carry it, so no candidate row exists to relay.
 fn verdict_str(f: &FileRow) -> String {
-    match (f.verdict, f.severity, f.confidence) {
+    match (&f.verdict, f.severity, f.confidence) {
         (Some(v), Some(s), Some(c)) => format!("{v} (sev {s}, conf {c})"),
         _ if f.a == f.b => "self-pair (off the sim table)".into(),
         _ => "unjudged".into(),

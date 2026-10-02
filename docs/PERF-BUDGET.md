@@ -357,6 +357,21 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - flow 腿的固定成本 = 两侧各降一次表 + 两次 daemon 往返（核判 `flow/1`）：299 行的文件每次写入中位 +10.5–11.1 ms，三组读数一致；找到发现时多落一行 feed，不另加可见成本。
 - 复跑：`cargo build --release` 各出一个二进制拷到车道目录；两份树各 `git init` + `ce dedup .`（daemon 的冷启动在第一次探针时还没盖完「全量已建」戳，探针会答 `degraded: true`——先用 CLI 建一次满索引）；各臂预热两跑后 ABAB ×10，`clean` 与 `finding` 各一坐。
 
+## v2.32 步 4B 七族文档改由核装配 A/B（实测 2026-10-02，release，同一台机、同一窗口：b3443723 自仓干净克隆〔测试子仓就位〕的两份拷贝，两臂各一份，A = b3443723 的 release ce〔`git archive` 构建，七族文档在 Rust 里装配〕，B = 终树的 ce〔判决后问 `document/1` 并绑定，文档沿用判决的核链〕，核同一个车道 ce-core 1.8.0〔proto 7.9.0〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕、三个面各暖跑一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；`--format json`，stdout 丢弃）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。
+
+| 面 | A（Rust 装配） | B（核装配 + 绑定） | 差 | 状态 |
+|---|---|---|---|---|
+| `ce check .` | 7404.5（7249.9–16403.0） | 7603.2（7284.0–12661.9） | +198.7（+2.7 %） | 噪声内（第二坐 +22.9 ms，两坐区间互相覆盖） |
+| `ce deadcode .` | 1984.5（1908.6–2668.3） | 1993.2（1944.6–2753.8） | +8.7 | 噪声内（两坐正负相反） |
+| `ce structure --deep .` | 2030.8（1963.8–2144.5） | 2038.7（2019.4–2187.3） | +7.9 | 噪声内（第二坐负载升到 60 %，B 区间 2467.4–3747.5 覆盖 A 的 2323.4–2821.1） |
+
+- 量时 `Get-CimInstance` 处理器负载：第一坐前 11 %、坐后 12 %；第二坐坐后 60 %（别的会话）。**第二坐**中位数 A / B：check 7223.1 / 7246.0、deadcode 2407.3 / 2381.0、structure --deep 2506.7 / 2663.0。
+- **一个面一个核进程**：本步首稿的文档另起一条核链，那时连坐两次（处理器负载 97–100 %），deadcode 两坐都是 B 慢 （+777 / +426 ms），读作多起一个核进程；改为沿用判决的链（`document::Held`）后两坐差都在噪声内。那几坐的读数不入表。
+- join / `graph --mentions` / `graph --sites` / 图屏未计时（切换门只比字节）。
+- 复跑：A 臂 `git archive`（b3443723）解到车道目录、`cargo build --release --locked`（独立 `CARGO_TARGET_DIR`）；B 臂终树 `cargo build --release`；脚本 `s9_flow/v232s4_gen/perf.py`（车道目录，不入库）。
+
 ## v2.32 步 3B 文档改由核装配 A/B（实测 2026-10-01，release，同一台机、同一窗口：e877f389 干净树〔`git archive` + 测试子仓 74620180，去掉 `.gitmodules`〕的两份拷贝，两臂各一份，A = e877f389 的 release ce〔`git archive` 构建，步 1–3 之前的主线，五族文档在 Rust 里装配〕，B = 终树的 ce〔步 3A–3D 变基到 0a128885 后，判决后问 `document/1` 并绑定〕，核同一个 ce-core 1.8.0〔proto 7.8.0，终树构建〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕、五个面各暖跑一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；`--format json`，stdout 丢弃；量时 `Get-CimInstance` 处理器负载 59–77 %〔别的会话的进程〕，故紧接着连坐两次）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒；表是第一坐，末列是第二坐的差。

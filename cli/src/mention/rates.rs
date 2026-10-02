@@ -38,7 +38,7 @@ pub fn declarations(idx: &Index) -> Result<BTreeMap<(String, String), Decl>> {
 }
 
 /// A count and its exported half (vis bit 0).
-#[derive(Debug, Default, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Split {
     pub all: usize,
     pub exported: usize,
@@ -52,7 +52,7 @@ impl Split {
 }
 
 /// Where the veto stopped, by reason (module doc for `collision_saved`).
-#[derive(Debug, Default, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub(super) struct Vetoed {
     /// Another file spells the name.
     pub other: usize,
@@ -68,7 +68,7 @@ pub(super) struct Vetoed {
 /// One language's census: the §3.1 domain, what survived every veto
 /// (the candidate table's rows before the core's mask and
 /// exemptions), and where the rest stopped.
-#[derive(Debug, Default, PartialEq, Eq, serde::Serialize)]
+#[derive(Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct LangRates {
     pub declared: Split,
     pub unmentioned: Split,

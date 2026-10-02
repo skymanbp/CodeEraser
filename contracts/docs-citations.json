@@ -1074,8 +1074,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/join/mod.rs|bb493d56a8b2eca6|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 97,
-    "end": 104,
+    "line": 51,
+    "end": 58,
     "text": "// the T3 family off the same snapshot (plan v2.30 step 5b-9): its"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
@@ -1085,8 +1085,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 324,
-    "end": 341,
+    "line": 325,
+    "end": 342,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/tests/unit/dedup/t3.rs|004a6ba98c9dbbe0|0": {
@@ -2265,13 +2265,13 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/judge.rs|71db14cfaff0abb0|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 206,
-    "end": 211,
+    "line": 95,
+    "end": 100,
     "text": "/// Judged languages only (plan v2.5): letting the scan-only arm in"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|cc93c4aa52f4e818|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 199,
+    "line": 204,
     "text": "crate::lockstep::refuse_degraded(&reply, \"structure/wire.rs vs Structure/Cost.hs\")?;"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Lang/Common/Boot2.hs|ecbfee15e57c3ad1|0": {
@@ -2820,14 +2820,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5932094aee58af08|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 189,
-    "end": 207,
+    "line": 188,
+    "end": 206,
     "text": "fn preflight(given: &Path) -> Result<(), ExitCode> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|91a6c3124e3ed609|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 177,
-    "end": 181,
+    "line": 176,
+    "end": 180,
     "text": "let fence_only = o.reply.failed.iter().all(|c| FENCE.contains(&c.as_str()));"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|e3855c398244a566|0": {
@@ -2837,14 +2837,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|f414078af6b9f3d0|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 128,
-    "end": 142,
+    "line": 127,
+    "end": 141,
     "text": "pub fn baseline_cmd(a: BaselineArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/report.rs|72eedfdd1ae101de|0": {
     "target": "../../../cli/src/report.rs",
-    "line": 48,
-    "end": 53,
+    "line": 118,
+    "end": 123,
     "text": "pub fn fail_suffix(failed: &[String]) -> String {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|cc9ee924c20278e7|0": {
@@ -2902,14 +2902,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|b0a71c3df04991be|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 399,
-    "end": 414,
+    "line": 400,
+    "end": 415,
     "text": "/// The discrete clone-member set: every block's sides attributed to"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 324,
-    "end": 341,
+    "line": 325,
+    "end": 342,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -2924,11 +2924,11 @@
     "end": 71,
     "text": "pub(crate) fn present(root: &Path, measured: &BTreeSet<u64>) -> Result<Vec<u64>> {"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/report.rs|33b0b22a34abf6e7|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/report.rs|0d4e0816643c15b6|0": {
     "target": "../../../cli/src/score/report.rs",
-    "line": 99,
-    "end": 105,
-    "text": "fn print_ratchet_tail(o: &Outcome) {"
+    "line": 60,
+    "end": 66,
+    "text": "fn print_ratchet_tail(r: &Report) {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/trend/mod.rs|02421ffd7685ec74|0": {
     "target": "../../../cli/src/trend/mod.rs",
@@ -3656,19 +3656,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|01ba091166cd9815|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 326,
+    "line": 319,
     "text": "/// bits through its role table, where an ablation can perturb them);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|0afbf65a97ab5f7b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 448,
+    "line": 445,
+    "end": 450,
     "text": "pub fn conf_word(conf: Option<i64>) -> &'static str {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|26d7b0c0bb2a5058|0": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 50,
-    "end": 55,
-    "text": "pub const VERDICT_NAMES: [&str; 4] = ["
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|2fa668f1a15fb7d1|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -3678,30 +3673,30 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|47e6b9dce7af0f78|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 490,
-    "end": 494,
+    "line": 486,
+    "end": 490,
     "text": "// bit is wire skew, refused by name like every other absent key"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|5a8c07b7d35f3a65|0": {
+    "target": "../../../cli/src/graph/deadcode.rs",
+    "line": 448,
+    "text": "Some(0) => t(\n\" [unvouched: unresolved sites in this language]\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 363,
-    "end": 366,
+    "line": 360,
+    "end": 363,
     "text": "let rows = reply[\"pos\"].as_array().map(Vec::len).unwrap_or(0);"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|6ef7187cdb7a96c3|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 192,
-    "end": 194,
+    "line": 185,
+    "end": 187,
     "text": "pub fn measured_nodes(w: &GraphWire) -> Vec<(i64, &str)> {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|7530c14d4504672d|0": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 517,
-    "text": "let mut dead = Vec::with_capacity(rows.len());"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|86dc4520a4549390|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 262,
+    "line": 255,
     "text": "rows,\nedges: wire,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|a612b2e0c056a92d|0": {
@@ -3712,44 +3707,38 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|b48e4a45d7fa65e9|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 288,
-    "end": 299,
+    "line": 281,
+    "end": 292,
     "text": "/// Cached edges → wire rows — EVERY kind travels since 2.20.0"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|bcb4fab990e9b345|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 305,
-    "end": 323,
+    "line": 298,
+    "end": 316,
     "text": ".map(|&i| i as i64)"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c18af790a198146f|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|bccd835095c573bd|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 521,
-    "end": 525,
-    "text": "[i, v, c] => (i as usize, v as usize, Some(c)),"
+    "line": 506,
+    "end": 510,
+    "text": "let rows: Vec<Vec<i64>> = serde_json::from_value(reply[\"dead\"].clone()).context(\"dead rows\")?;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c89240bb0aef2f0a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 507,
-    "end": 514,
+    "line": 497,
+    "end": 504,
     "text": "degraded,\nfail,"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|cfcd49a1f86410c9|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|df10614b7a577625|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 552,
-    "end": 566,
-    "text": "/// The informational table, labelled `path#unit` for sections. The"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f0d7ab62d8583e7e|0": {
-    "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 461,
-    "end": 470,
-    "text": "/// One core verdict row resolved to its node and name — shared by"
+    "line": 536,
+    "end": 542,
+    "text": "let rows: Vec<[i64; 2]> = serde_json::from_value(reply[\"reported\"].clone())"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f88de50d7b234cc0|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 290,
-    "end": 294,
+    "line": 283,
+    "end": 287,
     "text": "/// rule now (CE.Graph.Cost.assetKind), applied where the cut table"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/flags.rs|445bf00701224a12|0": {
@@ -4541,16 +4530,16 @@
     "end": 55,
     "text": "/// A fixed specifier the node carries as a keyword, not a field:"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|a830951c191a8896|0": {
+    "target": "../../../cli/src/graph/store.rs",
+    "line": 194,
+    "end": 196,
+    "text": "fn kinds() -> &'static [&'static str] {"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|d5350aafcc5c6a41|0": {
     "target": "../../../cli/src/graph/store.rs",
     "line": 155,
     "text": "pub const GRAPH_REV: i64 = 23;"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|dbd612eb5d353571|0": {
-    "target": "../../../cli/src/graph/store.rs",
-    "line": 195,
-    "end": 197,
-    "text": "const KINDS: &str = \"import import_from export_from use mod_decl link image ref_link ref_def url \\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
     "target": "../../../cli/src/graph/symwire.rs",
@@ -4605,12 +4594,6 @@
     "line": 148,
     "end": 154,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
-    "target": "../../../cli/src/report.rs",
-    "line": 116,
-    "end": 130,
-    "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_graph_precision.rs|185b850b408ba8bc|0": {
     "target": "../../../cli/tests/it/eval_graph_precision.rs",
@@ -5046,6 +5029,30 @@
     "end": 18,
     "text": "entries :: Integer -> [Integer] -> [Int]"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|23485230b107e32d|0": {
+    "target": "../../../core/app/CE/Graph/Document.hs",
+    "line": 113,
+    "end": 118,
+    "text": "dead row = case row of"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|321449288b91b1d9|0": {
+    "target": "../../../core/app/CE/Graph/Document.hs",
+    "line": 47,
+    "end": 52,
+    "text": "-- | The four verdicts by code 1..4 (CE.Graph.Dead)."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|513eb0e39ef810c0|0": {
+    "target": "../../../core/app/CE/Graph/Document.hs",
+    "line": 86,
+    "end": 102,
+    "text": "-- | The document; the advisory's three keys only when the road asked."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Document.hs|a97d079ede6dfb44|0": {
+    "target": "../../../core/app/CE/Graph/Document.hs",
+    "line": 54,
+    "end": 57,
+    "text": "-- | The liveness reason by code: 0 the unreferenced verdicts, 1 the"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Position.hs|98551ce5f51a2440|0": {
     "target": "../../../core/app/CE/Graph/Position.hs",
     "line": 1,
@@ -5063,6 +5070,12 @@
     "line": 20,
     "end": 21,
     "text": "\\# (package name, its exposed modules, space-separated) — the\\n\\"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Graph.hs|90429ce67d894c2c|0": {
+    "target": "../../../core/app/CE/Lang/Common/Graph.hs",
+    "line": 16,
+    "end": 19,
+    "text": "\\site_kinds = [\\n\\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Common/Ladder.hs|3fc42a9859244c4b|0": {
     "target": "../../../core/app/CE/Lang/Common/Ladder.hs",
@@ -5166,99 +5179,94 @@
     "end": 86,
     "text": "/// The same surface under the verdict family's universe (6.1.0):"
   },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|17dcd3f548e8aaec|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 66,
+    "end": 76,
+    "text": "/// The similarity a unit row carries (plan v2.30 step 5b-9): which"
+  },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|4610453a9abd25ca|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 138,
+    "line": 123,
     "text": "None => (String::new(), 0, String::new()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|48bfa7dfdcf40054|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 220,
-    "end": 229,
+    "line": 205,
+    "end": 214,
     "text": "for &(a, b, m) in &sim.t3.clones {"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|5992300f38f4e723|0": {
-    "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 61,
-    "end": 65,
-    "text": "#[derive(Debug, Clone, Copy, Default, Serialize, PartialEq, Eq)]"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|61032d8295705051|0": {
-    "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 39,
-    "text": "pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|62f0bc0f5de0f007|0": {
-    "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 84,
-    "end": 92,
-    "text": "#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|8dd271e4c7931b7c|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 131,
-    "end": 135,
+    "line": 116,
+    "end": 120,
     "text": "let hit = self\n.table(path)"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|90c66a60f36c2171|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 200,
-    "end": 205,
+    "line": 185,
+    "end": 190,
     "text": "let churn_of = |o: &Owner| {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|9234a6afac2962d5|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 184,
-    "end": 187,
+    "line": 169,
+    "end": 172,
     "text": "/// Assemble the Tier U rows: one per clone block and one per T3 pair"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|d45fd60de23dc11b|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 147,
-    "end": 162,
+    "line": 132,
+    "end": 147,
     "text": "/// The unit itself, by the report identity the T3 family already"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|dd26ec65941b7c62|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 51,
-    "end": 58,
+    "line": 36,
+    "end": 43,
     "text": "/// A span's owner: the report identity and the §7.2 anchor the churn"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|fd84ce0790022702|0": {
+    "target": "../../../cli/src/join/churn_unit.rs",
+    "line": 45,
+    "end": 50,
+    "text": "/// Window churn of one entity (lines appended / rewritten)."
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/churn_unit.rs|ff9ea0fd14051ba7|0": {
     "target": "../../../cli/src/join/churn_unit.rs",
-    "line": 41,
-    "end": 49,
+    "line": 26,
+    "end": 34,
     "text": "/// The report identity of a unit: the index's persisted (path, key,"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/document.rs|e7f5278909542115|0": {
+    "target": "../../../cli/src/join/document.rs",
+    "line": 191,
+    "end": 200,
+    "text": "]\n})\n.collect()\n}\n\n/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|0151757927f5f2a1|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 99,
-    "end": 104,
+    "line": 53,
+    "end": 58,
     "text": "let t3 = dedup::t3::judge_index(root, &idx, core)?;"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1a382c06c9d6184a|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 216,
-    "end": 226,
-    "text": ".collect()\n}\n\n/// Per-file churn sums over the per-unit ledger — derived the same"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1ec1874c10d90282|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 51,
-    "end": 55,
-    "text": "pub blocks: usize,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|1f31a5fd7011eef0|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 151,
-    "end": 165,
+    "line": 91,
+    "end": 105,
     "text": "/// index names a node in OUR dense assignment (F19: one id space),"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|372999982735fb78|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|22ffe6aec2470fe5|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 53,
-    "end": 55,
-    "text": "/// T3 near-miss unit pairs between the two files (5b-9): a pair"
+    "line": 125,
+    "end": 127,
+    "text": "}\nfor (a, b) in sim.t3.file_pairs() {"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|350f3839f6e8b589|0": {
+    "target": "../../../cli/src/join/mod.rs",
+    "line": 120,
+    "end": 124,
+    "text": "let mut by_pair = document::Sums::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|3b01dfc3adfb5a03|0": {
     "target": "../../../cli/src/join/mod.rs",
@@ -5266,78 +5274,61 @@
     "end": 8,
     "text": "//! `ce join` (M5-3h): the three-signal assembly — similarity (clone"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|492df516457aaf2d|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 30,
-    "end": 38,
-    "text": "/// JSON output schema id; bump on shape change (plan §7.1)."
-  },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|5641101658a9a52c|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 107,
-    "end": 110,
+    "line": 61,
+    "end": 64,
     "text": ".map(|&(i, _)| i)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|cc940108857cdb8a|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|c3b961d64bbea7fd|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 191,
-    "end": 193,
-    "text": "for (a, b) in sim.t3.file_pairs() {"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|d4d81ac2b58387ca|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 185,
-    "end": 190,
-    "text": "let mut by_pair: BTreeMap<(String, String), (usize, usize, usize)> = BTreeMap::new();"
+    "line": 111,
+    "end": 118,
+    "text": "/// smaller path first)."
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|dfdd0b9189164f9f|0": {
     "target": "../../../cli/src/join/mod.rs",
-    "line": 40,
-    "end": 44,
+    "line": 32,
+    "end": 36,
     "text": "/// Graph position of one file: [indeg, outdeg, sccId, sccSize,"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|e3607d3e504e3bb6|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 60,
-    "end": 62,
-    "text": "/// None = the pair is outside the churn report's co-change table"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|e478ae21f72ddeba|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 132,
-    "end": 148,
-    "text": "/// Tier F with the core's verdict on each pair it judged."
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|f6ee24a95adbb5c2|0": {
-    "target": "../../../cli/src/join/mod.rs",
-    "line": 178,
-    "end": 184,
-    "text": "let ordered = |a: &str, b: &str| {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|14ebb8074e19e8cd|0": {
     "target": "../../../cli/src/join/report.rs",
-    "line": 118,
+    "line": 130,
     "text": "\"join {}d window: {} file pairs, {} unit rows, {} commits (verdicts by the check lattice; exit stays report-only)\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|4c27878cfe0b7e07|0": {
     "target": "../../../cli/src/join/report.rs",
-    "line": 109,
+    "line": 121,
     "text": "\"join graph leg degraded: {}\","
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|6f4b405470ff13b9|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|82c867dbbd87a9d7|0": {
     "target": "../../../cli/src/join/report.rs",
-    "line": 30,
-    "text": "o.insert(\"caveatCode\".into(), json!(churn_unit::GRAPH_NULL_IMPORT_GRANULARITY));"
+    "line": 40,
+    "end": 41,
+    "text": "/// None = the pair is outside the churn report's co-change table."
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|aeafab32a59b9dcf|0": {
+    "target": "../../../cli/src/join/report.rs",
+    "line": 29,
+    "end": 35,
+    "text": "pub struct FileRow {"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/report.rs|d6b8acbd2ef22c2d|0": {
+    "target": "../../../cli/src/join/report.rs",
+    "line": 34,
+    "end": 35,
+    "text": "/// T3 near-miss unit pairs between the two files (5b-9)."
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/verdicts.rs|c007bf2e97512afa|0": {
     "target": "../../../cli/src/join/verdicts.rs",
-    "line": 39,
+    "line": 30,
     "text": "pub fn judge_pairs("
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/verdicts.rs|d6af8640f36b0d3b|0": {
     "target": "../../../cli/src/join/verdicts.rs",
-    "line": 51,
-    "end": 55,
+    "line": 42,
+    "end": 46,
     "text": "let idx = score::row_index(&files);"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
@@ -5347,8 +5338,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 266,
-    "end": 282,
+    "line": 267,
+    "end": 283,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
@@ -5359,43 +5350,38 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 343,
-    "end": 369,
+    "line": 344,
+    "end": 370,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6e6e351ef11fb49b|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 498,
-    "end": 504,
+    "line": 499,
+    "end": 505,
     "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 485,
-    "end": 488,
+    "line": 486,
+    "end": 489,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 324,
-    "end": 341,
+    "line": 325,
+    "end": 342,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cd401e3b9371f9ac|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 385,
-    "end": 397,
+    "line": 386,
+    "end": 398,
     "text": "/// The survivor is the STRONGER finding: the sort orders kind within"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/report.rs|87b0f1d7db238a67|0": {
-    "target": "../../../cli/src/score/report.rs",
-    "line": 55,
-    "text": "\"candidates\": r.candidates,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/report.rs|89879050495378e8|0": {
     "target": "../../../cli/src/score/report.rs",
-    "line": 85,
-    "end": 89,
+    "line": 46,
+    "end": 50,
     "text": "println!(\n\"{}\",\nline(\n\"check score {}/{} | axes {} | {} candidates\","
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/wire.rs|a40a0820e026d366|0": {
@@ -5454,6 +5440,40 @@
     "line": 85,
     "end": 94,
     "text": "-- | Which flag bits make a node an entry root — the single constant"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Join/Document.hs|454c4461cb57a3bb|0": {
+    "target": "../../../core/app/CE/Join/Document.hs",
+    "line": 133,
+    "text": ", \"caveatCode\" .= importGranularity"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Join/Document.hs|89c255e038efd961|0": {
+    "target": "../../../core/app/CE/Join/Document.hs",
+    "line": 74,
+    "end": 83,
+    "text": "assemble :: DocReq -> Value"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Join/Document.hs|99ebd8f56e24a928|0": {
+    "target": "../../../core/app/CE/Join/Document.hs",
+    "line": 92,
+    "end": 116,
+    "text": "filePair :: DocReq -> [Integer] -> Value"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Join/Document.hs|be34201e97578c1c|0": {
+    "target": "../../../core/app/CE/Join/Document.hs",
+    "line": 59,
+    "end": 62,
+    "text": "-- | Why a unit row's graph leg is null: import granularity has no unit"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Join/Document.hs|e1eb693c97cd9c27|0": {
+    "target": "../../../core/app/CE/Join/Document.hs",
+    "line": 124,
+    "end": 134,
+    "text": "unitPair :: [Integer] -> Value"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Score/Document.hs|c134b00021bc5c56|0": {
+    "target": "../../../core/app/CE/Score/Document.hs",
+    "line": 80,
+    "text": ", \"candidates\" .= rows req \"candidates\""
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|15998cfcbbcdc99b|0": {
     "target": "../../../core/app/CE/Verdict.hs",
@@ -5811,28 +5831,28 @@
     "end": 14,
     "text": "//! What a grammar reads as opaque to names: the spans of every literal"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|207d68f078cec302|0": {
-    "target": "../../../cli/src/structure/judge.rs",
-    "line": 178,
-    "end": 204,
-    "text": "fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<SplitReport> {"
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/document.rs|090745ee11ebc565|0": {
+    "target": "../../../cli/src/structure/document.rs",
+    "line": 86,
+    "end": 101,
+    "text": "seams: p.seams,"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/document.rs|4ae7746a65364c2d|0": {
+    "target": "../../../cli/src/structure/document.rs",
+    "line": 114,
+    "end": 134,
+    "text": "}\n}\nnames\n}\n\n/// The structure document's strings: the directory names, and the"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|51898e9fa4010244|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 316,
-    "end": 323,
+    "line": 182,
+    "end": 189,
     "text": "let mut k = vec!["
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|a5ee5be74263c9b8|0": {
-    "target": "../../../cli/src/structure/judge.rs",
-    "line": 188,
-    "end": 196,
-    "text": "for &[fid, unit, benefit, cost] in &reply.split_candidates {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|c3ae6102bc38c631|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 162,
-    "end": 173,
+    "line": 82,
+    "end": 93,
     "text": "pub(crate) fn committed_soft(root: &Path) -> u64 {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|005c173dd605b093|0": {
@@ -6017,6 +6037,12 @@
     "line": 172,
     "end": 177,
     "text": "-- | v1.1 prices (plan v2.7 ②, knob codes 17 / 18): a seam CUTTING"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Document.hs|82b64505d58e367e|0": {
+    "target": "../../../core/app/CE/Structure/Document.hs",
+    "line": 37,
+    "end": 46,
+    "text": "statement :: String"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|077b9fc6a128a52c|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
@@ -7751,20 +7777,20 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|5cc7c2244f498b9b|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 179,
-    "end": 234,
+    "line": 172,
+    "end": 227,
     "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|8ca6298142089325|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 189,
-    "end": 242,
+    "line": 182,
+    "end": 235,
     "text": "units: &UnitSpans,"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|90da22b9b71c3ec7|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 120,
-    "end": 140,
+    "line": 111,
+    "end": 131,
     "text": "fn dead_candidates("
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|b8e09761ad4cc7fe|0": {
@@ -7775,14 +7801,14 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|d352a15dd157bae7|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 143,
-    "end": 174,
+    "line": 136,
+    "end": 167,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|d352a15dd157bae7|1": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 143,
-    "end": 172,
+    "line": 136,
+    "end": 165,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|db1d2306348238b7|0": {
@@ -7799,7 +7825,7 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|fb118b31900abd10|0": {
     "target": "../../../cli/src/erase/gather.rs",
-    "line": 130,
+    "line": 123,
     "text": ".context(\"dead row carries no confidence — the graph ledger did not ride\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
@@ -8117,35 +8143,35 @@
     "end": 132,
     "text": "/// Who a root-relative path belongs to, read off the declarations and"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/canvas.rs|0aa66a3e55fbca5e|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/canvas.rs|fd8986123fee1bde|0": {
     "target": "../../../cli/src/graph/canvas.rs",
-    "line": 24,
+    "line": 17,
     "end": 40,
-    "text": "/// The graph screen's document (plan v2.30 step 5b item 31): the"
+    "text": "pub fn screen(root: &std::path::Path, core: &str) -> Result<Value> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|1ebf67098c072c48|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 88,
-    "end": 91,
+    "line": 86,
+    "end": 89,
     "text": "pub enum Advisory {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode.rs|64995790ae4f0f45|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 198,
-    "end": 243,
+    "line": 191,
+    "end": 236,
     "text": ".iter()\n.enumerate()\n.filter(|(_, n)| n.kind == super::wire::GRAN_FILE && keep(n))"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|03c27f3f9717188e|0": {
+    "target": "../../../cli/src/graph/deadcode/advisory.rs",
+    "line": 32,
+    "end": 43,
+    "text": "/// The states the road can end in once asked. `cut` is the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|3aaf569eab67efa7|0": {
     "target": "../../../cli/src/graph/deadcode/advisory.rs",
-    "line": 83,
-    "end": 146,
+    "line": 76,
+    "end": 134,
     "text": "pub(super) fn consume("
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/advisory.rs|c770b50ede36f3a3|0": {
-    "target": "../../../cli/src/graph/deadcode/advisory.rs",
-    "line": 31,
-    "end": 50,
-    "text": "pub struct AdvisoryRow {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/deadcode/report.rs|ea05c81abb032374|0": {
     "target": "../../../cli/src/graph/deadcode/report.rs",
@@ -8306,11 +8332,6 @@
     "line": 57,
     "end": 70,
     "text": "fn type_checking_only(node: Node<'_>, src: &[u8]) -> bool {"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/face.rs|07e01f0b4e5d62a1|0": {
-    "target": "../../../cli/src/mention/face.rs",
-    "line": 16,
-    "text": "pub const SCHEMA_ID: &str = \"ce.mentions-report/0.3.0\";"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/mod.rs|0362eb6b6f6329cc|0": {
     "target": "../../../cli/src/mention/mod.rs",
@@ -8529,12 +8550,6 @@
     "end": 236,
     "text": "}\n\nimpl Gate {\nfn open(root: &Path) -> Result<Gate> {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/report.rs|232d6141a70d50ce|0": {
-    "target": "../../../cli/src/report.rs",
-    "line": 116,
-    "end": 147,
-    "text": "pub fn deadcode_json(r: &crate::graph::deadcode::Report) -> serde_json::Value {"
-  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/tests/it/eval_mention.rs|36f4b54da51db24e|0": {
     "target": "../../../cli/tests/it/eval_mention.rs",
     "line": 35,
@@ -8602,8 +8617,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 293,
-    "end": 295,
+    "line": 296,
+    "end": 298,
     "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -8664,11 +8679,29 @@
     "end": 74,
     "text": "-- | Caps for the two advisory tables (6.2.0), each its own literal:"
   },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Document.hs|8d7cbf89521eb4ca|0": {
+    "target": "../../../core/app/CE/Graph/Document.hs",
+    "line": 129,
+    "end": 141,
+    "text": "-- | One advisory row: the declaring file, the name, its line, the"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Document.hs|93a5c7478da10851|0": {
+    "target": "../../../core/app/CE/Graph/Document.hs",
+    "line": 97,
+    "end": 102,
+    "text": "<> if flag req \"asked\""
+  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Lang/Common/Protocol.hs|d3330c3a110e0933|0": {
     "target": "../../../core/app/CE/Lang/Common/Protocol.hs",
     "line": 6,
     "end": 102,
     "text": "protocol :: String"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Mention/Document.hs|54addeb7f9120f68|0": {
+    "target": "../../../core/app/CE/Mention/Document.hs",
+    "line": 29,
+    "end": 30,
+    "text": "schemaId :: String"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|7378483969f4bd7b|0": {
     "target": "../../../gui/ui/graph.js",
@@ -9895,12 +9928,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|097f5d56f167eb0a|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 203,
+    "line": 195,
     "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|f50a981a429e80a8|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 190,
+    "line": 182,
     "text": "pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -9926,7 +9959,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 175,
+    "line": 176,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
@@ -11412,7 +11445,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|7f6211bb93596e3c|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 233,
+    "line": 225,
     "text": "pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
@@ -11422,7 +11455,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 197,
+    "line": 198,
     "text": "a[\"file\"].as_str().map(Path::new),"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {

@@ -73,22 +73,13 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
 }
 
 /// `ce graph --sites` entry: per-(lang, kind) counts on console,
-/// full rows as JSON.
-pub fn run_sites(root: &Path, json: bool) -> ExitCode {
-    match analyze(root) {
-        Ok(files) if json => {
-            println!("{}", sites_json(&files));
-            ExitCode::SUCCESS
-        }
-        Ok(files) => {
-            print_counts(&files);
-            ExitCode::SUCCESS
-        }
-        Err(err) => {
-            eprintln!("ce graph: {err:#}");
-            ExitCode::from(2)
-        }
-    }
+/// full rows as JSON — both read off the one document the core lays
+/// out (plan v2.32 step 4).
+pub fn run_sites(root: &Path, core: &str, json: bool) -> ExitCode {
+    let doc = analyze(root).and_then(|files| sites_document(core, &files));
+    crate::report::print_read(doc, json, "sites", |read: SitesRead| {
+        print_counts(&read.sites)
+    })
 }
 
 /// Site counts keyed (lang, kind) — the shape the slice doc freezes.
@@ -102,49 +93,105 @@ pub fn counts(files: &[FileSites]) -> BTreeMap<(&'static str, &'static str), usi
     map
 }
 
-fn print_counts(files: &[FileSites]) {
-    let total: usize = files.iter().map(|f| f.sites.len()).sum();
+/// The sites document as the console reads it.
+#[derive(serde::Deserialize)]
+struct SitesRead {
+    sites: Vec<SiteRead>,
+}
+
+#[derive(serde::Deserialize)]
+struct SiteRead {
+    path: String,
+    lang: String,
+    kind: String,
+}
+
+fn print_counts(sites: &[SiteRead]) {
+    let files: std::collections::BTreeSet<&str> = sites.iter().map(|s| s.path.as_str()).collect();
     println!(
         "{}",
         crate::i18n::line(
             "graph sites: {} across {} files",
             "图引用站点：{} 个，分布于 {} 个文件",
-            &[
-                &total,
-                &files.iter().filter(|f| !f.sites.is_empty()).count(),
-            ],
+            &[&sites.len(), &files.len()],
         )
     );
     // the per-(lang, kind) rows are pure data — nothing to translate
-    for ((lang, kind), n) in counts(files) {
+    let mut by: BTreeMap<(&str, &str), usize> = BTreeMap::new();
+    for s in sites {
+        *by.entry((s.lang.as_str(), s.kind.as_str())).or_insert(0) += 1;
+    }
+    for ((lang, kind), n) in by {
         println!("  {lang:<10} {kind:<12} {n}");
     }
 }
 
-/// The sites document's version identity — every other report family
-/// carries one; the e2e matrix caught this face shipping bare JSON.
-pub const SCHEMA_ID: &str = "ce.sites-report/0.1.0";
+/// The sites document (CE.Graph.Sites): each file's place in path
+/// order and its language, each site's integers with its kind by the
+/// package's storage code (the `store` table); the spec and the owner
+/// stay this side's text — the `--sites` face and the MCP tool print
+/// this one document.
+pub fn sites_document(core: &str, files: &[FileSites]) -> Result<serde_json::Value> {
+    let rank = crate::document::ranks(files.iter().map(|f| f.path.as_str()));
+    let mut rows: Vec<[i64; 6]> = Vec::new();
+    let mut texts = SiteTexts::default();
+    for (f, file) in files.iter().enumerate() {
+        for s in &file.sites {
+            let kind = store::kind_code(s.kind)?;
+            let owned = i64::from(s.owner.is_some());
+            rows.push([
+                rows.len() as i64,
+                f as i64,
+                kind,
+                s.line as i64,
+                s.nth as i64,
+                owned,
+            ]);
+            texts.specs.push(s.spec.clone());
+            texts.owners.push(s.owner.clone().unwrap_or_default());
+        }
+        texts.paths.push(file.path.clone());
+    }
+    let req = crate::document::Request::new("sites")
+        .range("files", files.len())
+        .range("sites", rows.len())
+        .rows(
+            "rankFiles",
+            rank.iter()
+                .enumerate()
+                .map(|(f, r)| [f, *r])
+                .collect::<Vec<_>>(),
+        )
+        .rows(
+            "langs",
+            files
+                .iter()
+                .enumerate()
+                .map(|(f, x)| [f as i64, x.lang as i64])
+                .collect::<Vec<_>>(),
+        )
+        .rows("sites", rows);
+    crate::document::assemble(core, req, &texts)
+}
 
-/// Full site rows as JSON — the `--sites` face and the MCP tool
-/// share this one serialization.
-pub fn sites_json(files: &[FileSites]) -> String {
-    let rows: Vec<serde_json::Value> = files
-        .iter()
-        .flat_map(|f| {
-            f.sites.iter().map(|s| {
-                serde_json::json!({
-                    "path": f.path,
-                    "lang": f.lang.name(),
-                    "kind": s.kind,
-                    "line": s.line,
-                    "nth": s.nth,
-                    "spec": s.spec,
-                    "owner": s.owner,
-                })
-            })
-        })
-        .collect();
-    serde_json::json!({ "schema": SCHEMA_ID, "sites": rows }).to_string()
+/// The sites document's strings: the paths, each site's spec and owner.
+#[derive(Default)]
+struct SiteTexts {
+    paths: Vec<String>,
+    specs: Vec<String>,
+    owners: Vec<String>,
+}
+
+impl crate::document::Resolve for SiteTexts {
+    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
+        let list = match class {
+            "path" => &self.paths,
+            "site_spec" => &self.specs,
+            "site_owner" => &self.owners,
+            _ => return None,
+        };
+        crate::document::at(list, ints)
+    }
 }
 
 #[cfg(test)]

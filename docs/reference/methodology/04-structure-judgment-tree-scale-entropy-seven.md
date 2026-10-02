@@ -10,7 +10,7 @@ codes and counts ([Structure.hs:12-15](../../../core/app/CE/Structure.hs#L12)). 
 language set enters the tree; the size-gate-only language arm is excluded, or the file
 population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
 NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
-has no language term at all ([judge.rs:206-211](../../../cli/src/structure/judge.rs#L206)) ([structure-axes.md:27-28](../structure-axes.md#L27)).
+has no language term at all ([judge.rs:95-100](../../../cli/src/structure/judge.rs#L95)) ([structure-axes.md:27-28](../structure-axes.md#L27)).
 This file keeps its original `-seven` name because that anchor is linked from outside the
 repository; the axis roster itself has been eight since proto 7.1.0 added modularity (S7).
 
@@ -348,7 +348,7 @@ are both true and `reason` is `structure_too_large`
 [StructureProps.hs:241-250](../../../core/test/StructureProps.hs#L241)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. No `ce structure` user ever sees that 1000: the CLI
-turns a degraded reply into an error before rendering ([wire.rs:199](../../../cli/src/structure/wire.rs#L199)),
+turns a degraded reply into an error before rendering ([wire.rs:204](../../../cli/src/structure/wire.rs#L204)),
 so the number matters to a second client of the protocol, not to this one's console. In the non-degraded case `fail` equals `degraded`,
 i.e. always false: S2 is report-only, and the CLI gates nothing on this score
 ([Structure.hs:176-178](../../../core/app/CE/Structure.hs#L176)).

@@ -23,8 +23,11 @@ import CE.Verdict.Ratchet (Ratcheted (..))
 import Data.Aeson (Value, object, (.=))
 import Data.Foldable (asum)
 
+-- | The catalogue lists the fail-condition names and the degraded
+-- reasons, so the measuring side sends their codes and holds neither
+-- list (plan v2.32 step 4B).
 doc :: DocFamily
-doc = docFamily "check" schemaId statement checked assemble []
+doc = docFamily "check" schemaId statement checked assemble ["failed" .= failNames, "reasons" .= coreReasons]
 
 schemaId :: String
 schemaId = "ce.check-report/0.5.0"

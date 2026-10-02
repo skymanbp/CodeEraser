@@ -1,22 +1,22 @@
 //! Check report faces (split from mod.rs at the 300-line dogfood
-//! gate when the bilingual console landed, M8-G3b): the JSON
-//! document and the console lines. Templates are data through
+//! gate when the bilingual console landed, M8-G3b): the document the
+//! core lays out (score/document.rs, plan v2.32 step 4) printed as
+//! is, and the console lines read off it. Templates are data through
 //! i18n::line — English bytes stay identical under the default,
 //! CE_LANG=zh picks whole Chinese lines; FAIL/pass stay English in
 //! both (exit-code vocabulary, not prose). JSON is never translated.
 
 use crate::i18n::{line, t};
-use crate::score::model::{Outcome, SCHEMA_ID};
-use serde_json::json;
+use crate::report::colon_pairs;
+use crate::score::document::Report;
 
 /// The `--roast` easter egg: one verdict-flavored line per score
 /// band, i18n-tabled like every console string. Bands are computed
 /// against the EFFECTIVE scale, never a /1000 literal (the C17
 /// discipline holds for jokes too). Console-only by contract —
 /// JSON is the machine face and machines don't laugh.
-pub fn roast_line(o: &Outcome) {
-    let r = &o.reply;
-    let scale = r.knobs.get("scoreScale").copied().unwrap_or(1000).max(1);
+pub fn roast_line(r: &Report) {
+    let scale = r.scale.unwrap_or(1000).max(1);
     let (en, zh) = match r.score * 1000 / scale {
         900.. => (
             "roast: suspiciously clean. who did you pay?",
@@ -38,68 +38,29 @@ pub fn roast_line(o: &Outcome) {
     println!("{}", t(en, zh));
 }
 
-pub fn report_json(o: &Outcome) -> serde_json::Value {
-    let r = &o.reply;
-    let mut doc = json!({
-        "schema": SCHEMA_ID,
-        "score": r.score,
-        // the denominator is a knob since P4 — a bare score was
-        // unrecoverable for consumers (review C17)
-        "scoreScale": r.knobs.get("scoreScale"),
-        "axes": r.axes,
-        // the floor this run was armed with (null = ratchet only, the
-        // CLI's own default): a pass means a different thing on each
-        // side of it, and a face that hides which is showing a
-        // stronger verdict than the run produced
-        "floor": o.floor,
-        "candidates": r.candidates,
-        "joinSeverity": r.join_severity,
-        "ratchet": {
-            "added": r.added, "removed": r.removed, "over": r.over,
-            "toleranceDrawn": r.tolerance_drawn, "fail": r.fail,
-            "failed": r.failed,
-        },
-        "counts": {
-            "files": o.files, "simPairs": o.sim_pairs, "members": o.members,
-            "collapsed": o.collapsed, "skippedSelf": o.skipped_self,
-        },
-        "degraded": r.degraded,
-    });
-    // the fifth register (0.5.0): an absent key is a reply that was
-    // never asked, never an empty answer
-    if let Some(d) = &r.dropped {
-        doc["ratchet"]["dropped"] = json!(d);
-    }
-    doc
-}
+crate::report::bound!(Report, print_console);
 
-pub fn print(o: &Outcome, as_json: bool) {
-    if as_json {
-        println!("{}", report_json(o));
-        return;
-    }
-    let r = &o.reply;
-    let axes: Vec<String> = r.axes.iter().map(|[c, p]| format!("{c}:{p}")).collect();
+fn print_console(r: &Report) {
     // the effective scale, never the retired /1000 literal (C17)
-    let scale = r.knobs.get("scoreScale").copied().unwrap_or(1000);
+    let scale = r.scale.unwrap_or(1000);
     println!(
         "{}",
         line(
             "check score {}/{} | axes {} | {} candidates",
             "检查分数 {}/{} | 判轴 {} | 候选 {}",
-            &[&r.score, &scale, &axes.join(" "), &r.candidates.len()],
+            &[&r.score, &scale, &colon_pairs(&r.axes), &r.candidates.len()],
         )
     );
-    print_ratchet_tail(o);
+    print_ratchet_tail(r);
 }
 
 /// The ratchet / note / degraded lines (split at the 50-line fn gate).
 /// A FAIL names what held (report::fail_suffix, O36); pass bytes are
 /// the ones this line always printed.
-fn print_ratchet_tail(o: &Outcome) {
-    let r = &o.reply;
-    let verdict = if r.fail {
-        format!("FAIL{}", crate::report::fail_suffix(&r.failed))
+fn print_ratchet_tail(r: &Report) {
+    let k = &r.ratchet;
+    let verdict = if k.fail {
+        format!("FAIL{}", crate::report::fail_suffix(&k.failed))
     } else {
         "pass".to_string()
     };
@@ -109,21 +70,22 @@ fn print_ratchet_tail(o: &Outcome) {
             "ratchet: {} added, {} removed, {} over, {} tolerance drawn -> {}",
             "棘轮：新增 {}，移除 {}，超限 {}，动用容差 {} -> {}",
             &[
-                &r.added.len(),
-                &r.removed.len(),
-                &r.over.len(),
-                &r.tolerance_drawn.len(),
+                &k.added.len(),
+                &k.removed.len(),
+                &k.over.len(),
+                &k.tolerance_drawn.len(),
                 &verdict,
             ],
         )
     );
-    if o.collapsed > 0 || o.skipped_self > 0 {
+    let c = &r.counts;
+    if c.collapsed > 0 || c.skipped_self > 0 {
         println!(
             "{}",
             line(
                 "note: {} blocks collapsed into existing members, {} intra-file pairs off the sim table",
                 "注：{} 块并入既有成员，{} 个文件内对不入相似表",
-                &[&o.collapsed, &o.skipped_self],
+                &[&c.collapsed, &c.skipped_self],
             )
         );
     }

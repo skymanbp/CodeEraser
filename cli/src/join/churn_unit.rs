@@ -8,39 +8,24 @@
 //! item 29; the report's own identity stays the index's nth). The
 //! graph leg at unit tier is null BY DESIGN: import granularity has
 //! no unit nodes (unit indegree is constant 0, design §6.2), so any
-//! number here would be fabricated; [`GRAPH_NULL_IMPORT_GRANULARITY`]
-//! rides every emitted row instead, so absence can never read as zero
+//! number here would be fabricated; the reason rides every row of the
+//! document as a code the core names (CE.Join.Document's
+//! importGranularity, plan v2.15), so absence can never read as zero
 //! indegree. Since plan v2.30 step 5b-9 the tier also carries the T3
 //! family's pairs, seated by the identity that family already names.
+//! The rows here are the measurement and, read back off the document,
+//! the console's rows too.
 
 use crate::churn;
 use crate::dedup;
 use crate::fourclass::units;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-/// Why the unit tier's graph leg is null, as a CODE rather than a
-/// sentence (plan v2.15). It used to be 200 characters of English
-/// prose riding every emitted row of the report JSON — which i18n.rs
-/// declares the machine face and never translates, so no lookup
-/// switch could reach it and a zh reader got English. The console
-/// meanwhile rendered the SAME fact from its own bilingual template
-/// ("graph null (R6 locked)"): one fact, two sources, one of them
-/// untranslatable. Measurement emits the code; each face owns the
-/// words, exactly as erase's reason codes 0..6 already work.
-///
-/// Frozen position, like every other verdict code here:
-///   1 import_granularity — import granularity has no unit nodes, so
-///     symbol-level indegree needs R6 (independent 100-callsite audit
-///     >= 0.90, 2026-08-12-m5-2-graph-design.md), not unlocked this
-///     milestone. There is no 0: a row without a reason would be the
-///     fabricated number this whole design refuses.
-pub const GRAPH_NULL_IMPORT_GRANULARITY: i64 = 1;
-
 /// The report identity of a unit: the index's persisted (path, key,
 /// nth), what every face prints.
-#[derive(Debug, Clone, Serialize, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct UnitId {
     pub path: String,
     /// "" = file top level (no single unit contains the span).
@@ -58,7 +43,7 @@ pub struct Owner {
 }
 
 /// Window churn of one entity (lines appended / rewritten).
-#[derive(Debug, Clone, Copy, Default, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Lines {
     pub appended: usize,
     pub rewrote: usize,
@@ -66,9 +51,9 @@ pub struct Lines {
 
 /// One Tier U row: a similar unit pair with its churn leg. The graph
 /// leg is deliberately NOT a field — it is null for every unit row,
-/// and the report prints [`GRAPH_NULL_IMPORT_GRANULARITY`] in its
-/// place — the code, not a sentence (plan v2.15).
-#[derive(Debug, Serialize)]
+/// and the document carries the reason's code in its place — the
+/// code, not a sentence (plan v2.15).
+#[derive(Debug, Serialize, Deserialize)]
 pub struct UnitRow {
     pub a: UnitId,
     pub b: UnitId,
@@ -81,7 +66,7 @@ pub struct UnitRow {
 /// The similarity a unit row carries (plan v2.30 step 5b-9): which
 /// clone family found the pair, with that family's own metric —
 /// `kind` on the wire, the metric fields beside it.
-#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum UnitSim {
     /// A T1/T2 clone block: its token count.

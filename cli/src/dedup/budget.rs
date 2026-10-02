@@ -60,7 +60,7 @@ pub fn check(
         distincts.to_vec(),
         floor_override.map(|f| f as u64),
     );
-    let reply = crate::score::wire::judge(core, &req)?;
+    let (reply, _) = crate::score::wire::judge(core, &req)?;
     anyhow::ensure!(
         reply.degraded.is_none(),
         "dedup check: core degraded the judgment ({:?}) — refusing to gate on it",

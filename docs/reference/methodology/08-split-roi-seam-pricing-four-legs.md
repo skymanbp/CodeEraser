@@ -16,7 +16,7 @@ exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and file
 `total_lines <= soft` are skipped [seams.rs:51-56](../../../cli/src/structure/seams.rs#L51). The
 `soft` passed in is the *committed* line — `softLine` from `ce-baseline.json`, falling back
 to the *global* `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:162-173](../../../cli/src/structure/judge.rs#L162) — so wherever a baseline is
+[judge.rs:82-93](../../../cli/src/structure/judge.rs#L82) — so wherever a baseline is
 committed the advisory opens the zone at exactly the line the hook uses; without one they part for
 a classed file, whose hook reads its class's warn line (plan v2.13 ① P4) while the advisory stays
 class-blind.
@@ -89,7 +89,7 @@ tree-wide, off the committed soft line, the global `file_lines_fail` and — sin
 then: only 12 and 13 rode, so a repo declaring `size_penalty_max` got the declared curve in its
 score and the core's built-in `P_max = 10` in its advisory, with both halves internally
 consistent and nothing anywhere disagreeing out loud
-([judge.rs:316-323](../../../cli/src/structure/judge.rs#L316),
+([judge.rs:182-189](../../../cli/src/structure/judge.rs#L182),
 [Cost.hs:141-150](../../../core/app/CE/Structure/Cost.hs#L141),
 counterfactual at [structure_knobs.rs:65-76](../../../cli/tests/it/structure_knobs.rs#L65)):
 
@@ -215,11 +215,15 @@ what lets the Rust side write the machine-generated *why*
 [Split.hs:6-8,180-183](../../../core/app/CE/Structure/Split.hs#L6). This is the advisory's answer to
 "big projects have naturally long files": long-and-cohesive is an exemption **with numbers
 attached**, long-and-splittable gets a cut line
-[size-advisory.md:56-58](../size-advisory.md#L56). Relabelling back to names
-happens only in Rust, with every dense id range-checked before it is used as a subscript
-[judge.rs:178-204](../../../cli/src/structure/judge.rs#L178); candidates surface as
+[size-advisory.md:56-58](../size-advisory.md#L56). Since plan v2.32 step 4 the core lays the
+structure document out (`CE.Structure.Document`): its statement names the universe every
+column points into, so each dense id is range-checked by the document contract before
+anything reads it [Document.hs:37-46](../../../core/app/CE/Structure/Document.hs#L37), and the
+names go back in Rust, which resolves the references the document carries
+[document.rs:114-134](../../../cli/src/structure/document.rs#L114); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
-end line [judge.rs:188-196](../../../cli/src/structure/judge.rs#L188).
+end line, which Rust sends beside the reply's row and refuses for a unit the file does not hold
+[document.rs:86-101](../../../cli/src/structure/document.rs#L86).
 
 ### Input validation
 

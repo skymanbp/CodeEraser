@@ -7,6 +7,7 @@
 //! seventh family). Names and paths stay on this side; only codes,
 //! counts and dense tree shape will cross the wire (§5.9.2).
 
+mod document;
 pub mod edges;
 pub mod judge;
 pub mod seams;

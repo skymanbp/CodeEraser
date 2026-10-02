@@ -32,7 +32,7 @@
     },
     {
       "id": "count:deadcode_codes#word",
-      "source": "cli/src/graph/deadcode.rs::VERDICT_NAMES",
+      "source": "core/app/CE/Graph/Document.hs (verdictNames)",
       "tier": "linked",
       "value": "4"
     },
@@ -94,7 +94,7 @@
     },
     {
       "id": "count:join_codes#word",
-      "source": "cli/src/join/verdicts.rs::VERDICT_NAMES",
+      "source": "core/app/CE/Join/Document.hs (verdictNames)",
       "tier": "linked",
       "value": "4"
     },
@@ -141,7 +141,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "42"
+      "value": "41"
     },
     {
       "id": "gate:dedup.tests#digits",
@@ -190,7 +190,7 @@
     },
     {
       "id": "report:check#schemaver",
-      "source": "cli/src/score/model.rs (typed)",
+      "source": "core/app/CE/Score/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.check-report/0.5.0"
     },
@@ -214,10 +214,9 @@
       "value": "ce.clone-units/0.1.0"
     },
     {
-      "debt": "report::DEADCODE_SCHEMA is private; promote = pub const",
       "id": "report:deadcode#schemaver",
-      "source": "cli/src/report.rs",
-      "tier": "scraped",
+      "source": "core/app/CE/Graph/Document.hs (schemaId)",
+      "tier": "linked",
       "value": "ce.deadcode-report/0.4.0"
     },
     {
@@ -264,25 +263,25 @@
     },
     {
       "id": "report:graph-canvas#schemaver",
-      "source": "cli/src/graph/canvas.rs (typed)",
+      "source": "core/app/CE/Graph/Screen.hs (canvasId)",
       "tier": "linked",
       "value": "ce.graph-canvas/0.4.0"
     },
     {
       "id": "report:graph-screen#schemaver",
-      "source": "cli/src/graph/canvas.rs (typed)",
+      "source": "core/app/CE/Graph/Screen.hs (screenId)",
       "tier": "linked",
       "value": "ce.graph-screen/0.1.0"
     },
     {
       "id": "report:join#schemaver",
-      "source": "cli/src/join/mod.rs (typed)",
+      "source": "core/app/CE/Join/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.join-report/0.4.0"
     },
     {
       "id": "report:mentions#schemaver",
-      "source": "cli/src/mention/face.rs (typed)",
+      "source": "core/app/CE/Mention/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.mentions-report/0.3.0"
     },
@@ -330,13 +329,13 @@
     },
     {
       "id": "report:sites#schemaver",
-      "source": "cli/src/graph/mod.rs (typed)",
+      "source": "core/app/CE/Graph/Sites.hs (schemaId)",
       "tier": "linked",
       "value": "ce.sites-report/0.1.0"
     },
     {
       "id": "report:structure#schemaver",
-      "source": "cli/src/structure/judge.rs (typed)",
+      "source": "core/app/CE/Structure/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.structure-report/0.6.0"
     },
@@ -478,5 +477,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 20
+  "scraped": 19
 }

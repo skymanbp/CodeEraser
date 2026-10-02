@@ -266,8 +266,10 @@ pub fn body(r: &Request) -> Value {
 }
 
 /// One verdict.request over the open core link; a missing capability
-/// or a non-result reply is an error, never an empty judgment.
-pub fn judge(core: &str, r: &Request) -> Result<Reply> {
+/// or a non-result reply is an error, never an empty judgment. The
+/// link comes back whole beside the reply, so the face's document
+/// rides the same core process (plan v2.32 step 4, crate::document::Held).
+pub fn judge(core: &str, r: &Request) -> Result<(Reply, crate::corelink::Link)> {
     let mut link = crate::lockstep::open_family(core, CAPABILITY)?;
     let reply = link
         .request("verdict", body(r))
@@ -277,7 +279,7 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
     // echoes, the fail/failed law, the fence policy, the newBaseline
     // shape, the provenance answer (wire_check, O32 / 6.4.0)
     wire_check::check_reply(r, &reply)?;
-    Ok(reply)
+    Ok((reply, link))
 }
 
 /// The ratchet sub-object's seven fields, decoded once (split from

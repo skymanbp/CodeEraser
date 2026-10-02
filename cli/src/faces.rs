@@ -36,16 +36,12 @@ pub fn churn(root: &Path, days: u32) -> Result<Value> {
     Ok(crate::churn::report_json(&crate::churn::run(root, days)?))
 }
 
-pub fn graph_sites(root: &Path) -> Result<Value> {
-    Ok(serde_json::from_str(&crate::graph::sites_json(
-        &crate::graph::analyze(root)?,
-    ))?)
+pub fn graph_sites(root: &Path, core: &str) -> Result<Value> {
+    crate::graph::sites_document(core, &crate::graph::analyze(root)?)
 }
 
 pub fn deadcode(root: &Path, core: &str) -> Result<Value> {
-    Ok(crate::report::deadcode_json(&crate::graph::deadcode::run(
-        root, None, core,
-    )?))
+    Ok(crate::graph::deadcode::run(root, None, core)?.doc)
 }
 
 /// The envelope-shaped pair share one throat (their two bodies were
@@ -72,15 +68,11 @@ pub fn docdup(root: &Path, core: &str) -> Result<Value> {
 }
 
 pub fn join(root: &Path, core: &str, days: u32) -> Result<Value> {
-    Ok(crate::join::report_json(&crate::join::run(
-        root, None, core, days,
-    )?))
+    Ok(crate::join::run(root, None, core, days)?.doc)
 }
 
 pub fn structure(root: &Path, core: &str, knobs: (bool, Option<u32>, bool)) -> Result<Value> {
-    Ok(crate::structure::report::report_json(
-        &crate::structure::judge::run(root, None, core, knobs)?,
-    ))
+    Ok(crate::structure::judge::run(root, None, core, knobs)?.doc)
 }
 
 /// Report-only: this face never writes a baseline (MCP charter ③;
@@ -92,7 +84,7 @@ pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
     // the one read (O31): a face judges the document it read, and a
     // file that is not a baseline is this face's named error too
     let baseline = crate::score::baseline::read(root)?;
-    let o = crate::score::run(
+    let mut o = crate::score::run(
         root,
         crate::score::Opts {
             db: None,
@@ -104,7 +96,7 @@ pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
             baseline,
         },
     )?;
-    Ok(crate::score::report_json(&o))
+    Ok(crate::score::document::document(core, &mut o)?.doc)
 }
 
 pub fn trend(root: &Path, core: &str, commits: usize, batch: Option<usize>) -> Result<Value> {

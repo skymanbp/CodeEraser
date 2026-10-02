@@ -44,7 +44,7 @@ pub fn candidates(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Gather
     let dead_codes: BTreeMap<&str, i64> = dead
         .dead
         .iter()
-        .map(|d| (d.path.as_str(), verdict_code(d.verdict)))
+        .map(|d| (d.path.as_str(), d.code))
         .collect();
     cands.extend(twin_candidates(
         &found.blocks,
@@ -105,15 +105,6 @@ fn lang_count(map: &BTreeMap<i64, i64>, path: &str) -> i64 {
         .unwrap_or(0)
 }
 
-/// The wire's dead verdict code for a graph verdict name: 1..4 in
-/// VERDICT_NAMES order (0 = not dead; erase/1 class 2 and 3 alike).
-fn verdict_code(verdict: &str) -> i64 {
-    1 + crate::graph::deadcode::VERDICT_NAMES
-        .iter()
-        .position(|v| *v == verdict)
-        .unwrap_or(0) as i64
-}
-
 /// Class-3 rows (2.32.0, H3): the trust fact is the graph family's
 /// OWN per-row confidence — a reply without the column means the
 /// ledger never rode, refused by name, never defaulted.
@@ -124,7 +115,9 @@ fn dead_candidates(
     dead.dead
         .iter()
         .map(|d| {
-            let code = verdict_code(d.verdict);
+            // the judgment's verdict code 1..4 (erase/1 class 3), the
+            // document's words beside it in the provenance
+            let code = d.code;
             let conf = d
                 .conf
                 .context("dead row carries no confidence — the graph ledger did not ride")?;
@@ -133,7 +126,7 @@ fn dead_candidates(
                 facts: [code, conf, 0, 0],
                 path: d.path.clone(),
                 span: None,
-                provenance: format!("deadcode: {} — {}", d.verdict, d.why()),
+                provenance: format!("deadcode: {} — {}", d.verdict, d.why),
                 sites: lang_count(lang_unres, &d.path),
             })
         })

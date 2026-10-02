@@ -138,11 +138,7 @@ face_cmd!(dedup_report, "dedup", |r, _| codeeraser::faces::dedup(
     r, None, None
 ));
 face_cmd!(scan_report, "scan", codeeraser::faces::scan);
-face_cmd!(
-    sites_report,
-    "sites",
-    |r, _| codeeraser::faces::graph_sites(r)
-);
+face_cmd!(sites_report, "sites", codeeraser::faces::graph_sites);
 face_cmd!(deadcode_report, "deadcode", codeeraser::faces::deadcode);
 face_cmd!(clone_report, "clone", codeeraser::faces::clone_t3);
 face_cmd!(docdup_report, "docdup", codeeraser::faces::docdup);

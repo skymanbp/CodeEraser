@@ -68,13 +68,13 @@ pub fn churn_cmd(root: &Path, days: u32, json: bool) -> ExitCode {
 
 pub fn graph_cmd(
     root: &Path,
-    sites: bool,
-    mentions: bool,
+    (sites, mentions): (bool, bool),
     db: Option<PathBuf>,
+    core: &str,
     json: bool,
 ) -> ExitCode {
     if mentions {
-        return codeeraser::mention::face::run(root, db, json);
+        return codeeraser::mention::face::run(root, db, core, json);
     }
     if !sites {
         // A bare `ce graph` is a question, not a mistake — the same
@@ -112,7 +112,7 @@ pub fn graph_cmd(
         );
         return ExitCode::SUCCESS;
     }
-    graph::run_sites(root, json)
+    graph::run_sites(root, core, json)
 }
 
 pub fn deadcode_cmd(

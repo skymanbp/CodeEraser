@@ -1,22 +1,11 @@
-//! The check run's outcome model — a LEAF both mod.rs and report.rs
-//! import, so the renderer never reaches back into its parent (the
-//! erase model.rs precedent: a child's `super::` import is a file
-//! cycle, and the cycle axis charges every member file).
+//! The check run's outcome model — a LEAF both mod.rs and the
+//! document request import, so the document never reaches back into
+//! its parent (the erase model.rs precedent: a child's `super::`
+//! import is a file cycle, and the cycle axis charges every member
+//! file). The document's schema id is the core's (CE.Score.Document,
+//! plan v2.32 step 4).
 
 use crate::score::wire;
-
-/// 0.2.0 (review C12): ratchet.fail grew degraded/dedup semantics
-/// at proto 2.5/2.6 and the ratchet object gains `failed` (held
-/// condition names) + top-level `scoreScale` — plan §7.1 demands
-/// the bump.
-/// 0.3.0 (2.33.0, H4): candidate rows widen to six columns (the
-/// leg-agreement confidence) and `joinSeverity` ships the verdict
-/// table's severity face.
-/// 0.5.0 (6.4.0, O40): `ratchet.dropped` — the committed rows an
-/// exclusion explains — present exactly when the provenance table
-/// rode (every check road; absent on a legacy core's reply, which
-/// judge() refuses anyway).
-pub const SCHEMA_ID: &str = "ce.check-report/0.5.0";
 
 pub struct Outcome {
     pub reply: wire::Reply,
@@ -36,4 +25,8 @@ pub struct Outcome {
     /// same tree read pass in one and FAIL in the other with nothing
     /// on screen to say why.
     pub floor: Option<u32>,
+    /// The verdict's core link, whole after the judgment: the check
+    /// document is laid out over it (plan v2.32 step 4), so a run
+    /// starts no second core process for its document.
+    pub held: crate::document::Held,
 }

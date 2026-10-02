@@ -17,7 +17,7 @@ use std::path::Path;
 /// repository (cut whole from U, indexed by the judged walk), and
 /// ignore semantics (the judged walk requires `.git` to honour
 /// `.gitignore`; this one never does).
-#[derive(Debug, Default, serde::Serialize)]
+#[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Outside {
     pub oversize: usize,
     pub binary: usize,

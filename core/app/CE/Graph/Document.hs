@@ -21,8 +21,10 @@ import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.Foldable (asum)
 import Data.Maybe (fromMaybe)
 
+-- | The catalogue lists the degraded reasons the reply is sent by
+-- (plan v2.32 step 4B).
 doc :: DocFamily
-doc = docFamily "deadcode" schemaId statement checked deadcode []
+doc = docFamily "deadcode" schemaId statement checked deadcode ["reasons" .= coreReasons]
 
 schemaId :: String
 schemaId = "ce.deadcode-report/0.4.0"
@@ -43,8 +45,11 @@ statement =
   \ref path nodes\nref node_name nodes\nref symbol advisory\nref why why\n"
 
 -- | The four verdicts by code 1..4 (CE.Graph.Dead).
+verdictNames :: [String]
+verdictNames = words "unref_private unref_public unreach_private unreach_public"
+
 verdictName :: Integer -> Value
-verdictName v = spelled (words "unref_private unref_public unreach_private unreach_public") (v - 1)
+verdictName v = spelled verdictNames (v - 1)
 
 -- | The liveness reason by code: 0 the unreferenced verdicts, 1 the
 -- unreachable ones (the English word every machine face prints).

@@ -8,13 +8,15 @@
 -- step 3's, read through DocumentHarness (see DocumentProps for what
 -- each holds), plus the ones only these families need: the canvas
 -- edges drop self-loops and package ends, the catalogue lists twelve
--- families, and the definition package holds the site kinds the
--- sites document names.
+-- families with check's fail-condition names and the four degrading
+-- families' reasons, and the definition package holds the site kinds
+-- the sites document names.
 module DocumentProps4 (battery) where
 
 import CE.Document (catalogue, respond)
-import CE.Document.Contract (DocFamily (..))
+import CE.Document.Contract (DocFamily (..), coreReasons)
 import CE.Lang (pack)
+import CE.Score.Document (failNames)
 import Data.Aeson
 import Data.List (nub)
 import Data.Maybe (fromMaybe)
@@ -33,7 +35,7 @@ battery =
     , "join pairs, sites and canvas edges sort by their rank or index"
     , "the same step-4 request assembles to the same bytes"
     , "the step-4 contracts refuse by name"
-    , "the catalogue lists the twelve families; the package holds the site kinds"
+    , "the catalogue lists the twelve families, the fail names and the reasons; the package holds the site kinds"
     , "the seeded step-4 documents are not vacuous"
     ]
     [emptiesHeld seven, fieldsHeld fieldTable seven, refsHeld judged && length judged == 1400, countsMeasured, ranked, sameBytes (take 70 judged), refusals, catalogued, seeded]
@@ -157,6 +159,8 @@ catalogued =
   all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) seven
     && objectKeys catalogue == 12
     && fmap (\ks -> length ks == 23 && nub ks == ks) (path ["store", "site_kinds"] pack >>= asList) == Just True
+    && (path ["check", "failed"] catalogue >>= asList) == Just failNames
+    && all (\f -> (path [f, "reasons"] catalogue >>= asList) == Just coreReasons) (words "check join deadcode graphscreen")
  where
   objectKeys v = case v of
     Object o -> length o

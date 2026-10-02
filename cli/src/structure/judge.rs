@@ -12,71 +12,10 @@
 use super::rows;
 use super::tree;
 use super::wire;
-use anyhow::{Context, Result, ensure};
+use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
 
-/// JSON output schema id; bump on shape change (plan §7.1). This is
-/// the ONE schema the CLI report and the S4 GUI tree share.
-/// 0.2.0 (M6 S3a): + divergence (per-mille χ² or null), deviations
-/// [{dir, kind}], declaredDirs. 0.3.0 (S3b): + deep (whether the S6
-/// redundancy rollup rode the wire — axis-6 rows exist only then).
-/// 0.4.0 (S3c): + days (the staleness window; null = axis 5 off).
-/// 0.5.0 (S4a): + tree [{id, parent, name, depth, subdirs, files,
-/// axes}] — the flat parent-linked rows the booklet §5 promised the
-/// GUI, per-node axes rolled from the findings.
-/// 0.6.0 (v0.6 §C): + split (whether the advisory rode) and, only
-/// then, splitCandidates [{path, afterLine, unit, benefitMilli,
-/// costMilli}] + sizeExempt [{path, benefitMilli, costMilli}].
-pub const SCHEMA_ID: &str = "ce.structure-report/0.6.0";
-
-pub struct Report {
-    pub score: i64,
-    /// The effective scale from the knob echo (row 8) — the review
-    /// C17 lesson applied from day one: no /1000 literal anywhere.
-    pub scale: i64,
-    pub entropy: Vec<[i64; 2]>,
-    pub axes: Vec<[i64; 2]>,
-    /// (dir path, axis code), re-labelled from the core's dense ids.
-    pub findings: Vec<(String, i64)>,
-    pub dirs: usize,
-    /// A-layer overlay (S3a): the χ² per-mille against ce.toml's
-    /// declared layout, the named deviations, and how many dirs the
-    /// layout declared (0 = row-C floor alone; divergence None with
-    /// declared > 0 means the deviations rows say where the mass
-    /// escaped — null is never a silent shrug).
-    pub divergence: Option<i64>,
-    pub deviations: Vec<(String, i64)>,
-    pub declared: usize,
-    /// Whether the S6 rollup rode the wire (--deep): axis-6 rows in
-    /// axes/findings exist exactly when true.
-    pub deep: bool,
-    /// The staleness window in days (--days): axis-5 rows exist
-    /// exactly when set.
-    pub days: Option<u32>,
-    /// The flat parent-linked tree (booklet §5): one row per walked
-    /// directory, per-node axis codes rolled from the findings —
-    /// the GUI's first-screen data face.
-    pub(super) tree: Vec<TreeRow>,
-    /// The split-ROI advisory (v0.6 §C): None = not armed; rows are
-    /// relabelled with the paths and unit names this side kept.
-    pub split: Option<SplitReport>,
-}
-
-pub struct SplitReport {
-    /// (path, boundary line, unit name, benefitMilli, costMilli).
-    pub candidates: Vec<(String, u64, String, i64, i64)>,
-    /// (path, bestBenefitMilli, bestCostMilli); 0/0 = no seam.
-    pub exempt: Vec<(String, i64, i64)>,
-}
-
-pub(super) struct TreeRow {
-    pub name: String,
-    pub parent: usize,
-    pub depth: u32,
-    pub subdirs: u32,
-    pub files: u32,
-    pub axes: Vec<i64>,
-}
+pub use super::report::Report;
 
 pub fn run(
     root: &Path,
@@ -110,46 +49,27 @@ pub fn run(
         None
     };
     let req = assemble(root, core, &t, (deep, days), &seam_facts, (&w, &found))?;
-    let reply = wire::judge(core, &req)?;
-    let names = names_by_id(&t);
-    // The boundary contract runs on the REQUEST side (Structure.hs
-    // dirRow); nothing checked the ids coming BACK, and both faces
-    // subscript a Vec with them — a negative wraps, a large one panics.
-    let n = names.len() as i64;
-    for &[d, _] in reply.findings.iter().chain(&reply.deviations) {
-        ensure!(
-            (0..n).contains(&d),
-            "structure reply: dir id {d} outside 0..{n}"
-        );
-    }
-    let tree = tree_rows(&t, &names, &reply.findings);
-    let findings = relabel(&names, &reply.findings);
-    let deviations = relabel(&names, &reply.deviations);
+    let mut link = crate::lockstep::open_family(core, wire::CAP)?;
+    let reply = wire::judge_on(&mut link, &req)?;
     let scale = reply
         .knobs
         .iter()
         .find(|[c, _]| *c == 8)
         .map(|[_, v]| *v)
         .context("knob echo missing the scale row")?;
-    let split_report = seam_facts
-        .as_ref()
-        .map(|sf| split_relabel(sf, &reply))
-        .transpose()?;
-    Ok(Report {
-        score: reply.score,
+    // the document the core lays out (plan v2.32 step 4): the reply's
+    // rows sent back, the directory ids range-checked by its contract
+    let parts = super::document::Parts {
+        tree: &t,
+        reply: &reply,
         scale,
-        entropy: reply.entropy,
-        axes: reply.axes,
-        findings,
-        dirs: t.dirs.len(),
-        divergence: reply.divergence,
-        deviations,
         declared: req.declared.len(),
         deep,
         days,
-        tree,
-        split: split_report,
-    })
+        seams: seam_facts.as_ref(),
+    };
+    let doc = super::document::assemble(core, Ok(link), &parts)?;
+    crate::report::read_bound(doc, "structure")
 }
 
 /// The committed baseline's frozen soft line, falling back to the
@@ -172,37 +92,6 @@ pub(crate) fn committed_soft(root: &Path) -> u64 {
     })
 }
 
-/// Dense reply rows → named advisory rows, ids range-checked before
-/// any subscript (the findings/deviations lesson applied here from
-/// day one).
-fn split_relabel(sf: &super::seams::SeamFacts, reply: &wire::Reply) -> Result<SplitReport> {
-    let n = sf.files.len() as i64;
-    let file = |id: i64| -> Result<usize> {
-        ensure!(
-            (0..n).contains(&id),
-            "split reply: file id {id} outside 0..{n}"
-        );
-        Ok(id as usize)
-    };
-    let mut candidates = Vec::new();
-    for &[fid, unit, benefit, cost] in &reply.split_candidates {
-        let f = file(fid)?;
-        let units = &sf.unit_names[f];
-        let u = usize::try_from(unit).ok().filter(|u| *u < units.len());
-        let (name, end) = match u {
-            Some(u) => (units[u].0.clone(), units[u].1),
-            None => anyhow::bail!("split reply: unit {unit} outside file {fid}"),
-        };
-        candidates.push((sf.files[f].0.clone(), end, name, benefit, cost));
-    }
-    let mut exempt = Vec::new();
-    for &[fid, benefit, cost] in &reply.size_exempt {
-        let f = file(fid)?;
-        exempt.push((sf.files[f].0.clone(), benefit, cost));
-    }
-    Ok(SplitReport { candidates, exempt })
-}
-
 /// Judged languages only (plan v2.5): letting the scan-only arm in
 /// would change every axis the TREE feeds — geometry (S0), naming
 /// (S1), docs (S4) and both entropy rows all shift with the file
@@ -215,29 +104,6 @@ fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
         .filter(|f| crate::scan::lang::Lang::judged_path(std::path::Path::new(&f.path)).is_some())
         .map(|f| f.path.clone())
         .collect()
-}
-
-/// One row per directory, the findings convolved back onto their
-/// nodes — the report keeps the DENSE ids so the GUI can link
-/// parents without re-deriving anything.
-fn tree_rows(t: &tree::Tree, names: &[String], findings: &[[i64; 2]]) -> Vec<TreeRow> {
-    let mut rows: Vec<TreeRow> = t
-        .dirs
-        .iter()
-        .enumerate()
-        .map(|(i, d)| TreeRow {
-            name: names[i].clone(),
-            parent: d.parent,
-            depth: d.depth,
-            subdirs: d.subdirs,
-            files: d.files,
-            axes: Vec::new(),
-        })
-        .collect();
-    for &[d, axis] in findings {
-        rows[d as usize].axes.push(axis);
-    }
-    rows
 }
 
 /// The whole request from one walked tree: the always-on tables,
@@ -333,24 +199,6 @@ fn sorted_refs(rows: &[[u64; 3]]) -> Vec<[u64; 3]> {
     out
 }
 
-fn names_by_id(t: &tree::Tree) -> Vec<String> {
-    let mut names = vec![String::from("."); t.dirs.len()];
-    for (path, &id) in &t.ids {
-        if !path.is_empty() {
-            names[id] = path.clone();
-        }
-    }
-    names
-}
-
-/// Dense [dirId, code] rows re-labelled with the names this side
-/// kept — findings and deviations ride the same throat (§5.9.2).
-fn relabel(names: &[String], rows: &[[i64; 2]]) -> Vec<(String, i64)> {
-    rows.iter()
-        .map(|&[d, code]| (names[d as usize].clone(), code))
-        .collect()
-}
-
-// report faces (report_json + the bilingual console) live in
-// report.rs since M8-G3b — re-exported above so callers keep the
-// structure::judge::{print, report_json} paths.
+// the report face (the document read back + the bilingual console)
+// lives in report.rs since M8-G3b; the document request in
+// document.rs since plan v2.32 step 4.

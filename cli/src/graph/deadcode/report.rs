@@ -4,10 +4,10 @@
 //! judgment family still rendering inside main_cmds.rs, and the
 //! entry_globs hint was the growth step that made the debt visible.
 //! Rendering only: every verdict, count and confidence word below is
-//! the core's or the measurement's.
+//! the core's document or the measurement's (plan v2.32 step 4: the
+//! machine faces print the bound document itself).
 
 use super::Report;
-use super::advisory::{ADVISORY_NAMES, UnmentionedFace};
 use crate::i18n::line;
 use crate::mention::UNMENTIONED_SOFT_CAP;
 
@@ -17,7 +17,7 @@ use crate::mention::UNMENTIONED_SOFT_CAP;
 /// reader sees it.
 pub fn print(r: &Report, json: bool) {
     if json {
-        println!("{}", crate::report::deadcode_json(r));
+        println!("{}", r.doc);
         return;
     }
     for d in &r.dead {
@@ -35,13 +35,13 @@ pub fn print(r: &Report, json: bool) {
             )
         );
     }
-    for (name, verdict) in &r.reported {
+    for a in &r.reported {
         println!(
             "{}",
             line(
                 "aggregate: {}  {}  (reported, never dead — decision 4)",
                 "聚合件：{}  {}（仅报告，永不判死 — 决议 4）",
-                &[name, verdict],
+                &[&a.name, &a.verdict],
             )
         );
     }
@@ -56,10 +56,10 @@ pub fn print(r: &Report, json: bool) {
 /// rows were judged). Advisories, never verdicts: nothing here moves
 /// the exit.
 fn advisory(r: &Report) {
-    let Some(face) = &r.unmentioned else {
+    let Some(rows) = &r.unmentioned else {
         return;
     };
-    let UnmentionedFace::Rows { rows, cut } = face else {
+    if r.unmentioned_dropped {
         println!(
             "{}",
             line(
@@ -69,7 +69,7 @@ fn advisory(r: &Report) {
             )
         );
         return;
-    };
+    }
     for a in rows {
         println!(
             "{}",
@@ -80,7 +80,11 @@ fn advisory(r: &Report) {
             )
         );
     }
-    let by_code = ADVISORY_NAMES.map(|c| rows.iter().filter(|a| a.code == c).count());
+    // the census by the judgment's code (CE.Graph.Advisory.code 0..3)
+    let mut by_code = [0usize; 4];
+    for a in rows {
+        by_code[a.code_ix] += 1;
+    }
     let files = rows
         .iter()
         .map(|a| a.name.as_str())
@@ -101,7 +105,7 @@ fn advisory(r: &Report) {
             ],
         )
     );
-    if *cut {
+    if r.unmentioned_cut {
         println!(
             "{}",
             line(
@@ -122,8 +126,8 @@ fn tail(r: &Report) {
              {} unresolved sites (verdicts assume none lands in-corpus)",
             "死码：{} 节点，{} 保留边，{} 死件，{} 聚合报告，{} 未解析调用点（判决假设它们皆不落语料内）",
             &[
-                &r.nodes,
-                &r.kept,
+                &r.counts.nodes,
+                &r.counts.kept_edges,
                 &r.dead.len(),
                 &r.reported.len(),
                 &r.unresolved_sites,

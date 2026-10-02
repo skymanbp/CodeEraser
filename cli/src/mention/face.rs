@@ -2,61 +2,119 @@
 //! only, the header counters, the convergence facts and the K23
 //! per-language census of the veto, so the universe is observable
 //! before any judgment consumes it (K39–K42 are library legs; this is
-//! the operator's window on the same numbers).
+//! the operator's window on the same numbers). The core lays the
+//! document out (document/1, CE.Mention.Document) from this side's
+//! numbers; the console reads the document back.
 
 use super::LangRates;
+use crate::document::{self, Request, Resolve};
 use crate::i18n::line;
+use crate::scan::lang::Lang;
+use anyhow::{Context, Result};
+use serde::Deserialize;
+use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-/// The document's version identity — every report face carries one.
-/// 0.2.0: the `rates` census rides beside the header (additive);
-/// 0.3.0: `skipped.signed`, the product's signature rule (additive).
-pub const SCHEMA_ID: &str = "ce.mentions-report/0.3.0";
-
-pub fn run(root: &Path, db: Option<PathBuf>, json: bool) -> ExitCode {
-    match refreshed(root, db) {
-        Ok((stats, rates)) if json => {
-            println!("{}", report_json(&stats, &rates));
-            ExitCode::SUCCESS
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str, json: bool) -> ExitCode {
+    let doc = document(root, db, core);
+    crate::report::print_read(doc, json, "mentions", |r: Read| {
+        for l in console(&r).into_iter().chain(rates_console(&r.rates)) {
+            println!("{l}");
         }
-        Ok((stats, rates)) => {
-            for l in console(&stats).into_iter().chain(rates_console(&rates)) {
-                println!("{l}");
-            }
-            ExitCode::SUCCESS
-        }
-        Err(err) => {
-            eprintln!("ce graph: {err:#}");
-            ExitCode::from(2)
-        }
-    }
+    })
 }
 
 /// The judged index first (the `outside` counters compare against
 /// its `files` table and the census reads its declarations), then
 /// the mention pass over the same tree, then the veto counted per
-/// language.
-fn refreshed(
-    root: &Path,
-    db: Option<PathBuf>,
-) -> anyhow::Result<(super::Stats, BTreeMap<&'static str, LangRates>)> {
+/// language — and the document the core lays out over them.
+pub fn document(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
     let stats = super::refresh(root, &idx)?;
     let rates = super::rates::census(root, &idx)?;
-    Ok((stats, rates))
+    document::assemble(core, request(&stats, &rates)?, &Nothing)
 }
 
-pub fn report_json(stats: &super::Stats, rates: &BTreeMap<&'static str, LangRates>) -> String {
-    let mut doc = serde_json::to_value(stats).expect("stats serialize");
-    doc["schema"] = serde_json::Value::String(SCHEMA_ID.to_string());
-    doc["mention_rev"] = serde_json::Value::from(super::MENTION_REV);
-    doc["rates"] = serde_json::to_value(rates).expect("rates serialize");
-    doc.to_string()
+/// The header as facts — every counter of `Stats` under its dotted
+/// path (`skipped.signed`), a flag as 0 / 1 — beside the index
+/// revision, and one census row per language.
+pub(super) fn request(
+    s: &super::Stats,
+    rates: &BTreeMap<&'static str, LangRates>,
+) -> Result<Request> {
+    let mut facts = vec![("mention_rev".to_string(), super::MENTION_REV)];
+    flatten("", &serde_json::to_value(s)?, &mut facts)?;
+    let rows = rates
+        .iter()
+        .map(|(name, r)| {
+            let lang = Lang::ALL
+                .iter()
+                .find(|l| l.name() == *name)
+                .with_context(|| format!("census language {name} has no code"))?;
+            let v = &r.vetoed;
+            Ok([
+                *lang as i64,
+                r.declared.all as i64,
+                r.declared.exported as i64,
+                r.unmentioned.all as i64,
+                r.unmentioned.exported as i64,
+                v.other as i64,
+                v.fold as i64,
+                v.self_text as i64,
+                v.collision_saved as i64,
+            ])
+        })
+        .collect::<Result<Vec<_>>>()?;
+    let req = facts
+        .into_iter()
+        .fold(Request::new("mentions"), |req, (k, n)| req.fact(&k, n));
+    Ok(req.rows("rates", rows))
 }
 
-fn console(s: &super::Stats) -> Vec<String> {
+/// `v`'s integer leaves under their dotted paths.
+fn flatten(at: &str, v: &Value, out: &mut Vec<(String, i64)>) -> Result<()> {
+    match v {
+        Value::Object(m) => {
+            for (k, x) in m {
+                let path = if at.is_empty() {
+                    k.clone()
+                } else {
+                    format!("{at}.{k}")
+                };
+                flatten(&path, x, out)?;
+            }
+        }
+        Value::Bool(b) => out.push((at.to_string(), i64::from(*b))),
+        _ => out.push((
+            at.to_string(),
+            v.as_i64().with_context(|| format!("{at}: {v}"))?,
+        )),
+    }
+    Ok(())
+}
+
+/// The mentions document names no repository string.
+struct Nothing;
+
+impl Resolve for Nothing {
+    fn resolve(&self, _: &str, _: &[i128]) -> Option<String> {
+        None
+    }
+}
+
+/// The document as the console reads it.
+#[derive(Deserialize)]
+struct Read {
+    mention_rev: i64,
+    #[serde(flatten)]
+    stats: super::Stats,
+    rates: BTreeMap<String, LangRates>,
+}
+
+fn console(r: &Read) -> Vec<String> {
+    let s = &r.stats;
     let k = &s.skipped;
     let rescan = if s.run.rescanned {
         " (rev changed: full rescan)"
@@ -67,13 +125,7 @@ fn console(s: &super::Stats) -> Vec<String> {
         line(
             "mention universe: {} files, {} mention sources, {} rows, {} files at the per-file cap (rev {})",
             "提及语料宇宙：{} 个文件，{} 个提及源文件，{} 行，{} 个文件触及单文件上限（rev {}）",
-            &[
-                &s.universe,
-                &s.sources,
-                &s.rows,
-                &s.capped,
-                &super::MENTION_REV,
-            ],
+            &[&s.universe, &s.sources, &s.rows, &s.capped, &r.mention_rev],
         ),
         line(
             "  skipped: {} over 4 MiB, {} binary, {} signed, {} walk errors",
@@ -113,7 +165,7 @@ fn console(s: &super::Stats) -> Vec<String> {
 /// what survived the veto (its exported half), and where the veto
 /// stopped — with the collision-saved count beside `other`, the
 /// blindness stated as a number rather than a footnote.
-fn rates_console(rates: &BTreeMap<&'static str, LangRates>) -> Vec<String> {
+fn rates_console(rates: &BTreeMap<String, LangRates>) -> Vec<String> {
     rates
         .iter()
         .map(|(lang, r)| {

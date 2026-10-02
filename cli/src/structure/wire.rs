@@ -185,14 +185,19 @@ fn shape_echo(reply: &serde_json::Value, sent: usize) -> Result<()> {
     Ok(())
 }
 
-/// One structure.request over one link.
+/// One structure.request over a fresh link.
 pub fn judge(core: &str, r: &Request) -> Result<Reply> {
+    judge_on(&mut crate::lockstep::open_family(core, CAP)?, r)
+}
+
+/// One structure.request over a link already open (the face keeps it
+/// for its document, plan v2.32 step 4).
+pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> {
     ensure!(
         priced_rows(r) <= STRUCT_NODE_CAP,
         "{} structure/1 request rows exceed the cap {STRUCT_NODE_CAP}",
         priced_rows(r)
     );
-    let mut link = crate::lockstep::open_family(core, CAP)?;
     let reply = link
         .request("structure", request_body(r))
         .map_err(anyhow::Error::msg)?;
