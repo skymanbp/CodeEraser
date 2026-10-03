@@ -203,8 +203,8 @@ module whose path carries an underscore-led segment, dunders excepted — bit 1)
 
 Both tables ride `graph.request` as optional keys that live and die together — one
 without the other is refused by name, first in the violation chain
-([Contract.hs:73-74](../../../core/app/CE/Graph/Contract.hs#L73),
-[Contract.hs:122-129](../../../core/app/CE/Graph/Contract.hs#L122)); each row is validated
+([Contract.hs:72-73](../../../core/app/CE/Graph/Contract.hs#L72),
+[Contract.hs:121-128](../../../core/app/CE/Graph/Contract.hs#L121)); each row is validated
 for width, sign, bound and `private ≤ total`
 ([Advisory.hs:29-48](../../../core/app/CE/Graph/Advisory.hs#L29)). The core then emits
 `exportUnmentioned = [[node, vis, conv, code]]` for every row whose visibility carries
@@ -228,9 +228,9 @@ judges the graph but drops the table and says so (`unmentionedDropped`), and the
 producer cuts at the same number so the two can never disagree — and `unmentionedHardCap`
 524,288 is the outer bound only a defective client reaches
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
-[Graph.hs:116-123](../../../core/app/CE/Graph.hs#L116)). The iron rule is two byte-level
+[Graph.hs:118-125](../../../core/app/CE/Graph.hs#L118)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:330-332](../../../contracts/VERSIONING.md#L330)).
+the same with or without them ([VERSIONING.md:320-322](../../../contracts/VERSIONING.md#L320)).
 
 ### 6. Rendering — one home, three faces
 
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1515 (1733 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 4273 (1069) | 636 (10) | 14.9 % | 97 / 636 = 15.3 % | 97 / 3637 |
-| | | rust | 3843 (2061) | 400 (4) | 10.4 % | 13 / 400 = 3.2 % | 13 / 3412 |
+| self @ this commit | 1515 (1733 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 4272 (1069) | 634 (10) | 14.8 % | 99 / 634 = 15.6 % | 99 / 3638 |
+| | | rust | 3849 (2066) | 399 (4) | 10.4 % | 13 / 399 = 3.3 % | 13 / 3419 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
