@@ -206,7 +206,7 @@ by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:167-190](../../../core/app/CE/Graph.hs#L167), [Graph.hs:167-190](../../../core/app/CE/Graph.hs#L167)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:536-542](../../../cli/src/graph/deadcode.rs#L536)) and `ce deadcode --check` relays the
-core's fail bit ([main_cmds.rs:128-148](../../../cli/src/main_cmds.rs#L128)).
+core's fail bit ([main_cmds.rs:126-146](../../../cli/src/main_cmds.rs#L126)).
 
 ### 5. Kept arcs and liveness
 
@@ -458,7 +458,7 @@ the resolver cannot choose its own denominator
 with a per-language floor of 15 ([eval_graph_precision.rs:91-92](../../../cli/tests/it/eval_graph_precision.rs#L91)).
 The "all findings dispositioned" criterion, honored by discipline at M5-2, is now a gate:
 `ce deadcode --check` exits non-zero on any dead file
-([main_cmds.rs:148-154](../../../cli/src/main_cmds.rs#L148)).
+([main_cmds.rs:146-152](../../../cli/src/main_cmds.rs#L146)).
 
 The six languages plan v2.30 added sit the same exam, each against a blind audit frozen before any
 scoring and registered in [EVAL-SET-LANGS.md](../../EVAL-SET-LANGS.md): the sample is frozen first,

@@ -62,10 +62,6 @@ pub(super) fn check_duplication(root: &Path, a: &Value) -> Result<String> {
     Ok(crate::faces::dedup(root, n("min_tokens"), n("min_distinct"))?.to_string())
 }
 
-pub(super) fn churn(root: &Path, a: &Value) -> Result<String> {
-    Ok(crate::faces::churn(root, days(a, 14))?.to_string())
-}
-
 pub(super) fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
     Ok(crate::faces::graph_sites(root, &core())?.to_string())
 }
@@ -126,9 +122,19 @@ pub(super) fn clone_report(root: &Path, a: &Value) -> Result<String> {
     plain_face(root, "clone")
 }
 
-pub(super) fn join(root: &Path, a: &Value) -> Result<String> {
-    Ok(crate::faces::join(root, &core(), days(a, 14))?.to_string())
+/// The faces over a git window (`days`, default 14) that ask the core:
+/// one body, a name per catalog row (the plain! precedent; churn
+/// joined join here when its document moved into the core, plan v2.32
+/// step 5 R0, and the two bodies were one clone block).
+macro_rules! windowed {
+    ($($name:ident => $face:path),+ $(,)?) => { $(
+        pub(super) fn $name(root: &Path, a: &Value) -> Result<String> {
+            Ok($face(root, &core(), days(a, 14))?.to_string())
+        }
+    )+ };
 }
+
+windowed!(churn => crate::faces::churn, join => crate::faces::join);
 
 pub(super) fn structure(root: &Path, a: &Value) -> Result<String> {
     let deep = a["deep"].as_bool().unwrap_or(false);

@@ -41,7 +41,7 @@ fn document(
         )
         .rows("pos", pos)
         .rows("cycles", cycle_rows(reply)?);
-    crate::document::assemble_over(core, held, req, &names)
+    crate::document::assemble_over(core, held, req, &names).map(|a| a.document)
 }
 
 /// [node, kind, canvas row]: the canvas rows are the file nodes in

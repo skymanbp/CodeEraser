@@ -113,11 +113,11 @@ leaked! {
     DocCheck { failed: Names, reasons: Names }
     /// A degrading family's catalogue entry (7.9.0): its reasons by code.
     DocReasons { reasons: Names }
-    /// What this side reads of the report documents' catalogue (7.8.0):
-    /// the schema ids and empty documents are the core's statement and
-    /// never bound here.
-    DocCatalogue { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
-                   graphscreen: DocReasons }
+    /// The entries this side reads of the report documents' catalogue
+    /// (7.8.0): the schema ids and empty documents are the core's
+    /// statement and never bound here.
+    DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
+                 graphscreen: DocReasons }
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }
@@ -131,6 +131,79 @@ leaked! {
         calls: Calls, fourclass: Fourclass, ladder: Ladder, walk: Walk, outputs: Rows,
         docdup: Docdup, keys: Keys, flags: Flags, tombstone: Tombstone, compdb: Compdb,
         protocol: Protocol, document: DocCatalogue, store: Store,
+    }
+}
+
+/// The report documents' catalogue: the entries this side reads,
+/// whether each family's `--format json` face prints its document
+/// indented (`pretty`, 7.10.0, plan v2.32 step 5 ruling R5) — a
+/// catalogue fact, never a table here — and the churn entry's pairing
+/// cap, which the measurement uses and the console names
+/// (`cochangeFileCap`).
+pub struct DocCatalogue {
+    entries: DocEntries,
+    pretty: HashMap<String, bool>,
+    pub cochange_file_cap: usize,
+}
+
+impl std::ops::Deref for DocCatalogue {
+    type Target = DocEntries;
+    fn deref(&self) -> &DocEntries {
+        &self.entries
+    }
+}
+
+impl DocCatalogue {
+    /// Whether `family`'s document prints indented; None = an entry
+    /// that states no `pretty` (a pre-7.10.0 catalogue).
+    pub fn pretty(&self, family: &str) -> Option<bool> {
+        self.pretty.get(family).copied()
+    }
+}
+
+/// The catalogue read whole: the typed entries, and every family's
+/// `pretty` beside them.
+#[derive(serde::Deserialize)]
+#[serde(try_from = "serde_json::Value")]
+pub struct DocCatalogueOwned {
+    entries: <DocEntries as Leak>::Owned,
+    pretty: HashMap<String, bool>,
+    cochange_file_cap: usize,
+}
+
+impl TryFrom<serde_json::Value> for DocCatalogueOwned {
+    type Error = serde_json::Error;
+    fn try_from(v: serde_json::Value) -> Result<Self, Self::Error> {
+        let pretty = v
+            .as_object()
+            .into_iter()
+            .flatten()
+            .filter_map(|(family, entry)| Some((family.clone(), entry.get("pretty")?.as_bool()?)))
+            .collect();
+        let cap = v["churn"]["cochangeFileCap"]
+            .as_u64()
+            .and_then(|n| usize::try_from(n).ok());
+        let Some(cochange_file_cap) = cap else {
+            return Err(serde::de::Error::custom(
+                "document.churn: no cochangeFileCap",
+            ));
+        };
+        Ok(DocCatalogueOwned {
+            entries: serde_json::from_value(v)?,
+            pretty,
+            cochange_file_cap,
+        })
+    }
+}
+
+impl Leak for DocCatalogue {
+    type Owned = DocCatalogueOwned;
+    fn leak(owned: DocCatalogueOwned) -> Self {
+        DocCatalogue {
+            entries: DocEntries::leak(owned.entries),
+            pretty: owned.pretty,
+            cochange_file_cap: owned.cochange_file_cap,
+        }
     }
 }
 

@@ -77,7 +77,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Va
             req = req.rows("faults", [[names.why.add(at), names.why.add(f.what)]]);
         }
     }
-    document::assemble_over(core, held, finish(req, &names), &names)
+    document::assemble_over(core, held, finish(req, &names), &names).map(|a| a.document)
 }
 
 /// Every table and fact the road did not fill, empty or zero, and the

@@ -102,7 +102,7 @@ pub fn judge_report(root: &Path, core: &str, w: &GraphWire) -> Result<Report> {
     let (j, _, held) = judged(root, core, w, &[])?;
     let (req, names) = document::request("deadcode", w, &j)?;
     document::read(
-        crate::document::assemble_over(core, held, req, &names)?,
+        crate::document::assemble_over(core, held, req, &names)?.document,
         w,
         &j,
     )

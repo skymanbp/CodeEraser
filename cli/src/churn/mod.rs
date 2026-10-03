@@ -48,10 +48,7 @@ mod survival;
 // the leaf owns the face; this re-export keeps every outside
 // caller's path (crate::churn::git) where it always was
 pub(crate) use gitio::{git, gitlinks};
-pub use report::{Report, UnitRow, print_console, report_json};
-// the cap prints beside the skip count it explains, so the report
-// leaf owns the binding and the measurement reads the SAME one
-use report::COCHANGE_FILE_CAP;
+pub use report::{Report, UnitRow, answer};
 
 use crate::fourclass::session;
 use crate::fourclass::units::{self, Unit};
@@ -255,7 +252,9 @@ fn count_cochange(
     skipped: &mut usize,
 ) {
     let files: Vec<&String> = pairs.iter().filter_map(|(_, a)| a.as_ref()).collect();
-    if files.len() > COCHANGE_FILE_CAP {
+    // the cap the console names beside the skip count: the core's
+    // catalogue states both (CE.Churn.Document), this side reads it
+    if files.len() > crate::tables::get().document.cochange_file_cap {
         *skipped += 1; // reported, not silent (no-silent-caps discipline)
         return;
     }
@@ -274,7 +273,8 @@ fn count_cochange(
 /// to rows the score path discarded anyway and a real hotspot could
 /// rank 21st; the honest guard is the core's verdictRowCap, which
 /// degrades whole rather than dropping rows). The CONSOLE keeps its
-/// own display cut in report.rs — that one is rendering.
+/// own display cut, in the core's lines (CE.Churn.Lines) — that one
+/// is rendering.
 fn top_pairs(
     counts: HashMap<(String, String), usize>,
     floor: usize,

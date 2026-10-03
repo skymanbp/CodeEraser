@@ -4585,14 +4585,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|40df88eaa1148ef9|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 128,
-    "end": 148,
+    "line": 126,
+    "end": 146,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|8de58f87dea9366e|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 148,
-    "end": 154,
+    "line": 146,
+    "end": 152,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_graph_precision.rs|185b850b408ba8bc|0": {
@@ -5142,20 +5142,15 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|a6cae4e7dac804e4|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 92,
-    "end": 102,
+    "line": 89,
+    "end": 99,
     "text": "// the wire floor follows the CONFIGURED knob when one is set"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|daf5ed578a3c4511|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 269,
-    "end": 287,
+    "line": 268,
+    "end": 286,
     "text": "}\n\n/// Every pair at or over the floor, count-descending — NO rank cut"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/report.rs|cbf39343337962e0|0": {
-    "target": "../../../cli/src/churn/report.rs",
-    "line": 14,
-    "text": "pub(crate) const COCHANGE_FILE_CAP: usize = 20;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -5400,6 +5395,11 @@
     "line": 26,
     "end": 27,
     "text": "assert_eq!(crossing.id.key, \"\", \"cross-unit span is not guessed\");"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Churn/Document.hs|af8831dc58f4c755|0": {
+    "target": "../../../core/app/CE/Churn/Document.hs",
+    "line": 33,
+    "text": "cochangeFileCap = 20"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Clone/Cost.hs|5cad32f8a4cc001c|0": {
     "target": "../../../core/app/CE/Clone/Cost.hs",
@@ -8617,8 +8617,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 312,
-    "end": 314,
+    "line": 314,
+    "end": 316,
     "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9928,12 +9928,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|097f5d56f167eb0a|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 195,
+    "line": 196,
     "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|f50a981a429e80a8|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 182,
+    "line": 183,
     "text": "pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -9959,7 +9959,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 176,
+    "line": 182,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
@@ -10255,7 +10255,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|102e73d797f3f249|0": {
     "target": "../../../cli/tests/unit/query/face.rs",
-    "line": 68,
+    "line": 70,
     "text": "fn a_lexical_fault_is_error_zero_at_its_place_and_no_judgment() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/legend.rs|83d614986f8f8dbb|0": {
@@ -10636,7 +10636,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ee74b95db080349c|0": {
     "target": "../../../cli/src/flow_report/face.rs",
-    "line": 162,
+    "line": 164,
     "text": "fn placed(files: &[Lowered], verdict: &Verdict) -> Vec<[i64; 6]> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|293f47b7fd646bc0|0": {
@@ -10894,7 +10894,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|39c8477982b58025|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 230,
+    "line": 236,
     "text": "/// (−1: nothing on this side)."
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|8acf28239d333bb2|0": {
@@ -10905,7 +10905,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|9f7d58911284bdf3|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 174,
+    "line": 175,
     "text": "/// node they land on (the same graph `ce deadcode` judges)."
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e315de48ee67ed2f|0": {
@@ -10915,7 +10915,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e34b025ba3a30b41|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 108,
+    "line": 109,
     "text": "fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -> Request {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|243bc494e8f3468c|0": {
@@ -11445,7 +11445,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|7f6211bb93596e3c|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 225,
+    "line": 226,
     "text": "pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
@@ -11455,7 +11455,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 198,
+    "line": 204,
     "text": "a[\"file\"].as_str().map(Path::new),"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {

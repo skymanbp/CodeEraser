@@ -107,7 +107,7 @@ fn analysis(cmd: Cmd, core: &str) -> Result<ExitCode, Box<Cmd>> {
     Ok(match cmd {
         Cmd::Scan { path, format } => cmds::scan_cmd(path, format, core),
         Cmd::Churn { root, days, format } => {
-            cmds::churn_cmd(&cmds::or_cwd(root), days, json(format))
+            cmds::churn_cmd(&cmds::or_cwd(root), days, json(format), core)
         }
         Cmd::Graph {
             root,

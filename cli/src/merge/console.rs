@@ -74,7 +74,7 @@ fn group(g: &GroupFace) -> Vec<String> {
         let cells: Vec<String> = p
             .values
             .iter()
-            .map(|v| format!("m{} \"{}\"", v.member, clip(&v.text)))
+            .map(|v| format!("m{} \"{}\"", v.member, clip(&v.text, TEXT_CAP)))
             .collect();
         out.push(line(
             "  param {}: {}",
@@ -101,12 +101,13 @@ fn member(m: &MemberFace) -> String {
     )
 }
 
-/// One line, at most TEXT_CAP characters, `…` when cut.
-fn clip(text: &str) -> String {
+/// One line, at most `cap` characters, `…` when cut — the console's
+/// and the core's `clipped` reference's (step 5) one reading.
+pub(super) fn clip(text: &str, cap: usize) -> String {
     let flat: String = text.split_whitespace().collect::<Vec<_>>().join(" ");
-    if flat.chars().count() <= TEXT_CAP {
+    if flat.chars().count() <= cap {
         return flat;
     }
-    let cut: String = flat.chars().take(TEXT_CAP).collect();
+    let cut: String = flat.chars().take(cap).collect();
     format!("{cut}…")
 }

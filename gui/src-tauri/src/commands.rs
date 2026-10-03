@@ -169,7 +169,7 @@ pub async fn check_report(
     })
     .await
 }
-face_cmd!(churn_report, "churn", days: |r, _c, d| codeeraser::faces::churn(r, d));
+face_cmd!(churn_report, "churn", days: codeeraser::faces::churn);
 face_cmd!(join_report, "join", days: codeeraser::faces::join);
 
 /// The same-role advisor (plan v2.29 step 6) — the SAME document

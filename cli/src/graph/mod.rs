@@ -171,7 +171,7 @@ pub fn sites_document(core: &str, files: &[FileSites]) -> Result<serde_json::Val
                 .collect::<Vec<_>>(),
         )
         .rows("sites", rows);
-    crate::document::assemble(core, req, &texts)
+    crate::document::assemble(core, req, &texts).map(|a| a.document)
 }
 
 /// The sites document's strings: the paths, each site's spec and owner.

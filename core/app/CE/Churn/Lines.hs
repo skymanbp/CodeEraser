@@ -1,5 +1,6 @@
 -- | The `ce churn` console lines (plan v2.32 step 5), transcribed from
--- cli/src/churn/report.rs `print_console`: the window's commits and
+-- the Rust printer this replaced (cli/src/churn/report.rs
+-- `print_console`, deleted at step 5 R0): the window's commits and
 -- ledger sums, survival, the strongest co-change pairs up to the
 -- display cut with the rest counted, the commits too large to pair
 -- and the submodules without file history. Report-only: no veto.

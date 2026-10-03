@@ -104,7 +104,7 @@ file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (
 from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit the core refused with its reason
-([Document.hs:88](../../../core/app/CE/Flow/Document.hs#L88), [face.rs:162](../../../cli/src/flow_report/face.rs#L162),
+([Document.hs:88](../../../core/app/CE/Flow/Document.hs#L88), [face.rs:164](../../../cli/src/flow_report/face.rs#L164),
 [report.rs:10](../../../cli/src/flow_report/report.rs#L10)). A finding's `lineEnd` is the line on
 which the run's last statement starts: the legend keeps each statement's first line only, so a
 last statement written over several lines is not followed to its end; the next lowering

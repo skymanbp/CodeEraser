@@ -34,7 +34,7 @@ pub fn document(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
     let stats = super::refresh(root, &idx)?;
     let rates = super::rates::census(root, &idx)?;
-    document::assemble(core, request(&stats, &rates)?, &Nothing)
+    document::assemble(core, request(&stats, &rates)?, &Nothing).map(|a| a.document)
 }
 
 /// The header as facts — every counter of `Stats` under its dotted

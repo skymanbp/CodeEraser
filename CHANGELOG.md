@@ -9,19 +9,26 @@
 
 ## [Unreleased]
 
+**无默认档位变更。** 权威轨 v2.32 步 5 R0：Rust 读核的 `lines` 与否决位，churn 一族先切（2026-10-02；`ce churn` 的文档与控制台每一行改由核装配与给出，Rust 只量窗口、送整数、按 stream 印；判决代码零改动，`document/1` 仍是 7.10.0，golden 不动，分数与 1.8.0 可比）：
+
+- **Rust**：`document::assemble` 返回 `Answer { document, lines, fail }`，请求带 `lang`；`cli/src/document/lines.rs`（行的绑定与打印）自车道 B2 逐字节拷入；打印器 `document::emit` 按目录的 `pretty` 印 json 面；切过来的面退出码读 `fail`。churn：`churn::answer` 送窗口的整数与配对表，`report_json` / `print_console` / `SCHEMA` / `COCHANGE_FILE_CAP` 删除，配对上限读目录 `document.churn.cochangeFileCap`；CLI / MCP / GUI 三面同走 `faces::churn(root, core, days)`。merge 面的 `Resolve` 补 `clipped` 一类（`lines` 现在每个面都绑定）。churn 照 join 的形写请求带出的三块克隆按所有者消掉：路径表收成 `document::Paths`（join 与 churn 同读），MCP 的两个窗口面收成宏 `windowed!`（查重预算 41 未动）。设计册 §13 第 45–50 条。
+- **行为变化**：`ce churn` 三面从此要核——无核或核不答 `document/1` 时具名拒、退 2（此前 churn 不问核）；其余字节与旧二进制相同（切换门见提交说明）。
+- **核**：`CE.Churn.Document` 立 `schemaId`；注释与官网 how 页双语的常量芯片 `COCHANGE_FILE_CAP` → `cochangeFileCap`、方法学册 07 的引文改指核。
+- **门读数**：见提交说明（车道 `lane/v232-step5a`，变基到 1d73ca58 / 子仓 145b62e 之上）。
+
 **无默认档位变更。** 权威轨 v2.32 步 5A 十个报告族进核（2026-10-01；核再按每族一份语句装配 scan / dedup / clone / clone-units / docdup / erase / erase-trail / churn / trend / similar 十份报告文档，并按请求的语言给出它们控制台的每一行与否决位，仍是 `document/1` 7.10.0；测量侧还没调用它——Rust 照旧自己装配与打印，切换在步 5 的 Rust 半；判决代码零改动，`document` 之外的 golden 只动握手与目录的 `tablesDigest`，分数与 1.8.0 可比）：
 
 - **核**：八个文档模块（十族）：`CE.Scan.Document`、`CE.Dedup.Document`、`CE.Clone.Document`（clone 与 clone-units 两族）、`CE.Docdup.Document`、`CE.Erase.Document`（erase 与 erase-trail 两族）、`CE.Churn.Document`、`CE.Trend.Document`、`CE.Similar.Document`，九个 `CE.<Fam>.Lines` 模块（clone 的两族共一个；`CE.Erase.TrailLines` 另拼轨迹的 UTC 时间戳），八份目录 `CE.Text.<Fam>`（逐字节转录自 Rust 打印处），`CE.Document.Envelope`（clone 与 docdup 共用的报告信封，对应 `cli/src/report.rs` 的 `envelope`：一行文本陈述 schema / 命中键 / 引用类 / 宇宙 / 三个度量名 / 计数器）；这十族的 schema id 只在 `docFamily` 调用里拼一次、文档读 `dfSchema`；`CE.Document.Read` 多 `emitted`（命中行 + summary 与未点名计数的尾巴，dedup / clone / docdup 共读）与 `fields`，`CE.Document.Contract` 多 `nameOf` / `judgedFacts` 与 `Say`。`spoken`（与 `Say` 一起从 `CE.Document.Contract` 挪进 `CE.Document.Read`，变基后 Contract 278 行）改为带目录：族的 `lines` / `exit` 直接拿到该语言的句子 `say` 与族装好的文档，Lines 模块不再各自 import 自己的文档模块与目录、也不再把文档重装一遍——5C 的十个 Lines 模块与守卫 / 审计同改，`DocFamily` 多 `dfText`（`DocumentProps5` 的目录覆盖改读它，不再 import 二十份目录）。名字各回一个所有者：erase 类名 / reason 名进 `CE.Erase.Cost`，scan 规则名进 `CE.Scan.Cost`、fail 条件名由 `CE.Scan` 读自己的 `conditions`，docdup 段 kind 名读定义包（`CE.Lang.segmentKinds`），dedup 的 `kgram` / `window` 为 `CE.Dedup.Cost` 的 `dedupKgram` / `dedupWindow`。
 - **wire 7.10.0**（同一未发布 minor 内加性）：`document.request` 的 `family` 多十个名字，`tables/1` 的 `document` 目录多十项（二十二项），每项多 `pretty`（面按多行缩进印文档与否：scan / dedup 为 true、其余 false，Rust 半从包读；文档的键一律排序），`tablesDigest` 随之挪动；只进 `lines` 的请求事实与引用类见设计册 §13 第 39 条，文档不受它们影响。`contracts/VERSIONING.md` 7.10.0 条补一段；`document/golden.ndjson` 六十七对 → 一百一十九对（十族各非空 en / zh、六个有否决的族再一对否决例、空或降级请求、一条本族拒绝），原先问 `scan` 的未知族拒绝改问 `nosuch`。
 - **等价**：`DocumentProps6` 十一腿（空文档 = 目录、字段表、引用落在陈述的宇宙内、字节同、十七条具名拒绝、dedup 摘要十二键、trend 判决词两语、erase 类名 / reason 名对 `CE.Erase.Cost`、轨迹时间戳、种子非空、目录的 `pretty` 只给 scan 与 dedup）+ `DocumentGen6`（每族 200 个种子请求；四份 `DocumentGen*` 共用 `seededBy`；十七条拒绝是一张文本表）；`DocumentProps5` 的九腿覆盖新十族（目录覆盖多八份、否决复述多六条），`DocumentProps4` 的目录项数 12 → 22。
-- **门读数**：见提交说明（车道 `lane/v232-step5a`，基于 `lane/v232-step5c` 的 7bf32967）。
+- **门读数**：见提交说明（车道 `lane/v232-step5a`，5C 之上，变基到 1d73ca58 / 子仓 145b62e）。
 
 **无默认档位变更。** 权威轨 v2.32 步 5C 控制台文本进核（2026-10-01；核按请求的语言给出每族控制台的每一行与该面的否决位，`document/1` 7.10.0；测量侧还没读它——Rust 照旧自己打印，切换在步 5 的 Rust 半；判决代码零改动，`document` 之外的十九份 golden 只差 proto 字面，`tablesDigest` 不变，分数与 1.8.0 可比）：
 
 - **核**：机制 `CE.Text`（模板按 key 取 `(en, zh)`、`{}` 自左至右填，数字按 Rust `Display`、`{:+}` 一处、`{:.1}` 按除得的 double 的精确二进制值半数取偶，`table` 把一份文本读成目录）+ 十二份目录 `CE.Text.<Fam>`（每份一个文本字面量，逐字节转录自 Rust 打印处，只有英文的句子 zh = en）+ 十个 `CE.<Fam>.Lines`（arch / query 与 rules / flow / merge / check / structure / join / deadcode / mentions / sites，各读核刚装出的文档再加请求事实）+ 两个句子族 `CE.Guard.Document`（`say` 行一条规则一行：重复 / 硬预算 / 分级区 / 墓碑 / 新增死代码 / ce.toml 不可读，围栏是尾句）与 `CE.Audit.Document`（Stop / precommit / commitmsg 三面）+ `CE.Document.Read`（文档读者，一次导入）；`CE.Document.Contract` 的请求多 `lang`、族多 `dfLines` / `dfExit`（`spoken`）；墓碑的 kind 名进 `CE.Tombstone`（`kindNames`）。
 - **wire 7.10.0**（加性）：请求可带 `lang`（0 / 1，其余按名拒），应答多 `lines`（`[stream, text, ref…]`，每个引用一个 `{}`）与 `exit: {fail}`；arch 请求多 `widths` 表、flow 多 `check` / `deny`、merge 多 `only`、check 多 `roast`、deadcode 与图屏多 `files` / `check` 事实，merge 片段截断是新引用类 `clipped`——都只进 `lines`，文档逐字节不变；这几项在请求里可缺省（陈述行 `optional`，缺省读 0 / 空），因为 3B / 4B 的 Rust 已在发这几族的文档请求而还不送它们，Rust 半送齐后可删。`Version.hs` / `corelink.rs::PROTO` / `contracts/VERSIONING.md` 7.10.0 条；`document/golden.ndjson` 二十四对 → 六十七对（既有请求按新键补齐，每族一条 `lang` 1，守卫与审计每句两语，ROI 一位小数电池 id 401）。
 - **等价**：`DocumentProps5` 九腿（每行 `{}` 数 = 引用数、行里的引用落在陈述的宇宙内、每份目录的每个 key 都被用到且无错配、空请求与超 cap 都答 `lines` / `exit`、`lang` 越界按名拒、否决位 = 各面规则的复述、`{:.1}` 对 Rust 的十三个读数、golden 每族有中文请求、去掉可缺省的事实与表文档不变）+ `DocumentGen5`（守卫与审计各 200 个种子请求）；子仓 `it/document_number_format.rs` 用 Rust `format!("{:.1}x", …)` 逐个比 golden 电池的 ROI。
-- **门读数**：见提交说明（车道 `lane/v232-step5a`，变基到 cacc2741 / 子仓 145b62e）。
+- **门读数**：见提交说明（车道 `lane/v232-step5a`，变基到 1d73ca58 / 子仓 145b62e）。
 
 **无默认档位变更。** 官网把数学摆上台面（2026-10-02；判决代码、生成块与事实芯片一个字节不动）：首页「判决家族」与「实测」之间新增「数学」一节（中英同构），每行一条算法——窗口取指纹、树编辑距离、shingle 上的 Jaccard、Tsallis-2 与 χ²、Newman 模块度、分数与棘轮、认知复杂度的递归增量、可达性与 Tarjan、拆分 ROI、Theil-Sen 斜率、整数 BM25 与 PPMI、分层 Datalog、可达性与活跃性、克隆合并、分层与切割——公式逐字取自 how / analysis 页的 `<pre>` 或方法学册（模块度取册 04、PPMI 取册 15、递归增量取白皮书原句），各自链到推导；how 页十族的定理 / 判定句从「推导与常数」折叠里移出、作为「规则」块紧贴公式可见，守卫阶梯的硬预算与软区公式移出折叠，常数表与长推导仍折叠（行数不变，逐句对拍对改版前零缺句）；技术栈页新增「数学在哪一层」，每层一句、取自站内已有句子；所有公式统一一种样式（等宽、深底、判定运算符用珊瑚色），`theme.css?v=10` / `style.css?v=10` 全站同改。
 

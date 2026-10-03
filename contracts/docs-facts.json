@@ -195,10 +195,9 @@
       "value": "ce.check-report/0.5.0"
     },
     {
-      "debt": "churn::report is private; promote = re-export SCHEMA beside Report",
       "id": "report:churn#schemaver",
-      "source": "cli/src/churn/report.rs",
-      "tier": "scraped",
+      "source": "core/app/CE/Churn/Document.hs (schemaId)",
+      "tier": "linked",
       "value": "ce.churn-report/0.2.0"
     },
     {
@@ -477,5 +476,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 19
+  "scraped": 18
 }

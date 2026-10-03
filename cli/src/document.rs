@@ -10,10 +10,19 @@
 //! strings. A judgment that did not happen is asked too, `degraded`
 //! naming the reason text, and a document the core does not answer —
 //! no `document/1`, a refusal, a document over its row cap — is an
-//! error by name, never a document printed from this side.
+//! error by name, never a document printed from this side. Since 7.10.0
+//! (plan v2.32 step 5) the reply also carries the console lines in the
+//! language this process speaks and the face's veto: every face gets
+//! one `Answer`, and `emit` prints it.
+
+pub mod lines;
+mod paths;
+
+pub use paths::Paths;
 
 use crate::corelink::Link;
 use anyhow::{Context, Result, anyhow, bail};
+use lines::{Line, Mode};
 use serde_json::{Map, Value, json};
 
 /// The capability the core must offer, and the request kind.
@@ -97,12 +106,25 @@ impl Request {
         self
     }
 
+    /// The request as it goes out; `lang` is this process's language,
+    /// set here and nowhere else (ruling R2).
     pub(crate) fn body(self) -> Value {
         json!({
             "family": self.family, "ranges": self.ranges, "rows": self.rows,
-            "facts": self.facts, "degraded": self.degraded,
+            "facts": self.facts, "degraded": self.degraded, "lang": lines::lang(),
         })
     }
+}
+
+/// What the core answered a face (ruling R1): the bound document, the
+/// console lines in this process's language bound through the same
+/// `Resolve`, and the face's veto. MCP and the GUI read `document`; the
+/// CLI prints (`emit`) and exits 1 iff `fail`.
+#[derive(Debug)]
+pub struct Answer {
+    pub document: Value,
+    pub lines: Vec<Line>,
+    pub fail: bool,
 }
 
 /// A face's link to the core: opened once, judged over, then laid out
@@ -117,13 +139,14 @@ pub fn open(core: &str) -> Held {
 }
 
 /// The request answered by a fresh core at `core`, bound through `r`.
-pub fn assemble(core: &str, req: Request, r: &dyn Resolve) -> Result<Value> {
+pub fn assemble(core: &str, req: Request, r: &dyn Resolve) -> Result<Answer> {
     assemble_over(core, Err(String::new()), req, r)
 }
 
 /// The request answered over `held` when it is a whole link, else over
-/// a fresh one to `core`, and bound through `r`.
-pub fn assemble_over(core: &str, held: Held, req: Request, r: &dyn Resolve) -> Result<Value> {
+/// a fresh one to `core`, and bound through `r`: the document and the
+/// lines, each reference a string, and the veto.
+pub fn assemble_over(core: &str, held: Held, req: Request, r: &dyn Resolve) -> Result<Answer> {
     let family = req.family;
     let named = |why: String| anyhow!("{family} document: {why}");
     let mut link = match held {
@@ -138,7 +161,35 @@ pub fn assemble_over(core: &str, held: Held, req: Request, r: &dyn Resolve) -> R
         let reason = reply["reason"].as_str().unwrap_or("degraded");
         bail!("{family} document: the core did not lay it out: {reason}");
     }
-    bind(reply["document"].take(), r)
+    let (lines, fail) = lines::bind_lines(&reply, r).map_err(|e| named(format!("{e:#}")))?;
+    let document = bind(reply["document"].take(), r)?;
+    Ok(Answer {
+        document,
+        lines,
+        fail,
+    })
+}
+
+/// An answer printed as its face prints it (ruling R3): the console
+/// face every line to its stream; the `--format json` face the document
+/// on stdout — indented when the catalogue states the family `pretty` —
+/// then its stream-1 lines (stdout is the document there).
+pub fn emit(family: &str, answer: &Answer, json: bool) -> Result<()> {
+    if !json {
+        lines::print(&answer.lines, Mode::Console);
+        return Ok(());
+    }
+    let Some(pretty) = crate::tables::get().document.pretty(family) else {
+        bail!("{family} document: the catalogue states no `pretty` (a pre-7.10.0 core)");
+    };
+    let text = if pretty {
+        serde_json::to_string_pretty(&answer.document)?
+    } else {
+        answer.document.to_string()
+    };
+    println!("{text}");
+    lines::print(&answer.lines, Mode::Document);
+    Ok(())
 }
 
 /// A bound document read as the face's reader `T` (the console, the

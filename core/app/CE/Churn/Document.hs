@@ -4,8 +4,9 @@
 
 -- | The `ce churn` document (plan v2.32 step 5; design booklet
 -- docs/reference/authority-track.md §5), transcribed from the face that
--- assembled it on the measuring side (cli/src/churn/report.rs
--- `report_json`): the window's commits, the ledger's two sums and the
+-- assembled it on the measuring side until step 5's R0 pilot (the
+-- measuring side now sends the integers, cli/src/churn/report.rs
+-- `answer`): the window's commits, the ledger's two sums and the
 -- lines it added, how many survive at HEAD and how many churned, the
 -- co-change pairs, the commits too large to pair and the declared
 -- submodules whose history is not this repository's. No judgment: the
@@ -19,11 +20,15 @@ import CE.Document.Contract
 import Data.Aeson (Value, object, (.=))
 
 doc :: DocFamily
-doc = docFamily "churn" "ce.churn-report/0.2.0" statement (const Nothing) assemble ["cochangeFileCap" .= cochangeFileCap, "displayCut" .= displayCut]
+doc = docFamily "churn" schemaId statement (const Nothing) assemble ["cochangeFileCap" .= cochangeFileCap, "displayCut" .= displayCut]
+
+schemaId :: String
+schemaId = "ce.churn-report/0.2.0"
 
 -- | Commits changing more files than this are left out of the pair
--- count (quadratic) and counted instead (cli/src/churn/report.rs
--- `COCHANGE_FILE_CAP`); the console names the number beside the count.
+-- count (quadratic) and counted instead; the measurement reads it off
+-- the catalogue entry (cli/src/churn/mod.rs) and the console names the
+-- number beside the count.
 cochangeFileCap :: Integer
 cochangeFileCap = 20
 

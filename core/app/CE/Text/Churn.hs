@@ -1,5 +1,6 @@
 -- | The `ce churn` console sentences (plan v2.32 step 5), transcribed
--- byte for byte from cli/src/churn/report.rs (`print_console`).
+-- byte for byte from cli/src/churn/report.rs (`print_console`, deleted
+-- at step 5 R0 when the face began printing these).
 module CE.Text.Churn (catalogue) where
 
 import CE.Text (Catalogue, table)

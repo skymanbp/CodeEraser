@@ -1,23 +1,14 @@
-//! The churn report shapes and emitters, split from mod.rs at the
-//! repo's own 300-line dogfood gate when the M5-3h per-unit ledger
-//! landed. Totals are METHODS over the ledger, never stored fields —
-//! the conservation-by-construction half of the ledger design.
+//! The churn report shape, split from mod.rs at the repo's own
+//! 300-line dogfood gate when the M5-3h per-unit ledger landed, and
+//! the request the core lays its document out from (plan v2.32 step 5,
+//! the R0 pilot): totals are METHODS over the ledger, never stored
+//! fields — the conservation-by-construction half of the ledger design
+//! — and the document, its console lines and the pairing cap the
+//! measurement reads (`document.churn.cochangeFileCap`) are the core's
+//! (CE.Churn.Document, CE.Churn.Lines).
 
-use crate::i18n::line;
-
-/// Commits with more changed files than this are skipped for pair
-/// counting (quadratic) and reported, never silently dropped. The
-/// report prints the cap beside the skip count it explains, so this
-/// leaf owns the binding and the measurement (mod.rs) reads the
-/// SAME one — the parent-hub import was a module cycle the graph
-/// axis itself billed (headroom sprint, 2026-08-24).
-pub(crate) const COCHANGE_FILE_CAP: usize = 20;
-
-/// The report's schema id; 0.2.0: additive
-/// `submodules_without_file_history`. A named constant, not an inline
-/// literal: the derived-fact registry (plan v2.21) scans cli/src for
-/// value-shaped ids and every family names its own.
-const SCHEMA: &str = "ce.churn-report/0.2.0";
+use crate::document::{self, Answer, Paths, Request, Resolve};
+use anyhow::Result;
 
 /// One ledger row: lines the window added inside this unit. `key` ""
 /// (with anchor "") is the file's top level — `owner()` found no
@@ -60,85 +51,46 @@ impl Report {
     }
 }
 
-pub fn report_json(r: &Report) -> serde_json::Value {
-    let added = r.added_in_window();
-    let churned = added.saturating_sub(r.surviving);
-    serde_json::json!({
-        "schema": SCHEMA,
-        "commits": r.commits,
-        "append_lines": r.append_lines(),
-        "rewrite_lines": r.rewrite_lines(),
-        "added_in_window": added,
-        "surviving": r.surviving,
-        "churned": churned,
-        "cochange": r.cochange.iter()
-            .map(|(a, b, n)| serde_json::json!({"a": a, "b": b, "count": n}))
-            .collect::<Vec<_>>(),
-        "skipped_large_commits": r.skipped_large,
-        "submodules_without_file_history": r.submodules_without_history,
-    })
+/// The churn document and its lines, laid out by the core at `core`:
+/// the window's sums, the survivors and the skip count as facts, each
+/// co-change pair `[a, b, commits]` over the paths it names, every path
+/// and submodule a reference this side resolves.
+pub fn answer(core: &str, r: &Report, days: u32) -> Result<Answer> {
+    let mut paths = Paths::default();
+    let cochange: Vec<[i64; 3]> = r
+        .cochange
+        .iter()
+        .map(|(a, b, n)| [paths.id(a), paths.id(b), *n as i64])
+        .collect();
+    let req = Request::new("churn")
+        .range("paths", paths.list.len())
+        .range("submodules", r.submodules_without_history.len())
+        .fact("days", days)
+        .fact("commits", r.commits)
+        .fact("appended", r.append_lines())
+        .fact("rewrote", r.rewrite_lines())
+        .fact("surviving", r.surviving)
+        .fact("skipped", r.skipped_large)
+        .rows("cochange", cochange);
+    let names = Names {
+        paths: paths.list,
+        submodules: &r.submodules_without_history,
+    };
+    document::assemble(core, req, &names)
 }
 
-pub fn print_console(r: &Report, days: u32) {
-    let added = r.added_in_window();
-    let churned = added.saturating_sub(r.surviving);
-    println!(
-        "{}",
-        line(
-            "churn window {}d: {} commits, appended {} / rewrote {} lines",
-            "改动窗口 {} 天：{} 个提交，追加 {} / 重写 {} 行",
-            &[&days, &r.commits, &r.append_lines(), &r.rewrite_lines()],
-        )
-    );
-    println!(
-        "{}",
-        line(
-            "window survival: {} of {} added lines survive at HEAD ({} churned)",
-            "窗口存活：新增 {} / {} 行存活至 HEAD（{} 已翻改）",
-            &[&r.surviving, &added, &churned],
-        )
-    );
-    // display cut only — the report struct and the wire carry the
-    // full table (batch-7 slice 12); the remainder is counted out
-    // loud, never silently absent
-    for (a, b, n) in r.cochange.iter().take(20) {
-        println!(
-            "{}",
-            line(
-                "co-change x{}: {} <-> {}",
-                "共变 x{}：{} <-> {}",
-                &[n, a, b]
-            )
-        );
-    }
-    if r.cochange.len() > 20 {
-        println!(
-            "{}",
-            line(
-                "co-change: {} more pairs below the display cut",
-                "共变：另有 {} 对低于显示截断",
-                &[&(r.cochange.len() - 20)]
-            )
-        );
-    }
-    if r.skipped_large > 0 {
-        println!(
-            "{}",
-            line(
-                "note: {} commit(s) above {} files skipped for pairing",
-                "注：{} 个提交超过 {} 文件上限，未参与配对",
-                &[&r.skipped_large, &COCHANGE_FILE_CAP],
-            )
-        );
-    }
-    if !r.submodules_without_history.is_empty() {
-        println!(
-            "{}",
-            line(
-                "note: no file history for declared submodule(s) {} — the ledger is the superproject's own history",
-                "注：声明的 submodule {} 无文件历史——账本只计超仓自身的历史",
-                &[&r.submodules_without_history.join(", ")],
-            )
-        );
+/// The churn document's strings: the pairs' paths and the submodules.
+struct Names<'a> {
+    paths: Vec<String>,
+    submodules: &'a [String],
+}
+
+impl Resolve for Names<'_> {
+    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
+        match class {
+            "path" => document::at(&self.paths, ints),
+            "submodule" => document::at(self.submodules, ints),
+            _ => None,
+        }
     }
 }

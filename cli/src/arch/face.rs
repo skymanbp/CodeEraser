@@ -44,7 +44,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Re
         .range("dirs", tables.dir_paths.len())
         .range("why", why.count());
     let names = Names { t: &tables, why };
-    document::assemble_over(core, held, req, &names)
+    document::assemble_over(core, held, req, &names).map(|a| a.document)
 }
 
 /// A file's total lines (scan's own count; a file deleted mid-run has

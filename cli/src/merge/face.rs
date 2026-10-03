@@ -79,7 +79,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
         why: Why::default(),
     };
     let req = request(&groups, answers, unsendable, merged).range("members", names.members.len());
-    document::assemble_over(core, Ok(link), req.range("why", 0), &names)
+    document::assemble_over(core, Ok(link), req.range("why", 0), &names).map(|a| a.document)
 }
 
 /// The judgment did not happen: no row, every fact zero, the reason;
@@ -100,6 +100,7 @@ fn degraded(core: &str, held: Held, why: String) -> Result<Value> {
         req.range("members", 0).range("why", 1).degraded(reason),
         &names,
     )
+    .map(|a| a.document)
 }
 
 /// Every chunk's answer joined: the suggestion rows numbered across
@@ -220,6 +221,11 @@ impl Resolve for Names<'_> {
                 let m = member(k)?;
                 let (post, post_end) = (i64::try_from(*post).ok()?, i64::try_from(*post_end).ok()?);
                 Some(span_text(&self.texts[&m.path], &m.tree, post, post_end))
+            }
+            // a console line's text cut to the cap the core names
+            ("clipped", [k, post, post_end, cap]) => {
+                let text = self.resolve("text", &[*k, *post, *post_end])?;
+                Some(super::console::clip(&text, usize::try_from(*cap).ok()?))
             }
             _ => None,
         }

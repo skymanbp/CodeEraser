@@ -52,16 +52,14 @@ pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> Ex
     fallible("scan", scan::run(&or_cwd(path), findings_fmt(format), core))
 }
 
-pub fn churn_cmd(root: &Path, days: u32, json: bool) -> ExitCode {
-    match churn::run(root, days) {
-        Ok(report) => {
-            if json {
-                println!("{}", churn::report_json(&report));
-            } else {
-                churn::print_console(&report, days);
-            }
-            ExitCode::SUCCESS
-        }
+/// `ce churn`: the window measured here, the document and its lines
+/// laid out by the core (plan v2.32 step 5, the R0 pilot); exit 1 iff
+/// the core's veto (churn states none), 2 when the run or the core
+/// fails.
+pub fn churn_cmd(root: &Path, days: u32, json: bool, core: &str) -> ExitCode {
+    let answer = churn::run(root, days).and_then(|report| churn::answer(core, &report, days));
+    match answer.and_then(|a| codeeraser::document::emit("churn", &a, json).map(|()| a.fail)) {
+        Ok(fail) => ExitCode::from(u8::from(fail)),
         Err(err) => fail("churn", err),
     }
 }

@@ -85,7 +85,7 @@ pub(super) fn assemble(
         dirs: names_by_id(p.tree),
         seams: p.seams,
     };
-    document::assemble_over(core, held, req.empty(&TABLES), &names)
+    document::assemble_over(core, held, req.empty(&TABLES), &names).map(|a| a.document)
 }
 
 /// structure/1's [file, unit, benefit, cost] with the unit's last

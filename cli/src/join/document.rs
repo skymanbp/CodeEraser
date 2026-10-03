@@ -10,7 +10,7 @@
 
 use super::churn_unit::{Lines, UnitRow, UnitSim};
 use super::{Pos, verdicts::Judged};
-use crate::document::{self, Request, Resolve, Why};
+use crate::document::{self, Paths, Request, Resolve, Why};
 use anyhow::{Context, Result};
 use std::collections::{BTreeMap, HashMap};
 
@@ -49,7 +49,7 @@ pub(super) fn assemble(
     p: &Parts<'_>,
 ) -> Result<serde_json::Value> {
     let (req, names) = request(p)?;
-    document::assemble_over(core, held, req, &names)
+    document::assemble_over(core, held, req, &names).map(|a| a.document)
 }
 
 fn request(p: &Parts<'_>) -> Result<(Request, Names)> {
@@ -203,28 +203,6 @@ fn file_churn(ch: &crate::churn::Report) -> HashMap<&str, Lines> {
         e.rewrote += u.rewrote;
     }
     map
-}
-
-/// The path table: each path once, in first-named order.
-#[derive(Default)]
-struct Paths {
-    list: Vec<String>,
-    at: HashMap<String, usize>,
-}
-
-impl Paths {
-    fn id(&mut self, path: &str) -> i64 {
-        if let Some(&i) = self.at.get(path) {
-            return i as i64;
-        }
-        self.list.push(path.to_string());
-        self.at.insert(path.to_string(), self.list.len() - 1);
-        (self.list.len() - 1) as i64
-    }
-
-    fn find(&self, path: &str) -> Option<i64> {
-        self.at.get(path).map(|&i| i as i64)
-    }
 }
 
 /// The join document's strings: the paths and each unit row's keys.

@@ -67,7 +67,7 @@ pub struct Counts {
 /// `core` and read back.
 pub fn document(core: &str, o: &mut Outcome) -> Result<Report> {
     let held = std::mem::replace(&mut o.held, Err(String::new()));
-    let doc = document::assemble_over(core, held, request(o)?, &Nothing)?;
+    let doc = document::assemble_over(core, held, request(o)?, &Nothing)?.document;
     crate::report::read_bound(doc, "check")
 }
 

@@ -357,6 +357,18 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - flow 腿的固定成本 = 两侧各降一次表 + 两次 daemon 往返（核判 `flow/1`）：299 行的文件每次写入中位 +10.5–11.1 ms，三组读数一致；找到发现时多落一行 feed，不另加可见成本。
 - 复跑：`cargo build --release` 各出一个二进制拷到车道目录；两份树各 `git init` + `ce dedup .`（daemon 的冷启动在第一次探针时还没盖完「全量已建」戳，探针会答 `degraded: true`——先用 CLI 建一次满索引）；各臂预热两跑后 ABAB ×10，`clean` 与 `finding` 各一坐。
 
+## v2.32 步 5 R0 churn 改印核的 `lines` A/B（实测 2026-10-02，release，同一台机、同一窗口：A = R0 父提交的 ce + 核〔Rust 与 cacc2741 只差 PROTO 一行，churn 由 Rust 装配打印〕，B = R0 的 ce + 核〔每次多一次 `document/1` 问答〕）
+
+口径：整个进程的墙钟，毫秒，bash `EPOCHREALTIME` 夹进程、含进程起；语料 = crosscheck `rust` 提交成单提交仓（每臂一份拷贝），面 `ce churn --days 14 .`，ABAB ×7。
+
+| 面 | A | B | 状态 |
+|---|---|---|---|
+| `ce churn --days 14`（rust 语料） | 中位 2158（2010–2548） | 中位 2143（2100–2491） | 噪声内 |
+| `ce churn --days 14`（自仓带历史的拷贝，各一次，切换门顺带记下） | 474 s / 568 s / 489 s（en / json / zh） | 483 s / 464 s / 486 s | 噪声内；墙钟是 git 历史与逐文件 blame，两臂同一份测量代码 |
+
+- B 多做的事 = 一次核问答（整数事实 + 配对表进、文档与 `lines` 出）与绑定；落在两臂的抖动之内。
+- 复跑：`s5_scratch/r0_abab.sh`（车道外的一次性脚本，不入库）：两份语料拷贝、`CE_CORE_BIN` 每臂各指自己的核。
+
 ## v2.32 步 4B 七族文档改由核装配 A/B（实测 2026-10-02，release，同一台机、同一窗口：b3443723 自仓干净克隆〔测试子仓就位〕的两份拷贝，两臂各一份，A = b3443723 的 release ce〔`git archive` 构建，七族文档在 Rust 里装配〕，B = 终树的 ce〔判决后问 `document/1` 并绑定，文档沿用判决的核链〕，核同一个车道 ce-core 1.8.0〔proto 7.9.0〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕、三个面各暖跑一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；`--format json`，stdout 丢弃）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒。

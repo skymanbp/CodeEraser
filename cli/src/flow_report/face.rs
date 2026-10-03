@@ -39,7 +39,9 @@ pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
         why: Why::default(),
     };
     let req = request(&mut names, judgment, shown.as_deref());
-    document::assemble_over(core, held, req, &names).map_err(|e| named_kind(e, shown.as_deref()))
+    document::assemble_over(core, held, req, &names)
+        .map(|a| a.document)
+        .map_err(|e| named_kind(e, shown.as_deref()))
 }
 
 /// The kinds a face asked to see, by name, in the order given and each

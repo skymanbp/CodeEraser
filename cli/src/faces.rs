@@ -32,8 +32,9 @@ pub fn dedup(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>
     crate::dedup::report_json(&found, &summary)
 }
 
-pub fn churn(root: &Path, days: u32) -> Result<Value> {
-    Ok(crate::churn::report_json(&crate::churn::run(root, days)?))
+/// The churn window, laid out by the core at `core` (plan v2.32 step 5).
+pub fn churn(root: &Path, core: &str, days: u32) -> Result<Value> {
+    Ok(crate::churn::answer(core, &crate::churn::run(root, days)?, days)?.document)
 }
 
 pub fn graph_sites(root: &Path, core: &str) -> Result<Value> {

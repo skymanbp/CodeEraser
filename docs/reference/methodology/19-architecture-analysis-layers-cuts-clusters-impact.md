@@ -131,14 +131,14 @@ id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../
   document, 2 when the core could not judge or a path is not a measured file
   ([main_arch.rs:32](../../../cli/src/main_arch.rs#L32), [console.rs:14](../../../cli/src/arch/console.rs#L14)).
 - **The MCP tool `architecture`** takes `impact` as a list of root-relative paths and relays the
-  same document ([adapters.rs:198](../../../cli/src/mcp/adapters.rs#L198), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234)).
+  same document ([adapters.rs:204](../../../cli/src/mcp/adapters.rs#L204), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234)).
 - **The GUI** renders it in the reports hub rather than a thirteenth tab — the header holds twelve
   tabs in one row at the default window, and the hub is where the report-only families live. The
   document nests, so the family registers its own renderer and an `impact` path box; the counts
   still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:21](../../../gui/ui/reports.js#L21),
   [commands_query.rs:39](../../../gui/src-tauri/src/commands_query.rs#L39)).
 
-All three go through one library function ([faces.rs:225](../../../cli/src/faces.rs#L225)).
+All three go through one library function ([faces.rs:226](../../../cli/src/faces.rs#L226)).
 
 ### 5. Gates
 

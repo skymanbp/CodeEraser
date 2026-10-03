@@ -280,7 +280,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:195](../../../cli/src/mcp/tools.rs#L195), [tools.rs:216](../../../cli/src/mcp/tools.rs#L216),
-  [adapters.rs:176](../../../cli/src/mcp/adapters.rs#L176)).
+  [adapters.rs:182](../../../cli/src/mcp/adapters.rs#L182)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch,
   answers it as one table per goal under its own column names with the derivation rows under an
   answer, and judges the project's rules file with one button; rendering only, a core without the
@@ -289,7 +289,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [query.js:61](../../../gui/ui/query.js#L61)).
 
 All three go through two library functions, so the document cannot differ by face
-([faces.rs:182](../../../cli/src/faces.rs#L182), [faces.rs:195](../../../cli/src/faces.rs#L195)); the
+([faces.rs:183](../../../cli/src/faces.rs#L183), [faces.rs:196](../../../cli/src/faces.rs#L196)); the
 integration leg holds the CLI's JSON to the library's byte for byte
 ([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).
@@ -348,7 +348,7 @@ graph's codes, the lexer's numbering and its faults at their place, a goal's col
 safety walk's order, the request body's tables and flags, and `consume`'s reading of a healthy,
 a degraded and a skewed reply ([legend.rs:12](../../../cli/tests/unit/query/legend.rs#L12),
 [program.rs:19](../../../cli/tests/unit/query/program.rs#L19), [wire.rs:63](../../../cli/tests/unit/query/wire.rs#L63),
-[face.rs:68](../../../cli/tests/unit/query/face.rs#L68)). The integration legs seed a Cargo package
+[face.rs:70](../../../cli/tests/unit/query/face.rs#L70)). The integration legs seed a Cargo package
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or
