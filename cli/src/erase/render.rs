@@ -3,44 +3,15 @@
 //! the plan's content hash on the way — a rendering that showed bytes the
 //! plan did not hash would be a second source of truth. The console
 //! lines and the plan document are the core's (erase/document.rs); the
-//! core places one diff per file. `report_json` is the GUI preview's
-//! document until that face reads the core's (it holds no core path).
+//! core places one diff per file, and the GUI's preview reads the same
+//! texts joined (`document::Diffs::unified`).
 
-use crate::erase::model::{Plan, Row, family_command};
+use crate::erase::model::{Plan, Row};
 use anyhow::{Result, ensure};
 use std::path::Path;
 
 /// The hunks' context lines (CE.Erase.Document `diffContext`).
 const CONTEXT: usize = 3;
-
-/// The plan document. `families` (0.3.0) names the family command
-/// behind every out-of-class kind — the same table the console
-/// sentence reads, so a GUI chip and a console line never disagree.
-pub fn report_json(p: &Plan) -> serde_json::Value {
-    let families: serde_json::Map<String, serde_json::Value> = p
-        .counts
-        .out_of_class
-        .keys()
-        .filter_map(|k| family_command(k).map(|c| ((*k).to_string(), c.into())))
-        .collect();
-    serde_json::json!({
-        "schema": crate::erase::model::SCHEMA_ID,
-        "rows": p.rows,
-        "counts": p.counts,
-        "families": families,
-    })
-}
-
-/// Unified diff over every eraseable row, grouped per file, hunks in
-/// plan order with cumulative new-side offsets. Provenance rides as
-/// a `##` trailer on each hunk header — verdict family, evidence,
-/// and the plan's file hash (fnv1a64).
-pub fn diff(root: &Path, p: &Plan) -> Result<String> {
-    Ok(file_diffs(root, p)?
-        .into_iter()
-        .map(|(_, d)| d + "\n")
-        .collect())
-}
 
 /// The diff one file at a time: the place of the file's first eraseable
 /// row in the plan, and its hunks (no final newline — the console prints
@@ -115,7 +86,3 @@ fn file_diff(out: &mut String, text: &str, rows: &[&Row]) {
         removed_so_far += cut;
     }
 }
-
-#[cfg(test)]
-#[path = "../../tests/unit/erase/render.rs"]
-mod tests;

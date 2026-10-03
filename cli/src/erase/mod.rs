@@ -24,8 +24,7 @@ mod wire;
 use crate::document::Held;
 use anyhow::{Result, bail};
 pub use model::{
-    CLASS_NAMES, Candidate, Counts, LOG_SCHEMA, Plan, REASON_NAMES, Row, SCHEMA_ID,
-    T1T2_NO_WHOLE_UNIT, family_command,
+    CLASS_NAMES, Candidate, Counts, LOG_SCHEMA, Plan, REASON_NAMES, Row, T1T2_NO_WHOLE_UNIT,
 };
 use std::path::{Path, PathBuf};
 

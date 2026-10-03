@@ -23,11 +23,6 @@ pub fn kinds() -> &'static [crate::tables::KindRow] {
     crate::tables::get().document.flow.kinds
 }
 
-/// A kind's name by code; "?" for a code the catalogue does not list.
-pub fn kind_name(kind: u8) -> &'static str {
-    kinds().get(usize::from(kind)).map_or("?", |row| row.name)
-}
-
 /// Whether the catalogue marks the kind advisory in every language
 /// (booklet §13 item 8: an unused parameter is often an interface's).
 pub fn advisory(kind: u8) -> bool {

@@ -35,7 +35,6 @@ pub mod wire;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
 use anyhow::Result;
-use std::collections::BTreeMap;
 use std::path::Path;
 use std::process::ExitCode;
 
@@ -78,17 +77,6 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
 pub fn run_sites(root: &Path, core: &str, json: bool) -> ExitCode {
     let answer = analyze(root).and_then(|files| sites_document(core, &files));
     crate::report::graph_face("sites", answer, json)
-}
-
-/// Site counts keyed (lang, kind) — the shape the slice doc freezes.
-pub fn counts(files: &[FileSites]) -> BTreeMap<(&'static str, &'static str), usize> {
-    let mut map = BTreeMap::new();
-    for file in files {
-        for site in &file.sites {
-            *map.entry((file.lang.name(), site.kind)).or_insert(0) += 1;
-        }
-    }
-    map
 }
 
 /// The sites document (CE.Graph.Sites): each file's place in path

@@ -140,10 +140,26 @@ pub fn listed_units(root: &Path) -> Result<Vec<crate::dedup::unitcache::UnitRow>
 /// omission: a machine surface that could delete files on its own
 /// authority is the one thing an eraser must never ship.
 pub fn erase(root: &Path, core: &str) -> Result<Value> {
+    Ok(erase_laid(root, core)?.0)
+}
+
+/// The GUI's erase preview: the same plan document and, under `diff`,
+/// the unified diff over the SAME plan — one measurement, so the
+/// preview can never show bytes the plan did not hash (erase.md). The
+/// document is the core's (plan v2.32 step 6), the diff this side's.
+pub fn erase_preview(root: &Path, core: &str) -> Result<Value> {
+    let (mut doc, diffs) = erase_laid(root, core)?;
+    doc["diff"] = Value::String(diffs.unified());
+    Ok(doc)
+}
+
+/// One fresh plan laid out by the core, and its per-file diffs.
+fn erase_laid(root: &Path, core: &str) -> Result<(Value, crate::erase::document::Diffs)> {
     let (plan, held) = crate::erase::planned(root, None, core)?;
     let diffs = crate::erase::document::Diffs::of(root, &plan)?;
     let run = crate::erase::document::Run::default();
-    Ok(crate::erase::document::answer(core, held, &plan, &diffs, run)?.document)
+    let doc = crate::erase::document::answer(core, held, &plan, &diffs, run)?.document;
+    Ok((doc, diffs))
 }
 
 /// The applied-erase audit trail (plan v2.29 step 9, O50): apply.rs

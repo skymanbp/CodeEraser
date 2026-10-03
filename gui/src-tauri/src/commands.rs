@@ -252,45 +252,23 @@ pub fn bench_doc() -> Result<Value, String> {
         .map_err(|e| e.to_string())
 }
 
-/// Both erase commands open with the SAME fresh plan (their two
-/// bodies were a token twin by this repo's own measure) — the plan
-/// is always re-measured, never carried over from the webview.
-async fn erase_task(
-    win: tauri::Window,
-    tag: &'static str,
-    root: String,
-    f: fn(&Path, &str, codeeraser::erase::Plan) -> anyhow::Result<Value>,
-) -> Result<Value, String> {
-    task(win, tag, root, move |r, c| {
-        let plan = codeeraser::erase::plan(r, None, c)?;
-        f(r, c, plan)
-    })
-    .await
-}
-
-/// The erase PLAN plus its unified-diff preview in one measurement —
-/// dry-run by definition (erase.md: the plan is read-only and both
-/// faces come from the SAME plan, so the preview can never show
-/// bytes the plan did not hash).
-#[tauri::command]
-pub async fn erase_preview(win: tauri::Window, root: String) -> Result<Value, String> {
-    erase_task(win, "erase", root, |r, _, plan| {
-        let diff = codeeraser::erase::render::diff(r, &plan)?;
-        let mut doc = codeeraser::erase::render::report_json(&plan);
-        doc["diff"] = json!(diff);
-        Ok(doc)
-    })
-    .await
-}
+// The erase PLAN plus its unified-diff preview in one measurement —
+// dry-run by definition (erase.md: the plan is read-only and both
+// faces come from the SAME plan, so the preview can never show bytes
+// the plan did not hash); the document is the core's, the one the CLI
+// prints and the MCP tool hands out (plan v2.32 step 6)
+face_cmd!(erase_preview, "erase", codeeraser::faces::erase_preview);
 
 /// The destructive phase — the SAME library entry the CLI's --apply
-/// drives (one implementation, two faces): preconditions in contract
+/// drives (one implementation, two faces): a fresh plan, never one
+/// carried over from the webview, then the preconditions in contract
 /// order (git repo whose toplevel equals the root, clean worktree,
 /// unchanged targets), writes, the audit log, and the convergence
 /// re-plan. Every refusal surfaces by name in the webview.
 #[tauri::command]
 pub async fn erase_apply(win: tauri::Window, root: String) -> Result<Value, String> {
-    erase_task(win, "erase_apply", root, |r, c, plan| {
+    task(win, "erase_apply", root, |r, c| {
+        let plan = codeeraser::erase::plan(r, None, c)?;
         let applied = codeeraser::erase::apply_plan(r, None, c, &plan)?;
         Ok(json!({"applied": applied}))
     })

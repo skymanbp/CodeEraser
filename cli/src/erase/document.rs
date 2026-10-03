@@ -32,6 +32,12 @@ impl Diffs {
     pub fn of(root: &Path, p: &Plan) -> Result<Diffs> {
         Ok(Diffs(crate::erase::render::file_diffs(root, p)?))
     }
+
+    /// The whole diff, one file after another, each ended by a newline
+    /// — the GUI preview's `diff` (faces::erase_preview).
+    pub fn unified(&self) -> String {
+        self.0.iter().map(|(_, d)| d.clone() + "\n").collect()
+    }
 }
 
 /// The code of `name` in a frozen name table.
