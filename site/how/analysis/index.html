@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How CodeEraser works: the analysis track</title>
 <meta name="description" content="The analysis track's judgment families: a Datalog over the index's facts that answers questions with their derivations and turns architecture rules into a gate, judged in the Haskell core with no model and no float.">
-<meta name="theme-color" content="#10141d">
+<meta name="theme-color" content="#0c0f16">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="en_US">
@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=7">
+<link rel="stylesheet" href="/theme.css?v=8">
+<link rel="stylesheet" href="/style.css?v=8">
 </head>
 <body>
 <div class="wrap">
@@ -39,12 +40,12 @@
 
 <section class="lede">
   <h1>The analysis track</h1>
+  <p>The analysis track lets the reader <em>ask</em>, over the same index and judged in the same core.</p><details class="more lede-more"><summary>Under the same commitments</summary>
   <p>The families on the <a href="/how/">how page</a> each judge one shape of entropy the tree
   already carries: a clone, a dead file, a duplicated paragraph, a unit that plays another's
-  part. The analysis track lets the reader <em>ask</em> — over the same index, judged in the same
-  core, under the same commitments: every answer is arithmetic over measured facts, there is no
+  part. Every answer here is arithmetic over measured facts, there is no
   model and no floating point between the evidence and the verdict, and every constant is cited
-  to the source line that implements it.</p>
+  to the source line that implements it.</p></details>
   <p>Its families continue the numbering from the fifteenth and get a booklet each; the short
   form is below, the full derivation lives in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
@@ -75,7 +76,7 @@ prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != a
          dead(F) :- file(F), not reach(F).   depends · same_dir · dir_ref
 strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
 eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
-  <p class="note">The measuring side lexes the text into a <code>[kind, value]</code> token stream, assembles only the
+  <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side lexes the text into a <code>[kind, value]</code> token stream, assembles only the
   fact tables the program names from its own index, and sends both; names go up as fnv1a64 hashes and
   request-local ids, never as text, and come back the same way to be labelled through the request's own
   tables. The core parses (a hand-written recursive descent), checks arity, sorts (a union-find over
@@ -97,7 +98,7 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
     <li><b>schema</b> ce.query-report/0.1.0</li>
     <li><b>since proto</b> 7.3.0</li>
     <li><b>wire</b> query/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -111,7 +112,7 @@ kind 0 : unreachable  = no path from the entry, one finding per maximal run of s
 kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
 kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
 skip   : a unit with a dynamic statement is not judged in part, and counted</pre>
-  <p class="note">The measuring side lowers every unit of ten languages (Python, TypeScript and TSX, Rust, Go, C,
+  <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side lowers every unit of ten languages (Python, TypeScript and TSX, Rust, Go, C,
   C++, Java, Lua, R) into four integer tables by a <code>FlowSpec</code> table per language; no name, path or
   source text crosses. The core builds the control-flow graph, walks reachability from the entry and
   backward liveness to a fixpoint, and answers <code>[unit, kind, seq, var, seqEnd]</code> rows the
@@ -130,7 +131,7 @@ skip   : a unit with a dynamic statement is not judged in part, and counted</pre
     <li><b>schema</b> ce.flow-report/0.1.0</li>
     <li><b>since proto</b> 7.4.0</li>
     <li><b>wire</b> flow/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -145,7 +146,7 @@ align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping na
 params : one per distinct value vector; feasible iff every hole is an expression or a name, params ≤ 6 and savings > 0
 reason : 3 a gap across statements, 1 position (a statement or other), 2 a type position, 4 more than six parameters, 5 no line saved
 kept   : the member whose file has the greatest in-degree; savings = Σ lines − (skeleton lines + members × 1), a fragment's lines its kept run's</pre>
-  <p class="note">The measuring side gathers the groups, builds each member's tree in <code>clone/1</code>'s
+  <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side gathers the groups, builds each member's tree in <code>clone/1</code>'s
   encoding with two more integer columns — a leaf's source hash and its position class, read off one
   table per language that reads the flow tables — and labels the answer back with every member's text at
   every parameter, a gap's whole forest included. Its trees leave comments out, and a fragment family
@@ -164,7 +165,7 @@ kept   : the member whose file has the greatest in-degree; savings = Σ lines �
     <li><b>schema</b> ce.merge-report/0.1.0</li>
     <li><b>since proto</b> 7.5.0</li>
     <li><b>wire</b> merge/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -179,7 +180,7 @@ layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points
 cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
 impact : breadth-first over the references read backwards, the focus at depth 0
 metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when nothing touches the directory</pre>
-  <p class="note">The measuring side sends five integer tables — the measured files with their directory
+  <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side sends five integer tables — the measured files with their directory
   and line count, the directory tree, the file-to-file references, the file-to-package references at
   the package's directory, and the <code>--impact</code> files — and labels the answer back: every cut
   arc carries the file references behind it. The core folds the references onto the directory graph,
@@ -195,7 +196,7 @@ metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when
     <li><b>schema</b> ce.arch-report/0.1.0</li>
     <li><b>since proto</b> 7.6.0</li>
     <li><b>wire</b> arch/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <footer class="site">

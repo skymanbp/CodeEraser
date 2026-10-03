@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser 工作原理：分析轨</title>
 <meta name="description" content="分析轨的判决家族：索引事实上的 Datalog，回答问题时附带推导链，把架构规则变成一道门，在 Haskell 核里判决，无模型无浮点。">
-<meta name="theme-color" content="#10141d">
+<meta name="theme-color" content="#0c0f16">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="zh_CN">
@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=7">
+<link rel="stylesheet" href="/theme.css?v=8">
+<link rel="stylesheet" href="/style.css?v=8">
 </head>
 <body>
 <div class="wrap">
@@ -39,7 +40,7 @@
 
 <section class="lede">
   <h1>分析轨</h1>
-  <p><a href="/zh/how/">工作原理</a>页上的每个家族各判一种树上已有的熵：一处克隆、一个死文件、一段重复的散文、一个扮演别人角色的单元。分析轨让读者<em>发问</em>——在同一份索引上、同一个核里判决、守同一套承诺：每个答案都是对实测事实的算术，证据与判决之间没有模型也没有浮点数，每个常数都钉在实现它的源码行上。</p>
+  <p>分析轨让读者<em>发问</em>，在同一份索引上、由同一个核判决。</p><details class="more lede-more"><summary>守同一套承诺</summary><p><a href="/zh/how/">工作原理</a>页上的每个家族各判一种树上已有的熵：一处克隆、一个死文件、一段重复的散文、一个扮演别人角色的单元。这里每个答案都是对实测事实的算术，证据与判决之间没有模型也没有浮点数，每个常数都钉在实现它的源码行上。</p></details>
   <p>它的家族从第十五族往后续编号，每族一册；下面是短版，完整推导在
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>，本页每个小标题都直接链进去。</p>
   <nav class="toc" aria-label="章节">
@@ -61,7 +62,7 @@ prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != a
          dead(F) :- file(F), not reach(F).   depends · same_dir · dir_ref
 strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
 eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
-  <p class="note">度量侧把文本词法成 <code>[kind, value]</code> 记号流，只从自己的索引装配程序点名的事实表，两者一起送出；名字以 fnv1a64 哈希与请求内 id 上线、从不以文本，回来时也是同样的 id，再经请求自己的表回标。核解析（手写递归下降）、检查元数、类别（变量、谓词位置与常量类别上的并查集）、安全性（域界：变量只在正原子或绑定先绑定它之后才可读）与分层，逐层求值，回答每个目标的元组、每条断言的违规、推导行与程序错误——每个错误落在一个记号上，度量侧把它映回 <code>line:column</code>。推导树要么整棵、要么不出：结点预算下装不下的整棵不出并计数，从不截断。记号与事实行在判决前定价，超限即完整的降级应答；派生元组超限让整次求值作废；没有这个家族的核在文档里是具名的未判决。内置的 <code>dead(F)</code> 就是 <code>ce deadcode</code> 的文件级判决改写成规则，本仓以 <code>ce.rules</code> 里的九条断言给自己把门，作 CI 的第七条狗粮腿。</p>
+  <details class="more"><summary>推导与常数</summary><p class="note">度量侧把文本词法成 <code>[kind, value]</code> 记号流，只从自己的索引装配程序点名的事实表，两者一起送出；名字以 fnv1a64 哈希与请求内 id 上线、从不以文本，回来时也是同样的 id，再经请求自己的表回标。核解析（手写递归下降）、检查元数、类别（变量、谓词位置与常量类别上的并查集）、安全性（域界：变量只在正原子或绑定先绑定它之后才可读）与分层，逐层求值，回答每个目标的元组、每条断言的违规、推导行与程序错误——每个错误落在一个记号上，度量侧把它映回 <code>line:column</code>。推导树要么整棵、要么不出：结点预算下装不下的整棵不出并计数，从不截断。记号与事实行在判决前定价，超限即完整的降级应答；派生元组超限让整次求值作废；没有这个家族的核在文档里是具名的未判决。内置的 <code>dead(F)</code> 就是 <code>ce deadcode</code> 的文件级判决改写成规则，本仓以 <code>ce.rules</code> 里的九条断言给自己把门，作 CI 的第七条狗粮腿。</p>
   <ul class="consts">
     <li><b>tokenCap</b> 65536</li>
     <li><b>factCap</b> 4194304</li>
@@ -71,7 +72,7 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
     <li><b>schema</b> ce.query-report/0.1.0</li>
     <li><b>入 wire 版本</b> 7.3.0</li>
     <li><b>wire</b> query/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -83,13 +84,13 @@ kind 0 : unreachable  = no path from the entry, one finding per maximal run of s
 kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
 kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
 skip   : a unit with a dynamic statement is not judged in part, and counted</pre>
-  <p class="note">度量侧按每个语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表；名字、路径、源码文本一样都不过线。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行，由度量侧回标。每一处近似都只加路径——finally 是一个汇合点、后继取待续目标的并集，表达式位置的出口不降表——所以发现只可能漏报、不可能凭空捏造。一条发现只在精度考题过门的语言里才算判决（盲评，门读的每一类都零误报）。十个语言都在门内：在回修后的降表上重生成的精度册（C++、R、Rust、TypeScript 是第二代考题）十份都过门，门读的每一类零误报；未用形参在哪个语言都只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增发现，挪了位置的发现不算这次写入干的。</p>
+  <details class="more"><summary>推导与常数</summary><p class="note">度量侧按每个语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表；名字、路径、源码文本一样都不过线。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行，由度量侧回标。每一处近似都只加路径——finally 是一个汇合点、后继取待续目标的并集，表达式位置的出口不降表——所以发现只可能漏报、不可能凭空捏造。一条发现只在精度考题过门的语言里才算判决（盲评，门读的每一类都零误报）。十个语言都在门内：在回修后的降表上重生成的精度册（C++、R、Rust、TypeScript 是第二代考题）十份都过门，门读的每一类零误报；未用形参在哪个语言都只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增发现，挪了位置的发现不算这次写入干的。</p>
   <ul class="consts">
     <li><b>rowCap</b> 524288</li>
     <li><b>schema</b> ce.flow-report/0.1.0</li>
     <li><b>入 wire 版本</b> 7.4.0</li>
     <li><b>wire</b> flow/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -101,7 +102,7 @@ align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping na
 params : one per distinct value vector; feasible iff every hole is an expression or a name, params ≤ 6 and savings > 0
 reason : 3 a gap across statements, 1 position (a statement or other), 2 a type position, 4 more than six parameters, 5 no line saved
 kept   : the member whose file has the greatest in-degree; savings = Σ lines − (skeleton lines + members × 1), a fragment's lines its kept run's</pre>
-  <p class="note">度量侧收集克隆组，为每个成员按 <code>clone/1</code> 的编码建树并多带两列整数——叶结点原文的哈希与它的位置类（每语言一张表，读流表的语句类）——再把答案回标成每个参数上每个成员的原文，间隙洞给整段森林。树里不带注释；片段族只送每个成员都有的那一段顶层结点，所以边界行上被截断的半条语句不会让成员变成两种形状，合并也按保留那一段的行数定价。核对齐成员、找出洞、给参数编号、给合并定价；名字、路径、源文本都不上线。核会拒收的组——没有函数可合并的 Markdown 与 HTML、没建成的树、形状不一的成员——按原因计数，不送。T3 骨架的行数是诚实的整数估计，不是实测。本仓在一个钉住提交上与四个钉住外部语料上的建议集被冻结，并从中抽一百条交盲判审可行性。</p>
+  <details class="more"><summary>推导与常数</summary><p class="note">度量侧收集克隆组，为每个成员按 <code>clone/1</code> 的编码建树并多带两列整数——叶结点原文的哈希与它的位置类（每语言一张表，读流表的语句类）——再把答案回标成每个参数上每个成员的原文，间隙洞给整段森林。树里不带注释；片段族只送每个成员都有的那一段顶层结点，所以边界行上被截断的半条语句不会让成员变成两种形状，合并也按保留那一段的行数定价。核对齐成员、找出洞、给参数编号、给合并定价；名字、路径、源文本都不上线。核会拒收的组——没有函数可合并的 Markdown 与 HTML、没建成的树、形状不一的成员——按原因计数，不送。T3 骨架的行数是诚实的整数估计，不是实测。本仓在一个钉住提交上与四个钉住外部语料上的建议集被冻结，并从中抽一百条交盲判审可行性。</p>
   <ul class="consts">
     <li><b>groupCap</b> 4096</li>
     <li><b>treeNodeCap</b> 131072</li>
@@ -109,7 +110,7 @@ kept   : the member whose file has the greatest in-degree; savings = Σ lines �
     <li><b>schema</b> ce.merge-report/0.1.0</li>
     <li><b>入 wire 版本</b> 7.5.0</li>
     <li><b>wire</b> merge/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -122,7 +123,7 @@ layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points
 cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
 impact : breadth-first over the references read backwards, the focus at depth 0
 metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when nothing touches the directory</pre>
-  <p class="note">度量侧送五张整数表——被度量的文件及其目录与行数、目录树、文件到文件的引用、文件到包的引用（落在包所在目录）、
+  <details class="more"><summary>推导与常数</summary><p class="note">度量侧送五张整数表——被度量的文件及其目录与行数、目录树、文件到文件的引用、文件到包的引用（落在包所在目录）、
   <code>--impact</code> 点名的文件——再把答案回标：每条切边带着它背后的文件引用。核把引用折成目录图，逐个强连通分量求反馈弧集，
   给剩下的图分层，在文件图上聚类，走影响面，度量每个目录。贪心路给出的切边集是极小的、未证最小，行上照实标出。
   本仓在一个钉住提交上的读数被冻结，漂移就意味着度量或核动了。</p>
@@ -134,7 +135,7 @@ metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when
     <li><b>schema</b> ce.arch-report/0.1.0</li>
     <li><b>入 wire 版本</b> 7.6.0</li>
     <li><b>wire</b> arch/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <footer class="site">

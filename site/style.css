@@ -1,118 +1,29 @@
-/* codeeraser.dev — committed dark, the icon's world.
-   Palette: ink ground, vermilion eraser, teal keyword, amber string.
-   Editing this file? Bump ?v= on every page's <link> — HTML is served
-   uncached but this sheet is edge/browser-cached for 4h; without the
-   bump, fresh HTML pairs with a stale sheet on returning visitors.
-   Every rule the eight pages share lives here and nowhere else — the
-   pages carry no <style> of their own — and the picture viewer's own
-   rules live beside it in viewer.css, loaded only by the six pages
-   that hang a picture. html and css are scan-only,
-   outside the judged set, so a block copied into two pages is
-   duplication no gate can see — the two /bench/ pages and the two
-   /how/ pages each paid for one such copy before this sheet took them.
-   One column, one width: every block between the header and the
-   footer spans the same 912px (.wrap minus its padding) — the hero's
-   chips, the scoreboard, the pictures, the card grids. A block that
-   is narrower than its neighbours reads as a different column. */
-:root {
-  color-scheme: dark;
-  --ink-0: #10141d;
-  --ink-1: #171c28;
-  --panel: #1e2534;
-  --panel-edge: #2a3347;
-  --text: #cdd6e4;
-  --muted: #8593ad;
-  --verm: #e4574a;
-  --teal: #57c7a8;
-  --amber: #d9a35b;
-  --paper: #f4efe6;
-  --mono: "IBM Plex Mono", ui-monospace, Consolas, "Noto Sans SC", monospace;
-  --sans: "IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif;
-  /* two radii: framed blocks (terminal, pictures, panels) and the
-     small chips and cards inside a stack */
-  --r-frame: 12px;
-  --r-chip: 10px;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  background: linear-gradient(180deg, var(--ink-1) 0%, var(--ink-0) 100%);
-  color: var(--text);
-  font-family: var(--sans);
-  line-height: 1.65;
-  min-height: 100vh;
-}
-a { color: var(--teal); text-decoration: none; }
-a:hover { text-decoration: underline; }
-:focus-visible { outline: 2px solid var(--verm); outline-offset: 2px; }
-button { font: inherit; color: inherit; }
-.wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-
-header.site {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  padding: 18px 0;
-}
-/* the lockup is a link home on every page but the home page itself */
-header.site .home { display: flex; align-items: center; gap: 12px; color: inherit; }
-header.site .home:hover { text-decoration: none; }
-header.site img { width: 28px; height: 28px; border-radius: 6px; }
-header.site .name { font-family: var(--mono); font-weight: 600; font-size: 1.05rem; color: var(--paper); }
-header.site nav {
-  flex: 1 1 18rem; display: flex; flex-wrap: wrap; justify-content: flex-end;
-  gap: 18px; align-items: center; font-size: 0.92rem;
-}
-header.site nav a { color: var(--muted); }
-header.site nav a:hover { color: var(--text); }
-
-/* Two openers on purpose: the home hero puts the icon beside the pitch;
-   the sub-pages' lede is a title over prose. The hero holds only the
-   name and the pitch — the install chips follow it at full column
-   width, so they line up with every block below them. */
-.hero { padding: 56px 0 28px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
-.hero img { width: 160px; height: 160px; border-radius: 28px; box-shadow: 0 12px 48px rgba(0,0,0,0.5); }
-.hero .pitch { flex: 1; min-width: min(300px, 100%); }
-.hero h1 {
-  font-family: var(--mono); font-size: clamp(2rem, 5vw, 2.9rem);
-  color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
-}
-.hero h1 .tm { font-size: 0.45em; vertical-align: super; color: var(--muted); }
-.hero p.tag { font-size: 1.15rem; color: var(--muted); margin-top: 10px; max-width: 34em; }
-.hero p.tag em { color: var(--verm); font-style: normal; font-weight: 600; }
-
-.lede { padding: 44px 0 8px; }
-.lede h1 {
-  font-family: var(--mono); font-size: clamp(1.7rem, 4.4vw, 2.4rem);
-  color: var(--paper); letter-spacing: -0.02em; text-wrap: balance;
-}
-.lede p { font-size: 1.05rem; color: var(--muted); margin-top: 16px; max-width: 44em; }
-.lede > p:first-of-type { font-size: 1.18rem; color: var(--text); }
-:lang(zh) .lede p { max-width: 40em; }
-.lede p em { color: var(--verm); font-style: normal; font-weight: 600; }
-.lede p strong { color: var(--text); font-weight: 600; }
-.lede p code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
-.page-head { padding: 44px 0 8px; }
-.page-head h1 { font-family: var(--mono); font-size: 2rem; color: var(--paper); }
-.page-head p { color: var(--muted); max-width: 48em; margin-top: 12px; }
-
+/* codeeraser.dev — the components: contents panel, chips, framed
+   blocks, cards, family blocks, tables, scoreboard, footer. Tokens,
+   base type, the header and the page openers live in theme.css, which
+   every page loads first with the same ?v= key as this sheet (the
+   header comment there carries the caching rule and the one-column
+   rule both sheets follow). */
 /* The how page's contents panel: one row per section, that section's
    families as numbered pills beside it — the page's own outline, so
    scroll-behavior above has somewhere to go. The same two-column
    subgrid as the chips below, so every section name takes one width
    and every pill row starts on one line. */
 .toc {
-  display: grid; grid-template-columns: max-content minmax(0, 1fr); margin-top: 28px;
-  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 4px 20px 6px;
+  display: grid; grid-template-columns: max-content minmax(0, 1fr); margin-top: var(--s-3);
+  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 8px 24px 10px; box-shadow: var(--shadow);
 }
 .toc .k { grid-column: 1 / -1; margin: 0; padding: 10px 0 6px; }
-.toc .row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; column-gap: 24px; padding: 9px 0; border-top: 1px solid var(--ink-1); }
+.toc .row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; column-gap: 24px; padding: 9px 0; border-top: 1px solid var(--panel-edge); }
 .toc .sec { color: var(--text); font-size: 0.92rem; line-height: 1.9; }
+.toc .sec:hover { color: var(--accent); text-decoration: none; }
 .toc ul { display: flex; flex-wrap: wrap; gap: 6px 8px; list-style: none; padding: 3px 0; }
 .toc li a {
   display: inline-block; font-family: var(--mono); font-size: 0.75rem; line-height: 1.6; color: var(--muted);
   background: var(--ink-1); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 2px 9px;
 }
-.toc li a:hover { color: var(--text); border-color: var(--muted); text-decoration: none; }
-.toc li a b { color: var(--amber); font-weight: 600; margin-right: 7px; }
+.toc li a:hover { color: var(--paper); border-color: var(--accent-edge); text-decoration: none; }
+.toc li a b { color: var(--accent); font-weight: 600; margin-right: 7px; }
 
 /* Key/value chips. The stack is a two-column grid and each chip a
    subgrid row of it, so every key in one stack takes the width of the
@@ -124,105 +35,119 @@ header.site nav a:hover { color: var(--text); }
 .installs { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 0; }
 .install {
   display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
-  column-gap: 16px; align-items: baseline;
+  column-gap: 20px; align-items: baseline;
   background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-chip); padding: 10px 16px;
+  border-radius: var(--r-chip); padding: 12px 18px;
 }
-.install .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); }
+.install .k { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+:lang(zh) .install .k { letter-spacing: 0.02em; }
 /* min-width:0 lets the value cell shrink so overflow-x can act */
-.install code { font-family: var(--mono); font-size: 0.9rem; color: var(--text); overflow-x: auto; min-width: 0; }
+.install code { font-size: 0.88rem; color: var(--text); overflow-x: auto; min-width: 0; }
 /* a measured chip: the key is a metric's full name, not a two-word
-   label, so it keeps its case */
-.install.metric .k { text-transform: none; letter-spacing: 0; }
-.installs + .cap { margin-top: 12px; }
+   label, so it keeps its case; the value is the figure, so it leads */
+.install.metric .k { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: var(--fs-sm); }
+.install.metric code { color: var(--paper); font-weight: 600; }
+.installs + .cap, .installs + p { margin-top: 14px; }
 
 /* Framed blocks — the terminal, the diagrams, the screenshots — share
-   one frame: ink ground, one hairline, one radius, and a caption or
-   control bar inside the frame rather than floating under it (the
-   picture figures' insides: viewer.css). */
+   one frame: ink ground, one hairline, one radius, one shadow, and a
+   caption or control bar inside the frame rather than floating under
+   it (the picture figures' insides: viewer.css). */
 .term, .arch, .shot {
   background: var(--ink-0); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-frame); overflow: hidden; margin: 0;
+  border-radius: var(--r-frame); overflow: hidden; margin: 0; box-shadow: var(--shadow);
 }
-.term { background: #0c0f16; margin: 40px 0; }
-.installs + .arch { margin-top: 28px; }
+.term { background: var(--well); margin: var(--s-3) 0; }
+.term.proof { margin-top: var(--s-1); border-color: var(--edge-strong); }
+.installs + .arch { margin-top: var(--s-3); }
 .term .bar {
-  display: flex; gap: 7px; padding: 11px 14px;
+  display: flex; gap: 7px; padding: 12px 16px;
   border-bottom: 1px solid var(--panel-edge);
 }
 .term .bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--panel-edge); }
-.term .bar i:first-child { background: var(--verm); }
+.term .bar i:first-child { background: var(--accent); }
 .term pre {
-  padding: 18px 20px; overflow-x: auto;
-  font-family: var(--mono); font-size: 0.84rem; line-height: 1.7; color: var(--muted);
+  padding: 20px 24px; overflow-x: auto;
+  font-family: var(--mono); font-size: 0.86rem; line-height: 1.75; color: var(--muted);
 }
 .term .p { color: var(--teal); }
 .term .s { color: var(--paper); font-weight: 600; }
-.term .r { color: var(--verm); }
+.term .r { color: var(--accent); }
 
 /* the two small-print voices: a caption under a block, a note inside one */
-.cap { font-size: 0.8rem; color: var(--muted); }
-.term .cap { padding: 0 20px 14px; }
-.note { font-size: 0.86rem; color: var(--muted); margin-top: 12px; }
-.cap code, .note code, .job code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
+.cap { font-size: var(--fs-sm); color: var(--muted); max-width: var(--measure); }
+.term .cap { padding: 0 24px 20px; margin-top: 0; }
+* + .cap { margin-top: 12px; }
+.note { font-size: 0.95rem; color: var(--muted); margin-top: 12px; max-width: var(--measure); }
+.cap code, .note code, .job code { color: var(--text); font-size: 0.92em; }
 /* inline code in running prose: a faint ground, never broken at its own hyphen (chips, tables and <pre> keep theirs) */
 .note code, .job code, p.cap code, .lede p code, .card p code, .trust code, .arch figcaption code, .shot figcaption code
   { background: rgba(255, 255, 255, 0.06); border-radius: 4px; padding: 0.05em 0.25em; white-space: nowrap; }
+p + p { margin-top: 12px; }
 
-h2 {
-  font-family: var(--mono); font-size: 1.3rem; color: var(--paper);
-  margin: 48px 0 18px; letter-spacing: -0.01em;
-}
 /* Three columns at full width, two on a tablet, one on a phone.
    min(Npx, 100%) caps the column floor at the container width: a
    320px floor inside a 312px viewport was blowing the whole page
    wide. Sixteen family cards leave one alone at three columns, so
    the card that is not a family (the plugin's hooks) spans the two
-   cells beside it; at two columns that span is the whole row. */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(272px, 100%), 1fr)); gap: 14px; }
+   cells beside it as a coral-washed callout, centred in its height;
+   at two columns that span is the whole row. */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(272px, 100%), 1fr)); gap: 16px; }
 .card {
   background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-chip); padding: 16px 18px;
+  border-radius: var(--r-chip); padding: 20px 22px; box-shadow: var(--shadow);
+  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
-.card h3 { font-family: var(--mono); color: var(--teal); font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
-.card p { font-size: 0.88rem; color: var(--muted); }
-.card.band { grid-column: span 2; border-style: dashed; }
+.card:hover { transform: translateY(-2px); border-color: var(--accent-edge); background: var(--panel-2); }
+.card h3 { color: var(--paper); font-size: 1.05rem; line-height: 1.35; margin-bottom: 8px; }
+.cmds .card h3 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0; }
+.card h3::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 2px; background: var(--accent); margin: 0 10px 2px 0; vertical-align: middle; }
+.card p { font-size: 0.92rem; color: var(--muted); }
+.card.band {
+  grid-column: span 2; display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(135deg, var(--accent-wash), transparent 70%), var(--panel);
+  border-color: var(--accent-edge); padding: 28px 32px;
+}
+.card.band h3 { font-family: var(--sans); font-size: 1.25rem; }
+.card.band p { font-size: 1.02rem; color: var(--text); max-width: 34em; }
 
 .trust {
-  background: var(--panel); border-left: 3px solid var(--amber);
-  border-radius: 0 var(--r-chip) var(--r-chip) 0; padding: 18px 22px; margin: 20px 0 8px;
-  font-size: 0.95rem; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--panel-edge); border-left: 3px solid var(--accent);
+  border-radius: 0 var(--r-chip) var(--r-chip) 0; padding: 22px 26px; margin: var(--s-2) 0 var(--s-1);
+  font-size: 1.05rem; color: var(--muted);
 }
-.trust code { font-family: var(--mono); color: var(--text); }
+.trust code { color: var(--text); }
+/* a CJK line in a full-width panel runs past ~40 characters: hold it to the measure */
+:lang(zh) .trust { padding-right: max(26px, calc(100% - var(--measure) - 26px)); }
 
-/* the how page's family blocks: one per methodology booklet */
+/* the how page's family blocks: one per methodology booklet. The
+   visible short form is the heading, one job sentence and the formula;
+   the derivation and constants fold into details.more. */
 .fam {
   background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-frame); padding: 18px 20px; margin: 14px 0;
+  border-radius: var(--r-frame); padding: 24px 28px; margin: var(--s-2) 0; box-shadow: var(--shadow);
 }
-.fam h3 {
-  font-family: var(--mono); font-size: 1rem; font-weight: 600;
-  color: var(--paper); letter-spacing: -0.01em; line-height: 1.45;
-}
-:lang(zh) .fam h3 { line-height: 1.5; }
-.fam h3 .n { color: var(--amber); margin-right: 10px; }
+.fam h3 { font-size: var(--fs-h3); line-height: 1.4; }
+:lang(zh) .fam h3 { line-height: 1.55; }
+.fam h3 .n { color: var(--accent); font-family: var(--mono); margin-right: 12px; }
 .fam h3 a { color: var(--paper); }
-.fam h3 a:hover { color: var(--teal); }
-.fam .job { font-size: 0.93rem; color: var(--muted); margin: 8px 0 12px; }
-.fam .note { font-size: 0.9rem; line-height: 1.7; }
+.fam h3 a:hover { color: var(--accent); text-decoration: none; }
+.fam .job { font-size: 1rem; color: var(--text); margin: 10px 0 16px; max-width: var(--measure); }
+.fam .note { font-size: 0.95rem; line-height: 1.75; }
+:lang(zh) .fam .note { line-height: 1.9; }
 .fam pre {
-  background: #0c0f16; border: 1px solid var(--panel-edge); border-radius: 8px;
-  padding: 12px 14px; overflow-x: auto;
+  background: var(--well); border: 1px solid var(--panel-edge); border-radius: 8px;
+  padding: 14px 16px; overflow-x: auto;
   font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text);
 }
 .fam pre + pre { margin-top: 8px; }
-ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; list-style: none; }
+ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--s-2); list-style: none; }
 ul.consts li {
   font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
   background: var(--ink-1); border: 1px solid var(--panel-edge);
   border-radius: 6px; padding: 3px 9px;
 }
-ul.consts li b { color: var(--teal); font-weight: 600; }
+ul.consts li b { color: var(--paper); font-weight: 600; }
 
 /* Tables. One header voice for all three — the scoreboard, the guard
    tier ladder and the bench dashboard — which the contents panel's
@@ -232,23 +157,24 @@ ul.consts li b { color: var(--teal); font-weight: 600; }
    `.num` on every cell that holds a count. */
 .board th, table.ladder th, .data-table th, .toc .k {
   font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber);
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
 }
 .tablewrap { overflow-x: auto; }
 /* the long latency series scrolls inside one screen under a pinned header row */
 .data-table .tablewrap { max-height: min(78vh, 52rem); overflow: auto; }
-.data-table thead th { position: sticky; top: 0; z-index: 1; background: #0c0f16; box-shadow: inset 0 -1px 0 var(--panel-edge); }
+.data-table thead th { position: sticky; top: 0; z-index: 1; background: var(--well); box-shadow: inset 0 -1px 0 var(--panel-edge); }
 .fam .tablewrap { margin: 14px 0 4px; }
 table.ladder { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 30em; }
 :lang(zh) table.ladder { min-width: 26em; }
-table.ladder th, table.ladder td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--panel-edge); }
+table.ladder th, table.ladder td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--panel-edge); }
 table.ladder td { color: var(--muted); vertical-align: top; }
 table.ladder td:first-child, table.ladder td code { font-family: var(--mono); color: var(--text); }
-.data-table { margin: 16px 0 32px; }
+.data-table { margin: var(--s-2) 0 var(--s-3); }
 .data-table table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.82rem; }
-.data-table th, .data-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
+.data-table th, .data-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
 .data-table td { color: var(--muted); }
 .data-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+.data-table tbody tr:hover { background: var(--accent-wash); }
 .data-table td code { color: var(--text); font-family: var(--mono); white-space: nowrap; }
 .data-table td:last-child code { white-space: normal; }
 .data-table .num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
@@ -259,34 +185,39 @@ table.ladder td:first-child, table.ladder td code { font-family: var(--mono); co
    keys. The panel spans the column like every block around it; the
    row rules run the full width so the eye rides one line from a
    label to its two figures. */
-.board { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-chip); padding: 2px 22px 10px; margin: 26px 0; overflow-x: auto; }
+.board { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 6px 26px 12px; margin: var(--s-2) 0; overflow-x: auto; box-shadow: var(--shadow); }
 .board table { width: 100%; border-collapse: collapse; }
-.board th, .board td { padding: 11px 0; text-align: right; white-space: nowrap; }
+.board th, .board td { padding: 13px 0; text-align: right; white-space: nowrap; }
 .board th + th, .board td + td { padding-left: 34px; width: 11em; }
 .board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); }
 .board th { border-bottom: 1px solid var(--panel-edge); }
-.board td + td { font-family: var(--mono); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
-.board tbody tr + tr td { border-top: 1px solid var(--ink-1); }
+.board th:last-child { color: var(--accent); }
+.board td + td { font-family: var(--mono); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.board tbody tr + tr td { border-top: 1px solid var(--panel-edge); }
 .board tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
 .board .was { color: var(--muted); }
-.board .to { color: var(--paper); font-weight: 600; }
+.board .to { color: var(--accent); font-weight: 600; }
 
 footer.site {
-  margin-top: 64px; padding: 28px 0 40px;
+  margin-top: 96px; padding: 32px 0 48px;
   border-top: 1px solid var(--panel-edge);
-  font-size: 0.85rem; color: var(--muted);
+  font-size: var(--fs-sm); color: var(--muted);
 }
-footer.site p + p { margin-top: 6px; }
+footer.site p + p { margin-top: 8px; }
 
 @media (max-width: 640px) {
+  :root { --s-4: 56px; --fs-h2: 1.45rem; }
   .wrap { padding: 0 16px; }
-  .hero { padding-top: 32px; gap: 24px; }
-  .hero img { width: 110px; height: 110px; border-radius: 20px; }
+  .hero { padding-top: 32px; gap: 20px; }
+  .hero img { width: 88px; height: 88px; border-radius: 20px; }
+  .lede, .page-head { padding-top: 40px; }
   /* a key beside its value no longer fits: key over value */
   header.site nav { flex-basis: 100%; justify-content: flex-start; gap: 6px 11px; font-size: 0.85rem; }
+  header.site nav a:last-child[href$="/releases/latest"] { border: 0; padding: 0; }
   .installs, .install, .toc, .toc .row { grid-template-columns: minmax(0, 1fr); }
-  .card.band { grid-column: auto; }
+  .card.band { grid-column: auto; padding: 22px; }
   .install { row-gap: 2px; }
+  .fam { padding: 20px 18px; }
   /* Under this width the scoreboard's three columns cannot fit: the
      label wrapped to five lines and the "with" column — the one the
      reader came for — sat off the right edge. So each row stacks, and
@@ -295,7 +226,7 @@ footer.site p + p { margin-top: 6px; }
   .board table, .board tbody, .board tr, .board td { display: block; }
   .board thead { display: none; }
   .board tbody tr { padding: 12px 0; }
-  .board tbody tr + tr { border-top: 1px solid var(--ink-1); }
+  .board tbody tr + tr { border-top: 1px solid var(--panel-edge); }
   .board tbody tr + tr td { border-top: none; }
   .board td, .board td:first-child { padding: 0; text-align: left; white-space: normal; }
   .board td + td { display: inline-block; width: auto; padding: 8px 30px 0 0; }
@@ -303,4 +234,6 @@ footer.site p + p { margin-top: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .card, .btn { transition: none; }
+  .card:hover, .btn:hover { transform: none; }
 }

@@ -1,0 +1,164 @@
+/* codeeraser.dev — committed dark, the icon's world.
+   Palette: one ink ground, one coral accent (the eraser in the icon);
+   teal and amber survive only as the terminal's ok / warn signals.
+   Editing this file? Bump ?v= on every page's <link> — HTML is served
+   uncached but this sheet is edge/browser-cached for 4h; without the
+   bump, fresh HTML pairs with a stale sheet on returning visitors.
+   Every rule the eight pages share lives in two sheets and nowhere
+   else — this one (tokens, base type, header and the page openers) and
+   style.css (the components), loaded in that order with one ?v= key —
+   the pages carry no <style> of their own — and the picture viewer's own
+   rules live beside it in viewer.css, loaded only by the six pages
+   that hang a picture. html and css are scan-only,
+   outside the judged set, so a block copied into two pages is
+   duplication no gate can see — the two /bench/ pages and the two
+   /how/ pages each paid for one such copy before this sheet took them.
+   One column, one width: every block between the header and the
+   footer spans the same 912px (.wrap minus its padding) — the hero's
+   chips, the scoreboard, the pictures, the card grids. A block that
+   is narrower than its neighbours reads as a different column.
+   Running prose inside that column is capped at a reading measure
+   (--measure: about 70 Latin characters, about 40 CJK characters). */
+:root {
+  color-scheme: dark;
+  /* ground: page, raised panel, hovered panel, terminal well */
+  --ink-0: #0c0f16;
+  --ink-1: #121722;
+  --panel: #171d2a;
+  --panel-2: #1d2433;
+  --well: #090c12;
+  --panel-edge: #262f41;
+  --edge-strong: #36415a;
+  /* text: body, secondary, headline white */
+  --text: #dde3ee;
+  --muted: #9aa5ba;
+  --paper: #f6f1e8;
+  /* the one accent, and the ink that sits on it */
+  --accent: #ff6f5e;
+  --accent-ink: #1b0a07;
+  --accent-wash: rgba(255, 111, 94, 0.10);
+  --accent-edge: rgba(255, 111, 94, 0.45);
+  /* terminal-only signals (the roast block's prompt, pass and roast) */
+  --teal: #5fd0b0;
+  --amber: #e0ac63;
+  --verm: var(--accent);
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, "Noto Sans SC", monospace;
+  --sans: "IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif;
+  /* type scale: small / body / lead / h3 / h2 / h1 / hero */
+  --fs-sm: 0.875rem;
+  --fs-body: 1rem;
+  --fs-lead: 1.25rem;
+  --fs-h3: 1.125rem;
+  --fs-h2: 1.75rem;
+  --fs-h1: clamp(2.1rem, 5vw, 2.75rem);
+  --fs-hero: clamp(2.6rem, 7vw, 4.25rem);
+  --lh: 1.65;
+  --measure: 56ch;
+  --measure-lead: 34em;
+  /* spacing scale: inside a block / between blocks / between sections */
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 32px;
+  --s-4: 72px;
+  /* two radii and one shadow for every panel */
+  --r-frame: 14px;
+  --r-chip: 10px;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+/* CJK: a taller line, a measure counted in characters, no tracking */
+:lang(zh) { --lh: 1.85; --measure: 38em; --measure-lead: 30em; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(ellipse 70% 40% at 50% -8%, rgba(255, 111, 94, 0.08), transparent 70%),
+    linear-gradient(180deg, var(--ink-1) 0%, var(--ink-0) 38rem);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh);
+  min-height: 100vh;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; color: inherit; }
+code { font-family: var(--mono); }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+/* One heading rule everywhere: headings are Plex Sans, tight; a
+   heading that IS a command (a family card's "ce check") is set in
+   mono because it is code, the same rule as inline code. */
+h1, h2, h3 { font-family: var(--sans); font-weight: 600; color: var(--paper); letter-spacing: -0.015em; text-wrap: balance; }
+:lang(zh) :is(h1, h2, h3) { letter-spacing: 0; }
+h2 { font-size: var(--fs-h2); line-height: 1.25; margin: var(--s-4) 0 var(--s-2); }
+
+header.site {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 20px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+/* the lockup is a link home on every page but the home page itself */
+header.site .home { display: flex; align-items: center; gap: 12px; color: inherit; }
+header.site .home:hover { text-decoration: none; }
+header.site img { width: 28px; height: 28px; border-radius: 6px; }
+header.site .name { font-family: var(--mono); font-weight: 600; font-size: 1.05rem; color: var(--paper); }
+header.site nav {
+  flex: 1 1 18rem; display: flex; flex-wrap: wrap; justify-content: flex-end;
+  gap: 22px; align-items: center; font-size: 0.92rem;
+}
+header.site nav a { color: var(--muted); }
+header.site nav a:hover { color: var(--paper); text-decoration: none; }
+/* the last link is the download: the one place the accent is a fill */
+header.site nav a:last-child[href$="/releases/latest"] {
+  color: var(--accent); border: 1px solid var(--accent-edge); border-radius: 999px; padding: 3px 12px;
+}
+
+/* Two openers on purpose: the home hero puts the icon beside the pitch
+   and closes on one install button, so the first screen holds what it
+   is, how to get it and (the terminal right under it) proof it works;
+   the sub-pages' lede is a title over one sentence of prose. */
+.hero { padding: 64px 0 var(--s-3); display: flex; gap: 44px; align-items: center; flex-wrap: wrap; }
+.hero img { width: 148px; height: 148px; border-radius: 30px; box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05); }
+.hero .pitch { flex: 1; min-width: min(300px, 100%); }
+.hero h1 { font-size: var(--fs-hero); line-height: 1.02; letter-spacing: -0.035em; }
+.hero h1 .tm { font-size: 0.3em; vertical-align: super; color: var(--muted); letter-spacing: 0; margin-left: 2px; }
+.hero p.tag { font-size: var(--fs-lead); line-height: 1.5; color: var(--muted); margin-top: var(--s-2); max-width: var(--measure-lead); }
+:lang(zh) .hero p.tag { line-height: 1.75; }
+.hero p.tag em { color: var(--accent); font-style: normal; font-weight: 600; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 28px; }
+.btn {
+  display: inline-block; background: var(--accent); color: var(--accent-ink); font-weight: 600;
+  padding: 12px 22px; border-radius: 10px; box-shadow: 0 8px 24px rgba(255, 111, 94, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: 0 12px 30px rgba(255, 111, 94, 0.35); }
+.cta-note { font-size: var(--fs-sm); color: var(--muted); }
+
+.lede, .page-head { padding: 64px 0 var(--s-1); }
+.lede h1, .page-head h1 { font-size: var(--fs-h1); line-height: 1.12; letter-spacing: -0.03em; }
+.lede p, .page-head p { font-size: 1.05rem; color: var(--muted); margin-top: var(--s-2); max-width: var(--measure); }
+.lede > p:first-of-type, .page-head > p:first-of-type { font-size: var(--fs-lead); line-height: 1.5; color: var(--text); max-width: var(--measure-lead); }
+:lang(zh) :is(.lede, .page-head) > p:first-of-type { line-height: 1.75; }
+.lede p em { color: var(--accent); font-style: normal; font-weight: 600; }
+.lede p strong { color: var(--text); font-weight: 600; }
+.lede p code { color: var(--text); font-size: 0.92em; }
+/* the sub-page hero (stack) is a lede without an icon */
+.hero:not(:has(img)) { padding-bottom: var(--s-3); }
+.hero:not(:has(img)) h1 { font-size: var(--fs-h1); line-height: 1.12; letter-spacing: -0.03em; }
+
+/* a framed figure straight after a page's opener keeps a block's breath */
+:is(.lede, .page-head) + :is(.arch, .term, .installs) { margin-top: var(--s-3); }
+
+/* Folded prose: the long form under a short one, opened on demand.
+   Native <details>, so no script and every word stays in the page. */
+details.more { margin-top: var(--s-2); }
+details.more > summary {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;
+  font-size: var(--fs-sm); color: var(--accent); user-select: none;
+}
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+"; font-family: var(--mono); display: inline-grid; place-items: center; width: 18px; height: 18px; line-height: 1; border: 1px solid var(--accent-edge); border-radius: 5px; font-size: 0.8rem; }
+details.more[open] > summary::before { content: "−"; }
+details.more > summary:hover { color: var(--paper); }
+details.more[open] > summary { margin-bottom: var(--s-1); }
+details.intro { margin: 0 0 var(--s-2); }

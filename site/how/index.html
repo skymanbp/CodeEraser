@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How CodeEraser works: deterministic judgment, nineteen families</title>
 <meta name="description" content="CodeEraser applies deterministic computation to the non-deterministic output of language models: nineteen judgment families, every verdict arithmetic over measured facts, every constant cited to a source line.">
-<meta name="theme-color" content="#10141d">
+<meta name="theme-color" content="#0c0f16">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="en_US">
@@ -20,8 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=7">
-<link rel="stylesheet" href="/viewer.css?v=1">
+<link rel="stylesheet" href="/theme.css?v=8">
+<link rel="stylesheet" href="/style.css?v=8">
+<link rel="stylesheet" href="/viewer.css?v=2">
 <script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
@@ -41,7 +42,7 @@
 <section class="lede">
   <h1>How it works</h1>
   <p>CodeEraser applies <em>deterministic</em> computation to the non-deterministic
-  output of language models. A model writing into a long-lived repository drifts toward
+  output of language models.</p><details class="more lede-more"><summary>Why not a second model</summary><p>A model writing into a long-lived repository drifts toward
   stacking rather than editing: the same function implemented twice, the same fact
   restated in a third file, an update that arrives as an append. The tempting fix is to
   audit that drift with a second model. This is the opposite commitment.</p>
@@ -51,7 +52,7 @@
   no sampling temperature anywhere between the evidence and the verdict, no floating
   point in the judgment layer, and no model in the loop. The same tree yields the same
   bytes on any machine at any hour, so a disagreement about code health is settled by
-  re-running the number and reading the <code>file:line</code> it points at.</p>
+  re-running the number and reading the <code>file:line</code> it points at.</p></details>
   <p>Each section below is the short form. The full derivation (every constant traced
   to the source line that implements it) lives in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">docs/reference/methodology.md</a>,
@@ -77,14 +78,14 @@
 </figure>
 
 <h2 id="families">The <!--ce:count:booklets#word-->nineteen<!--/ce--> judgment families</h2>
-<p class="note">Three counts of "family" ship across this site and they measure different things. Below there are <b><!--ce:count:booklets#word-->nineteen<!--/ce--></b> booklets, one per judgment whose math is worth its own derivation: families 01–15 on this page, the analysis track’s from 16 on <a href="/how/analysis/">a page of their own</a>. On the wire there are <b><!--ce:count:families#word-->sixteen<!--/ce--></b> judgment capabilities (the stack diagram's count, beside the handshake <code>hello</code>, the definition package <code>tables/1</code> and the report documents <code>document/1</code>; the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request). And there are <b><!--ce:count:mcp_tools#word-->twenty-one<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire: <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>erase_log</code> reads the applied-erase audit trail, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only). The analysis track adds <code>query</code> and <code>rules</code>: one question, or the rules file, judged over <code>query/1</code> — the code-query family on <a href="/how/analysis/#f16">its own page</a>.</p>
+<details class="more intro"><summary>Three counts of “family”</summary><p class="note">Three counts of "family" ship across this site and they measure different things. Below there are <b><!--ce:count:booklets#word-->nineteen<!--/ce--></b> booklets, one per judgment whose math is worth its own derivation: families 01–15 on this page, the analysis track’s from 16 on <a href="/how/analysis/">a page of their own</a>. On the wire there are <b><!--ce:count:families#word-->sixteen<!--/ce--></b> judgment capabilities (the stack diagram's count, beside the handshake <code>hello</code>, the definition package <code>tables/1</code> and the report documents <code>document/1</code>; the join and the split advisory ride inside <code>verdict</code> and <code>structure</code> requests, and the FPR tier ladder is a discipline, not a request). And there are <b><!--ce:count:mcp_tools#word-->twenty-one<!--/ce--></b> read-only MCP tools, which follow the report surfaces rather than the wire: <code>churn</code> and <code>graph --sites</code> each get one, <code>erase</code> reaches the dry-run plan and nothing else, <code>doctor</code> answers with machine state rather than a judgment, <code>erase_log</code> reads the applied-erase audit trail, <code>update_check</code> compares this build against the latest release, which is a surface no wire family and no booklet has, and <code>similar_units</code> is the same-role advisor (<code>ce similar</code>'s document: the core's order and role bit over <code>similar/1</code>, advisory only). The analysis track adds <code>query</code> and <code>rules</code>: one question, or the rules file, judged over <code>query/1</code> — the code-query family on <a href="/how/analysis/#f16">its own page</a>.</p></details>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 clone detection — winnowing fingerprint index</a></h3>
   <p class="job">Finds exact and parameterized duplicate token runs: renamed variables and
   changed constants are clones, changed syntax is not.</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
-  <p class="note">Any common substring of at least <code>t</code> normalized tokens contains
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Any common substring of at least <code>t</code> normalized tokens contains
   <code>t - k + 1 = w</code> consecutive k-grams (one complete window) and window
   selection depends only on that window's contents, so both copies select the same
   minimum. Hence at least one shared fingerprint, always: the Schleimer et al. SIGMOD'03
@@ -100,7 +101,7 @@
     <li><b>near-miss band</b> 25 &lt;= len &lt; 50</li>
     <li><b>TOKENIZER_REV</b> 4</li>
     <li><b>schema</b> ce.dedup-report/0.5.0</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -110,7 +111,7 @@
   <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
 clone      ⇔ TSED &gt;= 0.85</pre>
   <pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den &gt;= num * mx  where mx = max n1 n2</pre>
-  <p class="note"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1,
+  <details class="more"><summary>Derivation and constants</summary><p class="note"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1,
   relabel = 0 on matching kind codes, else 1) and is always integral, so the comparison
   is an exact cross-multiplication and the boundary is decidable in both directions: at
   <code>max = 100</code>, <code>ted 15</code> is a clone and <code>ted 16</code> is not.
@@ -130,7 +131,7 @@ clone      ⇔ TSED &gt;= 0.85</pre>
     <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
     <li><b>HOT_GROUP_CAP</b> 64</li>
     <li><b>schema</b> ce.clone-report/0.3.0</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -141,7 +142,7 @@ clone      ⇔ TSED &gt;= 0.85</pre>
 
 dupVerdictWith (num, den, vfloor) inter union run
   =  dupDecidesWith num den inter union  ||  run &gt;= vfloor</pre>
-  <p class="note">Bound in production to <code>(80, 100, 50)</code>: Jaccard at or above
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Bound in production to <code>(80, 100, 50)</code>: Jaccard at or above
   0.80, decided exactly in integers, <em>or</em> a verbatim run of at least 50 words. The
   core computes <code>inter</code> and <code>union</code> itself from the ascending
   deduped shingle sets; raw counts cross the wire, never a ratio, or "the re-check lives
@@ -159,7 +160,7 @@ dupVerdictWith (num, den, vfloor) inter union run
     <li><b>DOC_SET_CAP</b> 8192</li>
     <li><b>DOC_PAIR_CAP</b> 4096</li>
     <li><b>DOCDUP_REV</b> 8</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -173,7 +174,7 @@ perMille r      = floor (r * 1000)</pre>
   <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = flagged dirs, N = dir total
 raw      = Σ_axes (charge_i * violCost)
 score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
-  <p class="note">Shannon entropy and KL divergence need logarithms (irrational, therefore
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Shannon entropy and KL divergence need logarithms (irrational, therefore
   not exactly decidable), so the family publishes the rational-closed members of the same
   families instead: Tsallis-2 diversity and the χ² f-divergence, all over
   <code>Data.Ratio</code>. A χ² with observed mass on a zero-reference bin returns
@@ -199,7 +200,7 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
     <li><b>structNodeCap</b> 524288</li>
     <li><b>modFloor</b> 1</li>
     <li><b>modMassFloor</b> 4</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -221,7 +222,7 @@ S = clamp(floor(m * r^k), [softMin, softMax])</pre>
 
 added   = current \ baseline        -- non-empty =&gt; fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
-  <p class="note">Axis 0 is the only axis that is not a count: a convex penalty on file
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Axis 0 is the only axis that is not a count: a convex penalty on file
   size, exact <code>Rational</code>, monotone past the hard line. <code>pMax</code> is the
   value <em>at</em> <code>H</code>, not a ceiling. The soft line <code>S</code> is a
   statistic of the repository's own frozen LOC distribution, the identity
@@ -264,7 +265,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
     <li><b>legs cross at</b> 500</li>
     <li><b>verdictNodeCap</b> 131072</li>
     <li><b>verdictRowCap</b> 524288</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -277,7 +278,7 @@ reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
 referenced = indeg &gt;= 1 over kept arcs
 judged     = i ∉ reach
 code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
-  <p class="note"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes, structurally separated so an exported-but-unreferenced API
+  <details class="more"><summary>Derivation and constants</summary><p class="note"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes, structurally separated so an exported-but-unreferenced API
   can never collapse into plain dead: <code>1 unref_private</code>,
   <code>2 unref_public</code>, <code>3 unreach_private</code>, <code>4 unreach_public</code>.
   Resolution never guesses: a site walks its language's rungs in order and the first rung
@@ -308,7 +309,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
     <li><b>GRAPH_REV</b> 23</li>
     <li><b>tsconfig extends</b> unbounded, cycle-checked</li>
     <li><b>precision gate</b> ≥ 0.90</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -321,7 +322,7 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen &gt;= total * rewriteNum
 cochangeHot = cochange &gt;= cochangeFloor
 legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
-  <p class="note">Priority is <em>data</em>, not guard order: the first row whose required
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Priority is <em>data</em>, not guard order: the first row whose required
   bits all hold and whose forbidden bits all stay clear wins, else code 0. Making the
   order data is what lets the property battery falsify it by rotating the table. Every
   gating row requires the graph bit, so a mask of 5 (graph leg absent) can only carry code
@@ -342,7 +343,7 @@ legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
     <li><b>legChurn</b> 4</li>
     <li><b>COCHANGE_FILE_CAP</b> 20</li>
     <li><b>schema</b> ce.join-report/0.4.0</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -357,7 +358,7 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + roiPhiMilli
 
 viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without division</pre>
-  <p class="note">Benefit is the graded-zone penalty a split gives back, computed on the
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Benefit is the graded-zone penalty a split gives back, computed on the
   <em>same</em> convex curve the verdict family judges with, imported rather than
   re-derived; because <code>p</code> is convex with <code>p(0) = 0</code> it is
   superadditive, so the bracket is non-negative. Best-seam selection is the exact rational
@@ -376,7 +377,7 @@ viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without divis
     <li><b>NAME_FLOOR</b> 3</li>
     <li><b>CHURN_WINDOW_DAYS</b> 14</li>
     <li><b>knob codes</b> 12–18</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -389,7 +390,7 @@ viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without divis
 destFloor      =  least n with siteOpens siteCostCross n   =  2</pre>
   <pre>accepted   = isStart &amp;&amp; distinctEvidence &gt;= destFloor &amp;&amp; anchored
 anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
-  <p class="note">The cross-file evidence floor is <em>derived</em>, not tuned:
+  <details class="more"><summary>Derivation and constants</summary><p class="note">The cross-file evidence floor is <em>derived</em>, not tuned:
   <code>siteCostCross = 2</code> makes a single cross line a tie
   (<code>1*1 + 2 = 3 = 1*3</code>), ties do not open, so <code>destFloor</code> evaluates
   to 2, and that tie <em>is</em> the coincidence rejection. Only
@@ -417,7 +418,7 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
     <li><b>bucketCap</b> 64</li>
     <li><b>stackingNovelFloor</b> 20</li>
     <li><b>stackingRatio</b> 10</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -431,7 +432,7 @@ slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre>
   <pre>slope &lt; -band  → 2  (degrading)
 slope &gt;  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro</pre>
-  <p class="note"><code>%</code> here is <code>Data.Ratio</code>'s exact-ratio
+  <details class="more"><summary>Derivation and constants</summary><p class="note"><code>%</code> here is <code>Data.Ratio</code>'s exact-ratio
   constructor, not modulo; <code>y</code> renormalizes every commit onto a fixed 10⁶
   full-scale grid so rows measured under different <code>scoreScale</code> values are
   commensurable. The slope is the median of pairwise slopes (trend/2): one wild point,
@@ -451,7 +452,7 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
     <li><b>tsWindow</b> 512</li>
     <li><b>full-scale grid</b> 10⁶</li>
     <li><b>schema</b> ce.trend-report/0.3.0</li>
-  </ul>
+  </ul></details>
 </div>
 
 <h2 id="fpr">The FPR discipline: what earns a rule the right to deny</h2>
@@ -463,7 +464,7 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
   exact arithmetic, and a rule class may only enforce once it has paid for the right.</p>
   <pre>TIERS = ["observe", "warn", "ask", "deny"]
 PROMOTED_DEFAULT = "deny"</pre>
-  <div class="tablewrap">
+  <details class="more"><summary>Derivation and constants</summary><div class="tablewrap">
   <table class="ladder">
     <thead><tr><th>tier</th><th>permissionDecision</th><th>effect</th></tr></thead>
     <tbody>
@@ -546,7 +547,7 @@ permille = (lines - S) * 1000 / (H - S)
     <li><b>STOP_BUDGET_TOKENS</b> 400</li>
     <li><b>CHARS_PER_TOKEN</b> 4</li>
     <li><b>feed schema</b> ce.observe/0.13.0</li>
-  </ul>
+  </ul></details>
 </div>
 
 <h2 id="acting">Acting on the verdicts: erasure and advice</h2>
@@ -561,7 +562,7 @@ permille = (lines - S) * 1000 / (H - S)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
          6 public_surface (6.1.0)</pre>
-  <p class="note">Rust assembles integer facts from the three source families;
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Rust assembles integer facts from the three source families;
   Haskell applies the fixed first-failure predicate. Since proto 2.32.0 the dead-file
   family rides class 3, whose trust fact is the graph family's own per-row
   confidence; since proto 6.1.0 a public dead verdict (2 unref_public or 4
@@ -577,7 +578,7 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>since proto</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <div class="fam">
@@ -590,7 +591,7 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
 row   = [node, vis, conv]      (integers only — a name never rides the wire)
 emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
 code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
-  <p class="note">U is a walk of its own: hidden files enter, <code>.git</code>/<code>.ce</code>
+  <details class="more"><summary>Derivation and constants</summary><p class="note">U is a walk of its own: hidden files enter, <code>.git</code>/<code>.ce</code>
   are cut by name, an <em>undeclared</em> nested repository is cut whole while a path the root's
   <code>.gitmodules</code> declares stays in U as foreign, where it can spell a name and is never
   measured. Only <code>.gitignore</code> and <code>.ceignore</code> are
@@ -612,7 +613,7 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
     <li><b>unmentionedHardCap</b> 524288</li>
     <li><b>since proto</b> 6.2.0</li>
     <li><b>wire</b> graph/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <figure class="arch" id="constants">
@@ -636,7 +637,7 @@ edit, one session or one commit wrote, at the PreToolUse hook, at the Stop audit
 row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
 site  ⇔ names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
 over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
-  <p class="note">A name is what a text <em>declares</em>: an identifier outside comments and literals, a
+  <details class="more"><summary>Derivation and constants</summary><p class="note">A name is what a text <em>declares</em>: an identifier outside comments and literals, a
   unit name, a heading, a list lead; an inline code span only mentions, and keeps a name alive.
   Rust reads the two surfaces the change added (new headings, unit names and file stems; the
   added lines of comments, docstrings and paragraphs) and sends one row of three integers per
@@ -660,7 +661,7 @@ over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tie
     <li><b>SITE_CAP</b> 10</li>
     <li><b>since proto</b> 6.6.0</li>
     <li><b>wire</b> tombstone/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 <h2 id="advisor">The advisor family: the units that play the same part</h2>
@@ -678,7 +679,7 @@ retrieval over the index's own facts, judged as advice at <code>ce similar</code
 score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
 widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
 role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
-  <p class="note">Every unit of the T3 universe gets one bag: name pieces, shape, callee spellings, its own
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Every unit of the T3 universe gets one bag: name pieces, shape, callee spellings, its own
   doc segment, the node-kind histogram and literal <em>kinds</em>, each word stemmed and hashed with its
   channel letter, so a shared name and a shared callee are different evidence. The bags persist as two
   tables inside the one content-hash-gated refresh (<code>bag</code> is its own posting list; the pair
@@ -703,7 +704,7 @@ role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskel
     <li><b>similarCap</b> 65536</li>
     <li><b>since proto</b> 6.7.0</li>
     <li><b>wire</b> similar/1</li>
-  </ul>
+  </ul></details>
 </div>
 
 
