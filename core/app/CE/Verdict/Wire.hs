@@ -42,8 +42,10 @@ import CE.Verdict.Table
   , uniformArity
   , weightsOffence
   )
+import CE.Wire.Mask (retiredMask)
 import Control.Applicative ((<|>))
 import Data.Aeson
+import qualified Data.Aeson.KeyMap as KM
 import Data.Foldable (asum)
 import qualified Data.IntSet as IS
 
@@ -98,13 +100,11 @@ data VerdictReq = VerdictReq
     -- of documentation-language files; absent/empty preserves old cycle
     -- scoring semantics.
     reqDocFiles :: [Integer]
-  , -- H1 slice 2 (2.29.0, additive): the judged-language set as a
-    -- Lang-code bitmask — batch-7 dispositioned the PREDICATE to
-    -- Rust (the boundary authority) and promised the SET as an
-    -- echo-pinned knob; 0 = not declared (an old client or the
-    -- dedup-only road). The echo makes the set core-visible and
-    -- drift-detectable; no judgment consumes it yet.
-    reqJudgedMask :: Integer
+  , -- whether the request carried `judgedMask` (2.29.0 as an
+    -- echo-pinned knob no judgment consumed; retired at 8.0.0, plan
+    -- v2.32 step 6): refused by name — the judged set is the core's
+    -- language table (CE.Wire.Mask).
+    reqMaskSent :: Bool
   , -- plan v2.13 ① (3.1.0, additive): the rulepack's knob rows
     -- [classId, code, value] — the ceilings codes 0/1/2 (sizeCeil /
     -- cocCeil / sizeHard) under a class; the continuous rows carry
@@ -170,7 +170,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "dedupMinDistinct"
       <*> o .:? "judgedLoc" .!= []
       <*> o .:? "docFiles" .!= []
-      <*> o .:? "judgedMask" .!= 0
+      <*> pure (KM.member "judgedMask" o)
       <*> o .:? "classKnobs" .!= []
       <*> o .:? "knobsDigest"
       -- the export surface (6.1.0): absent is the legacy road, and
@@ -220,7 +220,7 @@ violation parsed req =
       -- ascending — a deduped set, because two exported declarations
       -- in one file are not two facts about that file
       table "symbols" (nodeRow n 2) 2 (reqSymbols req)
-    , if reqJudgedMask req < 0 then Just "judgedMask: negative" else Nothing
+    , retiredMask (reqMaskSent req)
     , -- the 6.4.0 tables: provenance entities (u64, ascending) and
       -- the self-loop set, whose presence is tied to the cycle floor
       maybe Nothing presentOffence (reqPresent req)

@@ -16,8 +16,8 @@
 //! promotes HTML to a judged document language. Each row turns judged
 //! in its own step, together with its measurement tables, so no file
 //! is ever judged or fingerprinted under a placeholder spec; the core
-//! reads the judged set off the wire (`judgedMask`, proto 7.2.0)
-//! instead of a constant. Since plan v2.32 step 2 the rows themselves —
+//! read the judged set off the wire (`judgedMask`, proto 7.2.0) instead
+//! of a constant until 8.0.0, and off its own language table since. Since plan v2.32 step 2 the rows themselves —
 //! extensions, report name, the arm bits — are the core's
 //! (CE.Lang.Common, read off `tables/1`, crate::tables): this file keeps
 //! the enum, whose codes are the frozen wire positions, and the
@@ -186,9 +186,9 @@ impl Lang {
 
     /// The judged-language set as a wire bitmask (H1 slice 2,
     /// 2.29.0): bit = Lang wire code, set = judged — the package's
-    /// `judged` column (plan v2.32 step 2). The request still carries it
-    /// (`judgedMask`, 7.2.0): its value is now the core's own, and the
-    /// key retires at 8.0.0, when the core reads CE.Lang itself.
+    /// `judged` column (plan v2.32 step 2). No request carries it since
+    /// 8.0.0 (plan v2.32 step 6): the core reads CE.Lang itself; the
+    /// facts registry and the per-language ledgers read it here.
     pub fn judged_mask() -> i64 {
         crate::tables::get().languages.mask(|row| row.judged)
     }

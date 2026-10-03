@@ -66,12 +66,6 @@ pub struct Request {
     /// Markdown/documentation file indices in the same `files` universe.
     /// Empty preserves the pre-2.27 cycle-axis semantics.
     pub doc_files: Vec<i64>,
-    /// The judged-language set as a Lang-code bitmask (H1 slice 2,
-    /// 2.29.0): batch-7 dispositioned the PREDICATE to Rust and
-    /// promised the SET as an echo-pinned knob — this is that knob.
-    /// 0 = not declared (the dedup-only road); the echo pins the
-    /// round trip so the core can see and ablate the set.
-    pub judged_mask: i64,
     /// The rulepack channel (3.1.0): `classed` = any class declared,
     /// so every continuous row rides four wide; `class_knobs` =
     /// [classId, code, value], the ceilings codes 0/1/2 under a class
@@ -184,7 +178,6 @@ impl Request {
             dedup_min_distinct: floor,
             judged_loc: Vec::new(),
             doc_files: Vec::new(),
-            judged_mask: 0,
         }
     }
 }
@@ -231,10 +224,6 @@ pub fn body(r: &Request) -> Value {
         ("dedup", r.dedup.map(|p| json!(p))),
         ("dedupDistinct", some_rows(&r.dedup_distinct)),
         ("dedupMinDistinct", r.dedup_min_distinct.map(|f| json!(f))),
-        (
-            "judgedMask",
-            (r.judged_mask != 0).then(|| json!(r.judged_mask)),
-        ),
         ("docFiles", some_rows(&r.doc_files)),
         ("symbols", some_rows(&r.symbols)),
         // the two 6.4.0 tables ride as OPTIONS, not as some_rows: an

@@ -43,12 +43,10 @@ data RowsReq = RowsReq
     -- (unfenced), Just [current, recorded] = the two digests to
     -- compare. Three states, so absent and null are never one.
     fenceOf :: Maybe Value
-  , -- the judged-language set as sent (7.2.0, plan v2.30): the
-    -- bitmask scan/1 checks its naming rows' language codes against.
-    -- Nothing = a pre-7.2.0 client, read as `legacyJudged` — the
-    -- seven codes the constant bound used to spell — so its bytes
-    -- never move.
-    maskOf :: Maybe Integer
+  , -- whether the request carried `judgedMask` (7.2.0, retired at
+    -- 8.0.0, plan v2.32 step 6): scan/1 refuses it by name, the
+    -- judged set being the core's language table (CE.Wire.Mask).
+    maskSent :: Bool
   , -- erase/1's target table (7.2.0, plan v2.30 step 7b): one
     -- [pathId, start, end] per fact row, the key the target closure
     -- groups rows by. Nothing = a client that closes for itself
@@ -86,7 +84,7 @@ instance FromJSON RowsReq where
       <*> o .:? "callEdges"
       <*> parseJSON (Object o)
       <*> pure (KM.lookup "knobsFence" o)
-      <*> o .:? "judgedMask"
+      <*> pure (KM.member "judgedMask" o)
       <*> o .:? "targets"
       <*> o .:? "events"
 

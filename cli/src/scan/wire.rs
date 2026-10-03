@@ -9,10 +9,8 @@
 //! ensure on every gate run). Only codes, values and name-shape
 //! facts cross the wire; subjects, names and paths never do
 //! (§5.9.2 index privacy). Since 7.2.0 every request also carries
-//! `judgedMask` — the judged-language set the naming rows' codes are
-//! checked against, echoed back and pinned here like the grade table —
-//! and `events`, each unit's structural event stream (plan v2.30 step
-//! 7b ③): the three complexity rows cross as 0 and come back derived,
+//! `events`, each unit's structural event stream (plan v2.30 step 7b
+//! ③): the three complexity rows cross as 0 and come back derived,
 //! so the numbers the report renders are the core's, never a second
 //! reading of the rules here.
 
@@ -193,7 +191,7 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Judgment, crate::corelink::
 fn request_body(r: &ScanRequest, c: &chunk::Chunk<'_>) -> Value {
     let mut body = json!({
         "rows": c.rows, "grades": r.grades, "naming": c.naming, "knobsFence": r.fence,
-        "judgedMask": crate::scan::lang::Lang::judged_mask(), "events": c.events,
+        "events": c.events,
     });
     let optional = [
         (!c.calls.is_empty()).then(|| ("callEdges", json!(c.calls))),
@@ -254,18 +252,9 @@ fn failed_of(reply: &Value) -> Result<Vec<String>> {
 
 /// Both tables the core judged with must be the ones this side sent
 /// — one table, two owners; the override echo is absent exactly when
-/// none rode. The judged-language mask (7.2.0) is held the same way:
-/// this side always sends it, so a reply without the echo is a
-/// pre-7.2.0 core, refused by name rather than read as "judged".
+/// none rode. The judged-language set is the core's own language
+/// table since 8.0.0 (plan v2.32 step 6): nothing rides, nothing echoes.
 fn assert_echo(reply: &serde_json::Value, r: &ScanRequest) -> Result<()> {
-    let mask = reply["judgedMask"].as_i64().context(
-        "judgedMask — a pre-7.2.0 core judges the language set silently; this ce needs scan/1 7.2.0",
-    )?;
-    ensure!(
-        mask == crate::scan::lang::Lang::judged_mask(),
-        "core judged with judgedMask {mask}, ce sent {}",
-        crate::scan::lang::Lang::judged_mask()
-    );
     let echoed: Vec<[u64; 3]> =
         serde_json::from_value(reply["grades"].clone()).context("grades")?;
     ensure!(

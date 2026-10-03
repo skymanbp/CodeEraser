@@ -14,6 +14,7 @@ import CE.Lang (allTables, digestOf, languages)
 import CE.Lang.Spec
 import CE.Lang.Spec.Flow
 import CE.Tables (package, respond, tablesDigest)
+import qualified CE.Wire.Mask as Mask
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import Data.Bits (shiftL, (.|.))
@@ -28,7 +29,7 @@ battery =
   runLegs
     [ "language codes run 0..21 in order"
     , "no extension names two languages"
-    , "the judged mask is 0x17847F and the tables are the judged languages"
+    , "the judged mask is 0x17847F, the wire contracts read it (CE.Wire.Mask), and the tables are the judged languages"
     , "the flow-judged mask is 1540127, inside the judged set"
     , "no nest-only kind is a unit kind"
     , "the slot sets are disjoint and the name pairs single"
@@ -49,7 +50,7 @@ extensions = unique (concatMap lgExts languages)
 
 judged :: Bool
 judged =
-  mask == 0x17847F && map ltName allTables == [lgName l | l <- languages, lgJudged l]
+  mask == 0x17847F && Mask.judgedMask == mask && map ltName allTables == [lgName l | l <- languages, lgJudged l]
  where
   mask = foldl' (.|.) (0 :: Integer) [1 `shiftL` lgCode l | l <- languages, lgJudged l]
 

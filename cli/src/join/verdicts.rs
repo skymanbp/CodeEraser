@@ -112,6 +112,5 @@ fn request(
         judged_loc: Vec::new(),
         doc_files: score::doc_file_indices(&files),
         files,
-        judged_mask: crate::scan::lang::Lang::judged_mask(),
     })
 }

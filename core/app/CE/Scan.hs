@@ -151,9 +151,6 @@ reply proto req (Echo levels moved derived) degraded =
       -- the recursion increment echoes what it raised, and only when
       -- the arcs rode (6.5.0): [rowIndex, effectiveValue], ascending
       <> ["cocBumped" .= moved | not degraded && isJust (callsOf req)]
-      -- the judged-language mask echoes exactly when it rode (7.2.0):
-      -- the client pins it like the grade table
-      <> ["judgedMask" .= m | not degraded, Just m <- [maskOf req]]
       -- the derived complexity rows echo exactly when the events rode
       -- (7.2.0): [rowIndex, value] for every cyclomatic, cognitive and
       -- nesting row, post recursion — the measuring side renders the

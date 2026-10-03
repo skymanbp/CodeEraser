@@ -141,44 +141,47 @@ Console output, `--help` and the hooks' own refusal sentences are English by def
 
 ## Three faces, one product
 
-Every capability is claimed once in this table, the sets are derived from the code (clap's enum, the Tauri roster, the MCP catalog, `hooks.json`, `plugin/commands`, `plugin/skills`), and a CI gate (`face_parity`) refuses a face nobody wrote down or a claim nobody shipped. Deliberate omissions are rows, not silence.
+Every capability is claimed once in this table, the sets are derived from the code (clap's enum, the Tauri roster, the MCP catalog, `hooks.json`, `plugin/commands`, `plugin/skills`), and a CI gate (`face_parity`) refuses a face nobody wrote down or a claim nobody shipped. The report documents come from the core's own catalogue: every family it lays out sits in one row, with all three faces or a note saying why not. Deliberate omissions are rows, not silence.
 
 <!-- parity:begin -->
-| capability | CLI | GUI (screen · commands) | plugin (hooks · MCP · commands · skills) |
-|---|---|---|---|
-| size / complexity / readability metrics | `ce scan` | `reports`, `scan_report` | MCP `scan` |
-| T1/T2 clone blocks | `ce dedup` | `reports`, `dedup_report` | MCP `check_duplication` |
-| T3 near-miss clones | `ce clone` | `reports`, `clone_report` | MCP `clone` |
-| documentation duplication | `ce docdup` | `reports`, `docdup_report` | MCP `docdup` |
-| reference sites and the mention universe | `ce graph` | `reports`, `sites_report` | MCP `graph_sites` |
-| liveness verdicts + symbol advisory | `ce deadcode` | `graph`, `graphscreen_report`, `reports`, `deadcode_report` | MCP `deadcode` |
-| git-window churn | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
-| three-signal join | `ce join` | `candidates`, `join_report` | MCP `join` |
-| tree-scale structure (split pricing) | `ce structure` | `structure`, `structure_report` | MCP `structure` |
-| score trajectory | `ce trend` | `trend`, `trend_report` | MCP `trend` |
-| score, ratchet and floor | `ce check` | `score`, `check_report` | MCP `check` |
-| same-role advisor (similar units, associative view) | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
-| code query and architecture rules | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
-| intra-function dead code (unreachable, dead stores, unused locals and parameters) | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
-| clone merge suggestions (anti-unification) | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
-| architecture analysis (layers, cuts, clusters, impact) | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
-| baseline writes | `ce baseline` | — CLI only: a machine surface never writes a baseline | — |
-| erase plan | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
-| erase apply | `ce erase --apply` | `erase`, `erase_apply` | — no MCP face: applying is a human act |
-| erase audit log | `ce erase --log` | `erase`, `erase_log_report` | MCP `erase_log` |
-| machine state | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
-| update check | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
-| update apply | `ce update --yes` | `update`, `update_apply` | — the plugin's copy is re-pinned by `/plugin update codeeraser` |
-| write-time guard | `ce probe --hook` | — hooks are the plugin's face | hook `PreToolUse` |
-| asked-write settlement | `ce settle --hook` | — hooks are the plugin's face | hook `PostToolUse` |
-| stop audit / git hooks | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — hooks are the plugin's face; precommit and commitmsg are git's | hook `Stop` |
-| session health line | `ce health --hook` | — hooks are the plugin's face | hook `SessionStart` |
-| project daemon | `ce daemon`, `ce ping` | — started lazily by every face | — |
-| read-only report server | `ce mcp` | — the plugin registers it | `.mcp.json` |
-| uninstall | `ce eject` | — CLI only | — |
-| Claude Code wiring | `ce setup`, `ce setup --unwire` | — CLI only: the Windows installer calls it, AppImage / dmg users run it once | — |
-| bench dashboard | — compiled-in series; README and site carry the same block | `bench`, `bench_doc` | — |
-| root anchoring | — every command and hook anchors through `root` | `default_root`, `resolve_root` | — |
+| capability | report document (core catalogue) | CLI | GUI (screen · commands) | plugin (hooks · MCP · commands · skills) |
+|---|---|---|---|---|
+| size / complexity / readability metrics | `scan` | `ce scan` | `reports`, `scan_report` | MCP `scan` |
+| T1/T2 clone blocks | `dedup` | `ce dedup` | `reports`, `dedup_report` | MCP `check_duplication` |
+| T3 near-miss clones | `clone` | `ce clone` | `reports`, `clone_report` | MCP `clone` |
+| the unit universe T3 judges | `clone-units` | `ce clone --units` | — no GUI screen: the listing is the judgment's input, read through the CLI and the MCP tool's `units` | MCP `clone` |
+| documentation duplication | `docdup` | `ce docdup` | `reports`, `docdup_report` | MCP `docdup` |
+| reference sites | `sites` | `ce graph --sites` | `reports`, `sites_report` | MCP `graph_sites` |
+| the mention universe | `mentions` | `ce graph --mentions` | — CLI only: the census behind the symbol advisory, which every face of `deadcode` carries | — |
+| liveness verdicts + symbol advisory | `deadcode` | `ce deadcode` | `reports`, `deadcode_report` | MCP `deadcode` |
+| graph screen (canvas + liveness) | `graphscreen` | — GUI only: the canvas is a picture; the same judgment's CLI and MCP faces are `deadcode` | `graph`, `graphscreen_report` | — |
+| git-window churn | `churn` | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
+| three-signal join | `join` | `ce join` | `candidates`, `join_report` | MCP `join` |
+| tree-scale structure (split pricing) | `structure` | `ce structure` | `structure`, `structure_report` | MCP `structure` |
+| score trajectory | `trend` | `ce trend` | `trend`, `trend_report` | MCP `trend` |
+| score, ratchet and floor | `check` | `ce check` | `score`, `check_report` | MCP `check` |
+| same-role advisor (similar units, associative view) | `similar` | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
+| code query and architecture rules | `query`, `rules` | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
+| intra-function dead code (unreachable, dead stores, unused locals and parameters) | `flow` | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
+| clone merge suggestions (anti-unification) | `merge` | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
+| architecture analysis (layers, cuts, clusters, impact) | `arch` | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
+| baseline writes | — | `ce baseline` | — CLI only: a machine surface never writes a baseline | — |
+| erase plan | `erase` | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
+| erase apply | — | `ce erase --apply` | `erase`, `erase_apply` | — no MCP face: applying is a human act |
+| erase audit log | `erase-trail` | `ce erase --log` | `erase`, `erase_log_report` | MCP `erase_log` |
+| machine state | — | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
+| update check | — | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
+| update apply | — | `ce update --yes` | `update`, `update_apply` | — the plugin's copy is re-pinned by `/plugin update codeeraser` |
+| write-time guard | — | `ce probe --hook` | — hooks are the plugin's face | hook `PreToolUse` |
+| asked-write settlement | — | `ce settle --hook` | — hooks are the plugin's face | hook `PostToolUse` |
+| stop audit / git hooks | — | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — hooks are the plugin's face; precommit and commitmsg are git's | hook `Stop` |
+| session health line | — | `ce health --hook` | — hooks are the plugin's face | hook `SessionStart` |
+| project daemon | — | `ce daemon`, `ce ping` | — started lazily by every face | — |
+| read-only report server | — | `ce mcp` | — the plugin registers it | `.mcp.json` |
+| uninstall | — | `ce eject` | — CLI only | — |
+| Claude Code wiring | — | `ce setup`, `ce setup --unwire` | — CLI only: the Windows installer calls it, AppImage / dmg users run it once | — |
+| bench dashboard | — | — compiled-in series; README and site carry the same block | `bench`, `bench_doc` | — |
+| root anchoring | — | — every command and hook anchors through `root` | `default_root`, `resolve_root` | — |
 <!-- parity:end -->
 
 ## Tech stack, design and philosophy

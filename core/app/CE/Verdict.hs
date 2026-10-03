@@ -110,7 +110,7 @@ result proto parsed req =
         -- round trip, and the empty-table default gate pins core
         -- defaults == ce.toml defaults — the drift check the
         -- retired mirrors never had
-        "knobs" .= knobsEcho k rk jk dedupFloor (reqJudgedMask req) (cycleRode req)
+        "knobs" .= knobsEcho k rk jk dedupFloor (cycleRode req)
       , -- batch-7 slice 1 (2.19.0, additive): the core's OWN
         -- admitted-block count from the distinct rows, null when the
         -- rows did not ride (the trend null-absence stance) — the
@@ -239,7 +239,7 @@ tooLarge proto req =
                 <> digestKey (reqKnobsDigest req)
             )
       , -- defaults: no judgment ran, so no override was applied
-        "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct 0 False
+        "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct False
       , "weights" .= effectiveWeights scoreBound []
       , "degraded" .= True
       , "reason" .= verdictTooLarge

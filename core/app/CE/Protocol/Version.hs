@@ -10,15 +10,13 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 7.10.0 = the console form in `document/1` (plan v2.32 step 5;
--- design booklet docs/reference/authority-track.md §6), additive: a
--- `document.request` may name a language (`lang`, 0 en / 1 zh), the
--- reply carries the family's console `lines` ([stream, text, ref…],
--- every number and product word written, a `{}` hole per reference)
--- and its veto (`exit: {fail}`); the guard and the audit sentences
--- are two more families (`guard`, `audit`, document `{}`, outside the
--- catalogue, so `tablesDigest` stands). Every judgment family answers
--- byte for byte as before; the capability list is unchanged.
+-- 8.0.0 = the retired request key (plan v2.32 step 6; design booklet
+-- docs/reference/authority-track.md §3, §13 item 18): `judgedMask`
+-- leaves scan/1, graph/1 and verdict — the core reads the judged set
+-- off its own language table (CE.Wire.Mask), a request that still
+-- carries the key is refused by name, and no reply echoes it. Major
+-- because a key that was accepted is now refused; every document and
+-- console line answers byte for byte as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the
@@ -26,7 +24,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "7.10.0"
+proto = "8.0.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

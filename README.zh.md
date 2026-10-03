@@ -141,44 +141,47 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 三面一体
 
-下表把每项能力恰好认领一次，各集合从代码派生（clap 枚举、Tauri 命令表、MCP 目录、`hooks.json`、`plugin/commands`、`plugin/skills`），CI 门 `face_parity` 拒绝任何没写下来的面与任何没交付的认领。有意的省略是表里的一行，不是沉默。
+下表把每项能力恰好认领一次，各集合从代码派生（clap 枚举、Tauri 命令表、MCP 目录、`hooks.json`、`plugin/commands`、`plugin/skills`），CI 门 `face_parity` 拒绝任何没写下来的面与任何没交付的认领。报告文档一列取自核自己的目录：核排版的每个家族恰在一行，三面俱全，或写明为何缺一面。有意的省略是表里的一行，不是沉默。
 
 <!-- parity:begin -->
-| 能力 | CLI | GUI（屏 · 命令） | 插件（hooks · MCP · 命令 · skill） |
-|---|---|---|---|
-| 尺寸 / 复杂度 / 可读性度量 | `ce scan` | `reports`, `scan_report` | MCP `scan` |
-| T1/T2 克隆块 | `ce dedup` | `reports`, `dedup_report` | MCP `check_duplication` |
-| T3 近似克隆 | `ce clone` | `reports`, `clone_report` | MCP `clone` |
-| 文档重复 | `ce docdup` | `reports`, `docdup_report` | MCP `docdup` |
-| 引用站点与提及宇宙 | `ce graph` | `reports`, `sites_report` | MCP `graph_sites` |
-| 存活性判决 + 符号顾问 | `ce deadcode` | `graph`, `graphscreen_report`, `reports`, `deadcode_report` | MCP `deadcode` |
-| git 窗口变动 | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
-| 三信号联判 | `ce join` | `candidates`, `join_report` | MCP `join` |
-| 树尺度结构（拆分定价） | `ce structure` | `structure`, `structure_report` | MCP `structure` |
-| 分数轨迹 | `ce trend` | `trend`, `trend_report` | MCP `trend` |
-| 分数、棘轮与地板 | `ce check` | `score`, `check_report` | MCP `check` |
-| 同角色顾问（相似单元、联想视图） | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
-| 代码查询与架构规则 | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
-| 函数内死代码（不可达、死存储、未用局部量与形参） | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
-| 克隆合并建议（反统一） | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
-| 架构分析（分层、拆环、簇、影响面） | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
-| 基线写入 | `ce baseline` | — 只在 CLI：机器面永不写基线 | — |
-| 擦除计划 | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
-| 擦除执行 | `ce erase --apply` | `erase`, `erase_apply` | — 无 MCP 面：执行是人类动作 |
-| 擦除审计日志 | `ce erase --log` | `erase`, `erase_log_report` | MCP `erase_log` |
-| 本机状态 | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
-| 更新检查 | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
-| 更新执行 | `ce update --yes` | `update`, `update_apply` | — 插件副本由 `/plugin update codeeraser` 重钉 |
-| 写入时守卫 | `ce probe --hook` | — 钩子即插件之面 | hook `PreToolUse` |
-| ask 档写入的落地记录 | `ce settle --hook` | — 钩子即插件之面 | hook `PostToolUse` |
-| Stop 审计 / git 钩子 | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — 钩子即插件之面；precommit 与 commitmsg 挂在 git 里 | hook `Stop` |
-| 会话健康行 | `ce health --hook` | — 钩子即插件之面 | hook `SessionStart` |
-| 项目 daemon | `ce daemon`, `ce ping` | — 每一面惰性启动 | — |
-| 只读报告服务器 | `ce mcp` | — 插件自行注册 | `.mcp.json` |
-| 卸载 | `ce eject` | — 只在 CLI | — |
-| Claude Code 接线 | `ce setup`, `ce setup --unwire` | — 只在 CLI：Windows 安装包调用它，AppImage / dmg 用户装后跑一次 | — |
-| 实测仪表盘 | — 编译内置序列；README 与官网带同一块 | `bench`, `bench_doc` | — |
-| 根锚定 | — 每条命令与钩子都经 `root` 锚定 | `default_root`, `resolve_root` | — |
+| 能力 | 报告文档（核目录） | CLI | GUI（屏 · 命令） | 插件（hooks · MCP · 命令 · skill） |
+|---|---|---|---|---|
+| 尺寸 / 复杂度 / 可读性度量 | `scan` | `ce scan` | `reports`, `scan_report` | MCP `scan` |
+| T1/T2 克隆块 | `dedup` | `ce dedup` | `reports`, `dedup_report` | MCP `check_duplication` |
+| T3 近似克隆 | `clone` | `ce clone` | `reports`, `clone_report` | MCP `clone` |
+| T3 所判的单元宇宙 | `clone-units` | `ce clone --units` | — 无 GUI 屏：这份清单是判决的输入，经 CLI 与 MCP 工具的 `units` 读取 | MCP `clone` |
+| 文档重复 | `docdup` | `ce docdup` | `reports`, `docdup_report` | MCP `docdup` |
+| 引用站点 | `sites` | `ce graph --sites` | `reports`, `sites_report` | MCP `graph_sites` |
+| 提及宇宙 | `mentions` | `ce graph --mentions` | — 只在 CLI：符号顾问背后的普查，`deadcode` 的每一面都带着顾问本身 | — |
+| 存活性判决 + 符号顾问 | `deadcode` | `ce deadcode` | `reports`, `deadcode_report` | MCP `deadcode` |
+| 图屏（画布 + 存活性） | `graphscreen` | — 只在 GUI：画布是一张图；同一判决的 CLI 与 MCP 面是 `deadcode` | `graph`, `graphscreen_report` | — |
+| git 窗口变动 | `churn` | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
+| 三信号联判 | `join` | `ce join` | `candidates`, `join_report` | MCP `join` |
+| 树尺度结构（拆分定价） | `structure` | `ce structure` | `structure`, `structure_report` | MCP `structure` |
+| 分数轨迹 | `trend` | `ce trend` | `trend`, `trend_report` | MCP `trend` |
+| 分数、棘轮与地板 | `check` | `ce check` | `score`, `check_report` | MCP `check` |
+| 同角色顾问（相似单元、联想视图） | `similar` | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
+| 代码查询与架构规则 | `query`, `rules` | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
+| 函数内死代码（不可达、死存储、未用局部量与形参） | `flow` | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
+| 克隆合并建议（反统一） | `merge` | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
+| 架构分析（分层、拆环、簇、影响面） | `arch` | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
+| 基线写入 | — | `ce baseline` | — 只在 CLI：机器面永不写基线 | — |
+| 擦除计划 | `erase` | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
+| 擦除执行 | — | `ce erase --apply` | `erase`, `erase_apply` | — 无 MCP 面：执行是人类动作 |
+| 擦除审计日志 | `erase-trail` | `ce erase --log` | `erase`, `erase_log_report` | MCP `erase_log` |
+| 本机状态 | — | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
+| 更新检查 | — | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
+| 更新执行 | — | `ce update --yes` | `update`, `update_apply` | — 插件副本由 `/plugin update codeeraser` 重钉 |
+| 写入时守卫 | — | `ce probe --hook` | — 钩子即插件之面 | hook `PreToolUse` |
+| ask 档写入的落地记录 | — | `ce settle --hook` | — 钩子即插件之面 | hook `PostToolUse` |
+| Stop 审计 / git 钩子 | — | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — 钩子即插件之面；precommit 与 commitmsg 挂在 git 里 | hook `Stop` |
+| 会话健康行 | — | `ce health --hook` | — 钩子即插件之面 | hook `SessionStart` |
+| 项目 daemon | — | `ce daemon`, `ce ping` | — 每一面惰性启动 | — |
+| 只读报告服务器 | — | `ce mcp` | — 插件自行注册 | `.mcp.json` |
+| 卸载 | — | `ce eject` | — 只在 CLI | — |
+| Claude Code 接线 | — | `ce setup`, `ce setup --unwire` | — 只在 CLI：Windows 安装包调用它，AppImage / dmg 用户装后跑一次 | — |
+| 实测仪表盘 | — | — 编译内置序列；README 与官网带同一块 | `bench`, `bench_doc` | — |
+| 根锚定 | — | — 每条命令与钩子都经 `root` 锚定 | `default_root`, `resolve_root` | — |
 <!-- parity:end -->
 
 ## 技术栈、设计与哲学

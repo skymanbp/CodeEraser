@@ -93,10 +93,8 @@ result proto req =
       , "degraded" .= False
       ]
       -- the declared floor echoes exactly when it rode (6.4.0): the
-      -- unmentioned/mounts precedent, legacy bytes untouched; the
-      -- judged-language mask (7.2.0) rides and echoes the same way
+      -- unmentioned/mounts precedent, legacy bytes untouched
       <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
-      <> ["judgedMask" .= m | Just m <- [reqJudgedMask req]]
       <> advisoryKeys req
  where
   (b, reach, deadRows, reportedRows) = liveness req

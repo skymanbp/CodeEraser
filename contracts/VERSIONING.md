@@ -7,6 +7,16 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 3.0.0 止；2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **8.0.0**（退役失去读者的请求键，major，计划 v2.32 步 6，2026-10-03；设计册 `docs/reference/authority-track.md` §3 退役行与 §13 第 18 条）：
+> `scan/1`、`graph/1` 与 `verdict` 的请求不再带 `judgedMask`——判决语言集由核自己的语言表给出（`CE.Lang` 每行的 `judged` 列，
+> `CE.Wire.Mask.judgedMask` 一处折出）；仍带这个键的请求按名拒 `contract: judgedMask: retired at 8.0.0 — the core reads its language table`，
+> 三族应答里的 `judgedMask` 回显（scan / graph 顶层、verdict 的 `knobs`）一并删除。请求键被拒是破坏性变更，按 §2 升 major：7.x 的 ce
+> 对 8.0.0 的核、8.0.0 的 ce 对 7.x 的核，都在握手处按 major 不符拒绝。请求锚（§3）随之重锚到 8.0.0：全部 golden 的 request 行由
+> `fixture_contract::regen` 机器重写（proto 低于锚的行改到锚，族 golden 的请求去掉退役键，`handshake/wire-errors` 的请求照原样问），
+> `handshake/wire-errors` 新加一对钉住退役键的拒绝。应答逐对核过，除 proto 与回显之外字节相同，例外六对：graph 第 26 对与 scan 第 17 对
+> （语言码 20 / 15 此前因请求掩码不含而按遗留路拒，现在语言表判它们在判决集内，照常判）、scan 第 18 对（此前钉 `judgedMask: negative`，
+> 键退役后是一次普通判决）、wire-errors 第 2 / 3 对（错误信息里点名的 server 版本）与新加的 wire-errors 第 5 对。`tablesDigest` 与 daemon
+> 协议（2.3.0）不动。
 > **7.10.0**（控制台文本，加性 minor，计划 v2.32 步 5，2026-10-01；设计册 `docs/reference/authority-track.md` §6）：
 > `document.request` 可带 `lang`（0 en / 1 zh，缺省 0；其余按名拒 `document: lang is not 0 or 1`）；`document.result` 多两个键：
 > `lines` = 该族在该语言下的控制台每一行 `[stream, text, ref…]`（stream 0 stdout / 1 stderr；数字与产品词已写进 text，每个引用在 text 里
@@ -519,7 +529,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `graph.request`（2.1.0 起）：`{"id","nodes":[[lang,kind,roles]],"edges":
   [[src,dst,kind,rung]],"pos":[idx],"unres":[[lang,unresolved,total]],
   "symbols":[[node,visibility]],"unmentioned":[[node,vis,conv]],
-  "mounts":[[node,private,total,bits]],"sccFloor":u64,"judgedMask":u64}`——稠密 0 基索引即
+  "mounts":[[node,private,total,bits]],"sccFloor":u64}`——稠密 0 基索引即
   节点身份，**无文本形物过线**（ADR-002 A6；6.2.0 的两张顾问表同律——候选名 `AdvisoryName`
   留在 Rust 侧，过线的只有整数）；节点行**三元组、单一合法元数**（5.0.0 起：
   pre-2.28 的 flags 列裁除，宽窄不对的行按**行下标**报 `node i: malformed row (need
@@ -531,7 +541,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   具名配对拒绝，占校验 asum 最前）：`unmentioned` 按 `id` 投影严格升序、每行 `[node, vis, conv]`；
   `mounts` 全节点恒一行、`take 1` 投影升序、`private ≤ total`、bits bit 0 再导出目标 / bit 1
   包私有；两表各自析取项计价（`mountCap` 131072 / `unmentionedHardCap` 524288），节点净空不动；
-  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。`sccFloor` 是 6.4.0 起的可选环底（与 `verdict` 的 `cycleFloor` 同读一份 `[graph] scc_floor`；≥1 否则按名拒绝，上过线即在 `graph.result` 回显）。`judgedMask` 是 7.2.0 起的可选判决语言位集（ce 恒发 `Lang::judged_mask()`；`unres` 行的 lang 按位校验，缺席 = 127 即旧七码；上过线即在 `graph.result` 回显）。
+  缺席 = 十键回复字节不变、dead 集不变（K16/K33）。`sccFloor` 是 6.4.0 起的可选环底（与 `verdict` 的 `cycleFloor` 同读一份 `[graph] scc_floor`；≥1 否则按名拒绝，上过线即在 `graph.result` 回显）。`unres` 行的 lang 按判决语言集校验——7.2.0 至 7.10.0 读请求键 `judgedMask`，8.0.0 起读核自己的语言表，带这个键的请求按名拒。
   `unres` 是 2.32.0 起的可选按语言站点
   台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
   两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
@@ -576,8 +586,8 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     `degraded.reason ∈ {verdict_too_large}`。
   - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],
     "naming":[[lang,style,upper,under,test]]}`（码 0..6，主体名/路径不过线；naming 自 2.30.0
-    由 ce 恒发、与码 6 行逐位对齐，core 容其缺席；行内 lang 自 7.2.0 按判决语言位集 `judgedMask` 校验——ce 恒发
-    `Lang::judged_mask()`，缺席 = 127 即旧七码，未降级的 result 回显同值）+ 调用弧 `callEdges=[[from,to]]`（6.5.0，
+    由 ce 恒发、与码 6 行逐位对齐，core 容其缺席；行内 lang 按判决语言集校验——7.2.0 至 7.10.0 读请求键
+    `judgedMask`，8.0.0 起读核自己的语言表，带这个键的请求按名拒）+ 调用弧 `callEdges=[[from,to]]`（6.5.0，
     两端都是 cognitive 行下标）+ 结构事件表 `events=[[row,seq,parent,pos,flags,aux,op…]]`（7.2.0 ③，ce 恒发，三条
     复杂度行清零乘车、核折出三数）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
     + 规则包两键（3.2.0）：`rowClasses`（与 rows 逐位对齐的 classId）与 `gradeOverrides`
@@ -606,7 +616,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
-  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
+  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->7.0.0<!--/ce-->**
   （<!--ce:count:golden_requests#digits-->302<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->7.10.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的

@@ -130,14 +130,6 @@ fn knob_echoes(r: &Request, reply: &Reply) -> Result<()> {
         reply.class_knobs,
         r.class_knobs
     );
-    if r.judged_mask != 0 {
-        let echoed = *reply.knobs.get("judgedMask").context("judgedMask")?;
-        ensure!(
-            echoed == r.judged_mask,
-            "core echoed judgedMask={echoed}, ce sent {}",
-            r.judged_mask
-        );
-    }
     Ok(())
 }
 

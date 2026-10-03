@@ -37,7 +37,7 @@ battery = runChecks (refusals <> roads <> export)
     [ ("the confidence column rides exactly when the ledger does", confRides)
     , ("K5: an empty symbols table is the same BYTES as none", emptyIsAbsent)
     , ("K52: sccFloor rides and echoes; at floor 1 a self-arc singleton is a cycle, a lone node is not", sccFloorRoad)
-    , ("the judged-language mask widens unres by name and echoes on every result it rode on", maskRoad)
+    , ("the judged set is the language table's: unres judges by it, no echo, the retired key refused by name", maskRoad)
     ]
   export = [("K9: the export surface moves the CODE and never the dead set", exportRides)]
 
@@ -71,30 +71,31 @@ refusedGraph req want = case respond "7.0.0" req of
   Left (_, code, msg) -> code == "contract" && want `isInfixOf` msg
   Right _ -> False
 
--- | The judged-language mask (7.2.0, plan v2.30 step 1): an `unres`
--- row for lang 20 judges under a mask that names it (1048703 = the
--- legacy seven plus bit 20) — vouched, dead row [0,1,2] — and
--- refuses by name without one; the mask echoes on every result it
--- rode on, ledger or none, never on a request without it; a negative
--- value refuses by name (CE.Wire.Mask.maskOffence, the read scan/1 makes).
+-- | The judged-language set (8.0.0, plan v2.32 step 6): it comes from
+-- the core's language table — an `unres` row for lang 20 (HTML, a
+-- judged language outside the legacy seven) judges with no key,
+-- vouched, dead row [0,1,2]; one for lang 7 (not judged) refuses by
+-- name; no result echoes a mask; and a request that still carries
+-- `judgedMask`, whatever its value, is refused by name
+-- (CE.Wire.Mask.retiredMask, the read scan/1 makes).
 maskRoad :: Bool
 maskRoad =
   and
-    [ deadOf (maskReq (Just [[20, 0, 1]]) [maskOf 1048703]) == Just (toJSON ([[0, 1, 2]] :: [[Integer]]))
-    , echoOf (maskReq (Just [[20, 0, 1]]) [maskOf 1048703]) == Just (toJSON (1048703 :: Integer))
-    , refusedGraph (maskReq (Just [[20, 0, 1]]) []) "unres 0: lang outside the judged set"
-    , echoOf (maskReq Nothing [maskOf 127]) == Just (toJSON (127 :: Integer))
+    [ deadOf (maskReq (Just [[20, 0, 1]]) []) == Just (toJSON ([[0, 1, 2]] :: [[Integer]]))
+    , refusedGraph (maskReq (Just [[7, 0, 1]]) []) "unres 0: lang outside the judged set"
+    , fmap (KM.member "judgedMask") (objOf (maskReq (Just [[20, 0, 1]]) [])) == Just False
     , fmap (KM.member "judgedMask") (objOf (maskReq Nothing [])) == Just False
-    , refusedGraph (maskReq Nothing [maskOf (-1)]) "judgedMask: negative"
+    , refusedGraph (maskReq Nothing [maskOf 127]) retired
+    , refusedGraph (maskReq (Just [[20, 0, 1]]) [maskOf 1548415]) retired
     ]
  where
+  retired = "judgedMask: retired at 8.0.0 \8212 the core reads its language table"
   maskOf m = "judgedMask" .= (m :: Integer)
   -- explicit signature at the definition (the GHC-39999 where-block
   -- lesson, fourth occurrence): Nothing leaves the table's element
   -- type ambiguous otherwise
   maskReq :: Maybe [[Integer]] -> [Pair] -> B8.ByteString
   maskReq unres extra = fixtureReq [[20, 0, 0]] (optional "unres" unres <> extra)
-  echoOf req = objOf req >>= KM.lookup "judgedMask"
 
 -- | The whole reply object of one graph request.
 objOf :: B8.ByteString -> Maybe (KM.KeyMap Value)

@@ -2,14 +2,15 @@
 -- every row of every table is well shaped, every code and language
 -- in range, every ladder coherent. Split from CE.Scan at the
 -- 300-line dogfood wall when the judged-language mask arrived
--- (7.2.0; the CE.Graph.Contract precedent): checking what arrived
+-- (7.2.0, retired from the wire at 8.0.0; the CE.Graph.Contract
+-- precedent): checking what arrived
 -- and judging it are two jobs, and only the first one is allowed to
 -- know the request's spelling. Every row shape reads through
 -- CE.Wire's rowCheck skeleton — the clone gate named the hand-rolled
 -- copy (its rowShape rhymed with trend/2's) the moment it moved.
 --
 -- Every message here is golden-pinned text. A refusal is named by
--- table, row index and reason — or, for the whole-request mask, by
+-- table, row index and reason — or, for the retired mask key, by
 -- key and reason — so a producer learns which row it got wrong,
 -- never just that something was wrong.
 module CE.Scan.Contract (violation) where
@@ -18,7 +19,7 @@ import CE.Scan.Cycles (callBattery)
 import CE.Scan.Events (eventBattery)
 import CE.Scan.Fence (fenceOffence)
 import CE.Wire (RowsReq (..), Rulepack (..), rowCheck, tableOffence)
-import CE.Wire.Mask (judgedLang, maskOffence)
+import CE.Wire.Mask (judgedLang, retiredMask)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (find)
@@ -30,13 +31,14 @@ import CE.Verdict.Cost (classIdPastFence)
 -- | First boundary-contract offender in request order (Clone.hs
 -- posture: the message names the violator deterministically); the
 -- ascending pass compares CODES alone (warn values legitimately
--- vary), through CE.Wire's shared checker. The judged-language mask
--- (7.2.0) is a whole-request fact the naming rows are read against,
--- so its own shape is named before any row of any table is.
+-- vary), through CE.Wire's shared checker. A request that still
+-- carries the retired `judgedMask` key (8.0.0) is named before any row
+-- of any table is: the naming rows are read against the core's own
+-- language table.
 violation :: RowsReq -> Maybe String
 violation req =
   asum
-    [ maskOffence (maskOf req)
+    [ retiredMask (maskSent req)
     , asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
     , tableOffence "grade" (take 1) gradeShape (gradesOf req)
     , namingBattery req
@@ -57,7 +59,7 @@ namingBattery req = case namingOf req of
   Just naming ->
     asum
       [ counts naming
-      , asum (zipWith (namingShape (maskOf req)) [0 :: Int ..] naming)
+      , asum (zipWith namingShape [0 :: Int ..] naming)
       , asum (zipWith preJudged [0 :: Int ..] (rowsOf req))
       ]
  where
@@ -98,15 +100,14 @@ overrideShape = rowCheck "gradeOverride" "malformed row (need [class,code,warn,f
       | otherwise -> ladderFault rest
     _ -> Nothing
 
--- | One naming-facts row; the language code must be in the judged
--- set the request declared (7.2.0), the legacy seven when it declared
--- none — the set is the producer's LANGS table, not a constant here.
-namingShape :: Maybe Integer -> Int -> [Integer] -> Maybe String
-namingShape mask = rowCheck "naming" "malformed row (need [lang,style,upper,under,test])" 5 checks
+-- | One naming-facts row; the language code must be a judged one —
+-- the language table's `judged` column (CE.Wire.Mask, 8.0.0).
+namingShape :: Int -> [Integer] -> Maybe String
+namingShape = rowCheck "naming" "malformed row (need [lang,style,upper,under,test])" 5 checks
  where
   checks row = case row of
     [lang, style, upper, under, test]
-      | not (judgedLang mask lang) -> Just "lang outside the judged set"
+      | not (judgedLang lang) -> Just "lang outside the judged set"
       | style < 0 || style > 2 -> Just "unknown style"
       | any (`notElem` [0, 1]) [upper, under, test] -> Just "non-boolean fact"
     _ -> Nothing
