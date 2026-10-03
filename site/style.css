@@ -48,6 +48,11 @@
 .install.metric .k { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: var(--fs-sm); }
 .install.metric code { color: var(--paper); font-weight: 600; }
 .installs + .cap, .installs + p { margin-top: 14px; }
+/* the install routes' full text, folded under the one-line chips */
+dl.routes-full { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 20px; margin: 4px 0 12px; font-size: var(--fs-sm); color: var(--muted); }
+dl.routes-full dt { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding-top: 2px; }
+:lang(zh) dl.routes-full dt { letter-spacing: 0.02em; }
+dl.routes-full dd { font-family: var(--mono); color: var(--text); max-width: var(--measure); }
 
 /* Framed blocks — the terminal, the diagrams, the screenshots — share
    one frame: ink ground, one hairline, one radius, one shadow, and a
@@ -103,6 +108,11 @@ p + p { margin-top: 12px; }
 .cmds .card h3 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0; }
 .card h3::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 2px; background: var(--accent); margin: 0 10px 2px 0; vertical-align: middle; }
 .card p { font-size: 0.92rem; color: var(--muted); }
+/* a card's second and later sentences fold under its first; the fold
+   sits on the card's bottom edge, so a row of cards keeps one baseline */
+.grid > .card { display: flex; flex-direction: column; }
+.card details.more { margin-top: auto; padding-top: 12px; }
+.card details.more > summary { font-size: 0.8rem; }
 .card.band {
   grid-column: span 2; display: flex; flex-direction: column; justify-content: center;
   background: linear-gradient(135deg, var(--accent-wash), transparent 70%), var(--panel);
@@ -214,7 +224,9 @@ footer.site p + p { margin-top: 8px; }
   /* a key beside its value no longer fits: key over value */
   header.site nav { flex-basis: 100%; justify-content: flex-start; gap: 6px 11px; font-size: 0.85rem; }
   header.site nav a:last-child[href$="/releases/latest"] { border: 0; padding: 0; }
-  .installs, .install, .toc, .toc .row { grid-template-columns: minmax(0, 1fr); }
+  .installs, .install, .toc, .toc .row, dl.routes-full { grid-template-columns: minmax(0, 1fr); }
+  dl.routes-full { row-gap: 2px; }
+  dl.routes-full dd { margin-bottom: 10px; }
   .card.band { grid-column: auto; padding: 22px; }
   .install { row-gap: 2px; }
   .fam { padding: 20px 18px; }
