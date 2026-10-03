@@ -148,8 +148,9 @@ pub struct ScanRequest<'a> {
 /// The naming facts and the row classes ride aligned: each chunk
 /// carries the facts of ITS code-6 rows and the classes of ITS rows.
 /// The named conditions (6.4.0) union across chunks in the core's
-/// canonical order, and the fail bit is their disjunction.
-pub fn judge(core: &str, r: &ScanRequest) -> Result<Judgment> {
+/// canonical order, and the fail bit is their disjunction. The link
+/// comes back whole, for the report to be laid out over it.
+pub fn judge(core: &str, r: &ScanRequest) -> Result<(Judgment, crate::corelink::Link)> {
     let mut link = crate::lockstep::open_family(core, CAP)?;
     let mut j = Judgment::default();
     let mut held = std::collections::BTreeSet::new();
@@ -173,7 +174,7 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<Judgment> {
     }
     // the canonical order is the core's (CE.Scan conds), not the
     // set's; a name outside the vocabulary is a wire drift
-    j.failed = ["hard_line", "knobs_digest", "degraded"]
+    j.failed = super::document::CONDITIONS
         .into_iter()
         .filter(|n| held.contains(*n))
         .map(String::from)
@@ -183,7 +184,7 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<Judgment> {
         "core named a condition outside the scan/1 vocabulary: {held:?}"
     );
     j.fail = !j.failed.is_empty();
-    Ok(j)
+    Ok((j, link))
 }
 
 /// One chunk's request body: the tables that ride every time, then

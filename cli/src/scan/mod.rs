@@ -1,9 +1,11 @@
 //! `ce scan` orchestration: walk → parse → measure → judge → emit.
 //! Since ADR-008 P3 the LEVEL judgment is the core's (scan/1, the
-//! graded verdict table); measurement and report rendering stay
-//! here, and the local evaluate() binding survives as the pinned
-//! mirror the whole-report ensure proves equal on every judged run
-//! — CLI gate, MCP tool and GUI face alike since batch-7 slice 8.
+//! graded verdict table); since plan v2.32 step 5 the report, its
+//! console lines and the exit bit are the core's too (document/1,
+//! document.rs) — measurement stays here, and the local evaluate()
+//! binding survives as the pinned mirror the whole-report ensure
+//! proves equal on every judged run — CLI gate, MCP tool and GUI face
+//! alike since batch-7 slice 8 (step 6 retires it).
 
 pub mod ast;
 pub mod binding;
@@ -13,6 +15,7 @@ pub mod chunk;
 pub mod classes;
 pub mod complexity;
 pub mod declarator;
+pub mod document;
 pub mod functions;
 pub mod globs;
 pub mod html;
@@ -37,18 +40,27 @@ pub enum Format {
     Sarif,
 }
 
+/// `ce scan`: the judged tree's document and lines printed in the
+/// requested form; exit 1 iff the core's veto (a held condition).
 pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
-    let (files, findings, summary, fail, failed) = analyze_judged(root, core)?;
+    let answer = judged(root, core)?;
     match format {
-        Format::Console => report::print_console(&findings, &summary, &failed),
-        Format::Json => println!("{}", report_string(&files, &findings, summary, &failed)?),
-        Format::Sarif => println!("{}", report::sarif_string(&findings)?),
+        Format::Console => crate::document::emit("scan", &answer, false)?,
+        Format::Json => crate::document::emit("scan", &answer, true)?,
+        Format::Sarif => crate::document::emit_projected(
+            &answer,
+            &crate::sarif::projected(&answer.document, "findings", document::finding)?,
+        ),
     }
-    Ok(if fail {
-        ExitCode::from(1)
-    } else {
-        ExitCode::SUCCESS
-    })
+    Ok(ExitCode::from(u8::from(answer.fail)))
+}
+
+/// The judged tree laid out by the core: the one scan answer every
+/// surface reads (the CLI prints it, MCP and the GUI take its
+/// document).
+pub fn judged(root: &Path, core: &str) -> Result<crate::document::Answer> {
+    let j = analyze_judged(root, core)?;
+    document::answer(core, &j.settled, j.held)
 }
 
 /// Measurement alone — the walk every scan surface shares; the score
@@ -67,16 +79,15 @@ pub fn measure(root: &Path) -> Result<(crate::config::Config, Vec<FileMetrics>)>
 /// gate happened to run). Levels come from the core (scan/1); the
 /// ADR-008 P3 drift ensure then proves the pinned mirror equal on
 /// EVERY surface, or the run dies loudly — formula drift named,
-/// never a silently forked verdict. The last two are the fail bit and
-/// the conditions it is the disjunction of (6.4.0: `hard_line`, the
-/// config fence `knobs_digest`, `degraded`).
-type Judged = (
-    Vec<FileMetrics>,
-    Vec<report::Finding>,
-    report::Summary,
-    bool,
-    Vec<String>,
-);
+/// never a silently forked verdict. The settled tree carries the fail
+/// bit and the conditions it is the disjunction of (6.4.0:
+/// `hard_line`, the config fence `knobs_digest`, `degraded`).
+pub struct Judged {
+    pub settled: Settled,
+    pub findings: Vec<report::Finding>,
+    /// The link the tree was judged over, for its report.
+    held: crate::document::Held,
+}
 
 /// A measured tree with the core's verdict on it, and the ONE road a
 /// complexity value takes: the three numbers are derived from each
@@ -100,6 +111,11 @@ pub struct Settled {
 }
 
 pub fn settle(root: &Path, core: &str) -> Result<Settled> {
+    Ok(settled_over(root, core)?.0)
+}
+
+/// The settled tree and the link it was judged over.
+fn settled_over(root: &Path, core: &str) -> Result<(Settled, crate::corelink::Link)> {
     let (config, mut files) = measure(root)?;
     let blocks = report::blocks_of(&files);
     // the call table (6.5.0): the arcs this side proved inside one
@@ -122,12 +138,12 @@ pub fn settle(root: &Path, core: &str) -> Result<Settled> {
         calls: &calls,
         events: &events,
     };
-    let j = wire::judge(core, &req)?;
+    let (j, link) = wire::judge(core, &req)?;
     complexity::apply(&mut files, &blocks, &j.derived, &j.bumped)?;
     // rebuilt AFTER the derivation: these are the values that were
     // graded, so the report, the mirror and the core read one number
     let rows = report::rows_of(&files);
-    Ok(Settled {
+    let settled = Settled {
         config,
         files,
         classes: t.classes,
@@ -138,7 +154,8 @@ pub fn settle(root: &Path, core: &str) -> Result<Settled> {
         levels: j.levels,
         fail: j.fail,
         failed: j.failed,
-    })
+    };
+    Ok((settled, link))
 }
 
 /// The rows as they cross — the facts roads: the fn-naming verdict
@@ -201,7 +218,7 @@ fn tables(
 }
 
 pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
-    let s = settle(root, core)?;
+    let (s, link) = settled_over(root, core)?;
     let findings = report::findings_from(
         &s.rows,
         &s.levels,
@@ -217,25 +234,11 @@ pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
         findings == mirror,
         "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
     );
-    let summary = report::summarize(&s.files, &findings);
-    Ok((s.files, findings, summary, s.fail, s.failed))
-}
-
-/// The scan report as its canonical JSON string (schema §7.1).
-pub fn report_string(
-    files: &[FileMetrics],
-    findings: &[report::Finding],
-    summary: report::Summary,
-    failed: &[String],
-) -> Result<String> {
-    let rep = report::Report {
-        schema: report::SCHEMA,
-        files,
+    Ok(Judged {
+        settled: s,
         findings,
-        summary,
-        failed,
-    };
-    Ok(serde_json::to_string_pretty(&rep)?)
+        held: Ok(link),
+    })
 }
 
 fn measure_file(src: Vec<u8>, path: &Path, root: &Path, language: Lang) -> Result<FileMetrics> {

@@ -58,9 +58,21 @@ pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> Ex
 /// fails.
 pub fn churn_cmd(root: &Path, days: u32, json: bool, core: &str) -> ExitCode {
     let answer = churn::run(root, days).and_then(|report| churn::answer(core, &report, days));
-    match answer.and_then(|a| codeeraser::document::emit("churn", &a, json).map(|()| a.fail)) {
+    answered("churn", "churn", json, answer)
+}
+
+/// A face the core answered (plan v2.32 step 5): its lines or its
+/// document printed, exit 1 iff the core's veto, 2 when the run or the
+/// core failed — `name` the command, `family` the document's.
+pub fn answered(
+    name: &str,
+    family: &str,
+    json: bool,
+    answer: anyhow::Result<codeeraser::document::Answer>,
+) -> ExitCode {
+    match answer.and_then(|a| codeeraser::document::emit(family, &a, json).map(|()| a.fail)) {
         Ok(fail) => ExitCode::from(u8::from(fail)),
-        Err(err) => fail("churn", err),
+        Err(err) => fail(name, err),
     }
 }
 

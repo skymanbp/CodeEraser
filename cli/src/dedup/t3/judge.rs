@@ -9,14 +9,14 @@ use crate::dedup::candidates::PairRow;
 use crate::lockstep;
 use anyhow::Result;
 
-/// Returns the merged rows, `[judged, prefiltered, cached]` and the
-/// request count.
+/// Returns the merged rows, `[judged, prefiltered, cached]`, the
+/// request count and the link, whole, for the report.
 pub(super) fn judge(
     core: &str,
     conn: &rusqlite::Connection,
     built: &[Outcome],
     sendable: &[&PairRow],
-) -> Result<(Scored, [u64; 3], usize)> {
+) -> Result<(Scored, [u64; 3], usize, crate::corelink::Link)> {
     let mut link = lockstep::open_family(core, wire::CAP)?;
     cache::open_generation(conn, link.proto())?;
     let held = cache::load(conn)?;
@@ -43,5 +43,5 @@ pub(super) fn judge(
     )?;
     rows.extend(scored);
     rows.sort_unstable();
-    Ok((rows, [judged, prefiltered, cached], requests))
+    Ok((rows, [judged, prefiltered, cached], requests, link))
 }

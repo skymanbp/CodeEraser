@@ -100,6 +100,17 @@ impl Request {
         self
     }
 
+    /// A measuring side's counters as facts: `names` space-separated,
+    /// one value each, in order.
+    pub fn counters(self, names: &str, values: &[u64]) -> Self {
+        let names: Vec<&str> = names.split_whitespace().collect();
+        assert_eq!(names.len(), values.len(), "one value per counter name");
+        names
+            .into_iter()
+            .zip(values)
+            .fold(self, |req, (name, n)| req.fact(name, *n))
+    }
+
     /// The judgment did not happen; `why` indexes the reason texts.
     pub fn degraded(mut self, why: usize) -> Self {
         self.degraded = Some(why);
@@ -179,17 +190,29 @@ pub fn emit(family: &str, answer: &Answer, json: bool) -> Result<()> {
         lines::print(&answer.lines, Mode::Console);
         return Ok(());
     }
+    emit_projected(answer, &rendered(family, &answer.document)?);
+    Ok(())
+}
+
+/// A family's document as its `--format json` face and its MCP tool
+/// print it: indented when the catalogue states the family `pretty`.
+pub fn rendered(family: &str, doc: &Value) -> Result<String> {
     let Some(pretty) = crate::tables::get().document.pretty(family) else {
         bail!("{family} document: the catalogue states no `pretty` (a pre-7.10.0 core)");
     };
-    let text = if pretty {
-        serde_json::to_string_pretty(&answer.document)?
+    Ok(if pretty {
+        serde_json::to_string_pretty(doc)?
     } else {
-        answer.document.to_string()
-    };
+        doc.to_string()
+    })
+}
+
+/// An answer whose stdout is a text made from its document (the
+/// document itself, or its SARIF projection): the text, then the
+/// stream-1 lines (ruling R3).
+pub fn emit_projected(answer: &Answer, text: &str) {
     println!("{text}");
     lines::print(&answer.lines, Mode::Document);
-    Ok(())
 }
 
 /// A bound document read as the face's reader `T` (the console, the
@@ -256,6 +279,18 @@ impl Why {
     /// The text a `why` reference names.
     pub fn at(&self, i: &[i128]) -> Option<String> {
         at(&self.0, i)
+    }
+}
+
+/// A face's strings held as lists, one per reference class, each read
+/// by a one-integer reference — the resolver of every face whose
+/// references are indices.
+pub struct Lists(pub Vec<(&'static str, Vec<String>)>);
+
+impl Resolve for Lists {
+    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
+        let (_, list) = self.0.iter().find(|(c, _)| *c == class)?;
+        at(list, ints)
     }
 }
 

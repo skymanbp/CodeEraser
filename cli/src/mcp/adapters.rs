@@ -40,18 +40,14 @@ fn days(args: &Value, default: u32) -> u32 {
 // P4 cross-surface-shell precedent). This file keeps only the MCP
 // concerns: the catalog table, arg parsing, and stringification.
 
-// scan is the STRING-native library face, and mcp_precommit
-// byte-pins this catalog to it (the catalog is a transport, never a
-// second serializer) — a Value round-trip re-orders keys and drops the
-// pretty form, so it stays on the direct string face; faces::scan
-// serves the GUI's Value-shaped consumption of the same document.
-// Since batch-7 slice 8 scan judges through the core like every
-// verdict surface (the byte pin survives: findings ≡ mirror by the
-// drift ensure). graph_sites prints the document the core lays out
-// (plan v2.32 step 4), one serialization like every sibling.
+// scan prints the document the core lays out (plan v2.32 step 5) in
+// the form its `--format json` face prints — document::rendered, the
+// catalogue states scan `pretty` — and mcp_precommit byte-pins this
+// catalog to that face (the catalog is a transport, never a second
+// serializer). graph_sites prints its document (step 4), one
+// serialization like every sibling.
 pub(super) fn scan(root: &Path, _a: &Value) -> Result<String> {
-    let (files, findings, summary, _fail, failed) = crate::scan::analyze_judged(root, &core())?;
-    crate::scan::report_string(&files, &findings, summary, &failed)
+    crate::document::rendered("scan", &crate::faces::scan(root, &core())?)
 }
 
 pub(super) fn check_duplication(root: &Path, a: &Value) -> Result<String> {
@@ -117,7 +113,7 @@ plain!(
 /// CLI flag produces, so the branch is real and stays written out.
 pub(super) fn clone_report(root: &Path, a: &Value) -> Result<String> {
     if a["units"].as_bool().unwrap_or(false) {
-        return Ok(crate::faces::clone_units(root)?.to_string());
+        return Ok(crate::faces::clone_units(root, &core())?.to_string());
     }
     plain_face(root, "clone")
 }

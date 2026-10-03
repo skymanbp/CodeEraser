@@ -8,6 +8,14 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 权威轨 v2.32 步 5 车道 A 第一批：scan / dedup / clone / clone-units / docdup 五族的文档与控制台改由核给出（2026-10-03；照 churn 试点的形：Rust 量出整数、送 `document/1`、按 stream 印核的 `lines`、退出码读核的否决位；判决代码零改动，`document/1` 仍是 7.10.0，分数与 1.8.0 可比）：
+
+- **Rust**：`scan::document`（新）送文件 / 函数 / 等级 / 档位表，`dedup::report::answer` 送块 / 组 / 成员与 `--check` 的预算与越线位（`budget::check` 返回 `Gate`），`dedup::t3::answer` 送每一条判过的 T3 行（`--units` 走 `units_answer`），`docdup::judge::answer` 送活段与每一条判过的行；判决的那条核链接着装文档（scan / clone / docdup 不再为文档另起一个核）；新克隆按所有者消掉：`sarif::projected`、`document::Lists`、`Request::counters`（主根 38 块、子仓 91 块；主根预算 41 → 38 具名下调，三个成员在子仓 RETIRED 按名退役，子仓预算 91 未动）。删除：`scan::report` 的 `SCHEMA` / `Report` / `Summary` / `print_console` / `sarif_string`（R10 镜像留下只喂漂移 ensure），dedup 的 `SCHEMA_ID` 与两句 ratchet 打印，t3 / docdup 的 `print` / `SCHEMA_ID` / `Report` / 序列化结构体，`unitcache::UNITS_SCHEMA_ID`，`cli/src/report.rs` 的 `Pair` / `Report` / `emit` / `envelope`。SARIF 是绑定后文档的投影。命令体收成 `main_cmds::answered`（churn 同读）。GUI 与 daemon 的签名不动（`dedup::report_json` 用本进程的核）。设计册 §13 第 51–55 条。
+- **核**：clone 与 docdup 的信封文本改读具名常量 `schemaId`；facts 的 `report:scan` / `report:dedup` / `report:clone` / `report:clone-units` / `report:docdup` 改绑核。
+- **行为变化**：五族从此要核答 `document/1`，否则具名拒、退 2；`ce dedup --check --format json` 低于预算时不再在文档后印那句建议（json 面 stdout 只有文档与 stream 1 的行，控制台照旧）；`ce scan` / `ce dedup` 的 `--format json` 键改为排序、值不变，`scan-report` 的 golden 由真管线重生成。
+- **代价**：每次多一次核问答（scan 的文档请求 278 KB、应答 1.3 MB）；自仓 release ABAB ×7 中位：scan 1725 → 1985 ms、dedup 988 → 1099、clone 4202 → 4342、docdup 3807 → 3927（`docs/PERF-BUDGET.md`）。
+- **门读数**：见提交说明（车道 `lane/v232-step5a`，快进到 7502f02c / 子仓 7631ba7 之上）。
+
 **无默认档位变更。** 数学独立成页（2026-10-02；判决代码、生成块一个字节不动）：新页对 `site/math/` 与 `site/zh/math/`，十六条规则按「重复 / 结构 / 分数与趋势 / 图与逻辑」四组排列，每条给出公式、它判什么、写明了的保证句（逐字取自 how / analysis 页或方法学册，册里只有英文的句子在中文页译出）、参与的常数（how 页常数芯片的拷贝，新门 `site_math` 逐个对回 how 页同族同名同值）与推导 / 方法学册两条链接，页首目录面板同 how 页；首页「数学」一节缩成三条公式的预告与一条「全部十六条规则 →」链接，离开首页的每一句都在数学页（逐句对拍改为全站合并口径，零缺句）；每页页头导航加「Math / 数学」，GitHub 移到页脚（各页页脚本就有），420 px 下导航仍一行；页集登记：`scripts/verify_site.js`、README 双语官网行、测试子仓 `docs_lang` / `facts_chips` / `site_contents`；`theme.css?v=11` / `style.css?v=11` 全站同改。
 
 **无默认档位变更。** 权威轨 v2.32 步 5 R0：Rust 读核的 `lines` 与否决位，churn 一族先切（2026-10-02；`ce churn` 的文档与控制台每一行改由核装配与给出，Rust 只量窗口、送整数、按 stream 印；判决代码零改动，`document/1` 仍是 7.10.0，golden 不动，分数与 1.8.0 可比）：

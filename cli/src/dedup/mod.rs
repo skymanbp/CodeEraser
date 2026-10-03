@@ -25,16 +25,9 @@ use crate::config::Config;
 use crate::graph::{ladder, store, wire};
 use crate::scan::Format;
 use anyhow::Result;
-use serde::Serialize;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
-
-/// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.5.0: clone groups — k-way families aggregated from pairwise
-/// blocks (attack-review R8 denominator inflation); 0.4.0 added the
-/// calibrated diversity floor (min_distinct, default 7).
-pub const SCHEMA_ID: &str = "ce.dedup-report/0.5.0";
 
 /// CLI options for [`run`] (bundled: six loose params would trip the
 /// project's own params threshold).
@@ -44,8 +37,8 @@ pub struct RunOpts {
     pub min_tokens: Option<usize>,
     pub min_distinct: Option<usize>,
     pub check: bool,
-    /// ce-core path — consulted by `check` alone (ADR-008 P2: the
-    /// budget comparison is the core's verdict).
+    /// ce-core path: the budget comparison under `check` (ADR-008 P2)
+    /// and the report itself (plan v2.32 step 5) are the core's.
     pub core: String,
 }
 
@@ -61,22 +54,28 @@ pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
         budget::gate_filters(opts.min_tokens, opts.min_distinct)?;
     }
     let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
-    report::emit(opts.format, &found, &summary)?;
-    if opts.check {
-        // the R12 gate lives in budget.rs (split at the 300-line
-        // dogfood ceiling when the review-repair asserts landed);
-        // since 2.19.0 it ships the pre-filter distinct counts and
-        // the effective floor, and the CORE's derivation is the
-        // gated number (batch-7 slice 1)
-        return budget::check(
+    // the R12 gate lives in budget.rs (split at the 300-line dogfood
+    // ceiling when the review-repair asserts landed); since 2.19.0 it
+    // ships the pre-filter distinct counts and the effective floor, and
+    // the CORE's derivation is the gated number (batch-7 slice 1). A
+    // gate that could not judge still lets the report print first —
+    // its refusal is the run's error after it, as before the switch.
+    let gate = opts.check.then(|| {
+        budget::check(
             root,
-            summary.blocks,
+            found.blocks.len(),
             &found.distincts,
             opts.min_distinct,
             &opts.core,
-        );
+        )
+    });
+    let judged = gate.as_ref().and_then(|g| g.as_ref().ok().copied());
+    let answer = report::answer(&opts.core, &found, &summary, judged)?;
+    report::emit(opts.format, &answer)?;
+    if let Some(Err(err)) = gate {
+        return Err(err);
     }
-    Ok(ExitCode::SUCCESS)
+    Ok(ExitCode::from(u8::from(answer.fail)))
 }
 
 /// One command boundary's measurement: blocks + their open index + its path (P10).
@@ -170,7 +169,7 @@ pub fn analyze(
         }
         None => recompute(&mut idx, root, &walked, p, filter)?,
     };
-    let summary = summarize(&found, &walked, removed, p, filter);
+    let summary = summarize(&walked, removed, filter);
     Ok((found, summary))
 }
 
@@ -209,26 +208,13 @@ fn recompute(
 /// Per-run summary: block facts ride `found`, refresh facts ride
 /// THIS run's walk — a served cache result must not replay the
 /// storing run's refreshed/removed counters.
-fn summarize(
-    found: &pairs::Blocks,
-    walked: &walkidx::WalkIndex,
-    removed: usize,
-    p: Params,
-    filter: pairs::Filter,
-) -> Summary {
+fn summarize(walked: &walkidx::WalkIndex, removed: usize, filter: pairs::Filter) -> Summary {
     Summary {
         // has_tokens files only: Markdown rows are graph cache, and
         // counting them would silently change dedup-report/0.5.0
         files: walked.tokenized,
         refreshed: walked.dirty.len(),
         removed,
-        blocks: found.blocks.len(),
-        groups: found.groups.len(),
-        hot_chained: found.hot_chained,
-        stale_skipped: found.stale_skipped,
-        low_diversity_suppressed: found.low_diversity_suppressed,
-        kgram: p.kgram,
-        window: p.window,
         min_tokens: filter.min_tokens,
         min_distinct: filter.min_distinct,
     }
@@ -270,22 +256,17 @@ fn resolve_edges(
     idx.resolve_refreshed(&dirty, &mut resolver)
 }
 
-pub use report::report_json;
+pub use report::{answer, report_json};
 
-#[derive(Serialize)]
+/// One run's walk counters and the two report filters it used — the
+/// facts the dedup document reads beside the blocks (the block, group
+/// and stale counts ride `found`; the winnowing point is the core's).
 pub struct Summary {
-    files: usize,
-    refreshed: usize,
-    removed: usize,
-    blocks: usize,
-    groups: usize,
-    hot_chained: usize,
-    stale_skipped: usize,
-    low_diversity_suppressed: usize,
-    kgram: usize,
-    window: usize,
-    min_tokens: usize,
-    min_distinct: usize,
+    pub files: usize,
+    pub refreshed: usize,
+    pub removed: usize,
+    pub min_tokens: usize,
+    pub min_distinct: usize,
 }
 
 /// Winnowing parameters. Guarantee threshold t = matches of at least

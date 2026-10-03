@@ -1,30 +1,11 @@
-//! Shared judgment-report shapes and emission — ONE pair-hit shape,
-//! ONE report envelope and ONE console posture for every judgment
-//! family. The repo's own ratchet caught the second family re-growing
-//! the first's structs and print function token for token (bite
-//! seventeen); the generic forms exist so a third family cannot
-//! re-grow them either.
+//! Shared report emission for the families whose console this side
+//! still prints: the one `--format` gate, the bound-document readers
+//! and the console's named-failure suffix. The pair envelope the clone
+//! and docdup reports shared left for the core (plan v2.32 step 5,
+//! CE.Document.Envelope).
 
-use serde::Serialize;
-
-/// One reported pair: the two endpoint names plus the family's own
-/// metric block, flattened into the row's JSON.
-#[derive(Serialize)]
-pub struct Pair<M: Serialize> {
-    pub a: String,
-    pub b: String,
-    #[serde(flatten)]
-    pub m: M,
-}
-
-/// One family's judgment report: reported pairs + the counts ledger.
-pub struct Report<M: Serialize, C: Serialize> {
-    pub hits: Vec<Pair<M>>,
-    pub counts: C,
-}
-
-/// The one --format gate for families whose Report does not fit the
-/// Pair/counts mold (join, trend): print the JSON document or run
+/// The one --format gate for families with their own reader (join,
+/// trend): print the JSON document or run
 /// the console closure — the `if as_json {…; return}` skeleton was
 /// the P4 ratchet's cross-family token twin.
 pub fn print_doc(as_json: bool, doc: impl FnOnce() -> serde_json::Value, console: impl FnOnce()) {
@@ -120,76 +101,4 @@ pub fn fail_suffix(failed: &[String]) -> String {
         return String::new();
     }
     crate::i18n::line(" (failed: {})", "（失败条件：{}）", &[&failed.join(", ")])
-}
-
-/// Print one family's report: the JSON envelope `{schema, <key>,
-/// counts}` under --format json, otherwise one templated line per
-/// hit plus a summary SENTENCE over the counts — both `{field}`
-/// templates, so the family contributes DATA, never another print
-/// function. Counters the sentence omits still print in the raw
-/// `k n` form after it (never silently absent, batch 9 P6) — the
-/// raw tail shrinks as the sentence grows, and a new counter can
-/// never vanish.
-pub fn emit<M: Serialize, C: Serialize>(
-    head: (&str, &str),
-    r: &Report<M, C>,
-    as_json: bool,
-    template: &str,
-    summary: &str,
-) {
-    if as_json {
-        println!("{}", envelope(head, r));
-        return;
-    }
-    let (_schema, key) = head;
-    for h in &r.hits {
-        println!(
-            "{}",
-            render(template, &serde_json::to_value(h).expect("hit"))
-        );
-    }
-    let v = serde_json::to_value(&r.counts).expect("counts");
-    let rest: Vec<String> = v
-        .as_object()
-        .expect("counts object")
-        .iter()
-        .filter(|(k, _)| !summary.contains(&format!("{{{k}}}")))
-        .map(|(k, n)| format!("{k} {n}"))
-        .collect();
-    let tail = if rest.is_empty() {
-        String::new()
-    } else {
-        format!(" | {}", rest.join(", "))
-    };
-    println!("{key}: {}{tail}", render(summary, &v));
-}
-
-/// The JSON half of emit as a value — the MCP report face returns
-/// this instead of printing, so the envelope stays one authority.
-pub fn envelope<M: Serialize, C: Serialize>(
-    (schema, key): (&str, &str),
-    r: &Report<M, C>,
-) -> serde_json::Value {
-    let mut doc = serde_json::Map::new();
-    doc.insert("schema".into(), schema.into());
-    doc.insert(key.into(), serde_json::to_value(&r.hits).expect("hits"));
-    doc.insert(
-        "counts".into(),
-        serde_json::to_value(&r.counts).expect("counts"),
-    );
-    serde_json::Value::Object(doc)
-}
-
-/// Substitute every `{field}` in the template with the object's
-/// field, strings bare and numbers in decimal.
-fn render(template: &str, v: &serde_json::Value) -> String {
-    let mut out = template.to_string();
-    for (k, val) in v.as_object().expect("hit object") {
-        let s = match val {
-            serde_json::Value::String(s) => s.clone(),
-            other => other.to_string(),
-        };
-        out = out.replace(&format!("{{{k}}}"), &s);
-    }
-    out
 }

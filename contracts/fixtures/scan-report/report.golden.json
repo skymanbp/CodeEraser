@@ -1,42 +1,42 @@
 {
-  "schema": "ce.scan-report/0.2.0",
+  "failed": [],
   "files": [
     {
-      "path": "src/sample.py",
-      "lang": "python",
-      "total_lines": 12,
       "comment_lines": 2,
       "functions": [
         {
-          "name": "loadConfig",
-          "start_line": 3,
-          "end_line": 9,
-          "lines": 7,
-          "params": 2,
-          "cyclomatic": 2,
           "cognitive": 1,
+          "cyclomatic": 2,
+          "end_line": 9,
+          "lines": 5,
           "max_nesting": 1,
-          "name_ok": false
+          "name": "loadConfig",
+          "name_ok": false,
+          "params": 2,
+          "start_line": 5
         }
-      ]
+      ],
+      "lang": "python",
+      "path": "src/sample.py",
+      "total_lines": 9
     }
   ],
   "findings": [
     {
       "file": "src/sample.py",
-      "line": 3,
-      "rule": "fn-naming",
       "level": "warn",
-      "value": 1,
+      "line": 5,
+      "rule": "fn-naming",
+      "subject": "loadConfig",
       "threshold": 0,
-      "subject": "loadConfig"
+      "value": 1
     }
   ],
+  "schema": "ce.scan-report/0.2.0",
   "summary": {
+    "fails": 0,
     "files": 1,
     "functions": 1,
-    "warns": 1,
-    "fails": 0
-  },
-  "failed": []
+    "warns": 1
+  }
 }

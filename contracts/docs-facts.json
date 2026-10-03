@@ -141,7 +141,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "41"
+      "value": "38"
     },
     {
       "id": "gate:dedup.tests#digits",
@@ -202,13 +202,13 @@
     },
     {
       "id": "report:clone#schemaver",
-      "source": "cli/src/dedup/t3/mod.rs (typed)",
+      "source": "core/app/CE/Clone/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.clone-report/0.3.0"
     },
     {
       "id": "report:clone-units#schemaver",
-      "source": "cli/src/dedup/unitcache.rs (typed)",
+      "source": "core/app/CE/Clone/Document.hs (unitsSchema)",
       "tier": "linked",
       "value": "ce.clone-units/0.1.0"
     },
@@ -220,13 +220,13 @@
     },
     {
       "id": "report:dedup#schemaver",
-      "source": "cli/src/dedup/mod.rs (typed)",
+      "source": "core/app/CE/Dedup/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.dedup-report/0.5.0"
     },
     {
       "id": "report:docdup#schemaver",
-      "source": "cli/src/docdup/judge/mod.rs (typed)",
+      "source": "core/app/CE/Docdup/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.docdup-report/0.1.0"
     },
@@ -310,7 +310,7 @@
     },
     {
       "id": "report:scan#schemaver",
-      "source": "cli/src/scan/report.rs (typed)",
+      "source": "core/app/CE/Scan/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.scan-report/0.2.0"
     },

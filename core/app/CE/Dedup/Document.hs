@@ -22,7 +22,7 @@ import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 
 doc :: DocFamily
-doc = (docFamily "dedup" "ce.dedup-report/0.5.0" statement checked assemble ["kgram" .= dedupKgram, "window" .= dedupWindow]) {dfPretty = True}
+doc = (docFamily "dedup" schemaId statement checked assemble ["kgram" .= dedupKgram, "window" .= dedupWindow]) {dfPretty = True}
 
 -- | A block row is [a file, a start, a end, b file, b start, b end,
 -- tokens, distinct]; a group row [g, blocks, tokens], one per group in
@@ -83,3 +83,7 @@ assemble req =
   member r = case r of
     [_, f, s, e] -> object ["file" .= ref "path" [f], "start" .= s, "end" .= e]
     _ -> object []
+
+-- | The document's schema id (the facts registry reads it here).
+schemaId :: String
+schemaId = "ce.dedup-report/0.5.0"

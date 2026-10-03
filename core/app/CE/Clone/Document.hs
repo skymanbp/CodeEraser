@@ -26,7 +26,7 @@ doc = docFamily "clone" (enSchema report) statement verdicts (enveloped report) 
 -- | The T3 report: a pair row's metrics are [ted, n1, n2]; the
 -- counters are the measuring side's, as the report names them.
 report :: Envelope
-report = envelopeOf "ce.clone-report/0.3.0 clones unit units units | ted n1 n2 | over_cap_units forest_units survivors s5_windowed s5_pruned_label s5_already s5_new pairs_dropped_over_cap pairs_dropped_forest sent requests prefiltered judged cached"
+report = envelopeOf (schemaId <> " clones unit units units | ted n1 n2 | over_cap_units forest_units survivors s5_windowed s5_pruned_label s5_already s5_new pairs_dropped_over_cap pairs_dropped_forest sent requests prefiltered judged cached")
 
 statement :: String
 statement = "range units\n" <> envelopeStatement report <> "ref unit units\n"
@@ -51,3 +51,7 @@ unitsAssemble req = object ["schema" .= unitsSchema, "units" .= map unit (rows r
   unit r = case r of
     [u, f, nth, nodes] -> object ["path" .= ref "path" [f], "key" .= ref "key" [u], "nth" .= nth, "nodes" .= nodes]
     _ -> object []
+
+-- | The document's schema id (the facts registry reads it here).
+schemaId :: String
+schemaId = "ce.clone-report/0.3.0"

@@ -618,4 +618,19 @@ entry_globs = [
 # pairs are `report::colon_pairs`. Row set diffed against the HEAD
 # (093ee88e) tree: that row gone, none new. Measured on the formatted
 # tree.
-budget = 41
+# 41 -> 38 (v2.32 step 5 lane A, the scan / dedup / clone / docdup
+# documents laid out by the core): three rows left with the reports
+# they were made of, none bought. dedup/t3/mod.rs's `print` rhymed
+# with docdup/judge/mod.rs's (60 tokens), t3's serialised Counts with
+# config/thresholds.rs's Thresholds (53 tokens), and faces.rs's two
+# `enveloped` faces with each other; the reports are the core's
+# documents now, so none of the three is there to rhyme. The six
+# rows the step first landed went before the count was read: the two
+# SARIF projections are `sarif::projected` with `num` / `text`, the
+# four index-to-string resolvers are `document::Lists`, the clone and
+# docdup counter facts are `Request::counters` (one line of names, one
+# column of values), and the core's four `schemaId` constants sit at
+# their modules' ends. Row set diffed against the 7502f02c tree: those
+# three rows gone, none new. Measured on the formatted tree. (The
+# three members are RETIRED by name in the tests subrepo.)
+budget = 38

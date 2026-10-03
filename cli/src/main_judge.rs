@@ -5,7 +5,7 @@
 //! caught DocdupArgs re-growing CloneArgs field-for-field; the other
 //! three families moved in as they grew the same JudgeArgs shape.
 
-use crate::main_cmds::{OutFormat, fail, json, or_cwd};
+use crate::main_cmds::{OutFormat, answered, fail, json, or_cwd};
 use codeeraser::{dedup, docdup, join};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -217,24 +217,13 @@ fn emit_checked<R>(
 
 /// `ce docdup` (M5-3g): the documentation-duplication judgment over
 /// the live cached segments — shingle sets to the core in chunks,
-/// raw inter/union plus the core's verdict bits back (ADR-008 P1).
+/// raw inter/union plus the core's verdict bits back (ADR-008 P1); the
+/// report, its lines and the `--check` veto are the core's (plan v2.32
+/// step 5).
 pub fn docdup_cmd(a: DocdupArgs, core: &str) -> ExitCode {
     let j = a.judge;
-    let as_json = json(j.format);
-    emit_checked(
-        "docdup",
-        || docdup::judge::run(&or_cwd(j.root), j.db, core),
-        |r| docdup::judge::print(r, as_json),
-        |r| {
-            (a.check && !r.hits.is_empty()).then(|| {
-                codeeraser::i18n::line(
-                    "{} reported duplication(s) — resolve or exempt them",
-                    "{} 处重复被报告 — 请解决或豁免",
-                    &[&r.hits.len()],
-                )
-            })
-        },
-    )
+    let answer = docdup::judge::answer(&or_cwd(j.root), j.db, core, a.check);
+    answered("docdup", "docdup", json(j.format), answer)
 }
 
 /// `ce clone` (M5-3e): the T3 TED judgment over the frozen candidate
@@ -242,47 +231,16 @@ pub fn docdup_cmd(a: DocdupArgs, core: &str) -> ExitCode {
 /// verdict bits back (ADR-008 P1). `--units` (M5-3b) instead lists
 /// the cached unit universe after asserting the unitsig/symbols
 /// identity agreement (zero orphans — the nth throat is one
-/// function, checked, not assumed).
+/// function, checked, not assumed). Both documents and their lines
+/// are the core's (plan v2.32 step 5).
 pub fn clone_cmd(a: CloneArgs, core: &str) -> ExitCode {
     let j = a.judge;
-    let as_json = json(j.format);
-    if !a.units {
-        return emit_checked(
-            "clone",
-            || dedup::t3::run(&or_cwd(j.root), j.db, core),
-            |r| dedup::t3::print(r, as_json),
-            |_| None,
-        );
-    }
-    emit_checked(
-        "clone",
-        || codeeraser::faces::clone_units(&or_cwd(j.root)),
-        |doc| print_units(doc, as_json),
-        |_| None,
-    )
-}
-
-/// The console face of the unit universe. The DOCUMENT is built in
-/// faces::clone_units — it used to be assembled here, which made it
-/// the one family document no machine surface could reach, and the
-/// `--units` MCP gap was that fact wearing a different hat.
-fn print_units(doc: &serde_json::Value, json: bool) {
-    if json {
-        println!("{doc}");
-        return;
-    }
-    let units = doc["units"].as_array().map(Vec::as_slice).unwrap_or(&[]);
-    for u in units {
-        println!(
-            "{}  {}#{}  {} nodes",
-            u["path"].as_str().unwrap_or("?"),
-            u["key"].as_str().unwrap_or("?"),
-            u["nth"],
-            u["nodes"]
-        );
-    }
-    println!(
-        "{}",
-        codeeraser::i18n::line("clone units: {}", "克隆单元：{}", &[&units.len()])
-    );
+    let root = or_cwd(j.root);
+    let answer = if a.units {
+        codeeraser::faces::listed_units(&root).and_then(|u| dedup::t3::units_answer(core, &u))
+    } else {
+        dedup::t3::answer(&root, j.db, core)
+    };
+    let family = if a.units { "clone-units" } else { "clone" };
+    answered("clone", family, json(j.format), answer)
 }

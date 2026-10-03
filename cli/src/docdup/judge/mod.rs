@@ -6,47 +6,50 @@
 //! full verdict bit (CE.Docdup.Cost.dupVerdict: Jaccard ∨ verbatim —
 //! the runs computed here ride the request as verdict inputs, F26);
 //! the reported set is the core's decision, cross-checked per row
-//! against the pinned is_dup mirror.
+//! against the pinned is_dup mirror. The report is the core's
+//! (document.rs).
 
 pub mod candidates;
+mod document;
 pub mod wire;
 
 use anyhow::{Context, Result, ensure};
-use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-/// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.docdup-report/0.1.0";
-
-#[derive(Serialize)]
+/// The judgment's counters, sent to the core as facts.
 pub struct Counts {
-    pub segments: usize,
-    /// The candidate pass's own tally rides flattened — one struct
-    /// owns those counters, nobody re-declares them.
-    #[serde(flatten)]
+    /// The candidate pass's own tally — one struct owns those
+    /// counters, nobody re-declares them.
     pub tally: candidates::Tally,
     pub sent: u64,
     pub requests: usize,
     pub judged: u64,
     pub jaccard_dups: u64,
-    pub dups: usize,
     /// Exempted segments by class (batch-7 defect sweep): the
     /// persisted classification, no longer silent in the report.
     pub exempt_license: u64,
     pub exempt_allow: u64,
 }
 
-/// The family metric block riding each reported pair (report::Pair
-/// flattens it, so the JSON row shape is unchanged).
-#[derive(Serialize)]
+/// A duplicate pair's metric: raw intersection and union and the
+/// verbatim run.
 pub struct Doc {
     pub inter: u64,
     pub union: u64,
     pub verbatim: u64,
 }
 
-pub type Report = crate::report::Report<Doc, Counts>;
+/// The judged universe: the live segments, the pairs the core called
+/// duplicates (segment indices with their metric), every judged row as
+/// the report sends it — [a, b, inter, union, run, verdict] — and the
+/// counters.
+pub struct Judged {
+    pub segs: Vec<candidates::SegRow>,
+    pub dups: Vec<(usize, usize, Doc)>,
+    judged: Vec<[i64; 6]>,
+    pub counts: Counts,
+}
 
 /// dup ⇔ inter·JACCARD_DEN ≥ JACCARD_NUM·union ∨ verbatim ≥
 /// verbatim_floor (the package's) — since ADR-008 P1 a MIRROR of the core's verdict
@@ -60,19 +63,24 @@ pub fn is_dup(inter: u64, union: u64, verbatim: u64) -> bool {
 }
 
 /// The whole judgment: refresh, live rows, coarse candidates, chunked
-/// docdup.requests, verdicts — rendered as the report's display pairs.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
+/// docdup.requests, verdicts.
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Judged> {
     let (idx, _db_path) = crate::dedup::refreshed_index(root, db)?;
-    let (segs, dups, counts) = rows_of(root, &idx, core)?;
-    let hits = dups
-        .into_iter()
-        .map(|(a, b, m)| crate::report::Pair {
-            a: name(&segs[a]),
-            b: name(&segs[b]),
-            m,
-        })
-        .collect();
-    Ok(Report { hits, counts })
+    Ok(judged_over(root, &idx, core)?.0)
+}
+
+/// `ce docdup`: the judgment, its report laid out by the core over the
+/// link it was judged over (plan v2.32 step 5); `check` is the
+/// console's `--check`.
+pub fn answer(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    check: bool,
+) -> Result<crate::document::Answer> {
+    let (idx, _db_path) = crate::dedup::refreshed_index(root, db)?;
+    let (judged, link) = judged_over(root, &idx, core)?;
+    document::report(core, &judged, check, Ok(link))
 }
 
 /// The structured judgment: segment table, dup pairs as indices
@@ -80,8 +88,19 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
 pub type Rows = (Vec<candidates::SegRow>, Vec<(usize, usize, Doc)>, Counts);
 
 /// The same judgment from an index the command boundary already
-/// refreshed and opened (batch 9 P10) — the erase gather's leg.
+/// refreshed and opened (batch 9 P10) — the erase gather's, the
+/// check's and the query facts' leg.
 pub fn rows_of(root: &Path, idx: &crate::dedup::index::Index, core: &str) -> Result<Rows> {
+    let (j, _link) = judged_over(root, idx, core)?;
+    Ok((j.segs, j.dups, j.counts))
+}
+
+/// The judgment and the link it was judged over.
+fn judged_over(
+    root: &Path,
+    idx: &crate::dedup::index::Index,
+    core: &str,
+) -> Result<(Judged, crate::corelink::Link)> {
     let segs = candidates::live_rows(idx)?;
     let cand = candidates::collect(root, &segs)?;
     // the family's lockstep bindings, inline: this judge is thin
@@ -97,34 +116,55 @@ pub fn rows_of(root: &Path, idx: &crate::dedup::index::Index, core: &str) -> Res
     )?;
     let runs: BTreeMap<(usize, usize), u64> =
         cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
-    let dups = reported_dups(&rows, &runs)?;
+    let judged_rows = reported_rows(&rows, &runs)?;
+    let dups = judged_rows
+        .iter()
+        .filter(|r| r[5] == 1)
+        .map(|r| {
+            let m = |k: usize| r[k] as u64;
+            (
+                r[0] as usize,
+                r[1] as usize,
+                Doc {
+                    inter: m(2),
+                    union: m(3),
+                    verbatim: m(4),
+                },
+            )
+        })
+        .collect();
     let (exempt_license, exempt_allow) = candidates::exempt_counts(idx)?;
     let counts = Counts {
-        segments: segs.len(),
         sent: cand.pairs.len() as u64,
         tally: cand.tally,
         requests,
         judged,
         jaccard_dups,
-        dups: dups.len(),
         exempt_license,
         exempt_allow,
     };
-    Ok((segs, dups, counts))
+    let judged = Judged {
+        segs,
+        dups,
+        judged: judged_rows,
+        counts,
+    };
+    Ok((judged, link))
 }
 
-/// The reported set from the CORE's verdict bits (ADR-008 P1), with
+/// Every judged row with its verbatim run, the CORE's verdict bit last
+/// (ADR-008 P1) — the reported set is the rows whose bit is set — with
 /// the per-row drift ensure — the pinned mirror must agree or the
 /// run dies loudly (formula drift named, never a silently forked
 /// verdict) — in one defensive pass (review C20: the runs[..]
 /// indexings were the last decode site that panicked instead of
 /// erroring on an unexpected pair echo). Split from run() at the
 /// E01 line, the t3::reported_clones shape.
-fn reported_dups(
+fn reported_rows(
     rows: &[(usize, usize, (u64, u64, bool))],
     runs: &BTreeMap<(usize, usize), u64>,
-) -> Result<Vec<(usize, usize, Doc)>> {
-    let mut dups = Vec::new();
+) -> Result<Vec<[i64; 6]>> {
+    let mut out = Vec::new();
     for &(a, b, (inter, union, v)) in rows {
         let run = *runs
             .get(&(a, b))
@@ -133,36 +173,10 @@ fn reported_dups(
             v == is_dup(inter, union, run),
             "core docdup verdict ({v}) disagrees with the pinned mirror at J {inter}/{union} run {run} — formula drift (Docdup/Cost.hs vs judge/mod.rs)"
         );
-        if v {
-            dups.push((
-                a,
-                b,
-                Doc {
-                    inter,
-                    union,
-                    verbatim: run,
-                },
-            ));
-        }
+        let n = |x: u64| x as i64;
+        out.push([a as i64, b as i64, n(inter), n(union), n(run), i64::from(v)]);
     }
-    Ok(dups)
-}
-
-/// Report emission through the ONE shared envelope+console throat.
-pub fn print(r: &Report, as_json: bool) {
-    crate::report::emit(
-        (SCHEMA_ID, "dups"),
-        r,
-        as_json,
-        crate::i18n::t(
-            "docdup {a} <-> {b}  J {inter}/{union} verbatim {verbatim}",
-            "文档重复 {a} <-> {b}  J {inter}/{union} 逐字 {verbatim}",
-        ),
-        crate::i18n::t(
-            "{dups} duplicate pair(s) over {segments} live segment(s) — {judged} judged, {jaccard_dups} by Jaccard",
-            "{dups} 对文档重复 / {segments} 个活段 — 判决 {judged}，其中 Jaccard 命中 {jaccard_dups}",
-        ),
-    );
+    Ok(out)
 }
 
 fn name(s: &candidates::SegRow) -> String {

@@ -27,6 +27,26 @@ pub fn report(results: Vec<Value>) -> Value {
     })
 }
 
+/// A bound document's `key` table projected one row to one finding
+/// (`result` below), the envelope around them, printed indented — the
+/// shape every family's `--format sarif` face shares.
+pub fn projected(doc: &Value, key: &str, finding: fn(&Value) -> Value) -> anyhow::Result<String> {
+    let rows = doc[key].as_array().map(Vec::as_slice).unwrap_or(&[]);
+    Ok(serde_json::to_string_pretty(&report(
+        rows.iter().map(finding).collect(),
+    ))?)
+}
+
+/// A document row's integer field (0 when absent).
+pub fn num(row: &Value, key: &str) -> usize {
+    row[key].as_u64().unwrap_or(0) as usize
+}
+
+/// A document row's string field (empty when absent).
+pub fn text<'a>(row: &'a Value, key: &str) -> &'a str {
+    row[key].as_str().unwrap_or("")
+}
+
 /// One finding. `level` is SARIF vocabulary ("error" / "warning" /
 /// "note"), spelled by the projecting family from its own judged
 /// grade; `related` locations ride only when non-empty (a clone

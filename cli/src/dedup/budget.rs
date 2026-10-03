@@ -2,14 +2,23 @@
 //! mod.rs when the review-repair asserts pushed it past the 300-line
 //! dogfood ceiling. The comparison is the CORE's since ADR-008 P2: a
 //! minimal verdict.request carries [blocks, budget] and the fail bit
-//! answers — Rust renders the report lines from its own numbers but
-//! never re-derives the exit code (the under-budget advisory is
-//! reporting, not judgment).
+//! answers; since plan v2.32 step 5 the ratchet's lines and the exit
+//! are the dedup document's too (CE.Dedup.Lines reads the budget and
+//! the bit), so this side never re-derives either.
 
 use crate::config::Config;
 use anyhow::Result;
 use std::path::Path;
-use std::process::ExitCode;
+
+/// One `--check` judgment as the document reads it: whether a check
+/// ran, the declared budget and verdict/1's fail bit (the budget
+/// held). The default is "no check".
+#[derive(Clone, Copy, Default)]
+pub struct Gate {
+    pub checked: bool,
+    pub budget: usize,
+    pub fail: bool,
+}
 
 /// The `--check` road judges at the calibrated operating point
 /// (t = 50, diversity floor 7). An override may TIGHTEN a filter —
@@ -49,7 +58,7 @@ pub fn check(
     distincts: &[u64],
     floor_override: Option<usize>,
     core: &str,
-) -> Result<ExitCode> {
+) -> Result<Gate> {
     let cfg = Config::load(root).map_err(anyhow::Error::msg)?;
     let Some(budget) = cfg.dedup.budget else {
         anyhow::bail!("--check needs [dedup] budget in ce.toml");
@@ -80,34 +89,17 @@ pub fn check(
         "core admitted {:?} blocks, the local filter kept {blocks} — pairs.rs and CE.Dedup.Cost have drifted",
         reply.dedup_blocks
     );
-    if reply.fail {
-        // attribute by the HELD names, never by construction-time
-        // coincidence (review C8): this message claims the budget,
-        // so the fail must BE the budget condition
-        anyhow::ensure!(
-            reply.failed == ["dedup_budget"],
-            "dedup check failed on {:?}, not the budget — message would misattribute",
-            reply.failed
-        );
-        eprintln!(
-            "{}",
-            crate::i18n::line(
-                "dedup ratchet: {} clone blocks > budget {} — new duplication must not land",
-                "去冗棘轮：{} 个克隆块 > 预算 {} — 新增重复不得落地",
-                &[&blocks, &budget],
-            )
-        );
-        return Ok(ExitCode::FAILURE);
-    }
-    if blocks < budget {
-        println!(
-            "{}",
-            crate::i18n::line(
-                "dedup ratchet: {} clone blocks < budget {} — ratchet the budget down",
-                "去冗棘轮：{} 个克隆块 < 预算 {} — 请把预算下调咬合",
-                &[&blocks, &budget],
-            )
-        );
-    }
-    Ok(ExitCode::SUCCESS)
+    // attribute by the HELD names, never by construction-time
+    // coincidence (review C8): the ratchet's line claims the budget,
+    // so a fail must BE the budget condition
+    anyhow::ensure!(
+        !reply.fail || reply.failed == ["dedup_budget"],
+        "dedup check failed on {:?}, not the budget — message would misattribute",
+        reply.failed
+    );
+    Ok(Gate {
+        checked: true,
+        budget,
+        fail: reply.fail,
+    })
 }

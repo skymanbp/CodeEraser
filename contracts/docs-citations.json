@@ -34,7 +34,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/budget.rs|b076d7328122f9cb|0": {
     "target": "../../../cli/src/dedup/budget.rs",
-    "line": 21,
+    "line": 30,
     "text": "pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|049be84698107cae|0": {
@@ -84,60 +84,49 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|131dea92d0490f13|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 45,
+    "line": 38,
     "text": "pub min_distinct: Option<usize>,"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|20fa5e5d34020a2d|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 155,
-    "end": 158,
+    "line": 154,
+    "end": 157,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 301,
-    "end": 309,
+    "line": 282,
+    "end": 290,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|43b03086c81217ee|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 157,
+    "line": 156,
     "text": "min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|4e0cd4185a41b141|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 54,
-    "end": 57,
+    "line": 47,
+    "end": 50,
     "text": "/// `min_tokens` lowers the report filter below the guarantee t for"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|9233707cb765c827|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|8417d9b1774d5bed|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 275,
-    "end": 289,
-    "text": "#[derive(Serialize)]"
+    "line": 261,
+    "end": 270,
+    "text": "/// One run's walk counters and the two report filters it used — the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 291,
-    "end": 294,
+    "line": 272,
+    "end": 275,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 309,
-    "end": 314,
+    "line": 290,
+    "end": 295,
     "text": "impl Default for Params {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 219,
-    "text": "Summary {\n// has_tokens files only: Markdown rows are graph cache, and"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|f1f2c52ca93e089e|1": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 219,
-    "end": 234,
-    "text": "Summary {\n// has_tokens files only: Markdown rows are graph cache, and"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|099592add4f62dbb|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -303,11 +292,11 @@
     "end": 91,
     "text": "/// Anchors whose stored token offset exceeded the live stream"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/report.rs|a0251a677b0ad973|0": {
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/report.rs|97b0f65c5e9d2217|0": {
     "target": "../../../cli/src/dedup/report.rs",
-    "line": 12,
-    "end": 18,
-    "text": "pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<serde_json::Value> {"
+    "line": 18,
+    "end": 72,
+    "text": "pub fn answer("
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|075fec6cbcf4c10d|0": {
     "target": "../../../cli/src/dedup/schema.rs",
@@ -564,6 +553,17 @@
     "end": 8,
     "text": "//! (trend_rebuild.rs pins exactly that). Parser-only invalidation"
   },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Dedup/Document.hs|1188f1584a2914fb|0": {
+    "target": "../../../core/app/CE/Dedup/Document.hs",
+    "line": 89,
+    "text": "schemaId = \"ce.dedup-report/0.5.0\""
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Dedup/Document.hs|c6c1f11a96340537|0": {
+    "target": "../../../core/app/CE/Dedup/Document.hs",
+    "line": 47,
+    "end": 65,
+    "text": "-- | The summary's twelve counters, in the report's order."
+  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/C.hs|55d5fc58a01a310f|0": {
     "target": "../../../core/app/CE/Lang/C.hs",
     "line": 126,
@@ -737,14 +737,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 301,
-    "end": 305,
+    "line": 282,
+    "end": 286,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 309,
-    "end": 317,
+    "line": 290,
+    "end": 298,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -917,81 +917,76 @@
     "end": 47,
     "text": "/// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one wipe"
   },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|0789f406982be40c|0": {
-    "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 24,
-    "text": "pub const SCHEMA_ID: &str = \"ce.clone-report/0.3.0\";"
-  },
-  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|32b8e9b3637d6a8d|0": {
-    "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 52,
-    "end": 71,
-    "text": "#[derive(Serialize, Clone)]"
-  },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|3463d97af9d18071|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 178,
-    "end": 182,
+    "line": 172,
+    "end": 176,
     "text": "for &(_, _, (ted, n1, n2, v)) in rows {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|403f2523fefd45be|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 218,
-    "end": 219,
+    "line": 212,
+    "end": 213,
     "text": "if u.nodes > wire::UNIT_NODE_CAP {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5a22db522a5d590c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 66,
-    "end": 70,
+    "line": 61,
+    "end": 65,
     "text": "pub prefiltered: u64,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5b4d9b675153bd48|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 55,
-    "end": 64,
+    "line": 50,
+    "end": 59,
     "text": "pub over_cap_units: usize,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|5c764fdd8cc06d4d|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 257,
-    "end": 274,
+    "line": 251,
+    "end": 268,
     "text": "fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairRow>, u64, u64) {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|677740f654b911ca|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 210,
-    "end": 211,
+    "line": 204,
+    "end": 205,
     "text": "pub(crate) fn build_trees("
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|75be95ae80742e4a|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 118,
-    "end": 120,
+    "line": 106,
+    "end": 108,
     "text": "/// The judgment over an already-refreshed index: identity gate,"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|845196f1fcbaf13b|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 236,
-    "end": 244,
+    "line": 230,
+    "end": 238,
     "text": "if let tree::Built::Tree(t) = &b {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|9c84e006f068e6e5|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 191,
-    "end": 200,
+    "line": 185,
+    "end": 194,
     "text": "/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — since ADR-008 P1 a"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|a4bf30c9a25404df|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 127,
-    "end": 129,
+    "line": 124,
+    "end": 126,
     "text": "// the product judgment sees the exhaustive S5 extension; the"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|a4c6952057fe2690|0": {
+    "target": "../../../cli/src/dedup/t3/mod.rs",
+    "line": 47,
+    "end": 66,
+    "text": "/// The judgment's counters, sent to the core as facts."
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/mod.rs|d5d73f05f598a93c|0": {
     "target": "../../../cli/src/dedup/t3/mod.rs",
-    "line": 170,
-    "end": 189,
+    "line": 164,
+    "end": 183,
     "text": "/// The reported set from the CORE's verdict bits (ADR-008 P1), with"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/t3/tree.rs|16d3e2bc93e406cf|0": {
@@ -1229,6 +1224,11 @@
     "line": 21,
     "end": 25,
     "text": "tsedNum :: Integer"
+  },
+  "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Document.hs|86fccee3895e299e|0": {
+    "target": "../../../core/app/CE/Clone/Document.hs",
+    "line": 57,
+    "text": "schemaId = \"ce.clone-report/0.3.0\""
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Clone/Prefilter.hs|6048d8f4fcb13067|0": {
     "target": "../../../core/app/CE/Clone/Prefilter.hs",
@@ -1747,20 +1747,20 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|0e9696e33e5abd05|0": {
     "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 129,
-    "end": 131,
+    "line": 169,
+    "end": 171,
     "text": "let run = *runs"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|992b962b93a06b9c|0": {
     "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 51,
-    "end": 60,
+    "line": 54,
+    "end": 63,
     "text": "/// dup ⇔ inter·JACCARD_DEN ≥ JACCARD_NUM·union ∨ verbatim ≥"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/mod.rs|bf6617dc2a663b82|0": {
     "target": "../../../cli/src/docdup/judge/mod.rs",
-    "line": 132,
-    "end": 135,
+    "line": 172,
+    "end": 175,
     "text": "ensure!(\nv == is_dup(inter, union, run),"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/wire.rs|4e21d98c92494a2d|0": {
@@ -2843,8 +2843,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/report.rs|72eedfdd1ae101de|0": {
     "target": "../../../cli/src/report.rs",
-    "line": 118,
-    "end": 123,
+    "line": 99,
+    "end": 104,
     "text": "pub fn fail_suffix(failed: &[String]) -> String {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|cc9ee924c20278e7|0": {
@@ -4585,14 +4585,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|40df88eaa1148ef9|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 126,
-    "end": 146,
+    "line": 138,
+    "end": 158,
     "text": "// --check (M5-close CI gate): the DECISION is the core's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_cmds.rs|8de58f87dea9366e|0": {
     "target": "../../../cli/src/main_cmds.rs",
-    "line": 146,
-    "end": 152,
+    "line": 158,
+    "end": 164,
     "text": "\"deadcode check: {} dead file(s) — disposition or entry_globs them\","
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_graph_precision.rs|185b850b408ba8bc|0": {
@@ -5154,7 +5154,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 156,
+    "line": 155,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/probe.rs|5959c3e2b25fe5a1|0": {
@@ -7320,13 +7320,13 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/budget.rs|b076d7328122f9cb|0": {
     "target": "../../../cli/src/dedup/budget.rs",
-    "line": 21,
+    "line": 30,
     "text": "pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<()> {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 291,
-    "end": 317,
+    "line": 272,
+    "end": 298,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|98cd5d387767c13a|0": {
@@ -9928,12 +9928,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|097f5d56f167eb0a|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 196,
+    "line": 183,
     "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|f50a981a429e80a8|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 183,
+    "line": 170,
     "text": "pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -9959,7 +9959,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 182,
+    "line": 178,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
@@ -11445,7 +11445,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|7f6211bb93596e3c|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 226,
+    "line": 213,
     "text": "pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
@@ -11455,7 +11455,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 204,
+    "line": 200,
     "text": "a[\"file\"].as_str().map(Path::new),"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {

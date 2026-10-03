@@ -26,7 +26,7 @@ import Data.List (nub, sort)
 import qualified Data.Map.Strict as M
 
 doc :: DocFamily
-doc = (docFamily "scan" "ce.scan-report/0.2.0" statement checked assemble ["rules" .= ruleNames, "conditions" .= conditionNames]) {dfPretty = True}
+doc = (docFamily "scan" schemaId statement checked assemble ["rules" .= ruleNames, "conditions" .= conditionNames]) {dfPretty = True}
 
 -- | A file row is [f, total lines, comment lines, language code]; a
 -- function row [u, f, start, end, lines, params, name conforms (0 /
@@ -146,3 +146,7 @@ assemble req =
         , "name_ok" .= (ok == 1)
         ]
     _ -> object []
+
+-- | The document's schema id (the facts registry reads it here).
+schemaId :: String
+schemaId = "ce.scan-report/0.2.0"

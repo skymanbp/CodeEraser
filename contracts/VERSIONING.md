@@ -23,8 +23,8 @@
 > true），`tablesDigest` 随之挪动；只进 `lines` 的请求事实与引用类见设计册
 > §13 第 39 条。document golden 再加五十二对（每族非空 en / zh、有否决的族再一对否决例、空或降级请求、一条本族拒绝），原先问 `scan`
 > 的未知族拒绝改问 `nosuch`；电池 `DocumentProps6` + `DocumentGen6`。读者（步 5 R0，wire 不动）：Rust 每个文档请求都带 `lang` 并绑定
-> `lines`，`churn` 一族改印核的 `lines`、退出码读 `exit.fail`、`--format json` 按目录的 `pretty` 印——7.10.0 之前的核答不出 `lines`
-> 或 `pretty`，按名拒。
+> `lines`，`churn`、`scan`、`dedup`、`clone`、`clone-units`、`docdup` 改印核的 `lines`、退出码读 `exit.fail`、`--format json` 按目录的
+> `pretty` 印（scan / dedup 的 `--format sarif` 是绑定后文档的投影）——7.10.0 之前的核答不出 `lines` 或 `pretty`，按名拒。
 > **7.9.0**（文档族第二批，加性 minor，计划 v2.32 步 4，2026-10-01；设计册 `docs/reference/authority-track.md` §5）：
 > `document/1` 的 `family` 多七个：`check` / `structure` / `join` / `deadcode` / `mentions` / `sites` / `graphscreen`（图屏一次装出画布与内嵌的
 > deadcode 文档）；每族的 `ranges` / `rows` / `facts` 键、行宽与每列的宇宙仍按族陈述，契约照旧按名拒，另加各族自己的检查（一行至多的可空表、

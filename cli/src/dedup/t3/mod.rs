@@ -4,24 +4,22 @@
 //! over one core link, and maps the raw TED scores back to unit
 //! identities. Every drop is a ledger line (over-cap units, forest
 //! spans, the pairs they strand) — the tally discipline candidates.rs
-//! established, carried to the wire.
+//! established, carried to the wire. The report is the core's
+//! (document.rs).
 
 pub mod cache;
+mod document;
 mod judge;
 pub mod tree;
 pub mod tree_text;
 pub mod wire;
 
+pub use document::units_answer;
+
 use super::candidates::{self, PairRow, TSED_DEN, TSED_NUM, Unit};
 use anyhow::{Result, ensure};
-use serde::Serialize;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
-
-/// JSON output schema id; bump on shape change (plan §7.1).
-/// 0.2.0 = the S5 counts (M5 close); 0.3.0 (plan v2.30 step 5b-9,
-/// additive) = `cached`, the pairs the verdict cache answered.
-pub const SCHEMA_ID: &str = "ce.clone-report/0.3.0";
 
 /// One unit's judged fate on the way to the wire (merge/1 reads the
 /// same fates for its whole-unit members, step 7).
@@ -31,9 +29,8 @@ pub(crate) enum Outcome {
     Forest,
 }
 
-/// The family metric block riding each reported pair (report::Pair
-/// flattens it, so the JSON row shape is unchanged).
-#[derive(Serialize, Clone, Copy, Debug, PartialEq, Eq)]
+/// A clone pair's metric: raw tree edit distance and both sizes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Ted {
     pub ted: i64,
     pub n1: i64,
@@ -47,9 +44,7 @@ type ScoredTed = (i64, i64, i64, bool);
 /// Judged rows: (a, b, payload) by built-unit index.
 type Scored = Vec<(usize, usize, ScoredTed)>;
 
-pub type Report = crate::report::Report<Ted, Counts>;
-
-#[derive(Serialize, Clone)]
+/// The judgment's counters, sent to the core as facts.
 pub struct Counts {
     pub units: usize,
     pub over_cap_units: usize,
@@ -68,44 +63,37 @@ pub struct Counts {
     /// Sendable pairs the verdict cache answered (cache.rs): `sent`
     /// = `judged` + `prefiltered` + `cached`, every run.
     pub cached: u64,
-    pub clones: usize,
 }
 
 /// The whole judgment: refresh + identity gate, candidates, trees,
 /// chunked clone.requests, verdicts — `ce clone`'s face over its own
 /// refreshed index.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Judged> {
     let (idx, _db_path) = super::refreshed_index(root, db)?;
-    Ok(judge_index(root, &idx, core)?.report())
+    judge_index(root, &idx, core)
+}
+
+/// `ce clone`: the judgment, its report laid out by the core over the
+/// link it was judged over (plan v2.32 step 5).
+pub fn answer(root: &Path, db: Option<PathBuf>, core: &str) -> Result<crate::document::Answer> {
+    let (idx, _db_path) = super::refreshed_index(root, db)?;
+    let (judged, link) = judged_with(root, &idx, core)?;
+    document::report(core, &judged, Ok(link))
 }
 
 /// The judged universe: the units, the pairs the core called clones
-/// (unit indices, a < b, with the raw metric) and the counts ledger.
-/// `ce check` and `ce join` read the pairs off their own snapshot
-/// (plan v2.30 step 5b-9); `ce clone` prints the report.
+/// (unit indices, a < b, with the raw metric), every judged row as the
+/// report sends it, and the counts ledger. `ce check` and `ce join`
+/// read the pairs off their own snapshot (plan v2.30 step 5b-9); `ce
+/// clone` has the core lay the report out (`answer`).
 pub struct Judged {
     pub units: Vec<Unit>,
     pub clones: Vec<(usize, usize, Ted)>,
+    judged: Scored,
     pub counts: Counts,
 }
 
 impl Judged {
-    /// The report face: each clone pair under its two unit names.
-    pub fn report(&self) -> Report {
-        Report {
-            hits: self
-                .clones
-                .iter()
-                .map(|&(a, b, m)| crate::report::Pair {
-                    a: name(&self.units[a]),
-                    b: name(&self.units[b]),
-                    m,
-                })
-                .collect(),
-            counts: self.counts.clone(),
-        }
-    }
-
     /// The clone pairs as file pairs — the sim table's kind-1 rows
     /// (score::clone_rows), one per clone pair, deduplicated there.
     pub fn file_pairs(&self) -> impl Iterator<Item = (&str, &str)> {
@@ -118,6 +106,15 @@ impl Judged {
 /// The judgment over an already-refreshed index: identity gate,
 /// candidates, trees, the cache-backed chunked judgment, verdicts.
 pub fn judge_index(root: &Path, idx: &super::index::Index, core: &str) -> Result<Judged> {
+    Ok(judged_with(root, idx, core)?.0)
+}
+
+/// The judgment and the link it was judged over.
+fn judged_with(
+    root: &Path,
+    idx: &super::index::Index,
+    core: &str,
+) -> Result<(Judged, crate::corelink::Link)> {
     let orphans = super::unitcache::identity_orphans(idx)?;
     ensure!(
         orphans == 0,
@@ -130,7 +127,7 @@ pub fn judge_index(root: &Path, idx: &super::index::Index, core: &str) -> Result
     let units: Vec<&Unit> = cand.units.iter().collect();
     let built = build_trees(root, &units, tree::Extras::With)?;
     let (sendable, dropped_over_cap, dropped_forest) = sendable_pairs(&cand.pairs, &built);
-    let (rows, [judged, prefiltered, cached], requests) =
+    let (rows, [judged, prefiltered, cached], requests, link) =
         judge::judge(core, idx.raw(), &built, &sendable)?;
     let clones = reported_clones(&rows)?;
     let (over_cap_units, forest_units) = built.iter().fold((0, 0), |(oc, fo), b| match b {
@@ -154,17 +151,14 @@ pub fn judge_index(root: &Path, idx: &super::index::Index, core: &str) -> Result
         prefiltered,
         judged,
         cached,
-        clones: clones.len(),
     };
-    Ok(Judged {
+    let judged = Judged {
         units: cand.units,
         clones,
+        judged: rows,
         counts,
-    })
-}
-
-fn name(u: &Unit) -> String {
-    format!("{}:{}#{}", u.path, u.key, u.nth)
+    };
+    Ok((judged, link))
 }
 
 /// The reported set from the CORE's verdict bits (ADR-008 P1), with
@@ -271,23 +265,6 @@ fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairR
         })
         .collect();
     (sendable, over_cap, forest)
-}
-
-/// Report emission through the ONE shared envelope+console throat.
-pub fn print(r: &Report, as_json: bool) {
-    crate::report::emit(
-        (SCHEMA_ID, "clones"),
-        r,
-        as_json,
-        crate::i18n::t(
-            "clone {a} <-> {b}  ted {ted} (nodes {n1}/{n2})",
-            "克隆 {a} <-> {b}  ted {ted}（节点 {n1}/{n2}）",
-        ),
-        crate::i18n::t(
-            "{clones} near-miss clone pair(s) over {units} unit(s) — {judged} judged, {cached} replayed from the verdict cache, {prefiltered} provably below threshold",
-            "{clones} 对近似克隆 / {units} 个单元 — 判决 {judged}，判决缓存回放 {cached}，可证低于阈值预滤 {prefiltered}",
-        ),
-    );
 }
 
 #[cfg(test)]

@@ -24,7 +24,7 @@ doc = docFamily "docdup" (enSchema report) statement checked (enveloped report) 
 -- | The report: a pair row's metrics are [inter, union, verbatim run];
 -- the counters are the measuring side's, as the report names them.
 report :: Envelope
-report = envelopeOf "ce.docdup-report/0.1.0 dups seg segments segs | inter union verbatim | over_cap_segments lsh_pairs seed_pairs hot_bands hot_shingles sent requests judged jaccard_dups exempt_license exempt_allow"
+report = envelopeOf (schemaId <> " dups seg segments segs | inter union verbatim | over_cap_segments lsh_pairs seed_pairs hot_bands hot_shingles sent requests judged jaccard_dups exempt_license exempt_allow")
 
 -- | A segment row is [s, file, start, end, kind], one per live
 -- segment; `check` the console's `--check`.
@@ -46,3 +46,7 @@ checked req =
 -- | Each segment's place for the console: its file, span and kind word.
 segments :: DocReq -> M.Map Integer (Integer, Integer, Integer, String)
 segments req = M.fromList [(i, (f, a, b, nameOf segmentKinds k)) | [i, f, a, b, k] <- rows req "segs"]
+
+-- | The document's schema id (the facts registry reads it here).
+schemaId :: String
+schemaId = "ce.docdup-report/0.1.0"

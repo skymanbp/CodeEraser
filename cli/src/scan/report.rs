@@ -1,19 +1,19 @@
-//! Threshold evaluation + console/JSON emission. Score polarity and
-//! any future scoring live in the Haskell judgment layer (M4+); here
-//! it is plain data-driven comparisons only.
+//! The measurement rows the scan wire carries and the findings read
+//! back from the core's levels, beside the pinned local mirror
+//! (`evaluate`) the whole-report ensure proves equal. The report, its
+//! console lines and its SARIF face are laid out from the core's
+//! document since plan v2.32 step 5 (scan/document.rs).
 
 use super::metrics::{FileMetrics, FnMetrics};
 use crate::config::Thresholds;
-use serde::Serialize;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
-#[serde(rename_all = "lowercase")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Level {
     Warn,
     Fail,
 }
 
-#[derive(Debug, Serialize, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct Finding {
     pub file: String,
     pub line: usize,
@@ -201,111 +201,4 @@ pub fn evaluate(file: &FileMetrics, t: &Thresholds) -> Vec<Finding> {
         }
     }
     out
-}
-
-/// JSON output schema id; bump on any shape change (plan §7.1: schema
-/// changes must bump the version — mechanism live since M0).
-/// 0.2.0 (6.4.0, O33): `failed`, the named conditions the exit code
-/// is the disjunction of — `hard_line`, `knobs_digest`, `degraded`.
-pub const SCHEMA: &str = "ce.scan-report/0.2.0";
-
-#[derive(Serialize)]
-pub struct Report<'a> {
-    pub schema: &'static str,
-    pub files: &'a [FileMetrics],
-    pub findings: &'a [Finding],
-    pub summary: Summary,
-    pub failed: &'a [String],
-}
-
-#[derive(Serialize)]
-pub struct Summary {
-    pub files: usize,
-    pub functions: usize,
-    pub warns: usize,
-    pub fails: usize,
-}
-
-pub fn summarize(files: &[FileMetrics], findings: &[Finding]) -> Summary {
-    Summary {
-        files: files.len(),
-        functions: files.iter().map(|f| f.functions.len()).sum(),
-        warns: findings.iter().filter(|f| f.level == Level::Warn).count(),
-        fails: findings.iter().filter(|f| f.level == Level::Fail).count(),
-    }
-}
-
-/// The SARIF face: the same judged finding list, ruleIds under
-/// `ce.scan/`, grades respelled in SARIF vocabulary (Fail carries
-/// the gate's exit-code meaning, hence "error"). The message reuses
-/// the console line's English body — SARIF is a machine face, never
-/// translated (i18n.rs charter).
-pub fn sarif_string(findings: &[Finding]) -> anyhow::Result<String> {
-    let results = findings
-        .iter()
-        .map(|f| {
-            crate::sarif::result(
-                &format!("ce.scan/{}", f.rule),
-                match f.level {
-                    Level::Fail => "error",
-                    Level::Warn => "warning",
-                },
-                &format!(
-                    "{} = {} (limit {}) [{}]",
-                    f.rule, f.value, f.threshold, f.subject
-                ),
-                crate::sarif::location(&f.file, f.line, f.line),
-                Vec::new(),
-            )
-        })
-        .collect();
-    Ok(serde_json::to_string_pretty(&crate::sarif::report(
-        results,
-    ))?)
-}
-
-pub fn print_console(findings: &[Finding], summary: &Summary, failed: &[String]) {
-    for f in findings {
-        // FAIL/warn are exit-code vocabulary — never translated
-        let tag = match f.level {
-            Level::Fail => "FAIL",
-            Level::Warn => "warn",
-        };
-        println!(
-            "{}",
-            crate::i18n::line(
-                "{} {}:{} {} = {} (limit {}) [{}]",
-                "{} {}:{} {} = {}（上限 {}）[{}]",
-                &[
-                    &tag,
-                    &f.file,
-                    &f.line,
-                    &f.rule,
-                    &f.value,
-                    &f.threshold,
-                    &f.subject
-                ],
-            )
-        );
-    }
-    // the verdict word and the names it stands on (O33/O36): only when
-    // something held, so a passing line keeps its bytes
-    let verdict = if failed.is_empty() {
-        String::new()
-    } else {
-        format!(" -> FAIL{}", crate::report::fail_suffix(failed))
-    };
-    println!(
-        "{}{verdict}",
-        crate::i18n::line(
-            "scanned {} files / {} functions — {} warn, {} fail",
-            "已扫描 {} 文件 / {} 函数 — {} warn，{} fail",
-            &[
-                &summary.files,
-                &summary.functions,
-                &summary.warns,
-                &summary.fails
-            ],
-        )
-    );
 }

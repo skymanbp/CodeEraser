@@ -15,18 +15,18 @@ use std::path::Path;
 /// Judged like its siblings (batch-7 slice 8): the scan face used
 /// to read the mirror with no core link — the one unguarded copy of
 /// a rule the core owns; analyze_judged carries the drift ensure to
-/// every surface.
+/// every surface, and the core lays the document out (plan v2.32
+/// step 5).
 pub fn scan(root: &Path, core: &str) -> Result<Value> {
-    let (files, findings, summary, _fail, failed) = crate::scan::analyze_judged(root, core)?;
-    Ok(serde_json::from_str(&crate::scan::report_string(
-        &files, &findings, summary, &failed,
-    )?)?)
+    Ok(crate::scan::judged(root, core)?.document)
 }
 
 /// Both report thresholds ride, not one: `min_distinct` is the
 /// DIVERSITY floor (`ce dedup --min-distinct`), and a face that
 /// accepted only `min_tokens` could not reproduce what the CLI
-/// prints — the caller was silently pinned to the core default.
+/// prints — the caller was silently pinned to the core default. The
+/// document is the core's (plan v2.32 step 5), laid out by the
+/// process's core.
 pub fn dedup(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<Value> {
     let (found, summary) = crate::dedup::analyze(root, None, min_tokens, min_distinct)?;
     crate::dedup::report_json(&found, &summary)
@@ -45,27 +45,14 @@ pub fn deadcode(root: &Path, core: &str) -> Result<Value> {
     Ok(crate::graph::deadcode::run(root, None, core)?.doc)
 }
 
-/// The envelope-shaped pair share one throat (their two bodies were
-/// a token-identical twin by this repo's own measure).
-fn enveloped<M: serde::Serialize, C: serde::Serialize>(
-    pair: (&str, &str),
-    r: anyhow::Result<crate::report::Report<M, C>>,
-) -> Result<Value> {
-    Ok(crate::report::envelope(pair, &r?))
-}
-
+/// The T3 report, laid out by the core (plan v2.32 step 5).
 pub fn clone_t3(root: &Path, core: &str) -> Result<Value> {
-    enveloped(
-        (crate::dedup::t3::SCHEMA_ID, "clones"),
-        crate::dedup::t3::run(root, None, core),
-    )
+    Ok(crate::dedup::t3::answer(root, None, core)?.document)
 }
 
+/// The docdup report, laid out by the core (plan v2.32 step 5).
 pub fn docdup(root: &Path, core: &str) -> Result<Value> {
-    enveloped(
-        (crate::docdup::judge::SCHEMA_ID, "dups"),
-        crate::docdup::judge::run(root, None, core),
-    )
+    Ok(crate::docdup::judge::answer(root, None, core, false)?.document)
 }
 
 pub fn join(root: &Path, core: &str, days: u32) -> Result<Value> {
@@ -118,21 +105,21 @@ pub fn graph_screen(root: &Path, core: &str) -> Result<Value> {
 /// one family document no machine surface could reach. The identity
 /// assertion travels with it — a face that listed units without
 /// checking the unitsig/symbols agreement would hand out a universe
-/// nobody had checked.
-pub fn clone_units(root: &Path) -> Result<Value> {
+/// nobody had checked. The core lays the listing out (plan v2.32
+/// step 5).
+pub fn clone_units(root: &Path, core: &str) -> Result<Value> {
+    Ok(crate::dedup::t3::units_answer(core, &listed_units(root)?)?.document)
+}
+
+/// The cached unit universe, the identity agreement checked.
+pub fn listed_units(root: &Path) -> Result<Vec<crate::dedup::unitcache::UnitRow>> {
     let (idx, _db) = crate::dedup::refreshed_index(root, None)?;
     let orphans = crate::dedup::unitcache::identity_orphans(&idx)?;
     anyhow::ensure!(
         orphans == 0,
         "{orphans} unitsig rows missing their symbols identity — nth throat drift"
     );
-    let rows = crate::dedup::unitcache::unit_rows(&idx)?;
-    Ok(serde_json::json!({
-        "schema": crate::dedup::unitcache::UNITS_SCHEMA_ID,
-        "units": rows.iter().map(|u| serde_json::json!({
-            "path": u.path, "key": u.key, "nth": u.nth, "nodes": u.nodes,
-        })).collect::<Vec<_>>(),
-    }))
+    crate::dedup::unitcache::unit_rows(&idx)
 }
 
 /// The erase PLAN — dry-run by definition and by construction: this
