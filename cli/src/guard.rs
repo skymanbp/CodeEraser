@@ -13,13 +13,14 @@ mod budget;
 mod flow;
 mod flow_novel;
 mod probe;
-mod say;
 mod settle;
+mod speech;
 mod tombstone;
 pub mod zone;
 
 use crate::config::Config;
 use envelope::Envelope;
+use speech::{Fence, Said};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -96,9 +97,9 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     }
     let sized = budget::size_classes(root, env, cfg.as_ref(), &mode, budget_seen);
     reasons.extend(sized.budget);
-    let own = Tiered::observe(root, env, cfg.as_ref());
+    let mut own = Tiered::observe(root, env, cfg.as_ref());
     let spoken = sized.zone.into_iter().chain(own.spoken()).collect();
-    let decided = emit_reasons(&mode, reasons, spoken, &broken);
+    let decided = emit_reasons(root, &mode, reasons, spoken, broken);
     if let Some(p) = own.flow {
         feed(root, env, p.line);
     }
@@ -120,18 +121,18 @@ struct Tiered {
 }
 
 impl Tiered {
-    fn observe(root: &Path, env: &Envelope, cfg: Option<&(Config, Option<&'static str>)>) -> Self {
-        let (c, fence) = cfg.map_or((None, None), |(c, f)| (Some(c), *f));
+    fn observe(root: &Path, env: &Envelope, cfg: Option<&(Config, Fence)>) -> Self {
+        let (c, fence) = cfg.map_or((None, Fence::None), |(c, f)| (Some(c), *f));
         Self {
             tomb: tombstone::observe(root, env, c, fence),
             flow: flow::observe(root, env, c),
         }
     }
 
-    fn spoken(&self) -> impl Iterator<Item = (&'static str, String)> {
-        let tomb = self.tomb.as_ref().and_then(|p| p.speak.clone());
+    fn spoken(&mut self) -> impl Iterator<Item = (&'static str, Said)> {
+        let tomb = self.tomb.as_mut().and_then(|p| p.speak.take());
         tomb.into_iter()
-            .chain(self.flow.as_ref().and_then(|p| p.speak.clone()))
+            .chain(self.flow.as_mut().and_then(|p| p.speak.take()))
     }
 }
 
@@ -145,12 +146,15 @@ impl Tiered {
 /// naming the config error (review C2). Split from decide() at the
 /// E01 line. Returns the tier it decided at (`observe` when nothing
 /// was emitted) — the tombstone leg records whether its write went
-/// through.
+/// through. The sentences are asked of the core only once a line is
+/// going out (speech.rs): an observe decision prints nothing, so it
+/// asks nothing.
 fn emit_reasons<'a>(
+    root: &Path,
     mode: &'a str,
-    class_reasons: Vec<String>,
-    tiered: Vec<(&'static str, String)>,
-    broken: &Option<String>,
+    class_reasons: Vec<Said>,
+    tiered: Vec<(&'static str, Said)>,
+    broken: Option<String>,
 ) -> &'a str {
     let rank = |t: &str| {
         crate::config::TIERS
@@ -178,11 +182,11 @@ fn emit_reasons<'a>(
         return "observe";
     }
     if let Some(e) = broken {
-        reasons.push(say::config_unreadable(e));
-        emit_decision("warn", &reasons.join(" "));
+        reasons.push(Said::ConfigUnreadable(e));
+        emit_decision("warn", || speech::phrase(root, &reasons));
         return "warn";
     }
-    emit_decision(tier, &reasons.join(" "));
+    emit_decision(tier, || speech::phrase(root, &reasons));
     tier
 }
 
@@ -198,8 +202,9 @@ fn clipped(reason: &str) -> String {
 // duplicate probe and its novel filter in probe.rs.
 
 /// Decision JSON on stdout — the exact shape proven by cc-enforcer's
-/// working hooks (allow carries the reason as a visible warning).
-fn emit_decision(mode: &str, reason: &str) {
+/// working hooks (allow carries the reason as a visible warning). The
+/// reason is phrased only when a line goes out.
+fn emit_decision(mode: &str, reason: impl FnOnce() -> String) {
     let decision = match mode {
         "deny" => "deny",
         "ask" => "ask",
@@ -210,7 +215,7 @@ fn emit_decision(mode: &str, reason: &str) {
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",
             "permissionDecision": decision,
-            "permissionDecisionReason": clipped(reason),
+            "permissionDecisionReason": clipped(&reason()),
         }
     });
     println!("{payload}");

@@ -144,6 +144,13 @@ impl Judge {
         }
     }
 
+    /// A document over the same link, the same way (plan v2.32 step
+    /// 5): the guard's request forwarded as the hook built it.
+    pub fn document(&mut self, body: serde_json::Value) -> serde_json::Value {
+        use crate::document::{CAP, KIND};
+        self.family((CAP, "pre-7.8.0 core"), KIND, body)
+    }
+
     /// One family's request behind its capability, every failure a
     /// named degraded object; a failed request counts against the
     /// link's budget, a missing capability does not.

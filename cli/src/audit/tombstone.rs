@@ -10,8 +10,8 @@
 //! schema 0.9.0). The decision reads two bits — the class's own tier
 //! (`[tombstone] tier`) and the core's `over` — and blocks only when
 //! both say so; no core = a degraded object, never a block and never
-//! a silent pass (A9f). The terminal faces print one line for the
-//! person.
+//! a silent pass (A9f). What the faces say about it is the core's
+//! (speech.rs).
 
 use crate::config::Config;
 use crate::corelink::Link;
@@ -47,23 +47,22 @@ pub(super) struct Leg {
     /// The class's own tier, as declared or the route default.
     pub tier: String,
     pub budget: Option<u32>,
-    /// The first judged sites as `file:line kind`.
-    pub shown: Vec<String>,
+    /// The first judged sites.
+    pub shown: Vec<Row>,
     pub erased: usize,
-    /// The event, which names the face in what the person reads.
-    pub face: String,
-    /// Why the measurement was not whole — pairs the batch could not
-    /// read, pairs whose line diff was bounded — or None. An incomplete
+    /// Why the measurement was not whole: pairs the batch could not
+    /// read, pairs whose line diff was bounded. An incomplete
     /// measurement is recorded, never enforced: the class cannot know
     /// what it did not read, or what a bounded diff read as written.
-    pub incomplete: Option<String>,
+    pub unread: usize,
+    pub bounded: usize,
 }
 
 impl Leg {
     /// The deny tier AND the core's condition AND a whole measurement —
     /// anything less is a feed entry, not a block.
     pub fn blocks(&self) -> bool {
-        self.incomplete.is_none()
+        self.unread + self.bounded == 0
             && self.tier == "deny"
             && self.judged.as_ref().is_ok_and(|j| j.over)
     }
@@ -103,15 +102,8 @@ pub(super) fn leg(
     }
     let shown = judged
         .as_ref()
-        .map(|j| f.judged_rows(j).take(10).map(Row::place).collect())
+        .map(|j| f.judged_rows(j).take(10).cloned().collect())
         .unwrap_or_default();
-    let incomplete = (unread + f.degraded_pairs > 0).then(|| {
-        crate::i18n::line(
-            "{} pair(s) unread, {} with a bounded diff",
-            "{} 对未读、{} 对 diff 有界",
-            &[&unread, &f.degraded_pairs],
-        )
-    });
     Some(Leg {
         feed,
         judged,
@@ -119,8 +111,8 @@ pub(super) fn leg(
         budget,
         shown,
         erased: f.erased.len(),
-        face: set.event.to_string(),
-        incomplete,
+        unread,
+        bounded: f.degraded_pairs,
     })
 }
 
@@ -177,91 +169,4 @@ fn measured(loaded: &[Loaded], set: &Changeset, policy: &Policy) -> tombstone::F
         .into_iter()
         .collect();
     tombstone::measure_with(&pairs, &message, &BTreeSet::new(), policy)
-}
-
-/// The block reason (deny tier, condition held): who judged what, the
-/// count, the budget it passed, the first sites, and what to do instead.
-pub(super) fn reason(leg: &Leg) -> String {
-    let sites = leg.judged.as_ref().map_or(0, |j| j.sites.len());
-    crate::i18n::line(
-        "{} leave {} tombstone site(s), past the `[tombstone] budget` of {}: {} — a \
-         removed name must not survive as an absence label or an argument from \
-         absence; drop the label, or say what replaced it.",
-        "{}留下 {} 处墓碑残留，越过 `[tombstone] budget` 的 {}：{} — \
-         被删的名字不该以「无 X」标签或缺席论证留下；去掉标签，或写清替代物。",
-        &[
-            &subject(&leg.face),
-            &sites,
-            &leg.budget.unwrap_or(0),
-            &leg.shown.join("; "),
-        ],
-    )
-}
-
-/// The reason's subject — the face and what it read: the Stop reads
-/// the session, the git hooks read the index, commitmsg the message
-/// with it.
-fn subject(face: &str) -> String {
-    match face {
-        "precommit" => crate::i18n::line(
-            "ce precommit: the staged changes",
-            "ce precommit：暂存的改动",
-            &[],
-        ),
-        "commitmsg" => crate::i18n::line(
-            "ce commitmsg: the staged changes and the message",
-            "ce commitmsg：暂存的改动与提交说明",
-            &[],
-        ),
-        _ => crate::i18n::line(
-            "ce audit: this session's edits",
-            "ce audit：本会话的编辑",
-            &[],
-        ),
-    }
-}
-
-/// The git-hook faces' terminal line: the judged sites when there are
-/// any (with why the measurement was not whole, when it was not — and
-/// so not enforced), the degradation when there is no verdict, nothing
-/// when the changeset is clean — the feed has the rest.
-pub(super) fn summary(leg: &Leg) -> Option<String> {
-    match &leg.judged {
-        Err(why) => Some(crate::i18n::line(
-            "ce {}: tombstone verdict unavailable (DEGRADED: {})",
-            "ce {}：墓碑残留判决不可用（已降级：{}）",
-            &[&leg.face, why],
-        )),
-        Ok(j) if j.sites.is_empty() => None,
-        Ok(j) => Some(sites_line(leg, j) + &incomplete_note(leg)),
-    }
-}
-
-/// The note a partial measurement adds to the terminal line.
-fn incomplete_note(leg: &Leg) -> String {
-    leg.incomplete.as_ref().map_or_else(String::new, |why| {
-        crate::i18n::line(
-            " (measurement incomplete: {}; not enforced)",
-            "（度量不完整：{}；不作强制）",
-            &[why],
-        )
-    })
-}
-
-fn sites_line(leg: &Leg, j: &Judged) -> String {
-    crate::i18n::line(
-        "ce {}: {} tombstone site(s) — {} label / {} prose over {} erased name(s): {} \
-             (tier {}; see .ce/observe.ndjson)",
-        "ce {}：{} 处墓碑残留 — 标签 {} / 散文 {}，涉及 {} 个被删名字：{}\
-             （档位 {}；详见 .ce/observe.ndjson）",
-        &[
-            &leg.face,
-            &j.sites.len(),
-            &j.label,
-            &j.prose,
-            &leg.erased,
-            &leg.shown.join("; "),
-            &leg.tier,
-        ],
-    )
 }

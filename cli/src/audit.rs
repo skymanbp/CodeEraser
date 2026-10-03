@@ -15,14 +15,17 @@ mod flow;
 mod observe;
 mod precommit;
 mod similar;
+mod speech;
 mod tombstone;
 mod verdict;
 
 use crate::config::Config;
+use crate::corelink::Link;
 pub use commitmsg::run_commitmsg;
 use observe::{AuditEvent, observe_log};
 pub use precommit::run_precommit;
 use serde::Deserialize;
+use serde_json::Value;
 use std::path::Path;
 use std::process::ExitCode;
 
@@ -60,11 +63,9 @@ pub fn run_hook() -> ExitCode {
     // carrying a ce.toml is audited THERE — its git, its index, its
     // budget — and its verdict rides this Stop under its mount name;
     // a submodule without one is a reader here, measured by nobody
-    let mut reasons: Vec<String> = audit(&root, &env.session_id).into_iter().collect();
+    let mut reasons: Vec<String> = audit(&root, &env.session_id, None).into_iter().collect();
     for mount in crate::gitmodules::gated(&root) {
-        if let Some(why) = audit(&root.join(&mount), &env.session_id) {
-            reasons.push(format!("{mount}: {why}"));
-        }
+        reasons.extend(audit(&root.join(&mount), &env.session_id, Some(&mount)));
     }
     if !reasons.is_empty() {
         let payload = serde_json::json!({
@@ -87,15 +88,18 @@ pub fn run_hook() -> ExitCode {
 /// `ce commitmsg`'s `message` rides the tombstone leg as one more
 /// surface — the two text legs read ONE git batch of the changed
 /// pairs) and the `event`-stamped observe entry (a git hook must not
-/// masquerade as a Stop audit). Outer None = git could not answer:
-/// fail open.
-type Gathered = (
-    String,
-    i64,
-    Vec<String>,
-    Option<verdict::Verdict>,
-    Option<tombstone::Leg>,
-);
+/// masquerade as a Stop audit). None = git could not answer: fail
+/// open.
+struct Gathered {
+    mode: String,
+    net_loc: i64,
+    changed: Vec<String>,
+    dups: Option<verdict::Verdict>,
+    tomb: Option<tombstone::Leg>,
+    /// The audit's core link, for what the face then says (speech.rs).
+    link: Option<Link>,
+}
+
 fn gather(
     root: &Path,
     diff_tail: &[&str],
@@ -132,18 +136,7 @@ fn gather(
         untracked: &untracked,
         message,
     };
-    let excludes = cfg.map_or(&[][..], |c| c.exclude.as_slice());
-    let texts = (!changed.is_empty())
-        .then(|| tombstone::loaded(root, &set, excludes))
-        .flatten();
-    let tombstone = tombstone::leg(root, &set, texts.as_ref(), cfg, link.as_mut());
-    let similar = texts
-        .as_ref()
-        .filter(|_| event == "stop_audit")
-        .and_then(|(loaded, _)| similar::leg(root, loaded, link.as_mut()));
-    let flow = texts
-        .as_ref()
-        .and_then(|(loaded, _)| flow::leg(loaded, link.as_mut()));
+    let (tombstone, similar, flow) = text_legs(root, &set, cfg, link.as_mut());
     observe_log(
         root,
         AuditEvent {
@@ -161,7 +154,38 @@ fn gather(
             unmeasured: crate::gitmodules::unseated(root),
         },
     );
-    Some((mode, net_loc, changed, dups, tombstone))
+    Some(Gathered {
+        mode,
+        net_loc,
+        changed,
+        dups,
+        tomb: tombstone,
+        link,
+    })
+}
+
+/// The legs that measure the changeset's text, read in ONE git batch
+/// (none when nothing changed): tombstone on every event, the similar
+/// advisor on the Stop alone, flow on every event.
+fn text_legs(
+    root: &Path,
+    set: &tombstone::Changeset,
+    cfg: Option<&Config>,
+    mut link: Option<&mut Link>,
+) -> (Option<tombstone::Leg>, Option<Value>, Option<Value>) {
+    let excludes = cfg.map_or(&[][..], |c| c.exclude.as_slice());
+    let texts = (!set.changed.is_empty())
+        .then(|| tombstone::loaded(root, set, excludes))
+        .flatten();
+    let tomb = tombstone::leg(root, set, texts.as_ref(), cfg, link.as_deref_mut());
+    let similar = texts
+        .as_ref()
+        .filter(|_| set.event == "stop_audit")
+        .and_then(|(loaded, _)| similar::leg(root, loaded, link.as_deref_mut()));
+    let flow = texts
+        .as_ref()
+        .and_then(|(loaded, _)| flow::leg(loaded, link));
+    (tomb, similar, flow)
 }
 
 /// §4.2 promises the Stop audit covers Bash writes, but `git diff`
@@ -190,28 +214,28 @@ fn stop_untracked(
 /// One project's Stop audit: its observe line always, and the block
 /// reasons when a deny tier holds a failing verdict — the duplicate
 /// verdict at `[guard] mode`, the tombstone verdict at `[tombstone]
-/// tier`. The caller prints, so a gated submodule's verdict can ride
-/// the session's one Stop.
-fn audit(root: &Path, session: &str) -> Option<String> {
+/// tier` — said by the core (speech.rs) under the gated submodule's
+/// `mount` when it is one. The caller prints, so a gated submodule's
+/// verdict can ride the session's one Stop. A Stop that blocks nothing
+/// asks nothing: INFORMATION never pays a spawn.
+fn audit(root: &Path, session: &str, mount: Option<&str>) -> Option<String> {
     // Not a git repo: nothing to audit, but the skip is RECORDED.
     let Some(base) = changes::base_rev(root) else {
         unmeasured_stop(root, session, Some("no_git"));
         return None;
     };
-    let Some((mode, net_loc, _, dups, tomb)) =
-        gather(root, &[base.as_str()], "stop_audit", Some(session), None)
-    else {
+    let Some(mut g) = gather(root, &[base.as_str()], "stop_audit", Some(session), None) else {
         unmeasured_stop(root, session, None);
         return None;
     };
-    let mut reasons = Vec::new();
-    if let Some(v) = dups.as_ref().filter(|v| mode == "deny" && v.fail) {
-        reasons.push(reason(net_loc, v));
+    let mut link = g.link.take();
+    let said = g.said(speech::Face::Stop, mount);
+    if !said.blocked() {
+        return None;
     }
-    if let Some(t) = tomb.as_ref().filter(|t| t.blocks()) {
-        reasons.push(tombstone::reason(t));
-    }
-    (!reasons.is_empty()).then(|| reasons.join(" "))
+    let (lines, fail) = speech::spoken(link.as_mut(), &said);
+    let texts: Vec<String> = lines.into_iter().map(|l| l.text).collect();
+    fail.then(|| texts.join(" "))
 }
 
 /// Every Stop that produces NO measurement, said in the feed instead
@@ -263,19 +287,4 @@ fn fourclass_report(root: &Path) -> serde_json::Value {
         Ok(Response::FourClassReport { report }) => report,
         _ => serde_json::json!({"degraded": "daemon_unavailable"}),
     }
-}
-
-/// The human-facing conviction line. Cost stance, unified
-/// 2026-08-19: ENFORCEMENT pays for its verdict (budgeted —
-/// PERF-BUDGET.md Stop row; since 2.24.0 that includes one audit/1
-/// spawn), INFORMATION never pays a spawn (fourclass_report).
-fn reason(net_loc: i64, v: &verdict::Verdict) -> String {
-    let net = format!("{net_loc:+}");
-    crate::i18n::line(
-        "ce audit: this session's edits leave {} duplicate block(s) touching \
-         changed files (net {} LOC): {} — deduplicate before stopping.",
-        "ce audit：本会话的编辑留下 {} 个触及改动文件的重复块\
-         （净 {} 行）：{} — 停止前请先去重。",
-        &[&v.dups, &net, &v.shown.join("; ")],
-    )
 }

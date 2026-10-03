@@ -385,6 +385,19 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - 第一轮把文档请求另起一个核时 scan 中位 +835 ms（同样负载下）；改为在判决那条核链上问（`document::assemble_over`），省掉一次进程起与目录加载。
 - 复跑：`s5_scratch/g_abab.py scan dedup clone docdup`（车道外的一次性脚本，不入库）；核单测 = 用记录中继（`rec_relay.py`）录下真请求，对核单独计时。
 
+## v2.32 步 5 Rust 半第一部分 precommit / commitmsg 空改动集 A/B（实测 2026-10-02，release，同一台机、同一坐：两份相同的树 = 车道 a12b4c75 的 `cli/src` 副本 395 个文件〔`git init`、提交一次、各用本臂的 ce 先 `ce dedup .` 建满索引〕，A = 分叉点 eec9dae4 的 ce + ce-core，B = 本车道的 ce + ce-core；各臂预热两跑后 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；`Get-CimInstance` 处理器负载坐前 37 %、坐后 14 %）
+
+口径：暂存区为空（改动集空）时 `ce precommit` 与 `ce commitmsg <msg>`（消息一行 `perf: empty changeset`）整个进程的墙钟，中位数（最小–最大），毫秒；两臂每跑都退 0、首行逐字节同（`ce precommit: 0 staged file(s), net +0 LOC, no touched duplicates`，commitmsg 同句换面名）。
+
+| 面 | A（分叉点） | B（本车道） | 状态 |
+|---|---|---|---|
+| `ce precommit` | 123.7（111.8–129.8） | 230.1（214.9–248.3） | 记录：中位 +106.4 ms |
+| `ce commitmsg` | 200.6（191.2–213.9） | 311.6（299.7–338.3） | 记录：中位 +111.0 ms |
+
+- 多出的这一笔是一次核的起动加一问：改动集空时审计不开核链（`audit.rs` 的 `gather` 只在 `changed` 非空时 `verdict::open`），而这一面要印的那一行改由核写出，`audit/speech.rs` 的 `spoken` 便自己开一条新链问 `audit`；分叉点在这里直接印本地句子、不起核。两面的增量一致（+106.4 / +111.0 ms）。
+- 主会话裁定（2026-10-02，设计册 §13 第 62 条）：代价按此记账、不改；无核时 precommit 印兜底句而不印本地的暂存摘要，同样不改。
+- 复跑：`cargo build --release` 出本车道的 ce，拷到车道目录外；分叉点的 ce 与 ce-core 各一份；两份树各 `git init` + 提交 + `ce dedup .`；各臂预热两跑后 ABAB ×7，precommit 与 commitmsg 各一组，跑前跑后各读一次处理器负载。
+
 ## v2.32 步 5 R0 churn 改印核的 `lines` A/B（实测 2026-10-02，release，同一台机、同一窗口：A = R0 父提交的 ce + 核〔Rust 与 cacc2741 只差 PROTO 一行，churn 由 Rust 装配打印〕，B = R0 的 ce + 核〔每次多一次 `document/1` 问答〕）
 
 口径：整个进程的墙钟，毫秒，bash `EPOCHREALTIME` 夹进程、含进程起；语料 = crosscheck `rust` 提交成单提交仓（每臂一份拷贝），面 `ce churn --days 14 .`，ABAB ×7。

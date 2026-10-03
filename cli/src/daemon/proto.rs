@@ -19,8 +19,10 @@ use std::path::Path;
 /// v2.27 step 4) adds the `tombstone` request — additive: a 2.1.0
 /// client asks a 2.0.0 daemon to leave (client.rs `stale`, same major
 /// and older minor) before it ever sends one; 2.2.0 (plan v2.31 step
-/// 5) adds the `flow` request the same additive way.
-pub const DAEMON_PROTO: &str = "2.2.0";
+/// 5) adds the `flow` request the same additive way; 2.3.0 (plan v2.32
+/// step 5) adds the `document` request — the guard's sentences, laid
+/// out by the core over the daemon's held link — the same way.
+pub const DAEMON_PROTO: &str = "2.3.0";
 
 /// The flow/1 request's four integer tables, exactly as
 /// `flow::wire::body` assembles them (a unit's rows led by its request
@@ -82,6 +84,14 @@ pub enum Request {
     /// lowered units, judged over the daemon-owned core link (flow/1).
     /// The hook places the reply's findings through its own legend.
     Flow(FlowTables),
+    /// A document request (plan v2.32 step 5): the PreToolUse guard's
+    /// `guard` family — rule codes and numbers as rows, strings as
+    /// references — forwarded as the hook built it over the
+    /// daemon-owned core link (document/1); the hook binds the reply's
+    /// lines through its own strings.
+    Document {
+        body: serde_json::Value,
+    },
     Shutdown,
 }
 
@@ -118,6 +128,10 @@ pub enum Response {
     },
     /// The raw flow.result, or the same degraded object (A9f).
     FlowReport {
+        reply: serde_json::Value,
+    },
+    /// The raw document.result, or the same degraded object (A9f).
+    DocumentReport {
         reply: serde_json::Value,
     },
     Error {

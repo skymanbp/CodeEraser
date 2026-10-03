@@ -98,6 +98,20 @@ pub fn request(root: &Path, req: &Request) -> Result<Response> {
     bounded(root, req, true, deadline_from_env())
 }
 
+/// A judgment relayed over the daemon's core link (tombstone, flow, a
+/// document): the raw reply its own response carries, or why there is
+/// none — a daemon that answered something else, or no daemon — by
+/// name. The reply's own degraded posture is the caller's to read.
+pub fn relay(root: &Path, req: &Request) -> std::result::Result<serde_json::Value, String> {
+    match (req, request(root, req)) {
+        (Request::Tombstone { .. }, Ok(Response::TombstoneReport { reply }))
+        | (Request::Flow(_), Ok(Response::FlowReport { reply }))
+        | (Request::Document { .. }, Ok(Response::DocumentReport { reply })) => Ok(reply),
+        (_, Ok(other)) => Err(format!("daemon answered {other:?}")),
+        (_, Err(e)) => Err(format!("daemon: {e}")),
+    }
+}
+
 /// The one hello loop both entry points share (the dedup ratchet
 /// caught them growing as clones). Every recoverable outcome gets
 /// exactly one more round; `lazy` gates the respawn arms — the

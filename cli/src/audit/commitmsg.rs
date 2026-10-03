@@ -8,6 +8,8 @@
 //! surface — a CI recipe, not a leg. Only the message is read here;
 //! what it measures lives in tombstone.rs, the body in precommit.rs.
 
+use super::speech::{self, Face, Said};
+use crate::document::lines::{Mode, print};
 use std::path::Path;
 use std::process::ExitCode;
 
@@ -15,17 +17,15 @@ use std::process::ExitCode;
 /// git-hook body. An unreadable file — absent, binary, or past
 /// texts::READ_CAP: the hook's input is read bounded, as every other
 /// side is — is a usage error (2), never a pass: the hook was handed a
-/// path, and a gate that cannot see its input must say so.
+/// path, and a gate that cannot see its input must say so (the
+/// sentence is the core's, speech.rs; the exit code is this side's).
 pub fn run_commitmsg(root: &Path, file: &Path) -> ExitCode {
     let Some(text) = crate::tombstone::texts::read_capped(file) else {
-        eprintln!(
-            "{}",
-            crate::i18n::line(
-                "ce commitmsg: cannot read {} (absent, binary or past READ_CAP)",
-                "ce commitmsg：读不了 {}（不存在、二进制或超过 READ_CAP）",
-                &[&file.display()],
-            )
-        );
+        let said = Said {
+            unreadable: Some(file.display().to_string()),
+            ..Said::bare(Face::Commitmsg)
+        };
+        print(&speech::spoken(None, &said).0, Mode::Console);
         return ExitCode::from(2);
     };
     let message = uncommented(&text, &comment_prefix(root));

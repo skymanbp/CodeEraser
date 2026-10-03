@@ -5,7 +5,7 @@
 //! content already carried, and the class's reason.
 
 use super::envelope::Envelope;
-use super::say;
+use super::speech::{Match, Said};
 use crate::daemon::client;
 use crate::daemon::proto::{Request, Response};
 use std::path::Path;
@@ -74,20 +74,22 @@ fn probe_matches(root: &Path, file_path: &str, content: &str) -> Option<Vec<serd
     }
 }
 
-/// The duplicate class's reason: the top matches as `file:a-b (n tokens)`.
-pub(super) fn reason(file_path: &str, matches: &[serde_json::Value]) -> String {
-    let top: Vec<String> = matches
+/// The duplicate class's reason: the count and the top three matches.
+pub(super) fn reason(file_path: &str, matches: &[serde_json::Value]) -> Said {
+    let int = |v: &serde_json::Value| v.as_i64().unwrap_or(-1);
+    let top = matches
         .iter()
         .take(3)
-        .map(|m| {
-            format!(
-                "{}:{}-{} ({} tokens)",
-                m["file"].as_str().unwrap_or("?"),
-                m["start_line"],
-                m["end_line"],
-                m["tokens"]
-            )
+        .map(|m| Match {
+            file: m["file"].as_str().unwrap_or("?").to_string(),
+            start: int(&m["start_line"]),
+            end: int(&m["end_line"]),
+            tokens: int(&m["tokens"]),
         })
         .collect();
-    say::duplicate(file_path, matches.len(), &top.join("; "))
+    Said::Duplicate {
+        file: file_path.to_string(),
+        regions: matches.len(),
+        top,
+    }
 }

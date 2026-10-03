@@ -9,6 +9,8 @@
 | PostToolUse (Write\|Edit) | `ce settle --hook` | 只记不说：本会话的 PreToolUse 对同一次工具调用（同一 `tool_use_id`）答过 `ask`、而工具真跑完了，就往观察账本追加一行 `settled`——人放行了这次写入；拒绝不触发任何钩子，所以没有这一行就是拒绝的记录 |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块，仅 deny 档拦停；墓碑腿同样在核里按 `[tombstone] tier` 与 budget 判、也只有 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)；同角色顾问行（本会话新增的单元其 top-1 带角色位时）只落进 observe 账本，永不拦停 |
 
+拒写理由与 Stop / precommit / commitmsg 的每一行都由核按当时的语言写出（钩子经 daemon 的核链、审计经自己的核链问一次）；核说不出时决定照旧，句子换成一句英文兜底 `ce: rule … fired; the core could not phrase the reason: …`——只点名触发的规则、不说决定，各档位同一拼写（审计面是 `ce <面>: rule … fired; the core could not phrase the verdict: …`，本地规则不拦时没有 `rule … fired; ` 这一段）。
+
 skill：[`skills/erase/`](skills/erase/SKILL.md)，把 dedup/deadcode/join
 的发现引导成安全删除（先读全文、查引用、小批删、重跑门证收敛），
 用户说"清理重复/死码"时由 Claude 自动调用。

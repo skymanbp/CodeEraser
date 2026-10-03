@@ -26,6 +26,8 @@
 > `lines`，`churn`、`scan`、`dedup`、`clone`、`clone-units`、`docdup`、`erase`、`erase-trail`、`trend`、`similar` 改印核的 `lines`、
 > 退出码读 `exit.fail`、`--format json` 按目录的 `pretty` 印（scan / dedup 的 `--format sarif` 是绑定后文档的投影）——7.10.0 之前的核答不出
 > `lines` 或 `pretty`，按名拒。
+> 同一 minor 的读者（步 5 Rust 半第一部分，核与 golden 零改动）：PreToolUse 守卫把 `guard` 请求经 daemon **2.3.0** 加性的 `document{body}` 送到 daemon 持有的核链、按 `document_report{reply}` 取回并印出它的一句（[DAEMON.md](DAEMON.md) §1）；
+> Stop / precommit / commitmsg 在审计自己的核链上问 `audit`，印它的行、按 `exit.fail` 拦；两处都绑不出时按本地规则判、说一句英文兜底。
 > **7.9.0**（文档族第二批，加性 minor，计划 v2.32 步 4，2026-10-01；设计册 `docs/reference/authority-track.md` §5）：
 > `document/1` 的 `family` 多七个：`check` / `structure` / `join` / `deadcode` / `mentions` / `sites` / `graphscreen`（图屏一次装出画布与内嵌的
 > deadcode 文档）；每族的 `ranges` / `rows` / `facts` 键、行宽与每列的宇宙仍按族陈述，契约照旧按名拒，另加各族自己的检查（一行至多的可空表、
@@ -619,4 +621,4 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
 | 协议 | <!--ce:ver:proto#v-->7.10.0<!--/ce--> | §1 所列两处常量 |
-| daemon 协议 | <!--ce:ver:daemon#v-->2.2.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |
+| daemon 协议 | <!--ce:ver:daemon#v-->2.3.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

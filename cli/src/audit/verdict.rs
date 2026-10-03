@@ -13,17 +13,17 @@ use serde_json::{Value, json};
 use std::collections::HashSet;
 use std::path::Path;
 
-/// The core's judgment over the touched-block bits, plus the
-/// rendered display lines Rust re-labels from the convicted row
-/// indices (paths never cross the wire, §5.9.2).
+/// The core's judgment over the touched-block bits, plus the blocks
+/// Rust re-labels from the convicted row indices (paths never cross
+/// the wire, §5.9.2).
 pub struct Verdict {
     /// The zero-tolerance verdict itself — the ONLY block/pass bit.
     pub fail: bool,
     /// Full conviction count (the observe feed and the reason line
     /// both say the true number, not the display cap).
     pub dups: usize,
-    /// First 10 convicted blocks, rendered; display truncation only.
-    pub shown: Vec<String>,
+    /// First 10 convicted blocks; display truncation only.
+    pub shown: Vec<crate::dedup::pairs::Block>,
 }
 
 /// The audit's core link — the shared head every judged surface
@@ -58,8 +58,8 @@ pub fn judge(root: &Path, changed: &[String], link: Option<&mut Link>) -> Option
     consume(&reply, &found.blocks)
 }
 
-/// The reply, consumed: convicted indices re-labelled into display
-/// lines. A degraded reply (over-cap) or an out-of-range index (wire
+/// The reply, consumed: convicted indices re-labelled into their
+/// blocks. A degraded reply (over-cap) or an out-of-range index (wire
 /// skew) answers None — the callers' degraded path, by design.
 fn consume(reply: &Value, blocks: &[crate::dedup::pairs::Block]) -> Option<Verdict> {
     if reply["degraded"] == json!(true) {
@@ -69,14 +69,8 @@ fn consume(reply: &Value, blocks: &[crate::dedup::pairs::Block]) -> Option<Verdi
     let shown = dups
         .iter()
         .take(10)
-        .map(|&i| {
-            let b = blocks.get(i)?;
-            Some(format!(
-                "{}:{}-{} <-> {}:{}-{} ({} tokens)",
-                b.a_file, b.a_start, b.a_end, b.b_file, b.b_start, b.b_end, b.tokens
-            ))
-        })
-        .collect::<Option<Vec<String>>>()?;
+        .map(|&i| blocks.get(i).cloned())
+        .collect::<Option<Vec<_>>>()?;
     Some(Verdict {
         fail: reply["fail"] == json!(true),
         dups: dups.len(),

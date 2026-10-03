@@ -7,4 +7,5 @@
 {"type":"four_class","pairs":[["a.rs","a.rs"],[null,"new.rs"]]}
 {"type":"tombstone","rows":[[0,0,1],[2,1,1]],"budget":3}
 {"type":"flow","units":[[0,5,0]],"stmts":[[0,0,-1,1,0,0],[0,1,-1,0,0,0]],"vars":[],"uses":[]}
+{"type":"document","body":{"degraded":null,"facts":{},"family":"guard","lang":0,"ranges":{"files":1},"rows":{"say":[[5,0,0,0,0,0,0]]}}}
 {"type":"shutdown"}

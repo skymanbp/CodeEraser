@@ -27,14 +27,14 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
 
 - **PreToolUse** — this Write/Edit's on-disk pair, the applied text the budget rule already
   computes, for a judged language inside the config's walk
-  ([guard/tombstone.rs:38-56](../../../cli/src/guard/tombstone.rs#L38)). It is the only leg
+  ([guard/tombstone.rs:39-57](../../../cli/src/guard/tombstone.rs#L39)). It is the only leg
   that sees one file at a time, so it carries the session with it (§7).
 - **Stop** — the working tree against `HEAD`, plus the audit's untracked files: a name that
   moved into a brand-new file is alive, and a new CHANGELOG is a changelog. Pairs outside the
   config's walk scope are dropped before any text is read — an excluded path is nobody's, as
   the guard leg reads it
   ([audit/tombstone.rs:1-7](../../../cli/src/audit/tombstone.rs#L1),
-  [audit/tombstone.rs:127-150](../../../cli/src/audit/tombstone.rs#L127)); since plan v2.29 step 6
+  [audit/tombstone.rs:119-142](../../../cli/src/audit/tombstone.rs#L119)); since plan v2.29 step 6
   that one batch also feeds the Stop audit's `similar` leg — the two text legs read the changed
   pairs once.
 - **precommit / commitmsg** — the index against `HEAD`, what the commit will hold; `ce
@@ -43,7 +43,7 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
   stays the staged pairs' own (a message item `- X is no longer needed` must not keep `X`
   alive) — its comment lines blanked in place so a site's line is the file's own
   ([audit/tombstone.rs:26-28](../../../cli/src/audit/tombstone.rs#L26),
-  [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167),
+  [audit/tombstone.rs:159-171](../../../cli/src/audit/tombstone.rs#L159),
   [commitmsg.rs:107-132](../../../cli/src/audit/commitmsg.rs#L107)).
 
 Every git side comes through ONE `cat-file --batch` process — its reply read as a stream, so
@@ -274,11 +274,11 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   the hook speaks only when its tier is not `observe`, a budget is declared, the core said
   `over` and the measurement was whole — no pair with a bounded diff
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
-  [guard/tombstone.rs:71-81](../../../cli/src/guard/tombstone.rs#L71),
-  [guard/tombstone.rs:149-167](../../../cli/src/guard/tombstone.rs#L149),
-  [hookio.rs:266-282](../../../cli/src/hookio.rs#L266),
-  [proto.rs:73-80](../../../cli/src/daemon/proto.rs#L73),
-  [say.rs:69-80](../../../cli/src/guard/say.rs#L69)).
+  [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
+  [guard/tombstone.rs:143-161](../../../cli/src/guard/tombstone.rs#L143),
+  [hookio.rs:265-281](../../../cli/src/hookio.rs#L265),
+  [proto.rs:75-82](../../../cli/src/daemon/proto.rs#L75),
+  [Text/Guard.hs:17](../../../core/app/CE/Text/Guard.hs#L17)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
   Stop sees the session's diff at once), judge over the audit's own core link, and block only
   when three things agree — the tier is `deny`, the core said `over`, and the measurement was
@@ -287,13 +287,15 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   is a degraded object, never a block and never a silent pass. The reason names who judged what, the count, the
   budget it passed, the first sites, and what to do instead — drop the label, or say what
   replaced it; the terminal faces print one line for the person: the sites when there are
-  any, the degradation when there is no verdict, nothing when the changeset is clean
-  ([audit/tombstone.rs:62-69](../../../cli/src/audit/tombstone.rs#L62),
-  [audit/tombstone.rs:182-199](../../../cli/src/audit/tombstone.rs#L182),
-  [audit/tombstone.rs:224-267](../../../cli/src/audit/tombstone.rs#L224),
-  [precommit.rs:22-61](../../../cli/src/audit/precommit.rs#L22)). `ce commitmsg` exits 2
+  any, the degradation when there is no verdict, nothing when the changeset is clean. Since
+  v2.32 step 5 those sentences and the block bit are the core's `audit` family, asked over the
+  audit's own link with the paths as references
+  ([audit/tombstone.rs:61-68](../../../cli/src/audit/tombstone.rs#L61),
+  [Audit/Document.hs:72-84](../../../core/app/CE/Audit/Document.hs#L72),
+  [Audit/Document.hs:105-121](../../../core/app/CE/Audit/Document.hs#L105),
+  [precommit.rs:21-44](../../../cli/src/audit/precommit.rs#L21)). `ce commitmsg` exits 2
   when it cannot read the file it was handed — a gate that cannot see its input must say so —
-  1 on a block, 0 otherwise ([commitmsg.rs:14-33](../../../cli/src/audit/commitmsg.rs#L14)).
+  1 on a block, 0 otherwise ([commitmsg.rs:16-35](../../../cli/src/audit/commitmsg.rs#L16)).
 
 Every producer writes ONE feed shape, the `tombstone` object (its shape since `ce.observe/0.9.0`): `rev`
 (the vocabulary revision — a reader of the ledger must know which tables produced a row),
@@ -331,8 +333,8 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   (`restored_on_disk`: one bounded read of each erasing file; a file that cannot be read
   restores nothing), so a still-later `(no X)` binds no name the tree carries; the Stop leg,
   which reads the whole session's diff at once with an empty union, sees the same survival
-  ([guard/tombstone.rs:149-207](../../../cli/src/guard/tombstone.rs#L149),
-  [audit/tombstone.rs:167-179](../../../cli/src/audit/tombstone.rs#L167)).
+  ([guard/tombstone.rs:143-201](../../../cli/src/guard/tombstone.rs#L143),
+  [audit/tombstone.rs:159-171](../../../cli/src/audit/tombstone.rs#L159)).
 - **A `///` doc comment is one paragraph to docdup since `DOCDUP_REV` 5.** Its tree-sitter
   node ends at column 0 of the next row, and until the v2.28 amendment (2026-09-04) the merge
   rule read that end row, so consecutive `///` lines never merged the way `//` runs do and a

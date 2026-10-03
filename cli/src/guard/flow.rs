@@ -13,9 +13,10 @@
 
 use super::envelope::Envelope;
 use super::flow_novel;
+use super::speech::Said;
 use crate::config::{Config, FLOW_DEFAULT};
 use crate::daemon::client;
-use crate::daemon::proto::{FlowTables, Request, Response};
+use crate::daemon::proto::{FlowTables, Request};
 use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire;
 use crate::flow_report::{self as fr, Placed};
@@ -26,7 +27,7 @@ use std::path::Path;
 /// reason at its own tier when the condition holds.
 pub(super) struct Pending {
     pub line: Value,
-    pub speak: Option<(&'static str, String)>,
+    pub speak: Option<(&'static str, Said)>,
 }
 
 /// Measure and judge one Write/Edit: a judged language with a flow
@@ -47,10 +48,16 @@ pub(super) fn observe(root: &Path, env: &Envelope, cfg: Option<&Config>) -> Opti
     let tier = tier(cfg);
     let file = &env.tool_input.file_path;
     let armed = tier != FLOW_DEFAULT && fr::lang_judged(lang);
-    let speak = armed
-        .then(|| super::say::flow_novel(file, &novel.iter().collect::<Vec<_>>()))
-        .flatten()
-        .map(|why| (tier, why));
+    let speak = novel.first().filter(|_| armed).map(|first| {
+        let said = Said::FlowNovel {
+            file: file.clone(),
+            novel: novel.len(),
+            unit: first.unit.clone(),
+            kind: first.kind,
+            line: first.line,
+        };
+        (tier, said)
+    });
     let line = json!({ "event": "flow", "file": file, "mode": tier, "flow": flow });
     Some(Pending { line, speak })
 }
@@ -92,11 +99,7 @@ fn placed(root: &Path, file: &Lowered) -> Result<Vec<Placed>, String> {
     for sent in wire::plan(files).0 {
         let tables: FlowTables =
             serde_json::from_value(wire::body(&sent)).map_err(|e| e.to_string())?;
-        let reply = match client::request(root, &Request::Flow(tables)) {
-            Ok(Response::FlowReport { reply }) => reply,
-            Ok(other) => return Err(format!("daemon answered {other:?}")),
-            Err(e) => return Err(format!("daemon: {e}")),
-        };
+        let reply = client::relay(root, &Request::Flow(tables))?;
         crate::corelink::judged::degraded(&reply)?;
         let judged = wire::consume(&reply, &sent)?;
         let nth = |f: &wire::Finding| sent.units[f.u].0.nth;

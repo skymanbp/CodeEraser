@@ -132,8 +132,8 @@ The PreToolUse leg lowers both sides of one write — the file on disk and the f
 would produce — judges each over the daemon's core link (daemon protocol 2.2.0, the additive
 `flow` request carrying the four tables exactly as `flow::wire::body` assembles them), places the
 findings through each side's legend and subtracts
-([flow.rs:1-12](../../../cli/src/guard/flow.rs#L1), [flow.rs:35](../../../cli/src/guard/flow.rs#L35),
-[proto.rs:30](../../../cli/src/daemon/proto.rs#L30)). The subtraction is the guard's usual
+([flow.rs:1-12](../../../cli/src/guard/flow.rs#L1), [flow.rs:36](../../../cli/src/guard/flow.rs#L36),
+[proto.rs:32](../../../cli/src/daemon/proto.rs#L32)). The subtraction is the guard's usual
 novelty, applied to findings: a multiset difference keyed on (unit name, kind, variable name),
 the line left out so a finding the edit merely moves is not this write's doing
 ([flow_novel.rs:15-22](../../../cli/src/guard/flow_novel.rs#L15)). The class's condition is a
@@ -141,7 +141,7 @@ judged language and a novel finding of a non-advisory kind, and the feed's `nove
 kinds only: an unused parameter the write brings shows in `kinds`, never in `novel`. The class
 speaks at its own tier,
 `[flow] tier`, shipped at observe, and never on a degraded side — a side the daemon could not
-judge is named in the line, never a decision ([flow.rs:114](../../../cli/src/guard/flow.rs#L114),
+judge is named in the line, never a decision ([flow.rs:117](../../../cli/src/guard/flow.rs#L117),
 [flow.rs:20-25](../../../cli/src/config/flow.rs#L20)). Each side is one question to the daemon, so
 a side the core refuses, even for one unit, is degraded whole and named in the line: the
 drop-and-ask-again of §1 is the batch road `ce flow` walks, and the hook keeps a write's cost to

@@ -4,6 +4,7 @@
 //! daemon-free, scan-scope only.
 
 use super::envelope::Envelope;
+use super::speech::{Fence, Said};
 use crate::config::{Config, Thresholds};
 use std::path::Path;
 
@@ -58,27 +59,27 @@ pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<u
 }
 
 /// The write would leave the file past ITS hard budget — the file's
-/// class line, or the global one (lines_for). `fence` is the note a
-/// drifted config earned (fenced): the reason says which budget it
-/// was judged against and why.
+/// class line, or the global one (lines_for). `fence` is why a
+/// drifted config was judged with the shipped budgets (fenced): the
+/// reason says which budget it was judged against and why.
 pub(super) fn budget_breach(
     t: &Thresholds,
     env: &Envelope,
     lines: usize,
-    fence: Option<&str>,
-) -> Option<String> {
+    fence: Fence,
+) -> Option<Said> {
     let cap = t.file_lines_fail;
     // cap 0 = no hard line exists (the P3 grade-table contract) —
     // without this the hook read 0 as "every write breaches"
     if cap == 0 || lines <= cap {
         return None;
     }
-    Some(super::say::over_budget(
-        &env.tool_input.file_path,
+    Some(Said::OverBudget {
+        file: env.tool_input.file_path.clone(),
         lines,
         cap,
         fence,
-    ))
+    })
 }
 
 /// The config the hook judges budgets with (6.4.0, O33): the declared
@@ -92,16 +93,12 @@ pub(super) fn budget_breach(
 /// budget (`file_lines_fail = 0` = no line; `exclude = ["src/**"]` =
 /// out of scope). `[guard]` mode and the tier arming stay as
 /// declared: a mode is not a budget, it prints in the status line,
-/// and loosening it is a visible act. The note names the fence for
-/// the deny reason.
-pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Option<&'static str>) {
+/// and loosening it is a visible act. The fence rides the deny reason.
+pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Fence) {
     match crate::score::baseline::fence_status(root, &cfg) {
-        Ok(f) if !f.drifted() => (cfg, None),
-        Ok(_) => (shipped_budgets(cfg), Some(super::say::drifted())),
-        Err(_) => (
-            shipped_budgets(cfg),
-            Some(super::say::baseline_unreadable()),
-        ),
+        Ok(f) if !f.drifted() => (cfg, Fence::None),
+        Ok(_) => (shipped_budgets(cfg), Fence::Drifted),
+        Err(_) => (shipped_budgets(cfg), Fence::Unreadable),
     }
 }
 
@@ -169,8 +166,8 @@ fn resulting_lines(env: &Envelope) -> Option<usize> {
 /// this session already, and the zone's own-tier firing.
 pub(super) struct SizeClasses {
     pub lines: Vec<serde_json::Value>,
-    pub budget: Option<String>,
-    pub zone: Option<(&'static str, String)>,
+    pub budget: Option<Said>,
+    pub zone: Option<(&'static str, Said)>,
 }
 
 /// Both size classes over one write, measured once: the hard budget
@@ -180,7 +177,7 @@ pub(super) struct SizeClasses {
 pub(super) fn size_classes(
     root: &Path,
     env: &Envelope,
-    cfg: Option<&(Config, Option<&'static str>)>,
+    cfg: Option<&(Config, Fence)>,
     mode: &str,
     budget_seen: bool,
 ) -> SizeClasses {
@@ -239,7 +236,7 @@ fn zone_assess(
     env: &Envelope,
     mode: &str,
     lines: usize,
-) -> (Option<serde_json::Value>, Option<(&'static str, String)>) {
+) -> (Option<serde_json::Value>, Option<(&'static str, Said)>) {
     let (cap, armed) = (z.cap, z.armed);
     let (frozen, tiers) = committed(root);
     let soft = frozen.unwrap_or(z.warn);
@@ -266,10 +263,14 @@ fn zone_assess(
         line["zone_tier"] = tier.into();
     }
     let fired = (armed && tier != "observe" && !seen).then(|| {
-        (
-            tier,
-            super::say::graded_zone(file, lines, permille, soft, cap),
-        )
+        let said = Said::Zone {
+            file: file.clone(),
+            lines,
+            permille,
+            soft,
+            cap,
+        };
+        (tier, said)
     });
     (Some(line), fired)
 }

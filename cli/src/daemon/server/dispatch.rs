@@ -47,25 +47,29 @@ pub(super) fn build(shared: &Shared, req: Request) -> (Response, bool) {
             super::replies::probe_reply(root, &file_path, &content),
             true,
         ),
-        Request::FourClass { pairs } => (
-            Response::FourClassReport {
-                report: judge.classify(root, &pairs),
-            },
-            true,
-        ),
-        Request::Tombstone { rows, budget } => (
-            Response::TombstoneReport {
-                reply: judge.tombstone(&rows, budget),
-            },
-            true,
-        ),
-        Request::Flow(tables) => (
-            Response::FlowReport {
-                reply: judge.flow(&tables),
-            },
-            true,
-        ),
         Request::Shutdown => (Response::Bye, false),
+        judged => (over_the_link(&mut judge, root, judged), true),
+    }
+}
+
+/// The requests answered over the daemon-owned core link.
+fn over_the_link(judge: &mut Judge, root: &std::path::Path, req: Request) -> Response {
+    match req {
+        Request::FourClass { pairs } => Response::FourClassReport {
+            report: judge.classify(root, &pairs),
+        },
+        Request::Tombstone { rows, budget } => Response::TombstoneReport {
+            reply: judge.tombstone(&rows, budget),
+        },
+        Request::Flow(tables) => Response::FlowReport {
+            reply: judge.flow(&tables),
+        },
+        Request::Document { body } => Response::DocumentReport {
+            reply: judge.document(body),
+        },
+        other => Response::Error {
+            message: format!("not a judgment: {other:?}"),
+        },
     }
 }
 

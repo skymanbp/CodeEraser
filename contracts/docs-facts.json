@@ -422,7 +422,7 @@
       "id": "ver:daemon#v",
       "source": "cli/src/daemon/proto.rs::DAEMON_PROTO",
       "tier": "linked",
-      "value": "2.2.0"
+      "value": "2.3.0"
     },
     {
       "id": "ver:docdup_rev#digits",

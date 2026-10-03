@@ -20,10 +20,11 @@
 //! no core = a degraded line, never a decision.
 
 use super::envelope::Envelope;
+use super::speech::{Fence, Said};
 use crate::config::{Config, TOMBSTONE_DEFAULT};
 use crate::daemon::client;
-use crate::daemon::proto::{Request, Response};
-use crate::tombstone::{self, HASH_CAP, Judgment, PairText, Policy, Row, wire};
+use crate::daemon::proto::Request;
+use crate::tombstone::{self, HASH_CAP, Judgment, PairText, Policy, wire};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
@@ -32,19 +33,19 @@ use std::path::Path;
 /// condition holds.
 pub(super) struct Pending {
     pub line: serde_json::Value,
-    pub speak: Option<(&'static str, String)>,
+    pub speak: Option<(&'static str, Said)>,
 }
 
 /// Measure and judge one Write/Edit. Scope is the budget rule's (a
 /// judged language, inside the config's walk) and the applied text is
 /// the budget rule's too (budget::resulting_text) — a tool call that
-/// is failing on its own measures nothing. `fence` = the drift note
-/// when the hook judges with fenced budgets (budget::fenced).
+/// is failing on its own measures nothing. `fence` = why the hook
+/// judges with the shipped budgets, when it does (budget::fenced).
 pub(super) fn observe(
     root: &Path,
     env: &Envelope,
     cfg: Option<&Config>,
-    fence: Option<&str>,
+    fence: Fence,
 ) -> Option<Pending> {
     let (lang, before) = env.judged_pair(root, cfg)?;
     let after = super::budget::resulting_text(env)?;
@@ -89,18 +90,19 @@ fn spoken(
     judged: &Judgment,
     tier: &'static str,
     budget: Option<u32>,
-    fence: Option<&str>,
-) -> Option<(&'static str, String)> {
+    fence: Fence,
+) -> Option<(&'static str, Said)> {
     let j = judged.as_ref().ok()?;
     let armed = j.over && tier != TOMBSTONE_DEFAULT && f.degraded_pairs == 0;
     let budget = budget.filter(|_| armed)?;
-    let shown: Vec<String> = f.judged_rows(j).take(3).map(Row::place).collect();
-    let mut why = super::say::tombstone_over(j.sites.len(), budget, &shown.join("; "));
-    if let Some(note) = fence {
-        why.push(' ');
-        why.push_str(note);
-    }
-    Some((tier, why))
+    let shown = f.judged_rows(j).take(3).cloned().collect();
+    let said = Said::Tombstone {
+        sites: j.sites.len(),
+        budget,
+        fence,
+        shown,
+    };
+    Some((tier, said))
 }
 
 /// The feed line, once the hook has decided at `decided`: `applied` is
@@ -133,17 +135,9 @@ fn knobs(cfg: Option<&Config>) -> (&'static str, Option<u32>) {
 /// budget cross the socket, and every failure is named.
 fn judge(root: &Path, f: &tombstone::Findings, budget: Option<u32>) -> Judgment {
     let rows = wire::rows(f);
-    match client::request(
-        root,
-        &Request::Tombstone {
-            rows: rows.clone(),
-            budget,
-        },
-    ) {
-        Ok(Response::TombstoneReport { reply }) => wire::consume(&reply, rows.len()),
-        Ok(other) => Err(format!("daemon answered {other:?}")),
-        Err(e) => Err(format!("daemon: {e}")),
-    }
+    let n = rows.len();
+    let reply = client::relay(root, &Request::Tombstone { rows, budget })?;
+    wire::consume(&reply, n)
 }
 
 /// The session's erased keys as its earlier `tombstone` lines left
