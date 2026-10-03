@@ -2281,96 +2281,96 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 138,
-    "end": 152,
+    "line": 135,
+    "end": 149,
     "text": "-- | depth == parent.depth + 1 for every non-root row. nodeRow's"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|228575861056e64a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 47,
-    "end": 52,
+    "line": 48,
+    "end": 53,
     "text": ", -- the seam tables count toward the same cap (C15: a declared"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3d54266a3b6aab2f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 118,
-    "end": 121,
+    "line": 115,
+    "end": 118,
     "text": "declOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4437845c220d08fa|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 201,
+    "line": 198,
     "text": ", \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 154,
-    "end": 167,
+    "line": 151,
+    "end": 164,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 154,
-    "end": 167,
+    "line": 151,
+    "end": 164,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 176,
-    "end": 178,
+    "line": 173,
+    "end": 175,
     "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 178,
-    "end": 182,
+    "line": 175,
+    "end": 179,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 178,
-    "end": 198,
+    "line": 175,
+    "end": 195,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|69c5155f32c757cf|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 45,
-    "end": 60,
+    "line": 46,
+    "end": 61,
     "text": "{ famName = \"structure\""
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 72,
+    "line": 73,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|82207190ce81caf3|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 123,
-    "end": 136,
+    "line": 120,
+    "end": 133,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 110,
-    "end": 113,
+    "line": 107,
+    "end": 110,
     "text": "convOk row = case row of"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|a5ff01411ccb2dda|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 100,
+    "end": 106,
+    "text": "-- the [dir, key, count] reading: the key under its cap, the count"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|b48a97004c2921f5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 67,
-    "end": 74,
+    "line": 68,
+    "end": 75,
     "text": "violation req ="
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|d7485a21f49c6c3c|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 93,
-    "end": 109,
-    "text": "dirTables =\n[ ((3, \"pattern\", capOk \"unknown pattern code\" 6), take 2, fromMaybe [] (reqPatterns req))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ddfc9813db49d347|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 231,
-    "end": 242,
+    "line": 228,
+    "end": 239,
     "text": "-- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ebd15a1b8f029b6d|0": {
@@ -2379,11 +2379,17 @@
     "end": 15,
     "text": "-- tables ride the wire — and the headline entropy rows. Names and"
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ee88d766f5a5854b|0": {
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|f179c7361af37e1a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 103,
-    "end": 109,
-    "text": "-- the two [dir, key, count] tables share one reading: the key"
+    "line": 91,
+    "end": 106,
+    "text": "dirTables =\n[ ((3, \"patternShapes\", capOk \"shape bits outside 0..127\" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ff6fdcfd5200b86f|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 67,
+    "end": 74,
+    "text": "violation :: StructReq -> Maybe String"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|1ce45d9f1e01be3f|0": {
     "target": "../../../core/app/CE/Structure/Axes.hs",
@@ -2699,11 +2705,11 @@
     "end": 59,
     "text": "knobTable :: [(Integer, Knobs -> Integer, Integer -> Knobs -> Knobs)]"
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|a72de1873007894c|0": {
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|d6dac33d467172f0|0": {
     "target": "../../../core/app/CE/Structure/Request.hs",
     "line": 84,
-    "end": 89,
-    "text": "-- | The [dirId, code, count] distribution the axes read, whichever"
+    "end": 87,
+    "text": "-- | The [dirId, code, count] distribution the axes read: the shape"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Shape.hs|04ef9ff20f51e83d|0": {
     "target": "../../../core/app/CE/Structure/Shape.hs",
@@ -2730,44 +2736,44 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|07fa44600b6597f6|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 153,
-    "end": 161,
+    "line": 158,
+    "end": 166,
     "text": "declaredOverlay ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|14d346ea6dcd4fce|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 39,
-    "end": 49,
+    "line": 40,
+    "end": 50,
     "text": "-- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|180053ab236a6370|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 241,
-    "end": 250,
+    "line": 246,
+    "end": 255,
     "text": "-- | P1 posture on the newest family: one node past the cap"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|4ee7ed4b7ebf46f2|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 186,
-    "end": 223,
+    "line": 191,
+    "end": 228,
     "text": "[ probeAt [] \"score\" == Just (toJSON (867 :: Integer))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|885bffb28ea698ca|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 76,
-    "end": 84,
+    "line": 82,
+    "end": 90,
     "text": "fixtureJudged :: Bool"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|b1d82d591529dd0b|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 117,
-    "end": 121,
+    "line": 123,
+    "end": 127,
     "text": ", -- the forged-depth probe (review 2026-08-20 #6): nodeRow's old"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|cc7cfe47d20e7add|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 141,
-    "end": 171,
+    "line": 146,
+    "end": 176,
     "text": "refused = refusedBy respond"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../structure-axes.md|2206ab3c881c25e7|0": {
@@ -5965,8 +5971,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 223,
-    "end": 230,
+    "line": 220,
+    "end": 227,
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|1c6da934c477c2cd|0": {
@@ -8617,17 +8623,17 @@
     "end": 53,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 330,
-    "end": 332,
-    "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
+    "line": 320,
+    "end": 322,
+    "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 116,
-    "end": 123,
-    "text": "advisoryKeys :: GraphReq -> [Pair]"
+    "line": 118,
+    "end": 125,
+    "text": "Nothing -> []\nJust rows"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Advisory.hs|1d8463e986c9fd4f|0": {
     "target": "../../../core/app/CE/Graph/Advisory.hs",
@@ -8653,11 +8659,11 @@
     "end": 129,
     "text": "-- | The advisory tables are one fact in two halves: `unmentioned`"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|8c8ee6d34f3f3fe6|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|7382804581594a84|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 73,
-    "end": 74,
-    "text": "<*> o .:? \"unmentioned\""
+    "line": 72,
+    "end": 73,
+    "text": "<*> o .:? \"symbols\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|007fe87498837f89|0": {
     "target": "../../../core/app/CE/Graph/Cost.hs",

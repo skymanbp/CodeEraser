@@ -204,7 +204,7 @@ module whose path carries an underscore-led segment, dunders excepted — bit 1)
 Both tables ride `graph.request` as optional keys that live and die together — one
 without the other is refused by name, first in the violation chain
 ([Contract.hs:72-73](../../../core/app/CE/Graph/Contract.hs#L72),
-[Contract.hs:121-128](../../../core/app/CE/Graph/Contract.hs#L121)); each row is validated
+[Contract.hs:122-129](../../../core/app/CE/Graph/Contract.hs#L122)); each row is validated
 for width, sign, bound and `private ≤ total`
 ([Advisory.hs:29-48](../../../core/app/CE/Graph/Advisory.hs#L29)). The core then emits
 `exportUnmentioned = [[node, vis, conv, code]]` for every row whose visibility carries
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1515 (1733 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 4272 (1069) | 634 (10) | 14.8 % | 99 / 634 = 15.6 % | 99 / 3638 |
-| | | rust | 3849 (2066) | 399 (4) | 10.4 % | 13 / 399 = 3.3 % | 13 / 3419 |
+| self @ this commit | 1517 (1735 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 4272 (1070) | 634 (10) | 14.8 % | 97 / 634 = 15.3 % | 97 / 3638 |
+| | | rust | 3843 (2061) | 400 (4) | 10.4 % | 13 / 400 = 3.2 % | 13 / 3412 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -322,7 +322,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->10<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1069<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->10<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1070<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

@@ -9,9 +9,10 @@
 -- 11 in the staleness leg; 19/20 belong to axis 7 and are levered in
 -- StructureModularityProps, which the E01 300-line wall split off),
 -- the refusals by name, the degraded-fails posture, and (7.2.0, plan
--- v2.30 step 7b) the name-pattern shape road: the same fixture sent
--- as stem facts judges to the same digit, the classifier's vocabulary
--- is pinned stem by stem, and the road's refusals name the offender.
+-- v2.30 step 7b) the name-pattern shape road: the fixture's stems ride
+-- as stem facts, the classifier's vocabulary is pinned stem by stem,
+-- and the road's refusals name the offender — the pre-classified
+-- `patterns` road among them, retired at 8.0.0 (plan v2.32 step 6).
 module StructureProps (battery) where
 
 import CE.Structure (respond)
@@ -31,7 +32,7 @@ battery = runLegs names probes
     , "the declared layout overlays by hand-computed digit"
     , "the redundancy axis judges present, absent and clean apart"
     , "the staleness axis judges by hand-computed digit"
-    , "the shape road judges to the pattern road's digit and echoes its rows"
+    , "the shape road echoes its rows, and the retired pattern road is refused by name"
     , "the classifier's vocabulary judges from shape bits, stem by stem"
     ]
   probes = [fixtureJudged, knobLevers, refusals, degradedFails, declaredOverlay, redundancyAxis, staleAxis, shapeRoad, shapeVocabulary]
@@ -47,12 +48,17 @@ battery = runLegs names probes
 -- each v=1 axis charges floor(1000·1/5) = 200; score = 1000 −
 -- (0+200·4)·10 div (10·5) = 840. Entropy: global patterns [11,4]
 -- → 782‰; dir files [3,9,6] (zero-file dir 3 filtered) → 916‰.
+-- The names ride as shape bits: dir 1's 5 snake stems as 5 (lower +
+-- underscore), its 4 pascal stems as 44 (upper + lower + first char
+-- upper), dir 2's 6 snake stems as 5 — codes 0 / 3 / 0 once folded.
 wireReq :: Value
-wireReq = wireReqWith ("patterns", [[1, 0, 5], [1, 3, 4], [2, 0, 6]])
+wireReq = wireReqWith ("patternShapes", fixtureShapes)
+
+fixtureShapes :: [[Integer]]
+fixtureShapes = [[1, 5, 5], [1, 44, 4], [2, 5, 6]]
 
 -- | The fixture with its name-pattern table named by the caller: the
--- pattern road above, the shape road in shapeRoad (7.2.0) — one
--- fixture, two spellings of the same distribution.
+-- shape road above, a forged or retired table in the refusal legs.
 wireReqWith :: (String, [[Integer]]) -> Value
 wireReqWith names =
   tabledRequest
@@ -119,7 +125,7 @@ refusals =
       -- rode a depth of 999 into the geometry axes and moved the
       -- score before depthChain existed
       refused (nodes [[0, 0, 0, 2, 3], [1, 0, 999, 0, 9]]) "depth is not parent depth + 1"
-    , refused (setKey "patterns" (toJSON [[0, 7, 1 :: Integer]]) wireReq) "unknown pattern code"
+    , refused (setKey "patterns" (toJSON [[1, 0, 5 :: Integer]]) wireReq) "patterns: retired at 8.0.0 \8212 the core classifies patternShapes"
     , refused (setKey "conventions" (toJSON [[0, 0 :: Integer]]) wireReq) "bits outside 1..3"
     , refused (setKey "fileRefs" (toJSON [[9, 0, 1, 1 :: Integer]]) wireReq) "dir out of range"
     , -- max+1: the boundary-exact unknown code, moved WITH the knob
@@ -131,7 +137,6 @@ refusals =
       -- 21 now)
       refused (setKey "knobs" (toJSON [[21, 1 :: Integer]]) wireReq) "unknown structure knob"
     , refused (setKey "knobs" (toJSON [[3, 0 :: Integer]]) wireReq) "knob below 1"
-    , refused (setKey "patterns" (toJSON [[1, 3, 4], [1, 0, 5 :: Integer]]) wireReq) "not strictly ascending"
     , refused (setKey "declared" (toJSON [[9, 1 :: Integer]]) wireReq) "declared 0: dir out of range"
     , refused (setKey "declared" (toJSON [[1, 0 :: Integer]]) wireReq) "weight below 1"
     , refused (setKey "declared" (toJSON [[2, 1], [1, 1 :: Integer]]) wireReq) "declared 1: not strictly ascending"
@@ -249,31 +254,25 @@ degradedFails = case replyObj overCap of
  where
   overCap = setKey "nodes" (toJSON [[0, 0, 0, 0, 0 :: Integer] | _ <- [0 .. structNodeCap]]) wireReq
 
--- | The shape road (7.2.0): the fixture's 5 snake stems ride as bits
--- 5 (lower + underscore), its 4 pascal stems as 44 (upper + lower +
--- first char upper) and dir 2's 6 snake stems as 5 again — the same
--- distribution the pattern road spells as codes 0 / 3 / 0 — so the
--- four judged keys must read the pattern road's digits, and the reply
--- echoes the three rows it folded; the pattern road echoes nothing.
--- Refusals: both roads at once, bits past 127, a zero count, an
--- out-of-order pair, a dir out of range — each by name.
+-- | The shape road (7.2.0): the reply echoes the three rows it
+-- folded (the hand-computed digits are fixtureJudged's). The retired
+-- road (8.0.0): `patterns` is refused by name, alone or beside
+-- `patternShapes`, before any table is read. Shape refusals: bits past
+-- 127, a zero count, an out-of-order pair, a dir out of range — each
+-- by name.
 shapeRoad :: Bool
 shapeRoad =
   and
-    [ judgedKeys (replyObj shapeReq) == judgedKeys (replyObj wireReq)
-    , (replyObj shapeReq >>= (`field` "patternShapes")) == Just (Number 3)
-    , (replyObj wireReq >>= (`field` "patternShapes")) == Nothing
-    , refusedBy respond (setKey "patternShapes" (toJSON shapes) wireReq) "patternShapes: rides beside patterns (one road)"
+    [ (replyObj wireReq >>= (`field` "patternShapes")) == Just (Number 3)
+    , refusedBy respond (wireReqWith ("patterns", [[1, 0, 5], [1, 3, 4], [2, 0, 6]])) "patterns: retired at 8.0.0 \8212 the core classifies patternShapes"
+    , refusedBy respond (setKey "patterns" (toJSON [[1, 0, 5 :: Integer]]) wireReq) "patterns: retired at 8.0.0 \8212 the core classifies patternShapes"
     , refusedBy respond (shapesAt [[1, 128, 1]]) "patternShapes 0: shape bits outside 0..127"
     , refusedBy respond (shapesAt [[1, 5, 0]]) "patternShapes 0: count below 1"
     , refusedBy respond (shapesAt [[1, 44, 4], [1, 5, 5]]) "patternShapes 1: not strictly ascending"
     , refusedBy respond (shapesAt [[9, 5, 1]]) "patternShapes 0: dir out of range"
     ]
  where
-  shapes = [[1, 5, 5], [1, 44, 4], [2, 5, 6]] :: [[Integer]]
-  shapeReq = shapesAt shapes
   shapesAt rows = wireReqWith ("patternShapes", rows)
-  judgedKeys o = [o >>= (`field` k) | k <- ["axes", "score", "entropy", "findings"]]
 
 -- | The ten stems the producer's own vocabulary test names, as shape
 -- bits (0 under / 1 dash / 2 lower / 3 upper / 4 digit-led / 5 first

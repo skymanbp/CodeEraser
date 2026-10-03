@@ -7,15 +7,20 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 3.0.0 止；2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
-> **8.0.0**（退役失去读者的请求键，major，计划 v2.32 步 6，2026-10-03；设计册 `docs/reference/authority-track.md` §3 退役行与 §13 第 18 条）：
+> **8.0.0**（退役失去读者的两个请求键 `judgedMask` 与 `patterns`，major，计划 v2.32 步 6，2026-10-03；设计册 `docs/reference/authority-track.md` §3 退役行与 §13 第 18、69、70 条）：
 > `scan/1`、`graph/1` 与 `verdict` 的请求不再带 `judgedMask`——判决语言集由核自己的语言表给出（`CE.Lang` 每行的 `judged` 列，
 > `CE.Wire.Mask.judgedMask` 一处折出）；仍带这个键的请求按名拒 `contract: judgedMask: retired at 8.0.0 — the core reads its language table`，
-> 三族应答里的 `judgedMask` 回显（scan / graph 顶层、verdict 的 `knobs`）一并删除。请求键被拒是破坏性变更，按 §2 升 major：7.x 的 ce
+> 三族应答里的 `judgedMask` 回显（scan / graph 顶层、verdict 的 `knobs`）一并删除。`structure/1` 的请求不再接受 `patterns`（7.2.0 之前由产品
+> 预分类的名字图案码表；ce 自 7.2.0 只发 `patternShapes`、由核 `CE.Structure.Shape` 分类）：带它的请求按名拒
+> `contract: patterns: retired at 8.0.0 — the core classifies patternShapes`，单独送或与 `patternShapes` 同送都一样，此前的同送拒绝句
+> `patternShapes: rides beside patterns (one road)` 退役；两个键的拒绝由 `CE.Wire.Retired` 一处拼出。请求键被拒是破坏性变更，按 §2 升 major：7.x 的 ce
 > 对 8.0.0 的核、8.0.0 的 ce 对 7.x 的核，都在握手处按 major 不符拒绝。请求锚（§3）随之重锚到 8.0.0：全部 golden 的 request 行由
 > `fixture_contract::regen` 机器重写（proto 低于锚的行改到锚，族 golden 的请求去掉退役键，`handshake/wire-errors` 的请求照原样问），
 > `handshake/wire-errors` 新加一对钉住退役键的拒绝。应答逐对核过，除 proto 与回显之外字节相同，例外六对：graph 第 26 对与 scan 第 17 对
 > （语言码 20 / 15 此前因请求掩码不含而按遗留路拒，现在语言表判它们在判决集内，照常判）、scan 第 18 对（此前钉 `judgedMask: negative`，
-> 键退役后是一次普通判决）、wire-errors 第 2 / 3 对（错误信息里点名的 server 版本）与新加的 wire-errors 第 5 对。`tablesDigest` 与 daemon
+> 键退役后是一次普通判决）、wire-errors 第 2 / 3 对（错误信息里点名的 server 版本）与新加的 wire-errors 第 5 对。structure golden 里只带 `patterns`
+> 的七对（1 / 3 / 6–10）由 regen 把这张表改拼成同一分布的 `patternShapes`（码 0–6 依次取位 5 / 6 / 12 / 44 / 9 / 20 / 64），判决键逐字节同、
+> 应答多回显 `patternShapes=3`；两路同送的第 19 对照原样问，钉住新的拒绝句。`tablesDigest` 与 daemon
 > 协议（2.3.0）不动。
 > **7.10.0**（控制台文本，加性 minor，计划 v2.32 步 5，2026-10-01；设计册 `docs/reference/authority-track.md` §6）：
 > `document.request` 可带 `lang`（0 en / 1 zh，缺省 0；其余按名拒 `document: lang is not 0 or 1`）；`document.result` 多两个键：

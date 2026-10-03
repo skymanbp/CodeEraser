@@ -4,7 +4,7 @@
 
 -- | Two hundred seeded structure requests behind StructureEquivProps
 -- (plan v2.32 step 7): a tree of one to nine directories with chained
--- depths, a name-pattern distribution on either road (or none),
+-- depths, a name-pattern distribution as shape facts (or none),
 -- conventions, file references — consistent with a directed dir-edge
 -- table when one rides — a declared layout, raw staleness facts, a
 -- redundancy rollup, the seam tables of up to three files and a
@@ -40,8 +40,7 @@ one = do
   parents <- mapM (\i -> int (fromInteger i)) [1 .. n - 1]
   files <- mapM (const (int 13)) [0 .. n - 1]
   road <- rand 3
-  pats <- if road == 1 then Just <$> distribution n 7 else pure Nothing
-  shapes <- if road == 2 then Just <$> distribution n 128 else pure Nothing
+  shapes <- if road == 0 then pure Nothing else Just <$> distribution n 128
   convs <- keep 2 [0 .. n - 1] >>= mapM (\d -> (\b -> [d, b + 1]) <$> int 3)
   edged <- chance 2
   (refs, edges) <- if edged then crossing n else (\r -> (r, Nothing)) <$> loose n
@@ -54,7 +53,7 @@ one = do
   let nodes = [[i, p, depthOf i, toInteger (length (filter (== i) parents)), f] | (i, p, f) <- zip3 [0 ..] (0 : parents) files]
       depthOf i = if i == 0 then 0 else 1 + depthOf ((0 : parents) !! fromInteger i)
       bundle = maybe ([], [], [], []) (\fs -> (concatMap (\(_, u, _, _, _) -> u) fs, concatMap (\(_, _, r, _, _) -> r) fs, concatMap (\(_, _, _, cl, _) -> cl) fs, concatMap (\(_, _, _, _, ch) -> ch) fs)) seams
-  pure (SIn nodes pats shapes convs refs decl docs staleEdges red edges (map (\(t, _, _, _, _) -> t) <$> seams) bundle ks)
+  pure (SIn nodes shapes convs refs decl docs staleEdges red edges (map (\(t, _, _, _, _) -> t) <$> seams) bundle ks)
 
 -- | [dir, key, count] rows ascending, a few keys per directory.
 distribution :: Integer -> Int -> G [[Integer]]
@@ -102,7 +101,6 @@ encode' :: SIn -> Value
 encode' i =
   object
     ( ["proto" .= ("7.0.0" :: String), "type" .= ("structure.request" :: String), "id" .= (1 :: Int), "nodes" .= sNodes i]
-        <> ["patterns" .= p | Just p <- [sPatterns i]]
         <> ["patternShapes" .= p | Just p <- [sShapes i]]
         <> ["conventions" .= sConventions i, "fileRefs" .= sRefs i, "declared" .= sDeclared i, "staleEdgeRows" .= sStaleEdges i, "knobs" .= sKnobs i]
         <> ["staleDocRows" .= d | Just d <- [sStaleDocs i]]

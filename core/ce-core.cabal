@@ -65,7 +65,7 @@ executable ce-core
                       CE.Structure.Declared, CE.Structure.Entropy, CE.Structure.Knobs,
                       CE.Structure.Stale, CE.Structure.Modularity,
                       CE.Structure.Request, CE.Structure.Shape,
-                      CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire, CE.Wire.Mask,
+                      CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire, CE.Wire.Mask, CE.Wire.Retired,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Candidates, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces
@@ -139,7 +139,7 @@ test-suite ce-core-test
                       CE.Structure.Declared, CE.Structure.Entropy, CE.Structure.Knobs,
                       CE.Structure.Stale, CE.Structure.Modularity,
                       CE.Structure.Request, CE.Structure.Shape,
-                      CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire, CE.Wire.Mask,
+                      CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire, CE.Wire.Mask, CE.Wire.Retired,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Candidates, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces,

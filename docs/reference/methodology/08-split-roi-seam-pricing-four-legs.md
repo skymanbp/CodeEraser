@@ -23,7 +23,7 @@ class-blind.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:223-230](../../../core/app/CE/Structure.hs#L223).
+[Structure.hs:220-227](../../../core/app/CE/Structure.hs#L220).
 
 ### Seam enumeration and best-seam selection
 

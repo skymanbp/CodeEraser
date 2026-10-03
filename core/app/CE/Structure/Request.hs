@@ -14,18 +14,18 @@ module CE.Structure.Request (StructReq (..), patternsOf, seamTables) where
 
 import CE.Structure.Shape (foldShapes)
 import Data.Aeson
-import Data.Maybe (fromMaybe)
+import qualified Data.Aeson.KeyMap as KM
 
 data StructReq = StructReq
   { reqId :: Value
   , reqNodes :: [[Integer]]
-  , -- the name-pattern distribution's two roads: `patterns` carries
-    -- [dirId, code, count] rows the producer classified for itself
-    -- (the pre-7.2.0 spelling, bytes kept), `patternShapes` carries
+  , -- the name-pattern distribution: `patternShapes` carries
     -- [dirId, bits, count] stem facts the core classifies
-    -- (CE.Structure.Shape). One request takes one road; the boundary
-    -- contract refuses both.
-    reqPatterns :: Maybe [[Integer]]
+    -- (CE.Structure.Shape). The pre-7.2.0 road, `patterns` — codes the
+    -- producer classified for itself — retired at 8.0.0 (plan v2.32
+    -- step 6): this only records that a request still carried it, and
+    -- the boundary contract refuses it by name.
+    reqPatternsSent :: Bool
   , reqShapes :: Maybe [[Integer]]
   , reqConventions :: [[Integer]]
   , reqFileRefs :: [[Integer]]
@@ -65,7 +65,7 @@ instance FromJSON StructReq where
     StructReq
       <$> o .: "id"
       <*> o .: "nodes"
-      <*> o .:? "patterns"
+      <*> pure (KM.member "patterns" o)
       <*> o .:? "patternShapes"
       <*> o .:? "conventions" .!= []
       <*> o .:? "fileRefs" .!= []
@@ -81,12 +81,10 @@ instance FromJSON StructReq where
       <*> o .:? "seamChurn" .!= []
       <*> o .:? "knobs" .!= []
 
--- | The [dirId, code, count] distribution the axes read, whichever
--- road it rode: the producer's codes, or the shape facts folded here.
--- The boundary contract has refused a request on both roads before
--- this is asked, so the shape road wins only by being the one there.
+-- | The [dirId, code, count] distribution the axes read: the shape
+-- facts folded here; no shape table, no distribution.
 patternsOf :: StructReq -> [[Integer]]
-patternsOf req = maybe (fromMaybe [] (reqPatterns req)) foldShapes (reqShapes req)
+patternsOf req = maybe [] foldShapes (reqShapes req)
 
 -- | The four unit/edge tables as ONE bundle — the same tuple
 -- CE.Structure.Split consumes on both its faces (offence + rows).

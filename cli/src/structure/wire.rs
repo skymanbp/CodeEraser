@@ -21,9 +21,9 @@ pub struct Request {
     pub nodes: Vec<[u64; 5]>,
     /// The S1 fact table (7.2.0, plan v2.30 step 7b): [dirId,
     /// shapeBits, count] stem facts, ascending — the core classifies
-    /// them (CE.Structure.Shape). The legacy `patterns` road, codes
-    /// chosen on this side, is never sent again; the core refuses a
-    /// request on both roads.
+    /// them (CE.Structure.Shape). The `patterns` road, codes chosen on
+    /// this side, is never sent; 8.0.0 retired it and the core refuses
+    /// it by name.
     pub shapes: Vec<[u64; 3]>,
     pub conventions: Vec<[u64; 2]>,
     pub file_refs: Vec<[u64; 4]>,

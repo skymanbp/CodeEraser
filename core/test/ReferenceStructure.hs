@@ -21,7 +21,7 @@ import ReferenceSplit (splitAnswer)
 -- | The request's tables as they ride.
 data SIn = SIn
   { sNodes :: [[Integer]]
-  , sPatterns, sShapes :: Maybe [[Integer]]
+  , sShapes :: Maybe [[Integer]]
   , sConventions, sRefs, sDeclared :: [[Integer]]
   , sStaleDocs :: Maybe [[Integer]]
   , sStaleEdges :: [[Integer]]
@@ -72,11 +72,13 @@ diversity cs
   total = sum live
   differ = sum [(a * b) % (total * total) | (i, a) <- zip [0 :: Int ..] live, (j, b) <- zip [0 :: Int ..] live, i /= j]
 
--- | The name-pattern rows the axes read, whichever road rode.
+-- | The name-pattern rows the axes read: the shape facts by style.
 patterns :: SIn -> [[Integer]]
-patterns inp = case sShapes inp of
-  Just rows -> [[d, c, sum [n | [d', b, n] <- rows, d' == d, style b == c]] | (d, c) <- nub [(d, style b) | [d, b, _] <- rows]]
-  Nothing -> maybe [] id (sPatterns inp)
+patterns inp =
+  [ [d, c, sum [n | [d', b, n] <- rows, d' == d, style b == c]]
+  | let rows = maybe [] id (sShapes inp)
+  , (d, c) <- nub [(d, style b) | [d, b, _] <- rows]
+  ]
 
 -- | Each judged axis with its flagged directories, ascending.
 flagged :: SIn -> [(Integer, [Integer])]
@@ -150,7 +152,7 @@ expected isDegraded inp0 =
     <> splitAnswer (k 12, k 13, k 14) (k 15, k 16, k 17, k 18) (sSeamFiles inp) (sSeams inp)
     <> [if isDegraded then Nothing else toJSON . length <$> sShapes inp]
  where
-  inp = if isDegraded then SIn [] Nothing Nothing [] [] [] Nothing [] Nothing Nothing Nothing ([], [], [], []) [] else inp0
+  inp = if isDegraded then SIn [] Nothing [] [] [] Nothing [] Nothing Nothing Nothing ([], [], [], []) [] else inp0
   k = knob inp
   axes = flagged inp
   dirCount = toInteger (length (sNodes inp))

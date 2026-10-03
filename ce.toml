@@ -646,4 +646,14 @@ entry_globs = [
 # by column (`zip4`); the face exit road lane A and this part each
 # wrote is one `main_prelude::answered`. Row set diffed against the 389c7750 tree:
 # that row gone, none new. Measured on the formatted tree.
-budget = 37
+# 37 -> 35 (v2.32 step 6, 8.0.0 retiring structure/1's `patterns`
+# request key): two rows left with the road, none bought.
+# CE.Structure's import block rhymed with CE.Docdup's (52 tokens,
+# Docdup.hs:38-43 against Structure.hs:32-37) until the named
+# refusal's import (CE.Wire.Retired) landed inside that run, and
+# StructureProps refused the pattern table twice in one run (65
+# tokens, lines 124-134 against 134-137) until the battery pinned
+# the one retired refusal instead. Row set diffed against the 94d227af tree: those
+# two rows gone, none new. Measured on the formatted tree. (The two
+# members are RETIRED by name in the tests subrepo.)
+budget = 35

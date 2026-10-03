@@ -5,8 +5,8 @@
 -- (structure/tree.rs, the STYLE table); now the facts ride the wire as
 -- `patternShapes` rows [dirId, bits, count] and the rule is this
 -- module's. The legacy `patterns` road — codes pre-classified by the
--- producer — keeps its bytes, and a request takes one road, never
--- both (CE.Structure's boundary contract).
+-- producer — kept its bytes until 8.0.0 retired it (plan v2.32 step 6;
+-- CE.Structure refuses it by name).
 module CE.Structure.Shape (foldShapes, shapeBitsCap, shapeCode, styleTable) where
 
 import Data.Bits (testBit, (.&.))

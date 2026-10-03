@@ -30,6 +30,7 @@ import CE.Structure.Shape (shapeBitsCap)
 import CE.Structure.Split (splitOffence, splitRows)
 import qualified CE.Structure.Stale as Stale
 import CE.Wire (Family (..), respondWith, tableOffence)
+import CE.Wire.Retired (retired)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -59,16 +60,16 @@ respond proto =
 -- | First boundary-contract offender in request order — the three
 -- dir-keyed tables walk ONE loop over their spec rows (the twelfth
 -- bite's repayment shape: the per-table asum/ascending pair was the
--- clone). The name-pattern distribution rides ONE road (7.2.0): a
--- request carrying both `patterns` and `patternShapes` is refused
--- before either table is read — one judgment, one road (the naming
--- facts' stance at 2.30.0).
+-- clone). The name-pattern distribution rides one road since 8.0.0:
+-- a request that still carries the producer-classified `patterns`
+-- table is refused by name before anything is read (plan v2.32 step 6;
+-- 7.2.0 to 7.10.0 refused it only beside `patternShapes`).
 violation :: StructReq -> Maybe String
 violation req =
   asum
-    ( asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
+    ( retired "patterns" "the core classifies patternShapes" (reqPatternsSent req)
+        : asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
         : depthChain (reqNodes req)
-        : oneRoad
         : [ tableOffence nm proj (dirRow n spec) rows
           | (spec@(_, nm, _), proj, rows) <- dirTables
           ]
@@ -87,12 +88,8 @@ violation req =
  where
   n = toInteger (length (reqNodes req))
   docRows = concat (reqStaleDocRows req)
-  oneRoad = case (reqPatterns req, reqShapes req) of
-    (Just _, Just _) -> Just "patternShapes: rides beside patterns (one road)"
-    _ -> Nothing
   dirTables =
-    [ ((3, "pattern", capOk "unknown pattern code" 6), take 2, fromMaybe [] (reqPatterns req))
-    , ((3, "patternShapes", capOk "shape bits outside 0..127" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))
+    [ ((3, "patternShapes", capOk "shape bits outside 0..127" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))
     , ((2, "convention", convOk), take 1, reqConventions req)
     , ((4, "fileRefs", refsOk), take 3, reqFileRefs req)
     , ((2, "declared", declOk), take 1, reqDeclared req)
@@ -100,8 +97,8 @@ violation req =
     , (Mod.edgeRowSpec n, take 2, concat (reqDirEdges req))
     ]
   noExtra _ = Nothing
-  -- the two [dir, key, count] tables share one reading: the key
-  -- under its cap, the count at least one
+  -- the [dir, key, count] reading: the key under its cap, the count
+  -- at least one
   capOk why cap row = case row of
     [_, v, count] | v > cap -> Just why
                   | count < 1 -> Just "count below 1"

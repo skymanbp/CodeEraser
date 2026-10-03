@@ -13,6 +13,7 @@ module CE.Wire.Mask (judgedLang, judgedMask, retiredMask) where
 
 import CE.Lang (languages)
 import CE.Lang.Spec (lgCode, lgJudged)
+import CE.Wire.Retired (retired)
 import Data.Bits (setBit, testBit)
 
 -- | The judged-language set as a bitmask (bit = language wire code):
@@ -30,6 +31,4 @@ judgedLang lang = lang >= 0 && lang < 63 && testBit judgedMask (fromInteger lang
 -- set — refused by name rather than read and ignored. Checked by the
 -- three families that carried it (scan/1, graph/1, verdict).
 retiredMask :: Bool -> Maybe String
-retiredMask sent
-  | sent = Just "judgedMask: retired at 8.0.0 \8212 the core reads its language table"
-  | otherwise = Nothing
+retiredMask = retired "judgedMask" "the core reads its language table"

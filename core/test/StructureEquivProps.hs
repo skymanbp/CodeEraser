@@ -29,7 +29,7 @@ battery =
     , "the seeded trees are not vacuous: every axis flags, both seam outcomes and both divergence forms occur"
     , "the style rule agrees with the shipped classifier on all 128 shape words"
     , "the diversity agrees with the shipped Tsallis-2 on every vector of up to four bins of 0..4"
-    , "forged depths, two pattern roads and an odd inside sum are refused as the reference reads them"
+    , "forged depths, the retired pattern road and an odd inside sum are refused as the reference reads them"
     , "an over-cap request degrades over no facts and the default knobs"
     , "modularity agrees on every three-directory graph of unit edges and intra masses, at four floors"
     ]
@@ -43,7 +43,7 @@ battery =
     ]
  where
   keys = ["axes", "score", "entropy", "findings", "divergence", "deviations", "splitCandidates", "sizeExempt", "patternShapes"]
-  blank = SIn [[0, 0, 0, 0, 0]] Nothing Nothing [] [] [] Nothing [] Nothing Nothing Nothing ([], [], [], []) []
+  blank = SIn [[0, 0, 0, 0, 0]] Nothing [] [] [] Nothing [] Nothing Nothing Nothing ([], [], [], []) []
   big = setKey "seamUnits" (toJSON (replicate (fromInteger structNodeCap) [0, 0, 1, 1 :: Integer])) (encode' blank)
 
 -- | Every directed unit-edge set over three directories, every intra
@@ -65,7 +65,7 @@ modularGrid =
  where
   arcs = [(a, b) | a <- [0 .. 2], b <- [0 .. 2], a /= b]
   tree refs edges fl mass =
-    SIn [[0, 0, 0, 2, 0], [1, 0, 1, 0, 0], [2, 0, 1, 0, 0]] Nothing Nothing [] refs [] Nothing [] Nothing (Just edges) Nothing ([], [], [], []) [[19, fl], [20, mass]]
+    SIn [[0, 0, 0, 2, 0], [1, 0, 1, 0, 0], [2, 0, 1, 0, 0]] Nothing [] refs [] Nothing [] Nothing (Just edges) Nothing ([], [], [], []) [[19, fl], [20, mass]]
 
 nonVacuous :: Bool
 nonVacuous =
@@ -79,20 +79,20 @@ nonVacuous =
     _ -> False
 
 -- | Three forgeries of a legal case, each with the offender the
--- reference names: node 1's depth moved off its parent's, both
--- pattern roads riding, and directory 0's inside sum made odd while a
+-- reference names: node 1's depth moved off its parent's, the retired
+-- `patterns` table riding (8.0.0), and directory 0's inside sum made odd while a
 -- dir-edge table rides. The unforged case itself is judged, not
 -- refused.
 forged :: SIn -> Bool
 forged c =
   fieldsOf respond (encode' c) ["proto"] /= Nothing
     && and [refusedBy respond (encode' f) why | (f, why) <- forgeries]
+    && refusedBy respond (setKey "patterns" (toJSON ([] :: [[Integer]])) (encode' c)) "patterns: retired at 8.0.0 \8212 the core classifies patternShapes"
  where
   forgeries =
     [ (c {sNodes = moved}, "node 1: depth is not parent depth + 1")
     | moved@(_ : _ : _) <- [[if take 1 r == [1] then bump 2 5 r else r | r <- sNodes c]]
     ]
-      <> [(c {sPatterns = Just [], sShapes = Just []}, "patternShapes: rides beside patterns (one road)")]
       <> [ (c {sRefs = [if take 1 r == [0] then bump 1 1 r else r | r <- sRefs c]}, "dirEdges: directory 0 fileRefs inside sum")
          | Just _ <- [sDirEdges c]
          , any ((== [0]) . take 1) (sRefs c)
