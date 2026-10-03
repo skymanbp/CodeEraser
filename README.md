@@ -116,6 +116,10 @@ Latency rows are release-build replays on one fixed host, comparable version to 
 
 **CLI only, or from source.** Download `ce-<ver>-<platform>` and `ce-core-<ver>-<platform>` (x86_64-windows / x86_64-linux / aarch64-macos / x86_64-macos / aarch64-linux), rename them `ce` / `ce-core` and put them side by side on PATH; or `cargo install codeeraser` and place a `ce-core` beside it; or build both with the pinned Rust toolchain (`rust-toolchain.toml`) and GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal: `cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`, then `cd .. && cargo install --path cli`. Core resolution is one chain everywhere: `CE_CORE_BIN` → a `ce-core` sibling → PATH; `--core <path>` wins.
 
+**Updating.** Release builds are two-phase: draft assets hashed, the pins committed to `plugin/bin/manifest.env`, and only then the tag verifies the same bytes ([RELEASE](docs/RELEASE.md)), which is what `ce update` and the tag job's installer check both read. `ce update` reads the latest tag and that tag's committed `manifest.env`; the verdict is the exit code, and `--yes` acts only where nothing else keeps a ledger of the binary. A copy the plugin bound is re-pinned by `/plugin update codeeraser`; a cargo install by `cargo install codeeraser`; the GUI app itself by the installer `--installer` saves. The plugin's SessionStart line announces a newer release once a day (`CE_UPDATE_CHECK=0` turns that off); the GUI has an update screen; `/codeeraser:update` runs the check from Claude Code.
+
+### Commands
+
 | Command | What it reports / judges |
 |---|---|
 | `ce scan` / `ce dedup` | size / complexity / readability metrics graded against the file's own lines; T1/T2 clone blocks, `--check` against the budget, a digest-keyed warm cache; both `--format sarif` |
@@ -135,9 +139,7 @@ Latency rows are release-build replays on one fixed host, comparable version to 
 
 Console output, `--help` and the hooks' own refusal sentences are English by default and Chinese under `--lang zh`, `CE_LANG=zh` or the project's `[ui] lang = "zh"` in `ce.toml`, in that order of precedence, and `--help` reads only the first two; JSON schemas and the FAIL/pass vocabulary are never translated. `[[rules.class]]` in `ce.toml` gives one glob set its own size and complexity lines and ratchet tolerance (`0` = may not grow), and the same line is read by the score, the `ce scan` ladder and the PreToolUse budget ([ce.toml reference](docs/reference/ce-toml.md)).
 
-**Updating.** Release builds are two-phase: draft assets hashed, the pins committed to `plugin/bin/manifest.env`, and only then the tag verifies the same bytes ([RELEASE](docs/RELEASE.md)), which is what `ce update` and the tag job's installer check both read. `ce update` reads the latest tag and that tag's committed `manifest.env`; the verdict is the exit code, and `--yes` acts only where nothing else keeps a ledger of the binary. A copy the plugin bound is re-pinned by `/plugin update codeeraser`; a cargo install by `cargo install codeeraser`; the GUI app itself by the installer `--installer` saves. The plugin's SessionStart line announces a newer release once a day (`CE_UPDATE_CHECK=0` turns that off); the GUI has an update screen; `/codeeraser:update` runs the check from Claude Code.
-
-### Three faces, one product
+## Three faces, one product
 
 Every capability is claimed once in this table, the sets are derived from the code (clap's enum, the Tauri roster, the MCP catalog, `hooks.json`, `plugin/commands`, `plugin/skills`), and a CI gate (`face_parity`) refuses a face nobody wrote down or a claim nobody shipped. Deliberate omissions are rows, not silence.
 

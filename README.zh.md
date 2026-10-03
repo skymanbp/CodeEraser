@@ -116,6 +116,10 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 **只要 CLI，或从源码。** 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`（x86_64-windows / x86_64-linux / aarch64-macos / x86_64-macos / aarch64-linux），改名 `ce` / `ce-core` 并排放上 PATH；或 `cargo install codeeraser` 再把 `ce-core` 放旁边；或用钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 自己构建：`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cd .. && cargo install --path cli`。核解析全线一条链：`CE_CORE_BIN` → 旁边的 `ce-core` → PATH；`--core <路径>` 最优先。
 
+**更新。** 发布分两段：draft 工件被哈希，pin 提交进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节（[RELEASE](docs/RELEASE.md)）；`ce update` 与 tag 腿的安装包校验读的都是它。`ce update` 读最新 tag 与该 tag 上已提交的 `manifest.env`；判定即退出码，`--yes` 只在没有别的账本管着这份二进制时动手。插件绑定的副本由 `/plugin update codeeraser` 重钉；cargo 安装由 `cargo install codeeraser`；GUI 应用本体由 `--installer` 保存的安装包更新。插件的 SessionStart 行每天通报一次新版本（`CE_UPDATE_CHECK=0` 关闭）；GUI 有更新屏；`/codeeraser:update` 在 Claude Code 里跑检查。
+
+### 命令
+
 | 命令 | 报告 / 判决内容 |
 |---|---|
 | `ce scan` / `ce dedup` | 尺寸 / 复杂度 / 可读性度量，按文件自己的线分级；T1/T2 克隆块，`--check` 对照预算，摘要键控的暖态缓存；两者都有 `--format sarif` |
@@ -135,9 +139,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 控制台输出、`--help` 与钩子自己的拒绝语默认英文，`--lang zh`、`CE_LANG=zh` 或项目 `ce.toml` 的 `[ui] lang = "zh"` 切中文（优先级依此为序，`--help` 只读前两者）；JSON schema 与 FAIL/pass 词汇永不翻译。`ce.toml` 里的 `[[rules.class]]` 给一组 glob 自己的尺寸与复杂度线和棘轮容差（`0` = 一行不许长），分数、`ce scan` 阶梯与 PreToolUse 预算读的是同一条线（[ce.toml 参考](docs/reference/ce-toml.md)）。
 
-**更新。** 发布分两段：draft 工件被哈希，pin 提交进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节（[RELEASE](docs/RELEASE.md)）；`ce update` 与 tag 腿的安装包校验读的都是它。`ce update` 读最新 tag 与该 tag 上已提交的 `manifest.env`；判定即退出码，`--yes` 只在没有别的账本管着这份二进制时动手。插件绑定的副本由 `/plugin update codeeraser` 重钉；cargo 安装由 `cargo install codeeraser`；GUI 应用本体由 `--installer` 保存的安装包更新。插件的 SessionStart 行每天通报一次新版本（`CE_UPDATE_CHECK=0` 关闭）；GUI 有更新屏；`/codeeraser:update` 在 Claude Code 里跑检查。
-
-### 三面一体
+## 三面一体
 
 下表把每项能力恰好认领一次，各集合从代码派生（clap 枚举、Tauri 命令表、MCP 目录、`hooks.json`、`plugin/commands`、`plugin/skills`），CI 门 `face_parity` 拒绝任何没写下来的面与任何没交付的认领。有意的省略是表里的一行，不是沉默。
 
