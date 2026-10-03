@@ -18,20 +18,20 @@
 
 <sub>在 [codeeraser.dev/zh/how/#verdict](https://codeeraser.dev/zh/how/#verdict) 可缩放、拖动查看此图。</sub>
 
-- **在写入的瞬间拦截。** 每个解析过的代码文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在由逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->50<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->57<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，在墓碑腿加入之前）。守卫只计**新引入**的重复：被替换内容本已携带的匹配被减掉，故按活流口径 719 条生产探针零误拦（0.00/500）；2,761 事件重放按全文写口径把 32 条拆文件中间态计作误拦（7.03/500）；两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)，1.8.0 起那里另有计划 v2.30 新增语言各一行（六语料各 400 提交，误拦 0）。
-- **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，再由 Haskell 核计算 Zhang–Shasha 树编辑距离，以 TSED ≥ 0.85 判定，全程精确整数运算。1.8.0 起，判过线的对自成一类进入 `ce check` 的克隆轴与 `ce join` 的相似腿；核对每一对树的判决记在索引里——问一次，两棵树、核或旋钮任一变了才重问。
+- **在写入的瞬间拦截。** 每个解析过的代码文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->50<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->57<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，墓碑腿加入之前）。守卫只计**新引入**的重复（减去被替换内容本已携带的匹配）：活流口径下 719 条生产探针零误拦（0.00/500）；2,761 事件重放的全文写口径把 32 条拆文件中间态计作误拦（7.03/500）。两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)，1.8.0 起另有计划 v2.30 新增语言各一行（六语料各 400 提交，误拦 0）。
+- **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，由 Haskell 核计算 Zhang–Shasha 树编辑距离、以 TSED ≥ 0.85 判定，全程精确整数。1.8.0 起判过线的对自成一类进 `ce check` 的克隆轴与 `ce join` 的相似腿；核对每对树的判决记在索引里，两棵树、核或旋钮任一变了才重问。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
-- **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、include、require、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。旁边的提及宇宙（每个文本文件里的每个标识符，只以 fnv1a64 哈希存储）产出**未被提及的声明**顾问，它永不把门翻红。
-- **只用本仓事实的同角色建议，零模型。** 索引里已有的事实拼成词袋（名字、形状、被调用者、文档、结构、字面量），以整数 BM25（k1 = 6/5、b = 3/4）打分、在核里判决：候选只有一个精确顺序，外加一个只在名字、被调用者与形状三条证据通道合取时才为真的角色位。`--widen` 加仓内 PPMI 联想视图。由构造只当顾问：无退出码、无门、不拦钩子。
-- **索引答得出的问题，索引守得住的规则。** 索引自有事实（文件、引用、单元、克隆、提及、路径类）上的 Datalog：`ce query` 答一个问题、每个答案带推导链；`ce rules` 把规则文件里的断言当门判，一条违规就是一行见证加它的推导。核负责解析、检查（类别、安全性、分层）、半朴素求值与推导；Rust 负责词法、装配事实表与回标 id，名字永不过线。
-- **函数内死代码，从控制流图读出。** Rust 把 `FlowSpec` 表认得的语言的每个单元降成四张整数表（单元、语句、变量、访问）；核建控制流图，答出不可达语句、死存储、未用局部量与形参。`ce flow`、MCP `flow`、GUI 报告枢纽的 flow 族与守卫的 flow 类（`[flow] tier`，出厂 observe）读同一份文档；只有盲评精度考题过门的语言里，发现才算判决，未用形参永远只是顾问。
-- **克隆组怎样合并成一个函数。** 对每个 T1/T2 克隆族与 T3 近似对，Rust 按克隆族的后序编码送出每个成员的树，外加两列整数：叶的源文本哈希与位置类（语句、表达式、类型、名字、其他）；核把成员对齐，把它们不同的地方变成参数（反合一），答出参数个数、保留哪个成员（被引用最多的文件）、省几行、可不可行及原因。`ce merge`、MCP `merge_suggestions` 与 GUI 报告枢纽的 merge 族读同一份文档，每个参数标着各成员的原文；只当顾问，永不成门。
-- **目录之间怎样相互依赖。** Rust 把 measured 文件及其目录与行数、目录树、文件引用、以及文件对整个目录的包粒度引用作为五张整数表送出；核把它们折成目录图，按最省的反馈弧集拆环（≤ 14 个目录的分量精确、更大用贪心序，每条拆掉的弧都标明走的是哪条路），把剩下的分层，在文件图上聚类（确定性 Louvain），点名不在其簇所在目录的文件，沿 `--impact` 点名的文件走影响面，并量出每个目录的扇入、扇出与不稳定度。`ce arch`、MCP 工具 `architecture` 与 GUI 报告枢纽的 arch 族读同一份文档；只当顾问，永不进门。
+- **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、include、require、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。提及宇宙（每个文本文件里的每个标识符，只存 fnv1a64 哈希）另产出**未被提及的声明**顾问，永不把门翻红。
+- **只用本仓事实的同角色建议，零模型。** 索引的事实拼成词袋（名字、形状、被调用者、文档、结构、字面量），以整数 BM25（k1 = 6/5、b = 3/4）打分、在核里判决：一个精确的候选顺序，外加只在名字、被调用者与形状三条通道合取时才为真的角色位。`--widen` 加仓内 PPMI 联想视图。由构造只当顾问：无退出码、无门、不拦钩子。
+- **索引答得出的问题，索引守得住的规则。** 索引自有事实（文件、引用、单元、克隆、提及、路径类）上的 Datalog：`ce query` 作答且每个答案带推导链；`ce rules` 把规则文件的断言当门判，一条违规是一行见证加推导。核负责解析、检查（类别、安全性、分层）、半朴素求值与推导；Rust 负责词法、装配事实表与回标 id，名字永不过线。
+- **函数内死代码，从控制流图读出。** Rust 把 `FlowSpec` 表认得的语言的每个单元降成四张整数表（单元、语句、变量、访问）；核建控制流图，答出不可达语句、死存储、未用局部量与形参。`ce flow`、MCP `flow`、GUI 报告枢纽的 flow 族与守卫的 flow 类（`[flow] tier`，出厂 observe）读同一份文档；盲评精度考题过门的语言里发现才算判决，未用形参永远只是顾问。
+- **克隆组怎样合并成一个函数。** 对每个 T1/T2 克隆族与 T3 近似对，Rust 按克隆族的后序编码送出每个成员的树，外加叶的源文本哈希与位置类（语句、表达式、类型、名字、其他）两列整数；核对齐成员，把不同处变成参数（反合一），答出参数个数、保留的成员（被引用最多的文件）、省几行、可不可行及原因。`ce merge`、MCP `merge_suggestions` 与 GUI 报告枢纽的 merge 族读同一份文档，每个参数标着各成员的原文；只当顾问，永不成门。
+- **目录之间怎样相互依赖。** Rust 送五张整数表：被度量文件及其目录与行数、目录树、文件引用、文件对整个目录的包粒度引用、`--impact` 点名的文件。核把它们折成目录图，按最省的反馈弧集拆环（≤ 14 个目录的分量精确、更大用贪心序，每条拆掉的弧标明走的路），把剩下的分层，在文件图上聚类（确定性 Louvain），点名不在其簇所在目录的文件，走影响面，并量出每个目录的扇入、扇出与不稳定度。`ce arch`、MCP 工具 `architecture` 与 GUI 报告枢纽的 arch 族读同一份文档；只当顾问，永不进门。
 - **被度量的结构。** <!--ce:count:structure_axes#word-->八<!--/ce-->轴（几何、命名多样性、混杂、错位、文档覆盖、过期文档、冗余、模块度）、逐目录 Tsallis-2 熵、与声明布局的卡方散度、四条成本腿（穿越引用、克隆切口、变动穿越、新文件 φ）的拆分 ROI 定价或内聚性辩词。
-- **挪几行骗不过的检查分数。** 门自己的各轴（尺寸、复杂度、克隆、文档重复、死码、变动、环）各计违规质量占机会数的份额 floor(1000·v/(v+n))，加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长需要容差 max(+2 %, +10 行) 或具名重立（`CE_ACCEPT_BASELINE=1`），改一个旋钮会让 `ce check` 具名停下而非挪动所有线。
+- **挪几行骗不过的检查分数。** 门自己的各轴（尺寸、复杂度、克隆、文档重复、死码、变动、环）各计违规质量占机会数的份额 floor(1000·v/(v+n))，加权折叠落在 0–1000。ADR-006 棘轮自动收紧每个上限；增长要么在容差 max(+2 %, +10 行) 内、要么具名重立（`CE_ACCEPT_BASELINE=1`），改一个旋钮会让 `ce check` 具名停下而非挪动所有线。
 - **时间是一等信号。** 最近 512 个分数点上的 Theil–Sen 斜率（一个野点拽不动中位数）；变动 = 新增 − 按 blame 存活的行；联判格把相似度、图位置与变动合成 merge / delete / churn-hotspot，带理由位与置信。
 - **有安全谓词的擦除，不是启发式。** <!--ce:count:erase_classes#word-->三<!--/ce-->类（逐字文档孪生、副本已死的整单元 T1 孪生、置信的非公开死文件）、<!--ce:count:erase_reasons#word-->七<!--/ce-->个冻结理由码、<!--ce:gate:erase.row_cap#digits-->4,096<!--/ce--> 行上限，以及任一已应用判决幸存即失败的收敛重规划。
-- **墓碑残留，按合取判决。** 把同一次改动删掉的名字再叙述回来，就留下残留：划掉的或 `(removed)` 样式的标签、或一句带回溯标记（`no longer`、`used to`、`曾经`……）且含那个被删名字的散文。Rust 度量改动集的面（删掉的名字、新增的标签、新增的句子），核里逐句判合取（标记与被删名字同句；标签只要名字），对着地板与该类的 `[tombstone] budget` 计数。PreToolUse、Stop 审计、`ce precommit` / `ce commitmsg` 三条腿出声，各自只按类自己的 `[tombstone] tier`，且只在核答 `over` 时。changelog 定位的文档按路径、台账形、带三个版本见证的段或 `[tombstone] ledger` 声明豁免；任何默认档位移动之前，误报率先在 git 历史上回放（[FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md)）。
+- **墓碑残留，按合取判决。** 把同一次改动删掉的名字再叙述回来就留下残留：划掉的或 `(removed)` 样式的标签，或一句带回溯标记（`no longer`、`used to`、`曾经`……）且含被删名字的散文。Rust 度量改动集的面（删掉的名字、新增的标签与句子），核逐句判合取（标记与名字同句；标签只要名字），对着地板与该类的 `[tombstone] budget` 计数。PreToolUse、Stop 审计、`ce precommit` / `ce commitmsg` 只按类自己的 `[tombstone] tier`、且只在核答 `over` 时出声。changelog 定位的文档按路径、台账形、带三个版本见证的段或 `[tombstone] ledger` 声明豁免；任何默认档位移动之前，误报率先在 git 历史上回放（[FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md)）。
 - **由构造保证的确定性。** 任何判决里没有随机数与时钟；golden 夹具逐字节比对；配置以事实过线，从不以名字。
 
 ## 实际效果：同一任务，跑两遍
@@ -108,15 +108,15 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 安装、运行与更新
 
-**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->五<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`。Windows 安装包把安装目录写入 PATH 并运行 `ce setup`；AppImage 与 dmg 用户自己跑一次 `ce setup`；它找到 Claude Code、接入下述插件，并说明那个 `ce` 所在目录是否在 PATH 上。<!--ce:count:binaries#word-->十五<!--/ce-->件产物（每目标的 `ce` 与 `ce-core` 加上安装包）连同 `SHA256SUMS` 按裁定不签名；用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
+**安装包。** 每个 [release](https://github.com/skymanbp/CodeEraser/releases) 发<!--ce:count:installers#word-->五<!--/ce-->个 GUI 安装包（NSIS `setup.exe` / AppImage / dmg），内含 GUI、`ce` 与判决核 `ce-core`。Windows 安装包把安装目录写入 PATH 并运行 `ce setup`（AppImage 与 dmg 用户自己跑一次），它找到 Claude Code、接入下述插件，并说明那个 `ce` 所在目录是否在 PATH 上。<!--ce:count:binaries#word-->十五<!--/ce-->件产物（每目标的 `ce` 与 `ce-core` 加上安装包）连同 `SHA256SUMS` 按裁定不签名；用 `sha256sum -c --ignore-missing SHA256SUMS` 校验。
 
-**Homebrew / winget。** 发布从它自己核过的那份钉扎清单生成 Homebrew 公式与 `packaging/` 下三份 winget 清单，永不手改，并在本仓配好 tap 与 winget 令牌时发布：`brew install skymanbp/codeeraser/codeeraser`（macOS 与 Linux，`ce` + `ce-core` 取自钉扎资产）与 `winget install skymanbp.CodeEraser`（Windows 安装包，须 winget-pkgs 合并之后）。
+**Homebrew / winget。** 发布从它核过的钉扎清单生成 Homebrew 公式与 `packaging/` 下三份 winget 清单（永不手改），配好 tap 与 winget 令牌时发布：`brew install skymanbp/codeeraser/codeeraser`（macOS 与 Linux，`ce` + `ce-core` 取自钉扎资产）与 `winget install skymanbp.CodeEraser`（Windows 安装包，须 winget-pkgs 合并之后）。
 
 **Claude Code 插件。** `ce setup` 在本仓的 `release` 分支上注册 marketplace（每次发布后快进到 tag，装机跟发布不跟 `main`）并安装插件；手动：`/plugin marketplace add skymanbp/CodeEraser@release`，再 `/plugin install codeeraser@codeeraser`。启动器按 pin 解析 `ce` 与 `ce-core`：先取命中的本地或 PATH 副本，再钉扎下载，最后才是会自报未校验的 PATH 二进制。
 
 **只要 CLI，或从源码。** 下载 `ce-<版本>-<平台>` 与 `ce-core-<版本>-<平台>`（x86_64-windows / x86_64-linux / aarch64-macos / x86_64-macos / aarch64-linux），改名 `ce` / `ce-core` 并排放上 PATH；或 `cargo install codeeraser` 再把 `ce-core` 放旁边；或用钉版 Rust 工具链（`rust-toolchain.toml`）与 GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--> + cabal 自己构建：`cd core && cabal build all && export CE_CORE_BIN=$(cabal list-bin ce-core)`，再 `cd .. && cargo install --path cli`。核解析全线一条链：`CE_CORE_BIN` → 旁边的 `ce-core` → PATH；`--core <路径>` 最优先。
 
-**更新。** 发布分两段：draft 工件被哈希，pin 提交进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节（[RELEASE](docs/RELEASE.md)）；`ce update` 与 tag 腿的安装包校验读的都是它。`ce update` 读最新 tag 与该 tag 上已提交的 `manifest.env`；判定即退出码，`--yes` 只在没有别的账本管着这份二进制时动手。插件绑定的副本由 `/plugin update codeeraser` 重钉；cargo 安装由 `cargo install codeeraser`；GUI 应用本体由 `--installer` 保存的安装包更新。插件的 SessionStart 行每天通报一次新版本（`CE_UPDATE_CHECK=0` 关闭）；GUI 有更新屏；`/codeeraser:update` 在 Claude Code 里跑检查。
+**更新。** 发布分两段：draft 工件被哈希，pin 提交进 `plugin/bin/manifest.env`，之后 tag 才校验同一批字节（[RELEASE](docs/RELEASE.md)）；`ce update` 与 tag 腿的安装包校验读的都是这些 pin。`ce update` 读最新 tag 与该 tag 上已提交的 `manifest.env`，以退出码作答，`--yes` 只在没有别的账本管着这份二进制时动手：插件绑定的副本由 `/plugin update codeeraser` 重钉，cargo 安装由 `cargo install codeeraser`，GUI 应用本体由 `--installer` 保存的安装包更新。插件的 SessionStart 行每天通报一次新版本（`CE_UPDATE_CHECK=0` 关闭）；GUI 有更新屏；`/codeeraser:update` 在 Claude Code 里跑检查。
 
 ### 命令
 
@@ -196,16 +196,16 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 ## 已知限制
 
-**1.8.0 的范围。** 计划 v2.29 把 2026-08-31 收口时裁定不做的后置工作（计划 v2.22，三个后置束共 45 条）逐条重开，只留代价划得来的那些；计划 v2.30 随后把判决语言集扩到 C、C++、Java、Lua、R 与 HTML，每种语言都带着自己冻结的精度考题与误拦台账进门（[language-expansion](docs/reference/language-expansion.md)）。以下限制就是留存下来的立场。
+**1.8.0 的范围。** 计划 v2.29 把 2026-08-31 收口时裁定不做的后置工作（计划 v2.22，三个后置束共 45 条）逐条重开，只留代价划得来的；计划 v2.30 随后把判决语言集扩到 C、C++、Java、Lua、R 与 HTML，每种语言带着自己冻结的精度考题与误拦台账进门（[language-expansion](docs/reference/language-expansion.md)）。以下是留存下来的立场。
 
-**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。二进制未签名。
+**限制。** PreToolUse 塑造行为，不是安全墙（shell 写入绕过它，Stop 审计与 CI 是兜底）。钩子遇内部错误失败开放并记录降级。
 
 - **语言。** 基于 AST 的判决使用上述<!--ce:count:grammars#word-->十二<!--/ce-->套语法；Markdown 没有 tree-sitter 语法，由文档与图规则判决，HTML 在自己的语法上走同一套规则（带 `id` 的元素是一节，它的文字是文档文字；没有函数，不算克隆指纹），纯文本（`.txt`）只走文档规则；JSDoc 与 Rust `///` 按注释而非 docstring 处理；不承诺 T4 克隆。`churn`、`join`、`trend` 以分钟计。
-- **只当顾问，永不是判决。** 符号层存活性只是顾问、永不是判决；`ce deadcode` 自己最后一行就这么写。同角色顾问是顾问不是判决：`ce similar`、MCP `similar_units` 与 GUI 相似屏只排序不裁决。`ce similar` 恒退 0，`ce check` 从不读这一族，Stop 审计的顾问行只落进 observe 账本。守卫类在拿出自己的误报记录之前一律停在 `observe`。
-- **本产品不替你画的线。** 复杂度轴出厂不带任何硬线。`cognitive_fail` 默认 0，所以在仓库自己声明一条之前，再纠缠的函数也只是 warn；写入时的钩子也从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。
-- **分发与接线。** v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）；以你自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不是被度量的部分）。
-- **墓碑残留。** 把单词名字也算名字：一个作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表。中文名字只在词边界处可测：宽名字只在它单独成标题、列表首词或标识符处被看见，散文里按子串绑定。
-- **分数可比性。** 跨 `[[rules.class]]` 开关、跨 v0.7.3 → v1.0.0 密度计费改判、跨 v1.2.0 → v1.3.0 测试子仓搬迁、跨 v1.3.x → v1.4.0 递归增量、跨 v1.6.0 → v1.7.0 克隆与文档轴改分母（被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）、跨 v1.7.4 → v1.8.0 扩语言（C、C++、Java、Lua、R、HTML 与纯文本进各轴的宇宙，核实过的近似克隆对进克隆轴）的分数不可比。`ce structure` 自己那个 0–1000 同样跨 v1.6.0 → v1.7.0 不可比：模块度轴是新的，而每一轴都进等权折叠；跨 v1.7.4 → v1.8.0 也不可比：新语言的边进了它的图。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴是对着这条随仓浮动的线计费的，而不是对着一个常数；本仓这条线自 v0.7.3 的 304 起随每次具名重立挪动（v1.4.1 时 372，把两条线同时套在 v1.4.1 的树上差三分）。
+- **只当顾问，永不是判决。** 符号层存活性与同角色顾问从不判决：`ce deadcode` 最后一行自己这么写，`ce similar`、MCP `similar_units` 与 GUI 相似屏只排序不裁决，`ce similar` 恒退 0，`ce check` 从不读这一族，Stop 审计的顾问行只落进 observe 账本。守卫类拿出自己的误报记录之前一律停在 `observe`。
+- **本产品不替你画的线。** 复杂度轴出厂不带硬线：`cognitive_fail` 默认 0，仓库自己声明之前再纠缠的函数也只是 warn，写入时的钩子从不判复杂度。`ce structure` 不设分数地板，故该族只报不守。
+- **分发与接线。** v1.7.0 起一次发布构建<!--ce:count:platforms#word-->五<!--/ce-->个目标（`x86_64-windows`、`x86_64-linux`、`aarch64-macos`、`x86_64-macos`、`aarch64-linux`）；在后两个目标上，读到更早清单的插件启动器只见空 pin，回落到 PATH 上的 `ce` 或源码安装。运行 `ce setup` 的账户不是登录用户时它什么都不接（退出码 13）；以自己的账户、不提权地跑。判决本仓需要 `cli/tests` submodule 就位（它是树的读者，永不被度量）。
+- **墓碑残留。** 单词名字也算名字：作为标识符被删掉的常用词，能绑住一句真在谈那个词的话，出路是仓库自己的 `[tombstone] terms` 词表。中文名字只在词边界处可测：宽名字只在单独成标题、列表首词或标识符处被看见，散文里按子串绑定。
+- **分数可比性。** 跨 `[[rules.class]]` 开关的分数不可比，跨这些版本也不可比：v0.7.3 → v1.0.0（密度计费改判）、v1.2.0 → v1.3.0（测试子仓搬迁）、v1.3.x → v1.4.0（递归增量）、v1.6.0 → v1.7.0（克隆与文档轴改分母为被判定对触及的文件数对各自的机会宇宙，docdup 对首次进入 `ce check`）、v1.7.4 → v1.8.0（C、C++、Java、Lua、R、HTML 与纯文本进各轴的宇宙，核实过的近似克隆对进克隆轴）。`ce structure` 自己的 0–1000 跨 v1.6.0 → v1.7.0（模块度轴是新的，每一轴都进等权折叠）与 v1.7.4 → v1.8.0（新语言的边进了它的图）也不可比。跨一次让基线 `softLine` 挪动的具名重立同样不可比：尺寸轴对着这条随仓浮动的线计费、不是常数，本仓这条线自 v0.7.3 的 304 起随每次具名重立挪动（v1.4.1 时 372，两条线同时套在 v1.4.1 的树上差三分）。
 
 ## 文档
 

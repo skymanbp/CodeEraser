@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser tech stack: measurement, wire, judgment, faces</title>
 <meta name="description" content="The CodeEraser stack, traced to its implementation and gates: Rust measurement, one NDJSON wire, Haskell judgment, and five report faces.">
-<meta name="theme-color" content="#0c0f16">
+<meta name="theme-color" content="#0b0e14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="en_US">
@@ -20,9 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=11">
-<link rel="stylesheet" href="/style.css?v=11">
-<link rel="stylesheet" href="/viewer.css?v=2">
+<link rel="stylesheet" href="/theme.css?v=12">
+<link rel="stylesheet" href="/style.css?v=12">
+<link rel="stylesheet" href="/viewer.css?v=3">
 <script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
@@ -39,14 +39,13 @@
   </nav>
 </header>
 
-<section class="hero">
-  <div class="pitch">
-    <h1>The tech stack</h1>
-    <p class="tag">Measurement lives in Rust. Judgment lives in Haskell. One
-    versioned wire connects them. This is the boundary set by ADR-002 and kept
-    load-bearing by ADR-008: parsing, extraction and indexing stop before policy;
-    score, ratchet and authorization stay in the core.</p>
-  </div>
+<section class="lede">
+  <div class="eyebrow">Architecture</div>
+  <h1>The tech stack</h1>
+  <p>Measurement lives in Rust, judgment in Haskell, and one versioned wire connects
+  them: the boundary set by ADR-002 and kept load-bearing by ADR-008. Parsing,
+  extraction and indexing stop before policy; score, ratchet and authorization stay
+  in the core.</p>
 </section>
 <div class="installs">
   <div class="install"><span class="k">core</span><code>GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce--></code></div>
@@ -61,6 +60,7 @@
   <code>contracts/</code>, or the release workflows. Open the <a href="/assets/stack.svg">full-size SVG</a>.</figcaption>
 </figure>
 
+<div class="eyebrow">Mathematics</div>
 <h2 id="math">Where the mathematics lives</h2>
 <dl class="layers">
   <dt>Rust · measurement</dt><dd>The rolling hash is Rabin-Karp, <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes.</dd>
@@ -70,35 +70,35 @@
   <dt>Release</dt><dd><code>release.yml</code> hashes draft assets, then committed pins bind those bytes.</dd>
 </dl>
 
+<div class="eyebrow">Discipline</div>
 <h2>What holds it honest</h2>
-<div class="grid">
+<div class="grid trio">
   <div class="card"><h3>It gates itself</h3><p>On every push, <code>ci.yml</code> runs <!--ce:count:gates#word-->seven<!--/ce--> product legs over this repository: scan, dedup ratchet, check at floor <code><!--ce:gate:floor.main#digits-->911<!--/ce--></code>, deadcode, docdup, erase and rules.</p></div>
-  <div class="card"><h3>The ratchet only shrinks</h3><p>ADR-006 freezes per-file ceilings and discrete violation sets in <code>ce-baseline.json</code>.</p><details class="more"><summary>More</summary><p>Growth needs a named re-establish; ordinary cleanup tightens the bank.</p></details></div>
-  <div class="card"><h3>Lines are declared, per path class</h3><p><code>ce.toml</code>'s <code>[[rules.class]]</code> gives one glob set its own size and complexity lines and its own ratchet allowance, at most 64 classes, first declared match wins.</p><details class="more"><summary>More</summary><p>The score, the <code>ce scan</code> ladder and the guard hook read the file's own line. Class names and globs never cross the wire: what crosses is the class index, its knobs and the <code>knobsDigest</code> of the whole parsed config. The <a href="/how/#f05">scoring section</a> lists the columns.</p></details></div>
-  <div class="card"><h3>Documentation has owners</h3><p><code>docs_gate.rs</code> generates CLI and configuration references from the binary.</p><details class="more"><summary>More</summary><p>Citation, navigation and constant tests check the methodology. Benchmark surfaces are byte-gated from one JSON contract.</p></details></div>
+  <div class="card"><h3>The ratchet only shrinks</h3><p>ADR-006 freezes per-file ceilings and discrete violation sets in <code>ce-baseline.json</code>: growth needs a named re-establish, and ordinary cleanup tightens the bank.</p></div>
+  <div class="card"><h3>Lines are declared, per path class</h3><p><code>ce.toml</code>'s <code>[[rules.class]]</code> gives one glob set its own size and complexity lines and ratchet allowance (at most 64 classes, first declared match wins), read alike by the score, the <code>ce scan</code> ladder and the guard hook; only the class index, its knobs and the <code>knobsDigest</code> of the whole parsed config cross the wire, never names or globs.</p><a class="go" href="/how/#f05">05 · the scoring section's columns</a></div>
+  <div class="card"><h3>Documentation has owners</h3><p><code>docs_gate.rs</code> generates the CLI and configuration references from the binary; citation, navigation and constant tests check the methodology, and benchmark surfaces are byte-gated from one JSON contract.</p></div>
   <!-- bench-stack:begin -->
 <div class="card"><h3>False-positive discipline</h3><p>classifier: <code>0/600 flagged (gate &lt;= 1%)</code>; write probe: <code>0/630 false positives</code>. Every other class stays observe. Each promotion is recorded in the CHANGELOG ledger.</p></div>
 <!-- bench-stack:end -->
-  <div class="card"><h3>Erase is deterministic</h3><p><code>erase/gather.rs</code> assembles facts; <code>CE.Erase</code> authorizes only rows that satisfy the safety predicate.</p><details class="more"><summary>More</summary><p>Apply verifies every target hash first, then re-runs the source families; a surviving verdict fails loudly. No LLM writes a replacement.</p></details></div>
-  <div class="card"><h3>Release has two phases</h3><p><code>release.yml</code> hashes draft assets, then committed pins bind those bytes.</p><details class="more"><summary>More</summary><p>The tag job downloads the same assets, checks CI and every pin, and publishes without rebuilding. The same pins project the Homebrew formula and the winget manifests, and <code>verify-publish</code> fast-forwards the <code>release</code> branch the plugin marketplace tracks.</p></details></div>
-  <div class="card"><h3>The method is inspectable</h3><p>The <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet methodology links every formula to its implementing <code>file:line</code>.</p><details class="more"><summary>More</summary><p><code>docs_citations.rs</code> checks the ledger; <code>docs_nav.rs</code> checks the booklet set and navigation.</p></details></div>
-  <div class="card"><h3>Haskell carries decisions</h3><p>The core alone computes score and ratchet verdicts, authorizes erase rows, and decides cycle-axis membership.</p><details class="more"><summary>More</summary><p>Property batteries perturb those decisions and compare small cases with reference implementations.</p></details></div>
+  <div class="card"><h3>Erase is deterministic</h3><p><code>erase/gather.rs</code> assembles facts and <code>CE.Erase</code> authorizes only rows that satisfy the safety predicate; apply verifies every target hash first, then re-runs the source families, and a surviving verdict fails loudly. No LLM writes a replacement.</p></div>
+  <div class="card"><h3>Release has two phases</h3><p><code>release.yml</code> hashes the draft assets and committed pins bind those bytes; the tag job downloads the same assets, checks CI and every pin, refuses an unexpected asset, and publishes without rebuilding; <code>SHA256SUMS</code> covers the set for offline checking. The same pins project the Homebrew formula and the winget manifests, and <code>verify-publish</code> fast-forwards the <code>release</code> branch the plugin marketplace tracks. Code signing is out of scope by design.</p></div>
+  <div class="card"><h3>The method is inspectable</h3><p>The <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet methodology links every formula to its implementing <code>file:line</code>; <code>docs_citations.rs</code> checks the ledger, <code>docs_nav.rs</code> the booklet set and navigation.</p></div>
+  <div class="card"><h3>Haskell carries decisions</h3><p>The core alone computes score and ratchet verdicts, authorizes erase rows and decides cycle-axis membership; property batteries perturb those decisions and compare small cases with reference implementations.</p></div>
 </div>
 
-<p class="trust">Trace the boundary in
+<div class="trust"><p>Trace the boundary in
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/DEVELOPMENT_PLAN.md">ADR-002 and ADR-008</a>,
   the wire in <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/VERSIONING.md">contracts/VERSIONING.md</a>,
-  and the verdict formulas in <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">the methodology index</a>.
-</p>
+  and the verdict formulas in <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">the methodology index</a>.</p></div>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="/">Overview</a> ·
-     <a href="/how/">How it works</a> ·
-     <a href="/bench/">Benchmarks</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
-  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,
-     the license does not grant trademark rights. © 2026 skymanbp.</p>
+  <div class="cols">
+    <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>Measurement in Rust, judgment in Haskell, one ratcheted score. Apache-2.0.</p></div>
+    <nav aria-label="Product"><p class="k">Product</p><a href="/">Overview</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a><a href="/bench/">Benchmarks</a></nav>
+    <nav aria-label="Docs"><p class="k">Docs</p><a href="/how/">How it works</a><a href="/how/analysis/">Analysis track</a><a href="/math/">Math</a><a href="/stack/">Stack</a></nav>
+    <nav aria-label="Project"><p class="k">Project</p><a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a></nav>
+  </div>
+  <p class="legal">"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the license does not grant trademark rights. © 2026 skymanbp.</p>
 </footer>
 
 </div>

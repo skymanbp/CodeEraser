@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser evaluation dashboard: replayed records</title>
 <meta name="description" content="Complete CodeEraser latency history and frozen accuracy, recall, precision and false-positive evaluation records, rendered from one benchmark contract.">
-<meta name="theme-color" content="#0c0f16">
+<meta name="theme-color" content="#0b0e14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="en_US">
@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=11">
-<link rel="stylesheet" href="/style.css?v=11">
+<link rel="stylesheet" href="/theme.css?v=12">
+<link rel="stylesheet" href="/style.css?v=12">
 </head>
 <body>
 <div class="wrap">
@@ -38,6 +38,7 @@
 </header>
 
 <section class="page-head">
+  <div class="eyebrow">Evidence</div>
   <h1>Evaluation dashboard</h1>
   <p>The latency series records every measured release row. Accuracy, recall,
   precision and false-positive results remain frozen where their ledgers require
@@ -215,13 +216,13 @@
 <p class="trust">Method and epoch details: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/BENCH.md">docs/BENCH.md</a>. Machine source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/bench/bench.json">contracts/bench/bench.json</a>.</p>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="/">Overview</a> ·
-     <a href="/how/">How it works</a> ·
-     <a href="/stack/">Stack</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
-  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,
-     the license does not grant trademark rights. © 2026 skymanbp.</p>
+  <div class="cols">
+    <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>Measurement in Rust, judgment in Haskell, one ratcheted score. Apache-2.0.</p></div>
+    <nav aria-label="Product"><p class="k">Product</p><a href="/">Overview</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a><a href="/bench/">Benchmarks</a></nav>
+    <nav aria-label="Docs"><p class="k">Docs</p><a href="/how/">How it works</a><a href="/how/analysis/">Analysis track</a><a href="/math/">Math</a><a href="/stack/">Stack</a></nav>
+    <nav aria-label="Project"><p class="k">Project</p><a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a></nav>
+  </div>
+  <p class="legal">"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the license does not grant trademark rights. © 2026 skymanbp.</p>
 </footer>
 
 </div>

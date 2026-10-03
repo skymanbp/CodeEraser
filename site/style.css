@@ -1,79 +1,75 @@
-/* codeeraser.dev — the components: contents panel, chips, framed
-   blocks, cards, family blocks, tables, scoreboard, footer. Tokens,
-   base type, the header and the page openers live in theme.css, which
-   every page loads first with the same ?v= key as this sheet (the
-   header comment there carries the caching rule and the one-column
-   rule both sheets follow). */
-/* The how page's contents panel: one row per section, that section's
-   families as numbered pills beside it — the page's own outline, so
-   scroll-behavior above has somewhere to go. The same two-column
-   subgrid as the chips below, so every section name takes one width
-   and every pill row starts on one line. */
-.toc {
-  display: grid; grid-template-columns: max-content minmax(0, 1fr); margin-top: var(--s-3);
-  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 8px 24px 10px; box-shadow: var(--shadow);
-}
-.toc .k { grid-column: 1 / -1; margin: 0; padding: 10px 0 6px; }
-.toc .row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; column-gap: 24px; padding: 9px 0; border-top: 1px solid var(--panel-edge); }
-.toc .sec { color: var(--text); font-size: 0.92rem; line-height: 1.9; }
-.toc .sec:hover { color: var(--accent); text-decoration: none; }
-.toc ul { display: flex; flex-wrap: wrap; gap: 6px 8px; list-style: none; padding: 3px 0; }
-.toc li a {
-  display: inline-block; font-family: var(--mono); font-size: 0.75rem; line-height: 1.6; color: var(--muted);
-  background: var(--ink-1); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 2px 9px;
-}
-.toc li a:hover { color: var(--paper); border-color: var(--accent-edge); text-decoration: none; }
-.toc li a b { color: var(--accent); font-weight: 600; margin-right: 7px; }
+/* codeeraser.dev — the components: contents panel, key/value rows,
+   framed blocks, cards, family blocks, tables, scoreboard, footer.
+   Tokens, base type, the header, the openers and the folds live in
+   theme.css, which every page loads first with the same ?v= key as
+   this sheet (its header comment carries the caching rule and the
+   one-column rule both sheets follow). Fewer boxes: prose sits on the
+   page ground between hairlines; a frame is kept for what is a thing
+   in itself (the terminal, a picture, a card, a formula well). */
 
-/* Key/value chips. The stack is a two-column grid and each chip a
-   subgrid row of it, so every key in one stack takes the width of the
-   widest key and every value starts on one vertical line — a
-   min-width on the key could not do that ("Homebrew · winget" pushed
-   its value 50px right of its neighbours'). Where subgrid is missing
-   the chip falls back to one column, key over value, which is also
-   the narrow-screen layout below. */
-.installs { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 0; }
+/* A page's contents: one row per section, that section's entries
+   beside it as numbered links — the page's own outline. A two-column
+   subgrid, so every section name takes one width and every entry row
+   starts on one line. */
+.toc { display: grid; grid-template-columns: max-content minmax(0, 1fr); margin-top: var(--s-5); border-top: 1px solid var(--panel-edge); }
+.toc .k { grid-column: 1 / -1; padding: 14px 0 6px; }
+.toc .row { display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; column-gap: 40px; padding: 10px 0; border-top: 1px solid var(--line); }
+.toc a { text-decoration: none; }
+.toc .sec { color: var(--paper); font-weight: 600; font-size: 0.92rem; line-height: 1.9; }
+.toc .sec:hover { color: var(--accent); }
+.toc ul { display: flex; flex-wrap: wrap; gap: 4px 22px; list-style: none; padding: 3px 0; }
+.toc li a { display: inline-block; font-size: 0.88rem; line-height: 1.6; color: var(--text-2); }
+.toc li a:hover { color: var(--accent); }
+.toc li a b { font-family: var(--mono); font-size: 0.78em; color: var(--muted); font-weight: 600; margin-right: 8px; font-variant-numeric: tabular-nums; }
+
+/* Key/value rows. The list is a two-column grid and each row a subgrid
+   row of it, so every key takes the width of the widest key and every
+   value starts on one vertical line; hairlines, not boxes. Where
+   subgrid is missing a row falls back to one column, key over value,
+   which is also the narrow-screen layout below. */
+.installs { display: grid; grid-template-columns: max-content minmax(0, 1fr); border-top: 1px solid var(--panel-edge); }
 .install {
   display: grid; grid-template-columns: subgrid; grid-column: 1 / -1;
-  column-gap: 20px; align-items: baseline;
-  background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-chip); padding: 12px 18px;
+  column-gap: 40px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--line);
 }
-.install .k { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-:lang(zh) .install .k { letter-spacing: 0.02em; }
+.install .k, .board th, table.ladder th, .data-table th, .toc .k, dl.routes-full dt, footer.site .k {
+  font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);
+}
+:lang(zh) :is(.install .k, dl.routes-full dt, footer.site .k) { letter-spacing: 0.04em; font-family: var(--sans); }
 /* min-width:0 lets the value cell shrink so overflow-x can act */
-.install code { font-size: 0.88rem; color: var(--text); overflow-x: auto; min-width: 0; }
-/* a measured chip: the key is a metric's full name, not a two-word
-   label, so it keeps its case; the value is the figure, so it leads */
-.install.metric .k { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: var(--fs-sm); }
-.install.metric code { color: var(--paper); font-weight: 600; }
-.installs + .cap, .installs + p { margin-top: 14px; }
-/* the install routes' full text, folded under the one-line chips */
-dl.routes-full { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 20px; margin: 4px 0 12px; font-size: var(--fs-sm); color: var(--muted); }
-dl.routes-full dt { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding-top: 2px; }
-:lang(zh) dl.routes-full dt { letter-spacing: 0.02em; }
+.install code { font-size: 0.9rem; color: var(--text); overflow-x: auto; min-width: 0; }
+.install code a { color: var(--paper); }
+/* Measured figures: the same rows read as a strip of stat tiles, the
+   figure leading in large tabular type and its full name under it. */
+.installs:has(> .metric) { grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); border-top: 0; gap: 0 32px; }
+.install.metric { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 8px; grid-column: auto; padding: 20px 0; border-top: 1px solid var(--panel-edge); border-bottom: 0; }
+.install.metric .k { text-transform: none; letter-spacing: 0; font-weight: 400; font-family: var(--sans); font-size: var(--fs-sm); color: var(--muted); line-height: 1.45; }
+.install.metric code { font-family: var(--sans); font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.55rem); font-weight: 600; letter-spacing: -0.02em; color: var(--paper); line-height: 1.2; overflow: visible; }
+.installs + .cap, .installs + p { margin-top: var(--s-2); }
+dl.routes-full { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 32px; margin: 4px 0 12px; font-size: var(--fs-sm); color: var(--muted); }
+dl.routes-full dt { padding-top: 2px; }
 dl.routes-full dd { font-family: var(--mono); color: var(--text); max-width: var(--measure); }
 
 /* Framed blocks — the terminal, the diagrams, the screenshots — share
-   one frame: ink ground, one hairline, one radius, one shadow, and a
-   caption or control bar inside the frame rather than floating under
-   it (the picture figures' insides: viewer.css). */
+   one frame: ink ground, one hairline, one radius, one soft lift, and
+   a caption or control bar inside the frame (viewer.css). */
 .term, .arch, .shot {
   background: var(--ink-0); border: 1px solid var(--panel-edge);
   border-radius: var(--r-frame); overflow: hidden; margin: 0; box-shadow: var(--shadow);
 }
-.term { background: var(--well); margin: var(--s-3) 0; }
-.term.proof { margin-top: var(--s-1); border-color: var(--edge-strong); }
-.installs + .arch { margin-top: var(--s-3); }
-.term .bar {
-  display: flex; gap: 7px; padding: 12px 16px;
-  border-bottom: 1px solid var(--panel-edge);
-}
-.term .bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--panel-edge); }
-.term .bar i:first-child { background: var(--accent); }
-.term pre {
-  padding: 20px 24px; overflow-x: auto;
-  font-family: var(--mono); font-size: 0.86rem; line-height: 1.75; color: var(--muted);
+.term { background: var(--well); margin: var(--s-4) 0; }
+.term.proof { margin: 0; border-color: var(--edge-strong); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 40px 100px -30px rgba(0, 0, 0, 0.75), 0 0 0 6px rgba(255, 255, 255, 0.02); }
+.installs + .arch { margin-top: var(--s-4); }
+.term .bar { display: flex; gap: 7px; padding: 13px 16px; border-bottom: 1px solid var(--line); }
+.term .bar i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); }
+.term pre { padding: 20px 24px; overflow-x: auto; font-family: var(--mono); font-size: 0.84rem; line-height: 1.8; color: var(--muted); }
+.hero .term pre { font-size: 0.72rem; padding: 20px 22px; white-space: pre-wrap; overflow-wrap: anywhere; }
+/* wide enough for the roast's longest line: one line per line, the column sized by the pre
+   alone (a zero-width caption fills whatever the pre decides) */
+@media (min-width: 900px) {
+  .hero .term pre { font-size: 0.8rem; white-space: pre; overflow-wrap: normal; }
+  .hero .term .cap { width: 0; min-width: 100%; }
 }
 .term .p { color: var(--teal); }
 .term .s { color: var(--paper); font-weight: 600; }
@@ -81,198 +77,191 @@ dl.routes-full dd { font-family: var(--mono); color: var(--text); max-width: var
 
 /* the two small-print voices: a caption under a block, a note inside one */
 .cap { font-size: var(--fs-sm); color: var(--muted); max-width: var(--measure); }
-.term .cap { padding: 0 24px 20px; margin-top: 0; }
+.term .cap { padding: 14px 24px 18px; margin-top: 0; max-width: none; border-top: 1px solid var(--line); }
 * + .cap { margin-top: 12px; }
-.note { font-size: 0.95rem; color: var(--muted); margin-top: 12px; max-width: var(--measure); }
+.note { font-size: 0.95rem; color: var(--text-2); margin-top: 12px; max-width: var(--measure); }
 .cap code, .note code, .job code { color: var(--text); font-size: 0.92em; }
-/* inline code in running prose: a faint ground, never broken at its own hyphen (chips, tables and <pre> keep theirs) */
-.note code, .job code, p.cap code, .lede p code, .card p code, .trust code, .arch figcaption code, .shot figcaption code
-  { background: rgba(255, 255, 255, 0.06); border-radius: 4px; padding: 0.05em 0.25em; white-space: nowrap; }
+/* inline code in running prose: a faint ground, never broken at its own hyphen (rows, tables and <pre> keep theirs) */
+.note code, .job code, p.cap code, .lede p code, .card p code, .trust code, .arch figcaption code, .shot figcaption code, dl.layers code
+  { background: rgba(255, 255, 255, 0.06); border-radius: 4px; padding: 0.05em 0.3em; white-space: nowrap; }
 p + p { margin-top: 12px; }
 
-/* Three columns at full width, two on a tablet, one on a phone.
-   min(Npx, 100%) caps the column floor at the container width: a
-   320px floor inside a 312px viewport was blowing the whole page
-   wide. Sixteen family cards leave one alone at three columns, so
-   the card that is not a family (the plugin's hooks) spans the two
-   cells beside it as a coral-washed callout, centred in its height;
-   at two columns that span is the whole row. */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(272px, 100%), 1fr)); gap: 16px; }
+/* Cards: a soft surface, one hairline, lifted on hover. The family
+   grid is a bento — four columns at full width, two on a tablet, one on
+   a phone — where the gate and the widest family take two cells and
+   the plugin's hooks close it as a two-cell band. min(Npx, 100%) caps
+   a column floor at the container width. */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 16px; }
+.cmds { grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); }
+@media (min-width: 1100px) { .cmds { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .trio { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .card {
-  background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-chip); padding: 20px 22px; box-shadow: var(--shadow);
-  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  display: flex; flex-direction: column; background: var(--surface), var(--ink-1);
+  border: 1px solid var(--line); border-radius: var(--r-frame); padding: 24px;
+  transition: transform 0.18s var(--ease), border-color 0.18s ease, background-color 0.18s ease;
 }
-.card:hover { transform: translateY(-2px); border-color: var(--accent-edge); background: var(--panel-2); }
-.card h3 { color: var(--paper); font-size: 1.05rem; line-height: 1.35; margin-bottom: 8px; }
-.cmds .card h3 { font-family: var(--mono); font-size: 1rem; letter-spacing: 0; }
-.card h3::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 2px; background: var(--accent); margin: 0 10px 2px 0; vertical-align: middle; }
+.card:hover { transform: translateY(-2px); border-color: var(--edge-strong); }
+.card h3 { color: var(--paper); font-size: 1.05rem; line-height: 1.35; margin-bottom: 10px; }
+.cmds .card h3 { font-family: var(--mono); font-size: 1rem; letter-spacing: -0.01em; }
 .card p { font-size: 0.92rem; color: var(--muted); }
-/* a card's second and later sentences fold under its first; the fold
-   sits on the card's bottom edge, so a row of cards keeps one baseline */
-.grid > .card { display: flex; flex-direction: column; }
-.card details.more { margin-top: auto; padding-top: 12px; }
-.card details.more > summary { font-size: 0.8rem; }
+.card .go { margin-top: auto; padding-top: 20px; font-family: var(--mono); font-size: var(--fs-xs); color: var(--text-2); text-decoration: none; }
+.card .go::after { content: " →"; transition: margin 0.18s var(--ease); }
+.card .go:hover { color: var(--accent); }
+.card .go:hover::after { margin-left: 4px; }
+@media (min-width: 640px) { .card.wide, .card.band { grid-column: span 2; } }
 .card.band {
-  grid-column: span 2; display: flex; flex-direction: column; justify-content: center;
-  background: linear-gradient(135deg, var(--accent-wash), transparent 70%), var(--panel);
-  border-color: var(--accent-edge); padding: 28px 32px;
+  justify-content: center; padding: 28px 32px;
+  background: radial-gradient(ellipse 80% 120% at 0% 0%, var(--accent-wash), transparent 60%), var(--ink-1);
+  border-color: var(--accent-edge);
 }
-.card.band h3 { font-family: var(--sans); font-size: 1.25rem; }
-.card.band p { font-size: 1.02rem; color: var(--text); max-width: 34em; }
+.card.band h3 { font-family: var(--sans); font-size: 1.2rem; }
+.card.band p { font-size: 1rem; color: var(--text-2); max-width: 36em; }
 
-.trust {
-  background: var(--panel); border: 1px solid var(--panel-edge); border-left: 3px solid var(--accent);
-  border-radius: 0 var(--r-chip) var(--r-chip) 0; padding: 22px 26px; margin: var(--s-2) 0 var(--s-1);
-  font-size: 1.05rem; color: var(--muted);
-}
-.trust code { color: var(--text); }
-/* a CJK line in a full-width panel runs past ~40 characters: hold it to the measure */
-:lang(zh) .trust { padding-right: max(26px, calc(100% - var(--measure) - 26px)); }
+/* the closing statement: lead-sized prose between two hairlines */
+.trust { border-top: 1px solid var(--panel-edge); padding: var(--s-4) 0 0; margin: var(--s-2) 0 0; font-size: var(--fs-lead); line-height: 1.6; color: var(--text-2); max-width: none; }
+.trust code { color: var(--text); font-size: 0.82em; }
+:lang(zh) .trust { line-height: 1.85; }
+.trust > * { max-width: var(--measure-lead); }
 
-/* the how page's family blocks: one per methodology booklet. The
-   visible short form is the heading, one job sentence and the formula;
-   the derivation and constants fold into details.more. */
-.fam {
-  background: var(--panel); border: 1px solid var(--panel-edge);
-  border-radius: var(--r-frame); padding: 24px 28px; margin: var(--s-2) 0; box-shadow: var(--shadow);
-}
+/* Family blocks (how pages) and formula cards (the math page): one
+   per entry. At full width the number and title hold a left rail that
+   follows the reader while the entry scrolls; the body takes the rest. */
+.fam { padding: var(--s-5) 0; border-top: 1px solid var(--line); }
 .fam h3 { font-size: var(--fs-h3); line-height: 1.4; }
-:lang(zh) .fam h3 { line-height: 1.55; }
-.fam h3 .n { color: var(--accent); font-family: var(--mono); margin-right: 12px; }
-.fam h3 a { color: var(--paper); }
-.fam h3 a:hover { color: var(--accent); text-decoration: none; }
-.fam .job { font-size: 1rem; color: var(--text); margin: 10px 0 16px; max-width: var(--measure); }
-.fam .note { font-size: 0.95rem; line-height: 1.75; }
+:lang(zh) .fam h3 { line-height: 1.6; }
+.fam h3 .n { display: block; font-family: var(--mono); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+.fam h3 a { color: var(--paper); text-decoration: none; }
+.fam h3 a:hover { color: var(--accent); }
+.fam .job { font-size: 1.05rem; color: var(--text); margin: 0 0 var(--s-3); max-width: var(--measure); }
+.fam .note { line-height: 1.75; }
 :lang(zh) .fam .note { line-height: 1.9; }
+@media (min-width: 1100px) {
+  .fam { display: grid; grid-template-columns: 260px minmax(0, 1fr); column-gap: 56px; align-items: start; }
+  .fam > * { grid-column: 2; }
+  .fam > h3 { grid-column: 1; grid-row: 1 / span 9; position: sticky; top: 96px; padding-right: 8px; }
+}
+.fam.formula { margin: var(--s-3) 0; padding: 40px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface), var(--ink-1); }
+.fam.formula > pre { order: -1; font-size: 0.95rem; padding: 22px 24px; margin-bottom: var(--s-3); color: var(--paper); white-space: pre-wrap; overflow-wrap: anywhere; }
+.fam.formula .job { color: var(--text-2); margin-bottom: 0; }
 /* One formula voice on every page: mono on the well, the deciding
-   operator (span.op) in the accent. A rule note sits beside its formula
-   unfolded; the home page's rows wrap a long rule at its spaces. */
+   operator (span.op) in the accent. */
 .fam pre, .eq pre {
-  background: var(--well); border: 1px solid var(--panel-edge); border-radius: 8px;
-  padding: 14px 16px; overflow-x: auto;
-  font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text);
+  background: var(--well); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; overflow-x: auto;
+  font-family: var(--mono); font-size: 0.82rem; line-height: 1.75; color: var(--text); font-variant-numeric: tabular-nums;
 }
 .fam pre + pre { margin-top: 8px; }
 pre .op { color: var(--accent); font-weight: 600; }
-.fam .note.rule { color: var(--text); border-left: 2px solid var(--accent-edge); padding-left: 14px; margin-top: 14px; }
-.fam .note.rule::before { content: "Rule"; display: block; font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-:lang(zh) .fam .note.rule::before { content: "规则"; letter-spacing: 0.02em; }
-.math { display: grid; gap: 10px; }
-.eq {
-  display: grid; grid-template-columns: 12.5rem minmax(0, 1fr); gap: 8px 24px; align-items: start;
-  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 18px 22px; box-shadow: var(--shadow);
-}
-.eq-name { grid-row: span 2; font-weight: 600; color: var(--paper); line-height: 1.45; }
-.eq-name b { display: block; font-family: var(--mono); color: var(--accent); }
-.eq pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px 14px; }
-.eq p { font-size: var(--fs-sm); color: var(--muted); max-width: var(--measure); }
-/* the home teaser's way to the math page; a math entry's two links */
-.more-link { margin-top: 14px; }
-.more-link a { color: var(--accent); font-weight: 600; }
-.fam .note.src { font-size: var(--fs-sm); }
-/* the stack page: one line per layer, what mathematics lives there */
-dl.layers { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 12px 24px; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 20px 24px; box-shadow: var(--shadow); }
-dl.layers dt { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--accent); padding-top: 3px; }
-dl.layers dd { max-width: var(--measure); }
+.fam .note.rule { color: var(--text); border-left: 1px solid var(--edge-strong); padding-left: 18px; margin-top: var(--s-3); }
+.fam .note.rule::before { content: "Rule"; display: block; margin-bottom: 4px; font-family: var(--mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+:lang(zh) .fam .note.rule::before { content: "规则"; letter-spacing: 0.04em; font-family: var(--sans); }
+.fam .note.src { font-size: var(--fs-sm); color: var(--muted); }
 ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--s-2); list-style: none; }
-ul.consts li {
-  font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
-  background: var(--ink-1); border: 1px solid var(--panel-edge);
-  border-radius: 6px; padding: 3px 9px;
-}
-ul.consts li b { color: var(--paper); font-weight: 600; }
+ul.consts li { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 3px 10px; font-variant-numeric: tabular-nums; }
+ul.consts li b { color: var(--paper); font-weight: 600; margin-right: 2px; }
 
-/* Tables. One header voice for all three — the scoreboard, the guard
-   tier ladder and the bench dashboard — which the contents panel's
-   label borrows — and one horizontal-scroll
-   wrapper, `.tablewrap`, whose name the dashboard generator
-   (cli/tests/it/bench_render_dashboard.rs) writes, as it writes
-   `.num` on every cell that holds a count. */
-.board th, table.ladder th, .data-table th, .toc .k {
-  font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
-}
+/* the home page's mathematics teaser: three formula cards */
+.math { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 16px; }
+.eq { display: flex; flex-direction: column; gap: var(--s-2); padding: 24px; border: 1px solid var(--line); border-radius: var(--r-frame); background: var(--surface), var(--ink-1); }
+.eq-name { font-weight: 600; color: var(--paper); line-height: 1.45; text-decoration: none; }
+.eq-name b { display: block; font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 0.1em; color: var(--muted); margin-bottom: 2px; }
+.eq-name:hover { color: var(--accent); }
+.eq pre { white-space: pre-wrap; overflow-wrap: anywhere; flex: 1; }
+.eq p { font-size: var(--fs-sm); color: var(--muted); }
+.more-link { margin-top: var(--s-3); }
+.more-link a, a.onward { font-weight: 600; text-decoration: none; }
+/* the stack page: one hairline row per layer, what mathematics lives there */
+dl.layers { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 40px; border-top: 1px solid var(--panel-edge); }
+dl.layers dt, dl.layers dd { padding: 15px 0; border-bottom: 1px solid var(--line); }
+dl.layers dt { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--paper); padding-top: 18px; }
+dl.layers dd { color: var(--text-2); }
+dl.layers dd > * { max-width: var(--measure); }
+
+/* Tables: quiet. One header voice (above, shared with the contents
+   label); row hairlines, no zebra; figures in tabular mono. The
+   scroll wrapper `.tablewrap` and the `.num` cells are written by the
+   dashboard generator (cli/tests/it/bench_render_dashboard.rs). */
 .tablewrap { overflow-x: auto; }
 /* the long latency series scrolls inside one screen under a pinned header row */
 .data-table .tablewrap { max-height: min(78vh, 52rem); overflow: auto; }
 .data-table thead th { position: sticky; top: 0; z-index: 1; background: var(--well); box-shadow: inset 0 -1px 0 var(--panel-edge); }
-.fam .tablewrap { margin: 14px 0 4px; }
+.fam .tablewrap { margin: var(--s-2) 0 4px; }
 table.ladder { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 30em; }
 :lang(zh) table.ladder { min-width: 26em; }
-table.ladder th, table.ladder td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--panel-edge); }
-table.ladder td { color: var(--muted); vertical-align: top; }
+table.ladder th, table.ladder td { text-align: left; padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line); }
+table.ladder th { border-bottom-color: var(--panel-edge); }
+table.ladder td { color: var(--text-2); vertical-align: top; }
 table.ladder td:first-child, table.ladder td code { font-family: var(--mono); color: var(--text); }
-.data-table { margin: var(--s-2) 0 var(--s-3); }
+.data-table { margin: var(--s-3) 0 var(--s-4); }
 .data-table table { width: 100%; min-width: 720px; border-collapse: collapse; font-size: 0.82rem; }
-.data-table th, .data-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--panel-edge); vertical-align: top; }
-.data-table td { color: var(--muted); }
-.data-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
-.data-table tbody tr:hover { background: var(--accent-wash); }
+.data-table th, .data-table td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.data-table td { color: var(--text-2); }
+.data-table tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
 .data-table td code { color: var(--text); font-family: var(--mono); white-space: nowrap; }
 .data-table td:last-child code { white-space: normal; }
 .data-table .num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
 
 /* The before/after scoreboard demo/table.js writes into both
-   homepages' `scoreboard` block. A .install chip cannot hold a
-   comparison: one value slot, and a label style built for two-word
-   keys. The panel spans the column like every block around it; the
-   row rules run the full width so the eye rides one line from a
-   label to its two figures. */
-.board { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 6px 26px 12px; margin: var(--s-2) 0; overflow-x: auto; box-shadow: var(--shadow); }
+   homepages' `scoreboard` block: a quiet table that spans the column,
+   the row rules running full width so the eye rides one line from a
+   label to its two figures; the "with" figure in headline ink. */
+.board { overflow-x: auto; margin: var(--s-3) 0 0; }
 .board table { width: 100%; border-collapse: collapse; }
-.board th, .board td { padding: 13px 0; text-align: right; white-space: nowrap; }
-.board th + th, .board td + td { padding-left: 34px; width: 11em; }
-.board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); }
-.board th { border-bottom: 1px solid var(--panel-edge); }
+.board th, .board td { padding: 16px 0; text-align: right; white-space: nowrap; }
+.board th + th, .board td + td { padding-left: 40px; width: 12em; }
+.board th:first-child, .board td:first-child { text-align: left; white-space: normal; padding-right: 20px; color: var(--text); font-size: 1.05rem; }
+.board th { border-bottom: 1px solid var(--edge-strong); }
 .board th:last-child { color: var(--accent); }
-.board td + td { font-family: var(--mono); font-size: 1.1rem; font-variant-numeric: tabular-nums; }
-.board tbody tr + tr td { border-top: 1px solid var(--panel-edge); }
-.board tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
+.board td + td { font-family: var(--mono); font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem); font-variant-numeric: tabular-nums; }
+.board tbody tr td { border-bottom: 1px solid var(--line); }
 .board .was { color: var(--muted); }
-.board .to { color: var(--accent); font-weight: 600; }
+.board .to { color: var(--paper); font-weight: 600; }
 
-footer.site {
-  margin-top: 96px; padding: 32px 0 48px;
-  border-top: 1px solid var(--panel-edge);
-  font-size: var(--fs-sm); color: var(--muted);
+/* The footer: three link columns under the lockup, the licence and the
+   trademark notice on one small line beneath. */
+footer.site { margin-top: calc(var(--section) * 1.25); padding: var(--s-5) 0 var(--s-6); border-top: 1px solid var(--panel-edge); font-size: var(--fs-sm); color: var(--muted); }
+footer.site .cols { display: grid; grid-template-columns: 2fr repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+footer.site .brand { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-weight: 600; color: var(--paper); }
+footer.site .brand img { width: 24px; height: 24px; border-radius: 6px; }
+footer.site .brand + p { margin-top: 12px; max-width: 26em; }
+footer.site nav { display: flex; flex-direction: column; gap: 8px; }
+footer.site nav .k { margin-bottom: 4px; }
+footer.site nav a { color: var(--text-2); text-decoration: none; }
+footer.site nav a:hover { color: var(--accent); }
+footer.site .legal { margin-top: var(--s-5); padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-xs); }
+
+@media (max-width: 900px) {
+  footer.site .cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  footer.site .cols > :first-child { grid-column: 1 / -1; }
 }
-footer.site p + p { margin-top: 8px; }
-
 @media (max-width: 640px) {
-  :root { --s-4: 56px; --fs-h2: 1.45rem; }
-  .wrap { padding: 0 16px; }
-  .hero { padding-top: 32px; gap: 20px; }
-  .hero img { width: 88px; height: 88px; border-radius: 20px; }
-  .lede, .page-head { padding-top: 40px; }
-  /* a key beside its value no longer fits: key over value */
-  header.site nav { flex-basis: 100%; justify-content: flex-start; gap: 6px 11px; font-size: 0.85rem; }
+  :root { --gutter: 16px; --section: 56px; }
+  header.site { position: relative; }
+  header.site nav { flex-basis: 100%; justify-content: flex-start; gap: 6px 14px; font-size: 0.85rem; }
   header.site nav a:last-child[href$="/releases/latest"] { border: 0; padding: 0; }
-  .installs, .install, .toc, .toc .row, dl.routes-full { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-top: 32px; }
+  .hero .mark { width: 48px; height: 48px; border-radius: 12px; }
+  /* a key beside its value no longer fits: key over value */
+  .installs:not(:has(> .metric)), .install, .toc, .toc .row, dl.routes-full, dl.layers { grid-template-columns: minmax(0, 1fr); }
+  .install { row-gap: 4px; }
   dl.routes-full { row-gap: 2px; }
   dl.routes-full dd { margin-bottom: 10px; }
-  .card.band { grid-column: auto; padding: 22px; }
-  .install { row-gap: 2px; }
-  .fam { padding: 20px 18px; }
-  .eq, dl.layers { grid-template-columns: minmax(0, 1fr); padding: 16px 18px; }
-  .eq-name { grid-row: auto; }
-  dl.layers dd { margin-bottom: 6px; }
-  /* Under this width the scoreboard's three columns cannot fit: the
-     label wrapped to five lines and the "with" column — the one the
-     reader came for — sat off the right edge. So each row stacks, and
-     each figure names its run. */
-  .board { padding: 6px 18px 12px; }
+  dl.layers dt { border-bottom: 0; padding-bottom: 0; }
+  .card.band { padding: 22px; }
+  .fam.formula { padding: 22px 18px; }
+  footer.site .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Under this width the scoreboard's three columns cannot fit: each
+     row stacks, and each figure names its run. */
   .board table, .board tbody, .board tr, .board td { display: block; }
   .board thead { display: none; }
-  .board tbody tr { padding: 12px 0; }
-  .board tbody tr + tr { border-top: 1px solid var(--panel-edge); }
-  .board tbody tr + tr td { border-top: none; }
+  .board tbody tr { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .board tbody tr td { border-bottom: 0; }
   .board td, .board td:first-child { padding: 0; text-align: left; white-space: normal; }
-  .board td + td { display: inline-block; width: auto; padding: 8px 30px 0 0; }
-  .board td + td::before { content: attr(data-run); display: block; font-family: var(--sans); font-size: 0.72rem; color: var(--muted); }
+  .board td + td { display: inline-block; width: auto; padding: 8px 32px 0 0; }
+  .board td + td::before { content: attr(data-run); display: block; font-family: var(--sans); font-size: var(--fs-xs); color: var(--muted); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .card, .btn { transition: none; }
+  *, *::before, *::after, ::details-content { transition: none !important; }
   .card:hover, .btn:hover { transform: none; }
 }

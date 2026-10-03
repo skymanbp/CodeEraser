@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser 评估仪表盘：回放记录</title>
 <meta name="description" content="CodeEraser 完整延迟历史与冻结的准确率、召回率、精度、误报评估记录，由同一 benchmark 合约渲染。">
-<meta name="theme-color" content="#0c0f16">
+<meta name="theme-color" content="#0b0e14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="zh_CN">
@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=11">
-<link rel="stylesheet" href="/style.css?v=11">
+<link rel="stylesheet" href="/theme.css?v=12">
+<link rel="stylesheet" href="/style.css?v=12">
 </head>
 <body>
 <div class="wrap">
@@ -38,6 +38,7 @@
 </header>
 
 <section class="page-head">
+  <div class="eyebrow">证据</div>
   <h1>评估仪表盘</h1>
   <p>延迟系列收录每个已测发布版的全部行。准确率、召回率、精度与误报结果在其台账需要人工仲裁或对照器已退役时保持冻结；来源列会明确指出这条边界。</p>
   <p>本页不拥有任何实测值。下方区块由 <code>contracts/bench/bench.json</code>
@@ -213,12 +214,13 @@
 <p class="trust">方法与 epoch 细节见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/BENCH.md">docs/BENCH.md</a>；机器单源见 <a href="https://github.com/skymanbp/CodeEraser/blob/main/contracts/bench/bench.json">contracts/bench/bench.json</a>。</p>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="/zh/">概览</a> ·
-     <a href="/zh/how/">原理</a> ·
-     <a href="/zh/stack/">技术栈</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
-  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
+  <div class="cols">
+    <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>度量在 Rust，判决在 Haskell，一个只准变好的分数。Apache-2.0。</p></div>
+    <nav aria-label="产品"><p class="k">产品</p><a href="/zh/">概览</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a><a href="/zh/bench/">实测</a></nav>
+    <nav aria-label="文档"><p class="k">文档</p><a href="/zh/how/">原理</a><a href="/zh/how/analysis/">分析轨</a><a href="/zh/math/">数学</a><a href="/zh/stack/">技术栈</a></nav>
+    <nav aria-label="项目"><p class="k">项目</p><a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法学</a></nav>
+  </div>
+  <p class="legal">「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
 </footer>
 
 </div>

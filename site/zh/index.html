@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser：消除 LLM 引入的代码与文档熵</title>
 <meta name="description" content="CodeEraser 判决你的仓库：克隆检测、死代码存活性、文档重复、结构熵。度量在 Rust，判决在 Haskell，一个只准变好的分数。">
-<meta name="theme-color" content="#0c0f16">
+<meta name="theme-color" content="#0b0e14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="zh_CN">
@@ -20,9 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=11">
-<link rel="stylesheet" href="/style.css?v=11">
-<link rel="stylesheet" href="/viewer.css?v=2">
+<link rel="stylesheet" href="/theme.css?v=12">
+<link rel="stylesheet" href="/style.css?v=12">
+<link rel="stylesheet" href="/viewer.css?v=3">
 <script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
@@ -42,8 +42,8 @@
 </header>
 
 <section class="hero">
-  <img src="/icon-256.png" alt="CodeEraser 图标：橡皮扫过代码行">
   <div class="pitch">
+    <img class="mark" src="/icon-256.png" width="64" height="64" alt="CodeEraser 图标：橡皮扫过代码行">
     <h1>CodeEraser<span class="tm">™</span></h1>
     <p class="tag">LLM 写的代码会<em>堆积</em>：重复代码块、死文件、过期文档、结构蔓延。
     CodeEraser 度量它、判决它、用一个只准变好的分数把住大门。</p>
@@ -52,10 +52,8 @@
       <span class="cta-note">Windows · Linux · macOS，SHA256 钉扎 · <a href="#install">其他安装方式</a></span>
     </div>
   </div>
-</section>
-
-<div class="term proof">
-  <div class="bar"><i></i><i></i><i></i></div>
+  <div class="term proof">
+    <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
 <span class="s">检查分数 924/1000</span> | 判轴 0:66 1:0 2:297 3:0 4:0 5:0 6:171 | 候选 595
@@ -63,9 +61,11 @@
 注：10 块并入既有成员，335 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
 <!-- roast:end -->
-  <p class="cap">真实输出：CodeEraser 判决它自己的仓库。棘轮只收不放：违规集入基线银行，新增熵直接判负。</p>
-</div>
+    <p class="cap">真实输出：CodeEraser 判决它自己的仓库；违规入基线银行，新增熵直接判负。</p>
+  </div>
+</section>
 
+<div class="eyebrow">证据</div>
 <!-- scoreboard:begin -->
 <h2>同一个任务，跑两遍</h2>
 <div class="board"><table>
@@ -79,8 +79,9 @@
 </tbody></table></div>
 <p class="cap">同一个七步任务，两份完全相同的种子树；唯一的变量是 CodeEraser 在不在环内——写入时的守卫、Stop 审计，以及审计拒绝之后按自己的计划执行的擦除。两次都仍以红色收场——但红的不是同一件事。</p>
 <!-- scoreboard:end -->
-<p class="cap">种子是 <code>demo/seed/</code>，一个精确到分的 Python + TypeScript 小型开票服务，两次运行之前先由同样的门量过、判为干净；任务是加折扣、紧凑报表、CSV 与 JSON 输出，以及 API 里的金额格式化。</p>
+<p class="cap">种子 <code>demo/seed/</code>：精确到分的 Python + TypeScript 开票服务，两次运行前先由同样的门判为干净；任务是加折扣、紧凑报表、CSV 与 JSON 输出与金额格式化。</p>
 
+<div class="eyebrow">产品</div>
 <h2>看它工作</h2>
 <div class="gallery">
   <div class="tabs" role="tablist" aria-label="GUI 屏幕" hidden>
@@ -90,67 +91,43 @@
   </div>
   <figure class="shot" id="shot-structure" role="tabpanel" aria-labelledby="tab-structure">
     <div class="stage"><img src="/assets/gui-structure.png" width="1424" height="892" alt="CodeEraser GUI：方化结构树图判决 CodeEraser 仓库自身，色块按发现密度加热，上方是本次判决的分数、熵与判轴芯片" loading="lazy"></div>
-    <figcaption>结构屏判决本仓库自身：方化树图，色块按发现密度加热，上方是<em>结构分数</em>。它量的是树尺度的熵，与上面终端里那个<em>检查分数</em>不是同一个尺子（后者是门自己的判轴加棘轮）。</figcaption>
+    <figcaption>结构屏判决本仓库：树图按发现密度加热，上方是<em>结构分数</em>（树尺度的熵，不是门的<em>检查分数</em>）。</figcaption>
   </figure>
   <figure class="shot" id="shot-tree" role="tabpanel" aria-labelledby="tab-tree">
     <div class="stage"><img src="/assets/gui-tree.png" width="1424" height="892" alt="CodeEraser GUI：结构树状视图，子树热轨、逐目录发现芯片与行内判轴标签" loading="lazy"></div>
-    <figcaption>同一份判决的树状视角：子树问题上卷进热轨，每行直接点名判轴。</figcaption>
+    <figcaption>同一份判决的树状视角：子树问题上卷进热轨，每行点名判轴。</figcaption>
   </figure>
   <figure class="shot" id="shot-candidates" role="tabpanel" aria-labelledby="tab-candidates">
     <div class="stage"><img src="/assets/gui-candidates.png" width="1424" height="892" alt="CodeEraser GUI：删除候选浏览器，列出相似文件对与块/token 计数" loading="lazy"></div>
-    <figcaption>删除候选浏览器：相似度 × 图位置 × 变动史，与 <code>ce join</code> 打印的同一批行。</figcaption>
+    <figcaption>删除候选：相似度 × 图位置 × 变动史，即 <code>ce join</code> 打印的那批行。</figcaption>
   </figure>
 </div>
 
-<h2 id="install">安装</h2>
-<div class="installs routes">
-  <div class="install"><span class="k">安装包</span>
-    <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>：GUI + CLI + 判决核，五个平台</code></div>
-  <div class="install"><span class="k">Homebrew</span>
-    <code>brew install skymanbp/codeeraser/codeeraser</code></div>
-  <div class="install"><span class="k">Cargo</span>
-    <code>cargo install codeeraser</code></div>
-  <div class="install"><span class="k">Claude Code</span>
-    <code>ce setup&nbsp;&nbsp;# 或 /plugin marketplace add skymanbp/CodeEraser@release</code></div>
-  <div class="install"><span class="k">更新</span>
-    <code>ce update --yes</code></div>
-</div>
-<p class="cap"><code>ce update</code> 只在两枚 SHA256 pin 都通过后替换 <code>ce</code> 与 <code>ce-core</code>；GUI 有自己的更新屏。</p>
-<details class="more"><summary>每条安装方式的完整说明</summary><dl class="routes-full"><dt>安装包</dt><dd><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>：x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux，GUI + CLI + 判决核，SHA256 钉扎；Windows 安装包运行 <code>ce setup</code>，AppImage / dmg 用户自己跑一次</dd><dt>Homebrew</dt><dd>brew install skymanbp/codeeraser/codeeraser（macOS 与 Linux，由同一组 pin 生成）</dd><dt>Claude Code</dt><dd>ce setup，或手动：/plugin marketplace add skymanbp/CodeEraser@release，再 /plugin install codeeraser@codeeraser</dd></dl><p class="cap"><code>ce update</code> 拿最新 tag 对比本构建（退出码 0 / 1 / 2）；<code>--yes</code> 在两枚 SHA256 pin 都通过后替换 <code>ce</code> 与 <code>ce-core</code>（但绝不动插件或 cargo 拥有的副本，它们各自给出自己的更新命令）；<code>--installer</code> 则保存经校验的 GUI 安装包。GUI 有更新屏，Claude Code 里用 <code>/codeeraser:update</code>。</p></details>
-
-<h2>接进工作流</h2>
-<div class="installs">
-  <div class="install"><span class="k">CI 门</span>
-    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->911<!--/ce-->&nbsp;&nbsp;# 棘轮+地板；exit 1 直接把流水线判红</code></div>
-  <div class="install"><span class="k">pre-commit</span>
-    <code>ce precommit&nbsp;&nbsp;# 暂存区净行数 + 涉改重复块</code></div>
-  <div class="install"><span class="k">MCP</span>
-    <code>ce mcp&nbsp;&nbsp;# 每个报告家族都是任意 agent 可读的只读工具</code></div>
-</div>
-
+<div class="eyebrow">判决</div>
 <h2>判决家族</h2>
 <div class="grid cmds">
-  <div class="card"><h3>ce check</h3><p>总门。<!--ce:count:axes#word-->七<!--/ce-->轴合成 0–1000 分，对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p></div>
-  <div class="card"><h3>ce dedup</h3><p>winnowing 指纹的 T1/T2 克隆检测，克隆块预算只准往下棘。</p></div>
-  <div class="card"><h3>ce clone</h3><p>T3 近似克隆：Haskell 核的树编辑距离判决，改名换形的拷贝一并抓。</p></div>
-  <div class="card"><h3>ce deadcode</h3><p>缓存引用图上的存活性判决：无保留入边、无入口声明即判死，门就红。</p><details class="more"><summary>更多</summary><p>旁边是未被提及的声明顾问，它永不把门翻红。</p></details></div>
-  <div class="card"><h3>ce docdup</h3><p>文档与注释里的重复散文，活段上的精确 Jaccard 判决。</p></div>
-  <div class="card"><h3>ce structure</h3><p>树尺度结构熵：布局偏离、文档陈旧、冗余、模块度诸轴，整仓一览。</p></div>
-  <div class="card"><h3>ce scan</h3><p>逐文件逐函数的尺寸、复杂度、可读性，经典指标由核分级；判的是全局表，或该文件自己那条 <code>[[rules.class]]</code> 线。</p></div>
-  <div class="card"><h3>ce trend</h3><p>主线历史上的分数轨迹，逐提交缓存、可重建、方向诚实。</p></div>
-  <div class="card"><h3>ce erase</h3><p>确定性两段式擦除器：死文件、逐字重复的文档孪生、整单元精确克隆。</p><details class="more"><summary>更多</summary><p>先出计划，只在干净工作区上应用，且永不通过让模型重写代码来完成。</p></details></div>
-  <div class="card"><h3>ce churn</h3><p>git 窗口内的改动热度，逐单元归属，看得出一个文件是在被重写，还是只在被追加。</p></div>
-  <div class="card"><h3>ce join</h3><p>三信号联判：把改动、重复与存活性折成一条判决，热的、重复的、已死的那个角落会自己报名。</p></div>
-  <div class="card"><h3>ce similar</h3><p>同角色顾问：在索引已有的词袋上做整数 BM25，由核判定哪些候选扮演查询的角色。</p><details class="more"><summary>更多</summary><p>确定性、离线的检索，只当顾问，永不把门翻红。</p></details></div>
-  <div class="card"><h3>ce query · ce rules</h3><p>索引自有事实上的 Datalog：提一个问题，每个答案带推导链；把架构约束写成断言，<code>ce rules</code> 就是一道门，第一条违规即退出。</p><details class="more"><summary>更多</summary><p>核里判决，CLI 回标名字。</p></details></div>
-  <div class="card"><h3>ce flow</h3><p>一个函数内部的死代码：没有路径到达的语句、没有路径读到的存储、没人读的局部量。</p><details class="more"><summary>更多</summary><p>核走控制流图；只有盲评精度考题过门的语言里，发现才算判决，未用形参永远只是顾问。</p></details></div>
-  <div class="card"><h3>ce merge</h3><p>克隆组怎样合并成一个函数：成员之间不同的地方变成参数，核答出参数个数、值得保留的成员、省下的行、可不可行及原因。</p><details class="more"><summary>更多</summary><p>只当顾问，永不成门。</p></details></div>
-  <div class="card"><h3>ce arch</h3><p>目录之间怎样相互依赖：分层、拆环最省要去掉的弧、文件簇与不在其簇所在目录的文件、每个目录的扇入、扇出与不稳定度，以及改动一个点名文件会波及哪些文件。</p><details class="more"><summary>更多</summary><p>只当顾问，永不成门。</p></details></div>
-  <div class="card band"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入在落笔瞬间被拦，你在 ask 档放行的写入落地后记账，停止时审计，会话开始报健康。</p></div>
+  <div class="card wide"><h3>ce check</h3><p>总门：<!--ce:count:axes#word-->七<!--/ce-->轴合成 0–1000 分，对基线银行只缩不涨的棘轮，外加 CI 硬地板。</p><a class="go" href="/zh/how/#f05">05 · 评分与棘轮</a></div>
+  <div class="card"><h3>ce dedup</h3><p>winnowing 指纹的 T1/T2 克隆检测，克隆块预算只准往下棘。</p><a class="go" href="/zh/how/#f01">01 · T1/T2 克隆</a></div>
+  <div class="card"><h3>ce clone</h3><p>T3 近似克隆，改名换形的拷贝一并抓，由 Haskell 核按树编辑距离判决。</p><a class="go" href="/zh/how/#f02">02 · T3 近似克隆</a></div>
+  <div class="card"><h3>ce deadcode</h3><p>缓存引用图上的存活性：无保留入边、无入口声明即死；旁边的未提及声明顾问永不把门翻红。</p><a class="go" href="/zh/how/#f06">06 · 死代码</a></div>
+  <div class="card"><h3>ce docdup</h3><p>文档与注释里的重复散文，活段上的精确 Jaccard 判决。</p><a class="go" href="/zh/how/#f03">03 · 文档重复</a></div>
+  <div class="card"><h3>ce structure</h3><p>整仓的树尺度结构熵：布局偏离、文档陈旧、冗余、模块度诸轴。</p><a class="go" href="/zh/how/#f04">04 · 结构判决</a></div>
+  <div class="card"><h3>ce scan</h3><p>逐文件逐函数的尺寸、复杂度、可读性，由核按全局表或该文件自己那条 <code>[[rules.class]]</code> 线分级。</p><a class="go" href="/zh/math/#m-recursion">认知复杂度</a></div>
+  <div class="card"><h3>ce trend</h3><p>主线历史上的分数轨迹，逐提交缓存、可重建、方向诚实。</p><a class="go" href="/zh/how/#f10">10 · 趋势斜率</a></div>
+  <div class="card"><h3>ce erase</h3><p>确定性两段式：死文件、逐字重复的文档孪生、整单元精确克隆，先出计划、只在干净工作区应用，永不交给模型。</p><a class="go" href="/zh/how/#f12">12 · 确定性擦除</a></div>
+  <div class="card"><h3>ce churn</h3><p>git 窗口内的改动热度，逐单元归属：看得出一个文件是在被重写，还是只在被追加。</p><a class="go" href="/zh/how/#f07">07 · 三信号 join</a></div>
+  <div class="card"><h3>ce join</h3><p>把改动、重复与存活性折成一条判决，热的、重复的、已死的那个角落会自己报名。</p><a class="go" href="/zh/how/#f07">07 · 三信号 join</a></div>
+  <div class="card"><h3>ce similar</h3><p>同角色顾问：离线、在索引的词袋上做整数 BM25，由核判定哪些候选扮演查询的角色。只当顾问。</p><a class="go" href="/zh/how/#f15">15 · 稀疏检索</a></div>
+  <div class="card wide"><h3>ce query · ce rules</h3><p>索引自有事实上的 Datalog，核里判决、每个答案带推导链；架构约束写成断言，<code>ce rules</code> 就是一道门，第一条违规即退出。</p><a class="go" href="/zh/how/analysis/#f16">16 · 代码查询与架构规则</a></div>
+  <div class="card"><h3>ce flow</h3><p>函数内部的死代码（到不了的语句、没人读的存储与局部量），在核的控制流图上判；盲评精度考题过门的语言才算判决，未用形参永远只是顾问。</p><a class="go" href="/zh/how/analysis/#f17">17 · 函数内死代码</a></div>
+  <div class="card"><h3>ce merge</h3><p>克隆组怎样合成一个函数：不同处变参数，核答参数个数、该留的成员、省下的行、可不可行及原因。只当顾问。</p><a class="go" href="/zh/how/analysis/#f18">18 · 克隆合并建议</a></div>
+  <div class="card"><h3>ce arch</h3><p>目录之间怎样依赖：分层、拆环最省的切边、文件簇与不在簇所在目录的文件、扇入、扇出、不稳定度，以及改一个点名文件波及哪些文件。只当顾问。</p><a class="go" href="/zh/how/analysis/#f19">19 · 架构分析</a></div>
+  <div class="card band"><h3>守卫钩子</h3><p>作为 Claude Code 插件：重复写入落笔即拦，ask 档放行的写入落地后记账，停止时审计，会话开始报健康。</p><a class="go" href="/zh/how/#f11">11 · 守卫档位阶梯</a></div>
 </div>
 
+<div class="eyebrow">数学</div>
 <h2 id="math">数学</h2>
-<p class="cap">每条判决都是对实测事实的整数或精确有理数算术，每条规则都追溯到实现它的源码行。下面每行一条规则，各自链到推导。</p>
+<p class="cap">对实测事实的整数或精确有理数算术；每条规则钉在实现它的源码行上。</p>
 <div class="math">
 <div class="eq"><a class="eq-name" href="/zh/math/#m-winnowing"><b>01</b>窗口取指纹</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre></div>
 <div class="eq"><a class="eq-name" href="/zh/math/#m-ted"><b>02</b>树编辑距离</a><pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre></div>
@@ -159,6 +136,7 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="more-link"><a href="/zh/math/">全部十六条规则 →</a></p>
 
+<div class="eyebrow">性能</div>
 <!-- bench:begin -->
 <h2>实测 · v1.8.0</h2>
 <div class="installs">
@@ -170,26 +148,55 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="cap">每个数字由回放产生（cli/tests/it/bench.rs 与 bench_backfill.rs），单源 contracts/bench/bench.json——绝不手填。</p>
 <!-- bench:end -->
-<p><a href="/zh/bench/">完整评估仪表盘 →</a></p>
+<p class="more-link"><a href="/zh/bench/">完整评估仪表盘 →</a></p>
 
+<div class="eyebrow">架构</div>
 <h2>内部构造</h2>
 <figure class="arch deep" id="architecture">
   <div class="stage"><img src="/assets/architecture.zh.svg" width="1440" height="620" alt="架构图：仓库由 Rust 度量侧解析并取指纹（tree-sitter、由逐项目 daemon 保温的 SQLite 指纹索引、引用图、git 窗口），经一条十六个家族的 NDJSON wire 进入 Haskell 判决核（策略作为数据随之发布），同一批报告由五张面孔渲染（终端、GUI、MCP 服务器、Claude Code hooks、CI）" loading="lazy"></div>
   <figcaption>度量在 Rust，判决在 Haskell：一条 wire、每家族一份报告 schema、五张面孔。由 <code>docs/diagrams/architecture.zh.json</code> 渲染；每个组件都引用自己的源文件。打开<a href="/assets/architecture.zh.svg">原尺寸 SVG</a>。</figcaption>
 </figure>
-<p><a href="/zh/stack/">查看组件级技术栈与执行门禁 →</a></p>
+<p class="more-link"><a href="/zh/stack/">组件级技术栈与执行门禁 →</a></p>
+
+<div class="eyebrow">上手</div>
+<h2 id="install">安装</h2>
+<div class="installs routes">
+  <div class="install"><span class="k">安装包</span>
+    <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>：GUI + CLI + 判决核，SHA256 钉扎</code></div>
+  <div class="install"><span class="k">Homebrew</span>
+    <code>brew install skymanbp/codeeraser/codeeraser</code></div>
+  <div class="install"><span class="k">Cargo</span>
+    <code>cargo install codeeraser</code></div>
+  <div class="install"><span class="k">Claude Code</span>
+    <code>ce setup&nbsp;&nbsp;# 手动：/plugin marketplace add skymanbp/CodeEraser@release，再 /plugin install codeeraser@codeeraser</code></div>
+  <div class="install"><span class="k">更新</span>
+    <code>ce update --yes</code></div>
+</div>
+
+<details class="more"><summary>平台与更新</summary><p class="cap">五个平台：x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux。Windows 安装包会运行 <code>ce setup</code>，AppImage / dmg 用户自己跑一次；Homebrew 公式（macOS 与 Linux）由同一组 pin 生成。</p>
+<p class="cap"><code>ce update</code> 拿最新 tag 对比本构建（退出码 0 / 1 / 2）；<code>--yes</code> 在两枚 SHA256 pin 都通过后才替换 <code>ce</code> 与 <code>ce-core</code>，绝不动插件或 cargo 拥有的副本（它们各给自己的更新命令）；<code>--installer</code> 保存经校验的 GUI 安装包。GUI 有自己的更新屏，Claude Code 里用 <code>/codeeraser:update</code>。</p></details>
+
+<h2>接进工作流</h2>
+<div class="installs">
+  <div class="install"><span class="k">CI 门</span>
+    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->911<!--/ce-->&nbsp;&nbsp;# 棘轮+地板；exit 1 直接把流水线判红</code></div>
+  <div class="install"><span class="k">pre-commit</span>
+    <code>ce precommit&nbsp;&nbsp;# 暂存区净行数 + 涉改重复块</code></div>
+  <div class="install"><span class="k">MCP</span>
+    <code>ce mcp&nbsp;&nbsp;# 每个报告家族都是任意 agent 可读的只读工具</code></div>
+</div>
 
 <h2>信任锚</h2>
-<p class="trust">全部<!--ce:count:binaries#word-->十五<!--/ce-->个发布二进制（<!--ce:count:platforms#word-->五<!--/ce-->平台 × ce / ce-core，再加<!--ce:count:installers#word-->五<!--/ce-->个 GUI
-安装包）都以 SHA256 钉扎在 <code>plugin/bin/manifest.env</code>；tag 阶段逐 pin 校验、等被打标提交的 CI 全绿、拒绝任何计划外资产，然后才发布。<code>SHA256SUMS</code> 覆盖全集可离线核对。代码签名被刻意排除在设计外；哈希链就是永久信任锚。本仓库每次提交都用自己的工具给自己把门。</p>
+<div class="trust"><p>全部<!--ce:count:binaries#word-->十五<!--/ce-->个发布二进制（<!--ce:count:platforms#word-->五<!--/ce-->平台 × ce / ce-core，再加<!--ce:count:installers#word-->五<!--/ce-->个 GUI 安装包）都以 SHA256 钉扎在 <code>plugin/bin/manifest.env</code>：信任锚是哈希链，不是代码签名（<a href="/zh/stack/">发布怎样切出</a>）。</p></div>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="/zh/how/">原理</a> ·
-     <a href="/zh/stack/">技术栈</a> ·
-     <a href="/zh/bench/">实测</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
-  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
+  <div class="cols">
+    <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>度量在 Rust，判决在 Haskell，一个只准变好的分数。Apache-2.0。</p></div>
+    <nav aria-label="产品"><p class="k">产品</p><a href="/zh/">概览</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a><a href="/zh/bench/">实测</a></nav>
+    <nav aria-label="文档"><p class="k">文档</p><a href="/zh/how/">原理</a><a href="/zh/how/analysis/">分析轨</a><a href="/zh/math/">数学</a><a href="/zh/stack/">技术栈</a></nav>
+    <nav aria-label="项目"><p class="k">项目</p><a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法学</a></nav>
+  </div>
+  <p class="legal">「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
 </footer>
 
 </div>

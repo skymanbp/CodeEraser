@@ -29,23 +29,23 @@
    without scripts is never shown buttons that do nothing */
 .stage-bar {
   display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px;
-  padding: 8px 12px; border-top: 1px solid var(--panel-edge);
+  padding: 8px 12px; border-top: 1px solid var(--line);
   font-family: var(--mono); font-size: 0.78rem; color: var(--muted);
 }
 .stage-bar button {
-  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px;
+  background: transparent; border: 1px solid var(--line); border-radius: 8px;
   padding: 3px 10px; min-width: 2.2em; cursor: pointer; color: var(--text);
 }
 .stage-bar button:hover { border-color: var(--accent-edge); color: var(--paper); }
 .stage-bar .readout { min-width: 3.6em; text-align: center; font-variant-numeric: tabular-nums; color: var(--text); }
 .stage-bar .hint { margin-left: auto; }
 
-.arch figcaption, .shot figcaption { padding: 14px max(18px, calc(100% - var(--measure) - 18px)) 14px 18px; font-size: 0.86rem; color: var(--muted); border-top: 1px solid var(--panel-edge); }
+.arch figcaption, .shot figcaption { padding: 14px max(18px, calc(100% - var(--measure) - 18px)) 14px 18px; font-size: 0.86rem; color: var(--muted); border-top: 1px solid var(--line); }
 .shot figcaption { font-size: 0.86rem; }
 .arch figcaption code, .shot figcaption code { font-family: var(--mono); color: var(--text); font-size: 0.92em; }
 /* a paragraph that follows a framed figure (the link onward) keeps
    the same breath every other block has under one */
-.arch + p, .gallery + p { margin-top: 14px; }
+.arch + p, .gallery + p { margin-top: var(--s-3); }
 
 figure:fullscreen { display: flex; flex-direction: column; margin: 0; border: 0; border-radius: 0; background: var(--ink-0); }
 figure:fullscreen .stage { flex: 1; min-height: 0; max-height: none; aspect-ratio: auto !important; }
@@ -54,14 +54,14 @@ figure:fullscreen figcaption { display: none; }
 /* the screenshot strip: one panel at a time once viewer.js runs (the
    tab list carries `hidden` until then, and every panel is shown;
    `[hidden]` only holds while nothing sets display, hence :not()) */
-.tabs:not([hidden]) { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tabs:not([hidden]) { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--ink-1); }
 .tabs [role="tab"] {
-  font-family: var(--mono); font-size: 0.82rem; color: var(--muted);
-  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 8px;
-  padding: 7px 14px; cursor: pointer;
+  font-size: 0.86rem; font-weight: 600; color: var(--muted);
+  background: transparent; border: 0; border-radius: 8px;
+  padding: 7px 16px; cursor: pointer; transition: color 0.15s ease, background-color 0.15s ease;
 }
 .tabs [role="tab"]:hover { color: var(--text); }
-.tabs [role="tab"][aria-selected="true"] { color: var(--paper); border-color: var(--accent-edge); box-shadow: inset 0 -2px 0 var(--accent); }
+.tabs [role="tab"][aria-selected="true"] { color: var(--paper); background: var(--panel-2); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 4px 12px rgba(0, 0, 0, 0.3); }
 .gallery figure + figure { margin-top: 14px; }
 
 @media (max-width: 640px) {

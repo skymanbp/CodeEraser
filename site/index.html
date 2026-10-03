@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CodeEraser: erase LLM-induced code &amp; document entropy</title>
 <meta name="description" content="CodeEraser judges your repository: clone detection, dead-code liveness, doc duplication, structural entropy. Measurement in Rust, judgment in Haskell, one ratcheted score.">
-<meta name="theme-color" content="#0c0f16">
+<meta name="theme-color" content="#0b0e14">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CodeEraser">
 <meta property="og:locale" content="en_US">
@@ -20,9 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=11">
-<link rel="stylesheet" href="/style.css?v=11">
-<link rel="stylesheet" href="/viewer.css?v=2">
+<link rel="stylesheet" href="/theme.css?v=12">
+<link rel="stylesheet" href="/style.css?v=12">
+<link rel="stylesheet" href="/viewer.css?v=3">
 <script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
@@ -42,8 +42,8 @@
 </header>
 
 <section class="hero">
-  <img src="/icon-256.png" alt="CodeEraser icon: an eraser mid-swipe through rows of code">
   <div class="pitch">
+    <img class="mark" src="/icon-256.png" width="64" height="64" alt="CodeEraser icon: an eraser mid-swipe through rows of code">
     <h1>CodeEraser<span class="tm">™</span></h1>
     <p class="tag">LLMs write code that <em>accretes</em>: duplicated blocks, dead files,
     stale docs, structural sprawl. CodeEraser measures it, judges it, and gates it
@@ -53,10 +53,8 @@
       <span class="cta-note">Windows · Linux · macOS, SHA256-pinned · <a href="#install">other ways to install</a></span>
     </div>
   </div>
-</section>
-
-<div class="term proof">
-  <div class="bar"><i></i><i></i><i></i></div>
+  <div class="term proof">
+    <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
 <span class="s">check score 924/1000</span> | axes 0:66 1:0 2:297 3:0 4:0 5:0 6:171 | 595 candidates
@@ -64,10 +62,11 @@ ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pas
 note: 10 blocks collapsed into existing members, 335 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
 <!-- roast:end -->
-  <p class="cap">Real output: CodeEraser judging its own repository. The ratchet only shrinks:
-  every violation is banked in a baseline, and new entropy fails the gate.</p>
-</div>
+    <p class="cap">Real output: CodeEraser on its own repository; violations are banked, new entropy fails the gate.</p>
+  </div>
+</section>
 
+<div class="eyebrow">Proof</div>
 <!-- scoreboard:begin -->
 <h2>The same task, run twice</h2>
 <div class="board"><table>
@@ -81,8 +80,9 @@ note: 10 blocks collapsed into existing members, 335 intra-file pairs off the si
 </tbody></table></div>
 <p class="cap">One seven-step task, two identical copies of the seed; the only variable is whether CodeEraser is in the loop — the write-time guard, the Stop audit, and, once the audit refuses, the eraser acting on its own plan. Both runs still end red — not on the same things.</p>
 <!-- scoreboard:end -->
-<p class="cap">The seed is <code>demo/seed/</code>, a small cent-exact invoicing service in Python and TypeScript, measured clean by the same gates before either run; the task adds discounts, a compact report, CSV and JSON output, and money formatting in the API.</p>
+<p class="cap">The seed, <code>demo/seed/</code>: a cent-exact Python and TypeScript invoicing service, clean by the same gates before either run; the task adds discounts, a compact report, CSV/JSON output and money formatting.</p>
 
+<div class="eyebrow">Product</div>
 <h2>See it work</h2>
 <div class="gallery">
   <div class="tabs" role="tablist" aria-label="GUI screens" hidden>
@@ -92,67 +92,43 @@ note: 10 blocks collapsed into existing members, 335 intra-file pairs off the si
   </div>
   <figure class="shot" id="shot-structure" role="tabpanel" aria-labelledby="tab-structure">
     <div class="stage"><img src="/assets/gui-structure.png" width="1424" height="892" alt="CodeEraser GUI: squarified structure treemap of the CodeEraser repository, tiles heated by findings density, with the run's score, entropy and axis chips above it" loading="lazy"></div>
-    <figcaption>The structure screen judging this repository: a squarified treemap, tiles heated by findings density, and the <em>structure score</em> above it. That score is tree-scale entropy, a different measure from the <em>check score</em> in the terminal above, which is the gate's own axes plus the ratchet.</figcaption>
+    <figcaption>The structure screen on this repository: a treemap heated by findings, under the <em>structure score</em> (tree-scale entropy, not the gate's <em>check score</em>).</figcaption>
   </figure>
   <figure class="shot" id="shot-tree" role="tabpanel" aria-labelledby="tab-tree">
     <div class="stage"><img src="/assets/gui-tree.png" width="1424" height="892" alt="CodeEraser GUI: structure tree view with subtree-heat rail, per-directory findings chips and inline axis tags" loading="lazy"></div>
-    <figcaption>The same judgment as a tree: subtree trouble rolls up into the heat rail, and every row names its axes.</figcaption>
+    <figcaption>The same judgment as a tree: trouble rolls up into the heat rail, every row names its axes.</figcaption>
   </figure>
   <figure class="shot" id="shot-candidates" role="tabpanel" aria-labelledby="tab-candidates">
     <div class="stage"><img src="/assets/gui-candidates.png" width="1424" height="892" alt="CodeEraser GUI: deletion-candidate browser listing similar file pairs with block and token counts" loading="lazy"></div>
-    <figcaption>The deletion-candidate browser: similarity × graph position × churn, the same rows <code>ce join</code> prints.</figcaption>
+    <figcaption>Deletion candidates: similarity × graph position × churn, the rows <code>ce join</code> prints.</figcaption>
   </figure>
 </div>
 
-<h2 id="install">Install</h2>
-<div class="installs routes">
-  <div class="install"><span class="k">Installer</span>
-    <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>: GUI + CLI + core, five platforms</code></div>
-  <div class="install"><span class="k">Homebrew</span>
-    <code>brew install skymanbp/codeeraser/codeeraser</code></div>
-  <div class="install"><span class="k">Cargo</span>
-    <code>cargo install codeeraser</code></div>
-  <div class="install"><span class="k">Claude Code</span>
-    <code>ce setup&nbsp;&nbsp;# or /plugin marketplace add skymanbp/CodeEraser@release</code></div>
-  <div class="install"><span class="k">Update</span>
-    <code>ce update --yes</code></div>
-</div>
-<p class="cap"><code>ce update</code> swaps <code>ce</code> and <code>ce-core</code> only after both SHA256 pins verify; the GUI has its own update screen.</p>
-<details class="more"><summary>Every install route in full</summary><dl class="routes-full"><dt>Installer</dt><dd><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>: x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux, GUI + CLI + judgment core, SHA256-pinned; the Windows installer runs <code>ce setup</code>, AppImage / dmg users run it once</dd><dt>Homebrew</dt><dd>brew install skymanbp/codeeraser/codeeraser (macOS and Linux, generated from the same pins)</dd><dt>Claude Code</dt><dd>ce setup, or by hand: /plugin marketplace add skymanbp/CodeEraser@release, then /plugin install codeeraser@codeeraser</dd></dl><p class="cap"><code>ce update</code> compares the latest tag against this build (exit 0 / 1 / 2); <code>--yes</code> replaces <code>ce</code> and <code>ce-core</code> after both SHA256 pins verify (never a copy the plugin or cargo owns, which name their own update), and <code>--installer</code> saves the verified GUI installer. The GUI has an update screen; in Claude Code, <code>/codeeraser:update</code>.</p></details>
-
-<h2>Wire it in</h2>
-<div class="installs">
-  <div class="install"><span class="k">CI gate</span>
-    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->911<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
-  <div class="install"><span class="k">pre-commit</span>
-    <code>ce precommit&nbsp;&nbsp;# staged net LOC + touched duplicates</code></div>
-  <div class="install"><span class="k">MCP</span>
-    <code>ce mcp&nbsp;&nbsp;# every report family as a read-only tool for any agent</code></div>
-</div>
-
+<div class="eyebrow">Judgment</div>
 <h2>Judgment families</h2>
 <div class="grid cmds">
-  <div class="card"><h3>ce check</h3><p>The gate. One 0–1000 score over <!--ce:count:axes#word-->seven<!--/ce--> axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p></div>
-  <div class="card"><h3>ce dedup</h3><p>T1/T2 clone detection via winnowing fingerprints, with a clone-block budget your repo can only ratchet down.</p></div>
-  <div class="card"><h3>ce clone</h3><p>T3 near-clones judged by tree edit distance in the Haskell core, renamed and reshaped copies included.</p></div>
-  <div class="card"><h3>ce deadcode</h3><p>Liveness verdicts on the cached reference graph: no kept in-edge and no entry flag means dead, and the gate says so.</p><details class="more"><summary>More</summary><p>Beside it, the unmentioned-declaration advisory, which never reddens a gate.</p></details></div>
-  <div class="card"><h3>ce docdup</h3><p>Duplicated prose across docs and comments, judged by exact Jaccard over live segments.</p></div>
-  <div class="card"><h3>ce structure</h3><p>Tree-scale entropy: layout divergence, doc staleness, redundancy and modularity axes over the whole repository.</p></div>
-  <div class="card"><h3>ce scan</h3><p>Size, complexity and readability per file and function, the classic metrics core-graded against the global table or the file's own <code>[[rules.class]]</code> lines.</p></div>
-  <div class="card"><h3>ce trend</h3><p>Your score across mainline history, cached per commit, rebuildable, honest about direction.</p></div>
-  <div class="card"><h3>ce erase</h3><p>The deterministic two-phase eraser: dead files, verbatim document twins and whole-unit exact clones.</p><details class="more"><summary>More</summary><p>Planned first, applied only from a clean worktree, never by asking a model to rewrite code.</p></details></div>
-  <div class="card"><h3>ce churn</h3><p>Change heat over a git window, attributed per unit, so you see how much of a file is being rewritten rather than added to.</p></div>
-  <div class="card"><h3>ce join</h3><p>The three-signal join: churn, duplication and liveness folded into one verdict, so a hot duplicated dead corner names itself.</p></div>
-  <div class="card"><h3>ce similar</h3><p>The same-role advisor: integer BM25 over term bags the index already holds, with the core deciding which candidates play the query's role.</p><details class="more"><summary>More</summary><p>A deterministic offline retrieval, advice only, never a gate.</p></details></div>
-  <div class="card"><h3>ce query · ce rules</h3><p>A Datalog over the index’s own facts: ask a question and every answer comes with its derivation; write architecture constraints as assertions and <code>ce rules</code> is a gate that exits on the first violation.</p><details class="more"><summary>More</summary><p>Judged in the core, labelled back by the CLI.</p></details></div>
-  <div class="card"><h3>ce flow</h3><p>Dead code inside one function: statements no path reaches, stores no path reads, locals nothing reads.</p><details class="more"><summary>More</summary><p>The core walks the control-flow graph; a finding is a verdict only in a language whose blind-reviewed precision exam passed, and an unused parameter is always advice.</p></details></div>
-  <div class="card"><h3>ce merge</h3><p>How a clone group would fold into one function: the places its members differ become parameters, and the core answers the parameter count, the member worth keeping, the lines saved, and feasible or why not.</p><details class="more"><summary>More</summary><p>Advice only, never a gate.</p></details></div>
-  <div class="card"><h3>ce arch</h3><p>How the directories depend on each other: the layers, the cheapest arcs to cut out of their cycles, the file clusters and the files outside their cluster's directory, each directory's fan-in, fan-out and instability, and what a change to a named file reaches.</p><details class="more"><summary>More</summary><p>Advice only, never a gate.</p></details></div>
-  <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, a write you let through at ask recorded once it lands, audits at stop, health at session start.</p></div>
+  <div class="card wide"><h3>ce check</h3><p>The gate: one 0–1000 score over <!--ce:count:axes#word-->seven<!--/ce--> axes, a shrink-only ratchet against the banked baseline, and a hard floor for CI.</p><a class="go" href="/how/#f05">05 · scoring and ratchet</a></div>
+  <div class="card"><h3>ce dedup</h3><p>T1/T2 clones by winnowing fingerprints, under a clone-block budget that only ratchets down.</p><a class="go" href="/how/#f01">01 · T1/T2 clones</a></div>
+  <div class="card"><h3>ce clone</h3><p>T3 near-clones, renamed and reshaped copies included, judged by tree edit distance in the Haskell core.</p><a class="go" href="/how/#f02">02 · T3 near-miss clones</a></div>
+  <div class="card"><h3>ce deadcode</h3><p>Liveness on the cached reference graph: no kept in-edge and no entry flag means dead; an unmentioned-declaration advisory beside it never reddens a gate.</p><a class="go" href="/how/#f06">06 · dead code</a></div>
+  <div class="card"><h3>ce docdup</h3><p>Duplicated prose across docs and comments, judged by exact Jaccard over live segments.</p><a class="go" href="/how/#f03">03 · documentation duplication</a></div>
+  <div class="card"><h3>ce structure</h3><p>Tree-scale entropy over the whole repository: layout divergence, doc staleness, redundancy and modularity axes.</p><a class="go" href="/how/#f04">04 · structure judgment</a></div>
+  <div class="card"><h3>ce scan</h3><p>Size, complexity and readability per file and function, core-graded against the global table or the file's own <code>[[rules.class]]</code> lines.</p><a class="go" href="/math/#m-recursion">Cognitive complexity</a></div>
+  <div class="card"><h3>ce trend</h3><p>Your score across mainline history, cached per commit, rebuildable, honest about direction.</p><a class="go" href="/how/#f10">10 · trend slope</a></div>
+  <div class="card"><h3>ce erase</h3><p>Deterministic and two-phase: dead files, verbatim doc twins and whole-unit exact clones, planned first, applied only from a clean worktree, never by a model.</p><a class="go" href="/how/#f12">12 · deterministic erase</a></div>
+  <div class="card"><h3>ce churn</h3><p>Change heat over a git window, per unit: how much of a file is being rewritten rather than added to.</p><a class="go" href="/how/#f07">07 · three-signal join</a></div>
+  <div class="card"><h3>ce join</h3><p>Churn, duplication and liveness folded into one verdict, so a hot, duplicated, dead corner names itself.</p><a class="go" href="/how/#f07">07 · three-signal join</a></div>
+  <div class="card"><h3>ce similar</h3><p>The same-role advisor: offline integer BM25 over the index's term bags, the core deciding which candidates play the query's role. Advice only.</p><a class="go" href="/how/#f15">15 · sparse retrieval</a></div>
+  <div class="card wide"><h3>ce query · ce rules</h3><p>Datalog over the index’s own facts, judged in the core, every answer with its derivation; written as assertions, architecture constraints make <code>ce rules</code> a gate that exits on the first violation.</p><a class="go" href="/how/analysis/#f16">16 · code query and architecture rules</a></div>
+  <div class="card"><h3>ce flow</h3><p>Dead code inside one function (unreached statements, unread stores and locals) on the core's control-flow graph; a verdict only where the language's blind precision exam passed, unused parameters always advice.</p><a class="go" href="/how/analysis/#f17">17 · intra-function dead code</a></div>
+  <div class="card"><h3>ce merge</h3><p>How a clone group folds into one function: differences become parameters; the core answers the parameter count, the member to keep, the lines saved, and feasible or why not. Advice only.</p><a class="go" href="/how/analysis/#f18">18 · clone merge suggestions</a></div>
+  <div class="card"><h3>ce arch</h3><p>How directories depend on each other: layers, the cheapest cycle cuts, file clusters and files outside their cluster's directory, fan-in, fan-out, instability, and what a change to a named file reaches. Advice only.</p><a class="go" href="/how/analysis/#f19">19 · architecture analysis</a></div>
+  <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes stopped as they are written, a write let through at ask recorded once it lands, audits at stop, health at session start.</p><a class="go" href="/how/#f11">11 · guard tier ladder</a></div>
 </div>
 
+<div class="eyebrow">Mathematics</div>
 <h2 id="math">The mathematics</h2>
-<p class="cap">Every verdict is integer or exact-rational arithmetic over measured facts, and every rule is cited to the line that implements it. One rule per row, each linked to its derivation.</p>
+<p class="cap">Integer or exact-rational arithmetic over measured facts; every rule cites its implementing line.</p>
 <div class="math">
 <div class="eq"><a class="eq-name" href="/math/#m-winnowing"><b>01</b>Winnowing</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre></div>
 <div class="eq"><a class="eq-name" href="/math/#m-ted"><b>02</b>Tree edit distance</a><pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre></div>
@@ -161,6 +137,7 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="more-link"><a href="/math/">All sixteen rules →</a></p>
 
+<div class="eyebrow">Performance</div>
 <!-- bench:begin -->
 <h2>Measured · v1.8.0</h2>
 <div class="installs">
@@ -172,31 +149,55 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="cap">Every number is produced by replay (cli/tests/it/bench.rs and bench_backfill.rs) from one source, contracts/bench/bench.json — never hand-filled.</p>
 <!-- bench:end -->
-<p><a href="/bench/">Complete evaluation dashboard →</a></p>
+<p class="more-link"><a href="/bench/">Complete evaluation dashboard →</a></p>
 
+<div class="eyebrow">Architecture</div>
 <h2>Under the hood</h2>
 <figure class="arch deep" id="architecture">
   <div class="stage"><img src="/assets/architecture.en.svg" width="1440" height="620" alt="Architecture: the repository is parsed and fingerprinted by the Rust measurement side (tree-sitter, the SQLite fingerprint index kept warm by a per-project daemon, the reference graph, git windows), crosses one NDJSON wire of sixteen families to the Haskell judgment core with its policy shipped as data, and the same reports are rendered by five faces (terminal, GUI, MCP server, Claude Code hooks, CI)" loading="lazy"></div>
   <figcaption>Measurement in Rust, judgment in Haskell: one wire, one report schema per family, five faces. Rendered from <code>docs/diagrams/architecture.en.json</code>; every component cites its source files. Open the <a href="/assets/architecture.en.svg">full-size SVG</a>.</figcaption>
 </figure>
-<p><a href="/stack/">Open the component-level stack and its enforcement map →</a></p>
+<p class="more-link"><a href="/stack/">The component-level stack and its enforcement map →</a></p>
+
+<div class="eyebrow">Get started</div>
+<h2 id="install">Install</h2>
+<div class="installs routes">
+  <div class="install"><span class="k">Installer</span>
+    <code><a href="https://github.com/skymanbp/CodeEraser/releases/latest">GitHub Releases</a>: GUI + CLI + judgment core, SHA256-pinned</code></div>
+  <div class="install"><span class="k">Homebrew</span>
+    <code>brew install skymanbp/codeeraser/codeeraser</code></div>
+  <div class="install"><span class="k">Cargo</span>
+    <code>cargo install codeeraser</code></div>
+  <div class="install"><span class="k">Claude Code</span>
+    <code>ce setup&nbsp;&nbsp;# by hand: /plugin marketplace add skymanbp/CodeEraser@release, then /plugin install codeeraser@codeeraser</code></div>
+  <div class="install"><span class="k">Update</span>
+    <code>ce update --yes</code></div>
+</div>
+
+<details class="more"><summary>Platforms and updating</summary><p class="cap">Five platforms: x86_64-windows · x86_64-linux · aarch64-macos · x86_64-macos · aarch64-linux. The Windows installer runs <code>ce setup</code>; AppImage and dmg users run it once. The Homebrew formula (macOS and Linux) comes from the same pins.</p>
+<p class="cap"><code>ce update</code> compares the latest tag with this build (exit 0 / 1 / 2); <code>--yes</code> swaps <code>ce</code> and <code>ce-core</code> only after both SHA256 pins verify, never a copy the plugin or cargo owns (they name their own update); <code>--installer</code> saves the verified GUI installer. The GUI has its own update screen; in Claude Code, <code>/codeeraser:update</code>.</p></details>
+
+<h2>Wire it in</h2>
+<div class="installs">
+  <div class="install"><span class="k">CI gate</span>
+    <code>ce check . --fail-under <!--ce:gate:floor.main#digits-->911<!--/ce-->&nbsp;&nbsp;# ratchet + floor; exit 1 turns the pipeline red</code></div>
+  <div class="install"><span class="k">pre-commit</span>
+    <code>ce precommit&nbsp;&nbsp;# staged net LOC + touched duplicates</code></div>
+  <div class="install"><span class="k">MCP</span>
+    <code>ce mcp&nbsp;&nbsp;# every report family as a read-only tool for any agent</code></div>
+</div>
 
 <h2>Trust anchor</h2>
-<p class="trust">All <!--ce:count:binaries#word-->fifteen<!--/ce--> release binaries (<!--ce:count:platforms#word-->five<!--/ce--> platforms × ce / ce-core, plus the <!--ce:count:installers#word-->five<!--/ce-->
-GUI installers) are pinned by SHA256 in <code>plugin/bin/manifest.env</code>;
-the tag phase verifies every pin, waits for a green CI on the tagged commit, and refuses
-an unexpected asset before anything publishes. <code>SHA256SUMS</code> covers the set for
-offline checking. Code signing is deliberately out of scope; the hash chain is the permanent
-anchor. This repository gates itself with its own tool on every commit.</p>
+<div class="trust"><p>All <!--ce:count:binaries#word-->fifteen<!--/ce--> release binaries (<!--ce:count:platforms#word-->five<!--/ce--> platforms × ce / ce-core, plus the <!--ce:count:installers#word-->five<!--/ce--> GUI installers) are SHA256-pinned in <code>plugin/bin/manifest.env</code>: the hash chain, not code signing, is the anchor (<a href="/stack/">how a release is cut</a>).</p></div>
 
 <footer class="site">
-  <p>Apache-2.0 · <a href="/how/">How it works</a> ·
-     <a href="/stack/">Stack</a> ·
-     <a href="/bench/">Benchmarks</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
-     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
-  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,
-     the license does not grant trademark rights. © 2026 skymanbp.</p>
+  <div class="cols">
+    <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>Measurement in Rust, judgment in Haskell, one ratcheted score. Apache-2.0.</p></div>
+    <nav aria-label="Product"><p class="k">Product</p><a href="/">Overview</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a><a href="/bench/">Benchmarks</a></nav>
+    <nav aria-label="Docs"><p class="k">Docs</p><a href="/how/">How it works</a><a href="/how/analysis/">Analysis track</a><a href="/math/">Math</a><a href="/stack/">Stack</a></nav>
+    <nav aria-label="Project"><p class="k">Project</p><a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a></nav>
+  </div>
+  <p class="legal">"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6, the license does not grant trademark rights. © 2026 skymanbp.</p>
 </footer>
 
 </div>
