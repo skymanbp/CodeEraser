@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=9">
-<link rel="stylesheet" href="/style.css?v=9">
+<link rel="stylesheet" href="/theme.css?v=10">
+<link rel="stylesheet" href="/style.css?v=10">
 <link rel="stylesheet" href="/viewer.css?v=2">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -85,12 +85,12 @@
   <p class="job">Finds exact and parameterized duplicate token runs: renamed variables and
   changed constants are clones, changed syntax is not.</p>
   <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Any common substring of at least <code>t</code> normalized tokens contains
+  <p class="note rule">Any common substring of at least <code>t</code> normalized tokens contains
   <code>t - k + 1 = w</code> consecutive k-grams (one complete window) and window
   selection depends only on that window's contents, so both copies select the same
   minimum. Hence at least one shared fingerprint, always: the Schleimer et al. SIGMOD'03
   no-miss lower bound as a correctness contract, not an estimate. The rolling hash is
-  Rabin-Karp, <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes.</p>
+  Rabin-Karp, <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
     <li><b>window</b> 26</li>
@@ -109,16 +109,16 @@
   <p class="job">Judges two units whose ASTs are structurally almost the same but whose
   token streams are not: reshaped and rewritten copies.</p>
   <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
-clone      ⇔ TSED &gt;= 0.85</pre>
-  <pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den &gt;= num * mx  where mx = max n1 n2</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1,
+clone      <span class="op">⇔</span> TSED <span class="op">&gt;=</span> 0.85</pre>
+  <pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre>
+  <p class="note rule"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1,
   relabel = 0 on matching kind codes, else 1) and is always integral, so the comparison
   is an exact cross-multiplication and the boundary is decidable in both directions: at
   <code>max = 100</code>, <code>ted 15</code> is a clone and <code>ted 16</code> is not.
   Two provably admissible O(1) prefilters cut pairs before any TED runs:
   <code>q · tsedDen &lt; tsedNum · max</code> for <code>q ∈ {min(n1,n2), I}</code>, where
   <code>I = Σ_label min(c1, c2)</code>, using the <em>same</em> 85/100 the judgment will,
-  which is exactly what makes them admissible. Since 1.8.0 the verified pairs ride
+  which is exactly what makes them admissible.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Since 1.8.0 the verified pairs ride
   <code>ce check</code>'s clone axis and <code>ce join</code>'s similarity leg as sim kind 1, and the
   core's verdict per tree pair is remembered in the index under the two trees' content keys,
   emptied whenever the core's proto or a knob changes.</p>
@@ -138,17 +138,17 @@ clone      ⇔ TSED &gt;= 0.85</pre>
   <h3 id="f03"><span class="n">03</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">Documentation duplication — shingling + MinHash/LSH</a></h3>
   <p class="job">Decides whether two blocks of documentation text (markdown paragraphs,
   HTML text, plain-text paragraphs, comment blocks, docstrings) are near-duplicates of each other.</p>
-  <pre>dupDecidesWith num den inter union  =  inter * den &gt;= num * union
+  <pre>dupDecidesWith num den inter union  =  inter * den <span class="op">&gt;=</span> num * union
 
 dupVerdictWith (num, den, vfloor) inter union run
-  =  dupDecidesWith num den inter union  ||  run &gt;= vfloor</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Bound in production to <code>(80, 100, 50)</code>: Jaccard at or above
+  =  dupDecidesWith num den inter union  <span class="op">||</span>  run <span class="op">&gt;=</span> vfloor</pre>
+  <p class="note rule">Bound in production to <code>(80, 100, 50)</code>: Jaccard at or above
   0.80, decided exactly in integers, <em>or</em> a verbatim run of at least 50 words. The
   core computes <code>inter</code> and <code>union</code> itself from the ascending
   deduped shingle sets; raw counts cross the wire, never a ratio, or "the re-check lives
   in Haskell" would be an empty claim. MinHash/LSH is only a coarse filter and is
   RNG-free: the permutation index is the salt. A run of <code>R</code> shingles spans
-  <code>R + k - 1</code> words.</p>
+  <code>R + k - 1</code> words.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>jaccardNum</b> 80</li>
     <li><b>jaccardDen</b> 100</li>
@@ -174,7 +174,7 @@ perMille r      = floor (r * 1000)</pre>
   <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = flagged dirs, N = dir total
 raw      = Σ_axes (charge_i * violCost)
 score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Shannon entropy and KL divergence need logarithms (irrational, therefore
+  <p class="note rule">Shannon entropy and KL divergence need logarithms (irrational, therefore
   not exactly decidable), so the family publishes the rational-closed members of the same
   families instead: Tsallis-2 diversity and the χ² f-divergence, all over
   <code>Data.Ratio</code>. A χ² with observed mass on a zero-reference bin returns
@@ -183,7 +183,7 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
   through the verdict family's density law into ‰ of scale, so the axis rows carry charges,
   not counts, folded through <code>structViolCostNeutral = 10</code>;
   <code>judgedAxisCount</code> is 5 to 8
-  depending on which optional fact tables rode the wire.</p>
+  depending on which optional fact tables rode the wire.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>violCost</b> 10</li>
     <li><b>scale</b> 1000</li>
@@ -220,9 +220,9 @@ r = median( max(x/m, m/x) )                    -- &gt;= 1 by construction
 S = clamp(floor(m * r^k), [softMin, softMax])</pre>
   <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
 
-added   = current \ baseline        -- non-empty =&gt; fail
+added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Axis 0 is the only axis that is not a count: a convex penalty on file
+  <p class="note rule">Axis 0 is the only axis that is not a count: a convex penalty on file
   size, exact <code>Rational</code>, monotone past the hard line. <code>pMax</code> is the
   value <em>at</em> <code>H</code>, not a ceiling. The soft line <code>S</code> is a
   statistic of the repository's own frozen LOC distribution, the identity
@@ -231,7 +231,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   fail bit is a disjunction of <!--ce:count:fail_conditions#word-->six<!--/ce--> <em>named</em> conditions:
   <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>,
   <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>. The reply carries the
-  list of names that held; the console prints them after <code>FAIL</code> in that order.</p>
+  list of names that held; the console prints them after <code>FAIL</code> in that order.</p><details class="more"><summary>Derivation and constants</summary>
   <p class="note">Since the rulepack (proto 3.1.0) a continuous row may carry a fourth column, the file's <em>path class</em>:
   the 1-based index of the first <code>[[rules.class]]</code>
   whose globs match, <code>0</code> for none. Beside it rides an additive <code>classKnobs</code> table
@@ -275,17 +275,17 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
   <pre>public     = testBit flags 0
-referenced = indeg &gt;= 1 over kept arcs
-judged     = i ∉ reach
+referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
+judged     = i <span class="op">∉</span> reach
 code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes, structurally separated so an exported-but-unreferenced API
+  <p class="note rule"><!--ce:count:deadcode_codes#Word-->Four<!--/ce--> codes, structurally separated so an exported-but-unreferenced API
   can never collapse into plain dead: <code>1 unref_private</code>,
   <code>2 unref_public</code>, <code>3 unreach_private</code>, <code>4 unreach_public</code>.
   Resolution never guesses: a site walks its language's rungs in order and the first rung
   producing <em>exactly one</em> in-scope candidate wins; more than one is
   <code>Unresolved</code>, and <code>External</code> is a correct terminal answer, not a
   miss. Cycles are reported, never judged; a cyclic island with no entry seed is dead by
-  reachability alone. The kind column is the formula's second filter, not baggage:
+  reachability alone.</p><details class="more"><summary>Derivation and constants</summary><p class="note">The kind column is the formula's second filter, not baggage:
   <code>inert</code> = {3 asset, 5 unused ref-def}, because an image link renders bytes and an unused
   reference definition renders nothing, neither counts as a reference, and the exclusion is
   executed by the core itself. Since proto 2.32.0 each dead row carries a confidence column judged from
@@ -319,14 +319,14 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
   <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
 (2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
 (3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
-  <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen &gt;= total * rewriteNum
-cochangeHot = cochange &gt;= cochangeFloor
+  <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen <span class="op">&gt;=</span> total * rewriteNum
+cochangeHot = cochange <span class="op">&gt;=</span> cochangeFloor
 legsMask    = legSim .|. (if graphBoth then legGraph else 0) .|. legChurn</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Priority is <em>data</em>, not guard order: the first row whose required
+  <p class="note rule">Priority is <em>data</em>, not guard order: the first row whose required
   bits all hold and whose forbidden bits all stay clear wins, else code 0. Making the
   order data is what lets the property battery falsify it by rotating the table. Every
   gating row requires the graph bit, so a mask of 5 (graph leg absent) can only carry code
-  0; a missing graph leg refuses to gate rather than pretending indegree 0. Since
+  0; a missing graph leg refuses to gate rather than pretending indegree 0.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Since
   proto 2.33.0 every candidate row carries a leg-agreement <em>confidence</em> (how many
   present legs contributed a held condition), and the table's severity face ships once
   as <code>joinSeverity</code>; <code>ce join</code> judges its pairs over the SAME
@@ -357,15 +357,15 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + crossChurn(u)     * roiChurnMilli
                 + roiPhiMilli
 
-viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without division</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Benefit is the graded-zone penalty a split gives back, computed on the
+viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
+  <p class="note rule">Benefit is the graded-zone penalty a split gives back, computed on the
   <em>same</em> convex curve the verdict family judges with, imported rather than
   re-derived; because <code>p</code> is convex with <code>p(0) = 0</code> it is
   superadditive, so the bracket is non-negative. Best-seam selection is the exact rational
   argmax over ROI, compared by cross-multiplied <code>b % c</code>. A file with
   <code>n</code> top-level units yields <code>n - 1</code> seams. Long-and-cohesive
   becomes an exemption <em>with numbers attached</em>; long-and-splittable gets a cut
-  line.</p>
+  line.</p><details class="more"><summary>Derivation and constants</summary>
   <ul class="consts">
     <li><b>seamSoft S</b> 300</li>
     <li><b>seamHard H</b> 750</li>
@@ -385,12 +385,12 @@ viable          ⇔ b &gt;= c            -- ROI &gt;= 1, evaluated without divis
   <p class="job">Reduces every supervised edit to four integer counts per file pair:
   matched, novel, moved, deleted. That makes "this update was stacked, not applied" a
   measurement.</p>
-  <pre>siteOpens s n  =  n * movedCost + s  &lt;  n * plainCost
+  <pre>siteOpens s n  =  n * movedCost + s  <span class="op">&lt;</span>  n * plainCost
 
 destFloor      =  least n with siteOpens siteCostCross n   =  2</pre>
-  <pre>accepted   = isStart &amp;&amp; distinctEvidence &gt;= destFloor &amp;&amp; anchored
+  <pre>accepted   = isStart &amp;&amp; distinctEvidence <span class="op">&gt;=</span> destFloor &amp;&amp; anchored
 anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">The cross-file evidence floor is <em>derived</em>, not tuned:
+  <p class="note rule">The cross-file evidence floor is <em>derived</em>, not tuned:
   <code>siteCostCross = 2</code> makes a single cross line a tie
   (<code>1*1 + 2 = 3 = 1*3</code>), ties do not open, so <code>destFloor</code> evaluates
   to 2, and that tie <em>is</em> the coincidence rejection. Only
@@ -398,7 +398,7 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
   ablation the invented station's widest anchor measured 16 alnum characters and the
   thinnest real anchor 19, so 19 is the top of the window that kills every measured
   coincidence while keeping every measured real site. The L2 delta is monotone in one
-  direction only: plain lines may become moved, never the reverse. Since proto 7.1.0 a
+  direction only: plain lines may become moved, never the reverse.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Since proto 7.1.0 a
   second, coarser stage rides beside the line delta: paired <code>declRem</code> /
   <code>declAdd</code> tables of declaration keys that vanish on one side and appear on
   exactly one other, accepted when the two spans share at least <code>declFloor = 1</code>
@@ -429,15 +429,15 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
 y_i   = (score_i * 1000000) % scale_i
 
 slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre>
-  <pre>slope &lt; -band  → 2  (degrading)
-slope &gt;  band  → 0  (improving)
+  <pre>slope <span class="op">&lt;</span> -band  → 2  (degrading)
+slope <span class="op">&gt;</span>  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note"><code>%</code> here is <code>Data.Ratio</code>'s exact-ratio
+  <p class="note rule"><code>%</code> here is <code>Data.Ratio</code>'s exact-ratio
   constructor, not modulo; <code>y</code> renormalizes every commit onto a fixed 10⁶
   full-scale grid so rows measured under different <code>scoreScale</code> values are
   commensurable. The slope is the median of pairwise slopes (trend/2): one wild point,
   a broken commit that still measured, drags a least-squares mean anywhere and cannot
-  move the median past its neighbors. Row order is deliberately unconstrained: the
+  move the median past its neighbors.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Row order is deliberately unconstrained: the
   judged view sorts by timestamp and caps at the tsWindow most recent points, so rebased
   commits are legal input. The steepest single-step fall ships as <code>cliff</code> and
   the longest strictly-falling run as <code>declineRun</code>, each naming its commit by
@@ -464,6 +464,13 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
   exact arithmetic, and a rule class may only enforce once it has paid for the right.</p>
   <pre>TIERS = ["observe", "warn", "ask", "deny"]
 PROMOTED_DEFAULT = "deny"</pre>
+  <pre>cap      = lines_for(file).file_lines_fail     // the file's class table; 750 for class 0
+breach   <span class="op">⇔</span> cap != 0 &amp;&amp; lines <span class="op">&gt;</span> cap
+
+permille = (lines - S) * 1000 / (H - S)
+0   ..= 249  →  observe
+250 ..= 750  →  warn
+751 ..       →  ask</pre>
   <details class="more"><summary>Derivation and constants</summary><div class="tablewrap">
   <table class="ladder">
     <thead><tr><th>tier</th><th>permissionDecision</th><th>effect</th></tr></thead>
@@ -520,13 +527,6 @@ PROMOTED_DEFAULT = "deny"</pre>
   write-first mid-states. Both readings live in FPR-REPLAY.md. The 35 self-repo blocks
   arbitrated as true positives and were remediated, stepping the clone-block budget
   251 → 211 → 209 → 205 → 202 in lockstep.</p>
-  <pre>cap      = lines_for(file).file_lines_fail     // the file's class table; 750 for class 0
-breach   ⇔ cap != 0 &amp;&amp; lines &gt; cap
-
-permille = (lines - S) * 1000 / (H - S)
-0   ..= 249  →  observe
-250 ..= 750  →  warn
-751 ..       →  ask</pre>
   <p class="note">The graded zone reads its <code>S</code> fallback and its <code>H</code> off the
   same per-file table as the hard budget. The map is the same discipline applied to itself:
   <code>[guard] zone_tiers</code> is <strong>off by default</strong>, so the zone rule is
@@ -562,13 +562,13 @@ permille = (lines - S) * 1000 / (H - S)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
          6 public_surface (6.1.0)</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Rust assembles integer facts from the three source families;
+  <p class="note rule">Rust assembles integer facts from the three source families;
   Haskell applies the fixed first-failure predicate. Since proto 2.32.0 the dead-file
   family rides class 3, whose trust fact is the graph family's own per-row
   confidence; since proto 6.1.0 a public dead verdict (2 unref_public or 4
   unreach_public) is refused as public_surface <em>before</em> that confidence
   is weighed, so an exported API is never eraseable however well vouched, and
-  only then does an unvouched confidence refuse the row. Class 0, the same
+  only then does an unvouched confidence refuse the row.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Class 0, the same
   family on the local-count road, retired at proto 4.0.0 when its grace window
   closed: the position stays frozen and the core refuses it by name. A degraded
   over-cap reply authorizes nothing, and the safety surface has no knobs.</p>
@@ -589,7 +589,7 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
   <pre>veto  = another file spells it | fold (Rust, ≥2 segments ∧ ≥7 chars)
         | the file's own exception regions spell it
 row   = [node, vis, conv]      (integers only — a name never rides the wire)
-emit  ⇔ vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
+emit  <span class="op">⇔</span> vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
 code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   <details class="more"><summary>Derivation and constants</summary><p class="note">U is a walk of its own: hidden files enter, <code>.git</code>/<code>.ce</code>
   are cut by name, an <em>undeclared</em> nested repository is cut whole while a path the root's
@@ -635,8 +635,8 @@ edit, one session or one commit wrote, at the PreToolUse hook, at the Stop audit
   <code>without_x</code>, a sentence <code>X is no longer needed</code>.</p>
   <pre>R     = ⋃ names(before) \ ⋃ alive(after)      (structural positions only; keys, never text)
 row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
-site  ⇔ names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
-over  ⇔ budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
+site  <span class="op">⇔</span> names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
+over  <span class="op">⇔</span> budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
   <details class="more"><summary>Derivation and constants</summary><p class="note">A name is what a text <em>declares</em>: an identifier outside comments and literals, a
   unit name, a heading, a list lead; an inline code span only mentions, and keeps a name alive.
   Rust reads the two surfaces the change added (new headings, unit names and file stems; the
@@ -678,7 +678,7 @@ retrieval over the index's own facts, judged as advice at <code>ce similar</code
   <pre>bag    = six channels N P C D S L        (facts the parse already carries; hashes, never words)
 score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
 widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
-role   ⇔ (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
+role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
   <details class="more"><summary>Derivation and constants</summary><p class="note">Every unit of the T3 universe gets one bag: name pieces, shape, callee spellings, its own
   doc segment, the node-kind histogram and literal <em>kinds</em>, each word stemmed and hashed with its
   channel letter, so a shared name and a shared callee are different evidence. The bags persist as two

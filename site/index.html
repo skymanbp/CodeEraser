@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=9">
-<link rel="stylesheet" href="/style.css?v=9">
+<link rel="stylesheet" href="/theme.css?v=10">
+<link rel="stylesheet" href="/style.css?v=10">
 <link rel="stylesheet" href="/viewer.css?v=2">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -149,6 +149,39 @@ note: 10 blocks collapsed into existing members, 306 intra-file pairs off the si
   <div class="card"><h3>ce merge</h3><p>How a clone group would fold into one function: the places its members differ become parameters, and the core answers the parameter count, the member worth keeping, the lines saved, and feasible or why not.</p><details class="more"><summary>More</summary><p>Advice only, never a gate.</p></details></div>
   <div class="card"><h3>ce arch</h3><p>How the directories depend on each other: the layers, the cheapest arcs to cut out of their cycles, the file clusters and the files outside their cluster's directory, each directory's fan-in, fan-out and instability, and what a change to a named file reaches.</p><details class="more"><summary>More</summary><p>Advice only, never a gate.</p></details></div>
   <div class="card band"><h3>Guard hooks</h3><p>As a Claude Code plugin: duplicate writes intercepted at the moment of writing, a write you let through at ask recorded once it lands, audits at stop, health at session start.</p></div>
+</div>
+
+<h2 id="math">The mathematics</h2>
+<p class="cap">Every verdict is integer or exact-rational arithmetic over measured facts, and every rule is cited to the line that implements it. One rule per row, each linked to its derivation.</p>
+<div class="math">
+<div class="eq"><a class="eq-name" href="/how/#f01"><b>01</b>Winnowing</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre><p>Any common run of at least <code>t</code> normalized tokens yields at least one shared fingerprint: the Schleimer et al. SIGMOD'03 no-miss bound, held as a correctness contract.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f02"><b>02</b>Tree edit distance</a><pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
+cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre><p>Zhang-Shasha edit distance is always integral, so a near-miss clone at TSED ≥ 0.85 is decided by exact cross-multiplication.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f03"><b>03</b>Jaccard over shingles</a><pre>dupDecidesWith num den inter union  =  inter * den <span class="op">&gt;=</span> num * union</pre><p>Two documentation blocks are duplicates at Jaccard ≥ 0.80 over five-word shingles, or on a verbatim run of 50 words; MinHash/LSH only proposes the pairs.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f04"><b>04</b>Tsallis-2 and χ²</a><pre>tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr</pre><p>Directory diversity and layout divergence in exact rationals: the log-free members of the entropy and KL families, so every boundary is decidable.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f04"><b>04</b>Newman modularity</a><pre>rho = q / qMax = (e*m − o*i) / (mu*(m − mu))</pre><p>Each directory's modularity contribution as a share of the most it could earn: 1000‰ when it never reaches out, 0 at the null model's expectation.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f05"><b>05</b>The score and the ratchet</a><pre>score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
+tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail</pre><p>The axes fold into one 0–1000 score under a convex size penalty; each file's ceiling only shrinks, and growth past max(+2 %, +10) fails the gate.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f05"><b>05</b>Cognitive complexity</a><pre><span class="op">+1</span> for each method in a recursion cycle, whether direct or indirect</pre><p>SonarSource's cognitive complexity with the recursion increment of S3776 Appendix B1, which SonarSource's own analysers leave out: the core finds the call cycles and every member pays once.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f06"><b>06</b>Liveness</a><pre>reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
+judged     = i <span class="op">∉</span> reach</pre><p>A file nothing live reaches is dead; cycles are found once, by Tarjan's strongly connected components, and reported, never judged.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f08"><b>08</b>Split ROI</a><pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
+viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre><p>The penalty curve is convex with p(0) = 0, hence superadditive: a seam's benefit is never negative, and it is priced against what the cut costs.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f10"><b>10</b>Theil-Sen slope</a><pre>slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre><p>The trend is the median of pairwise slopes: one wild commit cannot move it past its neighbours.</p></div>
+<div class="eq"><a class="eq-name" href="/how/#f15"><b>15</b>Integer BM25 and PPMI</a><pre>score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
+PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre><p>Integer BM25 with k1 = 6/5 and b = 3/4 ranks the units most like one unit; in-repository PPMI may widen a query, as advice only.</p></div>
+<div class="eq"><a class="eq-name" href="/how/analysis/#f16"><b>16</b>Stratified Datalog</a><pre>dead(F) :- file(F), <span class="op">not</span> reach(F).
+strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
+eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre><p>Datalog evaluated semi-naively, one stratum at a time, over the index's own facts; every answer carries the derivation that produced it.</p></div>
+<div class="eq"><a class="eq-name" href="/how/analysis/#f17"><b>17</b>Reachability and liveness</a><pre>kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
+kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)</pre><p>Reachability over each function's control-flow graph, and backward liveness over its variables.</p></div>
+<div class="eq"><a class="eq-name" href="/how/analysis/#f18"><b>18</b>Clone merge</a><pre>align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
+params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">&gt;</span> 0</pre><p>Where the members of a clone group differ becomes a hole, and each distinct value vector a parameter: at most six, and only when a line is saved.</p></div>
+<div class="eq"><a class="eq-name" href="/how/analysis/#f19"><b>19</b>Layers and cuts</a><pre>cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
+layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
+metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre><p>Directories ordered into layers once the cheapest arcs are cut out of their cycles, with each directory's instability in integer per-mille.</p></div>
 </div>
 
 <!-- bench:begin -->

@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=9">
-<link rel="stylesheet" href="/style.css?v=9">
+<link rel="stylesheet" href="/theme.css?v=10">
+<link rel="stylesheet" href="/style.css?v=10">
 </head>
 <body>
 <div class="wrap">
@@ -74,7 +74,7 @@ the wire between them.</p>
   <pre>clause := atom ':-' body '.'  |  '?-' body '.'  |  'assert' atom ':-' body '.'
 lit    := atom | 'not' atom | expr op expr | Var '=' expr | Var '=' agg(Vars : body)
 prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
-         dead(F) :- file(F), not reach(F).   depends · same_dir · dir_ref
+         dead(F) :- file(F), <span class="op">not</span> reach(F).   depends · same_dir · dir_ref
 strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
 eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
   <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side lexes the text into a <code>[kind, value]</code> token stream, assembles only the
@@ -144,7 +144,7 @@ skip   : a unit with a dynamic statement is not judged in part, and counted</pre
   <pre>groups : T1/T2 dedup families (whole units when one unit fills ≥ 9/10 of each member, else fragments trimmed to the members' common shape) · T3 judged pairs
 trees  : clone/1's postorder (lab, lld), extras (comments) left out, + leaf = fnv1a64 of a leaf's bytes (0 inside) + slot 0 stmt · 1 expr · 2 type · 3 name · 4 other
 align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
-params : one per distinct value vector; feasible iff every hole is an expression or a name, params ≤ 6 and savings > 0
+params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">></span> 0
 reason : 3 a gap across statements, 1 position (a statement or other), 2 a type position, 4 more than six parameters, 5 no line saved
 kept   : the member whose file has the greatest in-degree; savings = Σ lines − (skeleton lines + members × 1), a fragment's lines its kept run's</pre>
   <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side gathers the groups, builds each member's tree in <code>clone/1</code>'s
@@ -180,7 +180,7 @@ cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), e
 layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
 cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
 impact : breadth-first over the references read backwards, the focus at depth 0
-metrics: fanIn, fanOut, instability = ⌊1000 · out ÷ (in + out)⌋, −1 when nothing touches the directory</pre>
+metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre>
   <details class="more"><summary>Derivation and constants</summary><p class="note">The measuring side sends five integer tables — the measured files with their directory
   and line count, the directory tree, the file-to-file references, the file-to-package references at
   the package's directory, and the <code>--impact</code> files — and labels the answer back: every cut

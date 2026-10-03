@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=9">
-<link rel="stylesheet" href="/style.css?v=9">
+<link rel="stylesheet" href="/theme.css?v=10">
+<link rel="stylesheet" href="/style.css?v=10">
 <link rel="stylesheet" href="/viewer.css?v=2">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -56,6 +56,15 @@
   <figcaption>组件地图。每个框都对应 <code>cli/</code>、<code>core/</code>、
   <code>gui/</code>、<code>plugin/</code>、<code>contracts/</code> 或发布工作流中的实现边界。打开<a href="/assets/stack.zh.svg">原尺寸 SVG</a>。</figcaption>
 </figure>
+
+<h2 id="math">数学在哪一层</h2>
+<dl class="layers">
+  <dt>Rust · 度量</dt><dd>滚动哈希是 Rabin-Karp，<code>h = (h - t[i-k]*top)*BASE + t[i]</code>，跑在 FNV-1a 叶子哈希之上。</dd>
+  <dt>wire</dt><dd>过 wire 的是原始计数、绝不是比值，否则「复核发生在 Haskell」就是一句空话。</dd>
+  <dt>Haskell · 判决</dt><dd>证据与判决之间没有任何采样温度，判决层里没有浮点数，回路里没有模型。</dd>
+  <dt>产品面</dt><dd>同一棵树在任何机器、任何时刻都产出同样的字节；因此关于代码健康度的分歧靠重跑那个数、读它指向的 <code>file:line</code> 来收场。</dd>
+  <dt>发布</dt><dd><code>release.yml</code> 先为 draft 工件计哈希，再由提交的 pins 绑定这些字节。</dd>
+</dl>
 
 <h2>靠什么守住诚实</h2>
 <div class="grid">

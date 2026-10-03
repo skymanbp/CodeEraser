@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=9">
-<link rel="stylesheet" href="/style.css?v=9">
+<link rel="stylesheet" href="/theme.css?v=10">
+<link rel="stylesheet" href="/style.css?v=10">
 <link rel="stylesheet" href="/viewer.css?v=2">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -60,6 +60,15 @@
   <code>cli/</code>, <code>core/</code>, <code>gui/</code>, <code>plugin/</code>,
   <code>contracts/</code>, or the release workflows. Open the <a href="/assets/stack.svg">full-size SVG</a>.</figcaption>
 </figure>
+
+<h2 id="math">Where the mathematics lives</h2>
+<dl class="layers">
+  <dt>Rust · measurement</dt><dd>The rolling hash is Rabin-Karp, <code>h = (h - t[i-k]*top)*BASE + t[i]</code>, over FNV-1a leaf hashes.</dd>
+  <dt>Wire</dt><dd>Raw counts cross the wire, never a ratio, or “the re-check lives in Haskell” would be an empty claim.</dd>
+  <dt>Haskell · judgment</dt><dd>There is no sampling temperature anywhere between the evidence and the verdict, no floating point in the judgment layer, and no model in the loop.</dd>
+  <dt>Faces</dt><dd>The same tree yields the same bytes on any machine at any hour, so a disagreement about code health is settled by re-running the number and reading the <code>file:line</code> it points at.</dd>
+  <dt>Release</dt><dd><code>release.yml</code> hashes draft assets, then committed pins bind those bytes.</dd>
+</dl>
 
 <h2>What holds it honest</h2>
 <div class="grid">

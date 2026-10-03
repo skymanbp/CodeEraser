@@ -145,12 +145,32 @@ p + p { margin-top: 12px; }
 .fam .job { font-size: 1rem; color: var(--text); margin: 10px 0 16px; max-width: var(--measure); }
 .fam .note { font-size: 0.95rem; line-height: 1.75; }
 :lang(zh) .fam .note { line-height: 1.9; }
-.fam pre {
+/* One formula voice on every page: mono on the well, the deciding
+   operator (span.op) in the accent. A rule note sits beside its formula
+   unfolded; the home page's rows wrap a long rule at its spaces. */
+.fam pre, .eq pre {
   background: var(--well); border: 1px solid var(--panel-edge); border-radius: 8px;
   padding: 14px 16px; overflow-x: auto;
   font-family: var(--mono); font-size: 0.82rem; line-height: 1.7; color: var(--text);
 }
 .fam pre + pre { margin-top: 8px; }
+pre .op { color: var(--accent); font-weight: 600; }
+.fam .note.rule { color: var(--text); border-left: 2px solid var(--accent-edge); padding-left: 14px; margin-top: 14px; }
+.fam .note.rule::before { content: "Rule"; display: block; font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+:lang(zh) .fam .note.rule::before { content: "规则"; letter-spacing: 0.02em; }
+.math { display: grid; gap: 10px; }
+.eq {
+  display: grid; grid-template-columns: 12.5rem minmax(0, 1fr); gap: 8px 24px; align-items: start;
+  background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 18px 22px; box-shadow: var(--shadow);
+}
+.eq-name { grid-row: span 2; font-weight: 600; color: var(--paper); line-height: 1.45; }
+.eq-name b { display: block; font-family: var(--mono); color: var(--accent); }
+.eq pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px 14px; }
+.eq p { font-size: var(--fs-sm); color: var(--muted); max-width: var(--measure); }
+/* the stack page: one line per layer, what mathematics lives there */
+dl.layers { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 12px 24px; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 20px 24px; box-shadow: var(--shadow); }
+dl.layers dt { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--accent); padding-top: 3px; }
+dl.layers dd { max-width: var(--measure); }
 ul.consts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--s-2); list-style: none; }
 ul.consts li {
   font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
@@ -230,6 +250,9 @@ footer.site p + p { margin-top: 8px; }
   .card.band { grid-column: auto; padding: 22px; }
   .install { row-gap: 2px; }
   .fam { padding: 20px 18px; }
+  .eq, dl.layers { grid-template-columns: minmax(0, 1fr); padding: 16px 18px; }
+  .eq-name { grid-row: auto; }
+  dl.layers dd { margin-bottom: 6px; }
   /* Under this width the scoreboard's three columns cannot fit: the
      label wrapped to five lines and the "with" column — the one the
      reader came for — sat off the right edge. So each row stacks, and
