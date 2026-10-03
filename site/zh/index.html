@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=10">
-<link rel="stylesheet" href="/style.css?v=10">
+<link rel="stylesheet" href="/theme.css?v=11">
+<link rel="stylesheet" href="/style.css?v=11">
 <link rel="stylesheet" href="/viewer.css?v=2">
 <script src="/viewer.js?v=1" defer></script>
 </head>
@@ -33,10 +33,10 @@
   <span class="name">CodeEraser</span>
   <nav>
     <a href="/zh/how/">原理</a>
+    <a href="/zh/math/">数学</a>
     <a href="/zh/stack/">技术栈</a>
     <a href="/zh/bench/">实测</a>
     <a href="/">English</a>
-    <a href="https://github.com/skymanbp/CodeEraser">GitHub</a>
     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">下载</a>
   </nav>
 </header>
@@ -152,35 +152,12 @@
 <h2 id="math">数学</h2>
 <p class="cap">每条判决都是对实测事实的整数或精确有理数算术，每条规则都追溯到实现它的源码行。下面每行一条规则，各自链到推导。</p>
 <div class="math">
-<div class="eq"><a class="eq-name" href="/zh/how/#f01"><b>01</b>窗口取指纹</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre><p>任何长度至少为 <code>t</code> 的归一化公共 token 串都必然共享至少一个指纹：Schleimer 等人 SIGMOD'03 的 no-miss 下界，作为正确性契约。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f02"><b>02</b>树编辑距离</a><pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
-cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre><p>Zhang-Shasha 编辑距离恒为整数，故 TSED ≥ 0.85 的近似克隆由精确的交叉相乘判定。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f03"><b>03</b>shingle 上的 Jaccard</a><pre>dupDecidesWith num den inter union  =  inter * den <span class="op">&gt;=</span> num * union</pre><p>两段文档在 5 词 shingle 上 Jaccard ≥ 0.80、或存在 50 词逐字连续段即判重复；MinHash/LSH 只负责提名候选对。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f04"><b>04</b>Tsallis-2 与 χ²</a><pre>tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
-chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr</pre><p>目录多样性与布局散度全程用精确有理数：熵族与 KL 族里不取对数的成员，因而每条边界都可判定。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f04"><b>04</b>Newman 模块度</a><pre>rho = q / qMax = (e*m − o*i) / (mu*(m − mu))</pre><p>每个目录的模块度贡献除以它最多能挣到的份额：从不外引为 1000‰，恰在零模型期望处为 0。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f05"><b>05</b>分数与棘轮</a><pre>score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
-tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
-added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail</pre><p>各判轴在凸的尺寸罚分下折成一个 0–1000 分；每个文件的上限只缩不涨，增长超过 max(+2 %, +10) 即判负。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f05"><b>05</b>认知复杂度</a><pre><span class="op">+1</span> for each method in a recursion cycle, whether direct or indirect</pre><p>SonarSource 的认知复杂度，连同其自家分析器没有实现的 S3776 附录 B1 递归增量：调用环由核找出，每个环成员各加一次。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f06"><b>06</b>可达性</a><pre>reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
-judged     = i <span class="op">∉</span> reach</pre><p>活的入口都到不了的文件即死；环由 Tarjan 强连通分量只找一次，只报不判。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f08"><b>08</b>拆分 ROI</a><pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
-viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre><p>罚分曲线是凸的且 p(0) = 0，故超可加：一条缝的收益从不为负，再与切割的代价比较。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f10"><b>10</b>Theil-Sen 斜率</a><pre>slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre><p>趋势取成对斜率的中位数：一个野点提交拽不动它半步。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/#f15"><b>15</b>整数 BM25 与 PPMI</a><pre>score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
-PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre><p>整数 BM25（k1 = 6/5、b = 3/4）为一个单元排出最像它的单元；仓内 PPMI 可以拓宽查询，只作建议。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/analysis/#f16"><b>16</b>分层 Datalog</a><pre>dead(F) :- file(F), <span class="op">not</span> reach(F).
-strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
-eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre><p>在索引自身的事实上逐层半朴素求值的 Datalog；每个答案都带着推出它的那棵推导树。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/analysis/#f17"><b>17</b>可达性与活跃性</a><pre>kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
-kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)</pre><p>在每个函数的控制流图上求可达，在它的变量上做逆向活跃性分析。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/analysis/#f18"><b>18</b>克隆合并</a><pre>align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
-params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">&gt;</span> 0</pre><p>克隆组成员的差异处成为洞，每个不同的取值向量对应一个参数：至多 6 个，且确有省行才可行。</p></div>
-<div class="eq"><a class="eq-name" href="/zh/how/analysis/#f19"><b>19</b>分层与切割</a><pre>cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
-layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
-metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre><p>最便宜的弧从环里切掉之后，目录排成层；每个目录的不稳定度以整数千分数给出。</p></div>
+<div class="eq"><a class="eq-name" href="/zh/math/#m-winnowing"><b>01</b>窗口取指纹</a><pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre></div>
+<div class="eq"><a class="eq-name" href="/zh/math/#m-ted"><b>02</b>树编辑距离</a><pre>cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre></div>
+<div class="eq"><a class="eq-name" href="/zh/math/#m-score"><b>05</b>分数与棘轮</a><pre>score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
+tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
+<p class="more-link"><a href="/zh/math/">全部十六条规则 →</a></p>
 
 <!-- bench:begin -->
 <h2>实测 · v1.8.0</h2>

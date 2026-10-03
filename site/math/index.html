@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The mathematics of CodeEraser</title>
+<meta name="description" content="Every rule CodeEraser judges with, in one place: winnowing, tree edit distance, Jaccard, Tsallis-2 and χ², Newman modularity, the score and the ratchet, Theil-Sen, BM25, Datalog and the flow graph, each linked to its derivation.">
+<meta name="theme-color" content="#0c0f16">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://codeeraser.dev/math/">
+<meta property="og:title" content="The mathematics of CodeEraser">
+<meta property="og:description" content="The formulas behind every verdict: integer and exact-rational arithmetic over measured facts, each rule cited to its implementing line.">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/math/">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/math/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css?v=11">
+<link rel="stylesheet" href="/style.css?v=11">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <a class="home" href="/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
+  <nav>
+    <a href="/">Overview</a>
+    <a href="/how/">How it works</a>
+    <a href="/stack/">Stack</a>
+    <a href="/bench/">Benchmarks</a>
+    <a href="/zh/math/">中文</a>
+  </nav>
+</header>
+
+<section class="lede">
+  <h1>The mathematics</h1>
+  <p>Every verdict is integer or exact-rational arithmetic over measured facts, and every rule is cited to the line that implements it.</p>
+  <p>Each entry below gives the rule, what it decides, the guarantee behind it where one is written down and the constants in play, and links to its derivation on the how pages and to the methodology booklet that cites the implementing line.</p>
+  <nav class="toc" aria-label="Sections">
+    <p class="k">On this page</p>
+    <div class="row"><a class="sec" href="#duplication">Duplication</a><ul><li><a href="#m-winnowing">Winnowing</a></li><li><a href="#m-ted">Tree edit distance</a></li><li><a href="#m-jaccard">Jaccard over shingles</a></li><li><a href="#m-merge">Clone merge</a></li></ul></div>
+    <div class="row"><a class="sec" href="#structure">Structure</a><ul><li><a href="#m-tsallis">Tsallis-2 and χ²</a></li><li><a href="#m-modularity">Newman modularity</a></li><li><a href="#m-layers">Layers and cuts</a></li></ul></div>
+    <div class="row"><a class="sec" href="#score">Score and trend</a><ul><li><a href="#m-score">The score</a></li><li><a href="#m-ratchet">The ratchet</a></li><li><a href="#m-recursion">Cognitive complexity</a></li><li><a href="#m-roi">Split ROI</a></li><li><a href="#m-theilsen">Theil-Sen slope</a></li></ul></div>
+    <div class="row"><a class="sec" href="#graph">Graph and logic</a><ul><li><a href="#m-liveness">Liveness</a></li><li><a href="#m-flow">Reachability and liveness</a></li><li><a href="#m-datalog">Stratified Datalog</a></li><li><a href="#m-bm25">Integer BM25 and PPMI</a></li></ul></div>
+  </nav>
+</section>
+
+<h2 id="duplication">Duplication</h2>
+
+<div class="fam">
+  <h3 id="m-winnowing"><span class="n">01</span>Winnowing</h3>
+  <p class="job">Any common run of at least <code>t</code> normalized tokens yields at least one shared fingerprint: the Schleimer et al. SIGMOD'03 no-miss bound, held as a correctness contract.</p>
+  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
+  <p class="note rule">Any common substring of at least <code>t</code> normalized tokens contains <code>t - k + 1 = w</code> consecutive k-grams (one complete window) and window selection depends only on that window's contents, so both copies select the same minimum.</p>
+  <ul class="consts">
+    <li><b>kgram</b> 25</li>
+    <li><b>window</b> 26</li>
+    <li><b>guarantee t</b> 50</li>
+    <li><b>BASE</b> 1_000_003</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f01">how it works · 01</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">booklet 01</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-ted"><span class="n">02</span>Tree edit distance</h3>
+  <p class="job">Zhang-Shasha edit distance is always integral, so a near-miss clone at TSED ≥ 0.85 is decided by exact cross-multiplication.</p>
+  <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
+clone      <span class="op">⇔</span> TSED <span class="op">&gt;=</span> 0.85
+cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre>
+  <p class="note rule"><code>ted</code> is Zhang-Shasha with unit costs (delete = insert = 1, relabel = 0 on matching kind codes, else 1) and is always integral, so the comparison is an exact cross-multiplication and the boundary is decidable in both directions: at <code>max = 100</code>, <code>ted 15</code> is a clone and <code>ted 16</code> is not.</p>
+  <ul class="consts">
+    <li><b>tsedNum</b> 85</li>
+    <li><b>tsedDen</b> 100</li>
+    <li><b>T3_MIN_NODES</b> 24</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f02">how it works · 02</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">booklet 02</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-jaccard"><span class="n">03</span>Jaccard over shingles</h3>
+  <p class="job">Two documentation blocks are duplicates at Jaccard ≥ 0.80 over five-word shingles, or on a verbatim run of 50 words; MinHash/LSH only proposes the pairs.</p>
+  <pre>dupDecidesWith num den inter union  =  inter * den <span class="op">&gt;=</span> num * union
+
+dupVerdictWith (num, den, vfloor) inter union run
+  =  dupDecidesWith num den inter union  <span class="op">||</span>  run <span class="op">&gt;=</span> vfloor</pre>
+  <p class="note rule">MinHash/LSH is only a coarse filter and is RNG-free: the permutation index is the salt.</p>
+  <ul class="consts">
+    <li><b>jaccardNum</b> 80</li>
+    <li><b>jaccardDen</b> 100</li>
+    <li><b>shingleK</b> 5</li>
+    <li><b>verbatimFloor</b> 50</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f03">how it works · 03</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">booklet 03</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-merge"><span class="n">18</span>Clone merge</h3>
+  <p class="job">Where the members of a clone group differ becomes a hole, and each distinct value vector a parameter: at most six, and only when a line is saved.</p>
+  <pre>align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
+params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">&gt;</span> 0</pre>
+  <p class="note rule">The operation is anti-unification: the least general skeleton every member is an instance of, each member recovered by filling the skeleton's holes with its own values.</p>
+  <ul class="consts">
+    <li><b>groupCap</b> 4096</li>
+    <li><b>treeNodeCap</b> 131072</li>
+    <li><b>paramCap</b> 6</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/analysis/#f18">how it works · 18</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md">booklet 18</a></p>
+</div>
+
+<h2 id="structure">Structure</h2>
+
+<div class="fam">
+  <h3 id="m-tsallis"><span class="n">04</span>Tsallis-2 and χ²</h3>
+  <p class="job">Directory diversity and layout divergence in exact rationals: the log-free members of the entropy and KL families, so every boundary is decidable.</p>
+  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
+perMille r      = floor (r * 1000)</pre>
+  <p class="note rule">Shannon entropy and KL divergence need logarithms (irrational, therefore not exactly decidable), so the family publishes the rational-closed members of the same families instead: Tsallis-2 diversity and the χ² f-divergence, all over <code>Data.Ratio</code>.</p>
+  <p class="note rule">A χ² with observed mass on a zero-reference bin returns <code>Nothing</code>, a refusal rather than a zero: the report names those directories.</p>
+  <ul class="consts">
+    <li><b>scale</b> 1000</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f04">how it works · 04</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">booklet 04</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-modularity"><span class="n">04</span>Newman modularity</h3>
+  <p class="job">Each directory's modularity contribution as a share of the most it could earn: 1000‰ when it never reaches out, 0 at the null model's expectation.</p>
+  <pre>rho = q / qMax = (e*m − o*i) / (mu*(m − mu))</pre>
+  <p class="note rule">With <code>e</code> internal edges, out-mass <code>o</code>, in-mass <code>i</code>, incident mass <code>mu = e + crossOut + crossIn</code> and <code>m</code> edges in the tree, Newman's contribution of a directory is <code>q = e/m − o*i/m^2</code>, and the most a directory of mass <code>mu</code> could earn — every incident edge internal — is <code>qMax = mu(m−mu)/m^2</code>.</p>
+  <ul class="consts">
+    <li><b>modFloor</b> 1</li>
+    <li><b>modMassFloor</b> 4</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f04">how it works · 04</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">booklet 04</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-layers"><span class="n">19</span>Layers and cuts</h3>
+  <p class="job">Directories ordered into layers once the cheapest arcs are cut out of their cycles, with each directory's instability in integer per-mille.</p>
+  <pre>cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
+layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
+metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre>
+  <p class="note rule">The cheapest set of arcs whose removal leaves the graph acyclic is found one component at a time: an arc between two components lies on no cycle, so the minimum over the graph is the union of the components' minima.</p>
+  <ul class="consts">
+    <li><b>exactVertexCap</b> 14</li>
+    <li><b>instabilityScale</b> 1000</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/analysis/#f19">how it works · 19</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md">booklet 19</a></p>
+</div>
+
+<h2 id="score">Score and trend</h2>
+
+<div class="fam">
+  <h3 id="m-score"><span class="n">05</span>The score</h3>
+  <p class="job">The axes fold into one 0–1000 score under a convex size penalty; each file's ceiling only shrinks, and growth past max(+2 %, +10) fails the gate.</p>
+  <pre>raw     = sum_i (w_i * p_i * violCost)
+wTotal  = sum_i w_i                            -- derived, never a literal
+score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
+
+p(x) = 0                              if x &lt;= S
+     = pMax                           if H &lt;= S          -- degenerate fallback
+     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
+     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm</pre>
+  <p class="note rule">Axis 0 is the only axis that is not a count: a convex penalty on file size, exact <code>Rational</code>, monotone past the hard line.</p>
+  <ul class="consts">
+    <li><b>scoreScale</b> 1000</li>
+    <li><b>violCost</b> 10</li>
+    <li><b>sizeHard H</b> 750</li>
+    <li><b>sizePMax</b> 10</li>
+    <li><b>softLineK</b> 2</li>
+    <li><b>[softMin, softMax]</b> [200, 500]</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f05">how it works · 05</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">booklet 05</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-ratchet"><span class="n">05</span>The ratchet</h3>
+  <p class="job">Folds <!--ce:count:axes#word-->seven<!--/ce--> axes into one 0–1000 score and gates it against a banked baseline that is only allowed to tighten.</p>
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+
+added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
+removed = baseline \ current        -- informational; drives the shrink</pre>
+  <p class="note rule">The fail bit is a disjunction of <!--ce:count:fail_conditions#word-->six<!--/ce--> <em>named</em> conditions: <code>ratchet_over</code>, <code>discrete_added</code>, <code>floor</code>, <code>dedup_budget</code>, <code>knobs_digest</code>, <code>rows_dropped</code>.</p>
+  <ul class="consts">
+    <li><b>tolNum/tolDen</b> 102/100</li>
+    <li><b>tolAbs</b> 10</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f05">how it works · 05</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">booklet 05</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-recursion"><span class="n">05</span>Cognitive complexity</h3>
+  <p class="job">SonarSource's cognitive complexity with the recursion increment of S3776 Appendix B1, which SonarSource's own analysers leave out: the core finds the call cycles and every member pays once.</p>
+  <pre><span class="op">+1</span> for each method in a recursion cycle, whether direct or indirect</pre>
+  <ul class="consts">
+    <li><b>cocCeil</b> 15</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f05">how it works · 05</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">booklet 05</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-roi"><span class="n">08</span>Split ROI</h3>
+  <p class="job">The penalty curve is convex with p(0) = 0, hence superadditive: a seam's benefit is never negative, and it is priced against what the cut costs.</p>
+  <pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
+
+costMilli(u)    = crossRefs(u)      * roiRefMilli
+                + cutClones(end_u)  * roiCloneMilli
+                + crossChurn(u)     * roiChurnMilli
+                + roiPhiMilli
+
+viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
+  <p class="note rule">Benefit is the graded-zone penalty a split gives back, computed on the <em>same</em> convex curve the verdict family judges with, imported rather than re-derived; because <code>p</code> is convex with <code>p(0) = 0</code> it is superadditive, so the bracket is non-negative.</p>
+  <ul class="consts">
+    <li><b>seamSoft S</b> 300</li>
+    <li><b>seamHard H</b> 750</li>
+    <li><b>seamPMax</b> 10</li>
+    <li><b>roiRefMilli</b> 250</li>
+    <li><b>roiCloneMilli</b> 500</li>
+    <li><b>roiChurnMilli</b> 150</li>
+    <li><b>roiPhiMilli</b> 500</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f08">how it works · 08</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">booklet 08</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-theilsen"><span class="n">10</span>Theil-Sen slope</h3>
+  <p class="job">The trend is the median of pairwise slopes: one wild commit cannot move it past its neighbours.</p>
+  <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
+y_i   = (score_i * 1000000) % scale_i
+
+slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen
+
+slope <span class="op">&lt;</span> -band  → 2  (degrading)
+slope <span class="op">&gt;</span>  band  → 0  (improving)
+otherwise      → 1  (flat)        where band = floorMicro</pre>
+  <p class="note rule">The slope is the median of pairwise slopes (trend/2): one wild point, a broken commit that still measured, drags a least-squares mean anywhere and cannot move the median past its neighbors.</p>
+  <ul class="consts">
+    <li><b>minPoints</b> 3 (knob 0)</li>
+    <li><b>tsWindow</b> 512</li>
+    <li><b>full-scale grid</b> 10⁶</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f10">how it works · 10</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">booklet 10</a></p>
+</div>
+
+<h2 id="graph">Graph and logic</h2>
+
+<div class="fam">
+  <h3 id="m-liveness"><span class="n">06</span>Liveness</h3>
+  <p class="job">A file nothing live reaches is dead; cycles are found once, by Tarjan's strongly connected components, and reported, never judged.</p>
+  <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
+reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
+
+public     = testBit flags 0
+referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
+judged     = i <span class="op">∉</span> reach
+code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
+  <p class="note rule">Cycles are reported, never judged; a cyclic island with no entry seed is dead by reachability alone.</p>
+  <ul class="consts">
+    <li><b>minRung</b> 5</li>
+    <li><b>entryMask</b> 126 (bits 1–6)</li>
+    <li><b>sccFloor</b> 2</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f06">how it works · 06</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">booklet 06</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-flow"><span class="n">17</span>Reachability and liveness</h3>
+  <p class="job">Reachability over each function's control-flow graph, and backward liveness over its variables.</p>
+  <pre>kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
+kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
+kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)</pre>
+  <p class="note rule">Live-in is solved to a fixpoint of <code>in = transfer(∪ in of successors)</code> over the whole graph.</p>
+  <p class="note src">Derivation: <a href="/how/analysis/#f17">how it works · 17</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md">booklet 17</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-datalog"><span class="n">16</span>Stratified Datalog</h3>
+  <p class="job">Datalog evaluated semi-naively, one stratum at a time, over the index's own facts; every answer carries the derivation that produced it.</p>
+  <pre>dead(F) :- file(F), <span class="op">not</span> reach(F).
+strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
+eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
+  <p class="note rule">Set semantics, least model.</p>
+  <ul class="consts">
+    <li><b>derivedCap</b> 2097152</li>
+    <li><b>proofCap</b> 16384</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/analysis/#f16">how it works · 16</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">booklet 16</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-bm25"><span class="n">15</span>Integer BM25 and PPMI</h3>
+  <p class="job">Integer BM25 with k1 = 6/5 and b = 3/4 ranks the units most like one unit; in-repository PPMI may widen a query, as advice only.</p>
+  <pre>score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
+widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
+role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)
+PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre>
+  <p class="note rule">Rust sends the query bag and one nine-integer row per candidate; Haskell orders them as exact rationals and applies the role conjunction; names, words and paths never cross the wire.</p>
+  <ul class="consts">
+    <li><b>TOP_M</b> 3</li>
+    <li><b>MIN_COOC</b> 2</li>
+    <li><b>roleMinName</b> 1</li>
+    <li><b>roleMinCallee</b> 1</li>
+    <li><b>roleMinNameShape</b> 2</li>
+  </ul>
+  <p class="note src">Derivation: <a href="/how/#f15">how it works · 15</a> · Source: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">booklet 15</a></p>
+</div>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/">Overview</a> ·
+     <a href="/how/">How it works</a> ·
+     <a href="/stack/">Stack</a> ·
+     <a href="/bench/">Benchmarks</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></p>
+  <p>"CodeEraser"™ is a trademark of skymanbp. Per Apache-2.0 §6,
+     the license does not grant trademark rights. © 2026 skymanbp.</p>
+</footer>
+
+</div>
+</body>
+</html>

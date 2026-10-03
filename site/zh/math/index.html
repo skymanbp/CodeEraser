@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodeEraser 的数学</title>
+<meta name="description" content="CodeEraser 判决所用的每一条规则都在这里：winnowing、树编辑距离、Jaccard、Tsallis-2 与 χ²、Newman 模块度、分数与棘轮、Theil-Sen、BM25、Datalog 与控制流图，各自链到推导。">
+<meta name="theme-color" content="#0c0f16">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CodeEraser">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:url" content="https://codeeraser.dev/zh/math/">
+<meta property="og:title" content="CodeEraser 的数学">
+<meta property="og:description" content="每条判决背后的公式：对实测事实的整数与精确有理数算术，每条规则都追溯到实现它的源码行。">
+<meta property="og:image" content="https://codeeraser.dev/icon-256.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" hreflang="en" href="https://codeeraser.dev/math/">
+<link rel="alternate" hreflang="zh" href="https://codeeraser.dev/zh/math/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css?v=11">
+<link rel="stylesheet" href="/style.css?v=11">
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <a class="home" href="/zh/"><img src="/icon-256.png" alt=""><span class="name">CodeEraser</span></a>
+  <nav>
+    <a href="/zh/">概览</a>
+    <a href="/zh/how/">工作原理</a>
+    <a href="/zh/stack/">技术栈</a>
+    <a href="/zh/bench/">实测</a>
+    <a href="/math/">English</a>
+  </nav>
+</header>
+
+<section class="lede">
+  <h1>数学</h1>
+  <p>每条判决都是对实测事实的整数或精确有理数算术，每条规则都追溯到实现它的源码行。</p>
+  <p>下面每一条都给出规则本身、它判什么、写明了的保证（如有）与参与的常数，并链到工作原理页上的推导和引出实现行的方法学册。</p>
+  <nav class="toc" aria-label="章节">
+    <p class="k">本页内容</p>
+    <div class="row"><a class="sec" href="#duplication">重复</a><ul><li><a href="#m-winnowing">窗口取指纹</a></li><li><a href="#m-ted">树编辑距离</a></li><li><a href="#m-jaccard">shingle 上的 Jaccard</a></li><li><a href="#m-merge">克隆合并</a></li></ul></div>
+    <div class="row"><a class="sec" href="#structure">结构</a><ul><li><a href="#m-tsallis">Tsallis-2 与 χ²</a></li><li><a href="#m-modularity">Newman 模块度</a></li><li><a href="#m-layers">分层与切割</a></li></ul></div>
+    <div class="row"><a class="sec" href="#score">分数与趋势</a><ul><li><a href="#m-score">分数</a></li><li><a href="#m-ratchet">棘轮</a></li><li><a href="#m-recursion">认知复杂度</a></li><li><a href="#m-roi">拆分 ROI</a></li><li><a href="#m-theilsen">Theil-Sen 斜率</a></li></ul></div>
+    <div class="row"><a class="sec" href="#graph">图与逻辑</a><ul><li><a href="#m-liveness">可达性</a></li><li><a href="#m-flow">可达性与活跃性</a></li><li><a href="#m-datalog">分层 Datalog</a></li><li><a href="#m-bm25">整数 BM25 与 PPMI</a></li></ul></div>
+  </nav>
+</section>
+
+<h2 id="duplication">重复</h2>
+
+<div class="fam">
+  <h3 id="m-winnowing"><span class="n">01</span>窗口取指纹</h3>
+  <p class="job">任何长度至少为 <code>t</code> 的归一化公共 token 串都必然共享至少一个指纹：Schleimer 等人 SIGMOD'03 的 no-miss 下界，作为正确性契约。</p>
+  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
+  <p class="note rule">任何长度至少为 <code>t</code> 的归一化公共 token 子串，必然包含 <code>t - k + 1 = w</code> 个连续 k-gram（即一整个完整窗口）；而窗口最小值的选取只依赖该窗口内部的内容，所以两份拷贝必选出同一个最小值。</p>
+  <ul class="consts">
+    <li><b>kgram</b> 25</li>
+    <li><b>window</b> 26</li>
+    <li><b>保证阈 t</b> 50</li>
+    <li><b>BASE</b> 1_000_003</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f01">工作原理 · 01</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">方法学册 01</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-ted"><span class="n">02</span>树编辑距离</h3>
+  <p class="job">Zhang-Shasha 编辑距离恒为整数，故 TSED ≥ 0.85 的近似克隆由精确的交叉相乘判定。</p>
+  <pre>TSED(a, b) = (max(n1, n2) - ted(a, b)) / max(n1, n2)
+clone      <span class="op">⇔</span> TSED <span class="op">&gt;=</span> 0.85
+cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</span> num * mx  where mx = max n1 n2</pre>
+  <p class="note rule"><code>ted</code> 是单位代价的 Zhang-Shasha（删 = 插 = 1，kind 码相同时 relabel = 0，否则 1），恒为整数，所以比较是精确的交叉相乘，边界两侧都可判定：在 <code>max = 100</code> 时 <code>ted 15</code> 是克隆、<code>ted 16</code> 不是。</p>
+  <ul class="consts">
+    <li><b>tsedNum</b> 85</li>
+    <li><b>tsedDen</b> 100</li>
+    <li><b>T3_MIN_NODES</b> 24</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f02">工作原理 · 02</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">方法学册 02</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-jaccard"><span class="n">03</span>shingle 上的 Jaccard</h3>
+  <p class="job">两段文档在 5 词 shingle 上 Jaccard ≥ 0.80、或存在 50 词逐字连续段即判重复；MinHash/LSH 只负责提名候选对。</p>
+  <pre>dupDecidesWith num den inter union  =  inter * den <span class="op">&gt;=</span> num * union
+
+dupVerdictWith (num, den, vfloor) inter union run
+  =  dupDecidesWith num den inter union  <span class="op">||</span>  run <span class="op">&gt;=</span> vfloor</pre>
+  <p class="note rule">MinHash/LSH 只是粗筛，且无 RNG：置换下标本身就是盐。</p>
+  <ul class="consts">
+    <li><b>jaccardNum</b> 80</li>
+    <li><b>jaccardDen</b> 100</li>
+    <li><b>shingleK</b> 5</li>
+    <li><b>verbatimFloor</b> 50</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f03">工作原理 · 03</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/03-documentation-duplication-shingling-minhash.md">方法学册 03</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-merge"><span class="n">18</span>克隆合并</h3>
+  <p class="job">克隆组成员的差异处成为洞，每个不同的取值向量对应一个参数：至多 6 个，且确有省行才可行。</p>
+  <pre>align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
+params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">&gt;</span> 0</pre>
+  <p class="note rule">这一运算是反统一：取每个成员都是其实例的最小一般骨架，用各成员自己的值填上骨架的洞即还原该成员。</p>
+  <ul class="consts">
+    <li><b>groupCap</b> 4096</li>
+    <li><b>treeNodeCap</b> 131072</li>
+    <li><b>paramCap</b> 6</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/analysis/#f18">工作原理 · 18</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md">方法学册 18</a></p>
+</div>
+
+<h2 id="structure">结构</h2>
+
+<div class="fam">
+  <h3 id="m-tsallis"><span class="n">04</span>Tsallis-2 与 χ²</h3>
+  <p class="job">目录多样性与布局散度全程用精确有理数：熵族与 KL 族里不取对数的成员，因而每条边界都可判定。</p>
+  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
+perMille r      = floor (r * 1000)</pre>
+  <p class="note rule">Shannon 熵与 KL 散度需要对数（无理数，因而不可精确判定），所以本家族改为发布同族中在有理数下封闭的成员：Tsallis-2 多样性与 χ² f-散度，全程跑在 <code>Data.Ratio</code> 上。</p>
+  <p class="note rule">若某个 bin 参考质量为 0 而观测质量非 0，χ² 返回 <code>Nothing</code>：那是一次拒绝而不是一个零，报告会点名那些目录。</p>
+  <ul class="consts">
+    <li><b>scale</b> 1000</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f04">工作原理 · 04</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">方法学册 04</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-modularity"><span class="n">04</span>Newman 模块度</h3>
+  <p class="job">每个目录的模块度贡献除以它最多能挣到的份额：从不外引为 1000‰，恰在零模型期望处为 0。</p>
+  <pre>rho = q / qMax = (e*m − o*i) / (mu*(m − mu))</pre>
+  <p class="note rule">设目录内部边数为 <code>e</code>、出质量 <code>o</code>、入质量 <code>i</code>、关联质量 <code>mu = e + crossOut + crossIn</code>、全树边数 <code>m</code>，则一个目录的 Newman 贡献为 <code>q = e/m − o*i/m^2</code>；质量为 <code>mu</code> 的目录最多能挣到的（每条关联边都在内部时）是 <code>qMax = mu(m−mu)/m^2</code>。</p>
+  <ul class="consts">
+    <li><b>modFloor</b> 1</li>
+    <li><b>modMassFloor</b> 4</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f04">工作原理 · 04</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">方法学册 04</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-layers"><span class="n">19</span>分层与切割</h3>
+  <p class="job">最便宜的弧从环里切掉之后，目录排成层；每个目录的不稳定度以整数千分数给出。</p>
+  <pre>cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
+layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
+metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre>
+  <p class="note rule">使图无环的最便宜弧集逐个强连通分量求出：两个分量之间的弧不在任何环上，所以全图的最小值就是各分量最小值的并。</p>
+  <ul class="consts">
+    <li><b>exactVertexCap</b> 14</li>
+    <li><b>instabilityScale</b> 1000</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/analysis/#f19">工作原理 · 19</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md">方法学册 19</a></p>
+</div>
+
+<h2 id="score">分数与趋势</h2>
+
+<div class="fam">
+  <h3 id="m-score"><span class="n">05</span>分数</h3>
+  <p class="job">各判轴在凸的尺寸罚分下折成一个 0–1000 分；每个文件的上限只缩不涨，增长超过 max(+2 %, +10) 即判负。</p>
+  <pre>raw     = sum_i (w_i * p_i * violCost)
+wTotal  = sum_i w_i                            -- derived, never a literal
+score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
+
+p(x) = 0                              if x &lt;= S
+     = pMax                           if H &lt;= S          -- degenerate fallback
+     = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
+     = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ 线性臂</pre>
+  <p class="note rule">判轴 0 是唯一一条不是计数的轴：对文件尺寸的凸罚，精确 <code>Rational</code>，越过硬线之后仍单调上升。</p>
+  <ul class="consts">
+    <li><b>scoreScale</b> 1000</li>
+    <li><b>violCost</b> 10</li>
+    <li><b>sizeHard H</b> 750</li>
+    <li><b>sizePMax</b> 10</li>
+    <li><b>softLineK</b> 2</li>
+    <li><b>[softMin, softMax]</b> [200, 500]</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f05">工作原理 · 05</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">方法学册 05</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-ratchet"><span class="n">05</span>棘轮</h3>
+  <p class="job">把<!--ce:count:axes#word-->七<!--/ce-->条判轴折叠成一个 0–1000 的分数，并对着一份只准收紧的基线银行把门。</p>
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+
+added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
+removed = baseline \ current        -- informational; drives the shrink</pre>
+  <p class="note rule">fail 位是<!--ce:count:fail_conditions#word-->六<!--/ce-->个<em>具名</em>条件的析取：<code>ratchet_over</code>、<code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、<code>knobs_digest</code>、<code>rows_dropped</code>。</p>
+  <ul class="consts">
+    <li><b>tolNum/tolDen</b> 102/100</li>
+    <li><b>tolAbs</b> 10</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f05">工作原理 · 05</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">方法学册 05</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-recursion"><span class="n">05</span>认知复杂度</h3>
+  <p class="job">SonarSource 的认知复杂度，连同其自家分析器没有实现的 S3776 附录 B1 递归增量：调用环由核找出，每个环成员各加一次。</p>
+  <pre><span class="op">+1</span> for each method in a recursion cycle, whether direct or indirect</pre>
+  <ul class="consts">
+    <li><b>cocCeil</b> 15</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f05">工作原理 · 05</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">方法学册 05</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-roi"><span class="n">08</span>拆分 ROI</h3>
+  <p class="job">罚分曲线是凸的且 p(0) = 0，故超可加：一条缝的收益从不为负，再与切割的代价比较。</p>
+  <pre>benefitMilli(u) = max 0 (floor (1000 * (p(total) - p(end_u) - p(total - end_u))))
+
+costMilli(u)    = crossRefs(u)      * roiRefMilli
+                + cutClones(end_u)  * roiCloneMilli
+                + crossChurn(u)     * roiChurnMilli
+                + roiPhiMilli
+
+viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
+  <p class="note rule">收益是拆分退回来的那部分软区罚分，算在<em>与判决家族同一条</em>凸曲线上，直接 import 而不是重新推一遍；因为 <code>p</code> 是凸的且 <code>p(0) = 0</code>，故超可加，所以那个方括号非负。</p>
+  <ul class="consts">
+    <li><b>seamSoft S</b> 300</li>
+    <li><b>seamHard H</b> 750</li>
+    <li><b>seamPMax</b> 10</li>
+    <li><b>roiRefMilli</b> 250</li>
+    <li><b>roiCloneMilli</b> 500</li>
+    <li><b>roiChurnMilli</b> 150</li>
+    <li><b>roiPhiMilli</b> 500</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f08">工作原理 · 08</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md">方法学册 08</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-theilsen"><span class="n">10</span>Theil-Sen 斜率</h3>
+  <p class="job">趋势取成对斜率的中位数：一个野点提交拽不动它半步。</p>
+  <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
+y_i   = (score_i * 1000000) % scale_i
+
+slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen
+
+slope <span class="op">&lt;</span> -band  → 2  (degrading)
+slope <span class="op">&gt;</span>  band  → 0  (improving)
+otherwise      → 1  (flat)        where band = floorMicro</pre>
+  <p class="note rule">斜率取成对斜率的<b>中位数</b>（trend/2）：一个野点（测出来的坏提交）能把最小二乘的均值拽到任何地方，却拽不动中位数半步。</p>
+  <ul class="consts">
+    <li><b>minPoints</b> 3（knob 0）</li>
+    <li><b>tsWindow</b> 512</li>
+    <li><b>满量程网格</b> 10⁶</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f10">工作原理 · 10</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">方法学册 10</a></p>
+</div>
+
+<h2 id="graph">图与逻辑</h2>
+
+<div class="fam">
+  <h3 id="m-liveness"><span class="n">06</span>可达性</h3>
+  <p class="job">活的入口都到不了的文件即死；环由 Tarjan 强连通分量只找一次，只报不判。</p>
+  <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
+reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
+
+public     = testBit flags 0
+referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
+judged     = i <span class="op">∉</span> reach
+code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
+  <p class="note rule">环只报不判；没有入口种子的环岛仅凭可达性就已判死，无需特例。</p>
+  <ul class="consts">
+    <li><b>minRung</b> 5</li>
+    <li><b>entryMask</b> 126（bits 1–6）</li>
+    <li><b>sccFloor</b> 2</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f06">工作原理 · 06</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md">方法学册 06</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-flow"><span class="n">17</span>可达性与活跃性</h3>
+  <p class="job">在每个函数的控制流图上求可达，在它的变量上做逆向活跃性分析。</p>
+  <pre>kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
+kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
+kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)</pre>
+  <p class="note rule">活跃入集在整张图上解到 <code>in = transfer(∪ in of successors)</code> 的不动点。</p>
+  <p class="note src">推导: <a href="/zh/how/analysis/#f17">工作原理 · 17</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md">方法学册 17</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-datalog"><span class="n">16</span>分层 Datalog</h3>
+  <p class="job">在索引自身的事实上逐层半朴素求值的 Datalog；每个答案都带着推出它的那棵推导树。</p>
+  <pre>dead(F) :- file(F), <span class="op">not</span> reach(F).
+strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
+eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
+  <p class="note rule">集合语义，最小模型。</p>
+  <ul class="consts">
+    <li><b>derivedCap</b> 2097152</li>
+    <li><b>proofCap</b> 16384</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/analysis/#f16">工作原理 · 16</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">方法学册 16</a></p>
+</div>
+
+<div class="fam">
+  <h3 id="m-bm25"><span class="n">15</span>整数 BM25 与 PPMI</h3>
+  <p class="job">整数 BM25（k1 = 6/5、b = 3/4）为一个单元排出最像它的单元；仓内 PPMI 可以拓宽查询，只作建议。</p>
+  <pre>score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
+widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
+role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)
+PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre>
+  <p class="note rule">Rust 发查询袋与每候选九个整数一行；Haskell 用精确有理数排序并施加角色合取；名字、词与路径永不过线。</p>
+  <ul class="consts">
+    <li><b>TOP_M</b> 3</li>
+    <li><b>MIN_COOC</b> 2</li>
+    <li><b>roleMinName</b> 1</li>
+    <li><b>roleMinCallee</b> 1</li>
+    <li><b>roleMinNameShape</b> 2</li>
+  </ul>
+  <p class="note src">推导: <a href="/zh/how/#f15">工作原理 · 15</a> · 出处: <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">方法学册 15</a></p>
+</div>
+
+<footer class="site">
+  <p>Apache-2.0 · <a href="/zh/">概览</a> ·
+     <a href="/zh/how/">工作原理</a> ·
+     <a href="/zh/stack/">技术栈</a> ·
+     <a href="/zh/bench/">实测</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法学</a> ·
+     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></p>
+  <p>「CodeEraser」™ 为 skymanbp 商标。依 Apache-2.0 §6，许可证不授予商标权。© 2026 skymanbp。</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -167,6 +167,10 @@ pre .op { color: var(--accent); font-weight: 600; }
 .eq-name b { display: block; font-family: var(--mono); color: var(--accent); }
 .eq pre { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px 14px; }
 .eq p { font-size: var(--fs-sm); color: var(--muted); max-width: var(--measure); }
+/* the home teaser's way to the math page; a math entry's two links */
+.more-link { margin-top: 14px; }
+.more-link a { color: var(--accent); font-weight: 600; }
+.fam .note.src { font-size: var(--fs-sm); }
 /* the stack page: one line per layer, what mathematics lives there */
 dl.layers { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 12px 24px; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: var(--r-frame); padding: 20px 24px; box-shadow: var(--shadow); }
 dl.layers dt { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--accent); padding-top: 3px; }
