@@ -48,7 +48,7 @@ folded per-language unresolved count
 
 The class positions are part of the source contract: position `0` is
 retired, `1` is `verbatim_doc`, `2` is `t1_twin`, and `3` is `dead_file`
-([Cost.hs:5-20](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:25-33](../../../cli/src/erase/model.rs#L25)). Each class below is
+([Cost.hs:5-20](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:16-24](../../../cli/src/erase/model.rs#L16)). Each class below is
 written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
 
@@ -66,7 +66,7 @@ rows ([gather.rs:86-106](../../../cli/src/erase/gather.rs#L86)).
 The position stays frozen and is refused **by name** rather than folded into
 `unknown class`, so a client still sending it learns which road replaced it
 ([Erase.hs:38](../../../core/app/CE/Erase.hs#L38),
-[model.rs:25-32](../../../cli/src/erase/model.rs#L25)). Renumbering the
+[model.rs:16-23](../../../cli/src/erase/model.rs#L16)). Renumbering the
 survivors would have moved three other frozen codes to reclaim one array
 slot, so the name array keeps a `(retired)` placeholder in that position.
 The Rust graph leg still refuses a degraded deadcode report by name before
@@ -132,7 +132,7 @@ The same candidate family as class 0 with the trust judgment moved to its owner:
 ### 3. The seven reason codes
 
 The advisory vocabulary is frozen at seven positions in the client model
-([model.rs:36-48](../../../cli/src/erase/model.rs#L36)). The table records the
+([model.rs:27-39](../../../cli/src/erase/model.rs#L27)). The table records the
 meaning and the exact `judgeRow` condition that emits each code. Reason `0` is
 the successful verdict; the other six are refusals. The domain only ever
 grows — position 6 arrived at 6.1.0 and nothing renumbered, because a frozen
@@ -190,7 +190,7 @@ Only after all three checks does the executor write targets and append the
 audit records ([apply.rs:16-34](../../../cli/src/erase/apply.rs#L16)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
-([mod.rs:75-106](../../../cli/src/erase/mod.rs#L75)).
+([mod.rs:74-105](../../../cli/src/erase/mod.rs#L74)).
 
 ### 6. No tuning surface
 

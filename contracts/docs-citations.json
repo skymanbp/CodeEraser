@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|60823903c040c05e|0": {
     "target": "../../README.md",
-    "line": 195,
+    "line": 198,
     "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
@@ -1080,8 +1080,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 324,
-    "end": 341,
+    "line": 323,
+    "end": 340,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/tests/unit/dedup/t3.rs|004a6ba98c9dbbe0|0": {
@@ -2236,8 +2236,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Wire.hs|6c6e6a1e762976b9|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 199,
-    "end": 212,
+    "line": 197,
+    "end": 210,
     "text": "-- | decode → cap check (a complete degraded reply, never a"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../ce.toml|509b429c9ce82c99|0": {
@@ -2896,14 +2896,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|b0a71c3df04991be|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 399,
-    "end": 414,
+    "line": 398,
+    "end": 413,
     "text": "/// The discrete clone-member set: every block's sides attributed to"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 324,
-    "end": 341,
+    "line": 323,
+    "end": 340,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -3666,14 +3666,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|3e04a0732c1a18ea|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 455,
-    "end": 461,
+    "line": 445,
+    "end": 451,
     "text": "fn verdict_node(nodes: &[Node], idx: i64, verdict: i64) -> Result<&Node> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|47e6b9dce7af0f78|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 480,
-    "end": 484,
+    "line": 470,
+    "end": 474,
     "text": "// bit is wire skew, refused by name like every other absent key"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|675ef3e75097f97b|0": {
@@ -3713,20 +3713,20 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|bccd835095c573bd|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 500,
-    "end": 504,
+    "line": 490,
+    "end": 494,
     "text": "let rows: Vec<Vec<i64>> = serde_json::from_value(reply[\"dead\"].clone()).context(\"dead rows\")?;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|c89240bb0aef2f0a|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 491,
-    "end": 498,
+    "line": 481,
+    "end": 488,
     "text": "degraded,\nfail,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|df10614b7a577625|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
-    "line": 530,
-    "end": 536,
+    "line": 520,
+    "end": 526,
     "text": "let rows: Vec<[i64; 2]> = serde_json::from_value(reply[\"reported\"].clone())"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|f88de50d7b234cc0|0": {
@@ -4756,41 +4756,41 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|16d9f55e08d25b48|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 155,
-    "end": 157,
+    "line": 153,
+    "end": 155,
     "text": "declaredBits :: [Integer] -> Integer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|422fc27589865b29|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 106,
+    "line": 104,
     "text": "deadOut i v = case reqUnres req of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|a9965c7fea5c3599|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 149,
-    "end": 151,
+    "line": 147,
+    "end": 149,
     "text": "fileIdx = IS.fromList [i | (i, _ : k : _) <- zip [0 ..] (reqNodes req), k == granFile]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|b64bbfd00c63fb77|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 132,
+    "line": 130,
     "text": "b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|b64bbfd00c63fb77|1": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 132,
+    "line": 130,
     "text": "b = build minRung [assetKind, refdefKind] (length (reqNodes req)) (reqEdges req)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|be627d41b9635251|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 167,
-    "end": 190,
+    "line": 165,
+    "end": 188,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph.hs|be627d41b9635251|1": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 167,
-    "end": 190,
+    "line": 165,
+    "end": 188,
     "text": "tooLarge :: String -> GraphReq -> B8.ByteString"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Build.hs|11d50cd97df21a57|0": {
@@ -4824,48 +4824,48 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|218b48ca3a9e695a|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 91,
+    "line": 92,
     "text": ", tableOffence \"edge\" id (edgeRow n) es"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|3387c02ebee80a49|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 211,
-    "end": 219,
+    "line": 212,
+    "end": 220,
     "text": "nonNegative row = if any (< 0) row then Just \"negative field\" else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|6782f370920e2abe|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 216,
-    "end": 219,
+    "line": 217,
+    "end": 220,
     "text": "posRow :: Integer -> Int -> Integer -> Maybe String"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|7af31fbd5801de44|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 194,
-    "end": 209,
+    "line": 195,
+    "end": 210,
     "text": "-- ROLE FACTS; the pre-5.0.0 three meant lang, granularity and flags,"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|83b3d1c7a8a7681b|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 92,
-    "end": 96,
+    "line": 93,
+    "end": 97,
     "text": ", -- ascending pos is also the reply BOUND (M5-close review MED:"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|93cec9aca650cd49|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 26,
-    "end": 32,
+    "line": 27,
+    "end": 33,
     "text": "-- | Wire shape (design brief §2): index = node identity, nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|9c522356ed628d7f|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 77,
-    "end": 99,
+    "line": 78,
+    "end": 100,
     "text": "-- | First boundary-contract offender, if any — checked in request"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Contract.hs|f9794f7ca8482a30|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 183,
+    "line": 184,
     "text": "where\nfields [lang, unres, total]"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Graph/Cost.hs|0482f5b9a84ffd99|0": {
@@ -5136,13 +5136,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Wire.hs|cb5765da5377654d|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 214,
-    "end": 219,
+    "line": 212,
+    "end": 217,
     "text": "-- | Strictly-ascending row check with the family's label vocabulary"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/test/GraphWireProps.hs|13d8ff795a63a163|0": {
     "target": "../../../core/test/GraphWireProps.hs",
-    "line": 132,
+    "line": 133,
     "text": "confRides :: Bool"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../DEVELOPMENT_PLAN.md|bda1de03fe6ea227|0": {
@@ -5333,8 +5333,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 266,
-    "end": 282,
+    "line": 265,
+    "end": 281,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
@@ -5345,37 +5345,37 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 343,
-    "end": 369,
+    "line": 342,
+    "end": 368,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6e6e351ef11fb49b|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 498,
-    "end": 504,
+    "line": 497,
+    "end": 503,
     "text": "pub(crate) fn churn_tables(ch: &churn::Report, idx: &HashMap<&str, i64>) -> ChurnTables {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 485,
-    "end": 488,
+    "line": 484,
+    "end": 487,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 324,
-    "end": 341,
+    "line": 323,
+    "end": 340,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cd401e3b9371f9ac|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 385,
-    "end": 397,
+    "line": 384,
+    "end": 396,
     "text": "/// The survivor is the STRONGER finding: the sort orders kind within"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/wire.rs|a40a0820e026d366|0": {
     "target": "../../../cli/src/score/wire.rs",
-    "line": 116,
+    "line": 110,
     "text": "pub candidates: Vec<[i64; 6]>,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/wire.rs|a5e9bb1e3b606c05|0": {
@@ -5958,10 +5958,10 @@
     "end": 78,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|e839bfb454c3aa17|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|00f7e4fa49113a36|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"7.10.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"8.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -7233,12 +7233,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|25ec30a05fd96d35|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 157,
+    "line": 155,
     "text": "knobbedRows name cap rowShape knobShape deg jud proto ="
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|27cf496b88cbf446|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 163,
+    "line": 161,
     "text": ", tableOffence \"knob\" (take 1) knobShape (knobsOf req)"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/test/TrendProps.hs|05522fba8966ee03|0": {
@@ -7844,26 +7844,26 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 75,
-    "end": 106,
+    "line": 74,
+    "end": 105,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 25,
-    "end": 33,
+    "line": 16,
+    "end": 24,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|1": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 25,
-    "end": 32,
+    "line": 16,
+    "end": 23,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|8703f195b0f8e7c3|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 36,
-    "end": 48,
+    "line": 27,
+    "end": 39,
     "text": "/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|555fc245631410bd|0": {
@@ -8619,14 +8619,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 320,
-    "end": 322,
+    "line": 330,
+    "end": 332,
     "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
     "target": "../../../core/app/CE/Graph.hs",
-    "line": 118,
-    "end": 125,
+    "line": 116,
+    "end": 123,
     "text": "advisoryKeys :: GraphReq -> [Pair]"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Advisory.hs|1d8463e986c9fd4f|0": {
@@ -8649,14 +8649,14 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|57a6c65bff23e598|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 121,
-    "end": 128,
+    "line": 122,
+    "end": 129,
     "text": "-- | The advisory tables are one fact in two halves: `unmentioned`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Contract.hs|8c8ee6d34f3f3fe6|0": {
     "target": "../../../core/app/CE/Graph/Contract.hs",
-    "line": 72,
-    "end": 73,
+    "line": 73,
+    "end": 74,
     "text": "<*> o .:? \"unmentioned\""
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph/Cost.hs|007fe87498837f89|0": {
@@ -9362,8 +9362,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Wire.hs|7ce9998aa97b3b95|0": {
     "target": "../../../core/app/CE/Wire.hs",
-    "line": 138,
-    "end": 163,
+    "line": 136,
+    "end": 161,
     "text": "tableCap :: Integer -> RowsReq -> Bool"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/test/TombstoneProps.hs|897b6f6807378652|0": {
@@ -9738,10 +9738,10 @@
     "line": 65,
     "text": "fn similar_oracle_consistent() {"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/face_parity.rs|5a4bc4e95b316259|0": {
-    "target": "../../../cli/tests/it/face_parity.rs",
-    "line": 39,
-    "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | tab:similar, similar_report | mcp:similar_units | |"
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/face_parity_table.rs|5de1678623bc45c9|0": {
+    "target": "../../../cli/tests/it/face_parity_table.rs",
+    "line": 34,
+    "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | similar | tab:similar, similar_report | mcp:similar_units | |"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|007a06c4e5aed4f8|0": {
     "target": "../../../cli/tests/it/observe_feed.rs",
@@ -9946,12 +9946,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|385098c7ed32048e|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 210,
+    "line": 226,
     "text": "pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|e6e85fe7c0076ff4|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 197,
+    "line": 213,
     "text": "let ask = crate::query::face::Ask {\nrules: crate::query::rules_source(root, file)?,\nquery: None,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -10215,10 +10215,10 @@
     "end": 13,
     "text": "assert dead_file(F) :- dead(F)."
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/face_parity.rs|7e3193208646bf01|0": {
-    "target": "../../../cli/tests/it/face_parity.rs",
-    "line": 40,
-    "text": "code query and architecture rules | 代码查询与架构规则 | query, rules | tab:query, query_report, rules_report | mcp:query, mcp:rules | |"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/face_parity_table.rs|36c96ba6d9b78535|0": {
+    "target": "../../../cli/tests/it/face_parity_table.rs",
+    "line": 35,
+    "text": "code query and architecture rules | 代码查询与架构规则 | query, rules | query, rules | tab:query, query_report, rules_report | mcp:query, mcp:rules | |"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
     "target": "../../../cli/tests/it/query_face.rs",
@@ -10666,12 +10666,12 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|5150f690006b8d0b|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 71,
+    "line": 66,
     "text": "pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|98dfcfb680e6d525|0": {
     "target": "../../../cli/src/flow_report/mod.rs",
-    "line": 41,
+    "line": 36,
     "text": "pub fn judged(lang: Lang, kind: u8) -> bool {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/guard/flow.rs|a968908f87affff4|0": {
@@ -11451,7 +11451,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|9ab7edbd734e96bf|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 247,
+    "line": 263,
     "text": "/// binary. Read-only like every face — it reads the release index"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
@@ -11491,10 +11491,10 @@
     "line": 72,
     "text": "fn the_measured_files_are_dense_in_path_order_under_their_directories() {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../contracts/fixtures/arch/golden.ndjson|5d00bcf10f39349d|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../contracts/fixtures/arch/golden.ndjson|aba8dc88c35ffb9c|0": {
     "target": "../../../contracts/fixtures/arch/golden.ndjson",
     "line": 13,
-    "text": "{\"proto\":\"7.0.0\",\"type\":\"arch.request\",\"id\":7,\"files\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,15,1]],\"dirs\":[[0,-1],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0]],\"edges\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,0,1]],\"pkgEdges\":[]}"
+    "text": "{\"proto\":\"8.0.0\",\"type\":\"arch.request\",\"id\":7,\"files\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,15,1]],\"dirs\":[[0,-1],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0]],\"edges\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,0,1]],\"pkgEdges\":[]}"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch.hs|e06a4723c0a12b56|0": {
     "target": "../../../core/app/CE/Arch.hs",

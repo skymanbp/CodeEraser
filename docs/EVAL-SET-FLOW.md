@@ -667,4 +667,4 @@ c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法
 
 ## 计划 v2.32 步 6 之后：十份精度册再次退役并重生成（2026-10-03）
 
-权威轨 v2.32 步 6 退役请求键 `judgedMask`（proto 8.0.0，设计册 `docs/reference/authority-track.md` §13 第 69 条），出处门路径里的 `cli/src/scan/lang.rs` 只改了两段文档注释（请求不再带这一键），代码一字未动；门在本地按名拒了十份（python 第一个被点名）。切换门新 / 旧二进制逐字节同（设计册 §12 步 6 行），判分没有理由移动。处置与步 2 那次同形：**退役**（本提交）十份删档、十门考题 `stage` 翻回 `audited`，判决掩码不清空（掩码腿 `the_judged_mask_is_the_precision_docs` 在本提交上按构造红）；**重生成**（下一提交）在本提交的干净树上逐语言经 `CE_FLOW_OUT` 生成到仓外、十份齐了一次拷入，十门 `stage` 翻回 `scored`，读数与退役前逐份比对。
+权威轨 v2.32 步 6 退役请求键 `judgedMask`（proto 8.0.0，设计册 `docs/reference/authority-track.md` §13 第 69 条），出处门路径里的 `cli/src/scan/lang.rs` 只改了两段文档注释（请求不再带这一键），代码一字未动；门在本地按名拒了十份（python 第一个被点名）。切换门新 / 旧二进制逐字节同（设计册 §12 步 6 行），判分没有理由移动。处置与步 2 那次同形：**退役**（本提交）十份删档、十门考题 `stage` 翻回 `audited`，判决掩码不清空（掩码腿 `the_judged_mask_is_the_precision_docs` 在本提交上按构造红）；**重生成**（下一提交）在本提交的干净树上逐语言经 `CE_FLOW_OUT` 生成到仓外、十份齐了一次拷入，十门 `stage` 翻回 `scored`，读数与退役前逐份比对。**读数**（062d2d62 的干净树，2026-10-03）：十份与退役前的 blob 逐字节同，只差 `generated_from`（ab16e390 → 062d2d62，dirty 仍 false）；十门 `stage` 翻回 `scored`，判决掩码与精度册相符。

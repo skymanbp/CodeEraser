@@ -138,7 +138,7 @@ id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../
   still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:21](../../../gui/ui/reports.js#L21),
   [commands_query.rs:39](../../../gui/src-tauri/src/commands_query.rs#L39)).
 
-All three go through one library function ([faces.rs:247](../../../cli/src/faces.rs#L247)).
+All three go through one library function ([faces.rs:263](../../../cli/src/faces.rs#L263)).
 
 ### 5. Gates
 

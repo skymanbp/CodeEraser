@@ -10,11 +10,11 @@ The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:138](..
 
 ### Boundary contract
 
-Before any arithmetic, the first offender in request order is named and the request refused — the knobbed-table cascade every such family runs, rows first, then knobs ([Wire.hs:157](../../../core/app/CE/Wire.hs#L157)), bound to this family's row and knob contracts ([Trend.hs:29](../../../core/app/CE/Trend.hs#L29)):
+Before any arithmetic, the first offender in request order is named and the request refused — the knobbed-table cascade every such family runs, rows first, then knobs ([Wire.hs:155](../../../core/app/CE/Wire.hs#L155)), bound to this family's row and knob contracts ([Trend.hs:29](../../../core/app/CE/Trend.hs#L29)):
 
 - row must be exactly `[ts, score, scale]`, with `ts >= 0`, `scale > 0`, and `0 <= score <= scale` ([Trend.hs:39](../../../core/app/CE/Trend.hs#L39));
 - knob must be `[code, value]` with `code ∈ {0, 1}`, `value >= 0`, and — for `code == 0` — `value >= 2` ([Trend.hs:50](../../../core/app/CE/Trend.hs#L50));
-- knob codes must be strictly ascending ([Wire.hs:163](../../../core/app/CE/Wire.hs#L163)).
+- knob codes must be strictly ascending ([Wire.hs:161](../../../core/app/CE/Wire.hs#L161)).
 
 Row **order is deliberately unconstrained**: the judged view sorts by timestamp, and first-parent order is topological rather than chronological, so rebased or backdated commits are legal input. The property `orderFree` pins that a shuffled window states the same slope, verdict and fail — and the same cliff FACT: the request index moves with the request, the timestamp it points at must not ([TrendProps.hs:246](../../../core/test/TrendProps.hs#L246)).
 

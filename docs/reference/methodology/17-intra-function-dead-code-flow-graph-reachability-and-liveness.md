@@ -14,7 +14,7 @@ walks reachability and backward liveness and answers the findings over the fourt
 [mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). No name, path or source text crosses the wire:
 a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
 through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
-[mod.rs:71](../../../cli/src/flow_report/mod.rs#L71)).
+[mod.rs:66](../../../cli/src/flow_report/mod.rs#L66)).
 
 ### 1. The lowering — four tables per unit
 
@@ -124,7 +124,7 @@ mask holds the languages whose precision doc passed the gate of §8. Step 4's co
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
 retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
 generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
-all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:41](../../../cli/src/flow_report/mod.rs#L41)).
+all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:36](../../../cli/src/flow_report/mod.rs#L36)).
 
 ### 7. The guard class — novel findings at write time
 

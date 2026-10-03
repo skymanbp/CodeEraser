@@ -289,10 +289,10 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [query.js:61](../../../gui/ui/query.js#L61)).
 
 All three go through two library functions, so the document cannot differ by face
-([faces.rs:197](../../../cli/src/faces.rs#L197), [faces.rs:210](../../../cli/src/faces.rs#L210)); the
+([faces.rs:213](../../../cli/src/faces.rs#L213), [faces.rs:226](../../../cli/src/faces.rs#L226)); the
 integration leg holds the CLI's JSON to the library's byte for byte
 ([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)), and the parity table claims the
-capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).
+capability once across CLI, GUI and MCP ([face_parity_table.rs:35](../../../cli/tests/it/face_parity_table.rs#L35)).
 
 ### 10. The repository's own rules
 
