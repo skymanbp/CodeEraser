@@ -68,7 +68,8 @@ pub(super) fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
 /// the next such chain; the shell exists once and thin per-name fns
 /// satisfy the table's fn-pointer field (the pre-batch-4 banked
 /// shape, now over faces). `erase` reaches the PLAN alone and
-/// `erase_log` reads the trail it leaves, without a core; `doctor` is
+/// `erase_log` reads the trail it leaves (the process's core lays its
+/// document out, plan v2.32 step 5); `doctor` is
 /// the one tool whose FINDING may be a failure — a core that will not
 /// answer rides inside its document rather than as a tool error, so
 /// the caller reading it learns the state instead of an exception.

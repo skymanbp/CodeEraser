@@ -8,6 +8,13 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 权威轨 v2.32 步 5 车道 A 第二批：erase / erase-trail / trend / similar 四族的文档与控制台改由核给出（2026-10-03；照第一批的形；判决代码零改动，`document/1` 仍是 7.10.0，分数与 1.8.0 可比）：
+
+- **Rust**：`erase::document`（新）的 `answer` 送计划行、out-of-class 计数与 `check` / `apply` / `applied`，diff 逐文件先渲染（`render::file_diffs`）再由核放进 `lines`；`trail_answer` 送轨迹记录与读不出的行；`trend::document` 送点表与 trend/2 的应答；`similar::document` 送候选与角色位；erase、trend、similar 在判决那条核链上装文档。删除：erase 的 `render::print` 与三个句子函数、`log::print` / `report_json` / `REPORT_SCHEMA` / `utc_stamp` / `civil`，trend 的 `SCHEMA_ID` / `report_json` / `print` / `verdict_str` / `judgment_json` 与 `main_judge` 的否决闭包，similar 的 `SCHEMA_ID` / `report_json` / `console`；`render::report_json` 只为 GUI 的擦除预览留下（GUI 不在本车道）。三个命令体收成 `JudgeArgs::answered`；新克隆按所有者消掉，主根 38 块、子仓 91 块，预算 38 / 91 未动。设计册 §13 第 56–60 条。
+- **核**：erase 计划与轨迹、trend、similar 四个 schema id 成具名常量；facts 的 `report:erase-trail` / `report:trend` / `report:similar` 改绑核，刮取层 18 → 17。
+- **行为变化**：四族要核答 `document/1`（`ce erase --log` 此前不要核）；`ce erase --apply --format json` 不再在文档后印「erase applied」那句（json 面 stdout 只有文档与 stream 1 的行）；轨迹里类不在表内的记录算作读不出的一行、退 1。
+- **代价**：自仓 release ABAB ×7 中位：erase 3649 → 3575 ms、`erase --log`（一千行轨迹）44 → 178、trend `--commits 5`（全缓存）372 → 385、similar 1534 → 1542（`docs/PERF-BUDGET.md`）。
+
 **无默认档位变更。** 权威轨 v2.32 步 5 车道 A 第一批：scan / dedup / clone / clone-units / docdup 五族的文档与控制台改由核给出（2026-10-03；照 churn 试点的形：Rust 量出整数、送 `document/1`、按 stream 印核的 `lines`、退出码读核的否决位；判决代码零改动，`document/1` 仍是 7.10.0，分数与 1.8.0 可比）：
 
 - **Rust**：`scan::document`（新）送文件 / 函数 / 等级 / 档位表，`dedup::report::answer` 送块 / 组 / 成员与 `--check` 的预算与越线位（`budget::check` 返回 `Gate`），`dedup::t3::answer` 送每一条判过的 T3 行（`--units` 走 `units_answer`），`docdup::judge::answer` 送活段与每一条判过的行；判决的那条核链接着装文档（scan / clone / docdup 不再为文档另起一个核）；新克隆按所有者消掉：`sarif::projected`、`document::Lists`、`Request::counters`（主根 38 块、子仓 91 块；主根预算 41 → 38 具名下调，三个成员在子仓 RETIRED 按名退役，子仓预算 91 未动）。删除：`scan::report` 的 `SCHEMA` / `Report` / `Summary` / `print_console` / `sarif_string`（R10 镜像留下只喂漂移 ensure），dedup 的 `SCHEMA_ID` 与两句 ratchet 打印，t3 / docdup 的 `print` / `SCHEMA_ID` / `Report` / 序列化结构体，`unitcache::UNITS_SCHEMA_ID`，`cli/src/report.rs` 的 `Pair` / `Report` / `emit` / `envelope`。SARIF 是绑定后文档的投影。命令体收成 `main_cmds::answered`（churn 同读）。GUI 与 daemon 的签名不动（`dedup::report_json` 用本进程的核）。设计册 §13 第 51–55 条。

@@ -15,14 +15,14 @@
 -- The measuring side sends the candidates in display order as
 -- integers; the query's label, a candidate's place and key are
 -- references.
-module CE.Similar.Document (doc) where
+module CE.Similar.Document (doc, schemaId) where
 
 import CE.Document.Contract
 import Data.Aeson (Value (..), object, (.=))
 import Data.Foldable (asum)
 
 doc :: DocFamily
-doc = docFamily "similar" "ce.similar-report/0.1.0" statement checked assemble []
+doc = docFamily "similar" schemaId statement checked assemble []
 
 -- | A candidate row is [seat, nth, score, six channel hits, shape
 -- equal, widened, role (0 not, 1 same-role, 2 unjudged)], in display
@@ -72,3 +72,7 @@ assemble req =
         , "widened" .= (wide == 1)
         ]
     _ -> object []
+
+-- | The document's schema id (the facts registry reads it here).
+schemaId :: String
+schemaId = "ce.similar-report/0.1.0"

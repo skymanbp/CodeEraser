@@ -14,12 +14,14 @@
 //! `super::` web as the import cycle it was).
 
 mod apply;
+pub mod document;
 pub mod gather;
 pub mod log;
 mod model;
 pub mod render;
 mod wire;
 
+use crate::document::Held;
 use anyhow::{Result, bail};
 pub use model::{
     CLASS_NAMES, Candidate, Counts, LOG_SCHEMA, Plan, REASON_NAMES, Row, SCHEMA_ID,
@@ -35,14 +37,20 @@ use std::path::{Path, PathBuf};
 /// producers sending the same rows in the same order close the same
 /// way, and this producer's order is the sorted one.
 pub fn plan(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Plan> {
+    Ok(planned(root, db, core)?.0)
+}
+
+/// The plan and the link erase/1 judged it over, for its document.
+pub fn planned(root: &Path, db: Option<PathBuf>, core: &str) -> Result<(Plan, Held)> {
     let mut g = gather::candidates(root, db, core)?;
     g.candidates.sort_by(|a, b| {
         (&a.path, a.span, CLASS_NAMES[a.class]).cmp(&(&b.path, b.span, CLASS_NAMES[b.class]))
     });
+    let (verdicts, held) = wire::judge(core, &g.candidates)?;
     let rows: Vec<Row> = g
         .candidates
         .iter()
-        .zip(wire::judge(core, &g.candidates)?)
+        .zip(verdicts)
         .filter(|(_, v)| v.kept)
         .map(|(c, v)| Row {
             class: CLASS_NAMES[c.class],
@@ -61,7 +69,7 @@ pub fn plan(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Plan> {
         advisory: rows.iter().filter(|r| !r.eraseable).count(),
         out_of_class: g.out_of_class,
     };
-    Ok(Plan { rows, counts })
+    Ok((Plan { rows, counts }, held))
 }
 
 /// The destructive phase: preconditions + writes + audit log

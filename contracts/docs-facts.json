@@ -250,7 +250,7 @@
     },
     {
       "id": "report:erase-trail#schemaver",
-      "source": "cli/src/erase/log.rs (typed)",
+      "source": "core/app/CE/Erase/Document.hs (trailSchemaId)",
       "tier": "linked",
       "value": "ce.erase-trail-report/0.1.0"
     },
@@ -322,7 +322,7 @@
     },
     {
       "id": "report:similar#schemaver",
-      "source": "cli/src/similar/face.rs (typed)",
+      "source": "core/app/CE/Similar/Document.hs (schemaId)",
       "tier": "linked",
       "value": "ce.similar-report/0.1.0"
     },
@@ -339,10 +339,9 @@
       "value": "ce.structure-report/0.6.0"
     },
     {
-      "debt": "trend::report is private; promote = re-export SCHEMA_ID beside Report",
       "id": "report:trend#schemaver",
-      "source": "cli/src/trend/report.rs",
-      "tier": "scraped",
+      "source": "core/app/CE/Trend/Document.hs (schemaId)",
+      "tier": "linked",
       "value": "ce.trend-report/0.3.0"
     },
     {
@@ -476,5 +475,5 @@
     }
   ],
   "schema": "ce.docs-facts/0.1.0",
-  "scraped": 18
+  "scraped": 17
 }

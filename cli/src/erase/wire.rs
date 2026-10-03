@@ -12,6 +12,7 @@
 //! without the closure answers without the key and is refused by
 //! name, because the plan it would leave holds two rows per target.
 
+use crate::document::Held;
 use crate::erase::model::{Candidate, REASON_NAMES, Verdict};
 use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
@@ -19,10 +20,11 @@ use std::collections::BTreeMap;
 
 /// One erase.request over the open core link; degraded refused (the
 /// candidate set is bounded by real findings — an over-cap answer
-/// means the plan is beyond anything this side should trust).
-pub fn judge(core: &str, cands: &[Candidate]) -> Result<Vec<Verdict>> {
+/// means the plan is beyond anything this side should trust). The link
+/// goes back for the plan's document (none when nothing was judged).
+pub fn judge(core: &str, cands: &[Candidate]) -> Result<(Vec<Verdict>, Held)> {
     if cands.is_empty() {
-        return Ok(Vec::new());
+        return Ok((Vec::new(), Err("no candidate was judged".into())));
     }
     let mut link = crate::lockstep::open_family(core, "erase/1")?;
     let rows: Vec<[i64; 5]> = cands
@@ -39,7 +41,7 @@ pub fn judge(core: &str, cands: &[Candidate]) -> Result<Vec<Verdict>> {
         )
         .map_err(anyhow::Error::msg)?;
     crate::lockstep::refuse_degraded(&reply, "erase/wire.rs vs CE.Erase.Cost")?;
-    decode(&reply, cands.len())
+    Ok((decode(&reply, cands.len())?, Ok(link)))
 }
 
 /// The target table: one [pathId, start, end] per candidate — path

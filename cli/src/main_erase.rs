@@ -3,9 +3,9 @@
 //! a family of its own (plan by default, --apply behind the contract
 //! preconditions, --check as the CI zero-rows gate).
 
-use crate::main_cmds::{fail, json, or_cwd};
+use crate::main_cmds::{answered, fail, json, or_cwd};
 use crate::main_judge::JudgeArgs;
-use codeeraser::erase;
+use codeeraser::erase::{self, document, document::Run};
 use std::process::ExitCode;
 
 #[derive(clap::Args)]
@@ -28,55 +28,40 @@ pub struct EraseArgs {
 
 pub fn erase_cmd(a: EraseArgs, core: &str) -> ExitCode {
     let root = or_cwd(a.judge.root);
+    let as_json = json(a.judge.format);
     if a.log {
-        return log_cmd(&root, json(a.judge.format));
+        let answer = erase::log::read(&root).and_then(|l| document::trail_answer(core, &l));
+        return answered("erase", "erase-trail", as_json, answer);
     }
-    let plan = match erase::plan(&root, a.judge.db.clone(), core) {
-        Ok(p) => p,
+    // the diff is rendered before anything is applied: the hash check
+    // names a file that moved since planning, and an applied file no
+    // longer holds the bytes the plan showed
+    let planned = erase::planned(&root, a.judge.db.clone(), core)
+        .and_then(|(p, held)| Ok((document::Diffs::of(&root, &p)?, p, held)));
+    let (diffs, plan, held) = match planned {
+        Ok(planned) => planned,
         Err(e) => return fail("erase", e),
     };
-    if let Err(e) = erase::render::print(&root, &plan, json(a.judge.format)) {
-        return fail("erase", e);
-    }
-    if a.check && plan.counts.eraseable > 0 {
-        eprintln!(
-            "erase check: {} eraseable row(s) planned",
-            plan.counts.eraseable
-        );
-        return ExitCode::FAILURE;
-    }
-    if a.apply {
-        return match erase::apply_plan(&root, a.judge.db, core, &plan) {
-            Ok(n) => {
-                println!(
-                    "{}",
-                    codeeraser::i18n::line(
-                        "erase applied: {} row(s); audit trail in .ce/erase-log.ndjson",
-                        "擦除已执行：{} 行；审计轨迹在 .ce/erase-log.ndjson",
-                        &[&n],
-                    )
-                );
-                ExitCode::SUCCESS
-            }
-            Err(e) => fail("erase", e),
-        };
-    }
-    ExitCode::SUCCESS
-}
-
-/// `--log`: the trail's reader (erase::log), no core and no plan. A
-/// line the reader refused is printed by number and fails the exit
-/// code — an audit file with an unreadable record is a finding.
-fn log_cmd(root: &std::path::Path, as_json: bool) -> ExitCode {
-    match erase::log::read(root) {
-        Ok(l) => {
-            erase::log::print(&l, as_json);
-            if l.unreadable.is_empty() {
-                ExitCode::SUCCESS
-            } else {
-                ExitCode::FAILURE
-            }
+    let mut run = Run {
+        check: a.check,
+        applied: None,
+    };
+    // `--check` with an eraseable row is the veto, and a vetoed plan is
+    // never applied
+    let vetoed = a.check && plan.counts.eraseable > 0;
+    let applied = (a.apply && !vetoed).then(|| erase::apply_plan(&root, a.judge.db, core, &plan));
+    let refused = match applied {
+        Some(Ok(n)) => {
+            run.applied = Some(n);
+            None
         }
-        Err(e) => fail("erase", e),
+        Some(Err(e)) => Some(e),
+        None => None,
+    };
+    let answer = document::answer(core, held, &plan, &diffs, run);
+    let code = answered("erase", "erase", as_json, answer);
+    match refused {
+        Some(e) => fail("erase", e),
+        None => code,
     }
 }

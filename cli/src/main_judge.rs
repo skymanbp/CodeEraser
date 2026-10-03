@@ -25,6 +25,21 @@ pub struct JudgeArgs {
     pub(crate) db: Option<PathBuf>,
 }
 
+impl JudgeArgs {
+    /// A family the core answers (plan v2.32 step 5): `ask` gets the
+    /// root and the db, the answer is printed in the asked form and the
+    /// exit reads the core's veto (main_cmds::answered) — the one body
+    /// of `ce docdup`, `ce trend` and `ce similar`.
+    pub(crate) fn answered(
+        self,
+        family: &str,
+        ask: impl FnOnce(&Path, Option<PathBuf>) -> anyhow::Result<codeeraser::document::Answer>,
+    ) -> ExitCode {
+        let as_json = json(self.format);
+        answered(family, family, as_json, ask(&or_cwd(self.root), self.db))
+    }
+}
+
 #[derive(clap::Args)]
 pub struct CloneArgs {
     #[command(flatten)]
@@ -112,55 +127,9 @@ fn family_checked<R>(
 /// `ce trend` (M7-P4): the score trajectory over mainline history —
 /// cached in the index db, rebuildable from git at will.
 pub fn trend_cmd(a: TrendArgs, core: &str) -> ExitCode {
-    family_checked(
-        (a.judge, core),
-        "trend",
-        move |r, db, c| codeeraser::trend::run(r, db, c, a.commits, a.batch),
-        codeeraser::trend::print,
-        // declaring [trend] decline_floor_micro armed a fail bit that
-        // NO exit code read: the console printed `-> FAIL` and exited
-        // 0, so a CI leg watching the trajectory passed a declining
-        // one. The core owns the verdict; this is its exit-code
-        // throat (the dedup --check shape). "?" over a defaulted 0: a
-        // fabricated number would be the report lying about why it
-        // failed — and the floor prints as its VALUE in ‰/day of the
-        // score scale, not as a ce.toml key name (batch 9 P15).
-        |r| {
-            let declined = r.judgment.fail.then(|| {
-                let pm = |v: i64| format!("{:.1}", v as f64 / 1000.0);
-                let floor = r
-                    .judgment
-                    .knobs
-                    .iter()
-                    .find(|[c, _]| *c == 1)
-                    .map(|[_, v]| *v);
-                codeeraser::i18n::line(
-                    "score falls {}‰/day, past the declared {}‰/day decline floor",
-                    "分数每日下跌 {}‰，越过声明的每日 {}‰ 下行地板",
-                    &[
-                        &r.judgment
-                            .slope_micro_per_day
-                            .map_or("?".to_string(), |s| pm(-s)),
-                        &floor.map_or("?".to_string(), pm),
-                    ],
-                )
-            });
-            // a point that REFUSED to measure (an unseated submodule,
-            // a worktree that would not add) reaches the console, the
-            // JSON and the GUI, and reached no exit code — the P15
-            // defect one seat over. Keyed on `failed`, never on
-            // `pending`: --batch and the GUI's slice walk leave
-            // pending > 0 by design, and a threshold would be policy.
-            declined.or_else(|| {
-                let (sha, why) = r.failed.first()?;
-                Some(codeeraser::i18n::line(
-                    "{} of {} window commits refused to measure: {} — {}",
-                    "窗口内 {} / {} 个提交拒绝测量：{} —— {}",
-                    &[&r.failed.len(), &r.window, sha, why],
-                ))
-            })
-        },
-    )
+    a.judge.answered("trend", |root, db| {
+        codeeraser::trend::judged(root, db, core, a.commits, a.batch)
+    })
 }
 
 /// `ce structure` (M6 S2): the tree-scale entropy judgment —
@@ -221,9 +190,9 @@ fn emit_checked<R>(
 /// report, its lines and the `--check` veto are the core's (plan v2.32
 /// step 5).
 pub fn docdup_cmd(a: DocdupArgs, core: &str) -> ExitCode {
-    let j = a.judge;
-    let answer = docdup::judge::answer(&or_cwd(j.root), j.db, core, a.check);
-    answered("docdup", "docdup", json(j.format), answer)
+    a.judge.answered("docdup", |root, db| {
+        docdup::judge::answer(root, db, core, a.check)
+    })
 }
 
 /// `ce clone` (M5-3e): the T3 TED judgment over the frozen candidate

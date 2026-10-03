@@ -9,27 +9,23 @@
 //! and the same-role conjunction come back over similar/1 (wire.rs);
 //! a core that cannot answer makes a NAMED degraded document whose
 //! role column is null and whose order is the measured one, unjudged
-//! — never a verdict this side reached alone (A9f).
+//! — never a verdict this side reached alone (A9f). The document and
+//! the console lines are the core's (document.rs, plan v2.32 step 5).
 
 use super::bm25::{self, Hit, QueryTerm};
 use super::query::{self, Ask, Resolved, place};
 use super::reader::Reader;
-use super::{K, SIMILAR_REV, ppmi, wire};
+use super::{K, ppmi, wire};
 use crate::corelink::Link;
-use crate::i18n::line;
+use crate::document::Held;
 use anyhow::Result;
-use serde::Serialize;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
-/// 0.1.0: the first shape (plan v2.29 step 6).
-pub const SCHEMA_ID: &str = "ce.similar-report/0.1.0";
-
-/// One candidate as every face shows it. Field names are chosen so the
-/// GUI hub's generic five-column projection (alphabetical scalars)
-/// keeps `at`, `key`, `nth`, `role`, `score` — where it is, what it is,
-/// and the two judged numbers.
-#[derive(Serialize, Debug, Clone, PartialEq, Eq)]
+/// One candidate as measured and judged. (The document's field names
+/// keep the GUI hub's generic five-column projection — alphabetical
+/// scalars `at`, `key`, `nth`, `role`, `score`; CE.Similar.Document.)
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Row {
     pub at: String,
     pub key: String,
@@ -54,8 +50,15 @@ pub struct Report {
     pub degraded: Option<String>,
 }
 
-/// Index refreshed, query resolved, both arms ranked and judged.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask, widen: bool) -> Result<Report> {
+/// Index refreshed, query resolved, both arms ranked and judged; the
+/// link the judgment used, for the document (or why there is none).
+pub(super) fn judged(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    ask: &Ask,
+    widen: bool,
+) -> Result<(Report, Held)> {
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
     let reader = Reader::open(&idx)?;
     let q: Resolved = query::resolve(&reader, ask)?;
@@ -72,13 +75,14 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask, widen: bool)
             .collect();
         rows.extend(judge.rows(&reader, &wide_terms, &added, true));
     }
-    Ok(Report {
+    let report = Report {
         label: q.label,
         widen,
         terms: q.terms.len(),
         rows,
-        degraded: judge.degraded,
-    })
+        degraded: judge.degraded.clone(),
+    };
+    Ok((report, judge.held()))
 }
 
 /// The core's side of the document: a link, or the named reason there
@@ -90,6 +94,15 @@ struct Judge {
 }
 
 impl Judge {
+    /// The link, when no request failed over it (a failed request may
+    /// leave half a reply in the pipe).
+    fn held(self) -> Held {
+        match (self.link, self.degraded) {
+            (Some(link), None) => Ok(link),
+            (_, why) => Err(why.unwrap_or_else(|| "core unavailable".into())),
+        }
+    }
+
     fn open(core: &str) -> Judge {
         match Link::open(core) {
             Ok((link, _)) => Judge {
@@ -146,86 +159,3 @@ impl Judge {
             .collect()
     }
 }
-
-pub fn report_json(r: &Report) -> serde_json::Value {
-    let role = r.rows.iter().filter(|x| x.role == Some(true)).count();
-    let widened = r.rows.iter().filter(|x| x.widened).count();
-    serde_json::json!({
-        "schema": SCHEMA_ID,
-        "similar_rev": SIMILAR_REV,
-        "query": {"label": r.label, "terms": r.terms, "widen": r.widen},
-        "candidates": r.rows,
-        "counts": {"candidates": r.rows.len(), "role": role, "widened": widened},
-        "degraded": r.degraded,
-    })
-}
-
-/// The console face: one header sentence, one line per candidate —
-/// where, what, the evidence row in wire order, the role word.
-pub fn console(r: &Report) -> Vec<String> {
-    let role = r.rows.iter().filter(|x| x.role == Some(true)).count();
-    let mut out = vec![line(
-        "similar: {} — {} query term(s), {} candidate(s), {} same-role{}{}",
-        "similar：{} — {} 个查询项、{} 个候选、{} 个同角色{}{}",
-        &[
-            &r.label,
-            &r.terms,
-            &r.rows.len(),
-            &role,
-            &widened_note(r),
-            &degraded_note(r),
-        ],
-    )];
-    for x in &r.rows {
-        let evidence: Vec<String> = ["N", "P", "C", "D", "S", "L"]
-            .iter()
-            .zip(x.hits)
-            .map(|(l, n)| format!("{l}{n}"))
-            .collect();
-        let role = match x.role {
-            Some(true) => line("same-role", "同角色", &[]),
-            Some(false) => "-".to_string(),
-            None => "?".to_string(),
-        };
-        let tag = if x.widened {
-            line(" (associative)", "（联想）", &[])
-        } else {
-            String::new()
-        };
-        out.push(format!(
-            "  {} {}  {}  {}{}",
-            x.at,
-            x.key,
-            evidence.join(" "),
-            role,
-            tag
-        ));
-    }
-    out
-}
-
-fn widened_note(r: &Report) -> String {
-    if !r.widen {
-        return String::new();
-    }
-    let n = r.rows.iter().filter(|x| x.widened).count();
-    line(
-        ", {} from the associative view",
-        "，联想视图另加 {} 个",
-        &[&n],
-    )
-}
-
-fn degraded_note(r: &Report) -> String {
-    r.degraded.as_ref().map_or_else(String::new, |why| {
-        line(
-            " — degraded: {} (measured order, no role bits)",
-            " — 已降级：{}（按度量序、无角色位）",
-            &[why],
-        )
-    })
-}
-
-#[cfg(test)]
-#[path = "../../tests/unit/similar/face.rs"]
-mod tests;

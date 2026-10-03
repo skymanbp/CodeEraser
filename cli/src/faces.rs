@@ -88,9 +88,7 @@ pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
 }
 
 pub fn trend(root: &Path, core: &str, commits: usize, batch: Option<usize>) -> Result<Value> {
-    Ok(crate::trend::report_json(&crate::trend::run(
-        root, None, core, commits, batch,
-    )?))
+    Ok(crate::trend::judged(root, None, core, commits, batch)?.document)
 }
 
 /// The GUI's graph screen (plan v2.30 step 5b item 31): the canvas
@@ -128,20 +126,23 @@ pub fn listed_units(root: &Path) -> Result<Vec<crate::dedup::unitcache::UnitRow>
 /// omission: a machine surface that could delete files on its own
 /// authority is the one thing an eraser must never ship.
 pub fn erase(root: &Path, core: &str) -> Result<Value> {
-    Ok(crate::erase::render::report_json(&crate::erase::plan(
-        root, None, core,
-    )?))
+    let (plan, held) = crate::erase::planned(root, None, core)?;
+    let diffs = crate::erase::document::Diffs::of(root, &plan)?;
+    let run = crate::erase::document::Run::default();
+    Ok(crate::erase::document::answer(core, held, &plan, &diffs, run)?.document)
 }
 
 /// The applied-erase audit trail (plan v2.29 step 9, O50): apply.rs
 /// is its one writer and this is its reader — every face renders the
 /// same document, and none can append to it. Read-only like every
 /// sibling; a line the reader cannot parse rides inside the document
-/// by line number rather than failing the face.
+/// by line number rather than failing the face. The process's core lays
+/// the document out (plan v2.32 step 5); the face keeps its signature,
+/// so its GUI and MCP callers pass no core.
 pub fn erase_log(root: &Path) -> Result<Value> {
-    Ok(crate::erase::log::report_json(&crate::erase::log::read(
-        root,
-    )?))
+    let log = crate::erase::log::read(root)?;
+    let core = crate::tables::core_flag();
+    Ok(crate::erase::document::trail_answer(core, &log)?.document)
 }
 
 /// The same-role advisor's document (plan v2.29 step 6): one ask —
@@ -156,9 +157,7 @@ pub fn similar(
     ask: &crate::similar::query::Ask,
     widen: bool,
 ) -> Result<Value> {
-    Ok(crate::similar::face::report_json(
-        &crate::similar::face::run(root, None, core, ask, widen)?,
-    ))
+    Ok(crate::similar::document::answer(root, None, core, ask, widen)?.document)
 }
 
 /// One question over the index's facts (plan v2.31 step 2): the

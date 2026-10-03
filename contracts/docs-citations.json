@@ -2932,8 +2932,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/trend/mod.rs|02421ffd7685ec74|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 147,
-    "end": 158,
+    "line": 172,
+    "end": 183,
     "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Clone/Cost.hs|626115d91a368b79|0": {
@@ -7043,12 +7043,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|3bd732b256dddde4|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 97,
+    "line": 98,
     "text": "fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|41a32d51be006e6f|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 57,
+    "line": 58,
     "text": "let mut body = json!({"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|7fb457874f6bbf7f|0": {
@@ -7058,7 +7058,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|9966ff5b149ff05c|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 75,
+    "line": 76,
     "text": "for (name, pair) in [(\"cliff\", j.cliff), (\"declineRun\", j.decline_run)] {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|b3f6fb80cceb87dc|0": {
@@ -7066,61 +7066,46 @@
     "line": 5,
     "text": "//! order this side sent; hashes never cross, §5.9.2). Rust computes"
   },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|b8b1ec44035c79d3|0": {
-    "target": "../../../cli/src/trend/judge.rs",
-    "line": 127,
-    "text": "pub fn verdict_str(j: &Judgment) -> &'static str {"
-  },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|e975334367cdf27f|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 49,
+    "line": 50,
     "text": "let mut knobs: Vec<[i64; 2]> = Vec::new();"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|02421ffd7685ec74|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 147,
-    "end": 158,
+    "line": 172,
+    "end": 183,
     "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|0920e96e3069fb9c|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 102,
+    "line": 126,
     "text": "rows.reverse(); // git log is newest-first; charts read oldest-first"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|254f31d87003e86b|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 30,
+    "line": 31,
     "text": "/// in clap and a `10` literal in the MCP adapter, so one project"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|837592edb2511f12|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 134,
+    "line": 159,
     "text": "/// One commit's absolute score, judged in a detached temp worktree"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|a48e784705f6169e|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 113,
+    "line": 138,
     "text": "/// Newest `n` first-parent commits of HEAD: (full sha, committer"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|a5d917234234f42d|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 75,
+    "line": 99,
     "text": "let stamp = toolchain_stamp(core)?;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|d1414dfcc6565125|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 76,
+    "line": 100,
     "text": "// ONE fence for the whole trajectory: the committed soft line, or"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/report.rs|4469742040a13190|0": {
-    "target": "../../../cli/src/trend/report.rs",
-    "line": 17,
-    "text": "pub const SCHEMA_ID: &str = \"ce.trend-report/0.3.0\";"
-  },
-  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/report.rs|f04c57751c1a6644|0": {
-    "target": "../../../cli/src/trend/report.rs",
-    "line": 115,
-    "text": "fn print_shape_facts(r: &Report) {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Trend.hs|1233dff1a3411c0c|0": {
     "target": "../../../core/app/CE/Trend.hs",
@@ -7221,6 +7206,21 @@
     "target": "../../../core/app/CE/Trend/Cost.hs",
     "line": 60,
     "text": "[ (i, ts % 86400, (score * 1000000) % scale)"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Trend/Document.hs|7a8e1814cc0cbfbc|0": {
+    "target": "../../../core/app/CE/Trend/Document.hs",
+    "line": 82,
+    "text": "schemaId = \"ce.trend-report/0.3.0\""
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Trend/Lines.hs|4283c9571e3b80b1|0": {
+    "target": "../../../core/app/CE/Trend/Lines.hs",
+    "line": 37,
+    "text": "word = case key \"verdict\" j of"
+  },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Trend/Lines.hs|d32e525baf10930c|0": {
+    "target": "../../../core/app/CE/Trend/Lines.hs",
+    "line": 42,
+    "text": "shape =\n[say \"cliff\" [pm d, short i] | Success [i, d] <- [fromJSON (key \"cliff\" j)]]"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|25ec30a05fd96d35|0": {
     "target": "../../../core/app/CE/Wire.hs",
@@ -7830,8 +7830,8 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
-    "line": 67,
-    "end": 98,
+    "line": 75,
+    "end": 106,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|0": {
@@ -7854,27 +7854,27 @@
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|555fc245631410bd|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 35,
-    "end": 46,
+    "line": 37,
+    "end": 48,
     "text": "let reply = link"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|5df7975db4f3a3e3|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 60,
-    "end": 63,
+    "line": 62,
+    "end": 65,
     "text": ".collect()\n}\n\n/// The two reply tables, each length-locked to the request and read"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|90a6cd9f2a1ed699|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 27,
-    "end": 46,
+    "line": 29,
+    "end": 48,
     "text": "let mut link = crate::lockstep::open_family(core, \"erase/1\")?;"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|99d157d580d3df1e|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|92b9265df694eed8|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 42,
-    "end": 58,
-    "text": "decode(&reply, cands.len())"
+    "line": 44,
+    "end": 60,
+    "text": "Ok((decode(&reply, cands.len())?, Ok(link)))"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/lockstep.rs|a7f7cc8708bdb89f|0": {
     "target": "../../../cli/src/lockstep.rs",
@@ -8617,8 +8617,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|1e518b39e4c485a7|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 314,
-    "end": 316,
+    "line": 315,
+    "end": 317,
     "text": "> 占 `violation` asum **最前**：只发其一 ⇒ `unmentioned: mounts table required alongside` /"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|18e8c8074aa46fed|0": {
@@ -9422,7 +9422,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|42203d6f2fb5a593|0": {
     "target": "../../../cli/src/main_similar.rs",
-    "line": 31,
+    "line": 30,
     "text": "pub fn similar_cmd(a: SimilarArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
@@ -9505,32 +9505,22 @@
     "line": 59,
     "text": "pub fn doc_owner(d: &DocSeg, all: &[Unit]) -> Option<usize> {"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|115642791c0edccb|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|052d4a9553ac99bf|0": {
     "target": "../../../cli/src/similar/face.rs",
-    "line": 26,
-    "end": 45,
-    "text": "pub const SCHEMA_ID: &str = \"ce.similar-report/0.1.0\";"
+    "line": 55,
+    "end": 86,
+    "text": "pub(super) fn judged("
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|25dca994341b1b4e|0": {
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|7a8bbf5c5eb41110|0": {
     "target": "../../../cli/src/similar/face.rs",
-    "line": 165,
-    "text": "pub fn console(r: &Report) -> Vec<String> {"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|3d907a332a8f9c40|0": {
-    "target": "../../../cli/src/similar/face.rs",
-    "line": 150,
-    "text": "pub fn report_json(r: &Report) -> serde_json::Value {"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|8465eac1bc6dec28|0": {
-    "target": "../../../cli/src/similar/face.rs",
-    "line": 58,
-    "end": 75,
-    "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask, widen: bool) -> Result<Report> {"
+    "line": 29,
+    "end": 42,
+    "text": "pub struct Row {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/face.rs|b4df2d724ad657a3|0": {
     "target": "../../../cli/src/similar/face.rs",
-    "line": 44,
-    "end": 45,
+    "line": 40,
+    "end": 41,
     "text": "/// Reached by the widened query only (the associative view)."
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|0af647de8d71379a|0": {
@@ -9541,13 +9531,13 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|4bc6a96ee6ee332e|0": {
     "target": "../../../cli/src/similar/mod.rs",
-    "line": 43,
+    "line": 44,
     "text": "pub const K: usize = 5;"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|857e513176fffcce|0": {
     "target": "../../../cli/src/similar/mod.rs",
-    "line": 33,
-    "end": 43,
+    "line": 34,
+    "end": 44,
     "text": "/// words, channel tags, the shape / literal / structure feature"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|5e4ba0213acb00bc|0": {
@@ -9824,6 +9814,21 @@
     "end": 31,
     "text": "-- | The candidate row: [nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual,"
   },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Document.hs|3f443398143baa59|0": {
+    "target": "../../../core/app/CE/Similar/Document.hs",
+    "line": 78,
+    "text": "schemaId = \"ce.similar-report/0.1.0\""
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Document.hs|89c255e038efd961|0": {
+    "target": "../../../core/app/CE/Similar/Document.hs",
+    "line": 46,
+    "text": "assemble :: DocReq -> Value"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Lines.hs|6a65aa16f28af546|0": {
+    "target": "../../../core/app/CE/Similar/Lines.hs",
+    "line": 13,
+    "text": "lines' say doc _ ="
+  },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|0d4f123892f57f55|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
     "line": 100,
@@ -9928,12 +9933,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|097f5d56f167eb0a|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 183,
+    "line": 182,
     "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|f50a981a429e80a8|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 170,
+    "line": 169,
     "text": "pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -9959,7 +9964,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 178,
+    "line": 179,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
@@ -11445,7 +11450,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|7f6211bb93596e3c|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 213,
+    "line": 212,
     "text": "pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
@@ -11455,7 +11460,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 200,
+    "line": 201,
     "text": "a[\"file\"].as_str().map(Path::new),"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {

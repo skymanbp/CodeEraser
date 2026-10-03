@@ -17,7 +17,7 @@
 -- counts by kind code; paths and provenance are references. The
 -- trail `ce erase --log` reads is this module's second family
 -- (`trailDoc`, below).
-module CE.Erase.Document (doc, logRel, outOfClass, planRows, trailDoc) where
+module CE.Erase.Document (doc, logRel, outOfClass, planRows, schemaId, trailDoc, trailSchemaId) where
 
 import CE.Document.Contract
 import CE.Erase.Cost (classNames, reasonNames)
@@ -29,7 +29,7 @@ import qualified Data.Map.Strict as M
 
 doc :: DocFamily
 doc =
-  docFamily "erase" "ce.erase-plan/0.3.0" statement checked assemble $
+  docFamily "erase" schemaId statement checked assemble $
     ["classes" .= classNames, "reasons" .= reasonNames, "kinds" .= map fst outOfClass, "diffContext" .= diffContext]
 
 -- | The out-of-class kinds the plan counts, by code, each with the
@@ -109,7 +109,7 @@ assemble req =
 -- line's number; the target, provenance, hash, plan and the reason a
 -- line was refused are references.
 trailDoc :: DocFamily
-trailDoc = docFamily "erase-trail" "ce.erase-trail-report/0.1.0" trailStatement trailChecked trailAssemble ["log" .= logRel, "record" .= recordSchema]
+trailDoc = docFamily "erase-trail" trailSchemaId trailStatement trailChecked trailAssemble ["log" .= logRel, "record" .= recordSchema]
 
 -- | The record schema apply.rs writes and the reader holds every line
 -- to, and where the trail lives (root-relative).
@@ -162,3 +162,8 @@ trailAssemble req =
         , "plan" .= ref "plan" [i]
         ]
     _ -> object []
+
+-- | The two documents' schema ids (the facts registry reads them here).
+schemaId, trailSchemaId :: String
+schemaId = "ce.erase-plan/0.3.0"
+trailSchemaId = "ce.erase-trail-report/0.1.0"

@@ -20,6 +20,7 @@
 pub mod bag;
 pub mod bm25;
 pub mod docs;
+pub mod document;
 pub mod face;
 pub mod ppmi;
 pub mod query;

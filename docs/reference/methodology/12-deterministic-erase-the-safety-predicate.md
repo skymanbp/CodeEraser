@@ -19,16 +19,16 @@ the remaining four cells are facts whose meaning depends on that class
 ([VERSIONING-ARCHIVE-2.15-2.33.md:135-139](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L135)). The client
 prepends the class to those four facts, sends the resulting five-integer row,
 and reads one `[eraseable, reason]` pair back for every candidate
-([wire.rs:27-46](../../../cli/src/erase/wire.rs#L27)). Thus the measurement side
+([wire.rs:29-48](../../../cli/src/erase/wire.rs#L29)). Thus the measurement side
 can assemble evidence, but the boolean and reason are produced by `judgeRow`.
 
 Since 7.2.0 (plan v2.30 step 7b) the request also carries the rows' targets —
 one `[pathId, start, end]` per row, path ids dense in request order and `0/0`
 for a whole file — and the reply carries `kept`, one bit per row saying which
-row STANDS for its target ([wire.rs:42-58](../../../cli/src/erase/wire.rs#L42),
+row STANDS for its target ([wire.rs:44-60](../../../cli/src/erase/wire.rs#L44),
 [Erase.hs:51-57](../../../core/app/CE/Erase.hs#L51)). The client reads both
 tables length-locked and refuses a reply without `kept` as a pre-7.2.0 core
-([wire.rs:60-63](../../../cli/src/erase/wire.rs#L60)); the closure itself is
+([wire.rs:62-65](../../../cli/src/erase/wire.rs#L62)); the closure itself is
 §2's class-2 paragraph and `keptRows`.
 
 Rust's measurement leg preserves raw bytes for the final equality test: the
@@ -166,7 +166,7 @@ authorized from an over-cap computation
 The erase client treats degraded as an error rather than interpreting an empty
 table as “nothing to erase”: `wire.rs` calls `refuse_degraded` before decoding
 rows and checks that the decoded count equals the candidate count
-([wire.rs:35-46](../../../cli/src/erase/wire.rs#L35)). The shared refusal helper
+([wire.rs:37-48](../../../cli/src/erase/wire.rs#L37)). The shared refusal helper
 requires `degraded == false` and reports cap-mirror drift when it is not
 ([lockstep.rs:106-112](../../../cli/src/lockstep.rs#L106)).
 
@@ -190,7 +190,7 @@ Only after all three checks does the executor write targets and append the
 audit records ([apply.rs:16-34](../../../cli/src/erase/apply.rs#L16)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
-([mod.rs:67-98](../../../cli/src/erase/mod.rs#L67)).
+([mod.rs:75-106](../../../cli/src/erase/mod.rs#L75)).
 
 ### 6. No tuning surface
 

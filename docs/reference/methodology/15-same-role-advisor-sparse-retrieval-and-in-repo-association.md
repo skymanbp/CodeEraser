@@ -59,7 +59,7 @@ Query weights are integer multipliers — names ×3, callees ×2, everything els
 score stays exact ([terms.rs:49-56](../../../cli/src/similar/terms.rs#L49)). The whole term
 road is declared once as `SIMILAR_REV` and sits in the index cache key: a change to any rule
 above wipes the bag tables with the rest of the index rather than ranking old bags against new
-queries ([mod.rs:33-43](../../../cli/src/similar/mod.rs#L33)).
+queries ([mod.rs:34-44](../../../cli/src/similar/mod.rs#L34)).
 
 ### 2. The inverted tables — bags persisted as postings, pairs not stored
 
@@ -111,7 +111,7 @@ ordered by score then identity. A term in more than half the units — idf 0 —
 nor evidence: sharing what nearly everything shares says nothing, and walking its posting list
 would cost the whole corpus per query, so df is asked first and the list is never fetched.
 Shape equality and the role bit are read for the K survivors only, and neither orders
-([bm25.rs:77-100](../../../cli/src/similar/bm25.rs#L77), [mod.rs:43](../../../cli/src/similar/mod.rs#L43)).
+([bm25.rs:77-100](../../../cli/src/similar/bm25.rs#L77), [mod.rs:44](../../../cli/src/similar/mod.rs#L44)).
 Ranking is written once, against the `Postings` trait: the in-memory `Corpus` the instruments
 build and the persisted `Reader` over `.ce/index.db` both feed the same `top_k`, and the replay
 asserts they agree on every unit of five corpora — the instrument and the product run one road
@@ -150,7 +150,7 @@ the way the bare arm did and crossed no significance line (widened 63/118 agains
 on the first generation as first arbitrated; the Go fixture's re-measurement of 2026-09-26 moved the same oracle to 66/118 against 68/118, and the TypeScript fixture's of 2026-09-27 to 64/118 against 66/118), so the faces show the widened rows as a second page, tagged, and the
 role bit is read off the six channels only
 ([EVAL-SET-SIMILAR.md:228](../../EVAL-SET-SIMILAR.md#L228),
-[face.rs:44-45](../../../cli/src/similar/face.rs#L44)).
+[face.rs:40-41](../../../cli/src/similar/face.rs#L40)).
 
 ### 5. The wire — `similar/1`, and what Haskell judges
 
@@ -191,19 +191,19 @@ Every face renders one document, `ce.similar-report/0.1.0`: the query as
 `{label, terms, widen}`, the candidates as rows `{at, key, nth, role, score, hits[6],
 shape_equal, widened}` — the first five alphabetical scalars are what the GUI hub's generic
 projection shows — the counts, and `degraded` naming why the core did not judge when it did not
-([face.rs:26-45](../../../cli/src/similar/face.rs#L26), [face.rs:150](../../../cli/src/similar/face.rs#L150)).
+— laid out by the core from the measured rows ([face.rs:29-42](../../../cli/src/similar/face.rs#L29), [Document.hs:46](../../../core/app/CE/Similar/Document.hs#L46), [Document.hs:78](../../../core/app/CE/Similar/Document.hs#L78)).
 A query is exactly one of three asks: `at` (`file:line`, the innermost unit holding the line),
 `unit` (a key, refused by name when ambiguous, naming up to five places) or `text` (free text,
 whose words become name and doc evidence — no shape, no callee, so the core's role bit is false
 by construction) ([query.rs:16-53](../../../cli/src/similar/query.rs#L16),
-[query.rs:61-94](../../../cli/src/similar/query.rs#L61)). `run` refreshes the index over the
+[query.rs:61-94](../../../cli/src/similar/query.rs#L61)). `judged` refreshes the index over the
 same content-hash gate every command uses, resolves the ask, ranks the bare arm — and the widened
 arm when asked, its rows not in the bare arm tagged `widened` — and rides one `similar/1`
-request per arm over one core link ([face.rs:58-75](../../../cli/src/similar/face.rs#L58)).
+request per arm over one core link, the document asked over the same link ([face.rs:55-86](../../../cli/src/similar/face.rs#L55)).
 
 - **CLI** `ce similar --at file:line | --text "…" | --unit key [--widen]`: a bilingual head
   line and one line per candidate, `at key  N P C D S L  role`; `--format json` is the document
-  ([main_similar.rs:31](../../../cli/src/main_similar.rs#L31), [face.rs:165](../../../cli/src/similar/face.rs#L165)).
+  ([main_similar.rs:30](../../../cli/src/main_similar.rs#L30), [Lines.hs:13](../../../core/app/CE/Similar/Lines.hs#L13)).
 - **MCP** `similar_units` — the fifteenth read-only tool, `{at, text, unit, widen}`, relaying
   the same document ([tools.rs:178](../../../cli/src/mcp/tools.rs#L178)).
 - **GUI** the eleventh screen, `similar`: an input for `at` or text, the widen switch, the

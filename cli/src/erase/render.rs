@@ -1,13 +1,16 @@
-//! The plan's two faces (erase.md §two-phases): a unified diff whose
-//! every hunk carries its verdict provenance, and the machine JSON
-//! rows. The diff re-reads each target and re-verifies the plan's
-//! content hash on the way — a rendering that showed bytes the plan
-//! did not hash would be a second source of truth.
+//! The plan's unified diff (erase.md §two-phases): every hunk carries
+//! its verdict provenance. The diff re-reads each target and re-verifies
+//! the plan's content hash on the way — a rendering that showed bytes the
+//! plan did not hash would be a second source of truth. The console
+//! lines and the plan document are the core's (erase/document.rs); the
+//! core places one diff per file. `report_json` is the GUI preview's
+//! document until that face reads the core's (it holds no core path).
 
 use crate::erase::model::{Plan, Row, family_command};
 use anyhow::{Result, ensure};
 use std::path::Path;
 
+/// The hunks' context lines (CE.Erase.Document `diffContext`).
 const CONTEXT: usize = 3;
 
 /// The plan document. `families` (0.3.0) names the family command
@@ -28,57 +31,33 @@ pub fn report_json(p: &Plan) -> serde_json::Value {
     })
 }
 
-/// The whole console face: hunks for eraseable rows, named advisory
-/// rows, the aggregate out-of-class tail, one summary line.
-pub fn print(root: &Path, p: &Plan, as_json: bool) -> Result<()> {
-    if as_json {
-        println!("{}", report_json(p));
-        return Ok(());
-    }
-    print!("{}", diff(root, p)?);
-    for r in p.rows.iter().filter(|r| !r.eraseable) {
-        println!(
-            "{}",
-            crate::i18n::line(
-                "advisory {} {}{}: {}{} ({})",
-                "仅建议 {} {}{}：{}{}（{}）",
-                &[
-                    &r.class,
-                    &r.path,
-                    &span_str(r),
-                    &r.reason,
-                    &reason_detail(r),
-                    &r.provenance.as_str()
-                ],
-            )
-        );
-    }
-    for (k, n) in &p.counts.out_of_class {
-        println!("{}", out_of_class_line(k, *n));
-    }
-    println!(
-        "{}",
-        crate::i18n::line(
-            "erase plan: {} eraseable, {} advisory (dry-run; --apply to act)",
-            "擦除计划：可擦 {}，仅建议 {}（演练；--apply 才动手）",
-            &[&p.counts.eraseable, &p.counts.advisory],
-        )
-    );
-    Ok(())
-}
-
 /// Unified diff over every eraseable row, grouped per file, hunks in
 /// plan order with cumulative new-side offsets. Provenance rides as
 /// a `##` trailer on each hunk header — verdict family, evidence,
 /// and the plan's file hash (fnv1a64).
 pub fn diff(root: &Path, p: &Plan) -> Result<String> {
+    Ok(file_diffs(root, p)?
+        .into_iter()
+        .map(|(_, d)| d + "\n")
+        .collect())
+}
+
+/// The diff one file at a time: the place of the file's first eraseable
+/// row in the plan, and its hunks (no final newline — the console prints
+/// each as one line).
+pub fn file_diffs(root: &Path, p: &Plan) -> Result<Vec<(usize, String)>> {
     let mut cache = crate::erase::gather::TextCache::new(root);
-    let mut out = String::new();
-    let mut rows = p.eraseable().peekable();
-    while let Some(first) = rows.next() {
+    let mut out = Vec::new();
+    let mut rows = p
+        .rows
+        .iter()
+        .enumerate()
+        .filter(|(_, r)| r.eraseable)
+        .peekable();
+    while let Some((at, first)) = rows.next() {
         let mut file_rows = vec![first];
-        while rows.peek().is_some_and(|r| r.path == first.path) {
-            file_rows.push(rows.next().expect("peeked"));
+        while let Some((_, r)) = rows.next_if(|(_, r)| r.path == first.path) {
+            file_rows.push(r);
         }
         let text = cache.text(&first.path)?.to_string();
         ensure!(
@@ -86,51 +65,12 @@ pub fn diff(root: &Path, p: &Plan) -> Result<String> {
             "{}: content changed since planning — re-run ce erase",
             first.path
         );
-        file_diff(&mut out, &text, &file_rows);
+        let mut hunks = String::new();
+        file_diff(&mut hunks, &text, &file_rows);
+        hunks.pop();
+        out.push((at, hunks));
     }
     Ok(out)
-}
-
-/// The aggregate tail names the family command that owns the kind
-/// (O24): "see the family command" sent the reader somewhere without
-/// saying where. A kind the table does not know keeps the old
-/// sentence rather than inventing a command.
-fn out_of_class_line(kind: &str, n: usize) -> String {
-    match family_command(kind) {
-        Some(cmd) => crate::i18n::line(
-            "advisory {}: {} finding(s) — no deterministic-safe erase; see `{}`",
-            "仅建议 {}：{} 条——无确定性安全擦除；见 `{}`",
-            &[&kind, &n, &cmd],
-        ),
-        None => crate::i18n::line(
-            "advisory {}: {} finding(s) — no deterministic-safe erase; see the family command",
-            "仅建议 {}：{} 条——无确定性安全擦除；见对应家族命令",
-            &[&kind, &n],
-        ),
-    }
-}
-
-fn span_str(r: &Row) -> String {
-    match r.span {
-        Some((s, e)) => format!(":{s}-{e}"),
-        None => String::new(),
-    }
-}
-
-/// The reason's own number where it has one (FIELD-TEST, plan v2.25):
-/// `language_unresolved` says liveness cannot be trusted because the
-/// row's language still has unresolved reference sites, and the count
-/// is what lets a reader weigh that. Display-only — the wire's reason
-/// bits are frozen.
-fn reason_detail(r: &Row) -> String {
-    if r.reason != "language_unresolved" {
-        return String::new();
-    }
-    crate::i18n::line(
-        " — {} unresolved reference sites in this language",
-        "——该语言尚有 {} 个未解析引用点位",
-        &[&r.sites],
-    )
 }
 
 fn file_diff(out: &mut String, text: &str, rows: &[&Row]) {

@@ -13,14 +13,14 @@
 -- point), the fail bit and the knob echo. The measuring side sends its
 -- points and the reply's six keys as integers; commits and the
 -- refusals' reasons are references.
-module CE.Trend.Document (doc) where
+module CE.Trend.Document (doc, schemaId) where
 
 import CE.Document.Contract
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.Foldable (asum)
 
 doc :: DocFamily
-doc = docFamily "trend" "ce.trend-report/0.3.0" statement checked assemble []
+doc = docFamily "trend" schemaId statement checked assemble []
 
 -- | A point row is [i, ts, score, scale, then each axis's code and
 -- value], oldest first; `slope`, `verdict`, `cliff` [point, drop] and
@@ -76,3 +76,7 @@ assemble req =
   pairs xs = case xs of
     c : p : rest -> [c, p] : pairs rest
     _ -> []
+
+-- | The document's schema id (the facts registry reads it here).
+schemaId :: String
+schemaId = "ce.trend-report/0.3.0"

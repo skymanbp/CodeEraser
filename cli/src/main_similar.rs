@@ -4,7 +4,6 @@
 //! `--format json`. Split from main_judge.rs at its own size gate.
 
 use crate::main_prelude::*;
-use codeeraser::similar::face;
 use codeeraser::similar::query::Ask;
 
 #[derive(clap::Args)]
@@ -33,20 +32,7 @@ pub fn similar_cmd(a: SimilarArgs, core: &str) -> ExitCode {
         Ok(ask) => ask,
         Err(err) => return fail("similar", err),
     };
-    let j = a.judge;
-    match face::run(&or_cwd(j.root), j.db, core, &ask, a.widen) {
-        Ok(r) => {
-            print_doc(
-                json(j.format),
-                || face::report_json(&r),
-                || {
-                    for l in face::console(&r) {
-                        println!("{l}");
-                    }
-                },
-            );
-            ExitCode::SUCCESS
-        }
-        Err(err) => fail("similar", err),
-    }
+    a.judge.answered("similar", |root, db| {
+        codeeraser::similar::document::answer(root, db, core, &ask, a.widen)
+    })
 }

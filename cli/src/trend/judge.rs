@@ -8,21 +8,10 @@
 //! structure-family stance). Knob rows ride only when ce.toml
 //! declares them (the ceilings/27b9bc2 pattern).
 
+use crate::corelink::Link;
 use anyhow::Result;
-use serde::Serialize;
 use serde_json::{Value, json};
 use std::path::Path;
-
-/// One measured trajectory point — built by mod.rs, judged over this
-/// wire leg, rendered by the report faces.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
-pub struct Row {
-    pub commit: String,
-    pub ts: i64,
-    pub score: i64,
-    pub scale: i64,
-    pub axes: Vec<[i64; 2]>,
-}
 
 /// The core's judgment over the window, relayed verbatim: absent
 /// slope/verdict = below minPoints (unjudged, not flat); fail is
@@ -41,10 +30,22 @@ pub struct Judgment {
     pub knobs: Vec<[i64; 2]>,
 }
 
+/// One measured trajectory point — built by mod.rs, judged over this
+/// wire leg, laid out by the core (document.rs).
+#[derive(Debug, PartialEq, Eq)]
+pub struct Row {
+    pub commit: String,
+    pub ts: i64,
+    pub score: i64,
+    pub scale: i64,
+    pub axes: Vec<[i64; 2]>,
+}
+
 /// One trend.request over a fresh core link (the deadcode::judge
 /// shape); a missing capability or a non-result reply is an error,
-/// never a silently unjudged report.
-pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
+/// never a silently unjudged report. The link goes back for the
+/// report's document.
+pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<(Judgment, Link)> {
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
     let mut knobs: Vec<[i64; 2]> = Vec::new();
     if let Some(mp) = cfg.trend.min_points {
@@ -81,7 +82,7 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<Judgment> {
             );
         }
     }
-    Ok(j)
+    Ok((j, link))
 }
 
 /// Null -> None, [i, v] -> Some — anything else is a wire error.
@@ -109,27 +110,4 @@ fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {
         );
     }
     Ok(rows)
-}
-
-pub fn judgment_json(j: &Judgment) -> Value {
-    json!({
-        "slopeMicroPerDay": j.slope_micro_per_day,
-        "verdict": j.verdict,
-        "cliff": j.cliff,
-        "declineRun": j.decline_run,
-        "fail": j.fail,
-        "knobs": j.knobs,
-    })
-}
-
-/// Console words for the verdict code — rendering only, the code is
-/// the core's; bilingual via the i18n switch (M8-G3b).
-pub fn verdict_str(j: &Judgment) -> &'static str {
-    use crate::i18n::t;
-    match j.verdict {
-        Some(0) => t("improving", "上行"),
-        Some(1) => t("flat", "持平"),
-        Some(2) => t("degrading", "恶化"),
-        _ => t("unjudged (below minPoints)", "未判（低于最小点数）"),
-    }
 }

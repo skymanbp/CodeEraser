@@ -13,11 +13,12 @@
 //! knobs (a historical tree is judged as it declared itself then;
 //! only the measuring toolchain is today's).
 
+mod document;
 pub mod judge;
 mod report;
 mod worktree;
 
-pub use report::{print, report_json};
+pub use document::answer;
 
 use crate::score;
 use crate::{churn, dedup};
@@ -70,6 +71,29 @@ pub fn run(
     commits: usize,
     batch: Option<usize>,
 ) -> Result<Report> {
+    Ok(measured(root, db, core, commits, batch)?.0)
+}
+
+/// The report's document laid out over the link its judgment used.
+pub fn judged(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    commits: usize,
+    batch: Option<usize>,
+) -> Result<crate::document::Answer> {
+    let (report, link) = measured(root, db, core, commits, batch)?;
+    document::laid_out(core, &report, Ok(link))
+}
+
+/// The report and the link its trend/2 judgment went over.
+fn measured(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    commits: usize,
+    batch: Option<usize>,
+) -> Result<(Report, crate::corelink::Link)> {
     let shas = mainline(root, commits)?;
     let idx = dedup::index::Index::open(&dedup::index_db_path(root, db), dedup::Params::default())?;
     let stamp = toolchain_stamp(core)?;
@@ -100,14 +124,15 @@ pub fn run(
     }
     let mut rows: Vec<Row> = shas.iter().filter_map(|(s, _)| have.remove(s)).collect();
     rows.reverse(); // git log is newest-first; charts read oldest-first
-    let judgment = judge::judge(root, core, &rows)?;
-    Ok(Report {
+    let (judgment, link) = judge::judge(root, core, &rows)?;
+    let report = Report {
         window: shas.len(),
         pending: missing.len() - measured,
         rows,
         failed,
         judgment,
-    })
+    };
+    Ok((report, link))
 }
 
 /// Newest `n` first-parent commits of HEAD: (full sha, committer
