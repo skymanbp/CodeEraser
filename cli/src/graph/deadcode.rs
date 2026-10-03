@@ -31,20 +31,17 @@
 mod advisory;
 mod document;
 mod flags;
-mod report;
 mod targets;
-mod why;
 
 pub use advisory::{Advised, Named};
 pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
-pub use report::print;
-pub use why::WHY_ZH;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
 use crate::config::Config;
 use crate::dedup;
+use crate::document::Answer;
 use anyhow::{Context, Result, bail, ensure};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
@@ -99,13 +96,25 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Report> {
 /// out (plan v2.32 step 4) — boundaries holding the one snapshot call
 /// this, never a second measurement.
 pub fn judge_report(root: &Path, core: &str, w: &GraphWire) -> Result<Report> {
+    let (answer, j) = said(root, core, w, false)?;
+    document::read(answer.document, &j)
+}
+
+/// `ce deadcode`, the MCP tool and the GUI's face (plan v2.32 step 5):
+/// the document and the console lines the core lays out, and its veto
+/// — `check` is the console's `--check`, a fact only the lines and the
+/// veto read.
+pub fn answer(root: &Path, db: Option<PathBuf>, core: &str, check: bool) -> Result<Answer> {
+    let (idx, db_path) = dedup::refreshed_index(root, db)?;
+    let w = wire_of(root, &idx, &db_path, Advisory::Yes)?;
+    Ok(said(root, core, &w, check)?.0)
+}
+
+/// The judgment, then its document and lines over the judgment's link.
+fn said(root: &Path, core: &str, w: &GraphWire, check: bool) -> Result<(Answer, Judged)> {
     let (j, _, held) = judged(root, core, w, &[])?;
-    let (req, names) = document::request("deadcode", w, &j)?;
-    document::read(
-        crate::document::assemble_over(core, held, req, &names)?.document,
-        w,
-        &j,
-    )
+    let (req, names) = document::request(("deadcode", check), w, &j)?;
+    Ok((crate::document::assemble_over(core, held, req, &names)?, j))
 }
 
 /// The judgment alone, answering position rows too — the canvas
@@ -438,21 +447,6 @@ pub fn self_loop_rows(w: &GraphWire, loops: &[i64]) -> Vec<i64> {
         .filter(|(_, (n, _))| loops.contains(n))
         .map(|(u, _)| u as i64)
         .collect()
-}
-
-/// Console tag for the trust column — rendering only, the codes
-/// are the core's (CE.Graph.Cost.confidence).
-pub fn conf_word(conf: Option<i64>) -> &'static str {
-    use crate::i18n::t;
-    match conf {
-        Some(0) => t(
-            " [unvouched: unresolved sites in this language]",
-            "〔未担保：该语言尚有未解析点位〕",
-        ),
-        Some(1) => t(" [vacuous]", "〔空担保〕"),
-        Some(2) => t(" [vouched]", "〔已担保〕"),
-        _ => "",
-    }
 }
 
 /// One core verdict row's node, the verdict inside the four codes

@@ -17,7 +17,6 @@ pub mod knobs;
 pub mod model;
 mod pinned;
 mod provenance;
-pub mod report;
 pub mod wire;
 pub(crate) mod wire_check;
 

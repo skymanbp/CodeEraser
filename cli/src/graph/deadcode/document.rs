@@ -4,8 +4,9 @@
 //! dead and reported rows, the kept count, the degraded reason by its
 //! code in the package's list, one advisory row per name this side's
 //! table holds — and this side puts the paths, the section labels and
-//! the names back. `Report` is the document read back for the console,
-//! the exit and the readers that act on a verdict (erase, the tests);
+//! the names back, into the document and its console lines
+//! (CE.Graph.Lines). `Report` is the document read back for the readers
+//! that act on a verdict (erase, the tests);
 //! the codes beside a row are the judgment's, the strings the
 //! document's. The graph screen sends the same tables (graph/canvas.rs).
 
@@ -35,9 +36,6 @@ pub struct Report {
     pub unmentioned_dropped: bool,
     #[serde(default)]
     pub unmentioned_cut: bool,
-    /// File-tier nodes alone — the console hint's denominator.
-    #[serde(skip)]
-    pub files: usize,
     /// The core's gate bit (2.18.0).
     #[serde(skip)]
     pub fail: bool,
@@ -89,10 +87,11 @@ pub struct AdvisoryRow {
 }
 
 /// The deadcode request over one judgment: `nodes` the wire's dense
-/// assignment, the advisory one row per name, and the strings the
-/// document refers to.
+/// assignment, the advisory one row per name, the file-tier count and
+/// the console's `--check` (facts only the lines read), and the
+/// strings the document refers to.
 pub(crate) fn request<'a>(
-    family: &'static str,
+    (family, check): (&'static str, bool),
     w: &'a GraphWire,
     j: &Judged,
 ) -> Result<(Request, Names<'a>)> {
@@ -100,6 +99,8 @@ pub(crate) fn request<'a>(
     let mut req = Request::new(family)
         .range("nodes", w.nodes.len())
         .range("why", 0)
+        .fact("files", super::file_nodes(w).len())
+        .fact("check", u8::from(check))
         .fact("unresolvedSites", w.unresolved_sites)
         .rows("dead", &j.dead)
         .rows("reported", &j.reported)
@@ -110,23 +111,7 @@ pub(crate) fn request<'a>(
         })?;
         req = req.rows("reason", [[code]]);
     }
-    let mut symbols = Vec::new();
-    let mut rows: Vec<[i64; 4]> = Vec::new();
-    let (mut asked, mut dropped, mut cut) = (false, false, false);
-    match &j.advisory {
-        None => {}
-        Some(Advised::Dropped) => (asked, dropped) = (true, true),
-        Some(Advised::Rows {
-            rows: named,
-            cut: c,
-        }) => {
-            (asked, cut) = (true, *c);
-            for a in named {
-                rows.push([rows.len() as i64, a.node, a.line, a.code]);
-                symbols.push(a.symbol.clone());
-            }
-        }
-    }
+    let (symbols, rows, [asked, dropped, cut]) = advised(j);
     let req = req
         .range("advisory", rows.len())
         .rows("unmentioned", rows)
@@ -142,8 +127,28 @@ pub(crate) fn request<'a>(
     Ok((req, names))
 }
 
+/// The advisory the judgment carried, unfolded for the request: each
+/// row's symbol name, the `unmentioned` rows `[i, node, line, code]`,
+/// and whether it was asked, dropped over its cap, or cut.
+fn advised(j: &Judged) -> (Vec<String>, Vec<[i64; 4]>, [bool; 3]) {
+    let mut symbols = Vec::new();
+    let mut rows: Vec<[i64; 4]> = Vec::new();
+    let flags = match &j.advisory {
+        None => [false; 3],
+        Some(Advised::Dropped) => [true, true, false],
+        Some(Advised::Rows { rows: named, cut }) => {
+            for a in named {
+                rows.push([rows.len() as i64, a.node, a.line, a.code]);
+                symbols.push(a.symbol.clone());
+            }
+            [true, false, *cut]
+        }
+    };
+    (symbols, rows, flags)
+}
+
 /// The bound document read back, the judgment's codes beside its rows.
-pub(crate) fn read(doc: Value, w: &GraphWire, j: &Judged) -> Result<Report> {
+pub(crate) fn read(doc: Value, j: &Judged) -> Result<Report> {
     let mut r: Report = document::read(&doc, "deadcode")?;
     for (row, raw) in r.dead.iter_mut().zip(&j.dead) {
         row.code = raw[1];
@@ -153,11 +158,6 @@ pub(crate) fn read(doc: Value, w: &GraphWire, j: &Judged) -> Result<Report> {
             row.code_ix = a.code as usize;
         }
     }
-    r.files = w
-        .nodes
-        .iter()
-        .filter(|n| n.kind == crate::graph::wire::GRAN_FILE)
-        .count();
     r.fail = j.fail;
     r.doc = doc;
     Ok(r)

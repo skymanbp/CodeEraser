@@ -15,9 +15,8 @@ use super::columns::{self, GoalHead};
 use super::facts::{self, Labels};
 use super::program::Program;
 use super::{PRELUDE, wire};
-use crate::document::{self, Held, Request, Resolve, Why};
+use crate::document::{self, Answer, Held, Request, Resolve, Why};
 use anyhow::{Result, anyhow};
-use serde_json::Value;
 use std::path::{Path, PathBuf};
 
 /// What a face asks: a rules file (its label and text), a question,
@@ -43,7 +42,7 @@ pub fn question(text: &str) -> String {
 }
 
 /// The whole leg: lexed, assembled, judged, laid out.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Value> {
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Answer> {
     let query = ask.query.as_deref().map(question);
     let rules = ask.rules.as_ref().map(|(_, text)| text.as_str());
     let mut names = Names {
@@ -77,7 +76,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<Va
             req = req.rows("faults", [[names.why.add(at), names.why.add(f.what)]]);
         }
     }
-    document::assemble_over(core, held, finish(req, &names), &names).map(|a| a.document)
+    document::assemble_over(core, held, finish(req, &names), &names)
 }
 
 /// Every table and fact the road did not fill, empty or zero, and the

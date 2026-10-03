@@ -9,26 +9,38 @@
 // findings are the core's; this file only lays them out.
 "use strict";
 
-const FLOW_KINDS = {
-  unreachable: () => tr("flowKindUnreachable"),
-  dead_store: () => tr("flowKindDeadStore"),
-  unused_local: () => tr("flowKindUnusedLocal"),
-  unused_param: () => tr("flowKindUnusedParam"),
-};
-
+// the kinds as the core's flow catalogue lists them, `{name, en, zh}`
+// (plan v2.32 step 5, R8): read once, after the first document, so the
+// chips and the kind column carry the core's labels and no map of ours
+let flowKinds = null;
 // the kinds shown; a click on a kind chip toggles it
-const flowShown = new Set(Object.keys(FLOW_KINDS));
+let flowShown = null;
 
 registerHub("flow", { cmd: "flow_report", render: renderFlow });
 
+function flowLabel(name) {
+  const k = (flowKinds ?? []).find((r) => r.name === name);
+  return k ? k[ceLang] : name;
+}
+
 function renderFlow(d) {
+  if (!flowKinds) {
+    invoke("flow_kinds", { root: $("root").value })
+      .then((rows) => {
+        flowKinds = rows;
+        flowShown = new Set(rows.map((r) => r.name));
+        renderFlow(d);
+      })
+      .catch((e) => setStatus(String(e), true));
+    return;
+  }
   const counts = Object.entries(d.counts ?? {})
     .map(([k, v]) => `<span>${esc(k)} <b>${esc(String(v))}</b></span>`)
     .join("");
-  const kinds = Object.entries(FLOW_KINDS)
-    .map(([k, label]) => {
-      const on = flowShown.has(k) ? " on" : "";
-      return `<button class="chip flow-kind${on}" data-kind="${k}">${esc(label())}</button>`;
+  const kinds = flowKinds
+    .map(({ name }) => {
+      const on = flowShown.has(name) ? " on" : "";
+      return `<button class="chip flow-kind${on}" data-kind="${esc(name)}">${esc(flowLabel(name))}</button>`;
     })
     .join("");
   $("hub-chips").innerHTML = counts + kinds;
@@ -55,7 +67,7 @@ function flowFindings(all) {
     .map((f) => {
       const lines = f.line === f.lineEnd ? `${f.line}` : `${f.line}–${f.lineEnd}`;
       const mark = f.judged ? tr("flowJudged") : tr("flowAdvisory");
-      const kind = FLOW_KINDS[f.kind] ? FLOW_KINDS[f.kind]() : f.kind;
+      const kind = flowLabel(f.kind);
       const cells = [f.path, f.unit, kind, lines, f.var ?? "—", mark];
       return `<tr>${cells.map((c) => `<td>${esc(String(c))}</td>`).join("")}</tr>`;
     })

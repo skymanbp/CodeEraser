@@ -18,10 +18,9 @@
 use super::groups::{self, FAMILY_EXACT, Group, Unsendable};
 use super::wire::{self, HoleRow, Judged, Suggestion};
 use crate::dedup::{self, t3};
-use crate::document::{self, Held, Request, Resolve, Why};
+use crate::document::{self, Answer, Held, Request, Resolve, Why};
 use crate::graph::deadcode::{Advisory, wire_of};
 use anyhow::Result;
-use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -52,12 +51,18 @@ const FACTS: [&str; 6] = [
 ];
 
 /// The whole leg: measured, gathered, judged chunk by chunk, laid out.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
+/// `only` is the console's `--group` (its lines show that group alone;
+/// the document is always whole).
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str, only: Option<usize>) -> Result<Answer> {
+    let only = only.map_or(0, |g| g + 1);
     let (blocks, idx, db_path) = dedup::snapshot(root, db)?;
     let mut link = match document::open(core) {
         Ok(link) if link.has(wire::CAP) => link,
-        Ok(link) => return degraded(core, Ok(link), format!("core offers no {}", wire::CAP)),
-        Err(why) => return degraded(core, Err(why.clone()), why),
+        Ok(link) => {
+            let why = format!("core offers no {}", wire::CAP);
+            return degraded((core, only), Ok(link), why);
+        }
+        Err(why) => return degraded((core, only), Err(why.clone()), why),
     };
     let judged = t3::judge_index(root, &idx, core)?;
     let pairs: Vec<(usize, usize)> = judged.clones.iter().map(|&(a, b, _)| (a, b)).collect();
@@ -69,7 +74,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
         let body = wire::body(&sent, |p| indeg.get(p).copied().unwrap_or(0));
         let reply = match wire::ask(&mut link, body) {
             Ok(reply) => reply,
-            Err(why) => return degraded(core, Err(why.clone()), why),
+            Err(why) => return degraded((core, only), Err(why.clone()), why),
         };
         answers.push(wire::consume(&reply, &sent).map_err(|e| anyhow::anyhow!("merge: {e}"))?);
     }
@@ -78,13 +83,16 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Value> {
         texts: texts_of(root, &groups)?,
         why: Why::default(),
     };
-    let req = request(&groups, answers, unsendable, merged).range("members", names.members.len());
-    document::assemble_over(core, Ok(link), req.range("why", 0), &names).map(|a| a.document)
+    let req = request(&groups, answers, unsendable, merged)
+        .range("members", names.members.len())
+        .range("why", 0)
+        .fact("only", only);
+    document::assemble_over(core, Ok(link), req, &names)
 }
 
 /// The judgment did not happen: no row, every fact zero, the reason;
 /// laid out over `held` when the link is still whole.
-fn degraded(core: &str, held: Held, why: String) -> Result<Value> {
+fn degraded((core, only): (&str, usize), held: Held, why: String) -> Result<Answer> {
     let mut names = Names {
         members: Vec::new(),
         texts: Texts::new(),
@@ -97,10 +105,12 @@ fn degraded(core: &str, held: Held, why: String) -> Result<Value> {
     document::assemble_over(
         core,
         held,
-        req.range("members", 0).range("why", 1).degraded(reason),
+        req.range("members", 0)
+            .range("why", 1)
+            .fact("only", only)
+            .degraded(reason),
         &names,
     )
-    .map(|a| a.document)
 }
 
 /// Every chunk's answer joined: the suggestion rows numbered across
@@ -225,11 +235,22 @@ impl Resolve for Names<'_> {
             // a console line's text cut to the cap the core names
             ("clipped", [k, post, post_end, cap]) => {
                 let text = self.resolve("text", &[*k, *post, *post_end])?;
-                Some(super::console::clip(&text, usize::try_from(*cap).ok()?))
+                Some(clip(&text, usize::try_from(*cap).ok()?))
             }
             _ => None,
         }
     }
+}
+
+/// One line, at most `cap` characters, `…` when cut: the core's
+/// `clipped` reference (its console names the cap).
+fn clip(text: &str, cap: usize) -> String {
+    let flat: String = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    if flat.chars().count() <= cap {
+        return flat;
+    }
+    let cut: String = flat.chars().take(cap).collect();
+    format!("{cut}…")
 }
 
 /// The source text from node `post`'s start to node `post_end`'s end

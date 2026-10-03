@@ -3,6 +3,7 @@
 //! design). main_cli.rs owns the clap surface (its own G3b split),
 //! main.rs dispatches; this file owns the work.
 
+use crate::main_prelude::{answered, whole};
 use clap::ValueEnum;
 use codeeraser::i18n::line;
 use codeeraser::{churn, daemon, dedup, graph, scan};
@@ -58,22 +59,7 @@ pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> Ex
 /// fails.
 pub fn churn_cmd(root: &Path, days: u32, json: bool, core: &str) -> ExitCode {
     let answer = churn::run(root, days).and_then(|report| churn::answer(core, &report, days));
-    answered("churn", "churn", json, answer)
-}
-
-/// A face the core answered (plan v2.32 step 5): its lines or its
-/// document printed, exit 1 iff the core's veto, 2 when the run or the
-/// core failed — `name` the command, `family` the document's.
-pub fn answered(
-    name: &str,
-    family: &str,
-    json: bool,
-    answer: anyhow::Result<codeeraser::document::Answer>,
-) -> ExitCode {
-    match answer.and_then(|a| codeeraser::document::emit(family, &a, json).map(|()| a.fail)) {
-        Ok(fail) => ExitCode::from(u8::from(fail)),
-        Err(err) => fail(name, err),
-    }
+    answered("churn", "churn", json, answer, whole)
 }
 
 pub fn graph_cmd(
@@ -132,41 +118,11 @@ pub fn deadcode_cmd(
     json: bool,
     check: bool,
 ) -> ExitCode {
-    match graph::deadcode::run(root, db, core) {
-        Ok(report) => {
-            graph::deadcode::print(&report, json);
-            // --check (M5-close CI gate): the DECISION is the core's
-            // fail bit since 2.18.0 (batch-7 slice 4) — any file-tier
-            // dead verdict, or a degraded run that judged nothing,
-            // fails; this arm only picks which message renders. The
-            // M5-2 acceptance row "本仓库 deadcode 发现全处置" was
-            // honored by discipline only before the gate existed.
-            if check && report.fail {
-                if report.degraded.is_some() {
-                    eprintln!(
-                        "{}",
-                        line(
-                            "deadcode check: degraded ({}) — nothing was judged, refusing to pass",
-                            "deadcode check：已降级（{}）— 未判决任何内容，拒绝通过",
-                            &[&report.degraded.as_deref().unwrap_or("?")],
-                        )
-                    );
-                } else {
-                    eprintln!(
-                        "{}",
-                        line(
-                            "deadcode check: {} dead file(s) — disposition or entry_globs them",
-                            "deadcode check：{} 个死文件 — 请处置或加入 entry_globs",
-                            &[&report.dead.len()],
-                        )
-                    );
-                }
-                return ExitCode::FAILURE;
-            }
-            ExitCode::SUCCESS
-        }
-        Err(err) => fail("deadcode", err),
-    }
+    // --check (M5-close CI gate): the DECISION and its refusal line are
+    // the core's (any file-tier dead verdict, or a degraded run that
+    // judged nothing, fails; plan v2.32 step 5)
+    let answer = graph::deadcode::answer(root, db, core, check);
+    answered("deadcode", "deadcode", json, answer, whole)
 }
 
 /// The dedup flag set (clap surface + body in one place: six loose

@@ -47,9 +47,9 @@ pub(super) fn assemble(
     core: &str,
     held: document::Held,
     p: &Parts<'_>,
-) -> Result<serde_json::Value> {
+) -> Result<document::Answer> {
     let (req, names) = request(p)?;
-    document::assemble_over(core, held, req, &names).map(|a| a.document)
+    document::assemble_over(core, held, req, &names)
 }
 
 fn request(p: &Parts<'_>) -> Result<(Request, Names)> {

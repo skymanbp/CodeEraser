@@ -14,7 +14,7 @@
 
 use crate::daemon::client;
 use crate::daemon::proto::Request;
-use crate::document::{self, Resolve, at, lines};
+use crate::document::{self, lines};
 use crate::tombstone::Row;
 use serde_json::Value;
 use std::path::Path;
@@ -121,7 +121,7 @@ fn spoken(root: &Path, said: &[Said]) -> Result<String, String> {
     };
     let reply = client::relay(root, &request)?;
     crate::corelink::judged::degraded(&reply)?;
-    let (lines, _) = lines::bind_lines(&reply, &strings).map_err(|e| e.to_string())?;
+    let (lines, _) = lines::bind_lines(&reply, &strings.lists()).map_err(|e| e.to_string())?;
     let texts: Vec<String> = lines.into_iter().map(|l| l.text).collect();
     Ok(texts.join(" "))
 }
@@ -251,19 +251,16 @@ impl Strings {
             .rows("places", &self.places)
             .body()
     }
-}
 
-impl Resolve for Strings {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        let list = match class {
-            "file" => &self.files,
-            "match_file" => &self.match_files,
-            "place_file" => &self.place_files,
-            "unit" => &self.units,
-            "error" => &self.errors,
-            _ => return None,
-        };
-        at(list, ints)
+    /// The strings the request's references name, one list per class.
+    fn lists(self) -> document::Lists {
+        document::Lists(vec![
+            ("file", self.files),
+            ("match_file", self.match_files),
+            ("place_file", self.place_files),
+            ("unit", self.units),
+            ("error", self.errors),
+        ])
     }
 }
 

@@ -104,10 +104,13 @@ leaked! {
     Protocol { py_names: Names, py_prefixes: Names, ts_by_stem: Pairs, ts_pages: Names,
                ts_routes: Names, java_names: Names, c_names: Names, c_prefixes: Names,
                lua_names: Names, love_names: Names, r_names: Names }
-    /// The flow document's catalogue entry: the kinds by code, each
-    /// `[name, advisory]` — the names `--kind` and the feeds read, and
-    /// whether a kind is advisory in every language.
-    DocFlow { kinds: &'static [(&'static str, bool)] }
+    /// One flow kind, a `[name, advisory, en, zh]` row: the name `--kind`
+    /// and the feeds read, whether the kind is advisory in every
+    /// language, and its display label in each language (plan v2.32
+    /// step 5, R8: the GUI's hub reads the labels here).
+    KindRow { name: Text, advisory: bool, en: Text, zh: Text }
+    /// The flow document's catalogue entry: the kinds by code.
+    DocFlow { kinds: &'static [KindRow] }
     /// The check document's catalogue entry (7.9.0): the fail-condition
     /// names and the degraded reasons by code — a face sends the codes.
     DocCheck { failed: Names, reasons: Names }

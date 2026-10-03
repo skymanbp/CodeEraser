@@ -5,24 +5,23 @@
 //! and the per-directory metrics. The core judges them (arch/1) and
 //! lays the document out (document/1, CE.Arch.Document); this side
 //! sends the tables both answers are made of, each path's place in
-//! string order, and puts the paths back (crate::document); report.rs
-//! reads the bound document for the console and the exit code. A
+//! string order, and puts the paths back into the document and its
+//! console lines (crate::document); the CLI prints them. A
 //! document with a `degraded` reason carries no answer.
 
 use super::tables::{self, Tables};
 use super::wire::{self, Reply};
-use crate::document::{self, Request, Resolve, Why};
+use crate::document::{self, Answer, Request, Resolve, Why};
 use crate::graph::deadcode::{Advisory, wire_of};
 use crate::structure::tree;
 use anyhow::Result;
-use serde_json::Value;
 use std::path::{Path, PathBuf};
 
 /// The whole leg: the graph wire off a refreshed index, the tree over
 /// its measured files, the tables, the core's judgment and document.
 /// A focus path that names no measured file is an error and no
 /// document.
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Value> {
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Answer> {
     let (idx, db_path) = crate::dedup::refreshed_index(root, db)?;
     let w = wire_of(root, &idx, &db_path, Advisory::No)?;
     drop(idx);
@@ -44,7 +43,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Re
         .range("dirs", tables.dir_paths.len())
         .range("why", why.count());
     let names = Names { t: &tables, why };
-    document::assemble_over(core, held, req, &names).map(|a| a.document)
+    document::assemble_over(core, held, req, &names)
 }
 
 /// A file's total lines (scan's own count; a file deleted mid-run has
@@ -72,9 +71,11 @@ const TABLES: [&str; 13] = [
     "rankDirs",
 ];
 
-/// The request tables sent back, the answer tables, and each path's
-/// place in the joint string order of the file paths and the slashed
-/// directories (the order the folded references are listed in).
+/// The request tables sent back, the answer tables, each path's place
+/// in the joint string order of the file paths and the slashed
+/// directories (the order the folded references are listed in), and
+/// each directory's width in bytes and in characters (the console
+/// pads its metrics table by them; the core cannot measure a string).
 fn request(t: &Tables, r: &Reply) -> Request {
     let slashed: Vec<String> = t.dir_paths.iter().map(|d| slashed(d)).collect();
     let rank = document::ranks(t.paths.iter().chain(&slashed).map(String::as_str));
@@ -90,7 +91,8 @@ fn request(t: &Tables, r: &Reply) -> Request {
         .rows("pkgEdges", &t.pkg_edges)
         .rows("focus", focus)
         .rows("rankFiles", numbered(by_file))
-        .rows("rankDirs", numbered(by_dir));
+        .rows("rankDirs", numbered(by_dir))
+        .rows("widths", widths(&t.dir_paths));
     for key in [
         "layers",
         "cuts",
@@ -102,6 +104,12 @@ fn request(t: &Tables, r: &Reply) -> Request {
         req = req.rows(key, r.rows(key));
     }
     req
+}
+
+/// `[dir, bytes, chars]` for every directory (the root is 0 bytes).
+fn widths(dirs: &[String]) -> Vec<[usize; 3]> {
+    let width = |(i, d): (usize, &String)| [i, d.len(), d.chars().count()];
+    dirs.iter().enumerate().map(width).collect()
 }
 
 /// The arch document's strings: the paths, the directories, and the

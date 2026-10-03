@@ -24,6 +24,7 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (toList)
+import Data.List (zip4)
 import Data.Maybe (fromMaybe)
 import qualified Data.Set as S
 import DocumentGen (docRequest, requests)
@@ -202,10 +203,19 @@ catalogued =
     && tablesDigest == digestOf package
     && tablesDigest /= digestOf pack
     && all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) (filter (not . null . dfSchema) families)
-    && path ["flow", "kinds"] catalogue == Just (toJSON (zip (words "unreachable dead_store unused_local unused_param") [False, False, False, True]))
+    && path ["flow", "kinds"] catalogue == Just (toJSON flowKindRows)
     && path ["flow", "judged"] catalogue == Just (toJSON flowJudgedRows)
     && BL.length (encode catalogue) > 0
  where
+  -- name, advisory, and the two display labels (plan v2.32 step 5, R8),
+  -- column by column: the core's table is row by row
+  flowKindRows :: [(String, Bool, String, String)]
+  flowKindRows =
+    zip4
+      (words "unreachable dead_store unused_local unused_param")
+      [False, False, False, True]
+      ["unreachable", "dead store", "unused local", "unused parameter"]
+      (words "不可达 死存储 未用局部量 未用形参")
   flowJudgedRows = [code | Just (Array rs) <- [path ["languages", "rows"] pack], Object row <- toList rs, KM.lookup "flow_judged" row == Just (Bool True), Just (Number code) <- [KM.lookup "code" row]]
   dropDocument v = case v of
     Object o -> Object (KM.delete "document" o)

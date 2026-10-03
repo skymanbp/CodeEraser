@@ -8,7 +8,7 @@
 //! named degraded reason.
 
 use crate::commands::task;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 #[tauri::command]
 pub async fn flow_report(
@@ -19,6 +19,20 @@ pub async fn flow_report(
     let kinds = kinds.unwrap_or_default();
     task(win, "flow", root, move |r, c| {
         codeeraser::faces::flow(r, c, &kinds)
+    })
+    .await
+}
+
+/// The flow kinds as the core's catalogue lists them (plan v2.32 step
+/// 5, R8): each kind's name and its label in both languages, read off
+/// the definition package the task loads — the hub's chips and kind
+/// column carry no label map of their own.
+#[tauri::command]
+pub async fn flow_kinds(win: tauri::Window, root: String) -> Result<Value, String> {
+    task(win, "flow_kinds", root, |_, _| {
+        let rows = codeeraser::flow_report::kinds().iter();
+        let labelled = rows.map(|k| json!({"name": k.name, "en": k.en, "zh": k.zh}));
+        Ok(Value::Array(labelled.collect()))
     })
     .await
 }

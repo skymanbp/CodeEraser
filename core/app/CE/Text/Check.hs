@@ -1,7 +1,8 @@
 -- | The `ce check` console sentences (plan v2.32 step 5), transcribed
 -- byte for byte from cli/src/score/report.rs (`print`,
 -- `print_ratchet_tail`, `roast_line`) and the named-failure suffix
--- (cli/src/report.rs `fail_suffix`). `FAIL` / `pass` print in English
+-- (cli/src/report.rs `fail_suffix`), both deleted once the console
+-- read these lines. `FAIL` / `pass` print in English
 -- under both languages (the exit-code vocabulary).
 module CE.Text.Check (catalogue) where
 

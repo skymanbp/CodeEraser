@@ -37,6 +37,7 @@ fn main() {
             commands_query::query_report,
             commands_query::rules_report,
             commands_flow::flow_report,
+            commands_flow::flow_kinds,
             commands_query::merge_report,
             commands_query::arch_report,
             commands::erase_preview,

@@ -16,13 +16,14 @@ use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
 
 pub use super::report::Report;
+use crate::document::Answer;
 
 pub fn run(
     root: &Path,
     db: Option<PathBuf>,
     core: &str,
     (deep, days, split): (bool, Option<u32>, bool),
-) -> Result<Report> {
+) -> Result<Answer> {
     // measurement only — the structure verdict is this family's own
     // wire call below, never the scan mirror (batch-7 slice 8)
     let (_config, files) = crate::scan::measure(root)?;
@@ -68,8 +69,7 @@ pub fn run(
         days,
         seams: seam_facts.as_ref(),
     };
-    let doc = super::document::assemble(core, Ok(link), &parts)?;
-    crate::report::read_bound(doc, "structure")
+    super::document::assemble(core, Ok(link), &parts)
 }
 
 /// The committed baseline's frozen soft line, falling back to the

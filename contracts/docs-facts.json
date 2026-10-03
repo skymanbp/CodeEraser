@@ -141,7 +141,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "38"
+      "value": "37"
     },
     {
       "id": "gate:dedup.tests#digits",

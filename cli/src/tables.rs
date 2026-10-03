@@ -26,8 +26,8 @@ pub mod leak;
 mod pack;
 
 pub use pack::{
-    ByLang, Calls, Compdb, Docdup, Flags, Fourclass, Keys, Ladder, LangRow, Languages, Pack,
-    Protocol, Tables, Tombstone, Walk,
+    ByLang, Calls, Compdb, Docdup, Flags, Fourclass, Keys, KindRow, Ladder, LangRow, Languages,
+    Pack, Protocol, Tables, Tombstone, Walk,
 };
 
 use std::path::{Path, PathBuf};

@@ -4,7 +4,8 @@
 //! rows sent back, the flat directory tree and — when the advisory
 //! rode — the split candidates with each seam's last line; this side
 //! puts the directory names, the advisory's paths and its unit names
-//! back. report.rs reads the bound document for the console.
+//! back, into the document and its console lines (CE.Structure.Lines).
+//! report.rs reads the bound document for the library's callers.
 
 use super::seams::SeamFacts;
 use super::tree::Tree;
@@ -44,7 +45,7 @@ pub(super) fn assemble(
     core: &str,
     held: document::Held,
     p: &Parts<'_>,
-) -> Result<serde_json::Value> {
+) -> Result<document::Answer> {
     let r = p.reply;
     let tree: Vec<[i64; 5]> = p
         .tree
@@ -85,7 +86,7 @@ pub(super) fn assemble(
         dirs: names_by_id(p.tree),
         seams: p.seams,
     };
-    document::assemble_over(core, held, req.empty(&TABLES), &names).map(|a| a.document)
+    document::assemble_over(core, held, req.empty(&TABLES), &names)
 }
 
 /// structure/1's [file, unit, benefit, cost] with the unit's last

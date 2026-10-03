@@ -76,24 +76,23 @@ fn head(
 }
 
 /// One score::run and the document the core lays out over it (plan
-/// v2.32 step 4), printed. `name` is the command's own, so a failure
-/// says `ce baseline:` when that is what ran; the folded head used to
-/// print `ce check:` for both.
+/// v2.32 step 4), printed as the core's lines or the document (step
+/// 5); the veto is the core's. `name` is the command's own, so a
+/// failure says `ce baseline:` when that is what ran; the folded head
+/// used to print `ce check:` for both.
 fn judged(
     name: &str,
     root: &Path,
     as_json: bool,
     roast: bool,
     opts: score::Opts,
-) -> Result<(score::Outcome, score::document::Report), ExitCode> {
+) -> Result<(score::Outcome, bool), ExitCode> {
     let core = opts.core.clone();
     let mut o = score::run(root, opts).map_err(|err| fail(name, err))?;
-    let r = score::document::document(&core, &mut o).map_err(|err| fail(name, err))?;
-    codeeraser::report::print_bound(&r, as_json);
-    if roast && !as_json {
-        score::report::roast_line(&r);
-    }
-    Ok((o, r))
+    let printed = score::document::document(&core, &mut o, roast)
+        .and_then(|a| codeeraser::document::emit("check", &a, as_json).map(|()| a.fail));
+    let fail_bit = printed.map_err(|err| fail(name, err))?;
+    Ok((o, fail_bit))
 }
 
 /// `ce check`: judge, print, and fail on the core's word ALONE —
@@ -111,8 +110,7 @@ pub fn check_cmd(a: CheckArgs, core: &str) -> ExitCode {
     };
     match judged("check", &root, as_json, a.roast, opts) {
         Err(code) => code,
-        Ok((_, r)) if r.ratchet.fail => ExitCode::FAILURE,
-        Ok(_) => ExitCode::SUCCESS,
+        Ok((_, fail)) => ExitCode::from(u8::from(fail)),
     }
 }
 

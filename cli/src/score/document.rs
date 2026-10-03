@@ -4,14 +4,13 @@
 //! back, the floor this run was armed with, this side's counts, and
 //! the held conditions and the degraded reason by their codes in the
 //! package's lists. `ce check`, `ce baseline`, the MCP tool and the
-//! GUI print it; `Report` is the document read back for the console
-//! and the exit. No repository string rides it, so nothing is bound.
+//! GUI print it; the console lines and the veto are the core's too
+//! (CE.Score.Lines). No repository string rides it, so nothing is
+//! bound.
 
-use crate::document::{self, Request, Resolve};
+use crate::document::{self, Answer, Request, Resolve};
 use crate::score::model::Outcome;
 use anyhow::{Context, Result};
-use serde::Deserialize;
-use serde_json::Value;
 
 /// The tables a check request carries.
 const TABLES: [&str; 12] = [
@@ -29,46 +28,13 @@ const TABLES: [&str; 12] = [
     "dropped",
 ];
 
-/// The check document read back for the console and the exit.
-#[derive(Debug, Deserialize)]
-pub struct Report {
-    pub score: i64,
-    #[serde(rename = "scoreScale")]
-    pub scale: Option<i64>,
-    pub axes: Vec<[i64; 2]>,
-    pub candidates: Vec<Value>,
-    pub ratchet: Ratchet,
-    pub counts: Counts,
-    pub degraded: Option<String>,
-    /// The bound document itself, the machine faces' print.
-    #[serde(skip)]
-    pub doc: Value,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Ratchet {
-    pub added: Vec<Value>,
-    pub removed: Vec<Value>,
-    pub over: Vec<Value>,
-    #[serde(rename = "toleranceDrawn")]
-    pub tolerance_drawn: Vec<Value>,
-    pub fail: bool,
-    pub failed: Vec<String>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Counts {
-    pub collapsed: usize,
-    #[serde(rename = "skippedSelf")]
-    pub skipped_self: usize,
-}
-
 /// The check document over one outcome, laid out by the core at
-/// `core` and read back.
-pub fn document(core: &str, o: &mut Outcome) -> Result<Report> {
+/// `core`, with its lines; `roast` is the console's `--roast` (one
+/// more line, the document unchanged).
+pub fn document(core: &str, o: &mut Outcome, roast: bool) -> Result<Answer> {
     let held = std::mem::replace(&mut o.held, Err(String::new()));
-    let doc = document::assemble_over(core, held, request(o)?, &Nothing)?.document;
-    crate::report::read_bound(doc, "check")
+    let req = request(o)?.fact("roast", u8::from(roast));
+    document::assemble_over(core, held, req, &Nothing)
 }
 
 /// The verdict reply's rows, this run's floor and counts, and the two

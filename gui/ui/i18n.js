@@ -42,9 +42,8 @@ const CE_I18N = {
     emptyReports: "pick a report family and load — the same JSON documents the CLI prints",
     hubPaths: "paths", hubPathsPlaceholder: "comma-separated paths",
     // the flow family in the hub (plan v2.31 step 5): labels only — the
-    // findings, their kinds and the judged bit are the core's
-    flowKindUnreachable: "unreachable", flowKindDeadStore: "dead store",
-    flowKindUnusedLocal: "unused local", flowKindUnusedParam: "unused parameter",
+    // findings, their kinds, the judged bit and (plan v2.32 step 5, R8)
+    // the kind labels are the core's
     flowJudged: "judged", flowAdvisory: "advisory", flowRefused: "unjudged units",
     flowDegraded: (why) => `degraded: ${why} — no judgment`,
     flowNoFinding: "no finding of the shown kinds",
@@ -243,8 +242,6 @@ const CE_I18N = {
     emptyErase: "点预览，计划可证安全的擦除——执行前始终是演练",
     emptyReports: "选择报告家族并加载——与 CLI 打印的同一份 JSON 文档",
     hubPaths: "路径", hubPathsPlaceholder: "逗号分隔的路径",
-    flowKindUnreachable: "不可达", flowKindDeadStore: "死存储",
-    flowKindUnusedLocal: "未用局部量", flowKindUnusedParam: "未用形参",
     flowJudged: "判决", flowAdvisory: "顾问", flowRefused: "未判的单元",
     flowDegraded: (why) => `已降级：${why}——未判决`,
     flowNoFinding: "所显示的种类下没有发现",

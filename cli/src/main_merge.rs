@@ -8,7 +8,7 @@
 //! it, nothing enters the baseline.
 
 use crate::main_prelude::*;
-use codeeraser::merge::{console, face};
+use codeeraser::merge::face;
 
 #[derive(clap::Args)]
 pub struct MergeArgs {
@@ -23,17 +23,14 @@ pub struct MergeArgs {
 pub fn merge_cmd(a: MergeArgs, core: &str) -> ExitCode {
     let root = or_cwd(a.judge.root);
     let group = a.group;
-    document_face(
-        "merge",
-        face::run(&root, a.judge.db, core),
-        json(a.judge.format),
-        |r| console::console(r, group),
-        |r: &codeeraser::merge::report::Report| match group {
-            Some(k) if r.degraded.is_none() && k >= r.groups.len() => Err(anyhow::anyhow!(
-                "--group {k}: the document holds {} group(s)",
-                r.groups.len()
+    let answer = face::run(&root, a.judge.db, core, group);
+    answered("merge", "merge", json(a.judge.format), answer, |doc| {
+        let held = doc["groups"].as_array().map_or(0, Vec::len);
+        match group {
+            Some(k) if !degraded(doc)? && k >= held => Err(anyhow::anyhow!(
+                "--group {k}: the document holds {held} group(s)"
             )),
-            _ => Ok(ExitCode::from(if r.degraded.is_some() { 2 } else { 0 })),
-        },
-    )
+            _ => degraded(doc),
+        }
+    })
 }

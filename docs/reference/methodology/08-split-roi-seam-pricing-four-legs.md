@@ -91,7 +91,7 @@ score and the core's built-in `P_max = 10` in its advisory, with both halves int
 consistent and nothing anywhere disagreeing out loud
 ([judge.rs:182-189](../../../cli/src/structure/judge.rs#L182),
 [Cost.hs:141-150](../../../core/app/CE/Structure/Cost.hs#L141),
-counterfactual at [structure_knobs.rs:65-76](../../../cli/tests/it/structure_knobs.rs#L65)):
+counterfactual at [structure_knobs.rs:67-78](../../../cli/tests/it/structure_knobs.rs#L67)):
 
 | knob | code | default | source |
 |---|---|---|---|
@@ -220,10 +220,10 @@ structure document out (`CE.Structure.Document`): its statement names the univer
 column points into, so each dense id is range-checked by the document contract before
 anything reads it [Document.hs:37-46](../../../core/app/CE/Structure/Document.hs#L37), and the
 names go back in Rust, which resolves the references the document carries
-[document.rs:114-134](../../../cli/src/structure/document.rs#L114); candidates surface as
+[document.rs:115-135](../../../cli/src/structure/document.rs#L115); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
 end line, which Rust sends beside the reply's row and refuses for a unit the file does not hold
-[document.rs:86-101](../../../cli/src/structure/document.rs#L86).
+[document.rs:87-102](../../../cli/src/structure/document.rs#L87).
 
 ### Input validation
 

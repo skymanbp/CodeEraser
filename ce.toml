@@ -633,4 +633,17 @@ entry_globs = [
 # their modules' ends. Row set diffed against the 7502f02c tree: those
 # three rows gone, none new. Measured on the formatted tree. (The
 # three members are RETIRED by name in the tests subrepo.)
-budget = 38
+# 38 -> 37 (v2.32 step 5 Rust half part 2, the twelve (a)(b) consoles
+# printing the core's lines): one row left with the console it was
+# made of, none bought. structure/report.rs's two console stanzas
+# rhymed with each other (55 tokens, lines 116-124 against 169-180);
+# the console is the core's lines now and the file keeps only the
+# typed reader, so the run is not there to rhyme. The three rows the
+# part first landed went before the count was read: the flow / merge
+# / arch faces' `Ok(...?.document)` is `faces::laid`, the guard's and
+# the sites document's class-to-list resolvers build lane A's
+# `document::Lists` at the call, and DocumentProps spells the kind rows
+# by column (`zip4`); the face exit road lane A and this part each
+# wrote is one `main_prelude::answered`. Row set diffed against the 389c7750 tree:
+# that row gone, none new. Measured on the formatted tree.
+budget = 37

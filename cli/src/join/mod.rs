@@ -12,7 +12,8 @@
 //! graph leg is null by design, with the reason riding as a code
 //! the core names (CE.Join.Document, plan v2.15). The core lays the
 //! document out (document/1, plan v2.32 step 4; document.rs sends
-//! the tables), and `Report` is that document read back.
+//! the tables) and its console lines (step 5, CE.Join.Lines); `Report`
+//! is that document read back for the library's callers.
 
 pub mod churn_unit;
 mod document;
@@ -20,6 +21,8 @@ mod report;
 pub mod verdicts;
 
 pub use report::{FileRow, Report};
+
+use crate::document::Answer;
 
 use crate::churn;
 use crate::dedup;
@@ -35,7 +38,7 @@ use std::path::{Path, PathBuf};
 /// the graph between passes) — absence, never a fabricated zero.
 pub type Pos = [i64; 5];
 
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Report> {
+pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Answer> {
     // 265.0 s end to end on a cold db (PERF-BUDGET M5-3h), most of it
     // the churn leg's own — which brings its own span. These three
     // name the legs around it, so the quiet stretches before and
@@ -84,7 +87,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, days: u32) -> Result<Re
         graph_degraded,
         judged: &judged,
     };
-    crate::report::read_bound(document::assemble(core, held, &parts)?, "join")
+    document::assemble(core, held, &parts)
 }
 
 /// path → position from the reply's pos rows; each row's echoed

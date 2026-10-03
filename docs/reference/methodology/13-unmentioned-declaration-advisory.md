@@ -12,7 +12,7 @@ referenced name read as unmentioned) is the direction every rule is built agains
 the four-way verdicts: it never turns a gate red, never enters `ce erase`, and is
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
-[report.rs:58-63](../../../cli/src/graph/deadcode/report.rs#L58)). The plan calls it ADR-008
+[Deadcode.hs:22-24](../../../core/app/CE/Text/Deadcode.hs#L22)). The plan calls it ADR-008
 step 3b ([DEVELOPMENT_PLAN.md:292](../../DEVELOPMENT_PLAN.md#L292)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
@@ -230,15 +230,15 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:118-125](../../../core/app/CE/Graph.hs#L118)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:315-317](../../../contracts/VERSIONING.md#L315)).
+the same with or without them ([VERSIONING.md:320-322](../../../contracts/VERSIONING.md#L320)).
 
 ### 6. Rendering — one home, three faces
 
 Only `ce deadcode` and the GUI/MCP deadcode faces ask for the advisory; the five other
 consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, the canvas)
 pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:86-89](../../../cli/src/graph/deadcode.rs#L86),
-[deadcode.rs:191-236](../../../cli/src/graph/deadcode.rs#L191)). The reply is consumed once:
+([deadcode.rs:83-86](../../../cli/src/graph/deadcode.rs#L83),
+[deadcode.rs:200-245](../../../cli/src/graph/deadcode.rs#L200)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -250,7 +250,7 @@ name ([advisory.rs:32-43](../../../cli/src/graph/deadcode/advisory.rs#L32)), and
 the core's deadcode document lays the three keys out, naming each code and its reading
 ([Document.hs:99-104](../../../core/app/CE/Graph/Document.hs#L99), [Document.hs:131-143](../../../core/app/CE/Graph/Document.hs#L131)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
-([report.rs:58-114](../../../cli/src/graph/deadcode/report.rs#L58)); the MCP `deadcode`
+([Lines.hs:36-44](../../../core/app/CE/Graph/Lines.hs#L36)); the MCP `deadcode`
 tool returns the same document ([tools.rs:85-89](../../../cli/src/mcp/tools.rs#L85)); the GUI
 graph screen receives that document beside the canvas one in a single `ce.graph-screen`
 reply off ONE judgment (plan v2.30 step 5b item 31 — it used to run the report a second time
@@ -259,7 +259,7 @@ shared string, never a verdict) and lists a selected file's rows with the root-l
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:17-40](../../../cli/src/graph/canvas.rs#L17),
 [graph.js:33-60](../../../gui/ui/graph.js#L33),
-[graph.js:193-264](../../../gui/ui/graph.js#L193), [i18n.js:115-124](../../../gui/ui/i18n.js#L115)).
+[graph.js:193-264](../../../gui/ui/graph.js#L193), [i18n.js:114-123](../../../gui/ui/i18n.js#L114)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1520 (1738 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 4271 (1068) | 635 (10) | 14.9 % | 99 / 635 = 15.6 % | 99 / 3636 |
-| | | rust | 3902 (2109) | 407 (9) | 10.4 % | 13 / 407 = 3.2 % | 13 / 3463 |
+| self @ this commit | 1514 (1732 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 4272 (1069) | 635 (10) | 14.9 % | 99 / 635 = 15.6 % | 99 / 3637 |
+| | | rust | 3849 (2066) | 399 (4) | 10.4 % | 13 / 399 = 3.3 % | 13 / 3419 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -322,7 +322,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->10<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1068<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->10<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1069<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

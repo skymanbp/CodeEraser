@@ -159,7 +159,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 分数、棘轮与地板 | `ce check` | `score`, `check_report` | MCP `check` |
 | 同角色顾问（相似单元、联想视图） | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
 | 代码查询与架构规则 | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
-| 函数内死代码（不可达、死存储、未用局部量与形参） | `ce flow`, `ce flow --check` | `reports`, `flow_report` | MCP `flow` |
+| 函数内死代码（不可达、死存储、未用局部量与形参） | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
 | 克隆合并建议（反统一） | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
 | 架构分析（分层、拆环、簇、影响面） | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
 | 基线写入 | `ce baseline` | — 只在 CLI：机器面永不写基线 | — |

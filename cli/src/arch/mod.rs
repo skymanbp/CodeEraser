@@ -5,13 +5,12 @@
 //! a file, and each directory's fan-in, fan-out and instability — as
 //! advice. The boundary: this side measures (the measured files, the
 //! tree, the references as five integer tables, tables.rs) and puts the
-//! paths back into the document the core lays out (face.rs; report.rs
-//! reads it for console.rs); every answer is the core's arch/1
-//! (CE.Arch), the document its document/1 (CE.Arch.Document).
-//! No gate reads it, no baseline holds it, `ce check` never sees it.
+//! paths back into the document and the console lines the core lays
+//! out (face.rs); every answer is the core's arch/1 (CE.Arch), the
+//! document and its lines its document/1 (CE.Arch.Document,
+//! CE.Arch.Lines). No gate reads it, no baseline holds it, `ce check`
+//! never sees it.
 
-pub mod console;
 pub mod face;
-pub mod report;
 pub mod tables;
 pub mod wire;

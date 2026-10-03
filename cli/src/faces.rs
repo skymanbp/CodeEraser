@@ -8,9 +8,16 @@
 //! baseline or config. Callers resolve the root and the core; a face
 //! only turns (root, knobs) into the family's one document.
 
+use crate::document::Answer;
 use anyhow::Result;
 use serde_json::Value;
 use std::path::Path;
+
+/// The document of a core-laid answer: what every machine face hands
+/// out (the console lines and the veto are the CLI's alone).
+fn laid(answer: Result<Answer>) -> Result<Value> {
+    Ok(answer?.document)
+}
 
 /// Judged like its siblings (batch-7 slice 8): the scan face used
 /// to read the mirror with no core link — the one unguarded copy of
@@ -34,15 +41,22 @@ pub fn dedup(root: &Path, min_tokens: Option<usize>, min_distinct: Option<usize>
 
 /// The churn window, laid out by the core at `core` (plan v2.32 step 5).
 pub fn churn(root: &Path, core: &str, days: u32) -> Result<Value> {
-    Ok(crate::churn::answer(core, &crate::churn::run(root, days)?, days)?.document)
+    laid(crate::churn::answer(
+        core,
+        &crate::churn::run(root, days)?,
+        days,
+    ))
 }
 
 pub fn graph_sites(root: &Path, core: &str) -> Result<Value> {
-    crate::graph::sites_document(core, &crate::graph::analyze(root)?)
+    laid(crate::graph::sites_document(
+        core,
+        &crate::graph::analyze(root)?,
+    ))
 }
 
 pub fn deadcode(root: &Path, core: &str) -> Result<Value> {
-    Ok(crate::graph::deadcode::run(root, None, core)?.doc)
+    laid(crate::graph::deadcode::answer(root, None, core, false))
 }
 
 /// The T3 report, laid out by the core (plan v2.32 step 5).
@@ -56,11 +70,11 @@ pub fn docdup(root: &Path, core: &str) -> Result<Value> {
 }
 
 pub fn join(root: &Path, core: &str, days: u32) -> Result<Value> {
-    Ok(crate::join::run(root, None, core, days)?.doc)
+    laid(crate::join::run(root, None, core, days))
 }
 
 pub fn structure(root: &Path, core: &str, knobs: (bool, Option<u32>, bool)) -> Result<Value> {
-    Ok(crate::structure::judge::run(root, None, core, knobs)?.doc)
+    laid(crate::structure::judge::run(root, None, core, knobs))
 }
 
 /// Report-only: this face never writes a baseline (MCP charter ③;
@@ -84,7 +98,7 @@ pub fn check(root: &Path, core: &str, floor: Option<u32>) -> Result<Value> {
             baseline,
         },
     )?;
-    Ok(crate::score::document::document(core, &mut o)?.doc)
+    laid(crate::score::document::document(core, &mut o, false))
 }
 
 pub fn trend(root: &Path, core: &str, commits: usize, batch: Option<usize>) -> Result<Value> {
@@ -172,35 +186,42 @@ pub fn query(root: &Path, core: &str, body: &str, why: bool, file: Option<&Path>
         query: Some(body.to_string()),
         why,
     };
-    crate::query::face::run(root, None, core, &ask)
+    laid(crate::query::face::run(root, None, core, &ask))
 }
 
 /// The rules file judged (plan v2.31 step 2): every assertion's
 /// violations with their derivations — the document `ce rules`
 /// prints and exits on; here it is a report, the exit code is the
-/// CLI's own reading of `counts.violations`.
+/// core's veto the CLI reads.
 pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool) -> Result<Value> {
     let ask = crate::query::face::Ask {
         rules: crate::query::rules_source(root, file)?,
         query: None,
         why,
     };
-    crate::query::face::run(root, None, core, &ask)
+    laid(crate::query::face::run(root, None, core, &ask))
 }
 
 /// The dead code inside functions (plan v2.31 step 5): every unit
 /// of the tree judged over flow/1 and placed back through its legend
 /// — the SAME document `ce flow --format json` prints, `kinds`
 /// narrowing the listed findings as `--kind` does. Report-only: the
-/// CLI's `--check` is its own reading of `counts.judged`.
-pub use crate::flow_report::face::run as flow;
+/// CLI's `--check` is the core's veto over the same document.
+pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
+    laid(crate::flow_report::face::run(
+        root,
+        core,
+        kinds,
+        (false, false),
+    ))
+}
 
 /// The clone-merge suggestions (plan v2.31 step 7): every clone
 /// group anti-unified by the core's merge/1 and labelled back — the
 /// SAME document `ce merge --format json` prints. Advisory: a core
 /// that cannot judge is named in the document, and no gate reads it.
 pub fn merge(root: &Path, core: &str) -> Result<Value> {
-    crate::merge::face::run(root, None, core)
+    laid(crate::merge::face::run(root, None, core, None))
 }
 
 /// The architecture of the tree (plan v2.31 step 9): layers, the
@@ -210,7 +231,7 @@ pub fn merge(root: &Path, core: &str) -> Result<Value> {
 /// json` prints. Advisory: a core without the family is named in the
 /// document, and nothing here reaches a gate.
 pub fn arch(root: &Path, core: &str, impact: &[String]) -> Result<Value> {
-    crate::arch::face::run(root, None, core, impact)
+    laid(crate::arch::face::run(root, None, core, impact))
 }
 
 /// The machine's own state. Unlike every sibling it cannot fail: a

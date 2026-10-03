@@ -31,7 +31,7 @@ fn document(
     judged: &Judged,
     reply: &Value,
 ) -> Result<Value> {
-    let (req, names) = deadcode::doc_request("graphscreen", w, judged)?;
+    let (req, names) = deadcode::doc_request(("graphscreen", false), w, judged)?;
     let pos: Vec<[i64; 6]> = serde_json::from_value(reply["pos"].clone()).context("pos rows")?;
     let req = req
         .rows("graph", graph_rows(w))

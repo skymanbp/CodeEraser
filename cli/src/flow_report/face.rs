@@ -12,18 +12,19 @@
 //! names a reason carries no finding this side reached.
 
 use super::{place, unit_at};
-use crate::document::{self, Held, Request, Resolve, Why};
+use crate::document::{self, Answer, Held, Request, Resolve, Why};
 use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire::{self, Verdict};
 use anyhow::{Result, anyhow};
-use serde_json::Value;
 use std::path::Path;
 
 /// The whole leg: walked, lowered, judged, placed, laid out; `kinds`
 /// narrows the listed findings (empty = all), and a kind name the
 /// catalogue does not list is the core's refusal, named here by the
-/// name as given.
-pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
+/// name as given. `gate` is the console's `--check` and whether
+/// `[flow] tier` is deny: facts only the lines and the veto read (a
+/// machine face sends neither).
+pub fn run(root: &Path, core: &str, kinds: &[String], gate: (bool, bool)) -> Result<Answer> {
     let shown = shown_kinds(kinds);
     let (_, lowered) = crate::scan::walk::each_surviving(root, |path, lang, bytes| {
         let text = String::from_utf8(bytes).ok();
@@ -38,10 +39,11 @@ pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
         files: &files,
         why: Why::default(),
     };
-    let req = request(&mut names, judgment, shown.as_deref());
-    document::assemble_over(core, held, req, &names)
-        .map(|a| a.document)
-        .map_err(|e| named_kind(e, shown.as_deref()))
+    let (check, deny) = gate;
+    let req = request(&mut names, judgment, shown.as_deref())
+        .fact("check", u8::from(check))
+        .fact("deny", u8::from(deny));
+    document::assemble_over(core, held, req, &names).map_err(|e| named_kind(e, shown.as_deref()))
 }
 
 /// The kinds a face asked to see, by name, in the order given and each
@@ -49,12 +51,12 @@ pub fn run(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {
 /// other as −1, which the core refuses with the names it does list.
 /// None = every kind.
 pub fn shown_kinds(kinds: &[String]) -> Option<Vec<(String, i64)>> {
-    let known = crate::tables::get().document.flow.kinds;
+    let known = super::kinds();
     let mut shown: Vec<(String, i64)> = Vec::new();
     let names = kinds.iter().flat_map(|k| k.split(',')).map(str::trim);
     for name in names.filter(|k| !k.is_empty()) {
         if shown.iter().all(|(seen, _)| seen != name) {
-            let code = known.iter().position(|(k, _)| *k == name);
+            let code = known.iter().position(|row| row.name == name);
             shown.push((name.to_string(), code.map_or(-1, |i| i as i64)));
         }
     }

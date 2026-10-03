@@ -9,7 +9,7 @@
 
 use crate::main_prelude::*;
 use codeeraser::config::Config;
-use codeeraser::flow_report::{console, face};
+use codeeraser::flow_report::face;
 
 #[derive(clap::Args)]
 pub struct FlowArgs {
@@ -32,18 +32,6 @@ pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {
         Ok(c) => c.flow.tier().to_string(),
         Err(e) => return fail("flow", anyhow::anyhow!(e)),
     };
-    let gate = a.check && tier == "deny";
-    document_face(
-        "flow",
-        face::run(&root, core, &a.kind),
-        json(a.judge.format),
-        console::console,
-        |r: &codeeraser::flow_report::report::Report| {
-            Ok(match (r.degraded.is_some(), gate && r.judged() > 0) {
-                (true, _) => ExitCode::from(2),
-                (false, true) => ExitCode::from(1),
-                (false, false) => ExitCode::SUCCESS,
-            })
-        },
-    )
+    let answer = face::run(&root, core, &a.kind, (a.check, tier == "deny"));
+    answered("flow", "flow", json(a.judge.format), answer, degraded)
 }

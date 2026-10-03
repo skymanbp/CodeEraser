@@ -9,8 +9,7 @@
 
 use crate::main_prelude::*;
 use codeeraser::query::face::{self, Ask};
-use codeeraser::query::report::Report;
-use codeeraser::query::{PRELUDE, console, rules_source};
+use codeeraser::query::{PRELUDE, rules_source};
 use std::path::PathBuf;
 
 #[derive(clap::Args)]
@@ -56,62 +55,33 @@ pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {
             anyhow::anyhow!("a question is required (or --prelude)"),
         );
     };
-    judge("query", (a.judge, core), a.file, Some(body), a.why, |r| {
-        if r.judged() {
-            ExitCode::SUCCESS
-        } else {
-            ExitCode::from(2)
-        }
-    })
+    judge("query", (a.judge, core), a.file, Some(body), a.why)
 }
 
 pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {
-    judge("rules", (a.judge, core), a.file, None, a.why, |r| {
-        if !r.judged() {
-            ExitCode::from(2)
-        } else if r.violations() > 0 {
-            ExitCode::from(1)
-        } else {
-            ExitCode::SUCCESS
-        }
-    })
+    judge("rules", (a.judge, core), a.file, None, a.why)
 }
 
 /// One judgment for both faces: the rules file resolved, the core
-/// asked, the document shown, the exit code read off the report by
-/// the face's own rule.
+/// asked, its lines or document shown; exit 2 when the program was not
+/// judged (a program error, a degraded core), else the core's veto
+/// (`ce rules`: a violation; `ce query` states none).
 fn judge(
     name: &str,
     (j, core): (JudgeArgs, &str),
     file: Option<PathBuf>,
     query: Option<String>,
     why: bool,
-    exit: impl Fn(&Report) -> ExitCode,
 ) -> ExitCode {
     let root = or_cwd(j.root);
     let rules = match rules_source(&root, file.as_deref()) {
         Ok(r) => r,
         Err(err) => return fail(name, err),
     };
-    let rules_face = query.is_none();
     let ask = Ask { rules, query, why };
-    document_face(
-        name,
-        face::run(&root, j.db, core, &ask),
-        json(j.format),
-        |r: &Report| lines(r, rules_face),
-        |r| Ok(exit(r)),
-    )
-}
-
-/// The console, with the rules face's note when no rules file exists.
-fn lines(r: &Report, rules: bool) -> Vec<String> {
-    let note = (rules && r.program.rules_file.is_none()).then(|| {
-        codeeraser::i18n::line(
-            "rules: no rules file — zero assertions",
-            "rules：没有规则文件——零断言",
-            &[],
-        )
-    });
-    note.into_iter().chain(console::console(r)).collect()
+    let answer = face::run(&root, j.db, core, &ask);
+    answered(name, name, json(j.format), answer, |doc| {
+        let errors = doc["errors"].as_array().is_some_and(|e| !e.is_empty());
+        Ok(errors || !doc["degraded"].is_null())
+    })
 }

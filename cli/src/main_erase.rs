@@ -3,8 +3,9 @@
 //! a family of its own (plan by default, --apply behind the contract
 //! preconditions, --check as the CI zero-rows gate).
 
-use crate::main_cmds::{answered, fail, json, or_cwd};
+use crate::main_cmds::{fail, json, or_cwd};
 use crate::main_judge::JudgeArgs;
+use crate::main_prelude::{answered, whole};
 use codeeraser::erase::{self, document, document::Run};
 use std::process::ExitCode;
 
@@ -31,7 +32,7 @@ pub fn erase_cmd(a: EraseArgs, core: &str) -> ExitCode {
     let as_json = json(a.judge.format);
     if a.log {
         let answer = erase::log::read(&root).and_then(|l| document::trail_answer(core, &l));
-        return answered("erase", "erase-trail", as_json, answer);
+        return answered("erase", "erase-trail", as_json, answer, whole);
     }
     // the diff is rendered before anything is applied: the hash check
     // names a file that moved since planning, and an applied file no
@@ -59,7 +60,7 @@ pub fn erase_cmd(a: EraseArgs, core: &str) -> ExitCode {
         None => None,
     };
     let answer = document::answer(core, held, &plan, &diffs, run);
-    let code = answered("erase", "erase", as_json, answer);
+    let code = answered("erase", "erase", as_json, answer, whole);
     match refused {
         Some(e) => fail("erase", e),
         None => code,

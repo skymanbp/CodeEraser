@@ -28,6 +28,9 @@
 > `lines` 或 `pretty`，按名拒。
 > 同一 minor 的读者（步 5 Rust 半第一部分，核与 golden 零改动）：PreToolUse 守卫把 `guard` 请求经 daemon **2.3.0** 加性的 `document{body}` 送到 daemon 持有的核链、按 `document_report{reply}` 取回并印出它的一句（[DAEMON.md](DAEMON.md) §1）；
 > Stop / precommit / commitmsg 在审计自己的核链上问 `audit`，印它的行、按 `exit.fail` 拦；两处都绑不出时按本地规则判、说一句英文兜底。
+> 同一 minor 的读者（步 5 Rust 半第二部分）：arch / flow / merge / query / rules / check / structure / join / deadcode / mentions / sites
+> 十一个面改印核的 `lines`、退出码读 `exit.fail`，请求带上只进 `lines` 的事实；`tables/1` 目录 `document.flow.kinds` 每行在
+> `[name, advisory]` 之后多中英两个显示标签（GUI 读它），`tablesDigest` 随之挪动，tables golden 与 hello-ok 重答。
 > **7.9.0**（文档族第二批，加性 minor，计划 v2.32 步 4，2026-10-01；设计册 `docs/reference/authority-track.md` §5）：
 > `document/1` 的 `family` 多七个：`check` / `structure` / `join` / `deadcode` / `mentions` / `sites` / `graphscreen`（图屏一次装出画布与内嵌的
 > deadcode 文档）；每族的 `ranges` / `rows` / `facts` 键、行宽与每列的宇宙仍按族陈述，契约照旧按名拒，另加各族自己的检查（一行至多的可空表、

@@ -159,7 +159,7 @@ Every capability is claimed once in this table, the sets are derived from the co
 | score, ratchet and floor | `ce check` | `score`, `check_report` | MCP `check` |
 | same-role advisor (similar units, associative view) | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
 | code query and architecture rules | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
-| intra-function dead code (unreachable, dead stores, unused locals and parameters) | `ce flow`, `ce flow --check` | `reports`, `flow_report` | MCP `flow` |
+| intra-function dead code (unreachable, dead stores, unused locals and parameters) | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
 | clone merge suggestions (anti-unification) | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
 | architecture analysis (layers, cuts, clusters, impact) | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
 | baseline writes | `ce baseline` | — CLI only: a machine surface never writes a baseline | — |

@@ -83,4 +83,4 @@ lines' say _ req = map (line 0 . sentence) (rows req "say")
     [5, e, _, _, _, _, _] -> say "config_unreadable" [R (ref "error" [e])]
     _ -> plain ""
   kindName k = concat (take 1 (drop (fromInteger k) kindNames))
-  flowKind k = concat (take 1 (drop (fromInteger k) (map fst Flow.kindTable)))
+  flowKind k = concat (take 1 (drop (fromInteger k) Flow.kinds))

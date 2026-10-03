@@ -97,7 +97,7 @@ token ([legend.rs:125](../../../cli/src/query/legend.rs#L125), [Cost.hs:88](../.
 
 Eight clauses ship inside the binary as a `.rules` text and go up the same wire as the user's
 program, so the core never distinguishes them; their predicates are reserved, and a program that
-redefines one is a program error ([mod.rs:29](../../../cli/src/query/mod.rs#L29),
+redefines one is a program error ([mod.rs:27](../../../cli/src/query/mod.rs#L27),
 [prelude.rules:8-15](../../../cli/src/query/prelude.rules#L8)):
 
 ```
@@ -220,7 +220,7 @@ bare accusation ([Query.hs:91](../../../core/app/CE/Query.hs#L91)). One global n
 derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:38](../../../core/app/CE/Query/Proof.hs#L38)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
-row under the answer ([console.rs:69](../../../cli/src/query/console.rs#L69),
+row under the answer ([Lines.hs:40](../../../core/app/CE/Query/Lines.hs#L40),
 [query.js:85](../../../gui/ui/query.js#L85)).
 
 ### 8. Caps and degradation
@@ -252,30 +252,30 @@ since proto 7.8.0) from the program's facts, its answered tables and the goals a
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
 ([Document.hs:99](../../../core/app/CE/Query/Document.hs#L99), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
-[face.rs:224](../../../cli/src/query/face.rs#L224), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
-`?-` in front, `.` behind — unless written ([face.rs:38](../../../cli/src/query/face.rs#L38)); a glob
+[face.rs:223](../../../cli/src/query/face.rs#L223), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
+`?-` in front, `.` behind — unless written ([face.rs:37](../../../cli/src/query/face.rs#L37)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
-([face.rs:164](../../../cli/src/query/face.rs#L164)).
+([face.rs:163](../../../cli/src/query/face.rs#L163)).
 
 - **`ce query <body> [--why] [--file <rules>] [--prelude]`** answers one question built on the
   rules file's rules; exit 0 when judged, 2 on a program error or a core that could not judge.
   It is a report: an assertion's violations in the file it builds on do not move its exit code
-  ([main_query.rs:48](../../../cli/src/main_query.rs#L48)).
+  ([main_query.rs:47](../../../cli/src/main_query.rs#L47)).
 - **`ce rules [--file <rules>] [--why]`** judges every `assert` in the file: exit 1 when any
   assertion holds a violation, 2 when the program did not judge, 0 otherwise — and a missing
   default file is zero assertions and 0, said aloud
-  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:68](../../../cli/src/main_query.rs#L68)).
+  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:61](../../../cli/src/main_query.rs#L61)).
 - **The rules file** is the one named on the command line or by the MCP argument (root-relative
   unless absolute, and it must exist), else `[rules] file` from the config (it must exist), else
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
   alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
-  so declaring it moves no baseline ([mod.rs:39](../../../cli/src/query/mod.rs#L39),
+  so declaring it moves no baseline ([mod.rs:37](../../../cli/src/query/mod.rs#L37),
   [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:83-86](../../../cli/src/config/canonical.rs#L83)).
 - **The console** prints the errors first, then the degraded reason if any, then each goal —
   `?- F: 1 answer(s)` with its rows, `assert no_dead(F): ok` or `: N violation(s)` with its
   witnesses — every proof node indented under its answer, and one counts line; every sentence
   has its Chinese twin and the program's own words stay as written
-  ([console.rs:1-8](../../../cli/src/query/console.rs#L1), [console.rs:13](../../../cli/src/query/console.rs#L13),
+  ([Lines.hs:15-19](../../../core/app/CE/Query/Lines.hs#L15), [Query.hs:10-20](../../../core/app/CE/Text/Query.hs#L10),
   [main_lang.rs:76](../../../cli/src/main_lang.rs#L76)).
 - **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
   the CLI's exit code is its own reading of `counts.violations` and does not exist here
@@ -289,7 +289,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   [query.js:61](../../../gui/ui/query.js#L61)).
 
 All three go through two library functions, so the document cannot differ by face
-([faces.rs:169](../../../cli/src/faces.rs#L169), [faces.rs:182](../../../cli/src/faces.rs#L182)); the
+([faces.rs:197](../../../cli/src/faces.rs#L197), [faces.rs:210](../../../cli/src/faces.rs#L210)); the
 integration leg holds the CLI's JSON to the library's byte for byte
 ([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity.rs:40](../../../cli/tests/it/face_parity.rs#L40)).
@@ -348,7 +348,7 @@ graph's codes, the lexer's numbering and its faults at their place, a goal's col
 safety walk's order, the request body's tables and flags, and `consume`'s reading of a healthy,
 a degraded and a skewed reply ([legend.rs:12](../../../cli/tests/unit/query/legend.rs#L12),
 [program.rs:19](../../../cli/tests/unit/query/program.rs#L19), [wire.rs:63](../../../cli/tests/unit/query/wire.rs#L63),
-[face.rs:70](../../../cli/tests/unit/query/face.rs#L70)). The integration legs seed a Cargo package
+[face.rs:142](../../../cli/tests/unit/query/face.rs#L142)). The integration legs seed a Cargo package
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or

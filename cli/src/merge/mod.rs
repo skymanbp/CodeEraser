@@ -15,11 +15,9 @@
 //! FlowSpec's statement forms and never restate them, and flow/ minus
 //! mod.rs is the lowering the flow precision docs answer for.
 
-pub mod console;
 pub mod face;
 pub mod groups;
 pub mod groups_trim;
-pub mod report;
 pub mod slot;
 mod slot_flow;
 pub mod wire;

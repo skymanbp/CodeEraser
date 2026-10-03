@@ -7,7 +7,7 @@
 //! path is not a measured file.
 
 use crate::main_prelude::*;
-use codeeraser::arch::{console, face};
+use codeeraser::arch::face;
 use std::path::{Path, PathBuf};
 
 #[derive(clap::Args)]
@@ -31,13 +31,6 @@ pub fn arch_cmd(a: ArchArgs, core: &str) -> ExitCode {
     let j = a.judge;
     let root = or_cwd(j.root);
     let focus: Vec<String> = a.impact.iter().map(|p| spelled(&root, p)).collect();
-    document_face(
-        "arch",
-        face::run(&root, j.db, core, &focus),
-        json(j.format),
-        console::console,
-        |r: &codeeraser::arch::report::Report| {
-            Ok(ExitCode::from(if r.degraded.is_some() { 2 } else { 0 }))
-        },
-    )
+    let answer = face::run(&root, j.db, core, &focus);
+    answered("arch", "arch", json(j.format), answer, degraded)
 }

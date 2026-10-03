@@ -252,7 +252,7 @@ So a reply the core degraded to a request this side priced within both caps is a
 two sides' cap mirrors — an error naming both owners, never a document; a core without the family,
 or one that stops answering mid-run, gives a document with `degraded`, and a core that cannot be
 started is refused by name, since the document is the core's to lay out
-([wire.rs:149](../../../cli/src/merge/wire.rs#L149), [face.rs:87](../../../cli/src/merge/face.rs#L87)).
+([wire.rs:149](../../../cli/src/merge/wire.rs#L149), [face.rs:95](../../../cli/src/merge/face.rs#L95)).
 
 ### 4. The measuring side's rulings
 
@@ -275,32 +275,32 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
 4. The groups and the local pre-checks of §1; a member row's `unit` is the request-local member
    number (the core echoes it, never reads it), its `lines` the unit's line count or the
    fragment's kept run's (§1), its `fileIndeg` the reference graph's edges landing on the
-   member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:175](../../../cli/src/merge/face.rs#L175)).
+   member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:185](../../../cli/src/merge/face.rs#L185)).
 5. One report, `ce.merge-report/0.1.0`, for all three faces, laid out by the core over every
    chunk's rows joined, its counts tallied there, `merged_duplicates` (§1) beside them; each parameter labelled with every member's text at the parameter's first hole
    ([Document.hs:95](../../../core/app/CE/Merge/Document.hs#L95)). The text runs from the hole's first root
    to its last on that member — a leaf or relabel hole's node, a gap hole's whole forest — and an
-   empty side reads `""` ([face.rs:236](../../../cli/src/merge/face.rs#L236)).
+   empty side reads `""` ([face.rs:257](../../../cli/src/merge/face.rs#L257)).
 6. The T3 trees are built once for both families; `clone/1` never sends the new columns.
 7. The console prints the counts and the groups not sent, then per group a head line, its
    members — a trimmed member's run beside its span — and one line per parameter with every
    member's text cut at 40 characters; `--group n`
-   prints one group and leaves the JSON face whole ([console.rs:16](../../../cli/src/merge/console.rs#L16)).
+   prints one group and leaves the JSON face whole ([Lines.hs:25-26](../../../core/app/CE/Merge/Lines.hs#L25)).
 8. Exit codes: a judged document 0; a degraded one 2; an argument error — `--group` past the last
-   group included — 2 ([main_merge.rs:26](../../../cli/src/main_merge.rs#L26)).
+   group included — 2 ([main_merge.rs:27](../../../cli/src/main_merge.rs#L27)).
 
 ### 5. The faces
 
 `ce merge [--group <n>] [--format json]`, the MCP tool `merge_suggestions` and the GUI's merge
 family in the Reports hub all read the one document, which the core lays out (`document/1`) from
-every chunk's answer joined on this side ([Document.hs:76](../../../core/app/CE/Merge/Document.hs#L76), [face.rs:109](../../../cli/src/merge/face.rs#L109)).
+every chunk's answer joined on this side ([Document.hs:76](../../../core/app/CE/Merge/Document.hs#L76), [face.rs:119](../../../cli/src/merge/face.rs#L119)).
 The document holds the counts (the core's, and `merged_duplicates`), `unsendable`, and per group its family (`t1t2` / `t3`), whether it
 is a fragment, its members (`path`, `unit` as `path:key#nth` or null for a fragment, `lines` the
 clone-family span, `run` the lines sent and priced — `lines` again for a whole unit), the
 parameter count, the member kept, the savings, `feasible`, the reason by name (`ok`, `position`,
 `type`, `spans_statements`, `too_many_params`, `no_savings` — `position` for a hole at a statement
 or any other position no parameter can stand for) and the parameters, each with every member's `text`
-([Document.hs:52](../../../core/app/CE/Merge/Document.hs#L52), [report.rs:38](../../../cli/src/merge/report.rs#L38)). A core without the family,
+([Document.hs:52](../../../core/app/CE/Merge/Document.hs#L52)). A core without the family,
 or one that stops answering, gives a document with `degraded` naming why and no group — a request
 the core did not judge licenses nothing; a core that answers degraded to a request this side priced
 within both caps is a cap-mirror drift and an error, never a document. The GUI card leads with the

@@ -12,7 +12,7 @@
 -- index), the refusals (its own lowering's, which stand beside a
 -- `degraded` reason, and the core's), each file's language, each
 -- file's place in path order, and the kinds `--kind` showed.
-module CE.Flow.Document (doc, kindTable) where
+module CE.Flow.Document (doc, kindTable, kinds) where
 
 import CE.Document.Contract
 import CE.Lang (languages)
@@ -46,17 +46,25 @@ statement =
 
 -- | The finding kinds by code (CE.Flow.Cost), each with whether it is
 -- advisory in every language (an unused parameter is often an
--- interface's): the one table every face, feed and `--kind` reads,
--- answered as the catalogue's `kinds` rows `[name, advisory]`.
-kindTable :: [(String, Bool)]
-kindTable = [("unreachable", False), ("dead_store", False), ("unused_local", False), ("unused_param", True)]
+-- interface's) and its display label in English and in Chinese: the
+-- one table every face, feed and `--kind` reads, answered as the
+-- catalogue's `kinds` rows `[name, advisory, en, zh]` — the GUI's
+-- chips and kind column read the labels (plan v2.32 step 5, R8); the
+-- document names a kind by its name alone.
+kindTable :: [(String, Bool, String, String)]
+kindTable =
+  [ ("unreachable", False, "unreachable", "不可达")
+  , ("dead_store", False, "dead store", "死存储")
+  , ("unused_local", False, "unused local", "未用局部量")
+  , ("unused_param", True, "unused parameter", "未用形参")
+  ]
 
 kinds :: [String]
-kinds = map fst kindTable
+kinds = [name | (name, _, _, _) <- kindTable]
 
 -- | The advisory kinds' codes, read off the table.
 advisoryKinds :: [Integer]
-advisoryKinds = [code | (code, (_, True)) <- zip [0 ..] kindTable]
+advisoryKinds = [code | (code, (_, True, _, _)) <- zip [0 ..] kindTable]
 
 -- | The languages whose findings are judged, by wire code: the
 -- language table's `flow_judged` column (CE.Lang.Common), where each

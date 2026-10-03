@@ -1,6 +1,7 @@
 -- | The `ce scan` console sentences (plan v2.32 step 5), transcribed
 -- byte for byte from cli/src/scan/report.rs (`print_console`) and the
--- named-failure suffix (cli/src/report.rs `fail_suffix`). The `FAIL` /
+-- named-failure suffix (cli/src/report.rs `fail_suffix`), both deleted
+-- once the console read these lines. The `FAIL` /
 -- `warn` tags and ` -> FAIL` print in English under both languages
 -- (the exit-code vocabulary).
 module CE.Text.Scan (catalogue) where

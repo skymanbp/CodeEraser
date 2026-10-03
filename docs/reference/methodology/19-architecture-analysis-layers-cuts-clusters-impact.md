@@ -19,7 +19,7 @@ are Haskell's, over the wire family `arch/1` ([Arch.hs:5-19](../../../core/app/C
 
 | table | row | read off |
 |---|---|---|
-| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([tables.rs:54](../../../cli/src/arch/tables.rs#L54), [face.rs:52](../../../cli/src/arch/face.rs#L52)) |
+| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([tables.rs:54](../../../cli/src/arch/tables.rs#L54), [face.rs:51](../../../cli/src/arch/face.rs#L51)) |
 | `dirs` | `[D, parent]` | the structure family's directory tree over those paths: the root row 0 with parent −1, every other parent an earlier row, since the tree enters every ancestor before its child ([tables.rs:129](../../../cli/src/arch/tables.rs#L129)) |
 | `edges` | `[F, G, w]` | every graph arc from one measured file to another — any kind, any rung, through the structure family's own file join — plus an arc to a Markdown section, folded onto the section's file; a self pair is dropped and `w` counts the arcs between the pair ([rows.rs:89](../../../cli/src/structure/rows.rs#L89), [tables.rs:96](../../../cli/src/arch/tables.rs#L96)) |
 | `pkgEdges` | `[F, D, w]` | the arcs whose target is a package node — a Go, R or Java package import, a Markdown directory link — onto the package's directory; a package outside the tree has no row, and a reference into the file's own directory is kept for the core to fold |
@@ -93,7 +93,7 @@ directory ([Layers.hs:35](../../../core/app/CE/Arch/Layers.hs#L35), [Cost.hs:44]
 
 1. The node universe is the structure family's: the deadcode wire of a refreshed index, its
    measured file nodes in path order — so the two families place a file in one tree
-   ([face.rs:25](../../../cli/src/arch/face.rs#L25)).
+   ([face.rs:24](../../../cli/src/arch/face.rs#L24)).
 2. The directories are `structure::tree`'s, which numbers a parent before its child; the table
    checks it by name rather than renumber ([tables.rs:129](../../../cli/src/arch/tables.rs#L129)).
 3. `lines` is `ce scan`'s count of the file's bytes, not a second one.
@@ -111,7 +111,7 @@ arc's), and each cluster's majority directory, read by the rule the misplaced ro
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
 misplaced files never name two majorities. This side sends the tables back with each path's place
 in string order and puts the paths back ([Document.hs:96](../../../core/app/CE/Arch/Document.hs#L96), [Document.hs:122](../../../core/app/CE/Arch/Document.hs#L122),
-[face.rs:78](../../../cli/src/arch/face.rs#L78)).
+[face.rs:79](../../../cli/src/arch/face.rs#L79)).
 
 ### 4. The faces and the document
 
@@ -119,7 +119,7 @@ One document, `ce.arch-report/0.1.0`: the counts, one layer row per directory, t
 their file references (a package target written as its directory with a trailing slash), the
 clusters with their files, the misplaced files with their directory and their cluster's majority,
 the impact rows and the metrics, instability `null` where the core answered −1
-([Document.hs:78](../../../core/app/CE/Arch/Document.hs#L78), [report.rs:65](../../../cli/src/arch/report.rs#L65)). The arch reply is consumed
+([Document.hs:78](../../../core/app/CE/Arch/Document.hs#L78)). The arch reply is consumed
 strictly before the document is asked for: the five request counts echo what was sent, the four answer counts tally the tables,
 the layers and the metrics carry one row per directory in order, the clusters one per file, every
 id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../cli/src/arch/wire.rs#L124),
@@ -129,7 +129,7 @@ id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../
   level down, every cut arc with its references indented under it and `exact` or `greedy`, the
   misplaced files, the impact walk when a focus was named and the metrics table; exit 0 with a
   document, 2 when the core could not judge or a path is not a measured file
-  ([main_arch.rs:32](../../../cli/src/main_arch.rs#L32), [console.rs:14](../../../cli/src/arch/console.rs#L14)).
+  ([main_arch.rs:32](../../../cli/src/main_arch.rs#L32), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
 - **The MCP tool `architecture`** takes `impact` as a list of root-relative paths and relays the
   same document ([adapters.rs:201](../../../cli/src/mcp/adapters.rs#L201), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234)).
 - **The GUI** renders it in the reports hub rather than a thirteenth tab — the header holds twelve
@@ -138,7 +138,7 @@ id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../
   still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:21](../../../gui/ui/reports.js#L21),
   [commands_query.rs:39](../../../gui/src-tauri/src/commands_query.rs#L39)).
 
-All three go through one library function ([faces.rs:212](../../../cli/src/faces.rs#L212)).
+All three go through one library function ([faces.rs:247](../../../cli/src/faces.rs#L247)).
 
 ### 5. Gates
 

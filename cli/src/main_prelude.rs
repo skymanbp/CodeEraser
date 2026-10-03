@@ -1,7 +1,7 @@
 //! The imports every judged-family CLI face opens with (plan v2.31
-//! steps 5-9): the argument helpers, the shared judge arguments, the
-//! document printer and the exit code; and, since plan v2.32 step 3,
-//! the one road a core-laid document takes to the terminal. `ce flow`, `ce query` /
+//! steps 5-9): the argument helpers, the shared judge arguments and the
+//! exit code; and, since plan v2.32 step 5, the one road a core-laid
+//! document takes to the terminal (`answered`). `ce flow`, `ce query` /
 //! `ce rules`, `ce similar`, `ce merge` and `ce arch` each read these four names
 //! and then their own family's modules; the four lines lived at the
 //! head of every face until the clone gate read two heads as one block
@@ -11,36 +11,46 @@
 
 pub(crate) use crate::main_cmds::{fail, json, or_cwd};
 pub(crate) use crate::main_judge::JudgeArgs;
-pub(crate) use codeeraser::report::print_doc;
 pub(crate) use std::process::ExitCode;
 
-/// A document face (plan v2.32 step 3): the bound document read into
-/// its reader, the exit code the face's own rule reads off the reader,
-/// then the document printed as it is under `--format json` or as the
-/// console's lines. A run, a read or a rule that refused the reader
-/// (merge's `--group` past the last group) is `ce <name>: why`, exit
-/// 2, and nothing on stdout.
-pub(crate) fn document_face<T: serde::de::DeserializeOwned>(
+use codeeraser::document::Answer;
+use serde_json::Value;
+
+/// A face the core answered (plan v2.32 step 5, rulings R3 / R4): the
+/// answer printed — its lines on the console, the document under
+/// `--format json` — then the exit: 2 when the face's own rule reads
+/// the bound document as a judgment that did not happen (`unjudged`),
+/// else 1 iff the core's veto. A run, or a rule that refused the
+/// document before anything printed (merge's `--group` past the last
+/// group), is `ce <name>: why`, exit 2, and nothing on stdout — `name`
+/// the command, `family` the document's (`ce erase --log` lays out
+/// `erase-trail`, `ce clone --units` `clone-units`).
+pub(crate) fn answered(
     name: &str,
-    doc: anyhow::Result<serde_json::Value>,
+    family: &str,
     as_json: bool,
-    console: impl FnOnce(&T) -> Vec<String>,
-    exit: impl FnOnce(&T) -> anyhow::Result<ExitCode>,
+    answer: anyhow::Result<Answer>,
+    unjudged: impl FnOnce(&Value) -> anyhow::Result<bool>,
 ) -> ExitCode {
-    let read = doc.and_then(|doc| {
-        let r = T::deserialize(&doc)?;
-        let code = exit(&r)?;
-        Ok((doc, r, code))
+    let shown = answer.and_then(|a| {
+        let unjudged = unjudged(&a.document)?;
+        codeeraser::document::emit(family, &a, as_json)?;
+        Ok(if unjudged { 2 } else { u8::from(a.fail) })
     });
-    match read {
-        Ok((doc, r, code)) => {
-            print_doc(
-                as_json,
-                || doc,
-                || console(&r).iter().for_each(|l| println!("{l}")),
-            );
-            code
-        }
+    match shown {
+        Ok(code) => ExitCode::from(code),
         Err(err) => fail(name, err),
     }
+}
+
+/// A family whose document is never unjudged on its own reading: the
+/// core's veto alone decides the exit.
+pub(crate) fn whole(_: &Value) -> anyhow::Result<bool> {
+    Ok(false)
+}
+
+/// A document whose `degraded` names a reason: the judgment did not
+/// happen (arch, flow, merge).
+pub(crate) fn degraded(doc: &Value) -> anyhow::Result<bool> {
+    Ok(!doc["degraded"].is_null())
 }

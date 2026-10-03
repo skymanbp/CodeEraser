@@ -5,13 +5,12 @@
 //! through its unit's legend. Housed beside cli/src/flow/ rather than
 //! in it: that directory answers the precision docs (the provenance
 //! gate reads it by path), and a face is no answer. Nothing here
-//! judges: every finding is the core's over flow/1, the document its
-//! document/1 (CE.Flow.Document), and a finding's line and variable
-//! are what the lowering's legend supplies.
+//! judges: every finding is the core's over flow/1, the document and
+//! its console lines its document/1 (CE.Flow.Document, CE.Flow.Lines),
+//! and a finding's line and variable are what the lowering's legend
+//! supplies.
 
-pub mod console;
 pub mod face;
-pub mod report;
 
 use crate::flow::lower::{Lowered, Unit};
 use crate::flow::wire::Finding;
@@ -19,22 +18,22 @@ use crate::scan::lang::Lang;
 use serde_json::{Value, json};
 
 /// The kinds by code as the package's flow catalogue lists them
-/// (CE.Flow.Document): `(name, advisory)`.
-fn kinds() -> &'static [(&'static str, bool)] {
+/// (CE.Flow.Document): each row's name, advisory flag and labels.
+pub fn kinds() -> &'static [crate::tables::KindRow] {
     crate::tables::get().document.flow.kinds
 }
 
 /// A kind's name by code; "?" for a code the catalogue does not list.
 pub fn kind_name(kind: u8) -> &'static str {
-    kinds()
-        .get(usize::from(kind))
-        .map_or("?", |(name, _)| *name)
+    kinds().get(usize::from(kind)).map_or("?", |row| row.name)
 }
 
 /// Whether the catalogue marks the kind advisory in every language
 /// (booklet §13 item 8: an unused parameter is often an interface's).
 pub fn advisory(kind: u8) -> bool {
-    kinds().get(usize::from(kind)).is_some_and(|(_, a)| *a)
+    kinds()
+        .get(usize::from(kind))
+        .is_some_and(|row| row.advisory)
 }
 
 /// A finding is judged when its language passed the precision gate
@@ -111,7 +110,7 @@ pub fn kinds_json(kinds: impl IntoIterator<Item = u8>) -> Value {
     let counted = names
         .iter()
         .zip(n)
-        .map(|((k, _), c)| (k.to_string(), json!(c)));
+        .map(|(row, c)| (row.name.to_string(), json!(c)));
     Value::Object(counted.collect())
 }
 

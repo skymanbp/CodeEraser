@@ -5,7 +5,8 @@
 //! caught DocdupArgs re-growing CloneArgs field-for-field; the other
 //! three families moved in as they grew the same JudgeArgs shape.
 
-use crate::main_cmds::{OutFormat, answered, fail, json, or_cwd};
+use crate::main_cmds::{OutFormat, json, or_cwd};
+use crate::main_prelude::{answered, whole};
 use codeeraser::{dedup, docdup, join};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -28,7 +29,7 @@ pub struct JudgeArgs {
 impl JudgeArgs {
     /// A family the core answers (plan v2.32 step 5): `ask` gets the
     /// root and the db, the answer is printed in the asked form and the
-    /// exit reads the core's veto (main_cmds::answered) — the one body
+    /// exit reads the core's veto (main_prelude::answered) — the one body
     /// of `ce docdup`, `ce trend` and `ce similar`.
     pub(crate) fn answered(
         self,
@@ -36,7 +37,13 @@ impl JudgeArgs {
         ask: impl FnOnce(&Path, Option<PathBuf>) -> anyhow::Result<codeeraser::document::Answer>,
     ) -> ExitCode {
         let as_json = json(self.format);
-        answered(family, family, as_json, ask(&or_cwd(self.root), self.db))
+        answered(
+            family,
+            family,
+            as_json,
+            ask(&or_cwd(self.root), self.db),
+            whole,
+        )
     }
 }
 
@@ -101,29 +108,6 @@ pub struct TrendArgs {
     batch: Option<usize>,
 }
 
-/// The one flag-unpack + emit stanza for report families: unpack
-/// JudgeArgs beside the process's core, run with (root, db, core), print with as_json, seat a
-/// veto (`|_| None` for a family with no fail bit). structure/join
-/// were shape twins and `ce trend` would have been the third — the
-/// P4 ratchet caught the stanza; it exists once, and the no-veto
-/// wrapper that once fronted it was itself a counted clone of this
-/// signature (v2.18 subtraction batch).
-fn family_checked<R>(
-    (j, core): (JudgeArgs, &str),
-    name: &str,
-    run: impl FnOnce(&Path, Option<PathBuf>, &str) -> anyhow::Result<R>,
-    print: impl FnOnce(&R, bool),
-    veto: impl FnOnce(&R) -> Option<String>,
-) -> ExitCode {
-    let as_json = json(j.format);
-    emit_checked(
-        name,
-        || run(&or_cwd(j.root), j.db, core),
-        |r| print(r, as_json),
-        veto,
-    )
-}
-
 /// `ce trend` (M7-P4): the score trajectory over mainline history —
 /// cached in the index db, rebuildable from git at will.
 pub fn trend_cmd(a: TrendArgs, core: &str) -> ExitCode {
@@ -136,52 +120,19 @@ pub fn trend_cmd(a: TrendArgs, core: &str) -> ExitCode {
 /// aggregates to the core's structure/1, dense verdicts re-labelled
 /// with local names. Report-only by ruling — no score floor (v2.22, O53).
 pub fn structure_cmd(a: StructureArgs, core: &str) -> ExitCode {
-    family_checked(
-        (a.judge, core),
-        "structure",
-        move |r, db, c| {
-            codeeraser::structure::judge::run(r, db, c, (a.deep, a.days, a.split_candidates))
-        },
-        codeeraser::report::print_bound,
-        |_| None,
-    )
+    let j = a.judge;
+    let knobs = (a.deep, a.days, a.split_candidates);
+    let answer = codeeraser::structure::judge::run(&or_cwd(j.root), j.db, core, knobs);
+    answered("structure", "structure", json(j.format), answer, whole)
 }
 
 /// `ce join` (M5-3h): assemble the three signal legs — similarity,
 /// graph position, per-unit churn — report-only; the verdict lattice
 /// judges them on the verdict/1 wire via `ce check` (M5-3i).
 pub fn join_cmd(a: JoinArgs, core: &str) -> ExitCode {
-    family_checked(
-        (a.judge, core),
-        "join",
-        move |r, db, c| join::run(r, db, c, a.days),
-        codeeraser::report::print_bound,
-        |_| None,
-    )
-}
-
-/// Run one family's judgment and print its report — the ONE
-/// run/print/fail shape every judgment command is; the veto seat is
-/// how a --check style gate turns a printed report into exit 1 with
-/// a named reason (the dedup --check shape), `|_| None` for a family
-/// without one.
-fn emit_checked<R>(
-    name: &str,
-    run: impl FnOnce() -> anyhow::Result<R>,
-    print: impl FnOnce(&R),
-    veto: impl FnOnce(&R) -> Option<String>,
-) -> ExitCode {
-    match run() {
-        Ok(report) => {
-            print(&report);
-            if let Some(why) = veto(&report) {
-                eprintln!("{name} check: {why}");
-                return ExitCode::FAILURE;
-            }
-            ExitCode::SUCCESS
-        }
-        Err(err) => fail(name, err),
-    }
+    let j = a.judge;
+    let answer = join::run(&or_cwd(j.root), j.db, core, a.days);
+    answered("join", "join", json(j.format), answer, whole)
 }
 
 /// `ce docdup` (M5-3g): the documentation-duplication judgment over
@@ -211,5 +162,5 @@ pub fn clone_cmd(a: CloneArgs, core: &str) -> ExitCode {
         dedup::t3::answer(&root, j.db, core)
     };
     let family = if a.units { "clone-units" } else { "clone" };
-    answered("clone", family, json(j.format), answer)
+    answered("clone", family, json(j.format), answer, whole)
 }
