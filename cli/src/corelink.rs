@@ -13,14 +13,16 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 8.1.0 = the reference ladders' search for Python, Lua, Go and
-/// C / C++ in the core, `resolve/1` (plan v2.33 wave W2a; design
-/// booklet docs/reference/algorithm-track.md §6 row W2), additive on
-/// 8.0.0: the edge sweep sends the walked tree, the sites and each
-/// language's configuration as segment ids (graph/resolve/) and maps
-/// each reply row back to the ladder's outcome; the definition package
-/// gains `resolve` (the words and affixes this side interns), so
-/// `tablesDigest` moves. Every other family's bytes stand.
+/// §1). 9.0.0 = `resolve/1` on text (plan v2.33 W2-text stage A; design
+/// booklet docs/reference/algorithm-track.md §3, §6): the edge sweep sends
+/// the walked paths, the sites' specifiers and the configuration files it
+/// read as text (graph/resolve/), and the core reads go.mod, the root
+/// pyproject.toml's keys and the compile databases with their response
+/// and flag files; the segment table, vocabulary, affix rows and
+/// directory table are retired (a retired key is a major) and the
+/// definition package's `resolve` key names the config basenames a
+/// request carries, so `tablesDigest` moves. Every other family's bytes
+/// stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -32,7 +34,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "8.5.0";
+pub const PROTO: &str = "9.0.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

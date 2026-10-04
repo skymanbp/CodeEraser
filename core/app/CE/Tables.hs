@@ -17,7 +17,7 @@ module CE.Tables (package, respond, tablesDigest) where
 import CE.Document (catalogue)
 import CE.Lang (digestOf, pack)
 import CE.Lang.Contract (offence)
-import qualified CE.Resolve.Vocab as Vocab
+import qualified CE.Resolve.Tables as ResolveTables
 import CE.Limits (limits)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
@@ -36,7 +36,7 @@ respond proto line = case decodeStrict line of
 -- v2.33 W3, CE.Limits).
 package :: Value
 package = case pack of
-  Object keys -> Object (KM.insert "limits" limits (KM.insert "resolve" Vocab.table (KM.insert "document" catalogue keys)))
+  Object keys -> Object (KM.insert "limits" limits (KM.insert "resolve" ResolveTables.table (KM.insert "document" catalogue keys)))
   v -> v
 
 -- | The number the hello names as `tablesDigest` and the reply as

@@ -117,44 +117,14 @@ pub(crate) fn read_jsonc(root: &Path, rel: &str) -> Option<Value> {
     serde_json::from_str(&super::jsonc::clean(&text)).ok()
 }
 
-/// Python-side project surface: extra source roots and declared
-/// dependency names, both read from the repo-root pyproject.toml
-/// (its bytes sit in resolve_key, so answers cannot go stale).
-pub struct PyProject {
-    /// Directories that act as import roots besides the repo root
-    /// and src/ ([tool.setuptools.package-dir] values and
-    /// [tool.poetry.packages].from values).
-    pub source_dirs: Vec<String>,
-    /// [project] dependencies, reduced to bare package names.
-    pub deps: Vec<String>,
-}
-
-pub fn pyproject(root: &Path) -> Option<PyProject> {
-    let text = std::fs::read_to_string(root.join("pyproject.toml")).ok()?;
-    // toml 1.x: Value::from_str parses a single VALUE; documents
-    // parse as Table
-    let doc: toml::Table = text.parse().ok()?;
-    let setuptools = table_at(&doc, &["tool", "setuptools", "package-dir"])
-        .and_then(toml::Value::as_table)
-        .into_iter()
-        .flat_map(|map| map.values().filter_map(toml::Value::as_str));
-    let poetry = table_at(&doc, &["tool", "poetry", "packages"])
-        .and_then(toml::Value::as_array)
-        .into_iter()
-        .flat_map(|pkgs| {
-            pkgs.iter()
-                .filter_map(|p| p.get("from").and_then(toml::Value::as_str))
-        });
-    let source_dirs = setuptools.chain(poetry).map(str::to_string).collect();
-    let deps = table_at(&doc, &["project", "dependencies"])
-        .and_then(toml::Value::as_array)
-        .into_iter()
-        .flatten()
-        .filter_map(|d| d.as_str())
-        .map(dep_name)
-        .collect();
-    Some(PyProject { source_dirs, deps })
-}
+// The 92e728b1 pyproject reader, frozen (tests subrepo
+// unit/graph/oracle_cfg/pyproject.rs): the frozen Python ladder reads it
+// here; the core reads the decoded document since plan v2.33 W2-text.
+#[cfg(test)]
+#[path = "../../tests/unit/graph/oracle_cfg/pyproject.rs"]
+mod frozen_pyproject;
+#[cfg(test)]
+pub(crate) use frozen_pyproject::pyproject;
 
 /// Walk one dotted key path into a parsed TOML document.
 pub(crate) fn table_at<'a>(doc: &'a toml::Table, keys: &[&str]) -> Option<&'a toml::Value> {
@@ -163,13 +133,4 @@ pub(crate) fn table_at<'a>(doc: &'a toml::Table, keys: &[&str]) -> Option<&'a to
         cur = cur.get(key)?;
     }
     Some(cur)
-}
-
-/// "requests>=2.31 ; extra" → "requests" (PEP 508 name prefix).
-fn dep_name(requirement: &str) -> String {
-    requirement
-        .find(|c: char| !(c.is_alphanumeric() || c == '-' || c == '_' || c == '.'))
-        .map_or(requirement, |i| &requirement[..i])
-        .trim()
-        .to_string()
 }

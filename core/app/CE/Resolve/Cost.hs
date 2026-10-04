@@ -1,13 +1,12 @@
--- | The resolve family's constants (plan v2.33 wave W2a; design booklet
--- docs/reference/algorithm-track.md §6 row W2): the one cap every table
--- of a request counts against, the language codes the family answers,
--- the outcome and reason codes a reply row carries, and the token
--- separators a specifier row may hold. The codes are the measuring
--- side's `ladder::Outcome` / `ladder::Reason` in declaration order —
--- the reply is exactly what an outcome carried when the search lived
--- in cli/src/graph/ladder/, so everything downstream of it (the edge
--- store, deadcode, `ce graph --sites`, the precision documents) reads
--- the same answers.
+-- | The resolve family's constants (plan v2.33 wave W2a; on text since
+-- W2-text; design booklet docs/reference/algorithm-track.md §6): the
+-- one cap a request's text counts against, the language codes the
+-- family answers, the outcome and reason codes a reply row carries. The
+-- codes are the measuring side's `ladder::Outcome` / `ladder::Reason`
+-- in declaration order — the reply is exactly what an outcome carried
+-- when the search lived in cli/src/graph/ladder/, so everything
+-- downstream of it (the edge store, deadcode, `ce graph --sites`, the
+-- precision documents) reads the same answers.
 module CE.Resolve.Cost (
   resolveCap,
   langPy,
@@ -22,23 +21,16 @@ module CE.Resolve.Cost (
   outUnresolved,
   Reason (..),
   reasonCode,
-  sepDot,
-  sepSlash,
-  formSystem,
-  formRooted,
-  formDotted,
-  formPath,
-  forcedRelative,
-  forcedPlaced,
-  forcedOutside,
 ) where
 
--- | Every row of every table of one request, together: segments are
--- not rows (a count), the vocabulary is the core's own length. Over
--- the cap answers a complete degraded reply, never a partial one —
--- a tree that large is refused by name on the measuring side.
+-- | The characters of every string of one request plus one per row,
+-- together (CE.Resolve.Contract.requestSize). Over the cap answers a
+-- complete degraded reply, never a partial one — a tree that large is
+-- refused by name on the measuring side. 256 Mi: the integer-row
+-- family's cap was 4 Mi rows, and a path, a specifier or a
+-- configuration line is a few dozen characters.
 resolveCap :: Integer
-resolveCap = 4194304
+resolveCap = 268435456
 
 -- | The language codes of the four ladders this family holds (the
 -- `languages.rows` codes): Python, Go, C, C++, Lua. Every other
@@ -80,28 +72,3 @@ data Reason
 
 reasonCode :: Reason -> Integer
 reasonCode = toInteger . fromEnum
-
--- | Token separators inside a specifier row: Python's dot between two
--- dotted segments, Lua's dot and slash between two name pieces. Every
--- other token is a segment id (non-negative).
-sepDot, sepSlash :: Integer
-sepDot = -1
-sepSlash = -2
-
--- | The `form` column's bits, per language: C's `<…>` form, a Lua
--- `dofile` path that names no file of the tree (rooted at `/` or `~`,
--- or carrying a drive or a colon), a Go import or replacement whose
--- first segment holds a dot (a host name), a Go replacement that is a
--- filesystem path (`./`, `../`). Python's form is its leading-dot count.
-formSystem, formRooted, formDotted, formPath :: Integer
-formSystem = 1
-formRooted = 1
-formDotted = 1
-formPath = 2
-
--- | A forced include's first column: a spelling to search, an absolute
--- path the measuring side placed into the tree, or one placed outside it.
-forcedRelative, forcedPlaced, forcedOutside :: Integer
-forcedRelative = 0
-forcedPlaced = 1
-forcedOutside = 2

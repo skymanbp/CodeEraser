@@ -2,19 +2,27 @@
 //! ladder lands at 2f, judgment at 2g). Walk → detect → aggregate;
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
-//! ladder/ with its config surfaces (cabal / cargo / gomod / roots /
-//! jsonc) beside it; wire.rs bridges cached sites to edge rows for
+//! ladder/ with its config surfaces (cabal / cargo / roots / jsonc)
+//! beside it, and in the core for Python, Lua, Go and C / C++
+//! (resolve/, which sends the go.mod, pyproject and compile-database
+//! texts the core reads); wire.rs bridges cached sites to edge rows for
 //! phase 2.
+
+// The 92e728b1 go.mod and compile-database readers, frozen (tests
+// subrepo unit/graph/oracle_cfg/): the frozen ladders (ladder::frozen)
+// read them at their old paths, and the differential gate holds the
+// core's readers against them (plan v2.33 W2-text).
+#[cfg(test)]
+#[path = "../../tests/unit/graph/oracle_cfg/mod.rs"]
+pub(crate) mod oracle_cfg;
+#[cfg(test)]
+pub(crate) use oracle_cfg::{cmdline, compdb, compdb_flags, gomod};
 
 pub mod cabal;
 pub mod canvas;
 pub mod cargo;
-pub mod cmdline;
-pub mod compdb;
 pub mod compdb_find;
-pub mod compdb_flags;
 pub mod deadcode;
-pub mod gomod;
 pub mod jsonc;
 pub mod keys;
 pub mod ladder;

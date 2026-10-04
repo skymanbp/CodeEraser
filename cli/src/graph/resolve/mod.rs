@@ -1,38 +1,38 @@
-//! The reference ladders the core holds (plan v2.33 wave W2a; design
-//! booklet docs/reference/algorithm-track.md §6 row W2): Python, Lua,
-//! Go and C / C++ resolve in `resolve/1`. This side reads the tree and
-//! the configuration files, lowers every string to a segment id
-//! (lower.rs), sends one request per sweep with only the sites that
-//! need resolving, and maps each reply row back to the ladder's
-//! `Outcome` — so the edge store, deadcode, `ce graph --sites` and the
-//! precision documents read the answers they always read. The other
-//! languages' ladders still run on this side during the track.
+//! The reference ladders the core holds (plan v2.33 wave W2a; on text
+//! since W2-text, proto 9.0.0; design booklet
+//! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go and C /
+//! C++ resolve in `resolve/1`, with the readers of their configuration
+//! files (go.mod, the root pyproject.toml's keys, the compile databases,
+//! their response and flag files). This side sends what it read as text
+//! (request.rs) — one request per sweep with only the sites that need
+//! resolving — answers the core's `wanted` response files by reading
+//! them, and maps each reply row back to the ladder's `Outcome`, so the
+//! edge store, deadcode, `ce graph --sites` and the precision documents
+//! read the answers they always read. The other languages' ladders still
+//! run on this side during the track.
 //!
 //! The core is the one this process names (the global `--core`, then
 //! CE_CORE_BIN, a sibling of this binary, PATH), held open across the
 //! process's requests. A core that cannot answer is a named refusal:
 //! there is no copy of the search on this side to fall back on.
 
-mod facts;
-mod intern;
-mod lower;
-mod tokens;
+mod request;
 
 use super::ladder::{Outcome, Reason, Scope, Site};
 use crate::corelink::{Link, judged};
 use crate::scan::lang::Lang;
-use facts::Facts;
-use lower::{Input, Lowered};
-use serde_json::Value;
+use request::Input;
+use serde_json::{Value, json};
+use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 use std::sync::Mutex;
 
 /// The capability the core must offer, the request kind, the proto that
-/// minted the family.
+/// minted the family's text form.
 pub const CAP: &str = "resolve/1";
 pub const KIND: &str = "resolve";
-pub const SINCE: &str = "8.1.0";
+pub const SINCE: &str = "9.0.0";
 
 /// Whether the core holds this language's ladder.
 pub fn in_core(lang: Lang) -> bool {
@@ -42,20 +42,39 @@ pub fn in_core(lang: Lang) -> bool {
     )
 }
 
-/// The sites' outcomes, in order — every site a language `in_core`.
+/// The sites' outcomes, in order — every site a language `in_core`. The
+/// sweep's part of the request is read once per sweep (the memo), the
+/// response files the core asks for kept in it.
 pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
     if sites.is_empty() {
         return Ok(Vec::new());
     }
-    let facts = scope.memo.cached("resolve:facts", "", || Facts::of(scope));
-    let input = Input {
-        files: scope.files,
-        includes: scope.includes,
-        root: scope.root,
-    };
-    let lowered = lower::lower(&input, &facts, sites)?;
-    let reply = ask(lowered.body.clone())?;
-    consume(&reply, &lowered, sites.len())
+    let tree = scope.memo.cached("resolve:tree", "", || {
+        let input = Input {
+            files: scope.files,
+            root: scope.root,
+            configs: scope.configs,
+            search_roots: scope.search_roots,
+            lua: scope
+                .lua
+                .iter()
+                .map(|t| [t.dir.as_str(), t.suffix.as_str()])
+                .collect(),
+            includes: scope.includes,
+        };
+        RefCell::new(request::tree(&input))
+    });
+    let (rows, origins) = request::sites(scope.files, sites)?;
+    let mut body = tree.borrow().clone();
+    body["sites"] = rows;
+    body["origins"] = json!(origins);
+    let reply = complete(&mut body, scope.root)?;
+    tree.borrow_mut()["c"]["responses"] = body["c"]["responses"].clone();
+    let rows: Vec<(u8, i64, Option<String>, i64)> = judged::table(&reply, "results")?;
+    if rows.len() != sites.len() || judged::count(&reply, "sites")? != sites.len() {
+        return Err("resolve/1: wire skew: one result per site sent".into());
+    }
+    rows.into_iter().map(outcome).collect()
 }
 
 /// The build's forced includes (`-include x.h`) as unit → header import
@@ -67,22 +86,14 @@ pub fn forced_wire(
     ids: &BTreeMap<(&str, &str), usize>,
     wire: &mut BTreeSet<[i64; 4]>,
 ) -> Result<(), String> {
-    let facts = Facts::databases(root, files);
-    if facts.c.chains.is_empty() {
+    let mut body =
+        json!({ "files": files, "c": request::databases(root, files, &BTreeMap::new()) });
+    if body["c"]["dbs"].as_array().is_none_or(Vec::is_empty) {
         return Ok(());
     }
-    let none = BTreeMap::new();
-    let input = Input {
-        files,
-        includes: &none,
-        root,
-    };
-    let lowered = lower::lower(&input, &facts, &[])?;
-    let reply = ask(lowered.body.clone())?;
-    consume(&reply, &lowered, 0)?;
-    let arcs: Vec<[usize; 2]> = judged::table(&reply, "forced")?;
-    for [u, h] in arcs {
-        let (unit, header) = (name(&lowered.files, u)?, name(&lowered.files, h)?);
+    let reply = complete(&mut body, root)?;
+    let arcs: Vec<[String; 2]> = judged::table(&reply, "forced")?;
+    for [unit, header] in arcs {
         if let (Some(u), Some(h)) = (
             ids.get(&(unit.as_str(), "")),
             ids.get(&(header.as_str(), "")),
@@ -91,6 +102,33 @@ pub fn forced_wire(
         }
     }
     Ok(())
+}
+
+/// Each JSON compile database's response files, as the core's expansion
+/// names them (readable, missing, cyclic or depth-limited): the resolve
+/// key's inputs (compdb_find::facts). Only the databases that hold an
+/// `@` byte are asked about.
+pub fn responses(
+    root: &Path,
+    files: &BTreeSet<String>,
+) -> Result<BTreeMap<String, Vec<String>>, String> {
+    let mut body =
+        json!({ "files": files, "c": request::databases(root, files, &BTreeMap::new()) });
+    let reply = complete(&mut body, root)?;
+    let rows: Vec<(String, Vec<String>)> = judged::table(&reply, "responses")?;
+    Ok(rows.into_iter().collect())
+}
+
+/// Ask until the core names no response file the request lacks.
+fn complete(body: &mut Value, root: &Path) -> Result<Value, String> {
+    loop {
+        let reply = ask(body.clone())?;
+        let wanted: Vec<String> = judged::table(&reply, "wanted")?;
+        if wanted.is_empty() {
+            return Ok(reply);
+        }
+        request::answer_wanted(body, root, &wanted)?;
+    }
 }
 
 /// The process's link to the core, opened on first use and dropped on
@@ -113,26 +151,23 @@ fn ask(body: Value) -> Result<Value, String> {
     Ok(reply)
 }
 
-/// The reply rows as outcomes; a row of another shape, a target out of
-/// its table or a count that disagrees is wire skew, named.
-fn consume(reply: &Value, lowered: &Lowered, sent: usize) -> Result<Vec<Outcome>, String> {
-    let rows: Vec<[i64; 4]> = judged::table(reply, "results")?;
-    if rows.len() != sent || judged::count(reply, "sites")? != sent {
-        return Err("resolve/1: wire skew: one result per site sent".into());
-    }
-    rows.iter().map(|row| outcome(*row, lowered)).collect()
-}
-
-fn outcome([rung, kind, target, reason]: [i64; 4], lowered: &Lowered) -> Result<Outcome, String> {
-    let rung = u8::try_from(rung).map_err(|_| "resolve/1: wire skew: rung".to_string())?;
-    let at = usize::try_from(target).unwrap_or(usize::MAX);
+/// One reply row as an outcome; a row of another shape or a code out of
+/// its table is wire skew, named.
+fn outcome(
+    (rung, kind, target, reason): (u8, i64, Option<String>, i64),
+) -> Result<Outcome, String> {
+    let target = || {
+        target
+            .clone()
+            .ok_or("resolve/1: wire skew: no target".to_string())
+    };
     Ok(match kind {
         0 => Outcome::Resolved {
-            path: name(&lowered.files, at)?,
+            path: target()?,
             rung,
         },
         1 => Outcome::ResolvedPackage {
-            dir: name(&lowered.dirs, at)?,
+            dir: target()?,
             rung,
         },
         2 => Outcome::External { rung },
@@ -143,9 +178,8 @@ fn outcome([rung, kind, target, reason]: [i64; 4], lowered: &Lowered) -> Result<
     })
 }
 
-fn name(table: &[String], at: usize) -> Result<String, String> {
-    table
-        .get(at)
-        .cloned()
-        .ok_or_else(|| "resolve/1: wire skew: target out of its table".to_string())
-}
+/// The configuration readers' differential gate (tests subrepo): the
+/// frozen 92e728b1 readers against the core's, through `inspect`.
+#[cfg(test)]
+#[path = "../../../tests/unit/graph/resolve/mod.rs"]
+mod tests;

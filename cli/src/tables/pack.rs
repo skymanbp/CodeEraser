@@ -125,9 +125,9 @@ leaked! {
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }
-    /// The words and affixes resolve/1's search spells (8.1.0): the
-    /// request interns exactly these, in this order.
-    Resolve { words: Names, affixes: Names }
+    /// The walk's config basenames whose text a resolve/1 request
+    /// carries (9.0.0): the core's rule, read here.
+    Resolve { configs: Names }
     /// Every table, as the core answers them less the envelope.
     Tables {
         languages: Languages,

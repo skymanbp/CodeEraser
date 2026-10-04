@@ -1,12 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | An independently written reference for the resolve family (plan
--- v2.33 wave W2a): the four ladders as they read when they ran on the
--- measuring side, over PATH STRINGS — joins by splitting and gluing
--- text, a hit by set membership, the External tables by string
--- comparison — where the shipped search reads segment ids, an affix
--- table and a directory tree. The lowering between the two
--- (ReferenceResolveGen) numbers strings its own way. Every site of the
+-- v2.33 wave W2a; on text since W2-text): the four ladders written apart
+-- from the shipped modules, over the case as it holds its configuration
+-- (module paths, replace pairs, roots, dependency names) — the shipped
+-- core reads the same configuration from the request's go.mod texts and
+-- pyproject document, so its readers are on the path. Every site of the
 -- two hundred seeded cases must get the same answer from both, target
 -- spelled the same. The C ladder is read without compile databases
 -- here (the measuring side's ladder batteries drive the database rungs
@@ -15,7 +14,7 @@ module ReferenceResolve (equivalence, refAnswer) where
 
 import CE.Resolve (respond)
 import CE.Resolve.Cost (Reason (..), langC, langCpp, langGo, langLua, langPy)
-import CE.Resolve.Vocab (goStd, kindLoad, kindRequire, luaStdlib, pyStdlib)
+import CE.Resolve.Tables (goStd, kindLoad, kindRequire, luaStdlib, pyStdlib)
 import Data.Aeson (decodeStrict, encode)
 import qualified Data.ByteString.Lazy as BL
 import Data.List (intercalate, isPrefixOf, isSuffixOf, sortOn)
@@ -54,9 +53,8 @@ equivalence =
 disagree :: Case -> Maybe (String, String, Maybe Ref, Ref)
 disagree c = listToMaybe [(from, spec, got, want) | ((_, _, from, spec), got, want) <- zip3 (cSites c) shipped wanted, got /= Just want]
  where
-  (req, files, dirs) = lowered c
-  reply = either (const Nothing) decodeStrict (respond "8.1.0" (BL.toStrict (encode req)))
-  shipped = maybe (repeat Nothing) (map Just) (reply >>= answers files dirs) <> repeat Nothing
+  reply = either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode (request c))))
+  shipped = maybe (repeat Nothing) (map Just) (reply >>= answers) <> repeat Nothing
   wanted = map (refAnswer c) (cSites c)
 
 -- | The reference ladders, one site.
@@ -125,7 +123,7 @@ py c from spec
      in listToMaybe [h | k <- reverse [1 .. length segs - 1], Just h <- [moduleAt root (intercalate "." (take k segs))], "/__init__.py" `isSuffixOf` h]
   stdlibOrDeps =
     let top = takeWhile (/= '.') spec
-     in if top `elem` cPyDeps c || top == "__future__" || [top] `elem` pyStdlib then RExt 4 else RUnres OutOfScope
+     in if top `elem` cPyDeps c || top == "__future__" || [top] `elem` map pure (Set.toList pyStdlib) then RExt 4 else RUnres OutOfScope
 
 orElse :: Maybe a -> Maybe a -> Maybe a
 orElse a b = maybe b Just a
@@ -134,7 +132,7 @@ orElse a b = maybe b Just a
 
 lua :: Case -> Integer -> String -> String -> Ref
 lua c kind from spec
-  | kind == kindRequire && splitOn '.' spec `elem` luaStdlib = RExt 3
+  | kind == kindRequire && splitOn '.' spec `elem` map (splitOn '.') (Set.toList luaStdlib) = RExt 3
   | kind == kindRequire = luaModule
   | kind == kindLoad = besideOrRoot
   | otherwise = RUnres Unsupported
@@ -186,7 +184,7 @@ go c from spec = fromMaybe (external spec) (moduleRung spec `orElse` replaceRung
    where
     prefix = if null d then "" else d <> "/"
     importable f = prefix `isPrefixOf` f && let r = drop (length prefix) f in ".go" `isSuffixOf` r && '/' `notElem` r && not ("_test.go" `isSuffixOf` r)
-  external s = if '.' `elem` takeWhile (/= '/') s || splitOn '/' s `elem` goStd then RExt 3 else RUnres OutOfScope
+  external s = if '.' `elem` takeWhile (/= '/') s || splitOn '/' s `elem` map (splitOn '/') (Set.toList goStd) then RExt 3 else RUnres OutOfScope
 
 -- C / C++ (no compile databases) ---------------------------------------
 

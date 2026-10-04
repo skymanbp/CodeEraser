@@ -10,11 +10,12 @@
 //! files are resolve-key INPUTS like the tsconfig extends bases
 //! (keys.rs): their bytes, and the bytes of every in-tree response
 //! file a database names, join the key so that an edit re-fires the
-//! sweep; the resolve/1 lowering (resolve/facts.rs) and the deadcode request (the
-//! forced-include arcs) read exactly this set through `found`.
+//! sweep; the resolve/1 request (resolve/request.rs) and the deadcode request
+//! (the forced-include arcs) read exactly this set through `found`. Which
+//! response files a database names is the core's reading (resolve/1's
+//! `responses`, plan v2.33 W2-text).
 
 use crate::dedup::tokens;
-use crate::graph::compdb;
 use crate::graph::roots;
 use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
@@ -90,9 +91,12 @@ pub fn found<'a>(root: &Path, files: impl Iterator<Item = &'a String>) -> Vec<Fo
 /// `@`: a database holding no such byte names none, and is not parsed
 /// on every walk.
 pub fn facts<'a>(root: &Path, files: impl Iterator<Item = &'a String>) -> Vec<(String, u64)> {
+    let files: BTreeSet<String> = files.cloned().collect();
+    let found = found(root, files.iter());
     let mut seen = BTreeSet::new();
+    let mut named: Option<std::collections::BTreeMap<String, Vec<String>>> = None;
     let mut out = Vec::new();
-    for f in found(root, files) {
+    for f in found {
         if !seen.insert(f.rel.clone()) {
             continue;
         }
@@ -101,13 +105,28 @@ pub fn facts<'a>(root: &Path, files: impl Iterator<Item = &'a String>) -> Vec<(S
         if f.probe == 2 || !bytes.contains(&b'@') {
             continue;
         }
-        let responses = compdb::parse(root, &f.rel).map(|db| db.responses);
-        for rsp in responses.into_iter().flatten() {
-            let bytes = std::fs::read(root.join(&rsp)).unwrap_or_default();
+        // asked once, for every database; no core names none (the
+        // sweep that needs one is owed until a core answers anyway)
+        let named = named.get_or_insert_with(|| {
+            crate::graph::resolve::responses(root, &files).unwrap_or_default()
+        });
+        for rsp in named.get(&f.rel).into_iter().flatten() {
+            let bytes = std::fs::read(root.join(rsp)).unwrap_or_default();
             out.push((format!("c:rsp:{rsp}"), tokens::fnv1a(&bytes)));
         }
     }
     out
+}
+
+/// The root's absolute text as the databases' placement reads it:
+/// forward slashes, no verbatim prefix or final slash (a fact of the
+/// file system the core places absolute paths against).
+pub fn root_text(root: &Path) -> String {
+    root.to_string_lossy()
+        .replace('\\', "/")
+        .trim_start_matches("//?/")
+        .trim_end_matches('/')
+        .to_string()
 }
 
 #[cfg(test)]

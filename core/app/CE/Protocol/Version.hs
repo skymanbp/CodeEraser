@@ -10,14 +10,15 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 8.5.0 = plan v2.33 wave W3's four stages (design booklet
--- docs/reference/algorithm-track.md §11 items 29-38), four additive
--- minors on 8.1.0 landed together: 8.2.0 `candidates/1` (the T3
--- candidate pass), clone/1's `decide` and the definition package's
--- `limits`; 8.3.0 `rank/1` (the advisor's ranking); 8.4.0
--- `docpairs/1` (the docdup coarse filter) and docdup/1's `seqs`;
--- 8.5.0 `moves/1` (fourclass L1). `tablesDigest` moves with `limits`;
--- every older family answers byte for byte as before.
+-- 9.0.0 = plan v2.33 W2-text stage A (design booklet
+-- docs/reference/algorithm-track.md §3, §6 row W2a′): `resolve/1` carries
+-- text — paths, specifiers and configuration files as strings — and the
+-- core reads go.mod, the root pyproject.toml's keys, the compile
+-- databases, their response files and flag files; the request's segment
+-- table, vocabulary, affix rows and directory table are retired, and the
+-- definition package's `resolve` key now names the config basenames the
+-- request carries. A retired key is a major; every other family answers
+-- byte for byte as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the
@@ -25,7 +26,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "8.5.0"
+proto = "9.0.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

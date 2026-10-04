@@ -77,7 +77,8 @@ executable ce-core
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces,
                       CE.Resolve, CE.Resolve.Answer, CE.Resolve.C, CE.Resolve.CIndex, CE.Resolve.Contract,
                       CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
-                      CE.Resolve.Vocab, CE.Resolve.World
+                      CE.Resolve.Tables, CE.Resolve.World, CE.Resolve.Chars, CE.Resolve.Str,
+                      CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -160,7 +161,8 @@ test-suite ce-core-test
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces,
                       CE.Resolve, CE.Resolve.Answer, CE.Resolve.C, CE.Resolve.CIndex, CE.Resolve.Contract,
                       CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
-                      CE.Resolve.Vocab, CE.Resolve.World,
+                      CE.Resolve.Tables, CE.Resolve.World, CE.Resolve.Chars, CE.Resolve.Str,
+                      CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect,
                       ReferenceResolve, ReferenceResolveGen, ResolveProps,
                       Reference, ReferenceGraph, ReferenceQuery, QueryProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,

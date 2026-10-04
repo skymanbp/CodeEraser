@@ -1,8 +1,12 @@
--- | One site's answer (plan v2.33 wave W2a) — the measuring side's
--- `ladder::Outcome` for the four ladders this family holds: a file at a
--- rung, a Go package directory at a rung, External at a rung, or a
--- refusal with its reason — and the reply row it travels as,
--- `[rung, outcome, target, reason]` with -1 where a column is absent.
+{-# LANGUAGE OverloadedStrings #-}
+
+-- | One site's answer (plan v2.33 wave W2a; on text since W2-text) —
+-- the measuring side's `ladder::Outcome` for the four ladders this
+-- family holds: a file at a rung, a Go package directory at a rung,
+-- External at a rung, or a refusal with its reason — and the reply row
+-- it travels as, `[rung, outcome, target, reason]`: the target is the
+-- file's or the directory's repo-relative path, null where absent; the
+-- reason -1 where absent.
 module CE.Resolve.Answer (
   Answer (..),
   withRung,
@@ -12,15 +16,18 @@ module CE.Resolve.Answer (
 ) where
 
 import CE.Resolve.Cost
+import Data.Aeson (Value (..), toJSON)
+import qualified Data.Set as Set
 
 data Answer
-  = AFile !Int !Int
-  | APackage !Int !Int
+  = AFile String !Int
+  | APackage String !Int
   | AExternal !Int
   | AUnresolved !Reason
   deriving (Eq, Show)
 
--- | The same answer at another rung; a refusal passes untouched.
+-- | `Outcome::with_rung`: the same answer at another rung; a refusal
+-- passes untouched.
 withRung :: Int -> Answer -> Answer
 withRung r a = case a of
   AFile f _ -> AFile f r
@@ -28,24 +35,27 @@ withRung r a = case a of
   AExternal _ -> AExternal r
   AUnresolved why -> AUnresolved why
 
--- | A rung's distinct in-scope files as its answer: none leaves the
--- next rung to ask, one resolves at the rung, two or more is one name
--- in two places.
-oneOf :: [Int] -> Int -> Maybe Answer
-oneOf files rung = case files of
+-- | `paths::one_of`: a rung's distinct in-scope candidates as its
+-- answer — none leaves the next rung to ask, one resolves at the rung,
+-- two or more is one name in two places.
+oneOf :: Set.Set String -> Int -> Maybe Answer
+oneOf hits rung = case Set.toList hits of
   [] -> Nothing
-  [f] -> Just (AFile f rung)
+  [p] -> Just (AFile p rung)
   _ -> Just (AUnresolved AmbiguousRoot)
 
--- | The first rung that answers, else the fallback.
+-- | The first rung that answers (an `Option::or_else` chain), else the
+-- fallback.
 firstOf :: [Maybe Answer] -> Answer -> Answer
 firstOf rungs fallback = case [a | Just a <- rungs] of
   (a : _) -> a
   [] -> fallback
 
-answerRow :: Answer -> [Integer]
-answerRow a = case a of
-  AFile f r -> [toInteger r, outFile, toInteger f, -1]
-  APackage d r -> [toInteger r, outPackage, toInteger d, -1]
-  AExternal r -> [toInteger r, outExternal, -1, -1]
-  AUnresolved why -> [0, outUnresolved, -1, reasonCode why]
+answerRow :: Answer -> Value
+answerRow a = toJSON $ case a of
+  AFile f r -> [toJSON r, toJSON outFile, toJSON f, none]
+  APackage d r -> [toJSON r, toJSON outPackage, toJSON d, none]
+  AExternal r -> [toJSON r, toJSON outExternal, Null, none]
+  AUnresolved why -> [toJSON (0 :: Int), toJSON outUnresolved, Null, toJSON (reasonCode why)]
+ where
+  none = toJSON (-1 :: Int)

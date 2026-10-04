@@ -7,6 +7,22 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 3.0.0 止；2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **9.0.0**（`resolve/1` 改以文本过线，major，计划 v2.33 算法轨 W2-text 阶段 A，2026-10-04；设计册 `docs/reference/algorithm-track.md` §3 第一条、§6 W2a′ 行与 §11 第 43–49 条）：
+> 请求退役 `segs`、`vocab`、`affixes`、`dirs` 四个键，定义包的 `resolve {words, affixes}` 改为 `resolve {configs}`（测量侧要读的配置文件名，今日只有 `go.mod`）——
+> 带旧键的请求不再被读懂，按 §2 升 major：8.x 的 ce 对 9.0.0 的核、9.0.0 的 ce 对 8.x 的核，都在握手处按 major 不符拒绝。新请求全是文本：`files` = 走查到的路径
+> （严格升序）、`origins` = 站点所在而走查未收的文件（升序、不得与 `files` 相交）、`sites` 每行 `[lang, kind, from, spec]`（`from` 是 `files ++ origins` 的下标，`spec` 是检测器
+> 给出的说明符原文）、`config.searchRoots`（`[graph.search_roots]` 原表）、`py.pyproject`（根 `pyproject.toml` 解码后的文档，读不到或不是 TOML 为 null）、
+> `lua.templates` `[[目录, 后缀]]`、`go.mods` `[[路径, 原文]]`、`c {root, dbs, json, flags, responses, includes}`（根的绝对路径原文、clangd 三探名找到的库
+> `[目录, 探名码, 路径]`、每个 JSON 库解码后的行〔不是数组为 null〕、每个 `compile_flags.txt` 的原文、核点名过的响应文件原文、每个 C 族文件的 include 列表）。
+> go.mod 的读法、`pyproject.toml` 的键、编译数据库的命令行拆分（GNU / JSON / Windows 三种分词、MSVC 判定）、旗标链与响应文件展开都在核
+> （`CE.Resolve.{Go,Py,Cmdline,Flags,CompDb,CIndex}`）；TOML 与 JSON 的解码、读文件、探库留在 Rust。应答：`results` 每站点 `[rung, outcome, target, reason]`
+> 的 `target` 改为路径原文、`forced` 改为 `[[单元路径, 头文件路径]]`、`counts {files, resolved, sites}`；加性 `wanted`（展开读到而请求没带的响应文件——
+> 此时 `results` 与 `forced` 为空，测量侧读来补进 `c.responses` 再问一次）与 `responses`（每个 JSON 库的展开读过的响应文件，索引键的输入）。
+> cap 改按字符计：`files` / `origins` / 说明符 / 配置原文每个字符一分、每行一分，文档按编码长度，合计 > 268,435,456 → 具名降级 `resolve_too_large`。
+> 请求键 `inspect` 只给差分门用（`CE.Resolve.Inspect` 直接答核内各读法，应答加 `inspected`），产品从不送。请求锚（§3）重锚到 9.0.0；
+> 全部 golden 由 `fixture_contract::regen` 机器重写，除 proto 与 hello 的 `tablesDigest` 外只动两处：`resolve/golden` 六对按文本形重写
+> （Python / Lua / Go / C 各一对、编译数据库带响应文件与强制包含一对、一对按名拒绝），`tables` 第 2 对的 `resolve` 键；
+> `handshake/wire-errors` 的三条请求随 major 改拼（未知类型与退役键两条到 9.0.0、跨 major 那条到 10.0.0）。daemon 协议（2.3.0）不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -654,7 +670,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   字节比较可靠因为 freeze 钉 `aeson +ordered-keymap`（键序确定）。
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
-  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->8.0.0<!--/ce-->**
+  （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->8.0.0<!--/ce-->**
   （<!--ce:count:golden_requests#digits-->335<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->8.5.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
