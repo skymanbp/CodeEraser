@@ -15,6 +15,7 @@ import qualified CE.Candidates as Candidates
 import qualified CE.Similar.Rank as Rank
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
+import qualified CE.Docdup.Pairs as DocPairs
 import qualified CE.Document as Document
 import qualified CE.Erase as Erase
 import qualified CE.Flow as Flow
@@ -121,6 +122,7 @@ families =
   , Fam "resolve/1" "resolve.request" Resolve.respond
   , Fam "candidates/1" "candidates.request" Candidates.respond
   , Fam "rank/1" "rank.request" Rank.respond
+  , Fam "docpairs/1" "docpairs.request" DocPairs.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

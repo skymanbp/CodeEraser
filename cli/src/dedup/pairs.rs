@@ -3,7 +3,7 @@
 //! is verified by exact bidirectional extension over the two
 //! normalized token streams, and only maximal runs of >= t tokens
 //! are reported.
-//! Enumeration is not exhaustive above HOT_CAP: a hot hash group is
+//! Enumeration is not exhaustive above the hot cap: a hot hash group is
 //! walked as an adjacent chain, so the non-adjacent pairs inside it
 //! are never verified and any block only they would witness is not
 //! reported. That is a recall bound, and it is counted, not silent —
@@ -21,20 +21,23 @@ use std::collections::{BTreeMap, BTreeSet};
 /// (C(n,2)) to an adjacent chain (n-1 pairs) sorted by (file, tok).
 /// Attack-review D4: skipping hot groups made detection FALL TO ZERO
 /// as duplication rose (65 identical files → 0 blocks); chaining
-/// keeps every instance in ≥1 verified pair at linear cost.
-/// pub(crate): the S3 candidate source and the S4 band chaining ride
-/// the same cap (one binding).
-pub(crate) const HOT_CAP: usize = 64;
+/// keeps every instance in ≥1 verified pair at linear cost. The cap is
+/// the core's (CE.Dedup.Cost.hotCap, off the package since plan v2.33
+/// W3): the T3 sources and the docdup coarse filter chain by the same
+/// one there.
+pub(crate) fn hot_cap() -> usize {
+    crate::tables::get().limits.dedup.hot_cap
+}
 
 /// One visit of the hash-group pairing walk.
 pub(crate) enum GroupEvent<'a> {
-    /// A group crossed HOT_CAP and was chained instead of paired.
+    /// A group crossed the hot cap and was chained instead of paired.
     Chained,
     Pair(&'a Instance, &'a Instance),
 }
 
 /// Group instances by fingerprint hash and visit every candidate
-/// pair (chained above HOT_CAP) — ONE grouping walk for the T1/T2
+/// pair (chained above the hot cap) — ONE grouping walk for the T1/T2
 /// extension pass and the S3 candidate source, so the two can never
 /// disagree about which anchors exist.
 pub(crate) fn each_hash_pair<'a>(instances: &'a [Instance], mut f: impl FnMut(GroupEvent<'a>)) {
@@ -43,7 +46,7 @@ pub(crate) fn each_hash_pair<'a>(instances: &'a [Instance], mut f: impl FnMut(Gr
         by_hash.entry(inst.hash).or_default().push(inst);
     }
     for group in by_hash.values_mut().filter(|g| g.len() > 1) {
-        if group.len() > HOT_CAP {
+        if group.len() > hot_cap() {
             f(GroupEvent::Chained);
             group.sort_by(|x, y| (&x.file, x.start_tok).cmp(&(&y.file, y.start_tok)));
             for w in group.windows(2) {

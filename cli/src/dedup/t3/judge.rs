@@ -2,7 +2,10 @@
 //! 5b-9), split out of mod.rs at the 300-line soft line: the verdict
 //! cache answers the pairs it holds for this core's proto and knobs
 //! (cache.rs), the rest ride the ONE lockstep machine over one link,
-//! and what the core answered is remembered for the next run.
+//! and what the core answered is remembered for the next run. A
+//! replayed scored row still passes the core's decision (clone/1
+//! `decide`): a cached bit the core would not give is a corrupt cache
+//! row, refused by name.
 
 use super::{Outcome, Scored, cache, wire};
 use crate::dedup::candidates::PairRow;
@@ -23,6 +26,7 @@ pub(super) fn judge(
     let held = cache::load(conn)?;
     let keys = cache::Keys::of(built);
     let (mut rows, send, cached) = cache::replay(&held, &keys, sendable);
+    decided(&mut link, &rows)?;
     let (scored, judged, prefiltered, requests) = lockstep::lockstep_scores(
         &mut link,
         &wire::family(core),
@@ -45,4 +49,17 @@ pub(super) fn judge(
     rows.extend(scored);
     rows.sort_unstable();
     Ok((rows, [judged, prefiltered, cached], requests, link))
+}
+
+/// Every replayed row's cached bit against the core's own decision.
+fn decided(link: &mut crate::corelink::Link, rows: &Scored) -> Result<()> {
+    let metrics: Vec<[i64; 3]> = rows.iter().map(|r| [r.2.0, r.2.1, r.2.2]).collect();
+    let bits = wire::decide(link, &metrics)?;
+    for (&(_, _, (ted, n1, n2, v)), core) in rows.iter().zip(bits) {
+        anyhow::ensure!(
+            v == core,
+            "the verdict cache's bit ({v}) disagrees with the core's decision at ted {ted} nodes {n1}/{n2} — a corrupt t3ted row (delete .ce/index.db to rebuild)"
+        );
+    }
+    Ok(())
 }

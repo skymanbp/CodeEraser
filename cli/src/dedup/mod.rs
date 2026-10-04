@@ -8,7 +8,6 @@ mod candidate_wire;
 pub mod candidates;
 pub mod groups;
 pub mod index;
-pub mod minhash;
 pub mod pairs;
 pub mod probe;
 mod report;

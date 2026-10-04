@@ -25,6 +25,7 @@ module CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf) where
 
 import CE.Similar.Rank.Cost (channels, rankCap, scoredDfRatio, wordChannel)
 import CE.Wire (rowCheck, tableOffence)
+import CE.Wire.Tables (optTables)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
@@ -39,29 +40,26 @@ data RankReq = RankReq
   , seen :: [Integer]
   , query :: [[Integer]]
   , widen :: Bool
-  , words_ :: [[Integer]]
-  , pairs :: [[Integer]]
-  , terms :: [[Integer]]
-  , postings :: [[Integer]]
-  , lens :: [[Integer]]
+  , words_, pairs, terms, postings, lens :: [[Integer]]
+  -- ^ the five fact tables, in the order the parser reads them
   }
 
 instance FromJSON RankReq where
-  parseJSON = withObject "RankReq" $ \o ->
-    RankReq
-      <$> o .: "id"
-      <*> o .: "n"
-      <*> o .: "avg"
-      <*> o .: "k"
-      <*> o .:? "exclude"
-      <*> o .:? "seen" .!= []
-      <*> o .:? "query" .!= []
-      <*> o .:? "widen" .!= False
-      <*> o .:? "words" .!= []
-      <*> o .:? "pairs" .!= []
-      <*> o .:? "terms" .!= []
-      <*> o .:? "postings" .!= []
-      <*> o .:? "lens" .!= []
+  parseJSON = withObject "RankReq" $ \o -> do
+    req <-
+      RankReq
+        <$> o .: "id"
+        <*> o .: "n"
+        <*> o .: "avg"
+        <*> o .: "k"
+        <*> o .:? "exclude"
+        <*> o .:? "seen" .!= []
+        <*> o .:? "query" .!= []
+        <*> o .:? "widen" .!= False
+    tables <- optTables o ["words", "pairs", "terms", "postings", "lens"]
+    case tables of
+      [ws, ps, ts, pos, ls] -> pure (req ws ps ts pos ls)
+      _ -> fail "five tables"
 
 -- | Every table's rows together.
 rowsOf :: RankReq -> Int

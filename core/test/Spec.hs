@@ -13,6 +13,7 @@ import qualified ArchProps
 import qualified AuditProps
 import qualified CandidatesProps
 import qualified RankProps
+import qualified DocPairsProps
 import qualified DeclProps
 import qualified DocumentProps
 import qualified DocumentProps4
@@ -110,6 +111,7 @@ batteries =
   , goldenPairs "resolve/golden.ndjson"
   , goldenPairs "candidates/golden.ndjson"
   , goldenPairs "rank/golden.ndjson"
+  , goldenPairs "docpairs/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -125,6 +127,7 @@ batteries =
   , CloneProps.battery
   , CandidatesProps.battery
   , RankProps.battery
+  , DocPairsProps.battery
   , EntropyProps.battery
   , JoinProps.battery
   , ScanProps.battery

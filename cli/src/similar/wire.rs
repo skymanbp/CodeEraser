@@ -11,9 +11,8 @@ use super::rank::Hit;
 use crate::corelink::{Link, judged};
 use serde_json::{Value, json};
 
-/// The capability the core must offer, and the request kind.
+/// The capability the core must offer (request kind `similar`).
 pub const CAP: &str = "similar/1";
-pub const KIND: &str = "similar";
 
 /// The core's judgment of one query: the candidates (as indices into
 /// the rows sent) in judged order, and the role bit per row in request
@@ -60,7 +59,7 @@ pub fn body(query: &[[u64; 2]], rows: &[[i64; 9]]) -> Value {
 /// One request over a link past its handshake, behind the capability
 /// gate (a pre-6.7.0 core is healthy and answers nothing here).
 pub fn ask(link: &mut Link, query: &[[u64; 2]], rows: &[[i64; 9]]) -> Result<Value, String> {
-    judged::ask(link, CAP, "6.7.0", KIND, body(query, rows))
+    judged::ask(link, CAP, "6.7.0", "similar", body(query, rows))
 }
 
 /// The whole leg over one link: the weighted bag rank/1 ranked

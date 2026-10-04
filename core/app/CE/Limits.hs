@@ -33,16 +33,23 @@ limits =
     , "candidates"
         .= object
           [ "unit_cap" .= Candidates.candidateUnitCap
-          , "pair_cap" .= Candidates.candidatePairCap
+          , "sig_cap" .= Candidates.candidateSigCap
+          , "print_cap" .= Candidates.candidatePrintCap
+          , "near_cap" .= Candidates.candidateNearCap
+          , "lsh_perms" .= perms
+          , "lsh_bands" .= bands
+          , "lsh_rows" .= rows
           ]
     , "docdup"
         .= object
           [ "jaccard_num" .= Docdup.jaccardNum
           , "jaccard_den" .= Docdup.jaccardDen
           , "doc_set_cap" .= Docdup.docSetCap
+          , "doc_seq_cap" .= Docdup.docSeqCap
+          , "doc_corpus_cap" .= Docdup.docCorpusCap
           , "doc_pair_cap" .= Docdup.docPairCap
           ]
-    , "dedup" .= object ["min_distinct" .= Dedup.minDistinct]
+    , "dedup" .= object ["min_distinct" .= Dedup.minDistinct, "hot_cap" .= Dedup.hotCap]
     , "similar"
         .= object
           [ "similar_cap" .= Similar.similarCap
@@ -63,3 +70,4 @@ limits =
     ]
  where
   ratio q = [numerator q, denominator q]
+  (perms, bands, rows) = Candidates.lshShape

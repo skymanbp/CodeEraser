@@ -15,13 +15,17 @@
 -- decision, relayed by Rust, never re-derived there. The M5-3a stub
 -- refused here; this batch replaced exactly that refusal, and the
 -- computation lives behind the exhaustive reference harness
--- (core/test/CloneProps.hs ≡ ReferenceTed).
+-- (core/test/CloneProps.hs ≡ ReferenceTed). `decide` (plan v2.33 W3,
+-- additive): rows [ted,n1,n2] the caller's verdict cache replays —
+-- the reply's `decided` carries this core's bit for each, so a
+-- replayed row still passes the owner's decision (Rust holds no copy
+-- of the threshold).
 module CE.Clone (WireTree (..), decodeTree, respond, treeShape) where
 
 import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (histo, provablyBelowH)
 import CE.Clone.Ted (Tree (..), ted)
-import CE.Wire (Family (..), respondWith, tableOffence)
+import CE.Wire (Family (..), respondWith, rowCheck, tableOffence)
 import Data.Aeson
 import Data.Array.Unboxed (listArray)
 import qualified Data.ByteString.Char8 as B8
@@ -43,11 +47,12 @@ data CloneReq = CloneReq
   { reqId :: Value
   , reqTrees :: [WireTree]
   , reqPairs :: [[Int]]
+  , reqDecide :: Maybe [[Integer]]
   }
 
 instance FromJSON CloneReq where
   parseJSON = withObject "CloneReq" $ \o ->
-    CloneReq <$> o .: "id" <*> o .: "trees" <*> o .: "pairs"
+    CloneReq <$> o .: "id" <*> o .: "trees" <*> o .: "pairs" <*> o .:? "decide"
 
 -- | The shared cascade with this family's bindings (CE.Wire).
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
@@ -59,6 +64,7 @@ respond proto =
       , famOverCap = \req ->
           any (\t -> toInteger (length (wLab t)) > unitNodeCap) (reqTrees req)
             || toInteger (length (reqPairs req)) > pairCap
+            || toInteger (maybe 0 length (reqDecide req)) > pairCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req [] (0, 0) True
       , famJudged = \req ->
@@ -83,6 +89,7 @@ violation req =
   asum
     [ asum (zipWith treeShape [0 :: Int ..] ts)
     , tableOffence "pair" id (pairRow (length ts)) ps
+    , asum (zipWith decideRow [0 :: Int ..] (concat (reqDecide req)))
     ]
  where
   ts = reqTrees req
@@ -128,6 +135,17 @@ pairRow n p row = case row of
   _ -> Just (label <> "malformed row (need [i,j])")
  where
   label = "pair " <> show p <> ": "
+
+-- | One replayed row's shape: [ted,n1,n2], a distance and two
+-- non-empty tree sizes.
+decideRow :: Int -> [Integer] -> Maybe String
+decideRow = rowCheck "decide" "malformed row (need [ted,n1,n2])" 3 checks
+ where
+  checks row = case row of
+    (t : sizes)
+      | t < 0 -> Just "negative ted"
+      | any (< 1) sizes -> Just "empty tree size"
+    _ -> Nothing
 
 -- | Judge every pair: the admissible prefilter proves "below
 -- threshold" without TED where it can (below threshold ⇒ not a
@@ -179,3 +197,7 @@ reply proto req scored (judged, pre) degraded =
     , "degraded" .= degraded
     ]
       <> ["reason" .= ("clone_too_large" :: String) | degraded]
+      <> maybe [] (\ds -> ["decided" .= if degraded then [] else map decided ds]) (reqDecide req)
+ where
+  decided [t, n1, n2] = cloneDecides t n1 n2
+  decided _ = False -- unreachable: row shape validated upstream

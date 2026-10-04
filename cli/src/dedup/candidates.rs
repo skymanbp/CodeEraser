@@ -4,12 +4,12 @@
 //! no judge picks its own denominator). Two provably admissible
 //! prunes (§4.3) shrink the future TED workload with zero false
 //! negatives; every drop lands in the tally, never in silence. Since
-//! plan v2.33 W3 the prunes and the exhaustive source S5 are the
-//! core's (candidates/1, candidate_wire.rs): this side generates.
+//! plan v2.33 W3 the sources, the prunes and the exhaustive source S5
+//! are the core's (candidates/1, candidate_wire.rs): this side reads
+//! the index and the near runs (sources.rs) and sends them.
 //! Lives beside t3/ on purpose: the T-G13 ancestry gate requires the
 //! frozen sample to PRECEDE, in history, every file under dedup/t3 and
 //! CE/Clone, and the sample is drawn from what this module produces.
-//! The four source walks live in sources.rs (300-line gate).
 
 use super::index::Index;
 use super::unitcache;
@@ -26,15 +26,22 @@ pub fn limits() -> &'static crate::tables::CloneLimits {
     &crate::tables::get().limits.clone
 }
 
-/// S4 MinHash/LSH shape as ONE fact — (permutations, bands, rows),
-/// 128 = 32 × 4 (the docdup coarse-filter split, §5.3; band_keys
-/// asserts the product covers the signature).
-pub const LSH_SHAPE: (usize, usize, usize) = (128, 32, 4);
+/// The S4 MinHash/LSH shape — (permutations, bands, rows), 128 =
+/// 32 × 4, the docdup coarse filter's split too (§5.3) — off the core's
+/// package (CE.Candidates.Cost.lshShape), for the frozen docs' method
+/// lines.
+pub fn lsh_shape() -> (usize, usize, usize) {
+    let c = &crate::tables::get().limits.candidates;
+    (c.lsh_perms, c.lsh_bands, c.lsh_rows)
+}
 
 /// Groups above this size pair as adjacent chains, counted — the ONE
-/// cap (pairs::HOT_CAP, attack-review D4: skipping hot groups zeroed
-/// detection) re-exposed for the S3/S4 walks and the frozen docs.
-pub const HOT_GROUP_CAP: usize = super::pairs::HOT_CAP;
+/// cap (CE.Dedup.Cost.hotCap, attack-review D4: skipping hot groups
+/// zeroed detection) every hash-group walk reads, re-exposed for the
+/// frozen docs.
+pub fn hot_group_cap() -> usize {
+    super::pairs::hot_cap()
+}
 
 /// Candidate source labels in bit order: bit i of a pair's `sources`
 /// byte means SOURCES[i] found it. One table — the generators' bit
@@ -96,8 +103,8 @@ pub struct Candidates {
 
 /// The whole candidate pass over one refreshed index — READ-ONLY on
 /// the index (review HIGH-1: a writing candidate pass orphaned edges).
-/// The four sources generate here; the two admissible bounds (§4.3)
-/// and, with `exhaustive`, the S5 source run in the core over `link`
+/// The four sources, the two admissible bounds (§4.3) and, with
+/// `exhaustive`, the S5 source run in the core over `link`
 /// (candidates/1, plan v2.33 W3). The frozen-instrument path asks
 /// without S5: its universe is the four-source epoch's.
 pub fn collect(
@@ -108,10 +115,14 @@ pub fn collect(
 ) -> Result<Candidates> {
     let units = admitted(idx)?;
     let instances = idx.all_instances()?;
-    let mut g = super::sources::Gen::new(&units);
-    let union = g.union(root, &instances)?;
-    let mut tally = g.tally;
-    let pairs = super::candidate_wire::pass(link, &units, &union, exhaustive, &mut tally)?;
+    let near = super::sources::near_runs(root, &instances);
+    let facts = super::candidate_wire::Facts {
+        instances: &instances,
+        near: &near,
+        exhaustive,
+    };
+    let mut tally = Tally::default();
+    let pairs = super::candidate_wire::pass(link, &units, &facts, &mut tally)?;
     Ok(Candidates {
         units,
         pairs,

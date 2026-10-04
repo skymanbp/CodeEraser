@@ -10,6 +10,8 @@ module CE.Docdup.Cost
   , minDocTokens
   , verbatimFloor
   , docSetCap
+  , docSeqCap
+  , docCorpusCap
   , docPairCap
   , dupDecides
   , dupDecidesWith
@@ -53,6 +55,19 @@ shingleK = 5
 -- segment; the oracle's F31 segcap sits at the same scale.
 docSetCap :: Integer
 docSetCap = 8192
+
+-- | Per-sequence element ceiling for a request that sends sequences
+-- (plan v2.33 W3): a segment's shingle sequence repeats a shingle as
+-- often as its text does, so it runs longer than its set; eight times
+-- the set ceiling bounds the run walk, and a longer sequence degrades
+-- the request like an over-cap set.
+docSeqCap :: Integer
+docSeqCap = 65536
+
+-- | Ceiling on the shingles of all segments one coarse-filter request
+-- sends (docpairs/1; this repository sends about 390,000).
+docCorpusCap :: Integer
+docCorpusCap = 16777216
 
 -- | Per-request pair ceiling, the clone pairCap anchor carried over:
 -- over-cap answers a complete degraded reply, never a truncated one.

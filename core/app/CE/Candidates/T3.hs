@@ -1,10 +1,10 @@
 -- | The T3 candidate pass over integer facts (design vol.2 §4.2–§4.3;
--- plan v2.33 W3): the same-key source S2, the two admissible bounds
--- over the generators' union, then the exhaustive source S5. Until W3
--- the measuring side generated S2, applied both bounds, and the clone
--- judgment applied them again; S2 and the bounds now run here once (the
--- measuring side still generates S1, S3 and S4 from its index), and the
--- clone judgment's prefilter (CE.Clone) stays the judge's own guard.
+-- plan v2.33 W3): the same-key source S2 over the union of the three
+-- index-bound sources (CE.Candidates.Sources), the two admissible bounds,
+-- then the exhaustive source S5. Until W3 the measuring side generated
+-- every source, applied both bounds, and the clone judgment applied them
+-- again; they now run here once, and the clone judgment's prefilter
+-- (CE.Clone) stays the judge's own guard.
 --
 -- S2 pairs every two units that share a key in different files, within
 -- one language (a cross-language pair is counted and dropped). A pair
@@ -17,7 +17,7 @@
 module CE.Candidates.T3 (Answer (..), Tally (..), judgeT3) where
 
 import CE.Candidates.Cost (exhaustiveSource, keySource)
-import CE.Candidates.Units (Units, columns, interUpTo, nodesOf)
+import CE.Candidates.Units (Units, interUpTo, nodesOf)
 import qualified CE.Candidates.Units as U
 import CE.Clone.Prefilter (Bound (..), boundOf, reachFloor, sizeBelow)
 import Data.Array.Base (numElements, unsafeAt)
@@ -57,10 +57,11 @@ data Same = Same !IS.IntSet !Int !Int !(IM.IntMap Int) !Pruned
 -- pairs the label bound kept.
 data S5 = S5 !Int !Int !IS.IntSet
 
-judgeT3 :: Bool -> [[Integer]] -> [[Integer]] -> Answer
-judgeT3 ex rows sent = Answer (map row (IM.toAscList (IM.union keptAll s5Rows))) t (map perLang (IM.toAscList byLang))
+-- | The pass over the units and the three sources' union (pair key
+-- a·n + b → source bits).
+judgeT3 :: Bool -> Units -> IM.IntMap Int -> Answer
+judgeT3 ex us sentMap = Answer (map row (IM.toAscList (IM.union keptAll s5Rows))) t (map perLang (IM.toAscList byLang))
  where
-  us = columns rows
   n = U.count us
   pairKey a b = a * n + b
   -- the intersection walk stops once it provably cannot reach the
@@ -72,7 +73,6 @@ judgeT3 ex rows sent = Answer (map row (IM.toAscList (IM.union keptAll s5Rows)))
     SizeBound -> Pruned (s + 1) l kp
     LabelBound -> Pruned s (l + 1) kp
     Within -> Pruned s l (IM.insert k bits kp)
-  sentMap = IM.fromList [(pairKey (fromInteger a) (fromInteger b), fromInteger s) | [a, b, s] <- sent]
   Same hits fresh cross byLang afterSame =
     foldl' (sameKey us pairKey sentMap prune) (Same IS.empty 0 0 IM.empty (Pruned 0 0 IM.empty)) (groups (U.key us) n)
   sameBit k bits = if IS.member k hits then bits .|. fromInteger keySource else bits

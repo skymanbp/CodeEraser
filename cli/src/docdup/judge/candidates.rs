@@ -1,20 +1,24 @@
 //! docdup coarse filter (design vol.2 §5.3): live cached segments →
-//! MinHash/LSH banding ∪ verbatim seed pairs, every shed a tally.
-//! The LSH shape and hot cap are the ONE binding dedup::candidates
-//! owns (a second copy would let the two estimators drift), the
-//! signatures come from the ONE dedup::minhash implementation, and
-//! the verbatim runs are computed on shingle sequences re-derived
-//! through the ONE doc_facts throat for exactly the files that host
-//! candidates.
+//! the core's coarse filter (docpairs/1, plan v2.33 W3: MinHash/LSH
+//! banding ∪ shared-shingle seed pairs, hot groups chained, every shed
+//! a tally — CE.Docdup.Coarse) → the shingle sequences of exactly the
+//! segments the kept pairs name, re-derived through the ONE doc_facts
+//! throat (seqs.rs) so the judgment can measure their verbatim runs.
+//! A segment over the package's `doc_set_cap` is counted here and
+//! never sent.
 
-mod runs;
+mod seqs;
 
-use crate::dedup::candidates::{HOT_GROUP_CAP, LSH_SHAPE};
-use crate::dedup::{index::Index, minhash};
+use crate::corelink::{Link, judged};
+use crate::dedup::index::Index;
 use anyhow::{Context, Result, ensure};
-use runs::runs_for;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 use std::path::Path;
+
+/// The coarse filter's capability, request kind, and minting proto.
+pub const CAP: &str = "docpairs/1";
+const KIND: &str = "docpairs";
+const SINCE: &str = "8.4.0";
 
 /// One live cached segment — the judgment's unit of identity.
 /// `words` is the admitted post-strip word count (the cached column
@@ -120,10 +124,12 @@ fn shingle_set(blob: &[u8]) -> Result<Vec<u64>> {
         .collect())
 }
 
-/// The candidate pass output: pairs with their exact verbatim runs,
-/// plus the tally of every bound that fired.
+/// The candidate pass output: the kept pairs (segment ids ascending),
+/// each pair's segments' shingle sequences, and the tally of every
+/// bound that fired.
 pub struct Cand {
-    pub pairs: Vec<(usize, usize, u64)>,
+    pub pairs: Vec<(usize, usize)>,
+    pub seqs: BTreeMap<usize, Vec<u64>>,
     pub tally: Tally,
 }
 
@@ -138,72 +144,51 @@ pub struct Tally {
     pub hot_shingles: u64,
 }
 
-/// LSH bucket pairs ∪ shared-shingle seed pairs, with hot groups
-/// chained instead of skipped (pairs.rs HOT_CAP / attack-review D4:
-/// skipping hot groups made detection fall to zero) — then one exact
-/// verbatim run per candidate.
-pub fn collect(root: &Path, segs: &[SegRow]) -> Result<Cand> {
+/// The sendable segments (within the package's per-set ceiling, the
+/// rest counted) to the core's coarse filter, its kept pairs mapped
+/// back to segment ids, then the sequences of the segments they name.
+/// A degraded or skewed reply is a named refusal — the judgment never
+/// runs on a candidate set the core did not answer whole.
+pub fn collect(root: &Path, segs: &[SegRow], link: &mut Link) -> Result<Cand> {
     let mut tally = Tally::default();
-    let mut cand: BTreeSet<(usize, usize)> = BTreeSet::new();
-    let (perms, bands, rows_per) = LSH_SHAPE;
-    let mut buckets: BTreeMap<(usize, u64), Vec<usize>> = BTreeMap::new();
+    let cap = super::wire::limits().doc_set_cap;
     let sendable: Vec<usize> = (0..segs.len())
         .filter(|&i| {
-            let ok = segs[i].set.len() <= super::wire::limits().doc_set_cap;
+            let ok = segs[i].set.len() <= cap;
             tally.over_cap_segments += u64::from(!ok);
             ok
         })
         .collect();
-    for &i in &sendable {
-        let sig = minhash::signature(&segs[i].set, perms);
-        for key in minhash::band_keys(&sig, bands, rows_per) {
-            buckets.entry(key).or_default().push(i);
-        }
-    }
-    tally.lsh_pairs = group_pairs(buckets.values(), &mut tally.hot_bands, &mut cand);
-    let mut inverted: BTreeMap<u64, Vec<usize>> = BTreeMap::new();
-    for &i in &sendable {
-        for h in &segs[i].set {
-            inverted.entry(*h).or_default().push(i);
-        }
-    }
-    tally.seed_pairs = group_pairs(inverted.values(), &mut tally.hot_shingles, &mut cand);
-    let pairs = runs_for(root, segs, cand)?;
-    Ok(Cand { pairs, tally })
-}
-
-/// All-pairs under the hot cap, adjacent chains above it (counted);
-/// returns how many pairs this source contributed.
-///
-/// The chain is a RECALL BOUND, stated the way pairs.rs states its
-/// own: above HOT_GROUP_CAP only the n-1 adjacent pairs of a bucket
-/// ever reach the judge, so a duplicate pair that shares this bucket
-/// and nothing else is never judged and never reported. It is a
-/// bound, not a leak: every chained bucket ticks `hot_bands` /
-/// `hot_shingles`, and the D4 alternative — dropping the bucket
-/// whole — zeroed detection exactly when duplication was highest.
-fn group_pairs<'v>(
-    groups: impl Iterator<Item = &'v Vec<usize>>,
-    hot: &mut u64,
-    cand: &mut BTreeSet<(usize, usize)>,
-) -> u64 {
-    let mut added = 0;
-    for list in groups {
-        let pairs: Vec<(usize, usize)> = if list.len() <= HOT_GROUP_CAP {
-            (0..list.len())
-                .flat_map(|a| ((a + 1)..list.len()).map(move |b| (list[a], list[b])))
-                .collect()
-        } else {
-            *hot += 1;
-            list.windows(2).map(|w| (w[0], w[1])).collect()
-        };
-        for (a, b) in pairs {
-            if a != b && cand.insert((a.min(b), a.max(b))) {
-                added += 1;
-            }
-        }
-    }
-    added
+    let sets: Vec<&[u64]> = sendable.iter().map(|&i| segs[i].set.as_slice()).collect();
+    let keys = ["sets", "lshPairs", "seedPairs", "hotBands", "hotShingles"];
+    let (_, local, counts): (_, Vec<[usize; 2]>, _) = judged::whole_pass(
+        link,
+        (CAP, SINCE, KIND),
+        serde_json::json!({ "sets": sets }),
+        ("docdup coarse filter", &keys),
+    )?;
+    let [n_sets, lsh, seed, hot_bands, hot_shingles] = counts[..] else {
+        unreachable!("one count per key")
+    };
+    ensure!(
+        n_sets == sendable.len() as u64
+            && lsh + seed == local.len() as u64
+            && local.windows(2).all(|w| w[0] < w[1])
+            && local.iter().all(|&[a, b]| a < b && b < sendable.len()),
+        "docpairs/1 reply does not add up: wire skew"
+    );
+    (
+        tally.lsh_pairs,
+        tally.seed_pairs,
+        tally.hot_bands,
+        tally.hot_shingles,
+    ) = (lsh, seed, hot_bands, hot_shingles);
+    let pairs: Vec<(usize, usize)> = local
+        .into_iter()
+        .map(|[a, b]| (sendable[a], sendable[b]))
+        .collect();
+    let seqs = seqs::seqs_for(root, segs, &pairs)?;
+    Ok(Cand { pairs, seqs, tally })
 }
 
 #[cfg(test)]

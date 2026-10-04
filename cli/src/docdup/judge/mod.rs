@@ -1,20 +1,20 @@
 //! `ce docdup` judgment (design vol.2 §5.3, M5-3g): live cached
-//! segments → coarse candidates (LSH ∪ verbatim seeds) → chunks of at
-//! most the package's docdup `doc_pair_cap` pairs over one core link
-//! for the exact Haskell Jaccard re-check. Raw inter/union cross the
-//! wire, never a ratio, and since ADR-008 P1 each score row comes back
-//! with the CORE's full verdict bit (CE.Docdup.Cost.dupVerdict:
-//! Jaccard ∨ verbatim — the runs computed here ride the request as
-//! verdict inputs, F26); the reported set is the core's decision, and
-//! since plan v2.33 W3 this side holds no copy of the threshold. The
-//! report is the core's (document.rs).
+//! segments → the core's coarse candidates (LSH ∪ shared-shingle seeds,
+//! docpairs/1) → chunks of at most the package's docdup `doc_pair_cap`
+//! pairs over the same core link for the exact Haskell Jaccard
+//! re-check. Each chunk carries its segments' shingle sequences; the
+//! core derives the sets, measures each pair's verbatim run (plan v2.33
+//! W3) and answers raw inter/union, the run and, since ADR-008 P1, the
+//! CORE's full verdict bit (CE.Docdup.Cost.dupVerdict: Jaccard ∨
+//! verbatim); the reported set is the core's decision, and this side
+//! holds no copy of the threshold. The report is the core's
+//! (document.rs).
 
 pub mod candidates;
 mod document;
 pub mod wire;
 
-use anyhow::{Context, Result};
-use std::collections::BTreeMap;
+use anyhow::{Result, ensure};
 use std::path::{Path, PathBuf};
 
 /// The judgment's counters, sent to the core as facts.
@@ -91,21 +91,19 @@ fn judged_over(
     core: &str,
 ) -> Result<(Judged, crate::corelink::Link)> {
     let segs = candidates::live_rows(idx)?;
-    let cand = candidates::collect(root, &segs)?;
     // the family's lockstep bindings, inline: this judge is thin
     // enough that a separate fn was pure scaffolding (bite 17 tail)
     let fam = wire::family(core);
     let mut link = crate::lockstep::open_family(fam.core, fam.cap)?;
+    let cand = candidates::collect(root, &segs, &mut link)?;
     let (rows, judged, jaccard_dups, requests) = crate::lockstep::lockstep_scores(
         &mut link,
         &fam,
         &cand.pairs,
-        |chunk| wire::chunk_request(chunk, |g| &segs[g].set),
+        |chunk| wire::chunk_request(chunk, |g| &cand.seqs[&g]),
         wire::parse_result,
     )?;
-    let runs: BTreeMap<(usize, usize), u64> =
-        cand.pairs.iter().map(|&(a, b, r)| ((a, b), r)).collect();
-    let judged_rows = reported_rows(&rows, &runs)?;
+    let judged_rows = reported_rows(&rows, &cand.pairs)?;
     let dups = judged_rows
         .iter()
         .filter(|r| r[5] == 1)
@@ -141,21 +139,21 @@ fn judged_over(
     Ok((judged, link))
 }
 
-/// Every judged row with its verbatim run, the CORE's verdict bit last
-/// (ADR-008 P1) — the reported set is the rows whose bit is set — in
-/// one defensive pass (review C20: the runs[..] indexings were the last
-/// decode site that panicked instead of erroring on an unexpected pair
-/// echo). Split from run() at the E01 line, the t3::reported_clones
-/// shape.
+/// Every judged row with the run the core measured, the CORE's verdict
+/// bit last (ADR-008 P1) — the reported set is the rows whose bit is
+/// set — in one defensive pass (review C20: an echoed pair that was
+/// never sent is an error, never a row). Split from run() at the E01
+/// line, the t3::reported_clones shape.
 fn reported_rows(
-    rows: &[(usize, usize, (u64, u64, bool))],
-    runs: &BTreeMap<(usize, usize), u64>,
+    rows: &[(usize, usize, (u64, u64, u64, bool))],
+    sent: &[(usize, usize)],
 ) -> Result<Vec<[i64; 6]>> {
     let mut out = Vec::new();
-    for &(a, b, (inter, union, v)) in rows {
-        let run = *runs
-            .get(&(a, b))
-            .with_context(|| format!("core echoed pair ({a},{b}) that was never sent"))?;
+    for &(a, b, (inter, union, run, v)) in rows {
+        ensure!(
+            sent.binary_search(&(a, b)).is_ok(),
+            "core echoed pair ({a},{b}) that was never sent"
+        );
         let n = |x: u64| x as i64;
         out.push([a as i64, b as i64, n(inter), n(union), n(run), i64::from(v)]);
     }

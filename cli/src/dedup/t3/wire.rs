@@ -56,21 +56,14 @@ pub fn chunk_request<'t>(
     pairs: &[(usize, usize)],
     tree_of: impl Fn(usize) -> &'t UnitTree,
 ) -> (Vec<usize>, Value) {
-    let (order, rank) = crate::lockstep::sorted_rank(pairs.iter().copied());
-    let trees: Vec<&UnitTree> = order.iter().map(|&g| tree_of(g)).collect();
-    let local: Vec<[usize; 2]> = pairs.iter().map(|&(a, b)| [rank[&a], rank[&b]]).collect();
+    let (order, trees, local) = crate::lockstep::chunk_layout(pairs, tree_of);
     (order, request_body(&trees, &local))
 }
 
 /// This family's corelink bindings — capability, request kind, chunk
 /// ceiling — for the shared lockstep machine.
 pub fn family(core: &str) -> crate::lockstep::Family<'_> {
-    crate::lockstep::Family {
-        core,
-        cap: CAP,
-        kind: "clone",
-        chunk: limits().pair_cap,
-    }
+    crate::lockstep::Family::new(core, CAP, "clone", limits().pair_cap)
 }
 
 /// Decode one clone.result into request-local rows `(i, j, (ted, n1,
@@ -82,17 +75,37 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
 /// core's per-row verdict bits (ADR-008 P1: the reported set is the
 /// core's decision — raw ted stays for the instruments' cut tables).
 pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {
+    let l = limits();
     crate::lockstep::parse_scores(
         reply,
-        &[
-            ("tsedNum", json!(limits().tsed_num)),
-            ("tsedDen", json!(limits().tsed_den)),
-            ("minUnitNodes", json!(limits().min_unit_nodes)),
-        ],
+        &crate::lockstep::pins(
+            ["tsedNum", "tsedDen", "minUnitNodes"],
+            [l.tsed_num, l.tsed_den, l.min_unit_nodes],
+        ),
         "the package's clone limits vs the judging core's Clone/Cost.hs",
         &["judged", "prefiltered"],
         |[i, j, ted, n1, n2]: [i64; 5], v| (i as usize, j as usize, (ted, n1, n2, v)),
     )
+}
+
+/// The core's own bit for each replayed `(ted, n1, n2)` row (clone/1
+/// `decide`, plan v2.33 W3): this side holds no copy of the threshold,
+/// so the verdict cache's rows pass the owner's decision over the same
+/// link, in chunks of the package's pair cap. A degraded reply to a
+/// package-sized request is refused like a judging one.
+pub fn decide(link: &mut crate::corelink::Link, rows: &[[i64; 3]]) -> Result<Vec<bool>> {
+    let mut bits = Vec::with_capacity(rows.len());
+    for c in rows.chunks(limits().pair_cap) {
+        let body = json!({"trees": [], "pairs": [], "decide": c});
+        let reply = link.request("clone", body).map_err(anyhow::Error::msg)?;
+        crate::lockstep::refuse_degraded(&reply, "the package's clone pair_cap")?;
+        bits.extend(crate::lockstep::rows_for::<bool>(
+            &reply,
+            "decided",
+            c.len(),
+        )?);
+    }
+    Ok(bits)
 }
 
 #[cfg(test)]

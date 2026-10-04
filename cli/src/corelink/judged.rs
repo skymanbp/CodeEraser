@@ -27,6 +27,29 @@ pub fn ask(
     link.request(kind, body)
 }
 
+/// One candidate pass a caller consumes WHOLE (plan v2.33 W3): asked
+/// behind the gate, a degraded reply refused by name (`what` names the
+/// pass it starved), then the reply, its `pairs` table and the named
+/// `counts.<key>` in `keys` order. What adds up stays the caller's.
+pub fn whole_pass<P: DeserializeOwned>(
+    link: &mut Link,
+    (cap, since, kind): (&str, &str, &str),
+    body: Value,
+    (what, keys): (&str, &[&str]),
+) -> anyhow::Result<(Value, P, Vec<u64>)> {
+    let reply = ask(link, cap, since, kind, body).map_err(anyhow::Error::msg)?;
+    if let Err(why) = degraded(&reply) {
+        anyhow::bail!("{cap} degraded the {what} ({why})");
+    }
+    let pairs = table(&reply, "pairs").map_err(anyhow::Error::msg)?;
+    let counts = keys
+        .iter()
+        .map(|k| count(&reply, k).map(|n| n as u64))
+        .collect::<Result<_, _>>()
+        .map_err(anyhow::Error::msg)?;
+    Ok((reply, pairs, counts))
+}
+
 /// A reply's degraded posture, read before any table: the core's named
 /// reason (or the bare word) is a named non-judgment.
 pub fn degraded(reply: &Value) -> Result<(), String> {

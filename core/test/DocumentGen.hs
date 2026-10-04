@@ -42,7 +42,7 @@ requests fam = seededBy 104729 31 (gen fam)
     _ -> query f
 
 -- | Two hundred draws of a generator, the n-th seeded n * k + c.
-seededBy :: Int -> Int -> G Value -> [Value]
+seededBy :: Int -> Int -> G a -> [a]
 seededBy k c g = [runG g (S (n * k + c) 0 0 0) | n <- [1 .. 200]]
 
 num :: Int -> G Integer

@@ -22,7 +22,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// that minted the family.
 pub const CAP: &str = "rank/1";
 const KIND: &str = "rank";
-const SINCE: &str = "7.12.0";
+const SINCE: &str = "8.3.0";
 
 /// One query term as spelled: hash, channel, term frequency.
 #[derive(Debug, Clone, PartialEq, Eq)]

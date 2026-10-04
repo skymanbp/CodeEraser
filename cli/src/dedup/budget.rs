@@ -25,8 +25,11 @@ pub struct Gate {
 /// more blocks admitted, a stricter gate — but never loosen it:
 /// `--min-distinct 40` drove this repository's own budget from 182
 /// to 0 with no clone repaid (k4 fence attack). Refused BEFORE any
-/// measurement or core contact, by name. Report-only runs, the MCP
-/// tool and the GUI keep both overrides free: calibration controls.
+/// measurement, by name: a `--min-tokens` above the guarantee and a
+/// `--min-distinct 0` before any core contact, a `--min-distinct` above
+/// the floor once the floor is read off the core's package (plan v2.33
+/// W3: this side holds no copy of it). Report-only runs, the MCP tool
+/// and the GUI keep both overrides free: calibration controls.
 pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize>) -> Result<()> {
     let t = super::Params::default().guarantee();
     if let Some(m) = min_tokens.filter(|&m| m > t) {
@@ -36,19 +39,25 @@ pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize
             &[&m, &t],
         ));
     }
-    let d = super::pairs::default_min_distinct();
     match min_distinct {
         Some(0) => anyhow::bail!(crate::i18n::line(
             "--check cannot judge without a diversity floor: --min-distinct 0 disables the floor the core's contract needs (default or tighter only)",
             "--check 不能在无多样性地板下判决：--min-distinct 0 关闭了核契约所需的地板（只准默认或更紧）",
             &[],
         )),
-        Some(m) if m > d => anyhow::bail!(crate::i18n::line(
-            "--check judges at the calibrated operating point: --min-distinct {} is above {} and would suppress more blocks (default or tighter only)",
-            "--check 按校准工作点判决：--min-distinct {} 高于 {}，会多抑制克隆块（只准默认或更紧）",
-            &[&m, &d],
-        )),
-        _ => Ok(()),
+        Some(m) => {
+            let d = super::pairs::default_min_distinct();
+            anyhow::ensure!(
+                m <= d,
+                crate::i18n::line(
+                    "--check judges at the calibrated operating point: --min-distinct {} is above {} and would suppress more blocks (default or tighter only)",
+                    "--check 按校准工作点判决：--min-distinct {} 高于 {}，会多抑制克隆块（只准默认或更紧）",
+                    &[&m, &d],
+                )
+            );
+            Ok(())
+        }
+        None => Ok(()),
     }
 }
 

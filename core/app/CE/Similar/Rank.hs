@@ -19,11 +19,11 @@ import CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf)
 import CE.Similar.Rank.Cost (scoreFracBits)
 import CE.Similar.Rank.Score (Hit (..), QTerm (..), bare, expansion, rankTop)
 import CE.Wire (family)
+import CE.Wire.Result (resultLine)
 import Control.Applicative ((<|>))
-import Data.Aeson (Value, encode, object, (.=))
+import Data.Aeson (Value, (.=))
 import Data.Bits (shiftR)
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Function (on)
 import qualified Data.IntMap.Strict as IM
 import Data.List (groupBy)
@@ -57,18 +57,17 @@ widened r
 -- tables and the reason.
 answer :: String -> Bool -> RankReq -> B8.ByteString
 answer proto degraded r =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("rank.result" :: String)
-    , "id" .= reqId r
-    , "hits" .= [toInteger (hSeat h) : hScore h `shiftR` scoreFracBits : hScore h : hHits h | h <- hits]
+  resultLine
+    proto
+    "rank"
+    (reqId r)
+    [ "hits" .= [toInteger (hSeat h) : hScore h `shiftR` scoreFracBits : hScore h : hHits h | h <- hits]
     , "scoreDen" .= (2 ^ scoreFracBits :: Integer)
     , "added" .= [[qTerm q, qChan q] | q <- if degraded then [] else added r]
     , "query" .= if degraded then [] else M.toList (M.fromListWith (+) [(qTerm q, qWeight q) | q <- ranked])
-    , "counts" .= object ["rows" .= rowsOf r, "queryTerms" .= length ranked, "hits" .= length hits]
-    , "degraded" .= degraded
     ]
-      <> ["reason" .= ("rank_too_large" :: String) | degraded]
+    ["rows" .= rowsOf r, "queryTerms" .= length ranked, "hits" .= length hits]
+    (if degraded then Just "rank_too_large" else Nothing)
  where
   ranked
     | degraded = []

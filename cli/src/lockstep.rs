@@ -18,6 +18,27 @@ pub struct Family<'a> {
     pub chunk: usize,
 }
 
+impl<'a> Family<'a> {
+    /// A family's bindings: core path, capability, request kind, chunk.
+    pub fn new(core: &'a str, cap: &'a str, kind: &'a str, chunk: usize) -> Self {
+        Family {
+            core,
+            cap,
+            kind,
+            chunk,
+        }
+    }
+}
+
+/// The knobs a family pins, as parallel lists: each wire name with the
+/// value of the package this run read.
+pub fn pins<const N: usize>(
+    names: [&'static str; N],
+    values: [i64; N],
+) -> Vec<(&'static str, Value)> {
+    names.into_iter().zip(values.map(Value::from)).collect()
+}
+
 /// One decoded reply: request-local `(i, j, metrics)` rows plus the
 /// two family counters.
 pub type Scored<E> = (Vec<(usize, usize, E)>, [u64; 2]);
@@ -114,20 +135,36 @@ pub fn refuse_degraded(reply: &Value, mirrors: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// The reply's per-row verdict bits (ADR-008 P1: the core owns the
-/// reported-set decision, one bit per score row in row order; scores
-/// stay raw for the instruments' cut tables), length-locked to the
-/// score rows they qualify — ONE decode throat for every family.
-fn verdict_bits(reply: &Value, rows: usize) -> anyhow::Result<Vec<bool>> {
+/// A per-row column of the reply under `key` (the verdict bits of
+/// ADR-008 P1, docdup's measured runs, clone/1's decided bits),
+/// length-locked to the `rows` it qualifies — ONE decode throat for
+/// every family.
+pub fn rows_for<T: serde::de::DeserializeOwned>(
+    reply: &Value,
+    key: &str,
+    rows: usize,
+) -> anyhow::Result<Vec<T>> {
     use anyhow::Context;
-    let bits: Vec<bool> = serde_json::from_value(reply["verdicts"].clone()).context("verdicts")?;
+    let col: Vec<T> = serde_json::from_value(reply[key].clone()).context(key.to_string())?;
     anyhow::ensure!(
-        bits.len() == rows,
-        "core sent {} verdicts for {} score rows",
-        bits.len(),
-        rows
+        col.len() == rows,
+        "core sent {} {key} for {rows} score rows",
+        col.len()
     );
-    Ok(bits)
+    Ok(col)
+}
+
+/// One chunk's request-local layout over the shared sorted-rank throat:
+/// the global ids in rank order, each one's item, and the pairs as
+/// local `[i, j]` — the layout every pairwise family sends.
+pub fn chunk_layout<'t, T: ?Sized>(
+    pairs: &[(usize, usize)],
+    item_of: impl Fn(usize) -> &'t T,
+) -> (Vec<usize>, Vec<&'t T>, Vec<[usize; 2]>) {
+    let (order, rank) = sorted_rank(pairs.iter().copied());
+    let items = order.iter().map(|&g| item_of(g)).collect();
+    let local = pairs.iter().map(|&(a, b)| [rank[&a], rank[&b]]).collect();
+    (order, items, local)
 }
 
 /// A required reply field, its absence named — the third
@@ -184,7 +221,7 @@ pub fn parse_scores<R: serde::de::DeserializeOwned, E>(
     pin_knobs(reply, knobs, owners)?;
     refuse_degraded(reply, owners)?;
     let (rows, c) = scores_and_counts::<R>(reply, count_keys)?;
-    let bits = verdict_bits(reply, rows.len())?;
+    let bits: Vec<bool> = rows_for(reply, "verdicts", rows.len())?;
     let local = rows.into_iter().zip(bits).map(|(r, v)| row(r, v)).collect();
     Ok((local, [c[0], c[1]]))
 }

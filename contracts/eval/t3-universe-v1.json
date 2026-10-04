@@ -808,19 +808,6 @@
     {
       "bands": {
         "below_floor": 5,
-        "l": 2,
-        "m": 4,
-        "s": 5
-      },
-      "lang": "rs",
-      "path": "cli/tests/dedup_pairs.rs",
-      "sha256": "4559e190a4b1870245c0af3d2adbe4785f888c9574b12247f1d5d89feef73763",
-      "symbols": 16,
-      "units": 16
-    },
-    {
-      "bands": {
-        "below_floor": 5,
         "l": 0,
         "m": 0,
         "s": 3
@@ -1194,6 +1181,19 @@
       "sha256": "e77b1870e1e3b2700ee4acc1283b4a7f81954ee09fb5b1690efe01abf70c1441",
       "symbols": 5,
       "units": 5
+    },
+    {
+      "bands": {
+        "below_floor": 4,
+        "l": 2,
+        "m": 4,
+        "s": 6
+      },
+      "lang": "rs",
+      "path": "cli/tests/it/dedup_pairs.rs",
+      "sha256": "667d43f06cdea144858fffc1d2d895c9e67e7ae8c6e1c1e559670403148d297d",
+      "symbols": 16,
+      "units": 16
     },
     {
       "bands": {
@@ -1880,10 +1880,10 @@
       "py/l": 15,
       "py/m": 49,
       "py/s": 41,
-      "rs/below_floor": 624,
+      "rs/below_floor": 623,
       "rs/l": 132,
       "rs/m": 507,
-      "rs/s": 606,
+      "rs/s": 607,
       "ts/below_floor": 17,
       "ts/l": 6,
       "ts/m": 1,

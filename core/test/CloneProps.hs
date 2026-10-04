@@ -3,17 +3,26 @@
 -- the mapping-definition brute force, the two admissible prune
 -- bounds hold against brute-force ted, ted is a metric, and the
 -- threshold knob is alive (perturbing it moves the verdict count,
--- with the nonemptiness precondition asserted — F16). Since ADR-008
+-- with the nonemptiness precondition asserted — F16), and the
+-- handler's `decide` rows (plan v2.33 W3: the verdict cache's replayed
+-- rows) answer the same bit as the judging road. Since ADR-008
 -- P1 every verdict assertion runs through Cost.cloneDecides — the
 -- binding whose bit crosses the wire. CI walks n ≤ 4; CE_DEEP_TED=1
 -- extends to n = 5 (nightly).
+{-# LANGUAGE OverloadedStrings #-}
+
 module CloneProps (battery) where
 
+import CE.Clone (respond)
 import CE.Clone.Cost (cloneDecides, cloneDecidesWith, tsedDen, tsedNum)
 import CE.Clone.Prefilter (histo, provablyBelow)
 import CE.Clone.Ted (Tree (..), ted)
+import Data.Aeson (Value, decodeStrict, encode, object, toJSON, (.=))
+import qualified Data.Aeson.KeyMap as KM
 import Data.Array.Unboxed (listArray)
+import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntMap.Strict as IM
+import qualified Data.Set as S
 import ReferenceTed (family, labelInterOf, refTed)
 import System.Environment (lookupEnv)
 
@@ -50,8 +59,9 @@ battery = do
           && not (cloneDecides 16 100 90)
           && not (cloneDecidesWith (86, 100) 15 100 90)
       )
+  i <- decideLegs teds
   putStrLn ("     clone family: maxN " <> show maxN <> ", trees " <> show (length fam))
-  pure (a && b && c && d && e && f && g && h)
+  pure (a && b && c && d && e && f && g && h && i)
 
 check :: String -> Bool -> IO Bool
 check name ok = putStrLn ((if ok then "ok   " else "FAIL ") <> name) >> pure ok
@@ -101,6 +111,25 @@ triangle fam =
   idx = [0 .. length fam - 1]
   arr = IM.fromList [(i * length fam + j, zs (fam !! i) (fam !! j)) | i <- idx, j <- idx]
   d i j = arr IM.! (i * length fam + j)
+
+-- | `decide` over every distinct (ted, sizes) of the family (one
+-- request, under the pair cap): the reply's bits
+-- are cloneDecides in row order; a request without the key carries
+-- no `decided`; a malformed or negative row is refused by name.
+decideLegs :: [(Integer, T, T)] -> IO Bool
+decideLegs teds = do
+  let rows = S.toList (S.fromList [[v, size a, size b] | (v, a, b) <- teds])
+      want = [cloneDecides v n1 n2 | [v, n1, n2] <- rows]
+      ask extra = respond "test" (BL.toStrict (encode (object (["id" .= (1 :: Int), "trees" .= ([] :: [Value]), "pairs" .= ([] :: [[Int]])] <> extra))))
+      decided r = case r of
+        Right bs -> decodeStrict bs >>= (KM.lookup "decided" :: KM.KeyMap Value -> Maybe Value)
+        Left _ -> Nothing
+      refused r = either (\(_, _, m) -> m) (const "") r
+  a <- check "decide: bits = cloneDecides over the family" (decided (ask ["decide" .= rows]) == Just (toJSON want))
+  b <- check "decide: absent key, no decided" (decided (ask []) == Nothing)
+  c <- check "decide: negative ted refused" (refused (ask ["decide" .= [[-1, 2, 2 :: Integer]]]) == "decide 0: negative ted")
+  d <- check "decide: short row refused" (refused (ask ["decide" .= [[1, 2 :: Integer]]]) == "decide 0: malformed row (need [ted,n1,n2])")
+  pure (a && b && c && d && or want && not (and want))
 
 -- | The clone verdict at a given ratio, counted over the family; the
 -- production knob must separate from a perturbed one on a nonempty

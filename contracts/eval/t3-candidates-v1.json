@@ -25,7 +25,7 @@
     "admitted_by_lang": {
       "go": 45,
       "py": 105,
-      "rs": 1245,
+      "rs": 1246,
       "ts": 15
     },
     "cross_lang_dropped": 1258,
@@ -75,7 +75,7 @@
       "ts/s": 5
     },
     "union_pairs": 21746,
-    "units_admitted": 1407,
+    "units_admitted": 1408,
     "unowned_dropped": 355
   }
 }
