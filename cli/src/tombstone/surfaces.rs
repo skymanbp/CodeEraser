@@ -14,7 +14,7 @@
 use super::PairText;
 use super::frames::sentences;
 use crate::docdup::segments::{self, RawSeg};
-use crate::fourclass::{classify, units};
+use crate::fourclass::{changed, units};
 use crate::graph::ladder::md::head::atx_heading;
 use crate::graph::ladder::md::slug::render_text;
 use crate::graph::md::content_lines;
@@ -62,10 +62,10 @@ pub struct Added {
 }
 
 pub fn added(pair: &PairText) -> Added {
-    let c = classify(pair.before, pair.after, pair.lang);
+    let (lines, degraded) = changed(pair.before, pair.after);
     Added {
-        lines: c.changed.added.into_iter().collect(),
-        degraded: c.degraded,
+        lines: lines.added.into_iter().collect(),
+        degraded,
     }
 }
 

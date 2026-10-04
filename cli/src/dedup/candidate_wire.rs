@@ -213,3 +213,7 @@ fn record(tally: &mut Tally, c: &[u64]) {
         *f = v;
     }
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/dedup/candidate_wire.rs"]
+mod tests;

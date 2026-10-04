@@ -63,16 +63,18 @@ log2Cases =
 idfCases :: Bool
 idfCases = idfFp 10 6 == 0 && idfFp 10 1 > idfFp 10 3 && idfFp 0 0 == 0
 
--- | (k1 + 1)·tf / (tf + k1·(1 − b + b·len/avg)) cleared of every
--- denominator by hand from k1 = 6/5 and b = 3/4: 22·tf·avg over
--- 10·tf·avg + 3·avg + 9·len, the 2^16 fixed point applied once.
+-- | The closed form the core computes (22·tf·avg over
+-- 10·tf·avg + 3·avg + 9·len, the 2^16 fixed point applied once) is the
+-- rational definition (k1 + 1)·tf / (tf + k1·(1 − b + b·len/avg)) with
+-- k1 = 6/5 and b = 3/4, floored once.
 contributionCases :: Bool
 contributionCases =
   k1 == 6 / 5
     && b == 3 / 4
     && and
-      [ contribution 1 1 tf len avg == (2 ^ scoreFracBits * 22 * tf * avg) `div` (10 * tf * avg + 3 * avg + 9 * len)
-      | (tf, len, avg) <- [(1, 10, 10), (3, 7, 20), (12, 300, 45), (1, 1, 1)]
+      [ contribution w idf tf len avg == floor (fromInteger (w * idf * tf * 2 ^ scoreFracBits) * (k1 + 1) / (fromInteger tf + k1 * (1 - b + b * fromInteger len / fromInteger avg)))
+      | (tf, len, avg) <- [(1, 10, 10), (3, 7, 20), (12, 300, 45), (1, 1, 1), (0, 5, 3), (7, 0, 2)]
+      , (w, idf) <- [(1, 1), (768, 149), (256, 2047)]
       ]
 
 -- | idf > 0 exactly when n > scoredDfRatio · df; and once

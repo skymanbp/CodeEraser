@@ -139,15 +139,16 @@ fn judged_over(
     Ok((judged, link))
 }
 
+/// One scored row as wire::parse_result decodes it: the pair and
+/// (inter, union, run, verdict).
+type ScoredRow = (usize, usize, (u64, u64, u64, bool));
+
 /// Every judged row with the run the core measured, the CORE's verdict
 /// bit last (ADR-008 P1) — the reported set is the rows whose bit is
 /// set — in one defensive pass (review C20: an echoed pair that was
 /// never sent is an error, never a row). Split from run() at the E01
 /// line, the t3::reported_clones shape.
-fn reported_rows(
-    rows: &[(usize, usize, (u64, u64, u64, bool))],
-    sent: &[(usize, usize)],
-) -> Result<Vec<[i64; 6]>> {
+fn reported_rows(rows: &[ScoredRow], sent: &[(usize, usize)]) -> Result<Vec<[i64; 6]>> {
     let mut out = Vec::new();
     for &(a, b, (inter, union, run, v)) in rows {
         ensure!(

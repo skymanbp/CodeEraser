@@ -119,9 +119,9 @@ offence r =
 -- reason), or Left the refusal's message stem.
 expected :: Req -> Either String [Maybe Value]
 expected r
-  | overCap = Right (answer [] [] [] (replicate 13 0) True)
+  | overCap = Right (answerOf r [] [] [] (replicate 13 0) True)
   | Just why <- offence r = Left why
-  | otherwise = Right (answer (M.toList finalBits) rawRows (M.toList bucketSizes) tallies False)
+  | otherwise = Right (answerOf r (M.toList finalBits) rawRows (M.toList bucketSizes) tallies False)
  where
   overCap =
     toInteger (length (rUnits r)) > candidateUnitCap
@@ -192,15 +192,20 @@ expected r
     , s5 already
     , s5 newS5
     ]
-  answer :: [((Integer, Integer), Integer)] -> [[Integer]] -> [(Integer, Integer)] -> [Integer] -> Bool -> [Maybe Value]
-  answer rows raws sizes ns deg =
-    [ Just (toJSON [[a, b, s] | ((a, b), s) <- rows])
-    , Just (toJSON raws)
-    , Just (toJSON [[z, k] | (z, k) <- sizes])
-    , Just (object (zipWith (.=) names (toInteger (length (rUnits r)) : toInteger (length (rPrints r)) : toInteger (length (rNear r)) : ns)))
-    , Just (Bool deg)
-    , if deg then Just (String "candidates_too_large") else Nothing
-    ]
+
+-- | The six reply fields from the kept rows, the raw per-source rows,
+-- the band-group sizes, the thirteen tallies past the three input
+-- counts, and the degraded flag.
+answerOf :: Req -> [((Integer, Integer), Integer)] -> [[Integer]] -> [(Integer, Integer)] -> [Integer] -> Bool -> [Maybe Value]
+answerOf r rows raws sizes ns deg =
+  [ Just (toJSON [[a, b, s] | ((a, b), s) <- rows])
+  , Just (toJSON raws)
+  , Just (toJSON [[z, k] | (z, k) <- sizes])
+  , Just (object (zipWith (.=) names (toInteger (length (rUnits r)) : toInteger (length (rPrints r)) : toInteger (length (rNear r)) : ns)))
+  , Just (Bool deg)
+  , if deg then Just (String "candidates_too_large") else Nothing
+  ]
+ where
   names =
     [ "units", "prints", "near", "unowned", "selfPairs", "printHot", "bandHot", "union", "crossLanguage"
     , "prunedSize", "prunedLabel", "survivors", "s5Windowed", "s5PrunedLabel", "s5Already", "s5New"

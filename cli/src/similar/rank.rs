@@ -253,3 +253,7 @@ fn shape_terms(query: &[QueryTerm]) -> Vec<u64> {
 #[cfg(test)]
 #[path = "../../tests/unit/similar/rank.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "../../tests/unit/similar/rank_differential.rs"]
+mod differential;

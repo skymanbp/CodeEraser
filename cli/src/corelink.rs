@@ -32,7 +32,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "8.1.0";
+pub const PROTO: &str = "8.5.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

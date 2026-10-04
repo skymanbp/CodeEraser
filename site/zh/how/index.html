@@ -80,8 +80,8 @@
     <li><b>window</b> 26</li>
     <li><b>保证阈 t</b> 50</li>
     <li><b>BASE</b> 1_000_003</li>
-    <li><b>HOT_CAP</b> 64</li>
-    <li><b>DEFAULT_MIN_DISTINCT</b> 7</li>
+    <li><b>hotCap</b> 64</li>
+    <li><b>minDistinct</b> 7</li>
     <li><b>近似带</b> 25 &lt;= len &lt; 50</li>
     <li><b>TOKENIZER_REV</b> 4</li>
     <li><b>schema</b> ce.dedup-report/0.5.0</li>
@@ -98,11 +98,11 @@ clone      <span class="op">⇔</span> TSED <span class="op">&gt;=</span> 0.85</
   <ul class="consts">
     <li><b>tsedNum</b> 85</li>
     <li><b>tsedDen</b> 100</li>
-    <li><b>T3_MIN_NODES</b> 24</li>
+    <li><b>minUnitNodes</b> 24</li>
     <li><b>unitNodeCap</b> 256</li>
     <li><b>pairCap</b> 4096</li>
-    <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
-    <li><b>HOT_GROUP_CAP</b> 64</li>
+    <li><b>lshShape</b> (128, 32, 4)</li>
+    <li><b>hotCap</b> 64</li>
     <li><b>schema</b> ce.clone-report/0.3.0</li>
   </ul></details>
 </div>
@@ -123,8 +123,8 @@ dupVerdictWith (num, den, vfloor) inter union run
     <li><b>verbatimFloor</b> 50</li>
     <li><b>docLineCap</b> 200</li>
     <li><b>licHeadLines</b> 5</li>
-    <li><b>DOC_SET_CAP</b> 8192</li>
-    <li><b>DOC_PAIR_CAP</b> 4096</li>
+    <li><b>docSetCap</b> 8192</li>
+    <li><b>docPairCap</b> 4096</li>
     <li><b>DOCDUP_REV</b> 8</li>
   </ul></details>
 </div>
@@ -289,7 +289,7 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
     <li><b>destFloor</b> 2</li>
     <li><b>anchorFloor</b> 19</li>
     <li><b>MAX_D</b> 3000</li>
-    <li><b>MAX_BRIDGE</b> 7</li>
+    <li><b>maxBridge</b> 7</li>
     <li><b>bucketCap</b> 64</li>
     <li><b>stackingNovelFloor</b> 20</li>
     <li><b>stackingRatio</b> 10</li>
@@ -441,14 +441,14 @@ over  <span class="op">⇔</span> budget declared ∧ |sites| &gt; budget     (s
 score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
 widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
 role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
-  <details class="more"><summary>推导与常数</summary><p class="note">T3 宇宙每个单元一个袋（名字碎片、形状、被调者拼写、自有文档段、节点种类直方图、字面量<em>种类</em>），每个词词干化后连同通道字母哈希。词袋随内容哈希门控的刷新持久化（<code>bag</code> 自身即倒排表；spec 初稿的共现对表实测让冷索引慢 7–10×，不建，查询时推导）。内存仪器与 SQL 读者共用一份按 trait 写的排序，在五份语料的每个单元上一致。Rust 发查询袋与每候选九个整数；Haskell 用精确有理数排序并施加角色合取。两代仲裁 oracle 的地板：首样本 60 %，留出集 40 %，后者让首样本偏好的每个调优候选退场。永不成门，永不进 <code>ce erase</code>。</p>
+  <details class="more"><summary>推导与常数</summary><p class="note">T3 宇宙每个单元一个袋（名字碎片、形状、被调者拼写、自有文档段、节点种类直方图、字面量<em>种类</em>），每个词词干化后连同通道字母哈希。词袋随内容哈希门控的刷新持久化（<code>bag</code> 自身即倒排表；spec 初稿的共现对表实测让冷索引慢 7–10×，不建，查询时推导）。内存仪器与 SQL 读者共用一份按 trait 写的请求，在五份语料的每个单元上发出同样的字节。Rust 发查询袋、计分词的 df 与倒排行、座位长度；Haskell 经 <code>rank/1</code> 加权、扩展、计分并截出前 K 个，再经 <code>similar/1</code> 用精确有理数排序并施加角色合取。两代仲裁 oracle 的地板：首样本 60 %，留出集 40 %，后者让首样本偏好的每个调优候选退场。永不成门，永不进 <code>ce erase</code>。</p>
   <ul class="consts">
     <li><b>SIMILAR_REV</b> 1</li>
     <li><b>K</b> 5</li>
-    <li><b>W_UNIT</b> 256</li>
+    <li><b>wUnit</b> 256</li>
     <li><b>TERM_CAP</b> 96</li>
-    <li><b>TOP_M</b> 3</li>
-    <li><b>MIN_COOC</b> 2</li>
+    <li><b>topM</b> 3</li>
+    <li><b>minCooc</b> 2</li>
     <li><b>roleMinName</b> 1</li>
     <li><b>roleMinCallee</b> 1</li>
     <li><b>roleMinNameShape</b> 2</li>

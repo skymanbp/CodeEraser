@@ -11,11 +11,12 @@ gate, never enters `ce erase`, and every face prints it as advice
 offline where a "code RAG" usually is neither: the retrieval is sparse — integer BM25 over
 term bags read off facts the index already carries, not an embedding — and the only
 association it knows is this repository's own, positive pointwise mutual information over the
-same bags, opt-in and never evidence ([ppmi.rs:1-15](../../../cli/src/similar/ppmi.rs#L1)).
-The split is ADR-008's, sixth instalment: Rust builds the bags, the inverted tables and a
-query's top-K with six evidence integers per candidate; Haskell orders the candidates as exact
-rationals and decides which of them play the query's role over the twelfth wire family,
-`similar/1`. Names, words and paths never cross the wire — hashes and counts only, row index is
+same bags, opt-in and never evidence ([ppmi.rs:1-11](../../../cli/src/similar/ppmi.rs#L1)).
+The split is ADR-008's, sixth instalment, moved further by plan v2.33 W3: Rust builds the bags
+and the inverted tables and fetches what one query's ranking needs; Haskell weights, widens,
+scores and cuts the top-K over `rank/1` ([Rank.hs:5-15](../../../core/app/CE/Similar/Rank.hs#L5)), then orders the
+candidates as exact rationals and decides which of them play the query's role over the
+twelfth wire family, `similar/1`. Names, words and paths never cross the wire — hashes and counts only, row index is
 identity ([wire.rs:1-7](../../../cli/src/similar/wire.rs#L1),
 [Similar.hs:5-17](../../../core/app/CE/Similar.hs#L5)).
 
@@ -40,13 +41,13 @@ them apart ([terms.rs:10-23](../../../cli/src/similar/terms.rs#L10)):
 Identifier pieces fall at camel, underscore and digit boundaries and are lowercased
 (`parseJSONFile` → parse json file, `http2_server` → http 2 server); prose splits through the
 same function, so `parseJSON` in a comment meets `parse_json` in a name on the same terms
-([terms.rs:76-81](../../../cli/src/similar/terms.rs#L76),
-[terms.rs:119-126](../../../cli/src/similar/terms.rs#L119)). The stop list is a fixed table of
+([terms.rs:56-59](../../../cli/src/similar/terms.rs#L56),
+[terms.rs:109-116](../../../cli/src/similar/terms.rs#L109)). The stop list is a fixed table of
 48 prose words, never learned from a corpus, and it does not touch identifier pieces — `get`,
-`set` and `is` are what a role is made of ([terms.rs:66-69](../../../cli/src/similar/terms.rs#L66)).
+`set` and `is` are what a role is made of ([terms.rs:56-59](../../../cli/src/similar/terms.rs#L56)).
 Word channels are stemmed by Porter's 1980 algorithm and hashed; feature channels are hashed
 as spelled ([stem.rs:12](../../../cli/src/similar/stem.rs#L12),
-[terms.rs:129-138](../../../cli/src/similar/terms.rs#L129)). The doc channel takes the
+[terms.rs:119-128](../../../cli/src/similar/terms.rs#L119)). The doc channel takes the
 segments docdup already extracts, attributed by position — a leading block ending within
 `LEAD_GAP` lines above the unit's first line, or a head block within `HEAD_GAP` lines below it
 ([docs.rs:13-14](../../../cli/src/similar/docs.rs#L13),
@@ -56,10 +57,10 @@ the plan writes for every table `.ce/index.db` gains
 ([terms.rs:1-5](../../../cli/src/similar/terms.rs#L1)).
 
 Query weights are integer multipliers — names ×3, callees ×2, everything else ×1 — so the
-score stays exact ([terms.rs:49-56](../../../cli/src/similar/terms.rs#L49)). The whole term
+score stays exact ([Cost.hs:51-57](../../../core/app/CE/Similar/Rank/Cost.hs#L51)). The whole term
 road is declared once as `SIMILAR_REV` and sits in the index cache key: a change to any rule
 above wipes the bag tables with the rest of the index rather than ranking old bags against new
-queries ([mod.rs:34-44](../../../cli/src/similar/mod.rs#L34)).
+queries ([mod.rs:35-45](../../../cli/src/similar/mod.rs#L35)).
 
 ### 2. The inverted tables — bags persisted as postings, pairs not stored
 
@@ -97,29 +98,30 @@ are and folded into one integer fraction. A term's contribution is
 
     w · idf · 22 · tf · avg / (10 · tf · avg + 3 · avg + 9 · len)
 
-floored to 16-bit fixed point; the unit test re-derives the fraction from `K1` and `B`
-([bm25.rs:21-27](../../../cli/src/similar/bm25.rs#L21),
-[bm25.rs:243-248](../../../cli/src/similar/bm25.rs#L243)). `idf = log2((N − df + ½) / (df + ½))`
+floored to 16-bit fixed point; the core's battery re-derives the fraction from `k1` and `b`
+([Cost.hs:31-34](../../../core/app/CE/Similar/Rank/Cost.hs#L31),
+[Math.hs:49-61](../../../core/app/CE/Similar/Rank/Math.hs#L49)). `idf = log2((N − df + ½) / (df + ½))`
 in 8-bit fixed point from an integer `log2` by squaring only, floored at zero
-([bm25.rs:230-237](../../../cli/src/similar/bm25.rs#L230),
-[bm25.rs:253](../../../cli/src/similar/bm25.rs#L253)). No float is touched anywhere, so the same
+([Math.hs:11-36](../../../core/app/CE/Similar/Rank/Math.hs#L11),
+[Math.hs:38-47](../../../core/app/CE/Similar/Rank/Math.hs#L38)). No float is touched anywhere, so the same
 corpus ranks the same on every platform and the frozen evaluation rows compare byte for byte
-([bm25.rs:1-7](../../../cli/src/similar/bm25.rs#L1)).
+([Math.hs:1-5](../../../core/app/CE/Similar/Rank/Math.hs#L1)).
 
-`top_k` returns the `K = 5` best candidates for a query, excluding the query's own seat,
-ordered by score then identity. A term in more than half the units — idf 0 — is neither score
+The core returns the `K = 5` best candidates for a query, excluding the query's own seat,
+ordered by score then identity ([Score.hs:62-74](../../../core/app/CE/Similar/Rank/Score.hs#L62)). A term in more than half the units — idf 0 — is neither score
 nor evidence: sharing what nearly everything shares says nothing, and walking its posting list
-would cost the whole corpus per query, so df is asked first and the list is never fetched.
-Shape equality and the role bit are read for the K survivors only, and neither orders
-([bm25.rs:77-100](../../../cli/src/similar/bm25.rs#L77), [mod.rs:44](../../../cli/src/similar/mod.rs#L44)).
-Ranking is written once, against the `Postings` trait: the in-memory `Corpus` the instruments
-build and the persisted `Reader` over `.ce/index.db` both feed the same `top_k`, and the replay
-asserts they agree on every unit of five corpora — the instrument and the product run one road
-([bm25.rs:66](../../../cli/src/similar/bm25.rs#L66),
-[reader.rs:7-12](../../../cli/src/similar/reader.rs#L7),
-[similar_replay.rs:188](../../../cli/tests/it/similar_replay.rs#L188)). Query weights ride in
-`1/W_UNIT` = 1/256, which is what lets a PPMI-scaled expansion keep a *fraction* of its
-parent's weight without a float ([bm25.rs:25-27](../../../cli/src/similar/bm25.rs#L25)).
+would cost the whole corpus per query, so the measuring side asks df first and fetches the list
+only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:148-176](../../../cli/src/similar/rank.rs#L148)).
+Shape equality is read for the K survivors only, by the measuring side, and neither it nor the
+role bit orders ([rank.rs:113-121](../../../cli/src/similar/rank.rs#L113)).
+The request is written once, against the `Postings` trait: the in-memory `Corpus` the instruments
+build and the persisted `Reader` over `.ce/index.db` both feed the same request, and the replay
+asserts they send the same bytes on every unit of five corpora — the instrument and the product
+run one road ([rank.rs:59-72](../../../cli/src/similar/rank.rs#L59),
+[reader.rs:7-10](../../../cli/src/similar/reader.rs#L7),
+[similar_replay.rs:247](../../../cli/tests/it/similar_replay.rs#L247)). Query weights ride in
+`1/wUnit` = 1/256, which is what lets a PPMI-scaled expansion keep a *fraction* of its
+parent's weight without a float ([Cost.hs:42-45](../../../core/app/CE/Similar/Rank/Cost.hs#L42)).
 
 ### 4. The associative view — positive PMI over this repository, opt-in
 
@@ -128,19 +130,17 @@ Two word terms co-occurring in one unit's bag are counted once per unit, and
     PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))
 
 in the same 8-bit fixed point as the idf, from the same integer `log2`
-([ppmi.rs:1-6](../../../cli/src/similar/ppmi.rs#L1),
-[ppmi.rs:65](../../../cli/src/similar/ppmi.rs#L65)). A neighbour counts only when it co-occurred
-in at least `MIN_COOC = 2` units and carries at least `MIN_PPMI` = two bits of association;
-each spelled word term of the query appends its `TOP_M = 3` best neighbours at weight
-`parent × min(ppmi, PPMI_CAP) / PPMI_SCALE` — at most half the parent's weight — and a term the
-query already spells is never appended ([ppmi.rs:21-35](../../../cli/src/similar/ppmi.rs#L21),
-[ppmi.rs:79-100](../../../cli/src/similar/ppmi.rs#L79),
-[ppmi.rs:102-122](../../../cli/src/similar/ppmi.rs#L102)). A unit past `TERM_CAP = 96` distinct
+([Math.hs:63-72](../../../core/app/CE/Similar/Rank/Math.hs#L63)). A neighbour counts only when it co-occurred
+in at least `minCooc = 2` units and carries at least `minPpmi` = two bits of association;
+each spelled word term of the query appends its `topM = 3` best neighbours at weight
+`parent × min(ppmi, ppmiCap) / ppmiScale` — at most half the parent's weight — and a term the
+query already spells is never appended ([Cost.hs:67-79](../../../core/app/CE/Similar/Rank/Cost.hs#L67),
+[Score.hs:30-60](../../../core/app/CE/Similar/Rank/Score.hs#L30)). A unit past `TERM_CAP = 96` distinct
 word terms contributes its first 96 in term order and is ledgered as capped; the cap has one
 owner, so the in-memory table and the persisted writer count the same words
-([ppmi.rs:32-42](../../../cli/src/similar/ppmi.rs#L32)). One bound does the pruning for free:
+([ppmi.rs:18-42](../../../cli/src/similar/ppmi.rs#L18)). One bound does the pruning for free:
 `n_ab ≤ n_b` bounds `PPMI(a, b)` by `log2(N / n_a)`, under two bits as soon as `4 · n_a > N`, so
-the reader never walks such a word's pair rows ([ppmi.rs:74-83](../../../cli/src/similar/ppmi.rs#L74)).
+the measuring side never fetches such a word's pair rows ([Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:123-146](../../../cli/src/similar/rank.rs#L123)).
 
 This is enough to let this repository's `fetch / load / retrieve` meet, and never enough to
 outvote what the unit itself spells. No corpus but this one is consulted and no word table is
@@ -158,31 +158,31 @@ The request is the query bag as `[termHash, weight]` pairs — strictly ascendin
 plus one nine-integer row per candidate, `[nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual,
 bm25Num, bm25Den]`: the six channel hits, the shape bit, and the fixed-point score as a fraction
 over its unit, so the core compares the ratio and never learns the width
-([wire.rs:31-42](../../../cli/src/similar/wire.rs#L31),
-[Cost.hs:29-31](../../../core/app/CE/Similar/Cost.hs#L29)). The reply is `order` — the candidate
+([wire.rs:30-41](../../../cli/src/similar/wire.rs#L30),
+[Cost.hs:30-32](../../../core/app/CE/Similar/Cost.hs#L30)). The reply is `order` — the candidate
 indices by score descending as exact rationals, ties by request index — `roles`, one bit per
 row in request order, and `counts{rows, queryTerms, role}`
-([Similar.hs:86-92](../../../core/app/CE/Similar.hs#L86),
-[Similar.hs:101-118](../../../core/app/CE/Similar.hs#L101)). The role rule is a two-arm
+([Similar.hs:88-94](../../../core/app/CE/Similar.hs#L88),
+[Similar.hs:103-120](../../../core/app/CE/Similar.hs#L103)). The role rule is a two-arm
 conjunction over one row, and it lives in Haskell:
 
     role ⇔ (nHit ≥ roleMinName ∧ cHit ≥ roleMinCallee) ∨ (nHit ≥ roleMinNameShape ∧ shapeEqual)
 
 with floors 1, 1 and 2: a unit that is *called* the same and *calls* the same, or two name
-words in common with the same signature shape ([Cost.hs:34-56](../../../core/app/CE/Similar/Cost.hs#L34)).
-The measuring side's `role` in `bm25.rs` is the instrument's declared mirror of that rule for
-the frozen evaluation rows; after the wire landed the measurement never decides alone
-([bm25.rs:9-12](../../../cli/src/similar/bm25.rs#L9), [bm25.rs:225-228](../../../cli/src/similar/bm25.rs#L225)).
+words in common with the same signature shape ([Cost.hs:35-57](../../../core/app/CE/Similar/Cost.hs#L35)).
+The measuring side keeps no copy of that rule: the frozen evaluation rows take their role bits
+from `similar/1` ([similar_replay.rs:158-172](../../../cli/tests/it/similar_replay.rs#L158)), and only the tuning instrument keeps
+a declared mirror in the tests repository: the frozen oracle's conjunction ([similar.rs:195-198](../../../cli/tests/unit/w3_oracle/similar.rs#L195)), re-exported to the instrument ([mirror.rs:19-22](../../../cli/tests/it/similar_tune_parts/mirror.rs#L19)).
 A request whose query terms plus rows exceed `similarCap` = 65536 gets a complete degraded
 reply with empty tables and the reason `similar_too_large` — a query the core refused to judge
 has no order and no roles, and the faces name the degradation instead of showing the measuring
-side's order ([Cost.hs:26-27](../../../core/app/CE/Similar/Cost.hs#L26),
-[Similar.hs:95-98](../../../core/app/CE/Similar.hs#L95)). There is no knob and no fail tier:
+side's order ([Cost.hs:27-28](../../../core/app/CE/Similar/Cost.hs#L27),
+[Similar.hs:97-100](../../../core/app/CE/Similar.hs#L97)). There is no knob and no fail tier:
 a knobless family whose one table is not the shared `RowsReq` — the query bag is its own key —
 so it binds the cascade directly. On the Rust side `consume` is strict: the order must be a
 permutation of the rows sent, one role bit per row, counts agreeing with the tables; any skew
 is a *named* non-judgment, never conflated with "no candidates"
-([wire.rs:82-101](../../../cli/src/similar/wire.rs#L82)). The family entered the protocol at
+([wire.rs:78-97](../../../cli/src/similar/wire.rs#L78)). The family entered the protocol at
 6.7.0, additively ([VERSIONING.md](../../../contracts/VERSIONING.md)).
 
 ### 6. Three faces, one document, one Stop line
@@ -195,8 +195,8 @@ projection shows — the counts, and `degraded` naming why the core did not judg
 A query is exactly one of three asks: `at` (`file:line`, the innermost unit holding the line),
 `unit` (a key, refused by name when ambiguous, naming up to five places) or `text` (free text,
 whose words become name and doc evidence — no shape, no callee, so the core's role bit is false
-by construction) ([query.rs:16-53](../../../cli/src/similar/query.rs#L16),
-[query.rs:61-94](../../../cli/src/similar/query.rs#L61)). `judged` refreshes the index over the
+by construction) ([query.rs:17-54](../../../cli/src/similar/query.rs#L17),
+[query.rs:62-95](../../../cli/src/similar/query.rs#L62)). `judged` refreshes the index over the
 same content-hash gate every command uses, resolves the ask, ranks the bare arm — and the widened
 arm when asked, its rows not in the bare arm tagged `widened` — and rides one `similar/1`
 request per arm over one core link, the document asked over the same link ([face.rs:55-86](../../../cli/src/similar/face.rs#L55)).
@@ -281,13 +281,13 @@ for byte and the core judged the fixture pair same-role; the MCP tool relays it 
 request that names two asks; the Stop leg writes `{unit, twin, score}` for a unit the session
 added and no key once the unit is committed
 ([similar_face.rs:48](../../../cli/tests/it/similar_face.rs#L48),
-[similar_face.rs:99](../../../cli/tests/it/similar_face.rs#L99)). The wire leg asks the core for
-every unit of the go fixture and gets the measurement's order and roles back over one link, and
-the family is offered, judged and refuses by name
-([similar_wire.rs:18](../../../cli/tests/it/similar_wire.rs#L18),
-[similar_wire.rs:42](../../../cli/tests/it/similar_wire.rs#L42)). The replay holds the in-memory
+[similar_face.rs:99](../../../cli/tests/it/similar_face.rs#L99)). The wire leg ranks every unit of the go
+fixture through rank/1, has similar/1 judge it, and checks every role bit against the spec's
+conjunction; the family is offered, judged and refuses by name
+([similar_wire.rs:17](../../../cli/tests/it/similar_wire.rs#L17),
+[similar_wire.rs:36](../../../cli/tests/it/similar_wire.rs#L36)). The replay holds the in-memory
 corpus and the SQL reader to one ranking on five corpora
-([similar_replay.rs:188](../../../cli/tests/it/similar_replay.rs#L188)); the precision gate
+([similar_replay.rs:247](../../../cli/tests/it/similar_replay.rs#L247)); the precision gate
 holds both oracle generations to their floors. The advisor is one row of the three-face parity
 table — CLI, GUI tab and Tauri command, MCP tool — and the fifteenth tool in the MCP catalogue
 ([face_parity_table.rs:34](../../../cli/tests/it/face_parity_table.rs#L34)). Docs cite implementation lines

@@ -7,6 +7,21 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 3.0.0 止；2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
+> 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
+> ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
+> 秩，直方图之和须等于 `nodes`）、每单元的 shingle 集、指纹实例 `[hash, file, line, tok]`、近似段锚 `[fileA, lineA, fileB, lineB]` 与 `exhaustive`；
+> 应答 = 保留对 `pairs=[[a, b, sources]]`（升序，位 0–4 = S1–S5）+ `raw=[[位, lang, 对数]]`（每源每语言去重后的对数）+ `bandGroups`（S4 桶大小分布）+ `counts`（`union` / `crossLanguage` / `unowned` / `selfPairs` / 两界剪掉的数 / 存活 / 两种热组 /
+> S5 四数）；`clone.request` 加性可选 `decide=[[ted,n1,n2]]` → 应答 `decided` 逐行给本核的判定位（缓存回放的行）。
+> ② `rank.request` = 语料标量、查询袋 `[term, channel, tf]`、`exclude` / `seen` / `k` / `widen`、词的 `[term, df]` 与 postings `[term, seat, tf]`、
+> 座位长度、PPMI 的 `words=[[term,marg]]` 与 `pairs=[[a,b,nab,margB]]`；应答 = `hits=[[seat, score, scoreNum, N, P, C, D, S, L]]` 与 `scoreDen`、
+> `added=[[term,channel]]`、加权袋 `query=[[term,weight]]`、计数。③ `docpairs.request` = 段的严格升序 shingle 集；应答 = 候选对 `[a,b]` 与粗筛账
+> （`lshPairs` / `seedPairs` / `hotBands` / `hotShingles`）；`docdup.request` 加性 `seqs`（未排序 shingle 序列）+ `[i,j]` 对 → 核取集合、量逐字段，
+> 应答行多带 run，与 `sets` 同送按名拒。④ `moves.request` = `keys`（键码 → fnv1a64）+ 每对两侧的 `lines=[[内容码, fnv1a(trim), 宽]]`、`changed`、
+> `units=[[键码, kind, 起, 止, 可堆叠]]`；应答每对 `counts` / `moved` / `relocated` / `declRem` / `declAdd` / `dupSpans` / `runsRem` / `runsAdd`；
+> 行 > 4,194,304 或单元 > 262,144 → 具名降级 `moves_too_large`。定义包加顶层键 `limits`（`CE.Limits`），`tablesDigest` 随之变。各族旧核无此
+> 能力 = 测量侧具名降级；既有族字节零变化（既有 golden 只动 proto 字面、hello 能力表与 tables 摘要；新增 candidates / rank / docpairs / moves 四份 golden，
+> clone 与 docdup 各加两对）。daemon 协议（2.3.0）不动。
 > **8.1.0**（引用阶梯的查找进核，8.0.0 之上的加性 minor，计划 v2.33 算法轨 W2a，2026-10-03；设计册 `docs/reference/algorithm-track.md` §6 W2 行）：
 > 新族 `resolve/1`（`resolve.request` → `resolve.result`）：Python / Lua / Go / C·C++ 四个语言的引用阶梯的「查找」改在核里做——试哪些候选位置、
 > 按什么级序、什么算命中、歧义与拒答、External / OutOfScope 分类、按文件集建的逐语言索引（C 的编译数据库座位与强制包含弧在内）。过线只有整数：
@@ -498,7 +513,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->8.1.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->8.5.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -517,12 +532,13 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   不符 → `error/bad_request`。hello 自身仍走 §2 协商应答（`accept:false` 更富）。
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
-  "similar/1","query/1","flow/1","merge/1","arch/1","tables/1","document/1","resolve/1"]`；fourclass/2 =
+  "similar/1","query/1","flow/1","merge/1","arch/1","tables/1","document/1","resolve/1",
+  "candidates/1","rank/1","docpairs/1","moves/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -635,11 +651,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->8.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->308<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->8.1.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->335<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->8.5.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->8.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->8.1.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  server 走 <!--ce:ver:proto#v-->8.5.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -651,5 +667,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->8.1.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->8.5.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.3.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

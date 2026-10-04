@@ -209,11 +209,11 @@ fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: 
         let Some((after_path, before, after, lang)) = pair_texts(root, sha, pair) else {
             continue;
         };
-        let c = crate::fourclass::classify(&before, &after, lang);
+        let (changed, _) = crate::fourclass::changed(&before, &after);
         let before_units = units::segments(&before, lang);
         let after_units = units::segments(&after, lang);
         let anchors = crate::fourclass::anchor::for_units(&after_units);
-        for &l in &c.changed.added {
+        for &l in &changed.added {
             let owner = units::owner(&after_units, l);
             let rewrite = owner.is_some_and(|u| before_units.iter().any(|b| b.key == u.key));
             let id = unit_id(after_path, owner, &after_units, &anchors);

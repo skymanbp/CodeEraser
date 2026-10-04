@@ -22,8 +22,8 @@ pub mod decls;
 pub mod diff;
 pub mod kinds;
 mod model;
+pub mod moves;
 pub mod session;
-pub mod stacking;
 pub mod units;
 pub mod visibility;
 
@@ -32,5 +32,5 @@ pub mod visibility;
 // family a module cycle the graph axis itself billed); these
 // re-exports keep every outside path where it always was
 pub use model::{
-    ChangedLines, Classification, FourClass, MovedLine, alnum_width, classify, significant,
+    ChangedLines, Classification, FourClass, MovedLine, alnum_width, changed, significant,
 };

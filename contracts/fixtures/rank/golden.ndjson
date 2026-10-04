@@ -1,12 +1,12 @@
 {"avg":1,"exclude":0,"id":1,"k":3,"lens":[[0,4],[1,4],[3,3]],"n":12,"postings":[[10,0,1],[11,0,1],[11,1,1],[11,3,1],[12,0,1],[12,1,1],[13,0,1],[13,1,1]],"proto":"8.0.0","query":[[10,0,1],[11,0,1],[12,2,1],[13,1,1]],"terms":[[10,1],[11,3],[12,2],[13,2]],"type":"rank.request"}
-{"added":[],"counts":{"hits":2,"queryTerms":4,"rows":19},"degraded":false,"hits":[[1,309645,20292898731,1,1,1,0,0,0],[3,155443,10187125555,1,0,0,0,0,0]],"id":1,"proto":"8.0.0","query":[[10,768],[11,768],[12,512],[13,256]],"scoreDen":65536,"type":"rank.result"}
+{"added":[],"counts":{"hits":2,"queryTerms":4,"rows":19},"degraded":false,"hits":[[1,309645,20292898731,1,1,1,0,0,0],[3,155443,10187125555,1,0,0,0,0,0]],"id":1,"proto":"8.5.0","query":[[10,768],[11,768],[12,512],[13,256]],"scoreDen":65536,"type":"rank.result"}
 {"avg":1,"id":2,"k":5,"lens":[[0,3],[1,3],[2,3],[3,3]],"n":16,"pairs":[[1,2,4,4],[1,3,1,2],[1,4,1,2],[1,5,1,2]],"postings":[[1,0,1],[1,1,1],[1,2,1],[1,3,1]],"proto":"8.0.0","query":[[1,0,1]],"terms":[[1,4]],"type":"rank.request","words":[[1,4]]}
-{"added":[[2,0]],"counts":{"hits":4,"queryTerms":1,"rows":15},"degraded":false,"hits":[[0,159244,10436267212,1,0,0,0,0,0],[1,159244,10436267212,1,0,0,0,0,0],[2,159244,10436267212,1,0,0,0,0,0],[3,159244,10436267212,1,0,0,0,0,0]],"id":2,"proto":"8.0.0","query":[[1,768]],"scoreDen":65536,"type":"rank.result"}
+{"added":[[2,0]],"counts":{"hits":4,"queryTerms":1,"rows":15},"degraded":false,"hits":[[0,159244,10436267212,1,0,0,0,0,0],[1,159244,10436267212,1,0,0,0,0,0],[2,159244,10436267212,1,0,0,0,0,0],[3,159244,10436267212,1,0,0,0,0,0]],"id":2,"proto":"8.5.0","query":[[1,768]],"scoreDen":65536,"type":"rank.result"}
 {"avg":1,"id":3,"k":5,"lens":[[0,3],[1,3],[2,3],[3,3],[9,5]],"n":16,"pairs":[[1,2,4,4],[1,3,1,2],[1,4,1,2],[1,5,1,2]],"postings":[[1,0,1],[1,1,1],[1,2,1],[1,3,1],[2,0,1],[2,1,1],[2,2,1],[2,3,1],[2,9,2]],"proto":"8.0.0","query":[[1,0,1]],"seen":[0],"terms":[[1,4],[2,5]],"type":"rank.request","widen":true,"words":[[1,4]]}
-{"added":[[2,0]],"counts":{"hits":4,"queryTerms":2,"rows":23},"degraded":false,"hits":[[1,187967,12318670847,1,0,0,0,0,0],[2,187967,12318670847,1,0,0,0,0,0],[3,187967,12318670847,1,0,0,0,0,0],[9,33792,2214592512,0,0,0,0,0,0]],"id":3,"proto":"8.0.0","query":[[1,768],[2,192]],"scoreDen":65536,"type":"rank.result"}
+{"added":[[2,0]],"counts":{"hits":4,"queryTerms":2,"rows":23},"degraded":false,"hits":[[1,187967,12318670847,1,0,0,0,0,0],[2,187967,12318670847,1,0,0,0,0,0],[3,187967,12318670847,1,0,0,0,0,0],[9,33792,2214592512,0,0,0,0,0,0]],"id":3,"proto":"8.5.0","query":[[1,768],[2,192]],"scoreDen":65536,"type":"rank.result"}
 {"avg":1,"id":4,"k":5,"n":0,"proto":"8.0.0","type":"rank.request"}
-{"added":[],"counts":{"hits":0,"queryTerms":0,"rows":0},"degraded":false,"hits":[],"id":4,"proto":"8.0.0","query":[],"scoreDen":65536,"type":"rank.result"}
+{"added":[],"counts":{"hits":0,"queryTerms":0,"rows":0},"degraded":false,"hits":[],"id":4,"proto":"8.5.0","query":[],"scoreDen":65536,"type":"rank.result"}
 {"avg":1,"id":5,"k":2,"lens":[],"n":4,"postings":[],"proto":"8.0.0","query":[[5,0,1]],"terms":[[5,1]],"type":"rank.request"}
-{"code":"contract","id":5,"message":"terms: a scoring term without exactly df postings","proto":"8.0.0","type":"error"}
+{"code":"contract","id":5,"message":"terms: a scoring term without exactly df postings","proto":"8.5.0","type":"error"}
 {"avg":1,"exclude":4,"id":6,"k":2,"n":4,"proto":"8.0.0","type":"rank.request"}
-{"code":"contract","id":6,"message":"exclude: seat out of range","proto":"8.0.0","type":"error"}
+{"code":"contract","id":6,"message":"exclude: seat out of range","proto":"8.5.0","type":"error"}

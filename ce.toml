@@ -656,4 +656,23 @@ entry_globs = [
 # the one retired refusal instead. Row set diffed against the 94d227af tree: those
 # two rows gone, none new. Measured on the formatted tree. (The two
 # members are RETIRED by name in the tests subrepo.)
-budget = 35
+# 35 -> 33 (plan v2.33 W3, candidates and ranking into the core):
+# two rows left with the docdup request's second shape, none bought.
+# CE.Docdup rhymed with CE.Clone twice: the request record, its
+# FromJSON instance and the respondWith head (82 tokens, Docdup.hs
+# 47-63 against Clone.hs 44-60) until the optional `seqs` field and
+# its `.:?` read landed inside that run, and the reply's head (63
+# tokens, Docdup.hs 131-142 against Clone.hs 162-173) until each
+# scored row carried its measured run and the `runs` column rode
+# before the counts. The one row the lane
+# first bought - CE.Candidates' and CE.FourClass.Moves' respond and
+# answer heads (73 tokens) - went before the count was read: moves'
+# answer takes the degraded reason itself (Maybe String), as
+# CE.Merge's does. The Docdup/Cost.hs rows against Graph/Cost.hs and
+# Structure/Cost.hs are the same two blocks grown by the two new caps
+# (docSeqCap, docCorpusCap). Row set diffed against the 093aede4 tree:
+# those two rows gone, none new. Rebased onto a0198c2f (W2a, 35): the
+# merged tree first read 34 - CE.Candidates' import head and `respond`
+# rhymed with W2a's CE.Resolve (50 tokens) - and CE.Candidates now
+# imports ByteString by name; 33 again. Measured on the formatted tree.
+budget = 33

@@ -47,3 +47,8 @@ pub mod update;
 #[cfg(test)]
 #[path = "../tests/unit/testutil.rs"]
 pub(crate) mod testutil;
+// the frozen Rust oracles of the algorithms plan v2.33 W3 moved into
+// the core: the differential gates drive both and compare
+#[cfg(test)]
+#[path = "../tests/unit/w3_oracle/mod.rs"]
+pub(crate) mod w3_oracle;

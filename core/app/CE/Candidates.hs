@@ -26,11 +26,11 @@ import CE.Wire (family)
 import CE.Wire.Result (resultLine)
 import Data.Aeson (Value, (.=))
 import Data.Bits (countTrailingZeros)
-import qualified Data.ByteString.Char8 as B8
+import Data.ByteString.Char8 (ByteString)
 import qualified Data.IntMap.Strict as IM
 
 -- | decode → cap → contract → the pass.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: String -> ByteString -> Either (Maybe Value, String, String) ByteString
 respond proto = family "candidates" reqId overCap offence (answer proto True) (answer proto False)
 
 -- | The candidates.result object: the kept pairs, each source's
@@ -38,7 +38,7 @@ respond proto = family "candidates" reqId overCap offence (answer proto True) (a
 -- S4's bucket sizes `[size, n]`, the counts. Degraded: no pairs and a
 -- zero tally — a request the core refused to judge keeps nothing — the
 -- request tables still counted, and the reason.
-answer :: String -> Bool -> CandReq -> B8.ByteString
+answer :: String -> Bool -> CandReq -> ByteString
 answer proto degraded req =
   resultLine
     proto

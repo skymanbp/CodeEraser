@@ -92,8 +92,8 @@
     <li><b>window</b> 26</li>
     <li><b>guarantee t</b> 50</li>
     <li><b>BASE</b> 1_000_003</li>
-    <li><b>HOT_CAP</b> 64</li>
-    <li><b>DEFAULT_MIN_DISTINCT</b> 7</li>
+    <li><b>hotCap</b> 64</li>
+    <li><b>minDistinct</b> 7</li>
     <li><b>near-miss band</b> 25 &lt;= len &lt; 50</li>
     <li><b>TOKENIZER_REV</b> 4</li>
     <li><b>schema</b> ce.dedup-report/0.5.0</li>
@@ -118,11 +118,11 @@ clone      <span class="op">⇔</span> TSED <span class="op">&gt;=</span> 0.85</
   <ul class="consts">
     <li><b>tsedNum</b> 85</li>
     <li><b>tsedDen</b> 100</li>
-    <li><b>T3_MIN_NODES</b> 24</li>
+    <li><b>minUnitNodes</b> 24</li>
     <li><b>unitNodeCap</b> 256</li>
     <li><b>pairCap</b> 4096</li>
-    <li><b>LSH_SHAPE</b> (128, 32, 4)</li>
-    <li><b>HOT_GROUP_CAP</b> 64</li>
+    <li><b>lshShape</b> (128, 32, 4)</li>
+    <li><b>hotCap</b> 64</li>
     <li><b>schema</b> ce.clone-report/0.3.0</li>
   </ul></details>
 </div>
@@ -148,8 +148,8 @@ dupVerdictWith (num, den, vfloor) inter union run
     <li><b>verbatimFloor</b> 50</li>
     <li><b>docLineCap</b> 200</li>
     <li><b>licHeadLines</b> 5</li>
-    <li><b>DOC_SET_CAP</b> 8192</li>
-    <li><b>DOC_PAIR_CAP</b> 4096</li>
+    <li><b>docSetCap</b> 8192</li>
+    <li><b>docPairCap</b> 4096</li>
     <li><b>DOCDUP_REV</b> 8</li>
   </ul></details>
 </div>
@@ -373,7 +373,7 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
     <li><b>destFloor</b> 2</li>
     <li><b>anchorFloor</b> 19</li>
     <li><b>MAX_D</b> 3000</li>
-    <li><b>MAX_BRIDGE</b> 7</li>
+    <li><b>maxBridge</b> 7</li>
     <li><b>bucketCap</b> 64</li>
     <li><b>stackingNovelFloor</b> 20</li>
     <li><b>stackingRatio</b> 10</li>
@@ -595,19 +595,21 @@ role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeE
   its doc segment, node-kind histogram, literal <em>kinds</em>), every word stemmed and hashed with its
   channel letter. Bags persist in the content-hash-gated refresh (<code>bag</code> is its own posting
   list; a pair table measured 7–10× the cold index and was not built, so co-occurrence is derived at
-  query time). The in-memory instruments and the SQL reader share one trait-written ranking and agree on
-  every unit of five corpora. Rust sends the query bag and a nine-integer row per
-  candidate; Haskell orders exact rationals and applies the role conjunction. Floors from two arbitrated
+  query time). The in-memory instruments and the SQL reader feed one trait-written request and send the same
+  bytes on every unit of five corpora. Rust sends the query bag, the df and postings of the terms that
+  score and the seats' lengths; Haskell weights, widens, scores and cuts the top K over
+  <code>rank/1</code>, then orders exact rationals and applies the role conjunction over
+  <code>similar/1</code>. Floors from two arbitrated
   oracle generations: 60 % on the first sample, 40 % on the holdout, which retired every tuning
   candidate the first sample favoured. Never a gate, never in
   <code>ce erase</code>.</p>
   <ul class="consts">
     <li><b>SIMILAR_REV</b> 1</li>
     <li><b>K</b> 5</li>
-    <li><b>W_UNIT</b> 256</li>
+    <li><b>wUnit</b> 256</li>
     <li><b>TERM_CAP</b> 96</li>
-    <li><b>TOP_M</b> 3</li>
-    <li><b>MIN_COOC</b> 2</li>
+    <li><b>topM</b> 3</li>
+    <li><b>minCooc</b> 2</li>
     <li><b>roleMinName</b> 1</li>
     <li><b>roleMinCallee</b> 1</li>
     <li><b>roleMinNameShape</b> 2</li>

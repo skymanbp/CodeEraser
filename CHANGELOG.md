@@ -8,6 +8,17 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W3：T3 / docdup 候选生成、同角色顾问的排序与 fourclass L1 进核（2026-10-03；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；协议 **8.2.0–8.5.0**，W2a 的 8.1.0 之上四个新族各占一个加性 minor）。
+
+- **组 1 镜像退役**：新族 `candidates/1`（`CE.Candidates{,.Contract,.Cost,.T3,.Units}`）——尺寸界与标签界（`CE.Clone.Prefilter.boundOf` 一处陈述）、S2 同键源与 S5 在核里只做一次；`dedup/t3/mod.rs::is_clone`、`dedup/candidates.rs::verdict` 与 `struct_fp::label_intersection` 删除，T3 判决缓存回放的行经 `clone/1` 加性 `decide` 仍过核的判定；定义包加顶层键 `limits`（`CE.Limits`），热组上限、`minDistinct`、Jaccard 比例与各族上限改由 `tables::get().limits` 读，`wire.rs` 的镜像常量删除。
+- **组 2 排序**：新族 `rank/1`（`CE.Similar.Rank{,.Contract,.Cost,.Math,.Score}`）算 idf、BM25（与旧 Rust 同一闭式）、top-k、PPMI 扩展与加权袋；`similar/bm25.rs` 删除、`similar/ppmi.rs` 只留词上限与内存共现表（仪器与单元测试用），`similar/1` 不动。无核时 similar 文档具名降级、不出行。
+- **组 3 候选生成**：S1 / S3 / S4（MinHash / LSH，`CE.Candidates.Lsh`）、行锚归属与并集进 `candidates/1`；docdup 新族 `docpairs/1`（`CE.Docdup.{Coarse,Pairs}`）做粗筛，`docdup/1` 加性 `seqs` 形由核量最长逐字段（`CE.Docdup.Runs`）；`dedup/minhash.rs`、`docdup/judge/candidates/runs.rs` 删除，近似段的 T1/T2 扩展留 Rust。
+- **组 4 fourclass L1**：新族 `moves/1`（`CE.FourClass.Moves{,.Classify,.Contract,.Cost}`）判移动行、归属、整体搬迁、单侧声明、新同名顶层跨度与剩余段；`fourclass/stacking.rs` 删除，`model.rs` / `decls.rs` 只留形状与行 diff 的喉口（`fourclass::changed`，churn 与墓碑读它）；新上限（行 4,194,304 / 单元 262,144）下 Rust 把相邻文件对装进请求，单个文件对过线 = 具名降级 `moves_too_large`；无核 = 无文件对 + 具名原因。
+- **等价门**：测试子仓 `unit/w3_oracle/` 冻结 093aede4 的 Rust 原文，四条差分腿各一万个定种子输入同送冻结原文与真核，全同（`diff3.log`：8 passed）；每组新旧二进制十语料 + 自仓 + requests / cobra / ripgrep 逐字节同，Stop 审计（带 daemon、含跨文件搬迁）新旧同。
+- **记账**：查重预算主根 35 → 33（`ce.toml` 台账入账：`Clone.hs` 与 `Docdup.hs` 的两行随搬走的同形骨架消失，`Moves.hs` 的应答改与 `Candidates.hs` 不同的写法，对 093aede4 行集对拍无新行）、测试子仓 91 → 90（`unit/dedup/t3.rs` 与 `unit/docdup/judge.rs` 的判决边界头随两份镜像退役；本车道先长出的十行全部消掉，对 18e46b5 行集对拍无新行）；事实 `count:families` 仍是十六——它数判决族，四个新族与 `tables/1` / `document/1` 一样是判决的前段，子仓 `it/facts/count.rs` 以 `NOT_FAMILIES` 七项具名排除（落地时由主会话确认）；how / math 双语芯片随常量改名（`minDistinct` / `docPairCap` / `docSetCap` / `hotCap` / `lshShape` / `maxBridge` / `minCooc` / `minUnitNodes` / `topM` / `wUnit`）；册 01 / 02 / 03 / 07 / 09 / 11 / 15 引文重瞄，失效锚按名弃（`CE_DROP_VANISHED` 一百一十三枚，`bm25.rs` → `w3_oracle/similar.rs` 以 `CE_ALLOW_RENAME=1` 具名）；精度册不重生成（两族 `ANSWERED_BY` 的文件一个未动）。
+- **代价**（`docs/PERF-BUDGET.md` 新节，release ABAB ×7，093aede4 对变基前终树）：暖 `ce check` 10,006 → 11,264 ms（+12.6 %，预算 +15 % 内）、Stop 审计干净树 2,130 → 1,642 / 脏树 5,890 → 5,429 ms（预算 +0.3 s 内）；`ce similar --widen` 2,622 → 4,765 ms（+82 %，无预算，未查因，记为未解决项）。
+- **语言条**（§10 量法）：a0198c2f（W2a 落地后）Rust 2,395,609 / Haskell 1,554,411（39.35 %）→ 本车道终树 Rust 2,393,396 / Haskell 1,706,269（41.62 %），差 R − H 841,198 → 687,127；Rust 删 66,548 B、胶水补回 64,335 B，核 app 净 +90,095、test 净 +63,340。
+
 **无默认档位变更。** 算法轨 v2.33 W2a：Python / Lua / Go / C·C++ 四个引用阶梯的查找搬进核，新族 `resolve/1`、协议 **8.1.0**（2026-10-03；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §11 第 16–27 条）：
 
 - **核**：`CE.Resolve`（+ `Contract` / `Cost` / `Request` / `Vocab` / `World` / `Answer` 与逐语言 `Py` / `Lua` / `Go` / `C` / `CIndex`）按 a8db74a9 的 Rust 阶梯照抄控制流：候选位置、级序、命中规则、歧义与拒答、External / OutOfScope、C 的编译数据库座位、覆盖与 include 闭包都在核里；请求只带整数——段 id 驻留表、目录树、文件行、词表与词缀表、逐语言配置事实、站点 token；应答每站点 `[rung, outcome, target, reason]` 与 C 的强制包含弧。`hello` 能力与定义包多一族一键（`resolve.words` / `resolve.affixes`），`tablesDigest` 挪动；`Version.hs` 与 `corelink.rs` 的 `PROTO` 同为 8.1.0。

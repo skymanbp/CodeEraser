@@ -82,7 +82,7 @@ same walk now fills five more columns at the same node — `leaf`, `slot`, `own`
 node's byte span — so the two families can never read two different trees of one unit
 ([tree.rs:172](../../../cli/src/dedup/t3/tree.rs#L172), [tree.rs:232](../../../cli/src/dedup/t3/tree.rs#L232)).
 `clone/1`'s request still sends `lab` and `lld` alone, so its judgment bytes do not move
-([wire.rs:28](../../../cli/src/dedup/t3/wire.rs#L28)).
+([wire.rs:22](../../../cli/src/dedup/t3/wire.rs#L22)).
 
 **The merge family's trees leave the grammar's extras — its comments — out.** The token runs
 behind a T1/T2 family hold no comment, so a comment on one member only must not make the members

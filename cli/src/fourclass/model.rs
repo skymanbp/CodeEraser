@@ -1,14 +1,14 @@
-//! The L1 judgment itself — move semantics, the four counts, unit
-//! attribution and intact-relocation summary (the mod.rs header
-//! carries the contract prose). Split from the hub in the headroom
-//! sprint: batch.rs and delta.rs importing these THROUGH mod.rs
-//! made the family a module cycle the graph axis itself billed.
+//! The L1 judgment's shapes and line facts (the mod.rs header carries
+//! the contract prose). The judgment itself — move semantics, the four
+//! counts, unit attribution, the intact-relocation summary — is the
+//! core's since plan v2.33 W3 (CE.FourClass.Moves, lowered by
+//! moves.rs); what stays is the line diff's throat and the two line
+//! facts the lowering measures. Split from the hub in the headroom
+//! sprint: batch.rs and delta.rs importing these THROUGH mod.rs made
+//! the family a module cycle the graph axis itself billed.
 
-use super::decls::{self, Decl};
+use super::decls::Decl;
 use super::diff;
-use super::units::{self, Unit};
-use crate::scan::lang::Lang;
-use std::collections::HashSet;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct FourClass {
@@ -54,51 +54,25 @@ pub struct Classification {
     pub degraded: bool,
 }
 
-pub fn classify(before: &str, after: &str, lang: Lang) -> Classification {
+/// The line diff alone: the 1-based changed lines of both sides and
+/// whether the edit-distance cap tripped. The probe path's throat
+/// (tombstone's added lines, churn's ledger) — no verdict needed, so
+/// no core: the moves themselves are judged in CE.FourClass.Moves.
+pub fn changed(before: &str, after: &str) -> (ChangedLines, bool) {
     let a: Vec<&str> = before.lines().collect();
     let b: Vec<&str> = after.lines().collect();
-    let d = diff::diff(&hash_lines(&a), &hash_lines(&b));
-
-    let removed_sig: HashSet<&str> = sig_contents(&a, &d.removed);
-    let added_sig: HashSet<&str> = sig_contents(&b, &d.added);
-    let before_units = units::segments(before, lang);
-    let after_units = units::segments(after, lang);
-
-    let mut counts = FourClass::default();
-    let mut moved = Vec::new();
-    for &i in &d.removed {
-        if significant(a[i]) && added_sig.contains(a[i].trim()) {
-            counts.removed_moved += 1;
-            moved.push(moved_line(i, true, &before_units));
-        } else {
-            counts.removed_deleted += 1;
-        }
-    }
-    for &j in &d.added {
-        if significant(b[j]) && removed_sig.contains(b[j].trim()) {
-            counts.added_moved += 1;
-            moved.push(moved_line(j, false, &after_units));
-        } else {
-            counts.added_novel += 1;
-        }
-    }
-    let relocated_units = relocated(&moved, &before_units, &after_units, &d);
-    let decls = decls::tables(&before_units, &after_units);
-    let changed = ChangedLines {
-        removed: d.removed.iter().map(|&i| i + 1).collect(),
-        added: d.added.iter().map(|&j| j + 1).collect(),
-    };
-    Classification {
-        counts,
-        moved,
-        relocated_units,
-        decls,
-        changed,
-        degraded: d.degraded,
-    }
+    let d = diff::diff(&line_hashes(&a), &line_hashes(&b));
+    let one_based = |v: Vec<usize>| v.into_iter().map(|i| i + 1).collect();
+    (
+        ChangedLines {
+            removed: one_based(d.removed),
+            added: one_based(d.added),
+        },
+        d.degraded,
+    )
 }
 
-fn hash_lines(lines: &[&str]) -> Vec<u64> {
+pub(super) fn line_hashes(lines: &[&str]) -> Vec<u64> {
     use std::hash::{DefaultHasher, Hash, Hasher};
     lines
         .iter()
@@ -126,57 +100,3 @@ pub fn significant(line: &str) -> bool {
 pub fn alnum_width(line: &str) -> usize {
     line.trim().chars().filter(|c| c.is_alphanumeric()).count()
 }
-
-fn sig_contents<'s>(lines: &[&'s str], changed: &[usize]) -> HashSet<&'s str> {
-    changed
-        .iter()
-        .map(|&i| lines[i].trim())
-        .filter(|t| t.chars().any(char::is_alphanumeric))
-        .collect()
-}
-
-fn moved_line(idx: usize, removed: bool, side_units: &[Unit]) -> MovedLine {
-    MovedLine {
-        line: idx + 1,
-        removed,
-        unit: units::owner(side_units, idx + 1).map(|u| u.key.clone()),
-    }
-}
-
-/// A unit relocated intact when it exists on both sides and every
-/// changed line inside either span is a move (nothing was edited,
-/// only position changed).
-fn relocated(
-    moved: &[MovedLine],
-    before_units: &[Unit],
-    after_units: &[Unit],
-    d: &diff::DiffLines,
-) -> Vec<String> {
-    let moved_of = |removed: bool, key: &str| {
-        moved
-            .iter()
-            .filter(|m| m.removed == removed && m.unit.as_deref() == Some(key))
-            .count()
-    };
-    let changed_in = |unit: &Unit, changed: &[usize]| {
-        changed
-            .iter()
-            .filter(|&&i| unit.start_line <= i + 1 && i < unit.end_line)
-            .count()
-    };
-    let mut out = Vec::new();
-    for bu in before_units {
-        let Some(au) = after_units.iter().find(|u| u.key == bu.key) else {
-            continue;
-        };
-        let (rm, ad) = (changed_in(bu, &d.removed), changed_in(au, &d.added));
-        if rm + ad > 0 && moved_of(true, &bu.key) == rm && moved_of(false, &au.key) == ad {
-            out.push(bu.key.clone());
-        }
-    }
-    out
-}
-
-#[cfg(test)]
-#[path = "../../tests/unit/fourclass/model.rs"]
-mod tests;

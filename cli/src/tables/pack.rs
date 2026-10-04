@@ -5,6 +5,7 @@
 //! language rows are indexed by wire code.
 
 use super::leak::{Leak, leaked, owned};
+use super::limits::Limits;
 use crate::scan::lang::Lang;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -127,31 +128,6 @@ leaked! {
     /// The words and affixes resolve/1's search spells (8.1.0): the
     /// request interns exactly these, in this order.
     Resolve { words: Names, affixes: Names }
-    /// The clone judgment's thresholds and ceilings (CE.Clone.Cost).
-    CloneLimits { tsed_num: i64, tsed_den: i64, min_unit_nodes: i64, unit_node_cap: i64,
-                  pair_cap: usize }
-    /// The candidates family's ceilings and the MinHash/LSH shape
-    /// (CE.Candidates.Cost).
-    CandidateLimits { unit_cap: usize, sig_cap: usize, print_cap: usize, near_cap: usize,
-                      lsh_perms: usize, lsh_bands: usize, lsh_rows: usize }
-    /// The docdup judgment's ratio and ceilings (CE.Docdup.Cost).
-    DocdupLimits { jaccard_num: u64, jaccard_den: u64, doc_set_cap: usize, doc_seq_cap: usize,
-                   doc_corpus_cap: usize, doc_pair_cap: usize }
-    /// The T1/T2 report's diversity floor and the hot-group cap every
-    /// hash-group walk chains by (CE.Dedup.Cost).
-    DedupLimits { min_distinct: usize, hot_cap: usize }
-    /// The similar family's table ceiling (CE.Similar.Cost) and the
-    /// ranking's constants (CE.Similar.Rank.Cost): the frozen eval docs
-    /// echo them; the measuring side fetches by the two ratios and the
-    /// co-occurrence floor and computes nothing else with them.
-    SimilarLimits { similar_cap: usize, rank_cap: usize, k1: (i64, i64), b: (i64, i64),
-                    idf_frac_bits: i64, score_frac_bits: i64, w_unit: i64, top_m: usize,
-                    min_cooc: u64, min_ppmi: i64, ppmi_cap: i64, ppmi_scale: i64,
-                    scored_df_ratio: u64, neighbour_df_ratio: u64 }
-    /// The numbers requests are laid out by and candidates selected with
-    /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
-    Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,
-             dedup: DedupLimits, similar: SimilarLimits }
     /// Every table, as the core answers them less the envelope.
     Tables {
         languages: Languages,

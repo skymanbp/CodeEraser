@@ -150,6 +150,14 @@ pub struct Tally {
 /// A degraded or skewed reply is a named refusal — the judgment never
 /// runs on a candidate set the core did not answer whole.
 pub fn collect(root: &Path, segs: &[SegRow], link: &mut Link) -> Result<Cand> {
+    let (pairs, tally) = coarse(segs, link)?;
+    let seqs = seqs::seqs_for(root, segs, &pairs)?;
+    Ok(Cand { pairs, seqs, tally })
+}
+
+/// The coarse filter alone: the kept pairs as segment ids, ascending,
+/// and the tally.
+fn coarse(segs: &[SegRow], link: &mut Link) -> Result<(Vec<(usize, usize)>, Tally)> {
     let mut tally = Tally::default();
     let cap = super::wire::limits().doc_set_cap;
     let sendable: Vec<usize> = (0..segs.len())
@@ -187,8 +195,7 @@ pub fn collect(root: &Path, segs: &[SegRow], link: &mut Link) -> Result<Cand> {
         .into_iter()
         .map(|[a, b]| (sendable[a], sendable[b]))
         .collect();
-    let seqs = seqs::seqs_for(root, segs, &pairs)?;
-    Ok(Cand { pairs, seqs, tally })
+    Ok((pairs, tally))
 }
 
 #[cfg(test)]

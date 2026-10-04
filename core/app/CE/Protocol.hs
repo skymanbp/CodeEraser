@@ -20,6 +20,7 @@ import qualified CE.Document as Document
 import qualified CE.Erase as Erase
 import qualified CE.Flow as Flow
 import qualified CE.FourClass as FourClass
+import qualified CE.FourClass.Moves as Moves
 import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
 import qualified CE.Merge as Merge
@@ -123,6 +124,7 @@ families =
   , Fam "candidates/1" "candidates.request" Candidates.respond
   , Fam "rank/1" "rank.request" Rank.respond
   , Fam "docpairs/1" "docpairs.request" DocPairs.respond
+  , Fam "moves/1" "moves.request" Moves.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

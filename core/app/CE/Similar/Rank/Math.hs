@@ -5,7 +5,7 @@
 -- compare byte for byte with the Rust road they replace.
 module CE.Similar.Rank.Math (log2Fp, idfFp, contribution, ppmiFp) where
 
-import CE.Similar.Rank.Cost (b, idfFracBits, k1, minCooc, scoreFracBits)
+import CE.Similar.Rank.Cost (idfFracBits, minCooc, scoreFracBits)
 import Data.Bits (shiftL, shiftR, (.|.))
 
 -- | floor (2^idfFracBits · log2 (num / den)) for num ≥ den > 0, by
@@ -47,13 +47,18 @@ idfFp n df
   den = 2 * df + 1
 
 -- | One term's contribution, floored to scoreFracBits fixed point:
--- w · idf · (k1 + 1) · tf / (tf + k1 · (1 − b + b · len / avg)), the
--- exact rational floored once.
+-- w · idf · (k1 + 1) · tf / (tf + k1 · (1 − b + b · len / avg)) with
+-- k1 = 6/5 and b = 3/4 cleared of denominators to
+-- 22 · tf · avg / (10 · tf · avg + 3 · avg + 9 · len) — the measuring
+-- side's closed form (cli/src/similar/bm25.rs `contribution` until W3),
+-- spelled the same way; the battery re-derives it from k1 and b. Every
+-- operand is non-negative and the divisor is at least 3 · avg ≥ 3, so
+-- `div` floors exactly as the Rust i128 quotient did.
 contribution :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
-contribution w idf tf len avg = floor (top / bottom)
+contribution w idf tf len avg = num `div` den
  where
-  top = fromInteger (w * idf * tf * 2 ^ scoreFracBits) * (k1 + 1)
-  bottom = fromInteger tf + k1 * (1 - b + b * fromInteger len / fromInteger avg)
+  num = (w * idf * 22 * tf * avg) `shiftL` scoreFracBits
+  den = 10 * tf * avg + 3 * avg + 9 * len
 
 -- | PPMI (a, b) = max (0, log2 (n_ab · N / (n_a · n_b))) in the idf's
 -- fixed point; zero below minCooc.

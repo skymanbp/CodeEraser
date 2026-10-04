@@ -14,6 +14,7 @@ import qualified CE.Candidates.Cost as Candidates
 import qualified CE.Clone.Cost as Clone
 import qualified CE.Dedup.Cost as Dedup
 import qualified CE.Docdup.Cost as Docdup
+import qualified CE.FourClass.Moves.Cost as Moves
 import qualified CE.Similar.Cost as Similar
 import qualified CE.Similar.Rank.Cost as Rank
 import Data.Aeson (Value, object, (.=))
@@ -50,6 +51,7 @@ limits =
           , "doc_pair_cap" .= Docdup.docPairCap
           ]
     , "dedup" .= object ["min_distinct" .= Dedup.minDistinct, "hot_cap" .= Dedup.hotCap]
+    , "moves" .= object ["line_cap" .= Moves.movesLineCap, "unit_cap" .= Moves.movesUnitCap]
     , "similar"
         .= object
           [ "similar_cap" .= Similar.similarCap

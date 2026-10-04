@@ -14,6 +14,7 @@ import qualified AuditProps
 import qualified CandidatesProps
 import qualified RankProps
 import qualified DocPairsProps
+import qualified MovesProps
 import qualified DeclProps
 import qualified DocumentProps
 import qualified DocumentProps4
@@ -86,8 +87,10 @@ main = do
   results <- sequence batteries
   unless (and results) exitFailure
 
-batteries :: [IO Bool]
-batteries =
+-- | The golden pair files, in the order the suite runs them (the tests
+-- subrepo's fixture_contract reads these lines as its list).
+goldens :: [IO Bool]
+goldens =
   [ goldenPairs "handshake/hello-ok.ndjson"
   , goldenPairs "handshake/wire-errors.ndjson"
   , goldenPairs "fourclass/golden.ndjson"
@@ -112,59 +115,66 @@ batteries =
   , goldenPairs "candidates/golden.ndjson"
   , goldenPairs "rank/golden.ndjson"
   , goldenPairs "docpairs/golden.ndjson"
-  , SpecProbes.structural
-  , SpecProbes.refusalProbes
-  , SpecProbes.docdupStructural
-  , SpecProbes.costModel
-  , Reference.equivalence
-  , ReferenceQuery.equivalence
-  , ReferenceResolve.equivalence
-  , ReferenceGraph.equivalence
-  , ReferenceJaccard.equivalence
-  , GraphProps.battery
-  , GraphWireProps.battery
-  , AdvisoryProps.battery
-  , CloneProps.battery
-  , CandidatesProps.battery
-  , RankProps.battery
-  , DocPairsProps.battery
-  , EntropyProps.battery
-  , JoinProps.battery
-  , ScanProps.battery
-  , ScanCyclesProps.battery
-  , ScanEventsProps.battery
-  , StructureProps.battery
-  , StructureModularityProps.battery
-  , TrendProps.battery
-  , EraseProps.battery
-  , AuditProps.battery
-  , TombstoneProps.battery
-  , SimilarProps.battery
-  , QueryProps.battery
-  , FlowProps.battery
-  , MergeProps.battery
-  , ArchProps.battery
-  , VerdictProps.battery
-  , VerdictWireProps.battery
-  , VerdictFenceProps.battery
-  , VerdictKnobProps.battery
-  , SplitProps.battery
-  , ClassProps.battery
-  , StackingProps.battery
-  , DeclProps.battery
-  , TombstoneEquivProps.battery
-  , SimilarEquivProps.battery
-  , EraseEquivProps.battery
-  , TrendEquivProps.battery
-  , VerdictEquivProps.battery
-  , StructureEquivProps.battery
-  , LangProps.battery
-  , DocumentProps.battery
-  , DocumentProps4.battery
-  , DocumentProps5.battery
-  , DocumentProps6.battery
-  , ResolveProps.battery
+  , goldenPairs "moves/golden.ndjson"
   ]
+
+batteries :: [IO Bool]
+batteries =
+  goldens
+    <> [ SpecProbes.structural
+       , SpecProbes.refusalProbes
+       , SpecProbes.docdupStructural
+       , SpecProbes.costModel
+       , Reference.equivalence
+       , ReferenceQuery.equivalence
+       , ReferenceResolve.equivalence
+       , ReferenceGraph.equivalence
+       , ReferenceJaccard.equivalence
+       , GraphProps.battery
+       , GraphWireProps.battery
+       , AdvisoryProps.battery
+       , CloneProps.battery
+       , CandidatesProps.battery
+       , RankProps.battery
+       , DocPairsProps.battery
+       , MovesProps.battery
+       , EntropyProps.battery
+       , JoinProps.battery
+       , ScanProps.battery
+       , ScanCyclesProps.battery
+       , ScanEventsProps.battery
+       , StructureProps.battery
+       , StructureModularityProps.battery
+       , TrendProps.battery
+       , EraseProps.battery
+       , AuditProps.battery
+       , TombstoneProps.battery
+       , SimilarProps.battery
+       , QueryProps.battery
+       , FlowProps.battery
+       , MergeProps.battery
+       , ArchProps.battery
+       , VerdictProps.battery
+       , VerdictWireProps.battery
+       , VerdictFenceProps.battery
+       , VerdictKnobProps.battery
+       , SplitProps.battery
+       , ClassProps.battery
+       , StackingProps.battery
+       , DeclProps.battery
+       , TombstoneEquivProps.battery
+       , SimilarEquivProps.battery
+       , EraseEquivProps.battery
+       , TrendEquivProps.battery
+       , VerdictEquivProps.battery
+       , StructureEquivProps.battery
+       , LangProps.battery
+       , DocumentProps.battery
+       , DocumentProps4.battery
+       , DocumentProps5.battery
+       , DocumentProps6.battery
+       , ResolveProps.battery
+       ]
 
 -- | One named check through the shared runner.
 check :: String -> Bool -> IO Bool

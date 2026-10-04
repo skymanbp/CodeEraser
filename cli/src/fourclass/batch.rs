@@ -1,21 +1,22 @@
-//! L2 batch classification: run L1 per pair unchanged, ship only the
-//! leftovers (significant lines L1 called novel/deleted) to ce-core
-//! as `[line, fnv1a(trim)]`, and apply the returned monotone delta.
-//! L1 is the IR producer, not a modified engine — single-pair batches
-//! with no link are bitwise L1, which is what keeps the saturated
-//! 200-sample scores structural rather than re-proven.
+//! L2 batch classification: ask the core for L1 per pair (`moves/1`,
+//! moves.rs — the within-pair judgment and the leftover runs it
+//! leaves), ship only the leftovers (significant lines L1 called
+//! novel/deleted) to the core as `[line, fnv1a(trim), width]`, and
+//! apply the returned monotone delta. L1 is the IR producer, not a
+//! modified engine.
 //!
-//! Every fallback (no link, missing capability, link error, degraded
-//! core) returns the pure-L1 result with a visible reason (A9f):
-//! plan R8's "退回 L1 而非退回无" is a code path, not a promise.
+//! Since plan v2.33 W3 L1 is the core's too, so there is no Rust copy
+//! to fall back on: no link, a missing capability, a link error or a
+//! degraded L1 answer is a report with no pairs and a visible reason
+//! (A9f); a degraded CROSS-PAIR answer keeps the core's L1 pairs
+//! (plan R8's "退回 L1 而非退回无").
 
 mod delta;
 mod edges;
 
-use super::model::{Classification, classify, significant};
-use super::stacking::dup_spans;
+use super::model::Classification;
+use super::moves;
 use crate::corelink::Link;
-use crate::dedup::tokens::fnv1a;
 use crate::scan::lang::Lang;
 use delta::merge;
 use serde_json::{Value, json};
@@ -50,24 +51,32 @@ pub struct BatchClassification {
 }
 
 pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchClassification {
-    let pairs: Vec<Classification> = inputs
-        .iter()
-        .map(|p| classify(p.before, p.after, p.lang))
-        .collect();
     let Some(link) = link else {
-        return done(pairs, Some("no_link".into()), false); // link_mut counted it
+        return done(Vec::new(), Some("no_link".into()), false); // link_mut counted it
     };
-    if !link.has("fourclass/2") {
-        return done(pairs, Some("no_capability".into()), false); // alive, wrong family
+    if !link.has(moves::CAP) || !link.has("fourclass/2") {
+        return done(Vec::new(), Some("no_capability".into()), false); // alive, wrong family
     }
-    let sent = leftovers(inputs, &pairs);
+    let (req, bodies) = moves::request(inputs);
+    let mut replies = Vec::with_capacity(bodies.len());
+    for body in bodies {
+        match link.request(moves::KIND, body) {
+            Err(e) => return done(Vec::new(), Some(e), true), // the link itself
+            Ok(reply) => replies.push(reply),
+        }
+    }
+    let l1 = match moves::read(req, &replies) {
+        Ok(l1) => l1,
+        Err(e) => return done(Vec::new(), Some(e), false),
+    };
+    let (pairs, sent) = (l1.pairs, l1.runs);
     if sent
         .iter()
         .all(|(rem, add)| rem.is_empty() && add.is_empty())
     {
         return done(pairs, None, false);
     }
-    match link.request("fourclass", request_body(inputs, &pairs, &sent)) {
+    match link.request("fourclass", request_body(&pairs, &sent, &l1.dup_spans)) {
         Err(e) => done(pairs, Some(e), true), // the link itself
         Ok(reply) => {
             consume(&reply, inputs, &sent, &pairs).unwrap_or_else(|e| done(pairs, Some(e), false))
@@ -126,86 +135,18 @@ fn suspicions_of(reply: &Value) -> Vec<(usize, String)> {
 
 /// One contiguous run of significant leftover lines, as (1-based
 /// line, fnv1a(trim), alnum width) — the width is the line fact the
-/// core's anchor floor judges on (wire 2.0.0). Run structure is
-/// ALIGNMENT data and therefore produced here, by the aligner: two
-/// leftovers are adjacent iff every line between them is also changed
-/// and none of those in-between changed lines is significant (blanks
-/// and bare punctuation bridge a run — git's moved blocks span them
-/// too; a significant in-between line, moved or unchanged, breaks it).
+/// core's anchor floor judges on (wire 2.0.0). Run structure is the
+/// core's L1 answer (CE.FourClass.Moves): two leftovers are adjacent
+/// iff every line between them is also changed and none of those
+/// in-between changed lines is significant, over a bounded bridge.
 pub type Run = Vec<(usize, u64, usize)>;
 pub type Side = Vec<Run>;
-
-/// Per pair: the significant changed lines L1 left novel/deleted,
-/// grouped into runs, as (1-based line, fnv1a of the trimmed
-/// content). Private since the eval instruments that asserted the
-/// exact request retired (0c7c936): classify_batch is its one reader.
-fn leftovers(inputs: &[PairInput], pairs: &[Classification]) -> Vec<(Side, Side)> {
-    inputs
-        .iter()
-        .zip(pairs)
-        .map(|(input, c)| {
-            let moved = |removed: bool| -> Vec<usize> {
-                c.moved
-                    .iter()
-                    .filter(|m| m.removed == removed)
-                    .map(|m| m.line)
-                    .collect()
-            };
-            (
-                side_runs(input.before, &c.changed.removed, &moved(true)),
-                side_runs(input.after, &c.changed.added, &moved(false)),
-            )
-        })
-        .collect()
-}
-
-/// Longest insignificant bridge a run may span. Unbounded bridging
-/// let two significant lines 1000 punctuation lines apart compress
-/// into adjacency and fuse remote coincidences (attack review F6).
-/// Bound = the maximum observed on the frozen slice — bridge-width
-/// histogram over every leftover run of all 47 commits:
-/// {0:7037, 1:663, 2:411, 3:90, 4:19, 5:17, 6:2, 7:1} — revalidated
-/// by the full-corpus rerun (recall stayed 547/547).
-const MAX_BRIDGE: usize = 7;
-
-fn side_runs(text: &str, changed: &[usize], moved: &[usize]) -> Side {
-    let lines: Vec<&str> = text.lines().collect();
-    let mut runs: Side = Vec::new();
-    let mut open = false;
-    let mut prev = 0usize;
-    let mut last_kept = 0usize;
-    for &l in changed {
-        if l != prev + 1 {
-            open = false; // an unchanged gap breaks the run
-        }
-        prev = l;
-        let t = lines[l - 1];
-        if !significant(t) {
-            continue; // blank/punctuation changed line bridges
-        }
-        if moved.contains(&l) {
-            open = false; // a within-moved line breaks the run
-            continue;
-        }
-        if open && l - last_kept - 1 > MAX_BRIDGE {
-            open = false; // an over-long bridge is not adjacency
-        }
-        let entry = (l, fnv1a(t.trim().as_bytes()), super::alnum_width(t));
-        match runs.last_mut() {
-            Some(run) if open => run.push(entry),
-            _ => runs.push(vec![entry]),
-        }
-        open = true;
-        last_kept = l;
-    }
-    runs
-}
 
 /// The wire request over the leftover runs. Was public for the
 /// retired eval_ablation's block-level equivalence replay (v0.5.0,
 /// EVAL-SET.md); classify_batch is its one reader today, so the face
 /// is private — a revival re-opens it together with the instrument.
-fn request_body(inputs: &[PairInput], pairs: &[Classification], sent: &[(Side, Side)]) -> Value {
+fn request_body(pairs: &[Classification], sent: &[(Side, Side)], dup: &[Vec<[u64; 3]>]) -> Value {
     let pairs: Vec<Value> = sent
         .iter()
         .enumerate()
@@ -213,7 +154,7 @@ fn request_body(inputs: &[PairInput], pairs: &[Classification], sent: &[(Side, S
         // destination. The core needs every pair to judge uniqueness.
         .map(|(i, (rem, add))| {
             let (drem, dadd) = super::decls::request_keys(&pairs[i].decls);
-            json!({"i": i, "rem": rem, "add": add, "dupSpans": dup_spans(&inputs[i]),
+            json!({"i": i, "rem": rem, "add": add, "dupSpans": dup[i],
                    "declRem": drem, "declAdd": dadd})
         })
         .collect();

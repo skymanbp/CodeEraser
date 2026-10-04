@@ -57,7 +57,7 @@
     },
     {
       "id": "count:families#word",
-      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1 and resolve/1)",
+      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1)",
       "tier": "linked",
       "value": "16"
     },
@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "308"
+      "value": "335"
     },
     {
       "id": "count:grammars#word",
@@ -141,13 +141,13 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "35"
+      "value": "33"
     },
     {
       "id": "gate:dedup.tests#digits",
       "source": "cli/tests/ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "91"
+      "value": "90"
     },
     {
       "debt": "a Haskell const read by line; promote = the cap on the hello wire",
@@ -452,7 +452,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "8.1.0"
+      "value": "8.5.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",

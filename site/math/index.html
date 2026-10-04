@@ -77,7 +77,7 @@ cloneDecidesWith (num, den) t n1 n2 = (mx - t) * den <span class="op">&gt;=</spa
   <ul class="consts">
     <li><b>tsedNum</b> 85</li>
     <li><b>tsedDen</b> 100</li>
-    <li><b>T3_MIN_NODES</b> 24</li>
+    <li><b>minUnitNodes</b> 24</li>
   </ul>
   <p class="note src"><a href="/how/#f02">Derivation</a> · <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md">booklet 02</a></p>
 </div>
@@ -303,8 +303,8 @@ role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeE
 PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre>
   <p class="note rule">Haskell orders each candidate's nine-integer row as exact rationals and applies the role conjunction; names, words and paths never cross the wire.</p>
   <ul class="consts">
-    <li><b>TOP_M</b> 3</li>
-    <li><b>MIN_COOC</b> 2</li>
+    <li><b>topM</b> 3</li>
+    <li><b>minCooc</b> 2</li>
     <li><b>roleMinName</b> 1</li>
     <li><b>roleMinCallee</b> 1</li>
     <li><b>roleMinNameShape</b> 2</li>

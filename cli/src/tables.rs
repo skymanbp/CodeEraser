@@ -23,12 +23,13 @@
 mod cache;
 mod fetch;
 pub mod leak;
+mod limits;
 mod pack;
 
+pub use limits::{CandidateLimits, CloneLimits, DedupLimits, DocdupLimits, Limits, SimilarLimits};
 pub use pack::{
-    ByLang, Calls, CandidateLimits, CloneLimits, Compdb, DedupLimits, Docdup, DocdupLimits, Flags,
-    Fourclass, Keys, KindRow, Ladder, LangRow, Languages, Limits, Pack, Protocol, SimilarLimits,
-    Tables, Tombstone, Walk,
+    ByLang, Calls, Compdb, Docdup, Flags, Fourclass, Keys, KindRow, Ladder, LangRow, Languages,
+    Pack, Protocol, Tables, Tombstone, Walk,
 };
 
 use std::path::{Path, PathBuf};
