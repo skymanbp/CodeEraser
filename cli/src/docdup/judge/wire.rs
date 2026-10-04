@@ -1,13 +1,11 @@
 //! docdup/1 wire codec (contracts/fixtures/docdup/golden.ndjson is
 //! the byte-level contract; corelink stamps proto/type/id). The caps
-//! and the Jaccard ratio are MIRRORS of CE.Docdup.Cost — the Haskell
-//! module owns the numbers, and both drift directions are named at
-//! runtime: a mirror larger than the core's makes the core degrade
-//! (asserted below), a ratio, shingle-width or verbatim-floor drift
-//! breaks the knobs echo (D13/F29: the estimator's alphabet geometry
-//! and the judge's thresholds each have exactly one owner and one
-//! pinned mirror — verbatimFloor joined the pinned set at ADR-008 P1
-//! when its verdict home moved to the core).
+//! and the Jaccard ratio are CE.Docdup.Cost's, read off the core's
+//! package (plan v2.33 W3, `limits`); the reply's knob echo still pins
+//! the judging core to the package this run read — the ratio, the
+//! shingle width (D13/F29: the estimator's alphabet geometry and the
+//! judge's thresholds each have exactly one owner) and the verbatim
+//! floor.
 
 use crate::docdup::spec::table;
 use anyhow::Result;
@@ -16,18 +14,13 @@ use serde_json::{Value, json};
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "docdup/1";
 
-/// Per-set element ceiling — mirror of CE.Docdup.Cost.docSetCap.
-pub const DOC_SET_CAP: usize = 8192;
-
-/// Per-request pair ceiling — mirror of CE.Docdup.Cost.docPairCap.
-pub const DOC_PAIR_CAP: usize = 4096;
-
-/// The Jaccard report ratio — mirror of CE.Docdup.Cost.jaccardNum/
-/// jaccardDen, and byte-equal to the instrument side's pre-registered
-/// JACCARD_REPORT_FLOOR (frozen with the sample census before the
-/// judge existed).
-pub const JACCARD_NUM: u64 = 80;
-pub const JACCARD_DEN: u64 = 100;
+/// The docdup judgment's ratio and ceilings (CE.Docdup.Cost), off the
+/// package. The ratio is byte-equal to the instrument side's
+/// pre-registered JACCARD_REPORT_FLOOR (frozen with the sample census
+/// before the judge existed).
+pub fn limits() -> &'static crate::tables::DocdupLimits {
+    &crate::tables::get().limits.docdup
+}
 
 /// One chunk's request-local layout: global segment ids by the shared
 /// sorted-rank throat (corelink) and the encoded body carrying each
@@ -61,15 +54,15 @@ pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(u64, u64, 
     crate::lockstep::parse_scores(
         reply,
         &[
-            ("jaccardNum", json!(JACCARD_NUM)),
-            ("jaccardDen", json!(JACCARD_DEN)),
+            ("jaccardNum", json!(limits().jaccard_num)),
+            ("jaccardDen", json!(limits().jaccard_den)),
             ("shingleK", json!(table().doc_shingle)),
             ("verbatimFloor", json!(table().verbatim_floor)),
             ("minDocTokens", json!(table().min_doc_tokens)),
             ("docLineCap", json!(table().doc_line_cap)),
             ("licHeadLines", json!(table().license_head_lines)),
         ],
-        "judge/wire.rs vs Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
+        "the package's docdup numbers vs the judging core's Docdup/Cost.hs (shingleK: D13 alphabet geometry)",
         &["judged", "jaccardDups"],
         |[i, j, inter, union]: [u64; 4], v| (i as usize, j as usize, (inter, union, v)),
     )
@@ -81,7 +74,7 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
         core,
         cap: CAP,
         kind: "docdup",
-        chunk: DOC_PAIR_CAP,
+        chunk: limits().doc_pair_cap,
     }
 }
 

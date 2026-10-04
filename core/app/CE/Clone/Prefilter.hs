@@ -12,8 +12,11 @@
 --
 -- A pair failing `q·tsedDen ≥ tsedNum·max` for q = min(n1,n2) or
 -- q = I therefore provably cannot reach the threshold whatever TED
--- computes — "below" is a judgment, never a guess.
-module CE.Clone.Prefilter (histo, provablyBelow, provablyBelowH) where
+-- computes — "below" is a judgment, never a guess. Since plan v2.33 W3
+-- the candidate pass (CE.Candidates.T3) applies the same two bounds
+-- through `boundOf`, before any tree is built; this module is the one
+-- statement of both.
+module CE.Clone.Prefilter (Bound (..), boundOf, histo, provablyBelow, provablyBelowH, reachFloor, sizeBelow) where
 
 import CE.Clone.Cost (tsedDen, tsedNum)
 import qualified Data.IntMap.Strict as IM
@@ -27,15 +30,44 @@ histo = IM.fromListWith (+) . map (\l -> (l, 1))
 interH :: IM.IntMap Integer -> IM.IntMap Integer -> Integer
 interH x y = sum (IM.elems (IM.intersectionWith min x y))
 
+-- | Which bound decides a pair: the size bound first (its tally owns
+-- the pairs both bounds would cut), then the intersection bound, else
+-- the pair is within reach of the threshold.
+data Bound = SizeBound | LabelBound | Within
+  deriving (Eq, Show)
+
+-- | `q·tsedDen < tsedNum·max`: the bound quantity q cannot reach the
+-- threshold against the larger operand's size.
+sizeBelow :: (Integral a) => a -> a -> Bool
+sizeBelow q mx = q * fromInteger tsedDen < fromInteger tsedNum * mx
+{-# SPECIALIZE sizeBelow :: Int -> Int -> Bool #-}
+
+-- | The least bound quantity that is not below against `mx`:
+-- ceil(tsedNum·mx / tsedDen), so `sizeBelow q mx` ⇔ `q < reachFloor mx`
+-- for non-negative q (CloneProps holds the two equal). A walk that only
+-- needs to know whether an intersection reaches the threshold may stop
+-- as soon as it provably cannot (CE.Candidates.Units.interUpTo).
+reachFloor :: (Integral a) => a -> a
+reachFloor mx = (fromInteger tsedNum * mx + fromInteger tsedDen - 1) `div` fromInteger tsedDen
+{-# SPECIALIZE reachFloor :: Int -> Int #-}
+
+-- | The decision over the two sizes and the label intersection I; I is
+-- forced only when the size bound passes.
+boundOf :: (Integral a) => a -> a -> a -> Bound
+boundOf n1 n2 i
+  | sizeBelow (min n1 n2) mx = SizeBound
+  | sizeBelow i mx = LabelBound
+  | otherwise = Within
+ where
+  mx = max n1 n2
+{-# SPECIALIZE boundOf :: Int -> Int -> Int -> Bound #-}
+
 -- | True ⇔ provably below the clone threshold — the O(1) size
 -- corollary, then the intersection bound — from each operand's
 -- (size, histogram), handed over instead of rebuilt per pair (P11).
 provablyBelowH :: (Int, IM.IntMap Integer) -> (Int, IM.IntMap Integer) -> Bool
 provablyBelowH (n1, h1) (n2, h2) =
-  below (fromIntegral (min n1 n2)) || below (interH h1 h2)
- where
-  mx = fromIntegral (max n1 n2)
-  below q = q * tsedDen < tsedNum * mx
+  boundOf (toInteger n1) (toInteger n2) (interH h1 h2) /= Within
 
 -- | The list face of the same predicate (the cloneDecidesWith
 -- posture: one formula, two faces); CloneProps asserts through this.

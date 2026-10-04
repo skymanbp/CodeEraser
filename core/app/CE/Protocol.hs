@@ -11,6 +11,7 @@ module CE.Protocol (internalError, maxLineBytes, proto, respond) where
 
 import qualified CE.Arch as Arch
 import qualified CE.Audit as Audit
+import qualified CE.Candidates as Candidates
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
 import qualified CE.Document as Document
@@ -117,6 +118,7 @@ families =
   , Fam "tables/1" "tables.request" Tables.respond
   , Fam "document/1" "document.request" Document.respond
   , Fam "resolve/1" "resolve.request" Resolve.respond
+  , Fam "candidates/1" "candidates.request" Candidates.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

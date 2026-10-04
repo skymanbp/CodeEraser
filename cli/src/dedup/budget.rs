@@ -36,7 +36,7 @@ pub(super) fn gate_filters(min_tokens: Option<usize>, min_distinct: Option<usize
             &[&m, &t],
         ));
     }
-    let d = super::pairs::DEFAULT_MIN_DISTINCT;
+    let d = super::pairs::default_min_distinct();
     match min_distinct {
         Some(0) => anyhow::bail!(crate::i18n::line(
             "--check cannot judge without a diversity floor: --min-distinct 0 disables the floor the core's contract needs (default or tighter only)",

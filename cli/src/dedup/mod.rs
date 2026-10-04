@@ -4,6 +4,7 @@
 //! here; T3 is the M5 cold path.
 
 mod budget;
+mod candidate_wire;
 pub mod candidates;
 pub mod groups;
 pub mod index;
@@ -153,7 +154,7 @@ pub fn analyze(
     let removed = idx.remove_missing(&walked.indexed(), &seen)?;
     let filter = pairs::Filter {
         min_tokens: min_tokens.unwrap_or(p.guarantee()),
-        min_distinct: min_distinct.unwrap_or(pairs::DEFAULT_MIN_DISTINCT),
+        min_distinct: min_distinct.unwrap_or_else(pairs::default_min_distinct),
     };
     // Result cache (rescache.rs): with no indexed content moved, the
     // reload + matching phases re-derive byte-identical blocks at

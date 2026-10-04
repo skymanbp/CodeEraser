@@ -10,7 +10,7 @@
 //!
 //! Replay, not policy (ADR-008): a row is the core's OWN bit for the
 //! same two trees under the same proto and knobs, and `reported_clones`
-//! runs every row — replayed or fresh — through the pinned mirror. The
+//! reads every row — replayed or fresh — by that bit alone. The
 //! key is the judge's whole input for one tree, its postorder kind
 //! codes and lld column (tree.rs); two units with equal keys are the
 //! same tree to the judge whatever file or language they came from.
@@ -25,7 +25,7 @@
 
 use super::tree::UnitTree;
 use super::{Outcome, Scored, ScoredTed};
-use crate::dedup::candidates::{PairRow, T3_MIN_NODES, TSED_DEN, TSED_NUM};
+use crate::dedup::candidates::{PairRow, limits};
 use crate::dedup::tokens::fnv1a;
 use anyhow::Result;
 use rusqlite::{Connection, OptionalExtension};
@@ -115,8 +115,13 @@ impl Keys {
 /// it first. The proto is the core's own hello answer, so the bits a
 /// different core would judge are never replayed as this one's.
 pub fn open_generation(conn: &Connection, proto: &str) -> Result<()> {
+    let l = limits();
     let want = fnv1a(
-        format!("t3cache/{CACHE_REV}|{proto}|{TSED_NUM}/{TSED_DEN}|{T3_MIN_NODES}").as_bytes(),
+        format!(
+            "t3cache/{CACHE_REV}|{proto}|{}/{}|{}",
+            l.tsed_num, l.tsed_den, l.min_unit_nodes
+        )
+        .as_bytes(),
     ) as i64;
     let have: Option<i64> = conn
         .query_row("SELECT v FROM meta WHERE k = 't3_cache'", [], |r| r.get(0))

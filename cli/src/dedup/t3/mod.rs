@@ -1,6 +1,7 @@
 //! `ce clone` T3 judgment (design vol.2 §4, M5-3e): the frozen
 //! candidate pass picks the pairs, this driver rebuilds each unit's
-//! postorder tree (tree.rs), ships chunks of at most PAIR_CAP pairs
+//! postorder tree (tree.rs), ships chunks of at most the package's
+//! clone `pair_cap` pairs
 //! over one core link, and maps the raw TED scores back to unit
 //! identities. Every drop is a ledger line (over-cap units, forest
 //! spans, the pairs they strand) — the tally discipline candidates.rs
@@ -16,7 +17,7 @@ pub mod wire;
 
 pub use document::units_answer;
 
-use super::candidates::{self, PairRow, TSED_DEN, TSED_NUM, Unit};
+use super::candidates::{self, PairRow, Unit};
 use anyhow::{Result, ensure};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -120,16 +121,17 @@ fn judged_with(
         orphans == 0,
         "{orphans} unitsig rows missing their symbols identity — nth throat drift"
     );
-    let mut cand = candidates::collect(root, idx)?;
-    // the product judgment sees the exhaustive S5 extension; the
-    // frozen-instrument path calls collect() alone (candidates.rs)
-    candidates::extend_exhaustive(&mut cand);
+    // one link for the candidate pass and the judgment; the product
+    // judgment asks for the exhaustive S5 extension (the frozen-
+    // instrument path asks for the four sources alone, candidates.rs)
+    let mut link = crate::lockstep::open_family(core, wire::CAP)?;
+    let cand = candidates::collect(root, idx, &mut link, true)?;
     let units: Vec<&Unit> = cand.units.iter().collect();
     let built = build_trees(root, &units, tree::Extras::With)?;
     let (sendable, dropped_over_cap, dropped_forest) = sendable_pairs(&cand.pairs, &built);
     let (rows, [judged, prefiltered, cached], requests, link) =
-        judge::judge(core, idx.raw(), &built, &sendable)?;
-    let clones = reported_clones(&rows)?;
+        judge::judge(link, core, idx.raw(), &built, &sendable)?;
+    let clones = reported_clones(&rows);
     let (over_cap_units, forest_units) = built.iter().fold((0, 0), |(oc, fo), b| match b {
         Outcome::OverCap => (oc + 1, fo),
         Outcome::Forest => (oc, fo + 1),
@@ -161,36 +163,15 @@ fn judged_with(
     Ok((judged, link))
 }
 
-/// The reported set from the CORE's verdict bits (ADR-008 P1), with
-/// the per-row drift ensure: the pinned mirror must agree or the run
-/// dies loudly — formula drift named, never a silently forked
-/// verdict (the frozen 3f instruments score through is_clone, so
-/// this check is what keeps them equal to the product by proof).
-/// A row the verdict cache replayed (cache.rs) passes here like a
-/// fresh one: the mirror sees every bit the report is built from.
-fn reported_clones(rows: &[(usize, usize, ScoredTed)]) -> Result<Vec<(usize, usize, Ted)>> {
-    for &(_, _, (ted, n1, n2, v)) in rows {
-        ensure!(
-            v == is_clone(ted, n1, n2),
-            "core clone verdict ({v}) disagrees with the pinned mirror at ted {ted} nodes {n1}/{n2} — formula drift (Clone/Cost.hs vs t3/mod.rs)"
-        );
-    }
-    Ok(rows
-        .iter()
+/// The reported set: the rows whose CORE verdict bit is set (ADR-008
+/// P1). The bit is the decision — this side holds no copy of the
+/// threshold since plan v2.33 W3 — and a row the verdict cache
+/// replayed (cache.rs) is the core's own bit for the same two trees.
+fn reported_clones(rows: &[(usize, usize, ScoredTed)]) -> Vec<(usize, usize, Ted)> {
+    rows.iter()
         .filter(|&&(_, _, (_, _, _, v))| v)
         .map(|&(a, b, (ted, n1, n2, _))| (a, b, Ted { ted, n1, n2 }))
-        .collect())
-}
-
-/// clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max — since ADR-008 P1 a
-/// MIRROR of the core's verdict (CE.Clone.Cost.cloneDecides), not an
-/// authority: the reported set is built from the wire's per-row
-/// verdict bits, and this binding remains for the frozen 3f
-/// precision instruments plus run()'s per-row drift ensure. Same
-/// constants as the admissible prunes; the knobs echo pins them.
-pub fn is_clone(ted: i64, n1: i64, n2: i64) -> bool {
-    let mx = n1.max(n2);
-    (mx - ted) * TSED_DEN >= TSED_NUM * mx
+        .collect()
 }
 
 /// One parse per file, spans in unit order. Over-cap units are never
@@ -209,7 +190,7 @@ pub(crate) fn build_trees(
     let mut out: Vec<Option<Outcome>> = units.iter().map(|_| None).collect();
     let mut by_file: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
     for (i, u) in units.iter().enumerate() {
-        if u.nodes > wire::UNIT_NODE_CAP {
+        if u.nodes > candidates::limits().unit_node_cap {
             out[i] = Some(Outcome::OverCap);
         } else {
             by_file.entry(&u.path).or_default().push(i);
@@ -267,6 +248,3 @@ fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairR
     (sendable, over_cap, forest)
 }
 
-#[cfg(test)]
-#[path = "../../../tests/unit/dedup/t3.rs"]
-mod tests;

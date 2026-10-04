@@ -11,6 +11,7 @@ module Main (main) where
 import qualified AdvisoryProps
 import qualified ArchProps
 import qualified AuditProps
+import qualified CandidatesProps
 import qualified DeclProps
 import qualified DocumentProps
 import qualified DocumentProps4
@@ -106,6 +107,7 @@ batteries =
   , goldenPairs "tables/golden.ndjson"
   , goldenPairs "document/golden.ndjson"
   , goldenPairs "resolve/golden.ndjson"
+  , goldenPairs "candidates/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
@@ -119,6 +121,7 @@ batteries =
   , GraphWireProps.battery
   , AdvisoryProps.battery
   , CloneProps.battery
+  , CandidatesProps.battery
   , EntropyProps.battery
   , JoinProps.battery
   , ScanProps.battery

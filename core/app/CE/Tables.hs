@@ -18,6 +18,7 @@ import CE.Document (catalogue)
 import CE.Lang (digestOf, pack)
 import CE.Lang.Contract (offence)
 import qualified CE.Resolve.Vocab as Vocab
+import CE.Limits (limits)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
@@ -31,10 +32,11 @@ respond proto line = case decodeStrict line of
   _ -> Left (Nothing, "bad_request", "tables: the request is not an object")
 
 -- | The definition package: the language and product definitions
--- (CE.Lang) and the document catalogue.
+-- (CE.Lang), the document catalogue and the families' limits (plan
+-- v2.33 W3, CE.Limits).
 package :: Value
 package = case pack of
-  Object keys -> Object (KM.insert "resolve" Vocab.table (KM.insert "document" catalogue keys))
+  Object keys -> Object (KM.insert "limits" limits (KM.insert "resolve" Vocab.table (KM.insert "document" catalogue keys)))
   v -> v
 
 -- | The number the hello names as `tablesDigest` and the reply as

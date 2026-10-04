@@ -1,19 +1,19 @@
 //! `ce docdup` judgment (design vol.2 §5.3, M5-3g): live cached
 //! segments → coarse candidates (LSH ∪ verbatim seeds) → chunks of at
-//! most DOC_PAIR_CAP pairs over one core link for the exact Haskell
-//! Jaccard re-check. Raw inter/union cross the wire, never a ratio,
-//! and since ADR-008 P1 each score row comes back with the CORE's
-//! full verdict bit (CE.Docdup.Cost.dupVerdict: Jaccard ∨ verbatim —
-//! the runs computed here ride the request as verdict inputs, F26);
-//! the reported set is the core's decision, cross-checked per row
-//! against the pinned is_dup mirror. The report is the core's
-//! (document.rs).
+//! most the package's docdup `doc_pair_cap` pairs over one core link
+//! for the exact Haskell Jaccard re-check. Raw inter/union cross the
+//! wire, never a ratio, and since ADR-008 P1 each score row comes back
+//! with the CORE's full verdict bit (CE.Docdup.Cost.dupVerdict:
+//! Jaccard ∨ verbatim — the runs computed here ride the request as
+//! verdict inputs, F26); the reported set is the core's decision, and
+//! since plan v2.33 W3 this side holds no copy of the threshold. The
+//! report is the core's (document.rs).
 
 pub mod candidates;
 mod document;
 pub mod wire;
 
-use anyhow::{Context, Result, ensure};
+use anyhow::{Context, Result};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -49,17 +49,6 @@ pub struct Judged {
     pub dups: Vec<(usize, usize, Doc)>,
     judged: Vec<[i64; 6]>,
     pub counts: Counts,
-}
-
-/// dup ⇔ inter·JACCARD_DEN ≥ JACCARD_NUM·union ∨ verbatim ≥
-/// verbatim_floor (the package's) — since ADR-008 P1 a MIRROR of the core's verdict
-/// (CE.Docdup.Cost.dupVerdict), not an authority: the reported set
-/// is built from the wire's per-row bits, and this binding remains
-/// for run()'s per-row drift ensure. All three numbers are pinned by
-/// the knobs echo.
-pub fn is_dup(inter: u64, union: u64, verbatim: u64) -> bool {
-    inter * wire::JACCARD_DEN >= wire::JACCARD_NUM * union
-        || verbatim >= crate::docdup::spec::table().verbatim_floor as u64
 }
 
 /// The whole judgment: refresh, live rows, coarse candidates, chunked
@@ -153,13 +142,11 @@ fn judged_over(
 }
 
 /// Every judged row with its verbatim run, the CORE's verdict bit last
-/// (ADR-008 P1) — the reported set is the rows whose bit is set — with
-/// the per-row drift ensure — the pinned mirror must agree or the
-/// run dies loudly (formula drift named, never a silently forked
-/// verdict) — in one defensive pass (review C20: the runs[..]
-/// indexings were the last decode site that panicked instead of
-/// erroring on an unexpected pair echo). Split from run() at the
-/// E01 line, the t3::reported_clones shape.
+/// (ADR-008 P1) — the reported set is the rows whose bit is set — in
+/// one defensive pass (review C20: the runs[..] indexings were the last
+/// decode site that panicked instead of erroring on an unexpected pair
+/// echo). Split from run() at the E01 line, the t3::reported_clones
+/// shape.
 fn reported_rows(
     rows: &[(usize, usize, (u64, u64, bool))],
     runs: &BTreeMap<(usize, usize), u64>,
@@ -169,10 +156,6 @@ fn reported_rows(
         let run = *runs
             .get(&(a, b))
             .with_context(|| format!("core echoed pair ({a},{b}) that was never sent"))?;
-        ensure!(
-            v == is_dup(inter, union, run),
-            "core docdup verdict ({v}) disagrees with the pinned mirror at J {inter}/{union} run {run} — formula drift (Docdup/Cost.hs vs judge/mod.rs)"
-        );
         let n = |x: u64| x as i64;
         out.push([a as i64, b as i64, n(inter), n(union), n(run), i64::from(v)]);
     }
@@ -192,6 +175,3 @@ fn name(s: &candidates::SegRow) -> String {
     format!("{}:{}-{} {}", s.path, s.start_line, s.end_line, kind)
 }
 
-#[cfg(test)]
-#[path = "../../../tests/unit/docdup/judge.rs"]
-mod tests;

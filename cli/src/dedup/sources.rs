@@ -1,8 +1,11 @@
-//! The four T3 candidate sources (design vol.2 §4.2), one generator
-//! walk each — split from candidates.rs at the 300-line dogfood gate.
-//! Every source emits canonical same-language unit pairs through one
-//! push throat; everything either side sheds (self pairs, cross
-//! language, lines outside any admitted unit) is tallied there.
+//! The three index-bound T3 candidate sources (design vol.2 §4.2), one
+//! generator walk each — split from candidates.rs at the 300-line
+//! dogfood gate. Every source emits canonical same-language unit pairs
+//! through one push throat; everything either side sheds (self pairs,
+//! cross language, lines outside any admitted unit) is tallied there.
+//! The fourth, S2 (same key in different files), is a function of the
+//! units alone and runs in the core since plan v2.33 W3
+//! (candidate_wire.rs).
 
 use super::candidates::{HOT_GROUP_CAP, LSH_SHAPE, Tally, Unit};
 use super::index::Instance;
@@ -36,27 +39,25 @@ impl<'u> Gen<'u> {
         }
     }
 
-    /// All four sources merged into (pair → source bits). The array
-    /// ORDER is the bit assignment: bit i means candidates::SOURCES[i]
-    /// found the pair.
+    /// The three sources merged into (pair → source bits): bit i means
+    /// candidates::SOURCES[i] found the pair (S1 bit 0, S3 bit 2, S4
+    /// bit 3; S2's bit 1 is the core's).
     pub(super) fn union(
         &mut self,
         root: &Path,
         instances: &[Instance],
     ) -> Result<BTreeMap<(usize, usize), u8>> {
         let sets = [
-            self.near_pairs(root, instances)?,
-            self.same_key(),
-            self.fingerprint_pairs(instances),
-            self.structural_pairs(),
+            (0, self.near_pairs(root, instances)?),
+            (2, self.fingerprint_pairs(instances)),
+            (3, self.structural_pairs()),
         ];
         let mut union: BTreeMap<(usize, usize), u8> = BTreeMap::new();
-        for (i, set) in sets.into_iter().enumerate() {
+        for (bit, set) in sets {
             for p in set {
-                *union.entry(p).or_insert(0) |= 1 << i;
+                *union.entry(p).or_insert(0) |= 1 << bit;
             }
         }
-        self.tally.union_pairs = union.len() as u64;
         Ok(union)
     }
 
@@ -94,26 +95,6 @@ impl<'u> Gen<'u> {
             (Some(x), Some(y)) => self.push(set, x, y, src),
             _ => self.tally.unowned_dropped += 1,
         }
-    }
-
-    /// S2: same unit key across DIFFERENT files (the M4 frozen unit
-    /// vocabulary), exhaustive within each key group.
-    fn same_key(&mut self) -> BTreeSet<(usize, usize)> {
-        let mut by_key: BTreeMap<&str, Vec<usize>> = BTreeMap::new();
-        for (id, u) in self.units.iter().enumerate() {
-            by_key.entry(&u.key).or_default().push(id);
-        }
-        let mut out = BTreeSet::new();
-        for ids in by_key.values().filter(|ids| ids.len() > 1) {
-            for (i, &a) in ids.iter().enumerate() {
-                for &b in &ids[i + 1..] {
-                    if self.units[a].path != self.units[b].path {
-                        self.push(&mut out, a, b, "s2");
-                    }
-                }
-            }
-        }
-        out
     }
 
     /// S3: raw fingerprint co-occurrence, NO extension — wider than

@@ -1,24 +1,18 @@
 //! clone/1 wire codec (contracts/fixtures/clone/golden.ndjson is the
-//! byte-level contract; corelink stamps proto/type/id). The caps are
-//! MIRRORS of CE.Clone.Cost — the Haskell module owns the numbers,
-//! and both drift directions are named at runtime: a mirror larger
-//! than the core's makes the core degrade (asserted below), a
-//! threshold drift breaks the knobs echo.
+//! byte-level contract; corelink stamps proto/type/id). The caps and
+//! the threshold are CE.Clone.Cost's, read off the core's package
+//! (plan v2.33 W3, `candidates::limits`); the reply's knob echo still
+//! pins the judging core to the package this run read, and a degraded
+//! reply to a request laid out by the package's own caps is refused.
 
 use super::tree::UnitTree;
-use crate::dedup::candidates::{TSED_DEN, TSED_NUM};
+use crate::dedup::candidates::limits;
 use anyhow::Result;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "clone/1";
-
-/// Per-tree node ceiling — mirror of CE.Clone.Cost.unitNodeCap.
-pub const UNIT_NODE_CAP: i64 = 256;
-
-/// Per-request pair ceiling — mirror of CE.Clone.Cost.pairCap.
-pub const PAIR_CAP: usize = 4096;
 
 /// The request body for one chunk: trees with request-local DENSE
 /// labels (first-seen order across the chunk's trees — the judge
@@ -75,7 +69,7 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
         core,
         cap: CAP,
         kind: "clone",
-        chunk: PAIR_CAP,
+        chunk: limits().pair_cap,
     }
 }
 
@@ -83,22 +77,19 @@ pub fn family(core: &str) -> crate::lockstep::Family<'_> {
 /// n2, verdict))` plus `[judged, prefiltered]` — the shared
 /// parse_scores throat with this family's knob list (the prunes'
 /// admissibility argument collapses if the judge's ratio drifts from
-/// candidates.rs; a degraded reply to a client-sized request means
-/// the cap mirrors above disagree with Cost.hs), zipped with the
+/// the one the candidate pass bounded by; a degraded reply to a
+/// package-sized request means two cores answered one run), zipped with the
 /// core's per-row verdict bits (ADR-008 P1: the reported set is the
 /// core's decision — raw ted stays for the instruments' cut tables).
 pub fn parse_result(reply: &Value) -> Result<crate::lockstep::Scored<(i64, i64, i64, bool)>> {
     crate::lockstep::parse_scores(
         reply,
         &[
-            ("tsedNum", json!(TSED_NUM)),
-            ("tsedDen", json!(TSED_DEN)),
-            (
-                "minUnitNodes",
-                json!(crate::dedup::candidates::T3_MIN_NODES),
-            ),
+            ("tsedNum", json!(limits().tsed_num)),
+            ("tsedDen", json!(limits().tsed_den)),
+            ("minUnitNodes", json!(limits().min_unit_nodes)),
         ],
-        "t3/wire.rs+candidates.rs vs Clone/Cost.hs",
+        "the package's clone limits vs the judging core's Clone/Cost.hs",
         &["judged", "prefiltered"],
         |[i, j, ted, n1, n2]: [i64; 5], v| (i as usize, j as usize, (ted, n1, n2, v)),
     )

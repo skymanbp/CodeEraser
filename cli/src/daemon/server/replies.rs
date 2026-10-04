@@ -86,7 +86,7 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     let idx = Index::open(&root.join(".ce/index.db"), p)?;
     let f = pairs::Filter {
         min_tokens: p.guarantee(),
-        min_distinct: pairs::DEFAULT_MIN_DISTINCT,
+        min_distinct: pairs::default_min_distinct(),
     };
     let target = probe::Target {
         rel: &rel,

@@ -127,6 +127,21 @@ leaked! {
     /// The words and affixes resolve/1's search spells (8.1.0): the
     /// request interns exactly these, in this order.
     Resolve { words: Names, affixes: Names }
+    /// The clone judgment's thresholds and ceilings (CE.Clone.Cost).
+    CloneLimits { tsed_num: i64, tsed_den: i64, min_unit_nodes: i64, unit_node_cap: i64,
+                  pair_cap: usize }
+    /// The candidates family's two table ceilings (CE.Candidates.Cost).
+    CandidateLimits { unit_cap: usize, pair_cap: usize }
+    /// The docdup judgment's ratio and ceilings (CE.Docdup.Cost).
+    DocdupLimits { jaccard_num: u64, jaccard_den: u64, doc_set_cap: usize, doc_pair_cap: usize }
+    /// The T1/T2 report's diversity floor (CE.Dedup.Cost).
+    DedupLimits { min_distinct: usize }
+    /// The similar family's table ceiling (CE.Similar.Cost).
+    SimilarLimits { similar_cap: usize }
+    /// The numbers requests are laid out by and candidates selected with
+    /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
+    Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,
+             dedup: DedupLimits, similar: SimilarLimits }
     /// Every table, as the core answers them less the envelope.
     Tables {
         languages: Languages,
@@ -136,7 +151,7 @@ leaked! {
         sites: ByLang<Vec<crate::graph::spec::SiteKind>>,
         calls: Calls, fourclass: Fourclass, ladder: Ladder, walk: Walk, outputs: Rows,
         docdup: Docdup, keys: Keys, flags: Flags, tombstone: Tombstone, compdb: Compdb,
-        protocol: Protocol, document: DocCatalogue, store: Store, resolve: Resolve,
+        protocol: Protocol, document: DocCatalogue, store: Store, resolve: Resolve, limits: Limits,
     }
 }
 

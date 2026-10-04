@@ -111,11 +111,14 @@ pub struct Filter {
     pub min_distinct: usize,
 }
 
-// The declared MIRROR of CE.Dedup.Cost.minDistinct (batch-7 slice
-// 1): the authority is the core's, this copy filters the report and
-// the probe hot path, and `ce dedup --check` proves the two equal on
-// every gated run (reply.dedupBlocks vs the local count).
-pub const DEFAULT_MIN_DISTINCT: usize = 7;
+/// The default diversity floor, CE.Dedup.Cost.minDistinct read off
+/// the core's package (plan v2.33 W3): it filters the report and the
+/// probe hot path, and `ce dedup --check` still proves the core judged
+/// the same count on every gated run (reply.dedupBlocks vs the local
+/// count).
+pub fn default_min_distinct() -> usize {
+    crate::tables::get().limits.dedup.min_distinct
+}
 
 pub type Streams = BTreeMap<String, Vec<Token>>;
 

@@ -149,7 +149,7 @@ pub fn collect(root: &Path, segs: &[SegRow]) -> Result<Cand> {
     let mut buckets: BTreeMap<(usize, u64), Vec<usize>> = BTreeMap::new();
     let sendable: Vec<usize> = (0..segs.len())
         .filter(|&i| {
-            let ok = segs[i].set.len() <= super::wire::DOC_SET_CAP;
+            let ok = segs[i].set.len() <= super::wire::limits().doc_set_cap;
             tally.over_cap_segments += u64::from(!ok);
             ok
         })
