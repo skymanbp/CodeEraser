@@ -142,7 +142,7 @@ same_role；role 位混淆 = 同角色位对全部候选对的判决（tp / fp /
 
 ## 调优与联想探索（追记 2026-09-05：用户裁定 ①②③ 的结果）
 
-仪器 = `cli/tests/it/similar_tune.rs`（+ `similar_tune_parts/`，常驻 `--ignored`，release 跑；gpt-6-astra max 写、本仓第一方复跑）：
+仪器 = `cli/tests/it/similar_tune.rs`（+ `similar_tune_parts/`，`--ignored`，release 跑；gpt-6-astra max 写、本仓第一方复跑；v2.33 W3 起退役，复活配方在「复跑」节）：
 在**冻结 oracle 的候选池上重排**——每个配置只对已仲裁的候选重新打分排序（未仲裁的新候选另行导出、不冒充标签），
 84 个打分配置 + 16 个同角色谓词；p@1 / hit@5 口径同上表，配对 W : L = 与基线相比顶 1 由错变对 : 由对变错。
 生产打分代码与冻结 JSON 一字未动（仪器结束时断言 oracle 文件与读入时逐字节相等）。
@@ -327,7 +327,7 @@ dirty = 步 5 前置的测试改动），`cli/src/similar/bag.rs` 与 `stem.rs` 
    记为**唯一有留出集佐证的正向候选**，但幅度在噪声带内；步 6 三面落地后若回执样本（裁定 5「记录后果」）攒到第三代 oracle，再测一次即定。
 2. **地板第二代 40 %**（`similar_oracle_floors`，`GENERATIONS` 表按代给地板）：role=1 顶 1 53.6 %、hit@5 60.0 %、role 位精度 48.6 % 三数取最小向下
    取整到一成；v1 的 60 % 不动（各代各守，一代重冻结落线即红）。
-3. **留出集是仪器的常设通道**：`CE_SIMILAR_SAMPLE_GEN=<n>` 抽第 n 代（跳过更早各代 oracle 的 rank），`CE_SIMILAR_ORACLE=<n>` 让评测器对第 n 代重排，
+3. **留出集是仪器的常设通道**：`CE_SIMILAR_SAMPLE_GEN=<n>` 抽第 n 代（跳过更早各代 oracle 的 rank），`CE_SIMILAR_ORACLE=<n>` 让评测器对第 n 代重排（评测器已退役，按「复跑」节复活后才有这条通道），
    门对每一代断言：与更早各代零重叠、`holdout_of` 点名前一代、常量 = 当下常量、夹具行逐字节回放。第三代起同一条路，不再另写。
 
 ## Go 语料重量与重仲裁（2026-09-26，计划 v2.30 步 5b 第一小批）
@@ -366,7 +366,7 @@ Go 行替换（700 → 695、668 → 667）加 `rearbitrated`。上面「结果�
   替代合取（对 667 个候选）：spec 形 0.497 / 0.556（首 0.486 / 0.570）、`N≥1` 0.374 / 0.762、`N≥1∧C≥1` 0.484 / 0.469、`(N≥1∧C≥1∧形状)∨(N≥2∧形状)` 0.590 / 0.431、`N≥1∧C≥2` 0.589 / 0.412、spec ∧ 非同文件 0.495 / 0.281、spec ∨ `(D≥2∧形状)` 0.463 / 0.594。
 
 **评测器**（84 配置 / 16 谓词 / 留出集三候选）两节的表不重跑：它们支撑的裁定（三候选不采、`SIMILAR_REV` 1 不动）已经落地；要复核就按
-「复跑」节在当下的 oracle 上重排。
+「复跑」节的复活配方把评测器取回，在当下的 oracle 上重排。
 
 ## TypeScript 语料重量与重仲裁（2026-09-27，计划 v2.30 步 5b-6）
 
@@ -427,11 +427,18 @@ v2 29/57 = 50.9 %、69/115 = 60.0 %、89/179 = 49.7 %。两代都立住；TS 夹
 cd cli && cargo test --test it -- eval_similar_precision::
 export CE_CORE_BIN=…   # 自仓索引刷新要核
 cd cli && cargo test --release --test it -- --ignored similar_replay::similar_replay --nocapture
-cd cli && cargo test --release --test it -- --ignored similar_tune::similar_tune --nocapture   # 84 配置重排，表落 cli/target/similar-tune-v1/
 CE_BLESS=1 …           # 重冻结样本（常量改动后）；CE_SIMILAR_PACKET=<file> 另写仲裁 packet
 CE_SIMILAR_SAMPLE_GEN=2 CE_BLESS=1 …   # 抽第二代（留出集：跳过 v1 oracle 的 rank）→ similar-sample-v2.json
-CE_SIMILAR_ORACLE=2 …                  # 评测器对第二代 oracle 重排，表落 cli/target/similar-tune-v2/
 ```
+
+**评测器退役**（2026-10-04，v2.33 W3，主会话裁）：它重排的是生产里的 Rust BM25 / PPMI 排序，那份排序已经搬进核（`rank/1`），Rust 里不再有它调的东西；它在 W3 里改挂测试子仓的冻结预言机 `unit/w3_oracle/similar.rs`，违反了子仓自己的架构规则（`it/` 不读 `unit/`），于是按名删除。结论不变：三候选不采、`SIMILAR_REV` 1 不动、`field_binary` 是唯一有留出集佐证的正向候选、待第三代 oracle 再测（要测就先复活）。复活只读子仓历史、不写任何索引——f623abf 是子仓里最后一个带它的提交：
+
+```
+git -C cli/tests archive f623abf it/similar_tune.rs it/similar_tune_parts | tar -x -C cli/tests
+git -C cli/tests show f623abf:unit/w3_oracle/similar.rs > cli/tests/it/similar_tune_parts/oracle.rs
+```
+
+再删掉取回的 `similar_tune_parts/mod.rs` 里 `mod oracle;` 上面那行 `#[path = "../../unit/w3_oracle/similar.rs"]`（`mod oracle;` 就读旁边那份拷贝，它经仪器自己的 `mod lib` 取库），在 `cli/tests/it/main.rs` 加回 `mod similar_tune;` / `mod similar_tune_parts;`，然后跑 `cargo test --release --test it -- --ignored similar_tune::similar_tune --nocapture`（表落 `cli/target/similar-tune-v1/`，`CE_SIMILAR_ORACLE=2` 对第二代重排、表落 `similar-tune-v2/`）。公式就是冻结预言机：取回的那份与现行 `unit/w3_oracle/similar.rs` 只差文件头注释与三行 `use`，函数体逐字节相同。跑完用 `rm -r` 删掉取回的文件、去掉那两行 `mod`。
 
 仲裁批处理（prompt / packet / 合并脚本）在会话 scratchpad，不入库；重仲裁 = 换仲裁者重跑合并脚本，
 样本不动；仪器的单元宇宙一变（2026-09-26 Go 先例）= 该语料的样本行重量 + 只重仲裁那一语料，其余语料的行与仲裁不动。

@@ -171,8 +171,9 @@ conjunction over one row, and it lives in Haskell:
 with floors 1, 1 and 2: a unit that is *called* the same and *calls* the same, or two name
 words in common with the same signature shape ([Cost.hs:35-57](../../../core/app/CE/Similar/Cost.hs#L35)).
 The measuring side keeps no copy of that rule: the frozen evaluation rows take their role bits
-from `similar/1` ([similar_replay.rs:158-172](../../../cli/tests/it/similar_replay.rs#L158)), and only the tuning instrument keeps
-a declared mirror in the tests repository: the frozen oracle's conjunction ([similar.rs:195-198](../../../cli/tests/unit/w3_oracle/similar.rs#L195)), re-exported to the instrument ([mirror.rs:19-22](../../../cli/tests/it/similar_tune_parts/mirror.rs#L19)).
+from `similar/1` ([similar_replay.rs:158-172](../../../cli/tests/it/similar_replay.rs#L158)), and the only Rust spelling left
+is the frozen oracle the differential gate drives against the core ([similar.rs:191-194](../../../cli/tests/unit/w3_oracle/similar.rs#L191)).
+The offline tuning instrument that once mirrored it retired with the Rust ranking it tuned (EVAL-SET-SIMILAR.md, re-run section).
 A request whose query terms plus rows exceed `similarCap` = 65536 gets a complete degraded
 reply with empty tables and the reason `similar_too_large` — a query the core refused to judge
 has no order and no roles, and the faces name the degradation instead of showing the measuring

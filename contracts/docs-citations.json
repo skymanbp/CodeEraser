@@ -9842,12 +9842,6 @@
     "line": 247,
     "text": "fn similar_replay() {"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_tune_parts/mirror.rs|f14a5fd0497468ba|0": {
-    "target": "../../../cli/tests/it/similar_tune_parts/mirror.rs",
-    "line": 19,
-    "end": 22,
-    "text": "pub use oracle::{"
-  },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_wire.rs|302c459ea66e5d0d|0": {
     "target": "../../../cli/tests/it/similar_wire.rs",
     "line": 17,
@@ -9860,8 +9854,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/unit/w3_oracle/similar.rs|b5af3ed9d8f2e1ed|0": {
     "target": "../../../cli/tests/unit/w3_oracle/similar.rs",
-    "line": 195,
-    "end": 198,
+    "line": 191,
+    "end": 194,
     "text": "pub fn role(hits: &[u32; 6], shape_equal: bool) -> bool {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar.hs|1aea27ad2647faa5|0": {
