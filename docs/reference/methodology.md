@@ -32,9 +32,13 @@ engine, the four-classification, TSED, graph analysis, scoring and the
 ratchet — and turns those facts into verdicts
 ([DEVELOPMENT_PLAN.md:158-161](../DEVELOPMENT_PLAN.md#L158),
 [README.md:198](../../README.md#L198)). The boundary has a one-line
-test, from ADR-008: if a rule needs source text or line-level content to
-cross the wire, it is measurement and stays in Rust
-([DEVELOPMENT_PLAN.md:239](../DEVELOPMENT_PLAN.md#L239)). So read each
+test, from ADR-008 as amended in plan v2.33 (2026-10-04): what touches
+the world — files, tree-sitter, SQLite, git, processes — stays in Rust;
+a computation over facts Rust has read, integers or text, belongs to the
+core, and text crosses only the local pipe between `ce` and its child
+`ce-core`, with the privacy guarantees unchanged
+([DEVELOPMENT_PLAN.md:239](../DEVELOPMENT_PLAN.md#L239)). Each booklet
+describes its family's wire as it is today. So read each
 section as *facts → predicate → verdict*: the formula and its constants
 are the contract, the knobs are echoed back in the report, and each is
 cited to the file and line that implements it. No number in this

@@ -4,7 +4,7 @@
 
 ## 0. 一句话定位
 
-凡是只在「已降成整数的事实」上做的计算都归核：Rust 把世界（文件、文法、索引、git、进程）降成整数行，Haskell 在这些行上跑算法、下判决、出文档。本轨把今天仍在 Rust 里的这类算法按波次搬进核，每波落地后实读语言条，Haskell 字节数超过 Rust 即停；1.9.0 等这一刻再发。
+凡是在测量侧已读到的事实——整数或文本——上做的计算都归核：Rust 碰世界（文件、文法、索引、git、进程）并把读到的交出来，Haskell 在这些事实上跑算法、下判决、出文档（文本可经本机管道过线，§3，2026-10-04 修正案）。本轨把今天仍在 Rust 里的这类算法按波次搬进核，每波落地后实读语言条，Haskell 字节数超过 Rust 即停；1.9.0 等这一刻再发。
 
 ## 1. 裁定与目标
 
@@ -17,13 +17,19 @@
 ## 2. 分工句
 
 - **旧**（ADR-008 原文与硬约束 1）：判决在核；解析 / 索引 / 前端在 Rust。测量语义留 Rust；判据 = 需源文本或行级内容过 wire 即测量侧（§5.9.2）。ADR-008 验收段：「占比提升是副产品，禁止为占比搬迁或改写已有代码」。
-- **新**：凡是只在已降成整数的事实上做的计算——算法、判定、定义、文档、文字——都在核；Rust 只做碰世界的事（文件系统、tree-sitter、SQLite、git、进程、管道、clap / MCP / daemon / 钩子接线）和把世界降成整数行。
-- **两判例按新句改写**：细则第五期（墓碑）里对文本的切分与标记匹配是「降」、留 Rust，建立在降出的计数之上的判定是算法、归核（墓碑文本管线在钩子热路径上，本轨具名不搬，§7）；细则第六期（同角色顾问）里分词与词干是词法、留 Rust，BM25 分子分母与 PPMI 计数是词哈希 / tf / df 上的算法、归核（W3）。
-- §5.9.2 一票否决原样有效：需源文本或行级内容过 wire 的仍是测量、留 Rust；新句扩的是它的反面——不需要源文本的计算不再因「历来在 Rust」而留下。
+- **新**（立项 2026-10-03，文本过线修正案 2026-10-04 定稿）：凡是在测量侧已读到的事实——整数或文本——上做的计算（算法、判定、定义、文档、文字）都在核；Rust 只做碰世界的事（文件系统、tree-sitter、SQLite、git、进程、管道、clap / MCP / daemon / 钩子接线），并把读到的东西交给核。只有 tree-sitter 才能做的词法（CST）留 Rust；只是一个字符串的函数的词法（拆说明符、词干、Markdown 掩码）是算法、可以搬。
+- **两判例按新句改写**：细则第五期（墓碑）里对文本的切分与标记匹配是字符串上的算法、可以搬（W6，钩子路径上的成员受 §3 性能门约束）；细则第六期（同角色顾问）里 BM25 分子分母与 PPMI 计数已随 W3 进核，分词、词干与词袋随 W6 搬。
+- §5.9.2 的一票否决（「需源文本或行级内容过 wire 即测量侧」）由 §3 的线规则取代：文本可以过本机管道，判据改为「碰不碰世界」；§5.9 的隐私保证一条不动（计划书 §5.9-6）。
 
-## 3. 不变量（一条不动）
+## 3. 不变量
 
-- **整数过线**：名字、路径、源文本不过线；文本侧的切分 / 词法 / 分词仍是「降」，留 Rust，过线的是哈希与驻留 id。
+- **文本过本机管道，且只过这一处**（2026-10-04 修正案，取代「整数过线」；§11 第 39–42 条）：
+  1. *可以过线的*（请求侧，ce → ce-core）：测量侧从树上读到的任何文本——仓库相对路径、文件名与目录名、import / include / require 说明符的文本、配置文件的值（模块路径、包名、声明的根、编译数据库的旗标）、单元键与符号名、源文本片段（行、注释、散文段）——前提是读它的算法住在核里。文本是 UTF-8 的 JSON 字符串；不是合法 UTF-8 的字节序列按测量侧今天已有的读法送（有损，与 Rust 算法原来的读法相同），搬那个算法的车道写明这一点。
+  2. *留在 Rust 的*（碰世界）：读文件、tree-sitter 解析、SQLite、git、进程、管道、clap / MCP / daemon / 钩子接线。Rust 不必再把文本降成整数再问，读到什么送什么。只有 tree-sitter 能做的词法留下（CST）；只是一个字符串的函数的词法（拆说明符、词干、Markdown 掩码）是算法，可以搬。
+  3. *核可以答的*：也可以是文本——解析出的路径、渲染好的报告行、名字——所以 v2.32 留在 Rust 的绑定 / 符号表胶水（`symbols` 计数、码 → 字符串表）在核能自己拼出字符串的地方可以退役。
+  4. *不动的隐私保证*（计划书 §5.9-6，在此重申，免得把放宽读得比它宽）：线是同一台机器上 `ce` 与它的子进程 `ce-core` 之间的 stdio 管道，`ce-core` 不开文件、不开套接字、不联网（§5.9-1 不变）；核不持久化、不记日志，请求里的文本只活一个请求；§5.9-2 的索引隐私不变（`.ce/index.db` 仍只存哈希、span 与符号名，不存源文本；提及表仍只存 fnv1a64）；observe feed、trend 存储、基线、SARIF 与每份报告的字段与今天完全相同（报告本就印路径与单元键——今天由 Rust 渲染，明天可能由核渲染；这条规则不让任何**新**文本到达任何持久化或用户可见的面）；`contracts/` 下的 golden 与夹具只带合成文本（既有夹具树），不抄第三方仓库的文本；secrets 排除（`.env*`、`*.pem`……）在读之前由走查施行，被排除文件的文本同样到不了管道。
+  5. *性能门*：文本比 id 大。每条搬文本的车道量请求字节与它碰到的面的 ABAB；PreToolUse 钩子路径的预算（PERF-BUDGET）不变，钩子路径上的搬文本改动只有守住预算才落地。
+  6. *wire 版本*：每个开始带文本的族在自己的 proto 步里带（旧的整数键能在旁边多留一个 minor 时为加性，否则为断代），版本号由落码车道定，不在此定。
 - **三面等价**（CLI / MCP / GUI）。
 - **判决字节不动**：每族切换以新旧二进制十语料逐字节同为门（§9）。
 - **查重预算只降不升**；**E01**（函数 ≤ 50 / 75 行、CoC ≤ 15、文件 ≤ 300 / 750 行）；**核 `.hs` ≤ 290 行**（子仓 `core_size_gate`）。
@@ -65,33 +71,40 @@
 
 每波 = 一条或多条并行车道；每族落地后重读语言条（§10），达标即停。路径缩写（本册定义）：**H** = PreToolUse 钩子热路径；**S** = Stop / precommit 审计与命令批扫；**K** = 索引刷新（daemon 与命令共用）；**cold** = 只在命令里跑的冷路径。
 
-| 波 | 内容（Rust 侧现量 KiB） | wire 形（整数） | 路径 | 风险 |
+| 波 | 内容（Rust 侧现量 KiB） | wire 形 | 路径 | 风险 |
 |---|---|---|---|---|
 | W1 镜像退役 + 冷路径小件 | §5 镜像（除 zone）；`query/` 的 lexer / program / columns / legend（27）；`structure/` 的 tree / rows / edges + `arch/tables.rs`（25）；`config/` 的故障检查与 `canonical.rs`（16，钩子留本地 fail-open 读法）；`update/version.rs` / `update/manifest.rs` 的比较 | 既有请求不动或加性；cap 与默认值改读 `tables/1` / hello | cold / K | 低 |
-| W2 引用阶梯 | `graph/ladder/` 纯路径代数 22 个文件 + `graph/cabal_parse.rs` / `cmdline.rs` / `compdb_flags.rs` / `gomod.rs` / `jsonc.rs` / `roots_ts.rs` / `deadcode/targets.rs` / `nodes.rs` / `stored.rs`（≈ 205）；Rust 侧 `rs_*` / md / html 阶梯先出逐文件 surface 行 | 新族 `resolve/1`：路径 = 段 id 序列（Rust 驻留表，段文本不过线）、站点 `[kind, from, 段…]`、文件集、逐语言配置事实；应答每站点 `[rung, target \| refusal]` | K（增量刷新） | 中：体量最大；十三语言精度册全部重生成（判决字节须同） |
-| W3 候选与排序 | T3 / docdup 候选生成（`dedup/sources.rs` / `dedup/minhash.rs` / `dedup/candidates.rs` / `docdup/judge/candidates/runs.rs`，32）；`similar/bm25.rs` / `similar/ppmi.rs`（17；`stem.rs` / `terms.rs` 是词法，留 Rust）；fourclass L1（`diff.rs` / `model.rs` / `decls.rs` / `stacking.rs` / `anchor.rs`，21）；score / join / merge 的装配 join（30） | 既有族加性表：单元签名行、shingle 集、查询词的 postings 切片、行哈希对 | K / S | 中：超线性段要 ABAB，核端用数组 / IntMap |
+| W2a 引用阶梯（四语言，已落地） | Python / Lua / Go / C·C++ 的查找（下方「W2 状态」） | `resolve/1`（8.1.0）：路径 = 段 id 序列、站点 `[kind, from, 段…]`、文件集、逐语言配置事实；应答每站点 `[rung, target \| refusal]` | K（增量刷新） | 已落地 |
+| W2a′ 简化 `resolve/1` | 路径与说明符改以字符串过线；删段驻留表、`vocab`、词缀行与 `cli/src/graph/resolve/lower.rs` / `tokens.rs` 的大部分（删减量由车道实量） | `resolve/1` 带文本的 proto 步（§3 第 6 点） | K | 中：差分门与冻结预言机（§11 第 26 条）原样保留、须保持全绿 |
+| W2b 其余七个阶梯 | ts / hs / java / r / rs / md / html 的阶梯（`graph/ladder/` 余下文件）及其配置面逻辑（`graph/cabal_parse.rs` / `cmdline.rs` / `compdb_flags.rs` / `gomod.rs` / `jsonc.rs` / `roots_ts.rs` 一类；量由车道实量） | `resolve/1`：路径、说明符、配置值以文本过线 | K | 中：十三语言精度册重生成（判决字节须同） |
+| W3 候选与排序 | T3 / docdup 候选生成（`dedup/sources.rs` / `dedup/minhash.rs` / `dedup/candidates.rs` / `docdup/judge/candidates/runs.rs`，32）；`similar/bm25.rs` / `similar/ppmi.rs`（17；`stem.rs` / `terms.rs` 不在本波，W6 搬）；fourclass L1（`diff.rs` / `model.rs` / `decls.rs` / `stacking.rs` / `anchor.rs`，21）；score / join / merge 的装配 join（30） | 既有族加性表：单元签名行、shingle 集、查询词的 postings 切片、行哈希对 | K / S | 中：超线性段要 ABAB，核端用数组 / IntMap |
 | W4 CST 行导出 + 其上的算法 | Rust 一个通用导出器（仿 `scan/metrics/events.rs`）：每单元前序行 `[kind, field, parent, named, line, identHash]`；其上搬 `scan/calls.rs` / `scan/callees.rs`（24）、fourclass 的 `declared.rs` 与 `visibility/` 各语言（≈ 54）、mention 的 `conv/` / `selfref.rs` / `candidates.rs`（≈ 45） | 新族 `cst/1`（或各族加性 `rows`） | K（刷新） | 中 |
 | W5 flow 降表 | `flow/` 的 17 个降表文件（≈ 114）改在核里从 CST 行算 CFG 事实（表本就在核） | `flow/1` 请求改送 CST 行 | **H**（guard / flow 两侧降表）与 S | 高：钩子路径，只送改动单元；探针预算见 §8 |
+| W6 文本规则 | 墓碑文本管线（`cli/src/tombstone/`）、提及分词（`mention/token.rs`）、Markdown 掩码 / slug（`graph/md_mask.rs`、`ladder/md_slug.rs`）、similar 的词干 / 词 / 词袋（`similar/stem.rs` / `terms.rs` / `bag.rs`）、docdup 的 shingle（`docdup/shingle.rs`）；量由车道实量 | 各族带文本的 proto 步：源文本片段、名字以文本过线 | **H**（墓碑、guard 用到的分词）与 K / S | 高：钩子路径上的成员受 §3 第 5 点性能门约束，守不住预算不落地 |
+| W7 报告渲染胶水 | v2.32 因字符串不能过线而留在 Rust 的绑定与符号表（`symbols` 计数、码 → 字符串表）；量由车道实量 | 应答带文本（路径、名字、渲染好的行），报告字段不变 | cold / S | 中：报告字节须同 |
 
-- **W2 状态**（2026-10-03）：W2a 落码在车道 `lane/v233-w2`（未落地）——新族 `resolve/1`（proto 8.1.0，步 6 的 8.0.0 之上的加性 minor）接走 Python / Lua / Go / C·C++ 四个阶梯的查找：核 `core/app/CE/Resolve.hs` + `Resolve/` 十一个模块，Rust `cli/src/graph/resolve/`（驻留表、逐语言降、请求与应答）+ `graph/owed.rs`（无核记账）；`ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs` 删除。留在 Rust 的降：站点检测、`c_head.rs` 读 include 列表、`lua_path.rs` 抽 `package.path` 模板、`gomod.rs` 读 go.mod、`compdb*.rs` / `cmdline.rs` 读编译数据库并拆旗标、`[graph.search_roots]` 的配置读法；`ladder/paths.rs` 留给仍在 Rust 的 R / Haskell 阶梯（§11 第 16–23 条）。其余语言（ts / hs / java / r / rs / md / html）仍走 Rust 阶梯，W2b 接。
+- **W2 状态**（2026-10-03）：W2a 落码在车道 `lane/v233-w2`（未落地）——新族 `resolve/1`（proto 8.1.0，步 6 的 8.0.0 之上的加性 minor）接走 Python / Lua / Go / C·C++ 四个阶梯的查找：核 `core/app/CE/Resolve.hs` + `Resolve/` 十一个模块，Rust `cli/src/graph/resolve/`（驻留表、逐语言降、请求与应答）+ `graph/owed.rs`（无核记账）；`ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs` 删除。留在 Rust 的降：站点检测、`c_head.rs` 读 include 列表、`lua_path.rs` 抽 `package.path` 模板、`gomod.rs` 读 go.mod、`compdb*.rs` / `cmdline.rs` 读编译数据库并拆旗标、`[graph.search_roots]` 的配置读法；`ladder/paths.rs` 留给仍在 Rust 的 R / Haskell 阶梯（§11 第 16–23 条）。其余语言（ts / hs / java / r / rs / md / html）仍走 Rust 阶梯，W2b 接；2026-10-04 修正案之后先做 W2a′（把 W2a 的段 id 换成字符串、删掉那层降），W2b 直接按文本过线写（§11 第 42 条）。
 - **proto**：每个新族 / 加性表随自己的 minor（或在 v2.32 步 6 的 8.0.0 之后的 minor），版本号落地时按 `contracts/VERSIONING.md` 的顺序定；golden 由子仓 `fixture_contract::regen` 生成。
 - **粗算**（设计草案：净减按现量 70 %、核增量按搬走量 1.0× 含电池，单位 KB）：W1 ≈ −50 / +45，W2 ≈ −145 / +190，W3 ≈ −70 / +95，W4 ≈ −85 / +115，W5 ≈ −80 / +105 → Rust ≈ 2,406 − 430 − s，Haskell ≈ 1,468 + 550 = 2,018；s ≥ 0 时 Rust ≤ 1,976。五波全做才过线、余量不大——每波落地实读，偏差当波修正。
-- **车道**：W1 / W2 / W3 三条车道并行（目录不相交：query · structure · config / graph / dedup · docdup · similar · fourclass），W4 的导出器同时起，W5 等 W4。落地按波序，一族的落地提交才带它的 proto / golden / 事实。
+- **车道**：W1 / W2 / W3 三条车道并行（目录不相交：query · structure · config / graph / dedup · docdup · similar · fourclass），W4 的导出器同时起，W5 等 W4。落地按波序，一族的落地提交才带它的 proto / golden / 事实。修正案之后的次序（§11 第 42 条）：W2a′ 先于 W2b（同在 `graph/`）；W6、W7 与 W1 / W4 目录不相交、可并行；粗算一行不为 W2a′ / W2b / W6 / W7 估字节，量由各车道实读（§10）。
 
 ## 7. 不搬的与理由
 
-- **墓碑文本管线**（`cli/src/tombstone/`）：在 H 路径上对源文本做切分与匹配，是「降」；其上的整数判定早已在核（`tombstone/1`）。
-- **dedup 的 winnow / pairs**（`cli/src/dedup/winnow.rs`、`cli/src/dedup/pairs.rs` 的配对）：daemon 探针在 H 路径上仍要 Rust 一份，搬了是复制不是减少（`minDistinct` 的判定按 §5 退役，配对本身留下）。
-- **分词 / 词法 / stemmer**：文本侧的「降」。
+2026-10-04 修正案后逐行重读（§11 第 42 条）：理由只是「要读文本」的行不再成立，理由是钩子热路径的行带着那条理由留下。
+
+- **墓碑文本管线**（`cli/src/tombstone/`）：「对源文本切分与匹配是降」这条理由已不成立，列入 W6；留下的理由只剩它在 H 路径上——守住 §3 第 5 点的预算才搬，守不住就留在这里并记账。其上的整数判定早已在核（`tombstone/1`）。
+- **dedup 的 winnow / pairs**（`cli/src/dedup/winnow.rs`、`cli/src/dedup/pairs.rs` 的配对）：daemon 探针在 H 路径上仍要 Rust 一份，搬了是复制不是减少（`minDistinct` 的判定按 §5 退役，配对本身留下）。理由是热路径，不变。
+- **tree-sitter 的词法**（CST）：只有 tree-sitter 能做，留 Rust（W4 把它的输出作行导出）。纯字符串的分词 / 词干 / 掩码原记为「文本侧的降」，此理由不再成立，列入 W6。
 - **C 类全部**（§4）：碰世界的事。
 - **GUI**：前端接线。
 
-W5 之后仍未达标，再议这三项与 GUI（§11 第 9 条）。
+W5 之后仍未达标，再议余下各项与 GUI（§11 第 9 条）。
 
 ## 8. 性能与钩子
 
 - 每族切换提交带 release 同坐 ABAB ×7（旧 / 新二进制、自仓副本），读数进 `docs/PERF-BUDGET.md`；`ce check` 暖跑不得慢过 +15 %，慢了先用中继核录真请求单测核（核端的二次方行走是已见过的成因）。
-- 钩子探针（PreToolUse）：W1–W4 不碰探针路径。W5 的 guard / flow 经 daemon 持有的核链，预算 = 探针 p50 增量 ≤ 10 ms（bench `hook_probe` 同坐对比）；过不了就让 guard 留 Rust 降表一份、其余面走核，并如实记账。
+- 搬文本的车道（W2a′ / W2b / W6 / W7）另量请求字节（§3 第 5 点），与 ABAB 一同进 PERF-BUDGET。
+- 钩子探针（PreToolUse）：W1–W4 与 W7 不碰探针路径；W6 的钩子路径成员（墓碑、guard 用到的分词）与 W5 同一预算。W5 的 guard / flow 经 daemon 持有的核链，预算 = 探针 p50 增量 ≤ 10 ms（bench `hook_probe` 同坐对比）；过不了就让 guard 留 Rust 降表一份、其余面走核，并如实记账。
 
 ## 9. 门（每族）
 
@@ -112,6 +125,7 @@ W5 之后仍未达标，再议这三项与 GUI（§11 第 9 条）。
 | v2.32 步 6 并入立项提交后（车道 `lane/v232-step6` 的终点） | 2,400,357（`cli/src` 2,374,748 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,468,877（`core/app` 956,942 + `core/test` 510,338 + `scripts/tsprobe` 1,597） | 37.96 % | 931,480 | 权威轨步 6（Rust 无读者项退役、8.0.0 退役 `judgedMask` 与 `patterns`），上述量法 |
 | W2a（车道 `lane/v233-w2`，变基到 093aede4 之后，四个阶梯的查找进核） | 2,395,609（`cli/src` 2,370,000 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,554,411（`core/app` 1,017,058 + `core/test` 535,756 + `scripts/tsprobe` 1,597） | 39.35 % | 841,198 | 本车道终树，上述量法；对 093aede4（上一行）Rust −4,748、Haskell +85,534（`core/app` +60,116、`core/test` +25,418） |
 | W3（车道 `lane/v233-w3`，变基到 a0198c2f 之后，四组：候选 / 排序 / 候选生成 / fourclass L1） | 2,393,396 | 1,706,269 | 41.62 % | 687,127 | 本车道终树，上述量法；对 a0198c2f（上一行）Rust 删 66,548 B、胶水加 64,335 B（净 −2,213），核 app 净 +90,095、test 净 +63,340（§11 第 37 条） |
+| 68eda600（main，W3 落地之后；文本过线修正案的基点） | 2,393,396（`cli/src` 2,367,787 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,706,269（`core/app` 1,103,850 + `core/test` 600,822 + `scripts/tsprobe` 1,597） | 41.62 % | 687,127 | `v233_s0_scratch/langbar.py HEAD` 在本提交上的读数（2026-10-04）；与上一行同值（W3 车道终树即落地树） |
 
 注：草案把 `scripts/tsprobe` 的两种扩展名合记在 Rust 名下（8,128 + 1,597 ≈ 10 KB）；按扩展名分开后 Haskell 多 1,597 B。e35fde53 与 40ab1a4f 之间 `.rs` / `.hs` 无改动，两行是同一份字节的两种记法。
 
@@ -124,8 +138,8 @@ W5 之后仍未达标，再议这三项与 GUI（§11 第 9 条）。
 3. **发版**（同日 AskUserQuestion）：1.9.0 等目标达成再发；v2.32 步 10 排在本轨达标之后。
 4. **口径**：GitHub 语言条（主仓），`.gitattributes` 三条照旧；本地按 §10 近似读，发版以 `gh api` 读数为准。
 5. **分工句修正**（ADR-008，立项提交）：§2 的新句取代旧句；细则第五 / 六期两判例按新句改写；验收段「禁止为占比搬迁或改写已有代码」改写为「按新分工搬迁是分工的兑现，每次搬迁仍过本族的逐字节门」。
-6. **文本侧的降留 Rust**：切分 / 词法 / 分词 / stemmer 是降，过线的是哈希与驻留 id（§3）。
-7. **不搬三项与 C 类**（§7）：墓碑文本管线、dedup 的 winnow / pairs、分词 / 词法 / stemmer；C 类与 GUI。
+6. **文本侧的降留 Rust**：切分 / 词法 / 分词 / stemmer 是降，过线的是哈希与驻留 id——2026-10-04 由第 41 条取代（§3）。
+7. **不搬三项与 C 类**（§7）：墓碑文本管线、dedup 的 winnow / pairs、分词 / 词法 / stemmer；C 类与 GUI——2026-10-04 第 42 条把墓碑文本管线与纯字符串的分词 / 词干移入 W6，余下照旧。
 8. **每波实读、达标即停**（§1 第 5 条）；偏差当波修正。
 9. **W5 之后仍未达标**：再议 §7 三项与 GUI，经 AskUserQuestion 上呈。
 10. **性能门**：`ce check` 暖跑 +15 % 为线；钩子探针 p50 增量 ≤ 10 ms，过不了 guard 留 Rust 降表一份并记账（§8）。
@@ -157,3 +171,7 @@ W5 之后仍未达标，再议这三项与 GUI（§11 第 9 条）。
 36. **生产核与 Rust 控制流的三处不同**（性能，留待主会话裁）：① S2 在核里生成（第 30 条）；② 标签交集一旦证明够不到地板就提前停（`CE.Candidates.Units.interUpTo`：返回值低于 `reachFloor` 当且仅当完整的交集低于它）；③ S5 先过标签界、再按「已在并集里」分账（并集里的对都过了两界，所以从不被标签界剪掉，两种次序的账相同）。等价论证逐条写在车道日志，三条都由差分腿覆盖。
 37. **W3 的字节账**（§10 W3 行）：Rust 删 66,548 B、补回的线缆胶水 64,335 B，净只降 2,213 B——每个搬走的算法都换来一份请求装配与应答校验；差 R − H 的收窄几乎全由核增量给出（app +90,095、test +63,340）。
 38. **W3 家族计数**：与第 25 条同理，`count:families#word` 不计 `candidates/1` / `rank/1` / `docpairs/1` / `moves/1`——它们答的是判决的前段（候选、排序、粗筛、L1），判决仍由 `clone/1` / `similar/1` / `docdup/1` / `fourclass/2` 下，README 与官网的「十六个判决家族」不动（子仓 `it/facts/count.rs` 的 `NOT_FAMILIES` 八项，与 `resolve/1` 同表）。
+39. **量出来的结论**（W2a、W3 落地后，2026-10-04）：两波对 Rust 的净减只有约 7 KB——W2a 净 −4,748 B（§10 注）、W3 净 −2,213 B（第 37 条）。每个搬走的算法都要一层同样大小的降胶水（字符串 → 驻留 id → 请求 → 应答 → 字符串）；只要线上只许整数，这层胶水就删不掉，文本形的算法（引用阶梯、配置面读法的逻辑、墓碑 / 提及 / Markdown 的文本规则、报告渲染）也搬不动。
+40. **用户裁**（2026-10-04，AskUserQuestion 三选一，选「放开「只传整数」的规定」）：放开整数过线的规定，让 Rust 胶水可以删、文本形算法可以真搬。本条只立规则（本修正案提交零代码、零 wire 改动、不升 proto）；落码车道在主会话重锁 cc-memory 计划之后起。
+41. **线规则**（第 40 条的落文，§3 第一条六点）：文本过本机管道，且只过这一处——可以过线的文本、留在 Rust 的（碰世界）、核可以答文本、不动的隐私保证（计划书 §5.9-6）、性能门、wire 版本由各族自己的 proto 步定。分工句随之改为「在测量侧已读到的事实——整数或文本——上的计算在核；Rust 碰世界并交出读到的东西」，「Rust 把世界降成整数行」一句被取代，「tree-sitter 留 Rust」不变（§2）。
+42. **波次重排**（§6、§7）：W2a′ 简化 `resolve/1`（路径与说明符以字符串过线，删段驻留表、`vocab`、词缀行与 `graph/resolve/lower.rs` / `tokens.rs` 的大部分；差分门与冻结预言机原样、须保持全绿）→ W2b 其余七个阶梯连同配置面逻辑；W1 / W4 / W5 不变；新增 W6 文本规则（墓碑文本管线、提及分词、Markdown 掩码 / slug、similar 的词干 / 词 / 词袋、docdup shingle；钩子路径成员受性能门约束）与 W7 报告渲染胶水（v2.32 因字符串不能过线而留在 Rust 的绑定与符号表）；§7 里理由只是「要读文本」的行重读后移出，理由是钩子热路径的行留下。新波的字节量不预估，由车道实读。

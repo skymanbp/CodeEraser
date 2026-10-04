@@ -13,7 +13,7 @@ the four-way verdicts: it never turns a gate red, never enters `ce erase`, and i
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
 [Deadcode.hs:22-24](../../../core/app/CE/Text/Deadcode.hs#L22)). The plan calls it ADR-008
-step 3b ([DEVELOPMENT_PLAN.md:292](../../DEVELOPMENT_PLAN.md#L292)); the split follows
+step 3b ([DEVELOPMENT_PLAN.md:293](../../DEVELOPMENT_PLAN.md#L293)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
 

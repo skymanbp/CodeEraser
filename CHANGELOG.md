@@ -8,6 +8,14 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 修正案「文本可过本机线」（2026-10-04；只改文档，判决代码、wire、proto 与 golden 一个字节不动，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §3、§6、§7、§10 与 §11 第 39–42 条）：W2a 与 W3 落地后 Rust 两波只净减约 7 KB（W2a −4,748 B、W3 −2,213 B）——每个搬走的算法都换来同样大小的降胶水（字符串 → 驻留 id → 请求 → 应答 → 字符串）；用户 AskUserQuestion 三选一裁「放开「只传整数」的规定」。
+
+- **线规则**（取代「整数过线」与 §5.9.2 的「需源文本或行级内容过 wire 即测量侧」一票否决）：测量侧从树上读到的文本（仓库相对路径、文件与目录名、import / include / require 说明符、配置值、单元键与符号名、源文本片段）可在读它的算法住在核里时以 UTF-8 JSON 字符串送核，核也可答文本；Rust 只做碰世界的事并交出读到的东西，只有 tree-sitter 能做的词法留 Rust，纯字符串的词法是算法、可以搬；每个开始带文本的族在自己的 proto 步里带，版本号由落码车道定。
+- **隐私保证不动**（计划书新 §5.9-6「核线」）：线只是同机 `ce` 与子进程 `ce-core` 之间的 stdio 管道，`ce-core` 不开文件、不开套接字、不联网；核不持久化、不记日志；索引仍不存源文本；observe feed、trend、基线、SARIF 与报告的字段不变；`contracts/` 的 golden 与夹具只带合成文本；secrets 排除在读之前施行。性能门：每条搬文本的车道量请求字节与 ABAB，PreToolUse 钩子路径预算不变。
+- **波次重排**：W2a′ 简化 `resolve/1`（路径与说明符以字符串过线，删段驻留表、`vocab`、词缀行与 `graph/resolve/lower.rs` / `tokens.rs` 的大部分；差分门与冻结预言机原样保留）→ W2b 其余七个阶梯连同配置面逻辑；W1 / W4 / W5 不变；新增 W6 文本规则（墓碑文本管线、提及分词、Markdown 掩码 / slug、similar 词干 / 词 / 词袋、docdup shingle；钩子路径成员守住预算才落地）与 W7 报告渲染胶水；§7「不搬的」里理由只是「要读文本」的行移出，理由是钩子热路径的留下（dedup 的 winnow / pairs）。
+- **改的文档**：计划书横幅 v2.33 条、ADR-002 的 token 流句、ADR-008 分工句修正与细则第五 / 六 / 九期的 v2.33 注、§5.9 新第 6 条、§6 T 轨 v2.33 行；设计册 `algorithm-track.md` §0 / §2 / §3 / §6 / §7 / §8 / §10 / §11；权威轨册 §2 首条注明取代；`contracts/VERSIONING.md` §1 加「载荷里的文本」一条；方法学索引 `methodology.md` 的边界一句。各族条目与各册里描述某族当前线形的「名字 / 路径永不过线」照旧——那些族今天仍只送整数，由搬它的车道改。
+- **读数**（`langbar.py`，修正案基点 68eda600）：Rust 2,393,396 / Haskell 1,706,269 B = 41.62 %，差 687,127 B。
+
 **无默认档位变更。** 算法轨 v2.33 W3：T3 / docdup 候选生成、同角色顾问的排序与 fourclass L1 进核（2026-10-03；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；协议 **8.2.0–8.5.0**，W2a 的 8.1.0 之上四个新族各占一个加性 minor）。
 
 - **组 1 镜像退役**：新族 `candidates/1`（`CE.Candidates{,.Contract,.Cost,.T3,.Units}`）——尺寸界与标签界（`CE.Clone.Prefilter.boundOf` 一处陈述）、S2 同键源与 S5 在核里只做一次；`dedup/t3/mod.rs::is_clone`、`dedup/candidates.rs::verdict` 与 `struct_fp::label_intersection` 删除，T3 判决缓存回放的行经 `clone/1` 加性 `decide` 仍过核的判定；定义包加顶层键 `limits`（`CE.Limits`），热组上限、`minDistinct`、Jaccard 比例与各族上限改由 `tables::get().limits` 读，`wire.rs` 的镜像常量删除。

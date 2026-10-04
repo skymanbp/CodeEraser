@@ -518,6 +518,10 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
 - 未知**额外**字段必须被接收方忽略（同 major 内前向兼容）。
+- **载荷里的文本**（计划 v2.33 修正案 2026-10-04，§5.9-6）：请求可带测量侧从树上读到的文本（UTF-8 JSON 字符串：路径、说明符、配置值、
+  单元键与名字、源文本片段），应答也可带文本；线只是同机 `ce` 与子进程 `ce-core` 之间的 stdio 管道，核不持久化、不记日志。
+  各族开始带文本时在自己的 proto 步里带（旧整数键能并存一个 minor 时为加性，否则为断代），版本号由落码车道定；
+  下方各族条目写的是它们当时的形（多为整数），在其族改形之前仍然成立。
 - 未知 `type` → **`error` 应答**（0.2.0 起；此前实现以 hello 形状拒绝，属缺陷已修）：
   `{"proto","type":"error","id":<回显|null>,"code","message"}`，
   `code ∈ {unknown_type, bad_request, too_large, contract, internal}`——`internal`

@@ -15,16 +15,16 @@
     "line": 61,
     "text": "| `size` | 文件 LOC；函数长度；参数个数 | 文件 300 警告 / 750 阻断（ESLint max-lines=300；Sonar S104=750）；函数 50/75（ESLint=50；Sonar S138=75）；参数 5（Pylint）。尺寸门语言臂（v2.5）：js/jsx/css/scss/less/html/vue/svelte/sh/yml 仅入本模块 + guard 硬预算 + 棘轮，不入任何判决族。v2.6（as-built v0.6.0）：scan 双档不变；score size 轴改软区间凸罚（S=基线 softLine，缺则回落 300；H=750）+ `ce structure --split-candidates` 顾问面，契约见 [reference/size-advisory.md](reference/size-advisory.md) | M1 |"
   },
-  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|3aecb77e6154a3bf|0": {
-    "target": "../DEVELOPMENT_PLAN.md",
-    "line": 239,
-    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**分工句修正（2026-10-03，v2.33）**：凡是只在已降成整数的事实上做的计算——算法、判定、定义、文档、文字——都在核；Rust 只做碰世界的事（文件系统、tree-sitter、SQLite、git、进程、管道、clap / MCP / daemon / 钩子接线）和把世界降成整数行；上句的「测量语义留 Rust」据此只指降的那一半（词法 / 切分 / 分词 / 解析 / I/O），建立在降出的整数行之上的判定与算法归核；§5.9.2 一票否决原样有效。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测里对源文本的切分与匹配是「降」，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明（v2.33 改写：建立在降出的计数之上的判定是算法、归核；墓碑文本管线在钩子热路径上，v2.33 具名不搬）；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。**细则第六期 = 同角色顾问 + 稀疏检索（2026-09-05，v2.29）**：分词 / 词干是词法（「降」）、倒排表的存储在 SQLite，居 Rust `cli/src/similar/`（v2.33 改写：BM25 分子分母与 PPMI 计数原判为测量，实为词哈希 / tf / df 上的算法，归核，随 W3 搬），`SIMILAR_REV` 单点声明（分词路一处：查询与索引同函数，负向探针改一处两边同红）；过线只有整数——查询袋 `[termHash, weight]`、候选 `[nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual, bm25Num, bm25Den]`（九整数；`shapeEqual` 是步 5 落码时补的第七位：idf 为 0 的形状词既不计分也不计证据，`pHit` 复原不出「形状全等」，而合取第二臂读的正是它——步 2 仪器量的也是这一位）——排序（有理数）与「同角色」合取居 Haskell `CE.Similar`，回执 = 候选下标序 + role 位；名字与词文本永不过线；顾问永不产条件位（册 13 先例），故无 tier、无 §4.2 晋级门。**细则第七期 = 分析轨四家族（2026-09-29 立项，v2.31）**：程序文本的词法、glob 展开、函数体的降表（语句类 / 变量 / 读写序）、树的叶子哈希与位置类、目录树与包粒度边全是需源文本或文法的测量，居 Rust `cli/src/{query,flow,merge,arch}/`；Datalog 的文法 / 安全性 / 分层 / 半朴素求值 / 推导链、控制流图 / 可达 / 活性、反统一 / 参数计数 / 可行性、分层 / 最小反馈弧集 / 聚类 / 影响面全居 Haskell `CE.{Query,Flow,Merge,Arch}`；过线只有整数（记号流 `[kind,value]`、稠密 id、fnv1a64、枚举码），回执只有下标；`query/1` 的 `assert` 是门、`flow/1` 逐语言精度 ≥ 99 % 才成门、`merge/1` 与 `arch/1` 是顾问永不产条件位；四次 proto minor 7.3.0–7.6.0 各随其步。细则全文 = [reference/analysis-track.md](reference/analysis-track.md)。**细则第八期 = 权威轨（2026-10-01 立项，v2.32）**：语言的定义（语句 / 表达式位置 / 循环 kind、标准库名、构建产物规则、secrets 排除……——描述语言或产品语义、与文件系统状态无关、改一处就改判决的文本）由核的 `CE.Lang.*` 持有、经 `tables/1` 一次答整包，Rust 仍是执行者（解析、走查、文件系统不动；`GRAMMARS` 与以代码写成的 kind 启发式留 Rust）；报告文档的骨架与双语消息目录由核在应答里给出，字符串位一律符号引用、符号表只送计数，Rust 只绑定与打印——名字、路径、源文本仍永不过线；无核或旧核 = 具名拒绝，不留内嵌副本。细则全文 = [reference/authority-track.md](reference/authority-track.md)。**细则第九期 = 算法轨（2026-10-03 立项，v2.33）**：分工句修正（见本段首）的落码——五波把今天仍在 Rust 的、整数事实上的算法搬进核：W1 镜像退役 + 冷路径小件、W2 引用阶梯（新族 `resolve/1`，路径以段 id 序列过线、段文本不过线）、W3 候选与排序（既有族加性表）、W4 CST 行导出（新族 `cst/1`，每单元前序行 `[kind, field, parent, named, line, identHash]`）及其上的算法、W5 flow 降表；不搬：墓碑文本管线、dedup 的 winnow / pairs、分词 / 词法 / stemmer、碰世界的代码与 GUI；每族以新旧二进制十语料逐字节同为门。细则全文 = [reference/algorithm-track.md](reference/algorithm-track.md)。"
-  },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|3e89de1e7c44eef6|0": {
     "target": "../DEVELOPMENT_PLAN.md",
     "line": 158,
     "end": 161,
     "text": "**职责边界（B1 采纳后）**：延迟敏感的热路径（PreToolUse 廉价检查、索引探针）完全在"
+  },
+  "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|50218e07b583ea20|0": {
+    "target": "../DEVELOPMENT_PLAN.md",
+    "line": 239,
+    "text": "判决·豁免判定·预算·棘轮·阻断语义在 ce-core 以\"位台账+判决表\"求值（具名谓词产条件位，判决=有序数据表）；测量语义（指纹/掩码豁免/截断/上限执行）留 Rust，须单点声明+knobs 回显钉住；判据=需源文本或行级内容过 wire 即测量侧（§5.9.2 一票否决）；热路径 guard 与 hook 协议映射按 §5 边界留 Rust（两判例）。**分工句修正（2026-10-03 立项，2026-10-04 文本过线修正案定稿，v2.33）**：凡是在测量侧已读到的事实——整数或文本——上做的计算（算法、判定、定义、文档、文字）都在核；Rust 只做碰世界的事（文件系统、tree-sitter、SQLite、git、进程、管道、clap / MCP / daemon / 钩子接线）并把读到的交给核，只有 tree-sitter 能做的词法（CST）留 Rust；上句的「测量语义留 Rust」与「判据=需源文本或行级内容过 wire 即测量侧」据此只指碰世界的那一半，纯字符串上的切分 / 分词 / 词干 / 掩码与其上的判定都是算法、归核；§5.9.2 一票否决由 §5.9-6 的线规则取代——文本可过 `ce` → `ce-core` 的本机管道，§5.9 的隐私保证一条不动。**细则第五期 = 墓碑残留（2026-09-04，v2.26）**：R / S⁺ / P⁺ / 否定框与回溯标记匹配 / changelog 定位检测里对源文本的切分与匹配是「降」，居 Rust `cli/src/tombstone/`，`TOMBSTONE_REV` 单点声明（v2.33 改写：切分与匹配是字符串上的算法、归核，随 W6 搬；墓碑文本管线在钩子热路径上，守住 PERF-BUDGET 的钩子预算才落地）；第二段每段只送 `[kind, marks, erasedNames]` 三整数，合取与地板 `floor = 1` 居 Haskell `CE.Tombstone`（`stacking` 三信号合取先例，非 `audit/1` 单位析取）；第二段（v2.27）wire = `tombstone/1` 族 proto 6.6.0 加性，Rust 送行、Haskell 判行，回执只有下标与 `over`；豁免是 ce.toml 声明（`[tombstone] ledger`，整文件）或定位检测（路径 / 台账形状整文件、**段级**记号密度只豁免该段，K 由回放定——三者都是需源文本的测量故居 Rust，且只产 `exempt` 计数、永不产条件位），永不是被判文件里的标记（`ce:allow(tombstone)` 刻意不接线——对论证残留而言，一条解释「为何可写缺席论证」的 why 本身就是缺席论证）。**细则第六期 = 同角色顾问 + 稀疏检索（2026-09-05，v2.29）**：分词 / 词干是词法（「降」）、倒排表的存储在 SQLite，居 Rust `cli/src/similar/`（v2.33 改写：BM25 分子分母与 PPMI 计数原判为测量，实为词哈希 / tf / df 上的算法，归核，随 W3 搬；分词、词干与词袋随 W6 搬），`SIMILAR_REV` 单点声明（分词路一处：查询与索引同函数，负向探针改一处两边同红）；过线只有整数——查询袋 `[termHash, weight]`、候选 `[nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual, bm25Num, bm25Den]`（九整数；`shapeEqual` 是步 5 落码时补的第七位：idf 为 0 的形状词既不计分也不计证据，`pHit` 复原不出「形状全等」，而合取第二臂读的正是它——步 2 仪器量的也是这一位）——排序（有理数）与「同角色」合取居 Haskell `CE.Similar`，回执 = 候选下标序 + role 位；名字与词文本永不过线；顾问永不产条件位（册 13 先例），故无 tier、无 §4.2 晋级门。**细则第七期 = 分析轨四家族（2026-09-29 立项，v2.31）**：程序文本的词法、glob 展开、函数体的降表（语句类 / 变量 / 读写序）、树的叶子哈希与位置类、目录树与包粒度边全是需源文本或文法的测量，居 Rust `cli/src/{query,flow,merge,arch}/`；Datalog 的文法 / 安全性 / 分层 / 半朴素求值 / 推导链、控制流图 / 可达 / 活性、反统一 / 参数计数 / 可行性、分层 / 最小反馈弧集 / 聚类 / 影响面全居 Haskell `CE.{Query,Flow,Merge,Arch}`；过线只有整数（记号流 `[kind,value]`、稠密 id、fnv1a64、枚举码），回执只有下标；`query/1` 的 `assert` 是门、`flow/1` 逐语言精度 ≥ 99 % 才成门、`merge/1` 与 `arch/1` 是顾问永不产条件位；四次 proto minor 7.3.0–7.6.0 各随其步。细则全文 = [reference/analysis-track.md](reference/analysis-track.md)。**细则第八期 = 权威轨（2026-10-01 立项，v2.32）**：语言的定义（语句 / 表达式位置 / 循环 kind、标准库名、构建产物规则、secrets 排除……——描述语言或产品语义、与文件系统状态无关、改一处就改判决的文本）由核的 `CE.Lang.*` 持有、经 `tables/1` 一次答整包，Rust 仍是执行者（解析、走查、文件系统不动；`GRAMMARS` 与以代码写成的 kind 启发式留 Rust）；报告文档的骨架与双语消息目录由核在应答里给出，字符串位一律符号引用、符号表只送计数，Rust 只绑定与打印——名字、路径、源文本仍永不过线；无核或旧核 = 具名拒绝，不留内嵌副本。细则全文 = [reference/authority-track.md](reference/authority-track.md)。**细则第九期 = 算法轨（2026-10-03 立项，v2.33）**：分工句修正（见本段首）的落码——按波把今天仍在 Rust 的算法搬进核：W1 镜像退役 + 冷路径小件、W2 引用阶梯（新族 `resolve/1`，路径以段 id 序列过线、段文本不过线）、W3 候选与排序（既有族加性表）、W4 CST 行导出（新族 `cst/1`，每单元前序行 `[kind, field, parent, named, line, identHash]`）及其上的算法、W5 flow 降表；2026-10-04 文本过线修正案（§5.9-6）后加 W2a′（`resolve/1` 的段 id 换成字符串、删掉那层降）、W2b（其余七个阶梯连同配置面逻辑，以文本过线）、W6 文本规则（墓碑文本管线、提及分词、Markdown 掩码 / slug、similar 词干 / 词 / 词袋、docdup shingle）、W7 报告渲染胶水（v2.32 留在 Rust 的绑定与符号表）；不搬：dedup 的 winnow / pairs（钩子热路径）、tree-sitter 的词法、碰世界的代码与 GUI；每族以新旧二进制十语料逐字节同为门。细则全文 = [reference/algorithm-track.md](reference/algorithm-track.md)。"
   },
   "docs/reference/methodology.md|size-advisory.md|d2b53e03d12ebc60|0": {
     "target": "size-advisory.md",
@@ -1404,27 +1404,27 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 287,
+    "line": 288,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|1": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 287,
+    "line": 288,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|2": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 287,
+    "line": 288,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|3": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 287,
+    "line": 288,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|4": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 287,
+    "line": 288,
     "text": "| **M5-3A** 深度去冗·检测 | T3 冷路径（TSED 定义仓内自定义并文档化）、`docdup`（含代码注释/docstring 域），各配预注册评估仪器 | 3 周 ± | T3 recall 对 mizchi/similarity 可检出**全集**（分母永不缩减；检出按 ce 全层记功——T1/T2 已报 = 产品真阳非排除项；miss 按封闭词表归因入冻结台账，增长需显式 accept；`recall_incremental` 并列发布，书面处置触发器 <0.50——2026-08-13 拍板③；**v1.6 修正案（2026-08-14 拍板）**：字面门 ≥0.90 经仪器实证在仓内 TSED 定义下对该对照物可证不可达〔miss 100% 定义性：size_bound/below_floor/judged_not_clone，候选盲区已由 S5 全对候选源根修清零〕，门改挂**只升不降回归地板**（冻结 epoch zod 3/6、requests 67/425、cobra 1417/9205；门 `eval_t3_recall` 与冻结件随 v0.5.0 加码批退役（[EVAL-SET.md](EVAL-SET.md)），全档在 git 历史）〕）；T3 精度 ≥ 85%（四源冻结候选宇宙 + 独立审计 GT + 只对已答行 + 输出量地板——拍板⑤）；docdup：LSH 对暴力精确 Jaccard oracle 召回 ≥ 99%（硬）+ 审计精度 ≥ 85%（in-corpus GT 分母 ≥5 才逐语料设门）+ license/骨架豁免类零行进上报集（拍板④） |"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|8397dff6383188db|0": {
@@ -5230,7 +5230,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../DEVELOPMENT_PLAN.md|bda1de03fe6ea227|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 286,
+    "line": 287,
     "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板；**实测铸边精度 38/66=0.576 < 0.90，按本判据永久关闭（RG10 收案 2026-08-17，见 ADR-008）**）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|a6cae4e7dac804e4|0": {
@@ -7783,7 +7783,7 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|042e69f2bf21548b|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 284,
+    "line": 285,
     "text": "| **M3** 被动 guard v1 | 插件成型：PreToolUse 廉价门（预算+T1/T2 探针）、Stop 审计 v1（git diff 净 LOC + 新增重复块，**不含四分类**——A4）、SessionStart 引导+健康行、hook 输出 token 预算、pre-commit 模式、**最小 MCP server**（`check_duplication`/`scan`，对标 jscpd 已在位的位置——A8）；**收尾发 0.x 预览**（本地/私有 marketplace，自有真实项目 dogfood；部分会话跑**静默观察档**——只记录判定不注入不拦截，为 M4 积累未被 guard 塑形的 transcript；plugin.json 自此带显式 version） | 2–3 周 ± | 本地 marketplace 安装 → 测试仓库端到端拦截 T1 重复写入（transcript 为证）+ **500 次真实正常编辑重放误拦 ≤ 1 次**（N=1 演示不算数，B2）；hook 端到端 p95 < 1s 且分解表各项达标；会话累计 hook 延迟中位数 < 15s/百次编辑；0.x 预览在干净环境安装成功，dogfood 会话 ≥ 10（其中观察档 ≥ 5——D2-2） |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|23a1a483949f28b6|0": {
@@ -7806,17 +7806,17 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|9974341e8c37ef6d|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 285,
+    "line": 286,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|9974341e8c37ef6d|1": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 285,
+    "line": 286,
     "text": "| **M4** 更新监督 + Haskell 判决层引入 | 四分类 fallback 阶梯 L0→L1→L2（L2 = Haskell 承重首战）；`churn`；契约内容随真实需求定稿为 1.0 | 3–4 周 ± | **预注册**评估集（实现前冻结、≥200 编辑样本、≥50% 来自真实 agent transcript，**样本纯净度（D2-1）**：只采观察档会话与 M3 前无 guard 历史会话，被 guard 干预过的编辑排除并报告排除比例——否则 FPR 被 guard 塑形向下偏，deny 准入门自证）；主门 = **FPR：500 次真实正常编辑误报 ≤ 1%**；recall 报告但不设作弊性 100% 门；moved 以 `git -M -C` 交叉 + 人工标注为 ground truth（difftastic 不识别 moved，不能当对照——A5）；L2 需证明对 L1 的增量收益，否则产品走 L1 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../DEVELOPMENT_PLAN.md|a0b1a68cbae66910|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 320,
+    "line": 321,
     "text": "| R4 | 误报 → 信任崩塌 | 分级 warn/ask/deny + 演进路线（§4.2）；deny 准入 = M4 FPR 门（≤1%）；豁免带 why；每判决附量化依据 |"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../FPR-REPLAY.md|12e40c77b441466a|0": {
@@ -8878,7 +8878,7 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|b83d90fc0eaee33d|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
-    "line": 292,
+    "line": 293,
     "text": "| **M9** 打磨与完整面（v2.8 立项 2026-08-21） | 批 **0** v0.7.3 出货批：spawn 全站点无窗化（单一 helper 统一 corelink/churn/fourclass/daemon 四站点——unified fix）+ 裸 `ce` 印 help 退 0 + trend 默认分批渲染进度，随后完整发版链；批 **1** 两车道审阅 113 条全量落地（台账=项目 memory `audit-2026-08-21-two-lane-findings.md`；CONFIRMED 33 优先、minors 全清、与后续批重叠项归并不重复干）+ 全 md 防漂移扫尾；批 **2** 方法学册 `docs/reference/methodology.md`（每判决族数学实现——winnowing 指纹/TSED/结构熵七轴/评分与棘轮/图存活性/三信号 join/ROI 缝价，公式逐条引 file:line 禁凭印象）+ 细节版原理图 + 官网 How-it-works 页 + README 挂链；批 **3** `ce erase` 两段式（契约册 `docs/reference/erase.md` 先行）；批 **4** GUI 完整化：全报告族入面、erase 预览-应用、长任务进度事件、root 选择器/记忆（装机版 CWD=安装目录之弊）、设计系统翻新（v2.9 起并入终版不单发）；批 **5** bench dashboard：`eval/` 回放 harness 产 `bench.json` 单源（延迟 P50/P95、精度、召回、FPR），per-tag 回填 + 官网/README/GUI 三面同源渲染；批 **6** 实战检验：≥2 真实仓库全家桶实测入案例册（反哺批 5 与缺陷修复）；批 **7** 判决回迁第三弹（盘点 Rust 内残余判决性逻辑→迁移清单→逐片入核，wire 按 proto minor 加性；禁止为占比写代码——ADR-008 纪律沿用）；批 **8** 架构级全仓代码审查（v2.10 用户令 1.0 前置：模块边界与依赖结构〔import SCC 清单为线索〕、wire 十族契约一致性、核模块架构、GUI/测试架构、错误处理与降级路径；多 agent+逐条对抗核验，修复或书面 disposition 不悬空）；批 **9** 全域优雅性终打磨（数学/算法/架构/GUI 再设计思考，含 GUI 美化挂账项；提案册先行，契约/门槛变更走拍板；**v2.11 增补**：GUI Graph 可视化收进本批 GUI 波——文件级引用图 canvas 视图+死码/环判决叠加，复用 deadcode 判决运行的 Rust 投影零 proto 变更，符号级下钻不入围，2026-08-21 拍板） | 分批推进 | 每批五门+CI 全绿；批 0 发 v0.7.3，批 1–9 落 main，终版 **v1.0.0** 走完整发版链收口（v2.9/v2.10）；erase 触碰用户文件必 dry-run 默认+干净工作区前置+补丁与判决同源可审计；dashboard 每个数字可由回放复现（禁手填）；回迁片产品判决面字节等价 golden 承重；FPR 纪律与 guard 档位 opt-in 不破；弹窗根修以 windowed 进程实测零弹窗验收（**已收口 2026-08-22**：批 0–9 + 终扫〔113 对账 81 修 29 处置、716 断言终核、截图/官网真值重取〕全清，v1.0.0 发版链走毕即项目收口） |"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a2c3821eca59417f|0": {
