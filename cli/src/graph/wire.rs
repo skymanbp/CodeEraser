@@ -1,5 +1,6 @@
-//! Phase-2 resolver bridge (design §3/§4 wiring): one cached site →
-//! ladder dispatch → edge rows. Only in-corpus resolutions become
+//! Phase-2 resolver bridge (design §3/§4 wiring): cached sites →
+//! ladder dispatch (one batch: the core holds four languages' rungs
+//! since plan v2.33 wave W2a) → edge rows per site. Only in-corpus resolutions become
 //! rows — External and Unresolved sites stay ledger-visible as sites
 //! without edges (the eval instrument re-runs the ladder itself, so
 //! refusal reasons need no storage). A ResolvedPackage lands ONE row
@@ -11,6 +12,7 @@
 //! reordering is a GRAPH_REV bump.
 
 use super::ladder::{self, Outcome, Scope, Site};
+use super::owed::{Owed, Resolved};
 use super::store::{CachedSite, EdgeRow, kind_label};
 use crate::scan::lang::Lang;
 use std::path::Path;
@@ -36,23 +38,67 @@ pub const GRAN_FILE: i64 = 0;
 pub const GRAN_PACKAGE: i64 = 1;
 pub const GRAN_SECTION: i64 = 2;
 
-/// The resolver callback: dispatch one cached site down its language
-/// ladder and shape the outcome into edge rows.
-pub fn edges(site: &CachedSite, scope: &Scope) -> Vec<EdgeRow> {
-    let Some(lang) = Lang::from_path(Path::new(&site.file)) else {
-        return Vec::new();
+/// The resolver callback: dispatch the cached sites down their
+/// language ladders in one batch and shape each outcome into edge rows
+/// (a site with no language or no kind label has none). When the core
+/// cannot answer resolve/1, the languages it holds are stored
+/// unresolved and their files owed (owed.rs); the rest still resolve.
+pub fn edges(sites: &[CachedSite], scope: &Scope) -> anyhow::Result<Resolved> {
+    let at: Vec<Option<(Lang, Site)>> = sites
+        .iter()
+        .map(|site| {
+            let lang = Lang::from_path(Path::new(&site.file))?;
+            let kind = kind_label(site.kind)?;
+            Some((
+                lang,
+                Site {
+                    kind,
+                    from: &site.file,
+                    spec: &site.spec,
+                    line: usize::try_from(site.line).unwrap_or(1),
+                },
+            ))
+        })
+        .collect();
+    let batch: Vec<(Lang, &Site)> = at.iter().flatten().map(|(l, s)| (*l, s)).collect();
+    let (outcomes, owed) = match ladder::resolve_all(&batch, scope) {
+        Ok(all) => (all.into_iter().map(Some).collect(), None),
+        Err(reason) => without_core(&batch, scope, reason)?,
     };
-    let Some(kind) = kind_label(site.kind) else {
-        return Vec::new();
-    };
-    let at = Site {
-        kind,
-        from: &site.file,
-        spec: &site.spec,
-        line: usize::try_from(site.line).unwrap_or(1),
-    };
-    let outcome = ladder::resolve(lang, &at, scope);
-    rows(kind, outcome)
+    let mut outcomes = outcomes.into_iter();
+    let rows = at
+        .iter()
+        .map(|found| match found {
+            Some((_, site)) => outcomes
+                .next()
+                .expect("one outcome per site")
+                .map_or_else(Vec::new, |o| rows(site.kind, o)),
+            None => Vec::new(),
+        })
+        .collect();
+    Ok(Resolved { rows, owed })
+}
+
+/// The batch with no core to answer: this side's rungs answer their
+/// languages, the core's languages are none, their files owed.
+type Partial = (Vec<Option<Outcome>>, Option<Owed>);
+
+fn without_core(batch: &[(Lang, &Site)], scope: &Scope, reason: String) -> anyhow::Result<Partial> {
+    let held = |l: Lang| super::resolve::in_core(l);
+    let here: Vec<(Lang, &Site)> = batch.iter().filter(|(l, _)| !held(*l)).copied().collect();
+    let mut answered = ladder::resolve_all(&here, scope)
+        .map_err(anyhow::Error::msg)?
+        .into_iter();
+    let files = batch
+        .iter()
+        .filter(|(l, _)| held(*l))
+        .map(|(_, s)| s.from.to_string())
+        .collect();
+    let outcomes = batch
+        .iter()
+        .map(|(l, _)| if held(*l) { None } else { answered.next() })
+        .collect();
+    Ok((outcomes, Some(Owed { reason, files })))
 }
 
 /// In-corpus outcomes only. dst_unit "" is the file or package node;

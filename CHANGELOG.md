@@ -8,6 +8,16 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W2a：Python / Lua / Go / C·C++ 四个引用阶梯的查找搬进核，新族 `resolve/1`、协议 **8.1.0**（2026-10-03；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §11 第 16–27 条）：
+
+- **核**：`CE.Resolve`（+ `Contract` / `Cost` / `Request` / `Vocab` / `World` / `Answer` 与逐语言 `Py` / `Lua` / `Go` / `C` / `CIndex`）按 a8db74a9 的 Rust 阶梯照抄控制流：候选位置、级序、命中规则、歧义与拒答、External / OutOfScope、C 的编译数据库座位、覆盖与 include 闭包都在核里；请求只带整数——段 id 驻留表、目录树、文件行、词表与词缀表、逐语言配置事实、站点 token；应答每站点 `[rung, outcome, target, reason]` 与 C 的强制包含弧。`hello` 能力与定义包多一族一键（`resolve.words` / `resolve.affixes`），`tablesDigest` 挪动；`Version.hs` 与 `corelink.rs` 的 `PROTO` 同为 8.1.0。
+- **Rust**：`graph/ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs` 删除（37,908 B）；新 `graph/resolve/`（驻留、逐语言降、配置事实、请求与应答）与 `graph/owed.rs`（无核记账）。留在 Rust 的降：站点检测、`c_head.rs` 读 include 列表、`lua_path.rs` 抽模板、`gomod.rs` / `compdb*.rs` / `cmdline.rs` 读配置、词法判断（前导点、有根路径、带点头段、`<…>` 形、绝对路径的强制包含落点）与空说明符拒答。其余七个语言的阶梯仍在 Rust。
+- **无核**：核答不了 `resolve/1` 时，这四个语言的站点存为未解析、文件记进 `resolve_pending`、meta `resolve_degraded` 记文件数，其余语言照常解析；读边的面（graph / deadcode / structure / check / join / arch / merge / query / erase）在该行存在时按名拒 `resolve_unavailable: … — <原因>`，下一次有核的刷新只重解这些文件。钩子路径不变（探针不调阶梯）。
+- **差分门**：a8db74a9 的六个阶梯文件（`py` / `lua` / `go` / `c` / `c_search` / `c_index`）原样拷进测试子仓 `unit/graph/ladder/oracle/`，只在测试里经 `unit/graph/ladder/frozen.rs` 挂作 `ladder::frozen`（它以 glob 取回旧父模块的名字、逐个 `#[path]` 挂六份拷贝、带 a8db74a9 的分发器；`paths.rs` 自 a8db74a9 起代码未变，用现行的），`unit/dedup/ladder_diff/` 把同一批站点一边经真 `resolve/1` 问核、一边交冻结的 Rust 阶梯，逐站点比：真树 7,934 个站点（十个对拍语料、自仓、requests / cobra / koreader / luarocks / lua / fmt）+ 每个语言两颗种子各 400 棵随机树 × 30 站点，不一致 0；C 的强制包含弧 817 棵树同。
+- **精度册退役并重生成**（两个提交）：`ladder/mod.rs` 在十一份语言精度册的 `ANSWERED_BY` 里；第一个提交删档、六门考题翻回 `Audited`，第二个提交在 b3d5c4d5 的干净树上逐份重生成：十一份与退役前的 blob 只差 `generated_from.commit`（062d2d62 → b3d5c4d5），六门翻回 `Scored`；登记册 `docs/EVAL-SET-LANGS.md` 过 750 行硬线，此前四次的退役记录逐字节搬进新归档册 `docs/EVAL-SET-LANGS-REGEN.md`（冻结集）。
+- **门**：@@GATES@@
+- **读数**：语言条 37.96 % → 39.33 %（Rust 2,400,357 → 2,396,214 B、Haskell 1,468,877 → 1,553,185 B，差 931,480 → 843,029 B；Rust 删 37,908、降与接线 +33,765，Haskell `core/app` +58,890、`core/test` +25,418；`git ls-tree -r -l`，设计册 §10 行）。
+
 **无默认档位变更。** 权威轨 v2.32 步 6：Rust 里失去读者的项退役、协议 **8.0.0** 退役请求键 `judgedMask` 与 `patterns`、parity 门改读核的目录、GUI 擦除预览经 `document/1`（2026-10-03；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/authority-track.md` §13 第 69–75 条）：
 
 - **Rust 删除**：`erase/render.rs` 的 `report_json`（旧文档装配）与 `diff`、`erase/model.rs` 的 `SCHEMA_ID` 与 `family_command`（核 `CE.Erase.Document` 的 schema id 与 out-of-class 命令的镜像）、`flow_report::kind_name`（目录 kind 名的镜像，读者是第 64 条删掉的控制台）、`graph::counts`（挪进唯一读者 `unit/graph.rs`）；请求侧 `judgedMask` 的装配与三处回显校验（`scan/wire.rs`、`graph/deadcode.rs`、`score/wire.rs` 的 `judged_mask` 字段、`score/wire_check.rs`）。盘点（编译器探针：bin 并进库、GUI 用到的库路径当根）报 67 处产品够不着，其余各有测试或仪器读者、留下并具名（第 73 条）；`ZH_TSV` 与 `i18n` 零项可删。

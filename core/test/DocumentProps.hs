@@ -18,6 +18,7 @@ module DocumentProps (battery) where
 import CE.Document (catalogue, emptyOf, families, respond)
 import CE.Document.Contract (DocFamily (..), docRowCap)
 import CE.Lang (digestOf, pack)
+import qualified CE.Resolve.Vocab as Vocab
 import CE.Tables (package, tablesDigest)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -199,6 +200,7 @@ capped = case replyObjWith respond request of
 catalogued :: Bool
 catalogued =
   at package "document" == Just catalogue
+    && at package "resolve" == Just Vocab.table
     && dropDocument package == pack
     && tablesDigest == digestOf package
     && tablesDigest /= digestOf pack
@@ -217,6 +219,8 @@ catalogued =
       ["unreachable", "dead store", "unused local", "unused parameter"]
       (words "不可达 死存储 未用局部量 未用形参")
   flowJudgedRows = [code | Just (Array rs) <- [path ["languages", "rows"] pack], Object row <- toList rs, KM.lookup "flow_judged" row == Just (Bool True), Just (Number code) <- [KM.lookup "code" row]]
+  -- the package is the definition pack plus the two tables the core
+  -- adds: the document catalogue and the resolve vocabulary (8.1.0)
   dropDocument v = case v of
-    Object o -> Object (KM.delete "document" o)
+    Object o -> Object (KM.delete "resolve" (KM.delete "document" o))
     _ -> v

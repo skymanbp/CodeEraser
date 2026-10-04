@@ -286,7 +286,7 @@ impl Index {
     pub fn ensure_edges_resolved(
         &mut self,
         key: i64,
-        resolve: impl FnMut(&store::CachedSite) -> Vec<store::EdgeRow>,
+        resolve: impl FnMut(&[store::CachedSite]) -> Result<store::Resolved>,
     ) -> Result<bool> {
         store::ensure_resolved(&mut self.conn, key, resolve)
     }
@@ -296,7 +296,7 @@ impl Index {
     pub fn resolve_refreshed(
         &mut self,
         dirty: &BTreeSet<String>,
-        resolve: impl FnMut(&store::CachedSite) -> Vec<store::EdgeRow>,
+        resolve: impl FnMut(&[store::CachedSite]) -> Result<store::Resolved>,
     ) -> Result<()> {
         store::resolve_refreshed(&mut self.conn, dirty, resolve)
     }

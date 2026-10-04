@@ -93,7 +93,7 @@ the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in th
 booklet was distilled into `structure-axes.md` and its full text lives only in git history
 ([structure-axes.md:3-6](../structure-axes.md#L3)). No other definition of "row C"
 or of "self-referential floor" exists in the repository (verified by grep this run: the other hits in tracked source are
-[c.rs:3](../../../cli/src/graph/ladder/c.rs#L3), the language-expansion booklet's unrelated "§8 row C / C++", and
+[C.hs:3](../../../core/app/CE/Resolve/C.hs#L3), the language-expansion booklet's unrelated "§8 row C / C++", and
 [Boot2.hs:46](../../../core/app/CE/Lang/Common/Boot2.hs#L46), a Haskell module list where
 "Arrow Control.Category" spells the substring by accident).
 

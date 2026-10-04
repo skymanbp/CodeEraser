@@ -73,6 +73,7 @@
 | W4 CST 行导出 + 其上的算法 | Rust 一个通用导出器（仿 `scan/metrics/events.rs`）：每单元前序行 `[kind, field, parent, named, line, identHash]`；其上搬 `scan/calls.rs` / `scan/callees.rs`（24）、fourclass 的 `declared.rs` 与 `visibility/` 各语言（≈ 54）、mention 的 `conv/` / `selfref.rs` / `candidates.rs`（≈ 45） | 新族 `cst/1`（或各族加性 `rows`） | K（刷新） | 中 |
 | W5 flow 降表 | `flow/` 的 17 个降表文件（≈ 114）改在核里从 CST 行算 CFG 事实（表本就在核） | `flow/1` 请求改送 CST 行 | **H**（guard / flow 两侧降表）与 S | 高：钩子路径，只送改动单元；探针预算见 §8 |
 
+- **W2 状态**（2026-10-03）：W2a 落码在车道 `lane/v233-w2`（未落地）——新族 `resolve/1`（proto 8.1.0，步 6 的 8.0.0 之上的加性 minor）接走 Python / Lua / Go / C·C++ 四个阶梯的查找：核 `core/app/CE/Resolve.hs` + `Resolve/` 十一个模块，Rust `cli/src/graph/resolve/`（驻留表、逐语言降、请求与应答）+ `graph/owed.rs`（无核记账）；`ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs` 删除。留在 Rust 的降：站点检测、`c_head.rs` 读 include 列表、`lua_path.rs` 抽 `package.path` 模板、`gomod.rs` 读 go.mod、`compdb*.rs` / `cmdline.rs` 读编译数据库并拆旗标、`[graph.search_roots]` 的配置读法；`ladder/paths.rs` 留给仍在 Rust 的 R / Haskell 阶梯（§11 第 16–23 条）。其余语言（ts / hs / java / r / rs / md / html）仍走 Rust 阶梯，W2b 接。
 - **proto**：每个新族 / 加性表随自己的 minor（或在 v2.32 步 6 的 8.0.0 之后的 minor），版本号落地时按 `contracts/VERSIONING.md` 的顺序定；golden 由子仓 `fixture_contract::regen` 生成。
 - **粗算**（设计草案：净减按现量 70 %、核增量按搬走量 1.0× 含电池，单位 KB）：W1 ≈ −50 / +45，W2 ≈ −145 / +190，W3 ≈ −70 / +95，W4 ≈ −85 / +115，W5 ≈ −80 / +105 → Rust ≈ 2,406 − 430 − s，Haskell ≈ 1,468 + 550 = 2,018；s ≥ 0 时 Rust ≤ 1,976。五波全做才过线、余量不大——每波落地实读，偏差当波修正。
 - **车道**：W1 / W2 / W3 三条车道并行（目录不相交：query · structure · config / graph / dedup · docdup · similar · fourclass），W4 的导出器同时起，W5 等 W4。落地按波序，一族的落地提交才带它的 proto / golden / 事实。
@@ -109,8 +110,11 @@ W5 之后仍未达标，再议这三项与 GUI（§11 第 9 条）。
 | e35fde53 | ≈ 2,406 KB（`cli/src` 2,379,503 + `gui/src-tauri` 18 KB + `scripts/tsprobe` 10 KB） | 1,467,930（`core/app` 957,403 + `core/test` 510,527） | — | ≈ 938 KB | 设计草案（主会话 2026-10-03） |
 | 40ab1a4f（立项基线） | 2,405,719（`cli/src` 2,379,503 + `gui/src-tauri` 18,088 + `scripts/tsprobe` 8,128） | 1,469,527（`core/app` 957,403 + `core/test` 510,527 + `scripts/tsprobe` 1,597） | 37.92 % | 936,192 | 本册立项提交，上述量法 |
 | v2.32 步 6 并入立项提交后（车道 `lane/v232-step6` 的终点） | 2,400,357（`cli/src` 2,374,748 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,468,877（`core/app` 956,942 + `core/test` 510,338 + `scripts/tsprobe` 1,597） | 37.96 % | 931,480 | 权威轨步 6（Rust 无读者项退役、8.0.0 退役 `judgedMask` 与 `patterns`），上述量法 |
+| W2a（车道 `lane/v233-w2`，变基到 093aede4 之后，四个阶梯的查找进核） | 2,396,214（`cli/src` 2,370,605 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,553,185（`core/app` 1,015,832 + `core/test` 535,756 + `scripts/tsprobe` 1,597） | 39.33 % | 843,029 | 本车道终树，上述量法；对 093aede4（上一行）Rust −4,143、Haskell +84,308（`core/app` +58,890、`core/test` +25,418） |
 
 注：草案把 `scripts/tsprobe` 的两种扩展名合记在 Rust 名下（8,128 + 1,597 ≈ 10 KB）；按扩展名分开后 Haskell 多 1,597 B。e35fde53 与 40ab1a4f 之间 `.rs` / `.hs` 无改动，两行是同一份字节的两种记法。
+
+注（W2a）：Rust 只净减 4,143 B——删掉的四个阶梯的六个文件 37,908 B（`ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs`），换来的降与接线 33,765 B（`graph/resolve/` 五个文件 24,610、`graph/owed.rs` 3,428、其余十三个文件的改动 5,727，其中差分门的 `#[cfg(test)]` 挂载与说明约 1.1 KB）。查找本身在 Rust 里很紧凑，而把路径、站点与配置降成段 id 的那一层与它同量级；W2 行的「≈ −145」按这个比例看要大幅下调（§11 第 24 条）。
 
 ## 11. 拍板记录
 
@@ -129,3 +133,16 @@ W5 之后仍未达标，再议这三项与 GUI（§11 第 9 条）。
 13. **v2.32 步 9 取代**：权威轨步 9「口径类裁定」由本轨取代；权威轨步 10（发版 1.9.0）等本轨达标。
 14. **立项提交零代码改动**：本册 + 计划书 v2.33（横幅、ADR-008、§6 T 轨）+ 权威轨册两处指向 + CHANGELOG 一块；项目 CLAUDE.md（被 gitignore）的硬约束 1 与状态行由主会话在主根改。
 15. **权威轨步 6 的删减量只有约 5 KB**（2026-10-03）：步 6 删掉的 Rust 是 5,362 B（`cli/src` −4,755、`gui/src-tauri` −607），不是权威轨册 §5.4 估的约 200 KB——旧面、控制台与 `print_*` 已在步 3–5 各族切换时删掉，步 6 只剩盘点出的余项（权威轨册 §13 第 69–75 条）。差 R − H 由 936,192 降到 931,480（§10），缺口仍要靠本轨的波次补。
+16. **W2a 词表一维对齐**：`vocab` 是一列段 id，与定义包 `resolve.words ++ resolve.affixes` 逐项对齐（任务书草案写成 `[[vocabCode, segId]]` 对；一列已带同样的映射，次序由包定）。
+17. **W2a 文件行带 `walked` 位**：站点所在的文件若不在走查集（考题仪器的例子），照样追加一行、`walked` = 0——它的目录可读，但它永远不是目标、不进 Go 的目录集、不进 C 的覆盖集。
+18. **W2a 无核记账**（任务书 §3）：核答不了时（无核 / 无 `resolve/1` / 降级）四个语言的站点存为未解析、不出边行，其余语言照常解析；`graph/owed.rs` 把这些文件记进 `resolve_pending`（下一次有核的刷新只重解这些）、meta `resolve_degraded` 记文件数；读边的面（`graph::load::graph_rows` / `unresolved_paths`，即 graph / deadcode / structure / check / join / arch / merge / query / erase）在该行存在时按名拒 `resolve_unavailable: … — <原因>`；干净的一遍删掉两者。初稿让整次扫描拒答，会让索引刷新（daemon 冷启分析与 Stop 审计的 similar 腿都要它）一起停，改为记账。
+19. **W2a 钩子路径不变**：PreToolUse 探针（daemon `probe::probe`）从不调阶梯；冷启分析在后台——没有钩子路径因此新需要核（任务书的 STOP 条件未触发）。
+20. **W2a 编译数据库链在收集时驻留并按结构去重**（旗标链在内），一个请求里同形的链只过线一次。
+21. **W2a 主仓 `graph/` 之外的改动**：`core/app/CE/Protocol.hs`（族行）、`CE/Tables.hs`（包键）、`CE/Protocol/Version.hs` 与 `cli/src/corelink.rs`（proto 8.1.0 的两处拼写）、`core/ce-core.cabal`（模块）、`cli/src/tables/pack.rs`（读 `resolve` 键）、`cli/src/dedup/{mod,index}.rs`（索引的解析回调改成整批签名）；`core/test/DocumentProps.hs` 的目录腿多删一个包键并断言它等于 `CE.Resolve.Vocab.table`。
+22. **W2a 精度册出处**：子仓 `exams.rs` 的 C 与新加的 Lua 阶梯清单列入 `cli/src/graph/resolve/` 与 `core/app/CE/Resolve(.hs|/)`——查找住在那里，精度册的出处门要跟着它；`ladder/mod.rs` 本就在出处清单里且已改，全部已评分的精度册按两提交退役再重生成。
+23. **W2a 参考实现换一种写法**：`ReferenceResolve` 按路径字符串做（切分与拼接文本、集合成员、字符串比较 External 表），`ReferenceResolveGen` 用自己的降（按排序后的字符串编号）；正品读段 id、词缀表与目录树。两者在 200 例 1,620 站点上逐站点同答，另一腿要求这些例子走到四个阶梯的每一级与每种拒答（探针：改坏参考的一处，等价腿即红）。
+24. **W2a 的读数**：语言条 37.96 % → 39.33 %，差 931,480 → 843,029 B（对 093aede4）；Rust 只净减 4,143 B（§10 注）——整数过线要求 Rust 侧留一层降（驻留表、逐语言降、配置事实），它与被搬走的查找几乎一样大，所以一个阶梯的搬迁对 Rust 的净减远小于 §6 粗算的「净减按现量 70 %」。
+25. **W2a 家族计数**：`count:families#word`（README / 官网的「十六个判决家族」）不计 `resolve/1`，与 `hello` / `tables/1` / `document/1` 同理——它答一个站点通向哪里，判决仍是图族的事（子仓 `it/facts/count.rs`）。
+26. **W2a 差分门**（主会话令 2026-10-03「仔细确保算法逻辑、行为完全一致」）：a8db74a9 的 `ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs` 原样拷进测试子仓 `unit/graph/ladder/oracle/`、只在测试里编译（`ladder/mod.rs` 以 `#[cfg(test)] #[path]` 挂上测试子仓的 `unit/graph/ladder/frozen.rs` 作 `ladder::frozen`，它以 glob 取回旧父模块的名字、逐个 `#[path]` 挂六份拷贝、带 a8db74a9 的分发器；`paths.rs` 自 a8db74a9 起代码未变、用现行的），差分仪器 `unit/dedup/ladder_diff/` 把同一批站点一边经真 `resolve/1` 问核、一边交冻结的 Rust 阶梯，逐站点比 `Outcome`，C 的强制包含弧也比。腿：真树（十个对拍语料、自仓归档、requests / cobra / koreader / luarocks / lua / fmt 六棵真树，共 7,934 个站点）与四个语言各 400 棵种子随机树 × 30 站点（两颗种子，各语言各 24,000 站点；含歧义、`..`、空说明符、空段、根外路径、模板头尾、MSVC 包含栈、框架头、强制包含）：不一致 0。核的容量上限（`Cost` 的 cap）随机树碰不到，由 `ResolveProps` 的上限腿管。
+27. **W2a 正品按 Rust 控制流照抄，偏离逐条列出**：变基后为对齐控制流改了四处（Go `moduleRung` 改成按模块顺序的 best_len 折叠、`replaceRung` 改成按余部长度取首个最小、Lua 标准库改为整串比对、Python `moduleAt` 空点路径读根的原文）。仍与 Rust 写法不同、按等价论证保留的：路径是段 id 列表而非字符串（`join_rel` 的拼接改成逐段折叠，「`prefix ++ affix`」由词缀表答、树里不存在的拼接是不匹配任何文件的 `U` 段）；命中集合是文件 id 的 `IntSet` 而非路径字符串的 `BTreeSet`（文件 id 按路径序分配，二者一一对应）；Go 模块与余部长度按段数而非字节数（拥有同一说明符的模块按两种长度排序相同）；Lua 搜索目录是插入序列表而非按文本排序的 `BTreeMap`（命中取集合，次序不影响答案）；C 的旗标链在收集时按出现序编号而非在覆盖时编号（链号只用作集合的键，闭包逐链独立）；Python 的源根不做相邻去重（命中取集合）。词法判断（Python 前导点数、Lua `dofile` 是否有根、Go 头段是否带点、C 的 `<…>` 形、绝对路径的强制包含落到树内哪个文件）与空说明符拒答留在 Rust。逐函数对照表与语义单在车道日志。
+28. **W2a 精度考题册分出归档册**：`docs/EVAL-SET-LANGS.md` 记第五次退役并重生成时到 756 行、过 750 行硬线；此前四次的记录（步 7、v2.31 步 4 提交 B、v2.32 步 2、v2.32 步 6）逐字节搬进新册 `docs/EVAL-SET-LANGS-REGEN.md`，主册留一行指针；新册入冻结集（子仓 `frozen_set.rs`）与引文门的退出表（`contracts/docs-citations-optout.json`），与 `EVAL-SET-FLOW-GEN1.md` 同形。

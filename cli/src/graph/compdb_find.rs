@@ -10,7 +10,7 @@
 //! files are resolve-key INPUTS like the tsconfig extends bases
 //! (keys.rs): their bytes, and the bytes of every in-tree response
 //! file a database names, join the key so that an edit re-fires the
-//! sweep; the ladder (ladder/c_index.rs) and the deadcode request (the
+//! sweep; the resolve/1 lowering (resolve/facts.rs) and the deadcode request (the
 //! forced-include arcs) read exactly this set through `found`.
 
 use crate::dedup::tokens;

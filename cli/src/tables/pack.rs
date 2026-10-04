@@ -124,6 +124,9 @@ leaked! {
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }
+    /// The words and affixes resolve/1's search spells (8.1.0): the
+    /// request interns exactly these, in this order.
+    Resolve { words: Names, affixes: Names }
     /// Every table, as the core answers them less the envelope.
     Tables {
         languages: Languages,
@@ -133,7 +136,7 @@ leaked! {
         sites: ByLang<Vec<crate::graph::spec::SiteKind>>,
         calls: Calls, fourclass: Fourclass, ladder: Ladder, walk: Walk, outputs: Rows,
         docdup: Docdup, keys: Keys, flags: Flags, tombstone: Tombstone, compdb: Compdb,
-        protocol: Protocol, document: DocCatalogue, store: Store,
+        protocol: Protocol, document: DocCatalogue, store: Store, resolve: Resolve,
     }
 }
 

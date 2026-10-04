@@ -68,7 +68,10 @@ executable ce-core
                       CE.Trend, CE.Trend.Cost, CE.Erase, CE.Erase.Cost, CE.Wire, CE.Wire.Mask, CE.Wire.Retired,
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Candidates, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
-                      CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces
+                      CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces,
+                      CE.Resolve, CE.Resolve.Answer, CE.Resolve.C, CE.Resolve.CIndex, CE.Resolve.Contract,
+                      CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
+                      CE.Resolve.Vocab, CE.Resolve.World
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -143,6 +146,10 @@ test-suite ce-core-test
                       CE.Verdict, CE.Verdict.Cost, CE.Verdict.Candidates, CE.Verdict.Join,
                       CE.Verdict.Score, CE.Verdict.Ratchet, CE.Verdict.Soft, CE.Verdict.Knobs,
                       CE.Verdict.Table, CE.Verdict.Wire, CE.Verdict.Rows, CE.Verdict.Baseline, CE.Verdict.Faces,
+                      CE.Resolve, CE.Resolve.Answer, CE.Resolve.C, CE.Resolve.CIndex, CE.Resolve.Contract,
+                      CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
+                      CE.Resolve.Vocab, CE.Resolve.World,
+                      ReferenceResolve, ReferenceResolveGen, ResolveProps,
                       Reference, ReferenceGraph, ReferenceQuery, QueryProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,
                       ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps,

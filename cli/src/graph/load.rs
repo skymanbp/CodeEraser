@@ -63,6 +63,7 @@ row_tuple!(t6: A 0, B 1, C 2, D 3, E 4, F 5);
 /// count travels with the deadcode report, this names the owners so
 /// the language fold is a fact, never a guess).
 pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
+    super::owed::refuse_if_owed(idx.raw())?;
     rows(
         idx.raw(),
         "SELECT DISTINCT f.path FROM sites s JOIN files f ON f.id = s.file_id
@@ -99,6 +100,9 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Path
     // indexes nodes by source (review 2026-08-19, codex lane).
     let txn = conn.unchecked_transaction()?;
     let conn = &*txn;
+    // sites an absent core left unresolved are no graph to judge
+    // (owed.rs, plan v2.33 W2a)
+    super::owed::refuse_if_owed(conn)?;
     let files = graph_files(conn)?;
     let edges = rows(
         conn,

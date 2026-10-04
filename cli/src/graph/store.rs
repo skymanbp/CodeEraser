@@ -31,6 +31,9 @@ use std::collections::BTreeSet;
 // callers keep the store:: spelling (walkidx, tests) — the key
 // functions moved to keys.rs at the E01 300-line cap
 pub use crate::graph::keys::{is_resolver_config, resolve_key};
+// the batch answer the passes take (owed.rs: the no-core rule)
+use crate::graph::owed;
+pub use crate::graph::owed::{Resolved, each};
 
 /// Bump when site extraction or ladder semantics change: it sits in
 /// the meta cache key, so stale graph rows are wiped (RG3 standing
@@ -100,7 +103,7 @@ pub use crate::graph::keys::{is_resolver_config, resolve_key};
 /// 22 = plan v2.30 step 6's ladder commit gives the C family a fourth
 /// rung — the `include` directory beside the including file's own
 /// directory or any ancestor of it, for a file no compile chain
-/// reaches (ladder/c.rs) — and moves its External rung to 5: stored
+/// reaches (the core's CE.Resolve.C since plan v2.33 W2a) — and moves its External rung to 5: stored
 /// include edges and their rungs are re-derived once. The revision is
 /// part of the storage key, so an index a development build of an
 /// earlier step wrote (a corpus clone the exams run in) cannot keep
@@ -323,7 +326,7 @@ pub struct EdgeRow {
 pub fn ensure_resolved(
     conn: &mut Connection,
     key: i64,
-    mut resolve: impl FnMut(&CachedSite) -> Vec<EdgeRow>,
+    mut resolve: impl FnMut(&[CachedSite]) -> Result<Resolved>,
 ) -> Result<bool> {
     let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
     let stored: Option<i64> = tx
@@ -337,10 +340,11 @@ pub fn ensure_resolved(
     }
     tx.execute("DELETE FROM edges", [])?;
     let sites = cached_sites(&tx)?;
-    insert_edges(&tx, &sites, &mut resolve)?;
+    let owed = insert_edges(&tx, &sites, &mut resolve)?;
     // the sweep just replayed EVERY file's edges, so it retires the
-    // whole debt ledger in the same commit
-    tx.execute("DELETE FROM resolve_pending", [])?;
+    // whole debt ledger in the same commit (booking what an absent
+    // core left owed, owed.rs)
+    owed::settle(&tx, owed)?;
     tx.execute(
         "INSERT INTO meta (k, v) VALUES ('resolve_key', ?1)
          ON CONFLICT(k) DO UPDATE SET v = ?1",
@@ -366,7 +370,7 @@ pub fn ensure_resolved(
 pub fn resolve_refreshed(
     conn: &mut Connection,
     dirty: &BTreeSet<String>,
-    mut resolve: impl FnMut(&CachedSite) -> Vec<EdgeRow>,
+    mut resolve: impl FnMut(&[CachedSite]) -> Result<Resolved>,
 ) -> Result<()> {
     if dirty.is_empty() && !debt_standing(conn)? {
         return Ok(()); // the every-warm-run fast path stays a read
@@ -388,10 +392,11 @@ pub fn resolve_refreshed(
         del.execute((s.id,))?;
     }
     drop(del);
-    insert_edges(&tx, &sites, &mut resolve)?;
+    let left = insert_edges(&tx, &sites, &mut resolve)?;
     // every visible ledger row is in `owed` and was just resolved (a
-    // row whose file vanished resolves to nothing) — settled entire
-    tx.execute("DELETE FROM resolve_pending", [])?;
+    // row whose file vanished resolves to nothing) — settled entire,
+    // what an absent core left owed booked again (owed.rs)
+    owed::settle(&tx, left)?;
     tx.commit()?;
     Ok(())
 }
@@ -407,18 +412,26 @@ fn debt_standing(conn: &Connection) -> Result<bool> {
 }
 
 /// The single edge-insert throat shared by the phase-2 sweep and the
-/// phase-1.5 per-file refresh.
+/// phase-1.5 per-file refresh: the sites resolved in one batch, and
+/// what the batch left owed to an absent core.
 fn insert_edges(
     tx: &Transaction<'_>,
     sites: &[CachedSite],
-    resolve: &mut impl FnMut(&CachedSite) -> Vec<EdgeRow>,
-) -> Result<()> {
+    resolve: &mut impl FnMut(&[CachedSite]) -> Result<Resolved>,
+) -> Result<Option<owed::Owed>> {
     let mut ins = tx.prepare(
         "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity, via_reexport)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
     )?;
-    for s in sites {
-        for e in resolve(s) {
+    let Resolved { rows, owed } = resolve(sites)?;
+    anyhow::ensure!(
+        rows.len() == sites.len(),
+        "resolver answered {} of {} sites",
+        rows.len(),
+        sites.len()
+    );
+    for (s, edges) in sites.iter().zip(rows) {
+        for e in edges {
             ins.execute((
                 s.id,
                 &e.dst_path,
@@ -430,7 +443,7 @@ fn insert_edges(
             ))?;
         }
     }
-    Ok(())
+    Ok(owed)
 }
 
 /// Every cached site joined to its path, deterministically ordered.

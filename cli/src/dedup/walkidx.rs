@@ -51,7 +51,8 @@ pub(super) struct WalkIndex {
     /// its defaults, handed over through ladder::Scope.
     pub lua: BTreeSet<lua_path::Template>,
     /// Every walked C-family file's include list — the compile database
-    /// closure's input (ladder/c_index.rs; plan v2.30 step 5b).
+    /// closure's input (the core's CE.Resolve.CIndex since plan v2.33
+    /// W2a; plan v2.30 step 5b).
     pub includes: BTreeMap<String, Vec<String>>,
 }
 

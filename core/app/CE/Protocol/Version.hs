@@ -10,13 +10,13 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
--- 8.0.0 = the retired request key (plan v2.32 step 6; design booklet
--- docs/reference/authority-track.md §3, §13 item 18): `judgedMask`
--- leaves scan/1, graph/1 and verdict — the core reads the judged set
--- off its own language table (CE.Wire.Mask), a request that still
--- carries the key is refused by name, and no reply echoes it. Major
--- because a key that was accepted is now refused; every document and
--- console line answers byte for byte as before.
+-- 8.1.0 = the reference ladders' search for Python, Lua, Go and
+-- C / C++, `resolve/1` (plan v2.33 wave W2a; design booklet
+-- docs/reference/algorithm-track.md §6 row W2), additive on 8.0.0: a
+-- new family whose request is segment ids only, and the definition
+-- package's `resolve` (the words and affixes the measuring side
+-- interns), so `tablesDigest` moves. Every other family answers byte
+-- for byte as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the
@@ -24,7 +24,7 @@ module CE.Protocol.Version (majorMatches, proto) where
 -- (cli/src/corelink.rs::PROTO) -- it is not repeated here.
 
 proto :: String
-proto = "8.0.0"
+proto = "8.1.0"
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

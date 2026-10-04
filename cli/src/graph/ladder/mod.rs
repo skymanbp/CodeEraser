@@ -8,13 +8,17 @@
 //! be voted out by data at 2h.
 //!
 //! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
-//! the C family's followed in plan v2.30 step 2 (c.rs), Java's in
-//! step 3 (java.rs), Lua's and R's in step 4 (lua.rs, r/), HTML's in
-//! step 5 (html.rs); a language without rungs must return
-//! Unresolved(Unsupported) — an honest ledger row, never a silent
-//! skip. Dispatch carries the site's frozen kind label (store::KINDS):
-//! the TS/Py rungs are kind-uniform, Rust's mod_decl and use walk
-//! different rungs, and Markdown routes five kinds through one chain.
+//! the C family's followed in plan v2.30 step 2, Java's in step 3
+//! (java.rs), Lua's and R's in step 4 (r/), HTML's in step 5 (html.rs);
+//! a language without rungs must return Unresolved(Unsupported) — an
+//! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
+//! the Python, Lua, Go and C / C++ rungs live in the core
+//! (`resolve/1`, graph/resolve/): `resolve_all` sends their sites in
+//! one request and runs the other languages' rungs here. Dispatch
+//! carries the site's frozen kind label (the package's
+//! `store.site_kinds`): the TS rungs are kind-uniform, Rust's mod_decl
+//! and use walk different rungs, and Markdown routes five kinds through
+//! one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
@@ -23,13 +27,8 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::Path;
 use std::rc::Rc;
 
-pub mod c;
 // pub: the walk reads every C-family file's include list with it
 pub mod c_head;
-// pub: the deadcode request reads the forced-include arcs with it
-pub mod c_index;
-mod c_search;
-pub mod go;
 pub mod hs;
 pub mod java;
 // pub: the walk reads every Java header with it (dedup/walkidx.rs)
@@ -38,13 +37,11 @@ pub mod java_header;
 mod java_sets;
 // pub: the walk hashes every page's id set with it (dedup/walkidx.rs)
 pub mod html_head;
-pub mod lua;
 // pub: the walk reads every Lua file's package.path templates with it
 // (dedup/walkidx.rs)
 pub mod lua_path;
 pub mod md;
 mod paths;
-pub mod py;
 pub mod r;
 pub mod rs;
 // pub: walkidx feeds pubuse_hash into resolve_key (the slug-hash
@@ -52,108 +49,15 @@ pub mod rs;
 pub mod rs_reexport;
 mod rs_tree;
 pub mod ts;
-
-/// Which rung answered (1-based per the design §4 table); stored on
-/// every edge — ammunition for the per-level cut table.
-pub type Rung = u8;
-
-/// Unresolved reasons — the frozen design §4 vocabulary. `Dynamic`
-/// and `Macro` stay structurally empty so far: the site detector
-/// never opens dynamic imports or macro output (py.rs / rs.rs module
-/// headers state each mechanism).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Reason {
-    Dynamic,
-    AmbiguousPaths,
-    AmbiguousRoot,
-    AmbiguousWorkspace,
-    AmbiguousExports,
-    Macro,
-    ConfigDepth,
-    OutOfScope,
-    Unsupported,
-    /// A degenerate specifier (`import ""`): the site referenced
-    /// nothing, and says so in the ledger rather than vanishing at
-    /// detection (L step #15, O60).
-    Empty,
-    /// The name is declared in the referencing file itself — Java's
-    /// own compilation unit (java.rs `own_unit`): no other file is
-    /// referenced, so no edge is drawn, and the ledger says why
-    /// (plan v2.30 step 5).
-    OwnUnit,
-}
-
-/// Terminal state of one site.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Outcome {
-    /// Exactly one in-scope target (repo-relative, forward slashes).
-    Resolved {
-        path: String,
-        rung: Rung,
-    },
-    /// Exactly one in-scope PACKAGE directory (Go import, Markdown
-    /// directory link): the node identity is (pkg_dir, "") and
-    /// granularity is package — collapsing to a single file would be
-    /// a guess (design §4 row 4).
-    ResolvedPackage {
-        dir: String,
-        rung: Rung,
-    },
-    /// Markdown doc target (design §4 row 5): node identity is
-    /// (path, slug), granularity section. `slug: None` is the
-    /// anchored link whose section claim could not be confirmed
-    /// against the target's ATX slug set — the design's "degrade to
-    /// file level + ambiguous_anchor": the edge lands file-level
-    /// (dst_unit ""), and the refusal to guess a section stays
-    /// visible here instead of vanishing into a plain Resolved.
-    ResolvedSection {
-        path: String,
-        slug: Option<String>,
-        rung: Rung,
-    },
-    /// Resolved THROUGH a terminal file's re-export surface (§4 R5
-    /// as amended 2026-08-18: one hop to the definition file; the
-    /// via_reexport mark rides the edge row). Same edge semantics as
-    /// Resolved everywhere except the stored flag.
-    ResolvedVia {
-        path: String,
-        rung: Rung,
-    },
-    /// Resolved to an in-scope target that must NOT count as a
-    /// reference (H1 slice 16, 2.29.0): the unused reference
-    /// definition — user decision D3 made it ledger-visible, and
-    /// this variant is the outcome→edge-kind channel that lets the
-    /// edge TRAVEL (EDGE_REFDEF_UNUSED) while the CORE owns the
-    /// liveness exclusion (inert kinds beside assetKind).
-    ResolvedInert {
-        path: String,
-        rung: Rung,
-    },
-    /// Outside the corpus by design (registry dep, node_modules).
-    External {
-        rung: Rung,
-    },
-    Unresolved(Reason),
-}
-
-impl Outcome {
-    /// The same answer at another rung; a refusal passes through
-    /// untouched. One method for py's `__init__` degradation, go's
-    /// replace rewrite and md's reference machinery — each kept a
-    /// private copy until the v2.18 survey paired them.
-    pub(super) fn with_rung(mut self, rung: Rung) -> Self {
-        match &mut self {
-            Self::Resolved { rung: r, .. }
-            | Self::ResolvedPackage { rung: r, .. }
-            | Self::ResolvedSection { rung: r, .. }
-            | Self::ResolvedVia { rung: r, .. }
-            | Self::ResolvedInert { rung: r, .. }
-            | Self::External { rung: r } => *r = rung,
-            Self::Unresolved(_) => {}
-        }
-        self
-    }
-}
+// the site outcome vocabulary (a leaf: it reads nothing of this module)
+mod outcome;
+pub use outcome::{Outcome, Reason, Rung};
+// The a8db74a9 Python / Lua / Go / C rungs, frozen byte for byte: the
+// differential gate's oracle (tests subrepo unit/graph/ladder/oracle/,
+// driven by unit/dedup/ladder_diff/).
+#[cfg(test)]
+#[path = "../../../tests/unit/graph/ladder/frozen.rs"]
+pub(crate) mod frozen;
 
 /// What a resolver may consult. Candidate targets MUST come from
 /// `files` (the frozen in-scope set); `configs` are the resolver
@@ -240,27 +144,51 @@ pub struct Site<'a> {
     pub line: usize,
 }
 
-/// Dispatch one site to its language ladder. An empty specifier is
-/// refused here by name before any ladder sees it — a bare-package
-/// rung or a package-root lookup would otherwise read `""` as a
-/// name; Markdown and HTML keep their own reading of an empty target
-/// (the document itself; html.rs tells a page reference from an asset
-/// fetch of nothing). A ladder that branches on the site's kind takes
-/// the site; the others read its path and specifier.
-pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
-    if site.spec.is_empty() && !matches!(lang, Lang::Markdown | Lang::Html) {
-        return Outcome::Unresolved(Reason::Empty);
-    }
+/// Dispatch one site to its language ladder (`resolve_all` of one).
+pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Result<Outcome, String> {
+    let mut out = resolve_all(&[(lang, site)], scope)?;
+    Ok(out.pop().expect("one site in, one outcome out"))
+}
+
+/// Dispatch sites to their language ladders, outcomes in site order:
+/// the languages the core holds go in one resolve/1 request, the rest
+/// walk this side's rungs. An empty specifier is refused here by name
+/// before any ladder sees it — a bare-package rung or a package-root
+/// lookup would otherwise read `""` as a name; Markdown and HTML keep
+/// their own reading of an empty target (the document itself; html.rs
+/// tells a page reference from an asset fetch of nothing).
+pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
+    let empty = |lang: Lang, site: &Site| {
+        site.spec.is_empty() && !matches!(lang, Lang::Markdown | Lang::Html)
+    };
+    let core: Vec<(Lang, &Site)> = sites
+        .iter()
+        .filter(|(lang, site)| !empty(*lang, site) && super::resolve::in_core(*lang))
+        .copied()
+        .collect();
+    let mut answered = super::resolve::outcomes(&core, scope)?.into_iter();
+    Ok(sites
+        .iter()
+        .map(|(lang, site)| {
+            if empty(*lang, site) {
+                Outcome::Unresolved(Reason::Empty)
+            } else if super::resolve::in_core(*lang) {
+                answered.next().expect("one outcome per core site")
+            } else {
+                here(*lang, site, scope)
+            }
+        })
+        .collect())
+}
+
+/// The rungs this side still runs.
+fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
     match lang {
         Lang::TypeScript | Lang::Tsx => ts::resolve(site.from, site.spec, scope),
-        Lang::Python => py::resolve(site.from, site.spec, scope),
         Lang::Rust => rs::resolve(site, scope),
-        Lang::Go => go::resolve(site.from, site.spec, scope),
         Lang::Markdown => md::resolve(site, scope),
         Lang::Haskell => hs::resolve(site.from, site.spec, scope),
-        Lang::C | Lang::Cpp => c::resolve(site.from, site.spec, scope),
         Lang::Java => java::resolve(site, scope),
-        Lang::Lua => lua::resolve(site, scope),
         Lang::R => r::resolve(site, scope),
         Lang::Html => html::resolve(site, scope),
         // The sentinel is never walked, and the scan-only arm (plan

@@ -13,14 +13,14 @@ use std::process::{Child, Stdio};
 
 /// Protocol version offered by this client (single source together
 /// with core/app/CE/Protocol/Version.hs::proto — contracts/VERSIONING.md
-/// §1). 8.0.0 = the retired request key (plan v2.32 step 6; design
-/// booklet docs/reference/authority-track.md §3, §13 item 18):
-/// `judgedMask` leaves scan/1, graph/1 and verdict — the core reads the
-/// judged set off its own language table, refuses a request that still
-/// carries the key by name, and echoes none; this side reads the set
-/// off the definition package for its own measuring, as before. Major
-/// because a key that was accepted is now refused; every document and
-/// console line answers byte for byte as before.
+/// §1). 8.1.0 = the reference ladders' search for Python, Lua, Go and
+/// C / C++ in the core, `resolve/1` (plan v2.33 wave W2a; design
+/// booklet docs/reference/algorithm-track.md §6 row W2), additive on
+/// 8.0.0: the edge sweep sends the walked tree, the sites and each
+/// language's configuration as segment ids (graph/resolve/) and maps
+/// each reply row back to the ladder's outcome; the definition package
+/// gains `resolve` (the words and affixes this side interns), so
+/// `tablesDigest` moves. Every other family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger
 /// used to be mirrored beside both constants, and the copies drifted
@@ -32,7 +32,7 @@ use std::process::{Child, Stdio};
 /// meant is a ledger question, and the ledger has an address. Four
 /// entries had stacked up here by 6.1.0 and pushed the file past its
 /// own ratchet: the ledger that documents a size gate is not exempt.
-pub const PROTO: &str = "8.0.0";
+pub const PROTO: &str = "8.1.0";
 
 #[derive(Serialize)]
 struct Hello<'a> {

@@ -1,8 +1,9 @@
-//! The path-joining steps several ladders share (plan v2.30 step 4):
-//! C's declared roots, Lua's search directories and R's declared roots
-//! judge a set of candidates the same way, and Lua's `dofile` and R's
-//! `source` read a path the same way — two copies of each were the
-//! clone gate's to find.
+//! The path-joining steps the Rust ladders still share (plan v2.30
+//! step 4): R's declared roots and Haskell's search directories judge a
+//! set of candidates the same way, and R's `source` reads a path the
+//! way a script's working directory does. C's and Lua's copies of these
+//! steps moved into the core with their ladders (`CE.Resolve`, plan
+//! v2.33 W2a).
 
 use super::{Outcome, Reason, Rung, Scope};
 use crate::graph::roots;

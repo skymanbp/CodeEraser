@@ -39,6 +39,8 @@ import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
 import qualified ReferenceQuery
+import qualified ReferenceResolve
+import qualified ResolveProps
 import qualified ScanCyclesProps
 import qualified ScanEventsProps
 import qualified ScanProps
@@ -103,12 +105,14 @@ batteries =
   , goldenPairs "arch/golden.ndjson"
   , goldenPairs "tables/golden.ndjson"
   , goldenPairs "document/golden.ndjson"
+  , goldenPairs "resolve/golden.ndjson"
   , SpecProbes.structural
   , SpecProbes.refusalProbes
   , SpecProbes.docdupStructural
   , SpecProbes.costModel
   , Reference.equivalence
   , ReferenceQuery.equivalence
+  , ReferenceResolve.equivalence
   , ReferenceGraph.equivalence
   , ReferenceJaccard.equivalence
   , GraphProps.battery
@@ -150,6 +154,7 @@ batteries =
   , DocumentProps4.battery
   , DocumentProps5.battery
   , DocumentProps6.battery
+  , ResolveProps.battery
   ]
 
 -- | One named check through the shared runner.

@@ -21,6 +21,7 @@ import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
 import qualified CE.Merge as Merge
 import qualified CE.Query as Query
+import qualified CE.Resolve as Resolve
 import CE.Protocol.Version (majorMatches, proto)
 import qualified CE.Scan as Scan
 import qualified CE.Similar as Similar
@@ -115,6 +116,7 @@ families =
   , Fam "arch/1" "arch.request" Arch.respond
   , Fam "tables/1" "tables.request" Tables.respond
   , Fam "document/1" "document.request" Document.respond
+  , Fam "resolve/1" "resolve.request" Resolve.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

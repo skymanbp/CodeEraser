@@ -249,8 +249,8 @@ pub fn wire_of(
     nodes::contain(&nodes, &ids, declared.package_code_by_root(), &mut wire);
     // a build's forced includes (`-include x.h`) are arcs the source
     // text never spells: unit → header, beside the containment arcs
-    // (plan v2.30 step 5b, item 14; ladder/c_index.rs)
-    super::ladder::c_index::forced_wire(root, &file_set, &ids, &mut wire);
+    // (plan v2.30 step 5b, item 14; the core's resolve/1 since v2.33 W2a)
+    super::resolve::forced_wire(root, &file_set, &ids, &mut wire).map_err(anyhow::Error::msg)?;
     let symbols = super::symwire::export_surface(idx, &ids)?;
     let (unmentioned, mounts) = match advisory {
         Advisory::No => (None, None),
