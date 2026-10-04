@@ -1,9 +1,10 @@
 -- | The similar family's constants (plan v2.29 step 5; ADR-008 sixth
 -- instalment): the same-role conjunction and its floors, repatriated
 -- from cli/src/similar/bm25.rs where the ROI instrument carried them
--- as its declared mirror. Rust measures nine integers per candidate —
--- the distinct spelled terms shared per channel [N,P,C,D,S,L], the
--- shape-equality bit, and the BM25 score as a fraction; WHICH
+-- as its declared mirror. Each candidate rides as nine integers —
+-- the distinct spelled terms shared per channel [N,P,C,D,S,L] and the
+-- BM25 score as a fraction (both rank/1's answer since plan v2.33 W3),
+-- and the shape-equality bit the measuring side reads; WHICH
 -- candidates play the query's role, and in what order they stand, is
 -- judgment and lives here. An advisor: no floor here is a condition
 -- bit, nothing here reaches `ce check` (booklet 13's posture).

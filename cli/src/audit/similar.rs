@@ -1,7 +1,8 @@
 //! The Stop audit's similar leg (plan v2.29 step 6, spec §六): every
 //! unit the session ADDED — a (key, nth) the working tree's file holds
 //! and HEAD's did not — is asked of the index the way `ce similar`
-//! asks, its top-K ridden over similar/1 on the audit's core link, and
+//! asks, ranked over rank/1 and its top-K ridden over similar/1 on the
+//! audit's core link, and
 //! a row written into the feed's `similar` object only when the
 //! core's top-1 carries the role bit: an advisor's line for the
 //! evaluation ledger, never a reason to block. No core = the object
@@ -10,7 +11,9 @@
 //! nothing to say says nothing, so the feed stays the size it was).
 
 use crate::corelink::Link;
-use crate::similar::{self, K, UnitBag, bm25, file_bags, query::place, reader::Reader, wire};
+use crate::similar::{
+    self, K, UnitBag, corpus, file_bags, query::place, rank, reader::Reader, wire,
+};
 use crate::tombstone::texts::Loaded;
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
@@ -45,37 +48,43 @@ pub(super) fn leg(root: &Path, loaded: &[Loaded], link: Option<&mut Link>) -> Op
 
 /// Every new unit asked in turn: `(units asked, first failure)`. A
 /// unit with no candidate at all is not asked; the first refusal —
-/// the reader's, the wire's, a missing core — ends the loop by name.
+/// the reader's, the wire's, a missing core (which now ranks, so none
+/// is asked without one) — ends the loop by name.
 fn ask_all(
     idx: &crate::dedup::index::Index,
     fresh: &[(&str, UnitBag)],
-    mut link: Option<&mut Link>,
+    link: Option<&mut Link>,
     rows: &mut Vec<Value>,
 ) -> (usize, Option<String>) {
     let reader = match Reader::open(idx) {
         Ok(r) => r,
         Err(e) => return (0, Some(format!("{e:#}"))),
     };
+    let Some(link) = link else {
+        return (0, Some("core unavailable".into()));
+    };
     let mut queried = 0;
     for (rel, bag) in fresh {
-        let q = bm25::query_of(bag);
-        let hits = match bm25::top_k(&reader, &q, K, reader.seat_of(rel, &bag.key, bag.nth)) {
-            Ok(h) => h,
+        let q = corpus::query_of(bag);
+        let ask = rank::Ask {
+            query: &q,
+            k: K,
+            exclude: reader.seat_of(rel, &bag.key, bag.nth),
+        };
+        let arm = match rank::bare(link, &reader, &ask, None) {
+            Ok(Ok(arm)) => arm,
+            Ok(Err(why)) => return (queried, Some(why)),
             Err(e) => return (queried, Some(format!("{e:#}"))),
         };
-        if hits.is_empty() {
+        if arm.hits.is_empty() {
             continue;
         }
         queried += 1;
-        let judged = match link.as_deref_mut() {
-            Some(l) => wire::judge(l, &q, &hits),
-            None => Err("core unavailable".into()),
-        };
-        match judged {
+        match wire::judge(link, &arm.bag, &arm.hits) {
             Ok(j) => {
                 let top = j.order[0];
                 if j.roles[top] {
-                    let twin = &hits[top];
+                    let twin = &arm.hits[top];
                     rows.push(json!({
                         "unit": format!("{rel}:{}", bag.start_line),
                         "twin": place(&reader.seats()[twin.doc]),

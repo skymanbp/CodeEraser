@@ -136,8 +136,14 @@ leaked! {
     DocdupLimits { jaccard_num: u64, jaccard_den: u64, doc_set_cap: usize, doc_pair_cap: usize }
     /// The T1/T2 report's diversity floor (CE.Dedup.Cost).
     DedupLimits { min_distinct: usize }
-    /// The similar family's table ceiling (CE.Similar.Cost).
-    SimilarLimits { similar_cap: usize }
+    /// The similar family's table ceiling (CE.Similar.Cost) and the
+    /// ranking's constants (CE.Similar.Rank.Cost): the frozen eval docs
+    /// echo them; the measuring side fetches by the two ratios and the
+    /// co-occurrence floor and computes nothing else with them.
+    SimilarLimits { similar_cap: usize, rank_cap: usize, k1: (i64, i64), b: (i64, i64),
+                    idf_frac_bits: i64, score_frac_bits: i64, w_unit: i64, top_m: usize,
+                    min_cooc: u64, min_ppmi: i64, ppmi_cap: i64, ppmi_scale: i64,
+                    scored_df_ratio: u64, neighbour_df_ratio: u64 }
     /// The numbers requests are laid out by and candidates selected with
     /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
     Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,

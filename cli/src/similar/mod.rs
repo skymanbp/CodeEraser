@@ -2,28 +2,29 @@
 //! ADR-008 sixth instalment; the definition of record is methodology
 //! booklet 15, drafted as `.ccm/similar-spec-2026-09-05.md`). Every
 //! code unit of the unitsig universe gets a sparse six-channel bag of
-//! channel-tagged fnv1a64 terms (terms.rs / bag.rs); an integer BM25
-//! over the bags ranks candidates (bm25.rs); an in-repo PPMI table
-//! widens a query by the terms that co-occur with its own (ppmi.rs).
+//! channel-tagged fnv1a64 terms (terms.rs / bag.rs); the core ranks
+//! candidates by integer BM25 over the postings and widens a query by
+//! its words' in-repo PPMI neighbours (CE.Similar.Rank over rank/1,
+//! rank.rs; the pair counts it reads are ppmi.rs).
 //! The bags persist in `.ce/index.db` as hashes and counts only
 //! (store.rs writes them inside the per-file refresh, by difference;
 //! reader.rs ranks off the tables), so a query pays for its own
 //! postings and never for a corpus rebuild. Advisory only, in the
 //! posture of booklet 13's symbol-layer advisor: nothing here produces
 //! a condition bit, feeds `ce check`, or reaches `ce erase`. Rust
-//! measures; the "same role" conjunction and the rational ordering
-//! are the core's over similar/1 (wire.rs, step 5) — bm25.rs keeps
-//! the conjunction as the ROI instrument's declared mirror, and the
-//! three faces (face.rs, query.rs; the Stop leg in audit/similar.rs)
-//! relay what the core answered.
+//! measures; the ranking (rank/1), the "same role" conjunction and the
+//! rational ordering (similar/1, wire.rs) are the core's, and the three
+//! faces (face.rs, query.rs; the Stop leg in audit/similar.rs) relay
+//! what the core answered.
 
 pub mod bag;
-pub mod bm25;
+pub mod corpus;
 pub mod docs;
 pub mod document;
 pub mod face;
 pub mod ppmi;
 pub mod query;
+pub mod rank;
 pub mod reader;
 pub mod stem;
 pub mod store;

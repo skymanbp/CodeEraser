@@ -158,4 +158,3 @@ fn admitted(idx: &Index) -> Result<Vec<Unit>> {
         })
         .collect())
 }
-

@@ -4,15 +4,17 @@
 //! then postings from `bag`, df and the pair marginal from `df`, and
 //! a word's co-occurrence counts derived from the bag rows of the
 //! units that carry it (store.rs: no pair table), through the
-//! `Postings` / `Cooc` traits bm25.rs and ppmi.rs rank against. The
-//! in-memory `Corpus` the instruments build and this reader therefore
-//! run ONE ranking road, and the replay asserts the two agree on every
-//! unit of five corpora. Hits name seats; a seat names a unit and its
-//! lines, never a term.
+//! `Postings` / `Cooc` traits the rank/1 request is fetched through
+//! (rank.rs). The in-memory `Corpus` the instruments build and this
+//! reader are two sources of ONE request, and the replay asserts the two
+//! send the same bytes for every unit of five corpora. Seats are in
+//! (path, key, nth) order — the core breaks score ties by seat; a seat
+//! names a unit and its lines, never a term.
 
 use super::bag::UnitBag;
-use super::bm25::{Doc, Postings};
+use super::corpus::Doc;
 use super::ppmi::{Cooc, TERM_CAP};
+use super::rank::Postings;
 use super::store::bags_where;
 use super::terms::Channel;
 use crate::dedup::index::Index;
@@ -86,6 +88,15 @@ impl<'c> Reader<'c> {
             Ok(s)
         })
         .collect::<Result<Vec<Seat>>>()?;
+        // SQLite's BINARY collation is the byte order Rust's str order is,
+        // so the seats arrive in identity order; a repeat would make the
+        // tie order ambiguous and is a corrupt cache
+        ensure!(
+            seats
+                .windows(2)
+                .all(|w| (&w[0].path, &w[0].key, w[0].nth) < (&w[1].path, &w[1].key, w[1].nth)),
+            "unitsig seats not strictly ascending by (path, key, nth)"
+        );
         let by_unit: HashMap<i64, usize> =
             seats.iter().enumerate().map(|(i, s)| (s.unit, i)).collect();
         let mut total_len = 0u64;
@@ -216,11 +227,6 @@ impl Postings for Reader<'_> {
         shape.sort_unstable();
         Ok(shape)
     }
-
-    fn identity(&self, seat: usize) -> (&str, &str, i64) {
-        let s = &self.seats[seat];
-        (&s.path, &s.key, s.nth)
-    }
 }
 
 impl Cooc for Reader<'_> {
@@ -230,8 +236,8 @@ impl Cooc for Reader<'_> {
     /// counted: a unit counts a pair only when both words sit inside
     /// its cap, so `a` beyond the cap counts nothing, as in the
     /// in-memory table. Cost is the bag rows of the units carrying
-    /// `a`, and ppmi::neighbours never asks for a word in more than a
-    /// quarter of the units.
+    /// `a`, and rank::cooc_rows never asks for a word the package's
+    /// neighbour ratio rules out.
     fn pairs(&self, a: u64) -> Result<Vec<(u64, u32)>> {
         let ch = WORD_CHANNELS.map(|c| c.index() as i64);
         let rows = self.two_columns(

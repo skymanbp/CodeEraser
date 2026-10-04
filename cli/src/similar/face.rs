@@ -5,21 +5,21 @@
 //! associative view: the candidates the PPMI-widened query reaches
 //! that the bare query does not, tagged. Report-only and advisory in
 //! booklet 13's posture: nothing here is a condition bit or reaches
-//! `ce check`. Rust ranks off its own tables and measures; ordering
-//! and the same-role conjunction come back over similar/1 (wire.rs);
-//! a core that cannot answer makes a NAMED degraded document whose
-//! role column is null and whose order is the measured one, unjudged
-//! — never a verdict this side reached alone (A9f). The document and
-//! the console lines are the core's (document.rs, plan v2.32 step 5).
+//! `ce check`. Rust fetches off its own tables and measures shape; the
+//! ranking comes back over rank/1 (rank.rs), ordering and the same-role
+//! conjunction over similar/1 (wire.rs). A core that cannot rank makes
+//! a NAMED degraded document with no rows; one that ranked but cannot
+//! judge the role leaves the role column null in the ranked order —
+//! never a verdict this side reached alone (A9f). The document and the
+//! console lines are the core's (document.rs, plan v2.32 step 5).
 
-use super::bm25::{self, Hit, QueryTerm};
 use super::query::{self, Ask, Resolved, place};
+use super::rank::{self, Arm, Ranked};
 use super::reader::Reader;
-use super::{K, ppmi, wire};
+use super::{K, wire};
 use crate::corelink::Link;
 use crate::document::Held;
 use anyhow::Result;
-use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 /// One candidate as measured and judged. (The document's field names
@@ -62,18 +62,23 @@ pub(super) fn judged(
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
     let reader = Reader::open(&idx)?;
     let q: Resolved = query::resolve(&reader, ask)?;
-    let bare = bm25::top_k(&reader, &q.terms, K, q.seat)?;
+    let arm = rank::Ask {
+        query: &q.terms,
+        k: K,
+        exclude: q.seat,
+    };
+    let cooc = match widen {
+        true => Some(rank::cooc_rows(&reader, &q.terms)?),
+        false => None,
+    };
     let mut judge = Judge::open(core);
-    let mut rows = judge.rows(&reader, &q.terms, &bare, false);
-    if widen {
-        let mut wide_terms = q.terms.clone();
-        ppmi::expand(&reader, &mut wide_terms)?;
-        let seen: HashSet<usize> = bare.iter().map(|h| h.doc).collect();
-        let added: Vec<Hit> = bm25::top_k(&reader, &wide_terms, K, q.seat)?
-            .into_iter()
-            .filter(|h| !seen.contains(&h.doc))
-            .collect();
-        rows.extend(judge.rows(&reader, &wide_terms, &added, true));
+    let bare = judge.rank(|link| rank::bare(link, &reader, &arm, cooc.as_ref()))?;
+    let mut rows = judge.rows(&reader, bare.as_ref(), false);
+    if let (Some(cooc), Some(bare)) = (&cooc, &bare) {
+        let seen: Vec<usize> = bare.hits.iter().map(|h| h.doc).collect();
+        let wide =
+            judge.rank(|link| rank::widened(link, &reader, &arm, cooc, &bare.added, &seen))?;
+        rows.extend(judge.rows(&reader, wide.as_ref(), true));
     }
     let report = Report {
         label: q.label,
@@ -116,20 +121,31 @@ impl Judge {
         }
     }
 
-    /// One arm's hits as rows: in the core's order with its role bits,
-    /// or — degraded — in the measured order with none.
-    fn rows(
-        &mut self,
-        reader: &Reader<'_>,
-        q: &[QueryTerm],
-        hits: &[Hit],
-        widened: bool,
-    ) -> Vec<Row> {
-        if hits.is_empty() {
-            return Vec::new();
+    /// One arm ranked over the link: the arm, or None once any request
+    /// failed (the reason named on the document); a source error is the
+    /// command's.
+    fn rank(&mut self, ask: impl FnOnce(&mut Link) -> Ranked) -> Result<Option<Arm>> {
+        let Some(link) = self.link.as_mut().filter(|_| self.degraded.is_none()) else {
+            return Ok(None);
+        };
+        match ask(link)? {
+            Ok(arm) => Ok(Some(arm)),
+            Err(why) => {
+                self.degraded = Some(why);
+                Ok(None)
+            }
         }
+    }
+
+    /// One arm's hits as rows: in the core's order with its role bits,
+    /// or — the role judgment degraded — in the ranked order with none.
+    fn rows(&mut self, reader: &Reader<'_>, arm: Option<&Arm>, widened: bool) -> Vec<Row> {
+        let Some(arm) = arm.filter(|a| !a.hits.is_empty()) else {
+            return Vec::new();
+        };
+        let hits = &arm.hits;
         let judged = match (&mut self.link, &self.degraded) {
-            (Some(link), None) => wire::judge(link, q, hits),
+            (Some(link), None) => wire::judge(link, &arm.bag, hits),
             (_, Some(why)) => Err(why.clone()),
             (None, None) => Err("core unavailable".into()),
         };

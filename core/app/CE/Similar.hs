@@ -4,10 +4,12 @@
 
 -- | similar.request handler (plan v2.29 step 5): the twelfth judgment
 -- family — the same-role ADVISOR behind `ce similar`, the MCP tool and
--- the GUI screen. Rust ranks a query's candidates off its own inverted
--- tables and sends the query bag as [termHash, weight] pairs plus one
+-- the GUI screen. The core ranks a query's candidates (rank/1,
+-- CE.Similar.Rank, plan v2.33 W3) and the measuring side relays the
+-- weighted bag it answered as [termHash, weight] pairs plus one
 -- [nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual, bm25Num, bm25Den]
--- row per candidate; this family answers the order the candidates
+-- row per kept candidate (the shape bit its own measurement of the
+-- stored shape terms); this family answers the order the candidates
 -- stand in (exact rationals, never the measuring side's fixed point)
 -- and which of them play the query's role. Names, words and paths
 -- never cross the wire (§5.9.2) — hashes and counts only, row index is

@@ -247,4 +247,3 @@ fn sendable_pairs<'p>(pairs: &'p [PairRow], built: &[Outcome]) -> (Vec<&'p PairR
         .collect();
     (sendable, over_cap, forest)
 }
-

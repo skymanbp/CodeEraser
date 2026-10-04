@@ -83,33 +83,14 @@ pub fn shingles(seq: &[u64]) -> BTreeSet<u64> {
 }
 
 /// Kind histogram — the multiset the §4.3 label-intersection bound
-/// consumes (I = Σ min(c1, c2)).
+/// consumes (I = Σ min(c1, c2), computed by the core since plan v2.33
+/// W3: CE.Candidates.Units.interUpTo).
 pub fn histogram(seq: &[u64]) -> BTreeMap<u64, u32> {
     let mut h = BTreeMap::new();
     for k in seq {
         *h.entry(*k).or_insert(0u32) += 1;
     }
     h
-}
-
-/// I = Σ_label min(c1, c2) over two sorted (label, count) slices —
-/// the quantity the admissible bound `ted >= max(n1,n2) - I` turns
-/// into a prune (design §4.3; the bound itself is asserted against
-/// brute-force TED as an exhaustive-family property in 3e, R2).
-pub fn label_intersection(h1: &[(u64, u32)], h2: &[(u64, u32)]) -> i64 {
-    let (mut i, mut j, mut inter) = (0, 0, 0i64);
-    while i < h1.len() && j < h2.len() {
-        match h1[i].0.cmp(&h2[j].0) {
-            std::cmp::Ordering::Less => i += 1,
-            std::cmp::Ordering::Greater => j += 1,
-            std::cmp::Ordering::Equal => {
-                inter += h1[i].1.min(h2[j].1) as i64;
-                i += 1;
-                j += 1;
-            }
-        }
-    }
-    inter
 }
 
 #[cfg(test)]

@@ -95,8 +95,7 @@ pub(super) fn pass(
         bail!("candidates/1 degraded the T3 candidate pass ({why})");
     }
     let rows: Vec<[usize; 3]> = judged::table(&reply, "pairs").map_err(anyhow::Error::msg)?;
-    let by_lang: Vec<[usize; 2]> =
-        judged::table(&reply, "keyPairs").map_err(anyhow::Error::msg)?;
+    let by_lang: Vec<[usize; 2]> = judged::table(&reply, "keyPairs").map_err(anyhow::Error::msg)?;
     let count = |k: &str| judged::count(&reply, k).map(|n| n as u64);
     let read = (|| -> Result<[u64; 11], String> {
         Ok([
@@ -114,19 +113,36 @@ pub(super) fn pass(
         ])
     })()
     .map_err(anyhow::Error::msg)?;
-    let [n_units, n_pairs, all, cross, size, label, survivors, windowed, cut, already, new] = read;
+    let [
+        n_units,
+        n_pairs,
+        all,
+        cross,
+        size,
+        label,
+        survivors,
+        windowed,
+        cut,
+        already,
+        new,
+    ] = read;
     ensure!(
         n_units == units.len() as u64
             && n_pairs == union.len() as u64
             && size + label + survivors == all
             && survivors + new == rows.len() as u64
             && by_lang.iter().all(|&[l, _]| l < lang_names.len())
-            && rows.windows(2).all(|w| (w[0][0], w[0][1]) < (w[1][0], w[1][1]))
+            && rows
+                .windows(2)
+                .all(|w| (w[0][0], w[0][1]) < (w[1][0], w[1][1]))
             && rows.iter().all(|r| r[0] < r[1] && r[1] < units.len()),
         "candidates/1 reply does not add up: wire skew"
     );
     for [l, n] in by_lang {
-        *tally.raw_by.entry(format!("s2/{}", lang_names[l])).or_insert(0) += n as u64;
+        *tally
+            .raw_by
+            .entry(format!("s2/{}", lang_names[l]))
+            .or_insert(0) += n as u64;
     }
     tally.cross_lang_dropped += cross;
     (

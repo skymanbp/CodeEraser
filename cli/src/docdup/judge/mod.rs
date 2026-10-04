@@ -174,4 +174,3 @@ fn name(s: &candidates::SegRow) -> String {
         .unwrap_or("kind?");
     format!("{}:{}-{} {}", s.path, s.start_line, s.end_line, kind)
 }
-

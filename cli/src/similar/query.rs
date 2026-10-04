@@ -6,7 +6,8 @@
 //! refused by name rather than answered for one of its readings.
 
 use super::bag::UnitBag;
-use super::bm25::{QueryTerm, query_of};
+use super::corpus::query_of;
+use super::rank::QueryTerm;
 use super::reader::{Reader, Seat};
 use super::terms::{self, Channel};
 use anyhow::{Result, bail, ensure};

@@ -46,16 +46,6 @@ impl Channel {
         ["N", "P", "C", "D", "S", "L"][self.index()]
     }
 
-    /// Query weight multiplier (spec §三 权重位): names ×3, callees ×2,
-    /// everything else ×1 — integers, so the score stays exact.
-    pub fn weight(self) -> u32 {
-        match self {
-            Channel::Name => 3,
-            Channel::Callee => 2,
-            _ => 1,
-        }
-    }
-
     /// Whether the channel carries WORDS (split, stemmed, PPMI-widened)
     /// rather than features the measurer spells itself.
     pub fn is_words(self) -> bool {
