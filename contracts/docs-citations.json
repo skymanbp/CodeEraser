@@ -3652,17 +3652,16 @@
     "end": 191,
     "text": "fn markdown_segments(text: &str) -> Vec<Unit> {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal.rs|9bccd09ff7641777|0": {
-    "target": "../../../cli/src/graph/cabal.rs",
-    "line": 100,
-    "end": 125,
-    "text": "pub fn nearest(root: &Path, from_dir: &str) -> Option<String> {"
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/fourclass/visibility/hs.rs|411a2c6aae78ef2d|0": {
+    "target": "../../../cli/src/fourclass/visibility/hs.rs",
+    "line": 27,
+    "text": "pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal_parse.rs|7797e454cda7a9f5|0": {
-    "target": "../../../cli/src/graph/cabal_parse.rs",
-    "line": 215,
-    "end": 221,
-    "text": "fn import_commons(out: &mut Cabal, walk: &mut Walk, values: &[String]) {"
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cabal_find.rs|fcd601527c481218|0": {
+    "target": "../../../cli/src/graph/cabal_find.rs",
+    "line": 10,
+    "end": 26,
+    "text": "/// Nearest *.cabal walking up from `from_dir` — the file name is"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cargo.rs|f404a9bba69a4303|0": {
     "target": "../../../cli/src/graph/cargo.rs",
@@ -3782,63 +3781,22 @@
     "end": 41,
     "text": "pub(super) const ROLE_ENTRY_NAMED: i64 = 1;"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/targets.rs|840e3cb5fa799d2b|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/targets.rs|5a5954ba45e48665|0": {
     "target": "../../../cli/src/graph/deadcode/targets.rs",
-    "line": 93,
-    "text": "} else if let Some(c) = cabal::parse(root, m) {"
+    "line": 69,
+    "text": "targets: declared.intersection(files).cloned().collect(),"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/targets.rs|ca88eedd8c40558d|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/targets.rs|a0575005f73d28aa|0": {
     "target": "../../../cli/src/graph/deadcode/targets.rs",
-    "line": 54,
-    "end": 99,
-    "text": "/// One pass over the walked set: nearest Cargo.toml and nearest"
+    "line": 35,
+    "end": 80,
+    "text": "impl Declared {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/keys.rs|6d73353ef02f7aba|0": {
     "target": "../../../cli/src/graph/keys.rs",
-    "line": 89,
-    "end": 92,
+    "line": 90,
+    "end": 93,
     "text": "pub fn ts_fs_facts("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|38f0c6ee7e3b32d7|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 76,
-    "end": 85,
-    "text": "pub fn resolve(from: &str, spec: &str, scope: &Scope) -> Outcome {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|5587d17d8fe0b78d|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 187,
-    "end": 193,
-    "text": "fn depended_rung("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|5ab82d2ff47c6667|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 25,
-    "end": 30,
-    "text": "//! out_of_scope — module→package needs evidence. An `import {-#"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|a648f19823c58b71|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 11,
-    "end": 16,
-    "text": "//! `ghc Main.hs` search semantics. R2 (plan v2.30 step 5b): a module"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|be51b602882dae91|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 66,
-    "text": "fn split_package(spec: &str) -> (Option<&str>, &str) {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|bf7dc92ddfbac43a|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 216,
-    "end": 218,
-    "text": "/// R3: the global-db table, build-depends-gated under a cabal; a"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/hs.rs|df989deedb405f73|0": {
-    "target": "../../../cli/src/graph/ladder/hs.rs",
-    "line": 32,
-    "end": 40,
-    "text": "//! R6/RG10 re-review (3l exit row): a module's export list is a"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/html.rs|0c3b69fde5bce823|0": {
     "target": "../../../cli/src/graph/ladder/html.rs",
@@ -4027,8 +3985,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 194,
-    "end": 198,
+    "line": 192,
+    "end": 196,
     "text": "// The sentinel is never walked, and the scan-only arm (plan"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -5005,6 +4963,12 @@
     "end": 218,
     "text": "-- | `c_search::along`: the hits of the first non-empty step along one"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CabalWalk.hs|d6d426dd7ff983db|0": {
+    "target": "../../../core/app/CE/Resolve/CabalWalk.hs",
+    "line": 170,
+    "end": 175,
+    "text": "-- | `import_commons`: each named common block pulled in where the walk"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Cmdline.hs|5025afb4c14ee8e0|0": {
     "target": "../../../core/app/CE/Resolve/Cmdline.hs",
     "line": 1,
@@ -5058,6 +5022,41 @@
     "line": 71,
     "end": 90,
     "text": "-- | R1: the longest module prefix owns the import; the remainder names"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Hs.hs|06519c77dcca6363|0": {
+    "target": "../../../core/app/CE/Resolve/Hs.hs",
+    "line": 11,
+    "end": 15,
+    "text": "--   R2 a module another in-corpus package exposes — the package the"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Hs.hs|49b9053d44d76885|0": {
+    "target": "../../../core/app/CE/Resolve/Hs.hs",
+    "line": 115,
+    "end": 120,
+    "text": "externalRung :: String -> Maybe String -> Maybe Cabal -> Answer"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Hs.hs|4a379775a4946571|0": {
+    "target": "../../../core/app/CE/Resolve/Hs.hs",
+    "line": 19,
+    "end": 21,
+    "text": "-- A store-installed dependency outside the global db lands out_of_scope"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Hs.hs|676a49d70592063e|0": {
+    "target": "../../../core/app/CE/Resolve/Hs.hs",
+    "line": 70,
+    "text": "('\"' : rest) | Just (p, m) <- splitOnce '\"' rest -> (Just p, rustTrim m)"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Hs.hs|932bf7817f94ff18|0": {
+    "target": "../../../core/app/CE/Resolve/Hs.hs",
+    "line": 49,
+    "end": 55,
+    "text": "sourceRung o\n| maybe True (\\p -> maybe False ((== p) . cName) o) package = case Set.toList (hits o) of"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Hs.hs|fbd7401667c3e774|0": {
+    "target": "../../../core/app/CE/Resolve/Hs.hs",
+    "line": 101,
+    "end": 111,
+    "text": "dependedRung :: World -> [Cabal] -> String -> Maybe String -> Maybe Cabal -> String -> Maybe Answer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Java.hs|3831cb1e6c16f3c3|0": {
     "target": "../../../core/app/CE/Resolve/Java.hs",
@@ -8332,32 +8331,32 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|0e244c81f92576e1|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 224,
-    "end": 243,
+    "line": 228,
+    "end": 247,
     "text": "fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|20a3703f25e71064|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 240,
-    "end": 249,
+    "line": 243,
+    "end": 252,
     "text": "/// (`__init__.py`, `__main__.py`) is protocol. The declaration's own"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|4291021089a3ebc6|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 121,
-    "end": 127,
+    "line": 131,
+    "end": 137,
     "text": "pub fn mount_rows(nodes: &[Node], facts: &MountFacts) -> BTreeMap<i64, [i64; 3]> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|7aac3294e41145f8|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 41,
-    "end": 47,
+    "line": 43,
+    "end": 49,
     "text": "pub const MOUNT_REEXPORTED: i64 = 1;"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|eb6a10a23d7d8554|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 65,
-    "end": 94,
+    "line": 67,
+    "end": 96,
     "text": "pub fn facts(root: &Path, idx: &Index) -> Result<MountFacts> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mcp/tools.rs|8ef4edac0142a307|0": {
@@ -8762,8 +8761,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 374,
-    "end": 376,
+    "line": 382,
+    "end": 384,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -10735,7 +10734,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 109,
+    "line": 110,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11002,7 +11001,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 110,
+    "line": 111,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

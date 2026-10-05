@@ -615,6 +615,44 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **钩子**：PreToolUse 探针不问 `resolve/1`——一个在 gson 的 main 源集里写入新 Java 文件（两条 import、一个类型引用）的 `Write` 信封经 `ce probe --hook` 在 gson 拷贝上冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_c.sh`），与阶段 A、B 同。
 - 复跑：车道目录 `v233_w2t_scratch/perf_c.py 7`（树拷自 `.ce-eval/corpora` 与车道归档），读数原文 `perf_c.log`、逐跑 `perf_c.ndjson`、负载 `perf_c_load.txt`；请求字节 `reqbytes_c.sh`，各面请求 `warmreq_c.sh`，钩子 `hookprobe_c.sh`，核单独计时 `coretime_c.sh` / `core_split_c.py`。
 
+## v2.33 W2-text 阶段 D Haskell 阶梯与 `.cabal` 读法进核 A/B（实测 2026-10-05，release，同一台机、同一坐：A = fa83a48d 的 ce + 它的核〔`git archive` 构建〕，B = 车道树 9c1f7668 的 ce〔sha256 a6836d5c…，构建进车道的 scratch target〕+ 它的核〔Haskell 的三级阶梯、`.cabal` 读法、入口与包内私有在核，每个 `.cabal` 的原文随请求过线〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，07:59–08:17 共 18 次 2–55 %，含本坐自己的 ce）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）与两棵 Haskell 树 dataframe@96ec374、keel@71ed44a（各提交一次）。
+
+| 树 | 面 | A（fa83a48d） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `graph --sites` 冷 | 1699.0（1636.5–1718.2） | 1709.3（1680.5–1739.7） | +0.6 % |
+| self | `graph --sites` 暖 | 1614.6（1566.4–2072.2） | 1674.8（1611.3–1705.6） | +3.7 % |
+| self | `deadcode` 冷 | 29366.2（29133.6–29977.0） | 29389.6（29105.3–30388.9） | +0.1 % |
+| self | `deadcode` 暖 | 2165.6（2145.2–2402.6） | 2300.7（2271.4–2384.7） | +6.2 % |
+| self | `check` 暖 | 9814.0（9634.0–15661.9） | 9793.4（9538.6–15865.2） | -0.2 % |
+| dataframe | `graph --sites` 冷 | 1472.4（1432.9–1496.8） | 1496.0（1455.2–1531.7） | +1.6 % |
+| dataframe | `graph --sites` 暖 | 1382.9（1349.2–1427.0） | 1405.0（1369.6–1460.2） | +1.6 % |
+| dataframe | `deadcode` 冷 | 11753.1（11625.7–11923.6） | 11299.7（11238.4–12248.0） | -3.9 % |
+| dataframe | `deadcode` 暖 | 1226.0（1179.1–1279.3） | 1353.1（1307.3–1414.7） | +10.4 % |
+| dataframe | `check` 暖 | 5447.5（5367.3–40465.2） | 5685.5（5563.8–40402.6） | +4.4 % |
+| keel | `graph --sites` 冷 | 359.9（353.5–398.1） | 365.9（353.9–371.5） | +1.7 % |
+| keel | `graph --sites` 暖 | 254.9（250.1–285.9） | 263.2（254.5–289.6） | +3.3 % |
+| keel | `deadcode` 冷 | 1134.8（1108.0–1172.3） | 1173.3（1155.3–1202.8） | +3.4 % |
+| keel | `deadcode` 暖 | 276.5（260.4–296.7） | 399.8（360.2–417.2） | +44.6 % |
+| keel | `check` 暖 | 1181.7（1143.3–1463.2） | 1266.3（1225.1–1514.9） | +7.2 % |
+
+- 预算（任务书）：暖 `ce check` ≤ +15 %——三棵树 -0.2 %、+4.4 %、+7.2 %，都在线内。
+- **超线的面：暖 `deadcode`**——keel +44.6 %（276.5 → 399.8 ms，+123 ms）、dataframe +10.4 %、self +6.2 %。原因按请求点名（`warm2_d.sh`：每臂冷跑一次 `graph --sites` 与一次 `deadcode`，再经中继核跑第二次 `deadcode` 与 `structure`）：B 臂的暖 `deadcode` 多一个核会话（2 → 3）、两个 `resolve.request`——一个是 mounts 表位 1 的包内私有（keel 15,778 B、self 60,050 B），一个是声明目标的入口（keel 16,929 B、self 44,987 B，`DESCRIPTION` 与 `.cabal` 同一次请求）；A 臂两者都在 Rust 里答、一个请求也不发。小树上多起的那一个 ce-core 进程（连同它的 hello 与定义包的读入）就是增量的大头（keel 上那两个请求共 32,707 B；本节没有把它们与进程起动分开计时）。收法是让一个命令只开一个核会话——`resolve::ask` 的链接与图族的链接共用一个——这是本轨收尾阶段（车道日志 Stage Z 第 Z1 条，阶段 B 审阅时立）的事，本阶段不做。
+- **多出核请求的面**（`warmreq_d.sh`：每臂冷跑一次 `graph --sites` 建索引，再经中继核把八个面各跑一次）：`structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 在三棵树上都多一个会话、一个 `resolve.request`（mounts 表的包内私有：self 60,050 B、dataframe 108,048 B、keel 15,778 B，其中 `hs` 15,739 / 90,236 / 13,537 B）；`deadcode` 在这一跑是第一次建图边，B 臂 3 个请求（全部 Haskell 站点 + 入口 + 私有）、A 臂 1 个；`graph --sites` 与冷建两臂请求逐种相同。
+- 自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立，与本表无关；其余各跑全退 0。
+- **请求字节**（§3 第 5 点；同一棵树一次冷 `deadcode`，经中继核记下每个 `resolve.request` 与应答的字节；两臂 `deadcode` 输出逐字节同）：
+
+| 树 | 请求个数 A → B | 请求字节 A → B | 应答字节 A → B | 站点 A → B |
+|---|---|---|---|---|
+| self | 1 → 3 | 44,749 → 218,542 | 512 → 63,866 | 11 → 1,957 |
+| dataframe | 1 → 3 | 19,947 → 466,163 | 1,170 → 131,293 | 71 → 3,731 |
+| keel | 1 → 3 | 2,734 → 54,948 | 231 → 5,901 | 4 → 230 |
+
+- **核单独计时**（`coretime_d.sh`：把 B 臂那次冷 `deadcode` 的 `resolve/1` 会话经中继录下，单独喂核 5 次）：self 一个会话三个请求共 218,607 B → 中位 105.0 ms（103.8–111.8），dataframe 共 466,228 B（最大的一个请求 224,533 B）→ 162.5 ms（159.9–193.0）；请求字节翻 2.1 倍、时间 1.5 倍，没有超线性的迹象。
+- **钩子**：PreToolUse 探针不问 `resolve/1`——一个在 dataframe 的库源根下写入新 Haskell 模块（包内模块、boot 包模块、带包名的 import 各一条）的 `Write` 信封经 `ce probe --hook` 在 dataframe 拷贝上冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_d.sh`），与阶段 A、B、C 同。
+- 复跑：车道目录 `v233_w2t_scratch/perf_d.py 7`（树拷自车道归档与 `gate1d/seed-hs-*`），读数原文 `perf_d.log`、逐跑 `perf_d.ndjson`、负载 `perf_d_load.txt`；请求字节 `reqbytes_d.sh`，各面请求 `warmreq_d.sh` / `warm2_d.sh`，钩子 `hookprobe_d.sh`，核单独计时 `coretime_d.sh`。
+
 ## v2.33 W3 候选、排序、粗筛与 L1 进核 A/B（实测 2026-10-04，release，同一台机、同一坐：A = 093aede4 的 ce + 它的核，B = W3 车道终树〔变基前 7d6d851e 的代码〕的 ce + 它的核；车道 HEAD 归档〔测试子仓就位、提交一次〕的四份拷贝，两臂各一份干净树、一份脏树〔三个文件同样追加一个函数〕；各臂先暖建索引一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时 `Get-CimInstance` 处理器负载 36–79 %〔别的会话的编译与 python 作业〕）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒；冷 = 删掉 `.ce/` 后的一跑。

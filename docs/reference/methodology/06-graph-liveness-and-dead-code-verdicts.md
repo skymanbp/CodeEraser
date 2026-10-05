@@ -55,7 +55,7 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
 ([ladder/outcome.rs:14-29](../../../cli/src/graph/ladder/outcome.rs#L14)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:194-198](../../../cli/src/graph/ladder/mod.rs#L194)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:192-196](../../../cli/src/graph/ladder/mod.rs#L192)).
 
 Since plan v2.33 wave W2a the Python, Go, C / C++ and Lua rungs below run in the core's
 `resolve/1` family, the R rungs since W2-text stage B and the Java rungs since stage C, and since
@@ -92,7 +92,7 @@ Numeric details that are policy, not taste:
   never a guess ([roots_ts.rs:64-68](../../../cli/src/graph/roots_ts.rs#L64),
   [roots_ts.rs:100-103](../../../cli/src/graph/roots_ts.rs#L100)). The chain's every file, and the
   presence of a `node_modules/` under any ancestor of a TS file, are resolve-key inputs
-  ([keys.rs:89-92](../../../cli/src/graph/keys.rs#L89)).
+  ([keys.rs:90-93](../../../cli/src/graph/keys.rs#L90)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
   ([Py.hs:106-109](../../../core/app/CE/Resolve/Py.hs#L106)); within one root, package-before-module is
   CPython's own finder order and therefore **not** ambiguity — only cross-root disagreement is
@@ -309,12 +309,12 @@ keep an asset alive, so it is never a candidate and never a measured node
 ([deadcode.rs:194-196](../../../cli/src/graph/deadcode.rs#L194)). **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
-([targets.rs:54-99](../../../cli/src/graph/deadcode/targets.rs#L54),
+([targets.rs:35-80](../../../cli/src/graph/deadcode/targets.rs#L35),
 [cabal_find.rs:10-26](../../../cli/src/graph/cabal_find.rs#L10)). A tree whose manifest lives
 elsewhere — the test-suite submodule is a slice of the `cli` package, its binaries cargo
 targets only in the superproject's Cargo.toml — declares its roots in `ce.toml [graph]
 crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for this role
-([targets.rs:93](../../../cli/src/graph/deadcode/targets.rs#L93)) and a crate root for the
+([targets.rs:69](../../../cli/src/graph/deadcode/targets.rs#L69)) and a crate root for the
 Rust ladder's `mod` and `crate::` rungs alike
 ([rs.rs:81](../../../cli/src/graph/ladder/rs.rs#L81)), one normalizer serving both readers
 ([graph.rs:77](../../../cli/src/config/graph.rs#L77)); a declared path the walk does not hold, or that
