@@ -536,6 +536,43 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **钩子**：PreToolUse 探针不问 `resolve/1`——一个写入 Python 文件（带两条 import）的 `Write` 信封经 `ce probe --hook` 在 requests 拷贝上冷跑、暖跑各一次，返回时中继核记下的 `resolve.request` 都是 0；之后 daemon 后台的冷启分析送过一次（10,981 B），与 W2a 的「钩子路径不变」（设计册 §11 第 19 条）同。
 - 复跑：车道目录 `v233_w2t_scratch/perf.py 7`（树拷自 `.ce-eval/corpora` 与车道归档），读数原文 `perf.log`、逐跑 `perf.ndjson`、负载 `perf_load.txt`；请求字节 `reqbytes.sh`，钩子 `hookprobe.sh`。
 
+## v2.33 W2-text 阶段 B R 阶梯与 `DESCRIPTION` 读法进核 A/B（实测 2026-10-04，release，同一台机、同一坐：A = c96ab3f6 的 ce + 它的核〔`git archive` 构建〕，B = 车道树 74768b93 的 ce + 它的核〔R 的两级阶梯、`DESCRIPTION` 读法与包代码展开在核，`DESCRIPTION` 原文过线〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；本坐没有记处理器负载）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）与两份 R 语料（covid19model 是最大的 R 树、`DESCRIPTION` 在子目录 `covid19AgeModel/`；stringr 是仓根即包）。
+
+| 树 | 面 | A（c96ab3f6） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `graph --sites` 冷 | 1795.8（1672.0–1897.8） | 1745.3（1692.9–2075.4） | -2.8 % |
+| self | `graph --sites` 暖 | 1592.1（1549.3–1625.8） | 1589.2（1545.4–1646.1） | -0.2 % |
+| self | `deadcode` 冷 | 34496.5（31500.4–36642.6） | 30969.5（30778.5–37980.7） | -10.2 % |
+| self | `deadcode` 暖 | 2439.0（2383.5–2566.0） | 2513.4（2363.9–2641.5） | +3.1 % |
+| self | `check` 暖 | 10285.9（9817.3–16506.4） | 10594.8（10061.7–15350.9） | +3.0 % |
+| covid19model | `graph --sites` 冷 | 1021.2（986.1–1103.1） | 1033.2（1000.4–1094.7） | +1.2 % |
+| covid19model | `graph --sites` 暖 | 959.0（948.5–1011.3） | 970.7（909.1–1074.7） | +1.2 % |
+| covid19model | `deadcode` 冷 | 8348.7（7753.5–8431.8） | 7941.9（7732.0–8583.9） | -4.9 % |
+| covid19model | `deadcode` 暖 | 791.0（751.2–869.1） | 901.8（851.2–929.4） | +14.0 % |
+| covid19model | `check` 暖 | 2658.0（2563.7–4619.0） | 2835.0（2714.6–4842.9） | +6.7 % |
+| stringr | `graph --sites` 冷 | 339.8（307.7–421.4） | 345.2（331.2–382.6） | +1.6 % |
+| stringr | `graph --sites` 暖 | 233.4（215.5–259.5） | 220.4（211.1–235.3） | -5.6 % |
+| stringr | `deadcode` 冷 | 900.0（861.6–963.9） | 1021.1（956.3–1052.9） | +13.5 % |
+| stringr | `deadcode` 暖 | 254.4（228.2–279.0） | 351.4（326.6–361.7） | +38.1 % |
+| stringr | `check` 暖 | 841.2（778.6–1392.1） | 946.4（864.2–1536.4） | +12.5 % |
+
+- 预算（任务书）：暖 `ce check` ≤ +15 %——三棵树 +3.0 %、+6.7 %、+12.5 %（stringr，841 → 946 ms），都在线内。
+- **超过 +15 % 的面只有一个**：stringr 暖 `deadcode` +38.1 %（254 → 351 ms，+97 ms；B 的最小值 326.6 高于 A 的最大值 279.0，不是噪声）。同一机制让 covid19model 暖 `deadcode` +14.0 %（+111 ms）、stringr 冷 `deadcode` +13.5 %（+121 ms），也是两棵 R 树暖 `check` 多出的那部分（+105 / +177 ms）。原因已按请求核实（`warmreq_b.sh`：每臂在建好索引的拷贝上经中继核再跑一次暖 `deadcode`，数 `resolve.request`）：A 臂暖跑一个 `resolve/1` 请求也不发——包代码在 Rust 里算，图边从索引读；B 臂在有 `DESCRIPTION` 的树上每跑都要问核一次包代码（`Declared::gather` → `resolve::packages`，stringr 一个请求 3,552 B / 应答 642 B，covid19model 11,520 / 667 B），于是暖跑多起一个 `ce-core` 进程、多一次握手和一次问答，约 100 ms；自仓没有 `DESCRIPTION`，B 臂暖跑同样 0 个请求，`deadcode` 暖 +3.1 %。绝对量是每跑约 0.1 s 的定额，不随树变大；没做缓存（把包代码存进索引要动索引 schema），记为未解决项。
+- 自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立，与本表无关；其余各跑全退 0。
+- **请求字节**（§3 第 5 点；同一棵树一次冷 `deadcode`，经中继核记下每个 `resolve.request` 与应答的字节；两臂 `deadcode` 输出逐字节同）：
+
+| 树 | 请求个数 A → B | 请求字节 A → B | 应答字节 A → B |
+|---|---|---|---|
+| self | 1 → 1 | 43,881 → 43,905 | 498 → 512 |
+| covid19model | 1 → 2 | 10,198 → 61,985 | 281 → 27,683 |
+| stringr | 0 → 2 | 0 → 8,340 | 0 → 2,053 |
+
+  A 臂在 R 树上只为别的语言问核（covid19model 9 个非 R 站点，stringr 一个也没有）；B 臂把 1,697 / 55 个 R 站点连同 `DESCRIPTION` 原文送进图的请求（50,465 / 4,788 B），声明目标那一侧另送一次（11,520 / 3,552 B，只带文件表与 `DESCRIPTION`）。应答变大是 R 站点的目标改为路径。自仓多 24 B：请求多一个空的 `r.descriptions` 键，应答多一个空的 `packages` 表。
+- **钩子**：PreToolUse 探针不问 `resolve/1`——一个写入 R 文件（带一条 `library` 与一条 `source`）的 `Write` 信封经 `ce probe --hook` 在 covid19model 拷贝上冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_b.sh`），与阶段 A 同。
+- 复跑：车道目录 `v233_w2t_scratch/perf_b.py 7`（树拷自 `.ce-eval/corpora` 与车道归档），读数原文 `perf_b.log`、逐跑 `perf_b.ndjson`；请求字节 `reqbytes_b.sh`，暖跑请求 `warmreq_b.sh`，钩子 `hookprobe_b.sh`。
+
 ## v2.33 W3 候选、排序、粗筛与 L1 进核 A/B（实测 2026-10-04，release，同一台机、同一坐：A = 093aede4 的 ce + 它的核，B = W3 车道终树〔变基前 7d6d851e 的代码〕的 ce + 它的核；车道 HEAD 归档〔测试子仓就位、提交一次〕的四份拷贝，两臂各一份干净树、一份脏树〔三个文件同样追加一个函数〕；各臂先暖建索引一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时 `Get-CimInstance` 处理器负载 36–79 %〔别的会话的编译与 python 作业〕）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒；冷 = 删掉 `.ce/` 后的一跑。

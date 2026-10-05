@@ -1,9 +1,9 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
-//! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go and C /
-//! C++ resolve in `resolve/1`, with the readers of their configuration
-//! files (go.mod, the root pyproject.toml's keys, the compile databases,
-//! their response and flag files). This side sends what it read as text
+//! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go, C / C++
+//! and R resolve in `resolve/1`, with the readers of their configuration
+//! files (go.mod, R's DESCRIPTION, the root pyproject.toml's keys, the
+//! compile databases, their response and flag files). This side sends what it read as text
 //! (request.rs) — one request per sweep with only the sites that need
 //! resolving — answers the core's `wanted` response files by reading
 //! them, and maps each reply row back to the ladder's `Outcome`, so the
@@ -38,7 +38,7 @@ pub const SINCE: &str = "9.0.0";
 pub fn in_core(lang: Lang) -> bool {
     matches!(
         lang,
-        Lang::Python | Lang::Go | Lang::C | Lang::Cpp | Lang::Lua
+        Lang::Python | Lang::Go | Lang::C | Lang::Cpp | Lang::Lua | Lang::R
     )
 }
 
@@ -102,6 +102,27 @@ pub fn forced_wire(
         }
     }
     Ok(())
+}
+
+/// Each R package's code by its root: the DESCRIPTIONs at `manifests`
+/// (the declared-target pass's nearest ones) read and sent, the core's
+/// `packages` reply kept — a DESCRIPTION that cannot be read or names no
+/// package is none. No DESCRIPTION, no request.
+pub fn packages(
+    root: &Path,
+    files: &BTreeSet<String>,
+    manifests: &BTreeSet<String>,
+) -> Result<BTreeMap<String, BTreeSet<String>>, String> {
+    let texts = request::descriptions(root, manifests.iter());
+    if texts.is_empty() {
+        return Ok(BTreeMap::new());
+    }
+    let reply = complete(
+        &mut json!({ "files": files, "r": { "descriptions": texts } }),
+        root,
+    )?;
+    let rows: Vec<(String, BTreeSet<String>)> = judged::table(&reply, "packages")?;
+    Ok(rows.into_iter().collect())
 }
 
 /// Each JSON compile database's response files, as the core's expansion

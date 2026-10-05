@@ -2,10 +2,10 @@
 
 -- | resolve.request handler (plan v2.33 wave W2a; on text since
 -- W2-text, proto 9.0.0; design booklet docs/reference/algorithm-track.md
--- §3, §6): the reference ladders for Python, Lua, Go and C / C++, and
--- the configuration readers they read — go.mod, the root
--- `pyproject.toml`'s keys, the compile databases with their response
--- files and flag files. The measuring side walks the tree, detects the
+-- §3, §6): the reference ladders for Python, Lua, Go, C / C++ and R, and
+-- the configuration readers they read — go.mod, R's DESCRIPTION, the
+-- root `pyproject.toml`'s keys, the compile databases with their
+-- response files and flag files. The measuring side walks the tree, detects the
 -- sites, reads the files and sends what it read as text; this family
 -- decides which candidate locations a site tries, in which rung order,
 -- what counts as a hit, the ambiguity and refusal rules and the
@@ -16,7 +16,9 @@
 -- names and the request did not carry is `wanted` (the measuring side
 -- reads it and asks again; the results wait for it); `responses` names,
 -- per JSON database, every response path its expansion read — the
--- resolve key's input.
+-- resolve key's input; `packages` names each carried DESCRIPTION's
+-- package directory with its code (`[dir, [file]]`, the declared targets
+-- an R package node reaches).
 module CE.Resolve (respond) where
 
 import CE.Resolve.Answer
@@ -25,11 +27,14 @@ import CE.Resolve.CIndex (Env (..), Found (..), forcedArcs, index)
 import CE.Resolve.CompDb (Expanded (..), parseDb, parseFlags)
 import CE.Resolve.Contract (offence, overCap)
 import CE.Resolve.Cost
+import CE.Resolve.Description (Description (..), packageCode, readDescription)
 import CE.Resolve.Go (GoMod (..), parseGoMod, resolveGo)
 import CE.Resolve.Inspect (inspected)
 import CE.Resolve.Lua (resolveLua, searched)
 import CE.Resolve.Py (pyproject, resolvePy)
+import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
+import CE.Resolve.Str (parentDir)
 import CE.Resolve.World (pathOf, world)
 import CE.Wire (family)
 import Data.Aeson (Value, encode, object, (.=))
@@ -67,10 +72,13 @@ judged proto rq = reply proto rq resolved body False
   py = pyproject (rqPyproject rq)
   luaDirs = searched (searchRoots "lua" rq) (rqLuaTemplates rq)
   gomods = [m | (rel, text) <- rqGoMods rq, let m = parseGoMod rel text, isJust (gmModule m)]
+  descs = [d | (rel, text) <- rqDescriptions rq, Just d <- [readDescription (parentDir rel) text]]
+  packages = M.fromList [(dDir d, packageCode w d) | d <- descs]
   site s
     | sLang s == langPy = resolvePy w py from (sSpec s)
     | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
     | sLang s == langGo = resolveGo w gomods from (sSpec s)
+    | sLang s == langR = resolveR (w, searchRoots "r" rq, descs) (sKind s) from (sSpec s)
     | otherwise = resolveC env ix from (sSpec s)
    where
     from = pathOf w (sFrom s)
@@ -86,12 +94,13 @@ judged proto rq = reply proto rq resolved body False
     , "forced" .= (if complete then map (\(u, h) -> [u, h]) (forcedArcs env ix) else [])
     , "wanted" .= Set.toList wanted
     , "responses" .= [(rel, Set.toList (xResponses x)) | (rel, (_, x)) <- M.toList parsed]
+    , "packages" .= M.toList packages
     ]
       <> ["inspected" .= v | Just v <- [inspected <$> rqInspect rq]]
 
 -- | Over-cap: a complete degraded reply with empty tables.
 degraded :: String -> ResolveReq -> B8.ByteString
-degraded proto rq = reply proto rq 0 ["results" .= ([] :: [Value]), "forced" .= ([] :: [Value]), "wanted" .= ([] :: [Value]), "responses" .= ([] :: [Value])] True
+degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "forced", "wanted", "responses", "packages"]] True
 
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString

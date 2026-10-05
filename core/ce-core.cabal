@@ -78,7 +78,8 @@ executable ce-core
                       CE.Resolve, CE.Resolve.Answer, CE.Resolve.C, CE.Resolve.CIndex, CE.Resolve.Contract,
                       CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
                       CE.Resolve.Tables, CE.Resolve.World, CE.Resolve.Chars, CE.Resolve.Str,
-                      CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect
+                      CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect,
+                      CE.Resolve.Description, CE.Resolve.R
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -163,6 +164,7 @@ test-suite ce-core-test
                       CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
                       CE.Resolve.Tables, CE.Resolve.World, CE.Resolve.Chars, CE.Resolve.Str,
                       CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect,
+                      CE.Resolve.Description, CE.Resolve.R,
                       ReferenceResolve, ReferenceResolveGen, ResolveProps,
                       Reference, ReferenceGraph, ReferenceQuery, QueryProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,

@@ -240,7 +240,8 @@ pub fn wire_of(
     let nodes = nodes::nodes_of(&files, &edges, &idx.foreign_paths()?);
     let ids = nodes::ids(&nodes);
     let file_set: BTreeSet<String> = files.iter().cloned().collect();
-    let declared = targets::Declared::gather(root, &file_set, &config.graph.declared_roots());
+    let declared = targets::Declared::gather(root, &file_set, &config.graph.declared_roots())
+        .map_err(anyhow::Error::msg)?;
     let rows: Vec<Value> = nodes
         .iter()
         .map(|n| node_row(root, n, &entries, &declared))

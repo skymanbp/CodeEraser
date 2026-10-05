@@ -1,5 +1,5 @@
 //! What the edge passes do when the core cannot answer resolve/1 (plan
-//! v2.33 wave W2a, no-core rule): the Python, Lua, Go and C / C++
+//! v2.33 wave W2a, no-core rule): the Python, Lua, Go, C / C++ and R
 //! sites of the batch are stored unresolved (no edge rows), every file
 //! holding one is booked in the debt ledger (`resolve_pending`) so the
 //! next run with a core re-resolves exactly those, and the meta row
@@ -7,7 +7,7 @@
 //! index refresh itself goes on — the clone fingerprints, the hooks'
 //! reads, never wait on the graph — while every face that reads edges
 //! refuses by name (`refuse_if_owed`) instead of judging a graph with
-//! four languages' imports missing.
+//! the core's languages' imports missing.
 
 use super::store::{CachedSite, EdgeRow};
 use anyhow::{Result, bail};
@@ -80,7 +80,7 @@ pub fn refuse_if_owed(conn: &rusqlite::Connection) -> Result<()> {
         .clone()
         .unwrap_or_else(|| "an earlier run had no core that answers resolve/1".into());
     bail!(
-        "resolve_unavailable: the import sites of {files} file(s) (Python, Lua, Go, C / C++) wait for a core that answers resolve/1 — {why}; re-run with the core named (--core, CE_CORE_BIN)"
+        "resolve_unavailable: the import sites of {files} file(s) (Python, Lua, Go, C / C++, R) wait for a core that answers resolve/1 — {why}; re-run with the core named (--core, CE_CORE_BIN)"
     )
 }
 

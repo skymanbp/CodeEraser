@@ -4,11 +4,11 @@
 -- proto 9.0.0, algorithm-track §3): the measuring side sends what it
 -- read, as text — the walked paths, the sites' specifiers as the
 -- detector produced them, the `ce.toml` values the ladders read, and
--- the configuration files: each go.mod's text, the root
--- `pyproject.toml` and every `compile_commands.json` as the decoded
--- document (format decoding is a library read on that side; every rule
--- applied to the document is here), each `compile_flags.txt` and each
--- response file a database names as text. What needs the file system
+-- the configuration files: each go.mod's and each R DESCRIPTION's text,
+-- the root `pyproject.toml` and every `compile_commands.json` as the
+-- decoded document (format decoding is a library read on that side;
+-- every rule applied to the document is here), each `compile_flags.txt`
+-- and each response file a database names as text. What needs the file system
 -- stays a small fact: the absolute root's text, the databases a probe
 -- found, each C-family file's include list (read in the walk, a key
 -- input there). Every object and table may be absent, read as empty.
@@ -32,6 +32,7 @@ data ResolveReq = ResolveReq
   , rqPyproject :: Maybe Value
   , rqLuaTemplates :: [(String, String)]
   , rqGoMods :: [(String, String)]
+  , rqDescriptions :: [(String, String)]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
@@ -65,6 +66,7 @@ instance FromJSON ResolveReq where
     py <- o .:? "py"
     lua <- o .:? "lua"
     go <- o .:? "go"
+    r <- o .:? "r"
     ResolveReq
       <$> o .: "id"
       <*> o .:? "files" .!= []
@@ -74,6 +76,7 @@ instance FromJSON ResolveReq where
       <*> maybe (pure Nothing) (withObject "py" (.:? "pyproject")) py
       <*> maybe (pure []) (withObject "lua" (\l -> l .:? "templates" .!= [])) lua
       <*> maybe (pure []) (withObject "go" (\g -> g .:? "mods" .!= [])) go
+      <*> maybe (pure []) (withObject "r" (\d -> d .:? "descriptions" .!= [])) r
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 

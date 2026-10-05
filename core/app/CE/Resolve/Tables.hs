@@ -4,7 +4,7 @@
 -- W2-text; replaces the W2a vocabulary): the three External tables
 -- (`ladder.py.stdlib`, `ladder.lua.stdlib`, `ladder.go.std`), the two
 -- compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
--- storage codes of the two Lua site kinds the Lua ladder branches on.
+-- storage codes of the site kinds the Lua and R ladders branch on.
 -- The package's `resolve` key states which configuration files the
 -- measuring side sends as text — the basenames among the walk's
 -- configs (`configs`): a rule of this family, so not a second list
@@ -17,6 +17,8 @@ module CE.Resolve.Tables (
   skipFlags,
   kindRequire,
   kindLoad,
+  kindSource,
+  kindLibrary,
   configNames,
   table,
 ) where
@@ -50,19 +52,23 @@ packList path = either refuse id (parseEither parseJSON =<< walk path pack)
   walk _ _ = Left ("no " <> show path)
   refuse e = error ("resolve tables do not read: " <> e)
 
--- | The storage codes of the two Lua site kinds (`store.site_kinds`).
-kindRequire, kindLoad :: Integer
+-- | The storage codes of the two Lua site kinds and the two R ones
+-- (`store.site_kinds`).
+kindRequire, kindLoad, kindSource, kindLibrary :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
+kindSource = kindCode "source"
+kindLibrary = kindCode "library"
 
 kindCode :: String -> Integer
 kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKinds)
 
--- | The walk's config basenames whose text a request carries (`go.mod`;
--- the root `pyproject.toml`, the compile databases and their response
--- files travel by the measuring side's own finders).
+-- | The walk's config basenames whose text a request carries (`go.mod`
+-- under `go.mods`, `DESCRIPTION` under `r.descriptions`; the root
+-- `pyproject.toml`, the compile databases and their response files
+-- travel by the measuring side's own finders).
 configNames :: [String]
-configNames = ["go.mod"]
+configNames = ["go.mod", "DESCRIPTION"]
 
 -- | The `resolve` key of the package.
 table :: Value

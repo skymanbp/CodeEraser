@@ -1,23 +1,26 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | An independently written reference for the resolve family (plan
--- v2.33 wave W2a; on text since W2-text): the four ladders written apart
--- from the shipped modules, over the case as it holds its configuration
--- (module paths, replace pairs, roots, dependency names) — the shipped
--- core reads the same configuration from the request's go.mod texts and
--- pyproject document, so its readers are on the path. Every site of the
--- two hundred seeded cases must get the same answer from both, target
--- spelled the same. The C ladder is read without compile databases
+-- v2.33 wave W2a; on text since W2-text; R since its stage B): the five
+-- ladders written apart from the shipped modules, over the case as it
+-- holds its configuration (module paths, replace pairs, roots,
+-- dependency names, package names and Collate lists) — the shipped core
+-- reads the same configuration from the request's go.mod and DESCRIPTION
+-- texts and pyproject document, so its readers are on the path. Every
+-- site of the two hundred seeded cases must get the same answer from
+-- both, target spelled the same, and every case the same R package code. The C ladder is read without compile databases
 -- here (the measuring side's ladder batteries drive the database rungs
 -- end to end through the shipped core).
 module ReferenceResolve (equivalence, refAnswer) where
 
 import CE.Resolve (respond)
-import CE.Resolve.Cost (Reason (..), langC, langCpp, langGo, langLua, langPy)
-import CE.Resolve.Tables (goStd, kindLoad, kindRequire, luaStdlib, pyStdlib)
-import Data.Aeson (decodeStrict, encode)
+import CE.Resolve.Cost (Reason (..), langC, langCpp, langGo, langLua, langPy, langR)
+import CE.Resolve.Tables (goStd, kindLibrary, kindLoad, kindRequire, kindSource, luaStdlib, pyStdlib)
+import Data.Aeson (Value (..), decodeStrict, encode)
+import qualified Data.Aeson.KeyMap as KM
+import Data.Aeson.Types (parseMaybe, parseJSON)
 import qualified Data.ByteString.Lazy as BL
-import Data.List (intercalate, isPrefixOf, isSuffixOf, sortOn)
+import Data.List (intercalate, isInfixOf, isPrefixOf, isSuffixOf, sortOn)
 import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
 import qualified Data.Set as Set
@@ -29,8 +32,9 @@ import WireHarness (runChecks)
 equivalence :: IO Bool
 equivalence =
   runChecks
-    ( ("resolve: 200 cases, 1620 sites, shipped = reference", null bad)
-        : ("resolve: the cases reach every rung and refusal of the four ladders", null missing)
+    ( ("resolve: 200 cases, 2040 sites, shipped = reference", null bad)
+        : ("resolve: 200 cases, R package code shipped = reference", all samePackages cases)
+        : ("resolve: the cases reach every rung and refusal of the five ladders", null missing)
         : take 5 bad
           <> [("  never reached: " <> show m, False) | m <- missing]
     )
@@ -48,14 +52,25 @@ equivalence =
       <> [(langLua, s) | s <- ["file 1", "file 2", "external 3", "OutOfScope", "Unsupported", "AmbiguousRoot"]]
       <> [(langGo, s) | s <- ["package 1", "package 2", "external 3", "OutOfScope", "AmbiguousWorkspace"]]
       <> [(langC, s) | s <- ["file 1", "file 2", "file 4", "external 5", "OutOfScope", "Empty", "AmbiguousRoot"]]
+      <> [(langR, s) | s <- ["file 1", "package 2", "external 3", "OutOfScope", "Unsupported", "AmbiguousRoot", "AmbiguousWorkspace"]]
 
 -- | The first disagreeing site of a case, if any.
 disagree :: Case -> Maybe (String, String, Maybe Ref, Ref)
 disagree c = listToMaybe [(from, spec, got, want) | ((_, _, from, spec), got, want) <- zip3 (cSites c) shipped wanted, got /= Just want]
  where
-  reply = either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode (request c))))
-  shipped = maybe (repeat Nothing) (map Just) (reply >>= answers) <> repeat Nothing
+  shipped = maybe (repeat Nothing) (map Just) (shippedReply c >>= answers) <> repeat Nothing
   wanted = map (refAnswer c) (cSites c)
+
+shippedReply :: Case -> Maybe Value
+shippedReply c = either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode (request c))))
+
+-- | The reply's `packages` against the reference expansion.
+samePackages :: Case -> Bool
+samePackages c = (got :: Maybe [(String, [String])]) == Just (refPackages c)
+ where
+  got = case shippedReply c of
+    Just (Object o) -> parseMaybe parseJSON =<< KM.lookup "packages" o
+    _ -> Nothing
 
 -- | The reference ladders, one site.
 refAnswer :: Case -> (Integer, Integer, String, String) -> Ref
@@ -64,6 +79,7 @@ refAnswer c (lang, kind, from, spec)
   | lang == langLua = lua c kind from spec
   | lang == langGo = go c from spec
   | lang `elem` [langC, langCpp] = cFamily c from spec
+  | lang == langR = rLang c kind from spec
   | otherwise = RUnres Unsupported
 
 walked :: Case -> Set.Set String
@@ -147,9 +163,36 @@ lua c kind from spec
   luaModule
     | any null (splitOn '/' name) = RUnres OutOfScope
     | otherwise = fromMaybe (RUnres OutOfScope) (oneOf [p | (d, sufs) <- M.toList searched, Just p <- [listToMaybe [q | s <- sufs, Just q <- [joinRel d (name <> s)], Set.member q files]]] 1)
-  besideOrRoot
-    | take 1 spec `elem` ["/", "~"] || ':' `elem` spec = RUnres OutOfScope
-    | otherwise = maybe (RUnres OutOfScope) (`RFile` 2) (listToMaybe [p | d <- [parentDir from, ""], Just p <- [joinRel d spec], Set.member p files])
+  besideOrRoot = maybe (RUnres OutOfScope) (`RFile` 2) (scriptPath c from spec)
+
+-- | A path a script loads: beside the loading file, then under the root.
+scriptPath :: Case -> String -> String -> Maybe String
+scriptPath c from spec
+  | take 1 spec `elem` ["/", "~"] || ':' `elem` spec = Nothing
+  | otherwise = listToMaybe [p | d <- [parentDir from, ""], Just p <- [joinRel d spec], Set.member p (walked c)]
+
+-- R --------------------------------------------------------------------
+
+rLang :: Case -> Integer -> String -> String -> Ref
+rLang c kind from spec
+  | kind == kindSource && "://" `isInfixOf` spec = RExt 3
+  | kind == kindSource = fromMaybe (RUnres OutOfScope) (fmap (`RFile` 1) (scriptPath c from spec) `orElse` oneOf [p | d <- cRRoots c, Just p <- [joinRel d spec], Set.member p (walked c)] 1)
+  | kind == kindLibrary = case [d | (d, Just p, _) <- cDescs c, p == spec] of
+      [] -> RExt 3
+      [d] -> RPkg d 2
+      _ -> RUnres AmbiguousWorkspace
+  | otherwise = RUnres Unsupported
+
+-- | Each package's code: the Collate files under its `R/`, else every
+-- walked `.R` / `.r` file (a stem before the dot) directly in it.
+refPackages :: Case -> [(String, [String])]
+refPackages c = [(d, code d cs) | (d, Just _, cs) <- cDescs c]
+ where
+  code d cs =
+    let dir = joinDir d "R"
+     in if null cs
+          then [f | f <- cFiles c, parentDir f == dir, any (\e -> e `isSuffixOf` f && length (drop (length dir) f) > 3) [".R", ".r"]]
+          else Set.toList (Set.fromList [p | n <- cs, Just p <- [joinRel dir n], Set.member p (walked c)])
 
 -- Go -------------------------------------------------------------------
 

@@ -721,3 +721,10 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
 - **读数**：十一份在 c4eac446 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（6227189b → c4eac446），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 B 之后：十一份精度册第七次退役并重生成（2026-10-04）
+
+阶段 B 把 R 的两级阶梯、`DESCRIPTION` 读法与包代码展开搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 50–53 条）：`cli/src/graph/ladder/r/` 删掉，`cli/src/graph/resolve/` 读出 `DESCRIPTION` 原文送核，`core/app/CE/Resolve/` 多出 `R.hs` 与 `Description.hs`、`World.hs` 的共用函数改写了 C 与 Lua 的两处同义写法——三处都在 C、Lua 与 R 考题的 `ANSWERED_BY` 里（子仓 `it/eval_lang_parts/exams.rs`；R 的清单从已删的 `cli/src/graph/ladder/r/` 改为 `cli/src/graph/resolve/` 与 `core/app/CE/Resolve(.hs|/)`）。差分门（阶梯与配置读法两组）全同，判决字节不应移动；重生成按前一次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。

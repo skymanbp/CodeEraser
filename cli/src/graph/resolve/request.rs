@@ -1,8 +1,8 @@
 //! One resolve/1 request (plan v2.33 W2-text, proto 9.0.0): what this
 //! side read, as text — the walked paths, the sites' specifiers as the
 //! detector produced them, the `[graph.search_roots]` table, the Lua
-//! templates the walk read, each go.mod's text, the root
-//! `pyproject.toml` and every JSON compile database decoded (a library
+//! templates the walk read, each go.mod's and each R DESCRIPTION's text,
+//! the root `pyproject.toml` and every JSON compile database decoded (a library
 //! read; the rules applied to them are the core's), each flags file's
 //! text, and the facts that need the file system: the root's absolute
 //! text, the databases clangd's probes find, each C-family file's
@@ -27,13 +27,19 @@ pub struct Input<'a> {
     pub includes: &'a BTreeMap<String, Vec<String>>,
 }
 
-/// The sweep's part of a request: everything but the sites.
+/// The sweep's part of a request: everything but the sites. The walk's
+/// configs of the names the core reads (the package's `resolve.configs`)
+/// go as text: go.mod read as UTF-8, a DESCRIPTION lossy (it may declare
+/// `Encoding: latin1`).
 pub fn tree(input: &Input) -> Value {
     let wanted = &crate::tables::get().resolve.configs;
-    let go: Vec<(&String, String)> = input
-        .configs
-        .iter()
-        .filter(|c| wanted.contains(&c.rsplit('/').next().unwrap_or(c)))
+    let named = |name: &'static str| {
+        input.configs.iter().filter(move |c| {
+            let base = c.rsplit('/').next().unwrap_or(c);
+            base == name && wanted.contains(&base)
+        })
+    };
+    let go: Vec<(&String, String)> = named("go.mod")
         .filter_map(|c| Some((c, std::fs::read_to_string(input.root.join(c)).ok()?)))
         .collect();
     json!({
@@ -42,8 +48,21 @@ pub fn tree(input: &Input) -> Value {
         "py": { "pyproject": pyproject(input.root) },
         "lua": { "templates": input.lua },
         "go": { "mods": go },
+        "r": { "descriptions": descriptions(input.root, named("DESCRIPTION")) },
         "c": databases(input.root, input.files, input.includes),
     })
+}
+
+/// Each readable DESCRIPTION's text, lossy, by its path.
+pub fn descriptions<'a>(
+    root: &Path,
+    rels: impl Iterator<Item = &'a String>,
+) -> Vec<(&'a String, String)> {
+    rels.filter_map(|rel| {
+        let bytes = std::fs::read(root.join(rel)).ok()?;
+        Some((rel, String::from_utf8_lossy(&bytes).into_owned()))
+    })
+    .collect()
 }
 
 /// The root `pyproject.toml` decoded, null when it is absent or not TOML.

@@ -28,7 +28,7 @@ requestSize rq =
     , sum [1 + texts ds | ds <- M.elems (rqSearch rq)]
     , maybe 0 doc (rqPyproject rq)
     , sum [1 + chars d + chars s | (d, s) <- rqLuaTemplates rq]
-    , sum [1 + chars p + chars t | (p, t) <- rqGoMods rq]
+    , sum [1 + chars p + chars t | (p, t) <- rqGoMods rq <> rqDescriptions rq]
     , chars (cRoot c)
     , sum [1 + chars d + chars r | Db d _ r <- cDbs c]
     , sum [1 + chars r + maybe 0 (sum . map doc) rows | (r, rows) <- cJson c]

@@ -80,11 +80,7 @@ add dir suffixes dirs = M.insert dir (sortOn (/= ".lua") (foldl push tried suffi
   tried = M.findWithDefault [] dir dirs
   push acc s = if s `elem` acc then acc else acc <> [s]
 
--- | R2: `paths::beside_or_root` — beside the loading file, then under the
--- tree root; the first hit.
+-- | R2: `besideOrRoot` (CE.Resolve.World) — beside the loading file,
+-- then under the tree root; the first hit.
 loaded :: World -> String -> String -> Answer
-loaded w from spec
-  | rooted spec = AUnresolved OutOfScope
-  | otherwise = case [p | dir <- [parentDir from, ""], Just p <- [joinRel dir spec], member w p] of
-      (p : _) -> AFile p 2
-      [] -> AUnresolved OutOfScope
+loaded w from spec = maybe (AUnresolved OutOfScope) (`AFile` 2) (besideOrRoot w from spec)

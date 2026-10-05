@@ -26,8 +26,6 @@ module CE.Resolve.CIndex (
   form,
 ) where
 
-import CE.Lang (languages)
-import CE.Lang.Spec (Language (..))
 import CE.Resolve.CompDb (Entry (..), isAbsolute, relativize)
 import CE.Resolve.Flags (Chain (..), Search (..))
 import CE.Resolve.Str
@@ -116,17 +114,9 @@ cover env flags jsonDirs ix ids0 = ix {ixChains = cs, ixSeats = ixSeats ix <> se
     (x : _) -> x
     [] -> Nothing
 
--- | `compdb_find::is_c`: the path's extension (`Path::extension`: after
--- the basename's last `.`, a non-empty stem before it) is a C or C++ one.
+-- | `compdb_find::is_c`: the path's extension is a C or C++ one.
 isC :: String -> Bool
-isC path = maybe False (`elem` cExts) (extension (baseName path))
- where
-  cExts = concat [lgExts l | l <- languages, lgName l `elem` ["c", "cpp"]]
-  extension base
-    | base == ".." = Nothing
-    | otherwise = case break (== '.') (reverse base) of
-        (ext, '.' : stem) | not (null stem) -> Just (reverse ext)
-        _ -> Nothing
+isC = ofLangs ["c", "cpp"]
 
 -- | `compdb_find::is_unit`: `.c` / `.cc` / `.cpp` / `.cxx` after the
 -- path's last `.`.
@@ -196,10 +186,10 @@ stack ch ps file
     let next = [p | p <- Set.toList (M.findWithDefault Set.empty f ps), not (Set.member p seen)]
      in up (foldr Set.insert seen next) (reverse next <> rest)
 
--- | `paths::declared`: the walked files a name names under each declared
--- `c` root.
+-- | `declaredIn` (CE.Resolve.World) over the declared `c` roots: the
+-- walked files a name names under each.
 declared :: Env -> String -> Set.Set String
-declared env name = Set.fromList [p | dir <- eRoots env, Just p <- [inScope (eWorld env) dir name]]
+declared env = declaredIn (eWorld env) (eRoots env)
 
 -- | `c_search::under`: the walked file one searched place yields; a
 -- framework directory answers `A/B.h` as `A.framework/Headers/B.h`, then

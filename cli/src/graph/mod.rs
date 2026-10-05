@@ -3,10 +3,10 @@
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
 //! ladder/ with its config surfaces (cabal / cargo / roots / jsonc)
-//! beside it, and in the core for Python, Lua, Go and C / C++
-//! (resolve/, which sends the go.mod, pyproject and compile-database
-//! texts the core reads); wire.rs bridges cached sites to edge rows for
-//! phase 2.
+//! beside it, and in the core for Python, Lua, Go, C / C++ and R
+//! (resolve/, which sends the go.mod, DESCRIPTION, pyproject and
+//! compile-database texts the core reads); wire.rs bridges cached sites
+//! to edge rows for phase 2.
 
 // The 92e728b1 go.mod and compile-database readers, frozen (tests
 // subrepo unit/graph/oracle_cfg/): the frozen ladders (ladder::frozen)

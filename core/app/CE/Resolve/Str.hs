@@ -15,6 +15,7 @@ module CE.Resolve.Str (
   joinDir,
   ancestors,
   baseName,
+  extension,
   splitOn,
   splitOnStr,
   splitOnce,
@@ -69,6 +70,17 @@ ancestors d = d : ancestors (parentDir d)
 -- | The text after the last `/` (`rsplit('/').next()`).
 baseName :: String -> String
 baseName = reverse . takeWhile (/= '/') . reverse
+
+-- | `Path::extension` of a path: after its basename's last `.`, with a
+-- non-empty stem before it; `..` has none.
+extension :: String -> Maybe String
+extension path
+  | base == ".." = Nothing
+  | otherwise = case break (== '.') (reverse base) of
+      (ext, '.' : stem) | not (null stem) -> Just (reverse ext)
+      _ -> Nothing
+ where
+  base = baseName path
 
 -- | `str::split(char)`: every piece, empty ones kept ("" is one piece).
 splitOn :: Char -> String -> [String]
@@ -142,6 +154,7 @@ replaceChar :: Char -> Char -> String -> String
 replaceChar a b = map (\c -> if c == a then b else c)
 
 -- | A path that names no file of the tree when a script loads it: rooted
--- at `/` or `~`, or holding a drive or a colon (`paths::beside_or_root`).
+-- at `/` or `~`, or holding a drive or a colon (CE.Resolve.World
+-- `besideOrRoot`).
 rooted :: String -> Bool
 rooted spec = "/" `isPrefixOf` spec || "~" `isPrefixOf` spec || ':' `elem` spec

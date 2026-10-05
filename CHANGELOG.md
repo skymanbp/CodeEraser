@@ -8,6 +8,15 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W2-text 阶段 B：R 的两级阶梯、`DESCRIPTION` 读法与包代码展开进核，`DESCRIPTION` 原文过线；协议仍是 **9.0.0**（未发布，按 7.2.0 的同版加性先例；2026-10-04；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2b 行、§10 W2b 阶段 B 行与 §11 第 50–53 条；`contracts/VERSIONING.md` 9.0.0 条的「同版加性」段）。
+
+- **wire**（加性）：`sites` 加 R（码 20，`source` / `library`）；请求 `r.descriptions` `[[路径, 原文]]`（走查到的 R 包 `DESCRIPTION`，按字节有损 UTF-8 读，读不到不带）；定义包 `resolve.configs` 加 `DESCRIPTION`；应答 `packages` `[[包目录, [代码文件…]]]`（降级为空表）；`inspect` 加 `description`。golden：`resolve/golden` 加第 7 对（R），其余只动 hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs`。
+- **核**：新 `CE.Resolve.R`（`source` 先引用文件旁或仓根、再声明根；`library` / `requireNamespace` / `pkg::` 经站内 `DESCRIPTION` 答包目录、零个 External、两个以上 AmbiguousWorkspace；URL 说明符 External）与 `CE.Resolve.Description`（`Package` / `Collate` 字段、续行、带引号的名字，按 Rust 的 `str::lines` 与 Unicode White_Space 读；包代码 = `Collate` 列出的 `R/` 文件，否则 `R/` 下直属的 R 文件）；`CE.Resolve.World` 新 `besideOrRoot` / `declaredIn` / `ofLangs`，Lua 的 `loaded` 与 C 的 `declared` 改读它们，`Path::extension` 的读法收进 `Str.extension`。
+- **Rust**：`graph/ladder/r/`（阶梯与 `DESCRIPTION` 读法）删除，`ladder/paths.rs` 只留 `one_of`，`deadcode/targets.rs` 的包代码展开删除、`Declared::gather` 改问核（核答不了即具名拒绝），`resolve/request.rs` 读出 `DESCRIPTION` 原文。
+- **差分门**：删之前 R 阶梯、`paths.rs`、`DESCRIPTION` 读法与包代码展开按 c96ab3f6 原样冻进测试子仓（`unit/graph/oracle/r.rs`、`oracle/paths.rs`、`oracle_cfg/description.rs`、`oracle_cfg/r_package.rs`）；阶梯腿新增 `r-source` / `r-library`，三颗种子各 12,000 + 12,000 个 R 站点，真树 19 棵 R 站点 1,762、包代码两份；配置腿 `description` 三颗种子各 10,000 题（四分之一取自 stringr / covid19model 的真 `DESCRIPTION` 再变异）；其余语言的阶梯腿与配置九腿随共用函数重跑；不一致 0。
+- **切换门**：c96ab3f6 release + 核 对 本车道 release + 核，十个对拍语料、自仓归档与八棵真树（加 stringr、covid19model），graph --sites / deadcode / structure / check / join / arch / erase / rules 的 json：identical 303、differing 1——自仓 `ce rules` 只差回显的规则文件绝对路径（两臂拷贝在不同目录），其余字段逐字同。
+- **代价**（`docs/PERF-BUDGET.md` 新节，release ABAB ×7，c96ab3f6 对车道树，自仓与两棵 R 树）：暖 `ce check` +3.0 % / +6.7 % / +12.5 %（预算 +15 % 内）；超线的只有 stringr 暖 `deadcode` +38.1 %（254 → 351 ms）——有 `DESCRIPTION` 的树每跑 `deadcode` 都要问核一次包代码（暖跑旧臂 0 个 `resolve.request`、新臂 1 个，多起一个 `ce-core` 进程约 0.1 s），没做缓存，记为未解决项；`resolve.request` 字节 covid19model 10,198 → 61,985、stringr 0 → 8,340；PreToolUse 探针不问 `resolve/1`。
+
 **无默认档位变更。** 算法轨 v2.33 W2-text 阶段 A（W2a′）：`resolve/1` 改以文本过线，Python / Go / C·C++ 的配置读法随阶梯进核，协议 **9.0.0**（2026-10-04；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2a′ 行、§10 W2a′ 行与 §11 第 43–49 条；`contracts/VERSIONING.md` 9.0.0 条）。
 
 - **wire**：请求退役 `segs` / `vocab` / `affixes` / `dirs` 四个键、定义包 `resolve {words, affixes}` 改为 `resolve {configs}`，故升 major；新请求是文本——`files` / `origins` 路径原文、`sites` `[lang, kind, from, spec]`（说明符原文）、`config.searchRoots`、`py.pyproject`（解码后的文档）、`lua.templates`、`go.mods` `[[路径, 原文]]`、`c {root, dbs, json, flags, responses, includes}`；应答的目标改为路径原文，加 `wanted`（核点名而请求没带的响应文件，Rust 读来再问）与 `responses`（解析键的输入）；cap 改按字符计（> 2^28 具名降级 `resolve_too_large`）。golden 机器重写：`resolve/golden` 六对按文本形、`tables` 第 2 对的 `resolve` 键、`handshake/wire-errors` 三条随 major 改拼，其余只动 `proto` 与 hello 的 `tablesDigest`。

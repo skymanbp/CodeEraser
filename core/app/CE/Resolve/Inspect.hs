@@ -11,6 +11,7 @@
 --   chain      [[base, dir, [arg]]] → [chain]
 --   relativize [[base, dir, path]] → [path | null]
 --   goMod      [[rel, text]] → [[dir, module | null, [[old, new]]]]
+--   description [[rel, text]] → [[dir, package, [collated]] | null]
 --   pyproject  [doc | null] → [[[dir], [dep]] | null]
 --   db         [[base, rows | null, [[rel, text | null]]]] → [[[[unit,
 --              dir | null, chain]], [response], [wanted]]]
@@ -25,10 +26,11 @@ module CE.Resolve.Inspect (inspected) where
 import CE.Resolve.Chars (isRustAlnum, isRustWhite)
 import CE.Resolve.Cmdline
 import CE.Resolve.CompDb (Entry (..), Expanded (..), parseDb, parseFlags, relativize)
+import CE.Resolve.Description (Description (..), readDescription)
 import CE.Resolve.Flags (Chain (..), Search (..), chain)
 import CE.Resolve.Go (GoMod (..), parseGoMod)
 import CE.Resolve.Py (PyProject (..), pyproject)
-import CE.Resolve.Str (rustLines, rustTrim, splitWhitespace)
+import CE.Resolve.Str (parentDir, rustLines, rustTrim, splitWhitespace)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
@@ -40,7 +42,7 @@ import qualified Data.Set as Set
 inspected :: Value -> Value
 inspected (Object o) = object (concat [maybe [] (\v -> [K.fromString k .= v]) (answer k =<< KM.lookup (K.fromString k) o) | k <- keys])
  where
-  keys = ["split", "chain", "relativize", "goMod", "pyproject", "db", "flags", "text", "chars"]
+  keys = ["split", "chain", "relativize", "goMod", "description", "pyproject", "db", "flags", "text", "chars"]
 inspected _ = object []
 
 -- | One key's answer, Nothing when its question does not read.
@@ -50,6 +52,7 @@ answer k v = case k of
   "chain" -> each v (\(base, dir, argv) -> chainJson (chain argv (relativize base dir)))
   "relativize" -> each v (\(base, dir, path) -> toJSON (relativize base dir path))
   "goMod" -> each v (\(rel, text) -> let m = parseGoMod rel text in toJSON (gmDir m, gmModule m, gmReplaces m))
+  "description" -> each v (\(rel, text) -> toJSON ((\d -> (dDir d, dPackage d, dCollate d)) <$> readDescription (parentDir rel) text))
   "pyproject" -> each v (\doc -> toJSON ((\p -> (ppSourceDirs p, ppDeps p)) <$> pyproject doc))
   "db" -> each v (\(base, rows, texts) -> dbJson (maybe ([], mempty) (parseDb base (M.fromList texts)) rows))
   "flags" -> each v (\(base, rel, text) -> let (d, c) = parseFlags base rel text in toJSON [toJSON (d :: String), chainJson c])

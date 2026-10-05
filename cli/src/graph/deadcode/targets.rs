@@ -12,9 +12,9 @@
 //! elsewhere) is the same fact by declaration. An R package's
 //! DESCRIPTION (plan v2.30 step 4) declares the code R loads with the
 //! package, and its directory is the root the R entry directories sit
-//! under (flags.rs).
+//! under (flags.rs); the core reads it and answers the code (resolve/1
+//! `packages`, plan v2.33 W2-text stage B).
 
-use crate::graph::ladder::r::description::{self, Description};
 use crate::graph::{cabal, cargo, roots};
 use crate::scan::lang::Lang;
 use std::collections::{BTreeMap, BTreeSet};
@@ -39,26 +39,6 @@ fn main_targets(c: &cabal::Cabal, files: &BTreeSet<String>) -> BTreeSet<String> 
     out
 }
 
-/// An R package's code: its `Collate` files under `R/` when it lists
-/// them, else every walked R file directly in `R/` — what R loads with
-/// the package, which nothing `source`s.
-fn package_code(d: &Description, files: &BTreeSet<String>) -> BTreeSet<String> {
-    let code = roots::join_dir(&d.dir, "R");
-    if d.collate.is_empty() {
-        files
-            .iter()
-            .filter(|f| is_r(f) && roots::parent_dir(f) == code)
-            .cloned()
-            .collect()
-    } else {
-        d.collate
-            .iter()
-            .filter_map(|n| roots::join_rel(&code, n))
-            .filter(|p| files.contains(p))
-            .collect()
-    }
-}
-
 fn is_r(path: &str) -> bool {
     Lang::from_path(Path::new(path)) == Some(Lang::R)
 }
@@ -76,12 +56,13 @@ impl Declared {
     /// holding an R file, each manifest's targets computed once. A
     /// manifest above the repo root is out of tree by construction
     /// (nearest_up never leaves it). `declared` are the ce.toml crate
-    /// roots, kept where the file is walked.
+    /// roots, kept where the file is walked. An R package's code is the
+    /// core's answer; a core that cannot give it is a named refusal.
     pub(super) fn gather(
         root: &Path,
         files: &BTreeSet<String>,
         declared: &BTreeSet<String>,
-    ) -> Self {
+    ) -> Result<Self, String> {
         let dirs: BTreeSet<String> = files.iter().map(|f| roots::parent_dir(f)).collect();
         let r_dirs: BTreeSet<String> = files
             .iter()
@@ -96,26 +77,24 @@ impl Declared {
             .iter()
             .filter_map(|d| roots::nearest_up(root, d, "DESCRIPTION"));
         let manifests: BTreeSet<String> = rust.chain(haskell).chain(r).collect();
+        let (descriptions, manifests): (BTreeSet<String>, BTreeSet<String>) = manifests
+            .into_iter()
+            .partition(|m| m.ends_with("DESCRIPTION"));
         let mut out = Declared {
             targets: declared.intersection(files).cloned().collect(),
-            packages: BTreeMap::new(),
+            packages: crate::graph::resolve::packages(root, files, &descriptions)?,
         };
+        out.targets.extend(out.packages.values().flatten().cloned());
         for m in &manifests {
             if m.ends_with("Cargo.toml") {
                 if let Some(p) = cargo::package(root, m) {
                     out.targets.extend(p.crate_roots(files));
                 }
-            } else if m.ends_with("DESCRIPTION") {
-                if let Some(d) = description::parse(root, m) {
-                    let code = package_code(&d, files);
-                    out.targets.extend(code.iter().cloned());
-                    out.packages.insert(d.dir, code);
-                }
             } else if let Some(c) = cabal::parse(root, m) {
                 out.targets.extend(main_targets(&c, files));
             }
         }
-        out
+        Ok(out)
     }
 
     pub(super) fn hit(&self, path: &str) -> bool {

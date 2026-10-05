@@ -9,12 +9,13 @@
 //!
 //! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
 //! the C family's followed in plan v2.30 step 2, Java's in step 3
-//! (java.rs), Lua's and R's in step 4 (r/), HTML's in step 5 (html.rs);
+//! (java.rs), Lua's and R's in step 4, HTML's in step 5 (html.rs);
 //! a language without rungs must return Unresolved(Unsupported) — an
 //! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
 //! the Python, Lua, Go and C / C++ rungs live in the core
-//! (`resolve/1`, graph/resolve/): `resolve_all` sends their sites in
-//! one request and runs the other languages' rungs here. Dispatch
+//! (`resolve/1`, graph/resolve/), R's since W2-text stage B:
+//! `resolve_all` sends their sites in one request and runs the other
+//! languages' rungs here. Dispatch
 //! carries the site's frozen kind label (the package's
 //! `store.site_kinds`): the TS rungs are kind-uniform, Rust's mod_decl
 //! and use walk different rungs, and Markdown routes five kinds through
@@ -42,7 +43,6 @@ pub mod html_head;
 pub mod lua_path;
 pub mod md;
 mod paths;
-pub mod r;
 pub mod rs;
 // pub: walkidx feeds pubuse_hash into resolve_key (the slug-hash
 // discipline for the binder's cross-file input)
@@ -52,9 +52,9 @@ pub mod ts;
 // the site outcome vocabulary (a leaf: it reads nothing of this module)
 mod outcome;
 pub use outcome::{Outcome, Reason, Rung};
-// The a8db74a9 Python / Lua / Go / C rungs, frozen byte for byte: the
-// differential gate's oracle (tests subrepo unit/graph/ladder/oracle/,
-// driven by unit/dedup/ladder_diff/).
+// The a8db74a9 Python / Lua / Go / C rungs and the c96ab3f6 R rungs,
+// frozen byte for byte: the differential gate's oracle (tests subrepo
+// unit/graph/ladder/oracle/, driven by unit/dedup/ladder_diff/).
 #[cfg(test)]
 #[path = "../../../tests/unit/graph/ladder/frozen.rs"]
 pub(crate) mod frozen;
@@ -189,7 +189,6 @@ fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Markdown => md::resolve(site, scope),
         Lang::Haskell => hs::resolve(site.from, site.spec, scope),
         Lang::Java => java::resolve(site, scope),
-        Lang::R => r::resolve(site, scope),
         Lang::Html => html::resolve(site, scope),
         // The sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — if either ever arrives, the honest

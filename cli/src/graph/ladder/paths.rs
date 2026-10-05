@@ -1,12 +1,10 @@
-//! The path-joining steps the Rust ladders still share (plan v2.30
-//! step 4): R's declared roots and Haskell's search directories judge a
-//! set of candidates the same way, and R's `source` reads a path the
-//! way a script's working directory does. C's and Lua's copies of these
-//! steps moved into the core with their ladders (`CE.Resolve`, plan
-//! v2.33 W2a).
+//! A rung's candidates judged as one answer (plan v2.30 step 4), the
+//! step Haskell's search directories take. C's, Lua's and R's copies of
+//! this module's steps moved into the core with their ladders
+//! (`CE.Resolve.Answer`, `CE.Resolve.World`; plan v2.33 W2a and
+//! W2-text stage B).
 
-use super::{Outcome, Reason, Rung, Scope};
-use crate::graph::roots;
+use super::{Outcome, Reason, Rung};
 use std::collections::BTreeSet;
 
 /// A rung's distinct in-scope candidates as its answer: none leaves the
@@ -19,32 +17,4 @@ pub(super) fn one_of(hits: BTreeSet<String>, rung: Rung) -> Option<Outcome> {
         (Some(path), None) => Some(Outcome::Resolved { path, rung }),
         _ => Some(Outcome::Unresolved(Reason::AmbiguousRoot)),
     }
-}
-
-/// The in-scope files a spec names under each directory one language
-/// declares in `[graph.search_roots]`.
-pub(super) fn declared(lang: &str, spec: &str, scope: &Scope) -> BTreeSet<String> {
-    scope
-        .search_roots
-        .get(lang)
-        .into_iter()
-        .flatten()
-        .filter_map(|dir| roots::join_rel(dir, spec))
-        .filter(|p| scope.files.contains(p))
-        .collect()
-}
-
-/// A path as a script's working directory reads it: beside the file
-/// that names it, then under the tree root (a script runs from its own
-/// directory or from the project root) — the first in scope. An
-/// absolute path, a home-relative one or one with a drive names no file
-/// of the tree.
-pub(super) fn beside_or_root(from: &str, spec: &str, scope: &Scope) -> Option<String> {
-    if spec.starts_with(['/', '~']) || spec.contains(':') {
-        return None;
-    }
-    [roots::parent_dir(from), String::new()]
-        .iter()
-        .filter_map(|dir| roots::join_rel(dir, spec))
-        .find(|p| scope.files.contains(p))
 }

@@ -8,7 +8,7 @@
 
 > **以下按版本倒序（最新在前），至 3.0.0 止；2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
 > **9.0.0**（`resolve/1` 改以文本过线，major，计划 v2.33 算法轨 W2-text 阶段 A，2026-10-04；设计册 `docs/reference/algorithm-track.md` §3 第一条、§6 W2a′ 行与 §11 第 43–49 条）：
-> 请求退役 `segs`、`vocab`、`affixes`、`dirs` 四个键，定义包的 `resolve {words, affixes}` 改为 `resolve {configs}`（测量侧要读的配置文件名，今日只有 `go.mod`）——
+> 请求退役 `segs`、`vocab`、`affixes`、`dirs` 四个键，定义包的 `resolve {words, affixes}` 改为 `resolve {configs}`（测量侧要读的配置文件名：`go.mod`，阶段 B 起加 `DESCRIPTION`）——
 > 带旧键的请求不再被读懂，按 §2 升 major：8.x 的 ce 对 9.0.0 的核、9.0.0 的 ce 对 8.x 的核，都在握手处按 major 不符拒绝。新请求全是文本：`files` = 走查到的路径
 > （严格升序）、`origins` = 站点所在而走查未收的文件（升序、不得与 `files` 相交）、`sites` 每行 `[lang, kind, from, spec]`（`from` 是 `files ++ origins` 的下标，`spec` 是检测器
 > 给出的说明符原文）、`config.searchRoots`（`[graph.search_roots]` 原表）、`py.pyproject`（根 `pyproject.toml` 解码后的文档，读不到或不是 TOML 为 null）、
@@ -23,6 +23,11 @@
 > 全部 golden 由 `fixture_contract::regen` 机器重写，除 proto 与 hello 的 `tablesDigest` 外只动两处：`resolve/golden` 六对按文本形重写
 > （Python / Lua / Go / C 各一对、编译数据库带响应文件与强制包含一对、一对按名拒绝），`tables` 第 2 对的 `resolve` 键；
 > `handshake/wire-errors` 的三条请求随 major 改拼（未知类型与退役键两条到 9.0.0、跨 major 那条到 10.0.0）。daemon 协议（2.3.0）不动。
+> **9.0.0 同版加性**（R 阶梯进核，W2-text 阶段 B，2026-10-04；设计册 §6 W2b 行与 §11 第 50–53 条；9.0.0 未发布，按 7.2.0 的同版加性先例不另升版号）：
+> `sites` 的语言加 R（码 20，站点种类 `source` / `library`）；请求加性 `r.descriptions` `[[路径, 原文]]`——走查到的每个 R 包 `DESCRIPTION`，按字节读、有损 UTF-8 解码，
+> 读不到的不带；定义包的 `resolve.configs` 加 `DESCRIPTION`（hello 的 `tablesDigest` 随之变）。应答加性 `packages` `[[包目录, [代码文件…]]]`：每个读得出包名的
+> `DESCRIPTION` 的目录与它的代码（`Collate` 列出的 `R/` 文件，否则 `R/` 下直属的 R 文件），即 `ce deadcode` 的声明目标与包结点展开的成员；降级应答为空表。
+> `inspect` 加 `description`。golden：`resolve/golden` 加第 7 对（R），其余只动 hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs`。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
