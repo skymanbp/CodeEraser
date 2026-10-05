@@ -10,8 +10,10 @@
 //! file's package clause and path, and a manifest's target list (a
 //! Cargo package's lib/bin targets, a cabal's library stanza and
 //! other-modules). The folds — `mountedPrivate`, `pkgPrivate`, the
-//! code order — are the core's (CE.Graph.Advisory, piece (6)); this
-//! side measures.
+//! code order — are the core's (CE.Graph.Advisory, piece (6)), and so
+//! is the cabal's reading (resolve/1 `private`, plan v2.33 W2-text stage
+//! D: this side finds each Haskell file's nearest .cabal and sends it);
+//! this side measures.
 //!
 //! Coverage is the builder's contract, not the core's: `mount_rows`
 //! maps EVERY node — package, section and phantom nodes to `[0,0,0]`
@@ -25,7 +27,7 @@
 //! has this one producer and its tests.
 
 use super::nodes::Node;
-use super::{cabal, cargo, roots};
+use super::{cabal_find, cargo, roots};
 use crate::dedup::index::Index;
 use crate::scan::lang::Lang;
 use anyhow::{Result, ensure};
@@ -85,11 +87,19 @@ pub fn facts(root: &Path, idx: &Index) -> Result<MountFacts> {
         }
     }
     let mut manifests = Manifests::default();
+    let mut owners = BTreeMap::new();
     for path in &files {
-        if pkg_private(root, path, &files, &mut manifests) {
+        if Lang::judged_path(Path::new(path)) == Some(Lang::Haskell) {
+            if let Some(cabal) = manifests.cabal_of(root, &roots::parent_dir(path)) {
+                owners.insert(path.clone(), cabal);
+            }
+        } else if pkg_private(root, path, &files, &mut manifests) {
             out.pkg_private.insert(path.clone());
         }
     }
+    let haskell: BTreeSet<String> = owners.keys().cloned().collect();
+    let private = super::resolve::private(root, &haskell, &owners).map_err(anyhow::Error::msg)?;
+    out.pkg_private.extend(private);
     Ok(out)
 }
 
@@ -183,13 +193,12 @@ impl RustTargets {
 /// Manifests resolved once per directory and parsed once per
 /// manifest — every file of a directory shares one nearest
 /// Cargo.toml and one nearest .cabal, and every directory of a
-/// package shares one parse.
+/// package shares one parse (a cabal's, the core's).
 #[derive(Default)]
 struct Manifests {
     cargo_of: BTreeMap<String, Option<String>>,
     cargo: BTreeMap<String, RustTargets>,
     cabal_of: BTreeMap<String, Option<String>>,
-    cabal: BTreeMap<String, Option<cabal::Cabal>>,
 }
 
 impl Manifests {
@@ -206,27 +215,21 @@ impl Manifests {
         )
     }
 
-    fn haskell(&mut self, root: &Path, dir: &str) -> Option<&cabal::Cabal> {
-        let manifest = self
-            .cabal_of
+    fn cabal_of(&mut self, root: &Path, dir: &str) -> Option<String> {
+        self.cabal_of
             .entry(dir.to_string())
-            .or_insert_with(|| cabal::nearest(root, dir))
-            .clone()?;
-        self.cabal
-            .entry(manifest.clone())
-            .or_insert_with(|| cabal::parse(root, &manifest))
-            .as_ref()
+            .or_insert_with(|| cabal_find::nearest(root, dir))
+            .clone()
     }
 }
 
-/// bit 1 by language; TS and Markdown have no package privacy the
-/// criterion reads (0).
+/// bit 1 by language (Haskell's is the core's: `facts`); TS and
+/// Markdown have no package privacy the criterion reads (0).
 fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {
     let dir = roots::parent_dir(path);
     match Lang::judged_path(Path::new(path)) {
         Some(Lang::Go) => go_private(root, path),
         Some(Lang::Rust) => m.rust(root, &dir, files).is_some_and(|t| t.keeps(path)),
-        Some(Lang::Haskell) => m.haskell(root, &dir).is_some_and(|c| c.keeps_private(path)),
         Some(Lang::Python) => py_private(path),
         _ => false,
     }

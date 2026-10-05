@@ -1,6 +1,6 @@
 //! What the edge passes do when the core cannot answer resolve/1 (plan
-//! v2.33 wave W2a, no-core rule): the Python, Lua, Go, C / C++, R and Java
-//! sites of the batch are stored unresolved (no edge rows), every file
+//! v2.33 wave W2a, no-core rule): the Python, Lua, Go, C / C++, R, Java
+//! and Haskell sites of the batch are stored unresolved (no edge rows), every file
 //! holding one is booked in the debt ledger (`resolve_pending`) so the
 //! next run with a core re-resolves exactly those, and the meta row
 //! `resolve_degraded` names the state until a pass settles clean. The
@@ -80,7 +80,7 @@ pub fn refuse_if_owed(conn: &rusqlite::Connection) -> Result<()> {
         .clone()
         .unwrap_or_else(|| "an earlier run had no core that answers resolve/1".into());
     bail!(
-        "resolve_unavailable: the import sites of {files} file(s) (Python, Lua, Go, C / C++, R, Java) wait for a core that answers resolve/1 — {why}; re-run with the core named (--core, CE_CORE_BIN)"
+        "resolve_unavailable: the import sites of {files} file(s) (Python, Lua, Go, C / C++, R, Java, Haskell) wait for a core that answers resolve/1 — {why}; re-run with the core named (--core, CE_CORE_BIN)"
     )
 }
 

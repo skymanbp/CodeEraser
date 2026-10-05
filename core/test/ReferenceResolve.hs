@@ -42,13 +42,8 @@ equivalence =
     )
  where
   bad = [("  case " <> show k <> ": " <> show d, False) | (k, c) <- zip [1 :: Int ..] cases, Just d <- [disagree c]]
-  reached = Set.fromList [(lang, shape (refAnswer c s)) | c <- cases, s@(lang, _, _, _) <- cSites c]
+  reached = Set.fromList [(lang, refShape (refAnswer c s)) | c <- cases, s@(lang, _, _, _) <- cSites c]
   missing = filter (`Set.notMember` reached) required
-  shape a = case a of
-    RFile _ r -> "file " <> show r
-    RPkg _ r -> "package " <> show r
-    RExt r -> "external " <> show r
-    RUnres why -> show why
   required =
     [(langPy, s) | s <- ["file 1", "file 2", "file 3", "external 4", "OutOfScope", "AmbiguousRoot"]]
       <> [(langLua, s) | s <- ["file 1", "file 2", "external 3", "OutOfScope", "Unsupported", "AmbiguousRoot"]]

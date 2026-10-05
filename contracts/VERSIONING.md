@@ -33,6 +33,14 @@
 > 与包着站点的类型），缺行号的 Java 站点按名拒绝；请求加性 `java.headers` `[[路径, 包, [import…], [type…]]]`——走查读到的每个 Java 文件头，按路径严格升序，
 > import = `[名字, star, static, 行]`，type = `[名字, [父类型…], [成员类型…], 首行, 末行]`；JDK 名表仍是定义包的 `ladder.java`，不另带，`tablesDigest` 不动。
 > golden：`resolve/golden` 加第 8 对（Java 十五个站点：R1–R3 每一级、包目录、JDK 的 External、站外、本单元与没有阶梯的种类）与第 9 对（缺行号的 Java 站点按名拒绝），其余 golden 不动。
+> **9.0.0 同版加性**（Haskell 阶梯进核，W2-text 阶段 D，2026-10-05；设计册 §6 W2b 行与 §11 第 58–62 条；9.0.0 未发布，同上不另升版号）：
+> `sites` 的语言加 Haskell（码 6，站点种类 `import`）；请求加性 `hs.cabals` `[[路径, 原文]]`——走查到的每个 `.cabal`，按 UTF-8 读、读不到的不带，按路径严格升序；
+> 定义包的 `resolve.configs` 加 `*.cabal`（开头的 `*` 读作文件名后缀；hello 的 `tablesDigest` 随之变），GHC 的 boot 包表仍是定义包的 `ladder.hs.boot`。
+> 请求加性 `hs.owners` `[[文件, cabal 路径]]`（按文件升序；文件须在走查里、cabal 须在 `hs.cabals` 里，否则按名拒绝 `hs.owner i: its file is not walked or its cabal not carried`）。
+> 应答加性 `mains`（所带每个 cabal 的 `main-is` 接在它那一节的每个源根上、在走查里的文件，升序并集）与 `private`（`hs.owners` 里被各自 cabal 留作包内私有的文件：
+> cabal 没有库节，或文件在任一节源根下拼出的模块在 `other-modules` 而不在任何 `exposed-modules`）；降级应答两者为空表。`inspect` 加 `cabal`。golden：`resolve/golden` 加第 10 对
+> （Haskell 八个站点：源根、R2 依赖包、包限定 import、boot 包的 External、不在 boot 表的模块与不像模块名的说明符，带入口与包内私有）与第 11 对（`hs.owners` 指向没带的 cabal，按名拒绝），
+> hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs` 随之变，其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

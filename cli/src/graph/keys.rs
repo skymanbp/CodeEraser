@@ -29,7 +29,8 @@ fn config_names() -> &'static [&'static str] {
 
 /// `.cabal` is a basename SUFFIX (the file carries the package name:
 /// ce-core.cabal); cabal.project stays out — the hs ladder anchors
-/// by directory prefix and never reads a workspace list (hs.rs).
+/// by directory prefix and never reads a workspace list (the core's
+/// CE.Resolve.Hs).
 pub fn is_resolver_config(path: &Path) -> bool {
     path.file_name()
         .and_then(|n| n.to_str())

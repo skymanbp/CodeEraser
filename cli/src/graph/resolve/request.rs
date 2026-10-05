@@ -1,7 +1,8 @@
 //! One resolve/1 request (plan v2.33 W2-text, proto 9.0.0): what this
 //! side read, as text — the walked paths, the sites' specifiers as the
 //! detector produced them, the `[graph.search_roots]` table, the Lua
-//! templates the walk read, each go.mod's and each R DESCRIPTION's text,
+//! templates the walk read, each go.mod's, each R DESCRIPTION's and each
+//! .cabal file's text,
 //! every walked Java file's header as the walk read it (package, imports,
 //! type declarations: ladder/java_header.rs),
 //! the root `pyproject.toml` and every JSON compile database decoded (a library
@@ -31,30 +32,39 @@ pub struct Input<'a> {
 }
 
 /// The sweep's part of a request: everything but the sites. The walk's
-/// configs of the names the core reads (the package's `resolve.configs`)
-/// go as text: go.mod read as UTF-8, a DESCRIPTION lossy (it may declare
-/// `Encoding: latin1`).
+/// configs of the names the core reads (the package's `resolve.configs`,
+/// where a name opening with `*` is a basename suffix) go as text: go.mod
+/// and a .cabal read as UTF-8 (one that is not is none), a DESCRIPTION
+/// lossy (it may declare `Encoding: latin1`).
 pub fn tree(input: &Input) -> Value {
     let wanted = &crate::tables::get().resolve.configs;
     let named = |name: &'static str| {
         input.configs.iter().filter(move |c| {
             let base = c.rsplit('/').next().unwrap_or(c);
-            base == name && wanted.contains(&base)
+            let hit = name
+                .strip_prefix('*')
+                .map_or(base == name, |suffix| base.ends_with(suffix));
+            hit && wanted.contains(&name)
         })
     };
-    let go: Vec<(&String, String)> = named("go.mod")
-        .filter_map(|c| Some((c, std::fs::read_to_string(input.root.join(c)).ok()?)))
-        .collect();
     json!({
         "files": input.files,
         "config": { "searchRoots": input.search_roots },
         "py": { "pyproject": pyproject(input.root) },
         "lua": { "templates": input.lua },
-        "go": { "mods": go },
+        "go": { "mods": texts(input.root, named("go.mod")) },
         "r": { "descriptions": descriptions(input.root, named("DESCRIPTION")) },
+        "hs": { "cabals": texts(input.root, named("*.cabal").collect::<BTreeSet<_>>().into_iter()) },
         "java": { "headers": headers(input.java) },
         "c": databases(input.root, input.files, input.includes),
     })
+}
+
+/// Each file's text read as UTF-8, by its path, in the order given; one
+/// that cannot be read is none.
+pub fn texts<'a>(root: &Path, rels: impl Iterator<Item = &'a String>) -> Vec<(&'a String, String)> {
+    rels.filter_map(|rel| Some((rel, std::fs::read_to_string(root.join(rel)).ok()?)))
+        .collect()
 }
 
 /// Each readable DESCRIPTION's text, lossy, by its path.

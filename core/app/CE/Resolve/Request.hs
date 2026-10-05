@@ -6,6 +6,8 @@
 -- detector produced them, the `ce.toml` values the ladders read, and
 -- the configuration files: each go.mod's and each R DESCRIPTION's text,
 -- every walked Java file's header as the walk read it (CE.Resolve.JavaHeader),
+-- each .cabal file's text and which cabal owns each walked Haskell file
+-- (the nearest one the measuring side's directory scan found),
 -- the root `pyproject.toml` and every `compile_commands.json` as the
 -- decoded document (format decoding is a library read on that side;
 -- every rule applied to the document is here), each `compile_flags.txt`
@@ -22,7 +24,9 @@ module CE.Resolve.Request (
 ) where
 
 import CE.Resolve.JavaHeader (JHeader, headerRow)
-import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
+import Data.Aeson (FromJSON (..), Key, Object, Value, withObject, (.!=), (.:), (.:?))
+import qualified Data.Aeson.Key as K
+import Data.Aeson.Types (Parser)
 import qualified Data.Map.Strict as M
 
 data ResolveReq = ResolveReq
@@ -36,6 +40,8 @@ data ResolveReq = ResolveReq
   , rqGoMods :: [(String, String)]
   , rqDescriptions :: [(String, String)]
   , rqJavaHeaders :: [(String, JHeader)]
+  , rqHsCabals :: [(String, String)]
+  , rqHsOwners :: [(String, String)]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
@@ -70,10 +76,6 @@ instance FromJSON ResolveReq where
   parseJSON = withObject "ResolveReq" $ \o -> do
     cfg <- o .:? "config"
     py <- o .:? "py"
-    lua <- o .:? "lua"
-    go <- o .:? "go"
-    r <- o .:? "r"
-    java <- o .:? "java"
     ResolveReq
       <$> o .: "id"
       <*> o .:? "files" .!= []
@@ -81,10 +83,12 @@ instance FromJSON ResolveReq where
       <*> o .:? "sites" .!= []
       <*> maybe (pure M.empty) (withObject "config" (\c -> c .:? "searchRoots" .!= M.empty)) cfg
       <*> maybe (pure Nothing) (withObject "py" (.:? "pyproject")) py
-      <*> maybe (pure []) (withObject "lua" (\l -> l .:? "templates" .!= [])) lua
-      <*> maybe (pure []) (withObject "go" (\g -> g .:? "mods" .!= [])) go
-      <*> maybe (pure []) (withObject "r" (\d -> d .:? "descriptions" .!= [])) r
-      <*> maybe (pure []) (withObject "java" (\j -> j .:? "headers" .!= [] >>= mapM headerRow)) java
+      <*> listAt o "lua" "templates"
+      <*> listAt o "go" "mods"
+      <*> listAt o "r" "descriptions"
+      <*> (mapM headerRow =<< listAt o "java" "headers")
+      <*> listAt o "hs" "cabals"
+      <*> listAt o "hs" "owners"
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 
@@ -108,6 +112,11 @@ instance FromJSON CReq where
       <*> o .:? "flags" .!= []
       <*> o .:? "responses" .!= []
       <*> o .:? "includes" .!= []
+
+-- | The list at `section.key` of a request; an absent section or key is
+-- empty, a section that is no object is refused under its own name.
+listAt :: (FromJSON a) => Object -> Key -> Key -> Parser [a]
+listAt o section k = o .:? section >>= maybe (pure []) (withObject (K.toString section) (\s -> s .:? k .!= []))
 
 -- | One language's declared `[graph.search_roots]` directories.
 searchRoots :: String -> ResolveReq -> [String]

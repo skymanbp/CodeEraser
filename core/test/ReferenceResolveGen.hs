@@ -19,6 +19,9 @@ module ReferenceResolveGen (
   request,
   answers,
   Ref (..),
+  refShape,
+  requestHeader,
+  originsOf,
   splitOn,
   angled,
 ) where
@@ -27,7 +30,7 @@ import CE.Resolve.Cost (Reason (..), langC, langCpp, langGo, langLua, langPy, la
 import CE.Resolve.Tables (kindLibrary, kindLoad, kindRequire, kindSource)
 import Data.Aeson (Value (..), object, parseJSON, toJSON, (.=))
 import qualified Data.Aeson.KeyMap as KM
-import Data.Aeson.Types (parseMaybe)
+import Data.Aeson.Types (Pair, parseMaybe)
 import Data.List (isSuffixOf)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
@@ -46,6 +49,33 @@ data Case = Case
 -- | A site's answer with its target spelled.
 data Ref = RFile String Int | RPkg String Int | RExt Int | RUnres Reason
   deriving (Eq, Show)
+
+-- | An answer's shape, its target dropped: what a battery's "reach
+-- every answer" check counts.
+refShape :: Ref -> String
+refShape a = case a of
+  RFile _ r -> "file " <> show r
+  RPkg _ r -> "package " <> show r
+  RExt r -> "external " <> show r
+  RUnres why -> show why
+
+-- | The fields every resolve.request opens with: proto, type, id, the
+-- walked files and the origins after them.
+requestHeader :: [String] -> [String] -> [Pair]
+requestHeader files origins =
+  [ "proto" .= ("9.0.0" :: String)
+  , "type" .= ("resolve.request" :: String)
+  , "id" .= (1 :: Int)
+  , "files" .= files
+  , "origins" .= origins
+  ]
+
+-- | The files a case's sites stand in that the walk did not read, once
+-- each in path order, and every path's index in files ++ those.
+originsOf :: [String] -> [String] -> ([String], M.Map String Integer)
+originsOf files froms = (origins, M.fromList (zip (files <> origins) [0 ..]))
+ where
+  origins = Set.toList (Set.fromList [f | f <- froms, f `notElem` files])
 
 -- | Two hundred seeded cases, ten sites each (two per language).
 cases :: [Case]
@@ -106,13 +136,9 @@ langOf f
 -- configuration as the measuring side sends it.
 request :: Case -> Value
 request c =
-  object
-    [ "proto" .= ("9.0.0" :: String)
-    , "type" .= ("resolve.request" :: String)
-    , "id" .= (1 :: Int)
-    , "files" .= cFiles c
-    , "origins" .= cExtra c
-    , "sites" .= [[toJSON l, toJSON k, toJSON (index M.! from), toJSON spec] | (l, k, from, spec) <- cSites c]
+  object $
+    requestHeader (cFiles c) (cExtra c)
+      <> [ "sites" .= [[toJSON l, toJSON k, toJSON (index M.! from), toJSON spec] | (l, k, from, spec) <- cSites c]
     , "config" .= object ["searchRoots" .= object ["lua" .= cLuaRoots c, "c" .= cCRoots c, "r" .= cRRoots c]]
     , "py" .= object ["pyproject" .= pyproject]
     , "lua" .= object ["templates" .= [[d, t] | (d, t) <- cLuaTemplates c]]

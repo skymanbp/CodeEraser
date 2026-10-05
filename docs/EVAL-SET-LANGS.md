@@ -737,3 +737,10 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
 - **读数**：十一份在 cc11c60f 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（1278a18c → cc11c60f），判决、真值、宇宙台账与两段 RG1 处置逐字节同（gson、jsoup 两份 Java 档亦然）。
+
+## 算法轨 v2.33 W2-text 阶段 D 之后：十一份精度册第九次退役并重生成（2026-10-05）
+
+阶段 D 把 Haskell 的三级阶梯、`.cabal` 读法、可执行与测试入口和包内私有的判定搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 58–62 条）：`cli/src/graph/ladder/hs.rs`、`ladder/paths.rs`、`graph/cabal.rs`、`graph/cabal_parse.rs` 与 `roots.rs` 的 `beside` 删掉，`ladder/mod.rs` 的分派与 `cli/src/graph/resolve/` 的请求带上 Haskell，`core/app/CE/Resolve/` 多出 `Hs` / `Cabal` / `CabalWalk` 三个模块——`ladder/mod.rs` 与 `roots.rs` 在每份精度册共读的 `ANSWERED_BY` 里，后两处在 C、Lua、R 与 Java 考题的阶梯清单里（子仓 `it/lang_provenance.rs` 的 `ANSWERED_BY` 去掉已删的 `cli/src/graph/ladder/paths.rs`，它最后一个函数 `one_of` 在核里早有同义的 `CE.Resolve.Answer.oneOf`）。没有 Haskell 考题；差分门全同，判决字节不应移动；重生成按前一次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。

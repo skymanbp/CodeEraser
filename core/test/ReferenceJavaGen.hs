@@ -25,6 +25,7 @@ import Data.Aeson (Value, object, toJSON, (.=))
 import Data.List (isSuffixOf)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
+import ReferenceResolveGen (originsOf, requestHeader)
 
 -- | A type declaration: name, supertypes as written, members, lines.
 data Ty = Ty String [String] [Ty] Int Int
@@ -142,17 +143,12 @@ stem f = takeWhile (/= '.') (reverse (takeWhile (/= '/') (reverse f)))
 -- the sites with their lines, the headers in path order, the roots.
 javaRequest :: JCase -> Value
 javaRequest c =
-  object
-    [ "proto" .= ("9.0.0" :: String)
-    , "type" .= ("resolve.request" :: String)
-    , "id" .= (1 :: Int)
-    , "files" .= jFiles c
-    , "origins" .= origins
-    , "sites" .= [[toJSON langJava, toJSON kind, toJSON (index M.! from), toJSON spec, toJSON line] | (kind, from, spec, line) <- jSites c]
+  object $
+    requestHeader (jFiles c) origins
+      <> [ "sites" .= [[toJSON langJava, toJSON kind, toJSON (index M.! from), toJSON spec, toJSON line] | (kind, from, spec, line) <- jSites c]
     , "config" .= object ["searchRoots" .= object ["java" .= jRoots c]]
     , "java" .= object ["headers" .= [[toJSON p, toJSON pkg, toJSON ims, toJSON (map tyJson tys)] | (p, (pkg, ims, tys)) <- M.toAscList (jHeads c)]]
     ]
  where
-  origins = Set.toList (Set.fromList [f | (_, f, _, _) <- jSites c, f `notElem` jFiles c])
-  index = M.fromList (zip (jFiles c <> origins) [0 :: Integer ..])
+  (origins, index) = originsOf (jFiles c) [f | (_, f, _, _) <- jSites c]
   tyJson (Ty n ss ms a b) = toJSON (n, ss, map tyJson ms, a, b)

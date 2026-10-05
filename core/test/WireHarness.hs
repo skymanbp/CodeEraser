@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
+module WireHarness (battery, degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -16,6 +16,7 @@ import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import Data.List (isInfixOf)
+import qualified Data.Set as Set
 import Data.Version (showVersion)
 import Paths_ce_core (version)
 
@@ -30,6 +31,18 @@ runChecks checks = fmap and (mapM one checks)
   one (name, ok) = do
     putStrLn ((if ok then "ok   " else "FAIL ") <> name)
     pure ok
+
+-- | A reference battery over numbered cases: the two headline checks
+-- (every case agrees; the cases reach every required answer shape),
+-- then the first five disagreeing cases and each shape never reached.
+battery :: (String, String) -> [Maybe String] -> [String] -> Set.Set String -> [(String, Bool)]
+battery (agreed, reaches) verdicts required reached =
+  [(agreed, null off), (reaches, null missing)] <> map named (take 5 off) <> map unreached missing
+ where
+  off = [(k, d) | (k, Just d) <- zip [1 :: Int ..] verdicts]
+  missing = filter (`Set.notMember` reached) required
+  named (k, d) = ("  case " ++ show k ++ ": " ++ d, False)
+  unreached m = ("  never reached: " ++ m, False)
 
 -- | The table runner on two PARALLEL lists — names and probes — with
 -- the alignment leg first. A (name, probe) row per leg is a T2 clone

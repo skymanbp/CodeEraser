@@ -3,7 +3,8 @@
 -- | What the resolve family reads of the definition package (plan v2.33
 -- W2-text; replaces the W2a vocabulary): the External tables
 -- (`ladder.py.stdlib`, `ladder.lua.stdlib`, `ladder.go.std`, and since
--- stage C the JDK's `ladder.java` packages and `java.lang` types), the
+-- stage C the JDK's `ladder.java` packages and `java.lang` types, since
+-- stage D the global package database's `ladder.hs.boot`), the
 -- two compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
 -- storage codes of the site kinds the Lua, R and Java ladders branch on.
 -- The package's `resolve` key states which configuration files the
@@ -16,6 +17,7 @@ module CE.Resolve.Tables (
   goStd,
   javaPackages,
   javaLang,
+  hsBoot,
   gnuFlags,
   skipFlags,
   kindRequire,
@@ -30,7 +32,7 @@ module CE.Resolve.Tables (
 ) where
 
 import CE.Lang (pack, siteKinds)
-import Data.Aeson (Value (..), toJSON)
+import Data.Aeson (FromJSON, Value (..), toJSON)
 import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (parseEither, parseJSON)
@@ -48,6 +50,10 @@ javaPackages, javaLang :: Set.Set String
 javaPackages = Set.fromList (packList ["ladder", "java", "packages"])
 javaLang = Set.fromList (packList ["ladder", "java", "lang"])
 
+-- | The global package database's packages, each with its modules.
+hsBoot :: [(String, [String])]
+hsBoot = packAt ["ladder", "hs", "boot"]
+
 -- | The GNU joined spellings (longest conflicting spelling first) and
 -- the separate operands that cannot open an include option, in the
 -- package's order.
@@ -57,7 +63,11 @@ skipFlags = packList ["compdb", "skip"]
 
 -- | One string list of the package by its key path.
 packList :: [String] -> [String]
-packList path = either refuse id (parseEither parseJSON =<< walk path pack)
+packList = packAt
+
+-- | One value of the package by its key path.
+packAt :: (FromJSON a) => [String] -> a
+packAt path = either refuse id (parseEither parseJSON =<< walk path pack)
  where
   walk [] v = Right v
   walk (k : ks) (Object o) | Just v <- KM.lookup (K.fromString k) o = walk ks v
@@ -79,11 +89,12 @@ kindCode :: String -> Integer
 kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKinds)
 
 -- | The walk's config basenames whose text a request carries (`go.mod`
--- under `go.mods`, `DESCRIPTION` under `r.descriptions`; the root
--- `pyproject.toml`, the compile databases and their response files
+-- under `go.mods`, `DESCRIPTION` under `r.descriptions`, every `*.cabal`
+-- under `hs.cabals` — a name opening with `*` is a basename suffix; the
+-- root `pyproject.toml`, the compile databases and their response files
 -- travel by the measuring side's own finders).
 configNames :: [String]
-configNames = ["go.mod", "DESCRIPTION"]
+configNames = ["go.mod", "DESCRIPTION", "*.cabal"]
 
 -- | The `resolve` key of the package.
 table :: Value

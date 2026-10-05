@@ -1,8 +1,9 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
 //! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go, C / C++,
-//! R and Java resolve in `resolve/1`, with the readers of their configuration
-//! files (go.mod, R's DESCRIPTION, the root pyproject.toml's keys, the
+//! R, Java and Haskell resolve in `resolve/1`, with the readers of their
+//! configuration files (go.mod, R's DESCRIPTION, the .cabal files, the root
+//! pyproject.toml's keys, the
 //! compile databases, their response and flag files). This side sends what it read as text
 //! (request.rs) — one request per sweep with only the sites that need
 //! resolving — answers the core's `wanted` response files by reading
@@ -38,7 +39,14 @@ pub const SINCE: &str = "9.0.0";
 pub fn in_core(lang: Lang) -> bool {
     matches!(
         lang,
-        Lang::Python | Lang::Go | Lang::C | Lang::Cpp | Lang::Lua | Lang::R | Lang::Java
+        Lang::Python
+            | Lang::Go
+            | Lang::Haskell
+            | Lang::C
+            | Lang::Cpp
+            | Lang::Lua
+            | Lang::R
+            | Lang::Java
     )
 }
 
@@ -105,25 +113,57 @@ pub fn forced_wire(
     Ok(())
 }
 
-/// Each R package's code by its root: the DESCRIPTIONs at `manifests`
-/// (the declared-target pass's nearest ones) read and sent, the core's
-/// `packages` reply kept — a DESCRIPTION that cannot be read or names no
-/// package is none. No DESCRIPTION, no request.
-pub fn packages(
+/// What the manifests the declared-target pass found declare: each R
+/// package's code by its root (the core's `packages`; a DESCRIPTION that
+/// cannot be read or names no package is none) and the cabals' walked
+/// executable and test mains (`mains`; a .cabal that cannot be read
+/// declares nothing). No manifest read, no request.
+pub struct Declared {
+    pub packages: BTreeMap<String, BTreeSet<String>>,
+    pub mains: BTreeSet<String>,
+}
+
+pub fn declared(
     root: &Path,
     files: &BTreeSet<String>,
-    manifests: &BTreeSet<String>,
-) -> Result<BTreeMap<String, BTreeSet<String>>, String> {
-    let texts = request::descriptions(root, manifests.iter());
-    if texts.is_empty() {
-        return Ok(BTreeMap::new());
+    descriptions: &BTreeSet<String>,
+    cabals: &BTreeSet<String>,
+) -> Result<Declared, String> {
+    let r = request::descriptions(root, descriptions.iter());
+    let hs = request::texts(root, cabals.iter());
+    if r.is_empty() && hs.is_empty() {
+        return Ok(Declared {
+            packages: BTreeMap::new(),
+            mains: BTreeSet::new(),
+        });
     }
-    let reply = complete(
-        &mut json!({ "files": files, "r": { "descriptions": texts } }),
-        root,
-    )?;
+    let mut body = json!({ "files": files, "r": { "descriptions": r }, "hs": { "cabals": hs } });
+    let reply = complete(&mut body, root)?;
     let rows: Vec<(String, BTreeSet<String>)> = judged::table(&reply, "packages")?;
-    Ok(rows.into_iter().collect())
+    Ok(Declared {
+        packages: rows.into_iter().collect(),
+        mains: judged::table(&reply, "mains")?,
+    })
+}
+
+/// The walked Haskell files their owning cabal keeps private (the mounts
+/// table's bit 1): `owners` maps each to the cabal the directory scan
+/// found nearest; each cabal is read and sent once, and a file whose
+/// cabal cannot be read is not kept. No owner, no request.
+pub fn private(
+    root: &Path,
+    files: &BTreeSet<String>,
+    owners: &BTreeMap<String, String>,
+) -> Result<BTreeSet<String>, String> {
+    let cabals: BTreeSet<&String> = owners.values().collect();
+    let hs = request::texts(root, cabals.into_iter());
+    let read: BTreeSet<&String> = hs.iter().map(|(rel, _)| *rel).collect();
+    let owners: Vec<(&String, &String)> = owners.iter().filter(|(_, c)| read.contains(c)).collect();
+    if owners.is_empty() {
+        return Ok(BTreeSet::new());
+    }
+    let mut body = json!({ "files": files, "hs": { "cabals": hs, "owners": owners } });
+    judged::table(&complete(&mut body, root)?, "private")
 }
 
 /// Each JSON compile database's response files, as the core's expansion

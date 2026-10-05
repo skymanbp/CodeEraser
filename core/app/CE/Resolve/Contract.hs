@@ -4,7 +4,9 @@
 -- walked, every site in a language this family resolves with its file in
 -- range and — a Java site — its line, the Java headers in strictly
 -- ascending (path) order, every database probe one of the three, every
--- include list a walked file's — and the cap the request's text counts against. The
+-- include list a walked file's, the cabals in strictly ascending (path)
+-- order and every owner row a walked file's in that order, owned by a
+-- carried cabal — and the cap the request's text counts against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
@@ -37,6 +39,7 @@ requestSize rq =
     , sum [1 + chars r + maybe 0 chars t | (r, t) <- cFlags c <> cResponses c]
     , sum [1 + chars p + texts is | (p, is) <- cIncludes c]
     , sum [1 + chars p + header h | (p, h) <- rqJavaHeaders rq]
+    , sum [1 + chars p + chars t | (p, t) <- rqHsCabals rq <> rqHsOwners rq]
     ]
  where
   c = rqC rq
@@ -61,9 +64,13 @@ offence rq =
     , ascending "java.header" (map fst (rqJavaHeaders rq))
     , asum [Just ("c.db " <> show i <> ": probe out of range") | (i, Db _ p _) <- zip [0 :: Int ..] (cDbs (rqC rq)), p < 0 || p > 2]
     , asum [Just ("c.include " <> show i <> ": not a walked file") | (i, (p, _)) <- zip [0 :: Int ..] (cIncludes (rqC rq)), not (Set.member p walked)]
+    , ascending "hs.cabal" (map fst (rqHsCabals rq))
+    , ascending "hs.owner" (map fst (rqHsOwners rq))
+    , asum [Just ("hs.owner " <> show i <> ": its file is not walked or its cabal not carried") | (i, (f, c)) <- zip [0 :: Int ..] (rqHsOwners rq), not (Set.member f walked && Set.member c cabals)]
     ]
  where
   walked = Set.fromList (rqFiles rq)
+  cabals = Set.fromList (map fst (rqHsCabals rq))
   paths = toInteger (length (rqFiles rq) + length (rqOrigins rq))
   site i s
     | sLang s `notElem` resolvedLangs = Just ("site " <> show i <> ": language this family does not resolve")

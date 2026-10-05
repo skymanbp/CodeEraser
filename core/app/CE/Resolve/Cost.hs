@@ -16,6 +16,7 @@ module CE.Resolve.Cost (
   langLua,
   langR,
   langJava,
+  langHs,
   resolvedLangs,
   outFile,
   outPackage,
@@ -35,19 +36,13 @@ resolveCap :: Integer
 resolveCap = 268435456
 
 -- | The language codes of the ladders this family holds (the
--- `languages.rows` codes): Python, Go, C, C++, Lua, Java, R. Every other
+-- `languages.rows` codes): Python, Go, Haskell, C, C++, Lua, Java, R. Every other
 -- language's ladder still runs on the measuring side during the track.
-langPy, langGo, langC, langCpp, langLua, langJava, langR :: Integer
-langPy = 0
-langGo = 4
-langC = 15
-langCpp = 16
-langLua = 17
-langJava = 18
-langR = 20
+langPy, langGo, langHs, langC, langCpp, langLua, langJava, langR :: Integer
+(langPy, langGo, langHs, langC, langCpp, langLua, langJava, langR) = (0, 4, 6, 15, 16, 17, 18, 20)
 
 resolvedLangs :: [Integer]
-resolvedLangs = [langPy, langGo, langC, langCpp, langLua, langJava, langR]
+resolvedLangs = [langPy, langGo, langHs, langC, langCpp, langLua, langJava, langR]
 
 -- | The outcome column of a reply row: a file target, a package
 -- directory target (Go, R, Java), External, Unresolved.

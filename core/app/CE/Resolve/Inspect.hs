@@ -12,6 +12,8 @@
 --   relativize [[base, dir, path]] → [path | null]
 --   goMod      [[rel, text]] → [[dir, module | null, [[old, new]]]]
 --   description [[rel, text]] → [[dir, package, [collated]] | null]
+--   cabal      [[rel, text]] → [[dir, name, [[[root], main | null,
+--              library]], [dep], hasLibrary, [hidden], [exposed]]]
 --   pyproject  [doc | null] → [[[dir], [dep]] | null]
 --   db         [[base, rows | null, [[rel, text | null]]]] → [[[[unit,
 --              dir | null, chain]], [response], [wanted]]]
@@ -23,6 +25,8 @@
 -- place `[0 | 1, dir]` (1 = a framework directory).
 module CE.Resolve.Inspect (inspected) where
 
+import CE.Resolve.Cabal (Cabal (..), Stanza (..))
+import qualified CE.Resolve.Cabal as Cabal
 import CE.Resolve.Chars (isRustAlnum, isRustWhite)
 import CE.Resolve.Cmdline
 import CE.Resolve.CompDb (Entry (..), Expanded (..), parseDb, parseFlags, relativize)
@@ -42,7 +46,7 @@ import qualified Data.Set as Set
 inspected :: Value -> Value
 inspected (Object o) = object (concat [maybe [] (\v -> [K.fromString k .= v]) (answer k =<< KM.lookup (K.fromString k) o) | k <- keys])
  where
-  keys = ["split", "chain", "relativize", "goMod", "description", "pyproject", "db", "flags", "text", "chars"]
+  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars"]
 inspected _ = object []
 
 -- | One key's answer, Nothing when its question does not read.
@@ -53,6 +57,7 @@ answer k v = case k of
   "relativize" -> each v (\(base, dir, path) -> toJSON (relativize base dir path))
   "goMod" -> each v (\(rel, text) -> let m = parseGoMod rel text in toJSON (gmDir m, gmModule m, gmReplaces m))
   "description" -> each v (\(rel, text) -> toJSON ((\d -> (dDir d, dPackage d, dCollate d)) <$> readDescription (parentDir rel) text))
+  "cabal" -> each v (\(rel, text) -> cabalJson (Cabal.parse rel text))
   "pyproject" -> each v (\doc -> toJSON ((\p -> (ppSourceDirs p, ppDeps p)) <$> pyproject doc))
   "db" -> each v (\(base, rows, texts) -> dbJson (maybe ([], mempty) (parseDb base (M.fromList texts)) rows))
   "flags" -> each v (\(base, rel, text) -> let (d, c) = parseFlags base rel text in toJSON [toJSON (d :: String), chainJson c])
@@ -79,6 +84,9 @@ chainJson c = toJSON [toJSON (chMsvc c), toJSON (chOwnDir c), places (chQuote c)
   places = toJSON . map place
   place (SDir d) = toJSON [toJSON (0 :: Int), toJSON d]
   place (SFramework d) = toJSON [toJSON (1 :: Int), toJSON d]
+
+cabalJson :: Cabal -> Value
+cabalJson c = toJSON [toJSON (cDir c), toJSON (cName c), toJSON [toJSON [toJSON (stRoots s), toJSON (stMain s), toJSON (stLibrary s)] | s <- cStanzas c], toJSON (cDeps c), toJSON (cHasLibrary c), toJSON (Set.toList (cHidden c)), toJSON (Set.toList (cExposed c))]
 
 dbJson :: ([Entry], Expanded) -> Value
 dbJson (entries, x) = toJSON [toJSON [toJSON [toJSON (eUnit e), toJSON (eDir e), chainJson (eChain e)] | e <- entries], toJSON (Set.toList (xResponses x)), toJSON (Set.toList (xWanted x))]

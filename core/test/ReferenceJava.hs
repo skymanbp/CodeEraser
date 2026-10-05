@@ -22,26 +22,18 @@ import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe, isJust, listToMaybe, mapMaybe)
 import qualified Data.Set as Set
 import ReferenceJavaGen
-import ReferenceResolveGen (Ref (..), answers, splitOn)
-import WireHarness (runChecks)
+import ReferenceResolveGen (Ref (..), answers, refShape, splitOn)
+import WireHarness (battery, runChecks)
 
 equivalence :: IO Bool
-equivalence = runChecks (headline <> map named (take 5 off) <> map unreached missing)
- where
-  off = mapMaybe (\(k, c) -> (,) k <$> disagree c) (zip [1 :: Int ..] javaCases)
-  headline =
-    [ ("resolve: 200 Java cases, 2400 sites, shipped = reference", null off)
-    , ("resolve: the Java cases reach every rung and refusal of the Java rungs", null missing)
-    ]
-  named (k, d) = ("  case " ++ show k ++ ": " ++ show d, False)
-  unreached m = ("  never reached: " ++ m, False)
-  reached = Set.fromList (concatMap (\c -> map (shape . refSite c) (jSites c)) javaCases)
-  missing = filter (`Set.notMember` reached) ["file 1", "file 2", "file 3", "package 2", "external 4", "OutOfScope", "Unsupported", "AmbiguousRoot", "AmbiguousPaths", "OwnUnit"]
-  shape a = case a of
-    RFile _ g -> "file " <> show g
-    RPkg _ g -> "package " <> show g
-    RExt g -> "external " <> show g
-    RUnres why -> show why
+equivalence =
+  runChecks
+    ( battery
+        ("resolve: 200 Java cases, 2400 sites, shipped = reference", "resolve: the Java cases reach every rung and refusal of the Java rungs")
+        (map (fmap show . disagree) javaCases)
+        ["file 1", "file 2", "file 3", "package 2", "external 4", "OutOfScope", "Unsupported", "AmbiguousRoot", "AmbiguousPaths", "OwnUnit"]
+        (Set.fromList [refShape (refSite c s) | c <- javaCases, s <- jSites c])
+    )
 
 disagree :: JCase -> Maybe (JSite, Maybe Ref, Ref)
 disagree c = listToMaybe [(s, got, want) | (s, got, want) <- zip3 (jSites c) shipped (map (refSite c) (jSites c)), got /= Just want]
