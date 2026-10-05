@@ -14,13 +14,13 @@
 //! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
 //! the Python, Lua, Go and C / C++ rungs live in the core
 //! (`resolve/1`, graph/resolve/), R's since W2-text stage B, Java's
-//! since stage C and Haskell's since stage D:
+//! since stage C, Haskell's since stage D and the TS / TSX ones since
+//! stage E:
 //! `resolve_all` sends their sites in one request and runs the other
 //! languages' rungs here. Dispatch
 //! carries the site's frozen kind label (the package's
-//! `store.site_kinds`): the TS rungs are kind-uniform, Rust's mod_decl
-//! and use walk different rungs, and Markdown routes five kinds through
-//! one chain.
+//! `store.site_kinds`): Rust's mod_decl and use walk different rungs,
+//! and Markdown routes five kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
@@ -45,13 +45,13 @@ pub mod rs;
 // discipline for the binder's cross-file input)
 pub mod rs_reexport;
 mod rs_tree;
-pub mod ts;
 // the site outcome vocabulary (a leaf: it reads nothing of this module)
 mod outcome;
 pub use outcome::{Outcome, Reason, Rung};
 // The a8db74a9 Python / Lua / Go / C rungs, the c96ab3f6 R rungs, the
-// 27d0d56d Java rungs and the fa83a48d Haskell rungs, frozen byte for
-// byte: the differential gate's oracle (tests subrepo
+// 27d0d56d Java rungs, the fa83a48d Haskell rungs and the dd0eec61 TS
+// rungs, frozen byte for byte: the differential gate's oracle (tests
+// subrepo
 // unit/graph/ladder/oracle/, driven by unit/dedup/ladder_diff/).
 #[cfg(test)]
 #[path = "../../../tests/unit/graph/ladder/frozen.rs"]
@@ -185,7 +185,6 @@ pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome
 /// The rungs this side still runs.
 fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
     match lang {
-        Lang::TypeScript | Lang::Tsx => ts::resolve(site.from, site.spec, scope),
         Lang::Rust => rs::resolve(site, scope),
         Lang::Markdown => md::resolve(site, scope),
         Lang::Html => html::resolve(site, scope),

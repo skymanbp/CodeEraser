@@ -6,7 +6,10 @@
 -- ascending (path) order, every database probe one of the three, every
 -- include list a walked file's, the cabals in strictly ascending (path)
 -- order and every owner row a walked file's in that order, owned by a
--- carried cabal — and the cap the request's text counts against. The
+-- carried cabal, the package.json paths and the chained tsconfig paths
+-- in strictly ascending order, every TS fact a question of its kind
+-- asked once with an answer in its range (a text with a text answer
+-- only) — and the cap the request's text counts against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
@@ -40,6 +43,8 @@ requestSize rq =
     , sum [1 + chars p + texts is | (p, is) <- cIncludes c]
     , sum [1 + chars p + header h | (p, h) <- rqJavaHeaders rq]
     , sum [1 + chars p + chars t | (p, t) <- rqHsCabals rq <> rqHsOwners rq]
+    , texts (rqTsPackages rq <> rqTsChains rq)
+    , sum [1 + chars a + chars b + maybe 0 chars t | (_, a, b, _, t) <- rqTsFacts rq]
     ]
  where
   c = rqC rq
@@ -67,10 +72,19 @@ offence rq =
     , ascending "hs.cabal" (map fst (rqHsCabals rq))
     , ascending "hs.owner" (map fst (rqHsOwners rq))
     , asum [Just ("hs.owner " <> show i <> ": its file is not walked or its cabal not carried") | (i, (f, c)) <- zip [0 :: Int ..] (rqHsOwners rq), not (Set.member f walked && Set.member c cabals)]
+    , ascending "ts.package" (rqTsPackages rq)
+    , ascending "ts.chain" (rqTsChains rq)
+    , asum (zipWith tsFact [0 :: Int ..] (rqTsFacts rq))
+    , asum [Just ("ts.fact " <> show i <> ": asked twice") | (i, (seen, k)) <- zip [0 :: Int ..] (zip (scanl (flip Set.insert) Set.empty keys) keys), Set.member k seen]
     ]
  where
   walked = Set.fromList (rqFiles rq)
   cabals = Set.fromList (map fst (rqHsCabals rq))
+  keys = [(op, a, b) | (op, a, b, _, _) <- rqTsFacts rq]
+  tsFact i (op, _, b, st, t)
+    | op < 0 || op > 2 || (op /= 2 && b /= "") = Just ("ts.fact " <> show i <> ": no such question")
+    | st < 0 || st > (if op == 0 then 2 else 1) || (st == 2 && op == 0) /= (t /= Nothing) = Just ("ts.fact " <> show i <> ": answer out of range")
+    | otherwise = Nothing
   paths = toInteger (length (rqFiles rq) + length (rqOrigins rq))
   site i s
     | sLang s `notElem` resolvedLangs = Just ("site " <> show i <> ": language this family does not resolve")

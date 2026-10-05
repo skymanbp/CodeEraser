@@ -2,15 +2,18 @@
 //! side read, as text — the walked paths, the sites' specifiers as the
 //! detector produced them, the `[graph.search_roots]` table, the Lua
 //! templates the walk read, each go.mod's, each R DESCRIPTION's and each
-//! .cabal file's text,
+//! .cabal file's text, each walked package.json's and tsconfig.json's
+//! (with whether it is a file: a TS fact),
 //! every walked Java file's header as the walk read it (package, imports,
 //! type declarations: ladder/java_header.rs),
 //! the root `pyproject.toml` and every JSON compile database decoded (a library
 //! read; the rules applied to them are the core's), each flags file's
 //! text, and the facts that need the file system: the root's absolute
 //! text, the databases clangd's probes find, each C-family file's
-//! include list (read in the walk), and the response files the core
-//! asked for (`wanted`).
+//! include list (read in the walk), the response files the core
+//! asked for (`wanted`) and the TS rungs' file-system facts it asked for
+//! (`tsWanted`: a path's text, whether a path is a file, whether
+//! `node_modules/<name>` under a directory is a directory).
 
 use crate::graph::compdb_find::{self, Found};
 use crate::graph::ladder::Site;
@@ -55,6 +58,7 @@ pub fn tree(input: &Input) -> Value {
         "go": { "mods": texts(input.root, named("go.mod")) },
         "r": { "descriptions": descriptions(input.root, named("DESCRIPTION")) },
         "hs": { "cabals": texts(input.root, named("*.cabal").collect::<BTreeSet<_>>().into_iter()) },
+        "ts": ts(input.root, named("package.json").collect(), named("tsconfig.json")),
         "java": { "headers": headers(input.java) },
         "c": databases(input.root, input.files, input.includes),
     })
@@ -65,6 +69,62 @@ pub fn tree(input: &Input) -> Value {
 pub fn texts<'a>(root: &Path, rels: impl Iterator<Item = &'a String>) -> Vec<(&'a String, String)> {
     rels.filter_map(|rel| Some((rel, std::fs::read_to_string(root.join(rel)).ok()?)))
         .collect()
+}
+
+/// The TS object: the walk's package.json files (the fourth rung's
+/// members) and the text facts of those and of its tsconfig.json files.
+fn ts<'a>(
+    root: &Path,
+    packages: BTreeSet<&'a String>,
+    tsconfigs: impl Iterator<Item = &'a String>,
+) -> Value {
+    let facts: Vec<Value> = packages
+        .iter()
+        .copied()
+        .chain(tsconfigs)
+        .map(|rel| fact(root, 0, rel, ""))
+        .collect();
+    json!({ "packages": packages, "facts": facts })
+}
+
+/// One file-system fact as its request row, `[op, a, b, answer, text]`:
+/// a path's text (op 0: 0 no file, 1 a file that does not read as UTF-8,
+/// 2 its text), whether a path is a file (op 1), whether
+/// `node_modules/<b>` under the directory `a` is a directory (op 2).
+pub fn fact(root: &Path, op: i64, a: &str, b: &str) -> Value {
+    let (answer, text) = match op {
+        0 if !root.join(a).is_file() => (0, None),
+        0 => std::fs::read_to_string(root.join(a)).map_or((1, None), |t| (2, Some(t))),
+        1 => (i64::from(root.join(a).is_file()), None),
+        _ => {
+            let dir = root.join(a).join("node_modules").join(b);
+            (i64::from(dir.is_dir()), None)
+        }
+    };
+    json!([op, a, b, answer, text])
+}
+
+/// The facts the core asked for, read and added (a fact asked for twice
+/// is the core's contract refusal on the next request: `ts.fact i: asked
+/// twice`).
+pub fn answer_facts(
+    body: &mut Value,
+    root: &Path,
+    wanted: &[(i64, String, String)],
+) -> Result<(), String> {
+    if wanted.is_empty() {
+        return Ok(());
+    }
+    if body["ts"]["facts"].is_null() {
+        body["ts"]["facts"] = json!([]);
+    }
+    let carried = body["ts"]["facts"]
+        .as_array_mut()
+        .ok_or("resolve/1: request has no fact table")?;
+    for (op, a, b) in wanted {
+        carried.push(fact(root, *op, a, b));
+    }
+    Ok(())
 }
 
 /// Each readable DESCRIPTION's text, lossy, by its path.
@@ -187,6 +247,9 @@ pub fn sites(
 /// read and added (lossy UTF-8, null when unreadable); an empty list
 /// means the request is complete. A name asked for twice is wire skew.
 pub fn answer_wanted(body: &mut Value, root: &Path, wanted: &[String]) -> Result<(), String> {
+    if wanted.is_empty() {
+        return Ok(());
+    }
     let carried = body["c"]["responses"]
         .as_array_mut()
         .ok_or("resolve/1: request has no response table")?;

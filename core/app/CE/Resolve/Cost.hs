@@ -10,6 +10,8 @@
 module CE.Resolve.Cost (
   resolveCap,
   langPy,
+  langTs,
+  langTsx,
   langGo,
   langC,
   langCpp,
@@ -36,13 +38,14 @@ resolveCap :: Integer
 resolveCap = 268435456
 
 -- | The language codes of the ladders this family holds (the
--- `languages.rows` codes): Python, Go, Haskell, C, C++, Lua, Java, R. Every other
+-- `languages.rows` codes): Python, TypeScript, TSX, Go, Haskell, C, C++, Lua,
+-- Java, R. Every other
 -- language's ladder still runs on the measuring side during the track.
-langPy, langGo, langHs, langC, langCpp, langLua, langJava, langR :: Integer
-(langPy, langGo, langHs, langC, langCpp, langLua, langJava, langR) = (0, 4, 6, 15, 16, 17, 18, 20)
+langPy, langTs, langTsx, langGo, langHs, langC, langCpp, langLua, langJava, langR :: Integer
+(langPy, langTs, langTsx, langGo, langHs, langC, langCpp, langLua, langJava, langR) = (0, 1, 2, 4, 6, 15, 16, 17, 18, 20)
 
 resolvedLangs :: [Integer]
-resolvedLangs = [langPy, langGo, langHs, langC, langCpp, langLua, langJava, langR]
+resolvedLangs = [langPy, langTs, langTsx, langGo, langHs, langC, langCpp, langLua, langJava, langR]
 
 -- | The outcome column of a reply row: a file target, a package
 -- directory target (Go, R, Java), External, Unresolved.
@@ -53,8 +56,9 @@ outExternal = 2
 outUnresolved = 3
 
 -- | The refusal vocabulary, in the measuring side's declaration order
--- (its codes are this order's indices). The ladders here answer seven
--- of them (Java added ambiguous_paths and own_unit); the rest belong to
+-- (its codes are this order's indices). The ladders here answer nine
+-- of them (Java added ambiguous_paths and own_unit, the TS rungs
+-- ambiguous_exports and config_depth); the rest belong to
 -- ladders still on the measuring side.
 data Reason
   = Dynamic

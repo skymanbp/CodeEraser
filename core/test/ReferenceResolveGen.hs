@@ -24,14 +24,18 @@ module ReferenceResolveGen (
   originsOf,
   splitOn,
   angled,
+  rands,
+  askCore,
 ) where
 
+import CE.Resolve (respond)
 import CE.Resolve.Cost (Reason (..), langC, langCpp, langGo, langLua, langPy, langR)
 import CE.Resolve.Tables (kindLibrary, kindLoad, kindRequire, kindSource)
-import Data.Aeson (Value (..), object, parseJSON, toJSON, (.=))
+import Data.Aeson (Value (..), decodeStrict, encode, object, parseJSON, toJSON, (.=))
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (Pair, parseMaybe)
 import Data.List (isSuffixOf)
+import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
 
@@ -115,6 +119,11 @@ caseOf k = Case files [] sites (subset 4 ["lib", "src/a", "", "a/"]) (subset 5 [
   modSets = [[("", "ex.com/mod"), ("a", "local")], [("a", "ex.com/mod/a"), ("src", "ex.com/mod")], [("x", "local"), ("", "mod2")], [("", "ex.com/mod"), ("a", "ex.com/mod")]]
   replaces = [("other.org/z", "./a"), ("local/a", "../x"), ("mod2", "ex.com/mod"), ("ex.com/mod/a", "nodots/q")]
   slash d b = if null d then b else d <> "/" <> b
+
+-- | A request put to the core in-process, its reply read back; Nothing
+-- for a refusal or a reply that does not decode.
+askCore :: Value -> Maybe Value
+askCore v = either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode v)))
 
 -- | The LCG stream of one case.
 rands :: Int -> Int -> Int

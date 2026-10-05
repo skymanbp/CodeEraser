@@ -17,6 +17,8 @@ module ReferenceJavaGen (
   JSite,
   javaCases,
   javaRequest,
+  pickBy,
+  subsetBy,
 ) where
 
 import CE.Resolve.Cost (langJava)

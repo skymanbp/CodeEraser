@@ -2,15 +2,18 @@
 //! ladder lands at 2f, judgment at 2g). Walk → detect → aggregate;
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
-//! ladder/ with its config surfaces (cargo / roots / jsonc) beside it,
-//! and in the core for Python, Lua, Go, C / C++, R, Java and Haskell
-//! (resolve/, which sends the go.mod, DESCRIPTION, .cabal, pyproject and
-//! compile-database texts and the Java headers the core reads); wire.rs
+//! ladder/ with its config surfaces (cargo / roots) beside it, and in
+//! the core for Python, TypeScript / TSX, Lua, Go, C / C++, R, Java and
+//! Haskell (resolve/, which sends the package.json, tsconfig, go.mod,
+//! DESCRIPTION, .cabal, pyproject and compile-database texts, the
+//! file-system facts the TS rungs ask for and the Java headers the core
+//! reads); wire.rs
 //! bridges cached sites
 //! to edge rows for phase 2.
 
-// The 92e728b1 go.mod and compile-database readers and the fa83a48d
-// cabal reader, frozen (tests subrepo unit/graph/oracle_cfg/): the
+// The 92e728b1 go.mod and compile-database readers, the fa83a48d
+// cabal reader and the dd0eec61 tsconfig chain and JSONC cleaner, frozen
+// (tests subrepo unit/graph/oracle_cfg/): the
 // frozen ladders (ladder::frozen) read them at their old paths, and the
 // differential gate holds the core's readers against them (plan v2.33
 // W2-text).
@@ -18,14 +21,13 @@
 #[path = "../../tests/unit/graph/frozen_cfg.rs"]
 pub(crate) mod oracle_cfg;
 #[cfg(test)]
-pub(crate) use oracle_cfg::{cabal, cmdline, compdb, compdb_flags, gomod};
+pub(crate) use oracle_cfg::{cabal, cmdline, compdb, compdb_flags, gomod, jsonc, roots_ts};
 
 pub mod cabal_find;
 pub mod canvas;
 pub mod cargo;
 pub mod compdb_find;
 pub mod deadcode;
-pub mod jsonc;
 pub mod keys;
 pub mod ladder;
 pub mod load;
@@ -35,7 +37,6 @@ pub mod nodes;
 pub mod owed;
 pub mod resolve;
 pub mod roots;
-pub mod roots_ts;
 pub mod sites;
 pub mod spec;
 pub mod store;

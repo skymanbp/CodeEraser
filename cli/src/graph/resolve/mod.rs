@@ -1,13 +1,15 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
-//! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go, C / C++,
-//! R, Java and Haskell resolve in `resolve/1`, with the readers of their
-//! configuration files (go.mod, R's DESCRIPTION, the .cabal files, the root
-//! pyproject.toml's keys, the
-//! compile databases, their response and flag files). This side sends what it read as text
-//! (request.rs) — one request per sweep with only the sites that need
-//! resolving — answers the core's `wanted` response files by reading
-//! them, and maps each reply row back to the ladder's `Outcome`, so the
+//! docs/reference/algorithm-track.md §3, §6): Python, TypeScript / TSX,
+//! Lua, Go, C / C++, R, Java and Haskell resolve in `resolve/1`, with the
+//! readers of their configuration files (the tsconfig chains and
+//! package.json files, go.mod, R's DESCRIPTION, the .cabal files, the
+//! root pyproject.toml's keys, the compile databases, their response and
+//! flag files). This side sends what it read as text (request.rs) — one
+//! request per sweep with only the sites that need resolving — answers
+//! the core's `wanted` response files and `tsWanted` file-system facts
+//! by reading them, and maps each reply row back to the ladder's
+//! `Outcome`, so the
 //! edge store, deadcode, `ce graph --sites` and the precision documents
 //! read the answers they always read. The other languages' ladders still
 //! run on this side during the track.
@@ -40,6 +42,8 @@ pub fn in_core(lang: Lang) -> bool {
     matches!(
         lang,
         Lang::Python
+            | Lang::TypeScript
+            | Lang::Tsx
             | Lang::Go
             | Lang::Haskell
             | Lang::C
@@ -79,6 +83,7 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
     body["origins"] = json!(origins);
     let reply = complete(&mut body, scope.root)?;
     tree.borrow_mut()["c"]["responses"] = body["c"]["responses"].clone();
+    tree.borrow_mut()["ts"]["facts"] = body["ts"]["facts"].clone();
     let rows: Vec<(u8, i64, Option<String>, i64)> = judged::table(&reply, "results")?;
     if rows.len() != sites.len() || judged::count(&reply, "sites")? != sites.len() {
         return Err("resolve/1: wire skew: one result per site sent".into());
@@ -181,15 +186,38 @@ pub fn responses(
     Ok(rows.into_iter().collect())
 }
 
-/// Ask until the core names no response file the request lacks.
+/// Each walked tsconfig's extends chain as the core walks it: every
+/// config the chain reaches, the tsconfig first (a broken chain: what it
+/// reached before the break) — the resolve key's input (keys.rs). No
+/// tsconfig asked, no request.
+pub fn ts_reached(
+    root: &Path,
+    chains: &BTreeSet<&String>,
+) -> Result<BTreeMap<String, Vec<String>>, String> {
+    if chains.is_empty() {
+        return Ok(BTreeMap::new());
+    }
+    let facts: Vec<Value> = chains
+        .iter()
+        .map(|c| request::fact(root, 0, c, ""))
+        .collect();
+    let mut body = json!({ "ts": { "chains": chains, "facts": facts } });
+    let rows: Vec<(String, Vec<String>)> = judged::table(&complete(&mut body, root)?, "tsReached")?;
+    Ok(rows.into_iter().collect())
+}
+
+/// Ask until the core names no response file and no file-system fact the
+/// request lacks.
 fn complete(body: &mut Value, root: &Path) -> Result<Value, String> {
     loop {
         let reply = ask(body.clone())?;
         let wanted: Vec<String> = judged::table(&reply, "wanted")?;
-        if wanted.is_empty() {
+        let facts: Vec<(i64, String, String)> = judged::table(&reply, "tsWanted")?;
+        if wanted.is_empty() && facts.is_empty() {
             return Ok(reply);
         }
         request::answer_wanted(body, root, &wanted)?;
+        request::answer_facts(body, root, &facts)?;
     }
 }
 

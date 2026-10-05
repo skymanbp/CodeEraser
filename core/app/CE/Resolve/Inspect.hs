@@ -21,6 +21,18 @@
 --   text       [text] → [[[line], trimmed, [word]]]
 --   chars      true → {white: [[lo, hi]], alnum: [[lo, hi]]} over every
 --              scalar value
+--   jsonc      [text] → [[document] | null] (a document `null` apart from
+--              no document)
+--   jsoncAccepts [text] → [bool] (whether a document reads: one nested
+--              near the depth limit is too deep to echo inside a reply)
+--   tsconfig   [[dir, [[path, text | null]]]] → [[chain, baseDir | null,
+--              [[pattern, [target]]], anchor]] (chain: 0 none, 1 usable,
+--              2 refused)
+--   tsReached  [[start, [[path, text | null]]]] → [[path]]
+--   package    [[rel, text | null]] → [[dir, name | null, [exports], [dep]]
+--              | null] (exports: [] absent, [value] present)
+-- A TS question's tree is the files it lists (a null text: a file that
+-- does not read); no other path is a file.
 -- A chain is `[msvc, ownDir, quote, bracket, system, forced]`, a searched
 -- place `[0 | 1, dir]` (1 = a framework directory).
 module CE.Resolve.Inspect (inspected) where
@@ -34,19 +46,23 @@ import CE.Resolve.Description (Description (..), readDescription)
 import CE.Resolve.Flags (Chain (..), Search (..), chain)
 import CE.Resolve.Go (GoMod (..), parseGoMod)
 import CE.Resolve.Py (PyProject (..), pyproject)
+import CE.Resolve.Json (readJsonc)
 import CE.Resolve.Str (parentDir, rustLines, rustTrim, splitWhitespace)
+import CE.Resolve.TsConfig (Package (..), TsChain (..), TsOptions (..), package, tsExtendsFiles, tsOptions)
+import CE.Resolve.TsFacts (Facts, facts)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (FromJSON, parseMaybe, parseJSON)
 import Data.Char (chr)
+import Data.Maybe (isJust)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
 
 inspected :: Value -> Value
 inspected (Object o) = object (concat [maybe [] (\v -> [K.fromString k .= v]) (answer k =<< KM.lookup (K.fromString k) o) | k <- keys])
  where
-  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars"]
+  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package"]
 inspected _ = object []
 
 -- | One key's answer, Nothing when its question does not read.
@@ -63,6 +79,17 @@ answer k v = case k of
   "flags" -> each v (\(base, rel, text) -> let (d, c) = parseFlags base rel text in toJSON [toJSON (d :: String), chainJson c])
   "text" -> each v (\t -> toJSON (rustLines t, rustTrim t, splitWhitespace t))
   "chars" -> Just (object ["white" .= ranges isRustWhite, "alnum" .= ranges isRustAlnum])
+  _ -> tsAnswer k v
+
+-- | The TS readers' keys: the JSONC reader, the tsconfig chain, the
+-- package.json.
+tsAnswer :: String -> Value -> Maybe Value
+tsAnswer k v = case k of
+  "jsonc" -> each v (maybe Null (\d -> toJSON [d]) . readJsonc)
+  "jsoncAccepts" -> each v (toJSON . isJust . readJsonc)
+  "tsconfig" -> each v (\(dir, tree) -> either (const Null) tsChainJson (tsOptions (given tree) dir))
+  "tsReached" -> each v (\(start, tree) -> either (const Null) toJSON (tsExtendsFiles (given tree) start))
+  "package" -> each v (\(rel, text) -> either (const Null) (toJSON . fmap packageJson) (package (given [(rel, text)]) rel))
   _ -> Nothing
 
 -- | Every question of a list, answered in order.
@@ -90,6 +117,20 @@ cabalJson c = toJSON [toJSON (cDir c), toJSON (cName c), toJSON [toJSON [toJSON 
 
 dbJson :: ([Entry], Expanded) -> Value
 dbJson (entries, x) = toJSON [toJSON [toJSON [toJSON (eUnit e), toJSON (eDir e), chainJson (eChain e)] | e <- entries], toJSON (Set.toList (xResponses x)), toJSON (Set.toList (xWanted x))]
+
+-- | A TS question's tree: each listed file's text, or a file that does
+-- not read; every other path no file.
+given :: [(String, Maybe String)] -> Facts
+given tree = facts True [(0, path, "", maybe 1 (const 2) text, text) | (path, text) <- tree]
+
+tsChainJson :: TsChain -> Value
+tsChainJson c = case c of
+  TsNone -> toJSON [toJSON (0 :: Int), Null, toJSON ([] :: [Value]), toJSON ("" :: String)]
+  TsBroken -> toJSON [toJSON (2 :: Int), Null, toJSON ([] :: [Value]), toJSON ("" :: String)]
+  TsOk o -> toJSON [toJSON (1 :: Int), toJSON (toBaseDir o), toJSON (toPaths o), toJSON (toPathsAnchor o)]
+
+packageJson :: Package -> Value
+packageJson pk = toJSON [toJSON (pkDir pk), toJSON (pkName pk), toJSON (maybe [] pure (pkExports pk)), toJSON (pkDeps pk)]
 
 -- | The scalar values a predicate holds for, as inclusive ranges.
 ranges :: (Char -> Bool) -> [[Int]]

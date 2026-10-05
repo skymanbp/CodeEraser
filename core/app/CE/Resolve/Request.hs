@@ -8,6 +8,10 @@
 -- every walked Java file's header as the walk read it (CE.Resolve.JavaHeader),
 -- each .cabal file's text and which cabal owns each walked Haskell file
 -- (the nearest one the measuring side's directory scan found),
+-- the walk's package.json files and the file-system facts the TS rungs
+-- asked for (CE.Resolve.TsFacts: a path's text, whether a path is a
+-- file, whether `node_modules/<name>` under a directory is one) with the
+-- tsconfig files whose extends chains the resolve key asks about,
 -- the root `pyproject.toml` and every `compile_commands.json` as the
 -- decoded document (format decoding is a library read on that side;
 -- every rule applied to the document is here), each `compile_flags.txt`
@@ -42,6 +46,9 @@ data ResolveReq = ResolveReq
   , rqJavaHeaders :: [(String, JHeader)]
   , rqHsCabals :: [(String, String)]
   , rqHsOwners :: [(String, String)]
+  , rqTsPackages :: [String]
+  , rqTsFacts :: [(Int, String, String, Int, Maybe String)]
+  , rqTsChains :: [String]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
@@ -89,6 +96,9 @@ instance FromJSON ResolveReq where
       <*> (mapM headerRow =<< listAt o "java" "headers")
       <*> listAt o "hs" "cabals"
       <*> listAt o "hs" "owners"
+      <*> listAt o "ts" "packages"
+      <*> listAt o "ts" "facts"
+      <*> listAt o "ts" "chains"
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 

@@ -99,7 +99,7 @@ keys =
   \]\n\
   \# Source extension → the twins R2 can stat for it. The .mts/.cts\n\
   \# rows mirror esm_rewrite's [(\"js\",\"ts\"),(\"mjs\",\"mts\"),(\"cjs\",\"cts\")]\n\
-  \# table (ladder/ts.rs): R2 tests `!root.join(js_twin).is_file()` on\n\
+  \# table (CE.Resolve.Ts): R2 asks whether the JS twin is a file on\n\
   \# exactly the .mjs/.cjs twin of an in-scope .mts/.cts source, so\n\
   \# while those rows were missing, creating or deleting foo.mjs beside\n\
   \# foo.mts flipped R2's answer under an unchanged resolve key and the\n\

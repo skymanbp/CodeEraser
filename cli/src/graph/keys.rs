@@ -4,7 +4,7 @@
 //! hotfix landed; store.rs re-exports both names, so callers keep
 //! the `store::` spelling.
 
-use crate::graph::{roots, roots_ts};
+use crate::graph::roots;
 use std::collections::BTreeSet;
 use std::path::Path;
 
@@ -62,7 +62,8 @@ pub fn resolve_key(live: &BTreeSet<String>, configs: &[(String, u64)]) -> i64 {
 
 /// Source extension → the twins R2 can stat for it. The .mts/.cts
 /// rows mirror esm_rewrite's [("js","ts"),("mjs","mts"),("cjs","cts")]
-/// table (ladder/ts.rs): R2 tests `!root.join(js_twin).is_file()` on
+/// table (the core's CE.Resolve.Ts since plan v2.33 W2-text stage E; this
+/// side answers its `tsWanted` file fact): R2 tests `!is_file(js_twin)` on
 /// exactly the .mjs/.cjs twin of an in-scope .mts/.cts source, so
 /// while those rows were missing, creating or deleting foo.mjs beside
 /// foo.mts flipped R2's answer under an unchanged resolve key and the
@@ -148,23 +149,36 @@ fn node_modules_names(root: &Path, dir: &str) -> Vec<String> {
 /// Every file the extends chain of a walked tsconfig reaches under a
 /// name the walk reads as no config, with its content hash (step 5b):
 /// the chain reads its compilerOptions, so an edit to it must re-fire
-/// the sweep — a `tsconfig*.json` base already sits in `configs`.
+/// the sweep — a `tsconfig*.json` base already sits in `configs`. The
+/// chain is the core's to walk (`resolve::ts_reached`, plan v2.33
+/// W2-text stage E); a tsconfig whose bytes spell no `extends` (nor a
+/// `\u` escape, which could spell it) reaches only itself, a resolver
+/// config, and is not asked about — as a compile database holding no `@`
+/// names no response file (compdb_find.rs). No core answering reaches
+/// nothing (the sweep that needs one is owed until a core answers).
 fn extends_bases(root: &Path, configs: &[(String, u64)]) -> Vec<String> {
     let mut out = BTreeSet::new();
-    let walked = configs
+    let chained: BTreeSet<&String> = configs
         .iter()
-        .filter(|(c, _)| c.rsplit('/').next().is_some_and(is_tsconfig));
-    for (config, _) in walked {
-        for reached in roots_ts::ts_extends_files(root, config) {
-            if is_resolver_config(Path::new(&reached)) {
-                continue;
-            }
-            let bytes = std::fs::read(root.join(&reached)).unwrap_or_default();
-            out.insert(format!(
-                "{reached}={:016x}",
-                crate::dedup::tokens::fnv1a(&bytes)
-            ));
+        .map(|(c, _)| c)
+        .filter(|c| c.rsplit('/').next().is_some_and(is_tsconfig))
+        .filter(|c| {
+            let bytes = std::fs::read(root.join(c)).unwrap_or_default();
+            [&b"extends"[..], b"\\u"]
+                .iter()
+                .any(|word| bytes.windows(word.len()).any(|w| w == *word))
+        })
+        .collect();
+    let reached = crate::graph::resolve::ts_reached(root, &chained).unwrap_or_default();
+    for reached in reached.into_values().flatten() {
+        if is_resolver_config(Path::new(&reached)) {
+            continue;
         }
+        let bytes = std::fs::read(root.join(&reached)).unwrap_or_default();
+        out.insert(format!(
+            "{reached}={:016x}",
+            crate::dedup::tokens::fnv1a(&bytes)
+        ));
     }
     out.into_iter().collect()
 }

@@ -41,6 +41,17 @@
 > cabal 没有库节，或文件在任一节源根下拼出的模块在 `other-modules` 而不在任何 `exposed-modules`）；降级应答两者为空表。`inspect` 加 `cabal`。golden：`resolve/golden` 加第 10 对
 > （Haskell 八个站点：源根、R2 依赖包、包限定 import、boot 包的 External、不在 boot 表的模块与不像模块名的说明符，带入口与包内私有）与第 11 对（`hs.owners` 指向没带的 cabal，按名拒绝），
 > hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs` 随之变，其余 golden 不动。
+> **9.0.0 同版加性**（TypeScript / TSX 阶梯进核，W2-text 阶段 E，2026-10-05；设计册 §6 W2b 行与 §11 第 63–67 条；9.0.0 未发布，同上不另升版号）：
+> `sites` 的语言加 TypeScript（码 1）与 TSX（码 2，站点种类 `import`）；请求加性 `ts.packages`（走查到的每个 `package.json` 的路径，严格升序：第四级的成员）、
+> `ts.chains`（要问 extends 链的 tsconfig 路径，严格升序）与 `ts.facts` `[[op, a, b, 答, 原文 | null]]`——核问过的盘上事实：op 0 = 路径 a 的原文（答 0 不是文件、
+> 1 是文件但读不成 UTF-8、2 带原文），op 1 = 路径 a 是不是文件，op 2 = `a/node_modules/b` 是不是目录（答 0 / 1）；同一问题带两次按名拒绝 `ts.fact i: asked twice`，
+> 问法或答越界按名拒绝。测量侧首问只带每个走查到的 `package.json` 与 `tsconfig.json` 的原文。应答加性 `tsWanted` `[[op, a, b]]`——某个 TS 站点或某条链还缺的事实
+> （此时 `results` 与 `forced` 为空，测量侧读来补进 `ts.facts` 再问一次，同 `wanted`；核把一级之内互不依赖的事实一次问齐）与 `tsReached` `[[tsconfig, [路径…]]]`——
+> `ts.chains` 里每份 tsconfig 的 extends 链走到的每份配置（自身在前；断链列出断前走到的），索引键的输入；降级应答两者为空表。Node 的内建模块表仍是定义包的
+> `ladder.ts`；定义包的 `resolve.configs` 加 `package.json` 与 `tsconfig.json`（hello 的 `tablesDigest` 随之变）。`inspect` 加 `jsonc` / `jsoncAccepts` / `tsconfig` /
+> `tsReached` / `package`。golden：`resolve/golden` 加第 12 对（TS / TSX 十五个站点：R1–R5 每一级、ESM 改写、paths 的歧义、成员 exports 的模式与 `null`、内建与
+> `node:` 名、站外，带一条 extends 链）、第 13 对（同一请求不带事实：只答 `tsWanted`）与第 14 对（同一事实带两次，按名拒绝），hello 的 `tablesDigest` 与
+> `tables` 第 2 对的 `configs` 随之变，其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

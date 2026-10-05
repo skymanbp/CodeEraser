@@ -4,7 +4,8 @@
 -- W2-text; replaces the W2a vocabulary): the External tables
 -- (`ladder.py.stdlib`, `ladder.lua.stdlib`, `ladder.go.std`, and since
 -- stage C the JDK's `ladder.java` packages and `java.lang` types, since
--- stage D the global package database's `ladder.hs.boot`), the
+-- stage D the global package database's `ladder.hs.boot`, since stage E
+-- Node's builtin modules, `ladder.ts`), the
 -- two compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
 -- storage codes of the site kinds the Lua, R and Java ladders branch on.
 -- The package's `resolve` key states which configuration files the
@@ -18,6 +19,8 @@ module CE.Resolve.Tables (
   javaPackages,
   javaLang,
   hsBoot,
+  nodeBuiltins,
+  nodePrefixOnly,
   gnuFlags,
   skipFlags,
   kindRequire,
@@ -43,6 +46,12 @@ pyStdlib, luaStdlib, goStd :: Set.Set String
 pyStdlib = Set.fromList (packList ["ladder", "py", "stdlib"])
 luaStdlib = Set.fromList (packList ["ladder", "lua", "stdlib"])
 goStd = Set.fromList (packList ["ladder", "go", "std"])
+
+-- | Node's builtin modules: the names each importable bare and under
+-- `node:`, and the ones only `node:` reaches.
+nodeBuiltins, nodePrefixOnly :: Set.Set String
+nodeBuiltins = Set.fromList (packList ["ladder", "ts", "builtins"])
+nodePrefixOnly = Set.fromList (packList ["ladder", "ts", "prefix_only"])
 
 -- | The packages the JDK's runtime image exports and `java.lang`'s
 -- public top-level types.
@@ -90,11 +99,12 @@ kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKin
 
 -- | The walk's config basenames whose text a request carries (`go.mod`
 -- under `go.mods`, `DESCRIPTION` under `r.descriptions`, every `*.cabal`
--- under `hs.cabals` — a name opening with `*` is a basename suffix; the
+-- under `hs.cabals`, `package.json` and `tsconfig.json` as `ts.facts` —
+-- a name opening with `*` is a basename suffix; the
 -- root `pyproject.toml`, the compile databases and their response files
 -- travel by the measuring side's own finders).
 configNames :: [String]
-configNames = ["go.mod", "DESCRIPTION", "*.cabal"]
+configNames = ["go.mod", "DESCRIPTION", "*.cabal", "package.json", "tsconfig.json"]
 
 -- | The `resolve` key of the package.
 table :: Value
