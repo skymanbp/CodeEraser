@@ -1,0 +1,955 @@
+{
+  "corpus": {
+    "lang": "html",
+    "name": "codeeraser",
+    "tip": "d4b7f1f37aa50b61ecd21816204bb7f5b06d673c"
+  },
+  "generated_from": {
+    "ce": "1.8.0",
+    "commit": "1278a18c184d315e2ed2b701bdf3e472604c7c73",
+    "dirty": false
+  },
+  "method": "the frozen sample rows of one corpus, resolved by the shipped ladder against what the product's own walk reads at the pinned tip - every judged file of the tree (the frozen universe among them, each file re-read there and reproduced against its frozen row first; a drifted tree never scores), every other walked path as an asset a page may name, the resolver configs it reads - with no declared root, judged against the frozen blind audit — a truth naming a path the walk refuses (a universe file, or any path of the pinned tree where the truths reach the tree) is scored as outside the corpus, the audit's word kept beside it, and no sampled site may lie in a refused file. An in-corpus answer matches its truth exactly, or at file level when the ladder made no unit claim; a package answer matches a package truth; External is an answer, so external on an in-corpus truth is wrong, never missed. The universe ledger runs the ladder over every site of the frozen universe: its resolution rate is a recall ceiling. Each audit site gap is answered with every site the detector reads off its line. Pre-registered: the per-rung cut table and one line per site kind are published; precision >= 0.90 overall and per corpus where the in-corpus truths reach 5 (the M5-2 G2 contract). The walk record lists the refused files and their sites, which the ledger leaves out.",
+  "rows": [
+    {
+      "answered": "site/zh/stack/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 18,
+      "nth": 0,
+      "path": "site/stack/index.html",
+      "rank": "165be8f21b74d3dca6942faf112ab6821859e696e148c88cae77ef9e178ef588",
+      "reason": null,
+      "rung": 2,
+      "spec": "https://codeeraser.dev/zh/stack/",
+      "truth": "site/zh/stack/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 385,
+      "nth": 0,
+      "path": "site/zh/how/index.html",
+      "rank": "146128f4dfc91fa2d8d71c38c2fd2167f78447dae702f8419e6137956c3a7f1c",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/viewer.js",
+      "external": false,
+      "kind": "src",
+      "lang": "html",
+      "line": 25,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "1d6cf554e6d4b7752a94ee68006ca8a98c4bc08606799a9e6d248e21d09da3d8",
+      "reason": null,
+      "rung": 2,
+      "spec": "/viewer.js?v=1",
+      "truth": "site/viewer.js",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/how/index.html#f01",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 50,
+      "nth": 0,
+      "path": "site/zh/how/index.html",
+      "rank": "011ff49d70b6b201bf8d4f78ae0e2d3e42f0aa0d8a9c5ffaf75b0e3f71813d60",
+      "reason": null,
+      "rung": 4,
+      "spec": "#f01",
+      "truth": "site/zh/how/index.html#f01",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 22,
+      "nth": 0,
+      "path": "site/zh/stack/index.html",
+      "rank": "0fa1e18c2163d6e237f04080626cb723f0c54f49d9bd99a2ac0e2bb65d6391ec",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 22,
+      "nth": 0,
+      "path": "site/how/index.html",
+      "rank": "14bfb3118d33874a8171cc0adeb437f9f3720299437e9ec2b8673f363aafa1d6",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/favicon.png",
+      "external": false,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 17,
+      "nth": 0,
+      "path": "site/zh/bench/index.html",
+      "rank": "008d25320697b7d6015e4520a928232091083734d42480fa6a0a359102de50ba",
+      "reason": null,
+      "rung": 2,
+      "spec": "/favicon.png",
+      "truth": "site/favicon.png",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 202,
+      "nth": 0,
+      "path": "site/how/index.html",
+      "rank": "02ef09f745f540e5356c2e04662cb72f4af0869b1d826c954934f6402a1a13a6",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/how/index.html#honesty",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 69,
+      "nth": 1,
+      "path": "site/how/index.html",
+      "rank": "16b84909c1725b47080535756dc1f2441463231af5448ac7d61288ba72431cf8",
+      "reason": null,
+      "rung": 4,
+      "spec": "#honesty",
+      "truth": "site/how/index.html#honesty",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/bench/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 153,
+      "nth": 0,
+      "path": "site/index.html",
+      "rank": "14c99ed14f86ffc1f386ce26c09be0edf60fb13dcd328344f48a3bb27aa5de55",
+      "reason": null,
+      "rung": 2,
+      "spec": "/bench/",
+      "truth": "site/bench/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/assets/stack.svg",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 60,
+      "nth": 0,
+      "path": "site/stack/index.html",
+      "rank": "0e028394278b219d99c15b7f46b2733150c76e1d2f150aecd03ef1e800920561",
+      "reason": null,
+      "rung": 2,
+      "spec": "/assets/stack.svg",
+      "truth": "site/assets/stack.svg",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/icon-256.png",
+      "external": false,
+      "kind": "src",
+      "lang": "html",
+      "line": 31,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "10e077f7cb2310e9cba73ce7fe3bf95b2dff3645404cd1f28c3e09f159218d1e",
+      "reason": null,
+      "rung": 2,
+      "spec": "/icon-256.png",
+      "truth": "site/icon-256.png",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/how/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 19,
+      "nth": 0,
+      "path": "site/how/index.html",
+      "rank": "0d6d7abc6e7a73e18b5ece229d0767301ef3dfc9c0daa5f25c81d0396451e645",
+      "reason": null,
+      "rung": 2,
+      "spec": "https://codeeraser.dev/how/",
+      "truth": "site/how/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": "gui/ui/style.css",
+      "external": false,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 11,
+      "nth": 0,
+      "path": "gui/ui/index.html",
+      "rank": "0bfc7b3fade9d7c399aa0c43b15292fd41b475c0aedc9bb65d70d4f93220755c",
+      "reason": null,
+      "rung": 1,
+      "spec": "style.css",
+      "truth": "gui/ui/style.css",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 38,
+      "nth": 0,
+      "path": "site/index.html",
+      "rank": "12891a0ff8a9b4b269bcdfcaa5ceab082be575f1c4469f48fc5bd5f7a79d93e9",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/skymanbp/CodeEraser",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/assets/gui-structure.png",
+      "external": false,
+      "kind": "src",
+      "lang": "html",
+      "line": 102,
+      "nth": 0,
+      "path": "site/index.html",
+      "rank": "024e10690e578235b366ef3a5282be10adcd01628787ecabfdf1d7fefa3b5c05",
+      "reason": null,
+      "rung": 2,
+      "spec": "/assets/gui-structure.png",
+      "truth": "site/assets/gui-structure.png",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/assets/architecture.zh.svg",
+      "external": false,
+      "kind": "src",
+      "lang": "html",
+      "line": 155,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "00810f342ab90d1bf41029d6dd90bf20e9b353cb869f009bc4f1d63614736ac2",
+      "reason": null,
+      "rung": 2,
+      "spec": "/assets/architecture.zh.svg",
+      "truth": "site/assets/architecture.zh.svg",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/assets/methodology.zh.svg",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 456,
+      "nth": 0,
+      "path": "site/zh/how/index.html",
+      "rank": "06f01c3aa0e7c461467c0ca2efa29c8fd7aeaae8ecf372c090ed926d8ca3ca9f",
+      "reason": null,
+      "rung": 2,
+      "spec": "/assets/methodology.zh.svg",
+      "truth": "site/assets/methodology.zh.svg",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/stack/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 166,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "015636c4944808c1f92548f28a7d04be6d9d5131320b294871b56fb47b431d9c",
+      "reason": null,
+      "rung": 2,
+      "spec": "/zh/stack/",
+      "truth": "site/zh/stack/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/how/index.html#honesty",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 57,
+      "nth": 1,
+      "path": "site/zh/how/index.html",
+      "rank": "01ee4b1d844e809c4ed3972bec6f4dfd72153aa17aef0cfe6dda0e96d4f744ce",
+      "reason": null,
+      "rung": 4,
+      "spec": "#honesty",
+      "truth": "site/zh/how/index.html#honesty",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 22,
+      "nth": 0,
+      "path": "site/stack/index.html",
+      "rank": "0153cda148377e4f6749344f4add57954cbaeec9acb95be798e5e17c1c041d59",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 414,
+      "nth": 0,
+      "path": "site/how/index.html",
+      "rank": "0ff24b5a7862b8eb8976af51c79a968137257d6c5396c6c658b7ac0b308c09db",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 85,
+      "nth": 0,
+      "path": "site/stack/index.html",
+      "rank": "1819f6223274480896637d4271a43e92bc26c39afafc328042dd361d23c1eb69",
+      "reason": null,
+      "rung": 2,
+      "spec": "/",
+      "truth": "site/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/bench/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 19,
+      "nth": 0,
+      "path": "site/zh/bench/index.html",
+      "rank": "04d8febd32030f605392bf5dc220655781cb77e1d5dfe8413d2a15e706cf225c",
+      "reason": null,
+      "rung": 2,
+      "spec": "https://codeeraser.dev/zh/bench/",
+      "truth": "site/zh/bench/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/style.css",
+      "external": false,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 23,
+      "nth": 0,
+      "path": "site/how/index.html",
+      "rank": "1258cd59958ddcc5fae3ca9521e942b5b1351000359b26d38f2baed4f24bada7",
+      "reason": null,
+      "rung": 2,
+      "spec": "/style.css?v=6",
+      "truth": "site/style.css",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/bench/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 36,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "0085c45b434cb3c47281a8187fa984bd2c9ba3e246bc70cda2949ba413ebba60",
+      "reason": null,
+      "rung": 2,
+      "spec": "/zh/bench/",
+      "truth": "site/zh/bench/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 22,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "00f9012ec808f6127dc280431c67cc9e48c85f4bbf03ab983ca73227837afe9d",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "link_asset",
+      "lang": "html",
+      "line": 22,
+      "nth": 0,
+      "path": "site/bench/index.html",
+      "rank": "0ba80d2c2bd41b8cd6686f004342b858e9508fef6a4fd100524b046bcc048e6c",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/icon-256.png",
+      "external": false,
+      "kind": "src",
+      "lang": "html",
+      "line": 31,
+      "nth": 1,
+      "path": "site/zh/how/index.html",
+      "rank": "03aac8dea6e622a71b414be4fe001452a1137c87b6a93a01d62e796f2281e06a",
+      "reason": null,
+      "rung": 2,
+      "spec": "/icon-256.png",
+      "truth": "site/icon-256.png",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/how/index.html#f04",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 62,
+      "nth": 3,
+      "path": "site/how/index.html",
+      "rank": "0cb74a2bc6f0ac96688c22be444b04ff2f9f565fd49a6bf155d280a4051d6338",
+      "reason": null,
+      "rung": 4,
+      "spec": "#f04",
+      "truth": "site/how/index.html#f04",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/stack/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 34,
+      "nth": 0,
+      "path": "site/zh/how/index.html",
+      "rank": "15faa9b2b477b62758a292914f2e9ce4a259f8ab7f2b143c4fd95f34c17435f8",
+      "reason": null,
+      "rung": 2,
+      "spec": "/zh/stack/",
+      "truth": "site/zh/stack/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 53,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "0e6e61d156868549dbfe376332a32a17c18a5452a3d6330c2e7d018de5da658a",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/skymanbp/CodeEraser/releases/latest",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 21,
+      "nth": 0,
+      "path": "site/stack/index.html",
+      "rank": "0b31c7e24ff98512ea0c95ddbac66c52c2a86d6e3385e88abf21ca76113ff207",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://fonts.gstatic.com",
+      "truth": "external",
+      "verdict": "external_ok"
+    },
+    {
+      "answered": "site/zh/how/index.html#acting",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 54,
+      "nth": 0,
+      "path": "site/zh/how/index.html",
+      "rank": "16a3cd4801d9f0ebb1a19371760b692214cb45249f445a4a95dd9a2dd5024a90",
+      "reason": null,
+      "rung": 4,
+      "spec": "#acting",
+      "truth": "site/zh/how/index.html#acting",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/assets/gui-candidates.png",
+      "external": false,
+      "kind": "src",
+      "lang": "html",
+      "line": 110,
+      "nth": 0,
+      "path": "site/index.html",
+      "rank": "13a918d69209f4653f2ebfe3beb09fe138b945b31270d91c38fdce124976188a",
+      "reason": null,
+      "rung": 2,
+      "spec": "/assets/gui-candidates.png",
+      "truth": "site/assets/gui-candidates.png",
+      "verdict": "correct"
+    },
+    {
+      "answered": "site/zh/bench/index.html",
+      "external": false,
+      "kind": "href",
+      "lang": "html",
+      "line": 151,
+      "nth": 0,
+      "path": "site/zh/index.html",
+      "rank": "179d760c66296cd4dd8085774ed64e368338b6e179a2ba25faad221a35fba005",
+      "reason": null,
+      "rung": 2,
+      "spec": "/zh/bench/",
+      "truth": "site/zh/bench/index.html",
+      "verdict": "correct"
+    },
+    {
+      "answered": null,
+      "external": true,
+      "kind": "href",
+      "lang": "html",
+      "line": 621,
+      "nth": 0,
+      "path": "site/how/index.html",
+      "rank": "18f8693607b46fab33a9552be0871fa167e52c75ed0f056340157b1fadb85d52",
+      "reason": null,
+      "rung": 5,
+      "spec": "https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md",
+      "truth": "external",
+      "verdict": "external_ok"
+    }
+  ],
+  "schema": "ce.eval-lang-precision/1.1.0",
+  "site_gaps": [
+    {
+      "line": 12,
+      "path": "site/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/bench/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/bench/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/bench/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/bench/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/bench/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/bench/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/zh/how/index.html",
+      "sites": []
+    },
+    {
+      "line": 12,
+      "path": "site/stack/index.html",
+      "sites": []
+    },
+    {
+      "line": 15,
+      "path": "site/stack/index.html",
+      "sites": []
+    }
+  ],
+  "summary": {
+    "by_kind": {
+      "href": {
+        "in_corpus_truths": 16,
+        "precision": 1.0,
+        "recall": 1.0,
+        "verdicts": {
+          "correct": 16,
+          "external_ok": 7
+        }
+      },
+      "link_asset": {
+        "in_corpus_truths": 3,
+        "precision": 1.0,
+        "recall": 1.0,
+        "verdicts": {
+          "correct": 3,
+          "external_ok": 5
+        }
+      },
+      "src": {
+        "in_corpus_truths": 6,
+        "precision": 1.0,
+        "recall": 1.0,
+        "verdicts": {
+          "correct": 6
+        }
+      }
+    },
+    "by_lang": {
+      "html": {
+        "correct": 25,
+        "external_ok": 12
+      }
+    },
+    "cut": [
+      [
+        1,
+        1,
+        0,
+        1.0
+      ],
+      [
+        2,
+        20,
+        0,
+        1.0
+      ],
+      [
+        3,
+        20,
+        0,
+        1.0
+      ],
+      [
+        4,
+        25,
+        0,
+        1.0
+      ],
+      [
+        5,
+        25,
+        0,
+        1.0
+      ]
+    ],
+    "in_corpus_truths": 25,
+    "precision": 1.0,
+    "recall": 1.0,
+    "verdicts": {
+      "correct": 25,
+      "external_ok": 12
+    }
+  },
+  "universe": {
+    "r0_share": 0.061488673139158574,
+    "resolution_by": {
+      "html/href/r2": 94,
+      "html/href/r4": 46,
+      "html/href/r5": 90,
+      "html/link_asset/r1": 4,
+      "html/link_asset/r2": 22,
+      "html/link_asset/r5": 8,
+      "html/src/r1": 15,
+      "html/src/r2": 30
+    },
+    "resolution_rate": 1.0,
+    "total_sites": 309,
+    "unresolved_by": {}
+  },
+  "walk": {
+    "refused": [],
+    "refused_sites_by": {},
+    "unreached": [
+      ".claude-plugin/marketplace.json",
+      ".gitattributes",
+      ".github/dependabot.yml",
+      ".github/scripts/bootstrap_e2e.sh",
+      ".github/workflows/build-target.yml",
+      ".github/workflows/ci.yml",
+      ".github/workflows/release.yml",
+      ".gitignore",
+      ".gitmodules",
+      "cli/Cargo.lock",
+      "cli/tests",
+      "contracts/fixtures/crosscheck/DEDUP-CALIBRATION.md",
+      "contracts/fixtures/crosscheck/DIVERGENCES.md",
+      "contracts/fixtures/crosscheck/SOURCES.md",
+      "contracts/fixtures/crosscheck/c/lbaselib.c",
+      "contracts/fixtures/crosscheck/c/ldblib.c",
+      "contracts/fixtures/crosscheck/c/lfunc.c",
+      "contracts/fixtures/crosscheck/c/loadlib.c",
+      "contracts/fixtures/crosscheck/c/lzio.c",
+      "contracts/fixtures/crosscheck/cpp/include__fmt__base.h",
+      "contracts/fixtures/crosscheck/cpp/include__fmt__color.h",
+      "contracts/fixtures/crosscheck/cpp/include__fmt__format.h",
+      "contracts/fixtures/crosscheck/cpp/include__fmt__ostream.h",
+      "contracts/fixtures/crosscheck/cpp/include__fmt__std.h",
+      "contracts/fixtures/crosscheck/go/args.go",
+      "contracts/fixtures/crosscheck/go/bash_completionsV2.go",
+      "contracts/fixtures/crosscheck/go/cobra.go",
+      "contracts/fixtures/crosscheck/go/command_win.go",
+      "contracts/fixtures/crosscheck/go/completions.go",
+      "contracts/fixtures/crosscheck/java/extras__src__main__java__com__google__gson__interceptors__JsonPostDeserializer.java",
+      "contracts/fixtures/crosscheck/java/gson__src__main__java__com__google__gson__JsonDeserializationContext.java",
+      "contracts/fixtures/crosscheck/java/gson__src__main__java__com__google__gson__internal__bind__ReflectiveTypeAdapterFactory.java",
+      "contracts/fixtures/crosscheck/java/gson__src__main__java__com__google__gson__internal__sql__SqlTypesSupport.java",
+      "contracts/fixtures/crosscheck/java/metrics__src__main__java__com__google__gson__metrics__BagOfPrimitives.java",
+      "contracts/fixtures/crosscheck/lua/spec__help_spec.lua",
+      "contracts/fixtures/crosscheck/lua/spec__quick_spec.lua",
+      "contracts/fixtures/crosscheck/lua/src__luarocks__admin__cmd__make_manifest.lua",
+      "contracts/fixtures/crosscheck/lua/src__luarocks__build.lua",
+      "contracts/fixtures/crosscheck/lua/src__luarocks__cmd__upload.lua",
+      "contracts/fixtures/crosscheck/python/docs__conf.py",
+      "contracts/fixtures/crosscheck/python/src__requests__models.py",
+      "contracts/fixtures/crosscheck/python/src__requests__status_codes.py",
+      "contracts/fixtures/crosscheck/python/src__requests__structures.py",
+      "contracts/fixtures/crosscheck/python/src__requests__utils.py",
+      "contracts/fixtures/crosscheck/r/R__case.R",
+      "contracts/fixtures/crosscheck/r/R__compat-types-check.R",
+      "contracts/fixtures/crosscheck/r/R__conv.R",
+      "contracts/fixtures/crosscheck/r/R__detect.R",
+      "contracts/fixtures/crosscheck/r/R__replace.R",
+      "contracts/fixtures/crosscheck/rust/crates__ignore__src__walk.rs",
+      "contracts/fixtures/crosscheck/rust/crates__printer__src__hyperlink__mod.rs",
+      "contracts/fixtures/crosscheck/rust/crates__printer__src__lib.rs",
+      "contracts/fixtures/crosscheck/rust/crates__printer__src__util.rs",
+      "contracts/fixtures/crosscheck/rust/crates__regex__src__ban.rs",
+      "contracts/fixtures/crosscheck/typescript/packages__zod__src__v3__benchmarks__object.ts",
+      "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__locales__bg.ts",
+      "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__locales__ota.ts",
+      "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__locales__ru.ts",
+      "contracts/fixtures/crosscheck/typescript/packages__zod__src__v4__mini__index.ts",
+      "gui/src-tauri/Cargo.lock",
+      "plugin/.claude-plugin/plugin.json",
+      "plugin/.mcp.json",
+      "scripts/tsprobe/.gitignore",
+      "scripts/tsprobe/snippets/Probe.java",
+      "scripts/tsprobe/snippets/probe.R",
+      "scripts/tsprobe/snippets/probe.c",
+      "scripts/tsprobe/snippets/probe.cpp",
+      "scripts/tsprobe/snippets/probe.html",
+      "scripts/tsprobe/snippets/probe.lua",
+      "scripts/tsprobe/snippets/round2.R",
+      "scripts/tsprobe/snippets/round2.c",
+      "scripts/tsprobe/snippets/round2.cpp",
+      "scripts/tsprobe/snippets/round2.h",
+      "scripts/tsprobe/snippets/round2.java",
+      "scripts/tsprobe/snippets/round2.lua"
+    ]
+  }
+}
