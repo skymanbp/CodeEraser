@@ -8,6 +8,18 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W2-text 阶段 A（W2a′）：`resolve/1` 改以文本过线，Python / Go / C·C++ 的配置读法随阶梯进核，协议 **9.0.0**（2026-10-04；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2a′ 行、§10 W2a′ 行与 §11 第 43–49 条；`contracts/VERSIONING.md` 9.0.0 条）。
+
+- **wire**：请求退役 `segs` / `vocab` / `affixes` / `dirs` 四个键、定义包 `resolve {words, affixes}` 改为 `resolve {configs}`，故升 major；新请求是文本——`files` / `origins` 路径原文、`sites` `[lang, kind, from, spec]`（说明符原文）、`config.searchRoots`、`py.pyproject`（解码后的文档）、`lua.templates`、`go.mods` `[[路径, 原文]]`、`c {root, dbs, json, flags, responses, includes}`；应答的目标改为路径原文，加 `wanted`（核点名而请求没带的响应文件，Rust 读来再问）与 `responses`（解析键的输入）；cap 改按字符计（> 2^28 具名降级 `resolve_too_large`）。golden 机器重写：`resolve/golden` 六对按文本形、`tables` 第 2 对的 `resolve` 键、`handshake/wire-errors` 三条随 major 改拼，其余只动 `proto` 与 hello 的 `tablesDigest`。
+- **核**：新 `CE.Resolve.{Str,Chars,Cmdline,Flags,CompDb,Inspect,Tables}`，四个阶梯改在字符串上走；go.mod 读法、pyproject 的键与 `dep_name`、编译数据库的三种分词与 MSVC 判定、旗标链、响应文件展开与相对化都在核；字符串语义照抄 Rust（`str::lines`、Unicode White_Space 的 `trim`、由 rustc 逐码点生成的 `is_alphanumeric` 区间表、按 UTF-8 字节的长度）；`CE.Resolve.Vocab` 退役。
+- **Rust**：`graph/resolve/{lower,tokens,intern,facts}.rs` 与 `graph/{gomod,cmdline,compdb,compdb_flags}.rs` 删除（八个文件 44,681 B），`roots.rs` 的 pyproject 读法删除；新 `graph/resolve/request.rs` 读出原文装进请求。留在 Rust 的四件（§11 第 44 条）：TOML / JSON 解码、`lua_path.rs`（取 CST 字面量）、`c_head.rs`（走查键的输入）、读文件与 clangd 三探名找库。
+- **差分门**：删之前五份读法按 92e728b1 原样冻进测试子仓 `unit/graph/oracle_cfg/`（只改每份末尾单元测试的挂载路径一行），九条配置腿经请求键 `inspect` 逐题比冻结读法：字符类全部码点 + 其余每腿 10,000 题、两颗种子，真 go.mod 5 份、真 pyproject 23 份变异，不一致 0；阶梯差分（冻结预言机与驱动一字不改）两颗种子各 c 3,164 / cpp 8,836、c 3,171 / cpp 8,829，go / lua / python 各 12,000，真树 17 棵强制弧 0 差，不一致 0。
+- **切换门**：92e728b1 release + 核 对 本车道 release + 核，十个对拍语料、自仓归档与六棵真树，graph --sites / deadcode / structure / check / join 的 json：identical 170、differing 0。
+- **精度册退役并重生成**（两个提交）：`ANSWERED_BY` 的文件动了，第一个提交删档、考题翻回 `Audited`，第二个提交在 c4eac446 的干净树上逐份重生成：十一份与退役前只差 `generated_from.commit`（6227189b → c4eac446），考题翻回 `Scored`。
+- **代价**（`docs/PERF-BUDGET.md` 新节，release ABAB ×7，92e728b1 对车道终树，六棵树）：暖 `ce check` −3.8 % 到 +7.3 %（预算 +15 % 内），其余各面 −5.0 % 到 +7.8 %；`resolve.request` 字节 self 22,585 → 43,578、koreader 151,000 → 178,851；PreToolUse 探针不问 `resolve/1`。
+- **门**：`cabal test` 956 ok PASS（每个核 `.hs` ≤ 290 行，最长 287）；fmt、clippy `-D warnings`（cli 与 gui `--locked`）清；lib 542 passed / 14 ign；查重主根 33（预算 33）、子仓 90（预算 90）——新码先长出的克隆块（主 36、子 100）全部改写消掉，对基线行集对拍无新行；scan 主 110 warn / 子 57 warn、0 fail，对基线新增的只有两条 fn-params 警告（核 `CompDb.expand`、`Flags.addDirectory` 照抄 Rust 原形的参数个数，子仓冻结拷贝同样报）；具名重立（对 09e7f5c0 / 44c8b12 基线超容差）：主 `core/app/CE/Resolve/CIndex.hs` 266（cap 252）、`core/app/CE/Resolve.hs` 114（99）、`core/app/CE/Resolve/Py.hs` 147（121）、`core/test/ResolveProps.hs` 113（111）、`cli/src/graph/resolve/mod.rs` 185（161）、`cli/src/graph/compdb_find.rs` 134（125）、`docs/PERF-BUDGET.md` 706（664）、`contracts/VERSIONING.md` 691（688）、`CHANGELOG.md` 459（457），子 `it/unit_mounts.rs` 226（213）。
+- **语言条**（§10 量法）：Rust 2,393,396 → 2,355,295 B、Haskell 1,706,269 → 1,738,863 B，41.62 % → 42.47 %，差 687,127 → 616,432 B；Rust 删 46,245 B、加 8,144 B（净 −38,101）。
+
 **无默认档位变更。** 算法轨 v2.33 修正案「文本可过本机线」（2026-10-04；只改文档，判决代码、wire、proto 与 golden 一个字节不动，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §3、§6、§7、§10 与 §11 第 39–42 条）：W2a 与 W3 落地后 Rust 两波只净减约 7 KB（W2a −4,748 B、W3 −2,213 B）——每个搬走的算法都换来同样大小的降胶水（字符串 → 驻留 id → 请求 → 应答 → 字符串）；用户 AskUserQuestion 三选一裁「放开「只传整数」的规定」。
 
 - **线规则**（取代「整数过线」与 §5.9.2 的「需源文本或行级内容过 wire 即测量侧」一票否决）：测量侧从树上读到的文本（仓库相对路径、文件与目录名、import / include / require 说明符、配置值、单元键与符号名、源文本片段）可在读它的算法住在核里时以 UTF-8 JSON 字符串送核，核也可答文本；Rust 只做碰世界的事并交出读到的东西，只有 tree-sitter 能做的词法留 Rust，纯字符串的词法是算法、可以搬；每个开始带文本的族在自己的 proto 步里带，版本号由落码车道定。

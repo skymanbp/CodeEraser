@@ -126,10 +126,13 @@ W5 之后仍未达标，再议余下各项与 GUI（§11 第 9 条）。
 | W2a（车道 `lane/v233-w2`，变基到 093aede4 之后，四个阶梯的查找进核） | 2,395,609（`cli/src` 2,370,000 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,554,411（`core/app` 1,017,058 + `core/test` 535,756 + `scripts/tsprobe` 1,597） | 39.35 % | 841,198 | 本车道终树，上述量法；对 093aede4（上一行）Rust −4,748、Haskell +85,534（`core/app` +60,116、`core/test` +25,418） |
 | W3（车道 `lane/v233-w3`，变基到 a0198c2f 之后，四组：候选 / 排序 / 候选生成 / fourclass L1） | 2,393,396 | 1,706,269 | 41.62 % | 687,127 | 本车道终树，上述量法；对 a0198c2f（上一行）Rust 删 66,548 B、胶水加 64,335 B（净 −2,213），核 app 净 +90,095、test 净 +63,340（§11 第 37 条） |
 | 68eda600（main，W3 落地之后；文本过线修正案的基点） | 2,393,396（`cli/src` 2,367,787 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,706,269（`core/app` 1,103,850 + `core/test` 600,822 + `scripts/tsprobe` 1,597） | 41.62 % | 687,127 | `v233_s0_scratch/langbar.py HEAD` 在本提交上的读数（2026-10-04）；与上一行同值（W3 车道终树即落地树） |
+| W2a′（车道 `lane/v233-w2-text`，W2-text 阶段 A：`resolve/1` 以文本过线，Python / Go / C·C++ 的配置读法进核） | 2,355,295（`cli/src` 2,329,686 + `gui/src-tauri` 17,481 + `scripts/tsprobe` 8,128） | 1,738,863（`core/app` 1,138,585 + `core/test` 598,681 + `scripts/tsprobe` 1,597） | 42.47 % | 616,432 | 本车道终树，上述量法；对 92e728b1（上一行之后的修正案提交，`.rs` / `.hs` 与上一行同）Rust 删 46,245 B、加 8,144 B（净 −38,101），核 `core/app` 净 +34,735、`core/test` 净 −2,141 |
 
 注：草案把 `scripts/tsprobe` 的两种扩展名合记在 Rust 名下（8,128 + 1,597 ≈ 10 KB）；按扩展名分开后 Haskell 多 1,597 B。e35fde53 与 40ab1a4f 之间 `.rs` / `.hs` 无改动，两行是同一份字节的两种记法。
 
 注（W2a）：Rust 只净减 4,748 B——删掉的四个阶梯的六个文件 37,908 B（`ladder/py.rs` / `lua.rs` / `go.rs` / `c.rs` / `c_search.rs` / `c_index.rs`），换来的降与接线 33,160 B（`graph/resolve/` 五个文件 24,404、`graph/owed.rs` 3,428、其余十三个文件的改动 5,328——`ladder/outcome.rs` 是从 `ladder/mod.rs` 搬出的原码、与它合计——其中差分门的 `#[cfg(test)]` 挂载与说明 279 B）。查找本身在 Rust 里很紧凑，而把路径、站点与配置降成段 id 的那一层与它同量级；W2 行的「≈ −145」按这个比例看要大幅下调（§11 第 24 条）。
+
+注（W2a′）：Rust 净减 38,101 B——删掉 W2a 留下的整层降与三份配置读法：`graph/resolve/lower.rs` 10,058、`compdb_flags.rs` 9,611、`compdb.rs` 7,595、`cmdline.rs` 6,555、`resolve/facts.rs` 4,411、`resolve/tokens.rs` 3,073、`gomod.rs` 2,057、`resolve/intern.rs` 1,321（八个文件 44,681 B），`roots.rs` 的 pyproject 读法 −1,547、`tables/pack.rs` −17；加回的是送文本的那一层：新 `graph/resolve/request.rs` 5,222（读出原文并装进请求）、`resolve/mod.rs` +1,461（`wanted` 回路与 `responses`）、`compdb_find.rs` +853（响应文件名改问核、`root_text`）、`graph/mod.rs` +498（冻结读法的 `#[cfg(test)]` 挂载与说明）、`corelink.rs` +110（proto 9.0.0）。与 W2a（删 37,908、补 33,160）对照：线上能带文本之后，降胶水从「与被搬走的查找同量级」缩到被删字节的约六分之一（§11 第 39 条说的是只许整数过线时的情形）。核这边 `core/app` 新增 `Str` / `Chars` / `Cmdline` / `Flags` / `CompDb` / `Inspect` / `Tables` 七个模块（44,960 B），`Vocab` 退役、`Contract` / `World` / `Request` / `Cost` 随整数降一起变小；`core/test` 的 `ReferenceResolveGen` 不再自己降（−3,208）。
 
 ## 11. 拍板记录
 

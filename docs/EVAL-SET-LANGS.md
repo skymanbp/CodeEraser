@@ -719,4 +719,5 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 算法轨 v2.33 W2-text 阶段 A 让 `resolve/1` 以文本过线（proto 9.0.0），并把 go.mod、`pyproject.toml` 的键、编译数据库的命令行 / 旗标 / 响应文件读法搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 43–49 条）：`cli/src/graph/resolve/` 的降删掉、改为文本请求，`core/app/CE/Resolve(.hs|/)` 多出这些读法——两处都在 C 与 Lua 考题的 `ANSWERED_BY` 里（子仓 `it/eval_lang_parts/exams.rs`；C 的清单去掉已删的 `cli/src/graph/cmdline.rs`，读法如今在 `core/app/CE/Resolve/`），而十一份精度册共读的出处门要求它们的 `generated_from` 晚于每个被引路径的最后一次改动。差分门（阶梯与配置读法两组）全同，判决字节不应移动；重生成按 W2a 那次的两提交走。
 
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
-- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`；读数与退役前逐份比对，记在下一行。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
+- **读数**：十一份在 c4eac446 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（6227189b → c4eac446），判决、真值、宇宙台账与两段 RG1 处置逐字节同。

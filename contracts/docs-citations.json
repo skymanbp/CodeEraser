@@ -2320,11 +2320,6 @@
     "line": 46,
     "text": "\\  Control.Applicative Control.Arrow Control.Category Control.Concurrent\\n\\"
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Resolve/C.hs|76b5bc4d50607040|0": {
-    "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 3,
-    "text": "-- §8 row C / C++; moved from cli/src/graph/ladder/c.rs in plan v2.33"
-  },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
     "line": 135,
@@ -3675,12 +3670,6 @@
     "end": 128,
     "text": "fn auto_targets<'f>("
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cmdline.rs|5a84d23856e8b53d|0": {
-    "target": "../../../cli/src/graph/cmdline.rs",
-    "line": 1,
-    "end": 13,
-    "text": "//! Compiler command and response-file argv, read without consulting the host."
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/compdb_find.rs|6da64bb91fd1a64f|0": {
     "target": "../../../cli/src/graph/compdb_find.rs",
     "line": 1,
@@ -3689,21 +3678,9 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/compdb_find.rs|cfb0b78a9e00a246|0": {
     "target": "../../../cli/src/graph/compdb_find.rs",
-    "line": 24,
-    "end": 28,
+    "line": 25,
+    "end": 29,
     "text": "pub const PROBES: [&str; 3] = ["
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/compdb_flags.rs|256caa3970d55395|0": {
-    "target": "../../../cli/src/graph/compdb_flags.rs",
-    "line": 43,
-    "end": 56,
-    "text": "pub struct Chain {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/compdb_flags.rs|e623b80996f0a890|0": {
-    "target": "../../../cli/src/graph/compdb_flags.rs",
-    "line": 1,
-    "end": 28,
-    "text": "//! One invocation's explicit include chain, classified before the ladder searches it."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode.rs|01ba091166cd9815|0": {
     "target": "../../../cli/src/graph/deadcode.rs",
@@ -4366,17 +4343,17 @@
     "end": 10,
     "text": "//! What the edge passes do when the core cannot answer resolve/1 (plan"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/resolve/lower.rs|b565cd04fe6471dc|0": {
-    "target": "../../../cli/src/graph/resolve/lower.rs",
-    "line": 1,
-    "end": 10,
-    "text": "//! One resolve/1 request, lowered (plan v2.33 wave W2a): the walked"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/resolve/mod.rs|1bae1af6a73bedf1|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/resolve/mod.rs|cf4afd2ca7e3e108|0": {
     "target": "../../../cli/src/graph/resolve/mod.rs",
     "line": 1,
-    "end": 14,
-    "text": "//! The reference ladders the core holds (plan v2.33 wave W2a; design"
+    "end": 12,
+    "text": "//! The reference ladders the core holds (plan v2.33 wave W2a; on text"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/resolve/request.rs|2f1b2fbbb5664b6b|0": {
+    "target": "../../../cli/src/graph/resolve/request.rs",
+    "line": 1,
+    "end": 10,
+    "text": "//! One resolve/1 request (plan v2.33 W2-text, proto 9.0.0): what this"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/roots_ts.rs|507bce5c57ffc6d5|0": {
     "target": "../../../cli/src/graph/roots_ts.rs",
@@ -5052,164 +5029,183 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve.hs|238ecb23ced633ef|0": {
     "target": "../../../core/app/CE/Resolve.hs",
     "line": 1,
-    "end": 14,
+    "end": 19,
     "text": "{-# LANGUAGE OverloadedStrings #-}"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|1661918a733fb5bd|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 18,
-    "end": 21,
+    "line": 19,
+    "end": 22,
     "text": "--   R5 External: the system form with no hit is a toolchain or system"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|226d9b8ba073e6a9|0": {
-    "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 41,
-    "text": ", if null chains then oneOf (hits [inScope w (d <> [word w WInclude]) name | d <- ancestors (parentOf w from)]) 4 else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|3306dc33eb36e5f5|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 6,
-    "end": 7,
+    "line": 7,
+    "end": 8,
     "text": "--   R1 the including file's own directory, for the quoted form only —"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|360f2c87634a4a19|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|53f78d5a6ea09632|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 39,
-    "text": ", oneOf (hits [inScope w r name | r <- ixRoots ix]) 2"
+    "line": 41,
+    "text": ", oneOf (Set.unions [along w (ch c) system name (stack (ch c) (ixParents ix !! c) from) | c <- Set.toList chains]) 3"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|70b83b64cd1658f5|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|84943b1a8ecd93be|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
     "line": 40,
-    "text": ", oneOf (IS.toList (IS.fromList (concatMap database chains))) 3"
+    "text": ", oneOf (declared env name) 2"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|863a8c6377bafa81|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 15,
-    "end": 17,
+    "line": 16,
+    "end": 18,
     "text": "--   R4 the `include` directory beside the including file's own"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|a9289ba84ba3463f|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|a0115bf1680c06c5|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 47,
-    "text": "own = not system && (null chains || any (chOwn . (ixChains ix !)) chains)"
+    "line": 50,
+    "text": "own = not system && (Set.null chains || any (chOwnDir . ch) (Set.toList chains))"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|ac760effb18b6f73|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 11,
-    "end": 14,
+    "line": 12,
+    "end": 15,
     "text": "--   R3 the compile database (CE.Resolve.CIndex): the chains the file"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|ae00bb20fc9108be|0": {
+    "target": "../../../core/app/CE/Resolve/C.hs",
+    "line": 42,
+    "text": ", if Set.null chains then includeRung else Nothing"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/C.hs|bb225c7252296430|0": {
     "target": "../../../core/app/CE/Resolve/C.hs",
-    "line": 8,
-    "end": 10,
+    "line": 9,
+    "end": 11,
     "text": "--   R2 the declared roots, `[graph.search_roots] c` (C++ shares the"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CIndex.hs|503d34daa89f29e4|0": {
-    "target": "../../../core/app/CE/Resolve/CIndex.hs",
-    "line": 180,
-    "end": 191,
-    "text": "-- | The hits of the first non-empty step along one chain: the quoted"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CIndex.hs|e22a805ba93c68e8|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CIndex.hs|07e71069952a7447|0": {
     "target": "../../../core/app/CE/Resolve/CIndex.hs",
     "line": 1,
-    "end": 19,
-    "text": "-- | What the compile databases say about each C-family file (plan"
+    "end": 15,
+    "text": "-- | What the compile databases say about each C-family file (plan v2.30"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CIndex.hs|f4aeeb1c116b0851|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CIndex.hs|4040c5d3e23c1a9c|0": {
     "target": "../../../core/app/CE/Resolve/CIndex.hs",
-    "line": 210,
-    "end": 217,
-    "text": "-- | The chains a file compiles under: its own seats, else the chains"
+    "line": 180,
+    "end": 185,
+    "text": "-- | `chains_of`: the chains a file compiles under — its own seats, else"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/CIndex.hs|edd0e614cf23bf69|0": {
+    "target": "../../../core/app/CE/Resolve/CIndex.hs",
+    "line": 215,
+    "end": 228,
+    "text": "-- | `c_search::along`: the hits of the first non-empty step along one"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Cmdline.hs|5025afb4c14ee8e0|0": {
+    "target": "../../../core/app/CE/Resolve/Cmdline.hs",
+    "line": 1,
+    "end": 19,
+    "text": "-- | Compiler command and response-file argv, read without consulting the"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Flags.hs|6d83e9001a26f162|0": {
+    "target": "../../../core/app/CE/Resolve/Flags.hs",
+    "line": 48,
+    "end": 58,
+    "text": "-- | An invocation's placed directories: quoted-only, ordinary, then"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Flags.hs|9ab546ec09714b71|0": {
+    "target": "../../../core/app/CE/Resolve/Flags.hs",
+    "line": 1,
+    "end": 34,
+    "text": "-- | One invocation's explicit include chain, classified before the ladder"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Go.hs|04ec30936adbe5a2|0": {
     "target": "../../../core/app/CE/Resolve/Go.hs",
-    "line": 118,
-    "end": 122,
+    "line": 127,
+    "end": 131,
     "text": "-- | R3: the stdlib table, or a dotted head with no local match."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Go.hs|35a1e7d42b8c620a|0": {
     "target": "../../../core/app/CE/Resolve/Go.hs",
-    "line": 93,
-    "end": 109,
+    "line": 95,
+    "end": 111,
     "text": "-- | R2: the importer's module's replace directives, the shortest"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Go.hs|8de2f27b69f8a6ad|0": {
     "target": "../../../core/app/CE/Resolve/Go.hs",
-    "line": 111,
-    "end": 116,
+    "line": 120,
+    "end": 125,
     "text": "-- | A directory is an importable package while it directly holds an"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Go.hs|aa3929f3bfa1cd2f|0": {
     "target": "../../../core/app/CE/Resolve/Go.hs",
-    "line": 72,
-    "end": 91,
+    "line": 71,
+    "end": 90,
     "text": "-- | R1: the longest module prefix owns the import; the remainder names"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Lua.hs|6da05dea62db134b|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Lua.hs|47007e0a2aca9f5d|0": {
     "target": "../../../core/app/CE/Resolve/Lua.hs",
-    "line": 45,
-    "end": 53,
-    "text": "| kind == kindRequire && stdlibName = AExternal 3"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Lua.hs|8978a013c1f951e7|0": {
-    "target": "../../../core/app/CE/Resolve/Lua.hs",
-    "line": 105,
-    "end": 112,
-    "text": "-- | R2: the path beside the loading file, then under the tree root; the"
+    "line": 83,
+    "end": 90,
+    "text": "-- | R2: `paths::beside_or_root` — beside the loading file, then under the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Lua.hs|8fa513ea746c692e|0": {
     "target": "../../../core/app/CE/Resolve/Lua.hs",
-    "line": 55,
-    "end": 67,
+    "line": 52,
+    "end": 65,
     "text": "-- | R1: the module's path in every search directory the requiring file"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Lua.hs|f40aa6b5f3b9e9b5|0": {
+    "target": "../../../core/app/CE/Resolve/Lua.hs",
+    "line": 47,
+    "end": 50,
+    "text": "| kind == kindRequire && Set.member spec luaStdlib = AExternal 3"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|10ab3472312837d4|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 85,
+    "line": 86,
     "end": 95,
     "text": "-- | Longest strict prefix of the dotted path whose package __init__.py"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|1f65e9d53fe97c3a|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
     "line": 97,
-    "end": 107,
+    "end": 104,
     "text": "-- | R4: stdlib table or pyproject-declared dependency ⇒ External."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|2050c2a983c20189|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 11,
-    "end": 13,
+    "line": 12,
+    "end": 14,
     "text": "-- Within one root the package/module order is normative (CPython's"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|5d08e0d0fac0ffe1|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|444c1586d9304d7d|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 60,
-    "end": 83,
-    "text": "-- | R2 / R3 shared frame: one candidate rule against every source"
+    "line": 106,
+    "end": 109,
+    "text": "-- | `source_roots`: \"\", \"src\", the declared directories, consecutive"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|a634a48eb5152900|0": {
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|99f10c6974ffaa19|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 69,
-    "end": 79,
-    "text": "-- | One dotted module under one root: package before module (CPython"
+    "line": 76,
+    "end": 84,
+    "text": "-- | One dotted module under one root: package before module."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|d896287e4c730069|0": {
+    "target": "../../../core/app/CE/Resolve/Py.hs",
+    "line": 66,
+    "end": 84,
+    "text": "-- | R2 / R3 shared frame: one candidate rule against every source root;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|eeb3dd8d11ce8500|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 14,
-    "end": 15,
+    "line": 15,
+    "end": 16,
     "text": "-- `importlib(var)` / `__import__` dynamism never reaches this ladder:"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|ef9b59b4a6e50b66|0": {
-    "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 44,
-    "text": "roots = [word w WEmpty] : [word w WSrc] : map (map fromInteger) (pyRoots facts)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|fb5f4934cccb39e9|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 46,
-    "end": 58,
+    "line": 49,
+    "end": 64,
     "text": "-- | R1: dots climb, remainder walks down, package order normative."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Text/Deadcode.hs|094f3a80564c2753|0": {
@@ -6041,10 +6037,10 @@
     "end": 78,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|b54b8ae2f82f65a3|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|8cc7b6446f0dbf60|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"8.5.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"9.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -8760,8 +8756,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 348,
-    "end": 350,
+    "line": 364,
+    "end": 366,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -11648,10 +11644,10 @@
     "line": 72,
     "text": "fn the_measured_files_are_dense_in_path_order_under_their_directories() {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../contracts/fixtures/arch/golden.ndjson|aba8dc88c35ffb9c|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../contracts/fixtures/arch/golden.ndjson|f90ba52102ad7630|0": {
     "target": "../../../contracts/fixtures/arch/golden.ndjson",
     "line": 13,
-    "text": "{\"proto\":\"8.0.0\",\"type\":\"arch.request\",\"id\":7,\"files\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,15,1]],\"dirs\":[[0,-1],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0]],\"edges\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,0,1]],\"pkgEdges\":[]}"
+    "text": "{\"proto\":\"9.0.0\",\"type\":\"arch.request\",\"id\":7,\"files\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,15,1]],\"dirs\":[[0,-1],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[8,0],[9,0],[10,0],[11,0],[12,0],[13,0],[14,0],[15,0]],\"edges\":[[0,1,1],[1,2,1],[2,3,1],[3,4,1],[4,5,1],[5,6,1],[6,7,1],[7,8,1],[8,9,1],[9,10,1],[10,11,1],[11,12,1],[12,13,1],[13,14,1],[14,0,1]],\"pkgEdges\":[]}"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch.hs|e06a4723c0a12b56|0": {
     "target": "../../../core/app/CE/Arch.hs",

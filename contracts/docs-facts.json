@@ -410,7 +410,7 @@
       "id": "ver:anchor#v",
       "source": "cli/tests/it/facts/ver.rs::ANCHOR",
       "tier": "linked",
-      "value": "8.0.0"
+      "value": "9.0.0"
     },
     {
       "id": "ver:ce#v",
@@ -452,7 +452,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "8.5.0"
+      "value": "9.0.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",

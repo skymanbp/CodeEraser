@@ -13,7 +13,7 @@
 // read them at their old paths, and the differential gate holds the
 // core's readers against them (plan v2.33 W2-text).
 #[cfg(test)]
-#[path = "../../tests/unit/graph/oracle_cfg/mod.rs"]
+#[path = "../../tests/unit/graph/frozen_cfg.rs"]
 pub(crate) mod oracle_cfg;
 #[cfg(test)]
 pub(crate) use oracle_cfg::{cmdline, compdb, compdb_flags, gomod};
