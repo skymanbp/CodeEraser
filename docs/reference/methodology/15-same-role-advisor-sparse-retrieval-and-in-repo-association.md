@@ -89,7 +89,7 @@ writes no rows ([store.rs:12-24](../../../cli/src/similar/store.rs#L12),
 [store.rs:79](../../../cli/src/similar/store.rs#L79)). The cost, measured on this tree of 687
 files: cold `ce dedup` 5.2 → 8.4 s (0.65 s of a sixth parse, ≈1.5 s of random-key posting
 writes that five layouts could not beat), warm unchanged, database 10.7 → 18.0 MB
-([PERF-BUDGET.md:248-267](../../PERF-BUDGET.md#L248)).
+([PERF-BUDGET.md:252-271](../../PERF-BUDGET.md#L252)).
 
 ### 3. Ranking — integer BM25, one road for the instrument and the product
 

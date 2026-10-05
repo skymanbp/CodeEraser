@@ -3906,72 +3906,6 @@
     "end": 165,
     "text": "pub fn decode_refs(value: &str) -> String {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|25b0a0ed3f184a63|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 1,
-    "end": 10,
-    "text": "//! Java rungs (plan v2.30 step 3; design booklet §8 row Java; the"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|2ba63c3b7a1f304b|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 229,
-    "end": 234,
-    "text": "/// A simple type name in the JLS 6.4.1 order: a member type the"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|731209d92c9c4e81|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 154,
-    "end": 160,
-    "text": "fn class_of(&self, segs: &[&str], exact: Rung, nested: Rung) -> Option<Outcome> {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|776dbb2dfc646103|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 96,
-    "end": 102,
-    "text": "/// is a cut of it (plan v2.30 step 5b): a declaration folded over lines"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|8a5117df77f661f6|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 185,
-    "end": 195,
-    "text": "fn package_dir(&self, package: &str) -> Option<Outcome> {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|a9e63e38a1c0254f|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 206,
-    "end": 227,
-    "text": "/// R3, then R4 for what no rung holds."
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java.rs|ccc8d2e20b08184a|0": {
-    "target": "../../../cli/src/graph/ladder/java.rs",
-    "line": 173,
-    "end": 176,
-    "text": "/// Whether `f` declares the top-level type `class`: by the types"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_inherit.rs|f0466a3933088db0|0": {
-    "target": "../../../cli/src/graph/ladder/java_inherit.rs",
-    "line": 1,
-    "end": 14,
-    "text": "//! The inheritance rung of a simple type name — java.rs's child (plan"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_pick.rs|2808a808380a9bbc|0": {
-    "target": "../../../cli/src/graph/ladder/java_pick.rs",
-    "line": 86,
-    "end": 91,
-    "text": "pub(super) fn jdk(segs: &[&str]) -> Outcome {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_pick.rs|7bfd50639e5c1947|0": {
-    "target": "../../../cli/src/graph/ladder/java_pick.rs",
-    "line": 11,
-    "end": 19,
-    "text": "/// A name the referencing file declares itself reaches no other file:"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_sets.rs|1c275b690af7b668|0": {
-    "target": "../../../cli/src/graph/ladder/java_sets.rs",
-    "line": 29,
-    "end": 33,
-    "text": "pub fn visible(from: &str, candidate: &str) -> bool {"
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/java_types.rs|deb91383df4e80e1|0": {
     "target": "../../../cli/src/graph/ladder/java_types.rs",
     "line": 1,
@@ -4093,8 +4027,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 193,
-    "end": 197,
+    "line": 194,
+    "end": 198,
     "text": "// The sentinel is never walked, and the scan-only arm (plan"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -5124,6 +5058,72 @@
     "line": 71,
     "end": 90,
     "text": "-- | R1: the longest module prefix owns the import; the remainder names"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Java.hs|3831cb1e6c16f3c3|0": {
+    "target": "../../../core/app/CE/Resolve/Java.hs",
+    "line": 74,
+    "end": 87,
+    "text": "-- | `header_name`: the import the header read on the site's line, when"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Java.hs|b0d74f836ab69aa5|0": {
+    "target": "../../../core/app/CE/Resolve/Java.hs",
+    "line": 5,
+    "end": 10,
+    "text": "-- the same name). Java names a class by its package, and a package is"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Java.hs|c6b5fe8cc3e8d801|0": {
+    "target": "../../../core/app/CE/Resolve/Java.hs",
+    "line": 89,
+    "end": 96,
+    "text": "-- | `type_ref`: R3, then R4 for what no rung holds."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaAt.hs|19a9dd7193b57a23|0": {
+    "target": "../../../core/app/CE/Resolve/JavaAt.hs",
+    "line": 46,
+    "end": 63,
+    "text": "-- | `declared`: the unit's own view of a simple name — a single-type"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaAt.hs|4d029f8455ca2f95|0": {
+    "target": "../../../core/app/CE/Resolve/JavaAt.hs",
+    "line": 24,
+    "end": 32,
+    "text": "-- | `class_of`: the file declaring the class a fully qualified name"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaAt.hs|5e99d62bdabf79df|0": {
+    "target": "../../../core/app/CE/Resolve/JavaAt.hs",
+    "line": 34,
+    "end": 44,
+    "text": "-- | `package_dir`: `import a.b.*` — the one directory holding the"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaInherit.hs|874a931b9446b6f9|0": {
+    "target": "../../../core/app/CE/Resolve/JavaInherit.hs",
+    "line": 1,
+    "end": 15,
+    "text": "-- | The inheritance rung of a simple Java type name (plan v2.33 W2-text"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaPick.hs|535e65779a76da4f|0": {
+    "target": "../../../core/app/CE/Resolve/JavaPick.hs",
+    "line": 61,
+    "end": 75,
+    "text": "-- | `index_of` filtered by `visible`: the package's files `from` can see,"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaPick.hs|6841168f55e8cefb|0": {
+    "target": "../../../core/app/CE/Resolve/JavaPick.hs",
+    "line": 36,
+    "end": 59,
+    "text": "-- | The headers by path, every walked header's file by the package it"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaPick.hs|89f5acc37358d4e4|0": {
+    "target": "../../../core/app/CE/Resolve/JavaPick.hs",
+    "line": 77,
+    "end": 82,
+    "text": "-- | `own_unit`: a name the referencing file declares itself reaches no"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/JavaPick.hs|e7a81ca5c5ebb5b2|0": {
+    "target": "../../../core/app/CE/Resolve/JavaPick.hs",
+    "line": 109,
+    "end": 117,
+    "text": "-- | `jdk`: External when some prefix of the dotted name is a package the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Lua.hs|18d24ea713f31238|0": {
     "target": "../../../core/app/CE/Resolve/Lua.hs",
@@ -8762,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 369,
-    "end": 371,
+    "line": 374,
+    "end": 376,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -8885,13 +8885,13 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a2c3821eca59417f|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 189,
-    "end": 198,
+    "line": 193,
+    "end": 202,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a6700d086855d460|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 54,
+    "line": 58,
     "text": "| 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|43e5c1812a48317d|0": {
@@ -10039,8 +10039,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 248,
-    "end": 267,
+    "line": 252,
+    "end": 271,
     "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
@@ -10735,7 +10735,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 108,
+    "line": 109,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11002,7 +11002,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 109,
+    "line": 110,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
