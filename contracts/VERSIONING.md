@@ -28,6 +28,11 @@
 > 读不到的不带；定义包的 `resolve.configs` 加 `DESCRIPTION`（hello 的 `tablesDigest` 随之变）。应答加性 `packages` `[[包目录, [代码文件…]]]`：每个读得出包名的
 > `DESCRIPTION` 的目录与它的代码（`Collate` 列出的 `R/` 文件，否则 `R/` 下直属的 R 文件），即 `ce deadcode` 的声明目标与包结点展开的成员；降级应答为空表。
 > `inspect` 加 `description`。golden：`resolve/golden` 加第 7 对（R），其余只动 hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs`。
+> **9.0.0 同版加性**（Java 阶梯进核，W2-text 阶段 C，2026-10-05；设计册 §6 W2b 行与 §11 第 54–57 条；9.0.0 未发布，同上不另升版号）：
+> `sites` 的语言加 Java（码 18，站点种类 `import` / `import_star` / `type_ref`），Java 的站点行多带第五列行号 `[lang, kind, from, spec, line]`（核按行找头部读到的那条 import
+> 与包着站点的类型），缺行号的 Java 站点按名拒绝；请求加性 `java.headers` `[[路径, 包, [import…], [type…]]]`——走查读到的每个 Java 文件头，按路径严格升序，
+> import = `[名字, star, static, 行]`，type = `[名字, [父类型…], [成员类型…], 首行, 末行]`；JDK 名表仍是定义包的 `ladder.java`，不另带，`tablesDigest` 不动。
+> golden：`resolve/golden` 加第 8 对（Java 十五个站点：R1–R3 每一级、包目录、JDK 的 External、站外、本单元与没有阶梯的种类）与第 9 对（缺行号的 Java 站点按名拒绝），其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

@@ -5,6 +5,7 @@
 -- read, as text — the walked paths, the sites' specifiers as the
 -- detector produced them, the `ce.toml` values the ladders read, and
 -- the configuration files: each go.mod's and each R DESCRIPTION's text,
+-- every walked Java file's header as the walk read it (CE.Resolve.JavaHeader),
 -- the root `pyproject.toml` and every `compile_commands.json` as the
 -- decoded document (format decoding is a library read on that side;
 -- every rule applied to the document is here), each `compile_flags.txt`
@@ -20,6 +21,7 @@ module CE.Resolve.Request (
   searchRoots,
 ) where
 
+import CE.Resolve.JavaHeader (JHeader, headerRow)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import qualified Data.Map.Strict as M
 
@@ -33,13 +35,17 @@ data ResolveReq = ResolveReq
   , rqLuaTemplates :: [(String, String)]
   , rqGoMods :: [(String, String)]
   , rqDescriptions :: [(String, String)]
+  , rqJavaHeaders :: [(String, JHeader)]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
 
 -- | `[lang, kind, from, spec]`: the language and site-kind codes, the
--- index of the site's file in files ++ origins, the specifier.
-data Site = Site {sLang :: Integer, sKind :: Integer, sFrom :: Int, sSpec :: String}
+-- index of the site's file in files ++ origins, the specifier; a Java
+-- site adds its 1-based source line (`[lang, kind, from, spec, line]`):
+-- the Java rungs read the header's import on that line and the types
+-- enclosing it.
+data Site = Site {sLang :: Integer, sKind :: Integer, sFrom :: Int, sSpec :: String, sLine :: Maybe Int}
 
 -- | One database a probe found: the probed directory, the probe's index
 -- (0 `compile_commands.json`, 1 `build/compile_commands.json`, 2
@@ -67,6 +73,7 @@ instance FromJSON ResolveReq where
     lua <- o .:? "lua"
     go <- o .:? "go"
     r <- o .:? "r"
+    java <- o .:? "java"
     ResolveReq
       <$> o .: "id"
       <*> o .:? "files" .!= []
@@ -77,6 +84,7 @@ instance FromJSON ResolveReq where
       <*> maybe (pure []) (withObject "lua" (\l -> l .:? "templates" .!= [])) lua
       <*> maybe (pure []) (withObject "go" (\g -> g .:? "mods" .!= [])) go
       <*> maybe (pure []) (withObject "r" (\d -> d .:? "descriptions" .!= [])) r
+      <*> maybe (pure []) (withObject "java" (\j -> j .:? "headers" .!= [] >>= mapM headerRow)) java
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 
@@ -84,8 +92,9 @@ instance FromJSON Site where
   parseJSON v = do
     cols <- parseJSON v
     case cols :: [Value] of
-      [l, k, f, s] -> Site <$> parseJSON l <*> parseJSON k <*> parseJSON f <*> parseJSON s
-      _ -> fail "malformed site (need [lang,kind,from,spec])"
+      [l, k, f, s] -> Site <$> parseJSON l <*> parseJSON k <*> parseJSON f <*> parseJSON s <*> pure Nothing
+      [l, k, f, s, n] -> Site <$> parseJSON l <*> parseJSON k <*> parseJSON f <*> parseJSON s <*> (Just <$> parseJSON n)
+      _ -> fail "malformed site (need [lang,kind,from,spec] or [lang,kind,from,spec,line])"
 
 instance FromJSON Db where
   parseJSON v = (\(d, p, r) -> Db d p r) <$> parseJSON v

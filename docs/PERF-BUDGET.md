@@ -3,6 +3,10 @@
 > **封册（M7.5 深度瘦身，2026-08-18）**：重放仪器 `perf_budget.rs` 已随
 > 休眠仪器整体退役（EVAL-SET.md 修正案），本册数字为最终实测账本；
 > 后续性能数字随各批 As-built 记录，回归复核走 git 历史复活仪器。
+> 末尾七节（v0.2.0 符号绑定批后、M5-3j、M5-3i、M5-3g、M3 探针端到端、ADR-008 P3、
+> M6 S4b，实测 2026-08-14–08-19）已于 2026-10-05 逐字节迁入
+> [PERF-BUDGET-ARCHIVE.md](PERF-BUDGET-ARCHIVE.md)（正册离 `ce scan` 的 750 行硬线
+> 只剩 7 行，算法轨 v2.33 W2-text 阶段 C 的一节放不下）。
 
 > 口径：被动 guard 的 PreToolUse 端到端 = hook 触发 → 判定返回。
 > 预算为硬上界；"实测"列只写真实测过的数字，未测项标注实测里程碑，
@@ -573,6 +577,44 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **钩子**：PreToolUse 探针不问 `resolve/1`——一个写入 R 文件（带一条 `library` 与一条 `source`）的 `Write` 信封经 `ce probe --hook` 在 covid19model 拷贝上冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_b.sh`），与阶段 A 同。
 - 复跑：车道目录 `v233_w2t_scratch/perf_b.py 7`（树拷自 `.ce-eval/corpora` 与车道归档），读数原文 `perf_b.log`、逐跑 `perf_b.ndjson`；请求字节 `reqbytes_b.sh`，暖跑请求 `warmreq_b.sh`，钩子 `hookprobe_b.sh`。
 
+## v2.33 W2-text 阶段 C Java 阶梯进核 A/B（实测 2026-10-05，release，同一台机、同一坐：A = 27d0d56d 的 ce + 它的核〔`git archive` 构建〕，B = 车道树 5a7fbe7f 的 ce + 它的核〔Java 的四级阶梯与类型注解读法在核，每个走查到的 Java 文件头随请求过线〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，03:53–04:16 共 23 次 18–85 %，含本坐自己的 ce）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）与两份 Java 语料 gson、jsoup。
+
+| 树 | 面 | A（27d0d56d） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `graph --sites` 冷 | 1985.7（1782.9–2122.9） | 1847.0（1764.4–2166.5） | -7.0 % |
+| self | `graph --sites` 暖 | 1801.5（1620.9–2017.9） | 1831.6（1662.2–2085.2） | +1.7 % |
+| self | `deadcode` 冷 | 35563.0（33808.1–39092.1） | 35352.3（31986.6–38531.5） | -0.6 % |
+| self | `deadcode` 暖 | 2524.7（2241.1–2939.6） | 2441.6（2284.5–2820.1） | -3.3 % |
+| self | `check` 暖 | 11976.2（10954.6–18259.7） | 11876.2（11408.6–19046.0） | -0.8 % |
+| gson | `graph --sites` 冷 | 1230.5（1186.9–1654.2） | 1263.5（1182.1–1410.0） | +2.7 % |
+| gson | `graph --sites` 暖 | 1198.5（1040.6–1304.7） | 1228.4（1133.9–1282.5） | +2.5 % |
+| gson | `deadcode` 冷 | 7054.9（6911.7–7641.6） | 7119.9（6859.9–8128.3） | +0.9 % |
+| gson | `deadcode` 暖 | 887.3（825.2–991.2） | 878.5（825.3–961.5） | -1.0 % |
+| gson | `check` 暖 | 3306.8（3224.4–21664.3） | 3330.2（3229.3–20828.6） | +0.7 % |
+| jsoup | `graph --sites` 冷 | 1388.3（1289.6–1502.4） | 1369.1（1263.4–1412.7） | -1.4 % |
+| jsoup | `graph --sites` 暖 | 1231.1（1187.7–1339.5） | 1225.8（1154.9–1309.0） | -0.4 % |
+| jsoup | `deadcode` 冷 | 7461.4（7279.9–7871.8） | 7396.1（7259.0–7667.4） | -0.9 % |
+| jsoup | `deadcode` 暖 | 756.1（700.4–863.1） | 746.5（721.1–902.6） | -1.3 % |
+| jsoup | `check` 暖 | 4967.9（4543.5–101720.3） | 4834.1（4581.1–98971.7） | -2.7 % |
+
+- 预算（任务书）：暖 `ce check` ≤ +15 %——三棵树 -0.8 %、+0.7 %、-2.7 %，都在线内；没有一个面超过 +15 %。`check` 暖的最大值（gson 约 21 s、jsoup 约 100 s）是每臂第一次 `check`：近似克隆缓存在那一跑填满，两臂同形。
+- **第一版的核超线，已修**：同一坐法量本车道 52de63a1 的核（用同一个 ce），gson 冷 `deadcode` +20.4 %（7,229 → 8,703 ms）、jsoup +15.0 %（8,248 → 9,489 ms）。把那一跑经中继核录下的会话单独喂核（`relay_dump.py` + `core_time_c.py`），gson 2.0 s、jsoup 1.38 s；把 Java 文件头清空再喂 0.19 s，把站点清空 0.08 s——时间花在阶梯，不在解码。原因是每个站点每问一次包里的文件，都把每个候选文件的路径重新切段、找一遍标准源集（`sourceRoot` 还是按下标取列表元素），再逐个查头部看它声明了哪些类。改为每次请求在 `javaEnv` 里只建一次：每个文件「在不在 `main` 以外的源集」那一位、包索引、（包、类）索引；`sourceRoot` 改为一次线性扫描。之后同一份会话单独喂核 gson 0.34 s、jsoup 0.33 s（无负载时；本表那一坐里重量为 0.53 / 0.57 s），上表即修后的读数。修前修后两版核在四条阶梯腿 × 三颗种子各 12,000 个站点与 47,257 个真 Java 站点上与冻结的 Rust 阶梯不一致 0，`cabal test` 962 ok。
+- **多出核请求的面**（`warmreq_c.sh`：每臂在一份拷贝上冷跑一次 `graph --sites` 建索引，再经中继核把 `graph --sites` / `deadcode` / `structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 各跑一次，数每个核会话与每种请求）：只有在 Java 树上第一次建图边的那一跑多一个会话、一个 `resolve.request`——gson、jsoup 上就是那次 `deadcode`（A 臂 0 个，Java 在 Rust 里答）；之后的暖跑图边读自索引，两臂请求逐种相同。自仓同一跑两臂都是 1 个请求、11 个站点，多 22 B（空的 `java.headers`）。
+- 自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立，与本表无关；其余各跑全退 0。
+- **请求字节**（§3 第 5 点；同一棵树一次冷 `deadcode`，经中继核记下每个 `resolve.request` 与应答的字节；两臂 `deadcode` 输出逐字节同）：
+
+| 树 | 请求个数 A → B | 请求字节 A → B | 应答字节 A → B |
+|---|---|---|---|
+| self | 1 → 1 | 44,398 → 44,420 | 512 → 512 |
+| gson | 0 → 1 | 0 → 885,394 | 0 → 748,188 |
+| jsoup | 0 → 1 | 0 → 820,387 | 0 → 849,885 |
+
+  B 臂把 22,698 / 24,210 个 Java 站点（每个带行号）连同每个走查到的 Java 文件头（`java.headers` 183,303 / 120,612 B：包、import、类型与成员、首末行）送进一次请求；A 臂在这两棵树上一个请求也不发。
+- **钩子**：PreToolUse 探针不问 `resolve/1`——一个在 gson 的 main 源集里写入新 Java 文件（两条 import、一个类型引用）的 `Write` 信封经 `ce probe --hook` 在 gson 拷贝上冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_c.sh`），与阶段 A、B 同。
+- 复跑：车道目录 `v233_w2t_scratch/perf_c.py 7`（树拷自 `.ce-eval/corpora` 与车道归档），读数原文 `perf_c.log`、逐跑 `perf_c.ndjson`、负载 `perf_c_load.txt`；请求字节 `reqbytes_c.sh`，各面请求 `warmreq_c.sh`，钩子 `hookprobe_c.sh`，核单独计时 `coretime_c.sh` / `core_split_c.py`。
+
 ## v2.33 W3 候选、排序、粗筛与 L1 进核 A/B（实测 2026-10-04，release，同一台机、同一坐：A = 093aede4 的 ce + 它的核，B = W3 车道终树〔变基前 7d6d851e 的代码〕的 ce + 它的核；车道 HEAD 归档〔测试子仓就位、提交一次〕的四份拷贝，两臂各一份干净树、一份脏树〔三个文件同样追加一个函数〕；各臂先暖建索引一次，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时 `Get-CimInstance` 处理器负载 36–79 %〔别的会话的编译与 python 作业〕）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒；冷 = 删掉 `.ce/` 后的一跑。
@@ -642,102 +684,3 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - 自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立，与本表无关。
 - B 臂是变基之后、四处照抄 Rust 控制流的改写（Go `moduleRung` 按模块顺序折叠、`replaceRung` 按余部长度取首个最小、Lua 标准库按整串比对、Python `moduleAt` 空点路径读根的原文）之前的核；这四处不改复杂度（同一组列表遍历），本表未按改写后的核重量。
 - 复跑：车道目录 `v233_w2_scratch/perf.py 7`（树拷自主根 `.ce-eval/corpora` 与车道归档），读数原文 `perf.log`、逐跑 `perf.ndjson`。
-
-## v0.2.0 符号绑定批后（实测 2026-08-19，release，GRAPH_REV 7 + SCHEMA v8 全量重建，非静默机）
-
-口径：`pub use` 绑定面入阶梯（rs_reexport 单遍历 surface+hash）+ pubuse_hash 入 resolve_key + edges.via_reexport；REV 6→7 与 v7→v8 双 wipe 同批；用户会话活跃窗口（3j 先例：环境负载可致数倍摆动，绝对值按本窗口读）。
-
-| 项 | 实测 | 记录 |
-|---|---|---|
-| `ce dedup .`（冷，272 文件、169 块/86 组） | 5.15 s | REV 5 先例 2.72 s；文件 228→272 + 绑定面首建 + 负载窗口合成，未静默机复测 |
-| `ce check .`（token 暖 + REV 7 图首建） | 4.84 s | 边相阶梯全量重放一次性成本 |
-| `ce check .`（真暖） | 2.54 s | ✅ pre-commit 级维持 |
-
-## M5-3j 门迁移后 `ce check`（+.hs size-only 走文件，实测 2026-08-14，release，静默机）
-
-口径：3i 口径 + `hs_size_rows` 的第二次全树 walk（37 个 `.hs` 读文件计行）。
-
-| 项 | 实测 | 记录 |
-|---|---|---|
-| 冷（fresh `.ce/`，删除已 Test-Path 核实） | 2.2–2.8 s（4 跑） | `.hs` 走文件增量在噪声内 |
-| 暖（哈希门控索引） | 0.90–0.98 s | ✅ pre-commit 级 |
-| 3i 行的冷 31.6 s | 今日静默机不可复现 | 按实测保留原记录不改写；量级差=环境主导（3i 测量窗口与盲审/CI 并发同期），非判决路径成本——本节 4 跑散布为现行口径 |
-
-## M5-3i `ce check` 判决路径（ADR-006 门，实测 2026-08-14，release，静默机）
-
-口径：`ce check ..` 端到端 = 索引刷新 + T1/T2 块 + 图 pos + scan 全量度量指纹化
-+ 成员集哈希 + 单条 verdict.request + 回判。churn 表默认空（`--days` 显式开——
-blame 代价见 3h 节，空表=诚实缺席非零主张）。
-
-| 项 | 实测 | 状态 |
-|---|---|---|
-| 冷（fresh db，全量索引+图+scan+判决） | 31.6 s | CI 门可承受（与 cargo test 同级） |
-| 暖（哈希门控索引） | 1.21 s | ✅ pre-commit 级 |
-| 容差活体 | 2 条 toleranceDrawn（本批文档编辑被 max(+2%,+10) 吸收）| 机制实证 |
-
-## M5-3g docdup 判决冷路径（设计卷二 §5.3，实测 2026-08-14，release）
-
-口径：`ce docdup <root> --db <fresh>` 端到端 = 冷索引（六次解析含 docsegs）
-+ LSH∪种子候选 + 逐字 run（seed-extend，候选文件重读走 walked_text 单喉）
-+ 分块 docdup.request（docPairCap 4096）+ Haskell 精确 Jaccard + 回映。
-自仓（工作树，ce.toml 排除 crosscheck）：89 live 段、38 候选（全种子源）、
-1 请求、38 判、**0 上报**（RM13 报告态：自仓文档现无可报重复）——冷 2.59 s ✅。
-五语料 docdup-precision 生成（钉定树材料化 + 全量产品跑 ×5 + 候选双跑）
-一次 67.5 s ✅；单语料判决段均 < 3 s（段宇宙远小于单元宇宙，pairCap 未触发）。
-
-## M3 PreToolUse 探针端到端（口径 = 首表合计行的 ce 侧 = 行 2+3+4，release，n=30；本节自身未记测量日期）
-
-| 项 | 预算 | 实测（30 次） | 状态 |
-|---|---|---|---|
-| `ce probe --hook` e2e：解析信封 + 探针往返 + 判定组装 + 回传 | p95 < 1 s（合计行 ce 侧） | median 64 / p95 69 / max 73 ms | ✅ |
-| 同上，clean 路径（无判定输出，静默） | —（无预算） | median 70 / p95 81 ms | 记录 |
-| 冷首呼（懒起 daemon + 首连 + 判定） | —（降级档兜底，ADR-003） | 213 ms | 记录 |
-
-复跑：`perf_budget.rs` 已随 M7.5 封册退役——按 EVAL-SET.md「再生成」节的复活律**连同同代支撑**
-复活、跑毕重退役：`git show 0c7c936^:cli/tests/perf_budget.rs > cli/tests/perf_budget.rs && git archive 0c7c936^ cli/tests/common | tar -x`，再
-`cargo test --release --test perf_budget -- --ignored --nocapture`（合成语料确定性生成；hook e2e =
-`hook_e2e_p95_under_1s`），跑毕 `rm -rf cli/tests/perf_budget.rs cli/tests/common`
-（`cli/tests` 自 9bedcc4 起是 submodule：复活件在两个仓都未跟踪，对着 submodule 路径 `git checkout <sha> -- <路径>`
-会静默把 gitlink 换成历史 blob，退役必须是纯 `rm`；退役仪器留在树里会进下一次门：dedup 预算与棘轮都计其块与行）。
-
-补充口径：
-
-- 环节 2 的 Defender **首扫**（新编译 exe 第一次运行）不计入常规预算，单列记录（M0 验收原文）。
-- 会话累计口径：hook 延迟中位数 < 15 s / 百次编辑（M3 验收）——**实测 0.982 s**
-  （2026-08-10 定稿：0.2.0 feed 全量 10 会话、2,671 次 probe，按会话求
-  均值×100 后取中位；min 0.196 / max 2.111 s，census 见 T1-INTERCEPT.md §4）。✅
-- daemon 冷启动（首次索引构建）不占热路径——未就绪期显式降级为廉价检查档（ADR-003）。
-- 复测命令：`cli/` 下 `cargo build --release` 后
-  `1..10 | %{ (Measure-Command { .\target\release\ce.exe --version }).TotalMilliseconds }`。
-
-## ADR-008 P3 `ce scan` 接核后冷路径（实测 2026-08-17，release，自仓 273 文件 / 3,015 函数 ≈ 18.6k 测量行）
-
-> 口径：`ce scan . --core <exe>` 端到端 = walk+parse+度量 + 一次 scan.request
-> （分块阈 524288 行，自仓单请求）+ 整报告镜像 ensure + 渲染。P3 验收条款
-> "冷延迟入 PERF-BUDGET 实测、超标单片回滚"的落账（反审 C18 补记）。
-
-| 环节 | 账面基线（3l，无核） | 实测（×3 连测） | 判 |
-|---|---|---|---|
-| `ce scan .` 冷（首跑，核首启+握手） | 0.52 s | 0.98 s | ✅ 无回滚触发 |
-| `ce scan .` 暖（核复用系统缓存） | 0.52 s | 0.42–0.43 s | ✅ 反快于无核基线 |
-
-复跑：`cargo build --release` 后
-`1..3 | %{ (Measure-Command { .\target\release\ce.exe scan . --core $env:CE_CORE_BIN }).TotalSeconds }`。
-
-## M6 S4b `ce structure` 验收实测（2026-08-17，release，外部真语料，--db 指 scratch=真冷）
-
-> 计划 M6 验收行：「10 万 LOC 冷启动到首屏 <60s、报告打开 <3s」。GUI 首屏
-> = 同一 judge::run+report_json 管线 + webview 渲染（毫秒级），故 CLI 端到端
-> 即首屏时延的账面上界。冷=索引/图/判决全新建；暖=同 db 重跑（≈「报告打开」）。
-
-| 语料 | 规模（rs/ts/py/go/md 行数） | 冷 | 暖 | 门 |
-|---|---|---|---|---|
-| zod | 71,645 | 8.36 s | 2.66 s | ✅ 冷 ≪60s；暖 <3s |
-| ripgrep | 55,076 | 5.29 s | 1.64 s | ✅ 同上 |
-
-- 10 万 LOC 无现成单仓语料——按 zod 线性外推 ≈11.7s，距 60s 门 5 倍余量；
-  外推注记如实入册（非实测数字）。
-- 面效度旁证：ripgrep 树 982/1000、zod 平铺 src 794/1000（axes 3:63 错位
-  文件）——与两仓结构口碑同向。
-- 复跑：`ce structure .ce-eval\corpora\<c> --db <fresh> --core $env:CE_CORE_BIN`
-  各二连（首=冷、次=暖）。

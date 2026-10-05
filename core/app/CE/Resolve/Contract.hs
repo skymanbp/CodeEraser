@@ -2,14 +2,16 @@
 -- since W2-text): what a well-formed request IS — the walked paths in
 -- strictly ascending (path) order, the origins too and none of them
 -- walked, every site in a language this family resolves with its file in
--- range, every database probe one of the three, every include list a
--- walked file's — and the cap the request's text counts against. The
+-- range and — a Java site — its line, the Java headers in strictly
+-- ascending (path) order, every database probe one of the three, every
+-- include list a walked file's — and the cap the request's text counts against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
 module CE.Resolve.Contract (offence, overCap, requestSize) where
 
 import CE.Resolve.Cost
+import CE.Resolve.JavaHeader
 import CE.Resolve.Request
 import Data.Aeson (Value, encode)
 import qualified Data.ByteString.Lazy as BL
@@ -34,6 +36,7 @@ requestSize rq =
     , sum [1 + chars r + maybe 0 (sum . map doc) rows | (r, rows) <- cJson c]
     , sum [1 + chars r + maybe 0 chars t | (r, t) <- cFlags c <> cResponses c]
     , sum [1 + chars p + texts is | (p, is) <- cIncludes c]
+    , sum [1 + chars p + header h | (p, h) <- rqJavaHeaders rq]
     ]
  where
   c = rqC rq
@@ -41,6 +44,8 @@ requestSize rq =
   texts = sum . map ((+ 1) . chars)
   doc :: Value -> Integer
   doc = toInteger . BL.length . encode
+  header h = chars (hPackage h) + sum [1 + chars (iName i) | i <- hImports h] + sum (map typeSize (hTypes h))
+  typeSize t = 1 + chars (tName t) + texts (tSupers t) + sum (map typeSize (tMembers t))
 
 overCap :: ResolveReq -> Bool
 overCap rq = requestSize rq > resolveCap
@@ -53,6 +58,7 @@ offence rq =
     , ascending "origin" (rqOrigins rq)
     , asum [Just ("origin " <> show i <> ": a walked file") | (i, o) <- zip [0 :: Int ..] (rqOrigins rq), Set.member o walked]
     , asum (zipWith site [0 :: Int ..] (rqSites rq))
+    , ascending "java.header" (map fst (rqJavaHeaders rq))
     , asum [Just ("c.db " <> show i <> ": probe out of range") | (i, Db _ p _) <- zip [0 :: Int ..] (cDbs (rqC rq)), p < 0 || p > 2]
     , asum [Just ("c.include " <> show i <> ": not a walked file") | (i, (p, _)) <- zip [0 :: Int ..] (cIncludes (rqC rq)), not (Set.member p walked)]
     ]
@@ -62,6 +68,7 @@ offence rq =
   site i s
     | sLang s `notElem` resolvedLangs = Just ("site " <> show i <> ": language this family does not resolve")
     | sKind s < 0 || toInteger (sFrom s) < 0 || toInteger (sFrom s) >= paths = Just ("site " <> show i <> ": kind or file out of range")
+    | sLang s == langJava && sLine s == Nothing = Just ("site " <> show i <> ": a Java site without its line")
     | otherwise = Nothing
 
 -- | A path table in strictly ascending order: no path twice.

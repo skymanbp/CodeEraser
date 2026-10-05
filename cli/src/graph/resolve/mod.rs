@@ -1,7 +1,7 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
-//! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go, C / C++
-//! and R resolve in `resolve/1`, with the readers of their configuration
+//! docs/reference/algorithm-track.md §3, §6): Python, Lua, Go, C / C++,
+//! R and Java resolve in `resolve/1`, with the readers of their configuration
 //! files (go.mod, R's DESCRIPTION, the root pyproject.toml's keys, the
 //! compile databases, their response and flag files). This side sends what it read as text
 //! (request.rs) — one request per sweep with only the sites that need
@@ -38,7 +38,7 @@ pub const SINCE: &str = "9.0.0";
 pub fn in_core(lang: Lang) -> bool {
     matches!(
         lang,
-        Lang::Python | Lang::Go | Lang::C | Lang::Cpp | Lang::Lua | Lang::R
+        Lang::Python | Lang::Go | Lang::C | Lang::Cpp | Lang::Lua | Lang::R | Lang::Java
     )
 }
 
@@ -61,6 +61,7 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
                 .map(|t| [t.dir.as_str(), t.suffix.as_str()])
                 .collect(),
             includes: scope.includes,
+            java: scope.java,
         };
         RefCell::new(request::tree(&input))
     });

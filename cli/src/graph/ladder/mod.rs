@@ -8,12 +8,13 @@
 //! be voted out by data at 2h.
 //!
 //! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
-//! the C family's followed in plan v2.30 step 2, Java's in step 3
-//! (java.rs), Lua's and R's in step 4, HTML's in step 5 (html.rs);
+//! the C family's followed in plan v2.30 step 2, Java's in step 3,
+//! Lua's and R's in step 4, HTML's in step 5 (html.rs);
 //! a language without rungs must return Unresolved(Unsupported) — an
 //! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
 //! the Python, Lua, Go and C / C++ rungs live in the core
-//! (`resolve/1`, graph/resolve/), R's since W2-text stage B:
+//! (`resolve/1`, graph/resolve/), R's since W2-text stage B and Java's
+//! since stage C:
 //! `resolve_all` sends their sites in one request and runs the other
 //! languages' rungs here. Dispatch
 //! carries the site's frozen kind label (the package's
@@ -31,11 +32,9 @@ use std::rc::Rc;
 // pub: the walk reads every C-family file's include list with it
 pub mod c_head;
 pub mod hs;
-pub mod java;
-// pub: the walk reads every Java header with it (dedup/walkidx.rs)
 pub mod html;
+// pub: the walk reads every Java header with it (dedup/walkidx.rs)
 pub mod java_header;
-mod java_sets;
 // pub: the walk hashes every page's id set with it (dedup/walkidx.rs)
 pub mod html_head;
 // pub: the walk reads every Lua file's package.path templates with it
@@ -52,8 +51,8 @@ pub mod ts;
 // the site outcome vocabulary (a leaf: it reads nothing of this module)
 mod outcome;
 pub use outcome::{Outcome, Reason, Rung};
-// The a8db74a9 Python / Lua / Go / C rungs and the c96ab3f6 R rungs,
-// frozen byte for byte: the differential gate's oracle (tests subrepo
+// The a8db74a9 Python / Lua / Go / C rungs, the c96ab3f6 R rungs and
+// the 27d0d56d Java rungs, frozen byte for byte: the differential gate's oracle (tests subrepo
 // unit/graph/ladder/oracle/, driven by unit/dedup/ladder_diff/).
 #[cfg(test)]
 #[path = "../../../tests/unit/graph/ladder/frozen.rs"]
@@ -74,8 +73,9 @@ pub(crate) mod frozen;
 /// walked tree, plan v2.30): the rung a language's ladder walks after
 /// the site's own directory and before its build configuration. `java`
 /// is every walked Java file's header (java_header.rs) — the package it
-/// declares and the imports it writes, read by the walk so the Java
-/// ladder reads no file (plan v2.30 step 3); `lua` the templates the
+/// declares, the imports it writes and its type declarations, read by
+/// the walk so the Java rungs read no file (plan v2.30 step 3; the
+/// request carries them to the core's rungs since v2.33 W2-text stage C); `lua` the templates the
 /// walked Lua files assign to `package.path` (lua_path.rs, step 4).
 /// `assets` are the walked files the index never holds — no judged
 /// language: images, styles, scripts, fonts, data — the HTML rungs'
@@ -135,8 +135,10 @@ impl Memo {
 /// One reference site as the ladder consumes it — the CachedSite
 /// projection that travels the dispatcher. `kind` is the frozen
 /// label; `from` is repo-relative with forward slashes; `line` is
-/// the 1-based source line — only Rust consumes it (inline-module
-/// depth anchors self/super), the other ladders are line-free.
+/// the 1-based source line — Rust consumes it (inline-module depth
+/// anchors self/super) and the core's Java rungs read it (the header's
+/// import on that line, the types enclosing it); the others are
+/// line-free.
 pub struct Site<'a> {
     pub kind: &'a str,
     pub from: &'a str,
@@ -188,7 +190,6 @@ fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         Lang::Rust => rs::resolve(site, scope),
         Lang::Markdown => md::resolve(site, scope),
         Lang::Haskell => hs::resolve(site.from, site.spec, scope),
-        Lang::Java => java::resolve(site, scope),
         Lang::Html => html::resolve(site, scope),
         // The sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — if either ever arrives, the honest

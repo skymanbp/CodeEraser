@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | What the resolve family reads of the definition package (plan v2.33
--- W2-text; replaces the W2a vocabulary): the three External tables
--- (`ladder.py.stdlib`, `ladder.lua.stdlib`, `ladder.go.std`), the two
--- compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
--- storage codes of the site kinds the Lua and R ladders branch on.
+-- W2-text; replaces the W2a vocabulary): the External tables
+-- (`ladder.py.stdlib`, `ladder.lua.stdlib`, `ladder.go.std`, and since
+-- stage C the JDK's `ladder.java` packages and `java.lang` types), the
+-- two compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
+-- storage codes of the site kinds the Lua, R and Java ladders branch on.
 -- The package's `resolve` key states which configuration files the
 -- measuring side sends as text — the basenames among the walk's
 -- configs (`configs`): a rule of this family, so not a second list
@@ -13,12 +14,17 @@ module CE.Resolve.Tables (
   pyStdlib,
   luaStdlib,
   goStd,
+  javaPackages,
+  javaLang,
   gnuFlags,
   skipFlags,
   kindRequire,
   kindLoad,
   kindSource,
   kindLibrary,
+  kindImport,
+  kindImportStar,
+  kindTypeRef,
   configNames,
   table,
 ) where
@@ -36,6 +42,12 @@ pyStdlib = Set.fromList (packList ["ladder", "py", "stdlib"])
 luaStdlib = Set.fromList (packList ["ladder", "lua", "stdlib"])
 goStd = Set.fromList (packList ["ladder", "go", "std"])
 
+-- | The packages the JDK's runtime image exports and `java.lang`'s
+-- public top-level types.
+javaPackages, javaLang :: Set.Set String
+javaPackages = Set.fromList (packList ["ladder", "java", "packages"])
+javaLang = Set.fromList (packList ["ladder", "java", "lang"])
+
 -- | The GNU joined spellings (longest conflicting spelling first) and
 -- the separate operands that cannot open an include option, in the
 -- package's order.
@@ -52,13 +64,16 @@ packList path = either refuse id (parseEither parseJSON =<< walk path pack)
   walk _ _ = Left ("no " <> show path)
   refuse e = error ("resolve tables do not read: " <> e)
 
--- | The storage codes of the two Lua site kinds and the two R ones
--- (`store.site_kinds`).
-kindRequire, kindLoad, kindSource, kindLibrary :: Integer
+-- | The storage codes of the two Lua site kinds, the two R ones and the
+-- three Java ones (`store.site_kinds`).
+kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
 kindSource = kindCode "source"
 kindLibrary = kindCode "library"
+kindImport = kindCode "import"
+kindImportStar = kindCode "import_star"
+kindTypeRef = kindCode "type_ref"
 
 kindCode :: String -> Integer
 kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKinds)

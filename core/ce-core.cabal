@@ -79,7 +79,9 @@ executable ce-core
                       CE.Resolve.Cost, CE.Resolve.Go, CE.Resolve.Lua, CE.Resolve.Py, CE.Resolve.Request,
                       CE.Resolve.Tables, CE.Resolve.World, CE.Resolve.Chars, CE.Resolve.Str,
                       CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect,
-                      CE.Resolve.Description, CE.Resolve.R
+                      CE.Resolve.Description, CE.Resolve.R,
+                      CE.Resolve.JavaHeader, CE.Resolve.JavaName, CE.Resolve.JavaPick,
+                      CE.Resolve.JavaAt, CE.Resolve.JavaInherit, CE.Resolve.Java
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -165,7 +167,9 @@ test-suite ce-core-test
                       CE.Resolve.Tables, CE.Resolve.World, CE.Resolve.Chars, CE.Resolve.Str,
                       CE.Resolve.Cmdline, CE.Resolve.Flags, CE.Resolve.CompDb, CE.Resolve.Inspect,
                       CE.Resolve.Description, CE.Resolve.R,
-                      ReferenceResolve, ReferenceResolveGen, ResolveProps,
+                      CE.Resolve.JavaHeader, CE.Resolve.JavaName, CE.Resolve.JavaPick,
+                      CE.Resolve.JavaAt, CE.Resolve.JavaInherit, CE.Resolve.Java,
+                      ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ResolveProps,
                       Reference, ReferenceGraph, ReferenceQuery, QueryProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,
                       ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps,

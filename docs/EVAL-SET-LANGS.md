@@ -729,3 +729,10 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
 - **读数**：十一份在 1278a18c 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（c4eac446 → 1278a18c），判决、真值、宇宙台账与两段 RG1 处置逐字节同（stringr、covid19model 两份 R 档亦然）。
+
+## 算法轨 v2.33 W2-text 阶段 C 之后：十一份精度册第八次退役并重生成（2026-10-05）
+
+阶段 C 把 Java 的四级阶梯与类型注解的读法搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 54–57 条）：`cli/src/graph/ladder/java.rs` / `java_inherit.rs` / `java_pick.rs` / `java_sets.rs` 删掉，`java_header.rs` 只剩走查用的头部读法，`cli/src/graph/resolve/` 把每个 Java 文件头装进请求，`core/app/CE/Resolve/` 多出 `Java*.hs` 六个模块、`Request` / `Contract` / `Resolve` 的分派带上 Java——后两处在 C、Lua、R 与 Java 考题的 `ANSWERED_BY` 里（子仓 `it/eval_lang_parts/exams.rs`；Java 的清单从 `cli/src/graph/ladder/java*` 扩为它加 `cli/src/graph/resolve/` 与 `core/app/CE/Resolve(.hs|/)`）。差分门全同，判决字节不应移动；重生成按前一次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。

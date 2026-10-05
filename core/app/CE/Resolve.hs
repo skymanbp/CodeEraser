@@ -2,10 +2,11 @@
 
 -- | resolve.request handler (plan v2.33 wave W2a; on text since
 -- W2-text, proto 9.0.0; design booklet docs/reference/algorithm-track.md
--- §3, §6): the reference ladders for Python, Lua, Go, C / C++ and R, and
--- the configuration readers they read — go.mod, R's DESCRIPTION, the
+-- §3, §6): the reference ladders for Python, Lua, Go, C / C++, R and
+-- Java, and the configuration readers they read — go.mod, R's DESCRIPTION, the
 -- root `pyproject.toml`'s keys, the compile databases with their
--- response files and flag files. The measuring side walks the tree, detects the
+-- response files and flag files — and every walked Java file's header as
+-- the walk read it. The measuring side walks the tree, detects the
 -- sites, reads the files and sends what it read as text; this family
 -- decides which candidate locations a site tries, in which rung order,
 -- what counts as a hit, the ambiguity and refusal rules and the
@@ -30,6 +31,8 @@ import CE.Resolve.Cost
 import CE.Resolve.Description (Description (..), packageCode, readDescription)
 import CE.Resolve.Go (GoMod (..), parseGoMod, resolveGo)
 import CE.Resolve.Inspect (inspected)
+import CE.Resolve.Java (resolveJava)
+import CE.Resolve.JavaPick (javaEnv)
 import CE.Resolve.Lua (resolveLua, searched)
 import CE.Resolve.Py (pyproject, resolvePy)
 import CE.Resolve.R (resolveR)
@@ -42,7 +45,7 @@ import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
-import Data.Maybe (isJust)
+import Data.Maybe (fromMaybe, isJust)
 import qualified Data.Set as Set
 
 -- | decode → cap → contract → judge.
@@ -74,11 +77,13 @@ judged proto rq = reply proto rq resolved body False
   gomods = [m | (rel, text) <- rqGoMods rq, let m = parseGoMod rel text, isJust (gmModule m)]
   descs = [d | (rel, text) <- rqDescriptions rq, Just d <- [readDescription (parentDir rel) text]]
   packages = M.fromList [(dDir d, packageCode w d) | d <- descs]
+  java = javaEnv w (rqJavaHeaders rq) (searchRoots "java" rq)
   site s
     | sLang s == langPy = resolvePy w py from (sSpec s)
     | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
     | sLang s == langGo = resolveGo w gomods from (sSpec s)
     | sLang s == langR = resolveR (w, searchRoots "r" rq, descs) (sKind s) from (sSpec s)
+    | sLang s == langJava = resolveJava java (sKind s) from (fromMaybe 0 (sLine s)) (sSpec s)
     | otherwise = resolveC env ix from (sSpec s)
    where
     from = pathOf w (sFrom s)

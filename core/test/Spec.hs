@@ -42,6 +42,7 @@ import qualified QueryProps
 import qualified Reference
 import qualified ReferenceGraph
 import qualified ReferenceJaccard
+import qualified ReferenceJava
 import qualified ReferenceQuery
 import qualified ReferenceResolve
 import qualified ResolveProps
@@ -128,6 +129,7 @@ batteries =
        , Reference.equivalence
        , ReferenceQuery.equivalence
        , ReferenceResolve.equivalence
+       , ReferenceJava.equivalence
        , ReferenceGraph.equivalence
        , ReferenceJaccard.equivalence
        , GraphProps.battery

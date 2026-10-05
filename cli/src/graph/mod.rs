@@ -3,9 +3,10 @@
 //! the same detector feeds the frozen slice instrument, so this
 //! module stays resolution-free by construction. Resolution lives in
 //! ladder/ with its config surfaces (cabal / cargo / roots / jsonc)
-//! beside it, and in the core for Python, Lua, Go, C / C++ and R
+//! beside it, and in the core for Python, Lua, Go, C / C++, R and Java
 //! (resolve/, which sends the go.mod, DESCRIPTION, pyproject and
-//! compile-database texts the core reads); wire.rs bridges cached sites
+//! compile-database texts and the Java headers the core reads); wire.rs
+//! bridges cached sites
 //! to edge rows for phase 2.
 
 // The 92e728b1 go.mod and compile-database readers, frozen (tests

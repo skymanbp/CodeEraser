@@ -8,7 +8,9 @@
 -- reads the same configuration from the request's go.mod and DESCRIPTION
 -- texts and pyproject document, so its readers are on the path. Every
 -- site of the two hundred seeded cases must get the same answer from
--- both, target spelled the same, and every case the same R package code. The C ladder is read without compile databases
+-- both, target spelled the same, and every case the same R package code
+-- (the Java rungs have their own reference, ReferenceJava). The C ladder
+-- is read without compile databases
 -- here (the measuring side's ladder batteries drive the database rungs
 -- end to end through the shipped core).
 module ReferenceResolve (equivalence, refAnswer) where

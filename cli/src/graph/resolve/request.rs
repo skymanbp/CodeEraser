@@ -2,6 +2,8 @@
 //! side read, as text — the walked paths, the sites' specifiers as the
 //! detector produced them, the `[graph.search_roots]` table, the Lua
 //! templates the walk read, each go.mod's and each R DESCRIPTION's text,
+//! every walked Java file's header as the walk read it (package, imports,
+//! type declarations: ladder/java_header.rs),
 //! the root `pyproject.toml` and every JSON compile database decoded (a library
 //! read; the rules applied to them are the core's), each flags file's
 //! text, and the facts that need the file system: the root's absolute
@@ -25,6 +27,7 @@ pub struct Input<'a> {
     pub search_roots: &'a BTreeMap<String, BTreeSet<String>>,
     pub lua: Vec<[&'a str; 2]>,
     pub includes: &'a BTreeMap<String, Vec<String>>,
+    pub java: &'a BTreeMap<String, crate::graph::ladder::java_header::Header>,
 }
 
 /// The sweep's part of a request: everything but the sites. The walk's
@@ -49,6 +52,7 @@ pub fn tree(input: &Input) -> Value {
         "lua": { "templates": input.lua },
         "go": { "mods": go },
         "r": { "descriptions": descriptions(input.root, named("DESCRIPTION")) },
+        "java": { "headers": headers(input.java) },
         "c": databases(input.root, input.files, input.includes),
     })
 }
@@ -63,6 +67,27 @@ pub fn descriptions<'a>(
         Some((rel, String::from_utf8_lossy(&bytes).into_owned()))
     })
     .collect()
+}
+
+/// Each Java header the walk read, `[path, package, [import], [type]]`:
+/// an import `[name, star, static, line]`, a type `[name, [super],
+/// [member], first, last]`.
+fn headers(java: &BTreeMap<String, crate::graph::ladder::java_header::Header>) -> Vec<Value> {
+    fn ty(t: &crate::graph::ladder::java_header::TypeDecl) -> Value {
+        let members: Vec<Value> = t.members.iter().map(ty).collect();
+        json!([t.name, t.supers, members, t.lines.0, t.lines.1])
+    }
+    java.iter()
+        .map(|(path, h)| {
+            let imports: Vec<Value> = h
+                .imports
+                .iter()
+                .map(|i| json!([i.name, i.star, i.is_static, i.line]))
+                .collect();
+            let types: Vec<Value> = h.types.iter().map(ty).collect();
+            json!([path, h.package, imports, types])
+        })
+        .collect()
 }
 
 /// The root `pyproject.toml` decoded, null when it is absent or not TOML.
@@ -109,7 +134,8 @@ pub fn databases(
 
 /// The sites, each `[lang, kind, from, spec]`, `from` an index into the
 /// walked files then the sites' own files the walk did not hold (the
-/// `origins`, returned in order).
+/// `origins`, returned in order); a Java site adds its line (the Java
+/// rungs read the header's import on it and the types enclosing it).
 pub fn sites(
     files: &BTreeSet<String>,
     sites: &[(Lang, &Site)],
@@ -129,7 +155,16 @@ pub fn sites(
         .iter()
         .map(|(lang, s)| {
             let kind = kind_code(s.kind).map_err(|e| e.to_string())?;
-            Ok(json!([*lang as i64, kind, index[s.from], s.spec]))
+            let mut row = vec![
+                json!(*lang as i64),
+                json!(kind),
+                json!(index[s.from]),
+                json!(s.spec),
+            ];
+            if *lang == Lang::Java {
+                row.push(json!(s.line));
+            }
+            Ok(Value::Array(row))
         })
         .collect::<Result<Vec<_>, String>>()?;
     Ok((

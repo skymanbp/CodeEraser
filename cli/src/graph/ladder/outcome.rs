@@ -27,7 +27,7 @@ pub enum Reason {
     /// detection (L step #15, O60).
     Empty,
     /// The name is declared in the referencing file itself — Java's
-    /// own compilation unit (java.rs `own_unit`): no other file is
+    /// own compilation unit (the core's CE.Resolve.JavaPick `ownUnit`): no other file is
     /// referenced, so no edge is drawn, and the ledger says why
     /// (plan v2.30 step 5).
     OwnUnit,

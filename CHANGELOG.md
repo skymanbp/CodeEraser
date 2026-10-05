@@ -8,6 +8,16 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W2-text 阶段 C：Java 的四级阶梯与类型注解的读法进核，每个走查到的 Java 文件头随请求过线；协议仍是 **9.0.0**（未发布，同版加性；2026-10-05；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2b 行、§10 W2b 阶段 C 行与 §11 第 54–57 条；`contracts/VERSIONING.md` 9.0.0 条的第二个「同版加性」段）。
+
+- **wire**（加性）：`sites` 加 Java（码 18，`import` / `import_star` / `type_ref`），Java 站点带第五列行号（缺行号按名拒绝）；请求 `java.headers` `[[路径, 包, [[名字, star, static, 行]], [[名字, [父类型], [成员], 首行, 末行]]]]`（走查读出的文件头与类型，按路径升序）；JDK 名表本就在定义包的 `ladder.java`，不另带。golden：`resolve/golden` 加第 8、9 对（Java），其余不动。
+- **核**：新 `CE.Resolve.Java`（分派、`headerName` 补全被折行截断的 import、`typeRef`）、`JavaAt`（`classOf` / `packageDir` / `declared`）、`JavaInherit`（继承级：包着站点的类型由内而外，父类型在它自己那个文件里解读，最近一层声明了该成员类型的答）、`JavaPick`（定案规则、JDK 的读法、标准源集规则、`classFiles`）、`JavaName`（类型注解的读法）、`JavaHeader`（请求行）；包索引、（包、类）索引与每个文件的源集位每次请求只建一次。
+- **Rust**：`graph/ladder/java.rs` / `java_inherit.rs` / `java_pick.rs` / `java_sets.rs` 删除，`java_header.rs` 的注解读法删除（头部与类型的词法 `read` 与 `java_types.rs` 留下），`resolve/request.rs` 把每个 Java 文件头装进请求、Java 站点带行号，`in_core` 加 Java。
+- **差分门**：删之前 Java 阶梯与注解读法按 27d0d56d 原样冻进测试子仓（`unit/graph/ladder/oracle/java*.rs`、`unit/graph/oracle_cfg/java_annotation.rs`）；阶梯腿新增 `java-import` / `java-import-star` / `java-type-ref` / `java-annotated`（`unit/dedup/ladder_diff/java.rs` + `java_gen.rs`），三颗种子各 4 × 12,000 个站点；真树 gson 22,698 + jsoup 24,210 + Java 对拍语料 349 个 Java 站点；其余语言的阶梯腿、21 棵真树与配置读法十腿随共用的请求与分派重跑；不一致 0。核参考电池另写一份 Java（`ReferenceJava` / `ReferenceJavaGen`，200 例 × 12 站点）。
+- **切换门**：27d0d56d release + 核 对 本车道 release + 核，十个对拍语料、自仓归档与十棵真树（加 gson、jsoup），graph --sites / deadcode / structure / check / join / arch / erase / rules 的 json：identical 335、differing 1——自仓 `ce rules` 只差回显的规则文件绝对路径（两臂拷贝在不同目录），其余字段逐字同。
+- **代价**（`docs/PERF-BUDGET.md` 新节，release ABAB ×7，27d0d56d 对车道树，自仓与 gson、jsoup，坐时每分钟记负载 18–85 %）：暖 `ce check` -0.8 % / +0.7 % / -2.7 %，没有面超过 +15 %。第一版的核让 gson / jsoup 冷 `deadcode` +20.4 % / +15.0 %——每个站点都把候选文件的路径重新切段找源集、逐个查头部；改为每次请求建一次索引后，录下的 gson 会话单独喂核 2.0 → 0.34 s。只有在 Java 树上第一次建图边的那一跑多一个 `resolve.request`（gson 885,394 B / 22,698 个站点、jsoup 820,387 B / 24,210 个）；PreToolUse 探针不问 `resolve/1`。
+- **语言条**（§10 量法）：Rust 2,349,478 → 2,327,680 B、Haskell 1,750,981 → 1,796,836 B，42.70 % → 43.56 %，差 598,497 → 530,844 B；Rust 删 23,528 B、加 1,730 B（净 −21,798）。
+
 **无默认档位变更。** 算法轨 v2.33 W2-text 阶段 B：R 的两级阶梯、`DESCRIPTION` 读法与包代码展开进核，`DESCRIPTION` 原文过线；协议仍是 **9.0.0**（未发布，按 7.2.0 的同版加性先例；2026-10-04；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2b 行、§10 W2b 阶段 B 行与 §11 第 50–53 条；`contracts/VERSIONING.md` 9.0.0 条的「同版加性」段）。
 
 - **wire**（加性）：`sites` 加 R（码 20，`source` / `library`）；请求 `r.descriptions` `[[路径, 原文]]`（走查到的 R 包 `DESCRIPTION`，按字节有损 UTF-8 读，读不到不带）；定义包 `resolve.configs` 加 `DESCRIPTION`；应答 `packages` `[[包目录, [代码文件…]]]`（降级为空表）；`inspect` 加 `description`。golden：`resolve/golden` 加第 7 对（R），其余只动 hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs`。

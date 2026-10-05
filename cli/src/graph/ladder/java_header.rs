@@ -8,7 +8,8 @@
 //! the whole text (plan v2.30 step 5b). The walk reads every Java file
 //! this way on every run (dedup/walkidx.rs) — a tree-sitter parse per
 //! file per run is what the lexer saves — and hands the headers to the
-//! Java ladder (Scope::java), which never reads a file itself.
+//! Java rungs (Scope::java; in the core since plan v2.33 W2-text stage
+//! C, graph/resolve/request.rs sends them), which never read a file.
 
 #[path = "java_types.rs"]
 mod types;
@@ -27,7 +28,8 @@ pub struct Header {
 /// One import declaration: the dotted name as written (whitespace
 /// between its tokens dropped), whether it ends `.*`, whether it is
 /// `import static`, and the 1-based line of its `import` keyword — the
-/// line the detector's site stands on (ladder/java.rs header_name).
+/// line the detector's site stands on (the core's CE.Resolve.Java
+/// `headerName`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Import {
     pub name: String,
@@ -76,15 +78,6 @@ pub fn read(text: &str) -> Header {
         });
     }
     header
-}
-
-/// The text after an annotation whose `@` is already read — its dotted
-/// name and any argument list: the Java ladder drops a type annotation
-/// from the name it annotates (ladder/java.rs).
-pub(super) fn past_annotation(text: &str) -> &str {
-    let mut lex = Lexer(text);
-    lex.annotation();
-    lex.0
 }
 
 /// The unread rest of the text; every method skips the trivia before
