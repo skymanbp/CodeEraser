@@ -7,7 +7,7 @@
 //! CE.Mention.Document, CE.Mention.Lines) from this side's numbers.
 
 use super::LangRates;
-use crate::document::{self, Answer, Request, Resolve};
+use crate::document::{self, Answer, Request};
 use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
 use serde_json::Value;
@@ -27,7 +27,7 @@ pub fn document(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Answer> 
     let (idx, _db) = crate::dedup::refreshed_index(root, db)?;
     let stats = super::refresh(root, &idx)?;
     let rates = super::rates::census(root, &idx)?;
-    document::assemble(core, request(&stats, &rates)?, &Nothing)
+    document::assemble(core, request(&stats, &rates)?)
 }
 
 /// The header as facts — every counter of `Stats` under its dotted
@@ -86,13 +86,4 @@ fn flatten(at: &str, v: &Value, out: &mut Vec<(String, i64)>) -> Result<()> {
         )),
     }
     Ok(())
-}
-
-/// The mentions document names no repository string.
-struct Nothing;
-
-impl Resolve for Nothing {
-    fn resolve(&self, _: &str, _: &[i128]) -> Option<String> {
-        None
-    }
 }

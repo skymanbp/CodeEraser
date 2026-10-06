@@ -8,7 +8,7 @@
 //! (CE.Score.Lines). No repository string rides it, so nothing is
 //! bound.
 
-use crate::document::{self, Answer, Request, Resolve};
+use crate::document::{self, Answer, Request};
 use crate::score::model::Outcome;
 use anyhow::{Context, Result};
 
@@ -34,7 +34,7 @@ const TABLES: [&str; 12] = [
 pub fn document(core: &str, o: &mut Outcome, roast: bool) -> Result<Answer> {
     let held = std::mem::replace(&mut o.held, Err(String::new()));
     let req = request(o)?.fact("roast", u8::from(roast));
-    document::assemble_over(core, held, req, &Nothing)
+    document::assemble_over(core, held, req)
 }
 
 /// The verdict reply's rows, this run's floor and counts, and the two
@@ -80,13 +80,4 @@ fn request(o: &Outcome) -> Result<Request> {
         req = req.rows("dropped", d);
     }
     Ok(req.empty(&TABLES))
-}
-
-/// The check document holds no repository string.
-struct Nothing;
-
-impl Resolve for Nothing {
-    fn resolve(&self, _: &str, _: &[i128]) -> Option<String> {
-        None
-    }
 }

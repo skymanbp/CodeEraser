@@ -19,7 +19,7 @@ are Haskell's, over the wire family `arch/1` ([Arch.hs:5-19](../../../core/app/C
 
 | table | row | read off |
 |---|---|---|
-| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([tables.rs:54](../../../cli/src/arch/tables.rs#L54), [face.rs:51](../../../cli/src/arch/face.rs#L51)) |
+| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([tables.rs:54](../../../cli/src/arch/tables.rs#L54), [face.rs:53](../../../cli/src/arch/face.rs#L53)) |
 | `dirs` | `[D, parent]` | the structure family's directory tree over those paths: the root row 0 with parent −1, every other parent an earlier row, since the tree enters every ancestor before its child ([tables.rs:129](../../../cli/src/arch/tables.rs#L129)) |
 | `edges` | `[F, G, w]` | every graph arc from one measured file to another — any kind, any rung, through the structure family's own file join — plus an arc to a Markdown section, folded onto the section's file; a self pair is dropped and `w` counts the arcs between the pair ([rows.rs:89](../../../cli/src/structure/rows.rs#L89), [tables.rs:96](../../../cli/src/arch/tables.rs#L96)) |
 | `pkgEdges` | `[F, D, w]` | the arcs whose target is a package node — a Go, R or Java package import, a Markdown directory link — onto the package's directory; a package outside the tree has no row, and a reference into the file's own directory is kept for the core to fold |
@@ -111,7 +111,7 @@ arc's), and each cluster's majority directory, read by the rule the misplaced ro
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
 misplaced files never name two majorities. This side sends the tables back with each path's place
 in string order and puts the paths back ([Document.hs:96](../../../core/app/CE/Arch/Document.hs#L96), [Document.hs:122](../../../core/app/CE/Arch/Document.hs#L122),
-[face.rs:79](../../../cli/src/arch/face.rs#L79)).
+[face.rs:78](../../../cli/src/arch/face.rs#L78)).
 
 ### 4. The faces and the document
 

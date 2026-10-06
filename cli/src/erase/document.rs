@@ -8,9 +8,10 @@
 //! documents, the console lines and the veto come back. The unified
 //! diff stays this side's measurement: rendered per file before
 //! anything is applied (the hash check names a file that moved since
-//! planning), and the core places it as one reference per file.
+//! planning), and the core places it as one reference per file; every
+//! string is sent and the core spells it in.
 
-use crate::document::{self, Answer, Held, Paths, Request, Resolve};
+use crate::document::{self, Answer, Held, Paths, Request};
 use crate::erase::log::Log;
 use crate::erase::model::{CLASS_NAMES, Plan, REASON_NAMES, T1T2_NO_WHOLE_UNIT};
 use anyhow::{Context, Result};
@@ -37,6 +38,18 @@ impl Diffs {
     /// — the GUI preview's `diff` (faces::erase_preview).
     pub fn unified(&self) -> String {
         self.0.iter().map(|(_, d)| d.clone() + "\n").collect()
+    }
+
+    /// Each of the plan's `rows` rows: its file's diff at the file's
+    /// first row (a `diff` reference's key), nothing elsewhere.
+    fn by_row(&self, rows: usize) -> Vec<Option<&String>> {
+        let mut out = vec![None; rows];
+        for (i, d) in self.0.iter().rev() {
+            if let Some(slot) = out.get_mut(*i) {
+                *slot = Some(d);
+            }
+        }
+        out
     }
 }
 
@@ -79,36 +92,13 @@ pub fn answer(core: &str, held: Held, p: &Plan, diffs: &Diffs, run: Run) -> Resu
         .fact("applied", run.applied.unwrap_or(0))
         .rows("outOfClass", kinds.collect::<Result<Vec<_>>>()?)
         .rows("cands", cands);
-    let strings = PlanStrings {
-        lists: document::Lists(vec![
-            ("path", paths.list),
-            (
-                "provenance",
-                p.rows.iter().map(|r| r.provenance.clone()).collect(),
-            ),
-        ]),
-        diffs,
-    };
-    document::assemble_over(core, held, req, &strings)
-}
-
-/// The plan's strings: paths and each row's provenance by index, and
-/// each file's diff (a `diff` reference names the file's first and last
-/// row; the first is the key).
-struct PlanStrings<'a> {
-    lists: document::Lists,
-    diffs: &'a Diffs,
-}
-
-impl Resolve for PlanStrings<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        if class != "diff" {
-            return self.lists.resolve(class, ints);
-        }
-        let first = *ints.first()?;
-        let found = self.diffs.0.iter().find(|(i, _)| *i as i128 == first);
-        found.map(|(_, d)| d.clone())
-    }
+    // a `diff` reference names the file's first and last row; the
+    // first is the key
+    let req = req
+        .text("path", &paths.list)
+        .texts("provenance", p.rows.iter().map(|r| &r.provenance))
+        .text("diff", diffs.by_row(p.rows.len()));
+    document::assemble_over(core, held, req)
 }
 
 /// The trail document, its lines and its veto (a refused line).
@@ -137,18 +127,14 @@ pub fn trail_answer(core: &str, l: &Log) -> Result<Answer> {
         .fact("present", u8::from(l.present))
         .rows("records", records)
         .rows("unreadable", unreadable);
-    let column = |f: fn(&crate::erase::log::Record) -> &String| {
-        l.rows.iter().map(|r| f(r).clone()).collect()
+    let column = |f: fn(&crate::erase::log::Record) -> &String| -> Vec<&String> {
+        l.rows.iter().map(f).collect()
     };
-    let lists = document::Lists(vec![
-        ("path", paths.list),
-        ("provenance", column(|r| &r.provenance)),
-        ("hash", column(|r| &r.hash)),
-        ("plan", column(|r| &r.plan)),
-        (
-            "unreadable",
-            l.unreadable.iter().map(|(_, why)| why.clone()).collect(),
-        ),
-    ]);
-    document::assemble(core, req, &lists)
+    let req = req
+        .text("path", &paths.list)
+        .text("provenance", column(|r| &r.provenance))
+        .text("hash", column(|r| &r.hash))
+        .text("plan", column(|r| &r.plan))
+        .texts("unreadable", l.unreadable.iter().map(|(_, why)| why));
+    document::assemble(core, req)
 }

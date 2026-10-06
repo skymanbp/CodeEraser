@@ -4,8 +4,10 @@
 //! audit's own link (verdict::open) — the face, the counts and the
 //! verdicts as facts and rows, every path a reference — answered with
 //! the lines the face prints and `exit.fail`, the block / refuse bit.
-//! The sentences and both languages are the core's (`CE.Text.Audit`).
-//! A core the face cannot reach, or a reply it cannot bind, still
+//! The sentences and both languages are the core's (`CE.Text.Audit`),
+//! and so is the spelling: the paths and the three single strings ride
+//! the request and every line comes back whole (plan v2.33 W7).
+//! A core the face cannot reach, or a reply it cannot read, still
 //! decides by the local rule (`blocked`); the line then is the one
 //! English fallback, which names the rules and why the core did not
 //! phrase them.
@@ -13,8 +15,8 @@
 use super::tombstone::Leg;
 use super::verdict::Verdict;
 use crate::corelink::Link;
-use crate::document::lines::{Line, Stream, bind_lines};
-use crate::document::{self, Resolve, at};
+use crate::document;
+use crate::document::lines::{Line, Stream, spelled_lines};
 use serde_json::Value;
 
 /// The faces, by their code in the request.
@@ -124,10 +126,9 @@ fn asked(link: Option<&mut Link>, said: &Said) -> Result<(Vec<Line>, bool), Stri
     if !link.has(document::CAP) {
         return Err(format!("the core offers no {} (pre-7.8.0)", document::CAP));
     }
-    let strings = Strings::of(said);
-    let reply = link.request(document::KIND, strings.body(said))?;
+    let reply = link.request(document::KIND, body(said))?;
     crate::corelink::judged::degraded(&reply)?;
-    bind_lines(&reply, &strings).map_err(|e| e.to_string())
+    spelled_lines(&reply).map_err(|e| e.to_string())
 }
 
 /// The one English line a face says when the core did not phrase it:
@@ -160,74 +161,64 @@ fn fallback(said: &Said, why: &str) -> Line {
     Line { stream, text }
 }
 
-/// The strings the request's references name: each shown block's two
-/// paths, each shown site's path, and the three single strings.
-struct Strings {
-    blocks: Vec<(String, String)>,
-    places: Vec<String>,
-    error: Option<String>,
-    mount: Option<String>,
-    message: Option<String>,
-}
-
-impl Strings {
-    fn of(said: &Said) -> Self {
-        let shown = said.dups.map_or(&[][..], |v| v.shown.as_slice());
-        Strings {
-            blocks: shown
-                .iter()
-                .map(|b| (b.a_file.clone(), b.b_file.clone()))
-                .collect(),
-            places: said
-                .tomb
-                .map(|t| t.shown.iter().map(|p| p.file.clone()).collect())
-                .unwrap_or_default(),
-            error: said.tomb.and_then(|t| t.judged.as_ref().err().cloned()),
-            mount: said.mount.map(str::to_string),
-            message: said.unreadable.clone(),
-        }
+/// The `audit` request (CE.Audit.Document's statement) and the strings
+/// its references name: each shown block's two paths, each shown site's
+/// path, the leg's error, the mount and the unreadable message.
+fn body(said: &Said) -> Value {
+    let tier = |t: &str| crate::config::TIERS.iter().position(|x| *x == t);
+    let shown = said.dups.map_or(&[][..], |v| v.shown.as_slice());
+    let blocks: Vec<[usize; 6]> = shown
+        .iter()
+        .enumerate()
+        .map(|(k, b)| [k, b.a_start, b.a_end, b.b_start, b.b_end, b.tokens])
+        .collect();
+    let sites = said.tomb.map_or(&[][..], |t| t.shown.as_slice());
+    let places: Vec<[usize; 3]> = (sites.iter().enumerate())
+        .map(|(i, p)| [i, p.line, p.kind as usize])
+        .collect();
+    let dups: Vec<[usize; 2]> = said
+        .dups
+        .map(|v| [v.dups, usize::from(v.fail)])
+        .into_iter()
+        .collect();
+    let tomb: Vec<Vec<usize>> = said
+        .tomb
+        .map(|t| tomb_row(t, tier(&t.tier)))
+        .into_iter()
+        .collect();
+    let error: Vec<&String> = said
+        .tomb
+        .and_then(|t| t.judged.as_ref().err())
+        .into_iter()
+        .collect();
+    let mut req = document::Request::new("audit")
+        .range("blocks", blocks.len())
+        .range("places", places.len())
+        .range("errors", error.len())
+        .rows("net", [[said.net]])
+        .rows("dups", dups)
+        .rows("blocks", blocks)
+        .rows("tomb", tomb)
+        .rows("places", places)
+        .fact("face", said.face as u8)
+        .fact("git", u8::from(said.git))
+        .fact("unreadable", u8::from(said.unreadable.is_some()))
+        .fact("mounted", u8::from(said.mount.is_some()))
+        .fact("mode", tier(said.mode).unwrap_or(0))
+        .fact("changed", said.changed)
+        .text_columns(
+            ("block_a", "block_b"),
+            shown.iter().map(|b| (&b.a_file, &b.b_file)),
+        )
+        .texts("place_file", sites.iter().map(|p| &p.file))
+        .text("error", error);
+    if let Some(mount) = said.mount {
+        req = req.text("mount", mount);
     }
-
-    /// The `audit` request (CE.Audit.Document's statement).
-    fn body(&self, said: &Said) -> Value {
-        let tier = |t: &str| crate::config::TIERS.iter().position(|x| *x == t);
-        let shown = said.dups.map_or(&[][..], |v| v.shown.as_slice());
-        let blocks: Vec<[usize; 6]> = shown
-            .iter()
-            .enumerate()
-            .map(|(k, b)| [k, b.a_start, b.a_end, b.b_start, b.b_end, b.tokens])
-            .collect();
-        let places: Vec<[usize; 3]> = said.tomb.map_or_else(Vec::new, |t| {
-            let rows = t.shown.iter().enumerate();
-            rows.map(|(i, p)| [i, p.line, p.kind as usize]).collect()
-        });
-        let dups: Vec<[usize; 2]> = said
-            .dups
-            .map(|v| [v.dups, usize::from(v.fail)])
-            .into_iter()
-            .collect();
-        let tomb: Vec<Vec<usize>> = said
-            .tomb
-            .map(|t| tomb_row(t, tier(&t.tier)))
-            .into_iter()
-            .collect();
-        document::Request::new("audit")
-            .range("blocks", blocks.len())
-            .range("places", places.len())
-            .range("errors", usize::from(self.error.is_some()))
-            .rows("net", [[said.net]])
-            .rows("dups", dups)
-            .rows("blocks", blocks)
-            .rows("tomb", tomb)
-            .rows("places", places)
-            .fact("face", said.face as u8)
-            .fact("git", u8::from(said.git))
-            .fact("unreadable", u8::from(said.unreadable.is_some()))
-            .fact("mounted", u8::from(said.mount.is_some()))
-            .fact("mode", tier(said.mode).unwrap_or(0))
-            .fact("changed", said.changed)
-            .body()
+    if let Some(message) = &said.unreadable {
+        req = req.text("message", message);
     }
+    req.body()
 }
 
 /// The leg's row: [state, sites, label, prose, erased, budget, tier,
@@ -247,24 +238,6 @@ fn tomb_row(t: &Leg, tier: Option<usize>) -> Vec<usize> {
     row.extend(tail);
     row.extend([usize::from(over), t.unread, t.bounded]);
     row
-}
-
-impl Resolve for Strings {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        let one = |s: &Option<String>| s.clone().filter(|_| ints.is_empty());
-        match class {
-            "block_a" | "block_b" => {
-                let [k] = ints else { return None };
-                let (a, b) = self.blocks.get(usize::try_from(*k).ok()?)?;
-                Some(if class == "block_a" { a } else { b }.clone())
-            }
-            "place_file" => at(&self.places, ints),
-            "error" => self.error.clone().filter(|_| ints == [0]),
-            "mount" => one(&self.mount),
-            "message" => one(&self.message),
-            _ => None,
-        }
-    }
 }
 
 #[cfg(test)]

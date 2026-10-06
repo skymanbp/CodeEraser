@@ -52,6 +52,7 @@ import qualified ResolveProps
 import qualified ScanCyclesProps
 import qualified ScanEventsProps
 import qualified ScanProps
+import qualified SpellProps
 import qualified StructureModularityProps
 import qualified StructureProps
 import qualified TrendProps
@@ -182,6 +183,7 @@ batteries =
        , DocumentProps5.battery
        , DocumentProps6.battery
        , ResolveProps.battery
+       , SpellProps.battery
        ]
 
 -- | One named check through the shared runner.

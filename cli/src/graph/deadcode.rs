@@ -113,8 +113,8 @@ pub fn answer(root: &Path, db: Option<PathBuf>, core: &str, check: bool) -> Resu
 /// The judgment, then its document and lines over the judgment's link.
 fn said(root: &Path, core: &str, w: &GraphWire, check: bool) -> Result<(Answer, Judged)> {
     let (j, _, held) = judged(root, core, w, &[])?;
-    let (req, names) = document::request(("deadcode", check), w, &j)?;
-    Ok((crate::document::assemble_over(core, held, req, &names)?, j))
+    let req = document::request(("deadcode", check), w, &j)?;
+    Ok((crate::document::assemble_over(core, held, req)?, j))
 }
 
 /// The judgment alone, answering position rows too — the canvas

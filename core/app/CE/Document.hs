@@ -29,6 +29,11 @@
 -- (`exit: {fail}`); the guard and the audit faces, which have no
 -- report document, are families of their own whose `document` is `{}`
 -- (they stay out of the catalogue: there is no document to list).
+-- Plan v2.33 W7: a request that carries the measuring side's strings
+-- (`strings`) is answered spelled — every reference its string, every
+-- hole filled (CE.Document.Bind, the family's rules in
+-- CE.Document.Spell), the tables that only measured a string (ranks,
+-- widths) measured here; one that does not is answered as before.
 module CE.Document (blankOf, catalogue, emptyOf, families, respond) where
 
 import qualified CE.Arch.Document as Arch
@@ -42,7 +47,9 @@ import qualified CE.Dedup.Document as Dedup
 import qualified CE.Dedup.Lines as DedupLines
 import qualified CE.Docdup.Document as Docdup
 import qualified CE.Docdup.Lines as DocdupLines
+import CE.Document.Bind (bindDocument, bindLine, textOf)
 import CE.Document.Read hiding (fields)
+import CE.Document.Spell (derived, resolverFor)
 import qualified CE.Erase.Document as Erase
 import qualified CE.Erase.Lines as EraseLines
 import qualified CE.Erase.TrailLines as TrailLines
@@ -91,7 +98,9 @@ import qualified CE.Text.Trend as TrendText
 import qualified CE.Trend.Document as Trend
 import qualified CE.Trend.Lines as TrendLines
 import qualified CE.Wire as Wire
-import Data.Aeson (encode, object, (.=))
+import Data.Aeson (encode, object, toJSON, (.=))
+import Data.Aeson.Key (Key)
+import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Key (fromString)
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -157,6 +166,8 @@ blankOf fam lang =
     , dFacts = Just (M.fromList [(n, 0) | (n, _) <- spFacts sp])
     , dDegraded = if "why" `elem` spRanges sp then Just 0 else Nothing
     , dLang = lang
+    , dStrings = Nothing
+    , dInspect = Nothing
     }
  where
   sp = dfSpec fam
@@ -192,23 +203,67 @@ overCap req = maybe False (const (totalRows req > docRowCap)) (familyOf req)
 -- assembled from; past the cap the family's empty document and its
 -- lines, the reason named.
 answer :: String -> Bool -> DocReq -> B8.ByteString
-answer proto degraded req = BL.toStrict (encode (object (fields <> ["reason" .= ("document_too_large" :: String) | degraded])))
+answer proto degraded req = BL.toStrict (encode (object (fields <> ["reason" .= why | Just why <- [reason]])))
  where
   judged f = if degraded then blankOf f (dLang req) else req
   document = maybe (object []) (\f -> dfAssemble f (judged f)) (familyOf req)
-  lines' = maybe [] (\f -> map lineValue (dfLines f (langOf (dLang req)) (judged f))) (familyOf req)
+  lines' = maybe [] (\f -> dfLines f (langOf (dLang req)) (judged f)) (familyOf req)
   fails = maybe False (\f -> dfExit f (judged f)) (familyOf req)
+  -- the strings spelled in when the request carries them and the
+  -- document was laid out; a reference without its string degrades
+  -- the reply by name
+  bound = case (dStrings req, dFamily req) of
+    (Just _, Just fam) | not degraded -> Just (spellAll (resolverFor fam req) document lines')
+    _ -> Nothing
+  (document', lines'', reason) = case bound of
+    Nothing -> (document, map lineValue lines', if degraded then Just "document_too_large" else Nothing)
+    Just (Right (d, ls)) -> (d, ls, Nothing)
+    Just (Left why) -> (object [], [], Just ("unresolved_reference: " <> why))
   fields =
     [ "proto" .= proto
     , "type" .= ("document.result" :: String)
     , "id" .= dId req
-    , "document" .= document
-    , "lines" .= lines'
+    , "document" .= document'
+    , "lines" .= lines''
     , "exit" .= object ["fail" .= fails]
     , "counts" .= object ["rows" .= totalRows req]
-    , "degraded" .= degraded
+    , "degraded" .= (degraded || maybe False (either (const True) (const False)) bound)
     ]
 
--- | decode → cap → contract → assemble.
+-- | A laid-out document and its lines with every reference spelled.
+spellAll :: (String -> [Integer] -> Maybe String) -> Value -> [Line] -> Either String (Value, [Value])
+spellAll r document ls = (,) <$> bindDocument r document <*> traverse (bindLine r) ls
+
+-- | The differential's question (never sent by the product): each
+-- reference of `inspect.refs`, each document of `inspect.docs` and each
+-- `[stream, text, ref…]` of `inspect.lines` spelled through the
+-- family's rules over the request's strings (null where it does not
+-- spell), and the request's rows with the measured tables in.
+inspected :: String -> DocReq -> B8.ByteString
+inspected proto req = BL.toStrict (encode (object ["proto" .= proto, "type" .= ("document.result" :: String), "id" .= dId req, "inspected" .= body]))
+ where
+  r = resolverFor (maybe "" id (dFamily req)) req
+  part :: Key -> [Value]
+  part k = case dInspect req of
+    Just (Object o) | Just (Array xs) <- KM.lookup k o -> foldr (:) [] xs
+    _ -> []
+  body =
+    object
+      [ "refs" .= [either (const Null) toJSON (bindDocument r (object ["$" .= v])) | v <- part "refs"]
+      , "docs" .= [either (const Null) id (bindDocument r v) | v <- part "docs"]
+      , "lines" .= [either (const Null) id (lineOf v >>= bindLine r) | v <- part "lines"]
+      , "rows" .= dRows (derived req)
+      ]
+  lineOf v = case v of
+    Array xs | Number s : t : refs <- foldr (:) [] xs, Just text <- textOf t -> Right (Line (round s) (Piece text refs []))
+    _ -> Left "not a line"
+
+-- | decode → cap → contract → assemble; a request carrying strings has
+-- the tables they measure put in first; the differential's question
+-- (`inspect`) skips the statement and assembles nothing.
 respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = Wire.family "document" dId overCap offences (answer proto True) (answer proto False)
+respond proto = Wire.family "document" dId overCap check (answer proto True . derived) reply
+ where
+  asking = maybe False (const True) . dInspect
+  check req = if asking req then fmap (const "document: inspect names no family") (maybe (Just ()) (const Nothing) (familyOf req)) else offences (derived req)
+  reply req = if asking req then inspected proto req else answer proto False (derived req)

@@ -11,14 +11,15 @@
 //! — the named reason. A core that answers a chunk degraded is a
 //! cap-mirror drift and an error, never a document (step-7 ruling 4).
 //! The core lays the document out (document/1, CE.Merge.Document)
-//! over every chunk's answer joined here; this side puts the paths,
-//! unit names and member texts back (crate::document). Advisory: no
-//! gate reads it.
+//! over every chunk's answer joined here, and spells in the paths,
+//! unit names and member texts this side sends (crate::document; a
+//! hole's text is this side's cut of the tree's span, sent one per
+//! hole row). Advisory: no gate reads it.
 
 use super::groups::{self, FAMILY_EXACT, Group, Unsendable};
 use super::wire::{self, HoleRow, Judged, Suggestion};
 use crate::dedup::{self, t3};
-use crate::document::{self, Answer, Held, Request, Resolve, Why};
+use crate::document::{self, Answer, Held, Request, Why};
 use crate::graph::deadcode::{Advisory, wire_of};
 use anyhow::Result;
 use std::collections::BTreeMap;
@@ -78,27 +79,16 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, only: Option<usize>) ->
         };
         answers.push(wire::consume(&reply, &sent).map_err(|e| anyhow::anyhow!("merge: {e}"))?);
     }
-    let names = Names {
-        members: groups.iter().flat_map(|g| &g.members).collect(),
-        texts: texts_of(root, &groups)?,
-        why: Why::default(),
-    };
-    let req = request(&groups, answers, unsendable, merged)
-        .range("members", names.members.len())
-        .range("why", 0)
-        .fact("only", only);
-    document::assemble_over(core, Ok(link), req, &names)
+    let texts = texts_of(root, &groups)?;
+    let req = request(&groups, answers, (unsendable, merged), &texts).fact("only", only);
+    document::assemble_over(core, Ok(link), req)
 }
 
 /// The judgment did not happen: no row, every fact zero, the reason;
 /// laid out over `held` when the link is still whole.
 fn degraded((core, only): (&str, usize), held: Held, why: String) -> Result<Answer> {
-    let mut names = Names {
-        members: Vec::new(),
-        texts: Texts::new(),
-        why: Why::default(),
-    };
-    let reason = names.why.add(why);
+    let mut reasons = Why::default();
+    let reason = reasons.add(why);
     let req = FACTS
         .iter()
         .fold(Request::new("merge").empty(&TABLES), |q, k| q.fact(k, 0));
@@ -108,16 +98,25 @@ fn degraded((core, only): (&str, usize), held: Held, why: String) -> Result<Answ
         req.range("members", 0)
             .range("why", 1)
             .fact("only", only)
-            .degraded(reason),
-        &names,
+            .degraded(reason)
+            .text("why", reasons.list()),
     )
 }
 
 /// Every chunk's answer joined: the suggestion rows numbered across
 /// chunks with the family and fragment bits, one row per member
-/// numbered across groups, the hole rows, the facts this side counted.
-fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -> Request {
+/// numbered across groups, the hole rows, the facts this side counted,
+/// and the strings: each member's path and unit, and each hole row's
+/// text — the member's source from the row's first node to its last,
+/// cut here off the tree's spans (`span_text`).
+fn request(
+    groups: &[Group],
+    answers: Vec<Judged>,
+    (u, merged): (Unsendable, u64),
+    texts: &Texts,
+) -> Request {
     let (mut rows, mut members, mut holes) = (Vec::new(), Vec::new(), Vec::new());
+    let mut cut: Vec<String> = Vec::new();
     let mut nodes = 0;
     let suggested = answers.iter().flat_map(|j| &j.groups);
     for (g, (group, (s, hs))) in groups.iter().zip(suggested).enumerate() {
@@ -136,11 +135,18 @@ fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -
             ]);
         }
         holes.extend(hs.iter().map(|h| hole_row(g, h)));
+        cut.extend(hs.iter().map(|h| match group.members.get(h.m) {
+            Some(m) => span_text(&texts[&m.path], &m.tree, h.post, h.post_end),
+            None => String::new(),
+        }));
     }
     for j in &answers {
         nodes += j.counts[2];
     }
+    let all: Vec<&groups::Member> = groups.iter().flat_map(|g| &g.members).collect();
     Request::new("merge")
+        .range("members", all.len())
+        .range("why", 0)
         .rows("groups", rows)
         .rows("members", members)
         .rows("holes", holes)
@@ -150,6 +156,9 @@ fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -
         .fact("no_slot_table", u.no_slot_table)
         .fact("unbuilt", u.unbuilt)
         .fact("over_cap", u.over_cap)
+        .text_columns(("path", "unit"), all.iter().map(|m| (&m.path, &m.unit)))
+        .text("holeText", cut)
+        .text("why", [""; 0])
 }
 
 /// [g, params, kept, savings, feasible, reason, family, fragment].
@@ -210,47 +219,6 @@ fn texts_of(root: &Path, groups: &[Group]) -> Result<Texts> {
         }
     }
     Ok(out)
-}
-
-/// The merge document's strings: each member's path, unit and text at
-/// a hole (by its number across groups), and the reason.
-struct Names<'a> {
-    members: Vec<&'a groups::Member>,
-    texts: Texts,
-    why: Why,
-}
-
-impl Resolve for Names<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        let member = |k: &i128| usize::try_from(*k).ok().and_then(|k| self.members.get(k));
-        match (class, ints) {
-            ("why", _) => self.why.at(ints),
-            ("path", [k]) => Some(member(k)?.path.clone()),
-            ("unit", [k]) => member(k)?.unit.clone(),
-            ("text", [k, post, post_end]) => {
-                let m = member(k)?;
-                let (post, post_end) = (i64::try_from(*post).ok()?, i64::try_from(*post_end).ok()?);
-                Some(span_text(&self.texts[&m.path], &m.tree, post, post_end))
-            }
-            // a console line's text cut to the cap the core names
-            ("clipped", [k, post, post_end, cap]) => {
-                let text = self.resolve("text", &[*k, *post, *post_end])?;
-                Some(clip(&text, usize::try_from(*cap).ok()?))
-            }
-            _ => None,
-        }
-    }
-}
-
-/// One line, at most `cap` characters, `…` when cut: the core's
-/// `clipped` reference (its console names the cap).
-fn clip(text: &str, cap: usize) -> String {
-    let flat: String = text.split_whitespace().collect::<Vec<_>>().join(" ");
-    if flat.chars().count() <= cap {
-        return flat;
-    }
-    let cut: String = flat.chars().take(cap).collect();
-    format!("{cut}…")
 }
 
 /// The source text from node `post`'s start to node `post_end`'s end

@@ -10,7 +10,7 @@
 use super::SIMILAR_REV;
 use super::face::{self, Report};
 use super::query::Ask;
-use crate::document::{self, Answer, Held, Request, Resolve, Why};
+use crate::document::{self, Answer, Held, Request, Why};
 use anyhow::Result;
 use std::path::{Path, PathBuf};
 
@@ -59,31 +59,11 @@ fn laid_out(core: &str, r: &Report, held: Held) -> Result<Answer> {
     if let Some(reason) = &r.degraded {
         req = req.degraded(why.add(reason.clone()));
     }
-    let strings = Strings {
-        label: r.label.clone(),
-        at: r.rows.iter().map(|x| x.at.clone()).collect(),
-        key: r.rows.iter().map(|x| x.key.clone()).collect(),
-        why,
-    };
-    document::assemble_over(core, held, req.range("why", strings.why.count()), &strings)
-}
-
-/// The query's label, each seat's place and key, the reason texts.
-struct Strings {
-    label: String,
-    at: Vec<String>,
-    key: Vec<String>,
-    why: Why,
-}
-
-impl Resolve for Strings {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        match (class, ints) {
-            ("label", []) => Some(self.label.clone()),
-            ("at", _) => document::at(&self.at, ints),
-            ("key", _) => document::at(&self.key, ints),
-            ("why", _) => self.why.at(ints),
-            _ => None,
-        }
-    }
+    // the query's label, each seat's place and key, the reason texts
+    let req = req
+        .range("why", why.count())
+        .text("label", &r.label)
+        .text_columns(("at", "key"), r.rows.iter().map(|x| (&x.at, &x.key)))
+        .text("why", why.list());
+    document::assemble_over(core, held, req)
 }

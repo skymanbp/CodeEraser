@@ -10,7 +10,7 @@
 
 use super::churn_unit::{Lines, UnitRow, UnitSim};
 use super::{Pos, verdicts::Judged};
-use crate::document::{self, Paths, Request, Resolve, Why};
+use crate::document::{self, Paths, Request};
 use anyhow::{Context, Result};
 use std::collections::{BTreeMap, HashMap};
 
@@ -48,11 +48,10 @@ pub(super) fn assemble(
     held: document::Held,
     p: &Parts<'_>,
 ) -> Result<document::Answer> {
-    let (req, names) = request(p)?;
-    document::assemble_over(core, held, req, &names)
+    document::assemble_over(core, held, request(p)?)
 }
 
-fn request(p: &Parts<'_>) -> Result<(Request, Names)> {
+fn request(p: &Parts<'_>) -> Result<Request> {
     let mut paths = Paths::default();
     let files = file_rows(p, &mut paths);
     let units = unit_rows(p.units, &mut paths);
@@ -69,15 +68,12 @@ fn request(p: &Parts<'_>) -> Result<(Request, Names)> {
         .iter()
         .filter_map(|(x, y, n)| Some([paths.find(x)?, paths.find(y)?, *n as i64]))
         .collect();
-    let rank = document::ranks(paths.list.iter().map(String::as_str));
-    let rank_rows: Vec<[usize; 2]> = rank.iter().enumerate().map(|(i, r)| [i, *r]).collect();
     let req = Request::new("join")
         .range("paths", paths.list.len())
         .range("units", p.units.len())
         .range("why", 0)
         .fact("days", p.days)
         .fact("commits", p.churn.commits)
-        .rows("rankPaths", rank_rows)
         .rows("files", files)
         .rows("pos", pos)
         .rows("cochange", cochange)
@@ -85,17 +81,13 @@ fn request(p: &Parts<'_>) -> Result<(Request, Names)> {
         .rows("joinSeverity", &p.judged.join_severity)
         .rows("units", units);
     let req = reasons(req, p)?;
-    let keys = p
-        .units
-        .iter()
-        .map(|u| [u.a.key.clone(), u.b.key.clone()])
-        .collect();
-    let names = Names {
-        paths: paths.list,
-        keys,
-        why: Why::default(),
-    };
-    Ok((req.empty(&TABLES), names))
+    let keys: Vec<[&String; 2]> = p.units.iter().map(|u| [&u.a.key, &u.b.key]).collect();
+    // the core orders the paths (`rankPaths`) off the strings
+    let req = req
+        .text("path", &paths.list)
+        .text("key", keys)
+        .text("why", [""; 0]);
+    Ok(req.empty(&TABLES))
 }
 
 /// Each degraded leg's reason by its code in the package's list.
@@ -203,28 +195,4 @@ fn file_churn(ch: &crate::churn::Report) -> HashMap<&str, Lines> {
         e.rewrote += u.rewrote;
     }
     map
-}
-
-/// The join document's strings: the paths and each unit row's keys.
-struct Names {
-    paths: Vec<String>,
-    keys: Vec<[String; 2]>,
-    why: Why,
-}
-
-impl Resolve for Names {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        match class {
-            "path" => document::at(&self.paths, ints),
-            "key" => match ints {
-                [k, side] => {
-                    let row = self.keys.get(usize::try_from(*k).ok()?)?;
-                    row.get(usize::try_from(*side).ok()?).cloned()
-                }
-                _ => None,
-            },
-            "why" => self.why.at(ints),
-            _ => None,
-        }
-    }
 }

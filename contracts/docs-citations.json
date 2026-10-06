@@ -5330,8 +5330,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/document.rs|e7f5278909542115|0": {
     "target": "../../../cli/src/join/document.rs",
-    "line": 191,
-    "end": 200,
+    "line": 183,
+    "end": 192,
     "text": "]\n})\n.collect()\n}\n\n/// Per-file churn sums over the per-unit ledger — derived the same"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/join/mod.rs|0151757927f5f2a1|0": {
@@ -5925,17 +5925,11 @@
     "end": 14,
     "text": "//! What a grammar reads as opaque to names: the spans of every literal"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/document.rs|090745ee11ebc565|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/document.rs|ff3d7dda0862a34f|0": {
     "target": "../../../cli/src/structure/document.rs",
-    "line": 87,
-    "end": 102,
-    "text": "seams: p.seams,"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/document.rs|4ae7746a65364c2d|0": {
-    "target": "../../../cli/src/structure/document.rs",
-    "line": 115,
-    "end": 135,
-    "text": "}\n}\nnames\n}\n\n/// The structure document's strings: the directory names, and the"
+    "line": 101,
+    "end": 113,
+    "text": "fn candidates(sf: &SeamFacts, r: &Reply) -> Result<Vec<[i64; 5]>> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|51898e9fa4010244|0": {
     "target": "../../../cli/src/structure/judge.rs",
@@ -6047,6 +6041,12 @@
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
     "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"9.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Document/Spell.hs|98578b01610d2675|0": {
+    "target": "../../../core/app/CE/Document/Spell.hs",
+    "line": 25,
+    "end": 38,
+    "text": "resolverFor :: String -> DocReq -> Resolver"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
@@ -8762,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 416,
-    "end": 418,
+    "line": 423,
+    "end": 425,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -10756,7 +10756,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 112,
+    "line": 113,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -10835,7 +10835,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ee74b95db080349c|0": {
     "target": "../../../cli/src/flow_report/face.rs",
-    "line": 166,
+    "line": 210,
     "text": "fn placed(files: &[Lowered], verdict: &Verdict) -> Vec<[i64; 6]> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/mod.rs|293f47b7fd646bc0|0": {
@@ -11023,7 +11023,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 113,
+    "line": 114,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
@@ -11089,12 +11089,12 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|1c85462b7fd1d857|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 95,
+    "line": 89,
     "text": "fn degraded((core, only): (&str, usize), held: Held, why: String) -> Result<Answer> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|39c8477982b58025|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 257,
+    "line": 225,
     "text": "/// (−1: nothing on this side)."
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|8acf28239d333bb2|0": {
@@ -11105,13 +11105,13 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|9f7d58911284bdf3|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 185,
+    "line": 194,
     "text": "/// node they land on (the same graph `ce deadcode` judges)."
   },
-  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|e34b025ba3a30b41|0": {
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|d00e044676756a3e|0": {
     "target": "../../../cli/src/merge/face.rs",
-    "line": 119,
-    "text": "fn request(groups: &[Group], answers: Vec<Judged>, u: Unsendable, merged: u64) -> Request {"
+    "line": 112,
+    "text": "fn request(\ngroups: &[Group],"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|243bc494e8f3468c|0": {
     "target": "../../../cli/src/merge/groups.rs",
@@ -11564,7 +11564,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|4e65db66c3f45cd4|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 79,
+    "line": 78,
     "text": "fn request(t: &Tables, r: &Reply) -> Request {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|5466b2f19597e581|0": {
@@ -11574,7 +11574,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|e8ebd19464cabd3f|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 51,
+    "line": 53,
     "text": "fn line_count(root: &Path, path: &str) -> Result<i64> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/mod.rs|5ba8ae5afa201208|0": {

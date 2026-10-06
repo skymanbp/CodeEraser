@@ -8,6 +8,18 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W7：报告渲染胶水进核——报告里每个仓库字符串由核拼好，Rust 只送它读到的字符串表、印核答的行；协议仍是 **9.0.0**（未发布，同版加性；2026-10-06；报告字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W7 状态、§10 W7 行与 §11 第 73–78 条；`contracts/VERSIONING.md` 9.0.0 同版加性第七段）。
+
+- **wire**（加性）：`document/1` 请求可带 `strings`（类名 → 字符串表，嵌套数组）；带了，核在装配之后把每个 `{"$": [类, 整数…]}` 引用解成文本、把行里每个 `{}` 填上，行答 `[流, 文本]`，解不出的引用答降级 `unresolved_reference`（引用按 JSON 拼，与 Rust 原拒绝同句）；不带 = 原来的应答字节（guard、query 仍不带）。golden 三对（document 121–123：churn 带 strings 的中英两面与一条解不出的引用）。
+- **核**：新 `CE.Document.Spell`（`resolverFor` 各族规则：deadcode 的 `path#unit`、flow 的单元与变量名、merge 的洞文本与 `clip`、erase 的 diff、trend 的短提交号、docdup 的段名；`derived` 出 arch 的文件 / 目录排名与列宽、flow / sites 的文件排名、join 的路径排名；每个请求只建一次表）、`CE.Document.Bind`（`bindDocument` / `bindLine` / `nested`）；`inspect` 键只供差分门、答 `inspected`。
+- **Rust**：各面的 `Resolve` 实现、`document::ranks`、arch 的 `widths` / `slashed`、merge 的 `clip`、deadcode 的 `path#unit`、flow 的单元与变量名、docdup 的段名、trend 的短提交号删除；新 `Request::texts` / `text_columns` 送字符串表，`lines::carried` 读核拼好的行。留在 Rust 的：guard 的整套绑定（PreToolUse 钩子路径）、query 的绑定（`query/` 归 W1）、merge 的 `span_text`（按 CST 跨度切源文本）、erase 的 `render::file_diffs`（读文件）、SARIF 投影、`i18n.rs` / `main_lang.rs` 的 Rust 自有文案。
+- **差分门**：删之前十二份解析器按 1324c927 原样冻进测试子仓 `unit/document/frozen/`，每族一条腿（`unit/document/spelled/`），把同一个引用单独、在文档里、在行里各问核一次，与冻结解析器逐个比；三颗种子各 15 腿，每腿每颗种子 10,000 个引用以上，不一致 0（变基后重跑三颗种子，同样 15 passed）；两个探针（`slashed` 的根写成 `.`、`clip` 的省略号写成 `...`）各被对应的腿抓到；核电池 `SpellProps` 十五腿。
+- **切换门**：1324c927 release + 核 对 本车道 release + 核，十个对拍语料与自仓，每个面在英文、中文、json 与 SARIF 下的输出、MCP 二十次调用、GUI 二十三份文档、三个钩子与 observe feed 的键：identical 1210、differing 5——五处都是自仓 `query` / `rules` 回显的规则文件绝对路径（两臂拷贝在不同目录），换成同一个之后逐字节同；feed 的键十一棵树都相同。精度册一份没动。guard 的 PreToolUse 请求不带 `strings`，钩子路径不向核要文本。
+- **请求字节**（16 个 json 面、暖索引）：自仓 17 个 document 请求 1,586,478 → 3,265,248 B、应答 6,049,621 → 6,173,844 B；ripgrep 4,236,240 → 10,321,887 B、应答 24,756,625 → 26,352,393 B，最大的是 ripgrep `merge` 2,732,130 → 7,860,153 B（每个洞行一个 holeText，108,548 行）。第一版核按引用逐个建洞表，ripgrep `merge` 超过 60 s 期限被杀，改为每个请求建一次表后 37,892 ms（旧臂 34,736 ms）、逐字节同。
+- **代价**（`docs/PERF-BUDGET.md` 新节）：release ABAB ×7，1324c927 对车道（变基前），自仓与 ripgrep 暖跑，坐时每分钟记负载 62–86 %：自仓 `check` −0.6 %、`scan` −1.4 %、`deadcode` +0.8 %；ripgrep `check` +0.9 %、`scan` +7.3 %（889.1 → 953.7 ms，两臂都退 1：ripgrep 的文件过 fail 档）、`deadcode` +0.1 %。这一节让正册过了 750 行硬线，v2.32 步 3B 一节（实测 2026-10-01）逐字节迁入 `docs/PERF-BUDGET-ARCHIVE.md`。
+- **门**：`cabal test` 997 ok PASS；fmt、clippy `-D warnings`（cli 与 gui `--locked`）清；lib 542 passed / 42 ign；全量 `cargo test --test it`（变基前，一次）543 passed / 11 failed / 31 ign——`layout_tree`（车道里没有 `.ccm/`）与 `docs_diagrams`（车道里没有 archify 缓存，已 `--fetch`）是环境，`source_citations` 是真红（`SpellProps` 里的假路径 `a.md:3-7` 被读成引文，改成 `a.txt`），其余八条是待重立基线与祝福；corelink 1、daemon 2
+- **语言条**（§10 量法）：Rust 2,222,627 → 2,217,637 B、Haskell 1,977,737 → 2,003,366 B，47.08 % → 47.46 %，差 244,890 → 214,271 B；Rust 删 23,697 B、加 18,707 B（净 −4,990）。
+
 **无默认档位变更。** 算法轨 v2.33 W1 第 2 项：query 的扫描器、目标头与模式名进核；协议仍是 **9.0.0**（未发布，同版加性；2026-10-06；判决字节不变；设计册 `docs/reference/algorithm-track.md` §6 W1 状态、§10 W1 第 2 项行与 §11 第 77–79 条（含函数对照表）；`contracts/VERSIONING.md` 9.0.0 条的第八个「同版加性」段）。
 
 - **wire**（加性）：`query/1` 请求加 `texts`（前奏、规则文件、问句三段原文，核自己扫）与 `lex`（只答扫的结果 `lexed`，不判、不计价），`inspect` 附原始记号；扫不成的判决请求按名拒绝 `texts: …`，`lex` 不带 `texts` 按名拒绝。golden：`query/golden` 前八对请求改带原文（应答不动）、加第 9 对；`*.rules` 钉 LF。

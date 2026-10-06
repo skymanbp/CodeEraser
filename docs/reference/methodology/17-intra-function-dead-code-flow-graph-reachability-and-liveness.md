@@ -104,7 +104,7 @@ file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (
 from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit the core refused with its reason
-([Document.hs:96](../../../core/app/CE/Flow/Document.hs#L96), [face.rs:166](../../../cli/src/flow_report/face.rs#L166)).
+([Document.hs:96](../../../core/app/CE/Flow/Document.hs#L96), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
 A finding's `lineEnd` is the line on
 which the run's last statement starts: the legend keeps each statement's first line only, so a
 last statement written over several lines is not followed to its end; the next lowering
@@ -166,7 +166,7 @@ traces; the shipped judgment must agree finding for finding on 200 seeded random
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:113](../../../core/test/Spec.hs#L113)).
+([Spec.hs:114](../../../core/test/Spec.hs#L114)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

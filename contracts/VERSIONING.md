@@ -75,6 +75,13 @@
 > `setAt`、`names` 每个名字常量的哈希与拼写、`referenced` 程序读的事实表、`heads` 每个目标的头名与列），`inspect: true` 另附原始记号、变量表与目标；`lex`
 > 不带 `texts` 按名拒绝 `lex without texts`。golden：`query/golden` 前八对的请求改带 `texts`（应答逐字节不动），加第 9 对（只扫前奏）；`*.rules` 钉 LF
 > （`.gitattributes`：前奏以 `include_str!` 编进测量侧，它的字节就是请求行）。
+> **9.0.0 同版加性**（报告渲染胶水进核，W7，2026-10-06；设计册 §6「W7 状态」与 §11 第 83–88 条；9.0.0 未发布，同上不另升版号）：
+> `document.request` 加性可选 `strings`——类名 → 嵌套的 JSON 数组（每个引用整数一层；不带整数的类是一个字符串）；在场时核在装配之后解每个引用 `{"$": [类, 整数…]}`
+> （缺省按整数逐层取；十条族规则：arch `slashed`、deadcode `node_name`、flow `unit` / `var`、merge `text` / `clipped`、erase `diff`、trend `short`、docdup `seg`），
+> 填每行的 `{}` 洞，行答 `[流, 文本]`；解不出的引用或洞数与引用数不符 = 文档降级 `unresolved_reference: …`。`strings` 在场而请求没带时，核自己算 arch 的
+> `rankFiles` / `rankDirs` / `widths`、flow / sites 的 `rankFiles` 与 join 的 `rankPaths`。不带 `strings` 的请求逐字节答旧形（guard、query 照旧在测量侧绑定）。
+> 请求键 `inspect` `{refs, docs, lines}` 只给差分门用（应答加 `inspected` `{refs, docs, lines, rows}`），产品从不送。golden：`document/golden` 加第 121–123 对
+> （churn 带 `strings` 的英文与中文两对、路径表短一截的一对：`unresolved_reference`），其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -723,7 +730,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->347<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->350<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

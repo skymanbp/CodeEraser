@@ -2,15 +2,16 @@
 //! docs/reference/authority-track.md §5): the core lays it out
 //! (document/1, CE.Structure.Document) from the structure reply's
 //! rows sent back, the flat directory tree and — when the advisory
-//! rode — the split candidates with each seam's last line; this side
-//! puts the directory names, the advisory's paths and its unit names
-//! back, into the document and its console lines (CE.Structure.Lines).
+//! rode — the split candidates with each seam's last line — and the
+//! directory names, the advisory's paths and its unit names, which the
+//! core spells into the document and its console lines
+//! (CE.Structure.Lines).
 //! report.rs reads the bound document for the library's callers.
 
 use super::seams::SeamFacts;
 use super::tree::Tree;
 use super::wire::Reply;
-use crate::document::{self, Request, Resolve};
+use crate::document::{self, Request};
 use anyhow::{Result, ensure};
 
 /// The tables a structure request carries.
@@ -82,11 +83,16 @@ pub(super) fn assemble(
             .rows("splitCandidates", candidates(sf, r)?)
             .rows("sizeExempt", &r.size_exempt);
     }
-    let names = Names {
-        dirs: names_by_id(p.tree),
-        seams: p.seams,
-    };
-    document::assemble_over(core, held, req.empty(&TABLES), &names)
+    let mut req = req.empty(&TABLES).text("dir", names_by_id(p.tree));
+    if let Some(sf) = p.seams {
+        let units: Vec<Vec<&String>> = (sf.unit_names.iter())
+            .map(|units| units.iter().map(|u| &u.0).collect())
+            .collect();
+        req = req
+            .texts("path", sf.files.iter().map(|f| &f.0))
+            .text("unit", units);
+    }
+    document::assemble_over(core, held, req)
 }
 
 /// structure/1's [file, unit, benefit, cost] with the unit's last
@@ -115,26 +121,4 @@ fn names_by_id(t: &Tree) -> Vec<String> {
         }
     }
     names
-}
-
-/// The structure document's strings: the directory names, and the
-/// advisory's file paths and unit names.
-struct Names<'a> {
-    dirs: Vec<String>,
-    seams: Option<&'a SeamFacts>,
-}
-
-impl Resolve for Names<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        let file = |f: &i128| self.seams?.files.get(usize::try_from(*f).ok()?);
-        match (class, ints) {
-            ("dir", _) => document::at(&self.dirs, ints),
-            ("path", [f]) => file(f).map(|f| f.0.clone()),
-            ("unit", [f, u]) => {
-                let units = self.seams?.unit_names.get(usize::try_from(*f).ok()?)?;
-                units.get(usize::try_from(*u).ok()?).map(|u| u.0.clone())
-            }
-            _ => None,
-        }
-    }
 }

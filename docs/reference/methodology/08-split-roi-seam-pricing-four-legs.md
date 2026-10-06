@@ -219,11 +219,11 @@ attached**, long-and-splittable gets a cut line
 structure document out (`CE.Structure.Document`): its statement names the universe every
 column points into, so each dense id is range-checked by the document contract before
 anything reads it [Document.hs:37-46](../../../core/app/CE/Structure/Document.hs#L37), and the
-names go back in Rust, which resolves the references the document carries
-[document.rs:115-135](../../../cli/src/structure/document.rs#L115); candidates surface as
+names are spelled in the core, which resolves the references the document carries against the
+names Rust sends beside the request [Spell.hs:25-38](../../../core/app/CE/Document/Spell.hs#L25); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
 end line, which Rust sends beside the reply's row and refuses for a unit the file does not hold
-[document.rs:87-102](../../../cli/src/structure/document.rs#L87).
+[document.rs:101-113](../../../cli/src/structure/document.rs#L101).
 
 ### Input validation
 

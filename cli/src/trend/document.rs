@@ -7,7 +7,7 @@
 //! come back.
 
 use super::report::Report;
-use crate::document::{self, Answer, Held, Lists, Request};
+use crate::document::{self, Answer, Held, Request};
 use anyhow::Result;
 
 /// The trend document, its lines and its veto, over a fresh link.
@@ -38,16 +38,12 @@ pub(super) fn laid_out(core: &str, r: &Report, held: Held) -> Result<Answer> {
         .rows("cliff", j.cliff.as_slice())
         .rows("declineRun", j.decline_run.as_slice())
         .rows("knobs", &j.knobs);
+    // a `short` commit is the core's: the commit's first twelve
     let column =
-        |f: fn(&(String, String)) -> &String| r.failed.iter().map(|x| f(x).clone()).collect();
-    let lists = Lists(vec![
-        ("commit", r.rows.iter().map(|p| p.commit.clone()).collect()),
-        (
-            "short",
-            r.rows.iter().map(|p| p.commit[..12].to_string()).collect(),
-        ),
-        ("sha", column(|(sha, _)| sha)),
-        ("reason", column(|(_, why)| why)),
-    ]);
-    document::assemble_over(core, held, req, &lists)
+        |f: fn(&(String, String)) -> &String| -> Vec<&String> { r.failed.iter().map(f).collect() };
+    let req = req
+        .texts("commit", r.rows.iter().map(|p| &p.commit))
+        .text("sha", column(|(sha, _)| sha))
+        .text("reason", column(|(_, why)| why));
+    document::assemble_over(core, held, req)
 }

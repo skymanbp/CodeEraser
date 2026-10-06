@@ -7,7 +7,7 @@
 //! measurement reads (`document.churn.cochangeFileCap`) are the core's
 //! (CE.Churn.Document, CE.Churn.Lines).
 
-use crate::document::{self, Answer, Paths, Request, Resolve};
+use crate::document::{self, Answer, Paths, Request};
 use anyhow::Result;
 
 /// One ledger row: lines the window added inside this unit. `key` ""
@@ -53,8 +53,8 @@ impl Report {
 
 /// The churn document and its lines, laid out by the core at `core`:
 /// the window's sums, the survivors and the skip count as facts, each
-/// co-change pair `[a, b, commits]` over the paths it names, every path
-/// and submodule a reference this side resolves.
+/// co-change pair `[a, b, commits]` over the paths it names, and the
+/// paths and submodules the core spells in.
 pub fn answer(core: &str, r: &Report, days: u32) -> Result<Answer> {
     let mut paths = Paths::default();
     let cochange: Vec<[i64; 3]> = r
@@ -72,25 +72,8 @@ pub fn answer(core: &str, r: &Report, days: u32) -> Result<Answer> {
         .fact("surviving", r.surviving)
         .fact("skipped", r.skipped_large)
         .rows("cochange", cochange);
-    let names = Names {
-        paths: paths.list,
-        submodules: &r.submodules_without_history,
-    };
-    document::assemble(core, req, &names)
-}
-
-/// The churn document's strings: the pairs' paths and the submodules.
-struct Names<'a> {
-    paths: Vec<String>,
-    submodules: &'a [String],
-}
-
-impl Resolve for Names<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        match class {
-            "path" => document::at(&self.paths, ints),
-            "submodule" => document::at(self.submodules, ints),
-            _ => None,
-        }
-    }
+    let req = req
+        .text("path", &paths.list)
+        .text("submodule", &r.submodules_without_history);
+    document::assemble(core, req)
 }

@@ -6,13 +6,13 @@
 //! The core lays the document out (document/1, CE.Flow.Document): the
 //! kind names, which findings are judged, the order, the `--kind`
 //! filter and the counts are its. This side sends the placed findings
-//! (lines and variable index), the refusals, each file's language and
-//! place in path order, and puts the paths, unit names, variable names
-//! and reasons back (crate::document). A document whose `degraded`
-//! names a reason carries no finding this side reached.
+//! (lines and variable index), the refusals, each file's language,
+//! and the paths, unit names, variable names and reasons, which the
+//! core orders and spells in (crate::document). A document whose
+//! `degraded` names a reason carries no finding this side reached.
 
 use super::{place, unit_at};
-use crate::document::{self, Answer, Held, Request, Resolve, Why};
+use crate::document::{self, Answer, Held, Request, Why};
 use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire::{self, Verdict};
 use anyhow::{Result, anyhow};
@@ -34,16 +34,52 @@ pub fn run(root: &Path, core: &str, kinds: &[String], gate: (bool, bool)) -> Res
     let (paths, files): (Vec<String>, Vec<Lowered>) = lowered.into_iter().flatten().unzip();
     let mut held = document::open(core);
     let judgment = ask(&mut held, &files)?;
-    let mut names = Names {
-        paths: &paths,
-        files: &files,
-        why: Why::default(),
-    };
     let (check, deny) = gate;
-    let req = request(&mut names, judgment, shown.as_deref())
+    let req = request((&paths, &files), judgment, shown.as_deref())
         .fact("check", u8::from(check))
         .fact("deny", u8::from(deny));
-    document::assemble_over(core, held, req, &names).map_err(|e| named_kind(e, shown.as_deref()))
+    document::assemble_over(core, held, req).map_err(|e| named_kind(e, shown.as_deref()))
+}
+
+/// Per file, `[nth, …]` in the order the file holds them: each lowered
+/// unit's name (`units`), each unit the lowering left out by its own
+/// name (`unlowered`), each lowered unit's variable names (`vars`). A
+/// unit reference spells the first lowered unit at its `nth`, else the
+/// first left out, else nothing (one the core refused that is no
+/// lowered unit).
+fn unit_strings(files: &[Lowered]) -> [(&'static str, serde_json::Value); 3] {
+    let per = |f: fn(&Lowered) -> serde_json::Value| -> serde_json::Value {
+        files.iter().map(f).collect()
+    };
+    [
+        (
+            "units",
+            per(|f| {
+                f.units
+                    .iter()
+                    .map(|u| serde_json::json!([u.nth, u.name]))
+                    .collect()
+            }),
+        ),
+        (
+            "unlowered",
+            per(|f| {
+                f.unlowered
+                    .iter()
+                    .map(|u| serde_json::json!([u.nth, u.name]))
+                    .collect()
+            }),
+        ),
+        (
+            "vars",
+            per(|f| {
+                f.units
+                    .iter()
+                    .map(|u| serde_json::json!([u.nth, u.legend.var_name]))
+                    .collect()
+            }),
+        ),
+    ]
 }
 
 /// The kinds a face asked to see, by name, in the order given and each
@@ -101,20 +137,20 @@ fn ask(held: &mut Held, files: &[Lowered]) -> Result<Result<Verdict, String>> {
 /// The document request over the verdict (or the named degradation):
 /// every finding a unit's legend places as [file, nth, kind, line,
 /// lineEnd, variable or −1], the refusals as [file, nth, reason], each
-/// file's language and rank, the kinds shown, the measured tallies.
+/// file's language, the kinds shown, the measured tallies, and the
+/// strings: the paths, the reasons and the units' (`unit_strings`).
 fn request(
-    names: &mut Names,
+    (paths, files): (&[String], &[Lowered]),
     judgment: Result<Verdict, String>,
     shown: Option<&[(String, i64)]>,
 ) -> Request {
-    let files = names.files;
+    let mut why = Why::default();
     let (verdict, degraded) = match judgment {
         Ok(v) => (v, None),
-        Err(why) => (Verdict::default(), Some(names.why.add(why))),
+        Err(reason) => (Verdict::default(), Some(why.add(reason))),
     };
     let found = placed(files, &verdict);
-    let (unlowered, refused) = reasons(names, &verdict);
-    let rank = document::ranks(names.paths.iter().map(String::as_str));
+    let (unlowered, refused) = reasons(files, &mut why, &verdict);
     let numbered = |xs: Vec<usize>| -> Vec<[usize; 2]> {
         xs.into_iter().enumerate().map(|(f, x)| [f, x]).collect()
     };
@@ -124,7 +160,6 @@ fn request(
             "langs",
             numbered(files.iter().map(|x| x.lang as usize).collect()),
         )
-        .rows("rankFiles", numbered(rank))
         .rows(
             "shown",
             shown.map_or(Vec::new(), |s| s.iter().map(|(_, k)| [*k]).collect()),
@@ -136,7 +171,12 @@ fn request(
     let req = tallies(files)
         .into_iter()
         .fold(req, |q, (k, n)| q.fact(k, n));
-    let req = req.range("why", names.why.count());
+    let req = unit_strings(files)
+        .into_iter()
+        .fold(req, |q, (class, s)| q.text(class, s))
+        .range("why", why.count())
+        .text("path", paths)
+        .text("why", why.list());
     match degraded {
         Some(i) => req.degraded(i),
         None => req,
@@ -145,17 +185,21 @@ fn request(
 
 /// The units this side could not lower and the units the core refused,
 /// each as [file, nth, reason text].
-fn reasons(names: &mut Names, verdict: &Verdict) -> (Vec<[usize; 3]>, Vec<[usize; 3]>) {
+fn reasons(
+    files: &[Lowered],
+    why: &mut Why,
+    verdict: &Verdict,
+) -> (Vec<[usize; 3]>, Vec<[usize; 3]>) {
     let mut unlowered = Vec::new();
-    for (f, file) in names.files.iter().enumerate() {
+    for (f, file) in files.iter().enumerate() {
         for u in &file.unlowered {
-            unlowered.push([f, u.nth, names.why.add(u.reason.clone())]);
+            unlowered.push([f, u.nth, why.add(u.reason.clone())]);
         }
     }
     let refused = verdict
         .refused
         .iter()
-        .map(|(f, nth, why)| [*f, *nth, names.why.add(why.clone())])
+        .map(|(f, nth, reason)| [*f, *nth, why.add(reason.clone())])
         .collect();
     (unlowered, refused)
 }
@@ -200,45 +244,6 @@ fn tallies(files: &[Lowered]) -> [(&'static str, u64); 4] {
         ("vars", sum(|u| u.vars.len())),
         ("uses", sum(|u| u.uses.len())),
     ]
-}
-
-/// The flow document's strings: the paths, the unit names (a unit the
-/// lowering left out by its own name; one the core refused that is no
-/// lowered unit, empty), the variable names, the reasons.
-struct Names<'a> {
-    paths: &'a [String],
-    files: &'a [Lowered],
-    why: Why,
-}
-
-impl Names<'_> {
-    fn file(&self, f: i128) -> Option<&Lowered> {
-        usize::try_from(f).ok().and_then(|f| self.files.get(f))
-    }
-}
-
-impl Resolve for Names<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        match (class, ints) {
-            ("path", _) => document::at(self.paths, ints),
-            ("why", _) => self.why.at(ints),
-            ("unit", [f, nth]) => {
-                let (file, nth) = (self.file(*f)?, usize::try_from(*nth).ok()?);
-                let unit = unit_at(file, nth).map(|u| u.name.clone());
-                let left = file
-                    .unlowered
-                    .iter()
-                    .find(|u| u.nth == nth)
-                    .map(|u| u.name.clone());
-                Some(unit.or(left).unwrap_or_default())
-            }
-            ("var", [f, nth, v]) => {
-                let unit = unit_at(self.file(*f)?, usize::try_from(*nth).ok()?)?;
-                unit.legend.var_name.get(usize::try_from(*v).ok()?).cloned()
-            }
-            _ => None,
-        }
-    }
 }
 
 #[cfg(test)]

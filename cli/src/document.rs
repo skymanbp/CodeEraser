@@ -13,7 +13,13 @@
 //! error by name, never a document printed from this side. Since 7.10.0
 //! (plan v2.32 step 5) the reply also carries the console lines in the
 //! language this process speaks and the face's veto: every face gets
-//! one `Answer`, and `emit` prints it.
+//! one `Answer`, and `emit` prints it. Since plan v2.33 W7 a face sends
+//! its strings too (`Request::text`, by reference class): the core
+//! spells every reference and fills every hole itself, and this side
+//! prints what it gets. Two faces still bind here — the PreToolUse
+//! guard (guard/speech.rs, the hook path) and query (its program's
+//! strings stay this side until the program crosses) — through
+//! `assemble_bound` and the `Resolve` below.
 
 pub mod lines;
 mod paths;
@@ -44,6 +50,7 @@ pub struct Request {
     rows: Map<String, Value>,
     facts: Map<String, Value>,
     degraded: Option<usize>,
+    strings: Option<Map<String, Value>>,
 }
 
 impl Request {
@@ -54,7 +61,44 @@ impl Request {
             rows: Map::new(),
             facts: Map::new(),
             degraded: None,
+            strings: None,
         }
+    }
+
+    /// The strings references of `class` name, one JSON array level
+    /// per integer such a reference carries (a class with none: the
+    /// string itself). The core spells them in.
+    pub fn text(mut self, class: &str, strings: impl serde::Serialize) -> Self {
+        let v = serde_json::to_value(strings).expect("strings serialize");
+        self.strings
+            .get_or_insert_with(Map::new)
+            .insert(class.into(), v);
+        self
+    }
+
+    /// A class's strings from an iterator, in its order.
+    pub fn texts<T: serde::Serialize>(
+        self,
+        class: &str,
+        items: impl IntoIterator<Item = T>,
+    ) -> Self {
+        self.text(class, items.into_iter().collect::<Vec<_>>())
+    }
+
+    /// Two classes from one pass: each row's pair, its halves in order.
+    pub fn text_columns<A: serde::Serialize, B: serde::Serialize>(
+        self,
+        (a, b): (&str, &str),
+        rows: impl IntoIterator<Item = (A, B)>,
+    ) -> Self {
+        let (left, right): (Vec<A>, Vec<B>) = rows.into_iter().unzip();
+        self.text(a, left).text(b, right)
+    }
+
+    /// A face whose document names no string: still answered spelled.
+    pub fn spelled(mut self) -> Self {
+        self.strings.get_or_insert_with(Map::new);
+        self
     }
 
     /// The size of the universe `class` refers into.
@@ -120,10 +164,14 @@ impl Request {
     /// The request as it goes out; `lang` is this process's language,
     /// set here and nowhere else (ruling R2).
     pub(crate) fn body(self) -> Value {
-        json!({
+        let mut body = json!({
             "family": self.family, "ranges": self.ranges, "rows": self.rows,
             "facts": self.facts, "degraded": self.degraded, "lang": lines::lang(),
-        })
+        });
+        if let Some(strings) = self.strings {
+            body["strings"] = Value::Object(strings);
+        }
+        body
     }
 }
 
@@ -149,15 +197,44 @@ pub fn open(core: &str) -> Held {
     Link::open(core).map(|(link, _)| link)
 }
 
-/// The request answered by a fresh core at `core`, bound through `r`.
-pub fn assemble(core: &str, req: Request, r: &dyn Resolve) -> Result<Answer> {
-    assemble_over(core, Err(String::new()), req, r)
+/// The request answered by a fresh core at `core`, spelled.
+pub fn assemble(core: &str, req: Request) -> Result<Answer> {
+    assemble_over(core, Err(String::new()), req)
 }
 
 /// The request answered over `held` when it is a whole link, else over
-/// a fresh one to `core`, and bound through `r`: the document and the
-/// lines, each reference a string, and the veto.
-pub fn assemble_over(core: &str, held: Held, req: Request, r: &dyn Resolve) -> Result<Answer> {
+/// a fresh one to `core`, the core spelling every string it carries:
+/// the document and the lines as they print, and the veto.
+pub fn assemble_over(core: &str, held: Held, req: Request) -> Result<Answer> {
+    let req = req.spelled();
+    let (family, mut reply) = asked(core, held, req)?;
+    let (lines, fail) =
+        lines::spelled_lines(&reply).map_err(|e| anyhow!("{family} document: {e:#}"))?;
+    Ok(Answer {
+        document: reply["document"].take(),
+        lines,
+        fail,
+    })
+}
+
+/// The request answered over `held` (else a fresh link to `core`) with
+/// its references left for this side, bound through `r` — query's
+/// road, whose program's strings stay this side.
+pub fn assemble_bound(core: &str, held: Held, req: Request, r: &dyn Resolve) -> Result<Answer> {
+    let (family, mut reply) = asked(core, held, req)?;
+    let named = |why: String| anyhow!("{family} document: {why}");
+    let (lines, fail) = lines::bind_lines(&reply, r).map_err(|e| named(format!("{e:#}")))?;
+    let document = bind(reply["document"].take(), r)?;
+    Ok(Answer {
+        document,
+        lines,
+        fail,
+    })
+}
+
+/// The core's reply to `req`, refused by name when the core cannot lay
+/// the document out.
+fn asked(core: &str, held: Held, req: Request) -> Result<(&'static str, Value)> {
     let family = req.family;
     let named = |why: String| anyhow!("{family} document: {why}");
     let mut link = match held {
@@ -167,18 +244,12 @@ pub fn assemble_over(core: &str, held: Held, req: Request, r: &dyn Resolve) -> R
     if !link.has(CAP) {
         return Err(named(format!("core offers no {CAP} (pre-{SINCE})")));
     }
-    let mut reply = link.request(KIND, req.body()).map_err(named)?;
+    let reply = link.request(KIND, req.body()).map_err(named)?;
     if reply["degraded"] != Value::Bool(false) {
         let reason = reply["reason"].as_str().unwrap_or("degraded");
         bail!("{family} document: the core did not lay it out: {reason}");
     }
-    let (lines, fail) = lines::bind_lines(&reply, r).map_err(|e| named(format!("{e:#}")))?;
-    let document = bind(reply["document"].take(), r)?;
-    Ok(Answer {
-        document,
-        lines,
-        fail,
-    })
+    Ok((family, reply))
 }
 
 /// An answer printed as its face prints it (ruling R3): the console
@@ -276,6 +347,11 @@ impl Why {
         self.0.len()
     }
 
+    /// The texts, for the request's strings (class `why`).
+    pub fn list(&self) -> &[String] {
+        &self.0
+    }
+
     /// The text a `why` reference names.
     pub fn at(&self, i: &[i128]) -> Option<String> {
         at(&self.0, i)
@@ -302,16 +378,10 @@ pub fn at(list: &[String], i: &[i128]) -> Option<String> {
     }
 }
 
-/// Each string's place in their joint sort order (ties share one).
-pub fn ranks<'a>(strings: impl IntoIterator<Item = &'a str>) -> Vec<usize> {
-    let all: Vec<&str> = strings.into_iter().collect();
-    let mut sorted = all.clone();
-    sorted.sort_unstable();
-    all.iter()
-        .map(|s| sorted.partition_point(|x| x < s))
-        .collect()
-}
-
 #[cfg(test)]
 #[path = "../tests/unit/document.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "../tests/unit/document/frozen/mod.rs"]
+mod frozen;

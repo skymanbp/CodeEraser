@@ -46,10 +46,7 @@ pub enum Mode {
 /// The reply's lines, bound through `r`, and its `exit.fail`. A reply
 /// without `lines` / `exit` came from a core older than the contract.
 pub fn bind_lines(reply: &Value, r: &dyn Resolve) -> Result<(Vec<Line>, bool)> {
-    let (Some(lines), Some(fail)) = (reply["lines"].as_array(), reply["exit"]["fail"].as_bool())
-    else {
-        bail!("document: the reply carries no lines / exit (a pre-{SINCE} core)");
-    };
+    let (lines, fail) = carried(reply)?;
     let lines = lines
         .iter()
         .enumerate()
@@ -58,15 +55,49 @@ pub fn bind_lines(reply: &Value, r: &dyn Resolve) -> Result<(Vec<Line>, bool)> {
     Ok((lines, fail))
 }
 
+/// The reply's lines as the core spelled them (`[stream, text]`, every
+/// hole filled there) and its `exit.fail`.
+pub fn spelled_lines(reply: &Value) -> Result<(Vec<Line>, bool)> {
+    let (lines, fail) = carried(reply)?;
+    let line = |(i, l): (usize, &Value)| {
+        match l.as_array().map(Vec::as_slice) {
+            Some([s, Value::String(text)]) => stream_of(s).map(|stream| Line {
+                stream,
+                text: text.clone(),
+            }),
+            _ => None,
+        }
+        .ok_or_else(|| anyhow!("document: line {i} is not [stream, text]: {l}"))
+    };
+    let lines = lines.iter().enumerate().map(line).collect::<Result<_>>()?;
+    Ok((lines, fail))
+}
+
+/// The reply's `lines` and `exit.fail`; a reply without them came from
+/// a core older than the contract.
+fn carried(reply: &Value) -> Result<(&Vec<Value>, bool)> {
+    match (reply["lines"].as_array(), reply["exit"]["fail"].as_bool()) {
+        (Some(lines), Some(fail)) => Ok((lines, fail)),
+        _ => bail!("document: the reply carries no lines / exit (a pre-{SINCE} core)"),
+    }
+}
+
+/// A line's stream code: 0 stdout, 1 stderr.
+fn stream_of(code: &Value) -> Option<Stream> {
+    match code.as_u64() {
+        Some(0) => Some(Stream::Out),
+        Some(1) => Some(Stream::Err),
+        _ => None,
+    }
+}
+
 /// One `[stream, text, reference…]`, its holes filled.
 fn bound(l: &Value, r: &dyn Resolve) -> Result<Line> {
     let Some([stream, text, refs @ ..]) = l.as_array().map(Vec::as_slice) else {
         bail!("not [stream, text, reference…]: {l}");
     };
-    let stream = match stream.as_u64() {
-        Some(0) => Stream::Out,
-        Some(1) => Stream::Err,
-        _ => bail!("stream {stream} is not 0 or 1"),
+    let Some(stream) = stream_of(stream) else {
+        bail!("stream {stream} is not 0 or 1");
     };
     let Some(text) = text.as_str() else {
         bail!("text {text} is not a string");

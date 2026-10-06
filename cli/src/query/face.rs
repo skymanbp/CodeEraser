@@ -83,7 +83,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<An
             held = Err(String::new());
         }
     }
-    document::assemble_over(core, held, finish(req, &names), &names)
+    document::assemble_bound(core, held, finish(req, &names), &names)
 }
 
 /// Every table and fact the road did not fill, empty or zero, and the

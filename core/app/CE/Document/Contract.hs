@@ -44,11 +44,15 @@ data DocReq = DocReq
   , dFacts :: Maybe (M.Map String Integer)
   , dDegraded :: Maybe Integer
   , dLang :: Maybe Integer
+  , dStrings :: Maybe (M.Map String Value)
+  , dInspect :: Maybe Value
   }
 
 instance FromJSON DocReq where
-  parseJSON = withObject "DocReq" $ \o ->
-    DocReq <$> o .: "id" <*> o .:? "family" <*> o .:? "ranges" <*> o .:? "rows" <*> o .:? "facts" <*> o .:? "degraded" <*> o .:? "lang"
+  parseJSON = withObject "DocReq" $ \o -> do
+    strings <- o .:? "strings"
+    inspect <- o .:? "inspect"
+    DocReq <$> o .: "id" <*> o .:? "family" <*> o .:? "ranges" <*> o .:? "rows" <*> o .:? "facts" <*> o .:? "degraded" <*> o .:? "lang" <*> pure strings <*> pure inspect
 
 -- | One request table: its width (`open` = at least that many), whether
 -- it may ride beside a `degraded` reason, and the universe each fixed

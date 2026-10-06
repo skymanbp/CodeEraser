@@ -93,11 +93,10 @@ pub fn run_sites(root: &Path, core: &str, json: bool) -> ExitCode {
 
 /// The sites document (CE.Graph.Sites): each file's place in path
 /// order and its language, each site's integers with its kind by the
-/// package's storage code (the `store` table); the spec and the owner
-/// stay this side's text — the `--sites` face and the MCP tool print
-/// this one document.
+/// package's storage code (the `store` table), and the paths, specs
+/// and owners the core spells in (and orders the paths by) — the
+/// `--sites` face and the MCP tool print this one document.
 pub fn sites_document(core: &str, files: &[FileSites]) -> Result<crate::document::Answer> {
-    let rank = crate::document::ranks(files.iter().map(|f| f.path.as_str()));
     let mut rows: Vec<[i64; 6]> = Vec::new();
     let mut texts = SiteTexts::default();
     for (f, file) in files.iter().enumerate() {
@@ -121,13 +120,6 @@ pub fn sites_document(core: &str, files: &[FileSites]) -> Result<crate::document
         .range("files", files.len())
         .range("sites", rows.len())
         .rows(
-            "rankFiles",
-            rank.iter()
-                .enumerate()
-                .map(|(f, r)| [f, *r])
-                .collect::<Vec<_>>(),
-        )
-        .rows(
             "langs",
             files
                 .iter()
@@ -135,13 +127,11 @@ pub fn sites_document(core: &str, files: &[FileSites]) -> Result<crate::document
                 .map(|(f, x)| [f as i64, x.lang as i64])
                 .collect::<Vec<_>>(),
         )
-        .rows("sites", rows);
-    let lists = crate::document::Lists(vec![
-        ("path", texts.paths),
-        ("site_spec", texts.specs),
-        ("site_owner", texts.owners),
-    ]);
-    crate::document::assemble(core, req, &lists)
+        .rows("sites", rows)
+        .text("path", texts.paths)
+        .text("site_spec", texts.specs)
+        .text("site_owner", texts.owners);
+    crate::document::assemble(core, req)
 }
 
 /// The sites document's strings: the paths, each site's spec and owner.

@@ -7,7 +7,7 @@
 //! The SARIF face re-spells the bound document's blocks.
 
 use super::{Summary, budget::Gate, pairs};
-use crate::document::{self, Answer, Lists, Paths, Request};
+use crate::document::{self, Answer, Paths, Request};
 use crate::sarif::{location, num, text};
 use crate::scan::Format;
 use anyhow::Result;
@@ -68,7 +68,7 @@ pub fn answer(
         .rows("blocks", blocks)
         .rows("groups", groups)
         .rows("members", members);
-    document::assemble(core, req, &Lists(vec![("path", paths.list)]))
+    document::assemble(core, req.text("path", &paths.list))
 }
 
 /// The answer in the requested form: console lines, the document, or

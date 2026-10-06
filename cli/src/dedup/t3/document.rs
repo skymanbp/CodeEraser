@@ -8,7 +8,7 @@
 
 use super::Judged;
 use crate::dedup::unitcache::UnitRow;
-use crate::document::{self, Answer, Lists, Paths, Request};
+use crate::document::{self, Answer, Paths, Request};
 use anyhow::Result;
 
 /// The T3 report for one judgment, over the link it was judged over
@@ -45,12 +45,10 @@ pub(super) fn report(core: &str, j: &Judged, held: document::Held) -> Result<Ans
         )
         .rows("pairs", pairs);
     // a unit by its `path:key#nth`
-    let units = j
-        .units
-        .iter()
+    let units: Vec<String> = (j.units.iter())
         .map(|u| format!("{}:{}#{}", u.path, u.key, u.nth))
         .collect();
-    document::assemble_over(core, held, req, &Lists(vec![("unit", units)]))
+    document::assemble_over(core, held, req.text("unit", units))
 }
 
 /// The `--units` listing over the rows the identity check passed.
@@ -65,6 +63,6 @@ pub fn units_answer(core: &str, units: &[UnitRow]) -> Result<Answer> {
         .range("paths", paths.list.len())
         .range("units", units.len())
         .rows("units", rows);
-    let keys = units.iter().map(|u| u.key.clone()).collect();
-    document::assemble(core, req, &Lists(vec![("path", paths.list), ("key", keys)]))
+    let keys: Vec<&String> = units.iter().map(|u| &u.key).collect();
+    document::assemble(core, req.text("path", &paths.list).text("key", keys))
 }

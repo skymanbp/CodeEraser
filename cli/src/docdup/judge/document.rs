@@ -4,11 +4,11 @@
 //! pair with the docdup/1 reply's scores, its verbatim run and verdict
 //! bit, its counters and `--check`; the document, the console lines and
 //! the veto (`--check` with a reported duplication) come back. A
-//! segment in the document is a reference, spelled `path:start-end
-//! kind` here.
+//! segment in the document is a reference the core spells
+//! `path:start-end kind` from its row and the path.
 
-use super::{Judged, name};
-use crate::document::{self, Answer, Lists, Paths, Request};
+use super::Judged;
+use crate::document::{self, Answer, Paths, Request};
 use anyhow::Result;
 
 /// The docdup report for one judgment, over the link it was judged
@@ -53,11 +53,5 @@ pub(super) fn report(core: &str, j: &Judged, check: bool, held: document::Held) 
         )
         .rows("pairs", &j.judged)
         .rows("segs", segs);
-    let names = j.segs.iter().map(name).collect();
-    document::assemble_over(
-        core,
-        held,
-        req,
-        &Lists(vec![("path", paths.list), ("seg", names)]),
-    )
+    document::assemble_over(core, held, req.text("path", &paths.list))
 }

@@ -3,17 +3,16 @@
 //! (document/1, CE.Graph.Document) from the judgment's own rows — the
 //! dead and reported rows, the kept count, the degraded reason by its
 //! code in the package's list, one advisory row per name this side's
-//! table holds — and this side puts the paths, the section labels and
-//! the names back, into the document and its console lines
-//! (CE.Graph.Lines). `Report` is the document read back for the readers
+//! table holds — and the node paths and units and the advisory's names,
+//! which the core spells into the document and its console lines
+//! (CE.Graph.Lines; a section's `path#unit` label is its). `Report` is the document read back for the readers
 //! that act on a verdict (erase, the tests);
 //! the codes beside a row are the judgment's, the strings the
 //! document's. The graph screen sends the same tables (graph/canvas.rs).
 
 use super::advisory::Advised;
 use super::{GraphWire, Judged};
-use crate::document::{self, Request, Resolve, Why};
-use crate::graph::nodes::Node;
+use crate::document::{self, Request};
 use anyhow::{Context, Result};
 use serde::Deserialize;
 use serde_json::Value;
@@ -90,11 +89,11 @@ pub struct AdvisoryRow {
 /// assignment, the advisory one row per name, the file-tier count and
 /// the console's `--check` (facts only the lines read), and the
 /// strings the document refers to.
-pub(crate) fn request<'a>(
+pub(crate) fn request(
     (family, check): (&'static str, bool),
-    w: &'a GraphWire,
+    w: &GraphWire,
     j: &Judged,
-) -> Result<(Request, Names<'a>)> {
+) -> Result<Request> {
     let reasons = crate::tables::get().document.deadcode.reasons;
     let mut req = Request::new(family)
         .range("nodes", w.nodes.len())
@@ -118,13 +117,14 @@ pub(crate) fn request<'a>(
         .fact("asked", i64::from(asked))
         .fact("dropped", i64::from(dropped))
         .fact("cut", i64::from(cut))
-        .empty(&TABLES);
-    let names = Names {
-        nodes: &w.nodes,
-        symbols,
-        why: Why::default(),
-    };
-    Ok((req, names))
+        .empty(&TABLES)
+        .text_columns(
+            ("path", "node_unit"),
+            w.nodes.iter().map(|n| (&n.path, &n.unit)),
+        )
+        .text("symbol", symbols)
+        .text("why", [""; 0]);
+    Ok(req)
 }
 
 /// The advisory the judgment carried, unfolded for the request: each
@@ -161,36 +161,6 @@ pub(crate) fn read(doc: Value, j: &Judged) -> Result<Report> {
     r.fail = j.fail;
     r.doc = doc;
     Ok(r)
-}
-
-/// The deadcode document's strings: the node paths, a section's
-/// `path#unit` label, the advisory's names.
-pub(crate) struct Names<'a> {
-    nodes: &'a [Node],
-    symbols: Vec<String>,
-    why: Why,
-}
-
-impl Resolve for Names<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        let node = || {
-            let [i] = ints else { return None };
-            usize::try_from(*i).ok().and_then(|i| self.nodes.get(i))
-        };
-        match class {
-            "path" => node().map(|n| n.path.clone()),
-            "node_name" => node().map(|n| {
-                if n.unit.is_empty() {
-                    n.path.clone()
-                } else {
-                    format!("{}#{}", n.path, n.unit)
-                }
-            }),
-            "symbol" => document::at(&self.symbols, ints),
-            "why" => self.why.at(ints),
-            _ => None,
-        }
-    }
 }
 
 #[cfg(test)]

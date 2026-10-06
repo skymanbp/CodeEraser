@@ -4,14 +4,14 @@
 //! files outside their cluster's directory, the impact of the focus
 //! and the per-directory metrics. The core judges them (arch/1) and
 //! lays the document out (document/1, CE.Arch.Document); this side
-//! sends the tables both answers are made of, each path's place in
-//! string order, and puts the paths back into the document and its
-//! console lines (crate::document); the CLI prints them. A
+//! sends the tables both answers are made of and the paths; the core
+//! spells the paths into the document and its console lines, orders
+//! them and measures them (crate::document); the CLI prints them. A
 //! document with a `degraded` reason carries no answer.
 
 use super::tables::{self, Tables};
 use super::wire::{self, Reply};
-use crate::document::{self, Answer, Request, Resolve, Why};
+use crate::document::{self, Answer, Request, Why};
 use crate::graph::deadcode::{Advisory, wire_of};
 use crate::structure::tree;
 use anyhow::Result;
@@ -41,9 +41,11 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Re
     let req = req
         .range("files", tables.paths.len())
         .range("dirs", tables.dir_paths.len())
-        .range("why", why.count());
-    let names = Names { t: &tables, why };
-    document::assemble_over(core, held, req, &names)
+        .range("why", why.count())
+        .text("path", &tables.paths)
+        .text("dir", &tables.dir_paths)
+        .text("why", why.list());
+    document::assemble_over(core, held, req)
 }
 
 /// A file's total lines (scan's own count; a file deleted mid-run has
@@ -71,28 +73,16 @@ const TABLES: [&str; 13] = [
     "rankDirs",
 ];
 
-/// The request tables sent back, the answer tables, each path's place
-/// in the joint string order of the file paths and the slashed
-/// directories (the order the folded references are listed in), and
-/// each directory's width in bytes and in characters (the console
-/// pads its metrics table by them; the core cannot measure a string).
+/// The request tables sent back and the answer tables (the core
+/// orders the paths and measures the directories off the strings).
 fn request(t: &Tables, r: &Reply) -> Request {
-    let slashed: Vec<String> = t.dir_paths.iter().map(|d| slashed(d)).collect();
-    let rank = document::ranks(t.paths.iter().chain(&slashed).map(String::as_str));
-    let (by_file, by_dir) = rank.split_at(t.paths.len());
-    let numbered = |ranks: &[usize]| -> Vec<[usize; 2]> {
-        ranks.iter().enumerate().map(|(i, r)| [i, *r]).collect()
-    };
     let focus: Vec<[i64; 1]> = t.focus.iter().map(|f| [*f]).collect();
     let mut req = Request::new("arch")
         .rows("files", &t.files)
         .rows("dirs", &t.dirs)
         .rows("edges", &t.edges)
         .rows("pkgEdges", &t.pkg_edges)
-        .rows("focus", focus)
-        .rows("rankFiles", numbered(by_file))
-        .rows("rankDirs", numbered(by_dir))
-        .rows("widths", widths(&t.dir_paths));
+        .rows("focus", focus);
     for key in [
         "layers",
         "cuts",
@@ -104,39 +94,4 @@ fn request(t: &Tables, r: &Reply) -> Request {
         req = req.rows(key, r.rows(key));
     }
     req
-}
-
-/// `[dir, bytes, chars]` for every directory (the root is 0 bytes).
-fn widths(dirs: &[String]) -> Vec<[usize; 3]> {
-    let width = |(i, d): (usize, &String)| [i, d.len(), d.chars().count()];
-    dirs.iter().enumerate().map(width).collect()
-}
-
-/// The arch document's strings: the paths, the directories, and the
-/// reason the judgment did not happen.
-struct Names<'a> {
-    t: &'a Tables,
-    why: Why,
-}
-
-impl Resolve for Names<'_> {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        match class {
-            "path" => document::at(&self.t.paths, ints),
-            "dir" => document::at(&self.t.dir_paths, ints),
-            "slashed" => document::at(&self.t.dir_paths, ints).map(|d| slashed(&d)),
-            "why" => self.why.at(ints),
-            _ => None,
-        }
-    }
-}
-
-/// A directory as an arc end: its path with a trailing slash, the
-/// root as `./`.
-pub fn slashed(dir: &str) -> String {
-    if dir.is_empty() {
-        "./".into()
-    } else {
-        format!("{dir}/")
-    }
 }

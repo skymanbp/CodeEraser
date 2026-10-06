@@ -2,13 +2,14 @@
 //! CE.Scan.Document, CE.Scan.Lines): this side sends the measured
 //! files and functions as integers, the core's non-zero levels with
 //! each row's class, the grade tables it judged with and the held
-//! conditions by code, and binds the paths and function names back.
+//! conditions by code, and the paths and function names the core
+//! spells in.
 //! The findings, the summary, the console lines and the exit bit are
 //! the core's; the SARIF face re-spells the bound document's findings.
 
 use super::Settled;
 use super::lang::Lang;
-use crate::document::{self, Answer, Lists, Request};
+use crate::document::{self, Answer, Request};
 use crate::sarif::{num, text};
 use anyhow::{Context, Result};
 use serde_json::Value;
@@ -74,19 +75,12 @@ pub fn answer(core: &str, s: &Settled, held: document::Held) -> Result<Answer> {
         .rows("failed", failed);
     // each file's path and each function's name, in the order the
     // request counted them
-    let paths = s.files.iter().map(|f| f.path.clone()).collect();
-    let names = s
-        .files
-        .iter()
+    let paths: Vec<&String> = s.files.iter().map(|f| &f.path).collect();
+    let names: Vec<&String> = (s.files.iter())
         .flat_map(|f| &f.functions)
-        .map(|f| f.name.clone())
+        .map(|f| &f.name)
         .collect();
-    document::assemble_over(
-        core,
-        held,
-        req,
-        &Lists(vec![("path", paths), ("fn", names)]),
-    )
+    document::assemble_over(core, held, req.text("path", paths).text("fn", names))
 }
 
 /// One finding of the bound document as a SARIF result (the `--format
