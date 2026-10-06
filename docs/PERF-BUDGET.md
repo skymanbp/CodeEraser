@@ -690,3 +690,40 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **核单独计时**（`coretime_e.sh`：把 B 臂那次冷 `deadcode` 的 `resolve/1` 会话经中继录下，单独喂核 5 次）：self 223,246 B → 中位 212.9 ms（193.4–274.4）、zod 154,443 B → 273.2 ms（262.7–307.0）、careeros 438,650 B → 187.2 ms（179.0–209.5）。逐请求拆开（`core_split_e.py`，会话截到每个请求为止、5 跑取中位、减去前一截；含约 80 ms 的进程起与握手）：两棵 TS 树都是四个请求——两轮问链、两轮答站点（第二轮带上核点名的事实：zod 447 条、careeros 126 条）；careeros 最后一个请求的站点截到 1,353 / 2,706 / 5,412 个，核用 14.6 / 34.9 / 63.2 ms，随站点数约成线性，没有平方项的迹象。
 - **钩子**：PreToolUse 探针不问 `resolve/1`——在 zod 拷贝上写入一个带四条导入（同目录的 `./index.js`、工作区成员 `zod/v4/core`、内建 `node:fs`、依赖 `vitest`）的新 TS 文件的 `Write` 信封经 `ce probe --hook` 冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_e.sh`），与阶段 A–D 同。
 - 复跑：车道目录 `v233_w2t_scratch/perf_e.py 7`（树拷自车道归档与 `gate1e/seed-ts-*`），读数原文 `perf_e_all.log`、逐跑 `perf_e.ndjson`、负载 `perf_e_load.txt`；请求字节 `reqbytes_e.sh`，各面请求 `warmreq_e.sh`，钩子 `hookprobe_e.sh`，核单独计时 `coretime_e.sh` 与 `core_split_e.py`（`core_split_e.log`）。
+
+## v2.33 W2-text 阶段 F Rust 阶梯、Cargo.toml 读法、crate 根与包内私有进核 A/B（实测 2026-10-06，release，同一台机、同一坐：A = 1324c927 的 ce + 它的核〔`git archive` 构建〕，B = 车道树的 ce〔sha256 51cf5cbb…，构建进车道的 scratch target；与落地的第一个提交 f6c2788a 的 `cli/src` 与 `core/app` 相同〕+ 它的核〔sha256 275fe509…；Rust 的五级阶梯、Cargo.toml 读法、crate 根与包内私有在核，测量侧只答核点名的盘上与语法事实〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，01:23–02:08 共 44 次 45–99 %——不是静默窗；每次记下的前五个进程按累计 CPU 秒排序，44 次里没有一次出现 cargo / rustc / ghc / cabal，但累计排序看不见一次短的编译；本坐前后这台机器上另有三条车道〔W1、W7、W4〕开工，它们何时开始编译本坐没有记下，故不能排除坐时有别的车道在编译）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）与两棵 Rust 树 ripgrep@3fce3b5、autoshade（`gate1f/seed-rs-*`，各提交一次）。
+
+| 树 | 面 | A（1324c927） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `graph --sites` 冷 | 1930.7（1796.9–2251.9） | 1928.4（1813.4–2040.7） | -0.1 % |
+| self | `graph --sites` 暖 | 1760.5（1674.0–2099.0） | 1820.2（1748.0–2011.3） | +3.4 % |
+| self | `deadcode` 冷 | 44341.6（31812.1–49418.2） | 48473.0（43245.4–57963.6） | +9.3 % |
+| self | `deadcode` 暖 | 3592.9（2874.3–4856.9） | 3658.2（3288.3–3803.4） | +1.8 % |
+| self | `check` 暖 | 16187.7（15078.8–24785.5） | 16372.6（15384.0–24213.3） | +1.1 % |
+| ripgrep | `graph --sites` 冷 | 1456.4（1191.0–1727.6） | 1285.0（1143.0–1766.7） | -11.8 % |
+| ripgrep | `graph --sites` 暖 | 1365.1（1117.8–1471.8） | 1265.6（1030.3–1375.5） | -7.3 % |
+| ripgrep | `deadcode` 冷 | 8833.7（7399.4–9810.8） | 9441.9（8107.0–10422.7） | +6.9 % |
+| ripgrep | `deadcode` 暖 | 955.7（797.4–1154.4） | 1134.5（1067.1–1279.2） | +18.7 % |
+| ripgrep | `check` 暖 | 5866.9（3875.4–35706.9） | 5891.4（4424.6–34982.3） | +0.4 % |
+| autoshade | `graph --sites` 冷 | 6416.2（5870.2–7215.8） | 6701.1（6286.7–7353.5） | +4.4 % |
+| autoshade | `graph --sites` 暖 | 6810.6（6400.9–7473.9） | 6514.8（6315.3–6873.2） | -4.3 % |
+| autoshade | `deadcode` 冷 | 58798.0（47365.3–62627.9） | 59667.0（47470.7–68339.3） | +1.5 % |
+| autoshade | `deadcode` 暖 | 4188.9（3629.4–5621.5） | 4410.5（3884.0–5572.7） | +5.3 % |
+| autoshade | `check` 暖 | 23716.7（19588.7–44701.6） | 22202.7（20373.8–44044.0） | -6.4 % |
+
+- 预算（任务书）：暖 `ce check` ≤ +15 %——三棵树 +1.1 %、+0.4 %、-6.4 %，都在线内（自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立）。暖 `deadcode` 在 ripgrep 上 +18.7 %（955.7 → 1134.5 ms），自仓冷 `deadcode` +9.3 %；预算不管这两个面，如实记下。
+- **请求字节**（§3 第 5 点；同一棵树一次冷 `deadcode`，经中继核记下每个 `resolve.request` 与应答的字节；站点按请求累加，同一个站点每轮各算一次；两臂 `deadcode` 输出逐字节同）：
+
+| 树 | 请求个数 A → B | 请求字节 A → B | 应答字节 A → B | 站点 A → B |
+|---|---|---|---|---|
+| self | 3 → 15 | 227,731 → 35,218,074 | 67,728 → 215,650 | 2,085 → 83,954 |
+| ripgrep | 0 → 6 | 0 → 646,492 | 0 → 20,318 | 0 → 2,124 |
+| autoshade | 1 → 5 | 16,871 → 1,640,350 | 6,101 → 43,305 | 433 → 5,364 |
+
+- **多出来的字节从哪来**：自仓 B 臂的 15 个请求里 13 个是同一批 6,458 个站点的逐轮重问（2,569,749 → 2,719,869 B 一个），另两个不带站点（63,926 与 131,925 B）；ripgrep 4 轮 × 531 个站点、autoshade 3 轮 × 1,788 个。每一轮把全部站点与已答的事实再送一遍，核在 `tsWanted` 里点名还缺的事实；自仓轮数多，是因为 `CE.Resolve.Rs` 的 `globbed` 顺着通配再导出一次只问一个文件的顶层面（op 5），第 4 轮起每轮只多约两个面。可做的改法（本阶段不做）：一级之内把通配的各跳一次问齐、op 4 的行事实按需才送——改了要重跑切换门与本节。
+- **核单独计时**（`coretime_f.sh`：把 B 臂那次冷 `deadcode` 的 `resolve/1` 会话经中继录下，单独喂核 5 次）：self 35,218,139 B → 中位 3586.7 ms（3494.6–4052.8）、ripgrep 646,557 B → 172.0 ms（136.9–185.1）、autoshade 1,640,415 B → 295.0 ms（262.9–318.2）。
+- **其余七个面**（`warmreq_f.sh`：每臂冷跑一次 `graph --sites` 建索引，再经中继核把各面跑一次）：`structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 各一个 `resolve.request`、不带站点（自仓 61,653 → 63,925 B；ripgrep 0 → 17,042 B、autoshade 0 → 10,504 B，这两棵树各多一个核会话）；`graph --sites` 与冷建两臂请求逐种相同。
+- **钩子**：PreToolUse 探针不问 `resolve/1`——在 ripgrep 拷贝上写入一个带四条 `use`（`crate::`、工作区成员 `grep_matcher`、`std`、`super::`）的新 Rust 文件的 `Write` 信封经 `ce probe --hook` 冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_f.sh`），与阶段 A–E 同。
+- 复跑：车道目录 `v233_w2t_scratch/perf_f.py 7`（树拷自车道归档与 `gate1f/seed-rs-*`），读数原文 `perf_f_all.log`、逐跑 `perf_f.ndjson`、负载 `perf_f_load.txt`；请求字节 `reqbytes_f.sh`（`reqbytes_f_sum.py`），各面请求 `warmreq_f.sh`（`warmreq_f_sum.py`），钩子 `hookprobe_f.sh`，核单独计时 `coretime_f.sh`。

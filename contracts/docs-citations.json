@@ -3663,12 +3663,6 @@
     "end": 26,
     "text": "/// Nearest *.cabal walking up from `from_dir` — the file name is"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/cargo.rs|f404a9bba69a4303|0": {
-    "target": "../../../cli/src/graph/cargo.rs",
-    "line": 109,
-    "end": 128,
-    "text": "fn auto_targets<'f>("
-  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/compdb_find.rs|6da64bb91fd1a64f|0": {
     "target": "../../../cli/src/graph/compdb_find.rs",
     "line": 1,
@@ -3783,13 +3777,13 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/targets.rs|5a5954ba45e48665|0": {
     "target": "../../../cli/src/graph/deadcode/targets.rs",
-    "line": 69,
+    "line": 76,
     "text": "targets: declared.intersection(files).cloned().collect(),"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/deadcode/targets.rs|a0575005f73d28aa|0": {
     "target": "../../../cli/src/graph/deadcode/targets.rs",
-    "line": 35,
-    "end": 80,
+    "line": 37,
+    "end": 82,
     "text": "impl Declared {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/keys.rs|6d73353ef02f7aba|0": {
@@ -3985,8 +3979,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|21683e0bf8c62fc1|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 191,
-    "end": 195,
+    "line": 197,
+    "end": 201,
     "text": "// The sentinel is never walked, and the scan-only arm (plan"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -4006,94 +4000,17 @@
     "line": 8,
     "text": "pub type Rung = u8;"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs.rs|1ab2a9cf99e4b826|0": {
-    "target": "../../../cli/src/graph/ladder/rs.rs",
-    "line": 81,
-    "text": "roots_set.extend(scope.crate_roots.iter().cloned());"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs.rs|56b3c5cc141aa1a5|0": {
-    "target": "../../../cli/src/graph/ladder/rs.rs",
-    "line": 84,
-    "end": 98,
-    "text": "}\n\n/// R1: an explicit `#[path]` remap wins outright; otherwise one"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_bind.rs|45665363e3dba45e|0": {
-    "target": "../../../cli/src/graph/ladder/rs_bind.rs",
-    "line": 104,
-    "end": 110,
-    "text": "/// `name` when the file `p` walks to exports it (rs_reexport::exports —"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_bind.rs|76553d477e4f37a2|0": {
-    "target": "../../../cli/src/graph/ladder/rs_bind.rs",
-    "line": 68,
-    "end": 71,
-    "text": "Some(found) if found != *path => Outcome::ResolvedVia {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_bind.rs|9d3560e0edef3dc9|0": {
-    "target": "../../../cli/src/graph/ladder/rs_bind.rs",
-    "line": 14,
-    "end": 19,
-    "text": "/// first line, trimmed, is `spec` — the text a hand fold spread over"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_bind.rs|b19a081e7a84d32b|0": {
-    "target": "../../../cli/src/graph/ladder/rs_bind.rs",
-    "line": 46,
-    "end": 54,
-    "text": "/// A single-terminal walk that left segments unconsumed consults the"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_reexport.rs|26d9c400b0e1ee65|0": {
-    "target": "../../../cli/src/graph/ladder/rs_reexport.rs",
-    "line": 134,
-    "end": 149,
-    "text": "pub fn pubuse_hash(text: &str) -> u64 {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_reexport.rs|6b1f1a27e07e7ab4|0": {
-    "target": "../../../cli/src/graph/ladder/rs_reexport.rs",
-    "line": 6,
-    "end": 14,
-    "text": "//! structural, and the tree reading is the child rs_surface.rs. Since"
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_cst.rs|460c6503f0ef03d4|0": {
+    "target": "../../../cli/src/graph/ladder/rs_cst.rs",
+    "line": 179,
+    "end": 214,
+    "text": "/// The surface folded to one resolve_key input (the md slug_hash"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_surface.rs|030453ba8661e7b5|0": {
     "target": "../../../cli/src/graph/ladder/rs_surface.rs",
     "line": 42,
     "end": 45,
     "text": "/// `extern crate x;` binds `x`, `extern crate x as y;` binds `y`, to"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|0e6a881855c85fa0|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 231,
-    "end": 248,
-    "text": "fn super_walk<'a>("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|4a7d86f308685ec4|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 174,
-    "end": 205,
-    "text": "fn local_module("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|979a92271a9e5c97|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 99,
-    "end": 103,
-    "text": "\"crate\" => {\nlet anchors = covering_roots(from, roots_set);"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|a9d4b6a70b86d44a|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 136,
-    "end": 162,
-    "text": "fn crate_walk("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|ab5bbdddf5dcd792|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 261,
-    "end": 294,
-    "text": "fn extern_rung("
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/rs_use.rs|c1910536a643a1f6|0": {
-    "target": "../../../cli/src/graph/ladder/rs_use.rs",
-    "line": 104,
-    "end": 118,
-    "text": "\"self\" => {\nif inline_depth(scope, from, site.line) > 0 {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|0d4b0b0be629773b|0": {
     "target": "../../../cli/src/graph/load.rs",
@@ -4324,8 +4241,8 @@
     "end": 32,
     "text": "fn hash_moves_exactly_when_the_consulted_projection_moves() {"
   },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/unit/graph/ladder/rs_reexport.rs|df6cc8ab0bb47058|0": {
-    "target": "../../../cli/tests/unit/graph/ladder/rs_reexport.rs",
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/unit/graph/ladder/rs_cst.rs|df6cc8ab0bb47058|0": {
+    "target": "../../../cli/tests/unit/graph/ladder/rs_cst.rs",
     "line": 13,
     "end": 75,
     "text": "const PAIRS: &[(&str, bool, &str, &str)] = &["
@@ -4893,6 +4810,12 @@
     "end": 175,
     "text": "-- | `import_commons`: each named common block pulled in where the walk"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Cargo.hs|536be0d9084be4da|0": {
+    "target": "../../../core/app/CE/Resolve/Cargo.hs",
+    "line": 73,
+    "end": 80,
+    "text": "autoTargets :: Set.Set String -> Package -> String -> Set.Set String"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Cmdline.hs|5025afb4c14ee8e0|0": {
     "target": "../../../core/app/CE/Resolve/Cmdline.hs",
     "line": 1,
@@ -5137,6 +5060,82 @@
     "end": 20,
     "text": "--   R3 External: a package no carried DESCRIPTION declares — base R,"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|0af410a710365ab2|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 240,
+    "end": 254,
+    "text": "globbed :: RsEnv -> String -> String -> [String] -> [([String], Int)] -> Need (Maybe String)"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|253f50cfab39c7b5|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 212,
+    "end": 223,
+    "text": "bound :: RsEnv -> [String] -> Answer -> Int -> Need Answer"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|6a26636f95b24f52|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 220,
+    "end": 222,
+    "text": "pure $ case target of"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|9c45dc0a91ee6ca5|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 98,
+    "end": 107,
+    "text": "useRungs :: RsEnv -> Ctx -> String -> Int -> String -> Need Answer"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|9ddc772908a6ec1b|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 73,
+    "end": 84,
+    "text": "modRung :: RsEnv -> Ctx -> String -> Int -> String -> Need Answer"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|9e35d7dcf4ea91a9|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 62,
+    "text": "pure (pkg, maybe Set.empty (crateRoots (wFiles w)) pkg `Set.union` declared)"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|b414ccc63f87a97b|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 193,
+    "end": 207,
+    "text": "externRung :: RsEnv -> Ctx -> String -> [String] -> Need (Answer, Int)"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|c49b6985c4926e09|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 147,
+    "end": 155,
+    "text": "crateWalk :: RsEnv -> Set.Set String -> [String] -> [String] -> Need (Answer, Int)"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|cc388c94756d0f5b|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 178,
+    "end": 188,
+    "text": "superWalk :: RsEnv -> Set.Set String -> String -> Int -> [String] -> Need (Answer, Int, [String])"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|d2cf4f49a2fc683d|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 129,
+    "text": "| h == \"crate\" -> walked rest <$> crateWalk env roots (coveringRoots from roots) rest"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|e4d82b047f139140|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 164,
+    "end": 174,
+    "text": "localModule :: RsEnv -> Ctx -> (String, Int) -> String -> [String] -> Need (Maybe (Answer, Int))"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|f10fe95e32a13799|0": {
+    "target": "../../../core/app/CE/Resolve/Rs.hs",
+    "line": 130,
+    "end": 136,
+    "text": "| h == \"self\" -> do"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/RsSurface.hs|89e59117f8026c6c|0": {
+    "target": "../../../core/app/CE/Resolve/RsSurface.hs",
+    "line": 95,
+    "end": 98,
+    "text": "exports :: Facts -> String -> String -> Need Bool"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Ts.hs|13714c7d7928d4c3|0": {
     "target": "../../../core/app/CE/Resolve/Ts.hs",
     "line": 159,
@@ -5193,26 +5192,26 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/TsConfig.hs|0c6d784d42983949|0": {
     "target": "../../../core/app/CE/Resolve/TsConfig.hs",
-    "line": 79,
-    "end": 86,
+    "line": 86,
+    "end": 93,
     "text": "-- | `extends_walk`: the configs visited from `current` (each with its"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/TsConfig.hs|0c6d784d42983949|1": {
     "target": "../../../core/app/CE/Resolve/TsConfig.hs",
-    "line": 79,
-    "end": 86,
+    "line": 86,
+    "end": 93,
     "text": "-- | `extends_walk`: the configs visited from `current` (each with its"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/TsConfig.hs|126ca7c9fcdcd9f3|0": {
     "target": "../../../core/app/CE/Resolve/TsConfig.hs",
-    "line": 113,
-    "end": 117,
+    "line": 120,
+    "end": 124,
     "text": "-- | `ts_extends_files`: every config the extends chain from `start`"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/TsConfig.hs|18ec108b39ae83fb|0": {
     "target": "../../../core/app/CE/Resolve/TsConfig.hs",
-    "line": 45,
-    "end": 48,
+    "line": 46,
+    "end": 49,
     "text": "-- | No config at all, usable options, or a chain the ladder refuses (a"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Text/Deadcode.hs|094f3a80564c2753|0": {
@@ -8331,34 +8330,34 @@
     "end": 134,
     "text": "pub(super) fn consume("
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|0e244c81f92576e1|0": {
-    "target": "../../../cli/src/graph/mounts.rs",
-    "line": 228,
-    "end": 247,
-    "text": "fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {"
-  },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|20a3703f25e71064|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 243,
-    "end": 252,
+    "line": 211,
+    "end": 220,
     "text": "/// (`__init__.py`, `__main__.py`) is protocol. The declaration's own"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|4291021089a3ebc6|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 131,
-    "end": 137,
+    "line": 145,
+    "end": 151,
     "text": "pub fn mount_rows(nodes: &[Node], facts: &MountFacts) -> BTreeMap<i64, [i64; 3]> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|7aac3294e41145f8|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 43,
-    "end": 49,
+    "line": 44,
+    "end": 50,
     "text": "pub const MOUNT_REEXPORTED: i64 = 1;"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|df1438374562330e|0": {
+    "target": "../../../cli/src/graph/mounts.rs",
+    "line": 95,
+    "end": 117,
+    "text": "/// bit 1 over the walked set: Go's and Python's read here, Haskell's and"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/graph/mounts.rs|eb6a10a23d7d8554|0": {
     "target": "../../../cli/src/graph/mounts.rs",
-    "line": 67,
-    "end": 96,
+    "line": 69,
+    "end": 98,
     "text": "pub fn facts(root: &Path, idx: &Index) -> Result<MountFacts> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mcp/tools.rs|8ef4edac0142a307|0": {
@@ -8763,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 393,
-    "end": 395,
+    "line": 406,
+    "end": 408,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -8854,6 +8853,12 @@
     "line": 29,
     "end": 30,
     "text": "schemaId :: String"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Resolve/Cargo.hs|b524e054fbc81b4c|0": {
+    "target": "../../../core/app/CE/Resolve/Cargo.hs",
+    "line": 88,
+    "end": 95,
+    "text": "-- | `RustTargets::keeps`: whether a package keeps a file private — a"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Text/Deadcode.hs|a890d2f6f80e7e6a|0": {
     "target": "../../../core/app/CE/Text/Deadcode.hs",
@@ -10736,7 +10741,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 111,
+    "line": 112,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11003,7 +11008,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 112,
+    "line": 113,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
