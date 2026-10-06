@@ -45,6 +45,7 @@ import qualified ReferenceGraph
 import qualified ReferenceJaccard
 import qualified ReferenceHs
 import qualified ReferenceRs
+import qualified ReferenceMd
 import qualified ReferenceTs
 import qualified ReferenceJava
 import qualified ReferenceQuery
@@ -139,6 +140,7 @@ batteries =
        , ReferenceHs.equivalence
        , ReferenceTs.equivalence
        , ReferenceRs.equivalence
+       , ReferenceMd.equivalence
        , ReferenceGraph.equivalence
        , ReferenceJaccard.equivalence
        , GraphProps.battery

@@ -85,7 +85,8 @@ executable ce-core
                       CE.Resolve.JavaAt, CE.Resolve.JavaInherit, CE.Resolve.Java,
                       CE.Resolve.Cabal, CE.Resolve.CabalWalk, CE.Resolve.Hs,
                       CE.Resolve.Json, CE.Resolve.TsFacts, CE.Resolve.TsConfig, CE.Resolve.Ts,
-                      CE.Resolve.Cargo, CE.Resolve.RsTree, CE.Resolve.RsSurface, CE.Resolve.Rs
+                      CE.Resolve.Cargo, CE.Resolve.RsTree, CE.Resolve.RsSurface, CE.Resolve.Rs,
+                      CE.Resolve.Lower, CE.Resolve.Url, CE.Resolve.Md
     build-depends:
         base       >=4.19 && <5,
         aeson      >=2.2,
@@ -177,7 +178,8 @@ test-suite ce-core-test
                       CE.Resolve.Cabal, CE.Resolve.CabalWalk, CE.Resolve.Hs,
                       CE.Resolve.Json, CE.Resolve.TsFacts, CE.Resolve.TsConfig, CE.Resolve.Ts,
                       CE.Resolve.Cargo, CE.Resolve.RsTree, CE.Resolve.RsSurface, CE.Resolve.Rs,
-                      ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ResolveProps,
+                      CE.Resolve.Lower, CE.Resolve.Url, CE.Resolve.Md,
+                      ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ReferenceMd, ReferenceMdGen, ResolveProps,
                       Reference, ReferenceGraph, ReferenceQuery, QueryProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,
                       ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps,

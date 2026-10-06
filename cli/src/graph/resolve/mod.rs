@@ -1,8 +1,8 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
 //! docs/reference/algorithm-track.md §3, §6): Python, TypeScript / TSX,
-//! Rust, Lua, Go, C / C++, R, Java and Haskell resolve in `resolve/1`,
-//! with the readers of their configuration files (the tsconfig chains
+//! Rust, Lua, Go, C / C++, R, Java, Haskell and Markdown resolve in
+//! `resolve/1`, with the readers of their configuration files (the tsconfig chains
 //! and package.json files, the Cargo.toml files, go.mod, R's
 //! DESCRIPTION, the .cabal files, the root pyproject.toml's keys, the
 //! compile databases, their response and flag files). This side sends
@@ -12,7 +12,10 @@
 //! document, a Rust file's syntax tree), and maps each reply row back to
 //! the ladder's `Outcome`, so the edge store, deadcode, `ce graph
 //! --sites` and the precision documents read the answers they always
-//! read. Markdown's and HTML's ladders run on this side.
+//! read; a batch with Markdown sites carries what this side read of the
+//! documents up front (markdown.rs: anchor sets, reference tables, the
+//! walked assets), so it asks no extra round. HTML's ladder runs on this
+//! side.
 //!
 //! The core is the one this process names (the global `--core`, then
 //! CE_CORE_BIN, a sibling of this binary, PATH), held open across the
@@ -21,11 +24,12 @@
 
 mod facts;
 mod manifests;
+mod markdown;
 mod request;
 
 pub use manifests::{Declared, Manifests, declared, private};
 
-use super::ladder::{Outcome, Reason, Scope, Site};
+use super::ladder::{Outcome, Reason, Rung, Scope, Site};
 use crate::corelink::{Link, judged};
 use crate::scan::lang::Lang;
 use request::Input;
@@ -50,6 +54,7 @@ pub fn in_core(lang: Lang) -> bool {
             | Lang::Tsx
             | Lang::Rust
             | Lang::Go
+            | Lang::Markdown
             | Lang::Haskell
             | Lang::C
             | Lang::Cpp
@@ -63,7 +68,7 @@ pub fn in_core(lang: Lang) -> bool {
 /// sweep's part of the request is read once per sweep (the memo), the
 /// response files and facts the core asks for kept in it; each Rust
 /// site's syntax-tree fact at its row goes up front (every Rust rung
-/// reads it).
+/// reads it), and so do the Markdown facts (markdown.rs).
 pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
     if sites.is_empty() {
         return Ok(Vec::new());
@@ -89,6 +94,7 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
     let mut body = tree.borrow().clone();
     body["sites"] = rows;
     body["origins"] = json!(origins);
+    markdown::add(&mut body, scope, sites);
     let rows: Vec<(i64, String, String)> = sites
         .iter()
         .filter(|(lang, _)| *lang == Lang::Rust)
@@ -98,11 +104,32 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
     let reply = complete(&mut body, scope.root)?;
     tree.borrow_mut()["c"]["responses"] = body["c"]["responses"].clone();
     tree.borrow_mut()["ts"]["facts"] = body["ts"]["facts"].clone();
-    let rows: Vec<(u8, i64, Option<String>, i64)> = judged::table(&reply, "results")?;
-    if rows.len() != sites.len() || judged::count(&reply, "sites")? != sites.len() {
+    mapped(&reply, sites.len())
+}
+
+/// One reply row: `[rung, outcome, target, reason]`.
+type Row = (Rung, i64, Option<String>, i64);
+
+/// The reply's rows as outcomes, in order, a section row with its slug
+/// (`sections`, by row); a row count other than the sites sent, or a slug
+/// for no section row, is wire skew, named.
+fn mapped(reply: &Value, sent: usize) -> Result<Vec<Outcome>, String> {
+    let rows: Vec<Row> = judged::table(reply, "results")?;
+    if rows.len() != sent || judged::count(reply, "sites")? != sent {
         return Err("resolve/1: wire skew: one result per site sent".into());
     }
-    rows.into_iter().map(outcome).collect()
+    let mut sections = judged::table::<Vec<(usize, Option<String>)>>(reply, "sections")?
+        .into_iter()
+        .peekable();
+    let out = rows
+        .into_iter()
+        .enumerate()
+        .map(|(i, row)| outcome(row, sections.next_if(|(at, _)| *at == i).map(|(_, s)| s)))
+        .collect::<Result<Vec<_>, String>>()?;
+    match sections.next() {
+        Some(_) => Err("resolve/1: wire skew: a section slug for no section row".into()),
+        None => Ok(out),
+    }
 }
 
 /// The build's forced includes (`-include x.h`) as unit → header import
@@ -199,34 +226,38 @@ fn ask(body: Value) -> Result<Value, String> {
     Ok(reply)
 }
 
-/// One reply row as an outcome; a row of another shape or a code out of
-/// its table is wire skew, named.
+/// One reply row as an outcome, a section's slug from its `sections`
+/// row; a row of another shape, a code out of its table or a slug that
+/// belongs to no section row is wire skew, named.
 fn outcome(
-    (rung, kind, target, reason): (u8, i64, Option<String>, i64),
+    (rung, kind, target, reason): Row,
+    section: Option<Option<String>>,
 ) -> Result<Outcome, String> {
-    let target = || {
-        target
-            .clone()
-            .ok_or("resolve/1: wire skew: no target".to_string())
-    };
-    Ok(match kind {
-        0 => Outcome::Resolved {
-            path: target()?,
-            rung,
-        },
-        1 => Outcome::ResolvedPackage {
-            dir: target()?,
-            rung,
-        },
-        2 => Outcome::External { rung },
-        3 => Outcome::Unresolved(
-            Reason::from_code(reason).ok_or("resolve/1: wire skew: reason code")?,
-        ),
-        4 => Outcome::ResolvedVia {
-            path: target()?,
-            rung,
-        },
-        _ => return Err("resolve/1: wire skew: outcome code".into()),
+    if section.is_some() != (kind == 5) {
+        return Err("resolve/1: wire skew: a section row and its slug".into());
+    }
+    match (kind, target) {
+        (2, _) => Ok(Outcome::External { rung }),
+        (3, _) => Reason::from_code(reason)
+            .map(Outcome::Unresolved)
+            .ok_or_else(|| "resolve/1: wire skew: reason code".into()),
+        (_, Some(path)) => targeted(kind, path, rung, section.flatten())
+            .ok_or_else(|| "resolve/1: wire skew: outcome code".into()),
+        (0 | 1 | 4..=6, None) => Err("resolve/1: wire skew: no target".into()),
+        _ => Err("resolve/1: wire skew: outcome code".into()),
+    }
+}
+
+/// A target-bearing outcome code's outcome: a file, a package directory,
+/// a file through a re-export surface, a section, an inert file.
+fn targeted(kind: i64, path: String, rung: Rung, slug: Option<String>) -> Option<Outcome> {
+    Some(match kind {
+        0 => Outcome::Resolved { path, rung },
+        1 => Outcome::ResolvedPackage { dir: path, rung },
+        4 => Outcome::ResolvedVia { path, rung },
+        5 => Outcome::ResolvedSection { path, slug, rung },
+        6 => Outcome::ResolvedInert { path, rung },
+        _ => return None,
     })
 }
 

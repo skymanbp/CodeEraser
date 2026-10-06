@@ -721,3 +721,10 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
 - **读数**：十一份在 f6c2788a 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（097e5ba3 → f6c2788a），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 G 之后：十一份精度册第十二次退役并重生成（2026-10-06）
+
+阶段 G 把 Markdown 阶梯的判定搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 73–77 条）：`cli/src/graph/ladder/md.rs` 的 `resolve` / `link` / `directory` / `ref_link` / `ref_def` / `refs` / `ref_table` / `fold` 删掉，`ladder/mod.rs` 的 Markdown 分派与 `outcome.rs` 的 `with_rung` 走了，`cli/src/graph/resolve/` 的请求带上 Markdown（新 `resolve/markdown.rs`），`core/app/CE/Resolve/` 多出 `Md` / `Url` / `Lower` 三个模块——`ladder/mod.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`cli/src/graph/resolve/` 在 C、Lua、R 与 Java 考题的阶梯清单里。没有 Markdown 考题（HTML 考题的阶梯清单只有 `ladder/html*`，它读的 `md.rs` 三个读法本阶段原样留着）；差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。

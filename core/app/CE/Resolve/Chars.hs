@@ -9,8 +9,9 @@
 -- rustc 1.94.1's std over every scalar value; the differential gate
 -- (tests subrepo unit/graph/resolve_text/) asks both sides about every
 -- scalar value again, so a toolchain update that moves a property is
--- seen, not inherited.
-module CE.Resolve.Chars (isRustWhite, isRustAlnum) where
+-- seen, not inherited. The range reader is shared: CE.Resolve.Lower's
+-- two classes are tables of the same shape.
+module CE.Resolve.Chars (isRustWhite, isRustAlnum, hexRanges, within) where
 
 import Data.Char (ord)
 import Numeric (readHex)
@@ -26,20 +27,27 @@ white = ['\t' .. '\r'] <> " \x85\xA0\x1680" <> ['\x2000' .. '\x200A'] <> "\x2028
 -- | Alphabetic or Numeric: the range starting at or below the character
 -- covers it.
 isRustAlnum :: Char -> Bool
-isRustAlnum c = maybe False (\(_, hi) -> o <= hi) (IM.lookupLE o alnum)
+isRustAlnum = within alnum
+
+-- | Whether a range of a table (low bound → high bound) covers the
+-- character: the range starting at or below it.
+within :: IM.IntMap Int -> Char -> Bool
+within table c = maybe False (\(_, hi) -> o <= hi) (IM.lookupLE o table)
  where
   o = ord c
 
-alnum :: IM.IntMap Int
-alnum = IM.fromDistinctAscList (pairs bounds)
+-- | Ascending inclusive ranges written as hexadecimal words, low and
+-- high bound each.
+hexRanges :: String -> IM.IntMap Int
+hexRanges text = IM.fromDistinctAscList (pairs [n | w <- words text, (n, "") <- readHex w])
  where
   pairs (a : b : rest) = (a, b) : pairs rest
   pairs _ = []
 
--- | 844 ranges, low and high bound each, as hexadecimal words in four
--- literals (each binding within the size discipline).
-bounds :: [Int]
-bounds = [n | w <- words (unwords [boundsA, boundsB, boundsC, boundsD]), (n, "") <- readHex w]
+-- | 844 ranges, as hexadecimal words in four literals (each binding
+-- within the size discipline).
+alnum :: IM.IntMap Int
+alnum = hexRanges (unwords [boundsA, boundsB, boundsC, boundsD])
 
 boundsA :: String
 boundsA =

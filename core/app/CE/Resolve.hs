@@ -3,7 +3,8 @@
 -- | resolve.request handler (plan v2.33 wave W2a; on text since
 -- W2-text, proto 9.0.0; design booklet docs/reference/algorithm-track.md
 -- §3, §6): the reference ladders for Python, TypeScript / TSX, Rust, Lua,
--- Go, C / C++, R, Java and Haskell, and the configuration readers they
+-- Go, C / C++, R, Java, Haskell and Markdown, and the configuration
+-- readers they
 -- read — the tsconfig chains and package.json files, the Cargo.toml
 -- files, go.mod, R's DESCRIPTION, the .cabal files, the
 -- root `pyproject.toml`'s keys, the compile databases with their
@@ -14,8 +15,10 @@
 -- what counts as a hit, the ambiguity and refusal rules and the
 -- External classification. A reply row per site, `[rung, outcome,
 -- target, reason]`, is exactly what the measuring side's outcome
--- carried; the C family's forced includes (`-include x.h`) ride beside
--- them as `[unit, header]` path pairs. A response file the expansion
+-- carried, a Markdown section's slug (null: an anchor not confirmed)
+-- beside it in `sections` as `[row, slug]`; the C family's forced
+-- includes (`-include x.h`) ride beside them as `[unit, header]` path
+-- pairs. A response file the expansion
 -- names and the request did not carry is `wanted` (the measuring side
 -- reads it and asks again; the results wait for it), and so is a
 -- file-system or syntax-tree fact a TS or Rust rung needs and the request
@@ -49,6 +52,7 @@ import CE.Resolve.Inspect (inspected)
 import CE.Resolve.Java (resolveJava)
 import CE.Resolve.JavaPick (javaEnv)
 import CE.Resolve.Lua (resolveLua, searched)
+import CE.Resolve.Md (MdEnv (..), refTable, resolveMd)
 import CE.Resolve.Py (pyproject, resolvePy)
 import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
@@ -86,6 +90,7 @@ judged proto rq = reply proto rq resolved body False
   packages = M.fromList [(dDir d, packageCode w d) | d <- descs]
   java = javaEnv w (rqJavaHeaders rq) (searchRoots "java" rq)
   cabals = M.fromList [(rel, Cabal.parse rel text) | (rel, text) <- rqHsCabals rq]
+  md = MdEnv w (Set.fromList (rqAssets rq)) (M.fromList (rqMdSlugs rq)) (M.fromList [(f, refTable ds us) | (f, ds, us) <- rqMdRefs rq])
   site s
     | sLang s == langPy = resolvePy w py from (sSpec s)
     | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
@@ -93,6 +98,7 @@ judged proto rq = reply proto rq resolved body False
     | sLang s == langR = resolveR (w, searchRoots "r" rq, descs) (sKind s) from (sSpec s)
     | sLang s == langJava = resolveJava java (sKind s) from (fromMaybe 0 (sLine s)) (sSpec s)
     | sLang s == langHs = resolveHs w (M.elems cabals) from (sSpec s)
+    | sLang s == langMd = resolveMd md (sKind s) from (sSpec s)
     -- complete: no TS site waits for a fact
     | isTs s = either (const (AUnresolved OutOfScope)) id (ts s)
     | sLang s == langRs = either (const (AUnresolved OutOfScope)) id (rs s)
@@ -106,12 +112,10 @@ judged proto rq = reply proto rq resolved body False
   wanted = xWanted expanded
   complete = Set.null wanted && Set.null tsWanted
   answers = if complete then map site (rqSites rq) else []
-  resolved = length [() | a <- answers, not (unresolved a)]
-  unresolved a = case a of
-    AUnresolved _ -> True
-    _ -> False
+  resolved = length [() | a <- answers, case a of AUnresolved _ -> False; _ -> True]
   body =
     [ "results" .= map answerRow answers
+    , "sections" .= [(i, slug) | (i, ASection _ slug _) <- zip [0 :: Int ..] answers]
     , "forced" .= (if complete then map (\(u, h) -> [u, h]) (forcedArcs env ix) else [])
     , "wanted" .= Set.toList wanted
     , "tsWanted" .= map wantedRow (Set.toList tsWanted)
@@ -178,7 +182,7 @@ rsHalf w fx rq = (rs, done crates, done kept, Set.unions (waits crates : waits k
 
 -- | Over-cap: a complete degraded reply with empty tables.
 degraded :: String -> ResolveReq -> B8.ByteString
-degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "private"]] True
+degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "private"]] True
 
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString

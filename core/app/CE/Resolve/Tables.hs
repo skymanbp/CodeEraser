@@ -8,8 +8,8 @@
 -- Node's builtin modules, `ladder.ts`, since stage F the toolchain's
 -- crates, `ladder.rs`), the
 -- two compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
--- storage codes of the site kinds the Lua, R, Java and Rust ladders
--- branch on.
+-- storage codes of the site kinds the Lua, R, Java, Rust and Markdown
+-- ladders branch on.
 -- The package's `resolve` key states which configuration files the
 -- measuring side sends as text — the basenames among the walk's
 -- configs (`configs`): a rule of this family, so not a second list
@@ -35,6 +35,11 @@ module CE.Resolve.Tables (
   kindTypeRef,
   kindModDecl,
   kindUse,
+  kindLink,
+  kindImage,
+  kindRefLink,
+  kindRefDef,
+  kindUrl,
   configNames,
   table,
 ) where
@@ -97,8 +102,9 @@ packAt path = either refuse id (parseEither parseJSON =<< walk path pack)
   refuse e = error ("resolve tables do not read: " <> e)
 
 -- | The storage codes of the two Lua site kinds, the two R ones, the
--- three Java ones and the two Rust ones (`store.site_kinds`).
-kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef, kindModDecl, kindUse :: Integer
+-- three Java ones, the two Rust ones and the five Markdown ones
+-- (`store.site_kinds`).
+kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
 kindSource = kindCode "source"
@@ -108,6 +114,11 @@ kindImportStar = kindCode "import_star"
 kindTypeRef = kindCode "type_ref"
 kindModDecl = kindCode "mod_decl"
 kindUse = kindCode "use"
+kindLink = kindCode "link"
+kindImage = kindCode "image"
+kindRefLink = kindCode "ref_link"
+kindRefDef = kindCode "ref_def"
+kindUrl = kindCode "url"
 
 kindCode :: String -> Integer
 kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKinds)

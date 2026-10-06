@@ -1,55 +1,31 @@
-//! Markdown rungs (design §4 row 5). Doc targets resolve at FILE and
-//! SECTION granularity. R1 joins a relative target against the
-//! linking file's directory — a judged file, or a walked asset the
-//! index never parsed (an image, a stylesheet; plan v2.30 step 5b,
-//! the HTML rungs' second candidate set); a directory holding
-//! in-scope files resolves as a package — the audited fourclass row:
-//! a tree reference collapsed to one file would be a guess. R2
-//! validates a
-//! cross-file anchor, percent-decoded, against the target's anchor
-//! set (md_slug.rs: rendered-text slugs of the ATX headings by GitHub
-//! rules — lowercase, punctuation dropped, spaces to hyphens, -N
-//! duplicate suffixes — plus raw-HTML anchor ids verbatim); zero or
-//! multiple matches degrade to the file (ResolvedSection { slug:
-//! None }). R3 reference links substitute
-//! the in-file definition (CommonMark: labels case-fold and the
-//! FIRST definition wins — spec, not a guess) and rerun the chain
-//! relabeled rung 3; an unused definition is deliberately EXCLUDED
-//! from liveness — a definition that renders nothing must not keep
-//! its target alive (user decision D3). Since 2.29.0 (H1 slice 16,
-//! the executed post-1.0 disposition) the exclusion is the CORE's:
-//! an in-scope unused definition resolves and travels as an INERT
-//! edge (EDGE_REFDEF_UNUSED) that liveness drops beside the asset
-//! kind, and an unresolvable one is an ordinary miss — the borrowed
-//! External category retired with the channel that replaced it
-//! (Outcome::ResolvedInert). R4 a bare fragment is an
-//! in-file section claim taken AS WRITTEN, never validated: a claim
-//! on the linking document itself is an in-file edge whatever it
-//! names (the audited FAQ.md #complete row's raw-HTML anchor is one
-//! such — modeled for cross-file lookups since step 8, still not a
-//! reason to refuse an in-file claim). R5 any URI scheme (http/https/
-//! mailto per the design row) is External; site-root (/x) and
-//! protocol-relative (//x) forms are domain-relative in rendered
-//! contexts, never repo-relative.
+//! What stays of the Markdown rungs on this side (design §4 row 5).
+//! Since plan v2.33 W2-text stage G the Markdown ladder is the core's
+//! (CE.Resolve.Md: the link chain, the directory arm, the reference
+//! substitution, the label fold, first-wins and the inert unused
+//! definition); this side sends what it reads of the documents
+//! (graph/resolve/markdown.rs). Three readings remain here because the
+//! HTML rungs (html.rs) share them until stage H moves that ladder too —
+//! the core holds its own spelling of each meanwhile (CE.Resolve.Md,
+//! CE.Resolve.Url): R4 a bare fragment is an in-file section claim
+//! taken AS WRITTEN, never validated; R2 a cross-file fragment,
+//! percent-decoded, checked against the target's anchor set (md_slug.rs:
+//! rendered-text slugs of the headings by GitHub rules plus raw-HTML
+//! anchor ids verbatim), exactly one match naming the section and
+//! anything else degrading to the file (ResolvedSection { slug: None });
+//! and the URI-scheme test that sends a target out of the corpus before
+//! any join runs.
 //!
 //! The anchor set is the rendered heading's slug (ATX and setext —
-//! md_head.rs, plan v2.17 L round step 8 and v2.30 step 5b), the
-//! heading walk is block-aware, raw-HTML anchors enter the set from a
-//! tag read across lines and attribute spellings, and percent escapes
-//! decode (md_slug.rs); a fragment that matches no anchor degrades to
-//! file level, never invents a section. Cross-file staleness is
-//! closed at the key (M5 close, repaying the 2f wiring debt): the
-//! ONLY target-content fact this ladder consults is the anchor set
-//! (anchor() below), so every md file's slug_hash is a resolve_key
-//! input — a heading edit anywhere shifts the key and the phase-2
-//! sweep re-validates every anchor.
+//! md_head.rs), the heading walk is block-aware, raw-HTML anchors enter
+//! the set from a tag read across lines and attribute spellings, and
+//! percent escapes decode (md_slug.rs). Cross-file staleness is closed
+//! at the key: the ONLY target-content fact the anchor check consults is
+//! the anchor set, so every md file's slug_hash is a resolve_key input —
+//! a heading edit anywhere shifts the key and the phase-2 sweep
+//! re-validates every anchor.
 
-use super::{Outcome, Reason, Scope, Site};
-use crate::graph::md::{content_lines, detect, ref_definition};
-use crate::graph::roots;
+use super::{Outcome, Scope};
 use slug::{percent_decode, slug_set};
-use std::collections::{BTreeMap, BTreeSet};
-use std::rc::Rc;
 
 #[path = "md_head.rs"]
 pub(crate) mod head;
@@ -57,65 +33,9 @@ pub(crate) mod head;
 pub(crate) mod slug;
 pub use slug::slug_hash;
 
-pub fn resolve(site: &Site, scope: &Scope) -> Outcome {
-    let (from, spec) = (site.from, site.spec);
-    match site.kind {
-        "link" | "image" => link(from, spec, scope),
-        "ref_link" => ref_link(from, spec, scope),
-        "ref_def" => ref_def(from, spec, scope),
-        "url" => Outcome::External { rung: 5 },
-        _ => Outcome::Unresolved(Reason::Unsupported),
-    }
-}
-
-/// R1/R2/R5 chain for a direct target — link and image share it (the
-/// asset exclusion of images is edge-kind wiring, not resolution).
-fn link(from: &str, spec: &str, scope: &Scope) -> Outcome {
-    if is_scheme(spec) {
-        return Outcome::External { rung: 5 };
-    }
-    if spec.starts_with('/') {
-        return Outcome::Unresolved(Reason::OutOfScope);
-    }
-    let (path, frag) = match spec.split_once('#') {
-        Some((p, f)) => (p, Some(f)),
-        None => (spec, None),
-    };
-    if path.is_empty() {
-        return fragment(from, frag);
-    }
-    // decoded AFTER the split: an encoded `%23` is a literal `#` in
-    // the file name, never a fragment delimiter
-    let Some(target) = roots::join_rel(&roots::parent_dir(from), &percent_decode(path)) else {
-        return Outcome::Unresolved(Reason::OutOfScope);
-    };
-    if scope.files.contains(&target) {
-        return match frag {
-            Some(f) if crate::graph::md::is_md_path(&target) && !f.is_empty() => {
-                anchor(target, f, scope)
-            }
-            _ => Outcome::Resolved {
-                path: target,
-                rung: 1,
-            },
-        };
-    }
-    // a walked asset (step 5b): the walk lists it and the key hashes
-    // it, so it is never minted from the filesystem — a link to it is
-    // a file-level edge, an image an asset edge (graph/wire.rs
-    // edge_kind), and its node stands as an asset (graph/nodes.rs)
-    if scope.assets.contains(&target) {
-        return Outcome::Resolved {
-            path: target,
-            rung: 1,
-        };
-    }
-    directory(target, scope)
-}
-
 /// R4: a bare fragment names a section of the linking document, as
 /// written — there is nothing to validate against (module header).
-/// The HTML rungs read a bare fragment the same way (html.rs).
+/// The HTML rungs read a bare fragment this way (html.rs).
 pub(super) fn fragment(from: &str, frag: Option<&str>) -> Outcome {
     match frag {
         Some(f) if !f.is_empty() => Outcome::ResolvedSection {
@@ -130,28 +50,9 @@ pub(super) fn fragment(from: &str, frag: Option<&str>) -> Outcome {
     }
 }
 
-/// R1's directory arm: a tree reference resolves as a package while
-/// in-scope files live under it.
-fn directory(target: String, scope: &Scope) -> Outcome {
-    let prefix = if target.is_empty() {
-        String::new()
-    } else {
-        format!("{target}/")
-    };
-    if scope.files.iter().any(|f| f.starts_with(&prefix)) {
-        Outcome::ResolvedPackage {
-            dir: target,
-            rung: 1,
-        }
-    } else {
-        Outcome::Unresolved(Reason::OutOfScope)
-    }
-}
-
 /// R2: the fragment, percent-decoded, against the target's anchor
 /// set; anything but exactly one match degrades to the file (slug:
-/// None). A page linking into a Markdown document asks here too
-/// (html.rs), so one slug memo serves both ladders.
+/// None). A page linking into a Markdown document asks here (html.rs).
 pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
     // per-sweep: one read + slug pass per TARGET file, not one per
     // anchored link pointing at it (review MED)
@@ -169,86 +70,10 @@ pub(super) fn anchor(target: String, frag: &str, scope: &Scope) -> Outcome {
     }
 }
 
-/// R3: substitute the definition and rerun the chain, relabeled —
-/// the rung that answered is the reference machinery.
-fn ref_link(from: &str, spec: &str, scope: &Scope) -> Outcome {
-    let table = refs(from, scope);
-    match table.0.get(&fold(spec)) {
-        Some(target) => link(from, target, scope).with_rung(3),
-        None => Outcome::Unresolved(Reason::OutOfScope),
-    }
-}
-
-/// A definition site: used ⇒ its target resolves like a link (the
-/// ref_link edge simply duplicates it); unused ⇒ the target still
-/// resolves but travels INERT (H1 slice 16, 2.29.0) — the core owns
-/// the liveness exclusion, and an unresolvable unused definition is
-/// an ordinary miss now, never the borrowed External category. A
-/// duplicate label's later definition is inert under first-wins, so
-/// it lands in the unused arm.
-fn ref_def(from: &str, spec: &str, scope: &Scope) -> Outcome {
-    let table = refs(from, scope);
-    let (defs, used) = (&table.0, &table.1);
-    let live = defs
-        .iter()
-        .any(|(label, t)| t == spec && used.contains(label));
-    let resolved = link(from, spec, scope).with_rung(3);
-    if live {
-        return resolved;
-    }
-    match resolved {
-        Outcome::Resolved { path, rung } | Outcome::ResolvedSection { path, rung, .. } => {
-            Outcome::ResolvedInert { path, rung }
-        }
-        Outcome::ResolvedPackage { dir, rung } => Outcome::ResolvedInert { path: dir, rung },
-        other => other,
-    }
-}
-
-/// Per-sweep: every ref site in one file used to re-read it AND
-/// re-run the full detector walk (review MED).
-fn refs(from: &str, scope: &Scope) -> Rc<(BTreeMap<String, String>, BTreeSet<String>)> {
-    scope.memo.cached("md_refs", from, || {
-        let text = std::fs::read_to_string(scope.root.join(from)).unwrap_or_default();
-        ref_table(&text)
-    })
-}
-
-/// The in-file reference surface: first-win definitions by folded
-/// label, plus every label a reference link actually uses — built on
-/// the detector's own walk so the masking cannot drift (a fenced or
-/// commented definition must resolve nothing).
-fn ref_table(text: &str) -> (BTreeMap<String, String>, BTreeSet<String>) {
-    let mut defs: BTreeMap<String, String> = BTreeMap::new();
-    for (_, line, mask) in content_lines(text) {
-        if !mask.first().copied().unwrap_or(false)
-            && let Some((label, target)) = ref_definition(line)
-        {
-            defs.entry(fold(label))
-                .or_insert_with(|| target.to_string());
-        }
-    }
-    let used = detect(text)
-        .into_iter()
-        .filter(|s| s.kind == "ref_link")
-        .map(|s| fold(&s.spec))
-        .collect();
-    (defs, used)
-}
-
-/// CommonMark label normalization: case fold + whitespace collapse.
-fn fold(label: &str) -> String {
-    label
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
-        .to_lowercase()
-}
-
 /// An RFC 3986 scheme head (or a protocol-relative // form) leaves
 /// the corpus before any join runs — join_rel would silently
 /// normalize "//host/x" into a bogus in-tree path. The HTML rungs
-/// share the reading (html.rs).
+/// read it (html.rs).
 pub(super) fn is_scheme(spec: &str) -> bool {
     if spec.starts_with("//") {
         return true;

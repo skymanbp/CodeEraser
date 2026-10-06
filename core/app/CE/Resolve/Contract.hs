@@ -12,8 +12,10 @@
 -- TOML document an object, a Rust row's or surface's answer one that
 -- reads), the Rust package, crate-root and manifest paths in strictly
 -- ascending order, every Rust owner row a walked file's in that order and
--- every Rust site with its line — and the cap the request's text counts
--- against. The
+-- every Rust site with its line, the assets and the Markdown anchor sets
+-- and reference tables in strictly ascending (path) order, every anchor
+-- set a walked Markdown file's and every Markdown reference site's file
+-- with its table — and the cap the request's text counts against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
@@ -23,13 +25,16 @@ import CE.Resolve.Cost
 import CE.Resolve.JavaHeader
 import CE.Resolve.Request
 import CE.Resolve.RsSurface (readsAsAt, readsAsSurface)
+import CE.Resolve.Tables (kindRefDef, kindRefLink)
+import CE.Resolve.World (ofLangs)
+import Data.Array (listArray, (!))
 import Data.Aeson (Value (..), encode)
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
 import Data.Char (isDigit)
-import Data.Maybe (isJust)
+import Data.Maybe (isJust, listToMaybe)
 import qualified Data.Aeson.Key as K
 
 -- | One per row plus every character of every string, the decoded
@@ -55,6 +60,7 @@ requestSize rq =
     , sum [1 + chars a + chars b + maybe 0 payload t | (_, a, b, _, t) <- rqTsFacts rq]
     , texts (rqRsPackages rq <> rqRsCrateRoots rq <> rqRsManifests rq)
     , sum [1 + chars f + chars m | (f, m) <- rqRsOwners rq]
+    , mdSize rq
     ]
  where
   c = rqC rq
@@ -68,6 +74,15 @@ requestSize rq =
     _ -> doc v
   header h = chars (hPackage h) + sum [1 + chars (iName i) | i <- hImports h] + sum (map typeSize (hTypes h))
   typeSize t = 1 + chars (tName t) + texts (tSupers t) + sum (map typeSize (tMembers t))
+
+-- | The assets and the Markdown facts: one per row, one per character.
+mdSize :: ResolveReq -> Integer
+mdSize rq = strings (rqAssets rq) + sum (map slugs (rqMdSlugs rq)) + sum (map refs (rqMdRefs rq))
+ where
+  count = toInteger . length
+  strings = foldr (\x n -> n + 1 + count x) 0
+  slugs (p, ss) = 1 + count p + strings ss
+  refs (p, ds, us) = 1 + count p + strings us + sum [1 + count l + count t | (l, t) <- ds]
 
 overCap :: ResolveReq -> Bool
 overCap rq = requestSize rq > resolveCap
@@ -95,6 +110,7 @@ offence rq =
     , ascending "rs.manifest" (rqRsManifests rq)
     , ascending "rs.owner" (map fst (rqRsOwners rq))
     , asum [Just ("rs.owner " <> show i <> ": its file is not walked") | (i, (f, _)) <- zip [0 :: Int ..] (rqRsOwners rq), not (Set.member f walked)]
+    , mdOffence rq walked
     ]
  where
   walked = Set.fromList (rqFiles rq)
@@ -123,6 +139,23 @@ offence rq =
     | sLang s == langJava && sLine s == Nothing = Just ("site " <> show i <> ": a Java site without its line")
     | sLang s == langRs && sLine s == Nothing = Just ("site " <> show i <> ": a Rust site without its line")
     | otherwise = Nothing
+
+-- | The assets, the anchor sets (each a walked Markdown file's) and the
+-- reference tables in path order, and every Markdown reference site's
+-- file with its table (the sites already in range: the site checks come
+-- first).
+mdOffence :: ResolveReq -> Set.Set String -> Maybe String
+mdOffence rq walked =
+  asum
+    [ ascending "asset" (rqAssets rq)
+    , ascending "md.slugs" (map fst (rqMdSlugs rq))
+    , listToMaybe ["md.slugs " <> show i <> ": not a walked Markdown file" | (i, f) <- zip [0 :: Int ..] (map fst (rqMdSlugs rq)), Set.notMember f walked || not (ofLangs ["markdown"] f)]
+    , ascending "md.refs" [f | (f, _, _) <- rqMdRefs rq]
+    , listToMaybe ["site " <> show i <> ": a Markdown reference site without its file's table" | (i, s) <- zip [0 :: Int ..] (rqSites rq), sLang s == langMd, sKind s `elem` [kindRefLink, kindRefDef], Set.notMember (path ! sFrom s) tabled]
+    ]
+ where
+  tabled = Set.fromList [f | (f, _, _) <- rqMdRefs rq]
+  path = listArray (0, length (rqFiles rq) + length (rqOrigins rq) - 1) (rqFiles rq <> rqOrigins rq)
 
 -- | A path table in strictly ascending order: no path twice.
 ascending :: String -> [String] -> Maybe String

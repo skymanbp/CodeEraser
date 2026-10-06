@@ -54,7 +54,7 @@ data Case = Case
   }
 
 -- | A site's answer with its target spelled.
-data Ref = RFile String Int | RPkg String Int | RExt Int | RUnres Reason | RVia String Int
+data Ref = RFile String Int | RPkg String Int | RExt Int | RUnres Reason | RVia String Int | RSection String (Maybe String) Int | RInert String Int
   deriving (Eq, Show)
 
 -- | An answer's shape, its target dropped: what a battery's "reach
@@ -66,6 +66,8 @@ refShape a = case a of
   RExt r -> "external " <> show r
   RUnres why -> show why
   RVia _ r -> "via " <> show r
+  RSection _ slug r -> "section " <> show r <> maybe "" (const " slug") slug
+  RInert _ r -> "inert " <> show r
 
 -- | The fields every resolve.request opens with: proto, type, id, the
 -- walked files and the origins after them.
@@ -198,19 +200,24 @@ splitOn c s = case break (== c) s of
   (a, _ : rest) -> a : splitOn c rest
   (a, []) -> [a]
 
--- | A reply's rows as answers with their targets spelled; Nothing for
--- a reply that is no resolve.result.
+-- | A reply's rows as answers with their targets spelled, a section's
+-- slug from its `sections` row; Nothing for a reply that is no
+-- resolve.result.
 answers :: Value -> Maybe [Ref]
 answers (Object o) = do
   rows <- parseMaybe parseJSON =<< KM.lookup "results" o
-  traverse row (rows :: [[Value]])
+  slugs <- maybe (Just []) (parseMaybe parseJSON) (KM.lookup "sections" o)
+  let slugAt = M.fromList (slugs :: [(Int, Maybe String)])
+  sequence (zipWith (row slugAt) [0 ..] (rows :: [[Value]]))
  where
-  row r = case r of
+  row slugAt i r = case r of
     [g, Number 0, String t, _] -> RFile (text t) <$> int g
     [g, Number 1, String t, _] -> RPkg (text t) <$> int g
     [g, Number 2, _, _] -> RExt <$> int g
     [_, Number 3, _, why] -> RUnres . toEnum <$> int why
     [g, Number 4, String t, _] -> RVia (text t) <$> int g
+    [g, Number 5, String t, _] -> RSection (text t) <$> M.lookup i slugAt <*> int g
+    [g, Number 6, String t, _] -> RInert (text t) <$> int g
     _ -> Nothing
   int v = parseMaybe parseJSON v :: Maybe Int
   text t = maybe "" id (parseMaybe parseJSON (String t))

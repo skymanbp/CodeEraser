@@ -38,7 +38,7 @@ pub fn slug_hash(text: &str) -> u64 {
 /// text, not a target (the step-8 review: the comment-only mask let
 /// it in). A heading line can carry an anchor tag too — its own slug
 /// drops the tag, the id still enters, after the slug.
-pub(super) fn slug_set(text: &str) -> Vec<String> {
+pub(crate) fn slug_set(text: &str) -> Vec<String> {
     let mut seen: BTreeMap<String, usize> = BTreeMap::new();
     let mut rows: Vec<(usize, u8, String)> = Vec::new();
     for heading in headings(text) {

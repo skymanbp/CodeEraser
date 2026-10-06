@@ -90,6 +90,17 @@
 > 「先到的通道留下、tf 相加」的装袋次序全在核（`CE.Similar.{Bags,Terms,Stem,Chars,Lower}`），超过容量（单元、文本、码点与每个单元的每个列表元素合计 1,048,576）
 > 降级 `bags_too_large`。测量侧在索引刷新时每个文件问一次、自由文本查询问一次；词不入库，库里仍只有哈希。golden：新文件 `bags/golden` 四对（满单元带文本、
 > 匿名 / impl / 重复被调用名、`inspect` 与非 ASCII 文本、`ret` 越界按名拒绝）；hello 的 `capabilities` 加 `bags/1`（`tablesDigest` 不动），其余 golden 不动。
+> **9.0.0 同版加性**（Markdown 阶梯进核，W2-text 阶段 G，2026-10-06；设计册 §6 W2b 行与 §11 第 94–98 条；9.0.0 未发布，同上不另升版号）：
+> `sites` 的语言加 Markdown（码 5，站点种类 `link` / `image` / `ref_link` / `ref_def` / `url`）；请求加性 `assets`（走查到而索引不解析的文件，严格升序：R1 的第二个
+> 候选集）与 `md` `{slugs, refs}`——`slugs` `[[文件, [锚…]]]` 是每个走查到的 Markdown 文件的锚集（测量侧读出的渲染标题 slug 与原样的 HTML 锚 id，按文件严格升序，
+> 文件须是走查里的 Markdown 文件，否则按名拒绝 `md.slugs i: not a walked Markdown file`），`refs` `[[文件, [[标签, 目标]…], [用到的标签…]]]` 是批里每个带引用站点的
+> 文件的定义（原文、按文本顺序，代码与注释之外）与它的引用链接写出的标签（按文件严格升序；引用站点的文件缺表按名拒绝
+> `site i: a Markdown reference site without its file's table`）。两者只在批里有 Markdown 站点时带，随首问发出，不加问答轮。标签的折叠（空白折成一个空格、Rust
+> 的 `to_lowercase`，含 Final_Sigma）与「同标签第一条定义胜」在核。结果码加 5 = 段（`[级, 5, 文件, -1]`，段名在应答加性键 `sections` `[[行, 段名 | null]]`：R2 锚集
+> 恰好命中一个时是解码后的片段，否则 `null`；R4 是写出的片段）与 6 = 惰性（没有引用链接用到的定义，目标照常解析、不计活性）；每份应答（含降级）都带 `sections`。
+> `inspect` 加 `lower` / `fold` / `url`。golden：`resolve/golden` 加第 18 对（Markdown 十八个站点：R1 文件、目录与资产，R2 命中、重名与解码后的非 ASCII 锚，
+> R4，R5 的协议与站点根，R3 的折叠、Final_Sigma、缺定义与惰性定义）与第 19 对（同一请求不带 `refs`，按名拒绝）；既有十二对应答（第 1–5、7、8、10、12、13、15、16 对）
+> 各多一个空的 `sections` 键，hello 与 `tables` 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

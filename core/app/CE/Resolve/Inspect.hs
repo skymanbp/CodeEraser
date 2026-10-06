@@ -21,6 +21,11 @@
 --   text       [text] → [[[line], trimmed, [word]]]
 --   chars      true → {white: [[lo, hi]], alnum: [[lo, hi]]} over every
 --              scalar value
+--   lower      true → {map: [[c, lowered]] (every scalar value whose
+--              lowercase is not itself), final: [[lo, hi]] (x + `Σ` ends
+--              in a final sigma), after: [[lo, hi]] (`A` + x + `Σ` does)}
+--   fold       [label] → [folded] (the Markdown reference label fold)
+--   url        [target] → [[scheme, decoded]]
 --   jsonc      [text] → [[document] | null] (a document `null` apart from
 --              no document)
 --   jsoncAccepts [text] → [bool] (whether a document reads: one nested
@@ -52,6 +57,9 @@ import CE.Resolve.Flags (Chain (..), Search (..), chain)
 import CE.Resolve.Go (GoMod (..), parseGoMod)
 import CE.Resolve.Py (PyProject (..), pyproject)
 import CE.Resolve.Json (readJsonc)
+import CE.Resolve.Lower (rustLower)
+import CE.Resolve.Md (fold)
+import CE.Resolve.Url (isScheme, percentDecode)
 import CE.Resolve.Str (parentDir, rustLines, rustTrim, splitWhitespace)
 import CE.Resolve.TsConfig (Package (..), TsChain (..), TsOptions (..), package, tsExtendsFiles, tsOptions)
 import CE.Resolve.TsFacts (Facts, facts)
@@ -59,7 +67,7 @@ import Data.Aeson (Value (..), object, toJSON, (.=))
 import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (FromJSON, parseMaybe, parseJSON)
-import Data.Char (chr)
+import Data.Char (chr, ord)
 import Data.Maybe (isJust)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
@@ -67,7 +75,7 @@ import qualified Data.Set as Set
 inspected :: Value -> Value
 inspected (Object o) = object (concat [maybe [] (\v -> [K.fromString k .= v]) (answer k =<< KM.lookup (K.fromString k) o) | k <- keys])
  where
-  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package", "cargo"]
+  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "lower", "fold", "url", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package", "cargo"]
 inspected _ = object []
 
 -- | One key's answer, Nothing when its question does not read.
@@ -87,7 +95,7 @@ answer k v = case k of
   _ -> tsAnswer k v
 
 -- | The TS readers' keys: the JSONC reader, the tsconfig chain, the
--- package.json; and the Cargo.toml reader's.
+-- package.json; and the Cargo.toml reader's; then the Markdown ones.
 tsAnswer :: String -> Value -> Maybe Value
 tsAnswer k v = case k of
   "jsonc" -> each v (maybe Null (\d -> toJSON [d]) . readJsonc)
@@ -96,6 +104,16 @@ tsAnswer k v = case k of
   "tsReached" -> each v (\(start, tree) -> either (const Null) toJSON (tsExtendsFiles (given tree) start))
   "package" -> each v (\(rel, text) -> either (const Null) (toJSON . fmap packageJson) (package (given [(rel, text)]) rel))
   "cargo" -> each v (\(rel, doc, files) -> toJSON (cargoJson (Set.fromList files) . Cargo.package rel <$> (doc :: Maybe Value)))
+  _ -> mdAnswer k v
+
+-- | The Markdown rungs' string readings: the lowercase over every scalar
+-- value (alone, and a capital sigma after it with and without a cased
+-- letter before), the label fold, a target's scheme test and decoding.
+mdAnswer :: String -> Value -> Maybe Value
+mdAnswer k v = case k of
+  "lower" -> Just (object ["map" .= [(ord c, l) | c <- scalars, let l = rustLower [c], l /= [c]], "final" .= ranges (sigma ""), "after" .= ranges (sigma "A")])
+  "fold" -> each v (toJSON . fold)
+  "url" -> each v (\t -> toJSON (isScheme t, percentDecode t))
   _ -> Nothing
 
 -- | Every question of a list, answered in order.
@@ -143,9 +161,17 @@ cargoJson files p = toJSON [toJSON (Cargo.cpDir p), toJSON (Cargo.cpName p), toJ
  where
   set = toJSON . Set.toList
 
+-- | Every scalar value.
+scalars :: [Char]
+scalars = [chr i | i <- [0 .. 0x10FFFF], i < 0xD800 || i > 0xDFFF]
+
+-- | Whether a capital sigma after `lead` and a character lowers final.
+sigma :: String -> Char -> Bool
+sigma lead c = last (rustLower (lead <> [c, '\x3A3'])) == '\x3C2'
+
 -- | The scalar values a predicate holds for, as inclusive ranges.
 ranges :: (Char -> Bool) -> [[Int]]
-ranges p = go [i | i <- [0 .. 0x10FFFF], i < 0xD800 || i > 0xDFFF, p (chr i)]
+ranges p = go [ord c | c <- scalars, p c]
  where
   go [] = []
   go (x : xs) = let (run, rest) = spanRun x xs in [x, run] : go rest

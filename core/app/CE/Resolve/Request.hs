@@ -23,7 +23,14 @@
 -- and each response file a database names as text. What needs the file system
 -- stays a small fact: the absolute root's text, the databases a probe
 -- found, each C-family file's include list (read in the walk, a key
--- input there). Every object and table may be absent, read as empty.
+-- input there). With Markdown sites (plan v2.33 W2-text stage G) come
+-- the walked assets (`assets`: the files the index never parses, a
+-- link's second candidate set), every walked Markdown file's anchor set
+-- as the measuring side slugged it (`md.slugs`, `[path, [slug]]`) and,
+-- per file of a reference site, its definitions outside code and
+-- comments in text order and the labels its reference links write
+-- (`md.refs`, `[path, [[label, target]], [label]]`). Every object and
+-- table may be absent, read as empty.
 module CE.Resolve.Request (
   ResolveReq (..),
   Site (..),
@@ -58,6 +65,9 @@ data ResolveReq = ResolveReq
   , rqRsCrateRoots :: [String]
   , rqRsManifests :: [String]
   , rqRsOwners :: [(String, String)]
+  , rqAssets :: [String]
+  , rqMdSlugs :: [(String, [String])]
+  , rqMdRefs :: [(String, [(String, String)], [String])]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
@@ -112,6 +122,9 @@ instance FromJSON ResolveReq where
       <*> listAt o "rs" "crateRoots"
       <*> listAt o "rs" "manifests"
       <*> listAt o "rs" "owners"
+      <*> o .:? "assets" .!= []
+      <*> listAt o "md" "slugs"
+      <*> listAt o "md" "refs"
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 

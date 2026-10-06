@@ -15,10 +15,11 @@
 //! the Python, Lua, Go and C / C++ rungs live in the core
 //! (`resolve/1`, graph/resolve/), R's since W2-text stage B, Java's
 //! since stage C, Haskell's since stage D, the TS / TSX ones since
-//! stage E and Rust's since stage F (what they read of a Rust file's
-//! syntax tree is rs_cst.rs's facts): `resolve_all` sends their sites in
-//! one request and runs the other languages' rungs here. Dispatch
-//! carries the site's frozen kind label (the package's
+//! stage E, Rust's since stage F (what they read of a Rust file's
+//! syntax tree is rs_cst.rs's facts) and Markdown's since stage G (what
+//! they read of a document is graph/resolve/markdown.rs's facts):
+//! `resolve_all` sends their sites in one request and runs HTML's rungs
+//! here. Dispatch carries the site's frozen kind label (the package's
 //! `store.site_kinds`): Markdown routes five kinds through one chain.
 
 use crate::scan::lang::Lang;
@@ -47,8 +48,9 @@ pub mod rs_cst;
 mod outcome;
 pub use outcome::{Outcome, Reason, Rung};
 // The a8db74a9 Python / Lua / Go / C rungs, the c96ab3f6 R rungs, the
-// 27d0d56d Java rungs, the fa83a48d Haskell rungs, the dd0eec61 TS rungs
-// and the 1324c927 Rust rungs, frozen byte for byte: the differential
+// 27d0d56d Java rungs, the fa83a48d Haskell rungs, the dd0eec61 TS rungs,
+// the 1324c927 Rust rungs and the 3b7234eb Markdown rungs, frozen byte
+// for byte: the differential
 // gate's oracle (tests subrepo unit/graph/ladder/oracle/, driven by
 // unit/dedup/ladder_diff/). The frozen Rust tree walk and re-export
 // surface stand at their old paths, where the frozen rungs read them.
@@ -192,7 +194,6 @@ pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome
 /// The rungs this side still runs.
 fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
     match lang {
-        Lang::Markdown => md::resolve(site, scope),
         Lang::Html => html::resolve(site, scope),
         // The sentinel is never walked, and the scan-only arm (plan
         // v2.5) is never indexed — if either ever arrives, the honest
