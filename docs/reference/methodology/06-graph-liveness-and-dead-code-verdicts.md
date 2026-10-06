@@ -55,7 +55,7 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
 ([ladder/outcome.rs:14-29](../../../cli/src/graph/ladder/outcome.rs#L14)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:192-196](../../../cli/src/graph/ladder/mod.rs#L192)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:191-195](../../../cli/src/graph/ladder/mod.rs#L191)).
 
 Since plan v2.33 wave W2a the Python, Go, C / C++ and Lua rungs below run in the core's
 `resolve/1` family, the R rungs since W2-text stage B and the Java rungs since stage C, and since
@@ -92,7 +92,7 @@ Numeric details that are policy, not taste:
   never a guess ([TsConfig.hs:79-86](../../../core/app/CE/Resolve/TsConfig.hs#L79),
   [TsConfig.hs:113-117](../../../core/app/CE/Resolve/TsConfig.hs#L113)). The chain's every file, and the
   presence of a `node_modules/` under any ancestor of a TS file, are resolve-key inputs
-  ([keys.rs:90-93](../../../cli/src/graph/keys.rs#L90)).
+  ([keys.rs:91-94](../../../cli/src/graph/keys.rs#L91)).
 - Python source roots are `{repo root, "src"}` plus pyproject-declared dirs
   ([Py.hs:106-109](../../../core/app/CE/Resolve/Py.hs#L106)); within one root, package-before-module is
   CPython's own finder order and therefore **not** ambiguity — only cross-root disagreement is
