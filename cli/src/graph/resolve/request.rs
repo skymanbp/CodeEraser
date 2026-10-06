@@ -3,7 +3,8 @@
 //! detector produced them, the `[graph.search_roots]` table, the Lua
 //! templates the walk read, each go.mod's, each R DESCRIPTION's and each
 //! .cabal file's text, each walked package.json's and tsconfig.json's
-//! (with whether it is a file: a TS fact),
+//! (with whether it is a file: a TS fact), each walked Cargo.toml's
+//! document and the declared crate roots (`[graph] crate_roots`),
 //! every walked Java file's header as the walk read it (package, imports,
 //! type declarations: ladder/java_header.rs),
 //! the root `pyproject.toml` and every JSON compile database decoded (a library
@@ -11,9 +12,8 @@
 //! text, and the facts that need the file system: the root's absolute
 //! text, the databases clangd's probes find, each C-family file's
 //! include list (read in the walk), the response files the core
-//! asked for (`wanted`) and the TS rungs' file-system facts it asked for
-//! (`tsWanted`: a path's text, whether a path is a file, whether
-//! `node_modules/<name>` under a directory is a directory).
+//! asked for (`wanted`) and the facts the TS and Rust rungs asked for
+//! (`tsWanted`, facts.rs).
 
 use crate::graph::compdb_find::{self, Found};
 use crate::graph::ladder::Site;
@@ -32,6 +32,7 @@ pub struct Input<'a> {
     pub lua: Vec<[&'a str; 2]>,
     pub includes: &'a BTreeMap<String, Vec<String>>,
     pub java: &'a BTreeMap<String, crate::graph::ladder::java_header::Header>,
+    pub crate_roots: &'a BTreeSet<String>,
 }
 
 /// The sweep's part of a request: everything but the sites. The walk's
@@ -50,6 +51,7 @@ pub fn tree(input: &Input) -> Value {
             hit && wanted.contains(&name)
         })
     };
+    let cargo: BTreeSet<&String> = named("Cargo.toml").collect();
     json!({
         "files": input.files,
         "config": { "searchRoots": input.search_roots },
@@ -58,7 +60,8 @@ pub fn tree(input: &Input) -> Value {
         "go": { "mods": texts(input.root, named("go.mod")) },
         "r": { "descriptions": descriptions(input.root, named("DESCRIPTION")) },
         "hs": { "cabals": texts(input.root, named("*.cabal").collect::<BTreeSet<_>>().into_iter()) },
-        "ts": ts(input.root, named("package.json").collect(), named("tsconfig.json")),
+        "ts": ts(input.root, named("package.json").collect(), named("tsconfig.json"), &cargo),
+        "rs": { "packages": cargo, "crateRoots": input.crate_roots },
         "java": { "headers": headers(input.java) },
         "c": databases(input.root, input.files, input.includes),
     })
@@ -72,59 +75,23 @@ pub fn texts<'a>(root: &Path, rels: impl Iterator<Item = &'a String>) -> Vec<(&'
 }
 
 /// The TS object: the walk's package.json files (the fourth rung's
-/// members) and the text facts of those and of its tsconfig.json files.
+/// members), the text facts of those and of its tsconfig.json files, and
+/// the TOML facts of its Cargo.toml files (the Rust rungs' members).
 fn ts<'a>(
     root: &Path,
     packages: BTreeSet<&'a String>,
     tsconfigs: impl Iterator<Item = &'a String>,
+    cargo: &BTreeSet<&String>,
 ) -> Value {
-    let facts: Vec<Value> = packages
+    let mut reader = super::facts::Reader::new(root);
+    let mut facts: Vec<Value> = packages
         .iter()
         .copied()
         .chain(tsconfigs)
-        .map(|rel| fact(root, 0, rel, ""))
+        .map(|rel| reader.fact(0, rel, ""))
         .collect();
+    facts.extend(cargo.iter().map(|rel| reader.fact(3, rel, "")));
     json!({ "packages": packages, "facts": facts })
-}
-
-/// One file-system fact as its request row, `[op, a, b, answer, text]`:
-/// a path's text (op 0: 0 no file, 1 a file that does not read as UTF-8,
-/// 2 its text), whether a path is a file (op 1), whether
-/// `node_modules/<b>` under the directory `a` is a directory (op 2).
-pub fn fact(root: &Path, op: i64, a: &str, b: &str) -> Value {
-    let (answer, text) = match op {
-        0 if !root.join(a).is_file() => (0, None),
-        0 => std::fs::read_to_string(root.join(a)).map_or((1, None), |t| (2, Some(t))),
-        1 => (i64::from(root.join(a).is_file()), None),
-        _ => {
-            let dir = root.join(a).join("node_modules").join(b);
-            (i64::from(dir.is_dir()), None)
-        }
-    };
-    json!([op, a, b, answer, text])
-}
-
-/// The facts the core asked for, read and added (a fact asked for twice
-/// is the core's contract refusal on the next request: `ts.fact i: asked
-/// twice`).
-pub fn answer_facts(
-    body: &mut Value,
-    root: &Path,
-    wanted: &[(i64, String, String)],
-) -> Result<(), String> {
-    if wanted.is_empty() {
-        return Ok(());
-    }
-    if body["ts"]["facts"].is_null() {
-        body["ts"]["facts"] = json!([]);
-    }
-    let carried = body["ts"]["facts"]
-        .as_array_mut()
-        .ok_or("resolve/1: request has no fact table")?;
-    for (op, a, b) in wanted {
-        carried.push(fact(root, *op, a, b));
-    }
-    Ok(())
 }
 
 /// Each readable DESCRIPTION's text, lossy, by its path.
@@ -205,7 +172,8 @@ pub fn databases(
 /// The sites, each `[lang, kind, from, spec]`, `from` an index into the
 /// walked files then the sites' own files the walk did not hold (the
 /// `origins`, returned in order); a Java site adds its line (the Java
-/// rungs read the header's import on it and the types enclosing it).
+/// rungs read the header's import on it and the types enclosing it), a
+/// Rust site too (the Rust rungs read the syntax tree's answers at it).
 pub fn sites(
     files: &BTreeSet<String>,
     sites: &[(Lang, &Site)],
@@ -231,7 +199,7 @@ pub fn sites(
                 json!(index[s.from]),
                 json!(s.spec),
             ];
-            if *lang == Lang::Java {
+            if matches!(lang, Lang::Java | Lang::Rust) {
                 row.push(json!(s.line));
             }
             Ok(Value::Array(row))

@@ -1,9 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | One site's answer (plan v2.33 wave W2a; on text since W2-text) —
--- the measuring side's `ladder::Outcome` for the four ladders this
--- family holds: a file at a rung, a Go package directory at a rung,
--- External at a rung, or a refusal with its reason — and the reply row
+-- the measuring side's `ladder::Outcome` for the ladders this family
+-- holds: a file at a rung, a Go package directory at a rung, a file
+-- reached through a Rust re-export surface at a rung (`ResolvedVia`,
+-- plan v2.33 W2-text stage F), External at a rung, or a refusal with its
+-- reason — and the reply row
 -- it travels as, `[rung, outcome, target, reason]`: the target is the
 -- file's or the directory's repo-relative path, null where absent; the
 -- reason -1 where absent.
@@ -22,6 +24,7 @@ import qualified Data.Set as Set
 data Answer
   = AFile String !Int
   | APackage String !Int
+  | AVia String !Int
   | AExternal !Int
   | AUnresolved !Reason
   deriving (Eq, Show)
@@ -32,6 +35,7 @@ withRung :: Int -> Answer -> Answer
 withRung r a = case a of
   AFile f _ -> AFile f r
   APackage d _ -> APackage d r
+  AVia f _ -> AVia f r
   AExternal _ -> AExternal r
   AUnresolved why -> AUnresolved why
 
@@ -55,6 +59,7 @@ answerRow :: Answer -> Value
 answerRow a = toJSON $ case a of
   AFile f r -> [toJSON r, toJSON outFile, toJSON f, none]
   APackage d r -> [toJSON r, toJSON outPackage, toJSON d, none]
+  AVia f r -> [toJSON r, toJSON outVia, toJSON f, none]
   AExternal r -> [toJSON r, toJSON outExternal, Null, none]
   AUnresolved why -> [toJSON (0 :: Int), toJSON outUnresolved, Null, toJSON (reasonCode why)]
  where

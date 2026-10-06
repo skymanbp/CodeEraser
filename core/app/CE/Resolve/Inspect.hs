@@ -31,6 +31,10 @@
 --   tsReached  [[start, [[path, text | null]]]] → [[path]]
 --   package    [[rel, text | null]] → [[dir, name | null, [exports], [dep]]
 --              | null] (exports: [] absent, [value] present)
+--   cargo      [[rel, document | null, [file]]] → [[dir, name | null,
+--              [dep], [crateRoot], [binRoot], libRoot | null, [kept]] |
+--              null] (the document a decoded Cargo.toml; the roots and
+--              the kept files among the files listed)
 -- A TS question's tree is the files it lists (a null text: a file that
 -- does not read); no other path is a file.
 -- A chain is `[msvc, ownDir, quote, bracket, system, forced]`, a searched
@@ -38,6 +42,7 @@
 module CE.Resolve.Inspect (inspected) where
 
 import CE.Resolve.Cabal (Cabal (..), Stanza (..))
+import qualified CE.Resolve.Cargo as Cargo
 import qualified CE.Resolve.Cabal as Cabal
 import CE.Resolve.Chars (isRustAlnum, isRustWhite)
 import CE.Resolve.Cmdline
@@ -62,7 +67,7 @@ import qualified Data.Set as Set
 inspected :: Value -> Value
 inspected (Object o) = object (concat [maybe [] (\v -> [K.fromString k .= v]) (answer k =<< KM.lookup (K.fromString k) o) | k <- keys])
  where
-  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package"]
+  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package", "cargo"]
 inspected _ = object []
 
 -- | One key's answer, Nothing when its question does not read.
@@ -82,7 +87,7 @@ answer k v = case k of
   _ -> tsAnswer k v
 
 -- | The TS readers' keys: the JSONC reader, the tsconfig chain, the
--- package.json.
+-- package.json; and the Cargo.toml reader's.
 tsAnswer :: String -> Value -> Maybe Value
 tsAnswer k v = case k of
   "jsonc" -> each v (maybe Null (\d -> toJSON [d]) . readJsonc)
@@ -90,6 +95,7 @@ tsAnswer k v = case k of
   "tsconfig" -> each v (\(dir, tree) -> either (const Null) tsChainJson (tsOptions (given tree) dir))
   "tsReached" -> each v (\(start, tree) -> either (const Null) toJSON (tsExtendsFiles (given tree) start))
   "package" -> each v (\(rel, text) -> either (const Null) (toJSON . fmap packageJson) (package (given [(rel, text)]) rel))
+  "cargo" -> each v (\(rel, doc, files) -> toJSON (cargoJson (Set.fromList files) . Cargo.package rel <$> (doc :: Maybe Value)))
   _ -> Nothing
 
 -- | Every question of a list, answered in order.
@@ -121,7 +127,7 @@ dbJson (entries, x) = toJSON [toJSON [toJSON [toJSON (eUnit e), toJSON (eDir e),
 -- | A TS question's tree: each listed file's text, or a file that does
 -- not read; every other path no file.
 given :: [(String, Maybe String)] -> Facts
-given tree = facts True [(0, path, "", maybe 1 (const 2) text, text) | (path, text) <- tree]
+given tree = facts True [(0, path, "", maybe 1 (const 2) text, toJSON <$> text) | (path, text) <- tree]
 
 tsChainJson :: TsChain -> Value
 tsChainJson c = case c of
@@ -131,6 +137,11 @@ tsChainJson c = case c of
 
 packageJson :: Package -> Value
 packageJson pk = toJSON [toJSON (pkDir pk), toJSON (pkName pk), toJSON (maybe [] pure (pkExports pk)), toJSON (pkDeps pk)]
+
+cargoJson :: Set.Set String -> Cargo.Package -> Value
+cargoJson files p = toJSON [toJSON (Cargo.cpDir p), toJSON (Cargo.cpName p), toJSON (Cargo.cpDeps p), set (Cargo.crateRoots files p), set (Cargo.binRoots files p), toJSON (Cargo.libRoot files p), toJSON (filter (Cargo.keeps files (Just p)) (Set.toList files))]
+ where
+  set = toJSON . Set.toList
 
 -- | The scalar values a predicate holds for, as inclusive ranges.
 ranges :: (Char -> Bool) -> [[Int]]

@@ -19,6 +19,7 @@ module CE.Resolve.TsConfig (
   nearestPackage,
   field,
   str,
+  keysUnder,
 ) where
 
 import CE.Resolve.Str (joinRel, parentDir)
@@ -57,6 +58,12 @@ field _ _ = Nothing
 str :: Maybe Value -> Maybe String
 str (Just (String t)) = Just (K.toString (K.fromText t))
 str _ = Nothing
+
+-- | The keys of the object under each of the given fields, in field
+-- order (a field that holds no object adds none): a manifest's declared
+-- dependency names, package.json's and Cargo.toml's alike.
+keysUnder :: [String] -> Value -> [String]
+keysUnder ks doc = concat [map K.toString (KM.keys m) | k <- ks, Just (Object m) <- [field k doc]]
 
 -- | `ts_options`: the nearest tsconfig walking up from `fromDir`, then
 -- every config its extends chain reaches — an `extends` array read last
@@ -164,9 +171,8 @@ package fx rel = fmap surface <$> textOf fx rel
       { pkDir = parentDir rel
       , pkName = str (field "name" doc)
       , pkExports = field "exports" doc
-      , pkDeps = concat [map K.toString (KM.keys m) | k <- deps, Just (Object m) <- [field k doc]]
+      , pkDeps = keysUnder ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"] doc
       }
-  deps = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]
 
 -- | `nearest_package`: the nearest package.json walking up from
 -- `fromDir`, read.

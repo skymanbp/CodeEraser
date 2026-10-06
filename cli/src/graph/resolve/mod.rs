@@ -1,25 +1,29 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
 //! docs/reference/algorithm-track.md §3, §6): Python, TypeScript / TSX,
-//! Lua, Go, C / C++, R, Java and Haskell resolve in `resolve/1`, with the
-//! readers of their configuration files (the tsconfig chains and
-//! package.json files, go.mod, R's DESCRIPTION, the .cabal files, the
-//! root pyproject.toml's keys, the compile databases, their response and
-//! flag files). This side sends what it read as text (request.rs) — one
-//! request per sweep with only the sites that need resolving — answers
-//! the core's `wanted` response files and `tsWanted` file-system facts
-//! by reading them, and maps each reply row back to the ladder's
-//! `Outcome`, so the
-//! edge store, deadcode, `ce graph --sites` and the precision documents
-//! read the answers they always read. The other languages' ladders still
-//! run on this side during the track.
+//! Rust, Lua, Go, C / C++, R, Java and Haskell resolve in `resolve/1`,
+//! with the readers of their configuration files (the tsconfig chains
+//! and package.json files, the Cargo.toml files, go.mod, R's
+//! DESCRIPTION, the .cabal files, the root pyproject.toml's keys, the
+//! compile databases, their response and flag files). This side sends
+//! what it read (request.rs) — one request per sweep with only the sites
+//! that need resolving — answers the core's `wanted` response files and
+//! `tsWanted` facts by reading them (facts.rs: the file system, a TOML
+//! document, a Rust file's syntax tree), and maps each reply row back to
+//! the ladder's `Outcome`, so the edge store, deadcode, `ce graph
+//! --sites` and the precision documents read the answers they always
+//! read. Markdown's and HTML's ladders run on this side.
 //!
 //! The core is the one this process names (the global `--core`, then
 //! CE_CORE_BIN, a sibling of this binary, PATH), held open across the
 //! process's requests. A core that cannot answer is a named refusal:
 //! there is no copy of the search on this side to fall back on.
 
+mod facts;
+mod manifests;
 mod request;
+
+pub use manifests::{Declared, Manifests, declared, private};
 
 use super::ladder::{Outcome, Reason, Scope, Site};
 use crate::corelink::{Link, judged};
@@ -44,6 +48,7 @@ pub fn in_core(lang: Lang) -> bool {
         Lang::Python
             | Lang::TypeScript
             | Lang::Tsx
+            | Lang::Rust
             | Lang::Go
             | Lang::Haskell
             | Lang::C
@@ -56,7 +61,9 @@ pub fn in_core(lang: Lang) -> bool {
 
 /// The sites' outcomes, in order — every site a language `in_core`. The
 /// sweep's part of the request is read once per sweep (the memo), the
-/// response files the core asks for kept in it.
+/// response files and facts the core asks for kept in it; each Rust
+/// site's syntax-tree fact at its row goes up front (every Rust rung
+/// reads it).
 pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
     if sites.is_empty() {
         return Ok(Vec::new());
@@ -74,6 +81,7 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
                 .collect(),
             includes: scope.includes,
             java: scope.java,
+            crate_roots: scope.crate_roots,
         };
         RefCell::new(request::tree(&input))
     });
@@ -81,6 +89,12 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
     let mut body = tree.borrow().clone();
     body["sites"] = rows;
     body["origins"] = json!(origins);
+    let rows: Vec<(i64, String, String)> = sites
+        .iter()
+        .filter(|(lang, _)| *lang == Lang::Rust)
+        .map(|(_, s)| (4, s.from.to_string(), s.line.saturating_sub(1).to_string()))
+        .collect();
+    facts::answer_facts(&mut body, scope.root, &rows)?;
     let reply = complete(&mut body, scope.root)?;
     tree.borrow_mut()["c"]["responses"] = body["c"]["responses"].clone();
     tree.borrow_mut()["ts"]["facts"] = body["ts"]["facts"].clone();
@@ -118,59 +132,6 @@ pub fn forced_wire(
     Ok(())
 }
 
-/// What the manifests the declared-target pass found declare: each R
-/// package's code by its root (the core's `packages`; a DESCRIPTION that
-/// cannot be read or names no package is none) and the cabals' walked
-/// executable and test mains (`mains`; a .cabal that cannot be read
-/// declares nothing). No manifest read, no request.
-pub struct Declared {
-    pub packages: BTreeMap<String, BTreeSet<String>>,
-    pub mains: BTreeSet<String>,
-}
-
-pub fn declared(
-    root: &Path,
-    files: &BTreeSet<String>,
-    descriptions: &BTreeSet<String>,
-    cabals: &BTreeSet<String>,
-) -> Result<Declared, String> {
-    let r = request::descriptions(root, descriptions.iter());
-    let hs = request::texts(root, cabals.iter());
-    if r.is_empty() && hs.is_empty() {
-        return Ok(Declared {
-            packages: BTreeMap::new(),
-            mains: BTreeSet::new(),
-        });
-    }
-    let mut body = json!({ "files": files, "r": { "descriptions": r }, "hs": { "cabals": hs } });
-    let reply = complete(&mut body, root)?;
-    let rows: Vec<(String, BTreeSet<String>)> = judged::table(&reply, "packages")?;
-    Ok(Declared {
-        packages: rows.into_iter().collect(),
-        mains: judged::table(&reply, "mains")?,
-    })
-}
-
-/// The walked Haskell files their owning cabal keeps private (the mounts
-/// table's bit 1): `owners` maps each to the cabal the directory scan
-/// found nearest; each cabal is read and sent once, and a file whose
-/// cabal cannot be read is not kept. No owner, no request.
-pub fn private(
-    root: &Path,
-    files: &BTreeSet<String>,
-    owners: &BTreeMap<String, String>,
-) -> Result<BTreeSet<String>, String> {
-    let cabals: BTreeSet<&String> = owners.values().collect();
-    let hs = request::texts(root, cabals.into_iter());
-    let read: BTreeSet<&String> = hs.iter().map(|(rel, _)| *rel).collect();
-    let owners: Vec<(&String, &String)> = owners.iter().filter(|(_, c)| read.contains(c)).collect();
-    if owners.is_empty() {
-        return Ok(BTreeSet::new());
-    }
-    let mut body = json!({ "files": files, "hs": { "cabals": hs, "owners": owners } });
-    judged::table(&complete(&mut body, root)?, "private")
-}
-
 /// Each JSON compile database's response files, as the core's expansion
 /// names them (readable, missing, cyclic or depth-limited): the resolve
 /// key's inputs (compdb_find::facts). Only the databases that hold an
@@ -197,10 +158,7 @@ pub fn ts_reached(
     if chains.is_empty() {
         return Ok(BTreeMap::new());
     }
-    let facts: Vec<Value> = chains
-        .iter()
-        .map(|c| request::fact(root, 0, c, ""))
-        .collect();
+    let facts: Vec<Value> = chains.iter().map(|c| facts::fact(root, 0, c, "")).collect();
     let mut body = json!({ "ts": { "chains": chains, "facts": facts } });
     let rows: Vec<(String, Vec<String>)> = judged::table(&complete(&mut body, root)?, "tsReached")?;
     Ok(rows.into_iter().collect())
@@ -217,7 +175,7 @@ fn complete(body: &mut Value, root: &Path) -> Result<Value, String> {
             return Ok(reply);
         }
         request::answer_wanted(body, root, &wanted)?;
-        request::answer_facts(body, root, &facts)?;
+        facts::answer_facts(body, root, &facts)?;
     }
 }
 
@@ -264,6 +222,10 @@ fn outcome(
         3 => Outcome::Unresolved(
             Reason::from_code(reason).ok_or("resolve/1: wire skew: reason code")?,
         ),
+        4 => Outcome::ResolvedVia {
+            path: target()?,
+            rung,
+        },
         _ => return Err("resolve/1: wire skew: outcome code".into()),
     })
 }

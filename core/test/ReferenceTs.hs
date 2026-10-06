@@ -11,7 +11,7 @@
 -- Every site of the two hundred cases must get the same answer from both,
 -- every chained tsconfig the same reached list, and the cases reach every
 -- answer the TS rungs give.
-module ReferenceTs (equivalence) where
+module ReferenceTs (equivalence, parent, joinRel, ancestorsOf, within) where
 
 import CE.Resolve.Cost (Reason (..), langTs, langTsx)
 import CE.Resolve.Tables (nodeBuiltins, nodePrefixOnly)

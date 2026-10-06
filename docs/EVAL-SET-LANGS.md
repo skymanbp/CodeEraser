@@ -713,3 +713,10 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
 - **读数**：十一份在 097e5ba3 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（9c1f7668 → 097e5ba3），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 F 之后：十一份精度册第十一次退役并重生成（2026-10-06）
+
+阶段 F 把 Rust 的五级阶梯、Cargo.toml 读法、crate 根与包内私有的判定搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 68–72 条）：`cli/src/graph/ladder/rs.rs`、`rs_use.rs`、`rs_bind.rs`、`rs_tree.rs`、`rs_reexport.rs`、`graph/cargo.rs`、`roots.rs` 的 `table_at` 与 `mounts.rs` 的 `RustTargets` 删掉，`ladder/mod.rs`、`roots.rs`、`mounts.rs` 与 `cli/src/graph/resolve/` 的请求带上 Rust，`core/app/CE/Resolve/` 多出 `Rs` / `RsTree` / `RsSurface` / `Cargo` 四个模块——`ladder/mod.rs` 与 `roots.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`cli/src/graph/resolve/` 在 C、Lua、R 与 Java 考题的阶梯清单里。没有 Rust 考题；差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。

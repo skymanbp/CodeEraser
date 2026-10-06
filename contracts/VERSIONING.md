@@ -52,6 +52,19 @@
 > `tsReached` / `package`。golden：`resolve/golden` 加第 12 对（TS / TSX 十五个站点：R1–R5 每一级、ESM 改写、paths 的歧义、成员 exports 的模式与 `null`、内建与
 > `node:` 名、站外，带一条 extends 链）、第 13 对（同一请求不带事实：只答 `tsWanted`）与第 14 对（同一事实带两次，按名拒绝），hello 的 `tablesDigest` 与
 > `tables` 第 2 对的 `configs` 随之变，其余 golden 不动。
+> **9.0.0 同版加性**（Rust 阶梯进核，W2-text 阶段 F，2026-10-06；设计册 §6 W2b 行与 §11 第 68–72 条；9.0.0 未发布，同上不另升版号）：
+> `sites` 的语言加 Rust（码 3，站点种类 `mod_decl` 与 `use`），Rust 站点带 1-based 行号（`[lang, kind, from, spec, line]`，同 Java）；请求加性 `rs.packages`
+> （走查到的每个 `Cargo.toml`，严格升序：第四级的成员）、`rs.crateRoots`（`[graph] crate_roots` 声明的根，严格升序）、`rs.manifests`（声明目标那一遍要 crate 根的
+> `Cargo.toml`，严格升序）与 `rs.owners` `[[文件, Cargo.toml]]`（按文件严格升序，文件须在走查里，否则按名拒绝 `rs.owner i: its file is not walked`）。`ts.facts` 加三种问法：
+> op 3 = 路径 a 的 TOML 文档（答 0 不是文件、1 是文件但读不成 TOML、2 带测量侧解码出的文档：表为对象、字符串为字符串），op 4 = Rust 文件 a 在第 b 行（0-based，
+> 十进制）的语法事实 `{depth, mods, items, ns, uses}`，op 5 = 它的顶层面 `{defs, uses}`（答 0 读不到或解析不成、2 带事实；形不对按名拒绝 `answer out of range`）；
+> 测量侧首问带走查到的每个 `Cargo.toml` 的文档与每个 Rust 站点那一行的 op 4。应答加性 `crates`（`rs.manifests` 里每份读得出的 `Cargo.toml` 在走查里的 crate 根，
+> 升序并集），`private` 并入 `rs.owners` 里被所属 Cargo 包留作私有的文件（包有名字且没有 lib 目标，或有 lib 目标而文件是它的 bin 根）；结果的结果码加 4 = 经再导出
+> 一跳到定义文件（`[级, 4, 目标, -1]`，R5）。降级应答 `crates` 为空表。Rust 工具链自带的 crate 表仍是定义包的 `ladder.rs.builtin`；定义包的 `resolve.configs` 加
+> `Cargo.toml`（hello 的 `tablesDigest` 随之变）。`inspect` 加 `cargo`。golden：`resolve/golden` 加第 15 对（Rust 二十个站点：R1 的 `#[path]` 与 E0761 歧义、
+> R2 两个根的取舍与歧义、手折的 `use`、R3 的 `self` / `super` 与内联模块、R4 的成员 crate / 依赖 / 工具链 / 站外、R5 经 `pub use` 一跳，带 crate 根与包内私有）、
+> 第 16 对（同一请求不带事实：只答 `tsWanted`）与第 17 对（`rs.owners` 的文件不在走查里，按名拒绝）；既有十对应答（第 1–5、7、8、10、12、13 对）各多一个空的
+> `crates` 键，hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs` 随之变，其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

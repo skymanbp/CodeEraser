@@ -26,12 +26,15 @@ module ReferenceResolveGen (
   angled,
   rands,
   askCore,
+  replyKey,
+  settleWith,
 ) where
 
 import CE.Resolve (respond)
 import CE.Resolve.Cost (Reason (..), langC, langCpp, langGo, langLua, langPy, langR)
 import CE.Resolve.Tables (kindLibrary, kindLoad, kindRequire, kindSource)
-import Data.Aeson (Value (..), decodeStrict, encode, object, parseJSON, toJSON, (.=))
+import Data.Aeson (FromJSON, Value (..), decodeStrict, encode, object, parseJSON, toJSON, (.=))
+import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (Pair, parseMaybe)
 import Data.List (isSuffixOf)
@@ -51,7 +54,7 @@ data Case = Case
   }
 
 -- | A site's answer with its target spelled.
-data Ref = RFile String Int | RPkg String Int | RExt Int | RUnres Reason
+data Ref = RFile String Int | RPkg String Int | RExt Int | RUnres Reason | RVia String Int
   deriving (Eq, Show)
 
 -- | An answer's shape, its target dropped: what a battery's "reach
@@ -62,6 +65,7 @@ refShape a = case a of
   RPkg _ r -> "package " <> show r
   RExt r -> "external " <> show r
   RUnres why -> show why
+  RVia _ r -> "via " <> show r
 
 -- | The fields every resolve.request opens with: proto, type, id, the
 -- walked files and the origins after them.
@@ -124,6 +128,24 @@ caseOf k = Case files [] sites (subset 4 ["lib", "src/a", "", "a/"]) (subset 5 [
 -- for a refusal or a reply that does not decode.
 askCore :: Value -> Maybe Value
 askCore v = either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode v)))
+
+-- | One key of a reply object, decoded.
+replyKey :: FromJSON a => String -> Value -> Maybe a
+replyKey k (Object o) = parseMaybe parseJSON =<< KM.lookup (K.fromString k) o
+replyKey _ _ = Nothing
+
+-- | Ask until the core names no more facts under `tsWanted`, each round
+-- adding the named facts as `answer` gives them; Nothing for a refusal or
+-- facts still wanted after `rounds` more rounds.
+settleWith :: Int -> ([Value] -> Value) -> ((Int, String, String) -> Value) -> Maybe Value
+settleWith rounds ask answer = go [] rounds
+ where
+  go known n = askCore (ask known) >>= \v -> case replyKey "tsWanted" v of
+    Nothing -> Nothing
+    Just [] -> Just v
+    Just wanted
+      | n == 0 -> Nothing
+      | otherwise -> go (known <> map answer wanted) (n - 1)
 
 -- | The LCG stream of one case.
 rands :: Int -> Int -> Int
@@ -188,6 +210,7 @@ answers (Object o) = do
     [g, Number 1, String t, _] -> RPkg (text t) <$> int g
     [g, Number 2, _, _] -> RExt <$> int g
     [_, Number 3, _, why] -> RUnres . toEnum <$> int why
+    [g, Number 4, String t, _] -> RVia (text t) <$> int g
     _ -> Nothing
   int v = parseMaybe parseJSON v :: Maybe Int
   text t = maybe "" id (parseMaybe parseJSON (String t))

@@ -14,9 +14,11 @@
 //! package, and its directory is the root the R entry directories sit
 //! under (flags.rs); the core reads it and answers the code (resolve/1
 //! `packages`, plan v2.33 W2-text stage B). A cabal's main-is targets
-//! are the core's answer too (resolve/1 `mains`, stage D).
+//! are the core's answer too (resolve/1 `mains`, stage D), and so are a
+//! Cargo.toml's crate roots (resolve/1 `crates`, stage F).
 
-use crate::graph::{cabal_find, cargo, roots};
+use crate::graph::resolve::Manifests;
+use crate::graph::{cabal_find, roots};
 use crate::scan::lang::Lang;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -38,9 +40,9 @@ impl Declared {
     /// holding an R file, each manifest's targets computed once. A
     /// manifest above the repo root is out of tree by construction
     /// (nearest_up never leaves it). `declared` are the ce.toml crate
-    /// roots, kept where the file is walked. An R package's code and a
-    /// cabal's mains are the core's answer; a core that cannot give them
-    /// is a named refusal.
+    /// roots, kept where the file is walked. An R package's code, a
+    /// cabal's mains and a Cargo package's crate roots are the core's
+    /// answer; a core that cannot give them is a named refusal.
     pub(super) fn gather(
         root: &Path,
         files: &BTreeSet<String>,
@@ -64,18 +66,19 @@ impl Declared {
             .iter()
             .filter_map(|d| roots::nearest_up(root, d, "DESCRIPTION"))
             .collect();
-        let core = crate::graph::resolve::declared(root, files, &r, &haskell)?;
+        let found = Manifests {
+            descriptions: &r,
+            cabals: &haskell,
+            cargo: &rust,
+        };
+        let core = crate::graph::resolve::declared(root, files, &found)?;
         let mut out = Declared {
             targets: declared.intersection(files).cloned().collect(),
             packages: core.packages,
         };
         out.targets.extend(out.packages.values().flatten().cloned());
         out.targets.extend(core.mains);
-        for m in &rust {
-            if let Some(p) = cargo::package(root, m) {
-                out.targets.extend(p.crate_roots(files));
-            }
-        }
+        out.targets.extend(core.crates);
         Ok(out)
     }
 

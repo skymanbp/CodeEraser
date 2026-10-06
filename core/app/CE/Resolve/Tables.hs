@@ -5,9 +5,11 @@
 -- (`ladder.py.stdlib`, `ladder.lua.stdlib`, `ladder.go.std`, and since
 -- stage C the JDK's `ladder.java` packages and `java.lang` types, since
 -- stage D the global package database's `ladder.hs.boot`, since stage E
--- Node's builtin modules, `ladder.ts`), the
+-- Node's builtin modules, `ladder.ts`, since stage F the toolchain's
+-- crates, `ladder.rs`), the
 -- two compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
--- storage codes of the site kinds the Lua, R and Java ladders branch on.
+-- storage codes of the site kinds the Lua, R, Java and Rust ladders
+-- branch on.
 -- The package's `resolve` key states which configuration files the
 -- measuring side sends as text — the basenames among the walk's
 -- configs (`configs`): a rule of this family, so not a second list
@@ -21,6 +23,7 @@ module CE.Resolve.Tables (
   hsBoot,
   nodeBuiltins,
   nodePrefixOnly,
+  rsBuiltin,
   gnuFlags,
   skipFlags,
   kindRequire,
@@ -30,6 +33,8 @@ module CE.Resolve.Tables (
   kindImport,
   kindImportStar,
   kindTypeRef,
+  kindModDecl,
+  kindUse,
   configNames,
   table,
 ) where
@@ -43,21 +48,29 @@ import Data.List (elemIndex)
 import qualified Data.Set as Set
 
 pyStdlib, luaStdlib, goStd :: Set.Set String
-pyStdlib = Set.fromList (packList ["ladder", "py", "stdlib"])
-luaStdlib = Set.fromList (packList ["ladder", "lua", "stdlib"])
-goStd = Set.fromList (packList ["ladder", "go", "std"])
+pyStdlib = ladderSet "py" "stdlib"
+luaStdlib = ladderSet "lua" "stdlib"
+goStd = ladderSet "go" "std"
+
+-- | One name set of a language's ladder in the package.
+ladderSet :: String -> String -> Set.Set String
+ladderSet lang key = Set.fromList (packList ["ladder", lang, key])
 
 -- | Node's builtin modules: the names each importable bare and under
 -- `node:`, and the ones only `node:` reaches.
 nodeBuiltins, nodePrefixOnly :: Set.Set String
-nodeBuiltins = Set.fromList (packList ["ladder", "ts", "builtins"])
-nodePrefixOnly = Set.fromList (packList ["ladder", "ts", "prefix_only"])
+nodeBuiltins = ladderSet "ts" "builtins"
+nodePrefixOnly = ladderSet "ts" "prefix_only"
+
+-- | The crates the Rust toolchain provides without a declaration.
+rsBuiltin :: Set.Set String
+rsBuiltin = ladderSet "rs" "builtin"
 
 -- | The packages the JDK's runtime image exports and `java.lang`'s
 -- public top-level types.
 javaPackages, javaLang :: Set.Set String
-javaPackages = Set.fromList (packList ["ladder", "java", "packages"])
-javaLang = Set.fromList (packList ["ladder", "java", "lang"])
+javaPackages = ladderSet "java" "packages"
+javaLang = ladderSet "java" "lang"
 
 -- | The global package database's packages, each with its modules.
 hsBoot :: [(String, [String])]
@@ -83,9 +96,9 @@ packAt path = either refuse id (parseEither parseJSON =<< walk path pack)
   walk _ _ = Left ("no " <> show path)
   refuse e = error ("resolve tables do not read: " <> e)
 
--- | The storage codes of the two Lua site kinds, the two R ones and the
--- three Java ones (`store.site_kinds`).
-kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef :: Integer
+-- | The storage codes of the two Lua site kinds, the two R ones, the
+-- three Java ones and the two Rust ones (`store.site_kinds`).
+kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef, kindModDecl, kindUse :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
 kindSource = kindCode "source"
@@ -93,18 +106,21 @@ kindLibrary = kindCode "library"
 kindImport = kindCode "import"
 kindImportStar = kindCode "import_star"
 kindTypeRef = kindCode "type_ref"
+kindModDecl = kindCode "mod_decl"
+kindUse = kindCode "use"
 
 kindCode :: String -> Integer
 kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKinds)
 
 -- | The walk's config basenames whose text a request carries (`go.mod`
 -- under `go.mods`, `DESCRIPTION` under `r.descriptions`, every `*.cabal`
--- under `hs.cabals`, `package.json` and `tsconfig.json` as `ts.facts` —
--- a name opening with `*` is a basename suffix; the
+-- under `hs.cabals`, `package.json` and `tsconfig.json` as `ts.facts`,
+-- `Cargo.toml` as `ts.facts` decoded — a name opening with `*` is a
+-- basename suffix; the
 -- root `pyproject.toml`, the compile databases and their response files
 -- travel by the measuring side's own finders).
 configNames :: [String]
-configNames = ["go.mod", "DESCRIPTION", "*.cabal", "package.json", "tsconfig.json"]
+configNames = ["go.mod", "DESCRIPTION", "*.cabal", "package.json", "tsconfig.json", "Cargo.toml"]
 
 -- | The `resolve` key of the package.
 table :: Value

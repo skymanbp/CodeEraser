@@ -15,7 +15,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// target only in the superproject's Cargo.toml. A declared root is
 /// everything a manifest target is: the Rust ladder mounts its `mod`
 /// children in its own directory and anchors `crate::` paths there
-/// (ladder/rs.rs), and it is a declared build target for the entry
+/// (CE.Resolve.Rs, via `rs.crateRoots`), and it is a declared build target for the entry
 /// role (deadcode/targets.rs, role 6). Root-relative exact paths,
 /// `/`-spelled; a tree with a manifest needs none.
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]

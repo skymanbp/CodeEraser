@@ -7,9 +7,13 @@
 -- include list a walked file's, the cabals in strictly ascending (path)
 -- order and every owner row a walked file's in that order, owned by a
 -- carried cabal, the package.json paths and the chained tsconfig paths
--- in strictly ascending order, every TS fact a question of its kind
--- asked once with an answer in its range (a text with a text answer
--- only) — and the cap the request's text counts against. The
+-- in strictly ascending order, every fact a question of its kind asked
+-- once with an answer in its range (a text with a text answer only, a
+-- TOML document an object, a Rust row's or surface's answer one that
+-- reads), the Rust package, crate-root and manifest paths in strictly
+-- ascending order, every Rust owner row a walked file's in that order and
+-- every Rust site with its line — and the cap the request's text counts
+-- against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
@@ -18,11 +22,15 @@ module CE.Resolve.Contract (offence, overCap, requestSize) where
 import CE.Resolve.Cost
 import CE.Resolve.JavaHeader
 import CE.Resolve.Request
-import Data.Aeson (Value, encode)
+import CE.Resolve.RsSurface (readsAsAt, readsAsSurface)
+import Data.Aeson (Value (..), encode)
 import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
+import Data.Char (isDigit)
+import Data.Maybe (isJust)
+import qualified Data.Aeson.Key as K
 
 -- | One per row plus every character of every string, the decoded
 -- documents at their encoded length.
@@ -44,7 +52,9 @@ requestSize rq =
     , sum [1 + chars p + header h | (p, h) <- rqJavaHeaders rq]
     , sum [1 + chars p + chars t | (p, t) <- rqHsCabals rq <> rqHsOwners rq]
     , texts (rqTsPackages rq <> rqTsChains rq)
-    , sum [1 + chars a + chars b + maybe 0 chars t | (_, a, b, _, t) <- rqTsFacts rq]
+    , sum [1 + chars a + chars b + maybe 0 payload t | (_, a, b, _, t) <- rqTsFacts rq]
+    , texts (rqRsPackages rq <> rqRsCrateRoots rq <> rqRsManifests rq)
+    , sum [1 + chars f + chars m | (f, m) <- rqRsOwners rq]
     ]
  where
   c = rqC rq
@@ -52,6 +62,10 @@ requestSize rq =
   texts = sum . map ((+ 1) . chars)
   doc :: Value -> Integer
   doc = toInteger . BL.length . encode
+  -- a text at its characters, a document at its encoded length
+  payload v = case v of
+    String s -> chars (K.toString (K.fromText s))
+    _ -> doc v
   header h = chars (hPackage h) + sum [1 + chars (iName i) | i <- hImports h] + sum (map typeSize (hTypes h))
   typeSize t = 1 + chars (tName t) + texts (tSupers t) + sum (map typeSize (tMembers t))
 
@@ -76,20 +90,38 @@ offence rq =
     , ascending "ts.chain" (rqTsChains rq)
     , asum (zipWith tsFact [0 :: Int ..] (rqTsFacts rq))
     , asum [Just ("ts.fact " <> show i <> ": asked twice") | (i, (seen, k)) <- zip [0 :: Int ..] (zip (scanl (flip Set.insert) Set.empty keys) keys), Set.member k seen]
+    , ascending "rs.package" (rqRsPackages rq)
+    , ascending "rs.crateRoot" (rqRsCrateRoots rq)
+    , ascending "rs.manifest" (rqRsManifests rq)
+    , ascending "rs.owner" (map fst (rqRsOwners rq))
+    , asum [Just ("rs.owner " <> show i <> ": its file is not walked") | (i, (f, _)) <- zip [0 :: Int ..] (rqRsOwners rq), not (Set.member f walked)]
     ]
  where
   walked = Set.fromList (rqFiles rq)
   cabals = Set.fromList (map fst (rqHsCabals rq))
   keys = [(op, a, b) | (op, a, b, _, _) <- rqTsFacts rq]
   tsFact i (op, _, b, st, t)
-    | op < 0 || op > 2 || (op /= 2 && b /= "") = Just ("ts.fact " <> show i <> ": no such question")
-    | st < 0 || st > (if op == 0 then 2 else 1) || (st == 2 && op == 0) /= (t /= Nothing) = Just ("ts.fact " <> show i <> ": answer out of range")
+    | op < 0 || op > 5 || not (question op b) = Just ("ts.fact " <> show i <> ": no such question")
+    | st `notElem` states op || (st == 2) /= isJust t || not (maybe True (readsAs op) t) = Just ("ts.fact " <> show i <> ": answer out of range")
     | otherwise = Nothing
+  -- the second argument: a directory fact's name, a row fact's row
+  question op b = case op of
+    2 -> True
+    4 -> not (null b) && all isDigit b && length b <= 9
+    _ -> b == ""
+  states op = if op `elem` [1, 2] then [0, 1] else if op >= 4 then [0, 2] else [0, 1, 2]
+  readsAs op v = case (op, v) of
+    (0, String _) -> True
+    (3, Object _) -> True
+    (4, _) -> readsAsAt v
+    (5, _) -> readsAsSurface v
+    _ -> False
   paths = toInteger (length (rqFiles rq) + length (rqOrigins rq))
   site i s
     | sLang s `notElem` resolvedLangs = Just ("site " <> show i <> ": language this family does not resolve")
     | sKind s < 0 || toInteger (sFrom s) < 0 || toInteger (sFrom s) >= paths = Just ("site " <> show i <> ": kind or file out of range")
     | sLang s == langJava && sLine s == Nothing = Just ("site " <> show i <> ": a Java site without its line")
+    | sLang s == langRs && sLine s == Nothing = Just ("site " <> show i <> ": a Rust site without its line")
     | otherwise = Nothing
 
 -- | A path table in strictly ascending order: no path twice.

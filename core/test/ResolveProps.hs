@@ -45,7 +45,7 @@ battery = runLegs names probes
     , wantedFirst
     , refused (setKey "files" (toJSON ["b.py", "a.py" :: String]) base) "file 1: not after the path before it"
     , refused (setKey "origins" (toJSON [firstFile]) base) "origin 0: a walked file"
-    , refused (setKey "sites" (toJSON [[toJSON (3 :: Int), toJSON (0 :: Int), toJSON (0 :: Int), toJSON ("x" :: String)]]) base) "language this family does not resolve"
+    , refused (setKey "sites" (toJSON [[toJSON (5 :: Int), toJSON (0 :: Int), toJSON (0 :: Int), toJSON ("x" :: String)]]) base) "language this family does not resolve"
     , refused (setKey "sites" (toJSON [[toJSON langPy, toJSON (0 :: Int), toJSON (9999 :: Int), toJSON ("x" :: String)]]) base) "kind or file out of range"
     , refused (setKey "c" (object ["dbs" .= [[toJSON ("" :: String), toJSON (3 :: Int), toJSON ("x" :: String)]]]) base) "c.db 0: probe out of range"
     , capLeg
@@ -110,4 +110,4 @@ capLeg :: Bool
 capLeg = requestSize (req []) == resolveCap && not (overCap (req [])) && overCap (req [""])
  where
   spec = replicate (2 ^ (14 :: Int) - 1) 'a'
-  req files = ResolveReq (Number 1) files [] (replicate (2 ^ (14 :: Int)) (Site langPy 0 0 spec Nothing)) M.empty Nothing [] [] [] [] [] [] [] [] [] (CReq "" [] [] [] [] []) Nothing
+  req files = ResolveReq (Number 1) files [] (replicate (2 ^ (14 :: Int)) (Site langPy 0 0 spec Nothing)) M.empty Nothing [] [] [] [] [] [] [] [] [] [] [] [] [] (CReq "" [] [] [] [] []) Nothing

@@ -1,40 +1,40 @@
 //! The top-level surface of one Rust file, read off its tree — the
-//! child of rs_reexport.rs, split at the 300 line when plan v2.30 step
-//! 5b taught the surface globs and extern crates: every `use`
-//! declaration flattened to (bound name, full path, row) entries — a
-//! glob under the `*` slot, an `extern crate x [as y]` under its bound
-//! name as the crate's global path — and the item names the file
-//! defines with their visibility. One iteration each, shared by the
-//! parent's questions (`binds_to`, `exports`, `owns`) and the hash that
-//! keys the edge cache, so the consulted and the hashed projections
-//! cannot drift.
+//! child of rs_cst.rs (since plan v2.33 W2-text stage F; before it, of
+//! rs_reexport.rs, split at the 300 line in plan v2.30 step 5b): every
+//! `use` declaration flattened to (bound name, full path, row) entries —
+//! a glob under the `*` slot, an `extern crate x [as y]` under its bound
+//! name as the crate's global path — each with whether its item is pub,
+//! and the item names the file defines with their visibility. One
+//! iteration each, shared by the surface fact the core reads and the
+//! hash that keys the edge cache, so the consulted and the hashed
+//! projections cannot drift.
 
 /// The name slot of a glob entry: `*` is no identifier, so it
 /// collides with no bound name.
-pub(super) const GLOB: &str = "*";
+const GLOB: &str = "*";
 
 /// (bound name, full path segments, the declaration's row).
 pub(super) type Entry = (String, Vec<String>, usize);
 
 /// The top-level use declarations flattened, and the extern crate
 /// declarations, each binding its name or alias to the global path of
-/// the crate — every one, or the pub ones alone (the re-export
-/// surface).
-pub(super) fn use_entries(tree: &tree_sitter::Tree, src: &str, pub_only: bool) -> Vec<Entry> {
+/// the crate, with whether its item is pub (the pub ones are the
+/// re-export surface).
+pub(super) fn use_entries(tree: &tree_sitter::Tree, src: &str) -> Vec<(Entry, bool)> {
     let mut out = Vec::new();
     for item in crate::scan::ast::children(tree.root_node()) {
-        if pub_only && !is_pub(item, src) {
-            continue;
-        }
+        let mut entries = Vec::new();
         match item.kind() {
             "use_declaration" => {
                 if let Some(arg) = item.child_by_field_name("argument") {
-                    flatten(arg, src, "", item.start_position().row, &mut out);
+                    flatten(arg, src, "", item.start_position().row, &mut entries);
                 }
             }
-            "extern_crate_declaration" => extern_crate(item, src, &mut out),
+            "extern_crate_declaration" => extern_crate(item, src, &mut entries),
             _ => {}
         }
+        let is_pub = is_pub(item, src);
+        out.extend(entries.into_iter().map(|e| (e, is_pub)));
     }
     out
 }
@@ -119,9 +119,9 @@ fn is_pub(item: tree_sitter::Node, src: &str) -> bool {
 }
 
 /// The names F defines at top level, each with whether it is pub, ONE
-/// iteration (the module's own discipline): the definition-wins
-/// refusal, the crate rung's tie-break and the glob export read it,
-/// and the hash folds it.
+/// iteration (the module's own discipline): the surface fact carries it
+/// to the core's definition-wins refusal, crate tie-break and glob
+/// export, and the hash folds it.
 pub(super) fn toplevel_defs(tree: &tree_sitter::Tree, src: &str) -> Vec<(String, bool)> {
     const DEFS: [&str; 10] = [
         "struct_item",
@@ -158,7 +158,8 @@ fn join(prefix: &str, tail: &str) -> String {
 
 /// Path segments; the global form (`::foo::Bar`) keeps an EMPTY first
 /// segment — the marker the hop reads to walk the path as a crate
-/// name and never as a local module (rs_bind.rs, the step-8 review).
+/// name and never as a local module (CE.Resolve.Rs `hop`, the step-8
+/// review).
 fn split(path: &str) -> Vec<String> {
     let mut segs: Vec<String> = path
         .split("::")

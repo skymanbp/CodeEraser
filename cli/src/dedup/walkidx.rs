@@ -247,7 +247,7 @@ fn lang_fact(
         )),
         Lang::Rust => facts.push((
             rel.to_string(),
-            crate::graph::ladder::rs_reexport::pubuse_hash(&text),
+            crate::graph::ladder::rs_cst::pubuse_hash(&text),
         )),
         Lang::Java => {
             let header = java_header::read(&text);

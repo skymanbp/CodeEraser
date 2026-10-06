@@ -9,7 +9,7 @@ use std::path::Path;
 
 /// Nearest *.cabal walking up from `from_dir` — the file name is
 /// package-specific, so this is a per-directory scan, unlike
-/// roots::nearest_up's fixed-name probe (`cargo::nearest` is the
+/// roots::nearest_up's fixed-name probe (the Cargo.toml lookup is the
 /// fixed-name twin). Ties (several .cabal files in one directory)
 /// resolve to the lexicographic first for determinism.
 pub fn nearest(root: &Path, from_dir: &str) -> Option<String> {

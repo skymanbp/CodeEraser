@@ -2,7 +2,8 @@
 //! roots.rs): the nearest file of a name walking up, a path's parent,
 //! a directory's ancestors, the joins. The package.json and tsconfig
 //! readers moved into the core in plan v2.33 W2-text stage E
-//! (CE.Resolve.TsConfig); the TOML walk stays for the Cargo reader.
+//! (CE.Resolve.TsConfig), the TOML walk with the Cargo reader in stage F
+//! (CE.Resolve.Cargo).
 
 use std::path::Path;
 
@@ -79,11 +80,12 @@ mod frozen_pyproject;
 #[cfg(test)]
 pub(crate) use frozen_pyproject::pyproject;
 
-/// Walk one dotted key path into a parsed TOML document.
-pub(crate) fn table_at<'a>(doc: &'a toml::Table, keys: &[&str]) -> Option<&'a toml::Value> {
-    let mut cur = doc.get(keys[0])?;
-    for key in &keys[1..] {
-        cur = cur.get(key)?;
-    }
-    Some(cur)
-}
+// The 1324c927 TOML walk, frozen (tests subrepo
+// unit/graph/oracle_cfg/toml_walk.rs): the frozen pyproject and Cargo
+// readers read it here; the core walks the decoded documents since plan
+// v2.33 W2-text stage F.
+#[cfg(test)]
+#[path = "../../tests/unit/graph/oracle_cfg/toml_walk.rs"]
+mod frozen_toml_walk;
+#[cfg(test)]
+pub(crate) use frozen_toml_walk::table_at;

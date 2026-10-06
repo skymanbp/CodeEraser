@@ -2,10 +2,10 @@
 
 -- | resolve.request handler (plan v2.33 wave W2a; on text since
 -- W2-text, proto 9.0.0; design booklet docs/reference/algorithm-track.md
--- §3, §6): the reference ladders for Python, TypeScript / TSX, Lua, Go,
--- C / C++, R, Java and Haskell, and the configuration readers they read —
--- the tsconfig chains and package.json files, go.mod, R's DESCRIPTION,
--- the .cabal files, the
+-- §3, §6): the reference ladders for Python, TypeScript / TSX, Rust, Lua,
+-- Go, C / C++, R, Java and Haskell, and the configuration readers they
+-- read — the tsconfig chains and package.json files, the Cargo.toml
+-- files, go.mod, R's DESCRIPTION, the .cabal files, the
 -- root `pyproject.toml`'s keys, the compile databases with their
 -- response files and flag files — and every walked Java file's header as
 -- the walk read it. The measuring side walks the tree, detects the
@@ -18,22 +18,26 @@
 -- them as `[unit, header]` path pairs. A response file the expansion
 -- names and the request did not carry is `wanted` (the measuring side
 -- reads it and asks again; the results wait for it), and so is a
--- file-system fact a TS rung needs and the request lacks, under
--- `tsWanted` (CE.Resolve.TsFacts); `tsReached` names, per tsconfig of
+-- file-system or syntax-tree fact a TS or Rust rung needs and the request
+-- lacks, under `tsWanted` (CE.Resolve.TsFacts); `tsReached` names, per
+-- tsconfig of
 -- `ts.chains`, every config its extends chain reaches — the resolve
 -- key's input; `responses` names,
 -- per JSON database, every response path its expansion read — the
 -- resolve key's input; `packages` names each carried DESCRIPTION's
 -- package directory with its code (`[dir, [file]]`, the declared targets
 -- an R package node reaches); `mains` names the carried cabals' declared
--- executable and test mains that are walked, and `private` the files of
--- `hs.owners` their owning cabal keeps private (the mounts table's bit
--- 1).
+-- executable and test mains that are walked, `crates` the walked crate
+-- roots of the Cargo.toml files `rs.manifests` names, and `private` the
+-- files of `hs.owners` their owning cabal keeps private and those of
+-- `rs.owners` their owning Cargo package keeps private (the mounts
+-- table's bit 1).
 module CE.Resolve (respond) where
 
 import CE.Resolve.Answer
 import qualified CE.Resolve.Cabal as Cabal
 import CE.Resolve.C (resolveC)
+import qualified CE.Resolve.Cargo as Cargo
 import CE.Resolve.CIndex (Env (..), Found (..), Index, forcedArcs, index)
 import CE.Resolve.CompDb (Entry, Expanded (..), parseDb, parseFlags)
 import CE.Resolve.Contract (offence, overCap)
@@ -48,11 +52,12 @@ import CE.Resolve.Lua (resolveLua, searched)
 import CE.Resolve.Py (pyproject, resolvePy)
 import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
+import CE.Resolve.Rs (RsEnv (..), ctxFor, needAll, resolveRs)
 import CE.Resolve.Str (parentDir)
 import CE.Resolve.Ts (TsEnv (..), resolveTs)
 import CE.Resolve.TsConfig (package, tsExtendsFiles, tsOptions)
-import CE.Resolve.TsFacts (Fact, Need, facts, wantedRow)
-import CE.Resolve.World (World, pathOf, world)
+import CE.Resolve.TsFacts (Fact, Facts, Need, facts, tomlOf, wantedRow)
+import CE.Resolve.World (World (..), pathOf, world)
 import CE.Wire (family)
 import Data.Aeson (Value, encode, object, (.=))
 import Data.Aeson.Types (Pair)
@@ -90,10 +95,14 @@ judged proto rq = reply proto rq resolved body False
     | sLang s == langHs = resolveHs w (M.elems cabals) from (sSpec s)
     -- complete: no TS site waits for a fact
     | isTs s = either (const (AUnresolved OutOfScope)) id (ts s)
+    | sLang s == langRs = either (const (AUnresolved OutOfScope)) id (rs s)
     | otherwise = resolveC env ix from (sSpec s)
    where
     from = pathOf w (sFrom s)
-  (ts, reached, tsWanted) = tsHalf w rq
+  fx = facts False (rqTsFacts rq)
+  (ts, reached, tsWaits) = tsHalf w fx rq
+  (rs, crates, rsPrivate, rsWaits) = rsHalf w fx rq
+  tsWanted = tsWaits <> rsWaits
   wanted = xWanted expanded
   complete = Set.null wanted && Set.null tsWanted
   answers = if complete then map site (rqSites rq) else []
@@ -110,7 +119,8 @@ judged proto rq = reply proto rq resolved body False
     , "responses" .= [(rel, Set.toList (xResponses x)) | (rel, (_, x)) <- M.toList parsed]
     , "packages" .= M.toList packages
     , "mains" .= Set.toList (Set.unions (map (Cabal.mainTargets w) (M.elems cabals)))
-    , "private" .= [f | (f, owner) <- rqHsOwners rq, maybe False (`Cabal.keepsPrivate` f) (M.lookup owner cabals)]
+    , "crates" .= Set.toList crates
+    , "private" .= Set.toList (Set.fromList [f | (f, owner) <- rqHsOwners rq, maybe False (`Cabal.keepsPrivate` f) (M.lookup owner cabals)] <> rsPrivate)
     ]
       <> ["inspected" .= v | Just v <- [inspected <$> rqInspect rq]]
 
@@ -139,18 +149,36 @@ isTs s = sLang s == langTs || sLang s == langTsx
 -- | The TS half of a request: each TS site's answer (Left: the facts it
 -- waits for), every `ts.chains` config's reached files, and the facts the
 -- sites and the chains want together. A directory's chain is read once.
-tsHalf :: World -> ResolveReq -> (Site -> Need Answer, [(String, Need [String])], Set.Set Fact)
-tsHalf w rq = (ts, reached, Set.unions ([m | s <- rqSites rq, isTs s, Left m <- [ts s]] <> [m | (_, Left m) <- reached]))
+tsHalf :: World -> Facts -> ResolveReq -> (Site -> Need Answer, [(String, Need [String])], Set.Set Fact)
+tsHalf w fx rq = (ts, reached, Set.unions ([m | s <- rqSites rq, isTs s, Left m <- [ts s]] <> [m | (_, Left m) <- reached]))
  where
-  fx = facts False (rqTsFacts rq)
   chains = M.fromList [(d, tsOptions fx d) | s <- rqSites rq, isTs s, let d = parentDir (pathOf w (sFrom s))]
   tsEnv = TsEnv w fx (\d -> M.findWithDefault (tsOptions fx d) d chains) (catMaybes <$> mapM (package fx) (rqTsPackages rq))
   ts s = resolveTs tsEnv (pathOf w (sFrom s)) (sSpec s)
   reached = [(start, tsExtendsFiles fx start) | start <- rqTsChains rq]
 
+-- | The Rust half of a request: each Rust site's answer (Left: the facts
+-- it waits for), the walked crate roots of `rs.manifests`, the files of
+-- `rs.owners` their Cargo package keeps private, and the facts all of
+-- them want together. A directory's package context is read once, the
+-- walk's Cargo.toml files once.
+rsHalf :: World -> Facts -> ResolveReq -> (Site -> Need Answer, Set.Set String, Set.Set String, Set.Set Fact)
+rsHalf w fx rq = (rs, done crates, done kept, Set.unions (waits crates : waits kept : [m | s <- rqSites rq, sLang s == langRs, Left m <- [rs s]]))
+ where
+  crates = Set.unions <$> needAll [maybe Set.empty (Cargo.crateRoots (wFiles w) . Cargo.package m) <$> tomlOf fx m | m <- rqRsManifests rq]
+  kept = Set.fromList . map fst . filter snd <$> needAll [(\doc -> (f, Cargo.keeps (wFiles w) (Cargo.package m <$> doc) f)) <$> tomlOf fx m | (f, m) <- rqRsOwners rq]
+  done = either (const Set.empty) id
+  waits = either id (const Set.empty)
+  declared = Set.fromList (rqRsCrateRoots rq)
+  ctx = ctxFor fx w declared
+  ctxs = M.fromList [(d, ctx d) | s <- rqSites rq, sLang s == langRs, let d = parentDir (pathOf w (sFrom s))]
+  members = catMaybes <$> needAll [fmap (Cargo.package c) <$> tomlOf fx c | c <- rqRsPackages rq]
+  env = RsEnv w fx (\d -> M.findWithDefault (ctx d) d ctxs) members
+  rs s = resolveRs env (sKind s) (pathOf w (sFrom s)) (maybe 0 (max 0 . subtract 1) (sLine s)) (sSpec s)
+
 -- | Over-cap: a complete degraded reply with empty tables.
 degraded :: String -> ResolveReq -> B8.ByteString
-degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "private"]] True
+degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "private"]] True
 
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString

@@ -12,6 +12,11 @@
 -- asked for (CE.Resolve.TsFacts: a path's text, whether a path is a
 -- file, whether `node_modules/<name>` under a directory is one) with the
 -- tsconfig files whose extends chains the resolve key asks about,
+-- the walk's Cargo.toml files (their documents decoded among the facts,
+-- with what tree-sitter read of the Rust files the rungs ask about) and
+-- the declared Rust crate roots, the Cargo.toml files whose crate roots
+-- the declared-target pass asks for and which one owns each walked Rust
+-- file (the mounts pass),
 -- the root `pyproject.toml` and every `compile_commands.json` as the
 -- decoded document (format decoding is a library read on that side;
 -- every rule applied to the document is here), each `compile_flags.txt`
@@ -47,17 +52,21 @@ data ResolveReq = ResolveReq
   , rqHsCabals :: [(String, String)]
   , rqHsOwners :: [(String, String)]
   , rqTsPackages :: [String]
-  , rqTsFacts :: [(Int, String, String, Int, Maybe String)]
+  , rqTsFacts :: [(Int, String, String, Int, Maybe Value)]
   , rqTsChains :: [String]
+  , rqRsPackages :: [String]
+  , rqRsCrateRoots :: [String]
+  , rqRsManifests :: [String]
+  , rqRsOwners :: [(String, String)]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
 
 -- | `[lang, kind, from, spec]`: the language and site-kind codes, the
 -- index of the site's file in files ++ origins, the specifier; a Java
--- site adds its 1-based source line (`[lang, kind, from, spec, line]`):
--- the Java rungs read the header's import on that line and the types
--- enclosing it.
+-- or Rust site adds its 1-based source line (`[lang, kind, from, spec,
+-- line]`): the Java rungs read the header's import on that line and the
+-- types enclosing it, the Rust rungs the syntax tree at it.
 data Site = Site {sLang :: Integer, sKind :: Integer, sFrom :: Int, sSpec :: String, sLine :: Maybe Int}
 
 -- | One database a probe found: the probed directory, the probe's index
@@ -99,6 +108,10 @@ instance FromJSON ResolveReq where
       <*> listAt o "ts" "packages"
       <*> listAt o "ts" "facts"
       <*> listAt o "ts" "chains"
+      <*> listAt o "rs" "packages"
+      <*> listAt o "rs" "crateRoots"
+      <*> listAt o "rs" "manifests"
+      <*> listAt o "rs" "owners"
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 

@@ -11,9 +11,10 @@
 //! Cargo package's lib/bin targets, a cabal's library stanza and
 //! other-modules). The folds — `mountedPrivate`, `pkgPrivate`, the
 //! code order — are the core's (CE.Graph.Advisory, piece (6)), and so
-//! is the cabal's reading (resolve/1 `private`, plan v2.33 W2-text stage
-//! D: this side finds each Haskell file's nearest .cabal and sends it);
-//! this side measures.
+//! are the cabal's and the Cargo.toml's readings (resolve/1 `private`,
+//! plan v2.33 W2-text stages D and F: this side finds each Haskell
+//! file's nearest .cabal and each Rust file's nearest Cargo.toml and
+//! sends them); this side measures.
 //!
 //! Coverage is the builder's contract, not the core's: `mount_rows`
 //! maps EVERY node — package, section and phantom nodes to `[0,0,0]`
@@ -27,7 +28,7 @@
 //! has this one producer and its tests.
 
 use super::nodes::Node;
-use super::{cabal_find, cargo, roots};
+use super::{cabal_find, roots};
 use crate::dedup::index::Index;
 use crate::scan::lang::Lang;
 use anyhow::{Result, ensure};
@@ -45,7 +46,8 @@ pub const MOUNT_REEXPORTED: i64 = 1;
 /// or an `internal/` segment; a Cargo package without a lib target
 /// (the whole package), else its bin roots; a cabal without a library
 /// stanza (the whole package), else a module listed only under
-/// other-modules; a Python module path with an underscore-led segment.
+/// other-modules (both the core's reading); a Python module path with
+/// an underscore-led segment.
 pub const MOUNT_PKG_PRIVATE: i64 = 1 << 1;
 
 /// The facts per walked file, keyed by path — what the graph and the
@@ -86,20 +88,32 @@ pub fn facts(root: &Path, idx: &Index) -> Result<MountFacts> {
             out.reexported.insert(dst);
         }
     }
+    out.pkg_private = package_private(root, &files)?;
+    Ok(out)
+}
+
+/// bit 1 over the walked set: Go's and Python's read here, Haskell's and
+/// Rust's asked of the core with each file's nearest manifest.
+fn package_private(root: &Path, files: &BTreeSet<String>) -> Result<BTreeSet<String>> {
     let mut manifests = Manifests::default();
-    let mut owners = BTreeMap::new();
-    for path in &files {
-        if Lang::judged_path(Path::new(path)) == Some(Lang::Haskell) {
-            if let Some(cabal) = manifests.cabal_of(root, &roots::parent_dir(path)) {
-                owners.insert(path.clone(), cabal);
+    let (mut hs, mut rs, mut out) = (BTreeMap::new(), BTreeMap::new(), BTreeSet::new());
+    for path in files {
+        let dir = roots::parent_dir(path);
+        let (owners, found) = match Lang::judged_path(Path::new(path)) {
+            Some(Lang::Haskell) => (&mut hs, manifests.cabal_of(root, &dir)),
+            Some(Lang::Rust) => (&mut rs, manifests.cargo_of(root, &dir)),
+            _ => {
+                if pkg_private(root, path) {
+                    out.insert(path.clone());
+                }
+                continue;
             }
-        } else if pkg_private(root, path, &files, &mut manifests) {
-            out.pkg_private.insert(path.clone());
+        };
+        if let Some(manifest) = found {
+            owners.insert(path.clone(), manifest);
         }
     }
-    let haskell: BTreeSet<String> = owners.keys().cloned().collect();
-    let private = super::resolve::private(root, &haskell, &owners).map_err(anyhow::Error::msg)?;
-    out.pkg_private.extend(private);
+    out.extend(super::resolve::private(root, files, &hs, &rs).map_err(anyhow::Error::msg)?);
     Ok(out)
 }
 
@@ -151,68 +165,24 @@ impl MountFacts {
     }
 }
 
-/// The bin-root facts of one Cargo package, computed ONCE per manifest
-/// (the `Declared::gather` discipline — a per-file recomputation
-/// rescans the walked set for every Rust file, the shape the criterion
-/// itself rules out where nothing bounds the rescanned set, W9-F6).
-pub(crate) struct RustTargets {
-    /// `[package]` present — a virtual workspace manifest is not a
-    /// package and keeps nothing.
-    is_package: bool,
-    has_lib: bool,
-    bins: BTreeSet<String>,
-}
-
-impl RustTargets {
-    pub(crate) fn of(pkg: Option<cargo::Package>, files: &BTreeSet<String>) -> Self {
-        match pkg {
-            Some(p) => RustTargets {
-                is_package: p.name.is_some(),
-                has_lib: p.lib_root(files).is_some(),
-                bins: p.bin_roots(files),
-            },
-            None => RustTargets {
-                is_package: false,
-                has_lib: false,
-                bins: BTreeSet::new(),
-            },
-        }
-    }
-
-    /// The Rust arm, symmetric with the cabal one (§4, L3-F15): a
-    /// package without a lib target keeps every file (nothing outside
-    /// can `use` it); one with a lib target keeps its bin roots alone
-    /// — tests, benches, examples and build.rs are test-side facts,
-    /// and a file below a bin root is the mount table's business, not
-    /// this bit's.
-    pub(crate) fn keeps(&self, path: &str) -> bool {
-        self.is_package && (!self.has_lib || self.bins.contains(path))
-    }
-}
-
-/// Manifests resolved once per directory and parsed once per
-/// manifest — every file of a directory shares one nearest
-/// Cargo.toml and one nearest .cabal, and every directory of a
-/// package shares one parse (a cabal's, the core's).
+/// Manifests found once per directory — every file of a directory
+/// shares one nearest Cargo.toml and one nearest .cabal; each is read
+/// once, by the core (the Rust arm, symmetric with the cabal one, §4,
+/// L3-F15: a package without a lib target keeps every file, one with a
+/// lib target its bin roots alone; a manifest that does not read, or a
+/// virtual workspace, keeps nothing — CE.Resolve.Cargo `keeps`).
 #[derive(Default)]
 struct Manifests {
     cargo_of: BTreeMap<String, Option<String>>,
-    cargo: BTreeMap<String, RustTargets>,
     cabal_of: BTreeMap<String, Option<String>>,
 }
 
 impl Manifests {
-    fn rust(&mut self, root: &Path, dir: &str, files: &BTreeSet<String>) -> Option<&RustTargets> {
-        let manifest = self
-            .cargo_of
+    fn cargo_of(&mut self, root: &Path, dir: &str) -> Option<String> {
+        self.cargo_of
             .entry(dir.to_string())
             .or_insert_with(|| roots::nearest_up(root, dir, "Cargo.toml"))
-            .clone()?;
-        Some(
-            self.cargo
-                .entry(manifest.clone())
-                .or_insert_with(|| RustTargets::of(cargo::package(root, &manifest), files)),
-        )
+            .clone()
     }
 
     fn cabal_of(&mut self, root: &Path, dir: &str) -> Option<String> {
@@ -223,13 +193,11 @@ impl Manifests {
     }
 }
 
-/// bit 1 by language (Haskell's is the core's: `facts`); TS and
-/// Markdown have no package privacy the criterion reads (0).
-fn pkg_private(root: &Path, path: &str, files: &BTreeSet<String>, m: &mut Manifests) -> bool {
-    let dir = roots::parent_dir(path);
+/// bit 1 by language (Haskell's and Rust's are the core's: `facts`);
+/// TS and Markdown have no package privacy the criterion reads (0).
+fn pkg_private(root: &Path, path: &str) -> bool {
     match Lang::judged_path(Path::new(path)) {
         Some(Lang::Go) => go_private(root, path),
-        Some(Lang::Rust) => m.rust(root, &dir, files).is_some_and(|t| t.keeps(path)),
         Some(Lang::Python) => py_private(path),
         _ => false,
     }

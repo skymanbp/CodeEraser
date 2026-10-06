@@ -10,6 +10,7 @@
 module CE.Resolve.Cost (
   resolveCap,
   langPy,
+  langRs,
   langTs,
   langTsx,
   langGo,
@@ -24,6 +25,7 @@ module CE.Resolve.Cost (
   outPackage,
   outExternal,
   outUnresolved,
+  outVia,
   Reason (..),
   reasonCode,
 ) where
@@ -38,22 +40,25 @@ resolveCap :: Integer
 resolveCap = 268435456
 
 -- | The language codes of the ladders this family holds (the
--- `languages.rows` codes): Python, TypeScript, TSX, Go, Haskell, C, C++, Lua,
--- Java, R. Every other
+-- `languages.rows` codes): Python, TypeScript, TSX, Rust, Go, Haskell, C,
+-- C++, Lua, Java, R. Every other
 -- language's ladder still runs on the measuring side during the track.
-langPy, langTs, langTsx, langGo, langHs, langC, langCpp, langLua, langJava, langR :: Integer
-(langPy, langTs, langTsx, langGo, langHs, langC, langCpp, langLua, langJava, langR) = (0, 1, 2, 4, 6, 15, 16, 17, 18, 20)
+langPy, langTs, langTsx, langRs, langGo, langHs, langC, langCpp, langLua, langJava, langR :: Integer
+(langPy, langTs, langTsx, langRs, langGo, langHs, langC, langCpp, langLua, langJava, langR) = (0, 1, 2, 3, 4, 6, 15, 16, 17, 18, 20)
 
 resolvedLangs :: [Integer]
-resolvedLangs = [langPy, langTs, langTsx, langGo, langHs, langC, langCpp, langLua, langJava, langR]
+resolvedLangs = [langPy, langTs, langTsx, langRs, langGo, langHs, langC, langCpp, langLua, langJava, langR]
 
 -- | The outcome column of a reply row: a file target, a package
--- directory target (Go, R, Java), External, Unresolved.
-outFile, outPackage, outExternal, outUnresolved :: Integer
+-- directory target (Go, R, Java), External, Unresolved, a file target
+-- reached through a Rust re-export surface (the measuring side's
+-- `ResolvedVia`, since plan v2.33 W2-text stage F).
+outFile, outPackage, outExternal, outUnresolved, outVia :: Integer
 outFile = 0
 outPackage = 1
 outExternal = 2
 outUnresolved = 3
+outVia = 4
 
 -- | The refusal vocabulary, in the measuring side's declaration order
 -- (its codes are this order's indices). The ladders here answer nine

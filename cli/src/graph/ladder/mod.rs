@@ -14,13 +14,12 @@
 //! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
 //! the Python, Lua, Go and C / C++ rungs live in the core
 //! (`resolve/1`, graph/resolve/), R's since W2-text stage B, Java's
-//! since stage C, Haskell's since stage D and the TS / TSX ones since
-//! stage E:
-//! `resolve_all` sends their sites in one request and runs the other
-//! languages' rungs here. Dispatch
+//! since stage C, Haskell's since stage D, the TS / TSX ones since
+//! stage E and Rust's since stage F (what they read of a Rust file's
+//! syntax tree is rs_cst.rs's facts): `resolve_all` sends their sites in
+//! one request and runs the other languages' rungs here. Dispatch
 //! carries the site's frozen kind label (the package's
-//! `store.site_kinds`): Rust's mod_decl and use walk different rungs,
-//! and Markdown routes five kinds through one chain.
+//! `store.site_kinds`): Markdown routes five kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
@@ -40,22 +39,30 @@ pub mod html_head;
 // (dedup/walkidx.rs)
 pub mod lua_path;
 pub mod md;
-pub mod rs;
 // pub: walkidx feeds pubuse_hash into resolve_key (the slug-hash
-// discipline for the binder's cross-file input)
-pub mod rs_reexport;
-mod rs_tree;
+// discipline for the binder's cross-file input); the request reads the
+// two CST facts with it (graph/resolve/request.rs)
+pub mod rs_cst;
 // the site outcome vocabulary (a leaf: it reads nothing of this module)
 mod outcome;
 pub use outcome::{Outcome, Reason, Rung};
 // The a8db74a9 Python / Lua / Go / C rungs, the c96ab3f6 R rungs, the
-// 27d0d56d Java rungs, the fa83a48d Haskell rungs and the dd0eec61 TS
-// rungs, frozen byte for byte: the differential gate's oracle (tests
-// subrepo
-// unit/graph/ladder/oracle/, driven by unit/dedup/ladder_diff/).
+// 27d0d56d Java rungs, the fa83a48d Haskell rungs, the dd0eec61 TS rungs
+// and the 1324c927 Rust rungs, frozen byte for byte: the differential
+// gate's oracle (tests subrepo unit/graph/ladder/oracle/, driven by
+// unit/dedup/ladder_diff/). The frozen Rust tree walk and re-export
+// surface stand at their old paths, where the frozen rungs read them.
 #[cfg(test)]
 #[path = "../../../tests/unit/graph/ladder/frozen.rs"]
 pub(crate) mod frozen;
+#[cfg(test)]
+#[path = "../../../tests/unit/graph/ladder/oracle/rs_reexport.rs"]
+pub(crate) mod rs_reexport;
+#[cfg(test)]
+#[path = "../../../tests/unit/graph/ladder/oracle/rs_tree.rs"]
+mod rs_tree;
+#[cfg(test)]
+pub(crate) use frozen::members;
 
 /// What a resolver may consult. Candidate targets MUST come from
 /// `files` (the frozen in-scope set); `configs` are the resolver
@@ -134,10 +141,10 @@ impl Memo {
 /// One reference site as the ladder consumes it — the CachedSite
 /// projection that travels the dispatcher. `kind` is the frozen
 /// label; `from` is repo-relative with forward slashes; `line` is
-/// the 1-based source line — Rust consumes it (inline-module depth
-/// anchors self/super) and the core's Java rungs read it (the header's
-/// import on that line, the types enclosing it); the others are
-/// line-free.
+/// the 1-based source line — the core's Rust rungs read it (the
+/// syntax tree's answers at that row: inline-module depth anchors
+/// self/super) and its Java rungs (the header's import on that line,
+/// the types enclosing it); the others are line-free.
 pub struct Site<'a> {
     pub kind: &'a str,
     pub from: &'a str,
@@ -185,7 +192,6 @@ pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome
 /// The rungs this side still runs.
 fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
     match lang {
-        Lang::Rust => rs::resolve(site, scope),
         Lang::Markdown => md::resolve(site, scope),
         Lang::Html => html::resolve(site, scope),
         // The sentinel is never walked, and the scan-only arm (plan
@@ -193,29 +199,4 @@ fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
         // answer is the documented no-rungs stance, never a guess.
         _ => Outcome::Unresolved(Reason::Unsupported),
     }
-}
-
-/// Shared workspace-member throat for the R4 rungs: the in-scope
-/// configs of one basename, parsed once per sweep (the memo), and
-/// filtered by name — each caller judges the hit count (1 = the
-/// member, more = its own ambiguity reason).
-pub(crate) fn members<T: Clone + 'static>(
-    scope: &Scope,
-    basename: &'static str,
-    load: impl Fn(&Path, &str) -> Option<T>,
-    keep: impl Fn(&T) -> bool,
-) -> Vec<T> {
-    scope
-        .configs
-        .iter()
-        .filter(|c| c.rsplit('/').next() == Some(basename))
-        .filter_map(|c| {
-            scope
-                .memo
-                .cached(basename, c, || load(scope.root, c))
-                .as_ref()
-                .clone()
-        })
-        .filter(|t| keep(t))
-        .collect()
 }
