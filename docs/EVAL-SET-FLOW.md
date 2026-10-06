@@ -668,3 +668,7 @@ c-lua 有一个单元的访问行数 0 → 2（`ldo.c` 的 `LUAI_TRY`：C 文法
 ## 计划 v2.32 步 6 之后：十份精度册再次退役并重生成（2026-10-03）
 
 权威轨 v2.32 步 6 退役请求键 `judgedMask`（proto 8.0.0，设计册 `docs/reference/authority-track.md` §13 第 69 条），出处门路径里的 `cli/src/scan/lang.rs` 只改了两段文档注释（请求不再带这一键），代码一字未动；门在本地按名拒了十份（python 第一个被点名）。切换门新 / 旧二进制逐字节同（设计册 §12 步 6 行），判分没有理由移动。处置与步 2 那次同形：**退役**（本提交）十份删档、十门考题 `stage` 翻回 `audited`，判决掩码不清空（掩码腿 `the_judged_mask_is_the_precision_docs` 在本提交上按构造红）；**重生成**（下一提交）在本提交的干净树上逐语言经 `CE_FLOW_OUT` 生成到仓外、十份齐了一次拷入，十门 `stage` 翻回 `scored`，读数与退役前逐份比对。**读数**（062d2d62 的干净树，2026-10-03）：十份与退役前的 blob 逐字节同，只差 `generated_from`（ab16e390 → 062d2d62，dirty 仍 false）；十门 `stage` 翻回 `scored`，判决掩码与精度册相符。
+
+## 算法轨 v2.33 W1 第 1 项之后：十份精度册第三次退役并重生成（2026-10-06）
+
+W1 第 1 项把七个请求上限改读定义包（设计册 `docs/reference/algorithm-track.md` §11 第 74、76 条）：`cli/src/flow/wire.rs` 删了 `ROW_CAP` 镜像、`wire_batch.rs` 改读 `limits.caps.flow_rows`，两个文件都在出处门的 `LOWERING` 里（`cli/src/flow/` 除 `mod.rs`），判决一字未动，门按路径读而按名拒了十份。处置与 v2.32 步 2、步 6 同形：**退役**（第 1 项第一个提交 4845bfaa）十份删档、十门考题 `stage` 翻回 `audited`，判决掩码不清空（掩码腿 `the_judged_mask_is_the_precision_docs` 在那个提交上按构造红）；**重生成**（本提交）在 4845bfaa 的干净树（另一个工作树，测试子仓坐在它的指针上）上逐语言经 `CE_FLOW_OUT` 生成到仓外、十份齐了一次拷入，十门 `stage` 翻回 `scored`。**读数**：十份与退役前的 blob 逐字节同，只差 `generated_from` 的提交一行（062d2d62 → 4845bfaa，dirty 仍 false）；判决掩码与精度册相符。
