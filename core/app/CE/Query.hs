@@ -15,13 +15,18 @@
 -- program's errors — each error at a token index the measuring side
 -- maps back to `line:column`. A capped family: tokens
 -- and fact rows are priced before judging, derived tuples while
--- judging, proof nodes never degrade (they stop and count).
+-- judging, proof nodes never degrade (they stop and count). A `lex`
+-- request (plan v2.33 W1) answers the lexed program alone
+-- (CE.Query.Front): the measuring side reads which fact tables the
+-- program names before it assembles them.
 module CE.Query (respond) where
 
 import CE.Query.Check (Checked (..), Goal (..), check)
 import CE.Query.Contract (QueryReq (..), facts, offence, overCap, tokens)
 import CE.Query.Cost (errSyntax, proofCap)
 import CE.Query.Eval (Db, Prov, evalProgram, goalAnswers)
+import CE.Query.Front (lexedValue)
+import CE.Query.Lex (Fault, Lexed)
 import CE.Query.Parse (parseProgram)
 import CE.Query.Proof (Node (..), Root (..), proofRows)
 import CE.Query.Schema (schemaRows)
@@ -62,7 +67,23 @@ zeroTally = Tally 0 0 0 0 0
 -- with its errors and empty tables; the derived cap answers degraded
 -- with the count it reached.
 judged :: String -> QueryReq -> B8.ByteString
-judged proto req = reply proto req $ case parseProgram (tokens req) of
+judged proto req = case lexedOf req of
+  Just lexed | lexOf req -> lexReply proto req lexed
+  _ -> judgedProgram proto req
+
+-- | The lex reply: the envelope and the `lexed` object.
+lexReply :: String -> QueryReq -> Either Fault Lexed -> B8.ByteString
+lexReply proto req lexed =
+  BL.toStrict . encode . object $
+    [ "proto" .= proto
+    , "type" .= ("query.result" :: String)
+    , "id" .= reqId req
+    , "lexed" .= lexedValue (inspectOf req) lexed
+    , "degraded" .= False
+    ]
+
+judgedProgram :: String -> QueryReq -> B8.ByteString
+judgedProgram proto req = reply proto req $ case parseProgram (tokens req) of
   Left at -> withErrors req [] [[toInteger at, errSyntax]]
   Right clauses -> case check (fromInteger (preludeOf req)) clauses of
     Left errs -> withErrors req clauses [[toInteger at, code] | (at, code) <- errs]

@@ -8,6 +8,18 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 W1 第 2 项：query 的扫描器、目标头与模式名进核；协议仍是 **9.0.0**（未发布，同版加性；2026-10-06；判决字节不变；设计册 `docs/reference/algorithm-track.md` §6 W1 状态、§10 W1 第 2 项行与 §11 第 77–79 条（含函数对照表）；`contracts/VERSIONING.md` 9.0.0 条的第八个「同版加性」段）。
+
+- **wire**（加性）：`query/1` 请求加 `texts`（前奏、规则文件、问句三段原文，核自己扫）与 `lex`（只答扫的结果 `lexed`，不判、不计价），`inspect` 附原始记号；扫不成的判决请求按名拒绝 `texts: …`，`lex` 不带 `texts` 按名拒绝。golden：`query/golden` 前八对请求改带原文（应答不动）、加第 9 对；`*.rules` 钉 LF。
+- **核**：新 `CE.Query.LexState`（状态与字节级动作）、`CE.Query.Lex`（扫描器）、`CE.Query.Front`（目标头、位置、`lexed` 应答）；`Contract` 读 `texts` / `lex` / `inspect`，`Schema` 加 `schemaNames` / `codeNamed`；电池 `QueryProps` 加一腿。
+- **Rust**：`cli/src/query/lexer.rs`、`program.rs`、`columns.rs` 删除，`legend.rs` 删去模式那一半；新 `query/lexed.rs` 发 `lex`、读回位置 / 谓词名 / 集合 / 名字 / 读的表 / 目标头；`query` / `rules` 两面在同一条核链上先问 `lex` 再判。留下的：词表、`sort_name`、`sym`（事实表按它记名）。
+- **差分门**：四份按 1324c927 冻进测试子仓 `unit/query/oracle/`，`unit/query/lexed.rs` 三个种子各 10,000 个随机程序加真程序与核对拍，全同；反向探针（列号只数 ASCII）报 180 / 10,000 不同。
+- **切换门**：对第 1 项的状态（4845bfaa），48 个面在十四棵树上 identical 1,302、differing 42，42 处全是两臂的目录名，折成同一个之后逐字节同（设计册 §11 第 79 条）。
+- **第 3–5 项只记账**（§11 第 80–82 条）：第 3 项停在盘点待裁——`structure/tree.rs` 这棵目录树还供 query 的目录事实（`query/facts/graph.rs`），只把 structure / arch 的建表搬进核会在 Rust 留下它，要真删得 `structure/1`、`arch/1`、`query/1` 三处请求一起带路径原文；第 4 项（`config/` 的故障检查与 `canonical.rs`）在钩子路径上（守卫、daemon、Stop 审计、SessionStart 都读 `Config::load`，`knobs_digest` 进守卫围栏），留下；第 5 项（`update/`）是核到达本机的路、`session_notice` 在 SessionStart 上，留下。
+- **门**：`cabal test` 978 ok PASS（`QueryProps` 新腿改一个期望数的反向探针转红）；fmt、clippy `-D warnings` 清（gui 未动）；lib 542 passed / 27 ign；目标 it 腿 119 passed / 0 failed / 10 ign；FULL it 一次 553 passed / 1 failed / 31 ign、corelink 1、daemon 2，唯一红腿 `layout_tree` 是车道工作树里没有被 gitignore 的 `.ccm/`（阶段 F 同记，主根不红）；狗粮两根七腿 × 两种点核法 28 / 28 退 0；`ce scan` 主根 885 文件 110 warn 0 fail、子仓 586 文件 61 warn 0 fail；查重主根 33（预算 33）、子仓 90（预算 90），预算未动——新码先长出的块（`Lex.hs` 的导入表与 `LexState` 的导出表同形、`unit/query/frozen.rs` 的挂载与 `graph/frozen_cfg.rs` 同形）改写消掉；docdup 0；子仓 `ce check` 一度 948 < 949（`lexed.rs` 的随机流与 `unit/graph/resolve/draw.rs` 的 `step`、拼片常量与另两个串常量成近似克隆），随机流改线性同余、拼片改原始串后回到 949；具名重立：主根 `core/app/CE/Query.hs` 169（cap 158）、`core/app/CE/Query/Contract.hs` 131（cap 112）、`core/test/QueryProps.hs` 247（cap 228）、`docs/reference/algorithm-track.md` 383（cap 355）、`CHANGELOG.md` 541（cap 539）、`docs/PERF-BUDGET-ARCHIVE.md` 189（cap 182），子仓 `it/query_golden.rs` 188（cap 182），软线主 346 → 340、子 336 不动；重立后 `ce check` 主 925 / 子 949，0 over 0 tolerance drawn。请求字节（自仓头树，暖）：`ce query` 一个请求 304,417 B → 两个（一个 `lex`）306,762 B、应答 3,485 → 12,287 B；`ce rules` 289,265 → 291,697 B、应答 414 → 8,859 B；两臂输出逐字节同
+- **性能**（`docs/PERF-BUDGET.md`「v2.33 W1」节，3b7234eb 对 本项提交的 release + 核，ABAB ×7 暖跑，坐时负载 4–76 %）：暖 `ce check` 自仓 / requests / cobra +7.0 % / -1.0 % / -3.2 %（线 +15 %），`ce query` +0.1 % / -7.5 % / +4.6 %，`ce rules` +1.0 % / -8.1 % / -8.4 %，`ce scan` -1.4 % / -12.6 % / -7.2 %；本车道动的读者都不在 PreToolUse 探针上。这一节写进后 `docs/PERF-BUDGET.md` 到 753 行（过 750 硬线），v2.32 步 2 一节逐字节迁入 `docs/PERF-BUDGET-ARCHIVE.md`（同阶段 C / E），正册 736 行
+- **语言条**（§10 量法）：Rust 2,243,280 → 2,222,627 B、Haskell 1,951,920 → 1,977,737 B，46.53 % → 47.08 %，差 291,360 → 244,890 B；Rust 删 25,227 B、加 4,574 B（净 −20,653）。
+
 **无默认档位变更。** 算法轨 v2.33 W1 第 1 项：§5 镜像清单逐行核过，scan 分级与命名合规的 Rust 复核退役，七个请求上限改读定义包；协议仍是 **9.0.0**（未发布，同版加性；2026-10-06；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W1 状态、§10 W1 第 1 项行与 §11 第 73–76 条；`contracts/VERSIONING.md` 9.0.0 条的第七个「同版加性」段）。
 
 - **wire**（加性）：定义包 `limits` 加 `caps {scan_rows, flow_rows, merge_groups, merge_tree_nodes, structure_nodes, arch_files, arch_refs}`（`CE.Limits` 读各族 `Cost` 的常量，键表与值表两张平行列表）；各族请求与应答不动。golden：hello 的 `tablesDigest` 与 `tables` 第 2 对重生成，其余不动。

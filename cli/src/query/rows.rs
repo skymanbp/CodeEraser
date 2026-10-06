@@ -1,10 +1,9 @@
 //! The query document request's judged rows (plan v2.32 step 3): the
 //! core's tables sent back as `document/1` rows, with the goals as
 //! spelled, a value past the JSON integer range as its decimal string
-//! (program::num).
+//! (num below).
 
-use super::columns::GoalHead;
-use super::program::num;
+use super::lexed::GoalHead;
 use super::wire;
 use crate::document::Request;
 use anyhow::{Result, bail};
@@ -74,8 +73,18 @@ fn proof_rows(j: &wire::Judged) -> Vec<Vec<Value>> {
 }
 
 /// A row of integers, then values as numbers (a value past the JSON
-/// integer range rides as its decimal string, program::num).
+/// integer range rides as its decimal string, num).
 fn valued(head: &[i64], values: &[i128]) -> Vec<Value> {
     let head = head.iter().map(|x| Value::from(*x));
     head.chain(values.iter().map(|v| num(*v))).collect()
+}
+
+/// A wire number: a hash rides as the unsigned word it is, an
+/// integer literal as itself (the one kind that may be negative).
+fn num(v: i128) -> Value {
+    if v >= 0 {
+        Value::from(v as u64)
+    } else {
+        Value::from(v as i64)
+    }
 }

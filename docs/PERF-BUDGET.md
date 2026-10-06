@@ -7,7 +7,7 @@
 > M6 S4b，实测 2026-08-14–08-19）已于 2026-10-05 逐字节迁入
 > [PERF-BUDGET-ARCHIVE.md](PERF-BUDGET-ARCHIVE.md)（正册离 `ce scan` 的 750 行硬线
 > 只剩 7 行，算法轨 v2.33 W2-text 阶段 C 的一节放不下）；阶段 E 的一节又放不下时，
-> 末尾两节（v2.33 W3 与 W2a，实测 2026-10-03–10-04）同样逐字节迁去。
+> 末尾两节（v2.33 W3 与 W2a，实测 2026-10-03–10-04）同样逐字节迁去。W1 的一节（2026-10-06）又放不下时，v2.32 步 2 一节（实测 2026-10-01）同样逐字节迁去。
 
 > 口径：被动 guard 的 PreToolUse 端到端 = hook 触发 → 判定返回。
 > 预算为硬上界；"实测"列只写真实测过的数字，未测项标注实测里程碑，
@@ -469,23 +469,6 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **merge 多出的约 410 ms 是文档本身**：终树 merge 文档 3056 组、6147 个成员、34,529 个洞，`document.request` 857,019 B（43,732 行）、应答 2,815,738 B。经中继核把这条请求录下、单问核五次：hello 44–58 ms，文档 326–387 ms（核读请求、校验、装配、写应答）；其余是 Rust 写请求、读应答、绑定。旧路在 Rust 里直接拼同一份 JSON，没有这一来一回。arch / flow 的请求小（arch 8,877 行 / 98,721 B、flow 1,923 行 / 17,896 B）。
 - 复跑：A 臂的树由 `git archive`（e877f389）解到车道目录、`cargo build --release --locked`（独立 `CARGO_TARGET_DIR`）；B 臂终树 `cargo build --release --locked`；树 = `git archive`（e877f389）加子仓、删 `.gitmodules`；脚本 `s9_flow/v232s3_gen/perf.py`、录请求的中继 `dump_core.py` 与单问核的 `core_alone.py`（车道目录，不入库）。
 
-## v2.32 步 2 定义包改读 A/B（实测 2026-10-01，release，同一台机、同一窗口：两棵 baa4f8af 的 git 工作树〔测试子仓就位，两臂各一棵，免得两代索引互相重建〕，A = baa4f8af 的 ce〔`git archive` 构建，表在二进制里〕，B = 本批的 ce〔表读自 `.ce/tables-1.8.0-7.7.0.json`，缓存命中〕，核同一个 ce-core 1.8.0〔proto 7.7.0〕；各臂先冷建一次索引〔`dedup` / `scan` / `check`〕，再 ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起；量前 `Get-CimInstance` 处理器负载 8 %）
-
-口径：整个进程的墙钟，中位数（最小–最大），毫秒；`hook_probe` = bench 的同名形（`ce probe --hook` 对两文件夹具〔`a.rs` / `c.rs` 一对 T2 孪生〕写第三个文件的 PreToolUse 信封，stdout 落文件），ABAB ×30。
-
-| 面 | A（表在二进制里） | B（表读自缓存） | 状态 |
-|---|---|---|---|
-| `ce scan .` 暖 | 1300.4（1253.4–1333.3） | 1262.0（1248.5–1296.9） | 噪声内 |
-| `ce check .` 暖 | 6419.5（6181.6–6608.1） | 6459.8（6123.7–6905.7） | 噪声内（+40 ms，区间互相覆盖） |
-| `ce dedup .` 暖 | 801.2（760.7–866.1） | 807.2（762.8–826.7） | 噪声内 |
-| `hook_probe`（n = 30） | 53.8（48.3–276.8） | 54.5（50.1–260.9） | +0.7 ms；p50 预算 50 ms 两臂都不达，A 也不达——是本机此窗口的底，不是包的代价 |
-
-缓存未命中的第一跑（B 自己 ABAB ×7：每对先删 `.ce/tables-*.json` 再跑、随即缓存命中再跑，`ce scan .`）：未命中 1381.7（1305.3–1513.9）、命中 1250.8（1199.3–1341.8），**未命中多付 ≈ 131 ms**——起一个核进程问一次 `tables/1`、读 135 KB 应答、写缓存文件；每份核二进制（`{path, len, mtime_ns}`）每个项目付一次。
-
-- 缓存命中时每个 `ce` 进程多做的事 = 读 135,472 B 的缓存文件、对包字节算一次 fnv1a64、serde 读成 `'static` 表（泄漏进进程，活到进程结束）；暖跑三面与钩子探针都量不出来，故缓存保持 JSON、不换二进制格式。
-- release 体积：A 27,388,416 B → B 27,470,336 B（+81,920 B）：删掉的表文本（Rust 源码净 −149,033 B，见设计册 §4.5）在二进制里只是字符串常量，新加的是 serde 读包的派生代码（每个表结构一份所有权孪生）。
-- 复跑：A 臂的树由 `git archive`（baa4f8af，子仓 123b1bce 同法）解到车道目录，`cargo build --release --locked`（独立 `CARGO_TARGET_DIR`）出 A；本车道 `cargo build --release --locked` 出 B；`git worktree add --detach <dir> baa4f8af` 两次、各 `submodule update --init`（`protocol.file.allow=always`）；脚本 `s9_flow/v232s2_gen/perf.py`（车道目录，不入库）。
-
 ## v2.33 W2-text 阶段 A `resolve/1` 以文本过线 A/B（实测 2026-10-04，release，同一台机、同一坐：A = 92e728b1 的 ce + 它的核〔`git archive` 构建〕，B = 车道终树 1af49a44 的 ce + 它的核〔路径、说明符与 Python / Go / C·C++ 的配置原文过线，配置读法在核〕；每臂每棵树各一份拷贝〔`.ce` 删掉，koreader 拷贝去掉未就位的 `.gitmodules`〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载 6–62 %，含本坐自己的 ce）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）与每个阶梯语言最大的真树（requests = Python、koreader = Lua、cobra = Go、lua = C、fmt = C++）。`check` 只量暖（任务书：暖 `ce check` 的预算）。
@@ -727,3 +710,27 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **其余七个面**（`warmreq_f.sh`：每臂冷跑一次 `graph --sites` 建索引，再经中继核把各面跑一次）：`structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 各一个 `resolve.request`、不带站点（自仓 61,653 → 63,925 B；ripgrep 0 → 17,042 B、autoshade 0 → 10,504 B，这两棵树各多一个核会话）；`graph --sites` 与冷建两臂请求逐种相同。
 - **钩子**：PreToolUse 探针不问 `resolve/1`——在 ripgrep 拷贝上写入一个带四条 `use`（`crate::`、工作区成员 `grep_matcher`、`std`、`super::`）的新 Rust 文件的 `Write` 信封经 `ce probe --hook` 冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_f.sh`），与阶段 A–E 同。
 - 复跑：车道目录 `v233_w2t_scratch/perf_f.py 7`（树拷自车道归档与 `gate1f/seed-rs-*`），读数原文 `perf_f_all.log`、逐跑 `perf_f.ndjson`、负载 `perf_f_load.txt`；请求字节 `reqbytes_f.sh`（`reqbytes_f_sum.py`），各面请求 `warmreq_f.sh`（`warmreq_f_sum.py`），钩子 `hookprobe_f.sh`，核单独计时 `coretime_f.sh`。
+
+## v2.33 W1 镜像退役与 `query/1` 词法进核 A/B（实测 2026-10-06，release，同一台机、同一坐 12:59–13:09Z：A = 3b7234eb 的 ce〔sha256 9c942054…〕+ 它的核〔sha256 0e13014b…〕，在 3b7234eb 的工作树里构建；B = 车道树的 ce〔sha256 d45df209…，构建进车道的 scratch target，与本项提交的 `cli/src` 相同〕+ 它的核〔sha256 c8bc8015…；对本项提交的 `core/app` 重跑 `cabal build` 零模块重编、sha 不变〕——scan 的等级复判与命名符合性退出 Rust，七个请求上限读自定义包，`ce query` / `ce rules` 的程序原文过线、由核分词；每臂每棵树各一份拷贝〔`.ce` 删掉〕，每个（树、面）先跑一次，再 ABAB ×7 暖跑，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，12:59–13:08Z 共 10 次 4–76 %——不是静默窗，前五个进程〔按累计 CPU 秒〕是别的会话的 Code 与一个 python，10 次里没有 cargo / rustc / ghc / cabal，但累计排序看不见一次短的编译，W2-text / W6 / W7 三条车道同时开着，它们何时编译本坐没有记下）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）与两棵真树 requests、cobra（拷自 W2-text 车道的 `.ce-eval/corpora`）。只量暖跑：本车道动的是判决后的读者与 `query/1`，不碰索引刷新与冷建。
+
+| 树 | 面 | A（3b7234eb） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `check` 暖 | 11929.2（10256.5–13465.4） | 12759.5（10323.3–13675.7） | +7.0 % |
+| self | `scan` 暖 | 1837.5（1738.1–2231.5） | 1810.9（1767.9–1866.9） | -1.4 % |
+| self | `query` 暖 | 2709.5（2548.4–3014.4） | 2712.2（2603.1–2832.3） | +0.1 % |
+| self | `rules` 暖 | 2243.8（2225.4–2478.7） | 2265.5（2203.9–2611.1） | +1.0 % |
+| requests | `check` 暖 | 1033.9（1008.9–1091.7） | 1023.4（981.1–1095.5） | -1.0 % |
+| requests | `scan` 暖 | 290.6（272.3–326.7） | 254.1（243.4–342.6） | -12.6 % |
+| requests | `query` 暖 | 203.7（197.4–276.1） | 188.4（184.5–198.1） | -7.5 % |
+| requests | `rules` 暖 | 198.9（179.3–232.8） | 182.7（173.5–231.8） | -8.1 % |
+| cobra | `check` 暖 | 1173.0（1122.5–1197.1） | 1135.0（1076.9–1198.0） | -3.2 % |
+| cobra | `scan` 暖 | 299.2（282.9–328.7） | 277.6（273.5–378.6） | -7.2 % |
+| cobra | `query` 暖 | 205.4（191.0–256.9） | 214.9（185.3–223.6） | +4.6 % |
+| cobra | `rules` 暖 | 204.2（186.3–254.9） | 187.1（179.8–206.3） | -8.4 % |
+
+- 预算（§8）：暖 `ce check` ≤ +15 %——三棵树 +7.0 %、-1.0 %、-3.2 %，都在线内；自仓两臂的极差都过 3 秒（10256.5–13465.4 与 10323.3–13675.7），+7.0 % 落在这段噪声里。自仓 `check` 两臂都退 1（归档树里基线尚未按本车道重立），其余面两臂都退 0。`query` 用的问题是门里的 `file(F), lang(F, rust), lines(F, N), N > 200`。
+- **请求字节**（§3 第 5 点；自仓头树，暖，经中继核记下每个 `query.request` 与应答的字节；两臂输出逐字节同）：`ce query` 一个请求 304,417 B、应答 3,485 B → 两个请求（一个 `lex`）306,762 B、应答 12,287 B；`ce rules` 一个请求 289,265 B、应答 414 B → 两个请求 291,697 B、应答 8,859 B。多出来的是程序原文（前奏八条 + 用户程序）与核答回的分词结果。
+- **钩子**：本车道动的读者都不在 PreToolUse 探针上——`ce query` / `ce rules` 只由命令行、MCP 与 GUI 调用；留在钩子路上的镜像（`dedup/pairs.rs` 的 `minDistinct` 过滤、`score/knobs.rs` 的出厂值、`guard/zone.rs`）一个没动，故未单独量探针。
+- 复跑：车道目录 `v233_w1_scratch/perf_w1.py 7`，读数原文 `perf_w1.log`、逐跑 `perf_w1.ndjson`、负载 `perf_w1_load.txt`；请求字节 `reqbytes_q.sh`（读数 `reqbytes_q.log`）。

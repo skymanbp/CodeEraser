@@ -1,7 +1,7 @@
 //! The query/1 leg (design booklet §3, §4.5): the request — the
-//! token stream, the fact tables the program named, the prelude
-//! count, the two flags — and the reply consumed onto typed tables.
-//! Nothing here judges: the parse, the checks, the strata, the
+//! program's texts, the fact tables the program named, the two flags —
+//! and the reply consumed onto typed tables.
+//! Nothing here judges: the lexing (plan v2.33 W1), the parse, the checks, the strata, the
 //! evaluation and the proofs are the core's (ADR-008 seventh
 //! instalment); this side re-labels the ids it sent. A degraded
 //! reply is a NAMED non-judgment, and a reply whose tables disagree
@@ -62,22 +62,16 @@ pub struct Judged {
     pub degraded: Option<String>,
 }
 
-/// The request body.
-pub fn body(
-    program: &[Value],
-    facts: &BTreeMap<u32, Vec<Vec<u64>>>,
-    prelude: usize,
-    why: bool,
-    schema: bool,
-) -> Value {
+/// The request body: the program's three texts (the core lexes them,
+/// lexed.rs), the fact tables, the two flags.
+pub fn body(texts: &Value, facts: &BTreeMap<u32, Vec<Vec<u64>>>, why: bool, schema: bool) -> Value {
     let tables: serde_json::Map<String, Value> = facts
         .iter()
         .map(|(code, rows)| (code.to_string(), json!(rows)))
         .collect();
     json!({
-        "program": program,
+        "texts": texts,
         "facts": tables,
-        "prelude": prelude,
         "why": why,
         "schema": schema,
     })

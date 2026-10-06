@@ -7,10 +7,9 @@
 use super::graph::Nodes;
 use super::{Ctx, Labels, Sink};
 use crate::query::legend;
-use crate::query::program::Program;
 use anyhow::{Result, anyhow};
 
-pub fn fill(ctx: &Ctx<'_>, program: &Program, sink: &mut Sink, labels: &mut Labels) -> Result<()> {
+pub fn fill(ctx: &Ctx<'_>, sets: &[String], sink: &mut Sink, labels: &mut Labels) -> Result<()> {
     if sink.wants("mention") {
         mentions(ctx, sink)?;
     }
@@ -18,7 +17,7 @@ pub fn fill(ctx: &Ctx<'_>, program: &Program, sink: &mut Sink, labels: &mut Labe
         classes(ctx, sink, labels)?;
     }
     if sink.wants("set") {
-        for (id, glob) in program.sets.iter().enumerate() {
+        for (id, glob) in sets.iter().enumerate() {
             let set = crate::scan::globs::compile_inclusions(
                 ctx.root,
                 std::slice::from_ref(glob),

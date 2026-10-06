@@ -20,6 +20,13 @@ manifest.env text eol=lf
 # bindings). LF on every checkout: the ndjson rule's fifth application.
 *.hs text eol=lf
 
+# Query programs ride to the core as their texts (query/1 `texts`, plan
+# v2.33 W1): the built-in prelude is compiled in with include_str! and
+# its bytes are the query goldens' request lines, so a CRLF checkout on
+# the Windows runner would file a request the ubuntu leg never makes.
+# LF on every checkout: the ndjson rule's sixth application.
+*.rules text eol=lf
+
 # The demo corpus is byte-gated end to end (demo_replay): the seed tree
 # is written verbatim, steps.js cuts the seed at LF markers, and the
 # committed outputs plus the READMEs' generated blocks (demo / bench /

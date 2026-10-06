@@ -11,13 +11,15 @@ violations are witness rows, each with its proof, and `ce rules` exits on the fi
 architecture constraint ("the measuring side never reads the core", "no page of the site is an
 orphan") becomes a gate the way the clone budget is one
 ([mod.rs:1-13](../../../cli/src/query/mod.rs#L1)). The split is ADR-008's, seventh instalment:
-Rust lexes the text, assembles the fact tables the program names from its own index and puts
-the names back into the document the core lays out; the grammar, the sorts, the safety and stratification checks, the evaluation
-and every proof are Haskell's, over the thirteenth wire family, `query/1`, since proto 7.3.0
+Rust sends the program's three texts, assembles the fact tables the program names from its own index and puts
+the names back into the document the core lays out; the scanner, the grammar, the sorts, the safety and stratification checks, the evaluation
+and every proof are Haskell's, over the thirteenth wire family, `query/1`, since proto 7.3.0 (the texts since 9.0.0, plan v2.33 W1)
 ([wire.rs:1-8](../../../cli/src/query/wire.rs#L1), [Query.hs:5-18](../../../core/app/CE/Query.hs#L5)).
-No name, path or source text crosses the wire in either direction: a program's constants go up
-as fnv1a64 hashes and request-local ids, and the answers come back as ids this side labels
-again through the request's own tables ([legend.rs:1-8](../../../cli/src/query/legend.rs#L1)).
+The program's text rides to the core whole, on the local pipe only, and the core lexes it; no
+name or path crosses as a fact: the fact tables go up as fnv1a64 hashes and request-local ids,
+and the answers come back as ids this side labels again through the request's own tables and
+the names the lexed program carries back ([legend.rs:1-8](../../../cli/src/query/legend.rs#L1),
+[lexed.rs:1-8](../../../cli/src/query/lexed.rs#L1)).
 
 ### 1. The language — CE Datalog v1
 
@@ -43,7 +45,7 @@ which leaves `%` free to be the remainder operator. The scanner knows spellings 
 shapes: a lowercase word is a predicate when a `(` follows it and a name constant otherwise, a
 quoted string is a name except in the one position whose sort is a set, and `in(F, "glob")` is
 sugar rewritten on the spot to `set(S, F)` with the glob seated as set `S`
-([lexer.rs:1-12](../../../cli/src/query/lexer.rs#L1), [lexer.rs:349](../../../cli/src/query/lexer.rs#L349)).
+([Lex.hs:1-16](../../../core/app/CE/Query/Lex.hs#L1), [Lex.hs:188](../../../core/app/CE/Query/Lex.hs#L188)).
 The grammar lives in the core's hand-written recursive descent and nowhere else — the freeze's
 dependency set has no parser library — and the first shape it cannot read is the program's one
 syntax error, reported at the token it stopped on
@@ -54,50 +56,53 @@ left side begins with the variable; whether `Var = expr` binds or compares is th
 [Syntax.hs:48-54](../../../core/app/CE/Query/Syntax.hs#L48)). An `assert`'s head names the witness
 columns; a violation is one head tuple, and the assertion passes when there is none. A `?-`
 answers with the variables its body binds, in the order the safety walk binds them
-([Syntax.hs:58-61](../../../core/app/CE/Query/Syntax.hs#L58), [columns.rs:1-8](../../../cli/src/query/columns.rs#L1)).
+([Syntax.hs:58-61](../../../core/app/CE/Query/Syntax.hs#L58), [Front.hs:80](../../../core/app/CE/Query/Front.hs#L80)).
 
 ### 2. The facts — twenty-seven predicates read off the index
 
 The schema is one table with a row per predicate — its code, its name, the sort of each
-argument — held in the core and mirrored line for line on the measuring side; the core echoes
-it under `schema` when asked, and a unit leg holds the two copies equal
-([Schema.hs:18](../../../core/app/CE/Query/Schema.hs#L18), [legend.rs:14](../../../cli/src/query/legend.rs#L14),
-[legend.rs:12](../../../cli/tests/unit/query/legend.rs#L12)). Sorts are node 0, dir 1, unit 2, int 3,
+argument — held in the core alone (the measuring side's mirror retired in plan v2.33 W1); the
+core echoes it under `schema` when asked, and the lexed program carries each predicate's name by
+code back to the side that assembles the tables
+([Schema.hs:18](../../../core/app/CE/Query/Schema.hs#L18), [Schema.hs:71](../../../core/app/CE/Query/Schema.hs#L71),
+[lexed.rs:90](../../../cli/src/query/lexed.rs#L90)). Sorts are node 0, dir 1, unit 2, int 3,
 sym 4, set 5; a position nothing constrained resolves to the open sort, −1
 ([Cost.hs:140](../../../core/app/CE/Query/Cost.hs#L140)).
 
 | predicate | sorts | read off |
 |---|---|---|
-| `node(N, K)` · `file(F)` | node, sym | the graph wire's nodes — files, packages, sections, walked assets, the same dense ids `graph/1` judges — with the prose-only files the docdup family reads appended after them; `K` is `file` / `pkg` / `section` / `asset` / `prose`, and `file` is the view of kind `file` ([graph.rs:30](../../../cli/src/query/facts/graph.rs#L30), [legend.rs:132](../../../cli/src/query/legend.rs#L132)) |
+| `node(N, K)` · `file(F)` | node, sym | the graph wire's nodes — files, packages, sections, walked assets, the same dense ids `graph/1` judges — with the prose-only files the docdup family reads appended after them; `K` is `file` / `pkg` / `section` / `asset` / `prose`, and `file` is the view of kind `file` ([graph.rs:30](../../../cli/src/query/facts/graph.rs#L30), [legend.rs:34](../../../cli/src/query/legend.rs#L34)) |
 | `in_dir(N, D)` · `dir(D)` · `parent(D, P)` · `dir_name(D, S)` | node, dir, sym | the directory tree the structure family builds over every node path, a package seated at its own directory; root is dir 0 and reads `.`, and `parent` has no row for it ([graph.rs:154](../../../cli/src/query/facts/graph.rs#L154)) |
 | `lang(F, L)` | node, sym | `Lang::name` of every file-shaped node, `unknown` where no language claims the path |
-| `role(N, R)` | node, sym | one row per set role bit: `entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` ([graph.rs:87](../../../cli/src/query/facts/graph.rs#L87), [legend.rs:137](../../../cli/src/query/legend.rs#L137)) |
+| `role(N, R)` | node, sym | one row per set role bit: `entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` ([graph.rs:87](../../../cli/src/query/facts/graph.rs#L87), [legend.rs:39](../../../cli/src/query/legend.rs#L39)) |
 | `lines(F, N)` | node, int | one read per file-shaped node, only when a program asks ([graph.rs:137](../../../cli/src/query/facts/graph.rs#L137)) |
-| `ref(N, M, K, R)` | node, node, sym, int | every resolved edge of the graph wire with its kind (`import` / `doc_link` / `doc_ref` / `asset` / `contain` / `refdef`) and its rung; External and Unresolved sites have no edge, and `unresolved(F, N)` counts the latter per file ([legend.rs:151](../../../cli/src/query/legend.rs#L151)) |
+| `ref(N, M, K, R)` | node, node, sym, int | every resolved edge of the graph wire with its kind (`import` / `doc_link` / `doc_ref` / `asset` / `contain` / `refdef`) and its rung; External and Unresolved sites have no edge, and `unresolved(F, N)` counts the latter per file ([legend.rs:53](../../../cli/src/query/legend.rs#L53)) |
 | `unit(U, F)` · `unit_kind(U, K)` · `unit_lines(U, N)` · `unit_at(U, L)` | unit, node, sym, int | the index's symbol rows in one dense order (file, first line, last line, key, nth), each seated in its file node; kinds `fn` / `named` / `impl` / `section` ([units.rs:42](../../../cli/src/query/facts/units.rs#L42)) |
 | `named(U, S)` · `exported(U)` · `params(U, N)` | unit, sym, int | the declared name the mention pass would spell, the visibility bit, the arity off the key |
 | `coc(U, N)` · `cyclo(U, N)` · `nesting(U, N)` | unit, int | the three complexity numbers the core derives for `ce scan`, seated on the unit sharing the function's file and span — a span two units share goes to the one whose key names the function, and to none when neither does ([units.rs:115](../../../cli/src/query/facts/units.rs#L115)) |
 | `clone(U, V, K)` | unit, unit, sym | `t1t2`: a T1/T2 block covering whole units on both sides pairs them in order; `t3`: the pairs the core judged clones, on the units' identities ([pairs.rs:45](../../../cli/src/query/facts/pairs.rs#L45), [pairs.rs:62](../../../cli/src/query/facts/pairs.rs#L62)) |
 | `dup(F, G, N)` · `docdup(F, G)` | node, node, int | the T1/T2 blocks between two files with their token count; the file pairs behind the segment pairs the docdup core judged — each pair once, lower id first ([pairs.rs:1-6](../../../cli/src/query/facts/pairs.rs#L1)) |
-| `mention(S, F)` | sym, node | the mention pass's own table: the identifier hashes it stores are the hashes a program's `"name"` lexes to ([text.rs:42](../../../cli/src/query/facts/text.rs#L42)) |
-| `class(F, S)` | node, sym | the `[[rules.class]]` matcher the scan uses, by the class's name ([text.rs:59](../../../cli/src/query/facts/text.rs#L59)) |
-| `set(S, F)` | set, node | each glob the program spelled, expanded over the file-shaped nodes through the exclude list's own dialect ([text.rs:13](../../../cli/src/query/facts/text.rs#L13)) |
+| `mention(S, F)` | sym, node | the mention pass's own table: the identifier hashes it stores are the hashes a program's `"name"` lexes to ([text.rs:41](../../../cli/src/query/facts/text.rs#L41)) |
+| `class(F, S)` | node, sym | the `[[rules.class]]` matcher the scan uses, by the class's name ([text.rs:58](../../../cli/src/query/facts/text.rs#L58)) |
+| `set(S, F)` | set, node | each glob the program spelled, expanded over the file-shaped nodes through the exclude list's own dialect ([text.rs:12](../../../cli/src/query/facts/text.rs#L12)) |
 
 Only the tables the program names are built, and the costly ones — a scan for the complexity
 numbers, the T3 and docdup judgments, the mention pass, a read of every file for its line count
 — only when their predicate is read; a table is a set, sorted and deduplicated before it goes up
-([mod.rs:1-7](../../../cli/src/query/facts/mod.rs#L1), [mod.rs:68](../../../cli/src/query/facts/mod.rs#L68),
-[mod.rs:123](../../../cli/src/query/facts/mod.rs#L123)). One hash serves every name-shaped
-constant: `mention("foo", F)` meets the index's own rows because the lexer and the mention
-table key by the same fnv1a64, and the enum words a table spells (`entry`, `import`, `t3`) are
+([mod.rs:1-7](../../../cli/src/query/facts/mod.rs#L1), [mod.rs:69](../../../cli/src/query/facts/mod.rs#L69),
+[mod.rs:129](../../../cli/src/query/facts/mod.rs#L129)). One hash serves every name-shaped
+constant: `mention("foo", F)` meets the index's own rows because the core's lexer and the
+measuring side's mention table key by the same fnv1a64 (spelled once on each side; the
+differential leg holds the names they give equal), and the enum words a table spells (`entry`, `import`, `t3`) are
 name constants in the program, so `role(N, entry_named)` and `role(N, "entry_named")` are one
-token ([legend.rs:125](../../../cli/src/query/legend.rs#L125), [Cost.hs:88](../../../core/app/CE/Query/Cost.hs#L88)).
+token ([LexState.hs:159](../../../core/app/CE/Query/LexState.hs#L159), [legend.rs:27](../../../cli/src/query/legend.rs#L27),
+[Cost.hs:88](../../../core/app/CE/Query/Cost.hs#L88)).
 
 ### 3. The prelude
 
 Eight clauses ship inside the binary as a `.rules` text and go up the same wire as the user's
 program, so the core never distinguishes them; their predicates are reserved, and a program that
-redefines one is a program error ([mod.rs:27](../../../cli/src/query/mod.rs#L27),
+redefines one is a program error ([mod.rs:33](../../../cli/src/query/mod.rs#L33),
 [prelude.rules:8-15](../../../cli/src/query/prelude.rules#L8)):
 
 ```
@@ -119,23 +124,25 @@ holds the two roads to one file ([query_face.rs:87](../../../cli/tests/it/query_
 
 ### 4. The token stream
 
-The request carries the program as `[kind, value]` pairs: 0 a predicate code, 1 a variable, 2
+The core lexes the texts into `[kind, value]` pairs (a request may still carry the pairs
+themselves as `program`): 0 a predicate code, 1 a variable, 2
 an integer, 3 a set id, 4 a name hash, 6 an anonymous variable, and 10 to 33 the punctuation and
 keywords (`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/`
 `%` `count` `min` `max` `sum` `:`); 5 was an enum kind in the booklet's first draft and is
-deliberately unassigned ([lexer.rs:44](../../../cli/src/query/lexer.rs#L44),
-[Cost.hs:88](../../../core/app/CE/Query/Cost.hs#L88)). Variables number per clause by first
+deliberately unassigned ([Cost.hs:88](../../../core/app/CE/Query/Cost.hs#L88)). Variables number per clause by first
 appearance; program predicates number from 1000 by first appearance across every source —
 the prelude first, then the rules file, then the ad hoc query — and codes below 1000 are the
-schema's ([lexer.rs:293](../../../cli/src/query/lexer.rs#L293), [program.rs:101](../../../cli/src/query/program.rs#L101),
-[program.rs:115](../../../cli/src/query/program.rs#L115), [Cost.hs:81-82](../../../core/app/CE/Query/Cost.hs#L81)).
+schema's ([Lex.hs:150](../../../core/app/CE/Query/Lex.hs#L150), [Lex.hs:31](../../../core/app/CE/Query/Lex.hs#L31),
+[Lex.hs:115](../../../core/app/CE/Query/Lex.hs#L115), [Cost.hs:81-82](../../../core/app/CE/Query/Cost.hs#L81)).
 Every token keeps the line and column it came from, so an error the core reports at a token
-index reads back as `where line:column` — the one text-shaped thing about an error, and it
-never crosses the wire ([program.rs:131](../../../cli/src/query/program.rs#L131)). A malformed
+index reads back as `where line:column` through the lex reply's `at` table
+([Front.hs:37](../../../core/app/CE/Query/Front.hs#L37), [lexed.rs:74](../../../cli/src/query/lexed.rs#L74)). A malformed
 token or table is the measuring side's fault and is refused by name before any judging —
 unknown kind, negative value, unknown predicate code, unknown fact predicate, wrong arity,
-negative fact value, a table not strictly ascending, a negative prelude count
-([Contract.hs:5-13](../../../core/app/CE/Query/Contract.hs#L5), [Contract.hs:56](../../../core/app/CE/Query/Contract.hs#L56)).
+negative fact value, a table not strictly ascending, a negative prelude count, texts that do not
+lex, a `lex` request without texts
+([Contract.hs:5-13](../../../core/app/CE/Query/Contract.hs#L5), [Contract.hs:76](../../../core/app/CE/Query/Contract.hs#L76),
+[Contract.hs:87](../../../core/app/CE/Query/Contract.hs#L87)).
 
 ### 5. The checks — arity, sorts, safety, stratification
 
@@ -162,7 +169,7 @@ redefined, 8 aggregate shape, 9 anonymous head ([Cost.hs:152-153](../../../core/
   anonymous head argument names no column ([Safety.hs:1-8](../../../core/app/CE/Query/Check/Safety.hs#L1),
   [Safety.hs:55](../../../core/app/CE/Query/Check/Safety.hs#L55), [Safety.hs:82](../../../core/app/CE/Query/Check/Safety.hs#L82)).
   The order the outer level binds its variables in is the projection a query answers with
-  ([Safety.hs:23](../../../core/app/CE/Query/Check/Safety.hs#L23), [columns.rs:115](../../../cli/src/query/columns.rs#L115)).
+  ([Safety.hs:23](../../../core/app/CE/Query/Check/Safety.hs#L23), [Front.hs:115](../../../core/app/CE/Query/Front.hs#L115)).
 - **Unknown and prelude.** A program predicate read anywhere but defined by no rule; a rule past
   the first `prelude` clauses whose head is a reserved predicate.
 - **Stratification.** A head sits at least as high as every positive body predicate and strictly
@@ -176,7 +183,7 @@ What comes out is the evaluator's program: the rules with their strata, the goal
 projections and sorts, and every program predicate's resolved position sorts — the reply's
 `preds` table, which the measuring side labels a proof node's arguments by
 ([Check.hs:30-39](../../../core/app/CE/Query/Check.hs#L30), [Check.hs:60](../../../core/app/CE/Query/Check.hs#L60),
-[Query.hs:82](../../../core/app/CE/Query.hs#L82)).
+[Query.hs:103](../../../core/app/CE/Query.hs#L103)).
 
 ### 6. Evaluation — semi-naive, one stratum at a time
 
@@ -214,7 +221,7 @@ parent −1, `rule` the clause index (−1 for a sent fact), `pred` the node's p
 for a query's root) ([Proof.hs:1-7](../../../core/app/CE/Query/Proof.hs#L1),
 [Proof.hs:56](../../../core/app/CE/Query/Proof.hs#L56)). A `?-`'s trees are expanded only under
 `why`; an assertion's violations carry theirs always — a violation without its derivation is a
-bare accusation ([Query.hs:91](../../../core/app/CE/Query.hs#L91)). One global node budget,
+bare accusation ([Query.hs:112](../../../core/app/CE/Query.hs#L112)). One global node budget,
 `proofCap`, governs a reply: a tree that would not fit whole is left out and counted in
 `counts.proofTruncated`, never cut in the middle, so every emitted tree is a complete
 derivation and no answer is ever dropped for its proof's sake
@@ -232,11 +239,11 @@ errors. The derived ceiling (2,097,152 tuples) is checked after every round of e
 and crossing it abandons the whole evaluation for the same degraded reply with the count it
 reached — never a partial answer. The proof ceiling (16,384 nodes) never degrades: it stops
 expanding and counts ([Cost.hs:72-76](../../../core/app/CE/Query/Cost.hs#L72),
-[Contract.hs:49](../../../core/app/CE/Query/Contract.hs#L49), [Query.hs:125](../../../core/app/CE/Query.hs#L125)).
+[Contract.hs:67](../../../core/app/CE/Query/Contract.hs#L67), [Query.hs:146](../../../core/app/CE/Query.hs#L146)).
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
 that offers no `query/1` reads the same way, and a reply whose tables disagree with what was
 sent — a goal count, an answer's arity, an error index past the stream — is wire skew, never a
-healthy answer ([wire.rs:103](../../../cli/src/query/wire.rs#L103), [rows.rs:17](../../../cli/src/query/rows.rs#L17)).
+healthy answer ([wire.rs:97](../../../cli/src/query/wire.rs#L97), [rows.rs:16](../../../cli/src/query/rows.rs#L16)).
 The family has no knobs, no fail tier and no condition bit: `ce rules` reads
 `counts.violations` and nothing else.
 
@@ -252,10 +259,10 @@ since proto 7.8.0) from the program's facts, its answered tables and the goals a
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
 ([Document.hs:99](../../../core/app/CE/Query/Document.hs#L99), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
-[face.rs:223](../../../cli/src/query/face.rs#L223), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
+[face.rs:225](../../../cli/src/query/face.rs#L225), [mod.rs:36](../../../cli/src/query/facts/mod.rs#L36)). A question is wrapped once into query form —
 `?-` in front, `.` behind — unless written ([face.rs:37](../../../cli/src/query/face.rs#L37)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
-([face.rs:163](../../../cli/src/query/face.rs#L163)).
+([face.rs:170](../../../cli/src/query/face.rs#L170)).
 
 - **`ce query <body> [--why] [--file <rules>] [--prelude]`** answers one question built on the
   rules file's rules; exit 0 when judged, 2 on a program error or a core that could not judge.
@@ -269,7 +276,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   unless absolute, and it must exist), else `[rules] file` from the config (it must exist), else
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
   alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
-  so declaring it moves no baseline ([mod.rs:37](../../../cli/src/query/mod.rs#L37),
+  so declaring it moves no baseline ([mod.rs:43](../../../cli/src/query/mod.rs#L43),
   [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:83-86](../../../cli/src/config/canonical.rs#L83)).
 - **The console** prints the errors first, then the degraded reason if any, then each goal —
   `?- F: 1 answer(s)` with its rows, `assert no_dead(F): ok` or `: N violation(s)` with its
@@ -335,20 +342,21 @@ list-comprehension form — that shares only the checker; the shipped evaluator 
 for tuple on every program of the enumerated family over every seeded fact set (five programs,
 forty sets, 200 cases), and the same reference replays a proof tree by checking that each rule
 node's children are one solution of its body ([ReferenceQuery.hs:1-12](../../../core/test/ReferenceQuery.hs#L1),
-[ReferenceQuery.hs:34](../../../core/test/ReferenceQuery.hs#L34)). Eight golden pairs pin the
+[ReferenceQuery.hs:34](../../../core/test/ReferenceQuery.hs#L34)). Nine golden pairs pin the
 wire bytes — the prelude with the schema echo, an assertion's violation, a `why` query negating
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
-aggregate over a set — and a tests-repo leg regenerates them through the real lexer so every
-request line is the prelude followed by its program
-([Spec.hs:112](../../../core/test/Spec.hs#L112), [query_golden.rs:25](../../../cli/tests/it/query_golden.rs#L25),
-[query_golden.rs:111](../../../cli/tests/it/query_golden.rs#L111)).
+aggregate over a set, and the prelude lexed alone — and a tests-repo leg regenerates them so
+every request line carries the prelude and its program as texts
+([Spec.hs:112](../../../core/test/Spec.hs#L112), [query_golden.rs:26](../../../cli/tests/it/query_golden.rs#L26),
+[query_golden.rs:112](../../../cli/tests/it/query_golden.rs#L112)).
 
-On the measuring side the unit legs hold the legend to the core's echo and the vocabulary to the
-graph's codes, the lexer's numbering and its faults at their place, a goal's columns in the
-safety walk's order, the request body's tables and flags, and `consume`'s reading of a healthy,
-a degraded and a skewed reply ([legend.rs:12](../../../cli/tests/unit/query/legend.rs#L12),
-[program.rs:19](../../../cli/tests/unit/query/program.rs#L19), [wire.rs:63](../../../cli/tests/unit/query/wire.rs#L63),
-[face.rs:142](../../../cli/tests/unit/query/face.rs#L142)). The integration legs seed a Cargo package
+On the measuring side the unit legs hold the vocabulary to the graph's codes, the core's lex
+reply to the scanner, the goal heads and the schema names frozen at 1324c927 (three seeded runs
+of 10,000 random programs and the real ones), the request body's tables and flags, and
+`consume`'s reading of a healthy, a degraded and a skewed reply
+([vocabulary.rs:1](../../../cli/tests/unit/query/vocabulary.rs#L1),
+[lexed.rs:165](../../../cli/tests/unit/query/lexed.rs#L165), [wire.rs:63](../../../cli/tests/unit/query/wire.rs#L63),
+[face.rs:145](../../../cli/tests/unit/query/face.rs#L145)). The integration legs seed a Cargo package
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or

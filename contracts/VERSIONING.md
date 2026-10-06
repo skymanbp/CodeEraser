@@ -68,6 +68,13 @@
 > **9.0.0 同版加性**（七个请求上限进定义包，算法轨 W1 第 1 项，2026-10-06；设计册 §11 第 73–75 条；9.0.0 未发布，同上不另升版号）：
 > 定义包 `limits` 加 `caps {scan_rows, flow_rows, merge_groups, merge_tree_nodes, structure_nodes, arch_files, arch_refs}`——scan / flow / merge / structure / arch
 > 五族契约的请求上限（`CE.Scan.Cost.scanRowCap` 等），测量侧按它排请求、不再留镜像；各族的请求与应答不动。hello 的 `tablesDigest` 与 `tables` 第 2 对随之变，其余 golden 不动。
+> **9.0.0 同版加性**（query 的扫描器、目标头与模式名进核，算法轨 W1 第 2 项，2026-10-06；设计册 §11 第 77–79 条；9.0.0 未发布，同上不另升版号）：
+> `query/1` 请求加性 `texts` `[前奏, 规则文件 | null, 问句 | null]`——带它时核自己扫（`CE.Query.Lex`），`program` 与 `prelude` 取扫出的记号与前奏子句数
+> （不带 `texts` 的请求照旧读 `program`）；扫不成的 `texts` 按名拒绝 `texts: <源> <行>:<列>: <原因>`。加性 `lex: true` 只要扫的结果、不判、不计价：应答
+> `lexed`（扫不成只答 `{fault: [位置, 原因]}`，位置读作 `源 行:列`；扫成为 `fault: null` 与 `tokens`、`clauses`、`prelude`、每个记号的 `at`、`preds` 每个谓词的码与名、`sets` 与
+> `setAt`、`names` 每个名字常量的哈希与拼写、`referenced` 程序读的事实表、`heads` 每个目标的头名与列），`inspect: true` 另附原始记号、变量表与目标；`lex`
+> 不带 `texts` 按名拒绝 `lex without texts`。golden：`query/golden` 前八对的请求改带 `texts`（应答逐字节不动），加第 9 对（只扫前奏）；`*.rules` 钉 LF
+> （`.gitattributes`：前奏以 `include_str!` 编进测量侧，它的字节就是请求行）。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -716,7 +723,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->346<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->347<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

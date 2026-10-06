@@ -8762,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 409,
-    "end": 411,
+    "line": 416,
+    "end": 418,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -10155,22 +10155,6 @@
     "line": 216,
     "text": "\"rules\",\nrules,"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|0b5c5c7ec7c0f040|0": {
-    "target": "../../../cli/src/query/columns.rs",
-    "line": 115,
-    "text": "fn outer_vars(toks: &[Token]) -> Vec<String> {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/columns.rs|54f2baebfbbe808c|0": {
-    "target": "../../../cli/src/query/columns.rs",
-    "line": 1,
-    "end": 8,
-    "text": "//! The goals' column names (design booklet §4.5): the core answers a"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|24f391b94133166e|0": {
-    "target": "../../../cli/src/query/face.rs",
-    "line": 163,
-    "text": "fn glob_faults(root: &Path, program: &Program) -> Vec<(String, String)> {"
-  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|38995ca156c29327|0": {
     "target": "../../../cli/src/query/face.rs",
     "line": 1,
@@ -10182,9 +10166,14 @@
     "line": 37,
     "text": "pub fn question(text: &str) -> String {"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|9a5c9c0bdc03904b|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 170,
+    "text": "fn glob_faults(root: &Path, program: &Lexed) -> Vec<(String, String)> {"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|b43a275db29321f1|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 223,
+    "line": 225,
     "text": "impl Resolve for Names {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|1dddd95dd80f8269|0": {
@@ -10209,13 +10198,13 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|179260bdca83ea10|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 68,
+    "line": 69,
     "text": "pub struct Sink {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|1a30fb51b76de4e1|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|8e9bc98f8ad96c9c|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 123,
-    "text": "pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Program) -> Result<Facts> {"
+    "line": 129,
+    "text": "pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -> Result<Facts> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|f9803ac8e916bbe8|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
@@ -10244,20 +10233,20 @@
     "line": 45,
     "text": "fn twins(ctx: &Ctx<'_>, units: &Units, sink: &mut Sink) {"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|1cec996806a3e7a3|0": {
+    "target": "../../../cli/src/query/facts/text.rs",
+    "line": 12,
+    "text": "pub fn fill(ctx: &Ctx<'_>, sets: &[String], sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|34916d3db1241f86|0": {
     "target": "../../../cli/src/query/facts/text.rs",
-    "line": 59,
+    "line": 58,
     "text": "fn classes(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|6d0ff0a89c422b18|0": {
     "target": "../../../cli/src/query/facts/text.rs",
-    "line": 42,
+    "line": 41,
     "text": "fn mentions(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/text.rs|fbf57485ec7f69c8|0": {
-    "target": "../../../cli/src/query/facts/text.rs",
-    "line": 13,
-    "text": "pub fn fill(ctx: &Ctx<'_>, program: &Program, sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/units.rs|8ff8db07b8fa222c|0": {
     "target": "../../../cli/src/query/facts/units.rs",
@@ -10277,53 +10266,43 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|92dae6b55a12f01a|0": {
     "target": "../../../cli/src/query/legend.rs",
-    "line": 132,
+    "line": 34,
     "text": "pub const NODE_KINDS: [&str; 5] = [\"file\", \"pkg\", \"section\", \"asset\", \"prose\"];"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|b5035c66204fb898|0": {
     "target": "../../../cli/src/query/legend.rs",
-    "line": 137,
+    "line": 39,
     "text": "pub const ROLE_NAMES: [&str; 10] = ["
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|bb3c0c8e97f327d5|0": {
-    "target": "../../../cli/src/query/legend.rs",
-    "line": 14,
-    "text": "const SCHEMA: &str = \"\\"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|be239a13651dc5ec|0": {
     "target": "../../../cli/src/query/legend.rs",
-    "line": 151,
+    "line": 53,
     "text": "pub const REF_KINDS: [&str; 6] = ["
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/legend.rs|f889b58f0a66303a|0": {
     "target": "../../../cli/src/query/legend.rs",
-    "line": 125,
+    "line": 27,
     "text": "pub fn sym(name: &str) -> u64 {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|3e77fbd57dee3395|0": {
-    "target": "../../../cli/src/query/lexer.rs",
-    "line": 349,
-    "text": "fn sugar(&mut self, line: u32, col: u32) -> Result<(), Fault> {"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|1ec85f0c2e1aab5f|0": {
+    "target": "../../../cli/src/query/lexed.rs",
+    "line": 90,
+    "text": "pub fn schema(&self) -> BTreeMap<String, u32> {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|8a5cf2b211b7dddf|0": {
-    "target": "../../../cli/src/query/lexer.rs",
-    "line": 44,
-    "text": "const PUNCT: &str = \":- 10\\n, 11\\n. 12\\n( 13\\n) 14\\nnot 15\\n?- 16\\nassert 17\\n= 18\\n!= 19\\n\\"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|4d3b1ce8fe15441c|0": {
+    "target": "../../../cli/src/query/lexed.rs",
+    "line": 74,
+    "text": "pub fn locate(&self, idx: usize) -> String {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|ab259b560c786b46|0": {
-    "target": "../../../cli/src/query/lexer.rs",
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|91a98a53c03bc97c|0": {
+    "target": "../../../cli/src/query/lexed.rs",
     "line": 1,
-    "end": 12,
-    "text": "//! The query language's scanner (design booklet §4.4): the text of a"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexer.rs|f538e69a9f6d36a3|0": {
-    "target": "../../../cli/src/query/lexer.rs",
-    "line": 293,
-    "text": "fn variable(&mut self, w: String, line: u32, col: u32) {"
+    "end": 8,
+    "text": "//! The lexed program as the core reads it back (plan v2.33 W1): the"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|23bcba3c1722e495|0": {
     "target": "../../../cli/src/query/mod.rs",
-    "line": 27,
+    "line": 33,
     "text": "pub const PRELUDE: &str = include_str!(\"prelude.rules\");"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|2df12d0d7494a4a5|0": {
@@ -10334,7 +10313,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/mod.rs|d79179f736e4d4c2|0": {
     "target": "../../../cli/src/query/mod.rs",
-    "line": 37,
+    "line": 43,
     "text": "pub fn rules_source("
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/prelude.rules|5891a3eb263ddd54|0": {
@@ -10343,29 +10322,14 @@
     "end": 15,
     "text": "entry(N) :- role(N, _)."
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/program.rs|4d3b1ce8fe15441c|0": {
-    "target": "../../../cli/src/query/program.rs",
-    "line": 131,
-    "text": "pub fn locate(&self, idx: usize) -> String {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/program.rs|7ad404834329de0f|0": {
-    "target": "../../../cli/src/query/program.rs",
-    "line": 115,
-    "text": "pub(super) fn idb_code(&mut self, name: &str) -> u32 {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/program.rs|8424bc45010209e5|0": {
-    "target": "../../../cli/src/query/program.rs",
-    "line": 101,
-    "text": "pub fn lex(prelude: &str, rules: Option<&str>, query: Option<&str>) -> Result<Program, Fault> {"
-  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/rows.rs|67f09ca7906e45e2|0": {
     "target": "../../../cli/src/query/rows.rs",
-    "line": 17,
+    "line": 16,
     "text": "\"wire skew: {} goals sent, {} answered\","
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|3330a64bd12a7a96|0": {
     "target": "../../../cli/src/query/wire.rs",
-    "line": 103,
+    "line": 97,
     "text": "pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|da3bb2dec2173e71|0": {
@@ -10412,33 +10376,28 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 25,
+    "line": 26,
     "text": "const PROGRAMS: &str = \"\\"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|d650078f6324fbb1|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|c43fa06b40a8903d|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 111,
-    "text": "fn every_request_line_is_the_prelude_then_its_program_through_the_lexer() {"
+    "line": 112,
+    "text": "fn every_request_line_is_the_prelude_then_its_program() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|102e73d797f3f249|0": {
     "target": "../../../cli/tests/unit/query/face.rs",
-    "line": 142,
+    "line": 145,
     "text": "fn a_lexical_fault_is_error_zero_at_its_place_and_no_judgment() {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/legend.rs|83d614986f8f8dbb|0": {
-    "target": "../../../cli/tests/unit/query/legend.rs",
-    "line": 12,
-    "text": "fn the_schema_rows_are_the_cores_echo() {"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/lexed.rs|c3eeee3028d09050|0": {
+    "target": "../../../cli/tests/unit/query/lexed.rs",
+    "line": 165,
+    "text": "fn the_cores_lexer_answers_what_the_frozen_scanner_did_on_three_seeds() {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/legend.rs|83d614986f8f8dbb|1": {
-    "target": "../../../cli/tests/unit/query/legend.rs",
-    "line": 12,
-    "text": "fn the_schema_rows_are_the_cores_echo() {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/program.rs|e6573e0034c086e6|0": {
-    "target": "../../../cli/tests/unit/query/program.rs",
-    "line": 19,
-    "text": "fn the_prelude_is_eight_clauses_over_six_reserved_predicates() {"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/vocabulary.rs|aa7159bca53c2343|0": {
+    "target": "../../../cli/tests/unit/query/vocabulary.rs",
+    "line": 1,
+    "text": "//! The live legend's vocabulary (plan v2.33 W1 moved the fact schema's"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/wire.rs|ceb2e7c5ab25b666|0": {
     "target": "../../../cli/tests/unit/query/wire.rs",
@@ -10447,7 +10406,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|0e2ab9480d5e8f13|0": {
     "target": "../../../core/app/CE/Query.hs",
-    "line": 82,
+    "line": 103,
     "text": "predRows :: Checked -> [[Integer]]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|84a2efcc5da58d86|0": {
@@ -10458,12 +10417,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|c7f4b2ee90b22583|0": {
     "target": "../../../core/app/CE/Query.hs",
-    "line": 125,
+    "line": 146,
     "text": "degraded :: String -> QueryReq -> B8.ByteString"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|c995105bfbb32abd|0": {
     "target": "../../../core/app/CE/Query.hs",
-    "line": 91,
+    "line": 112,
     "text": "answered :: QueryReq -> [Clause] -> Checked -> (Db, Prov, Integer) -> Answered"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|70f3b3e93369e1c1|0": {
@@ -10531,8 +10490,13 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|3cb2149f4ff674fa|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 49,
+    "line": 67,
     "text": "overCap :: QueryReq -> Bool"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|6c09cf6a62d51fac|0": {
+    "target": "../../../core/app/CE/Query/Contract.hs",
+    "line": 87,
+    "text": "textsShape :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|9551146ad3aeee22|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
@@ -10542,7 +10506,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|d27383d18075f614|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 56,
+    "line": 76,
     "text": "offence :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|0f2ba5f8addc02bf|0": {
@@ -10646,6 +10610,52 @@
     "line": 28,
     "text": "joinBody :: Look -> (Int -> Indexed) -> [Lit] -> Subst -> [(Subst, [Fact])]"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|1f3c0f11d00a0a55|0": {
+    "target": "../../../core/app/CE/Query/Front.hs",
+    "line": 37,
+    "text": "located :: Int -> Int -> Int -> String"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|272cd9cc7db917ba|0": {
+    "target": "../../../core/app/CE/Query/Front.hs",
+    "line": 115,
+    "text": "outerVars :: [Tok] -> [String]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|e114e360ed0b8431|0": {
+    "target": "../../../core/app/CE/Query/Front.hs",
+    "line": 80,
+    "text": "goals :: [Tok] -> [Head]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|34a55d08379f21a6|0": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 150,
+    "text": "variable :: Lx -> String -> Int -> Int -> Lx"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|3c42f0fcbfc26b6a|0": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 1,
+    "end": 16,
+    "text": "-- | The query language's scanner (design booklet §4.4; plan v2.33 W1"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|8e479014bd642dc7|0": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 31,
+    "text": "lexProgram :: String -> Maybe String -> Maybe String -> Either Fault Lexed"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|a528d5d2cb958962|0": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 115,
+    "text": "idbCode :: Lx -> String -> (Integer, Lx)"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|a80438474861a1fe|0": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 188,
+    "text": "sugar :: Lx -> Int -> Int -> Either Fault Lx"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/LexState.hs|a94b2a2b3e6da5c0|0": {
+    "target": "../../../core/app/CE/Query/LexState.hs",
+    "line": 159,
+    "text": "sym :: String -> Word64"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lines.hs|609f7516e41f6b88|0": {
     "target": "../../../core/app/CE/Query/Lines.hs",
     "line": 15,
@@ -10688,6 +10698,11 @@
     "line": 1,
     "end": 7,
     "text": "-- | Proof trees (design booklet §4.5): for an answer, the rule that"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Schema.hs|aa6dbcf5e2d6202c|0": {
+    "target": "../../../core/app/CE/Query/Schema.hs",
+    "line": 71,
+    "text": "schemaNames :: [(Int, String)]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Schema.hs|e0dd6cbfe7cf2db5|0": {
     "target": "../../../core/app/CE/Query/Schema.hs",

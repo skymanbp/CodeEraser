@@ -6,7 +6,7 @@
 -- lexer's vocabulary and never cross the wire. A code absent here is
 -- a contract refusal on the facts object, so a table the measuring
 -- side invents cannot be judged by accident.
-module CE.Query.Schema (arityOf, schemaRows, sortsOf) where
+module CE.Query.Schema (arityOf, codeNamed, schemaNames, schemaRows, sortsOf) where
 
 import CE.Query.Cost (sortDir, sortInt, sortNode, sortSet, sortSym, sortUnit)
 import qualified Data.IntMap.Strict as IM
@@ -65,6 +65,15 @@ sortsOf code = IM.lookup code schema
 
 arityOf :: Int -> Maybe Int
 arityOf = fmap length . sortsOf
+
+-- | Each fact predicate's name by code, ascending — the lexer's
+-- vocabulary (CE.Query.Lex; plan v2.33 W1 moved the scanner here).
+schemaNames :: [(Int, String)]
+schemaNames = [(n, name) | c : name : _ <- map words rows, [(n, "")] <- [reads c], IM.member n schema]
+
+-- | A fact predicate's code by name.
+codeNamed :: String -> Maybe Int
+codeNamed name = lookup name [(n, c) | (c, n) <- schemaNames]
 
 -- | The echo: `[code, arity, sort…]` per predicate, ascending by code.
 schemaRows :: [[Integer]]

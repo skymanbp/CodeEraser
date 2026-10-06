@@ -76,10 +76,11 @@ names =
   , "an over-cap token stream degrades to empty tables; fact rows are priced at the cap; the derived cap aborts with the count reached"
   , "proof trees past the node budget are left out whole and counted"
   , "an empty program answers empty tables"
+  , "texts lex in the core: judged as the token stream they lex to, a lex request answers the lexed program, a lexical fault is named"
   ]
 
 probes :: [Bool]
-probes = [deadFile, assertion, errorsNamed, proofReplay, aggregates, arithmetic, goalsAndSorts, schemaEcho, refusals, capped, proofBudget, emptyProgram]
+probes = [deadFile, assertion, errorsNamed, proofReplay, aggregates, arithmetic, goalsAndSorts, schemaEcho, refusals, capped, proofBudget, emptyProgram, textsRoad]
 
 deadFile :: Bool
 deadFile =
@@ -201,7 +202,7 @@ capped =
     && either (const False) (\(_, _, n) -> n == 4) (evaluated 4)
  where
   big = setKey "program" (toJSON (replicate (fromInteger tokenCap + 1) [tokDot, 0])) (request "" [] [])
-  tabled n = QueryReq Null [] [("1", replicate n [0])] 0 False False
+  tabled n = QueryReq Null Nothing False False [] [("1", replicate n [0])] 0 False False
   evaluated cap = case parseProgram (toks (prelude <> " ?- p1001 ( v0 ) .")) >>= either (const (Left 0)) Right . check 3 of
     Right chk -> evalProgramWith cap chk (IM.fromList [(c, S.fromList t) | (c, t) <- facts4])
     Left _ -> Left 0
@@ -216,3 +217,31 @@ proofBudget =
 emptyProgram :: Bool
 emptyProgram =
   answersOf "" [] ["answers", "goals", "proof", "errors", "degraded"] == Just [rows [], rows [], rows [], rows [], Just (Bool False)]
+
+-- | The program as its three texts (prelude, rules, query): judged as
+-- the token stream the core lexes them to; `lex` answers the lexed
+-- program alone; a lexical fault refuses a judging request by its
+-- place and answers a lex request with the fault.
+textsRoad :: Bool
+textsRoad =
+  and
+    [ ask (withTexts q) == ask tokenForm
+    , ask (withTexts q) == Just [rows [[0, 2, 12], [0, 3, 40]], rows [[0, 0, 0, 3]], rows []]
+    , lexedOf (lexOnly q) ["tokens", "clauses", "prelude", "referenced", "heads"]
+        == Just [Just (Number 12), Just (Number 1), Just (Number 0), Just (toJSON [8 :: Int]), Just (toJSON [[Null, toJSON ["F", "N" :: String]]])]
+    , maybe False (all (`notElem` [Nothing, Just Null])) (lexedOf (lexOnly bad) ["fault"])
+    , refusedBy respond (withTexts bad) "texts: query 1:"
+    , refusedBy respond (setKey "lex" (Bool True) (request "" [] [])) "lex without texts"
+    ]
+ where
+  q = "?- lines(F, N), N > 10."
+  bad = "?- lines(F, \"src)."
+  withTexts s = setKey "texts" (toJSON [Just "", Nothing, Just (s :: String)]) (request "" facts4 [])
+  lexOnly s = setKey "lex" (Bool True) (withTexts s)
+  tokenForm = setKey "program" (toJSON tokens) (request "" facts4 [])
+  tokens = [[16, 0], [0, 8], [13, 0], [1, 0], [11, 0], [1, 1], [14, 0], [11, 0], [1, 1], [22, 0], [2, 10], [12, 0]] :: [[Integer]]
+  ask r = fieldsOf respond r ["answers", "goals", "errors"]
+  lexedOf r ks = do
+    o <- replyObjWith respond r
+    Object l <- field o "lexed"
+    pure (map (field l) ks)

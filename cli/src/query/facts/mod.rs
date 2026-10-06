@@ -12,7 +12,7 @@ pub mod text;
 pub mod units;
 
 use super::legend;
-use super::program::Program;
+use super::lexed::Lexed;
 use crate::dedup::index::Index;
 use crate::dedup::pairs::Blocks;
 use crate::graph::deadcode::{Advisory, GraphWire};
@@ -64,29 +64,34 @@ pub struct Facts {
 }
 
 /// The sink the assemblers fill: a table is a set, and only a table
-/// the program named is kept.
+/// the program named is kept. The schema's codes by name are the
+/// core's (the lexed program's predicate names, CE.Query.Schema).
 pub struct Sink {
+    codes: BTreeMap<String, u32>,
     wanted: BTreeSet<u32>,
     tables: BTreeMap<u32, BTreeSet<Vec<u64>>>,
 }
 
 impl Sink {
-    fn new(wanted: BTreeSet<u32>) -> Sink {
+    fn new(program: &Lexed) -> Sink {
+        let wanted = program.referenced.clone();
         Sink {
+            codes: program.schema(),
             tables: wanted.iter().map(|c| (*c, BTreeSet::new())).collect(),
             wanted,
         }
     }
 
-    fn code(name: &str) -> u32 {
-        legend::pred(name)
+    fn code(&self, name: &str) -> u32 {
+        *self
+            .codes
+            .get(name)
             .unwrap_or_else(|| panic!("schema predicate {name:?}"))
-            .code
     }
 
     /// Whether the program reads this predicate.
     pub fn wants(&self, name: &str) -> bool {
-        self.wanted.contains(&Sink::code(name))
+        self.wanted.contains(&self.code(name))
     }
 
     pub fn wants_any(&self, names: &[&str]) -> bool {
@@ -95,7 +100,8 @@ impl Sink {
 
     /// One row of a predicate's table; dropped when nothing reads it.
     pub fn row(&mut self, name: &str, row: Vec<u64>) {
-        if let Some(t) = self.tables.get_mut(&Sink::code(name)) {
+        let code = self.code(name);
+        if let Some(t) = self.tables.get_mut(&code) {
             t.insert(row);
         }
     }
@@ -120,11 +126,11 @@ pub struct Ctx<'a> {
 
 /// The index refreshed, the graph wire built, and every table the
 /// program names filled.
-pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Program) -> Result<Facts> {
+pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -> Result<Facts> {
     let (blocks, idx, db_path) = crate::dedup::snapshot(root, db)?;
     let wire = crate::graph::deadcode::wire_of(root, &idx, &db_path, Advisory::No)?;
     let nodes = graph::Nodes::build(&wire, &idx)?;
-    let mut sink = Sink::new(program.referenced());
+    let mut sink = Sink::new(program);
     let mut labels = Labels {
         nodes: nodes.labels.clone(),
         names: dictionary(program),
@@ -142,7 +148,7 @@ pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Program)
     graph::fill(&ctx, &mut sink, &mut labels)?;
     let units = units::fill(&ctx, &mut sink, &mut labels)?;
     pairs::fill(&ctx, &units, &mut sink)?;
-    text::fill(&ctx, program, &mut sink, &mut labels)?;
+    text::fill(&ctx, &program.sets, &mut sink, &mut labels)?;
     Ok(Facts {
         tables: sink.finish(),
         labels,
@@ -151,10 +157,10 @@ pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Program)
 
 /// The reverse dictionary a `sym` answer reads through: every enum
 /// word the assembler can spell, and every name the program spelled.
-fn dictionary(program: &Program) -> BTreeMap<u64, String> {
+fn dictionary(program: &Lexed) -> BTreeMap<u64, String> {
     let mut names: BTreeMap<u64, String> = legend::vocabulary()
         .map(|w| (legend::sym(w), w.to_string()))
         .collect();
-    names.extend(program.names.iter().map(|(h, n)| (*h, n.clone())));
+    names.extend(program.names().map(|(h, n)| (h, n.clone())));
     names
 }

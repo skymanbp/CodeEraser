@@ -14,19 +14,29 @@
 module CE.Query.Contract (QueryReq (..), facts, offence, overCap, tokens) where
 
 import CE.Query.Cost (factCap, idbFloor, kindAnon, kindInt, kindPred, kindSet, kindSym, kindVar, punctCeil, punctFloor, tokenCap)
+import CE.Query.Front (located)
+import CE.Query.Lex (Fault (..), Lexed (..), Tok (..), lexProgram)
 import CE.Query.Schema (arityOf)
 import CE.Wire (rowCheck, tableOffence)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Char (isDigit)
 import Data.Foldable (asum)
+import Data.Maybe (listToMaybe)
 import qualified Data.Map.Strict as M
 
 -- | The request: id, the token stream, the fact tables keyed by
 -- predicate code (decimal strings — JSON object keys), how many
 -- leading clauses are the prelude, whether queries carry proofs,
--- whether the schema rides back.
+-- whether the schema rides back. Since 9.0.0 (plan v2.33 W1, additive
+-- in the unreleased minor) the program may ride as its three texts —
+-- the prelude, the rules file, the query (`null` when absent) — and
+-- this side lexes them (CE.Query.Lex); `lex` asks for the lexed
+-- program alone (CE.Query.Front), `inspect` adds the raw tokens.
 data QueryReq = QueryReq
   { reqId :: Value
+  , lexedOf :: Maybe (Either Fault Lexed)
+  , lexOf :: Bool
+  , inspectOf :: Bool
   , programOf :: [[Integer]]
   , tablesOf :: [(String, [[Integer]])]
   , preludeOf :: Integer
@@ -35,31 +45,50 @@ data QueryReq = QueryReq
   }
 
 instance FromJSON QueryReq where
-  parseJSON = withObject "QueryReq" $ \o ->
+  parseJSON = withObject "QueryReq" $ \o -> do
+    lexed <- fmap (\(p, r, q) -> lexProgram p r q) <$> o .:? "texts"
+    let program = [[tKind t, tValue t] | Just (Right l) <- [lexed], t <- lTokens l]
+        prelude = [toInteger (lPrelude l) | Just (Right l) <- [lexed]]
     QueryReq
       <$> o .: "id"
-      <*> o .:? "program" .!= []
+      <*> pure lexed
+      <*> o .:? "lex" .!= False
+      <*> o .:? "inspect" .!= False
+      <*> maybe (o .:? "program" .!= []) (const (pure program)) lexed
       <*> fmap M.toList (o .:? "facts" .!= M.empty)
-      <*> o .:? "prelude" .!= 0
+      <*> maybe (o .:? "prelude" .!= 0) pure (listToMaybe prelude)
       <*> o .:? "why" .!= False
       <*> o .:? "schema" .!= False
 
 -- | Tokens and fact rows are priced separately: each is its own
--- request dimension with its own ceiling (CE.Query.Cost).
+-- request dimension with its own ceiling (CE.Query.Cost). A lex
+-- request is never priced: it carries no facts, and its answer is the
+-- token count the judging request is priced by.
 overCap :: QueryReq -> Bool
 overCap req =
-  toInteger (length (programOf req)) > tokenCap
-    || toInteger (sum [length rows | (_, rows) <- tablesOf req]) > factCap
+  not (lexOf req)
+    && ( toInteger (length (programOf req)) > tokenCap
+          || toInteger (sum [length rows | (_, rows) <- tablesOf req]) > factCap
+       )
 
 -- | The first offender in request order: the tokens, the prelude
 -- count, then each table (unknown code first, then its rows).
 offence :: QueryReq -> Maybe String
 offence req =
   asum
-    [ asum (zipWith tokenShape [0 :: Int ..] (programOf req))
+    [ textsShape req
+    , asum (zipWith tokenShape [0 :: Int ..] (programOf req))
     , if preludeOf req < 0 then Just "negative prelude" else Nothing
     , asum (map tableShape (tablesOf req))
     ]
+
+-- | A lex request needs its texts; a judging request's texts must lex
+-- (the measuring side asked for the lexed program first).
+textsShape :: QueryReq -> Maybe String
+textsShape req = case (lexOf req, lexedOf req) of
+  (True, Nothing) -> Just "lex without texts"
+  (False, Just (Left f)) -> Just ("texts: " <> located (fSrc f) (fLine f) (fCol f) <> ": " <> fWhat f)
+  _ -> Nothing
 
 tokenShape :: Int -> [Integer] -> Maybe String
 tokenShape = rowCheck "token" "malformed token (need [kind,value])" 2 tokenChecks
