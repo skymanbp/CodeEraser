@@ -87,7 +87,7 @@ pub fn refresh_bags(
     let bags = if foreign {
         Vec::new()
     } else {
-        file_bags(text, lang)
+        file_bags(text, lang).map_err(anyhow::Error::msg)?
     };
     let seats: HashMap<(String, i64), i64> = tx
         .prepare_cached("SELECT key, nth, id FROM unitsig WHERE file_id = ?1")?

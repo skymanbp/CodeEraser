@@ -6,7 +6,7 @@
 > 2026-08-12）：rem/add 条目携第三元素 = trim 后 alnum 宽度，喂
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
-> **以下按版本倒序（最新在前），至 3.0.0 止；2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **以下按版本倒序（最新在前），至 6.0.0 止；5.1.0–3.0.0 已于 2026-10-06 逐字节迁入 [VERSIONING-ARCHIVE-3.0-5.1.md](VERSIONING-ARCHIVE-3.0-5.1.md)（算法轨 W6 的 9.0.0 同版加性段落下后正册读 751 行），2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
 > **9.0.0**（`resolve/1` 改以文本过线，major，计划 v2.33 算法轨 W2-text 阶段 A，2026-10-04；设计册 `docs/reference/algorithm-track.md` §3 第一条、§6 W2a′ 行与 §11 第 43–49 条）：
 > 请求退役 `segs`、`vocab`、`affixes`、`dirs` 四个键，定义包的 `resolve {words, affixes}` 改为 `resolve {configs}`（测量侧要读的配置文件名：`go.mod`，阶段 B 起加 `DESCRIPTION`）——
 > 带旧键的请求不再被读懂，按 §2 升 major：8.x 的 ce 对 9.0.0 的核、9.0.0 的 ce 对 8.x 的核，都在握手处按 major 不符拒绝。新请求全是文本：`files` = 走查到的路径
@@ -82,6 +82,14 @@
 > `rankFiles` / `rankDirs` / `widths`、flow / sites 的 `rankFiles` 与 join 的 `rankPaths`。不带 `strings` 的请求逐字节答旧形（guard、query 照旧在测量侧绑定）。
 > 请求键 `inspect` `{refs, docs, lines}` 只给差分门用（应答加 `inspected` `{refs, docs, lines, rows}`），产品从不送。golden：`document/golden` 加第 121–123 对
 > （churn 带 `strings` 的英文与中文两对、路径表短一截的一对：`unresolved_reference`），其余 golden 不动。
+> **9.0.0 同版加性**（同角色顾问的词袋进核，W6 第 2 项，2026-10-06；设计册 §6 W6 行与 §11 第 89–93 条；9.0.0 未发布，同上不另升版号）：
+> 新能力 `bags/1`，请求 `bags.request`：`units` `[[键, kind 词, ret, [被调用名原文…], [字面量种类…], [[结构 kind, 次数]…], [注释行…]]]`（ret = `null` 不是可调用单元、
+> `0` / `1` 是否声明返回；结构 kind 严格升序、0 ≤ kind < 2^64、1 ≤ 次数 < 2^32，违者按单元下标点名拒绝）、`texts`（自由文本查询的原文）与 `inspect`（码点，
+> 只给差分门用，产品从不送）。应答 `bags` / `texts` 每个单元 / 每段文本一张 `[[词项, 通道, tf]]`（词项升序，通道 0–5 = N P C D S L）、`chars`（每个码点的
+> alnum / numeric / lower / upper 与完整小写映射）、`counts` `{units, texts, terms}`；标识符切分、停用词、Porter 词干、带通道标签的 fnv1a、形状拼写与
+> 「先到的通道留下、tf 相加」的装袋次序全在核（`CE.Similar.{Bags,Terms,Stem,Chars,Lower}`），超过容量（单元、文本、码点与每个单元的每个列表元素合计 1,048,576）
+> 降级 `bags_too_large`。测量侧在索引刷新时每个文件问一次、自由文本查询问一次；词不入库，库里仍只有哈希。golden：新文件 `bags/golden` 四对（满单元带文本、
+> 匿名 / impl / 重复被调用名、`inspect` 与非 ASCII 文本、`ret` 越界按名拒绝）；hello 的 `capabilities` 加 `bags/1`（`tablesDigest` 不动），其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -484,98 +492,6 @@
 > 金样 203 行改动中 199 行由 proto 串与改名解释，另 4 行 = 2 条内嵌 server 版本串 + pair 16/17 逐字段核实
 > 只差改名与版本（改名改变了 aeson 的键序，故字符串级对拍不成立，需逐字段比）。
 > 请求行随 major 机器重写为 6.0.0；核电池请求侧 proto 同步 22 处。
-> **5.1.0**（规则包围栏 + per-class 棘轮容差 minor，K 轮步 4，2026-08-25，用户拍板 v2.14 ②）：
-> ①`verdict.request` 加性标量 `classDigest`——对 `[[rules.class]]` 规范化声明（名、**声明序**的 globs、旋钮）
-> 的指纹。名与 glob 仍永不过线（§5.9.2）：它们的哈希不是它们。编码为**长度前缀**（netstring 式 `tag:len:bytes`）
-> 而非分隔符——首版靠 fnv1a 的 NUL 分隔，自带的腿当场抓到碰撞：名 `a` 带 glob `b` 与名 `a\0glob\0b` 无 glob
-> 字节流全等（分隔符只能分隔不含它的东西，长度可以）。②`ce-baseline.json` 记录其天花板**在哪套规则包下立的**，
-> 核加持名 fail 条件 `class_digest`，判据是**朴素的 Maybe 不等**且是全的：两边皆无=同意；改了规则包=不同意；
-> 对着围栏之前的旧基线声明规则包=不同意；把基线记过的规则包删掉=也不同意。四种分歧要的是同一个答案：
-> 具名说出来，让人去具名重立一条地板。只有 establish 写 digest（`CE_ACCEPT_BASELINE=1` 走空基线路），
-> 故「同意一套新规则包」与「同意一条新地板」是同一个动作。③`classKnobs` 码域 0..2 → **0..3**，码 3 =
-> 该类自己的棘轮容差（行数**绝对值**，非比例——想要它的是 vendored 与夹具树，它们要的是零或固定额度，
-> 而大文件的百分比正是本旋钮要拿掉的白拿增长）。声明即**取代两条全局腿**，故 0 意味着一行都不许长、
-> 全局 max(+2%,+10) 救不了它（因为根本没被查询）。它是唯一「零有意义」的类旋钮，故表的取值下界**按码判**
-> 而非一刀切（码 0/1/2 是线，线为零是荒谬）。反事实：K11 = 无类声明仓 digest 缺席（**不是 null**）且 101 对
-> 金样中 199 改动行里 197 行只动 proto 字段、另 2 行是不匹配文案内嵌 server 版本串〔核电池另有一腿断言
-> newBaseline 无该键〕、K12 = 改规则包即 `failed=["class_digest"]` 而 `over` 为空——不是悄悄放松而是具名停下
-> 〔fixtures/verdict pair 16〕、K13 = establish 记下 digest 且棘轮行仍三列、K14 = 类容差 0 时长一行即 over
-> 且 allowed=天花板本身〔pair 17；全局 +10 腿够不着〕；另有 Rust 侧三腿钉指纹本身（声明序/名/glob/旋钮各一，
-> 「零旋钮」≠「无旋钮」，以及长度前缀的单射性）。请求行随 minor 机器重写为 5.1.0；核电池请求侧 proto 同步 22 处。
-> **5.0.0**（graph 节点行 legacy flags 列裁除 **major**，K 轮步 3d，2026-08-25）：节点行降为
-> `[lang, kind, roles]` **单一元**——pre-2.28 的 flags 列离场。它自 2.28.0 roles 列成为权威后又被
-> 生产、上线、丢弃了七个 minor；4.0.0 想同批砍掉却被实测拦下（flags 位 0 是公私判决轴，可见性无生产者时删列会让
-> `unref_public`/`unreach_public` 连夹具都无法表达），4.1.0 的 `symbols` 表补上那个生产者，此条遂解锁。
-> **档位**：§2 写死「schema 不兼容变更（删字段/改字段形状）必须 bump major」，删列正是改行形状，故 major——
-> 计划原写 minor，2026-08-25 按本仓自己的规则修正（v2.14 就地记账）。代价为零：4.x 全程未发布（v1.1.0 出货 3.2.0）。
-> **三列同元不同义**是有意为之：新三列 = lang/粒度/角色事实，旧三列 = lang/粒度/flags；major 在信封处拒绝一切
-> 跨版本对话，那道拒绝正是使元数复用安全的机制，故 K1 由「按行元拒」改为「按 major 拒」。表级
-> `node rows: mixed arity` 拒绝随之退役——只剩一种合法元数时，宽窄不对的行就是 malformed，且按**行下标**点名。
-> Rust 侧 `flags::legacy_flags` 与 `LEGACY` 折叠表一并删除，随之退役的还有 `legacy_fold_is_the_pre_228_bits`
-> 一条测试与 allow-claim 测试里的一行断言（电池名集差实测：Rust −1/+0，核 −1/+1 同一探针改口径）。
-> 反事实：**语义保持**——夹具 pair 7 把同一批事实改走各自的通道（节点 0 的入口身份走 roles 0→flag 位 1，
-> 节点 3/5 的导出面走 `symbols`），回复与 4.1.0 **逐字段相同**（dead 表码 1/2/3/4 齐全、pos、cycles、counts 皆同），
-> 证明这是裁除而非语义迁移；99 对金样中 199 行改动、193 行只动 proto 字段，另 6 行 = 三条我方重塑的请求
-> （pair 7/11/12）+ pair 13 的新 malformed 文案 + 两条内嵌 server 版本串的错误文案。
-> 请求行随 major 机器重写为 5.0.0；核电池请求侧 proto 同步 16 处。
-> **4.1.0**（导出面 minor，K 轮步 3c，2026-08-25，用户三度交本代理裁断 v2.14 K7）：`graph.request` 加性一键——
-> `symbols=[[node,visibility]]`，node < 节点数、visibility ≥ 0、**严格升序**（该表是去重的 (节点, 可见性) 集合，
-> 重复行=生产者丢了集合语义，按名拒 `symbol i: not strictly ascending`）。core 按 `Cost.exportVisBit`
-> 读出导出节点、按 `Cost.publicFlagBit` 或上 flags 位 0——那正是 `Dead.deadTable` 一直在分的公私判决轴，
-> 而它**从来没有过生产者**（`cli/src/graph/deadcode/flags.rs:9`：文件粒度永不置位，公开性是符号事实）。
-> 判决码 2/4（`unref_public`/`unreach_public`）自此首次可达。该位**故意在 entryMask 之外**：导出面是判决轴、
-> 不是入口主张（RG10），故它只改死节点报哪个码，永不改哪些节点死。缺席**与空表同路**（`symRows` 只喂 [] ），
-> 字节与 4.0.0 客户端所得相同。表另计 `symCap`。**L 轮片 (2)（2026-08-27）起本表的 visibility 是存储字的 bit 0 投影**：
-> `symbols.flags` 另存 bit 1（作用域导出）与 bit 2（`pub(crate)` 族受限）供后续 `unmentioned` 表用，`symwire.rs`
-> 的 `SELECT DISTINCT … flags & 1` 在查询处掩码，本表字节与 `symCap` 定容皆不动（K34）。**同批未做**：原计划并列的 `symEdges` 不上线——K10 审计量的是
-> 精度（683/683），而「无引用」吃的是召回，实测自仓 import 绑定只覆盖 1064 条 Rust 导出声明中的 170 条
-> （补模块跳转到 248 条，~23%），漏掉的是全路径调用与方法调用（皆非 import 点位）。详见 DEVELOPMENT_PLAN v2.14 K7。
-> **L 轮终裁（2026-08-27，用户拍板 ①）：删**——`symedges.rs`/`bindings.rs` 与 index 的 `bindings` 表随 schema v14 退役
-> （提及否决器批片 (1)，DEVELOPMENT_PLAN v2.17 条；包含论证：有符号边必有某 import 行出现过该 token，否决器完全包含它），
-> wire 面零变动（`symEdges` 从未上线）。
-> 反事实：K5 = 无符号表/空符号表与 4.0.0 逐字节相同（99 对机器重生成后逐行对拍：195 改动行中 193 行只动 proto 字段、
-> 2 行是不匹配文案内嵌的 server 版本串；核电池另有一腿直接比 `respond` 两次的字节）、K6 = 请求体无任何字符串叶子
-> （`cli/tests/it/graph_export_surface.rs`，结构性断言而非按本夹具的路径列举）、K9 = 导出节点判 2 而其邻居仍判 1，
-> 且死集合不动（`fixtures/graph` pair 16 + 核电池 `exportRides`）；两个旋钮各有反事实腿（读错可见性位=无面、
-> 置 entryMask 内的位=该节点变入口而离开判决集）。请求行随 minor 机器重写为 4.1.0；核电池请求侧 proto 同步 19 处（Haskell 字面量 11 + Spec.hs 内嵌请求 8；`9.0.0` 的外来 major 探针不动）。
-> **4.0.0**（erase class 0 退役 **major**，K 轮步 2，2026-08-24，用户拍板 v2.14）：`erase.request` 的 class 0
-> （dead_file 本地计数路）自 2.32.0 被 class 3 取代、Rust 同 minor 起不再铸行，宽限窗至此关闭——**离开判决集**，
-> 其冻结位保留并**按名拒绝**（`row i: retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)`），而非折进
-> 「unknown class」：仍在发它的客户端由此得知接替它的是哪条路。位不重编——重编会为省一个数组槽而移动另外三个冻结码，
-> `CLASS_NAMES` 改留 `(retired)` 占位（二义的两个 dead_file 同死）。纯裁除故走 major。**同批未做**：graph 节点行的
-> pre-2.28 legacy flags 列本拟同批退役，实测拦下——flags 位 0（exported）是公私判决轴，符号表给可见性第一个真生产者
-> 之前删列会让 `unref_public`/`unreach_public` 连夹具都无法表达（对拍实证：旧 golden 含码 2/4，删列重生成后归零），
-> 故顺延至符号表落地后的 minor。反事实：K2 = class 0 行按名被拒（fixtures/erase pair 8）、K4 = 未受影响九族回复
-> 除 proto 串外逐字节相同（98 对机器重生成后逐行对拍，仅 erase 两行按等价迁至 class 3、wire-errors 两条错误文案
-> 内嵌 server 版本串）。请求行随 major 机器重写为 4.0.0（3.0.0 先例，§3）；核电池请求侧 proto 同步 19 处。
-> **3.2.0**（规则包 scan 旁表 minor，I 轮 P3，2026-08-24，用户拍板 v2.13 ①）：`scan.request` 加性两键——
-> `rowClasses=[classId…]` 与 rows **位置对齐**（长度必等、每项 < 64；缺席 = 全行走全局表）与
-> `gradeOverrides=[[classId,code,warn,fail]]`（classId ≥ 1、code 0..6、阶梯同 grades 文法〔fail 0 = 无硬线、
-> fail ≥ warn〕、(classId,code) 严格升序；仅非空时发）；core 按 (class,code) 查表回落全局有效表，
-> `grades` 回显仍为全局表，`gradeOverrides` 到场且非 degraded 时原样回显（客户端断言往返）；两表计入
-> scanRowCap；chunk 切分时类列随行同切。ce.toml 侧 `[[rules.class]].knobs` 增 `fn_lines_warn` /
-> `fn_lines_fail`（P3 两键）；Rust 镜像 evaluate 按文件类取有效阈值，每判对拍恒等式覆盖到类。
-> 无声明仓库 wire 字节不变。
-> **3.1.0**（规则包 DSL v1 minor，I 轮 P1+P2，2026-08-24，用户拍板 v2.13 ①）：①`verdict.request` 的
-> `continuous` 行可携第 4 列 **classId**——`[u_fp, metricCode, value, classId]`，路径类的 1 基声明
-> 序号，0 = 默认类；全表单 arity，混排拒 `continuous rows: mixed arity`；classId < 64（栅栏 classCap）；
-> 身份前缀宽 2 不变，棘轮只读三列前缀；②加性新表 `classKnobs=[[classId,code,value]]`——码域 =
-> ceilings 恒发子集 {0,1,2}（sizeCeil / cocCeil / sizeHard 的类影子，**不新造码**），classId ≥ 1
-> （类 0 即全局表，已有 ceilings 通道）、value ≥ 1、(classId,code) 严格升序；core 建 Map 求值、
-> 缺键回落全局线，chargeAt 律与机会数不动；③回复在表到场时**原样回显** `classKnobs`（客户端断言
-> 往返；无表 = 无键，旧回复字节不变）；④`newBaseline` **永三列**（类是本 run 收费参数，非棘轮
-> 事实）；⑤ce.toml 侧 `[[rules.class]]`：name/globs 仅本地（§5.9.2），globset 与 exclude 同方言，
-> 声明序首中，classCap 64，逐类 ladder_fault 于 load 咽喉；无声明仓库的 wire 字节不变（C1）。
-> **声明一个类 = 分数迁移**（§2 发版声明义务同款）：类线一经声明，该类文件的轴 0（sizeMass 的 S/H）
-> 与轴 1（cocOver 上限）换线收费，分数与声明前**不可比**；未声明 `[[rules.class]]` 的仓库判决与
-> wire 字节均不变，分数序列照旧可比。
-> 反事实证表 C1–C9 = core/test/ClassProps.hs + cli 侧 config_contract / scan::classes 电池。
-> **3.0.0**（churn 行裁列 **major**，I 轮 D3，2026-08-24，用户拍板「现在就删」）：`verdict.request` 的 `churn` 表由五列 `[u,rewrite,append,added,survived]` **收窄为三列**
-> `[u,rewrite,append]`——第 4 列恒等于 rewrite+append、第 5 列恒为 0（per-entity 存活从未测量），
-> core 自 M5-3i 起两列全弃读（`Score.churnHeavy` / `Verdict.churnMap` 只解 rw/ap）；删列 = 请求形状
-> 破坏性变更，按 §2 升 major：两侧实现 + 三个 core 测试 harness 的 proto 字面量 + **全十族 golden**
-> 同批重生（请求行 proto 一律改写为 3.0.0；回复行经核机器再生，与旧回复除 proto/server 字串外
-> 逐字节相同——判决面零变化的亲证）；「留+记愿望单」落选（用户裁）。同批 daemon 协议独立升
 > **2.0.0**（`hello_ok` 砍无读者的 `version` 字段）——daemon 协议自有台账，见
 > [DAEMON.md](DAEMON.md) §1（其后每一次 daemon bump 只记在那里）。
 
@@ -612,12 +528,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
   "similar/1","query/1","flow/1","merge/1","arch/1","tables/1","document/1","resolve/1",
-  "candidates/1","rank/1","docpairs/1","moves/1"]`；fourclass/2 =
+  "candidates/1","rank/1","docpairs/1","moves/1","bags/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明；bags/1 = 同角色顾问的词袋〔similar 索引的前段〕，9.0.0 同版加性声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
@@ -730,7 +646,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->350<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->354<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

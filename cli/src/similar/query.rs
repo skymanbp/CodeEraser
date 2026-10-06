@@ -9,7 +9,6 @@ use super::bag::UnitBag;
 use super::corpus::query_of;
 use super::rank::QueryTerm;
 use super::reader::{Reader, Seat};
-use super::terms::{self, Channel};
 use anyhow::{Result, bail, ensure};
 
 /// The three asks every face accepts.
@@ -88,7 +87,7 @@ pub fn resolve(reader: &Reader<'_>, ask: &Ask) -> Result<Resolved> {
         Ask::Text(text) => Ok(Resolved {
             seat: None,
             label: format!("text: {}", text.trim()),
-            terms: text_terms(text),
+            terms: text_terms(text).map_err(anyhow::Error::msg)?,
         }),
     }
 }
@@ -120,24 +119,18 @@ fn seated(reader: &Reader<'_>, seat: usize) -> Result<Resolved> {
     })
 }
 
-/// Free text as a query: its words (the term road's prose split, stop
-/// list and stemmer — one road for index and query) as NAME and DOC
+/// Free text as a query: its words (the core's prose split, stop list
+/// and stemmer — one road for index and query, bags/1) as NAME and DOC
 /// evidence at those channels' weights. No shape, callee, structure or
 /// literal term: a text carries nothing the conjunction's shape arm
 /// reads and no callee for its first arm, so the role bits the core
 /// answers for a text query are false by construction — reported as
 /// the core's answer, never decided here.
-pub fn text_terms(text: &str) -> Vec<QueryTerm> {
+pub fn text_terms(text: &str) -> Result<Vec<QueryTerm>, String> {
+    let (_, texts) = super::bags::ask(Vec::new(), &[text])?;
     let mut bag = UnitBag::empty(String::new(), 0);
-    for w in terms::prose_words(text) {
-        for ch in [Channel::Name, Channel::Doc] {
-            bag.terms
-                .entry(terms::word_term(ch, &w))
-                .or_insert((ch, 0))
-                .1 += 1;
-        }
-    }
-    query_of(&bag)
+    bag.terms = texts.into_iter().next().unwrap_or_default();
+    Ok(query_of(&bag))
 }
 
 #[cfg(test)]

@@ -230,7 +230,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:118-125](../../../core/app/CE/Graph.hs#L118)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:423-425](../../../contracts/VERSIONING.md#L423)).
+the same with or without them ([VERSIONING.md:431-433](../../../contracts/VERSIONING.md#L431)).
 
 ### 6. Rendering — one home, three faces
 
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1676 (1894 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 6362 (1505) | 948 (16) | 14.9 % | 174 / 948 = 18.4 % | 174 / 5414 |
-| | | rust | 3509 (1921) | 344 (4) | 9.8 % | 0 / 344 = 0.0 % | 0 / 3138 |
+| self @ this commit | 1695 (1913 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 6504 (1533) | 974 (16) | 15.0 % | 179 / 974 = 18.4 % | 179 / 5530 |
+| | | rust | 3489 (1921) | 335 (3) | 9.6 % | 0 / 335 = 0.0 % | 0 / 3126 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -322,7 +322,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->16<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1505<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->1.1<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->16<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1533<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->1.0<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
@@ -378,8 +378,8 @@ consumers that never ask must not pay. A/B medians, n = 9 interleaved on two ide
 HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet window:
 `ce audit --hook` 1.186 s → 0.954 s, `ce erase` (plan) 1.526 s → 1.493 s, `ce check`
 1.786 s → 1.802 s (spread 1.729–1.928) — no consumer slower
-([PERF-BUDGET.md:194-203](../../PERF-BUDGET.md#L194)). The pass itself: cold ≈ 1.95 s, warm ≈
-0.54 s on the self corpus ([PERF-BUDGET.md:59](../../PERF-BUDGET.md#L59)).
+([PERF-BUDGET.md:195-204](../../PERF-BUDGET.md#L195)). The pass itself: cold ≈ 1.95 s, warm ≈
+0.54 s on the self corpus ([PERF-BUDGET.md:60](../../PERF-BUDGET.md#L60)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
 scratch repository ([mention_universe.rs:221-257](../../../cli/tests/it/mention_universe.rs#L221)); the self

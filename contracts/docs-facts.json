@@ -57,7 +57,7 @@
     },
     {
       "id": "count:families#word",
-      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1)",
+      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1 and the W6 stage bags/1)",
       "tier": "linked",
       "value": "16"
     },
@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "350"
+      "value": "354"
     },
     {
       "id": "count:grammars#word",

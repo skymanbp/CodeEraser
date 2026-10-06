@@ -13,6 +13,7 @@ import qualified CE.Arch as Arch
 import qualified CE.Audit as Audit
 import qualified CE.Candidates as Candidates
 import qualified CE.Similar.Rank as Rank
+import qualified CE.Similar.Bags as Bags
 import qualified CE.Clone as Clone
 import qualified CE.Docdup as Docdup
 import qualified CE.Docdup.Pairs as DocPairs
@@ -125,6 +126,7 @@ families =
   , Fam "rank/1" "rank.request" Rank.respond
   , Fam "docpairs/1" "docpairs.request" DocPairs.respond
   , Fam "moves/1" "moves.request" Moves.respond
+  , Fam "bags/1" "bags.request" Bags.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

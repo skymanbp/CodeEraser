@@ -2,7 +2,8 @@
 //! ADR-008 sixth instalment; the definition of record is methodology
 //! booklet 15, drafted as `.ccm/similar-spec-2026-09-05.md`). Every
 //! code unit of the unitsig universe gets a sparse six-channel bag of
-//! channel-tagged fnv1a64 terms (terms.rs / bag.rs); the core ranks
+//! channel-tagged fnv1a64 terms the core spells (bags/1, bags.rs) off
+//! the facts bag.rs reads from the tree; the core ranks
 //! candidates by integer BM25 over the postings and widens a query by
 //! its words' in-repo PPMI neighbours (CE.Similar.Rank over rank/1,
 //! rank.rs; the pair counts it reads are ppmi.rs).
@@ -18,6 +19,7 @@
 //! what the core answered.
 
 pub mod bag;
+pub mod bags;
 pub mod corpus;
 pub mod docs;
 pub mod document;
@@ -26,7 +28,6 @@ pub mod ppmi;
 pub mod query;
 pub mod rank;
 pub mod reader;
-pub mod stem;
 pub mod store;
 pub mod terms;
 pub mod wire;
@@ -46,3 +47,7 @@ pub const K: usize = 5;
 
 pub use bag::{UnitBag, file_bags};
 pub use terms::Channel;
+
+#[cfg(test)]
+#[path = "../../tests/unit/similar/frozen.rs"]
+pub(crate) mod frozen;

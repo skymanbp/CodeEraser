@@ -8762,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 423,
-    "end": 425,
+    "line": 431,
+    "end": 433,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -8891,13 +8891,13 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a2c3821eca59417f|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 194,
-    "end": 203,
+    "line": 195,
+    "end": 204,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a6700d086855d460|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 59,
+    "line": 60,
     "text": "| 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|43e5c1812a48317d|0": {
@@ -9459,7 +9459,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
-    "line": 115,
+    "line": 116,
     "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Text/Guard.hs|3c58ce5d4cc1e956|0": {
@@ -9595,8 +9595,14 @@
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {
     "target": "../../../cli/src/similar/bag.rs",
     "line": 1,
-    "end": 9,
+    "end": 10,
     "text": "//! The six-channel bag of one code unit (spec §三), read off facts"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bags.rs|b79316058b093403|0": {
+    "target": "../../../cli/src/similar/bags.rs",
+    "line": 1,
+    "end": 11,
+    "text": "//! The bags/1 leg (plan v2.33 W6; booklet 15 §1): the term road is the"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/docs.rs|0e49265103123e00|0": {
     "target": "../../../cli/src/similar/docs.rs",
@@ -9635,8 +9641,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|857e513176fffcce|0": {
     "target": "../../../cli/src/similar/mod.rs",
-    "line": 35,
-    "end": 45,
+    "line": 36,
+    "end": 46,
     "text": "/// words, channel tags, the shape / literal / structure feature"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|bb7143cbe2e9734e|0": {
@@ -9653,14 +9659,14 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/query.rs|7bf48deae2d11f3c|0": {
     "target": "../../../cli/src/similar/query.rs",
-    "line": 17,
-    "end": 54,
+    "line": 16,
+    "end": 53,
     "text": "pub enum Ask {\nAt { path: String, line: usize },"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/query.rs|b1df876024bab412|0": {
     "target": "../../../cli/src/similar/query.rs",
-    "line": 62,
-    "end": 95,
+    "line": 61,
+    "end": 94,
     "text": "pub fn resolve(reader: &Reader<'_>, ask: &Ask) -> Result<Resolved> {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/rank.rs|0ad5dec1e9ac1712|0": {
@@ -9699,11 +9705,6 @@
     "end": 12,
     "text": "//! Reading the persisted bags back (spec §三): the seats of the own"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/stem.rs|9f92f8b0bf7a02a3|0": {
-    "target": "../../../cli/src/similar/stem.rs",
-    "line": 12,
-    "text": "pub fn stem(word: &str) -> String {"
-  },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|17c83e1e451ac0e5|0": {
     "target": "../../../cli/src/similar/store.rs",
     "line": 79,
@@ -9738,41 +9739,11 @@
     "end": 12,
     "text": "//! Pairs themselves are NOT stored: a pair table for this repository"
   },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|6d3a90afaf4bc950|0": {
-    "target": "../../../cli/src/similar/terms.rs",
-    "line": 56,
-    "end": 59,
-    "text": "/// Prose stop words dropped from the doc channel — a fixed small"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|6d3a90afaf4bc950|1": {
-    "target": "../../../cli/src/similar/terms.rs",
-    "line": 56,
-    "end": 59,
-    "text": "/// Prose stop words dropped from the doc channel — a fixed small"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|79ce147193b8cb08|0": {
-    "target": "../../../cli/src/similar/terms.rs",
-    "line": 1,
-    "end": 5,
-    "text": "//! Term production — the ONE tokenization road index and query share"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|c48d2c19ec350d05|0": {
-    "target": "../../../cli/src/similar/terms.rs",
-    "line": 119,
-    "end": 128,
-    "text": "/// The term of one WORD under a channel: stemmed, then hashed with"
-  },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|ca9efca2174a8154|0": {
     "target": "../../../cli/src/similar/terms.rs",
-    "line": 10,
-    "end": 23,
+    "line": 7,
+    "end": 11,
     "text": "/// The six evidence channels (spec §三). The one-letter label is"
-  },
-  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/terms.rs|f789a478015e9416|0": {
-    "target": "../../../cli/src/similar/terms.rs",
-    "line": 109,
-    "end": 116,
-    "text": "/// Words of one prose line: identifier-split pieces with the stop"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/wire.rs|104b04a4a5c6065e|0": {
     "target": "../../../cli/src/similar/wire.rs",
@@ -9889,6 +9860,12 @@
     "line": 103,
     "end": 120,
     "text": "-- | The similar.result object: the candidate indices in judged order,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Bags.hs|d180c3eb1f1683eb|0": {
+    "target": "../../../core/app/CE/Similar/Bags.hs",
+    "line": 5,
+    "end": 25,
+    "text": "-- | bags.request handler (plan v2.33 W6; booklet 15 §1): the six-channel"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Cost.hs|083b5f1dc2fe9e50|0": {
     "target": "../../../core/app/CE/Similar/Cost.hs",
@@ -10007,6 +9984,41 @@
     "end": 74,
     "text": "-- | The top k by score descending then seat ascending, the excluded"
   },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Stem.hs|c06d976918cbaada|0": {
+    "target": "../../../core/app/CE/Similar/Stem.hs",
+    "line": 21,
+    "text": "stem :: String -> String"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Terms.hs|0226495844904385|0": {
+    "target": "../../../core/app/CE/Similar/Terms.hs",
+    "line": 89,
+    "end": 97,
+    "text": "-- | The term of one WORD under a channel: stemmed, then hashed with the"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Terms.hs|18ef4490e3af3f7e|0": {
+    "target": "../../../core/app/CE/Similar/Terms.hs",
+    "line": 84,
+    "end": 87,
+    "text": "-- | Words of one prose line: identifier-split pieces with the stop words"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Terms.hs|47d7cf93bc75681a|0": {
+    "target": "../../../core/app/CE/Similar/Terms.hs",
+    "line": 55,
+    "end": 60,
+    "text": "-- | Identifier pieces at camel / underscore / digit boundaries, lowercased"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Terms.hs|9fdacf65f8983ee0|0": {
+    "target": "../../../core/app/CE/Similar/Terms.hs",
+    "line": 46,
+    "end": 53,
+    "text": "-- | Prose stop words dropped from the doc channel — a fixed small table,"
+  },
+  "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Terms.hs|a67ca2068ba3d2ec|0": {
+    "target": "../../../core/app/CE/Similar/Terms.hs",
+    "line": 1,
+    "end": 6,
+    "text": "-- | Term production of the same-role advisor (plan v2.33 W6; moved from"
+  },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../EVAL-SET-SIMILAR.md|0d4f123892f57f55|0": {
     "target": "../../EVAL-SET-SIMILAR.md",
     "line": 100,
@@ -10045,8 +10057,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 253,
-    "end": 272,
+    "line": 254,
+    "end": 273,
     "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
@@ -10756,7 +10768,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 113,
+    "line": 114,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11023,7 +11035,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 114,
+    "line": 115,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

@@ -5,10 +5,12 @@
 //! kind histogram (S) and the KINDS — never the values — of its
 //! literals (L). One parse per file; units and nth come from the
 //! throats the unitsig cache uses (fourclass::units), so the bag
-//! universe IS the T3 universe, and Markdown has no bags.
+//! universe IS the T3 universe, and Markdown has no bags. This side
+//! reads the tree and sends each unit's facts as one row; the words,
+//! stems, hashes and the bag itself are the core's (bags.rs, bags/1).
 
 use super::docs::{DocSeg, doc_owner, doc_segments};
-use super::terms::{self, Channel};
+use super::terms::Channel;
 use crate::dedup::struct_fp;
 use crate::fourclass::units::{self, Unit};
 use crate::scan::ast;
@@ -16,6 +18,7 @@ use crate::scan::lang::Lang;
 use crate::scan::metrics::own_nodes;
 use crate::scan::spec::{self, LangSpec};
 use crate::scan::{callees, functions};
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use tree_sitter::Node;
 
@@ -61,15 +64,28 @@ impl UnitBag {
             .map(|(t, _)| *t)
             .collect()
     }
-
-    fn add(&mut self, ch: Channel, term: u64, n: u32) {
-        self.terms.entry(term).or_insert((ch, 0)).1 += n;
-    }
 }
 
 /// Every unit's bag for one file, in nth-throat order. A parse
-/// failure or a grammarless language yields none.
-pub fn file_bags(text: &str, lang: Lang) -> Vec<UnitBag> {
+/// failure or a grammarless language yields none; a core that cannot
+/// answer is the named refusal.
+pub fn file_bags(text: &str, lang: Lang) -> Result<Vec<UnitBag>, String> {
+    bagged(file_rows(text, lang))
+}
+
+/// The core's terms seated on the units the rows were read from.
+pub fn bagged(rows: Vec<(UnitBag, Value)>) -> Result<Vec<UnitBag>, String> {
+    let (mut bags, rows): (Vec<UnitBag>, Vec<Value>) = rows.into_iter().unzip();
+    let (terms, _) = super::bags::ask(rows, &[])?;
+    for (bag, terms) in bags.iter_mut().zip(terms) {
+        bag.terms = terms;
+    }
+    Ok(bags)
+}
+
+/// Every unit of one file with its bags/1 row, the bag's terms still
+/// empty — what the core is asked about.
+pub fn file_rows(text: &str, lang: Lang) -> Vec<(UnitBag, Value)> {
     let Some(tree) = ast::parse_lang(text, lang) else {
         return Vec::new();
     };
@@ -118,84 +134,37 @@ struct FileFacts<'f> {
     docs: Vec<DocSeg>,
 }
 
-fn build(u: &Unit, nth: i64, seat: usize, node: Node<'_>, f: &FileFacts<'_>) -> UnitBag {
-    let mut bag = UnitBag {
-        key: u.key.clone(),
-        nth,
-        start_line: u.start_line,
-        end_line: u.end_line,
-        terms: BTreeMap::new(),
-    };
-    for w in name_words(&u.key) {
-        bag.add(Channel::Name, terms::word_term(Channel::Name, &w), 1);
-    }
-    for s in shape(u, node, f.src, f.sp) {
-        bag.add(
-            Channel::Shape,
-            terms::feature_term(Channel::Shape, s.as_bytes()),
-            1,
-        );
-    }
+/// One unit's row: `[key, kind, ret, callees, literals, structure,
+/// doc lines]` — the key (N, and the arity P reads), the kind word and,
+/// for a callable, whether it declares a return (P), the callee
+/// spellings of its own body (C), its literal kinds (L), its structure
+/// histogram `[kind, n]` (S) and the lines of the docs it owns (D).
+fn build(u: &Unit, nth: i64, seat: usize, node: Node<'_>, f: &FileFacts<'_>) -> (UnitBag, Value) {
     let own = own_nodes(node, f.src, f.sp);
-    for w in callees(&own, f.src, f.sp) {
-        bag.add(Channel::Callee, terms::word_term(Channel::Callee, &w), 1);
-    }
-    for kind in own.iter().filter_map(|n| literal_kind(*n)) {
-        bag.add(
-            Channel::Literal,
-            terms::feature_term(Channel::Literal, kind.as_bytes()),
-            1,
-        );
-    }
+    let literals: Vec<&str> = own.iter().filter_map(|n| literal_kind(*n)).collect();
     let seq = struct_fp::unit_seq(&f.spine, u.start_line, u.end_line);
-    for (kind, n) in struct_fp::histogram(&seq) {
-        let term = terms::feature_term(Channel::Structure, &kind.to_le_bytes());
-        bag.add(Channel::Structure, term, n);
-    }
-    let owned = f
+    let structure: Vec<[u64; 2]> = struct_fp::histogram(&seq)
+        .into_iter()
+        .map(|(kind, n)| [kind, u64::from(n)])
+        .collect();
+    let docs: Vec<&String> = f
         .docs
         .iter()
         .zip(&f.owner)
-        .filter(|(_, o)| **o == Some(seat));
-    for w in owned.flat_map(|(d, _)| &d.words) {
-        bag.add(Channel::Doc, terms::word_term(Channel::Doc, w), 1);
-    }
-    bag
-}
-
-/// The arity suffix of a function key (`name/3` → Some("3")).
-fn arity(key: &str) -> Option<&str> {
-    key.rsplit_once('/')
-        .filter(|(_, n)| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()))
-        .map(|(_, n)| n)
-}
-
-/// The words of a unit key: the arity dropped, an `impl T for U` its
-/// two keywords, an anonymous unit its placeholder (a closure has no
-/// name evidence at all); split_ident does the rest.
-fn name_words(key: &str) -> Vec<String> {
-    let base = arity(key).map_or(key, |n| &key[..key.len() - n.len() - 1]);
-    if base == "(anonymous)" {
-        return Vec::new();
-    }
-    let mut words = terms::split_ident(base);
-    if base.starts_with("impl ") {
-        words.retain(|w| w != "impl" && w != "for");
-    }
-    words
-}
-
-/// Shape features: the unit's kind word, its arity, and for a
-/// callable whether it declares a return.
-fn shape(u: &Unit, node: Node<'_>, src: &[u8], sp: &LangSpec) -> Vec<String> {
-    let mut out = vec![format!("k:{}", kind_word(u, node, src, sp))];
-    if let Some(n) = arity(&u.key) {
-        out.push(format!("p:{n}"));
-    }
-    if functions::is_unit_node(node, src, sp) {
-        out.push(format!("ret:{}", u8::from(declares_return(node, src))));
-    }
-    out
+        .filter(|(_, o)| **o == Some(seat))
+        .flat_map(|(d, _)| &d.lines)
+        .collect();
+    let ret =
+        functions::is_unit_node(node, f.src, f.sp).then(|| u8::from(declares_return(node, f.src)));
+    let kind = kind_word(u, node, f.src, f.sp);
+    let callees = callees(&own, f.src, f.sp);
+    let row = json!([u.key, kind, ret, callees, literals, structure, docs]);
+    let bag = UnitBag {
+        start_line: u.start_line,
+        end_line: u.end_line,
+        ..UnitBag::empty(u.key.clone(), nth)
+    };
+    (bag, row)
 }
 
 /// Whether a callable declares what it returns: a `return_type`
@@ -243,25 +212,24 @@ fn kind_word(u: &Unit, node: Node<'_>, src: &[u8], sp: &LangSpec) -> &'static st
 
 /// Callee spellings in the unit's own body: the callee field of every
 /// call node (LangSpec::call_fields — the arcs read the same one), a
-/// bare name whole or a member's last segment.
-fn callees(own: &[Node<'_>], src: &[u8], sp: &LangSpec) -> Vec<String> {
-    let mut out = Vec::new();
-    for node in own.iter().filter(|n| sp.call_kinds.contains(&n.kind())) {
-        let Some(callee) = node.child_by_field_name(sp.call_fields.0) else {
-            continue;
-        };
-        let name = if sp.call_name_kinds.contains(&callee.kind()) {
+/// bare name whole or a member's last segment, as spelled (the core
+/// splits it).
+fn callees<'t, 's>(own: &[Node<'t>], src: &'s [u8], sp: &LangSpec) -> Vec<&'s str> {
+    let named = |callee: Node<'t>| -> Option<Node<'t>> {
+        if sp.call_name_kinds.contains(&callee.kind()) {
             Some(callee)
         } else if sp.call_member_kinds.contains(&callee.kind()) {
             ast::named_children(callee).last().copied()
         } else {
             None
-        };
-        if let Some(text) = name.and_then(|n| n.utf8_text(src).ok()) {
-            out.extend(terms::split_ident(text));
         }
-    }
-    out
+    };
+    own.iter()
+        .filter(|n| sp.call_kinds.contains(&n.kind()))
+        .filter_map(|n| n.child_by_field_name(sp.call_fields.0))
+        .filter_map(named)
+        .filter_map(|n| n.utf8_text(src).ok())
+        .collect()
 }
 
 /// The literal KIND of a node, counted once per literal: a node whose

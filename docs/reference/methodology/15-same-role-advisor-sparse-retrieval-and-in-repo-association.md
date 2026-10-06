@@ -23,11 +23,17 @@ identity ([wire.rs:1-7](../../../cli/src/similar/wire.rs#L1),
 ### 1. The bag — six channels off facts the tree already carries
 
 Every code unit of the unitsig universe — the T3 universe, `(file, key, nth)`, so Markdown has
-no bags — gets one sparse bag ([bag.rs:1-9](../../../cli/src/similar/bag.rs#L1)). Six
+no bags — gets one sparse bag ([bag.rs:1-10](../../../cli/src/similar/bag.rs#L1)). Six
 channels, each read off a fact the parse already produced, each with a one-letter label that is
 mixed into the term hash — a name word and a callee word spelled alike are two terms, so a
 shared name is name evidence and a shared callee is callee evidence, and the role rule can read
-them apart ([terms.rs:10-23](../../../cli/src/similar/terms.rs#L10)):
+them apart ([terms.rs:7-11](../../../cli/src/similar/terms.rs#L7)). The tree stays on the
+measuring side, which sends each unit's facts as text over the local pipe — the key, the kind
+word and return flag, the callee spellings, the literal kinds, the structure histogram and the
+lines of the comments it owns — and the core builds the bag: splitting, the stop list, the
+stemmer, the hashes and the channel order are one road in `bags/1`
+([bags.rs:1-11](../../../cli/src/similar/bags.rs#L1),
+[Bags.hs:5-25](../../../core/app/CE/Similar/Bags.hs#L5)):
 
 | channel | source fact | term |
 |---|---|---|
@@ -41,26 +47,29 @@ them apart ([terms.rs:10-23](../../../cli/src/similar/terms.rs#L10)):
 Identifier pieces fall at camel, underscore and digit boundaries and are lowercased
 (`parseJSONFile` → parse json file, `http2_server` → http 2 server); prose splits through the
 same function, so `parseJSON` in a comment meets `parse_json` in a name on the same terms
-([terms.rs:56-59](../../../cli/src/similar/terms.rs#L56),
-[terms.rs:109-116](../../../cli/src/similar/terms.rs#L109)). The stop list is a fixed table of
-48 prose words, never learned from a corpus, and it does not touch identifier pieces — `get`,
-`set` and `is` are what a role is made of ([terms.rs:56-59](../../../cli/src/similar/terms.rs#L56)).
-Word channels are stemmed by Porter's 1980 algorithm and hashed; feature channels are hashed
-as spelled ([stem.rs:12](../../../cli/src/similar/stem.rs#L12),
-[terms.rs:119-128](../../../cli/src/similar/terms.rs#L119)). The doc channel takes the
+([Terms.hs:55-60](../../../core/app/CE/Similar/Terms.hs#L55),
+[Terms.hs:84-87](../../../core/app/CE/Similar/Terms.hs#L84)). Letter, digit and case classes
+are Rust's, held as tables generated from rustc's own, and lowercasing is the full Unicode
+mapping, so the core splits a word exactly where the measuring side once did. The stop list is
+a fixed table of 48 prose words, never learned from a corpus, and it does not touch identifier
+pieces — `get`, `set` and `is` are what a role is made of
+([Terms.hs:46-53](../../../core/app/CE/Similar/Terms.hs#L46)). Word channels are stemmed by
+Porter's 1980 algorithm and hashed; feature channels are hashed as spelled
+([Stem.hs:21](../../../core/app/CE/Similar/Stem.hs#L21),
+[Terms.hs:89-97](../../../core/app/CE/Similar/Terms.hs#L89)). The doc channel takes the
 segments docdup already extracts, attributed by position — a leading block ending within
 `LEAD_GAP` lines above the unit's first line, or a head block within `HEAD_GAP` lines below it
 ([docs.rs:13-14](../../../cli/src/similar/docs.rs#L13),
-[docs.rs:59](../../../cli/src/similar/docs.rs#L59)). Only channel-tagged fnv1a64 hashes leave
-the term module: no word text is stored anywhere downstream, which is the index-privacy clause
-the plan writes for every table `.ce/index.db` gains
-([terms.rs:1-5](../../../cli/src/similar/terms.rs#L1)).
+[docs.rs:59](../../../cli/src/similar/docs.rs#L59)). Only channel-tagged fnv1a64 hashes come
+back from the core: no word text is stored anywhere downstream, which is the index-privacy
+clause the plan writes for every table `.ce/index.db` gains
+([Terms.hs:1-6](../../../core/app/CE/Similar/Terms.hs#L1)).
 
 Query weights are integer multipliers — names ×3, callees ×2, everything else ×1 — so the
 score stays exact ([Cost.hs:51-57](../../../core/app/CE/Similar/Rank/Cost.hs#L51)). The whole term
 road is declared once as `SIMILAR_REV` and sits in the index cache key: a change to any rule
 above wipes the bag tables with the rest of the index rather than ranking old bags against new
-queries ([mod.rs:35-45](../../../cli/src/similar/mod.rs#L35)).
+queries ([mod.rs:36-46](../../../cli/src/similar/mod.rs#L36)).
 
 ### 2. The inverted tables — bags persisted as postings, pairs not stored
 
@@ -89,7 +98,7 @@ writes no rows ([store.rs:12-24](../../../cli/src/similar/store.rs#L12),
 [store.rs:79](../../../cli/src/similar/store.rs#L79)). The cost, measured on this tree of 687
 files: cold `ce dedup` 5.2 → 8.4 s (0.65 s of a sixth parse, ≈1.5 s of random-key posting
 writes that five layouts could not beat), warm unchanged, database 10.7 → 18.0 MB
-([PERF-BUDGET.md:253-272](../../PERF-BUDGET.md#L253)).
+([PERF-BUDGET.md:254-273](../../PERF-BUDGET.md#L254)).
 
 ### 3. Ranking — integer BM25, one road for the instrument and the product
 
@@ -196,8 +205,8 @@ projection shows — the counts, and `degraded` naming why the core did not judg
 A query is exactly one of three asks: `at` (`file:line`, the innermost unit holding the line),
 `unit` (a key, refused by name when ambiguous, naming up to five places) or `text` (free text,
 whose words become name and doc evidence — no shape, no callee, so the core's role bit is false
-by construction) ([query.rs:17-54](../../../cli/src/similar/query.rs#L17),
-[query.rs:62-95](../../../cli/src/similar/query.rs#L62)). `judged` refreshes the index over the
+by construction) ([query.rs:16-53](../../../cli/src/similar/query.rs#L16),
+[query.rs:61-94](../../../cli/src/similar/query.rs#L61)). `judged` refreshes the index over the
 same content-hash gate every command uses, resolves the ask, ranks the bare arm — and the widened
 arm when asked, its rows not in the bare arm tagged `widened` — and rides one `similar/1`
 request per arm over one core link, the document asked over the same link ([face.rs:55-86](../../../cli/src/similar/face.rs#L55)).

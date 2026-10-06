@@ -1,8 +1,8 @@
 //! Doc attribution for the bag's D channel: docdup's own comment /
-//! docstring segments, wordized through the term road, each owned by
-//! at most one unit (`owner`). Split from bag.rs at the file budget.
+//! docstring segments, each owned by at most one unit (`owner`); their
+//! lines go to the core, which words them through the term road (bags/1).
+//! Split from bag.rs at the file budget.
 
-use super::terms;
 use crate::docdup::{exempt, segments, spec as docspec};
 use crate::fourclass::units::Unit;
 use crate::scan::lang::Lang;
@@ -13,20 +13,20 @@ use crate::scan::lang::Lang;
 pub const LEAD_GAP: usize = 3;
 pub const HEAD_GAP: usize = 2;
 
-/// One attributable comment / docstring: its kind, span, prose words,
-/// and whether it is a Rust inner doc (`//!` — the module's, never a
+/// One attributable comment / docstring: its kind, span, the text of
+/// its lines, and whether it is a Rust inner doc (`//!` — the module's, never a
 /// unit's).
 pub struct DocSeg {
     docstring: bool,
     inner: bool,
     start: usize,
     end: usize,
-    pub words: Vec<String>,
+    pub lines: Vec<String>,
 }
 
 /// Every comment-block and docstring segment of the file (docdup's
 /// own extraction, skeleton rows stripped the way docdup strips
-/// them), wordized through the term road.
+/// them).
 pub fn doc_segments(text: &str, lang: Lang) -> Vec<DocSeg> {
     let (raw, _) = segments::extract(text, lang);
     let mut ledger = exempt::Ledger::default();
@@ -40,9 +40,9 @@ pub fn doc_segments(text: &str, lang: Lang) -> Vec<DocSeg> {
                 .is_some_and(|l| l.text.trim_start().starts_with("//!")),
             start: s.start_line as usize,
             end: s.end_line as usize,
-            words: exempt::strip_skeleton(s, &mut ledger)
-                .iter()
-                .flat_map(|l| terms::prose_words(&l.text))
+            lines: exempt::strip_skeleton(s, &mut ledger)
+                .into_iter()
+                .map(|l| l.text.clone())
                 .collect(),
         })
         .collect()

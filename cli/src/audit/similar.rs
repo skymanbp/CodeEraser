@@ -11,25 +11,24 @@
 //! nothing to say says nothing, so the feed stays the size it was).
 
 use crate::corelink::Link;
-use crate::similar::{
-    self, K, UnitBag, corpus, file_bags, query::place, rank, reader::Reader, wire,
-};
+use crate::similar::{self, K, UnitBag, bag, corpus, query::place, rank, reader::Reader, wire};
 use crate::tombstone::texts::Loaded;
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
 use std::path::Path;
 
 pub(super) fn leg(root: &Path, loaded: &[Loaded], link: Option<&mut Link>) -> Option<Value> {
-    let fresh = new_units(loaded);
+    let (fresh, bagging) = new_units(loaded);
     if fresh.is_empty() {
         return None;
     }
     // the verdict leg just refreshed this index over the same tree, so
     // the open is a re-read, and the new units sit in it as seats
     let mut rows = Vec::new();
-    let (queried, degraded) = match crate::dedup::refreshed_index(root, None) {
-        Ok((idx, _db)) => ask_all(&idx, &fresh, link, &mut rows),
-        Err(e) => (0, Some(format!("{e:#}"))),
+    let (queried, degraded) = match (bagging, crate::dedup::refreshed_index(root, None)) {
+        (Some(why), _) => (0, Some(why)),
+        (None, Ok((idx, _db))) => ask_all(&idx, &fresh, link, &mut rows),
+        (None, Err(e)) => (0, Some(format!("{e:#}"))),
     };
     if rows.is_empty() && degraded.is_none() {
         return None;
@@ -100,20 +99,25 @@ fn ask_all(
 
 /// The after side's bags whose (key, nth) the before side lacks — the
 /// units this change brought into being, by the same throat the index
-/// seats them with.
-fn new_units(loaded: &[Loaded]) -> Vec<(&str, UnitBag)> {
-    let mut out = Vec::new();
+/// seats them with — bagged by the core in one ask; its refusal is the
+/// second half, named.
+fn new_units(loaded: &[Loaded]) -> (Vec<(&str, UnitBag)>, Option<String>) {
+    let (mut rels, mut rows) = (Vec::new(), Vec::new());
     for l in loaded {
-        let before: BTreeSet<(String, i64)> = file_bags(&l.before, l.lang)
+        let before: BTreeSet<(String, i64)> = bag::file_rows(&l.before, l.lang)
             .into_iter()
-            .map(|b| (b.key, b.nth))
+            .map(|(b, _)| (b.key, b.nth))
             .collect();
-        out.extend(
-            file_bags(&l.after, l.lang)
-                .into_iter()
-                .filter(|b| !before.contains(&(b.key.clone(), b.nth)))
-                .map(|b| (l.rel.as_str(), b)),
-        );
+        for row in bag::file_rows(&l.after, l.lang) {
+            if !before.contains(&(row.0.key.clone(), row.0.nth)) {
+                rels.push(l.rel.as_str());
+                rows.push(row);
+            }
+        }
     }
-    out
+    let unbagged: Vec<UnitBag> = rows.iter().map(|(b, _)| b.clone()).collect();
+    match bag::bagged(rows) {
+        Ok(bags) => (rels.into_iter().zip(bags).collect(), None),
+        Err(why) => (rels.into_iter().zip(unbagged).collect(), Some(why)),
+    }
 }
