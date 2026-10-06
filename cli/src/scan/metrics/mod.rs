@@ -26,8 +26,9 @@ pub struct FnMetrics {
     pub cognitive: u32,
     pub max_nesting: u32,
     /// Name conforms to the language's convention (readability §4.1)
-    /// — the pinned mirror's verdict; the core judges the same from
-    /// the facts below, and the whole-report ensure holds them equal.
+    /// — the core's verdict over the facts below (CE.Scan.Cost
+    /// .conforms), written by `scan::settle` off the code-6 level;
+    /// `measure` alone leaves it true (no verdict read).
     pub name_ok: bool,
     /// The five naming facts bound for the wire ([lang, style,
     /// upper, under, test] — naming::facts). Skipped: wire shape,

@@ -2312,7 +2312,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|cc93c4aa52f4e818|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 204,
+    "line": 203,
     "text": "crate::lockstep::refuse_degraded(&reply, \"structure/wire.rs vs Structure/Cost.hs\")?;"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Lang/Common/Boot2.hs|ecbfee15e57c3ad1|0": {
@@ -8762,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 406,
-    "end": 408,
+    "line": 409,
+    "end": 411,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -10111,12 +10111,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|385098c7ed32048e|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 226,
+    "line": 225,
     "text": "pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|e6e85fe7c0076ff4|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 213,
+    "line": 212,
     "text": "let ask = crate::query::face::Ask {\nrules: crate::query::rules_source(root, file)?,\nquery: None,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -10805,17 +10805,17 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|10e7f3e0dbe6a0ad|0": {
     "target": "../../../cli/src/flow/wire_batch.rs",
-    "line": 126,
+    "line": 128,
     "text": "fn refused_unit(error: &str, sent: &Sent) -> Option<(usize, String)> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|32903890f16e9327|0": {
     "target": "../../../cli/src/flow/wire_batch.rs",
-    "line": 80,
+    "line": 82,
     "text": "pub fn judge(link: &mut Link, files: &[Lowered]) -> Result<Verdict, String> {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/wire_batch.rs|7a44f3f578cbe7c2|0": {
     "target": "../../../cli/src/flow/wire_batch.rs",
-    "line": 39,
+    "line": 41,
     "text": "pub fn plan(files: &[Lowered]) -> (Vec<Sent<'_>>, Vec<Unsent>) {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow_report/face.rs|ee74b95db080349c|0": {
@@ -11100,22 +11100,22 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|243bc494e8f3468c|0": {
     "target": "../../../cli/src/merge/groups.rs",
-    "line": 216,
+    "line": 215,
     "text": "fn settle(\np: Plan,"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|dc94b8fad341b797|0": {
     "target": "../../../cli/src/merge/groups.rs",
-    "line": 159,
+    "line": 158,
     "text": "pub fn filling(start: usize, end: usize, ids: &[usize], units: &[Unit]) -> Option<usize> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|e7868c0809365657|0": {
     "target": "../../../cli/src/merge/groups.rs",
-    "line": 271,
+    "line": 270,
     "text": "fn trimmed(spans: &[Span], frags: &BTreeMap<Span, Option<Tops>>) -> Result<Vec<Member>, Counter> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups.rs|fe715f4a73f45dd3|0": {
     "target": "../../../cli/src/merge/groups.rs",
-    "line": 78,
+    "line": 77,
     "text": "pub fn one_per_member_set(groups: &mut Vec<Group>) -> u64 {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/groups_trim.rs|5b2eb76a99e403f0|0": {
@@ -11173,7 +11173,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|2c7f61f8d970ef98|0": {
     "target": "../../../cli/src/merge/wire.rs",
-    "line": 75,
+    "line": 71,
     "text": "pub fn chunks(groups: &[Group]) -> Vec<Range<usize>> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|35618d0f4191bcfe|0": {
@@ -11184,12 +11184,12 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|7d8aac6440e2ce0f|0": {
     "target": "../../../cli/src/merge/wire.rs",
-    "line": 149,
+    "line": 146,
     "text": "pub fn consume(reply: &Value, sent: &[&Group]) -> Result<Judged, String> {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/wire.rs|ba386e1bf8065c7f|0": {
     "target": "../../../cli/src/merge/wire.rs",
-    "line": 122,
+    "line": 119,
     "text": "let lines = member.run.1 + 1 - member.run.0;"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/eval_merge_review.rs|1ca4ce56416be027|0": {
@@ -11593,11 +11593,6 @@
     "line": 96,
     "text": "fn folded(w: &GraphWire, t: &Tree, slot: &BTreeMap<&str, usize>) -> Folded {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|5dcb977ea419265d|0": {
-    "target": "../../../cli/src/arch/wire.rs",
-    "line": 29,
-    "text": "pub const ARCH_FILE_CAP: usize = 131072;"
-  },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|7bc125be9e5ee21a|0": {
     "target": "../../../cli/src/arch/wire.rs",
     "line": 1,
@@ -11606,17 +11601,22 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|95df4f4bf3a0b417|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 175,
+    "line": 173,
     "text": "let col: usize = col.parse().context(\"an id column\")?;"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|99fca406c10b61bf|0": {
+    "target": "../../../cli/src/arch/wire.rs",
+    "line": 72,
+    "text": "(files > caps.arch_files || refs > caps.arch_refs).then(|| {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|9e002ae0cba9f447|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 124,
+    "line": 122,
     "text": ");\ntables.insert(key, rows);"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|9ab7edbd734e96bf|0": {
     "target": "../../../cli/src/faces.rs",
-    "line": 263,
+    "line": 262,
     "text": "/// binary. Read-only like every face — it reads the release index"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
@@ -11782,6 +11782,11 @@
     "target": "../../../core/app/CE/Arch/Louvain.hs",
     "line": 85,
     "text": "-- | Ruling 6 as tightened in the step-8 lane: `[[F, M]]` for every"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Limits.hs|a799a9567231eed5|0": {
+    "target": "../../../core/app/CE/Limits.hs",
+    "line": 87,
+    "text": "caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ArchCases.hs|6205a2f18f7d1061|0": {
     "target": "../../../core/test/ArchCases.hs",

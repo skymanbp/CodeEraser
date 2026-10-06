@@ -26,11 +26,10 @@ pub const CAP: &str = "merge/1";
 pub const KIND: &str = "merge";
 const SINCE: &str = "7.5.0";
 
-/// Groups per request — mirror of CE.Merge.Cost.groupCap.
-pub const GROUP_CAP: usize = 4096;
-/// Tree nodes per request — mirror of CE.Merge.Cost.treeNodeCap (the
-/// cap that keeps a request inside the protocol's line ceiling).
-pub const TREE_NODE_CAP: usize = 131_072;
+/// The core's reason codes (CE.Merge.Cost): the last one, and the one
+/// that says no line is saved (reasonNoSavings).
+const REASON_CEIL: i64 = 5;
+const REASON_NO_SAVINGS: i64 = 5;
 
 /// The counts object's keys, in the wire's order.
 pub const COUNTS: [&str; 6] = [
@@ -41,11 +40,6 @@ pub const COUNTS: [&str; 6] = [
     "holes",
     "feasible",
 ];
-
-/// The core's reason codes (CE.Merge.Cost): the last one, and the one
-/// that says no line is saved (reasonNoSavings).
-const REASON_CEIL: i64 = 5;
-const REASON_NO_SAVINGS: i64 = 5;
 
 /// One group's answer: [params, kept, savings, feasible, reason].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -69,15 +63,18 @@ pub struct HoleRow {
     pub post_end: i64,
 }
 
-/// Consecutive runs of the groups, each within both caps; a group never
-/// splits (the caller has not sent one whose nodes alone pass
-/// TREE_NODE_CAP).
+/// Consecutive runs of the groups, each within both caps — groups per
+/// request and tree nodes per request (CE.Merge.Cost's groupCap /
+/// treeNodeCap, the latter keeping a request inside the protocol's line
+/// ceiling; read off the definition package); a group never splits (the
+/// caller has not sent one whose nodes alone pass the node cap).
 pub fn chunks(groups: &[Group]) -> Vec<Range<usize>> {
+    let caps = &crate::tables::get().limits.caps;
     let mut out = Vec::new();
     let (mut start, mut nodes) = (0, 0);
     for (i, g) in groups.iter().enumerate() {
         let n = g.nodes();
-        if i > start && (i - start == GROUP_CAP || nodes + n > TREE_NODE_CAP) {
+        if i > start && (i - start == caps.merge_groups || nodes + n > caps.merge_tree_nodes) {
             out.push(start..i);
             (start, nodes) = (i, 0);
         }

@@ -8,7 +8,7 @@ use anyhow::{Result, ensure};
 
 /// Greedy chunk split whose budget counts EVERY request dimension
 /// the core's cap counts (the C15 lesson made structural — the old
-/// rows-only `chunks(SCAN_ROW_CAP)` left no room for the grade
+/// rows-only `chunks(scanRowCap)` left no room for the grade
 /// table, so the first chunk of a cap-sized tree degraded): a row
 /// pays 1, or 2 on a classed run because the class column is one
 /// entry per row and `CE.Scan.overCap` sums it as its own dimension;

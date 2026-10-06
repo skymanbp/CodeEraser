@@ -25,10 +25,10 @@ are Haskell's, over the wire family `arch/1` ([Arch.hs:5-19](../../../core/app/C
 | `pkgEdges` | `[F, D, w]` | the arcs whose target is a package node — a Go, R or Java package import, a Markdown directory link — onto the package's directory; a package outside the tree has no row, and a reference into the file's own directory is kept for the core to fold |
 | `focus` | `[F…]` | the `--impact` paths, root-relative with forward slashes, ascending and distinct; a path that names no measured file is an error by name and no document ([tables.rs:152](../../../cli/src/arch/tables.rs#L152)) |
 
-Two caps, mirrored before the request leaves: 131,072 files, and 524,288 references across the
-two reference tables together, since both become arcs of the one directory graph
-([Cost.hs:24](../../../core/app/CE/Arch/Cost.hs#L24), [Cost.hs:30](../../../core/app/CE/Arch/Cost.hs#L30),
-[wire.rs:29](../../../cli/src/arch/wire.rs#L29)). A request past either is refused on this side as
+Two caps, read off the definition package's `limits.caps` before the request leaves: 131,072 files,
+and 524,288 references across the two reference tables together, since both become arcs of the one
+directory graph ([Cost.hs:24](../../../core/app/CE/Arch/Cost.hs#L24), [Cost.hs:30](../../../core/app/CE/Arch/Cost.hs#L30),
+[Limits.hs:87](../../../core/app/CE/Limits.hs#L87), [wire.rs:72](../../../cli/src/arch/wire.rs#L72)). A request past either is refused on this side as
 `arch_too_large` and the document carries that reason; a core that cannot be started or answer,
 or one without the family, is named the same way; a core that degrades a request priced inside
 the caps is a cap-mirror drift and an error. The core's contract names the first
@@ -122,8 +122,8 @@ the impact rows and the metrics, instability `null` where the core answered −1
 ([Document.hs:78](../../../core/app/CE/Arch/Document.hs#L78)). The arch reply is consumed
 strictly before the document is asked for: the five request counts echo what was sent, the four answer counts tally the tables,
 the layers and the metrics carry one row per directory in order, the clusters one per file, every
-id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../cli/src/arch/wire.rs#L124),
-[wire.rs:175](../../../cli/src/arch/wire.rs#L175)).
+id is in range and every focus file has its depth-0 row ([wire.rs:122](../../../cli/src/arch/wire.rs#L122),
+[wire.rs:173](../../../cli/src/arch/wire.rs#L173)).
 
 - **`ce arch [--impact <path>…] [--format json]`** prints the counts, the layers from the top
   level down, every cut arc with its references indented under it and `exact` or `greedy`, the
@@ -138,7 +138,7 @@ id is in range and every focus file has its depth-0 row ([wire.rs:124](../../../
   still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:21](../../../gui/ui/reports.js#L21),
   [commands_query.rs:39](../../../gui/src-tauri/src/commands_query.rs#L39)).
 
-All three go through one library function ([faces.rs:263](../../../cli/src/faces.rs#L263)).
+All three go through one library function ([faces.rs:262](../../../cli/src/faces.rs#L262)).
 
 ### 5. Gates
 

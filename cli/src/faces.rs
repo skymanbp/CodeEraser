@@ -21,9 +21,8 @@ fn laid(answer: Result<Answer>) -> Result<Value> {
 
 /// Judged like its siblings (batch-7 slice 8): the scan face used
 /// to read the mirror with no core link — the one unguarded copy of
-/// a rule the core owns; analyze_judged carries the drift ensure to
-/// every surface, and the core lays the document out (plan v2.32
-/// step 5).
+/// a rule the core owns; it reads the core's levels like every other
+/// surface, and the core lays the document out (plan v2.32 step 5).
 pub fn scan(root: &Path, core: &str) -> Result<Value> {
     Ok(crate::scan::judged(root, core)?.document)
 }

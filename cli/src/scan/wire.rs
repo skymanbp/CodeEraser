@@ -4,9 +4,8 @@
 //! the effective grade table echoed WHOLE and pinned against the
 //! rows this side sent (ADR-008 P3: ce.toml is the source, the
 //! core's gradeTable holds the DEFAULTS, and the level judgment
-//! never happens here — report.rs::evaluate is a pinned mirror for
-//! the auxiliary surfaces, proven equal by scan::run's whole-report
-//! ensure on every gate run). Only codes, values and name-shape
+//! never happens here; plan v2.33 W1 retired the local mirror every
+//! surface used to be checked against). Only codes, values and name-shape
 //! facts cross the wire; subjects, names and paths never do
 //! (§5.9.2 index privacy). Since 7.2.0 every request also carries
 //! `events`, each unit's structural event stream (plan v2.30 step 7b
@@ -21,9 +20,6 @@ use serde_json::{Value, json};
 
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "scan/1";
-
-/// Row ceiling — mirror of CE.Scan.Cost.scanRowCap.
-pub const SCAN_ROW_CAP: usize = 524288;
 
 /// One judged scan: the levels positionally, the fail bit, the named
 /// conditions it is the disjunction of, the three complexity rows of
@@ -153,7 +149,9 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Judgment, crate::corelink::
     let mut j = Judgment::default();
     let mut held = std::collections::BTreeSet::new();
     let reserved = r.grades.len() + r.overrides.len();
-    for c in chunk::plan(r, SCAN_ROW_CAP - reserved)? {
+    // the row ceiling, CE.Scan.Cost.scanRowCap off the definition package
+    let cap = crate::tables::get().limits.caps.scan_rows;
+    for c in chunk::plan(r, cap - reserved)? {
         let reply = link
             .request("scan", request_body(r, &c))
             .map_err(anyhow::Error::msg)?;

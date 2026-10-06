@@ -29,8 +29,14 @@ leaked! {
                     scored_df_ratio: u64, neighbour_df_ratio: u64 }
     /// The L1 judgment's request ceilings (CE.FourClass.Moves.Cost).
     MovesLimits { line_cap: usize, unit_cap: usize }
+    /// The request ceilings the scan, flow, merge, structure and arch
+    /// families plan their requests by (plan v2.33 W1; each its
+    /// family's Cost constant, once held here as a second literal).
+    WireCaps { scan_rows: usize, flow_rows: usize, merge_groups: usize,
+               merge_tree_nodes: usize, structure_nodes: usize, arch_files: usize,
+               arch_refs: usize }
     /// The numbers requests are laid out by and candidates selected with
     /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
     Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,
-             dedup: DedupLimits, similar: SimilarLimits, moves: MovesLimits }
+             dedup: DedupLimits, similar: SimilarLimits, moves: MovesLimits, caps: WireCaps }
 }

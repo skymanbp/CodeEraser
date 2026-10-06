@@ -57,8 +57,9 @@ scanRowCap = 524288
 -- same facts under TypeScript or Haskell stay a violation (the
 -- leak the Rust-side predicate carried). Style 0 = no convention
 -- (Markdown, non-identifier subjects). Shape is enforced by
--- Scan.hs's validator; cli scan/metrics/naming.rs::conforms is the
--- pinned mirror the whole-report ensure proves equal.
+-- Scan.hs's validator; the measuring side reads the verdict back off
+-- the code-6 level (cli scan/mod.rs `named`; plan v2.33 W1 retired
+-- its mirror).
 conforms :: [Integer] -> Bool
 conforms row = case row of
   [lang, style, upper, under, test]

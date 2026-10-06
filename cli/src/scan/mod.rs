@@ -2,10 +2,9 @@
 //! Since ADR-008 P3 the LEVEL judgment is the core's (scan/1, the
 //! graded verdict table); since plan v2.32 step 5 the report, its
 //! console lines and the exit bit are the core's too (document/1,
-//! document.rs) — measurement stays here, and the local evaluate()
-//! binding survives as the pinned mirror the whole-report ensure
-//! proves equal on every judged run — CLI gate, MCP tool and GUI face
-//! alike since batch-7 slice 8 (step 6 retires it).
+//! document.rs) — measurement stays here. Plan v2.33 W1 retired the
+//! local mirrors (the threshold evaluation and the naming verdict):
+//! every surface reads the core's levels and nothing else.
 
 pub mod ast;
 pub mod binding;
@@ -59,8 +58,8 @@ pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
 /// surface reads (the CLI prints it, MCP and the GUI take its
 /// document).
 pub fn judged(root: &Path, core: &str) -> Result<crate::document::Answer> {
-    let j = analyze_judged(root, core)?;
-    document::answer(core, &j.settled, j.held)
+    let (settled, link) = settled_over(root, core)?;
+    document::answer(core, &settled, Ok(link))
 }
 
 /// Measurement alone — the walk every scan surface shares; the score
@@ -72,28 +71,14 @@ pub fn measure(root: &Path) -> Result<(crate::config::Config, Vec<FileMetrics>)>
     })
 }
 
-/// The one judged scan entry every verdict-bearing surface shares —
-/// the CLI gate, the MCP tool and the GUI face alike (batch-7 slice
-/// 8: the retired mirror-only analyze() made the pinned mirror the
-/// SOLE authority on the auxiliary surfaces, guarded only when the
-/// gate happened to run). Levels come from the core (scan/1); the
-/// ADR-008 P3 drift ensure then proves the pinned mirror equal on
-/// EVERY surface, or the run dies loudly — formula drift named,
-/// never a silently forked verdict. The settled tree carries the fail
-/// bit and the conditions it is the disjunction of (6.4.0:
-/// `hard_line`, the config fence `knobs_digest`, `degraded`).
-pub struct Judged {
-    pub settled: Settled,
-    pub findings: Vec<report::Finding>,
-    /// The link the tree was judged over, for its report.
-    held: crate::document::Held,
-}
-
-/// A measured tree with the core's verdict on it, and the ONE road a
-/// complexity value takes: the three numbers are derived from each
-/// unit's structural events and the recursion increment is charged
-/// here and nowhere else (plan v2.30 step 7b ③), so `rows` below
-/// already carry the numbers the core judged with. `measure` alone
+/// A measured tree with the core's verdict on it — the levels, the
+/// fail bit and the conditions it is the disjunction of (6.4.0:
+/// `hard_line`, the config fence `knobs_digest`, `degraded`) — and the
+/// ONE road a complexity value and a naming verdict take: the three
+/// numbers are derived from each unit's structural events, the
+/// recursion increment is charged and each name is judged here and
+/// nowhere else (plan v2.30 step 7b ③; v2.33 W1), so `rows` below
+/// already carry the values the core judged with. `measure` alone
 /// answers no complexity at all — its units read 0 there — which
 /// is exactly what the structure family, the one reader that never
 /// looks at complexity, should keep getting.
@@ -140,8 +125,9 @@ fn settled_over(root: &Path, core: &str) -> Result<(Settled, crate::corelink::Li
     };
     let (j, link) = wire::judge(core, &req)?;
     complexity::apply(&mut files, &blocks, &j.derived, &j.bumped)?;
+    named(&mut files, &blocks, &j.levels)?;
     // rebuilt AFTER the derivation: these are the values that were
-    // graded, so the report, the mirror and the core read one number
+    // graded, so the report and the core read one number
     let rows = report::rows_of(&files);
     let settled = Settled {
         config,
@@ -217,28 +203,26 @@ fn tables(
     })
 }
 
-pub fn analyze_judged(root: &Path, core: &str) -> Result<Judged> {
-    let (s, link) = settled_over(root, core)?;
-    let findings = report::findings_from(
-        &s.rows,
-        &s.levels,
-        &s.grades,
-        (&s.row_classes, &s.overrides),
-    );
-    let mirror: Vec<report::Finding> = s
-        .files
-        .iter()
-        .flat_map(|f| report::evaluate(f, &s.classes.thresholds_for(&s.config, &f.path)))
-        .collect();
+/// Each function's naming verdict, read off the core's level on its
+/// code-6 row: that row is graded on the fixed ladder [6, 0, 0]
+/// (`wire::grade_rows`; no class overrides code 6), so a level above
+/// 0 is exactly the core's "does not conform" (CE.Scan.Cost.conforms
+/// over the facts that rode). The core's answer, never a local one.
+fn named(files: &mut [FileMetrics], blocks: &[usize], levels: &[u8]) -> Result<()> {
     anyhow::ensure!(
-        findings == mirror,
-        "core scan verdicts disagree with the pinned mirror — formula drift (Scan/Cost.hs vs report.rs)"
+        levels.len() == blocks.iter().sum::<usize>(),
+        "scan/1: {} levels for {} rows",
+        levels.len(),
+        blocks.iter().sum::<usize>()
     );
-    Ok(Judged {
-        settled: s,
-        findings,
-        held: Ok(link),
-    })
+    let mut row = 0;
+    for (f, block) in files.iter_mut().zip(blocks) {
+        for (k, func) in f.functions.iter_mut().enumerate() {
+            func.name_ok = levels[row + 1 + report::FN_CODES * k + report::FN_CODES - 1] == 0;
+        }
+        row += block;
+    }
+    Ok(())
 }
 
 fn measure_file(src: Vec<u8>, path: &Path, root: &Path, language: Lang) -> Result<FileMetrics> {
@@ -282,7 +266,7 @@ fn measure_functions(
         .map(|unit| {
             let naming = metrics::naming::facts(language, sp.name_style, &unit.name);
             FnMetrics {
-                name_ok: metrics::naming::conforms(naming),
+                name_ok: true,
                 naming,
                 events: metrics::events::emit(unit.node, src, sp),
                 name: unit.name,

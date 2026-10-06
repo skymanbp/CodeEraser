@@ -9,9 +9,9 @@
 //! what structure each unit holds, `CE.Scan.Complexity` folds the
 //! three numbers and `CE.Scan.Cycles` charges the recursion point;
 //! this module only moves indices in one direction and effective
-//! values in the other — so the number the report renders, the
-//! number the pinned mirror grades and the number the core graded are
-//! one number by construction, not by two implementations agreeing.
+//! values in the other — so the number the report renders and the
+//! number the core graded are one number by construction, not by two
+//! implementations agreeing.
 
 use super::metrics::FileMetrics;
 use super::report::FN_CODES;

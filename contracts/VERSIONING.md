@@ -65,6 +65,9 @@
 > R2 两个根的取舍与歧义、手折的 `use`、R3 的 `self` / `super` 与内联模块、R4 的成员 crate / 依赖 / 工具链 / 站外、R5 经 `pub use` 一跳，带 crate 根与包内私有）、
 > 第 16 对（同一请求不带事实：只答 `tsWanted`）与第 17 对（`rs.owners` 的文件不在走查里，按名拒绝）；既有十对应答（第 1–5、7、8、10、12、13 对）各多一个空的
 > `crates` 键，hello 的 `tablesDigest` 与 `tables` 第 2 对的 `configs` 随之变，其余 golden 不动。
+> **9.0.0 同版加性**（七个请求上限进定义包，算法轨 W1 第 1 项，2026-10-06；设计册 §11 第 73–75 条；9.0.0 未发布，同上不另升版号）：
+> 定义包 `limits` 加 `caps {scan_rows, flow_rows, merge_groups, merge_tree_nodes, structure_nodes, arch_files, arch_refs}`——scan / flow / merge / structure / arch
+> 五族契约的请求上限（`CE.Scan.Cost.scanRowCap` 等），测量侧按它排请求、不再留镜像；各族的请求与应答不动。hello 的 `tablesDigest` 与 `tables` 第 2 对随之变，其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

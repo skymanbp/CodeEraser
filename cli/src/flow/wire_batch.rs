@@ -9,7 +9,7 @@
 //! core's to say.
 
 use super::lower::{Lowered, Unit};
-use super::wire::{self, Finding, KIND, ROW_CAP, Sent, TABLES};
+use super::wire::{self, Finding, KIND, Sent, TABLES};
 use crate::corelink::Link;
 
 /// A whole judgment over files: each finding with its file and its
@@ -31,8 +31,10 @@ fn weight(u: &Unit) -> usize {
 /// A unit this side refused before asking: `(file, nth, reason)`.
 pub type Unsent = (usize, usize, String);
 
-/// The units in file order split into requests, each at most ROW_CAP
-/// rows; a unit heavier than the cap alone is refused by name beside
+/// The units in file order split into requests, each at most the one
+/// cap the four tables count against together (`CE.Flow.Cost.rowCap`,
+/// read off the definition package); a unit heavier than the cap alone
+/// is refused by name beside
 /// the batches — its rows are never split, since the core reads a unit
 /// whole — and the other units plan as ever. A dynamic unit travels
 /// like any other: the core counts it.
@@ -43,18 +45,18 @@ pub fn plan(files: &[Lowered]) -> (Vec<Sent<'_>>, Vec<Unsent>) {
         files,
         units: Vec::new(),
     };
-    let mut load = 0;
+    let (mut load, cap) = (0, crate::tables::get().limits.caps.flow_rows);
     for (f, file) in files.iter().enumerate() {
         for unit in &file.units {
             let w = weight(unit);
-            if w > ROW_CAP {
+            if w > cap {
                 let reason = format!(
-                    "weighs {w} rows against the cap of {ROW_CAP} — a unit's rows never straddle two requests"
+                    "weighs {w} rows against the cap of {cap} — a unit's rows never straddle two requests"
                 );
                 refused.push((f, unit.nth, reason));
                 continue;
             }
-            if load + w > ROW_CAP && !batch.units.is_empty() {
+            if load + w > cap && !batch.units.is_empty() {
                 out.push(std::mem::replace(
                     &mut batch,
                     Sent {

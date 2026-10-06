@@ -13,9 +13,6 @@ use serde_json::json;
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "structure/1";
 
-/// Node ceiling — mirror of CE.Structure.Cost.structNodeCap.
-pub const STRUCT_NODE_CAP: usize = 524288;
-
 /// The assembled request tables (dense ids; names never cross).
 pub struct Request {
     pub nodes: Vec<[u64; 5]>,
@@ -193,9 +190,11 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
 /// One structure.request over a link already open (the face keeps it
 /// for its document, plan v2.32 step 4).
 pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> {
+    // the node ceiling, CE.Structure.Cost.structNodeCap off the package
+    let cap = crate::tables::get().limits.caps.structure_nodes;
     ensure!(
-        priced_rows(r) <= STRUCT_NODE_CAP,
-        "{} structure/1 request rows exceed the cap {STRUCT_NODE_CAP}",
+        priced_rows(r) <= cap,
+        "{} structure/1 request rows exceed the cap {cap}",
         priced_rows(r)
     );
     let reply = link

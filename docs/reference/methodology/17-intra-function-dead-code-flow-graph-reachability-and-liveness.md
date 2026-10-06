@@ -47,7 +47,7 @@ skipped whole by the core and counted ([Flow.hs:62-63](../../../core/app/CE/Flow
 whose tree cannot be lowered to the contract's shape is not sent (`unlowered`); a unit the core
 still refuses by name is mapped back from the refusal's row, dropped, and the batch asked again,
 so one unit's defect never costs the others their verdict
-([wire_batch.rs:80](../../../cli/src/flow/wire_batch.rs#L80), [wire_batch.rs:126](../../../cli/src/flow/wire_batch.rs#L126)).
+([wire_batch.rs:82](../../../cli/src/flow/wire_batch.rs#L82), [wire_batch.rs:128](../../../cli/src/flow/wire_batch.rs#L128)).
 
 ### 2. The graph
 
@@ -93,7 +93,7 @@ degraded reply — no findings, the counts, `flow_too_large` — since a request
 judge licenses nothing ([Cost.hs:53](../../../core/app/CE/Flow/Cost.hs#L53),
 [Contract.hs:47](../../../core/app/CE/Flow/Contract.hs#L47), [Flow.hs:45](../../../core/app/CE/Flow.hs#L45)).
 The measuring side plans its batches under the same cap, and a single unit heavier than it is
-refused by name rather than split ([wire_batch.rs:39](../../../cli/src/flow/wire_batch.rs#L39)).
+refused by name rather than split ([wire_batch.rs:41](../../../cli/src/flow/wire_batch.rs#L41)).
 There is no knob and no condition bit on the wire: what a finding means for a gate is decided on
 this side, by the class's tier and the precision mask.
 

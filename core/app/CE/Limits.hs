@@ -7,17 +7,25 @@
 -- its own copy of each and a reply's knob echo pinned the copy equal;
 -- it now reads them here, from the same core that judges. Each value
 -- is the owning family's Cost constant, never a second statement; the
--- keys are snake case like every other package key.
+-- keys are snake case like every other package key. W1 added `caps`:
+-- the request ceilings the scan, flow, merge, structure and arch
+-- families are planned by.
 module CE.Limits (limits) where
 
+import qualified CE.Arch.Cost as Arch
 import qualified CE.Candidates.Cost as Candidates
 import qualified CE.Clone.Cost as Clone
 import qualified CE.Dedup.Cost as Dedup
 import qualified CE.Docdup.Cost as Docdup
+import qualified CE.Flow.Cost as Flow
 import qualified CE.FourClass.Moves.Cost as Moves
+import qualified CE.Merge.Cost as Merge
+import qualified CE.Scan.Cost as Scan
 import qualified CE.Similar.Cost as Similar
 import qualified CE.Similar.Rank.Cost as Rank
+import qualified CE.Structure.Cost as Structure
 import Data.Aeson (Value, object, (.=))
+import qualified Data.Aeson.Key as Key
 import Data.Ratio (denominator, numerator)
 
 limits :: Value
@@ -52,6 +60,7 @@ limits =
           ]
     , "dedup" .= object ["min_distinct" .= Dedup.minDistinct, "hot_cap" .= Dedup.hotCap]
     , "moves" .= object ["line_cap" .= Moves.movesLineCap, "unit_cap" .= Moves.movesUnitCap]
+    , "caps" .= object (zipWith (\k v -> Key.fromString k .= v) (words capKeys) caps)
     , "similar"
         .= object
           [ "similar_cap" .= Similar.similarCap
@@ -73,3 +82,6 @@ limits =
  where
   ratio q = [numerator q, denominator q]
   (perms, bands, rows) = Candidates.lshShape
+  -- the request ceilings beside their keys, in one order
+  capKeys = "scan_rows flow_rows merge_groups merge_tree_nodes structure_nodes arch_files arch_refs"
+  caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap]

@@ -15,7 +15,6 @@
 
 use super::groups_trim::{isomorphic, trim};
 use super::slot::slot_spec;
-use super::wire::TREE_NODE_CAP;
 use crate::dedup::candidates::Unit;
 use crate::dedup::groups::Group as Family;
 use crate::dedup::t3::tree::{Extras, Top, UnitTree, file_fragments};
@@ -240,7 +239,7 @@ fn settle(
         fragment: p.units.is_none(),
         members,
     };
-    if g.nodes() > TREE_NODE_CAP {
+    if g.nodes() > crate::tables::get().limits.caps.merge_tree_nodes {
         return Err(|u| &mut u.over_cap);
     }
     let trees: Vec<&UnitTree> = g.members.iter().map(|m| &m.tree).collect();

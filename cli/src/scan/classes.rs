@@ -46,8 +46,9 @@ impl Classes {
 
     /// The threshold table `rel` is measured against locally (P3,
     /// 3.2.0): its class's effective lines, or the global table for
-    /// class 0 — the same reading the core takes from gradeOverrides,
-    /// so the scan's pinned mirror keeps proving the wire equal.
+    /// class 0 — the same reading the core takes from gradeOverrides.
+    /// The write-time guard's zone reads it (guard/zone.rs, the hook
+    /// path, where no scan reply exists).
     pub fn thresholds_for(
         &self,
         cfg: &crate::config::Config,

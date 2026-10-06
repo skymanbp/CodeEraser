@@ -30,7 +30,7 @@ Two families feed the family, each unchanged from its own booklet:
   A member is a line span. It is a *whole unit* when one admitted unit fills it — the longest unit
   lying inside the member's lines, kept when it covers at least nine tenths of them, because a
   member's line span is coarser than its tokens and may carry a comment line or a brace more
-  ([groups.rs:159](../../../cli/src/merge/groups.rs#L159)). A family whose every member is a
+  ([groups.rs:158](../../../cli/src/merge/groups.rs#L158)). A family whose every member is a
   whole unit sends those units' trees; any other sends each member as a *fragment*: the maximal
   named nodes inside the member's lines — its top nodes — under one synthetic root, and the report
   marks the group `fragment` ([tree.rs:103](../../../cli/src/dedup/t3/tree.rs#L103)).
@@ -49,9 +49,9 @@ top to its last ([groups_trim.rs:1-11](../../../cli/src/merge/groups_trim.rs#L1)
 is not one shape. A member keeps its clone-family line span as its identity — the span `ce dedup`
 names — and carries beside it the kept run's own lines, the first kept top's first line to the last
 one's last, as its `run` ([tree.rs:64](../../../cli/src/dedup/t3/tree.rs#L64),
-[groups.rs:271](../../../cli/src/merge/groups.rs#L271)). The request's `lines` column is the run's,
+[groups.rs:270](../../../cli/src/merge/groups.rs#L270)). The request's `lines` column is the run's,
 so the core prices the lines a merge would fold, never a boundary statement the trim cut off
-([wire.rs:122](../../../cli/src/merge/wire.rs#L122)); a whole unit's run is its span. The report
+([wire.rs:119](../../../cli/src/merge/wire.rs#L119)); a whole unit's run is its span. The report
 prints both spans, and the texts on it come off the trimmed trees.
 
 A group the core would refuse, or that no request can carry, is never sent; it is counted by why
@@ -60,7 +60,7 @@ under `unsendable`, in this order: a member whose language has no position-class
 where one tree was needed, nothing selected (`unbuilt`) —, a fragment family with no run of tops
 in common (`not_isomorphic`), a group whose nodes alone pass the request cap (`over_cap`), and
 last, for T1/T2 alone, members whose trees are not one shape (`not_isomorphic`)
-([groups.rs:216](../../../cli/src/merge/groups.rs#L216)). The last check is the core's own
+([groups.rs:215](../../../cli/src/merge/groups.rs#L215)). The last check is the core's own
 definition asked early, so the core's refusal never lands on the live road
 ([groups_trim.rs:95](../../../cli/src/merge/groups_trim.rs#L95), [Align.hs:26](../../../core/app/CE/Merge/Align.hs#L26)).
 
@@ -72,7 +72,7 @@ row per pair, the stronger kind kept): an exact isomorphism is the stronger clai
 The drop comes after the local pre-checks and before any request, so a T3 pair whose T1/T2 twin was
 not sent stays; the groups dropped are counted apart as `merged_duplicates`, never under
 `unsendable` — they are the same suggestion twice, not a group no request can carry
-([groups.rs:78](../../../cli/src/merge/groups.rs#L78)).
+([groups.rs:77](../../../cli/src/merge/groups.rs#L77)).
 
 ### 2. The trees — `clone/1`'s encoding and four columns
 
@@ -247,12 +247,12 @@ T1/T2 group ([Contract.hs:57](../../../core/app/CE/Merge/Contract.hs#L57),
 the one that keeps the widest request at both caps inside the protocol's 32 MiB line, the six
 columns and a member row per one-node tree at their widest
 ([Cost.hs:29-37](../../../core/app/CE/Merge/Cost.hs#L29)); the measuring side chunks by both caps
-and never splits a group across two requests ([wire.rs:75](../../../cli/src/merge/wire.rs#L75)).
+and never splits a group across two requests ([wire.rs:71](../../../cli/src/merge/wire.rs#L71)).
 So a reply the core degraded to a request this side priced within both caps is a drift between the
 two sides' cap mirrors — an error naming both owners, never a document; a core without the family,
 or one that stops answering mid-run, gives a document with `degraded`, and a core that cannot be
 started is refused by name, since the document is the core's to lay out
-([wire.rs:149](../../../cli/src/merge/wire.rs#L149), [face.rs:95](../../../cli/src/merge/face.rs#L95)).
+([wire.rs:146](../../../cli/src/merge/wire.rs#L146), [face.rs:95](../../../cli/src/merge/face.rs#L95)).
 
 ### 4. The measuring side's rulings
 

@@ -349,7 +349,7 @@ are both true and `reason` is `structure_too_large`
 [StructureProps.hs:246-255](../../../core/test/StructureProps.hs#L246)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. No `ce structure` user ever sees that 1000: the CLI
-turns a degraded reply into an error before rendering ([wire.rs:204](../../../cli/src/structure/wire.rs#L204)),
+turns a degraded reply into an error before rendering ([wire.rs:203](../../../cli/src/structure/wire.rs#L203)),
 so the number matters to a second client of the protocol, not to this one's console. In the non-degraded case `fail` equals `degraded`,
 i.e. always false: S2 is report-only, and the CLI gates nothing on this score
 ([Structure.hs:173-175](../../../core/app/CE/Structure.hs#L173)).

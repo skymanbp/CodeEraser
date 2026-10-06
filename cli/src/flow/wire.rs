@@ -22,14 +22,6 @@ pub const CAP: &str = "flow/1";
 pub const KIND: &str = "flow";
 const SINCE: &str = "7.4.0";
 
-/// The one cap the four tables count against together: a mirror of
-/// `CE.Flow.Cost.rowCap` (core/app/CE/Flow/Cost.hs).
-pub const ROW_CAP: usize = 524_288;
-
-/// The counts object's keys, in the wire's order: the four tables sent,
-/// then the findings and the units skipped as dynamic.
-pub const COUNTS: [&str; 6] = ["units", "stmts", "vars", "uses", "findings", "dynamicUnits"];
-
 /// One request's units and where they came from: a unit's request
 /// index `u` is its place in `units`, the `usize` beside it the index
 /// of its file in `files`.
@@ -37,6 +29,10 @@ pub struct Sent<'a> {
     pub files: &'a [Lowered],
     pub units: Vec<(&'a Unit, usize)>,
 }
+
+/// The counts object's keys, in the wire's order: the four tables sent,
+/// then the findings and the units skipped as dynamic.
+pub const COUNTS: [&str; 6] = ["units", "stmts", "vars", "uses", "findings", "dynamicUnits"];
 
 /// One finding row, `[u, kind, seq, v, seqEnd]`: `u` the request's
 /// unit index, kind 0 unreachable run (v −1) / 1 dead store / 2 unused

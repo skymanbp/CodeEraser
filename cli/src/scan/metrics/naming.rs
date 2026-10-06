@@ -1,11 +1,10 @@
-//! Readability naming FACTS (plan §4.1) plus the pinned conforms
-//! mirror. Since 2.30.0 (ADR-008 batch-7 slice 14) the judgment —
-//! which case family a language enforces, and who gets the godoc
-//! underscore exemption — is the core's (CE.Scan.Cost.conforms);
-//! this side extracts name-SHAPE facts for the wire and keeps
-//! conforms only as the mirror the whole-report ensure proves equal
-//! per run. Provenance: PEP 8 (Python), RFC 430 (Rust), Effective
-//! Go + go vet's test-name rule, common TS practice.
+//! Readability naming FACTS (plan §4.1). Since 2.30.0 (ADR-008
+//! batch-7 slice 14) the judgment — which case family a language
+//! enforces, and who gets the godoc underscore exemption — is the
+//! core's (CE.Scan.Cost.conforms); this side extracts name-SHAPE facts
+//! for the wire and reads the verdict back (scan::settle; plan v2.33
+//! W1 retired the local mirror). Provenance: PEP 8 (Python), RFC 430
+//! (Rust), Effective Go + go vet's test-name rule, common TS practice.
 
 use crate::scan::lang::Lang;
 use crate::scan::spec::NameStyle;
@@ -57,20 +56,6 @@ fn test_shape(core: &str) -> bool {
         core.strip_prefix(p)
             .is_some_and(|rest| !rest.starts_with(char::is_lowercase))
     })
-}
-
-/// Pinned MIRROR of CE.Scan.Cost.conforms — the report face reads
-/// it, and scan::analyze_judged's whole-report ensure proves it
-/// equal to the core's verdict on every judged run. The godoc
-/// exemption is gated on Go's OWN lang code: the same facts under
-/// TypeScript or Haskell stay a violation.
-pub fn conforms(row: [i64; 5]) -> bool {
-    let [lang, style, upper, under, test] = row;
-    match style {
-        1 => upper == 0,
-        2 => under == 0 || (lang == Lang::Go as i64 && test == 1),
-        _ => true,
-    }
 }
 
 #[cfg(test)]

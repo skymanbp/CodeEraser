@@ -24,11 +24,6 @@ pub const CAP: &str = "arch/1";
 pub const KIND: &str = "arch";
 const SINCE: &str = "7.6.0";
 
-/// Mirrors of CE.Arch.Cost.fileCap / refCap: the files, and the two
-/// reference tables together.
-pub const ARCH_FILE_CAP: usize = 131072;
-pub const ARCH_REF_CAP: usize = 524288;
-
 /// The counts object's keys, space-separated: the five request
 /// tables, then the four answer tallies (read through `count_keys`).
 const COUNTS: &str = "files dirs edges pkgEdges focus cuts clusters misplaced impact";
@@ -68,13 +63,16 @@ impl Reply {
 /// An answer, or the named reason there is none.
 pub type Judgment = std::result::Result<Reply, String>;
 
-/// The local refusal: a request past either cap never leaves.
+/// The local refusal: a request past either cap — CE.Arch.Cost's
+/// fileCap / refCap (the files, and the two reference tables
+/// together), read off the definition package — never leaves.
 pub fn over_cap(t: &Tables) -> Option<String> {
-    let refs = t.edges.len() + t.pkg_edges.len();
-    (t.files.len() > ARCH_FILE_CAP || refs > ARCH_REF_CAP).then(|| {
+    let caps = &crate::tables::get().limits.caps;
+    let (files, refs) = (t.files.len(), t.edges.len() + t.pkg_edges.len());
+    (files > caps.arch_files || refs > caps.arch_refs).then(|| {
         format!(
-            "arch_too_large: {} files (cap {ARCH_FILE_CAP}), {refs} references (cap {ARCH_REF_CAP})",
-            t.files.len()
+            "arch_too_large: {files} files (cap {}), {refs} references (cap {})",
+            caps.arch_files, caps.arch_refs
         )
     })
 }
