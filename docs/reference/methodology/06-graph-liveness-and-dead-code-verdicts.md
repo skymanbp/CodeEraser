@@ -55,7 +55,7 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
 ([ladder/outcome.rs:14-29](../../../cli/src/graph/ladder/outcome.rs#L14)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:197-201](../../../cli/src/graph/ladder/mod.rs#L197)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:198-202](../../../cli/src/graph/ladder/mod.rs#L198)).
 
 Since plan v2.33 wave W2a the Python, Go, C / C++ and Lua rungs below run in the core's
 `resolve/1` family, the R rungs since W2-text stage B and the Java rungs since stage C, and since
