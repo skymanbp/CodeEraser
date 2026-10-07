@@ -13,7 +13,7 @@
 | S1 命名一致性 | 每兄弟集的命名模式熵（case/分隔符/数字打头——分类器只有这三维，**无前缀族**）——**名不过线**：7.2.0 起过线的是每个词干的七位形状位（`patternShapes`），模式码由核 `CE.Structure.Shape` 的 STYLE 表折出；此前 Rust 分类后只过模式码分布 | walk 文件名（词干形状位） |
 | S2 正交性/局部性 | 目录内 vs 目录间引用密度（fileRefs 触点为单一事实基） | graph 边表 |
 | S3 漂移错位 | 持有错位文件的**目录**计数（修正案①）；文件级谓词不变：outside ≥ min 且 > 2×inside | graph 边表 |
-| S4 文档基建 | 文件数 ≥ bigDirFloor（默认 8，旋钮 6）的目录须有 README；根目录须有可识别配置；约定位掩码（1=README，2=config） | walk + tree.rs 自有的 8 个配置基名表（与 entry_globs 无关，那是图族的存活根表）|
+| S4 文档基建 | 文件数 ≥ bigDirFloor（默认 8，旋钮 6）的目录须有 README；根目录须有可识别配置；约定位掩码（1=README，2=config） | walk + 核 `CE.Structure.Tree.configNames` 的 8 个配置基名表（v2.33 W1 第 3 项前在 `cli/src/structure/tree.rs`）（与 entry_globs 无关，那是图族的存活根表）|
 | S5 文档新鲜度 | 每目录的**陈旧文档数**：某个引用目标晚于该 md **文件**自身最后一改即陈旧（存在量词 + 严格 >，同提交不算）| churn 窗口 + md 阶梯 |
 | S6 冗余/孤儿卷积 | dedup 块数、deadcode 判决按目录卷积（--deep 才上线） | dedup/deadcode 判决 |
 | S7 模块度 | 目录分划在**有向引用图**上的 Newman 贡献，除以该目录自身质量所能挣到的上限：`rho = (e·m − o·i) / (mu·(m−mu))`，低于 `modFloor`（‰，默认 1）即计入；`mu < modMassFloor`（默认 4）或 `mu == m` 者不判。intra 质量不上 wire——`fileRefs` 的 `inside` 之和恰为其两倍，边界律钉两表同一张图 | graph 边表（有向目录边表 `dirEdges` + fileRefs） |

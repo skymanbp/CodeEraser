@@ -10,12 +10,27 @@
 -- as empty, every row the right width with the right ranges, the
 -- reference tables and the focus strictly ascending. The first
 -- offender in request order is named as `<table> <i>: <reason>`.
-module CE.Arch.Contract (ArchReq (..), offence, overCap) where
+--
+-- Since 9.0.0 (plan v2.33 W1 item 3, additive in the unreleased minor) a
+-- request may carry the PATH form instead (CE.Arch.Tables): the decoder
+-- builds the five tables from it, so every check below reads one shape;
+-- `pathOf` keeps the directory paths the reply echoes, or the fault that
+-- replaces a judgment, or the offence that refuses the form.
+module CE.Arch.Contract (ArchReq (..), ArchPath (..), offence, overCap) where
 
 import CE.Arch.Cost (fileCap, refCap, rootParent)
+import CE.Arch.Tables (assemble, parsePaths, pathsOffence)
 import CE.Wire (ascendingOn, rowCheck, tableOffence)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
+import qualified Data.Aeson.KeyMap as KM
 import Data.Foldable (asum)
+
+-- | The path form as decoded: the directory paths (the root "") or the
+-- fault naming a focus path no measured file holds, and the offence.
+data ArchPath = ArchPath
+  { apDirs :: Either String [String]
+  , apOffence :: Maybe String
+  }
 
 -- | The request: id and the five tables.
 data ArchReq = ArchReq
@@ -25,12 +40,26 @@ data ArchReq = ArchReq
   , edgeRows :: [[Integer]]
   , pkgRows :: [[Integer]]
   , focusRows :: [Integer]
+  , pathOf :: Maybe ArchPath
   }
 
 instance FromJSON ArchReq where
-  parseJSON = withObject "ArchReq" $ \o ->
+  parseJSON = withObject "ArchReq" $ \o -> do
+    paths <- parsePaths o
     let table key = o .:? key .!= []
-     in ArchReq <$> o .: "id" <*> table "files" <*> table "dirs" <*> table "edges" <*> table "pkgEdges" <*> (o .:? "focus" .!= [])
+    req <- ArchReq <$> o .: "id" <*> table "files" <*> table "dirs" <*> table "edges" <*> table "pkgEdges" <*> (o .:? "focus" .!= []) <*> pure Nothing
+    pure $ case paths of
+      Nothing -> req
+      Just p -> case asum [mixed, pathsOffence p] of
+        Just why -> req {pathOf = Just (ArchPath (Left why) (Just why))}
+        Nothing -> case assemble p of
+          Left fault -> req {pathOf = Just (ArchPath (Left fault) Nothing)}
+          Right ((files, dirs, edges, pkgs, focus), names) ->
+            ArchReq (reqId req) files dirs edges pkgs focus (Just (ArchPath (Right names) Nothing))
+       where
+        mixed = case [k | k <- ["files", "dirs", "edges", "pkgEdges", "focus"], KM.member k o] of
+          k : _ -> Just ("paths beside the table " <> show k)
+          [] -> Nothing
 
 -- | Two dimensions, two caps: the files, and the two reference
 -- tables together (both become arcs of one directory graph).
@@ -48,7 +77,8 @@ overCap req =
 offence :: ArchReq -> Maybe String
 offence req =
   asum
-    [ asum (zipWith fileShape [0 ..] (fileRows req))
+    [ pathOf req >>= apOffence
+    , asum (zipWith fileShape [0 ..] (fileRows req))
     , asum (zipWith dirShape [0 ..] (dirRows req))
     , asum (zipWith (fileRange dirs) [0 ..] (fileRows req))
     , tableOffence "edge" (take 2) (edgeShape files) (edgeRows req)

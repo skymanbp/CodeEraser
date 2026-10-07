@@ -1,16 +1,16 @@
 //! `ce structure` (M6 S2): the tree-scale judgment — walk the tree
 //! once through the scan measurement (ONE walk for every surface),
-//! assemble the fact tables through structure::rows, send ONE
-//! structure.request, and re-label the core's dense verdicts with
-//! the names this side kept (§5.9.2). Report-only by ruling — no
-//! score floor (v2.22 close-out, O53): the CLI gates nothing here.
+//! read what the request carries by path through structure::rows,
+//! send ONE structure.request (the core builds the tree and the
+//! tables, plan v2.33 W1 item 3), and lay the document out over the
+//! tree it answered. Report-only by ruling — no score floor (v2.22
+//! close-out, O53): the CLI gates nothing here.
 
 // single-path module imports on purpose: the reference ladder
 // resolves them to the sibling FILES, so the graph sees the true
 // dependencies instead of a parent-hub cycle (headroom sprint,
 // 2026-08-24 — this module family was the cycle axis's own finding)
 use super::rows;
-use super::tree;
 use super::wire;
 use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
@@ -27,7 +27,6 @@ pub fn run(
     // measurement only — the structure verdict is this family's own
     // wire call below, never the scan mirror (batch-7 slice 8)
     let (_config, files) = crate::scan::measure(root)?;
-    let t = tree::build(&judged_paths(&files));
     // ONE snapshot for every leg (batch 9 P10): blocks + index
     // measured once, the graph wire from that same index — the "ONE
     // walk" the module doc promises, structural now.
@@ -49,7 +48,8 @@ pub fn run(
     } else {
         None
     };
-    let req = assemble(root, core, &t, (deep, days), &seam_facts, (&w, &found))?;
+    let paths = judged_paths(&files);
+    let req = assemble(root, core, paths, (deep, days), &seam_facts, (&w, &found))?;
     let mut link = crate::lockstep::open_family(core, wire::CAP)?;
     let reply = wire::judge_on(&mut link, &req)?;
     let scale = reply
@@ -61,10 +61,9 @@ pub fn run(
     // the document the core lays out (plan v2.32 step 4): the reply's
     // rows sent back, the directory ids range-checked by its contract
     let parts = super::document::Parts {
-        tree: &t,
         reply: &reply,
         scale,
-        declared: req.declared.len(),
+        declared: req.layout.len(),
         deep,
         days,
         seams: seam_facts.as_ref(),
@@ -98,7 +97,7 @@ pub(crate) fn committed_soft(root: &Path) -> u64 {
 /// population (S2 mixing reads the style distributions the core
 /// folds from the shape rows, not file language — the old comment
 /// blamed the wrong axis; batch-7 defect sweep).
-fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
+pub(crate) fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
     files
         .iter()
         .filter(|f| crate::scan::lang::Lang::judged_path(std::path::Path::new(&f.path)).is_some())
@@ -106,7 +105,7 @@ fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
         .collect()
 }
 
-/// The whole request from one walked tree: the always-on tables,
+/// The whole request from one walk: the paths and the graph's arcs,
 /// the ce.toml layout, and the two honestly-optional axes (split
 /// from run() when the third optional table pushed it past the
 /// repo's own function gate). The two axis switches travel as ONE
@@ -116,7 +115,7 @@ fn judged_paths(files: &[crate::scan::metrics::FileMetrics]) -> Vec<String> {
 fn assemble(
     root: &Path,
     core: &str,
-    t: &tree::Tree,
+    paths: Vec<String>,
     (deep, days): (bool, Option<u32>),
     seam_facts: &Option<super::seams::SeamFacts>,
     (w, found): (
@@ -125,12 +124,12 @@ fn assemble(
     ),
 ) -> Result<wire::Request> {
     let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let stale_docs = match days {
-        Some(d) => Some(rows::stale_doc_rows(root, w, t, d)?),
+    let stale = match days {
+        Some(d) => Some(rows::stale_docs(root, w, d)?),
         None => None,
     };
     let redundancy = if deep {
-        Some(rows::redundancy_rows(root, core, w, found, t)?)
+        Some(rows::redundancy(root, core, w, found)?)
     } else {
         None
     };
@@ -144,20 +143,19 @@ fn assemble(
     let knobs = seams
         .as_ref()
         .map_or_else(Vec::new, |_| seam_knobs(root, &cfg));
-    // ONE join, two tables (O54): fileRefs and the directed crossing
-    // table are drawn from the same edge multiset, which is what lets
-    // the core read the intra mass off `inside` instead of asking for
-    // it twice.
-    let (file_refs, dir_edges) = rows::ref_rows(w, t)?;
+    // ONE arc list, two tables (O54): the core draws fileRefs and the
+    // directed crossing table from the same edge multiset, which is
+    // what lets it read the intra mass off `inside` instead of asking
+    // for it twice.
+    let layout = (cfg.structure.layout.iter())
+        .map(|(path, &w)| (path.clone(), w))
+        .collect();
     Ok(wire::Request {
-        nodes: rows::node_rows(t),
-        shapes: rows::shape_rows(t),
-        conventions: rows::convention_rows(t),
-        file_refs,
-        declared: rows::declared_rows(&cfg.structure.layout, t)?,
-        stale_docs,
+        paths,
+        arcs: rows::arcs(w),
+        layout,
+        stale,
         redundancy,
-        dir_edges: Some(dir_edges),
         seams,
         knobs,
     })

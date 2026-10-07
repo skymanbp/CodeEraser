@@ -101,6 +101,16 @@
 > `inspect` 加 `lower` / `fold` / `url`。golden：`resolve/golden` 加第 18 对（Markdown 十八个站点：R1 文件、目录与资产，R2 命中、重名与解码后的非 ASCII 锚，
 > R4，R5 的协议与站点根，R3 的折叠、Final_Sigma、缺定义与惰性定义）与第 19 对（同一请求不带 `refs`，按名拒绝）；既有十二对应答（第 1–5、7、8、10、12、13、15、16 对）
 > 各多一个空的 `sections` 键，hello 与 `tables` 不动。
+> **9.0.0 同版加性**（目录树与建表进核，算法轨 W1 第 3 项，2026-10-06；设计册 §6「W1 状态」与 §11 第 99–103 条；9.0.0 未发布，同上不另升版号）：
+> 三族请求加性带路径原文，核自己建目录树与按目录的表（`CE.Structure.{Tree,Raw}` / `CE.Arch.Tables` / `CE.Query.Tree`），建出的表解进原来的整数字段，之后的契约与判决不动。
+> `structure.request` 加性 `paths`（走查到的判决语言路径）、`refPaths` + `refPairs` `[[a,b]]`（图的 measured 文件与文件到文件的弧，按 `refPaths` 下标）、`layout` `[[目录, 权重]]`、
+> `staleDocs` `[[文档, 时间, [目标时间…]]]`（`--days`）、`clonePairs` `[[a,b]]` 与 `deadPaths`（`--deep`）；应答加 `tree` `[[dirId, parent, depth, subdirs, files]]` 与 `dirs`
+> （每个目录的路径，根 `.`），降级时加 `priced`（核计价的行数），`inspect: true`（差分门用，产品从不送）另附 `built`（核建的按目录表）；路径放不进树或 layout 指不到目录时
+> 不判、答 `fault`（原句）。`arch.request` 加性 `paths` / `lines` / `arcs` / `sections` / `packages` `[[slot, 目录]]` / `focusPaths`；应答加 `tables`
+> `{files, dirs, edges, pkgEdges, focus}` 与 `dirNames`（根 `""`），`--impact` 指不到 measured 文件时答 `fault`。`query.request` 加性 `tree` `{paths, packages}`：核只建程序读的
+> 目录表（2–5），应答加 `dirs` `[[标签, 名字, 名字哈希]]`。路径形与旧的整数表同送按名拒绝（`paths beside the dir-keyed table …` / `paths beside the table …` /
+> `facts <码>: a directory table beside the tree`）；不带路径的请求逐字节答旧形。golden：`structure/golden` 加第 21–22 对（路径形带 `inspect`、layout 故障）、`arch/golden`
+> 加第 8–9 对（路径形、`--impact` 故障）、`query/golden` 加第 10 对（`tree`），其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -657,7 +667,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->356<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->361<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

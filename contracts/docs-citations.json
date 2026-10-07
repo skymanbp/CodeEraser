@@ -2306,14 +2306,20 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/judge.rs|71db14cfaff0abb0|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 95,
-    "end": 100,
+    "line": 94,
+    "end": 99,
     "text": "/// Judged languages only (plan v2.5): letting the scan-only arm in"
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|cc93c4aa52f4e818|0": {
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|16456a4d00b7fc23|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 203,
-    "text": "crate::lockstep::refuse_degraded(&reply, \"structure/wire.rs vs Structure/Cost.hs\")?;"
+    "line": 154,
+    "end": 164,
+    "text": "fn path_answers(reply: &serde_json::Value) -> Result<Built> {"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|f1d285a1af03715a|0": {
+    "target": "../../../cli/src/structure/wire.rs",
+    "line": 163,
+    "text": "anyhow::bail!(\"{priced} structure/1 request rows exceed the cap {cap}\");"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Lang/Common/Boot2.hs|ecbfee15e57c3ad1|0": {
     "target": "../../../core/app/CE/Lang/Common/Boot2.hs",
@@ -2322,55 +2328,44 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 135,
-    "end": 149,
+    "line": 147,
+    "end": 161,
     "text": "-- | depth == parent.depth + 1 for every non-root row. nodeRow's"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|228575861056e64a|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 48,
-    "end": 53,
-    "text": ", -- the seam tables count toward the same cap (C15: a declared"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3d54266a3b6aab2f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 115,
-    "end": 118,
+    "line": 127,
+    "end": 130,
     "text": "declOk row = case row of"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4437845c220d08fa|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 198,
-    "text": ", \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 151,
-    "end": 164,
+    "line": 163,
+    "end": 176,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 151,
-    "end": 164,
+    "line": 163,
+    "end": 176,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 173,
-    "end": 175,
+    "line": 185,
+    "end": 187,
     "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 175,
-    "end": 179,
+    "line": 187,
+    "end": 191,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 175,
-    "end": 195,
+    "line": 187,
+    "end": 207,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|69c5155f32c757cf|0": {
@@ -2379,39 +2374,50 @@
     "end": 61,
     "text": "{ famName = \"structure\""
   },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6ad8993d8911e54e|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 209,
+    "text": "<> [\"fail\" .= degraded, \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable], \"degraded\" .= degraded]"
+  },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 73,
+    "line": 85,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|82207190ce81caf3|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 120,
-    "end": 133,
+    "line": 132,
+    "end": 145,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|89c38eabd37e152a|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 57,
+    "end": 62,
+    "text": "priced :: StructReq -> Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 107,
-    "end": 110,
+    "line": 119,
+    "end": 122,
     "text": "convOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|a5ff01411ccb2dda|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 100,
-    "end": 106,
+    "line": 112,
+    "end": 118,
     "text": "-- the [dir, key, count] reading: the key under its cap, the count"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|b48a97004c2921f5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 68,
-    "end": 75,
+    "line": 80,
+    "end": 87,
     "text": "violation req ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ddfc9813db49d347|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 228,
-    "end": 239,
+    "line": 238,
+    "end": 249,
     "text": "-- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ebd15a1b8f029b6d|0": {
@@ -2422,14 +2428,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|f179c7361af37e1a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 91,
-    "end": 106,
+    "line": 103,
+    "end": 118,
     "text": "dirTables =\n[ ((3, \"patternShapes\", capOk \"shape bits outside 0..127\" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ff6fdcfd5200b86f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 67,
-    "end": 74,
+    "line": 79,
+    "end": 86,
     "text": "violation :: StructReq -> Maybe String"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|1ce45d9f1e01be3f|0": {
@@ -2748,8 +2754,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|d6dac33d467172f0|0": {
     "target": "../../../core/app/CE/Structure/Request.hs",
-    "line": 84,
-    "end": 87,
+    "line": 177,
+    "end": 180,
     "text": "-- | The [dirId, code, count] distribution the axes read: the shape"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Shape.hs|04ef9ff20f51e83d|0": {
@@ -5938,20 +5944,20 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/document.rs|ff3d7dda0862a34f|0": {
     "target": "../../../cli/src/structure/document.rs",
-    "line": 101,
-    "end": 113,
+    "line": 84,
+    "end": 96,
     "text": "fn candidates(sf: &SeamFacts, r: &Reply) -> Result<Vec<[i64; 5]>> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|51898e9fa4010244|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 182,
-    "end": 189,
+    "line": 180,
+    "end": 187,
     "text": "let mut k = vec!["
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|c3ae6102bc38c631|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 82,
-    "end": 93,
+    "line": 81,
+    "end": 92,
     "text": "pub(crate) fn committed_soft(root: &Path) -> u64 {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|005c173dd605b093|0": {
@@ -6061,8 +6067,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 220,
-    "end": 227,
+    "line": 230,
+    "end": 237,
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|1c6da934c477c2cd|0": {
@@ -8773,8 +8779,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 442,
-    "end": 444,
+    "line": 452,
+    "end": 454,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -10191,47 +10197,42 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|9a5c9c0bdc03904b|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 170,
+    "line": 179,
     "text": "fn glob_faults(root: &Path, program: &Lexed) -> Vec<(String, String)> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|b43a275db29321f1|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 225,
+    "line": 234,
     "text": "impl Resolve for Names {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|1dddd95dd80f8269|0": {
     "target": "../../../cli/src/query/facts/graph.rs",
-    "line": 30,
+    "line": 31,
     "text": "pub fn build(w: &GraphWire, idx: &Index) -> Result<Nodes> {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|5b75789cf73756c4|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|bf4b7b691eb441eb|0": {
     "target": "../../../cli/src/query/facts/graph.rs",
-    "line": 87,
-    "text": "pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<()> {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|83fe4f9274f978b2|0": {
-    "target": "../../../cli/src/query/facts/graph.rs",
-    "line": 154,
-    "text": "fn tree_tables(nodes: &Nodes, sink: &mut Sink, labels: &mut Labels) {"
+    "line": 88,
+    "text": "pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|f2f974f576dc2712|0": {
     "target": "../../../cli/src/query/facts/graph.rs",
-    "line": 137,
+    "line": 162,
     "text": "fn line_counts(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|179260bdca83ea10|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 69,
+    "line": 80,
     "text": "pub struct Sink {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|8e9bc98f8ad96c9c|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 129,
+    "line": 140,
     "text": "pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -> Result<Facts> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|f9803ac8e916bbe8|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 36,
+    "line": 45,
     "text": "pub fn render(&self, sort: i64, v: i128) -> String {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|fe5603408107d945|0": {
@@ -10352,7 +10353,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|3330a64bd12a7a96|0": {
     "target": "../../../cli/src/query/wire.rs",
-    "line": 97,
+    "line": 110,
     "text": "pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|da3bb2dec2173e71|0": {
@@ -10399,12 +10400,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 26,
+    "line": 29,
     "text": "const PROGRAMS: &str = \"\\"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|c43fa06b40a8903d|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 112,
+    "line": 129,
     "text": "fn every_request_line_is_the_prelude_then_its_program() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|102e73d797f3f249|0": {
@@ -10424,7 +10425,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/wire.rs|ceb2e7c5ab25b666|0": {
     "target": "../../../cli/tests/unit/query/wire.rs",
-    "line": 63,
+    "line": 69,
     "text": "fn consume_names_the_degraded_reply_and_every_skew() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|0e2ab9480d5e8f13|0": {
@@ -10513,12 +10514,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|3cb2149f4ff674fa|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 67,
+    "line": 95,
     "text": "overCap :: QueryReq -> Bool"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|6c09cf6a62d51fac|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 87,
+    "line": 116,
     "text": "textsShape :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|9551146ad3aeee22|0": {
@@ -10529,7 +10530,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|d27383d18075f614|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 76,
+    "line": 104,
     "text": "offence :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|0f2ba5f8addc02bf|0": {
@@ -10749,6 +10750,11 @@
     "end": 61,
     "text": "data Clause\n= Rule Atom [Lit] Int"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Tree.hs|80d8e433c01c5785|0": {
+    "target": "../../../core/app/CE/Query/Tree.hs",
+    "line": 41,
+    "text": "treeTables :: NodeTree -> ([(Int, [[Integer]])], [(String, String, Word64)])"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Text/Query.hs|3cb93e93215b0065|0": {
     "target": "../../../core/app/CE/Text/Query.hs",
     "line": 10,
@@ -10777,10 +10783,10 @@
     "line": 34,
     "text": "naive :: Checked -> Db -> Db"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 115,
-    "text": ", goldenPairs \"query/golden.ndjson\""
+    "line": 114,
+    "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
     "target": "../../../gui/src-tauri/src/commands_query.rs",
@@ -11585,20 +11591,20 @@
     "end": 12,
     "text": "-- | The merge battery's cases for the second generation's rulings"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|4e65db66c3f45cd4|0": {
-    "target": "../../../cli/src/arch/face.rs",
-    "line": 78,
-    "text": "fn request(t: &Tables, r: &Reply) -> Request {"
-  },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|5466b2f19597e581|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 24,
+    "line": 23,
     "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Answer> {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|e8ebd19464cabd3f|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|65c7900bd31c9009|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 53,
-    "text": "fn line_count(root: &Path, path: &str) -> Result<i64> {"
+    "line": 80,
+    "text": "fn request(t: &Built, r: &Reply) -> Request {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|73ad354fb7d6ab21|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 28,
+    "text": "let lines = (arcs.paths.iter())"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/mod.rs|5ba8ae5afa201208|0": {
     "target": "../../../cli/src/arch/mod.rs",
@@ -11606,51 +11612,26 @@
     "end": 9,
     "text": "//! The architecture family (plan v2.31 step 9; design booklet"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|2ac8108dcabc988b|0": {
-    "target": "../../../cli/src/arch/tables.rs",
-    "line": 54,
-    "text": "pub fn assemble(w: &GraphWire, t: &Tree, focus: &[String], lines: &[i64]) -> Result<Tables> {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|acfaaf9a12383c4f|0": {
-    "target": "../../../cli/src/arch/tables.rs",
-    "line": 129,
-    "text": "fn dir_rows(t: &Tree) -> Result<Rows<2>> {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|acfaaf9a12383c4f|1": {
-    "target": "../../../cli/src/arch/tables.rs",
-    "line": 129,
-    "text": "fn dir_rows(t: &Tree) -> Result<Rows<2>> {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|ba14db875bf90cf9|0": {
-    "target": "../../../cli/src/arch/tables.rs",
-    "line": 152,
-    "text": "fn focus_rows(focus: &[String], slot: &BTreeMap<&str, usize>) -> Result<Vec<i64>> {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/tables.rs|f77585dd9af9c2f6|0": {
-    "target": "../../../cli/src/arch/tables.rs",
-    "line": 96,
-    "text": "fn folded(w: &GraphWire, t: &Tree, slot: &BTreeMap<&str, usize>) -> Folded {"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|7bc125be9e5ee21a|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|34d76ae9b20d3c07|0": {
     "target": "../../../cli/src/arch/wire.rs",
     "line": 1,
-    "end": 12,
-    "text": "//! The arch/1 leg (design booklet §3's wire table, §7): the five"
+    "end": 13,
+    "text": "//! The arch/1 leg (design booklet §3's wire table, §7): the path form"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|95df4f4bf3a0b417|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 173,
+    "line": 243,
     "text": "let col: usize = col.parse().context(\"an id column\")?;"
-  },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|99fca406c10b61bf|0": {
-    "target": "../../../cli/src/arch/wire.rs",
-    "line": 72,
-    "text": "(files > caps.arch_files || refs > caps.arch_refs).then(|| {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|9e002ae0cba9f447|0": {
     "target": "../../../cli/src/arch/wire.rs",
-    "line": 122,
+    "line": 172,
     "text": ");\ntables.insert(key, rows);"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/wire.rs|d8243d129364eae6|0": {
+    "target": "../../../cli/src/arch/wire.rs",
+    "line": 164,
+    "text": "fn read_tables(v: &Value, spec: &'static str) -> Result<BTreeMap<&'static str, Vec<Vec<i64>>>> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|9ab7edbd734e96bf|0": {
     "target": "../../../cli/src/faces.rs",
@@ -11672,10 +11653,15 @@
     "line": 234,
     "text": "tool!(\n\"flow\","
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/structure/rows.rs|64f5dba50d2cfe02|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/structure/rows.rs|5dfcc9f8b3436c6d|0": {
     "target": "../../../cli/src/structure/rows.rs",
-    "line": 89,
-    "text": "pub(crate) fn file_join(w: &crate::graph::deadcode::GraphWire, t: &tree::Tree) -> Result<FileJoin> {"
+    "line": 30,
+    "text": "pub fn arcs(w: &GraphWire) -> Arcs {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/structure/rows.rs|5dfcc9f8b3436c6d|1": {
+    "target": "../../../cli/src/structure/rows.rs",
+    "line": 30,
+    "text": "pub fn arcs(w: &GraphWire) -> Arcs {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/it/arch_face.rs|4fe7222019c273f8|0": {
     "target": "../../../cli/tests/it/arch_face.rs",
@@ -11689,10 +11675,15 @@
     "end": 16,
     "text": "//! The architecture family's reading of this repository, frozen (plan"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/unit/arch/tables.rs|fa9a0568db9a2660|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/unit/arch/tables.rs|d04bac0d52958107|0": {
     "target": "../../../cli/tests/unit/arch/tables.rs",
-    "line": 72,
-    "text": "fn the_measured_files_are_dense_in_path_order_under_their_directories() {"
+    "line": 91,
+    "text": "fn the_focus_is_ascending_distinct_and_a_stranger_is_named() {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/tests/unit/structure/diff_arch.rs|09f34e1cba2ca446|0": {
+    "target": "../../../cli/tests/unit/structure/diff_arch.rs",
+    "line": 1,
+    "text": "//! The differential leg of plan v2.33 W1 item 3 for the arch tables: the"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../contracts/fixtures/arch/golden.ndjson|f90ba52102ad7630|0": {
     "target": "../../../contracts/fixtures/arch/golden.ndjson",
@@ -11707,7 +11698,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Contract.hs|798afb348c52be60|0": {
     "target": "../../../core/app/CE/Arch/Contract.hs",
-    "line": 48,
+    "line": 77,
     "text": "offence :: ArchReq -> Maybe String"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Cost.hs|490d63f9e9dcf864|0": {
@@ -11821,10 +11812,50 @@
     "line": 85,
     "text": "-- | Ruling 6 as tightened in the step-8 lane: `[[F, M]]` for every"
   },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Tables.hs|2b48ca5eb19914d6|0": {
+    "target": "../../../core/app/CE/Arch/Tables.hs",
+    "line": 71,
+    "text": "assemble :: Paths -> Either String (([[Integer]], [[Integer]], [[Integer]], [[Integer]], [Integer]), [String])"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Tables.hs|2e2768dc7e0b967f|0": {
+    "target": "../../../core/app/CE/Arch/Tables.hs",
+    "line": 81,
+    "text": "pkgs = counted [(f, toInteger d) | (f, path) <- pPackages p, Just d <- [M.lookup path (tIds t)]]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Tables.hs|3e03b60bed86c140|0": {
+    "target": "../../../core/app/CE/Arch/Tables.hs",
+    "line": 82,
+    "text": "focusSlot path = maybe (Left (\"--impact: \" <> path <> \" is not a measured file\")) Right (M.lookup path slots)"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Tables.hs|7f90d4cb5cb84c74|0": {
+    "target": "../../../core/app/CE/Arch/Tables.hs",
+    "line": 80,
+    "text": "edges = counted [(a, b) | [a, b] <- pArcs p ++ pSections p, a /= b]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Tables.hs|ba1973436433a7c7|0": {
+    "target": "../../../core/app/CE/Arch/Tables.hs",
+    "line": 78,
+    "text": "files = [[f, maybe 0 toInteger (dirOf t path), n] | (f, path, n) <- zip3 [0 ..] (pPaths p) (pLines p)]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Arch/Tables.hs|d4b94fe7915ccf33|0": {
+    "target": "../../../core/app/CE/Arch/Tables.hs",
+    "line": 79,
+    "text": "dirs = [0, -1] : [[toInteger d, toInteger (dParent dir)] | (d, dir) <- drop 1 (IM.toAscList (tDirs t))]"
+  },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Limits.hs|a799a9567231eed5|0": {
     "target": "../../../core/app/CE/Limits.hs",
     "line": 87,
     "text": "caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap]"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Structure/Tree.hs|f767f36e6267bad9|0": {
+    "target": "../../../core/app/CE/Structure/Tree.hs",
+    "line": 54,
+    "text": "build :: [String] -> Tree"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Structure/Tree.hs|f767f36e6267bad9|1": {
+    "target": "../../../core/app/CE/Structure/Tree.hs",
+    "line": 54,
+    "text": "build :: [String] -> Tree"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/test/ArchCases.hs|6205a2f18f7d1061|0": {
     "target": "../../../core/test/ArchCases.hs",

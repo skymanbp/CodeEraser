@@ -1,19 +1,20 @@
 //! The node universe and its tables: the graph wire's nodes (files,
 //! packages, sections, walked assets — the same dense ids graph/1
 //! judges, nodes.rs's one assignment) with the prose-only files the
-//! docdup family reads appended after them; the directory tree the
-//! structure family builds, over every node path, with a package
-//! seated at its own directory; the roles, the references, the
-//! unresolved counts, the languages, the line counts.
+//! docdup family reads appended after them; the roles, the references,
+//! the unresolved counts, the languages, the line counts; and every
+//! node's path for the directory tree the core builds over them, a
+//! package seated at its own directory (plan v2.33 W1 item 3,
+//! CE.Query.Tree).
 
-use super::{Ctx, Labels, Sink};
+use super::{Ctx, Sink};
 use crate::dedup::index::Index;
 use crate::graph::deadcode::GraphWire;
 use crate::graph::wire::{GRAN_PACKAGE, GRAN_SECTION};
 use crate::query::legend::{self, KIND_ASSET, KIND_PROSE, NODE_KINDS, REF_KINDS, ROLE_NAMES};
 use crate::scan::lang::Lang;
-use crate::structure::tree;
 use anyhow::Result;
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -83,8 +84,8 @@ impl Nodes {
     }
 }
 
-/// The node, role, reference, language, line and tree tables.
-pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<()> {
+/// The node, role, reference, language and line tables.
+pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {
     let nodes = ctx.nodes;
     for (i, kind) in nodes.kinds.iter().enumerate() {
         let id = i as u64;
@@ -126,11 +127,35 @@ pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<()> {
     if sink.wants("lines") {
         line_counts(ctx, sink)?;
     }
-    if sink.wants_any(&["in_dir", "dir", "parent", "dir_name"]) {
-        tree_tables(nodes, sink, labels);
-    }
     Ok(())
 }
+
+/// The directory tables the core builds, by name.
+const DIR_TABLES: [&str; 4] = ["in_dir", "dir", "parent", "dir_name"];
+
+/// The tree form, when the program reads a directory table: every
+/// node's path in node order and the package nodes. The core builds the
+/// tree over the other nodes' paths, seats each package at its own
+/// directory and answers the four tables with each directory's label
+/// and name (CE.Query.Tree), so the sink sends none of them.
+pub fn tree(nodes: &Nodes, sink: &mut Sink) -> Option<Value> {
+    if !sink.wants_any(&DIR_TABLES) {
+        return None;
+    }
+    for name in DIR_TABLES {
+        let code = sink.code(name);
+        sink.tables.remove(&code);
+    }
+    let packages: Vec<usize> = (nodes.kinds.iter().enumerate())
+        .filter(|(_, k)| **k == GRAN_PACKAGE as usize)
+        .map(|(i, _)| i)
+        .collect();
+    Some(json!({"paths": nodes.paths, "packages": packages}))
+}
+
+#[cfg(test)]
+#[path = "../../../tests/unit/query/facts/graph.rs"]
+mod frozen;
 
 /// One read per file-shaped node (assets too: a text asset has
 /// lines, and a binary one counts what its bytes hold).
@@ -147,49 +172,4 @@ fn line_counts(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {
         sink.row("lines", vec![i as u64, n as u64]);
     }
     Ok(())
-}
-
-/// The directory tree over every file-shaped and section path, a
-/// package seated at its own directory; root is dir 0 and reads `.`.
-fn tree_tables(nodes: &Nodes, sink: &mut Sink, labels: &mut Labels) {
-    let file_paths: Vec<String> = nodes
-        .kinds
-        .iter()
-        .zip(&nodes.paths)
-        .filter(|(k, _)| **k != GRAN_PACKAGE as usize)
-        .map(|(_, p)| p.clone())
-        .collect();
-    let mut t = tree::build(&file_paths);
-    for (i, kind) in nodes.kinds.iter().enumerate() {
-        let dir = if *kind == GRAN_PACKAGE as usize {
-            tree::dir_id(&mut t, &nodes.paths[i])
-        } else {
-            tree::dir_of(&t, &nodes.paths[i]).unwrap_or(0)
-        };
-        sink.row("in_dir", vec![i as u64, dir as u64]);
-    }
-    let mut by_id: Vec<String> = vec![String::new(); t.dirs.len()];
-    for (path, id) in &t.ids {
-        by_id[*id] = path.clone();
-    }
-    for (id, dir) in t.dirs.iter().enumerate() {
-        sink.row("dir", vec![id as u64]);
-        if id != 0 {
-            sink.row("parent", vec![id as u64, dir.parent as u64]);
-        }
-        let name = by_id[id]
-            .rsplit('/')
-            .next()
-            .filter(|n| !n.is_empty())
-            .unwrap_or(".");
-        labels
-            .names
-            .entry(legend::sym(name))
-            .or_insert_with(|| name.to_string());
-        sink.row("dir_name", vec![id as u64, legend::sym(name)]);
-    }
-    labels.dirs = by_id
-        .into_iter()
-        .map(|p| if p.is_empty() { ".".to_string() } else { p })
-        .collect();
 }

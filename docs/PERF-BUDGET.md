@@ -719,3 +719,31 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - **其余七个面**（`warmreq_g.sh`：每臂冷跑一次 `graph --sites` 建索引，再经中继核把各面跑一次）：两棵树上每个面两臂的请求种类与个数相同，`structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 的 `resolve.request` 不带站点、字节两臂相同（自仓 64,404 B，Claude-Code-Local 两个共 136,310 B）。
 - **钩子**：PreToolUse 探针不问 `resolve/1`——在 Claude-Code-Local 拷贝上写入一个带文件链接、跨文件锚、目录、图片、引用链接与定义、没人用的定义、裸片段与自动链接的新 Markdown 文件的 `Write` 信封经 `ce probe --hook` 冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_g.sh`），与阶段 A–F 同。
 - 复跑：车道目录 `v233_w2t_scratch/perf_g.py 7`（树拷自车道归档、`ts_trees/Claude-Code-Local` 与 `gate1g/seed-rs-ripgrep`），读数原文 `perf_g_all.log`、逐跑 `perf_g.ndjson`、负载 `perf_g_load.txt`；请求字节 `reqbytes_g.sh`（`reqbytes_g_sum.py`），各面请求 `warmreq_g.sh`（`warmreq_g_sum.py`），钩子 `hookprobe_g.sh`，核单独计时 `coretime_g.sh`。
+
+## v2.33 W1 第 3 项 目录树与建表进核 A/B（实测 2026-10-07 00:29–00:50Z，在变基到 e393e1cf〔W2b 阶段 G 落地〕之前对 924fddab 量，按「每阶段只量一次」变基后不重量；release，同一台机、同一坐：A = 924fddab 的 ce〔sha256 508ee2a5…〕+ 它的核〔sha256 c4ef9e53…〕，在 924fddab 的工作树里构建，`cli/src` 与 `core/` 与 dbed2fc6 相同；B = 车道树的 ce〔sha256 a53db263…，构建进车道的 scratch target，与本项提交的 `cli/src` 相同〕+ 它的核〔sha256 efe4bfc4…〕——structure / arch / query 的请求带路径原文，核建目录树与按目录的表；每臂每棵树各一份拷贝〔`.ce` 删掉〕，每个（树、面）先跑一次，再 ABAB ×7 暖跑，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，00:29–00:49Z 共 20 次 48–100 %——**不是静默窗**：20 次的首个进程都是用户在玩的 Warhammer3，为不和用户抢机器，第一条计时之前〔逐跑记录还是 0 行〕把计时脚本的进程调到 BelowNormal，两臂之后起的 ce 都继承这一档）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：dbed2fc6 的归档（测试子仓 f64c57d 就位）与两棵真树 requests、cobra（拷自 W2-text 车道的 `.ce-eval/corpora`）。只量暖跑：本项动的是三族判决请求的组装与目录表，不碰索引刷新与冷建。`query` 用的问题是读目录表的 `in_dir(F, D), dir_name(D, N)`。
+
+| 树 | 面 | A（924fddab） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `structure` 暖 | 4012.1（3334.7–9944.2） | 4397.4（3350.2–6584.4） | +9.6 % |
+| self | `structure --deep --days 30` 暖 | 5389.4（3849.4–5794.1） | 4849.1（3769.1–8097.9） | -10.0 % |
+| self | `arch` 暖 | 1999.2（1857.4–2360.7） | 2060.5（1927.3–2204.0） | +3.1 % |
+| self | `query` 暖 | 8418.0（5336.0–20858.3） | 8055.5（4745.0–33713.4） | -4.3 % |
+| self | `check` 暖 | 28733.7（24921.9–89201.1） | 28580.3（20617.1–45457.1） | -0.5 % |
+| requests | `structure` 暖 | 675.8（426.7–1326.2） | 650.6（504.6–776.1） | -3.7 % |
+| requests | `structure --deep --days 30` 暖 | 784.9（746.4–1439.6） | 859.0（655.5–955.2） | +9.4 % |
+| requests | `arch` 暖 | 426.8（310.7–582.9） | 502.9（407.5–736.5） | +17.8 % |
+| requests | `query` 暖 | 390.0（312.2–556.3） | 559.9（389.5–721.2） | +43.6 % |
+| requests | `check` 暖 | 2227.6（1922.2–2739.6） | 2115.1（1600.7–2356.2） | -5.1 % |
+| cobra | `structure` 暖 | 560.2（422.7–848.8） | 597.0（521.9–880.1） | +6.6 % |
+| cobra | `structure --deep --days 30` 暖 | 932.6（709.8–1036.3） | 926.7（790.5–1283.5） | -0.6 % |
+| cobra | `arch` 暖 | 461.6（284.7–964.9） | 451.6（362.9–938.3） | -2.2 % |
+| cobra | `query` 暖 | 472.2（386.5–739.5） | 478.1（445.7–954.7） | +1.2 % |
+| cobra | `check` 暖 | 4917.8（2907.2–7609.9） | 5207.5（4468.2–12195.3） | +5.9 % |
+
+- 预算（§8）：暖 `ce check` ≤ +15 %——三棵树 -0.5 %、-5.1 %、+5.9 %，都在线内（`ce check` 不经本项改动的三族请求，它是本坐的噪声参照）。本坐负载高，自仓 `check` 两臂的中位数是 W1 第 1、2 项那一坐（12 秒上下）的两倍多，极差到 20–89 秒；两臂所有面都退 0。
+- requests 的 `query` +43.6 %、`arch` +17.8 % 是本表最大的两格，两臂区间重叠（312.2–556.3 对 389.5–721.2、310.7–582.9 对 407.5–736.5）；同一问题在 cobra 上是 +1.2 % / -2.2 %，在自仓是 -4.3 % / +3.1 %。本坐不静默，这两格的差是否是本项的代价，一坐量不出来；按「每阶段只量一次」没有重坐，记作未定。
+- **请求字节**（§3 第 5 点；经中继核记下每个请求与应答的字节，暖，两臂输出逐字节同）：自仓 `structure` 请求 16,339 → 81,671 B（应答 2,044 → 6,522 B）、`structure --deep --days 30 --split-candidates` 112,162 → 177,692 B、`arch` 48,849 → 61,351 B（应答 16,094 → 67,455 B：核答回建好的五张表与目录名）、`query`（`in_dir(F, D), dir_name(D, N), parent(D, P)`）298,990 → 327,848 B；koreader `structure` 11,288 → 88,140 B、`--deep --days 30 --split-candidates` 1,462,245 → 2,380,732 B（staleness 每篇文档带它的目标时间列表）、`arch` 55,523 → 65,937 B、`query` 151,893 → 168,879 B。document 请求两臂逐字节同。
+- **钩子**：structure / arch / query 都不在 PreToolUse 探针上（命令行、MCP 与 GUI 调用），未单独量探针。
+- 复跑：车道目录 `v233_w1_scratch/perf_i3.py 7`，读数原文 `perf_i3.log`、逐跑 `perf_i3.ndjson`、负载 `perf_i3_load.txt`；请求字节 `reqbytes3.sh`（读数 `reqbytes3-Adb.log` / `reqbytes3-B.log`）。

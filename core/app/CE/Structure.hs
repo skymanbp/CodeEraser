@@ -25,7 +25,7 @@ import qualified CE.Structure.Modularity as Mod
 import CE.Verdict.Score (chargeAt)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
-import CE.Structure.Request (StructReq (..), patternsOf, seamTables)
+import CE.Structure.Request (StructReq (..), pathFault, pathKeys, pathOffence, patternsOf, seamTables)
 import CE.Structure.Shape (shapeBitsCap)
 import CE.Structure.Split (splitOffence, splitRows)
 import qualified CE.Structure.Stale as Stale
@@ -45,17 +45,29 @@ respond proto =
     Family
       { famName = "structure"
       , famId = reqId
-      , -- the seam tables count toward the same cap (C15: a declared
-        -- cap that misses a request dimension walks it uncapped)
-        famOverCap = \req ->
-          let (u, r, c, h) = seamTables req
-              seamRows = maybe 0 length (reqSeamFiles req) + sum (map length [u, r, c, h])
-              edgeRows = maybe 0 length (reqDirEdges req)
-           in toInteger (length (reqNodes req) + seamRows + edgeRows) > structNodeCap
+      , famOverCap = \req -> priced req > structNodeCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req (effective []) True
-      , famJudged = \req -> reply proto req (effective (reqKnobs req)) False
+      , famJudged = \req -> maybe (reply proto req (effective (reqKnobs req)) False) (faultReply proto req) (pathFault req)
       }
+
+-- | The rows the cap prices: the nodes, the seam tables and the dir-edge
+-- table together (C15: a declared cap that misses a request dimension
+-- walks it uncapped).
+priced :: StructReq -> Integer
+priced req = toInteger (length (reqNodes req) + seamRows + edgeRows)
+ where
+  (u, r, c, h) = seamTables req
+  seamRows = maybe 0 length (reqSeamFiles req) + sum (map length [u, r, c, h])
+  edgeRows = maybe 0 length (reqDirEdges req)
+
+-- | A path-form request whose path the tree cannot place: the fault in
+-- place of a judgment (the measuring side stops on it, as it stopped on
+-- its own message before the core built the tree).
+faultReply :: String -> StructReq -> String -> B8.ByteString
+faultReply proto req fault =
+  BL.toStrict . encode . object $
+    ["proto" .= proto, "type" .= ("structure.result" :: String), "id" .= reqId req, "fault" .= fault, "degraded" .= False]
 
 -- | First boundary-contract offender in request order — the three
 -- dir-keyed tables walk ONE loop over their spec rows (the twelfth
@@ -67,7 +79,7 @@ respond proto =
 violation :: StructReq -> Maybe String
 violation req =
   asum
-    ( retired "patterns" "the core classifies patternShapes" (reqPatternsSent req)
+    ( pathOffence req : retired "patterns" "the core classifies patternShapes" (reqPatternsSent req)
         : asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
         : depthChain (reqNodes req)
         : [ tableOffence nm proj (dirRow n spec) rows
@@ -194,12 +206,10 @@ reply proto req k degraded =
     ]
       <> declaredKeys
       <> splitKeys
-      <> [ "fail" .= degraded
-         , "knobs" .= [[c, g k] | (c, g, _) <- knobTable]
-         , "degraded" .= degraded
-         ]
+      <> ["fail" .= degraded, "knobs" .= [[c, g k] | (c, g, _) <- knobTable], "degraded" .= degraded]
       <> ["reason" .= ("structure_too_large" :: String) | degraded]
       <> ["patternShapes" .= length rows | not degraded, Just rows <- [reqShapes req]]
+      <> pathKeys (if degraded then priced req else 0) req
  where
   facts =
     if degraded

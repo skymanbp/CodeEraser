@@ -58,23 +58,36 @@ pub struct Judged {
     pub errors: Vec<(usize, i64)>,
     pub counts: BTreeMap<&'static str, u64>,
     pub schema: Option<Vec<Vec<i64>>>,
+    /// The directories the core built from the tree form, `[label, name,
+    /// hash]` by id.
+    pub dirs: Option<Vec<(String, String, u64)>>,
     /// The core's named reason it did not judge.
     pub degraded: Option<String>,
 }
 
 /// The request body: the program's three texts (the core lexes them,
-/// lexed.rs), the fact tables, the two flags.
-pub fn body(texts: &Value, facts: &BTreeMap<u32, Vec<Vec<u64>>>, why: bool, schema: bool) -> Value {
+/// lexed.rs), the fact tables, the tree form when a directory table is
+/// read (the core builds those tables, CE.Query.Tree), the two flags.
+pub fn body(
+    texts: &Value,
+    (facts, tree): (&BTreeMap<u32, Vec<Vec<u64>>>, Option<&Value>),
+    why: bool,
+    schema: bool,
+) -> Value {
     let tables: serde_json::Map<String, Value> = facts
         .iter()
         .map(|(code, rows)| (code.to_string(), json!(rows)))
         .collect();
-    json!({
+    let mut body = json!({
         "texts": texts,
         "facts": tables,
         "why": why,
         "schema": schema,
-    })
+    });
+    if let Some(tree) = tree {
+        body["tree"] = tree.clone();
+    }
+    body
 }
 
 /// One request over a link past its handshake, behind the
@@ -97,6 +110,7 @@ fn number(v: &Value) -> Result<i128, String> {
 pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {
     let mut j = Judged {
         counts: counts_of(reply)?,
+        dirs: optional(reply, "dirs")?,
         ..Judged::default()
     };
     if let Err(reason) = judged::degraded(reply) {
@@ -128,10 +142,16 @@ pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {
             _ => return Err("wire skew: an error is [token <= sent, code 1..9]".into()),
         }
     }
-    if reply.get("schema").is_some() {
-        j.schema = Some(judged::table(reply, "schema")?);
-    }
+    j.schema = optional(reply, "schema")?;
     Ok(j)
+}
+
+/// A table the reply carries only when the request asked for it.
+fn optional<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> Result<Option<T>, String> {
+    reply
+        .get(key)
+        .map(|_| judged::table(reply, key))
+        .transpose()
 }
 
 fn counts_of(reply: &Value) -> Result<BTreeMap<&'static str, u64>, String> {

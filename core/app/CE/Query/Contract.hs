@@ -17,12 +17,15 @@ import CE.Query.Cost (factCap, idbFloor, kindAnon, kindInt, kindPred, kindSet, k
 import CE.Query.Front (located)
 import CE.Query.Lex (Fault (..), Lexed (..), Tok (..), lexProgram)
 import CE.Query.Schema (arityOf)
+import CE.Query.Tree (NodeTree, parseTree, treeTables)
 import CE.Wire (rowCheck, tableOffence)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Char (isDigit)
 import Data.Foldable (asum)
 import Data.Maybe (listToMaybe)
 import qualified Data.Map.Strict as M
+import qualified Data.Set as S
+import Data.Word (Word64)
 
 -- | The request: id, the token stream, the fact tables keyed by
 -- predicate code (decimal strings — JSON object keys), how many
@@ -31,7 +34,12 @@ import qualified Data.Map.Strict as M
 -- in the unreleased minor) the program may ride as its three texts —
 -- the prelude, the rules file, the query (`null` when absent) — and
 -- this side lexes them (CE.Query.Lex); `lex` asks for the lexed
--- program alone (CE.Query.Front), `inspect` adds the raw tokens.
+-- program alone (CE.Query.Front), `inspect` adds the raw tokens. Since
+-- item 3 of the same lane the request may carry `tree` — every node's path
+-- and the package nodes (CE.Query.Tree) — and this side builds the four
+-- directory tables the program reads; `dirsOf` keeps each directory's
+-- label, name and hash for the reply, `clashOf` names a directory table
+-- sent beside the tree.
 data QueryReq = QueryReq
   { reqId :: Value
   , lexedOf :: Maybe (Either Fault Lexed)
@@ -42,6 +50,8 @@ data QueryReq = QueryReq
   , preludeOf :: Integer
   , whyOf :: Bool
   , schemaOf :: Bool
+  , dirsOf :: Maybe [(String, String, Word64)]
+  , clashOf :: Maybe String
   }
 
 instance FromJSON QueryReq where
@@ -49,16 +59,34 @@ instance FromJSON QueryReq where
     lexed <- fmap (\(p, r, q) -> lexProgram p r q) <$> o .:? "texts"
     let program = [[tKind t, tValue t] | Just (Right l) <- [lexed], t <- lTokens l]
         prelude = [toInteger (lPrelude l) | Just (Right l) <- [lexed]]
-    QueryReq
-      <$> o .: "id"
-      <*> pure lexed
-      <*> o .:? "lex" .!= False
-      <*> o .:? "inspect" .!= False
-      <*> maybe (o .:? "program" .!= []) (const (pure program)) lexed
-      <*> fmap M.toList (o .:? "facts" .!= M.empty)
-      <*> maybe (o .:? "prelude" .!= 0) pure (listToMaybe prelude)
-      <*> o .:? "why" .!= False
-      <*> o .:? "schema" .!= False
+    req <-
+      QueryReq
+        <$> o .: "id"
+        <*> pure lexed
+        <*> o .:? "lex" .!= False
+        <*> o .:? "inspect" .!= False
+        <*> maybe (o .:? "program" .!= []) (const (pure program)) lexed
+        <*> fmap M.toList (o .:? "facts" .!= M.empty)
+        <*> maybe (o .:? "prelude" .!= 0) pure (listToMaybe prelude)
+        <*> o .:? "why" .!= False
+        <*> o .:? "schema" .!= False
+        <*> pure Nothing
+        <*> pure Nothing
+    maybe req (withTree req) <$> parseTree o
+
+-- | The directory tables built from the tree, the ones the program reads
+-- (a schema predicate among its tokens), added to the fact tables; a
+-- directory table also sent is named.
+withTree :: QueryReq -> NodeTree -> QueryReq
+withTree req nt = req {tablesOf = M.toList (M.union sent built), dirsOf = Just dirs, clashOf = clash}
+ where
+  (tables, dirs) = treeTables nt
+  read' = S.fromList [v | [k, v] <- programOf req, k == kindPred, v < idbFloor]
+  built = M.fromList [(show code, rows) | (code, rows) <- tables, S.member (toInteger code) read']
+  sent = M.fromList (tablesOf req)
+  clash = case M.keys (M.intersection sent built) of
+    k : _ -> Just ("facts " <> k <> ": a directory table beside the tree")
+    [] -> Nothing
 
 -- | Tokens and fact rows are priced separately: each is its own
 -- request dimension with its own ceiling (CE.Query.Cost). A lex
@@ -77,6 +105,7 @@ offence :: QueryReq -> Maybe String
 offence req =
   asum
     [ textsShape req
+    , clashOf req
     , asum (zipWith tokenShape [0 :: Int ..] (programOf req))
     , if preludeOf req < 0 then Just "negative prelude" else Nothing
     , asum (map tableShape (tablesOf req))

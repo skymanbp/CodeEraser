@@ -1,7 +1,9 @@
 //! structure/1 wire codec (contracts/fixtures/structure/golden.ndjson
 //! is the byte-level contract; corelink stamps proto/type/id): the
-//! tree-scale fact tables out, the judged axes / score / entropy /
-//! findings back. This family keeps NO Rust verdict mirror by
+//! request's path form out — since plan v2.33 W1 item 3 the core builds
+//! the directory tree and the dir-keyed tables from the paths
+//! (CE.Structure.Raw) — the judged axes / score / entropy / findings and
+//! the tree it built back. This family keeps NO Rust verdict mirror by
 //! design-booklet ruling (no frozen instrument needs one — the
 //! review-repair C1 seam class is closed at the design table), so
 //! the client parses and relays; a degraded reply to a client-sized
@@ -13,37 +15,23 @@ use serde_json::json;
 /// Capability name the core's hello must offer (Protocol.hs).
 pub const CAP: &str = "structure/1";
 
-/// The assembled request tables (dense ids; names never cross).
+/// The request's path form (the core builds the tree and the tables
+/// from it, CE.Structure.Raw).
 pub struct Request {
-    pub nodes: Vec<[u64; 5]>,
-    /// The S1 fact table (7.2.0, plan v2.30 step 7b): [dirId,
-    /// shapeBits, count] stem facts, ascending — the core classifies
-    /// them (CE.Structure.Shape). The `patterns` road, codes chosen on
-    /// this side, is never sent; 8.0.0 retired it and the core refuses
-    /// it by name.
-    pub shapes: Vec<[u64; 3]>,
-    pub conventions: Vec<[u64; 2]>,
-    pub file_refs: Vec<[u64; 4]>,
-    /// The A-layer template (S3a): [dirId, weight] rows compiled
-    /// from ce.toml's [structure] layout, dirId-ascending. Empty =
-    /// no declaration — the reply carries no A-layer keys at all.
-    pub declared: Vec<[u64; 2]>,
-    /// The S5 staleness join (S3c): [dirId, stale, total] rows —
-    /// same absence semantics as redundancy, driven by --days.
-    /// The raw S5 tables (2.23.0) — the predicate is the core's
-    /// (deriveStale); the type lives with its producer.
-    pub stale_docs: Option<super::rows::StaleTables>,
-    /// The S6 rollup (S3b): [dirId, dupBlocks, deadUnits] rows.
-    /// None = the table stays off the wire and axis 6 is honestly
-    /// unjudged; Some(empty) = judged clean (absence vs zero).
-    pub redundancy: Option<Vec<[u64; 3]>>,
-    /// The directed CROSSING dir-edge table (7.1.0, O54):
-    /// [fromDir, toDir, count], from != to, ascending. Same absence
-    /// semantics — None = axis 7 unjudged, Some(empty) = judged clean.
-    /// The intra mass is NOT here: it is `file_refs`' inside sum
-    /// halved, and the core refuses the pair unless the two tables
-    /// account for the same edges.
-    pub dir_edges: Option<Vec<[u64; 3]>>,
+    /// The walked judged paths the tree is built over.
+    pub paths: Vec<String>,
+    /// The graph's measured files and their file-to-file arcs: the
+    /// reference split (S3) and the crossing dir-edge table (7.1.0, O54)
+    /// the core counts off them.
+    pub arcs: super::rows::Arcs,
+    /// ce.toml's [structure] layout (S3a), in key order. Empty = no
+    /// declaration — the reply carries no A-layer keys at all.
+    pub layout: Vec<(String, u32)>,
+    /// The S5 staleness facts — None = axis 5 unjudged (no --days).
+    pub stale: Option<super::rows::StaleDocs>,
+    /// The S6 facts — None = axis 6 honestly unjudged (no --deep);
+    /// Some with nothing in it = judged clean (absence vs zero).
+    pub redundancy: Option<super::rows::Redundancy>,
     /// The split-ROI seam tables (plan v2.6 §C, 2.14.0). None = the
     /// advisory is not armed and the reply carries no split keys.
     pub seams: Option<SeamTables>,
@@ -95,6 +83,10 @@ pub struct Reply {
     /// [fileId, bestBenefitMilli, bestCostMilli] — past the soft
     /// line with no viable seam (0/0 = no seam at all).
     pub size_exempt: Vec<[i64; 3]>,
+    /// The tree the core built: [dirId, parent, depth, subdirs, files].
+    pub tree: Vec<[i64; 5]>,
+    /// Each directory's path by id, the root `.`.
+    pub dirs: Vec<String>,
 }
 
 /// Pin the echo the way every sibling family does (scan compares the
@@ -117,43 +109,25 @@ fn pinned_echo(reply: &serde_json::Value, sent: &[[u64; 2]]) -> Result<Vec<[i64;
     Ok(echoed)
 }
 
-/// The rows the CORE prices against its node cap — nodes, the seam
-/// tables and (7.1.0) the dir-edge table together, C15's rule that
-/// every request dimension counts. This mirrors
-/// `CE.Structure.respond`'s `famOverCap` term for term; it used to
-/// price the node rows alone, so a request the core would degrade left
-/// here as a well-formed request and came back as a cap-mirror drift
-/// error instead of a named local refusal.
-fn priced_rows(r: &Request) -> usize {
-    let seams = r.seams.as_ref().map_or(0, |s| {
-        s.files.len() + s.units.len() + s.refs.len() + s.clones.len() + s.churn.len()
-    });
-    r.nodes.len() + seams + r.dir_edges.as_ref().map_or(0, Vec::len)
-}
-
-/// The request body: the four tables every request carries, then
-/// each optional table exactly when its measurement rode — absence
-/// is the core's "unjudged", never a zero (the redundancy / dir-edge
-/// / seam semantics on `Request`).
-fn request_body(r: &Request) -> serde_json::Value {
+/// The request body: the paths and the graph's files and arcs every
+/// request carries, then each optional table exactly when its
+/// measurement rode — absence is the core's "unjudged", never a zero
+/// (the layout / staleness / redundancy / seam semantics on `Request`).
+pub(crate) fn request_body(r: &Request) -> serde_json::Value {
     let mut body = json!({
-        "nodes": r.nodes,
-        "patternShapes": r.shapes,
-        "conventions": r.conventions,
-        "fileRefs": r.file_refs,
+        "paths": r.paths,
+        "refPaths": r.arcs.paths,
+        "refPairs": r.arcs.files,
     });
-    if !r.declared.is_empty() {
-        body["declared"] = json!(r.declared);
+    if !r.layout.is_empty() {
+        body["layout"] = json!(r.layout);
     }
-    if let Some((docs, edges)) = &r.stale_docs {
-        body["staleDocRows"] = json!(docs);
-        body["staleEdgeRows"] = json!(edges);
+    if let Some(docs) = &r.stale {
+        body["staleDocs"] = json!(docs);
     }
-    if let Some(rows) = &r.redundancy {
-        body["redundancy"] = json!(rows);
-    }
-    if let Some(rows) = &r.dir_edges {
-        body["dirEdges"] = json!(rows);
+    if let Some((blocks, dead)) = &r.redundancy {
+        body["clonePairs"] = json!(blocks);
+        body["deadPaths"] = json!(dead);
     }
     if let Some(s) = &r.seams {
         body["seamFiles"] = json!(s.files);
@@ -168,18 +142,34 @@ fn request_body(r: &Request) -> serde_json::Value {
     body
 }
 
-/// The shape road's own echo (7.2.0): the core says how many shape
-/// rows it folded — a pre-7.2.0 core drops the table under the
-/// unknown-field rule and would judge S1 on nothing, silently.
-fn shape_echo(reply: &serde_json::Value, sent: usize) -> Result<()> {
-    let folded = reply["patternShapes"].as_u64().context(
-        "structure reply carries no patternShapes echo — a core older than 7.2.0 judged the name patterns on nothing",
-    )?;
+/// The path form's own answers, read before any verdict: a path the
+/// core's tree could not place (its fault — the message this side
+/// printed before the core built the tree), a request past the node cap
+/// (the rows the core priced — CE.Structure.Cost.structNodeCap, refused
+/// by name as this side refused it), and the tree with the shape echo a
+/// core that built the tables answers (a core without the path form
+/// refuses the request for its missing `nodes`, so a reply without them
+/// is a skewed one); the tree rows and each directory's path handed back.
+type Built = (Vec<[i64; 5]>, Vec<String>);
+fn path_answers(reply: &serde_json::Value) -> Result<Built> {
+    if let Some(fault) = reply["fault"].as_str() {
+        anyhow::bail!("{fault}");
+    }
+    if reply["degraded"].as_bool() == Some(true) {
+        let cap = crate::tables::get().limits.caps.structure_nodes;
+        let priced = reply["priced"]
+            .as_u64()
+            .context("structure reply: degraded without its priced rows")?;
+        anyhow::bail!("{priced} structure/1 request rows exceed the cap {cap}");
+    }
     ensure!(
-        folded == sent as u64,
-        "structure reply echoes {folded} of {sent} shape rows — cap mirror drift"
+        reply["patternShapes"].as_u64().is_some() && reply["tree"].is_array(),
+        "structure reply carries no built tree — a core without the path form (9.0.0)"
     );
-    Ok(())
+    Ok((
+        crate::lockstep::reply_rows(reply, "tree")?,
+        crate::lockstep::reply_rows(reply, "dirs")?,
+    ))
 }
 
 /// One structure.request over a fresh link.
@@ -190,24 +180,16 @@ pub fn judge(core: &str, r: &Request) -> Result<Reply> {
 /// One structure.request over a link already open (the face keeps it
 /// for its document, plan v2.32 step 4).
 pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> {
-    // the node ceiling, CE.Structure.Cost.structNodeCap off the package
-    let cap = crate::tables::get().limits.caps.structure_nodes;
-    ensure!(
-        priced_rows(r) <= cap,
-        "{} structure/1 request rows exceed the cap {cap}",
-        priced_rows(r)
-    );
     let reply = link
         .request("structure", request_body(r))
         .map_err(anyhow::Error::msg)?;
-    crate::lockstep::refuse_degraded(&reply, "structure/wire.rs vs Structure/Cost.hs")?;
+    let (tree, dirs) = path_answers(&reply)?;
     let rows = crate::lockstep::reply_rows::<Vec<[i64; 2]>>;
     let echoed = pinned_echo(&reply, &r.knobs)?;
-    shape_echo(&reply, r.shapes.len())?;
     // the A-layer keys exist exactly when a layout was declared —
     // a missing key on a declared request (or the reverse) is
     // contract drift, surfaced by the decode throat's named error
-    let (divergence, deviations) = if r.declared.is_empty() {
+    let (divergence, deviations) = if r.layout.is_empty() {
         (None, Vec::new())
     } else {
         let div: Vec<i64> = crate::lockstep::reply_rows(&reply, "divergence")?;
@@ -225,6 +207,8 @@ pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> 
         (Vec::new(), Vec::new())
     };
     Ok(Reply {
+        tree,
+        dirs,
         axes: rows(&reply, "axes")?,
         score: reply["score"].as_i64().context("score")?,
         entropy: rows(&reply, "entropy")?,

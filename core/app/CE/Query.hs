@@ -163,6 +163,7 @@ reply proto req a =
     ]
       <> ["reason" .= ("query_too_large" :: String) | ansDegraded a]
       <> ["schema" .= schemaRows | schemaOf req]
+      <> ["dirs" .= [(l, n, h) | (l, n, h) <- dirs] | Just dirs <- [dirsOf req]]
 
 -- | The fact tables as the database the evaluation starts from.
 factsDb :: QueryReq -> Db

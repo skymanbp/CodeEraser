@@ -1,15 +1,14 @@
 //! The structure document (plan v2.32 step 4; design booklet
 //! docs/reference/authority-track.md §5): the core lays it out
 //! (document/1, CE.Structure.Document) from the structure reply's
-//! rows sent back, the flat directory tree and — when the advisory
-//! rode — the split candidates with each seam's last line — and the
-//! directory names, the advisory's paths and its unit names, which the
-//! core spells into the document and its console lines
-//! (CE.Structure.Lines).
+//! rows sent back — the flat directory tree the core built and its
+//! directory names (plan v2.33 W1 item 3), and, when the advisory
+//! rode, the split candidates with each seam's last line — and the
+//! advisory's paths and its unit names, which the core spells into the
+//! document and its console lines (CE.Structure.Lines).
 //! report.rs reads the bound document for the library's callers.
 
 use super::seams::SeamFacts;
-use super::tree::Tree;
 use super::wire::Reply;
 use crate::document::{self, Request};
 use anyhow::{Result, ensure};
@@ -31,7 +30,6 @@ const TABLES: [&str; 9] = [
 /// and the declared-directory count the request carried, and the
 /// effective scale from the knob echo.
 pub(super) struct Parts<'a> {
-    pub tree: &'a Tree,
     pub reply: &'a Reply,
     pub scale: i64,
     pub declared: usize,
@@ -48,23 +46,8 @@ pub(super) fn assemble(
     p: &Parts<'_>,
 ) -> Result<document::Answer> {
     let r = p.reply;
-    let tree: Vec<[i64; 5]> = p
-        .tree
-        .dirs
-        .iter()
-        .enumerate()
-        .map(|(i, d)| {
-            let [parent, depth, subdirs, files] = [
-                d.parent as i64,
-                d.depth.into(),
-                d.subdirs.into(),
-                d.files.into(),
-            ];
-            [i as i64, parent, depth, subdirs, files]
-        })
-        .collect();
     let mut req = Request::new("structure")
-        .range("dirs", p.tree.dirs.len())
+        .range("dirs", r.tree.len())
         .range("seamFiles", p.seams.map_or(0, |s| s.files.len()))
         .fact("score", r.score)
         .fact("scale", p.scale)
@@ -73,7 +56,7 @@ pub(super) fn assemble(
         .fact("split", i64::from(p.seams.is_some()))
         .rows("entropy", &r.entropy)
         .rows("axes", &r.axes)
-        .rows("tree", tree)
+        .rows("tree", &r.tree)
         .rows("findings", &r.findings)
         .rows("deviations", &r.deviations)
         .single("days", p.days)
@@ -83,7 +66,7 @@ pub(super) fn assemble(
             .rows("splitCandidates", candidates(sf, r)?)
             .rows("sizeExempt", &r.size_exempt);
     }
-    let mut req = req.empty(&TABLES).text("dir", names_by_id(p.tree));
+    let mut req = req.empty(&TABLES).text("dir", &r.dirs);
     if let Some(sf) = p.seams {
         let units: Vec<Vec<&String>> = (sf.unit_names.iter())
             .map(|units| units.iter().map(|u| &u.0).collect())
@@ -110,15 +93,4 @@ fn candidates(sf: &SeamFacts, r: &Reply) -> Result<Vec<[i64; 5]>> {
             Ok([f, u, b, c, end.map_or(0, |e| e.1 as i64)])
         })
         .collect()
-}
-
-/// Directory names by dense id, the root as `.`.
-fn names_by_id(t: &Tree) -> Vec<String> {
-    let mut names = vec![String::from("."); t.dirs.len()];
-    for (path, &id) in &t.ids {
-        if !path.is_empty() {
-            names[id] = path.clone();
-        }
-    }
-    names
 }

@@ -16,14 +16,14 @@ exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and file
 `total_lines <= soft` are skipped [seams.rs:51-56](../../../cli/src/structure/seams.rs#L51). The
 `soft` passed in is the *committed* line — `softLine` from `ce-baseline.json`, falling back
 to the *global* `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:82-93](../../../cli/src/structure/judge.rs#L82) — so wherever a baseline is
+[judge.rs:81-92](../../../cli/src/structure/judge.rs#L81) — so wherever a baseline is
 committed the advisory opens the zone at exactly the line the hook uses; without one they part for
 a classed file, whose hook reads its class's warn line (plan v2.13 ① P4) while the advisory stays
 class-blind.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:220-227](../../../core/app/CE/Structure.hs#L220).
+[Structure.hs:230-237](../../../core/app/CE/Structure.hs#L230).
 
 ### Seam enumeration and best-seam selection
 
@@ -89,7 +89,7 @@ tree-wide, off the committed soft line, the global `file_lines_fail` and — sin
 then: only 12 and 13 rode, so a repo declaring `size_penalty_max` got the declared curve in its
 score and the core's built-in `P_max = 10` in its advisory, with both halves internally
 consistent and nothing anywhere disagreeing out loud
-([judge.rs:182-189](../../../cli/src/structure/judge.rs#L182),
+([judge.rs:180-187](../../../cli/src/structure/judge.rs#L180),
 [Cost.hs:141-150](../../../core/app/CE/Structure/Cost.hs#L141),
 counterfactual at [structure_knobs.rs:67-78](../../../cli/tests/it/structure_knobs.rs#L67)):
 
@@ -223,7 +223,7 @@ names are spelled in the core, which resolves the references the document carrie
 names Rust sends beside the request [Spell.hs:25-38](../../../core/app/CE/Document/Spell.hs#L25); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
 end line, which Rust sends beside the reply's row and refuses for a unit the file does not hold
-[document.rs:101-113](../../../cli/src/structure/document.rs#L101).
+[document.rs:84-96](../../../cli/src/structure/document.rs#L84).
 
 ### Input validation
 

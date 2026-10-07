@@ -108,7 +108,7 @@ capped =
   cap = fromInteger fileCap
   half = fromInteger refCap `div` 2
   big = tabledRequest "7.0.0" "arch.request" [("files", replicate (cap + 1) [0, 0, 0]), ("dirs", [[0, -1]])]
-  req f e p = ArchReq Null (replicate f []) [] (replicate e []) (replicate p []) []
+  req f e p = ArchReq Null (replicate f []) [] (replicate e []) (replicate p []) [] Nothing
 
 emptyRequest :: Bool
 emptyRequest =

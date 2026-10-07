@@ -202,7 +202,7 @@ capped =
     && either (const False) (\(_, _, n) -> n == 4) (evaluated 4)
  where
   big = setKey "program" (toJSON (replicate (fromInteger tokenCap + 1) [tokDot, 0])) (request "" [] [])
-  tabled n = QueryReq Null Nothing False False [] [("1", replicate n [0])] 0 False False
+  tabled n = QueryReq Null Nothing False False [] [("1", replicate n [0])] 0 False False Nothing Nothing
   evaluated cap = case parseProgram (toks (prelude <> " ?- p1001 ( v0 ) .")) >>= either (const (Left 0)) Right . check 3 of
     Right chk -> evalProgramWith cap chk (IM.fromList [(c, S.fromList t) | (c, t) <- facts4])
     Left _ -> Left 0

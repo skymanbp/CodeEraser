@@ -138,11 +138,12 @@ fn judge(
         return Ok((req.rows("faults", rows), held));
     }
     let facts = facts::assemble(g.root, g.db, g.core, &program)?;
-    let body = wire::body(&g.texts, &facts.tables, g.why, false);
+    let body = wire::body(&g.texts, (&facts.tables, facts.tree.as_ref()), g.why, false);
     let reply = match &mut held {
         Ok(link) => wire::ask(link, body),
         Err(why) => Err(why.clone()),
     };
+    let tree = facts.tree.is_some();
     names.labels = Some(facts.labels);
     let tokens = program.tokens;
     names.program = Some(program);
@@ -150,7 +151,15 @@ fn judge(
         Ok(reply) => reply,
         Err(why) => return Ok((req.degraded(names.why.add(why)), Err(String::new()))),
     };
-    let j = wire::consume(&reply, tokens).map_err(|e| anyhow!("{e}"))?;
+    let mut j = wire::consume(&reply, tokens).map_err(|e| anyhow!("{e}"))?;
+    if tree && j.degraded.is_none() {
+        let dirs = j.dirs.take().ok_or_else(|| {
+            anyhow!("query reply carries no directories — a core without the tree form (9.0.0)")
+        })?;
+        if let Some(l) = names.labels.as_mut() {
+            l.adopt_dirs(dirs);
+        }
+    }
     Ok((answered(req, names, j)?, held))
 }
 

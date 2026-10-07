@@ -32,6 +32,15 @@ pub struct Labels {
 }
 
 impl Labels {
+    /// The directories the core built (`[label, name, hash]` by id, the
+    /// root's label `.`): each label, and each name by its hash.
+    pub fn adopt_dirs(&mut self, dirs: Vec<(String, String, u64)>) {
+        for (label, name, hash) in dirs {
+            self.names.entry(hash).or_insert(name);
+            self.dirs.push(label);
+        }
+    }
+
     /// One answer value as text, by the sort the core answered.
     pub fn render(&self, sort: i64, v: i128) -> String {
         let at = |list: &[String], word: &str| {
@@ -60,6 +69,8 @@ impl Labels {
 pub struct Facts {
     /// Rows per predicate code, each table sorted and deduplicated.
     pub tables: BTreeMap<u32, Vec<Vec<u64>>>,
+    /// The tree form (graph::tree), when the program reads a directory.
+    pub tree: Option<serde_json::Value>,
     pub labels: Labels,
 }
 
@@ -145,12 +156,14 @@ pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -
         nodes: &nodes,
         blocks: &blocks,
     };
-    graph::fill(&ctx, &mut sink, &mut labels)?;
+    graph::fill(&ctx, &mut sink)?;
     let units = units::fill(&ctx, &mut sink, &mut labels)?;
     pairs::fill(&ctx, &units, &mut sink)?;
     text::fill(&ctx, &program.sets, &mut sink, &mut labels)?;
+    let tree = graph::tree(&nodes, &mut sink);
     Ok(Facts {
         tables: sink.finish(),
+        tree,
         labels,
     })
 }

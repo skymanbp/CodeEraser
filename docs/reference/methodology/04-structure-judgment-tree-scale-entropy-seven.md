@@ -10,7 +10,7 @@ codes and counts ([Structure.hs:12-15](../../../core/app/CE/Structure.hs#L12)). 
 language set enters the tree; the size-gate-only language arm is excluded, or the file
 population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
 NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
-has no language term at all ([judge.rs:95-100](../../../cli/src/structure/judge.rs#L95)) ([structure-axes.md:27-28](../structure-axes.md#L27)).
+has no language term at all ([judge.rs:94-99](../../../cli/src/structure/judge.rs#L94)) ([structure-axes.md:27-28](../structure-axes.md#L27)).
 This file keeps its original `-seven` name because that anchor is linked from outside the
 repository; the axis roster itself has been eight since proto 7.1.0 added modularity (S7).
 
@@ -99,7 +99,7 @@ the language-expansion booklet's unrelated "§8 row C / C++" and
 
 Mechanically the floor is a shape guarantee: the A-layer keys `divergence` and `deviations`
 exist **only** when the request declares a layout; an undeclared request answers the S2 shape
-byte for byte ([Structure.hs:175-179](../../../core/app/CE/Structure.hs#L175),
+byte for byte ([Structure.hs:187-191](../../../core/app/CE/Structure.hs#L187),
 [Declared.hs:16-23](../../../core/app/CE/Structure/Declared.hs#L16)), and the battery asserts both keys
 absent on the undeclared fixture ([StructureProps.hs:158-166](../../../core/test/StructureProps.hs#L158)).
 
@@ -110,9 +110,9 @@ root and, under deepest-owner semantics, the catch-all bin
 ([config.rs:78-89](../../../cli/src/config.rs#L78), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
 sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
-([Structure.hs:73](../../../core/app/CE/Structure.hs#L73),
-[Structure.hs:115-118](../../../core/app/CE/Structure.hs#L115),
-[Structure.hs:151-164](../../../core/app/CE/Structure.hs#L151)).
+([Structure.hs:85](../../../core/app/CE/Structure.hs#L85),
+[Structure.hs:127-130](../../../core/app/CE/Structure.hs#L127),
+[Structure.hs:163-176](../../../core/app/CE/Structure.hs#L163)).
 
 Ownership resolves by depth, never by guess. Ids are dense and parents precede children, so one
 left fold suffices: a directory owns itself when declared, otherwise it inherits its parent's
@@ -199,10 +199,10 @@ Notes on the non-obvious ones:
   classification: the request carries each stem's seven character-class facts as
   `patternShapes` bits and the core folds them to codes through its STYLE table
   ([Shape.hs:31-44](../../../core/app/CE/Structure/Shape.hs#L31),
-  [Request.hs:84-87](../../../core/app/CE/Structure/Request.hs#L84)). Bits are bounded `0..127`
-  by the boundary contract ([Structure.hs:100-106](../../../core/app/CE/Structure.hs#L100)); the
+  [Request.hs:177-180](../../../core/app/CE/Structure/Request.hs#L177)). Bits are bounded `0..127`
+  by the boundary contract ([Structure.hs:112-118](../../../core/app/CE/Structure.hs#L112)); the
   producer-classified `patterns` road (codes `0..6`) was retired at 8.0.0 and is refused by
-  name ([Structure.hs:68-75](../../../core/app/CE/Structure.hs#L68)). `600‰` "tolerates one odd name in a
+  name ([Structure.hs:80-87](../../../core/app/CE/Structure.hs#L80)). `600‰` "tolerates one odd name in a
   convention-following set and flags a genuine style mix"
   ([Cost.hs:50-53](../../../core/app/CE/Structure/Cost.hs#L50)).
 - **S2** uses *one basis on both sides* — per-file touch counts, never edges-vs-touches. Each
@@ -215,7 +215,7 @@ Notes on the non-obvious ones:
 - **S4** convention bits are a mask: `1 = README`, `2 = config`; `even bits` means the README bit
   is clear, and the root additionally owes a recognized config
   ([Axes.hs:229-239](../../../core/app/CE/Structure/Axes.hs#L229)). Bits are constrained to `1..3` at the
-  boundary ([Structure.hs:107-110](../../../core/app/CE/Structure.hs#L107)).
+  boundary ([Structure.hs:119-122](../../../core/app/CE/Structure.hs#L119)).
 - **S6** never re-derives duplication or dead code: it convolves the per-file families' verdicts
   to the tree scale ([Axes.hs:166-167](../../../core/app/CE/Structure/Axes.hs#L166)).
 - **S7** (7.1.0, plan v2.29 step 10, O54) is the only axis that reads *edges*. The request's
@@ -261,7 +261,7 @@ version; the protocol is far past it) the structure family runs the **same densi
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
 through `chargeAt`, imported from [Score.hs:161](../../../core/app/CE/Verdict/Score.hs#L161)
-(one law, two families; [Structure.hs:228-239](../../../core/app/CE/Structure.hs#L228)):
+(one law, two families; [Structure.hs:238-249](../../../core/app/CE/Structure.hs#L238)):
 
 ```
 charge_i = floor(scale * v_i / (v_i + N))
@@ -308,7 +308,7 @@ and a knob cannot exist in one direction only
 ([Knobs.hs:28-59](../../../core/app/CE/Structure/Knobs.hs#L28)); rows outside `0..20` or with value `< 1`
 are refused by name ([Knobs.hs:19-24](../../../core/app/CE/Structure/Knobs.hs#L19)). `ce.toml` is the
 source, `Cost.hs` the defaults ([Cost.hs:1-6](../../../core/app/CE/Structure/Cost.hs#L1)), and the reply
-echoes the full effective set ([Structure.hs:198](../../../core/app/CE/Structure.hs#L198)). Codes `12..18`
+echoes the full effective set ([Structure.hs:209](../../../core/app/CE/Structure.hs#L209)). Codes `12..18`
 (`seamSoft=300`, `seamHard=750`, `seamPMax=10`, `roiRefMilli=250`, `roiPhiMilli=500`,
 `roiCloneMilli=500`, `roiChurnMilli=150` —
 [Cost.hs:141-178](../../../core/app/CE/Structure/Cost.hs#L141)) belong to the split-ROI advisory, not to
@@ -321,35 +321,37 @@ and returns the *first* offender by name ([Structure.hs:46-61](../../../core/app
 
 - node rows are dense and tree-shaped: `id == index`, no negative fields, root self-loops at
   depth 0, `parent < id` for every non-root row
-  ([Structure.hs:120-133](../../../core/app/CE/Structure.hs#L120));
+  ([Structure.hs:132-145](../../../core/app/CE/Structure.hs#L132));
 - `depth == parent.depth + 1` is *checked*, not assumed. It was previously only claimed in a
   docstring, and a forged row `[1,0,999,0,1]` rode straight into the geometry axis and moved the
-  score (review 2026-08-20 #6) ([Structure.hs:135-149](../../../core/app/CE/Structure.hs#L135),
+  score (review 2026-08-20 #6) ([Structure.hs:147-161](../../../core/app/CE/Structure.hs#L147),
   probe at [StructureProps.hs:123-127](../../../core/test/StructureProps.hs#L123));
 - the six `dirTables` share one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
-  ([Structure.hs:67-74](../../../core/app/CE/Structure.hs#L67),
-  [Structure.hs:151-164](../../../core/app/CE/Structure.hs#L151)); `staleDocRows` shares the
+  ([Structure.hs:79-86](../../../core/app/CE/Structure.hs#L79),
+  [Structure.hs:163-176](../../../core/app/CE/Structure.hs#L163)); `staleDocRows` shares the
   ROW checker but orders **non-descending**, because one directory holds many docs
   ([Stale.hs:26-29](../../../core/app/CE/Structure/Stale.hs#L26)). Extra rules: (7.2.0) shape bits
   `<= 127` with count `>= 1` — the pre-classified `patterns` table is refused by name since 8.0.0;
   convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`
   (the pre-judged staleDocs rules retired with their table at 2.29.0 — the raw
   `staleDocRows`/`staleEdgeRows` validators own staleness now)
-  ([Structure.hs:91-106](../../../core/app/CE/Structure.hs#L91)).
+  ([Structure.hs:103-118](../../../core/app/CE/Structure.hs#L103)).
 
 **Over-cap.** `structNodeCap = 524288` ([Cost.hs:184-187](../../../core/app/CE/Structure/Cost.hs#L184)).
 Node rows, the seam tables *and* (7.1.0) the dir-edge table count against the same cap — a declared
-cap that misses a request dimension walks that dimension uncapped, and the Rust mirror prices the
-same three terms ([wire.rs](../../../cli/src/structure/wire.rs))
-([Structure.hs:48-53](../../../core/app/CE/Structure.hs#L48)). Over-cap answers a **complete degraded
+cap that misses a request dimension walks that dimension uncapped
+([Structure.hs:57-62](../../../core/app/CE/Structure.hs#L57)). Since plan v2.33 W1 item 3 the core
+prices the tables it built from the paths, and a path-form reply that degrades carries the rows it
+priced, which the measuring side prints in its refusal
+([wire.rs:154-164](../../../cli/src/structure/wire.rs#L154)). Over-cap answers a **complete degraded
 reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
 are both true and `reason` is `structure_too_large`
-([Structure.hs:175-195](../../../core/app/CE/Structure.hs#L175),
+([Structure.hs:187-207](../../../core/app/CE/Structure.hs#L187),
 [StructureProps.hs:246-255](../../../core/test/StructureProps.hs#L246)). Note the consequence of the
 empty-facts path: five axes at penalty 0, hence `score = 1000` with `fail = true` — the score is
 not evidence of health in a degraded reply. No `ce structure` user ever sees that 1000: the CLI
-turns a degraded reply into an error before rendering ([wire.rs:203](../../../cli/src/structure/wire.rs#L203)),
+turns a degraded reply into an error before rendering ([wire.rs:163](../../../cli/src/structure/wire.rs#L163)),
 so the number matters to a second client of the protocol, not to this one's console. In the non-degraded case `fail` equals `degraded`,
 i.e. always false: S2 is report-only, and the CLI gates nothing on this score
-([Structure.hs:173-175](../../../core/app/CE/Structure.hs#L173)).
+([Structure.hs:185-187](../../../core/app/CE/Structure.hs#L185)).
