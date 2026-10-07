@@ -37,11 +37,11 @@ Token hashing is FNV-1a over those bytes: `h = 0xcbf29ce484222325`, then per byt
 
 Normalization semantics are versioned: <!--ce:ver:tokenizer_rev#digits-->`TOKENIZER_REV = 4`<!--/ce--> ([tokens.rs:28](../../../cli/src/dedup/tokens.rs#L28)) is stored in the index meta table and a mismatch clears every parser-derived table while the trend history stays — stamped with the revision that measured it and remeasured before reuse ([parser.rs:26](../../../cli/src/dedup/schema/parser.rs#L26), [mod.rs:4-8](../../../cli/src/trend/mod.rs#L4)) — so fingerprints from an older tokenizer can never mix with new ones ([schema.rs:112-122](../../../cli/src/dedup/schema.rs#L112), [schema.rs:182-204](../../../cli/src/dedup/schema.rs#L182)).
 
-Languages that do not fingerprint (`Lang::fingerprints() == false` — a grammar-less language such as Markdown or plain text — the scan-only arm never reaches the index at all ([lang.rs:176-178](../../../cli/src/scan/lang.rs#L176)) — and HTML, whose grammar feeds its sections, sites and page text but whose leaves carry no identifiers, so any two pages would hash into one clone pair; [lang.rs:243-245](../../../cli/src/scan/lang.rs#L243)) get no token stream and therefore **zero** fingerprint rows ([index.rs:145-162](../../../cli/src/dedup/index.rs#L145)). Fingerprints exist for Python, TypeScript, TSX, Rust, Go, Haskell, C, C++, Java, Lua and R.
+Languages that do not fingerprint (`Lang::fingerprints() == false` — a grammar-less language such as Markdown or plain text — the scan-only arm never reaches the index at all ([lang.rs:176-178](../../../cli/src/scan/lang.rs#L176)) — and HTML, whose grammar feeds its sections, sites and page text but whose leaves carry no identifiers, so any two pages would hash into one clone pair; [lang.rs:243-245](../../../cli/src/scan/lang.rs#L243)) get no token stream and therefore **zero** fingerprint rows ([index.rs:175-192](../../../cli/src/dedup/index.rs#L175)). Fingerprints exist for Python, TypeScript, TSX, Rust, Go, Haskell, C, C++, Java, Lua and R.
 
 ### 2. k-gram rolling hash
 
-Winnowing consumes only the `hash` field of the token stream ([index.rs:150-151](../../../cli/src/dedup/index.rs#L150)). Let `t[0..n]` be that sequence and `k = p.kgram`.
+Winnowing consumes only the `hash` field of the token stream ([index.rs:180-181](../../../cli/src/dedup/index.rs#L180)). Let `t[0..n]` be that sequence and `k = p.kgram`.
 
 - `BASE = 1_000_003` ([winnow.rs:17](../../../cli/src/dedup/winnow.rs#L17)), all arithmetic wrapping u64.
 - If `n < k`, the hash list is empty and the file contributes no fingerprints ([winnow.rs:29-31](../../../cli/src/dedup/winnow.rs#L29)).
@@ -70,11 +70,11 @@ Defaults: `kgram = 25`, `window = 26`, so `t = 26 + 25 - 1 = 50` tokens — chos
 
 ### 4. The inverted index
 
-Fingerprints land in `fingerprints(hash, file_id, start_tok, start_line, end_line)` with `idx_fp_hash` and `idx_fp_file`, cascade-deleted from `files` ([schema.rs:89-97](../../../cli/src/dedup/schema.rs#L89)). Line mapping at insert time is `start_line = toks[f.start].start_line` and `end_line = toks[f.start + p.kgram - 1].end_line` ([index.rs:394-395](../../../cli/src/dedup/index.rs#L394)) — the span of the k-gram, not of one token.
+Fingerprints land in `fingerprints(hash, file_id, start_tok, start_line, end_line)` with `idx_fp_hash` and `idx_fp_file`, cascade-deleted from `files` ([schema.rs:89-97](../../../cli/src/dedup/schema.rs#L89)). Line mapping at insert time is `start_line = toks[f.start].start_line` and `end_line = toks[f.start + p.kgram - 1].end_line` ([index.rs:437-438](../../../cli/src/dedup/index.rs#L437)) — the span of the k-gram, not of one token.
 
-Invalidation is content-hash gated per file: `content_hash = fnv1a(src)`, and a match short-circuits the refresh entirely ([index.rs:121](../../../cli/src/dedup/index.rs#L121), [index.rs:137-139](../../../cli/src/dedup/index.rs#L137)); a change deletes and reinserts only that file's rows in one transaction ([index.rs:152-185](../../../cli/src/dedup/index.rs#L152)). The whole database is keyed by <!--ce:ver:schema.index#digits-->`SCHEMA_VERSION = 17`<!--/ce--> ([schema.rs:62](../../../cli/src/dedup/schema.rs#L62)) plus the meta tuple `(kgram, window, tokenizer_rev, graph_rev, struct_rev, docdup_rev, similar_rev)` ([schema.rs:191-201](../../../cli/src/dedup/schema.rs#L191)); any mismatch wipes and rebuilds, so a parameter change cannot silently reuse stale fingerprints.
+Invalidation is content-hash gated per file: `content_hash = fnv1a(src)`, and a match short-circuits the refresh entirely ([index.rs:139](../../../cli/src/dedup/index.rs#L139), [index.rs:155](../../../cli/src/dedup/index.rs#L155)); a change deletes and reinserts only that file's rows in one transaction ([index.rs:182-215](../../../cli/src/dedup/index.rs#L182)). The whole database is keyed by <!--ce:ver:schema.index#digits-->`SCHEMA_VERSION = 17`<!--/ce--> ([schema.rs:62](../../../cli/src/dedup/schema.rs#L62)) plus the meta tuple `(kgram, window, tokenizer_rev, graph_rev, struct_rev, docdup_rev, similar_rev)` ([schema.rs:191-201](../../../cli/src/dedup/schema.rs#L191)); any mismatch wipes and rebuilds, so a parameter change cannot silently reuse stale fingerprints.
 
-Instance queries sort their rows before returning ([index.rs:324](../../../cli/src/dedup/index.rs#L324), [index.rs:342](../../../cli/src/dedup/index.rs#L342)), so downstream pairing sees a fixed order regardless of SQLite's row order.
+Instance queries sort their rows before returning ([index.rs:346](../../../cli/src/dedup/index.rs#L346), [index.rs:364](../../../cli/src/dedup/index.rs#L364)), so downstream pairing sees a fixed order regardless of SQLite's row order.
 
 ### 5. Anchor pairing
 

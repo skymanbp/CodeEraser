@@ -33,7 +33,7 @@ the two reference tables together, since both become arcs of the one directory g
 ([Cost.hs:24](../../../core/app/CE/Arch/Cost.hs#L24), [Cost.hs:30](../../../core/app/CE/Arch/Cost.hs#L30)).
 A request past either is degraded; the measuring side names it `arch_too_large` from the built
 tables' counts and the definition package's `limits.caps`, and the document carries that reason
-([Limits.hs:87](../../../core/app/CE/Limits.hs#L87), [wire.rs:164](../../../cli/src/arch/wire.rs#L164));
+([Limits.hs:91](../../../core/app/CE/Limits.hs#L91), [wire.rs:164](../../../cli/src/arch/wire.rs#L164));
 a core that cannot be started or answer, or one without the family, is named the same way. The core's contract names the first
 offending row of any table by its index — width, identity, range, order, the one root, a parent
 before its child ([Contract.hs:77](../../../core/app/CE/Arch/Contract.hs#L77)).

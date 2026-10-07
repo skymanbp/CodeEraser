@@ -69,13 +69,13 @@ Query weights are integer multipliers — names ×3, callees ×2, everything els
 score stays exact ([Cost.hs:51-57](../../../core/app/CE/Similar/Rank/Cost.hs#L51)). The whole term
 road is declared once as `SIMILAR_REV` and sits in the index cache key: a change to any rule
 above wipes the bag tables with the rest of the index rather than ranking old bags against new
-queries ([mod.rs:36-46](../../../cli/src/similar/mod.rs#L36)).
+queries ([mod.rs:37-47](../../../cli/src/similar/mod.rs#L37)).
 
 ### 2. The inverted tables — bags persisted as postings, pairs not stored
 
 Two tables, added at index schema 16 (17 today), holding only hashes and counts
 ([store.rs:1-6](../../../cli/src/similar/store.rs#L1),
-[store.rs:45-58](../../../cli/src/similar/store.rs#L45)). `bag(term_hash, unit, tf, channel)`
+[store.rs:46-59](../../../cli/src/similar/store.rs#L46)). `bag(term_hash, unit, tf, channel)`
 is keyed by the unit's own `unitsig` row — the bag universe *is* the unitsig universe by
 foreign key — and is a `WITHOUT ROWID` table on `(term_hash, unit)`, so the table *is* its
 posting list: a term's units are one b-tree range. `df(term_hash, df, marg)` holds, per term,
@@ -94,8 +94,8 @@ the file's old bags at −1 before the unitsig rows are replaced and `refresh_ba
 new ones at +1 after, and only the non-zero *net* deltas reach SQL — an edit to one function
 costs that unit's terms, never the corpus's; a foreign file (owner 1, measured by nobody)
 writes no rows ([store.rs:12-24](../../../cli/src/similar/store.rs#L12),
-[store.rs:68](../../../cli/src/similar/store.rs#L68),
-[store.rs:79](../../../cli/src/similar/store.rs#L79)). The cost, measured on this tree of 687
+[store.rs:69](../../../cli/src/similar/store.rs#L69),
+[store.rs:81](../../../cli/src/similar/store.rs#L81)). The cost, measured on this tree of 687
 files: cold `ce dedup` 5.2 → 8.4 s (0.65 s of a sixth parse, ≈1.5 s of random-key posting
 writes that five layouts could not beat), warm unchanged, database 10.7 → 18.0 MB
 ([PERF-BUDGET.md:254-273](../../PERF-BUDGET.md#L254)).

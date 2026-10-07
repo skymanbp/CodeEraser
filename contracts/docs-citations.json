@@ -39,48 +39,47 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|049be84698107cae|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 342,
+    "line": 364,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// The raw connection. Read surface for the graph domain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|4941b6562b468902|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 145,
-    "end": 162,
+    "line": 175,
+    "end": 192,
     "text": "let toks = if lang.fingerprints() {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|8ea0435b9504d203|0": {
+    "target": "../../../cli/src/dedup/index.rs",
+    "line": 139,
+    "text": "let chash = tokens::fnv1a(src) as i64;\nlet stored: Option<(i64, bool)> = self"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|b7a4b1ebd6335ed2|0": {
+    "target": "../../../cli/src/dedup/index.rs",
+    "line": 155,
+    "text": "Ok(stored != Some((chash, foreign)))"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|cd3b9b36ea3bf35e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 152,
-    "end": 185,
+    "line": 182,
+    "end": 215,
     "text": "let tx = self.conn.transaction()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|d4d0ef2ed905d0c6|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 150,
-    "end": 151,
+    "line": 180,
+    "end": 181,
     "text": "let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|df57b763e96f63e4|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 324,
+    "line": 346,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// Every fingerprint occurrence of an OWN file, deterministically"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|e3dd79e176b2419e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 394,
-    "end": 395,
+    "line": 437,
+    "end": 438,
     "text": "let start = toks[f.start].start_line;"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|eb8666897ba361c5|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 137,
-    "end": 139,
-    "text": "if stored == Some((chash, foreign)) {"
-  },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|fd08efb186625299|0": {
-    "target": "../../../cli/src/dedup/index.rs",
-    "line": 121,
-    "text": "let chash = tokens::fnv1a(src) as i64;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|131dea92d0490f13|0": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -3649,7 +3648,7 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/dedup/walkidx.rs|7cfb954ec13d15ec|0": {
     "target": "../../../cli/src/dedup/walkidx.rs",
-    "line": 179,
+    "line": 189,
     "text": "anyhow::ensure!("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/fourclass/units.rs|cf114f9611ec7126|0": {
@@ -3860,8 +3859,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|314b9bab069679ed|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 191,
-    "end": 195,
+    "line": 188,
+    "end": 192,
     "text": "// The sentinel is never walked, and the scan-only arm"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -5068,20 +5067,20 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|0af410a710365ab2|0": {
     "target": "../../../core/app/CE/Resolve/Rs.hs",
-    "line": 240,
-    "end": 254,
+    "line": 251,
+    "end": 261,
     "text": "globbed :: RsEnv -> String -> String -> [String] -> [([String], Int)] -> Need (Maybe String)"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|253f50cfab39c7b5|0": {
     "target": "../../../core/app/CE/Resolve/Rs.hs",
-    "line": 212,
-    "end": 223,
+    "line": 216,
+    "end": 227,
     "text": "bound :: RsEnv -> [String] -> Answer -> Int -> Need Answer"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|6a26636f95b24f52|0": {
     "target": "../../../core/app/CE/Resolve/Rs.hs",
-    "line": 220,
-    "end": 222,
+    "line": 224,
+    "end": 226,
     "text": "pure $ case target of"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Rs.hs|9c45dc0a91ee6ca5|0": {
@@ -8779,8 +8778,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 460,
-    "end": 462,
+    "line": 466,
+    "end": 468,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -9476,7 +9475,7 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|169f60cb875707b4|0": {
     "target": "../../../core/app/CE/Protocol.hs",
-    "line": 116,
+    "line": 108,
     "text": ", Fam \"tombstone/1\" \"tombstone.request\" Tombstone.respond"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Text/Guard.hs|3c58ce5d4cc1e956|0": {
@@ -9658,8 +9657,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/mod.rs|857e513176fffcce|0": {
     "target": "../../../cli/src/similar/mod.rs",
-    "line": 36,
-    "end": 46,
+    "line": 37,
+    "end": 47,
     "text": "/// words, channel tags, the shape / literal / structure feature"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/ppmi.rs|bb7143cbe2e9734e|0": {
@@ -9724,18 +9723,18 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|17c83e1e451ac0e5|0": {
     "target": "../../../cli/src/similar/store.rs",
-    "line": 79,
+    "line": 81,
     "text": "pub fn refresh_bags("
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|421a4e5b0170ec8b|0": {
     "target": "../../../cli/src/similar/store.rs",
-    "line": 45,
-    "end": 58,
+    "line": 46,
+    "end": 59,
     "text": "pub const SIMILAR_SCHEMA: &str = \""
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|83a23dc624157095|0": {
     "target": "../../../cli/src/similar/store.rs",
-    "line": 68,
+    "line": 69,
     "text": "pub fn retire(tx: &Transaction<'_>, file_id: i64) -> Result<Delta> {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/store.rs|9b202b0befa65e5c|0": {
@@ -11842,10 +11841,10 @@
     "line": 79,
     "text": "dirs = [0, -1] : [[toInteger d, toInteger (dParent dir)] | (d, dir) <- drop 1 (IM.toAscList (tDirs t))]"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Limits.hs|a799a9567231eed5|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Limits.hs|379b72d0486d8f01|0": {
     "target": "../../../core/app/CE/Limits.hs",
-    "line": 87,
-    "text": "caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap]"
+    "line": 91,
+    "text": "caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap, toInteger Bags.bagsCap, toInteger maxLineBytes]"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Structure/Tree.hs|f767f36e6267bad9|0": {
     "target": "../../../core/app/CE/Structure/Tree.hs",
