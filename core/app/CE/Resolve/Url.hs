@@ -1,8 +1,8 @@
--- | Two readings of a link target the Markdown rungs make before any
--- path is joined (plan v2.33 W2-text stage G; once
+-- | Two readings of a link target the Markdown and HTML rungs make before
+-- any path is joined (plan v2.33 W2-text stage G; once
 -- cli/src/graph/ladder/md.rs `is_scheme` and md_slug.rs
--- `percent_decode`, which stay on the measuring side for the HTML rungs
--- until stage H moves them here): whether the target leaves the corpus
+-- `percent_decode`, whose Rust copies the HTML rungs read until stage H
+-- moved those rungs here too): whether the target leaves the corpus
 -- by a URI scheme, and the target percent-decoded.
 module CE.Resolve.Url (isScheme, percentDecode) where
 

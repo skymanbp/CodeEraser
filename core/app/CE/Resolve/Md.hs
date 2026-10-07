@@ -23,7 +23,7 @@
 -- readers, the tombstone leg on the hook path, docdup's segments,
 -- fourclass's section units and the walk's key, have no core
 -- replacement yet).
-module CE.Resolve.Md (MdEnv (..), fold, refTable, resolveMd) where
+module CE.Resolve.Md (MdEnv (..), anchor, fold, fragment, refTable, resolveMd) where
 
 import CE.Resolve.Answer
 import CE.Resolve.Cost

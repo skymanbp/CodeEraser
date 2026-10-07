@@ -28,6 +28,8 @@ module ReferenceResolveGen (
   askCore,
   replyKey,
   settleWith,
+  refEquivalence,
+  siteRequest,
 ) where
 
 import CE.Resolve (respond)
@@ -41,6 +43,7 @@ import Data.List (isSuffixOf)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
+import qualified WireHarness as W
 
 data Case = Case
   { cFiles :: [String]
@@ -128,6 +131,37 @@ caseOf k = Case files [] sites (subset 4 ["lib", "src/a", "", "a/"]) (subset 5 [
 
 -- | A request put to the core in-process, its reply read back; Nothing
 -- for a refusal or a reply that does not decode.
+-- | A one-language reference battery: every site of every case answered
+-- by the core as the reference answers it (the case's request, its
+-- sites, the reference's answer to one), and the cases reaching every
+-- answer `reach` names.
+refEquivalence :: String -> [c] -> (c -> Value, c -> [s], c -> s -> Ref) -> [String] -> IO Bool
+refEquivalence lang cs (ask, sitesOf, refOf) reach =
+  W.runChecks
+    ( W.battery
+        ( "resolve: " <> show (length cs) <> " " <> lang <> " cases, " <> show (sum (map (length . sitesOf) cs)) <> " sites, shipped = reference"
+        , "resolve: the " <> lang <> " cases reach every answer of the " <> lang <> " rungs"
+        )
+        (map disagree cs)
+        reach
+        (Set.fromList [refShape (refOf c s) | c <- cs, s <- sitesOf c])
+    )
+ where
+  disagree c = case askCore (ask c) >>= answers of
+    Nothing -> Just "no reply"
+    Just got
+      | got /= map (refOf c) (sitesOf c) -> Just ("core " <> show got <> " reference " <> show (map (refOf c) (sitesOf c)))
+      | otherwise -> Nothing
+
+-- | A one-language case's request: the header (the walked files, then the
+-- sites' files the walk did not hold as origins), the sites, and the
+-- language's own keys given the origins.
+siteRequest :: Integer -> [String] -> [(Integer, String, String)] -> ([String] -> [Pair]) -> Value
+siteRequest lang files sites own =
+  object (requestHeader files origins <> ["sites" .= [(lang, kind, M.findWithDefault 0 from ix, spec) | (kind, from, spec) <- sites]] <> own origins)
+ where
+  (origins, ix) = originsOf files [f | (_, f, _) <- sites]
+
 askCore :: Value -> Maybe Value
 askCore v = either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode v)))
 

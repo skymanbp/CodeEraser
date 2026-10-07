@@ -26,6 +26,11 @@
 --              in a final sigma), after: [[lo, hi]] (`A` + x + `Σ` does)}
 --   fold       [label] → [folded] (the Markdown reference label fold)
 --   url        [target] → [[scheme, decoded]]
+--   htmlRefs   [text] → [[decoded, [host, rest] | null]] (the character
+--              references decoded; the origin split off)
+--   htmlPage   [[from, lang, base, canonical, ogUrl, [[hreflang, href]]]]
+--              → [[base, host, root]] (each null when none: the page an
+--              HTML document's facts derive)
 --   jsonc      [text] → [[document] | null] (a document `null` apart from
 --              no document)
 --   jsoncAccepts [text] → [bool] (whether a document reads: one nested
@@ -55,6 +60,7 @@ import CE.Resolve.CompDb (Entry (..), Expanded (..), parseDb, parseFlags, relati
 import CE.Resolve.Description (Description (..), readDescription)
 import CE.Resolve.Flags (Chain (..), Search (..), chain)
 import CE.Resolve.Go (GoMod (..), parseGoMod)
+import CE.Resolve.HtmlHead (Doc (..), Page (..), decodeRefs, page, splitOrigin)
 import CE.Resolve.Py (PyProject (..), pyproject)
 import CE.Resolve.Json (readJsonc)
 import CE.Resolve.Lower (rustLower)
@@ -75,7 +81,7 @@ import qualified Data.Set as Set
 inspected :: Value -> Value
 inspected (Object o) = object (concat [maybe [] (\v -> [K.fromString k .= v]) (answer k =<< KM.lookup (K.fromString k) o) | k <- keys])
  where
-  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "lower", "fold", "url", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package", "cargo"]
+  keys = ["split", "chain", "relativize", "goMod", "description", "cabal", "pyproject", "db", "flags", "text", "chars", "lower", "fold", "url", "htmlRefs", "htmlPage", "jsonc", "jsoncAccepts", "tsconfig", "tsReached", "package", "cargo"]
 inspected _ = object []
 
 -- | One key's answer, Nothing when its question does not read.
@@ -108,12 +114,15 @@ tsAnswer k v = case k of
 
 -- | The Markdown rungs' string readings: the lowercase over every scalar
 -- value (alone, and a capital sigma after it with and without a cased
--- letter before), the label fold, a target's scheme test and decoding.
+-- letter before), the label fold, a target's scheme test and decoding;
+-- and the HTML rungs' (the character references, the origin, a page).
 mdAnswer :: String -> Value -> Maybe Value
 mdAnswer k v = case k of
   "lower" -> Just (object ["map" .= [(ord c, l) | c <- scalars, let l = rustLower [c], l /= [c]], "final" .= ranges (sigma ""), "after" .= ranges (sigma "A")])
   "fold" -> each v (toJSON . fold)
   "url" -> each v (\t -> toJSON (isScheme t, percentDecode t))
+  "htmlRefs" -> each v (\t -> toJSON (decodeRefs t, splitOrigin t))
+  "htmlPage" -> each v (\(from, l, b, c, o, alts) -> let p = page from (Doc l b c o alts []) in toJSON (pBase p, pHost p, pRoot p))
   _ -> Nothing
 
 -- | Every question of a list, answered in order.

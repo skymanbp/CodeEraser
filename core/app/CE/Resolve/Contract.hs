@@ -15,7 +15,9 @@
 -- every Rust site with its line, the assets and the Markdown anchor sets
 -- and reference tables in strictly ascending (path) order, every anchor
 -- set a walked Markdown file's and every Markdown reference site's file
--- with its table — and the cap the request's text counts against. The
+-- with its table, the HTML documents in strictly ascending (path) order,
+-- each an HTML file's of the request, and every HTML site's file with its
+-- document — and the cap the request's text counts against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
@@ -75,14 +77,16 @@ requestSize rq =
   header h = chars (hPackage h) + sum [1 + chars (iName i) | i <- hImports h] + sum (map typeSize (hTypes h))
   typeSize t = 1 + chars (tName t) + texts (tSupers t) + sum (map typeSize (tMembers t))
 
--- | The assets and the Markdown facts: one per row, one per character.
+-- | The assets, the Markdown facts and the HTML documents: one per row,
+-- one per character.
 mdSize :: ResolveReq -> Integer
-mdSize rq = strings (rqAssets rq) + sum (map slugs (rqMdSlugs rq)) + sum (map refs (rqMdRefs rq))
+mdSize rq = strings (rqAssets rq) + sum (map slugs (rqMdSlugs rq)) + sum (map refs (rqMdRefs rq)) + sum (map page (rqHtmlDocs rq))
  where
   count = toInteger . length
   strings = foldr (\x n -> n + 1 + count x) 0
   slugs (p, ss) = 1 + count p + strings ss
   refs (p, ds, us) = 1 + count p + strings us + sum [1 + count l + count t | (l, t) <- ds]
+  page (p, l, b, c, o, alts, ids) = 1 + count p + strings [x | Just x <- [l, b, c, o]] + strings ids + sum [1 + count h + count t | (h, t) <- alts]
 
 overCap :: ResolveReq -> Bool
 overCap rq = requestSize rq > resolveCap
@@ -149,12 +153,22 @@ mdOffence rq walked =
   asum
     [ ascending "asset" (rqAssets rq)
     , ascending "md.slugs" (map fst (rqMdSlugs rq))
-    , listToMaybe ["md.slugs " <> show i <> ": not a walked Markdown file" | (i, f) <- zip [0 :: Int ..] (map fst (rqMdSlugs rq)), Set.notMember f walked || not (ofLangs ["markdown"] f)]
+    , stray "md.slugs" "not a walked Markdown file" "markdown" walked (map fst (rqMdSlugs rq))
     , ascending "md.refs" [f | (f, _, _) <- rqMdRefs rq]
-    , listToMaybe ["site " <> show i <> ": a Markdown reference site without its file's table" | (i, s) <- zip [0 :: Int ..] (rqSites rq), sLang s == langMd, sKind s `elem` [kindRefLink, kindRefDef], Set.notMember (path ! sFrom s) tabled]
+    , bare "a Markdown reference site without its file's table" (\s -> sLang s == langMd && sKind s `elem` [kindRefLink, kindRefDef]) tabled
+    , ascending "html.docs" (map docPath (rqHtmlDocs rq))
+    , stray "html.docs" "not an HTML file of the request" "html" known (map docPath (rqHtmlDocs rq))
+    , bare "an HTML site without its file's document" ((== langHtml) . sLang) paged
     ]
  where
+  -- a fact table's file that is not one of `among` or not of `lang`
+  stray key why lang among fs = listToMaybe [key <> " " <> show i <> ": " <> why | (i, f) <- zip [0 :: Int ..] fs, Set.notMember f among || not (ofLangs [lang] f)]
+  -- a site `wants` facts for whose file is not in `held`
+  bare why wants held = listToMaybe ["site " <> show i <> ": " <> why | (i, s) <- zip [0 :: Int ..] (rqSites rq), wants s, Set.notMember (path ! sFrom s) held]
   tabled = Set.fromList [f | (f, _, _) <- rqMdRefs rq]
+  docPath (p, _, _, _, _, _, _) = p
+  paged = Set.fromList (map docPath (rqHtmlDocs rq))
+  known = walked <> Set.fromList (rqOrigins rq)
   path = listArray (0, length (rqFiles rq) + length (rqOrigins rq) - 1) (rqFiles rq <> rqOrigins rq)
 
 -- | A path table in strictly ascending order: no path twice.

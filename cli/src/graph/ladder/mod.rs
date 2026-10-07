@@ -9,18 +9,20 @@
 //!
 //! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
 //! the C family's followed in plan v2.30 step 2, Java's in step 3,
-//! Lua's and R's in step 4, HTML's in step 5 (html.rs);
+//! Lua's and R's in step 4, HTML's in step 5;
 //! a language without rungs must return Unresolved(Unsupported) — an
 //! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
 //! the Python, Lua, Go and C / C++ rungs live in the core
 //! (`resolve/1`, graph/resolve/), R's since W2-text stage B, Java's
 //! since stage C, Haskell's since stage D, the TS / TSX ones since
 //! stage E, Rust's since stage F (what they read of a Rust file's
-//! syntax tree is rs_cst.rs's facts) and Markdown's since stage G (what
-//! they read of a document is graph/resolve/markdown.rs's facts):
-//! `resolve_all` sends their sites in one request and runs HTML's rungs
-//! here. Dispatch carries the site's frozen kind label (the package's
-//! `store.site_kinds`): Markdown routes five kinds through one chain.
+//! syntax tree is rs_cst.rs's facts), Markdown's since stage G (what
+//! they read of a document is graph/resolve/markdown.rs's facts) and
+//! HTML's since stage H (what they read of a page's syntax tree is
+//! html_head.rs's facts, sent by graph/resolve/markdown.rs): `resolve_all`
+//! sends their sites in one request. Dispatch carries the site's frozen
+//! kind label (the package's `store.site_kinds`): Markdown routes five
+//! kinds through one chain.
 
 use crate::scan::lang::Lang;
 use std::any::Any;
@@ -31,10 +33,11 @@ use std::rc::Rc;
 
 // pub: the walk reads every C-family file's include list with it
 pub mod c_head;
-pub mod html;
 // pub: the walk reads every Java header with it (dedup/walkidx.rs)
 pub mod java_header;
-// pub: the walk hashes every page's id set with it (dedup/walkidx.rs)
+// pub: the walk hashes every page's id set with it (dedup/walkidx.rs);
+// the request reads every page's head facts with it
+// (graph/resolve/markdown.rs)
 pub mod html_head;
 // pub: the walk reads every Lua file's package.path templates with it
 // (dedup/walkidx.rs)
@@ -49,8 +52,8 @@ mod outcome;
 pub use outcome::{Outcome, Reason, Rung};
 // The a8db74a9 Python / Lua / Go / C rungs, the c96ab3f6 R rungs, the
 // 27d0d56d Java rungs, the fa83a48d Haskell rungs, the dd0eec61 TS rungs,
-// the 1324c927 Rust rungs and the 3b7234eb Markdown rungs, frozen byte
-// for byte: the differential
+// the 1324c927 Rust rungs, the 3b7234eb Markdown rungs and the a0cb6e13
+// HTML rungs, frozen byte for byte: the differential
 // gate's oracle (tests subrepo unit/graph/ladder/oracle/, driven by
 // unit/dedup/ladder_diff/). The frozen Rust tree walk and re-export
 // surface stand at their old paths, where the frozen rungs read them.
@@ -86,8 +89,8 @@ pub(crate) use frozen::members;
 /// request carries them to the core's rungs since v2.33 W2-text stage C); `lua` the templates the
 /// walked Lua files assign to `package.path` (lua_path.rs, step 4).
 /// `assets` are the walked files the index never holds — no judged
-/// language: images, styles, scripts, fonts, data — the HTML rungs'
-/// second candidate set (step 5; the walk lists them and the key
+/// language: images, styles, scripts, fonts, data — the HTML and
+/// Markdown rungs' second candidate set (step 5; the walk lists them and the key
 /// hashes them, so a target is still never minted from the
 /// filesystem). `includes` is each walked C-family file's include
 /// list (c_head.rs), the compile database closure's input (step 5b).
@@ -161,12 +164,12 @@ pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Result<Outcome, String
 }
 
 /// Dispatch sites to their language ladders, outcomes in site order:
-/// the languages the core holds go in one resolve/1 request, the rest
-/// walk this side's rungs. An empty specifier is refused here by name
+/// the languages the core holds go in one resolve/1 request, any other
+/// is refused as unsupported. An empty specifier is refused here by name
 /// before any ladder sees it — a bare-package rung or a package-root
 /// lookup would otherwise read `""` as a name; Markdown and HTML keep
-/// their own reading of an empty target (the document itself; html.rs
-/// tells a page reference from an asset fetch of nothing).
+/// their own reading of an empty target (the document itself; the HTML
+/// rungs tell a page reference from an asset fetch of nothing).
 pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
     let empty = |lang: Lang, site: &Site| {
         site.spec.is_empty() && !matches!(lang, Lang::Markdown | Lang::Html)
@@ -185,19 +188,12 @@ pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome
             } else if super::resolve::in_core(*lang) {
                 answered.next().expect("one outcome per core site")
             } else {
-                here(*lang, site, scope)
+                // The sentinel is never walked, and the scan-only arm
+                // (plan v2.5) is never indexed — if either ever arrives,
+                // the honest answer is the documented no-rungs stance,
+                // never a guess.
+                Outcome::Unresolved(Reason::Unsupported)
             }
         })
         .collect())
-}
-
-/// The rungs this side still runs.
-fn here(lang: Lang, site: &Site, scope: &Scope) -> Outcome {
-    match lang {
-        Lang::Html => html::resolve(site, scope),
-        // The sentinel is never walked, and the scan-only arm (plan
-        // v2.5) is never indexed — if either ever arrives, the honest
-        // answer is the documented no-rungs stance, never a guess.
-        _ => Outcome::Unresolved(Reason::Unsupported),
-    }
 }

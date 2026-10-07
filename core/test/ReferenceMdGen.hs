@@ -10,14 +10,13 @@
 -- titlecase digraph — and sites of the five kinds with targets plain,
 -- relative, odd, percent-escaped (well-formed or not) and fragments.
 -- No RNG: an LCG over the case number (the Reference.hs posture).
-module ReferenceMdGen (MCase (..), mdCases, mdRequest, isMdName) where
+module ReferenceMdGen (MCase (..), mdCases, mdReach, mdRequest, isMdName) where
 
 import CE.Resolve.Cost (langMd)
 import CE.Resolve.Tables (kindImage, kindLink, kindRefDef, kindRefLink, kindUrl)
 import Data.Aeson (Value, object, (.=))
-import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
-import ReferenceResolveGen (originsOf, rands, requestHeader)
+import ReferenceResolveGen (rands, siteRequest)
 
 data MCase = MCase
   { mFiles :: [String]
@@ -84,12 +83,8 @@ frags = ["", "", "", "#intro", "#faq", "#x%20y", "#", "#\948\961\972\956\959\962
 -- | The case's request: files then origins by index, the sites, the
 -- assets and the Markdown facts.
 mdRequest :: MCase -> Value
-mdRequest c =
-  object $
-    requestHeader (mFiles c) origins
-      <> [ "sites" .= [(langMd, kind, M.findWithDefault 0 from ix, spec) | (kind, from, spec) <- mSites c]
-         , "assets" .= mAssets c
-         , "md" .= object ["slugs" .= mSlugs c, "refs" .= mRefs c]
-         ]
- where
-  (origins, ix) = originsOf (mFiles c) [f | (_, f, _) <- mSites c]
+mdRequest c = siteRequest langMd (mFiles c) (mSites c) (const ["assets" .= mAssets c, "md" .= object ["slugs" .= mSlugs c, "refs" .= mRefs c]])
+
+-- | Every answer the Markdown cases must reach.
+mdReach :: [String]
+mdReach = ["file 1", "file 3", "file 4", "package 1", "package 3", "external 3", "external 5", "section 2", "section 2 slug", "section 3 slug", "section 4 slug", "inert 3", "OutOfScope"]

@@ -111,6 +111,14 @@
 > 目录表（2–5），应答加 `dirs` `[[标签, 名字, 名字哈希]]`。路径形与旧的整数表同送按名拒绝（`paths beside the dir-keyed table …` / `paths beside the table …` /
 > `facts <码>: a directory table beside the tree`）；不带路径的请求逐字节答旧形。golden：`structure/golden` 加第 21–22 对（路径形带 `inspect`、layout 故障）、`arch/golden`
 > 加第 8–9 对（路径形、`--impact` 故障）、`query/golden` 加第 10 对（`tree`），其余 golden 不动。
+> **9.0.0 同版加性**（HTML 阶梯进核，W2-text 阶段 H，2026-10-07；设计册 §6 W2b 行与 §11 第 104–108 条；9.0.0 未发布，同上不另升版号）：
+> `sites` 的语言加 HTML（码 10，站点种类 `href` / `src` / `srcset` / `action` / `link_asset`）；请求加性 `html` `{docs}`——`docs` `[[文件, lang, base, canonical, ogUrl, [[hreflang, href]…], [id…]]]`
+> 是每个走查到的 HTML 文件、以及批里 HTML 站点所在而未被走查的文件，测量侧从语法树读出的 `<html lang>`、第一个 `<base href>`、第一个 canonical、第一个 `og:url`（各取第一个非空值、原样，缺则 `null`）、
+> 按文档顺序的 hreflang alternate 与 `id` 集；按路径严格升序，文件须是请求里的 HTML 文件（`html.docs i: not an HTML file of the request`），HTML 站点的文件缺行按名拒绝
+> （`site i: an HTML site without its file's document`）。`<base>` 与站点的字符引用解码、canonical / `og:url` / 本页语言的 alternate 推出的服务 URL、主机与部署根、R1–R5 与跨页片段对目标页 `id` 集
+> （Markdown 目标对 `md.slugs`）的校验都在核；`assets` 与 `md.slugs` 在批里有 Markdown 或 HTML 站点时带，随首问发出，不加问答轮。段的结果码与 `sections` 同 Markdown（码 5，段名
+> 是解码后的片段、恰好命中一个 `id` 时才有）。`inspect` 加 `htmlRefs`（字符引用解码与主机拆分）与 `htmlPage`（一页推出的 base、主机与根）。golden：`resolve/golden` 加第 20 对（HTML 十九个站点：
+> R1–R4、段、本主机绝对 URL、他主机与协议、空值三种、字符引用）与第 21 对（同一请求 `html.docs` 为空，按名拒绝），其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

@@ -7,7 +7,8 @@
 //! (md_mask.rs), raw-HTML anchors — `<h1..6 id=…>`, `<a name=…>`,
 //! `<a id=…>` — enter the set verbatim (they are GitHub targets, the
 //! audited FAQ.md row's shape), and a fragment or path is
-//! percent-decoded before the lookup. Plan v2.30 step 5b closed the
+//! percent-decoded before the lookup (the core's CE.Resolve.Url since
+//! plan v2.33 W2-text stage H). Plan v2.30 step 5b closed the
 //! two that remained: setext headings slug like ATX ones, and an
 //! anchor tag is read across lines and attribute spellings — which
 //! lines are headings and which tags are anchors is md_head.rs's one
@@ -191,35 +192,4 @@ fn slugify(text: &str) -> String {
         }
     }
     out
-}
-
-/// `%XX` escapes decoded — a destination is percent-encoded in the
-/// source and plain in the tree; an escape that is not two hex digits
-/// stays as written, and a result that is not UTF-8 leaves the whole
-/// text untouched — never a guess.
-pub(crate) fn percent_decode(s: &str) -> String {
-    if !s.contains('%') {
-        return s.to_string();
-    }
-    let bytes = s.as_bytes();
-    let mut out = Vec::with_capacity(bytes.len());
-    let mut i = 0;
-    while i < bytes.len() {
-        let hex = (bytes[i] == b'%')
-            .then(|| bytes.get(i + 1..i + 3))
-            .flatten()
-            .and_then(|h| std::str::from_utf8(h).ok())
-            .and_then(|h| u8::from_str_radix(h, 16).ok());
-        match hex {
-            Some(b) => {
-                out.push(b);
-                i += 3;
-            }
-            None => {
-                out.push(bytes[i]);
-                i += 1;
-            }
-        }
-    }
-    String::from_utf8(out).unwrap_or_else(|_| s.to_string())
 }

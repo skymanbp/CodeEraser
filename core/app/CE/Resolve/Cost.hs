@@ -10,6 +10,7 @@
 module CE.Resolve.Cost (
   resolveCap,
   langPy,
+  langHtml,
   langRs,
   langTs,
   langTsx,
@@ -44,13 +45,13 @@ resolveCap = 268435456
 
 -- | The language codes of the ladders this family holds (the
 -- `languages.rows` codes): Python, TypeScript, TSX, Rust, Go, Markdown,
--- Haskell, C, C++, Lua, Java, R. Every other
--- language's ladder still runs on the measuring side during the track.
-langPy, langTs, langTsx, langRs, langGo, langMd, langHs, langC, langCpp, langLua, langJava, langR :: Integer
-(langPy, langTs, langTsx, langRs, langGo, langMd, langHs, langC, langCpp, langLua, langJava, langR) = (0, 1, 2, 3, 4, 5, 6, 15, 16, 17, 18, 20)
+-- Haskell, HTML, C, C++, Lua, Java, R — every language with rungs (any
+-- other is refused as unsupported on the measuring side).
+langPy, langTs, langTsx, langRs, langGo, langMd, langHs, langHtml, langC, langCpp, langLua, langJava, langR :: Integer
+(langPy, langTs, langTsx, langRs, langGo, langMd, langHs, langHtml, langC, langCpp, langLua, langJava, langR) = (0, 1, 2, 3, 4, 5, 6, 10, 15, 16, 17, 18, 20)
 
 resolvedLangs :: [Integer]
-resolvedLangs = [langPy, langTs, langTsx, langRs, langGo, langMd, langHs, langC, langCpp, langLua, langJava, langR]
+resolvedLangs = [langPy, langTs, langTsx, langRs, langGo, langMd, langHs, langHtml, langC, langCpp, langLua, langJava, langR]
 
 -- | The outcome column of a reply row: a file target, a package
 -- directory target (Go, R, Java), External, Unresolved, a file target

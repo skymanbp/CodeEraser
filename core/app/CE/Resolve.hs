@@ -3,7 +3,7 @@
 -- | resolve.request handler (plan v2.33 wave W2a; on text since
 -- W2-text, proto 9.0.0; design booklet docs/reference/algorithm-track.md
 -- §3, §6): the reference ladders for Python, TypeScript / TSX, Rust, Lua,
--- Go, C / C++, R, Java, Haskell and Markdown, and the configuration
+-- Go, C / C++, R, Java, Haskell, Markdown and HTML, and the configuration
 -- readers they
 -- read — the tsconfig chains and package.json files, the Cargo.toml
 -- files, go.mod, R's DESCRIPTION, the .cabal files, the
@@ -48,11 +48,12 @@ import CE.Resolve.Cost
 import CE.Resolve.Description (Description (..), packageCode, readDescription)
 import CE.Resolve.Go (GoMod (..), parseGoMod, resolveGo)
 import CE.Resolve.Hs (resolveHs)
+import CE.Resolve.Html (HtmlEnv (..), pageEnv, resolveHtml)
 import CE.Resolve.Inspect (inspected)
 import CE.Resolve.Java (resolveJava)
 import CE.Resolve.JavaPick (javaEnv)
 import CE.Resolve.Lua (resolveLua, searched)
-import CE.Resolve.Md (MdEnv (..), refTable, resolveMd)
+import CE.Resolve.Md (resolveMd)
 import CE.Resolve.Py (pyproject, resolvePy)
 import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
@@ -90,7 +91,7 @@ judged proto rq = reply proto rq resolved body False
   packages = M.fromList [(dDir d, packageCode w d) | d <- descs]
   java = javaEnv w (rqJavaHeaders rq) (searchRoots "java" rq)
   cabals = M.fromList [(rel, Cabal.parse rel text) | (rel, text) <- rqHsCabals rq]
-  md = MdEnv w (Set.fromList (rqAssets rq)) (M.fromList (rqMdSlugs rq)) (M.fromList [(f, refTable ds us) | (f, ds, us) <- rqMdRefs rq])
+  pages = pageEnv w rq
   site s
     | sLang s == langPy = resolvePy w py from (sSpec s)
     | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
@@ -98,7 +99,8 @@ judged proto rq = reply proto rq resolved body False
     | sLang s == langR = resolveR (w, searchRoots "r" rq, descs) (sKind s) from (sSpec s)
     | sLang s == langJava = resolveJava java (sKind s) from (fromMaybe 0 (sLine s)) (sSpec s)
     | sLang s == langHs = resolveHs w (M.elems cabals) from (sSpec s)
-    | sLang s == langMd = resolveMd md (sKind s) from (sSpec s)
+    | sLang s == langMd = resolveMd (hMd pages) (sKind s) from (sSpec s)
+    | sLang s == langHtml = resolveHtml pages (sKind s) from (sSpec s)
     -- complete: no TS site waits for a fact
     | isTs s = either (const (AUnresolved OutOfScope)) id (ts s)
     | sLang s == langRs = either (const (AUnresolved OutOfScope)) id (rs s)

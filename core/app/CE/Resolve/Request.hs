@@ -29,10 +29,14 @@
 -- as the measuring side slugged it (`md.slugs`, `[path, [slug]]`) and,
 -- per file of a reference site, its definitions outside code and
 -- comments in text order and the labels its reference links write
--- (`md.refs`, `[path, [[label, target]], [label]]`). Every object and
+-- (`md.refs`, `[path, [[label, target]], [label]]`). With HTML sites
+-- (stage H) come the same assets and anchor sets and, per walked HTML
+-- file and per HTML site's file the walk did not hold, what its syntax
+-- tree says of the page (`html.docs`, HtmlDocRow). Every object and
 -- table may be absent, read as empty.
 module CE.Resolve.Request (
   ResolveReq (..),
+  HtmlDocRow,
   Site (..),
   CReq (..),
   Db (..),
@@ -68,9 +72,15 @@ data ResolveReq = ResolveReq
   , rqAssets :: [String]
   , rqMdSlugs :: [(String, [String])]
   , rqMdRefs :: [(String, [(String, String)], [String])]
+  , rqHtmlDocs :: [HtmlDocRow]
   , rqC :: CReq
   , rqInspect :: Maybe Value
   }
+
+-- | One HTML document as the measuring side read it: `[path, lang,
+-- base, canonical, ogUrl, [[hreflang, href]], [id]]`, each value as
+-- written (null: none, or only empty ones).
+type HtmlDocRow = (String, Maybe String, Maybe String, Maybe String, Maybe String, [(String, String)], [String])
 
 -- | `[lang, kind, from, spec]`: the language and site-kind codes, the
 -- index of the site's file in files ++ origins, the specifier; a Java
@@ -125,6 +135,7 @@ instance FromJSON ResolveReq where
       <*> o .:? "assets" .!= []
       <*> listAt o "md" "slugs"
       <*> listAt o "md" "refs"
+      <*> listAt o "html" "docs"
       <*> o .:? "c" .!= CReq "" [] [] [] [] []
       <*> o .:? "inspect"
 

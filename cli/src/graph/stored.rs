@@ -3,9 +3,9 @@
 //! or an `href` written `https://<user>:<secret>@example.com/x?token=<t>`
 //! landed in `.ce/index.db` with its userinfo and its query — the two
 //! RFC 3986 components (§3.2.1, §3.4) that carry credentials in
-//! practice — while every rung discards both before it joins: html.rs
-//! cuts the path at `?`, html_head::split_origin drops the userinfo,
-//! and md::is_scheme sends a URL out of the corpus unread. The stored
+//! practice — while every rung discards both before it joins: the core's
+//! HTML rungs cut the path at `?`, their origin split drops the userinfo
+//! and the scheme test sends a URL out of the corpus unread. The stored
 //! form keeps what a rung reads and nothing a rung ignores: the path,
 //! a bare `?` where a query stood (its presence is a fact the HTML
 //! rungs branch on — a pure query is the page — and its content is

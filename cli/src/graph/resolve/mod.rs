@@ -1,7 +1,7 @@
 //! The reference ladders the core holds (plan v2.33 wave W2a; on text
 //! since W2-text, proto 9.0.0; design booklet
 //! docs/reference/algorithm-track.md §3, §6): Python, TypeScript / TSX,
-//! Rust, Lua, Go, C / C++, R, Java, Haskell and Markdown resolve in
+//! Rust, Lua, Go, C / C++, R, Java, Haskell, Markdown and HTML resolve in
 //! `resolve/1`, with the readers of their configuration files (the tsconfig chains
 //! and package.json files, the Cargo.toml files, go.mod, R's
 //! DESCRIPTION, the .cabal files, the root pyproject.toml's keys, the
@@ -12,10 +12,10 @@
 //! document, a Rust file's syntax tree), and maps each reply row back to
 //! the ladder's `Outcome`, so the edge store, deadcode, `ce graph
 //! --sites` and the precision documents read the answers they always
-//! read; a batch with Markdown sites carries what this side read of the
-//! documents up front (markdown.rs: anchor sets, reference tables, the
-//! walked assets), so it asks no extra round. HTML's ladder runs on this
-//! side.
+//! read; a batch with Markdown or HTML sites carries what this side read
+//! of the documents up front (markdown.rs: anchor sets, reference tables,
+//! the walked assets, each page's head facts and id set), so it asks no
+//! extra round.
 //!
 //! The core is the one this process names (the global `--core`, then
 //! CE_CORE_BIN, a sibling of this binary, PATH), held open across the
@@ -55,6 +55,7 @@ pub fn in_core(lang: Lang) -> bool {
             | Lang::Rust
             | Lang::Go
             | Lang::Markdown
+            | Lang::Html
             | Lang::Haskell
             | Lang::C
             | Lang::Cpp
@@ -68,7 +69,8 @@ pub fn in_core(lang: Lang) -> bool {
 /// sweep's part of the request is read once per sweep (the memo), the
 /// response files and facts the core asks for kept in it; each Rust
 /// site's syntax-tree fact at its row goes up front (every Rust rung
-/// reads it), and so do the Markdown facts (markdown.rs).
+/// reads it), and so do the Markdown and HTML facts (the document
+/// facts, markdown.rs).
 pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
     if sites.is_empty() {
         return Ok(Vec::new());

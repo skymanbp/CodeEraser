@@ -9,41 +9,20 @@
 -- against the measuring side's standard library over every scalar value.
 -- Every site of the two hundred cases must get the same answer from
 -- both, and the cases reach every answer the Markdown rungs give.
-module ReferenceMd (equivalence) where
+module ReferenceMd (equivalence, decode, dirOf, pieces, schemed, walk) where
 
-import CE.Resolve (respond)
 import CE.Resolve.Chars (isRustWhite)
 import CE.Resolve.Cost (Reason (..))
 import CE.Resolve.Lower (rustLower)
 import CE.Resolve.Tables (kindImage, kindLink, kindRefDef, kindRefLink, kindUrl)
-import Data.Aeson (decodeStrict, encode)
 import Data.Bits (shiftL, shiftR, (.&.), (.|.))
-import qualified Data.ByteString.Lazy as BL
 import Data.Char (chr, digitToInt, isAsciiLower, isAsciiUpper, isDigit, isHexDigit, ord)
 import Data.List (isPrefixOf, unfoldr)
-import qualified Data.Set as Set
 import ReferenceMdGen
-import ReferenceResolveGen (Ref (..), answers, refShape)
-import WireHarness (battery, runChecks)
+import ReferenceResolveGen (Ref (..), refEquivalence)
 
 equivalence :: IO Bool
-equivalence =
-  runChecks
-    ( battery
-        ("resolve: 200 Markdown cases, 3000 sites, shipped = reference", "resolve: the Markdown cases reach every answer of the Markdown rungs")
-        (map disagree mdCases)
-        ["file 1", "file 3", "file 4", "package 1", "package 3", "external 3", "external 5", "section 2", "section 2 slug", "section 3 slug", "section 4 slug", "inert 3", "OutOfScope"]
-        (Set.fromList [refShape (refSite c s) | c <- mdCases, s <- mSites c])
-    )
-
-disagree :: MCase -> Maybe String
-disagree c = case either (const Nothing) decodeStrict (respond "9.0.0" (BL.toStrict (encode (mdRequest c)))) >>= answers of
-  Nothing -> Just "no reply"
-  Just got
-    | got /= want -> Just ("core " <> show got <> " reference " <> show want)
-    | otherwise -> Nothing
- where
-  want = map (refSite c) (mSites c)
+equivalence = refEquivalence "Markdown" mdCases (mdRequest, mSites, refSite) mdReach
 
 refSite :: MCase -> (Integer, String, String) -> Ref
 refSite c (kind, from, spec)

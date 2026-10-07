@@ -40,6 +40,8 @@ module CE.Resolve.Tables (
   kindRefLink,
   kindRefDef,
   kindUrl,
+  kindHref,
+  kindAction,
   configNames,
   table,
 ) where
@@ -102,9 +104,9 @@ packAt path = either refuse id (parseEither parseJSON =<< walk path pack)
   refuse e = error ("resolve tables do not read: " <> e)
 
 -- | The storage codes of the two Lua site kinds, the two R ones, the
--- three Java ones, the two Rust ones and the five Markdown ones
--- (`store.site_kinds`).
-kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl :: Integer
+-- three Java ones, the two Rust ones, the five Markdown ones and the two
+-- HTML ones whose empty specifier lands the page (`store.site_kinds`).
+kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl, kindHref, kindAction :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
 kindSource = kindCode "source"
@@ -119,6 +121,8 @@ kindImage = kindCode "image"
 kindRefLink = kindCode "ref_link"
 kindRefDef = kindCode "ref_def"
 kindUrl = kindCode "url"
+kindHref = kindCode "href"
+kindAction = kindCode "action"
 
 kindCode :: String -> Integer
 kindCode k = maybe (error ("no site kind " <> k)) toInteger (elemIndex k siteKinds)
