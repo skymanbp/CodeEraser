@@ -119,6 +119,12 @@
 > （Markdown 目标对 `md.slugs`）的校验都在核；`assets` 与 `md.slugs` 在批里有 Markdown 或 HTML 站点时带，随首问发出，不加问答轮。段的结果码与 `sections` 同 Markdown（码 5，段名
 > 是解码后的片段、恰好命中一个 `id` 时才有）。`inspect` 加 `htmlRefs`（字符引用解码与主机拆分）与 `htmlPage`（一页推出的 base、主机与根）。golden：`resolve/golden` 加第 20 对（HTML 十九个站点：
 > R1–R4、段、本主机绝对 URL、他主机与协议、空值三种、字符引用）与第 21 对（同一请求 `html.docs` 为空，按名拒绝），其余 golden 不动。
+> **9.0.0 同版加性**（W2-text 阶段 Z 收尾，2026-10-07；设计册 §11 第 109–112 条；9.0.0 未发布，同上不另升版号）：`tables/1` 的 `limits.caps` 加性两键——`bags_items`
+> （`bags/1` 一个请求的项数上限，即 `CE.Similar.Bags.bagsCap` 1,048,576，按该族契约的数法：单元、文本、`inspect` 与每个单元的被调用名、字面量、结构与文档各算一项）与 `line_bytes`
+> （协议一行的字节上限 `maxLineBytes` 33,554,432，自 `CE.Protocol` 移入 `CE.Protocol.Version`、原处照旧导出）；测量侧按这两条把一次刷新的全部词袋装进尽量少的 `bags/1` 请求，
+> hello 里定义包的摘要随之变。`resolve/1` 的线形不变：核只改了哪一轮在 `tsWanted` 里点名哪些事实（一层能点名的同一轮问），测量侧首问另带每个 Rust 站点所在目录及其祖先的
+> `Cargo.toml` 探问（到第一个是文件的为止，原由首轮应答点名）；每个结果只在全部事实到齐后写出，答案与事实在哪一轮到达无关。golden：`tables/golden` 的应答与
+> `handshake/hello-ok` 的摘要机器重生成，其余不动，请求行数不变。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

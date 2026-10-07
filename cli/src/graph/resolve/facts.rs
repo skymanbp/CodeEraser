@@ -82,6 +82,33 @@ pub fn fact(root: &Path, op: i64, a: &str, b: &str) -> Value {
     Reader::new(root).fact(op, a, b)
 }
 
+/// The Cargo.toml probes the core's first round would name (plan v2.33
+/// W2-text Z2): for each Rust site's directory, the TOML fact of
+/// `Cargo.toml` there and in each ancestor up to the first that is a file
+/// — what `ctx_for` reads (CE.Resolve.Rs) — so the request carries them
+/// up front. A chain met before stops where it joins.
+pub fn manifest_probes(root: &Path, rows: &[(i64, String, String)]) -> Vec<(i64, String, String)> {
+    use crate::graph::roots::{ancestors, join_dir, parent_dir};
+    let dirs: std::collections::BTreeSet<String> =
+        rows.iter().map(|(_, from, _)| parent_dir(from)).collect();
+    let mut probes = Vec::new();
+    let mut seen = HashSet::new();
+    for dir in &dirs {
+        for d in ancestors(dir) {
+            let path = join_dir(d, "Cargo.toml");
+            if !seen.insert(path.clone()) {
+                break;
+            }
+            let found = root.join(&path).is_file();
+            probes.push((3, path, String::new()));
+            if found {
+                break;
+            }
+        }
+    }
+    probes
+}
+
 /// The facts asked for, read and added to the request's fact table — a
 /// fact the table already carries is not read again (the core refuses a
 /// fact carried twice: `ts.fact i: asked twice`; it never asks for one it

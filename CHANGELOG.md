@@ -8,7 +8,7 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
-**无默认档位变更。** 算法轨 v2.33 W2-text 阶段 H：HTML 阶梯（相对引用与 `<base>`、声明根与页面自己的服务 URL 推出的部署根、祖先目录、裸片段、他主机与协议、跨页片段对目标页的 `id` 集）、服务 URL 的推导与字符引用的解码进核，测量侧只送每页读出的原样事实；W2b 的七个阶梯至此全部进核，只剩阶段 Z（Markdown 的掩码、标题与 slug）。协议仍是 **9.0.0**（未发布，同版加性；2026-10-07；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2b 行与 W2 状态、§10 W2b 阶段 H 行与它的注、§11 第 104–108 条；`contracts/VERSIONING.md` 9.0.0 条的「HTML 阶梯进核」段）。
+**无默认档位变更。** 算法轨 v2.33 W2-text 阶段 H：HTML 阶梯（相对引用与 `<base>`、声明根与页面自己的服务 URL 推出的部署根、祖先目录、裸片段、他主机与协议、跨页片段对目标页的 `id` 集）、服务 URL 的推导与字符引用的解码进核，测量侧只送每页读出的原样事实；W2b 的七个阶梯至此全部进核；Markdown 的掩码、标题与 slug 按 W6 的裁定留在 Rust（墓碑管线不搬，设计册 §11 第 112 条），阶段 Z 只做收尾。协议仍是 **9.0.0**（未发布，同版加性；2026-10-07；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2b 行与 W2 状态、§10 W2b 阶段 H 行与它的注、§11 第 104–108 条；`contracts/VERSIONING.md` 9.0.0 条的「HTML 阶梯进核」段）。
 
 - **wire**（加性）：`sites` 加 HTML（码 10，`href` / `src` / `srcset` / `action` / `link_asset`）；请求加性 `html` `{docs}`——每个走查到的 HTML 文件与批里 HTML 站点所在而未走查的文件各一行 `[文件, lang, base, canonical, ogUrl, [[hreflang, href]…], [id…]]`（原样、各取第一个非空），按路径严格升序；`assets` 与 `md.slugs` 改为批里有 Markdown 或 HTML 站点时就带，都随首问发出、不加问答轮；段沿用 Markdown 的结果码 5 与 `sections`；`html.docs` 的文件不是请求里的 HTML 文件、HTML 站点的文件缺行，都按名拒绝；`inspect` 加 `htmlRefs` / `htmlPage`。golden：`resolve/golden` 加第 20 对（十九个 HTML 站点）与第 21 对（同一请求 `html.docs` 为空，按名拒绝）。
 - **核**：新 `CE.Resolve.Html`（分派、R1 的相对拼接与 `<base>`、R2 声明根与推出的根、R3 祖先目录、`candidate` / `directory`、跨页片段对 `id` 集或 Markdown 锚集；`pageEnv` 一次建出 Markdown 与页面的环境）与 `CE.Resolve.HtmlHead`（`<base>` 的解码、canonical / `og:url` / 本页语言 hreflang 推出的服务 URL、主机与部署根、源的拆分、字符引用）；Markdown 的四个读法直接读阶段 G 的 `CE.Resolve.Md` / `CE.Resolve.Url`，不写第二份。每个函数以它取代的 a0cb6e13 Rust 函数命名对照（设计册 §11 第 108 条）。

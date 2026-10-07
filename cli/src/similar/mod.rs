@@ -20,6 +20,7 @@
 
 pub mod bag;
 pub mod bags;
+pub mod batch;
 pub mod corpus;
 pub mod docs;
 pub mod document;

@@ -27,6 +27,18 @@ pub fn ask(
     link.request(kind, body)
 }
 
+/// One request over the process's core session (plan v2.33 W2-text
+/// stage Z1: taken for the request, parked again unless the request broke
+/// it), behind the gate; a degraded reply is a named refusal, every error
+/// prefixed by the capability. The families that ask from deep inside a
+/// sweep (resolve/1, bags/1) go through here.
+pub fn session_ask((cap, since, kind): (&str, &str, &str), body: Value) -> Result<Value, String> {
+    let (mut link, _) = Link::open(crate::tables::core_flag())?;
+    let reply = ask(&mut link, cap, since, kind, body).map_err(|e| format!("{cap}: {e}"))?;
+    degraded(&reply).map_err(|e| format!("{cap}: {e}"))?;
+    Ok(reply)
+}
+
 /// One candidate pass a caller consumes WHOLE (plan v2.33 W3): asked
 /// behind the gate, a degraded reply refused by name (`what` names the
 /// pass it starved), then the reply, its `pairs` table and the named

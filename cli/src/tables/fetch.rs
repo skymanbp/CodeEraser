@@ -6,13 +6,13 @@
 use super::cache::{self, Identity};
 use super::pack::Pack;
 use crate::corelink::Link;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 /// The package for the project at `root`, or the named refusal; a
 /// fetched package is written back to the cache when `write`.
 pub(super) fn load(root: &Path, write: bool) -> Result<Pack, String> {
     let resolved = crate::corelink::resolve_core(super::core_flag());
-    let core = locate(&resolved).ok_or_else(|| {
+    let core = crate::corelink::locate(&resolved).ok_or_else(|| {
         format!(
             "core unavailable: no `{resolved}` to answer tables/1 (export CE_CORE_BIN, or install \
              ce-core beside ce)"
@@ -39,24 +39,6 @@ pub(super) fn load(root: &Path, write: bool) -> Result<Pack, String> {
         cache::write(&file, &id, digest, &text);
     }
     Ok(pack)
-}
-
-/// The core binary itself: a path as given, a bare name on PATH.
-fn locate(core: &str) -> Option<PathBuf> {
-    let given = Path::new(core);
-    if given.components().count() > 1 || given.is_absolute() {
-        return given
-            .is_file()
-            .then(|| std::path::absolute(given).ok())
-            .flatten();
-    }
-    let exe = format!("{core}.exe");
-    let names: &[&str] = if cfg!(windows) {
-        &[&exe, core]
-    } else {
-        &[core]
-    };
-    crate::proc::on_path(names)
 }
 
 /// The core's answer: the package text (the reply less its envelope —

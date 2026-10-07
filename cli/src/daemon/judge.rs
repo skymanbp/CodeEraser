@@ -13,7 +13,11 @@
 //! never means stderr: that handle is null whenever the daemon was
 //! lazily spawned (client.rs gives it Stdio::null), so the lines below
 //! are a courtesy for a foreground daemon, not the channel the A9f
-//! promise rests on.
+//! promise rests on. The link is the daemon's OWN (`Link::own`), never
+//! the process slot every command shares its core through (corelink,
+//! plan v2.33 W2-text Z1): the daemon outlives commands, and its core is
+//! retired on purpose (`retire_link`), which a parked session would not
+//! be.
 
 use crate::corelink::Link;
 use crate::fourclass::batch::{BatchClassification, PairInput, classify_batch};
@@ -185,7 +189,7 @@ impl Judge {
 
     fn link_mut(&mut self) -> Option<&mut Link> {
         if self.link.is_none() && self.budget.open(Instant::now()) {
-            match core_bin().and_then(|bin| Link::open(&bin).ok()) {
+            match core_bin().and_then(|bin| Link::own(&bin).ok()) {
                 Some((link, _reply)) => {
                     self.link = Some(link);
                     if let Some(n) = self.budget.recovered() {

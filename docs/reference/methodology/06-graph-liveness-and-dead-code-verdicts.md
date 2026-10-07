@@ -63,8 +63,11 @@ W2-text so do the readers of the configuration they search — go.mod, R's `DESC
 `pyproject.toml`'s keys, the compile databases with their response and flag files — with every
 walked Java file's header as this side's lexer read it
 ([Resolve.hs:1-21](../../../core/app/CE/Resolve.hs#L1)): this side reads the tree, detects the sites
-and reads the files, sends what it read as text, reads any response file the core names as wanted,
-and maps each reply row back to the outcome the other rungs return
+and reads the files, sends what it read as text, reads any response file or fact the core names as
+wanted — one round per resolve level, every fact a level can name asked together, each Rust site's
+row and its directory's Cargo.toml probes carried in the first request — over the one core session
+the command shares with every other family, and maps each reply row back to the outcome the other
+rungs return
 ([resolve/mod.rs:1-12](../../../cli/src/graph/resolve/mod.rs#L1),
 [request.rs:1-10](../../../cli/src/graph/resolve/request.rs#L1)). A sweep whose core cannot answer
 stores those languages' sites unresolved, owes their files to the next run, and every face

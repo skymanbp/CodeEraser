@@ -109,8 +109,8 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
     Ok(out)
 }
 
-/// The walk: every judged file through refresh_file, the md facts
-/// gathered, and the resolver configs returned with their content
+/// The walk: every stale judged file refreshed (its bags asked with its
+/// batch, similar/batch.rs), the md facts gathered, and the resolver configs returned with their content
 /// hashes (key inputs). Reads go through walk::read_surviving: a
 /// mid-walk deletion is a skip and the next run converges (the
 /// survival rule scan and graph already walk under); an unreadable
@@ -123,6 +123,9 @@ fn refresh_tree(
     md_facts: &mut Vec<(String, u64)>,
 ) -> Result<Vec<(String, u64)>> {
     let mut configs: Vec<(String, u64)> = Vec::new();
+    // a stale file's bags are asked with the batch it joins, not one by
+    // one inside its transaction (similar/batch.rs, plan v2.33 W2-text Z4)
+    let mut batch = crate::similar::batch::Batch::new(Params::default());
     // foreign files (a declared submodule's) enter the index too: the
     // graph needs the references they hold and the advisory the names
     // they spell — their `foreign` flag is what keeps every
@@ -146,23 +149,30 @@ fn refresh_tree(
             continue; // vanished mid-walk: not live this pass
         };
         lang_fact(lang, &rel, &src, md_facts, out);
-        if idx.refresh_file(&rel, &src, lang, Params::default(), foreign)? {
+        if idx.stale(&rel, &src, foreign)? {
             out.dirty.insert(rel.clone());
+            batch.push(idx, (rel.clone(), src, lang), foreign)?;
         }
-        if lang.fingerprints() {
-            out.tokenized += 1;
-        }
-        if lang.prose_only() {
-            // the prose-only arm (plan v2.30 step 5b-8): indexed for
-            // its docsegs rows, an asset for the pages that name it,
-            // never live — no rung reads it as a target
-            out.assets.insert(rel.clone());
-            out.prose.insert(rel);
-        } else {
-            out.live.insert(rel);
-        }
+        seat(out, rel, lang);
     }
+    batch.finish(idx)?;
     Ok(configs)
+}
+
+/// One indexed file seated on the walk index: counted when it
+/// fingerprints, then live — or, the prose-only arm (plan v2.30 step
+/// 5b-8), indexed for its docsegs rows and an asset for the pages that
+/// name it, never live: no rung reads it as a target.
+fn seat(out: &mut WalkIndex, rel: String, lang: Lang) {
+    if lang.fingerprints() {
+        out.tokenized += 1;
+    }
+    if lang.prose_only() {
+        out.assets.insert(rel.clone());
+        out.prose.insert(rel);
+    } else {
+        out.live.insert(rel);
+    }
 }
 
 /// The two `[graph]` declarations the resolver reads, seated on the

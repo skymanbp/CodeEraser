@@ -22,7 +22,7 @@ pub(super) fn deadline() -> Duration {
 
 /// Byte ceiling for ONE reply line — a MEMORY bound, deliberately
 /// above the core's own 32 MiB frame ceiling
-/// (core/app/CE/Protocol.hs::maxLineBytes), so no in-contract reply
+/// (core/app/CE/Protocol/Version.hs::maxLineBytes), so no in-contract reply
 /// is ever cut short. The deadline alone did not bound the pump: a
 /// core emitting an endless newline-free line grew the String for the
 /// whole deadline window, unbounded, while `next_line` sat waiting

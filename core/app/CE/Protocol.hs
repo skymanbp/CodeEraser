@@ -27,7 +27,7 @@ import qualified CE.Handshake as Handshake
 import qualified CE.Merge as Merge
 import qualified CE.Query as Query
 import qualified CE.Resolve as Resolve
-import CE.Protocol.Version (majorMatches, proto)
+import CE.Protocol.Version (majorMatches, maxLineBytes, proto)
 import qualified CE.Scan as Scan
 import qualified CE.Similar as Similar
 import qualified CE.Structure as Structure
@@ -41,14 +41,6 @@ import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
-
--- | Checked before any JSON parse, so a hostile oversized line is
--- never decoded. Relaxed from 1 MiB at M5-2a (2026-08-12 decision):
--- the only client is the trusted same-machine daemon, and a graph
--- request legitimately carries ~1 MB per 100k LOC — the real
--- per-family guards are CE.Graph.Cost's node/edge caps.
-maxLineBytes :: Int
-maxLineBytes = 33554432
 
 -- | Just the envelope: @type@ for dispatch, @id@ for echoing into
 -- error replies, @proto@ for the per-message major check. Unknown

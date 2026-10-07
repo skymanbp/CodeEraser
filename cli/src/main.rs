@@ -40,10 +40,13 @@ fn main() -> ExitCode {
     // reads the core's definition package (plan v2.32 step 2):
     // named once, before any command runs
     codeeraser::tables::core(&cli.core);
-    match analysis(cli.cmd, &cli.core) {
+    let code = match analysis(cli.cmd, &cli.core) {
         Ok(code) => code,
         Err(cmd) => infra(*cmd, &cli.core),
-    }
+    };
+    // the command's one core session ends with it (corelink, Z1)
+    codeeraser::corelink::release();
+    code
 }
 
 /// Parse through the (possibly localized) Command: zh swaps the help

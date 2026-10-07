@@ -10,7 +10,9 @@
 //! is opt-in — so reader.rs derives a word's co-occurrence counts at
 //! query time from the bag rows of the units that carry it, exactly
 //! the counts the in-memory table keeps. Written inside refresh_file's
-//! content-hash-gated transaction in two halves around the unitsig
+//! content-hash-gated transaction (the bags themselves asked of the core
+//! before it began, one ask per batch of files: batch.rs) in two halves
+//! around the unitsig
 //! refresh (whose row replacement cascades the old bag rows away):
 //! `retire` tallies the file's old bags at −1 first, `refresh_bags`
 //! tallies the new ones at +1 after, and only the non-zero NET deltas
@@ -24,10 +26,9 @@
 //! the term road wipes the tables with the rest. Privacy (plan
 //! §5.9.2): no word text enters the database.
 
-use super::bag::{UnitBag, file_bags};
+use super::bag::UnitBag;
 use super::ppmi::capped_words;
 use super::terms::Channel;
-use crate::scan::lang::Lang;
 use anyhow::{Context, Result};
 use rusqlite::{Connection, Transaction};
 use std::collections::{BTreeMap, HashMap};
@@ -73,29 +74,23 @@ pub fn retire(tx: &Transaction<'_>, file_id: i64) -> Result<Delta> {
     Ok(delta)
 }
 
-/// The second half, once the file's unitsig rows are current: bag
-/// every unit, seat each bag on its unitsig row, and move the
-/// aggregate by the net difference.
+/// The second half, once the file's unitsig rows are current: seat
+/// each of the file's bags (asked of the core before the transaction
+/// began, batch.rs; none for a foreign file) on its unitsig row, and
+/// move the aggregate by the net difference.
 pub fn refresh_bags(
     tx: &Transaction<'_>,
     file_id: i64,
-    text: &str,
-    lang: Lang,
-    foreign: bool,
+    bags: &[UnitBag],
     mut delta: Delta,
 ) -> Result<()> {
-    let bags = if foreign {
-        Vec::new()
-    } else {
-        file_bags(text, lang).map_err(anyhow::Error::msg)?
-    };
     let seats: HashMap<(String, i64), i64> = tx
         .prepare_cached("SELECT key, nth, id FROM unitsig WHERE file_id = ?1")?
         .query_map((file_id,), |r| Ok(((r.get(0)?, r.get(1)?), r.get(2)?)))?
         .collect::<rusqlite::Result<_>>()?;
     let mut ins = tx
         .prepare_cached("INSERT INTO bag (unit, term_hash, tf, channel) VALUES (?1, ?2, ?3, ?4)")?;
-    for bag in &bags {
+    for bag in bags {
         let unit = seats
             .get(&(bag.key.clone(), bag.nth))
             .with_context(|| format!("{}#{}: bagged but not in unitsig", bag.key, bag.nth))?;

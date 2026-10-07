@@ -118,6 +118,24 @@ impl Index {
         p: Params,
         foreign: bool,
     ) -> Result<bool> {
+        if !self.stale(rel, src, foreign)? {
+            return Ok(false);
+        }
+        let bags = if foreign {
+            Vec::new()
+        } else {
+            crate::similar::file_bags(&String::from_utf8_lossy(src), lang)
+                .map_err(anyhow::Error::msg)?
+        };
+        self.write_file(rel, src, lang, p, foreign, &bags)?;
+        Ok(true)
+    }
+
+    /// Whether `rel` needs refreshing: its stored content hash or owner
+    /// flag differ from these bytes' (refresh_file's fast path; the walk
+    /// asks first so a stale file's bags join one batched ask, plan v2.33
+    /// W2-text Z4).
+    pub fn stale(&self, rel: &str, src: &[u8], foreign: bool) -> Result<bool> {
         let chash = tokens::fnv1a(src) as i64;
         let stored: Option<(i64, bool)> = self
             .conn
@@ -134,9 +152,21 @@ impl Index {
                     Err(e)
                 }
             })?;
-        if stored == Some((chash, foreign)) {
-            return Ok(false);
-        }
+        Ok(stored != Some((chash, foreign)))
+    }
+
+    /// One stale file refreshed in one transaction, its bags (asked of
+    /// the core before the transaction began; none for a foreign file or
+    /// one without units) handed in.
+    pub fn write_file(
+        &mut self,
+        rel: &str,
+        src: &[u8],
+        lang: Lang,
+        p: Params,
+        foreign: bool,
+        bags: &[crate::similar::UnitBag],
+    ) -> Result<()> {
         // Markdown (no grammar) — and any grammar that does not
         // fingerprint (`Lang::fingerprints`, plan v2.30 §2) — enters
         // `files` for the graph cache with zero fingerprint rows:
@@ -150,20 +180,12 @@ impl Index {
         let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();
         let fps = winnow::fingerprints(&hashes, p);
         let tx = self.conn.transaction()?;
-        tx.execute(
-            "INSERT INTO files (path, content_hash, token_count, has_tokens, owner)
-             VALUES (?1, ?2, ?3, ?4, ?5)
-             ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3,
-                                             has_tokens = ?4, owner = ?5",
-            (
-                rel,
-                chash,
-                toks.len() as i64,
-                i64::from(lang.fingerprints()),
-                i64::from(foreign),
-            ),
-        )?;
-        let id: i64 = tx.query_row("SELECT id FROM files WHERE path = ?1", (rel,), |r| r.get(0))?;
+        let facts = [
+            toks.len() as i64,
+            i64::from(lang.fingerprints()),
+            i64::from(foreign),
+        ];
+        let id = seat_file(&tx, rel, src, facts)?;
         tx.execute("DELETE FROM fingerprints WHERE file_id = ?1", (id,))?;
         insert_fps(&tx, id, &fps, &toks, p)?;
         let text = String::from_utf8_lossy(src);
@@ -181,9 +203,9 @@ impl Index {
         // channel: the same-role advisor's bags, seated on the fresh
         // unitsig rows, the aggregate moved by difference
         // (similar/store.rs; PERF-BUDGET carries the cost)
-        crate::similar::store::refresh_bags(&tx, id, &text, lang, foreign, retired)?;
+        crate::similar::store::refresh_bags(&tx, id, bags, retired)?;
         tx.commit()?;
-        Ok(true)
+        Ok(())
     }
 
     /// Drop rows for files no longer on disk; returns removed count.
@@ -377,6 +399,27 @@ pub fn peek(db_path: &Path, p: Params) -> Result<(i64, bool)> {
     let current = schema::schema_current(&conn, p)?;
     let files = conn.query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?;
     Ok((files, current))
+}
+
+/// The file's `files` row upserted — the bytes' content hash and
+/// `[token_count, has_tokens, owner]` — and its id (write_file's first
+/// statement).
+fn seat_file(
+    tx: &rusqlite::Transaction<'_>,
+    rel: &str,
+    src: &[u8],
+    facts: [i64; 3],
+) -> Result<i64> {
+    let chash = tokens::fnv1a(src) as i64;
+    let [count, has_tokens, owner] = facts;
+    tx.execute(
+        "INSERT INTO files (path, content_hash, token_count, has_tokens, owner)
+         VALUES (?1, ?2, ?3, ?4, ?5)
+         ON CONFLICT(path) DO UPDATE SET content_hash = ?2, token_count = ?3,
+                                         has_tokens = ?4, owner = ?5",
+        (rel, chash, count, has_tokens, owner),
+    )?;
+    Ok(tx.query_row("SELECT id FROM files WHERE path = ?1", (rel,), |r| r.get(0))?)
 }
 
 fn insert_fps(

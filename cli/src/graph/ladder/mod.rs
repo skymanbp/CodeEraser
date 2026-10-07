@@ -7,22 +7,19 @@
 //! rung, so precision is attributable per level and a dirty rung can
 //! be voted out by data at 2h.
 //!
-//! All six launch ladders have landed (TS → Py → Rust → Go → Md → Hs),
-//! the C family's followed in plan v2.30 step 2, Java's in step 3,
-//! Lua's and R's in step 4, HTML's in step 5;
-//! a language without rungs must return Unresolved(Unsupported) — an
-//! honest ledger row, never a silent skip. Since plan v2.33 wave W2a
-//! the Python, Lua, Go and C / C++ rungs live in the core
-//! (`resolve/1`, graph/resolve/), R's since W2-text stage B, Java's
-//! since stage C, Haskell's since stage D, the TS / TSX ones since
-//! stage E, Rust's since stage F (what they read of a Rust file's
-//! syntax tree is rs_cst.rs's facts), Markdown's since stage G (what
-//! they read of a document is graph/resolve/markdown.rs's facts) and
-//! HTML's since stage H (what they read of a page's syntax tree is
-//! html_head.rs's facts, sent by graph/resolve/markdown.rs): `resolve_all`
-//! sends their sites in one request. Dispatch carries the site's frozen
-//! kind label (the package's `store.site_kinds`): Markdown routes five
-//! kinds through one chain.
+//! Every rung of every language with a ladder runs in the core
+//! (`resolve/1`, graph/resolve/; plan v2.33 wave W2a and W2-text stages
+//! A–H). This side detects the sites and reads what the rungs read — the
+//! configuration files as text, a Rust file's syntax-tree facts
+//! (rs_cst.rs), a document's anchors and definitions and a page's head
+//! facts (graph/resolve/markdown.rs, html_head.rs) — and `resolve_all`
+//! sends a sweep's sites in one request over the process's one core
+//! session (corelink), asking again only for the facts the next resolve
+//! level names: one round per level (stage Z). Dispatch carries the
+//! site's frozen kind label (the package's `store.site_kinds`; Markdown
+//! routes five kinds through one chain); a language without rungs
+//! returns Unresolved(Unsupported) — an honest ledger row, never a silent
+//! skip.
 
 use crate::scan::lang::Lang;
 use std::any::Any;

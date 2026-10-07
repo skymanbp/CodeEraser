@@ -31,10 +31,12 @@ leaked! {
     MovesLimits { line_cap: usize, unit_cap: usize }
     /// The request ceilings the scan, flow, merge, structure and arch
     /// families plan their requests by (plan v2.33 W1; each its
-    /// family's Cost constant, once held here as a second literal).
+    /// family's Cost constant, once held here as a second literal), and
+    /// the two an index refresh's batched bags ask is planned by (W2-text
+    /// Z4: the bags/1 item ceiling, the protocol's line in bytes).
     WireCaps { scan_rows: usize, flow_rows: usize, merge_groups: usize,
                merge_tree_nodes: usize, structure_nodes: usize, arch_files: usize,
-               arch_refs: usize }
+               arch_refs: usize, bags_items: usize, line_bytes: usize }
     /// The numbers requests are laid out by and candidates selected with
     /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
     Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,

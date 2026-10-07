@@ -6,15 +6,15 @@
 //! spellings, the literal kinds, the structure histogram and the lines of
 //! the comments it owns (bag.rs) — and a free-text query as it was typed
 //! (query.rs); the reply's `[term, channel, tf]` rows are what the stored
-//! tables hold. Index refreshes and queries share the process's link,
-//! opened on first use. A core that cannot answer is a named refusal:
-//! there is no copy of the road on this side to fall back on.
+//! tables hold. Index refreshes and queries ride the process's core
+//! session (corelink::judged::session_ask). A core that cannot answer is
+//! a named refusal: there is no copy of the road on this side to fall
+//! back on.
 
 use super::terms::Channel;
-use crate::corelink::{Link, judged};
+use crate::corelink::judged;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
-use std::sync::{Mutex, PoisonError};
 
 /// The capability the core must offer, the request kind, the proto that
 /// minted the family.
@@ -57,22 +57,10 @@ fn terms(bags: Vec<Vec<(u64, usize, u32)>>) -> Result<Vec<Terms>, String> {
         .collect()
 }
 
-/// The process's link to the core: taken out for one request and put
-/// back only when it answered, so a failed link is dropped and the next
-/// request opens a fresh one.
-static LINK: Mutex<Option<Link>> = Mutex::new(None);
-
+/// One request over the process's core session (the reader legs of the
+/// differential gate ask `inspect` through it too).
 fn request(body: Value) -> Result<Value, String> {
-    let mut held = LINK.lock().unwrap_or_else(PoisonError::into_inner);
-    let mut link = match held.take() {
-        Some(link) => link,
-        None => Link::open(crate::tables::core_flag())?.0,
-    };
-    let reply =
-        judged::ask(&mut link, CAP, SINCE, KIND, body).map_err(|e| format!("{CAP}: {e}"))?;
-    *held = Some(link);
-    judged::degraded(&reply).map_err(|e| format!("{CAP}: {e}"))?;
-    Ok(reply)
+    judged::session_ask((CAP, SINCE, KIND), body)
 }
 
 #[cfg(test)]

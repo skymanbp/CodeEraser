@@ -18,8 +18,8 @@
 //! extra round.
 //!
 //! The core is the one this process names (the global `--core`, then
-//! CE_CORE_BIN, a sibling of this binary, PATH), held open across the
-//! process's requests. A core that cannot answer is a named refusal:
+//! CE_CORE_BIN, a sibling of this binary, PATH): the process's core
+//! session (corelink), shared with every other family the command asks. A core that cannot answer is a named refusal:
 //! there is no copy of the search on this side to fall back on.
 
 mod facts;
@@ -30,14 +30,13 @@ mod request;
 pub use manifests::{Declared, Manifests, declared, private};
 
 use super::ladder::{Outcome, Reason, Rung, Scope, Site};
-use crate::corelink::{Link, judged};
+use crate::corelink::judged;
 use crate::scan::lang::Lang;
 use request::Input;
 use serde_json::{Value, json};
 use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
-use std::sync::Mutex;
 
 /// The capability the core must offer, the request kind, the proto that
 /// minted the family's text form.
@@ -69,8 +68,9 @@ pub fn in_core(lang: Lang) -> bool {
 /// sweep's part of the request is read once per sweep (the memo), the
 /// response files and facts the core asks for kept in it; each Rust
 /// site's syntax-tree fact at its row goes up front (every Rust rung
-/// reads it), and so do the Markdown and HTML facts (the document
-/// facts, markdown.rs).
+/// reads it), with the Cargo.toml probes of its directory's context
+/// (facts::manifest_probes), and so do the Markdown and HTML facts (the
+/// document facts, markdown.rs).
 pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
     if sites.is_empty() {
         return Ok(Vec::new());
@@ -97,11 +97,12 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
     body["sites"] = rows;
     body["origins"] = json!(origins);
     markdown::add(&mut body, scope, sites);
-    let rows: Vec<(i64, String, String)> = sites
+    let mut rows: Vec<(i64, String, String)> = sites
         .iter()
         .filter(|(lang, _)| *lang == Lang::Rust)
         .map(|(_, s)| (4, s.from.to_string(), s.line.saturating_sub(1).to_string()))
         .collect();
+    rows.extend(facts::manifest_probes(scope.root, &rows));
     facts::answer_facts(&mut body, scope.root, &rows)?;
     let reply = complete(&mut body, scope.root)?;
     tree.borrow_mut()["c"]["responses"] = body["c"]["responses"].clone();
@@ -208,24 +209,9 @@ fn complete(body: &mut Value, root: &Path) -> Result<Value, String> {
     }
 }
 
-/// The process's link to the core, opened on first use and dropped on
-/// any failure so the next request opens a fresh one.
-static LINK: Mutex<Option<Link>> = Mutex::new(None);
-
+/// One round over the process's core session (corelink::judged).
 fn ask(body: Value) -> Result<Value, String> {
-    let mut held = LINK.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
-    if held.is_none() {
-        let (link, _) = Link::open(crate::tables::core_flag())?;
-        *held = Some(link);
-    }
-    let link = held.as_mut().expect("opened above");
-    let reply = judged::ask(link, CAP, SINCE, KIND, body);
-    if reply.is_err() {
-        *held = None;
-    }
-    let reply = reply.map_err(|e| format!("resolve/1: {e}"))?;
-    judged::degraded(&reply).map_err(|e| format!("resolve/1: {e}"))?;
-    Ok(reply)
+    judged::session_ask((CAP, SINCE, KIND), body)
 }
 
 /// One reply row as an outcome, a section's slug from its `sections`

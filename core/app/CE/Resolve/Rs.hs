@@ -208,11 +208,15 @@ externRung env (pkg, roots) name rest
 
 -- | `bound` (R5): a single-terminal walk that left segments unconsumed
 -- consults the terminal's surface for one hop and answers the definition
--- file; an unbound, ambiguous or self-pointing hop keeps the file.
+-- file; an unbound, ambiguous or self-pointing hop keeps the file. The
+-- terminal directory's context, which every hop from the file reads, is
+-- asked beside its surface (plan v2.33 W2-text Z2: what a level can name
+-- goes in one round; the answer is the same whichever round a fact
+-- arrives in, since every result is written only once all are known).
 bound :: RsEnv -> [String] -> Answer -> Int -> Need Answer
 bound env walked out used = case (out, drop used walked) of
   (AFile path rung, name : tl) -> do
-    b <- bindsTo (reFacts env) path name
+    (b, _) <- both (bindsTo (reFacts env) path name) (reCtx env (parentDir path))
     target <- case b of
       Just (Named segs row) -> hop env path segs tl row
       Just (Globbed globs) -> globbed env path name tl globs
@@ -224,31 +228,34 @@ bound env walked out used = case (out, drop used walked) of
 
 -- | `hop`: the bound path, then the tail, walked bind-free from the
 -- facade at the entry's own row; a global path walks as a crate name.
+-- The facade's context and, when the walk's head reads it (`self`,
+-- `super`, a local module), its row at the entry are asked together.
 hop :: RsEnv -> String -> [String] -> [String] -> Int -> Need (Maybe String)
 hop env facade segs tl row = do
-  ctx <- reCtx env (parentDir facade)
-  (o, _, _) <- useWalk env ctx (facade, row) (drop (fromEnum global) segs <> tl) global
+  (ctx, _) <- both (reCtx env (parentDir facade)) (if readsRow then () <$ rsAt (reFacts env) facade row else pure ())
+  (o, _, _) <- useWalk env ctx (facade, row) path global
   pure $ case o of
-    AFile path _ -> Just path
+    AFile found _ -> Just found
     _ -> Nothing
  where
   global = take 1 segs == [""]
+  path = drop (fromEnum global) segs <> tl
+  readsRow = not global && take 1 path /= ["crate"] && not (null path)
 
 -- | `globbed`: exactly one glob whose module exports the name answers the
 -- walk of its path, the name and the tail; several, or none, keep the
--- file. The globs are asked in order until a second carries the name.
+-- file. Every glob is asked at once, its carrier test beside its walk
+-- with the name, where the globs were asked in order until a second
+-- carried the name: "the first two carriers are one" is "exactly one
+-- glob carries", and the answer is that glob's walk either way (Z2).
 globbed :: RsEnv -> String -> String -> [String] -> [([String], Int)] -> Need (Maybe String)
-globbed env facade name tl globs = carrying [] globs >>= \found -> case found of
-  [(segs, row)] -> hop env facade segs (name : tl) row
-  _ -> pure Nothing
+globbed env facade name tl globs = pick <$> needAll [both (carries g) (hop env facade segs (name : tl) row) | g@(segs, row) <- globs]
  where
-  carrying found gs
-    | length found == 2 = pure found
-    | otherwise = case gs of
-        [] -> pure found
-        (g@(segs, row) : more) -> do
-          target <- hop env facade segs [] row
-          carries <- case target of
-            Just m | m /= facade -> exports (reFacts env) m name
-            _ -> pure False
-          carrying (if carries then found <> [g] else found) more
+  pick tried = case [target | (True, target) <- tried] of
+    [target] -> target
+    _ -> Nothing
+  carries (segs, row) = do
+    target <- hop env facade segs [] row
+    case target of
+      Just m | m /= facade -> exports (reFacts env) m name
+      _ -> pure False

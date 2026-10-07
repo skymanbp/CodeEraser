@@ -9,7 +9,9 @@
 -- is the owning family's Cost constant, never a second statement; the
 -- keys are snake case like every other package key. W1 added `caps`:
 -- the request ceilings the scan, flow, merge, structure and arch
--- families are planned by.
+-- families are planned by; W2-text Z4 the bags/1 item ceiling and the
+-- protocol's line ceiling, which an index refresh's batched bags ask is
+-- planned by.
 module CE.Limits (limits) where
 
 import qualified CE.Arch.Cost as Arch
@@ -20,7 +22,9 @@ import qualified CE.Docdup.Cost as Docdup
 import qualified CE.Flow.Cost as Flow
 import qualified CE.FourClass.Moves.Cost as Moves
 import qualified CE.Merge.Cost as Merge
+import CE.Protocol.Version (maxLineBytes)
 import qualified CE.Scan.Cost as Scan
+import qualified CE.Similar.Bags as Bags
 import qualified CE.Similar.Cost as Similar
 import qualified CE.Similar.Rank.Cost as Rank
 import qualified CE.Structure.Cost as Structure
@@ -83,5 +87,5 @@ limits =
   ratio q = [numerator q, denominator q]
   (perms, bands, rows) = Candidates.lshShape
   -- the request ceilings beside their keys, in one order
-  capKeys = "scan_rows flow_rows merge_groups merge_tree_nodes structure_nodes arch_files arch_refs"
-  caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap]
+  capKeys = "scan_rows flow_rows merge_groups merge_tree_nodes structure_nodes arch_files arch_refs bags_items line_bytes"
+  caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap, toInteger Bags.bagsCap, toInteger maxLineBytes]

@@ -6,7 +6,7 @@
 -- again at 6.1.0. So the standing rule is a SUBSTITUTION, not an
 -- append: each version replaces the last one's entry here, and the
 -- history lives at its address.
-module CE.Protocol.Version (majorMatches, proto) where
+module CE.Protocol.Version (majorMatches, maxLineBytes, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
@@ -27,6 +27,17 @@ module CE.Protocol.Version (majorMatches, proto) where
 
 proto :: String
 proto = "9.0.0"
+
+-- | The request line's byte ceiling, checked by "CE.Protocol" before any
+-- JSON parse, so a hostile oversized line is never decoded. Relaxed from
+-- 1 MiB at M5-2a (2026-08-12 decision): the only client is the trusted
+-- same-machine daemon, and a graph request legitimately carries ~1 MB per
+-- 100k LOC — the real per-family guards are CE.Graph.Cost's node/edge
+-- caps. Here, beside the version, because the definition package names it
+-- too (CE.Limits `line_bytes`: the bags/1 batches are planned by it, plan
+-- v2.33 W2-text Z4) and "CE.Protocol" imports the package.
+maxLineBytes :: Int
+maxLineBytes = 33554432
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.
