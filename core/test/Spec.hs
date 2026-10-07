@@ -54,6 +54,7 @@ import qualified ReferenceResolve
 import qualified ResolveProps
 import qualified ScanCyclesProps
 import qualified ScanEventsProps
+import qualified ScanReferenceProps
 import qualified ScanProps
 import qualified SpellProps
 import qualified StructureModularityProps
@@ -159,6 +160,7 @@ batteries =
        , ScanProps.battery
        , ScanCyclesProps.battery
        , ScanEventsProps.battery
+       , ScanReferenceProps.battery
        , StructureProps.battery
        , StructureModularityProps.battery
        , TrendProps.battery

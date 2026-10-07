@@ -8,6 +8,13 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** 算法轨 v2.33 参考求值器第 1 项：`scan/1` 复杂度推导的第二种写法——只加核测试，判决、线形与报告字节都不动（2026-10-07；设计册 `docs/reference/algorithm-track.md` §11 第 114 条）。
+
+- **参考**：新 `core/test/ReferenceScan.hs` 在单元的结构树上按白皮书 v1.7 规则（`CE.Scan.Complexity` 头注所述）算圈复杂度、认知复杂度与最大嵌套——嵌套层是树折叠的显式参数，不读事件的父链、位置与类别位；递归加一由调用关系的闭包定环（对的集合自乘到不动点），不用 `Data.Graph`，也不用 `ReferenceGraph.reachB`。
+- **生成器**：新 `core/test/ReferenceScanGen.hs`：if / else / else-if 链、循环（含 Python 的 loop-else）、计或不计决策的 case、try / catch / finally、带标签与不带标签的跳转、lambda、三元、混合运算符的布尔链、`??`、let 链、作为独立单元的嵌套具名函数；按三种表族（CLike：Rust / C / TS 的 `else_clause`；GoLike：Go / Java 的 `alternative` 字段；PyLike：Python 的 `elif_clause`）降成测量侧会写的事件行（与 `cli/src/scan/metrics/events.rs` 的 `Emitter::visit` 同一走法），程序带单元之间的调用。
+- **腿**（新 `core/test/ScanReferenceProps.hs`，挂 `Spec.hs` 与 cabal 测试段）：1,200 个种子程序经真 `respond` 的 `derived` 与 `cocBumped` 逐行等于参考，且三族与十六种形都到达；300 个稠密调用图的 `cocBumped` 等于闭包，自环、长环与无环都到达；白皮书例题册 38 行（Rust 发射器写下的真事件）经线推出的三个数等于按页面写成的树（新 `core/test/ScanPageTrees.hs`）上参考算出的数，认知复杂度等于页边值、页面写了圈复杂度的行也相等；递归锚行加一条自调用后等于页边值加一。四条变异探针（else 付嵌套罚、去掉 IN_ALT 位、三元的操作数不加深、只认自环）各自让对应的腿转红，还原后文件 sha 相同。
+- **册**：方法学册 05 加一段「复杂度值从哪里来」，指向核的推导与这份参考。
+
 **无默认档位变更。** 算法轨 v2.33 W2-text 阶段 Z：收尾三项——每个进程一条核会话（Z1）、一层能点名的事实同一轮问（Z2）、一次刷新的词袋一次问（Z4）；判决不动，只改问法。Markdown 的掩码、标题与 slug 按 W6 的裁定留在 Rust，阶段 Z 不搬（设计册 §11 第 112 条）。协议仍是 **9.0.0**（未发布，同版加性；2026-10-07；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §6 W2 状态、§10 W2b 阶段 Z 行与它的注、§11 第 109–112 条；`contracts/VERSIONING.md` 9.0.0 条的「W2-text 阶段 Z 收尾」段）。
 
 - **wire**（加性）：`tables/1` 的 `limits.caps` 加 `bags_items`（`bags/1` 一个请求的项数上限 1,048,576）与 `line_bytes`（协议一行的字节上限 33,554,432，`maxLineBytes` 自 `CE.Protocol` 移入叶模块 `CE.Protocol.Version`，原处照旧导出）；`resolve/1` 线形不变。golden：只有 `tables/golden` 的应答与 `handshake/hello-ok` 的定义包摘要机器重生成，请求行数不变。

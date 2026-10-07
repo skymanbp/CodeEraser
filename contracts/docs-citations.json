@@ -3003,6 +3003,18 @@
     "line": 104,
     "text": "sccFloor = 2\n\n-- | The node kind whose dead verdicts FAIL (batch-7 slice 4, RG9:"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Scan/Complexity.hs|e9d11f505ba51ce4|0": {
+    "target": "../../../core/app/CE/Scan/Complexity.hs",
+    "line": 1,
+    "end": 24,
+    "text": "-- | The three complexity numbers of ONE unit — cognitive complexity"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Scan/Cycles.hs|1ace8fc4bf7604e3|0": {
+    "target": "../../../core/app/CE/Scan/Cycles.hs",
+    "line": 1,
+    "end": 20,
+    "text": "-- | The recursion increment (S3776 §1, ADR-008 fourth instalment):"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Score/Lines.hs|bbf0d9a69ad865e7|0": {
     "target": "../../../core/app/CE/Score/Lines.hs",
     "line": 29,
@@ -3617,6 +3629,18 @@
     "line": 216,
     "end": 222,
     "text": "-- | K14: class 1 declares a zero allowance and grows by one line —"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/test/ReferenceScan.hs|5e785ddb829be6de|0": {
+    "target": "../../../core/test/ReferenceScan.hs",
+    "line": 1,
+    "end": 27,
+    "text": "-- | A second spelling of scan/1's complexity derivation (plan v2.33,"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/test/ScanReferenceProps.hs|238ecb23ced633ef|0": {
+    "target": "../../../core/test/ScanReferenceProps.hs",
+    "line": 1,
+    "end": 11,
+    "text": "{-# LANGUAGE OverloadedStrings #-}"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../DEVELOPMENT_PLAN.md|639b01d00d76978c|0": {
     "target": "../../DEVELOPMENT_PLAN.md",
@@ -10784,7 +10808,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 115,
+    "line": 116,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11051,7 +11075,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 117,
+    "line": 118,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
