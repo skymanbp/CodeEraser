@@ -39,6 +39,7 @@ import qualified GraphProps
 import qualified JoinProps
 import qualified LangProps
 import qualified MergeProps
+import qualified MergeReferenceProps
 import qualified QueryProps
 import qualified Reference
 import qualified ReferenceGraph
@@ -171,6 +172,7 @@ batteries =
        , QueryProps.battery
        , FlowProps.battery
        , MergeProps.battery
+       , MergeReferenceProps.battery
        , ArchProps.battery
        , VerdictProps.battery
        , VerdictWireProps.battery

@@ -184,7 +184,7 @@ test-suite ce-core-test
                       ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ReferenceMd, ReferenceMdGen, ReferenceHtml, ReferenceHtmlGen, ResolveProps,
                       Reference, ReferenceGraph, ReferenceQuery, QueryProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,
-                      ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps,
+                      ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps, ReferenceMergeGen, ReferenceMerge, MergeReferenceProps,
                       ReferenceArch, ArchCases, ArchRefusals, ArchFasProps, ArchProps,
                       ReferenceTed, CloneProps, ReferenceJaccard, ReferenceCandidates, CandidatesProps, ReferenceRank, RankProps, ReferenceBags, BagsProps, ReferenceDocPairs, DocPairsProps, ReferenceMoves, MovesProps,
                       AuditProps, TombstoneProps, SimilarProps, EntropyProps, JoinProps, LangProps, DocumentProps, DocumentGen, DocumentHarness, DocumentProps4, DocumentGen4, DocumentProps5, DocumentGen5, DocumentProps6, DocumentGen6, SpellProps, ScanProps, ScanCyclesProps, ScanEventsProps, ReferenceScanGen, ReferenceScan, ScanPageTrees, ScanReferenceProps,

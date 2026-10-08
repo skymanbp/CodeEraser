@@ -307,7 +307,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1737 (1955 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 6992 (1625) | 1046 (16) | 15.0 % | 209 / 1046 = 20.0 % | 209 / 5946 |
+| self @ this commit | 1740 (1958 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7085 (1636) | 1065 (15) | 15.0 % | 213 / 1065 = 20.0 % | 213 / 6020 |
 | | | rust | 3472 (1922) | 329 (3) | 9.5 % | 2 / 329 = 0.6 % | 2 / 3114 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
@@ -322,7 +322,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->16<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1625<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->1.0<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->15<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1636<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

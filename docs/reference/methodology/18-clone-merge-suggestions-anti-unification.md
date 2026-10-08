@@ -330,6 +330,12 @@ and generated suggestion — feasible exactly at 0, 0 only with a line saved, 5 
 ([MergeProps.hs:169](../../../core/test/MergeProps.hs#L169)) —, the equal-gap fold, both caps, the
 empty request and the counts each have their leg, and seven request–reply pairs are golden
 ([golden.ndjson](../../../contracts/fixtures/merge/golden.ndjson)).
+The judgment is held to a second spelling written from §3's rules that walks the members' trees
+top-down as rose trees, a T3 pair through the same optimal mapping: two hundred and fifty generated
+T1/T2 groups and two hundred and fifty generated T3 pairs must answer its suggestion row and hole
+rows field for field — the holes and their order, the parameter numbering, the member kept, the
+lines saved, the reason, each hole's first and last root per member
+([ReferenceMerge.hs:1-31](../../../core/test/ReferenceMerge.hs#L1), [MergeReferenceProps.hs:1-10](../../../core/test/MergeReferenceProps.hs#L1)).
 
 On the measuring side the unit legs hold the slot tables (§4 ruling 2), the nine-tenths rule, the
 fragment's synthetic root, the trim — a boundary statement on one side trimmed off and the family

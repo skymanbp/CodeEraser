@@ -10808,7 +10808,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 116,
+    "line": 117,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11075,7 +11075,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 118,
+    "line": 119,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {
@@ -11608,11 +11608,23 @@
     "line": 186,
     "text": "postsHold :: Group -> Bool"
   },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeReferenceProps.hs|238ecb23ced633ef|0": {
+    "target": "../../../core/test/MergeReferenceProps.hs",
+    "line": 1,
+    "end": 10,
+    "text": "{-# LANGUAGE OverloadedStrings #-}"
+  },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/MergeRulings.hs|9b900638ca398e26|0": {
     "target": "../../../core/test/MergeRulings.hs",
     "line": 1,
     "end": 12,
     "text": "-- | The merge battery's cases for the second generation's rulings"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/test/ReferenceMerge.hs|228f9a0b9b5bb00c|0": {
+    "target": "../../../core/test/ReferenceMerge.hs",
+    "line": 1,
+    "end": 31,
+    "text": "-- | A second spelling of merge/1's judgment (plan v2.33, reference"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|5466b2f19597e581|0": {
     "target": "../../../cli/src/arch/face.rs",

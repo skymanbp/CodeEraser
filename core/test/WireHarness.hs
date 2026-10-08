@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (battery, degradedFace, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
+module WireHarness (battery, degradedFace, generated, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -43,6 +43,11 @@ battery (agreed, reaches) verdicts required reached =
   missing = filter (`Set.notMember` reached) required
   named (k, d) = ("  case " ++ show k ++ ": " ++ d, False)
   unreached m = ("  never reached: " ++ m, False)
+
+-- | `battery` over generated cases: each case's verdict and the
+-- shapes it reaches, read off the case by the two functions given.
+generated :: (String, String) -> (c -> Maybe String) -> (c -> Set.Set String) -> [String] -> [c] -> [(String, Bool)]
+generated names judge reach required cases = battery names (map judge cases) required (Set.unions (map reach cases))
 
 -- | The table runner on two PARALLEL lists — names and probes — with
 -- the alignment leg first. A (name, probe) row per leg is a T2 clone

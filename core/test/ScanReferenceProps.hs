@@ -19,16 +19,15 @@ import qualified Data.Set as S
 import ReferenceScan (cyclic, measure, settled)
 import ReferenceScanGen
 import ScanPageTrees (pageTree)
-import WireHarness (field, replyObjWith, runChecks, setKey)
-import qualified WireHarness as H
+import WireHarness (field, generated, replyObjWith, rowsRequest, runChecks, setKey)
 
 battery :: IO Bool
 battery = do
   raw <- B8.readFile "../contracts/fixtures/scan/whitepaper.ndjson"
   let register = mapMaybe decodeStrict (filter (not . B8.null) (map stripCR (B8.lines raw)))
   runChecks
-    ( H.battery ("v2.33: 1200 seeded programs echo the tree reference's derived and cocBumped rows", "v2.33: the programs reach every family, structure and cycle shape") (map judged programs) shapes (S.unions (map reached programs))
-        <> H.battery ("v2.33: 300 seeded call graphs raise exactly the closure's cycle", "v2.33: the graphs reach a self-loop, a longer cycle and an acyclic graph") (map judged callGraphs) graphShapes (S.unions (map graphReached callGraphs))
+    ( generated ("v2.33: 1200 seeded programs echo the tree reference's derived and cocBumped rows", "v2.33: the programs reach every family, structure and cycle shape") judged reached shapes programs
+        <> generated ("v2.33: 300 seeded call graphs raise exactly the closure's cycle", "v2.33: the graphs reach a self-loop, a longer cycle and an acyclic graph") judged graphReached graphShapes callGraphs
         <> [ ("v2.33: every whitepaper line derives on the wire what its page tree measures", length register >= 38 && all pageAgrees register)
            , ("v2.33: the recursion anchor settles to the page's value plus one", any anchorSettles register)
            ]
@@ -62,7 +61,7 @@ instance FromJSON Line where
 lineReply :: Line -> Bool -> Maybe Value
 lineReply l looping = replyObjWith respond req >>= (`field` key)
  where
-  base = setKey "events" (toJSON (map (1 :) (lEvents l))) (H.rowsRequest "7.0.0" "scan.request" [[3, 0], [4, 0], [5, 0]])
+  base = setKey "events" (toJSON (map (1 :) (lEvents l))) (rowsRequest "7.0.0" "scan.request" [[3, 0], [4, 0], [5, 0]])
   req = if looping then setKey "callEdges" (toJSON [[1, 1 :: Integer]]) base else base
   key = if looping then "cocBumped" else "derived"
 
