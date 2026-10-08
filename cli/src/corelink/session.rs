@@ -4,7 +4,8 @@
 //! A session that lost its framing — a write or read that failed, a
 //! deadline, a reply that does not parse, a desync — is `broken` and is
 //! never handed out again; a core's refusal (an error reply echoing the
-//! request's id) leaves it whole, the core being stateless per request.
+//! request's id, or the id-less `too_large` of a line the core would not
+//! read) leaves it whole, the core being stateless per request.
 
 use super::{Hello, HelloReply, PROTO, pipe};
 use serde_json::Value;
@@ -74,8 +75,13 @@ impl Session {
         // an error reply that echoes our id is a REFUSAL, not a
         // desync: surface the core's named reason (review C4 — the
         // knob roads put ce.toml values behind these messages, and
-        // "desync" hid every one of them)
-        if reply["type"] == "error" && reply["id"] == self.next_id {
+        // "desync" hid every one of them). So is `too_large` with no id:
+        // the core refuses a line over its byte ceiling before decoding
+        // it (CE.Protocol.respond), so it has no id to echo, answers
+        // that line with exactly one line and keeps no state — the
+        // framing holds and the session stays whole
+        let unread = reply["id"].is_null() && reply["code"] == "too_large";
+        if reply["type"] == "error" && (reply["id"] == self.next_id || unread) {
             return Err(format!(
                 "core refused {kind}.request: {}: {}",
                 reply["code"].as_str().unwrap_or("?"),

@@ -8,6 +8,12 @@
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
 ## [Unreleased]
+**无默认档位变更。** v2.33 遗留核查第 1 项：整语料一遍的请求过了协议的一行时不再读成失步。阶段 E 起每道切换门两臂都有的退 2——careeros、Claude-Code-Local 上 `ce check` / `ce join` / `ce clone` 报 `desync: expected candidates.result id N`——原因是 T3 候选一遍（`candidates/1`）的请求行 56,901,892 / 54,933,100 B 过了核在解码前量的行上限 33,554,432 B，核答一行无 id 的 `too_large`，测量侧把它读成失步。协议仍是 **9.0.0**（线形与核都不动；2026-10-07；判决字节不变，分数与 1.8.0 可比；设计册 `docs/reference/algorithm-track.md` §11 第 113 条；`contracts/VERSIONING.md` §1 客户端规则句）。
+
+- **整语料一遍按行量**：`corelink::judged::whole_pass`（`candidates/1` 与 `docpairs/1` 共用）在问之前按 `tables/1` 的 `limits.caps.line_bytes` 量请求行（只数字节、不建字符串，信封按最宽 id 计），超了不发，与核按族上限降级同一句具名拒绝：`{cap} degraded the {what} (request line N B over the M B line the core reads; not sent)`。这一遍是整语料的，不拆、不抬上限。
+- **无 id 的 `too_large` 是拒绝**：`corelink/session.rs` 把 `code` 为 `too_large` 且 `id` 为 null 的 `error` 应答读作具名拒绝（`core refused … too_large: …`），会话不作废；别的不回显 id 的应答照旧是失步。测试子仓 `unit/corelink.rs` 新腿：过行的整语料一遍不发、具名降级；硬发过去读作拒绝、会话没作废、下一条照常答；两处改动各自关掉都让这条腿红。
+- **读数与门**：切换门（e8e413dd 的 release + 核 对 本车道，阶段 Z 那道门的 38 棵树八个面加 `clone` / `docdup`，连同 z4 段）781 份输出 774 份逐字节同，不同的七份 = 自仓 `ce rules` 回显的规则文件路径与两棵 TS 树上 `check` / `clone` / `join` 的 stderr（旧 `desync: expected candidates.result id N`，新 `candidates/1 degraded the T3 candidate pass (request line 56901910 B over the 33554432 B line the core reads; not sent)`，两臂都退 2、stdout 同）；这两棵树仍退 2，退在该族的具名降级上，不是失步。门：主 check 925 / dedup 33 / scan 110 warn 0 fail，子仓 950 / 90 / 62 warn 0 fail（warn 集对 e8e413dd 不增不减）；lib 550 / it 550 绿 5 红（31 ign）/ corelink 1 / daemon 2，clippy `--all-targets -- -D warnings` + fmt 清；全量 it 的 5 红 = 祝福前三条（`baseline_bridge` / `eval_mention` / `site_roast`，重立与祝福后复跑绿）+ 两条本工作树没有的本机产物（`docs_diagrams` 缺 archify 缓存、`layout_tree` 缺 `.ccm/`）；两仓狗粮 28 腿全绿；ADR-006 具名重立（对 adf326e4 / d39322b）：主 `cli/src/corelink/judged.rs` 132（cap 97）、子 `unit/corelink.rs` 87（cap 64），软线不动。
+
 **无默认档位变更。** 算法轨 v2.33 参考求值器第 2 项：`merge/1` 判决的第二种写法——只加核测试，判决、线形与报告字节都不动（2026-10-07；设计册 `docs/reference/algorithm-track.md` §11 第 115 条）。
 
 - **参考**：新 `core/test/ReferenceMerge.hs` 照分析轨设计册 §6.3 的规则自顶向下走成员的树（玫瑰树，不读后序数组）：T1/T2 组逐结点对齐，T3 对经 `CE.Clone.Ted.tedMapping`（其最优性与 Tai 合法性已由 `MergeProps` 对 `ReferenceTed` 守住）只保留父对也保留的子对；答出洞、参数编号（文本向量按首现去重）、保留者、省下的行、可行与理由、每个洞在每个成员上的首末根。设计册没写明处取的读法逐条写在模块头：重标洞的位置类取成员 0 的、只差空白的重标（空洞）不触发拓宽、保留对数含被拓宽父对之下的对。

@@ -571,7 +571,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明；bags/1 = 同角色顾问的词袋〔similar 索引的前段〕，9.0.0 同版加性声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
-  回退 L1 且降级可见——绝不给错答案，只给响亮的答案。
+  回退 L1 且降级可见——绝不给错答案，只给响亮的答案。例外只有一种：`error` 应答
+  `code` 为 `too_large` 且 `id` 为 null——核在解析之前按行字节上限拒收，没有 id 可回显，
+  只答这一行、不留状态，帧没乱——是具名拒绝，会话不作废（v2.33 遗留核查第 1 项；设计册
+  `docs/reference/algorithm-track.md` §11 第 113 条）。测量侧整语料一遍的请求（`candidates/1`、
+  `docpairs/1`）发出之前先按 `tables/1` 的 `limits.caps.line_bytes` 量行，超了不发、按该族的降级具名拒绝。
 - `fourclass.request`（2.0.0 形状，7.0.0 起 `dupSpans`，7.1.0 起可带声明两表）：
   `{"id","pairs":[{"i","rem":[[[行,hash,宽],…],…],"add":[…],"dupSpans":[[keyhash,起,止]],
   "declRem":[[keyhash,kind,起,止]],"declAdd":[…]}]}`——rem/add 为 L1 判 novel/deleted 的**显著**行按

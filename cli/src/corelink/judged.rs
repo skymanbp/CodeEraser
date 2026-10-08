@@ -43,12 +43,18 @@ pub fn session_ask((cap, since, kind): (&str, &str, &str), body: Value) -> Resul
 /// behind the gate, a degraded reply refused by name (`what` names the
 /// pass it starved), then the reply, its `pairs` table and the named
 /// `counts.<key>` in `keys` order. What adds up stays the caller's.
+/// A request whose line would pass the protocol's line ceiling is not
+/// sent and meets the same named degradation (`fits_line`): the pass is
+/// whole-corpus, so it cannot be split without changing its answer.
 pub fn whole_pass<P: DeserializeOwned>(
     link: &mut Link,
     (cap, since, kind): (&str, &str, &str),
     body: Value,
     (what, keys): (&str, &[&str]),
 ) -> anyhow::Result<(Value, P, Vec<u64>)> {
+    if let Err(why) = fits_line(kind, &body) {
+        anyhow::bail!("{cap} degraded the {what} ({why})");
+    }
     let reply = ask(link, cap, since, kind, body).map_err(anyhow::Error::msg)?;
     if let Err(why) = degraded(&reply) {
         anyhow::bail!("{cap} degraded the {what} ({why})");
@@ -60,6 +66,45 @@ pub fn whole_pass<P: DeserializeOwned>(
         .collect::<Result<_, _>>()
         .map_err(anyhow::Error::msg)?;
     Ok((reply, pairs, counts))
+}
+
+/// Whether `body` as a `{kind}.request` line stays within the line
+/// ceiling the core states (`limits.caps.line_bytes`, CE.Limits): the
+/// core measures a line before it decodes it, so a longer one could only
+/// be answered by a `too_large` that echoes no id (CE.Protocol.respond).
+/// The line is counted as the session writes it (session.rs: the body
+/// plus the `id` / `proto` / `type` it stamps, the id at its widest),
+/// without building it; over the ceiling, the named reason.
+fn fits_line(kind: &str, body: &Value) -> Result<(), String> {
+    let max = crate::tables::get().limits.caps.line_bytes;
+    let stamp = format!(
+        r#","id":{},"proto":"{}","type":"{kind}.request""#,
+        u64::MAX,
+        super::PROTO
+    );
+    let mut line = Count(stamp.len());
+    serde_json::to_writer(&mut line, body).map_err(|e| e.to_string())?;
+    if line.0 > max {
+        return Err(format!(
+            "request line {} B over the {max} B line the core reads; not sent",
+            line.0
+        ));
+    }
+    Ok(())
+}
+
+/// A writer that keeps only the number of bytes written to it.
+struct Count(usize);
+
+impl std::io::Write for Count {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        self.0 += bytes.len();
+        Ok(bytes.len())
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
 }
 
 /// A reply's degraded posture, read before any table: the core's named
