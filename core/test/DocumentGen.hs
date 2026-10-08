@@ -113,6 +113,9 @@ query fam = do
   faults <- replicateM 2 ((\a b -> [a, b]) <$> num (fromInteger why) <*> num (fromInteger why))
   errors <- replicateM 2 ((\t c -> [t, c + 1]) <$> num (fromInteger tokens + 1) <*> num 9)
   degraded <- (== 0) <$> rand 5
+  -- clauses past the prelude's two: none (the prelude alone) or a
+  -- pack's or a rules file's one
+  past <- num 2
   let judged = road == 2 && not degraded
       core = if judged then [("goals", sorted), ("preds", preds), ("answers", answers), ("proof", proof)] else []
   pure $
@@ -123,7 +126,7 @@ query fam = do
           <> [(t, []) | t <- ["goals", "preds", "answers", "proof"], judged == False]
           <> core
       )
-      (zip (words "tokens clauses prelude askWhy rulesFile query") (tokens : 3 : 2 : flags) <> zip countKeys counts)
+      (zip (words "tokens clauses prelude askWhy rulesFile query") (tokens : 2 + past : 2 : flags) <> zip countKeys counts)
       (if road == 2 && degraded then Just 0 else Nothing)
  where
   countKeys = words "rules queries asserts strata facts derived answers violations proofNodes proofTruncated"

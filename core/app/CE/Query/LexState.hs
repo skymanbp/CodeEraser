@@ -37,19 +37,25 @@ import qualified Data.Map.Strict as M
 import Data.Word (Word64, Word8)
 
 -- | One token: its wire kind and value, the source it came from (0
--- prelude, 1 rules, 2 query), where, and the spelling it stands for.
+-- prelude, 1 rules, 2 query, 3 the `[rules.pack]` text — lexed second,
+-- numbered last so the three older sources keep their numbers), where,
+-- and the spelling it stands for.
 data Tok = Tok {tKind :: Integer, tValue :: Integer, tSrc :: Int, tLine :: Int, tCol :: Int, tSpell :: String}
 
 -- | The lexed program: the tokens (newest first while scanning, in
 -- order once `lexProgram` returns), the clauses over every source and
--- how many of them are the prelude's, the program predicates by code −
--- 1000, the globs by set id, every name spelled by hash, and per
--- clause its variable names by number (`_` for an anonymous one;
--- newest clause first while scanning).
+-- how many of them are the prelude's, how many the binary ships (the
+-- prelude's and the pack's — the clauses whose predicates are
+-- reserved), the pack's rendered text when one was sent, the program
+-- predicates by code − 1000, the globs by set id, every name spelled
+-- by hash, and per clause its variable names by number (`_` for an
+-- anonymous one; newest clause first while scanning).
 data Lexed = Lexed
   { lTokens :: [Tok]
   , lClauses :: Int
   , lPrelude :: Int
+  , lShipped :: Int
+  , lPack :: Maybe String
   , lPreds :: [String]
   , lSets :: [String]
   , lNames :: M.Map Word64 String
@@ -80,7 +86,7 @@ data Lx = Lx
   }
 
 emptyLexed :: Lexed
-emptyLexed = Lexed [] 0 0 [] [] M.empty []
+emptyLexed = Lexed [] 0 0 0 Nothing [] [] M.empty []
 
 peek :: Lx -> Maybe Word8
 peek x = B.indexMaybe (xB x) (xI x)

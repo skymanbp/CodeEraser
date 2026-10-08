@@ -40,6 +40,7 @@ import qualified JoinProps
 import qualified LangProps
 import qualified MergeProps
 import qualified MergeReferenceProps
+import qualified PackProps
 import qualified QueryProps
 import qualified Reference
 import qualified ReferenceGraph
@@ -170,6 +171,7 @@ batteries =
        , TombstoneProps.battery
        , SimilarProps.battery
        , QueryProps.battery
+       , PackProps.battery
        , FlowProps.battery
        , MergeProps.battery
        , MergeReferenceProps.battery

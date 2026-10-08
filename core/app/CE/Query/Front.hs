@@ -9,7 +9,9 @@
 -- line:column`, the predicate names by code, the globs and where each
 -- was spelled, the names by hash, the schema predicates the program
 -- reads (the fact tables the request must carry), and every goal's
--- head as spelled — or the lexical fault that stopped the program.
+-- head as spelled, and the `[rules.pack]` text as rendered (`packText`,
+-- only when a pack was sent) — or the lexical fault that stopped the
+-- program.
 -- The goals' column names (design booklet §4.5): the core answers a
 -- goal's tuples by position, and the names are the program's own
 -- text. A query's columns are the variables its body binds, in the
@@ -41,6 +43,7 @@ sourceWord :: Int -> String
 sourceWord src = case src of
   0 -> "prelude"
   1 -> "rules"
+  3 -> "pack"
   _ -> "query"
 
 -- | The `lexed` object of a lex reply: the fault, or the program's
@@ -67,6 +70,7 @@ lexedValue inspect lexed = case lexed of
     , "referenced" .= S.toAscList (referenced p)
     , "heads" .= [(hName h, hColumns h) | h <- goals (lTokens p)]
     ]
+      <> ["packText" .= t | Just t <- [lPack p]]
   setToken p i = find (\t -> tKind t == kindSet && tValue t == toInteger i) (lTokens p)
   raw p =
     object

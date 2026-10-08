@@ -63,7 +63,10 @@ threshold is the reader's own. Rust measures and labels, the Haskell core judges
   <p class="job">A CE Datalog question over the index's facts — files, directories, references, units,
   complexity, judged clone and docdup pairs, mentions, path classes — answered with derivations. A rules
   file's assertions are a gate: each violation is a witness row with its proof, and
-  <code>ce rules</code> exits 1 on the first.</p>
+  <code>ce rules</code> exits 1 on the first. Five common checks need no Datalog: <code>[rules.pack]</code>
+  in <code>ce.toml</code> switches on directory cycles, fan-in and fan-out caps, layers and forbidden
+  pairs, which the core renders to the same language, under reserved <code>pack_</code> heads, and
+  judges beside the file.</p>
   <pre>clause := atom ':-' body '.'  |  '?-' body '.'  |  'assert' atom ':-' body '.'
 lit    := atom | 'not' atom | expr op expr | Var '=' expr | Var '=' agg(Vars : body)
 prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
@@ -87,6 +90,8 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
     <li><b>derivedCap</b> 2097152</li>
     <li><b>proofCap</b> 16384</li>
     <li><b>idbFloor</b> 1000</li>
+    <li><b>layerCap</b> 16</li>
+    <li><b>forbidCap</b> 64</li>
     <li><b>schema</b> ce.query-report/0.1.0</li>
     <li><b>since proto</b> 7.3.0</li>
     <li><b>wire</b> query/1</li>

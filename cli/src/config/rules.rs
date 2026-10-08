@@ -27,6 +27,56 @@ pub struct RulesCfg {
     /// (plan v2.31 step 2). A path, never a knob: the knob
     /// fingerprint drops it (config::canonical rule 7).
     pub file: Option<String>,
+    /// The built-in rule pack (plan v2.33): checks the query family
+    /// judges without a rules file. Read here, carried as rows, rendered
+    /// and judged in the core (CE.Query.Pack); never a knob — the knob
+    /// fingerprint drops it (config::canonical rule 7).
+    pub pack: PackCfg,
+}
+
+/// `[rules.pack]`: every key optional; what the keys mean, and every
+/// refusal of a declared value that cannot be rendered (fewer than two
+/// layers, a list past its cap, a quote in a glob), is the core's.
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct PackCfg {
+    pub no_dir_cycles: bool,
+    pub fan_in_max: Option<u64>,
+    pub fan_out_max: Option<u64>,
+    pub layers: Vec<String>,
+    /// `[from, to]` pairs; a pair of any other length is read and sent
+    /// as it stands, and the core refuses it by name.
+    pub forbid: Vec<Vec<String>>,
+}
+
+impl PackCfg {
+    /// The declared items as the query/1 `pack` rows, `[name,
+    /// params…]`, in the table's key order; nothing declared = no rows.
+    pub fn rows(&self) -> Vec<serde_json::Value> {
+        use serde_json::json;
+        let mut rows = Vec::new();
+        if self.no_dir_cycles {
+            rows.push(json!(["no_dir_cycles"]));
+        }
+        for (name, n) in [
+            ("fan_in_max", self.fan_in_max),
+            ("fan_out_max", self.fan_out_max),
+        ] {
+            if let Some(n) = n {
+                rows.push(json!([name, n]));
+            }
+        }
+        let named = |name: &str, globs: &[String]| -> serde_json::Value {
+            std::iter::once(json!(name))
+                .chain(globs.iter().map(|g| json!(g)))
+                .collect()
+        };
+        if !self.layers.is_empty() {
+            rows.push(named("layers", &self.layers));
+        }
+        rows.extend(self.forbid.iter().map(|pair| named("forbid", pair)));
+        rows
+    }
 }
 
 /// name and globs are REQUIRED keys — serde names the missing one;
@@ -135,3 +185,7 @@ impl RulesCfg {
         None
     }
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/config/rules.rs"]
+mod tests;

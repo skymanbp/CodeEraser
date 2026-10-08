@@ -61,16 +61,21 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<An
         .fact("askWhy", u8::from(ask.why))
         .fact("rulesFile", u8::from(names.rules_file.is_some()))
         .fact("query", u8::from(query.is_some()));
+    let pack = crate::config::Config::load(root)
+        .map_err(anyhow::Error::msg)?
+        .rules
+        .pack
+        .rows();
     let ground = Ground {
         root,
         db,
         core,
         why: ask.why,
-        texts: lexed::texts(PRELUDE, rules, query.as_deref()),
+        program: lexed::program(lexed::texts(PRELUDE, rules, query.as_deref()), pack),
     };
     let mut held = document::open(core);
     let lexed = match &mut held {
-        Ok(link) => lexed::lex(link, &ground.texts),
+        Ok(link) => lexed::lex(link, &ground.program),
         Err(why) => Err(why.clone()),
     };
     match lexed {
@@ -84,6 +89,26 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, ask: &Ask) -> Result<An
         }
     }
     document::assemble_bound(core, held, finish(req, &names), &names)
+}
+
+/// The `[rules.pack]` program the core renders from `root`'s ce.toml
+/// (what `ce query --prelude` prints after the prelude); none declared =
+/// `None`, and no core is asked.
+pub fn pack_text(root: &Path, core: &str) -> Result<Option<String>> {
+    let rows = crate::config::Config::load(root)
+        .map_err(anyhow::Error::msg)?
+        .rules
+        .pack
+        .rows();
+    if rows.is_empty() {
+        return Ok(None);
+    }
+    let mut link = document::open(core).map_err(|e| anyhow!("{e}"))?;
+    let program = lexed::program(lexed::texts(PRELUDE, None, None), rows);
+    match lexed::lex(&mut link, &program).map_err(|e| anyhow!("{e}"))? {
+        Lex::Program(p) => Ok(p.pack_text),
+        Lex::Fault(at, what) => Err(anyhow!("{at}: {what}")),
+    }
 }
 
 /// Every table and fact the road did not fill, empty or zero, and the
@@ -106,13 +131,14 @@ fn finish(req: Request, names: &Names) -> Request {
 }
 
 /// Where a program is judged: the tree, its index, the core, whether
-/// the queries carry their proofs, and the program's texts.
+/// the queries carry their proofs, and the program (its texts and the
+/// pack rows, lexed::program).
 struct Ground<'a> {
     root: &'a Path,
     db: Option<PathBuf>,
     core: &'a str,
     why: bool,
-    texts: Value,
+    program: Value,
 }
 
 /// A lexed program: its faults, or the core's judgment of it over the
@@ -138,7 +164,12 @@ fn judge(
         return Ok((req.rows("faults", rows), held));
     }
     let facts = facts::assemble(g.root, g.db, g.core, &program)?;
-    let body = wire::body(&g.texts, (&facts.tables, facts.tree.as_ref()), g.why, false);
+    let body = wire::body(
+        &g.program,
+        (&facts.tables, facts.tree.as_ref()),
+        g.why,
+        false,
+    );
     let reply = match &mut held {
         Ok(link) => wire::ask(link, body),
         Err(why) => Err(why.clone()),

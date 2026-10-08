@@ -65,11 +65,12 @@ pub struct Judged {
     pub degraded: Option<String>,
 }
 
-/// The request body: the program's three texts (the core lexes them,
-/// lexed.rs), the fact tables, the tree form when a directory table is
-/// read (the core builds those tables, CE.Query.Tree), the two flags.
+/// The request body: the program — its three texts and the pack rows
+/// (the core lexes them, lexed::program) — the fact tables, the tree
+/// form when a directory table is read (the core builds those tables,
+/// CE.Query.Tree), the two flags.
 pub fn body(
-    texts: &Value,
+    program: &Value,
     (facts, tree): (&BTreeMap<u32, Vec<Vec<u64>>>, Option<&Value>),
     why: bool,
     schema: bool,
@@ -78,12 +79,10 @@ pub fn body(
         .iter()
         .map(|(code, rows)| (code.to_string(), json!(rows)))
         .collect();
-    let mut body = json!({
-        "texts": texts,
-        "facts": tables,
-        "why": why,
-        "schema": schema,
-    });
+    let mut body = program.clone();
+    body["facts"] = Value::Object(tables);
+    body["why"] = json!(why);
+    body["schema"] = json!(schema);
     if let Some(tree) = tree {
         body["tree"] = tree.clone();
     }

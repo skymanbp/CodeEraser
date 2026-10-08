@@ -2854,14 +2854,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|76b28420c94d7237|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 76,
-    "end": 104,
+    "line": 79,
+    "end": 107,
     "text": "pub fn canonical(cfg: &Config) -> Value {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/config/canonical.rs|b1fd070c83dda0e1|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 118,
-    "end": 141,
+    "line": 123,
+    "end": 146,
     "text": "pub(super) fn prune(node: Value, shipped: Option<&Value>) -> Option<Value> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/fourclass/anchor.rs|bc424b68d386ad1f|0": {
@@ -8802,8 +8802,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 466,
-    "end": 468,
+    "line": 472,
+    "end": 474,
     "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -9607,8 +9607,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
     "target": "../ce-toml.md",
-    "line": 87,
-    "end": 94,
+    "line": 92,
+    "end": 99,
     "text": "## [tombstone]"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/audit/similar.rs|4dbfefaca8311860|0": {
@@ -10149,17 +10149,37 @@
     "line": 26,
     "text": "assert dead_file(F) :- dead(F)."
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/canonical.rs|9ae7fb2196f32953|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.toml|1d9cfdba9664fff3|0": {
+    "target": "../../../ce.toml",
+    "line": 53,
+    "text": "[rules.pack]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/canonical.rs|aad58beefcb33a11|0": {
     "target": "../../../cli/src/config/canonical.rs",
-    "line": 83,
-    "end": 86,
-    "text": "// rule 7: the rules file is a path the query family reads, never"
+    "line": 91,
+    "text": "rules.remove(\"pack\");"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/canonical.rs|e79090983f2a6196|0": {
+    "target": "../../../cli/src/config/canonical.rs",
+    "line": 86,
+    "end": 91,
+    "text": "// rule 7: the rules file is a path the query family reads, and the"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/rules.rs|223a93993213ddf8|0": {
     "target": "../../../cli/src/config/rules.rs",
     "line": 25,
     "end": 29,
     "text": "/// The rules file `ce rules` judges and `ce query` builds on,"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/rules.rs|e0715b782968737b|0": {
+    "target": "../../../cli/src/config/rules.rs",
+    "line": 55,
+    "text": "pub fn rows(&self) -> Vec<serde_json::Value> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/rules.rs|fdf0d6282a152252|0": {
+    "target": "../../../cli/src/config/rules.rs",
+    "line": 42,
+    "text": "pub struct PackCfg {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|385098c7ed32048e|0": {
     "target": "../../../cli/src/faces.rs",
@@ -10178,12 +10198,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|4350583dd45e803c|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 47,
+    "line": 49,
     "text": "pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|d07418fdeecbdc85|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 61,
+    "line": 69,
     "text": "pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|e5325963d09827f3|0": {
@@ -10213,6 +10233,11 @@
     "end": 12,
     "text": "//! The one document of `ce query`, `ce rules`, the MCP tools and the"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|44bbfd134b4ab315|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 64,
+    "text": "let pack = crate::config::Config::load(root)"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|6d479bd5450d53e7|0": {
     "target": "../../../cli/src/query/face.rs",
     "line": 37,
@@ -10220,12 +10245,17 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|9a5c9c0bdc03904b|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 179,
+    "line": 210,
     "text": "fn glob_faults(root: &Path, program: &Lexed) -> Vec<(String, String)> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|abe2c2ff70013cfc|0": {
+    "target": "../../../cli/src/query/face.rs",
+    "line": 97,
+    "text": "pub fn pack_text(root: &Path, core: &str) -> Result<Option<String>> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|b43a275db29321f1|0": {
     "target": "../../../cli/src/query/face.rs",
-    "line": 234,
+    "line": 265,
     "text": "impl Resolve for Names {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|1dddd95dd80f8269|0": {
@@ -10333,12 +10363,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|1ec85f0c2e1aab5f|0": {
     "target": "../../../cli/src/query/lexed.rs",
-    "line": 90,
+    "line": 109,
     "text": "pub fn schema(&self) -> BTreeMap<String, u32> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|4d3b1ce8fe15441c|0": {
     "target": "../../../cli/src/query/lexed.rs",
-    "line": 74,
+    "line": 93,
     "text": "pub fn locate(&self, idx: usize) -> String {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/lexed.rs|91a98a53c03bc97c|0": {
@@ -10376,7 +10406,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|3330a64bd12a7a96|0": {
     "target": "../../../cli/src/query/wire.rs",
-    "line": 110,
+    "line": 109,
     "text": "pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/wire.rs|da3bb2dec2173e71|0": {
@@ -10398,42 +10428,42 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 140,
+    "line": 141,
     "text": "fn sugar_aggregates_arithmetic_and_every_program_error_go_the_same_road() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|b01bf384f3002998|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 231,
+    "line": 232,
     "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 87,
+    "line": 88,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|1": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 87,
+    "line": 88,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|e86b28abce63cf8a|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 172,
+    "line": 173,
     "text": "fn rules_is_a_gate_on_the_documents_violations() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 29,
+    "line": 32,
     "text": "const PROGRAMS: &str = \"\\"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|c43fa06b40a8903d|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
-    "line": 129,
+    "line": 148,
     "text": "fn every_request_line_is_the_prelude_then_its_program() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|102e73d797f3f249|0": {
     "target": "../../../cli/tests/unit/query/face.rs",
-    "line": 145,
+    "line": 146,
     "text": "fn a_lexical_fault_is_error_zero_at_its_place_and_no_judgment() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/lexed.rs|c3eeee3028d09050|0": {
@@ -10448,12 +10478,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/wire.rs|ceb2e7c5ab25b666|0": {
     "target": "../../../cli/tests/unit/query/wire.rs",
-    "line": 69,
+    "line": 75,
     "text": "fn consume_names_the_degraded_reply_and_every_skew() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|0e2ab9480d5e8f13|0": {
     "target": "../../../core/app/CE/Query.hs",
-    "line": 103,
+    "line": 104,
     "text": "predRows :: Checked -> [[Integer]]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|84a2efcc5da58d86|0": {
@@ -10464,13 +10494,23 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|c7f4b2ee90b22583|0": {
     "target": "../../../core/app/CE/Query.hs",
-    "line": 146,
+    "line": 147,
     "text": "degraded :: String -> QueryReq -> B8.ByteString"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query.hs|c995105bfbb32abd|0": {
     "target": "../../../core/app/CE/Query.hs",
-    "line": 112,
+    "line": 113,
     "text": "answered :: QueryReq -> [Clause] -> Checked -> (Db, Prov, Integer) -> Answered"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|00a611cc3b67762d|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 103,
+    "text": "preludeErrors :: Int -> IS.IntSet -> [Clause] -> [(Int, Integer)]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|40d63182767b3b7b|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 49,
+    "text": "checkReserving :: Int -> IS.IntSet -> [Clause] -> Either [(Int, Integer)] Checked"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|70f3b3e93369e1c1|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
@@ -10480,7 +10520,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|737dff05a7885263|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 60,
+    "line": 67,
     "text": "predSorts :: Sorts -> [RuleC] -> [(Int, [Integer])]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|90f543781fd5cf30|0": {
@@ -10490,12 +10530,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|9e97ea98c9f3b9eb|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 121,
+    "line": 130,
     "text": "fixLevels :: [(Int, Int, Bool)] -> IM.IntMap Int -> IM.IntMap Int"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|b842ea3861ccd559|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 104,
+    "line": 113,
     "text": "stratify :: [RuleC] -> Either [(Int, Integer)] [[Int]]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Safety.hs|0d89e4e62a80445c|0": {
@@ -10535,14 +10575,19 @@
     "end": 8,
     "text": "-- | Sort inference for a parsed program (design booklet §4.2): every"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|371efeb6a4cd9919|0": {
+    "target": "../../../core/app/CE/Query/Contract.hs",
+    "line": 132,
+    "text": "packShape req = case (packOf req, lexedOf req) of"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|3cb2149f4ff674fa|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 95,
+    "line": 109,
     "text": "overCap :: QueryReq -> Bool"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|6c09cf6a62d51fac|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 116,
+    "line": 139,
     "text": "textsShape :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|9551146ad3aeee22|0": {
@@ -10553,41 +10598,51 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Contract.hs|d27383d18075f614|0": {
     "target": "../../../core/app/CE/Query/Contract.hs",
-    "line": 104,
+    "line": 118,
     "text": "offence :: QueryReq -> Maybe String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|0f2ba5f8addc02bf|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 140,
+    "line": 159,
     "text": "sortNode, sortDir, sortUnit, sortInt, sortSym, sortSet, sortOpen :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|152676cf191cebf9|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 152,
-    "end": 153,
+    "line": 171,
+    "end": 172,
     "text": "errSyntax, errUnknownPred, errArity, errSort, errUnsafe, errUnstratified, errPrelude, errAggregate, errHead :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|361927163b0ab109|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 72,
-    "end": 76,
+    "line": 75,
+    "end": 79,
     "text": "tokenCap, factCap, derivedCap, proofCap :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|3aa3975185a2f5d2|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 81,
-    "end": 82,
+    "line": 100,
+    "end": 101,
     "text": "idbFloor :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 88,
+    "line": 107,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|1": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 88,
+    "line": 107,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|be12768b1912a4da|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 94,
+    "text": "packPrefix :: String"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|f51cdd4278a67362|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 86,
+    "text": "layerCap, forbidCap :: Int"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|e8d2a5abc1d0b176|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
@@ -10659,22 +10714,27 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|1f3c0f11d00a0a55|0": {
     "target": "../../../core/app/CE/Query/Front.hs",
-    "line": 37,
+    "line": 39,
     "text": "located :: Int -> Int -> Int -> String"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|272cd9cc7db917ba|0": {
     "target": "../../../core/app/CE/Query/Front.hs",
-    "line": 115,
+    "line": 119,
     "text": "outerVars :: [Tok] -> [String]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|b9e900640e792ab1|0": {
+    "target": "../../../core/app/CE/Query/Front.hs",
+    "line": 73,
+    "text": "<> [\"packText\" .= t | Just t <- [lPack p]]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Front.hs|e114e360ed0b8431|0": {
     "target": "../../../core/app/CE/Query/Front.hs",
-    "line": 80,
+    "line": 84,
     "text": "goals :: [Tok] -> [Head]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|34a55d08379f21a6|0": {
     "target": "../../../core/app/CE/Query/Lex.hs",
-    "line": 150,
+    "line": 154,
     "text": "variable :: Lx -> String -> Int -> Int -> Lx"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|3c42f0fcbfc26b6a|0": {
@@ -10683,36 +10743,51 @@
     "end": 16,
     "text": "-- | The query language's scanner (design booklet §4.4; plan v2.33 W1"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|8e479014bd642dc7|0": {
-    "target": "../../../core/app/CE/Query/Lex.hs",
-    "line": 31,
-    "text": "lexProgram :: String -> Maybe String -> Maybe String -> Either Fault Lexed"
-  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|a528d5d2cb958962|0": {
     "target": "../../../core/app/CE/Query/Lex.hs",
-    "line": 115,
+    "line": 119,
     "text": "idbCode :: Lx -> String -> (Integer, Lx)"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|a80438474861a1fe|0": {
     "target": "../../../core/app/CE/Query/Lex.hs",
-    "line": 188,
+    "line": 192,
     "text": "sugar :: Lx -> Int -> Int -> Either Fault Lx"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|b97681de48c2c40a|0": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 34,
+    "text": "lexProgram :: String -> Maybe String -> Maybe String -> Maybe String -> Either Fault Lexed"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lex.hs|b97681de48c2c40a|1": {
+    "target": "../../../core/app/CE/Query/Lex.hs",
+    "line": 34,
+    "text": "lexProgram :: String -> Maybe String -> Maybe String -> Maybe String -> Either Fault Lexed"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/LexState.hs|a94b2a2b3e6da5c0|0": {
     "target": "../../../core/app/CE/Query/LexState.hs",
-    "line": 159,
+    "line": 165,
     "text": "sym :: String -> Word64"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lines.hs|609f7516e41f6b88|0": {
     "target": "../../../core/app/CE/Query/Lines.hs",
-    "line": 15,
-    "end": 19,
+    "line": 16,
+    "end": 20,
     "text": "lines' rules say doc req ="
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Lines.hs|e7d72d907ea40cae|0": {
     "target": "../../../core/app/CE/Query/Lines.hs",
-    "line": 40,
+    "line": 41,
     "text": "in [ say \"proof\" [W (concat (replicate (depth (int \"node\" p) + 1) \"  \")), fillOf (key \"pred\" p), P (join \", \" (map (piece . fillOf) (arr \"args\" p))), P (by p)]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Pack.hs|05b1f16a15a72db9|0": {
+    "target": "../../../core/app/CE/Query/Pack.hs",
+    "line": 44,
+    "text": "-- | One declared item, its parameters read."
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Pack.hs|bc1b8f7ae3ab0bb2|0": {
+    "target": "../../../core/app/CE/Query/Pack.hs",
+    "line": 110,
+    "text": "text v = case fromJSON v of"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Parse.hs|1978e2d612d5a6c0|0": {
     "target": "../../../core/app/CE/Query/Parse.hs",
@@ -10784,6 +10859,12 @@
     "end": 20,
     "text": "table\n\"no_rules_file\\trules: no rules file — zero assertions\\trules：没有规则文件——零断言\\n\\"
   },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/PackProps.hs|f782124126b2287d|0": {
+    "target": "../../../core/test/PackProps.hs",
+    "line": 5,
+    "end": 12,
+    "text": "-- | The `[rules.pack]` battery (plan v2.33; CE.Query.Pack): every item"
+  },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/QueryProps.hs|40c6531da695f911|0": {
     "target": "../../../core/test/QueryProps.hs",
     "line": 65,
@@ -10794,6 +10875,12 @@
     "line": 5,
     "end": 14,
     "text": "-- | The query family's battery (plan v2.31 step 1): the prelude's"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferencePack.hs|b5984665503ff02f|0": {
+    "target": "../../../core/test/ReferencePack.hs",
+    "line": 1,
+    "end": 8,
+    "text": "-- | A second spelling of the `[rules.pack]` items (CE.Query.Pack) for"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|47d5e319b39163b9|0": {
     "target": "../../../core/test/ReferenceQuery.hs",
@@ -10808,7 +10895,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 117,
+    "line": 118,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
@@ -11075,7 +11162,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 119,
+    "line": 120,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

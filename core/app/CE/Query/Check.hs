@@ -4,7 +4,7 @@
 -- that finds fault answers its errors — every one at a token. What
 -- comes out is the evaluator's program: the rules with their strata,
 -- the goals with their projections and sorts.
-module CE.Query.Check (Checked (..), Goal (..), RuleC (..), check) where
+module CE.Query.Check (Checked (..), Goal (..), RuleC (..), check, checkReserving) where
 
 import CE.Query.Check.Safety (outerVars, safetyErrors)
 import CE.Query.Check.Sorts (Sorts, inferSorts, positionSort, variableSort)
@@ -40,12 +40,19 @@ data Checked = Checked
 
 -- | Phases in order; the first faulty phase answers.
 check :: Int -> [Clause] -> Either [(Int, Integer)] Checked
-check prelude clauses = do
+check prelude = checkReserving prelude IS.empty
+
+-- | `check` with the program predicates reserved by spelling — the
+-- `pack_` prefix's codes (CE.Query.Cost `packPrefix`), which no rule
+-- past the shipped clauses may define, whether or not a pack defined
+-- them.
+checkReserving :: Int -> IS.IntSet -> [Clause] -> Either [(Int, Integer)] Checked
+checkReserving prelude spelled clauses = do
   phase (arityErrors clauses)
   sorts <- either (Left . (: [])) Right (inferSorts clauses)
   phase (concatMap safetyErrors clauses)
   phase (unknownErrors clauses)
-  phase (preludeErrors prelude clauses)
+  phase (preludeErrors prelude spelled clauses)
   strata <- stratify rules
   Right (Checked rules strata (goals sorts) (predSorts sorts rules))
  where
@@ -90,12 +97,14 @@ unknownErrors clauses =
  where
   defined = IS.fromList [atomPred h | Rule h _ _ <- clauses]
 
--- | The first `prelude` clauses reserve the predicates they define.
-preludeErrors :: Int -> [Clause] -> [(Int, Integer)]
-preludeErrors prelude clauses =
+-- | The first `prelude` clauses (the shipped ones: the prelude's and
+-- the pack's) reserve the predicates they define, and the `spelled`
+-- codes are reserved whoever defines them.
+preludeErrors :: Int -> IS.IntSet -> [Clause] -> [(Int, Integer)]
+preludeErrors prelude spelled clauses =
   [(atomAt h, errPrelude) | Rule h _ _ <- drop prelude clauses, IS.member (atomPred h) reserved]
  where
-  reserved = IS.fromList [atomPred h | Rule h _ _ <- take prelude clauses]
+  reserved = IS.union spelled (IS.fromList [atomPred h | Rule h _ _ <- take prelude clauses])
 
 -- | Strata by the level rule: a head sits at least as high as every
 -- positive body predicate and strictly above every negated or

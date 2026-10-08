@@ -8,7 +8,8 @@
 -- line:column`. The scanner knows spellings and nothing of shapes:
 -- variables number per clause by first appearance (`_` takes a fresh
 -- number), program predicates number from 1000 by first appearance
--- across every source, a lowercase word is a predicate when a `(`
+-- across every source (the pack's between the prelude's and the rules
+-- file's), a lowercase word is a predicate when a `(`
 -- follows it and a name constant otherwise, a quoted string is a name
 -- except in the one position whose sort is a set — `set(S, …)`'s
 -- first argument and the `in(F, "glob")` sugar, rewritten here to
@@ -25,13 +26,16 @@ import Data.List (elemIndex)
 import qualified Data.Set as S
 import Data.Word (Word8)
 
--- | `Program::lex`: the three sources in wire order; the first
+-- | `Program::lex`: the sources in wire order — the prelude, the
+-- `[rules.pack]` text this side rendered (CE.Query.Pack; source 3,
+-- absent when no pack was sent), the rules file, the query; the first
 -- lexical fault stops the whole program (the core never parses it).
 -- The tokens and the variable tables come back in order.
-lexProgram :: String -> Maybe String -> Maybe String -> Either Fault Lexed
-lexProgram prelude rules query = do
+lexProgram :: String -> Maybe String -> Maybe String -> Maybe String -> Either Fault Lexed
+lexProgram prelude pack rules query = do
   p0 <- run 0 prelude emptyLexed
-  let p1 = p0 {lPrelude = lClauses p0}
+  p1' <- maybe (Right p0) (\t -> run 3 t p0) pack
+  let p1 = p1' {lPrelude = lClauses p0, lShipped = lClauses p1', lPack = pack}
   p2 <- maybe (Right p1) (\t -> run 1 t p1) rules
   p3 <- maybe (Right p2) (\t -> run 2 t p2) query
   Right p3 {lTokens = reverse (lTokens p3), lVars = reverse (lVars p3)}

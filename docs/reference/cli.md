@@ -282,7 +282,7 @@ Options:
       --db <DB>          Index database path (default: <root>/.ce/index.db)
       --why              Carry every answer's derivation (a violation always does)
       --file <FILE>      The rules file whose rules the question builds on (default: `[rules] file`, else ce.rules at the root when it exists)
-      --prelude          Print the built-in prelude and exit
+      --prelude          Print the built-in prelude, then the `[rules.pack]` program the core renders from ce.toml when one is declared, and exit
   -h, --help             Print help
 ```
 
@@ -301,7 +301,7 @@ Options:
       --lang <LANG>      Console language (wins over CE_LANG and the project's ce.toml `[ui] lang`) [possible values: en, zh]
       --core <CORE>      Path to the ce-core executable (default: CE_CORE_BIN, a ce-core beside this binary, then PATH) [default: ce-core]
       --db <DB>          Index database path (default: <root>/.ce/index.db)
-      --file <FILE>      The rules file to judge (default: `[rules] file`, else ce.rules at the root; absent = zero assertions)
+      --file <FILE>      The rules file to judge (default: `[rules] file`, else ce.rules at the root; absent = the `[rules.pack]` assertions alone, zero when none is declared)
       --why              Carry every query answer's derivation too
   -h, --help             Print help
 ```

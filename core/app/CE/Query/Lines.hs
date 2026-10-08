@@ -4,7 +4,8 @@
 -- each goal — a question with its answers, an assertion with its
 -- witnesses — every proof row indented by its depth in the
 -- derivation, and one counts line; the rules face says first when no
--- rules file was found. The veto is the rules face's: a judged program
+-- rules file was found and the program is the prelude alone (a
+-- `[rules.pack]` lexes clauses of its own past the prelude's). The veto is the rules face's: a judged program
 -- whose assertions found a violation (an unjudged one is the face's
 -- own refusal, exit 2).
 module CE.Query.Lines (lines', veto) where
@@ -14,7 +15,7 @@ import CE.Document.Read
 lines' :: Bool -> Say -> Value -> DocReq -> [Line]
 lines' rules say doc req =
   map (line 0) $
-    [say "no_rules_file" [] | rules, fact req "rulesFile" == 0]
+    [say "no_rules_file" [] | rules, fact req "rulesFile" == 0, fact req "clauses" <= fact req "prelude"]
       <> [say "error" [fillOf (key "at" e), fillOf (key "what" e)] | e <- arr "errors" doc]
       <> [say "degraded" [R d] | let d = key "degraded" doc, d /= Null]
       <> (if judged doc then concatMap goal (arr "goals" doc) <> [counts] else [])

@@ -77,9 +77,9 @@ query	代码查询：用 CE Datalog 对索引里的事实（文件、引用、�
 query.body	问题：一条查询体（如 `dead(F)`；`?-` 与结尾的 `.` 可省）；除非 --prelude 否则必填
 query.why	每个答案带推导链（违规恒带）
 query.file	问题所叠加的规则文件（缺省 = `[rules] file`，否则仓根存在的 ce.rules）
-query.prelude	打印内置前奏并退出
+query.prelude	打印内置前奏；ce.toml 声明了 `[rules.pack]` 时再打印核渲染出的规则包程序；然后退出
 rules	架构规则当门：规则文件（仓根 ce.rules 或 `[rules] file`）里每条 `assert` 由核的 query/1 判决，每条违规带见证与推导链；有违规退出 1，程序错误退出 2
-rules.file	要判决的规则文件（缺省 = `[rules] file`，否则仓根的 ce.rules；不存在 = 零断言）
+rules.file	要判决的规则文件（缺省 = `[rules] file`，否则仓根的 ce.rules；不存在 = 只判 `[rules.pack]` 的断言，没声明则零断言）
 rules.why	查询答案也带推导链
 flow	函数内死代码（不可达语句、死存储、未用局部量与形参），由核的 flow/1 判决；--check 是它自己的门，在 `[flow] tier` 为 deny 时生效（从不进 `ce check`）；未用形参永远只当顾问
 flow.check	`[flow] tier` 为 deny 且存在被判决的发现时退出 1（未用形参只当顾问，永不计入）

@@ -56,7 +56,7 @@
 
 <div class="fam">
   <h3 id="f16"><span class="n">16</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">代码查询与架构规则——索引事实上的 Datalog</a></h3>
-  <p class="job">用 CE Datalog 对索引的事实——文件、目录、引用、单元、复杂度、已判的克隆对与文档重复对、提及、路径类——提问，答案带推导链；规则文件的断言是门：违规是一行见证加推导，<code>ce rules</code> 见第一条即退 1。</p>
+  <p class="job">用 CE Datalog 对索引的事实——文件、目录、引用、单元、复杂度、已判的克隆对与文档重复对、提及、路径类——提问，答案带推导链；规则文件的断言是门：违规是一行见证加推导，<code>ce rules</code> 见第一条即退 1。五项常见检查不必写 Datalog：<code>ce.toml</code> 的 <code>[rules.pack]</code> 可开目录成环、扇入 / 扇出上限、分层与禁止引用对，核把它们渲染成同一种语言（谓词头保留 <code>pack_</code> 前缀），与规则文件一起判。</p>
   <pre>clause := atom ':-' body '.'  |  '?-' body '.'  |  'assert' atom ':-' body '.'
 lit    := atom | 'not' atom | expr op expr | Var '=' expr | Var '=' agg(Vars : body)
 prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
@@ -70,6 +70,8 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
     <li><b>derivedCap</b> 2097152</li>
     <li><b>proofCap</b> 16384</li>
     <li><b>idbFloor</b> 1000</li>
+    <li><b>layerCap</b> 16</li>
+    <li><b>forbidCap</b> 64</li>
     <li><b>schema</b> ce.query-report/0.1.0</li>
     <li><b>入 wire 版本</b> 7.3.0</li>
     <li><b>wire</b> query/1</li>

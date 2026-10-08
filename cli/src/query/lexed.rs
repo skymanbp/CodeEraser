@@ -5,7 +5,9 @@
 //! and keeps what it labels by: every token's `where line:column`, the
 //! predicate names by code, the globs and where each was spelled, the
 //! names by hash, the fact tables the program reads, and every goal's
-//! head as spelled. A lexical fault comes back as its place and what.
+//! head as spelled, and the `[rules.pack]` text the core rendered from
+//! the pack rows sent beside the texts (plan v2.33). A lexical fault
+//! comes back as its place and what.
 
 use super::wire;
 use crate::corelink::Link;
@@ -35,6 +37,10 @@ pub struct Lexed {
     names: Vec<(u64, String)>,
     pub referenced: BTreeSet<u32>,
     pub heads: Vec<GoalHead>,
+    /// The pack's CE Datalog as the core rendered and lexed it; absent
+    /// when no pack was sent.
+    #[serde(default, rename = "packText")]
+    pub pack_text: Option<String>,
 }
 
 /// The core's answer to a lex request: the program, or the fault that
@@ -49,9 +55,22 @@ pub fn texts(prelude: &str, rules: Option<&str>, query: Option<&str>) -> Value {
     json!([prelude, rules, query])
 }
 
-/// The program lexed by the core over `link`.
-pub fn lex(link: &mut Link, texts: &Value) -> Result<Lex, String> {
-    let reply = wire::ask(link, json!({"texts": texts, "lex": true}))?;
+/// The program as the core lexes it: the three texts, and the
+/// `[rules.pack]` rows (config::PackCfg::rows) when any are declared —
+/// an undeclared pack sends no `pack` key at all.
+pub fn program(texts: Value, pack: Vec<Value>) -> Value {
+    let mut program = json!({ "texts": texts });
+    if !pack.is_empty() {
+        program["pack"] = Value::Array(pack);
+    }
+    program
+}
+
+/// The program (`program`) lexed by the core over `link`.
+pub fn lex(link: &mut Link, program: &Value) -> Result<Lex, String> {
+    let mut req = program.clone();
+    req["lex"] = json!(true);
+    let reply = wire::ask(link, req)?;
     let lexed = &reply["lexed"];
     if let Some([at, what]) = lexed["fault"].as_array().map(Vec::as_slice) {
         let text = |v: &Value| v.as_str().map(str::to_string);

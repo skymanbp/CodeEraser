@@ -11,6 +11,9 @@ module CE.Query.Cost (
   factCap,
   derivedCap,
   proofCap,
+  layerCap,
+  forbidCap,
+  packPrefix,
   idbFloor,
   kindPred,
   kindVar,
@@ -74,6 +77,22 @@ tokenCap = 65536
 factCap = 4194304
 derivedCap = 2097152
 proofCap = 16384
+
+-- | The `[rules.pack]` items (CE.Query.Pack) count against the token
+-- cap like any text; two of them carry a list, and each list has its
+-- own ceiling, refused by name past it: `layers` renders one assertion
+-- per ordered pair of its globs (16 globs = 120 assertions), `forbid`
+-- one per pair it lists.
+layerCap, forbidCap :: Int
+layerCap = 16
+forbidCap = 64
+
+-- | Every predicate the pack renders is spelled with this prefix, and
+-- the prefix is reserved: a rule outside the shipped clauses whose head
+-- carries it is program error 7, like a prelude predicate redefined —
+-- so a pack item switched on later never meets a user's own `pack_…`.
+packPrefix :: String
+packPrefix = "pack_"
 
 -- | Predicate codes below this are the fact schema (CE.Query.Schema);
 -- at or above it they are the program's own predicates, numbered by

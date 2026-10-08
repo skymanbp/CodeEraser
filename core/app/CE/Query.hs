@@ -21,7 +21,7 @@
 -- program names before it assembles them.
 module CE.Query (respond) where
 
-import CE.Query.Check (Checked (..), Goal (..), check)
+import CE.Query.Check (Checked (..), Goal (..), checkReserving)
 import CE.Query.Contract (QueryReq (..), facts, offence, overCap, tokens)
 import CE.Query.Cost (errSyntax, proofCap)
 import CE.Query.Eval (Db, Prov, evalProgram, goalAnswers)
@@ -37,6 +37,7 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntMap.Strict as IM
+import qualified Data.IntSet as IS
 import qualified Data.Set as S
 
 -- | decode → cap (tokens, fact rows) → contract → judge.
@@ -85,7 +86,7 @@ lexReply proto req lexed =
 judgedProgram :: String -> QueryReq -> B8.ByteString
 judgedProgram proto req = reply proto req $ case parseProgram (tokens req) of
   Left at -> withErrors req [] [[toInteger at, errSyntax]]
-  Right clauses -> case check (fromInteger (preludeOf req)) clauses of
+  Right clauses -> case checkReserving (fromInteger (preludeOf req)) (IS.fromList (map fromInteger (reservedOf req))) clauses of
     Left errs -> withErrors req clauses [[toInteger at, code] | (at, code) <- errs]
     Right chk -> case evalProgram chk (factsDb req) of
       Left n -> blank req clauses (Just chk) zeroTally {tDerived = n} True

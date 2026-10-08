@@ -16,6 +16,7 @@ module CE.Query.Contract (QueryReq (..), facts, offence, overCap, tokens) where
 import CE.Query.Cost (factCap, idbFloor, kindAnon, kindInt, kindPred, kindSet, kindSym, kindVar, punctCeil, punctFloor, tokenCap)
 import CE.Query.Front (located)
 import CE.Query.Lex (Fault (..), Lexed (..), Tok (..), lexProgram)
+import CE.Query.Pack (renderPack, reservedAt)
 import CE.Query.Schema (arityOf)
 import CE.Query.Tree (NodeTree, parseTree, treeTables)
 import CE.Wire (rowCheck, tableOffence)
@@ -39,7 +40,13 @@ import Data.Word (Word64)
 -- and the package nodes (CE.Query.Tree) — and this side builds the four
 -- directory tables the program reads; `dirsOf` keeps each directory's
 -- label, name and hash for the reply, `clashOf` names a directory table
--- sent beside the tree.
+-- sent beside the tree. The `pack` key (plan v2.33, additive in the same
+-- unreleased minor) carries the `[rules.pack]` items as rows; `packOf`
+-- holds their rendered text or the refusal (CE.Query.Pack), the text is
+-- lexed between the prelude and the rules file, and `preludeOf` then
+-- counts the shipped clauses — the prelude's and the pack's, whose
+-- predicates are reserved; `reservedOf` holds the program predicates
+-- spelled with the reserved `pack_` prefix (CE.Query.Check).
 data QueryReq = QueryReq
   { reqId :: Value
   , lexedOf :: Maybe (Either Fault Lexed)
@@ -52,13 +59,18 @@ data QueryReq = QueryReq
   , schemaOf :: Bool
   , dirsOf :: Maybe [(String, String, Word64)]
   , clashOf :: Maybe String
+  , packOf :: Maybe (Either String String)
+  , reservedOf :: [Integer]
   }
 
 instance FromJSON QueryReq where
   parseJSON = withObject "QueryReq" $ \o -> do
-    lexed <- fmap (\(p, r, q) -> lexProgram p r q) <$> o .:? "texts"
+    pack <- fmap renderPack <$> o .:? "pack"
+    let text = either (const Nothing) Just =<< pack
+    lexed <- fmap (\(p, r, q) -> lexProgram p text r q) <$> o .:? "texts"
     let program = [[tKind t, tValue t] | Just (Right l) <- [lexed], t <- lTokens l]
-        prelude = [toInteger (lPrelude l) | Just (Right l) <- [lexed]]
+        prelude = [toInteger (lShipped l) | Just (Right l) <- [lexed]]
+        reserved = [idbFloor + i | Just (Right l) <- [lexed], i <- reservedAt (lPreds l)]
     req <-
       QueryReq
         <$> o .: "id"
@@ -72,6 +84,8 @@ instance FromJSON QueryReq where
         <*> o .:? "schema" .!= False
         <*> pure Nothing
         <*> pure Nothing
+        <*> pure pack
+        <*> pure reserved
     maybe req (withTree req) <$> parseTree o
 
 -- | The directory tables built from the tree, the ones the program reads
@@ -104,12 +118,21 @@ overCap req =
 offence :: QueryReq -> Maybe String
 offence req =
   asum
-    [ textsShape req
+    [ packShape req
+    , textsShape req
     , clashOf req
     , asum (zipWith tokenShape [0 :: Int ..] (programOf req))
     , if preludeOf req < 0 then Just "negative prelude" else Nothing
     , asum (map tableShape (tablesOf req))
     ]
+
+-- | A pack rides only beside the texts it is lexed between, and must
+-- render (its refusal is CE.Query.Pack's, by name).
+packShape :: QueryReq -> Maybe String
+packShape req = case (packOf req, lexedOf req) of
+  (Just (Left why), _) -> Just why
+  (Just _, Nothing) -> Just "pack without texts"
+  _ -> Nothing
 
 -- | A lex request needs its texts; a judging request's texts must lex
 -- (the measuring side asked for the lexed program first).

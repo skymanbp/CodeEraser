@@ -4,8 +4,8 @@
 //! judged as a gate. Exit codes: a program error (lexical, syntax,
 //! sort, safety, stratification) or a core that could not judge is 2
 //! for both; `ce rules` answers 1 when any assertion holds a
-//! violation and 0 when every one passes — a missing default file is
-//! zero assertions and 0, said aloud.
+//! violation and 0 when every one passes — a missing default file with
+//! no `[rules.pack]` declared is zero assertions and 0, said aloud.
 
 use crate::main_prelude::*;
 use codeeraser::query::face::{self, Ask};
@@ -26,7 +26,8 @@ pub struct QueryArgs {
     /// `[rules] file`, else ce.rules at the root when it exists)
     #[arg(long)]
     file: Option<PathBuf>,
-    /// Print the built-in prelude and exit
+    /// Print the built-in prelude, then the `[rules.pack]` program the
+    /// core renders from ce.toml when one is declared, and exit
     #[arg(long)]
     prelude: bool,
 }
@@ -36,7 +37,8 @@ pub struct RulesArgs {
     #[command(flatten)]
     judge: JudgeArgs,
     /// The rules file to judge (default: `[rules] file`, else
-    /// ce.rules at the root; absent = zero assertions)
+    /// ce.rules at the root; absent = the `[rules.pack]` assertions
+    /// alone, zero when none is declared)
     #[arg(long)]
     file: Option<PathBuf>,
     /// Carry every query answer's derivation too
@@ -47,7 +49,13 @@ pub struct RulesArgs {
 pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {
     if a.prelude {
         print!("{PRELUDE}");
-        return ExitCode::SUCCESS;
+        return match face::pack_text(&or_cwd(a.judge.root), core) {
+            Ok(pack) => {
+                print!("{}", pack.unwrap_or_default());
+                ExitCode::SUCCESS
+            }
+            Err(err) => fail("query", err),
+        };
     }
     let Some(body) = a.body else {
         return fail(

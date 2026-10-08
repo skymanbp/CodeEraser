@@ -37,6 +37,27 @@ entry_globs = [
     "plugin/skills/",
 ]
 
+# The built-in rule pack (plan v2.33): checks the core renders to CE
+# Datalog and `ce rules .` (CI's seventh dogfood gate) judges beside
+# ce.rules. Only the items green on this tree when they entered
+# (2026-10-07, measured one by one): the GUI sits above the measuring
+# side, which sits above the core, and three reads that never happen
+# stay forbidden — the core reading its own tests, the measuring side
+# reading the site or the GUI. Left out by measurement: no_dir_cycles
+# (1653 directory pairs reach each other on this tree), and the two
+# fan caps — today's maxima are the test roster cli/tests/it/main.rs
+# (225 files out) and the shared helper cli/tests/it/common/mod.rs
+# (161 readers), both growing by one with every test file, so a cap
+# there would gate routine test additions, not the architecture.
+# Never a knob: the fingerprint drops the table (canonical rule 7).
+[rules.pack]
+layers = ["gui/**", "cli/src/**", "core/app/**"]
+forbid = [
+    ["core/app/**", "core/test/**"],
+    ["cli/src/**", "site/**"],
+    ["cli/src/**", "gui/**"],
+]
+
 # Only-shrink clone ratchet (M2 review R12), enforced in CI via
 # `ce dedup --check`. 188 measured 2026-08-12 in the M5-2e schema-v4
 # batch: the ratchet caught the batch's own new test scaffolding

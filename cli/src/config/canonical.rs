@@ -37,7 +37,10 @@
 //!    #16, O42's open half); declaration ORDER, which is
 //!    precedence, still counts through rule 3;
 //! 6. the `[ui]` table is presentation — which language a sentence is
-//!    spoken in moves no line — dropped whole (plan v2.29 step 9, O61).
+//!    spoken in moves no line — dropped whole (plan v2.29 step 9, O61);
+//! 7. `[rules] file` and `[rules.pack]` are what the query family reads
+//!    and judges, never a threshold — dropped whole (plan v2.31 step 2,
+//!    plan v2.33), so switching a pack check on moves no baseline.
 //!
 //! What survives is hashed as JSON (serde_json's map is key-ordered,
 //! so the bytes are canonical); an empty survivor is no fingerprint
@@ -80,10 +83,12 @@ pub fn canonical(cfg: &Config) -> Value {
     if let Some(top) = declared.as_object_mut() {
         top.remove("ui");
     }
-    // rule 7: the rules file is a path the query family reads, never
-    // a knob — dropped whole (plan v2.31 step 2)
+    // rule 7: the rules file is a path the query family reads, and the
+    // rule pack is checks the query family judges — neither is a knob,
+    // both dropped whole (plan v2.31 step 2; the pack plan v2.33)
     if let Some(rules) = declared.get_mut("rules").and_then(Value::as_object_mut) {
         rules.remove("file");
+        rules.remove("pack");
     }
     // rule 5: the class name is a label, never a knob
     if let Some(classes) = declared

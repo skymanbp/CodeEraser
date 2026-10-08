@@ -125,6 +125,12 @@
 > hello 里定义包的摘要随之变。`resolve/1` 的线形不变：核只改了哪一轮在 `tsWanted` 里点名哪些事实（一层能点名的同一轮问），测量侧首问另带每个 Rust 站点所在目录及其祖先的
 > `Cargo.toml` 探问（到第一个是文件的为止，原由首轮应答点名）；每个结果只在全部事实到齐后写出，答案与事实在哪一轮到达无关。golden：`tables/golden` 的应答与
 > `handshake/hello-ok` 的摘要机器重生成，其余不动，请求行数不变。
+> **9.0.0 同版加性**（内置规则包，v2.33 规则包车道，2026-10-07；设计册 `docs/reference/analysis-track.md` §4.6 与 §13 第 54 条；9.0.0 未发布，同上不另升版号）：
+> `query.request` 加性 `pack` `[[名, 参数…]…]`——`ce.toml` `[rules.pack]` 声明的项（`no_dir_cycles` / `fan_in_max` / `fan_out_max` / `layers` / `forbid`），未声明即无此键；
+> 须与 `texts` 同送。核（`CE.Query.Pack`）把每项渲染成一段 CE Datalog，作为第四个源（记号 src 3，定位读 `pack 行:列`）夹在前奏与规则文件之间扫，前奏与包的子句合为不可重定义的出厂子句；
+> 谓词前缀 `pack_` 保留，规则文件或问句定义任何 `pack_…` 谓词即程序错误 7。词法应答（`lex: true`）加性 `packText`（渲染文本，仅带包时出现）。渲染不了的按名拒绝（`pack: unknown item …` /
+> `pack <名>: declared twice` / `pack layers: … a layering needs at least two` / `pack layers: … over the cap 16` / `pack forbid: … over the cap 64` / `pack without texts` 等）。
+> 不带 `pack` 的请求逐字节答旧形。golden：`query/golden` 加第 11 对（五项全开的判决）与第 12 对（同一包的词法应答带 `packText`），其余 golden 不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -685,7 +691,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->363<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->365<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

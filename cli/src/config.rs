@@ -18,7 +18,7 @@ pub use tier::{Guard, PROMOTED_DEFAULT, TIERS, static_tier, tier_of};
 // The rulepack (plan v2.13 ①) is its own module for the same reason:
 // the class ladder and the fence are policy judged at load.
 mod rules;
-pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, RulesCfg};
+pub use rules::{CLASS_CAP, ClassCfg, ClassKnobs, PackCfg, RulesCfg};
 
 mod tombstone; // the class's own table (plan v2.27), judged at load like the rulepack's
 pub use tombstone::{TOMBSTONE_DEFAULT, TombstoneCfg};
