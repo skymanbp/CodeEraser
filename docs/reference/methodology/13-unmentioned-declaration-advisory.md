@@ -251,7 +251,7 @@ the core's deadcode document lays the three keys out, naming each code and its r
 ([Document.hs:99-104](../../../core/app/CE/Graph/Document.hs#L99), [Document.hs:131-143](../../../core/app/CE/Graph/Document.hs#L131)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
 ([Lines.hs:36-44](../../../core/app/CE/Graph/Lines.hs#L36)); the MCP `deadcode`
-tool returns the same document ([tools.rs:85-89](../../../cli/src/mcp/tools.rs#L85)); the GUI
+tool returns the same document ([tools.rs:91-95](../../../cli/src/mcp/tools.rs#L91)); the GUI
 graph screen receives that document beside the canvas one in a single `ce.graph-screen`
 reply off ONE judgment (plan v2.30 step 5b item 31 — it used to run the report a second time
 and join the two across two snapshots), joins the two by file path (a rendering join on a
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1745 (1963 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7167 (1650) | 1067 (15) | 14.9 % | 213 / 1067 = 20.0 % | 213 / 6100 |
-| | | rust | 3481 (1926) | 328 (3) | 9.4 % | 2 / 328 = 0.6 % | 2 / 3124 |
+| self @ this commit | 1753 (1971 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7167 (1650) | 1066 (15) | 14.9 % | 213 / 1066 = 20.0 % | 213 / 6101 |
+| | | rust | 3477 (1912) | 329 (3) | 9.5 % | 2 / 329 = 0.6 % | 2 / 3118 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |

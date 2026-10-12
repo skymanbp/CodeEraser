@@ -7,7 +7,7 @@
 
 use crate::main_cmds::{OutFormat, json, or_cwd};
 use crate::main_prelude::{answered, whole};
-use codeeraser::{dedup, docdup, join};
+use codeeraser::faces::{self, Plumb};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -30,7 +30,8 @@ impl JudgeArgs {
     /// A family the core answers (plan v2.32 step 5): `ask` gets the
     /// root and the db, the answer is printed in the asked form and the
     /// exit reads the core's veto (main_prelude::answered) — the one body
-    /// of `ce docdup`, `ce trend` and `ce similar`.
+    /// of `ce docdup`, `ce trend`, `ce structure`, `ce join` and `ce
+    /// similar`.
     pub(crate) fn answered(
         self,
         family: &str,
@@ -108,42 +109,47 @@ pub struct TrendArgs {
     batch: Option<usize>,
 }
 
-/// `ce trend` (M7-P4): the score trajectory over mainline history —
-/// cached in the index db, rebuildable from git at will.
-pub fn trend_cmd(a: TrendArgs, core: &str) -> ExitCode {
-    a.judge.answered("trend", |root, db| {
-        codeeraser::trend::judged(root, db, core, a.commits, a.batch)
-    })
+/// The commands whose whole body is one faces call through
+/// `JudgeArgs::answered`: the fn scaffold is written once (the
+/// faces::road! / face_cmd! precedent — four hand-written twins side by
+/// side were this repo's own clone verdict). Each row names the args
+/// binding, the core and the closure's (root, db) the face is asked by.
+macro_rules! answered_cmd {
+    ($($(#[$m:meta])* $name:ident($a:ident: $args:ty, $core:ident)
+        => $family:literal, |$root:ident, $db:ident| $face:expr;)+) => { $(
+        $(#[$m])*
+        pub fn $name($a: $args, $core: &str) -> ExitCode {
+            $a.judge.answered($family, |$root, $db| $face)
+        }
+    )+ };
 }
 
-/// `ce structure` (M6 S2): the tree-scale entropy judgment —
-/// aggregates to the core's structure/1, dense verdicts re-labelled
-/// with local names. Report-only by ruling — no score floor (v2.22, O53).
-pub fn structure_cmd(a: StructureArgs, core: &str) -> ExitCode {
-    let j = a.judge;
-    let knobs = (a.deep, a.days, a.split_candidates);
-    let answer = codeeraser::structure::judge::run(&or_cwd(j.root), j.db, core, knobs);
-    answered("structure", "structure", json(j.format), answer, whole)
-}
+answered_cmd! {
+    /// `ce trend` (M7-P4): the score trajectory over mainline history —
+    /// cached in the index db, rebuildable from git at will.
+    trend_cmd(a: TrendArgs, core) => "trend",
+        |root, db| faces::trend(root, core, (a.commits, a.batch), Plumb::db(db));
 
-/// `ce join` (M5-3h): assemble the three signal legs — similarity,
-/// graph position, per-unit churn — report-only; the verdict lattice
-/// judges them on the verdict/1 wire via `ce check` (M5-3i).
-pub fn join_cmd(a: JoinArgs, core: &str) -> ExitCode {
-    let j = a.judge;
-    let answer = join::run(&or_cwd(j.root), j.db, core, a.days);
-    answered("join", "join", json(j.format), answer, whole)
-}
+    /// `ce structure` (M6 S2): the tree-scale entropy judgment —
+    /// aggregates to the core's structure/1, dense verdicts re-labelled
+    /// with local names. Report-only by ruling — no score floor (v2.22,
+    /// O53).
+    structure_cmd(a: StructureArgs, core) => "structure",
+        |root, db| faces::structure(root, core, (a.deep, a.days, a.split_candidates), Plumb::db(db));
 
-/// `ce docdup` (M5-3g): the documentation-duplication judgment over
-/// the live cached segments — shingle sets to the core in chunks,
-/// raw inter/union plus the core's verdict bits back (ADR-008 P1); the
-/// report, its lines and the `--check` veto are the core's (plan v2.32
-/// step 5).
-pub fn docdup_cmd(a: DocdupArgs, core: &str) -> ExitCode {
-    a.judge.answered("docdup", |root, db| {
-        docdup::judge::answer(root, db, core, a.check)
-    })
+    /// `ce join` (M5-3h): assemble the three signal legs — similarity,
+    /// graph position, per-unit churn — report-only; the verdict lattice
+    /// judges them on the verdict/1 wire via `ce check` (M5-3i).
+    join_cmd(a: JoinArgs, core) => "join",
+        |root, db| faces::join(root, core, a.days, Plumb::db(db));
+
+    /// `ce docdup` (M5-3g): the documentation-duplication judgment over
+    /// the live cached segments — shingle sets to the core in chunks,
+    /// raw inter/union plus the core's verdict bits back (ADR-008 P1);
+    /// the report, its lines and the `--check` veto are the core's (plan
+    /// v2.32 step 5).
+    docdup_cmd(a: DocdupArgs, core) => "docdup",
+        |root, db| faces::docdup(root, core, Plumb::gate(db, a.check));
 }
 
 /// `ce clone` (M5-3e): the T3 TED judgment over the frozen candidate
@@ -155,12 +161,7 @@ pub fn docdup_cmd(a: DocdupArgs, core: &str) -> ExitCode {
 /// are the core's (plan v2.32 step 5).
 pub fn clone_cmd(a: CloneArgs, core: &str) -> ExitCode {
     let j = a.judge;
-    let root = or_cwd(j.root);
-    let answer = if a.units {
-        codeeraser::faces::listed_units(&root).and_then(|u| dedup::t3::units_answer(core, &u))
-    } else {
-        dedup::t3::answer(&root, j.db, core)
-    };
+    let answer = faces::clone(&or_cwd(j.root), core, a.units, Plumb::db(j.db));
     let family = if a.units { "clone-units" } else { "clone" };
     answered("clone", family, json(j.format), answer, whole)
 }

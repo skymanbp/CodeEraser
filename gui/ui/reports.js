@@ -5,30 +5,38 @@
 // what the CLI's --format json prints is exactly what appears.
 "use strict";
 
-// family → invoke command, whether it takes a days window, the argument name of an optional path list (paths), and an optional custom renderer — a family whose document is more than flat row arrays registers one from its own file (hub_arch.js); the generic renderer stays the default.
+// family → invoke command, whether it takes a days window, the argument name of an optional path list (paths), the dedup thresholds (thresholds), the unit-universe switch (units), and an optional custom renderer — a family whose document is more than flat row arrays registers one from its own file (hub_arch.js); the generic renderer stays the default.
 const HUB = {
   scan: { cmd: "scan_report" },
-  dedup: { cmd: "dedup_report" },
-  clone: { cmd: "clone_report" },
+  dedup: { cmd: "dedup_report", thresholds: true },
+  clone: { cmd: "clone_report", units: true },
   docdup: { cmd: "docdup_report" },
   deadcode: { cmd: "deadcode_report" },
   churn: { cmd: "churn_report", days: true },
   sites: { cmd: "sites_report" },
 };
 
-function registerHub(name, spec) { HUB[name] = spec; const o = document.createElement("option"); o.value = name; o.textContent = name; $("hub-family").appendChild(o); }
+function registerHub(name, spec) { HUB[name] = spec; const o = document.createElement("option"); o.value = name; o.textContent = tr("hubFamily", name); $("hub-family").appendChild(o); }
 
 let hubDoc = null;
 
+// The selector's names are the family's in the reader's language (the
+// value stays the family key the commands are registered under).
+function hubNames() {
+  for (const o of $("hub-family").options) o.textContent = tr("hubFamily", o.value);
+}
+
 (function bootReports() {
-  i18nRefreshers.push(() => hubDoc && renderHub());
+  i18nRefreshers.push(hubNames, () => hubDoc && renderHub());
   const sel = $("hub-family");
   sel.innerHTML = Object.keys(HUB)
-    .map((k) => `<option value="${k}">${k}</option>`)
+    .map((k) => `<option value="${k}">${esc(tr("hubFamily", k))}</option>`)
     .join("");
   sel.addEventListener("change", () => {
     $("hub-days-wrap").hidden = !HUB[sel.value].days;
     $("hub-paths-wrap").hidden = !HUB[sel.value].paths;
+    $("hub-thresholds-wrap").hidden = !HUB[sel.value].thresholds;
+    $("hub-units-wrap").hidden = !HUB[sel.value].units;
   });
   $("hub-load").addEventListener("click", loadHub);
 })();
@@ -41,6 +49,10 @@ async function loadHub() {
     const args = { root: $("root").value };
     if (fam.days) args.days = posInt($("hub-days").value, 1, 14);
     if (fam.paths) args[fam.paths] = $("hub-paths").value.split(",").map((s) => s.trim()).filter(Boolean);
+    // `--min-tokens` / `--min-distinct`: empty = the core's defaults
+    const num = (id, lo) => ($(id).value.trim() === "" ? null : posInt($(id).value, lo, 1000000));
+    if (fam.thresholds) Object.assign(args, { minTokens: num("hub-min-tokens", 1), minDistinct: num("hub-min-distinct", 0) });
+    if (fam.units) args.units = $("hub-units").checked;
     hubDoc = await invoke(fam.cmd, args);
     renderHub();
     setStatus(hubDoc.schema ?? "", false);

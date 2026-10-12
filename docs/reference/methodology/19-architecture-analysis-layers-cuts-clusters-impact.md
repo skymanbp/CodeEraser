@@ -22,7 +22,7 @@ answering them with each directory's path for the document.
 
 | table | row | read off |
 |---|---|---|
-| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([rows.rs:30](../../../cli/src/structure/rows.rs#L30), [face.rs:28](../../../cli/src/arch/face.rs#L28), [Tables.hs:78](../../../core/app/CE/Arch/Tables.hs#L78)) |
+| `files` | `[F, D, lines]` | the measured FILE nodes of the deadcode wire — not foreign, not an asset, not a section, not a package — in path order, dense from 0; `lines` is the file's total line count, the same count `ce scan` takes ([rows.rs:30](../../../cli/src/structure/rows.rs#L30), [face.rs:29](../../../cli/src/arch/face.rs#L29), [Tables.hs:78](../../../core/app/CE/Arch/Tables.hs#L78)) |
 | `dirs` | `[D, parent]` | the structure family's directory tree over those paths, built in the core: the root row 0 with parent −1, every other parent an earlier row, since the tree enters every ancestor before its child ([Tables.hs:79](../../../core/app/CE/Arch/Tables.hs#L79), [Tree.hs:54](../../../core/app/CE/Structure/Tree.hs#L54)) |
 | `edges` | `[F, G, w]` | every graph arc from one measured file to another — any kind, any rung, the structure family's own arc list — plus an arc to a Markdown section, folded onto the section's file; a self pair is dropped and `w` counts the arcs between the pair ([rows.rs:30](../../../cli/src/structure/rows.rs#L30), [Tables.hs:80](../../../core/app/CE/Arch/Tables.hs#L80)) |
 | `pkgEdges` | `[F, D, w]` | the arcs whose target is a package node — a Go, R or Java package import, a Markdown directory link — onto the package's directory; a package outside the tree has no row, and a reference into the file's own directory is kept for the core to fold ([Tables.hs:81](../../../core/app/CE/Arch/Tables.hs#L81)) |
@@ -96,7 +96,7 @@ directory ([Layers.hs:35](../../../core/app/CE/Arch/Layers.hs#L35), [Cost.hs:44]
 
 1. The node universe is the structure family's: the deadcode wire of a refreshed index, its
    measured file nodes in path order — so the two families place a file in one tree
-   ([face.rs:23](../../../cli/src/arch/face.rs#L23)).
+   ([face.rs:24](../../../cli/src/arch/face.rs#L24)).
 2. The directories are the structure family's tree, which numbers a parent before its child; the
    core builds it for both families from the paths ([Tree.hs:54](../../../core/app/CE/Structure/Tree.hs#L54)).
 3. `lines` is `ce scan`'s count of the file's bytes, not a second one.
@@ -114,7 +114,7 @@ arc's), and each cluster's majority directory, read by the rule the misplaced ro
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
 misplaced files never name two majorities. This side sends the tables back with each path's place
 in string order and puts the paths back ([Document.hs:96](../../../core/app/CE/Arch/Document.hs#L96), [Document.hs:122](../../../core/app/CE/Arch/Document.hs#L122),
-[face.rs:80](../../../cli/src/arch/face.rs#L80)).
+[face.rs:90](../../../cli/src/arch/face.rs#L90)).
 
 ### 4. The faces and the document
 
@@ -132,16 +132,18 @@ id is in range and every focus file has its depth-0 row ([wire.rs:172](../../../
   level down, every cut arc with its references indented under it and `exact` or `greedy`, the
   misplaced files, the impact walk when a focus was named and the metrics table; exit 0 with a
   document, 2 when the core could not judge or a path is not a measured file
-  ([main_arch.rs:32](../../../cli/src/main_arch.rs#L32), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
+  ([main_arch.rs:28](../../../cli/src/main_arch.rs#L28), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
 - **The MCP tool `architecture`** takes `impact` as a list of root-relative paths and relays the
-  same document ([adapters.rs:201](../../../cli/src/mcp/adapters.rs#L201), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234)).
+  same document ([adapters.rs:231](../../../cli/src/mcp/adapters.rs#L231), [tools.rs:241](../../../cli/src/mcp/tools.rs#L241)).
 - **The GUI** renders it in the reports hub rather than a thirteenth tab — the header holds twelve
   tabs in one row at the default window, and the hub is where the report-only families live. The
   document nests, so the family registers its own renderer and an `impact` path box; the counts
   still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:21](../../../gui/ui/reports.js#L21),
-  [commands_query.rs:39](../../../gui/src-tauri/src/commands_query.rs#L39)).
+  [commands_query.rs:44](../../../gui/src-tauri/src/commands_query.rs#L44)).
 
-All three go through one library function ([faces.rs:262](../../../cli/src/faces.rs#L262)).
+All three faces, the CLI included, go through one library function, and the face cleans each
+`impact` path the same way whichever face sent it — `./x` and `a\b` name the same file
+([ask.rs:110](../../../cli/src/faces/ask.rs#L110), [face.rs:58](../../../cli/src/arch/face.rs#L58)).
 
 ### 5. Gates
 

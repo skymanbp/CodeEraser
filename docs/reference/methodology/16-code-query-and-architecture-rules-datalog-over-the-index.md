@@ -119,7 +119,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 `dead` mirrors `ce deadcode`'s file-tier verdict by construction: an entry is a node with any
 role bit (every role lands in the core's entry mask), and a reference of any rung is followed
 except the two liveness-inert kinds the graph judgment drops the same way. The integration leg
-holds the two roads to one file ([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)).
+holds the two roads to one file ([query_face.rs:96](../../../cli/tests/it/query_face.rs#L96)).
 `ce query --prelude` prints the text verbatim.
 
 ### 4. The token stream
@@ -230,7 +230,7 @@ derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:38](../../../core/app/CE/Query/Proof.hs#L38)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
 row under the answer ([Lines.hs:41](../../../core/app/CE/Query/Lines.hs#L41),
-[query.js:85](../../../gui/ui/query.js#L85)).
+[query.js:108](../../../gui/ui/query.js#L108)).
 
 ### 8. Caps and degradation
 
@@ -269,11 +269,15 @@ the exclude dialect cannot read is a program error at the glob's token before an
 - **`ce query <body> [--why] [--file <rules>] [--prelude]`** answers one question built on the
   rules file's rules; exit 0 when judged, 2 on a program error or a core that could not judge.
   It is a report: an assertion's violations in the file it builds on do not move its exit code
-  ([main_query.rs:49](../../../cli/src/main_query.rs#L49)).
+  ([main_query.rs:48](../../../cli/src/main_query.rs#L48)). `--prelude` asks no question: it
+  prints the built-in prelude, then the program the core renders from `[rules.pack]` (§11), and
+  under `--format json` the same two texts as `ce.query-prelude/0.1.0` — `{prelude, pack}`, `pack`
+  null when no pack is declared ([main_query.rs:75](../../../cli/src/main_query.rs#L75),
+  [ask.rs:72](../../../cli/src/faces/ask.rs#L72)).
 - **`ce rules [--file <rules>] [--why]`** judges every `assert` in the file: exit 1 when any
   assertion holds a violation, 2 when the program did not judge, 0 otherwise — and a missing
   default file with no rule pack declared is zero assertions and 0, said aloud
-  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:69](../../../cli/src/main_query.rs#L69)).
+  ([main_query.rs:1-8](../../../cli/src/main_query.rs#L1), [main_query.rs:65](../../../cli/src/main_query.rs#L65)).
 - **The rules file** is the one named on the command line or by the MCP argument (root-relative
   unless absolute, and it must exist), else `[rules] file` from the config (it must exist), else
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
@@ -286,22 +290,26 @@ the exclude dialect cannot read is a program error at the glob's token before an
   has its Chinese twin and the program's own words stay as written
   ([Lines.hs:16-20](../../../core/app/CE/Query/Lines.hs#L16), [Query.hs:10-20](../../../core/app/CE/Text/Query.hs#L10),
   [main_lang.rs:76](../../../cli/src/main_lang.rs#L76)).
-- **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document;
-  the CLI's exit code is its own reading of `counts.violations` and does not exist here
-  ([tools.rs:195](../../../cli/src/mcp/tools.rs#L195), [tools.rs:216](../../../cli/src/mcp/tools.rs#L216),
-  [adapters.rs:179](../../../cli/src/mcp/adapters.rs#L179)).
-- **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch,
-  answers it as one table per goal under its own column names with the derivation rows under an
-  answer, and judges the project's rules file with one button; rendering only, a core without the
-  family shows the document's degraded posture
-  ([commands_query.rs:14](../../../gui/src-tauri/src/commands_query.rs#L14), [query.js:21](../../../gui/ui/query.js#L21),
-  [query.js:61](../../../gui/ui/query.js#L61)).
+- **MCP** `query` (`body`, `why`, `file`) and `rules` (`file`, `why`) return the same document,
+  and `query` with `prelude: true` returns the `ce.query-prelude` document instead (`body` is not
+  needed then); the CLI's exit code is its own reading of `counts.violations` and does not exist here
+  ([tools.rs:209](../../../cli/src/mcp/tools.rs#L209), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234),
+  [adapters.rs:198](../../../cli/src/mcp/adapters.rs#L198)).
+- **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch
+  and a rules-file box (`--file`), answers it as one table per goal under its own column names
+  with the derivation rows under an answer, judges the rules file with one button, and shows the
+  `ce.query-prelude` texts with another (the Tauri command `query_prelude`); rendering only, a
+  core without the family shows the document's degraded posture
+  ([commands_query.rs:17](../../../gui/src-tauri/src/commands_query.rs#L17), [query.js:42](../../../gui/ui/query.js#L42),
+  [query.js:84](../../../gui/ui/query.js#L84)).
 
-All three go through two library functions, so the document cannot differ by face
-([faces.rs:212](../../../cli/src/faces.rs#L212), [faces.rs:225](../../../cli/src/faces.rs#L225)); the
+All three faces, the CLI included, go through the same three library functions — one road for
+the question, the rules file and the pack text — so the document cannot differ by face
+([ask.rs:39](../../../cli/src/faces/ask.rs#L39), [ask.rs:52](../../../cli/src/faces/ask.rs#L52),
+[ask.rs:72](../../../cli/src/faces/ask.rs#L72)); the
 integration leg holds the CLI's JSON to the library's byte for byte
-([query_face.rs:88](../../../cli/tests/it/query_face.rs#L88)), and the parity table claims the
-capability once across CLI, GUI and MCP ([face_parity_table.rs:35](../../../cli/tests/it/face_parity_table.rs#L35)).
+([query_face.rs:96](../../../cli/tests/it/query_face.rs#L96)), and the parity table claims the
+capability once across CLI, GUI and MCP ([face_parity_table.rs:38](../../../cli/tests/it/face_parity_table.rs#L38)).
 
 ### 10. The repository's own rules
 
@@ -419,8 +427,8 @@ of 10,000 random programs and the real ones), the request body's tables and flag
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or
-default ([query_face.rs:141](../../../cli/tests/it/query_face.rs#L141), [query_face.rs:173](../../../cli/tests/it/query_face.rs#L173),
-[query_face.rs:232](../../../cli/tests/it/query_face.rs#L232)). The family is one row of the parity
+default ([query_face.rs:149](../../../cli/tests/it/query_face.rs#L149), [query_face.rs:188](../../../cli/tests/it/query_face.rs#L188),
+[query_face.rs:244](../../../cli/tests/it/query_face.rs#L244)). The family is one row of the parity
 table, one screen of the GUI roster and two tools of the MCP catalogue; docs cite implementation
 lines (this booklet is under the citations gate), and the caps above bind to their source names
 under `docs_consts`.

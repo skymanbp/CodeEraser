@@ -73,7 +73,7 @@ pub fn answer(
 
 /// The answer in the requested form: console lines, the document, or
 /// its SARIF projection — each followed by the stream-1 lines.
-pub(super) fn emit(format: Format, answer: &Answer) -> Result<()> {
+pub fn emit(format: Format, answer: &Answer) -> Result<()> {
     match format {
         Format::Console => document::emit("dedup", answer, false),
         Format::Json => document::emit("dedup", answer, true),
@@ -111,9 +111,9 @@ fn block(b: &Value) -> Value {
     crate::sarif::result("ce.dedup/clone-block", "note", &message, here, vec![there])
 }
 
-/// The dedup report as a document, for the faces that hold no core
-/// path of their own (the daemon's `dedup` reply, the MCP tool and the
-/// GUI's `faces::dedup`): the process's core answers it.
+/// The dedup report as a document, for the face that holds no core
+/// path of its own (the daemon's `dedup` reply): the process's core
+/// answers it. Every other face takes crate::faces::dedup.
 pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<Value> {
     Ok(answer(crate::tables::core_flag(), found, s, None)?.document)
 }

@@ -48,7 +48,6 @@ use crate::scan::lang::Lang;
 use crate::scan::walk;
 use anyhow::Result;
 use std::path::Path;
-use std::process::ExitCode;
 
 /// Every site of one file, path repo-relative with forward slashes.
 pub struct FileSites {
@@ -81,14 +80,6 @@ pub fn analyze(root: &Path) -> Result<Vec<FileSites>> {
     let mut out: Vec<FileSites> = rows.into_iter().flatten().collect();
     out.sort_by(|a, b| a.path.cmp(&b.path));
     Ok(out)
-}
-
-/// `ce graph --sites` entry: per-(lang, kind) counts on console,
-/// full rows as JSON — the document and its lines the core lays out
-/// (plan v2.32 steps 4-5).
-pub fn run_sites(root: &Path, core: &str, json: bool) -> ExitCode {
-    let answer = analyze(root).and_then(|files| sites_document(core, &files));
-    crate::report::graph_face("sites", answer, json)
 }
 
 /// The sites document (CE.Graph.Sites): each file's place in path

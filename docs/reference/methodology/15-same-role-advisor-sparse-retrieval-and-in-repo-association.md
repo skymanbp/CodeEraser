@@ -215,7 +215,7 @@ request per arm over one core link, the document asked over the same link ([face
   line and one line per candidate, `at key  N P C D S L  role`; `--format json` is the document
   ([main_similar.rs:30](../../../cli/src/main_similar.rs#L30), [Lines.hs:13](../../../core/app/CE/Similar/Lines.hs#L13)).
 - **MCP** `similar_units` — the fifteenth read-only tool, `{at, text, unit, widen}`, relaying
-  the same document ([tools.rs:178](../../../cli/src/mcp/tools.rs#L178)).
+  the same document ([tools.rs:192](../../../cli/src/mcp/tools.rs#L192)).
 - **GUI** the eleventh screen, `similar`: an input for `at` or text, the widen switch, the
   candidate table with the six evidence columns ([similar.js](../../../gui/ui/similar.js),
   [commands.rs](../../../gui/src-tauri/src/commands.rs)).
@@ -290,8 +290,8 @@ The three faces agree on one document: the CLI's `--format json` prints the libr
 for byte and the core judged the fixture pair same-role; the MCP tool relays it and refuses a
 request that names two asks; the Stop leg writes `{unit, twin, score}` for a unit the session
 added and no key once the unit is committed
-([similar_face.rs:48](../../../cli/tests/it/similar_face.rs#L48),
-[similar_face.rs:99](../../../cli/tests/it/similar_face.rs#L99)). The wire leg ranks every unit of the go
+([similar_face.rs:55](../../../cli/tests/it/similar_face.rs#L55),
+[similar_face.rs:106](../../../cli/tests/it/similar_face.rs#L106)). The wire leg ranks every unit of the go
 fixture through rank/1, has similar/1 judge it, and checks every role bit against the spec's
 conjunction; the family is offered, judged and refuses by name
 ([similar_wire.rs:17](../../../cli/tests/it/similar_wire.rs#L17),
@@ -300,7 +300,7 @@ corpus and the SQL reader to one ranking on five corpora
 ([similar_replay.rs:247](../../../cli/tests/it/similar_replay.rs#L247)); the precision gate
 holds both oracle generations to their floors. The advisor is one row of the three-face parity
 table — CLI, GUI tab and Tauri command, MCP tool — and the fifteenth tool in the MCP catalogue
-([face_parity_table.rs:34](../../../cli/tests/it/face_parity_table.rs#L34)). Docs cite implementation lines
+([face_parity_table.rs:37](../../../cli/tests/it/face_parity_table.rs#L37)). Docs cite implementation lines
 (this booklet is under the citations gate), the constants above bind to their source names
 under `docs_consts`, and the feed golden carries no `similar` object by design: its
 staged twin shares one name word where the core's role bit wants two, so `similar_face.rs` seeds the pair

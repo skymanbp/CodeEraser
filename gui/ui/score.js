@@ -20,8 +20,12 @@ async function loadCheck() {
     // this screen could arm nothing, so one tree read pass here and
     // FAIL in the pipeline with nothing on screen to say why.
     const floor = $("check-floor").value.trim();
+    // `--days`: the churn window the verdict reads (empty = the churn
+    // tables stay empty, the CLI's default)
+    const days = $("check-days").value.trim();
     checkDoc = await invoke("check_report", {
       root: $("root").value,
+      days: days === "" ? null : posInt(days, 0, 100000),
       floor: floor === "" ? null : posInt(floor, 0, 1000000),
     });
     renderCheck();

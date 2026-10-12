@@ -81,51 +81,51 @@
     "end": 438,
     "text": "let start = toks[f.start].start_line;"
   },
-  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|131dea92d0490f13|0": {
-    "target": "../../../cli/src/dedup/mod.rs",
-    "line": 38,
-    "text": "pub min_distinct: Option<usize>,"
-  },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|20fa5e5d34020a2d|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 154,
-    "end": 157,
+    "line": 132,
+    "end": 135,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 282,
-    "end": 290,
+    "line": 260,
+    "end": 268,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|4e0cd4185a41b141|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 47,
-    "end": 50,
+    "line": 33,
+    "end": 36,
     "text": "/// `min_tokens` lowers the report filter below the guarantee t for"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|8417d9b1774d5bed|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 261,
-    "end": 270,
+    "line": 239,
+    "end": 248,
     "text": "/// One run's walk counters and the two report filters it used — the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|94988c2d0aa739bb|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 156,
+    "line": 134,
     "text": "min_distinct: min_distinct.unwrap_or_else(pairs::default_min_distinct),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 272,
-    "end": 275,
+    "line": 250,
+    "end": 253,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 290,
-    "end": 295,
+    "line": 268,
+    "end": 273,
     "text": "impl Default for Params {"
+  },
+  "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|cd2d93872a10c371|0": {
+    "target": "../../../cli/src/dedup/mod.rs",
+    "line": 43,
+    "text": "(min_tokens, min_distinct): (Option<usize>, Option<usize>),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/pairs.rs|04458cb97aa3401a|0": {
     "target": "../../../cli/src/dedup/pairs.rs",
@@ -670,14 +670,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 282,
-    "end": 286,
+    "line": 260,
+    "end": 264,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 290,
-    "end": 298,
+    "line": 268,
+    "end": 276,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -2872,25 +2872,25 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|5932094aee58af08|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 186,
-    "end": 204,
+    "line": 180,
+    "end": 198,
     "text": "fn preflight(given: &Path) -> Result<(), ExitCode> {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|91a6c3124e3ed609|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 174,
-    "end": 178,
+    "line": 168,
+    "end": 172,
     "text": "let fence_only = o.reply.failed.iter().all(|c| FENCE.contains(&c.as_str()));"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|e3855c398244a566|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 48,
+    "line": 50,
     "text": "const FENCE: [&str; 2] = [\"knobs_digest\", \"rows_dropped\"];"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/main_score.rs|f414078af6b9f3d0|0": {
     "target": "../../../cli/src/main_score.rs",
-    "line": 125,
-    "end": 139,
+    "line": 119,
+    "end": 133,
     "text": "pub fn baseline_cmd(a: BaselineArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/anchor.rs|cc9ee924c20278e7|0": {
@@ -4084,8 +4084,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_prelude.rs|a536628ce5c2f089|0": {
     "target": "../../../cli/src/main_prelude.rs",
-    "line": 27,
-    "end": 42,
+    "line": 30,
+    "end": 45,
     "text": "/// `erase-trail`, `ce clone --units` `clone-units`)."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/tests/it/eval_graph_precision.rs|185b850b408ba8bc|0": {
@@ -5289,7 +5289,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/mod.rs|94988c2d0aa739bb|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 156,
+    "line": 134,
     "text": "min_distinct: min_distinct.unwrap_or_else(pairs::default_min_distinct),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/probe.rs|5959c3e2b25fe5a1|0": {
@@ -7517,8 +7517,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 272,
-    "end": 298,
+    "line": 250,
+    "end": 276,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|60965f2ba816a1d8|0": {
@@ -8402,8 +8402,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mcp/tools.rs|8ef4edac0142a307|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 85,
-    "end": 89,
+    "line": 91,
+    "end": 95,
     "text": "tool!(\n\"deadcode\","
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/candidates.rs|2203179c0b1eb61a|0": {
@@ -9629,7 +9629,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/mcp/tools.rs|ca647b06408c3faf|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 178,
+    "line": 192,
     "text": "\"similar_units\","
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/similar/bag.rs|d636799180c461a3|0": {
@@ -9820,7 +9820,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/face_parity_table.rs|5de1678623bc45c9|0": {
     "target": "../../../cli/tests/it/face_parity_table.rs",
-    "line": 34,
+    "line": 37,
     "text": "same-role advisor (similar units, associative view) | 同角色顾问（相似单元、联想视图） | similar | similar | tab:similar, similar_report | mcp:similar_units | |"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/observe_feed.rs|007a06c4e5aed4f8|0": {
@@ -9831,12 +9831,12 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|55926dc0727ec714|0": {
     "target": "../../../cli/tests/it/similar_face.rs",
-    "line": 99,
+    "line": 106,
     "text": "fn widen_tags_what_only_the_widened_query_reaches_and_the_ask_is_exactly_one() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|efe6dd5b4b54977f|0": {
     "target": "../../../cli/tests/it/similar_face.rs",
-    "line": 48,
+    "line": 55,
     "text": "fn the_cli_prints_the_library_face_and_the_core_judged_the_pair_same_role() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_replay.rs|14f878767d3c21f6|0": {
@@ -10181,15 +10181,25 @@
     "line": 42,
     "text": "pub struct PackCfg {"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|385098c7ed32048e|0": {
-    "target": "../../../cli/src/faces.rs",
-    "line": 225,
-    "text": "pub fn flow(root: &Path, core: &str, kinds: &[String]) -> Result<Value> {"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces/ask.rs|83d8cdc4be59b9bf|0": {
+    "target": "../../../cli/src/faces/ask.rs",
+    "line": 39,
+    "text": "pub fn query(\nroot: &Path,"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces.rs|e6e85fe7c0076ff4|0": {
-    "target": "../../../cli/src/faces.rs",
-    "line": 212,
-    "text": "let ask = crate::query::face::Ask {\nrules: crate::query::rules_source(root, file)?,\nquery: None,"
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces/ask.rs|c2a609aa825ffbf8|0": {
+    "target": "../../../cli/src/faces/ask.rs",
+    "line": 72,
+    "text": "pub fn pack_text(root: &Path, core: &str) -> Result<Value> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces/ask.rs|c2a609aa825ffbf8|1": {
+    "target": "../../../cli/src/faces/ask.rs",
+    "line": 72,
+    "text": "pub fn pack_text(root: &Path, core: &str) -> Result<Value> {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/faces/ask.rs|d8c48e900992fbc6|0": {
+    "target": "../../../cli/src/faces/ask.rs",
+    "line": 52,
+    "text": "pub fn rules(root: &Path, core: &str, file: Option<&Path>, why: bool, p: Plumb) -> Result<Answer> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
     "target": "../../../cli/src/main_lang.rs",
@@ -10198,12 +10208,17 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|4350583dd45e803c|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 49,
+    "line": 48,
     "text": "pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|74c33109f3538744|0": {
+    "target": "../../../cli/src/main_query.rs",
+    "line": 75,
+    "text": "fn prelude(root: &Path, core: &str, as_json: bool) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|d07418fdeecbdc85|0": {
     "target": "../../../cli/src/main_query.rs",
-    "line": 69,
+    "line": 65,
     "text": "pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_query.rs|e5325963d09827f3|0": {
@@ -10214,17 +10229,17 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 179,
+    "line": 198,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 195,
+    "line": 209,
     "text": "\"query\",\nquery,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|e24234656aa40c40|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 216,
+    "line": 234,
     "text": "\"rules\",\nrules,"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/face.rs|38995ca156c29327|0": {
@@ -10421,34 +10436,34 @@
     "end": 13,
     "text": "assert dead_file(F) :- dead(F)."
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/face_parity_table.rs|36c96ba6d9b78535|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/face_parity_table.rs|e569765ecda78c2c|0": {
     "target": "../../../cli/tests/it/face_parity_table.rs",
-    "line": 35,
-    "text": "code query and architecture rules | 代码查询与架构规则 | query, rules | query, rules | tab:query, query_report, rules_report | mcp:query, mcp:rules | |"
+    "line": 38,
+    "text": "code query and architecture rules | 代码查询与架构规则 | query, rules | query, query --prelude, rules | tab:query, query_report, query_prelude, rules_report | mcp:query, mcp:rules | |"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 141,
+    "line": 149,
     "text": "fn sugar_aggregates_arithmetic_and_every_program_error_go_the_same_road() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|b01bf384f3002998|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 232,
+    "line": 244,
     "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 88,
+    "line": 96,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|1": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 88,
+    "line": 96,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|e86b28abce63cf8a|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 173,
+    "line": 188,
     "text": "fn rules_is_a_gate_on_the_documents_violations() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
@@ -10898,24 +10913,24 @@
     "line": 118,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|9417b829477b37f4|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|0603e97b6afa2e54|0": {
     "target": "../../../gui/src-tauri/src/commands_query.rs",
-    "line": 14,
-    "text": "pub async fn query_report("
+    "line": 17,
+    "text": "face_cmd!(query_report, \"query\", (body: String, why: bool, file: Option<String>) =>"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|0dee44a1532a2581|0": {
     "target": "../../../gui/ui/query.js",
-    "line": 61,
+    "line": 84,
     "text": "function goalTable(d, g) {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|828631c729cf096e|0": {
     "target": "../../../gui/ui/query.js",
-    "line": 85,
+    "line": 108,
     "text": "function proofLine(p, rows) {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|8f8d2688348ba2ec|0": {
     "target": "../../../gui/ui/query.js",
-    "line": 21,
+    "line": 42,
     "text": "async function loadQuery(rules) {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/audit/flow.rs|3e4d07aceeaab9e5|0": {
@@ -11017,8 +11032,8 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/main_flow.rs|50350e88ad9ffccd|0": {
     "target": "../../../cli/src/main_flow.rs",
-    "line": 29,
-    "end": 37,
+    "line": 27,
+    "end": 31,
     "text": "pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/daemon_flow.rs|4e9632f41b3e85e1|0": {
@@ -11033,7 +11048,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_face.rs|86b3095f4c308d00|0": {
     "target": "../../../cli/tests/it/flow_face.rs",
-    "line": 77,
+    "line": 83,
     "text": "fn the_cli_prints_the_library_face_and_kind_narrows_only_the_listing() {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_guard.rs|c1d69d926211c89b|0": {
@@ -11223,7 +11238,7 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/main_merge.rs|7e7ce4363f4e7344|0": {
     "target": "../../../cli/src/main_merge.rs",
-    "line": 27,
+    "line": 29,
     "text": "answered(\"merge\", \"merge\", json(a.judge.format), answer, |doc| {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/merge/face.rs|1c85462b7fd1d857|0": {
@@ -11383,12 +11398,12 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|9045e0cec0b29c5b|0": {
     "target": "../../../cli/tests/it/merge_face.rs",
-    "line": 215,
+    "line": 225,
     "text": "fn the_mcp_tool_relays_the_face_and_an_absent_core_is_refused() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|9255ede4c445553c|0": {
     "target": "../../../cli/tests/it/merge_face.rs",
-    "line": 183,
+    "line": 187,
     "text": "fn one_group_prints_alone_and_the_clone_report_is_unmoved() {"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/tests/it/merge_face.rs|b65ec27abf0ff93f|0": {
@@ -11715,17 +11730,22 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|5466b2f19597e581|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 23,
+    "line": 24,
     "text": "pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Answer> {"
+  },
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|597230b5a7fe0d02|0": {
+    "target": "../../../cli/src/arch/face.rs",
+    "line": 58,
+    "text": "fn spelled(root: &Path, path: &str) -> String {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|65c7900bd31c9009|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 80,
+    "line": 90,
     "text": "fn request(t: &Built, r: &Reply) -> Request {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/face.rs|73ad354fb7d6ab21|0": {
     "target": "../../../cli/src/arch/face.rs",
-    "line": 28,
+    "line": 29,
     "text": "let lines = (arcs.paths.iter())"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/arch/mod.rs|5ba8ae5afa201208|0": {
@@ -11755,24 +11775,24 @@
     "line": 164,
     "text": "fn read_tables(v: &Value, spec: &'static str) -> Result<BTreeMap<&'static str, Vec<Vec<i64>>>> {"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces.rs|9ab7edbd734e96bf|0": {
-    "target": "../../../cli/src/faces.rs",
-    "line": 262,
-    "text": "/// binary. Read-only like every face — it reads the release index"
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces/ask.rs|a99c56b3689d0134|0": {
+    "target": "../../../cli/src/faces/ask.rs",
+    "line": 110,
+    "text": "arch(root, core, p, impact: &[String]) => crate::arch::face::run(root, p.db, core, impact)"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|b140356e00375528|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|7f46c565714e3ac4|0": {
     "target": "../../../cli/src/main_arch.rs",
-    "line": 32,
-    "text": "let root = or_cwd(j.root);"
+    "line": 28,
+    "text": "answered(\"arch\", \"arch\", json(j.format), answer, degraded)"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|68b98c2cfc61ddb7|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|2cfdcc6c81b2fef5|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 201,
-    "text": "a[\"file\"].as_str().map(Path::new),"
+    "line": 231,
+    "text": "pub(super) fn architecture(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {
     "target": "../../../cli/src/mcp/tools.rs",
-    "line": 234,
+    "line": 241,
     "text": "tool!(\n\"flow\","
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/structure/rows.rs|5dfcc9f8b3436c6d|0": {
@@ -12009,10 +12029,10 @@
     "end": 11,
     "text": "-- | Independent references for the arch judgment (plan v2.31 step 8),"
   },
-  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/src-tauri/src/commands_query.rs|c4e8f551a8670dae|0": {
+  "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/src-tauri/src/commands_query.rs|fb0133a7c601ab27|0": {
     "target": "../../../gui/src-tauri/src/commands_query.rs",
-    "line": 39,
-    "text": ".await\n}\n\n/// The architecture document (plan v2.31 step 9) — the SAME document"
+    "line": 44,
+    "text": "face_cmd!(arch_report, \"arch\", (impact: Vec<String>) =>"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/ui/hub_arch.js|c73ee86c235fc014|0": {
     "target": "../../../gui/ui/hub_arch.js",

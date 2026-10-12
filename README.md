@@ -141,27 +141,27 @@ Console output, `--help` and the hooks' own refusal sentences are English by def
 
 ## Three faces, one product
 
-Every capability is claimed once in this table, the sets are derived from the code (clap's enum, the Tauri roster, the MCP catalog, `hooks.json`, `plugin/commands`, `plugin/skills`), and a CI gate (`face_parity`) refuses a face nobody wrote down or a claim nobody shipped. The report documents come from the core's own catalogue: every family it lays out sits in one row, with all three faces or a note saying why not. Deliberate omissions are rows, not silence.
+Every capability is claimed once in this table, the sets are derived from the code (clap's enum, the Tauri roster, the MCP catalog, `hooks.json`, `plugin/commands`, `plugin/skills`), and a CI gate (`face_parity`) refuses a face nobody wrote down or a claim nobody shipped. The report documents come from the core's own catalogue: every family it lays out sits in one row, with all three faces or a note saying why not. Deliberate omissions are rows, not silence. All three faces reach a document by one road (`cli/src/faces`), so they answer the same bytes: every option that changes a document is an argument on all three, and the only flags a machine face may lack are the CLI-only ones listed by name with their reason in `cli/src/faces/exempt.rs` (index path, rendering, exit gates, mutations). The gate derives each face's options from the code (the CLI's help, the MCP catalog, the Tauri signatures), subtracts that list, and names any option missing from a face; it also checks that each GUI command passes its arguments through to the face its MCP tool calls, that the webview really invokes every command the table claims, and that each hook runs the guard-class legs its row lists.
 
 <!-- parity:begin -->
 | capability | report document (core catalogue) | CLI | GUI (screen · commands) | plugin (hooks · MCP · commands · skills) |
 |---|---|---|---|---|
 | size / complexity / readability metrics | `scan` | `ce scan` | `reports`, `scan_report` | MCP `scan` |
-| T1/T2 clone blocks | `dedup` | `ce dedup` | `reports`, `dedup_report` | MCP `check_duplication` |
+| T1/T2 clone blocks | `dedup` | `ce dedup` | `reports`, `candidates`, `dedup_report` | MCP `check_duplication` |
 | T3 near-miss clones | `clone` | `ce clone` | `reports`, `clone_report` | MCP `clone` |
-| the unit universe T3 judges | `clone-units` | `ce clone --units` | — no GUI screen: the listing is the judgment's input, read through the CLI and the MCP tool's `units` | MCP `clone` |
+| the unit universe T3 judges | `clone-units` | `ce clone --units` | `reports`, `clone_report` | MCP `clone` |
 | documentation duplication | `docdup` | `ce docdup` | `reports`, `docdup_report` | MCP `docdup` |
 | reference sites | `sites` | `ce graph --sites` | `reports`, `sites_report` | MCP `graph_sites` |
-| the mention universe | `mentions` | `ce graph --mentions` | — CLI only: the census behind the symbol advisory, which every face of `deadcode` carries | — |
+| the mention universe | `mentions` | `ce graph --mentions` | — CLI only: the census behind the symbol advisory, which every face of `deadcode` carries | — CLI only: the MCP `deadcode` tool carries the advisory the census feeds |
 | liveness verdicts + symbol advisory | `deadcode` | `ce deadcode` | `reports`, `deadcode_report` | MCP `deadcode` |
-| graph screen (canvas + liveness) | `graphscreen` | — GUI only: the canvas is a picture; the same judgment's CLI and MCP faces are `deadcode` | `graph`, `graphscreen_report` | — |
-| git-window churn | `churn` | `ce churn` | `candidates`, `churn_report` | MCP `churn` |
+| graph screen (canvas + liveness) | `graphscreen` | — GUI only: the canvas is a picture; the same judgment's CLI and MCP faces are `deadcode` | `graph`, `graphscreen_report` | — GUI only: the MCP face of the same judgment is `deadcode` |
+| git-window churn | `churn` | `ce churn` | `reports`, `churn_report` | MCP `churn` |
 | three-signal join | `join` | `ce join` | `candidates`, `join_report` | MCP `join` |
 | tree-scale structure (split pricing) | `structure` | `ce structure` | `structure`, `structure_report` | MCP `structure` |
 | score trajectory | `trend` | `ce trend` | `trend`, `trend_report` | MCP `trend` |
 | score, ratchet and floor | `check` | `ce check` | `score`, `check_report` | MCP `check` |
 | same-role advisor (similar units, associative view) | `similar` | `ce similar` | `similar`, `similar_report` | MCP `similar_units` |
-| code query and architecture rules | `query`, `rules` | `ce query`, `ce rules` | `query`, `query_report`, `rules_report` | MCP `query`, MCP `rules` |
+| code query and architecture rules | `query`, `rules` | `ce query`, `ce query --prelude`, `ce rules` | `query`, `query_report`, `query_prelude`, `rules_report` | MCP `query`, MCP `rules` |
 | intra-function dead code (unreachable, dead stores, unused locals and parameters) | `flow` | `ce flow`, `ce flow --check` | `reports`, `flow_report`, `flow_kinds` | MCP `flow` |
 | clone merge suggestions (anti-unification) | `merge` | `ce merge` | `reports`, `merge_report` | MCP `merge_suggestions` |
 | architecture analysis (layers, cuts, clusters, impact) | `arch` | `ce arch` | `reports`, `arch_report` | MCP `architecture` |
@@ -169,12 +169,12 @@ Every capability is claimed once in this table, the sets are derived from the co
 | erase plan | `erase` | `ce erase` | `erase`, `erase_preview` | MCP `erase`, skill `erase` |
 | erase apply | — | `ce erase --apply` | `erase`, `erase_apply` | — no MCP face: applying is a human act |
 | erase audit log | `erase-trail` | `ce erase --log` | `erase`, `erase_log_report` | MCP `erase_log` |
-| machine state | — | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
+| machine state and guard-class tiers | — | `ce doctor` | `doctor`, `doctor_report` | MCP `doctor` |
 | update check | — | `ce update` | `update`, `update_check` | MCP `update_check`, `/codeeraser:update`, hook `SessionStart` |
 | update apply | — | `ce update --yes` | `update`, `update_apply` | — the plugin's copy is re-pinned by `/plugin update codeeraser` |
-| write-time guard | — | `ce probe --hook` | — hooks are the plugin's face | hook `PreToolUse` |
+| write-time guard | — | `ce probe --hook` (guard · flow · tombstone) | — hooks are the plugin's face; flow and tombstone judge the write inside the hook, so no report family of their own — their tiers ride every face's doctor | hook `PreToolUse` |
 | asked-write settlement | — | `ce settle --hook` | — hooks are the plugin's face | hook `PostToolUse` |
-| stop audit / git hooks | — | `ce audit --hook`, `ce precommit`, `ce commitmsg` | — hooks are the plugin's face; precommit and commitmsg are git's | hook `Stop` |
+| stop audit / git hooks | — | `ce audit --hook` (guard · flow · tombstone), `ce precommit` (guard · flow · tombstone), `ce commitmsg` (guard · flow · tombstone) | — hooks are the plugin's face; precommit and commitmsg are git's; tombstone judges the changeset inside them, its tier on every face's doctor | hook `Stop` |
 | session health line | — | `ce health --hook` | — hooks are the plugin's face | hook `SessionStart` |
 | project daemon | — | `ce daemon`, `ce ping` | — started lazily by every face | — |
 | read-only report server | — | `ce mcp` | — the plugin registers it | `.mcp.json` |

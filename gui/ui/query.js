@@ -16,7 +16,28 @@ let queryDoc = null;
   i18nRefreshers.push(() => queryDoc && renderQuery());
   $("query-run").addEventListener("click", () => loadQuery(false));
   $("query-rules").addEventListener("click", () => loadQuery(true));
+  $("query-prelude").addEventListener("click", loadPrelude);
 })();
+
+// The text a question builds on (`ce query --prelude`, the same
+// document the MCP `query` tool answers under `prelude`): the built-in
+// prelude, then the program the core renders from `[rules.pack]`.
+async function loadPrelude() {
+  setStatus(tr("judging"), false);
+  try {
+    const d = await invoke("query_prelude", { root: $("root").value });
+    queryDoc = null;
+    $("empty-query").hidden = true;
+    $("query-summary").innerHTML = "";
+    $("query-rows").innerHTML =
+      `<h3>${esc(tr("queryPreludeHead"))}</h3><pre>${esc(d.prelude)}</pre>` +
+      `<h3>${esc(tr("queryPackHead"))}</h3>` +
+      (d.pack === null ? `<div class="qline">${esc(tr("queryPackNone"))}</div>` : `<pre>${esc(d.pack)}</pre>`);
+    setStatus(d.schema, false);
+  } catch (e) {
+    setStatus(String(e), true);
+  }
+}
 
 async function loadQuery(rules) {
   const text = $("query-text").value.trim();
@@ -28,10 +49,12 @@ async function loadQuery(rules) {
   $("query-rules").disabled = true;
   setStatus(tr("judging"), false);
   try {
-    const args = { root: $("root").value, why: $("query-why").checked };
+    // the rules file (`--file`): empty = `[rules] file`, else ce.rules
+    const file = $("query-file").value.trim() || null;
+    const args = { root: $("root").value, why: $("query-why").checked, file };
     queryDoc = rules
       ? await invoke("rules_report", args)
-      : await invoke("query_report", { ...args, program: text });
+      : await invoke("query_report", { ...args, body: text });
     renderQuery();
     setStatus(queryDoc.schema, false);
   } catch (e) {

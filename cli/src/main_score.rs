@@ -11,6 +11,8 @@
 
 use crate::main_cmds::{fail, json, or_cwd};
 use crate::main_judge::JudgeArgs;
+use crate::main_prelude::{answered, whole};
+use codeeraser::faces::{self, Plumb};
 use codeeraser::i18n::{line, t};
 use codeeraser::score;
 use std::path::{Path, PathBuf};
@@ -51,24 +53,20 @@ fn act(var: &str) -> bool {
     std::env::var(var).as_deref() == Ok("1")
 }
 
-/// The shared head of both commands — the scope, the output mode and
-/// the wire options from one JudgeArgs and the process's core (the
-/// ratchet caught the second copy of this shape growing). The baseline
-/// is the caller's ONE read (O31): score::run never reads the file
-/// itself.
-fn head(
-    (judge, core): (JudgeArgs, &str),
-    days: Option<u32>,
-    floor: Option<u32>,
-) -> (PathBuf, bool, score::Opts) {
+/// The head of `ce baseline` — the scope, the output mode and the wire
+/// options from its JudgeArgs and the process's core (`ce check` rides
+/// crate::faces since plan v2.33 step 10, and judges the same Opts
+/// there). The baseline is the caller's ONE read (O31): score::run
+/// never reads the file itself.
+fn head((judge, core): (JudgeArgs, &str), days: Option<u32>) -> (PathBuf, bool, score::Opts) {
     let opts = score::Opts {
         db: judge.db,
         core: core.to_string(),
         days,
-        floor,
+        floor: None,
         establish: false,
-        // both commands judge the committed baseline (or a true
-        // re-establish); only trend pins a soft line without one
+        // the committed baseline (or a true re-establish); only trend
+        // pins a soft line without one
         pinned_soft: None,
         baseline: None,
     };
@@ -77,21 +75,17 @@ fn head(
 
 /// One score::run and the document the core lays out over it (plan
 /// v2.32 step 4), printed as the core's lines or the document (step
-/// 5); the veto is the core's. `name` is the command's own, so a
-/// failure says `ce baseline:` when that is what ran; the folded head
-/// used to print `ce check:` for both.
+/// 5); the veto is the core's.
 fn judged(
-    name: &str,
     root: &Path,
     as_json: bool,
-    roast: bool,
     opts: score::Opts,
 ) -> Result<(score::Outcome, bool), ExitCode> {
     let core = opts.core.clone();
-    let mut o = score::run(root, opts).map_err(|err| fail(name, err))?;
-    let printed = score::document::document(&core, &mut o, roast)
+    let mut o = score::run(root, opts).map_err(|err| fail("baseline", err))?;
+    let printed = score::document::document(&core, &mut o, false)
         .and_then(|a| codeeraser::document::emit("check", &a, as_json).map(|()| a.fail));
-    let fail_bit = printed.map_err(|err| fail(name, err))?;
+    let fail_bit = printed.map_err(|err| fail("baseline", err))?;
     Ok((o, fail_bit))
 }
 
@@ -101,17 +95,17 @@ fn judged(
 /// could not judge must never pass", said by the core), so the old
 /// `|| degraded` disjunct here retired as re-derived policy. A
 /// subdirectory scopes the measurement — it under-reports, and
-/// persists nothing.
+/// persists nothing. The answer is the faces' (plan v2.33 step 10):
+/// the GUI and MCP faces judge the same days and floor.
 pub fn check_cmd(a: CheckArgs, core: &str) -> ExitCode {
-    let (root, as_json, mut opts) = head((a.judge, core), a.days, a.fail_under);
-    opts.baseline = match score::baseline::read(&root) {
-        Ok(committed) => committed,
-        Err(err) => return fail("check", err),
+    let j = a.judge;
+    let plumb = Plumb {
+        db: j.db,
+        roast: a.roast,
+        ..Plumb::default()
     };
-    match judged("check", &root, as_json, a.roast, opts) {
-        Err(code) => code,
-        Ok((_, fail)) => ExitCode::from(u8::from(fail)),
-    }
+    let answer = faces::check(&or_cwd(j.root), core, (a.days, a.fail_under), plumb);
+    answered("check", "check", json(j.format), answer, whole)
 }
 
 /// `ce baseline`: persist the core's newBaseline under a named act.
@@ -123,7 +117,7 @@ pub fn check_cmd(a: CheckArgs, core: &str) -> ExitCode {
 /// the declared one); anything else held refuses by name unless the
 /// judgment was the wholesale one (a NULL baseline: nothing holds).
 pub fn baseline_cmd(a: BaselineArgs, core: &str) -> ExitCode {
-    let (root, as_json, mut opts) = head((a.judge, core), a.days, None);
+    let (root, as_json, mut opts) = head((a.judge, core), a.days);
     if let Err(code) = preflight(&root) {
         return code;
     }
@@ -154,7 +148,7 @@ pub fn baseline_cmd(a: BaselineArgs, core: &str) -> ExitCode {
         return ExitCode::FAILURE;
     }
     opts.establish = wholesale;
-    let o = match judged("baseline", &root, as_json, false, opts) {
+    let o = match judged(&root, as_json, opts) {
         Err(code) => return code,
         Ok((o, _)) => o,
     };

@@ -8,7 +8,6 @@
 //! it, nothing enters the baseline.
 
 use crate::main_prelude::*;
-use codeeraser::merge::face;
 
 #[derive(clap::Args)]
 pub struct MergeArgs {
@@ -21,9 +20,12 @@ pub struct MergeArgs {
 }
 
 pub fn merge_cmd(a: MergeArgs, core: &str) -> ExitCode {
-    let root = or_cwd(a.judge.root);
     let group = a.group;
-    let answer = face::run(&root, a.judge.db, core, group);
+    let plumb = Plumb {
+        group,
+        ..Plumb::db(a.judge.db)
+    };
+    let answer = faces::merge(&or_cwd(a.judge.root), core, plumb);
     answered("merge", "merge", json(a.judge.format), answer, |doc| {
         let held = doc["groups"].as_array().map_or(0, Vec::len);
         match group {

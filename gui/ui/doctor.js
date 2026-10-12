@@ -54,6 +54,9 @@ function renderDoctor() {
       ? drow("ce-core", `${d.core.version} (proto ${d.core.proto})`)
       : drow("ce-core", d.core.error ?? tr("posNull"), true),
     drow(tr("guardTier"), d.guard),
+    // ce.doctor-report/0.4.0: every guard class the hooks read, the key
+    // that sets it and its tier (a pre-0.4.0 document has no rows)
+    ...(d.classes ?? []).map((c) => drow(tr("guardClass", c.class, c.key), c.tier)),
     // codes since ce.doctor-report/0.2.0 (plan v2.15) — the sentence
     // used to come off the wire in English, which is exactly the one
     // place a lookup switch cannot reach. An unknown code renders as

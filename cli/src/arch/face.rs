@@ -18,8 +18,9 @@ use std::path::{Path, PathBuf};
 
 /// The whole leg: the graph wire off a refreshed index, its measured
 /// files and arcs with their line counts, the core's tables, judgment
-/// and document. A focus path that names no measured file is an error
-/// (the core's fault) and no document.
+/// and document. A focus path is read as the index spells it on every
+/// face (`spelled`); one that names no measured file is an error (the
+/// core's fault) and no document.
 pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Result<Answer> {
     let (idx, db_path) = crate::dedup::refreshed_index(root, db)?;
     let w = wire_of(root, &idx, &db_path, Advisory::No)?;
@@ -31,7 +32,7 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Re
     let ask = Ask {
         arcs,
         lines,
-        focus: focus.to_vec(),
+        focus: focus.iter().map(|f| spelled(root, f)).collect(),
     };
     let mut held = document::open(core);
     let mut why = Why::default();
@@ -48,6 +49,15 @@ pub fn run(root: &Path, db: Option<PathBuf>, core: &str, focus: &[String]) -> Re
         .text("dir", &built.dir_paths)
         .text("why", why.list());
     document::assemble_over(core, held, req)
+}
+
+/// A focus path as the index spells it: root-relative, forward
+/// slashes, no leading `./` — `./x`, `a\b` and an absolute path under
+/// the root all name the same file, whichever face typed them (the CLI
+/// alone cleaned them up until plan v2.33 step 10).
+fn spelled(root: &Path, path: &str) -> String {
+    let rel = crate::scan::walk::rel_str(root, Path::new(path));
+    rel.strip_prefix("./").map_or(rel.clone(), str::to_string)
 }
 
 /// A file's total lines (scan's own count; a file deleted mid-run has

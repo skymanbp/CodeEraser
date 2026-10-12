@@ -209,6 +209,18 @@ const CE_I18N = {
     archImpact: "impact", archDepth: "depth", archMetrics: "metrics", archFanIn: "fan-in", archFanOut: "fan-out",
     archInstability: "instability ‰", archNoCycles: "no cycles among directories",
     archDegraded: (why) => `degraded: ${why} — no answer`,
+    // plan v2.33 step 10: every document option the CLI takes, here too
+    checkDaysHint: "churn window in days (--days); empty = the churn tables stay empty",
+    similarUnit: "or unit (name/arity)", queryFile: "rules file",
+    queryFilePlaceholder: "default: [rules] file, else ce.rules", queryPrelude: "prelude",
+    queryPreludeHead: "built-in prelude", queryPackHead: "[rules.pack] program",
+    queryPackNone: "no [rules.pack] declared in ce.toml",
+    minTokens: "min tokens", minDistinct: "min distinct", cloneUnits: "unit universe",
+    hubFamily: (n) => ({
+      scan: "scan", dedup: "dedup (T1/T2)", clone: "clone (T3)", docdup: "docdup",
+      deadcode: "deadcode", churn: "churn", sites: "sites", flow: "flow", merge: "merge", arch: "arch",
+    })[n] ?? n,
+    guardClass: (c, key) => `guard class ${c} (${key})`,
     emptyQuery: "type a question in CE Datalog (`dead(F)`, `depends(A, B), not same_dir(A, B)`, `N = count(F : in(F, \"src/**\"))`) and ask — the same document `ce query` prints, every answer labelled and its derivation under derivations; judge ce.rules runs the project's rules file the way `ce rules` does",
   },
   zh: {
@@ -373,6 +385,17 @@ const CE_I18N = {
     archImpact: "影响面", archDepth: "深度", archMetrics: "度量", archFanIn: "扇入", archFanOut: "扇出",
     archInstability: "不稳定度 ‰", archNoCycles: "目录之间没有环",
     archDegraded: (why) => `已降级：${why}——无答案`,
+    checkDaysHint: "变动窗口天数（--days）；留空 = 变动表为空",
+    similarUnit: "或单元（name/arity）", queryFile: "规则文件",
+    queryFilePlaceholder: "默认：[rules] file，否则 ce.rules", queryPrelude: "前奏",
+    queryPreludeHead: "内置前奏", queryPackHead: "[rules.pack] 程序",
+    queryPackNone: "ce.toml 未声明 [rules.pack]",
+    minTokens: "最少记号", minDistinct: "最少互异记号", cloneUnits: "单元宇宙",
+    hubFamily: (n) => ({
+      scan: "度量", dedup: "T1/T2 克隆", clone: "T3 近似克隆", docdup: "文档重复",
+      deadcode: "死代码", churn: "变动", sites: "引用站点", flow: "函数内死代码", merge: "合并建议", arch: "架构",
+    })[n] ?? n,
+    guardClass: (c, key) => `守卫类 ${c}（${key}）`,
     emptyQuery: "用 CE Datalog 输入一个问题（`dead(F)`、`depends(A, B), not same_dir(A, B)`、`N = count(F : in(F, \"src/**\"))`）后点提问——与 `ce query` 打印的是同一份文档：每个答案回标成路径与名字，勾选推导链看每个答案怎么推出来；「判 ce.rules」按 `ce rules` 的方式跑仓库自己的规则文件",
   },
 };

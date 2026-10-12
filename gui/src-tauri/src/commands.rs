@@ -1,13 +1,17 @@
 //! Every #[tauri::command] — the Tauri layer's whole job is to run
 //! the LIBRARY pipeline and hand the webview the report documents
 //! (§5 — no second report form). Batch 4: every family face routes
-//! through codeeraser::faces (the ONE adapter layer the MCP catalog
-//! consumes too), every root a human typed goes through
+//! through codeeraser::faces (the ONE road the CLI and the MCP catalog
+//! take too, plan v2.33 step 10: each report command's body is one
+//! faces call, its parameters the family's document options — the
+//! parity gate reads them off these signatures), every root a human
+//! typed goes through
 //! codeeraser::root (the CLI/MCP/hook throat — the GUI was the one
 //! surface still passing it raw, planting stray .ce/ dirs), and
 //! every task emits `ce-task` start/done/error events so long runs
 //! are visible instead of a frozen status line.
 
+use codeeraser::faces::{self, doc, Plumb};
 use serde_json::{json, Value};
 use std::path::Path;
 use tauri::Emitter;
@@ -71,128 +75,89 @@ where
     out
 }
 
-/// One full structure judgment — the same road `ce structure` drives.
-/// split = the v0.7 advisory face (plan v2.7 ③), opt-in per scan.
-#[tauri::command]
-pub async fn structure_report(
-    win: tauri::Window,
-    root: String,
-    deep: bool,
-    days: Option<u32>,
-    split: bool,
-) -> Result<Value, String> {
-    task(win, "structure", root, move |r, c| {
-        codeeraser::faces::structure(r, c, (deep, days, split))
-    })
-    .await
-}
+// One full structure judgment — the same road `ce structure` drives.
+// split = the v0.7 advisory face (plan v2.7 ③), opt-in per scan.
+face_cmd!(structure_report, "structure", (deep: bool, days: Option<u32>, split: bool) =>
+    |r, c, deep, days, split| doc(faces::structure(r, c, (deep, days, split), Plumb::default())));
 
-/// Score trajectory (M7-P4): small `batch` values let the webview
-/// show measuring progress; points cache in the project's index db.
-#[tauri::command]
-pub async fn trend_report(
-    win: tauri::Window,
-    root: String,
-    commits: usize,
-    batch: Option<usize>,
-) -> Result<Value, String> {
-    task(win, "trend", root, move |r, c| {
-        codeeraser::faces::trend(r, c, commits, batch)
-    })
-    .await
-}
+// Score trajectory (M7-P4): small `batch` values let the webview
+// show measuring progress; points cache in the project's index db.
+face_cmd!(trend_report, "trend", (commits: usize, batch: Option<usize>) =>
+    |r, c, n, b| doc(faces::trend(r, c, (n, b), Plumb::default())));
 
-/// The plain report commands differ only in name, event tag and
-/// library face — the fn scaffold exists ONCE here. Ten hand-written
-/// twins were the ratchet's first bite on this file (the tauri
-/// macro's surface contract demands one fn per webview command, so
-/// the fn is minted by a macro instead of by hand); the second arm
-/// adds the days window the churn/join faces take. The truly
-/// measurement-only faces (dedup, sites) ignore the core argument on
-/// purpose: a missing core must not fail a face that never judges —
-/// scan is NOT one of them (it grades, and since batch-7 slice 8 it
-/// judges through the core like every graded surface). check is
-/// report-only (faces charter): it never writes a baseline.
+/// The report commands differ only in name, event tag, the document
+/// options they take and the library face — the fn scaffold exists
+/// ONCE here. Ten hand-written twins were the ratchet's first bite on
+/// this file (the tauri macro's surface contract demands one fn per
+/// webview command, so the fn is minted by a macro instead of by
+/// hand); the second arm adds the options, each handed to the body
+/// after the root and the core. Every face here takes the core: since
+/// plan v2.33 step 10 each report the core lays out goes through the
+/// same faces call the CLI makes. Shared with commands_query.rs and
+/// commands_flow.rs, whose hand-written commands were the same clone.
 macro_rules! face_cmd {
-    ($name:ident, $tag:literal, $body:expr) => {
+    // first: a plain $body:expr arm tried first would commit to
+    // parsing `(days: u32)` as an expression and fail hard
+    ($name:ident, $tag:literal, ($($a:ident: $t:ty),+) => $body:expr) => {
         #[tauri::command]
-        pub async fn $name(win: tauri::Window, root: String) -> Result<Value, String> {
-            task(win, $tag, root, $body).await
-        }
-    };
-    ($name:ident, $tag:literal, days: $body:expr) => {
-        #[tauri::command]
-        pub async fn $name(win: tauri::Window, root: String, days: u32) -> Result<Value, String> {
+        pub async fn $name(
+            win: tauri::Window,
+            root: String,
+            $($a: $t),+
+        ) -> Result<serde_json::Value, String> {
             // parenthesized: a closure-literal $body is not callable
             // as a bare `expr(args)` under Rust's call grammar
-            task(win, $tag, root, move |r, c| ($body)(r, c, days)).await
+            $crate::commands::task(win, $tag, root, move |r, c| ($body)(r, c, $($a),+)).await
+        }
+    };
+    ($name:ident, $tag:literal, $body:expr) => {
+        #[tauri::command]
+        pub async fn $name(win: tauri::Window, root: String) -> Result<serde_json::Value, String> {
+            $crate::commands::task(win, $tag, root, $body).await
         }
     };
 }
+pub(crate) use face_cmd;
 
-// BOTH report thresholds ride since the face widened (K step 7):
-// the screen pins neither, so the core's defaults answer — but a
-// call site that named only min_tokens is exactly the silent pin
-// the widening exists to make impossible
-face_cmd!(dedup_report, "dedup", |r, _| codeeraser::faces::dedup(
-    r, None, None
-));
-face_cmd!(scan_report, "scan", codeeraser::faces::scan);
-face_cmd!(sites_report, "sites", codeeraser::faces::graph_sites);
-face_cmd!(deadcode_report, "deadcode", codeeraser::faces::deadcode);
-face_cmd!(clone_report, "clone", codeeraser::faces::clone_t3);
-face_cmd!(docdup_report, "docdup", codeeraser::faces::docdup);
-// the audit trail's reader (O50) — no core, never a writer: the erase
-// screen's third command reads what its second one appended
-face_cmd!(erase_log_report, "erase_log", |r, _| {
-    codeeraser::faces::erase_log(r)
-});
-face_cmd!(
-    graphscreen_report,
-    "graphscreen",
-    codeeraser::faces::graph_screen
-);
-/// The one face that takes an OPT-IN gate knob rather than a
-/// measurement window, so it does not fit either macro arm: `floor`
-/// is `--fail-under`, absent = the ratchet alone (the CLI's default).
-/// Without it this screen could not reproduce the verdict CI prints,
-/// and the two faces of one gate disagreed with nothing on screen to
-/// say why.
-#[tauri::command]
-pub async fn check_report(
-    win: tauri::Window,
-    root: String,
-    floor: Option<u32>,
-) -> Result<Value, String> {
-    task(win, "check", root, move |r, c| {
-        codeeraser::faces::check(r, c, floor)
-    })
-    .await
-}
-face_cmd!(churn_report, "churn", days: codeeraser::faces::churn);
-face_cmd!(join_report, "join", days: codeeraser::faces::join);
+// BOTH report thresholds ride (K step 7, `--min-tokens` /
+// `--min-distinct`): absent = the core's defaults, the CLI's own.
+face_cmd!(dedup_report, "dedup", (min_tokens: Option<usize>, min_distinct: Option<usize>) =>
+    |r, c, t, d| faces::gated_doc(faces::dedup(r, c, (t, d), Plumb::default())));
+face_cmd!(scan_report, "scan", |r, c| doc(faces::scan(r, c)));
+face_cmd!(sites_report, "sites", |r, c| doc(faces::graph_sites(r, c)));
+face_cmd!(deadcode_report, "deadcode", |r, c| doc(faces::deadcode(
+    r,
+    c,
+    Plumb::default()
+)));
+face_cmd!(docdup_report, "docdup", |r, c| doc(faces::docdup(
+    r,
+    c,
+    Plumb::default()
+)));
+// the audit trail's reader (O50), never a writer: the erase screen's
+// third command reads what its second one appended
+face_cmd!(erase_log_report, "erase_log", |r, c| doc(faces::erase_log(
+    r, c
+)));
+face_cmd!(graphscreen_report, "graphscreen", faces::graph_screen);
 
-/// The same-role advisor (plan v2.29 step 6) — the SAME document
-/// `ce similar` prints: `at` (file:line) or `text`, the associative
-/// view under `widen`. Advisory: the screen renders the order and
-/// role bits the core answered, and a core without the family shows
-/// the document's named degraded posture, never a verdict of the
-/// webview's own.
-#[tauri::command]
-pub async fn similar_report(
-    win: tauri::Window,
-    root: String,
-    at: Option<String>,
-    text: Option<String>,
-    widen: bool,
-) -> Result<Value, String> {
-    task(win, "similar", root, move |r, c| {
-        let ask =
-            codeeraser::similar::query::Ask::from_parts(at.as_deref(), text.as_deref(), None)?;
-        codeeraser::faces::similar(r, c, &ask, widen)
-    })
-    .await
-}
+// The T3 report, or under `units` the cached unit universe (`ce clone
+// --units`; absent = the T3 report).
+face_cmd!(clone_report, "clone", (units: Option<bool>) =>
+    |r, c, u: Option<bool>| doc(faces::clone(r, c, u.unwrap_or(false), Plumb::default())));
+
+// The gate's report: `floor` is `--fail-under` (absent = the ratchet
+// alone, the CLI's default) and `days` the churn window `--days`
+// arms (absent = the churn tables stay empty). Without them this
+// screen could not reproduce the verdict CI prints, and two faces of
+// one gate disagreed with nothing on screen to say why. Report-only:
+// it never writes a baseline.
+face_cmd!(check_report, "check", (days: Option<u32>, floor: Option<u32>) =>
+    |r, c, d, f| doc(faces::check(r, c, (d, f), Plumb::default())));
+face_cmd!(churn_report, "churn", (days: u32) => |r, c, d| doc(faces::churn(r, c, d)));
+face_cmd!(join_report, "join", (days: u32) =>
+    |r, c, d| doc(faces::join(r, c, d, Plumb::default())));
 
 /// The machine's own state (K round step 6) — the SAME document
 /// `ce doctor` renders, so two faces of a diagnostic cannot disagree
@@ -206,11 +171,11 @@ pub async fn similar_report(
 /// worked, and made this module's opening claim ("every family face
 /// routes through codeeraser::faces") false for exactly one screen —
 /// which is how the two machine surfaces drift apart in the first
-/// place. The face cannot fail, so the map_err arm is unreachable by
-/// construction and stays only because the signature is shared.
+/// place. The face cannot fail; the `Ok` is the signature every
+/// command shares.
 #[tauri::command]
 pub fn doctor_report(root: String) -> Result<Value, String> {
-    codeeraser::faces::doctor(Path::new(&root), &core_path()).map_err(|e| format!("{e:#}"))
+    Ok(faces::doctor(Path::new(&root), &core_path()))
 }
 
 /// The update DOCUMENT — the same one `ce update` prints — off the
@@ -219,11 +184,9 @@ pub fn doctor_report(root: String) -> Result<Value, String> {
 /// fail (an unreachable index rides inside the document).
 #[tauri::command]
 pub async fn update_check() -> Result<Value, String> {
-    tauri::async_runtime::spawn_blocking(|| {
-        codeeraser::faces::update_check().map_err(|e| format!("{e:#}"))
-    })
-    .await
-    .map_err(|e| e.to_string())?
+    tauri::async_runtime::spawn_blocking(faces::update_check)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// The apply leg — the SAME library entry `ce update --yes` drives
@@ -257,7 +220,7 @@ pub fn bench_doc() -> Result<Value, String> {
 // faces come from the SAME plan, so the preview can never show bytes
 // the plan did not hash); the document is the core's, the one the CLI
 // prints and the MCP tool hands out (plan v2.32 step 6)
-face_cmd!(erase_preview, "erase", codeeraser::faces::erase_preview);
+face_cmd!(erase_preview, "erase", faces::erase_preview);
 
 /// The destructive phase — the SAME library entry the CLI's --apply
 /// drives (one implementation, two faces): a fresh plan, never one

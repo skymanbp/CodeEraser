@@ -115,7 +115,7 @@ catalogue's kinds ([Document.hs:92](../../../core/app/CE/Flow/Document.hs#L92)).
 when the core is missing (refused by name, no document) or lacks the family (the document names
 the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
-([main_flow.rs:29-37](../../../cli/src/main_flow.rs#L29), [Lines.hs:32-33](../../../core/app/CE/Flow/Lines.hs#L32)). The MCP tool `flow` and the GUI's
+([main_flow.rs:27-31](../../../cli/src/main_flow.rs#L27), [Lines.hs:32-33](../../../core/app/CE/Flow/Lines.hs#L32)). The MCP tool `flow` and the GUI's
 reports hub read the same document through `faces::flow`; the hub registers its own renderer for
 the kind chips, the judged / advisory mark and the unjudged units.
 
@@ -210,7 +210,7 @@ own `deny`, the MCP relay to the same document, the guard's novel count, its sen
 and its refusal at `deny` on a judged language's write (Python) and its silence on an unjudged
 one (Rust), a moved finding and an unused parameter as not novel, the Stop line's `flow`
 object, and the daemon round trip
-([flow_face.rs:77](../../../cli/tests/it/flow_face.rs#L77), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
+([flow_face.rs:83](../../../cli/tests/it/flow_face.rs#L83), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
 [flow_audit.rs:46](../../../cli/tests/it/flow_audit.rs#L46), [daemon_flow.rs:18](../../../cli/tests/it/daemon_flow.rs#L18)).
 The family is one row of the parity table, one hub renderer of the GUI and one tool of the MCP
 catalogue; this booklet is under the citations gate.

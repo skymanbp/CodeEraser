@@ -8,8 +8,6 @@
 //! `--kind`, an unreadable ce.toml.
 
 use crate::main_prelude::*;
-use codeeraser::config::Config;
-use codeeraser::flow_report::face;
 
 #[derive(clap::Args)]
 pub struct FlowArgs {
@@ -27,11 +25,7 @@ pub struct FlowArgs {
 }
 
 pub fn flow_cmd(a: FlowArgs, core: &str) -> ExitCode {
-    let root = or_cwd(a.judge.root);
-    let tier = match Config::load(&root) {
-        Ok(c) => c.flow.tier().to_string(),
-        Err(e) => return fail("flow", anyhow::anyhow!(e)),
-    };
-    let answer = face::run(&root, core, &a.kind, (a.check, tier == "deny"));
+    let plumb = Plumb::gate(None, a.check);
+    let answer = faces::flow(&or_cwd(a.judge.root), core, &a.kind, plumb);
     answered("flow", "flow", json(a.judge.format), answer, degraded)
 }

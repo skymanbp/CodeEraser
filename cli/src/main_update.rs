@@ -9,7 +9,7 @@ use codeeraser::update;
 use std::process::ExitCode;
 
 pub fn update_cmd(yes: bool, installer: bool, format: OutFormat) -> ExitCode {
-    let doc = update::document();
+    let doc = codeeraser::faces::update_check();
     if !yes {
         return report(&doc, json(format));
     }

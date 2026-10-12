@@ -27,7 +27,9 @@ MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:coun
 的权限删文件的机器面，是橡皮擦唯一不能出的东西；`update_check` 同理只到检查；
 `similar_units` 是同角色顾问（`ce similar` 的同一份文档），只当顾问不判决；
 `query` / `rules` 是代码查询家族（`ce query` / `ce rules` 的同一份文档，问题或规则文件在核的 `query/1`
-上判决），这里只出报告，退出码是 CLI 自己读 `counts.violations` 的事；
+上判决），这里只出报告，退出码是 CLI 自己读 `counts.violations` 的事；`query` 带 `prelude: true` 时不问问题，
+答前奏与核从 `ce.toml` `[rules.pack]` 渲染出的规则包原文（`ce.query-prelude/0.1.0`，与 `ce query --prelude`、
+GUI 查询屏「前奏」按钮同一份文档；没声明规则包时 `pack` 为 null）；
 `merge_suggestions` 是克隆合并建议（`ce merge` 的同一份文档：每个克隆组合并成一个函数要几个参数、保留哪个成员、
 省几行、可不可行及原因，在核的 `merge/1` 上判决），只当顾问；
 `architecture` 是架构分析（`ce arch` 的同一份文档：分层、拆环切边、簇与错位文件、目录度量，`impact`

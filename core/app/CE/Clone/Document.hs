@@ -9,7 +9,7 @@
 -- envelope, cli/src/report.rs) — the pairs the core's verdict bit
 -- names clones, each with its raw tree edit distance and both sizes,
 -- and the sixteen counters — and the unit universe `--units` lists
--- (cli/src/faces.rs `clone_units`). The measuring side sends every
+-- (cli/src/faces/mod.rs `clone`, the `units` arm). The measuring side sends every
 -- judged pair with the clone/1 reply's scores and verdict bit (the
 -- cache's replays among them), its own counters, and for `--units` one
 -- row per unit; a unit is named by reference.

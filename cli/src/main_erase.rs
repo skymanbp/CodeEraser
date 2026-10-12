@@ -6,7 +6,8 @@
 use crate::main_cmds::{fail, json, or_cwd};
 use crate::main_judge::JudgeArgs;
 use crate::main_prelude::{answered, whole};
-use codeeraser::erase::{self, document, document::Run};
+use codeeraser::erase;
+use codeeraser::faces::{self, Plumb};
 use std::process::ExitCode;
 
 #[derive(clap::Args)]
@@ -28,38 +29,25 @@ pub struct EraseArgs {
 }
 
 pub fn erase_cmd(a: EraseArgs, core: &str) -> ExitCode {
-    let root = or_cwd(a.judge.root);
-    let as_json = json(a.judge.format);
+    let j = a.judge;
+    let root = or_cwd(j.root);
+    let as_json = json(j.format);
     if a.log {
-        let answer = erase::log::read(&root).and_then(|l| document::trail_answer(core, &l));
+        let answer = faces::erase_log(&root, core);
         return answered("erase", "erase-trail", as_json, answer, whole);
     }
-    // the diff is rendered before anything is applied: the hash check
-    // names a file that moved since planning, and an applied file no
-    // longer holds the bytes the plan showed
-    let planned = erase::planned(&root, a.judge.db.clone(), core)
-        .and_then(|(p, held)| Ok((document::Diffs::of(&root, &p)?, p, held)));
-    let (diffs, plan, held) = match planned {
-        Ok(planned) => planned,
+    // the one mutation, handed to the read-only face as a closure: the
+    // face plans, renders the diff, holds a `--check` veto, then asks
+    // this closure — and reports the count it returns
+    let db = j.db.clone();
+    let apply = |plan: &erase::Plan, _: &erase::document::Diffs| {
+        a.apply.then(|| erase::apply_plan(&root, db, core, plan))
+    };
+    let gated = faces::erase(&root, core, Plumb::gate(j.db, a.check), apply);
+    let (answer, refused) = match gated {
+        Ok((answer, refused)) => (Ok(answer), refused),
         Err(e) => return fail("erase", e),
     };
-    let mut run = Run {
-        check: a.check,
-        applied: None,
-    };
-    // `--check` with an eraseable row is the veto, and a vetoed plan is
-    // never applied
-    let vetoed = a.check && plan.counts.eraseable > 0;
-    let applied = (a.apply && !vetoed).then(|| erase::apply_plan(&root, a.judge.db, core, &plan));
-    let refused = match applied {
-        Some(Ok(n)) => {
-            run.applied = Some(n);
-            None
-        }
-        Some(Err(e)) => Some(e),
-        None => None,
-    };
-    let answer = document::answer(core, held, &plan, &diffs, run);
     let code = answered("erase", "erase", as_json, answer, whole);
     match refused {
         Some(e) => fail("erase", e),

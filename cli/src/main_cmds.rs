@@ -5,8 +5,9 @@
 
 use crate::main_prelude::{answered, whole};
 use clap::ValueEnum;
+use codeeraser::faces::{self, Plumb};
 use codeeraser::i18n::line;
-use codeeraser::{churn, daemon, dedup, graph, scan};
+use codeeraser::{daemon, dedup, scan};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -50,7 +51,11 @@ fn findings_fmt(f: FindingsFormat) -> scan::Format {
 }
 
 pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> ExitCode {
-    fallible("scan", scan::run(&or_cwd(path), findings_fmt(format), core))
+    let answer = faces::scan(&or_cwd(path), core);
+    fallible(
+        "scan",
+        answer.and_then(|a| scan::emit(findings_fmt(format), &a)),
+    )
 }
 
 /// `ce churn`: the window measured here, the document and its lines
@@ -58,10 +63,17 @@ pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> Ex
 /// the core's veto (churn states none), 2 when the run or the core
 /// fails.
 pub fn churn_cmd(root: &Path, days: u32, json: bool, core: &str) -> ExitCode {
-    let answer = churn::run(root, days).and_then(|report| churn::answer(core, &report, days));
-    answered("churn", "churn", json, answer, whole)
+    answered(
+        "churn",
+        "churn",
+        json,
+        faces::churn(root, core, days),
+        whole,
+    )
 }
 
+/// `ce graph`: `--sites` is the sites face (a walk — `--db` names no
+/// index it reads), `--mentions` the CLI-only census (faces::exempt).
 pub fn graph_cmd(
     root: &Path,
     (sites, mentions): (bool, bool),
@@ -108,7 +120,7 @@ pub fn graph_cmd(
         );
         return ExitCode::SUCCESS;
     }
-    graph::run_sites(root, core, json)
+    codeeraser::report::graph_face("sites", faces::graph_sites(root, core), json)
 }
 
 pub fn deadcode_cmd(
@@ -121,7 +133,7 @@ pub fn deadcode_cmd(
     // --check (M5-close CI gate): the DECISION and its refusal line are
     // the core's (any file-tier dead verdict, or a degraded run that
     // judged nothing, fails; plan v2.32 step 5)
-    let answer = graph::deadcode::answer(root, db, core, check);
+    let answer = faces::deadcode(root, core, Plumb::gate(db, check));
     answered("deadcode", "deadcode", json, answer, whole)
 }
 
@@ -154,19 +166,18 @@ pub struct DedupArgs {
     check: bool,
 }
 
+/// `ce dedup`: the faces' answer printed in the asked form, then the
+/// `--check` gate's refusal when it could not judge; exit 1 iff the
+/// core's veto (the budget comparison under `--check`).
 pub fn dedup_cmd(a: DedupArgs, core: &str) -> ExitCode {
-    let opts = dedup::RunOpts {
-        format: findings_fmt(a.format),
-        db: a.db,
-        min_tokens: a.min_tokens,
-        min_distinct: a.min_distinct,
-        check: a.check,
-        core: core.to_string(),
-    };
-    match dedup::run(&or_cwd(a.path), opts) {
-        Ok(code) => code,
-        Err(err) => fail("dedup", err),
-    }
+    let thresholds = (a.min_tokens, a.min_distinct);
+    let plumb = Plumb::gate(a.db, a.check);
+    let shown =
+        faces::dedup(&or_cwd(a.path), core, thresholds, plumb).and_then(|(answer, gate)| {
+            dedup::emit(findings_fmt(a.format), &answer)?;
+            gate.map_or(Ok(ExitCode::from(u8::from(answer.fail))), Err)
+        });
+    fallible("dedup", shown)
 }
 
 /// The four hook entries share one contract: --hook or nothing.
@@ -233,7 +244,7 @@ pub fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
 /// reports the enclosing project and NAMES it: a silent re-root is
 /// the half of that defect the operator pays for.
 pub fn doctor(core: &str, root: &Path, as_json: bool) -> ExitCode {
-    let d = codeeraser::health::doctor::document(root, core);
+    let d = faces::doctor(root, core);
     if as_json {
         // the exit code still relays the handshake: a JSON face
         // that always exits 0 would make `ce doctor --format json`

@@ -287,7 +287,7 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
    member's text cut at 40 characters; `--group n`
    prints one group and leaves the JSON face whole ([Lines.hs:25-26](../../../core/app/CE/Merge/Lines.hs#L25)).
 8. Exit codes: a judged document 0; a degraded one 2; an argument error — `--group` past the last
-   group included — 2 ([main_merge.rs:27](../../../cli/src/main_merge.rs#L27)).
+   group included — 2 ([main_merge.rs:29](../../../cli/src/main_merge.rs#L29)).
 
 ### 5. The faces
 
@@ -359,7 +359,7 @@ texts, the T3 pair infeasible across statements with the extra statement as its 
 fragment group marked, `--group` and its refusal, `ce clone`'s report on the same fixture unmoved,
 the MCP relay, and a core that cannot be reached refused by name
 ([merge_face.rs:118](../../../cli/tests/it/merge_face.rs#L118),
-[merge_face.rs:183](../../../cli/tests/it/merge_face.rs#L183), [merge_face.rs:215](../../../cli/tests/it/merge_face.rs#L215)).
+[merge_face.rs:187](../../../cli/tests/it/merge_face.rs#L187), [merge_face.rs:225](../../../cli/tests/it/merge_face.rs#L225)).
 
 **The frozen suggestion set.** `contracts/eval/merge-suggestions-v<n>.json` freezes, for this
 repository at one pinned commit (exported with `git archive`, `.gitmodules` removed) and for the four

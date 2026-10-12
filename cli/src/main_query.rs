@@ -8,9 +8,8 @@
 //! no `[rules.pack]` declared is zero assertions and 0, said aloud.
 
 use crate::main_prelude::*;
-use codeeraser::query::face::{self, Ask};
-use codeeraser::query::{PRELUDE, rules_source};
-use std::path::PathBuf;
+use codeeraser::document::Answer;
+use std::path::{Path, PathBuf};
 
 #[derive(clap::Args)]
 pub struct QueryArgs {
@@ -47,15 +46,9 @@ pub struct RulesArgs {
 }
 
 pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {
+    let j = a.judge;
     if a.prelude {
-        print!("{PRELUDE}");
-        return match face::pack_text(&or_cwd(a.judge.root), core) {
-            Ok(pack) => {
-                print!("{}", pack.unwrap_or_default());
-                ExitCode::SUCCESS
-            }
-            Err(err) => fail("query", err),
-        };
+        return prelude(&or_cwd(j.root), core, json(j.format));
     }
     let Some(body) = a.body else {
         return fail(
@@ -63,32 +56,41 @@ pub fn query_cmd(a: QueryArgs, core: &str) -> ExitCode {
             anyhow::anyhow!("a question is required (or --prelude)"),
         );
     };
-    judge("query", (a.judge, core), a.file, Some(body), a.why)
+    let root = or_cwd(j.root);
+    let ask = (body.as_str(), a.why);
+    let answer = faces::query(&root, core, ask, a.file.as_deref(), Plumb::db(j.db));
+    shown("query", json(j.format), answer)
 }
 
 pub fn rules_cmd(a: RulesArgs, core: &str) -> ExitCode {
-    judge("rules", (a.judge, core), a.file, None, a.why)
+    let j = a.judge;
+    let file = a.file.as_deref();
+    let answer = faces::rules(&or_cwd(j.root), core, file, a.why, Plumb::db(j.db));
+    shown("rules", json(j.format), answer)
 }
 
-/// One judgment for both faces: the rules file resolved, the core
-/// asked, its lines or document shown; exit 2 when the program was not
-/// judged (a program error, a degraded core), else the core's veto
-/// (`ce rules`: a violation; `ce query` states none).
-fn judge(
-    name: &str,
-    (j, core): (JudgeArgs, &str),
-    file: Option<PathBuf>,
-    query: Option<String>,
-    why: bool,
-) -> ExitCode {
-    let root = or_cwd(j.root);
-    let rules = match rules_source(&root, file.as_deref()) {
-        Ok(r) => r,
-        Err(err) => return fail(name, err),
+/// The pack text (faces::pack_text): the prelude, then the program the
+/// core renders from `[rules.pack]` when one is declared — the two
+/// strings on the console, the document under `--format json`.
+fn prelude(root: &Path, core: &str, as_json: bool) -> ExitCode {
+    let doc = match faces::pack_text(root, core) {
+        Ok(doc) => doc,
+        Err(err) => return fail("query", err),
     };
-    let ask = Ask { rules, query, why };
-    let answer = face::run(&root, j.db, core, &ask);
-    answered(name, name, json(j.format), answer, |doc| {
+    if as_json {
+        println!("{doc}");
+    } else {
+        let text = |k: &str| doc[k].as_str().unwrap_or_default().to_string();
+        print!("{}{}", text("prelude"), text("pack"));
+    }
+    ExitCode::SUCCESS
+}
+
+/// Both faces' answer shown; exit 2 when the program was not judged (a
+/// program error, a degraded core), else the core's veto (`ce rules`:
+/// a violation; `ce query` states none).
+fn shown(name: &str, as_json: bool, answer: anyhow::Result<Answer>) -> ExitCode {
+    answered(name, name, as_json, answer, |doc| {
         let errors = doc["errors"].as_array().is_some_and(|e| !e.is_empty());
         Ok(errors || !doc["degraded"].is_null())
     })

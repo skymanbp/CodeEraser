@@ -223,7 +223,7 @@ by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:165-188](../../../core/app/CE/Graph.hs#L165), [Graph.hs:165-188](../../../core/app/CE/Graph.hs#L165)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
 ([deadcode.rs:521-527](../../../cli/src/graph/deadcode.rs#L521)) and `ce deadcode --check` relays the
-core's fail bit ([Lines.hs:60-61](../../../core/app/CE/Graph/Lines.hs#L60), [main_prelude.rs:27-42](../../../cli/src/main_prelude.rs#L27)).
+core's fail bit ([Lines.hs:60-61](../../../core/app/CE/Graph/Lines.hs#L60), [main_prelude.rs:30-45](../../../cli/src/main_prelude.rs#L30)).
 
 ### 5. Kept arcs and liveness
 

@@ -26,6 +26,12 @@ pub struct Tool {
 
 const DAYS: (&str, &str, &str) = ("days", "integer", "git history window in days (default 14)");
 const KIND: (&str, &str, &str) = ("kind", "string", "comma-separated kinds to show");
+const FILE: (&str, &str, &str) = (
+    "file",
+    "string",
+    "a rules file (path relative to the root; default `[rules] file`, else ce.rules)",
+);
+const WHY: (&str, &str, &str) = ("why", "boolean", "carry every answer's derivation");
 const IMPACT: (&str, &str, &str) = (
     "impact",
     "array",
@@ -133,11 +139,18 @@ pub const TOOLS: &[Tool] = &[
         check,
         "ADR-006 baseline judgment: score, ratchet and axes (report only — this \
          surface never writes a baseline).",
-        &[(
-            "floor",
-            "integer",
-            "arm the --fail-under score floor; absent = the ratchet alone judges",
-        )]
+        &[
+            (
+                "days",
+                "integer",
+                "churn window in days; absent = the churn tables stay empty",
+            ),
+            (
+                "floor",
+                "integer",
+                "arm the --fail-under score floor; absent = the ratchet alone judges",
+            ),
+        ]
     ),
     tool!(
         "erase",
@@ -157,9 +170,10 @@ pub const TOOLS: &[Tool] = &[
     tool!(
         "doctor",
         doctor,
-        "This machine's state (ce.doctor-report schema): ce-core handshake, guard \
-         tier, index freshness, daemon, degraded-run counter. The daemon is asked \
-         without being started."
+        "This machine's state (ce.doctor-report schema): ce-core handshake, the tier \
+         of every guard class the hooks read (the write guard, flow, tombstone), index \
+         freshness, daemon, degraded-run counter. The daemon is asked without being \
+         started."
     ),
     tool!(
         "trend",
@@ -197,18 +211,22 @@ pub const TOOLS: &[Tool] = &[
         "One question in CE Datalog over the index's facts (ce.query-report schema): \
          files, references, units, clones, mentions, path classes, with the built-in \
          prelude (`dead`, `reach`, `depends`, `same_dir`, `dir_ref`) and the project's \
-         rules file; every answer labelled, its derivation under `why`. Report-only.",
+         rules file; every answer labelled, its derivation under `why`; `prelude` \
+         answers the text a question builds on instead (ce.query-prelude schema: the \
+         prelude and the `[rules.pack]` program). Report-only.",
         &[
             (
                 "body",
                 "string",
-                "the question (`dead(F)`; `?-` and the final `.` optional)"
+                "the question (`dead(F)`; `?-` and the final `.` optional); required \
+                 unless `prelude`"
             ),
-            ("why", "boolean", "carry every answer's derivation"),
+            WHY,
+            FILE,
             (
-                "file",
-                "string",
-                "a rules file to build on (path relative to the root)"
+                "prelude",
+                "boolean",
+                "answer the prelude and the `[rules.pack]` program instead of a question",
             ),
         ]
     ),
@@ -218,18 +236,7 @@ pub const TOOLS: &[Tool] = &[
         "The project's architecture rules judged (ce.rules-report schema): every \
          `assert` in the rules file with its violations, each carrying its witness and \
          derivation. The CLI exits on `counts.violations`; here it is a report.",
-        &[
-            (
-                "file",
-                "string",
-                "the rules file (default: `[rules] file`, else ce.rules)"
-            ),
-            (
-                "why",
-                "boolean",
-                "carry every query answer's derivation too"
-            ),
-        ]
+        &[FILE, WHY]
     ),
     tool!(
         "flow",

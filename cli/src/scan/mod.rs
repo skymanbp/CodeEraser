@@ -39,15 +39,14 @@ pub enum Format {
     Sarif,
 }
 
-/// `ce scan`: the judged tree's document and lines printed in the
-/// requested form; exit 1 iff the core's veto (a held condition).
-pub fn run(root: &Path, format: Format, core: &str) -> Result<ExitCode> {
-    let answer = judged(root, core)?;
+/// `ce scan`: the judged tree's answer (crate::faces::scan) printed
+/// in the requested form; exit 1 iff the core's veto (a held condition).
+pub fn emit(format: Format, answer: &crate::document::Answer) -> Result<ExitCode> {
     match format {
-        Format::Console => crate::document::emit("scan", &answer, false)?,
-        Format::Json => crate::document::emit("scan", &answer, true)?,
+        Format::Console => crate::document::emit("scan", answer, false)?,
+        Format::Json => crate::document::emit("scan", answer, true)?,
         Format::Sarif => crate::document::emit_projected(
-            &answer,
+            answer,
             &crate::sarif::projected(&answer.document, "findings", document::finding)?,
         ),
     }

@@ -234,7 +234,7 @@
       "id": "report:doctor#schemaver",
       "source": "cli/src/health/doctor.rs (typed)",
       "tier": "linked",
-      "value": "ce.doctor-report/0.3.0"
+      "value": "ce.doctor-report/0.4.0"
     },
     {
       "id": "report:erase-log#schemaver",
@@ -301,6 +301,12 @@
       "source": "core/app/CE/Query/Document.hs (querySchemaId)",
       "tier": "linked",
       "value": "ce.query-report/0.1.0"
+    },
+    {
+      "id": "report:query-prelude#schemaver",
+      "source": "cli/src/faces/ask.rs (typed)",
+      "tier": "linked",
+      "value": "ce.query-prelude/0.1.0"
     },
     {
       "id": "report:rules#schemaver",

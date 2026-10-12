@@ -73,6 +73,8 @@
     <section class="bar">
       <label><span data-i18n="verdict"></span>
         <input id="check-floor" type="number" min="0" placeholder="—" data-i18n-title="floorHint" /></label>
+      <label><span data-i18n="days"></span>
+        <input id="check-days" type="number" min="0" placeholder="—" data-i18n-title="checkDaysHint" /></label>
       <button id="check-load" data-i18n="load"></button>
     </section>
     <main class="col">
@@ -140,6 +142,7 @@
     <section class="bar">
       <label><span data-i18n="similarAt"></span> <input id="similar-at" type="text" spellcheck="false" placeholder="src/lib.rs:42" /></label>
       <label><span data-i18n="similarText"></span> <input id="similar-text" type="text" spellcheck="false" /></label>
+      <label><span data-i18n="similarUnit"></span> <input id="similar-unit" type="text" spellcheck="false" placeholder="name/arity" /></label>
       <label><input id="similar-widen" type="checkbox" /> <span data-i18n="widen"></span></label>
       <button id="similar-load" data-i18n="load"></button>
       <div class="stat" id="similar-summary"></div>
@@ -154,8 +157,10 @@
     <section class="bar">
       <input id="query-text" type="text" spellcheck="false" data-i18n-ph="queryPlaceholder" />
       <label><input id="query-why" type="checkbox" /> <span data-i18n="queryWhy"></span></label>
+      <label><span data-i18n="queryFile"></span> <input id="query-file" type="text" spellcheck="false" data-i18n-ph="queryFilePlaceholder" /></label>
       <button id="query-run" data-i18n="queryRun"></button>
       <button id="query-rules" data-i18n="queryRules"></button>
+      <button id="query-prelude" data-i18n="queryPrelude"></button>
       <div class="stat" id="query-summary"></div>
     </section>
     <main class="col">
@@ -169,6 +174,9 @@
       <select id="hub-family"></select>
       <label id="hub-days-wrap" hidden><span data-i18n="days"></span> <input id="hub-days" type="number" min="1" value="14" /></label>
       <label id="hub-paths-wrap" hidden><span data-i18n="hubPaths"></span> <input id="hub-paths" type="text" spellcheck="false" data-i18n-ph="hubPathsPlaceholder" /></label>
+      <label id="hub-thresholds-wrap" hidden><span data-i18n="minTokens"></span> <input id="hub-min-tokens" type="number" min="1" placeholder="—" />
+        <span data-i18n="minDistinct"></span> <input id="hub-min-distinct" type="number" min="0" placeholder="—" /></label>
+      <label id="hub-units-wrap" hidden><input id="hub-units" type="checkbox" /> <span data-i18n="cloneUnits"></span></label>
       <button id="hub-load" data-i18n="load"></button>
       <div class="stat" id="hub-chips"></div>
     </section>

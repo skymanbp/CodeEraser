@@ -48,6 +48,23 @@ ce join . --days 14 --format json   # similarity × position × churn
 `ce join` ranks the strongest deletion candidates: high similarity,
 weak graph position, low churn. Start from the top of that list.
 
+Four more families help where they apply (all advisory, the same
+documents the MCP tools and the GUI show):
+
+```sh
+ce merge . --format json      # a clone group as ONE function: its parameters, the member kept, lines saved
+ce flow . --format json       # dead code INSIDE functions: unreachable statements, dead stores, unused locals
+ce similar --unit <name/arity> . --format json   # same-role twins of the unit you are about to keep
+ce query 'dead(F)' . --format json   # ask the index directly; `ce rules .` lists the rule violations
+```
+
+Read `merge` before collapsing a clone family (it says whether one
+function can take the members' differences as parameters), `flow` for
+deletions smaller than a unit, `similar` to find the copies a clone
+gate misses because the wording drifted, and `query` / `rules` to
+check a deletion against the architecture rules the project declared
+(`ce.rules`, `[rules.pack]` in ce.toml).
+
 ## 3. Verify each candidate — no exceptions
 
 For every candidate pair or dead unit:

@@ -19,18 +19,21 @@ let similarDoc = null;
 async function loadSimilar() {
   const at = $("similar-at").value.trim();
   const text = $("similar-text").value.trim();
-  if (!at && !text) {
+  const unit = $("similar-unit").value.trim();
+  if (!at && !text && !unit) {
     setStatus(tr("similarNeedsQuery"), true);
     return;
   }
   $("similar-load").disabled = true;
   setStatus(tr("judging"), false);
   try {
-    // `at` wins when both are typed: a unit is the sharper ask
+    // one ask, as the CLI's clap group demands: `at` wins, then the
+    // unit key, then the text — a unit is the sharper ask
     similarDoc = await invoke("similar_report", {
       root: $("root").value,
       at: at || null,
-      text: at ? null : text,
+      unit: at ? null : unit || null,
+      text: at || unit ? null : text,
       widen: $("similar-widen").checked,
     });
     renderSimilar();

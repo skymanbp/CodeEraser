@@ -23,59 +23,37 @@ pub mod winnow;
 
 use crate::config::Config;
 use crate::graph::{ladder, store, wire};
-use crate::scan::Format;
 use anyhow::Result;
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
-use std::process::ExitCode;
 
-/// CLI options for [`run`] (bundled: six loose params would trip the
-/// project's own params threshold).
-pub struct RunOpts {
-    pub format: Format,
-    pub db: Option<PathBuf>,
-    pub min_tokens: Option<usize>,
-    pub min_distinct: Option<usize>,
-    pub check: bool,
-    /// ce-core path: the budget comparison under `check` (ADR-008 P2)
-    /// and the report itself (plan v2.32 step 5) are the core's.
-    pub core: String,
-}
-
-/// Batch entry point: refresh the index (incremental), reap deleted
-/// files, verify anchors by token-stream extension, report blocks.
+/// One `ce dedup` judgment (the faces' road, plan v2.33 step 10):
+/// refresh the index (incremental), reap deleted files, verify anchors
+/// by token-stream extension, and the core's report over the blocks.
 /// `min_tokens` lowers the report filter below the guarantee t for
 /// calibration runs; detection below t is opportunistic (anchors are
 /// only guaranteed at >= t). `check` turns the run into the R12
-/// ratchet gate against ce.toml [dedup] budget.
-pub fn run(root: &Path, opts: RunOpts) -> Result<ExitCode> {
-    if opts.check {
-        // the ratchet road accepts the operating point or tighter only
-        budget::gate_filters(opts.min_tokens, opts.min_distinct)?;
+/// ratchet gate against ce.toml [dedup] budget: the operating point or
+/// tighter only, and a gate that could not judge still lets the report
+/// print first — its refusal rides beside the answer (budget.rs; since
+/// 2.19.0 the CORE's derivation is the gated number, batch-7 slice 1).
+pub fn gated(
+    root: &Path,
+    (db, check): (Option<PathBuf>, bool),
+    (min_tokens, min_distinct): (Option<usize>, Option<usize>),
+    core: &str,
+) -> Result<(crate::document::Answer, Option<anyhow::Error>)> {
+    if check {
+        budget::gate_filters(min_tokens, min_distinct)?;
     }
-    let (found, summary) = analyze(root, opts.db, opts.min_tokens, opts.min_distinct)?;
-    // the R12 gate lives in budget.rs (split at the 300-line dogfood
-    // ceiling when the review-repair asserts landed); since 2.19.0 it
-    // ships the pre-filter distinct counts and the effective floor, and
-    // the CORE's derivation is the gated number (batch-7 slice 1). A
-    // gate that could not judge still lets the report print first —
-    // its refusal is the run's error after it, as before the switch.
-    let gate = opts.check.then(|| {
-        budget::check(
-            root,
-            found.blocks.len(),
-            &found.distincts,
-            opts.min_distinct,
-            &opts.core,
-        )
+    let (found, summary) = analyze(root, db, min_tokens, min_distinct)?;
+    let gate = check.then(|| {
+        let distincts = &found.distincts;
+        budget::check(root, found.blocks.len(), distincts, min_distinct, core)
     });
     let judged = gate.as_ref().and_then(|g| g.as_ref().ok().copied());
-    let answer = report::answer(&opts.core, &found, &summary, judged)?;
-    report::emit(opts.format, &answer)?;
-    if let Some(Err(err)) = gate {
-        return Err(err);
-    }
-    Ok(ExitCode::from(u8::from(answer.fail)))
+    let answer = report::answer(core, &found, &summary, judged)?;
+    Ok((answer, gate.and_then(Result::err)))
 }
 
 /// One command boundary's measurement: blocks + their open index + its path (P10).
@@ -256,7 +234,7 @@ fn resolve_edges(
     idx.resolve_refreshed(&dirty, &mut resolver)
 }
 
-pub use report::{answer, report_json};
+pub use report::{answer, emit, report_json};
 
 /// One run's walk counters and the two report filters it used — the
 /// facts the dedup document reads beside the blocks (the block, group

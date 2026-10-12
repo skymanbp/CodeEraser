@@ -7,8 +7,7 @@
 //! path is not a measured file.
 
 use crate::main_prelude::*;
-use codeeraser::arch::face;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 #[derive(clap::Args)]
 pub struct ArchArgs {
@@ -20,17 +19,11 @@ pub struct ArchArgs {
     impact: Vec<PathBuf>,
 }
 
-/// A focus path as the index spells it: root-relative, forward
-/// slashes, no leading `./`.
-fn spelled(root: &Path, path: &Path) -> String {
-    let rel = codeeraser::scan::walk::rel_str(root, path);
-    rel.strip_prefix("./").map_or(rel.clone(), str::to_string)
-}
-
+/// The `--impact` paths go as typed: arch::face::run reads them as the
+/// index spells them, on every face (plan v2.33 step 10).
 pub fn arch_cmd(a: ArchArgs, core: &str) -> ExitCode {
     let j = a.judge;
-    let root = or_cwd(j.root);
-    let focus: Vec<String> = a.impact.iter().map(|p| spelled(&root, p)).collect();
-    let answer = face::run(&root, j.db, core, &focus);
+    let focus: Vec<String> = a.impact.iter().map(|p| p.display().to_string()).collect();
+    let answer = faces::arch(&or_cwd(j.root), core, &focus, Plumb::db(j.db));
     answered("arch", "arch", json(j.format), answer, degraded)
 }

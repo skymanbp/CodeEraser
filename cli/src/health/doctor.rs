@@ -16,13 +16,14 @@ use serde_json::{Value, json};
 use std::path::Path;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.doctor-report/0.3.0";
+pub const SCHEMA_ID: &str = "ce.doctor-report/0.4.0";
 
 /// The whole diagnostic. Never returns an error: a core that will
 /// not answer IS the finding, and a doctor that fails outward tells
 /// the operator nothing about the thing they came to ask about.
 pub fn document(root: &Path, core: &str) -> Value {
     let root = crate::root::project_root(root);
+    let loaded = crate::config::Config::load(&root);
     let (degraded, entries) = super::degraded_runs(&root);
     let index = super::index_fact(&root);
     let daemon = super::daemon_fact(&root);
@@ -36,10 +37,11 @@ pub fn document(root: &Path, core: &str) -> Value {
         // project, and a silent re-root is half the defect
         "root": root.display().to_string(),
         "ce": {"version": env!("CARGO_PKG_VERSION"), "proto": corelink::PROTO},
-        "guard": crate::config::tier_of(
-            &crate::config::Config::load(&root),
-            crate::config::PROMOTED_DEFAULT,
-        ),
+        "guard": crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT),
+        // 0.4.0 (plan v2.33 step 10): every guard class the hooks read,
+        // one row each with the key that sets it — the write guard,
+        // flow, tombstone — so no face shows one class and hides two
+        "classes": classes(&loaded),
         // codes and counts, never sentences (plan v2.15): prose on
         // the machine face is prose no face can translate
         "index": {"state": index.0, "files": index.1},
@@ -63,6 +65,25 @@ pub fn document(root: &Path, core: &str) -> Value {
             "error": error,
         },
     })
+}
+
+/// The guard classes, each `{class, key, tier}`: the tier the hooks
+/// enforce, read the way they read it (an unreadable ce.toml renders
+/// through `config::tier_of` for all three — never as a deliberate
+/// observe). Tombstone and flow judge a changeset inside a hook, so
+/// they have no report family of their own; this row is their face.
+fn classes(loaded: &Result<crate::config::Config, String>) -> Value {
+    use crate::config::{PROMOTED_DEFAULT, tier_of};
+    let class = |c: fn(&crate::config::Config) -> String| match loaded {
+        Ok(cfg) => c(cfg),
+        Err(_) => tier_of(loaded, "observe"),
+    };
+    json!([
+        {"class": "guard", "key": "[guard] mode", "tier": tier_of(loaded, PROMOTED_DEFAULT)},
+        {"class": "flow", "key": "[flow] tier", "tier": class(|c| c.flow.tier().to_string())},
+        {"class": "tombstone", "key": "[tombstone] tier",
+         "tier": class(|c| c.tombstone.tier().to_string())},
+    ])
 }
 
 /// Read one `{state, <count>}` object back out of the document. The
@@ -89,7 +110,7 @@ fn ms_fact(v: &Value) -> (i64, Option<u128>) {
 /// and the handshake bit, so the caller owns the exit code and stdout
 /// / stderr split without this function knowing about either.
 pub fn console(d: &Value) -> (Vec<String>, bool) {
-    let s = |p: &str, k: &str| d[p][k].as_str().unwrap_or("?").to_string();
+    let s = |p: &str, k: &str| word(d, p, k);
     let mut out = vec![
         format!("ce {} (proto {})", s("ce", "version"), s("ce", "proto")),
         line(
@@ -112,6 +133,7 @@ pub fn console(d: &Value) -> (Vec<String>, bool) {
             ],
         ),
     ];
+    out.extend(class_lines(d));
     // rendered only when non-zero: a gauge that reads 0 in every
     // healthy process is noise on the line and a finding otherwise
     if let Some(parked) = d["daemon"]["parkedWorkers"].as_u64().filter(|n| *n > 0) {
@@ -121,13 +143,18 @@ pub fn console(d: &Value) -> (Vec<String>, bool) {
             &[&parked],
         ));
     }
+    let (handshake, ok) = handshake_lines(d);
+    out.extend(handshake);
+    (out, ok)
+}
+
+/// The core's line and the handshake verdict, and whether it held.
+fn handshake_lines(d: &Value) -> (Vec<String>, bool) {
     let ok = d["core"]["handshake"] == json!(true);
+    let mut out = Vec::new();
     if ok {
-        out.push(format!(
-            "ce-core {} (proto {})",
-            s("core", "version"),
-            s("core", "proto")
-        ));
+        let (version, proto) = (word(d, "core", "version"), word(d, "core", "proto"));
+        out.push(format!("ce-core {version} (proto {proto})"));
         // OK/FAILED is this diagnostic's own verdict, not the
         // exit-code vocabulary `check` borrows FAIL/pass from — a
         // reader of an otherwise Chinese report has no reason to
@@ -141,4 +168,24 @@ pub fn console(d: &Value) -> (Vec<String>, bool) {
         ));
     }
     (out, ok)
+}
+
+/// A string fact of the document, `?` when it is absent.
+fn word(d: &Value, part: &str, key: &str) -> String {
+    d[part][key].as_str().unwrap_or("?").to_string()
+}
+
+/// One line per guard class the document lists: its name, the key that
+/// sets it and the tier the hooks enforce.
+fn class_lines(d: &Value) -> Vec<String> {
+    let rows = d["classes"].as_array().into_iter().flatten();
+    rows.map(|c| {
+        let s = |k: &str| c[k].as_str().unwrap_or("?").to_string();
+        line(
+            "guard class {} ({}): {}",
+            "守卫类 {}（{}）：{}",
+            &[&s("class"), &s("key"), &s("tier")],
+        )
+    })
+    .collect()
 }

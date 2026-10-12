@@ -33,6 +33,6 @@ pub fn similar_cmd(a: SimilarArgs, core: &str) -> ExitCode {
         Err(err) => return fail("similar", err),
     };
     a.judge.answered("similar", |root, db| {
-        codeeraser::similar::document::answer(root, db, core, &ask, a.widen)
+        codeeraser::faces::similar(root, core, &ask, a.widen, Plumb::db(db))
     })
 }
