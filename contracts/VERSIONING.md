@@ -146,6 +146,7 @@
 > 拒绝不是断链：核的拒绝（回显本请求 id 的 `error`，或无 id 的 `too_large`）不作废会话，daemon 的核链只在帧丢了时才计失败、退避（`Link::is_broken`），钩子的四类请求（fourclass、tombstone、flow、document）收到拒绝答具名降级、下一次钩子照常判。测量侧按行上限排每一族的请求：整语料一遍与会话路（`resolve/1`、`bags/1`）发出前量行；`moves/1` 按行数、单元数与字节三者装包；lockstep 两族（`clone/1`、`docdup/1`）的块超行就对半再分；一对单独超行的按名拒绝、不发。`erase/1` 与 `trend/2` 的降级应答读作核的具名原因（`erase/1 degraded the plan (…)` / `trend/2 degraded the judgment (…)`），不再读作镜像漂移。
 > 收紧：`verdict` 的 `continuous` 行与基线的 `baseline.continuous` 行，值列与实体列同按 u64 校验，越界按名拒 `outside u64`（基线行此前两列都不校验）。
 > golden：`scan/golden` 加第 27 对（缺 `naming`）与第 28 对（缺 `knobsFence`）、`erase/golden` 加第 15 对（缺 `targets`）、`graph/golden` 加第 27 对（缺 `unres`），各答 `<键>: required at 9.0.0`；`tables/golden` 与 `handshake/hello-ok` 的摘要机器重生成，其余不动。
+> **9.0.0 同版改动**（C 族替代记号归一类，v2.33 步 11b，2026-10-13；语言扩展册 D19；9.0.0 未发布，同上不另升版号）：`tables/1` 的 `scan.<lang>.coc_operators` 一项是一个算子类、可写几种拼写（空格分开），测量侧送的算子 id 是类的下标；C / C++ 由 `['&&', '||', 'and', 'or']` 改为 `['&& and', '|| or']`，`&&` / `||` 的 id 不变（0 / 1），其余语言仍一项一种拼写。golden：`tables/golden` 第 1 对（两张 C 族表与包摘要）与 `handshake/hello-ok` 的 `tablesDigest`，机器重生成，请求行不变。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

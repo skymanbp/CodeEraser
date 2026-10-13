@@ -13,7 +13,8 @@
 /// ancestor (None = the unit itself); `pos` is 1 in that ancestor's
 /// body and 0 in its header (0 under a non-splitting ancestor); `aux`
 /// is a chain's operand count; `ops` are a logic root's operator ids
-/// (indices into the spec's coc_operators) in source order.
+/// (class ids: indices into the spec's coc_operators, one entry per
+/// operator class) in source order.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Event {
     pub seq: u32,

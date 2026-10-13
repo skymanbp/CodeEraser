@@ -720,7 +720,8 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 | 面 | A | B | B / A − 1 |
 |---|---|---|---|
 | `similar --at cli/src/corelink/judged.rs:20 --widen` 暖 | 6182.8（4740.7–7134.0） | 3752.0（3587.4–4640.4） | -39.3 % |
+| `scan --format json` 暖（第 2 项） | 2670.5（2513.2–3537.2） | 2813.8（2483.4–5118.0） | +5.4 % |
 
-- **负载**：坐时五次 `load_probe.ps1`：总负载 65 / 28 / 68 / 55 / 88 %（本坐之外 43.6 / 37.2 / 64.8 / 33.4 / 70.6 %，别的车道的编译进程 3–7 个）——不是静默窗，两臂交替跑，比值比绝对量可信。去掉共现的两条请求不走被改的三处，这两格的差在噪声内。
+- **负载**：坐时五次 `load_probe.ps1`：总负载 65 / 28 / 68 / 55 / 88 %（本坐之外 43.6 / 37.2 / 64.8 / 33.4 / 70.6 %，别的车道的编译进程 3–7 个）——不是静默窗，两臂交替跑，比值比绝对量可信。去掉共现的两条请求不走被改的三处，`scan` 一行两臂的极差互相覆盖：这三格的差都在噪声内。
 - 同一对请求在第 1 项初版的核（sha256 ef7c33e2…，分组还写在 `Contract` 里，查重门点名后挪进 `Score`，表达式不变）上的一坐（17:12–17:17Z，负载 40–80 %）：003 / 005 为 1057.6 / 2359.3 → 486.0 / 558.6 ms，`--widen` 6881.6 → 4848.6 ms。遗留核查第 4 项同两条请求：E 1650.6 / 2939.8、P 1253.5 / 2249.4、Q 1137.3 / 770.1 ms。
-- 复跑：车道目录 `v233_p11_core_scratch/heavy3.sh`（持锁起跑 `core_replay.py 7 <核>`、`similar_gate.py 7 <核> <ce>`），读数原文 `core_replay.ndjson`、`similar_gate.ndjson`、`heavy3.log`。
+- 复跑：车道目录 `v233_p11_core_scratch/heavy3.sh`（持锁起跑 `core_replay.py 7 <核>`、`similar_gate.py 7 <核> <ce>`、`scan_abab.py 7 <核>`），读数原文 `core_replay.ndjson`、`similar_gate.ndjson`、`scan_abab.ndjson`、`heavy3.log`。

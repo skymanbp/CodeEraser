@@ -117,7 +117,9 @@ scan3 =
   \if_kinds = ['if_statement']\n\
   \coc_flat_kinds = ['else_clause']\n\
   \coc_nest_only_kinds = ['lambda_expression']\n\
-  \coc_operators = ['&&', '||', 'and', 'or']\n\
+  \# one entry per operator class: the alternative tokens are the same\n\
+  \# operator (ISO C++ [lex.digraph]), so `a && b and c` is one run\n\
+  \coc_operators = ['&& and', '|| or']\n\
   \coc_jump_kinds = ['goto_statement']\n\
   \label_kinds = ['statement_identifier']\n\
   \comment_kinds = ['comment']\n\

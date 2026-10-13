@@ -580,7 +580,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/C.hs|55d5fc58a01a310f|0": {
     "target": "../../../core/app/CE/Lang/C.hs",
-    "line": 126,
+    "line": 128,
     "text": "\\literal_delims = ['\\\"', \\\"'\\\", 'character', 'R\\\"']\\n\\"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Go.hs|8d3bd939589ad9c9|0": {
@@ -3025,6 +3025,11 @@
     "target": "../../../core/app/CE/Graph/Cost.hs",
     "line": 104,
     "text": "sccFloor = 2\n\n-- | The node kind whose dead verdicts FAIL (batch-7 slice 4, RG9:"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Lang/C.hs|fd269582fb358431|0": {
+    "target": "../../../core/app/CE/Lang/C.hs",
+    "line": 122,
+    "text": "\\coc_operators = ['&& and', '|| or']\\n\\"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Scan/Complexity.hs|e9d11f505ba51ce4|0": {
     "target": "../../../core/app/CE/Scan/Complexity.hs",
@@ -8856,8 +8861,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|d535a3cf381a0200|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 482,
-    "end": 484,
+    "line": 483,
+    "end": 485,
     "text": "> 回执 `failed` 具名序 `hard_line, knobs_digest, degraded`（fence 上过线即在；`fail ⇔ failed ≠ []`）。"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -10038,26 +10043,26 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Math.hs|0e52c59664b38bb0|0": {
     "target": "../../../core/app/CE/Similar/Rank/Math.hs",
-    "line": 63,
-    "end": 72,
+    "line": 70,
+    "end": 79,
     "text": "-- | PPMI (a, b) = max (0, log2 (n_ab · N / (n_a · n_b))) in the idf's"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Math.hs|24e67785fec397c7|0": {
     "target": "../../../core/app/CE/Similar/Rank/Math.hs",
-    "line": 49,
-    "end": 61,
+    "line": 56,
+    "end": 68,
     "text": "-- | One term's contribution, floored to scoreFracBits fixed point:"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Math.hs|2a2f0ff8b6e3c059|0": {
     "target": "../../../core/app/CE/Similar/Rank/Math.hs",
-    "line": 38,
-    "end": 47,
+    "line": 45,
+    "end": 54,
     "text": "-- | idf (t) = log2 ((N − df + ½) / (df + ½)) in fixed point, floored at"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Math.hs|c4bcd6386e8e85c4|0": {
     "target": "../../../core/app/CE/Similar/Rank/Math.hs",
-    "line": 11,
-    "end": 36,
+    "line": 12,
+    "end": 37,
     "text": "-- | floor (2^idfFracBits · log2 (num / den)) for num ≥ den > 0, by"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Math.hs|d9f0d311a771e57e|0": {
@@ -10068,14 +10073,14 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Score.hs|2e27539d17ebab54|0": {
     "target": "../../../core/app/CE/Similar/Rank/Score.hs",
-    "line": 30,
-    "end": 60,
+    "line": 31,
+    "end": 61,
     "text": "-- | The expansion of a query, in query order: each spelled word term's"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Rank/Score.hs|b53fb58d9fcf6a1e|0": {
     "target": "../../../core/app/CE/Similar/Rank/Score.hs",
-    "line": 62,
-    "end": 74,
+    "line": 80,
+    "end": 92,
     "text": "-- | The top k by score descending then seat ascending, the excluded"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../core/app/CE/Similar/Stem.hs|c06d976918cbaada|0": {

@@ -86,7 +86,7 @@ HTML 的 LangSpec 为空表（MARKDOWN 同款），只提供 `comment_kinds = [c
 | D16 | R 可见性 | 文件有 roxygen 串则 `#' @export` 为准，否则点号约定（`.name` 内部）；`NAMESPACE` 是另一文件不读——Python `__all__` 前的同一路，后置 | visibility/mod.rs 原则 |
 | D17 | Java 同包引用 | 不经 import：以 `type_ref` 名字站点补（§8），否则每个只被同包引用的文件都成「未引用」 | 存活判决可用性 |
 | D18 | C/C++ 翻译单元、R 包 `R/` | `.c/.cc/.cpp/.cxx` 从不被 include：按「编译单元」角色入口，死候选是无人 include 的头；R 包的 `R/*.R` 由加载器整体 collate：按声明目标角色（DESCRIPTION 即清单） | roleBits 是核的表 |
-| D19 | C++ `and`/`or`、`attribute_specifier`、Java 带实参 `annotation` | C++ 两项已由步 2 电池实证（`coc_c.rs` 行 `c`；`attribute_specifier` 走 Ffi 读法）；Java 项本轮样本未含，表内先列（†），电池落地时实证 | 诚实登记 |
+| D19 | C++ `and`/`or`、`attribute_specifier`、Java 带实参 `annotation` | C++ `and`/`or` 自 v2.33 步 11b 起已解决：替代记号与 `&&`/`\|\|` 是同一个算子（ISO C++ [lex.digraph]），C 族 `coc_operators` 一类一项（`'&& and'`、`'\|\| or'`），两种拼写同一个 id，`a && b and c` 是一段（`coc_c.rs` 两行），`and` 接 `or` 仍是两段；`attribute_specifier` 走 Ffi 读法（步 2 电池实证）；Java 项本轮样本未含，表内先列（†），电池落地时实证 | C++ 两项已解决；Java 项诚实登记 |
 | D20 | HTML 文本 | `text` 叶被内联元素切开，段 = 块级元素文本后代的串接；`pre/code/script/style/textarea` 与 `comment` shed 计数 | md 围栏与 HTML 注释 mask 先例 |
 | D21 | Lua 局部绑定遮蔽（`local helper = other.helper`） | 已建模（步 5b 第 2 条）：`call_import_kinds = variable_declaration`——绑定了值的 `local` 名在其宿主体内遮蔽同名可调用；绑定函数值的 `local f = function` / `local function g` 是索引里的可调用，不作遮蔽（`calls.rs shadowed`）；声明的位置不读（少算侧） | Lua 5.4 §3.5 词法作用域；ignore 仓 `use` 先例 |
 | D22 | 命名轴 | C/C++/Lua/R 无社区统一规范 → Any（style 0）；Java MixedCaps | 规范出处各语言风格指南 |

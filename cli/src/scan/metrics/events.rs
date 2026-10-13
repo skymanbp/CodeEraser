@@ -198,12 +198,15 @@ impl Emitter<'_, '_> {
         self.logic_op(node).is_some() && node.parent().is_none_or(|p| self.logic_op(p).is_none())
     }
 
+    /// The operator's class id: the index of the `coc_operators` entry
+    /// whose space-separated spellings hold the token, so the C family's
+    /// `and` is the id `&&` is (ISO C++ [lex.digraph]; register D19).
     fn logic_op(&self, node: Node<'_>) -> Option<u32> {
         let op = operator_text(node, self.src)?;
         self.spec
             .coc_operators
             .iter()
-            .position(|&o| o == op)
+            .position(|class| class.split_whitespace().any(|o| o == op))
             .map(|i| i as u32)
     }
 

@@ -109,15 +109,15 @@ are and folded into one integer fraction. A term's contribution is
 
 floored to 16-bit fixed point; the core's battery re-derives the fraction from `k1` and `b`
 ([Cost.hs:31-34](../../../core/app/CE/Similar/Rank/Cost.hs#L31),
-[Math.hs:49-61](../../../core/app/CE/Similar/Rank/Math.hs#L49)). `idf = log2((N − df + ½) / (df + ½))`
+[Math.hs:56-68](../../../core/app/CE/Similar/Rank/Math.hs#L56)). `idf = log2((N − df + ½) / (df + ½))`
 in 8-bit fixed point from an integer `log2` by squaring only, floored at zero
-([Math.hs:11-36](../../../core/app/CE/Similar/Rank/Math.hs#L11),
-[Math.hs:38-47](../../../core/app/CE/Similar/Rank/Math.hs#L38)). No float is touched anywhere, so the same
+([Math.hs:12-37](../../../core/app/CE/Similar/Rank/Math.hs#L12),
+[Math.hs:45-54](../../../core/app/CE/Similar/Rank/Math.hs#L45)). No float is touched anywhere, so the same
 corpus ranks the same on every platform and the frozen evaluation rows compare byte for byte
 ([Math.hs:1-5](../../../core/app/CE/Similar/Rank/Math.hs#L1)).
 
 The core returns the `K = 5` best candidates for a query, excluding the query's own seat,
-ordered by score then identity ([Score.hs:62-74](../../../core/app/CE/Similar/Rank/Score.hs#L62)). A term in more than half the units — idf 0 — is neither score
+ordered by score then identity ([Score.hs:80-92](../../../core/app/CE/Similar/Rank/Score.hs#L80)). A term in more than half the units — idf 0 — is neither score
 nor evidence: sharing what nearly everything shares says nothing, and walking its posting list
 would cost the whole corpus per query, so the measuring side asks df first and fetches the list
 only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:146-174](../../../cli/src/similar/rank.rs#L146)).
@@ -139,12 +139,12 @@ Two word terms co-occurring in one unit's bag are counted once per unit, and
     PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))
 
 in the same 8-bit fixed point as the idf, from the same integer `log2`
-([Math.hs:63-72](../../../core/app/CE/Similar/Rank/Math.hs#L63)). A neighbour counts only when it co-occurred
+([Math.hs:70-79](../../../core/app/CE/Similar/Rank/Math.hs#L70)). A neighbour counts only when it co-occurred
 in at least `minCooc = 2` units and carries at least `minPpmi` = two bits of association;
 each spelled word term of the query appends its `topM = 3` best neighbours at weight
 `parent × min(ppmi, ppmiCap) / ppmiScale` — at most half the parent's weight — and a term the
 query already spells is never appended ([Cost.hs:67-79](../../../core/app/CE/Similar/Rank/Cost.hs#L67),
-[Score.hs:30-60](../../../core/app/CE/Similar/Rank/Score.hs#L30)). A unit past `TERM_CAP = 96` distinct
+[Score.hs:31-61](../../../core/app/CE/Similar/Rank/Score.hs#L31)). A unit past `TERM_CAP = 96` distinct
 word terms contributes its first 96 in term order and is ledgered as capped; the cap has one
 owner, so the in-memory table and the persisted writer count the same words
 ([ppmi.rs:18-42](../../../cli/src/similar/ppmi.rs#L18)). One bound does the pruning for free:

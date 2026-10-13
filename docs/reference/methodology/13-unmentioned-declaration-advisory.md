@@ -230,7 +230,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:120-127](../../../core/app/CE/Graph.hs#L120)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:482-484](../../../contracts/VERSIONING.md#L482)).
+the same with or without them ([VERSIONING.md:483-485](../../../contracts/VERSIONING.md#L483)).
 
 ### 6. Rendering — one home, three faces
 
@@ -307,7 +307,7 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1760 (1978 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7237 (1699) | 1080 (16) | 14.9 % | 203 / 1080 = 18.8 % | 203 / 6157 |
+| self @ this commit | 1760 (1978 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7239 (1700) | 1080 (16) | 14.9 % | 203 / 1080 = 18.8 % | 203 / 6159 |
 | | | rust | 3451 (1900) | 323 (2) | 9.4 % | 2 / 323 = 0.6 % | 2 / 3098 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
@@ -322,7 +322,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->16<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1699<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->16<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1700<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
