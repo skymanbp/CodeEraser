@@ -122,22 +122,28 @@ softKMax = 1024
 -- sim den==0 lesson); a zero default weight (5) could zero the
 -- score divisor under an empty weights table; a scale (6) below 1
 -- leaves no score at all; a cycle floor (7) below 1 would count
--- every file as a cycle member.
+-- every file as a cycle member. The three numerators are the same
+-- vacuity from the other side (9.0.0): a rewrite numerator (1) of 0
+-- marks every churned entity rewrite-heavy, a co-change floor (3) of
+-- 0 makes every pair hot, and a violation cost (4) of 0 pins the
+-- score at the scale so no floor can ever fail. Only code 0 keeps 0
+-- legal: it is the default ("dead at indegree 0").
 thresholdsOffence :: [[Integer]] -> Maybe String
 thresholdsOffence = axisTable "thresholds" 7 "unknown threshold knob" judgeT
  where
   judgeT code v
     | v < 0 = Just "negative field"
     | code == 2 && v < 1 = Just "zero denominator"
-    | code >= 5 && v < 1 = Just "knob below 1"
+    | code /= 0 && v < 1 = Just "knob below 1"
     | otherwise = Nothing
 
--- | Tolerance rows [leg, value]: 0 tolNum / 1 tolDen / 2 tolAbs.
+-- | Tolerance rows [leg, value]: 0 tolNum / 1 tolDen / 2 tolAbs /
+-- 3 tolAbsCoc (9.0.0, the complexity rows' absolute leg).
 -- Both ratio legs stay >= 1 (a zero denominator is vacuous; a num
 -- below den just collapses that leg — tolerated already floors at
 -- the ceiling through the max with the +abs leg).
 toleranceOffence :: [[Integer]] -> Maybe String
-toleranceOffence = axisTable "tolerance" 2 "unknown tolerance leg" judgeT
+toleranceOffence = axisTable "tolerance" 3 "unknown tolerance leg" judgeT
  where
   judgeT code v
     | v < 0 = Just "negative field"

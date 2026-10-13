@@ -134,9 +134,13 @@ judged parsed req =
   -- the soft line judging THIS run: the committed one, or (only at
   -- establish) the fresh derivation — which is also what the new
   -- baseline freezes, so the establishing run and every later run
-  -- judge with the same S
+  -- judge with the same S. The derivation's upper fence is the
+  -- effective hard line when it sits below softMax (9.0.0): a
+  -- committed S is never above H, so the relative line widens the
+  -- comfort zone and never reaches past the wall (zonePenalty also
+  -- prices against min S H, for baselines committed before)
   effSoft = case base of
-    Nothing -> softLine (sSoftK k) softMin softMax (reqJudgedLoc req)
+    Nothing -> softLine (sSoftK k) softMin (min softMax (sSizeHard k)) (reqJudgedLoc req)
     Just b -> bSoft b
   newSoft = effSoft
   -- the class column is a charging parameter, never a ratchet fact

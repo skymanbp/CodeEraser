@@ -197,15 +197,15 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
   <pre>raw     = sum_i (w_i * p_i * violCost)
 wTotal  = sum_i w_i                            -- derived, never a literal
 score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
-  <pre>p(x) = 0                              if x &lt;= S
+  <pre>p(x) = 0                              if x &lt;= S          -- S read as min S H
      = pMax                           if H &lt;= S          -- degenerate fallback
      = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
      = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm
 
-m = median(x)
-r = median( max(x/m, m/x) )                    -- &gt;= 1 by construction
-S = clamp(floor(m * r^k), [softMin, softMax])</pre>
-  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+m = gmedian(x)                                 -- log-space median: √(x_lo·x_hi) when the count is even
+r = gmedian( max(x/m, m/x) )                   -- &gt;= 1 by construction
+S = clamp(floor(m * r^k), [softMin, min softMax H])</pre>
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- tolAbsCoc on a complexity row
 
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
@@ -240,6 +240,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
     <li><b>sccFloor</b> 2</li>
     <li><b>tolNum/tolDen</b> 102/100</li>
     <li><b>tolAbs</b> 10</li>
+    <li><b>tolAbsCoc</b> 1</li>
     <li><b>legs cross at</b> 500</li>
     <li><b>verdictNodeCap</b> 131072</li>
     <li><b>verdictRowCap</b> 524288</li>

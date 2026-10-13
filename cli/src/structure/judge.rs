@@ -25,7 +25,7 @@ pub fn run(
 ) -> Result<Answer> {
     // measurement only — the structure verdict is this family's own
     // wire call below, never the scan mirror (batch-7 slice 8)
-    let (_config, files) = crate::scan::measure(root)?;
+    let (config, files) = crate::scan::measure(root)?;
     // ONE snapshot for every leg (batch 9 P10): blocks + index
     // measured once, the graph wire from that same index — the "ONE
     // walk" the module doc promises, structural now.
@@ -38,12 +38,14 @@ pub fn run(
     )?;
     drop(idx);
     let seam_facts = if split {
-        Some(super::seams::seam_facts(
-            root,
-            &files,
-            committed_soft(root),
-            &found,
-        )?)
+        let classes = crate::scan::classes::Classes::compile(root, &config.rules)
+            .map_err(anyhow::Error::msg)?;
+        let owners = super::seams::Owners {
+            soft: committed_soft(root),
+            classes: &classes,
+            rules: &config.rules,
+        };
+        Some(super::seams::seam_facts(root, &files, &owners, &found)?)
     } else {
         None
     };
@@ -142,6 +144,10 @@ fn assemble(
     let knobs = seams
         .as_ref()
         .map_or_else(Vec::new, |_| seam_knobs(root, &cfg));
+    // the verdict's own class rows, never a second builder (9.0.0)
+    let class_knobs = seams.as_ref().map_or_else(Vec::new, |_| {
+        crate::score::knobs::class_knob_rows(&cfg.rules)
+    });
     // ONE arc list, two tables (O54): the core draws fileRefs and the
     // directed crossing table from the same edge multiset, which is
     // what lets it read the intra mass off `inside` instead of asking
@@ -157,6 +163,7 @@ fn assemble(
         redundancy,
         seams,
         knobs,
+        class_knobs,
     })
 }
 
@@ -175,11 +182,15 @@ fn assemble(
 /// value through score::knobs::ceiling_rows code 3, so a repo setting
 /// `[score] size_penalty_max` had its two families disagree about the
 /// SAME curve, silently, since both answers are internally consistent.
+/// Code 13 rides only when a hard line is declared: `file_lines_fail
+/// = 0` means "no hard line" (the scan grade contract) and the core
+/// refuses any structure knob below 1 — the same reading as
+/// score::knobs::ceiling_rows code 2, so the core's 750 then judges.
 fn seam_knobs(root: &Path, cfg: &crate::config::Config) -> Vec<[u64; 2]> {
-    let mut k = vec![
-        [12, committed_soft(root)],
-        [13, cfg.thresholds.file_lines_fail as u64],
-    ];
+    let mut k = vec![[12, committed_soft(root)]];
+    if cfg.thresholds.file_lines_fail >= 1 {
+        k.push([13, cfg.thresholds.file_lines_fail as u64]);
+    }
     if let Some(p) = cfg.score.size_penalty_max {
         k.push([14, u64::from(p)]);
     }

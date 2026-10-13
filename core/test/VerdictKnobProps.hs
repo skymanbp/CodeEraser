@@ -21,6 +21,7 @@ battery =
   runChecks
     [ ("ceilings override moves the score and echoes in knobs", ceilingKnob)
     , ("thresholds/tolerance rows move the verdict and echo", thresholdKnob)
+    , ("a complexity row's absolute leg is +1 point, not +10 lines", cocTolerance)
     , ("the dedup pair fails over budget and passes at it", dedupBudget)
     , ("the soft line derives at establish, carries after, and judges", softLineWire)
     ]
@@ -83,6 +84,29 @@ thresholdKnob = scaleMoves && tolFlips
     Bool f <- KM.lookup "fail" rat
     e <- echo o "tolAbs"
     pure (f, e)
+
+-- | 9.0.0 through the REAL respond: a cognitive-complexity row
+-- (metric 1) at ceiling 15 may reach 16 in one edit (drawn, no fail)
+-- and 17 fails — +1 point, since the +2 % leg floors to 0 there — while
+-- a declared tolerance row code 3 = 3 lets 17 through and echoes; the
+-- file-lines row keeps its +10 (thresholdKnob's 310 over 300 above).
+cocTolerance :: Bool
+cocTolerance =
+  run 16 Nothing == Just (False, Number 1)
+    && run 17 Nothing == Just (True, Number 1)
+    && run 17 (Just [[3, 3]]) == Just (False, Number 3)
+ where
+  run :: Integer -> Maybe [[Integer]] -> Maybe (Bool, Value)
+  run v rows = do
+    o <- replyObj (maybe id (setKey "tolerance" . toJSON) rows (based v))
+    Object rat <- KM.lookup "ratchet" o
+    Bool f <- KM.lookup "fail" rat
+    (,) f <$> echo o "tolAbsCoc"
+  based v =
+    setKey
+      "baseline"
+      (object ["continuous" .= [[0, 1, 15 :: Integer]], "discrete" .= ([] :: [Integer])])
+      (setKey "continuous" (toJSON [[0, 1, v]]) (wireReq [] [] [] []))
 
 -- | ADR-008 P2 through the REAL respond: the [blocks, budget] pair
 -- answers through the fail bit — one over budget fails, at budget

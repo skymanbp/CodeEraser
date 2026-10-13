@@ -189,7 +189,7 @@ test-suite ce-core-test
                       ReferenceTed, CloneProps, ReferenceJaccard, ReferenceCandidates, CandidatesProps, ReferenceRank, RankProps, ReferenceBags, BagsProps, ReferenceDocPairs, DocPairsProps, ReferenceMoves, MovesProps,
                       AuditProps, TombstoneProps, SimilarProps, EntropyProps, JoinProps, LangProps, DocumentProps, DocumentGen, DocumentHarness, DocumentProps4, DocumentGen4, DocumentProps5, DocumentGen5, DocumentProps6, DocumentGen6, SpellProps, ScanProps, ScanCyclesProps, ScanEventsProps, ReferenceScanGen, ReferenceScan, ScanPageTrees, ScanReferenceProps,
                       StructureProps, StructureModularityProps, TrendProps, EraseProps, VerdictProps,
-                      VerdictWireProps, VerdictFenceProps, VerdictKnobProps, SplitProps, WireHarness,
+                      VerdictWireProps, VerdictFenceProps, VerdictKnobProps, SoftProps, SplitProps, WireHarness,
                       ClassProps, StackingProps, DeclProps,
                       ReferenceTombstone, TombstoneEquivProps, ReferenceSimilar, SimilarEquivProps, ReferenceErase, EraseEquivProps, ReferenceTrend, TrendEquivProps, ReferenceContract, ReferenceScore, ReferenceRatchet, VerdictGen, VerdictEquivProps, ReferenceSplit, ReferenceStructure, StructureGen, StructureEquivProps
     build-depends:

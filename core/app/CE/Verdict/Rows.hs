@@ -16,10 +16,9 @@ module CE.Verdict.Rows
   , selfLoopsOffence
   ) where
 
-import CE.Verdict.Cost (classIdPastFence, scoreScale)
-import CE.Scan.Cost (gradeTable)
+import CE.Verdict.Cost (classIdPastFence, metricTop, scoreScale)
 import CE.Verdict.Table (ascendingBy)
-import CE.Wire (label, topCode, u64)
+import CE.Wire (label, u64)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import qualified Data.IntSet as IS
@@ -93,7 +92,7 @@ contRow name i row = case row of
     | length rest > 1 -> Just (label name i <> "malformed row")
     | any (< 0) row -> Just (label name i <> "negative field")
     | not (u64 u && u64 v) -> Just (label name i <> "outside u64")
-    | code > topCode gradeTable -> Just (label name i <> "unknown metric code")
+    | code > metricTop -> Just (label name i <> "unknown metric code")
     | any classIdPastFence rest -> Just (label name i <> "class beyond the fence")
     | otherwise -> Nothing
   _ -> Just (label name i <> "malformed row")

@@ -1339,7 +1339,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Verdict/Score.hs|ffed7fc4a3ab3316|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 210,
+    "line": 209,
     "text": "touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Wire/Result.hs|2b18a37c2d41233e|0": {
@@ -1402,8 +1402,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/VerdictProps.hs|94000713a90044f4|0": {
     "target": "../../../core/test/VerdictProps.hs",
-    "line": 217,
-    "end": 229,
+    "line": 228,
+    "end": 240,
     "text": "-- | Plan v2.30 step 5b-9: the T3 family's verified pairs enter the sim"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|0": {
@@ -2316,31 +2316,31 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 78,
-    "end": 84,
+    "line": 102,
+    "end": 108,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/config.rs|03a125dbca2461b4|1": {
     "target": "../../../cli/src/config.rs",
-    "line": 78,
-    "end": 89,
+    "line": 102,
+    "end": 113,
     "text": "/// Structure declaration layer (M6 S3a, design booklet §2 row A):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/judge.rs|71db14cfaff0abb0|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 93,
-    "end": 98,
+    "line": 95,
+    "end": 100,
     "text": "/// Judged languages only (plan v2.5): letting the scan-only arm in"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|16456a4d00b7fc23|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 154,
-    "end": 164,
+    "line": 172,
+    "end": 182,
     "text": "fn path_answers(reply: &serde_json::Value) -> Result<Built> {"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../cli/src/structure/wire.rs|f1d285a1af03715a|0": {
     "target": "../../../cli/src/structure/wire.rs",
-    "line": 163,
+    "line": 181,
     "text": "anyhow::bail!(\"{priced} structure/1 request rows exceed the cap {cap}\");"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Lang/Common/Boot2.hs|ecbfee15e57c3ad1|0": {
@@ -2350,96 +2350,96 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 138,
-    "end": 152,
+    "line": 140,
+    "end": 154,
     "text": "-- | depth == parent.depth + 1 for every non-root row. nodeRow's"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3d54266a3b6aab2f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 118,
-    "end": 121,
+    "line": 120,
+    "end": 123,
     "text": "declOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|460a7441df054ec5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 79,
-    "end": 86,
+    "line": 80,
+    "end": 87,
     "text": "<> [ Mod.crossTableOffence (reqFileRefs req) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 154,
-    "end": 167,
+    "line": 156,
+    "end": 169,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 154,
-    "end": 167,
+    "line": 156,
+    "end": 169,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 176,
-    "end": 178,
+    "line": 178,
+    "end": 180,
     "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 178,
-    "end": 182,
+    "line": 180,
+    "end": 184,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 178,
-    "end": 198,
+    "line": 180,
+    "end": 200,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6ad8993d8911e54e|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 197,
+    "line": 199,
     "text": "<> [\"fail\" .= degraded, \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable], \"degraded\" .= degraded]"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 76,
+    "line": 77,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|82207190ce81caf3|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 123,
-    "end": 136,
+    "line": 125,
+    "end": 138,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|89c38eabd37e152a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 56,
-    "end": 61,
+    "line": 57,
+    "end": 62,
     "text": "priced :: StructReq -> Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 110,
-    "end": 113,
+    "line": 112,
+    "end": 115,
     "text": "convOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|a5ff01411ccb2dda|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 103,
-    "end": 109,
+    "line": 105,
+    "end": 111,
     "text": "-- the [dir, key, count] reading: the key under its cap, the count"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|b48a97004c2921f5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 71,
-    "end": 78,
+    "line": 72,
+    "end": 79,
     "text": "violation req ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ddfc9813db49d347|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 226,
-    "end": 237,
+    "line": 228,
+    "end": 239,
     "text": "-- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ebd15a1b8f029b6d|0": {
@@ -2450,14 +2450,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|f179c7361af37e1a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 94,
-    "end": 109,
+    "line": 96,
+    "end": 111,
     "text": "dirTables =\n[ ((3, \"patternShapes\", capOk \"shape bits outside 0..127\" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ff6fdcfd5200b86f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 70,
-    "end": 89,
+    "line": 71,
+    "end": 90,
     "text": "violation :: StructReq -> Maybe String"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|1ce45d9f1e01be3f|0": {
@@ -2569,8 +2569,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|18c9f0eea6030e9d|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 179,
-    "end": 182,
+    "line": 180,
+    "end": 183,
     "text": "-- | Node ceiling (the verdictRowCap magnitude anchor): over-cap"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|2300974f81b4c175|0": {
@@ -2625,8 +2625,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|c1ba8a23dc04c7ed|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 136,
-    "end": 173,
+    "line": 133,
+    "end": 170,
     "text": "-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|c71c1473fe529f1e|0": {
@@ -2776,8 +2776,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|d6dac33d467172f0|0": {
     "target": "../../../core/app/CE/Structure/Request.hs",
-    "line": 179,
-    "end": 182,
+    "line": 184,
+    "end": 187,
     "text": "-- | The [dirId, code, count] distribution the axes read: the shape"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Shape.hs|04ef9ff20f51e83d|0": {
@@ -2946,11 +2946,11 @@
     "end": 15,
     "text": "//! Same-key siblings are told apart by the §7.2 CONTAINER ANCHOR"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/knobs.rs|f54c2e9de298eca5|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/knobs.rs|25015ed9a7a1a262|0": {
     "target": "../../../cli/src/score/knobs.rs",
-    "line": 41,
-    "end": 68,
-    "text": "/// The core's cycle floor when none is declared"
+    "line": 55,
+    "end": 74,
+    "text": "pub fn core_defaults() -> ScoreCfg {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
@@ -3061,19 +3061,19 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|1673217720b81c48|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 156,
-    "end": 163,
+    "line": 160,
+    "end": 167,
     "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|307400576096ea7f|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 195,
-    "end": 208,
+    "line": 199,
+    "end": 212,
     "text": "-- | The verdict.result line, one reply with the degraded flag: the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|519ccf349e6063d5|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 154,
+    "line": 158,
     "text": "floorFail = maybe False (perMille <) (reqFloor req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|5267f37c538565c1|0": {
@@ -3084,15 +3084,21 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|559a51d13591df9e|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 173,
-    "end": 182,
+    "line": 177,
+    "end": 186,
     "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|56743e615ed9c0b8|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 210,
-    "end": 213,
+    "line": 214,
+    "end": 217,
     "text": "-- | What a degraded reply answers: empty tables, the defaults, and a"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|6c3516d7f8b5804b|0": {
+    "target": "../../../core/app/CE/Verdict.hs",
+    "line": 142,
+    "end": 143,
+    "text": "effSoft = case base of"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|6df58d645f65d232|0": {
     "target": "../../../core/app/CE/Verdict.hs",
@@ -3102,8 +3108,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|854205522b2ef6da|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 146,
-    "end": 152,
+    "line": 150,
+    "end": 156,
     "text": "r = ratchet rk classTol (reqPresent req) base (reqCont req) (reqDisc req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|c21dd7adccd4467a|0": {
@@ -3129,16 +3135,28 @@
     "line": 54,
     "text": "parsed = parseBaseline (reqBaseline req)"
   },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|00e1dee4a2d8d938|0": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 137,
+    "end": 138,
+    "text": "tolAbsCoc :: Integer"
+  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|07581643642c63fb|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 151,
-    "end": 154,
+    "line": 170,
+    "end": 173,
     "text": "-- | The hard line H (plan §4.1's 750), reaching the core for the"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|1513780063c4244c|0": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 98,
+    "end": 99,
+    "text": "metricTop :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|213e5a4586c1fae0|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 200,
-    "end": 201,
+    "line": 219,
+    "end": 220,
     "text": "deadIndegCeil :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|25abab9c9efb2321|0": {
@@ -3149,50 +3167,44 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|282f482011c64c7c|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 259,
-    "end": 263,
+    "line": 280,
+    "end": 284,
     "text": "verdictNodeCap :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|5f54c51ee93e3da0|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 112,
-    "end": 119,
+    "line": 123,
+    "end": 130,
     "text": "tolNum :: Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|7305f03e70d4e437|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|5f54c51ee93e3da0|1": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 102,
-    "end": 103,
-    "text": "rewriteNum :: Integer"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|730b9020fd437b53|0": {
-    "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 193,
-    "end": 194,
-    "text": "cocCeil :: Integer"
+    "line": 123,
+    "end": 130,
+    "text": "tolNum :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|752adad12698c251|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 168,
-    "end": 173,
+    "line": 187,
+    "end": 192,
     "text": "-- | k: the multiplicative-MAD exponent in the soft-line derivation"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|7650c9eba8724304|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 158,
-    "end": 166,
+    "line": 177,
+    "end": 185,
     "text": "-- | P_max: the axis-0 penalty of a file AT the hard line, in the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|7cbf659b07b43ccb|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 105,
-    "end": 106,
+    "line": 115,
+    "end": 116,
     "text": "rewriteDen :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|86cdac7551b0138c|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 250,
-    "end": 251,
+    "line": 271,
+    "end": 272,
     "text": "scoreScale :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|8f80f9819c596dd5|0": {
@@ -3203,20 +3215,20 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|904b225d99978e8f|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 108,
-    "end": 111,
+    "line": 118,
+    "end": 121,
     "text": "-- | ADR-006 continuous-ratchet tolerance: a ceiling may be exceeded"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|93e1c170a4e5a601|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 121,
-    "end": 128,
+    "line": 140,
+    "end": 147,
     "text": "-- | The classKnobs code a class states its OWN ratchet tolerance"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|993952d94b6acdbc|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 182,
-    "end": 189,
+    "line": 201,
+    "end": 208,
     "text": "-- | The §B clamp fence: however the repo's distribution leans, the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|a14dd1d8125a0b5b|0": {
@@ -3227,44 +3239,50 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|b70e22fc16e4f9aa|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 85,
-    "end": 86,
+    "line": 87,
+    "end": 88,
     "text": "classCap :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|c43a03b028922dc3|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 212,
-    "end": 213,
+    "line": 233,
+    "end": 234,
+    "text": "violCost :: Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|c43a03b028922dc3|1": {
+    "target": "../../../core/app/CE/Verdict/Cost.hs",
+    "line": 233,
+    "end": 234,
     "text": "violCost :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|cd38faf265bed4ea|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 236,
-    "end": 237,
+    "line": 257,
+    "end": 258,
     "text": "violCostNeutral :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|cd9a97e542c04810|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 144,
-    "end": 149,
+    "line": 163,
+    "end": 168,
     "text": "-- | Size-axis soft-line FALLBACK: when the baseline carries no"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e0570c69d97f9368|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 130,
-    "end": 142,
+    "line": 149,
+    "end": 161,
     "text": "-- | The cognitive-complexity sibling of classTolCode (6.4.0, O37)."
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e0728177b7e69a35|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 242,
-    "end": 243,
+    "line": 263,
+    "end": 264,
     "text": "defaultWeight :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|e6cce729a02fd8f1|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 155,
-    "end": 156,
+    "line": 174,
+    "end": 175,
     "text": "sizeHard :: Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Faces.hs|833b59cd5de1365e|0": {
@@ -3296,22 +3314,10 @@
     "end": 51,
     "text": "ratchetObj :: Bool -> Ratcheted -> [(String, Bool)] -> Value"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|08ef6cbd74e5cc5a|0": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 108,
-    "end": 113,
-    "text": ", rDrawn =\n[ [u, c, v - bv]"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|0b2a6a4e2e391150|0": {
-    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 61,
-    "end": 64,
-    "text": "-- | The single-edit ceiling allowance. Globally: max of the +2% leg"
-  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|1baa6db902d3c0ab|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 116,
-    "end": 122,
+    "line": 122,
+    "end": 128,
     "text": ", rDropped =\n[ [u, c, v]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|1ceba8f5f6d929fe|0": {
@@ -3322,64 +3328,76 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|2551be227a692885|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 128,
-    "end": 136,
+    "line": 134,
+    "end": 142,
     "text": "-- the class is read from the CURRENT row and spends only on the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|2b2ab11c94c4b1ca|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 49,
-    "end": 51,
+    "line": 50,
+    "end": 52,
     "text": "-- ^ [u,metricCode,drawn]: over the ceiling but inside tolerance —"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|332d5805e967f694|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 114,
-    "end": 115,
+    "line": 120,
+    "end": 121,
+    "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|332d5805e967f694|1": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 120,
+    "end": 121,
     "text": ", rAdded = S.toAscList (curSet `S.difference` baseSet)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|4f2919edd7e637b2|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 124,
+    "line": 130,
     "text": ", rNewDisc = disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|6a72c7512fc5497d|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 42,
-    "end": 43,
+    "line": 43,
+    "end": 44,
     "text": "ratchetBound :: RatchetKnobs"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|6c3f5504c3f5aae0|0": {
+    "target": "../../../core/app/CE/Verdict/Ratchet.hs",
+    "line": 62,
+    "end": 68,
+    "text": "-- | The single-edit ceiling allowance for a row of metric `m`."
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|86920523129df3dc|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 92,
+    "line": 98,
     "text": "ratchet ::\nRatchetKnobs ->"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|95ff1c903969508b|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 141,
-    "end": 142,
+    "line": 147,
+    "end": 148,
     "text": "curSet = S.fromList disc"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|9bd30dae6afa6514|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 148,
+    "line": 154,
     "text": "identity = take 3"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|9ea8f7bb94748c26|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 81,
-    "end": 84,
+    "line": 87,
+    "end": 90,
     "text": "-- saw adopt their value (bootstrap, not a violation). A baseline"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|ced8e3a7acc32281|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 103,
-    "end": 108,
+    "line": 109,
+    "end": 114,
     "text": "{ rOver =\n[ [u, c, v, allowed]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|d5210d7f2d5e81ca|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 123,
+    "line": 129,
     "text": ", rNewCont = [[u, c, maybe v (min v) mbv] | ((u, c), (v, mbv, _)) <- rows]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|e6880c3e826550ee|0": {
@@ -3389,60 +3407,60 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|e77609f961eb1415|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 66,
-    "end": 75,
+    "line": 70,
+    "end": 81,
     "text": "-- A class that declares its own tolerance REPLACES both legs with an"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|f4ad7dcc70c09767|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 77,
-    "end": 124,
+    "line": 83,
+    "end": 130,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|f4ad7dcc70c09767|1": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 77,
-    "end": 81,
+    "line": 83,
+    "end": 87,
     "text": "-- | Judge current facts against the baseline. Continuous: per"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|ff903654540a6196|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Ratchet.hs|fbb3b9d40e679864|0": {
     "target": "../../../core/app/CE/Verdict/Ratchet.hs",
-    "line": 73,
-    "end": 75,
-    "text": "tolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer"
+    "line": 77,
+    "end": 81,
+    "text": "tolerated :: RatchetKnobs -> Integer -> Maybe Integer -> Integer -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Rows.hs|b49585f26d3b58c8|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 90,
-    "end": 102,
+    "line": 89,
+    "end": 101,
     "text": "contRow :: String -> Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|0047c55e846ad4db|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 213,
+    "line": 212,
     "text": "dupFiles k f = touched [(u, v) | [u, v, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|07869a65a6a23383|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 189,
-    "end": 195,
+    "line": 188,
+    "end": 194,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|07869a65a6a23383|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 189,
-    "end": 195,
+    "line": 188,
+    "end": 194,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|14fb74480fd1eb86|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 224,
+    "line": 223,
     "text": "count [() | [_, rw, ap] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|3636fd2f7c9eb1b1|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 197,
-    "end": 207,
+    "line": 196,
+    "end": 206,
     "text": "-- | Axis 2 / axis 3 mass (7.0.0, O22): the FILES a verified pair"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|398835d61e497791|0": {
@@ -3453,20 +3471,20 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|49a9c5a3b2637360|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 270,
-    "end": 277,
+    "line": 269,
+    "end": 276,
     "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|49a9c5a3b2637360|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 270,
-    "end": 277,
+    "line": 269,
+    "end": 276,
     "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|53ce9d036606538c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 208,
-    "end": 210,
+    "line": 207,
+    "end": 209,
     "text": "cloneFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|0": {
@@ -3489,8 +3507,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|57124610f8b6b134|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 231,
-    "end": 238,
+    "line": 230,
+    "end": 240,
     "text": "cycleMembers :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|5b3ad397752d9911|0": {
@@ -3505,15 +3523,9 @@
     "end": 149,
     "text": "docFiles = toInteger (length (fDocFiles f))"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6507a526d9217ff6|1": {
-    "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 148,
-    "end": 153,
-    "text": "docFiles = toInteger (length (fDocFiles f))"
-  },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|656b9739094cc571|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 187,
+    "line": 186,
     "text": "s = maybe (sSizeCeil k) id soft"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|0": {
@@ -3525,7 +3537,7 @@
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
     "line": 151,
-    "end": 156,
+    "end": 164,
     "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|67ae4563ca2c76a8|0": {
@@ -3536,14 +3548,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|87e11f21877ed3c2|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 222,
-    "end": 224,
+    "line": 221,
+    "end": 223,
     "text": "churnHeavy :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|993827d7e86e206a|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 219,
-    "end": 220,
+    "line": 218,
+    "end": 219,
     "text": "deadFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|9a33567040c58443|0": {
@@ -3554,25 +3566,30 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|aa447550ddf1042c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 212,
-    "end": 219,
+    "line": 211,
+    "end": 212,
     "text": "dupFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|aacc4ec38599f419|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 237,
+    "line": 236,
     "text": ", size > 1 || IS.member (fromInteger u) loops"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|b9b5ad04a3a3c78b|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 216,
-    "end": 217,
+    "line": 215,
+    "end": 216,
     "text": "touched :: [(Integer, Integer)] -> Integer"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|cf1e0c54c1524a6c|0": {
+    "target": "../../../core/app/CE/Verdict/Score.hs",
+    "line": 149,
+    "text": "codeFiles = count [() | (u : _) <- fPos f, IS.notMember (fromInteger u) (docSet f)]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|e53c6ab8a40735d4|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 253,
-    "end": 256,
+    "line": 252,
+    "end": 255,
     "text": "effWeight :: ScoreKnobs -> [[Integer]] -> Integer -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|f51a2f3edddd803b|0": {
@@ -3583,62 +3600,62 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|fc5edbc46f904ee6|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 259,
-    "end": 260,
+    "line": 258,
+    "end": 259,
     "text": "effectiveWeights :: ScoreKnobs -> [[Integer]] -> [[Integer]]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|ffed7fc4a3ab3316|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 210,
+    "line": 209,
     "text": "touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|240872b953950d90|0": {
+    "target": "../../../core/app/CE/Verdict/Soft.hs",
+    "line": 119,
+    "end": 126,
+    "text": "zonePenalty s0 h pMax x"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|37ae4657ff314060|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 37,
-    "end": 46,
+    "line": 70,
+    "end": 79,
     "text": "softLine :: Integer -> Integer -> Integer -> [Integer] -> Maybe Integer"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|5c6c024e6b6aee48|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|56bacf2666bd6e8c|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 31,
-    "end": 36,
-    "text": "-- | S = clamp(floor(m·r^k), [lo, hi]) over the judged-language LOC"
+    "line": 55,
+    "end": 61,
+    "text": "-- | S = clamp(⌊m·r^k⌋, [lo, hi]) over the judged-language LOC"
   },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|6e95d52f17ecdd2a|0": {
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|967b0689bcbc7531|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 18,
-    "end": 29,
-    "text": "-- | Exact order-statistic median of a non-empty list: the middle"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|74135f0bedf6ccec|0": {
-    "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 38,
-    "end": 39,
-    "text": "softLine kExp lo hi locs = case sort [x | x <- locs, x > 0] of"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|962d9f0d739396b5|0": {
-    "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 63,
-    "end": 69,
-    "text": "zonePenalty s h pMax x"
+    "line": 71,
+    "end": 81,
+    "text": "softLine kExp lo hi locs = case [x | x <- locs, x > 0] of"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|96c17b1bd5d7dd79|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 65,
-    "end": 66,
+    "line": 121,
+    "end": 122,
     "text": "| h <= s = pMax % 1"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|a59d4cf332f57ef6|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 48,
-    "end": 62,
+    "line": 97,
+    "end": 111,
     "text": "-- | p(x) for one file: 0 at or under the soft line; the convex"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|b550b11977d6e610|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
     "line": 1,
-    "end": 8,
+    "end": 17,
     "text": "-- | The plan-v2.6 soft zone (§A) and relative soft line (§B), pure"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|c82e10827cdcb93a|0": {
+    "target": "../../../core/app/CE/Verdict/Soft.hs",
+    "line": 45,
+    "end": 53,
+    "text": "-- | The two middle order statistics of a non-empty list (the one"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Table.hs|50114d0507895916|0": {
     "target": "../../../core/app/CE/Verdict/Table.hs",
@@ -5637,12 +5654,12 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|15998cfcbbcdc99b|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 164,
+    "line": 168,
     "text": "conds = failConditions r floorFail dedupOver digestDrift"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|8c8cfcceeca29fc9|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 205,
+    "line": 209,
     "text": "(\"joinSeverity\" .= [[c, s] | (c, s) <- severities])"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|3a0e1a98252fd865|0": {
@@ -5688,26 +5705,26 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Cost.hs|7305f03e70d4e437|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 102,
-    "end": 103,
+    "line": 112,
+    "end": 113,
     "text": "rewriteNum :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Cost.hs|7cbf659b07b43ccb|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 105,
-    "end": 106,
+    "line": 115,
+    "end": 116,
     "text": "rewriteDen :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Cost.hs|be06412bc5c9cf07|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 94,
-    "end": 95,
+    "line": 104,
+    "end": 105,
     "text": "cochangeFloor :: Integer"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Cost.hs|e8dcf08903310724|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
-    "line": 92,
-    "end": 95,
+    "line": 102,
+    "end": 105,
     "text": "-- own table floor (pairs enter it at count >= 2), so the lattice"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Faces.hs|2c9081fbdbd93c19|0": {
@@ -5897,8 +5914,8 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Knobs.hs|528e12b08eff93a5|0": {
     "target": "../../../core/app/CE/Verdict/Knobs.hs",
-    "line": 101,
-    "end": 103,
+    "line": 102,
+    "end": 104,
     "text": ", \"rewriteNum\" .= sRewriteNum k"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Knobs.hs|89255dcefa5c87de|0": {
@@ -5909,20 +5926,20 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Knobs.hs|f9c412546b7119e9|0": {
     "target": "../../../core/app/CE/Verdict/Knobs.hs",
-    "line": 74,
-    "end": 80,
+    "line": 75,
+    "end": 81,
     "text": "effectiveJoin :: ScoreKnobs -> [[Integer]] -> Knobs"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Rows.hs|8cd2d720fbab8cbf|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 49,
-    "end": 55,
+    "line": 48,
+    "end": 54,
     "text": "simRow :: Integer -> String -> Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Rows.hs|90a07d33766d9aa0|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 40,
-    "end": 41,
+    "line": 39,
+    "end": 40,
     "text": "| u >= n || v >= n -> Just (label name i <> \"endpoint out of range\")"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|261d4883f27a4fb2|0": {
@@ -6003,34 +6020,34 @@
     "end": 96,
     "text": "fn candidates(sf: &SeamFacts, r: &Reply) -> Result<Vec<[i64; 5]>> {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|51898e9fa4010244|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|87ed8079d29ddad4|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 179,
-    "end": 186,
-    "text": "let mut k = vec!["
+    "line": 189,
+    "end": 198,
+    "text": "fn seam_knobs(root: &Path, cfg: &crate::config::Config) -> Vec<[u64; 2]> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/judge.rs|c3ae6102bc38c631|0": {
     "target": "../../../cli/src/structure/judge.rs",
-    "line": 80,
-    "end": 91,
+    "line": 82,
+    "end": 93,
     "text": "pub(crate) fn committed_soft(root: &Path) -> u64 {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|005c173dd605b093|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 150,
-    "end": 164,
+    "line": 177,
+    "end": 191,
     "text": "let since = format!(\"{CHURN_WINDOW_DAYS} days ago\");"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|115da39e5377117c|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 244,
-    "end": 262,
+    "line": 271,
+    "end": 289,
     "text": "/// Word-bounded containment: the name with no identifier character"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|16cddbf1ce3c8d52|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 214,
-    "end": 242,
+    "line": 241,
+    "end": 269,
     "text": "/// One mention edge per (from, to) unit pair where `to`'s bare name"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|1f1c9651d4bc18a4|0": {
@@ -6041,25 +6058,25 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2349130d2081cba4|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 204,
+    "line": 231,
     "text": "let end = (u.end_line as u64).min(total);"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2e89520f8fc057f5|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 50,
-    "end": 55,
+    "line": 76,
+    "end": 81,
     "text": "for f in files {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|3eb1197a1630aff5|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 221,
-    "end": 242,
+    "line": 248,
+    "end": 269,
     "text": "fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str, lang: Lang) {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|51dde1bfb2cad0a0|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 108,
-    "end": 143,
+    "line": 135,
+    "end": 170,
     "text": "/// over the window — [fileId, a, b] rows, a < b, distinct. Ledger"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|943c2528ffb1772e|0": {
@@ -6070,20 +6087,20 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|a54c2b4d17ae3069|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 78,
-    "end": 106,
+    "line": 105,
+    "end": 133,
     "text": "/// span over two files)."
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|adcd3022195c7dcb|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 114,
-    "end": 143,
+    "line": 141,
+    "end": 170,
     "text": "if out.files.is_empty() {\nreturn;\n}\nlet ids: BTreeMap<&str, u64> = out"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|d0ada7ad3365a2e6|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 88,
-    "end": 104,
+    "line": 115,
+    "end": 131,
     "text": ".collect();\nlet mut rows = BTreeSet::new();"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|d8f59404b36e4c06|0": {
@@ -6094,19 +6111,19 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|ee6577134b4b67bd|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 234,
+    "line": 261,
     "text": "if i == j || name.len() < NAME_FLOOR {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|fe03c940e631e227|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 185,
-    "end": 199,
+    "line": 212,
+    "end": 226,
     "text": "fn top_level(all: &[units::Unit]) -> Vec<units::Unit> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/tests/it/structure_knobs.rs|618d30c6681b777f|0": {
     "target": "../../../cli/tests/it/structure_knobs.rs",
-    "line": 67,
-    "end": 78,
+    "line": 77,
+    "end": 88,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|8cc7b6446f0dbf60|0": {
@@ -6122,8 +6139,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 218,
-    "end": 225,
+    "line": 220,
+    "end": 227,
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|1c6da934c477c2cd|0": {
@@ -6140,68 +6157,68 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|049c7da6cbe4fbab|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 146,
-    "end": 147,
+    "line": 147,
+    "end": 148,
     "text": "seamSoft :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|43ee1926218091b6|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 155,
-    "end": 165,
+    "line": 156,
+    "end": 166,
     "text": "-- | §C cost prices, in MILLI penalty-units (knob codes 15 / 16):"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|615914f0f7e0234c|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 149,
-    "end": 150,
+    "line": 150,
+    "end": 151,
     "text": "seamHard :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|6d9dd6de5812b351|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 152,
-    "end": 153,
+    "line": 153,
+    "end": 154,
     "text": "seamPMax :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|6e35690d3aebce5c|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 164,
-    "end": 165,
+    "line": 165,
+    "end": 166,
     "text": "roiPhiMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|9f220d8cdc714a19|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 176,
-    "end": 177,
+    "line": 177,
+    "end": 178,
     "text": "roiChurnMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|ab4197b7bb88af03|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 161,
-    "end": 162,
+    "line": 162,
+    "end": 163,
     "text": "roiRefMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|c1ba8a23dc04c7ed|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 136,
-    "end": 145,
+    "line": 133,
+    "end": 142,
     "text": "-- | Split-ROI (plan v2.6 §C, knob codes 12..14): the advisory's own"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|c862bbeef4114c05|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 173,
-    "end": 174,
+    "line": 174,
+    "end": 175,
     "text": "roiCloneMilli :: Integer"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|e8dba1ee48a474bf|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 158,
-    "end": 160,
+    "line": 159,
+    "end": 161,
     "text": "-- mental-load overhead the booklet names φ). Defaults sized so a"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Cost.hs|f29557c8656c44ff|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 167,
-    "end": 172,
+    "line": 168,
+    "end": 173,
     "text": "-- | v1.1 prices (plan v2.7 ②, knob codes 17 / 18): a seam CUTTING"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Document.hs|82b64505d58e367e|0": {
@@ -6212,14 +6229,20 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|077b9fc6a128a52c|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 125,
-    "end": 140,
+    "line": 135,
+    "end": 150,
     "text": "unitsOrdered :: [[Integer]] -> Maybe String"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|188b5b7ba4f20335|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 229,
-    "end": 231,
+    "line": 242,
+    "end": 244,
+    "text": "straddle (s, e) = case (M.lookupGE s lineIx, M.lookupLT e lineIx) of"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|188b5b7ba4f20335|1": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 242,
+    "end": 244,
     "text": "straddle (s, e) = case (M.lookupGE s lineIx, M.lookupLT e lineIx) of"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|2183f99ab9554111|0": {
@@ -6228,45 +6251,33 @@
     "end": 8,
     "text": "-- × roiRefMilli + the flat roiPhiMilli per new file — and answer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|22464fcabc491ff7|0": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 216,
-    "end": 219,
-    "text": "crossings :: [(Integer, Integer)] -> M.Map Integer Integer"
-  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|2cd27091f375fa10|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 178,
+    "line": 190,
     "text": "let (u, b, c) = maximumBy (comparing (\\(_, b', c') -> b' % c')) priced"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|34d5a565f95d2ae2|0": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 174,
-    "end": 182,
-    "text": "step (cs, es) [fid, total] = case seams k (slice fid) total of"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|351809cd25914d8d|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 53,
+    "line": 56,
     "text": ", tableOffence \"seamRefs\" id (refRow counts) refs"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|358506448a24c12c|0": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 208,
+    "end": 222,
+    "text": "seams :: (Knobs, Integer -> Rational) -> Slice -> Integer -> [(Integer, Integer, Integer)]"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|51d5b7750a11080f|0": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 186,
+    "end": 194,
+    "text": "step (cs, es) (fid : total : cls) = case seams (k, classedZone classes (sum cls) curve) (slice fid) total of"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|54c9f1c4b751da77|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 158,
-    "end": 160,
+    "line": 168,
+    "end": 170,
     "text": "-- (cost is never 0: phi >= 1 by the knob rule) — else an exemption"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|5b9e323f73b4397c|0": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 200,
-    "end": 201,
-    "text": "p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|5b9e323f73b4397c|1": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 200,
-    "end": 201,
-    "text": "p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|609b31afa4d328e2|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
@@ -6282,8 +6293,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|633baa81008e9733|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 142,
-    "end": 144,
+    "line": 152,
+    "end": 154,
     "text": "refRow :: M.Map Integer Integer -> Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|8b4139f48f7823fb|0": {
@@ -6291,17 +6302,17 @@
     "line": 7,
     "text": "-- either the best viable seam (ROI >= 1) or an exemption row whose"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|8e0ee7f42328c6f7|0": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 194,
-    "end": 209,
-    "text": "seams :: Knobs -> Slice -> Integer -> [(Integer, Integer, Integer)]"
-  },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|995d1de7f671bcc2|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 47,
-    "end": 56,
+    "line": 50,
+    "end": 59,
     "text": "splitOffence :: [[Integer]] -> SeamTables -> Maybe String"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|a7c56e332a4728dc|0": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 66,
+    "end": 78,
+    "text": "fileRow i row = ((\"seamFiles \" <> show i <> \": \") <>) <$> lookup True (fileFaults i row)"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|a8e3db4a8465b390|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
@@ -6311,118 +6322,122 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|be33d2f764dfbb69|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 205,
-    "end": 209,
+    "line": 218,
+    "end": 222,
     "text": "cost u =\ncharge refX u * kRoiRefMilli k"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|be33d2f764dfbb69|1": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 205,
-    "end": 209,
+    "line": 218,
+    "end": 222,
     "text": "cost u =\ncharge refX u * kRoiRefMilli k"
-  },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|c518302ca496d69c|0": {
-    "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 63,
-    "end": 68,
-    "text": "fileRow i row = case row of"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|d025f039290eb9f3|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 118,
-    "end": 120,
+    "line": 128,
+    "end": 130,
     "text": "churnRow :: M.Map Integer Integer -> Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|e24726e8b1c65fa9|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 76,
-    "end": 82,
+    "line": 86,
+    "end": 92,
     "text": "spanOffence :: M.Map Integer Integer -> String -> (Integer, Integer, Integer) -> Maybe String"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|e931ad98010910d9|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 179,
+    "line": 191,
     "text": "in if b >= c\nthen ([fid, u, b, c] : cs, es)"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|efba8f7c519933d2|0": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 214,
+    "text": "benefit end = max 0 (floor (1000 * (p total - p end - p (total - end))))"
+  },
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|efba8f7c519933d2|1": {
+    "target": "../../../core/app/CE/Structure/Split.hs",
+    "line": 214,
+    "text": "benefit end = max 0 (floor (1000 * (p total - p end - p (total - end))))"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Split.hs|f194033918cbcac6|0": {
     "target": "../../../core/app/CE/Structure/Split.hs",
-    "line": 238,
-    "end": 239,
+    "line": 251,
+    "end": 252,
     "text": "charge :: M.Map Integer Integer -> Integer -> Integer"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Verdict/Soft.hs|962d9f0d739396b5|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Verdict/Soft.hs|240872b953950d90|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 63,
-    "end": 69,
-    "text": "zonePenalty s h pMax x"
+    "line": 119,
+    "end": 126,
+    "text": "zonePenalty s0 h pMax x"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Verdict/Soft.hs|96c17b1bd5d7dd79|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 65,
+    "line": 121,
     "text": "| h <= s = pMax % 1"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Verdict/Soft.hs|a59d4cf332f57ef6|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 48,
-    "end": 62,
+    "line": 97,
+    "end": 111,
     "text": "-- | p(x) for one file: 0 at or under the soft line; the convex"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|0c01dba9739e23a9|0": {
     "target": "../size-advisory.md",
-    "line": 107,
-    "end": 111,
+    "line": 109,
+    "end": 113,
     "text": "- **自仓首跑实证**（S=294 口径复核 2026-08-20）：graph_ladder.rs"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|329075613142ec37|0": {
     "target": "../size-advisory.md",
-    "line": 94,
-    "end": 97,
+    "line": 96,
+    "end": 99,
     "text": "benefit = 软区间罚回收（与 verdict 同一曲线权威"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|34258d75cd93294a|0": {
     "target": "../size-advisory.md",
-    "line": 115,
-    "end": 118,
+    "line": 117,
+    "end": 120,
     "text": "- 方法：`Cost.hs` 价点重编 × 语料 `--split-candidates` 重放，比对"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|3ba2981147276636|0": {
     "target": "../size-advisory.md",
-    "line": 55,
+    "line": 57,
     "text": "φ（`roiPhiMilli`）。设计初稿的「基线重键噪声」并入 φ：搬走的成员换键、基线具名重立一次，是每个新文件付一次的固定代价，不另立项（同批退役）。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4601876c535f456f|0": {
     "target": "../size-advisory.md",
-    "line": 51,
-    "end": 52,
+    "line": 53,
+    "end": 54,
     "text": "- 收益 B = **渐进区罚分回收**，模型唯一一项。设计初稿另列的「dedup 预算效应」与「热/冷单元隔离」已于 v2.30 步 5b 退役、不再是「未实现」："
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|4ea3a6ec3001bf79|0": {
     "target": "../size-advisory.md",
-    "line": 111,
-    "end": 114,
+    "line": 113,
+    "end": 116,
     "text": "候选——豁免与候选语义都以数字落地。"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|a13b8e580620e6b5|0": {
     "target": "../size-advisory.md",
-    "line": 123,
+    "line": 125,
     "text": "- **roiChurnMilli = 150**（0.6×ref：历史相关性弱于在场代码耦合的"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|d9dffcd08eba8db2|0": {
     "target": "../size-advisory.md",
-    "line": 98,
-    "end": 103,
+    "line": 100,
+    "end": 105,
     "text": "- **共引代理**：真·文件内符号共引不存在于任何缓存（v0.6 映射实证）；"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|e77a0b42e14cb13a|0": {
     "target": "../size-advisory.md",
-    "line": 119,
-    "end": 122,
+    "line": 121,
+    "end": 124,
     "text": "- **roiCloneMilli = 500**（2×ref）：四倍价域零候选翻转（价是缝导向"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../size-advisory.md|fc9206488f44c39d|0": {
     "target": "../size-advisory.md",
-    "line": 56,
-    "end": 58,
+    "line": 58,
+    "end": 60,
     "text": "- `ROI = B/C`（有理数）。"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|02279480097b02df|0": {
@@ -7261,8 +7276,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/config.rs|ade4e98fb475f753|0": {
     "target": "../../../cli/src/config.rs",
-    "line": 98,
-    "end": 100,
+    "line": 122,
+    "end": 124,
     "text": "pub(crate) struct TrendCfg {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -7462,8 +7477,8 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Verdict/Soft.hs|6e95d52f17ecdd2a|0": {
     "target": "../../../core/app/CE/Verdict/Soft.hs",
-    "line": 18,
-    "end": 29,
+    "line": 31,
+    "end": 42,
     "text": "-- | Exact order-statistic median of a non-empty list: the middle"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Wire.hs|fb914d9a2d941e9d|0": {
@@ -7780,26 +7795,26 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|40ff14cbd35248aa|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 53,
-    "end": 57,
+    "line": 60,
+    "end": 64,
     "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|40ff14cbd35248aa|1": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 53,
-    "end": 55,
+    "line": 60,
+    "end": 62,
     "text": "if cap == 0 || cap <= soft || lines <= soft {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|b380312631d7e1f2|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 71,
-    "end": 83,
+    "line": 78,
+    "end": 90,
     "text": "pub fn envelope(doc: &Value) -> (Option<usize>, Option<(usize, usize)>) {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/guard/zone.rs|d6a82418326f82c8|0": {
     "target": "../../../cli/src/guard/zone.rs",
-    "line": 56,
-    "end": 64,
+    "line": 63,
+    "end": 71,
     "text": "let permille = (lines - soft) * 1000 / (cap - soft);"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/health.rs|cdac5031b8c8b34b|0": {
@@ -8861,8 +8876,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|d535a3cf381a0200|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 486,
-    "end": 488,
+    "line": 488,
+    "end": 490,
     "text": "> 回执 `failed` 具名序 `hard_line, knobs_digest, degraded`（fence 上过线即在；`fail ⇔ failed ≠ []`）。"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -9666,8 +9681,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
     "target": "../ce-toml.md",
-    "line": 92,
-    "end": 99,
+    "line": 93,
+    "end": 100,
     "text": "## [tombstone]"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/audit/similar.rs|4dbfefaca8311860|0": {
@@ -10162,13 +10177,13 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
     "target": "../../../.github/workflows/ci.yml",
-    "line": 289,
+    "line": 295,
     "text": "cargo run --locked -- rules tests --core \"$CORE_BIN\"\n\n# The churn axis (score axis 5) needs the git-subprocess walk —"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|622eb8e30e1a9137|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|2b1f52a541669d9a|0": {
     "target": "../../../.github/workflows/ci.yml",
-    "line": 266,
-    "text": "cargo run --locked -- rules .. --core \"$CORE_BIN\"\n\n# The test suite is a READER of this tree (plan v2.18 step #12):\n# its files feed the graph's edges and the advisory's mention\n# universe above and are measured by nobody there. What measures\n# them is the submodule's own ce.toml + baseline — the same seven\n# gates, rooted at cli/tests (root resolution stops at its\n# ce.toml). 978 at the split, floor 975: the same bite; 987 once\n# the crate's unit tests rode in as unit/ (step #13), floor 983;\n# 983 once the clone axis re-denominated (v2.29 step 8), floor 979;\n# 953 once the T3 near-miss pairs entered the sim table (v2.30 step\n# 5b-9), floor 949.\n- name: Dogfood the test suite (its own ce.toml + baseline)"
+    "line": 269,
+    "text": "cargo run --locked -- rules .. --core \"$CORE_BIN\"\n\n# The test suite is a READER of this tree (plan v2.18 step #12):\n# its files feed the graph's edges and the advisory's mention\n# universe above and are measured by nobody there. What measures\n# them is the submodule's own ce.toml + baseline — the same seven\n# gates, rooted at cli/tests (root resolution stops at its\n# ce.toml). 978 at the split, floor 975: the same bite; 987 once\n# the crate's unit tests rode in as unit/ (step #13), floor 983;\n# 983 once the clone axis re-denominated (v2.29 step 8), floor 979;\n# 953 once the T3 near-miss pairs entered the sim table (v2.30 step\n# 5b-9), floor 949 — then routine test additions read 948 twice\n# (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point\n# over a floor meant to fire on collapse; re-anchored at 945, five\n# under 950, the main tree's bite (2026-10-13).\n- name: Dogfood the test suite (its own ce.toml + baseline)"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|0abbb9a52b13c833|0": {
     "target": "../../../ce.rules",
@@ -10980,7 +10995,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 110,
+    "line": 111,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|0603e97b6afa2e54|0": {
@@ -11255,7 +11270,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 112,
+    "line": 113,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

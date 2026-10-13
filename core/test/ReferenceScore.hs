@@ -3,8 +3,9 @@
 -- axis's charge is the integer quotient scale·a / (a + n·b) of the
 -- mass a/b over its opportunity n (the density law floor(scale ·
 -- v/(v+n)) with the fraction cleared by hand); the soft-zone curve
--- is one fraction over a common denominator; the soft line's median
--- is an ORDER STATISTIC found by counting, never by sorting; the
+-- is one fraction over a common denominator; the soft line's two
+-- log-space middles are ORDER STATISTICS found by counting, never by
+-- sorting, and its fourth root a bisection over the integers; the
 -- touched-file masses are list sets (nub), the class lines list
 -- lookups over the raw wire rows. Only the ScoreKnobs record — the
 -- entry's own parameter — and the soft-line clamp constants are read.
@@ -27,14 +28,16 @@ data Inputs = Inputs
 
 -- | p(x) on the zone (s, h] as one fraction: pMax·(x−s)²/(h−s)²
 -- inside, pMax·((h−s) + 2(x−h))/(h−s) past the wall, 0 at or under
--- s, a flat pMax when the wall does not stand above the line.
+-- s, a flat pMax when the wall does not stand above the line. The
+-- line is never read above the wall (9.0.0): s past h prices as h.
 refZone :: Integer -> Integer -> Integer -> Integer -> Rational
-refZone s h pMax x
+refZone line h pMax x
   | x <= s = 0
   | d <= 0 = fromInteger pMax
   | x > h = (pMax * (d + 2 * (x - h))) % d
   | otherwise = (pMax * (x - s) * (x - s)) % (d * d)
  where
+  s = if line > h then h else line
   d = h - s
 
 -- | The density law with the fraction cleared.
@@ -95,16 +98,39 @@ refScore k neutral weights charges = (max 0 (sScoreScale k - spent `div` (neutra
   totalWeight = sum [weightOf c | (c, _) <- charges]
   spent = sum [weightOf c * p | (c, p) <- charges] * sViolCost k
 
--- | S = clamp(floor(m·r^k), [lo, hi]) over the positive LOC values,
--- m the median and r the median of every value's ratio to it folded
--- to at least one; Nothing when no value is positive.
+-- | S = clamp(floor(m·r^k), [lo, hi]) over the positive LOC values in
+-- log space (9.0.0): m the log-space median of the values and r the
+-- log-space median of every value's ratio to m folded to at least one
+-- — an even count's middle is the geometric mean of its two middles —
+-- read in fourth powers, m⁴ = (x_a·x_b)² and r⁴ = ρ_a²·ρ_b², so S is
+-- the largest integer whose fourth power stays at or under m⁴·r^{4k};
+-- Nothing when no value is positive.
 refSoftLine :: Integer -> Integer -> Integer -> [Integer] -> Maybe Integer
 refSoftLine kExp lo hi locs = case [fromInteger x | x <- locs, x > 0] of
   [] -> Nothing
-  xs ->
-    let m = median xs
-        r = median [max (x / m) (m / x) | x <- xs]
-     in Just (max lo (min hi (floor (m * r ^ kExp))))
+  vs ->
+    let mSq = logMiddleSquared vs
+        r4 = logMiddleSquared [max (v * v / mSq) (mSq / (v * v)) | v <- vs]
+     in Just (max lo (min hi (fourthRootFloor (mSq * mSq * r4 ^ kExp))))
+
+-- | The square of a log-space median: the product of the two middle
+-- order statistics (the one middle squared when the count is odd).
+logMiddleSquared :: [Rational] -> Rational
+logMiddleSquared vs = rankAt ((n - 1) `div` 2) vs * rankAt (n `div` 2) vs
+ where
+  n = length vs
+
+-- | The largest integer s >= 0 with s⁴ <= q, by doubling then halving
+-- the bracket [s, s + step).
+fourthRootFloor :: Rational -> Integer
+fourthRootFloor q = narrow 0 (until (\b -> fromInteger (b ^ (4 :: Int)) > q) (* 2) 1)
+ where
+  narrow s step
+    | step <= 1 = s
+    | fromInteger ((s + half) ^ (4 :: Int)) <= q = narrow (s + half) (step - half)
+    | otherwise = narrow s half
+   where
+    half = step `div` 2
 
 -- | The order statistic of rank j: the value with at most j values
 -- strictly below it and more than j at or below it.
@@ -112,11 +138,3 @@ rankAt :: Int -> [Rational] -> Rational
 rankAt j xs = case [x | x <- xs, length (filter (< x) xs) <= j, length (filter (<= x) xs) > j] of
   (x : _) -> x
   [] -> 0
-
-median :: [Rational] -> Rational
-median xs
-  | odd n = rankAt h xs
-  | otherwise = (rankAt (h - 1) xs + rankAt h xs) / 2
- where
-  n = length xs
-  h = n `div` 2

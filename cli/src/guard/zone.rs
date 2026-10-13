@@ -44,6 +44,13 @@ pub struct Landing {
 /// (`lines <= soft`) — silence rather than a made-up position. Past H
 /// the position keeps climbing and stays priced: the hard-budget rule
 /// decides there, never this map, and its caller never asks.
+///
+/// Since 9.0.0 the core derives S under H, so a baseline it commits
+/// reaches `cap <= soft` only at equality. The branch stays for the
+/// rest: a baseline committed before 9.0.0 may carry S above H, and a
+/// class's own hard line may sit below the global S. Silence is right
+/// there too — a write past `cap` is the hard-budget rule's (it denies),
+/// and one at or under `cap` is under S as well.
 pub fn landing(
     lines: usize,
     soft: usize,

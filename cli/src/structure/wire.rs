@@ -43,9 +43,14 @@ pub struct Request {
     /// "the two families cannot disagree" comment was false as built.
     /// The measurement's own S and H now ride codes 12/13.
     pub knobs: Vec<[u64; 2]>,
+    /// The verdict's class rows (score::knobs::class_knob_rows, 9.0.0),
+    /// riding with the seam tables: a seam in a classed file prices on
+    /// its class's lines. Empty = no class row, and seamFiles keeps two
+    /// columns.
+    pub class_knobs: Vec<[i64; 3]>,
 }
 
-/// files [fileId, total] / units [fileId, unit, start, end] /
+/// files [fileId, total, class] / units [fileId, unit, start, end] /
 /// refs [fileId, from, to] / clones [fileId, start, end] /
 /// churn [fileId, a, b] — one named bundle (clippy's
 /// type-complexity line agrees with the wire doc here). The two
@@ -54,7 +59,7 @@ pub struct Request {
 /// this same type in place — one shape, no mirror struct.
 #[derive(Default, Clone)]
 pub struct SeamTables {
-    pub files: Vec<[u64; 2]>,
+    pub files: Vec<[u64; 3]>,
     pub units: Vec<[u64; 4]>,
     pub refs: Vec<[u64; 3]>,
     pub clones: Vec<[u64; 3]>,
@@ -130,16 +135,29 @@ pub(crate) fn request_body(r: &Request) -> serde_json::Value {
         body["deadPaths"] = json!(dead);
     }
     if let Some(s) = &r.seams {
-        body["seamFiles"] = json!(s.files);
-        body["seamUnits"] = json!(s.units);
-        body["seamRefs"] = json!(s.refs);
-        body["seamClones"] = json!(s.clones);
-        body["seamChurn"] = json!(s.churn);
+        seam_keys(&mut body, s, &r.class_knobs);
     }
     if !r.knobs.is_empty() {
         body["knobs"] = json!(r.knobs);
     }
     body
+}
+
+/// The five seam tables, and the class rows they price with (9.0.0):
+/// the class column of seamFiles rides with the class rows, so an
+/// undeclaring repo's request keeps its two-column bytes and no
+/// `classKnobs` key (the class rows are only built when seams ride).
+fn seam_keys(body: &mut serde_json::Value, s: &SeamTables, classes: &[[i64; 3]]) {
+    if classes.is_empty() {
+        body["seamFiles"] = json!(s.files.iter().map(|[f, t, _]| [*f, *t]).collect::<Vec<_>>());
+    } else {
+        body["seamFiles"] = json!(s.files);
+        body["classKnobs"] = json!(classes);
+    }
+    body["seamUnits"] = json!(s.units);
+    body["seamRefs"] = json!(s.refs);
+    body["seamClones"] = json!(s.clones);
+    body["seamChurn"] = json!(s.churn);
 }
 
 /// The path form's own answers, read before any verdict: a path the

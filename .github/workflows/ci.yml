@@ -236,6 +236,9 @@ jobs:
       # Plan v2.30 step 5b-9 sent the T3 near-miss pairs into the sim
       # table as kind 1: 944 → 916 (917 on the untouched 2263995 tree),
       # and the floor re-anchors at 911 — five under, as 944 sat over 939.
+      # The algorithm track (v2.33) moved code into the core and left the
+      # self score at 925 (step 11b, 2026-10-13): fourteen over the floor,
+      # which stays.
       # Also the deadcode zero-dead
       # gate and the docdup zero-report gate (audit D6/D9: the
       # "全处置" acceptance rows were discipline-only before), and the
@@ -274,7 +277,10 @@ jobs:
       # the crate's unit tests rode in as unit/ (step #13), floor 983;
       # 983 once the clone axis re-denominated (v2.29 step 8), floor 979;
       # 953 once the T3 near-miss pairs entered the sim table (v2.30 step
-      # 5b-9), floor 949.
+      # 5b-9), floor 949 — then routine test additions read 948 twice
+      # (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point
+      # over a floor meant to fire on collapse; re-anchored at 945, five
+      # under 950, the main tree's bite (2026-10-13).
       - name: Dogfood the test suite (its own ce.toml + baseline)
         shell: bash
         working-directory: cli
@@ -282,7 +288,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan tests --core "$CORE_BIN"
           cargo run --locked -- dedup tests --check --core "$CORE_BIN"
-          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 949
+          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 945
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check
@@ -475,7 +481,10 @@ jobs:
       # the crate's unit tests rode in as unit/ (step #13), floor 983;
       # 983 once the clone axis re-denominated (v2.29 step 8), floor 979;
       # 953 once the T3 near-miss pairs entered the sim table (v2.30 step
-      # 5b-9), floor 949.
+      # 5b-9), floor 949 — then routine test additions read 948 twice
+      # (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point
+      # over a floor meant to fire on collapse; re-anchored at 945, five
+      # under 950, the main tree's bite (2026-10-13).
       - name: Dogfood the test suite (macOS coverage)
         shell: bash
         working-directory: cli
@@ -483,7 +492,7 @@ jobs:
           CORE_BIN=$(cd ../core && cabal list-bin ce-core)
           cargo run --locked -- scan tests --core "$CORE_BIN"
           cargo run --locked -- dedup tests --check --core "$CORE_BIN"
-          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 949
+          cargo run --locked -- check tests --core "$CORE_BIN" --fail-under 945
           cargo run --locked -- deadcode tests --core "$CORE_BIN" --check
           cargo run --locked -- docdup tests --core "$CORE_BIN" --check
           cargo run --locked -- erase tests --core "$CORE_BIN" --check

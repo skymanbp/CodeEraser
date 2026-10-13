@@ -148,14 +148,19 @@ overMono = all one [1 .. 60 :: Integer]
 
 -- | Hand-computed derivations (plan v2.6 §B, the log-free form):
 -- {240,300,375} → m=300, r=5/4, k=2 → floor(300·25/16)=468;
--- {100,300} even-median → m=200, r=7/4 → 612 → clamp 500;
--- all-100 → r=1 → 100 → clamp 200; k=1 halves the spread's bite;
--- zeros are dropped and an empty multiset derives NOTHING.
+-- {100,300} even count → m²=100·300, r⁴=3·3 → ⌊(9·10⁸·81)^¼⌋=519
+-- → clamp 500 (the arithmetic middles gave 612); all-100 → r=1 →
+-- 100 → clamp 200; k=1 halves the spread's bite; zeros are dropped
+-- and an empty multiset derives NOTHING. The upper fence is min
+-- softMax H at establish (9.0.0): under H = 400 the same {100,300}
+-- reads 400, and an H below softMin wins over the lower fence too.
 softDerive :: Bool
 softDerive =
   and
     [ softLine 2 200 500 [240, 300, 375] == Just 468
     , softLine 2 200 500 [100, 300] == Just 500
+    , softLine 2 200 (min 500 400) [100, 300] == Just 400
+    , softLine 2 200 (min 500 150) [240, 300, 375] == Just 150
     , softLine 2 200 500 [100, 100, 100] == Just 200
     , softLine 1 200 500 [240, 300, 375] == Just 375
     , softLine 2 200 500 [0, 0] == Nothing
@@ -169,7 +174,9 @@ softDerive =
 -- prices 10·(1+2) = 30; one step past H adds exactly the slope
 -- 2·P_max/(H−S) the quadratic reached AT H (no kink); and the
 -- degenerate H<=S falls back to flat P_max instead of dividing by
--- zero.
+-- zero. Since 9.0.0 the line is read as min S H: with S = 480 above
+-- H = 400 a 450-line file past the wall charges P_max (it charged 0)
+-- and one at 400 still charges nothing; H = S prices the same way.
 zoneCurve :: Bool
 zoneCurve =
   and
@@ -180,6 +187,10 @@ zoneCurve =
     , zonePenalty 300 750 10 751 - zonePenalty 300 750 10 750 == 2 * 10 % 450
     , zonePenalty 300 300 10 400 == 10
     , zonePenalty 300 200 10 400 == 10
+    , zonePenalty 480 400 10 450 == 10
+    , zonePenalty 480 400 10 400 == 0
+    , zonePenalty 400 400 10 450 == 10
+    , zonePenalty 300 200 10 250 == 10
     ]
 
 docFilesCycle :: Bool

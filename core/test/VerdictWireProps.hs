@@ -177,7 +177,11 @@ knobProbes =
   , ("thresholds", 8, 1, "unknown threshold knob")
   , ("thresholds", 2, 0, "zero denominator")
   , ("thresholds", 5, 0, "knob below 1")
-  , ("tolerance", 3, 1, "unknown tolerance leg")
+  , -- the three numerators whose zero made a predicate vacuous (9.0.0)
+    ("thresholds", 1, 0, "knob below 1")
+  , ("thresholds", 3, 0, "knob below 1")
+  , ("thresholds", 4, 0, "knob below 1")
+  , ("tolerance", 4, 1, "unknown tolerance leg")
   , ("tolerance", 1, 0, "knob below 1")
   ]
 
@@ -204,6 +208,11 @@ refusals = and (map knob knobProbes <> shaped)
       refused (setKey "dedup" (toJSON [1 :: Integer]) base) "malformed pair"
     , refused (setKey "dedup" (toJSON [-1, 5 :: Integer]) base) "negative field"
     , refused (setKey "judgedLoc" (toJSON [-1 :: Integer]) base) "outside u64"
+    , -- the verdict charges metric 0 (file lines) and 1 (cognitive)
+      -- alone: scan's code 2 is refused, live row and baseline alike
+      refused (setKey "continuous" (toJSON [[0, 2, 5 :: Integer]]) base) "unknown metric code"
+    , refused (setKey "baseline" (metricTwo 2) base) "unknown metric code"
+    , not (refused (setKey "baseline" (metricTwo 1) base) "unknown metric code")
     , -- a stored softLine of 0 is no line at all — refused by name
       refused (setKey "baseline" storedZero base) "outside 1..u64"
     , -- the value column is a u64 like the entity, current and stored
@@ -211,6 +220,7 @@ refusals = and (map knob knobProbes <> shaped)
       refused (setKey "continuous" (toJSON [[1, 0, past]]) base) "continuous 0: outside u64"
     , refused (setKey "baseline" (stored [[1, 0, past]] 300) base) "baseline.continuous 0: outside u64"
     ]
+  metricTwo c = stored [[0, c, 5]] 300
   past = 2 ^ (64 :: Int) :: Integer
   storedZero = stored [] 0
   stored cont soft =

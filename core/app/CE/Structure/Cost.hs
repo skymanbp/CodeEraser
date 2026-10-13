@@ -124,12 +124,9 @@ modFloor = 1
 -- | S7 (knob 20, O54): the smallest incident-edge mass at which a
 -- directory is judged at all. Below four edges the sign of the
 -- contribution is decided by one reference, and a directory nobody has
--- wired up yet is not a failed module. Four is also the smallest mass
--- at which a directory can hold as many internal edges as crossing
--- ones and still cross at all (2 + 2; at three, parity forbids
--- e == cross). Under the floor a directory is ABSENT from the axis —
--- never counted clean, never flagged (the F16 non-vacuity stance at
--- the knob level, mixRefFloor's precedent).
+-- wired up yet is not a failed module. Under the floor a directory is
+-- ABSENT from the axis — never counted clean, never flagged (the F16
+-- non-vacuity stance at the knob level, mixRefFloor's precedent).
 modMassFloor :: Integer
 modMassFloor = 4
 
@@ -137,12 +134,16 @@ modMassFloor = 4
 -- copy of the zone triple — S/H/P_max — because the structure
 -- family must price a seam without a verdict/1 request in flight.
 -- Rust sends the SAME numbers it sends verdict/1 — the committed
--- softLine, ce.toml's file_lines_fail, and (6.1.0) score's
--- size_penalty_max when one is declared — so the two families cannot
--- disagree about the curve (knob code 12 / 13 / 14). Until 6.1.0
--- only 12 and 13 rode: a repo declaring size_penalty_max got the
--- declared P_max in its score and the default 10 in its advisory,
--- and both halves looked right on their own.
+-- softLine, ce.toml's file_lines_fail (left out when 0 = no hard
+-- line, so this default judges, as the score's does), and (6.1.0)
+-- score's size_penalty_max when one is declared — and (9.0.0) the
+-- verdict's own classKnobs rows with each seam file's class, priced
+-- through the verdict's one class-line resolver (Soft.classedZone),
+-- so the two families read one curve per file. Until 6.1.0 only 12
+-- and 13 rode: a repo declaring size_penalty_max got the declared
+-- P_max in its score and the default 10 in its advisory; until 9.0.0
+-- a classed file was priced on the global curve in its advisory and
+-- on its class's in its score — both halves looked right on their own.
 seamSoft :: Integer
 seamSoft = 300
 

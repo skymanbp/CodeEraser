@@ -13,39 +13,39 @@ never contributes to the structure score or the fail bit. Measurement is Rust
 
 A file enters the seam tables only if it is in the **judged** language set and strictly
 exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and files with
-`total_lines <= soft` are skipped [seams.rs:50-55](../../../cli/src/structure/seams.rs#L50). The
+`total_lines <= soft` are skipped [seams.rs:76-81](../../../cli/src/structure/seams.rs#L76). The
 `soft` passed in is the *committed* line — `softLine` from `ce-baseline.json`, falling back
 to the *global* `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:80-91](../../../cli/src/structure/judge.rs#L80) — so wherever a baseline is
+[judge.rs:82-93](../../../cli/src/structure/judge.rs#L82) — so wherever a baseline is
 committed the advisory opens the zone at exactly the line the hook uses; without one they part for
 a classed file, whose hook reads its class's warn line (plan v2.13 ① P4) while the advisory stays
 class-blind.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:218-225](../../../core/app/CE/Structure.hs#L218).
+[Structure.hs:220-227](../../../core/app/CE/Structure.hs#L220).
 
 ### Seam enumeration and best-seam selection
 
 Units on the wire are the **top-level** spans only: outermost, non-overlapping,
 start-ordered, so a nested helper always lands on its holder's side of every seam
-[seams.rs:185-199](../../../cli/src/structure/seams.rs#L185). Each unit's `end` is clamped to the
-file total [seams.rs:204](../../../cli/src/structure/seams.rs#L204).
+[seams.rs:212-226](../../../cli/src/structure/seams.rs#L212). Each unit's `end` is clamped to the
+file total [seams.rs:231](../../../cli/src/structure/seams.rs#L231).
 
 A seam is the gap *after* a unit that has a successor — the enumeration zips the file's unit
 list against its own tail, so a file with `n` top-level units yields `n − 1` seams and a
-single-unit file yields none [Split.hs:194-209](../../../core/app/CE/Structure/Split.hs#L194). Seam
+single-unit file yields none [Split.hs:208-222](../../../core/app/CE/Structure/Split.hs#L208). Seam
 `u` cuts the file at line `end_u` into a prefix of `end_u` lines and a suffix of
 `total − end_u` lines.
 
 Each seam is priced to a triple `(u, benefitMilli, costMilli)`. Selection is the exact
 rational argmax over ROI, compared by cross-multiplied `b % c` rather than division —
 `maximumBy (comparing (\(_, b', c') -> b' % c'))`
-[Split.hs:178](../../../core/app/CE/Structure/Split.hs#L178). Equal ROIs go to the **last** seam in
+[Split.hs:190](../../../core/app/CE/Structure/Split.hs#L190). Equal ROIs go to the **last** seam in
 file order: `maximumBy` keeps the later of equals (the reference battery `StructureEquivProps`
 pins it). Cost is never zero because φ ≥ 1 by the
 knob rule, so the ratio is always defined
-[Split.hs:158-160](../../../core/app/CE/Structure/Split.hs#L158).
+[Split.hs:168-170](../../../core/app/CE/Structure/Split.hs#L168).
 
 ### Benefit: soft-zone penalty recovered
 
@@ -54,26 +54,26 @@ verdict family judges with** — `CE.Verdict.Soft.zonePenalty`, imported directl
 re-derived [Split.hs:2-5,24,200](../../../core/app/CE/Structure/Split.hs#L2):
 
 ```
-p(x) = 0                              if x <= S
+p(x) = 0                              if x <= S     -- S read as min S H (proto 9.0.0)
 p(x) = P_max · ((x − S)/(H − S))²      if S < x <= H
 p(x) = P_max · (1 + 2(x − H)/(H − S))  if x > H     -- C¹ linear arm (proto 2.17.0)
 ```
 
-[Soft.hs:63-69](../../../core/app/CE/Verdict/Soft.hs#L63). The curve is convex on the zone, exact
+[Soft.hs:119-126](../../../core/app/CE/Verdict/Soft.hs#L119). The curve is convex on the zone, exact
 `Rational`, and keeps charging past `H` — since proto 2.17.0 linearly, at exactly the slope the
 quadratic reached at the wall (monotone, no kink; the deny at `H` is the guard's job, and a
 score that stopped charging past the wall would reward growth — but the quadratic never leaves
 its contracted `(S,H]` domain: the M9 batch-6 saturation lesson)
-[Soft.hs:48-62](../../../core/app/CE/Verdict/Soft.hs#L48). For seam pricing this means the size
+[Soft.hs:97-111](../../../core/app/CE/Verdict/Soft.hs#L97). For seam pricing this means the size
 benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. A degenerate
-`H <= S` falls back to the pre-v0.6 binary `p = P_max` flat
-[Soft.hs:65](../../../core/app/CE/Verdict/Soft.hs#L65).
+`H <= S` (only `H == S` since the curve opens at `min S H`) falls back to the pre-v0.6 binary `p = P_max` flat
+[Soft.hs:121](../../../core/app/CE/Verdict/Soft.hs#L121).
 
 ```
 benefitMilli(u) = max 0 (floor (1000 · (p(total) − p(end_u) − p(total − end_u))))
 ```
 
-[Split.hs:200-201](../../../core/app/CE/Structure/Split.hs#L200). The `1000·` converts penalty units
+[Split.hs:214](../../../core/app/CE/Structure/Split.hs#L214). The `1000·` converts penalty units
 to milli — milli is the one published scale
 [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8). Because `p` is convex with `p(0) = 0`, it
 is superadditive, so the bracket is non-negative for any well-formed zone triple; the
@@ -82,22 +82,25 @@ from producing a negative benefit.
 
 The zone triple is the advisory's own copy of `S/H/P_max`, so the structure family can price
 a seam without a `verdict/1` request in flight; Rust sends the same numbers it sends
-`verdict/1` for an unclassed tree — the advisory is **class-blind**: since proto 3.1.0 `verdict/1`
-measures a classed row against its `[[rules.class]]` lines, while knobs 12, 13 and 14 ride once,
-tree-wide, off the committed soft line, the global `file_lines_fail` and — since 6.1.0 —
-`score.size_penalty_max` when one is declared. That last one was the claim's own exception until
-then: only 12 and 13 rode, so a repo declaring `size_penalty_max` got the declared curve in its
-score and the core's built-in `P_max = 10` in its advisory, with both halves internally
-consistent and nothing anywhere disagreeing out loud
-([judge.rs:179-186](../../../cli/src/structure/judge.rs#L179),
-[Cost.hs:136-145](../../../core/app/CE/Structure/Cost.hs#L136),
-counterfactual at [structure_knobs.rs:67-78](../../../cli/tests/it/structure_knobs.rs#L67)):
+`verdict/1`: knobs 12, 13 and 14 ride once, tree-wide, off the committed soft line, the global
+`file_lines_fail` (left out when it is `0` = no hard line, so the core's `750` judges, as the
+score's does) and — since 6.1.0 — `score.size_penalty_max` when one is declared. Since proto
+9.0.0 the request also carries the verdict's own `classKnobs` rows and each seam file's class,
+and a classed file is priced on its class's opening edge and hard line through the one resolver
+the score's size axis reads (`Soft.classedZone`); until then the advisory was class-blind, while
+`verdict/1` (since 3.1.0) measured a classed row against its `[[rules.class]]` lines. Both gaps
+had the same shape — before 6.1.0 only 12 and 13 rode, so a repo declaring `size_penalty_max`
+got the declared curve in its score and the core's built-in `P_max = 10` in its advisory — with
+both halves internally consistent and nothing anywhere disagreeing out loud
+([judge.rs:189-198](../../../cli/src/structure/judge.rs#L189),
+[Cost.hs:133-142](../../../core/app/CE/Structure/Cost.hs#L133),
+counterfactual at [structure_knobs.rs:77-88](../../../cli/tests/it/structure_knobs.rs#L77)):
 
 | knob | code | default | source |
 |---|---|---|---|
-| `seamSoft` (S) | 12 | `300` | [Cost.hs:146-147](../../../core/app/CE/Structure/Cost.hs#L146) |
-| `seamHard` (H) | 13 | `750` | [Cost.hs:149-150](../../../core/app/CE/Structure/Cost.hs#L149) |
-| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:152-153](../../../core/app/CE/Structure/Cost.hs#L152) |
+| `seamSoft` (S) | 12 | `300` | [Cost.hs:147-148](../../../core/app/CE/Structure/Cost.hs#L147) |
+| `seamHard` (H) | 13 | `750` | [Cost.hs:150-151](../../../core/app/CE/Structure/Cost.hs#L150) |
+| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:153-154](../../../core/app/CE/Structure/Cost.hs#L153) |
 
 ### Cost: the four priced legs
 
@@ -108,22 +111,22 @@ costMilli(u) = crossRefs(u)  · roiRefMilli
              + roiPhiMilli
 ```
 
-[Split.hs:205-209](../../../core/app/CE/Structure/Split.hs#L205). Three counting legs plus one flat
+[Split.hs:218-222](../../../core/app/CE/Structure/Split.hs#L218). Three counting legs plus one flat
 leg. Both crossing legs charge through one helper — `crossings` folds every edge `(a,b)` into a
 difference map `[(min a b, +1), (max a b, -1)]` and running-sums it, so a seam `u` is charged
 iff `min <= u < max`, exactly "one endpoint at or before `u`"
-([Split.hs:216-219](../../../core/app/CE/Structure/Split.hs#L216), read per seam by `charge`'s
-`lookupLE` at [Split.hs:238-239](../../../core/app/CE/Structure/Split.hs#L238)). The clone leg uses a line-level
+([Split.hs:242-244](../../../core/app/CE/Structure/Split.hs#L242), read per seam by `charge`'s
+`lookupLE` at [Split.hs:251-252](../../../core/app/CE/Structure/Split.hs#L251)). The clone leg uses a line-level
 straddle instead: block `[s,e)` is cut iff `s <= line && line < e`, mapped onto the seam-line
 index by the `lookupGE s` / `lookupLT e` pair
-([Split.hs:229-231](../../../core/app/CE/Structure/Split.hs#L229)).
+([Split.hs:242-244](../../../core/app/CE/Structure/Split.hs#L242)).
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:161-162](../../../core/app/CE/Structure/Cost.hs#L161) | word-bounded mention edges [seams.rs:221-242](../../../cli/src/structure/seams.rs#L221) |
-| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:173-174](../../../core/app/CE/Structure/Cost.hs#L173) | T1/T2 dedup block spans [seams.rs:78-106](../../../cli/src/structure/seams.rs#L78) |
-| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:176-177](../../../core/app/CE/Structure/Cost.hs#L176) | 14-day commit ledger [seams.rs:114-143](../../../cli/src/structure/seams.rs#L114) |
-| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:164-165](../../../core/app/CE/Structure/Cost.hs#L164) | flat, no measurement |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:162-163](../../../core/app/CE/Structure/Cost.hs#L162) | word-bounded mention edges [seams.rs:248-269](../../../cli/src/structure/seams.rs#L248) |
+| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:174-175](../../../core/app/CE/Structure/Cost.hs#L174) | T1/T2 dedup block spans [seams.rs:105-133](../../../cli/src/structure/seams.rs#L105) |
+| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:177-178](../../../core/app/CE/Structure/Cost.hs#L177) | 14-day commit ledger [seams.rs:141-170](../../../cli/src/structure/seams.rs#L141) |
+| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:165-166](../../../core/app/CE/Structure/Cost.hs#L165) | flat, no measurement |
 
 All seven knobs (zone triple + four prices) ride the `Knobs` record
 [Axes.hs:71-80](../../../core/app/CE/Structure/Axes.hs#L71) and are bound to the `Cost.hs` defaults
@@ -134,75 +137,75 @@ All seven knobs (zone triple + four prices) ride the `Knobs` record
 **Leg 1 — severed references.** The honest v1 proxy: true intra-file symbol co-reference
 exists in no cache, so an edge `(i → j)` is recorded when unit `j`'s bare name appears
 word-bounded inside unit `i`'s body
-[seams.rs:214-242](../../../cli/src/structure/seams.rs#L214),
-[size-advisory.md:94-97](../size-advisory.md#L94). The body is searched with every literal and
+[seams.rs:241-269](../../../cli/src/structure/seams.rs#L241),
+[size-advisory.md:96-99](../size-advisory.md#L96). The body is searched with every literal and
 comment blanked to spaces first — the exact tree-sitter spans, through the one masker the
 tombstone's literal blanking shares ([opaque.rs:1-14](../../../cli/src/scan/opaque.rs#L1),
 [opaque.rs:27-38](../../../cli/src/scan/opaque.rs#L27)) — so a name inside a string or a comment is no
 reference (plan v2.30 step 5b item 30; it counted one until then). Word-boundedness is
 identifier-char adjacency on both sides
-[seams.rs:244-262](../../../cli/src/structure/seams.rs#L244). Names shorter than `NAME_FLOOR = 3` are
+[seams.rs:271-289](../../../cli/src/structure/seams.rs#L271). Names shorter than `NAME_FLOOR = 3` are
 dropped as noise — `new`, `run`, `id` would edge every unit to every other
 [seams.rs:31-34](../../../cli/src/structure/seams.rs#L31),
-[seams.rs:234](../../../cli/src/structure/seams.rs#L234). What the proxy measures is therefore a
+[seams.rs:261](../../../cli/src/structure/seams.rs#L261). What the proxy measures is therefore a
 word-bounded spelling of the unit's name in the neighbour's code — a same-named local or field
 counts as one, since no symbol table stands behind it; the advisory face is non-binding
-[size-advisory.md:98-103](../size-advisory.md#L98).
+[size-advisory.md:100-105](../size-advisory.md#L100).
 
 **Leg 2 — cut clone blocks.** Spans come off the *same* index the dedup family judges from
 (`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
-through a `BTreeSet` [seams.rs:88-104](../../../cli/src/structure/seams.rs#L88). A seam through a
+through a `BTreeSet` [seams.rs:115-131](../../../cli/src/structure/seams.rs#L115). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
-reference [Cost.hs:167-172](../../../core/app/CE/Structure/Cost.hs#L167).
+reference [Cost.hs:168-173](../../../core/app/CE/Structure/Cost.hs#L168).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent
 --no-merges`, path-limited to the seam files)
-[seams.rs:150-164](../../../cli/src/structure/seams.rs#L150), then each commit's ledger rows are
+[seams.rs:177-191](../../../cli/src/structure/seams.rs#L177), then each commit's ledger rows are
 joined onto the *current* snapshot's units at key level; renamed units drop out honestly, and
 a tree without git history prices the leg at zero rather than failing the advisory
-[seams.rs:108-143](../../../cli/src/structure/seams.rs#L108). The window constant
+[seams.rs:135-170](../../../cli/src/structure/seams.rs#L135). The window constant
 `CHURN_WINDOW_DAYS` reads the churn family's own default `DEFAULT_DAYS = 14` — the §4.1 two-week
 anchor, and deliberately a **measurement constant, not a wire knob** (the prices are the knobs)
 [seams.rs:36-38](../../../cli/src/structure/seams.rs#L36), [churn/mod.rs:51-52](../../../cli/src/churn/mod.rs#L51),
-[size-advisory.md:123](../size-advisory.md#L123).
+[size-advisory.md:125](../size-advisory.md#L125).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
-booklet names φ [Cost.hs:155-165](../../../core/app/CE/Structure/Cost.hs#L155). Defaults were sized so
+booklet names φ [Cost.hs:156-166](../../../core/app/CE/Structure/Cost.hs#L156). Defaults were sized so
 a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing references does not
-[Cost.hs:158-160](../../../core/app/CE/Structure/Cost.hs#L158).
+[Cost.hs:159-161](../../../core/app/CE/Structure/Cost.hs#L159).
 
 ### Price calibration (as-built)
 
 The v1.1 legs were calibrated by recompiling the `Cost.hs` price points and replaying
 `--split-candidates` over corpora, comparing candidate/exemption flips and best-seam movement
-[size-advisory.md:111-114](../size-advisory.md#L111).
+[size-advisory.md:113-116](../size-advisory.md#L113).
 
 - `roiCloneMilli = 500` (= 2 × ref): swept `{250, 500, 1000}` over four external corpora / 86
   candidates. Zero candidate flips across the fourfold price range — the price is a
   *seam-steering* term, not a candidate killer — with exactly one best-seam move per price
   point, each in the correct direction (cobra's `command_test` moves its seam off the clone
   block at the 1000 price point)
-  [size-advisory.md:115-118](../size-advisory.md#L115).
+  [size-advisory.md:117-120](../size-advisory.md#L117).
 - `roiChurnMilli = 150` (= 0.6 × ref, reflecting that historical correlation is weaker
   evidence than in-situ code coupling): swept `{150, 300, 600}` on the self repo only —
   external corpora tips are frozen outside the 14-day window, so their churn leg is honestly
   zero and only a live window can be calibrated. Zero label flips over the fourfold range,
   with cost scaling verified linear (`graph_ladder` 800 → 1100 → 1700)
-  [size-advisory.md:119-122](../size-advisory.md#L119).
+  [size-advisory.md:121-124](../size-advisory.md#L121).
 
 Self-repo first run at the `S = 294` calibration: `graph_ladder.rs` got a real seam after line
 318 (2120‰ benefit against 500‰ cost, ROI 4.2); `DEVELOPMENT_PLAN.md` and `main_cmds.rs` got
 machine-written cohesion exemptions (11‰ vs 500‰ and 0‰ vs 2000‰); `cli.md` crossed the line
 by one notch (507‰ vs 500‰) and flipped to a candidate
-[size-advisory.md:107-111](../size-advisory.md#L107).
+[size-advisory.md:109-113](../size-advisory.md#L109).
 
 ### The ROI auto-exemption
 
 Viability is `ROI >= 1`, evaluated without division as `b >= c`
-[Split.hs:179](../../../core/app/CE/Structure/Split.hs#L179),
+[Split.hs:191](../../../core/app/CE/Structure/Split.hs#L191),
 [Split.hs:7](../../../core/app/CE/Structure/Split.hs#L7). The fold produces exactly one row per file,
-into one of three shapes [Split.hs:174-182](../../../core/app/CE/Structure/Split.hs#L174):
+into one of three shapes [Split.hs:186-194](../../../core/app/CE/Structure/Split.hs#L186):
 
 | condition | row | table |
 |---|---|---|
@@ -215,7 +218,7 @@ what lets the Rust side write the machine-generated *why*
 [Split.hs:6-8,180-183](../../../core/app/CE/Structure/Split.hs#L6). This is the advisory's answer to
 "big projects have naturally long files": long-and-cohesive is an exemption **with numbers
 attached**, long-and-splittable gets a cut line
-[size-advisory.md:56-58](../size-advisory.md#L56). Since plan v2.32 step 4 the core lays the
+[size-advisory.md:58-60](../size-advisory.md#L58). Since plan v2.32 step 4 the core lays the
 structure document out (`CE.Structure.Document`): its statement names the universe every
 column points into, so each dense id is range-checked by the document contract before
 anything reads it [Document.hs:38-47](../../../core/app/CE/Structure/Document.hs#L38), and the
@@ -228,17 +231,17 @@ end line, which Rust sends beside the reply's row and refuses for a unit the fil
 ### Input validation
 
 The five seam tables are boundary-checked before any pricing, in request order
-[Split.hs:47-56](../../../core/app/CE/Structure/Split.hs#L47): file ids dense (`id == index`) with
-`total >= 1` [Split.hs:63-68](../../../core/app/CE/Structure/Split.hs#L63); units dense per file from
+[Split.hs:50-59](../../../core/app/CE/Structure/Split.hs#L50): file ids dense (`id == index`) with
+`total >= 1` [Split.hs:66-78](../../../core/app/CE/Structure/Split.hs#L66); units dense per file from
 0, spans strictly ascending and non-overlapping, checked in one fold carrying
 `(file, previousEnd, expectedNextUnit)`
-[Split.hs:125-140](../../../core/app/CE/Structure/Split.hs#L125); `seamUnits` and `seamClones` share
+[Split.hs:135-150](../../../core/app/CE/Structure/Split.hs#L135); `seamUnits` and `seamClones` share
 **one** span checker so the two tables cannot drift on what a span is
-[Split.hs:76-82](../../../core/app/CE/Structure/Split.hs#L76); ref edges refuse self-edges
-[Split.hs:142-144](../../../core/app/CE/Structure/Split.hs#L142) and churn pairs must ascend, so an
+[Split.hs:86-92](../../../core/app/CE/Structure/Split.hs#L86); ref edges refuse self-edges
+[Split.hs:152-154](../../../core/app/CE/Structure/Split.hs#L152) and churn pairs must ascend, so an
 unordered pair has exactly one spelling
-[Split.hs:118-120](../../../core/app/CE/Structure/Split.hs#L118); all three edge tables must arrive in
-ascending canonical order [Split.hs:53,54,55](../../../core/app/CE/Structure/Split.hs#L53).
+[Split.hs:128-130](../../../core/app/CE/Structure/Split.hs#L128); all three edge tables must arrive in
+ascending canonical order [Split.hs:56,54,55](../../../core/app/CE/Structure/Split.hs#L56).
 
 Every quantity above is exact integer or `Rational` arithmetic — no floating point enters the
 computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8).
@@ -248,14 +251,14 @@ computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#
 The design contract §C once listed two benefit terms and one cost term beyond the four legs —
 benefit "dedup budget effect" and "hot/cold unit isolation", cost "baseline re-key noise" — and
 plan v2.30 step 5b retired them from the model with reasons, in place of a standing "not
-implemented" ([size-advisory.md:51-52](../size-advisory.md#L51), [size-advisory.md:55](../size-advisory.md#L55)):
+implemented" ([size-advisory.md:53-54](../size-advisory.md#L53), [size-advisory.md:57](../size-advisory.md#L57)):
 a clone block is judged on content fingerprints, and a seam either cuts it (priced by
 `roiCloneMilli`) or leaves it whole on one side, so no split lowers the dedup ledger by a line;
 a seam between hot and cold units is a seam severing no co-change pair, which the
 `roiChurnMilli` leg already prices at zero, so a benefit term would count the same churn fact
 twice (the model stays on the conservative side); and re-keying the moved members' baseline
 identity is paid once per new file, which is what φ is. The shipped benefit is the soft-zone
-recovery term alone [Split.hs:200-201](../../../core/app/CE/Structure/Split.hs#L200) and the
+recovery term alone [Split.hs:214](../../../core/app/CE/Structure/Split.hs#L214) and the
 shipped cost is exactly the four legs above
-[Split.hs:205-209](../../../core/app/CE/Structure/Split.hs#L205). No constant for a retired
+[Split.hs:218-222](../../../core/app/CE/Structure/Split.hs#L218). No constant for a retired
 term exists in `Cost.hs`, and none is owed.

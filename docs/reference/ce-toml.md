@@ -50,19 +50,20 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 
 | key | default | meaning |
 |---|---|---|
-| `weights` | *(absent)* | Per-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default |
 | `size_penalty_max` | *(absent)* | Soft-zone curve: the size-axis penalty of a file AT the hard line (plan v2.6; default 10) |
 | `soft_line_k` | *(absent)* | Relative soft line: the multiplicative-MAD exponent k in S = clamp(median*r^k, [200,500]) (default 2) |
 | `dead_indeg_ceil` | *(absent)* | Deadcode axis: a file at or below this in-degree (and unreachable) counts as orphaned |
-| `rewrite_num` | *(absent)* | Churn axis rewrite-share threshold, ratio numerator (cross-multiplied) |
+| `rewrite_num` | *(absent)* | Churn axis rewrite-share threshold, ratio numerator (cross-multiplied); ≥ 1 — at 0 every churned entity would read rewrite-heavy, so 0 is refused at load by name |
 | `rewrite_den` | *(absent)* | Churn axis rewrite-share threshold, ratio denominator |
-| `cochange_floor` | *(absent)* | Co-change count at which a pair counts as entangled |
-| `viol_cost` | *(absent)* | Per-mille cost of one weighted violation in the score fold |
+| `cochange_floor` | *(absent)* | Co-change count at which a pair counts as entangled; ≥ 1 — at 0 every pair would read hot, so 0 is refused at load by name |
+| `viol_cost` | *(absent)* | The score fold's strictness dial, relative to its neutral value 10 (`violCostNeutral`): score = scale − ⌊Σ wᵢ·chargeᵢ·viol_cost ⁄ (10·Σ wᵢ)⌋, floored at 0, so at 10 the score is the scale minus the floored weighted mean of the axis charges, above 10 harsher (it may saturate at 0 by choice), below 10 gentler; ≥ 1 — at 0 the score sits at the scale and no floor can fail, so 0 is refused at load by name |
 | `default_weight` | *(absent)* | Weight of any axis the weights table does not name |
 | `score_scale` | *(absent)* | The score's full scale (per-mille by default) |
+| `weights` | *(absent)* | Per-axis weight numerators by axis name (size / complexity / clone / docdup / deadcode / churn / cycle); unlisted axes keep the equal default |
 | `tol_num` | *(absent)* | Ratchet ratio leg numerator: a ceiling may grow to ceiling*tol_num/tol_den in one edit |
 | `tol_den` | *(absent)* | Ratchet ratio leg denominator |
-| `tol_abs` | *(absent)* | Ratchet absolute leg: or by this many lines, whichever is larger |
+| `tol_abs` | *(absent)* | Ratchet absolute leg on the file-lines rows: or by this many lines, whichever is larger |
+| `tol_abs_coc` | *(absent)* | Ratchet absolute leg on the function cognitive-complexity rows: or by this many points, whichever is larger (9.0.0; default 1 — the +10 lines leg never applied to a complexity row) |
 
 ## [structure]
 

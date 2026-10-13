@@ -69,6 +69,7 @@ import qualified StackingProps
 import qualified VerdictKnobProps
 import qualified VerdictWireProps
 import qualified VerdictFenceProps
+import qualified SoftProps
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import qualified Data.ByteString.Char8 as B8
@@ -172,6 +173,7 @@ batteries =
        , VerdictWireProps.battery
        , VerdictFenceProps.battery
        , VerdictKnobProps.battery
+       , SoftProps.battery
        , SplitProps.battery
        , ClassProps.battery
        , StackingProps.battery

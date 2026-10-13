@@ -16,7 +16,7 @@ import CE.Verdict (respond)
 import CE.Verdict.Cost (defaultWeight, softLineK, softMax, softMin, verdictRowCap, violCostNeutral)
 import CE.Verdict.Join (bound, confidence, judge)
 import CE.Verdict.Ratchet (Baseline (..), Ratcheted (..), ratchet, ratchetBound, tolerated)
-import CE.Verdict.Score (Facts (..), ScoreKnobs, classKnobsOf, penalties, score, scoreBound)
+import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine, zonePenalty)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import qualified Data.Map.Strict as M
@@ -40,7 +40,7 @@ battery =
     [ all charges factCases
     , and [softLine kk lo hi locs == refSoftLine kk lo hi locs | locs <- locCases, (kk, lo, hi) <- [(softLineK, softMin, softMax), (1, 1, 100000)]]
     , and [zonePenalty s h p x == refZone s h p x | s <- [0 .. 6], h <- [0 .. 6], p <- [1, 10], x <- [0 .. 12]]
-    , and [tolerated ratchetBound d c == refTolerated ratchetBound d c | c <- [0 .. 1200], d <- [Nothing, Just 0, Just 7]]
+    , and [tolerated ratchetBound m d c == refTolerated ratchetBound m d c | c <- [0 .. 1200], d <- [Nothing, Just 0, Just 7], m <- [0, 1]]
     , all ratchets ratchetCases
     , and [judge bound l == refJudge bound l && confidence mask bits == refConfidence bound l | l <- joinFamily, let (_, mask, bits) = judge bound l]
     , all wired wireCases
@@ -90,7 +90,9 @@ wired c@(sim, pos, churn, cont, classes, locs, docs, weights, _) =
   fieldsOf respond (request c) ["score", "axes", "weights"]
     == Just [Just (toJSON perMille), Just (toJSON [[a, p] | (a, p) <- pens]), Just (toJSON [[a, maybe defaultWeight id (lookup a [(x, w) | [x, w] <- weights])] | a <- [0 .. 6 :: Integer]])]
  where
-  pens = refCharges scoreBound (refSoftLine softLineK softMin softMax locs) (Inputs sim pos churn cont docs classes [])
+  -- the establishing derivation is fenced under the effective hard
+  -- line as well as softMax (9.0.0)
+  pens = refCharges scoreBound (refSoftLine softLineK softMin (min softMax (sSizeHard scoreBound)) locs) (Inputs sim pos churn cont docs classes [])
   (perMille, _) = refScore scoreBound violCostNeutral weights pens
 
 -- | The reference's own reading of the two boundaries: one discrete

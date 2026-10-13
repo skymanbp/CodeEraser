@@ -207,7 +207,7 @@ ERROR 节点无法可靠建树。代价（文件短暂脏后被要求返工）�
 **ADR-006 棘轮语义（B5 修复）。**
 - **连续型指标**（文件 LOC、函数 CoC）：per-file/per-function ceiling = 基线值；
   超 ceiling 即 fail，低于 ceiling 自动收紧到新值。修 bug 需要加行时：ceiling 有
-  单次编辑 +2% 或 +10 行（取大）的容差，容差消耗计入 `ce check` 棘轮行。具名重立（`CE_ACCEPT_BASELINE=1 ce baseline`）时，每个超容差上升的文件与每个新入表实体都必须在 CHANGELOG 该提交段逐个具名（文件、旧→新行数），无名即违规——靠纪律执行、不设门（2026-08-28 用户裁）。`ce baseline` 只在项目根持久化，缺基线不再无声建立——须 `CE_ACCEPT_BASELINE=1`（v2.18 步 #14 O30/O31）。
+  单次编辑 +2% 或 +10 行（取大）的容差——复杂度行 +2% 或 +1 点（取大，9.0.0）——容差消耗计入 `ce check` 棘轮行。具名重立（`CE_ACCEPT_BASELINE=1 ce baseline`）时，每个超容差上升的文件与每个新入表实体都必须在 CHANGELOG 该提交段逐个具名（文件、旧→新行数），无名即违规——靠纪律执行、不设门（2026-08-28 用户裁）。`ce baseline` 只在项目根持久化，缺基线不再无声建立——须 `CE_ACCEPT_BASELINE=1`（v2.18 步 #14 O30/O31）。
 - **离散型违规**（clone 实例、deadcode 符号）：基线是**违规集合**（指纹标识）；
   新增成员即 fail，移除成员自动收基线。
 - **旋钮围栏（v2.14 起；4.2.0 `classDigest` 只钉 `[[rules.class]]`，6.0.0 拓宽为整份解析 ce.toml 并改名 `knobsDigest`，v2.18 步 #14 O39 起为规范树 = 与出厂默认不同的**有效**旋钮集，类名是标签不入树〔af45fcf 复核收口〕）**：基线另存标量 `knobsDigest`。

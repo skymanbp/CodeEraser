@@ -60,11 +60,12 @@ thresholdSetters =
     (7, \v k -> k {sCycleFloor = v})
   ]
 
--- | The tolerance legs by position (0 num / 1 den / 2 abs): a
--- record from lookups, not a sibling lambda table.
+-- | The tolerance legs by position (0 num / 1 den / 2 abs / 3 abs on
+-- the complexity rows, 9.0.0): a record from lookups, not a sibling
+-- lambda table.
 effectiveRatchet :: [[Integer]] -> RatchetKnobs
 effectiveRatchet rows =
-  RatchetKnobs (leg 0 rTolNum) (leg 1 rTolDen) (leg 2 rTolAbs)
+  RatchetKnobs (leg 0 rTolNum) (leg 1 rTolDen) (leg 2 rTolAbs) (leg 3 rTolAbsCoc)
  where
   leg c f = pick rows c (f ratchetBound)
 
@@ -107,6 +108,7 @@ knobsEcho k rk jk dedupFloor cycleRode =
     , "tolNum" .= rTolNum rk
     , "tolDen" .= rTolDen rk
     , "tolAbs" .= rTolAbs rk
+    , "tolAbsCoc" .= rTolAbsCoc rk
     , "minDistinct" .= dedupFloor
     ]
       -- the cycle floor echoes exactly when code 7 rode (6.4.0):

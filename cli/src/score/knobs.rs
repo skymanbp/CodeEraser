@@ -36,7 +36,7 @@ pub const THRESHOLD_KEYS: [&str; 8] = [
     "scoreScale",
     "cycleFloor",
 ];
-pub const TOLERANCE_KEYS: [&str; 3] = ["tolNum", "tolDen", "tolAbs"];
+pub const TOLERANCE_KEYS: [&str; 4] = ["tolNum", "tolDen", "tolAbs", "tolAbsCoc"];
 
 /// The core's cycle floor when none is declared
 /// (`CE.Graph.Cost.sccFloor`, the package's `limits.graph.scc_floor`):
@@ -69,6 +69,7 @@ pub fn core_defaults() -> ScoreCfg {
         tol_num: knob("tolNum"),
         tol_den: knob("tolDen"),
         tol_abs: knob("tolAbs"),
+        tol_abs_coc: knob("tolAbsCoc"),
     }
 }
 
@@ -155,7 +156,7 @@ pub fn threshold_rows(s: &ScoreCfg, scc_floor: Option<u32>) -> Vec<[i64; 2]> {
 }
 
 pub fn tolerance_rows(s: &ScoreCfg) -> Vec<[i64; 2]> {
-    rows(&[s.tol_num, s.tol_den, s.tol_abs])
+    rows(&[s.tol_num, s.tol_den, s.tol_abs, s.tol_abs_coc])
 }
 
 /// weights rows from named ce.toml keys — an unknown axis name is a

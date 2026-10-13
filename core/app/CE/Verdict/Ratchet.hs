@@ -1,5 +1,5 @@
 -- | The ADR-006 ratchet, pure: continuous ceilings with the
--- max(+2%, +10) single-edit tolerance, and the discrete violation
+-- max(+2%, +10 lines | +1 point) single-edit tolerance, and the discrete violation
 -- SET (new member = fail, removed member auto-shrinks). No baseline
 -- means ESTABLISH: nothing fails, the current facts become the new
 -- baseline (the betterer opening move). Knobs travel as parameters;
@@ -37,10 +37,11 @@ data RatchetKnobs = RatchetKnobs
   { rTolNum :: Integer
   , rTolDen :: Integer
   , rTolAbs :: Integer
+  , rTolAbsCoc :: Integer
   }
 
 ratchetBound :: RatchetKnobs
-ratchetBound = RatchetKnobs Cost.tolNum Cost.tolDen Cost.tolAbs
+ratchetBound = RatchetKnobs Cost.tolNum Cost.tolDen Cost.tolAbs Cost.tolAbsCoc
 
 data Ratcheted = Ratcheted
   { rOver :: [[Integer]]
@@ -58,10 +59,13 @@ data Ratcheted = Ratcheted
   , rNewDisc :: [Integer]
   }
 
--- | The single-edit ceiling allowance. Globally: max of the +2% leg
--- (integer div truncates DOWN — the conservative side, the "ties
--- don't open" stance) and the +10 leg; the legs cross at ceiling 500
--- and Spec.costModel pins one assertion on each side.
+-- | The single-edit ceiling allowance for a row of metric `m`.
+-- Globally: max of the +2% leg (integer div truncates DOWN — the
+-- conservative side, the "ties don't open" stance) and the absolute
+-- leg — +10 lines on a file-lines row (metric 0; the legs cross at
+-- ceiling 500), +1 point on a cognitive-complexity row (metric 1,
+-- 9.0.0; they cross at 50); Spec.costModel pins one assertion on each
+-- side.
 --
 -- A class that declares its own tolerance REPLACES both legs with an
 -- absolute allowance (5.1.0). Absolute, not proportional, on purpose:
@@ -70,9 +74,11 @@ data Ratcheted = Ratcheted
 -- percentage of a large file is exactly the unearned growth the plan
 -- objected to. t = 0 therefore means ANY growth is over — the global
 -- legs cannot rescue it, because they are not consulted.
-tolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer
-tolerated _ (Just t) c = c + t
-tolerated k Nothing c = max (c * rTolNum k `div` rTolDen k) (c + rTolAbs k)
+tolerated :: RatchetKnobs -> Integer -> Maybe Integer -> Integer -> Integer
+tolerated _ _ (Just t) c = c + t
+tolerated k m Nothing c = max (c * rTolNum k `div` rTolDen k) (c + absLeg)
+ where
+  absLeg = if m == 1 then rTolAbsCoc k else rTolAbs k
 
 -- | Judge current facts against the baseline. Continuous: per
 -- (entity, metric) — value above tolerated(ceiling) is OVER; above
@@ -129,7 +135,7 @@ ratchet k classTol present (Just b) cont disc =
   -- allowance; the baseline stays three columns, so a class is a
   -- charging parameter and never a ratchet fact (plan v2.13 ①)
   rows =
-    [ ((u, c), (v, mbv, maybe 0 (tolerated k (classTol cls c)) mbv))
+    [ ((u, c), (v, mbv, maybe 0 (tolerated k c (classTol cls c)) mbv))
     | (u : c : v : rest) <- cont
     , let cls = classOf rest
     , let mbv = M.lookup (u, c) baseMap

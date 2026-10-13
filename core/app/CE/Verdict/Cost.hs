@@ -55,6 +55,7 @@ module CE.Verdict.Cost
   , tolNum
   , tolDen
   , tolAbs
+  , tolAbsCoc
   , sizeCeil
   , sizeHard
   , sizePMax
@@ -72,6 +73,7 @@ module CE.Verdict.Cost
   , verdictNodeCap
   , verdictRowCap
   , classCap
+  , metricTop
   ) where
 
 -- | The rulepack fence (plan v2.13 ①, 3.1.0): the INCLUSIVE maximum
@@ -87,6 +89,14 @@ classCap = 64
 
 classIdPastFence :: Integer -> Bool
 classIdPastFence c = c > classCap
+
+-- | The top continuous metric code verdict/1 admits: 0 = file lines,
+-- 1 = function cognitive complexity, the two the score charges and
+-- the ratchet holds. scan/1's grade table runs to 6, but borrowing its
+-- top let codes 2..6 in, ratcheted and never charged. One owner: the
+-- live rows (Rows.contRow) and the baseline (Baseline) both read it.
+metricTop :: Integer
+metricTop = 1
 
 -- | Co-change count that counts as entangled — the churn report's
 -- own table floor (pairs enter it at count >= 2), so the lattice
@@ -106,9 +116,10 @@ rewriteDen :: Integer
 rewriteDen = 100
 
 -- | ADR-006 continuous-ratchet tolerance: a ceiling may be exceeded
--- by max(+2%, +10) in one edit — tolNum/tolDen is the 2% leg,
+-- by max(+2%, +10 lines) in one edit — tolNum/tolDen is the 2% leg,
 -- tolAbs the +10 leg, the max taken in Ratchet.tolerated. The legs
 -- cross at ceiling 500 (Spec.costModel pins one assertion per leg).
+-- The +10 is LINES: the complexity rows (metric 1) take tolAbsCoc.
 tolNum :: Integer
 tolNum = 102
 
@@ -117,6 +128,14 @@ tolDen = 100
 
 tolAbs :: Integer
 tolAbs = 10
+
+-- | The absolute leg for a function's cognitive-complexity row
+-- (metric 1, 9.0.0): +1 point, not +10 — ADR-006 states its absolute
+-- leg in lines, and +10 on a ceiling of 15 was a +67 % allowance
+-- nobody wrote down. The proportional leg stays for both metrics; on
+-- this leg it crosses at ceiling 50.
+tolAbsCoc :: Integer
+tolAbsCoc = 1
 
 -- | The classKnobs code a class states its OWN ratchet tolerance
 -- under (5.1.0, plan v2.14 ②). Codes 0/1/2 shadow the ceilings
@@ -204,8 +223,10 @@ deadIndegCeil = 0
 -- score = scale - sum(w_i * charge_i * violCost) / (violCostNeutral
 -- * wTotal), floored at 0. charge_i is the axis's bounded per-mille
 -- density (Score.charge), so at the neutral default the score is
--- the plain weighted mean of the axis charges and can never
--- saturate; a repo declaring viol_cost above neutral asks for
+-- the scale minus the FLOOR of the weighted mean of the (already
+-- floored) axis charges — at most one point above the exact mean,
+-- lenient by less than one — and can never saturate; a repo
+-- declaring viol_cost above neutral asks for
 -- harsher scores by choice. wTotal is DERIVED from the effective
 -- weights, never a literal (the destFloor convention — a hand-typed
 -- total is how a weight silently dies).

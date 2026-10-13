@@ -70,7 +70,8 @@ data VerdictReq = VerdictReq
     -- knobs speak the same [code, value] grammar — thresholds codes
     -- 0..6 (deadIndegCeil / rewriteNum / rewriteDen / cochangeFloor
     -- / violCost / defaultWeight / scoreScale) and the ADR-006
-    -- tolerance legs 0..2 (tolNum / tolDen / tolAbs). Absent = []
+    -- tolerance legs 0..2 (tolNum / tolDen / tolAbs; 3 = tolAbsCoc
+    -- since 9.0.0, the complexity rows' absolute leg). Absent = []
     -- = every knob at its Cost.hs DEFAULT.
     reqThresholds :: [[Integer]]
   , reqTolerance :: [[Integer]]

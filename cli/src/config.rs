@@ -53,10 +53,6 @@ pub(crate) use graph::GraphCfg;
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct ScoreCfg {
-    /// Per-axis weight numerators by axis NAME (size / complexity /
-    /// clone / docdup / deadcode / churn / cycle); unlisted axes
-    /// keep the decision-⑦ equal weight.
-    pub weights: std::collections::BTreeMap<String, u32>,
     /// v0.6 soft-zone curve (plan v2.6 §A): the axis-0 penalty of a
     /// file AT the hard line; absent = the core's default 10.
     pub size_penalty_max: Option<u32>,
@@ -70,9 +66,37 @@ pub struct ScoreCfg {
     pub viol_cost: Option<u32>,
     pub default_weight: Option<u32>,
     pub score_scale: Option<u32>,
+    /// Per-axis weight numerators by axis NAME (size / complexity /
+    /// clone / docdup / deadcode / churn / cycle); unlisted axes
+    /// keep the decision-⑦ equal weight. (Field order sets only the
+    /// row order of the generated ce-toml.md page — the knobs digest
+    /// hashes the key-ordered JSON form; the tolerance legs follow as
+    /// one group.)
+    pub weights: std::collections::BTreeMap<String, u32>,
     pub tol_num: Option<u32>,
     pub tol_den: Option<u32>,
     pub tol_abs: Option<u32>,
+    /// The absolute leg on a function's cognitive-complexity row
+    /// (9.0.0, tolerance code 3): points, not lines; absent = 1.
+    pub tol_abs_coc: Option<u32>,
+}
+
+impl ScoreCfg {
+    /// The three threshold numerators the core refuses below 1 (9.0.0,
+    /// `CE.Verdict.Table.thresholdsOffence` codes 1 / 3 / 4), named at
+    /// the load throat so every face refuses before a request is built:
+    /// at 0 each one makes its predicate vacuous (every churned entity
+    /// rewrite-heavy, every pair hot, the score pinned at the scale).
+    fn fault(&self) -> Option<String> {
+        [
+            ("rewrite_num", self.rewrite_num),
+            ("cochange_floor", self.cochange_floor),
+            ("viol_cost", self.viol_cost),
+        ]
+        .into_iter()
+        .find(|(_, v)| *v == Some(0))
+        .map(|(key, _)| format!("ce.toml [score] {key} = 0: knob below 1"))
+    }
 }
 
 /// Structure declaration layer (M6 S3a, design booklet §2 row A):
@@ -210,6 +234,7 @@ impl Config {
             .thresholds
             .ladder_fault()
             .or_else(|| cfg.rules.fault(&cfg.thresholds))
+            .or_else(|| cfg.score.fault())
             .or_else(|| cfg.graph.fault())
             .or_else(|| cfg.tombstone.fault())
             .or_else(|| tier::tier_fault("[flow]", cfg.flow.tier.as_deref()))

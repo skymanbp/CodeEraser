@@ -22,7 +22,8 @@ module CE.Structure (respond) where
 import CE.Structure.Axes (Facts (..), Knobs (kScale, kViolCost), axes, entropyRows, findings)
 import CE.Structure.Cost (structNodeCap, structViolCostNeutral)
 import qualified CE.Structure.Modularity as Mod
-import CE.Verdict.Score (chargeAt)
+import CE.Verdict.Score (chargeAt, classKnobsOf)
+import CE.Verdict.Table (classKnobsOffence)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
 import CE.Structure.Request (StructReq (..), pathFault, pathKeys, pathOffence, patternsOf, seamTables)
@@ -86,6 +87,7 @@ violation req =
            , Stale.nonDescDir docRows
            , Stale.edgesOffence (toInteger (length docRows)) (reqStaleEdges req)
            , knobsOffence (reqKnobs req)
+           , classKnobsOffence (reqClassKnobs req)
            ]
     )
  where
@@ -221,7 +223,7 @@ reply proto req k degraded =
   splitKeys = case (if degraded then Nothing else reqSeamFiles req) of
     Nothing -> []
     Just sf ->
-      let (cands, exempts) = splitRows k sf (seamTables req)
+      let (cands, exempts) = splitRows k (classKnobsOf (reqClassKnobs req)) sf (seamTables req)
        in ["splitCandidates" .= cands, "sizeExempt" .= exempts]
   -- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):
   -- every axis penalty is a flagged-directory count, so each pairs

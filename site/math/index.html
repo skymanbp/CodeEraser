@@ -164,7 +164,7 @@ metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> 
 wTotal  = sum_i w_i                            -- derived, never a literal
 score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
 
-p(x) = 0                              if x &lt;= S
+p(x) = 0                              if x &lt;= S          -- S read as min S H
      = pMax                           if H &lt;= S          -- degenerate fallback
      = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
      = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ linear arm</pre>
@@ -183,7 +183,7 @@ p(x) = 0                              if x &lt;= S
 <div class="fam formula">
   <h3 id="m-ratchet"><span class="n">05</span>The ratchet</h3>
   <p class="job">Gates the score of <!--ce:count:axes#word-->seven<!--/ce--> axes against a banked baseline that may only tighten.</p>
-  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- tolAbsCoc on a complexity row
 
 added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
 removed = baseline \ current        -- informational; drives the shrink</pre>
@@ -191,6 +191,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
   <ul class="consts">
     <li><b>tolNum/tolDen</b> 102/100</li>
     <li><b>tolAbs</b> 10</li>
+    <li><b>tolAbsCoc</b> 1</li>
   </ul>
   <p class="note src"><a href="/how/#f05">Derivation</a> · <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">booklet 05</a></p>
 </div>

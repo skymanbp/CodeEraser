@@ -23,12 +23,16 @@ import Data.Ratio ((%))
 type RatchetOut = ([[Integer]], [[Integer]], [Integer], [Integer], [[Integer]], [[Integer]], [Integer])
 
 -- | The ceiling plus its allowance: the class's own absolute
--- allowance where declared, else c + max(⌊2 % of c⌋, tolAbs) — the
--- +2 % leg written as the excess over c.
-refTolerated :: RatchetKnobs -> Maybe Integer -> Integer -> Integer
-refTolerated k declared c = case declared of
+-- allowance where declared, else c + max(⌊2 % of c⌋, the absolute
+-- leg) — the +2 % leg written as the excess over c, the absolute leg
+-- tolAbs lines on metric 0 and tolAbsCoc points on metric 1 (9.0.0).
+refTolerated :: RatchetKnobs -> Integer -> Maybe Integer -> Integer -> Integer
+refTolerated k metric declared c = case declared of
   Just t -> c + t
-  Nothing -> c + max ((c * (rTolNum k - rTolDen k)) `div` rTolDen k) (rTolAbs k)
+  Nothing -> c + max ((c * (rTolNum k - rTolDen k)) `div` rTolDen k) (absolute metric)
+ where
+  absolute 1 = rTolAbsCoc k
+  absolute _ = rTolAbs k
 
 -- | The ratchet over a baseline (Nothing = establish), the class
 -- allowance rows [class, code, value] (code 4 answers metric 1 where
@@ -48,7 +52,7 @@ refRatchet k classRows present (Just (base, baseDisc)) (cont, disc) =
  where
   keys = [(u, c) | (u : c : _) <- cont]
   judged =
-    [ (u, c, v, b, maybe 0 (refTolerated k (allowance cls c)) b)
+    [ (u, c, v, b, maybe 0 (refTolerated k c (allowance cls c)) b)
     | (u : c : v : rest) <- cont
     , let cls = sum (take 1 rest)
     , let b = lookup (u, c) [((bu, bc), bv) | [bu, bc, bv] <- reverse base]

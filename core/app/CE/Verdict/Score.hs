@@ -24,7 +24,7 @@ import CE.Clone.Cost (tsedDen, tsedNum)
 import CE.Docdup.Cost (jaccardDen, jaccardNum)
 import CE.Graph.Cost (sccFloor)
 import qualified CE.Verdict.Cost as Cost
-import CE.Verdict.Soft (zonePenalty)
+import CE.Verdict.Soft (classedZone)
 import qualified Data.Map.Strict as M
 import Data.Ratio ((%))
 import qualified Data.IntSet as IS
@@ -179,9 +179,8 @@ count = toInteger . length
 sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational
 sizeMass k soft f =
   sum
-    [ zonePenalty (line 0 s) (line 2 (sSizeHard k)) (sSizePMax k) v
+    [ classedZone (fClassKnobs f) (classOf row) (s, sSizeHard k, sSizePMax k) v
     | row@(_ : 0 : v : _) <- fCont f
-    , let line code g = M.findWithDefault g (classOf row, code) (fClassKnobs f)
     ]
  where
   s = maybe (sSizeCeil k) id soft

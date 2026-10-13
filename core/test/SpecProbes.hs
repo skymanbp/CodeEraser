@@ -71,12 +71,16 @@ costModel = do
   -- The ADR-006 tolerance legs cross at ceiling 500: below it the
   -- +10 leg wins, above it the 2% leg — one assertion per branch
   -- (plan §7.1), so neither leg can silently die.
-  e <- check "tolerance below the crossover rides +10" (tolerated ratchetBound Nothing 100 == 110)
-  f <- check "tolerance above the crossover rides +2%" (tolerated ratchetBound Nothing 1000 == 1020)
+  e <- check "tolerance below the crossover rides +10" (tolerated ratchetBound 0 Nothing 100 == 110)
+  f <- check "tolerance above the crossover rides +2%" (tolerated ratchetBound 0 Nothing 1000 == 1020)
   -- a class allowance REPLACES both legs (5.1.0), so zero is zero at
   -- a ceiling where the +10 leg would otherwise have paid out
-  g <- check "a class allowance replaces both legs" (tolerated ratchetBound (Just 0) 100 == 100)
-  pure (a && b && c && d && e && f && g)
+  g <- check "a class allowance replaces both legs" (tolerated ratchetBound 0 (Just 0) 100 == 100)
+  -- the complexity rows' absolute leg is +1 point, not +10 lines
+  -- (9.0.0): crossing at 50, one assertion per branch again
+  h <- check "complexity below the crossover rides +1" (tolerated ratchetBound 1 Nothing 15 == 16)
+  i <- check "complexity above the crossover rides +2%" (tolerated ratchetBound 1 Nothing 100 == 102)
+  pure (a && b && c && d && e && f && g && h && i)
 
 -- | Field-level assertions that do not depend on fixture bytes.
 -- The oversize and over-cap probes are generated at run time — a

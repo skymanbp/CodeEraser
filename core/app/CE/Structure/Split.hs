@@ -21,7 +21,8 @@ module CE.Structure.Split
   ) where
 
 import CE.Structure.Axes (Knobs (..))
-import CE.Verdict.Soft (zonePenalty)
+import CE.Verdict.Cost (classIdPastFence)
+import CE.Verdict.Soft (classedZone)
 import CE.Wire (label, tableOffence)
 import Data.Foldable (asum)
 import Data.List (maximumBy)
@@ -40,7 +41,9 @@ type Slice =
   ([(Integer, Integer)], [(Integer, Integer)], [(Integer, Integer)], [(Integer, Integer)])
 
 -- | Boundary contract for the five seam tables, in request order.
--- Files are dense (id == index); units are dense PER FILE, spans
+-- Files are dense (id == index) and carry the file's class as an
+-- optional third column (9.0.0, 0 = none, within the rulepack fence);
+-- units are dense PER FILE, spans
 -- inside the file's total, strictly ordered and non-overlapping;
 -- refs and churn pairs name in-range distinct units of their file;
 -- clone spans sit inside their file's total (v2.7 ② tables).
@@ -58,14 +61,21 @@ splitOffence files (units, refs, clones, churn) =
   -- asum is lazy, so both maps are demanded only once every
   -- seamFiles row has passed fileRow — malformed rows never reach
   -- them, and no row-level check rescans a table again
-  totals = M.fromList [(f, t) | [f, t] <- files]
+  totals = M.fromList [(f, t) | (f : t : _) <- files]
   counts = unitCounts files units
-  fileRow i row = case row of
-    [fid, total]
-      | fid /= toInteger i -> Just ("seamFiles " <> show i <> ": index mismatch")
-      | total < 1 -> Just ("seamFiles " <> show i <> ": total below 1")
-      | otherwise -> Nothing
-    _ -> Just ("seamFiles " <> show i <> ": malformed row (need [file,total])")
+  fileRow i row = (("seamFiles " <> show i <> ": ") <>) <$> lookup True (fileFaults i row)
+
+-- | One seamFiles row's faults in refusal order, (holds, reason):
+-- [file, total] or (9.0.0) [file, total, class].
+fileFaults :: Int -> [Integer] -> [(Bool, String)]
+fileFaults i row = case row of
+  (fid : total : cls)
+    | length cls <= 1 ->
+        [ (fid /= toInteger i, "index mismatch")
+        , (total < 1, "total below 1")
+        , (any (\c -> c < 0 || classIdPastFence c) cls, "class beyond the fence")
+        ]
+  _ -> [(True, "malformed row (need [file,total(,class)])")]
 
 -- | The shared span contract: in-range file, 1-based ordered span
 -- inside the file's total — seamUnits and seamClones both speak it
@@ -149,7 +159,7 @@ refRow counts =
 -- files × units cost, and every pairRow lookup then walked it.
 unitCounts :: [[Integer]] -> [[Integer]] -> M.Map Integer Integer
 unitCounts files units =
-  M.unionWith (+) (M.fromList [(f, 0) | [f, _] <- files]) perFile
+  M.unionWith (+) (M.fromList [(f, 0) | (f : _) <- files]) perFile
  where
   perFile = M.fromListWith (+) [(f, 1) | [f, _, _, _] <- units]
 
@@ -159,9 +169,11 @@ unitCounts files units =
 -- row carrying the best seam's numbers (0/0 when the file has no
 -- seam at all: a single unit cannot be split). Rows CONS and the
 -- pair reverses once: the old `cands <> [row]` re-walked the answer
--- built so far on every file, F² over the files the cap admits.
-splitRows :: Knobs -> [[Integer]] -> SeamTables -> ([[Integer]], [[Integer]])
-splitRows k files (units, refs, clones, churn) = (reverse cands, reverse exempts)
+-- built so far on every file, F² over the files the cap admits. A
+-- file's class (third column, 9.0.0) picks its curve from the class
+-- rows the verdict reads (Soft.classedZone, one resolver).
+splitRows :: Knobs -> M.Map (Integer, Integer) Integer -> [[Integer]] -> SeamTables -> ([[Integer]], [[Integer]])
+splitRows k classes files (units, refs, clones, churn) = (reverse cands, reverse exempts)
  where
   (cands, exempts) = foldl' step ([], []) files
   byUnit = byFile [(f, (u, e)) | [f, u, _, e] <- units]
@@ -171,7 +183,7 @@ splitRows k files (units, refs, clones, churn) = (reverse cands, reverse exempts
   slice f = (grab byUnit, grab byRef, grab byClone, grab byChurn)
    where
     grab = M.findWithDefault [] f
-  step (cs, es) [fid, total] = case seams k (slice fid) total of
+  step (cs, es) (fid : total : cls) = case seams (k, classedZone classes (sum cls) curve) (slice fid) total of
     [] -> (cs, [fid, 0, 0] : es)
     priced ->
       -- Equal ROIs go to the LAST seam: maximumBy keeps the later of equals.
@@ -180,24 +192,25 @@ splitRows k files (units, refs, clones, churn) = (reverse cands, reverse exempts
             then ([fid, u, b, c] : cs, es)
             else (cs, [fid, b, c] : es)
   step acc _ = acc
+  curve = (kSeamSoft k, kSeamHard k, kSeamPMax k)
 
 -- | One table bucketed by file id, table order preserved (the
 -- fromListWith accumulator prepends, hence the single reverse).
 byFile :: [(Integer, a)] -> M.Map Integer [a]
 byFile rows = M.map reverse (M.fromListWith (++) [(f, [v]) | (f, v) <- rows])
 
--- | Every seam of one file as (afterUnit, benefitMilli, costMilli).
+-- | Every seam of one file as (afterUnit, benefitMilli, costMilli),
+-- `p` the file's own zone curve.
 -- Cost (v2.7 ② full pricing): severed references × ref price, cut
 -- clone blocks (span straddling the seam line) × clone price,
 -- crossing co-change pairs × churn price, plus the flat φ. All three
 -- crossing tables are built once per FILE and read per seam.
-seams :: Knobs -> Slice -> Integer -> [(Integer, Integer, Integer)]
-seams k (mine, refs, clones, churn) total =
+seams :: (Knobs, Integer -> Rational) -> Slice -> Integer -> [(Integer, Integer, Integer)]
+seams (k, p) (mine, refs, clones, churn) total =
   [(u, benefit end, cost u) | (u, end) <- open]
  where
   -- the seams are the gaps after every unit BUT the last
   open = zipWith const mine (drop 1 mine)
-  p = zonePenalty (kSeamSoft k) (kSeamHard k) (kSeamPMax k)
   benefit end = max 0 (floor (1000 * (p total - p end - p (total - end))))
   refX = crossings refs
   churnX = crossings churn

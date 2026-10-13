@@ -81,6 +81,10 @@ data StructReq = StructReq
   , reqSeamClones :: [[Integer]]
   , reqSeamChurn :: [[Integer]]
   , reqKnobs :: [[Integer]]
+  , reqClassKnobs :: [[Integer]]
+  -- ^ 9.0.0: the verdict's own classKnobs rows [class, code, value]
+  -- (CE.Verdict.Table.classKnobsOffence holds them), so a seam in a
+  -- classed file prices on its class's curve; absent = no class
   }
 
 instance FromJSON StructReq where
@@ -112,6 +116,7 @@ integerForm o nodes =
       <*> o .:? "seamClones" .!= []
       <*> o .:? "seamChurn" .!= []
       <*> o .:? "knobs" .!= []
+      <*> o .:? "classKnobs" .!= []
 
 -- | The path form decoded: refused when it rides beside a dir-keyed
 -- table or its own contract fails (then nothing is built), else built.

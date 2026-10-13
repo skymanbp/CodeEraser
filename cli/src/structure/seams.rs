@@ -37,12 +37,38 @@ const NAME_FLOOR: usize = 3;
 /// (a measurement constant, not a wire knob — prices are the knobs).
 const CHURN_WINDOW_DAYS: u32 = crate::churn::DEFAULT_DAYS;
 
-/// Assemble the five seam tables over the judged files past `soft`;
-/// the clone leg reads the command boundary's one snapshot (P10).
+/// Where a file's seams open and which class owns it (9.0.0): a file
+/// whose class declares its own `file_lines_warn` is past THAT line —
+/// the row the verdict's class code 0 reads — and every other file is
+/// past the committed soft line. The class index rides as seamFiles'
+/// third column, so the core prices the seam on the same curve.
+pub struct Owners<'a> {
+    pub soft: u64,
+    pub classes: &'a crate::scan::classes::Classes,
+    pub rules: &'a crate::config::RulesCfg,
+}
+
+impl Owners<'_> {
+    fn of(&self, rel: &str) -> (u64, u64) {
+        let class = self.classes.class_of(rel);
+        let line = match class {
+            0 => self.soft,
+            c => self.rules.class[c as usize - 1]
+                .knobs
+                .file_lines_warn
+                .map_or(self.soft, |w| w as u64),
+        };
+        (line, class)
+    }
+}
+
+/// Assemble the five seam tables over the judged files past their
+/// opening line (`Owners`); the clone leg reads the command
+/// boundary's one snapshot (P10).
 pub fn seam_facts(
     root: &Path,
     files: &[FileMetrics],
-    soft: u64,
+    owners: &Owners,
     found: &crate::dedup::pairs::Blocks,
 ) -> Result<SeamFacts> {
     let mut out = SeamFacts::default();
@@ -51,7 +77,8 @@ pub fn seam_facts(
         let Some(lang) = Lang::judged_path(Path::new(&f.path)) else {
             continue;
         };
-        if (f.total_lines as u64) <= soft {
+        let (line, class) = owners.of(&f.path);
+        if (f.total_lines as u64) <= line {
             continue;
         }
         let Ok(bytes) = std::fs::read(root.join(&f.path)) else {
@@ -61,7 +88,7 @@ pub fn seam_facts(
         let all = units::segments(&text, lang);
         let tops = top_level(&all);
         let fid = out.files.len() as u64;
-        out.tables.files.push([fid, f.total_lines as u64]);
+        out.tables.files.push([fid, f.total_lines as u64, class]);
         out.files.push((f.path.clone(), f.total_lines as u64));
         key_maps.push(key_map(&all, &tops));
         push_units(&mut out, fid, &tops, f.total_lines as u64);
