@@ -1,45 +1,81 @@
 -- | An independently written reference for the query family's
--- evaluator (design booklet §4.7): naive fixpoint — every rule over
--- the WHOLE database every round, no indexes, no delta routing, no
--- provenance — with the join written as a plain nested product over
--- the body in list-comprehension form. Only the checker is shared
--- (the strata are its answer, not the evaluator's); everything past
--- it is a second implementation. The shipped evaluator must agree
--- tuple for tuple on every program of the enumerated family over
--- every fact set of the seeded generator (the Reference.hs posture:
--- deterministic, no RNG inside a byte-determinism contract). The
--- same reference replays a proof tree node by node: each rule node's
--- children must be one solution of its body.
-module ReferenceQuery (Db, equivalence, factSets, naive, replays, toks) where
+-- evaluator (design booklet §4.1 / §4.7): its own strata — the
+-- predicate graph's components read off a transitive closure (no
+-- Data.Graph), a negative or aggregated edge inside one is the
+-- unstratifiable program, a component's level the most negative edges
+-- on a path into it — then a naive fixpoint per stratum, every rule
+-- over the WHOLE database every round, no indexes, no delta routing,
+-- no provenance, the join a plain nested product over the body in
+-- list-comprehension form; its own arithmetic, comparisons and
+-- aggregates (count and sum of nothing are 0, min and max of nothing
+-- have no value), its own goal answers (a query's variables in the
+-- order the body first binds them, an assertion's head). Only the
+-- parser is shared. The shipped checker and evaluator must agree on
+-- every program of the seeded generator (ReferenceQueryGen) over its
+-- fact set, refusal for refusal and tuple for tuple
+-- (QueryReferenceProps). The same reference replays a proof tree node
+-- by node: each rule node's children must be one solution of its body.
+module ReferenceQuery (Db, events, goalAnswersRef, naive, replays, strataCount, toks) where
 
-import CE.Query.Check (Checked (..), RuleC (..), check)
-import CE.Query.Check.Safety (outerVars)
 import CE.Query.Cost
-import CE.Query.Eval (evalProgram)
-import CE.Query.Parse (parseProgram)
 import CE.Query.Syntax
 import Control.Monad (foldM, guard, join)
-import Data.Bits (shiftR, (.&.))
 import Data.Char (isDigit)
 import qualified Data.IntMap.Strict as IM
-import qualified Data.Map.Strict as M
-import Data.Maybe (mapMaybe, maybeToList)
+import Data.List (nub, sort)
+import qualified Data.Map as M
+import Data.Maybe (fromMaybe, mapMaybe, maybeToList)
 import qualified Data.Set as S
-import ReferenceFlowGen (lcgStep)
 
 type Db = IM.IntMap (S.Set [Integer])
 type Subst = IM.IntMap Integer
 
--- | The naive evaluator: strata in order, each to a fixpoint of
--- "apply every rule to the whole database".
-naive :: Checked -> Db -> Db
-naive chk = go (chkStrata chk)
+-- | The predicates a literal reads and whether positively: a
+-- negation's atom, and every atom an aggregate's body reads at any
+-- depth, are negative edges (§4.1 分层).
+readsOf :: Lit -> [(Bool, Int)]
+readsOf lit = case lit of
+  LPos a -> [(True, atomPred a)]
+  LNeg a _ -> [(False, atomPred a)]
+  LAgg _ _ _ body _ -> [(False, p) | l <- body, (_, p) <- readsOf l]
+  _ -> []
+
+-- | The rules by stratum, lowest first; Nothing = a negative edge
+-- inside a component (unstratifiable).
+strata :: [Clause] -> Maybe [[(Atom, [Lit])]]
+strata clauses
+  | or [not pos && together q h | (q, h, pos) <- edges] = Nothing
+  | otherwise = Just [[r | r@(h, _) <- rules, level (atomPred h) == l] | l <- nub (sort (map (level . atomPred . fst) rules))]
  where
-  go [] db = db
-  go (stratum : rest) db = go rest (fix [chkRules chk !! i | i <- stratum] db)
+  rules = [(h, b) | Rule h b _ <- clauses]
+  edges = [(q, atomPred h, pos) | (h, b) <- rules, l <- b, (pos, q) <- readsOf l, isIdb q]
+  -- the closure as each predicate's reach set, walked depth first
+  succs = M.fromListWith (<>) [(q, [h]) | (q, h, _) <- edges]
+  next p = M.findWithDefault [] p succs
+  walk seen [] = seen
+  walk seen (x : xs)
+    | S.member x seen = walk seen xs
+    | otherwise = walk (S.insert x seen) (next x <> xs)
+  reach p = walk S.empty (next p)
+  together a b = S.member b (reach a) && S.member a (reach b)
+  -- a component by its least member
+  rep p = minimum (p : [q | (q, _, _) <- edges, together p q])
+  memo = M.fromList [(c, compLevel c) | c <- nub [rep (atomPred h) | (h, _) <- rules]]
+  compLevel c = maximum ((0 :: Int) : [M.findWithDefault 0 (rep q) memo + (if pos then 0 else 1) | (q, h, pos) <- edges, rep h == c, rep q /= c])
+  level p = M.findWithDefault 0 (rep p) memo
+
+-- | How many strata the program stands in, or Nothing.
+strataCount :: [Clause] -> Maybe Int
+strataCount = fmap length . strata
+
+-- | The naive evaluator: its own strata in order, each to a fixpoint
+-- of "apply every rule to the whole database"; Nothing when the
+-- program cannot be stratified.
+naive :: [Clause] -> Db -> Maybe Db
+naive clauses db0 = foldl (flip fix) db0 <$> strata clauses
+ where
   fix rules db = let db' = foldl apply db rules in if db' == db then db else fix rules db'
-  apply db r = IM.insertWith S.union (atomPred (ruleHead r)) (S.fromList (heads db r)) db
-  heads db r = [map (valueIn s) (atomArgs (ruleHead r)) | s <- solve db (ruleBody r) IM.empty]
+  apply db (h, b) = IM.insertWith S.union (atomPred h) (S.fromList [map (valueIn s) (atomArgs h) | s <- solve db b IM.empty]) db
 
 -- | Every substitution a body admits, one literal at a time.
 solve :: Db -> [Lit] -> Subst -> [Subst]
@@ -103,13 +139,16 @@ cmp op x y = case lookup op [(tokEq, (==)), (tokNe, (/=)), (tokLt, (<)), (tokLe,
   Just f -> f x y
   Nothing -> False
 
+-- | The inner body's answers projected onto the aggregated variables,
+-- as a set: count and sum of nothing are 0, min and max of nothing
+-- have no value (the literal fails).
 agg :: Db -> Integer -> [(Int, Int)] -> [Lit] -> Subst -> Maybe Integer
 agg db op vars body s
   | op == tokCount = Just (toInteger (S.size rows))
+  | op == tokSum = Just (sum firsts)
   | S.null rows = Nothing
   | op == tokMin = Just (minimum firsts)
-  | op == tokMax = Just (maximum firsts)
-  | otherwise = Just (sum firsts)
+  | otherwise = Just (maximum firsts)
  where
   rows = S.fromList [[IM.findWithDefault 0 v s' | (v, _) <- vars] | s' <- solve db body s]
   firsts = [x | x : _ <- S.toList rows]
@@ -136,7 +175,7 @@ replays clauses db rows = all node rows
   readsAs s a (q, t) = atomPred a == q && length (atomArgs a) == length t && and [termOf x == TAnon || valueIn s x == y | (x, y) <- zip (atomArgs a) t]
   headOf cl s = case clauseHead cl of
     Just h -> map (valueIn s) (atomArgs h)
-    Nothing -> [IM.findWithDefault 0 v s | v <- outerVars (clauseBody cl)]
+    Nothing -> [IM.findWithDefault 0 v s | v <- firstBound (clauseBody cl)]
 
 -- | A token stream from a spaced spelling: `pN` predicate, `vN`
 -- variable, `iN` integer, `sN` symbol, `eN` set, `_` anonymous, and
@@ -154,60 +193,42 @@ toks = map one . words
     _ -> (maybe (error ("toks: " <> w)) id (lookup w punct), 0)
   punct = zip [":-", ",", ".", "(", ")", "not", "?-", "assert", "=", "!=", "<", "<=", ">", ">=", "+", "-", "*", "/", "%", "count", "min", "max", "sum", ":"] [punctFloor ..]
 
--- | The batteries' one LCG stream from a seed: deterministic, and
--- enough spread for small fact sets.
-lcg :: Integer -> [Integer]
-lcg seed = drop 1 (iterate lcgStep seed)
-
--- | Fact sets over four nodes (codes 0..3): `file` for every node,
--- `ref` arcs drawn from the stream, `role` entry bits, `lines`
--- counts, `in_dir` placements — one set per seed.
-factSets :: [Db]
-factSets = [factSet seed | seed <- [1 .. 40]]
-
-factSet :: Integer -> Db
-factSet seed =
-  IM.fromList
-    [ (1, S.fromList [[n] | n <- nodes])
-    , (9, S.fromList [[a, b, 0, 1] | (a, b) <- arcs])
-    , (7, S.fromList [[n, 5] | n <- nodes, odd (bit n)])
-    , (8, S.fromList [[n, 1 + (bit (n + 4) `shiftR` 1)] | n <- nodes])
-    , (2, S.fromList [[n, bit (n + 8) .&. 1] | n <- nodes])
-    ]
+-- | A body's variables in the order it first binds them: an atom's
+-- in term order, a binding's and an aggregate's target.
+firstBound :: [Lit] -> [Int]
+firstBound = foldl (\seen l -> seen <> filter (`notElem` seen) (nub (newly l))) []
  where
-  nodes = [0 .. 3]
-  stream = lcg seed
-  bit :: Integer -> Integer
-  bit i = (stream !! fromInteger i) `shiftR` 16
-  arcs = [(a, b) | (i, (a, b)) <- zip [12 ..] [(a, b) | a <- nodes, b <- nodes], bit i .&. 3 == 0]
+  newly l = case l of
+    LPos a -> [v | Term _ (TVar v) <- atomArgs a]
+    LAssign v _ _ -> [v]
+    LAgg v _ _ _ _ -> [v]
+    _ -> []
 
--- | The programs: the prelude's three rules and its dead-file query;
--- transitive dependence; an outdegree count; arithmetic over line
--- counts; a symmetric pair broken by `<` under two negations.
-programs :: [String]
-programs =
-  [ "p1000 ( v0 ) :- p7 ( v0 , s5 ) . p1000 ( v1 ) :- p1000 ( v0 ) , p9 ( v0 , v1 , _ , _ ) . p1001 ( v0 ) :- p1 ( v0 ) , not p1000 ( v0 ) . ?- p1001 ( v0 ) ."
-  , "p1000 ( v0 , v1 ) :- p9 ( v0 , v1 , _ , _ ) . p1000 ( v0 , v1 ) :- p1000 ( v0 , v2 ) , p9 ( v2 , v1 , _ , _ ) . ?- p1000 ( v0 , v1 ) , v0 != v1 ."
-  , "p1000 ( v0 , v1 ) :- p1 ( v0 ) , v1 = count ( v2 : p9 ( v0 , v2 , _ , _ ) ) . ?- p1000 ( v0 , v1 ) , v1 > i0 ."
-  , "p1000 ( v0 , v1 ) :- p8 ( v0 , v2 ) , v1 = v2 * i2 + i1 , v1 > i3 . ?- p1000 ( v0 , v1 ) ."
-  , "p1000 ( v0 , v1 ) :- p2 ( v0 , v2 ) , p2 ( v1 , v2 ) , v0 < v1 . p1001 ( v0 ) :- p1 ( v0 ) , not p1000 ( v0 , _ ) , not p1000 ( _ , v0 ) . ?- p1001 ( v0 ) ."
-  ]
-
--- | Every program over every fact set: the shipped evaluator's
--- database equals the naive one's, relation for relation.
-equivalence :: IO Bool
-equivalence = do
-  let cases = [(pi', fi, prog, db) | (pi', prog) <- zip [0 :: Int ..] programs, (fi, db) <- zip [0 :: Int ..] factSets]
-      failures = [(pi', fi) | (pi', fi, prog, db) <- cases, not (agree (toks prog) db)]
-      ok = null failures
-  putStrLn ((if ok then "ok   " else "FAIL ") <> "semi-naive evaluator agrees with the naive reference on " <> show (length cases) <> " program × fact-set cases" <> (if ok then "" else " — first mismatches " <> show (take 3 failures)))
-  pure ok
-
-agree :: [(Integer, Integer)] -> Db -> Bool
-agree prog db = case parseProgram prog >>= either (const (Left 0)) Right . check 0 of
-  Left _ -> False
-  Right chk -> case evalProgram chk db of
-    Left _ -> False
-    Right (db', _, _) -> idb db' == idb (naive chk db)
+-- | Each goal's distinct answer tuples, ascending, in clause order: a
+-- query answers its first-bound variables, an assertion its head
+-- (the violations).
+goalAnswersRef :: [Clause] -> Db -> [[[Integer]]]
+goalAnswersRef clauses db = [S.toAscList (S.fromList (map (answer cl) (solve db (clauseBody cl) IM.empty))) | cl <- clauses, isGoal cl]
  where
-  idb = M.fromList . filter (isIdb . fst) . IM.toList
+  isGoal cl = case cl of Rule {} -> False; _ -> True
+  answer cl s = case clauseHead cl of
+    Just h -> map (valueIn s) (atomArgs h)
+    Nothing -> [IM.findWithDefault 0 v s | v <- firstBound (clauseBody cl)]
+
+-- | What an evaluation met, by name — every body literal read under
+-- every substitution the literals before it admit, over the final
+-- database: each aggregate folded (and whether over nothing), each
+-- operator applied, a division by zero, each comparison, a `=` on a
+-- bound variable.
+events :: [Clause] -> Db -> [String]
+events clauses db = concat [met s l | cl <- clauses, let b = clauseBody cl, (i, l) <- zip [0 ..] b, s <- solve db (take i b) IM.empty]
+ where
+  met s l = case l of
+    LAgg _ op _ body _ -> [spell op <> (if null (solve db body s) then " over nothing" else " over rows")]
+    LAssign v e _ -> ["a bound = compares" | IM.member v s] <> applied s e
+    LCmp op x y _ -> ["comparison " <> spell op] <> applied s x <> applied s y
+    _ -> []
+  applied s e = case e of
+    EBin op x y -> ["operator " <> spell op] <> ["a division by zero fails its literal" | op `elem` [tokDiv, tokMod], ev s y == Just 0] <> applied s x <> applied s y
+    _ -> []
+  spell op = fromMaybe "?" (lookup op (zip [tokEq, tokNe, tokLt, tokLe, tokGt, tokGe, tokAdd, tokSub, tokMul, tokDiv, tokMod, tokCount, tokMin, tokMax, tokSum] (words "= != < <= > >= + - * / % count min max sum")))

@@ -182,7 +182,7 @@ test-suite ce-core-test
                       CE.Resolve.Lower, CE.Resolve.Url, CE.Resolve.Md,
                       CE.Resolve.HtmlHead, CE.Resolve.Html,
                       ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ReferenceMd, ReferenceMdGen, ReferenceHtml, ReferenceHtmlGen, ResolveProps,
-                      Reference, ReferenceGraph, ReferenceQuery, QueryProps, ReferencePack, PackProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
+                      Reference, ReferenceGraph, ReferenceQuery, ReferenceQueryGen, QueryReferenceProps, QueryProps, ReferencePack, PackProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
                       ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,
                       ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps, ReferenceMergeGen, ReferenceMerge, MergeReferenceProps,
                       ReferenceArch, ArchCases, ArchRefusals, ArchFasProps, ArchProps,
@@ -190,7 +190,7 @@ test-suite ce-core-test
                       AuditProps, TombstoneProps, SimilarProps, EntropyProps, JoinProps, LangProps, DocumentProps, DocumentGen, DocumentHarness, DocumentProps4, DocumentGen4, DocumentProps5, DocumentGen5, DocumentProps6, DocumentGen6, SpellProps, ScanProps, ScanCyclesProps, ScanEventsProps, ReferenceScanGen, ReferenceScan, ScanPageTrees, ScanReferenceProps,
                       StructureProps, StructureModularityProps, TrendProps, EraseProps, VerdictProps,
                       VerdictWireProps, VerdictFenceProps, VerdictKnobProps, SoftProps, SplitProps, WireHarness,
-                      ClassProps, StackingProps, DeclProps,
+                      ClassProps, StackingProps, FourClassReferenceProps, DeclProps,
                       ReferenceTombstone, TombstoneEquivProps, ReferenceSimilar, SimilarEquivProps, ReferenceErase, EraseEquivProps, ReferenceTrend, TrendEquivProps, ReferenceContract, ReferenceScore, ReferenceRatchet, VerdictGen, VerdictEquivProps, ReferenceSplit, ReferenceStructure, StructureGen, StructureEquivProps
     build-depends:
         base       >=4.19 && <5,

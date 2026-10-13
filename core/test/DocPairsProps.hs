@@ -17,7 +17,7 @@ import CE.Docdup.Runs (indexed, runWords)
 import CE.Docdup.Cost (shingleK)
 import Data.Aeson (Value (..))
 import qualified Data.Aeson.KeyMap as KM
-import ReferenceDocPairs (coarseExpected, coarseRequests, runRef, seqExpected, seqRequests)
+import ReferenceDocPairs (coarseExpected, coarseRequests, runRef, seqExpected, seqRequests, verbatimAlone)
 import WireHarness (fieldsOf, refusedBy, runLegs, tabledRequest)
 
 battery :: IO Bool
@@ -27,7 +27,7 @@ battery =
     , "the run walk agrees with the dynamic program on every seeded pair"
     , "two hundred seeded coarse requests agree with the reference"
     , "two hundred seeded sequence requests agree with the reference"
-    , "the seeded requests are not vacuous: LSH and seeds both find, a seed group chains, runs and dups occur"
+    , "the seeded requests are not vacuous: LSH and seeds both find, a seed group chains, runs and dups occur, a run alone decides"
     , "the refusals name their offender"
     , "the set, corpus and sequence caps degrade, never truncate"
     ]
@@ -72,6 +72,7 @@ nonVacuous =
     && any (positive "hotShingles" . coarseExpected) coarseRequests
     && any (\(qs, ps) -> any (/= Number 0) (runsOf (seqExpected qs ps))) seqRequests
     && any (\(qs, ps) -> positive "jaccardDups" (seqExpected qs ps)) seqRequests
+    && any verbatimAlone seqRequests
  where
   positive k fs = case reverse fs of
     (Just (Object c) : _) -> maybe False (/= Number 0) (KM.lookup k c)

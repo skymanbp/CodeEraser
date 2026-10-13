@@ -53,9 +53,10 @@ so one unit's defect never costs the others their verdict
 
 `CE.Flow.Cfg` unfolds the structured statements into edges: an if to its then and else, a loop
 back to its head (an infinite head has no exit edge), a switch to each case with fallthrough to
-the next, a try body's every statement to each of its catches, jumps to their targets, return,
-throw and no-return calls to the exit ([Cfg.hs:1-14](../../../core/app/CE/Flow/Cfg.hs#L1),
-[Cfg.hs:40](../../../core/app/CE/Flow/Cfg.hs#L40)). A finally is one hub, not a copy per target:
+the next, a try body's every statement to each of its catches, every statement in the body or
+a catch of a try with a finally on through that finally as a throw that continues outward (catch or
+no catch; ruling 2026-10-13), jumps to their targets, return, throw and no-return calls to the exit ([Cfg.hs:1-14](../../../core/app/CE/Flow/Cfg.hs#L1),
+[Cfg.hs:44](../../../core/app/CE/Flow/Cfg.hs#L44)). A finally is one hub, not a copy per target:
 every edge that leaves the try or a catch is routed through it, and the hub's successors are the
 union of the targets the incoming edges carried. The union over-approximates, and it only adds
 paths — the direction in which a verdict can be lost, never invented.
@@ -160,13 +161,14 @@ the changeset's findings are recorded, and the site list is `ce flow`'s.
 The core holds its judgment to a reference that builds no graph at all: a tree-walking
 interpreter that enumerates every execution trace of a structured unit — every branch and case,
 each loop head at most twice, every statement of a try body free to hand control to a catch,
+and of the body or a catch of a try with a finally free to throw on out through it,
 a finally continuing with the union of the pending completions — and reads the findings off the
 traces; the shipped judgment must agree finding for finding on 200 seeded random programs
 ([ReferenceFlow.hs:1-12](../../../core/test/ReferenceFlow.hs#L1)). The battery adds the
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:113](../../../core/test/Spec.hs#L113)).
+([Spec.hs:114](../../../core/test/Spec.hs#L114)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

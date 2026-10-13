@@ -7,16 +7,20 @@
 -- battery held before the move, the two fetch ratios pinned against the
 -- formulas they shortcut, a ranking and a widening worked by hand, two
 -- hundred seeded corpora agreeing with ReferenceRank on every reply
--- field, the contract's refusals by name, and the cap.
+-- field — among them a widening whose neighbour's PPMI passes the cap,
+-- and a word one of whose top m neighbours the query spells while a
+-- neighbour past the top m it does not, and no word adds (the top m are
+-- taken before the spelled are dropped, so that neighbour stays out) —
+-- the contract's refusals by name, and the cap.
 module RankProps (battery) where
 
 import CE.Similar.Rank (respond)
 import CE.Similar.Rank.Contract (RankReq (..), overCap)
-import CE.Similar.Rank.Cost (b, k1, minPpmi, neighbourDfRatio, rankCap, scoreFracBits, scoredDfRatio)
+import CE.Similar.Rank.Cost (b, k1, minPpmi, neighbourDfRatio, ppmiCap, rankCap, scoreFracBits, scoredDfRatio, topM)
 import CE.Similar.Rank.Math (contribution, idfFp, log2Fp, ppmiFp)
-import Data.Aeson (Value (..), toJSON)
+import Data.Aeson (Result (..), Value (..), fromJSON, toJSON)
 import ReferenceContract (cells)
-import ReferenceRank (RReq (..), encodeReq, expected, requests)
+import ReferenceRank (RReq (..), encodeReq, expected, neighbourLists, requests)
 import WireHarness (fieldsOf, refusedBy, runLegs)
 
 battery :: IO Bool
@@ -29,7 +33,7 @@ battery =
     , "a ranking worked by hand: shared rare terms first, the query never itself"
     , "a widening worked by hand: fetch reaches load at two bits, a capped fraction"
     , "two hundred seeded corpora agree with the reference on every reply field"
-    , "the seeded corpora are not vacuous: cuts, exclusions, seen seats, idf zero and widenings"
+    , "the seeded corpora are not vacuous: cuts, exclusions, seen seats, idf zero, widenings, a capped neighbour and a crowded top three"
     , "the contract's refusals name the offender"
     , "the cap counts every table"
     ]
@@ -130,7 +134,13 @@ nonVacuous =
     && any (\r -> maybe False (`elem` scored r) (rExclude r)) requests
     && any (\r -> any (`elem` rSeen r) (scored r) && hitCount r > 0) requests
     && any (\r -> or [d > 0 && rN r <= 2 * d | [_, d] <- rTerms r]) requests
+    && any (\r -> rWiden r && or [p > ppmiCap && t `notElem` spelled r | (_, ns) <- neighbourLists r, (t, p) <- take topM ns]) requests
+    && any (\r -> or [any ((`elem` spelled r) . fst) (take topM ns) && any (\(t, _) -> t `notElem` spelled r && t `notElem` added r) (drop topM ns) | (_, ns) <- neighbourLists r]) requests
  where
+  spelled r = [t | (t : _) <- rQuery r]
+  added r = case expected r of
+    (_ : Just v : _) | Success xs <- fromJSON v -> [t | (t : _) <- xs :: [[Integer]]]
+    _ -> []
   grew r = case expected r of
     (_ : Just (Array a) : _) -> not (null a)
     _ -> False

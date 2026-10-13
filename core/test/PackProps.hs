@@ -36,8 +36,8 @@ names =
   , "no_dir_cycles: witness rows equal the reference on 200 seeded tables, 40 or more witnessing"
   , "fan_in_max: witness rows equal the reference on 200 seeded tables, 40 or more witnessing"
   , "fan_out_max: witness rows equal the reference on 200 seeded tables, 40 or more witnessing"
-  , "layers: witness rows equal the reference on 200 seeded tables, 40 or more witnessing"
-  , "forbid: witness rows equal the reference on 200 seeded tables, 40 or more witnessing"
+  , "layers: witness rows equal the reference on 200 seeded tables, 40 or more witnessing, a glob member that is no file witnessing nothing"
+  , "forbid: witness rows equal the reference on 200 seeded tables, 40 or more witnessing, a glob member that is no file witnessing nothing"
   , "the lex reply carries the rendered text, its tokens read `pack line:column`, the prelude count stays the prelude's"
   , "every pack refusal names its cause, the two caps among them"
   ]
@@ -49,8 +49,8 @@ probes prelude =
   , agrees prelude (const [["no_dir_cycles"]]) (const cycles)
   , agrees prelude (\s -> [["fan_in_max", toJSON (s `mod` 3)]]) (fanIn . (`mod` 3))
   , agrees prelude (\s -> [["fan_out_max", toJSON (s `mod` 3)]]) (fanOut . (`mod` 3))
-  , agrees prelude (\s -> [toJSON ("layers" :: String) : map toJSON (layersOf s)]) (layered . layersOf)
-  , agrees prelude (map (\(a, b) -> ["forbid", toJSON a, toJSON b]) . pairsOf) (forbidden . pairsOf)
+  , agrees prelude (\s -> [toJSON ("layers" :: String) : map toJSON (layersOf s)]) (layered . layersOf) && filesOnly prelude (\s -> [toJSON ("layers" :: String) : map toJSON (layersOf s)]) (layered . layersOf)
+  , agrees prelude (map (\(a, b) -> ["forbid", toJSON a, toJSON b]) . pairsOf) (forbidden . pairsOf) && filesOnly prelude (map (\(a, b) -> ["forbid", toJSON a, toJSON b]) . pairsOf) (forbidden . pairsOf)
   , lexed prelude
   , refusals prelude
   ]
@@ -122,9 +122,20 @@ pairsOf s = take (fromInteger (1 + s `mod` 3)) [(pool (s + i), pool (s * 7 + i *
 -- table seats each glob's members under the id the lex reply gives the
 -- glob.
 agrees :: String -> (Integer -> [[Value]]) -> (Integer -> Tables -> S.Set [Integer]) -> Bool
-agrees prelude packOf reference = all (== Just True) (map (fmap fst) outcomes) && length [() | Just (_, True) <- outcomes] >= 40
+agrees prelude packOf reference = all (== Just True) [fmap (\(ok, _, _) -> ok) o | o <- outcomes] && length [() | Just (_, True, _) <- outcomes] >= 40
  where
-  outcomes = map one seeds
+  outcomes = judged prelude packOf reference
+
+-- | Some seed's rows would differ were every glob member a file: an arc
+-- with an end that is no file is reached, and the core kept it out.
+filesOnly :: String -> (Integer -> [[Value]]) -> (Integer -> Tables -> S.Set [Integer]) -> Bool
+filesOnly prelude packOf reference = or [moved | Just (_, _, moved) <- judged prelude packOf reference]
+
+-- | Each seed: the core's rows equal the reference's, the reference
+-- witnesses something, and its rows move when every node is a file.
+judged :: String -> (Integer -> [[Value]]) -> (Integer -> Tables -> S.Set [Integer]) -> [Maybe (Bool, Bool, Bool)]
+judged prelude packOf reference = map one seeds
+ where
   one s = do
     let pack = packOf s
     l <- lexOf prelude Nothing pack
@@ -135,7 +146,7 @@ agrees prelude packOf reference = all (== Just True) (map (fmap fst) outcomes) &
     o <- reply (request prelude Nothing pack facts [])
     Success answers <- fromJSON <$> field o "answers" :: Maybe (Result [[Integer]])
     let want = reference s t
-    pure (S.fromList answers == want && length answers == S.size want, not (S.null want))
+    pure (S.fromList answers == want && length answers == S.size want, not (S.null want), reference s t {tFiles = S.fromList (tNodes t)} /= want)
 
 -- | The lex reply over a pack: the text it rendered, tokens placed in
 -- the pack, the prelude count unchanged by the pack's clauses.

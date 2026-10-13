@@ -5,15 +5,20 @@
 -- | The advisor ranking's second implementation (plan v2.33 W3), spelled
 -- the way the measuring side spelled it before the move: the log2 by
 -- `until` and a fold over the fraction bits, the contribution as the
--- expanded integer fraction 22·tf·avg / (10·tf·avg + 3·avg + 9·len)
--- (k1 = 6/5 and b = 3/4 cleared by hand, not the core's rationals), the
--- expansion as a fold carrying the added list, the ranking as one sortOn
--- over a Data.Map of per-seat sums. It answers the reply fields
--- `rank.result` shows, and draws two hundred seeded small corpora.
-module ReferenceRank (RReq (..), encodeReq, expected, requests) where
+-- BM25 definition itself over Rational — (k1 + 1)·tf / (tf + k1·(1 − b +
+-- b·len/avg)) with k1 = 6/5 and b = 3/4 written here as this module's
+-- own data, floored once to the 2^16 fixed point (the core computes the
+-- cleared closed form) — the expansion as a fold carrying the added
+-- list, the ranking as one sortOn over a Data.Map of per-seat sums. It
+-- answers the reply fields `rank.result` shows, and draws two hundred
+-- seeded small corpora, a third of them with seats that hold none of
+-- the corpus's terms, so N is large enough for a neighbour's PPMI to
+-- pass the cap.
+module ReferenceRank (RReq (..), encodeReq, expected, neighbourLists, requests) where
 
 import Data.Aeson (Value, object, toJSON, (.=))
 import Data.List (sortOn)
+import Data.Ratio ((%))
 import qualified Data.Map.Strict as M
 import Data.Ord (Down (..))
 import ReferenceFlowGen (G, S (..), rand, runG)
@@ -67,7 +72,10 @@ ppmiRef :: Integer -> Integer -> Integer -> Integer -> Integer
 ppmiRef n nab na nb = if nab >= 2 && nab * n > na * nb then log2Ref (nab * n) (na * nb) else 0
 
 contribRef :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
-contribRef w idf tf len avg = (w * idf * 22 * tf * avg * 65536) `quot` (10 * tf * avg + 3 * avg + 9 * len)
+contribRef w idf tf len avg = floor (toRational (w * idf * tf * 65536) * (bmK1 + 1) / (toRational tf + bmK1 * (1 - bmB + bmB * (len % avg))))
+ where
+  bmK1 = 6 % 5 :: Rational
+  bmB = 3 % 4 :: Rational
 
 weightOf :: Integer -> Integer
 weightOf ch = 256 * maybe 1 id (lookup ch [(0, 3), (2, 2)])
@@ -77,16 +85,25 @@ ranked :: RReq -> ([(Integer, Integer, Integer, Bool)], [(Integer, Integer, Inte
 ranked r = (bareQ, widened)
  where
   bareQ = [(t, ch, tf * weightOf ch, True) | [t, ch, tf] <- rQuery r]
-  marg = M.fromList [(t, m) | [t, m] <- rWords r]
   spelled = map (\(t, _, _, _) -> t) bareQ
   widened = if null (rWords r) then [] else reverse (foldl' widenOne [] bareQ)
   widenOne acc (a, ch, w, _)
     | ch `notElem` [0, 2, 3] = acc
-    | otherwise = foldl' (\xs (b, p) -> if b `elem` spelled || any (\(x, _, _, _) -> x == b) xs then xs else (b, ch, w * min p 1024 `quot` 2048, False) : xs) acc (near a)
-  near a =
-    let na = M.findWithDefault 0 a marg
-        cands = [(b, p) | [a', b, nab, nb] <- rPairs r, a' == a, let p = ppmiRef (rN r) nab na nb, p >= 512]
-     in if na == 0 || 4 * na > rN r then [] else take 3 (sortOn (\(b, p) -> (Down p, b)) cands)
+    | otherwise = foldl' (\xs (b, p) -> if b `elem` spelled || any (\(x, _, _, _) -> x == b) xs then xs else (b, ch, w * min p 1024 `quot` 2048, False) : xs) acc (take 3 (qualifying r a))
+
+-- | A word's neighbours past both floors (two shared units, two bits),
+-- strongest first, ties by term — before the top three are taken and
+-- before the query's own words are dropped.
+qualifying :: RReq -> Integer -> [(Integer, Integer)]
+qualifying r a =
+  let na = M.findWithDefault 0 a (M.fromList [(t, m) | [t, m] <- rWords r])
+      cands = [(b, p) | [a', b, nab, nb] <- rPairs r, a' == a, let p = ppmiRef (rN r) nab na nb, p >= 512]
+   in if na == 0 || 4 * na > rN r then [] else sortOn (\(b, p) -> (Down p, b)) cands
+
+-- | Every spelled word term of a request with its qualifying neighbours
+-- (the coverage probes read them).
+neighbourLists :: RReq -> [(Integer, [(Integer, Integer)])]
+neighbourLists r = [(t, qualifying r t) | [t, ch, _] <- rQuery r, ch `elem` [0, 2, 3]]
 
 -- | The reply fields [hits, added, query, counts, degraded].
 expected :: RReq -> [Maybe Value]
@@ -116,12 +133,15 @@ expected r =
   cut = take (fromInteger (rK r)) (sortOn (\(s, sc, _) -> (Down sc, s)) [(s, sc, h) | (s, (sc, h)) <- M.toList per, Just s /= rExclude r])
   kept = [x | x@(s, _, _) <- cut, s `notElem` rSeen r]
 
--- | Two hundred seeded corpora: two to twelve seats over eight terms of
+-- | Two hundred seeded corpora: two to twelve seats over twelve terms of
 -- random channels (hashes above 2^63, as fnv1a64 spells them), each
--- seat carrying a term with chance 1/4 at tf 1–3; every term's df and
--- postings, every seat's length; a random query, k, exclusion and seen
--- set; the words' counts and every co-occurrence when the request
--- carries them (always when widened).
+-- seat carrying a term with chance 1/4 (1/2 in a dense corpus, one in
+-- two) at tf 1–3; one corpus in three
+-- counts thirty to forty-nine more seats that hold none of the terms
+-- (they raise N, so a pair's PPMI can pass the cap, and change no
+-- posting); every term's df and postings, every seat's length; a random
+-- query, k, exclusion and seen set; the words' counts and every
+-- co-occurrence when the request carries them (always when widened).
 requests :: [RReq]
 requests = [runG request (S (n * 7919 + 13) 0 0 0) | n <- [1 .. 200 :: Int]]
 
@@ -139,9 +159,13 @@ request = do
   seenBits <- mapM (const (rand 4)) [1 .. n]
   w <- rand 2
   c <- rand 2
-  let seat = [0 .. toInteger n - 1]
+  quiet <- rand 3
+  density <- (+ 1) <$> rand 2
+  extra <- (+ 30) <$> rand 20
+  let total = toInteger n + (if quiet == 0 then toInteger extra else 0)
+      seat = [0 .. toInteger n - 1]
       tc = zip vocab chans
-      has s t = [tf | (s', row, tfRow) <- zip3 seat cells tfs, s' == s, (t', cell, tf) <- zip3 vocab row tfRow, t' == t, cell == 0]
+      has s t = [tf | (s', row, tfRow) <- zip3 seat cells tfs, s' == s, (t', cell, tf) <- zip3 vocab row tfRow, t' == t, cell < density]
       postings = [[t, s, toInteger tf] | t <- vocab, s <- seat, tf <- has s t]
       df t = toInteger (length [() | (t' : _) <- postings, t' == t])
       lens = [[s, sum [x | [_, s', x] <- postings, s' == s] + pad] | (s, pad) <- zip seat pads, any (\p -> p !! 1 == s) postings]
@@ -151,10 +175,10 @@ request = do
       cooc = w == 1 || c == 1
       wordsRows = [[t, df t] | [t, ch, _] <- query, ch `elem` [0, 2, 3]]
       pairsRows = [[a, b, both a b, df b] | [a, _] <- wordsRows, b <- wordTerms, b /= a, both a b > 0]
-      sumAvg = max 1 (sum [l | [_, l] <- lens] `quot` toInteger n)
+      sumAvg = max 1 (sum [l | [_, l] <- lens] `quot` total)
   pure
     RReq
-      { rN = toInteger n
+      { rN = total
       , rAvg = sumAvg
       , rK = k
       , rExclude = if ex == 0 then Just exSeat else Nothing
@@ -168,4 +192,4 @@ request = do
       , rLens = lens
       }
  where
-  vocab = [2 ^ (63 :: Int) + 7 * i | i <- [0 .. 7]]
+  vocab = [2 ^ (63 :: Int) + 7 * i | i <- [0 .. 11]]

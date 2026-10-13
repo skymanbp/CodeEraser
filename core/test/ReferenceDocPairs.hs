@@ -8,11 +8,13 @@
 -- the pair set a Data.Map, the verbatim run the classic dynamic program
 -- over every prefix pair (the longest common suffix table, no seeds, no
 -- extension), a set the sorted nub of its sequence, Jaccard by
--- membership counts. It answers the reply fields `docpairs.result` and
--- a sequence `docdup.result` show.
-module ReferenceDocPairs (coarseExpected, coarseRequests, runRef, seqExpected, seqRequests) where
+-- membership counts, the verdict its own spelling of the booklet's two
+-- halves (a Jaccard of at least four fifths, or a common run of at
+-- least fifty words). It answers the reply fields `docpairs.result`
+-- and a sequence `docdup.result` show.
+module ReferenceDocPairs (coarseExpected, coarseRequests, runRef, seqExpected, seqRequests, verbatimAlone) where
 
-import CE.Docdup.Cost (dupDecides, dupVerdict, shingleK)
+import CE.Docdup.Cost (shingleK)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.List (nub, sort)
 import qualified Data.Map.Strict as M
@@ -56,22 +58,40 @@ runRef xs ys = if best == 0 then 0 else best + shingleK - 1
     | otherwise = 0 :: Integer
   best = maximum (Lazy.elems table)
 
+-- | The two halves as this module's data: the Jaccard threshold 0.80
+-- written as four fifths, the verbatim floor of fifty words.
+jaccardHalf :: Integer -> Integer -> Bool
+jaccardHalf inter union = 5 * inter >= 4 * union
+
+verdictOf :: Integer -> Integer -> Integer -> Bool
+verdictOf inter union run = jaccardHalf inter union || run >= 50
+
+-- | Whether some pair of a request is a duplicate by its run alone.
+verbatimAlone :: ([[Integer]], [[Integer]]) -> Bool
+verbatimAlone (qs, ps) = or [verdictOf inter union run && not (jaccardHalf inter union) | (_, _, inter, union, run) <- seqRows qs ps]
+
 -- | scores, verdicts, runs, counts for a sequence request over valid
 -- sequences and pairs.
 seqExpected :: [[Integer]] -> [[Integer]] -> [Maybe Value]
 seqExpected qs ps =
   [ Just (toJSON [[i, j, inter, union] | (i, j, inter, union, _) <- rows])
-  , Just (toJSON [dupVerdict inter union run | (_, _, inter, union, run) <- rows])
+  , Just (toJSON [verdictOf inter union run | (_, _, inter, union, run) <- rows])
   , Just (toJSON [run | (_, _, _, _, run) <- rows])
   , Just
       ( object
           [ "sets" .= length qs
           , "pairs" .= length ps
           , "judged" .= length rows
-          , "jaccardDups" .= length [() | (_, _, inter, union, _) <- rows, dupDecides inter union]
+          , "jaccardDups" .= length [() | (_, _, inter, union, _) <- rows, jaccardHalf inter union]
           ]
       )
   ]
+ where
+  rows = seqRows qs ps
+
+-- | Each pair's (i, j, inter, union, run).
+seqRows :: [[Integer]] -> [[Integer]] -> [(Integer, Integer, Integer, Integer, Integer)]
+seqRows qs ps = rows
  where
   at k = qs !! fromInteger k
   rows =
@@ -102,12 +122,25 @@ coarseG = do
 
 -- | Two hundred seeded sequence requests: two to six sequences of one
 -- to twelve shingles over four values (so runs repeat and nest), and
--- every ascending pair.
+-- every ascending pair; one request in five instead two long sequences
+-- sharing a run of 44 to 48 distinct shingles (a 48- to 52-word run,
+-- either side of the verbatim floor) inside twenty shingles of their
+-- own each, so the Jaccard half stays under four fifths.
 seqRequests :: [([[Integer]], [[Integer]])]
 seqRequests = seededBy 3011 7 seqG
 
 seqG :: G ([[Integer]], [[Integer]])
-seqG = do
+seqG = rand 5 >>= \r -> if r == 0 then longG else shortG
+
+longG :: G ([[Integer]], [[Integer]])
+longG = do
+  shared <- (+ 44) <$> rand 5
+  let common = [7000 + v | v <- [1 .. toInteger shared]]
+      own k = [k * 100 + v | v <- [1 .. 20]]
+  pure ([common <> own 1, own 2 <> common], [[0, 1]])
+
+shortG :: G ([[Integer]], [[Integer]])
+shortG = do
   size <- (+ 2) <$> rand 5
   qs <- mapM (const one) [1 .. size]
   let n = toInteger size

@@ -6,7 +6,7 @@
 -- Rust side's Myers-vs-brute-force-LCS minimality proof, and the
 -- reason §7.3's property testing stays deterministic here: a seeded
 -- generator SAMPLES a space this small; enumeration covers it.
-module Reference (equivalence) where
+module Reference (equivalence, refBlocks, refMarks) where
 
 import CE.FourClass.Cost (anchorFloor, destFloor)
 import CE.FourClass.Provenance (classify)

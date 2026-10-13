@@ -21,6 +21,11 @@
 -- * `forbid from to` — a file matching the first glob may not reference
 --   a file matching the second, one assertion per pair.
 --
+-- Both read file nodes only, as the fan counts do: a glob's set holds
+-- every file-shaped node its pattern matches — an asset or a prose page
+-- as well as a file — and an asset or a page is no `file`, so the two
+-- ends are guarded with `file(F)` / `file(G)` after the reads.
+--
 -- A glob is spelled into the text as a quoted string and read by the
 -- rules file's own `in(F, "glob")` sugar, so a glob the exclude dialect
 -- cannot read is reported by the measuring side at the glob's place in
@@ -146,7 +151,7 @@ render k it = case it of
       [ "# [rules.pack] " <> name <> " = " <> show n
       , "assert pack_" <> name <> "(" <> keep <> ", N) :- file(" <> keep <> "), N = count(" <> other <> " : ref(F, G, _, _), file(" <> other <> "), F != G), N > " <> show n <> "."
       ]
-  reads' name from to = "assert " <> name <> "(F, G) :- in(F, " <> quoted from <> "), ref(F, G, _, _), in(G, " <> quoted to <> ")."
+  reads' name from to = "assert " <> name <> "(F, G) :- in(F, " <> quoted from <> "), ref(F, G, _, _), in(G, " <> quoted to <> "), file(F), file(G)."
 
 quoted :: String -> String
 quoted g = "\"" <> g <> "\""

@@ -10881,12 +10881,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Pack.hs|05b1f16a15a72db9|0": {
     "target": "../../../core/app/CE/Query/Pack.hs",
-    "line": 44,
+    "line": 49,
     "text": "-- | One declared item, its parameters read."
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Pack.hs|bc1b8f7ae3ab0bb2|0": {
     "target": "../../../core/app/CE/Query/Pack.hs",
-    "line": 110,
+    "line": 115,
     "text": "text v = case fromJSON v of"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Parse.hs|1978e2d612d5a6c0|0": {
@@ -10985,17 +10985,17 @@
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|47d5e319b39163b9|0": {
     "target": "../../../core/test/ReferenceQuery.hs",
     "line": 1,
-    "end": 12,
+    "end": 17,
     "text": "-- | An independently written reference for the query family's"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|dad56a2cf8d08e5a|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|94924658d6780d5d|0": {
     "target": "../../../core/test/ReferenceQuery.hs",
-    "line": 35,
-    "text": "naive :: Checked -> Db -> Db"
+    "line": 68,
+    "text": "strataCount :: [Clause] -> Maybe Int"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 111,
+    "line": 112,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|0603e97b6afa2e54|0": {
@@ -11173,7 +11173,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cfg.hs|5385685dfe41e6e3|0": {
     "target": "../../../core/app/CE/Flow/Cfg.hs",
-    "line": 40,
+    "line": 44,
     "text": "cfg :: Unit -> Cfg"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cfg.hs|98af2af0f2c67611|0": {
@@ -11270,7 +11270,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 113,
+    "line": 114,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

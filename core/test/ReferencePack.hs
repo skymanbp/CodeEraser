@@ -92,7 +92,11 @@ layered gs t = S.unions [crossing k lower upper t | (k, (lower, upper)) <- zip [
 forbidden :: [(String, String)] -> Tables -> S.Set [Integer]
 forbidden ps t = S.unions [crossing k from to t | (k, (from, to)) <- zip [0 ..] ps]
 
+-- | Goal k's rows: an arc from a FILE in the first glob to a FILE in
+-- the second (a glob also holds nodes that are no file — the tables
+-- seat every node in a glob's members, the way the measuring side seats
+-- assets and prose pages).
 crossing :: Integer -> String -> String -> Tables -> S.Set [Integer]
-crossing k from to t = S.fromList [[k, f, g] | (f, g) <- S.toList (arcs t), S.member f (mem from), S.member g (mem to)]
+crossing k from to t = S.fromList [[k, f, g] | (f, g) <- S.toList (arcs t), S.member f (mem from), S.member g (mem to), S.member f (tFiles t), S.member g (tFiles t)]
  where
   mem g = M.findWithDefault S.empty g (tMembers t)

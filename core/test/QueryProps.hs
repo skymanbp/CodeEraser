@@ -128,9 +128,9 @@ errorsNamed =
 proofReplay :: Bool
 proofReplay = case (parseProgram (toks prog), replyObjWith respond (request prog facts4 [("why", Bool True)])) of
   (Right clauses, Just o)
-    | Right chk <- check 0 clauses
+    | Right _ <- check 0 clauses
     , Just (Success proof) <- fmap fromJSON (field o "proof") ->
-        length (proof :: [[Integer]]) == 11 && replays clauses (naive chk db) proof
+        length (proof :: [[Integer]]) == 11 && maybe False (\final -> replays clauses final proof) (naive clauses db)
   _ -> False
  where
   prog = "p1000 ( v0 , v1 ) :- p9 ( v0 , v1 , _ , _ ) . p1000 ( v0 , v1 ) :- p1000 ( v0 , v2 ) , p9 ( v2 , v1 , _ , _ ) . ?- p1000 ( v0 , v1 ) ."

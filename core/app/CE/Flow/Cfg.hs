@@ -1,8 +1,12 @@
 -- | The control-flow graph of one unit (design booklet §5.2):
 -- structured control flow unfolded from the statement kinds, a
 -- try's body handed to its catches conservatively (every statement
--- inside the body may throw), a finally on every edge that leaves
--- its try, jumps routed to their targets, exits to the unit's exit.
+-- inside the body may throw), a throw from inside a try's body or
+-- catch part continuing outward through that try's finally (ruling
+-- 2026-10-13: catch or no catch, the pending throw then meets the
+-- enclosing catches or leaves the unit), a finally on every edge that
+-- leaves its try, jumps routed to their targets, exits to the unit's
+-- exit.
 --
 -- Nodes are statement seqs, plus the entry, the exit and one hub
 -- per finally: the hub is where the finally's body completes, and
@@ -109,13 +113,21 @@ chainOf u s = [(a, partOf child) | (child, a) <- zip (s : anc) anc, kindOf u a =
     | kindOf u c == kindFinally = Finally
     | otherwise = Body
 
--- | A statement's outgoing hops: its structural successors, and — for
--- every try it sits in the body of — one hop to each catch.
+-- | A statement's outgoing hops: its structural successors; for
+-- every try it sits in the body of, one hop to each catch; and, when
+-- a try it sits in the body or a catch of has a finally, the implicit
+-- throw's hop to the unit's exit — routing takes it through the
+-- innermost such finally, whose hub owes the exit on outward, the
+-- road an explicit throw already takes.
 hops :: Unit -> (Int -> Int) -> Stmt -> [Hop]
-hops u hubOf s = [Hop me c t | (c, t) <- successors u hubOf s] <> [Hop me chain c | (t, Body) <- chain, c <- catchesOf u t]
+hops u hubOf s =
+  [Hop me c t | (c, t) <- successors u hubOf s]
+    <> [Hop me chain c | (t, Body) <- chain, c <- catchesOf u t]
+    <> [Hop me chain (IM.size (stmts u) + 1) | any finallyAhead chain]
  where
   me = sSeq s
   chain = chainOf u me
+  finallyAhead (t, part) = part /= Finally && finallyOf u t /= Nothing
 
 -- | Where a statement's structure sends control, each target under
 -- the try chain the hop is routed by: the handlers' own rules, a

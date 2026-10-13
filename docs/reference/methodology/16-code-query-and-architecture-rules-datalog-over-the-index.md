@@ -347,19 +347,19 @@ the declared items as rows `[name, params…]` of integers and strings — the q
 The core renders each item to one clause set of CE Datalog and lexes that text as a fourth
 source between the prelude and the rules file, so the pack's assertions are judged, witnessed
 and proved by the machinery of §§5–7 untouched — the pack is text in front of the user's program
-([Pack.hs:44](../../../core/app/CE/Query/Pack.hs#L44), [Lex.hs:34](../../../core/app/CE/Query/Lex.hs#L34)):
+([Pack.hs:49](../../../core/app/CE/Query/Pack.hs#L49), [Lex.hs:34](../../../core/app/CE/Query/Lex.hs#L34)):
 
 | key | renders to |
 |---|---|
 | `no_dir_cycles = true` | `pack_dir_reach`, the transitive closure of the prelude's `dir_ref`, and `assert pack_no_dir_cycles(D, E)` over the pairs that reach each other, `D < E` — one row per unordered pair |
 | `fan_in_max = N` | `assert pack_fan_in_max(G, N)`: a file referenced by more than N other files, counted over file nodes only |
 | `fan_out_max = N` | `assert pack_fan_out_max(F, N)`: a file referencing more than N other files |
-| `layers = [g0, g1, …]` | top first; `assert pack_layers_<i>_<j>(F, G)` for every ordered pair i > j: a file of the lower layer i referencing one of the higher layer j |
-| `forbid = [[from, to], …]` | `assert pack_forbid_<k>(F, G)` per pair: a file matching `from` referencing one matching `to` |
+| `layers = [g0, g1, …]` | top first; `assert pack_layers_<i>_<j>(F, G)` for every ordered pair i > j: a file of the lower layer i referencing one of the higher layer j, file nodes only (an asset or a prose page a glob matches is no file) |
+| `forbid = [[from, to], …]` | `assert pack_forbid_<k>(F, G)` per pair: a file matching `from` referencing one matching `to`, file nodes only |
 
 A glob is spelled into the text as a quoted string and read by the rules file's own
 `in(F, "glob")` sugar, so a glob the exclude dialect cannot read is the same program error at
-its place — `pack line:column` ([Pack.hs:110](../../../core/app/CE/Query/Pack.hs#L110),
+its place — `pack line:column` ([Pack.hs:115](../../../core/app/CE/Query/Pack.hs#L115),
 [Front.hs:73](../../../core/app/CE/Query/Front.hs#L73)). Every predicate the pack renders is spelled
 `pack_…`, and the prefix is reserved: the prelude's clauses and the pack's together are the
 shipped clauses whose predicates no later rule may define, and any rule past them that defines a
@@ -402,19 +402,22 @@ clean beside the shipped prelude; holds error 7 at the rules file's own token fo
 second spelling written as plain set comprehensions over the same tables, 40 or more of the seeds
 witnessing a violation, with every refusal named ([PackProps.hs:5-12](../../../core/test/PackProps.hs#L5),
 [ReferencePack.hs:1-8](../../../core/test/ReferencePack.hs#L1)).
-The reference is an independently written naive evaluator — every rule over the whole database
-every round, no indexes, no delta routing, no provenance, the join a plain nested product in
-list-comprehension form — that shares only the checker; the shipped evaluator must agree tuple
-for tuple on every program of the enumerated family over every seeded fact set (five programs,
-forty sets, 200 cases), and the same reference replays a proof tree by checking that each rule
-node's children are one solution of its body ([ReferenceQuery.hs:1-12](../../../core/test/ReferenceQuery.hs#L1),
-[ReferenceQuery.hs:35](../../../core/test/ReferenceQuery.hs#L35)). Twelve golden pairs pin the
+The reference is an independently written naive evaluator — its own strata read off a
+transitive closure of the predicate graph, then every rule over the whole database every round,
+no indexes, no delta routing, no provenance, the join a plain nested product in
+list-comprehension form, its own arithmetic, comparisons and aggregates — that shares only the
+parser; the shipped checker and evaluator must agree refusal for refusal and tuple for tuple on
+200 seeded programs (recursion, every aggregate over rows and over nothing, every operator with
+divisions by zero, comparisons, negation up to a fourth stratum, a negative cycle in one program
+in ten, assertions that hold or are violated), and the same reference replays a proof tree by
+checking that each rule node's children are one solution of its body ([ReferenceQuery.hs:1-17](../../../core/test/ReferenceQuery.hs#L1),
+[ReferenceQuery.hs:68](../../../core/test/ReferenceQuery.hs#L68)). Twelve golden pairs pin the
 wire bytes — the prelude with the schema echo, an assertion's violation, a `why` query negating
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
 aggregate over a set, the prelude lexed alone, the tree form, and the rule pack judged and
 lexed — and a tests-repo leg regenerates them so every request line carries the prelude and its
 program as texts
-([Spec.hs:111](../../../core/test/Spec.hs#L111), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
+([Spec.hs:112](../../../core/test/Spec.hs#L112), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
 [query_golden.rs:148](../../../cli/tests/it/query_golden.rs#L148)).
 
 On the measuring side the unit legs hold the vocabulary to the graph's codes, the core's lex

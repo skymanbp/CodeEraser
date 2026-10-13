@@ -143,7 +143,8 @@ in the same 8-bit fixed point as the idf, from the same integer `log2`
 in at least `minCooc = 2` units and carries at least `minPpmi` = two bits of association;
 each spelled word term of the query appends its `topM = 3` best neighbours at weight
 `parent × min(ppmi, ppmiCap) / ppmiScale` — at most half the parent's weight — and a term the
-query already spells is never appended ([Cost.hs:67-79](../../../core/app/CE/Similar/Rank/Cost.hs#L67),
+query already spells is never appended; the top m are taken before the query's own words are
+dropped, so a spelled neighbour still holds one of the m places and the word appends fewer ([Cost.hs:67-79](../../../core/app/CE/Similar/Rank/Cost.hs#L67),
 [Score.hs:31-61](../../../core/app/CE/Similar/Rank/Score.hs#L31)). A unit past `TERM_CAP = 96` distinct
 word terms contributes its first 96 in term order and is ledgered as capped; the cap has one
 owner, so the in-memory table and the persisted writer count the same words

@@ -51,7 +51,7 @@ import qualified ReferenceHtml
 import qualified ReferenceMd
 import qualified ReferenceTs
 import qualified ReferenceJava
-import qualified ReferenceQuery
+import qualified QueryReferenceProps
 import qualified ReferenceResolve
 import qualified ResolveProps
 import qualified ScanCyclesProps
@@ -66,6 +66,7 @@ import qualified VerdictProps
 import qualified SpecProbes
 import qualified SplitProps
 import qualified StackingProps
+import qualified FourClassReferenceProps
 import qualified VerdictKnobProps
 import qualified VerdictWireProps
 import qualified VerdictFenceProps
@@ -131,7 +132,7 @@ batteries =
        , SpecProbes.docdupStructural
        , SpecProbes.costModel
        , Reference.equivalence
-       , ReferenceQuery.equivalence
+       , QueryReferenceProps.equivalence
        , ReferenceResolve.equivalence
        , ReferenceJava.equivalence
        , ReferenceHs.equivalence
@@ -177,6 +178,7 @@ batteries =
        , SplitProps.battery
        , ClassProps.battery
        , StackingProps.battery
+       , FourClassReferenceProps.battery
        , DeclProps.battery
        , TombstoneEquivProps.battery
        , SimilarEquivProps.battery
