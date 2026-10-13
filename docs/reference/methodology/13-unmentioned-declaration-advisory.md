@@ -121,10 +121,10 @@ name (`x$f`, `print.foo`) stays whole and falls out on the token invariant, and 
 an anchor like a heading, out with Markdown ([name.rs:9-27](../../../cli/src/mention/name.rs#L9),
 [name.rs:40-47](../../../cli/src/mention/name.rs#L40)); the unit is `(file, name)`, so a file
 declaring one name twice is one candidate
-([candidates.rs:164-192](../../../cli/src/mention/candidates.rs#L164)).
+([candidates.rs:166-194](../../../cli/src/mention/candidates.rs#L166)).
 
 The veto asks three questions in a fixed order, cheapest first, and stops at the first
-yes ([candidates.rs:90-112](../../../cli/src/mention/candidates.rs#L90)):
+yes ([candidates.rs:91-113](../../../cli/src/mention/candidates.rs#L91)):
 
 1. **another file spells it** — the identity hash occurs in a file other than the
    declaring one ([store.rs:227-229](../../../cli/src/mention/store.rs#L227));
@@ -145,10 +145,10 @@ yes ([candidates.rs:90-112](../../../cli/src/mention/candidates.rs#L90)):
 A survivor becomes one row keyed `[node, vis, conv]` with its names kept beside the key
 on the Rust side — the wire carries integers only, never a name
 ([candidates.rs:46](../../../cli/src/mention/candidates.rs#L46),
-[candidates.rs:116-148](../../../cli/src/mention/candidates.rs#L116)). The table is cut at
-131,072 keys in wire order, the same rows every run, and the cut is reported as a fact
-of its own ([candidates.rs:53-64](../../../cli/src/mention/candidates.rs#L53),
-[candidates.rs:154-160](../../../cli/src/mention/candidates.rs#L154)).
+[candidates.rs:117-149](../../../cli/src/mention/candidates.rs#L117)). The table is cut at
+131,072 keys (the core's soft cap, read from the definition package) in wire order, the same rows every run, and the cut is reported as a fact
+of its own ([candidates.rs:48-54](../../../cli/src/mention/candidates.rs#L48),
+[candidates.rs:155-161](../../../cli/src/mention/candidates.rs#L155)).
 
 **Blindness named.** A name declared in two files is counted mentioned by the second
 declaration alone; the census reports how often that was the only speller
@@ -203,8 +203,8 @@ module whose path carries an underscore-led segment, dunders excepted — bit 1)
 
 Both tables ride `graph.request` as optional keys that live and die together — one
 without the other is refused by name, first in the violation chain
-([Contract.hs:72-73](../../../core/app/CE/Graph/Contract.hs#L72),
-[Contract.hs:122-129](../../../core/app/CE/Graph/Contract.hs#L122)); each row is validated
+([Contract.hs:71-72](../../../core/app/CE/Graph/Contract.hs#L71),
+[Contract.hs:125-132](../../../core/app/CE/Graph/Contract.hs#L125)); each row is validated
 for width, sign, bound and `private ≤ total`
 ([Advisory.hs:29-48](../../../core/app/CE/Graph/Advisory.hs#L29)). The core then emits
 `exportUnmentioned = [[node, vis, conv, code]]` for every row whose visibility carries
@@ -228,9 +228,9 @@ judges the graph but drops the table and says so (`unmentionedDropped`), and the
 producer cuts at the same number so the two can never disagree — and `unmentionedHardCap`
 524,288 is the outer bound only a defective client reaches
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
-[Graph.hs:118-125](../../../core/app/CE/Graph.hs#L118)). The iron rule is two byte-level
+[Graph.hs:120-127](../../../core/app/CE/Graph.hs#L120)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:472-474](../../../contracts/VERSIONING.md#L472)).
+the same with or without them ([VERSIONING.md:482-484](../../../contracts/VERSIONING.md#L482)).
 
 ### 6. Rendering — one home, three faces
 
@@ -248,7 +248,7 @@ three keys, present only when the road was asked: `unmentioned` rows of five sca
 producer's cut, which the core cannot see — so Rust sends it as a fact beside one request row per
 name ([advisory.rs:32-43](../../../cli/src/graph/deadcode/advisory.rs#L32)), and since plan v2.32 step 4
 the core's deadcode document lays the three keys out, naming each code and its reading
-([Document.hs:99-104](../../../core/app/CE/Graph/Document.hs#L99), [Document.hs:131-143](../../../core/app/CE/Graph/Document.hs#L131)). The console prints one line per row, a
+([Document.hs:98-103](../../../core/app/CE/Graph/Document.hs#L98), [Document.hs:130-142](../../../core/app/CE/Graph/Document.hs#L130)). The console prints one line per row, a
 census line by code and, on either degradation, one local line saying which
 ([Lines.hs:36-44](../../../core/app/CE/Graph/Lines.hs#L36)); the MCP `deadcode`
 tool returns the same document ([tools.rs:91-95](../../../cli/src/mcp/tools.rs#L91)); the GUI
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1751 (1969 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7160 (1653) | 1064 (15) | 14.9 % | 205 / 1064 = 19.3 % | 205 / 6096 |
-| | | rust | 3439 (1892) | 328 (2) | 9.5 % | 2 / 328 = 0.6 % | 2 / 3081 |
+| self @ this commit | 1754 (1972 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7235 (1699) | 1080 (16) | 14.9 % | 203 / 1080 = 18.8 % | 203 / 6155 |
+| | | rust | 3438 (1891) | 326 (2) | 9.5 % | 2 / 326 = 0.6 % | 2 / 3082 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -322,7 +322,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->15<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1653<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->16<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1699<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

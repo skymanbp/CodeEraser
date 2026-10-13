@@ -23,7 +23,7 @@ class-blind.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
-[Structure.hs:230-237](../../../core/app/CE/Structure.hs#L230).
+[Structure.hs:218-225](../../../core/app/CE/Structure.hs#L218).
 
 ### Seam enumeration and best-seam selection
 
@@ -59,15 +59,15 @@ p(x) = P_max · ((x − S)/(H − S))²      if S < x <= H
 p(x) = P_max · (1 + 2(x − H)/(H − S))  if x > H     -- C¹ linear arm (proto 2.17.0)
 ```
 
-[Soft.hs:59-65](../../../core/app/CE/Verdict/Soft.hs#L59). The curve is convex on the zone, exact
+[Soft.hs:63-69](../../../core/app/CE/Verdict/Soft.hs#L63). The curve is convex on the zone, exact
 `Rational`, and keeps charging past `H` — since proto 2.17.0 linearly, at exactly the slope the
 quadratic reached at the wall (monotone, no kink; the deny at `H` is the guard's job, and a
 score that stopped charging past the wall would reward growth — but the quadratic never leaves
 its contracted `(S,H]` domain: the M9 batch-6 saturation lesson)
-[Soft.hs:44-58](../../../core/app/CE/Verdict/Soft.hs#L44). For seam pricing this means the size
+[Soft.hs:48-62](../../../core/app/CE/Verdict/Soft.hs#L48). For seam pricing this means the size
 benefit of splitting a past-`H` giant is linear in its overhang, not quadratic. A degenerate
 `H <= S` falls back to the pre-v0.6 binary `p = P_max` flat
-[Soft.hs:61](../../../core/app/CE/Verdict/Soft.hs#L61).
+[Soft.hs:65](../../../core/app/CE/Verdict/Soft.hs#L65).
 
 ```
 benefitMilli(u) = max 0 (floor (1000 · (p(total) − p(end_u) − p(total − end_u))))
@@ -90,14 +90,14 @@ then: only 12 and 13 rode, so a repo declaring `size_penalty_max` got the declar
 score and the core's built-in `P_max = 10` in its advisory, with both halves internally
 consistent and nothing anywhere disagreeing out loud
 ([judge.rs:179-186](../../../cli/src/structure/judge.rs#L179),
-[Cost.hs:141-150](../../../core/app/CE/Structure/Cost.hs#L141),
+[Cost.hs:136-145](../../../core/app/CE/Structure/Cost.hs#L136),
 counterfactual at [structure_knobs.rs:67-78](../../../cli/tests/it/structure_knobs.rs#L67)):
 
 | knob | code | default | source |
 |---|---|---|---|
-| `seamSoft` (S) | 12 | `300` | [Cost.hs:151-152](../../../core/app/CE/Structure/Cost.hs#L151) |
-| `seamHard` (H) | 13 | `750` | [Cost.hs:154-155](../../../core/app/CE/Structure/Cost.hs#L154) |
-| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:157-158](../../../core/app/CE/Structure/Cost.hs#L157) |
+| `seamSoft` (S) | 12 | `300` | [Cost.hs:146-147](../../../core/app/CE/Structure/Cost.hs#L146) |
+| `seamHard` (H) | 13 | `750` | [Cost.hs:149-150](../../../core/app/CE/Structure/Cost.hs#L149) |
+| `seamPMax` (P_max) | 14 | `10` | [Cost.hs:152-153](../../../core/app/CE/Structure/Cost.hs#L152) |
 
 ### Cost: the four priced legs
 
@@ -120,14 +120,14 @@ index by the `lookupGE s` / `lookupLT e` pair
 
 | leg | knob | code | default (milli) | constant | measurement |
 |---|---|---|---|---|---|
-| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:166-167](../../../core/app/CE/Structure/Cost.hs#L166) | word-bounded mention edges [seams.rs:221-242](../../../cli/src/structure/seams.rs#L221) |
-| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:178-179](../../../core/app/CE/Structure/Cost.hs#L178) | T1/T2 dedup block spans [seams.rs:78-106](../../../cli/src/structure/seams.rs#L78) |
-| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:181-182](../../../core/app/CE/Structure/Cost.hs#L181) | 14-day commit ledger [seams.rs:114-143](../../../cli/src/structure/seams.rs#L114) |
-| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:169-170](../../../core/app/CE/Structure/Cost.hs#L169) | flat, no measurement |
+| severed reference | `roiRefMilli` | 15 | `250` | [Cost.hs:161-162](../../../core/app/CE/Structure/Cost.hs#L161) | word-bounded mention edges [seams.rs:221-242](../../../cli/src/structure/seams.rs#L221) |
+| cut clone block | `roiCloneMilli` | 17 | `500` | [Cost.hs:173-174](../../../core/app/CE/Structure/Cost.hs#L173) | T1/T2 dedup block spans [seams.rs:78-106](../../../cli/src/structure/seams.rs#L78) |
+| crossing co-change pair | `roiChurnMilli` | 18 | `150` | [Cost.hs:176-177](../../../core/app/CE/Structure/Cost.hs#L176) | 14-day commit ledger [seams.rs:114-143](../../../cli/src/structure/seams.rs#L114) |
+| per-new-file overhead φ | `roiPhiMilli` | 16 | `500` | [Cost.hs:164-165](../../../core/app/CE/Structure/Cost.hs#L164) | flat, no measurement |
 
 All seven knobs (zone triple + four prices) ride the `Knobs` record
-[Axes.hs:70-79](../../../core/app/CE/Structure/Axes.hs#L70) and are bound to the `Cost.hs` defaults
-[Axes.hs:99-105](../../../core/app/CE/Structure/Axes.hs#L99). The wire carries them as knob codes
+[Axes.hs:71-80](../../../core/app/CE/Structure/Axes.hs#L71) and are bound to the `Cost.hs` defaults
+[Axes.hs:100-106](../../../core/app/CE/Structure/Axes.hs#L100). The wire carries them as knob codes
 12–18; the golden fixture pins `[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150]`
 [golden.ndjson:22](../../../contracts/fixtures/structure/golden.ndjson#L22).
 
@@ -153,7 +153,7 @@ counts as one, since no symbol table stands behind it; the advisory face is non-
 (`crate::dedup::snapshot`, the one command-boundary measurement, which itself calls `dedup::analyze`), both sides of each block, clamped to `[1, total]` and deduplicated
 through a `BTreeSet` [seams.rs:88-104](../../../cli/src/structure/seams.rs#L88). A seam through a
 block splits one coherent duplicate span across two files — priced dearer than one severed
-reference [Cost.hs:172-177](../../../core/app/CE/Structure/Cost.hs#L172).
+reference [Cost.hs:167-172](../../../core/app/CE/Structure/Cost.hs#L167).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
 the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent
@@ -168,9 +168,9 @@ anchor, and deliberately a **measurement constant, not a wire knob** (the prices
 [size-advisory.md:123](../size-advisory.md#L123).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
-booklet names φ [Cost.hs:160-170](../../../core/app/CE/Structure/Cost.hs#L160). Defaults were sized so
+booklet names φ [Cost.hs:155-165](../../../core/app/CE/Structure/Cost.hs#L155). Defaults were sized so
 a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing references does not
-[Cost.hs:163-165](../../../core/app/CE/Structure/Cost.hs#L163).
+[Cost.hs:158-160](../../../core/app/CE/Structure/Cost.hs#L158).
 
 ### Price calibration (as-built)
 
@@ -218,7 +218,7 @@ attached**, long-and-splittable gets a cut line
 [size-advisory.md:56-58](../size-advisory.md#L56). Since plan v2.32 step 4 the core lays the
 structure document out (`CE.Structure.Document`): its statement names the universe every
 column points into, so each dense id is range-checked by the document contract before
-anything reads it [Document.hs:37-46](../../../core/app/CE/Structure/Document.hs#L37), and the
+anything reads it [Document.hs:38-47](../../../core/app/CE/Structure/Document.hs#L38), and the
 names are spelled in the core, which resolves the references the document carries against the
 names Rust sends beside the request [Spell.hs:25-38](../../../core/app/CE/Document/Spell.hs#L25); candidates surface as
 `(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's

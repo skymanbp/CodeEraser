@@ -151,7 +151,7 @@ fault answers every error it found, each at a token; a program with an error ans
 ([Check.hs:42](../../../core/app/CE/Query/Check.hs#L42)). The codes: 1 syntax, 2 unknown
 predicate, 3 arity, 4 sort, 5 unsafe variable, 6 unstratifiable negation, 7 prelude predicate
 redefined, 8 aggregate shape, 9 anonymous head ([Cost.hs:171-172](../../../core/app/CE/Query/Cost.hs#L171),
-[Document.hs:61](../../../core/app/CE/Query/Document.hs#L61)).
+[Document.hs:65](../../../core/app/CE/Query/Document.hs#L65)).
 
 - **Arity.** A fact predicate's arity is the schema's; a program predicate's is fixed by its
   first appearance.
@@ -185,7 +185,7 @@ What comes out is the evaluator's program: the rules with their strata, the goal
 projections and sorts, and every program predicate's resolved position sorts — the reply's
 `preds` table, which the measuring side labels a proof node's arguments by
 ([Check.hs:30-39](../../../core/app/CE/Query/Check.hs#L30), [Check.hs:67](../../../core/app/CE/Query/Check.hs#L67),
-[Query.hs:104](../../../core/app/CE/Query.hs#L104)).
+[Query.hs:98](../../../core/app/CE/Query.hs#L98)).
 
 ### 6. Evaluation — semi-naive, one stratum at a time
 
@@ -223,14 +223,14 @@ parent −1, `rule` the clause index (−1 for a sent fact), `pred` the node's p
 for a query's root) ([Proof.hs:1-7](../../../core/app/CE/Query/Proof.hs#L1),
 [Proof.hs:56](../../../core/app/CE/Query/Proof.hs#L56)). A `?-`'s trees are expanded only under
 `why`; an assertion's violations carry theirs always — a violation without its derivation is a
-bare accusation ([Query.hs:113](../../../core/app/CE/Query.hs#L113)). One global node budget,
+bare accusation ([Query.hs:107](../../../core/app/CE/Query.hs#L107)). One global node budget,
 `proofCap`, governs a reply: a tree that would not fit whole is left out and counted in
 `counts.proofTruncated`, never cut in the middle, so every emitted tree is a complete
 derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:38](../../../core/app/CE/Query/Proof.hs#L38)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
 row under the answer ([Lines.hs:41](../../../core/app/CE/Query/Lines.hs#L41),
-[query.js:104](../../../gui/ui/query.js#L104)).
+[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:179-195](../../../core/app/CE/Query/Document.hs#L179)).
 
 ### 8. Caps and degradation
 
@@ -241,7 +241,7 @@ errors. The derived ceiling (2,097,152 tuples) is checked after every round of e
 and crossing it abandons the whole evaluation for the same degraded reply with the count it
 reached — never a partial answer. The proof ceiling (16,384 nodes) never degrades: it stops
 expanding and counts ([Cost.hs:75-79](../../../core/app/CE/Query/Cost.hs#L75),
-[Contract.hs:109](../../../core/app/CE/Query/Contract.hs#L109), [Query.hs:147](../../../core/app/CE/Query.hs#L147)).
+[Contract.hs:109](../../../core/app/CE/Query/Contract.hs#L109), [Query.hs:141](../../../core/app/CE/Query.hs#L141)).
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
 that offers no `query/1` reads the same way, and a reply whose tables disagree with what was
 sent — a goal count, an answer's arity, an error index past the stream — is wire skew, never a
@@ -260,7 +260,7 @@ and the named reason when the core did not judge. The core lays the document out
 since proto 7.8.0) from the program's facts, its answered tables and the goals as spelled, which
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
-([Document.hs:99](../../../core/app/CE/Query/Document.hs#L99), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
+([Document.hs:101](../../../core/app/CE/Query/Document.hs#L101), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
 [face.rs:265](../../../cli/src/query/face.rs#L265), [mod.rs:45](../../../cli/src/query/facts/mod.rs#L45)). A question is wrapped once into query form —
 `?-` in front, `.` behind — unless written ([face.rs:37](../../../cli/src/query/face.rs#L37)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
@@ -301,7 +301,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   `ce.query-prelude` texts with another (the Tauri command `query_prelude`); rendering only, a
   core without the family shows the document's degraded posture
   ([commands_query.rs:17](../../../gui/src-tauri/src/commands_query.rs#L17), [query.js:42](../../../gui/ui/query.js#L42),
-  [query.js:80](../../../gui/ui/query.js#L80)).
+  [query.js:79](../../../gui/ui/query.js#L79)).
 
 All three faces, the CLI included, go through the same three library functions — one road for
 the question, the rules file and the pack text — so the document cannot differ by face

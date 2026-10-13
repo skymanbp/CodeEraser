@@ -172,7 +172,7 @@ over its unit, so the core compares the ratio and never learns the width
 indices by score descending as exact rationals, ties by request index — `roles`, one bit per
 row in request order, and `counts{rows, queryTerms, role}`
 ([Similar.hs:88-94](../../../core/app/CE/Similar.hs#L88),
-[Similar.hs:103-120](../../../core/app/CE/Similar.hs#L103)). The role rule is a two-arm
+[Similar.hs:103-116](../../../core/app/CE/Similar.hs#L103)). The role rule is a two-arm
 conjunction over one row, and it lives in Haskell:
 
     role ⇔ (nHit ≥ roleMinName ∧ cHit ≥ roleMinCallee) ∨ (nHit ≥ roleMinNameShape ∧ shapeEqual)
@@ -201,7 +201,7 @@ Every face renders one document, `ce.similar-report/0.1.0`: the query as
 `{label, terms, widen}`, the candidates as rows `{at, key, nth, role, score, hits[6],
 shape_equal, widened}` — the first five alphabetical scalars are what the GUI hub's generic
 projection shows — the counts, and `degraded` naming why the core did not judge when it did not
-— laid out by the core from the measured rows ([face.rs:29-42](../../../cli/src/similar/face.rs#L29), [Document.hs:46](../../../core/app/CE/Similar/Document.hs#L46), [Document.hs:78](../../../core/app/CE/Similar/Document.hs#L78)).
+— laid out by the core from the measured rows ([face.rs:29-42](../../../cli/src/similar/face.rs#L29), [Document.hs:46](../../../core/app/CE/Similar/Document.hs#L46), [Document.hs:77](../../../core/app/CE/Similar/Document.hs#L77)).
 A query is exactly one of three asks: `at` (`file:line`, the innermost unit holding the line),
 `unit` (a key, refused by name when ambiguous, naming up to five places) or `text` (free text,
 whose words become name and doc evidence — no shape, no callee, so the core's role bit is false

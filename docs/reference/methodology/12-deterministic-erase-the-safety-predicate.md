@@ -26,7 +26,7 @@ Since 7.2.0 (plan v2.30 step 7b) the request also carries the rows' targets —
 one `[pathId, start, end]` per row, path ids dense in request order and `0/0`
 for a whole file — and the reply carries `kept`, one bit per row saying which
 row STANDS for its target ([wire.rs:44-60](../../../cli/src/erase/wire.rs#L44),
-[Erase.hs:51-57](../../../core/app/CE/Erase.hs#L51)). The client reads both
+[Erase.hs:55-61](../../../core/app/CE/Erase.hs#L55)). The client reads both
 tables length-locked and refuses a reply without `kept` as a pre-7.2.0 core
 ([wire.rs:62-65](../../../cli/src/erase/wire.rs#L62)); the closure itself is
 §2's class-2 paragraph and `keptRows`.
@@ -65,7 +65,7 @@ rows ([gather.rs:86-106](../../../cli/src/erase/gather.rs#L86)).
 
 The position stays frozen and is refused **by name** rather than folded into
 `unknown class`, so a client still sending it learns which road replaced it
-([Erase.hs:38](../../../core/app/CE/Erase.hs#L38),
+([Erase.hs:40](../../../core/app/CE/Erase.hs#L40), the text owned by [Retired.hs:30-31](../../../core/app/CE/Wire/Retired.hs#L30),
 [model.rs:16-23](../../../cli/src/erase/model.rs#L16)). Renumbering the
 survivors would have moved three other frozen codes to reclaim one array
 slot, so the name array keeps a `(retired)` placeholder in that position.
@@ -127,7 +127,7 @@ the coverage fact is explicit and checked before the other evidence.
 
 #### Class 3 — `dead_file`, the confidence road (2.32.0)
 
-The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:83-86](../../../core/app/CE/Erase/Cost.hs#L83)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:47-57](../../../core/app/CE/Erase/Cost.hs#L47)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:40-43](../../../core/app/CE/Erase.hs#L40)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:21](../../../core/app/CE/Erase/Cost.hs#L21)).
+The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:83-86](../../../core/app/CE/Erase/Cost.hs#L83)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:47-57](../../../core/app/CE/Erase/Cost.hs#L47)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:21](../../../core/app/CE/Erase/Cost.hs#L21)).
 
 ### 3. The seven reason codes
 

@@ -17,7 +17,7 @@ The split is ADR-008's, seventh instalment. Rust gathers the groups, builds each
 `clone/1`'s postorder encoding with four more integer columns, and labels the answers back with
 the members' source text; the alignment, the holes, the parameters, the feasibility, the member
 kept and the savings are all Haskell's, over the fifteenth wire family, `merge/1`, since proto
-7.5.0 ([wire.rs:1-12](../../../cli/src/merge/wire.rs#L1), [Merge.hs:34](../../../core/app/CE/Merge.hs#L34)).
+7.5.0 ([wire.rs:1-12](../../../cli/src/merge/wire.rs#L1), [Merge.hs:33-34](../../../core/app/CE/Merge.hs#L33)).
 No name, path or source text crosses the wire: a leaf goes up as the fnv1a64 hash of its bytes,
 and every text on the report is read back on this side from the member's own file.
 
@@ -51,7 +51,7 @@ names — and carries beside it the kept run's own lines, the first kept top's f
 one's last, as its `run` ([tree.rs:64](../../../cli/src/dedup/t3/tree.rs#L64),
 [groups.rs:270](../../../cli/src/merge/groups.rs#L270)). The request's `lines` column is the run's,
 so the core prices the lines a merge would fold, never a boundary statement the trim cut off
-([wire.rs:119](../../../cli/src/merge/wire.rs#L119)); a whole unit's run is its span. The report
+([wire.rs:128](../../../cli/src/merge/wire.rs#L128)); a whole unit's run is its span. The report
 prints both spans, and the texts on it come off the trimmed trees.
 
 A group the core would refuse, or that no request can carry, is never sent; it is counted by why
@@ -233,7 +233,7 @@ A fragment group's merged function wraps the run in a helper, so either family a
 `trees=[{lab,lld,leaf,slot,own,text}]` in member order — and the reply one suggestion row per group
 `[g,params,kept,savings,feasible,reason]`, its hole rows `[g,hole,param,m,post,postEnd]` and the
 counts of groups, members, nodes, suggestions, holes and feasible suggestions
-([Merge.hs:37-61](../../../core/app/CE/Merge.hs#L37)). `post` and `postEnd` are the member's first
+([Merge.hs:36-54](../../../core/app/CE/Merge.hs#L36)). `post` and `postEnd` are the member's first
 and last root of the hole: one node twice for a leaf or relabel hole, the first and last root of a
 gap's forest — siblings under one parent — and −1 −1 where that side is empty
 ([Tree.hs:87-98](../../../core/app/CE/Merge/Tree.hs#L87), [Holes.hs:46-67](../../../core/app/CE/Merge/Holes.hs#L46)).
@@ -247,12 +247,12 @@ T1/T2 group ([Contract.hs:57](../../../core/app/CE/Merge/Contract.hs#L57),
 the one that keeps the widest request at both caps inside the protocol's 32 MiB line, the six
 columns and a member row per one-node tree at their widest
 ([Cost.hs:29-37](../../../core/app/CE/Merge/Cost.hs#L29)); the measuring side chunks by both caps
-and never splits a group across two requests ([wire.rs:71](../../../cli/src/merge/wire.rs#L71)).
+and never splits a group across two requests ([wire.rs:80](../../../cli/src/merge/wire.rs#L80)).
 So a reply the core degraded to a request this side priced within both caps is a drift between the
 two sides' cap mirrors — an error naming both owners, never a document; a core without the family,
 or one that stops answering mid-run, gives a document with `degraded`, and a core that cannot be
 started is refused by name, since the document is the core's to lay out
-([wire.rs:146](../../../cli/src/merge/wire.rs#L146), [face.rs:74](../../../cli/src/merge/face.rs#L74)).
+([wire.rs:155](../../../cli/src/merge/wire.rs#L155), [face.rs:74](../../../cli/src/merge/face.rs#L74)).
 
 ### 4. The measuring side's rulings
 
@@ -278,7 +278,7 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
    member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:179](../../../cli/src/merge/face.rs#L179)).
 5. One report, `ce.merge-report/0.1.0`, for all three faces, laid out by the core over every
    chunk's rows joined, its counts tallied there, `merged_duplicates` (§1) beside them; each parameter labelled with every member's text at the parameter's first hole
-   ([Document.hs:95](../../../core/app/CE/Merge/Document.hs#L95)). The text runs from the hole's first root
+   ([Document.hs:97](../../../core/app/CE/Merge/Document.hs#L97)). The text runs from the hole's first root
    to its last on that member — a leaf or relabel hole's node, a gap hole's whole forest — and an
    empty side reads `""` ([face.rs:210](../../../cli/src/merge/face.rs#L210)).
 6. The T3 trees are built once for both families; `clone/1` never sends the new columns.
@@ -293,14 +293,14 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
 
 `ce merge [--group <n>] [--format json]`, the MCP tool `merge_suggestions` and the GUI's merge
 family in the Reports hub all read the one document, which the core lays out (`document/1`) from
-every chunk's answer joined on this side ([Document.hs:76](../../../core/app/CE/Merge/Document.hs#L76), [face.rs:97](../../../cli/src/merge/face.rs#L97)).
+every chunk's answer joined on this side ([Document.hs:79](../../../core/app/CE/Merge/Document.hs#L79), [face.rs:97](../../../cli/src/merge/face.rs#L97)).
 The document holds the counts (the core's, and `merged_duplicates`), `unsendable`, and per group its family (`t1t2` / `t3`), whether it
 is a fragment, its members (`path`, `unit` as `path:key#nth` or null for a fragment, `lines` the
 clone-family span, `run` the lines sent and priced — `lines` again for a whole unit), the
 parameter count, the member kept, the savings, `feasible`, the reason by name (`ok`, `position`,
 `type`, `spans_statements`, `too_many_params`, `no_savings` — `position` for a hole at a statement
 or any other position no parameter can stand for) and the parameters, each with every member's `text`
-([Document.hs:52](../../../core/app/CE/Merge/Document.hs#L52)). A core without the family,
+([Document.hs:55](../../../core/app/CE/Merge/Document.hs#L55)). A core without the family,
 or one that stops answering, gives a document with `degraded` naming why and no group — a request
 the core did not judge licenses nothing; a core that answers degraded to a request this side priced
 within both caps is a cap-mirror drift and an error, never a document. The GUI card leads with the

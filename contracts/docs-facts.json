@@ -141,7 +141,7 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "33"
+      "value": "31"
     },
     {
       "id": "gate:dedup.tests#digits",
@@ -246,13 +246,13 @@
       "id": "report:erase-plan#schemaver",
       "source": "core/app/CE/Erase/Document.hs (schemaId)",
       "tier": "linked",
-      "value": "ce.erase-plan/0.3.0"
+      "value": "ce.erase-plan/0.4.0"
     },
     {
       "id": "report:erase-trail#schemaver",
       "source": "core/app/CE/Erase/Document.hs (trailSchemaId)",
       "tier": "linked",
-      "value": "ce.erase-trail-report/0.1.0"
+      "value": "ce.erase-trail-report/0.2.0"
     },
     {
       "id": "report:flow#schemaver",
@@ -342,7 +342,7 @@
       "id": "report:structure#schemaver",
       "source": "core/app/CE/Structure/Document.hs (schemaId)",
       "tier": "linked",
-      "value": "ce.structure-report/0.6.0"
+      "value": "ce.structure-report/0.7.0"
     },
     {
       "id": "report:trend#schemaver",

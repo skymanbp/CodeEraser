@@ -181,7 +181,7 @@ decision record — is exempt as a whole, and every exemption is counted where t
 see it (the docdup ledger discipline: never silent). Only Markdown can hold the role: a code
 file narrates nothing by job ([role.rs:1-16](../../../cli/src/tombstone/role.rs#L1)). Four
 witnesses, the first that answers deciding
-([mod.rs:148-196](../../../cli/src/tombstone/mod.rs#L148)); none of them reads a commit
+([mod.rs:145-193](../../../cli/src/tombstone/mod.rs#L145)); none of them reads a commit
 message, which is a surface and no file ([candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)):
 
 | witness | reads | exempts | feed `why` |
@@ -209,7 +209,7 @@ that never spell a name, whole or as a word of a compound
 [ce-toml.md:92-99](../ce-toml.md#L92)). An exemption enters the feed only when the changeset
 erased something (a file by role or declaration) or when it suppressed a row (a segment): an
 exemption that suppressed nothing is nothing to see
-([mod.rs:114-139](../../../cli/src/tombstone/mod.rs#L114)).
+([mod.rs:111-136](../../../cli/src/tombstone/mod.rs#L111)).
 
 ### 6. The wire — `tombstone/1`, and what Haskell judges
 
@@ -224,13 +224,13 @@ rows sent, counts that do not add up to it, or an `over` that is no boolean: no 
 no malformed reply, is ever read as "no sites" or "not over"
 ([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
 [judged.rs:45-58](../../../cli/src/corelink/judged.rs#L45)). The core registers the family as the
-eleventh ([Protocol.hs:108](../../../core/app/CE/Protocol.hs#L108)) and answers it through
+eleventh ([Protocol.hs:117](../../../core/app/CE/Protocol.hs#L117)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
-knob ([Wire.hs:136-161](../../../core/app/CE/Wire.hs#L136),
+knob ([Wire.hs:191-216](../../../core/app/CE/Wire.hs#L191),
 [Tombstone.hs:35-59](../../../core/app/CE/Tombstone.hs#L35)). The judgment is three lines
 ([Cost.hs:47-58](../../../core/app/CE/Tombstone/Cost.hs#L47),
-[Tombstone.hs:61-67](../../../core/app/CE/Tombstone.hs#L61)):
+[Tombstone.hs:59-65](../../../core/app/CE/Tombstone.hs#L59)):
 
     site(kind, marks, names)  ⇔  names ≥ minName  ∧  (kind ≠ kindProse  ∨  marks ≥ minMarks)
     label = |{sites : kind ≠ kindProse}|          prose = |{sites : kind = kindProse}|
@@ -241,7 +241,7 @@ any honest changeset; over the cap the core answers a complete degraded reply wi
 site table, the condition unevaluated and the reason `tombstone_too_large`: a changeset the
 core refused to judge is neither convicted nor cleared
 ([Cost.hs:18-45](../../../core/app/CE/Tombstone/Cost.hs#L18),
-[Tombstone.hs:69-95](../../../core/app/CE/Tombstone.hs#L69)). The reply carries the site
+[Tombstone.hs:67-84](../../../core/app/CE/Tombstone.hs#L67)). The reply carries the site
 indices in request order, the `rows` / `label` / `prose` counts, `over`, the effective knob
 table echoed (empty = no budget declared) and `degraded`. Loosening either floor re-opens the
 replay rounds that measured the conjunction's precision (§9): the floors are the contract,

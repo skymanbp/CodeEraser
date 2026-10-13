@@ -696,4 +696,22 @@ forbid = [
 # merged tree first read 34 - CE.Candidates' import head and `respond`
 # rhymed with W2a's CE.Resolve (50 tokens) - and CE.Candidates now
 # imports ByteString by name; 33 again. Measured on the formatted tree.
-budget = 33
+# 33 -> 31 (v2.33 step 11a, defragmentation, core lane): two rows
+# left with the folds, none bought. CE.Erase's row check rhymed with
+# CE.Trend's knob check (51 tokens, Erase.hs 44-58 against Trend.hs
+# 53-64: the hand-spelled `label` prefix, the malformed-row arm and
+# its `where`) until both read CE.Wire.Rows `rowCheck` / `label`; and
+# CE.Graph's over-cap reply rhymed with CE.Verdict's (54 tokens,
+# Graph.hs 160-173 against Verdict.hs 199-213) until each family
+# answered degraded and judged through one reply function with the
+# degraded flag, its envelope CE.Wire.Result `resultLine` and its
+# reason `tooLargeOf`. The rows the lane bought on the way (38 at
+# its peak: Arch~Query, Audit~Trend, Candidates~Merge,
+# Candidates~Flow, Docdup/Pairs~Similar, Wire~WireHarness, the
+# families table, then two from a twelve-field defaults record)
+# went before the count was read: one `Respond` type, the `tabled`
+# skeleton, CE.Wire as the one import surface, the version-1
+# family names by `first`, and the score defaults read as a map by
+# wire name. Row set diffed against the 0e189ab6 tree: those two
+# rows gone, none new. Measured on the formatted tree.
+budget = 31

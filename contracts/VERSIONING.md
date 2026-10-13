@@ -131,6 +131,16 @@
 > 谓词前缀 `pack_` 保留，规则文件或问句定义任何 `pack_…` 谓词即程序错误 7。词法应答（`lex: true`）加性 `packText`（渲染文本，仅带包时出现）。渲染不了的按名拒绝（`pack: unknown item …` /
 > `pack <名>: declared twice` / `pack layers: … a layering needs at least two` / `pack layers: … over the cap 16` / `pack forbid: … over the cap 64` / `pack without texts` 等）。
 > 不带 `pack` 的请求逐字节答旧形。golden：`query/golden` 加第 11 对（五项全开的判决）与第 12 对（同一包的词法应答带 `packText`），其余 golden 不动。
+> **9.0.0 同版收紧**（去碎片化核车道，v2.33 步 11a，2026-10-12；设计册 `docs/reference/analysis-track.md` §13 第 56 条；9.0.0 未发布，major 之内收紧不另升版号）：
+> 测量侧一向都送、只有缺席臂在核里活着的五个键改为必送——`scan.request` 的 `naming` / `events` / `knobsFence`、`erase.request` 的 `targets`、`graph.request` 的 `unres`；
+> 缺哪个就按名拒绝 `<键>: required at 9.0.0`（`CE.Wire.Rows.required`，一个键一句；scan 的次序是行 → 档 → naming → callEdges → events → 类 → fence，graph 在退役键之后、各表之前）。
+> 随缺席臂一起走的旧形：scan 的应答 `failed` 每次都在（降级应答也在）、`derived` 每次判决都在；erase 的 `kept` 每次判决都在；graph 的死行恒为三列 `[i, verdict, confidence]`。
+> `flow.result` 的发现行加第六列 `judged`（0 / 1，`CE.Flow.Document.judgedFinding`：种类非顾问且单元的语言过了精度门；文档的 `judged` 读同一个谓词），测量侧读这一位、不再自己合取。
+> 定义包加性：`limits` 三组——`graph` = `{scc_floor, unmentioned_cap}`（`CE.Graph.Cost.sccFloor` / `unmentionedCap`）、`zone` = `{warn_permille, ask_permille}`（`CE.Verdict.Cost` 的两条档线）、`score_defaults` = 每个判决旋钮的默认值（键名即线上旋钮名，`CE.Verdict.Knobs.defaultsEcho`，降级 verdict 应答回显同一份）；`document.merge.reasons`（merge 理由按码）；`tombstone` 表加 `kind_names`（`CE.Tombstone.kindNames`，墓碑行种类按码）。hello 摘要随之变。
+> 应答信封只有一处拼写（`CE.Wire.Result` 的 `envelope` / `replyLine` / `resultLine` / `faultLine`，族名一处 `CE.Wire.Families`），graph / verdict 的降级与判决同一个应答函数——这两条应答字节不变。
+> golden：`scan/golden` 26 条请求行全改（缺的三键补齐；第 1 对把预判的 fn-naming 值改成命名事实，第 10–15 对把裸认知行改成 `[3,4,5]` 三元组与等量的带标签跳转事件、调用边改指认知行，第 26 对改钉 `events: required at 9.0.0`）、
+> `erase/golden` 第 1–8 对补 `targets`、`graph/golden` 22 条补 `unres: []`、`flow/golden` 第 1–5 对应答多一列、`tables/golden` 与 `handshake/hello-ok` 的摘要，全部机器重生成，请求行数不变。
+> 定义包里 Rust 原先自留字面量的六处改读包（`limits.zone` / `limits.graph` / `limits.score_defaults` / `document.merge.reasons` / `tombstone.kind_names`，值与被删的字面量逐个相等，各由一条腿钉住）。报告文档（同一车道；由请求里已有的事实推得的值归核陈述，网页删掉自己的算法）：`ce.erase-plan` 0.3.0 → 0.4.0 加性 `run`（`{applied}`：本次 apply 擦掉的行数，没跑 apply 为 null；请求本就带 `apply` / `applied` 两个事实）、`ce.erase-trail-report` 0.1.0 → 0.2.0 每条记录加性 `stamp`（`ts_ms` 的 UTC 时戳，`CE.Erase.Document.utcStamp`，`ce erase --log` 的控制台行读同一个字段）、`ce.structure-report` 0.6.0 → 0.7.0 `splitCandidates` / `sizeExempt` 每行加性 `roi`（控制台印的一位小数文本 `CE.Text.fixed 1`；成本为 0 的无缝行为 null）——这三份随 1.8.0 发出，各升一个 minor；`ce.query-report` / `ce.rules-report` 0.1.0 未发布，版本内加性：每个目标 `answers`（它的答案在 `answers` 里的下标）、每个答案 `proof`（它根以下的推导行在 `proof` 里的下标）、每个推导行 `depth`（到答案根的边数，沿父列只走向更小的结点号，故任何请求都会停）。旧键逐字不变。golden：`document/golden` 第 2、4、27、28、63、64（query / rules）、17、32、60（structure）、95–99（erase）、101–105（trail）对的应答，`tables/golden` 与 `handshake/hello-ok` 的摘要（目录里三份 schema、erase 空文档的 `run`），请求行不变。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序

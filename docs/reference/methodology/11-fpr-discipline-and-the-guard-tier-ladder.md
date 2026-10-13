@@ -95,7 +95,7 @@ H = the file's file_lines_fail                                      // its class
 permille = (lines - S) * 1000 / (H - S)
 ```
 
-([zone.rs:52-56](../../../cli/src/guard/zone.rs#L52); `S` is read off the committed `ce-baseline.json` through `zone::envelope`, [zone.rs:70-82](../../../cli/src/guard/zone.rs#L70); `file_lines_warn = 300`, [ce-toml.md:17](../ce-toml.md#L17)). A degenerate zone — `H == 0` (no hard line), `H <= S`, or `lines <= S` — logs nothing rather than fabricating a position ([zone.rs:52-54](../../../cli/src/guard/zone.rs#L52)).
+([zone.rs:53-57](../../../cli/src/guard/zone.rs#L53); `S` is read off the committed `ce-baseline.json` through `zone::envelope`, [zone.rs:71-83](../../../cli/src/guard/zone.rs#L71); `file_lines_warn = 300`, [ce-toml.md:17](../ce-toml.md#L17)). A degenerate zone — `H == 0` (no hard line), `H <= S`, or `lines <= S` — logs nothing rather than fabricating a position ([zone.rs:53-55](../../../cli/src/guard/zone.rs#L53)).
 
 The map is a three-way partition on that per-mille ([zone.rs:56-64](../../../cli/src/guard/zone.rs#L56)):
 

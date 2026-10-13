@@ -13,8 +13,8 @@ walks reachability and backward liveness and answers the findings over the fourt
 `flow/1`, since proto 7.4.0 ([Flow.hs:5-18](../../../core/app/CE/Flow.hs#L5),
 [mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). No name, path or source text crosses the wire:
 a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
-through the legend it kept ([Flow.hs:67-75](../../../core/app/CE/Flow.hs#L67),
-[mod.rs:66](../../../cli/src/flow_report/mod.rs#L66)).
+through the legend it kept ([Flow.hs:65-73](../../../core/app/CE/Flow.hs#L65),
+[mod.rs:62](../../../cli/src/flow_report/mod.rs#L62)).
 
 ### 1. The lowering — four tables per unit
 
@@ -43,7 +43,7 @@ the one unconditional exit made of arms that all leave, and its casualty is a mi
 a false one. A unit the measuring side cannot read — an evaluator call (`eval`, `exec`, `load`,
 R's `assign` and `get`), a preprocessor conditional inside a C-family body whose two arms would
 be lowered as consecutive, a computed `goto`, `asm`, `setjmp` — carries the dynamic flag and is
-skipped whole by the core and counted ([Flow.hs:62-63](../../../core/app/CE/Flow.hs#L62)). A unit
+skipped whole by the core and counted ([Flow.hs:58-59](../../../core/app/CE/Flow.hs#L58)). A unit
 whose tree cannot be lowered to the contract's shape is not sent (`unlowered`); a unit the core
 still refuses by name is mapped back from the refusal's row, dropped, and the batch asked again,
 so one unit's defect never costs the others their verdict
@@ -91,7 +91,7 @@ cannot show, so no tier, mask or gate ever reads it as a verdict
 The four tables are one dimension against one cap, 524,288 rows; crossing it answers a complete
 degraded reply — no findings, the counts, `flow_too_large` — since a request the core refused to
 judge licenses nothing ([Cost.hs:53](../../../core/app/CE/Flow/Cost.hs#L53),
-[Contract.hs:47](../../../core/app/CE/Flow/Contract.hs#L47), [Flow.hs:45](../../../core/app/CE/Flow.hs#L45)).
+[Contract.hs:47](../../../core/app/CE/Flow/Contract.hs#L47), [Flow.hs:41-46](../../../core/app/CE/Flow.hs#L41)).
 The measuring side plans its batches under the same cap, and a single unit heavier than it is
 refused by name rather than split ([wire_batch.rs:41](../../../cli/src/flow/wire_batch.rs#L41)).
 There is no knob and no condition bit on the wire: what a finding means for a gate is decided on
@@ -104,14 +104,14 @@ file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (
 from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit the core refused with its reason
-([Document.hs:96](../../../core/app/CE/Flow/Document.hs#L96), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
+([Document.hs:104](../../../core/app/CE/Flow/Document.hs#L104), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
 A finding's `lineEnd` is the line on
 which the run's last statement starts: the legend keeps each statement's first line only, so a
 last statement written over several lines is not followed to its end; the next lowering
 generation carries the end. `--kind` narrows the listing and
 never the counts, so a filtered run cannot move the gate; a name the package's flow catalogue
 does not list goes as −1, and the core refuses it, the refusal naming the name as given and the
-catalogue's kinds ([Document.hs:92](../../../core/app/CE/Flow/Document.hs#L92)). The exit codes are the family's own: 2
+catalogue's kinds ([Document.hs:100](../../../core/app/CE/Flow/Document.hs#L100)). The exit codes are the family's own: 2
 when the core is missing (refused by name, no document) or lacks the family (the document names
 the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
@@ -124,7 +124,7 @@ mask holds the languages whose precision doc passed the gate of §8. Step 4's co
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
 retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
 generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
-all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [mod.rs:36](../../../cli/src/flow_report/mod.rs#L36)).
+all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [Document.hs:77-84](../../../core/app/CE/Flow/Document.hs#L77)); since plan v2.33 step 11a the rule is stated once, in the core, and every finding row carries its judged bit as a sixth column ([wire.rs:36-41](../../../cli/src/flow/wire.rs#L36)).
 
 ### 7. The guard class — novel findings at write time
 
@@ -136,12 +136,12 @@ findings through each side's legend and subtracts
 [proto.rs:32](../../../cli/src/daemon/proto.rs#L32)). The subtraction is the guard's usual
 novelty, applied to findings: a multiset difference keyed on (unit name, kind, variable name),
 the line left out so a finding the edit merely moves is not this write's doing
-([flow.rs:127-131](../../../cli/src/guard/flow.rs#L127)). The class's condition is a
-judged language and a novel finding of a non-advisory kind, and the feed's `novel` counts those
+([flow.rs:130-134](../../../cli/src/guard/flow.rs#L130)). The class's condition is a
+novel finding the core judged — a non-advisory kind in a judged language, the finding row's sixth column — and the feed's `novel` counts those
 kinds only: an unused parameter the write brings shows in `kinds`, never in `novel`. The class
 speaks at its own tier,
 `[flow] tier`, shipped at observe, and never on a degraded side — a side the daemon could not
-judge is named in the line, never a decision ([flow.rs:117](../../../cli/src/guard/flow.rs#L117),
+judge is named in the line, never a decision ([flow.rs:120](../../../cli/src/guard/flow.rs#L120),
 [flow.rs:20-25](../../../cli/src/config/flow.rs#L20)). Each side is one question to the daemon, so
 a side the core refuses, even for one unit, is degraded whole and named in the line: the
 drop-and-ask-again of §1 is the batch road `ce flow` walks, and the hook keeps a write's cost to
@@ -204,7 +204,7 @@ strict reading), both readings recorded.
 
 The unit legs hold the placement of every kind back to its lines and variable, the novelty
 subtraction (a moved finding, a rename, a multiset, kind-blind) and the tier's load-time refusal
-([flow_novel.rs:17](../../../cli/tests/unit/guard/flow_novel.rs#L17)). The integration legs hold
+([flow_novel.rs:18](../../../cli/tests/unit/guard/flow_novel.rs#L18)). The integration legs hold
 the CLI to the library face with `--kind` narrowing only the listing, `--check` to the class's
 own `deny`, the MCP relay to the same document, the guard's novel count, its sentence at `warn`
 and its refusal at `deny` on a judged language's write (Python) and its silence on an unjudged
