@@ -8,7 +8,7 @@ explicit in the predicate module's ADR-008 comment
 ([Cost.hs:1-5](../../../core/app/CE/Erase/Cost.hs#L1)). The Rust side calls the
 three source families in their normal order, then sends those facts to
 `erase/1`; it does not select a winner or infer safety
-([gather.rs:24-48](../../../cli/src/erase/gather.rs#L24)). The wire carries dense
+([gather.rs:24-69](../../../cli/src/erase/gather.rs#L24)). The wire carries dense
 integer rows, with row order serving as identity and paths kept on the client
 ([VERSIONING-ARCHIVE-2.15-2.33.md:135-136](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L135)).
 
@@ -19,16 +19,16 @@ the remaining four cells are facts whose meaning depends on that class
 ([VERSIONING-ARCHIVE-2.15-2.33.md:135-139](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L135)). The client
 prepends the class to those four facts, sends the resulting five-integer row,
 and reads one `[eraseable, reason]` pair back for every candidate
-([wire.rs:32-51](../../../cli/src/erase/wire.rs#L32)). Thus the measurement side
+([wire.rs:32-52](../../../cli/src/erase/wire.rs#L32)). Thus the measurement side
 can assemble evidence, but the boolean and reason are produced by `judgeRow`.
 
 Since 7.2.0 (plan v2.30 step 7b) the request also carries the rows' targets —
 one `[pathId, start, end]` per row, path ids dense in request order and `0/0`
 for a whole file — and the reply carries `kept`, one bit per row saying which
-row STANDS for its target ([wire.rs:52-68](../../../cli/src/erase/wire.rs#L52),
+row STANDS for its target ([wire.rs:68-84](../../../cli/src/erase/wire.rs#L68),
 [Erase.hs:55-61](../../../core/app/CE/Erase.hs#L55)). The client reads both
 tables length-locked and refuses a reply without `kept` as a pre-7.2.0 core
-([wire.rs:83-86](../../../cli/src/erase/wire.rs#L83)); the closure itself is
+([wire.rs:86-98](../../../cli/src/erase/wire.rs#L86)); the closure itself is
 §2's class-2 paragraph and `keptRows`.
 
 Rust's measurement leg preserves raw bytes for the final equality test: the
@@ -37,18 +37,18 @@ requires equality of the raw line slices
 ([gather.rs:1-7](../../../cli/src/erase/gather.rs#L1)). Dead-file candidates
 come from the graph report and carry a verdict code plus the graph family's own
 per-row confidence (class 3 since 2.32.0)
-([gather.rs:111-131](../../../cli/src/erase/gather.rs#L111)). Document candidates
+([gather.rs:108-134](../../../cli/src/erase/gather.rs#L108)). Document candidates
 carry both segment word counts and the raw-slice equality bit
-([gather.rs:136-167](../../../cli/src/erase/gather.rs#L136)). T1-twin candidates
+([gather.rs:136-170](../../../cli/src/erase/gather.rs#L136)). T1-twin candidates
 carry whole-unit coverage, byte equality, copy-file liveness, and the locally
 folded per-language unresolved count
-([gather.rs:172-227](../../../cli/src/erase/gather.rs#L172)).
+([gather.rs:172-235](../../../cli/src/erase/gather.rs#L172)).
 
 ### 2. Four frozen class codes, three provable families
 
 The class positions are part of the source contract: position `0` is
 retired, `1` is `verbatim_doc`, `2` is `t1_twin`, and `3` is `dead_file`
-([Cost.hs:5-20](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:16-24](../../../cli/src/erase/model.rs#L16)). Each class below is
+([Cost.hs:5-26](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:16-24](../../../cli/src/erase/model.rs#L16)). Each class below is
 written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
 
@@ -71,7 +71,7 @@ survivors would have moved three other frozen codes to reclaim one array
 slot, so the name array keeps a `(retired)` placeholder in that position.
 The Rust graph leg still refuses a degraded deadcode report by name before
 any dead row is minted, so an incomplete graph judgment cannot become proof
-([gather.rs:71-83](../../../cli/src/erase/gather.rs#L71)).
+([gather.rs:71-84](../../../cli/src/erase/gather.rs#L71)).
 
 #### Class 1 — `verbatim_doc`
 
@@ -86,7 +86,7 @@ then computes equality from the two inclusive line slices
 **Predicate.** The full-segment test is integer-only: `verbatim` must be at
 least both segment word counts, and the raw bytes must compare equal
 ([Cost.hs:79-80](../../../core/app/CE/Erase/Cost.hs#L79)). Passing both tests
-returns `(True, 0)` ([Cost.hs:68](../../../core/app/CE/Erase/Cost.hs#L68)).
+returns `(True, 0)` ([Cost.hs:81](../../../core/app/CE/Erase/Cost.hs#L81)).
 
 **Guard.** A short verbatim run refuses with reason `2`; a byte mismatch refuses
 with reason `3` ([Cost.hs:79-80](../../../core/app/CE/Erase/Cost.hs#L79)). The
@@ -101,7 +101,7 @@ not merely a high similarity score.
 dedup block that covers at least one complete cached unit, then records the
 coverage bit, raw equality, the target file's dead VERDICT code (`0` when the
 graph does not call it dead, else 1–4 in the deadcode family's order), and its
-language unresolved count ([gather.rs:182-235](../../../cli/src/erase/gather.rs#L182)).
+language unresolved count ([gather.rs:180-235](../../../cli/src/erase/gather.rs#L180)).
 Until proto 7.0.0 the third fact was a death bit, so the RG10 bar never reached
 this road: the acceptance fixture's public `copy.py` twin was refused only
 because the `dead_file` row for the same path won the plan's closure by
@@ -111,7 +111,7 @@ file names only its death — and since 7.2.0 it is the core's: an eraseable
 whole-file row owns its path and closes the span rows on it, the richest
 `licence` stands among eraseable rows, the dead file's categorical refusal
 stands among advisory ones, and a tie inside one class breaks to the earliest
-row ([Cost.hs:129-164](../../../core/app/CE/Erase/Cost.hs#L129)).
+row ([Cost.hs:129-165](../../../core/app/CE/Erase/Cost.hs#L129)).
 
 **Predicate.** `judgeRow` evaluates those facts in source order: coverage must
 be `1`, bytes must be equal, the copy must be dead and not a public surface
@@ -127,12 +127,12 @@ the coverage fact is explicit and checked before the other evidence.
 
 #### Class 3 — `dead_file`, the confidence road (2.32.0)
 
-The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:83-86](../../../core/app/CE/Erase/Cost.hs#L83)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:47-57](../../../core/app/CE/Erase/Cost.hs#L47)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:21](../../../core/app/CE/Erase/Cost.hs#L21)).
+The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:94](../../../core/app/CE/Erase/Cost.hs#L94)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:49-59](../../../core/app/CE/Erase/Cost.hs#L49)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:19-21](../../../core/app/CE/Erase/Cost.hs#L19)).
 
 ### 3. The seven reason codes
 
 The advisory vocabulary is frozen at seven positions in the client model
-([model.rs:27-39](../../../cli/src/erase/model.rs#L27)). The table records the
+([model.rs:26-41](../../../cli/src/erase/model.rs#L26)). The table records the
 meaning and the exact `judgeRow` condition that emits each code. Reason `0` is
 the successful verdict; the other six are refusals. The domain only ever
 grows — position 6 arrived at 6.1.0 and nothing renumbered, because a frozen
@@ -140,7 +140,7 @@ position that moves silently rewrites every plan a reader has already read.
 
 | position/name | meaning | condition in `judgeRow` |
 |---|---|---|
-| `0 eraseable` | every class-specific safety test passed | class 1 falls through after the full-segment and byte tests, class 2 after all four checks, class 3 after a non-public verdict and a non-zero confidence ([Cost.hs:78-94](../../../core/app/CE/Erase/Cost.hs#L78)) |
+| `0 eraseable` | every class-specific safety test passed | class 1 falls through after the full-segment and byte tests, class 2 after all four checks, class 3 after a non-public verdict and a non-zero confidence ([Cost.hs:78-95](../../../core/app/CE/Erase/Cost.hs#L78)) |
 | `1 language_unresolved` | the owning language still has unresolved graph sites | class 2: the final guard sees `langUnresolved /= 0`; class 3: the graph family's confidence is `0` ([Cost.hs:82-88](../../../core/app/CE/Erase/Cost.hs#L82), [Cost.hs:92-95](../../../core/app/CE/Erase/Cost.hs#L92)) |
 | `2 not_full_segment` | the reported verbatim run does not cover either segment | class 1: `verbatim < wordsA || verbatim < wordsB` ([Cost.hs:78-79](../../../core/app/CE/Erase/Cost.hs#L78)) |
 | `3 bytes_differ` | the candidate and its survivor are not byte-identical | class 1 or class 2: `bytesEqual /= 1` ([Cost.hs:78-84](../../../core/app/CE/Erase/Cost.hs#L78)) |
@@ -168,10 +168,10 @@ so it cannot be chunked — and the erase client never sends a plan over the
 ceiling: the package states it (`limits.caps.erase_rows`), and a plan with more
 candidates is refused by name before anything is sent, naming the narrowing a
 user has, a subtree or an `exclude` in ce.toml
-([wire.rs:59-64](../../../cli/src/erase/wire.rs#L59)). A degraded reply, should
+([wire.rs:55-66](../../../cli/src/erase/wire.rs#L55)). A degraded reply, should
 one still arrive, is an error carrying the core's reason rather than an empty
 table read as “nothing to erase”, and the decoded count must equal the
-candidate count ([wire.rs:46-52](../../../cli/src/erase/wire.rs#L46)).
+candidate count ([wire.rs:46-52](../../../cli/src/erase/wire.rs#L46), [wire.rs:92-98](../../../cli/src/erase/wire.rs#L92)).
 
 ### 5. `--apply`: predicates before writes
 
@@ -184,16 +184,16 @@ eraseable. The executor's precondition function is deliberately ordered
    ([apply.rs:43-57](../../../cli/src/erase/apply.rs#L43)).
 2. **Worktree cleanliness.** `git status --porcelain` must succeed; after the
    `.ce` state directory is removed from the comparison, no user dirt may
-   remain ([apply.rs:58-78](../../../cli/src/erase/apply.rs#L58)).
+   remain ([apply.rs:58-77](../../../cli/src/erase/apply.rs#L58)).
 3. **Target identity.** Every target is read again and its FNV-1a content hash
    must equal the hash captured in the plan
    ([apply.rs:79-88](../../../cli/src/erase/apply.rs#L79)).
 
 Only after all three checks does the executor write targets and append the
-audit records ([apply.rs:16-34](../../../cli/src/erase/apply.rs#L16)). The apply
+audit records ([apply.rs:16-35](../../../cli/src/erase/apply.rs#L16)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
-([mod.rs:74-105](../../../cli/src/erase/mod.rs#L74)).
+([mod.rs:74-106](../../../cli/src/erase/mod.rs#L74)).
 
 ### 6. No tuning surface
 
@@ -212,7 +212,7 @@ comments, where facts are measured, the predicate chooses safety, and
 ([Cost.hs:1-5](../../../core/app/CE/Erase/Cost.hs#L1), [Cost.hs:74-77](../../../core/app/CE/Erase/Cost.hs#L74)).
 “Guard” is the only explanatory label that is not a named wire field or a
 Haskell identifier here; it means the `|` conditions shown beside each class,
-not an additional rule ([Cost.hs:78-91](../../../core/app/CE/Erase/Cost.hs#L78),
+not an additional rule ([Cost.hs:78-95](../../../core/app/CE/Erase/Cost.hs#L78),
 [VERSIONING-ARCHIVE-2.15-2.33.md:132-146](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L132)). No other
 constant, class, reason, degraded behavior, or apply condition in this booklet
 is an inferred term: each is named in the source links above.

@@ -8019,7 +8019,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|4430ba4e8b1d3ff0|0": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 58,
-    "end": 78,
+    "end": 77,
     "text": "let dirty = git(&[\"status\", \"--porcelain\"]).context(\"git status\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|63dfaddfd6783920|0": {
@@ -8031,7 +8031,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/apply.rs|e180d3a745326c7b|0": {
     "target": "../../../cli/src/erase/apply.rs",
     "line": 16,
-    "end": 34,
+    "end": 35,
     "text": "/// Preconditions + writes + audit log. Returns the applied count."
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|03b69f6290794c98|0": {
@@ -8040,23 +8040,23 @@
     "end": 7,
     "text": "//! The erase plan's measurement leg: candidate FACTS from the three"
   },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|17ff45fa224bf290|0": {
+    "target": "../../../cli/src/erase/gather.rs",
+    "line": 108,
+    "end": 134,
+    "text": "/// Class-3 rows (2.32.0, H3): the trust fact is the graph family's"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|1eab99f837ef5ebd|0": {
+    "target": "../../../cli/src/erase/gather.rs",
+    "line": 180,
+    "end": 235,
+    "text": "fn twin_candidates("
+  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|5cc7c2244f498b9b|0": {
     "target": "../../../cli/src/erase/gather.rs",
     "line": 172,
-    "end": 227,
-    "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|8ca6298142089325|0": {
-    "target": "../../../cli/src/erase/gather.rs",
-    "line": 182,
     "end": 235,
-    "text": "units: &UnitSpans,"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|90da22b9b71c3ec7|0": {
-    "target": "../../../cli/src/erase/gather.rs",
-    "line": 111,
-    "end": 131,
-    "text": "fn dead_candidates("
+    "text": "/// Whole-unit T1 twins: a dedup block side that covers at least one"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|b8e09761ad4cc7fe|0": {
     "target": "../../../cli/src/erase/gather.rs",
@@ -8067,7 +8067,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|d352a15dd157bae7|0": {
     "target": "../../../cli/src/erase/gather.rs",
     "line": 136,
-    "end": 167,
+    "end": 170,
     "text": "/// Verbatim doc duplicates: for every core-reported pair, the"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|d352a15dd157bae7|1": {
@@ -8079,13 +8079,13 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|db1d2306348238b7|0": {
     "target": "../../../cli/src/erase/gather.rs",
     "line": 24,
-    "end": 48,
+    "end": 69,
     "text": "/// All three measurement legs in family order: deadcode (graph),"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|e52d618f6d7596ec|0": {
     "target": "../../../cli/src/erase/gather.rs",
     "line": 71,
-    "end": 83,
+    "end": 84,
     "text": "/// The graph family, degraded refused by name: an erase plan built"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/gather.rs|fb118b31900abd10|0": {
@@ -8096,7 +8096,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/mod.rs|7a25fea42e703208|0": {
     "target": "../../../cli/src/erase/mod.rs",
     "line": 74,
-    "end": 105,
+    "end": 106,
     "text": "/// The destructive phase: preconditions + writes + audit log"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|182dde58361a02da|0": {
@@ -8111,29 +8111,35 @@
     "end": 23,
     "text": "/// Frozen class positions — the wire's `class` field (erase/1)."
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|8703f195b0f8e7c3|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/model.rs|bd5690ae0ca9df5e|0": {
     "target": "../../../cli/src/erase/model.rs",
-    "line": 27,
-    "end": 39,
-    "text": "/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file"
+    "line": 26,
+    "end": 41,
+    "text": "/// Frozen reason positions — the wire's `reason` field (erase/1)."
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|5df7975db4f3a3e3|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|670736f145f7d2c2|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 83,
-    "end": 86,
-    "text": ".collect()\n}\n\n/// The two reply tables, each length-locked to the request and read"
+    "line": 55,
+    "end": 66,
+    "text": "/// The plan's rows against the core's ceiling, before anything is sent:"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|7284b69d28d3e0e1|0": {
+    "target": "../../../cli/src/erase/wire.rs",
+    "line": 92,
+    "end": 98,
+    "text": "ensure!(\nverdicts.len() == n && kept.len() == n,"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|77bda7ef17074fa0|0": {
     "target": "../../../cli/src/erase/wire.rs",
     "line": 32,
-    "end": 51,
+    "end": 52,
     "text": "let mut link = crate::corelink::judged::open(core, \"erase/1\")?;"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|92b9265df694eed8|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|8962e1d07235dc9a|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 52,
-    "end": 68,
-    "text": "Ok((decode(&reply, cands.len())?, Ok(link)))"
+    "line": 86,
+    "end": 98,
+    "text": "/// The two reply tables, each length-locked to the request and read"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|a92d6998172ecb3f|0": {
     "target": "../../../cli/src/erase/wire.rs",
@@ -8141,11 +8147,11 @@
     "end": 52,
     "text": "if reply[\"degraded\"] != Value::Bool(false) {"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|c7262a98473f88b8|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|e37a525679dd3ed6|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 59,
-    "end": 64,
-    "text": "pub(crate) fn within_cap(rows: usize, cap: usize) -> Result<()> {"
+    "line": 68,
+    "end": 84,
+    "text": "/// The target table: one [pathId, start, end] per candidate — path"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md",
@@ -8196,7 +8202,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|03de824997b99f52|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 129,
-    "end": 164,
+    "end": 165,
     "text": "-- | The target closure (7.2.0, plan v2.30 step 7b): which judged row"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|1bfad10134ba1290|0": {
@@ -8241,10 +8247,10 @@
     "end": 83,
     "text": "judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|306177f05792370c|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|215b4a8c4d7f725b|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 21,
-    "text": "--                  exists for it — the H3 scope line)"
+    "line": 94,
+    "text": "| conf == 0 = (False, 1)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|318f342a0b5d4722|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -8252,11 +8258,11 @@
     "end": 59,
     "text": "publicDeadVerdicts :: [Integer]"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|3a6334b8a25a4eb9|0": {
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|44e0630d6a3c386c|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 47,
-    "end": 57,
-    "text": "import qualified Data.Set as S"
+    "line": 19,
+    "end": 21,
+    "text": "--                  language-trust fact stays the local count: a twin"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|594f1387f601fdb4|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -8291,7 +8297,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ad3fe900cfbb9e59|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 5,
-    "end": 20,
+    "end": 26,
     "text": "-- and lives here (ADR-008). Classes are frozen positions:"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ae6fcf496dcfdd1b|0": {
@@ -8315,7 +8321,7 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 78,
-    "end": 94,
+    "end": 95,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|2": {
@@ -8333,13 +8339,24 @@
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|b5f1127cd68099ec|4": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 78,
-    "end": 91,
+    "end": 95,
     "text": "judgeRow [1, verbatim, wordsA, wordsB, bytesEqual]"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|c5de2376eb8e4a70|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 81,
+    "text": "| otherwise = (True, 0)\njudgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|c935b83409ce2bdd|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 86,
     "text": "| copyDead `elem` publicDeadVerdicts = (False, 6)"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|d032e6912cc2b7a4|0": {
+    "target": "../../../core/app/CE/Erase/Cost.hs",
+    "line": 49,
+    "end": 59,
+    "text": "-- | The dead verdicts an erase plan may never act on (6.1.0): 2"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|ed64fa1cc784f706|0": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
@@ -8347,11 +8364,6 @@
     "text": "judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|0": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 68,
-    "text": "-- | Row ceiling: candidates are bounded by dead files + verbatim"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|f0c6e68f6fcf33a3|1": {
     "target": "../../../core/app/CE/Erase/Cost.hs",
     "line": 68,
     "end": 72,
@@ -8368,12 +8380,6 @@
     "line": 92,
     "end": 93,
     "text": "judgeRow [3, verdict, conf, _, _]"
-  },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Erase/Cost.hs|fd15edd515b6de47|0": {
-    "target": "../../../core/app/CE/Erase/Cost.hs",
-    "line": 83,
-    "end": 86,
-    "text": "| unitCovered /= 1 = (False, 5)"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../core/app/CE/Wire/Retired.hs|e4ae39564b71902b|0": {
     "target": "../../../core/app/CE/Wire/Retired.hs",
