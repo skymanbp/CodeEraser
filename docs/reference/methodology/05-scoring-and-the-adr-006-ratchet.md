@@ -70,7 +70,7 @@ This is `S = clamp(median + k·MAD, ...)` in log-LOC space, exponentiated, read 
 
 ### The continuous ratchet
 
-ADR-006 defines per-file/per-function ceilings on continuous metrics (file LOC, function CoC): the ceiling is the baseline value; exceeding it fails, and coming in under it tightens the ceiling automatically. A single edit is allowed `+2%` or `+10` lines, whichever is larger — on a function's complexity row `+2%` or `+1` point (proto 9.0.0) — and consumed tolerance is reported in the `ce check` ratchet line ([DEVELOPMENT_PLAN.md:205-212](../../DEVELOPMENT_PLAN.md#L205)).
+ADR-006 defines per-file/per-function ceilings on continuous metrics (file LOC, function CoC): the ceiling is the baseline value; exceeding it fails, and coming in under it tightens the ceiling automatically. A single edit is allowed `+2%` or `+10` lines, whichever is larger — on a function's complexity row `+2%` or `+1` point (proto 9.0.0) — and consumed tolerance is reported in the `ce check` ratchet line ([DEVELOPMENT_PLAN.md:204-211](../../DEVELOPMENT_PLAN.md#L204)).
 
 As built ([Ratchet.hs:83-130](../../../core/app/CE/Verdict/Ratchet.hs#L83)) the law has two arms — the row's class allowance first, the global legs only when the class declares none:
 
@@ -93,7 +93,7 @@ Tolerance is drawn per run against the *baseline* ceiling, and the new ceiling i
 
 ### The discrete ratchet
 
-For discrete violations (clone instances, deadcode symbols) the baseline is a **set** of violation fingerprints; a new member fails, a removed member shrinks the baseline ([DEVELOPMENT_PLAN.md:211-212](../../DEVELOPMENT_PLAN.md#L211)). The implementation is plain set difference both ways over `Data.Set`, with the results returned in ascending order ([Ratchet.hs:120-121](../../../core/app/CE/Verdict/Ratchet.hs#L120), [Ratchet.hs:147-148](../../../core/app/CE/Verdict/Ratchet.hs#L147)):
+For discrete violations (clone instances, deadcode symbols) the baseline is a **set** of violation fingerprints; a new member fails, a removed member shrinks the baseline ([DEVELOPMENT_PLAN.md:210-211](../../DEVELOPMENT_PLAN.md#L210)). The implementation is plain set difference both ways over `Data.Set`, with the results returned in ascending order ([Ratchet.hs:120-121](../../../core/app/CE/Verdict/Ratchet.hs#L120), [Ratchet.hs:147-148](../../../core/app/CE/Verdict/Ratchet.hs#L147)):
 
 ```
 added   = current \ baseline        -- non-empty => fail
@@ -111,7 +111,7 @@ newDisc = current                   -- verbatim, not intersected
 
 ### Composing the fail bit
 
-ADR-006 makes the ratchet the primary gate for a repository that has a baseline and `--fail-under` a floor underneath it; either alone fails ([DEVELOPMENT_PLAN.md:217-218](../../DEVELOPMENT_PLAN.md#L217)). As built, the fail bit is the disjunction of six **named** conditions ([Faces.hs:23-31](../../../core/app/CE/Verdict/Faces.hs#L23)):
+ADR-006 makes the ratchet the primary gate for a repository that has a baseline and `--fail-under` a floor underneath it; either alone fails ([DEVELOPMENT_PLAN.md:216-217](../../DEVELOPMENT_PLAN.md#L216)). As built, the fail bit is the disjunction of six **named** conditions ([Faces.hs:23-31](../../../core/app/CE/Verdict/Faces.hs#L23)):
 
 | name | holds when |
 |---|---|

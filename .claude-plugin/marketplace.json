@@ -10,7 +10,7 @@
     {
       "name": "codeeraser",
       "source": "./plugin",
-      "description": "CodeEraser passive guard + erase skill: PreToolUse duplicate-write interception, Stop audit, SessionStart health, and guided safe deletion of findings — backed by a per-project winnowing clone index daemon. The starter resolves ce and the ce-core judgment core in three steps: a verified local copy, a SHA256-pinned download from GitHub Releases (manifest.env pins), then PATH.",
+      "description": "CodeEraser passive guard + erase skill: PreToolUse duplicate-write interception (plus the tombstone and flow legs), PostToolUse settle, Stop audit, SessionStart health, and guided safe deletion of findings — backed by a per-project winnowing clone index daemon. The starter resolves ce and the ce-core judgment core in three steps: a verified local copy, a SHA256-pinned download from GitHub Releases (manifest.env pins), then PATH.",
       "author": {
         "name": "skymanbp"
       },

@@ -66,7 +66,7 @@
    ci.yml 的 `packaging-live`，需要 Homebrew 与 pipx 的机器）。`packaging-live` 本身**装不了
    还没发布的 draft**——公式里的 url 是公开发布 URL，此刻 draft 的资产还是 404；它是**公开渠道**
    验收：每周一随周程，publish 之后再手动 dispatch 一次（§3）——没有那一跑，两个 README 与官网
-   两首页的 `brew install` / `winget install` 就是没有任何读者验过的承诺。
+   两首页的 `brew install` 就是没有任何读者验过的承诺。
 2. Release notes **先于 tag** 写到 draft 上：`gh release edit vX.Y.Z --notes-file <notes.md>`
    ——功能面 + 分数迁移声明（如适用）+ 未签名明示（代码签名/公证裁定不做——
    2026-08-19，SHA256 链为永久信任锚；ADR-007/R1 立场）。tag 腿拒发仍带占位句
@@ -112,11 +112,11 @@
   （schema 1.10.0；`packaging-live` 经 pipx 调 `check-jsonschema` 对 Microsoft 的 schema 校验——CI 的
   校验工具，不是仓内实现语言；清单字节纯 ASCII，生成器拒绝其他）。tag 腿
   `winget-pr` 在 `WINGET_TOKEN` 在座时同步用户的 fork、切分支、经 contents API 放文件、对
-  microsoft/winget-pkgs 开 PR（首次标题 New package，其后 New version）；不在座则手动从该目录
+  microsoft/winget-pkgs 开 PR（标题按上游目录 `manifests/s/skymanbp/CodeEraser` 是否已存在而定：首个 PR 合并之前一律 New package，其后 New version，见 `scripts/winget_pr.sh`）；不在座则手动从该目录
   开 PR。合并后 `winget install skymanbp.CodeEraser`。
 - **一次只开一个 winget PR，且只为当前发布**（2026-09-20 用户裁）：winget-pkgs 的合并要等社区
   志愿者管理员，排队以周计；若新版本先发出去而旧 PR 还没过，**撤掉旧的**，只留最新那一个——
-  否则管理员要替同一个包审一摞已经被取代的版本。撤时在 PR 上写明去向与替代者。
+  否则管理员要替同一个包审一摞已经被取代的版本。撤是手动的（tag 腿 `winget-pr` 不关旧 PR）：`gh pr close <旧 PR> --comment` 写明去向与替代者。
 - **合并之前，官网两首页不得把 winget 列为安装方式**（同一裁定）：README 双语写
   「须 winget-pkgs 合并之后」是可以的，但首页的安装芯片是祈使句、读者会照着敲，敲不通就是
   假话。实录：1.7.0 / 1.7.2 / 1.7.3 三个 PR 自 2026-09-06 起挂到 09-20 无人审（十项校验全过、
@@ -137,8 +137,8 @@
   进 `CLOUDFLARE_API_TOKEN` 跑 `npx wrangler pages deploy site
   --project-name codeeraser`，finally 里 DELETE /user/tokens/<id>
   销毁；任何 token 值不落对话/不落库/不打印。wrangler 退 0 后它自己串跑
-  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），8/8 才退 0——上线以此为准；
-  该读者也可单独跑：它把八页逐个与 `git show HEAD:<page>`
+  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），12/12 才退 0——上线以此为准；
+  该读者也可单独跑：它把十二页逐个与 `git show HEAD:<page>`
   的 blob 对拍。判据**不是**「剥完摘要相同」——那样会连第二处真差异一起吞掉——
   而是「至多一处 Cloudflare 边缘注入的 beacon，剥掉它之后与 blob 逐字节相等」；
   beacon 带属性且连它所在那行的换行一起注入，两点都在脚本头注里写明。

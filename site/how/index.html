@@ -64,7 +64,7 @@
     <div class="row"><a class="sec" href="#residue">Change-time residue</a><ul><li><a href="#f14"><b>14</b>Tombstone residue</a></li></ul></div>
     <div class="row"><a class="sec" href="#advisor">Same-role advisor</a><ul><li><a href="#f15"><b>15</b>Sparse retrieval</a></li></ul></div>
     <div class="row"><a class="sec" href="/how/analysis/">Analysis track</a><ul><li><a href="/how/analysis/#f16"><b>16</b>Code query and architecture rules</a></li><li><a href="/how/analysis/#f17"><b>17</b>Intra-function dead code</a></li><li><a href="/how/analysis/#f18"><b>18</b>Clone merge suggestions</a></li><li><a href="/how/analysis/#f19"><b>19</b>Architecture analysis</a></li></ul></div>
-    <div class="row"><a class="sec" href="#honesty">Honesty boundaries</a><ul><li><a href="#honesty">not a security boundary</a></li><li><a href="#honesty">fail-open</a></li></ul></div>
+    <div class="row"><a class="sec" href="#honesty">Honesty boundaries</a><ul><li><a href="#honesty">not a security boundary</a></li><li><a href="#honesty">fail-open</a></li><li><a href="#honesty">one wire line</a></li></ul></div>
   </nav>
 </section>
 
@@ -621,13 +621,17 @@ role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeE
 </div>
 
 
-<h2 id="honesty">Two honesty boundaries</h2>
+<h2 id="honesty">Three honesty boundaries</h2>
 <p class="trust"><code>PreToolUse</code> shapes behavior; it is <strong>not a security
 boundary</strong>: <code>Bash: echo &gt;&gt;</code> or <code>sed -i</code> bypasses it, and the backstops are
 the <code>Stop</code> audit over <code>git diff</code> (write-tool agnostic) and the CI gate. The hook is
 deliberately <strong>fail-open</strong>: an internal failure allows the edit and lands in the observe feed
 instead of reading as "no duplicates". Both are written into the plan: a gate that lies about its reach is
 worse than one that states it.</p>
+<p class="trust">One request line to the core is at most <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> bytes (<code>maxLineBytes</code>,
+the <code>limits.caps.line_bytes</code> the core states), and the reply reader stops at twice that. A family
+whose request would pass the line splits it into batches; an item that alone would pass it is refused by
+name, never truncated, so a verdict is never judged on part of its input.</p>
 
 <footer class="site">
   <div class="cols">

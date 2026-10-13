@@ -56,7 +56,7 @@
     <div class="row"><a class="sec" href="#residue">改动时残留</a><ul><li><a href="#f14"><b>14</b>墓碑残留</a></li></ul></div>
     <div class="row"><a class="sec" href="#advisor">同角色顾问</a><ul><li><a href="#f15"><b>15</b>稀疏检索</a></li></ul></div>
     <div class="row"><a class="sec" href="/zh/how/analysis/">分析轨</a><ul><li><a href="/zh/how/analysis/#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="/zh/how/analysis/#f17"><b>17</b>函数内死代码</a></li><li><a href="/zh/how/analysis/#f18"><b>18</b>克隆合并建议</a></li><li><a href="/zh/how/analysis/#f19"><b>19</b>架构分析</a></li></ul></div>
-    <div class="row"><a class="sec" href="#honesty">诚实边界</a><ul><li><a href="#honesty">不是安全边界</a></li><li><a href="#honesty">fail-open</a></li></ul></div>
+    <div class="row"><a class="sec" href="#honesty">诚实边界</a><ul><li><a href="#honesty">不是安全边界</a></li><li><a href="#honesty">fail-open</a></li><li><a href="#honesty">协议一行</a></li></ul></div>
   </nav>
 </section>
 
@@ -460,8 +460,9 @@ role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeE
 </div>
 
 
-<h2 id="honesty">两条诚实边界</h2>
+<h2 id="honesty">三条诚实边界</h2>
 <p class="trust"><code>PreToolUse</code> 只塑造行为，<strong>不是安全边界</strong>：<code>Bash: echo &gt;&gt;</code> 或 <code>sed -i</code> 能绕过它，兜底是跑在 <code>git diff</code> 上、与写入工具无关的 <code>Stop</code> 审计和 CI 门。钩子刻意 <strong>fail-open</strong>：内部失败放行该次编辑并落进 observe feed，而不是读成「没有重复」。两条都写进了计划：对自己覆盖范围撒谎的门，比如实声明的门更糟。</p>
+<p class="trust">送核的一行请求至多 <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> 字节（<code>maxLineBytes</code>，即核声明的 <code>limits.caps.line_bytes</code>），读应答的一侧在它的两倍处截停。请求会超过这一行的家族分批送；单独一项就超过的按名拒绝、从不截断，所以判决从不只看输入的一部分。</p>
 
 <footer class="site">
   <div class="cols">

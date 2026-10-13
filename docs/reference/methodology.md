@@ -37,7 +37,7 @@ the world — files, tree-sitter, SQLite, git, processes — stays in Rust;
 a computation over facts Rust has read, integers or text, belongs to the
 core, and text crosses only the local pipe between `ce` and its child
 `ce-core`, with the privacy guarantees unchanged
-([DEVELOPMENT_PLAN.md:239](../DEVELOPMENT_PLAN.md#L239)). Each booklet
+([DEVELOPMENT_PLAN.md:238](../DEVELOPMENT_PLAN.md#L238)). Each booklet
 describes its family's wire as it is today. So read each
 section as *facts → predicate → verdict*: the formula and its constants
 are the contract, the knobs are echoed back in the report, and each is

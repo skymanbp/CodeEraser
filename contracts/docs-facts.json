@@ -177,6 +177,12 @@
       "value": "750"
     },
     {
+      "id": "gate:wire.line_bytes#digits",
+      "source": "core/app/CE/Protocol/Version.hs::maxLineBytes (tables/1 limits.caps.line_bytes)",
+      "tier": "linked",
+      "value": "134217728"
+    },
+    {
       "id": "report:arch#schemaver",
       "source": "core/app/CE/Arch/Document.hs (schemaId)",
       "tier": "linked",
