@@ -89,7 +89,7 @@ Edit 减 `old_string` 的自有匹配（基线探针仅首探命中才发；基�
   （先削源即过），终态判决属 Stop 层（搬移完成后树内无重复，Stop 审计对此类天然
   不误报）。
 - **门算术（双口径并记，不合成单一数字）**：按重放全文写模型计 32 条误拦 =
-  7.03/500（1.41%）；按活流口径（Edit 片段语义 + 安全序协议）本机 719 条生产
+  7.04/500（1.41%）；按活流口径（Edit 片段语义 + 安全序协议）本机 719 条生产
   探针 0 条此类误拦 = 0.00/500。两类已晋级规则**维持 deny**（拍板走根修而非降档），
   依据入 CHANGELOG。
 
@@ -287,8 +287,8 @@ CHANGELOG 写「无默认档位变更」并点名本节。**区间如实说**：
 ## `flow/1` 逐语言回放（2026-09-30，计划 v2.31 步 4 提交 D1 / D2）
 
 > 十个语言各一份历史，在提交 D1 的干净树（降表 = 提交 E 回修之后的）上实跑、由 D2 冻结。本台账**不是门**：`flow/1` 的准入由精度册定（设计册
-> [reference/analysis-track.md](reference/analysis-track.md) §13 第 6 条「精度考题 ≥ 99 %，回放台账并记」；门 =
-> `cli/tests/it/eval_flow_precision.rs` 的掩码腿），这里是第二读数——问语料的作者自己拿每条发现怎么办了。仪器 = 测试子仓
+> [reference/analysis-track.md](reference/analysis-track.md) §13 第 6 条，执行者读法 = 每个受门类别零误报：有真阳记 pass、无样本记 vacuous、一条误报即 fail，不是比例线；门 =
+> `cli/tests/it/eval_flow_precision.rs` 的掩码腿，规则在 `flow_precision/mod.rs` 的 `gate_of`），这里是第二读数——问语料的作者自己拿每条发现怎么办了。仪器 = 测试子仓
 > `cli/tests/it/fpr_flow_replay.rs`（`#[ignore]`，release 跑，常设；计数规则只住在 `fpr_flow_replay_parts/book.rs` 与 `lane.rs`，
 > 语料与合成历史走同一段代码），冻结件 = `contracts/eval/fpr-flow-v1.json`，执行者 = `cli/tests/it/fpr_flow_gate.rs`（非 ignored：
 > 十行按考题表序、语料与 tip 等于考题的、窗口等于共用常量；两个口径各自、逐类与三个受评类合计都封闭；受评合计等于类 0 / 1 / 2 之和；
@@ -390,7 +390,7 @@ CHANGELOG 写「无默认档位变更」并点名本节。**区间如实说**：
 - **十语言两口径率**由第一张表的「严格率」「窄率」两列读。窄口径七个语言是 0.0000 %（python、typescript、tsx、rust、go、c、r），cpp 20.0000 %、
   java 4.6511 %、lua 17.5000 %；严格口径只有 rust 与 r 是 0.0000 %，其余大得多（python 50.0000 %、typescript 33.3333 %、tsx / go / c 100.0000 %、
   cpp 52.9411 %、java 23.9795 %、lua 56.8627 %）——它把「单元被改过一次、发现还在」一律记误拦，窄口径只在改动行碰到发现的行段时才结账。两个数都是
-  实测、都冻结，不合成单一数字；本台账不设线，准入仍只读精度册。tsx / go / c 的严格 100 % 各是一条误拦对零真阳（分母 1 / 1 / 3），不是率的常态。
+  实测、都冻结，不合成单一数字；本台账不设线，准入仍只读精度册。tsx / go 的严格 100 % 各是一条误拦对零真阳、c 是三条（类 0 两条 + 类 1 一条）对零真阳（分母 1 / 1 / 3），不是率的常态。
 - **窄口径的误拦逐条**（语言 / 提交 / 单元 / 变量；仪器在结账那一事件打印 `FALSE <提交> <路径> <单元>/<形参数> kind <类>: <锚>`，这里从十个
   `d2-<语言>.log` 抄、条数对回表的「窄·误拦」列）：**cpp 2 条**——46a45990 `include/fmt/compile.h` `compile_format_string/1` 类 2 `next_id`、
   45f230b9 `test/printf-test.cc` `test_length/2` 类 1 `unsigned_value`；**java 8 条**——2c94c757 `functional/StreamingTypeAdaptersTest.java`
@@ -403,7 +403,7 @@ CHANGELOG 写「无默认档位变更」并点名本节。**区间如实说**：
   d300c11c `src/luarocks/cmd/install.lua` `install.install_binary_rock_deps/2` 类 1 `ok`、d300c11c `src/luarocks/cmd/make.lua` `make.command/1` 类 2
   `errcode`、deb9cadc `src/luarocks/cmd/install.lua` `install.install_binary_rock/2` 类 2 `ok`；其余七个语言 0 条。归因不在本节做：这些行是语料作者
   改了那个单元、改动行碰到了发现、发现还在——是不是产品误报要回精度考题的真值表问。
-- **类 3 顾问列**（第三张表）：十语言共 587 条发现，窄口径误拦 python 20、go 5、java 27，其余七个语言 0；严格口径 python 22、go 9、java 71、cpp 1、
+- **类 3 顾问列**（第三张表）：十语言共 587 条发现（严格口径；窄口径 588，差在 luarocks 的 49 / 50），窄口径误拦 python 20、go 5、java 27，其余七个语言 0；严格口径 python 22、go 9、java 71、cpp 1、
   lua 3；逐条见 `d2-<语言>.log` 的 `kind 3` 行。未用形参在每个面都是顾问，不进率、不进门。
 
 **耗时**（release 测试体，同机串行，每个语言一次 `CE_FPR_FLOW_CORPUS=<语言>` 带 `CE_BLESS=1` 与 `CE_FPR_OUT=<树外目录>`，记挂钟秒）：D2 这一坐

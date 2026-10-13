@@ -268,8 +268,8 @@ own ledger set — 60 % for v1, 40 % for v2 — floors that only rise
 
 ### 8. Residual risks, stated
 
-- **The role rule is a precision instrument, not a recall one.** 61 % and 49 % role-bit
-  precision on the two generations, against a top-1 that is `same_role` 57 % and 40 % of the
+- **The role rule is a precision instrument, not a recall one.** 60.6 % and 49.7 % role-bit
+  precision on the two generations, against a top-1 that is `same_role` 55.9 % and 38.3 % of the
   time: the advisor is right more often than not and wrong often enough that every face prints
   it as advice. Promotion to anything that blocks would need an FPR ledger the family does not
   have and, by the spec, is not built to earn.

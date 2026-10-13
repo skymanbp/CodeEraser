@@ -63,7 +63,7 @@ fn shown(answer: Result<crate::document::Answer>) -> Result<String> {
 
 // scan prints the document the core lays out (plan v2.32 step 5) in
 // the form its `--format json` face prints — document::rendered, the
-// catalogue states scan `pretty` — and mcp_precommit byte-pins this
+// catalogue states scan `pretty` — and mcp_reports byte-pins this
 // catalog to that face (the catalog is a transport, never a second
 // serializer). graph_sites prints its document (step 4), one
 // serialization like every sibling.

@@ -258,8 +258,8 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ## 10. 文档与事实面
 
-- 计数事实：`count:families` 十二 → 十六、`count:screens` 十一 → 十五、`count:mcp_tools` 十六 → 二十一（`it/facts/form.rs` 的数词表到 twenty，先扩到 thirty）、`count:booklets` 十五 → 十九、`count:gates` 六 → 七、`count:golden_requests` 152 → ≥ 176；`LITERALS` 里手改的字面（stack.svg 两对的家族行、how 页标题、六处 alt 文字「N families」）逐处改。
-- 官网 how 页现 732 行、硬线 750：四张家族卡放新页对 `site/how/analysis/`（en / zh 各一），how 页目录面板与两首页各加一行入口；`site_contents.rs` 假定 f15 是末卡，改读 f16–f19 在新页；`verify_site.js` 与部署清单加两页。
+- 计数事实：`count:families` 十二 → 十六、`count:screens` 十一 → 十五、`count:mcp_tools` 十六 → 二十一（`it/facts/form.rs` 的数词表到 twenty，先扩到 thirty）、`count:booklets` 十五 → 十九、`count:gates` 六 → 七、`count:golden_requests` 152 → ≥ 176（落地读数见 `contracts/docs-facts.json`：families 十六、screens 十二〔只有 Query 自成一屏，flow / merge / arch 住在诊断 hub 的报告屏里，各是 `registerHub` 的一个家族〕、mcp_tools 二十一、booklets 十九、gates 七、golden_requests 365）；`LITERALS` 里手改的字面（stack.svg 两对的家族行、how 页标题、六处 alt 文字「N families」）逐处改。
+- 官网 how 页当时 732 行（四张卡移出后 643 行）、硬线 750：四张家族卡放新页对 `site/how/analysis/`（en / zh 各一），how 页目录面板与两首页各加一行入口；`site_contents.rs` 假定 f15 是末卡，改读 f16–f19 在新页；`verify_site.js` 与部署清单加两页。
 - 方法学册 16–19（每家族一册：判决定义、表、门、读数）+ `methodology.md` 索引四行 + 前后导航；架构图 IR（家族数 / 屏数 / 工具数子标签）与判决图（tag 行加四个家族）重渲；README 双语命令表加五行、parity 块随 bless、「三面一体」句、How it works 四行、技术栈条目；plugin/README 工具句；`VERSIONING.md` 四条；`ce-toml.md` 与 `cli.md` 再生；`DAEMON.md` 一行（flow 腿）；CHANGELOG 每步一块；计划书横幅与 T 轨行随步。
 
 ## 11. 语言条：量法与记账
@@ -294,7 +294,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 3. `query/1` 的事实宇宙——**与 `graph/1` 同一份结点集与下标**：`ref` 表逐行等于图请求的边表，事实装配可对拍（备选「只送文件」丢掉包与资产结点，`dead` 前奏就与 `ce deadcode` 不一致）。
 4. 程序错误的形——**正常应答里的 `errors` 表**，拒绝只留给表形（备选「按拒绝答」让一条拼错的规则读成「核坏了」）。
 5. 前奏谓词名保留——**保留**：一处权威（备选「允许覆盖」让同名谓词两处定义）。
-6. `flow/1` 的门——**精度考题 ≥ 99 %，回放台账并记**：静态发现的误报直接由盲判量；回放的「随单元被改却留下」是第二读数（备选「只读回放」把「人没修」读成误报）。
+6. `flow/1` 的门——**精度考题零误报，回放台账并记**（执行者 `flow_precision/mod.rs` 的 `gate_of`：每个受门类别有真阳记 pass、无样本记 vacuous、一条误报即 fail；立项时写的「≥ 99 %」落码为零误报线）：静态发现的误报直接由盲判量；回放的「随单元被改却留下」是第二读数（备选「只读回放」把「人没修」读成误报）。
 7. `flow/1` 的语言集——**十种有语句的文法**；Haskell 无语句按构造不入，不记为限制（备选「Haskell 按 do 块判」是另一种判决，另立）。
 8. `unused_param` 顾问——**顾问不门**：接口 / 覆写 / 回调的形参本就可能不用，误报无界（备选「入门」）。
 9. `merge/1` 的树——**`clone/1` 同编码加 `leaf` 与 `slot` 两列**：计划书写的是叶子哈希一列，位置类是可行性判决必需的第二个语法事实，同批加（备选「核从 kind 哈希猜位置类」——核不知道文法）。
