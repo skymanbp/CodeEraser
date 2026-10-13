@@ -16,8 +16,8 @@ The split is ADR-008's, sixth instalment, moved further by plan v2.33 W3: Rust b
 and the inverted tables and fetches what one query's ranking needs; Haskell weights, widens,
 scores and cuts the top-K over `rank/1` ([Rank.hs:5-15](../../../core/app/CE/Similar/Rank.hs#L5)), then orders the
 candidates as exact rationals and decides which of them play the query's role over the
-twelfth wire family, `similar/1`. Names, words and paths never cross the wire — hashes and counts only, row index is
-identity ([wire.rs:1-7](../../../cli/src/similar/wire.rs#L1),
+twelfth wire family, `similar/1`. On `similar/1` and `rank/1` only hashes and counts cross, row index is
+identity; the unit texts the bags are built from go to the core once, over the local pipe, in `bags/1` ([wire.rs:1-7](../../../cli/src/similar/wire.rs#L1),
 [Similar.hs:5-17](../../../core/app/CE/Similar.hs#L5)).
 
 ### 1. The bag — six channels off facts the tree already carries

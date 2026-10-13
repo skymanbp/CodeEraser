@@ -254,7 +254,7 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
 
 <div class="fam formula">
   <h3 id="m-liveness"><span class="n">06</span>Liveness</h3>
-  <p class="job">A file nothing live reaches is dead; cycles come from Tarjan's strongly connected components, found once.</p>
+  <p class="job">A file nothing live reaches is dead; cycles come from Kosaraju's strongly connected components, found once.</p>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
 
@@ -302,7 +302,7 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
 widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
 role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)
 PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre>
-  <p class="note rule">Haskell orders each candidate's nine-integer row as exact rationals and applies the role conjunction; names, words and paths never cross the wire.</p>
+  <p class="note rule">Haskell orders each candidate's nine-integer row as exact rationals and applies the role conjunction; on <code>similar/1</code> and <code>rank/1</code> only hashes and counts cross — the unit texts the bags are built from go to the core once, over the local pipe, in <code>bags/1</code>.</p>
   <ul class="consts">
     <li><b>topM</b> 3</li>
     <li><b>minCooc</b> 2</li>

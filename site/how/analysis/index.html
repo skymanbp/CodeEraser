@@ -56,7 +56,7 @@
 <h2 id="analysis">The analysis families: questions the index can answer</h2>
 <p class="note">A judgment family compares a measured fact with a written threshold; an analysis
 family answers a <em>program</em> — a question or a rules file — over the index's facts: the
-threshold is the reader's own. Rust measures and labels, the Haskell core judges, only integers cross.</p>
+threshold is the reader's own. Rust measures and labels; the Haskell core judges. Since protocol 9.0.0 the texts the core reads (a program's source, the measured paths) cross over the local pipe; names in the fact tables still cross as hashes.</p>
 
 <div class="fam">
   <h3 id="f16"><span class="n">16</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">Code query and architecture rules — Datalog over the index's facts</a></h3>
@@ -73,8 +73,9 @@ prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != a
          dead(F) :- file(F), <span class="op">not</span> reach(F).   depends · same_dir · dir_ref
 strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
 eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Rust sends a <code>[kind, value]</code> token stream and only the fact tables the program
-  names; names go as fnv1a64 hashes and request-local ids. The core parses
+  <details class="more"><summary>Derivation and constants</summary><p class="note">Rust sends the program's three texts (prelude, rules file, question) and only the fact tables the program
+  names; names in the tables go as fnv1a64 hashes and request-local ids. The core lexes the texts into
+  <code>[kind, value]</code> tokens, parses
   (a hand-written recursive descent), checks arity, sorts (a union-find over variables, predicate
   positions and constant sorts), safety (range restriction: a variable is read only after a positive
   atom or a binding bound it) and stratification, evaluates stratum by stratum, and returns goal tuples,
@@ -104,7 +105,9 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
   locals and, as advice, unread parameters. <code>ce flow</code> lists them, the guard
   counts those a write adds, and the Stop line records them without blocking.</p>
   <pre>tables : stmts [u, seq, parent, kind, flags, aux] · vars [u, v, declSeq, flags] · uses [u, seq, v, mode]
-cfg    : structured kinds unfolded; a try body's every statement may reach each catch; one finally hub per try
+cfg    : structured kinds unfolded; a try body's every statement may reach each catch;
+         with a finally, body and catch statements may also throw on out through it;
+         one finally hub per try
 kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
 kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
 kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
@@ -115,7 +118,8 @@ skip   : a unit with a dynamic statement is not judged in part, and counted</pre
   <code>[unit, kind, seq, var, seqEnd]</code> rows. Approximations only add paths (a finally is one hub
   over the pending targets; expression-position exits are not lowered), so a finding can be missed,
   never invented. A language is judged once its blind precision exam shows no false positive in a gated
-  kind: all ten pass, C++, R, Rust and TypeScript on a second exam generation; an unused parameter stays
+  kind: all ten are admitted (each gated kind passes or is vacuous — no positive in the sample and no
+  false positive), C++, R, Rust and TypeScript on a second exam generation; an unused parameter stays
   advice everywhere. The guard class <code>[flow] tier</code> ships at observe; novel findings are a multiset
   difference on (unit, kind, variable), so a moved finding does not count.</p>
   <ul class="consts">
@@ -169,9 +173,10 @@ layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points
 cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
 impact : breadth-first over the references read backwards, the focus at depth 0
 metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre>
-  <details class="more"><summary>Derivation and constants</summary><p class="note">Five integer tables go up — measured files with directory and line count, the directory tree,
-  file-to-file references, file-to-package references at the package's directory, and the
-  <code>--impact</code> files; each cut arc comes back with its file references. The core folds the
+  <details class="more"><summary>Derivation and constants</summary><p class="note">The measured paths go up with their line counts, the graph's references by path and the
+  <code>--impact</code> paths; the core builds the directory tree and the five tables (files with directory
+  and line count, directories, file-to-file and file-to-package references, the focus) itself, and each
+  cut arc comes back with its file references. The core folds the
   references onto the directory graph, finds a feedback arc set per strongly connected component, layers
   the rest, clusters the file graph, walks the impact and measures every directory. A greedy cut is
   minimal, not proven minimum, and says so. This repository's reading at one pinned commit is frozen;

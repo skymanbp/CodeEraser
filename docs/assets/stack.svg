@@ -45,7 +45,7 @@
         <text x="66" y="339">pre-hello and post-hello silence deadlines</text>
         <text x="66" y="356">warm index + long-lived ce-core child</text>
 
-        <text x="616" y="305">resolver ladder: relative · alias · package · re-export · include · require</text>
+        <text x="616" y="305">reference sites and the files the rungs read (configs, headers)</text>
         <text x="616" y="322">Markdown / HTML file and section anchors · unresolved-site ledger</text>
         <text x="616" y="339">git churn window · score facts · structure seam facts</text>
         <text x="616" y="356">erase gather: graph death · byte equality · full coverage</text>
@@ -72,14 +72,16 @@
       </g>
       <g font-size="10" fill="#8593ad">
         <text x="66" y="513">proto 9.0.0 · SemVer</text>
-        <text x="66" y="530">major mismatch refuses</text>
-        <text x="66" y="547">minor fields are additive</text>
-        <text x="66" y="564">integer rows · class index, no names</text>
+        <text x="66" y="528">major mismatch refuses</text>
+        <text x="66" y="543">minor fields are additive</text>
+        <text x="66" y="558">integer rows · texts on the local pipe</text>
+        <text x="66" y="573">class index, never names or globs</text>
 
         <text x="338" y="513">hello discovery</text>
-        <text x="338" y="530">twelve judgment families: fourclass · graph · clone · docdup · verdict</text>
-        <text x="338" y="547">scan · structure · trend · erase · audit · tombstone · similar</text>
-        <text x="338" y="564">each family has request/result shapes and bounded refusal</text>
+        <text x="338" y="528">sixteen judgment families: fourclass · graph · clone · docdup</text>
+        <text x="338" y="543">verdict · scan · structure · trend · erase · audit · tombstone</text>
+        <text x="338" y="558">similar · query · flow · merge · arch</text>
+        <text x="338" y="573">each family has request/result shapes and bounded refusal</text>
 
         <text x="866" y="513">shared golden fixtures</text>
         <text x="866" y="530">Rust client replay in CI</text>
@@ -114,12 +116,14 @@
         <text x="66" y="798">trend slope and graded scan verdicts</text>
         <text x="66" y="816">cycle axis excludes the declared document universe</text>
 
-        <text x="430" y="726">SCC, reachability and file-level liveness verdicts</text>
-        <text x="430" y="744">T3 tree-edit-distance clone decision</text>
-        <text x="430" y="762">exact docdup verdict over shingle-set facts</text>
-        <text x="430" y="780">three-signal join and audit conviction tables</text>
-        <text x="430" y="798">knobless erase safety predicate</text>
-        <text x="430" y="816">degraded erase replies authorize no row</text>
+        <text x="430" y="726">resolver ladders (resolve/1): relative · alias</text>
+        <text x="430" y="742">package · re-export · include · require</text>
+        <text x="430" y="758">SCC, reachability and file-level liveness verdicts</text>
+        <text x="430" y="774">T3 tree-edit-distance clone decision</text>
+        <text x="430" y="790">exact docdup verdict over shingle-set facts</text>
+        <text x="430" y="806">three-signal join and audit conviction tables</text>
+        <text x="430" y="822">knobless erase safety predicate</text>
+        <text x="430" y="838">degraded erase replies authorize no row</text>
 
         <text x="794" y="726">fixed-seed and exhaustive reference batteries</text>
         <text x="794" y="744">knob perturbation proves each policy input is live</text>

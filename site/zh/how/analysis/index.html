@@ -52,7 +52,7 @@
 </section>
 
 <h2 id="analysis">分析家族：索引答得出的问题</h2>
-<p class="note">判决家族拿实测事实比一条写下的阈值；分析家族拿一个<em>程序</em>——问题或规则文件——在索引的事实上作答，阈值由读者自己写。Rust 度量与回标，Haskell 核判决，过线的只有整数。</p>
+<p class="note">判决家族拿实测事实比一条写下的阈值；分析家族拿一个<em>程序</em>——问题或规则文件——在索引的事实上作答，阈值由读者自己写。Rust 度量与回标，Haskell 核判决。协议 9.0.0 起，核要读的文本（程序原文、被度量的路径）经本机管道过线；事实表里的名字仍以哈希过线。</p>
 
 <div class="fam">
   <h3 id="f16"><span class="n">16</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md">代码查询与架构规则——索引事实上的 Datalog</a></h3>
@@ -61,9 +61,9 @@
 lit    := atom | 'not' atom | expr op expr | Var '=' expr | Var '=' agg(Vars : body)
 prelude: entry(N) :- role(N, _).   reach(M) :- reach(N), ref(N, M, K, _), K != asset, K != refdef.
          dead(F) :- file(F), <span class="op">not</span> reach(F).   depends · same_dir · dir_ref
-strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
-eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
-  <details class="more"><summary>推导与常数</summary><p class="note">度量侧送出 <code>[kind, value]</code> 记号流与程序点名的事实表；名字以 fnv1a64 哈希与请求内 id 上线，回来再回标。核解析（手写递归下降），查元数、类别（变量、谓词位置与常量类别上的并查集）、安全性（域界：变量须先被正原子或绑定绑定才可读）与分层，逐层求值，答回目标元组、违规、推导行与错误——错误落在记号上，映回 <code>line:column</code>。推导树整棵或不出：超结点预算的计数、不截断。记号与事实行先定价（超限给完整的降级应答）；派生元组超限整次作废；没有这个家族的核是具名未判决。内置 <code>dead(F)</code> 即 <code>ce deadcode</code> 的文件级判决；<code>ce.rules</code> 九条断言是 CI 第七条狗粮腿。</p>
+strata : 头位于体内每个被否定或被聚合的谓词之上；SCC 内的负边是程序错误
+eval   : 逐层半朴素求值，建在惰性位掩码索引上；元组的第一条推导即其出处</pre>
+  <details class="more"><summary>推导与常数</summary><p class="note">度量侧送出程序的三段原文（前奏、规则文件、问题）与程序点名的事实表；表里的名字以 fnv1a64 哈希与请求内 id 上线，回来再回标。核把原文切成 <code>[kind, value]</code> 记号，再解析（手写递归下降），查元数、类别（变量、谓词位置与常量类别上的并查集）、安全性（域界：变量须先被正原子或绑定绑定才可读）与分层，逐层求值，答回目标元组、违规、推导行与错误——错误落在记号上，映回 <code>line:column</code>。推导树整棵或不出：超结点预算的计数、不截断。记号与事实行先定价（超限给完整的降级应答）；派生元组超限整次作废；没有这个家族的核是具名未判决。内置 <code>dead(F)</code> 即 <code>ce deadcode</code> 的文件级判决；<code>ce.rules</code> 九条断言是 CI 第七条狗粮腿。</p>
   <ul class="consts">
     <li><b>tokenCap</b> 65536</li>
     <li><b>factCap</b> 4194304</li>
@@ -82,12 +82,13 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
   <h3 id="f17"><span class="n">17</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md">函数内死代码——控制流图、可达性与活性</a></h3>
   <p class="job">函数内的死代码：无路径到达的语句、无路径读到的存储、没人读的局部量，没人读的形参只作顾问。<code>ce flow</code> 列出，守卫数一次写入新增的，Stop 行只记、不拦停。</p>
   <pre>tables : stmts [u, seq, parent, kind, flags, aux] · vars [u, v, declSeq, flags] · uses [u, seq, v, mode]
-cfg    : structured kinds unfolded; a try body's every statement may reach each catch; one finally hub per try
-kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
-kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
-kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)
-skip   : a unit with a dynamic statement is not judged in part, and counted</pre>
-  <details class="more"><summary>推导与常数</summary><p class="note">每语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行。近似只加路径（finally 是一个汇合点、后继取待续目标的并集；表达式位置的出口不降表），所以只会漏报、不会捏造。语言的盲评精度考题在门读的每一类零误报才算判决：十个都过，C++、R、Rust、TypeScript 用第二代考题；未用形参处处只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增，挪位置的不算。</p>
+cfg    : 结构化种类展开；try 体的每条语句都可能到达每个 catch；
+         有 finally 时，体与 catch 里的语句还可能经它向外抛出；每个 try 一个 finally 汇合点
+kind 0 : unreachable  = 入口无路径可达，每段极大连续 seq 一条发现
+kind 1 : dead_store   = 下次写或出口之前没有路径读到的写（反向活性）
+kind 2 : unused_local = 无读 · kind 3 : unused_param = 无读（顾问，从不判决）
+skip   : 含动态语句的单元不做部分判决，只计数</pre>
+  <details class="more"><summary>推导与常数</summary><p class="note">每语言一张 <code>FlowSpec</code> 表，把十个语言（Python、TypeScript 与 TSX、Rust、Go、C、C++、Java、Lua、R）的每个单元降成四张整数表。核建控制流图，从入口走可达性、反向求活性到不动点，答回 <code>[unit, kind, seq, var, seqEnd]</code> 行。近似只加路径（finally 是一个汇合点、后继取待续目标的并集；表达式位置的出口不降表），所以只会漏报、不会捏造。语言的盲评精度考题在门读的每一类零误报才算判决：十个都获准判决（门读的每一类都过或空过——样本里没有阳性也没有误报），C++、R、Rust、TypeScript 用第二代考题；未用形参处处只是顾问。守卫类 <code>[flow] tier</code> 出厂 observe，按（单元，种类，变量）的多重集差数新增，挪位置的不算。</p>
   <ul class="consts">
     <li><b>rowCap</b> 524288</li>
     <li><b>schema</b> ce.flow-report/0.1.0</li>
@@ -99,12 +100,12 @@ skip   : a unit with a dynamic statement is not judged in part, and counted</pre
 <div class="fam">
   <h3 id="f18"><span class="n">18</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md">克隆合并建议——克隆族语法树上的反统一</a></h3>
   <p class="job">每个克隆组怎样合成一个函数：成员不同处成为参数，答案是参数个数、该留的成员、省下的行数与可行性（不可行给原因）。只当顾问：没有门读它，<code>ce merge</code> 出文档即退 0。</p>
-  <pre>groups : T1/T2 dedup families (whole units when one unit fills ≥ 9/10 of each member, else fragments trimmed to the members' common shape) · T3 judged pairs
-trees  : clone/1's postorder (lab, lld), extras (comments) left out, + leaf = fnv1a64 of a leaf's bytes (0 inside) + slot 0 stmt · 1 expr · 2 type · 3 name · 4 other
-align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
-params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">></span> 0
-reason : 3 a gap across statements, 1 position (a statement or other), 2 a type position, 4 more than six parameters, 5 no line saved
-kept   : the member whose file has the greatest in-degree; savings = Σ lines − (skeleton lines + members × 1), a fragment's lines its kept run's</pre>
+  <pre>groups : T1/T2 dedup 族（某单元占每个成员 ≥ 9/10 时取整单元，否则把片段裁到成员共有的形状）· T3 已判对
+trees  : clone/1 的后序 (lab, lld)，不带附加结点（注释），+ leaf = 叶结点字节的 fnv1a64（内部结点为 0）+ slot 0 stmt · 1 expr · 2 type · 3 name · 4 other
+align  : T1/T2 同构，洞 = 不同的叶；T3 取自顶向下收窄的树编辑映射，重标与不等长间隙是洞
+params : 每个不同的取值向量一个；可行当且仅当每个洞都是表达式或名字、params <span class="op">≤</span> 6 且 savings <span class="op">></span> 0
+reason : 3 跨语句的间隙，1 位置（语句或其他），2 类型位置，4 参数多于六个，5 没省下行
+kept   : 所在文件入度最大的成员；savings = Σ lines − (skeleton lines + members × 1)，片段的行数取其保留段</pre>
   <details class="more"><summary>推导与常数</summary><p class="note">每个成员按 <code>clone/1</code> 编码建树，多带叶结点原文哈希与位置类两列（每语言一张表，读流表的语句类）；答案回标成每个参数上每个成员的原文，间隙洞给整段森林。树不带注释；片段族只送每个成员都有的那段顶层结点，边界行截断的半条语句不会分出两种形状，合并按保留段的行数定价。核对齐成员、找洞、给参数编号、给合并定价。核会拒收的组——没有函数可合并的 Markdown 与 HTML、没建成的树、形状不一——按原因计数、不送。T3 骨架的行数是诚实的整数估计。本仓与四个外部语料各在一个钉住提交上的建议集被冻结，抽一百条盲判可行性。</p>
   <ul class="consts">
     <li><b>groupCap</b> 4096</li>
@@ -119,13 +120,13 @@ kept   : the member whose file has the greatest in-degree; savings = Σ lines �
 <div class="fam">
   <h3 id="f19"><span class="n">19</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md">架构分析——分层、拆环、簇、影响面</a></h3>
   <p class="job">目录之间怎么依赖：哪些在底层，拆环最省切哪几条边，哪些文件该挪到常打交道的文件旁，每个目录的扇入、扇出与不稳定度，改一个文件波及哪些文件。只当顾问：没有门读它，<code>ce arch</code> 出文档即退 0。</p>
-  <pre>arcs   : dir(F) → dir(G) per file reference, dir(F) → D per package reference; inside one directory uncounted
-cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
-layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
-cluster: deterministic Louvain, gains in integers, two levels; misplaced = its cluster holds strictly more files elsewhere
-impact : breadth-first over the references read backwards, the focus at depth 0
-metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre>
-  <details class="more"><summary>推导与常数</summary><p class="note">度量侧送五张整数表——被度量文件及其目录与行数、目录树、文件到文件的引用、文件到包的引用（落在包所在目录）、<code>--impact</code> 的文件；每条切边回标时带背后的文件引用。核把引用折成目录图，逐个强连通分量求反馈弧集，给剩下的分层，在文件图上聚类，走影响面，度量每个目录。贪心切边集极小、未证最小，行上照实标出。本仓在一个钉住提交上的读数被冻结，漂移即度量或核动了。</p>
+  <pre>arcs   : 每条文件引用一条 dir(F) → dir(G)，每条包引用一条 dir(F) → D；同一目录内的不计
+cuts   : 逐个 SCC，≤ 14 个目录时走子集规划（exact 1），否则 Eades–Lin–Smyth + 冗余清理（exact 0）
+layers : d 无出边时 level(d) = 0，否则 1 + d 所指者的最大 level，切掉的弧不算
+cluster: 确定性 Louvain，增益取整数，两层；misplaced = 它的簇在别处的文件严格更多
+impact : 沿引用反向广度优先，焦点在深度 0
+metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋，没有边碰到该目录时为 −1</pre>
+  <details class="more"><summary>推导与常数</summary><p class="note">度量侧送被度量文件的路径与行数、按路径的引用与 <code>--impact</code> 路径；目录树与五张表（文件及其目录与行数、目录、文件到文件与文件到包的引用、焦点）由核自己建，每条切边回标时带背后的文件引用。核把引用折成目录图，逐个强连通分量求反馈弧集，给剩下的分层，在文件图上聚类，走影响面，度量每个目录。贪心切边集极小、未证最小，行上照实标出。本仓在一个钉住提交上的读数被冻结，漂移即度量或核动了。</p>
   <ul class="consts">
     <li><b>fileCap</b> 131072</li>
     <li><b>refCap</b> 524288</li>

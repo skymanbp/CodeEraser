@@ -45,7 +45,7 @@
         <text x="66" y="339">hello 前后的静默截止时限</text>
         <text x="66" y="356">暖索引 + 常驻 ce-core 子进程</text>
 
-        <text x="616" y="305">解析阶梯：相对 · 别名 · 包 · 再导出 · include · require</text>
+        <text x="616" y="305">引用站点，以及阶梯要读的文件（配置、头文件）</text>
         <text x="616" y="322">Markdown / HTML 文件与章节锚点 · 未解析站点台账</text>
         <text x="616" y="339">git 变动窗口 · 评分事实 · 结构缝事实</text>
         <text x="616" y="356">擦除采集：图上判死 · 字节相等 · 全覆盖</text>
@@ -72,14 +72,16 @@
       </g>
       <g font-size="10" fill="#8593ad">
         <text x="66" y="513">proto 9.0.0 · SemVer</text>
-        <text x="66" y="530">主版本不合即拒绝</text>
-        <text x="66" y="547">次版本字段只加不改</text>
-        <text x="66" y="564">整数行 · 只过类下标，不过名字</text>
+        <text x="66" y="528">主版本不合即拒绝</text>
+        <text x="66" y="543">次版本字段只加不改</text>
+        <text x="66" y="558">整数行 · 文本只走本机管道</text>
+        <text x="66" y="573">只过类下标，不过类名与 glob</text>
 
         <text x="338" y="513">hello 发现</text>
-        <text x="338" y="530">十二个判决家族：fourclass · graph · clone · docdup · verdict</text>
-        <text x="338" y="547">scan · structure · trend · erase · audit · tombstone · similar</text>
-        <text x="338" y="564">每个家族有自己的请求/结果形状与有界拒绝</text>
+        <text x="338" y="528">十六个判决家族：fourclass · graph · clone · docdup</text>
+        <text x="338" y="543">verdict · scan · structure · trend · erase · audit · tombstone</text>
+        <text x="338" y="558">similar · query · flow · merge · arch</text>
+        <text x="338" y="573">每个家族有自己的请求/结果形状与有界拒绝</text>
 
         <text x="866" y="513">共享的 golden 夹具</text>
         <text x="866" y="530">CI 里回放 Rust 客户端</text>
@@ -114,12 +116,14 @@
         <text x="66" y="798">趋势斜率与分级 scan 判决</text>
         <text x="66" y="816">环轴排除声明的文档宇宙</text>
 
-        <text x="430" y="726">SCC、可达性与文件级存活判决</text>
-        <text x="430" y="744">T3 树编辑距离克隆裁决</text>
-        <text x="430" y="762">shingle 集事实上的精确 docdup 判决</text>
-        <text x="430" y="780">三信号联判与审计定罪表</text>
-        <text x="430" y="798">无旋钮的擦除安全谓词</text>
-        <text x="430" y="816">降级的擦除应答不授权任何行</text>
+        <text x="430" y="726">解析阶梯（resolve/1）：相对 · 别名 · 包</text>
+        <text x="430" y="742">再导出 · include · require</text>
+        <text x="430" y="758">SCC、可达性与文件级存活判决</text>
+        <text x="430" y="774">T3 树编辑距离克隆裁决</text>
+        <text x="430" y="790">shingle 集事实上的精确 docdup 判决</text>
+        <text x="430" y="806">三信号联判与审计定罪表</text>
+        <text x="430" y="822">无旋钮的擦除安全谓词</text>
+        <text x="430" y="838">降级的擦除应答不授权任何行</text>
 
         <text x="794" y="726">定种子与穷举参照电池</text>
         <text x="794" y="744">旋钮扰动证明每个策略输入都活着</text>

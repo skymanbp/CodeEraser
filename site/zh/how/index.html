@@ -55,23 +55,23 @@
     <div class="row"><a class="sec" href="#acting">据判决行动</a><ul><li><a href="#f12"><b>12</b>确定性擦除</a></li><li><a href="#f13"><b>13</b>提及否决</a></li></ul></div>
     <div class="row"><a class="sec" href="#residue">改动时残留</a><ul><li><a href="#f14"><b>14</b>墓碑残留</a></li></ul></div>
     <div class="row"><a class="sec" href="#advisor">同角色顾问</a><ul><li><a href="#f15"><b>15</b>稀疏检索</a></li></ul></div>
-    <div class="row"><a class="sec" href="/zh/how/analysis/">分析轨</a><ul><li><a href="/zh/how/analysis/#f16"><b>16</b>代码查询与架构规则</a></li></ul></div>
+    <div class="row"><a class="sec" href="/zh/how/analysis/">分析轨</a><ul><li><a href="/zh/how/analysis/#f16"><b>16</b>代码查询与架构规则</a></li><li><a href="/zh/how/analysis/#f17"><b>17</b>函数内死代码</a></li><li><a href="/zh/how/analysis/#f18"><b>18</b>克隆合并建议</a></li><li><a href="/zh/how/analysis/#f19"><b>19</b>架构分析</a></li></ul></div>
     <div class="row"><a class="sec" href="#honesty">诚实边界</a><ul><li><a href="#honesty">不是安全边界</a></li><li><a href="#honesty">fail-open</a></li></ul></div>
   </nav>
 </section>
 
 <figure class="arch deep" id="verdict">
-  <div class="stage"><img src="/assets/judgment.zh.svg" width="650" height="760" alt="一个判决如何产生：Rust 度量语法单元、token 指纹、文档 shingle、git 窗口、引用图与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留，每行一个 wire 家族；门与逐家族报告交付判决" loading="lazy"></div>
-  <figcaption>每行一个 wire 家族：Rust 度量的事实、它喂给的 Haskell 判决、离开的东西（退出码或报告行）。打开<a href="/assets/judgment.zh.svg">原尺寸 SVG</a>。</figcaption>
+  <div class="stage"><img src="/assets/judgment.zh.svg" width="650" height="874" alt="一个判决如何产生：Rust 度量语法单元、token 指纹与每个单元的词袋事实、文档 shingle、git 窗口、引用图的站点与改动集的面；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、轨迹与审计、存活性与擦除、墓碑残留，以及控制流、合并与架构，每行标出它喂给的 wire 家族；门与逐家族报告交付判决" loading="lazy"></div>
+  <figcaption>每行标出它喂给的 wire 家族：Rust 度量的事实、它喂给的 Haskell 判决、离开的东西（退出码或报告行）。打开<a href="/assets/judgment.zh.svg">原尺寸 SVG</a>。</figcaption>
 </figure>
 
 <h2 id="families"><!--ce:count:booklets#word-->十九<!--/ce-->个判决家族</h2>
-<details class="more intro"><summary>三种「家族」计数</summary><p class="note">本站有三种计数。<b><!--ce:count:booklets#word-->十九<!--/ce--></b> 册，每册一条值得单独推导的判决：01–15 族在本页，分析轨的（16 起）在<a href="/zh/how/analysis/">单独一页</a>。wire 上 <b><!--ce:count:families#word-->十六<!--/ce--></b> 个判决能力（技术栈图上的数，不计握手 <code>hello</code>、定义包 <code>tables/1</code> 与报告文档 <code>document/1</code>；联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）。只读 MCP 工具 <b><!--ce:count:mcp_tools#word-->二十一<!--/ce--></b> 个，随报告面而非 wire：<code>churn</code> 与 <code>graph --sites</code>、<code>erase</code>（只到演练计划）、<code>doctor</code>（机器状态）、<code>erase_log</code>（已应用擦除的轨迹）、<code>update_check</code>（本构建对比最新发布）、<code>similar_units</code>（<code>ce similar</code> 在 <code>similar/1</code> 上的顾问文档），以及在 <code>query/1</code> 上判的 <code>query</code> 与 <code>rules</code>（<a href="/zh/how/analysis/#f16">单独一页</a>）。</p></details>
+<details class="more intro"><summary>三种「家族」计数</summary><p class="note">本站有三种计数。<b><!--ce:count:booklets#word-->十九<!--/ce--></b> 册，每册一条值得单独推导的判决：01–15 族在本页，分析轨的（16 起）在<a href="/zh/how/analysis/">单独一页</a>。wire 上 <b><!--ce:count:families#word-->十六<!--/ce--></b> 个判决能力（技术栈图上的数，不计握手 <code>hello</code>、定义包 <code>tables/1</code>、报告文档 <code>document/1</code> 与家族调用的六个阶段能力 <code>resolve/1</code>、<code>candidates/1</code>、<code>rank/1</code>、<code>docpairs/1</code>、<code>moves/1</code>、<code>bags/1</code>；联判与拆分顾问搭在 <code>verdict</code> 与 <code>structure</code> 请求里，FPR 档位阶梯是纪律不是请求）。只读 MCP 工具 <b><!--ce:count:mcp_tools#word-->二十一<!--/ce--></b> 个，随报告面而非 wire：<code>churn</code> 与 <code>graph --sites</code>、<code>erase</code>（只到演练计划）、<code>doctor</code>（机器状态）、<code>erase_log</code>（已应用擦除的轨迹）、<code>update_check</code>（本构建对比最新发布）、<code>similar_units</code>（<code>ce similar</code> 在 <code>similar/1</code> 上的顾问文档），在 <code>query/1</code> 上判的 <code>query</code> 与 <code>rules</code>（<a href="/zh/how/analysis/#f16">单独一页</a>），以及在 <code>flow/1</code>、<code>merge/1</code>、<code>arch/1</code> 上的 <code>flow</code>、<code>merge_suggestions</code> 与 <code>architecture</code>。</p></details>
 
 <div class="fam">
   <h3 id="f01"><span class="n">01</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md">T1/T2 克隆检测——winnowing 指纹索引</a></h3>
   <p class="job">找出精确与参数化的重复 token 段：改名的变量、换掉的常量算克隆，改掉的语法不算。</p>
-  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
+  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 个记号</pre>
   <p class="note rule">任何至少 <code>t</code> 个归一化 token 的公共段都含
   <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，窗口最小值只依赖窗口内容，两份拷贝必选中同一个：<strong>必然至少共享一个指纹</strong>，这是 Schleimer 等人 SIGMOD'03 的 no-miss 下界，作为正确性契约。滚动哈希是 Rabin-Karp，
   <code>h = (h - t[i-k]*top)*BASE + t[i]</code>，跑在 FNV-1a 叶子哈希之上。</p><details class="more"><summary>推导与常数</summary>
@@ -132,8 +132,8 @@ dupVerdictWith (num, den, vfloor) inter union run
 <div class="fam">
   <h3 id="f04"><span class="n">04</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md">结构判决——树尺度熵，<!--ce:count:structure_axes#word-->八<!--/ce-->条判轴</a></h3>
   <p class="job">判的是树而不是文件：目录几何、命名分布、引用局部性、文档覆盖、文档陈旧、冗余、模块度。</p>
-  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
-tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- N == 0 时也 = 0
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = 非零桶数，n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
 perMille r      = floor (r * 1000)</pre>
   <pre>charge_i = floor(scale * v_i / (v_i + N))   -- v = 被点名目录数, N = 目录总数
@@ -163,20 +163,20 @@ score    = max 0 (scale - raw `div` (structViolCostNeutral * judgedAxisCount))</
   <h3 id="f05"><span class="n">05</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md">评分与 ADR-006 棘轮</a></h3>
   <p class="job">把<!--ce:count:axes#word-->七<!--/ce-->条判轴折成一个 0–1000 分，并对着只准收紧的基线银行把门。</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
-wTotal  = sum_i w_i                            -- derived, never a literal
+wTotal  = sum_i w_i                            -- 推导而来，从不写死
 score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))</pre>
-  <pre>p(x) = 0                              if x &lt;= S          -- S read as min S H
-     = pMax                           if H &lt;= S          -- degenerate fallback
+  <pre>p(x) = 0                              if x &lt;= S          -- S 读作 min S H
+     = pMax                           if H &lt;= S          -- 退化时的兜底
      = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
      = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ 线性臂
 
-m = gmedian(x)                                 -- log-space median: √(x_lo·x_hi) when the count is even
-r = gmedian( max(x/m, m/x) )                   -- &gt;= 1 by construction
+m = gmedian(x)                                 -- 对数空间中位数：个数为偶时取 √(x_lo·x_hi)
+r = gmedian( max(x/m, m/x) )                   -- 按构造 &gt;= 1
 S = clamp(floor(m * r^k), [softMin, min softMax H])</pre>
-  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- tolAbsCoc on a complexity row
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- 复杂度行用 tolAbsCoc
 
-added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
-removed = baseline \ current        -- informational; drives the shrink</pre>
+added   = current \ baseline        -- 非空 <span class="op">=&gt;</span> fail
+removed = baseline \ current        -- 只作告知；驱动收缩</pre>
   <p class="note rule">判轴 0 是唯一不是计数的轴：对文件尺寸的凸罚，精确 <code>Rational</code>，越过硬线仍单调；<code>pMax</code> 是<em>落在</em> <code>H</code> 上的值，不是上限。软线 <code>S</code> 是仓库自身冻结 LOC 分布的统计量，<code>S = clamp(median + k·MAD, …)</code> 改写成乘性形式以免取对数，只在 establish 时导出并冻进基线。fail 位是<!--ce:count:fail_conditions#word-->六<!--/ce-->个<em>具名</em>条件的析取：<code>ratchet_over</code>、<code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、<code>knobs_digest</code>、<code>rows_dropped</code>，控制台按此序印在 <code>FAIL</code> 之后。</p><details class="more"><summary>推导与常数</summary>
   <p class="note">proto 3.1.0 起，连续行可带<em>路径类</em>：首个命中的 <code>[[rules.class]]</code> 的 1 基下标（<code>0</code> 表示无），按该类的软线、硬线与 CoC 上限收费，未声明处回落全局线。在 ceilings 的码 <code>0 / 1 / 2</code> 之外，<code>classKnobs</code> 加 <code>3</code>（proto 5.1.0，该类的棘轮容差行数）与 <code>4</code>（proto 6.4.0，认知复杂度容差）；声明即<em>取代</em>两条全局腿，<code>0</code> 意味任何增长皆超。基线仍是三列；类名与 glob 永不过线。</p>
   <ul class="consts">
@@ -209,7 +209,7 @@ reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }</pre>
   <pre>public     = testBit flags 0
 referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
 judged     = i <span class="op">∉</span> reach
-code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
+code       = 1 + public + 2*referenced    -- 以查找表为准</pre>
   <p class="note rule"><!--ce:count:deadcode_codes#word-->四<!--/ce-->个码让「已导出但无人引用的 API」永不塌进普通 dead：<code>1 unref_private</code>、<code>2 unref_public</code>、<code>3 unreach_private</code>、<code>4 unreach_public</code>。一个 site 按本语言梯级依次走，第一个产出<em>恰好一个</em>在域候选的梯级胜出；多于一个即 <code>Unresolved</code>，<code>External</code> 是正确答案、不是漏判。环只报不判；没有入口种子的环岛仅凭可达性即判死。</p><details class="more"><summary>推导与常数</summary><p class="note"><code>inert</code> = {3 资产, 5 未用 ref-def}，由核亲自排除：图片链接渲染字节，未用的引用定义什么也不渲染。proto 2.32.0 起每条死件行带一列由按语言点位台账判出的置信（0 未担保、1 空担保、2 已担保），即擦除家族的信任边界。import 边精度 <strong>38/40 = 0.95</strong>，跨五个钉扎语料，对着 ≥ 0.90 的门，样本冻结于任何解析器之前。计划 v2.30 新增的六种语言各过一份冻结、盲评的考题：C 73/73、C++ 15/15、Java 36/36、Lua 86/86、R 18/18、HTML 75/75（召回 73/74、15/17、36/36、86/86、18/18、75/76），逐语言误拦台账（六语料各 400 提交）误拦 0；见
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/EVAL-SET-LANGS.md">EVAL-SET-LANGS</a> 与
   <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/FPR-REPLAY.md">FPR-REPLAY</a>。</p>
@@ -228,8 +228,8 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 <div class="fam">
   <h3 id="f07"><span class="n">07</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/07-the-three-signal-join.md">三信号 join</a></h3>
   <p class="job">把相似度 × 图位置 × 变动史合成<!--ce:count:join_codes#word-->四<!--/ce-->个候选码之一，然后刻意不据此行动。</p>
-  <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + both referenced + distinct SCCs
-(2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + dead flank, RG10 guard clear
+  <pre>(1, sev 2, [1,2,3,4], [])    -- merge_candidate:  sim + graph + 两侧都被引用 + 分属不同 SCC
+(2, sev 3, [1,2,5],   [6])   -- delete_candidate: sim + graph + 一侧已死，RG10 守卫放行
 (3, sev 1, [1,2,7,8], [])    -- churn_hotspot:    sim + graph + cochange + rewrite</pre>
   <pre>rewriteHot  = total &gt; 0 &amp;&amp; (rewrote_a + rewrote_b) * rewriteDen <span class="op">&gt;=</span> total * rewriteNum
 cochangeHot = cochange <span class="op">&gt;=</span> cochangeFloor
@@ -257,7 +257,7 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + crossChurn(u)     * roiChurnMilli
                 + roiPhiMilli
 
-viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
+viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1，不做除法即判</pre>
   <p class="note rule">收益是拆分退回的软区罚分，算在与判决家族<em>同一条</em>凸曲线上（直接 import）；<code>p</code> 凸且 <code>p(0) = 0</code>，故超可加，方括号非负。最佳缝是对 ROI 的精确有理 argmax，用交叉相乘的 <code>b % c</code> 比较；<code>n</code> 个顶层单元产出 <code>n - 1</code> 条缝。长而内聚得一条<em>带数字的</em>豁免，长而可拆得一条切割线。</p><details class="more"><summary>推导与常数</summary>
   <ul class="consts">
     <li><b>seamSoft S</b> 300</li>
@@ -300,13 +300,13 @@ anchored   = any (\(_,_,w) -&gt; w &gt;= anchorFloor) evidence</pre>
 <div class="fam">
   <h3 id="f10"><span class="n">10</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md">分数轨迹——趋势斜率判决</a></h3>
   <p class="job">check 分数在历史上是涨、平还是跌，每天多少？</p>
-  <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
+  <pre>x_i   = ts_i % 86400                 -- 秒折成天，精确比值
 y_i   = (score_i * 1000000) % scale_i
 
 slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen</pre>
-  <pre>slope <span class="op">&lt;</span> -band  → 2  (degrading)
-slope <span class="op">&gt;</span>  band  → 0  (improving)
-otherwise      → 1  (flat)        where band = floorMicro</pre>
+  <pre>slope <span class="op">&lt;</span> -band  → 2  （变差）
+slope <span class="op">&gt;</span>  band  → 0  （变好）
+否则           → 1  （持平）      其中 band = floorMicro</pre>
   <p class="note rule"><code>%</code> 是 <code>Data.Ratio</code> 的精确比构造子，不是取模；<code>y</code> 把每次提交归一到固定的 10⁶ 满量程网格，不同 <code>scoreScale</code> 下的行因而可比。斜率取成对斜率的<b>中位数</b>（trend/2）：一个野点能把最小二乘均值拽到任何地方，却拽不动中位数。</p><details class="more"><summary>推导与常数</summary><p class="note">判决视图按时间戳排序并只留 tsWindow 个最近点，rebase 过的提交合法。最陡单步跌落以 <code>cliff</code>、最长连续下跌以 <code>declineRun</code> 过线，各用请求索引指认提交；hash 不过线。低于 <code>minPoints</code> 或无时间戳相异的点对时斜率为 <code>Nothing</code>，绝不编造「持平」；默认地板 0 下「下滑」只报不判负。</p>
   <ul class="consts">
     <li><b>minPoints</b> 3（knob 0）</li>
@@ -365,8 +365,8 @@ permille = (lines - S) * 1000 / (H - S)
 <div class="fam">
   <h3 id="f12"><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">确定性擦除——安全谓词</a></h3>
   <p class="job">判决擦除计划的行，覆盖<!--ce:count:erase_classes#word-->三<!--/ce-->个可证明的类（<code>dead_file</code>、<code>verbatim_doc</code>、<code>t1_twin</code>），其余行以具名 reason code 拒绝。</p>
-  <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
-         3 dead_file (confidence road, 2.32.0)
+  <pre>class  = 0（4.0.0 退役，按名拒绝）| 1 verbatim_doc | 2 t1_twin
+         3 dead_file（置信度路，2.32.0）
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
          6 public_surface (6.1.0)</pre>
@@ -383,10 +383,10 @@ reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
 <div class="fam">
   <h3 id="f13"><span class="n">13</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/13-unmentioned-declaration-advisory.md">未提及声明顾问——提及否决</a></h3>
   <p class="job">列出名字不被任何<em>他</em>文件拼写的已判决声明，带可见性码：一件只报不判的负向仪器。</p>
-  <pre>veto  = another file spells it | fold (Rust, ≥2 segments ∧ ≥7 chars)
-        | the file's own exception regions spell it
-row   = [node, vis, conv]      (integers only — a name never rides the wire)
-emit  <span class="op">⇔</span> vis ⊇ {exported, scope-exported} ∧ conv has no exempt bit (0..10)
+  <pre>veto  = 别的文件拼出它 | 折叠（Rust，≥2 段 ∧ ≥7 字符）
+        | 文件自己的例外区拼出它
+row   = [node, vis, conv]      （只有整数——名字从不上 wire）
+emit  <span class="op">⇔</span> vis ⊇ {exported, scope-exported} ∧ conv 不带豁免位（0..10）
 code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
   <details class="more"><summary>推导与常数</summary><p class="note">U 是自有的 walk：隐藏文件进入，<code>.git</code>/<code>.ce</code> 按名裁掉，<em>未声明</em>的嵌套仓库整体裁掉，根的 <code>.gitmodules</code> 声明的路径作为外来者留下（能拼名字，永不被度量）。只认 <code>.gitignore</code> 与 <code>.ceignore</code>，同一提交得同一个 U，walk 的每个参数都是 <code>MENTION_REV</code> 的输入；mentions 只存 64 位哈希。Haskell 只读可见性词与 mounts 行（私有 <code>mod</code> 挂载、门面再导出、包内私有）。两表随 <code>graph.request</code> 同来同去，不带时应答与十键应答逐字节相同、死集不变。超过 <code>unmentionedCap</code> 时核丢表并具名说明。永不成门，永不进 <code>ce erase</code>。</p>
   <ul class="consts">
@@ -411,10 +411,10 @@ code  = 1 private &gt; 2 restricted &gt; 3 reexported &gt; 0 public</pre>
 <div class="fam">
   <h3 id="f14"><span class="n">14</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md">墓碑残留——被删名字的合取</a></h3>
   <p class="job">抓住从代码里删掉 X、又把 X 以缺席形式写回的改动：标题 <code>(no X)</code>、标识符 <code>without_x</code>、一句 <code>X is no longer needed</code>。</p>
-  <pre>R     = ⋃ names(before) \ ⋃ alive(after)      (structural positions only; keys, never text)
+  <pre>R     = ⋃ names(before) \ ⋃ alive(after)      （只取结构位；只过键，从不过原文）
 row   = [kind, marks, names]                  kind ∈ {0 bracketed, 1 bare, 2 prose}
-site  <span class="op">⇔</span> names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    (the conjunction, read per sentence)
-over  <span class="op">⇔</span> budget declared ∧ |sites| &gt; budget     (spoken at [tombstone] tier; ships observe)</pre>
+site  <span class="op">⇔</span> names ≥ 1 ∧ (kind ≠ 2 ∨ marks ≥ 1)    （合取，按句读）
+over  <span class="op">⇔</span> 声明了 budget ∧ |sites| &gt; budget  （按 [tombstone] tier 出声；出厂 observe）</pre>
   <details class="more"><summary>推导与常数</summary><p class="note">名字是文本<em>声明</em>出来的：注释与字面量之外的标识符、单元名、标题、列表首词；内联代码跨度只是提及，只保活。Rust 每个新增面发三个整数；Haskell 落座站点并判预算。changelog 定位的文档整体豁免，按路径约定、台账形状或 <code>[tombstone] ledger</code>；自身即台账的引用块或小节只豁免自己。本类出厂 <code>observe</code>，任何晋级都须据两段历史上的九轮 FPR 回放（<code>docs/FPR-TOMBSTONE.md</code>）论证。</p>
   <ul class="consts">
     <li><b>TOMBSTONE_REV</b> 1</li>
@@ -438,10 +438,10 @@ over  <span class="op">⇔</span> budget declared ∧ |sites| &gt; budget     (s
 <div class="fam">
   <h3 id="f15"><span class="n">15</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md">同角色顾问——稀疏检索与仓内联想</a></h3>
   <p class="job">用整数 BM25 在读自索引事实的六通道词袋上排出与某单元（或一段文本）最像的单元，再问核哪些扮演查询的角色：离线「代码 RAG」，无模型、无浮点，只当顾问。</p>
-  <pre>bag    = six channels N P C D S L        (facts the parse already carries; hashes, never words)
-score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
-widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
-role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)</pre>
+  <pre>bag    = 六个通道 N P C D S L          （解析已带的事实；只过哈希，从不过词）
+score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   （k1 = 6/5，b = 3/4；整数定点）
+widen  = 前 m 个 PPMI 邻居，权重 ≤ ½      （选开的视图；从不作证据）
+role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  （在 Haskell 里经 similar/1 判；只当顾问）</pre>
   <details class="more"><summary>推导与常数</summary><p class="note">T3 宇宙每个单元一个袋（名字碎片、形状、被调者拼写、自有文档段、节点种类直方图、字面量<em>种类</em>），每个词词干化后连同通道字母哈希。词袋随内容哈希门控的刷新持久化（<code>bag</code> 自身即倒排表；spec 初稿的共现对表实测让冷索引慢 7–10×，不建，查询时推导）。内存仪器与 SQL 读者共用一份按 trait 写的请求，在五份语料的每个单元上发出同样的字节。Rust 发查询袋、计分词的 df 与倒排行、座位长度；Haskell 经 <code>rank/1</code> 加权、扩展、计分并截出前 K 个，再经 <code>similar/1</code> 用精确有理数排序并施加角色合取。两代仲裁 oracle 的地板：首样本 60 %，留出集 40 %，后者让首样本偏好的每个调优候选退场。永不成门，永不进 <code>ce erase</code>。</p>
   <ul class="consts">
     <li><b>SIMILAR_REV</b> 1</li>

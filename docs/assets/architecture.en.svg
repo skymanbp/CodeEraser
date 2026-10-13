@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" data-theme="dark" viewBox="0 0 1440 620" role="img" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
         <title id="archify-diagram-title">CodeEraser architecture</title>
-        <desc id="archify-diagram-description">How CodeEraser is built: Rust measures the repository, one NDJSON wire carries integer facts to the Haskell core that judges them, and the product faces render the same reports.</desc>
+        <desc id="archify-diagram-description">How CodeEraser is built: Rust measures the repository, one NDJSON wire carries the measured facts (integers and, since protocol 9.0.0, the texts the core reads, over the local pipe only) to the Haskell core that judges them, and the product faces render the same reports.</desc>
 <style>@font-face { font-family: 'JetBrains Mono'; font-weight: 400; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }
 @font-face { font-family: 'JetBrains Mono'; font-weight: 500; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }
 @font-face { font-family: 'JetBrains Mono'; font-weight: 600; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }
@@ -312,15 +312,15 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="555" y="216" class="t-muted" font-size="9" text-anchor="middle">.ce/index.db · SQLite WAL</text>
         </g>
 
-        <g id="node-graph" data-node-id="graph" data-node-label="Reference graph" tabindex="0" role="button" aria-label="Focus Reference graph, ladders · SCC · mentions, cli/ — Rust · measurement" aria-pressed="false" data-node-kind="backend" data-node-sublabel="ladders · SCC · mentions" data-node-context="cli/ — Rust · measurement">
-          <title>Reference graph · ladders · SCC · mentions · cli/ — Rust · measurement</title>
+        <g id="node-graph" data-node-id="graph" data-node-label="Reference graph" tabindex="0" role="button" aria-label="Focus Reference graph, sites · mentions, cli/ — Rust · measurement" aria-pressed="false" data-node-kind="backend" data-node-sublabel="sites · mentions" data-node-context="cli/ — Rust · measurement">
+          <title>Reference graph · sites · mentions · cli/ — Rust · measurement</title>
           <rect x="480" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="480" y="280" width="150" height="64" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(486 286) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="555" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Reference graph</text>
-        <text x="555" y="326" class="t-muted" font-size="9" text-anchor="middle">ladders · SCC · mentions</text>
+        <text x="555" y="326" class="t-muted" font-size="9" text-anchor="middle">sites · mentions</text>
         </g>
 
         <g id="node-churn" data-node-id="churn" data-node-label="Git windows" tabindex="0" role="button" aria-label="Focus Git windows, churn · score points, cli/ — Rust · measurement" aria-pressed="false" data-node-kind="backend" data-node-sublabel="churn · score points" data-node-context="cli/ — Rust · measurement">
@@ -348,15 +348,15 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="835" y="326" class="t-muted" font-size="7.8" text-anchor="middle">proto 9.0.0 · sixteen families</text>
         </g>
 
-        <g id="node-judge" data-node-id="judge" data-node-label="Judgment core" tabindex="0" role="button" aria-label="Focus Judgment core, exact rationals · no clock · no RNG, core/ — Haskell · judgment" aria-pressed="false" data-node-kind="backend" data-node-sublabel="exact rationals · no clock · no RNG" data-node-context="core/ — Haskell · judgment">
-          <title>Judgment core · exact rationals · no clock · no RNG · core/ — Haskell · judgment</title>
+        <g id="node-judge" data-node-id="judge" data-node-label="Judgment core" tabindex="0" role="button" aria-label="Focus Judgment core, ladders · SCC · exact · no RNG, core/ — Haskell · judgment" aria-pressed="false" data-node-kind="backend" data-node-sublabel="ladders · SCC · exact · no RNG" data-node-context="core/ — Haskell · judgment">
+          <title>Judgment core · ladders · SCC · exact · no RNG · core/ — Haskell · judgment</title>
           <rect x="990" y="170" width="160" height="284" rx="6" class="c-mask" />
           <rect x="990" y="170" width="160" height="284" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(996 176) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="1070" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Judgment core</text>
-        <text x="1070" y="326" class="t-muted" font-size="7.2" text-anchor="middle">exact rationals · no clock · no RNG</text>
+        <text x="1070" y="326" class="t-muted" font-size="8.4" text-anchor="middle">ladders · SCC · exact · no RNG</text>
         </g>
 
         <g id="node-policy" data-node-id="policy" data-node-label="Policy as data" tabindex="0" role="button" aria-label="Focus Policy as data, ADR-008 · thresholds ship in Haskell, core/ — Haskell · judgment" aria-pressed="false" data-node-kind="database" data-node-sublabel="ADR-008 · thresholds ship in Haskell" data-node-context="core/ — Haskell · judgment">
@@ -413,8 +413,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">twenty-one read-only tools</text>
         </g>
 
-        <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="Focus Claude Code hooks, PreToolUse · PostToolUse · Stop, faces — five renderings" aria-pressed="false" data-node-kind="security" data-node-sublabel="PreToolUse · PostToolUse · Stop" data-node-context="faces — five renderings">
-          <title>Claude Code hooks · PreToolUse · PostToolUse · Stop · faces — five renderings</title>
+        <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="Focus Claude Code hooks, SessionStart · Pre/PostToolUse · Stop, faces — five renderings" aria-pressed="false" data-node-kind="security" data-node-sublabel="SessionStart · Pre/PostToolUse · Stop" data-node-context="faces — five renderings">
+          <title>Claude Code hooks · SessionStart · Pre/PostToolUse · Stop · faces — five renderings</title>
           <rect x="1250" y="390" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="390" width="150" height="64" rx="6" class="c-security" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(1256 396) scale(0.6875)">
@@ -422,7 +422,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <path d="m5.8 8 1.5 1.5 3-3" />
           </g>
           <text x="1325" y="420" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Claude Code hooks</text>
-        <text x="1325" y="436" class="t-muted" font-size="7.6" text-anchor="middle">PreToolUse · PostToolUse · Stop</text>
+        <text x="1325" y="436" class="t-muted" font-size="6.3" text-anchor="middle">SessionStart · Pre/PostToolUse · Stop</text>
         </g>
 
         <g id="node-ci" data-node-id="ci" data-node-label="CI · pre-commit" tabindex="0" role="button" aria-label="Focus CI · pre-commit, ce check --fail-under, faces — five renderings" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="ce check --fail-under" data-node-context="faces — five renderings">

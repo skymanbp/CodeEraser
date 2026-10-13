@@ -44,7 +44,7 @@ before its child ([Contract.hs:79](../../../core/app/CE/Arch/Contract.hs#L79)).
 target's, every package edge an arc from the file's directory to the named one; an arc inside
 one directory is not counted, and one ordered pair met twice is one arc with its weights added
 ([Dirs.hs:27](../../../core/app/CE/Arch/Dirs.hs#L27)). Its strongly connected components come
-from the graph family's own decomposition — one Tarjan in the core, not two
+from the graph family's own decomposition — one Kosaraju pass in the core, not two
 ([Dirs.hs:48](../../../core/app/CE/Arch/Dirs.hs#L48)).
 
 **The cuts.** The cheapest set of arcs whose removal leaves the graph acyclic is found one

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" data-theme="dark" viewBox="0 0 1440 620" role="img" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
         <title id="archify-diagram-title">CodeEraser 架构</title>
-        <desc id="archify-diagram-description">CodeEraser 的构造：Rust 度量仓库，一条 NDJSON wire 把整数事实送进判决它们的 Haskell 核，各产品面渲染同一批报告。</desc>
+        <desc id="archify-diagram-description">CodeEraser 的构造：Rust 度量仓库，一条 NDJSON wire 把实测事实（整数，协议 9.0.0 起还有核要读的文本，只走本机管道）送进判决它们的 Haskell 核，各产品面渲染同一批报告。</desc>
 <style>@font-face { font-family: 'JetBrains Mono'; font-weight: 400; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }
 @font-face { font-family: 'JetBrains Mono'; font-weight: 500; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }
 @font-face { font-family: 'JetBrains Mono'; font-weight: 600; src: local('JetBrains Mono'), local('JetBrainsMono-Regular'); }
@@ -312,15 +312,15 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="555" y="216" class="t-muted" font-size="9" text-anchor="middle">.ce/index.db · SQLite WAL</text>
         </g>
 
-        <g id="node-graph" data-node-id="graph" data-node-label="引用图" tabindex="0" role="button" aria-label="聚焦 引用图, 解析阶梯 · SCC · 提及, cli/ — Rust · 度量" aria-pressed="false" data-node-kind="backend" data-node-sublabel="解析阶梯 · SCC · 提及" data-node-context="cli/ — Rust · 度量">
-          <title>引用图 · 解析阶梯 · SCC · 提及 · cli/ — Rust · 度量</title>
+        <g id="node-graph" data-node-id="graph" data-node-label="引用图" tabindex="0" role="button" aria-label="聚焦 引用图, 站点 · 提及, cli/ — Rust · 度量" aria-pressed="false" data-node-kind="backend" data-node-sublabel="站点 · 提及" data-node-context="cli/ — Rust · 度量">
+          <title>引用图 · 站点 · 提及 · cli/ — Rust · 度量</title>
           <rect x="480" y="280" width="150" height="64" rx="6" class="c-mask" />
           <rect x="480" y="280" width="150" height="64" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(486 286) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="555" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">引用图</text>
-        <text x="555" y="326" class="t-muted" font-size="9" text-anchor="middle">解析阶梯 · SCC · 提及</text>
+        <text x="555" y="326" class="t-muted" font-size="9" text-anchor="middle">站点 · 提及</text>
         </g>
 
         <g id="node-churn" data-node-id="churn" data-node-label="git 窗口" tabindex="0" role="button" aria-label="聚焦 git 窗口, 变动 · 分数点, cli/ — Rust · 度量" aria-pressed="false" data-node-kind="backend" data-node-sublabel="变动 · 分数点" data-node-context="cli/ — Rust · 度量">
@@ -348,15 +348,15 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="835" y="326" class="t-muted" font-size="9" text-anchor="middle">proto 9.0.0 · 十六个家族</text>
         </g>
 
-        <g id="node-judge" data-node-id="judge" data-node-label="判决核" tabindex="0" role="button" aria-label="聚焦 判决核, 精确有理数 · 无时钟 · 无随机, core/ — Haskell · 判决" aria-pressed="false" data-node-kind="backend" data-node-sublabel="精确有理数 · 无时钟 · 无随机" data-node-context="core/ — Haskell · 判决">
-          <title>判决核 · 精确有理数 · 无时钟 · 无随机 · core/ — Haskell · 判决</title>
+        <g id="node-judge" data-node-id="judge" data-node-label="判决核" tabindex="0" role="button" aria-label="聚焦 判决核, 解析阶梯 · SCC · 精确 · 无随机, core/ — Haskell · 判决" aria-pressed="false" data-node-kind="backend" data-node-sublabel="解析阶梯 · SCC · 精确 · 无随机" data-node-context="core/ — Haskell · 判决">
+          <title>判决核 · 解析阶梯 · SCC · 精确 · 无随机 · core/ — Haskell · 判决</title>
           <rect x="990" y="170" width="160" height="284" rx="6" class="c-mask" />
           <rect x="990" y="170" width="160" height="284" rx="6" class="c-backend" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(996 176) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5" />
           </g>
           <text x="1070" y="310" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">判决核</text>
-        <text x="1070" y="326" class="t-muted" font-size="9" text-anchor="middle">精确有理数 · 无时钟 · 无随机</text>
+        <text x="1070" y="326" class="t-muted" font-size="8.4" text-anchor="middle">解析阶梯 · SCC · 精确 · 无随机</text>
         </g>
 
         <g id="node-policy" data-node-id="policy" data-node-label="策略即数据" tabindex="0" role="button" aria-label="聚焦 策略即数据, ADR-008 · 阈值随 Haskell 发布, core/ — Haskell · 判决" aria-pressed="false" data-node-kind="database" data-node-sublabel="ADR-008 · 阈值随 Haskell 发布" data-node-context="core/ — Haskell · 判决">
@@ -413,8 +413,8 @@ rect.c-bg-rect { fill: var(--bg); }
         <text x="1325" y="326" class="t-muted" font-size="9" text-anchor="middle">二十一个只读工具</text>
         </g>
 
-        <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="聚焦 Claude Code hooks, PreToolUse · PostToolUse · Stop, 面 — 五种渲染" aria-pressed="false" data-node-kind="security" data-node-sublabel="PreToolUse · PostToolUse · Stop" data-node-context="面 — 五种渲染">
-          <title>Claude Code hooks · PreToolUse · PostToolUse · Stop · 面 — 五种渲染</title>
+        <g id="node-hooks" data-node-id="hooks" data-node-label="Claude Code hooks" tabindex="0" role="button" aria-label="聚焦 Claude Code hooks, SessionStart · Pre/PostToolUse · Stop, 面 — 五种渲染" aria-pressed="false" data-node-kind="security" data-node-sublabel="SessionStart · Pre/PostToolUse · Stop" data-node-context="面 — 五种渲染">
+          <title>Claude Code hooks · SessionStart · Pre/PostToolUse · Stop · 面 — 五种渲染</title>
           <rect x="1250" y="390" width="150" height="64" rx="6" class="c-mask" />
           <rect x="1250" y="390" width="150" height="64" rx="6" class="c-security" stroke-width="1.5" />
           <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(1256 396) scale(0.6875)">
@@ -422,7 +422,7 @@ rect.c-bg-rect { fill: var(--bg); }
             <path d="m5.8 8 1.5 1.5 3-3" />
           </g>
           <text x="1325" y="420" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Claude Code hooks</text>
-        <text x="1325" y="436" class="t-muted" font-size="7.6" text-anchor="middle">PreToolUse · PostToolUse · Stop</text>
+        <text x="1325" y="436" class="t-muted" font-size="6.3" text-anchor="middle">SessionStart · Pre/PostToolUse · Stop</text>
         </g>
 
         <g id="node-ci" data-node-id="ci" data-node-label="CI · pre-commit" tabindex="0" role="button" aria-label="聚焦 CI · pre-commit, ce check --fail-under, 面 — 五种渲染" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="ce check --fail-under" data-node-context="面 — 五种渲染">

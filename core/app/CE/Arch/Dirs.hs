@@ -7,7 +7,7 @@
 -- referencing each other both ways is one neighbour with both
 -- weights. The strongly connected components of the directory graph
 -- come from CE.Graph.Build, the same decomposition the graph family
--- answers its cycles with: one Tarjan in the core, not two.
+-- answers its cycles with: one Kosaraju in the core, not two.
 module CE.Arch.Dirs (Arcs, arcsOf, dirOfFile, fileNeighbours, sccsOf) where
 
 import CE.Graph.Build (Built (..), build)

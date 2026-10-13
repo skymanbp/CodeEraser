@@ -56,7 +56,7 @@
 <div class="fam formula">
   <h3 id="m-winnowing"><span class="n">01</span>窗口取指纹</h3>
   <p class="job">判两个文件共享哪些归一化 token 串，指纹取每个窗口的最小值。</p>
-  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 tokens</pre>
+  <pre>t = window + kgram - 1 = 26 + 25 - 1 = 50 个记号</pre>
   <p class="note rule">no-miss 下界（Schleimer 等人 SIGMOD'03，作为正确性契约）：长度至少 <code>t</code> 的公共串含 <code>t - k + 1 = w</code> 个连续 k-gram，即一整个窗口，两份拷贝必选出它的同一个最小值。</p>
   <ul class="consts">
     <li><b>kgram</b> 25</li>
@@ -102,8 +102,8 @@ dupVerdictWith (num, den, vfloor) inter union run
 <div class="fam formula">
   <h3 id="m-merge"><span class="n">18</span>克隆合并</h3>
   <p class="job">克隆组成员的差异处成为洞，每个不同的取值向量一个参数：至多 6 个，且确有省行才可行。</p>
-  <pre>align  : T1/T2 isomorphic, holes = differing leaves; T3 the tree-edit mapping narrowed top-down, relabels and unequal gaps are holes
-params : one per distinct value vector; feasible iff every hole is an expression or a name, params <span class="op">≤</span> 6 and savings <span class="op">&gt;</span> 0</pre>
+  <pre>align  : T1/T2 同构，洞 = 不同的叶；T3 取自顶向下收窄的树编辑映射，重标与不等长间隙是洞
+params : 每个不同的取值向量一个；可行当且仅当每个洞都是表达式或名字、params <span class="op">≤</span> 6 且 savings <span class="op">&gt;</span> 0</pre>
   <p class="note rule">反统一：取每个成员都是其实例的最小一般骨架，用各成员自己的值填洞即还原该成员。</p>
   <ul class="consts">
     <li><b>groupCap</b> 4096</li>
@@ -118,8 +118,8 @@ params : one per distinct value vector; feasible iff every hole is an expression
 <div class="fam formula">
   <h3 id="m-tsallis"><span class="n">04</span>Tsallis-2 与 χ²</h3>
   <p class="job">目录多样性与布局散度，全程精确有理数。</p>
-  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- and = 0 when N == 0
-tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = nonzero bins, n &gt; 1
+  <pre>tsallis2 cs     = 1 - Σ (c/N)^2            -- N == 0 时也 = 0
+tsallis2Norm cs = tsallis2 cs / (1 - 1/n)  -- n = 非零桶数，n &gt; 1
 chi2 pairs      = Σ_{r &gt; 0} (p - q)^2 / q  -- p = o/Σo, q = r/Σr
 perMille r      = floor (r * 1000)</pre>
   <p class="note rule">Shannon 熵与 KL 需要对数（无理数，不可精确判定），故改用同族中不取对数的成员 Tsallis-2 与 χ² f-散度，跑在 <code>Data.Ratio</code> 上；参考质量为 0 的 bin 上有观测质量时 χ² 返回 <code>Nothing</code>——点名那些目录的拒绝，而不是零。</p>
@@ -144,9 +144,9 @@ perMille r      = floor (r * 1000)</pre>
 <div class="fam formula">
   <h3 id="m-layers"><span class="n">19</span>分层与切割</h3>
   <p class="job">把最便宜的弧从环里切掉后给目录分层，不稳定度以整数千分数给出。</p>
-  <pre>cuts   : per SCC, a subset programme when it has ≤ 14 directories (exact 1), else Eades–Lin–Smyth + redundancy pass (exact 0)
-layers : level(d) = 0 when nothing leaves d, else 1 + max level of what d points at, the cut arcs removed
-metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋, −1 when nothing touches the directory</pre>
+  <pre>cuts   : 逐个 SCC，≤ 14 个目录时走子集规划（exact 1），否则 Eades–Lin–Smyth + 冗余清理（exact 0）
+layers : d 无出边时 level(d) = 0，否则 1 + d 所指者的最大 level，切掉的弧不算
+metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> (in + out)⌋，没有边碰到该目录时为 −1</pre>
   <p class="note rule">切边逐个强连通分量求：分量之间的弧不在任何环上，所以全图的最小值是各分量最小值的并。</p>
   <ul class="consts">
     <li><b>exactVertexCap</b> 14</li>
@@ -161,11 +161,11 @@ metrics: fanIn, fanOut, instability = ⌊1000 · out <span class="op">÷</span> 
   <h3 id="m-score"><span class="n">05</span>分数</h3>
   <p class="job">各判轴在凸的尺寸罚分下折成一个 0–1000 分；文件上限只缩不涨，增长超过 max(+2 %, +10) 即判负。</p>
   <pre>raw     = sum_i (w_i * p_i * violCost)
-wTotal  = sum_i w_i                            -- derived, never a literal
+wTotal  = sum_i w_i                            -- 推导而来，从不写死
 score   = max 0 (scoreScale - raw `div` (violCostNeutral * wTotal))
 
-p(x) = 0                              if x &lt;= S          -- S read as min S H
-     = pMax                           if H &lt;= S          -- degenerate fallback
+p(x) = 0                              if x &lt;= S          -- S 读作 min S H
+     = pMax                           if H &lt;= S          -- 退化时的兜底
      = pMax * ((x - S) / (H - S))^2   if S &lt; x &lt;= H
      = pMax * (1 + 2*(x - H)/(H - S)) if x &gt; H           -- C¹ 线性臂</pre>
   <p class="note rule">判轴 0 是唯一不是计数的轴：对文件尺寸的凸罚，精确 <code>Rational</code>，越过硬线仍单调。</p>
@@ -183,10 +183,10 @@ p(x) = 0                              if x &lt;= S          -- S read as min S H
 <div class="fam formula">
   <h3 id="m-ratchet"><span class="n">05</span>棘轮</h3>
   <p class="job">把<!--ce:count:axes#word-->七<!--/ce-->条判轴的分数对着一份只准收紧的基线把门。</p>
-  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- tolAbsCoc on a complexity row
+  <pre>tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)   -- 复杂度行用 tolAbsCoc
 
-added   = current \ baseline        -- non-empty <span class="op">=&gt;</span> fail
-removed = baseline \ current        -- informational; drives the shrink</pre>
+added   = current \ baseline        -- 非空 <span class="op">=&gt;</span> fail
+removed = baseline \ current        -- 只作告知；驱动收缩</pre>
   <p class="note rule">fail 位是<!--ce:count:fail_conditions#word-->六<!--/ce-->个<em>具名</em>条件的析取：<code>ratchet_over</code>、<code>discrete_added</code>、<code>floor</code>、<code>dedup_budget</code>、<code>knobs_digest</code>、<code>rows_dropped</code>。</p>
   <ul class="consts">
     <li><b>tolNum/tolDen</b> 102/100</li>
@@ -199,7 +199,7 @@ removed = baseline \ current        -- informational; drives the shrink</pre>
 <div class="fam formula">
   <h3 id="m-recursion"><span class="n">05</span>认知复杂度</h3>
   <p class="job">认知复杂度连同 SonarSource 自家分析器没实现的 S3776 附录 B1 递归增量：调用环由核找出，每个成员各加一次。</p>
-  <pre><span class="op">+1</span> for each method in a recursion cycle, whether direct or indirect</pre>
+  <pre><span class="op">+1</span>：递归环里的每个方法各加一，直接与间接同价</pre>
   <ul class="consts">
     <li><b>cocCeil</b> 15</li>
   </ul>
@@ -216,7 +216,7 @@ costMilli(u)    = crossRefs(u)      * roiRefMilli
                 + crossChurn(u)     * roiChurnMilli
                 + roiPhiMilli
 
-viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1, evaluated without division</pre>
+viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c            -- ROI &gt;= 1，不做除法即判</pre>
   <p class="note rule"><code>p</code> 凸且 <code>p(0) = 0</code>，故超可加，所以收益——算在<em>与判决家族同一条</em>曲线上（直接 import，不重推）——从不为负。</p>
   <ul class="consts">
     <li><b>seamSoft S</b> 300</li>
@@ -233,14 +233,14 @@ viable          <span class="op">⇔</span> b <span class="op">&gt;=</span> c   
 <div class="fam formula">
   <h3 id="m-theilsen"><span class="n">10</span>Theil-Sen 斜率</h3>
   <p class="job">趋势取成对斜率的中位数（trend/2）。</p>
-  <pre>x_i   = ts_i % 86400                 -- seconds to days, exact ratio
+  <pre>x_i   = ts_i % 86400                 -- 秒折成天，精确比值
 y_i   = (score_i * 1000000) % scale_i
 
 slope = median{ (y_j - y_i) / (x_j - x_i) : x_i ≠ x_j }   -- Theil-Sen
 
-slope <span class="op">&lt;</span> -band  → 2  (degrading)
-slope <span class="op">&gt;</span>  band  → 0  (improving)
-otherwise      → 1  (flat)        where band = floorMicro</pre>
+slope <span class="op">&lt;</span> -band  → 2  （变差）
+slope <span class="op">&gt;</span>  band  → 0  （变好）
+否则           → 1  （持平）      其中 band = floorMicro</pre>
   <p class="note rule">一个野点（测出来的坏提交）能把最小二乘均值拽到任何地方，却拽不动中位数半步。</p>
   <ul class="consts">
     <li><b>minPoints</b> 3（knob 0）</li>
@@ -254,14 +254,14 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
 
 <div class="fam formula">
   <h3 id="m-liveness"><span class="n">06</span>可达性</h3>
-  <p class="job">活的入口都到不了的文件即死；环由 Tarjan 强连通分量只找一次。</p>
+  <p class="job">活的入口都到不了的文件即死；环由 Kosaraju 强连通分量只找一次。</p>
   <pre>arcs  = { (s,d) | [s,d,kind,rung] ∈ edges,  rung &lt;= minRung,  kind ∉ inert }
 reach = ⋃ { reachable(G, s) | s ∈ entries(entryMask, flags) }
 
 public     = testBit flags 0
 referenced = indeg <span class="op">&gt;=</span> 1 over kept arcs
 judged     = i <span class="op">∉</span> reach
-code       = 1 + public + 2*referenced    -- the lookup table is the authority</pre>
+code       = 1 + public + 2*referenced    -- 以查找表为准</pre>
   <p class="note rule">环只报不判；没有入口种子的环岛仅凭可达性即判死。</p>
   <ul class="consts">
     <li><b>minRung</b> 5</li>
@@ -274,9 +274,9 @@ code       = 1 + public + 2*referenced    -- the lookup table is the authority</
 <div class="fam formula">
   <h3 id="m-flow"><span class="n">17</span>可达性与活跃性</h3>
   <p class="job">在每个函数的控制流图上求可达，在它的变量上做逆向活跃性分析。</p>
-  <pre>kind 0 : unreachable  = no path from the entry, one finding per maximal run of seqs
-kind 1 : dead_store   = a write no path reads before the next write or the exit (backward liveness)
-kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, never judged)</pre>
+  <pre>kind 0 : unreachable  = 入口无路径可达，每段极大连续 seq 一条发现
+kind 1 : dead_store   = 下次写或出口之前没有路径读到的写（反向活性）
+kind 2 : unused_local = 无读 · kind 3 : unused_param = 无读（顾问，从不判决）</pre>
   <p class="note rule">活跃入集在整张图上解到 <code>in = transfer(∪ in of successors)</code> 的不动点。</p>
   <p class="note src"><a href="/zh/how/analysis/#f17">推导</a> · <a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md">方法学册 17</a></p>
 </div>
@@ -285,8 +285,8 @@ kind 2 : unused_local = no read · kind 3 : unused_param = no read (advice, neve
   <h3 id="m-datalog"><span class="n">16</span>分层 Datalog</h3>
   <p class="job">在索引自身的事实上逐层半朴素求值的 Datalog；每个答案带着它的推导树。</p>
   <pre>dead(F) :- file(F), <span class="op">not</span> reach(F).
-strata : a head sits above every negated or aggregated body predicate; a negative edge inside an SCC is a program error
-eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation of a tuple is its provenance</pre>
+strata : 头位于体内每个被否定或被聚合的谓词之上；SCC 内的负边是程序错误
+eval   : 逐层半朴素求值，建在惰性位掩码索引上；元组的第一条推导即其出处</pre>
   <p class="note rule">集合语义，最小模型。</p>
   <ul class="consts">
     <li><b>derivedCap</b> 2097152</li>
@@ -298,11 +298,11 @@ eval   : semi-naive per stratum over lazy bitmask indexes; the first derivation 
 <div class="fam formula">
   <h3 id="m-bm25"><span class="n">15</span>整数 BM25 与 PPMI</h3>
   <p class="job">整数 BM25（k1 = 6/5、b = 3/4）为一个单元排出最像它的单元；仓内 PPMI 可拓宽查询，只作建议。</p>
-  <pre>score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   (k1 = 6/5, b = 3/4; integer fixed point)
-widen  = top-m PPMI neighbours at ≤ ½ weight    (opt-in view; never evidence)
-role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  (judged in Haskell over similar/1; advisory only)
+  <pre>score  = Σ w · idf · 22·tf·avg / (10·tf·avg + 3·avg + 9·len)   （k1 = 6/5，b = 3/4；整数定点）
+widen  = 前 m 个 PPMI 邻居，权重 ≤ ½      （选开的视图；从不作证据）
+role   <span class="op">⇔</span> (N ≥ 1 ∧ C ≥ 1) ∨ (N ≥ 2 ∧ shapeEqual)  （在 Haskell 里经 similar/1 判；只当顾问）
 PPMI(a, b) = max(0, log2(n_ab · N / (n_a · n_b)))</pre>
-  <p class="note rule">Haskell 把每个候选的九整数行按精确有理数排序并施加角色合取；名字、词与路径永不过线。</p>
+  <p class="note rule">Haskell 把每个候选的九整数行按精确有理数排序并施加角色合取；在 <code>similar/1</code> 与 <code>rank/1</code> 上只过哈希与计数——词袋所据的单元原文经本机管道在 <code>bags/1</code> 里送核一次。</p>
   <ul class="consts">
     <li><b>topM</b> 3</li>
     <li><b>minCooc</b> 2</li>
