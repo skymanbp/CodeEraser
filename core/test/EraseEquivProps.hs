@@ -8,8 +8,8 @@
 -- pairwise closure — on every sequence of up to three rows and every
 -- multiset of four over three paths (twin / dead file / verbatim
 -- segment, eraseable or not, two spans), on two hundred seeded requests (a fifth of them without the
--- target table, so `kept` must stay absent), on the contract's
--- refusals and on both sides of the row cap.
+-- target table, so both refuse it by name: required at 9.0.0), on the
+-- contract's refusals and on both sides of the row cap.
 module EraseEquivProps (battery) where
 
 import CE.Erase (respond)
@@ -32,7 +32,7 @@ battery =
     [ all (\(ts, rs) -> agrees (rs, [], Just ts)) exhaustive
     , all agrees seeded
     , all agrees refusals
-    , all agrees [(replicate n [3, 1, 2, 0, 0], [], Nothing) | n <- [fromInteger eraseRowCap, fromInteger eraseRowCap + 1]]
+    , all capAgrees [fromInteger eraseRowCap, fromInteger eraseRowCap + 1]
     ]
 
 request :: [[Integer]] -> [[Integer]] -> Maybe [[Integer]] -> Value
@@ -42,6 +42,16 @@ request rows knobs targets =
 agrees :: ([[Integer]], [[Integer]], Maybe [[Integer]]) -> Bool
 agrees (rows, knobs, targets) =
   answers respond ["rows", "counts", "fail", "degraded", "reason", "kept"] (request rows knobs targets) (expected rows knobs targets)
+
+-- | Both sides of the row cap, each row its own whole file: the judged
+-- side and the degraded side agree on every field but `kept`, whose
+-- pairwise reference is quadratic at 65,536 rows (the closure is held
+-- by the legs above; laziness leaves it unread here).
+capAgrees :: Int -> Bool
+capAgrees n = answers respond (words "rows counts fail degraded reason") (request rows [] targets) (fmap (take 5) (expected rows [] targets))
+ where
+  rows = replicate n [3, 1, 2, 0, 0]
+  targets = Just [[i, 0, 0] | i <- [0 .. toInteger n - 1]]
 
 -- | Two hundred seeded requests: one to nine rows of any live class,
 -- every fact drawn inside its legal range, two paths and two spans so

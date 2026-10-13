@@ -17,12 +17,14 @@
 -- fields from it, so every check and the judgment below read one shape.
 -- `reqPath` keeps what the path form needs past the judgment: the tree
 -- the reply echoes, the fault that replaces a judgment, the offence that
--- refuses it.
+-- refuses it. Test seam: Rust sends the path form only; the integer
+-- form stays as the props' differential seam (plan v2.33 step 11a, C26).
 module CE.Structure.Request (StructReq (..), PathForm (..), patternsOf, seamTables, pathOffence, pathFault, pathKeys) where
 
 import CE.Structure.Raw (Built (..), Raw, buildRaw, parseRaw, rawOffence)
 import CE.Structure.Shape (foldShapes)
 import CE.Structure.Tree (dirPaths)
+import CE.Wire (patternsSent)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (Pair, Parser)
@@ -95,7 +97,7 @@ integerForm o nodes =
     StructReq Nothing
       <$> o .: "id"
       <*> nodes
-      <*> pure (KM.member "patterns" o)
+      <*> pure (patternsSent o)
       <*> o .:? "patternShapes"
       <*> o .:? "conventions" .!= []
       <*> o .:? "fileRefs" .!= []

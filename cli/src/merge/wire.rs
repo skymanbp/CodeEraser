@@ -25,11 +25,20 @@ use std::path::Path;
 pub const CAP: &str = "merge/1";
 pub const KIND: &str = "merge";
 
-/// The core's reason codes (CE.Merge.Cost): the last one, and the one
-/// that says no line is saved (reasonNoSavings).
-// TODO(defrag-core: document.merge.reasons)
-const REASON_CEIL: i64 = 5;
-const REASON_NO_SAVINGS: i64 = 5;
+/// The core's reason names by code (the merge document's catalogue
+/// entry, CE.Merge.Document.reasons): a reason code is one of them, and
+/// the code of `no_savings` says no line is saved.
+fn reasons() -> &'static [&'static str] {
+    crate::tables::get().document.merge.reasons
+}
+
+/// The code of the reason that says no line is saved.
+fn reason_no_savings() -> Option<i64> {
+    reasons()
+        .iter()
+        .position(|r| *r == "no_savings")
+        .map(|i| i as i64)
+}
 
 /// The counts object's keys, in the wire's order.
 pub const COUNTS: [&str; 6] = [
@@ -183,11 +192,11 @@ fn suggestions(reply: &Value, sent: &[&Group]) -> Result<Vec<(Suggestion, Vec<Ho
                 if *id == g as i64
                     && *params >= 0
                     && (0..group.members.len() as i64).contains(kept)
-                    && (0..=REASON_CEIL).contains(reason)
+                    && (0..reasons().len() as i64).contains(reason)
                     && (*feasible == 1) == (*reason == 0)
                     && (0..=1).contains(feasible)
                     && (*reason != 0 || *savings > 0)
-                    && (*reason != REASON_NO_SAVINGS || *savings <= 0) =>
+                    && (Some(*reason) != reason_no_savings() || *savings <= 0) =>
             {
                 let s = Suggestion {
                     params: *params as u64,

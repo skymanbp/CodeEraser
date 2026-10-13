@@ -112,8 +112,7 @@ findings req = zipWith finding (layoutOf req) (rows req "levels")
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= dfSchema doc
-    , "files" .= map file (rows req "files")
+    [ "files" .= map file (rows req "files")
     , "findings" .= hits
     , "summary" .= counted (words "files functions warns fails") [range req "files", range req "fns", count 1, count 2]
     , "failed" .= map (spelled conditionNames) (sort (nub (concat (rows req "failed"))))

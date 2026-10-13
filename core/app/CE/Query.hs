@@ -31,18 +31,18 @@ import CE.Query.Parse (parseProgram)
 import CE.Query.Proof (Node (..), Root (..), proofRows)
 import CE.Query.Schema (schemaRows)
 import CE.Query.Syntax (Clause (..))
-import CE.Wire (family)
-import Data.Aeson (Value, encode, object, (.=))
+import CE.Wire (Respond, family, replyLine, resultLine, tooLarge)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
 import qualified Data.Aeson.Key as Key
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntMap.Strict as IM
 import qualified Data.IntSet as IS
 import qualified Data.Set as S
 
 -- | decode → cap (tokens, fact rows) → contract → judge.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "query" reqId overCap offence (degraded proto) (judged proto)
+respond :: Respond
+respond proto = family F.query reqId overCap offence (degraded proto) (judged proto)
 
 -- | Everything a reply carries besides the envelope: the five
 -- tables, the counts, the degraded bit.
@@ -75,13 +75,7 @@ judged proto req = case lexedOf req of
 -- | The lex reply: the envelope and the `lexed` object.
 lexReply :: String -> QueryReq -> Either Fault Lexed -> B8.ByteString
 lexReply proto req lexed =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("query.result" :: String)
-    , "id" .= reqId req
-    , "lexed" .= lexedValue (inspectOf req) lexed
-    , "degraded" .= False
-    ]
+  replyLine proto F.query (reqId req) ["lexed" .= lexedValue (inspectOf req) lexed, "degraded" .= False]
 
 judgedProgram :: String -> QueryReq -> B8.ByteString
 judgedProgram proto req = reply proto req $ case parseProgram (tokens req) of
@@ -150,21 +144,21 @@ degraded proto req = reply proto req (blank req [] Nothing zeroTally True)
 -- | The query.result object.
 reply :: String -> QueryReq -> Answered -> B8.ByteString
 reply proto req a =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("query.result" :: String)
-    , "id" .= reqId req
-    , "goals" .= ansGoals a
-    , "preds" .= ansPreds a
-    , "answers" .= ansRows a
-    , "proof" .= ansProof a
-    , "errors" .= ansErrors a
-    , "counts" .= object [Key.fromString key .= v | (key, v) <- ansCounts a]
-    , "degraded" .= ansDegraded a
-    ]
-      <> ["reason" .= ("query_too_large" :: String) | ansDegraded a]
-      <> ["schema" .= schemaRows | schemaOf req]
-      <> ["dirs" .= [(l, n, h) | (l, n, h) <- dirs] | Just dirs <- [dirsOf req]]
+  resultLine
+    proto
+    F.query
+    (reqId req)
+    ( [ "goals" .= ansGoals a
+      , "preds" .= ansPreds a
+      , "answers" .= ansRows a
+      , "proof" .= ansProof a
+      , "errors" .= ansErrors a
+      ]
+        <> ["schema" .= schemaRows | schemaOf req]
+        <> ["dirs" .= [(l, n, h) | (l, n, h) <- dirs] | Just dirs <- [dirsOf req]]
+    )
+    [Key.fromString key .= v | (key, v) <- ansCounts a]
+    (tooLarge F.query (ansDegraded a))
 
 -- | The fact tables as the database the evaluation starts from.
 factsDb :: QueryReq -> Db

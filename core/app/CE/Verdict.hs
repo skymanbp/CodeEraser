@@ -16,38 +16,40 @@ module CE.Verdict (degradedCondition, respond, verdictTooLarge) where
 import qualified CE.Dedup.Cost as DedupCost
 import CE.Verdict.Cost (softMax, softMin, verdictNodeCap, verdictRowCap)
 import CE.Verdict.Candidates (candidates)
-import CE.Verdict.Join (bound, severities)
-import CE.Verdict.Knobs (effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
-import CE.Verdict.Ratchet (Baseline (..), ratchet, ratchetBound)
+import CE.Verdict.Join (severities)
+import CE.Verdict.Knobs (defaultsEcho, effectiveJoin, effectiveKnobs, effectiveRatchet, knobsEcho)
+import CE.Verdict.Ratchet (Baseline (..), ratchet)
 import CE.Verdict.Cost (classCocTolCode, classTolCode)
 import CE.Verdict.Score (Facts (..), ScoreKnobs (..), classKnobsOf, effectiveWeights, penalties, score, scoreBound)
 import CE.Verdict.Soft (softLine)
 import CE.Verdict.Baseline (parseBaseline)
 import CE.Verdict.Faces (digestKey, failConditions, newBaselineObj, ratchetObj)
 import CE.Verdict.Wire (VerdictReq (..), violation)
+import qualified CE.Wire.Families as F
+import CE.Wire (Respond, replyLine, tooLargeOf)
 import Control.Applicative ((<|>))
 import Data.Aeson
+import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
-import Data.Maybe (isJust)
+import Data.Maybe (fromMaybe, isJust, isNothing)
 
 -- | Left = (id to echo, error code, message) for the dispatcher's
 -- error encoder; Right = the encoded verdict.result line. The
 -- baseline is parsed exactly ONCE here and handed to the cap, the
 -- boundary check and the judgment (the M5-close review pair:
 -- baseline rows escaped the row cap, and parseBaseline ran twice).
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto line = case eitherDecodeStrict line of
   Left e -> Left (Nothing, "bad_request", "verdict: " <> e)
   Right req
     | toInteger (length (reqTier req)) > verdictNodeCap
         || toInteger (rowTotal req + baselineRows parsed) > verdictRowCap ->
-        Right (tooLarge proto req)
+        Right (reply proto req Nothing)
     | Just why <- violation parsed req ->
         Left (Just (reqId req), "contract", why)
     | otherwise ->
-        Right (result proto parsed req)
+        Right (reply proto req (Just (judged parsed req)))
    where
     parsed = parseBaseline (reqBaseline req)
 
@@ -92,16 +94,9 @@ baselineRows _ = 0
 -- ADR-006 conjunction: ratchet (over ceiling past tolerance, or a
 -- new discrete member) OR the --fail-under floor — either alone
 -- fails (plan: "两者任一 fail 即 fail").
-result :: String -> Either String (Maybe Baseline) -> VerdictReq -> B8.ByteString
-result proto parsed req =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-      , "type" .= ("verdict.result" :: String)
-      , "id" .= reqId req
-      , "candidates" .= candidates jk req
-      , -- the verdict table's severity face (2.33.0, H4): shipped
-        -- once, ranked with — the number is the core's
-        "joinSeverity" .= [[c, s] | (c, s) <- severities]
+judged :: Either String (Maybe Baseline) -> VerdictReq -> [Pair]
+judged parsed req =
+    [ "candidates" .= candidates jk req
       , "score" .= perMille
       , "axes" .= [[c, p] | (c, p) <- pens]
       , "ratchet" .= ratchetObj (isJust (reqPresent req)) r conds
@@ -123,7 +118,6 @@ result proto parsed req =
         -- additive): the one knob family that had no round trip —
         -- computed by the SAME lookup the score folded with
         "weights" .= effectiveWeights k (reqWeights req)
-      , "degraded" .= False
       ]
       -- the class rows echo exactly when they rode (3.1.0): the
       -- client asserts the round trip; a legacy reply keeps its bytes
@@ -195,52 +189,57 @@ cycleRode req = any ((== [7]) . take 1) (reqThresholds req)
 -- | The degraded reply's reason and its one fail condition, by name:
 -- this module owns both words (the check document reads them here).
 verdictTooLarge, degradedCondition :: String
-verdictTooLarge = "verdict_too_large"
+verdictTooLarge = tooLargeOf F.verdict
 degradedCondition = "degraded"
 
--- | Over-cap refusal: a well-formed degraded result with the FULL
--- key set, never a truncated judgment.
-tooLarge :: String -> VerdictReq -> B8.ByteString
-tooLarge proto req =
-  BL.toStrict . encode $
-    object
-      [ "proto" .= proto
-      , "type" .= ("verdict.result" :: String)
-      , "id" .= reqId req
-      , "candidates" .= ([] :: [Value])
-      , -- constants, not client input — the degraded reply may
-        -- still speak them (the C14 defaults posture)
-        "joinSeverity" .= [[c, s] | (c, s) <- severities]
-      , "score" .= (0 :: Int)
-      , "axes" .= ([] :: [Value])
-      , "ratchet"
-          .= object
-            ( [ "added" .= ([] :: [Value])
-              , "removed" .= ([] :: [Value])
-              , "over" .= ([] :: [Value])
-              , "toleranceDrawn" .= ([] :: [Value])
-              , -- ADR-008 P1: a gate that could not judge must never
-                -- pass, said by the CORE — the degraded reply carries
-                -- its own fail semantics; Rust relays, never re-derives
-                "fail" .= True
-              , "failed" .= [degradedCondition]
-              ]
-                -- `present` rode (6.4.0): the key answers here too, so
-                -- a reply without it is an older core, never a new one
-                -- that judged nothing
-                <> ["dropped" .= ([] :: [Value]) | isJust (reqPresent req)]
-            )
-      , "newBaseline"
-          .= object
-            ( [ "continuous" .= ([] :: [Value])
-              , "discrete" .= ([] :: [Value])
-              , "softLine" .= (Nothing :: Maybe Integer)
-              ]
-                <> digestKey (reqKnobsDigest req)
-            )
-      , -- defaults: no judgment ran, so no override was applied
-        "knobs" .= knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct False
-      , "weights" .= effectiveWeights scoreBound []
-      , "degraded" .= True
-      , "reason" .= verdictTooLarge
-      ]
+-- | The verdict.result line, one reply with the degraded flag: the
+-- judged fields, or (Nothing: over a cap) the FULL key set with nothing
+-- judged, never a truncated judgment. The severity face, the flag and
+-- the reason are spelled here once for both.
+reply :: String -> VerdictReq -> Maybe [Pair] -> B8.ByteString
+reply proto req body =
+  replyLine proto F.verdict (reqId req) $
+    -- the verdict table's severity face (2.33.0, H4): shipped once,
+    -- ranked with — the number is the core's (constants, not client
+    -- input: the degraded reply speaks them too, the C14 posture)
+    ("joinSeverity" .= [[c, s] | (c, s) <- severities])
+      : ("degraded" .= isNothing body)
+      : fromMaybe (degradedFields req) body
+      <> ["reason" .= verdictTooLarge | isNothing body]
+
+-- | What a degraded reply answers: empty tables, the defaults, and a
+-- ratchet that fails by itself.
+degradedFields :: VerdictReq -> [Pair]
+degradedFields req =
+  [ "candidates" .= ([] :: [Value])
+  , "score" .= (0 :: Int)
+  , "axes" .= ([] :: [Value])
+  , "ratchet"
+      .= object
+        ( [ "added" .= ([] :: [Value])
+          , "removed" .= ([] :: [Value])
+          , "over" .= ([] :: [Value])
+          , "toleranceDrawn" .= ([] :: [Value])
+          , -- ADR-008 P1: a gate that could not judge must never
+            -- pass, said by the CORE — the degraded reply carries
+            -- its own fail semantics; Rust relays, never re-derives
+            "fail" .= True
+          , "failed" .= [degradedCondition]
+          ]
+            -- `present` rode (6.4.0): the key answers here too, so
+            -- a reply without it is an older core, never a new one
+            -- that judged nothing
+            <> ["dropped" .= ([] :: [Value]) | isJust (reqPresent req)]
+        )
+  , "newBaseline"
+      .= object
+        ( [ "continuous" .= ([] :: [Value])
+          , "discrete" .= ([] :: [Value])
+          , "softLine" .= (Nothing :: Maybe Integer)
+          ]
+            <> digestKey (reqKnobsDigest req)
+        )
+  , -- defaults: no judgment ran, so no override was applied
+    "knobs" .= defaultsEcho
+  , "weights" .= effectiveWeights scoreBound []
+  ]

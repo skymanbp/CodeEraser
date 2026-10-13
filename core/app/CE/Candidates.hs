@@ -22,34 +22,30 @@ import CE.Candidates.Lsh (sets)
 import CE.Candidates.Sources (Gen (..), generate)
 import CE.Candidates.T3 (Answer (..), Tally (..), judgeT3)
 import CE.Candidates.Units (columns)
-import CE.Wire (family)
-import CE.Wire.Result (resultLine)
-import Data.Aeson (Value, (.=))
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
+import Data.Aeson.Types (Pair)
 import Data.Bits (countTrailingZeros)
-import Data.ByteString.Char8 (ByteString)
 import qualified Data.IntMap.Strict as IM
 
 -- | decode → cap → contract → the pass.
-respond :: String -> ByteString -> Either (Maybe Value, String, String) ByteString
-respond proto = family "candidates" reqId overCap offence (answer proto True) (answer proto False)
+respond :: Respond
+respond = tabled F.candidates reqId overCap offence answer
 
 -- | The candidates.result object: the kept pairs, each source's
 -- distinct pairs per language `[source, lang, n]` (source = bit index),
 -- S4's bucket sizes `[size, n]`, the counts. Degraded: no pairs and a
 -- zero tally — a request the core refused to judge keeps nothing — the
 -- request tables still counted, and the reason.
-answer :: String -> Bool -> CandReq -> ByteString
-answer proto degraded req =
-  resultLine
-    proto
-    "candidates"
-    (reqId req)
-    [ "pairs" .= kept a
+answer :: Bool -> CandReq -> ([Pair], [Pair])
+answer degraded req =
+  ( [ "pairs" .= kept a
     , "raw" .= rawRows
     , "bandGroups" .= [[size, k] | (size, k) <- IM.toAscList (bandGroups g)]
     ]
-    (zipWith (.=) countKeys countValues)
-    (if degraded then Just "candidates_too_large" else Nothing)
+  , zipWith (.=) countKeys countValues
+  )
  where
   countKeys =
     [ "units", "prints", "near", "union", "crossLanguage", "unowned", "selfPairs", "printHot", "bandHot"

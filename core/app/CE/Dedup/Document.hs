@@ -51,8 +51,7 @@ summaryKeys = words "files refreshed removed blocks groups hot_chained stale_ski
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= dfSchema doc
-    , "blocks" .= map block (rows req "blocks")
+    [ "blocks" .= map block (rows req "blocks")
     , "groups" .= map group (rows req "groups")
     , "summary" .= counted summaryKeys (map value summaryKeys)
     ]

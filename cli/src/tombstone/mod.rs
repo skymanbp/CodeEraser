@@ -67,13 +67,10 @@ pub enum Kind {
 }
 
 impl Kind {
-    // TODO(defrag-core: tombstone.kind_names)
+    /// The kind's name, by its wire code (the package's
+    /// `tombstone.kind_names`, CE.Tombstone.kindNames).
     pub fn name(self) -> &'static str {
-        match self {
-            Kind::Bracketed => "bracketed",
-            Kind::Bare => "bare",
-            Kind::Prose => "prose",
-        }
+        crate::tables::get().tombstone.kind_names[self as usize]
     }
 }
 

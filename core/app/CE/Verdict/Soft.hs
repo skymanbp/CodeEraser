@@ -7,21 +7,25 @@
 -- ever taken (the Entropy.hs discipline: Shannon/KL fell to
 -- Tsallis-2/χ² for the same reason).
 module CE.Verdict.Soft
-  ( softLine
+  ( median
+  , softLine
   , zonePenalty
   ) where
 
 import Data.List (sort)
 import Data.Ratio ((%))
 
--- | Exact median of a non-empty sorted list: middle element, or the
--- mean of the two middles (even length) — stays Rational either way.
-medianR :: [Rational] -> Rational
-medianR xs
-  | odd n = xs !! mid
-  | otherwise = (xs !! (mid - 1) + xs !! mid) / 2
+-- | Exact order-statistic median of a non-empty list: the middle
+-- element of its sort, or the mean of the two middles (even length) —
+-- Rational either way, deterministic by sort. The one median: the
+-- soft line here and trend/2's Theil-Sen slope (CE.Trend.Cost) read it.
+median :: [Rational] -> Rational
+median xs
+  | odd n = sorted !! mid
+  | otherwise = (sorted !! (mid - 1) + sorted !! mid) / 2
  where
-  n = length xs
+  sorted = sort xs
+  n = length sorted
   mid = n `div` 2
 
 -- | S = clamp(floor(m·r^k), [lo, hi]) over the judged-language LOC
@@ -36,10 +40,10 @@ softLine kExp lo hi locs = case sort [x | x <- locs, x > 0] of
   xs -> Just (min hi (max lo (floor (m * spread ^ kExp))))
    where
     sorted = map (% 1) xs
-    m = medianR sorted
+    m = median sorted
     -- r: the multiplicative MAD — median of each point's ratio to
     -- the median, folded to >= 1 (|log| = log of the larger ratio)
-    spread = medianR (sort [max (x / m) (m / x) | x <- sorted])
+    spread = median [max (x / m) (m / x) | x <- sorted]
 
 -- | p(x) for one file: 0 at or under the soft line; the convex
 -- curve pMax·((x−s)/(h−s))² on the zone (s,h]; past the hard line

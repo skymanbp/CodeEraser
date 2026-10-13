@@ -6,6 +6,7 @@
 -- one cap and the first offence by name. The handler is CE.Similar.Bags.
 module CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsCap, overCap, offence) where
 
+import CE.Wire (label, u64)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.List (findIndex)
 
@@ -45,12 +46,12 @@ itemsOf r = length (units r) + length (texts r) + length (inspect r) + sum (map 
 -- request shape (CE.Similar.Bags), else the first code point out of range.
 offence :: BagsReq -> Maybe String
 offence r = case findIndex bad (units r) of
-  Just i -> Just ("units " <> show i <> ": need ret null/0/1 and [[kind,n]] strictly ascending, 0 <= kind < 2^64, 1 <= n < 2^32")
+  Just i -> Just (label "units" i <> "need ret null/0/1 and [[kind,n]] strictly ascending, 0 <= kind < 2^64, 1 <= n < 2^32")
   Nothing
     | any (\c -> c < 0 || c > 0x10FFFF) (inspect r) -> Just "inspect: a code point out of 0..0x10FFFF"
     | otherwise -> Nothing
  where
   bad (_, _, ret, _, _, ss, _) = maybe False (`notElem` [0, 1]) ret || not (ascending ss)
   ascending ss = all row ss && and (zipWith (<) kinds (drop 1 kinds)) where kinds = [k | (k : _) <- ss]
-  row [k, n] = k >= 0 && k < 2 ^ (64 :: Int) && n >= 1 && n < 2 ^ (32 :: Int)
+  row [k, n] = u64 k && n >= 1 && n < 2 ^ (32 :: Int)
   row _ = False

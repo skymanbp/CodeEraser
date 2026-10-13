@@ -16,11 +16,11 @@
 -- The predicate is deliberately knobless: safety is not tunable.
 module CE.Erase (respond) where
 
-import CE.Erase.Cost (classOf, eraseRowCap, judgeRow, keptRows)
-import CE.Wire (RowsReq (..), knoblessRows, rowCheck)
+import CE.Erase.Cost (classNames, classOf, eraseRowCap, judgeRow, keptRows)
+import CE.Wire (Respond, RowsReq (..), knoblessRows, label, required, resultLine, retiredClassZero, rowCheck, tooLarge, topCode)
+import qualified CE.Wire.Families as F
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 
 -- | The shared knobless cascade with this family's bindings
@@ -29,24 +29,28 @@ import Data.Foldable (asum)
 -- unknown knob silently dropped would present a tuned predicate
 -- as effective (the pinned-echo lesson, structure/wire.rs) — and
 -- the target table's own contract past the rows.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = knoblessRows "erase" eraseRowCap rowShape targetsBattery (degraded proto) (judged proto)
+respond :: Respond
+respond proto = knoblessRows F.erase eraseRowCap rowShape targetsBattery (degraded proto) (judged proto)
 
 rowShape :: Int -> [Integer] -> Maybe String
-rowShape i row = case row of
-  [cls, w, x, y, z]
-    | cls == 0 -> Just (label <> "retired class 0 (superseded by 3 at 2.32.0, retired 4.0.0)")
-    | cls < 0 || cls > 3 -> Just (label <> "unknown class")
-    | any (< 0) [w, x, y, z] -> Just (label <> "negative fact")
-    | cls == 3 && (w < 1 || w > 4) -> Just (label <> "dead verdict outside 1..4")
-    | cls == 1 && z > 1 -> Just (label <> "bytesEqual not a boolean")
-    | cls == 2 && any (> 1) [w, x] -> Just (label <> "coverage/equality not booleans")
-    | cls == 2 && y > 4 -> Just (label <> "dead verdict outside 0..4")
-    | cls == 3 && x > 2 -> Just (label <> "confidence outside 0..2")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [class,w,x,y,z])")
+rowShape = rowCheck "row" "malformed row (need [class,w,x,y,z])" 5 checks
  where
-  label = "row " <> show i <> ": "
+  checks row = case row of
+    [cls, w, x, y, z]
+      | cls == 0 -> Just retiredClassZero
+      | cls < 0 || cls > topCode classNames -> Just "unknown class"
+      | any (< 0) [w, x, y, z] -> Just "negative fact"
+      | otherwise ->
+          -- each class's own fact ranges, first offence named
+          lookup
+            True
+            [ (cls == 3 && (w < 1 || w > 4), "dead verdict outside 1..4")
+            , (cls == 1 && z > 1, "bytesEqual not a boolean")
+            , (cls == 2 && any (> 1) [w, x], "coverage/equality not booleans")
+            , (cls == 2 && y > 4, "dead verdict outside 0..4")
+            , (cls == 3 && x > 2, "confidence outside 0..2")
+            ]
+    _ -> Nothing
 
 -- | The target table's contract (7.2.0): aligned 1:1 with the fact
 -- rows; each [pathId, start, end] a dense non-negative path id
@@ -54,10 +58,12 @@ rowShape i row = case row of
 -- whole file — the one shape each class can name (a verbatim segment
 -- is a span, a twin or a dead file is a whole file); and the table
 -- in key order, so the closure's earliest-row tie is a stated fact.
--- Runs after the fact rows, so every class read here is 1..3.
+-- Required since 9.0.0 (the measuring side always sent it; the road
+-- without it, a reply with no `kept`, went with the major). Runs after
+-- the fact rows, so every class read here is 1..3.
 targetsBattery :: RowsReq -> Maybe String
 targetsBattery req = case targetsOf req of
-  Nothing -> Nothing
+  Nothing -> required "targets"
   Just ts ->
     asum
       [ counts ts
@@ -70,7 +76,7 @@ targetsBattery req = case targetsOf req of
         Just ("targets: " <> show (length ts) <> " rows for " <> show (length (rowsOf req)) <> " fact rows")
     | otherwise = Nothing
   keyOrder i (prev, cur)
-    | take 3 prev > take 3 cur = Just ("target " <> show i <> ": out of key order")
+    | take 3 prev > take 3 cur = Just (label "target" i <> "out of key order")
     | otherwise = Nothing
 
 targetShape :: Int -> [Integer] -> [Integer] -> Maybe String
@@ -100,26 +106,24 @@ degraded proto req = reply proto req [] True
 -- request order; fail mirrors degraded (the plan itself never gates —
 -- the self-repo zero-row gate is the CLI's --check, judged against
 -- THIS table, not a core fail bit). `kept` rides exactly when the
--- target table rode and the rows were judged (the cocBumped
--- precedent): one 0/1 per row, the closure's answer.
+-- rows were judged (the target table is required since 9.0.0): one 0/1
+-- per row, the closure's answer.
 reply :: String -> RowsReq -> [(Bool, Integer)] -> Bool -> B8.ByteString
 reply proto req verdicts isDegraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("erase.result" :: String)
-    , "id" .= rowsId req
-    , "rows" .= [[if e then 1 else 0 :: Integer, r] | (e, r) <- verdicts]
-    , "counts"
-        .= object
-          [ "rows" .= length (rowsOf req)
-          , "eraseable" .= length (filter fst verdicts)
-          , "advisory" .= length (filter (not . fst) verdicts)
-          ]
-    , "fail" .= isDegraded
-    , "degraded" .= isDegraded
+  resultLine
+    proto
+    F.erase
+    (rowsId req)
+    ( [ "rows" .= [[if e then 1 else 0 :: Integer, r] | (e, r) <- verdicts]
+      , "fail" .= isDegraded
+      ]
+        <> [ "kept" .= [if k then 1 else 0 :: Integer | k <- keptRows ts (rowsOf req) verdicts]
+           | not isDegraded
+           , Just ts <- [targetsOf req]
+           ]
+    )
+    [ "rows" .= length (rowsOf req)
+    , "eraseable" .= length (filter fst verdicts)
+    , "advisory" .= length (filter (not . fst) verdicts)
     ]
-      <> ["reason" .= ("erase_too_large" :: String) | isDegraded]
-      <> [ "kept" .= [if k then 1 else 0 :: Integer | k <- keptRows ts (rowsOf req) verdicts]
-         | not isDegraded
-         , Just ts <- [targetsOf req]
-         ]
+    (tooLarge F.erase isDegraded)

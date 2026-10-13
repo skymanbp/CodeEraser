@@ -13,7 +13,7 @@ module ScanProps (battery) where
 import CE.Scan (respond)
 import CE.Scan.Cost (gradeWith, scanRowCap)
 import Data.Aeson
-import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
+import WireHarness (degradedFace, dropKey, field, refusedBy, replyObjWith, runChecks, scanRequest, setKey)
 
 battery :: IO Bool
 battery = do
@@ -37,7 +37,7 @@ battery = do
   -- the fence channel (6.4.0), its own table
   fence <-
     runChecks
-      [ ("K51: knobsFence answers failed in canonical order, and its absence is a byte", fenceRoad)
+      [ ("K51: knobsFence answers failed in canonical order, and a request without it is refused by name", fenceRoad)
       ]
   pure (base && rulepack && fence)
 
@@ -45,9 +45,9 @@ battery = do
 -- committed baseline) and a matching pair name nothing; a drifted
 -- pair (a null half included) names `knobs_digest`; a hard-line row
 -- beside a drift names both in the core's order; a request without
--- the key answers no `failed` at all (the legacy bytes); a malformed
--- value refuses by name; and the over-cap face names `degraded`
--- alone. The fail bit is the disjunction of the names every time.
+-- the key is refused by name (required at 9.0.0); a malformed value
+-- refuses by name; and the over-cap face names `degraded` alone. The
+-- fail bit is the disjunction of the names every time.
 fenceRoad :: Bool
 fenceRoad =
   failedOf (fenced Null [[1, 50]]) == Just []
@@ -59,13 +59,12 @@ fenceRoad =
     && failedOf (fenced Null [[0, 800]]) == Just ["hard_line"]
     && failOf (fenced (pair (Just 5) (Just 6)) [[1, 50]]) == Just True
     && failOf (fenced Null [[1, 50]]) == Just False
-    && fmap (field' "failed") (replyObj (wireReq [[1, 50]])) == Just Nothing
+    && refusedBy respond (dropKey "knobsFence" (wireReq [[1, 50]])) "knobsFence: required at 9.0.0"
     && refusedBy respond (fenced (toJSON [5 :: Integer]) [[1, 50]]) "knobsFence: malformed"
     && failedOf (fenced Null [[0, 0] | _ <- [0 .. scanRowCap]]) == Just ["degraded"]
  where
   fenced v rows = setKey "knobsFence" v (wireReq rows)
   pair a b = toJSON [a, b :: Maybe Integer]
-  field' k o = field o k
   failedOf req = case replyObj req of
     Just o -> case field o "failed" of
       Just v -> case fromJSON v :: Result [String] of
@@ -90,13 +89,13 @@ boundaries =
     && map (gradeWith (0, 0)) [0, 1] == [0, 1]
 
 wireReq :: [[Integer]] -> Value
-wireReq = rowsRequest "7.0.0" "scan.request"
+wireReq = scanRequest
 
 replyObj :: Value -> Maybe Object
 replyObj = replyObjWith respond
 
 positional :: Bool
-positional = case replyObj (wireReq [[0, 301], [1, 50], [6, 1], [0, 800]]) of
+positional = case replyObj (setKey "naming" (toJSON [[1, 2, 0, 1, 1 :: Integer]]) (wireReq [[0, 301], [1, 50], [6, 0], [0, 800]])) of
   Nothing -> False
   Just o ->
     field o "levels" == Just (toJSON [1, 0, 1, 2 :: Integer])
@@ -144,8 +143,9 @@ refusals =
 -- (mixedCaps, underscore, go-vet test shape) are exempt under Go's
 -- lang code and a warn under TypeScript's — the leak the Rust-side
 -- predicate carried; snake facts judge on the uppercase bit; an
--- empty facts table beside function-free rows is legal; and the
--- legacy road (no naming key) still judges the sent 0/1.
+-- empty facts table beside function-free rows is legal; and a
+-- request without the table is refused by name (required at 9.0.0:
+-- the road that judged the sent 0/1 went with the major).
 factsRoad :: Bool
 factsRoad =
   and
@@ -153,7 +153,7 @@ factsRoad =
     , run [[1, 2, 0, 1, 1]] [[6, 0]] == Just (toJSON [1 :: Integer])
     , run [[0, 1, 1, 0, 0]] [[6, 0]] == Just (toJSON [1 :: Integer])
     , run [] [[0, 301]] == Just (toJSON [1 :: Integer])
-    , (replyObj (wireReq [[6, 1]]) >>= \o -> field o "levels") == Just (toJSON [1 :: Integer])
+    , refusedBy respond (dropKey "naming" (wireReq [[6, 1]])) "naming: required at 9.0.0"
     ]
  where
   run naming rows =

@@ -21,4 +21,4 @@ lines' say _ req =
   sites = rows req "sites"
   langs = M.fromList [(f, l) | [f, l] <- rows req "langs"]
   counted' = M.fromListWith (+) [((langName (M.findWithDefault (-1) f langs), kind k), 1 :: Integer) | _ : f : k : _ <- sites]
-  kind k = concat (take 1 (drop (fromInteger k) siteKinds))
+  kind = nameOf siteKinds

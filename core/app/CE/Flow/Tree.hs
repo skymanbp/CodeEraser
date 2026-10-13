@@ -12,6 +12,7 @@
 module CE.Flow.Tree (Stmt (..), Unit (..), Use (..), Var (..), ancestors, build, hasFlag, kidsOf) where
 
 import CE.Flow.Cost (varParam)
+import CE.Wire (label)
 import Control.Monad (foldM)
 import Data.Bits (testBit)
 import qualified Data.IntMap.Strict as IM
@@ -84,7 +85,7 @@ grouped what step units rows = fst <$> foldM go (units, (-1, -1)) (zip [0 ..] ro
    where
     u = fromInteger u'
   go _ (i, []) = Left (at i ("malformed " <> what))
-  at i msg = what <> " " <> show i <> ": " <> msg
+  at i msg = label what i <> msg
 
 -- | The key a row must carry to continue the previous row's unit: the
 -- previous key + 1, or 0 when it opens a new unit.

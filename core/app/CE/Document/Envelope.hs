@@ -57,8 +57,7 @@ verdicts req = codes req "pairs" 5 0 1
 enveloped :: Envelope -> DocReq -> Value
 enveloped e req =
   object
-    [ "schema" .= enSchema e
-    , fromString (enHits e) .= map hit hits
+    [ fromString (enHits e) .= map hit hits
     , "counts" .= counted (fst (enUniverse e) : enMeasured e <> [enHits e]) ([range req (snd (enUniverse e))] <> map (fact req) (enMeasured e) <> [toInteger (length hits)])
     ]
  where

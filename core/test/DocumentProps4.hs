@@ -17,6 +17,7 @@ import CE.Document (catalogue, respond)
 import CE.Document.Contract (DocFamily (..), coreReasons)
 import CE.Lang (pack)
 import CE.Score.Document (failNames)
+import CE.Text (fixed)
 import Data.Aeson
 import Data.List (nub)
 import Data.Maybe (fromMaybe)
@@ -84,6 +85,7 @@ countsMeasured = all measured judged
         && len d "findings" == size r "findings"
         && sum [toInteger (length (items n "axes")) | n <- items d "tree"] == size r "findings"
         && (at d "splitCandidates" /= Nothing) == (factOf r "split" == 1)
+        && and [at x "roi" == Just (roiOf (int (at x "benefitMilli")) (int (at x "costMilli"))) | x <- items d "splitCandidates" <> items d "sizeExempt"]
     "join" -> len d "files" == size r "files" && len d "units" == size r "units"
     "deadcode" -> deadMeasured r d
     "mentions" -> objectSize (at d "rates") == size r "rates" && int (at d "universe") == factOf r "universe"
@@ -99,6 +101,7 @@ countsMeasured = all measured judged
       && toInteger (length (items d "dead")) == size r "dead"
       && toInteger (length (items d "unmentioned")) == size r "unmentioned"
       && (at d "unmentioned" /= Nothing) == (factOf r "asked" == 1)
+  roiOf b c = if c == 0 then Null else toJSON (fixed 1 b c)
   objectSize v = case v of
     Just (Object o) -> toInteger (length o)
     _ -> -1

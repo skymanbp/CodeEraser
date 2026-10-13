@@ -25,11 +25,11 @@ module CE.Clone (WireTree (..), decodeTree, respond, treeShape) where
 import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
 import CE.Clone.Prefilter (histo, provablyBelowH)
 import CE.Clone.Ted (Tree (..), ted)
-import CE.Wire (Family (..), respondWith, rowCheck, tableOffence)
+import CE.Wire (Family (..), Respond, label, respondWith, resultLine, rowCheck, tableOffence, tooLarge)
+import qualified CE.Wire.Families as F
 import Data.Aeson
 import Data.Array.Unboxed (listArray)
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
 
@@ -55,11 +55,11 @@ instance FromJSON CloneReq where
     CloneReq <$> o .: "id" <*> o .: "trees" <*> o .: "pairs" <*> o .:? "decide"
 
 -- | The shared cascade with this family's bindings (CE.Wire).
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto =
   respondWith
     Family
-      { famName = "clone"
+      { famName = F.clone
       , famId = reqId
       , famOverCap = \req ->
           any (\t -> toInteger (length (wLab t)) > unitNodeCap) (reqTrees req)
@@ -99,19 +99,19 @@ violation req =
 -- with merge/1 (CE.Merge.Contract), which reads the same encoding.
 treeShape :: Int -> WireTree -> Maybe String
 treeShape t tree
-  | null lab = Just (label <> "empty tree")
-  | length lab /= length lld = Just (label <> "lab/lld length mismatch")
-  | Just leaf <- wLeaf tree, length leaf /= length lab = Just (label <> "leaf length mismatch")
-  | Just i <- badLld = Just (label <> "node " <> show i <> ": lld out of range")
+  | null lab = Just (at <> "empty tree")
+  | length lab /= length lld = Just (at <> "lab/lld length mismatch")
+  | Just leaf <- wLeaf tree, length leaf /= length lab = Just (at <> "leaf length mismatch")
+  | Just i <- badLld = Just (at <> "node " <> show i <> ": lld out of range")
   -- per-node tiling alone admits forests; a single tree's root must
   -- reach the first postorder node
-  | last lld /= 0 = Just (label <> "not a single tree (root lld /= 0)")
-  | any (< 0) lab = Just (label <> "negative label")
-  | Just i <- badSpan = Just (label <> "node " <> show i <> ": children do not tile the span")
+  | last lld /= 0 = Just (at <> "not a single tree (root lld /= 0)")
+  | any (< 0) lab = Just (at <> "negative label")
+  | Just i <- badSpan = Just (at <> "node " <> show i <> ": children do not tile the span")
   | otherwise = Nothing
  where
   (lab, lld) = (wLab tree, wLld tree)
-  label = "tree " <> show t <> ": "
+  at = label "tree" t
   badLld = lookup True [(l < 0 || l > i, i) | (i, l) <- zip [0 ..] lld]
   badSpan = lookup True [(not (tiles i), i) | i <- [0 .. length lld - 1]]
   -- postorder reconstructibility (F37 replacement): node i's children
@@ -127,14 +127,14 @@ treeShape t tree
 pairRow :: Int -> Int -> [Int] -> Maybe String
 pairRow n p row = case row of
   [i, j]
-    | i < 0 || j < 0 || i >= n || j >= n -> Just (label <> "endpoint out of range")
+    | i < 0 || j < 0 || i >= n || j >= n -> Just (at <> "endpoint out of range")
     -- a unit is not a clone of itself (review C11: [0,0] passed and
     -- judged ted 0 = certain clone)
-    | i == j -> Just (label <> "self pair")
+    | i == j -> Just (at <> "self pair")
     | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [i,j])")
+  _ -> Just (at <> "malformed row (need [i,j])")
  where
-  label = "pair " <> show p <> ": "
+  at = label "pair" p
 
 -- | One replayed row's shape: [ted,n1,n2], a distance and two
 -- non-empty tree sizes.
@@ -178,26 +178,22 @@ judge trees ps = foldr step ([], 0, 0) ps
 -- same order — scores stay raw for the instruments' cut tables.
 reply :: String -> CloneReq -> [([Integer], Bool)] -> (Int, Int) -> Bool -> B8.ByteString
 reply proto req scored (judged, pre) degraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("clone.result" :: String)
-    , "id" .= reqId req
-    , "scores" .= map fst scored
-    , "verdicts" .= map snd scored
-    , "counts"
-        .= object
-          [ "trees" .= length (reqTrees req)
-          , "pairs" .= length (reqPairs req)
-          , "judged" .= judged
-          , "prefiltered" .= pre
-          ]
-    , "knobs"
-        .= object
-          ["tsedNum" .= tsedNum, "tsedDen" .= tsedDen, "minUnitNodes" .= minUnitNodes]
-    , "degraded" .= degraded
+  resultLine
+    proto
+    F.clone
+    (reqId req)
+    ( [ "scores" .= map fst scored
+      , "verdicts" .= map snd scored
+      , "knobs" .= object ["tsedNum" .= tsedNum, "tsedDen" .= tsedDen, "minUnitNodes" .= minUnitNodes]
+      ]
+        <> maybe [] (\ds -> ["decided" .= if degraded then [] else map decided ds]) (reqDecide req)
+    )
+    [ "trees" .= length (reqTrees req)
+    , "pairs" .= length (reqPairs req)
+    , "judged" .= judged
+    , "prefiltered" .= pre
     ]
-      <> ["reason" .= ("clone_too_large" :: String) | degraded]
-      <> maybe [] (\ds -> ["decided" .= if degraded then [] else map decided ds]) (reqDecide req)
+    (tooLarge F.clone degraded)
  where
   decided [t, n1, n2] = cloneDecides t n1 n2
   decided _ = False -- unreachable: row shape validated upstream

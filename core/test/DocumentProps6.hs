@@ -18,7 +18,7 @@ module DocumentProps6 (battery) where
 import CE.Document (catalogue, respond)
 import CE.Document.Contract (DocFamily (..), DocReq, Spec (..), Table (..))
 import CE.Erase.Cost (classNames, reasonNames)
-import CE.Erase.TrailLines (utcStamp)
+import CE.Erase.Document (utcStamp)
 import CE.Text (Line (..), Piece (..), langOf)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -49,7 +49,7 @@ legNames =
   \dedup's summary holds the twelve counters\n\
   \trend's verdict words are the face's, in both languages\n\
   \the erase plan and trail spell CE.Erase.Cost's names\n\
-  \the trail's stamp is the measuring side's civil date\n\
+  \the trail's stamp is the measuring side's civil date, on every row\n\
   \the seeded step-5 documents are not vacuous\n\
   \the catalogue says pretty for scan and dedup alone"
 
@@ -67,7 +67,7 @@ fieldTable =
   \dedup schema string\ndedup blocks array\ndedup groups array\ndedup summary object\n\
   \clone schema string\nclone clones array\nclone counts object\nclone-units schema string\nclone-units units array\n\
   \docdup schema string\ndocdup dups array\ndocdup counts object\n\
-  \erase schema string\nerase rows array\nerase counts object\nerase families object\n\
+  \erase schema string\nerase rows array\nerase counts object\nerase families object\nerase run object\n\
   \erase-trail schema string\nerase-trail log string\nerase-trail present bool\nerase-trail rows array\n\
   \erase-trail unreadable array\nerase-trail counts object\n\
   \churn schema string\nchurn commits number\nchurn append_lines number\nchurn rewrite_lines number\n\
@@ -167,12 +167,13 @@ eraseNames =
     at r "class" `elem` map (Just . toJSON) classNames
       && (n == "erase-trail" || at r "reason" `elem` map (Just . toJSON) reasonNames)
 
--- | The stamp of five instants, read off the measuring side's
--- `utc_stamp` (cli/src/erase/log.rs).
+-- | The stamp of five instants, as the measuring side's reader once
+-- spelled them, and every judged trail row's `stamp` is its `ts_ms`'s.
 stamped :: Bool
 stamped =
   map utcStamp [0, 951782400000, 1700000000123, 4102444799999, 86399999]
     == ["1970-01-01T00:00:00Z", "2000-02-29T00:00:00Z", "2023-11-14T22:13:20Z", "2099-12-31T23:59:59Z", "1970-01-01T23:59:59Z"]
+    && and [at r "stamp" == Just (toJSON (utcStamp (int (at r "ts_ms")))) | (f, _, d) <- judged, dfName f == "erase-trail", r <- items d "rows"]
 
 -- | Each family reaches what the legs above read.
 seeded :: Bool

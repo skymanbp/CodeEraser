@@ -7,8 +7,10 @@
 -- face that assembled them on the measuring side
 -- (cli/src/query/face.rs): the program block, every goal with its
 -- kind, columns and sorts, every answer, every proof row, every error,
--- the core's counts. Three roads: the measuring side's own faults (a
--- lexical fault or a glob it could not read: `faults`, each a
+-- the core's counts; each goal names its answers, each answer the rows
+-- of its derivation below the root, each proof row its depth (edges
+-- from its answer's root). Three roads: the measuring side's own
+-- faults (a lexical fault or a glob it could not read: `faults`, each a
 -- position text and a message text), the core's program errors
 -- (`errors`), or the judgment. The two documents differ in their
 -- schema id alone.
@@ -18,7 +20,9 @@ import CE.Document.Contract
 import CE.Query.Schema (sortsOf)
 import Data.Aeson (Value (..), object, toJSON, (.=))
 import Data.Foldable (asum)
+import Data.List (mapAccumL)
 import qualified Data.IntMap.Strict as IM
+import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe)
 
 queryDoc, rulesDoc :: DocFamily
@@ -31,7 +35,7 @@ querySchemaId = "ce.query-report/0.1.0"
 rulesSchemaId = "ce.rules-report/0.1.0"
 
 family :: String -> String -> DocFamily
-family name schemaId = docFamily name schemaId statement aligned (assemble schemaId) []
+family name schemaId = docFamily name schemaId statement aligned assemble []
 
 -- | The request. `at` is the token positions an error may name (the
 -- stream's length plus one: the end of input), `heads` the program's
@@ -74,9 +78,7 @@ errorNames =
 
 -- | A sort's name by code (CE.Query.Cost); any other is `open`.
 sortName :: Integer -> String
-sortName s = case drop (fromInteger s) (words "node dir unit int sym set") of
-  (n : _) | s >= 0 -> n
-  _ -> "open"
+sortName = nameOr "open" (words "node dir unit int sym set")
 
 -- | A fault answers no goal; an error code is the core's; a judged
 -- program's heads are its goals, one each, in order.
@@ -96,14 +98,13 @@ aligned req =
 judged :: DocReq -> Bool
 judged req = null (rows req "faults") && null (rows req "errors") && dDegraded req == Nothing
 
-assemble :: String -> DocReq -> Value
-assemble schemaId req =
+assemble :: DocReq -> Value
+assemble req =
   object
-    [ "schema" .= schemaId
-    , "program" .= program req
-    , "goals" .= if judged req then zipWith goal (rows req "heads") (rows req "goals") else []
-    , "answers" .= if judged req then map (answer ofGoal) (rows req "answers") else []
-    , "proof" .= if judged req then map (proofRow ofGoal ofPred) (rows req "proof") else []
+    [ "program" .= program req
+    , "goals" .= if judged req then zipWith (goal answersOf) (rows req "heads") (rows req "goals") else []
+    , "answers" .= if judged req then zipWith (answer ofGoal proofOf) nths (rows req "answers") else []
+    , "proof" .= if judged req then zipWith (proofRow ofGoal ofPred) depths (rows req "proof") else []
     , "errors" .= errors req
     , "counts" .= counted counts (map (fact req) counts)
     , "degraded" .= whyRef req
@@ -111,6 +112,7 @@ assemble schemaId req =
  where
   ofGoal = sortsBy (rows req "goals") (drop 1)
   ofPred = sortsBy (rows req "preds") id
+  Grouped answersOf nths proofOf depths = grouped (rows req "answers") (rows req "proof")
 
 program :: DocReq -> Value
 program req =
@@ -136,11 +138,12 @@ errors req
   face at tok code what = object ["at" .= at, "token" .= tok, "code" .= code, "what" .= what]
   named c = toJSON (fromMaybe "?" (lookup c (zip [0 ..] errorNames)))
 
-goal :: [Integer] -> [Integer] -> Value
-goal head' row = case (head', row) of
+goal :: (Integer -> [Int]) -> [Integer] -> [Integer] -> Value
+goal answersOf head' row = case (head', row) of
   ([g, named, cols], _ : kind : sorts) ->
     object
       [ "goal" .= g
+      , "answers" .= answersOf g
       , "kind" .= (if kind == 1 then "assert" else "query" :: String)
       , "name" .= (if named /= 0 then ref "goal_name" [g] else Null)
       , "columns" .= [ref "column" [g, i] | i <- [0 .. cols - 1]]
@@ -160,22 +163,49 @@ sortsBy table past = \x -> IM.lookup (fromInteger x) m
 values :: [Integer] -> [Integer] -> [Value]
 values sorts = zipWith (\s v -> ref "value" [s, v]) (sorts <> repeat (-1))
 
-answer :: (Integer -> Maybe [Integer]) -> [Integer] -> Value
-answer ofGoal row = case row of
-  g : vs -> object ["goal" .= g, "values" .= values (fromMaybe [] (ofGoal g)) vs, "raw" .= vs]
+answer :: (Integer -> Maybe [Integer]) -> ((Integer, Integer) -> [Int]) -> Integer -> [Integer] -> Value
+answer ofGoal proofOf nth row = case row of
+  g : vs -> object ["goal" .= g, "values" .= values (fromMaybe [] (ofGoal g)) vs, "raw" .= vs, "proof" .= proofOf (g, nth)]
   _ -> Null
+
+-- | The grouping the faces read: a goal's answers (indices into
+-- `answers`), each answer's place among its goal's answers, an
+-- answer's derivation rows below its root (indices into `proof`, keyed
+-- by goal and that place), and each proof row's depth — edges from its
+-- answer's root, walked over the parent column (a tree is emitted
+-- whole and numbered in pre-order, so every parent is present and
+-- smaller; the walk stops at a parent that is not, so any request
+-- terminates).
+data Grouped = Grouped (Integer -> [Int]) [Integer] ((Integer, Integer) -> [Int]) [Integer]
+
+grouped :: [[Integer]] -> [[Integer]] -> Grouped
+grouped answers proof = Grouped (\g -> M.findWithDefault [] g byGoal) nths (\k -> M.findWithDefault [] k byAnswer) (map depth proof)
+ where
+  goals = [g | g : _ <- answers]
+  byGoal = M.fromListWith (flip (<>)) [(g, [i]) | (i, g) <- zip [0 ..] goals]
+  nths = snd (mapAccumL (\seen g -> let n = M.findWithDefault 0 g seen in (M.insert g (n + 1) seen, n)) M.empty goals)
+  byAnswer = M.fromListWith (flip (<>)) [((g, a), [j]) | (j, g : a : _ : parent : _) <- zip [0 ..] proof, parent >= 0]
+  parents = M.fromList [((g, a, n), parent) | g : a : n : parent : _ <- proof]
+  depth row = case row of
+    g : a : n : parent : _ -> walk 0 n parent
+     where
+      walk d cur at
+        | at < 0 || at >= cur = d
+        | otherwise = maybe d (walk (d + 1) at) (M.lookup (g, a, at) parents)
+    _ -> 0
 
 -- | A proof row; its argument sorts are the goal's at a query root,
 -- the core's resolved ones for a program predicate, the schema's for a
 -- fact.
-proofRow :: (Integer -> Maybe [Integer]) -> (Integer -> Maybe [Integer]) -> [Integer] -> Value
-proofRow ofGoal ofPred row = case row of
+proofRow :: (Integer -> Maybe [Integer]) -> (Integer -> Maybe [Integer]) -> Integer -> [Integer] -> Value
+proofRow ofGoal ofPred depth row = case row of
   g : a : node : parent : rule : p : args ->
     object
       [ "goal" .= g
       , "answer" .= a
       , "node" .= node
       , "parent" .= parent
+      , "depth" .= depth
       , "rule" .= rule
       , "pred" .= (if p < 0 then String "?-" else ref "pred" [p])
       , "args" .= values (sortsAt g p) args

@@ -73,7 +73,7 @@ macro_rules! owned {
     )*};
 }
 pub(crate) use owned;
-owned!(bool, usize, i64, u64, char, String);
+owned!(bool, u32, usize, i64, u64, char, String);
 
 /// A struct read through `Leak`: its owned twin (every field the
 /// field type's `Owned`, the field's own serde attributes kept) is the

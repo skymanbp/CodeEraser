@@ -27,28 +27,24 @@ module CE.Similar.Bags (BagsReq (..), bagsCap, overCap, respond) where
 
 import CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsCap, offence, overCap)
 import CE.Similar.Terms
-import CE.Wire (family)
-import CE.Wire.Result (resultLine)
-import Data.Aeson (Value, (.=))
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
+import Data.Aeson.Types (Pair)
 import qualified Data.ByteString as B
-import qualified Data.ByteString.Char8 as B8
 import Data.Char (chr, isDigit)
 import Data.List (isPrefixOf)
 import qualified Data.Map.Strict as M
 import Data.Word (Word64)
 
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "bags" reqId overCap offence (answer proto True) (answer proto False)
+respond :: Respond
+respond = tabled F.bags reqId overCap offence answer
 
-answer :: String -> Bool -> BagsReq -> B8.ByteString
-answer proto degraded r =
-  resultLine
-    proto
-    "bags"
-    (reqId r)
-    ["bags" .= bags, "texts" .= textBags, "chars" .= chars]
-    ["units" .= length bags, "texts" .= length textBags, "terms" .= sum (map length (bags <> textBags))]
-    (if degraded then Just "bags_too_large" else Nothing)
+answer :: Bool -> BagsReq -> ([Pair], [Pair])
+answer degraded r =
+  ( ["bags" .= bags, "texts" .= textBags, "chars" .= chars]
+  , ["units" .= length bags, "texts" .= length textBags, "terms" .= sum (map length (bags <> textBags))]
+  )
  where
   bags = if degraded then [] else map (rows . build) (units r)
   textBags = if degraded then [] else map (rows . textTerms) (texts r)

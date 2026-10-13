@@ -22,7 +22,8 @@ module CE.Trend.Cost (
   verdictOf,
 ) where
 
-import Data.List (sort, sortBy, tails)
+import CE.Verdict.Soft (median)
+import Data.List (sortBy, tails)
 import Data.Ord (comparing)
 import Data.Ratio ((%))
 
@@ -80,18 +81,6 @@ slopeMicroPerDay view
     , (_, x2, y2) <- rest
     , x2 /= x1
     ]
-
--- | Order-statistic median, the even count averaged — exact in
--- Rational, deterministic by sort.
-median :: [Rational] -> Rational
-median xs
-  | odd n = at mid
-  | otherwise = (at (mid - 1) + at mid) / 2
- where
-  sorted = sort xs
-  n = length sorted
-  mid = n `div` 2
-  at k = sorted !! k
 
 -- | The steepest single-step FALL between consecutive points of the
 -- judged view: (request index of the LATER point, the exact drop in

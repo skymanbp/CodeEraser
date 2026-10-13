@@ -9,15 +9,16 @@
 -- cli/src/erase/model.rs): the rows the erase/1 target closure kept,
 -- each with its class, the predicate's verdict and reason, its target,
 -- provenance, the unresolved sites of its language and the file's
--- content hash; the counts; and the family command behind every
--- out-of-class kind. The class and reason names are CE.Erase.Cost's;
+-- content hash; the counts; the family command behind every
+-- out-of-class kind; and the run (`applied`: the rows an apply erased,
+-- null when none ran). The class and reason names are CE.Erase.Cost's;
 -- the out-of-class kinds and their commands are this module's table.
 -- The measuring side sends every judged candidate in plan order with
 -- the reply's [eraseable, reason] and `kept` bit, and the out-of-class
 -- counts by kind code; paths and provenance are references. The
 -- trail `ce erase --log` reads is this module's second family
 -- (`trailDoc`, below).
-module CE.Erase.Document (doc, logRel, outOfClass, planRows, schemaId, trailDoc, trailSchemaId) where
+module CE.Erase.Document (doc, logRel, outOfClass, planRows, schemaId, trailDoc, trailSchemaId, utcStamp) where
 
 import CE.Document.Contract
 import CE.Erase.Cost (classNames, reasonNames)
@@ -26,6 +27,7 @@ import Data.Aeson.Key (fromString)
 import Data.Foldable (asum)
 import Data.List (sortOn)
 import qualified Data.Map.Strict as M
+import Text.Printf (printf)
 
 doc :: DocFamily
 doc =
@@ -75,10 +77,10 @@ planRows req = [(i, r) | (i, r) <- zip [0 ..] (rows req "cands"), drop 9 r == [1
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= dfSchema doc
-    , "rows" .= map row kept
+    [ "rows" .= map row kept
     , "counts" .= object ["candidates" .= length kept, "eraseable" .= length eraseable, "advisory" .= (length kept - length eraseable), "out_of_class" .= object [fromString k .= n | (k, n) <- kinds]]
     , "families" .= object [fromString k .= c | (k, _) <- kinds, Just c <- [lookup k outOfClass]]
+    , "run" .= object ["applied" .= (if flag req "apply" then toJSON (fact req "applied") else Null)]
     ]
  where
   kept = planRows req
@@ -140,8 +142,7 @@ trailChecked req =
 trailAssemble :: DocReq -> Value
 trailAssemble req =
   object
-    [ "schema" .= dfSchema trailDoc
-    , "log" .= logRel
+    [ "log" .= logRel
     , "present" .= flag req "present"
     , "rows" .= map record (rows req "records")
     , "unreadable" .= [object ["line" .= n, "why" .= ref "unreadable" [k]] | [k, n] <- rows req "unreadable"]
@@ -154,6 +155,7 @@ trailAssemble req =
       object
         [ "schema" .= recordSchema
         , "ts_ms" .= ts
+        , "stamp" .= utcStamp ts
         , "class" .= spelled classNames cls
         , "path" .= ref "path" [f]
         , "span" .= (if spanned == 1 then toJSON [s, e] else Null)
@@ -165,5 +167,22 @@ trailAssemble req =
 
 -- | The two documents' schema ids (the facts registry reads them here).
 schemaId, trailSchemaId :: String
-schemaId = "ce.erase-plan/0.3.0"
-trailSchemaId = "ce.erase-trail-report/0.1.0"
+schemaId = "ce.erase-plan/0.4.0"
+trailSchemaId = "ce.erase-trail-report/0.2.0"
+
+-- | `YYYY-MM-DDTHH:MM:SSZ` from epoch milliseconds — the proleptic
+-- Gregorian civil date of the day count (Howard Hinnant's
+-- `civil_from_days`, integer-exact).
+utcStamp :: Integer -> String
+utcStamp ms = printf "%04d-%02d-%02dT%02d:%02d:%02dZ" y m d (rest `div` 3600) (rest `mod` 3600 `div` 60) (rest `mod` 60)
+ where
+  secs = ms `div` 1000
+  rest = secs `mod` 86400
+  z = secs `div` 86400 + 719468
+  (era, doe) = z `divMod` 146097
+  yoe = (doe - doe `div` 1460 + doe `div` 36524 - doe `div` 146096) `div` 365
+  doy = doe - (365 * yoe + yoe `div` 4 - yoe `div` 100)
+  mp = (5 * doy + 2) `div` 153
+  d = doy - (153 * mp + 2) `div` 5 + 1
+  m = if mp < 10 then mp + 3 else mp - 9
+  y = yoe + era * 400 + (if m <= 2 then 1 else 0)

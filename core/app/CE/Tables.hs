@@ -19,25 +19,34 @@ import CE.Lang (digestOf, pack)
 import CE.Lang.Contract (offence)
 import qualified CE.Resolve.Tables as ResolveTables
 import CE.Limits (limits)
+import CE.Tombstone (kindNames)
+import CE.Wire.Families (FamilyName (..))
+import qualified CE.Wire.Families as F
+import CE.Wire (Respond, envelope)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
 
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto line = case decodeStrict line of
   Just (Object o) -> case offence o of
     Just why -> Left (KM.lookup "id" o, "contract", why)
     Nothing -> Right (reply proto (KM.lookup "id" o))
-  _ -> Left (Nothing, "bad_request", "tables: the request is not an object")
+  _ -> Left (Nothing, "bad_request", nameWord F.tables <> ": the request is not an object")
 
 -- | The definition package: the language and product definitions
 -- (CE.Lang), the document catalogue and the families' limits (plan
--- v2.33 W3, CE.Limits).
+-- v2.33 W3, CE.Limits). The `tombstone` table also carries the row
+-- kinds by code (step 11a: the names a site's `file:line kind` spells,
+-- CE.Tombstone.kindNames — the family's own list, not a transcription).
 package :: Value
 package = case pack of
-  Object keys -> Object (KM.insert "limits" limits (KM.insert "resolve" ResolveTables.table (KM.insert "document" catalogue keys)))
+  Object keys -> Object (KM.mapWithKey withKinds (KM.insert "limits" limits (KM.insert "resolve" ResolveTables.table (KM.insert "document" catalogue keys))))
   v -> v
+ where
+  withKinds "tombstone" (Object t) = Object (KM.insert "kind_names" (toJSON kindNames) t)
+  withKinds _ t = t
 
 -- | The number the hello names as `tablesDigest` and the reply as
 -- `digest`: the package's own.
@@ -46,15 +55,9 @@ tablesDigest = digestOf package
 
 -- | The package's keys beside the envelope's and the digest.
 reply :: String -> Maybe Value -> B8.ByteString
-reply proto rid = BL.toStrict (encode (Object (KM.union envelope content)))
+reply proto rid = BL.toStrict (encode (Object (KM.union fixed content)))
  where
-  envelope =
-    KM.fromList
-      [ ("proto", toJSON proto)
-      , ("type", String "tables.result")
-      , ("id", maybe Null id rid)
-      , ("digest", toJSON tablesDigest)
-      ]
+  fixed = KM.fromList (envelope proto F.tables (maybe Null id rid) <> ["digest" .= tablesDigest])
   content = case package of
     Object keys -> keys
     _ -> KM.empty

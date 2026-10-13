@@ -20,10 +20,10 @@
 module CE.Similar (respond) where
 
 import CE.Similar.Cost (isRole, ratio, rowWidth, similarCap)
-import CE.Wire (family, rowCheck, tableOffence)
-import Data.Aeson (FromJSON (..), Value, encode, object, withObject, (.!=), (.:), (.:?), (.=))
+import CE.Wire (Respond, family, resultLine, rowCheck, tableOffence, tooLarge)
+import qualified CE.Wire.Families as F
+import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?), (.=))
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import Data.List (sortBy)
 import Data.Ord (Down (..), comparing)
@@ -43,8 +43,8 @@ instance FromJSON SimilarReq where
 -- | decode → cap (query terms and rows together) → contract (the query
 -- table first: shape then strictly ascending hashes — a bag is a set;
 -- then every row) → judge.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "similar" simId overCap offence (degraded proto) (judged proto)
+respond :: Respond
+respond proto = family F.similar simId overCap offence (degraded proto) (judged proto)
 
 -- | Query terms and candidate rows are priced together (the scan C15
 -- discipline: every request dimension counts against the cap).
@@ -104,18 +104,13 @@ degraded proto req = reply proto req [] [] True
 -- the role bit per candidate in request order, the counts.
 reply :: String -> SimilarReq -> [Integer] -> [Bool] -> Bool -> B8.ByteString
 reply proto req order roles isDegraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("similar.result" :: String)
-    , "id" .= simId req
-    , "order" .= order
-    , "roles" .= roles
-    , "counts"
-        .= object
-          [ "rows" .= length (candidatesOf req)
-          , "queryTerms" .= length (queryOf req)
-          , "role" .= length (filter id roles)
-          ]
-    , "degraded" .= isDegraded
+  resultLine
+    proto
+    F.similar
+    (simId req)
+    ["order" .= order, "roles" .= roles]
+    [ "rows" .= length (candidatesOf req)
+    , "queryTerms" .= length (queryOf req)
+    , "role" .= length (filter id roles)
     ]
-      <> ["reason" .= ("similar_too_large" :: String) | isDegraded]
+    (tooLarge F.similar isDegraded)

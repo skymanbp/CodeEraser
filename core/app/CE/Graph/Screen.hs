@@ -58,7 +58,7 @@ fileNodes :: DocReq -> [Integer]
 fileNodes req = [n | [n, 0, _] <- rows req "graph"]
 
 assemble :: DocReq -> Value
-assemble req = object ["schema" .= screenId, "canvas" .= canvas req, "deadcode" .= Dead.deadcode req]
+assemble req = object ["canvas" .= canvas req, "deadcode" .= dfAssemble Dead.doc req]
 
 canvas :: DocReq -> Value
 canvas req =

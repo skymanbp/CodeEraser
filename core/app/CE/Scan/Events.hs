@@ -7,8 +7,8 @@
 -- assumed); `seq` the unit-local pre-order index, contiguous from 0;
 -- `parent` −1 or an earlier seq; `pos` 0 or 1; `flags` thirteen bits;
 -- `aux` a chain's operand count and 0 elsewhere; the tail a logic
--- root's operator ids, present exactly when that bit is. When the
--- table rides, every code-3, -4 and -5 row must carry 0 — the value
+-- root's operator ids, present exactly when that bit is. The table is
+-- required since 9.0.0; every code-3, -4 and -5 row must carry 0 — the value
 -- is derived here, by the judgment's owner, the way the naming facts
 -- settle the code-6 rows (the staleDocs lesson: one judgment, one
 -- road) — and every such row must sit in a [3,4,5] triple. A unit
@@ -19,7 +19,7 @@
 module CE.Scan.Events (derivedRows, eventBattery, withEvents) where
 
 import CE.Scan.Complexity (eventOf, fold)
-import CE.Wire (ascendingOn)
+import CE.Wire (ascendingOn, label)
 import Data.Bits (testBit)
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
@@ -34,9 +34,8 @@ derived = [3, 4, 5]
 -- | First offender in request order: the rows' own posture on the
 -- events road (zeroed, in triples), then each event's shape, then
 -- the order and the seq contiguity across the table.
-eventBattery :: [[Integer]] -> Maybe [[Integer]] -> Maybe String
-eventBattery _ Nothing = Nothing
-eventBattery rows (Just evs) =
+eventBattery :: [[Integer]] -> [[Integer]] -> Maybe String
+eventBattery rows evs =
   asum
     [ asum (zipWith rowPosture [0 :: Int ..] rows)
     , asum (zipWith (eventShape n codeAt) [0 :: Int ..] evs)
@@ -95,14 +94,10 @@ contiguous evs = go M.empty (zip [0 :: Int ..] evs)
     | otherwise = go (M.insert r (s + 1) seen) rest
   go seen (_ : rest) = go seen rest
 
-label :: String -> Int -> String
-label what i = what <> " " <> show i <> ": "
-
 -- | The rows with each unit's three complexity values derived from
--- its events — the table absent, the rows keep their bytes.
-withEvents :: Maybe [[Integer]] -> [[Integer]] -> [[Integer]]
-withEvents Nothing rows = rows
-withEvents (Just evs) rows = zipWith settle [0 :: Int ..] rows
+-- its events.
+withEvents :: [[Integer]] -> [[Integer]] -> [[Integer]]
+withEvents evs rows = zipWith settle [0 :: Int ..] rows
  where
   -- fromListWith prepends, so each unit's list comes out reversed
   -- and is turned back: linear, and the order is the table's

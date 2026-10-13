@@ -14,7 +14,6 @@ module CE.Structure.Cost
   , bigDirFloor
   , structViolCost
   , structViolCostNeutral
-  , structScale
   , dupMin
   , deadMin
   , staleMin
@@ -85,10 +84,6 @@ structViolCost = 10
 -- knob.
 structViolCostNeutral :: Integer
 structViolCostNeutral = 10
-
--- | The structure score's opening value (per-mille scale).
-structScale :: Integer
-structScale = 1000
 
 -- | S6: a directory joins the redundancy finding when its clone
 -- blocks reach this floor — one block is already this tool's whole

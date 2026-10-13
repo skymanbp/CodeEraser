@@ -59,7 +59,7 @@ checked req =
 assemble :: DocReq -> Value
 assemble req =
   object $
-    ["schema" .= schemaId, "rates" .= object (map census (rows req "rates"))]
+    ["rates" .= object (map census (rows req "rates"))]
       <> [fromString k .= fact req k | k <- header, '.' `notElem` k]
       <> [fromString g .= object (map (member g) ks) | (g, ks) <- groups]
  where

@@ -20,6 +20,7 @@ module CE.Structure.Entropy
   , perMille
   ) where
 
+import CE.Verdict.Cost (scoreScale)
 import Data.Ratio (Ratio, (%))
 
 -- | Tsallis-2 entropy of a count distribution: 1 − Σ (c/N)².
@@ -65,6 +66,7 @@ chi2 pairs
   sq x = x * x
 
 -- | The publishing scale: exact rational → per-mille floor (the
--- deterministic truncation every published structure number rides).
+-- deterministic truncation every published structure number rides),
+-- the one per-mille constant the scores open at (CE.Verdict.Cost).
 perMille :: Ratio Integer -> Integer
-perMille r = floor (r * 1000)
+perMille r = floor (r * fromInteger scoreScale)

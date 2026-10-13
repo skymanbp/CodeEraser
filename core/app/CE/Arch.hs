@@ -26,10 +26,11 @@ import CE.Arch.Impact (impact)
 import CE.Arch.Layers (levels, metrics)
 import CE.Arch.Louvain (clusters, misplaced)
 import qualified CE.Wire as Wire
-import Data.Aeson (Value, encode, object, (.=))
+import qualified CE.Wire.Families as F
+import CE.Wire (Respond, faultLine, resultLine, tooLarge)
+import Data.Aeson (object, (.=))
 import Data.Aeson.Types (Pair)
 import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntMap.Strict as IM
 import qualified Data.Set as S
 
@@ -66,26 +67,20 @@ judge req =
 -- judge licenses nothing — the five request tables still counted, the
 -- answer counts 0, and the reason.
 answer :: String -> Bool -> ArchReq -> B.ByteString
-answer proto degraded req = BL.toStrict (encode (object (fields <> ["reason" .= ("arch_too_large" :: String) | degraded])))
+answer proto degraded req =
+  resultLine
+    proto
+    F.arch
+    (reqId req)
+    (tables <> pathKeys req)
+    (zipWith (.=) ["files", "dirs", "edges", "pkgEdges", "focus", "cuts", "clusters", "misplaced", "impact"] tallies)
+    (tooLarge F.arch degraded)
  where
   a = if degraded then Answer [] [] [] [] [] [] else judge req
+  tables = zipWith (.=) ["layers", "cuts", "clusters", "misplaced", "impact", "metrics"] (map ($ a) [layers, cuts, grouped, outside, reach, measured])
   sizes = map (toInteger . length) [fileRows req, dirRows req, edgeRows req, pkgRows req] <> [toInteger (length (focusRows req))]
   distinct = toInteger (S.size (S.fromList [c | [_, c] <- grouped a]))
   tallies = sizes <> [toInteger (length (cuts a)), distinct, toInteger (length (outside a)), toInteger (length (reach a))]
-  fields =
-    [ "proto" .= proto
-    , "type" .= ("arch.result" :: String)
-    , "id" .= reqId req
-    , "layers" .= layers a
-    , "cuts" .= cuts a
-    , "clusters" .= grouped a
-    , "misplaced" .= outside a
-    , "impact" .= reach a
-    , "metrics" .= measured a
-    , "counts" .= object (zipWith (.=) ["files", "dirs", "edges", "pkgEdges", "focus", "cuts", "clusters", "misplaced", "impact"] tallies)
-    , "degraded" .= degraded
-    ]
-      <> pathKeys req
 
 -- | What a path-form reply adds (plan v2.33 W1 item 3): the five tables
 -- built from the paths, which the document is laid out over, and each
@@ -98,17 +93,11 @@ pathKeys req = case pathOf req of
     ]
   _ -> []
 
--- | A path-form request whose focus names no measured file: the fault in
--- place of a judgment (the measuring side stops on it).
-faultReply :: String -> ArchReq -> String -> B.ByteString
-faultReply proto req fault =
-  BL.toStrict (encode (object ["proto" .= proto, "type" .= ("arch.result" :: String), "id" .= reqId req, "fault" .= fault, "degraded" .= False]))
-
 -- | decode → cap → contract → judge; the degraded reply is the judged
 -- reply's shape with nothing judged.
-respond :: String -> B.ByteString -> Either (Maybe Value, String, String) B.ByteString
-respond proto = Wire.family "arch" reqId overCap offence (answer proto True) judged
+respond :: Respond
+respond proto = Wire.family F.arch reqId overCap offence (answer proto True) judged
  where
   judged req = case pathOf req of
-    Just (ArchPath (Left fault) Nothing) -> faultReply proto req fault
+    Just (ArchPath (Left fault) Nothing) -> faultLine proto F.arch (reqId req) fault
     _ -> answer proto False req

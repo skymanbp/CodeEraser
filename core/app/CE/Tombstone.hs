@@ -15,10 +15,10 @@
 module CE.Tombstone (kindNames, respond) where
 
 import CE.Tombstone.Cost (budgetCode, isSite, kindProse, overBudget, tombstoneRowCap)
-import CE.Wire (RowsReq (..), knobbedRows, rowCheck)
-import Data.Aeson (Value, encode, object, (.=))
+import CE.Wire (Respond, RowsReq (..), knobTable, knobbedRows, resultLine, rowCheck, tooLarge)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 
 -- | The row kinds by code, as a site names its kind (`file:line kind`;
 -- the measuring side's `Kind::name`, read by the guard and audit
@@ -36,8 +36,8 @@ budgetOf req = case [v | [c, v] <- knobsOf req, c == budgetCode] of
 -- (CE.Wire knobbedRows): the rows-and-knobs cap, the row contract
 -- through rowCheck (width 3, then the value checks), the knob
 -- contract — one code today — and the two replies.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond = knobbedRows "tombstone" tombstoneRowCap rowShape knobShape degraded judged
+respond :: Respond
+respond = knobbedRows F.tombstone tombstoneRowCap rowShape knobsOffence degraded judged
  where
   rowShape = rowCheck "row" "malformed row (need [kind,marks,erasedNames])" 3 rowChecks
 
@@ -48,15 +48,13 @@ rowChecks row = case row of
     | marks < 0 || names < 0 -> Just "negative count"
   _ -> Nothing
 
-knobShape :: Int -> [Integer] -> Maybe String
-knobShape i row = case row of
-  [code, v]
-    | code /= budgetCode -> Just (label <> "unknown knob code")
-    | v < 0 -> Just (label <> "negative knob value")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed knob (need [code,value])")
+-- | The knob table (CE.Wire.knobTable): one code, the budget.
+knobsOffence :: [[Integer]] -> Maybe String
+knobsOffence = knobTable "knob" "malformed knob (need [code,value])" budgetCode "unknown knob code" judge
  where
-  label = "knob " <> show i <> ": "
+  judge _ v
+    | v < 0 = Just "negative knob value"
+    | otherwise = Nothing
 
 judged :: String -> RowsReq -> B8.ByteString
 judged proto req = reply proto req (map fst sites) (label, prose) over False
@@ -76,20 +74,11 @@ degraded proto req = reply proto req [] (0, 0) False True
 -- order, their label / prose split, the budget condition, the
 -- effective knob table echoed (empty = no budget declared).
 reply :: String -> RowsReq -> [Integer] -> (Int, Int) -> Bool -> Bool -> B8.ByteString
-reply proto req sites (label, prose) over isDegraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("tombstone.result" :: String)
-    , "id" .= rowsId req
-    , "sites" .= sites
-    , "counts"
-        .= object
-          [ "rows" .= length (rowsOf req)
-          , "label" .= label
-          , "prose" .= prose
-          ]
-    , "over" .= over
-    , "knobs" .= [[budgetCode, b] | Just b <- [budgetOf req]]
-    , "degraded" .= isDegraded
-    ]
-      <> ["reason" .= ("tombstone_too_large" :: String) | isDegraded]
+reply proto req sites (labelled, prose) over isDegraded =
+  resultLine
+    proto
+    F.tombstone
+    (rowsId req)
+    ["sites" .= sites, "over" .= over, "knobs" .= [[budgetCode, b] | Just b <- [budgetOf req]]]
+    ["rows" .= length (rowsOf req), "label" .= labelled, "prose" .= prose]
+    (tooLarge F.tombstone isDegraded)

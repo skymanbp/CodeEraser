@@ -23,16 +23,15 @@ module CE.Merge (respond) where
 import CE.Clone (WireTree (..))
 import CE.Merge.Contract (MergeReq (..), MergeTree (..), groupsOf, offence, overCap)
 import CE.Merge.Holes (suggest)
-import CE.Wire (family)
-import Data.Aeson (Value, encode, object, (.=))
-import Data.ByteString (ByteString)
-import Data.ByteString.Lazy (toStrict)
-import Data.Maybe (isJust)
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
+import Data.Aeson.Types (Pair)
 
 -- | decode → caps (groups, nodes) → contract → judge; the degraded
 -- reply is the judged reply's shape with nothing judged.
-respond :: String -> ByteString -> Either (Maybe Value, String, String) ByteString
-respond proto = family "merge" reqId overCap offence (answer proto (Just "merge_too_large")) (answer proto Nothing)
+respond :: Respond
+respond = tabled F.merge reqId overCap offence answer
 
 -- | The merge.result object. Judged (no reason): one suggestion row
 -- [g,params,kept,savings,feasible,reason] per group in request order
@@ -41,21 +40,15 @@ respond proto = family "merge" reqId overCap offence (answer proto (Just "merge_
 -- node twice for a leaf hole, −1 −1 an empty side). Degraded (the reason): no rows — a request the core
 -- refused to judge licenses nothing. The counts name the three
 -- request dimensions either way.
-answer :: String -> Maybe String -> MergeReq -> ByteString
-answer proto reason req = toStrict (encode (object (fields <> maybe [] (\why -> ["reason" .= why]) reason)))
+answer :: Bool -> MergeReq -> ([Pair], [Pair])
+answer degraded req =
+  ( ["suggestions" .= rows, "holes" .= holes]
+  , (zipWith (.=) ["groups", "members", "nodes", "suggestions", "holes", "feasible"] tallies)
+  )
  where
-  judged = maybe (map suggest (groupsOf req)) (const []) reason
+  judged = if degraded then [] else map suggest (groupsOf req)
   rows = map fst judged
   holes = concatMap snd judged
   nodes = sum (map (length . wLab . tWire) (treeRows req))
   feasible = length [() | row <- rows, take 1 (drop 4 row) == [1]]
   tallies = map length [groupRows req, memberRows req] <> [nodes, length rows, length holes, feasible]
-  fields =
-    [ "proto" .= proto
-    , "type" .= ("merge.result" :: String)
-    , "id" .= reqId req
-    , "suggestions" .= rows
-    , "holes" .= holes
-    , "counts" .= object (zipWith (.=) ["groups", "members", "nodes", "suggestions", "holes", "feasible"] tallies)
-    , "degraded" .= isJust reason
-    ]

@@ -14,7 +14,7 @@
 -- measuring side's table holds for each row the core kept. The graph
 -- screen embeds this same document (CE.Graph.Screen), so its
 -- statement and assembly are exported.
-module CE.Graph.Document (deadcode, doc, statement, verdictName, whyCodes) where
+module CE.Graph.Document (doc, statement, verdictName, whyCodes) where
 
 import CE.Document.Contract
 import Data.Aeson (Value (..), object, toJSON, (.=))
@@ -89,8 +89,7 @@ checked req =
 deadcode :: DocReq -> Value
 deadcode req =
   object $
-    [ "schema" .= schemaId
-    , "dead" .= map dead (rows req "dead")
+    [ "dead" .= map dead (rows req "dead")
     , "reported" .= [object ["name" .= ref "node_name" [n], "verdict" .= verdictName v] | [n, v] <- rows req "reported"]
     , "counts" .= object ["nodes" .= range req "nodes", "kept_edges" .= fromMaybe 0 (keptOf req)]
     , "unresolved_sites" .= fact req "unresolvedSites"

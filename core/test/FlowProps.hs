@@ -15,12 +15,14 @@ module FlowProps (battery) where
 import CE.Flow (respond)
 import CE.Flow.Contract (FlowReq (..), overCap)
 import CE.Flow.Cost (rowCap)
+import CE.Flow.Document (judgedFinding)
 import Data.Aeson
+import qualified Data.Map.Strict as M
 import FlowCases (Case (..), judgments)
 import FlowRefusals (refusals)
 import ReferenceFlow (referenceFindings)
 import ReferenceFlowGen (programs, request)
-import WireHarness (fieldsOf, refusedBy, replyObjWith, runLegs, setKey, tabledRequest)
+import WireHarness (field, fieldsOf, refusedBy, replyObjWith, runLegs, setKey, tabledRequest)
 
 battery :: IO Bool
 battery = runLegs (map caseName table <> names) (map holds table <> probes)
@@ -45,8 +47,21 @@ holds c = case caseRefusal c of
   Just message -> refusedBy respond (caseRequest c) message
   Nothing -> findingsOf (caseRequest c) == Just [rows (caseExpect c)]
 
+-- | The core's finding rows with the judged bit (9.0.0, the sixth
+-- column) taken off once it is held to the catalogue rule
+-- (CE.Flow.Document.judgedFinding over the unit's language in the
+-- request's units table): the cases and the trace reference state the
+-- five trace columns. A bit off the rule reads as no answer.
 findingsOf :: Value -> Maybe [Maybe Value]
-findingsOf r = fieldsOf respond r ["findings"]
+findingsOf r = map (>>= traced) <$> fieldsOf respond r ["findings"]
+ where
+  traced v = case fromJSON v of
+    Success fs | all bitHeld fs -> Just (toJSON (map (take 5) fs))
+    _ -> Nothing
+  bitHeld f = case f of
+    [u, kind, _, _, _, bit] -> bit == (if judgedFinding (M.findWithDefault (-1) u langOf) kind then 1 else 0)
+    _ -> False
+  langOf = M.fromList [(u, l) | Object o <- [r], Just us <- [field o "units"], Success rows' <- [fromJSON us], u : l : _ <- rows' :: [[Integer]]]
 
 rows :: [[Integer]] -> Maybe Value
 rows = Just . toJSON

@@ -14,10 +14,10 @@ import CE.Candidates.Lsh (sets)
 import CE.Docdup (setShape)
 import CE.Docdup.Coarse (Coarse (..), coarse)
 import CE.Docdup.Cost (docCorpusCap, docSetCap)
-import CE.Wire (family)
-import CE.Wire.Result (resultLine)
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?), (.=))
-import qualified Data.ByteString.Char8 as B8
+import Data.Aeson.Types (Pair)
 import Data.Foldable (asum)
 import qualified Data.IntSet as IS
 
@@ -27,8 +27,8 @@ instance FromJSON PairsReq where
   parseJSON = withObject "PairsReq" $ \o -> PairsReq <$> o .: "id" <*> o .:? "sets" .!= []
 
 -- | decode → cap → contract → the filter.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "docpairs" reqId overCap offence (answer proto True) (answer proto False)
+respond :: Respond
+respond = tabled F.docpairs reqId overCap offence answer
 
 -- | A set over the per-set ceiling, or the sets together over the
 -- corpus ceiling.
@@ -43,15 +43,11 @@ offence req = asum (zipWith setShape [0 ..] (reqSets req))
 
 -- | The docpairs.result object: the kept pairs, the counts; degraded
 -- answers no pairs and a zero tally.
-answer :: String -> Bool -> PairsReq -> B8.ByteString
-answer proto degraded req =
-  resultLine
-    proto
-    "docpairs"
-    (reqId req)
-    ["pairs" .= [[k `div` n, k `mod` n] | k <- IS.toAscList (found c)]]
-    (("sets" .= n) : zipWith (.=) ["lshPairs", "seedPairs", "hotBands", "hotShingles"] tally)
-    (if degraded then Just "docpairs_too_large" else Nothing)
+answer :: Bool -> PairsReq -> ([Pair], [Pair])
+answer degraded req =
+  ( ["pairs" .= [[k `div` n, k `mod` n] | k <- IS.toAscList (found c)]]
+  , "sets" .= n : zipWith (.=) ["lshPairs", "seedPairs", "hotBands", "hotShingles"] tally
+  )
  where
   tally = map ($ c) [lshPairs, seedPairs, hotBands, hotShingles]
   n = length (reqSets req)

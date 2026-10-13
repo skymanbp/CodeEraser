@@ -17,16 +17,17 @@
 module CE.Trend (respond) where
 
 import CE.Trend.Cost (cliffOf, declineRunOf, judgedView, knobTable, slopeMicroPerDay, trendRowCap, verdictOf)
-import CE.Wire (RowsReq (..), knobbedRows, pick)
+import CE.Wire (Respond, RowsReq (..), knobbedRows, pick, resultLine, rowCheck, tooLarge, topCode)
+import qualified CE.Wire as Wire
+import qualified CE.Wire.Families as F
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 
 
 -- | The shared knobbed-table cascade with this family's bindings
 -- (CE.Wire knobbedRows).
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond = knobbedRows "trend" trendRowCap rowShape knobShape degraded judged
+respond :: Respond
+respond = knobbedRows F.trend trendRowCap rowShape knobsOffence degraded judged
 
 -- | Boundary contract per row. Row ORDER is deliberately
 -- unconstrained: the judged view sorts by timestamp, and git's
@@ -36,26 +37,24 @@ respond = knobbedRows "trend" trendRowCap rowShape knobShape degraded judged
 -- the all-tied window answers a null slope (no ts-distinct pair),
 -- never a refusal — its falls still report.
 rowShape :: Int -> [Integer] -> Maybe String
-rowShape i row = case row of
-  [ts, score, scale]
-    | ts < 0 -> Just (label <> "negative timestamp")
-    | scale <= 0 -> Just (label <> "non-positive scale")
-    | score < 0 || score > scale -> Just (label <> "score outside 0..scale")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [ts,score,scale])")
+rowShape = rowCheck "row" "malformed row (need [ts,score,scale])" 3 checks
  where
-  label = "row " <> show i <> ": "
+  checks row = case row of
+    [ts, score, scale]
+      | ts < 0 -> Just "negative timestamp"
+      | scale <= 0 -> Just "non-positive scale"
+      | score < 0 || score > scale -> Just "score outside 0..scale"
+    _ -> Nothing
 
-knobShape :: Int -> [Integer] -> Maybe String
-knobShape i row = case row of
-  [code, v]
-    | code < 0 || code > 1 -> Just (label <> "unknown knob code")
-    | v < 0 -> Just (label <> "negative knob value")
-    | code == 0 && v < 2 -> Just (label <> "minPoints below 2")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed knob (need [code,value])")
+-- | The knob table (CE.Wire.knobTable): codes 0 to the last row of
+-- CE.Trend.Cost.knobTable, minPoints (code 0) at least 2.
+knobsOffence :: [[Integer]] -> Maybe String
+knobsOffence = Wire.knobTable "knob" "malformed knob (need [code,value])" (topCode knobTable) "unknown knob code" judge
  where
-  label = "knob " <> show i <> ": "
+  judge code v
+    | v < 0 = Just "negative knob value"
+    | code == 0 && v < 2 = Just "minPoints below 2"
+    | otherwise = Nothing
 
 -- | Below minPoints the verdict and slope are ABSENT (null) and the
 -- fail bit stays false — nothing was judged, and an unjudged trend
@@ -112,17 +111,16 @@ data Judgment = Judgment
 -- = [startReqIdx, points]; counts.judged names the tsWindow cut.
 reply :: String -> RowsReq -> Judgment -> B8.ByteString
 reply proto req j =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("trend.result" :: String)
-    , "id" .= rowsId req
-    , "slopeMicroPerDay" .= fmap (round :: Rational -> Integer) (jSlope j)
+  resultLine
+    proto
+    F.trend
+    (rowsId req)
+    [ "slopeMicroPerDay" .= fmap (round :: Rational -> Integer) (jSlope j)
     , "verdict" .= jVerdict j
     , "cliff" .= fmap (\(i, d) -> [i, round d]) (jCliff j)
     , "declineRun" .= fmap (\(i, n) -> [i, n]) (jRun j)
     , "fail" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))
     , "knobs" .= [[c, v] | (c, v) <- jEffective j]
-    , "counts" .= object ["rows" .= length (rowsOf req), "judged" .= jJudged j]
-    , "degraded" .= jDegraded j
     ]
-      <> ["reason" .= ("trend_too_large" :: String) | jDegraded j]
+    ["rows" .= length (rowsOf req), "judged" .= jJudged j]
+    (tooLarge F.trend (jDegraded j))

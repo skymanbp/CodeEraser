@@ -19,7 +19,7 @@ import CE.Clone (WireTree (..), treeShape)
 import CE.Merge.Align (isomorphic)
 import CE.Merge.Cost
 import CE.Merge.Tree (Group (..), mtree)
-import CE.Wire (rowCheck, tableOffence)
+import CE.Wire (label, rowCheck, tableOffence)
 import Data.Aeson
 import Data.Aeson.Types (Parser)
 import Data.Foldable (asum)
@@ -95,11 +95,11 @@ memberShape = rowCheck "member" "malformed member (need [g,m,unit,lines,fileInde
 memberLink :: M.Map Integer Integer -> Int -> Maybe [Integer] -> [Integer] -> Maybe String
 memberLink families i prev row = case row of
   g : m : _
-    | not (M.member g families) -> label "unknown group"
-    | m /= next g -> label "m not consecutive"
+    | not (M.member g families) -> refuse "unknown group"
+    | m /= next g -> refuse "m not consecutive"
   _ -> Nothing
  where
-  label why = Just ("member " <> show i <> ": " <> why)
+  refuse why = Just (label "member" i <> why)
   next g = case prev of
     Just (pg : pm : _) | pg == g -> pm + 1
     _ -> 0
@@ -108,13 +108,13 @@ memberLink families i prev row = case row of
 groupSize :: M.Map Integer Int -> Int -> [Integer] -> Maybe String
 groupSize counts i row = case row of
   [g, fam, _] -> case M.findWithDefault 0 g counts of
-    0 -> label "no members"
-    1 -> label "one member"
-    n | fam == familyNear && n /= 2 -> label "a T3 pair needs exactly two members"
+    0 -> refuse "no members"
+    1 -> refuse "one member"
+    n | fam == familyNear && n /= 2 -> refuse "a T3 pair needs exactly two members"
     _ -> Nothing
   _ -> Nothing
  where
-  label why = Just ("group " <> show i <> ": " <> why)
+  refuse why = Just (label "group" i <> why)
 
 -- | clone/1's shape contract, then the four added columns present in
 -- wire order, each as long as the tree, every slot a known class,
@@ -122,19 +122,19 @@ groupSize counts i row = case row of
 treeOffence :: Int -> MergeTree -> Maybe String
 treeOffence t tree = asum [treeShape t (tWire tree), leaf, slot, hashes "own" (tOwn tree), hashes "text" (tText tree)]
  where
-  label why = Just ("tree " <> show t <> ": " <> why)
+  refuse why = Just (label "tree" t <> why)
   size = length (wLab (tWire tree))
-  leaf = maybe (label "leaf missing") (const Nothing) (wLeaf (tWire tree))
+  leaf = maybe (refuse "leaf missing") (const Nothing) (wLeaf (tWire tree))
   slot = case tSlot tree of
-    Nothing -> label "slot missing"
+    Nothing -> refuse "slot missing"
     Just slots
-      | length slots /= size -> label "slot length mismatch"
-      | otherwise -> asum [label ("node " <> show n <> ": unknown slot") | (n, s) <- zip [0 :: Int ..] slots, s < 0 || s > slotCeil]
+      | length slots /= size -> refuse "slot length mismatch"
+      | otherwise -> asum [refuse (label "node" n <> "unknown slot") | (n, s) <- zip [0 :: Int ..] slots, s < 0 || s > slotCeil]
   hashes what column = case column of
-    Nothing -> label (what <> " missing")
+    Nothing -> refuse (what <> " missing")
     Just hs
-      | length hs /= size -> label (what <> " length mismatch")
-      | otherwise -> asum [label ("node " <> show n <> ": negative " <> what) | (n, h) <- zip [0 :: Int ..] hs, h < 0]
+      | length hs /= size -> refuse (what <> " length mismatch")
+      | otherwise -> asum [refuse (label "node" n <> "negative " <> what) | (n, h) <- zip [0 :: Int ..] hs, h < 0]
 
 -- | The groups in request order, each with its member rows and their
 -- trees (members and trees zip in member order).

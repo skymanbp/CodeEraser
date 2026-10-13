@@ -15,26 +15,24 @@
 module CE.Audit (respond) where
 
 import CE.Audit.Cost (auditBlockCap, dupTolerance, judgeRow)
-import CE.Wire (RowsReq (..), knoblessRows)
-import Data.Aeson
+import CE.Wire (Respond, RowsReq (..), knoblessRows, resultLine, rowCheck, tooLarge)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 
 -- | The shared knobless cascade with this family's bindings
 -- (CE.Wire.knoblessRows): every row [aTouched, bTouched], both
 -- strict booleans — a count smuggled in as a bit would judge
 -- as touched and must refuse by name instead.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = knoblessRows "audit" auditBlockCap rowShape (const Nothing) (degraded proto) (judged proto)
+respond :: Respond
+respond proto = knoblessRows F.audit auditBlockCap rowShape (const Nothing) (degraded proto) (judged proto)
 
 rowShape :: Int -> [Integer] -> Maybe String
-rowShape i row = case row of
-  [a, b]
-    | any (`notElem` [0, 1]) [a, b] -> Just (label <> "touched bit not a boolean")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [aTouched,bTouched])")
+rowShape = rowCheck "row" "malformed row (need [aTouched,bTouched])" 2 checks
  where
-  label = "row " <> show i <> ": "
+  checks bits
+    | any (`notElem` [0, 1]) bits = Just "touched bit not a boolean"
+    | otherwise = Nothing
 
 judged :: String -> RowsReq -> B8.ByteString
 judged proto req = reply proto req dups False
@@ -53,17 +51,10 @@ degraded proto req = reply proto req [] True
 -- convictions than dupTolerance, or a degraded reply).
 reply :: String -> RowsReq -> [Integer] -> Bool -> B8.ByteString
 reply proto req dups isDegraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("audit.result" :: String)
-    , "id" .= rowsId req
-    , "dups" .= dups
-    , "counts"
-        .= object
-          [ "rows" .= length (rowsOf req)
-          , "dups" .= length dups
-          ]
-    , "fail" .= (isDegraded || toInteger (length dups) > dupTolerance)
-    , "degraded" .= isDegraded
-    ]
-      <> ["reason" .= ("audit_too_large" :: String) | isDegraded]
+  resultLine
+    proto
+    F.audit
+    (rowsId req)
+    ["dups" .= dups, "fail" .= (isDegraded || toInteger (length dups) > dupTolerance)]
+    ["rows" .= length (rowsOf req), "dups" .= length dups]
+    (tooLarge F.audit isDegraded)

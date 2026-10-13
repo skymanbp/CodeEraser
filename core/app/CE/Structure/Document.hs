@@ -17,6 +17,7 @@
 module CE.Structure.Document (doc) where
 
 import CE.Document.Contract
+import CE.Text (fixed)
 import Data.Aeson (Value (..), object, (.=))
 import Data.Aeson.Key (Key)
 import Data.Aeson.Types (Pair)
@@ -27,7 +28,7 @@ doc :: DocFamily
 doc = docFamily "structure" schemaId statement checked assemble []
 
 schemaId :: String
-schemaId = "ce.structure-report/0.6.0"
+schemaId = "ce.structure-report/0.7.0"
 
 -- | The request: a tree row is [id, parent, depth, subdirs, files]
 -- (the root its own parent); a split candidate structure/1's [file,
@@ -60,8 +61,7 @@ checked req =
 assemble :: DocReq -> Value
 assemble req =
   object $
-    [ "schema" .= schemaId
-    , "score" .= fact req "score"
+    [ "score" .= fact req "score"
     , "scoreScale" .= fact req "scale"
     , "entropy" .= rows req "entropy"
     , "axes" .= rows req "axes"
@@ -107,4 +107,6 @@ advisory req
       ]
   | otherwise = []
  where
-  milli f b c = ["path" .= ref "path" [f], "benefitMilli" .= b, "costMilli" .= c]
+  -- the ROI the console prints (CE.Text.fixed, one decimal); none
+  -- without a priced seam
+  milli f b c = ["path" .= ref "path" [f], "benefitMilli" .= b, "costMilli" .= c, "roi" .= (if c == 0 then Nothing else Just (fixed 1 b c))]

@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (battery, coreVersion, degradedFace, generated, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
+module WireHarness (battery, coreVersion, degradedFace, dropKey, generated, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, scanRequest, setKey, tabledRequest) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -80,6 +80,13 @@ tabledRequest protoV kind tables =
 rowsRequest :: String -> String -> [[Integer]] -> Value
 rowsRequest protoV kind rows = tabledRequest protoV kind [("rows", rows)]
 
+-- | A scan.request over `rows` with the three tables 9.0.0 requires
+-- (plan v2.33 step 11a): no naming facts, no events, unfenced — a
+-- battery sets the one it is about over the default.
+scanRequest :: [[Integer]] -> Value
+scanRequest rows =
+  setKey "knobsFence" Null (setKey "events" (toJSON ([] :: [[Integer]])) (setKey "naming" (toJSON ([] :: [[Integer]])) (rowsRequest "7.0.0" "scan.request" rows)))
+
 -- | Drive a family's REAL respond and decode the reply object.
 replyObjWith ::
   (String -> B8.ByteString -> Either e B8.ByteString) ->
@@ -105,6 +112,11 @@ fieldsOf respond r ks = do
 setKey :: String -> Value -> Value -> Value
 setKey k v (Object o) = Object (KM.insert (Key.fromString k) v o)
 setKey _ _ v = v
+
+-- | The request without `k`: the required-key refusals' fixture.
+dropKey :: String -> Value -> Value
+dropKey k (Object o) = Object (KM.delete (Key.fromString k) o)
+dropKey _ v = v
 
 field :: Object -> String -> Maybe Value
 field o k = KM.lookup (Key.fromString k) o

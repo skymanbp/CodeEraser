@@ -22,54 +22,58 @@ module CE.Flow (respond, unitFindings) where
 import CE.Flow.Cfg (cfg)
 import CE.Flow.Contract (FlowReq (..), offence, overCap)
 import CE.Flow.Cost (findDeadStore, findUnreachable, flagDynamic)
+import CE.Flow.Document (judgedFinding)
 import CE.Flow.Live (deadStores, unused)
 import CE.Flow.Reach (reachable, runs)
 import CE.Flow.Tree (Unit (..), hasFlag)
-import CE.Wire (family)
-import Data.Aeson (Value, encode, object, (.=))
-import Data.ByteString (ByteString)
-import Data.ByteString.Lazy (toStrict)
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
+import Data.Aeson ((.=))
+import Data.Aeson.Types (Pair)
 import qualified Data.IntMap.Strict as IM
 import Data.List (partition, sort)
 
 -- | decode → cap (the four tables together) → contract → judge; the
 -- degraded reply is the judged reply's shape with nothing judged.
-respond :: String -> ByteString -> Either (Maybe Value, String, String) ByteString
-respond proto = family "flow" reqId overCap offence (answer proto True) (answer proto False)
+respond :: Respond
+respond = tabled F.flow reqId overCap offence answer
 
 -- | The flow.result object. Judged: every unit not skipped answers
 -- its findings, ascending as rows, and the skipped ones are counted.
 -- Degraded: no findings — a request the core refused to judge
 -- licenses nothing — and the reason. The counts name the four tables
 -- either way.
-answer :: String -> Bool -> FlowReq -> ByteString
-answer proto degraded req = toStrict (encode (object (fields <> ["reason" .= ("flow_too_large" :: String) | degraded])))
+answer :: Bool -> FlowReq -> ([Pair], [Pair])
+answer degraded req =
+  ( ["findings" .= findings]
+  , zipWith (.=) ["units", "stmts", "vars", "uses", "findings", "dynamicUnits"] tallies
+  )
  where
   units = if degraded then [] else either (const []) IM.elems (unitsOf req)
   (skipped, judged) = partition dynamic units
   findings = sort (concatMap unitFindings judged)
   tallies = map (toInteger . length) [unitRows req, stmtRows req, varRows req, useRows req, findings] <> [toInteger (length skipped)]
-  fields =
-    [ "proto" .= proto
-    , "type" .= ("flow.result" :: String)
-    , "id" .= reqId req
-    , "findings" .= findings
-    , "counts" .= object (zipWith (.=) ["units", "stmts", "vars", "uses", "findings", "dynamicUnits"] tallies)
-    , "degraded" .= degraded
-    ]
 
 -- | A unit any of whose statements carries the dynamic flag.
 dynamic :: Unit -> Bool
 dynamic u = any (hasFlag flagDynamic) (IM.elems (stmts u))
 
--- | One unit's findings as `[u, kind, seq, v, seqEnd]` rows: the
--- unreachable runs (v −1), the dead stores, the unused variables.
+-- | One unit's findings as `[u, kind, seq, v, seqEnd, judged]` rows: the
+-- unreachable runs (v −1), the dead stores, the unused variables; the
+-- last column the judged bit (9.0.0, CE.Flow.Document.judgedFinding:
+-- the kind not advisory, the unit's language past the precision gate).
 unitFindings :: Unit -> [[Integer]]
 unitFindings u =
-  [[me, findUnreachable, toInteger a, -1, toInteger b] | (a, b) <- runs (IM.size (stmts u)) seen]
-    <> [[me, findDeadStore, toInteger s, toInteger v, toInteger s] | (s, v) <- deadStores u g seen]
-    <> [[me, kind, toInteger decl, toInteger v, toInteger decl] | (kind, v, decl) <- unused u]
+  map
+    judgedOn
+    ( [[me, findUnreachable, toInteger a, -1, toInteger b] | (a, b) <- runs (IM.size (stmts u)) seen]
+        <> [[me, findDeadStore, toInteger s, toInteger v, toInteger s] | (s, v) <- deadStores u g seen]
+        <> [[me, kind, toInteger decl, toInteger v, toInteger decl] | (kind, v, decl) <- unused u]
+    )
  where
+  judgedOn row = case row of
+    _ : kind : _ -> row <> [if judgedFinding (toInteger (unitLang u)) kind then 1 else 0]
+    _ -> row
   me = toInteger (unitId u)
   g = cfg u
   seen = reachable g

@@ -29,26 +29,25 @@ import CE.Structure.Request (StructReq (..), pathFault, pathKeys, pathOffence, p
 import CE.Structure.Shape (shapeBitsCap)
 import CE.Structure.Split (splitOffence, splitRows)
 import qualified CE.Structure.Stale as Stale
-import CE.Wire (Family (..), respondWith, tableOffence)
-import CE.Wire.Retired (retired)
+import CE.Wire (Family (..), Respond, faultLine, label, replyLine, respondWith, retiredPatterns, tableOffence, tooLargeOf)
+import qualified CE.Wire.Families as F
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
 import Data.Maybe (fromMaybe)
 
 -- | The shared cascade with this family's bindings (CE.Wire).
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto =
   respondWith
     Family
-      { famName = "structure"
+      { famName = F.structure
       , famId = reqId
       , famOverCap = \req -> priced req > structNodeCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req (effective []) True
-      , famJudged = \req -> maybe (reply proto req (effective (reqKnobs req)) False) (faultReply proto req) (pathFault req)
+      , famJudged = \req -> maybe (reply proto req (effective (reqKnobs req)) False) (faultLine proto F.structure (reqId req)) (pathFault req)
       }
 
 -- | The rows the cap prices: the nodes, the seam tables and the dir-edge
@@ -61,14 +60,6 @@ priced req = toInteger (length (reqNodes req) + seamRows + edgeRows)
   seamRows = maybe 0 length (reqSeamFiles req) + sum (map length [u, r, c, h])
   edgeRows = maybe 0 length (reqDirEdges req)
 
--- | A path-form request whose path the tree cannot place: the fault in
--- place of a judgment (the measuring side stops on it, as it stopped on
--- its own message before the core built the tree).
-faultReply :: String -> StructReq -> String -> B8.ByteString
-faultReply proto req fault =
-  BL.toStrict . encode . object $
-    ["proto" .= proto, "type" .= ("structure.result" :: String), "id" .= reqId req, "fault" .= fault, "degraded" .= False]
-
 -- | First boundary-contract offender in request order — the three
 -- dir-keyed tables walk ONE loop over their spec rows (the twelfth
 -- bite's repayment shape: the per-table asum/ascending pair was the
@@ -79,7 +70,7 @@ faultReply proto req fault =
 violation :: StructReq -> Maybe String
 violation req =
   asum
-    ( pathOffence req : retired "patterns" "the core classifies patternShapes" (reqPatternsSent req)
+    ( pathOffence req : retiredPatterns (reqPatternsSent req)
         : asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
         : depthChain (reqNodes req)
         : [ tableOffence nm proj (dirRow n spec) rows
@@ -135,14 +126,14 @@ violation req =
 nodeRow :: Int -> [Integer] -> Maybe String
 nodeRow i row = case row of
   [nid, parent, depth, subdirs, files]
-    | any (< 0) [nid, parent, depth, subdirs, files] -> Just (label <> "negative field")
-    | nid /= toInteger i -> Just (label <> "index mismatch")
-    | i == 0 && (parent /= 0 || depth /= 0) -> Just (label <> "root must self-loop at depth 0")
-    | i > 0 && parent >= toInteger i -> Just (label <> "parent not before child")
+    | any (< 0) [nid, parent, depth, subdirs, files] -> Just (at <> "negative field")
+    | nid /= toInteger i -> Just (at <> "index mismatch")
+    | i == 0 && (parent /= 0 || depth /= 0) -> Just (at <> "root must self-loop at depth 0")
+    | i > 0 && parent >= toInteger i -> Just (at <> "parent not before child")
     | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [id,parent,depth,subdirs,files])")
+  _ -> Just (at <> "malformed row (need [id,parent,depth,subdirs,files])")
  where
-  label = "node " <> show i <> ": "
+  at = label "node" i
 
 -- | depth == parent.depth + 1 for every non-root row. nodeRow's
 -- docstring CLAIMED this held by position, but nothing checked it —
@@ -157,7 +148,7 @@ depthChain rows = asum (zipWith step [1 :: Int ..] (drop 1 rows))
   step i row = case row of
     [_, parent, depth, _, _]
       | IM.lookup (fromInteger parent) table /= Just (depth - 1) ->
-          Just ("node " <> show i <> ": depth is not parent depth + 1")
+          Just (label "node" i <> "depth is not parent depth + 1")
     _ -> Nothing
 
 -- | Shared shape for the dir-keyed tables — the table's identity
@@ -166,14 +157,14 @@ depthChain rows = asum (zipWith step [1 :: Int ..] (drop 1 rows))
 dirRow :: Integer -> (Int, String, [Integer] -> Maybe String) -> Int -> [Integer] -> Maybe String
 dirRow n (arity, name, extra) i row = case row of
   (d : _)
-    | length row /= arity -> Just (label <> "malformed row")
-    | any (< 0) row -> Just (label <> "negative field")
-    | d >= n -> Just (label <> "dir out of range")
-    | Just why <- extra row -> Just (label <> why)
+    | length row /= arity -> Just (at <> "malformed row")
+    | any (< 0) row -> Just (at <> "negative field")
+    | d >= n -> Just (at <> "dir out of range")
+    | Just why <- extra row -> Just (at <> why)
     | otherwise -> Nothing
-  [] -> Just (label <> "malformed row")
+  [] -> Just (at <> "malformed row")
  where
-  label = name <> " " <> show i <> ": "
+  at = label name i
 
 -- knobsOffence / knobTable / effective live in CE.Structure.Knobs
 -- (E01 split at the 300-line wall, the CE.Verdict.Knobs precedent).
@@ -195,11 +186,8 @@ dirRow n (arity, name, extra) i row = case row of
 -- and judge S1 on nothing.
 reply :: String -> StructReq -> Knobs -> Bool -> B8.ByteString
 reply proto req k degraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("structure.result" :: String)
-    , "id" .= reqId req
-    , "axes" .= [[c, p] | (c, p) <- pens]
+  replyLine proto F.structure (reqId req) $
+    [ "axes" .= [[c, p] | (c, p) <- pens]
     , "score" .= score
     , "entropy" .= entropyRows facts
     , "findings" .= findings k facts
@@ -207,7 +195,7 @@ reply proto req k degraded =
       <> declaredKeys
       <> splitKeys
       <> ["fail" .= degraded, "knobs" .= [[c, g k] | (c, g, _) <- knobTable], "degraded" .= degraded]
-      <> ["reason" .= ("structure_too_large" :: String) | degraded]
+      <> ["reason" .= tooLargeOf F.structure | degraded]
       <> ["patternShapes" .= length rows | not degraded, Just rows <- [reqShapes req]]
       <> pathKeys (if degraded then priced req else 0) req
  where

@@ -66,13 +66,14 @@ kept targets rows = [isOpen i && all (not . outranks i) others | (i, _) <- index
   outranks i j = j /= i && isOpen j && key j == key i && (rank j > rank i || (rank j == rank i && j < i))
 
 -- | The contract, in the cascade's order: each row, then any knob,
--- then the target table (alignment, each target, key order).
+-- then the target table (present — required at 9.0.0 — then
+-- alignment, each target, key order).
 offence :: [[Integer]] -> [[Integer]] -> Maybe [[Integer]] -> Maybe String
 offence rows knobs targets =
   firstOffender (labelled "row" rowWhy rows <> labelled "knob" (const (Just "erase/1 declares no knob codes")) knobs <> targetWhys)
  where
   targetWhys = case targets of
-    Nothing -> []
+    Nothing -> ["targets: required at 9.0.0"]
     Just ts
       | length ts /= length rows -> ["targets: " <> show (length ts) <> " rows for " <> show (length rows) <> " fact rows"]
       | otherwise ->

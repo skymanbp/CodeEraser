@@ -33,9 +33,12 @@ pub struct Sent<'a> {
 /// then the findings and the units skipped as dynamic.
 pub const COUNTS: [&str; 6] = ["units", "stmts", "vars", "uses", "findings", "dynamicUnits"];
 
-/// One finding row, `[u, kind, seq, v, seqEnd]`: `u` the request's
-/// unit index, kind 0 unreachable run (v −1) / 1 dead store / 2 unused
-/// local / 3 unused parameter (seq −1).
+/// One finding row, `[u, kind, seq, v, seqEnd, judged]`: `u` the
+/// request's unit index, kind 0 unreachable run (v −1) / 1 dead store /
+/// 2 unused local / 3 unused parameter (seq −1), and the core's judged
+/// bit (9.0.0, CE.Flow.Document.judgedFinding: the kind not advisory,
+/// the unit's language past the precision gate) — read, never derived
+/// on this side.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Finding {
     pub u: usize,
@@ -43,6 +46,7 @@ pub struct Finding {
     pub seq: i64,
     pub v: i64,
     pub seq_end: i64,
+    pub judged: bool,
 }
 
 /// The reply, typed.
@@ -116,7 +120,7 @@ pub fn consume(reply: &Value, sent: &Sent) -> Result<Judged, String> {
             &format!("counts.{key} is not the {n} rows sent"),
         )?;
     }
-    let rows: Vec<[i64; 5]> =
+    let rows: Vec<[i64; 6]> =
         judged::table(reply, "findings").map_err(|e| format!("wire skew: {e}"))?;
     let dynamic = sent.units.iter().filter(|(u, _)| u.dynamic).count();
     skew(
@@ -147,10 +151,11 @@ fn skew(holds: bool, what: &str) -> Result<(), String> {
 }
 
 /// One row, held to the unit it names.
-fn finding(row: &[i64; 5], sent: &Sent) -> Result<Finding, String> {
-    let [u, kind, seq, v, seq_end] = *row;
+fn finding(row: &[i64; 6], sent: &Sent) -> Result<Finding, String> {
+    let [u, kind, seq, v, seq_end, judged] = *row;
     let unit = usize::try_from(u).ok().and_then(|i| sent.units.get(i));
-    let fits = unit.is_some_and(|(unit, _)| fits(unit, kind, seq, v, seq_end));
+    let fits = (0..=1).contains(&judged)
+        && unit.is_some_and(|(unit, _)| fits(unit, kind, seq, v, seq_end));
     skew(
         fits,
         &format!("finding {row:?} does not fit the unit it names"),
@@ -161,6 +166,7 @@ fn finding(row: &[i64; 5], sent: &Sent) -> Result<Finding, String> {
         seq,
         v,
         seq_end,
+        judged: judged == 1,
     })
 }
 

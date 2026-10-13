@@ -161,9 +161,9 @@ knownKind kind = kind `elem` [kindPred, kindVar, kindInt, kindSet, kindSym, kind
 tableShape :: (String, [[Integer]]) -> Maybe String
 tableShape (key, rows) = case tableCode key >>= \c -> fmap ((,) c) (arityOf c) of
   Nothing -> Just ("facts " <> key <> ": unknown fact predicate")
-  Just (code, arity) -> tableOffence label id (rowCheck label ("malformed fact (need " <> show arity <> " values)") arity negative) rows
+  Just (code, arity) -> tableOffence named id (rowCheck named ("malformed fact (need " <> show arity <> " values)") arity negative) rows
    where
-    label = "facts " <> show code
+    named = "facts " <> show code
     negative row = if any (< 0) row then Just "negative fact value" else Nothing
 
 -- | A key is a code when it is a plain decimal (no sign, no leading

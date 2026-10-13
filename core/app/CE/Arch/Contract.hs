@@ -15,7 +15,9 @@
 -- request may carry the PATH form instead (CE.Arch.Tables): the decoder
 -- builds the five tables from it, so every check below reads one shape;
 -- `pathOf` keeps the directory paths the reply echoes, or the fault that
--- replaces a judgment, or the offence that refuses the form.
+-- replaces a judgment, or the offence that refuses the form. Test seam:
+-- Rust sends the path form only; the integer form stays as the props'
+-- differential seam (plan v2.33 step 11a, C26).
 module CE.Arch.Contract (ArchReq (..), ArchPath (..), offence, overCap) where
 
 import CE.Arch.Cost (fileCap, refCap, rootParent)

@@ -39,33 +39,36 @@ pub const THRESHOLD_KEYS: [&str; 8] = [
 pub const TOLERANCE_KEYS: [&str; 3] = ["tolNum", "tolDen", "tolAbs"];
 
 /// The core's cycle floor when none is declared
-/// (`CE.Graph.Cost.sccFloor`): the digest's effective default for
-/// `[graph] scc_floor`, pinned live by core_wire's mirror gate.
-// TODO(defrag-core: limits.graph.scc_floor)
-pub const CORE_SCC_FLOOR: u32 = 2;
+/// (`CE.Graph.Cost.sccFloor`, the package's `limits.graph.scc_floor`):
+/// the digest's effective default for `[graph] scc_floor`.
+pub fn core_scc_floor() -> u32 {
+    crate::tables::get().limits.graph.scc_floor
+}
 
-/// The core's Cost.hs defaults as DECLARED values — the Rust mirror
-/// the knob digest's effective default reads (O39), so a knob spelled
-/// at its default fingerprints as silence does. A mirror, never a
+/// The core's defaults as DECLARED values (the package's
+/// `limits.score_defaults`, the degraded verdict reply's own echo):
+/// what the knob digest's effective default reads (O39), so a knob
+/// spelled at its default fingerprints as silence does. Never a
 /// second judgment: the core keeps judging with its own constants
-/// whether or not a row rides, and core_wire::knob_default_drift_gate
-/// reddens the day this table and the core's echo disagree.
-// TODO(defrag-core: limits.score_defaults)
+/// whether or not a row rides, and core_wire's drift gate holds these
+/// rows to the echo a knobless request receives.
 pub fn core_defaults() -> ScoreCfg {
+    let d = &crate::tables::get().limits.score_defaults;
+    let knob = |name: &str| d.get(name).copied();
     ScoreCfg {
         weights: Default::default(),
-        size_penalty_max: Some(10),
-        soft_line_k: Some(2),
-        dead_indeg_ceil: Some(0),
-        rewrite_num: Some(50),
-        rewrite_den: Some(100),
-        cochange_floor: Some(2),
-        viol_cost: Some(10),
-        default_weight: Some(1),
-        score_scale: Some(1000),
-        tol_num: Some(102),
-        tol_den: Some(100),
-        tol_abs: Some(10),
+        size_penalty_max: knob("sizePMax"),
+        soft_line_k: knob("softLineK"),
+        dead_indeg_ceil: knob("deadIndegCeil"),
+        rewrite_num: knob("rewriteNum"),
+        rewrite_den: knob("rewriteDen"),
+        cochange_floor: knob("cochangeFloor"),
+        viol_cost: knob("violCost"),
+        default_weight: knob("defaultWeight"),
+        score_scale: knob("scoreScale"),
+        tol_num: knob("tolNum"),
+        tol_den: knob("tolDen"),
+        tol_abs: knob("tolAbs"),
     }
 }
 

@@ -18,11 +18,11 @@ import CE.Graph.Cost (assetKind, confidence, edgeCap, entryMask, exemptCategorie
 import qualified CE.Graph.Cycles as Cycles
 import qualified CE.Graph.Dead as Dead
 import qualified CE.Graph.Position as Position
-import CE.Wire (Family (..), respondWith)
+import CE.Wire (Family (..), Respond, respondWith, resultLine, tooLarge, tooLargeOf)
+import qualified CE.Wire.Families as F
 import Data.Aeson
 import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntSet as IS
 import Data.List (partition)
 import Data.Maybe (fromMaybe)
@@ -30,11 +30,11 @@ import Data.Maybe (fromMaybe)
 -- | The shared cascade with this family's bindings (CE.Wire —
 -- decode error prefix, caps, offence, replies all byte-identical to
 -- the pre-skeleton cascade; the goldens are the proof).
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto =
   respondWith
     Family
-      { famName = "graph"
+      { famName = F.graph
       , famId = reqId
       , -- the unres ledger counts toward a cap too (the scan C15
         -- discipline: every request dimension is priced) — validation
@@ -51,59 +51,61 @@ respond proto =
             || toInteger (length (unmentionedRows req)) > unmentionedHardCap
             || toInteger (length (mountRows req)) > mountCap
       , famOffence = violation
-      , famDegraded = tooLarge proto
-      , famJudged = result proto
+      , famDegraded = answer proto True
+      , famJudged = answer proto False
       }
 
--- | The judged result. Knobs are the CE.Graph.Cost constants;
--- everything else is a function of the request, and the aeson
--- KeyMap encodes keys sorted — deterministic bytes by construction.
-result :: String -> GraphReq -> B8.ByteString
-result proto req =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-      , "type" .= ("graph.result" :: String)
-      , "id" .= reqId req
-      , -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
-        -- only file-granularity verdicts land in the FAILING dead
-        -- table; package/section verdicts are informational
-        -- `reported` rows. The kind column always crossed the wire
-        -- and was validated, then discarded — an unnamed Rust
-        -- branch held the policy instead.
-        "dead" .= [deadOut i v | (i, v) <- deadRows]
-      , "reported" .= [[toInteger i, toInteger v] | (i, v) <- reportedRows]
-      , -- the zero-tolerance gate, named: any file-tier dead verdict
-        -- fails `ce deadcode --check` — the exit was synthesized
-        -- client-side before, where no ablation could see it
-        "fail" .= not (null deadRows)
-      , "pos" .= Position.positions b reach (reqPos req)
-      , -- the floor is the request's where declared (6.4.0, O59),
-        -- the shipped constant otherwise — the same number the
-        -- verdict family reads as thresholds code 7
-        "cycles"
-          .= [ toJSON [toJSON (toInteger i), toJSON (map toInteger ms)]
-             | (i, ms) <- Cycles.cycles (fromMaybe sccFloor (reqSccFloor req)) b
-             ]
-      , "counts"
-          .= object
-            [ "nodes" .= length (reqNodes req)
-            , "edges" .= length (reqEdges req)
-            , "kept" .= bKept b
-            ]
-      , "degraded" .= False
-      ]
+-- | The graph.result line, one reply with the degraded flag. Judged:
+-- knobs are the CE.Graph.Cost constants, everything else a function of
+-- the request. Degraded (over a cap): a well-formed reply, never a
+-- truncated graph — every table empty, `fail` by itself (a gate that
+-- could not judge must never pass: the verdict family's P1 stance,
+-- applied here at 2.18.0), counts echo what arrived with kept = 0, the
+-- reason named, and none of the keys that echo what rode.
+answer :: String -> Bool -> GraphReq -> B8.ByteString
+answer proto degraded req =
+  resultLine
+    proto
+    F.graph
+    (reqId req)
+    fields
+    ["nodes" .= length (reqNodes req), "edges" .= length (reqEdges req), "kept" .= kept]
+    (tooLarge F.graph degraded)
+ where
+  none = [] :: [Value]
+  (fields, kept)
+    | degraded = (["dead" .= none, "reported" .= none, "fail" .= True, "pos" .= none, "cycles" .= none], 0)
+    | otherwise = (judged, bKept b)
+  judged =
+    [ -- RG9 split, core-owned since 2.18.0 (batch-7 slice 4):
+      -- only file-granularity verdicts land in the FAILING dead
+      -- table; package/section verdicts are informational
+      -- `reported` rows. The kind column always crossed the wire
+      -- and was validated, then discarded — an unnamed Rust
+      -- branch held the policy instead.
+      "dead" .= [deadOut i v | (i, v) <- deadRows]
+    , "reported" .= [[toInteger i, toInteger v] | (i, v) <- reportedRows]
+    , -- the zero-tolerance gate, named: any file-tier dead verdict
+      -- fails `ce deadcode --check` — the exit was synthesized
+      -- client-side before, where no ablation could see it
+      "fail" .= not (null deadRows)
+    , "pos" .= Position.positions b reach (reqPos req)
+    , -- the floor is the request's where declared (6.4.0, O59),
+      -- the shipped constant otherwise — the same number the
+      -- verdict family reads as thresholds code 7
+      "cycles"
+        .= [ toJSON [toJSON (toInteger i), toJSON (map toInteger ms)]
+           | (i, ms) <- Cycles.cycles (fromMaybe sccFloor (reqSccFloor req)) b
+           ]
+    ]
       -- the declared floor echoes exactly when it rode (6.4.0): the
       -- unmentioned/mounts precedent, legacy bytes untouched
       <> ["sccFloor" .= f | Just f <- [reqSccFloor req]]
       <> advisoryKeys req
- where
   (b, reach, deadRows, reportedRows) = liveness req
-  -- the confidence column rides exactly when the ledger rode
-  -- (2.32.0): legacy requests keep two-column dead rows,
-  -- byte-identical
-  deadOut i v = case reqUnres req of
-    Nothing -> [toInteger i, toInteger v]
-    Just unres -> [toInteger i, toInteger v, confidence unres (langOf i)]
+  -- the confidence column (2.32.0) on every dead row: the ledger it
+  -- reads is required since 9.0.0
+  deadOut i v = [toInteger i, toInteger v, confidence (unresRows req) (langOf i)]
   langOf i
     | ((l : _) : _) <- drop i (reqNodes req) = l
     | otherwise = error "dead index inside the node table by construction"
@@ -157,32 +159,4 @@ declaredBits _ = 0
 -- | The degraded reply's reason, by name: this module owns the word
 -- (the report documents read it here, CE.Document.Contract).
 graphTooLarge :: String
-graphTooLarge = "graph_too_large"
-
--- | Over-cap refusal: a well-formed degraded result, never a
--- truncated graph. counts echoes what arrived (informational);
--- kept = 0 because nothing was analyzed.
-tooLarge :: String -> GraphReq -> B8.ByteString
-tooLarge proto req =
-  BL.toStrict . encode $
-    object
-      [ "proto" .= proto
-      , "type" .= ("graph.result" :: String)
-      , "id" .= reqId req
-      , "dead" .= ([] :: [Value])
-      , "reported" .= ([] :: [Value])
-      , -- a gate that could not judge must never pass (the verdict
-        -- family's P1 stance, applied here at 2.18.0): the degraded
-        -- reply fails by itself
-        "fail" .= True
-      , "pos" .= ([] :: [Value])
-      , "cycles" .= ([] :: [Value])
-      , "counts"
-          .= object
-            [ "nodes" .= length (reqNodes req)
-            , "edges" .= length (reqEdges req)
-            , "kept" .= (0 :: Int)
-            ]
-      , "degraded" .= True
-      , "reason" .= graphTooLarge
-      ]
+graphTooLarge = tooLargeOf F.graph

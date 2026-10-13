@@ -24,7 +24,7 @@ import CE.Scan.Cost (scanRowCap)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import Data.Maybe (catMaybes, isJust)
-import WireHarness (field, refusedBy, replyObjWith, rowsRequest, runLegs, setKey)
+import WireHarness (dropKey, field, refusedBy, replyObjWith, runLegs, scanRequest, setKey)
 
 registerPath :: FilePath
 registerPath = "../contracts/fixtures/scan/whitepaper.ndjson"
@@ -155,7 +155,7 @@ triple = [[3, 0], [4, 0], [5, 0]]
 
 -- | A request whose events are keyed at row 1, the cognitive row.
 withEvents :: [[Integer]] -> [[Integer]] -> Value
-withEvents rows evs = setKey "events" (toJSON (map (1 :) evs)) (rowsRequest "7.0.0" "scan.request" rows)
+withEvents rows evs = setKey "events" (toJSON (map (1 :) evs)) (scanRequest rows)
 
 replyField :: String -> Value -> Maybe Value
 replyField k r = replyObjWith respond r >>= (`field` k)
@@ -186,12 +186,12 @@ roadProbes register =
   , replyField "derived" cycled == Just (derivedRows (4, 4, 1))
       && replyField "cocBumped" cycled == Just (toJSON [[1, 4 :: Integer]])
   , replyField "derived" (withEvents triple []) == Just (derivedRows (1, 0, 0))
-  , replyField "levels" legacy == Just (toJSON [0, 0, 0 :: Integer]) && replyField "derived" legacy == Nothing
+  , refusedBy respond legacy "events: required at 9.0.0"
   , replyField "derived" (withEvents [[0, 0] | _ <- [0 .. scanRowCap]] []) == Nothing
   ]
  where
   cycled = setKey "callEdges" (toJSON [[1, 1 :: Integer]]) (withEvents triple sample)
-  legacy = rowsRequest "7.0.0" "scan.request" [[3, 2], [4, 7], [5, 1]]
+  legacy = dropKey "events" (scanRequest [[3, 2], [4, 7], [5, 1]])
 
 -- | Every refusal the table can earn, each by the message the core
 -- names it with; the requests ride in the parallel list below.
@@ -237,4 +237,4 @@ refusalProbes = zipWith (refusedBy respond) requests refusalMessages
     , raw [[1, 0, -1, 0, 1, 0], [1, 2, 0, 0, 1, 0]]
     ]
   -- the events as sent, row column included
-  raw evs = setKey "events" (toJSON (evs :: [[Integer]])) (rowsRequest "7.0.0" "scan.request" triple)
+  raw evs = setKey "events" (toJSON (evs :: [[Integer]])) (scanRequest triple)

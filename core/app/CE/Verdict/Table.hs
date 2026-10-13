@@ -6,8 +6,7 @@
 -- differ only in DATA: the code bound, its refusal text, and the
 -- per-code value judgment.
 module CE.Verdict.Table
-  ( label
-  , ascendingBy
+  ( ascendingBy
   , table
   , weightsOffence
   , ceilingsOffence
@@ -20,28 +19,20 @@ module CE.Verdict.Table
   ) where
 
 import CE.Verdict.Cost (classIdPastFence, classKnobMaxCode, classTolCode)
+import CE.Wire (ascendingOn, knobTable, label, tableOffence, u64)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (nub)
 
-label :: String -> Int -> String
-label name i = name <> " " <> show i <> ": "
-
 -- | Strictly ascending on the first `k` fields — the row's IDENTITY;
 -- duplicate identities are refused by implication, whatever the
--- payload says.
+-- payload says (CE.Wire.ascendingOn on that prefix).
 ascendingBy :: String -> Int -> [[Integer]] -> Maybe String
-ascendingBy name k rows =
-  asum
-    [ if take k prev < take k cur
-        then Nothing
-        else Just (label name i <> "not strictly ascending")
-    | (i, (prev, cur)) <- zip [1 ..] (zip rows (drop 1 rows))
-    ]
+ascendingBy name k = ascendingOn name (take k)
 
+-- | CE.Wire.tableOffence with the identity prefix `idWidth` wide.
 table :: String -> (String -> Int -> [Integer] -> Maybe String) -> Int -> [[Integer]] -> Maybe String
-table name rowCheck idWidth rows =
-  asum (zipWith (rowCheck name) [0 :: Int ..] rows) <|> ascendingBy name idWidth rows
+table name rowCheck idWidth = tableOffence name (take idWidth) (rowCheck name)
 
 -- | One arity per table (3.1.0): a row set mixing widths would be
 -- read two ways at once — refused by name, the graph/1 precedent.
@@ -78,26 +69,17 @@ classKnobsOffence = table "classKnobs" one 2
   floorFor :: Integer -> Integer
   floorFor code = if code >= classTolCode then 0 else 1
 
--- | [code, value] rows, code-bounded, judged per code — generalized
--- for P4 (the thresholds table judges denominators and divisor
--- knobs by CODE). The dedup ratchet caught the second family
--- cloning the first's scaffolding; this shared grammar is the
--- throat.
-knobTable :: String -> Integer -> String -> (Integer -> Integer -> Maybe String) -> [[Integer]] -> Maybe String
-knobTable name axisMax axisWhy judgeV = table name one 1
- where
-  one nm i row = case row of
-    [code, v]
-      | code < 0 || code > axisMax -> Just (label nm i <> axisWhy)
-      | Just why <- judgeV code v -> Just (label nm i <> why)
-      | otherwise -> Nothing
-    _ -> Just (label nm i <> "malformed row (need [axis,value])")
+-- | [code, value] rows, code-bounded, judged per code — the four
+-- knob tables read CE.Wire.knobTable with verdict/1's own malformed
+-- text.
+axisTable :: String -> Integer -> String -> (Integer -> Integer -> Maybe String) -> [[Integer]] -> Maybe String
+axisTable name = knobTable name "malformed row (need [axis,value])"
 
 -- | A request may zero SOME axes (unlisted ones default to 1);
 -- zeroing all seven leaves the score with no divisor and is refused.
 weightsOffence :: [[Integer]] -> Maybe String
 weightsOffence rows =
-  knobTable "weights" 6 "unknown axis code" negW rows
+  axisTable "weights" 6 "unknown axis code" negW rows
     <|> if length rows == 7 && all zeroed rows
       then Just "weights: every axis zeroed"
       else Nothing
@@ -123,7 +105,7 @@ weightsOffence rows =
 -- calibrated default of 2 — far past where any spread the clamp
 -- cares about has already saturated it.
 ceilingsOffence :: [[Integer]] -> Maybe String
-ceilingsOffence = knobTable "ceilings" 4 "unknown ceiling axis" judgeC
+ceilingsOffence = axisTable "ceilings" 4 "unknown ceiling axis" judgeC
  where
   judgeC code v
     | v < 1 = Just "ceiling below 1"
@@ -142,7 +124,7 @@ softKMax = 1024
 -- leaves no score at all; a cycle floor (7) below 1 would count
 -- every file as a cycle member.
 thresholdsOffence :: [[Integer]] -> Maybe String
-thresholdsOffence = knobTable "thresholds" 7 "unknown threshold knob" judgeT
+thresholdsOffence = axisTable "thresholds" 7 "unknown threshold knob" judgeT
  where
   judgeT code v
     | v < 0 = Just "negative field"
@@ -155,7 +137,7 @@ thresholdsOffence = knobTable "thresholds" 7 "unknown threshold knob" judgeT
 -- below den just collapses that leg — tolerated already floors at
 -- the ceiling through the max with the +abs leg).
 toleranceOffence :: [[Integer]] -> Maybe String
-toleranceOffence = knobTable "tolerance" 2 "unknown tolerance leg" judgeT
+toleranceOffence = axisTable "tolerance" 2 "unknown tolerance leg" judgeT
  where
   judgeT code v
     | v < 0 = Just "negative field"
@@ -169,11 +151,9 @@ dedupOffence Nothing = Nothing
 dedupOffence (Just row) = case row of
   [blocks, budget]
     | blocks < 0 || budget < 0 -> Just "dedup: negative field"
-    | blocks >= u64 || budget >= u64 -> Just "dedup: outside u64"
+    | not (u64 blocks && u64 budget) -> Just "dedup: outside u64"
     | otherwise -> Nothing
   _ -> Just "dedup: malformed pair (need [blocks,budget])"
- where
-  u64 = 18446744073709551616
 
 -- | batch-7 slice 1: the distinct rows are meaningless without the
 -- pair they re-derive, the override floor is meaningless without
@@ -192,7 +172,7 @@ dedupDistinctOffence pair rows floor' =
         Just f | f < 1 -> Just "dedupMinDistinct below 1"
         _ -> Nothing
     , asum
-        [ if d >= 0 && d < 18446744073709551616
+        [ if u64 d
             then Nothing
             else Just (label "dedupDistinct" i <> "outside u64")
         | (i, d) <- zip [0 :: Int ..] rows

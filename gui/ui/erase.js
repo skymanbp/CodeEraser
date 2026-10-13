@@ -34,15 +34,14 @@ function loadErase() {
 // --apply flag; a button needs its own deliberate step), then the
 // library preconditions do the real guarding and refuse by name. The
 // answer is the erase DOCUMENT `ce erase --apply --format json` prints:
-// the plan the apply ran against. Apply erases every eraseable row of
-// it or refuses whole (erase::apply::execute), so its
-// `counts.eraseable` IS the count applied.
+// the plan the apply ran against, and under `run.applied` the rows the
+// apply erased.
 async function applyErase() {
   const n = eraseDoc?.counts?.eraseable ?? 0;
   if (!n || !window.confirm(tr("applyConfirm", n))) return;
   const d = await load("erase-apply", tr("applying"), "erase_apply", { root: $("root").value }, () => {});
   if (!d) return;
-  setStatus(tr("applied", d.counts.eraseable), false);
+  setStatus(tr("applied", d.run.applied), false);
   await loadErase(); // the post-apply plan is the convergence face
   if (eraseLogDoc) await loadEraseLog(); // an open log shows the new records
 }
@@ -86,14 +85,6 @@ function renderErase() {
   $("erase-diff").hidden = !d.diff;
 }
 
-// The stamp the console prints for the same integer (the core's
-// CE.Erase.TrailLines.utcStamp): seconds, UTC, no fraction — three
-// faces, one reading of ts_ms. Deferred to the core lane: the trail
-// document should carry the stamp, and this copy then goes.
-function logStamp(ms) {
-  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
 function renderEraseLog() {
   $("empty-erase").hidden = true;
   const d = eraseLogDoc;
@@ -107,7 +98,7 @@ function renderEraseLog() {
       const span = r.span ? `:${r.span[0]}-${r.span[1]}` : "";
       return (
         `<div class="erow kill"><i>✕</i><b>${esc(r.path)}${span}</b> <em>${esc(r.class)}</em>` +
-        `<span>${esc(logStamp(r.ts_ms))}</span>` +
+        `<span>${esc(r.stamp)}</span>` +
         `<small>${esc(r.provenance)} · plan ${esc(r.plan)}</small></div>`
       );
     })

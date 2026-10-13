@@ -19,7 +19,7 @@
 | S7 模块度 | 目录分划在**有向引用图**上的 Newman 贡献，除以该目录自身质量所能挣到的上限：`rho = (e·m − o·i) / (mu·(m−mu))`，低于 `modFloor`（‰，默认 1）即计入；`mu < modMassFloor`（默认 4）或 `mu == m` 者不判。intra 质量不上 wire——`fileRefs` 的 `inside` 之和恰为其两倍，边界律钉两表同一张图 | graph 边表（有向目录边表 `dirEdges` + fileRefs） |
 
 - 评分（2.26.0 密度律）：`charge_i = floor(scale·v_i/(v_i+N))`（N=目录总数），`score = max 0 (kScale − Σ(charge×violCost) div (neutral×judgedAxisCount))`（整数 div、且钳到 0；`judgedAxisCount` 为 5..8；册 04 §5 为准）；轴行载费额（‰）
-  （`structViolCost=10`、`structScale=1000`；旋钮回执逐行 pin，
+  （`structViolCost=10`、`scoreScale=1000`；旋钮回执逐行 pin，
   漂移即错——「一个数字两个主人」拒绝）。
 - 熵实现：Shannon/KL 需对数=无理数不可精确判定，取有理判定式；
   落在任何已声明 bin 之外的观测质量 → `divergence` 整体撤回（`[]`），

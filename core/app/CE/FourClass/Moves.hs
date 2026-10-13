@@ -12,27 +12,23 @@ module CE.FourClass.Moves (respond) where
 
 import CE.FourClass.Moves.Classify (Classified (..), Line (..), classify, unitOf)
 import CE.FourClass.Moves.Contract (MovesReq (..), PairIn (..), Side (..), offence, overCap)
-import CE.Wire (family)
-import CE.Wire.Result (resultLine)
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
 import Data.Aeson (Value, object, (.=))
+import Data.Aeson.Types (Pair)
 import Data.Array (listArray)
-import qualified Data.ByteString.Char8 as B8
 
 -- | decode → cap → contract → the judgment.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "moves" reqId overCap offence (answer proto (Just "moves_too_large")) (answer proto Nothing)
+respond :: Respond
+respond = tabled F.moves reqId overCap offence answer
 
 -- | The moves.result object: one answer per pair, the counts of pairs
 -- and line rows; degraded (the reason) answers no pairs.
-answer :: String -> Maybe String -> MovesReq -> B8.ByteString
-answer proto reason req =
-  resultLine
-    proto
-    "moves"
-    (reqId req)
-    ["pairs" .= maybe (map (encode . judge) (pairsIn req)) (const []) reason]
-    ["pairs" .= length (pairsIn req), "lines" .= sum [length (sideLines s) | p <- pairsIn req, s <- [pairBefore p, pairAfter p]]]
-    reason
+answer :: Bool -> MovesReq -> ([Pair], [Pair])
+answer degraded req =
+  ( ["pairs" .= if degraded then [] else map (encode . judge) (pairsIn req)]
+  , ["pairs" .= length (pairsIn req), "lines" .= sum [length (sideLines s) | p <- pairsIn req, s <- [pairBefore p, pairAfter p]]]
+  )
  where
   hashes = listArray (0, length (keyHashes req) - 1) (keyHashes req)
   judge p = classify hashes (side (pairBefore p)) (side (pairAfter p))

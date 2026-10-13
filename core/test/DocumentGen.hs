@@ -109,7 +109,7 @@ query fam = do
   let sorted = [g : k : ss | (g, k, ss) <- sorts]
   preds <- forM [1000, 1001] (\c -> (c :) <$> replicateM 2 (subtract 1 <$> num 7))
   answers <- forM sorts (\(g, _, ss) -> (g :) <$> mapM (const value) ss)
-  proof <- forM sorts (\(g, _, _) -> (\p as -> [g, 0, 0, -1, -1, p] <> as) <$> pickPred <*> replicateM 2 value)
+  proof <- concat <$> forM sorts (\(g, _, _) -> forM [(0, -1), (1, 0), (2, 1), (3, 0)] (\(n, up) -> (\p as -> [g, 0, n, up, -1, p] <> as) <$> pickPred <*> replicateM 2 value))
   faults <- replicateM 2 ((\a b -> [a, b]) <$> num (fromInteger why) <*> num (fromInteger why))
   errors <- replicateM 2 ((\t c -> [t, c + 1]) <$> num (fromInteger tokens + 1) <*> num 9)
   degraded <- (== 0) <$> rand 5

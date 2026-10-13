@@ -205,4 +205,5 @@ shuffledRefused (n, arcs, _) =
         , "nodes" .= replicate n ([0, 0, 0] :: [Integer])
         , "edges" .= rows
         , "pos" .= ([] :: [Value])
+        , "unres" .= ([] :: [Value])
         ]

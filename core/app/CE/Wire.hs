@@ -11,12 +11,51 @@
 -- request line. CE.Verdict keeps its own cascade: its parsed
 -- baseline threads through cap AND offence, a shape this skeleton
 -- deliberately does not grow to cover.
-module CE.Wire (Family (..), RowsReq (..), Rulepack (..), applyRows, ascendingOn, family, knobbedRows, knoblessRows, pick, respondWith, rowsFamily, notAscending, rowCheck, tableCap, tableOffence) where
+-- The family modules import the skeleton from here (plan v2.33 step
+-- 11a): the reply envelope (CE.Wire.Result), the retired keys
+-- (CE.Wire.Retired) and the row vocabulary (CE.Wire.Rows) ride out with
+-- it; only the family names are imported on their own, qualified
+-- (CE.Wire.Families as F).
+module CE.Wire
+  ( Answered
+  , Family (..)
+  , FamilyName (..)
+  , Respond
+  , RowsReq (..)
+  , Rulepack (..)
+  , applyRows
+  , family
+  , knobbedRows
+  , knoblessRows
+  , pick
+  , respondWith
+  , rowsFamily
+  , tableCap
+  , tabled
+  , module CE.Wire.Result
+  , module CE.Wire.Retired
+  , module CE.Wire.Rows
+  ) where
 
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
+import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
+import CE.Wire.Families (FamilyName (..))
+import CE.Wire.Result
+import CE.Wire.Retired
+import CE.Wire.Rows
 import Data.Foldable (asum)
+
+-- | A family's answer to one request line: the reply line, or the
+-- refusal the protocol turns into an error reply (the id when one
+-- decoded, the error code, the message).
+type Answered = Either (Maybe Value, String, String) B8.ByteString
+
+-- | A family's responder: the protocol version it answers under, the
+-- request line, the answer. Every family's `respond` has this type,
+-- and the dispatch table (CE.Protocol) holds one per family.
+type Respond = String -> B8.ByteString -> Answered
 
 -- | The [[Integer]]-rows request the table families share: id, the
 -- fact rows, and the optional side tables — Trend/Erase read knobs,
@@ -34,12 +73,12 @@ data RowsReq = RowsReq
   , namingOf :: Maybe [[Integer]]
   , -- scan/1's call table (6.5.0): the arcs the recursion increment
     -- judges, as indices into `rows`. Nothing = a client that sends
-    -- none, and the reply keeps its legacy bytes.
+    -- none: no arc, nothing to bump.
     callsOf :: Maybe [[Integer]]
   , rulepackOf :: Rulepack
   , -- scan/1's fence channel (6.4.0, O33): the `knobsFence` value as
-    -- it rode — Nothing = the key never came (a client that read no
-    -- baseline: legacy bytes), Just Null = no committed baseline
+    -- it rode — Nothing = the key never came (refused by name at
+    -- 9.0.0, `knobsFence: required at 9.0.0`), Just Null = no committed baseline
     -- (unfenced), Just [current, recorded] = the two digests to
     -- compare. Three states, so absent and null are never one.
     fenceOf :: Maybe Value
@@ -49,13 +88,13 @@ data RowsReq = RowsReq
     maskSent :: Bool
   , -- erase/1's target table (7.2.0, plan v2.30 step 7b): one
     -- [pathId, start, end] per fact row, the key the target closure
-    -- groups rows by. Nothing = a client that closes for itself
-    -- (legacy bytes: no `kept` key rides back).
+    -- groups rows by. Nothing = the key never came, which erase/1
+    -- refuses by name at 9.0.0 (`targets: required at 9.0.0`).
     targetsOf :: Maybe [[Integer]]
   , -- scan/1's events table (7.2.0, plan v2.30 step 7b ③): each
     -- unit's structural events, keyed by its cognitive row, the
-    -- three complexity rows derived from them. Nothing = a client
-    -- that measured for itself (legacy bytes: no `derived` echo).
+    -- three complexity rows derived from them. Nothing = the key
+    -- never came, which scan/1 refuses by name at 9.0.0.
     eventsOf :: Maybe [[Integer]]
   }
 
@@ -84,13 +123,13 @@ instance FromJSON RowsReq where
       <*> o .:? "callEdges"
       <*> parseJSON (Object o)
       <*> pure (KM.lookup "knobsFence" o)
-      <*> pure (KM.member "judgedMask" o)
+      <*> pure (judgedMaskSent o)
       <*> o .:? "targets"
       <*> o .:? "events"
 
 -- | One family's bindings for the shared cascade.
 data Family req = Family
-  { famName :: String
+  { famName :: FamilyName
   -- ^ decode-error prefix ("clone: ...")
   , famId :: req -> Value
   , famOverCap :: req -> Bool
@@ -108,25 +147,41 @@ data Family req = Family
 -- of it — the write gate named the block, so it moved here.
 family ::
   (FromJSON req) =>
-  String ->
+  FamilyName ->
   (req -> Value) ->
   (req -> Bool) ->
   (req -> Maybe String) ->
   (req -> B8.ByteString) ->
   (req -> B8.ByteString) ->
   B8.ByteString ->
-  Either (Maybe Value, String, String) B8.ByteString
+  Answered
 family name ident overCap offence deg jud = respondWith (Family name ident overCap offence deg jud)
+
+-- | A family whose degraded reply is its judged reply with nothing
+-- judged (plan v2.33 step 11a): one answer, read twice, gives the
+-- family's fields and counts, and the skeleton spells the envelope,
+-- the degraded flag and the reason (`tooLarge`) once.
+tabled ::
+  (FromJSON req) =>
+  FamilyName ->
+  (req -> Value) ->
+  (req -> Bool) ->
+  (req -> Maybe String) ->
+  (Bool -> req -> ([Pair], [Pair])) ->
+  Respond
+tabled name ident overCap offence answer proto = family name ident overCap offence (line True) (line False)
+ where
+  line degraded req = uncurry (resultLine proto name (ident req)) (answer degraded req) (tooLarge name degraded)
 
 -- | A RowsReq family: the shared request type's own id.
 rowsFamily ::
-  String ->
+  FamilyName ->
   (RowsReq -> Bool) ->
   (RowsReq -> Maybe String) ->
   (RowsReq -> B8.ByteString) ->
   (RowsReq -> B8.ByteString) ->
   B8.ByteString ->
-  Either (Maybe Value, String, String) B8.ByteString
+  Answered
 rowsFamily name = family name rowsId
 
 -- | The cap a KNOBBED table family counts against: rows and knob
@@ -138,27 +193,25 @@ tableCap cap req = toInteger (length (rowsOf req) + length (knobsOf req)) > cap
 
 -- | A KNOBBED table family (trend/2, tombstone/1): rows and knob rows
 -- count against one cap together, the first malformed row in request
--- order is the offence, else the first malformed knob — rows are
--- facts in request order and none is asked to ascend. trend/2 minted
--- this cascade and tombstone/1 copied it verbatim, so it lives here
--- (this module's own promotion rule).
+-- order is the offence, else the knob table's (CE.Wire.Rows.knobTable,
+-- labelled "knob") — rows are facts in request order and none is
+-- asked to ascend. trend/2 minted this cascade and tombstone/1 copied
+-- it verbatim, so it lives here (this module's own promotion rule).
 knobbedRows ::
-  String ->
+  FamilyName ->
   Integer ->
   (Int -> [Integer] -> Maybe String) ->
-  (Int -> [Integer] -> Maybe String) ->
+  ([[Integer]] -> Maybe String) ->
   (String -> RowsReq -> B8.ByteString) ->
   (String -> RowsReq -> B8.ByteString) ->
-  String ->
-  B8.ByteString ->
-  Either (Maybe Value, String, String) B8.ByteString
-knobbedRows name cap rowShape knobShape deg jud proto =
+  Respond
+knobbedRows name cap rowShape knobsOffence deg jud proto =
   rowsFamily name (tableCap cap) offence (deg proto) (jud proto)
  where
   offence req =
     asum
       [ asum (zipWith rowShape [0 :: Int ..] (rowsOf req))
-      , tableOffence "knob" (take 1) knobShape (knobsOf req)
+      , knobsOffence (knobsOf req)
       ]
 
 -- | A KNOBLESS table family (erase/1, audit/1): rows
@@ -169,7 +222,7 @@ knobbedRows name cap rowShape knobShape deg jud proto =
 -- tenth family (audit/1) reminted erase/1's violation shell
 -- verbatim — this module's own promotion rule.
 knoblessRows ::
-  String ->
+  FamilyName ->
   Integer ->
   (Int -> [Integer] -> Maybe String) ->
   -- | the family's own contract past the rows (erase/1's target
@@ -178,7 +231,7 @@ knoblessRows ::
   (RowsReq -> B8.ByteString) ->
   (RowsReq -> B8.ByteString) ->
   B8.ByteString ->
-  Either (Maybe Value, String, String) B8.ByteString
+  Answered
 knoblessRows name cap rowShape more =
   rowsFamily
     name
@@ -192,7 +245,7 @@ knoblessRows name cap rowShape more =
       , more req
       ]
   noKnob i _ =
-    Just ("knob " <> show i <> ": " <> name <> "/1 declares no knob codes")
+    Just (label "knob" i <> nameWord name <> "/" <> show (nameVersion name) <> " declares no knob codes")
 
 -- | decode → cap check (a complete degraded reply, never a
 -- truncated one) → boundary contract (error/contract naming the
@@ -201,65 +254,13 @@ respondWith ::
   (FromJSON req) =>
   Family req ->
   B8.ByteString ->
-  Either (Maybe Value, String, String) B8.ByteString
+  Answered
 respondWith fam line = case eitherDecodeStrict line of
-  Left e -> Left (Nothing, "bad_request", famName fam <> ": " <> e)
+  Left e -> Left (Nothing, "bad_request", nameWord (famName fam) <> ": " <> e)
   Right req
     | famOverCap fam req -> Right (famDegraded fam req)
     | Just why <- famOffence fam req -> Left (Just (famId fam req), "contract", why)
     | otherwise -> Right (famJudged fam req)
-
--- | Strictly-ascending row check with the family's label vocabulary
--- (list Ord is lexicographic) — one comparison, four families.
-notAscending :: (Ord a) => String -> Int -> (a, a) -> Maybe String
-notAscending what i (prev, cur)
-  | prev < cur = Nothing
-  | otherwise = Just (what <> " " <> show i <> ": not strictly ascending")
-
--- | Whole-table ascending pass on a PROJECTION of each row — the
--- identity prefix for docdup pairs (take 2), the code for scan
--- grades (take 1), the whole row for clone pairs and graph edges
--- (id). One zipWith, five call sites: the review-repair batch's own
--- ratchet bite was the projection lambda cloning across families.
--- | One row's whole contract: the right width, then the checks a
--- well-formed row must pass, both wearing the same "<table> <i>: "
--- label. tableOffence below shares the table-level envelope; this is
--- the row-level one under it, and the clone gate named it when
--- graph/1's node row lost its second arm and its three validators
--- collapsed onto one shape.
---
--- The malformed message is the CALLER's whole string, not a template:
--- families say "malformed row (need [..])" and "malformed knob (need
--- [..])", and the wording is each family's contract, not this
--- skeleton's to normalize.
-rowCheck ::
-  String -> String -> Int -> ([Integer] -> Maybe String) -> Int -> [Integer] -> Maybe String
-rowCheck what malformed width checks i row
-  | length row /= width = Just (label <> malformed)
-  | otherwise = fmap (label <>) (checks row)
- where
-  label = what <> " " <> show i <> ": "
-
--- | One table's whole contract: every row well shaped in request
--- order, then the table strictly ascending. Nine modules held this
--- exact two-step fold — the clone gate named it the moment graph/1
--- added a fifth table — and it earns its place here the same way
--- ascendingOn did one line below (the tenth ratchet bite promoted
--- that one). Order is preserved deliberately: shape errors must
--- surface before ordering errors, so the ascending pass only ever
--- compares rows it can compare.
-tableOffence :: (Ord b) => String -> (a -> b) -> (Int -> a -> Maybe String) -> [a] -> Maybe String
-tableOffence what proj row rows =
-  asum [asum (zipWith row [0 :: Int ..] rows), ascendingOn what proj rows]
-
-ascendingOn :: (Ord b) => String -> (a -> b) -> [a] -> Maybe String
-ascendingOn what proj rows =
-  asum
-    ( zipWith
-        (\i (p, c) -> notAscending what i (proj p, proj c))
-        [1 :: Int ..]
-        (zip rows (drop 1 rows))
-    )
 
 -- | Fold [code, value] rows through a setter table; rows whose code
 -- the table does not own fall through untouched (validation already

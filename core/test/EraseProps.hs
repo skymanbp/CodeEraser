@@ -29,7 +29,7 @@ battery = runLegs names probes
     , "the family is knobless: any knob row refuses by name"
     , "an over-cap erase request degrades to an EMPTY table that FAILS"
     , "the target closure keeps the richest eraseable row, else the categorical advisory"
-    , "kept rides exactly when targets ride, and target refusals name the offender"
+    , "kept rides on every judged reply, a request without targets is refused by name, and target refusals name the offender"
     ]
   probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace]
 
@@ -74,8 +74,17 @@ truthTable =
     , (False, 6), (False, 6), (False, 6)
     ]
 
+-- | An erase request over `rows`, its target table (required at 9.0.0)
+-- one path per row in key order: a one-line span for a verbatim_doc
+-- row, the whole file otherwise.
 req :: [[Integer]] -> Value
-req = rowsRequest "7.0.0" "erase.request"
+req rows = setKey "targets" (toJSON (zipWith target [0 :: Integer ..] rows)) (bare rows)
+ where
+  target i r = if take 1 r == [1] then [i, 1, 1] else [i, 0, 0]
+
+-- | The same request without its target table.
+bare :: [[Integer]] -> Value
+bare = rowsRequest "7.0.0" "erase.request"
 
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of
@@ -189,15 +198,15 @@ closure =
     , [True, True]
     ]
 
--- | The wire face of the closure: `kept` rides one bit per row when
--- the target table rode (the counts stay the whole table's), never
--- when it did not, never on a degraded reply; and every target
--- refusal names its row and reason.
+-- | The wire face of the closure: `kept` rides one bit per row on every
+-- judged reply (the counts stay the whole table's), never on a degraded
+-- one; a request without the target table is refused by name (required
+-- at 9.0.0); and every target refusal names its row and reason.
 targetsFace :: Bool
 targetsFace =
   and
     [ fmap (`field` "kept") (replyObjWith respond withTargets) == Just (Just (toJSON [0, 1, 0 :: Integer]))
-    , fmap (`field` "kept") (replyObjWith respond (req rows)) == Just Nothing
+    , refusedBy respond (bare rows) "targets: required at 9.0.0"
     , fmap (`field` "kept") (replyObjWith respond (targeted big (replicate (length big) [0, 0, 0]))) == Just Nothing
     , length refusedRows == length refusedTargets && length refusedTargets == length whys
     , and (zipWith3 (\r t why -> refusedBy respond (targeted r t) why) refusedRows refusedTargets whys)

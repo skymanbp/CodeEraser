@@ -73,12 +73,11 @@ function renderQuery() {
 
 // One goal: its heading (a question's columns, or the assertion's
 // name and verdict), a table of its answers, and under each answer
-// the derivation rows the document carries, indented by depth. The
-// answers and proof rows are grouped per goal and the depth walked here:
-// deferred to the core lane — the query document should carry each
-// goal's rows and each proof row's depth, and these walks then go.
+// the derivation rows the document carries, indented by depth: the
+// document groups them (a goal's `answers`, an answer's `proof`, both
+// indices) and states each row's depth.
 function goalTable(d, g) {
-  const rows = d.answers.map((a, i) => [a, i]).filter(([a]) => a.goal === g.goal);
+  const rows = g.answers.map((i) => d.answers[i]);
   const title =
     g.kind === "assert"
       ? `assert ${esc(g.name)}(${esc(g.columns.join(", "))}) — ${rows.length ? `${rows.length} ${esc(tr("queryViolations"))}` : esc(tr("queryOk"))}`
@@ -87,11 +86,11 @@ function goalTable(d, g) {
   const head = g.columns.map((h, i) => `<th>${esc(h)} <em>${esc(g.sorts[i])}</em></th>`).join("");
   const width = g.columns.length;
   const body = rows
-    .map(([a], nth) => {
+    .map((a) => {
       const cells = a.values.map((v) => `<td>${esc(v)}</td>`).join("");
-      const proof = d.proof.filter((p) => p.goal === g.goal && p.answer === nth && p.parent >= 0);
+      const proof = a.proof.map((j) => d.proof[j]);
       const chain = proof.length
-        ? `<tr class="proof"><td colspan="${width}">${proof.map((p) => proofLine(p, proof)).join("")}</td></tr>`
+        ? `<tr class="proof"><td colspan="${width}">${proof.map(proofLine).join("")}</td></tr>`
         : "";
       return `<tr>${cells}</tr>${chain}`;
     })
@@ -100,15 +99,8 @@ function goalTable(d, g) {
 }
 
 // One derivation node: `pred(args)` and whether a clause or a sent
-// fact produced it, indented by its depth under the root.
-function proofLine(p, rows) {
-  let depth = 0;
-  for (let at = p.parent; at >= 0; ) {
-    const parent = rows.find((q) => q.node === at);
-    if (!parent) break;
-    depth += 1;
-    at = parent.parent;
-  }
+// fact produced it, indented by its depth under the root's premises.
+function proofLine(p) {
   const by = p.rule < 0 ? tr("queryFact") : tr("queryClause", p.rule);
-  return `<div class="proof-line" style="padding-left:${depth}em">${esc(p.pred)}(${esc(p.args.join(", "))}) <em>${esc(by)}</em></div>`;
+  return `<div class="proof-line" style="padding-left:${p.depth - 1}em">${esc(p.pred)}(${esc(p.args.join(", "))}) <em>${esc(by)}</em></div>`;
 }

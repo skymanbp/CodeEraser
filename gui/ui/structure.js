@@ -80,19 +80,19 @@ function renderSplit() {
     const m = Math.max(b, c) || 1;
     return `<span class="roibar" style="--b:${((100 * b) / m).toFixed(1)}%;--c:${((100 * c) / m).toFixed(1)}%" title="${b} / ${c} milli"></span>`;
   };
-  // ROI = benefit / cost, divided here: deferred to the core lane — the
-  // structure document should carry `roi`, and these divisions then go
+  // `roi` is the document's (the console's one decimal); an exemption
+  // without a priced seam carries none
   const cand = report.splitCandidates.map(
     (c) =>
       `<div class="row">✂ <b>${esc(c.path)}</b> — ${esc(tr("seamAfter"))} L${c.afterLine}` +
-      ` (${esc(c.unit)}) · <b>ROI ${(c.benefitMilli / c.costMilli).toFixed(1)}×</b>${bar(c.benefitMilli, c.costMilli)}</div>`,
+      ` (${esc(c.unit)}) · <b>ROI ${esc(c.roi)}×</b>${bar(c.benefitMilli, c.costMilli)}</div>`,
   );
   const ex = report.sizeExempt.map(
     (e) =>
       `<div class="row zero">${esc(e.path)} — ` +
-      // costMilli === 0 is the core's [fid,0,0] no-seam row (a single
-      // unit cannot be split); it must never reach the division
-      `${esc(e.costMilli === 0 ? tr("noSeam") : tr("cohesiveRoi", (e.benefitMilli / e.costMilli).toFixed(1)))}` +
+      // a null roi is the core's [fid,0,0] no-seam row (a single unit
+      // cannot be split)
+      `${esc(e.roi === null ? tr("noSeam") : tr("cohesiveRoi", e.roi))}` +
       `${bar(e.benefitMilli, e.costMilli)}</div>`,
   );
   p.innerHTML =

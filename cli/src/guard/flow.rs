@@ -47,7 +47,10 @@ pub(super) fn observe(root: &Path, env: &Envelope, cfg: Option<&Config>) -> Opti
     };
     let tier = tier(cfg);
     let file = &env.tool_input.file_path;
-    let armed = tier != FLOW_DEFAULT && fr::lang_judged(lang);
+    // the condition: a novel finding the core judged (its bit, 9.0.0:
+    // a judged language and a kind that is not advisory), at a tier
+    // that speaks
+    let armed = tier != FLOW_DEFAULT && novel.iter().any(|p| p.judged);
     let speak = novel.first().filter(|_| armed).map(|first| {
         let said = Said::FlowNovel {
             file: file.clone(),

@@ -46,8 +46,7 @@ checked req =
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= dfSchema doc
-    , "similar_rev" .= fact req "similarRev"
+    [ "similar_rev" .= fact req "similarRev"
     , "query" .= object ["label" .= ref "label" [], "terms" .= fact req "terms", "widen" .= flag req "widen"]
     , "candidates" .= map candidate cands
     , "counts" .= counted (words "candidates role widened") (map count [const True, \r -> role r == 1, \r -> widened r == 1])

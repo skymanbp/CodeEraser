@@ -15,11 +15,12 @@
 -- never just that something was wrong.
 module CE.Scan.Contract (violation) where
 
+import CE.Scan.Cost (gradeTable)
 import CE.Scan.Cycles (callBattery)
 import CE.Scan.Events (eventBattery)
 import CE.Scan.Fence (fenceOffence)
-import CE.Wire (RowsReq (..), Rulepack (..), rowCheck, tableOffence)
-import CE.Wire.Mask (judgedLang, retiredMask)
+import CE.Wire (RowsReq (..), Rulepack (..), required, retiredMask, rowCheck, tableOffence, topCode, u64)
+import CE.Wire.Mask (judgedLang)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import Data.List (find)
@@ -43,9 +44,9 @@ violation req =
     , tableOffence "grade" (take 1) gradeShape (gradesOf req)
     , namingBattery req
     , callBattery (rowsOf req) (callsOf req)
-    , eventBattery (rowsOf req) (eventsOf req)
+    , maybe (required "events") (eventBattery (rowsOf req)) (eventsOf req)
     , classBattery req
-    , fenceOffence (fenceOf req)
+    , maybe (required "knobsFence") fenceOffence (fenceOf req)
     ]
 
 -- | The naming-facts table's own contract (2.30.0): aligned 1:1
@@ -53,9 +54,11 @@ violation req =
 -- facts — and the verdict provably absent from the wire: a code-6
 -- row must carry value 0 when facts ride (the staleDocs lesson,
 -- inverted before shipping this time: one judgment, one road).
+-- Required since 9.0.0 (the measuring side always sent it; the road
+-- that judged the client's own 0/1 went with the major).
 namingBattery :: RowsReq -> Maybe String
 namingBattery req = case namingOf req of
-  Nothing -> Nothing
+  Nothing -> required "naming"
   Just naming ->
     asum
       [ counts naming
@@ -117,9 +120,9 @@ rowShape = rowCheck "row" "malformed row (need [code,value])" 2 checks
  where
   checks row = case row of
     [code, v]
-      | code < 0 || code > 6 -> Just "unknown metric code"
+      | code < 0 || code > topCode gradeTable -> Just "unknown metric code"
       | v < 0 -> Just "negative value"
-      | v >= 18446744073709551616 -> Just "value outside u64"
+      | not (u64 v) -> Just "value outside u64"
     _ -> Nothing
 
 -- | A grade override must stay a coherent ladder: a hard line BELOW
@@ -141,7 +144,7 @@ ladderFault row = case row of
     snd
       <$> find
         fst
-        [ (code < 0 || code > 6, "unknown metric code")
+        [ (code < 0 || code > topCode gradeTable, "unknown metric code")
         , (warn < 0 || failLine < 0, "negative field")
         , (failLine /= 0 && failLine < warn, "fail line below warn")
         ]

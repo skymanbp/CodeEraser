@@ -17,7 +17,9 @@ module CE.Verdict.Rows
   ) where
 
 import CE.Verdict.Cost (classIdPastFence, scoreScale)
-import CE.Verdict.Table (ascendingBy, label)
+import CE.Scan.Cost (gradeTable)
+import CE.Verdict.Table (ascendingBy)
+import CE.Wire (label, topCode, u64)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import qualified Data.IntSet as IS
@@ -25,10 +27,10 @@ import qualified Data.IntSet as IS
 tierRow :: Int -> [Integer] -> Maybe String
 tierRow i row = case row of
   [u, code]
-    | u /= toInteger i -> Just ("tier " <> show i <> ": index mismatch")
-    | code < 0 || code > 1 -> Just ("tier " <> show i <> ": unknown tier code")
+    | u /= toInteger i -> Just (label "tier" i <> "index mismatch")
+    | code < 0 || code > 1 -> Just (label "tier" i <> "unknown tier code")
     | otherwise -> Nothing
-  _ -> Just ("tier " <> show i <> ": malformed row (need [u,tier])")
+  _ -> Just (label "tier" i <> "malformed row (need [u,tier])")
 
 pairRow :: Integer -> Int -> String -> Int -> [Integer] -> Maybe String
 pairRow n arity name i row = case row of
@@ -88,15 +90,15 @@ contRow name i row = case row of
   (u : code : _ : rest)
     | length rest > 1 -> Just (label name i <> "malformed row")
     | any (< 0) row -> Just (label name i <> "negative field")
-    | u >= 18446744073709551616 -> Just (label name i <> "outside u64")
-    | code > 6 -> Just (label name i <> "unknown metric code")
+    | not (u64 u) -> Just (label name i <> "outside u64")
+    | code > topCode gradeTable -> Just (label name i <> "unknown metric code")
     | any classIdPastFence rest -> Just (label name i <> "class beyond the fence")
     | otherwise -> Nothing
   _ -> Just (label name i <> "malformed row")
 
 discEntry :: Int -> Integer -> Maybe String
 discEntry i x
-  | x < 0 || x >= 18446744073709551616 = Just (label "discrete" i <> "outside u64")
+  | not (u64 x) = Just (label "discrete" i <> "outside u64")
   | otherwise = Nothing
 
 docFilesOffence :: Integer -> [Integer] -> Maybe String
@@ -125,7 +127,7 @@ presentOffence rows =
   asum (zipWith one [0 :: Int ..] rows) <|> ascendingBy "present" 1 (map pure rows)
  where
   one i x
-    | x < 0 || x >= 18446744073709551616 = Just (label "present" i <> "outside u64")
+    | not (u64 x) = Just (label "present" i <> "outside u64")
     | otherwise = Nothing
 
 -- | The self-loop table (6.4.0, O59): the file indices whose node
@@ -173,5 +175,5 @@ judgedLocOffence locs =
     ]
  where
   one i x
-    | x < 0 || x >= 18446744073709551616 = Just (label "judgedLoc" i <> "outside u64")
+    | not (u64 x) = Just (label "judgedLoc" i <> "outside u64")
     | otherwise = Nothing

@@ -51,8 +51,7 @@ statement =
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= dfSchema doc
-    , "commits" .= fact req "commits"
+    [ "commits" .= fact req "commits"
     , "append_lines" .= fact req "appended"
     , "rewrite_lines" .= fact req "rewrote"
     , "added_in_window" .= added

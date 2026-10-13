@@ -17,6 +17,7 @@ module CE.Structure.Axes
 import qualified CE.Structure.Modularity as Mod
 import CE.Structure.Entropy (perMille, tsallis2Norm)
 import qualified CE.Structure.Cost as Cost
+import CE.Verdict.Cost (scoreScale)
 import qualified Data.Map.Strict as M
 
 -- | The validated fact tables (row shapes enforced by CE.Structure's
@@ -90,7 +91,7 @@ bound =
     , kMisplaceMin = Cost.misplaceMin
     , kBigDirFloor = Cost.bigDirFloor
     , kViolCost = Cost.structViolCost
-    , kScale = Cost.structScale
+    , kScale = scoreScale
     , kDupMin = Cost.dupMin
     , kDeadMin = Cost.deadMin
     , kStaleMin = Cost.staleMin

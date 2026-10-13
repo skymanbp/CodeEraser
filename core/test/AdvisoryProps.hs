@@ -42,7 +42,8 @@ legs =
   ]
 
 -- | A graph request over `nodes` (entry-less file nodes unless said
--- otherwise), no edges, plus the side tables the leg is about.
+-- otherwise), no edges, an empty ledger unless the leg sends one
+-- (required at 9.0.0), plus the side tables the leg is about.
 req :: [[Integer]] -> [Pair] -> Value
 req nodes extra =
   object
@@ -53,6 +54,7 @@ req nodes extra =
       , "edges" .= ([] :: [Value])
       , "pos" .= ([] :: [Value])
       ]
+        <> ["unres" .= ([] :: [Value]) | "unres" `notElem` map fst extra]
         <> extra
     )
 
@@ -136,7 +138,7 @@ ironRule =
     , ["mounts" .= reexported, "unmentioned" .= open]
     , ["mounts" .= [[0, 0, 0, 0 :: Integer]], "unmentioned" .= dropRows]
     ]
-    && deadOf (req two []) == Just (toJSON ([[0, 1], [1, 1]] :: [[Integer]]))
+    && deadOf (req two []) == Just (toJSON ([[0, 1, 1], [1, 1, 1]] :: [[Integer]]))
  where
   two = [[0, 0, 0], [0, 0, 0]]
   m = [[0, 0, 0, 0], [1, 0, 0, 0 :: Integer]]
@@ -258,7 +260,7 @@ ownCaps =
 -- has no business being built for a cap check).
 lone :: Int -> B8.ByteString -> B8.ByteString -> B8.ByteString
 lone count row key =
-  "{\"proto\":\"7.0.0\",\"type\":\"graph.request\",\"id\":1,\"nodes\":[[0,0,0]],\"edges\":[],\"pos\":[],\""
+  "{\"proto\":\"7.0.0\",\"type\":\"graph.request\",\"id\":1,\"nodes\":[[0,0,0]],\"edges\":[],\"pos\":[],\"unres\":[],\""
     <> key
     <> "\":["
     <> B8.intercalate "," (replicate count row)

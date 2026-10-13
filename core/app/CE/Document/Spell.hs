@@ -9,7 +9,7 @@
 module CE.Document.Spell (derived, resolverFor) where
 
 import CE.Document.Bind (Resolver, Strings (..), indexed, nested, textOf)
-import CE.Document.Contract (DocReq (..), rows)
+import CE.Document.Contract (DocReq (..), nameOr, rows)
 import CE.Lang (segmentKinds)
 import CE.Resolve.Chars (isRustWhite)
 import Control.Applicative ((<|>))
@@ -138,9 +138,7 @@ segName req plain = \s -> do
   pure (path <> ":" <> show a <> "-" <> show b <> " " <> kindName k)
  where
   segs = M.fromListWith (\_ first -> first) [(i, rest) | i : rest <- rows req "segs"]
-  kindName k = case drop (fromInteger k) segmentKinds of
-    name : _ | k >= 0 -> name
-    _ -> "kind?"
+  kindName = nameOr "kind?" segmentKinds
 
 -- | The tables a family's request carried as measures of its strings,
 -- measured here when the request carries the strings: each path's

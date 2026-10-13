@@ -45,12 +45,13 @@ pub struct AdvisoryName {
 /// `entry().or_default().push()` below (W8-F2).
 pub type Names = BTreeMap<[i64; 3], Vec<AdvisoryName>>;
 
-/// The producer's own cut of the table, equal to the core's soft cap
-/// (`CE.Graph.Cost.unmentionedCap`, pinned source-to-source by
-/// docs_consts K46): a smaller value would truncate silently, a
-/// larger one would resurrect a table the core drops.
-// TODO(defrag-core: limits.graph.unmentioned_cap)
-pub const UNMENTIONED_SOFT_CAP: usize = 131_072;
+/// The producer's own cut of the table: the core's soft cap
+/// (`CE.Graph.Cost.unmentionedCap`, the package's
+/// `limits.graph.unmentioned_cap`) — a smaller value would truncate
+/// silently, a larger one would resurrect a table the core drops.
+pub fn unmentioned_soft_cap() -> usize {
+    crate::tables::get().limits.graph.unmentioned_cap
+}
 
 /// The table plus the one fact the table cannot carry about itself:
 /// whether the producer's cut removed rows. The core still answers
@@ -149,14 +150,15 @@ pub fn unmentioned(
     Ok(cut(out))
 }
 
-/// The producer's cut: the first `UNMENTIONED_SOFT_CAP` keys in wire
+/// The producer's cut: the first `unmentioned_soft_cap()` keys in wire
 /// order (the map's order, so the same rows survive run after run —
 /// the §6 "always the same batch" promise), and whether any key fell
 /// past it. Exactly the cap is not a cut.
 fn cut(all: Names) -> Unmentioned {
-    let cut = all.len() > UNMENTIONED_SOFT_CAP;
+    let cap = unmentioned_soft_cap();
+    let cut = all.len() > cap;
     Unmentioned {
-        names: all.into_iter().take(UNMENTIONED_SOFT_CAP).collect(),
+        names: all.into_iter().take(cap).collect(),
         cut,
     }
 }

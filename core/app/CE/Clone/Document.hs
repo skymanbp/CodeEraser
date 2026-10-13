@@ -46,7 +46,7 @@ unitsChecked :: DocReq -> Maybe String
 unitsChecked req = asum [dense req "units" (range req "units")]
 
 unitsAssemble :: DocReq -> Value
-unitsAssemble req = object ["schema" .= unitsSchema, "units" .= map unit (rows req "units")]
+unitsAssemble req = object ["units" .= map unit (rows req "units")]
  where
   unit r = case r of
     [u, f, nth, nodes] -> object ["path" .= ref "path" [f], "key" .= ref "key" [u], "nth" .= nth, "nodes" .= nodes]

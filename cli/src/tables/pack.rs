@@ -94,11 +94,12 @@ leaked! {
     Keys { config_names: Names, twin_exts: Rows }
     /// The entry-file names and directories.
     Flags { entry_names: Names, entry_dirs: Rows }
-    /// The tombstone reading's vocabularies and numbers.
+    /// The tombstone reading's vocabularies and numbers, and the site
+    /// kinds' names by wire code.
     Tombstone { negations: Names, keywords: Names, en_prefix: Names, en_suffix: Names,
                 zh_prefix: Names, zh_suffix: Names, marks_en: Names, marks_zh: Names,
                 stop_en: Names, min_ascii_name: usize, min_wide_name: usize,
-                join_max: usize, open: Chars, close: Chars }
+                join_max: usize, open: Chars, close: Chars, kind_names: Names }
     /// The compilation database's flag tables.
     Compdb { gnu: Names, skip: Names }
     /// The protocol names a loader, a framework or a platform calls.
@@ -120,7 +121,8 @@ leaked! {
     /// The entries this side reads of the report documents' catalogue
     /// (7.8.0): the schema ids and empty documents are the core's
     /// statement and never bound here.
-    DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons }
+    DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
+                 merge: DocReasons }
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }

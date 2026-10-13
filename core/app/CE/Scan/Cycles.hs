@@ -20,6 +20,7 @@
 -- it. The increment itself, the constant 1, exists in this one place.
 module CE.Scan.Cycles (callBattery, withCycles) where
 
+import CE.Wire (label)
 import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import qualified Data.Graph as G
@@ -49,14 +50,13 @@ callBattery rows (Just arcs) =
   shape i row = case row of
     [from, to]
       | from < 0 || from >= n || to < 0 || to >= n ->
-          Just (label i <> "endpoint outside the rows")
+          Just (label "callEdge" i <> "endpoint outside the rows")
       | not (seats from) || not (seats to) ->
-          Just (label i <> "endpoint is not a cognitive row")
+          Just (label "callEdge" i <> "endpoint is not a cognitive row")
       | otherwise -> Nothing
-    _ -> Just (label i <> "malformed row (need [from,to])")
+    _ -> Just (label "callEdge" i <> "malformed row (need [from,to])")
   ascending = out <$> find (uncurry (>=)) (zip arcs (drop 1 arcs))
   out _ = "callEdges: not strictly ascending"
-  label i = "callEdge " <> show i <> ": "
 
 -- | The rows as judged, beside the table of what moved: every
 -- cognitive row whose unit sits in a cycle carries value + 1, and

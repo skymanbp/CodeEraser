@@ -10,7 +10,7 @@
 
 use crate::corelink::Link;
 use crate::flow::lower::{Lowered, lower_file};
-use crate::flow_report::{judged, kinds_json};
+use crate::flow_report::kinds_json;
 use crate::tombstone::texts::Loaded;
 use serde_json::{Value, json};
 
@@ -31,15 +31,11 @@ pub(super) fn leg(loaded: &[Loaded], link: Option<&mut Link>) -> Option<Value> {
     };
     match verdict {
         Ok(verdict) => {
-            let found = || {
-                verdict
-                    .findings
-                    .iter()
-                    .map(|(f, _, x)| (files[*f].lang, x.kind))
-            };
+            let found = || verdict.findings.iter().map(|(_, _, x)| x);
             v["findings"] = json!(verdict.findings.len());
-            v["kinds"] = kinds_json(found().map(|(_, k)| k));
-            v["judged"] = json!(found().filter(|(lang, k)| judged(*lang, *k)).count());
+            v["kinds"] = kinds_json(found().map(|x| x.kind));
+            // the core's bit per finding (9.0.0), never this side's rule
+            v["judged"] = json!(found().filter(|x| x.judged).count());
         }
         Err(why) => v["degraded"] = json!(why),
     }

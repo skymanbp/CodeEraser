@@ -50,8 +50,7 @@ checked req =
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= dfSchema doc
-    , "window" .= fact req "window"
+    [ "window" .= fact req "window"
     , "pending" .= fact req "pending"
     , "rows" .= map point (rows req "points")
     , "failed" .= [[ref "sha" [k], ref "reason" [k]] | k <- [0 .. range req "failed" - 1]]

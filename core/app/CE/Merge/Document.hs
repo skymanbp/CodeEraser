@@ -20,11 +20,12 @@ import Data.Aeson (Value (..), object, (.=))
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 
-doc :: DocFamily
-doc = docFamily "merge" schemaId statement joined assemble []
-
 schemaId :: String
 schemaId = "ce.merge-report/0.1.0"
+
+-- | The catalogue lists the reasons by code (`document.merge.reasons`).
+doc :: DocFamily
+doc = docFamily "merge" schemaId statement joined assemble ["reasons" .= reasons]
 
 -- | A group row is merge/1's suggestion [g, params, kept, savings,
 -- feasible, reason] with the family and fragment bits after it; a
@@ -48,7 +49,9 @@ statement =
 
 -- | The reasons by code (CE.Merge.Cost): feasible, a position no
 -- parameter can stand for, a type position, a gap across statements,
--- more parameters than the ceiling, no line saved.
+-- more parameters than the ceiling, no line saved. The package's
+-- catalogue carries them (`document.merge.reasons`, plan v2.33 step
+-- 11a): the measuring side reads the codes it names from there.
 reasons :: [String]
 reasons = ["ok", "position", "type", "spans_statements", "too_many_params", "no_savings"]
 
@@ -76,8 +79,7 @@ memberIds req = M.fromList [((g, m), k) | k : g : m : _ <- rows req "members"]
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= schemaId
-    , "counts" .= counted countKeys tallies
+    [ "counts" .= counted countKeys tallies
     , "unsendable" .= counted unsendable (map (fact req) unsendable)
     , "groups" .= map (group ids (bucket 1 "members") (bucket 0 "holes")) (rows req "groups")
     , "degraded" .= whyRef req
@@ -112,7 +114,7 @@ group ids members holes row = case row of
           , "kept" .= kept
           , "savings" .= savings
           , "feasible" .= (feasible == 1)
-          , "reason" .= concat (take 1 (drop (fromInteger reason) reasons))
+          , "reason" .= nameOf reasons reason
           , "holes" .= [object ["param" .= p, "values" .= [value r | r <- mine, take 1 (drop 1 r) == [h]]] | (p, h) <- firstReach]
           ]
   _ -> Null

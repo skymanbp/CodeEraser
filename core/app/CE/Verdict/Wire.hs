@@ -42,10 +42,9 @@ import CE.Verdict.Table
   , uniformArity
   , weightsOffence
   )
-import CE.Wire.Mask (retiredMask)
+import CE.Wire (judgedMaskSent, retiredMask)
 import Control.Applicative ((<|>))
 import Data.Aeson
-import qualified Data.Aeson.KeyMap as KM
 import Data.Foldable (asum)
 import qualified Data.IntSet as IS
 
@@ -170,7 +169,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "dedupMinDistinct"
       <*> o .:? "judgedLoc" .!= []
       <*> o .:? "docFiles" .!= []
-      <*> pure (KM.member "judgedMask" o)
+      <*> pure (judgedMaskSent o)
       <*> o .:? "classKnobs" .!= []
       <*> o .:? "knobsDigest"
       -- the export surface (6.1.0): absent is the legacy road, and

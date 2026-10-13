@@ -21,6 +21,7 @@ import CE.Lang (digestOf, pack)
 import qualified CE.Resolve.Tables as ResolveTables
 import CE.Limits (limits)
 import CE.Tables (package, tablesDigest)
+import CE.Tombstone (kindNames)
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
@@ -46,8 +47,10 @@ battery =
     , "past the row cap the empty document, its reason named"
     , "the package carries the catalogue and the digest moves with it"
     , "the seeded documents are not vacuous: every road and every sorted list occurs"
+    , "the limits package holds its stated keys, group by group"
+    , "a query's goals name their answers, an answer its proof rows below the root, a row its depth"
     ]
-    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded]
+    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded, limitsHeld, groupedByWalk]
 
 -- | Step 3's families.
 five :: [DocFamily]
@@ -203,6 +206,7 @@ catalogued =
   at package "document" == Just catalogue
     && at package "resolve" == Just ResolveTables.table
     && at package "limits" == Just limits
+    && path ["tombstone", "kind_names"] package == Just (toJSON kindNames)
     && dropDocument package == pack
     && tablesDigest == digestOf package
     && tablesDigest /= digestOf pack
@@ -224,6 +228,36 @@ catalogued =
   -- the package is the definition pack plus the three tables the core
   -- adds: the document catalogue, the resolve config names (9.0.0) and
   -- the measuring side's limits (plan v2.33 W3)
+  -- the package less what CE.Tables adds to the language pack: the
+  -- three keys and the tombstone table's kind names
   dropDocument v = case v of
-    Object o -> Object (KM.delete "limits" (KM.delete "resolve" (KM.delete "document" o)))
+    Object o -> Object (KM.mapWithKey dropKinds (KM.delete "limits" (KM.delete "resolve" (KM.delete "document" o))))
     _ -> v
+  dropKinds "tombstone" (Object t) = Object (KM.delete "kind_names" t)
+  dropKinds _ t = t
+
+-- | Every limits group with its key count (C32): a key dropped or added
+-- on either side is a named failure, not a silently shorter object.
+limitsHeld :: Bool
+limitsHeld = case limits of
+  Object o -> [(Key.toString k, length g) | (k, Object g) <- KM.toAscList o] == stated && KM.size o == length stated
+  _ -> False
+ where
+  stated = [("candidates", 7), ("caps", 9), ("clone", 5), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 16), ("similar", 14), ("zone", 2)]
+
+-- | The query documents' grouping, restated as the walk the GUI once
+-- did: a goal's answers are the rows naming it, an answer's proof the
+-- rows of its goal and place with a parent, a row's depth the parent
+-- links followed to the root; and some row sits two below its root.
+groupedByWalk :: Bool
+groupedByWalk = all held queries && any (any ((== Just (toJSON (2 :: Int))) . (`at` "depth")) . (`items` "proof")) queries
+ where
+  queries = [d | (f, _, d) <- judged, dfName f `elem` ["query", "rules"], not (null (items d "proof"))]
+  held d = and [at g "answers" == Just (toJSON (answersOf d (at g "goal"))) | g <- items d "goals"] && and (zipWith (answerHeld d) [0 ..] (items d "answers")) && and [at p "depth" == Just (toJSON (depthOf d p)) | p <- items d "proof"]
+  answersOf d g = [i | (i, a) <- zip [0 :: Int ..] (items d "answers"), at a "goal" == g]
+  answerHeld d i a = at a "proof" == Just (toJSON [j | (j, p) <- zip [0 :: Int ..] (items d "proof"), at p "goal" == at a "goal", at p "answer" == Just (toJSON (place d i a)), int (at p "parent") >= 0])
+  place d i a = length [() | b <- take i (items d "answers"), at b "goal" == at a "goal"]
+  depthOf d p = length (takeWhile (/= Nothing) (take (length (items d "proof")) (drop 1 (iterate (>>= up d p) (Just p)))))
+  up d p q = case [r | r <- items d "proof", at r "goal" == at p "goal", at r "answer" == at p "answer", at r "node" == at q "parent"] of
+    r : _ -> Just r
+    [] -> Nothing

@@ -23,7 +23,7 @@ import Data.Bits (setBit)
 import qualified Data.IntSet as IS
 import qualified Data.Set as S
 import ReferenceGraph (arcsOf, reachB)
-import WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
+import WireHarness (field, refusedBy, replyObjWith, runChecks, scanRequest, setKey)
 
 battery :: IO Bool
 battery = runChecks [("v2.23: " <> name, ok) | (name, ok) <- legs]
@@ -89,7 +89,7 @@ monotone =
 legacy :: Bool
 legacy =
   withCycles Nothing base == (base, [])
-    && replyObjWith respond (ask base Nothing) /= Nothing
+    && replyObjWith respond (ask (map last base) Nothing) /= Nothing
     && bumpedOf Nothing == Nothing
 
 -- | The reply's key rides exactly when the arcs did — an empty
@@ -98,7 +98,7 @@ legacy =
 keyRides :: Bool
 keyRides =
   bumpedOf (Just (edges [(0, 1)])) == Just (toJSON ([] :: [[Integer]]))
-    && bumpedOf (Just (edges [(0, 0)])) == Just (toJSON [[0 :: Integer, 8]])
+    && bumpedOf (Just (edges [(0, 0)])) == Just (toJSON [[1 :: Integer, 8]])
 
 -- | Each case brings the rows its offence needs: the shape battery
 -- runs before the order one, so a table whose ENDPOINTS are already
@@ -106,26 +106,35 @@ keyRides =
 refusals :: Bool
 refusals =
   and
-    [ refusedBy respond (ask rows (Just arcs)) why
+    [ refusedBy respond (setKey "callEdges" (toJSON (arcs :: [[Integer]])) (scanRequest rows)) why
     | (rows, arcs, why) <-
-        [ (mixedRows, [[0, 9]], "endpoint outside the rows")
-        , (mixedRows, [[0, 1]], "endpoint is not a cognitive row")
-        , (base, [[1, 1], [0, 0]], "not strictly ascending")
-        , (mixedRows, [[0]], "malformed row (need [from,to])")
+        [ (mixedRows, [[1, 9]], "endpoint outside the rows")
+        , (mixedRows, [[1, 3]], "endpoint is not a cognitive row")
+        , (concat (replicate 2 triple), [[4, 4], [1, 1]], "not strictly ascending")
+        , (mixedRows, [[1]], "malformed row (need [from,to])")
         ]
     ]
 
--- | Row 0 cognitive, row 1 a file row: an endpoint has both a seat
--- that exists and a seat that is the wrong metric to land on.
+-- | Row 1 cognitive (in its unit's triple), row 3 a file row: an
+-- endpoint has both a seat that exists and a seat that is the wrong
+-- metric to land on.
 mixedRows :: [[Integer]]
-mixedRows = [[4, 3], [0, 3]]
+mixedRows = triple <> [[0, 3]]
 
-ask :: [[Integer]] -> Maybe [[Integer]] -> Value
-ask rows arcs = case arcs of
-  Nothing -> req
-  Just a -> setKey "callEdges" (toJSON a) req
+triple :: [[Integer]]
+triple = [[3, 0], [4, 0], [5, 0]]
+
+-- | Units on the wire (the events are required since 9.0.0): each
+-- unit's [3,4,5] triple, its cognitive value as that many labelled
+-- jumps (a flat +1 that moves neither cyclomatic nor nesting,
+-- CE.Scan.Complexity bit 3), the arcs re-pointed at the cognitive
+-- rows.
+ask :: [Integer] -> Maybe [[Integer]] -> Value
+ask cocs arcs = maybe id (setKey "callEdges" . toJSON . map (map seat)) arcs (setKey "events" (toJSON evs) (scanRequest rows))
  where
-  req = rowsRequest "7.0.0" "scan.request" rows
+  rows = concat (replicate (length cocs) triple)
+  seat i = 3 * i + 1
+  evs = [[seat u, s, -1, 0, 8, 0] | (u, v) <- zip [0 ..] cocs, s <- [0 .. v - 1]]
 
 bumpedOf :: Maybe [[Integer]] -> Maybe Value
-bumpedOf arcs = replyObjWith respond (ask base arcs) >>= \o -> field o "cocBumped"
+bumpedOf arcs = replyObjWith respond (ask (map last base) arcs) >>= \o -> field o "cocBumped"

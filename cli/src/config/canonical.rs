@@ -66,7 +66,7 @@ fn effective_default() -> Config {
             tier: Some(super::FLOW_DEFAULT.into()),
         },
         graph: GraphCfg {
-            scc_floor: Some(crate::score::knobs::CORE_SCC_FLOOR),
+            scc_floor: Some(crate::score::knobs::core_scc_floor()),
             ..GraphCfg::default()
         },
         ..Config::default()

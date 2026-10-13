@@ -31,12 +31,6 @@ pub fn advisory(kind: u8) -> bool {
         .is_some_and(|row| row.advisory)
 }
 
-/// A finding is judged when its language passed the precision gate
-/// (`flow::judged_mask`) and its kind is not an advisory one.
-pub fn judged(lang: Lang, kind: u8) -> bool {
-    !advisory(kind) && lang_judged(lang)
-}
-
 /// Whether the precision gate admitted `lang` at all.
 pub fn lang_judged(lang: Lang) -> bool {
     crate::flow::judged_mask() & (1 << lang as i64) != 0
@@ -44,7 +38,8 @@ pub fn lang_judged(lang: Lang) -> bool {
 
 /// One finding read back through its unit's legend: the unit's name
 /// and place, the kind, the source lines (a run's first and last
-/// statement; a parameter's own line) and the variable's name.
+/// statement; a parameter's own line), the variable's name and the
+/// core's judged bit (`Finding::judged`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Placed {
     pub unit: String,
@@ -53,6 +48,7 @@ pub struct Placed {
     pub line: u32,
     pub line_end: u32,
     pub var: Option<String>,
+    pub judged: bool,
 }
 
 /// The unit of `file` at `nth`.
@@ -89,6 +85,7 @@ pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {
         line,
         line_end,
         var: var.cloned(),
+        judged: f.judged,
     })
 }
 

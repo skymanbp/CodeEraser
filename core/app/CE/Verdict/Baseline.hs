@@ -8,7 +8,9 @@
 module CE.Verdict.Baseline (parseBaseline) where
 
 import CE.Verdict.Ratchet (Baseline (..))
-import CE.Verdict.Table (ascendingBy, label)
+import CE.Scan.Cost (gradeTable)
+import CE.Verdict.Table (ascendingBy)
+import CE.Wire (label, topCode, u64)
 import Data.Aeson
 import qualified Data.Aeson.Types as AT
 import Data.Foldable (asum)
@@ -39,10 +41,10 @@ parseBaseline v = case AT.parse bl v of
   contShape i row = case row of
     [_, code, _]
       | any (< 0) row -> Just (label "baseline.continuous" i <> "negative field")
-      | code > 6 -> Just (label "baseline.continuous" i <> "unknown metric code")
+      | code > topCode gradeTable -> Just (label "baseline.continuous" i <> "unknown metric code")
       | otherwise -> Nothing
     _ -> Just (label "baseline.continuous" i <> "malformed row")
   softShape Nothing = Nothing
   softShape (Just s)
-    | s < 1 || s >= 18446744073709551616 = Just "baseline.softLine: outside 1..u64"
+    | s < 1 || not (u64 s) = Just "baseline.softLine: outside 1..u64"
     | otherwise = Nothing

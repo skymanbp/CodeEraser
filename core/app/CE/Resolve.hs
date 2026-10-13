@@ -63,18 +63,18 @@ import CE.Resolve.Ts (TsEnv (..), resolveTs)
 import CE.Resolve.TsConfig (package, tsExtendsFiles, tsOptions)
 import CE.Resolve.TsFacts (Fact, Facts, Need, facts, tomlOf, wantedRow)
 import CE.Resolve.World (World (..), pathOf, world)
-import CE.Wire (family)
-import Data.Aeson (Value, encode, object, (.=))
+import CE.Wire (Respond, family, resultLine, tooLarge)
+import qualified CE.Wire.Families as F
+import Data.Aeson (Value, (.=))
 import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
 import Data.Maybe (catMaybes, fromMaybe, isJust)
 import qualified Data.Set as Set
 
 -- | decode → cap → contract → judge.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "resolve" rqId overCap offence (degraded proto) (judged proto)
+respond :: Respond
+respond proto = family F.resolve rqId overCap offence (degraded proto) (judged proto)
 
 -- | Each site through its language's ladder, in request order; the
 -- forced-include arcs; the response files read and wanted.
@@ -189,19 +189,13 @@ degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "s
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString
 reply proto rq resolved body isDegraded =
-  BL.toStrict . encode . object $
-    [ "counts" .= counts
-    , "degraded" .= isDegraded
-    , "id" .= rqId rq
-    , "proto" .= proto
-    , "type" .= ("resolve.result" :: String)
+  resultLine
+    proto
+    F.resolve
+    (rqId rq)
+    body
+    [ "files" .= length (rqFiles rq)
+    , "resolved" .= resolved
+    , "sites" .= length (rqSites rq)
     ]
-      <> body
-      <> ["reason" .= ("resolve_too_large" :: String) | isDegraded]
- where
-  counts =
-    object
-      [ "files" .= length (rqFiles rq)
-      , "resolved" .= resolved
-      , "sites" .= length (rqSites rq)
-      ]
+    (tooLarge F.resolve isDegraded)

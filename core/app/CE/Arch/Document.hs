@@ -58,8 +58,7 @@ slots req
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= schemaId
-    , "counts" .= counted countKeys tallies
+    [ "counts" .= counted countKeys tallies
     , "layers" .= [object ["dir" .= dir d, "level" .= l] | [d, l] <- rows req "layers"]
     , "cuts" .= map (cut (folded req dirAt)) (rows req "cuts")
     , "clusters" .= [cluster dirAt c fs | (c, fs) <- M.toAscList clustered]

@@ -19,7 +19,7 @@ import qualified Data.Set as S
 import ReferenceScan (cyclic, measure, settled)
 import ReferenceScanGen
 import ScanPageTrees (pageTree)
-import WireHarness (field, generated, replyObjWith, rowsRequest, runChecks, setKey)
+import WireHarness (field, generated, replyObjWith, runChecks, scanRequest, setKey)
 
 battery :: IO Bool
 battery = do
@@ -61,7 +61,7 @@ instance FromJSON Line where
 lineReply :: Line -> Bool -> Maybe Value
 lineReply l looping = replyObjWith respond req >>= (`field` key)
  where
-  base = setKey "events" (toJSON (map (1 :) (lEvents l))) (rowsRequest "7.0.0" "scan.request" [[3, 0], [4, 0], [5, 0]])
+  base = setKey "events" (toJSON (map (1 :) (lEvents l))) (scanRequest [[3, 0], [4, 0], [5, 0]])
   req = if looping then setKey "callEdges" (toJSON [[1, 1 :: Integer]]) base else base
   key = if looping then "cocBumped" else "derived"
 

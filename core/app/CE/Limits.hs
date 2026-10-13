@@ -11,7 +11,12 @@
 -- the request ceilings the scan, flow, merge, structure and arch
 -- families are planned by; W2-text Z4 the bags/1 item ceiling and the
 -- protocol's line ceiling, which an index refresh's batched bags ask is
--- planned by.
+-- planned by. Step 11a (defragmentation) added `graph` — the cycle
+-- floor and the advisory table's soft cap the measuring side plans its
+-- request by — `zone`, the two per-mille tier lines the guard's
+-- declared tiers are drawn at, and `score_defaults`, every verdict knob
+-- at its default under its wire knob name (the degraded verdict reply's
+-- own echo, CE.Verdict.Knobs.defaultsEcho).
 module CE.Limits (limits) where
 
 import qualified CE.Arch.Cost as Arch
@@ -20,6 +25,7 @@ import qualified CE.Clone.Cost as Clone
 import qualified CE.Dedup.Cost as Dedup
 import qualified CE.Docdup.Cost as Docdup
 import qualified CE.Flow.Cost as Flow
+import qualified CE.Graph.Cost as Graph
 import qualified CE.FourClass.Moves.Cost as Moves
 import qualified CE.Merge.Cost as Merge
 import CE.Protocol.Version (maxLineBytes)
@@ -28,8 +34,9 @@ import qualified CE.Similar.Bags as Bags
 import qualified CE.Similar.Cost as Similar
 import qualified CE.Similar.Rank.Cost as Rank
 import qualified CE.Structure.Cost as Structure
+import qualified CE.Verdict.Cost as Verdict
+import CE.Verdict.Knobs (defaultsEcho)
 import Data.Aeson (Value, object, (.=))
-import qualified Data.Aeson.Key as Key
 import Data.Ratio (denominator, numerator)
 
 limits :: Value
@@ -64,28 +71,48 @@ limits =
           ]
     , "dedup" .= object ["min_distinct" .= Dedup.minDistinct, "hot_cap" .= Dedup.hotCap]
     , "moves" .= object ["line_cap" .= Moves.movesLineCap, "unit_cap" .= Moves.movesUnitCap]
-    , "caps" .= object (zipWith (\k v -> Key.fromString k .= v) (words capKeys) caps)
-    , "similar"
-        .= object
-          [ "similar_cap" .= Similar.similarCap
-          , "rank_cap" .= Rank.rankCap
-          , "k1" .= ratio Rank.k1
-          , "b" .= ratio Rank.b
-          , "idf_frac_bits" .= Rank.idfFracBits
-          , "score_frac_bits" .= Rank.scoreFracBits
-          , "w_unit" .= Rank.wUnit
-          , "top_m" .= Rank.topM
-          , "min_cooc" .= Rank.minCooc
-          , "min_ppmi" .= Rank.minPpmi
-          , "ppmi_cap" .= Rank.ppmiCap
-          , "ppmi_scale" .= Rank.ppmiScale
-          , "scored_df_ratio" .= Rank.scoredDfRatio
-          , "neighbour_df_ratio" .= Rank.neighbourDfRatio
-          ]
+    , "graph" .= object ["scc_floor" .= Graph.sccFloor, "unmentioned_cap" .= Graph.unmentionedCap]
+    , "zone" .= object ["warn_permille" .= Verdict.zoneWarnPermille, "ask_permille" .= Verdict.zoneAskPermille]
+    , "score_defaults" .= defaultsEcho
+    , "caps" .= caps
+    , "similar" .= similar
+    ]
+ where
+  (perms, bands, rows) = Candidates.lshShape
+
+-- | The request ceilings the families are planned by.
+caps :: Value
+caps =
+  object
+    [ "scan_rows" .= Scan.scanRowCap
+    , "flow_rows" .= Flow.rowCap
+    , "merge_groups" .= Merge.groupCap
+    , "merge_tree_nodes" .= Merge.treeNodeCap
+    , "structure_nodes" .= Structure.structNodeCap
+    , "arch_files" .= Arch.fileCap
+    , "arch_refs" .= Arch.refCap
+    , "bags_items" .= Bags.bagsCap
+    , "line_bytes" .= maxLineBytes
+    ]
+
+-- | The similar family's ceilings and the ranking's constants.
+similar :: Value
+similar =
+  object
+    [ "similar_cap" .= Similar.similarCap
+    , "rank_cap" .= Rank.rankCap
+    , "k1" .= ratio Rank.k1
+    , "b" .= ratio Rank.b
+    , "idf_frac_bits" .= Rank.idfFracBits
+    , "score_frac_bits" .= Rank.scoreFracBits
+    , "w_unit" .= Rank.wUnit
+    , "top_m" .= Rank.topM
+    , "min_cooc" .= Rank.minCooc
+    , "min_ppmi" .= Rank.minPpmi
+    , "ppmi_cap" .= Rank.ppmiCap
+    , "ppmi_scale" .= Rank.ppmiScale
+    , "scored_df_ratio" .= Rank.scoredDfRatio
+    , "neighbour_df_ratio" .= Rank.neighbourDfRatio
     ]
  where
   ratio q = [numerator q, denominator q]
-  (perms, bands, rows) = Candidates.lshShape
-  -- the request ceilings beside their keys, in one order
-  capKeys = "scan_rows flow_rows merge_groups merge_tree_nodes structure_nodes arch_files arch_refs bags_items line_bytes"
-  caps = [Scan.scanRowCap, Flow.rowCap, Merge.groupCap, Merge.treeNodeCap, Structure.structNodeCap, Arch.fileCap, Arch.refCap, toInteger Bags.bagsCap, toInteger maxLineBytes]

@@ -10,20 +10,17 @@ module CE.Structure.Knobs
   ) where
 
 import CE.Structure.Axes (Knobs (..), bound)
-import CE.Wire (applyRows, tableOffence)
+import CE.Wire (applyRows, topCode)
+import qualified CE.Wire as Wire
 
+-- | The knob rows (CE.Wire.knobTable): codes 0 to the last row of
+-- knobTable below, every value at least 1.
 knobsOffence :: [[Integer]] -> Maybe String
-knobsOffence rows =
-  tableOffence "knob" (take 1) one rows
+knobsOffence = Wire.knobTable "knob" "malformed row (need [code,value])" (topCode knobTable) "unknown structure knob" atLeastOne
  where
-  one i row = case row of
-    [code, v]
-      | code < 0 || code > 20 -> Just (label <> "unknown structure knob")
-      | v < 1 -> Just (label <> "knob below 1")
-      | otherwise -> Nothing
-    _ -> Just (label <> "malformed row (need [code,value])")
-   where
-    label = "knob " <> show i <> ": "
+  atLeastOne _ v
+    | v < 1 = Just "knob below 1"
+    | otherwise = Nothing
 
 -- | ONE knob authority: the effective fold and the reply echo both
 -- read this table (codes 0..20, ascending — the echo IS this order;

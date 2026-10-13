@@ -18,13 +18,14 @@ use crate::scan::classes::Classes;
 use serde_json::Value;
 use std::path::Path;
 
-/// The DECLARED mirror of the core's cut points (CE.Verdict.Cost
-/// `zoneWarnPermille` / `zoneAskPermille`), in permille of the (S, H]
-/// span. Since 2.21.0 the AUTHORITY is the core's and the pair rides
-/// the committed baseline; this pair is what a pre-2.21 baseline, or
-/// a tree with no baseline at all, falls back to.
-// TODO(defrag-core: limits.zone.{warn_permille, ask_permille})
-pub const DECLARED_TIERS: (usize, usize) = (250, 750);
+/// The core's cut points (CE.Verdict.Cost `zoneWarnPermille` /
+/// `zoneAskPermille`, the package's `limits.zone`), in permille of the
+/// (S, H] span: what a baseline without a sound `zoneTiers` pair, or a
+/// tree with no baseline at all, falls back to.
+pub fn declared_tiers() -> (usize, usize) {
+    let zone = &crate::tables::get().limits.zone;
+    (zone.warn_permille, zone.ask_permille)
+}
 
 /// Where one write landed: its position in the zone and the tier the
 /// map gives that position.
@@ -53,7 +54,7 @@ pub fn landing(
         return None;
     }
     let permille = (lines - soft) * 1000 / (cap - soft);
-    let (warn, ask) = tiers.unwrap_or(DECLARED_TIERS);
+    let (warn, ask) = tiers.unwrap_or_else(declared_tiers);
     let tier = if permille < warn {
         "observe"
     } else if permille <= ask {

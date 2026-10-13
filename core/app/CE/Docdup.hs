@@ -43,11 +43,11 @@ import CE.Docdup.Cost
   )
 import CE.Docdup.Jaccard (interUnion)
 import CE.Docdup.Runs (indexed, runWords, setOf)
+import qualified CE.Wire.Families as F
 import Data.Array (listArray, (!))
-import CE.Wire (Family (..), respondWith, tableOffence)
+import CE.Wire (Family (..), Respond, elements, label, outsideU64, respondWith, resultLine, rowCheck, tableOffence, tooLarge, u64)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
 
@@ -69,11 +69,11 @@ setsOf :: DocdupReq -> [[Integer]]
 setsOf req = maybe (reqSets req) (map setOf) (reqSeqs req)
 
 -- | The shared cascade with this family's bindings (CE.Wire).
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto =
   respondWith
     Family
-      { famName = "docdup"
+      { famName = F.docdup
       , famId = reqId
       , famOverCap = \req ->
           any (\s -> toInteger (length s) > docSetCap) (setsOf req)
@@ -111,21 +111,16 @@ violation req = case reqSeqs req of
   ps = reqPairs req
 
 -- | A sequence: non-empty, every element a u64 (any order, repeats
--- allowed).
+-- allowed; CE.Wire.elements).
 seqShape :: Int -> [Integer] -> Maybe String
-seqShape s xs
-  | null xs = Just (label <> "empty sequence")
-  | any (\x -> x < 0 || x >= 2 ^ (64 :: Int)) xs = Just (label <> "element outside u64")
-  | otherwise = Nothing
- where
-  label = "seq " <> show s <> ": "
+seqShape = elements "seq" "sequence" outsideU64 False
 
 -- | A pair over sequences carries no run: [i, j], then the same
 -- endpoint checks.
 seqPair :: Int -> Int -> [Integer] -> Maybe String
 seqPair n p row = case row of
   [i, j] -> pairRow n p [i, j, 0]
-  _ -> Just ("pair " <> show p <> ": malformed row (need [i,j] beside seqs)")
+  _ -> Just (label "pair" p <> "malformed row (need [i,j] beside seqs)")
 
 -- | The pairs as [i, j, run]: sent, or measured over the sequences.
 pairsOf :: DocdupReq -> [[Integer]]
@@ -137,29 +132,21 @@ pairsOf req = case reqSeqs req of
      in [[i, j, run i j] | i : j : _ <- reqPairs req]
 
 -- | A set: non-empty, strictly ascending u64 elements (docdup/1 and
--- docpairs/1 read the same contract).
+-- docpairs/1 read the same contract; CE.Wire.elements, the negative
+-- and the too-large element named apart).
 setShape :: Int -> [Integer] -> Maybe String
-setShape s set
-  | null set = Just (label <> "empty set")
-  | any (< 0) set = Just (label <> "negative element")
-  | any (>= 2 ^ (64 :: Int)) set = Just (label <> "element exceeds u64")
-  | or (zipWith (>=) set (drop 1 set)) = Just (label <> "not strictly ascending")
-  | otherwise = Nothing
- where
-  label = "set " <> show s <> ": "
+setShape = elements "set" "set" [((< 0), "negative element"), (not . u64, "element exceeds u64")] True
 
 pairRow :: Int -> Int -> [Integer] -> Maybe String
-pairRow n p row = case row of
-  [i, j, run]
-    | i < 0 || j < 0 || i >= toInteger n || j >= toInteger n ->
-        Just (label <> "endpoint out of range")
-    -- a segment is not a duplicate of itself (review C11)
-    | i == j -> Just (label <> "self pair")
-    | run < 0 -> Just (label <> "negative verbatim run")
-    | otherwise -> Nothing
-  _ -> Just (label <> "malformed row (need [i,j,verbatimRun])")
+pairRow n = rowCheck "pair" "malformed row (need [i,j,verbatimRun])" 3 checks
  where
-  label = "pair " <> show p <> ": "
+  checks row = case row of
+    [i, j, run]
+      | i < 0 || j < 0 || i >= toInteger n || j >= toInteger n -> Just "endpoint out of range"
+      -- a segment is not a duplicate of itself (review C11)
+      | i == j -> Just "self pair"
+      | run < 0 -> Just "negative verbatim run"
+    _ -> Nothing
 
 -- | Judge every pair: exact Jaccard on the two sets, raw counts out,
 -- each row paired with the owner's FULL verdict (ADR-008 P1) — the
@@ -183,31 +170,28 @@ judge sets ps = foldr step ([], 0) ps
 -- also answers each scored row's measured run (`runs`, same order).
 reply :: String -> DocdupReq -> [([Integer], Bool, Integer)] -> Int -> Bool -> B8.ByteString
 reply proto req scored dups degraded =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("docdup.result" :: String)
-    , "id" .= reqId req
-    , "scores" .= [row | (row, _, _) <- scored]
-    , "verdicts" .= [v | (_, v, _) <- scored]
+  resultLine
+    proto
+    F.docdup
+    (reqId req)
+    ( [ "scores" .= [row | (row, _, _) <- scored]
+      , "verdicts" .= [v | (_, v, _) <- scored]
+      , "knobs"
+          .= object
+            [ "jaccardNum" .= jaccardNum
+            , "jaccardDen" .= jaccardDen
+            , "shingleK" .= shingleK
+            , "verbatimFloor" .= verbatimFloor
+            , "minDocTokens" .= minDocTokens
+            , "docLineCap" .= docLineCap
+            , "licHeadLines" .= licHeadLines
+            ]
+      ]
+        <> ["runs" .= [run | (_, _, run) <- scored] | Just _ <- [reqSeqs req]]
+    )
+    [ "sets" .= length (setsOf req)
+    , "pairs" .= length (reqPairs req)
+    , "judged" .= length scored
+    , "jaccardDups" .= dups
     ]
-      <> ["runs" .= [run | (_, _, run) <- scored] | Just _ <- [reqSeqs req]]
-      <> [ "counts"
-        .= object
-          [ "sets" .= length (setsOf req)
-          , "pairs" .= length (reqPairs req)
-          , "judged" .= length scored
-          , "jaccardDups" .= dups
-          ]
-    , "knobs"
-        .= object
-          [ "jaccardNum" .= jaccardNum
-          , "jaccardDen" .= jaccardDen
-          , "shingleK" .= shingleK
-          , "verbatimFloor" .= verbatimFloor
-          , "minDocTokens" .= minDocTokens
-          , "docLineCap" .= docLineCap
-          , "licHeadLines" .= licHeadLines
-          ]
-    , "degraded" .= degraded
-    ]
-      <> ["reason" .= ("docdup_too_large" :: String) | degraded]
+    (tooLarge F.docdup degraded)

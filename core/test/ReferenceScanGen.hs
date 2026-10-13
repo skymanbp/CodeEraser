@@ -21,7 +21,7 @@ import Data.Aeson (Value, toJSON)
 import Data.Bits ((.|.))
 import Data.List (nub, sort)
 import ReferenceFlowGen (G, S (..), rand, runG)
-import WireHarness (rowsRequest, setKey)
+import WireHarness (scanRequest, setKey)
 
 data Style = CLike | GoLike | PyLike deriving (Eq, Show)
 
@@ -173,7 +173,7 @@ visit frame pos edge n (acc, next)
 -- the events keyed at each unit's cognitive row, the calls between
 -- units as cognitive-row pairs, ascending.
 request :: Program -> Value
-request p = setKey "callEdges" (toJSON calls) (setKey "events" (toJSON evs) (rowsRequest "7.0.0" "scan.request" rows))
+request p = setKey "callEdges" (toJSON calls) (setKey "events" (toJSON evs) (scanRequest rows))
  where
   us = units p
   rows = concat [[[3, 0], [4, 0], [5, 0]] | _ <- us]

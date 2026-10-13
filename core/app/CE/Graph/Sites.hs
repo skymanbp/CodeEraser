@@ -49,7 +49,7 @@ checked req =
     ]
 
 assemble :: DocReq -> Value
-assemble req = object ["schema" .= schemaId, "sites" .= map site (sortOn placed (rows req "sites"))]
+assemble req = object ["sites" .= map site (sortOn placed (rows req "sites"))]
  where
   at table = M.fromList [(k, v) | [k, v] <- rows req table]
   (rank, lang) = (at "rankFiles", at "langs")

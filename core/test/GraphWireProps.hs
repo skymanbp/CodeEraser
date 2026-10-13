@@ -34,7 +34,7 @@ battery = runChecks (refusals <> roads <> export)
     , ("symbol refusals name the offender", symRefused)
     ]
   roads =
-    [ ("the confidence column rides exactly when the ledger does", confRides)
+    [ ("the confidence column rides on every dead row; a request without the ledger is refused by name", confRides)
     , ("K5: an empty symbols table is the same BYTES as none", emptyIsAbsent)
     , ("K52: sccFloor rides and echoes; at floor 1 a self-arc singleton is a cycle, a lone node is not", sccFloorRoad)
     , ("the judged set is the language table's: unres judges by it, no echo, the retired key refused by name", maskRoad)
@@ -61,6 +61,7 @@ sccFloorRoad =
       , "nodes" .= ([[0, 0, 0], [0, 0, 0], [0, 0, 0]] :: [[Integer]])
       , "edges" .= ([[0, 0, 0, 0], [1, 2, 0, 0]] :: [[Integer]])
       , "pos" .= ([] :: [Value])
+      , "unres" .= ([] :: [Value])
       ]
         <> extra
 
@@ -126,15 +127,17 @@ malformedNode = case respond "7.0.0" req of
 
 -- | Three entry-less file nodes, all dead (unref_private): lang 0
 -- fully resolved -> vouched 2; lang 4 with unresolved sites ->
--- unvouched 0; lang 6 absent from the ledger -> vacuous 1. The SAME
--- request without the ledger answers two-column rows — the legacy
--- road is byte-shaped, not merely value-equal. The kernel rule is
--- pinned beside the wire: (0,0) is vacuous, not vouched.
+-- unvouched 0; lang 6 absent from the ledger -> vacuous 1. An empty
+-- ledger reads every node vacuous; a request without the ledger is
+-- refused by name (required at 9.0.0: the two-column road went with
+-- the major). The kernel rule is pinned beside the wire: (0,0) is
+-- vacuous, not vouched.
 confRides :: Bool
 confRides =
   deadOf (graphReq (Just [[0, 0, 3], [4, 2, 9]]))
     == Just (toJSON ([[0, 1, 2], [1, 1, 0], [2, 1, 1]] :: [[Integer]]))
-    && deadOf (graphReq Nothing) == Just (toJSON ([[0, 1], [1, 1], [2, 1]] :: [[Integer]]))
+    && deadOf (graphReq (Just [])) == Just (toJSON ([[0, 1, 1], [1, 1, 1], [2, 1, 1]] :: [[Integer]]))
+    && refusedGraph (bare [[0, 0, 0], [4, 0, 0], [6, 0, 0]] []) "unres: required at 9.0.0"
     && map (confidence [[0, 0, 3], [4, 2, 9]]) [0, 4, 6] == [2, 0, 1]
     && confidence [[5, 0, 0]] 5 == 1
 
@@ -171,13 +174,13 @@ exportRides =
   and
     [ deadOf (symReq Nothing) == plain
     , deadOf (symReq (Just [])) == plain
-    , deadOf (symReq (Just [[0, 1]])) == Just (toJSON ([[0, 2], [1, 1]] :: [[Integer]]))
+    , deadOf (symReq (Just [[0, 1]])) == Just (toJSON ([[0, 2, 1], [1, 1, 1]] :: [[Integer]]))
     , deadOf (symReq (Just [[0, 2]])) == plain
     , -- and the DEAD SET never moved: both nodes, every time
-      deadOf (symReq (Just [[0, 1], [1, 1]])) == Just (toJSON ([[0, 2], [1, 2]] :: [[Integer]]))
+      deadOf (symReq (Just [[0, 1], [1, 1]])) == Just (toJSON ([[0, 2, 1], [1, 2, 1]] :: [[Integer]]))
     ]
  where
-  plain = Just (toJSON ([[0, 1], [1, 1]] :: [[Integer]]))
+  plain = Just (toJSON ([[0, 1, 1], [1, 1, 1]] :: [[Integer]]))
 
 -- | K5: absence and emptiness are one road, not two — the whole
 -- reply, byte for byte, is what a pre-4.1.0 client already got.
@@ -207,9 +210,15 @@ symReq syms = fixtureReq [[0, 0, 0], [0, 0, 0]] (optional "symbols" syms)
 -- side table the prop is about. THREE copies of this builder were a
 -- T2 clone chain by this repo's own gate on the first draft — what
 -- differs between the props is the nodes and the side table, never
--- the procedure.
+-- the procedure. The ledger every request now carries (required at
+-- 9.0.0) defaults to empty unless the prop is about it.
 fixtureReq :: [[Integer]] -> [Pair] -> B8.ByteString
-fixtureReq nodes extra =
+fixtureReq nodes extra = bare nodes (["unres" .= ([] :: [Value]) | "unres" `notElem` map fst extra] <> extra)
+
+-- | The same request with nothing defaulted: the required-key
+-- refusal's fixture.
+bare :: [[Integer]] -> [Pair] -> B8.ByteString
+bare nodes extra =
   BL.toStrict . encode . object $
     [ "id" .= (1 :: Int)
     , "nodes" .= nodes

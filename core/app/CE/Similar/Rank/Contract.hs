@@ -24,7 +24,7 @@
 module CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf) where
 
 import CE.Similar.Rank.Cost (channels, rankCap, scoredDfRatio, wordChannel)
-import CE.Wire (rowCheck, tableOffence)
+import CE.Wire (label, rowCheck, tableOffence)
 import CE.Wire.Tables (optTables)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
@@ -86,7 +86,7 @@ offence r =
  where
   n = corpusN r
   seat what i s
-    | s < 0 || s >= n = Just (what <> " " <> show i <> ": seat out of range")
+    | s < 0 || s >= n = Just (label what i <> "seat out of range")
     | otherwise = Nothing
   inSeat s = s >= 0 && s < n
   queryRow row = case row of

@@ -12,7 +12,7 @@
 -- index), the refusals (its own lowering's, which stand beside a
 -- `degraded` reason, and the core's), each file's language, each
 -- file's place in path order, and the kinds `--kind` showed.
-module CE.Flow.Document (doc, kindTable, kinds) where
+module CE.Flow.Document (doc, judgedFinding, kindTable, kinds) where
 
 import CE.Document.Contract
 import CE.Lang (languages)
@@ -74,6 +74,14 @@ advisoryKinds = [code | (code, (_, True, _, _)) <- zip [0 ..] kindTable]
 judgedLangs :: [Integer]
 judgedLangs = [toInteger (lgCode l) | l <- languages, lgFlowJudged l]
 
+-- | Whether a finding of `kind` in a unit of language `lang` is judged:
+-- its kind is not advisory and its language passed the precision gate.
+-- The one statement of the rule (plan v2.33 step 11a, A17): the flow/1
+-- reply's sixth column and this document's `judged` both read it, and
+-- the measuring side reads one of those two, never its own copy.
+judgedFinding :: Integer -> Integer -> Bool
+judgedFinding lang kind = kind `notElem` advisoryKinds && lang `elem` judgedLangs
+
 -- | The tables read by file hold one row per file; every kind is one
 -- of the four. A `shown` row of −1 is a `--kind` name the measuring
 -- side found nowhere in this catalogue: refused, the first such row
@@ -96,8 +104,7 @@ known req =
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= schemaId
-    , "counts" .= counted countKeys tallies
+    [ "counts" .= counted countKeys tallies
     , "findings" .= map face listed
     , "refused" .= map refusal refused
     , "degraded" .= whyRef req
@@ -106,7 +113,7 @@ assemble req =
   langOf = IM.fromList [(fromInteger f, l) | [f, l] <- rows req "langs"]
   rankOf = IM.fromList [(fromInteger f, r) | [f, r] <- rows req "rankFiles"]
   rank f = IM.findWithDefault (-1) (fromInteger f) rankOf
-  judgedAt [f, _, k, _, _, _] = k `notElem` advisoryKinds && IM.findWithDefault (-1) (fromInteger f) langOf `elem` judgedLangs
+  judgedAt [f, _, k, _, _, _] = judgedFinding (IM.findWithDefault (-1) (fromInteger f) langOf) k
   judgedAt _ = False
   found = sortOn (\r -> (rank (head' r), take 3 (drop 1 r))) (rows req "findings")
   shown = [k | [k] <- rows req "shown"]
@@ -117,7 +124,7 @@ assemble req =
       object
         [ "path" .= ref "path" [f]
         , "unit" .= ref "unit" [f, nth]
-        , "kind" .= concat (take 1 (drop (fromInteger k) kinds))
+        , "kind" .= nameOf kinds k
         , "line" .= l
         , "lineEnd" .= le
         , "var" .= (if v >= 0 then ref "var" [f, nth, v] else Null)

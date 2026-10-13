@@ -18,10 +18,9 @@
 module CE.Graph.Contract (GraphReq (..), mountRows, symRows, unmentionedRows, unresRows, violation) where
 
 import CE.Graph.Advisory (mountRow, unmentionedRow)
-import CE.Wire (rowCheck, tableOffence)
-import CE.Wire.Mask (judgedLang, retiredMask)
+import CE.Wire (judgedMaskSent, required, retiredMask, rowCheck, tableOffence)
+import CE.Wire.Mask (judgedLang)
 import Data.Aeson
-import qualified Data.Aeson.KeyMap as KM
 import Data.Foldable (asum)
 
 -- | Wire shape (design brief §2): index = node identity, nothing
@@ -73,7 +72,7 @@ instance FromJSON GraphReq where
       <*> o .:? "unmentioned"
       <*> o .:? "mounts"
       <*> o .:? "sccFloor"
-      <*> pure (KM.member "judgedMask" o)
+      <*> pure (judgedMaskSent o)
 
 -- | First boundary-contract offender, if any — checked in request
 -- order so the message is deterministic. Shape errors surface before
@@ -87,6 +86,10 @@ violation req =
   asum
     [ pairing (reqUnmentioned req) (reqMounts req)
     , retiredMask (reqMaskSent req)
+    , -- the ledger is required since 9.0.0: the measuring side always
+      -- sent it, and the two-column dead row it was absent for went
+      -- with the major
+      maybe (required "unres") (const Nothing) (reqUnres req)
     , sccFloorOffence (reqSccFloor req)
     , asum (zipWith nodeRow [0 :: Int ..] (reqNodes req))
     , tableOffence "edge" id (edgeRow n) es
@@ -137,8 +140,8 @@ sccFloorOffence :: Maybe Integer -> Maybe String
 sccFloorOffence (Just f) | f < 1 = Just "sccFloor: below 1"
 sccFloorOffence _ = Nothing
 
--- | The unres table as sent, [] when absent — the cap's and the
--- validator's view; road selection stays on reqUnres's Maybe.
+-- | The unres table as sent — the cap's, the validator's and the
+-- confidence column's view; [] only before the required-key check.
 unresRows :: GraphReq -> [[Integer]]
 unresRows = maybe [] id . reqUnres
 

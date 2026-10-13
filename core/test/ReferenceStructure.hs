@@ -12,6 +12,7 @@
 module ReferenceStructure (SIn (..), diversity, expected, flagged, style) where
 
 import CE.Structure.Cost
+import CE.Verdict.Cost (scoreScale)
 import Data.Aeson (Value, toJSON)
 import Data.Bits (testBit)
 import Data.List (nub, sort)
@@ -37,7 +38,7 @@ knob inp code = last (dflt : [v | [c, v] <- sKnobs inp, c == code])
  where
   dflt = maybe 0 id (lookup code defaults)
   defaults =
-    zip [0 ..] [depthCeil, fanoutCeil, namingMin, namingCeil, mixRefFloor, misplaceMin, bigDirFloor, structViolCost, structScale, dupMin, deadMin, staleMin, seamSoft, seamHard, seamPMax, roiRefMilli, roiPhiMilli, roiCloneMilli, roiChurnMilli, modFloor, modMassFloor]
+    zip [0 ..] [depthCeil, fanoutCeil, namingMin, namingCeil, mixRefFloor, misplaceMin, bigDirFloor, structViolCost, scoreScale, dupMin, deadMin, staleMin, seamSoft, seamHard, seamPMax, roiRefMilli, roiPhiMilli, roiCloneMilli, roiChurnMilli, modFloor, modMassFloor]
 
 -- | One stem's style from its seven facts: unclassifiable (6) and
 -- digit-led (5) first; then dash with underscore, or both cases with a

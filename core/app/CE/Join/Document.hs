@@ -74,8 +74,7 @@ checked req =
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= schemaId
-    , "days" .= fact req "days"
+    [ "days" .= fact req "days"
     , "commits" .= fact req "commits"
     , "degraded" .= degradedOf req ["graphReason", "verdictReason"]
     , "files" .= map (filePair req) (sortOn placed (rows req "files"))

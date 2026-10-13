@@ -50,10 +50,10 @@ mountCap = 131072
 -- | The soft cap of the `unmentioned` table: above it the core still
 -- judges the graph but DROPS the table (`unmentionedDropped`), never
 -- the request — an advisory can never turn the gate red. The producer
--- truncates at the same number (cli/src/mention UNMENTIONED_SOFT_CAP,
--- pinned equal source-to-source by docs_consts): a smaller Rust cap
--- would truncate silently, a larger one would resurrect a dropped
--- table. Sized as the one-row-per-node anchor, 1 row/node x 131072
+-- truncates at this number, read from the package's
+-- `limits.graph.unmentioned_cap` (cli/src/mention/candidates.rs
+-- unmentioned_soft_cap): a smaller cap would truncate silently, a
+-- larger one would resurrect a dropped table. Sized as the one-row-per-node anchor, 1 row/node x 131072
 -- nodes = 131072: at the brief's 20k-node sizing anchor that holds
 -- 6.5 rows/node, above the measured peak (the self corpus: 332 rows
 -- = 0.57 rows/node, peak 6 per node). The measurement is a value,

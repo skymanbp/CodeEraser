@@ -3,7 +3,7 @@
 //! each table the owning family's constants, typed once at read like
 //! the rest of the package (pack.rs).
 
-use super::leak::leaked;
+use super::leak::{leaked, owned};
 
 leaked! {
     /// The clone judgment's thresholds and ceilings (CE.Clone.Cost).
@@ -37,8 +37,20 @@ leaked! {
     WireCaps { scan_rows: usize, flow_rows: usize, merge_groups: usize,
                merge_tree_nodes: usize, structure_nodes: usize, arch_files: usize,
                arch_refs: usize, bags_items: usize, line_bytes: usize }
+    /// The graph family's cycle floor and the `unmentioned` table's
+    /// soft cap (CE.Graph.Cost `sccFloor` / `unmentionedCap`).
+    GraphLimits { scc_floor: u32, unmentioned_cap: usize }
+    /// The zone's two tier lines, per mille of the (S, H] span
+    /// (CE.Verdict.Cost `zoneWarnPermille` / `zoneAskPermille`).
+    ZoneLimits { warn_permille: usize, ask_permille: usize }
     /// The numbers requests are laid out by and candidates selected with
     /// (plan v2.33 W3, CE.Limits): each the owning family's constant.
     Limits { clone: CloneLimits, candidates: CandidateLimits, docdup: DocdupLimits,
-             dedup: DedupLimits, similar: SimilarLimits, moves: MovesLimits, caps: WireCaps }
+             dedup: DedupLimits, similar: SimilarLimits, moves: MovesLimits, caps: WireCaps,
+             graph: GraphLimits, zone: ZoneLimits, score_defaults: ScoreDefaults }
 }
+
+/// Each verdict knob's core default, by its wire name (the degraded
+/// verdict reply's echo, CE.Verdict.Knobs.defaultsEcho).
+pub type ScoreDefaults = std::collections::BTreeMap<String, u32>;
+owned!(ScoreDefaults);

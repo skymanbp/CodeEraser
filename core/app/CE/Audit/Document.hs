@@ -101,7 +101,7 @@ lines' say _ req
   block r = case r of
     [k, sa, ae, bs, be, t] -> say "block" [R (ref "block_a" [k]), N sa, N ae, R (ref "block_b" [k]), N bs, N be, N t]
     _ -> plain ""
-  shown = join "; " [say "place" [R (ref "place_file" [i]), N l, W (concat (take 1 (drop (fromInteger k) kindNames)))] | [i, l, k] <- rows req "places"]
+  shown = join "; " [say "place" [R (ref "place_file" [i]), N l, W (nameOf kindNames k)] | [i, l, k] <- rows req "places"]
   subject = say (case face of 1 -> "subject_precommit"; 2 -> "subject_commitmsg"; _ -> "subject_stop") []
   tombReason = case tomb req of
     Just (_ : sites : _ : _ : _ : budget : _) -> say "tomb_reason" [P subject, N sites, N budget, P shown]
@@ -119,4 +119,4 @@ lines' say _ req
     Nothing -> say "staged_degraded" [faceWord, N (fact req "changed"), W (signed net)]
     Just (0 : _) -> say "staged" [faceWord, N (fact req "changed"), W (signed net)]
     Just _ -> dupReason
-  tierWord t = concat (take 1 (drop (fromInteger t) (words "observe warn ask deny")))
+  tierWord = nameOf (words "observe warn ask deny")

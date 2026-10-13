@@ -73,8 +73,7 @@ checked req =
 assemble :: DocReq -> Value
 assemble req =
   object
-    [ "schema" .= schemaId
-    , "score" .= fact req "score"
+    [ "score" .= fact req "score"
     , "scoreScale" .= optional req "scale"
     , "axes" .= rows req "axes"
     , "floor" .= optional req "floor"

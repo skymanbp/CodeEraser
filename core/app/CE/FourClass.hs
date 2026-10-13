@@ -9,15 +9,15 @@ module CE.FourClass (respond) where
 import CE.FourClass.Decl (declViolation)
 import CE.FourClass.Provenance (classify)
 import CE.FourClass.Wire
+import CE.Wire (Respond)
 import Control.Applicative ((<|>))
-import Data.Aeson (Value, eitherDecodeStrict)
-import qualified Data.ByteString.Char8 as B8
+import Data.Aeson (eitherDecodeStrict)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 
 -- | Left = (id to echo, error code, message) for the dispatcher's
 -- error encoder; Right = the encoded fourclass.result line.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+respond :: Respond
 respond proto line = case eitherDecodeStrict line of
   Left e -> Left (Nothing, "bad_request", "fourclass: " <> e)
   Right req -> case violation (reqPairs req) of

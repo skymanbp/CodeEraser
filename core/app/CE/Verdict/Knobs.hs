@@ -13,8 +13,10 @@ module CE.Verdict.Knobs
   , effectiveRatchet
   , effectiveJoin
   , knobsEcho
+  , defaultsEcho
   ) where
 
+import qualified CE.Dedup.Cost as DedupCost
 import CE.Verdict.Join (Knobs (..), bound)
 import CE.Verdict.Ratchet (RatchetKnobs (..), ratchetBound)
 import CE.Verdict.Score (ScoreKnobs (..), scoreBound)
@@ -112,3 +114,10 @@ knobsEcho k rk jk dedupFloor cycleRode =
       -- defaults echo omits it too
       <> ["cycleFloor" .= sCycleFloor k | cycleRode]
 
+-- | The echo of the defaults, every knob at its Cost.hs value: what a
+-- degraded verdict reply echoes (no judgment ran, so no override was
+-- applied), and the definition package's `limits.score_defaults` (plan
+-- v2.33 step 11a), which the measuring side reads its knob defaults
+-- from rather than holding a copy.
+defaultsEcho :: Value
+defaultsEcho = knobsEcho scoreBound ratchetBound bound DedupCost.minDistinct False

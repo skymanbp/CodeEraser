@@ -18,12 +18,12 @@ module CE.Similar.Rank (respond) where
 import CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf)
 import CE.Similar.Rank.Cost (scoreFracBits)
 import CE.Similar.Rank.Score (Hit (..), QTerm (..), bare, expansion, rankTop)
-import CE.Wire (family)
-import CE.Wire.Result (resultLine)
+import CE.Wire (Respond, tabled)
+import qualified CE.Wire.Families as F
 import Control.Applicative ((<|>))
-import Data.Aeson (Value, (.=))
+import Data.Aeson ((.=))
+import Data.Aeson.Types (Pair)
 import Data.Bits (shiftR)
-import qualified Data.ByteString.Char8 as B8
 import Data.Function (on)
 import qualified Data.IntMap.Strict as IM
 import Data.List (groupBy)
@@ -32,8 +32,8 @@ import qualified Data.Set as S
 
 -- | decode → cap → contract (and, widened, every expansion term must
 -- have a terms row) → the ranking.
-respond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
-respond proto = family "rank" reqId overCap (\r -> offence r <|> widened r) (answer proto True) (answer proto False)
+respond :: Respond
+respond = tabled F.rank reqId overCap (\r -> offence r <|> widened r) answer
 
 -- | The expansion this request's cooc rows give its bare query.
 added :: RankReq -> [QTerm]
@@ -55,19 +55,15 @@ widened r
 -- C, D, S, L] over scoreDen, the expansion [term, channel], the
 -- weighted bag [term, weight] ranked, the counts. Degraded: empty
 -- tables and the reason.
-answer :: String -> Bool -> RankReq -> B8.ByteString
-answer proto degraded r =
-  resultLine
-    proto
-    "rank"
-    (reqId r)
-    [ "hits" .= [toInteger (hSeat h) : hScore h `shiftR` scoreFracBits : hScore h : hHits h | h <- hits]
+answer :: Bool -> RankReq -> ([Pair], [Pair])
+answer degraded r =
+  ( [ "hits" .= [toInteger (hSeat h) : hScore h `shiftR` scoreFracBits : hScore h : hHits h | h <- hits]
     , "scoreDen" .= (2 ^ scoreFracBits :: Integer)
     , "added" .= [[qTerm q, qChan q] | q <- if degraded then [] else added r]
     , "query" .= if degraded then [] else M.toList (M.fromListWith (+) [(qTerm q, qWeight q) | q <- ranked])
     ]
-    ["rows" .= rowsOf r, "queryTerms" .= length ranked, "hits" .= length hits]
-    (if degraded then Just "rank_too_large" else Nothing)
+  , ["rows" .= rowsOf r, "queryTerms" .= length ranked, "hits" .= length hits]
+  )
  where
   ranked
     | degraded = []

@@ -159,7 +159,7 @@ refusalProbes = do
   dupPosReply =
     Protocol.respond
       coreVersion
-      "{\"proto\":\"9.0.0\",\"type\":\"graph.request\",\"id\":5,\"nodes\":[[0,0,0],[0,0,0]],\"edges\":[],\"pos\":[1,1]}"
+      "{\"proto\":\"9.0.0\",\"type\":\"graph.request\",\"id\":5,\"nodes\":[[0,0,0],[0,0,0]],\"edges\":[],\"pos\":[1,1],\"unres\":[]}"
   dupPairReply =
     Protocol.respond
       coreVersion

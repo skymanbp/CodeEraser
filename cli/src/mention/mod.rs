@@ -44,7 +44,7 @@ mod tests_index;
 pub mod token;
 mod walk;
 
-pub use candidates::{AdvisoryName, Names, UNMENTIONED_SOFT_CAP, Unmentioned};
+pub use candidates::{AdvisoryName, Names, Unmentioned, unmentioned_soft_cap};
 pub use census::Outside;
 pub use rates::LangRates;
 // the universe's own membership rules, published so the K23

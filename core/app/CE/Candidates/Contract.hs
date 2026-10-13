@@ -15,7 +15,7 @@
 module CE.Candidates.Contract (CandReq (..), offence, overCap) where
 
 import CE.Candidates.Cost (candidateNearCap, candidatePrintCap, candidateSigCap, candidateUnitCap)
-import CE.Wire (rowCheck)
+import CE.Wire (elements, label, outsideU64, rowCheck, u64)
 import CE.Wire.Tables (optTables)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
 import Data.Foldable (asum)
@@ -68,23 +68,23 @@ offence req =
 unitShape :: Int -> [Integer] -> Maybe String
 unitShape i row = case row of
   (lang : fileCode : keyCode : nodes : from : to : hist)
-    | lang < 0 -> label "negative language"
-    | fileCode < 0 -> label "negative file"
-    | keyCode < 0 -> label "negative key"
-    | nodes < 1 -> label "non-positive nodes"
-    | from < 1 || to < from -> label "span not 1-based and ordered"
-    | odd (length hist) -> label "histogram not [kind,count] pairs"
-    | any (< 0) kinds -> label "negative kind"
-    | any (< 1) counts -> label "non-positive count"
-    | or (zipWith (>=) kinds (drop 1 kinds)) -> label "kinds not strictly ascending"
-    | sum counts /= nodes -> label "histogram does not sum to nodes"
+    | lang < 0 -> refuse "negative language"
+    | fileCode < 0 -> refuse "negative file"
+    | keyCode < 0 -> refuse "negative key"
+    | nodes < 1 -> refuse "non-positive nodes"
+    | from < 1 || to < from -> refuse "span not 1-based and ordered"
+    | odd (length hist) -> refuse "histogram not [kind,count] pairs"
+    | any (< 0) kinds -> refuse "negative kind"
+    | any (< 1) counts -> refuse "non-positive count"
+    | or (zipWith (>=) kinds (drop 1 kinds)) -> refuse "kinds not strictly ascending"
+    | sum counts /= nodes -> refuse "histogram does not sum to nodes"
     | otherwise -> Nothing
    where
     kinds = everyOther hist
     counts = everyOther (drop 1 hist)
-  _ -> label "malformed unit (need [lang,file,key,nodes,start,end,kind,count,...])"
+  _ -> refuse "malformed unit (need [lang,file,key,nodes,start,end,kind,count,...])"
  where
-  label why = Just ("unit " <> show i <> ": " <> why)
+  refuse why = Just (label "unit" i <> why)
 
 -- | The even positions of a list.
 everyOther :: [a] -> [a]
@@ -93,14 +93,10 @@ everyOther xs = case xs of
   [x] -> [x]
   [] -> []
 
--- | One unit's set: non-empty, every element a u64.
+-- | One unit's set: non-empty, every element a u64 (CE.Wire.elements;
+-- any order — the pass sorts).
 setShape :: Int -> [Integer] -> Maybe String
-setShape i set
-  | null set = label "empty set"
-  | any (not . word) set = label "element outside u64"
-  | otherwise = Nothing
- where
-  label why = Just ("sig " <> show i <> ": " <> why)
+setShape = elements "sig" "set" outsideU64 False
 
 -- | [hash, file, line, tok]: the hash a u64, the rest non-negative.
 printShape :: Int -> [Integer] -> Maybe String
@@ -108,7 +104,7 @@ printShape = rowCheck "print" "malformed print (need [hash,file,line,tok])" 4 ch
  where
   checks row = case row of
     (h : rest)
-      | not (word h) -> Just "hash outside u64"
+      | not (u64 h) -> Just "hash outside u64"
       | any (< 0) rest -> Just "negative file, line or tok"
     _ -> Nothing
 
@@ -119,6 +115,3 @@ nearShape = rowCheck "near" "malformed near run (need [fileA,lineA,fileB,lineB])
   checks row
     | any (< 0) row = Just "negative file or line"
     | otherwise = Nothing
-
-word :: Integer -> Bool
-word x = x >= 0 && x < 2 ^ (64 :: Int)

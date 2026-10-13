@@ -36,6 +36,9 @@ import qualified CE.Tables as Tables
 import qualified CE.Tombstone as Tombstone
 import qualified CE.Trend as Trend
 import qualified CE.Verdict as Verdict
+import CE.Wire (Answered, Respond)
+import CE.Wire.Families (FamilyName (..))
+import qualified CE.Wire.Families as F
 import Control.Applicative ((<|>))
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
@@ -88,37 +91,43 @@ internalError = errReply Nothing "internal"
 -- DERIVED from it (famCap), so a capability declared without a
 -- responder is unrepresentable, not merely undisciplined.
 data Fam = Fam
-  { famCap :: String
-  , famType :: String
-  , famRespond :: String -> B8.ByteString -> Either (Maybe Value, String, String) B8.ByteString
+  { famName :: FamilyName
+  , famRespond :: Respond
   }
+
+-- | The capability `<name>/<version>` and the request type
+-- `<name>.request`, both read off the family's one name
+-- (CE.Wire.Families, plan v2.33 step 11a).
+famCap, famType :: Fam -> String
+famCap f = nameWord (famName f) <> "/" <> show (nameVersion (famName f))
+famType f = nameWord (famName f) <> ".request"
 
 families :: [Fam]
 families =
-  [ Fam "fourclass/2" "fourclass.request" FourClass.respond
-  , Fam "graph/1" "graph.request" Graph.respond
-  , Fam "clone/1" "clone.request" Clone.respond
-  , Fam "docdup/1" "docdup.request" Docdup.respond
-  , Fam "verdict/1" "verdict.request" Verdict.respond
-  , Fam "scan/1" "scan.request" Scan.respond
-  , Fam "structure/1" "structure.request" Structure.respond
-  , Fam "trend/2" "trend.request" Trend.respond
-  , Fam "erase/1" "erase.request" Erase.respond
-  , Fam "audit/1" "audit.request" Audit.respond
-  , Fam "tombstone/1" "tombstone.request" Tombstone.respond
-  , Fam "similar/1" "similar.request" Similar.respond
-  , Fam "query/1" "query.request" Query.respond
-  , Fam "flow/1" "flow.request" Flow.respond
-  , Fam "merge/1" "merge.request" Merge.respond
-  , Fam "arch/1" "arch.request" Arch.respond
-  , Fam "tables/1" "tables.request" Tables.respond
-  , Fam "document/1" "document.request" Document.respond
-  , Fam "resolve/1" "resolve.request" Resolve.respond
-  , Fam "candidates/1" "candidates.request" Candidates.respond
-  , Fam "rank/1" "rank.request" Rank.respond
-  , Fam "docpairs/1" "docpairs.request" DocPairs.respond
-  , Fam "moves/1" "moves.request" Moves.respond
-  , Fam "bags/1" "bags.request" Bags.respond
+  [ Fam F.fourclass FourClass.respond
+  , Fam F.graph Graph.respond
+  , Fam F.clone Clone.respond
+  , Fam F.docdup Docdup.respond
+  , Fam F.verdict Verdict.respond
+  , Fam F.scan Scan.respond
+  , Fam F.structure Structure.respond
+  , Fam F.trend Trend.respond
+  , Fam F.erase Erase.respond
+  , Fam F.audit Audit.respond
+  , Fam F.tombstone Tombstone.respond
+  , Fam F.similar Similar.respond
+  , Fam F.query Query.respond
+  , Fam F.flow Flow.respond
+  , Fam F.merge Merge.respond
+  , Fam F.arch Arch.respond
+  , Fam F.tables Tables.respond
+  , Fam F.document Document.respond
+  , Fam F.resolve Resolve.respond
+  , Fam F.candidates Candidates.respond
+  , Fam F.rank Rank.respond
+  , Fam F.docpairs DocPairs.respond
+  , Fam F.moves Moves.respond
+  , Fam F.bags Bags.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's
@@ -141,7 +150,7 @@ dispatch version env line
 -- single malformed request from desyncing the whole session (the
 -- client treats a non-echoed id as L2-down, VERSIONING.md §1; Opus
 -- review, one fix for every family).
-familyReply :: Envelope -> Either (Maybe Value, String, String) B8.ByteString -> B8.ByteString
+familyReply :: Envelope -> Answered -> B8.ByteString
 familyReply env (Left (rid, code, message)) = errReply (rid <|> envId env) code message
 familyReply _ (Right bytes) = bytes
 

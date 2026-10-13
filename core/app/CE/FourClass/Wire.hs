@@ -17,9 +17,10 @@ module CE.FourClass.Wire
   , encodeResult
   ) where
 
+import qualified CE.Wire.Families as F
+import CE.Wire (replyLine)
 import Data.Aeson hiding (Result)
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Word (Word64)
 
 -- | One request: the L1 leftovers (significant lines classified
@@ -98,11 +99,8 @@ data Result = Result
 
 encodeResult :: String -> Result -> B8.ByteString
 encodeResult proto r =
-  BL.toStrict . encode . object $
-    [ "proto" .= proto
-    , "type" .= ("fourclass.result" :: String)
-    , "id" .= resId r
-    , "moved" .= resMoved r
+  replyLine proto F.fourclass (resId r) $
+    [ "moved" .= resMoved r
     , "blocks" .= [(bFromPair b, bFromLines b, bToPair b, bToLines b) | b <- resBlocks r]
     , "suspicions" .= resSuspicions r
     , "degraded" .= maybe False (const True) (resDegraded r)

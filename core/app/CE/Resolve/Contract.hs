@@ -29,6 +29,7 @@ import CE.Resolve.Request
 import CE.Resolve.RsSurface (readsAsAt, readsAsSurface)
 import CE.Resolve.Tables (kindRefDef, kindRefLink)
 import CE.Resolve.World (ofLangs)
+import CE.Wire (label)
 import Data.Array (listArray, (!))
 import Data.Aeson (Value (..), encode)
 import qualified Data.ByteString.Lazy as BL
@@ -162,9 +163,9 @@ mdOffence rq walked =
     ]
  where
   -- a fact table's file that is not one of `among` or not of `lang`
-  stray key why lang among fs = listToMaybe [key <> " " <> show i <> ": " <> why | (i, f) <- zip [0 :: Int ..] fs, Set.notMember f among || not (ofLangs [lang] f)]
+  stray key why lang among fs = listToMaybe [label key i <> why | (i, f) <- zip [0 :: Int ..] fs, Set.notMember f among || not (ofLangs [lang] f)]
   -- a site `wants` facts for whose file is not in `held`
-  bare why wants held = listToMaybe ["site " <> show i <> ": " <> why | (i, s) <- zip [0 :: Int ..] (rqSites rq), wants s, Set.notMember (path ! sFrom s) held]
+  bare why wants held = listToMaybe [label "site" i <> why | (i, s) <- zip [0 :: Int ..] (rqSites rq), wants s, Set.notMember (path ! sFrom s) held]
   tabled = Set.fromList [f | (f, _, _) <- rqMdRefs rq]
   docPath (p, _, _, _, _, _, _) = p
   paged = Set.fromList (map docPath (rqHtmlDocs rq))
@@ -173,4 +174,4 @@ mdOffence rq walked =
 
 -- | A path table in strictly ascending order: no path twice.
 ascending :: String -> [String] -> Maybe String
-ascending name xs = asum [Just (name <> " " <> show i <> ": not after the path before it") | (i, (a, b)) <- zip [1 :: Int ..] (zip xs (drop 1 xs)), a >= b]
+ascending name xs = asum [Just (label name i <> "not after the path before it") | (i, (a, b)) <- zip [1 :: Int ..] (zip xs (drop 1 xs)), a >= b]

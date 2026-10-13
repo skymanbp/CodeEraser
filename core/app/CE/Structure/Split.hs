@@ -22,7 +22,7 @@ module CE.Structure.Split
 
 import CE.Structure.Axes (Knobs (..))
 import CE.Verdict.Soft (zonePenalty)
-import CE.Wire (tableOffence)
+import CE.Wire (label, tableOffence)
 import Data.Foldable (asum)
 import Data.List (maximumBy)
 import qualified Data.Map.Strict as M
@@ -88,7 +88,7 @@ unitRow totals i row = case row of
   [f, _, s, e] -> spanOffence totals lbl (f, s, e)
   _ -> Just (lbl <> "malformed row (need [file,unit,start,end])")
  where
-  lbl = "seamUnits " <> show i <> ": "
+  lbl = label "seamUnits" i
 
 -- | One clone-block span (v2.7 ②): the T1/T2 block a seam must not
 -- cut unpriced — the same span contract on [file, start, end].
@@ -97,7 +97,7 @@ cloneRow totals i row = case row of
   [f, s, e] -> spanOffence totals lbl (f, s, e)
   _ -> Just (lbl <> "malformed row (need [file,start,end])")
  where
-  lbl = "seamClones " <> show i <> ": "
+  lbl = label "seamClones" i
 
 -- | The shared pair contract: distinct in-range units of one file,
 -- plus each table's own relation — refs refuse self edges, churn
@@ -113,7 +113,7 @@ pairRow counts name rel i row = case row of
     | otherwise -> Just (lbl <> "file out of range")
   _ -> Just (lbl <> "malformed row (need [file,a,b])")
  where
-  lbl = name <> " " <> show i <> ": "
+  lbl = label name i
 
 churnRow :: M.Map Integer Integer -> Int -> [Integer] -> Maybe String
 churnRow counts =
@@ -136,8 +136,8 @@ unitsOrdered = go (0 :: Int) (-1) (-1) 0
     | s <= prevEnd = Just (lbl <> "spans overlap or descend")
     | otherwise = go (i + 1) f e (nextU + 1) rest
    where
-    lbl = "seamUnits " <> show i <> ": "
-  go i _ _ _ _ = Just ("seamUnits " <> show i <> ": malformed row")
+    lbl = label "seamUnits" i
+  go i _ _ _ _ = Just (label "seamUnits" i <> "malformed row")
 
 refRow :: M.Map Integer Integer -> Int -> [Integer] -> Maybe String
 refRow counts =
