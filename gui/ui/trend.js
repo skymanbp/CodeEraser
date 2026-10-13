@@ -88,7 +88,7 @@ function judgmentRows(j) {
   const bad = j.verdict === 2 || j.fail;
   out.push(
     `<div class="row"><span>${esc(tr("verdict"))}</span>` +
-    `<b class="verdict ${bad ? "bad" : "ok"}">${esc(name)}</b></div>`
+    `<b class="pill ${bad ? "bad" : "ok"}">${esc(name)}</b></div>`
   );
   if (j.slopeMicroPerDay !== null) {
     out.push(row(tr("score"), tr("slopePerDay", (j.slopeMicroPerDay / 1000).toFixed(1))));

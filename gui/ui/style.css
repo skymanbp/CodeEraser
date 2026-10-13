@@ -3,9 +3,9 @@
    screens.css. Ground and panels sit in the icon's ink world;
    vermilion is the BRAND channel only (wordmark + active tab), the
    interaction accent is a steel blue, the teal ring is the
-   keyboard/focus + selection channel, and the alarm ramp in main.js
-   stays the one semantic channel for findings density. Three screens
-   share this shell: header (brand + root + tabs), a per-view control
+   keyboard/focus + selection channel, and the alarm ramp in app.js
+   stays the one semantic channel for findings density. Every screen
+   shares this shell: header (brand + root + tabs), a per-view control
    bar, a main canvas with a detail aside. Magnitudes come from
    tokens.css (faces, type, space, ink); this file owns only the
    ground/chrome/semantic colours and their uses. */

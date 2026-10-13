@@ -30,15 +30,12 @@ let gpos = null, gsel = -1;
   redrawers.graph = () => graphDoc && drawGraph();
 })();
 
-async function loadGraph() {
-  $("graph-load").disabled = true;
-  setStatus(tr("judging"));
-  try {
-    // One reply carries both documents off one judgment: the map and
-    // the advisory commit together, so a failure never leaves the map
-    // on a new run beside symbol rows from an old one.
-    const root = $("root").value;
-    const doc = await invoke("graphscreen_report", { root });
+// One reply carries both documents off one judgment: the map and the
+// advisory commit together, so a failure never leaves the map on a new
+// run beside symbol rows from an old one. The status line names the
+// canvas schema (what `show` returns).
+function loadGraph() {
+  return load("graph-load", tr("judging"), "graphscreen_report", { root: $("root").value }, (doc) => {
     graphDoc = doc.canvas;
     advDoc = doc.deadcode;
     advByPath = new Map();
@@ -51,12 +48,8 @@ async function loadGraph() {
     layoutGraph();
     drawGraph();
     renderGraphAside(-1);
-    setStatus(graphDoc.schema);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("graph-load").disabled = false;
-  }
+    return graphDoc.schema;
+  });
 }
 
 function layoutGraph() {
@@ -228,9 +221,9 @@ function renderGraphAside(i) {
   const f = d.files[i], p = f.pos;
   let html = `<h2>${esc(String(f.path))}</h2>`;
   if (f.verdict != null) {
-    // the reason by code (0.4.0); a pre-0.4.0 document has no code and
-    // shows the English sentence it carries rather than "undefined"
-    html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(tr("deadWhy")[f.whyCode] ?? String(f.why ?? ""))}</div>`;
+    // the reason by code (ce.graph-canvas/0.4.0); an unknown code shows
+    // as its number rather than "undefined"
+    html += `<div class="row"><b>${esc(String(f.verdict))}</b></div><div class="row zero">${esc(tr("deadWhy")[f.whyCode] ?? String(f.whyCode))}</div>`;
     // The trust column (2.32.0) the console prints beside the verdict
     // and this pane dropped. The same number decides whether `ce
     // erase` may act on the row, so a verdict shown without it is a

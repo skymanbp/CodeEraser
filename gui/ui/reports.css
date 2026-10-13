@@ -4,29 +4,35 @@
    shared degraded notice. screens.css keeps the visualization
    screens (structure summary/tree/treemap, trend chart, candidate
    browser); same contract in both — the alarm ramp painted by
-   main.js is the one semantic channel, teal is selection/focus
+   app.js is the one semantic channel, teal is selection/focus
    only, vermilion is brand only. */
 
 /* ---- score screen (batch 4): the check verdict as a hero — the
    verdict pill is semantic state (ok/bad), separate from brand and
    from the alarm ramp; numbers stay tabular ---- */
 main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: var(--s3); }
-#check-hero { font-variant-numeric: tabular-nums; }
-#check-hero #check-score { font-size: var(--t-hero); font-weight: 600; color: var(--ink); font-family: var(--face-display); letter-spacing: var(--ls-hero); font-variant-numeric: proportional-nums lining-nums; }
-#check-hero small { font-size: var(--t-lg); color: var(--ink-min); margin-left: var(--s2); }
+/* the hero — the score, the doctor's handshake, the update's version:
+   one figure, its caption and its state pill */
+.hero { font-variant-numeric: tabular-nums; }
+.hero .hero-figure { font-size: var(--t-hero); font-weight: 600; color: var(--ink); font-family: var(--face-display); letter-spacing: var(--ls-hero); font-variant-numeric: proportional-nums lining-nums; }
+.hero small { font-size: var(--t-lg); color: var(--ink-min); margin-left: var(--s2); }
 /* the score's name, sized as a caption so it cannot be misread as part
    of the figure — the structure screen carries its twin */
-#check-hero .kind { font-size: var(--t-xs); color: var(--ink-min); }
-#check-hero .verdict {
-  margin-left: var(--s4);
-  padding: 2px var(--s2);
+.hero .kind { font-size: var(--t-xs); color: var(--ink-min); }
+/* the state pill — every screen's: the hero's verdict, a trend verdict,
+   a candidate pair's verdict (bad / mid / quiet by the core's severity) */
+.pill {
+  padding: 1px var(--s2);
   border-radius: var(--r-pill);
   font-size: var(--t-xs);
   font-weight: 600;
-  vertical-align: middle;
+  white-space: nowrap;
 }
-#check-hero .verdict.ok { background: rgba(79, 157, 122, 0.16); color: var(--ok); }
-#check-hero .verdict.bad { background: rgba(224, 138, 130, 0.16); color: var(--err); }
+.pill.ok { background: rgba(79, 157, 122, 0.16); color: var(--ok); }
+.pill.bad { background: rgba(224, 138, 130, 0.16); color: var(--err); }
+.pill.mid { background: var(--data-soft); color: var(--data); }
+.pill.quiet { color: var(--ink-min); }
+.hero .pill { margin-left: var(--s4); padding: 2px var(--s2); vertical-align: middle; }
 #check-hero #check-bar {
   width: 320px;
   height: 5px;
@@ -38,12 +44,14 @@ main.col { flex-direction: column; overflow-y: auto; padding: var(--s4); gap: va
 #check-hero #check-bar div { height: 100%; background: var(--data); }
 #check-axes { display: flex; gap: var(--s4); color: var(--ink-mid); font-size: var(--t-sm); }
 #check-axes b { color: var(--ink); }
-#check-axes .zero, #check-axes .zero b { color: var(--ink-min); }
 #check-ratchet { font-size: var(--t-sm); color: var(--ink-mid); max-width: 420px; }
 #check-ratchet > b { color: var(--ink); font-size: var(--t-xs); letter-spacing: 0.06em; text-transform: uppercase; }
 #check-ratchet .row b { font-variant-numeric: tabular-nums; }
 #check-named { font-family: var(--mono); font-size: var(--t-sm); color: var(--ink-mid); }
 .row.bad { color: var(--err); }
+.row.ok { color: var(--ok); }
+/* a note row (a cap said, a degraded line, a census head) recedes */
+.row.zero { color: var(--ink-min); }
 
 /* ---- erase screen (batch 4): plan rows read as a ledger — the
    kill mark is semantic (will act), advisory rows recede; the diff

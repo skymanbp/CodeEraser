@@ -258,8 +258,8 @@ and join the two across two snapshots), joins the two by file path (a rendering 
 shared string, never a verdict) and lists a selected file's rows with the root-level census
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:17-40](../../../cli/src/graph/canvas.rs#L17),
-[graph.js:33-60](../../../gui/ui/graph.js#L33),
-[graph.js:193-264](../../../gui/ui/graph.js#L193), [i18n.js:114-123](../../../gui/ui/i18n.js#L114)).
+[graph.js:33-53](../../../gui/ui/graph.js#L33),
+[graph.js:186-257](../../../gui/ui/graph.js#L186), [i18n.js:114-123](../../../gui/ui/i18n.js#L114)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -308,7 +308,7 @@ The pin is the formula, the row is the reading.
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
 | self @ this commit | 1753 (1971 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7167 (1650) | 1066 (15) | 14.9 % | 213 / 1066 = 20.0 % | 213 / 6101 |
-| | | rust | 3477 (1912) | 329 (3) | 9.5 % | 2 / 329 = 0.6 % | 2 / 3118 |
+| | | rust | 3475 (1912) | 327 (3) | 9.4 % | 2 / 327 = 0.6 % | 2 / 3118 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |

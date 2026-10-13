@@ -7,9 +7,9 @@
   "shots": {
     "gui-structure.png": "237056a668f49c7a969f0d72e07d9a288cf13b581f107ebb570725925bdf4806",
     "gui-tree.png": "2cebe97638ed7bcf2b111632e0511f642729bc3ac826cd23bf939525e860096f",
-    "gui-candidates.png": "d7cda66dbbd5e2553faf70d2cd586b811e68898733eb8317c77937a26f500ffb"
+    "gui-candidates.png": "107613e2f910ebe643c6f8b4e8e18d9faabaf73b6e2aef91baa500e4e1a42d01"
   },
-  "ui": "41c2d27077c5371f55e27f261d7d1bf1f8b998b1da1ee2831ca1491b96e127d5",
+  "ui": "8bc4f6da2a102dbe49eaee37b4c2e9e1e98deb1de82cd6cd4d5c1a77b2dabb52",
   "schemas": {
     "structure": "ce.structure-report/0.6.0",
     "join": "ce.join-report/0.4.0",

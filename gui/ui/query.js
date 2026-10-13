@@ -45,24 +45,17 @@ async function loadQuery(rules) {
     setStatus(tr("queryNeedsText"), true);
     return;
   }
-  $("query-run").disabled = true;
-  $("query-rules").disabled = true;
-  setStatus(tr("judging"), false);
-  try {
-    // the rules file (`--file`): empty = `[rules] file`, else ce.rules
-    const file = $("query-file").value.trim() || null;
-    const args = { root: $("root").value, why: $("query-why").checked, file };
-    queryDoc = rules
-      ? await invoke("rules_report", args)
-      : await invoke("query_report", { ...args, body: text });
+  // the rules file (`--file`): empty = `[rules] file`, else ce.rules
+  const file = $("query-file").value.trim() || null;
+  const args = { root: $("root").value, why: $("query-why").checked, file };
+  const btns = ["query-run", "query-rules"];
+  const show = (d) => {
+    queryDoc = d;
     renderQuery();
-    setStatus(queryDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("query-run").disabled = false;
-    $("query-rules").disabled = false;
-  }
+  };
+  return rules
+    ? load(btns, tr("judging"), "rules_report", args, show)
+    : load(btns, tr("judging"), "query_report", { ...args, body: text }, show);
 }
 
 function renderQuery() {
@@ -73,14 +66,17 @@ function renderQuery() {
     `<span><b>${c.answers}</b> ${esc(tr("queryAnswers"))}</span>` +
     `<span class="${c.violations ? "bad" : "ok"}"><b>${c.violations}</b> ${esc(tr("queryViolations"))}</span>` +
     (d.errors.length ? `<span class="bad"><b>${d.errors.length}</b> ${esc(tr("queryErrors"))}</span>` : "") +
-    (d.degraded ? `<span class="zero">${esc(tr("queryDegraded", d.degraded))}</span>` : "");
+    (d.degraded ? `<span class="zero">${esc(tr("noJudgment", d.degraded))}</span>` : "");
   const errors = d.errors.map((e) => `<div class="qline bad">${esc(e.at)}: ${esc(e.what)}</div>`).join("");
   $("query-rows").innerHTML = errors + d.goals.map((g) => goalTable(d, g)).join("");
 }
 
 // One goal: its heading (a question's columns, or the assertion's
 // name and verdict), a table of its answers, and under each answer
-// the derivation rows the document carries, indented by depth.
+// the derivation rows the document carries, indented by depth. The
+// answers and proof rows are grouped per goal and the depth walked here:
+// deferred to the core lane — the query document should carry each
+// goal's rows and each proof row's depth, and these walks then go.
 function goalTable(d, g) {
   const rows = d.answers.map((a, i) => [a, i]).filter(([a]) => a.goal === g.goal);
   const title =

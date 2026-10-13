@@ -12,29 +12,23 @@ let checkDoc = null;
   $("check-load").addEventListener("click", loadCheck);
 })();
 
-async function loadCheck() {
-  $("check-load").disabled = true;
-  setStatus(tr("judging"), false);
-  try {
-    // `--fail-under`, opt-in on every road — but CI arms 911 while
-    // this screen could arm nothing, so one tree read pass here and
-    // FAIL in the pipeline with nothing on screen to say why.
-    const floor = $("check-floor").value.trim();
-    // `--days`: the churn window the verdict reads (empty = the churn
-    // tables stay empty, the CLI's default)
-    const days = $("check-days").value.trim();
-    checkDoc = await invoke("check_report", {
-      root: $("root").value,
-      days: days === "" ? null : posInt(days, 0, 100000),
-      floor: floor === "" ? null : posInt(floor, 0, 1000000),
-    });
+function loadCheck() {
+  // `--fail-under`, opt-in on every road — but CI arms 911 while
+  // this screen could arm nothing, so one tree read pass here and
+  // FAIL in the pipeline with nothing on screen to say why.
+  const floor = $("check-floor").value.trim();
+  // `--days`: the churn window the verdict reads (empty = the churn
+  // tables stay empty, the CLI's default)
+  const days = $("check-days").value.trim();
+  const args = {
+    root: $("root").value,
+    days: days === "" ? null : posInt(days, 0, 100000),
+    floor: floor === "" ? null : posInt(floor, 0, 1000000),
+  };
+  return load("check-load", tr("judging"), "check_report", args, (d) => {
+    checkDoc = d;
     renderCheck();
-    setStatus(checkDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("check-load").disabled = false;
-  }
+  });
 }
 
 function renderCheck() {
@@ -56,9 +50,9 @@ function renderCheck() {
   // distinguished them — "check score" / "structure score" — and a
   // reader moving between two tabs deserves the same courtesy
   $("check-hero").innerHTML = notice +
-    `<span id="check-score">${d.score}</span><small>/ ${scale}</small>` +
+    `<span class="hero-figure">${d.score}</span><small>/ ${scale}</small>` +
     `<small class="kind">${esc(tr("scoreCheck"))}</small>` +
-    `<span class="verdict ${rt.fail ? "bad" : "ok"}">${verdict}</span>` +
+    `<span class="pill ${rt.fail ? "bad" : "ok"}">${verdict}</span>` +
     `<small class="floor">${esc(floor)}</small>` +
     `<div id="check-bar"><div style="width:${(100 * d.score) / scale}%"></div></div>`;
   // the CHECK axes are the verdict family's seven (size…cycles), a
@@ -86,17 +80,13 @@ function renderCheck() {
     "";
   // The join lattice's verdicts, reduced to a bare count until now.
   // Name and order both come off the wire (`joinSeverity` is the
-  // core's own face); the only thing done here is tallying.
+  // core's own face); the only thing done here is tallying (census).
   const sev = new Map((d.joinSeverity || []).map(([c, s]) => [c, s]));
-  const tally = new Map();
-  for (const [, , code] of d.candidates) tally.set(code, (tally.get(code) ?? 0) + 1);
+  const tally = census(d.candidates, (c) => c[2], (c) => sev.get(c[2]));
   const names = tr("joinVerdictNames");
-  $("check-candidates").innerHTML = tally.size
+  $("check-candidates").innerHTML = tally.length
     ? `<b>${esc(tr("byVerdict"))}</b>` +
-      [...tally.entries()]
-        .sort((a, b) => (sev.get(b[0]) ?? 0) - (sev.get(a[0]) ?? 0) || a[0] - b[0])
-        .map(([code, n]) => row(names[code] ?? String(code), n))
-        .join("")
+      tally.map(([code, n]) => row(names[code] ?? String(code), n)).join("")
     : "";
   // `failed` is the ratchet's NAMED register (the dense over rows are
   // wire identities, not prose) — the actionable half of the verdict

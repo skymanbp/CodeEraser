@@ -4,15 +4,16 @@
 // hot", the tree answers "where exactly": each row rolls its
 // subtree's findings up into its heat rail (log-ranked against the
 // report's own range, so the rail is a gradient, not a wall) and
-// names its own findings as inline axis tags. Shares main.js globals
-// ($, report, children, selId, showDetail, drawTreemap, heat, esc).
+// names its own findings as inline axis tags. Shares the globals of
+// app.js and structure.js ($, report, children, selId, showDetail,
+// drawTreemap, heat, esc).
 "use strict";
 
 let treeView = localStorage.getItem("ce-structure-view") === "tree";
 let expanded = null; // ids whose children are visible
 let lastTree = null; // reset expansion when a new report arrives
 
-// The one structure repaint entry (main.js render/resize call this):
+// The one structure repaint entry (structure.js render/resize call this):
 // picks the active lens, keeps the switch buttons in sync. The tree
 // is HTML flow — a resize repaint is harmless (only scroll resets).
 function redrawStructure() {
@@ -29,7 +30,7 @@ function redrawStructure() {
 }
 
 // Subtree rollup, leaf-to-root over the report's parent-before-child
-// order (the weights() trick) — used for findings AND file counts.
+// order — used for findings, file counts and the treemap's weights.
 function rollup(get) {
   const r = report.tree.map(get);
   for (let i = report.tree.length - 1; i > 0; i--) {
@@ -55,6 +56,12 @@ function foldChain(id) {
     path.push(cur);
   }
   return path;
+}
+
+// The label a folded chain carries in BOTH lenses: each node's last
+// path segment ("." for the root), joined.
+function chainLabel(path) {
+  return path.map((i) => report.tree[i].name.split("/").pop() || ".").join("/");
 }
 
 function drawTree() {
@@ -98,10 +105,7 @@ function drawTree() {
 function walkRows(id, ctx, out) {
   const path = foldChain(id);
   const tail = path[path.length - 1];
-  const label = path
-    .map((i) => report.tree[i].name.split("/").pop() || ".")
-    .join("/");
-  out.push(rowHtml(tail, path[0], label, ctx));
+  out.push(rowHtml(tail, path[0], chainLabel(path), ctx));
   if (expanded.has(path[0])) {
     for (const k of children[tail]) walkRows(k, ctx, out);
   }

@@ -93,6 +93,18 @@ road!(
     }
 );
 
+/// The flow kinds as the core's catalogue lists them (plan v2.32 step 5,
+/// R8): each kind's name and its label in both languages, read off the
+/// definition package the caller loaded — the GUI hub's chips and kind
+/// column carry no label map of their own.
+pub fn flow_kinds() -> Value {
+    let rows = crate::flow_report::kinds().iter();
+    Value::Array(
+        rows.map(|k| json!({"name": k.name, "en": k.en, "zh": k.zh}))
+            .collect(),
+    )
+}
+
 road!(
     /// The clone-merge suggestions (plan v2.31 step 7): every clone group
     /// anti-unified by the core's merge/1 and labelled back. Advisory: a

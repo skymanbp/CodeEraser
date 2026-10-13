@@ -18,6 +18,8 @@ cargo run --release -- tsx  snippets/flow.tsx
 | 2 | `round2.h`（C 头，走 cpp）`round2.c` `round2.cpp` `round2.lua` `round2.java` `round2.R` | 同上 | 访问节默认值与类外定义、嵌套命名空间、函数指针与拼接串、Lua 表字段函数与长括号、Java 嵌套/局部/匿名类与带标签 continue、R 的 `x$y$z <-` 与默认实参 |
 | 3 | `flow.*` 十份（`py` `ts` `tsx` `rs` `go` `c` `cpp` `java` `lua` `R`） | 各语言自己的 | 语句 / 声明 / 访问 / 跳转 / 捕获 |
 
+第二十三份样本 `flow.hs`（计划 v2.31 步 7 的 Haskell 槽位表样本，`core/app/CE/Lang/Haskell.hs` 引它）在本探针里没有文法臂：tsprobe 不钉 Haskell 文法，它的 kind 对照的是 `cli/Cargo.toml` 钉住的 tree-sitter-haskell 的 node-types.json；它放在这里，是与其他 `flow.*` 样本同处。
+
 2026-09-24 两轮十二个样本全部 `has_error=false`、零 `!!ERROR`；2026-09-30 第三轮十份同样全部 `has_error=false`、零 `!!ERROR`，`cli/src/flow/` 表里的每个 kind、字段与记号都在对应语言的转录里出现过（C 与 C++ 共读一张表，只有 C++ 才有的十四个串记在单元腿的 `CPP_ONLY` 里）。加一门语言 = 加一个 `grammar()` 臂、一条 Cargo 依赖、一份样本；改样本后重跑并核对设计册 §10 的事实行与 `cli/src/flow/` 的表。
 
-**自食提示**：`snippets/` 写在本目录的 `.gitignore` 里，但二十二个样本是 `git add -f` 进库、照常被 git 跟踪的。`ce` 的两条走查（度量走查与提及宇宙）按 `.gitignore` 的**模式**而非索引跳过文件，所以样本既不进尺寸门与指纹索引，也不会以自己的标识符「提及」本仓的符号而遮掉未提及顾问行；提及宇宙的公式门把它们记在 `pattern-ignored` 一项（zod 语料的同款先例），而 `.ceignore` 会被那条门拒绝。新增样本要 `git add -f`；这些语言落地后也不必改 `ce.toml`。探针自己的 `src/main.rs` 照常被判决。
+**自食提示**：`snippets/` 写在本目录的 `.gitignore` 里，但二十三个样本是 `git add -f` 进库、照常被 git 跟踪的。`ce` 的两条走查（度量走查与提及宇宙）按 `.gitignore` 的**模式**而非索引跳过文件，所以样本既不进尺寸门与指纹索引，也不会以自己的标识符「提及」本仓的符号而遮掉未提及顾问行；提及宇宙的公式门把它们记在 `pattern-ignored` 一项（zod 语料的同款先例），而 `.ceignore` 会被那条门拒绝。新增样本要 `git add -f`；这些语言落地后也不必改 `ce.toml`。探针自己的 `src/main.rs` 照常被判决。

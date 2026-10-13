@@ -230,7 +230,7 @@ derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:38](../../../core/app/CE/Query/Proof.hs#L38)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
 row under the answer ([Lines.hs:41](../../../core/app/CE/Query/Lines.hs#L41),
-[query.js:108](../../../gui/ui/query.js#L108)).
+[query.js:104](../../../gui/ui/query.js#L104)).
 
 ### 8. Caps and degradation
 
@@ -294,14 +294,14 @@ the exclude dialect cannot read is a program error at the glob's token before an
   and `query` with `prelude: true` returns the `ce.query-prelude` document instead (`body` is not
   needed then); the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:209](../../../cli/src/mcp/tools.rs#L209), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234),
-  [adapters.rs:198](../../../cli/src/mcp/adapters.rs#L198)).
+  [adapters.rs:179](../../../cli/src/mcp/adapters.rs#L179)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch
   and a rules-file box (`--file`), answers it as one table per goal under its own column names
   with the derivation rows under an answer, judges the rules file with one button, and shows the
   `ce.query-prelude` texts with another (the Tauri command `query_prelude`); rendering only, a
   core without the family shows the document's degraded posture
   ([commands_query.rs:17](../../../gui/src-tauri/src/commands_query.rs#L17), [query.js:42](../../../gui/ui/query.js#L42),
-  [query.js:84](../../../gui/ui/query.js#L84)).
+  [query.js:80](../../../gui/ui/query.js#L80)).
 
 All three faces, the CLI included, go through the same three library functions — one road for
 the question, the rules file and the pack text — so the document cannot differ by face

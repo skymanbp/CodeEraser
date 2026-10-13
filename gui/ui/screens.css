@@ -2,7 +2,7 @@
    style.css, which keeps the shared shell; the report screens moved
    to reports.css at the repo's own 300-line gate): structure
    summary/tree/treemap, trend chart, candidate browser. Same
-   contract: the alarm ramp painted by main.js is the one semantic
+   contract: the alarm ramp painted by app.js is the one semantic
    channel; teal is selection/focus only; vermilion is brand only. */
 
 /* ---- structure summary strip ---- */
@@ -20,7 +20,9 @@
    two-space join), values carry the weight, zero axes recede */
 #entropy, #axes { display: flex; gap: var(--s4); }
 #entropy b, #axes b { color: var(--ink); font-weight: 600; }
-#axes .zero, #axes .zero b { color: var(--ink-min); }
+/* a zero-count axis recedes — the structure strip's and the score
+   screen's chip rows alike */
+#axes .zero, #axes .zero b, #check-axes .zero, #check-axes .zero b { color: var(--ink-min); }
 #score { font-size: var(--t-xl); font-weight: 600; color: var(--ink); font-family: var(--face-display); }
 /* which score this is. A caption, not a competing number — the score
    screen shows another figure out of 1000 and the two are different
@@ -247,27 +249,15 @@
 #cand-list .cand .pair { flex: 1; overflow-wrap: anywhere; }
 #cand-list .cand b { color: var(--ink); font-weight: 600; }
 #cand-list .cand .dir { color: var(--ink-min); font-weight: 400; }
-/* the verdict pill (K round step 6): the core's own name for the pair,
-   ranked by the core's own severity. Three steps over the existing
-   palette — no colour is minted here, because a rank the core did not
-   ship would be this face inventing judgment. */
-#cand-list .cand .vpill {
-  margin-right: var(--s2);
-  padding: 1px var(--s2);
-  border-radius: var(--r-pill);
-  font-size: var(--t-xs);
-  font-weight: 600;
-  white-space: nowrap;
-}
-#cand-list .cand .vpill.bad { background: rgba(224, 138, 130, 0.16); color: var(--err); }
-#cand-list .cand .vpill.mid { background: var(--data-soft); color: var(--data); }
-#cand-list .cand .vpill.quiet { color: var(--ink-min); }
+/* the verdict pill (K round step 6, the shared .pill of reports.css):
+   the core's own name for the pair, ranked by the core's own severity
+   in its bad / mid / quiet steps */
+#cand-list .cand .pill { margin-right: var(--s2); }
 #cand-list .cand > span:last-child {
   color: var(--ink-mid);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-#cand-list .err { color: var(--err); }
 
 /* ---- split-ROI bar (batch 9 P14): benefit and cost as two
    magnitude fills on one track, in the data channel — the ratio is

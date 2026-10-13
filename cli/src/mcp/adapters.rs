@@ -1,21 +1,16 @@
 //! The MCP argument adapters: one fn per catalog row, each turning
 //! (root, arguments) into a family's public report string, plus the
-//! three argument readers they share. Split from tools.rs when the
+//! argument readers they share. Split from tools.rs when the
 //! catalog reached thirteen rows and the file crossed the 300-line
 //! line — the module's own doc already named these as two jobs (the
 //! TABLE is the authority for tools/list and dispatch; these are the
 //! transport). Read-only by construction, same charter: every body
 //! ends at a family face, and `erase` reaches the PLAN alone.
 
-use crate::faces::{self, Plumb, doc};
+use crate::faces::{self, Plumb, core, doc};
 use anyhow::Result;
 use serde_json::Value;
 use std::path::Path;
-
-/// CE_CORE_BIN → sibling → PATH: the daemon's resolver, one authority.
-fn core() -> String {
-    crate::daemon::judge::core_bin().unwrap_or_else(|| "ce-core".into())
-}
 
 /// A count arg, or the default — ONE guard for every window. `as u32`
 /// TRUNCATED (`days = 4294967296` became 0 and judged a zero-day
@@ -35,13 +30,22 @@ fn days(args: &Value, default: u32) -> u32 {
     u32::try_from(v).unwrap_or(default)
 }
 
-/// An optional window or floor: absent stays None (the honest Option:
-/// that axis unjudged, that floor unarmed), and a PRESENT value past
-/// u32 saturates rather than truncating into a small one.
-fn opt_u32(args: &Value, key: &str) -> Option<u32> {
-    args[key]
-        .as_u64()
-        .map(|v| u32::try_from(v).unwrap_or(u32::MAX))
+/// An optional window, floor or threshold: absent stays None (the honest
+/// Option: that axis unjudged, that floor unarmed, the core's default),
+/// and a PRESENT value past the type saturates at `max` rather than
+/// truncating into a small one.
+fn opt<T: TryFrom<u64>>(args: &Value, key: &str, max: T) -> Option<T> {
+    args[key].as_u64().map(|v| T::try_from(v).unwrap_or(max))
+}
+
+/// Two optional numbers of one type (a window and a floor, the two
+/// dedup thresholds), each read by `opt`.
+fn opt_pair<T: TryFrom<u64> + Copy>(
+    args: &Value,
+    [a, b]: [&str; 2],
+    max: T,
+) -> (Option<T>, Option<T>) {
+    (opt(args, a, max), opt(args, b, max))
 }
 
 /// A face's answer as the tool's string: the document, one
@@ -68,65 +72,41 @@ pub(super) fn scan(root: &Path, _a: &Value) -> Result<String> {
 }
 
 pub(super) fn check_duplication(root: &Path, a: &Value) -> Result<String> {
-    let n = |k: &str| {
-        a[k].as_u64()
-            .map(|v| usize::try_from(v).unwrap_or(usize::MAX))
-    };
-    let thresholds = (n("min_tokens"), n("min_distinct"));
-    let answer = faces::dedup(root, &core(), thresholds, Plumb::default());
-    Ok(faces::gated_doc(answer)?.to_string())
+    let thresholds = opt_pair(a, ["min_tokens", "min_distinct"], usize::MAX);
+    let gated = faces::dedup(root, &core(), thresholds, Plumb::default());
+    Ok(faces::gated_doc(gated)?.to_string())
 }
 
 pub(super) fn graph_sites(root: &Path, _a: &Value) -> Result<String> {
     shown(faces::graph_sites(root, &core()))
 }
 
-/// The plain faces (no extra knobs) share ONE adapter body — the
-/// census caught the three judged shells chaining into clone blocks,
-/// and the trail reader (O50) made `erase` / `erase_log` / `doctor`
-/// the next such chain; the shell exists once and thin per-name fns
-/// satisfy the table's fn-pointer field (the pre-batch-4 banked
-/// shape, now over faces). `erase` reaches the PLAN alone and
-/// `erase_log` reads the trail it leaves (the process's core lays its
-/// document out, plan v2.32 step 5); `doctor` is
-/// the one tool whose FINDING may be a failure — a core that will not
-/// answer rides inside its document rather than as a tool error, so
-/// the caller reading it learns the state instead of an exception.
-fn plain_face(root: &Path, which: &str) -> Result<String> {
-    let (c, p) = (core(), Plumb::default());
-    let document = match which {
-        "deadcode" => doc(faces::deadcode(root, &c, p)),
-        "docdup" => doc(faces::docdup(root, &c, p)),
-        "erase" => faces::gated_doc(faces::erase(root, &c, p, |_, _| None)),
-        "erase_log" => doc(faces::erase_log(root, &c)),
-        "doctor" => Ok(faces::doctor(root, &c)),
-        "merge" => doc(faces::merge(root, &c, p)),
-        other => Err(anyhow::anyhow!("not a plain face: {other}")),
-    };
-    Ok(document?.to_string())
-}
-
-/// The adapters that differ by ONE string. The catalog needs a
-/// distinct fn pointer per row, so the three-line body
-/// `plain_face(root, NAME)` was typed once per family — and once the
-/// split put them side by side this repo's own clone gate counted them
-/// as a block, which is the correct reading: they are one function
-/// wearing several names. Minted here instead (the face_cmd! precedent).
+/// The plain faces (no extra knobs): the catalog needs a distinct fn
+/// pointer per row, and the body — resolve the core, call the family's
+/// face, serialize its document — exists once, here, each row naming
+/// only its face call over (root, core) (the face_cmd! precedent: one
+/// function wearing several names is what this repo's clone gate
+/// counted when they were typed out). `erase` reaches the PLAN alone and
+/// `erase_log` reads the trail it leaves; `doctor` is the one tool whose
+/// FINDING may be a failure — a core that will not answer rides inside
+/// its document rather than as a tool error, so the caller reading it
+/// learns the state instead of an exception.
 macro_rules! plain {
-    ($($name:ident => $family:literal),+ $(,)?) => { $(
+    ($($name:ident => $face:expr),+ $(,)?) => { $(
         pub(super) fn $name(root: &Path, _a: &Value) -> Result<String> {
-            plain_face(root, $family)
+            let face: fn(&Path, &str) -> Result<Value> = $face;
+            Ok(face(root, &core())?.to_string())
         }
     )+ };
 }
 
 plain!(
-    deadcode => "deadcode",
-    docdup => "docdup",
-    erase => "erase",
-    erase_log => "erase_log",
-    doctor => "doctor",
-    merge_suggestions => "merge",
+    deadcode => |r, c| doc(faces::deadcode(r, c, Plumb::default())),
+    docdup => |r, c| doc(faces::docdup(r, c, Plumb::default())),
+    erase => |r, c| faces::gated_doc(faces::erase(r, c, Plumb::default(), |_, _| None)),
+    erase_log => |r, c| doc(faces::erase_log(r, c)),
+    doctor => |r, c| Ok(faces::doctor(r, c)),
+    merge_suggestions => |r, c| doc(faces::merge(r, c, Plumb::default())),
 );
 
 /// Not plain: `units` switches this row to the OTHER document its own
@@ -136,10 +116,8 @@ pub(super) fn clone_report(root: &Path, a: &Value) -> Result<String> {
     shown(faces::clone(root, &core(), units, Plumb::default()))
 }
 
-/// The faces over a git window (`days`, default 14) that ask the core:
-/// one body, a name per catalog row (the plain! precedent; churn
-/// joined join here when its document moved into the core, plan v2.32
-/// step 5 R0, and the two bodies were one clone block).
+/// The two faces over a git window (`days`, default 14): churn reads the
+/// window alone, join the index beside it (its `Plumb`).
 pub(super) fn churn(root: &Path, a: &Value) -> Result<String> {
     shown(faces::churn(root, &core(), days(a, 14)))
 }
@@ -152,7 +130,7 @@ pub(super) fn join(root: &Path, a: &Value) -> Result<String> {
 pub(super) fn structure(root: &Path, a: &Value) -> Result<String> {
     let deep = a["deep"].as_bool().unwrap_or(false);
     // a PRESENT and unusable value must not become a zero-day window
-    let d = opt_u32(a, "days").map(|v| v.max(1));
+    let d = opt(a, "days", u32::MAX).map(|v| v.max(1));
     // the split advisory joins the MCP face in v0.7 (plan v2.7 ③):
     // same report schema, same rows the CLI prints
     let split = a["split"].as_bool().unwrap_or(false);
@@ -167,9 +145,12 @@ pub(super) fn check(root: &Path, a: &Value) -> Result<String> {
     // weaker one that happens to agree most days
     // the churn window `--days` arms (absent = the churn tables stay
     // empty, the CLI's own default)
-    let window = (opt_u32(a, "days"), opt_u32(a, "floor"));
-    let answer = faces::check(root, &core(), window, Plumb::default());
-    shown(answer)
+    shown(faces::check(
+        root,
+        &core(),
+        opt_pair(a, ["days", "floor"], u32::MAX),
+        Plumb::default(),
+    ))
 }
 
 /// The one tool about the BINARY rather than the project: `path`

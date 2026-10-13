@@ -8906,17 +8906,17 @@
     "end": 24,
     "text": "\\advisory_dropped\\tadvisory: the core dropped the unmentioned table — more than {} candidate rows, none judged at symbol level\\t顾问：核已丢弃未提及表——候选行超过 {}，符号层一行未判\\n\\"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|7378483969f4bd7b|0": {
-    "target": "../../../gui/ui/graph.js",
-    "line": 193,
-    "end": 264,
-    "text": "// The advisory's two states the rows cannot show for themselves: the"
-  },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|78087d139fbb9fef|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|205eabac10a9949f|0": {
     "target": "../../../gui/ui/graph.js",
     "line": 33,
-    "end": 60,
-    "text": "async function loadGraph() {"
+    "end": 53,
+    "text": "// One reply carries both documents off one judgment: the map and the"
+  },
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/graph.js|7378483969f4bd7b|0": {
+    "target": "../../../gui/ui/graph.js",
+    "line": 186,
+    "end": 257,
+    "text": "// The advisory's two states the rows cannot show for themselves: the"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
@@ -10229,7 +10229,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/adapters.rs|784f4c1a962fd2c7|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 198,
+    "line": 179,
     "text": "pub(super) fn query(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/mcp/tools.rs|52e79274f77915ba|0": {
@@ -10920,12 +10920,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|0dee44a1532a2581|0": {
     "target": "../../../gui/ui/query.js",
-    "line": 84,
+    "line": 80,
     "text": "function goalTable(d, g) {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|828631c729cf096e|0": {
     "target": "../../../gui/ui/query.js",
-    "line": 108,
+    "line": 104,
     "text": "function proofLine(p, rows) {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/ui/query.js|8f8d2688348ba2ec|0": {
@@ -11777,7 +11777,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/faces/ask.rs|a99c56b3689d0134|0": {
     "target": "../../../cli/src/faces/ask.rs",
-    "line": 110,
+    "line": 122,
     "text": "arch(root, core, p, impact: &[String]) => crate::arch::face::run(root, p.db, core, impact)"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/main_arch.rs|7f46c565714e3ac4|0": {
@@ -11787,7 +11787,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/adapters.rs|2cfdcc6c81b2fef5|0": {
     "target": "../../../cli/src/mcp/adapters.rs",
-    "line": 231,
+    "line": 212,
     "text": "pub(super) fn architecture(root: &Path, a: &Value) -> Result<String> {"
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../cli/src/mcp/tools.rs|a847e667f925f680|0": {
@@ -12041,7 +12041,7 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../gui/ui/reports.js|c3b060be3a39ae44|0": {
     "target": "../../../gui/ui/reports.js",
-    "line": 21,
+    "line": 35,
     "text": "let hubDoc = null;"
   }
 }

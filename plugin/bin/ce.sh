@@ -126,6 +126,38 @@ fetch() { # $1=url $2=dest — file:// is the hermetic test transport
     esac
 }
 
+# The pin of one artifact for this platform ($1 = CE or CECORE), empty
+# when the platform is unsupported or the manifest pins none.
+pin_for() {
+    [ "$key" = "unsupported" ] && return 0
+    eval "printf '%s' \"\${CE_SHA256_$(echo "$key" | tr 'a-z-' 'A-Z_')_$1:-}\""
+}
+
+# Download $1, verify it against pin $3, place it at $2 atomically ($4
+# names it in the refusal): 0 placed, 1 download failed (the caller says
+# how it degrades), 2 SHA256 mismatch (said here). The temp is
+# PID-suffixed: two sessions sharing one data dir once curled into ONE
+# path, the interleaved bytes failed the hash and an rm -f deleted the
+# sibling's file mid-verify.
+fetch_verified() {
+    ftmp="$2.download.$$"
+    if ! fetch "$1" "$ftmp"; then
+        rm -f "$ftmp"
+        return 1
+    fi
+    fgot=$(sha_of "$ftmp")
+    if [ "$fgot" != "$3" ]; then # nothing kept
+        rm -f "$ftmp"
+        echo "codeeraser: REFUSING downloaded $4 — SHA256 mismatch for $1" >&2
+        echo "codeeraser: expected $3" >&2
+        echo "codeeraser: actual   $fgot" >&2
+        return 2
+    fi
+    chmod +x "$ftmp"
+    mv -f "$ftmp" "$2"
+    return 0
+}
+
 run_path_ce() {
     if command -v ce >/dev/null 2>&1; then
         # A pin EXISTS for this platform yet we are here: the verified
@@ -143,10 +175,7 @@ run_path_ce() {
 key=$(plat_key)
 ext=""
 case "$key" in x86_64-windows) ext=".exe" ;; esac
-pin=""
-if [ "$key" != "unsupported" ]; then
-    eval "pin=\${CE_SHA256_$(echo "$key" | tr 'a-z-' 'A-Z_')_CE:-}"
-fi
+pin=$(pin_for CE)
 bound_core=""
 # 1 = every pinned leg verified (or has no pin): the only state a
 # stamp may record. ensure_core clears it on each of its degrades.
@@ -161,10 +190,7 @@ core_ok=1
 # refuses the artifact as loudly as ce's own and keeps NOTHING —
 # a tampered core must not hide behind a PATH ce-core.
 ensure_core() {
-    corepin=""
-    if [ "$key" != "unsupported" ]; then
-        eval "corepin=\${CE_SHA256_$(echo "$key" | tr 'a-z-' 'A-Z_')_CECORE:-}"
-    fi
+    corepin=$(pin_for CECORE)
     if [ -z "$corepin" ] || [ -z "$data" ]; then return 0; fi
     coretgt="$data/ce-core$ext"
     # Same rule as ce below: a PATH ce-core that MATCHES the pin is the
@@ -205,36 +231,19 @@ ensure_core() {
     core_ok=0
     if [ -n "${CE_AIRGAPPED:-}" ]; then return 0; fi
     coreurl="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-core-$ver-$key$ext"
-    # PID-suffixed: two sessions sharing one CLAUDE_PLUGIN_DATA used to
-    # curl into the SAME path, and the interleaved bytes then failed the
-    # hash — a security-grade "REFUSING" for a benign race, plus an
-    # rm -f that deleted the sibling's file mid-verify.
-    coretmp="$coretgt.download.$$"
-    if ! fetch "$coreurl" "$coretmp"; then
-        rm -f "$coretmp"
-        echo "codeeraser: ce-core download failed ($coreurl) — judgment families degrade until it lands" >&2
-        return 0
-    fi
-    coregot=$(sha_of "$coretmp")
-    if [ "$coregot" != "$corepin" ]; then
-        rm -f "$coretmp"
-        echo "codeeraser: REFUSING downloaded ce-core — SHA256 mismatch for $coreurl" >&2
-        echo "codeeraser: expected $corepin" >&2
-        echo "codeeraser: actual   $coregot" >&2
-        # Refuse the artifact, then DEGRADE — the on-disk mismatch
-        # branch above already takes exactly this stance and this one
-        # did not. `exit 1` here killed the starter before it ever
-        # exec'd, so one tampered (or merely stale-CDN) core blocked
-        # every hook on the machine for a component no hook consults.
-        # Nothing was placed, and CE_CORE_BIN is already bound to the
-        # now-absent verified path, so ce's resolver still cannot walk
-        # on to an unverified PATH ce-core: the judgment families
-        # report a handshake miss, which is the truth.
-        return 0
-    fi
-    chmod +x "$coretmp"
-    mv -f "$coretmp" "$coretgt"
-    core_ok=1
+    fetch_verified "$coreurl" "$coretgt" "$corepin" ce-core
+    case $? in
+        0) core_ok=1 ;;
+        1) echo "codeeraser: ce-core download failed ($coreurl) — judgment families degrade until it lands" >&2 ;;
+        # 2, refused: DEGRADE, as the on-disk mismatch above does — an
+        # `exit 1` here once killed the starter before it exec'd, so one
+        # tampered (or stale-CDN) core blocked every hook for a component
+        # no hook consults. Nothing was placed and CE_CORE_BIN is bound
+        # to the absent verified path, so ce's resolver cannot walk on to
+        # an unverified PATH ce-core: the judgment families report a
+        # handshake miss, which is the truth.
+    esac
+    return 0
 }
 
 # The stamp the fast path reads: written only on the VERIFIED legs
@@ -291,22 +300,11 @@ fi
 
 mkdir -p "$data"
 url="${CE_BOOTSTRAP_BASE_URL:-$CE_BASE_URL}/ce-$ver-$key$ext"
-tmp="$target.download.$$" # PID-suffixed — see ensure_core
-if ! fetch "$url" "$tmp"; then
-    rm -f "$tmp"
-    echo "codeeraser: download failed ($url) — falling back to PATH ce" >&2
-    run_path_ce "$@"
-fi
-got=$(sha_of "$tmp")
-if [ "$got" != "$pin" ]; then
-    rm -f "$tmp"
-    echo "codeeraser: REFUSING downloaded binary — SHA256 mismatch for $url" >&2
-    echo "codeeraser: expected $pin" >&2
-    echo "codeeraser: actual   $got" >&2
-    exit 1
-fi
-chmod +x "$tmp"
-mv -f "$tmp" "$target"
+fetch_verified "$url" "$target" "$pin" binary
+case $? in
+    1) echo "codeeraser: download failed ($url) — falling back to PATH ce" >&2; run_path_ce "$@" ;;
+    2) exit 1 ;;
+esac
 ensure_core
 bind "$target"
 exec "$target" "$@"

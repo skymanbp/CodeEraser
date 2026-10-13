@@ -41,7 +41,7 @@ macro_rules! road {
 mod ask;
 pub mod exempt;
 
-pub use ask::{PRELUDE_SCHEMA, arch, flow, merge, pack_text, query, rules, similar};
+pub use ask::{PRELUDE_SCHEMA, arch, flow, flow_kinds, merge, pack_text, query, rules, similar};
 
 use crate::document::Answer;
 use crate::erase::document::Diffs;
@@ -86,6 +86,15 @@ impl Plumb {
 /// the refusal after it, as it always did; a machine face never arms
 /// either and reads the answer alone.
 pub type Gated = (Answer, Option<anyhow::Error>);
+
+/// The ONE core resolution of the machine faces (the MCP adapters, the
+/// GUI's tasks): corelink's resolver chain — the process's `--core`,
+/// CE_CORE_BIN, a `ce-core` sibling of this executable (the installed
+/// layout), then PATH. The CLI resolves its own `--core` flag through
+/// the same chain.
+pub fn core() -> String {
+    crate::corelink::resolve_core("ce-core")
+}
 
 /// The document of an answer: what every machine face hands out (the
 /// console lines and the veto are the CLI's alone).
@@ -211,11 +220,11 @@ pub fn graph_screen(root: &Path, core: &str) -> Result<Value> {
 /// The erase PLAN — dry-run by definition and by construction: this
 /// face reaches `erase::planned`, which is read-only. `then` runs
 /// between the plan (with its rendered diff) and its document: the
-/// CLI's `--apply` hands in the mutation and the document reports the
-/// count it returns; the GUI preview keeps the diff; MCP hands in
-/// `|_, _| None`. This module applies nothing of its own — a surface
-/// that could delete files on its own authority is the one thing an
-/// eraser must never ship. Under `--check` an eraseable row is the
+/// CLI's `--apply` and the GUI's apply command hand in the mutation and
+/// the answer carries the count it returns; the GUI preview keeps the
+/// diff; MCP hands in `|_, _| None`. This module applies nothing of its
+/// own — a surface that could delete files on its own authority is the
+/// one thing an eraser must never ship. Under `--check` an eraseable row is the
 /// veto, and a vetoed plan is never handed on.
 pub fn erase(
     root: &Path,

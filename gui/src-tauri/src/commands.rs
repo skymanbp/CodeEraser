@@ -36,18 +36,12 @@ pub fn resolve_root(root: String) -> Result<Value, String> {
     Ok(json!({"root": resolved.display().to_string(), "ascended": ascended}))
 }
 
-/// The ONE core resolution — corelink's resolver chain (CE_CORE_BIN →
-/// a `ce-core` sibling of this executable → PATH). The installers
-/// stage ce-core as a sidecar beside the app binary, which is exactly
-/// the sibling leg. A truly missing core still fails loudly — the
-/// judgment run reports the spawn failure by name, same as the CLI.
-fn core_path() -> String {
-    codeeraser::corelink::resolve_core("ce-core")
-}
-
 /// The one task body: anchor the root, read the definition package
 /// (its absence is the task's named error, shown as any other), resolve
-/// the core, run the library closure off the async runtime, and bracket
+/// the core (faces::core — the installers stage ce-core as a sidecar
+/// beside the app binary, which is exactly its sibling leg; a truly
+/// missing core still fails loudly, by name, same as the CLI), run the
+/// library closure off the async runtime, and bracket
 /// it with `ce-task` events. Four spawn_blocking twins were the P4 ratchet's
 /// first catch; the measurement-only faces ride the same shape and
 /// simply ignore the core argument (resolving is a string lookup —
@@ -66,7 +60,7 @@ where
         let root = codeeraser::root::project_root(Path::new(&root));
         codeeraser::tables::anchor(&root);
         codeeraser::tables::load()?;
-        f(&root, &core_path()).map_err(|e| format!("{e:#}"))
+        f(&root, &faces::core()).map_err(|e| format!("{e:#}"))
     })
     .await
     .map_err(|e| e.to_string())?;
@@ -175,7 +169,7 @@ face_cmd!(join_report, "join", (days: u32) =>
 /// command shares.
 #[tauri::command]
 pub fn doctor_report(root: String) -> Result<Value, String> {
-    Ok(faces::doctor(Path::new(&root), &core_path()))
+    Ok(faces::doctor(Path::new(&root), &faces::core()))
 }
 
 /// The update DOCUMENT — the same one `ce update` prints — off the
@@ -222,18 +216,18 @@ pub fn bench_doc() -> Result<Value, String> {
 // prints and the MCP tool hands out (plan v2.32 step 6)
 face_cmd!(erase_preview, "erase", faces::erase_preview);
 
-/// The destructive phase — the SAME library entry the CLI's --apply
-/// drives (one implementation, two faces): a fresh plan, never one
-/// carried over from the webview, then the preconditions in contract
-/// order (git repo whose toplevel equals the root, clean worktree,
-/// unchanged targets), writes, the audit log, and the convergence
-/// re-plan. Every refusal surfaces by name in the webview.
-#[tauri::command]
-pub async fn erase_apply(win: tauri::Window, root: String) -> Result<Value, String> {
-    task(win, "erase_apply", root, |r, c| {
-        let plan = codeeraser::erase::plan(r, None, c)?;
-        let applied = codeeraser::erase::apply_plan(r, None, c, &plan)?;
-        Ok(json!({"applied": applied}))
-    })
-    .await
-}
+// The destructive phase — the SAME road the CLI's --apply drives: the
+// erase face plans afresh (never a plan carried over from the webview)
+// and hands that plan to the mutation, the preconditions in contract
+// order (git repo whose toplevel equals the root, clean worktree,
+// unchanged targets), writes, the audit log and the convergence
+// re-plan; the answer is the erase DOCUMENT of the plan applied, and a
+// refusal surfaces by name in the webview.
+face_cmd!(erase_apply, "erase_apply", |r, c| {
+    use codeeraser::erase::{self, document::Diffs, Plan};
+    let apply = |plan: &Plan, _: &Diffs| Some(erase::apply_plan(r, None, c, plan));
+    match faces::erase(r, c, Plumb::default(), apply)? {
+        (_, Some(refused)) => Err(refused),
+        (answer, None) => Ok(answer.document),
+    }
+});

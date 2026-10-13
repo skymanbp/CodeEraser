@@ -2,7 +2,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 //! CodeEraser GUI shell (M6 S4a; batch 4 = the complete face): the
-//! command surface lives in commands.rs — every report family the
+//! command surface lives in commands.rs, commands_query.rs and
+//! commands_flow.rs — every report family the
 //! CLI prints, the erase preview/apply pair, root anchoring through
 //! codeeraser::root, and `ce-task` progress events. This file keeps
 //! only the builder, the one plugin (the native folder picker behind

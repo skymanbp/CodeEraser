@@ -23,61 +23,43 @@ let eraseLogDoc = null;
   $("erase-log").addEventListener("click", loadEraseLog);
 })();
 
-async function loadErase() {
-  $("erase-preview").disabled = true;
-  setStatus(tr("planning"), false);
-  try {
-    eraseDoc = await invoke("erase_preview", { root: $("root").value });
+function loadErase() {
+  return load("erase-preview", tr("planning"), "erase_preview", { root: $("root").value }, (d) => {
+    eraseDoc = d;
     renderErase();
-    setStatus(eraseDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("erase-preview").disabled = false;
-  }
+  });
 }
 
 // The destructive phase — confirm first (the CLI's guard is the
 // --apply flag; a button needs its own deliberate step), then the
-// library preconditions do the real guarding and refuse by name.
+// library preconditions do the real guarding and refuse by name. The
+// answer is the erase DOCUMENT `ce erase --apply --format json` prints:
+// the plan the apply ran against. Apply erases every eraseable row of
+// it or refuses whole (erase::apply::execute), so its
+// `counts.eraseable` IS the count applied.
 async function applyErase() {
   const n = eraseDoc?.counts?.eraseable ?? 0;
   if (!n || !window.confirm(tr("applyConfirm", n))) return;
-  $("erase-apply").disabled = true;
-  setStatus(tr("applying"), false);
-  try {
-    const r = await invoke("erase_apply", { root: $("root").value });
-    setStatus(tr("applied", r.applied), false);
-    await loadErase(); // the post-apply plan is the convergence face
-    if (eraseLogDoc) await loadEraseLog(); // an open log shows the new records
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("erase-apply").disabled = false;
-  }
+  const d = await load("erase-apply", tr("applying"), "erase_apply", { root: $("root").value }, () => {});
+  if (!d) return;
+  setStatus(tr("applied", d.counts.eraseable), false);
+  await loadErase(); // the post-apply plan is the convergence face
+  if (eraseLogDoc) await loadEraseLog(); // an open log shows the new records
 }
 
-async function loadEraseLog() {
-  $("erase-log").disabled = true;
-  setStatus(tr("readingLog"), false);
-  try {
-    eraseLogDoc = await invoke("erase_log_report", { root: $("root").value });
+function loadEraseLog() {
+  return load("erase-log", tr("readingLog"), "erase_log_report", { root: $("root").value }, (d) => {
+    eraseLogDoc = d;
     renderEraseLog();
-    setStatus(eraseLogDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("erase-log").disabled = false;
-  }
+  });
 }
 
 function renderErase() {
   $("empty-erase").hidden = true;
   const d = eraseDoc;
   // an out-of-class kind carries the family command that owns it
-  // (O24, `families` since ce.erase-plan/0.3.0) — the same table the
-  // console sentence reads
-  const families = d.families || {};
+  // (O24, `families`) — the same table the console sentence reads
+  const families = d.families;
   $("erase-summary").innerHTML =
     `<span class="ok"><b>${d.counts.eraseable}</b> ${esc(tr("eraseable"))}</span>` +
     `<span><b>${d.counts.advisory}</b> ${esc(tr("advisory"))}</span>` +
@@ -104,8 +86,10 @@ function renderErase() {
   $("erase-diff").hidden = !d.diff;
 }
 
-// The stamp the console prints for the same integer (erase::log::utc_stamp):
-// seconds, UTC, no fraction — three faces, one reading of ts_ms.
+// The stamp the console prints for the same integer (the core's
+// CE.Erase.TrailLines.utcStamp): seconds, UTC, no fraction — three
+// faces, one reading of ts_ms. Deferred to the core lane: the trail
+// document should carry the stamp, and this copy then goes.
 function logStamp(ms) {
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
 }

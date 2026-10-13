@@ -15,18 +15,11 @@ let updateDoc = null;
   $("update-apply").addEventListener("click", applyUpdate);
 })();
 
-async function loadUpdate() {
-  $("update-check").disabled = true;
-  setStatus(tr("checking"), false);
-  try {
-    updateDoc = await invoke("update_check");
+function loadUpdate() {
+  return load("update-check", tr("checking"), "update_check", {}, (d) => {
+    updateDoc = d;
     renderUpdate();
-    setStatus(updateDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("update-check").disabled = false;
-  }
+  });
 }
 
 async function applyUpdate() {
@@ -48,10 +41,6 @@ async function applyUpdate() {
   }
 }
 
-// A row whose value carries state: `bad` when the fact is the finding.
-const urow = (k, v, bad) =>
-  `<div class="row${bad ? " bad" : ""}"><span>${esc(k)}</span>${esc(String(v))}</div>`;
-
 // Every apply-side act is gated on the document's own action code —
 // the button appears only where the library would place anything,
 // and the installer box only where a bundle sits beside us.
@@ -61,16 +50,16 @@ function renderUpdate() {
   const cur = d.current;
   const late = d.latest;
   const parts = [
-    `<div id="check-hero"><span id="check-score">${esc(cur.version)}</span>` +
-    `<span class="verdict ${d.verdict === 0 ? "ok" : "bad"}">${esc(tr("updateVerdictWords", d.verdict))}</span></div>`,
-    urow(tr("currentVersion"), `${cur.version} (proto ${cur.proto}) — ${cur.exe}`),
-    urow(tr("installKind"), tr("installWords", cur.install)),
+    `<div class="hero"><span class="hero-figure">${esc(cur.version)}</span>` +
+    `<span class="pill ${d.verdict === 0 ? "ok" : "bad"}">${esc(tr("updateVerdictWords", d.verdict))}</span></div>`,
+    stateRow(tr("currentVersion"), `${cur.version} (proto ${cur.proto}) — ${cur.exe}`),
+    stateRow(tr("installKind"), tr("installWords", cur.install)),
     late.error
-      ? urow(tr("latestVersion"), late.error, true)
-      : urow(tr("latestVersion"), `${late.version} — ${late.url}`, d.verdict === 1),
-    ...(d.pins.error ? [urow(tr("updatePins"), d.pins.error, true)] : []),
-    ...(d.pins.ce ? [urow(tr("updatePins"), `ce ${d.pins.ce.slice(0, 12)}… · ce-core ${d.pins.ceCore.slice(0, 12)}…`)] : []),
-    ...(d.verdict === 1 ? [urow(tr("verdict"), tr("updateActionWords", d.action), d.action === 2 || d.action === 3)] : []),
+      ? stateRow(tr("latestVersion"), late.error, true)
+      : stateRow(tr("latestVersion"), `${late.version} — ${late.url}`, d.verdict === 1),
+    ...(d.pins.error ? [stateRow(tr("updatePins"), d.pins.error, true)] : []),
+    ...(d.pins.ce ? [stateRow(tr("updatePins"), `ce ${d.pins.ce.slice(0, 12)}… · ce-core ${d.pins.ceCore.slice(0, 12)}…`)] : []),
+    ...(d.verdict === 1 ? [stateRow(tr("verdict"), tr("updateActionWords", d.action), d.action === 2 || d.action === 3)] : []),
   ];
   $("update-body").innerHTML = parts.join("");
   const here = d.verdict === 1 && (d.action === 1 || d.action === 4);

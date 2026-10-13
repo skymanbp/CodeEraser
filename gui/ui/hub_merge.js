@@ -19,13 +19,12 @@ registerHub("merge", { cmd: "merge_report", render: renderMerge });
 const MERGE_CELL = 40;
 
 function renderMerge(d) {
-  const chip = (k, v) => `<span>${esc(k)} <b>${esc(String(v))}</b></span>`;
   $("hub-chips").innerHTML = [
-    ...Object.entries(d.counts).map(([k, v]) => chip(`counts.${k}`, v)),
-    ...Object.entries(d.unsendable).map(([k, v]) => chip(`${tr("mergeUnsendable")} ${k}`, v)),
+    ...Object.entries(d.counts).map(([k, v]) => hubChip(`counts.${k}`, v)),
+    ...Object.entries(d.unsendable).map(([k, v]) => hubChip(`${tr("mergeUnsendable")} ${k}`, v)),
   ].join("");
   if (d.degraded) {
-    $("hub-tables").innerHTML = `<div class="row zero">${esc(tr("mergeDegraded", d.degraded))}</div>`;
+    $("hub-tables").innerHTML = `<div class="row zero">${esc(tr("noJudgment", d.degraded))}</div>`;
     return;
   }
   $("hub-tables").innerHTML = d.groups.map(mergeCard).join("");

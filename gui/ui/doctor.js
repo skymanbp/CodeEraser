@@ -18,25 +18,15 @@ let doctorDoc = null;
   $("doctor-load").addEventListener("click", loadDoctor);
 })();
 
-async function loadDoctor() {
-  $("doctor-load").disabled = true;
-  setStatus(tr("judging"), false);
-  try {
-    doctorDoc = await invoke("doctor_report", { root: $("root").value });
+function loadDoctor() {
+  return load("doctor-load", tr("judging"), "doctor_report", { root: $("root").value }, (d) => {
+    doctorDoc = d;
     renderDoctor();
-    setStatus(doctorDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("doctor-load").disabled = false;
-  }
+  });
 }
 
-// A row whose value carries state: `bad` when the fact itself is the
-// finding (no handshake, an unreadable index), quiet otherwise. The
-// words are the backend's — this file mints no diagnosis.
-const drow = (k, v, bad) =>
-  `<div class="row${bad ? " bad" : ""}"><span>${esc(k)}</span>${esc(String(v))}</div>`;
+// The rows are app.js's stateRow: `bad` when the fact itself is the
+// finding (no handshake, an unreadable index).
 
 function renderDoctor() {
   $("empty-doctor").hidden = true;
@@ -46,30 +36,30 @@ function renderDoctor() {
   // the handshake is the hero because it is the one fact that decides
   // whether any judgment on this machine is possible at all
   const parts = [
-    `<div id="check-hero"><span id="check-score">${esc(ok ? tr("handshakeOk") : tr("handshakeFailed"))}</span>` +
-    `<span class="verdict ${ok ? "ok" : "bad"}">${esc(tr("handshake"))}</span></div>`,
-    drow(tr("project"), d.root),
-    drow(`ce`, `${d.ce.version} (proto ${d.ce.proto})`),
+    `<div class="hero"><span class="hero-figure">${esc(ok ? tr("handshakeOk") : tr("handshakeFailed"))}</span>` +
+    `<span class="pill ${ok ? "ok" : "bad"}">${esc(tr("handshake"))}</span></div>`,
+    stateRow(tr("project"), d.root),
+    stateRow(`ce`, `${d.ce.version} (proto ${d.ce.proto})`),
     ok
-      ? drow("ce-core", `${d.core.version} (proto ${d.core.proto})`)
-      : drow("ce-core", d.core.error ?? tr("posNull"), true),
-    drow(tr("guardTier"), d.guard),
+      ? stateRow("ce-core", `${d.core.version} (proto ${d.core.proto})`)
+      : stateRow("ce-core", d.core.error ?? tr("posNull"), true),
+    stateRow(tr("guardTier"), d.guard),
     // ce.doctor-report/0.4.0: every guard class the hooks read, the key
-    // that sets it and its tier (a pre-0.4.0 document has no rows)
-    ...(d.classes ?? []).map((c) => drow(tr("guardClass", c.class, c.key), c.tier)),
+    // that sets it and its tier
+    ...d.classes.map((c) => stateRow(tr("guardClass", c.class, c.key), c.tier)),
     // codes since ce.doctor-report/0.2.0 (plan v2.15) — the sentence
     // used to come off the wire in English, which is exactly the one
     // place a lookup switch cannot reach. An unknown code renders as
     // the code, never as "undefined": a state we cannot name is still
     // a state, and the number is the honest thing to show.
-    drow(tr("indexState"), tr("indexWords", d.index.state, d.index.files), d.index.state >= 2),
-    drow(tr("daemonState"), tr("daemonWords", d.daemon.state, d.daemon.ms), d.daemon.state === 2),
+    stateRow(tr("indexState"), tr("indexWords", d.index.state, d.index.files), d.index.state >= 2),
+    stateRow(tr("daemonState"), tr("daemonWords", d.daemon.state, d.daemon.ms), d.daemon.state === 2),
     // 0.3.0: the client deadline's residue, a row only when non-zero —
-    // 0 in every healthy process, and a pre-0.3.0 document has no key
-    ...(d.daemon.parkedWorkers > 0 ? [drow(tr("parkedWorkers"), d.daemon.parkedWorkers, true)] : []),
+    // 0 in every healthy process
+    ...(d.daemon.parkedWorkers > 0 ? [stateRow(tr("parkedWorkers"), d.daemon.parkedWorkers, true)] : []),
     // the total frames the count: the feed is append-only, so a bare
     // degraded number never returns to zero and reads as a live alarm
-    drow(tr("degradedRuns"), tr("ofEntries", dr.degraded, dr.entries), dr.degraded > 0),
+    stateRow(tr("degradedRuns"), tr("ofEntries", dr.degraded, dr.entries), dr.degraded > 0),
   ];
   $("doctor-body").innerHTML = parts.join("");
 }

@@ -2,8 +2,12 @@
 # lockfile is a build by-product here, not a distributed artifact
 Cargo.lock
 target/
-# the twenty-two samples are fixtures for the probe, not files of this
-# repository. They stay tracked (`git add -f`); this pattern is what
+# the twenty-three samples are fixtures for the probe, not files of this
+# repository. One of them, flow.hs (the Haskell slot-table sample of plan
+# v2.31 step 7, cited by core/app/CE/Lang/Haskell.hs), has no grammar arm
+# in this probe: tsprobe pins no Haskell grammar, and that sample's kinds
+# are checked against the node-types.json of the tree-sitter-haskell
+# cli/Cargo.toml pins; it sits here beside the other flow samples. They stay tracked (`git add -f`); this pattern is what
 # keeps them out of ce's two walks, which read .gitignore PATTERNS and
 # never the index — so they enter neither the scan nor the advisory's
 # mention universe (the universe formula counts them under

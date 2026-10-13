@@ -1,8 +1,8 @@
 // CodeEraser GUI — deletion-candidate browser (M7-P4, i18n'd
 // M8-G3a). Renders the ce.join-report rows (three-signal file pairs
 // + unit pairs) and the ce.dedup-report block list, in DOCUMENT
-// ORDER — the list is the CLI's own report rows through the same
-// report_json throats, and no verdict or ranking is derived here.
+// ORDER — the list is the documents the CLI prints, off the same
+// faces calls, and no verdict or ranking is derived here.
 // The per-row background bar is tokens/max(tokens) as width — pure
 // geometry over a printed number (the scorefill stance), normalized
 // per section because the three sections measure different things.
@@ -79,7 +79,7 @@ const barStyle = (v, max) => ` style="--w:${((100 * v) / (max || 1)).toFixed(1)}
 // the one number the core does not judge on. Three ranks over the
 // existing palette; no colour is minted here.
 const verdictBadge = (v, sev) =>
-  v == null ? "" : `<span class="vpill ${sev >= 3 ? "bad" : sev >= 2 ? "mid" : "quiet"}">${esc(v)}</span>`;
+  v == null ? "" : `<span class="pill ${sev >= 3 ? "bad" : sev >= 2 ? "mid" : "quiet"}">${esc(v)}</span>`;
 
 // A unit row's similarity in its family's own words (ce.join-report
 // 0.4.0, plan v2.30 step 5b-9): a T1/T2 block prints its tokens, a T3
@@ -151,21 +151,12 @@ function renderCandidates() {
 }
 
 // How many pairs landed on each verdict, ordered by the core's own
-// severity where the rows carry one. Counting is not judging: every
-// name and every rank came off the wire.
+// severity where the rows carry one (census, app.js).
 function verdictCensus(files) {
-  const tally = new Map();
-  for (const f of files) {
-    if (f.verdict == null) continue;
-    const cur = tally.get(f.verdict) ?? { n: 0, sev: f.severity ?? 0 };
-    cur.n += 1;
-    tally.set(f.verdict, cur);
-  }
-  if (!tally.size) return [];
+  const tally = census(files, (f) => f.verdict, (f) => f.severity);
+  if (!tally.length) return [];
   return [`<div class="row zero"><span>${esc(tr("byVerdict"))}</span></div>`].concat(
-    [...tally.entries()]
-      .sort((a, b) => b[1].sev - a[1].sev || a[0].localeCompare(b[0]))
-      .map(([name, v]) => row(name, v.n)),
+    tally.map(([name, n]) => row(name, n)),
   );
 }
 

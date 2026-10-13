@@ -19,25 +19,14 @@ function bootStructure() {
   redrawers.structure = () => report && redrawStructure();
 }
 
-async function scan() {
+function scan() {
   const days = $("days").value ? posInt($("days").value, 1, null) : null;
-  $("scan").disabled = true;
-  setStatus(tr("judging"), false);
-  try {
-    report = await invoke("structure_report", {
-      root: $("root").value,
-      deep: $("deep").checked,
-      days,
-      split: $("split").checked,
-    });
+  const args = { root: $("root").value, deep: $("deep").checked, days, split: $("split").checked };
+  return load("scan", tr("judging"), "structure_report", args, (d) => {
+    report = d;
     if (selId >= report.tree.length) selId = 0;
     render();
-    setStatus(report.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("scan").disabled = false;
-  }
+  });
 }
 
 // Chips, not joined strings: HTML collapses whitespace runs, so a
@@ -91,6 +80,8 @@ function renderSplit() {
     const m = Math.max(b, c) || 1;
     return `<span class="roibar" style="--b:${((100 * b) / m).toFixed(1)}%;--c:${((100 * c) / m).toFixed(1)}%" title="${b} / ${c} milli"></span>`;
   };
+  // ROI = benefit / cost, divided here: deferred to the core lane — the
+  // structure document should carry `roi`, and these divisions then go
   const cand = report.splitCandidates.map(
     (c) =>
       `<div class="row">✂ <b>${esc(c.path)}</b> — ${esc(tr("seamAfter"))} L${c.afterLine}` +
@@ -108,17 +99,6 @@ function renderSplit() {
     `<b>${esc(tr("splitTitle"))}</b>` + (cand.join("") + ex.join("") || esc(tr("none")));
 }
 
-// Subtree weight = every file under the node (+1 keeps empty dirs
-// visible); computed once per render, leaf-to-root over the dense
-// parent-before-child order the report guarantees.
-function weights() {
-  const w = report.tree.map((n) => n.files + 1);
-  for (let i = report.tree.length - 1; i > 0; i--) {
-    w[report.tree[i].parent] += w[i];
-  }
-  return w;
-}
-
 function drawTreemap() {
   const svg = $("treemap");
   const { width, height } = svg.getBoundingClientRect();
@@ -126,7 +106,9 @@ function drawTreemap() {
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.textContent = "";
   const GUT = 14; // the app-wide left/right rail
-  layout(0, GUT, GUT, width - 2 * GUT, height - 2 * GUT, weights());
+  // subtree weight = every file under the node (+1 keeps empty dirs
+  // visible), rolled up once per render (rollup, structree.js)
+  layout(0, GUT, GUT, width - 2 * GUT, height - 2 * GUT, rollup((n) => n.files + 1));
 }
 
 // Squarified treemap (Bruls, Huizing & van Wijk 2000): each node
@@ -144,7 +126,7 @@ function layout(id, x, y, wd, ht, w) {
   // away a node that carries findings of its own.
   const path = foldChain(id);
   const tail = path[path.length - 1];
-  drawRect(tail, x, y, wd, ht, path.map((i) => report.tree[i].name.split("/").pop() || ".").join("/"));
+  drawRect(tail, x, y, wd, ht, chainLabel(path));
   const kids = children[tail];
   if (!kids.length) return;
   const strip = ht > 30 ? 16 : 0;

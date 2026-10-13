@@ -16,7 +16,7 @@
 // which is how cli/tests/it/site_viewer.rs drives it.
 //
 // Editing this file? Bump ?v= on every page's <script>, for the same
-// reason style.css states on its first lines.
+// reason theme.css states on its first lines.
 (function (root) {
   "use strict";
   // 1x is the fitted picture and the floor: past it there is only

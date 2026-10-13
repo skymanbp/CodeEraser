@@ -2,7 +2,8 @@
 // soft line): the shared globals every screen uses (`invoke`, `$`,
 // `esc`, `row`, `setStatus`, `posInt`, `redrawers`, the alarm ramp),
 // the tab strip, root memory + the anchoring echo, the ce-task
-// event feed, and boot. Screens own their rendering; this file owns
+// event feed, boot, and the helpers more than one screen reads
+// (`load`, `stateRow`, `census`). Screens own their rendering; this file owns
 // the chrome. No framework, no build step — judgment zero-leak into
 // JS (user ruling).
 "use strict";
@@ -121,3 +122,48 @@ document.addEventListener("DOMContentLoaded", boot);
 const row = (k, v) => `<div class="row">${esc(String(k))}: <b>${esc(String(v))}</b></div>`;
 const esc = (s) =>
   s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+// A row whose value carries state (the doctor and update screens):
+// `bad` when the fact itself is the finding, quiet otherwise. The words
+// are the backend's — no screen mints a diagnosis.
+const stateRow = (k, v, bad) =>
+  `<div class="row${bad ? " bad" : ""}"><span>${esc(k)}</span>${esc(String(v))}</div>`;
+
+// The one load road every screen takes: its button(s) disabled while
+// the backend works, a status word meanwhile (`said`, translated at the
+// call so the i18n gate sees its key), then the document's
+// schema (or what `show` returns instead) — or the error, whole, on the
+// status line. `show` stores and renders the document; the document is
+// returned (undefined on error).
+async function load(btns, said, cmd, args, show) {
+  const ids = [].concat(btns);
+  ids.forEach((id) => ($(id).disabled = true));
+  setStatus(said, false);
+  try {
+    const d = await invoke(cmd, args);
+    const status = show(d);
+    setStatus(status ?? d.schema ?? "", false);
+    return d;
+  } catch (e) {
+    setStatus(String(e), true);
+  } finally {
+    ids.forEach((id) => ($(id).disabled = false));
+  }
+}
+
+// How many items landed on each key, ordered by the core's severity
+// (higher first; `sevOf` read off the first item of a key), ties by the
+// key itself. Counting is not judging: every key and every rank came off
+// the wire. Returns [key, count] pairs.
+function census(items, keyOf, sevOf) {
+  const tally = new Map();
+  for (const it of items) {
+    const k = keyOf(it);
+    if (k == null) continue;
+    const cur = tally.get(k) ?? { n: 0, sev: sevOf(it) ?? 0 };
+    cur.n += 1;
+    tally.set(k, cur);
+  }
+  const byKey = (a, b) => (typeof a === "number" ? a - b : String(a).localeCompare(String(b)));
+  return [...tally.entries()].sort((a, b) => b[1].sev - a[1].sev || byKey(a[0], b[0])).map(([k, v]) => [k, v.n]);
+}

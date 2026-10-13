@@ -24,26 +24,24 @@ async function loadSimilar() {
     setStatus(tr("similarNeedsQuery"), true);
     return;
   }
-  $("similar-load").disabled = true;
-  setStatus(tr("judging"), false);
-  try {
-    // one ask, as the CLI's clap group demands: `at` wins, then the
-    // unit key, then the text — a unit is the sharper ask
-    similarDoc = await invoke("similar_report", {
-      root: $("root").value,
-      at: at || null,
-      unit: at ? null : unit || null,
-      text: at || unit ? null : text,
-      widen: $("similar-widen").checked,
-    });
+  // one ask, as the CLI's clap group demands: `at` wins, then the
+  // unit key, then the text — a unit is the sharper ask
+  const args = {
+    root: $("root").value,
+    at: at || null,
+    unit: at ? null : unit || null,
+    text: at || unit ? null : text,
+    widen: $("similar-widen").checked,
+  };
+  return load("similar-load", tr("judging"), "similar_report", args, (d) => {
+    similarDoc = d;
     renderSimilar();
-    setStatus(similarDoc.schema, false);
-  } catch (e) {
-    setStatus(String(e), true);
-  } finally {
-    $("similar-load").disabled = false;
-  }
+  });
 }
+
+// The six evidence channels in wire order (the core's
+// CE.Similar.Rank.Cost `channels`): the header and every row read this.
+const SIMILAR_CHANNELS = ["N", "P", "C", "D", "S", "L"];
 
 function renderSimilar() {
   $("empty-similar").hidden = true;
@@ -55,7 +53,7 @@ function renderSimilar() {
     `<span class="ok"><b>${c.role}</b> ${esc(tr("sameRole"))}</span>` +
     (d.query.widen ? `<span><b>${c.widened}</b> ${esc(tr("widenedRows"))}</span>` : "") +
     (d.degraded ? `<span class="zero">${esc(tr("similarDegraded", d.degraded))}</span>` : "");
-  const head = ["at", "key", tr("evidence"), tr("role"), tr("score")]
+  const head = ["at", "key", `${tr("evidence")} ${SIMILAR_CHANNELS.join(" ")}`, tr("role"), tr("score")]
     .map((h) => `<th>${esc(h)}</th>`)
     .join("");
   const body = d.candidates.map(similarRow).join("");
@@ -70,9 +68,9 @@ function renderSimilar() {
 function similarRow(r) {
   const tag = r.widened ? ` <em>${esc(tr("widenedTag"))}</em>` : "";
   const role = r.role === null ? "?" : r.role ? tr("sameRole") : "—";
-  const hits = ["N", "P", "C", "D", "S", "L"].map((l, i) => `${l}${r.hits[i]}`).join(" ");
+  const hits = SIMILAR_CHANNELS.map((l, i) => `${l}${r.hits[i]}`).join(" ");
   return (
-    `<tr class="${r.role ? "role" : ""}">` +
+    `<tr>` +
     `<td>${esc(r.at)}</td><td>${esc(r.key)}${tag}</td>` +
     `<td class="num">${esc(hits)}</td><td>${esc(role)}</td><td class="num">${r.score}</td></tr>`
   );
