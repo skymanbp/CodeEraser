@@ -63,12 +63,11 @@ fn targets_of(cands: &[Candidate]) -> Vec<[i64; 3]> {
 }
 
 /// The two reply tables, each length-locked to the request and read
-/// in step; a missing `kept` is named as the pre-7.2.0 core it means.
+/// in step; a missing `kept` is skew (corelink::skew), refused by name.
 fn decode(reply: &Value, n: usize) -> Result<Vec<Verdict>> {
     let verdicts: Vec<[i64; 2]> = crate::corelink::judged::table(reply, "rows")?;
-    let kept: Vec<i64> = crate::corelink::judged::table(reply, "kept").context(
-        "the erase reply carries no `kept` table — a core older than 7.2.0 judged the rows without the target closure",
-    )?;
+    let kept: Vec<i64> = crate::corelink::judged::table(reply, "kept")
+        .with_context(|| crate::corelink::skew("erase/1 `kept`"))?;
     ensure!(
         verdicts.len() == n && kept.len() == n,
         "core judged {} of {} erase rows ({} kept bits)",
