@@ -65,7 +65,10 @@ docSeqCap :: Integer
 docSeqCap = 65536
 
 -- | Ceiling on the shingles of all segments one coarse-filter request
--- sends (docpairs/1; this repository sends about 390,000).
+-- sends (docpairs/1; this repository sends about 390,000). It sits above
+-- what the protocol's line can carry (16 Mi integers pass 33,554,432
+-- bytes), so the line acts first: the measuring side names a pass over it
+-- before sending (corelink::judged::whole_pass → fits_line).
 docCorpusCap :: Integer
 docCorpusCap = 16777216
 

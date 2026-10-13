@@ -206,12 +206,18 @@ refusals = and (map knob knobProbes <> shaped)
     , refused (setKey "judgedLoc" (toJSON [-1 :: Integer]) base) "outside u64"
     , -- a stored softLine of 0 is no line at all — refused by name
       refused (setKey "baseline" storedZero base) "outside 1..u64"
+    , -- the value column is a u64 like the entity, current and stored
+      -- (plan v2.33 step 11b item 7)
+      refused (setKey "continuous" (toJSON [[1, 0, past]]) base) "continuous 0: outside u64"
+    , refused (setKey "baseline" (stored [[1, 0, past]] 300) base) "baseline.continuous 0: outside u64"
     ]
-  storedZero =
+  past = 2 ^ (64 :: Int) :: Integer
+  storedZero = stored [] 0
+  stored cont soft =
     object
-      [ "continuous" .= ([] :: [Value])
+      [ "continuous" .= (cont :: [[Integer]])
       , "discrete" .= ([] :: [Integer])
-      , "softLine" .= (0 :: Integer)
+      , "softLine" .= (soft :: Integer)
       ]
   simReq rows =
     setKey

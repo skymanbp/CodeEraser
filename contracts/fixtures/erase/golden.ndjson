@@ -26,3 +26,5 @@
 {"code":"contract","id":13,"message":"target 0: whole-file class names a span","proto":"9.0.0","type":"error"}
 {"proto":"9.0.0","type":"erase.request","id":14,"rows":[[3,1,2,0,0],[3,1,2,0,0]],"targets":[[1,0,0],[0,0,0]]}
 {"code":"contract","id":14,"message":"target 1: out of key order","proto":"9.0.0","type":"error"}
+{"proto":"9.0.0","type":"erase.request","id":15,"rows":[[3,1,2,0,0]]}
+{"code":"contract","id":15,"message":"targets: required at 9.0.0","proto":"9.0.0","type":"error"}

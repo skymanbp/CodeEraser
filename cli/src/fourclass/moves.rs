@@ -20,6 +20,7 @@ use super::decls::Decl;
 use super::diff;
 use super::model::{ChangedLines, Classification, FourClass, MovedLine, alnum_width, line_hashes};
 use super::units::{self, Unit};
+use crate::corelink::judged::{json_len, line_len, line_max};
 use crate::dedup::tokens::fnv1a;
 use serde::Deserialize;
 use serde_json::{Value, json};
@@ -81,9 +82,12 @@ fn stackable(key: &str) -> bool {
 }
 
 /// The `moves.request` bodies over the changeset — consecutive pairs
-/// packed under the core's line and unit ceilings (`limits.moves`), so
-/// only a single pair over a ceiling meets a degraded answer — with
-/// what reading the replies needs.
+/// packed under the core's line and unit ceilings (`limits.moves`) and
+/// under the protocol's line (`limits.caps.line_bytes`, measured the way
+/// corelink::judged::fits_line measures it: every body repeats the whole
+/// `keys` table, and the byte line is reached at about a quarter of the
+/// row cap — plan v2.33 step 11b item 2), so only a single pair over a
+/// ceiling meets a named answer — with what reading the replies needs.
 pub fn request(inputs: &[PairInput]) -> (Request, Vec<Value>) {
     let measured: Vec<Measured> = inputs.iter().map(measure).collect();
     let mut codes: Vec<String> = measured
@@ -127,46 +131,71 @@ pub fn request(inputs: &[PairInput]) -> (Request, Vec<Value>) {
         json!({"lines": lines, "changed": changed, "units": units})
     };
     let keys: Vec<u64> = codes.iter().map(|k| fnv1a(k.as_bytes())).collect();
-    let limits = &crate::tables::get().limits.moves;
-    let sizes: Vec<(usize, usize)> = inputs
+    let pairs: Vec<Value> = inputs
         .iter()
         .zip(&measured)
         .map(|(p, m)| {
-            let n_lines = p.before.lines().count() + p.after.lines().count();
-            (n_lines, m.units[0].len() + m.units[1].len())
+            json!({"before": side(p.before, &m.changed[0], &m.units[0]),
+                   "after": side(p.after, &m.changed[1], &m.units[1])})
         })
         .collect();
-    let starts = packing(&sizes, limits.line_cap, limits.unit_cap);
-    let bodies = starts
+    let bodies = packed(inputs, &measured, &keys, pairs);
+    (Request { measured, codes }, bodies)
+}
+
+/// The pairs cut into bodies where `packing` puts the starts, each body
+/// repeating the whole `keys` table (counted once per body in the room
+/// the line leaves).
+fn packed(
+    inputs: &[PairInput],
+    measured: &[Measured],
+    keys: &[u64],
+    pairs: Vec<Value>,
+) -> Vec<Value> {
+    let sizes: Vec<[usize; 3]> = inputs
+        .iter()
+        .zip(measured)
+        .zip(&pairs)
+        .map(|((p, m), v)| {
+            let n_lines = p.before.lines().count() + p.after.lines().count();
+            [
+                n_lines,
+                m.units[0].len() + m.units[1].len(),
+                json_len(v) + 1,
+            ]
+        })
+        .collect();
+    let limits = &crate::tables::get().limits.moves;
+    let empty = line_len(KIND, &json!({"keys": keys, "pairs": []}));
+    let room = line_max().saturating_sub(empty);
+    let starts = packing(&sizes, [limits.line_cap, limits.unit_cap, room]);
+    let mut pairs = pairs.into_iter();
+    starts
         .iter()
         .enumerate()
         .map(|(c, &from)| {
             let to = starts.get(c + 1).copied().unwrap_or(inputs.len());
-            let pairs: Vec<Value> = (from..to)
-                .map(|i| {
-                    let (p, m) = (&inputs[i], &measured[i]);
-                    json!({"before": side(p.before, &m.changed[0], &m.units[0]),
-                           "after": side(p.after, &m.changed[1], &m.units[1])})
-                })
-                .collect();
-            json!({"keys": keys, "pairs": pairs})
+            let chunk: Vec<Value> = pairs.by_ref().take(to - from).collect();
+            json!({"keys": keys, "pairs": chunk})
         })
-        .collect();
-    (Request { measured, codes }, bodies)
+        .collect()
 }
 
-/// Where the bodies start, over each pair's (lines, units): consecutive
-/// pairs share a body while the running counts stay within the core's
-/// ceilings; a pair that alone passes a ceiling still gets a body of
-/// its own, which the core answers degraded by name.
-pub(crate) fn packing(sizes: &[(usize, usize)], line_cap: usize, unit_cap: usize) -> Vec<usize> {
-    let (mut starts, mut lines, mut units) = (Vec::new(), 0, 0);
-    for (i, &(n_lines, n_units)) in sizes.iter().enumerate() {
-        if i == 0 || lines + n_lines > line_cap || units + n_units > unit_cap {
+/// Where the bodies start, over each pair's [lines, units, bytes] (its
+/// serialized bytes plus the separator that joins it to the array): a
+/// body is cut when the next pair would pass EITHER row cap or the room
+/// the line leaves beside the body's `keys` table; a pair that alone
+/// passes one still gets a body of its own — over a row cap the core
+/// answers it degraded by name, over the line the batch names it before
+/// sending (batch.rs).
+pub(crate) fn packing(sizes: &[[usize; 3]], caps: [usize; 3]) -> Vec<usize> {
+    let (mut starts, mut run) = (Vec::new(), [0usize; 3]);
+    for (i, size) in sizes.iter().enumerate() {
+        if i == 0 || (0..3).any(|k| run[k] + size[k] > caps[k]) {
             starts.push(i);
-            (lines, units) = (0, 0);
+            run = [0; 3];
         }
-        (lines, units) = (lines + n_lines, units + n_units);
+        (0..3).for_each(|k| run[k] += size[k]);
     }
     starts
 }

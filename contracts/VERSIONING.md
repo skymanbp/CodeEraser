@@ -141,6 +141,11 @@
 > golden：`scan/golden` 26 条请求行全改（缺的三键补齐；第 1 对把预判的 fn-naming 值改成命名事实，第 10–15 对把裸认知行改成 `[3,4,5]` 三元组与等量的带标签跳转事件、调用边改指认知行，第 26 对改钉 `events: required at 9.0.0`）、
 > `erase/golden` 第 1–8 对补 `targets`、`graph/golden` 22 条补 `unres: []`、`flow/golden` 第 1–5 对应答多一列、`tables/golden` 与 `handshake/hello-ok` 的摘要，全部机器重生成，请求行数不变。
 > 定义包里 Rust 原先自留字面量的六处改读包（`limits.zone` / `limits.graph` / `limits.score_defaults` / `document.merge.reasons` / `tombstone.kind_names`，值与被删的字面量逐个相等，各由一条腿钉住）。报告文档（同一车道；由请求里已有的事实推得的值归核陈述，网页删掉自己的算法）：`ce.erase-plan` 0.3.0 → 0.4.0 加性 `run`（`{applied}`：本次 apply 擦掉的行数，没跑 apply 为 null；请求本就带 `apply` / `applied` 两个事实）、`ce.erase-trail-report` 0.1.0 → 0.2.0 每条记录加性 `stamp`（`ts_ms` 的 UTC 时戳，`CE.Erase.Document.utcStamp`，`ce erase --log` 的控制台行读同一个字段）、`ce.structure-report` 0.6.0 → 0.7.0 `splitCandidates` / `sizeExempt` 每行加性 `roi`（控制台印的一位小数文本 `CE.Text.fixed 1`；成本为 0 的无缝行为 null）——这三份随 1.8.0 发出，各升一个 minor；`ce.query-report` / `ce.rules-report` 0.1.0 未发布，版本内加性：每个目标 `answers`（它的答案在 `answers` 里的下标）、每个答案 `proof`（它根以下的推导行在 `proof` 里的下标）、每个推导行 `depth`（到答案根的边数，沿父列只走向更小的结点号，故任何请求都会停）。旧键逐字不变。golden：`document/golden` 第 2、4、27、28、63、64（query / rules）、17、32、60（structure）、95–99（erase）、101–105（trail）对的应答，`tables/golden` 与 `handshake/hello-ok` 的摘要（目录里三份 schema、erase 空文档的 `run`），请求行不变。
+> **9.0.0 同版补记**（线路车道，v2.33 步 11b，2026-10-13；设计册 `docs/reference/algorithm-track.md` §11 第 118 条；9.0.0 未发布，同上不另升版号）：
+> `tables/1` 的 `limits.caps` 加性两键——`erase_rows`（`CE.Erase.Cost.eraseRowCap` 4,096：擦除判决是一个请求、不能分块，测量侧发出之前按名拒绝 `erase: N candidates over the core's erase_rows cap M; …`）与 `trend_rows`（`CE.Trend.Cost.trendRowCap` 4,096，行与声明的旋钮行合计：测量侧量任何一个提交之前按名拒绝 `trend: --commits N over the core's trend_rows cap M …`）；`doc_seq_cap` 早在 `limits.docdup` 里、测量侧此前不读，现在读：序列超过它的段与超 `doc_set_cap` 的段一起记进 `over_cap_segments`，它的对不判。hello 摘要随之变。
+> 拒绝不是断链：核的拒绝（回显本请求 id 的 `error`，或无 id 的 `too_large`）不作废会话，daemon 的核链只在帧丢了时才计失败、退避（`Link::is_broken`），钩子的四类请求（fourclass、tombstone、flow、document）收到拒绝答具名降级、下一次钩子照常判。测量侧按行上限排每一族的请求：整语料一遍与会话路（`resolve/1`、`bags/1`）发出前量行；`moves/1` 按行数、单元数与字节三者装包；lockstep 两族（`clone/1`、`docdup/1`）的块超行就对半再分；一对单独超行的按名拒绝、不发。`erase/1` 与 `trend/2` 的降级应答读作核的具名原因（`erase/1 degraded the plan (…)` / `trend/2 degraded the judgment (…)`），不再读作镜像漂移。
+> 收紧：`verdict` 的 `continuous` 行与基线的 `baseline.continuous` 行，值列与实体列同按 u64 校验，越界按名拒 `outside u64`（基线行此前两列都不校验）。
+> golden：`scan/golden` 加第 27 对（缺 `naming`）与第 28 对（缺 `knobsFence`）、`erase/golden` 加第 15 对（缺 `targets`）、`graph/golden` 加第 27 对（缺 `unres`），各答 `<键>: required at 9.0.0`；`tables/golden` 与 `handshake/hello-ok` 的摘要机器重生成，其余不动。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -590,8 +595,9 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。例外只有一种：`error` 应答
   `code` 为 `too_large` 且 `id` 为 null——核在解析之前按行字节上限拒收，没有 id 可回显，
   只答这一行、不留状态，帧没乱——是具名拒绝，会话不作废（v2.33 遗留核查第 1 项；设计册
-  `docs/reference/algorithm-track.md` §11 第 113 条）。测量侧整语料一遍的请求（`candidates/1`、
-  `docpairs/1`）发出之前先按 `tables/1` 的 `limits.caps.line_bytes` 量行，超了不发、按该族的降级具名拒绝。
+  `docs/reference/algorithm-track.md` §11 第 113 条）。测量侧按 `tables/1` 的 `limits.caps.line_bytes` 排每一族的请求
+  （上文 9.0.0 同版补记）：整语料一遍（`candidates/1`、`docpairs/1`）与会话路（`resolve/1`、`bags/1`）发出之前量行，超了不发、
+  按名拒绝；装包的族（`bags/1`、`moves/1`、lockstep 的 `clone/1` / `docdup/1`）按字节切。拒绝不是断链，只有帧丢了才算（`Link::is_broken`）。
 - `fourclass.request`（2.0.0 形状，7.0.0 起 `dupSpans`，7.1.0 起可带声明两表）：
   `{"id","pairs":[{"i","rem":[[[行,hash,宽],…],…],"add":[…],"dupSpans":[[keyhash,起,止]],
   "declRem":[[keyhash,kind,起,止]],"declAdd":[…]}]}`——rem/add 为 L1 判 novel/deleted 的**显著**行按
@@ -626,14 +632,14 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   `mounts` 全节点恒一行、`take 1` 投影升序、`private ≤ total`、bits bit 0 再导出目标 / bit 1
   包私有；两表各自析取项计价（`mountCap` 131072 / `unmentionedHardCap` 524288），节点净空不动；
   缺席 = 十键回复字节不变、dead 集不变（K16/K33）。`sccFloor` 是 6.4.0 起的可选环底（与 `verdict` 的 `cycleFloor` 同读一份 `[graph] scc_floor`；≥1 否则按名拒绝，上过线即在 `graph.result` 回显）。`unres` 行的 lang 按判决语言集校验——7.2.0 至 7.10.0 读请求键 `judgedMask`，8.0.0 起读核自己的语言表，带这个键的请求按名拒。
-  `unres` 是 2.32.0 起的可选按语言站点
-  台账，是**判决输入**：在场时每条 dead 行增置信列（`CE.Graph.Cost.confidence`），缺席 = 旧
-  两列 dead 行、字节不变；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
+  `unres` 是 2.32.0 起的按语言站点
+  台账，9.0.0 起必送（缺席按名拒 `unres: required at 9.0.0`，上文 9.0.0 同版收紧），是**判决输入**：每条 dead 行
+  带置信列（`CE.Graph.Cost.confidence`）；总数 `unresolved_sites` 仍只进 Rust 侧报告与摘要行（请求体见
   `cli/src/graph/deadcode.rs` `GraphWire`，核侧 `core/app/CE/Graph/Contract.hs` `GraphReq`——4.1.0 符号表落地时随解码与边界校验自 `CE.Graph` 拆出）；
   超 `CE.Graph.Cost` 节点/边护栏 → `graph.result` 带 `degraded:true,
   "reason":"graph_too_large"`（绝不截断）。
 - `graph.result`（语义 M5-2g 落地，穷举参照 harness 见 core/test/）：
-  `{"id","dead":[[idx,verdict]],"reported":[[idx,verdict]],"fail",
+  `{"id","dead":[[idx,verdict,confidence]]（9.0.0 起恒三列）,"reported":[[idx,verdict]],"fail",
   "pos":[[idx,indeg,outdeg,sccId,sccSize,reachIn]],"cycles":[[sccId,[idx]]],
   "counts":{"nodes","edges","kept"},"degraded"(,"reason"∈{graph_too_large})}`——
   `dead` 只承载文件粒度判决，`reported` 承载 package/section 聚合判决；非降级时
@@ -670,14 +676,14 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
     `degraded.reason ∈ {verdict_too_large}`。
   - `scan/1`（2.7.0，判决与声明同批）：request 携测量行 `{"rows":[[code,value]],
     "naming":[[lang,style,upper,under,test]]}`（码 0..6，主体名/路径不过线；naming 自 2.30.0
-    由 ce 恒发、与码 6 行逐位对齐，core 容其缺席；行内 lang 按判决语言集校验——7.2.0 至 7.10.0 读请求键
+    由 ce 恒发、与码 6 行逐位对齐，9.0.0 起必送（缺席按名拒 `naming: required at 9.0.0`，上文 9.0.0 同版收紧）；行内 lang 按判决语言集校验——7.2.0 至 7.10.0 读请求键
     `judgedMask`，8.0.0 起读核自己的语言表，带这个键的请求按名拒）+ 调用弧 `callEdges=[[from,to]]`（6.5.0，
-    两端都是 cognitive 行下标）+ 结构事件表 `events=[[row,seq,parent,pos,flags,aux,op…]]`（7.2.0 ③，ce 恒发，三条
+    两端都是 cognitive 行下标）+ 结构事件表 `events=[[row,seq,parent,pos,flags,aux,op…]]`（7.2.0 ③，9.0.0 起必送，三条
     复杂度行清零乘车、核折出三数）+ 可选 `grades` 覆盖 `[[code,warn,fail]]`
     + 规则包两键（3.2.0）：`rowClasses`（与 rows 逐位对齐的 classId）与 `gradeOverrides`
     `[[classId,code,warn,fail]]`（码 ∈ {0,1,4}，回复原样回显）
-    （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）+ 围栏键 `knobsFence`（6.4.0，ce 恒发：`null` = 无基线未围、`[current,recorded]` 两摘要各 u64 或 null）；result 回
-    `{"levels":[0|1|2 逐行],"counts":{rows,warns,fails},"fail",生效 "grades" 全表,"failed":[名…],"cocBumped":[[rowIndex,值]]（弧上过线）,"derived":[[rowIndex,值]]（事件上过线，每单元三行）}`（`failed` 具名序 `hard_line, knobs_digest, degraded`，`knobsFence` 上过线即在；`fail ⇔ failed ≠ []`）；
+    （fail 0=无硬线、fail==warn=合法单线配置、码严格升序）+ 围栏键 `knobsFence`（6.4.0，9.0.0 起必送：`null` = 无基线未围、`[current,recorded]` 两摘要各 u64 或 null）；result 回
+    `{"levels":[0|1|2 逐行],"counts":{rows,warns,fails},"fail",生效 "grades" 全表,"failed":[名…],"cocBumped":[[rowIndex,值]]（弧上过线）,"derived":[[rowIndex,值]]（事件上过线，每单元三行）}`（`failed` 具名序 `hard_line, knobs_digest, degraded`，9.0.0 起每次都在、降级应答也在；`fail ⇔ failed ≠ []`）；
     `degraded.reason ∈ {scan_too_large}` 且自带 fail=true。
 
 ## 2. SemVer 协商规则
@@ -701,7 +707,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->365<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->369<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随

@@ -46,14 +46,7 @@ pub struct Row {
 /// never a silently unjudged report. The link goes back for the
 /// report's document.
 pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<(Judgment, Link)> {
-    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
-    let mut knobs: Vec<[i64; 2]> = Vec::new();
-    if let Some(mp) = cfg.trend.min_points {
-        knobs.push([0, mp as i64]);
-    }
-    if let Some(floor) = cfg.trend.decline_floor_micro {
-        knobs.push([1, floor as i64]);
-    }
+    let knobs = declared(root)?;
     let mut link = crate::corelink::judged::open(core, "trend/2")?;
     let mut body = json!({
         "rows": rows.iter().map(|r| json!([r.ts, r.score, r.scale])).collect::<Vec<_>>(),
@@ -62,6 +55,12 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<(Judgment, Link)> 
         body["knobs"] = json!(knobs);
     }
     let reply = link.request("trend", body).map_err(anyhow::Error::msg)?;
+    // the degraded posture first: an over-cap reply carries null slope
+    // and verdict, `fail` true and the DEFAULT knobs, which read as an
+    // unjudged failing window or a false knob pin (step 11b item 5)
+    if let Err(why) = crate::corelink::judged::degraded(&reply) {
+        anyhow::bail!("trend/2 degraded the judgment ({why})");
+    }
     let j = Judgment {
         slope_micro_per_day: reply["slopeMicroPerDay"].as_i64(),
         verdict: reply["verdict"].as_i64(),
@@ -83,6 +82,41 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<(Judgment, Link)> 
         }
     }
     Ok((j, link))
+}
+
+/// The knob rows ce.toml declares (`[trend]`), in code order.
+fn declared(root: &Path) -> Result<Vec<[i64; 2]>> {
+    let cfg = crate::config::Config::load(root).map_err(anyhow::Error::msg)?;
+    let mut knobs: Vec<[i64; 2]> = Vec::new();
+    if let Some(mp) = cfg.trend.min_points {
+        knobs.push([0, mp as i64]);
+    }
+    if let Some(floor) = cfg.trend.decline_floor_micro {
+        knobs.push([1, floor as i64]);
+    }
+    Ok(knobs)
+}
+
+/// A window of `commits` against the core's row ceiling
+/// (`limits.caps.trend_rows`, rows and declared knob rows together),
+/// before a commit of it is measured: over it is refused by name with
+/// the largest window that fits (plan v2.33 step 11b item 5) — measuring
+/// commits the core would not judge is the slowest thing this binary
+/// could waste.
+pub fn window_fits(root: &Path, commits: usize) -> Result<()> {
+    let knobs = declared(root)?.len();
+    window_within(commits, knobs, crate::tables::get().limits.caps.trend_rows)
+}
+
+/// `window_fits` over the three numbers.
+pub(crate) fn window_within(commits: usize, knobs: usize, cap: usize) -> Result<()> {
+    let room = cap.saturating_sub(knobs);
+    anyhow::ensure!(
+        commits <= room,
+        "trend: --commits {commits} over the core's trend_rows cap {cap} ({knobs} declared knob \
+         row(s) ride with the rows); ask for at most {room}"
+    );
+    Ok(())
 }
 
 /// Null -> None, [i, v] -> Some — anything else is a wire error.
@@ -111,3 +145,7 @@ fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {
     }
     Ok(rows)
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/trend/judge.rs"]
+mod tests;

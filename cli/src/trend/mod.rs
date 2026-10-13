@@ -94,6 +94,7 @@ fn measured(
     commits: usize,
     batch: Option<usize>,
 ) -> Result<(Report, crate::corelink::Link)> {
+    judge::window_fits(root, commits)?;
     let shas = mainline(root, commits)?;
     let idx = dedup::index::Index::open(&dedup::index_db_path(root, db), dedup::Params::default())?;
     let stamp = toolchain_stamp(core)?;
@@ -253,15 +254,21 @@ fn put(conn: &rusqlite::Connection, r: &Row, stamp: &str) -> Result<()> {
     Ok(())
 }
 
-/// The measuring toolchain: CLI/core versions and parser revision.
-/// Preserved rows from an older parser must be remeasured even while
-/// the package versions still match during an unreleased upgrade.
+/// The measuring toolchain: CLI/core versions, the wire proto and the
+/// parser revision. Preserved rows from an older parser must be
+/// remeasured even while the package versions still match during an
+/// unreleased upgrade; so must rows scored under an older wire (plan
+/// v2.33 step 11b item 7: a 9.0.0 build still reporting 1.8.0 read the
+/// released 1.8.0's 7.2.0 rows as its own). The proto, not trend/2's
+/// family version: a row is a whole `ce check` score, which every
+/// family's wire feeds, and trend/2 has stayed at 2 across them.
 fn toolchain_stamp(core: &str) -> Result<String> {
     let (_, hello) = crate::corelink::Link::own(core).map_err(anyhow::Error::msg)?;
     Ok(format!(
-        "ce{} core{} tokenizer{}",
+        "ce{} core{} proto{} tokenizer{}",
         env!("CARGO_PKG_VERSION"),
         hello.version,
+        crate::corelink::PROTO,
         dedup::tokens::TOKENIZER_REV
     ))
 }

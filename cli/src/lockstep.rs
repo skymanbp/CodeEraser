@@ -53,8 +53,9 @@ pub type Judged<E> = (Vec<(usize, usize, E)>, u64, u64, usize);
 /// `judged::open` (plan v2.30 step 5b-9: the T3 family reads the
 /// core's proto off the link before deciding what its verdict cache
 /// may answer, then sends only the rest): chunk, build a
-/// request-local body, one request per chunk, map each wire row's
-/// endpoints through its chunk's rank order, accumulate the two
+/// request-local body, one request per chunk (cut further when its line
+/// would pass the protocol's ceiling, `within_line`), map each wire
+/// row's endpoints through its chunk's rank order, accumulate the two
 /// family counters, sort.
 pub fn lockstep_scores<P, E: Ord>(
     link: &mut Link,
@@ -64,8 +65,10 @@ pub fn lockstep_scores<P, E: Ord>(
     parse: impl Fn(&Value) -> anyhow::Result<Scored<E>>,
 ) -> anyhow::Result<Judged<E>> {
     let (mut rows, mut c0, mut c1, mut requests) = (Vec::new(), 0, 0, 0);
-    for c in pairs.chunks(fam.chunk) {
-        let (order, body) = build(c);
+    let fits = |body: &Value| {
+        judged::fits_line(fam.kind, body).map_err(|why| format!("{}: {why}", fam.kind))
+    };
+    let mut send = |order: Vec<usize>, body: Value| -> anyhow::Result<()> {
         let reply = judged::ask(link, fam.cap, fam.kind, body)?;
         let (ws, counts) = parse(&reply)?;
         c0 += counts[0];
@@ -79,9 +82,39 @@ pub fn lockstep_scores<P, E: Ord>(
             rows.push((a, b, e));
         }
         requests += 1;
+        Ok(())
+    };
+    for c in pairs.chunks(fam.chunk) {
+        within_line(c, &build, &fits, &mut send)?;
     }
     rows.sort_unstable();
     Ok((rows, c0, c1, requests))
+}
+
+/// The one planner every lockstep family's chunks pass through (plan
+/// v2.33 step 11b item 3): the chunk's body is sent whole when its line
+/// fits (`fits`: corelink::judged::fits_line), else the chunk is halved
+/// and each half planned again — a chunk within the pair cap but over
+/// the line (docdup's sequences run up to `doc_seq_cap` shingles each)
+/// was sent and answered with the id-less `too_large`. One pair whose
+/// body alone passes the line is refused by name, never sent.
+pub(crate) fn within_line<P>(
+    c: &[P],
+    build: &impl Fn(&[P]) -> (Vec<usize>, Value),
+    fits: &impl Fn(&Value) -> Result<(), String>,
+    send: &mut impl FnMut(Vec<usize>, Value) -> anyhow::Result<()>,
+) -> anyhow::Result<()> {
+    let (order, body) = build(c);
+    match fits(&body) {
+        Ok(()) => send(order, body),
+        Err(why) if c.len() <= 1 => anyhow::bail!("{why} (one pair alone)"),
+        Err(_) => {
+            drop(body);
+            let (head, tail) = c.split_at(c.len() / 2);
+            within_line(head, build, fits, send)?;
+            within_line(tail, build, fits, send)
+        }
+    }
 }
 
 /// Request-local layout by sorted rank: the distinct endpoint ids in

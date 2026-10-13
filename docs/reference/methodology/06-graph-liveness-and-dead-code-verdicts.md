@@ -129,7 +129,7 @@ Numeric details that are policy, not taste:
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
   ([Rs.hs:224-226](../../../core/app/CE/Resolve/Rs.hs#L224),
-  [wire.rs:129-130](../../../cli/src/graph/wire.rs#L129)).
+  [wire.rs:142-143](../../../cli/src/graph/wire.rs#L142)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the only
 target-content facts a ladder consults are the Markdown anchor set and the Rust top-level
@@ -144,19 +144,19 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:114-147](../../../cli/src/graph/wire.rs#L114)). An edge's
+ledger-visible as sites *without* edges ([wire.rs:127-160](../../../cli/src/graph/wire.rs#L127)). An edge's
 kind follows its site's: code kinds import; the Markdown link family and HTML's page references (`href`, a
 form's `action`) split doc_link / doc_ref by whether the target is a page (Markdown or HTML); an image, a
 `src` / `srcset` resource and an asset `<link>` are always assets
-([wire.rs:158-175](../../../cli/src/graph/wire.rs#L158), [wire.rs:177-186](../../../cli/src/graph/wire.rs#L177)).
+([wire.rs:171-188](../../../cli/src/graph/wire.rs#L171), [wire.rs:190-199](../../../cli/src/graph/wire.rs#L190)).
 Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
 reference definition's in-scope target, which resolves and travels as an edge while the core
 excludes it from liveness beside the asset kind
-([wire.rs:25-34](../../../cli/src/graph/wire.rs#L25), [Cost.hs:166-173](../../../core/app/CE/Graph/Cost.hs#L166)); granularity
+([wire.rs:26-35](../../../cli/src/graph/wire.rs#L26), [Cost.hs:166-173](../../../core/app/CE/Graph/Cost.hs#L166)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
-([wire.rs:42-45](../../../cli/src/graph/wire.rs#L42)).
+([wire.rs:43-46](../../../cli/src/graph/wire.rs#L43)).
 
 Node identity is the pair `(path, unit)` over a `BTreeSet` of every walked file plus every edge
 target, so the id assignment is a function of the graph and the wire bytes are shuffle-proof

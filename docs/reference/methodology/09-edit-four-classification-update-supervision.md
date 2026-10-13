@@ -12,7 +12,7 @@ Judgment (which lines correspond) is Haskell — since plan v2.33 W3 the within-
 
 ### L1: within-file classification
 
-The measuring side hashes each line with `DefaultHasher` ([model.rs:75-85](../../../cli/src/fourclass/model.rs#L75)), runs a self-contained Myers line diff ([moves.rs:66-75](../../../cli/src/fourclass/moves.rs#L66)), and sends each side's lines as `[content code, fnv1a(trim), alnum width]` with the changed indices and the side's units ([moves.rs:87-116](../../../cli/src/fourclass/moves.rs#L87)). The core classifies each changed line by content lookup against the opposite side:
+The measuring side hashes each line with `DefaultHasher` ([model.rs:75-85](../../../cli/src/fourclass/model.rs#L75)), runs a self-contained Myers line diff ([moves.rs:67-76](../../../cli/src/fourclass/moves.rs#L67)), and sends each side's lines as `[content code, fnv1a(trim), alnum width]` with the changed indices and the side's units ([moves.rs:91-120](../../../cli/src/fourclass/moves.rs#L91)). The core classifies each changed line by content lookup against the opposite side:
 
 ```
 removed line i is MOVED  iff significant(a[i]) && code(a[i]) ∈ added_sig
@@ -20,7 +20,7 @@ added   line j is MOVED  iff significant(b[j]) && code(b[j]) ∈ removed_sig
 otherwise removed → deleted, added → novel
 ```
 
-([Classify.hs:55-73](../../../core/app/CE/FourClass/Moves/Classify.hs#L55); the opposite-side sets are built over the content codes of the changed significant lines at [Classify.hs:68-70](../../../core/app/CE/FourClass/Moves/Classify.hs#L68)). A content code ranks the distinct trimmed texts of the request, so equal code is exactly equal trimmed text ([moves.rs:96-102](../../../cli/src/fourclass/moves.rs#L96)).
+([Classify.hs:55-73](../../../core/app/CE/FourClass/Moves/Classify.hs#L55); the opposite-side sets are built over the content codes of the changed significant lines at [Classify.hs:68-70](../../../core/app/CE/FourClass/Moves/Classify.hs#L68)). A content code ranks the distinct trimmed texts of the request, so equal code is exactly equal trimmed text ([moves.rs:100-106](../../../cli/src/fourclass/moves.rs#L100)).
 
 Two properties are load-bearing:
 
@@ -117,7 +117,7 @@ with `stackingNovelFloor = 20` ([Verdict.hs:25-26](../../../core/app/CE/FourClas
 
 `novel` and `deleted` here are **post-reclassification** — the novel LINES and the deleted count — supplied by the caller, not the raw leftover list lengths, which would overcount ([Verdict.hs:33-36](../../../core/app/CE/FourClass/Verdict.hs#L33)). They are the sent-leftover lines not present in the phase marks, `leftLines side marks p`, kept as lines on the addition side so the rule can place them and counted on the removal side ([Provenance.hs:30](../../../core/app/CE/FourClass/Provenance.hs#L30), [Provenance.hs:34-35](../../../core/app/CE/FourClass/Provenance.hs#L34)).
 
-**The duplication evidence** (`dupSpans`) is one `[fnv1a(key), start, end]` row per after-side occurrence of a newly duplicated unit key, computed in the core's L1 answer since plan v2.33 W3 over key codes and line numbers only, since symbol knowledge stays on the Rust side per ADR-002 ([Classify.hs:122-137](../../../core/app/CE/FourClass/Moves/Classify.hs#L122), [Wire.hs:50](../../../core/app/CE/FourClass/Wire.hs#L50), [Wire.hs:67](../../../core/app/CE/FourClass/Wire.hs#L67)). A key qualifies iff its after-side count rises to ≥2 *and* strictly exceeds its before-side count ([Classify.hs:132-133](../../../core/app/CE/FourClass/Moves/Classify.hs#L132)); a span with `start < 1` or `end < start` is refused by name at the envelope, pair index named ([FourClass.hs:41-42](../../../core/app/CE/FourClass.hs#L41)). Three scoping exclusions, each a measured false-positive source ([Classify.hs:139-145](../../../core/app/CE/FourClass/Moves/Classify.hs#L139), the stack bit the measuring side sends at [moves.rs:77-81](../../../cli/src/fourclass/moves.rs#L77)):
+**The duplication evidence** (`dupSpans`) is one `[fnv1a(key), start, end]` row per after-side occurrence of a newly duplicated unit key, computed in the core's L1 answer since plan v2.33 W3 over key codes and line numbers only, since symbol knowledge stays on the Rust side per ADR-002 ([Classify.hs:122-137](../../../core/app/CE/FourClass/Moves/Classify.hs#L122), [Wire.hs:50](../../../core/app/CE/FourClass/Wire.hs#L50), [Wire.hs:67](../../../core/app/CE/FourClass/Wire.hs#L67)). A key qualifies iff its after-side count rises to ≥2 *and* strictly exceeds its before-side count ([Classify.hs:132-133](../../../core/app/CE/FourClass/Moves/Classify.hs#L132)); a span with `start < 1` or `end < start` is refused by name at the envelope, pair index named ([FourClass.hs:41-42](../../../core/app/CE/FourClass.hs#L41)). Three scoping exclusions, each a measured false-positive source ([Classify.hs:139-145](../../../core/app/CE/FourClass/Moves/Classify.hs#L139), the stack bit the measuring side sends at [moves.rs:78-82](../../../cli/src/fourclass/moves.rs#L78)):
 
 - **top-level only** — a unit strictly span-contained in another is excluded ([Classify.hs:144](../../../core/app/CE/FourClass/Moves/Classify.hs#L144)), because a method nested in two different classes shares its flat key legitimately;
 - **`(anonymous)` keys excluded** — an anonymous closure has no stacking identity;
@@ -141,7 +141,7 @@ Plan §4.3 B3c defines three rungs, each the control group for the next ([DEVELO
 
 L2 must prove incremental gain over L1 or the ladder falls back to L1 ([DEVELOPMENT_PLAN.md:117](../../DEVELOPMENT_PLAN.md#L117)).
 
-**L1 is the IR producer, not a modified engine.** L2 asks the core for L1 per pair (`moves/1`), ships only the leftovers (significant lines L1 called novel/deleted) as `[line, fnv1a(trim), alnum_width]` grouped into runs, and applies a monotone delta ([batch.rs:1-6](../../../cli/src/fourclass/batch.rs#L1), [batch.rs:149-162](../../../cli/src/fourclass/batch.rs#L149)). Changed pairs are packed into `moves.request` bodies under the core's line and unit ceilings (`movesLineCap = 4194304`, `movesUnitCap = 262144`, [Cost.hs:7-15](../../../core/app/CE/FourClass/Moves/Cost.hs#L7)), so only a single pair over a ceiling meets a degraded answer ([moves.rs:83-86](../../../cli/src/fourclass/moves.rs#L83)).
+**L1 is the IR producer, not a modified engine.** L2 asks the core for L1 per pair (`moves/1`), ships only the leftovers (significant lines L1 called novel/deleted) as `[line, fnv1a(trim), alnum_width]` grouped into runs, and applies a monotone delta ([batch.rs:1-6](../../../cli/src/fourclass/batch.rs#L1), [batch.rs:155-168](../../../cli/src/fourclass/batch.rs#L155)). Changed pairs are packed into `moves.request` bodies under the core's line and unit ceilings (`movesLineCap = 4194304`, `movesUnitCap = 262144`, [Cost.hs:7-15](../../../core/app/CE/FourClass/Moves/Cost.hs#L7)), so only a single pair over a ceiling meets a degraded answer ([moves.rs:84-87](../../../cli/src/fourclass/moves.rs#L84)).
 
 The delta is monotone in one direction only: `removed_deleted → removed_moved`, `added_novel → added_moved` ([Wire.hs:85-87](../../../core/app/CE/FourClass/Wire.hs#L85), [delta.rs:61-66](../../../cli/src/fourclass/batch/delta.rs#L61)). L2 can therefore only reclassify plain lines as moved, never the reverse.
 
@@ -149,22 +149,23 @@ The delta is monotone in one direction only: `removed_deleted → removed_moved`
 
 | condition | pairs | `degraded` reason | `link_failed` |
 |---|---|---|---|
-| no core link | none | `"no_link"` ([batch.rs:54-56](../../../cli/src/fourclass/batch.rs#L54)) | false |
-| link alive, capability `moves/1` or `fourclass/2` absent | none | `"no_capability"` ([batch.rs:57-59](../../../cli/src/fourclass/batch.rs#L57)) | false |
-| transport error on `moves/1` | none | the error string ([batch.rs:63-64](../../../cli/src/fourclass/batch.rs#L63)) | **true** |
-| L1 reply degraded (e.g. `moves_too_large`) or malformed | none | that reason or the named check ([batch.rs:68-71](../../../cli/src/fourclass/batch.rs#L68)) | false |
-| no leftovers to ask about | L1 | `None` — the pass ran vacuously ([batch.rs:72-78](../../../cli/src/fourclass/batch.rs#L72)) | false |
-| transport error on the cross-pair request | L1 | the error string ([batch.rs:80](../../../cli/src/fourclass/batch.rs#L80)) | **true** |
-| core answered with a `reason` (e.g. `bucket_cap`) | L1 | that reason ([batch.rs:107-111](../../../cli/src/fourclass/batch.rs#L107)) | false |
-| core answered, delta failed validation | L1 | the merge error ([batch.rs:81-83](../../../cli/src/fourclass/batch.rs#L81)) | false |
+| no core link | none | `"no_link"` ([batch.rs:55-57](../../../cli/src/fourclass/batch.rs#L55)) | false |
+| link alive, capability `moves/1` or `fourclass/2` absent | none | `"no_capability"` ([batch.rs:58-60](../../../cli/src/fourclass/batch.rs#L58)) | false |
+| one pair whose `moves/1` body alone passes the protocol's line | none | `moves/1: request line … not sent` ([batch.rs:66-67](../../../cli/src/fourclass/batch.rs#L66)) | false |
+| error on `moves/1` (the link lost, or the core refused) | none | the error string ([batch.rs:69-70](../../../cli/src/fourclass/batch.rs#L69)) | **true** only when the framing was lost (`Link::is_broken`) |
+| L1 reply degraded (e.g. `moves_too_large`) or malformed | none | that reason or the named check ([batch.rs:74-77](../../../cli/src/fourclass/batch.rs#L74)) | false |
+| no leftovers to ask about | L1 | `None` — the pass ran vacuously ([batch.rs:78-84](../../../cli/src/fourclass/batch.rs#L78)) | false |
+| error on the cross-pair request (the link lost, or the core refused) | L1 | the error string ([batch.rs:86](../../../cli/src/fourclass/batch.rs#L86)) | **true** only when the framing was lost (`Link::is_broken`) |
+| core answered with a `reason` (e.g. `bucket_cap`) | L1 | that reason ([batch.rs:113-117](../../../cli/src/fourclass/batch.rs#L113)) | false |
+| core answered, delta failed validation | L1 | the merge error ([batch.rs:87-89](../../../cli/src/fourclass/batch.rs#L87)) | false |
 
-`link_failed` is stated rather than inferred because the restart budget keys on it ([batch.rs:50](../../../cli/src/fourclass/batch.rs#L50)). A degraded reply may carry partial blocks; the reason is checked **before** merge on purpose, since applying them would be partial L2 behind a flag ([batch.rs:107-111](../../../cli/src/fourclass/batch.rs#L107)). Capability `fourclass/2` is the anchor-width request shape (proto 2.0.0); a client probing `fourclass/1` sees absence and degrades to L1 loudly rather than sending the un-parseable two-element shape ([Handshake.hs:30-32](../../../core/app/CE/Handshake.hs#L30), [Handshake.hs:30-32](../../../core/app/CE/Handshake.hs#L30)).
+`link_failed` is stated rather than inferred because the restart budget keys on it ([batch.rs:51](../../../cli/src/fourclass/batch.rs#L51)). A degraded reply may carry partial blocks; the reason is checked **before** merge on purpose, since applying them would be partial L2 behind a flag ([batch.rs:113-117](../../../cli/src/fourclass/batch.rs#L113)). Capability `fourclass/2` is the anchor-width request shape (proto 2.0.0); a client probing `fourclass/1` sees absence and degrades to L1 loudly rather than sending the un-parseable two-element shape ([Handshake.hs:30-32](../../../core/app/CE/Handshake.hs#L30), [Handshake.hs:30-32](../../../core/app/CE/Handshake.hs#L30)).
 
 ### Boundary checks
 
 The reply is an answer, not an authority ([delta.rs:4-5](../../../cli/src/fourclass/batch/delta.rs#L4)):
 
-- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:18-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:112-114](../../../cli/src/fourclass/batch.rs#L112)).
+- **Merge is all-or-nothing.** `merge` works on a copy; an in-place form leaked a half-merged result through the error path as the claimed "pure L1 fallback" ([delta.rs:18-20](../../../cli/src/fourclass/batch/delta.rs#L18), [batch.rs:118-120](../../../cli/src/fourclass/batch.rs#L118)).
 - **Each returned line is consumed once** from a per-side unconsumed set; a double-listed line is a named error, not a `usize` underflow that produced ~18e18 "deleted" lines ([delta.rs:13-16](../../../cli/src/fourclass/batch/delta.rs#L13), [delta.rs:58-59](../../../cli/src/fourclass/batch/delta.rs#L58)).
 - **Wire indices are bounds-checked**, not used as slice subscripts, in both the merge and the report — the report path runs inside the daemon, which has no `catch_unwind` ([delta.rs:100-102](../../../cli/src/fourclass/batch/delta.rs#L100), [session.rs:113-123](../../../cli/src/fourclass/session.rs#L113)).
 - **The core checks pair uniqueness and within-first**, alongside declaration and duplication-span validation, at its boundary ([FourClass.hs:35-48](../../../core/app/CE/FourClass.hs#L35)): no duplicate pair index (Anchor's run maps key on `(pair, run)`, so `M.fromList` would silently drop an earlier duplicate's runs), and **within-first** — no leftover added hash of a pair may occur among that same pair's leftover removed hashes. Within-first is L1's within-file consumption rule seen from the judgment side; verifying its consequence turns a cross-language assumption into a checked contract ([FourClass.hs:3-6](../../../core/app/CE/FourClass.hs#L3)).

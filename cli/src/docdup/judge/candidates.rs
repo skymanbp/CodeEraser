@@ -5,7 +5,10 @@
 //! segments the kept pairs name, re-derived through the ONE doc_facts
 //! throat (seqs.rs) so the judgment can measure their verbatim runs.
 //! A segment over the package's `doc_set_cap` is counted here and
-//! never sent.
+//! never sent; so is one whose shingle sequence passes `doc_seq_cap`
+//! (plan v2.33 step 11b item 3: a sequence repeats a shingle as often
+//! as its text does, so it can be far longer than its set, and the core
+//! degraded the whole judgment request for it).
 
 mod seqs;
 
@@ -145,12 +148,21 @@ pub struct Tally {
 
 /// The sendable segments (within the package's per-set ceiling, the
 /// rest counted) to the core's coarse filter, its kept pairs mapped
-/// back to segment ids, then the sequences of the segments they name.
+/// back to segment ids, then the sequences of the segments they name —
+/// a segment whose sequence passes the per-sequence ceiling counted
+/// with the over-cap ones and its pairs left unjudged (the same road).
 /// A degraded or skewed reply is a named refusal — the judgment never
 /// runs on a candidate set the core did not answer whole.
 pub fn collect(root: &Path, segs: &[SegRow], link: &mut Link) -> Result<Cand> {
-    let (pairs, tally) = coarse(segs, link)?;
-    let seqs = seqs::seqs_for(root, segs, &pairs)?;
+    let (mut pairs, mut tally) = coarse(segs, link)?;
+    let mut seqs = seqs::seqs_for(root, segs, &pairs)?;
+    let cap = super::wire::limits().doc_seq_cap;
+    seqs.retain(|_, s| {
+        let ok = s.len() <= cap;
+        tally.over_cap_segments += u64::from(!ok);
+        ok
+    });
+    pairs.retain(|(a, b)| seqs.contains_key(a) && seqs.contains_key(b));
     Ok(Cand { pairs, seqs, tally })
 }
 

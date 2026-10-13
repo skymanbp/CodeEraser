@@ -79,7 +79,9 @@ posRow unitTier n i row = case row of
 -- | continuous entities are FINGERPRINTS (u64), not tier indexes:
 -- the ratchet joins current-vs-baseline on (u, code) across runs,
 -- and a tier index shifts whenever a file lands 鈥?so u here is
--- range-checked against u64, never against the node universe.
+-- range-checked against u64, never against the node universe; the
+-- value is a u64 measurement too (plan v2.33 step 11b item 7: an
+-- unbounded value reached the ratchet's arithmetic unrefused).
 -- Three columns, or four with the rulepack class (3.1.0, plan v2.13
 -- ①): the class is bounded by the fence here, and the TABLE keeps
 -- one arity (Table.uniformArity at the boundary — the graph/1
@@ -87,10 +89,10 @@ posRow unitTier n i row = case row of
 -- being read two ways at once.
 contRow :: String -> Int -> [Integer] -> Maybe String
 contRow name i row = case row of
-  (u : code : _ : rest)
+  (u : code : v : rest)
     | length rest > 1 -> Just (label name i <> "malformed row")
     | any (< 0) row -> Just (label name i <> "negative field")
-    | not (u64 u) -> Just (label name i <> "outside u64")
+    | not (u64 u && u64 v) -> Just (label name i <> "outside u64")
     | code > topCode gradeTable -> Just (label name i <> "unknown metric code")
     | any classIdPastFence rest -> Just (label name i <> "class beyond the fence")
     | otherwise -> Nothing

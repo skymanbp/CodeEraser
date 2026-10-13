@@ -61,12 +61,40 @@ pub fn ask(link: &mut Link, cap: &str, kind: &str, body: Value) -> Result<Value,
 /// stage Z1: taken for the request, parked again unless the request broke
 /// it), behind the gate; a degraded reply is a named refusal, every error
 /// prefixed by the capability. The families that ask from deep inside a
-/// sweep (resolve/1, bags/1) go through here.
+/// sweep (resolve/1, bags/1) go through here. Their request is whole like
+/// a candidate pass's, so it meets the same line check (`ask_whole`): a
+/// line the core would answer only with an id-less `too_large` is not
+/// sent, the named reason is the error (plan v2.33 step 11b item 6).
 pub fn session_ask((cap, kind): (&str, &str), body: Value) -> Result<Value, String> {
     let (mut link, _) = Link::open(crate::tables::core_flag())?;
-    let reply = ask(&mut link, cap, kind, body).map_err(|e| format!("{cap}: {e}"))?;
+    let reply = ask_whole(&mut link, (cap, kind), body).map_err(|e| format!("{cap}: {e}"))?;
     degraded(&reply).map_err(|e| format!("{cap}: {e}"))?;
     Ok(reply)
+}
+
+/// Why a whole request has no reply: its line passes the ceiling and was
+/// not sent (`fits_line`'s named reason), or the link / the core said no.
+enum Unsent {
+    Line(String),
+    Unread(Unread),
+}
+
+impl std::fmt::Display for Unsent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Unsent::Line(why) => f.write_str(why),
+            Unsent::Unread(u) => u.fmt(f),
+        }
+    }
+}
+
+/// `ask` for a request that cannot be split without changing its answer
+/// — the two roads that send one (`whole_pass`, `session_ask`) share the
+/// line check here, one owner: measured before it is built, refused by
+/// name before it is sent.
+fn ask_whole(link: &mut Link, (cap, kind): (&str, &str), body: Value) -> Result<Value, Unsent> {
+    fits_line(kind, &body).map_err(Unsent::Line)?;
+    ask(link, cap, kind, body).map_err(Unsent::Unread)
 }
 
 /// One candidate pass a caller consumes WHOLE (plan v2.33 W3): asked
@@ -74,7 +102,7 @@ pub fn session_ask((cap, kind): (&str, &str), body: Value) -> Result<Value, Stri
 /// pass it starved), then the reply, its `pairs` table and the named
 /// `counts.<key>` in `keys` order. What adds up stays the caller's.
 /// A request whose line would pass the protocol's line ceiling is not
-/// sent and meets the same named degradation (`fits_line`): the pass is
+/// sent and meets the same named degradation (`ask_whole`): the pass is
 /// whole-corpus, so it cannot be split without changing its answer.
 pub fn whole_pass<P: DeserializeOwned>(
     link: &mut Link,
@@ -82,10 +110,11 @@ pub fn whole_pass<P: DeserializeOwned>(
     body: Value,
     (what, keys): (&str, &[&str]),
 ) -> anyhow::Result<(Value, P, Vec<u64>)> {
-    if let Err(why) = fits_line(kind, &body) {
-        anyhow::bail!("{cap} degraded the {what} ({why})");
-    }
-    let reply = ask(link, cap, kind, body)?;
+    let reply = match ask_whole(link, (cap, kind), body) {
+        Ok(reply) => reply,
+        Err(Unsent::Line(why)) => anyhow::bail!("{cap} degraded the {what} ({why})"),
+        Err(Unsent::Unread(u)) => return Err(u.into()),
+    };
     if let Err(why) = degraded(&reply) {
         anyhow::bail!("{cap} degraded the {what} ({why})");
     }
@@ -104,22 +133,41 @@ pub fn whole_pass<P: DeserializeOwned>(
 /// The line is counted as the session writes it (session.rs: the body
 /// plus the `id` / `proto` / `type` it stamps, the id at its widest),
 /// without building it; over the ceiling, the named reason.
-fn fits_line(kind: &str, body: &Value) -> Result<(), String> {
-    let max = crate::tables::get().limits.caps.line_bytes;
+pub fn fits_line(kind: &str, body: &Value) -> Result<(), String> {
+    let (line, max) = (line_len(kind, body), line_max());
+    if line > max {
+        return Err(format!(
+            "request line {line} B over the {max} B line the core reads; not sent"
+        ));
+    }
+    Ok(())
+}
+
+/// The ceiling `fits_line` holds a line to (`limits.caps.line_bytes`).
+pub fn line_max() -> usize {
+    crate::tables::get().limits.caps.line_bytes
+}
+
+/// The bytes of `body` as a `{kind}.request` line, counted the way
+/// `fits_line` counts it — the planners that pack several items into one
+/// body (fourclass::moves, lockstep) measure the empty body here and each
+/// item with `json_len`, so a body they cut stays within the line.
+pub fn line_len(kind: &str, body: &Value) -> usize {
     let stamp = format!(
         r#","id":{},"proto":"{}","type":"{kind}.request""#,
         u64::MAX,
         super::PROTO
     );
-    let mut line = Count(stamp.len());
-    serde_json::to_writer(&mut line, body).map_err(|e| e.to_string())?;
-    if line.0 > max {
-        return Err(format!(
-            "request line {} B over the {max} B line the core reads; not sent",
-            line.0
-        ));
-    }
-    Ok(())
+    stamp.len() + json_len(body)
+}
+
+/// The bytes of one value as serde writes it compactly (an item joins an
+/// array at that many bytes plus one separator).
+pub fn json_len(value: &Value) -> usize {
+    let mut line = Count(0);
+    // writing a `Value` to a writer that never fails cannot fail
+    let _ = serde_json::to_writer(&mut line, value);
+    line.0
 }
 
 /// A writer that keeps only the number of bytes written to it.

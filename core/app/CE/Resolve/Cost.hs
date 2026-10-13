@@ -36,9 +36,14 @@ module CE.Resolve.Cost (
 
 -- | The characters of every string of one request plus one per row,
 -- together (CE.Resolve.Contract.requestSize). Over the cap answers a
--- complete degraded reply, never a partial one — a tree that large is
--- refused by name on the measuring side. 256 Mi: the integer-row
--- family's cap was 4 Mi rows, and a path, a specifier or a
+-- complete degraded reply, never a partial one. 256 Mi is above the
+-- protocol's line (CE.Protocol.Version.maxLineBytes, 33,554,432 bytes),
+-- so it is not the bound that acts: a request that long never reaches the
+-- decoder, and the measuring side refuses by name the line that would
+-- pass the ceiling before it sends it (corelink::judged::session_ask →
+-- fits_line, plan v2.33 step 11b item 6). The constant stays as the
+-- decode-side guard should the line ever be raised. 256 Mi: the
+-- integer-row family's cap was 4 Mi rows, and a path, a specifier or a
 -- configuration line is a few dozen characters.
 resolveCap :: Integer
 resolveCap = 268435456

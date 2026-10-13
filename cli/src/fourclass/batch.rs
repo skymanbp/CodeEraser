@@ -46,7 +46,8 @@ pub struct BatchClassification {
     pub suspicions: Vec<(usize, String)>,
     /// None = the cross-file pass ran (or nothing needed asking).
     pub degraded: Option<String>,
-    /// Did the LINK fail, or did the core ANSWER without a verdict?
+    /// Did the LINK fail, or did the core ANSWER without a verdict (a
+    /// degraded reply, a refusal — Link::is_broken)?
     pub link_failed: bool, // stated, not inferred: the restart budget keys on it
 }
 
@@ -60,8 +61,13 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
     let (req, bodies) = moves::request(inputs);
     let mut replies = Vec::with_capacity(bodies.len());
     for body in bodies {
+        // a single pair whose body alone passes the line: named here and
+        // never sent, the batch unjudged (plan v2.33 step 11b item 2)
+        if let Err(why) = crate::corelink::judged::fits_line(moves::KIND, &body) {
+            return done(Vec::new(), Some(format!("{}: {why}", moves::CAP)), false);
+        }
         match link.request(moves::KIND, body) {
-            Err(e) => return done(Vec::new(), Some(e), true), // the link itself
+            Err(e) => return done(Vec::new(), Some(e), link.is_broken()),
             Ok(reply) => replies.push(reply),
         }
     }
@@ -77,7 +83,7 @@ pub fn classify_batch(inputs: &[PairInput], link: Option<&mut Link>) -> BatchCla
         return done(pairs, None, false);
     }
     match link.request("fourclass", request_body(&pairs, &sent, &l1.dup_spans)) {
-        Err(e) => done(pairs, Some(e), true), // the link itself
+        Err(e) => done(pairs, Some(e), link.is_broken()), // a refusal keeps it
         Ok(reply) => {
             consume(&reply, inputs, &sent, &pairs).unwrap_or_else(|e| done(pairs, Some(e), false))
         }

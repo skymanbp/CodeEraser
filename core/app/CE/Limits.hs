@@ -16,7 +16,12 @@
 -- request by — `zone`, the two per-mille tier lines the guard's
 -- declared tiers are drawn at, and `score_defaults`, every verdict knob
 -- at its default under its wire knob name (the degraded verdict reply's
--- own echo, CE.Verdict.Knobs.defaultsEcho).
+-- own echo, CE.Verdict.Knobs.defaultsEcho). Step 11b added two `caps`:
+-- erase/1's row ceiling (the plan is one request — the closure chooses
+-- across the rows of one path — so the measuring side refuses a plan
+-- over it by name before sending) and trend/2's (rows and declared knob
+-- rows count against it together; the measuring side refuses a window
+-- that cannot fit before measuring a commit of it).
 module CE.Limits (limits) where
 
 import qualified CE.Arch.Cost as Arch
@@ -24,6 +29,7 @@ import qualified CE.Candidates.Cost as Candidates
 import qualified CE.Clone.Cost as Clone
 import qualified CE.Dedup.Cost as Dedup
 import qualified CE.Docdup.Cost as Docdup
+import qualified CE.Erase.Cost as Erase
 import qualified CE.Flow.Cost as Flow
 import qualified CE.Graph.Cost as Graph
 import qualified CE.FourClass.Moves.Cost as Moves
@@ -34,6 +40,7 @@ import qualified CE.Similar.Bags as Bags
 import qualified CE.Similar.Cost as Similar
 import qualified CE.Similar.Rank.Cost as Rank
 import qualified CE.Structure.Cost as Structure
+import qualified CE.Trend.Cost as Trend
 import qualified CE.Verdict.Cost as Verdict
 import CE.Verdict.Knobs (defaultsEcho)
 import Data.Aeson (Value, object, (.=))
@@ -93,6 +100,8 @@ caps =
     , "arch_refs" .= Arch.refCap
     , "bags_items" .= Bags.bagsCap
     , "line_bytes" .= maxLineBytes
+    , "erase_rows" .= Erase.eraseRowCap
+    , "trend_rows" .= Trend.trendRowCap
     ]
 
 -- | The similar family's ceilings and the ranking's constants.

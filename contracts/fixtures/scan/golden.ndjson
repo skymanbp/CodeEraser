@@ -50,3 +50,7 @@
 {"code":"contract","id":25,"message":"event 1: seq not contiguous","proto":"9.0.0","type":"error"}
 {"proto":"9.0.0","type":"scan.request","id":26,"rows":[[3,2],[4,7],[5,1]],"naming":[],"knobsFence":null}
 {"code":"contract","id":26,"message":"events: required at 9.0.0","proto":"9.0.0","type":"error"}
+{"proto":"9.0.0","type":"scan.request","id":27,"rows":[[3,2],[4,7],[5,1]],"events":[],"knobsFence":null}
+{"code":"contract","id":27,"message":"naming: required at 9.0.0","proto":"9.0.0","type":"error"}
+{"proto":"9.0.0","type":"scan.request","id":28,"rows":[[0,301],[1,50],[6,0],[0,800]],"naming":[[1,2,0,1,1]],"events":[]}
+{"code":"contract","id":28,"message":"knobsFence: required at 9.0.0","proto":"9.0.0","type":"error"}

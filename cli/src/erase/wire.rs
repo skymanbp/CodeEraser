@@ -18,14 +18,17 @@ use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
-/// One erase.request over the open core link; degraded refused (the
-/// candidate set is bounded by real findings — an over-cap answer
-/// means the plan is beyond anything this side should trust). The link
-/// goes back for the plan's document (none when nothing was judged).
+/// One erase.request over the open core link. The judgment cannot be
+/// chunked (the closure chooses across the rows of one path), so a plan
+/// over the core's row ceiling (`limits.caps.erase_rows`) is refused by
+/// name before it is sent (plan v2.33 step 11b item 4), and a degraded
+/// reply, should one arrive, is the core's named reason. The link goes
+/// back for the plan's document (none when nothing was judged).
 pub fn judge(core: &str, cands: &[Candidate]) -> Result<(Vec<Verdict>, Held)> {
     if cands.is_empty() {
         return Ok((Vec::new(), Err("no candidate was judged".into())));
     }
+    within_cap(cands.len(), crate::tables::get().limits.caps.erase_rows)?;
     let mut link = crate::corelink::judged::open(core, "erase/1")?;
     let rows: Vec<[i64; 5]> = cands
         .iter()
@@ -40,8 +43,26 @@ pub fn judge(core: &str, cands: &[Candidate]) -> Result<(Vec<Verdict>, Held)> {
             json!({ "rows": rows, "targets": targets_of(cands) }),
         )
         .map_err(anyhow::Error::msg)?;
-    crate::lockstep::refuse_degraded(&reply, "erase/wire.rs vs CE.Erase.Cost")?;
+    if reply["degraded"] != Value::Bool(false) {
+        let why = crate::corelink::judged::degraded(&reply)
+            .err()
+            .map_or("no degraded flag".into(), String::from);
+        anyhow::bail!("erase/1 degraded the plan ({why})");
+    }
     Ok((decode(&reply, cands.len())?, Ok(link)))
+}
+
+/// The plan's rows against the core's ceiling, before anything is sent:
+/// over it is refused by name with the narrowing a user has — the plan
+/// gathers every family's findings under the root, so a subtree or an
+/// `exclude` in ce.toml is what shrinks it.
+pub(crate) fn within_cap(rows: usize, cap: usize) -> Result<()> {
+    ensure!(
+        rows <= cap,
+        "erase: {rows} candidates over the core's erase_rows cap {cap}; narrow the plan with \
+         `ce erase <subdirectory>` or an `exclude` in ce.toml"
+    );
+    Ok(())
 }
 
 /// The target table: one [pathId, start, end] per candidate — path

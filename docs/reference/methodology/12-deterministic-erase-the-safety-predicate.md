@@ -19,16 +19,16 @@ the remaining four cells are facts whose meaning depends on that class
 ([VERSIONING-ARCHIVE-2.15-2.33.md:135-139](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L135)). The client
 prepends the class to those four facts, sends the resulting five-integer row,
 and reads one `[eraseable, reason]` pair back for every candidate
-([wire.rs:29-48](../../../cli/src/erase/wire.rs#L29)). Thus the measurement side
+([wire.rs:32-51](../../../cli/src/erase/wire.rs#L32)). Thus the measurement side
 can assemble evidence, but the boolean and reason are produced by `judgeRow`.
 
 Since 7.2.0 (plan v2.30 step 7b) the request also carries the rows' targets —
 one `[pathId, start, end]` per row, path ids dense in request order and `0/0`
 for a whole file — and the reply carries `kept`, one bit per row saying which
-row STANDS for its target ([wire.rs:44-60](../../../cli/src/erase/wire.rs#L44),
+row STANDS for its target ([wire.rs:52-68](../../../cli/src/erase/wire.rs#L52),
 [Erase.hs:55-61](../../../core/app/CE/Erase.hs#L55)). The client reads both
 tables length-locked and refuses a reply without `kept` as a pre-7.2.0 core
-([wire.rs:62-65](../../../cli/src/erase/wire.rs#L62)); the closure itself is
+([wire.rs:83-86](../../../cli/src/erase/wire.rs#L83)); the closure itself is
 §2's class-2 paragraph and `keptRows`.
 
 Rust's measurement leg preserves raw bytes for the final equality test: the
@@ -163,12 +163,15 @@ degraded reply with `fail:true` and an empty judgment table, so no row can be
 authorized from an over-cap computation
 ([VERSIONING-ARCHIVE-2.15-2.33.md:144-146](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L144)).
 
-The erase client treats degraded as an error rather than interpreting an empty
-table as “nothing to erase”: `wire.rs` calls `refuse_degraded` before decoding
-rows and checks that the decoded count equals the candidate count
-([wire.rs:37-48](../../../cli/src/erase/wire.rs#L37)). The shared refusal helper
-requires `degraded == false` and reports cap-mirror drift when it is not
-([lockstep.rs:116-122](../../../cli/src/lockstep.rs#L116)).
+The judgment is one request — the closure chooses across the rows of one path,
+so it cannot be chunked — and the erase client never sends a plan over the
+ceiling: the package states it (`limits.caps.erase_rows`), and a plan with more
+candidates is refused by name before anything is sent, naming the narrowing a
+user has, a subtree or an `exclude` in ce.toml
+([wire.rs:59-64](../../../cli/src/erase/wire.rs#L59)). A degraded reply, should
+one still arrive, is an error carrying the core's reason rather than an empty
+table read as “nothing to erase”, and the decoded count must equal the
+candidate count ([wire.rs:46-52](../../../cli/src/erase/wire.rs#L46)).
 
 ### 5. `--apply`: predicates before writes
 

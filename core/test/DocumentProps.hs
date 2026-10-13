@@ -243,7 +243,7 @@ limitsHeld = case limits of
   Object o -> [(Key.toString k, length g) | (k, Object g) <- KM.toAscList o] == stated && KM.size o == length stated
   _ -> False
  where
-  stated = [("candidates", 7), ("caps", 9), ("clone", 5), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 16), ("similar", 14), ("zone", 2)]
+  stated = [("candidates", 7), ("caps", 11), ("clone", 5), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 16), ("similar", 14), ("zone", 2)]
 
 -- | The query documents' grouping, restated as the walk the GUI once
 -- did: a goal's answers are the rows naming it, an answer's proof the

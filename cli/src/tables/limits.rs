@@ -33,10 +33,13 @@ leaked! {
     /// families plan their requests by (plan v2.33 W1; each its
     /// family's Cost constant, once held here as a second literal), and
     /// the two an index refresh's batched bags ask is planned by (W2-text
-    /// Z4: the bags/1 item ceiling, the protocol's line in bytes).
+    /// Z4: the bags/1 item ceiling, the protocol's line in bytes), and the
+    /// two whole requests this side refuses by name before sending (step
+    /// 11b: erase/1's rows, trend/2's rows with its knob rows).
     WireCaps { scan_rows: usize, flow_rows: usize, merge_groups: usize,
                merge_tree_nodes: usize, structure_nodes: usize, arch_files: usize,
-               arch_refs: usize, bags_items: usize, line_bytes: usize }
+               arch_refs: usize, bags_items: usize, line_bytes: usize, erase_rows: usize,
+               trend_rows: usize }
     /// The graph family's cycle floor and the `unmentioned` table's
     /// soft cap (CE.Graph.Cost `sccFloor` / `unmentionedCap`).
     GraphLimits { scc_floor: u32, unmentioned_cap: usize }

@@ -39,8 +39,9 @@ parseBaseline v = case AT.parse bl v of
   bl = withObject "baseline" $ \o ->
     (,,,) <$> o .: "continuous" <*> o .: "discrete" <*> o .:? "softLine" <*> o .:? "knobsDigest"
   contShape i row = case row of
-    [_, code, _]
+    [u, code, x]
       | any (< 0) row -> Just (label "baseline.continuous" i <> "negative field")
+      | not (u64 u && u64 x) -> Just (label "baseline.continuous" i <> "outside u64")
       | code > topCode gradeTable -> Just (label "baseline.continuous" i <> "unknown metric code")
       | otherwise -> Nothing
     _ -> Just (label "baseline.continuous" i <> "malformed row")

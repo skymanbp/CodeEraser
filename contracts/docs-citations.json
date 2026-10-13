@@ -1642,26 +1642,32 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|0e595f4f3d2771cd|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 169,
-    "end": 197,
+    "line": 181,
+    "end": 209,
     "text": "let sets: Vec<&[u64]> = sendable.iter().map(|&i| segs[i].set.as_slice()).collect();"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|11081afa57cc4ee5|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 78,
-    "end": 87,
+    "line": 81,
+    "end": 90,
     "text": "/// Every LIVE admitted segment of an OWN file in identity order,"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|b5e9de6dfc4fe374|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 159,
-    "end": 168,
+    "line": 171,
+    "end": 180,
     "text": "fn coarse(segs: &[SegRow], link: &mut Link) -> Result<(Vec<(usize, usize)>, Tally)> {"
+  },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|cd99034a69358342|0": {
+    "target": "../../../cli/src/docdup/judge/candidates.rs",
+    "line": 159,
+    "end": 165,
+    "text": "let cap = super::wire::limits().doc_seq_cap;"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates.rs|f00a85b3c547dcc2|0": {
     "target": "../../../cli/src/docdup/judge/candidates.rs",
-    "line": 110,
-    "end": 120,
+    "line": 113,
+    "end": 123,
     "text": "/// Decode one docsegs shingle blob (u64 LE rows): `chunks_exact`"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/docdup/judge/candidates/seqs.rs|17671c69f969ccb1|0": {
@@ -1883,15 +1889,21 @@
     "end": 57,
     "text": "/// content_lines PLUS the inline-code mask merged in — the full"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|4203ffe931ae724a|0": {
+    "target": "../../../cli/src/lockstep.rs",
+    "line": 101,
+    "end": 118,
+    "text": "pub(crate) fn within_line<P>("
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|b4dfe2c431316fca|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 147,
-    "end": 158,
+    "line": 180,
+    "end": 191,
     "text": "/// One chunk's request-local layout over the shared sorted-rank throat:"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/lockstep.rs|d0ed92deaf34ad50|0": {
     "target": "../../../cli/src/lockstep.rs",
-    "line": 67,
+    "line": 87,
     "text": "for c in pairs.chunks(fam.chunk) {"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../cli/src/scan/lang.rs|689c8fc33de77ed4|0": {
@@ -2071,14 +2083,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|06e671714f9f72fb|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 98,
-    "end": 101,
+    "line": 101,
+    "end": 104,
     "text": "-- (2026-08-14 attainment-line-B amendment, ccm #842): hard-wrapped"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|0f720e8840bb98a1|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 149,
-    "end": 150,
+    "line": 152,
+    "end": 153,
     "text": "dupDecidesWith :: Integer -> Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|32ee0e65750b9e5c|0": {
@@ -2087,22 +2099,28 @@
     "end": 62,
     "text": "-- often as its text does, so it runs longer than its set; eight times"
   },
+  "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|44421bdb1afcf7e3|0": {
+    "target": "../../../core/app/CE/Docdup/Cost.hs",
+    "line": 64,
+    "end": 65,
+    "text": "docSeqCap :: Integer"
+  },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|49b0523c017c427f|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 152,
-    "end": 163,
+    "line": 155,
+    "end": 166,
     "text": "-- | The FULL duplication verdict (ADR-008 P1): Jaccard half ∨"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|51679bdf31a2efb9|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 72,
-    "end": 75,
+    "line": 75,
+    "end": 78,
     "text": "-- | Per-request pair ceiling, the clone pairCap anchor carried over:"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|5450871a63e3fe61|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 105,
-    "end": 106,
+    "line": 108,
+    "end": 109,
     "text": "docLineCap :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|56bd8ca4d0fb0245|0": {
@@ -2119,14 +2137,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7559273dd66da9de|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 76,
-    "end": 77,
+    "line": 79,
+    "end": 80,
     "text": "docPairCap :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7b6f22f080b3ccba|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 111,
-    "end": 114,
+    "line": 114,
+    "end": 117,
     "text": "-- of the segment. ADR-008 P1 moved the floor's VERDICT home here: the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
@@ -2137,8 +2155,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7cc2b00c6f5f13e5|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 135,
-    "end": 136,
+    "line": 138,
+    "end": 139,
     "text": "licHeadLines :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|9700dd4f43343265|0": {
@@ -2149,8 +2167,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|980d7b79ef3e48cd|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 156,
-    "end": 157,
+    "line": 159,
+    "end": 160,
     "text": "dupVerdict :: Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|9e3cf4c46bebf063|0": {
@@ -2161,8 +2179,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|a0090a5f4797c21f|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 89,
-    "end": 90,
+    "line": 92,
+    "end": 93,
     "text": "minDocTokens :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|a744556afc6e920a|0": {
@@ -2173,14 +2191,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|abeb04d82b8a450d|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 145,
-    "end": 148,
+    "line": 148,
+    "end": 151,
     "text": "-- | The threshold-parameterized form — ONE formula, so the reference"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|bbc3e3298c695141|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 161,
-    "end": 163,
+    "line": 164,
+    "end": 166,
     "text": "dupVerdictWith :: (Integer, Integer, Integer) -> Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|cd940d209736dc34|0": {
@@ -2191,20 +2209,20 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|d1be99e472f277d8|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 108,
-    "end": 111,
+    "line": 111,
+    "end": 114,
     "text": "-- | Verbatim hard-hit floor in words (plan :68, Lee et al."
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|d7f215c88d63ebd3|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 159,
-    "end": 160,
+    "line": 162,
+    "end": 163,
     "text": "-- | The knob-parameterized disjunction — ONE formula, so the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|f43c6ab4e318a162|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 115,
-    "end": 116,
+    "line": 118,
+    "end": 119,
     "text": "verbatimFloor :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Jaccard.hs|444b1933ffc9e82d|0": {
@@ -2977,8 +2995,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/trend/mod.rs|035063f05be757ad|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 147,
-    "end": 158,
+    "line": 148,
+    "end": 159,
     "text": "&n.to_string(),"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Clone/Cost.hs|626115d91a368b79|0": {
@@ -3390,8 +3408,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Rows.hs|b49585f26d3b58c8|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 88,
-    "end": 100,
+    "line": 90,
+    "end": 102,
     "text": "contRow :: String -> Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|0047c55e846ad4db|0": {
@@ -4059,38 +4077,38 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|0d326540934ffa41|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 158,
-    "end": 175,
+    "line": 171,
+    "end": 188,
     "text": "/// Code kinds import; the doc kinds — Markdown's link family and"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|201ccd65b3bae451|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 129,
-    "end": 130,
+    "line": 142,
+    "end": 143,
     "text": "// §4 R5 amendment: same file-level edge, the hop recorded"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|4907f924e5e1d99a|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 42,
-    "end": 45,
+    "line": 43,
+    "end": 46,
     "text": "/// Frozen granularity codes."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|6fe1564690f4c9bb|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 114,
-    "end": 147,
+    "line": 127,
+    "end": 160,
     "text": "fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|8db1fe7ae025a171|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 177,
-    "end": 186,
+    "line": 190,
+    "end": 199,
     "text": "/// A page — a Markdown or HTML document — as an edge target, the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|e47a7e60502158f5|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 25,
-    "end": 34,
+    "line": 26,
+    "end": 35,
     "text": "pub const EDGE_IMPORT: i64 = 0;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/main_prelude.rs|a536628ce5c2f089|0": {
@@ -6404,8 +6422,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|02279480097b02df|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 54,
-    "end": 56,
+    "line": 55,
+    "end": 57,
     "text": "let Some(link) = link else {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|04ff3ffb27d46f6a|0": {
@@ -6416,32 +6434,32 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|278240da5fe1690e|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 68,
-    "end": 71,
+    "line": 74,
+    "end": 77,
     "text": "let l1 = match moves::read(req, &replies) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|512590e6e5abc522|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 57,
-    "end": 59,
+    "line": 58,
+    "end": 60,
     "text": "if !link.has(moves::CAP) || !link.has(\"fourclass/2\") {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|5e78c4dbae1ee1e1|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 72,
-    "end": 78,
+    "line": 78,
+    "end": 84,
     "text": "let (pairs, sent) = (l1.pairs, l1.runs);"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|638dba9a1d619d20|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 107,
-    "end": 111,
+    "line": 113,
+    "end": 117,
     "text": "// Check the reason BEFORE merge: partial blocks behind a bucket"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|638dba9a1d619d20|1": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 107,
-    "end": 111,
+    "line": 113,
+    "end": 117,
     "text": "// Check the reason BEFORE merge: partial blocks behind a bucket"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|699bc537dd2bd310|0": {
@@ -6452,36 +6470,42 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|73f827687937b06e|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 63,
-    "end": 64,
+    "line": 69,
+    "end": 70,
     "text": "match link.request(moves::KIND, body) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|9e1657e872adb87f|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 50,
+    "line": 51,
     "text": "pub link_failed: bool, // stated, not inferred: the restart budget keys on it"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|a2c2066acf526cd1|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 149,
-    "end": 162,
+    "line": 155,
+    "end": 168,
     "text": "fn request_body(pairs: &[Classification], sent: &[(Side, Side)], dup: &[Vec<[u64; 3]>]) -> Value {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|a427f254f63cd5f5|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 112,
-    "end": 114,
+    "line": 118,
+    "end": 120,
     "text": "// Merge copies L1, so a malformed delta or declaration answer"
   },
-  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|b28b7f27190c3f56|0": {
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|b9b35c4ebac303d7|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 80,
-    "text": "Err(e) => done(pairs, Some(e), true), // the link itself"
+    "line": 86,
+    "text": "Err(e) => done(pairs, Some(e), link.is_broken()), // a refusal keeps it"
+  },
+  "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|d28dddf7d8f6d3fe|0": {
+    "target": "../../../cli/src/fourclass/batch.rs",
+    "line": 66,
+    "end": 67,
+    "text": "if let Err(why) = crate::corelink::judged::fits_line(moves::KIND, &body) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch.rs|df763eef179007a7|0": {
     "target": "../../../cli/src/fourclass/batch.rs",
-    "line": 81,
-    "end": 83,
+    "line": 87,
+    "end": 89,
     "text": "Ok(reply) => {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/batch/delta.rs|1506f64c88367f2a|0": {
@@ -6604,32 +6628,32 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/moves.rs|1fe3dfebc7556849|0": {
     "target": "../../../cli/src/fourclass/moves.rs",
-    "line": 87,
-    "end": 116,
+    "line": 91,
+    "end": 120,
     "text": "pub fn request(inputs: &[PairInput]) -> (Request, Vec<Value>) {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/moves.rs|21054823ec53b7ba|0": {
     "target": "../../../cli/src/fourclass/moves.rs",
-    "line": 77,
-    "end": 81,
+    "line": 78,
+    "end": 82,
     "text": "/// May a key carry stacking identity? Anonymous units have none, and"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/moves.rs|897d04d30adfa01b|0": {
     "target": "../../../cli/src/fourclass/moves.rs",
-    "line": 96,
-    "end": 102,
+    "line": 100,
+    "end": 106,
     "text": "let mut contents: Vec<&str> = inputs"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/moves.rs|9750dcf0650cdb7d|0": {
     "target": "../../../cli/src/fourclass/moves.rs",
-    "line": 83,
-    "end": 86,
+    "line": 84,
+    "end": 87,
     "text": "/// The `moves.request` bodies over the changeset — consecutive pairs"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/moves.rs|b24c7b1761af2f2a|0": {
     "target": "../../../cli/src/fourclass/moves.rs",
-    "line": 66,
-    "end": 75,
+    "line": 67,
+    "end": 76,
     "text": "fn measure(p: &PairInput) -> Measured {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|19cee92be350da23|0": {
@@ -7242,14 +7266,20 @@
     "end": 40,
     "text": "pub(crate) fn baseline("
   },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|36581a1d1e7f7cb3|0": {
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 112,
+    "end": 115,
+    "text": "pub(crate) fn window_within(commits: usize, knobs: usize, cap: usize) -> Result<()> {"
+  },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|3bd732b256dddde4|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 98,
+    "line": 132,
     "text": "fn parse_knobs(v: &Value, sent: &[[i64; 2]]) -> Result<Vec<[i64; 2]>> {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|41a32d51be006e6f|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 58,
+    "line": 51,
     "text": "let mut body = json!({"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|7fb457874f6bbf7f|0": {
@@ -7259,7 +7289,7 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|9966ff5b149ff05c|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 76,
+    "line": 75,
     "text": "for (name, pair) in [(\"cliff\", j.cliff), (\"declineRun\", j.decline_run)] {"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|b3f6fb80cceb87dc|0": {
@@ -7267,20 +7297,25 @@
     "line": 5,
     "text": "//! order this side sent; hashes never cross, §5.9.2). Rust computes"
   },
+  "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|d684d19f1444544b|0": {
+    "target": "../../../cli/src/trend/judge.rs",
+    "line": 61,
+    "text": "if let Err(why) = crate::corelink::judged::degraded(&reply) {"
+  },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/judge.rs|e975334367cdf27f|0": {
     "target": "../../../cli/src/trend/judge.rs",
-    "line": 50,
+    "line": 90,
     "text": "let mut knobs: Vec<[i64; 2]> = Vec::new();"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|02421ffd7685ec74|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 172,
-    "end": 183,
+    "line": 173,
+    "end": 184,
     "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|0920e96e3069fb9c|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 126,
+    "line": 127,
     "text": "rows.reverse(); // git log is newest-first; charts read oldest-first"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|254f31d87003e86b|0": {
@@ -7290,22 +7325,22 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|837592edb2511f12|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 159,
+    "line": 160,
     "text": "/// One commit's absolute score, judged in a detached temp worktree"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|a48e784705f6169e|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 138,
+    "line": 139,
     "text": "/// Newest `n` first-parent commits of HEAD: (full sha, committer"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|a5d917234234f42d|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 99,
+    "line": 100,
     "text": "let stamp = toolchain_stamp(core)?;"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|d1414dfcc6565125|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 100,
+    "line": 101,
     "text": "// ONE fence for the whole trajectory: the committed soft line, or"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../core/app/CE/Trend.hs|021bee4e3ec10e13|0": {
@@ -8062,35 +8097,35 @@
     "end": 39,
     "text": "/// Position 6 arrived at 6.1.0 with the RG10 firewall: a dead file"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|555fc245631410bd|0": {
-    "target": "../../../cli/src/erase/wire.rs",
-    "line": 37,
-    "end": 48,
-    "text": "let reply = link"
-  },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|5df7975db4f3a3e3|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 62,
-    "end": 65,
+    "line": 83,
+    "end": 86,
     "text": ".collect()\n}\n\n/// The two reply tables, each length-locked to the request and read"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|77bda7ef17074fa0|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 29,
-    "end": 48,
+    "line": 32,
+    "end": 51,
     "text": "let mut link = crate::corelink::judged::open(core, \"erase/1\")?;"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|92b9265df694eed8|0": {
     "target": "../../../cli/src/erase/wire.rs",
-    "line": 44,
-    "end": 60,
+    "line": 52,
+    "end": 68,
     "text": "Ok((decode(&reply, cands.len())?, Ok(link)))"
   },
-  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/lockstep.rs|a7f7cc8708bdb89f|0": {
-    "target": "../../../cli/src/lockstep.rs",
-    "line": 116,
-    "end": 122,
-    "text": "/// A degraded reply to a client-sized request means the Rust cap"
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|a92d6998172ecb3f|0": {
+    "target": "../../../cli/src/erase/wire.rs",
+    "line": 46,
+    "end": 52,
+    "text": "if reply[\"degraded\"] != Value::Bool(false) {"
+  },
+  "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../cli/src/erase/wire.rs|c7262a98473f88b8|0": {
+    "target": "../../../cli/src/erase/wire.rs",
+    "line": 59,
+    "end": 64,
+    "text": "pub(crate) fn within_cap(rows: usize, cap: usize) -> Result<()> {"
   },
   "docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md|../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md|18abf172f879fdb8|0": {
     "target": "../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md",
@@ -8819,11 +8854,11 @@
     "end": 53,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|291abd717a6a1ec5|0": {
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|d535a3cf381a0200|0": {
     "target": "../../../contracts/VERSIONING.md",
     "line": 482,
     "end": 484,
-    "text": "> 并在拒绝理由具名围栏。全部新键缺席时十二 golden 逐字节如前（仅 proto 戳改动，K16）；`fixture_contract.rs`"
+    "text": "> 回执 `failed` 具名序 `hard_line, knobs_digest, degraded`（fence 上过线即在；`fail ⇔ failed ≠ []`）。"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
     "target": "../../../core/app/CE/Graph.hs",
@@ -10227,12 +10262,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/graph/wire.rs|78e1d9439dd48ef3|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 38,
+    "line": 39,
     "text": "pub const EDGE_NAMES: [&str; 6] = ["
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/graph/wire.rs|826aefb7f736d556|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 47,
+    "line": 48,
     "text": "pub const GRAN_NAMES: [&str; 3] = [\"file\", \"pkg\", \"section\"];"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/main_lang.rs|761fa1116be85460|0": {
@@ -12025,8 +12060,8 @@
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Limits.hs|13f0dcd12f24bb27|0": {
     "target": "../../../core/app/CE/Limits.hs",
-    "line": 83,
-    "end": 96,
+    "line": 90,
+    "end": 103,
     "text": "-- | The request ceilings the families are planned by."
   },
   "docs/reference/methodology/19-architecture-analysis-layers-cuts-clusters-impact.md|../../../core/app/CE/Structure/Tree.hs|f767f36e6267bad9|0": {

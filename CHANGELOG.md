@@ -10,6 +10,16 @@
 ## [Unreleased]
 **无默认档位变更。** v2.33 步 11b 主会话文档提交（审计 C 台账数字逐条重算，分数与判决零改动）：README 双语的「2,761 事件重放 … 7.03/500」改为自仓全史 2,274 事件 / 7.04/500（32 / 2,274 × 500 = 7.036；2,761 是两语料之和，不是那 32 条的分母），FPR-REPLAY :92 / 册 11 同改 7.04；FPR-TOMBSTONE 第六轮两语料合计的 95 % 区间 0.301–1.535 % 改为重算的 0.303–1.545 %、「约 1,500 个零命中事件」改按第八 / 第九轮各算（上界压进 1 % 需 1,022 / 1,303 个事件）；FPR-REPLAY :393 c 的严格 100 % 是三条误拦对零真阳（不是一条）、:406 的 587 点名为严格口径（窄口径 588）；册 15 :271-272 的角色位精度与 same_role 比例改为当前表值 60.6 / 49.7 / 55.9 / 38.3 %；设计册 analysis-track §10 的立项目标旁写上落地读数（screens 十二：flow / merge / arch 住在诊断 hub）、how 页 732 → 643 行、§13 第 6 条「≥ 99 %」写明执行者是零误报线（`flow_precision/mod.rs` `gate_of`）；`cli/src/mcp/adapters.rs:66` 注释改点名 `mcp_reports.rs`（测试车道把 catalog 字节钉搬去了那里）。**已知**：装机的插件 1.8.0 读不了本仓 2026-10-08 起带 `[rules.pack]` 的 ce.toml（旧版按名拒绝陌生键、整份配置落到 observe，状态行 `guard: observe (ce.toml ERROR …)` 说了、别处没说）——1.9.0 装上即消；升级配置先于插件 = 守卫只观察到插件跟上为止，发布说明要写这一句。
 
+**无默认档位变更。** v2.33 步 11b 线路车道（拒绝不是断链；每一族的请求按核声明的上限与那一行来排；设计册 `docs/reference/algorithm-track.md` §11 第 118 条）。界内的输入判决与报告逐字节不变。
+
+- **拒绝不是断链**：`Link::is_broken()` 说出上一次失败是帧丢了还是核的拒绝（错误文本两者照旧逐字不变）；daemon 的四类钩子请求与 fourclass 批只在断链时计失败、退避与作废核链。此前一条违约或过大的钩子请求就会杀掉健康的核，之后每个钩子等 1 s·2^(n−1)（至多 60 s），总是太大的请求让等待一直翻倍。新测试：daemon 收到一条按契约拒绝的 document 请求之后，下一条 tombstone 钩子照常判、stderr 没有退避行（去掉修复即红）；单元腿杀掉自己起的核，链读作断。
+- **会话路量行**：`judged::ask_whole`（量行再问，一个所有者）由整语料一遍与会话路（`resolve/1`、`bags/1`）共用；`resolve/1` 的请求过行按名拒绝，`resolve_unavailable` 的原因点名哪几个语言的阶梯没答（原句里写死、早已过时的语言清单删掉）。`CE.Resolve.Cost.resolveCap` 与 `CE.Docdup.Cost.docCorpusCap` 的注释改说实话：两者都在协议一行之上，起作用的是那一行。
+- **`moves/1` 按字节装包**：每对先建好，按行数、单元数与序列化字节（`judged::json_len`，空包连 `keys` 表用 `line_len` 量）三者切包；一对单独超行按名记为未判（`moves/1: request line …`），不发、不算断链。新增 `--ignored` 腿（两个 50 万行的新增文件，各约 20 MB、合计约 41 MB、100 万行——只按行数是一个包）。
+- **docdup 的序列上限**：`limits.docdup.doc_seq_cap` 现在读了——序列过它的段记进 `over_cap_segments`、它的对不判；lockstep 两族（clone / docdup）的块经 `lockstep::within_line` 量行，超了对半再分，一对单独超行按名拒绝。此前核把整个判决请求降级，测量侧报「cap mirror drift」退 2（旧二进制在新夹具上复现原句）。
+- **erase / trend 的上限**：`limits.caps` 加 `erase_rows`、`trend_rows`；擦除计划过上限在发出前按名拒绝并点名能缩小计划的办法，`--commits` 过上限（减去声明的旋钮行）在量第一个提交之前按名拒绝；两族的降级应答读作核的原因，不再报「镜像漂移」或假的旋钮钉。趋势缓存的工具链戳加上线路 `proto`，9.0.0 的构建不再把 1.8.0 在 7.2.0 下量的点当自己的。
+- **核的收紧**：`verdict` 的 `continuous` 行与基线行的值列按 u64 校验（基线行此前实体列也不校验），电池两条探针。
+- **拒绝的 golden**：`naming` / `knobsFence`（scan 第 27、28 对）、`targets`（erase 第 15 对）、`unres`（graph 第 27 对）各一对；`contracts/VERSIONING.md` 五处还写着缺席臂的段落改成 9.0.0 的事实，9.0.0 条目加一段补记。
+
 **无默认档位变更。** v2.33 步 11a 去碎片化（GUI / Tauri / 插件 / 站点 / MCP 适配器一路，审计 B 表）：同一件事只留一个所有者，各处旧拼写改读它；除下面点名的两处，所有报告文档逐字节不变。
 
 - **网页一处一份**：`gui/ui/app.js` 收三个共用件——`load`（每个屏的加载路：按钮置灰、状态字、`invoke`、渲染、schema 或错误，原先约十一份同形写法；结构 / 评分 / 诊断 / 更新 / 擦除三处 / 相似 / 图 / 报告集线器 / 查询都走它，趋势与候选两屏的形状不同各留自己的）、`stateRow`（诊断与更新两屏的带状态行，B3）、`census`（评分屏与候选屏两份按严重度计数排序，B6）；`structree.js` 的 `rollup` 顶替结构屏自己的 `weights()`（B4），`chainLabel` 一份供树状与矩形图两种视图（B5）；报告集线器一份 `hubChip` / `hubTable`（带行数上限与上限说明，arch / flow 的表因此也有上限）、一份 `hubOption`，通用投影不再认识 scan 的 `failed`（改由 `HUB.scan.labels` 自报，B15 / B16 / B38 / B39）；flow / query / merge 三条一模一样的降级句收成一个键 `noJudgment`（B34）；相似屏的六个证据通道字母只在 `SIMILAR_CHANNELS` 一处（B35）。

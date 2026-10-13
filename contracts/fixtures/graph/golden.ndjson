@@ -50,3 +50,5 @@
 {"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,2]],"degraded":false,"fail":true,"id":25,"pos":[],"proto":"9.0.0","reported":[],"type":"graph.result"}
 {"proto":"9.0.0","type":"graph.request","id":26,"nodes":[[20,0,0]],"edges":[],"pos":[],"unres":[[20,0,1]]}
 {"counts":{"edges":0,"kept":0,"nodes":1},"cycles":[],"dead":[[0,1,2]],"degraded":false,"fail":true,"id":26,"pos":[],"proto":"9.0.0","reported":[],"type":"graph.result"}
+{"proto":"9.0.0","type":"graph.request","id":27,"nodes":[[0,0,0],[0,1,0]],"edges":[[0,2,0,1]],"pos":[]}
+{"code":"contract","id":27,"message":"unres: required at 9.0.0","proto":"9.0.0","type":"error"}

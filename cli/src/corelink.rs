@@ -151,6 +151,16 @@ impl Link {
             .expect("a live link holds its session")
             .request(kind, body)
     }
+
+    /// Whether the last failed `request` lost the session's framing (a
+    /// write or read that failed, a deadline, a reply that does not
+    /// parse, a desync) rather than meeting the core's refusal: the
+    /// error text is the same either way, so a reader that keys a retry
+    /// budget or a link's life on the failure asks here after an `Err`.
+    /// A refused request leaves the session whole (session.rs).
+    pub fn is_broken(&self) -> bool {
+        self.session().broken
+    }
 }
 
 impl Drop for Link {

@@ -120,7 +120,9 @@ impl Judge {
     pub fn judge_changeset(&mut self, inputs: &[PairInput]) -> BatchClassification {
         let batch = classify_batch(inputs, self.link_mut());
         // Keyed on the LINK, not on getting a verdict: a core refusing
-        // via its own work budget is HEALTHY, killing it cost a retry.
+        // via its own work budget or its contract is HEALTHY, killing it
+        // cost a retry (batch.rs sets link_failed only when the request
+        // broke the session, Link::is_broken).
         if batch.link_failed {
             self.note_failure();
         }
@@ -156,8 +158,10 @@ impl Judge {
     }
 
     /// One family's request behind its capability, every failure a
-    /// named degraded object; a failed request counts against the
-    /// link's budget, a missing capability does not.
+    /// named degraded object; a request that broke the link counts
+    /// against its budget, a missing capability or the core's refusal
+    /// (an over-cap or contract-violating body: the core answered and
+    /// stays healthy, Link::is_broken) does not.
     fn family(&mut self, cap: &str, kind: &str, body: serde_json::Value) -> serde_json::Value {
         let Some(link) = self.link_mut() else {
             return degraded("core_unavailable");
@@ -168,7 +172,9 @@ impl Judge {
         match link.request(kind, body) {
             Ok(reply) => reply,
             Err(why) => {
-                self.note_failure();
+                if link.is_broken() {
+                    self.note_failure();
+                }
                 degraded(&why)
             }
         }

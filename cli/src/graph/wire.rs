@@ -15,6 +15,7 @@ use super::ladder::{self, Outcome, Scope, Site};
 use super::owed::{Owed, Resolved};
 use super::store::{CachedSite, EdgeRow, kind_label};
 use crate::scan::lang::Lang;
+use std::collections::BTreeSet;
 use std::path::Path;
 
 /// Frozen edge-kind codes: code→code import, doc→doc link, doc→code
@@ -102,6 +103,18 @@ fn without_core(batch: &[(Lang, &Site)], scope: &Scope, reason: String) -> anyho
         .filter(|(l, _)| held(*l))
         .map(|(_, s)| s.from.to_string())
         .collect();
+    // the languages whose ladders went unanswered, named with the reason
+    // (plan v2.33 step 11b item 6: a request over the line is refused by
+    // name, and the face says whose sites wait on it)
+    let langs: BTreeSet<&str> = batch
+        .iter()
+        .filter(|(l, _)| held(*l))
+        .map(|(l, _)| l.name())
+        .collect();
+    let reason = format!(
+        "the {} ladders unanswered: {reason}",
+        langs.into_iter().collect::<Vec<_>>().join(", ")
+    );
     let outcomes = batch
         .iter()
         .map(|(l, _)| if held(*l) { None } else { answered.next() })
