@@ -20,6 +20,7 @@
 - **核的收紧**：`verdict` 的 `continuous` 行与基线行的值列按 u64 校验（基线行此前实体列也不校验），电池两条探针。
 - **拒绝的 golden**：`naming` / `knobsFence`（scan 第 27、28 对）、`targets`（erase 第 15 对）、`unres`（graph 第 27 对）各一对；`contracts/VERSIONING.md` 五处还写着缺席臂的段落改成 9.0.0 的事实，9.0.0 条目加一段补记。
 - **协议一行 32 → 128 MiB**（用户裁定 2026-10-13，设计册 §11 第 120 条）：`maxLineBytes` 33,554,432 → 134,217,728 B、`readBudget` 67,108,864 → 268,435,456 B（行的两倍），测量侧的应答上限 `corelink/pipe.rs::MAX_REPLY_BYTES` 64 → 256 MiB（行的两倍，单元腿读 tables golden 钉住）；依据是实测的核峰值工作集——`candidates/1` 是请求字节的 21–25 倍（PERF-BUDGET「v2.33 步 11b」）；careeros 与 Claude-Code-Local 的 `ce check` 现在给出判决（763 / 785，退 0）。
+- **精度册退役并重生成**（两个提交）：线路车道（4d3a58fa）与行上限车道（30a56389）改写了语言考题阶梯清单里 `core/app/CE/Resolve/Cost.hs` 的注释（常量与答案未动，出处门按路径读），退役 1ed34653 / 子仓 f81c896 删十一份、考题翻回 `Audited`，下一提交在 1ed34653 的干净树上逐份重生成：十一份与退役前只差 `generated_from.commit`（9ccbffd4 → 1ed34653）、`dirty = false`，考题翻回 `Scored`（子仓 5c75924）。
 
 **无默认档位变更。** v2.33 步 11b 核车道第 1 项：`ce similar --widen` 慢在核里的三处（设计册 `algorithm-track.md` 第 117 项诊断、第 119 项改法），应答逐字节不变。
 
