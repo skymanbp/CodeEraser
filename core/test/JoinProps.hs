@@ -11,6 +11,7 @@ module JoinProps (battery) where
 
 import CE.Verdict.Join
 import Data.Bits (testBit, xor, (.&.), (.|.))
+import ReferenceFlowGen (lcgStep)
 
 battery :: IO Bool
 battery = do
@@ -107,7 +108,7 @@ rowAt i =
     }
  where
   s :: Int -> Int
-  s n = fromInteger (lcg (toInteger i * 104729 + toInteger n) `mod` 1000)
+  s n = fromInteger (lcgStep (toInteger i * 104729 + toInteger n) `div` 65536 `mod` 1000)
   posAt n = case s n `mod` 5 of
     0 -> Nothing
     _ ->
@@ -119,9 +120,6 @@ rowAt i =
             , pScc = toInteger (s (n * 19) `mod` 3)
             }
         )
-
-lcg :: Integer -> Integer
-lcg s = (s * 6364136223846793005 + 1442695040888963407) `mod` 18446744073709551616
 
 census :: Knobs -> [Int]
 census k = [length [() | l <- pop, let (v, _, _) = judge k l, v == c] | c <- [0 .. 3]]

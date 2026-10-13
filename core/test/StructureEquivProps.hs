@@ -78,16 +78,16 @@ nonVacuous =
     (Just (Array xs) : _) -> not (null xs)
     _ -> False
 
--- | Three forgeries of a legal case, each with the offender the
--- reference names: node 1's depth moved off its parent's, the retired
--- `patterns` table riding (8.0.0), and directory 0's inside sum made odd while a
--- dir-edge table rides. The unforged case itself is judged, not
--- refused.
+-- | Two forgeries of a legal case, each with the offender the
+-- reference names: node 1's depth moved off its parent's, and
+-- directory 0's inside sum made odd while a dir-edge table rides. The
+-- unforged case itself is judged, not refused. (The retired `patterns`
+-- table is refused once, alone and beside patternShapes, in
+-- StructureProps.shapeRoad.)
 forged :: SIn -> Bool
 forged c =
   fieldsOf respond (encode' c) ["proto"] /= Nothing
     && and [refusedBy respond (encode' f) why | (f, why) <- forgeries]
-    && refusedBy respond (setKey "patterns" (toJSON ([] :: [[Integer]])) (encode' c)) "patterns: retired at 8.0.0 \8212 the core classifies patternShapes"
  where
   forgeries =
     [ (c {sNodes = moved}, "node 1: depth is not parent depth + 1")

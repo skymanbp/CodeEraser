@@ -72,21 +72,13 @@ import qualified VerdictFenceProps
 import qualified CE.Protocol as Protocol
 import Control.Monad (unless)
 import qualified Data.ByteString.Char8 as B8
-import Data.Version (showVersion)
-import Paths_ce_core (version)
 import System.Exit (exitFailure)
 import System.IO (hSetEncoding, stderr, stdout, utf8)
-import WireHarness (runChecks)
+import WireHarness (coreVersion, runChecks)
 
 -- | cabal test runs with the package root (core/) as cwd.
 fixtureDir :: FilePath
 fixtureDir = "../contracts/fixtures/"
-
--- | The version respond echoes — the cabal-generated single source
--- (Main.hs derives the same way; an injected literal here once
--- pinned 0.0.1 into the hello golden while the shipped core moved).
-coreVersion :: String
-coreVersion = showVersion version
 
 main :: IO ()
 main = do

@@ -166,7 +166,7 @@ traces; the shipped judgment must agree finding for finding on 200 seeded random
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:120](../../../core/test/Spec.hs#L120)).
+([Spec.hs:112](../../../core/test/Spec.hs#L112)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language
@@ -210,7 +210,7 @@ own `deny`, the MCP relay to the same document, the guard's novel count, its sen
 and its refusal at `deny` on a judged language's write (Python) and its silence on an unjudged
 one (Rust), a moved finding and an unused parameter as not novel, the Stop line's `flow`
 object, and the daemon round trip
-([flow_face.rs:83](../../../cli/tests/it/flow_face.rs#L83), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
+([flow_face.rs:80](../../../cli/tests/it/flow_face.rs#L80), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
 [flow_audit.rs:46](../../../cli/tests/it/flow_audit.rs#L46), [daemon_flow.rs:18](../../../cli/tests/it/daemon_flow.rs#L18)).
 The family is one row of the parity table, one hub renderer of the GUI and one tool of the MCP
 catalogue; this booklet is under the citations gate.

@@ -31,7 +31,7 @@ import qualified Data.Set as S
 import DocumentGen (requests)
 import DocumentGen4 (requests4)
 import DocumentGen5 (requests5)
-import DocumentGen6 (requests6)
+import DocumentGen6 (requests6, step5Names)
 import DocumentHarness (at, documentOf, emptyRequest, int, ints, items, path, refsHeld)
 import WireHarness (field, refusedBy, replyObjWith, runLegs, setKey)
 
@@ -70,7 +70,7 @@ seeded = concat [gen (dfName f) | f <- families]
   gen n
     | n `elem` words "arch query rules flow merge" = requests n
     | n `elem` words "guard audit" = requests5 n
-    | n `elem` words "scan dedup clone clone-units docdup erase erase-trail churn trend similar" = requests6 n
+    | n `elem` step5Names = requests6 n
     | otherwise = requests4 n
 
 -- | Each request in both languages, with its family and lines.

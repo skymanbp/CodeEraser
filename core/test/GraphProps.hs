@@ -24,6 +24,7 @@ import Data.Bits (xor)
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.IntSet as IS
 import Data.List (isInfixOf, sort)
+import ReferenceFlowGen (lcgStep)
 import ReferenceGraph (reachB)
 import WireHarness (runChecks)
 
@@ -139,21 +140,22 @@ allGraphs prop = all (prop . graphAt) [1 .. 200 :: Int]
 graphAt :: Int -> (Int, [(Int, Int, Integer)], [Integer])
 graphAt i = (n, arcs, flagses)
  where
-  s0 = lcg (toInteger i * 7919)
-  n = 3 + fromInteger (s0 `mod` 6)
-  picks = drops (lcg s0) [(a, b) | a <- [0 .. n - 1], b <- [0 .. n - 1]]
-  arcs = [(a, b, 1 + lcg (toInteger (a * n + b)) `mod` 5) | (a, b) <- picks]
-  flagses = [lcg (s0 + toInteger v) `mod` 8 | v <- [1 .. n]]
+  s0 = lcgStep (toInteger i * 7919)
+  n = 3 + fromInteger (high s0 `mod` 6)
+  picks = drops (lcgStep s0) [(a, b) | a <- [0 .. n - 1], b <- [0 .. n - 1]]
+  arcs = [(a, b, 1 + high (lcgStep (toInteger (a * n + b))) `mod` 5) | (a, b) <- picks]
+  flagses = [high (lcgStep (s0 + toInteger v)) `mod` 8 | v <- [1 .. n]]
 
 -- | Keep each element on a 1-in-4 draw from the seed stream.
 drops :: Integer -> [(Int, Int)] -> [(Int, Int)]
 drops _ [] = []
 drops s (x : xs)
-  | s `mod` 4 == 0 = x : drops (lcg s) xs
-  | otherwise = drops (lcg s) xs
+  | high s `mod` 4 == 0 = x : drops (lcgStep s) xs
+  | otherwise = drops (lcgStep s) xs
 
-lcg :: Integer -> Integer
-lcg s = (s * 6364136223846793005 + 1442695040888963407) `mod` 18446744073709551616
+-- | A draw: the LCG state's high bits.
+high :: Integer -> Integer
+high s = s `div` 65536
 
 rowsOf :: [(Int, Int, Integer)] -> [[Integer]]
 rowsOf arcs = sort [[toInteger a, toInteger b, 0, r] | (a, b, r) <- arcs]

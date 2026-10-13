@@ -8,7 +8,7 @@
 -- half). One check runner, one respond-to-Object decoder, one
 -- request editor, one field reader; each battery keeps only its own
 -- probes.
-module WireHarness (battery, degradedFace, generated, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
+module WireHarness (battery, coreVersion, degradedFace, generated, field, fieldsOf, refusedBy, replyObjWith, rowsRequest, runChecks, runLegs, setKey, tabledRequest) where
 
 import Data.Aeson
 import qualified Data.Aeson.Key as Key
@@ -20,7 +20,10 @@ import qualified Data.Set as Set
 import Data.Version (showVersion)
 import Paths_ce_core (version)
 
--- | Same single source as Spec/Main — never an injected literal.
+-- | The version respond echoes: the cabal-generated single source
+-- (Main.hs derives the same way; an injected literal here once pinned
+-- 0.0.1 into the hello golden while the shipped core moved). Spec and
+-- SpecProbes read it here (audit C row 22).
 coreVersion :: String
 coreVersion = showVersion version
 

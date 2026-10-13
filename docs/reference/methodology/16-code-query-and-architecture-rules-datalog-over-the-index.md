@@ -408,13 +408,13 @@ list-comprehension form — that shares only the checker; the shipped evaluator 
 for tuple on every program of the enumerated family over every seeded fact set (five programs,
 forty sets, 200 cases), and the same reference replays a proof tree by checking that each rule
 node's children are one solution of its body ([ReferenceQuery.hs:1-12](../../../core/test/ReferenceQuery.hs#L1),
-[ReferenceQuery.hs:34](../../../core/test/ReferenceQuery.hs#L34)). Twelve golden pairs pin the
+[ReferenceQuery.hs:35](../../../core/test/ReferenceQuery.hs#L35)). Twelve golden pairs pin the
 wire bytes — the prelude with the schema echo, an assertion's violation, a `why` query negating
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
 aggregate over a set, the prelude lexed alone, the tree form, and the rule pack judged and
 lexed — and a tests-repo leg regenerates them so every request line carries the prelude and its
 program as texts
-([Spec.hs:118](../../../core/test/Spec.hs#L118), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
+([Spec.hs:110](../../../core/test/Spec.hs#L110), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
 [query_golden.rs:148](../../../cli/tests/it/query_golden.rs#L148)).
 
 On the measuring side the unit legs hold the vocabulary to the graph's codes, the core's lex

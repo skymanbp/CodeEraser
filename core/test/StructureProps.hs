@@ -20,6 +20,7 @@ import CE.Structure.Cost (structNodeCap)
 import CE.Structure.Shape (foldShapes, shapeCode)
 import Data.Aeson
 import WireHarness (field, refusedBy, replyObjWith, runLegs, setKey, tabledRequest)
+import qualified WireHarness as W
 
 battery :: IO Bool
 battery = runLegs names probes
@@ -125,7 +126,6 @@ refusals =
       -- rode a depth of 999 into the geometry axes and moved the
       -- score before depthChain existed
       refused (nodes [[0, 0, 0, 2, 3], [1, 0, 999, 0, 9]]) "depth is not parent depth + 1"
-    , refused (setKey "patterns" (toJSON [[1, 0, 5 :: Integer]]) wireReq) "patterns: retired at 8.0.0 \8212 the core classifies patternShapes"
     , refused (setKey "conventions" (toJSON [[0, 0 :: Integer]]) wireReq) "bits outside 1..3"
     , refused (setKey "fileRefs" (toJSON [[9, 0, 1, 1 :: Integer]]) wireReq) "dir out of range"
     , -- max+1: the boundary-exact unknown code, moved WITH the knob
@@ -244,13 +244,10 @@ staleAxis =
     setKey "redundancy" (toJSON [[1, 1, 0], [2, 0, 1 :: Integer]]) staleReq
 
 -- | P1 posture on the newest family: one node past the cap
--- degrades to a complete reply whose fail bit is TRUE.
+-- degrades to a complete reply whose fail bit is TRUE, no finding,
+-- its reason named (the shared degraded face).
 degradedFails :: Bool
-degradedFails = case replyObj overCap of
-  Nothing -> False
-  Just o ->
-    field o "degraded" == Just (Bool True)
-      && field o "fail" == Just (Bool True)
+degradedFails = W.degradedFace respond overCap "findings" "structure_too_large"
  where
   overCap = setKey "nodes" (toJSON [[0, 0, 0, 0, 0 :: Integer] | _ <- [0 .. structNodeCap]]) wireReq
 

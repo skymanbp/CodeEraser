@@ -7,7 +7,7 @@
 -- without a held veto, the trail present or absent, a similar run the
 -- core did not judge one time in six); drawn by the flow reference's
 -- generator, as DocumentGen, DocumentGen4 and DocumentGen5 draw theirs.
-module DocumentGen6 (requests6) where
+module DocumentGen6 (requests6, step5Names) where
 
 import Control.Monad (forM, replicateM)
 import Data.Aeson (Value)
@@ -16,10 +16,19 @@ import DocumentGen (docRequest, num, seededBy, some)
 import ReferenceFlowGen (G, rand)
 
 requests6 :: String -> [Value]
-requests6 fam = seededBy 6007 41 (fromMaybe similar (lookup fam (zip names gens)))
- where
-  names = words "scan dedup clone clone-units docdup erase erase-trail churn trend"
-  gens = [scan, dedup, clone, cloneUnits, docdup, erase, trail, churn, trend]
+requests6 fam = seededBy 6007 41 (fromMaybe similar (lookup fam generators))
+
+-- | Step 5's ten families by name, each with its generator: the one
+-- list DocumentProps5 and DocumentProps6 read (audit C row 34).
+generators :: [(String, G Value)]
+generators =
+  zip
+    (words "scan dedup clone clone-units docdup erase erase-trail churn trend similar")
+    [scan, dedup, clone, cloneUnits, docdup, erase, trail, churn, trend, similar]
+
+-- | The ten names, in generator order.
+step5Names :: [String]
+step5Names = map fst generators
 
 -- | Fact rows named by the words, each drawn below the bound.
 drawn :: String -> Int -> G [(String, Integer)]

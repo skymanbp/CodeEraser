@@ -21,13 +21,7 @@ import Data.Aeson (Value (..), decodeStrict)
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as B8
-import Data.Version (showVersion)
-import Paths_ce_core (version)
-import WireHarness (runChecks)
-
--- | The version respond echoes — the cabal-generated single source.
-coreVersion :: String
-coreVersion = showVersion version
+import WireHarness (coreVersion, runChecks)
 
 -- | One named check through the shared runner.
 check :: String -> Bool -> IO Bool

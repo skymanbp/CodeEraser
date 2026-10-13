@@ -291,7 +291,7 @@ for byte and the core judged the fixture pair same-role; the MCP tool relays it 
 request that names two asks; the Stop leg writes `{unit, twin, score}` for a unit the session
 added and no key once the unit is committed
 ([similar_face.rs:55](../../../cli/tests/it/similar_face.rs#L55),
-[similar_face.rs:106](../../../cli/tests/it/similar_face.rs#L106)). The wire leg ranks every unit of the go
+[similar_face.rs:109](../../../cli/tests/it/similar_face.rs#L109)). The wire leg ranks every unit of the go
 fixture through rank/1, has similar/1 judge it, and checks every role bit against the spec's
 conjunction; the family is offered, judged and refuses by name
 ([similar_wire.rs:17](../../../cli/tests/it/similar_wire.rs#L17),

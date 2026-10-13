@@ -10,7 +10,7 @@
 -- rows each one sends. Split from the interpreter so both stand
 -- below the core's file wall (the Reference.hs posture: deterministic,
 -- no RNG inside a byte-determinism contract).
-module ReferenceFlowGen (Ctx (..), G, Node (..), Prog (..), S (..), programs, rand, request, runG, walk) where
+module ReferenceFlowGen (Ctx (..), G, Node (..), Prog (..), S (..), lcgStep, programs, rand, request, runG, walk) where
 
 import CE.Flow.Cost
 import Data.Aeson (Value)
@@ -49,9 +49,15 @@ instance Monad G where
 runG :: G a -> S -> a
 runG (G g) s = fst (g s)
 
+-- | One step of the seeded batteries' one LCG (audit C row 21): every
+-- battery that draws, through `G` or through a plain stream, steps it;
+-- its high bits are the draw (`div` 65536).
+lcgStep :: Integer -> Integer
+lcgStep x = (x * 1103515245 + 12345) `mod` 2147483648
+
 -- | A number in [0, n).
 rand :: Int -> G Int
-rand n = G (\s -> let x = (seed s * 1103515245 + 12345) `mod` 2147483648 in (x `div` 65536 `mod` n, s {seed = x}))
+rand n = G (\s -> let x = fromInteger (lcgStep (toInteger (seed s))) in (x `div` 65536 `mod` n, s {seed = x}))
 
 fresh :: G Int
 fresh = G (\s -> (counter s, s {counter = counter s + 1}))

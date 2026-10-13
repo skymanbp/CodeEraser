@@ -286,7 +286,7 @@ Density is scale-free: same rate, same score.
 Worked end-to-end on the battery fixture — root (2 subdirs, 3 files, README+config), dir 1
 (9 files, 5 snake + 4 pascal, two files with 4 outside refs each, no README), dir 2 (6 files,
 uniform names), dir 3 (empty, depth 2), so `N = 4`
-([StructureProps.hs:40-50](../../../core/test/StructureProps.hs#L40)):
+([StructureProps.hs:41-51](../../../core/test/StructureProps.hs#L41)):
 
 ```
 axes    = [[0,0],[1,200],[2,200],[3,200],[4,200]]  -- v=1 at N=4: floor(1000/5)=200
@@ -297,7 +297,7 @@ findings= [[1,1],[1,2],[1,3],[1,4]]
 ```
 
 asserted against the real `respond` at
-[StructureProps.hs:82-90](../../../core/test/StructureProps.hs#L82). Adding an empty `redundancy` table
+[StructureProps.hs:83-91](../../../core/test/StructureProps.hs#L83). Adding an empty `redundancy` table
 makes it six judged axes: `1000 - 8000 div 60 = 867`; both optional tables plus flagged rows
 give seven axes, charges `800+200+333`, `1000 - 13330 div 70 = 810`
 ([StructureProps.hs:191-228](../../../core/test/StructureProps.hs#L191)).
@@ -325,7 +325,7 @@ and returns the *first* offender by name ([Structure.hs:46-61](../../../core/app
 - `depth == parent.depth + 1` is *checked*, not assumed. It was previously only claimed in a
   docstring, and a forged row `[1,0,999,0,1]` rode straight into the geometry axis and moved the
   score (review 2026-08-20 #6) ([Structure.hs:147-161](../../../core/app/CE/Structure.hs#L147),
-  probe at [StructureProps.hs:123-127](../../../core/test/StructureProps.hs#L123));
+  probe at [StructureProps.hs:124-128](../../../core/test/StructureProps.hs#L124));
 - the six `dirTables` share one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
   ([Structure.hs:79-86](../../../core/app/CE/Structure.hs#L79),

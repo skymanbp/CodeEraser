@@ -25,6 +25,7 @@ import qualified Data.IntMap.Strict as IM
 import qualified Data.Map.Strict as M
 import Data.Maybe (mapMaybe, maybeToList)
 import qualified Data.Set as S
+import ReferenceFlowGen (lcgStep)
 
 type Db = IM.IntMap (S.Set [Integer])
 type Subst = IM.IntMap Integer
@@ -153,10 +154,10 @@ toks = map one . words
     _ -> (maybe (error ("toks: " <> w)) id (lookup w punct), 0)
   punct = zip [":-", ",", ".", "(", ")", "not", "?-", "assert", "=", "!=", "<", "<=", ">", ">=", "+", "-", "*", "/", "%", "count", "min", "max", "sum", ":"] [punctFloor ..]
 
--- | A linear congruential stream from a seed (Numerical Recipes'
--- constants): deterministic, and enough spread for small fact sets.
+-- | The batteries' one LCG stream from a seed: deterministic, and
+-- enough spread for small fact sets.
 lcg :: Integer -> [Integer]
-lcg seed = drop 1 (iterate (\x -> (1664525 * x + 1013904223) .&. 0xFFFFFFFF) seed)
+lcg seed = drop 1 (iterate lcgStep seed)
 
 -- | Fact sets over four nodes (codes 0..3): `file` for every node,
 -- `ref` arcs drawn from the stream, `role` entry bits, `lines`

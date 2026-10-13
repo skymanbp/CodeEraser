@@ -47,6 +47,10 @@ javaCases :: [JCase]
 javaCases = map javaCase [1 .. 200]
 
 -- | The case's LCG stream (seeded apart from ReferenceResolveGen's).
+-- Kept off the batteries' one LCG (ReferenceFlowGen.lcgStep, audit C
+-- row 21) by finding: under that stream these two hundred cases never
+-- reach AmbiguousPaths, and the battery's reach check
+-- (ResolveProps) names that rung; this stream's cases reach it.
 roll :: Int -> Int -> Int
 roll k i = fromInteger (go (toInteger (k * 104723 + i * 7907 + 17)) `div` 65536)
  where

@@ -24,6 +24,7 @@ import qualified Data.Map.Strict as M
 import Data.Ord (comparing)
 import qualified Data.Set as S
 import ReferenceArch (acyclicRef, fasByPermutation, fasBySubsets)
+import ReferenceFlowGen (lcgStep)
 import System.CPUTime (getCPUTime)
 
 type Weighted = (Int, [((Int, Int), Integer)])
@@ -178,10 +179,7 @@ shuffled xs (s : ss) = case splitAt (fromInteger (draw s `mod` toInteger (length
 
 -- | The seeded stream and its high bits.
 stream :: Int -> [Integer]
-stream i = drop 1 (iterate lcg (toInteger i * 7919))
-
-lcg :: Integer -> Integer
-lcg s = (s * 6364136223846793005 + 1442695040888963407) `mod` 18446744073709551616
+stream i = drop 1 (iterate lcgStep (toInteger i * 7919))
 
 draw :: Integer -> Integer
-draw s = lcg s `div` 8589934592
+draw s = lcgStep s `div` 65536

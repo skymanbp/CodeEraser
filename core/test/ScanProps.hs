@@ -13,7 +13,7 @@ module ScanProps (battery) where
 import CE.Scan (respond)
 import CE.Scan.Cost (gradeWith, scanRowCap)
 import Data.Aeson
-import WireHarness (field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
+import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runChecks, setKey)
 
 battery :: IO Bool
 battery = do
@@ -219,13 +219,10 @@ classRefusals = all (uncurry (refusedBy respond)) probes
   over os = setKey "gradeOverrides" (toJSON (os :: [[Integer]])) classRows
 
 -- | P1 posture on the new family: one row past the cap degrades to
--- a complete reply whose fail bit is TRUE.
+-- a complete reply whose fail bit is TRUE, no level judged, its
+-- reason named (the shared degraded face).
 degradedFails :: Bool
-degradedFails = case replyObj (wireReq [[0, 0] | _ <- [0 .. scanRowCap]]) of
-  Nothing -> False
-  Just o ->
-    field o "degraded" == Just (Bool True)
-      && field o "fail" == Just (Bool True)
+degradedFails = degradedFace respond (wireReq [[0, 0] | _ <- [0 .. scanRowCap]]) "levels" "scan_too_large"
 
 -- | The judged-language set (8.0.0, plan v2.32 step 6): it comes from
 -- the core's language table, never from the request — a naming row of

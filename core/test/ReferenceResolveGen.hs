@@ -44,6 +44,7 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
 import qualified WireHarness as W
+import ReferenceFlowGen (lcgStep)
 
 data Case = Case
   { cFiles :: [String]
@@ -185,9 +186,7 @@ settleWith rounds ask answer = go [] rounds
 
 -- | The LCG stream of one case.
 rands :: Int -> Int -> Int
-rands k i = fromInteger (iterate step (toInteger (k * 7919 + i * 104729)) !! 3 `div` 65536)
- where
-  step x = (x * 1103515245 + 12345) `mod` 2147483648
+rands k i = fromInteger (iterate lcgStep (toInteger (k * 7919 + i * 104729)) !! 3 `div` 65536)
 
 langOf :: String -> Integer
 langOf f

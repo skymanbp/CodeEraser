@@ -2788,8 +2788,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|14d346ea6dcd4fce|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 40,
-    "end": 50,
+    "line": 41,
+    "end": 51,
     "text": "-- | Fixture: root (2 subdirs, 3 files, README+config) / dir 1"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|180053ab236a6370|0": {
@@ -2806,14 +2806,14 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|885bffb28ea698ca|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 82,
-    "end": 90,
+    "line": 83,
+    "end": 91,
     "text": "fixtureJudged :: Bool"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|b1d82d591529dd0b|0": {
     "target": "../../../core/test/StructureProps.hs",
-    "line": 123,
-    "end": 127,
+    "line": 124,
+    "end": 128,
     "text": ", -- the forged-depth probe (review 2026-08-20 #6): nodeRow's old"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/StructureProps.hs|cc7cfe47d20e7add|0": {
@@ -5901,50 +5901,50 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|261d4883f27a4fb2|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 65,
-    "end": 66,
+    "line": 66,
+    "end": 67,
     "text": "hotspotRow :: Maybe Integer -> Legs"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|3209b6627556c388|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 22,
+    "line": 23,
     "text": "f <- check \"reason bit 0 never fires (deliberately absent)\" bitZeroSilent"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|38bd23c13508ac86|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 24,
+    "line": 25,
     "text": "h <- check \"reorder: rotating the verdict table flips the both-row\" reorder"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|516abd90d47f49b1|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 186,
+    "line": 184,
     "text": "severityPinned :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|74b764e7c12a48d7|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 192,
+    "line": 190,
     "text": "confidenceCounts :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|843431b606662743|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 49,
-    "end": 50,
+    "line": 50,
+    "end": 51,
     "text": "mergeRow :: Legs"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|91a84e5796ee2d6b|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 201,
-    "end": 206,
+    "line": 199,
+    "end": 204,
     "text": "reorder :: Bool"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|b7e9056bb092e050|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 18,
+    "line": 19,
     "text": "b <- check \"RG10 counterfactual: a public dead flank never deletes\" rg10"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|ca4f956189d95f60|0": {
     "target": "../../../core/test/JoinProps.hs",
-    "line": 19,
+    "line": 20,
     "text": "c <- check \"legsMask honest: gated => 3 legs; graph-absent never gates\" legsHonest"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/VerdictWireProps.hs|e9fd80310f47cd95|0": {
@@ -7146,14 +7146,14 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/SpecProbes.hs|3511fafd14f9a99b|0": {
     "target": "../../../core/test/SpecProbes.hs",
-    "line": 70,
-    "end": 73,
+    "line": 64,
+    "end": 67,
     "text": "c <-\ncheck\n\"floor tracks the site cost (ablation table)\""
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/test/SpecProbes.hs|6688a4e51b1f09e6|0": {
     "target": "../../../core/test/SpecProbes.hs",
-    "line": 68,
-    "end": 69,
+    "line": 62,
+    "end": 63,
     "text": "a <- check \"cross floor derives to 2\" (destFloor == 2)"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../DEVELOPMENT_PLAN.md|13b48102ab91505e|0": {
@@ -9831,7 +9831,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|55926dc0727ec714|0": {
     "target": "../../../cli/tests/it/similar_face.rs",
-    "line": 106,
+    "line": 109,
     "text": "fn widen_tags_what_only_the_widened_query_reaches_and_the_ask_is_exactly_one() {"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/tests/it/similar_face.rs|efe6dd5b4b54977f|0": {
@@ -10905,12 +10905,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|dad56a2cf8d08e5a|0": {
     "target": "../../../core/test/ReferenceQuery.hs",
-    "line": 34,
+    "line": 35,
     "text": "naive :: Checked -> Db -> Db"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|b7c903f8436ae3ba|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 118,
+    "line": 110,
     "text": ", goldenPairs \"similar/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|0603e97b6afa2e54|0": {
@@ -11048,7 +11048,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_face.rs|86b3095f4c308d00|0": {
     "target": "../../../cli/tests/it/flow_face.rs",
-    "line": 83,
+    "line": 80,
     "text": "fn the_cli_prints_the_library_face_and_kind_narrows_only_the_listing() {"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/tests/it/flow_guard.rs|c1d69d926211c89b|0": {
@@ -11177,7 +11177,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 120,
+    "line": 112,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

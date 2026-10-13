@@ -27,6 +27,7 @@ import Data.Aeson (Value, object, toJSON, (.=))
 import Data.List (intercalate, isPrefixOf, sortOn)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
+import ReferenceFlowGen (lcgStep)
 import ReferenceResolveGen (originsOf, requestHeader)
 
 -- | A stanza as the case writes it: its header, roots, exposed and other
@@ -49,7 +50,7 @@ data HCase = HCase
 roll :: Int -> Int -> Int
 roll k i = fromInteger (steps !! 4 `div` 65536)
  where
-  steps = iterate (\y -> (y * 1664525 + 1013904223) `mod` 4294967296) (toInteger (k * 7901 + i * 104677 + 29))
+  steps = iterate lcgStep (toInteger (k * 7901 + i * 104677 + 29))
 
 hsCase :: Int -> HCase
 hsCase k = HCase files cabals sites

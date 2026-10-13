@@ -8,10 +8,10 @@
 -- answers, the way the measuring side assembles the `set` table.
 module ReferencePack (Tables (..), tables, cycles, fanIn, fanOut, layered, forbidden) where
 
-import Data.Bits (shiftL, shiftR, xor, (.&.))
+import Data.Bits ((.&.))
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
-import Data.Word (Word64)
+import ReferenceFlowGen (lcgStep)
 
 -- | One seeded table set: the nodes, which of them are files, each
 -- node's directory, the reference arcs (with their kind and rung, two
@@ -24,17 +24,16 @@ data Tables = Tables
   , tMembers :: M.Map String (S.Set Integer)
   }
 
--- | xorshift64 from a seed (never 0): a stream of draws in [0, m).
-draws :: Integer -> [Word64]
-draws seed = drop 1 (iterate step (fromInteger seed * 2654435761 + 1))
- where
-  step x0 = let x1 = x0 `xor` (x0 `shiftL` 13); x2 = x1 `xor` (x1 `shiftR` 7) in x2 `xor` (x2 `shiftL` 17)
+-- | The batteries' one LCG from a seed: a stream of draws (its high
+-- bits), each taken `mod` m below.
+draws :: Integer -> [Integer]
+draws seed = map (`div` 65536) (drop 1 (iterate lcgStep (seed * 2654435761 + 1)))
 
 -- | The tables for a seed over the globs an item spells.
 tables :: Integer -> [String] -> Tables
 tables seed globs = Tables nodes files dirOf refs members
  where
-  rs = map toInteger (draws seed)
+  rs = draws seed
   pick i m = (rs !! i) `mod` m
   n = 5 + pick 0 5
   nodes = [0 .. n - 1]

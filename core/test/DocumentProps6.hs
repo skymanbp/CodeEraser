@@ -28,7 +28,7 @@ import Data.List (isPrefixOf, sort)
 import qualified Data.Map.Strict as M
 import Data.Maybe (fromMaybe)
 import DocumentGen (docRequest)
-import DocumentGen6 (requests6)
+import DocumentGen6 (requests6, step5Names)
 import DocumentHarness (at, emptiesHeld, familiesNamed, fieldsHeld, int, items, judgedBy, path, refsHeld, sameBytes)
 import WireHarness (refusedBy, runLegs, setKey)
 
@@ -54,7 +54,7 @@ legNames =
   \the catalogue says pretty for scan and dedup alone"
 
 ten :: [DocFamily]
-ten = familiesNamed (words "scan dedup clone clone-units docdup erase erase-trail churn trend similar")
+ten = familiesNamed step5Names
 
 judged :: [(DocFamily, Value, Value)]
 judged = judgedBy requests6 ten
