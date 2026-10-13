@@ -675,3 +675,6 @@ W1 第 1 项把七个请求上限改读定义包（设计册 `docs/reference/alg
 
 ## 算法轨 v2.33 步 11a 去碎片化之后：十份精度册第四次退役并重生成（2026-10-13）
 去碎片化 Rust 测量侧车道（审计 A 第 12、19、20 行）改了 `cli/src/flow/` 九个文件：结点文本统一读 `scan::ast::text`、`holds` / `has_child` 收进 `scan::ast`、三处「按（结点种类、记号）配结点」收成 `flow::at::fits`，判决一字未动（字节门 flow / flow_k 两面在十七棵树上 CLI 与 MCP 共 68 份新旧逐字节同），门按路径读而按名拒了十份。处置与前三次同形：**退役**（本提交）十份删档、十门考题 `stage` 翻回 `audited`；**重生成**（下一提交）在本提交的干净树上经 `CE_FLOW_OUT` 逐语言生成到树外、十份齐了一次放回，`stage` 翻回 `scored`。**读数**：十份在 fd6eb9de 的干净树上经 `CE_FLOW_OUT` 生成到树外、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（4845bfaa → fd6eb9de），`per_kind` / `gate` / `judged` 与每行判分逐字节同。
+
+## 算法轨 v2.33 步 11a 去碎片化核一路之后：十份精度册第五次退役并重生成（2026-10-13）
+去碎片化核车道（审计 A17）把「这一行算不算判决」的规则搬进核：flow/1 的 findings 行多出第六列、核在 `CE.Flow.Document.judgedFinding` 里陈述它，`cli/src/flow/wire.rs` 改读这一列、删掉 Rust 那份规则——这个文件在出处门的 `LOWERING` 里（`cli/src/flow/` 除 `mod.rs`），门按路径读而按名拒了十份。规则只换了所有者，判分没有理由移动。处置与前四次同形：**退役**（本提交）十份删档、十门考题 `stage` 翻回 `audited`；**重生成**（下一提交）在本提交的干净树上经 `CE_FLOW_OUT` 逐语言生成到树外、十份齐了一次放回，`stage` 翻回 `scored`。
