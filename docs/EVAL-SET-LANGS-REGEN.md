@@ -87,3 +87,43 @@ learning-area → lua → fmt，每份生成后挪出树、`git status --porcela
 - **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
 - **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
 - **读数**：十一份在 9c1f7668 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（cc11c60f → 9c1f7668），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 E 之后：十一份精度册第十次退役并重生成（2026-10-05）
+
+阶段 E 把 TypeScript / TSX 的五级阶梯、tsconfig 的 extends 链、package.json 读法与 JSONC 读法搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 63–67 条）：`cli/src/graph/ladder/ts.rs`、`ladder/ts_node.rs`、`graph/roots_ts.rs`、`graph/jsonc.rs` 与 `roots.rs` 的 package.json 读法删掉，`ladder/mod.rs`、`keys.rs` 与 `cli/src/graph/resolve/` 的请求带上 TS，`core/app/CE/Resolve/` 多出 `Ts` / `TsConfig` / `TsFacts` / `Json` 四个模块——`ladder/mod.rs`、`roots.rs` 与 `keys.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`cli/src/graph/resolve/` 在 C、Lua、R 与 Java 考题的阶梯清单里。没有 TS 考题；差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
+- **读数**：十一份在 097e5ba3 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（9c1f7668 → 097e5ba3），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 F 之后：十一份精度册第十一次退役并重生成（2026-10-06）
+
+阶段 F 把 Rust 的五级阶梯、Cargo.toml 读法、crate 根与包内私有的判定搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 68–72 条）：`cli/src/graph/ladder/rs.rs`、`rs_use.rs`、`rs_bind.rs`、`rs_tree.rs`、`rs_reexport.rs`、`graph/cargo.rs`、`roots.rs` 的 `table_at` 与 `mounts.rs` 的 `RustTargets` 删掉，`ladder/mod.rs`、`roots.rs`、`mounts.rs` 与 `cli/src/graph/resolve/` 的请求带上 Rust，`core/app/CE/Resolve/` 多出 `Rs` / `RsTree` / `RsSurface` / `Cargo` 四个模块——`ladder/mod.rs` 与 `roots.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`cli/src/graph/resolve/` 在 C、Lua、R 与 Java 考题的阶梯清单里。没有 Rust 考题；差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
+- **读数**：十一份在 f6c2788a 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（097e5ba3 → f6c2788a），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 G 之后：十一份精度册第十二次退役并重生成（2026-10-06）
+
+阶段 G 把 Markdown 阶梯的判定搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 94–98 条）：`cli/src/graph/ladder/md.rs` 的 `resolve` / `link` / `directory` / `ref_link` / `ref_def` / `refs` / `ref_table` / `fold` 删掉，`ladder/mod.rs` 的 Markdown 分派与 `outcome.rs` 的 `with_rung` 走了，`cli/src/graph/resolve/` 的请求带上 Markdown（新 `resolve/markdown.rs`），`core/app/CE/Resolve/` 多出 `Md` / `Url` / `Lower` 三个模块——`ladder/mod.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`cli/src/graph/resolve/` 在 C、Lua、R 与 Java 考题的阶梯清单里。没有 Markdown 考题（HTML 考题的阶梯清单只有 `ladder/html*`，它读的 `md.rs` 三个读法本阶段原样留着）；差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
+- **读数**：十一份在 ef4ed263 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（f6c2788a → ef4ed263），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 H 之后：十一份精度册第十三次退役并重生成（2026-10-07）
+
+阶段 H 把 HTML 阶梯搬进核（设计册 `docs/reference/algorithm-track.md` §11 第 104–108 条）：`cli/src/graph/ladder/html.rs` 整个删掉，`html_head.rs` 只剩语法树的走法（`read`）与 `id` 集（`ids` / `id_hash`），`ladder/md.rs` 留给它的 `fragment` / `anchor` / `is_scheme` 与 `md_slug.rs` 的 `percent_decode` 没有读者了、一并删掉，`cli/src/graph/resolve/markdown.rs` 把每页的事实装进请求（`html.docs`），`core/app/CE/Resolve/` 多出 `Html` / `HtmlHead` 两个模块——`ladder/mod.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`ladder/html*` 与 `cli/src/graph/resolve/` 在考题的阶梯清单里。HTML 考题的阶梯清单本提交改成 `HTML_LADDER`（`ladder/html*`、`cli/src/graph/resolve/`、`core/app/CE/Resolve.hs` 与 `core/app/CE/Resolve/`，与 C、Lua、R、Java 同形；这几处的第一个提交都晚于 HTML 的审阅表，顺序门照旧成立）。差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
+- **读数**：十一份在 738b8521 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（ef4ed263 → 738b8521），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 算法轨 v2.33 W2-text 阶段 Z 之后：十一份精度册第十四次退役并重生成（2026-10-07）
+
+阶段 Z 收尾（设计册 `docs/reference/algorithm-track.md` §11 第 109–112 条）不改任何判决，只改问法：核 `CE.Resolve.Rs` 把一层能点名的事实放在同一轮问，`cli/src/graph/resolve/facts.rs` / `mod.rs` 在首问里另带每个 Rust 站点所在目录的 `Cargo.toml` 探问，`ladder/mod.rs` 的模块头改写——`ladder/mod.rs` 在每份精度册共读的 `ANSWERED_BY` 里，`cli/src/graph/resolve/` 与 `core/app/CE/Resolve/` 在 C、Lua、R、Java、HTML 考题的阶梯清单里。差分门全同，判决字节不应移动；重生成按前几次的两提交走。
+
+- **退役**（本提交）：十一份精度册删档、六门考题的 `stage` 翻回 `Audited`；册 06 §9 引的十一处 summary 行在本提交上按构造缺目标，下一提交回绿。
+- **重生成**（下一提交）：在本提交的干净树上逐份生成、每份生成后挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，六门 `stage` 翻回 `Scored`。
+- **读数**：十一份在 0f3ddafa 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（738b8521 → 0f3ddafa），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
