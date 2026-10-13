@@ -17,6 +17,10 @@
 --   postings           [term, seat, tf] (ascending; term a terms row)
 --   lens               [seat, len] (ascending; every posting seat)
 --
+-- The decoder also fills `expansion`, the PPMI expansion the cooc
+-- tables give the bare query: a lazy field, so the contract check, the
+-- `added` key and the widened ranking share one computation.
+--
 -- Completeness the measuring side's fetch must meet: every query term
 -- (and, widened, every expansion term) has a terms row; a term that
 -- scores (n > 2·df) has exactly df postings; a spelled word term has a
@@ -24,6 +28,7 @@
 module CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf) where
 
 import CE.Similar.Rank.Cost (channels, rankCap, scoredDfRatio, wordChannel)
+import CE.Similar.Rank.Score (QTerm, expandRows)
 import CE.Wire (label, rowCheck, tableOffence)
 import CE.Wire.Tables (optTables)
 import Data.Aeson (FromJSON (..), Value, withObject, (.!=), (.:), (.:?))
@@ -42,6 +47,8 @@ data RankReq = RankReq
   , widen :: Bool
   , words_, pairs, terms, postings, lens :: [[Integer]]
   -- ^ the five fact tables, in the order the parser reads them
+  , expansion :: [QTerm]
+  -- ^ derived by the decoder from the fields above (expandRows)
   }
 
 instance FromJSON RankReq where
@@ -58,7 +65,7 @@ instance FromJSON RankReq where
         <*> o .:? "widen" .!= False
     tables <- optTables o ["words", "pairs", "terms", "postings", "lens"]
     case tables of
-      [ws, ps, ts, pos, ls] -> pure (req ws ps ts pos ls)
+      [ws, ps, ts, pos, ls] -> pure (let r = req ws ps ts pos ls [] in r {expansion = expandRows (corpusN r) (query r) ws ps})
       _ -> fail "five tables"
 
 -- | Every table's rows together.

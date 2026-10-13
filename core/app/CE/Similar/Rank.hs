@@ -17,7 +17,7 @@ module CE.Similar.Rank (respond) where
 
 import CE.Similar.Rank.Contract (RankReq (..), offence, overCap, rowsOf)
 import CE.Similar.Rank.Cost (scoreFracBits)
-import CE.Similar.Rank.Score (Hit (..), QTerm (..), bare, expansion, rankTop)
+import CE.Similar.Rank.Score (Hit (..), QTerm (..), bare, rankTop)
 import CE.Wire (Respond, tabled)
 import qualified CE.Wire.Families as F
 import Control.Applicative ((<|>))
@@ -35,18 +35,9 @@ import qualified Data.Set as S
 respond :: Respond
 respond = tabled F.rank reqId overCap (\r -> offence r <|> widened r) answer
 
--- | The expansion this request's cooc rows give its bare query.
-added :: RankReq -> [QTerm]
-added r
-  | null (words_ r) = []
-  | otherwise = expansion (corpusN r) (bare (query r)) margs pairsBy
- where
-  margs = M.fromList [(t, m) | [t, m] <- words_ r]
-  pairsBy = M.fromAscListWith (flip (<>)) [(a, [[b', nab, mb]]) | [a, b', nab, mb] <- pairs r]
-
 widened :: RankReq -> Maybe String
 widened r
-  | widen r && any (\q -> S.notMember (qTerm q) known) (added r) = Just "widen: an expansion term without a terms row"
+  | widen r && any (\q -> S.notMember (qTerm q) known) (expansion r) = Just "widen: an expansion term without a terms row"
   | otherwise = Nothing
  where
   known = S.fromList [t | (t : _) <- terms r]
@@ -59,7 +50,7 @@ answer :: Bool -> RankReq -> ([Pair], [Pair])
 answer degraded r =
   ( [ "hits" .= [toInteger (hSeat h) : hScore h `shiftR` scoreFracBits : hScore h : hHits h | h <- hits]
     , "scoreDen" .= (2 ^ scoreFracBits :: Integer)
-    , "added" .= [[qTerm q, qChan q] | q <- if degraded then [] else added r]
+    , "added" .= [[qTerm q, qChan q] | q <- if degraded then [] else expansion r]
     , "query" .= if degraded then [] else M.toList (M.fromListWith (+) [(qTerm q, qWeight q) | q <- ranked])
     ]
   , ["rows" .= rowsOf r, "queryTerms" .= length ranked, "hits" .= length hits]
@@ -67,7 +58,7 @@ answer degraded r =
  where
   ranked
     | degraded = []
-    | widen r = bare (query r) <> added r
+    | widen r = bare (query r) <> expansion r
     | otherwise = bare (query r)
   hits
     | degraded = []

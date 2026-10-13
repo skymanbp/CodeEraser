@@ -183,4 +183,4 @@ refused :: (RReq, String) -> Bool
 refused (r, why) = refusedBy respond (encodeReq r) why
 
 sized :: Integer -> RankReq
-sized n = RankReq Null 1 1 0 Nothing (replicate (fromInteger n) 0) [] False [] [] [] [] []
+sized n = RankReq Null 1 1 0 Nothing (replicate (fromInteger n) 0) [] False [] [] [] [] [] []

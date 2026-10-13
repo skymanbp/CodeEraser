@@ -4,12 +4,13 @@
 -- side fetched, and cut to the top k by score then seat (seat order is
 -- identity order). A term in more than half the units (idf 0) is neither
 -- score nor evidence; an expansion adds score but never evidence.
-module CE.Similar.Rank.Score (QTerm (..), Hit (..), bare, expansion, rankTop) where
+module CE.Similar.Rank.Score (QTerm (..), Hit (..), bare, expansion, expandRows, rankTop) where
 
 import CE.Similar.Rank.Cost (chanWeight, minCooc, minPpmi, neighbourDfRatio, ppmiCap, ppmiScale, topM, wUnit, wordChannel)
 import CE.Similar.Rank.Math (contribution, idfFp, ppmiFp)
+import Data.Function (on)
 import qualified Data.IntMap.Strict as IM
-import Data.List (sortBy)
+import Data.List (groupBy, sortBy)
 import qualified Data.Map.Strict as M
 import Data.Ord (Down (..), comparing)
 import qualified Data.Set as S
@@ -58,6 +59,23 @@ expansion n query margs pairsBy = go [q | q <- query, qSpelled q, wordChannel (q
           ]
    where
     na = M.findWithDefault 0 a margs
+
+-- | The expansion a rank request's rows give its bare query: n, the
+-- [term, channel, tf] query rows, the [term, marg] words and the
+-- [a, b, nab, margB] pairs. `pairs` is strictly ascending on (a, b) (the
+-- contract), so one pass in request order groups each word's rows,
+-- ascending b — the map `expansion` reads.
+expandRows :: Integer -> [[Integer]] -> [[Integer]] -> [[Integer]] -> [QTerm]
+expandRows n queryRows wordRows pairRows
+  | null wordRows = []
+  | otherwise = expansion n (bare queryRows) margs pairsBy
+ where
+  margs = M.fromList [(t, m) | [t, m] <- wordRows]
+  pairsBy =
+    M.fromDistinctAscList
+      [ (a, [[b', nab, mb] | [_, b', nab, mb] <- grp])
+      | grp@((a : _) : _) <- groupBy ((==) `on` take 1) pairRows
+      ]
 
 -- | The top k by score descending then seat ascending, the excluded
 -- seat out before the cut, the seen seats out after it.

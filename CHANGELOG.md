@@ -20,6 +20,11 @@
 - **核的收紧**：`verdict` 的 `continuous` 行与基线行的值列按 u64 校验（基线行此前实体列也不校验），电池两条探针。
 - **拒绝的 golden**：`naming` / `knobsFence`（scan 第 27、28 对）、`targets`（erase 第 15 对）、`unres`（graph 第 27 对）各一对；`contracts/VERSIONING.md` 五处还写着缺席臂的段落改成 9.0.0 的事实，9.0.0 条目加一段补记。
 
+**无默认档位变更。** v2.33 步 11b 核车道第 1 项：`ce similar --widen` 慢在核里的三处（设计册 `algorithm-track.md` 第 117 项诊断、第 119 项改法），应答逐字节不变。
+
+- **改法**：`CE.Similar.Rank.Contract` 的解码器把扩展算一次存进请求的惰性字段 `expansion`（契约检查、应答的 `added` 键与加权排序共用），`CE.Similar.Rank.Score.expandRows` 把每个词的共现行一遍按请求序分组（原先向左嵌套拼接，一个词 k 行是 O(k²)）；`CE.Similar.Rank.Math.log2Fp` 收窄操作数改为按位宽一次右移（原先每次一位）。
+- **读数**（release，同一坐，负载 28–88 %）：记下的两条 `rank/1` 请求单独喂核 927.1 / 2383.1 → 571.2 / 569.8 ms，应答逐字节相同；自仓暖 `ce similar --widen` 中位 6182.8 → 3752.0 ms；自仓与 requests 上 `similar` 带不带 `--widen` 四份文档两臂逐字节相同；golden 无一对移动；`cabal test` 1052 条 ok。细表见 `docs/PERF-BUDGET.md`。
+
 **无默认档位变更。** v2.33 步 11a 去碎片化（GUI / Tauri / 插件 / 站点 / MCP 适配器一路，审计 B 表）：同一件事只留一个所有者，各处旧拼写改读它；除下面点名的两处，所有报告文档逐字节不变。
 
 - **网页一处一份**：`gui/ui/app.js` 收三个共用件——`load`（每个屏的加载路：按钮置灰、状态字、`invoke`、渲染、schema 或错误，原先约十一份同形写法；结构 / 评分 / 诊断 / 更新 / 擦除三处 / 相似 / 图 / 报告集线器 / 查询都走它，趋势与候选两屏的形状不同各留自己的）、`stateRow`（诊断与更新两屏的带状态行，B3）、`census`（评分屏与候选屏两份按严重度计数排序，B6）；`structree.js` 的 `rollup` 顶替结构屏自己的 `weights()`（B4），`chainLabel` 一份供树状与矩形图两种视图（B5）；报告集线器一份 `hubChip` / `hubTable`（带行数上限与上限说明，arch / flow 的表因此也有上限）、一份 `hubOption`，通用投影不再认识 scan 的 `failed`（改由 `HUB.scan.labels` 自报，B15 / B16 / B38 / B39）；flow / query / merge 三条一模一样的降级句收成一个键 `noJudgment`（B34）；相似屏的六个证据通道字母只在 `SIMILAR_CHANNELS` 一处（B35）。

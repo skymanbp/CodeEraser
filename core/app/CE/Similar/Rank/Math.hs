@@ -7,6 +7,7 @@ module CE.Similar.Rank.Math (log2Fp, idfFp, contribution, ppmiFp) where
 
 import CE.Similar.Rank.Cost (idfFracBits, minCooc, scoreFracBits)
 import Data.Bits (shiftL, shiftR, (.|.))
+import GHC.Num (integerLog2)
 
 -- | floor (2^idfFracBits · log2 (num / den)) for num ≥ den > 0, by
 -- integer squaring only: the integer part by doubling den, each fraction
@@ -30,10 +31,16 @@ log2Fp num den = (intPart `shiftL` idfFracBits) .|. frac
      in if sn >= 2 * sd
           then bits (left - 1) sn (sd `shiftL` 1) (acc `shiftL` 1 .|. 1)
           else bits (left - 1) sn sd (acc `shiftL` 1)
-  narrow n d
-    | n >= limit || d >= limit = narrow (n `shiftR` 1) (d `shiftR` 1)
-    | otherwise = (n, d)
-  limit = 2 ^ (62 :: Int)
+  -- One shift by the width a one-bit-at-a-time loop would reach: that
+  -- loop stops at the least k with n >> k < 2^62 and d >> k < 2^62,
+  -- i.e. bitLen n - k <= 62 and bitLen d - k <= 62, and right shifts
+  -- compose (x >> a >> b = x >> (a + b)). Both operands are positive
+  -- here — num >= den > 0 on entry, then squares of positives with
+  -- n >= d — so integerLog2 is defined.
+  narrow n d = (n `shiftR` k, d `shiftR` k)
+   where
+    k = max 0 (max (bitLen n) (bitLen d) - 62)
+  bitLen x = fromIntegral (integerLog2 x) + 1 :: Int
 
 -- | idf (t) = log2 ((N − df + ½) / (df + ½)) in fixed point, floored at
 -- zero: a term in more than half the units carries no discrimination
