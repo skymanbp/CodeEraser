@@ -10467,28 +10467,18 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|518799ee92471a07|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 149,
+    "line": 140,
     "text": "fn sugar_aggregates_arithmetic_and_every_program_error_go_the_same_road() {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|b01bf384f3002998|0": {
-    "target": "../../../cli/tests/it/query_face.rs",
-    "line": 244,
-    "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|0": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 96,
+    "line": 87,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|c3f8c8fc96e3518f|1": {
     "target": "../../../cli/tests/it/query_face.rs",
-    "line": 96,
+    "line": 87,
     "text": "fn the_cli_prints_the_library_face_and_dead_f_is_the_deadcode_verdict() {"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_face.rs|e86b28abce63cf8a|0": {
-    "target": "../../../cli/tests/it/query_face.rs",
-    "line": 188,
-    "text": "fn rules_is_a_gate_on_the_documents_violations() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/query_golden.rs|809c9b07c2d66867|0": {
     "target": "../../../cli/tests/it/query_golden.rs",
@@ -10499,6 +10489,16 @@
     "target": "../../../cli/tests/it/query_golden.rs",
     "line": 148,
     "text": "fn every_request_line_is_the_prelude_then_its_program() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/rules_face.rs|b01bf384f3002998|0": {
+    "target": "../../../cli/tests/it/rules_face.rs",
+    "line": 89,
+    "text": "fn the_rules_file_is_named_by_flag_config_or_default_and_must_exist() {"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/it/rules_face.rs|e86b28abce63cf8a|0": {
+    "target": "../../../cli/tests/it/rules_face.rs",
+    "line": 33,
+    "text": "fn rules_is_a_gate_on_the_documents_violations() {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/tests/unit/query/face.rs|102e73d797f3f249|0": {
     "target": "../../../cli/tests/unit/query/face.rs",

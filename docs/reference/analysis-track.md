@@ -128,7 +128,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 ### 4.7 门
 
 - 核：朴素不动点参考求值器与半朴素 + 索引求值器在枚举程序 × 种子事实集（200 例）上逐元组等价；分层 / 安全性 / 类别每种程序错误按名；推导链每结点重放规则体得回该元组；聚合与参考实现等价；派生上限降级；golden 八对（步 1 六对：前奏 + schema 回显 / 断言违规 / 带 `why` 的查询 / 语法 / 未绑定 / 不可分层；步 2 加算术 / 集合上的聚合两对，子仓 `query_golden.rs` 钉每条请求行 = 前奏 + 程序经真词法；v2.33 规则包加两对：五项全开的判决、同一包的词法应答带 `packText`）；规则包另有 `PackProps`：五项各自与合起来的渲染文本过检查、`pack_` 重定义在规则文件自己的记号处报错误 7、每项 200 张种子事实表上核的见证行与按集合推导式另写的参考逐行等价（≥ 40 张有违规）、每条拒绝按名。
-- Rust：词法编号与故障位置（`unit/query/program.rs` 六腿）、图例与核回显同表（`unit/query/legend.rs`）、glob 读不出 = 该记号处的程序错误（`unit/query/face.rs` 负向探针）、`consume` 对健康 / 降级 / 偏斜应答（`unit/query/wire.rs`）；集成：`dead(F)` 与 `ce deadcode` 同一文件、糖 / 聚合 / 算术 / 九种错误同一条路、`ce rules` 退出码与控制台、规则文件三种来源（`it/query_face.rs` 四腿）；三面字节同 = CLI JSON 对库面逐字节、三面经同两个库函数（`face_parity` 一行；选项集与 GUI 直通由第 55 条的门核）。
+- Rust：词法编号与故障位置（`unit/query/program.rs` 六腿）、图例与核回显同表（`unit/query/legend.rs`）、glob 读不出 = 该记号处的程序错误（`unit/query/face.rs` 负向探针）、`consume` 对健康 / 降级 / 偏斜应答（`unit/query/wire.rs`）；集成：`dead(F)` 与 `ce deadcode` 同一文件、糖 / 聚合 / 算术 / 九种错误同一条路、`ce rules` 退出码与控制台、规则文件三种来源（`it/query_face.rs` 两腿、`it/rules_face.rs` 两腿）；三面字节同 = CLI JSON 对库面逐字节、三面经同两个库函数（`face_parity` 一行；选项集与 GUI 直通由第 55 条的门核）。
 - 精度：无统计门（语义精确）；自仓 `ce.rules` CI 常绿即验收。
 
 ## 5. 功能 ②：函数内死代码（`flow/1`）

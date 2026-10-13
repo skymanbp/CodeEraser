@@ -119,7 +119,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 `dead` mirrors `ce deadcode`'s file-tier verdict by construction: an entry is a node with any
 role bit (every role lands in the core's entry mask), and a reference of any rung is followed
 except the two liveness-inert kinds the graph judgment drops the same way. The integration leg
-holds the two roads to one file ([query_face.rs:96](../../../cli/tests/it/query_face.rs#L96)).
+holds the two roads to one file ([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)).
 `ce query --prelude` prints the text verbatim.
 
 ### 4. The token stream
@@ -308,7 +308,7 @@ the question, the rules file and the pack text — so the document cannot differ
 ([ask.rs:39](../../../cli/src/faces/ask.rs#L39), [ask.rs:52](../../../cli/src/faces/ask.rs#L52),
 [ask.rs:72](../../../cli/src/faces/ask.rs#L72)); the
 integration leg holds the CLI's JSON to the library's byte for byte
-([query_face.rs:96](../../../cli/tests/it/query_face.rs#L96)), and the parity table claims the
+([query_face.rs:87](../../../cli/tests/it/query_face.rs#L87)), and the parity table claims the
 capability once across CLI, GUI and MCP ([face_parity_table.rs:38](../../../cli/tests/it/face_parity_table.rs#L38)).
 
 ### 10. The repository's own rules
@@ -427,8 +427,8 @@ of 10,000 random programs and the real ones), the request body's tables and flag
 and hold `dead(F)` to `ce deadcode`'s own road, run the sugar, the aggregates, the arithmetic and
 every program error through the same face, treat `ce rules` as the gate it is — exit 1 on one
 violation, the witness and its chain on the console — and name the rules file by flag, config or
-default ([query_face.rs:149](../../../cli/tests/it/query_face.rs#L149), [query_face.rs:188](../../../cli/tests/it/query_face.rs#L188),
-[query_face.rs:244](../../../cli/tests/it/query_face.rs#L244)). The family is one row of the parity
+default ([query_face.rs:140](../../../cli/tests/it/query_face.rs#L140), [rules_face.rs:33](../../../cli/tests/it/rules_face.rs#L33),
+[rules_face.rs:89](../../../cli/tests/it/rules_face.rs#L89)). The family is one row of the parity
 table, one screen of the GUI roster and two tools of the MCP catalogue; docs cite implementation
 lines (this booklet is under the citations gate), and the caps above bind to their source names
 under `docs_consts`.
