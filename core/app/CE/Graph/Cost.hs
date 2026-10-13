@@ -19,7 +19,7 @@ module CE.Graph.Cost (confidence, nodeCap, edgeCap, symCap, mountCap, unmentione
 -- headroom on nodes and ~8x on edges. A request with EVERY table at
 -- its cap (6.2.0: nodes, edges, symbols, mounts, unmentioned at the
 -- hard cap) runs ~13 MB with small integers and ~23 MB with six-digit
--- node indices in every row — under the 32 MiB envelope either way.
+-- node indices in every row — under the 128 MiB envelope either way.
 -- Over cap => degraded graph_too_large, never a truncated graph.
 nodeCap :: Integer
 nodeCap = 131072

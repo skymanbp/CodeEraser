@@ -29,15 +29,20 @@ proto :: String
 proto = "9.0.0"
 
 -- | The request line's byte ceiling, checked by "CE.Protocol" before any
--- JSON parse, so a hostile oversized line is never decoded. Relaxed from
--- 1 MiB at M5-2a (2026-08-12 decision): the only client is the trusted
--- same-machine daemon, and a graph request legitimately carries ~1 MB per
--- 100k LOC — the real per-family guards are CE.Graph.Cost's node/edge
--- caps. Here, beside the version, because the definition package names it
--- too (CE.Limits `line_bytes`: the bags/1 batches are planned by it, plan
--- v2.33 W2-text Z4) and "CE.Protocol" imports the package.
+-- JSON parse, so a hostile oversized line is never decoded. It is a
+-- memory bound: on 5efc9096 the core's peak working set measured 21–25×
+-- the request bytes for candidates/1 (49× for bags/1, 14× for
+-- docpairs/1), so 128 MiB admits ~3.3 GB on candidates and ~6.6 GB at
+-- worst — ruled by the user on 2026-10-13 over 32 / 64 MiB and over
+-- following the family caps (~540 MB of request, 11–13 GB); the family
+-- names whichever of its caps or this line binds (algorithm-track §11
+-- item 113, PERF-BUDGET "v2.33 step 11b"). 1 MiB until M5-2a, 32 MiB
+-- from 2026-08-12 to 2026-10-13. Here, beside the version, because the
+-- definition package names it too (CE.Limits `line_bytes`: the bags/1
+-- batches are planned by it, plan v2.33 W2-text Z4) and "CE.Protocol"
+-- imports the package.
 maxLineBytes :: Int
-maxLineBytes = 33554432
+maxLineBytes = 134217728
 
 -- | The per-message major check (§1): a request without a proto, or
 -- with a foreign major, is never answered as if it negotiated.

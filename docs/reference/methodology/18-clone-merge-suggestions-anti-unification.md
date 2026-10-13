@@ -95,7 +95,7 @@ count less its comments, never more ([tree.rs:36-58](../../../cli/src/dedup/t3/t
 - **`leaf`** — for a leaf (a node whose `lld` is its own index) the fnv1a64 of the leaf's source
   bytes, the same hash the token layer uses; 0 on every internal node.
 - **`slot`** — the node's position class: 0 a statement, 1 an expression, 2 a type, 3 a declared
-  name or a local assignment's bare target, 4 anything else ([Cost.hs:65-71](../../../core/app/CE/Merge/Cost.hs#L65)).
+  name or a local assignment's bare target, 4 anything else ([Cost.hs:66-72](../../../core/app/CE/Merge/Cost.hs#L66)).
 - **`own`** — the fnv1a64 of the node's own anonymous tokens — its operator, keyword and
   punctuation: the unnamed children the tree's child walk steps over, looked through to their
   tokens and never into a named child — joined in source order with one 0x00 between two tokens;
@@ -216,13 +216,13 @@ whose parameters number more than six answers 4, and one whose holes and paramet
 savings (below) are not positive answers 5, `no_savings`: a merge that saves no line is not a
 suggestion anyone would take, the stance of 4 ([Holes.hs:57-62](../../../core/app/CE/Merge/Holes.hs#L57),
 [Holes.hs:74](../../../core/app/CE/Merge/Holes.hs#L74),
-[Cost.hs:48-51](../../../core/app/CE/Merge/Cost.hs#L48), [Cost.hs:82-95](../../../core/app/CE/Merge/Cost.hs#L82)).
+[Cost.hs:49-52](../../../core/app/CE/Merge/Cost.hs#L49), [Cost.hs:83-96](../../../core/app/CE/Merge/Cost.hs#L83)).
 
 **The member kept and the savings.** The member kept is the one whose file has the greatest
 in-degree in the reference graph — the file most others already reach — a tie to the least member
 index ([Holes.hs:81-84](../../../core/app/CE/Merge/Holes.hs#L81)). The savings are the members'
 lines less the merged function's lines and one call line per member left behind
-([Holes.hs:64](../../../core/app/CE/Merge/Holes.hs#L64), [Cost.hs:53-56](../../../core/app/CE/Merge/Cost.hs#L53)).
+([Holes.hs:64](../../../core/app/CE/Merge/Holes.hs#L64), [Cost.hs:54-57](../../../core/app/CE/Merge/Cost.hs#L54)).
 A T1/T2 skeleton is the kept member itself; a T3 skeleton is the kept member's lines in the share
 of its nodes the kept pairs cover, rounded up — the wire carries no per-node line, so this is an
 honest integer estimate, never a measured count ([Holes.hs:89-95](../../../core/app/CE/Merge/Holes.hs#L89)).
@@ -244,7 +244,7 @@ missing or of the wrong length, a slot out of range, a negative own or text, and
 T1/T2 group ([Contract.hs:57](../../../core/app/CE/Merge/Contract.hs#L57),
 [Contract.hs:122](../../../core/app/CE/Merge/Contract.hs#L122)). More than 4,096 groups or
 131,072 nodes (`treeNodeCap`) answers a complete degraded reply with no rows — the node cap is
-the one that keeps the widest request at both caps inside the protocol's 32 MiB line, the six
+the one that keeps the widest request at both caps inside the protocol's 128 MiB line, the six
 columns and a member row per one-node tree at their widest
 ([Cost.hs:29-37](../../../core/app/CE/Merge/Cost.hs#L29)); the measuring side chunks by both caps
 and never splits a group across two requests ([wire.rs:80](../../../cli/src/merge/wire.rs#L80)).

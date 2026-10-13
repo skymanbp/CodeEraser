@@ -2083,14 +2083,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|06e671714f9f72fb|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 101,
-    "end": 104,
+    "line": 103,
+    "end": 106,
     "text": "-- (2026-08-14 attainment-line-B amendment, ccm #842): hard-wrapped"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|0f720e8840bb98a1|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 152,
-    "end": 153,
+    "line": 154,
+    "end": 155,
     "text": "dupDecidesWith :: Integer -> Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|32ee0e65750b9e5c|0": {
@@ -2107,20 +2107,20 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|49b0523c017c427f|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 155,
-    "end": 166,
+    "line": 157,
+    "end": 168,
     "text": "-- | The FULL duplication verdict (ADR-008 P1): Jaccard half ∨"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|51679bdf31a2efb9|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 75,
-    "end": 78,
+    "line": 77,
+    "end": 80,
     "text": "-- | Per-request pair ceiling, the clone pairCap anchor carried over:"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|5450871a63e3fe61|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 108,
-    "end": 109,
+    "line": 110,
+    "end": 111,
     "text": "docLineCap :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|56bd8ca4d0fb0245|0": {
@@ -2137,14 +2137,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7559273dd66da9de|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 79,
-    "end": 80,
+    "line": 81,
+    "end": 82,
     "text": "docPairCap :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7b6f22f080b3ccba|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 114,
-    "end": 117,
+    "line": 116,
+    "end": 119,
     "text": "-- of the segment. ADR-008 P1 moved the floor's VERDICT home here: the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
@@ -2155,8 +2155,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|7cc2b00c6f5f13e5|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 138,
-    "end": 139,
+    "line": 140,
+    "end": 141,
     "text": "licHeadLines :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|9700dd4f43343265|0": {
@@ -2167,8 +2167,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|980d7b79ef3e48cd|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 159,
-    "end": 160,
+    "line": 161,
+    "end": 162,
     "text": "dupVerdict :: Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|9e3cf4c46bebf063|0": {
@@ -2179,8 +2179,8 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|a0090a5f4797c21f|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 92,
-    "end": 93,
+    "line": 94,
+    "end": 95,
     "text": "minDocTokens :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|a744556afc6e920a|0": {
@@ -2191,14 +2191,14 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|abeb04d82b8a450d|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 148,
-    "end": 151,
+    "line": 150,
+    "end": 153,
     "text": "-- | The threshold-parameterized form — ONE formula, so the reference"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|bbc3e3298c695141|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 164,
-    "end": 166,
+    "line": 166,
+    "end": 168,
     "text": "dupVerdictWith :: (Integer, Integer, Integer) -> Integer -> Integer -> Integer -> Bool"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|cd940d209736dc34|0": {
@@ -2209,20 +2209,20 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|d1be99e472f277d8|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 111,
-    "end": 114,
+    "line": 113,
+    "end": 116,
     "text": "-- | Verbatim hard-hit floor in words (plan :68, Lee et al."
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|d7f215c88d63ebd3|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 162,
-    "end": 163,
+    "line": 164,
+    "end": 165,
     "text": "-- | The knob-parameterized disjunction — ONE formula, so the"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Cost.hs|f43c6ab4e318a162|0": {
     "target": "../../../core/app/CE/Docdup/Cost.hs",
-    "line": 118,
-    "end": 119,
+    "line": 120,
+    "end": 121,
     "text": "verbatimFloor :: Integer"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Docdup/Jaccard.hs|444b1933ffc9e82d|0": {
@@ -8861,8 +8861,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|d535a3cf381a0200|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 483,
-    "end": 485,
+    "line": 486,
+    "end": 488,
     "text": "> 回执 `failed` 具名序 `hard_line, knobs_digest, degraded`（fence 上过线即在；`fail ⇔ failed ≠ []`）。"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -11617,14 +11617,14 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|06fcecd45dac10ab|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 48,
-    "end": 51,
+    "line": 49,
+    "end": 52,
     "text": "-- | A merged function taking more than six parameters is not a"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|1133089ee3f8b3dd|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 53,
-    "end": 56,
+    "line": 54,
+    "end": 57,
     "text": "-- | Each member left behind becomes one call line (step-6 ruling 7:"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|513f88eee622c1ac|0": {
@@ -11635,14 +11635,14 @@
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|5db5363ddb3643cd|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 65,
-    "end": 71,
+    "line": 66,
+    "end": 72,
     "text": "-- | A node's position class, the `slot` column (§6.2): a statement,"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Cost.hs|a041038499897953|0": {
     "target": "../../../core/app/CE/Merge/Cost.hs",
-    "line": 82,
-    "end": 95,
+    "line": 83,
+    "end": 96,
     "text": "-- | A suggestion's reason (step-6 ruling 6), the first infeasible"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Merge/Document.hs|098932ff40bf8ffc|0": {

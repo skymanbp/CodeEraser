@@ -37,7 +37,7 @@ module CE.Resolve.Cost (
 -- | The characters of every string of one request plus one per row,
 -- together (CE.Resolve.Contract.requestSize). Over the cap answers a
 -- complete degraded reply, never a partial one. 256 Mi is above the
--- protocol's line (CE.Protocol.Version.maxLineBytes, 33,554,432 bytes),
+-- protocol's line (CE.Protocol.Version.maxLineBytes, 134,217,728 bytes),
 -- so it is not the bound that acts: a request that long never reaches the
 -- decoder, and the measuring side refuses by name the line that would
 -- pass the ceiling before it sends it (corelink::judged::session_ask →

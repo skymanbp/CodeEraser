@@ -147,6 +147,9 @@
 > 收紧：`verdict` 的 `continuous` 行与基线的 `baseline.continuous` 行，值列与实体列同按 u64 校验，越界按名拒 `outside u64`（基线行此前两列都不校验）。
 > golden：`scan/golden` 加第 27 对（缺 `naming`）与第 28 对（缺 `knobsFence`）、`erase/golden` 加第 15 对（缺 `targets`）、`graph/golden` 加第 27 对（缺 `unres`），各答 `<键>: required at 9.0.0`；`tables/golden` 与 `handshake/hello-ok` 的摘要机器重生成，其余不动。
 > **9.0.0 同版改动**（C 族替代记号归一类，v2.33 步 11b，2026-10-13；语言扩展册 D19；9.0.0 未发布，同上不另升版号）：`tables/1` 的 `scan.<lang>.coc_operators` 一项是一个算子类、可写几种拼写（空格分开），测量侧送的算子 id 是类的下标；C / C++ 由 `['&&', '||', 'and', 'or']` 改为 `['&& and', '|| or']`，`&&` / `||` 的 id 不变（0 / 1），其余语言仍一项一种拼写。golden：`tables/golden` 第 1 对（两张 C 族表与包摘要）与 `handshake/hello-ok` 的 `tablesDigest`，机器重生成，请求行不变。
+> **9.0.0 同版放宽**（协议一行的字节上限，v2.33 步 11b，2026-10-13；设计册 `docs/reference/algorithm-track.md` §11 第 120 条；9.0.0 未发布，放宽按 §2 是 minor，同版不另升版号）：
+> `maxLineBytes` 33,554,432 → 134,217,728 B（128 MiB），`readBudget` 67,108,864 → 268,435,456；`limits.caps.line_bytes` 答新值；测量侧的分批与按行预检照旧读这一个数，规划不变。
+> golden：`tables/golden` 的应答（`line_bytes`）与 `handshake/hello-ok` 的包摘要机器重生成，请求行数不变。
 > **8.2.0–8.5.0**（W3 四族，8.1.0 之上的四个加性 minor，计划 v2.33 算法轨 W3，2026-10-03；设计册 `docs/reference/algorithm-track.md` §11 第 29–38 条；
 > 8.2.0 `candidates/1` + `clone/1` 的 `decide` + `tables/1` 的 `limits`、8.3.0 `rank/1`、8.4.0 `docpairs/1` + `docdup/1` 的 `seqs`、8.5.0 `moves/1`，四族同批落地，server 恒答 8.5.0）：
 > ① `candidates.request` = 准入单元行 `[lang, file, key, nodes, start, end, kind, count…]`（文件 / 键 / kind 都是请求内的稠密码，文件码与键码按文本排序
@@ -576,7 +579,8 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
   为第五席，2.3.0 同代的 Main.hs 异常屏障引入（挂账清零批 2026-08-17：纯判决
   计算内任何缺陷成为 error/internal 行而非进程崩溃，id 恒 null——计算死在可信
   回显之前；Spec `refusalProbes` 钉其 code 字符串）。core 侧在 JSON 解析
-  **之前**先做行字节上限预检（2.1.0 起 32 MiB，此前 1 MiB——2026-08-12 决策：
+  **之前**先做行字节上限预检（9.0.0 起 128 MiB——2026-10-13 用户裁定：这一行是内存上限，核的峰值工作集实测是请求字节的
+  21–25 倍〔`candidates/1`；`bags/1` 49 倍、`docpairs/1` 14 倍〕，见 PERF-BUDGET「v2.33 步 11b」；2.1.0 起 32 MiB，此前 1 MiB——2026-08-12 决策：
   唯一客户端是同机受信 daemon，而 graph 请求在 100k LOC 量级合法地 ~1 MB；
   真防护 = 各族容量护栏），超限即 `too_large`，不解析。
 - **每条非 hello 消息的 `proto` 由 core 强制校验**（1.0.0 定稿修正，攻击评审 F8：

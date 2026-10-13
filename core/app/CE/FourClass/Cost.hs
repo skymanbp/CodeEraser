@@ -40,7 +40,7 @@ siteCostCross = 2
 -- them plain: n*movedCost + s < n*plainCost. Ties resolve to not
 -- opening (conservative). The multiply rides Integer — decision ③
 -- (Codex C4, Anchor.overWork) backported at this module's ONLY
--- multiply site: n is bounded by the 32 MiB line cap (< 3.4M
+-- multiply site: n is bounded by the 128 MiB line cap (< 13.5M
 -- entries) so machine Int cannot overflow today, but the judgment
 -- must not depend on that arithmetic being redone at every reading.
 siteOpens :: Int -> Int -> Bool

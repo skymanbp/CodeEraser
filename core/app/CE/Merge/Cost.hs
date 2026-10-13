@@ -33,14 +33,15 @@ module CE.Merge.Cost (
 -- for the trees because CE.Graph.Cost.nodeCap already names the
 -- graph's (the how page reads each constant by its bare name). It
 -- keeps a request at both caps inside the protocol's line
--- (CE.Protocol.maxLineBytes, 33,554,432 bytes): members never
+-- (CE.Protocol.maxLineBytes, 134,217,728 bytes): members never
 -- outnumber nodes (every tree has one), and a one-node tree with its
 -- member row at their widest — indices at the cap's width, hashes and
 -- line counts at u64's — spell 195 bytes, so 131,072 nodes and 4,096
--- group rows encode to 25.6 MB. Merge generation 2's own
--- and text columns put 1,048,576 nodes past the line (ripgrep's
--- request measured 39,165,017 bytes); MergeProps encodes the widest
--- request at both caps and holds it under the line.
+-- group rows encode to 25.6 MB. The cap fell from 1,048,576 when Merge
+-- generation 2's own and text columns put that many nodes past the
+-- line of the day, 33,554,432 bytes (ripgrep's request measured
+-- 39,165,017 bytes); MergeProps encodes the widest request at both
+-- caps and holds it under the line.
 groupCap, treeNodeCap :: Integer
 groupCap = 4096
 treeNodeCap = 131072

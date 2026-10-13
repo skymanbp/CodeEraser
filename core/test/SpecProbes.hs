@@ -80,7 +80,7 @@ costModel = do
 
 -- | Field-level assertions that do not depend on fixture bytes.
 -- The oversize and over-cap probes are generated at run time — a
--- 32 MiB line or a 131k-node request has no business weighing down
+-- 128 MiB line or a 131k-node request has no business weighing down
 -- a committed fixture file.
 structural :: IO Bool
 structural = do
@@ -109,7 +109,7 @@ structural = do
   pure (and [a, b, c, d, e, f, g, h, i])
  where
   unknownReply = Protocol.respond coreVersion "{\"proto\":\"9.0.0\",\"type\":\"mystery\",\"id\":7}"
-  oversizeReply = Protocol.respond coreVersion (B8.replicate 33554433 'x')
+  oversizeReply = Protocol.respond coreVersion (B8.replicate (Protocol.maxLineBytes + 1) 'x')
   majorReply = Protocol.respond coreVersion "{\"proto\":\"10.0.0\",\"type\":\"hello\"}"
   overCapReply =
     Protocol.respond coreVersion $

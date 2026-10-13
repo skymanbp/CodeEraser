@@ -215,7 +215,7 @@ Oversize protection is by row count, not bytes (the envelope precheck is relaxed
 trusted same-machine child): `nodeCap = 131072` and `edgeCap = 524288`
 ([Cost.hs:24-28](../../../core/app/CE/Graph/Cost.hs#L24)). The sizing anchor is ~20k nodes / ~60k edges
 per 100k LOC, so the caps carry ~6× headroom on nodes and ~8× on edges; a request with every
-table at its cap — the 6.2.0 advisory tables included — stays under the 32 MiB envelope
+table at its cap — the 6.2.0 advisory tables included — stays under the 128 MiB envelope
 ([Cost.hs:15-21](../../../core/app/CE/Graph/Cost.hs#L15)). Over cap the core returns a **well-formed
 degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = true`,
 `reason = "graph_too_large"` and `fail = true` — a gate that could not judge never passes, said

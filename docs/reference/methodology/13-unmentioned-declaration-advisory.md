@@ -230,7 +230,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:120-127](../../../core/app/CE/Graph.hs#L120)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:483-485](../../../contracts/VERSIONING.md#L483)).
+the same with or without them ([VERSIONING.md:486-488](../../../contracts/VERSIONING.md#L486)).
 
 ### 6. Rendering — one home, three faces
 
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1760 (1978 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7239 (1700) | 1080 (16) | 14.9 % | 203 / 1080 = 18.8 % | 203 / 6159 |
-| | | rust | 3451 (1900) | 323 (2) | 9.4 % | 2 / 323 = 0.6 % | 2 / 3098 |
+| self @ this commit | 1760 (1978 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7239 (1700) | 1079 (16) | 14.9 % | 203 / 1079 = 18.8 % | 203 / 6160 |
+| | | rust | 3451 (1900) | 322 (2) | 9.3 % | 2 / 322 = 0.6 % | 2 / 3099 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |

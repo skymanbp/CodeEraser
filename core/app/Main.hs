@@ -83,16 +83,17 @@ data Frame
   | Overlong B8.ByteString
 
 -- | A MEMORY bound, not the protocol ceiling: CE.Protocol.maxLineBytes
--- (32 MiB) stays the single authority on what is in contract, which is
+-- (128 MiB) stays the single authority on what is in contract, which is
 -- why an over-budget prefix is handed to respond for the verdict
 -- rather than answered here. This number must only stay ABOVE that
--- ceiling so no in-contract line is ever cut short. Until it existed,
--- B8.hGetLine materialized the whole line BEFORE the guard could look
--- at it — the advertised 32 MiB ceiling was a report, not a bound, and
--- one newline-free flood grew the heap until the process died
+-- ceiling so no in-contract line is ever cut short; it is kept at twice
+-- the ceiling (256 MiB; 64 MiB when the line was 32 MiB). Until it
+-- existed, B8.hGetLine materialized the whole line BEFORE the guard
+-- could look at it — the advertised ceiling was a report, not a bound,
+-- and one newline-free flood grew the heap until the process died
 -- (2026-08-20 protocol review).
 readBudget :: Int
-readBudget = 67108864
+readBudget = 268435456
 
 chunkBytes :: Int
 chunkBytes = 65536

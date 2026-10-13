@@ -19,6 +19,7 @@
 - **erase / trend 的上限**：`limits.caps` 加 `erase_rows`、`trend_rows`；擦除计划过上限在发出前按名拒绝并点名能缩小计划的办法，`--commits` 过上限（减去声明的旋钮行）在量第一个提交之前按名拒绝；两族的降级应答读作核的原因，不再报「镜像漂移」或假的旋钮钉。趋势缓存的工具链戳加上线路 `proto`，9.0.0 的构建不再把 1.8.0 在 7.2.0 下量的点当自己的。
 - **核的收紧**：`verdict` 的 `continuous` 行与基线行的值列按 u64 校验（基线行此前实体列也不校验），电池两条探针。
 - **拒绝的 golden**：`naming` / `knobsFence`（scan 第 27、28 对）、`targets`（erase 第 15 对）、`unres`（graph 第 27 对）各一对；`contracts/VERSIONING.md` 五处还写着缺席臂的段落改成 9.0.0 的事实，9.0.0 条目加一段补记。
+- **协议一行 32 → 128 MiB**（用户裁定 2026-10-13，设计册 §11 第 120 条）：`maxLineBytes` 33,554,432 → 134,217,728 B、`readBudget` 67,108,864 → 268,435,456 B（行的两倍），测量侧的应答上限 `corelink/pipe.rs::MAX_REPLY_BYTES` 64 → 256 MiB（行的两倍，单元腿读 tables golden 钉住）；依据是实测的核峰值工作集——`candidates/1` 是请求字节的 21–25 倍（PERF-BUDGET「v2.33 步 11b」）；careeros 与 Claude-Code-Local 的 `ce check` 现在给出判决（763 / 785，退 0）。
 
 **无默认档位变更。** v2.33 步 11b 核车道第 1 项：`ce similar --widen` 慢在核里的三处（设计册 `algorithm-track.md` 第 117 项诊断、第 119 项改法），应答逐字节不变。
 

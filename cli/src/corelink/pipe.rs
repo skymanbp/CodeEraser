@@ -21,13 +21,14 @@ pub(super) fn deadline() -> Duration {
 }
 
 /// Byte ceiling for ONE reply line — a MEMORY bound, deliberately
-/// above the core's own 32 MiB frame ceiling
-/// (core/app/CE/Protocol/Version.hs::maxLineBytes), so no in-contract reply
-/// is ever cut short. The deadline alone did not bound the pump: a
+/// twice the protocol's line (core/app/CE/Protocol/Version.hs::maxLineBytes,
+/// the `limits.caps.line_bytes` the core states), so no in-contract reply
+/// is ever cut short; a unit leg reads the tables golden and holds the
+/// two together. The deadline alone did not bound the pump: a
 /// core emitting an endless newline-free line grew the String for the
 /// whole deadline window, unbounded, while `next_line` sat waiting
 /// for a message that could not arrive (2026-08-20 protocol review).
-const MAX_REPLY_BYTES: u64 = 64 * 1024 * 1024;
+const MAX_REPLY_BYTES: u64 = 256 * 1024 * 1024;
 
 /// Pump the child's stdout into a channel, line by line. EOF ends the
 /// thread and the hung-up channel tells the waiter; a read error is
