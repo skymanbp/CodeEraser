@@ -16,10 +16,9 @@
 //! one `Answer`, and `emit` prints it. Since plan v2.33 W7 a face sends
 //! its strings too (`Request::text`, by reference class): the core
 //! spells every reference and fills every hole itself, and this side
-//! prints what it gets. Two faces still bind here, through the
-//! `Resolve` below — the PreToolUse guard (guard/speech.rs, the hook
-//! path, `lines::bind_lines`) and query (its program's strings stay
-//! this side until the program crosses, `assemble_bound`).
+//! prints what it gets. One face still binds here, through the
+//! `Resolve` below — query (its program's strings stay this side until
+//! the program crosses, `assemble_bound`).
 
 pub mod lines;
 mod paths;
@@ -371,18 +370,6 @@ impl Why {
     /// The text a `why` reference names.
     pub fn at(&self, i: &[i128]) -> Option<String> {
         at(&self.0, i)
-    }
-}
-
-/// A face's strings held as lists, one per reference class, each read
-/// by a one-integer reference — the resolver of every face whose
-/// references are indices.
-pub struct Lists(pub Vec<(&'static str, Vec<String>)>);
-
-impl Resolve for Lists {
-    fn resolve(&self, class: &str, ints: &[i128]) -> Option<String> {
-        let (_, list) = self.0.iter().find(|(c, _)| *c == class)?;
-        at(list, ints)
     }
 }
 

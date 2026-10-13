@@ -4,11 +4,11 @@
 //! `Said` — its code, its numbers and its strings; the hook decides
 //! the tier, then asks ONE `guard` document over the daemon's held
 //! link (`Request::Document`, daemon proto 2.3.0) with every rule as a
-//! `say` row and every string as a reference, binds the reply's lines
-//! through the strings it holds, and joins them as the decision's
-//! reason. The sentences and both languages are the core's
+//! `say` row and every string by its reference class (`Request::text`,
+//! plan v2.33 W7), and joins the lines the core spelled as the
+//! decision's reason. The sentences and both languages are the core's
 //! (`CE.Text.Guard`); the decision stays this side's. A core the hook
-//! cannot reach, or a reply it cannot bind, still decides — the
+//! cannot reach, or a reply it cannot read, still decides — the
 //! sentence then is the one English fallback, which names the rules
 //! and why the core did not phrase them.
 
@@ -121,7 +121,7 @@ fn spoken(root: &Path, said: &[Said]) -> Result<String, String> {
     };
     let reply = client::relay(root, &request)?;
     crate::corelink::judged::degraded(&reply)?;
-    let (lines, _) = lines::bind_lines(&reply, &strings.lists()).map_err(|e| e.to_string())?;
+    let (lines, _) = lines::spelled_lines(&reply).map_err(|e| e.to_string())?;
     let texts: Vec<String> = lines.into_iter().map(|l| l.text).collect();
     Ok(texts.join(" "))
 }
@@ -239,7 +239,9 @@ impl Strings {
         }
     }
 
-    fn body(&self) -> Value {
+    /// The request: the tables, and the strings the references name,
+    /// one list per class.
+    fn body(self) -> Value {
         document::Request::new("guard")
             .range("files", self.files.len())
             .range("matches", self.matches.len())
@@ -249,18 +251,12 @@ impl Strings {
             .rows("say", &self.say)
             .rows("matches", &self.matches)
             .rows("places", &self.places)
+            .text("file", self.files)
+            .text("match_file", self.match_files)
+            .text("place_file", self.place_files)
+            .text("unit", self.units)
+            .text("error", self.errors)
             .body()
-    }
-
-    /// The strings the request's references name, one list per class.
-    fn lists(self) -> document::Lists {
-        document::Lists(vec![
-            ("file", self.files),
-            ("match_file", self.match_files),
-            ("place_file", self.place_files),
-            ("unit", self.units),
-            ("error", self.errors),
-        ])
     }
 }
 
