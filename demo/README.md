@@ -150,8 +150,9 @@ invisible to every gate in this repository and visible to every reader of it.
 | 8 | `invoicer/report.py` | not the task's: the repair the Stop audit named: one renderer, the compact variant differing only where it really differs | lands, and the audit falls silent |
 
 Move 2 is the honest boundary on purpose: the duplicate-write rule charges
-only duplication a write *introduces* (the 2,761-event replay in
-[FPR-REPLAY.md](../docs/FPR-REPLAY.md) is why), and a full-file rewrite that
+only duplication a write *introduces* (the replay of 2,761 events in
+[FPR-REPLAY.md](../docs/FPR-REPLAY.md), 487 on requests and 2,274 on this
+repository's history, is why), and a full-file rewrite that
 copies its own blocks introduces none, so the next layer, the Stop audit,
 refuses to end the turn over exactly those two blocks, which is what move 8
 answers.

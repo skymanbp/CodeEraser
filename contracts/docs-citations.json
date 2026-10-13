@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|60823903c040c05e|0": {
+  "docs/reference/methodology.md|../../README.md|17c31d91d672a861|0": {
     "target": "../../README.md",
     "line": 198,
-    "text": "- **Philosophy.** Measure in Rust, decide in Haskell, render everywhere else. Codes cross the wire; each face owns its sentences. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
+    "text": "- **Philosophy.** Measure in Rust, decide and write in Haskell, print everywhere else. Rust hands the core what it read (integers and, since plan v2.33, text over the local pipe only); the core answers verdicts, documents and every console line in the asked language. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",

@@ -27,7 +27,7 @@ MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:coun
 的权限删文件的机器面，是橡皮擦唯一不能出的东西；`update_check` 同理只到检查；
 `similar_units` 是同角色顾问（`ce similar` 的同一份文档），只当顾问不判决；
 `query` / `rules` 是代码查询家族（`ce query` / `ce rules` 的同一份文档，问题或规则文件在核的 `query/1`
-上判决），这里只出报告，退出码是 CLI 自己读 `counts.violations` 的事；`query` 带 `prelude: true` 时不问问题，
+上判决），这里只出报告，退出码是 CLI 的事（读核的否决位：`ce rules` 有违规退 1，程序错误或核判不了退 2）；`query` 带 `prelude: true` 时不问问题，
 答前奏与核从 `ce.toml` `[rules.pack]` 渲染出的规则包原文（`ce.query-prelude/0.1.0`，与 `ce query --prelude`、
 GUI 查询屏「前奏」按钮同一份文档；没声明规则包时 `pack` 为 null）；
 `merge_suggestions` 是克隆合并建议（`ce merge` 的同一份文档：每个克隆组合并成一个函数要几个参数、保留哪个成员、
@@ -89,7 +89,7 @@ file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒�
 
 默认档位 = §4.2 路线第 3 级（2026-08-17 1.0 档位切换生效，依据见根目录
 [CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
-（写后文件超过其硬线：默认 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce-->，或其 `[[rules.class]]` 声明的那条；hook 经 `guard::budget::lines_for`、`ce scan` 直呼，两面同读 `scan::classes::Classes::thresholds_for` 那张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
+（写后文件超过其硬线：默认 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce-->，或其 `[[rules.class]]` 声明的那条；hook 经 `guard::budget::lines_for` 读 `scan::classes::Classes::thresholds_for`，`ce scan` 送每行的类号（`Classes::class_of`）、由核按 `gradeOverrides` 分级——两面读的是同一张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
 分级区档位映射（软线→硬线之间按位置 <25 % observe / 25–75 % warn / >75 % ask）走 `[guard] zone_tiers`
 这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
@@ -103,7 +103,7 @@ precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部
 FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格 0/125、宽读法 0/820；唯一 copy 正例 `1035f6b1` 漏过（召回 0/1），本批无默认档位变更；
 `similar` 对象（本会话新增的单元逐个问过同角色顾问：`rev`、`new_units`、`queried`，以及核的 top-1 带角色位时的 `rows` 行 `{unit,twin,score}`；无核或读不到索引时只记 `degraded`）同样永不出声：顾问不判决，评估台账见 [docs/EVAL-SET-SIMILAR.md](../docs/EVAL-SET-SIMILAR.md)；
 `flow` 事件行（PreToolUse 一次写入的前后两侧各降表经核 flow/1 判一次，后侧有发现才落一行：`before` / `after` 发现数、按 `(单元名, 种类, 变量名)` 多重集相减得的 `novel`、按种类计数的 `kinds`、语言是否在判决掩码 `judged`；`mode` 是类自己的 `[flow] tier`，出厂 observe）与 Stop / precommit / commitmsg 行上的 `flow` 对象（改动集里有单元的文件数、单元数、发现数、`kinds`、被判决的条数）自 feed 0.12.0 起加性出现；Stop 腿在任何档位都不拦停，站点清单在 `ce flow` 里；
-核的定义包读不到（没有核、核早于 7.7.0）时钩子不度量、退 0、从不拒写，但每个钩子各落一行（PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`）：`degraded` 为真、`reason` 是 CLI 拒绝时的同一句，PreToolUse / PostToolUse 行另带 `file` 与 `tool_use_id`，自 feed 0.13.0 起加性出现；`ce doctor` 的降级计数把它们算进去，SessionStart 那一行写「tables: unavailable — <原因>」，每个会话说一次；
+核的定义包读不到（没有核、核的协议 major 与本构建不同）时钩子不度量、退 0、从不拒写，但每个钩子各落一行（PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`）：`degraded` 为真、`reason` 是 CLI 拒绝时的同一句，PreToolUse / PostToolUse 行另带 `file` 与 `tool_use_id`，自 feed 0.13.0 起加性出现；`ce doctor` 的降级计数把它们算进去，SessionStart 那一行写「tables: unavailable — <原因>」，每个会话说一次；
 `session_id` 为 `null` 表示该条不属于任何会话；`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
 不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。
