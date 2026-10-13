@@ -135,7 +135,7 @@ impl Lowerer<'_> {
                 let hit = self
                     .at(arm, pos, others)
                     .iter()
-                    .any(|x| super::at::holds(*x, tok));
+                    .any(|x| crate::scan::ast::has_child(*x, &[tok]));
                 hit && unguarded
             }
         }

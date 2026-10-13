@@ -280,7 +280,7 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 6
+        "below_floor": 7
       },
       "live": 4,
       "path": "cli/src/dedup/tokens.rs",
@@ -288,7 +288,7 @@
       "segs_by": {
         "comment_block": 4
       },
-      "sha256": "6ac972adf5bbd4f0be51f9e5dcb20dcf1ae4bca7017246349873a3dc5ec53290"
+      "sha256": "3d9618917a8e0483aa8d2fbc217a0d0ff45f8424c995d16a48047a79c9d321dc"
     },
     {
       "exempt_by": {},
@@ -362,15 +362,15 @@
       "exempt_by": {},
       "lang": "rs",
       "ledger": {
-        "below_floor": 6
+        "below_floor": 5
       },
       "live": 4,
       "path": "cli/src/fourclass/session.rs",
-      "seg_sha256": "9af527d3c7bc0a2b5f818372de4bd37e36822a2bb1385f95e5057016381b5b44",
+      "seg_sha256": "866cf35e9528658f1dd351ed2b8fcea150faefae0951a795b54eb89bb7055b92",
       "segs_by": {
         "comment_block": 4
       },
-      "sha256": "495df3120f88d3d902a96f8b435b35d4b209d22f864f82f37268db695b2d1d18"
+      "sha256": "2acdcbe425e166972a6425892976b6db4a9594265ce03a1c985f050cbaaaad15"
     },
     {
       "exempt_by": {},

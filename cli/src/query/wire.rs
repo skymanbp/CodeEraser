@@ -14,7 +14,6 @@ use std::collections::BTreeMap;
 /// The capability the core must offer, and the request kind.
 pub const CAP: &str = "query/1";
 pub const KIND: &str = "query";
-const SINCE: &str = "7.3.0";
 
 /// The counts object's keys, in the wire's order.
 pub const COUNTS: [&str; 10] = [
@@ -92,7 +91,7 @@ pub fn body(
 /// One request over a link past its handshake, behind the
 /// capability gate (a pre-7.3.0 core is healthy and answers nothing).
 pub fn ask(link: &mut Link, body: Value) -> Result<Value, String> {
-    judged::ask(link, CAP, SINCE, KIND, body)
+    Ok(judged::ask(link, CAP, KIND, body)?)
 }
 
 /// A wire number: the unsigned word a hash is, or the signed integer
@@ -113,7 +112,7 @@ pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {
         ..Judged::default()
     };
     if let Err(reason) = judged::degraded(reply) {
-        j.degraded = Some(reason);
+        j.degraded = Some(reason.into());
         return Ok(j);
     }
     j.goals = goals_of(reply)?;
@@ -151,6 +150,7 @@ fn optional<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> Result<
         .get(key)
         .map(|_| judged::table(reply, key))
         .transpose()
+        .map_err(String::from)
 }
 
 fn counts_of(reply: &Value) -> Result<BTreeMap<&'static str, u64>, String> {

@@ -83,10 +83,8 @@ pub fn private(
         "rs": { "owners": rs.iter().collect::<Vec<_>>() },
     });
     let manifests: BTreeSet<&String> = rs.values().collect();
-    judged::table(
-        &complete_toml(&mut body, root, manifests.into_iter())?,
-        "private",
-    )
+    let reply = complete_toml(&mut body, root, manifests.into_iter())?;
+    Ok(judged::table(&reply, "private")?)
 }
 
 /// `complete`, the given Cargo.toml files' TOML facts carried up front.

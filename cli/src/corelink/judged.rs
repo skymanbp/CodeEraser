@@ -1,30 +1,60 @@
-//! What every judged family's Rust leg does the same way once it has
-//! a link: ask behind the capability gate, and read a reply's degraded
-//! posture, tables and counts by name. Promoted when the twelfth family
-//! (similar/1) reminted tombstone/1's ask-and-consume shell verbatim —
-//! the dedup gate's own promotion rule. Policy never lives here: which
-//! tables a family has and what skew means for them stays in that
-//! family's wire.rs.
+//! The one kit every judged family reads core replies with, once it has
+//! a link: open behind the capability gate, ask, and read a reply's
+//! degraded posture, tables, fields and counts by name. Promoted when
+//! the twelfth family (similar/1) reminted tombstone/1's ask-and-consume
+//! shell verbatim — the dedup gate's own promotion rule; the chunked
+//! lockstep loop (lockstep.rs) reads its replies through here too (plan
+//! v2.33 step 11a: the two kits were one). Policy never lives here:
+//! which tables a family has and what a degraded reply means for it
+//! stays in that family's wire.rs.
 
 use super::Link;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 
-/// One `{kind}.request` behind its capability gate: a core without the
-/// family is healthy and answers nothing here, and the absence is
-/// NAMED with the proto that minted the family — never read as an
-/// empty judgment (A9f).
-pub fn ask(
-    link: &mut Link,
-    cap: &str,
-    since: &str,
-    kind: &str,
-    body: Value,
-) -> Result<Value, String> {
-    if !link.has(cap) {
-        return Err(format!("core offers no {cap} (pre-{since})"));
+/// A reply this side cannot read as a judgment: a link that would not
+/// open, a capability or key the core does not carry, a degraded reply,
+/// a table that does not decode. Its words are the reason; a `String`
+/// family and an `anyhow` family both take it by `?`.
+#[derive(Debug)]
+pub struct Unread(String);
+
+impl std::fmt::Display for Unread {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
     }
-    link.request(kind, body)
+}
+
+impl std::error::Error for Unread {}
+
+impl From<Unread> for String {
+    fn from(u: Unread) -> String {
+        u.0
+    }
+}
+
+/// A link to `core` that carries `cap` — the shared head of every
+/// family that opens its own link (the lockstep families, score, scan,
+/// structure, trend, the audit verdict).
+pub fn open(core: &str, cap: &str) -> Result<Link, Unread> {
+    let (link, _hello) = Link::open(core).map_err(Unread)?;
+    gate(&link, cap)?;
+    Ok(link)
+}
+
+/// The capability gate: a core without `cap` is named as skew
+/// (crate::corelink::skew), never read as an empty judgment (A9f).
+fn gate(link: &Link, cap: &str) -> Result<(), Unread> {
+    match link.has(cap) {
+        true => Ok(()),
+        false => Err(Unread(super::skew(cap))),
+    }
+}
+
+/// One `{kind}.request` behind its capability gate.
+pub fn ask(link: &mut Link, cap: &str, kind: &str, body: Value) -> Result<Value, Unread> {
+    gate(link, cap)?;
+    link.request(kind, body).map_err(Unread)
 }
 
 /// One request over the process's core session (plan v2.33 W2-text
@@ -32,9 +62,9 @@ pub fn ask(
 /// it), behind the gate; a degraded reply is a named refusal, every error
 /// prefixed by the capability. The families that ask from deep inside a
 /// sweep (resolve/1, bags/1) go through here.
-pub fn session_ask((cap, since, kind): (&str, &str, &str), body: Value) -> Result<Value, String> {
+pub fn session_ask((cap, kind): (&str, &str), body: Value) -> Result<Value, String> {
     let (mut link, _) = Link::open(crate::tables::core_flag())?;
-    let reply = ask(&mut link, cap, since, kind, body).map_err(|e| format!("{cap}: {e}"))?;
+    let reply = ask(&mut link, cap, kind, body).map_err(|e| format!("{cap}: {e}"))?;
     degraded(&reply).map_err(|e| format!("{cap}: {e}"))?;
     Ok(reply)
 }
@@ -48,23 +78,22 @@ pub fn session_ask((cap, since, kind): (&str, &str, &str), body: Value) -> Resul
 /// whole-corpus, so it cannot be split without changing its answer.
 pub fn whole_pass<P: DeserializeOwned>(
     link: &mut Link,
-    (cap, since, kind): (&str, &str, &str),
+    (cap, kind): (&str, &str),
     body: Value,
     (what, keys): (&str, &[&str]),
 ) -> anyhow::Result<(Value, P, Vec<u64>)> {
     if let Err(why) = fits_line(kind, &body) {
         anyhow::bail!("{cap} degraded the {what} ({why})");
     }
-    let reply = ask(link, cap, since, kind, body).map_err(anyhow::Error::msg)?;
+    let reply = ask(link, cap, kind, body)?;
     if let Err(why) = degraded(&reply) {
         anyhow::bail!("{cap} degraded the {what} ({why})");
     }
-    let pairs = table(&reply, "pairs").map_err(anyhow::Error::msg)?;
+    let pairs = table(&reply, "pairs")?;
     let counts = keys
         .iter()
         .map(|k| count(&reply, k).map(|n| n as u64))
-        .collect::<Result<_, _>>()
-        .map_err(anyhow::Error::msg)?;
+        .collect::<Result<_, _>>()?;
     Ok((reply, pairs, counts))
 }
 
@@ -109,9 +138,10 @@ impl std::io::Write for Count {
 
 /// A reply's degraded posture, read before any table: the core's named
 /// reason (or the bare word) is a named non-judgment.
-pub fn degraded(reply: &Value) -> Result<(), String> {
+pub fn degraded(reply: &Value) -> Result<(), Unread> {
     if reply["degraded"] == Value::Bool(true) {
-        return Err(reply["reason"].as_str().unwrap_or("degraded").to_string());
+        let why = reply["reason"].as_str().unwrap_or("degraded");
+        return Err(Unread(why.to_string()));
     }
     Ok(())
 }
@@ -119,14 +149,23 @@ pub fn degraded(reply: &Value) -> Result<(), String> {
 /// One table of the reply under `key`, decoded; its absence or a
 /// malformed element is named by key (a malformed reply is never a
 /// healthy one).
-pub fn table<T: DeserializeOwned>(reply: &Value, key: &str) -> Result<T, String> {
-    serde_json::from_value(reply[key].clone()).map_err(|e| format!("{key}: {e}"))
+pub fn table<T: DeserializeOwned>(reply: &Value, key: &str) -> Result<T, Unread> {
+    serde_json::from_value(reply[key].clone()).map_err(|e| Unread(format!("{key}: {e}")))
+}
+
+/// A required field of the reply as it stands, its absence named (a
+/// `null` decodes as a table; a missing field is no field).
+pub fn field(reply: &Value, key: &str) -> Result<Value, Unread> {
+    reply
+        .get(key)
+        .cloned()
+        .ok_or_else(|| Unread(format!("reply missing {key}")))
 }
 
 /// One `counts.<key>` of the reply, or its named absence.
-pub fn count(reply: &Value, key: &str) -> Result<usize, String> {
+pub fn count(reply: &Value, key: &str) -> Result<usize, Unread> {
     reply["counts"][key]
         .as_u64()
         .map(|n| n as usize)
-        .ok_or_else(|| format!("counts.{key} missing"))
+        .ok_or_else(|| Unread(format!("counts.{key} missing")))
 }

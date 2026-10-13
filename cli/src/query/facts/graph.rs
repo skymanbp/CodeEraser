@@ -10,15 +10,16 @@
 use super::{Ctx, Sink};
 use crate::dedup::index::Index;
 use crate::graph::deadcode::GraphWire;
-use crate::graph::wire::{GRAN_PACKAGE, GRAN_SECTION};
-use crate::query::legend::{self, KIND_ASSET, KIND_PROSE, NODE_KINDS, REF_KINDS, ROLE_NAMES};
+use crate::graph::deadcode::ROLE_NAMES;
+use crate::graph::wire::{EDGE_NAMES, GRAN_PACKAGE, GRAN_SECTION};
+use crate::query::legend::{self, KIND_ASSET, KIND_PROSE};
 use crate::scan::lang::Lang;
 use anyhow::Result;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::path::Path;
 
-/// The universe: label, kind (a `legend::NODE_KINDS` index) and path
+/// The universe: label, kind (a `legend::node_kind` code) and path
 /// per node, and the file-shaped nodes by path.
 pub struct Nodes {
     pub labels: Vec<String>,
@@ -89,7 +90,7 @@ pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {
     let nodes = ctx.nodes;
     for (i, kind) in nodes.kinds.iter().enumerate() {
         let id = i as u64;
-        sink.row("node", vec![id, legend::sym(NODE_KINDS[*kind])]);
+        sink.row("node", vec![id, legend::sym(legend::node_kind(*kind))]);
         if *kind == 0 {
             sink.row("file", vec![id]);
         }
@@ -111,7 +112,7 @@ pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {
         }
     }
     for [from, to, kind, rung] in &ctx.wire.edges {
-        let name = REF_KINDS.get(*kind as usize).copied().unwrap_or("unknown");
+        let name = legend::named(&EDGE_NAMES, *kind).unwrap_or("unknown");
         sink.row(
             "ref",
             vec![*from as u64, *to as u64, legend::sym(name), *rung as u64],

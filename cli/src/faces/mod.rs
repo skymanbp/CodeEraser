@@ -188,18 +188,8 @@ pub fn check(
     p: Plumb,
 ) -> Result<Answer> {
     let baseline = crate::score::baseline::read(root)?;
-    let mut o = crate::score::run(
-        root,
-        crate::score::Opts {
-            db: p.db,
-            core: core.into(),
-            days,
-            floor,
-            establish: false,
-            pinned_soft: None,
-            baseline,
-        },
-    )?;
+    let opts = crate::score::Opts::check(p.db, core, (days, floor), baseline);
+    let mut o = crate::score::run(root, opts)?;
     crate::score::document::document(core, &mut o, p.roast)
 }
 

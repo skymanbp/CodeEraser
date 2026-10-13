@@ -4,11 +4,9 @@
 //! (the RG13 plan). The full subcommand roster is main_cli.rs's —
 //! a milestone list here went stale nine subcommands deep.
 
-mod main_arch;
 mod main_cli;
 mod main_cmds;
 mod main_erase;
-mod main_flow;
 mod main_judge;
 mod main_lang;
 mod main_merge;
@@ -139,9 +137,9 @@ fn analysis(cmd: Cmd, core: &str) -> Result<ExitCode, Box<Cmd>> {
         Cmd::Similar(a) => main_similar::similar_cmd(a, core),
         Cmd::Query(a) => main_query::query_cmd(a, core),
         Cmd::Rules(a) => main_query::rules_cmd(a, core),
-        Cmd::Flow(a) => main_flow::flow_cmd(a, core),
+        Cmd::Flow(a) => main_judge::flow_cmd(a, core),
         Cmd::Merge(a) => main_merge::merge_cmd(a, core),
-        Cmd::Arch(a) => main_arch::arch_cmd(a, core),
+        Cmd::Arch(a) => main_judge::arch_cmd(a, core),
         Cmd::Erase(a) => main_erase::erase_cmd(a, core),
         Cmd::Check(a) => main_score::check_cmd(a, core),
         Cmd::Baseline(a) => main_score::baseline_cmd(a, core),

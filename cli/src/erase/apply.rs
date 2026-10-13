@@ -153,8 +153,10 @@ fn write_target(root: &Path, chunk: &[&Row]) -> Result<()> {
 /// contract's audit trail, not telemetry.
 fn append_log(root: &Path, r: &Row, plan_hash: u64) -> Result<()> {
     use std::io::Write;
-    let dir = root.join(".ce");
-    std::fs::create_dir_all(&dir)?;
+    let path = root.join(super::log::LOG_REL);
+    if let Some(dir) = path.parent() {
+        std::fs::create_dir_all(dir)?;
+    }
     let ts_ms = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map(|d| d.as_millis() as u64)
@@ -172,7 +174,7 @@ fn append_log(root: &Path, r: &Row, plan_hash: u64) -> Result<()> {
     let mut f = std::fs::OpenOptions::new()
         .create(true)
         .append(true)
-        .open(dir.join("erase-log.ndjson"))?;
+        .open(&path)?;
     f.write_all(format!("{line}\n").as_bytes())?;
     Ok(())
 }

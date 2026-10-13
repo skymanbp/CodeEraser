@@ -15,7 +15,7 @@ use std::path::Path;
 
 /// Where apply.rs appends, root-relative (append_log; the core's
 /// `logRel` names the same place in the document).
-const LOG_REL: &str = ".ce/erase-log.ndjson";
+pub(super) const LOG_REL: &str = ".ce/erase-log.ndjson";
 
 /// One record exactly as apply.rs writes it — the same eight fields,
 /// read strictly: a writer that drifted is a NAMED unreadable line,

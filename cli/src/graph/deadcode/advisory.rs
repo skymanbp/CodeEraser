@@ -87,9 +87,7 @@ pub(super) fn consume(
     let rows: Vec<[i64; 4]> = match reply.get("exportUnmentioned") {
         Some(rows) => serde_json::from_value(rows.clone()).context("exportUnmentioned rows")?,
         None if reply.get("degraded") == Some(&Value::Bool(true)) => Vec::new(),
-        None => bail!(
-            "core answered the advisory tables without exportUnmentioned — a pre-6.2.0 core cannot judge them"
-        ),
+        None => bail!("{}", crate::corelink::skew("exportUnmentioned")),
     };
     let mut out = Vec::new();
     for row in rows {

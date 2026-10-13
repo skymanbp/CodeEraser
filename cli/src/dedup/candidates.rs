@@ -26,29 +26,11 @@ pub fn limits() -> &'static crate::tables::CloneLimits {
     &crate::tables::get().limits.clone
 }
 
-/// The S4 MinHash/LSH shape — (permutations, bands, rows), 128 =
-/// 32 × 4, the docdup coarse filter's split too (§5.3) — off the core's
-/// package (CE.Candidates.Cost.lshShape), for the frozen docs' method
-/// lines.
-pub fn lsh_shape() -> (usize, usize, usize) {
-    let c = &crate::tables::get().limits.candidates;
-    (c.lsh_perms, c.lsh_bands, c.lsh_rows)
-}
-
-/// Groups above this size pair as adjacent chains, counted — the ONE
-/// cap (CE.Dedup.Cost.hotCap, attack-review D4: skipping hot groups
-/// zeroed detection) every hash-group walk reads, re-exposed for the
-/// frozen docs.
-pub fn hot_group_cap() -> usize {
-    super::pairs::hot_cap()
-}
-
 /// Candidate source labels in bit order: bit i of a pair's `sources`
 /// byte means SOURCES[i] found it. One table — the generators' bit
 /// assignment and the sample's label lookup can never drift apart.
-/// No in-tree reader since the sample generators retired (0c7c936):
-/// the table is the revival base the frozen docs' labels compile
-/// against (EVAL-SET.md「再生成」). s5 (bit 4) is the M5-close
+/// Read by candidate_wire.rs (the tally's labels), and the revival
+/// base the frozen docs' labels compile against (EVAL-SET.md「再生成」). s5 (bit 4) is the M5-close
 /// exhaustive source and PRODUCT-ONLY — frozen docs never carry bit 4.
 pub const SOURCES: [&str; 5] = ["s1", "s2", "s3", "s4", "s5"];
 

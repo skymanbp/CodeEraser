@@ -84,7 +84,7 @@ fn member_access(node: Node<'_>, src: &[u8]) -> Option<Access> {
     let mut prev = member.prev_sibling();
     while let Some(p) = prev {
         if p.kind() == "access_specifier" {
-            return Some(match text(p, src).as_str() {
+            return Some(match text(p, src) {
                 "public" => Access::Public,
                 "protected" => Access::Protected,
                 _ => Access::Private,

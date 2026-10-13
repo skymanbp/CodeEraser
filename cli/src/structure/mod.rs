@@ -10,14 +10,8 @@
 
 mod document;
 pub mod judge;
-pub mod seams;
-// the report faces (JSON doc + bilingual console), split from
-// judge.rs at the 300-line dogfood gate when the M8-G3b Chinese
-// console landed; callers name report directly since the headroom
-// sprint — the judge re-export made judge<->report a cycle the
-// graph family itself billed
-pub mod report;
 pub mod rows;
+pub mod seams;
 pub mod wire;
 
 // the tree, the edge counts, the request rows and the arch tables as they

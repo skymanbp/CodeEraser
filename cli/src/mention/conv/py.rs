@@ -17,8 +17,9 @@
 //!     `typing.`-qualified name, on an `if` or an `elif` arm alike;
 //!     an `else` arm is live code.
 
-use super::{Conv, parent_of_kind, text, under};
+use super::{Conv, parent_of_kind, under};
 use crate::scan::ast;
+use crate::scan::ast::text;
 use tree_sitter::Node;
 
 /// Decorator attribute suffixes that register a callable with a host

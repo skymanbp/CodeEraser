@@ -55,7 +55,7 @@ AmbiguousWorkspace, AmbiguousExports, Macro, ConfigDepth, OutOfScope, Unsupporte
 (`Empty` = a degenerate specifier such as `import ""`, kept as a site and refused by the
 dispatcher before any rung could read the empty string as a name — O60, L round step #15)
 ([ladder/outcome.rs:14-29](../../../cli/src/graph/ladder/outcome.rs#L14)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:188-192](../../../cli/src/graph/ladder/mod.rs#L188)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:186-190](../../../cli/src/graph/ladder/mod.rs#L186)).
 
 Since plan v2.33 wave W2a the Python, Go, C / C++ and Lua rungs below run in the core's
 `resolve/1` family, the R rungs since W2-text stage B and the Java rungs since stage C, and since
@@ -109,7 +109,7 @@ Numeric details that are policy, not taste:
   duplicates take `-N` suffixes in document order ([md_slug.rs:48-52](../../../cli/src/graph/ladder/md_slug.rs#L48)).
   A setext heading — a paragraph under `===` or `---` — slugs like an ATX one, its lines joined, from
   its first row ([md_head.rs:30-61](../../../cli/src/graph/ladder/md_head.rs#L30)), and the section units
-  read the same headings ([units.rs:172-191](../../../cli/src/fourclass/units.rs#L172)) — plan v2.30 step 5b.
+  read the same headings ([units.rs:174-193](../../../cli/src/fourclass/units.rs#L174)) — plan v2.30 step 5b.
   Raw-HTML anchors (`<a name=…>`, `<a id=…>`, `<h1..6 id=…>`) enter the set verbatim, the tag read across
   lines and its attribute with or without spaces around `=`, quoted or bare
   ([md_head.rs:126-150](../../../cli/src/graph/ladder/md_head.rs#L126)); a fragment is percent-decoded
@@ -129,7 +129,7 @@ Numeric details that are policy, not taste:
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
   ([Rs.hs:224-226](../../../core/app/CE/Resolve/Rs.hs#L224),
-  [wire.rs:121-122](../../../cli/src/graph/wire.rs#L121)).
+  [wire.rs:129-130](../../../cli/src/graph/wire.rs#L129)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the only
 target-content facts a ladder consults are the Markdown anchor set and the Rust top-level
@@ -144,11 +144,11 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:106-139](../../../cli/src/graph/wire.rs#L106)). An edge's
+ledger-visible as sites *without* edges ([wire.rs:114-147](../../../cli/src/graph/wire.rs#L114)). An edge's
 kind follows its site's: code kinds import; the Markdown link family and HTML's page references (`href`, a
 form's `action`) split doc_link / doc_ref by whether the target is a page (Markdown or HTML); an image, a
 `src` / `srcset` resource and an asset `<link>` are always assets
-([wire.rs:150-167](../../../cli/src/graph/wire.rs#L150), [wire.rs:169-178](../../../cli/src/graph/wire.rs#L169)).
+([wire.rs:158-175](../../../cli/src/graph/wire.rs#L158), [wire.rs:177-186](../../../cli/src/graph/wire.rs#L177)).
 Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
@@ -156,7 +156,7 @@ reference definition's in-scope target, which resolves and travels as an edge wh
 excludes it from liveness beside the asset kind
 ([wire.rs:25-34](../../../cli/src/graph/wire.rs#L25), [Cost.hs:166-173](../../../core/app/CE/Graph/Cost.hs#L166)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
-([wire.rs:36-39](../../../cli/src/graph/wire.rs#L36)).
+([wire.rs:42-45](../../../cli/src/graph/wire.rs#L42)).
 
 Node identity is the pair `(path, unit)` over a `BTreeSet` of every walked file plus every edge
 target, so the id assignment is a function of the graph and the wire bytes are shuffle-proof
@@ -176,8 +176,8 @@ Two transformations happen on the way to the wire:
    ([Cost.hs:166-173](../../../core/app/CE/Graph/Cost.hs#L166)) since 2.29.0 — the two riding one
    inert list into the same comprehension as the rung filter
    ([Graph.hs:130](../../../core/app/CE/Graph.hs#L130), [Build.hs:43-49](../../../core/app/CE/Graph/Build.hs#L43)) — Rust no longer pre-drops rows
-   ([deadcode.rs:291-302](../../../cli/src/graph/deadcode.rs#L291)). An endpoint that is not a node
-   is a *named error*, never a panic ([deadcode.rs:293-297](../../../cli/src/graph/deadcode.rs#L293)).
+   ([deadcode.rs:292-303](../../../cli/src/graph/deadcode.rs#L292)). An endpoint that is not a node
+   is a *named error*, never a panic ([deadcode.rs:294-298](../../../cli/src/graph/deadcode.rs#L294)).
 2. **Synthetic containment arcs** are added from each package node to every file under its
    directory — or, for a package whose code its manifest declares (an R package's `DESCRIPTION`,
    plan v2.30 step 4: the `Collate` files, else the files directly in `R/`), to that code alone,
@@ -222,8 +222,8 @@ degraded result** with `dead = []`, `reported = []`, `kept = 0`, `degraded = tru
 by the core itself since 2.18.0, and never a truncated graph
 ([Graph.hs:165-188](../../../core/app/CE/Graph.hs#L165), [Graph.hs:165-188](../../../core/app/CE/Graph.hs#L165)).
 The CLI treats a degraded reply as an event, not silence: it lands in the observe feed
-([deadcode.rs:521-527](../../../cli/src/graph/deadcode.rs#L521)) and `ce deadcode --check` relays the
-core's fail bit ([Lines.hs:60-61](../../../core/app/CE/Graph/Lines.hs#L60), [main_prelude.rs:30-45](../../../cli/src/main_prelude.rs#L30)).
+([deadcode.rs:513-519](../../../cli/src/graph/deadcode.rs#L513)) and `ce deadcode --check` relays the
+core's fail bit ([Lines.hs:60-61](../../../core/app/CE/Graph/Lines.hs#L60), [main_prelude.rs:29-44](../../../cli/src/main_prelude.rs#L29)).
 
 ### 5. Kept arcs and liveness
 
@@ -258,9 +258,9 @@ exported-ness is the public/private *verdict* axis, so a library's unreferenced 
 ([Cost.hs:92-95](../../../core/app/CE/Graph/Cost.hs#L92)).
 
 Only file nodes carry entry facts; section and package rows get `0`
-([deadcode.rs:308-326](../../../cli/src/graph/deadcode.rs#L308)). Since proto **2.28.0**
+([deadcode.rs:309-327](../../../cli/src/graph/deadcode.rs#L309)). Since proto **2.28.0**
 (batch-7 slice 3 main body) the node row's last column carries **role facts** — the third and
-last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:329](../../../cli/src/graph/deadcode.rs#L329)) — and the
+last since 5.0.0, `[lang, kind, roles]` ([deadcode.rs:330](../../../cli/src/graph/deadcode.rs#L330)) — and the
 category membership Rust used to fuse into the flags column is decided by the core's
 **role table** `roleBits` ([Graph/Cost.hs:150-151](../../../core/app/CE/Graph/Cost.hs#L150)):
 the row's entry bits derive through `deriveFlags`
@@ -302,14 +302,14 @@ role 9  a walked asset: a file the index holds no parse of, named
 ```
 
 ([flags.rs:24-41](../../../cli/src/graph/deadcode/flags.rs#L24),
-[flags.rs:68-103](../../../cli/src/graph/deadcode/flags.rs#L68)). The role→bit landing is the
+[flags.rs:83-118](../../../cli/src/graph/deadcode/flags.rs#L83)). The role→bit landing is the
 core's data: roles 0, 1, 6 and 8 (7.2.0) all land on bit 1, roles 2/3/4/5 on bits 2/3/5/6, role 7
 (6.3.0) on bit 2 beside the test convention — a foreign reader's references seed
 reachability and it is never judged, the same standing a test file has — and role 9 (7.2.0,
 plan v2.30 step 5) alone on bit 4, the dyn-referenced bit, which had no producer before: the
 references the graph cannot read (a stylesheet's `url()`, a script's fetch, a manifest's icons)
 keep an asset alive, so it is never a candidate and never a measured node
-([deadcode.rs:194-196](../../../cli/src/graph/deadcode.rs#L194)). **Role 6 closes
+([deadcode.rs:195-197](../../../cli/src/graph/deadcode.rs#L195)). **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
 before only the name conventions were — the discovery is nearest-manifest per walked directory
 ([targets.rs:37-82](../../../cli/src/graph/deadcode/targets.rs#L37),
@@ -373,7 +373,7 @@ The per-node join surface, computed only for the requested `pos` indices, is
 [Position.hs:14-32](../../../core/app/CE/Graph/Position.hs#L14)); degrees count distinct kept arcs, and
 `reachIn` is `fromEnum (i ∈ reach)`. A non-degraded reply **must** answer every requested index
 — a short `pos` table would silently starve the M5-3 join, so the CLI refuses it
-([deadcode.rs:370-373](../../../cli/src/graph/deadcode.rs#L370)).
+([deadcode.rs:371-374](../../../cli/src/graph/deadcode.rs#L371)).
 
 ### 7. The four-way verdict
 
@@ -406,7 +406,7 @@ The names are the core's too since plan v2.32 step 4: the deadcode document
 (`CE.Graph.Document`, laid out over `document/1`) spells a verdict by position — `verdictNames`
 read at `code - 1` ([Document.hs:49-54](../../../core/app/CE/Graph/Document.hs#L49)) — and the
 Rust side, which sends the judgment's rows back as codes, refuses a code past the four as
-wire-version skew, not a panic ([deadcode.rs:446-452](../../../cli/src/graph/deadcode.rs#L446)).
+wire-version skew, not a panic ([deadcode.rs:447-453](../../../cli/src/graph/deadcode.rs#L447)).
 The `why` string is a two-way split on the same axis: codes 1–2 read *"no kept in-edge and no
 entry flag"*, codes 3–4 read *"referenced only from dead code; no entry flag"*
 ([Document.hs:56-59](../../../core/app/CE/Graph/Document.hs#L56), placed at
@@ -420,10 +420,10 @@ the node kind column it always received ([Graph.hs:147-149](../../../core/app/CE
 `fail` bit naming the zero-tolerance gate. The Rust side keeps the split as a boundary
 contract, because the failing table is what licenses `ce erase`'s dead-file rows: an aggregate
 arriving in `dead` refuses as wire skew, never a directory erase
-([deadcode.rs:482-489](../../../cli/src/graph/deadcode.rs#L482)); an absent `fail` bit or
+([deadcode.rs:479-486](../../../cli/src/graph/deadcode.rs#L479)); an absent `fail` bit or
 `reported` table refuses as wire skew by name too — the handshake already turns a pre-2.18
 core away, so the client's old fallback conjunction was unreachable and was retired (L round
-step #15, O62; [deadcode.rs:471-475](../../../cli/src/graph/deadcode.rs#L471)). Both lists, the counts, and
+step #15, O62; [deadcode.rs:469-472](../../../cli/src/graph/deadcode.rs#L469)). Both lists, the counts, and
 `unresolved_sites` ship in the JSON document the core lays out
 ([Document.hs:88-104](../../../core/app/CE/Graph/Document.hs#L88)). The design's *"no entry rule ⇒ every doc trivially
 dies"* stance is deliberate: an unlinked doc **is** reported
@@ -441,7 +441,7 @@ Since 2.32.0 the request may ship a per-language site ledger — `"unres": [[lan
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:133](../../../cli/src/graph/load.rs#L133), [deadcode.rs:265](../../../cli/src/graph/deadcode.rs#L265)), fences every returned index and bounds the column ([deadcode.rs:491-495](../../../cli/src/graph/deadcode.rs#L491)), and the core renders the trust word beside each dead file ([Lines.hs:28-34](../../../core/app/CE/Graph/Lines.hs#L28)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:133](../../../core/test/GraphWireProps.hs#L133)).
+([Cost.hs:160](../../../core/app/CE/Graph/Cost.hs#L160)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Legacy requests without the key keep two-column dead rows, byte-identical. The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:133](../../../cli/src/graph/load.rs#L133), [deadcode.rs:266](../../../cli/src/graph/deadcode.rs#L266)), fences every returned index and bounds the column ([deadcode.rs:489-493](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:28-34](../../../core/app/CE/Graph/Lines.hs#L28)). The props battery pins all three codes through the real `respond`, the legacy two-column road beside them, and every ledger refusal by name ([GraphWireProps.hs:133](../../../core/test/GraphWireProps.hs#L133)).
 
 ### 9. Acceptance
 

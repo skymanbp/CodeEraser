@@ -108,7 +108,13 @@ fn extra_units<'t>(
         let mut keyed: Vec<(String, i64, Option<tree_sitter::Node<'t>>)> =
             super::declared::keys(node, kinds, src, lang)
                 .into_iter()
-                .map(|name| (key_text(name, src), super::kinds::KIND_NAMED, Some(name)))
+                .map(|name| {
+                    (
+                        crate::scan::ast::text(name, src).to_string(),
+                        super::kinds::KIND_NAMED,
+                        Some(name),
+                    )
+                })
                 .collect();
         if keyed.is_empty()
             && let Some(key) = impl_key(node, src, lang)
@@ -133,10 +139,6 @@ fn extra_units<'t>(
         }
     }
     out
-}
-
-fn key_text(name: tree_sitter::Node, src: &[u8]) -> String {
-    String::from_utf8_lossy(&src[name.byte_range()]).into_owned()
 }
 
 /// Key for a Rust impl block: `impl Foo`, or `impl Advisor for Foo`

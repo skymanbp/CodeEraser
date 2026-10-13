@@ -248,16 +248,16 @@
     },
     {
       "bands": {
-        "below_floor": 6,
+        "below_floor": 7,
         "l": 1,
         "m": 4,
-        "s": 3
+        "s": 4
       },
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "6ac972adf5bbd4f0be51f9e5dcb20dcf1ae4bca7017246349873a3dc5ec53290",
-      "symbols": 14,
-      "units": 14
+      "sha256": "3d9618917a8e0483aa8d2fbc217a0d0ff45f8424c995d16a48047a79c9d321dc",
+      "symbols": 16,
+      "units": 16
     },
     {
       "bands": {
@@ -326,16 +326,16 @@
     },
     {
       "bands": {
-        "below_floor": 7,
+        "below_floor": 5,
         "l": 2,
-        "m": 3,
-        "s": 8
+        "m": 1,
+        "s": 5
       },
       "lang": "rs",
       "path": "cli/src/fourclass/session.rs",
-      "sha256": "495df3120f88d3d902a96f8b435b35d4b209d22f864f82f37268db695b2d1d18",
-      "symbols": 20,
-      "units": 20
+      "sha256": "2acdcbe425e166972a6425892976b6db4a9594265ce03a1c985f050cbaaaad15",
+      "symbols": 13,
+      "units": 13
     },
     {
       "bands": {
@@ -1880,10 +1880,10 @@
       "py/l": 15,
       "py/m": 49,
       "py/s": 41,
-      "rs/below_floor": 623,
+      "rs/below_floor": 622,
       "rs/l": 132,
-      "rs/m": 507,
-      "rs/s": 607,
+      "rs/m": 505,
+      "rs/s": 605,
       "ts/below_floor": 17,
       "ts/l": 6,
       "ts/m": 1,
@@ -1894,16 +1894,16 @@
       "go": 92,
       "md": 123,
       "py": 126,
-      "rs": 1869,
+      "rs": 1864,
       "ts": 32
     },
-    "total_symbols": 2242,
-    "total_units": 2119,
+    "total_symbols": 2237,
+    "total_units": 2114,
     "units_by": {
       "go": 92,
       "md": 0,
       "py": 126,
-      "rs": 1869,
+      "rs": 1864,
       "ts": 32
     }
   }

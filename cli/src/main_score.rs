@@ -53,23 +53,12 @@ fn act(var: &str) -> bool {
     std::env::var(var).as_deref() == Ok("1")
 }
 
-/// The head of `ce baseline` — the scope, the output mode and the wire
-/// options from its JudgeArgs and the process's core (`ce check` rides
-/// crate::faces since plan v2.33 step 10, and judges the same Opts
-/// there). The baseline is the caller's ONE read (O31): score::run
-/// never reads the file itself.
+/// The head of `ce baseline` — the scope, the output mode and the
+/// check options `ce check` judges with (score::Opts::check), no floor;
+/// the baseline is set by the act below, the caller's ONE read (O31):
+/// score::run never reads the file itself.
 fn head((judge, core): (JudgeArgs, &str), days: Option<u32>) -> (PathBuf, bool, score::Opts) {
-    let opts = score::Opts {
-        db: judge.db,
-        core: core.to_string(),
-        days,
-        floor: None,
-        establish: false,
-        // the committed baseline (or a true re-establish); only trend
-        // pins a soft line without one
-        pinned_soft: None,
-        baseline: None,
-    };
+    let opts = score::Opts::check(judge.db, core, (days, None), None);
     (or_cwd(judge.root), json(judge.format), opts)
 }
 

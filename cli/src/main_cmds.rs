@@ -7,6 +7,7 @@ use crate::main_prelude::{answered, whole};
 use clap::ValueEnum;
 use codeeraser::faces::{self, Plumb};
 use codeeraser::i18n::line;
+use codeeraser::sarif::{self, Findings};
 use codeeraser::{daemon, dedup, scan};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -15,16 +16,6 @@ use std::process::ExitCode;
 pub enum OutFormat {
     Console,
     Json,
-}
-
-/// The two finding-shaped commands (scan, dedup) alone take the wide
-/// format — sarif in the help of a command whose report carries no
-/// physical locations would be a promise nothing renders.
-#[derive(Clone, Copy, ValueEnum)]
-pub enum FindingsFormat {
-    Console,
-    Json,
-    Sarif,
 }
 
 pub fn json(format: OutFormat) -> bool {
@@ -42,20 +33,14 @@ pub fn or_cwd(root: Option<PathBuf>) -> PathBuf {
     root
 }
 
-fn findings_fmt(f: FindingsFormat) -> scan::Format {
-    match f {
-        FindingsFormat::Console => scan::Format::Console,
-        FindingsFormat::Json => scan::Format::Json,
-        FindingsFormat::Sarif => scan::Format::Sarif,
-    }
-}
-
-pub fn scan_cmd(path: Option<PathBuf>, format: FindingsFormat, core: &str) -> ExitCode {
-    let answer = faces::scan(&or_cwd(path), core);
-    fallible(
-        "scan",
-        answer.and_then(|a| scan::emit(findings_fmt(format), &a)),
-    )
+/// `ce scan`: the judged tree's answer in the requested form; exit 1
+/// iff the core's veto (a held condition).
+pub fn scan_cmd(path: Option<PathBuf>, format: Findings, core: &str) -> ExitCode {
+    let shown = faces::scan(&or_cwd(path), core).and_then(|a| {
+        sarif::emit("scan", ("findings", scan::document::finding), format, &a)?;
+        Ok(ExitCode::from(u8::from(a.fail)))
+    });
+    fallible("scan", shown)
 }
 
 /// `ce churn`: the window measured here, the document and its lines
@@ -82,45 +67,57 @@ pub fn graph_cmd(
     json: bool,
 ) -> ExitCode {
     if mentions {
-        return codeeraser::mention::face::run(root, db, core, json);
+        let answer = codeeraser::mention::face::document(root, db, core);
+        return answered("graph", "mentions", json, answer, whole);
     }
     if !sites {
-        // A bare `ce graph` is a question, not a mistake — the same
-        // reading v0.7.3 gave a bare `ce`. It used to answer on
-        // stderr with exit 2, which PowerShell repaints as a red
-        // NativeCommandError wall and every wrapper reads as a
-        // failure. The usable form goes to stdout and the exit is
-        // clean; --format is named here because it is inert without
-        // --sites, which was the second half of the same puzzle.
-        // the two forms are the SAME ascii on both roads, so the
-        // column padding survives translation untouched
-        println!(
-            "{}",
-            line(
-                "ce graph --sites [--format json]   list the reference sites",
-                "ce graph --sites [--format json]   列出引用站点",
-                &[],
-            )
-        );
-        println!(
-            "{}",
-            line(
-                "ce graph --mentions [--format json] refresh the mention universe",
-                "ce graph --mentions [--format json] 刷新提及语料宇宙",
-                &[],
-            )
-        );
-        println!(
-            "{}",
-            line(
-                "ce deadcode                        judge liveness over them",
-                "ce deadcode                        在其上判决存活性",
-                &[],
-            )
-        );
+        graph_usage();
         return ExitCode::SUCCESS;
     }
-    codeeraser::report::graph_face("sites", faces::graph_sites(root, core), json)
+    answered(
+        "graph",
+        "sites",
+        json,
+        faces::graph_sites(root, core),
+        whole,
+    )
+}
+
+/// The bare `ce graph` answer: the usable forms on stdout.
+fn graph_usage() {
+    // A bare `ce graph` is a question, not a mistake — the same
+    // reading v0.7.3 gave a bare `ce`. It used to answer on
+    // stderr with exit 2, which PowerShell repaints as a red
+    // NativeCommandError wall and every wrapper reads as a
+    // failure. The usable form goes to stdout and the exit is
+    // clean; --format is named here because it is inert without
+    // --sites, which was the second half of the same puzzle.
+    // the two forms are the SAME ascii on both roads, so the
+    // column padding survives translation untouched
+    println!(
+        "{}",
+        line(
+            "ce graph --sites [--format json]   list the reference sites",
+            "ce graph --sites [--format json]   列出引用站点",
+            &[],
+        )
+    );
+    println!(
+        "{}",
+        line(
+            "ce graph --mentions [--format json] refresh the mention universe",
+            "ce graph --mentions [--format json] 刷新提及语料宇宙",
+            &[],
+        )
+    );
+    println!(
+        "{}",
+        line(
+            "ce deadcode                        judge liveness over them",
+            "ce deadcode                        在其上判决存活性",
+            &[],
+        )
+    );
 }
 
 pub fn deadcode_cmd(
@@ -144,8 +141,8 @@ pub fn deadcode_cmd(
 pub struct DedupArgs {
     /// Directory to index (default: current directory)
     path: Option<PathBuf>,
-    #[arg(long, value_enum, default_value_t = FindingsFormat::Console)]
-    format: FindingsFormat,
+    #[arg(long, value_enum, default_value_t = Findings::Console)]
+    format: Findings,
     /// Index database path (default: <path>/.ce/index.db)
     #[arg(long)]
     db: Option<PathBuf>,
@@ -174,7 +171,7 @@ pub fn dedup_cmd(a: DedupArgs, core: &str) -> ExitCode {
     let plumb = Plumb::gate(a.db, a.check);
     let shown =
         faces::dedup(&or_cwd(a.path), core, thresholds, plumb).and_then(|(answer, gate)| {
-            dedup::emit(findings_fmt(a.format), &answer)?;
+            sarif::emit("dedup", ("blocks", dedup::finding), a.format, &answer)?;
             gate.map_or(Ok(ExitCode::from(u8::from(answer.fail))), Err)
         });
     fallible("dedup", shown)

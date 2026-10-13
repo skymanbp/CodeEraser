@@ -8,17 +8,18 @@
 //! whether it can fail the build, and what it costs — never a plan
 //! coordinate the user cannot resolve.
 
-use crate::main_arch::ArchArgs;
-use crate::main_cmds::{DedupArgs, FindingsFormat, OutFormat};
+use crate::main_cmds::{DedupArgs, OutFormat};
 use crate::main_erase::EraseArgs;
-use crate::main_flow::FlowArgs;
-use crate::main_judge::{CloneArgs, DocdupArgs, JoinArgs, StructureArgs, TrendArgs};
+use crate::main_judge::{
+    ArchArgs, CloneArgs, DocdupArgs, FlowArgs, JoinArgs, StructureArgs, TrendArgs,
+};
 use crate::main_merge::MergeArgs;
 use crate::main_query::{QueryArgs, RulesArgs};
 use crate::main_score::{BaselineArgs, CheckArgs};
 use crate::main_setup::SetupArgs;
 use crate::main_similar::SimilarArgs;
 use clap::{Parser, Subcommand};
+use codeeraser::sarif::Findings;
 use std::path::PathBuf;
 
 #[derive(Parser)]
@@ -59,8 +60,8 @@ pub(crate) enum Cmd {
     Scan {
         /// Directory to scan (default: current directory)
         path: Option<PathBuf>,
-        #[arg(long, value_enum, default_value_t = FindingsFormat::Console)]
-        format: FindingsFormat,
+        #[arg(long, value_enum, default_value_t = Findings::Console)]
+        format: Findings,
     },
     /// Time-dimension metrics: append vs rewrite, windowed churn,
     /// co-change pairs (report-only; the join consumes them). Costs
@@ -70,7 +71,7 @@ pub(crate) enum Cmd {
         /// Repository root (default: current directory)
         root: Option<PathBuf>,
         /// History window in days
-        #[arg(long, default_value_t = 14)]
+        #[arg(long, default_value_t = codeeraser::churn::DEFAULT_DAYS)]
         days: u32,
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,

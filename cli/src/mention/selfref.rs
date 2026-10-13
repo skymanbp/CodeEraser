@@ -25,9 +25,9 @@
 
 mod doc;
 
-use super::conv::text;
 use super::token::{emit, whole_run_only};
 use crate::scan::ast;
+use crate::scan::ast::text;
 use crate::scan::lang::Lang;
 use doc::Runs;
 use std::collections::BTreeSet;

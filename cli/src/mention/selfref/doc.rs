@@ -7,7 +7,7 @@
 
 mod blocks;
 
-use crate::mention::conv::text;
+use crate::scan::ast::text;
 use crate::scan::lang::Lang;
 use tree_sitter::Node;
 

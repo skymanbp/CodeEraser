@@ -252,7 +252,7 @@ So a reply the core degraded to a request this side priced within both caps is a
 two sides' cap mirrors — an error naming both owners, never a document; a core without the family,
 or one that stops answering mid-run, gives a document with `degraded`, and a core that cannot be
 started is refused by name, since the document is the core's to lay out
-([wire.rs:146](../../../cli/src/merge/wire.rs#L146), [face.rs:89](../../../cli/src/merge/face.rs#L89)).
+([wire.rs:146](../../../cli/src/merge/wire.rs#L146), [face.rs:74](../../../cli/src/merge/face.rs#L74)).
 
 ### 4. The measuring side's rulings
 
@@ -275,12 +275,12 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
 4. The groups and the local pre-checks of §1; a member row's `unit` is the request-local member
    number (the core echoes it, never reads it), its `lines` the unit's line count or the
    fragment's kept run's (§1), its `fileIndeg` the reference graph's edges landing on the
-   member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:194](../../../cli/src/merge/face.rs#L194)).
+   member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:179](../../../cli/src/merge/face.rs#L179)).
 5. One report, `ce.merge-report/0.1.0`, for all three faces, laid out by the core over every
    chunk's rows joined, its counts tallied there, `merged_duplicates` (§1) beside them; each parameter labelled with every member's text at the parameter's first hole
    ([Document.hs:95](../../../core/app/CE/Merge/Document.hs#L95)). The text runs from the hole's first root
    to its last on that member — a leaf or relabel hole's node, a gap hole's whole forest — and an
-   empty side reads `""` ([face.rs:225](../../../cli/src/merge/face.rs#L225)).
+   empty side reads `""` ([face.rs:210](../../../cli/src/merge/face.rs#L210)).
 6. The T3 trees are built once for both families; `clone/1` never sends the new columns.
 7. The console prints the counts and the groups not sent, then per group a head line, its
    members — a trimmed member's run beside its span — and one line per parameter with every
@@ -293,7 +293,7 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
 
 `ce merge [--group <n>] [--format json]`, the MCP tool `merge_suggestions` and the GUI's merge
 family in the Reports hub all read the one document, which the core lays out (`document/1`) from
-every chunk's answer joined on this side ([Document.hs:76](../../../core/app/CE/Merge/Document.hs#L76), [face.rs:112](../../../cli/src/merge/face.rs#L112)).
+every chunk's answer joined on this side ([Document.hs:76](../../../core/app/CE/Merge/Document.hs#L76), [face.rs:97](../../../cli/src/merge/face.rs#L97)).
 The document holds the counts (the core's, and `merged_duplicates`), `unsendable`, and per group its family (`t1t2` / `t3`), whether it
 is a fragment, its members (`path`, `unit` as `path:key#nth` or null for a fragment, `lines` the
 clone-family span, `run` the lines sent and priced — `lines` again for a whole unit), the
@@ -389,7 +389,7 @@ parameterisation equals the core's ([eval_merge_review.rs:93](../../../cli/tests
 
 **The precision.** Four judges, one batch of twenty-five each, answered the hundred rows; their answer files are
 filed verbatim, in the sample's order, as the review doc, every line held to the same row check the gate re-runs
-([answers.rs:119](../../../cli/tests/it/eval_merge_review/answers.rs#L119)). The precision doc reads no product: it is
+([answers.rs:128](../../../cli/tests/it/eval_merge_review/answers.rs#L128)). The precision doc reads no product: it is
 the three frozen docs' readings by definition, so it carries no tree and lands in the review's commit
 ([eval_merge_review.rs:229](../../../cli/tests/it/eval_merge_review.rs#L229)). The core's feasibility agrees with the
 audit on 83 of the 100 rows, its reason on 77 and its parameter count on 45 (zod 60 / 56 / 26 of 68, ripgrep 17 / 15 /

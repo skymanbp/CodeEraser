@@ -13,7 +13,7 @@
 //! source bytes, so `()` and `( )` differ there and agree here.
 
 use super::tree::{Extras, kids, skipped};
-use crate::dedup::tokens::fnv1a;
+use crate::dedup::tokens::fnv1a_fields;
 use crate::scan::ast;
 use std::collections::HashMap;
 use tree_sitter::Node;
@@ -88,11 +88,8 @@ impl<'a> Tokens<'a> {
     }
 
     fn hash(&self, tokens: &[(usize, usize)]) -> u64 {
-        if tokens.is_empty() {
-            0
-        } else {
-            fnv1a(&self.joined(tokens))
-        }
+        let runs: Vec<&[u8]> = tokens.iter().map(|&(s, e)| &self.bytes[s..e]).collect();
+        joined_text(&runs)
     }
 }
 
@@ -102,7 +99,7 @@ pub fn joined_text(streams: &[&[u8]]) -> u64 {
     if streams.is_empty() {
         0
     } else {
-        fnv1a(&join(streams.iter().copied()))
+        fnv1a_fields(streams)
     }
 }
 

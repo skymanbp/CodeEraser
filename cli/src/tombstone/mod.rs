@@ -67,6 +67,7 @@ pub enum Kind {
 }
 
 impl Kind {
+    // TODO(defrag-core: tombstone.kind_names)
     pub fn name(self) -> &'static str {
         match self {
             Kind::Bracketed => "bracketed",

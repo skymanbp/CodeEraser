@@ -12,15 +12,11 @@
 //! graph leg is null by design, with the reason riding as a code
 //! the core names (CE.Join.Document, plan v2.15). The core lays the
 //! document out (document/1, plan v2.32 step 4; document.rs sends
-//! the tables) and its console lines (step 5, CE.Join.Lines); `Report`
-//! is that document read back for the library's callers.
+//! the tables) and its console lines (step 5, CE.Join.Lines).
 
 pub mod churn_unit;
 mod document;
-mod report;
 pub mod verdicts;
-
-pub use report::{FileRow, Report};
 
 use crate::document::Answer;
 

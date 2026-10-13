@@ -20,7 +20,6 @@ pub use super::wire_batch::{Verdict, judge, plan};
 /// The capability the core must offer, and the request kind.
 pub const CAP: &str = "flow/1";
 pub const KIND: &str = "flow";
-const SINCE: &str = "7.4.0";
 
 /// One request's units and where they came from: a unit's request
 /// index `u` is its place in `units`, the `usize` beside it the index
@@ -95,7 +94,7 @@ pub fn sizes(sent: &Sent) -> [usize; 4] {
 /// One request over a link past its handshake, behind the capability
 /// gate (a pre-7.4.0 core is healthy and answers nothing here).
 pub fn ask(link: &mut Link, body: Value) -> Result<Value, String> {
-    judged::ask(link, CAP, SINCE, KIND, body)
+    Ok(judged::ask(link, CAP, KIND, body)?)
 }
 
 /// The reply consumed against what was sent: a degraded reply to a

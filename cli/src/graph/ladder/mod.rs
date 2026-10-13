@@ -69,17 +69,15 @@ pub(crate) use frozen::members;
 /// What a resolver may consult. Candidate targets MUST come from
 /// `files` (the frozen in-scope set); `configs` are the resolver
 /// config paths the walk collected (all in resolve_key, store.rs);
-/// raw fs access via `root` may only justify External, block a
-/// rewrite, read an in-scope candidate's own bytes to refine
-/// granularity (Md section slugs, R3 definition tables), or read a
-/// walk TERMINAL's own bytes for the one-hop re-export bind — never
-/// mint an in-scope candidate. `crate_roots` are the declared Rust
+/// `root` is read for the bytes a request carries (graph/resolve/),
+/// never to mint an in-scope candidate — the rungs themselves are the
+/// core's (CE.Resolve.*). `crate_roots` are the declared Rust
 /// crate roots (ce.toml `[graph] crate_roots` ∩ files) the Rust ladder
 /// unions with the manifest's — a tree that is a slice of a package
 /// elsewhere has no manifest to read. `search_roots` is the declared
 /// `[graph.search_roots]` table (language name → directories ∩ the
-/// walked tree, plan v2.30): the rung a language's ladder walks after
-/// the site's own directory and before its build configuration. `java`
+/// walked tree, plan v2.30), sent as the core's rungs read it
+/// (CE.Resolve.Request). `java`
 /// is every walked Java file's header (java_header.rs) — the package it
 /// declares, the imports it writes and its type declarations, read by
 /// the walk so the Java rungs read no file (plan v2.30 step 3; the

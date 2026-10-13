@@ -219,8 +219,11 @@ fn stop_untracked(
 /// verdict can ride the session's one Stop. A Stop that blocks nothing
 /// asks nothing: INFORMATION never pays a spawn.
 fn audit(root: &Path, session: &str, mount: Option<&str>) -> Option<String> {
-    // Not a git repo: nothing to audit, but the skip is RECORDED.
-    let Some(base) = changes::base_rev(root) else {
+    // Not a git repo: nothing to audit, but the skip is RECORDED. An
+    // unborn HEAD diffs against the empty tree: a brand-new project has
+    // no HEAD until its first commit, and `diff HEAD` would take the
+    // whole audit down the fail-open path with no feed entry at all.
+    let Some(base) = crate::churn::rev_or_empty_tree(root, "HEAD") else {
         unmeasured_stop(root, session, Some("no_git"));
         return None;
     };

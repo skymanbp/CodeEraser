@@ -46,9 +46,6 @@ impl Report {
     pub fn rewrite_lines(&self) -> usize {
         self.units.iter().map(|u| u.rewrote).sum()
     }
-    pub fn added_in_window(&self) -> usize {
-        self.append_lines() + self.rewrite_lines()
-    }
 }
 
 /// The churn document and its lines, laid out by the core at `core`:

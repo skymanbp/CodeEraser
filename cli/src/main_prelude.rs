@@ -3,13 +3,12 @@
 //! exit code; and, since plan v2.32 step 5, the one road a core-laid
 //! document takes to the terminal (`answered`); and, since plan v2.33
 //! step 10, the one road every face reaches its family by
-//! (`codeeraser::faces` and its `Plumb`). `ce flow`, `ce query` /
-//! `ce rules`, `ce similar`, `ce merge` and `ce arch` each read these names
+//! (`codeeraser::faces` and its `Plumb`). `ce query` / `ce rules`,
+//! `ce similar`, `ce merge` and main_judge.rs each read these names
 //! and then their own family's modules; the lines lived at the
 //! head of every face until the clone gate read two heads as one block
 //! (main_flow.rs against main_merge.rs), and one owner is the fix, not
-//! a reordered import. main_judge.rs is at its own size line, so the
-//! imports live here.
+//! a reordered import.
 
 pub(crate) use crate::main_cmds::{fail, json, or_cwd};
 pub(crate) use crate::main_judge::JudgeArgs;

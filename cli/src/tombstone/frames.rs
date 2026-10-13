@@ -138,11 +138,6 @@ pub struct Candidate {
     pub bracketed: bool,
 }
 
-/// A word that belongs to a frame, never to a name.
-pub fn frame_word(w: &str) -> bool {
-    has(v().en_prefix, w) || has(v().en_suffix, w) || has(v().zh_prefix, w) || has(v().zh_suffix, w)
-}
-
 /// Where the X slot of a prefix frame at `j` starts: the next word,
 /// or the one after for `no more`; None when `w[j]` opens no frame.
 /// A Chinese prefix counts here only as a word of its own (`无 cache`,

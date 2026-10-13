@@ -135,10 +135,10 @@ English prefixes (`no`, `not`, `non`, `without`, `sans`, `minus`), English suffi
 1..=`join_max` words after it (`no more` counts as one prefix), a suffix the words before it,
 a Chinese form the rest of its own run; the candidates are spellings, the hub keys them and
 asks the erased set — a candidate that names nothing erased is nothing
-([frames.rs:174-205](../../../cli/src/tombstone/frames.rs#L174),
-[frames.rs:217-227](../../../cli/src/tombstone/frames.rs#L217)). A frame inside a bracket
+([frames.rs:169-200](../../../cli/src/tombstone/frames.rs#L169),
+[frames.rs:212-222](../../../cli/src/tombstone/frames.rs#L212)). A frame inside a bracket
 pair is kind 0, `bracketed`; a bare one is kind 1 — the two label kinds the wire carries and
-the feed names ([frames.rs:208-215](../../../cli/src/tombstone/frames.rs#L208),
+the feed names ([frames.rs:203-210](../../../cli/src/tombstone/frames.rs#L203),
 [mod.rs:60-67](../../../cli/src/tombstone/mod.rs#L60)). The label row's `names` is how many
 DISTINCT names the bound candidates spell — a name written twice is one name — among those
 known: erased by this changeset, or by an earlier edit of the session
@@ -158,7 +158,7 @@ A prose segment is cut into sentences — after `.`, `!`, `?`, `;` when whitespa
 follows (so `ce.toml` and `a.rs` stay whole) and after any full-width `。！？；` — in its
 WHOLE text, and the conjunction is read per sentence this change touched: the fourth
 self-replay round had bound a name mentioned 3,000 characters away from its mark on one
-5,000-character line ([frames.rs:229-253](../../../cli/src/tombstone/frames.rs#L229),
+5,000-character line ([frames.rs:224-248](../../../cli/src/tombstone/frames.rs#L224),
 [surfaces.rs:159-192](../../../cli/src/tombstone/surfaces.rs#L159)). Each sentence yields
 one row when it carries a retrospective mark or an erased name at all: `marks` counts every
 English phrase of the mark table at word boundaries (`previously` must not match inside
@@ -166,7 +166,7 @@ English phrase of the mark table at word boundaries (`previously` must not match
 number is the floor's input, not a tally; `names` counts the known names it spells — every
 window and every wide erased name it contains as a substring (a Chinese sentence is one
 word), once per key across both scripts
-([frames.rs:255-282](../../../cli/src/tombstone/frames.rs#L255),
+([frames.rs:250-277](../../../cli/src/tombstone/frames.rs#L250),
 [Prose.hs:54-64](../../../core/app/CE/Lang/Common/Prose.hs#L54),
 [names.rs:70-81](../../../cli/src/tombstone/names.rs#L70),
 [names.rs:174-182](../../../cli/src/tombstone/names.rs#L174),
@@ -181,7 +181,7 @@ decision record — is exempt as a whole, and every exemption is counted where t
 see it (the docdup ledger discipline: never silent). Only Markdown can hold the role: a code
 file narrates nothing by job ([role.rs:1-16](../../../cli/src/tombstone/role.rs#L1)). Four
 witnesses, the first that answers deciding
-([mod.rs:147-195](../../../cli/src/tombstone/mod.rs#L147)); none of them reads a commit
+([mod.rs:148-196](../../../cli/src/tombstone/mod.rs#L148)); none of them reads a commit
 message, which is a surface and no file ([candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)):
 
 | witness | reads | exempts | feed `why` |
@@ -209,7 +209,7 @@ that never spell a name, whole or as a word of a compound
 [ce-toml.md:92-99](../ce-toml.md#L92)). An exemption enters the feed only when the changeset
 erased something (a file by role or declaration) or when it suppressed a row (a segment): an
 exemption that suppressed nothing is nothing to see
-([mod.rs:113-138](../../../cli/src/tombstone/mod.rs#L113)).
+([mod.rs:114-139](../../../cli/src/tombstone/mod.rs#L114)).
 
 ### 6. The wire — `tombstone/1`, and what Haskell judges
 
@@ -223,7 +223,7 @@ non-judgment like a degraded reply, a site table that is not an ascending subseq
 rows sent, counts that do not add up to it, or an `over` that is no boolean: no failure, and
 no malformed reply, is ever read as "no sites" or "not over"
 ([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
-[judged.rs:17-28](../../../cli/src/corelink/judged.rs#L17)). The core registers the family as the
+[judged.rs:45-58](../../../cli/src/corelink/judged.rs#L45)). The core registers the family as the
 eleventh ([Protocol.hs:108](../../../core/app/CE/Protocol.hs#L108)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
@@ -276,7 +276,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
   [guard/tombstone.rs:143-161](../../../cli/src/guard/tombstone.rs#L143),
-  [hookio.rs:266-282](../../../cli/src/hookio.rs#L266),
+  [hookio.rs:273-289](../../../cli/src/hookio.rs#L273),
   [proto.rs:75-82](../../../cli/src/daemon/proto.rs#L75),
   [Text/Guard.hs:17](../../../core/app/CE/Text/Guard.hs#L17)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the

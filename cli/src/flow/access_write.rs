@@ -30,10 +30,7 @@ pub(super) fn braced(text: &str) -> Vec<String> {
 impl Lowerer<'_> {
     /// An assignment row: the value read, then the target written.
     pub(super) fn assign(&mut self, node: Node<'_>, excl: &[usize]) -> bool {
-        let row =
-            self.flow.assigns.iter().find(|a| {
-                a.kind == node.kind() && (a.op.is_empty() || super::at::holds(node, &a.op))
-            });
+        let row = (self.flow.assigns.iter()).find(|a| super::at::fits(node, &a.kind, &a.op));
         let Some(row) = row else { return false };
         let others = [row.left.as_str(), row.right.as_str()];
         for r in self.at(node, &row.right, &others) {

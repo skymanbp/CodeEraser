@@ -59,7 +59,7 @@ pub fn body(query: &[[u64; 2]], rows: &[[i64; 9]]) -> Value {
 /// One request over a link past its handshake, behind the capability
 /// gate (a pre-6.7.0 core is healthy and answers nothing here).
 pub fn ask(link: &mut Link, query: &[[u64; 2]], rows: &[[i64; 9]]) -> Result<Value, String> {
-    judged::ask(link, CAP, "6.7.0", "similar", body(query, rows))
+    Ok(judged::ask(link, CAP, "similar", body(query, rows))?)
 }
 
 /// The whole leg over one link: the weighted bag rank/1 ranked

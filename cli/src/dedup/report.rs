@@ -4,12 +4,11 @@
 //! table, the walk's counters and the two report filters, and under
 //! `--check` the budget and verdict/1's fail bit; the document, the
 //! console lines (the ratchet's among them) and the exit bit come back.
-//! The SARIF face re-spells the bound document's blocks.
+//! The SARIF face re-spells the bound document's blocks (`finding`).
 
 use super::{Summary, budget::Gate, pairs};
 use crate::document::{self, Answer, Paths, Request};
 use crate::sarif::{location, num, text};
-use crate::scan::Format;
 use anyhow::Result;
 use serde_json::Value;
 
@@ -71,29 +70,13 @@ pub fn answer(
     document::assemble(core, req.text("path", &paths.list))
 }
 
-/// The answer in the requested form: console lines, the document, or
-/// its SARIF projection — each followed by the stream-1 lines.
-pub fn emit(format: Format, answer: &Answer) -> Result<()> {
-    match format {
-        Format::Console => document::emit("dedup", answer, false),
-        Format::Json => document::emit("dedup", answer, true),
-        Format::Sarif => {
-            document::emit_projected(
-                answer,
-                &crate::sarif::projected(&answer.document, "blocks", block)?,
-            );
-            Ok(())
-        }
-    }
-}
-
 /// One clone block of the bound document as a SARIF "note" (the
 /// `--format sarif` face, sarif::projected) — blocks are budget-gated
 /// facts, not per-block failures, so the ratchet's tolerated debt must
 /// not masquerade as errors on a scanning dashboard. The message is the
 /// console face's English line verbatim (SARIF is a machine face,
 /// never translated).
-fn block(b: &Value) -> Value {
+pub fn finding(b: &Value) -> Value {
     let (a, bf) = (text(b, "a_file"), text(b, "b_file"));
     let (a_at, b_at) = (
         (num(b, "a_start"), num(b, "a_end")),
@@ -109,11 +92,4 @@ fn block(b: &Value) -> Value {
     );
     let (here, there) = (location(a, a_at.0, a_at.1), location(bf, b_at.0, b_at.1));
     crate::sarif::result("ce.dedup/clone-block", "note", &message, here, vec![there])
-}
-
-/// The dedup report as a document, for the face that holds no core
-/// path of its own (the daemon's `dedup` reply): the process's core
-/// answers it. Every other face takes crate::faces::dedup.
-pub fn report_json(found: &pairs::Blocks, s: &Summary) -> Result<Value> {
-    Ok(answer(crate::tables::core_flag(), found, s, None)?.document)
 }

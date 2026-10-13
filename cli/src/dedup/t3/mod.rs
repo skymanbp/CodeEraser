@@ -124,7 +124,7 @@ fn judged_with(
     // one link for the candidate pass and the judgment; the product
     // judgment asks for the exhaustive S5 extension (the frozen-
     // instrument path asks for the four sources alone, candidates.rs)
-    let mut link = crate::lockstep::open_family(core, wire::CAP)?;
+    let mut link = crate::corelink::judged::open(core, wire::CAP)?;
     let cand = candidates::collect(root, idx, &mut link, true)?;
     let units: Vec<&Unit> = cand.units.iter().collect();
     let built = build_trees(root, &units, tree::Extras::With)?;

@@ -116,7 +116,7 @@ pub struct ScanRequest<'a> {
     /// null = no committed baseline (unfenced), `[current, recorded]`
     /// = the two digests, each u64 or null (score::baseline::Fence).
     /// Rides on EVERY scan request this side sends, so a core that
-    /// answers no `failed` is a pre-6.4.0 one, refused by name.
+    /// answers no `failed` is skew, refused by name.
     pub fence: Value,
     /// Each file's row count, in row order (report::blocks_of): the
     /// unit a chunk boundary must fall between, so no call arc is
@@ -145,7 +145,7 @@ pub struct ScanRequest<'a> {
 /// canonical order, and the fail bit is their disjunction. The link
 /// comes back whole, for the report to be laid out over it.
 pub fn judge(core: &str, r: &ScanRequest) -> Result<(Judgment, crate::corelink::Link)> {
-    let mut link = crate::lockstep::open_family(core, CAP)?;
+    let mut link = crate::corelink::judged::open(core, CAP)?;
     let mut j = Judgment::default();
     let mut held = std::collections::BTreeSet::new();
     let reserved = r.grades.len() + r.overrides.len();
@@ -163,9 +163,9 @@ pub fn judge(core: &str, r: &ScanRequest) -> Result<(Judgment, crate::corelink::
         assert_echo(&reply, r)?;
         j.levels.extend(levels_of(&reply, c.rows.len())?);
         held.extend(failed_of(&reply)?);
-        j.derived.extend(lifted(&reply, "derived", "7.2.0", &c)?);
+        j.derived.extend(lifted(&reply, "derived", &c)?);
         if !c.calls.is_empty() {
-            j.bumped.extend(lifted(&reply, "cocBumped", "6.5.0", &c)?);
+            j.bumped.extend(lifted(&reply, "cocBumped", &c)?);
         }
     }
     // the canonical order is the core's (CE.Scan conds), not the
@@ -222,24 +222,20 @@ fn levels_of(reply: &Value, rows: usize) -> Result<Vec<u8>> {
 /// core older than the table it is answering, refused by the version
 /// it lacks rather than read as "no complexity anywhere" or "no
 /// cycles".
-fn lifted(reply: &Value, key: &str, since: &str, c: &chunk::Chunk<'_>) -> Result<Vec<[u64; 2]>> {
-    let rows: Vec<[u64; 2]> = serde_json::from_value(reply[key].clone()).with_context(|| {
-        format!(
-            "{key} — a pre-{since} core answers this table silently; this ce needs scan/1 {since}"
-        )
-    })?;
+fn lifted(reply: &Value, key: &str, c: &chunk::Chunk<'_>) -> Result<Vec<[u64; 2]>> {
+    let rows: Vec<[u64; 2]> = serde_json::from_value(reply[key].clone())
+        .with_context(|| crate::corelink::skew(&format!("scan/1 `{key}`")))?;
     let base = c.span.start as u64;
     Ok(rows.into_iter().map(|[i, v]| [i + base, v]).collect())
 }
 
 /// One chunk's named conditions (6.4.0, O33). The key is required
 /// whenever `knobsFence` rode — this side always sends it — so a
-/// missing key is a pre-6.4.0 core, refused by name; and the bit
-/// must be their disjunction, or the reply is no verdict at all.
+/// missing key is skew, refused by name; and the bit must be their
+/// disjunction, or the reply is no verdict at all.
 fn failed_of(reply: &Value) -> Result<Vec<String>> {
-    let failed: Vec<String> = serde_json::from_value(reply["failed"].clone()).context(
-        "failed — a pre-6.4.0 core answers no named conditions; this ce needs scan/1 6.4.0",
-    )?;
+    let failed: Vec<String> = serde_json::from_value(reply["failed"].clone())
+        .with_context(|| crate::corelink::skew("scan/1 `failed`"))?;
     let fail = reply["fail"].as_bool().context("fail")?;
     ensure!(
         fail != failed.is_empty(),

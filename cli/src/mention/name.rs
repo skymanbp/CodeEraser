@@ -26,7 +26,7 @@
 //!     `(anonymous)` and `impl X` all fail it, each for the reason the
 //!     tokenizer itself states.
 //!
-//! The key's own spelling (`declared_name`, the unit key) is untouched:
+//! The key's own spelling (the unit key) is untouched:
 //! this is a partial function FROM the key, not a second producer of it.
 
 use super::token::{emit, whole_run_only};

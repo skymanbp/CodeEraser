@@ -121,10 +121,10 @@ name (`x$f`, `print.foo`) stays whole and falls out on the token invariant, and 
 an anchor like a heading, out with Markdown ([name.rs:9-27](../../../cli/src/mention/name.rs#L9),
 [name.rs:40-47](../../../cli/src/mention/name.rs#L40)); the unit is `(file, name)`, so a file
 declaring one name twice is one candidate
-([candidates.rs:163-191](../../../cli/src/mention/candidates.rs#L163)).
+([candidates.rs:164-192](../../../cli/src/mention/candidates.rs#L164)).
 
 The veto asks three questions in a fixed order, cheapest first, and stops at the first
-yes ([candidates.rs:89-111](../../../cli/src/mention/candidates.rs#L89)):
+yes ([candidates.rs:90-112](../../../cli/src/mention/candidates.rs#L90)):
 
 1. **another file spells it** — the identity hash occurs in a file other than the
    declaring one ([store.rs:227-229](../../../cli/src/mention/store.rs#L227));
@@ -145,10 +145,10 @@ yes ([candidates.rs:89-111](../../../cli/src/mention/candidates.rs#L89)):
 A survivor becomes one row keyed `[node, vis, conv]` with its names kept beside the key
 on the Rust side — the wire carries integers only, never a name
 ([candidates.rs:46](../../../cli/src/mention/candidates.rs#L46),
-[candidates.rs:115-147](../../../cli/src/mention/candidates.rs#L115)). The table is cut at
+[candidates.rs:116-148](../../../cli/src/mention/candidates.rs#L116)). The table is cut at
 131,072 keys in wire order, the same rows every run, and the cut is reported as a fact
-of its own ([candidates.rs:52-63](../../../cli/src/mention/candidates.rs#L52),
-[candidates.rs:153-159](../../../cli/src/mention/candidates.rs#L153)).
+of its own ([candidates.rs:53-64](../../../cli/src/mention/candidates.rs#L53),
+[candidates.rs:154-160](../../../cli/src/mention/candidates.rs#L154)).
 
 **Blindness named.** A name declared in two files is counted mentioned by the second
 declaration alone; the census reports how often that was the only speller
@@ -166,7 +166,7 @@ index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign expo
 `//export`, and C / C++'s `extern "C"` linkage, `__declspec(dllexport)` and the `visibility("default")`,
 `used`, `constructor` and `destructor` attributes ([conv/c.rs:1-14](../../../cli/src/mention/conv/c.rs#L1));
 `Registration` for a Python decorator and a Java annotation
-([conv/mod.rs:244-253](../../../cli/src/mention/conv/mod.rs#L244)); `Member`; `DefaultExport`; `Ambient`; Rust
+([conv/mod.rs:235-244](../../../cli/src/mention/conv/mod.rs#L235)); `Member`; `DefaultExport`; `Ambient`; Rust
 `cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:100-109](../../../cli/src/mention/conv/mod.rs#L100)).
 The name-table half is computed at wire time from the path, the name and the key: a test
 file by path component, a `benches`/`examples` component only under a Cargo package
@@ -237,8 +237,8 @@ the same with or without them ([VERSIONING.md:472-474](../../../contracts/VERSIO
 Only `ce deadcode` and the GUI/MCP deadcode faces ask for the advisory; the five other
 consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, the canvas)
 pass `Advisory::No`, each with its reason at the call site
-([deadcode.rs:83-86](../../../cli/src/graph/deadcode.rs#L83),
-[deadcode.rs:200-245](../../../cli/src/graph/deadcode.rs#L200)). The reply is consumed once:
+([deadcode.rs:84-87](../../../cli/src/graph/deadcode.rs#L84),
+[deadcode.rs:201-246](../../../cli/src/graph/deadcode.rs#L201)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -281,7 +281,7 @@ A projection gate pins that the symbol column survives the hub's generic table
   Haskell export-list precedent, and the same narrowing the underscore convention already
   is: a helper the module's own export list omits is not public API, so the erase refusal
   `public_surface` no longer holds it; a body under `if TYPE_CHECKING:` carries conv
-  `Ambient` ([conv/py.rs:57-70](../../../cli/src/mention/conv/py.rs#L57)). requests `_types.py:157`
+  `Ambient` ([conv/py.rs:58-71](../../../cli/src/mention/conv/py.rs#L58)). requests `_types.py:157`
   now reads private and exempt and leaves the advisory; `__init__.py:60 check_compatibility`,
   public by convention but absent from the module's `__all__`, leaves it too (exported
   645 → <!--ce:restate:survival:requests-8068356:declared-exported#paren-->644<!--/ce-->, unmentioned-exported 432 → <!--ce:restate:survival:requests-8068356:unmentioned-exported#paren-->431<!--/ce-->); the requests population is 16 → 14.
@@ -307,8 +307,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1756 (1974 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7160 (1653) | 1065 (15) | 14.9 % | 205 / 1065 = 19.2 % | 205 / 6095 |
-| | | rust | 3475 (1912) | 327 (3) | 9.4 % | 2 / 327 = 0.6 % | 2 / 3118 |
+| self @ this commit | 1751 (1969 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7160 (1653) | 1064 (15) | 14.9 % | 205 / 1064 = 19.3 % | 205 / 6096 |
+| | | rust | 3439 (1892) | 328 (2) | 9.5 % | 2 / 328 = 0.6 % | 2 / 3081 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |

@@ -10,7 +10,7 @@
 //! anonymous function hangs off (arrow functions), and the statement
 //! that binds a Lua or R function value (scan/binding.rs).
 
-use super::ast;
+use super::ast::{self, text};
 use super::binding;
 use super::declarator;
 use super::spec::LangSpec;
@@ -83,7 +83,7 @@ fn unit<'t>(node: Node<'t>, src: &[u8], spec: &LangSpec) -> FnUnit<'t> {
 /// criterion T3).
 pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
     if let Some(name) = node.child_by_field_name("name").filter(|n| n.is_named()) {
-        let base = text(name, src);
+        let base = text(name, src).to_string();
         return match receiver_type(node, src) {
             Some(recv) => format!("({recv}) {base}"),
             None => base,
@@ -99,7 +99,7 @@ pub(crate) fn name_of(node: Node<'_>, src: &[u8]) -> String {
         && matches!(parent.kind(), "variable_declarator" | "pair" | "assignment")
         && let Some(name) = parent.child_by_field_name(field_for(parent.kind()))
     {
-        return text(name, src);
+        return text(name, src).to_string();
     }
     binding::of(node, src)
         .and_then(|b| binding::spelled(b.name, src))
@@ -133,7 +133,7 @@ pub(crate) fn owner_of(node: Node<'_>, src: &[u8], spec: &LangSpec) -> Option<St
     if !spec.owner_kinds.contains(&holder.kind()) {
         return None;
     }
-    Some(text(holder.child_by_field_name("name")?, src))
+    Some(text(holder.child_by_field_name("name")?, src).to_string())
 }
 
 /// The argument counts a unit accepts, `(fewest, most)` with `most`
@@ -180,7 +180,7 @@ fn receiver_type(node: Node<'_>, src: &[u8]) -> Option<String> {
         .into_iter()
         .find(|c| c.kind() == "parameter_declaration")
         .and_then(|p| p.child_by_field_name("type"))
-        .map(|ty| text(ty, src))
+        .map(|ty| text(ty, src).to_string())
 }
 
 fn field_for(parent_kind: &str) -> &'static str {
@@ -280,8 +280,4 @@ fn child_of_kinds<'t>(node: Node<'t>, kinds: &[&str]) -> Option<Node<'t>> {
     ast::children(node)
         .into_iter()
         .find(|c| kinds.contains(&c.kind()))
-}
-
-fn text(node: Node<'_>, src: &[u8]) -> String {
-    node.utf8_text(src).unwrap_or("(non-utf8)").to_string()
 }

@@ -41,6 +41,7 @@ pub const TOLERANCE_KEYS: [&str; 3] = ["tolNum", "tolDen", "tolAbs"];
 /// The core's cycle floor when none is declared
 /// (`CE.Graph.Cost.sccFloor`): the digest's effective default for
 /// `[graph] scc_floor`, pinned live by core_wire's mirror gate.
+// TODO(defrag-core: limits.graph.scc_floor)
 pub const CORE_SCC_FLOOR: u32 = 2;
 
 /// The core's Cost.hs defaults as DECLARED values — the Rust mirror
@@ -49,6 +50,7 @@ pub const CORE_SCC_FLOOR: u32 = 2;
 /// second judgment: the core keeps judging with its own constants
 /// whether or not a row rides, and core_wire::knob_default_drift_gate
 /// reddens the day this table and the core's echo disagree.
+// TODO(defrag-core: limits.score_defaults)
 pub fn core_defaults() -> ScoreCfg {
     ScoreCfg {
         weights: Default::default(),

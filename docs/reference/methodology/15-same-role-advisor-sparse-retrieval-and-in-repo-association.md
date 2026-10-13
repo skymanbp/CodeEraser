@@ -120,13 +120,13 @@ The core returns the `K = 5` best candidates for a query, excluding the query's 
 ordered by score then identity ([Score.hs:62-74](../../../core/app/CE/Similar/Rank/Score.hs#L62)). A term in more than half the units — idf 0 — is neither score
 nor evidence: sharing what nearly everything shares says nothing, and walking its posting list
 would cost the whole corpus per query, so the measuring side asks df first and fetches the list
-only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:148-176](../../../cli/src/similar/rank.rs#L148)).
+only when `N > 2 · df` (`scoredDfRatio`, [Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:146-174](../../../cli/src/similar/rank.rs#L146)).
 Shape equality is read for the K survivors only, by the measuring side, and neither it nor the
-role bit orders ([rank.rs:113-121](../../../cli/src/similar/rank.rs#L113)).
+role bit orders ([rank.rs:111-119](../../../cli/src/similar/rank.rs#L111)).
 The request is written once, against the `Postings` trait: the in-memory `Corpus` the instruments
 build and the persisted `Reader` over `.ce/index.db` both feed the same request, and the replay
 asserts they send the same bytes on every unit of five corpora — the instrument and the product
-run one road ([rank.rs:59-72](../../../cli/src/similar/rank.rs#L59),
+run one road ([rank.rs:57-70](../../../cli/src/similar/rank.rs#L57),
 [reader.rs:7-10](../../../cli/src/similar/reader.rs#L7),
 [similar_replay.rs:247](../../../cli/tests/it/similar_replay.rs#L247)). Query weights ride in
 `1/wUnit` = 1/256, which is what lets a PPMI-scaled expansion keep a *fraction* of its
@@ -149,7 +149,7 @@ word terms contributes its first 96 in term order and is ledgered as capped; the
 owner, so the in-memory table and the persisted writer count the same words
 ([ppmi.rs:18-42](../../../cli/src/similar/ppmi.rs#L18)). One bound does the pruning for free:
 `n_ab ≤ n_b` bounds `PPMI(a, b)` by `log2(N / n_a)`, under two bits as soon as `4 · n_a > N`, so
-the measuring side never fetches such a word's pair rows ([Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:123-146](../../../cli/src/similar/rank.rs#L123)).
+the measuring side never fetches such a word's pair rows ([Cost.hs:81-89](../../../core/app/CE/Similar/Rank/Cost.hs#L81), [rank.rs:121-144](../../../cli/src/similar/rank.rs#L121)).
 
 This is enough to let this repository's `fetch / load / retrieve` meet, and never enough to
 outvote what the unit itself spells. No corpus but this one is consulted and no word table is

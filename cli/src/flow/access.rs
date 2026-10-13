@@ -156,7 +156,8 @@ impl Lowerer<'_> {
             .iter()
             .filter(|(k, _, ops)| {
                 k == node.kind()
-                    && (ops.is_empty() || ops.iter().any(|o| super::at::holds(node, o)))
+                    && (ops.is_empty()
+                        || ops.iter().any(|o| crate::scan::ast::has_child(node, &[o])))
             })
             .flat_map(|(_, p, _)| self.at(node, p, &[]))
             .map(|n| n.id())
@@ -191,7 +192,7 @@ impl Lowerer<'_> {
     pub(super) fn marked(&self, node: Node<'_>, mark: &str) -> bool {
         match mark.strip_prefix('@') {
             Some(kind) => self.kids(node).iter().any(|c| c.kind() == kind),
-            None => super::at::holds(node, mark),
+            None => crate::scan::ast::has_child(node, &[mark]),
         }
     }
 

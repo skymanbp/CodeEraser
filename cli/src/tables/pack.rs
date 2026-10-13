@@ -120,8 +120,7 @@ leaked! {
     /// The entries this side reads of the report documents' catalogue
     /// (7.8.0): the schema ids and empty documents are the core's
     /// statement and never bound here.
-    DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons,
-                 graphscreen: DocReasons }
+    DocEntries { flow: DocFlow, check: DocCheck, join: DocReasons, deadcode: DocReasons }
     /// The index's storage tables (7.9.0): the site kinds by their
     /// frozen storage code.
     Store { site_kinds: Names }

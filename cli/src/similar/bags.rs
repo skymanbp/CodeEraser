@@ -16,11 +16,9 @@ use crate::corelink::judged;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
-/// The capability the core must offer, the request kind, the proto that
-/// minted the family.
+/// The capability the core must offer, and the request kind.
 pub const CAP: &str = "bags/1";
 const KIND: &str = "bags";
-const SINCE: &str = "9.0.0";
 
 /// term → (channel, tf): one bag as the stored tables hold it.
 pub type Terms = BTreeMap<u64, (Channel, u32)>;
@@ -60,7 +58,7 @@ fn terms(bags: Vec<Vec<(u64, usize, u32)>>) -> Result<Vec<Terms>, String> {
 /// One request over the process's core session (the reader legs of the
 /// differential gate ask `inspect` through it too).
 fn request(body: Value) -> Result<Value, String> {
-    judged::session_ask((CAP, SINCE, KIND), body)
+    judged::session_ask((CAP, KIND), body)
 }
 
 #[cfg(test)]

@@ -5,7 +5,7 @@
 use super::super::coldstart;
 use super::super::proto::Response;
 use anyhow::Result;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::time::Instant;
 
 pub(super) fn dedup_reply(
@@ -83,7 +83,7 @@ fn run_probe(root: &Path, file_path: &str, content: &str) -> Result<serde_json::
     let canon = std::fs::canonicalize(path).unwrap_or_else(|_| path.to_path_buf());
     let rel = crate::scan::walk::rel_str(root, &canon);
     let p = Params::default();
-    let idx = Index::open(&root.join(".ce/index.db"), p)?;
+    let idx = Index::open(&root.join(crate::dedup::INDEX_REL), p)?; // the served root (coldstart.rs)
     let f = pairs::Filter {
         min_tokens: p.guarantee(),
         min_distinct: pairs::default_min_distinct(),
@@ -102,7 +102,14 @@ fn run_dedup(
     min_tokens: Option<usize>,
     min_distinct: Option<usize>,
 ) -> Result<serde_json::Value> {
-    let db: Option<PathBuf> = None; // daemon always uses <root>/.ce/index.db
-    let (found, summary) = crate::dedup::analyze(root, db, min_tokens, min_distinct)?;
-    crate::dedup::report_json(&found, &summary)
+    // the faces' one road (no --db: the root's own index; no gate), over
+    // the process's core — the daemon holds no core path of its own
+    let thresholds = (min_tokens, min_distinct);
+    let plumb = crate::faces::Plumb::default();
+    crate::faces::gated_doc(crate::faces::dedup(
+        root,
+        crate::tables::core_flag(),
+        thresholds,
+        plumb,
+    ))
 }

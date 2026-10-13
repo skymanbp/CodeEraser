@@ -116,7 +116,7 @@ fn call_edit<'t>(expr: Node<'t>, src: &[u8]) -> Option<Edit<'t>> {
     let [arg] = ast::entries(expr.child_by_field_name("arguments")?)[..] else {
         return None;
     };
-    match text(function.child_by_field_name("attribute")?, src).as_str() {
+    match text(function.child_by_field_name("attribute")?, src) {
         "extend" => Some(Edit::Many(arg)),
         "append" => Some(Edit::One(arg)),
         _ => None,

@@ -24,7 +24,10 @@ static INDEX_STATE: AtomicU8 = AtomicU8::new(INDEX_UNKNOWN);
 /// end of every FULL pass) — never a row count.
 fn full_build_done(root: &Path) -> bool {
     use crate::dedup::{Params, index::Index};
-    Index::open(&root.join(".ce/index.db"), Params::default())
+    // the served root, as `ce daemon <dir>` canonicalized it — never
+    // re-anchored (dedup::index_db_path climbs to the project root,
+    // which would open an ancestor's index for a daemon on a subdirectory)
+    Index::open(&root.join(crate::dedup::INDEX_REL), Params::default())
         .and_then(|idx| idx.full_build_done())
         .unwrap_or(false)
 }

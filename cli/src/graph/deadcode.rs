@@ -36,6 +36,7 @@ mod targets;
 pub use advisory::{Advised, Named};
 pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
+pub(crate) use flags::ROLE_NAMES;
 
 use super::load::{GraphEdge, graph_rows};
 use super::nodes::{self, Node};
@@ -130,7 +131,7 @@ pub fn judged(
     w: &GraphWire,
     pos: &[i64],
 ) -> Result<(Judged, Value, crate::document::Held)> {
-    let mut link = crate::lockstep::open_family(core, "graph/1")?;
+    let mut link = crate::corelink::judged::open(core, "graph/1")?;
     let reply = judge_on(&mut link, w, pos)?;
     let j = consume(&reply, &w.nodes, w.unmentioned.as_ref())?;
     if let Some(reason) = &j.degraded {
@@ -359,7 +360,7 @@ fn node_row(
 /// a non-degraded reply MUST answer every requested index — a short
 /// pos table would silently starve the join, so it refuses here.
 pub fn judge(core: &str, w: &GraphWire, pos: &[i64]) -> Result<Value> {
-    judge_on(&mut crate::lockstep::open_family(core, "graph/1")?, w, pos)
+    judge_on(&mut crate::corelink::judged::open(core, "graph/1")?, w, pos)
 }
 
 /// The graph.request over a link already open.
@@ -465,14 +466,10 @@ fn consume(
     // is its text, not its signal.
     let degraded = (reply["degraded"].as_bool() == Some(true))
         .then(|| reply["reason"].as_str().unwrap_or("degraded").to_string());
-    // the fail bit is the core's (2.18.0); the client's own
-    // conjunction stood in for a pre-2.18 core until L step #15
-    // (O62) — no such core passes a 3.0.0+ handshake, so a missing
-    // bit is wire skew, refused by name like every other absent key
+    // the fail bit is the core's (2.18.0): a missing bit is skew,
+    // refused by name like every other absent key
     let Some(fail) = reply["fail"].as_bool() else {
-        bail!(
-            "wire skew: graph reply carries no `fail` bit (a pre-2.18.0 core cannot reach this client)"
-        )
+        bail!("{}", crate::corelink::skew("graph/1 `fail`"))
     };
     Ok(Judged {
         advisory: advisory::consume(reply, nodes, names)?,
@@ -484,16 +481,15 @@ fn consume(
     })
 }
 
-/// The failing table: two-column rows on the legacy road, three when
-/// the ledger rode (2.32.0) — arity is the road, not noise — every
-/// row fenced to the four codes, file granularity and 0..2 trust.
+/// The failing table: three columns, the ledger's trust beside each
+/// verdict (2.32.0; request_body always sends `unres`, so the core
+/// always answers the third) — every row fenced to the four codes,
+/// file granularity and 0..2 trust.
 fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<Vec<i64>>> {
     let rows: Vec<Vec<i64>> = serde_json::from_value(reply["dead"].clone()).context("dead rows")?;
     for row in &rows {
-        let (idx, verdict, conf) = match row[..] {
-            [i, v] => (i, v, None),
-            [i, v, c] => (i, v, Some(c)),
-            _ => bail!("dead row of arity {} — wire skew", row.len()),
+        let [idx, verdict, conf] = row[..] else {
+            bail!("dead row of arity {} — wire skew", row.len());
         };
         let node = verdict_node(nodes, idx, verdict)?;
         // The RG9 split is the CORE's since 2.18.0; here it survives
@@ -504,22 +500,18 @@ fn dead_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<Vec<i64>>> {
             node.kind == super::wire::GRAN_FILE,
             "core dead row {idx} is not file-granularity — wire skew"
         );
-        if let Some(c) = conf {
-            ensure!(
-                (0..=2).contains(&c),
-                "confidence {c} outside 0..2 — wire skew"
-            );
-        }
+        ensure!(
+            (0..=2).contains(&conf),
+            "confidence {conf} outside 0..2 — wire skew"
+        );
     }
     Ok(rows)
 }
 
-/// The informational table. The key is mandatory since 2.18.0; its
-/// absence parsed as empty for older cores until L step #15 (O62)
-/// retired that dead compat.
+/// The informational table: a mandatory key, its absence skew.
 fn reported_rows(reply: &Value, nodes: &[Node]) -> Result<Vec<[i64; 2]>> {
     let rows: Vec<[i64; 2]> = serde_json::from_value(reply["reported"].clone())
-        .context("wire skew: graph reply carries no `reported` table (a pre-2.18.0 core cannot reach this client)")?;
+        .with_context(|| crate::corelink::skew("graph/1 `reported`"))?;
     for &[idx, verdict] in &rows {
         verdict_node(nodes, idx, verdict)?;
     }

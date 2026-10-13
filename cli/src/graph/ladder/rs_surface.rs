@@ -43,12 +43,15 @@ pub(super) fn use_entries(tree: &tree_sitter::Tree, src: &str) -> Vec<(Entry, bo
 /// the crate — the global form's path (`::x`, an empty first segment),
 /// the marker the hop reads (plan v2.30 step 5b).
 fn extern_crate(item: tree_sitter::Node, src: &str, out: &mut Vec<Entry>) {
-    let Some(name) = item.child_by_field_name("name").map(|n| text(n, src)) else {
+    let Some(name) = item
+        .child_by_field_name("name")
+        .map(|n| crate::scan::ast::text(n, src.as_bytes()).to_string())
+    else {
         return;
     };
     let bound = item
         .child_by_field_name("alias")
-        .map(|n| text(n, src))
+        .map(|n| crate::scan::ast::text(n, src.as_bytes()).to_string())
         .unwrap_or_else(|| name.clone());
     out.push((bound, vec![String::new(), name], item.start_position().row));
 }
@@ -60,7 +63,7 @@ fn extern_crate(item: tree_sitter::Node, src: &str, out: &mut Vec<Entry>) {
 fn flatten(node: tree_sitter::Node, src: &str, prefix: &str, row: usize, out: &mut Vec<Entry>) {
     let field = |name: &str| {
         node.child_by_field_name(name)
-            .map(|n| text(n, src))
+            .map(|n| crate::scan::ast::text(n, src.as_bytes()).to_string())
             .unwrap_or_default()
     };
     match node.kind() {
@@ -84,7 +87,7 @@ fn flatten(node: tree_sitter::Node, src: &str, prefix: &str, row: usize, out: &m
         "use_wildcard" => {
             let p = crate::scan::ast::named_children(node)
                 .first()
-                .map(|n| text(*n, src))
+                .map(|n| crate::scan::ast::text(*n, src.as_bytes()).to_string())
                 .unwrap_or_default();
             let segs = split(&join(prefix, &p));
             if !segs.is_empty() {
@@ -92,7 +95,7 @@ fn flatten(node: tree_sitter::Node, src: &str, prefix: &str, row: usize, out: &m
             }
         }
         "identifier" | "scoped_identifier" | "crate" | "super" | "self" => {
-            let mut segs = split(&join(prefix, &text(node, src)));
+            let mut segs = split(&join(prefix, crate::scan::ast::text(node, src.as_bytes())));
             if segs.last().is_some_and(|s| s == "self") {
                 segs.pop(); // `{self, …}` binds the module itself
             }
@@ -102,10 +105,6 @@ fn flatten(node: tree_sitter::Node, src: &str, prefix: &str, row: usize, out: &m
         }
         _ => {}
     }
-}
-
-fn text(n: tree_sitter::Node, src: &str) -> String {
-    n.utf8_text(src.as_bytes()).unwrap_or("").to_string()
 }
 
 /// pub / pub(crate) visibility only — a private use re-exports

@@ -92,8 +92,8 @@ pub struct Request {
     /// the walk's own candidate set read with no ignore file and no
     /// exclude (score::provenance), minus the measured set. Some on
     /// every check road, an empty table included (the reply then
-    /// still answers `dropped`, which is how a pre-6.4.0 core is told
-    /// apart from a clean tree); None on the dedup-only and join
+    /// still answers `dropped`, which is how a skewed core is told apart
+    /// from a clean tree); None on the dedup-only and join
     /// roads, which carry no baseline for it to be read against.
     pub present: Option<Vec<u64>>,
     /// The self-loop table (6.4.0, O59): verdict-universe indices
@@ -259,7 +259,7 @@ pub fn body(r: &Request) -> Value {
 /// link comes back whole beside the reply, so the face's document
 /// rides the same core process (plan v2.32 step 4, crate::document::Held).
 pub fn judge(core: &str, r: &Request) -> Result<(Reply, crate::corelink::Link)> {
-    let mut link = crate::lockstep::open_family(core, CAPABILITY)?;
+    let mut link = crate::corelink::judged::open(core, CAPABILITY)?;
     let reply = link
         .request("verdict", body(r))
         .map_err(anyhow::Error::msg)?;
@@ -285,7 +285,7 @@ struct RatchetEcho {
 }
 
 fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
-    use crate::lockstep::reply_rows as rows;
+    use crate::corelink::judged::table as rows;
     Ok(RatchetEcho {
         added: rows(r, "added")?,
         removed: rows(r, "removed")?,
@@ -293,8 +293,8 @@ fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
         tolerance_drawn: rows(r, "toleranceDrawn")?,
         fail: r["fail"].as_bool().context("fail")?,
         failed: rows(r, "failed")?,
-        // absent on a pre-6.4.0 reply and on one whose request sent
-        // no present table — wire_check tells the two apart
+        // absent on a reply whose request sent no present table and on
+        // a skewed core's — wire_check tells the two apart
         dropped: if r["dropped"].is_null() {
             None
         } else {
@@ -304,8 +304,8 @@ fn ratchet_of(r: &Value) -> Result<RatchetEcho> {
 }
 
 fn parse(v: &Value) -> Result<Reply> {
-    use crate::lockstep::reply_rows as rows;
-    let r = ratchet_of(&crate::lockstep::reply_field(v, "ratchet")?)?;
+    use crate::corelink::judged::table as rows;
+    let r = ratchet_of(&crate::corelink::judged::field(v, "ratchet")?)?;
     Ok(Reply {
         candidates: rows(v, "candidates")?,
         join_severity: rows(v, "joinSeverity")?,
@@ -318,7 +318,7 @@ fn parse(v: &Value) -> Result<Reply> {
         fail: r.fail,
         failed: r.failed,
         dropped: r.dropped,
-        new_baseline: crate::lockstep::reply_field(v, "newBaseline")?,
+        new_baseline: crate::corelink::judged::field(v, "newBaseline")?,
         knobs: rows(v, "knobs")?,
         weights: rows(v, "weights")?,
         // absent on a legacy reply (the key rides only when rows did)

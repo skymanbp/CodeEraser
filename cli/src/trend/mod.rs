@@ -257,7 +257,7 @@ fn put(conn: &rusqlite::Connection, r: &Row, stamp: &str) -> Result<()> {
 /// Preserved rows from an older parser must be remeasured even while
 /// the package versions still match during an unreleased upgrade.
 fn toolchain_stamp(core: &str) -> Result<String> {
-    let hello = crate::corelink::run(core).map_err(anyhow::Error::msg)?;
+    let (_, hello) = crate::corelink::Link::own(core).map_err(anyhow::Error::msg)?;
     Ok(format!(
         "ce{} core{} tokenizer{}",
         env!("CARGO_PKG_VERSION"),

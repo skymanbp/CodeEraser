@@ -24,10 +24,10 @@ use std::path::Path;
 /// The capability the core must offer, and the request kind.
 pub const CAP: &str = "merge/1";
 pub const KIND: &str = "merge";
-const SINCE: &str = "7.5.0";
 
 /// The core's reason codes (CE.Merge.Cost): the last one, and the one
 /// that says no line is saved (reasonNoSavings).
+// TODO(defrag-core: document.merge.reasons)
 const REASON_CEIL: i64 = 5;
 const REASON_NO_SAVINGS: i64 = 5;
 
@@ -167,7 +167,7 @@ pub fn consume(reply: &Value, sent: &[&Group]) -> Result<Judged, String> {
 /// One request over a link past its handshake, behind the capability
 /// gate (a core without the family is healthy and answers nothing).
 pub fn ask(link: &mut Link, body: Value) -> Result<Value, String> {
-    judged::ask(link, CAP, SINCE, KIND, body)
+    Ok(judged::ask(link, CAP, KIND, body)?)
 }
 
 fn suggestions(reply: &Value, sent: &[&Group]) -> Result<Vec<(Suggestion, Vec<HoleRow>)>, String> {

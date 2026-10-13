@@ -5,9 +5,40 @@
 //! projection by construction: the builders re-spell findings that
 //! arrive already judged — no verdict, no wire, no policy lives
 //! here. A machine face like the report JSONs: never translated
-//! (i18n.rs charter).
+//! (i18n.rs charter). The finding-shaped faces (`ce scan`, `ce dedup`)
+//! print through `emit` below, the one road their three formats take.
 
 use serde_json::{Value, json};
+
+/// The finding-shaped faces' formats: beside console and json, sarif —
+/// offered only by a command whose report carries physical locations
+/// (sarif in the help of any other would be a promise nothing renders).
+#[derive(Clone, Copy, clap::ValueEnum)]
+pub enum Findings {
+    Console,
+    Json,
+    Sarif,
+}
+
+/// A finding-shaped answer printed in `format`: the console lines, the
+/// document, or the SARIF projection of its `key` rows by `finding` —
+/// each followed by the stream-1 lines.
+pub fn emit(
+    family: &str,
+    (key, finding): (&str, fn(&Value) -> Value),
+    format: Findings,
+    answer: &crate::document::Answer,
+) -> anyhow::Result<()> {
+    match format {
+        Findings::Console => crate::document::emit(family, answer, false),
+        Findings::Json => crate::document::emit(family, answer, true),
+        Findings::Sarif => {
+            let text = projected(&answer.document, key, finding)?;
+            crate::document::emit_projected(answer, &text);
+            Ok(())
+        }
+    }
+}
 
 /// The one report envelope, at the minimum GitHub code scanning —
 /// the consuming face this revival bought — ingests: schema,

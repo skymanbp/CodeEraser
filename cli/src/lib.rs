@@ -31,7 +31,6 @@ pub mod merge;
 pub mod proc;
 pub mod progress;
 pub mod query;
-pub mod report;
 pub mod root;
 pub mod sarif;
 pub mod scan;

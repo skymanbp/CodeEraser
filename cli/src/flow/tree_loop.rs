@@ -159,7 +159,7 @@ impl Lowerer<'_> {
         let marked = row
             .marker
             .iter()
-            .find(|(tok, _)| super::at::holds(holder, tok));
+            .find(|(tok, _)| crate::scan::ast::has_child(holder, &[tok]));
         let declare = match (row.marker.is_empty(), marked) {
             (false, Some((_, scope))) => Some(self.scope_for(*scope)),
             (false, None) => None,
@@ -195,9 +195,9 @@ impl Lowerer<'_> {
         } else {
             &self.flow.const_false
         };
-        let literal = table.iter().any(|(kind, tok)| {
-            node.kind() == kind && (tok.is_empty() || super::at::holds(node, tok))
-        });
+        let literal = table
+            .iter()
+            .any(|(kind, tok)| super::at::fits(node, kind, tok));
         let number = truth
             && self.is(&self.flow.int_kinds, node)
             && self

@@ -47,6 +47,21 @@ const ROLE_UNIT: i64 = 1 << 8;
 /// cannot read — a stylesheet's `url()`, a script's fetch, a
 /// manifest's icons — keep it alive, so it is never a candidate.
 pub(super) const ROLE_ASSET: i64 = 1 << 9;
+/// Each role's name, by bit position (ROLE_ENTRY_NAMED bit 0 …
+/// ROLE_ASSET bit 9) — the word the query family labels a node's role
+/// with (query::legend).
+pub(crate) const ROLE_NAMES: [&str; 10] = [
+    "entry_named",
+    "entry_dir",
+    "test",
+    "glob",
+    "doc",
+    "allow",
+    "declared",
+    "foreign",
+    "unit",
+    "asset",
+];
 
 /// Files a runtime or a build starts by their own name, which nothing
 /// imports: Rust's `main.rs` and `build.rs`, Go's `main.go`, Python's

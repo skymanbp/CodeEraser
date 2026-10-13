@@ -7,15 +7,15 @@
 //!
 //! The 2026-09-27 ruling, one clause per language:
 //!   - Go: a `const_spec` / `var_spec` at package level (kinds::
-//!     PACKAGE_LEVEL, step 5b item 25).
+//!     shared().package_level, step 5b item 25).
 //!   - Java: a `static` field and an interface's or annotation type's
-//!     constant (kinds::JAVA_FIELDS). An instance field is every
+//!     constant (kinds::shared().java_fields). An instance field is every
 //!     object's own and stays out; an enum constant is reached by
 //!     `values()` / `valueOf` without its name being spelled, a road
 //!     the mention criterion cannot see, so it stays out as well (a row
 //!     for it would be unsafe on the advisory face).
 //!   - C / C++: a `declaration` at file scope that defines a variable
-//!     (kinds::C_VARIABLE) — one unit per declarator that names no
+//!     (kinds::shared().c_variable) — one unit per declarator that names no
 //!     function (a prototype `int f(int);` is the header's own spelling
 //!     of a name, booklet §6) and is no bare `extern` (a reference to a
 //!     definition elsewhere, C11 6.9.2). A class member is the class's
@@ -23,7 +23,7 @@
 //!     out-of-class definition `int K::count = 0;` is the file-scope
 //!     declaration the rule admits, keyed as it is spelled.
 //!   - TypeScript: a `const` / `let` / `var` at module level (kinds::
-//!     TS_LEXICAL) — under the program, an `export` / `declare` wrapper
+//!     shared().ts_lexical) — under the program, an `export` / `declare` wrapper
 //!     or a namespace / module / `declare global` body — one unit per
 //!     bound identifier, a destructuring pattern's included. A
 //!     declarator whose function value the extractor already named
@@ -66,9 +66,9 @@ pub(super) fn keys<'t>(node: Node<'t>, table: &[&str], src: &[u8], lang: Lang) -
 }
 
 /// Whether a registered kind declares here: an instance of a family
-/// names the family, never a new type (kinds::REDECLARING); a C
+/// names the family, never a new type (kinds::shared().redeclaring); a C
 /// `struct K x;` spells K by the node kind that declares it and only
-/// the form with a body declares (kinds::BODIED); a Go const or var
+/// the form with a body declares (kinds::shared().bodied); a Go const or var
 /// spec declares a cross-file name at package level alone; a Java
 /// field when `static`; a C declaration at file scope; a TS lexical
 /// form at module level (module doc).

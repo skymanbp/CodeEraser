@@ -137,7 +137,7 @@ impl Emitter<'_, '_> {
             (entry_of(sp.coc_flat_kinds, kind).is_some(), FLAT),
             (sp.coc_nest_only_kinds.contains(&kind), NEST_ONLY),
             (
-                sp.coc_jump_kinds.contains(&kind) && has_child_of(node, sp.label_kinds),
+                sp.coc_jump_kinds.contains(&kind) && ast::has_child(node, sp.label_kinds),
                 LABELLED_JUMP,
             ),
             (sp.if_kinds.contains(&kind), IF_KIND),
@@ -256,14 +256,6 @@ fn entry_of(table: Kinds, kind: &str) -> Option<&'static str> {
         .iter()
         .copied()
         .find(|e| e.split(' ').next() == Some(kind))
-}
-
-/// Whether a direct child of `node` is one of `kinds` — a jump's
-/// label.
-fn has_child_of(node: Node<'_>, kinds: &[&str]) -> bool {
-    ast::children(node)
-        .iter()
-        .any(|c| kinds.contains(&c.kind()))
 }
 
 #[cfg(test)]

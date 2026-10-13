@@ -16,8 +16,7 @@ use super::tombstone::Leg;
 use super::verdict::Verdict;
 use crate::corelink::Link;
 use crate::document;
-use crate::document::lines::{Line, Stream, spelled_lines};
-use serde_json::Value;
+use crate::document::lines::{Line, Stream};
 
 /// The faces, by their code in the request.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -123,12 +122,8 @@ pub(super) fn spoken(link: Option<&mut Link>, said: &Said) -> (Vec<Line>, bool) 
 
 fn asked(link: Option<&mut Link>, said: &Said) -> Result<(Vec<Line>, bool), String> {
     let link = link.ok_or("no core")?;
-    if !link.has(document::CAP) {
-        return Err(format!("the core offers no {} (pre-7.8.0)", document::CAP));
-    }
-    let reply = link.request(document::KIND, body(said))?;
-    crate::corelink::judged::degraded(&reply)?;
-    spelled_lines(&reply).map_err(|e| e.to_string())
+    let answer = document::assemble_on(link, request(said)).map_err(|e| format!("{e:#}"))?;
+    Ok((answer.lines, answer.fail))
 }
 
 /// The one English line a face says when the core did not phrase it:
@@ -164,7 +159,7 @@ fn fallback(said: &Said, why: &str) -> Line {
 /// The `audit` request (CE.Audit.Document's statement) and the strings
 /// its references name: each shown block's two paths, each shown site's
 /// path, the leg's error, the mount and the unreadable message.
-fn body(said: &Said) -> Value {
+fn request(said: &Said) -> document::Request {
     let tier = |t: &str| crate::config::TIERS.iter().position(|x| *x == t);
     let shown = said.dups.map_or(&[][..], |v| v.shown.as_slice());
     let blocks: Vec<[usize; 6]> = shown
@@ -218,7 +213,7 @@ fn body(said: &Said) -> Value {
     if let Some(message) = &said.unreadable {
         req = req.text("message", message);
     }
-    req.body()
+    req
 }
 
 /// The leg's row: [state, sites, label, prose, erased, budget, tier,

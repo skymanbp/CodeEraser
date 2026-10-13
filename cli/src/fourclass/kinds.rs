@@ -35,6 +35,9 @@
 use crate::scan::lang::Lang;
 use crate::tables::Fourclass;
 
+/// Each declaration form's name, by code counted from KIND_FN (the
+/// query family's unit kinds).
+pub const KIND_NAMES: [&str; 4] = ["fn", "named", "impl", "section"];
 /// Declaration forms carried beside the key hash in fourclass/2.
 /// Kept here so units can measure kinds without importing decls,
 /// which reads the unit table back.

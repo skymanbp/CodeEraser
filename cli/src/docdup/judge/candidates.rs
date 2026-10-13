@@ -15,10 +15,9 @@ use anyhow::{Context, Result, ensure};
 use std::collections::BTreeMap;
 use std::path::Path;
 
-/// The coarse filter's capability, request kind, and minting proto.
+/// The coarse filter's capability and request kind.
 pub const CAP: &str = "docpairs/1";
 const KIND: &str = "docpairs";
-const SINCE: &str = "8.4.0";
 
 /// One live cached segment — the judgment's unit of identity.
 /// `words` is the admitted post-strip word count (the cached column
@@ -171,7 +170,7 @@ fn coarse(segs: &[SegRow], link: &mut Link) -> Result<(Vec<(usize, usize)>, Tall
     let keys = ["sets", "lshPairs", "seedPairs", "hotBands", "hotShingles"];
     let (_, local, counts): (_, Vec<[usize; 2]>, _) = judged::whole_pass(
         link,
-        (CAP, SINCE, KIND),
+        (CAP, KIND),
         serde_json::json!({ "sets": sets }),
         ("docdup coarse filter", &keys),
     )?;

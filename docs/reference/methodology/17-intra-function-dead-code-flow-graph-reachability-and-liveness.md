@@ -115,7 +115,7 @@ catalogue's kinds ([Document.hs:92](../../../core/app/CE/Flow/Document.hs#L92)).
 when the core is missing (refused by name, no document) or lacks the family (the document names
 the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
-([main_flow.rs:27-31](../../../cli/src/main_flow.rs#L27), [Lines.hs:32-33](../../../core/app/CE/Flow/Lines.hs#L32)). The MCP tool `flow` and the GUI's
+([main_judge.rs:193-197](../../../cli/src/main_judge.rs#L193), [Lines.hs:32-33](../../../core/app/CE/Flow/Lines.hs#L32)). The MCP tool `flow` and the GUI's
 reports hub read the same document through `faces::flow`; the hub registers its own renderer for
 the kind chips, the judged / advisory mark and the unjudged units.
 
@@ -136,7 +136,7 @@ findings through each side's legend and subtracts
 [proto.rs:32](../../../cli/src/daemon/proto.rs#L32)). The subtraction is the guard's usual
 novelty, applied to findings: a multiset difference keyed on (unit name, kind, variable name),
 the line left out so a finding the edit merely moves is not this write's doing
-([flow_novel.rs:15-22](../../../cli/src/guard/flow_novel.rs#L15)). The class's condition is a
+([flow.rs:127-131](../../../cli/src/guard/flow.rs#L127)). The class's condition is a
 judged language and a novel finding of a non-advisory kind, and the feed's `novel` counts those
 kinds only: an unused parameter the write brings shows in `kinds`, never in `novel`. The class
 speaks at its own tier,

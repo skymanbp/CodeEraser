@@ -25,21 +25,6 @@ use anyhow::Result;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-/// Reason names by code (CE.Merge.Cost): feasible, a position no
-/// parameter can stand for (a statement's or any other that is not an
-/// expression or a declared name — hence `position`, not `statement`),
-/// a type position, a gap across statements, more parameters than the
-/// ceiling, no line saved. The document's names are the core's; the
-/// review instrument reads this copy.
-pub const REASONS: [&str; 6] = [
-    "ok",
-    "position",
-    "type",
-    "spans_statements",
-    "too_many_params",
-    "no_savings",
-];
-
 /// The document request's tables and facts.
 const TABLES: [&str; 3] = ["groups", "members", "holes"];
 const FACTS: [&str; 6] = [

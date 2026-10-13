@@ -71,12 +71,11 @@ fn star<'t>(node: Node<'t>, others: &[&str], comments: &[&str]) -> Vec<Node<'t>>
         .collect()
 }
 
-/// Whether a node holds this token as a direct child (anonymous or
-/// named: an operator, a storage word, a marker).
-pub fn holds(node: Node<'_>, token: &str) -> bool {
-    crate::scan::ast::children(node)
-        .iter()
-        .any(|c| c.kind() == token)
+/// Whether a row keyed by (node kind, token) fits this node: the kind
+/// matches and, when the row names a token, the node holds it as a
+/// direct child (an operator, a storage word, a marker).
+pub fn fits(node: Node<'_>, kind: &str, token: &str) -> bool {
+    node.kind() == kind && (token.is_empty() || crate::scan::ast::has_child(node, &[token]))
 }
 
 /// The node's first source line, trimmed, at most 80 characters.

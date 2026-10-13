@@ -47,7 +47,7 @@ pub fn body(rows: &[[u64; 3]], budget: Option<u32>) -> Value {
 /// One request over a link past its handshake, behind the capability
 /// gate (a pre-6.6.0 core is healthy and answers nothing here).
 pub fn ask(link: &mut Link, rows: &[[u64; 3]], budget: Option<u32>) -> Result<Value, String> {
-    judged::ask(link, CAP, "6.6.0", KIND, body(rows, budget))
+    Ok(judged::ask(link, CAP, KIND, body(rows, budget))?)
 }
 
 /// The reply, consumed: a degraded reply is a named non-judgment; a

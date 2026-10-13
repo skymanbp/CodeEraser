@@ -16,10 +16,10 @@
 //! one `Answer`, and `emit` prints it. Since plan v2.33 W7 a face sends
 //! its strings too (`Request::text`, by reference class): the core
 //! spells every reference and fills every hole itself, and this side
-//! prints what it gets. Two faces still bind here — the PreToolUse
-//! guard (guard/speech.rs, the hook path) and query (its program's
-//! strings stay this side until the program crosses) — through
-//! `assemble_bound` and the `Resolve` below.
+//! prints what it gets. Two faces still bind here, through the
+//! `Resolve` below — the PreToolUse guard (guard/speech.rs, the hook
+//! path, `lines::bind_lines`) and query (its program's strings stay
+//! this side until the program crosses, `assemble_bound`).
 
 pub mod lines;
 mod paths;
@@ -34,7 +34,6 @@ use serde_json::{Map, Value, json};
 /// The capability the core must offer, and the request kind.
 pub const CAP: &str = "document/1";
 pub const KIND: &str = "document";
-const SINCE: &str = "7.8.0";
 
 /// A face's strings, by the class and the integers a reference
 /// carries; None = a class it does not hold or an integer outside it.
@@ -206,8 +205,18 @@ pub fn assemble(core: &str, req: Request) -> Result<Answer> {
 /// a fresh one to `core`, the core spelling every string it carries:
 /// the document and the lines as they print, and the veto.
 pub fn assemble_over(core: &str, held: Held, req: Request) -> Result<Answer> {
-    let req = req.spelled();
-    let (family, mut reply) = asked(core, held, req)?;
+    spelled(asked(core, held, req.spelled())?)
+}
+
+/// The request answered over a link the face keeps (the Stop audit's,
+/// which its verdicts went over first), spelled like `assemble_over`.
+pub fn assemble_on(link: &mut Link, req: Request) -> Result<Answer> {
+    spelled(asked_on(link, req.spelled())?)
+}
+
+/// A spelled reply read as the face's answer: the document, the lines
+/// as they print, and the veto.
+fn spelled((family, mut reply): (&'static str, Value)) -> Result<Answer> {
     let (lines, fail) =
         lines::spelled_lines(&reply).map_err(|e| anyhow!("{family} document: {e:#}"))?;
     Ok(Answer {
@@ -235,14 +244,20 @@ pub fn assemble_bound(core: &str, held: Held, req: Request, r: &dyn Resolve) -> 
 /// The core's reply to `req`, refused by name when the core cannot lay
 /// the document out.
 fn asked(core: &str, held: Held, req: Request) -> Result<(&'static str, Value)> {
-    let family = req.family;
-    let named = |why: String| anyhow!("{family} document: {why}");
     let mut link = match held {
         Ok(link) => link,
-        Err(_) => open(core).map_err(named)?,
+        Err(_) => open(core).map_err(|why| anyhow!("{} document: {why}", req.family))?,
     };
+    asked_on(&mut link, req)
+}
+
+/// The core's reply to `req` over `link`, refused by name when the
+/// core cannot lay the document out.
+fn asked_on(link: &mut Link, req: Request) -> Result<(&'static str, Value)> {
+    let family = req.family;
+    let named = |why: String| anyhow!("{family} document: {why}");
     if !link.has(CAP) {
-        return Err(named(format!("core offers no {CAP} (pre-{SINCE})")));
+        return Err(named(crate::corelink::skew(CAP)));
     }
     let reply = link.request(KIND, req.body()).map_err(named)?;
     if reply["degraded"] != Value::Bool(false) {
@@ -269,7 +284,8 @@ pub fn emit(family: &str, answer: &Answer, json: bool) -> Result<()> {
 /// print it: indented when the catalogue states the family `pretty`.
 pub fn rendered(family: &str, doc: &Value) -> Result<String> {
     let Some(pretty) = crate::tables::get().document.pretty(family) else {
-        bail!("{family} document: the catalogue states no `pretty` (a pre-7.10.0 core)");
+        let skew = crate::corelink::skew(&format!("`pretty` for {family} in its catalogue"));
+        bail!("{family} document: {skew}");
     };
     Ok(if pretty {
         serde_json::to_string_pretty(doc)?

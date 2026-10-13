@@ -27,7 +27,7 @@ mod rs;
 mod tests;
 
 use crate::fourclass::visibility::{ancestors, java_modifiers};
-use crate::scan::ast;
+use crate::scan::ast::{self, text};
 use crate::scan::lang::Lang;
 use std::collections::BTreeSet;
 use tree_sitter::Node;
@@ -108,12 +108,6 @@ pub fn ast_bits(node: Node<'_>, src: &[u8], lang: Lang, facts: &FileFacts) -> i6
         Lang::Java => java_bits(node),
         _ => 0,
     }
-}
-
-/// A node's bytes as text — shared with the self-mention walk, whose
-/// own copy the clone gate paired with this one.
-pub(super) fn text<'s>(node: Node<'_>, src: &'s [u8]) -> &'s str {
-    node.utf8_text(src).unwrap_or("")
 }
 
 /// The node's parent when it is of `kind`.
@@ -212,12 +206,14 @@ const DEFAULTABLE: [&str; 3] = [
 fn ts_bits(node: Node<'_>) -> i64 {
     let mut word = 0;
     let export = parent_of_kind(node, "export_statement");
-    if has_child(node, "decorator") || export.is_some_and(|e| has_child(e, "decorator")) {
+    if ast::has_child(node, &["decorator"])
+        || export.is_some_and(|e| ast::has_child(e, &["decorator"]))
+    {
         word |= Conv::Registration.bit();
     }
     if DEFAULTABLE.contains(&node.kind())
         && node.child_by_field_name("name").is_some()
-        && export.is_some_and(|e| has_child(e, "default"))
+        && export.is_some_and(|e| ast::has_child(e, &["default"]))
     {
         word |= Conv::DefaultExport.bit();
     }
@@ -225,11 +221,6 @@ fn ts_bits(node: Node<'_>) -> i64 {
         word |= Conv::Ambient.bit();
     }
     word
-}
-
-/// Anonymous leaves (`default`) and named ones (`decorator`) alike.
-fn has_child(node: Node<'_>, kind: &str) -> bool {
-    ast::children(node).iter().any(|c| c.kind() == kind)
 }
 
 // ---- Java (AST half) ----

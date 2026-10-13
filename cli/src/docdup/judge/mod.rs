@@ -94,7 +94,7 @@ fn judged_over(
     // the family's lockstep bindings, inline: this judge is thin
     // enough that a separate fn was pure scaffolding (bite 17 tail)
     let fam = wire::family(core);
-    let mut link = crate::lockstep::open_family(fam.core, fam.cap)?;
+    let mut link = crate::corelink::judged::open(fam.core, fam.cap)?;
     let cand = candidates::collect(root, &segs, &mut link)?;
     let (rows, judged, jaccard_dups, requests) = crate::lockstep::lockstep_scores(
         &mut link,

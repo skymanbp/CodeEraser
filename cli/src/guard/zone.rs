@@ -23,6 +23,7 @@ use std::path::Path;
 /// span. Since 2.21.0 the AUTHORITY is the core's and the pair rides
 /// the committed baseline; this pair is what a pre-2.21 baseline, or
 /// a tree with no baseline at all, falls back to.
+// TODO(defrag-core: limits.zone.{warn_permille, ask_permille})
 pub const DECLARED_TIERS: (usize, usize) = (250, 750);
 
 /// Where one write landed: its position in the zone and the tier the

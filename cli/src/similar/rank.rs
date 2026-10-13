@@ -18,11 +18,9 @@ use anyhow::Result;
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
-/// The capability the core must offer, the request kind, and the proto
-/// that minted the family.
+/// The capability the core must offer, and the request kind.
 pub const CAP: &str = "rank/1";
 const KIND: &str = "rank";
-const SINCE: &str = "8.3.0";
 
 /// One query term as spelled: hash, channel, term frequency.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -111,7 +109,7 @@ pub fn widened(
 }
 
 fn answer(link: &mut Link, p: &impl Postings, ask: &Ask, body: Value) -> Result<Arm, String> {
-    let reply = judged::ask(link, CAP, SINCE, KIND, body)?;
+    let reply = judged::ask(link, CAP, KIND, body)?;
     let mut arm = consume(&reply, p.n_docs(), ask.k)?;
     let shape = shape_terms(ask.query);
     for h in &mut arm.hits {

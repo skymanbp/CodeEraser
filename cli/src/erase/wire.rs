@@ -26,7 +26,7 @@ pub fn judge(core: &str, cands: &[Candidate]) -> Result<(Vec<Verdict>, Held)> {
     if cands.is_empty() {
         return Ok((Vec::new(), Err("no candidate was judged".into())));
     }
-    let mut link = crate::lockstep::open_family(core, "erase/1")?;
+    let mut link = crate::corelink::judged::open(core, "erase/1")?;
     let rows: Vec<[i64; 5]> = cands
         .iter()
         .map(|c| {
@@ -65,8 +65,8 @@ fn targets_of(cands: &[Candidate]) -> Vec<[i64; 3]> {
 /// The two reply tables, each length-locked to the request and read
 /// in step; a missing `kept` is named as the pre-7.2.0 core it means.
 fn decode(reply: &Value, n: usize) -> Result<Vec<Verdict>> {
-    let verdicts: Vec<[i64; 2]> = crate::lockstep::reply_rows(reply, "rows")?;
-    let kept: Vec<i64> = crate::lockstep::reply_rows(reply, "kept").context(
+    let verdicts: Vec<[i64; 2]> = crate::corelink::judged::table(reply, "rows")?;
+    let kept: Vec<i64> = crate::corelink::judged::table(reply, "kept").context(
         "the erase reply carries no `kept` table — a core older than 7.2.0 judged the rows without the target closure",
     )?;
     ensure!(

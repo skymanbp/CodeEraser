@@ -45,9 +45,11 @@ mod gitio;
 mod report;
 mod survival;
 
-// the leaf owns the face; this re-export keeps every outside
-// caller's path (crate::churn::git) where it always was
-pub(crate) use gitio::{git, gitlinks};
+// the leaf owns the face; re-exported so callers keep crate::churn::git
+pub(crate) use gitio::{git, gitlinks, rev_or_empty_tree};
+
+/// The churn window's default in days, every face's: the §4.1 two-week anchor.
+pub const DEFAULT_DAYS: u32 = 14;
 pub use report::{Report, UnitRow, answer};
 
 use crate::fourclass::session;

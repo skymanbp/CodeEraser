@@ -91,7 +91,7 @@ fn status_line(root: &Path) -> String {
 /// i18n.rs declares report JSON the machine face and never translates
 /// it. A code crosses; each face owns its sentence.
 pub(crate) fn index_fact(root: &Path) -> (i64, Option<i64>) {
-    let db = root.join(".ce/index.db");
+    let db = crate::dedup::index_db_path(root, None);
     if !db.exists() {
         return (0, None);
     }
@@ -157,7 +157,7 @@ fn line_degraded(line: &serde_json::Value) -> bool {
 /// degraded count alone never returns to zero after one incident
 /// (attack-review finding).
 pub fn degraded_runs(root: &Path) -> (usize, usize) {
-    let Ok(log) = std::fs::read_to_string(root.join(".ce/observe.ndjson")) else {
+    let Ok(log) = std::fs::read_to_string(root.join(crate::hookio::OBSERVE_REL)) else {
         return (0, 0);
     };
     let entries: Vec<serde_json::Value> = log

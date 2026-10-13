@@ -17,9 +17,10 @@
 //! and claims nothing: it says the definition lives elsewhere, never
 //! that a foreign caller reaches it.
 
-use super::{Conv, text};
+use super::Conv;
 use crate::fourclass::visibility::ancestors;
 use crate::scan::ast;
+use crate::scan::ast::text;
 use tree_sitter::Node;
 
 pub(super) fn bits(node: Node<'_>, src: &[u8]) -> i64 {

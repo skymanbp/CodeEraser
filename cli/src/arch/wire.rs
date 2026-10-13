@@ -19,11 +19,9 @@ use anyhow::{Context, Result, bail, ensure};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
-/// The capability the core must offer, the request kind, and the
-/// proto that minted the family (for the named absence).
+/// The capability the core must offer, and the request kind.
 pub const CAP: &str = "arch/1";
 pub const KIND: &str = "arch";
-const SINCE: &str = "7.6.0";
 
 /// The counts object's keys, space-separated: the five request
 /// tables, then the four answer tallies (read through `count_keys`).
@@ -117,9 +115,10 @@ pub fn judge(held: &mut Held, a: &Ask) -> Result<(Built, Judgment)> {
         Ok(link) => link,
         Err(why) => return Ok((Built::default(), Err(why.clone()))),
     };
-    let reply = match judged::ask(link, CAP, SINCE, KIND, request_body(a)) {
+    let reply = match judged::ask(link, CAP, KIND, request_body(a)) {
         Ok(reply) => reply,
         Err(why) => {
+            let why = String::from(why);
             *held = Err(why.clone());
             return Ok((Built::default(), Err(why)));
         }
@@ -146,8 +145,8 @@ fn built(reply: &Value, a: &Ask) -> Result<Built> {
     );
     let b = Built {
         tables: read_tables(tables, BUILT)?,
-        focus: crate::lockstep::reply_rows(tables, "focus")?,
-        dir_paths: crate::lockstep::reply_rows(reply, "dirNames")?,
+        focus: crate::corelink::judged::table(tables, "focus")?,
+        dir_paths: crate::corelink::judged::table(reply, "dirNames")?,
     };
     let (files, dirs) = (b.rows("files").len(), b.rows("dirs").len());
     ensure!(
@@ -164,7 +163,7 @@ fn built(reply: &Value, a: &Ask) -> Result<Built> {
 fn read_tables(v: &Value, spec: &'static str) -> Result<BTreeMap<&'static str, Vec<Vec<i64>>>> {
     let mut tables = BTreeMap::new();
     for (key, width) in spec.lines().filter_map(|l| l.split_once(' ')) {
-        let rows: Vec<Vec<i64>> = crate::lockstep::reply_rows(v, key)?;
+        let rows: Vec<Vec<i64>> = crate::corelink::judged::table(v, key)?;
         let width: usize = width.parse().context("a table width")?;
         ensure!(
             rows.iter().all(|r| r.len() == width),

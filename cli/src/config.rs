@@ -182,7 +182,7 @@ impl Config {
         let tree = canonical(self);
         let bytes = serde_json::to_vec(&tree).ok()?;
         (tree != serde_json::Value::Object(Default::default()))
-            .then(|| crate::score::baseline::fnv1a(&[&bytes]))
+            .then(|| crate::dedup::tokens::fnv1a(&bytes))
     }
 
     /// Load `ce.toml` for `root`; absent file = defaults.

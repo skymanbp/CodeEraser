@@ -38,11 +38,9 @@ use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
-/// The capability the core must offer, the request kind, the proto that
-/// minted the family's text form.
+/// The capability the core must offer, and the request kind.
 pub const CAP: &str = "resolve/1";
 pub const KIND: &str = "resolve";
-pub const SINCE: &str = "9.0.0";
 
 /// Whether the core holds this language's ladder.
 pub fn in_core(lang: Lang) -> bool {
@@ -211,7 +209,7 @@ fn complete(body: &mut Value, root: &Path) -> Result<Value, String> {
 
 /// One round over the process's core session (corelink::judged).
 fn ask(body: Value) -> Result<Value, String> {
-    judged::session_ask((CAP, SINCE, KIND), body)
+    judged::session_ask((CAP, KIND), body)
 }
 
 /// One reply row as an outcome, a section's slug from its `sections`

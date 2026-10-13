@@ -79,8 +79,8 @@ mod ts;
 // the one ancestor walk lives with the AST helpers, since the scan
 // layer's owner road reads it too; re-exported for the climbs below
 // and for the mention category word (mention/conv)
-use crate::scan::ast;
 pub(crate) use crate::scan::ast::ancestors;
+use crate::scan::ast::{self, text};
 use crate::scan::lang::Lang;
 pub(crate) use java::modifiers as java_modifiers;
 use tree_sitter::Node;
@@ -124,7 +124,7 @@ pub fn bits(node: Node<'_>, src: &[u8], lang: Lang) -> i64 {
 /// 5b); every other declaration binds one name and answers `bits`.
 pub fn bits_of(node: Node<'_>, name: Option<Node<'_>>, src: &[u8], lang: Lang) -> i64 {
     match (lang, name) {
-        (Lang::Go, Some(name)) => word(initial_upper(&text(name, src)), go_scope_open(node)),
+        (Lang::Go, Some(name)) => word(initial_upper(text(name, src)), go_scope_open(node)),
         _ => bits(node, src, lang),
     }
 }
@@ -202,9 +202,5 @@ fn root_of(node: Node<'_>) -> Node<'_> {
 }
 
 fn name_text(node: Node<'_>, src: &[u8]) -> Option<String> {
-    Some(text(node.child_by_field_name("name")?, src))
-}
-
-fn text(node: Node<'_>, src: &[u8]) -> String {
-    String::from_utf8_lossy(&src[node.byte_range()]).into_owned()
+    Some(text(node.child_by_field_name("name")?, src).to_string())
 }

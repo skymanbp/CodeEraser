@@ -54,7 +54,7 @@ pub fn judge(root: &Path, core: &str, rows: &[Row]) -> Result<(Judgment, Link)> 
     if let Some(floor) = cfg.trend.decline_floor_micro {
         knobs.push([1, floor as i64]);
     }
-    let mut link = crate::lockstep::open_family(core, "trend/2")?;
+    let mut link = crate::corelink::judged::open(core, "trend/2")?;
     let mut body = json!({
         "rows": rows.iter().map(|r| json!([r.ts, r.score, r.scale])).collect::<Vec<_>>(),
     });

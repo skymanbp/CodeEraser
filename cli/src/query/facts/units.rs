@@ -5,8 +5,9 @@
 //! the core derives for `ce scan`, matched to units by span.
 
 use super::{Ctx, Labels, Sink};
+use crate::fourclass::kinds::{KIND_FN, KIND_NAMES};
 use crate::fourclass::visibility::VIS_EXPORTED;
-use crate::query::legend::{self, UNIT_KINDS};
+use crate::query::legend;
 use anyhow::Result;
 use std::collections::BTreeMap;
 
@@ -65,11 +66,7 @@ pub fn fill(ctx: &Ctx<'_>, sink: &mut Sink, labels: &mut Labels) -> Result<Units
             .of_path(&s.path)
             .expect("filtered to seated paths");
         sink.row("unit", vec![id, node]);
-        let kind = usize::try_from(s.kind - 1)
-            .ok()
-            .and_then(|k| UNIT_KINDS.get(k))
-            .copied()
-            .unwrap_or("other");
+        let kind = legend::named(&KIND_NAMES, s.kind - KIND_FN).unwrap_or("other");
         sink.row("unit_kind", vec![id, legend::sym(kind)]);
         sink.row(
             "unit_lines",

@@ -48,10 +48,8 @@ fn ask(core: &Path) -> Result<(String, u64, String), String> {
     let (mut link, hello) =
         Link::open(&path).map_err(|e| format!("core unavailable: {path}: {e} (tables/1)"))?;
     if !link.has("tables/1") {
-        return Err(format!(
-            "pre-7.7.0 core {path} (proto {}): no tables/1",
-            hello.proto
-        ));
+        let skew = super::super::corelink::skew("tables/1");
+        return Err(format!("core {path} (proto {}): {skew}", hello.proto));
     }
     let mut reply = link
         .request("tables", serde_json::json!({}))

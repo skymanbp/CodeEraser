@@ -4,9 +4,11 @@
 //! the lockstep score loop — extracted from the two family drivers
 //! when the repo's own ratchet caught the second re-growing the
 //! first verbatim (bite seventeen). corelink.rs keeps the Link
-//! itself; this module is everything the families say OVER it.
+//! itself and corelink::judged the reply kit (open, ask, degraded,
+//! table, field, count) this loop reads its replies with.
 
 use crate::corelink::Link;
+use crate::corelink::judged;
 use serde_json::Value;
 
 /// One judgment family's wire bindings: core path, capability name,
@@ -47,21 +49,8 @@ pub type Scored<E> = (Vec<(usize, usize, E)>, [u64; 2]);
 /// counters, and the request count.
 pub type Judged<E> = (Vec<(usize, usize, E)>, u64, u64, usize);
 
-/// Open the link and demand one capability — the shared head every
-/// judgment surface speaks (the lockstep families here, the score
-/// wire, the scan wire): the repo's own ratchet caught the third
-/// hand-rolled copy when the scan family landed (ADR-008 P3).
-pub fn open_family(core: &str, cap: &str) -> anyhow::Result<Link> {
-    let (link, _hello) = Link::open(core).map_err(anyhow::Error::msg)?;
-    anyhow::ensure!(
-        link.has(cap),
-        "ce-core offers no {cap} capability — upgrade the core"
-    );
-    Ok(link)
-}
-
 /// Chunked lockstep judging over ONE link the caller opened through
-/// `open_family` (plan v2.30 step 5b-9: the T3 family reads the
+/// `judged::open` (plan v2.30 step 5b-9: the T3 family reads the
 /// core's proto off the link before deciding what its verdict cache
 /// may answer, then sends only the rest): chunk, build a
 /// request-local body, one request per chunk, map each wire row's
@@ -77,7 +66,7 @@ pub fn lockstep_scores<P, E: Ord>(
     let (mut rows, mut c0, mut c1, mut requests) = (Vec::new(), 0, 0, 0);
     for c in pairs.chunks(fam.chunk) {
         let (order, body) = build(c);
-        let reply = link.request(fam.kind, body).map_err(anyhow::Error::msg)?;
+        let reply = judged::ask(link, fam.cap, fam.kind, body)?;
         let (ws, counts) = parse(&reply)?;
         c0 += counts[0];
         c1 += counts[1];
@@ -98,8 +87,8 @@ pub fn lockstep_scores<P, E: Ord>(
 /// Request-local layout by sorted rank: the distinct endpoint ids in
 /// ascending order plus the id→rank map — the monotone map keeps the
 /// wire's strictly-ascending pair rows for free. ONE throat for every
-/// family's chunk_request.
-pub fn sorted_rank(
+/// family's chunk_request (chunk_layout below).
+fn sorted_rank(
     ends: impl Iterator<Item = (usize, usize)>,
 ) -> (Vec<usize>, std::collections::BTreeMap<usize, usize>) {
     let order: Vec<usize> = ends
@@ -125,14 +114,16 @@ fn pin_knobs(reply: &Value, expect: &[(&str, Value)], owners: &str) -> anyhow::R
 }
 
 /// A degraded reply to a client-sized request means the Rust cap
-/// mirrors sit above the core's — refuse, naming the module pair.
+/// mirrors sit above the core's — refuse, naming the module pair. The
+/// flag must be stated: a reply without it is no client-sized answer.
 pub fn refuse_degraded(reply: &Value, mirrors: &str) -> anyhow::Result<()> {
-    anyhow::ensure!(
-        reply["degraded"] == Value::Bool(false),
-        "core degraded a client-sized request ({}) — cap mirror drift ({mirrors})",
-        reply["reason"]
-    );
-    Ok(())
+    if reply["degraded"] == Value::Bool(false) {
+        return Ok(());
+    }
+    let why = judged::degraded(reply)
+        .err()
+        .map_or("no degraded flag".into(), String::from);
+    anyhow::bail!("core degraded a client-sized request ({why}) — cap mirror drift ({mirrors})")
 }
 
 /// A per-row column of the reply under `key` (the verdict bits of
@@ -144,8 +135,7 @@ pub fn rows_for<T: serde::de::DeserializeOwned>(
     key: &str,
     rows: usize,
 ) -> anyhow::Result<Vec<T>> {
-    use anyhow::Context;
-    let col: Vec<T> = serde_json::from_value(reply[key].clone()).context(key.to_string())?;
+    let col: Vec<T> = judged::table(reply, key)?;
     anyhow::ensure!(
         col.len() == rows,
         "core sent {} {key} for {rows} score rows",
@@ -167,41 +157,16 @@ pub fn chunk_layout<'t, T: ?Sized>(
     (order, items, local)
 }
 
-/// A required reply field, its absence named — the third
-/// hand-rolled closure of this shape (score, then structure) made
-/// it family infrastructure.
-pub fn reply_field(reply: &Value, key: &str) -> anyhow::Result<Value> {
-    use anyhow::Context;
-    reply
-        .get(key)
-        .cloned()
-        .with_context(|| format!("reply missing {key}"))
-}
-
-/// The typed sibling: fetch AND decode in one throat. The
-/// from_value+context ladder recloned across the wire parsers when
-/// the A-layer keys landed (thirteenth ratchet bite) — every table
-/// row a family reads now comes through here.
-pub fn reply_rows<T: serde::de::DeserializeOwned>(reply: &Value, key: &str) -> anyhow::Result<T> {
-    use anyhow::Context;
-    serde_json::from_value(reply_field(reply, key)?).with_context(|| format!("decode {key}"))
-}
-
-/// The reply's score rows plus the named u64 counters, decoded once.
+/// The reply's score rows plus the named counters, decoded once.
 fn scores_and_counts<R: serde::de::DeserializeOwned>(
     reply: &Value,
     keys: &[&str],
 ) -> anyhow::Result<(Vec<R>, Vec<u64>)> {
-    use anyhow::Context;
-    let rows: Vec<R> = serde_json::from_value(reply["scores"].clone()).context("scores")?;
+    let rows: Vec<R> = judged::table(reply, "scores")?;
     let counts = keys
         .iter()
-        .map(|k| {
-            reply["counts"][*k]
-                .as_u64()
-                .with_context(|| format!("counts.{k}"))
-        })
-        .collect::<anyhow::Result<_>>()?;
+        .map(|k| judged::count(reply, k).map(|n| n as u64))
+        .collect::<Result<_, _>>()?;
     Ok((rows, counts))
 }
 

@@ -14,11 +14,7 @@ const SORT_NAMES: [&str; 6] = ["node", "dir", "unit", "int", "sym", "set"];
 /// A sort's name; the open sort (and any code outside the table)
 /// reads `open`.
 pub fn sort_name(sort: i64) -> &'static str {
-    usize::try_from(sort)
-        .ok()
-        .and_then(|i| SORT_NAMES.get(i))
-        .copied()
-        .unwrap_or("open")
+    named(&SORT_NAMES, sort).unwrap_or("open")
 }
 
 /// The one hash of a name — the same fnv1a64 the mention table and
@@ -28,34 +24,35 @@ pub fn sym(name: &str) -> u64 {
     crate::dedup::tokens::fnv1a(name.as_bytes())
 }
 
-/// Node kinds, by the graph wire's granularity code, then the two
-/// this family adds: a walked asset (the wire's own bit) and a
-/// prose-only file (the docdup family's universe, no graph node).
-pub const NODE_KINDS: [&str; 5] = ["file", "pkg", "section", "asset", "prose"];
-pub const KIND_ASSET: usize = 3;
-pub const KIND_PROSE: usize = 4;
+/// Node kinds: the graph wire's granularity codes, named by code
+/// (graph::wire::GRAN_NAMES), then the two this family adds after
+/// them — a walked asset (the wire's own bit) and a prose-only file
+/// (the docdup family's universe, no graph node).
+const GRANS: usize = crate::graph::wire::GRAN_NAMES.len();
+pub const KIND_ASSET: usize = GRANS;
+pub const KIND_PROSE: usize = GRANS + 1;
+const ADDED_KINDS: [&str; 2] = ["asset", "prose"];
 
-/// Role names by role bit (graph/deadcode/flags.rs's positions).
-pub const ROLE_NAMES: [&str; 10] = [
-    "entry_named",
-    "entry_dir",
-    "test",
-    "glob",
-    "doc",
-    "allow",
-    "declared",
-    "foreign",
-    "unit",
-    "asset",
-];
+/// A node kind's name.
+pub fn node_kind(kind: usize) -> &'static str {
+    let grans = &crate::graph::wire::GRAN_NAMES;
+    grans
+        .iter()
+        .chain(&ADDED_KINDS)
+        .nth(kind)
+        .copied()
+        .unwrap_or("unknown")
+}
 
-/// Reference kinds by the graph wire's edge code (graph/wire.rs).
-pub const REF_KINDS: [&str; 6] = [
-    "import", "doc_link", "doc_ref", "asset", "contain", "refdef",
-];
-
-/// Unit kinds by fourclass::kinds code minus one (fn 1 … section 4).
-pub const UNIT_KINDS: [&str; 4] = ["fn", "named", "impl", "section"];
+/// The name at `code` in a table indexed by code (roles, references
+/// and unit kinds are named where their codes are frozen: graph/
+/// deadcode/flags.rs, graph/wire.rs, fourclass/kinds.rs).
+pub fn named(table: &[&'static str], code: i64) -> Option<&'static str> {
+    usize::try_from(code)
+        .ok()
+        .and_then(|i| table.get(i))
+        .copied()
+}
 
 /// Clone kinds: a whole-unit twin inside a T1/T2 block, a T3 pair.
 pub const CLONE_KINDS: [&str; 2] = ["t1t2", "t3"];
@@ -63,12 +60,12 @@ pub const CLONE_KINDS: [&str; 2] = ["t1t2", "t3"];
 /// Every enum word the assembler can spell — the reverse dictionary
 /// a `sym` answer reads its name back through.
 pub fn vocabulary() -> impl Iterator<Item = &'static str> {
-    NODE_KINDS
-        .iter()
-        .chain(ROLE_NAMES.iter())
-        .chain(REF_KINDS.iter())
-        .chain(UNIT_KINDS.iter())
-        .chain(CLONE_KINDS.iter())
+    (crate::graph::wire::GRAN_NAMES.iter())
+        .chain(&ADDED_KINDS)
+        .chain(&crate::graph::deadcode::ROLE_NAMES)
+        .chain(&crate::graph::wire::EDGE_NAMES)
+        .chain(&crate::fourclass::kinds::KIND_NAMES)
+        .chain(&CLONE_KINDS)
         .copied()
 }
 

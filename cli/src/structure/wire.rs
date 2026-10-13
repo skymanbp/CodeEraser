@@ -97,7 +97,7 @@ pub struct Reply {
 /// unpriced, no error, no degraded flag. The full table is a free
 /// minor-version fingerprint; sent rows must echo.
 fn pinned_echo(reply: &serde_json::Value, sent: &[[u64; 2]]) -> Result<Vec<[i64; 2]>> {
-    let echoed: Vec<[i64; 2]> = crate::lockstep::reply_rows(reply, "knobs")?;
+    let echoed: Vec<[i64; 2]> = crate::corelink::judged::table(reply, "knobs")?;
     for pair in sent.iter().map(|[c, v]| [*c as i64, *v as i64]) {
         ensure!(
             echoed.contains(&pair),
@@ -167,14 +167,14 @@ fn path_answers(reply: &serde_json::Value) -> Result<Built> {
         "structure reply carries no built tree — a core without the path form (9.0.0)"
     );
     Ok((
-        crate::lockstep::reply_rows(reply, "tree")?,
-        crate::lockstep::reply_rows(reply, "dirs")?,
+        crate::corelink::judged::table(reply, "tree")?,
+        crate::corelink::judged::table(reply, "dirs")?,
     ))
 }
 
 /// One structure.request over a fresh link.
 pub fn judge(core: &str, r: &Request) -> Result<Reply> {
-    judge_on(&mut crate::lockstep::open_family(core, CAP)?, r)
+    judge_on(&mut crate::corelink::judged::open(core, CAP)?, r)
 }
 
 /// One structure.request over a link already open (the face keeps it
@@ -184,7 +184,7 @@ pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> 
         .request("structure", request_body(r))
         .map_err(anyhow::Error::msg)?;
     let (tree, dirs) = path_answers(&reply)?;
-    let rows = crate::lockstep::reply_rows::<Vec<[i64; 2]>>;
+    let rows = crate::corelink::judged::table::<Vec<[i64; 2]>>;
     let echoed = pinned_echo(&reply, &r.knobs)?;
     // the A-layer keys exist exactly when a layout was declared —
     // a missing key on a declared request (or the reverse) is
@@ -192,7 +192,7 @@ pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> 
     let (divergence, deviations) = if r.layout.is_empty() {
         (None, Vec::new())
     } else {
-        let div: Vec<i64> = crate::lockstep::reply_rows(&reply, "divergence")?;
+        let div: Vec<i64> = crate::corelink::judged::table(&reply, "divergence")?;
         (div.first().copied(), rows(&reply, "deviations")?)
     };
     // the split keys ride exactly when the seam tables did (the
@@ -200,8 +200,8 @@ pub fn judge_on(link: &mut crate::corelink::Link, r: &Request) -> Result<Reply> 
     // would hide the contract drift a missing key means
     let (split_candidates, size_exempt) = if r.seams.is_some() {
         (
-            crate::lockstep::reply_rows(&reply, "splitCandidates")?,
-            crate::lockstep::reply_rows(&reply, "sizeExempt")?,
+            crate::corelink::judged::table(&reply, "splitCandidates")?,
+            crate::corelink::judged::table(&reply, "sizeExempt")?,
         )
     } else {
         (Vec::new(), Vec::new())

@@ -87,7 +87,7 @@ pub(super) fn unit_edges(
     line_level: &[Relocation],
 ) -> Result<Vec<Relocation>, String> {
     let Some(rows) = reply.get("unitEdges") else {
-        return Ok(Vec::new()); // pre-7.1.0 core
+        return Ok(Vec::new()); // no pair carried declarations (CE.FourClass.Decl.edges)
     };
     let rows = rows
         .as_array()

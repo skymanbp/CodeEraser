@@ -119,11 +119,20 @@ pub(super) fn clone_report(root: &Path, a: &Value) -> Result<String> {
 /// The two faces over a git window (`days`, default 14): churn reads the
 /// window alone, join the index beside it (its `Plumb`).
 pub(super) fn churn(root: &Path, a: &Value) -> Result<String> {
-    shown(faces::churn(root, &core(), days(a, 14)))
+    shown(faces::churn(
+        root,
+        &core(),
+        days(a, crate::churn::DEFAULT_DAYS),
+    ))
 }
 
 pub(super) fn join(root: &Path, a: &Value) -> Result<String> {
-    let answer = faces::join(root, &core(), days(a, 14), Plumb::default());
+    let answer = faces::join(
+        root,
+        &core(),
+        days(a, crate::churn::DEFAULT_DAYS),
+        Plumb::default(),
+    );
     shown(answer)
 }
 

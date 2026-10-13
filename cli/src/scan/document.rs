@@ -88,7 +88,7 @@ pub fn answer(core: &str, s: &Settled, held: document::Held) -> Result<Answer> {
 /// respelled in SARIF vocabulary (fail carries the gate's exit-code
 /// meaning, hence "error"). The message is the console line's English
 /// body — SARIF is a machine face, never translated (i18n.rs charter).
-pub(super) fn finding(f: &Value) -> Value {
+pub fn finding(f: &Value) -> Value {
     let (rule, line) = (text(f, "rule"), num(f, "line"));
     let level = if text(f, "level") == "fail" {
         "error"

@@ -12,9 +12,6 @@ use super::Resolve;
 use anyhow::{Result, anyhow, bail};
 use serde_json::Value;
 
-/// The proto whose replies carry `lines` and `exit`.
-const SINCE: &str = "7.10.0";
-
 /// The language the core writes a request's lines in: 1 = zh, as the
 /// console reads it (i18n::zh), else 0.
 pub fn lang() -> u8 {
@@ -73,12 +70,15 @@ pub fn spelled_lines(reply: &Value) -> Result<(Vec<Line>, bool)> {
     Ok((lines, fail))
 }
 
-/// The reply's `lines` and `exit.fail`; a reply without them came from
-/// a core older than the contract.
+/// The reply's `lines` and `exit.fail`; a reply without them is skew
+/// (corelink::skew).
 fn carried(reply: &Value) -> Result<(&Vec<Value>, bool)> {
     match (reply["lines"].as_array(), reply["exit"]["fail"].as_bool()) {
         (Some(lines), Some(fail)) => Ok((lines, fail)),
-        _ => bail!("document: the reply carries no lines / exit (a pre-{SINCE} core)"),
+        _ => bail!(
+            "document: {}",
+            crate::corelink::skew("`lines` / `exit` in the reply")
+        ),
     }
 }
 

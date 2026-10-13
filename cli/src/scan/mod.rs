@@ -31,27 +31,6 @@ use anyhow::{Context, Result};
 use lang::Lang;
 use metrics::{FileMetrics, FnMetrics};
 use std::path::Path;
-use std::process::ExitCode;
-
-pub enum Format {
-    Console,
-    Json,
-    Sarif,
-}
-
-/// `ce scan`: the judged tree's answer (crate::faces::scan) printed
-/// in the requested form; exit 1 iff the core's veto (a held condition).
-pub fn emit(format: Format, answer: &crate::document::Answer) -> Result<ExitCode> {
-    match format {
-        Format::Console => crate::document::emit("scan", answer, false)?,
-        Format::Json => crate::document::emit("scan", answer, true)?,
-        Format::Sarif => crate::document::emit_projected(
-            answer,
-            &crate::sarif::projected(&answer.document, "findings", document::finding)?,
-        ),
-    }
-    Ok(ExitCode::from(u8::from(answer.fail)))
-}
 
 /// The judged tree laid out by the core: the one scan answer every
 /// surface reads (the CLI prints it, MCP and the GUI take its

@@ -49,6 +49,7 @@ pub type Names = BTreeMap<[i64; 3], Vec<AdvisoryName>>;
 /// (`CE.Graph.Cost.unmentionedCap`, pinned source-to-source by
 /// docs_consts K46): a smaller value would truncate silently, a
 /// larger one would resurrect a table the core drops.
+// TODO(defrag-core: limits.graph.unmentioned_cap)
 pub const UNMENTIONED_SOFT_CAP: usize = 131_072;
 
 /// The table plus the one fact the table cannot carry about itself:

@@ -85,7 +85,7 @@
 //! while a local bound to a function value is a callable the index
 //! seats, never a shadow.
 
-use super::ast;
+use super::ast::{self, text};
 use super::callees::{Named, Owner, container_of, owner_key};
 use super::functions::{self, FnUnit};
 use super::metrics::own_nodes;
@@ -157,16 +157,16 @@ fn target(
     named: &Named,
 ) -> Option<usize> {
     match callee(call, spec)? {
-        Callee::Bare(name) => bare(call, text(name, src)?, caller, named),
+        Callee::Bare(name) => bare(call, text(name, src), caller, named),
         Callee::Member(object, member) => {
-            let obj = text(object, src)?;
+            let obj = text(object, src);
             let own_type = spec.call_self_words.contains(&obj)
                 || caller.receiver == Some(obj)
                 || owner_tail(caller) == Some(obj);
             if !own_type {
                 return None;
             }
-            let key = (caller.owner.clone(), text(member, src)?.to_string());
+            let key = (caller.owner.clone(), text(member, src).to_string());
             own(named.pick(named.base.get(&key)?, call)?, caller, named)
         }
     }
@@ -249,7 +249,7 @@ fn shadowed<'s>(own: &[Node<'_>], src: &'s [u8], spec: &LangSpec) -> HashSet<&'s
                 break;
             }
             if spec.call_name_kinds.contains(&node.kind()) {
-                names.extend(text(node, src));
+                names.push(text(node, src));
             }
             stack.extend(ast::children(node));
         }
@@ -281,11 +281,7 @@ fn receiver_binding(node: Node<'_>, src: &[u8]) -> Option<String> {
     let decl = ast::named_children(recv)
         .into_iter()
         .find(|c| c.kind() == "parameter_declaration")?;
-    text(decl.child_by_field_name("name")?, src).map(str::to_string)
-}
-
-fn text<'s>(node: Node<'_>, src: &'s [u8]) -> Option<&'s str> {
-    node.utf8_text(src).ok()
+    Some(text(decl.child_by_field_name("name")?, src).to_string())
 }
 
 #[cfg(test)]

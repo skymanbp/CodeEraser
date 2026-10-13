@@ -217,7 +217,7 @@ impl Lowerer<'_> {
             self.flow
                 .lasting_storage
                 .iter()
-                .any(|w| *w == t || super::at::holds(s, w))
+                .any(|w| *w == t || crate::scan::ast::has_child(s, &[w]))
         });
         let items = match row.items.as_str() {
             "" => vec![node],

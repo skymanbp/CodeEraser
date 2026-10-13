@@ -13,11 +13,6 @@ use anyhow::{Context, Result};
 use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
-use std::process::ExitCode;
-
-pub fn run(root: &Path, db: Option<PathBuf>, core: &str, json: bool) -> ExitCode {
-    crate::report::graph_face("mentions", document(root, db, core), json)
-}
 
 /// The judged index first (the `outside` counters compare against
 /// its `files` table and the census reads its declarations), then

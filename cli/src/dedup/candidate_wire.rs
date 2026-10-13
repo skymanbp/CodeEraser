@@ -21,9 +21,6 @@ use std::collections::{BTreeMap, BTreeSet};
 pub const CAP: &str = "candidates/1";
 const KIND: &str = "candidates";
 
-/// The proto that minted the family (named when a core lacks it).
-const SINCE: &str = "8.2.0";
-
 /// Request-local codes in first-seen order.
 struct Codes<K: Ord>(BTreeMap<K, i64>);
 
@@ -150,7 +147,7 @@ pub(super) fn pass(
     tally: &mut Tally,
 ) -> Result<Vec<PairRow>> {
     let (request, lang_names) = body(units, facts);
-    let fam = (CAP, SINCE, KIND);
+    let fam = (CAP, KIND);
     let (reply, rows, c): (_, Vec<[usize; 3]>, _) =
         judged::whole_pass(link, fam, request, ("T3 candidate pass", &COUNTS))?;
     let raw: Vec<[usize; 3]> = judged::table(&reply, "raw").map_err(anyhow::Error::msg)?;

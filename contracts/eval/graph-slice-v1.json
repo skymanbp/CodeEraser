@@ -158,7 +158,7 @@
     {
       "lang": "rs",
       "path": "cli/src/dedup/tokens.rs",
-      "sha256": "6ac972adf5bbd4f0be51f9e5dcb20dcf1ae4bca7017246349873a3dc5ec53290",
+      "sha256": "3d9618917a8e0483aa8d2fbc217a0d0ff45f8424c995d16a48047a79c9d321dc",
       "sites": {
         "use": 5
       }
@@ -207,7 +207,7 @@
     {
       "lang": "rs",
       "path": "cli/src/fourclass/session.rs",
-      "sha256": "495df3120f88d3d902a96f8b435b35d4b209d22f864f82f37268db695b2d1d18",
+      "sha256": "2acdcbe425e166972a6425892976b6db4a9594265ce03a1c985f050cbaaaad15",
       "sites": {
         "mod_decl": 1,
         "use": 3

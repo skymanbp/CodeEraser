@@ -3,7 +3,7 @@
 //! (on-disk, applied) pair, each side lowered (flow::lower) and judged
 //! over the daemon's core link (flow/1), the findings placed through
 //! each side's legend, and the after side's findings the before side
-//! does not account for (flow_novel.rs) counted as NOVEL — the guard's
+//! does not account for (`novel` below) counted as NOVEL — the guard's
 //! own semantics: a finding the file already carried is not this
 //! write's doing. Only a judged language's non-advisory findings make
 //! the condition; the class speaks at its OWN tier (`[flow] tier`,
@@ -12,7 +12,6 @@
 //! (no core, a daemon without the family: named, never a decision).
 
 use super::envelope::Envelope;
-use super::flow_novel;
 use super::speech::Said;
 use crate::config::{Config, FLOW_DEFAULT};
 use crate::daemon::client;
@@ -21,6 +20,7 @@ use crate::flow::lower::{Lowered, lower_file};
 use crate::flow::wire;
 use crate::flow_report::{self as fr, Placed};
 use serde_json::{Value, json};
+use std::collections::BTreeMap;
 use std::path::Path;
 
 /// What the leg leaves for the hook: the feed line, and the class's
@@ -65,7 +65,7 @@ pub(super) fn observe(root: &Path, env: &Envelope, cfg: Option<&Config>) -> Opti
 /// The feed object over two judged sides, and the write's novel
 /// non-advisory findings (the condition, when the language is judged).
 fn measured(b: &[Placed], a: &[Placed], after: &Lowered) -> (Value, Vec<Placed>) {
-    let novel: Vec<Placed> = flow_novel::novel(b, a)
+    let novel: Vec<Placed> = novel(b, a)
         .into_iter()
         .filter(|p| !fr::advisory(p.kind))
         .cloned()
@@ -117,3 +117,39 @@ fn placed(root: &Path, file: &Lowered) -> Result<Vec<Placed>, String> {
 fn tier(cfg: Option<&Config>) -> &'static str {
     crate::config::static_tier(cfg.map_or(FLOW_DEFAULT, |c| c.flow.tier()), FLOW_DEFAULT)
 }
+
+/// A finding's identity across the two sides of one write: `(unit
+/// name, kind, variable name)` — the guard's own novel semantics (the
+/// duplicate probe's, K step 11; design booklet §5.4). A line number
+/// never enters the key: a finding that moved because lines were added
+/// above it is the same finding. A renamed unit or variable is a new
+/// key, and so a new finding.
+type Key = (String, u8, String);
+
+fn key(p: &Placed) -> Key {
+    (p.unit.clone(), p.kind, p.var.clone().unwrap_or_default())
+}
+
+/// What a write brings: the after findings the before side does not
+/// account for, in the after side's order — a multiset difference,
+/// each before finding cancelling one after finding with its key.
+fn novel<'a>(before: &[Placed], after: &'a [Placed]) -> Vec<&'a Placed> {
+    let mut left: BTreeMap<Key, usize> = BTreeMap::new();
+    for p in before {
+        *left.entry(key(p)).or_default() += 1;
+    }
+    after
+        .iter()
+        .filter(|p| match left.get_mut(&key(p)) {
+            Some(n) if *n > 0 => {
+                *n -= 1;
+                false
+            }
+            _ => true,
+        })
+        .collect()
+}
+
+#[cfg(test)]
+#[path = "../../tests/unit/guard/flow_novel.rs"]
+mod tests;

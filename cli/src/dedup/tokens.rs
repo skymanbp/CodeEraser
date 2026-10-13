@@ -184,9 +184,28 @@ pub(crate) fn is_literal(kind: &str, spec: &LangSpec) -> bool {
         || spec.literal_delims.contains(&kind)
 }
 
-/// FNV-1a: tiny, dependency-free, stable across runs (index persists).
+/// FNV-1a 64: tiny, dependency-free, stable across runs (the index, the
+/// baseline and the T3 cache persist it). The crate's one spelling.
 pub fn fnv1a(bytes: &[u8]) -> u64 {
-    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    fnv1a_from(0xcbf2_9ce4_8422_2325, bytes)
+}
+
+/// FNV-1a 64 over the fields' bytes with one NUL between two of them —
+/// the §7.2 member identity primitive (score/baseline.rs), the config
+/// digest and the T3 tree text: equal to `fnv1a` of the joined bytes,
+/// without joining them.
+pub fn fnv1a_fields(fields: &[&[u8]]) -> u64 {
+    let mut h = 0xcbf2_9ce4_8422_2325;
+    for (i, f) in fields.iter().enumerate() {
+        if i > 0 {
+            h = fnv1a_from(h, &[0]);
+        }
+        h = fnv1a_from(h, f);
+    }
+    h
+}
+
+fn fnv1a_from(mut h: u64, bytes: &[u8]) -> u64 {
     for b in bytes {
         h ^= u64::from(*b);
         h = h.wrapping_mul(0x0000_0100_0000_01b3);

@@ -10,6 +10,7 @@
 
 use super::knobs;
 use super::wire::{Reply, Request};
+use anyhow::bail;
 use anyhow::{Context, Result, ensure};
 use serde_json::Value;
 use std::collections::BTreeMap;
@@ -37,15 +38,13 @@ pub(crate) fn check_reply(r: &Request, reply: &Reply) -> Result<()> {
         );
     }
     digest_echo(r.knobs_digest, &reply.new_baseline)?;
-    ensure!(
-        r.present.is_some() == reply.dropped.is_some(),
-        "{}",
-        if r.present.is_some() {
-            "core answered no ratchet.dropped — a pre-6.4.0 core cannot judge the provenance table"
-        } else {
-            "core answered ratchet.dropped to a request that sent no present table"
+    match (r.present.is_some(), reply.dropped.is_some()) {
+        (true, false) => bail!("{}", crate::corelink::skew("ratchet.dropped")),
+        (false, true) => {
+            bail!("core answered ratchet.dropped to a request that sent no present table")
         }
-    );
+        _ => {}
+    }
     if reply.degraded.is_some() {
         return Ok(());
     }

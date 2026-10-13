@@ -158,6 +158,10 @@ fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Op
     serde_json::from_slice(&raw).ok()
 }
 
+/// The observe feed, root-relative: the one spelling every reader and
+/// the writer below join.
+pub const OBSERVE_REL: &str = ".ce/observe.ndjson";
+
 /// Append one entry to `<root>/.ce/observe.ndjson` (the untainted M4
 /// evaluation feed, plan D2-1), stamping `schema`, `session_id` and
 /// `ts_ms`. Failures are swallowed by design: the feed is telemetry,
@@ -169,8 +173,11 @@ fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Op
 /// payload that omitted `session_id` can never leave a `""` behind
 /// that later reads as a real (and shared) session id.
 pub fn observe_append(root: &Path, session: Option<&str>, mut line: serde_json::Value) {
-    let dir = root.join(".ce");
-    if std::fs::create_dir_all(&dir).is_err() {
+    let path = root.join(OBSERVE_REL);
+    if path
+        .parent()
+        .is_some_and(|dir| std::fs::create_dir_all(dir).is_err())
+    {
         return;
     }
     let epoch_ms = std::time::SystemTime::now()
@@ -191,7 +198,7 @@ pub fn observe_append(root: &Path, session: Option<&str>, mut line: serde_json::
     if let Ok(mut fh) = std::fs::OpenOptions::new()
         .create(true)
         .append(true)
-        .open(dir.join("observe.ndjson"))
+        .open(&path)
     {
         let _ = fh.write_all(record.as_bytes());
     }
@@ -272,7 +279,7 @@ pub fn session_lines(root: &Path, session: &str) -> Vec<serde_json::Value> {
     if session.is_empty() {
         return Vec::new();
     }
-    let Ok(feed) = tail(&root.join(".ce/observe.ndjson"), FEED_WINDOW) else {
+    let Ok(feed) = tail(&root.join(OBSERVE_REL), FEED_WINDOW) else {
         return Vec::new();
     };
     feed.lines()

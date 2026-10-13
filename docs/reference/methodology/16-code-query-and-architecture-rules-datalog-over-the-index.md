@@ -71,15 +71,15 @@ sym 4, set 5; a position nothing constrained resolves to the open sort, −1
 
 | predicate | sorts | read off |
 |---|---|---|
-| `node(N, K)` · `file(F)` | node, sym | the graph wire's nodes — files, packages, sections, walked assets, the same dense ids `graph/1` judges — with the prose-only files the docdup family reads appended after them; `K` is `file` / `pkg` / `section` / `asset` / `prose`, and `file` is the view of kind `file` ([graph.rs:31](../../../cli/src/query/facts/graph.rs#L31), [legend.rs:34](../../../cli/src/query/legend.rs#L34)) |
+| `node(N, K)` · `file(F)` | node, sym | the graph wire's nodes — files, packages, sections, walked assets, the same dense ids `graph/1` judges — with the prose-only files the docdup family reads appended after them; `K` is `file` / `pkg` / `section` / `asset` / `prose`, and `file` is the view of kind `file` ([graph.rs:32](../../../cli/src/query/facts/graph.rs#L32), [wire.rs:47](../../../cli/src/graph/wire.rs#L47), [legend.rs:34](../../../cli/src/query/legend.rs#L34)) |
 | `in_dir(N, D)` · `dir(D)` · `parent(D, P)` · `dir_name(D, S)` | node, dir, sym | the directory tree the core builds over every node path the measuring side sends (plan v2.33 W1 item 3), a package seated at its own directory; root is dir 0 and reads `.`, and `parent` has no row for it ([Tree.hs:41](../../../core/app/CE/Query/Tree.hs#L41)) |
 | `lang(F, L)` | node, sym | `Lang::name` of every file-shaped node, `unknown` where no language claims the path |
-| `role(N, R)` | node, sym | one row per set role bit: `entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` ([graph.rs:88](../../../cli/src/query/facts/graph.rs#L88), [legend.rs:39](../../../cli/src/query/legend.rs#L39)) |
-| `lines(F, N)` | node, int | one read per file-shaped node, only when a program asks ([graph.rs:162](../../../cli/src/query/facts/graph.rs#L162)) |
-| `ref(N, M, K, R)` | node, node, sym, int | every resolved edge of the graph wire with its kind (`import` / `doc_link` / `doc_ref` / `asset` / `contain` / `refdef`) and its rung; External and Unresolved sites have no edge, and `unresolved(F, N)` counts the latter per file ([legend.rs:53](../../../cli/src/query/legend.rs#L53)) |
-| `unit(U, F)` · `unit_kind(U, K)` · `unit_lines(U, N)` · `unit_at(U, L)` | unit, node, sym, int | the index's symbol rows in one dense order (file, first line, last line, key, nth), each seated in its file node; kinds `fn` / `named` / `impl` / `section` ([units.rs:42](../../../cli/src/query/facts/units.rs#L42)) |
+| `role(N, R)` | node, sym | one row per set role bit: `entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` ([graph.rs:89](../../../cli/src/query/facts/graph.rs#L89), [flags.rs:53](../../../cli/src/graph/deadcode/flags.rs#L53)) |
+| `lines(F, N)` | node, int | one read per file-shaped node, only when a program asks ([graph.rs:163](../../../cli/src/query/facts/graph.rs#L163)) |
+| `ref(N, M, K, R)` | node, node, sym, int | every resolved edge of the graph wire with its kind (`import` / `doc_link` / `doc_ref` / `asset` / `contain` / `refdef`) and its rung; External and Unresolved sites have no edge, and `unresolved(F, N)` counts the latter per file ([wire.rs:38](../../../cli/src/graph/wire.rs#L38)) |
+| `unit(U, F)` · `unit_kind(U, K)` · `unit_lines(U, N)` · `unit_at(U, L)` | unit, node, sym, int | the index's symbol rows in one dense order (file, first line, last line, key, nth), each seated in its file node; kinds `fn` / `named` / `impl` / `section` ([units.rs:43](../../../cli/src/query/facts/units.rs#L43)) |
 | `named(U, S)` · `exported(U)` · `params(U, N)` | unit, sym, int | the declared name the mention pass would spell, the visibility bit, the arity off the key |
-| `coc(U, N)` · `cyclo(U, N)` · `nesting(U, N)` | unit, int | the three complexity numbers the core derives for `ce scan`, seated on the unit sharing the function's file and span — a span two units share goes to the one whose key names the function, and to none when neither does ([units.rs:115](../../../cli/src/query/facts/units.rs#L115)) |
+| `coc(U, N)` · `cyclo(U, N)` · `nesting(U, N)` | unit, int | the three complexity numbers the core derives for `ce scan`, seated on the unit sharing the function's file and span — a span two units share goes to the one whose key names the function, and to none when neither does ([units.rs:112](../../../cli/src/query/facts/units.rs#L112)) |
 | `clone(U, V, K)` | unit, unit, sym | `t1t2`: a T1/T2 block covering whole units on both sides pairs them in order; `t3`: the pairs the core judged clones, on the units' identities ([pairs.rs:45](../../../cli/src/query/facts/pairs.rs#L45), [pairs.rs:62](../../../cli/src/query/facts/pairs.rs#L62)) |
 | `dup(F, G, N)` · `docdup(F, G)` | node, node, int | the T1/T2 blocks between two files with their token count; the file pairs behind the segment pairs the docdup core judged — each pair once, lower id first ([pairs.rs:1-6](../../../cli/src/query/facts/pairs.rs#L1)) |
 | `mention(S, F)` | sym, node | the mention pass's own table: the identifier hashes it stores are the hashes a program's `"name"` lexes to ([text.rs:41](../../../cli/src/query/facts/text.rs#L41)) |
@@ -95,7 +95,7 @@ constant: `mention("foo", F)` meets the index's own rows because the core's lexe
 measuring side's mention table key by the same fnv1a64 (spelled once on each side; the
 differential leg holds the names they give equal), and the enum words a table spells (`entry`, `import`, `t3`) are
 name constants in the program, so `role(N, entry_named)` and `role(N, "entry_named")` are one
-token ([LexState.hs:165](../../../core/app/CE/Query/LexState.hs#L165), [legend.rs:27](../../../cli/src/query/legend.rs#L27),
+token ([LexState.hs:165](../../../core/app/CE/Query/LexState.hs#L165), [legend.rs:23](../../../cli/src/query/legend.rs#L23),
 [Cost.hs:107](../../../core/app/CE/Query/Cost.hs#L107)).
 
 ### 3. The prelude
@@ -245,7 +245,7 @@ expanding and counts ([Cost.hs:75-79](../../../core/app/CE/Query/Cost.hs#L75),
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
 that offers no `query/1` reads the same way, and a reply whose tables disagree with what was
 sent — a goal count, an answer's arity, an error index past the stream — is wire skew, never a
-healthy answer ([wire.rs:109](../../../cli/src/query/wire.rs#L109), [rows.rs:16](../../../cli/src/query/rows.rs#L16)).
+healthy answer ([wire.rs:108](../../../cli/src/query/wire.rs#L108), [rows.rs:16](../../../cli/src/query/rows.rs#L16)).
 The family has no knobs, no fail tier and no condition bit: `ce rules` reads
 `counts.violations` and nothing else.
 
@@ -294,7 +294,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   and `query` with `prelude: true` returns the `ce.query-prelude` document instead (`body` is not
   needed then); the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:209](../../../cli/src/mcp/tools.rs#L209), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234),
-  [adapters.rs:179](../../../cli/src/mcp/adapters.rs#L179)).
+  [adapters.rs:188](../../../cli/src/mcp/adapters.rs#L188)).
 - **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch
   and a rules-file box (`--file`), answers it as one table per goal under its own column names
   with the derivation rows under an answer, judges the rules file with one button, and shows the

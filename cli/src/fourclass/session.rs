@@ -46,37 +46,17 @@ pub fn scoped_pairs(root: &Path, tail: &[&str]) -> Option<Vec<PathPair>> {
 /// unwrap_or_default turned that into a zero-line commit while blame
 /// still counted the root's surviving lines).
 pub fn commit_pairs(root: &Path, sha: &str) -> Option<Vec<PathPair>> {
-    let base = rev_id(root, &format!("{sha}^")).or_else(|| empty_tree(root))?;
+    let base = crate::churn::rev_or_empty_tree(root, &format!("{sha}^"))?;
     diff_pairs(
         root,
         &["diff", "--name-status", "-z", "-M", "-C", &base, sha],
     )
 }
 
-/// This family's face over proc::git_output: stdout on success,
-/// None on any failure (a missing repo is a report shape here, not
-/// an error). quotePath=false rides along from the shared runner —
-/// a no-op for this family's -z consumers, whose paths are already
-/// literal.
-pub(crate) fn git_stdout(root: &Path, args: &[&str]) -> Option<String> {
-    let out = crate::proc::git_output(root, args).ok()?;
-    out.status
-        .success()
-        .then(|| String::from_utf8_lossy(&out.stdout).into_owned())
-}
-
-fn rev_id(root: &Path, rev: &str) -> Option<String> {
-    git_stdout(root, &["rev-parse", "--verify", "-q", rev]).map(|s| s.trim().to_string())
-}
-
-/// The empty tree's id from git itself (differs between sha1 and
-/// sha256 repositories, so never a hard-coded constant).
-fn empty_tree(root: &Path) -> Option<String> {
-    git_stdout(root, &["hash-object", "-t", "tree", "--stdin"]).map(|s| s.trim().to_string())
-}
-
+/// The pairs of one `diff` invocation; None on any git failure (a
+/// missing repo is a report shape here, not an error).
 fn diff_pairs(root: &Path, args: &[&str]) -> Option<Vec<PathPair>> {
-    let raw = git_stdout(root, args)?;
+    let raw = crate::churn::git(root, args).ok()?;
     Some(parse_name_status(&raw))
 }
 

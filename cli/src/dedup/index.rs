@@ -284,14 +284,6 @@ impl Index {
         Ok(rows.collect::<rusqlite::Result<_>>()?)
     }
 
-    /// Indexed file count; the health line does NOT read it (it goes
-    /// through index::peek without opening) — dedup_index's contract does.
-    pub fn file_count(&self) -> Result<i64> {
-        Ok(self
-            .conn
-            .query_row("SELECT COUNT(*) FROM files", [], |r| r.get(0))?)
-    }
-
     /// Coldstart completeness stamp + probe — the meta lifecycle
     /// lives in schema.rs; these are the Index-typed doors.
     pub fn mark_full_build(&mut self) -> Result<()> {

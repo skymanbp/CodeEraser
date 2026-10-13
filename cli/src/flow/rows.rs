@@ -1,8 +1,7 @@
 //! The rows a flow table is made of (plan v2.31 step 4; design
 //! booklet docs/reference/analysis-track.md §5.1): their shapes and
-//! the choices they make. Beside spec.rs for the reason scan::spec_c
-//! gives for its own split: the contract read past the 300-line line
-//! once every row carried its documentation. A field written without
+//! the choices they make. Beside spec.rs since the contract read past
+//! the 300-line line once every row carried its documentation. A field written without
 //! a type is a position (pos.rs).
 
 use super::pos::Pos;

@@ -33,10 +33,9 @@ pub struct SeamFacts {
 /// floor, recorded in the booklet.
 const NAME_FLOOR: usize = 3;
 
-/// Churn window for the co-change leg — the §4.1 two-week anchor the
-/// churn family reports by default; a measurement constant, not a
-/// wire knob (prices are the knobs).
-const CHURN_WINDOW_DAYS: u32 = 14;
+/// Churn window for the co-change leg: the churn family's own default
+/// (a measurement constant, not a wire knob — prices are the knobs).
+const CHURN_WINDOW_DAYS: u32 = crate::churn::DEFAULT_DAYS;
 
 /// Assemble the five seam tables over the judged files past `soft`;
 /// the clone leg reads the command boundary's one snapshot (P10).

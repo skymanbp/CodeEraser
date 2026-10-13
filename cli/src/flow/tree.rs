@@ -253,9 +253,9 @@ impl Lowerer<'_> {
 
     pub(super) fn decl_row(&self, node: Node<'_>) -> Option<&'static Decl> {
         let f: &'static super::spec::FlowSpec = self.flow;
-        f.decls.iter().find(|d| {
-            d.kind == node.kind() && (d.token.is_empty() || super::at::holds(node, &d.token))
-        })
+        f.decls
+            .iter()
+            .find(|d| super::at::fits(node, &d.kind, &d.token))
     }
 
     /// A declaration statement (rule 8) — with a refutable pattern's

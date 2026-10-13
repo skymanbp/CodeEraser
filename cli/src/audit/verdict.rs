@@ -32,7 +32,7 @@ pub struct Verdict {
 /// callers' visible degraded skip; local re-judging stays forbidden.
 pub(super) fn open() -> Option<Link> {
     let bin = crate::daemon::judge::core_bin()?;
-    crate::lockstep::open_family(&bin, "audit/1").ok()
+    crate::corelink::judged::open(&bin, "audit/1").ok()
 }
 
 /// Measure (set membership per block side), judge (one audit.request

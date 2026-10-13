@@ -63,6 +63,30 @@ pub struct Opts {
     pub pinned_soft: Option<u64>,
 }
 
+impl Opts {
+    /// A check over the committed `baseline` (the caller's one read,
+    /// O31; None = no file): the index, the core, the churn window and
+    /// the floor as asked — never the wholesale act, never a pinned soft
+    /// line (only trend pins one). `ce check` (crate::faces::check) and
+    /// `ce baseline` judge with these.
+    pub fn check(
+        db: Option<PathBuf>,
+        core: &str,
+        (days, floor): (Option<u32>, Option<u32>),
+        baseline: Option<serde_json::Value>,
+    ) -> Opts {
+        Opts {
+            db,
+            core: core.to_string(),
+            days,
+            floor,
+            establish: false,
+            pinned_soft: None,
+            baseline,
+        }
+    }
+}
+
 /// The measurement half of a check run — everything read off the
 /// repo before ce.toml speaks (split from run at the E01 warn line,
 /// the SECOND time: ADR-008 P4's knob tables re-grew the body the

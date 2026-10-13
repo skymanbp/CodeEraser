@@ -18,6 +18,26 @@ pub(crate) fn git(root: &Path, args: &[&str]) -> Result<String> {
     Ok(String::from_utf8_lossy(&out.stdout).into_owned())
 }
 
+/// A diff base: `rev` itself when it resolves, else git's empty tree —
+/// an unborn HEAD (a brand-new project, this product's headline
+/// scenario) or a root commit's missing parent (attack review
+/// 2026-08-11 F12: `sha^..sha` fails on the root, and a zero-line
+/// commit was the reading). The empty tree's id is asked of git, since
+/// it differs between sha1 and sha256 repositories. None = not a git
+/// repository, asked on its own: `hash-object` needs no repository and
+/// answers the empty tree's id outside one too, so a non-repo would
+/// read as a repo whose diff failed (the Stop audit wrote `.ce/` and a
+/// `degraded: true` line into the promotion ledger for that).
+pub(crate) fn rev_or_empty_tree(root: &Path, rev: &str) -> Option<String> {
+    if git(root, &["rev-parse", "--verify", "-q", rev]).is_ok() {
+        return Some(rev.to_string());
+    }
+    git(root, &["rev-parse", "--git-dir"]).ok()?;
+    git(root, &["hash-object", "-t", "tree", "--stdin"])
+        .ok()
+        .map(|s| s.trim().to_string())
+}
+
 /// `HEAD`'s gitlinks as (path, sha): the mode-160000 rows of
 /// `ls-tree -r -z` — `-z` because every other list reader in the
 /// crate is literal (`-z`) and a C-quoted path would match nothing,

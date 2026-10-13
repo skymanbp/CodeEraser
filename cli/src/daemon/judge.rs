@@ -131,11 +131,11 @@ impl Judge {
     /// tombstone.result (the hook re-labels its indices), or a degraded
     /// object naming why there is none. The failure budget is
     /// classify's: a dead link counts, a core without the family does
-    /// not (it is healthy, only older than this ce).
+    /// not (it is healthy, only from another build: corelink::skew).
     pub fn tombstone(&mut self, rows: &[[u64; 3]], budget: Option<u32>) -> serde_json::Value {
         use crate::tombstone::wire;
         let body = wire::body(rows, budget);
-        self.family((wire::CAP, "pre-6.6.0 core"), wire::KIND, body)
+        self.family(wire::CAP, wire::KIND, body)
     }
 
     /// The flow verdict over the same link, the same way (plan v2.31
@@ -143,7 +143,7 @@ impl Judge {
     pub fn flow(&mut self, tables: &crate::daemon::proto::FlowTables) -> serde_json::Value {
         use crate::flow::wire;
         match serde_json::to_value(tables) {
-            Ok(body) => self.family((wire::CAP, "pre-7.4.0 core"), wire::KIND, body),
+            Ok(body) => self.family(wire::CAP, wire::KIND, body),
             Err(e) => degraded(&e.to_string()),
         }
     }
@@ -152,23 +152,18 @@ impl Judge {
     /// 5): the guard's request forwarded as the hook built it.
     pub fn document(&mut self, body: serde_json::Value) -> serde_json::Value {
         use crate::document::{CAP, KIND};
-        self.family((CAP, "pre-7.8.0 core"), KIND, body)
+        self.family(CAP, KIND, body)
     }
 
     /// One family's request behind its capability, every failure a
     /// named degraded object; a failed request counts against the
     /// link's budget, a missing capability does not.
-    fn family(
-        &mut self,
-        (cap, older): (&str, &str),
-        kind: &str,
-        body: serde_json::Value,
-    ) -> serde_json::Value {
+    fn family(&mut self, cap: &str, kind: &str, body: serde_json::Value) -> serde_json::Value {
         let Some(link) = self.link_mut() else {
             return degraded("core_unavailable");
         };
         if !link.has(cap) {
-            return degraded(older);
+            return degraded(&crate::corelink::skew(cap));
         }
         match link.request(kind, body) {
             Ok(reply) => reply,
@@ -267,7 +262,7 @@ fn load_pair(
 }
 
 fn head_content(root: &Path, path: &str) -> Option<String> {
-    session::git_stdout(root, &["show", &format!("HEAD:{path}")])
+    crate::churn::git(root, &["show", &format!("HEAD:{path}")]).ok()
 }
 
 #[cfg(test)]

@@ -15,6 +15,7 @@
 //! visible one-time re-establish, not a silent red.
 
 use super::anchor::{Anchors, Side};
+use crate::dedup::tokens::fnv1a_fields;
 use crate::scan::metrics::FileMetrics;
 use anyhow::{Context, Result, bail};
 use serde_json::{Value, json};
@@ -32,25 +33,6 @@ const BASELINE_FILE: &str = "ce-baseline.json";
 /// carries, so the family is spelled here once (facts gate).
 pub const SCHEMA_ID: &str = "ce.baseline/2";
 
-/// FNV-1a 64 over the field bytes, NUL-separated — the §7.2 member
-/// identity primitive.
-pub fn fnv1a(fields: &[&[u8]]) -> u64 {
-    let mut h: u64 = 14695981039346656037;
-    let mut eat = |bytes: &[u8]| {
-        for &b in bytes {
-            h ^= u64::from(b);
-            h = h.wrapping_mul(1099511628211);
-        }
-    };
-    for (i, f) in fields.iter().enumerate() {
-        if i > 0 {
-            eat(&[0]);
-        }
-        eat(f);
-    }
-    h
-}
-
 /// §7.2: member id = fnv1a(kind ‖0‖ a_path ‖0‖ a_key ‖0‖ a_anchor ‖0‖
 /// b_path ‖0‖ b_key ‖0‖ b_anchor), sides normalized by (path, key,
 /// anchor) lex order. Line numbers and block order are deliberately
@@ -60,7 +42,7 @@ pub fn fnv1a(fields: &[&[u8]]) -> u64 {
 /// a same-container redefinition can ever shift.
 pub fn member_id(kind: &str, a: &Side, b: &Side) -> u64 {
     let (x, y) = if a <= b { (a, b) } else { (b, a) };
-    fnv1a(&[
+    fnv1a_fields(&[
         kind.as_bytes(),
         x.0.as_bytes(),
         x.1.as_bytes(),
@@ -73,14 +55,14 @@ pub fn member_id(kind: &str, a: &Side, b: &Side) -> u64 {
 
 /// Continuous entity for a file's line count (metricCode 0).
 pub fn file_entity(path: &str) -> u64 {
-    fnv1a(&[b"file", path.as_bytes()])
+    fnv1a_fields(&[b"file", path.as_bytes()])
 }
 
 /// Continuous entity for a function's cognitive complexity
 /// (metricCode 1): (path, key, §7.2 anchor) — the fn identity a
 /// rename or move keeps honest, and a deleted sibling leaves alone.
 fn fn_entity(path: &str, key: &str, anchor: &str) -> u64 {
-    fnv1a(&[b"fn", path.as_bytes(), key.as_bytes(), anchor.as_bytes()])
+    fnv1a_fields(&[b"fn", path.as_bytes(), key.as_bytes(), anchor.as_bytes()])
 }
 
 /// Continuous rows [entity, code, value] for one scanned file: its

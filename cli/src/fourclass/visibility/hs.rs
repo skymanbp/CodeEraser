@@ -43,10 +43,10 @@ pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {
         return true;
     };
     let module = header.child_by_field_name("module").map(|m| text(m, src));
-    hs_lex::entries(&hs_lex::strip_comments(&text(list, src)))
+    hs_lex::entries(&hs_lex::strip_comments(text(list, src)))
         .iter()
         .any(|entry| {
-            names(entry, &name, module.as_deref())
+            names(entry, &name, module)
                 || owner
                     .as_deref()
                     .is_some_and(|class| member_entry(entry, class, &name))

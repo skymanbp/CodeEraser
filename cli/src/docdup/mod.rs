@@ -42,8 +42,8 @@ use rusqlite::Transaction;
 pub const DOCDUP_REV: i64 = 8;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs). `kind`
-/// and `exempt` are the frozen position codes in spec::KIND_NAMES /
-/// exempt::EXEMPT_NAMES; `shingles` = sorted deduped shingle u64s LE.
+/// and `exempt` are the frozen position codes in the package's
+/// `docdup.kind_names` / exempt::EXEMPT_*; `shingles` = sorted deduped shingle u64s LE.
 pub const DOCSEGS_SCHEMA: &str = "
 CREATE TABLE docsegs (
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,

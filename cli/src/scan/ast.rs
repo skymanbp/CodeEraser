@@ -40,6 +40,20 @@ fn kids<'t>(count: usize, at: impl Fn(u32) -> Option<Node<'t>>) -> Vec<Node<'t>>
     (0..count).filter_map(|i| at(i as u32)).collect()
 }
 
+/// A node's source text. Every tree here is parsed from a `&str` and
+/// tree-sitter cuts at code points, so the text is always UTF-8 and the
+/// empty fallback is unreachable: one rule serves every reader (six
+/// copies with three fallbacks lived beside their callers).
+pub fn text<'s>(node: Node<'_>, src: &'s [u8]) -> &'s str {
+    node.utf8_text(src).unwrap_or("")
+}
+
+/// Whether a direct child of `node`, anonymous or named, is of one of
+/// `kinds` — an operator, a storage word, a decorator, a jump's label.
+pub fn has_child(node: Node<'_>, kinds: &[&str]) -> bool {
+    children(node).iter().any(|c| kinds.contains(&c.kind()))
+}
+
 pub fn children<'t>(node: Node<'t>) -> Vec<Node<'t>> {
     kids(node.child_count() as usize, |i| node.child(i))
 }

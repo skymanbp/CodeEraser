@@ -9,8 +9,8 @@
 use super::segments::{RawSeg, SegLine};
 use super::spec::{KIND_HTML_TEXT, KIND_MD_PARA, KIND_TEXT_PARA, table};
 
-/// Exemption classes as frozen position codes; 0 = live.
-pub const EXEMPT_NAMES: [&str; 3] = ["live", "license_header", "inline_allow"];
+/// Exemption classes as frozen position codes; 0 = live (the eval
+/// instrument names them, tests it/eval_support/docseg.rs).
 pub const EXEMPT_LIVE: i64 = 0;
 pub const EXEMPT_LICENSE: i64 = 1;
 pub const EXEMPT_ALLOW: i64 = 2;

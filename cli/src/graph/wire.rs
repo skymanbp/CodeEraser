@@ -1,6 +1,6 @@
 //! Phase-2 resolver bridge (design §3/§4 wiring): cached sites →
-//! ladder dispatch (one batch: the core holds four languages' rungs
-//! since plan v2.33 wave W2a) → edge rows per site. Only in-corpus resolutions become
+//! ladder dispatch (one batch: the core holds every language's rungs,
+//! plan v2.33 W2a / W2-text) → edge rows per site. Only in-corpus resolutions become
 //! rows — External and Unresolved sites stay ledger-visible as sites
 //! without edges (the eval instrument re-runs the ladder itself, so
 //! refusal reasons need no storage). A ResolvedPackage lands ONE row
@@ -32,11 +32,19 @@ pub const EDGE_CONTAIN: i64 = 4;
 /// the asset kind — user decision D3 as a wire fact instead of a
 /// borrowed External outcome.
 pub const EDGE_REFDEF_UNUSED: i64 = 5;
+/// Each edge kind's name, by code (EDGE_IMPORT 0 … EDGE_REFDEF_UNUSED
+/// 5) — the word the query family labels a reference with
+/// (query::legend).
+pub const EDGE_NAMES: [&str; 6] = [
+    "import", "doc_link", "doc_ref", "asset", "contain", "refdef",
+];
 
 /// Frozen granularity codes.
 pub const GRAN_FILE: i64 = 0;
 pub const GRAN_PACKAGE: i64 = 1;
 pub const GRAN_SECTION: i64 = 2;
+/// Each granularity's name, by code (the query family's node kinds).
+pub const GRAN_NAMES: [&str; 3] = ["file", "pkg", "section"];
 
 /// The resolver callback: dispatch the cached sites down their
 /// language ladders in one batch and shape each outcome into edge rows

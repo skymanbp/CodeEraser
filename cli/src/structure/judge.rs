@@ -15,7 +15,6 @@ use super::wire;
 use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
 
-pub use super::report::Report;
 use crate::document::Answer;
 
 pub fn run(
@@ -50,7 +49,7 @@ pub fn run(
     };
     let paths = judged_paths(&files);
     let req = assemble(root, core, paths, (deep, days), &seam_facts, (&w, &found))?;
-    let mut link = crate::lockstep::open_family(core, wire::CAP)?;
+    let mut link = crate::corelink::judged::open(core, wire::CAP)?;
     let reply = wire::judge_on(&mut link, &req)?;
     let scale = reply
         .knobs
@@ -197,6 +196,5 @@ fn sorted_refs(rows: &[[u64; 3]]) -> Vec<[u64; 3]> {
     out
 }
 
-// the report face (the document read back + the bilingual console)
-// lives in report.rs since M8-G3b; the document request in
-// document.rs since plan v2.32 step 4.
+// the document request lives in document.rs since plan v2.32 step 4;
+// the core lays the document and its console lines out.

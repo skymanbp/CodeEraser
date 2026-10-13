@@ -50,31 +50,6 @@ fn judged(rel: &str) -> bool {
     crate::scan::lang::Lang::judged_path(Path::new(rel)).is_some()
 }
 
-/// The diff base: `HEAD`, or git's empty tree when HEAD is unborn.
-/// A brand-new project — this product's headline scenario — has no
-/// HEAD until its first commit, and `diff HEAD` then fails outright,
-/// taking the whole audit down the fail-open path with no feed entry
-/// at all. The empty-tree fallback is the fourclass side's own idiom
-/// (`fourclass::session::commit_pairs`, attack review F12); the id is
-/// asked of git rather than hard-coded because it differs between
-/// sha1 and sha256 repositories. None = not a git repo.
-pub fn base_rev(root: &Path) -> Option<String> {
-    // Repo-existence is its own question, asked FIRST. It used to be
-    // inferred from the fallback, and `hash-object` needs no
-    // repository — it answers the empty-tree id outside one, exit 0.
-    // So every Stop in a non-repo directory looked like a repo whose
-    // diff had failed: `.ce/` created there and a `degraded: true`
-    // line written into the promotion ledger for a degradation that
-    // never happened.
-    crate::churn::git(root, &["rev-parse", "--git-dir"]).ok()?;
-    if crate::churn::git(root, &["rev-parse", "--verify", "-q", "HEAD"]).is_ok() {
-        return Some("HEAD".into());
-    }
-    crate::churn::git(root, &["hash-object", "-t", "tree", "--stdin"])
-        .ok()
-        .map(|s| s.trim().to_string())
-}
-
 /// One `-z` numstat record — `added\tdeleted\tpath`, the path RAW, so
 /// `splitn(3)` keeps a tab inside the name out of the separator's
 /// reach. None = a malformed row (one must not void the whole audit)

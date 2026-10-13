@@ -33,7 +33,7 @@ the two reference tables together, since both become arcs of the one directory g
 ([Cost.hs:24](../../../core/app/CE/Arch/Cost.hs#L24), [Cost.hs:30](../../../core/app/CE/Arch/Cost.hs#L30)).
 A request past either is degraded; the measuring side names it `arch_too_large` from the built
 tables' counts and the definition package's `limits.caps`, and the document carries that reason
-([Limits.hs:91](../../../core/app/CE/Limits.hs#L91), [wire.rs:164](../../../cli/src/arch/wire.rs#L164));
+([Limits.hs:91](../../../core/app/CE/Limits.hs#L91), [wire.rs:163](../../../cli/src/arch/wire.rs#L163));
 a core that cannot be started or answer, or one without the family, is named the same way. The core's contract names the first
 offending row of any table by its index — width, identity, range, order, the one root, a parent
 before its child ([Contract.hs:77](../../../core/app/CE/Arch/Contract.hs#L77)).
@@ -125,16 +125,16 @@ the impact rows and the metrics, instability `null` where the core answered −1
 ([Document.hs:78](../../../core/app/CE/Arch/Document.hs#L78)). The arch reply is consumed
 strictly before the document is asked for: the five request counts echo what was sent, the four answer counts tally the tables,
 the layers and the metrics carry one row per directory in order, the clusters one per file, every
-id is in range and every focus file has its depth-0 row ([wire.rs:172](../../../cli/src/arch/wire.rs#L172),
-[wire.rs:243](../../../cli/src/arch/wire.rs#L243)).
+id is in range and every focus file has its depth-0 row ([wire.rs:171](../../../cli/src/arch/wire.rs#L171),
+[wire.rs:242](../../../cli/src/arch/wire.rs#L242)).
 
 - **`ce arch [--impact <path>…] [--format json]`** prints the counts, the layers from the top
   level down, every cut arc with its references indented under it and `exact` or `greedy`, the
   misplaced files, the impact walk when a focus was named and the metrics table; exit 0 with a
   document, 2 when the core could not judge or a path is not a measured file
-  ([main_arch.rs:28](../../../cli/src/main_arch.rs#L28), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
+  ([main_judge.rs:222](../../../cli/src/main_judge.rs#L222), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
 - **The MCP tool `architecture`** takes `impact` as a list of root-relative paths and relays the
-  same document ([adapters.rs:212](../../../cli/src/mcp/adapters.rs#L212), [tools.rs:241](../../../cli/src/mcp/tools.rs#L241)).
+  same document ([adapters.rs:221](../../../cli/src/mcp/adapters.rs#L221), [tools.rs:241](../../../cli/src/mcp/tools.rs#L241)).
 - **The GUI** renders it in the reports hub rather than a thirteenth tab — the header holds twelve
   tabs in one row at the default window, and the hub is where the report-only families live. The
   document nests, so the family registers its own renderer and an `impact` path box; the counts

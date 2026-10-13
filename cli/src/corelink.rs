@@ -1,7 +1,8 @@
 //! Persistent NDJSON link to ce-core (ADR-003 wire format,
 //! contracts/VERSIONING.md). `Link` holds the spawned core across
-//! requests — strict lockstep, exactly one request outstanding; the
-//! one-shot `run` (hello + EOF) remains for `ce doctor`. A process keeps
+//! requests — strict lockstep, exactly one request outstanding;
+//! `Link::own` is the one-shot hello `ce doctor` and trend's toolchain
+//! stamp read (a fresh core, never the parked one). A process keeps
 //! one core session (plan v2.33 W2-text stage Z, Z1; shared.rs): a link
 //! dropped healthy is parked, and the next `open` of the same core takes
 //! it back, hello and all — every family a command judges with rides
@@ -101,7 +102,8 @@ impl Link {
 
     /// A session of this link's own, spawned and never parked: the
     /// daemon's long-lived core (the process that outlives commands
-    /// retires it on purpose) and `ce doctor`'s one-shot hello.
+    /// retires it on purpose) and the one-shot hellos (`ce doctor`,
+    /// trend's toolchain stamp; M0 behaviour, kept by CI).
     pub fn own(core: &str) -> Result<(Link, HelloReply), String> {
         let key = shared::key(core);
         session::Session::open(core, key).map(|s| Link::over(s, true))
@@ -162,12 +164,6 @@ impl Drop for Link {
     }
 }
 
-/// One-shot hello for `ce doctor` (M0 behaviour, kept by CI): a fresh
-/// core, never the process's parked one.
-pub fn run(core: &str) -> Result<HelloReply, String> {
-    Link::own(core).map(|(_link, reply)| reply)
-}
-
 /// The effective core binary for a `--core` flag value: an explicit
 /// path is used verbatim; the untouched default routes through the
 /// daemon's resolver chain — the process's global `--core` (when it
@@ -190,6 +186,15 @@ fn spawn(core: &str) -> Result<Child, String> {
         .stdout(Stdio::piped())
         .spawn()
         .map_err(|e| format!("cannot start `{effective}`: {e}"))
+}
+
+/// What this ce needs and the core it reached does not carry — a
+/// capability or a reply key every 9.x core answers with. `validate`
+/// pins the major and `tables::check_hello` the definition package's
+/// digest, so no older core gets this far: reaching it means the two
+/// binaries come from different builds, and the one remedy is named.
+pub fn skew(what: &str) -> String {
+    format!("core offers no {what}: ce and ce-core are out of step (install both from one release)")
 }
 
 fn validate(reply: HelloReply) -> Result<HelloReply, String> {

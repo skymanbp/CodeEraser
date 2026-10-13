@@ -21,9 +21,10 @@
 //!     or an `extern "…"` modifier on the function itself.
 //!   - `Allow`: `allow(dead_code)` / `expect(dead_code)`.
 
-use super::{Conv, text};
+use super::Conv;
 use crate::fourclass::visibility::ancestors;
 use crate::scan::ast;
+use crate::scan::ast::text;
 use tree_sitter::Node;
 
 /// Attribute paths (last segment) that hand a declaration to a

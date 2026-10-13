@@ -27,7 +27,8 @@ pub fn document(root: &Path, core: &str) -> Value {
     let (degraded, entries) = super::degraded_runs(&root);
     let index = super::index_fact(&root);
     let daemon = super::daemon_fact(&root);
-    let (version, proto, handshake, error) = match corelink::run(core) {
+    let (version, proto, handshake, error) = match corelink::Link::own(core).map(|(_, hello)| hello)
+    {
         Ok(reply) => (Some(reply.version), Some(reply.proto), true, Value::Null),
         Err(e) => (None, None, false, json!(e)),
     };

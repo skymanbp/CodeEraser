@@ -35,28 +35,21 @@ pub(crate) fn ancestors(dir: &str) -> impl Iterator<Item = &str> {
     })
 }
 
+// The ca057291 relative join, frozen (tests subrepo
+// unit/graph/oracle_cfg/join_rel.rs): only the frozen ladder oracles read
+// it; the core joins since plan v2.33 W2-text (CE.Resolve.Str).
+#[cfg(test)]
+#[path = "../../tests/unit/graph/oracle_cfg/join_rel.rs"]
+mod frozen_join_rel;
+#[cfg(test)]
+pub(crate) use frozen_join_rel::join_rel;
+
 pub(crate) fn join_dir(dir: &str, name: &str) -> String {
     if dir.is_empty() {
         name.to_string()
     } else {
         format!("{dir}/{name}")
     }
-}
-
-/// Join a relative spec onto a repo-relative dir, resolving ./ and
-/// ../ segments; escaping above the repo root is None (out of tree).
-pub fn join_rel(dir: &str, spec: &str) -> Option<String> {
-    let mut parts: Vec<&str> = dir.split('/').filter(|p| !p.is_empty()).collect();
-    for seg in spec.split('/') {
-        match seg {
-            "" | "." => {}
-            ".." => {
-                parts.pop()?;
-            }
-            s => parts.push(s),
-        }
-    }
-    Some(parts.join("/"))
 }
 
 // The dd0eec61 package.json reader, frozen (tests subrepo

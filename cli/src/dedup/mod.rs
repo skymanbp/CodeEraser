@@ -87,8 +87,12 @@ pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index
 /// explicit `--db` still wins verbatim — that is the escape hatch for
 /// a deliberately separate index.
 pub(crate) fn index_db_path(root: &Path, db: Option<PathBuf>) -> PathBuf {
-    db.unwrap_or_else(|| crate::root::project_root(root).join(".ce/index.db"))
+    db.unwrap_or_else(|| crate::root::project_root(root).join(INDEX_REL))
 }
+
+/// The index's place under a root: `index_db_path` joins it to the
+/// anchored project root; the daemon joins it to the root it serves.
+pub(crate) const INDEX_REL: &str = ".ce/index.db";
 
 /// The walkidx read + index.rs text conversion, verbatim — ONE decode
 /// for every judgment-side re-read (t3 trees, docdup sequences): a
@@ -234,7 +238,7 @@ fn resolve_edges(
     idx.resolve_refreshed(&dirty, &mut resolver)
 }
 
-pub use report::{answer, emit, report_json};
+pub use report::{answer, finding};
 
 /// One run's walk counters and the two report filters it used — the
 /// facts the dedup document reads beside the blocks (the block, group
