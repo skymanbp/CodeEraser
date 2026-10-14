@@ -10,16 +10,19 @@ count a merged function would take, the member worth keeping (the one the most f
 reach), the lines the merge would save, and whether the merge is feasible at all, with the reason
 when it is not. The operation is anti-unification: the least general skeleton every member is an
 instance of, each member recovered by filling the skeleton's holes with its own values. It is
-advice — no condition bit, no gate reads it, and `ce merge` exits 0 with a document
+advice — no condition bit, no gate reads it, and `ce merge` exits 0 with a judged document
+(2 with a degraded one, §4 ruling 8)
 ([Merge.hs:5-19](../../../core/app/CE/Merge.hs#L5), [face.rs:1-16](../../../cli/src/merge/face.rs#L1)).
 
 The split is ADR-008's, seventh instalment. Rust gathers the groups, builds each member's tree in
-`clone/1`'s postorder encoding with four more integer columns, and labels the answers back with
-the members' source text; the alignment, the holes, the parameters, the feasibility, the member
+`clone/1`'s postorder encoding with four more integer columns, and sends the members' source text
+for the report beside the answers; the alignment, the holes, the parameters, the feasibility, the member
 kept and the savings are all Haskell's, over the fifteenth wire family, `merge/1`, since proto
 7.5.0 ([wire.rs:1-12](../../../cli/src/merge/wire.rs#L1), [Merge.hs:33-34](../../../core/app/CE/Merge.hs#L33)).
-No name, path or source text crosses the wire: a leaf goes up as the fnv1a64 hash of its bytes,
-and every text on the report is read back on this side from the member's own file.
+`merge/1` carries no name, path or source text: a leaf goes up as the fnv1a64 hash of its bytes.
+Every text on the report is read on this side from the member's own file and travels in the
+face's `document/1` request, where the core spells the paths, unit names and member texts in
+([face.rs:10-17](../../../cli/src/merge/face.rs#L10)).
 
 ### 1. The groups
 
@@ -113,10 +116,10 @@ kind is one of the flow table's statement forms — the conditionals, the loops,
 their cases, the tries and their catches and finally clauses, the `with` forms, the declarations,
 `return`, `throw`, `break`, `continue`, `goto`, the labels, the statement wrappers, the `else` and
 `elif` arms — or when its parent is one of the flow table's block or splice kinds
-([slot.rs:166](../../../cli/src/merge/slot.rs#L166)). What the flow tables do not say, the slot
+([slot.rs:162-165](../../../cli/src/merge/slot.rs#L162)). What the flow tables do not say, the slot
 table says: its expression kinds, its type kinds, the (declaring kind, field) pairs where a
 declared name sits, and — named, so a decision is told apart from an omission — the kinds that
-are "other" ([slot.rs:45](../../../cli/src/merge/slot.rs#L45)). Three more lists place what an
+are "other" ([slot.rs:69](../../../cli/src/merge/slot.rs#L69)). Three more lists place what an
 expression is made of: the (kind, field) pairs where an assignment's target sits — a bare
 identifier there is a name, 3, a local rename, any other target 4, since a parameter cannot take a
 write — the (kind, field) pairs where a member, method or field name sits inside an expression, and
@@ -124,7 +127,7 @@ the kinds of a string literal's content; those last two are 4, left for the core
 enclosing expression (§3). The rule reads the sets in a fixed order: statement, then declared name,
 then type, then assignment target, then part name or literal content, then expression, else 4 —
 the declared name before the type, so a type's own name is a name; an unknown position holds no
-parameter, the safe side ([slot.rs:209](../../../cli/src/merge/slot.rs#L209)). Every table also
+parameter, the safe side ([slot.rs:160](../../../cli/src/merge/slot.rs#L160)). Every table also
 names its language's helper lines — the head and closing lines a merged function wraps around a
 fragment: 1 in Python and Haskell, 2 elsewhere ([slot.rs:66](../../../cli/src/merge/slot.rs#L66)). A table is
 read in pieces: TSX reads TypeScript's shared piece and its JSX kinds while TypeScript adds the one
@@ -137,7 +140,7 @@ the two lists a flow table would give: `stmt_kinds`, its statement forms (the do
 instances, imports and the rest), and `container_kinds`, the kinds whose children stand in a
 statement position (`do`, `declarations`, `local_binds`, the class and instance bodies). A
 language with a flow table never fills either list — the unit leg holds both ways
-([Haskell.hs:126-141](../../../core/app/CE/Lang/Haskell.hs#L126), [slot.rs:166](../../../cli/src/merge/slot.rs#L166)).
+([Haskell.hs:126-141](../../../core/app/CE/Lang/Haskell.hs#L126), [slot.rs:120](../../../cli/src/merge/slot.rs#L120)).
 The Haskell grammar spells an expression, a pattern and a type with the same kinds (`apply`,
 `variable`, `tuple`…), so its type class holds only the kinds that are types alone — a type
 constructor's `name`, the arrow, `forall`, `context` and the like — and a shared kind reads as an
@@ -167,8 +170,8 @@ distance is `ted`'s by construction ([Ted.hs:14-18](../../../core/app/CE/Clone/T
 [Ted.hs:56](../../../core/app/CE/Clone/Ted.hs#L56)). The Tai mapping is then narrowed top-down: a
 mapped pair is kept only when its parents are a kept pair, starting from the two roots; roots not
 mapped to each other leave no skeleton and the whole pair is one hole
-([Mapped.hs:37](../../../core/app/CE/Merge/Mapped.hs#L37)). A kept pair whose keys differ is a leaf
-hole — the mapping's relabel, its value the node alone ([Mapped.hs:48](../../../core/app/CE/Merge/Mapped.hs#L48));
+([Mapped.hs:37](../../../core/app/CE/Merge/Mapped.hs#L37)). A kept pair whose keys differ is a relabel
+hole at that node (a leaf, or an inner node the mapping relabels), its value the node alone ([Mapped.hs:48](../../../core/app/CE/Merge/Mapped.hs#L48));
 a kept pair whose keys agree and whose own tokens differ — an operator, a keyword, a punctuation
 mark — is a hole at that node in the other class, so it is never feasible
 ([Widen.hs:27](../../../core/app/CE/Merge/Widen.hs#L27)).
@@ -319,7 +322,7 @@ the same distance, a valid Tai mapping, a cost equal to the distance. Every hole
 root per member is held over those groups and the two hundred pairs as T3 groups: −1 −1 on an empty
 side, else `post ≤ postEnd`, one node or two children of one parent ([MergeProps.hs:186](../../../core/test/MergeProps.hs#L186)).
 Every reported hole is live and two holes share a parameter exactly when they share their text
-vectors ([MergeProps.hs:132](../../../core/test/MergeProps.hs#L132)); the second generation's
+vectors ([MergeProps.hs:137](../../../core/test/MergeProps.hs#L137)); the second generation's
 rulings each have a case and its reverse probe — an operator that differs, a member name widened to
 its expression and a target root left alone, a one-sided gap widened to its literal and left alone
 under a class-other parent, whitespace alone, an argument one member lacks, a gap
@@ -331,10 +334,13 @@ and generated suggestion — feasible exactly at 0, 0 only with a line saved, 5 
 empty request and the counts each have their leg, and seven request–reply pairs are golden
 ([golden.ndjson](../../../contracts/fixtures/merge/golden.ndjson)).
 The judgment is held to a second spelling written from §3's rules that walks the members' trees
-top-down as rose trees, a T3 pair through the same optimal mapping: two hundred and fifty generated
-T1/T2 groups and two hundred and fifty generated T3 pairs must answer its suggestion row and hole
-rows field for field — the holes and their order, the parameter numbering, the member kept, the
-lines saved, the reason, each hole's first and last root per member
+top-down as rose trees, a T3 pair through the same optimal mapping: per seed, under three base
+seeds, two hundred and fifty generated T1/T2 groups and two hundred and fifty generated T3 pairs
+must answer its suggestion row and hole rows field for field — the holes and their order, the
+parameter numbering, the member kept, the lines saved, the reason, each hole's first and last
+root per member; two hundred T3 pairs per seed aligned through a non-optimal mapping
+(`mappedWith`) must open the reference's live holes and keep its pair count; and every seed must
+reach every reason and rule shape §6.3 states
 ([ReferenceMerge.hs:1-31](../../../core/test/ReferenceMerge.hs#L1), [MergeReferenceProps.hs:1-10](../../../core/test/MergeReferenceProps.hs#L1)).
 
 On the measuring side the unit legs hold the slot tables (§4 ruling 2), the nine-tenths rule, the

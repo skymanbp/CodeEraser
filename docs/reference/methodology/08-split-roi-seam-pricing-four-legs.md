@@ -13,13 +13,14 @@ never contributes to the structure score or the fail bit. Measurement is Rust
 
 A file enters the seam tables only if it is in the **judged** language set and strictly
 exceeds the committed soft line: `Lang::judged_path(...)` must resolve, and files with
-`total_lines <= soft` are skipped [seams.rs:76-81](../../../cli/src/structure/seams.rs#L76). The
-`soft` passed in is the *committed* line — `softLine` from `ce-baseline.json`, falling back
+`total_lines <=` its opening line are skipped [seams.rs:76-81](../../../cli/src/structure/seams.rs#L76).
+The opening line is the *committed* soft line — `softLine` from `ce-baseline.json`, falling back
 to the *global* `thresholds.file_lines_warn`, falling back to `300`
-[judge.rs:82-93](../../../cli/src/structure/judge.rs#L82) — so wherever a baseline is
-committed the advisory opens the zone at exactly the line the hook uses; without one they part for
-a classed file, whose hook reads its class's warn line (plan v2.13 ① P4) while the advisory stays
-class-blind.
+[judge.rs:82-93](../../../cli/src/structure/judge.rs#L82) — or, for a file whose
+`[[rules.class]]` declares `file_lines_warn`, that class's warn line (proto 9.0.0,
+[seams.rs:40-62](../../../cli/src/structure/seams.rs#L40)); the class rides as `seamFiles`' third
+column, so the advisory opens a classed file at the same class line the hook reads, and wherever a
+baseline is committed every other file at exactly the line the hook uses.
 
 The reply keys `splitCandidates` / `sizeExempt` exist **iff** `seamFiles` rode the wire, and
 a degraded reply drops them with the rest of the facts
@@ -50,8 +51,9 @@ knob rule, so the ratio is always defined
 ### Benefit: soft-zone penalty recovered
 
 Benefit is the graded-zone penalty the split gives back, computed on the **same curve the
-verdict family judges with** — `CE.Verdict.Soft.zonePenalty`, imported directly rather than
-re-derived [Split.hs:2-5,24,200](../../../core/app/CE/Structure/Split.hs#L2):
+verdict family judges with** — `CE.Verdict.Soft.zonePenalty`, reached through the verdict's one
+class-line resolver `Soft.classedZone` rather than re-derived
+[Split.hs:2-5,25,186](../../../core/app/CE/Structure/Split.hs#L2), [Soft.hs:134-137](../../../core/app/CE/Verdict/Soft.hs#L134):
 
 ```
 p(x) = 0                              if x <= S     -- S read as min S H (proto 9.0.0)
@@ -115,7 +117,7 @@ costMilli(u) = crossRefs(u)  · roiRefMilli
 leg. Both crossing legs charge through one helper — `crossings` folds every edge `(a,b)` into a
 difference map `[(min a b, +1), (max a b, -1)]` and running-sums it, so a seam `u` is charged
 iff `min <= u < max`, exactly "one endpoint at or before `u`"
-([Split.hs:242-244](../../../core/app/CE/Structure/Split.hs#L242), read per seam by `charge`'s
+([Split.hs:229-232](../../../core/app/CE/Structure/Split.hs#L229), read per seam by `charge`'s
 `lookupLE` at [Split.hs:251-252](../../../core/app/CE/Structure/Split.hs#L251)). The clone leg uses a line-level
 straddle instead: block `[s,e)` is cut iff `s <= line && line < e`, mapped onto the seam-line
 index by the `lookupGE s` / `lookupLT e` pair
@@ -168,7 +170,7 @@ a tree without git history prices the leg at zero rather than failing the adviso
 `CHURN_WINDOW_DAYS` reads the churn family's own default `DEFAULT_DAYS = 14` — the §4.1 two-week
 anchor, and deliberately a **measurement constant, not a wire knob** (the prices are the knobs)
 [seams.rs:36-38](../../../cli/src/structure/seams.rs#L36), [churn/mod.rs:51-52](../../../cli/src/churn/mod.rs#L51),
-[size-advisory.md:125](../size-advisory.md#L125).
+[size-advisory.md:129](../size-advisory.md#L129).
 
 **Leg 4 — φ.** The flat per-new-file cost: S0 fanout plus the mental-load overhead the design
 booklet names φ [Cost.hs:156-166](../../../core/app/CE/Structure/Cost.hs#L156). Defaults were sized so
@@ -179,20 +181,20 @@ a mid-zone file with a clean seam clears ROI 1 and one with 10+ crossing referen
 
 The v1.1 legs were calibrated by recompiling the `Cost.hs` price points and replaying
 `--split-candidates` over corpora, comparing candidate/exemption flips and best-seam movement
-[size-advisory.md:113-116](../size-advisory.md#L113).
+[size-advisory.md:117-120](../size-advisory.md#L117).
 
 - `roiCloneMilli = 500` (= 2 × ref): swept `{250, 500, 1000}` over four external corpora / 86
   candidates. Zero candidate flips across the fourfold price range — the price is a
   *seam-steering* term, not a candidate killer — with exactly one best-seam move per price
   point, each in the correct direction (cobra's `command_test` moves its seam off the clone
   block at the 1000 price point)
-  [size-advisory.md:117-120](../size-advisory.md#L117).
+  [size-advisory.md:121-124](../size-advisory.md#L121).
 - `roiChurnMilli = 150` (= 0.6 × ref, reflecting that historical correlation is weaker
   evidence than in-situ code coupling): swept `{150, 300, 600}` on the self repo only —
   external corpora tips are frozen outside the 14-day window, so their churn leg is honestly
   zero and only a live window can be calibrated. Zero label flips over the fourfold range,
   with cost scaling verified linear (`graph_ladder` 800 → 1100 → 1700)
-  [size-advisory.md:121-124](../size-advisory.md#L121).
+  [size-advisory.md:125-128](../size-advisory.md#L125).
 
 Self-repo first run at the `S = 294` calibration: `graph_ladder.rs` got a real seam after line
 318 (2120‰ benefit against 500‰ cost, ROI 4.2); `DEVELOPMENT_PLAN.md` and `main_cmds.rs` got
@@ -215,16 +217,17 @@ into one of three shapes [Split.hs:186-194](../../../core/app/CE/Structure/Split
 
 The exemption row carries the **best seam's** numbers (best by ROI, not by benefit), which is
 what lets the Rust side write the machine-generated *why*
-[Split.hs:6-8,180-183](../../../core/app/CE/Structure/Split.hs#L6). This is the advisory's answer to
+[Split.hs:6-8,166-170](../../../core/app/CE/Structure/Split.hs#L6). This is the advisory's answer to
 "big projects have naturally long files": long-and-cohesive is an exemption **with numbers
 attached**, long-and-splittable gets a cut line
-[size-advisory.md:58-60](../size-advisory.md#L58). Since plan v2.32 step 4 the core lays the
+[size-advisory.md:62-64](../size-advisory.md#L62). Since plan v2.32 step 4 the core lays the
 structure document out (`CE.Structure.Document`): its statement names the universe every
 column points into, so each dense id is range-checked by the document contract before
 anything reads it [Document.hs:38-47](../../../core/app/CE/Structure/Document.hs#L38), and the
 names are spelled in the core, which resolves the references the document carries against the
 names Rust sends beside the request [Spell.hs:25-38](../../../core/app/CE/Document/Spell.hs#L25); candidates surface as
-`(path, afterLine, unitName, benefitMilli, costMilli)` where `afterLine` is the chosen unit's
+`(path, afterLine, unitName, benefitMilli, costMilli, roi)` (`roi` the one-decimal ratio the
+console prints, null without a priced seam; an exemption row carries it too), where `afterLine` is the chosen unit's
 end line, which Rust sends beside the reply's row and refuses for a unit the file does not hold
 [document.rs:84-96](../../../cli/src/structure/document.rs#L84).
 
@@ -241,7 +244,7 @@ The five seam tables are boundary-checked before any pricing, in request order
 [Split.hs:152-154](../../../core/app/CE/Structure/Split.hs#L152) and churn pairs must ascend, so an
 unordered pair has exactly one spelling
 [Split.hs:128-130](../../../core/app/CE/Structure/Split.hs#L128); all three edge tables must arrive in
-ascending canonical order [Split.hs:56,54,55](../../../core/app/CE/Structure/Split.hs#L56).
+ascending canonical order [Split.hs:56-58](../../../core/app/CE/Structure/Split.hs#L56).
 
 Every quantity above is exact integer or `Rational` arithmetic — no floating point enters the
 computation at any stage [Split.hs:8-9](../../../core/app/CE/Structure/Split.hs#L8).

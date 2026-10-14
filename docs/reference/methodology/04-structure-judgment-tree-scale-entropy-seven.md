@@ -4,13 +4,14 @@
 
 The `structure/1` family judges the *tree*, not the file: directory geometry, naming
 distributions, reference locality, documentation coverage, and — when the deep tables ride
-the wire — doc staleness and redundancy rollups. Rust measures and re-labels; Haskell
-decides. Names never cross the wire — the request's vocabulary is dense directory ids,
-codes and counts ([Structure.hs:12-15](../../../core/app/CE/Structure.hs#L12)). Only the *judged*
+the wire — doc staleness and redundancy rollups. Since plan v2.33 W1 item 3 Rust sends the
+walked judged paths, the graph's file paths and arcs and the layout by path; the core builds
+the directory tree and every dir-keyed table (CE.Structure.Raw), judges, and lays the document
+out; the integer form survives only as the test seam ([Request.hs:14-21](../../../core/app/CE/Structure/Request.hs#L14)). Only the *judged*
 language set enters the tree; the size-gate-only language arm is excluded, or the file
 population would shift S0 geometry, S1 naming, S4 documentation and both entropy rows —
 NOT because "S2 would call a front-end directory language-mixed", which blames an axis that
-has no language term at all ([judge.rs:95-100](../../../cli/src/structure/judge.rs#L95)) ([structure-axes.md:27-28](../structure-axes.md#L27)).
+has no language term at all ([judge.rs:95-100](../../../cli/src/structure/judge.rs#L95)) ([structure-axes.md:29-32](../structure-axes.md#L29)).
 This file keeps its original `-seven` name because that anchor is linked from outside the
 repository; the axis roster itself has been eight since proto 7.1.0 added modularity (S7).
 
@@ -92,8 +93,7 @@ judges against. Absent = the self-referential floor alone (row C)". *Caveat for 
 the design booklet's row A/B/C taxonomy that the phrase indexes is **not** in the tree — the
 booklet was distilled into `structure-axes.md` and its full text lives only in git history
 ([structure-axes.md:3-6](../structure-axes.md#L3)). No other definition of "row C"
-or of "self-referential floor" exists in the repository (verified by grep this run: the other hits in tracked source are
-the language-expansion booklet's unrelated "§8 row C / C++" and
+or of "self-referential floor" exists in the repository (verified by grep this run: the only other hit in tracked source is
 [Boot2.hs:46](../../../core/app/CE/Lang/Common/Boot2.hs#L46), a Haskell module list where
 "Arrow Control.Category" spells the substring by accident).
 
@@ -107,8 +107,9 @@ absent on the undeclared fixture ([StructureProps.hs:158-166](../../../core/test
 
 `ce.toml`'s `[structure.layout]` maps directory paths to relative weights `>= 1`; `"."` is the
 root and, under deepest-owner semantics, the catch-all bin
-([config.rs:102-113](../../../cli/src/config.rs#L102), [ce.toml:9-21](../../../ce.toml#L9)). Rust validates and
-sends it as `[dirId, weight]` rows; the core re-checks arity 2, non-negativity, `dirId < |nodes|`,
+([config.rs:102-113](../../../cli/src/config.rs#L102), [ce.toml:9-23](../../../ce.toml#L9)). Rust sends
+it as `(path, weight)` pairs; the core resolves each path to its directory id (refusing a path
+that names no walked directory), sorts, then checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
 ([Structure.hs:77](../../../core/app/CE/Structure.hs#L77),
 [Structure.hs:120-123](../../../core/app/CE/Structure.hs#L120),
@@ -163,9 +164,9 @@ and drown every other axis (the illustration's "500 files" is a doc-side figure 
 fixture behind it; under today's density law a charge is bounded by `scale`, so no single
 axis can zero the score at all); files remain the *measured* unit, the directory is the *judged* unit
 ([Axes.hs:128-134](../../../core/app/CE/Structure/Axes.hs#L128),
-[structure-axes.md:30-39](../structure-axes.md#L30)). The migration moved this repo's own score 990 → 992 under the THEN-current raw-mass fold;
+[structure-axes.md:34-39](../structure-axes.md#L34)). The migration moved this repo's own score 990 → 992 under the THEN-current raw-mass fold;
 2.26.0's density fold re-migrated every structure score again, so neither figure describes
-the score today ([structure-axes.md:41-43](../structure-axes.md#L41)).
+the score today ([structure-axes.md:49-50](../structure-axes.md#L49)).
 
 | axis | fact row | predicate | knobs (code, default) |
 |---|---|---|---|
@@ -174,9 +175,9 @@ the score today ([structure-axes.md:41-43](../structure-axes.md#L41)).
 | **S2** mixing | `[dirId,inside,outside,count]` | `ins + outs >= mixRefFloor && outs > ins` | 4 `mixRefFloor=5` |
 | **S3** misplacement | `[dirId,inside,outside,count]` | per file `outside >= misplaceMin && outside > 2*inside`, then dedup to dirs | 5 `misplaceMin=3` |
 | **S4** documentation | `[id,…,files]` + `[dirId,bits]` | `(files >= bigDirFloor && even bits) \|\| (id == 0 && bits < 2)` | 6 `bigDirFloor=8` |
-| **S5** staleness | wire `[dirId,docTs]` + `[docIdx,targetTs]`, core-derived into `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
-| **S6** redundancy | `[dirId,dupBlocks,deadUnits]` | `dupBlocks >= dupMin \|\| deadUnits >= deadMin` | 9 `dupMin=1`, 10 `deadMin=1` |
-| **S7** modularity | `[fromDir,toDir,count]` + `fileRefs`' `inside` sums | `mu >= modMassFloor && mu < m && 1000*(e*m − o*i) < modFloor*mu*(m−mu)` | 19 `modFloor=1`, 20 `modMassFloor=4` |
+| **S5** staleness | wire `staleDocs` by path, core-built into `[dirId,docTs]` + `[docIdx,targetTs]` and derived into `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
+| **S6** redundancy | wire `clonePairs` + `deadPaths` by path, core-built into `[dirId,dupBlocks,deadUnits]` | `dupBlocks >= dupMin \|\| deadUnits >= deadMin` | 9 `dupMin=1`, 10 `deadMin=1` |
+| **S7** modularity | `[fromDir,toDir,count]` + `fileRefs`' `inside` sums, both core-built from the one arc list | `mu >= modMassFloor && mu < m && 1000*(e*m − o*i) < modFloor*mu*(m−mu)` | 19 `modFloor=1`, 20 `modMassFloor=4` |
 
 Sources: predicates [Axes.hs:163-174](../../../core/app/CE/Structure/Axes.hs#L163),
 [Axes.hs:176-181](../../../core/app/CE/Structure/Axes.hs#L176),
@@ -195,9 +196,10 @@ Notes on the non-obvious ones:
 
 - **S1** builds its per-directory count vector by grouping the pattern rows on `dirId`
   ([Axes.hs:193-194](../../../core/app/CE/Structure/Axes.hs#L193)); only pattern *codes* are judged —
-  names never enter, and since 7.2.0 (plan v2.30 step 7b) neither does the producer's
-  classification: the request carries each stem's seven character-class facts as
-  `patternShapes` bits and the core folds them to codes through its STYLE table
+  names never enter the judgment, and since 7.2.0 (plan v2.30 step 7b) neither does the producer's
+  classification: since 9.0.0 the core computes each stem's seven character-class bits itself
+  (CE.Structure.Tree `shapeBits`) from the paths — a `patternShapes` table survives only on the
+  integer test seam — and folds them to codes through its STYLE table
   ([Shape.hs:31-44](../../../core/app/CE/Structure/Shape.hs#L31),
   [Request.hs:184-187](../../../core/app/CE/Structure/Request.hs#L184)). Bits are bounded `0..127`
   by the boundary contract ([Structure.hs:105-111](../../../core/app/CE/Structure.hs#L105)); the
@@ -207,7 +209,7 @@ Notes on the non-obvious ones:
   ([Cost.hs:49-52](../../../core/app/CE/Structure/Cost.hs#L49)).
 - **S2** uses *one basis on both sides* — per-file touch counts, never edges-vs-touches. Each
   `fileRefs` row contributes `(inside * count, outside * count)`, summed per directory
-  ([Axes.hs:211-215](../../../core/app/CE/Structure/Axes.hs#L211)).
+  ([Modularity.hs:44-48](../../../core/app/CE/Structure/Modularity.hs#L44)).
 - **S3**'s `> 2*inside` ratio is part of the predicate's definition in v1, not a separate knob
   ([Cost.hs:62-65](../../../core/app/CE/Structure/Cost.hs#L62),
   [Axes.hs:220-228](../../../core/app/CE/Structure/Axes.hs#L220)). Directories are deduped via a map's
@@ -218,12 +220,14 @@ Notes on the non-obvious ones:
   boundary ([Structure.hs:112-115](../../../core/app/CE/Structure.hs#L112)).
 - **S6** never re-derives duplication or dead code: it convolves the per-file families' verdicts
   to the tree scale ([Axes.hs:167-168](../../../core/app/CE/Structure/Axes.hs#L167)).
-- **S7** (7.1.0, plan v2.29 step 10, O54) is the only axis that reads *edges*. The request's
+- **S7** (7.1.0, plan v2.29 step 10, O54) is the only axis that reads *edges*. The core builds
+  `fileRefs` and `dirEdges` from the one arc list the request carries (CE.Structure.Raw); the
   `dirEdges` table carries the **crossing** mass — `[fromDir, toDir, count]`, `from != to`,
   ascending — and the intra mass rides nowhere: an intra edge adds 1 to `inside` at *both* of its
   ends, so a directory's `fileRefs` inside sum is exactly twice its internal edge count, and a
   number with two owners is a number that can disagree with itself. What licenses the derivation
-  is a boundary law over the pair, enforced only when `dirEdges` rides: every directory's inside
+  is a boundary law over the pair, enforced whenever `dirEdges` is present — on the path form
+always: every directory's inside
   sum is even, and its outside sum equals the `dirEdges` mass incident to it in either direction
   ([Modularity.hs](../../../core/app/CE/Structure/Modularity.hs)).
 
@@ -313,7 +317,7 @@ source, `Cost.hs` the defaults ([Cost.hs:1-6](../../../core/app/CE/Structure/Cos
 echoes the full effective set ([Structure.hs:199](../../../core/app/CE/Structure.hs#L199)). Codes `12..18`
 (`seamSoft=300`, `seamHard=750`, `seamPMax=10`, `roiRefMilli=250`, `roiPhiMilli=500`,
 `roiCloneMilli=500`, `roiChurnMilli=150` —
-[Cost.hs:133-170](../../../core/app/CE/Structure/Cost.hs#L133)) belong to the split-ROI advisory, not to
+[Cost.hs:133-178](../../../core/app/CE/Structure/Cost.hs#L133)) belong to the split-ROI advisory, not to
 any axis, and never enter this fold.
 
 ### 6. Preconditions the fold assumes
@@ -330,7 +334,7 @@ and returns the *first* offender by name ([Structure.hs:71-90](../../../core/app
   probe at [StructureProps.hs:124-128](../../../core/test/StructureProps.hs#L124));
 - the six `dirTables` share one checker — arity, non-negativity, `dirId < |nodes|`, a
   per-table extra rule, and strict ascent
-  ([Structure.hs:80-87](../../../core/app/CE/Structure.hs#L80),
+  ([Structure.hs:77-79,96-103](../../../core/app/CE/Structure.hs#L77),
   [Structure.hs:156-169](../../../core/app/CE/Structure.hs#L156)); `staleDocRows` shares the
   ROW checker but orders **non-descending**, because one directory holds many docs
   ([Stale.hs:26-29](../../../core/app/CE/Structure/Stale.hs#L26)). Extra rules: (7.2.0) shape bits
@@ -338,7 +342,7 @@ and returns the *first* offender by name ([Structure.hs:71-90](../../../core/app
   convention bits in `1..3`; `fileRefs` count `>= 1`; declared weight `>= 1`
   (the pre-judged staleDocs rules retired with their table at 2.29.0 — the raw
   `staleDocRows`/`staleEdgeRows` validators own staleness now)
-  ([Structure.hs:96-111](../../../core/app/CE/Structure.hs#L96)).
+  ([Structure.hs:96-123](../../../core/app/CE/Structure.hs#L96)).
 
 **Over-cap.** `structNodeCap = 524288` ([Cost.hs:180-183](../../../core/app/CE/Structure/Cost.hs#L180)).
 Node rows, the seam tables *and* (7.1.0) the dir-edge table count against the same cap — a declared

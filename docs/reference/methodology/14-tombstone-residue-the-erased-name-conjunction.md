@@ -16,8 +16,10 @@ tier above observe until the FPR ledger argues one
 instalment: Rust measures three integers per candidate surface — its kind, the
 retrospective marks in it, the erased names it binds — and Haskell decides which rows are
 sites and whether the changeset is over its declared budget
-([Cost.hs:1-7](../../../core/app/CE/Tombstone/Cost.hs#L1)). Names and paths never cross
-the wire, row index is identity, and every number lands in the observe feed beside the
+([Cost.hs:1-7](../../../core/app/CE/Tombstone/Cost.hs#L1)). Names never cross the wire and
+`tombstone/1` carries integers alone, row index is identity; the paths of the sites shown reach
+the core only as references in the guard / audit speech documents (plan v2.33 W7, §7); every
+number lands in the observe feed beside the
 judgment it received ([mod.rs:16-28](../../../cli/src/tombstone/mod.rs#L16)).
 
 ### 1. The changeset — what one leg hands the measurement
@@ -35,8 +37,8 @@ text ([mod.rs:51-58](../../../cli/src/tombstone/mod.rs#L51)). Three legs build o
   the guard leg reads it
   ([audit/tombstone.rs:1-7](../../../cli/src/audit/tombstone.rs#L1),
   [audit/tombstone.rs:119-142](../../../cli/src/audit/tombstone.rs#L119)); since plan v2.29 step 6
-  that one batch also feeds the Stop audit's `similar` leg — the two text legs read the changed
-  pairs once.
+  that one batch also feeds the Stop audit's `similar` leg, and since plan v2.31 step 5 its
+  `flow` leg, so the three text legs read the changed pairs once.
 - **precommit / commitmsg** — the index against `HEAD`, what the commit will hold; `ce
   commitmsg` adds the message as an after-only SURFACE named `COMMIT_EDITMSG` — its subject
   line is a label, its sentences are prose, but it declares no name and keeps none alive, so R

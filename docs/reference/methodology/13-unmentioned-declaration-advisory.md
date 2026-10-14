@@ -13,7 +13,7 @@ the four-way verdicts: it never turns a gate red, never enters `ce erase`, and i
 rendered with that word on every surface
 ([Cost.hs:50-52](../../../core/app/CE/Graph/Cost.hs#L50),
 [Deadcode.hs:22-24](../../../core/app/CE/Text/Deadcode.hs#L22)). The plan calls it ADR-008
-step 3b ([DEVELOPMENT_PLAN.md:292](../../DEVELOPMENT_PLAN.md#L292)); the split follows
+step 3b ([DEVELOPMENT_PLAN.md:240](../../DEVELOPMENT_PLAN.md#L240)); the split follows
 ADR-008 as everywhere else — Rust measures (walks, tokenizes, stores hashes, extracts the
 declaration's name and category), Haskell decides which rows come out and with which code.
 
@@ -31,20 +31,20 @@ owner predicate shared with the measurement walk and the guard's scope
 part of its score); an undeclared nested repository is **cut** whole. One reader parses the
 declaration with git's own config grammar
 ([gitmodules.rs:1-23](../../../cli/src/gitmodules.rs#L1)), and a declared checkout that is not
-seated refuses by name rather than letting U shrink ([walk.rs:85-88](../../../cli/src/mention/walk.rs#L85)),
+seated refuses by name rather than letting U shrink ([walk.rs:87-90](../../../cli/src/mention/walk.rs#L87)),
 `.gitignore` and `.ceignore` are honoured and nothing else — not the walker's `.ignore`,
 not global or parent ignore files, and `.git` is not required, so one commit yields one
-U on any machine ([walk.rs:91-102](../../../cli/src/mention/walk.rs#L91)); the cut is one published predicate,
+U on any machine ([walk.rs:93-104](../../../cli/src/mention/walk.rs#L93)); the cut is one published predicate,
 `cut`, that the walk's entry filter, the census and the formula below all read
-([walk.rs:135-174](../../../cli/src/mention/walk.rs#L135)). Directory symlinks are not
+([walk.rs:137-164](../../../cli/src/mention/walk.rs#L137)). Directory symlinks are not
 followed; a file symlink is read through when its target is a regular file inside the
 root, identity being the canonical relative path, so a link and its target enter once
-([walk.rs:176-186](../../../cli/src/mention/walk.rs#L176),
-[walk.rs:188-236](../../../cli/src/mention/walk.rs#L188)). Files over 4 MiB are skipped and
+([walk.rs:166-176](../../../cli/src/mention/walk.rs#L166),
+[walk.rs:178-226](../../../cli/src/mention/walk.rs#L178)). Files over 4 MiB are skipped and
 counted ([walk.rs:60](../../../cli/src/mention/walk.rs#L60)); the exclusion table is the
 scan's secret globs plus four omni-mentioners (`*.map`, `tags`, `TAGS`, `*.po`) — files
-whose purpose is to name every symbol ([walk.rs:65](../../../cli/src/mention/walk.rs#L65),
-[walk.rs:242-259](../../../cli/src/mention/walk.rs#L242)). A document the product signed — a
+whose purpose is to name every symbol ([walk.rs:67](../../../cli/src/mention/walk.rs#L67),
+[walk.rs:236-249](../../../cli/src/mention/walk.rs#L236)). A document the product signed — a
 JSON object whose top-level `schema` is under `ce.` or whose top-level `generated_from`
 carries a `ce` key, the two spellings of the product's signature on its reports, feeds,
 contracts and frozen instruments — leaves U when it is read, beside the binary rule, and is
@@ -57,7 +57,7 @@ document is not a generated tree but the product's own reading of one.
 
 The binary rule is git's: a UTF-16 BOM decodes, otherwise a NUL in the first 8000 bytes
 skips the file; a later NUL keeps it, decoded lossily so one stray byte cannot lose a
-file's mentions ([walk.rs:255-272](../../../cli/src/mention/walk.rs#L255)). The consequence
+file's mentions ([walk.rs:251-263,291-294](../../../cli/src/mention/walk.rs#L251)). The consequence
 is stated, not hidden: PDF-disguised `.ai` assets whose first NUL falls past byte 8000
 are in U (zod holds eight, requests one), and §8 prices what they add.
 
@@ -88,9 +88,10 @@ ASCII-identifier pieces, so `调用$graph函数` yields `$graph` and never a bar
 JS family and Java, whose identifiers take `$` too (`Outer$Inner` is not `Inner`)
 ([token.rs:71-79](../../../cli/src/mention/token.rs#L71),
 [token.rs:96-102](../../../cli/src/mention/token.rs#L96)). A piece that does not open a run
-(digit-led) is dropped; a piece equal to the run is the run. The arm table is
-`MENTION_WHOLE_RUN_EXTS`, looked up lower-cased, and no extension is the union arm
-([token.rs:91-95](../../../cli/src/mention/token.rs#L91)). The reason the arm exists is a
+(digit-led) is dropped; a piece equal to the run is the run. The arm table is the core's
+`[languages] mention_whole_run_exts` (CE.Lang.Common, read off `tables/1` since plan v2.32
+step 2), looked up lower-cased, and no extension is the union arm
+([token.rs:91-107](../../../cli/src/mention/token.rs#L91)). The reason the arm exists is a
 cost the spec measured before sealing: in a `.ts` file `$ZodString` must stay whole (a
 bare `ZodString` would mention its twin), while `exec $ce_entry_main` in a shell script
 must keep `ce_entry_main`.
@@ -143,7 +144,8 @@ yes ([candidates.rs:91-113](../../../cli/src/mention/candidates.rs#L91)):
    [blocks.rs:18-27](../../../cli/src/mention/selfref/doc/blocks.rs#L18)).
 
 A survivor becomes one row keyed `[node, vis, conv]` with its names kept beside the key
-on the Rust side — the wire carries integers only, never a name
+on the Rust side — the `graph/1` table carries integers only, so the core judges no name; the
+names reach the core afterwards as the referenced strings of the deadcode document request (§6)
 ([candidates.rs:46](../../../cli/src/mention/candidates.rs#L46),
 [candidates.rs:117-149](../../../cli/src/mention/candidates.rs#L117)). The table is cut at
 131,072 keys (the core's soft cap, read from the definition package) in wire order, the same rows every run, and the cut is reported as a fact
@@ -165,7 +167,7 @@ the name is reached without being spelled), bit 11 is rendered and never exempts
 index time (`Ffi` for Rust export attributes and `extern`, Haskell `foreign export`, Go
 `//export`, and C / C++'s `extern "C"` linkage, `__declspec(dllexport)` and the `visibility("default")`,
 `used`, `constructor` and `destructor` attributes ([conv/c.rs:1-14](../../../cli/src/mention/conv/c.rs#L1));
-`Registration` for a Python decorator and a Java annotation
+`Registration` for a Python decorator (the registrar table), any TS decorator and any Java annotation
 ([conv/mod.rs:235-244](../../../cli/src/mention/conv/mod.rs#L235)); `Member`; `DefaultExport`; `Ambient`; Rust
 `cfg(test)` and `allow(dead_code)`) ([conv/mod.rs:100-109](../../../cli/src/mention/conv/mod.rs#L100)).
 The name-table half is computed at wire time from the path, the name and the key: a test
@@ -214,7 +216,7 @@ category word has none of the exempt bits 0..10 (bit 11, a Rust `cfg` naming no 
 is rendered but never exempts) — the mask reads the
 visibility word, the exemptions read the category word, and the two never cross
 ([Advisory.hs:61-70](../../../core/app/CE/Graph/Advisory.hs#L61),
-[Cost.hs:204](../../../core/app/CE/Graph/Cost.hs#L204), [Cost.hs:218](../../../core/app/CE/Graph/Cost.hs#L218)).
+[Cost.hs:206-207](../../../core/app/CE/Graph/Cost.hs#L206), [Cost.hs:220-221](../../../core/app/CE/Graph/Cost.hs#L220)).
 The code is a frozen total order `1 > 2 > 3 > 0`: **1 private** when the file has at
 least one mount, every mount is a private `mod` and no façade re-exports it, or the
 package keeps it private; **2 restricted** on visibility bit 2; **3 reexported** on mounts
@@ -230,15 +232,15 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:41-74](../../../core/app/CE/Graph/Cost.hs#L41),
 [Graph.hs:120-127](../../../core/app/CE/Graph.hs#L120)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:488-490](../../../contracts/VERSIONING.md#L488)).
+the same with or without them ([VERSIONING.md:515-517](../../../contracts/VERSIONING.md#L515)).
 
 ### 6. Rendering — one home, three faces
 
-Only `ce deadcode` and the GUI/MCP deadcode faces ask for the advisory; the five other
-consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, the canvas)
-pass `Advisory::No`, each with its reason at the call site
+Only `ce deadcode`, the MCP `deadcode` tool and the GUI graph screen ask for the advisory; the
+seven other consumers of the graph wire (`erase`, `join`, `score`/`check`, `structure`, `arch`,
+`merge`, `query`) pass `Advisory::No`, each with its reason at the call site
 ([deadcode.rs:84-87](../../../cli/src/graph/deadcode.rs#L84),
-[deadcode.rs:201-246](../../../cli/src/graph/deadcode.rs#L201)). The reply is consumed once:
+[deadcode.rs:257-263](../../../cli/src/graph/deadcode.rs#L257)). The reply is consumed once:
 each core row is looked up in the producer's own table (a key the producer never offered,
 or a key without names, is a named wire-skew refusal), and a non-degraded reply without
 the key is refused as a pre-6.2.0 core rather than read as "asked and clean"
@@ -307,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1766 (1984 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7473 (1717) | 1134 (15) | 15.2 % | 199 / 1134 = 17.5 % | 199 / 6339 |
-| | | rust | 3455 (1901) | 321 (2) | 9.3 % | 2 / 321 = 0.6 % | 2 / 3103 |
+| self @ this commit | 1766 (1984 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7473 (1717) | 1136 (15) | 15.2 % | 199 / 1136 = 17.5 % | 199 / 6337 |
+| | | rust | 3455 (1901) | 320 (2) | 9.3 % | 2 / 320 = 0.6 % | 2 / 3104 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -322,7 +324,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self rust <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->15<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1717<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->15<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1717<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.9<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of
@@ -392,5 +394,5 @@ counted on a synthetic tree with a collision told apart from a reference
 ([unit/mention/rates.rs:12-53](../../../cli/tests/unit/mention/rates.rs#L12)); the producer's cut flag; the 0.3.0 keys absent on every
 pass-No road and the row-key order on the console and in the GUI projection
 ([deadcode_e2e.rs](../../../cli/tests/it/deadcode_e2e.rs),
-[hub_projection.js](../../../cli/tests/gui/hub_projection.js)); and the soft cap pinned equal
-source-to-source between `candidates.rs` and `Cost.hs`.
+[hub_projection.js](../../../cli/tests/gui/hub_projection.js)); and the producer's cut, read from the definitions package,
+pinned equal to `Cost.hs`'s `unmentionedCap` (docs_consts, K46).

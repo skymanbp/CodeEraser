@@ -9,8 +9,8 @@ to break those cycles most cheaply, which files would sit better beside the file
 and what a change to one file reaches. This family answers those five questions, as advice. No
 gate reads it, no baseline holds it and `ce check` never sees it
 ([mod.rs:1-9](../../../cli/src/arch/mod.rs#L1)). The split is ADR-008's, seventh instalment: Rust
-measures the tree it already indexed — the measured files, their directories, the references
-between them — as five integer tables and labels the answer back; the directory graph, its
+measures the tree it already indexed — the measured files, their line counts and the references
+between them — and sends them by path; the tree, the five integer tables, the directory graph, its
 feedback arc set, the layers, the clusters, the misplaced files, the impact walk and the metrics
 are Haskell's, over the wire family `arch/1` ([Arch.hs:5-19](../../../core/app/CE/Arch.hs#L5),
 [wire.rs:1-13](../../../cli/src/arch/wire.rs#L1)). Since plan v2.33 W1 item 3 the measuring side sends
@@ -33,7 +33,7 @@ the two reference tables together, since both become arcs of the one directory g
 ([Cost.hs:24](../../../core/app/CE/Arch/Cost.hs#L24), [Cost.hs:30](../../../core/app/CE/Arch/Cost.hs#L30)).
 A request past either is degraded; the measuring side names it `arch_too_large` from the built
 tables' counts and the definition package's `limits.caps`, and the document carries that reason
-([Limits.hs:90-103](../../../core/app/CE/Limits.hs#L90), [wire.rs:163](../../../cli/src/arch/wire.rs#L163));
+([Limits.hs:90-103](../../../core/app/CE/Limits.hs#L90), [wire.rs:180](../../../cli/src/arch/wire.rs#L180));
 a core that cannot be started or answer, or one without the family, is named the same way. The core's contract names the first
 offending row of any table by its index — width, identity, range, order, the one root, a parent
 before its child ([Contract.hs:79](../../../core/app/CE/Arch/Contract.hs#L79)).
@@ -92,7 +92,10 @@ directories pointing at it, fan-out the distinct ones it points at, and the inst
 ⌊1000 · out ÷ (in + out)⌋ — Martin's I per mille, an integer — or −1 when no arc touches the
 directory ([Layers.hs:35](../../../core/app/CE/Arch/Layers.hs#L35), [Cost.hs:44](../../../core/app/CE/Arch/Cost.hs#L44)).
 
-### 3. The measuring side's six rulings
+### 3. The six rulings on what is measured
+
+Rulings 2, 5 and 6 are applied by the core on the paths it is sent (CE.Arch.Tables); the others
+by the measuring side.
 
 1. The node universe is the structure family's: the deadcode wire of a refreshed index, its
    measured file nodes in path order — so the two families place a file in one tree
@@ -106,14 +109,14 @@ directory ([Layers.hs:35](../../../core/app/CE/Arch/Layers.hs#L35), [Cost.hs:44]
    or dropped for being in the file's own directory — that is the core's rule, applied where the
    battery sees it.
 6. A focus path is spelled root-relative with forward slashes; one that names no measured file
-   is refused by name before the core is asked.
+   is the core's fault, an error by name and no document ([Tables.hs:82](../../../core/app/CE/Arch/Tables.hs#L82)).
 
 The document's two derivations are the core's too (`document/1`, since proto 7.8.0): the file
 references under each cut arc (the `edges` and `pkgEdges` rows whose two directories are the
 arc's), and each cluster's majority directory, read by the rule the misplaced rows are judged by
 — the directory holding most of the cluster's files, the least id on a tie — so a cluster and its
-misplaced files never name two majorities. This side sends the tables back with each path's place
-in string order and puts the paths back ([Document.hs:95](../../../core/app/CE/Arch/Document.hs#L95), [Document.hs:121](../../../core/app/CE/Arch/Document.hs#L121),
+misplaced files never name two majorities. This side sends the tables back with the paths and
+directory names as text; the core orders them and spells them into the document ([Document.hs:95](../../../core/app/CE/Arch/Document.hs#L95), [Document.hs:121](../../../core/app/CE/Arch/Document.hs#L121),
 [face.rs:90](../../../cli/src/arch/face.rs#L90)).
 
 ### 4. The faces and the document
@@ -125,7 +128,7 @@ the impact rows and the metrics, instability `null` where the core answered −1
 ([Document.hs:77](../../../core/app/CE/Arch/Document.hs#L77)). The arch reply is consumed
 strictly before the document is asked for: the five request counts echo what was sent, the four answer counts tally the tables,
 the layers and the metrics carry one row per directory in order, the clusters one per file, every
-id is in range and every focus file has its depth-0 row ([wire.rs:171](../../../cli/src/arch/wire.rs#L171),
+id is in range and every focus file has its depth-0 row ([wire.rs:193](../../../cli/src/arch/wire.rs#L193),
 [wire.rs:242](../../../cli/src/arch/wire.rs#L242)).
 
 - **`ce arch [--impact <path>…] [--format json]`** prints the counts, the layers from the top
@@ -134,11 +137,11 @@ id is in range and every focus file has its depth-0 row ([wire.rs:171](../../../
   document, 2 when the core could not judge or a path is not a measured file
   ([main_judge.rs:222](../../../cli/src/main_judge.rs#L222), [Lines.hs:16-17](../../../core/app/CE/Arch/Lines.hs#L16)).
 - **The MCP tool `architecture`** takes `impact` as a list of root-relative paths and relays the
-  same document ([adapters.rs:221](../../../cli/src/mcp/adapters.rs#L221), [tools.rs:241](../../../cli/src/mcp/tools.rs#L241)).
+  same document ([adapters.rs:221](../../../cli/src/mcp/adapters.rs#L221), [tools.rs:258-259](../../../cli/src/mcp/tools.rs#L258)).
 - **The GUI** renders it in the reports hub rather than a thirteenth tab — the header holds twelve
   tabs in one row at the default window, and the hub is where the report-only families live. The
   document nests, so the family registers its own renderer and an `impact` path box; the counts
-  still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:35](../../../gui/ui/reports.js#L35),
+  still lead as chips ([hub_arch.js:14](../../../gui/ui/hub_arch.js#L14), [reports.js:30](../../../gui/ui/reports.js#L30),
   [commands_query.rs:44](../../../gui/src-tauri/src/commands_query.rs#L44)).
 
 All three faces, the CLI included, go through one library function, and the face cleans each
@@ -161,8 +164,9 @@ has no constant bound ([ArchFasProps.hs:1-16](../../../core/test/ArchFasProps.hs
 cuts on all three families; the clustering is deterministic and never less modular than every
 file alone; the impact equals a whole-set fixpoint closure with its round depths; the caps, the
 empty request and the counts each have a leg ([ArchProps.hs:5-9](../../../core/test/ArchProps.hs#L5)).
-Seven golden pairs pin the wire bytes, the last a fifteen-directory ring on the greedy road
-([golden.ndjson:13](../../../contracts/fixtures/arch/golden.ndjson#L13)).
+Nine golden pairs pin the wire bytes, the seventh a fifteen-directory ring on the greedy road
+([golden.ndjson:13](../../../contracts/fixtures/arch/golden.ndjson#L13)), the last two the path
+form, one with a focus and one naming a stranger.
 
 The measuring side's tables.rs, frozen at c2abca5d in the tests subrepo, keeps the unit legs it
 was written with — dense ids and earlier parents, two rungs one pair, the self pair and the section

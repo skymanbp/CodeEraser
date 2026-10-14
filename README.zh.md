@@ -14,7 +14,7 @@
 
 ## 具体实现，以及它的不同之处
 
-![一个判决如何产生：Rust 度量语法单元、token 指纹与每个单元的词袋事实、文档 shingle、git 窗口与 diff、引用图；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、改动判决（轨迹、审计、墓碑残留）、存活性与擦除、控制流合并与架构，每行一到三个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
+![一个判决如何产生：Rust 度量语法单元、token 指纹与每个单元的词袋事实、文档 shingle、git 窗口与 diff、引用图；Haskell 判决结构与分数、克隆与同角色顾问、文档重复、改动判决（轨迹、审计、墓碑残留）、存活性与擦除，以及控制流、合并与架构，每行一到三个 wire 家族；门与逐家族报告交付判决](docs/assets/judgment.zh.svg)
 
 <sub>在 [codeeraser.dev/zh/how/#verdict](https://codeeraser.dev/zh/how/#verdict) 可缩放、拖动查看此图。</sub>
 

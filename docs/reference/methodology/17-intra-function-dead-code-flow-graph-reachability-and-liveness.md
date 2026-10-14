@@ -11,9 +11,10 @@ any more. The split is ADR-008's, seventh instalment: Rust lowers every unit of 
 `FlowSpec` table knows into four integer tables, and the core builds the control-flow graph,
 walks reachability and backward liveness and answers the findings over the fourteenth wire family,
 `flow/1`, since proto 7.4.0 ([Flow.hs:5-18](../../../core/app/CE/Flow.hs#L5),
-[mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). No name, path or source text crosses the wire:
-a finding comes back as `[unit, kind, seq, var, seqEnd]` and the measuring side labels it again
-through the legend it kept ([Flow.hs:65-73](../../../core/app/CE/Flow.hs#L65),
+[mod.rs:1-11](../../../cli/src/flow/mod.rs#L1)). `flow/1` carries no name, path or source text:
+a finding comes back as `[unit, kind, seq, var, seqEnd, judged]` (the judged bit since 9.0.0) and
+the measuring side places it through the legend it kept; the report's strings travel in the
+face's `document/1` request, and the core spells them in ([Flow.hs:65-73](../../../core/app/CE/Flow.hs#L65),
 [mod.rs:62](../../../cli/src/flow_report/mod.rs#L62)).
 
 ### 1. The lowering — four tables per unit
@@ -23,7 +24,8 @@ its body is the grammar's body field ([lower.rs:73](../../../cli/src/flow/lower.
 tables are the whole of what the core sees (the design booklet's §5.1,
 [analysis-track.md](../analysis-track.md)):
 
-- `units` — one row per unit with its parameter count;
+- `units=[[u, lang, params]]` — one row per unit with its language's wire code and its
+  parameter count;
 - `stmts=[[u, seq, parent, kind, flags, aux]]` — the statements in pre-order, sixteen kinds
   (block, stmt, if, loop, switch, case, try, catch, finally, return, throw, break, continue, goto,
   label, no-return call), five flag bits (has-else, infinite, fallthrough, dynamic, empty) and the
@@ -104,13 +106,14 @@ this side, by the class's tier and the precision mask.
 file, asks the core and prints `ce.flow-report/0.1.0`, which the core lays out (`document/1`)
 from the placed findings this side sends back: the counts (units, statements, variables,
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
-kind, lines, variable and whether it is judged, and each unit the core refused with its reason
+kind, lines, variable and whether it is judged, and each unit left unjudged with its reason —
+the ones the lowering could not shape and the ones the core refused
 ([Document.hs:104](../../../core/app/CE/Flow/Document.hs#L104), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
 A finding's `lineEnd` is the line on
-which the run's last statement starts: the legend keeps each statement's first line only, so a
-last statement written over several lines is not followed to its end; the next lowering
-generation carries the end. `--kind` narrows the listing and
-never the counts, so a filtered run cannot move the gate; a name the package's flow catalogue
+which the run's last statement starts. The legend records each statement's last line too
+(`Legend::stmt_end`, LEG-1), but the face does not read it yet, so a last statement written over
+several lines is not followed to its end. `--kind` narrows the listing and the `shown` count
+only, never the other counts or the judged count, so a filtered run cannot move the gate; a name the package's flow catalogue
 does not list goes as −1, and the core refuses it, the refusal naming the name as given and the
 catalogue's kinds ([Document.hs:100](../../../core/app/CE/Flow/Document.hs#L100)). The exit codes are the family's own: 2
 when the core is missing (refused by name, no document) or lacks the family (the document names
@@ -130,8 +133,8 @@ all ten — since plan v2.32 step 2 the set is the definition package's `flow_ju
 ### 7. The guard class — novel findings at write time
 
 The PreToolUse leg lowers both sides of one write — the file on disk and the file the edit
-would produce — judges each over the daemon's core link (daemon protocol 2.2.0, the additive
-`flow` request carrying the four tables exactly as `flow::wire::body` assembles them), places the
+would produce — judges each over the daemon's core link (the additive `flow` request of daemon protocol 2.2.0,
+now 2.3.0, carrying the four tables exactly as `flow::wire::body` assembles them), places the
 findings through each side's legend and subtracts
 ([flow.rs:1-12](../../../cli/src/guard/flow.rs#L1), [flow.rs:36](../../../cli/src/guard/flow.rs#L36),
 [proto.rs:32](../../../cli/src/daemon/proto.rs#L32)). The subtraction is the guard's usual
@@ -163,7 +166,8 @@ interpreter that enumerates every execution trace of a structured unit — every
 each loop head at most twice, every statement of a try body free to hand control to a catch,
 and of the body or a catch of a try with a finally free to throw on out through it,
 a finally continuing with the union of the pending completions — and reads the findings off the
-traces; the shipped judgment must agree finding for finding on 200 seeded random programs
+traces; the shipped judgment must agree finding for finding on 200 seeded random requests of one to
+three units each (judged bits and dynamic counts included)
 ([ReferenceFlow.hs:1-12](../../../core/test/ReferenceFlow.hs#L1)). The battery adds the
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
@@ -209,8 +213,8 @@ subtraction (a moved finding, a rename, a multiset, kind-blind) and the tier's l
 ([flow_novel.rs:18](../../../cli/tests/unit/guard/flow_novel.rs#L18)). The integration legs hold
 the CLI to the library face with `--kind` narrowing only the listing, `--check` to the class's
 own `deny`, the MCP relay to the same document, the guard's novel count, its sentence at `warn`
-and its refusal at `deny` on a judged language's write (Python) and its silence on an unjudged
-one (Rust), a moved finding and an unused parameter as not novel, the Stop line's `flow`
+and its refusal at `deny` on a judged language's write (Python and Rust, both judged since step 4
+commit G; the leg branches on the mask, so a language outside it would be held silent), a moved finding and an unused parameter as not novel, the Stop line's `flow`
 object, and the daemon round trip
 ([flow_face.rs:80](../../../cli/tests/it/flow_face.rs#L80), [flow_guard.rs:64](../../../cli/tests/it/flow_guard.rs#L64),
 [flow_audit.rs:46](../../../cli/tests/it/flow_audit.rs#L46), [daemon_flow.rs:18](../../../cli/tests/it/daemon_flow.rs#L18)).

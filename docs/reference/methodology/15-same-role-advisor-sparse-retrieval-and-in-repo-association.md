@@ -12,9 +12,9 @@ offline where a "code RAG" usually is neither: the retrieval is sparse — integ
 term bags read off facts the index already carries, not an embedding — and the only
 association it knows is this repository's own, positive pointwise mutual information over the
 same bags, opt-in and never evidence ([ppmi.rs:1-11](../../../cli/src/similar/ppmi.rs#L1)).
-The split is ADR-008's, sixth instalment, moved further by plan v2.33 W3: Rust builds the bags
-and the inverted tables and fetches what one query's ranking needs; Haskell weights, widens,
-scores and cuts the top-K over `rank/1` ([Rank.hs:5-15](../../../core/app/CE/Similar/Rank.hs#L5)), then orders the
+The split is ADR-008's, sixth instalment, moved further by plan v2.33 W3 and W6: Rust reads
+each unit's facts off the tree, stores the inverted tables and fetches what one query's ranking
+needs; Haskell builds the bags (`bags/1`), weights, widens, scores and cuts the top-K over `rank/1` ([Rank.hs:5-15](../../../core/app/CE/Similar/Rank.hs#L5)), then orders the
 candidates as exact rationals and decides which of them play the query's role over the
 twelfth wire family, `similar/1`. On `similar/1` and `rank/1` only hashes and counts cross, row index is
 identity; the unit texts the bags are built from go to the core once, over the local pipe, in `bags/1` ([wire.rs:1-7](../../../cli/src/similar/wire.rs#L1),
@@ -166,8 +166,9 @@ role bit is read off the six channels only
 
 The request is the query bag as `[termHash, weight]` pairs — strictly ascending, may be empty —
 plus one nine-integer row per candidate, `[nHit, pHit, cHit, dHit, sHit, lHit, shapeEqual,
-bm25Num, bm25Den]`: the six channel hits, the shape bit, and the fixed-point score as a fraction
-over its unit, so the core compares the ratio and never learns the width
+bm25Num, bm25Den]`: the six channel hits, the shape bit, and the fixed-point score `rank/1`
+answered as a fraction over its denominator (`rank/1` sets the width, `scoreDen` = 2^16), so
+`similar/1` compares exact rationals and reads no width
 ([wire.rs:30-41](../../../cli/src/similar/wire.rs#L30),
 [Cost.hs:30-32](../../../core/app/CE/Similar/Cost.hs#L30)). The reply is `order` — the candidate
 indices by score descending as exact rationals, ties by request index — `roles`, one bit per
@@ -181,13 +182,14 @@ conjunction over one row, and it lives in Haskell:
 with floors 1, 1 and 2: a unit that is *called* the same and *calls* the same, or two name
 words in common with the same signature shape ([Cost.hs:35-57](../../../core/app/CE/Similar/Cost.hs#L35)).
 The measuring side keeps no copy of that rule: the frozen evaluation rows take their role bits
-from `similar/1` ([similar_replay.rs:158-172](../../../cli/tests/it/similar_replay.rs#L158)), and the only Rust spelling left
-is the frozen oracle the differential gate drives against the core ([similar.rs:191-194](../../../cli/tests/unit/w3_oracle/similar.rs#L191)).
+from `similar/1` ([similar_replay.rs:158-172](../../../cli/tests/it/similar_replay.rs#L158)), and its only Rust spellings
+are in tests: the frozen oracle the differential gate drives against the core ([similar.rs:191-194](../../../cli/tests/unit/w3_oracle/similar.rs#L191))
+and the wire leg's expectation ([similar_wire.rs:23](../../../cli/tests/it/similar_wire.rs#L23)).
 The offline tuning instrument that once mirrored it retired with the Rust ranking it tuned (EVAL-SET-SIMILAR.md, re-run section).
 A request whose query terms plus rows exceed `similarCap` = 65536 gets a complete degraded
 reply with empty tables and the reason `similar_too_large` — a query the core refused to judge
-has no order and no roles, and the faces name the degradation instead of showing the measuring
-side's order ([Cost.hs:27-28](../../../core/app/CE/Similar/Cost.hs#L27),
+has no judged order and no roles, and the faces name the degradation and keep the candidates in
+`rank/1`'s order with the role column null ([Cost.hs:27-28](../../../core/app/CE/Similar/Cost.hs#L27),
 [Similar.hs:97-100](../../../core/app/CE/Similar.hs#L97)). There is no knob and no fail tier:
 a knobless family whose one table is not the shared `RowsReq` — the query bag is its own key —
 so it binds the cascade directly. On the Rust side `consume` is strict: the order must be a
@@ -198,10 +200,10 @@ is a *named* non-judgment, never conflated with "no candidates"
 
 ### 6. Three faces, one document, one Stop line
 
-Every face renders one document, `ce.similar-report/0.1.0`: the query as
+Every face renders one document, `ce.similar-report/0.1.0`: `similar_rev` first, the query as
 `{label, terms, widen}`, the candidates as rows `{at, key, nth, role, score, hits[6],
 shape_equal, widened}` — the first five alphabetical scalars are what the GUI hub's generic
-projection shows — the counts, and `degraded` naming why the core did not judge when it did not
+projection shows — the counts `{candidates, role, widened}`, and `degraded` naming why the core did not judge when it did not
 — laid out by the core from the measured rows ([face.rs:29-42](../../../cli/src/similar/face.rs#L29), [Document.hs:46](../../../core/app/CE/Similar/Document.hs#L46), [Document.hs:77](../../../core/app/CE/Similar/Document.hs#L77)).
 A query is exactly one of three asks: `at` (`file:line`, the innermost unit holding the line),
 `unit` (a key, refused by name when ambiguous, naming up to five places) or `text` (free text,
@@ -217,9 +219,10 @@ request per arm over one core link, the document asked over the same link ([face
   ([main_similar.rs:30](../../../cli/src/main_similar.rs#L30), [Lines.hs:13](../../../core/app/CE/Similar/Lines.hs#L13)).
 - **MCP** `similar_units` — the fifteenth read-only tool, `{at, text, unit, widen}`, relaying
   the same document ([tools.rs:192](../../../cli/src/mcp/tools.rs#L192)).
-- **GUI** the eleventh screen, `similar`: an input for `at` or text, the widen switch, the
-  candidate table with the six evidence columns ([similar.js](../../../gui/ui/similar.js),
-  [commands.rs](../../../gui/src-tauri/src/commands.rs)).
+- **GUI** the `similar` screen (the seventh of twelve tabs): inputs for `at`, a unit key or
+  text, the widen switch, and the candidate table with the six channel hits in one evidence
+  column ([similar.js](../../../gui/ui/similar.js),
+  [commands_query.rs](../../../gui/src-tauri/src/commands_query.rs)).
 - **Stop audit** — every unit the session *added* (a `(key, nth)` the working tree's file holds
   and `HEAD`'s did not) is asked of the index the way `ce similar` asks, and a row
   `{unit, twin, score}` is written into the feed's `similar` object only when the core's top-1

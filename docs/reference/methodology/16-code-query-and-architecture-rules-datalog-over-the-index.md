@@ -93,7 +93,7 @@ numbers, the T3 and docdup judgments, the mention pass, a read of every file for
 [mod.rs:140](../../../cli/src/query/facts/mod.rs#L140)). One hash serves every name-shaped
 constant: `mention("foo", F)` meets the index's own rows because the core's lexer and the
 measuring side's mention table key by the same fnv1a64 (spelled once on each side; the
-differential leg holds the names they give equal), and the enum words a table spells (`entry`, `import`, `t3`) are
+differential leg holds the names they give equal), and the enum words a table spells (`entry_named`, `import`, `t3`) are
 name constants in the program, so `role(N, entry_named)` and `role(N, "entry_named")` are one
 token ([LexState.hs:165](../../../core/app/CE/Query/LexState.hs#L165), [legend.rs:23](../../../cli/src/query/legend.rs#L23),
 [Cost.hs:107](../../../core/app/CE/Query/Cost.hs#L107)).
@@ -140,7 +140,7 @@ index reads back as `where line:column` through the lex reply's `at` table
 token or table is the measuring side's fault and is refused by name before any judging —
 unknown kind, negative value, unknown predicate code, unknown fact predicate, wrong arity,
 negative fact value, a table not strictly ascending, a negative prelude count, texts that do not
-lex, a `lex` request without texts
+lex, a `lex` request without texts, a directory table sent beside the `tree` form
 ([Contract.hs:5-13](../../../core/app/CE/Query/Contract.hs#L5), [Contract.hs:118](../../../core/app/CE/Query/Contract.hs#L118),
 [Contract.hs:139](../../../core/app/CE/Query/Contract.hs#L139)).
 
@@ -150,7 +150,8 @@ A parsed program passes six phases before anything is evaluated, and the first p
 fault answers every error it found, each at a token; a program with an error answers nothing
 ([Check.hs:42](../../../core/app/CE/Query/Check.hs#L42)). The codes: 1 syntax, 2 unknown
 predicate, 3 arity, 4 sort, 5 unsafe variable, 6 unstratifiable negation, 7 prelude predicate
-redefined, 8 aggregate shape, 9 anonymous head ([Cost.hs:171-172](../../../core/app/CE/Query/Cost.hs#L171),
+redefined, 8 aggregate shape, 9 anonymous head; 0 is the measuring side's own (a lexical fault, or
+a glob the exclude dialect cannot read), reported at its place ([Cost.hs:171-172](../../../core/app/CE/Query/Cost.hs#L171),
 [Document.hs:65](../../../core/app/CE/Query/Document.hs#L65)).
 
 - **Arity.** A fact predicate's arity is the schema's; a program predicate's is fixed by its
@@ -281,7 +282,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
 - **The rules file** is the one named on the command line or by the MCP argument (root-relative
   unless absolute, and it must exist), else `[rules] file` from the config (it must exist), else
   `ce.rules` at the project root when it exists — else none, and the program is the prelude
-  alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
+  and the rendered pack (§11) alone. `[rules] file` is a path the family reads, never a knob: the knob fingerprint drops it,
   so declaring it moves no baseline ([mod.rs:43](../../../cli/src/query/mod.rs#L43),
   [rules.rs:25-29](../../../cli/src/config/rules.rs#L25), [canonical.rs:86-91](../../../cli/src/config/canonical.rs#L86)).
 - **The console** prints the errors first, then the degraded reason if any, then each goal —
@@ -295,7 +296,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   needed then); the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:209](../../../cli/src/mcp/tools.rs#L209), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234),
   [adapters.rs:188](../../../cli/src/mcp/adapters.rs#L188)).
-- **The GUI's Query screen** — the twelfth tab — takes a question in a box with a `why` switch
+- **The GUI's Query screen** — the eighth of twelve tabs — takes a question in a box with a `why` switch
   and a rules-file box (`--file`), answers it as one table per goal under its own column names
   with the derivation rows under an answer, judges the rules file with one button, and shows the
   `ce.query-prelude` texts with another (the Tauri command `query_prelude`); rendering only, a
@@ -347,7 +348,7 @@ the declared items as rows `[name, params…]` of integers and strings — the q
 The core renders each item to one clause set of CE Datalog and lexes that text as a fourth
 source between the prelude and the rules file, so the pack's assertions are judged, witnessed
 and proved by the machinery of §§5–7 untouched — the pack is text in front of the user's program
-([Pack.hs:49](../../../core/app/CE/Query/Pack.hs#L49), [Lex.hs:34](../../../core/app/CE/Query/Lex.hs#L34)):
+([Pack.hs:55](../../../core/app/CE/Query/Pack.hs#L55), [Lex.hs:34](../../../core/app/CE/Query/Lex.hs#L34)):
 
 | key | renders to |
 |---|---|
@@ -359,7 +360,7 @@ and proved by the machinery of §§5–7 untouched — the pack is text in front
 
 A glob is spelled into the text as a quoted string and read by the rules file's own
 `in(F, "glob")` sugar, so a glob the exclude dialect cannot read is the same program error at
-its place — `pack line:column` ([Pack.hs:115](../../../core/app/CE/Query/Pack.hs#L115),
+its place — `pack line:column` ([Pack.hs:154](../../../core/app/CE/Query/Pack.hs#L154),
 [Front.hs:73](../../../core/app/CE/Query/Front.hs#L73)). Every predicate the pack renders is spelled
 `pack_…`, and the prefix is reserved: the prelude's clauses and the pack's together are the
 shipped clauses whose predicates no later rule may define, and any rule past them that defines a
@@ -388,13 +389,15 @@ today's maxima are a test roster and a shared test helper that grow with every t
 
 ### 12. Gates and goldens
 
-The core's battery has twelve legs: the prelude's dead-file query with its proof and counts; an
+The core's battery has thirteen legs: the prelude's dead-file query with its proof and counts; an
 assertion's violations carrying their derivation unasked; every program error named at its
 token, the erroring program answering nothing; proof trees replayed node by node against the
 naive reference; the four aggregates with their empty cases and grouping; arithmetic, `=` on a
 bound variable as a comparison, division by zero, `<` on ids; goals with their kinds and sorts
 and `preds` with the open sort; the schema echo only when asked; every contract refusal by name;
-the three capped dimensions; proof trees past the budget left out whole; the empty program
+the three capped dimensions; proof trees past the budget left out whole; the empty program; and
+the texts lexed in the core — judged as the token stream they lex to, a `lex` request answering
+the lexed program, a lexical fault named
 ([QueryProps.hs:5-14](../../../core/test/QueryProps.hs#L5), [QueryProps.hs:65](../../../core/test/QueryProps.hs#L65)).
 The pack's battery renders every item, alone and all five together, to a program that checks
 clean beside the shipped prelude; holds error 7 at the rules file's own token for a redefined
@@ -417,7 +420,7 @@ a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair,
 aggregate over a set, the prelude lexed alone, the tree form, and the rule pack judged and
 lexed — and a tests-repo leg regenerates them so every request line carries the prelude and its
 program as texts
-([Spec.hs:112](../../../core/test/Spec.hs#L112), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
+([Spec.hs:113](../../../core/test/Spec.hs#L113), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
 [query_golden.rs:148](../../../cli/tests/it/query_golden.rs#L148)).
 
 On the measuring side the unit legs hold the vocabulary to the graph's codes, the core's lex

@@ -185,11 +185,14 @@ eraseable. The executor's precondition function is deliberately ordered
 2. **Worktree cleanliness.** `git status --porcelain` must succeed; after the
    `.ce` state directory is removed from the comparison, no user dirt may
    remain ([apply.rs:58-77](../../../cli/src/erase/apply.rs#L58)).
-3. **Target identity.** Every target is read again and its FNV-1a content hash
+3. **Inside this repository.** No target may sit at or below a submodule; such
+   a row is refused by name and stays planned, its removal made in that
+   repository by hand ([apply.rs:92-111](../../../cli/src/erase/apply.rs#L92)).
+4. **Target identity.** Every target is read again and its FNV-1a content hash
    must equal the hash captured in the plan
    ([apply.rs:79-88](../../../cli/src/erase/apply.rs#L79)).
 
-Only after all three checks does the executor write targets and append the
+Only after all four checks does the executor write targets and append the
 audit records ([apply.rs:16-35](../../../cli/src/erase/apply.rs#L16)). The apply
 entry then re-plans the tree and fails if any applied eraseable verdict
 survives; convergence is part of the operation's result
