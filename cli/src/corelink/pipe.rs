@@ -39,7 +39,7 @@ pub(super) fn reader(out: ChildStdout) -> Receiver<std::io::Result<String>> {
 }
 
 /// The pump proper, over any reader and any cap so the ceiling is
-/// testable without a 64 MiB fixture.
+/// testable without a 256 MiB fixture.
 fn pump<R: Read + Send + 'static>(src: R, cap: u64) -> Receiver<std::io::Result<String>> {
     let (tx, rx) = channel();
     std::thread::spawn(move || {

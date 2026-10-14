@@ -65,7 +65,7 @@ use std::path::Path;
 /// nothing else). The inputs, each a sentence in its file:
 ///   - token.rs: the run alphabet (opens / continues), the script
 ///     split's identifier side, the `$` arm and its extension table
-///     (`MENTION_WHOLE_RUN_EXTS`, lower-cased lookup, no extension =
+///     (`[languages] mention_whole_run_exts`, lower-cased, none =
 ///     union), the digit-led drop, the fold filter set and the
 ///     7-literal-character fold threshold, and the fold gate's
 ///     segmenter (`_`/camel boundaries, an all-caps run one segment)

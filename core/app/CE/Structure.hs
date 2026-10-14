@@ -9,10 +9,10 @@
 -- FAILS, the P1 posture), machine-check the boundary contract in
 -- request order, then judge the axes — five S2 axes always, plus
 -- staleness (5), redundancy (6) and modularity (7) when their fact
--- tables ride the wire — and the headline entropy rows. Names and
--- paths never cross (§5.9.2): the report's
--- vocabulary is dense ids, codes and counts, re-labelled by the
--- Rust side that kept the names. Knob rows ride the established
+-- tables ride the wire — and the headline entropy rows. Since 9.0.0
+-- the request may carry the path form (CE.Structure.Raw builds the
+-- tree and its tables from the paths); the document is laid out and
+-- spelled here (CE.Structure.Document). Knob rows ride the established
 -- [code, value] grammar; ce.toml is the source, Cost.hs the
 -- defaults, and the reply echoes the effective set whole. The
 -- request record and its decoder live in CE.Structure.Request

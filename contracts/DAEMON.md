@@ -20,7 +20,7 @@
   不了。未认证行 → `error{unauthorized}` 且**连接**关闭，daemon 存续；
   token 比较为常数时间（2026-08-20 加固批）。
 - 消息：NDJSON，一行一条；serde 外部 tag `type`，snake_case
-  （`{"type":"hello","proto":"1.1.0","token":"…"}`）。**未认证行长
+  （`{"type":"hello","proto":"<DAEMON_PROTO>","token":"…"}`，`proto` 即下文的版本常量）。**未认证行长
   上限 4 KiB**（超限 → `error` 并关连接，超出部分不缓冲不解析）；
   认证后不限长（probe/four_class 合法携带整文件内容）。
 - 每连接可承载多条请求（server/conn.rs `handle` 循环）；解析失败回
@@ -89,7 +89,7 @@
     期限短于服务端会把健康的慢判决误读成挂死），`CE_CLIENT_DEADLINE_SECS`
     覆盖。K 步 10 兑现审计 #85 的「1.0 后再议」：此前三边只有这一边
     没期限，卡死的 daemon 把 PreToolUse 钩子无限期挂住。实现是工人线程
-    持连接、主线程限时收（interprocess <!--ce:tool:interprocess#v-->2.4.3<!--/ce--> 对命名管道无读超时 API，
+    持连接、主线程限时收（interprocess <!--ce:tool:interprocess#v-->2.4.3<!--/ce-->——`cli/Cargo.toml` 的要求，两份锁文件今解析为 2.4.4，两版间上游只改文档——对命名管道无读超时 API，
     仅有弃用的 PIPE_NOWAIT 轮询）。超时后主线程**拆除**工人（L 轮步 #14
     O64，`daemon/cancel.rs`）：Unix 经复制的描述符 `shutdown` 套接字，工人
     的读返回 0；Windows 对管道句柄 `CancelIoEx`（interprocess 以
@@ -144,7 +144,8 @@
   形状**；`dedup_report.report`、`probe_report.matches`、
   `four_class_report.report`、`tombstone_report.reply`、`flow_report.reply`、`document.body` / `document_report.reply` 七个嵌套载荷是 `serde_json::Value` 直通，
   其内部键**不在**本门覆盖内（fixture 里的载荷是示意占位）。各自的
-  权威与钉点：dedup report = `dedup::report_json`（report_schema
+  权威与钉点：dedup report = `faces::dedup` 的文档（`dedup::gated` →
+  `dedup::report::answer`，核 `CE.Dedup.Document` 排版；report_schema
   golden `fixtures/dedup-report/` + daemon_e2e 消费）、fourclass
   report = `fourclass::session` 形状（daemon_e2e 断言 + wire_indices
   索引钉；7.0.0 起核链退避恢复后的首份报告可带加性 `recovered: n`，daemon/judge.rs）、probe matches = probe.rs 报告形（guard 电池）、tombstone reply =

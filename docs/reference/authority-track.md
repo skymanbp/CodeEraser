@@ -29,8 +29,8 @@
 
 | 件 | proto | 请求 | 应答 | 缓存与降级 |
 |---|---|---|---|---|
-| ① `tables/1` | 7.7.0（加性） | 无参（信封之外多一个键按名拒） | `tables.result` 一次答整包：十六个顶层键按表族分（`languages` / `scan` / `flow` / `slot` / `sites` / `calls` / `fourclass` / `ladder` / `walk` / `outputs` / `docdup` / `keys` / `flags` / `tombstone` / `compdb` / `protocol`），每语言的表在表族键下按语言报告名分，另带 `digest`（规范字节的 fnv1a64，hello 回执的 `tablesDigest` 同数；规范字节 135,145 B） | Rust 第一次用到时要一次，按核 `(version, proto)` 入键落盘缓存 `.ce/tables-<ver>-<proto>.json`；握手已知版本 → 命中无往返；持核链的 daemon 内存缓存；缓存损坏 = 重取；无核 / 旧核无 `tables/1` = 具名拒绝，不留内嵌副本 |
-| ② ③ `document/1` | 每批一个 minor（步 3 = 7.8.0，新五族；步 4 = 7.9.0；步 5 = 7.10.0，控制台文本） | `document.request`：`family` + `ranges`（可被引用的宇宙大小）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号）+ `facts`（标量）+ `degraded`（null 或 `why` 下标）+ 步 5 起可选 `lang`（0 en / 1 zh，缺省 0，其余按名拒）；每族的键、行宽、每列所指的宇宙写成一张陈述文本表 | `document.result`：`document` = 与今天报告 JSON 同形的骨架（字符串位 `{"$": [类别, 整数…]}`，产品常量直接出字符串）；步 5 起另带 `lines` = 请求语言的控制台每一行 `[stream, text, ref…]`（stream 0 stdout / 1 stderr，数字与产品词已写进 text，每个引用在 text 里留一个 `{}`、按序跟在后面）与 `exit: {fail}`（该面的否决位）；`tables/1` 包加 `document` 目录（每族 schema id 与空文档；`guard` / `audit` 两个句子族没有文档、不进目录） | 判决没发生而核够得着 → 照样问，带 `degraded` 与测量侧留下的事实（§13 第 20 条）；文档时刻核够不着、请求被拒、行总数 > 1,048,576（核答该族空文档 + `document_too_large`）= 具名拒绝、不是降级；包里的空文档只作陈述与电池的锚，测量侧永不绑定 |
+| ① `tables/1` | 7.7.0（加性） | 无参（信封之外多一个键按名拒） | `tables.result` 一次答整包：十六个顶层键（步 1；今二十个，另有 `document` / `resolve` / `limits` / `store`）按表族分（`languages` / `scan` / `flow` / `slot` / `sites` / `calls` / `fourclass` / `ladder` / `walk` / `outputs` / `docdup` / `keys` / `flags` / `tombstone` / `compdb` / `protocol`），每语言的表在表族键下按语言报告名分，另带 `digest`（规范字节的 fnv1a64，hello 回执的 `tablesDigest` 同数；规范字节 135,145 B，步 1 时） | Rust 第一次用到时要一次，按核 `(version, proto)` 入键落盘缓存 `.ce/tables-<ver>-<proto>.json`；握手已知版本 → 命中无往返；持核链的 daemon 内存缓存；缓存损坏 = 重取；无核 / 旧核无 `tables/1` = 具名拒绝，不留内嵌副本 |
+| ② ③ `document/1` | 每批一个 minor（步 3 = 7.8.0，新五族；步 4 = 7.9.0；步 5 = 7.10.0，控制台文本） | `document.request`：`family` + `ranges`（可被引用的宇宙大小）+ `rows`（判决已答的行原样回送 + 文档要而判决不要的整数：秩、行号、成员号）+ `facts`（标量）+ `degraded`（null 或 `why` 下标）+ 步 5 起可选 `lang`（0 en / 1 zh，缺省 0，其余按名拒）+ 算法轨 W7 起可选 `strings`（类名 → 字符串表，核据此自己拼写）；每族的键、行宽、每列所指的宇宙写成一张陈述文本表 | `document.result`：`document` = 与今天报告 JSON 同形的骨架（字符串位 `{"$": [类别, 整数…]}`，产品常量直接出字符串）；步 5 起另带 `lines` = 请求语言的控制台每一行 `[stream, text, ref…]`（stream 0 stdout / 1 stderr，数字与产品词已写进 text，每个引用在 text 里留一个 `{}`、按序跟在后面）与 `exit: {fail}`（该面的否决位）；`tables/1` 包加 `document` 目录（每族 schema id 与空文档；`guard` / `audit` 两个句子族没有文档、不进目录） | 判决没发生而核够得着 → 照样问，带 `degraded` 与测量侧留下的事实（§13 第 20 条）；文档时刻核够不着、请求被拒、行总数 > 1,048,576（核答该族空文档 + `document_too_large`）= 具名拒绝、不是降级；包里的空文档只作陈述与电池的锚，测量侧永不绑定 |
 | 退役 | 8.0.0（major） | — | 退役失去一切读者的键（§13 第 18 条：判决应答的行表仍是 `document/1` 的输入；步 6 盘点后是两个请求键：`judgedMask`〔§13 第 69 条〕与 `patterns`〔主会话裁，§13 第 70 条〕） | 全部族切完后一次（§12 步 6） |
 
 - 每个 minor 与 8.0.0 各一条 `contracts/VERSIONING.md`（最新在前），`Version.hs` 与 `corelink.rs` 的 `PROTO` 同步；`tables/1` 进 `Protocol.hs` 的 `families` 表（hello 能力表由它派生）。
@@ -40,7 +40,7 @@
 
 **那句话**：语言的定义（什么是语句、什么是表达式位置、哪些 kind 是循环、标准库叫什么、哪些路径是构建产物）是判决的一部分，应当由判决者持有；Rust 只是执行者。
 
-### 4.1 今天
+### 4.1 立项时（2026-10-01）
 
 定义文本散在测量侧：`scan/spec_*` 34.5 KB、`flow/spec_*` 25.1 KB、`merge/slot_*` 16.6 KB、`fourclass/kinds.rs` 7.2 KB、`graph/ladder/hs_boot.rs` 42.4 KB、`java_jdk.rs` 7.2 KB、`ts_node.rs`、Go / Python 标准库名、Lua 标准库名、walk 的 secrets 与内建排除、`outputs.rs` 产物规则、`lang.rs` 扩展名表……（测量侧七目录内合计 204 KB）；七目录外 `graph/spec.rs` + `spec/calls.rs` 14.7 KB、`mention/conv/protocol.rs` 8.5 KB、`docdup/spec.rs` 2.8 KB、`graph/keys.rs` 2.0 KB、`deadcode/flags.rs` 1.9 KB、`tombstone/vocab.rs`、`compdb_flags.rs` 等。可由核持有的纯定义文本 ≈ 235 KB（只读盘点，HEAD blob 字节）。读法有两种：`const` 表，与 TOML 片段经 `toml::from_str` 读入（`flow/spec.rs`、`merge/slot.rs`）。
 
@@ -72,7 +72,7 @@ Rust −≈ 235 KB，Haskell +≈ 250 KB（record 语法比 TOML 略长）。
 
 **那句话**：报告文档的形状（字段、排序、计数、schema id）是判决的陈述，应当只有一处权威；三面只是三种打印。
 
-### 5.1 今天
+### 5.1 立项时（2026-10-01）
 
 核答整数行表 → 各族的报告装配把行表 + 索引里的路径 / 名字 / 片段 / 行号拼成 `ce.<family>-report/x.y.z`（设计稿盘点记 16 份 `face.rs`；以同名文件计今天 6 个，其余装配在各族的 `report.rs` / `judge.rs` / `model.rs` / `mod.rs` 里，`cli/src` 里的 `ce.*-report/` schema id 共 22 种）→ 各族 `console.rs` 渲染文本 → GUI / MCP 吃同一份 JSON。
 
@@ -80,7 +80,7 @@ Rust −≈ 235 KB，Haskell +≈ 250 KB（record 语法比 TOML 略长）。
 
 - **一个族、一次装配**：文档由独立的 wire 族 `document/1` 装出（`CE.Document` 分派 / 契约 / cap + 每族一个 `CE.<Fam>.Document`），不随各族应答走——flow 按 `rowCap` 分批、merge 按两个 cap 分块判决，文档若在 Rust 侧折叠各批就等于把装配留在 Rust。请求 = `family` + `ranges` + `rows`（判决已答的行原样回送 + **文档需要而判决不需要的整数事实**：秩、行号、成员号）+ `facts` + `degraded`；每族把自己的请求写成一张陈述文本表（`range` / `fact` / `rows` 名、行宽、每列所指的宇宙 / `ref` 类别），契约按它逐条核（`CE.Document.Contract`）。
 - 核直接给出**文档骨架** = 与今天的报告 JSON 同形：字段集、数组内的排序、计数、schema id、`degraded` 位全在核；来自被度量仓库的字符串位一律是**类别化引用** `{"$": [类别, 整数…]}`（类别 + 判决自己已在用的整数；不预建符号表、不送符号计数），产品常量（schema id、kind 名、原因名、error 名、`t1t2` / `t3`、`?-`）核直接出字符串；按字符串排序的地方 Rust 送**秩**、核按秩排。
-- Rust 一个通用绑定器 `bind(skeleton, resolve)`（遍历 JSON，`{"$": [类别, 整数…]}` → 按类别解出的字符串）；各族的报告装配删除，只剩请求装配 + 解析器。三面等价由构造保证。
+- Rust 一个通用绑定器 `bind(skeleton, resolve)`（遍历 JSON，`{"$": [类别, 整数…]}` → 按类别解出的字符串）；各族的报告装配删除，只剩请求装配 + 解析器。三面等价由构造保证。（立项设计；算法轨 W7 起各面随请求送 `strings`，核自己拼写、填满 `{}`，Rust 只印；Rust `bind` 只留 query 的 `assemble_bound`，guard 自步 11a A25〔d12cb1a4〕起亦同路。）
 - **降级与空文档**：陈述把表与事实分 `kept` / `judged` 两半，`degraded` 时只留 `kept` 的；判决没发生而核够得着，Rust 照样问 `document/1`、印核答的；核够不着 = 具名拒绝（§13 第 20 条）。每族的空文档（同一个装配函数对空请求的结果）进 `tables/1` 的 `document` 目录，作陈述与电池的锚，测量侧永不绑定。
 - **切换规则**：每批一个 minor（`document/1` 加性；步 3 = 7.8.0）；切换提交以「旧装配产物 == 新 `bind` 产物逐字节」为门（十语料 × 每族 × 三面），然后删旧装配；全部族切完后一次 major 8.0.0 退役失去一切读者的键（范围见 §13 第 18 条）。
 - **分组落地**：(e) 新五族 query / rules / flow / merge / arch 作样板（骨架最简单）→ (a) check / score / structure / join → (b) graph：deadcode / mentions / sites / canvas → (c) scan / dedup / clone / docdup / erase → (d) churn / trend / tombstone / similar / audit / update / health。(d) 里 update / doctor / setup / health 留在 Rust（它们描述的是 Rust 进程自己的环境，`ce doctor` 必须在没有核时也能跑）；audit / probe / precommit / commitmsg 没有 `ce.*` 文档，它们的句子由 `document/1` 的两个句子族 `guard`（PreToolUse 拒绝理由）与 `audit`（Stop / precommit / commitmsg）给出，`document` 为 `{}`。
@@ -114,13 +114,13 @@ Rust −≈ 200 KB，Haskell +≈ 180 KB。Rust 的减量在步 6 兑现（旧�
 
 **那句话**：控制台文本只是文档的另一种渲染；渲染规则与消息目录是文档权威的一部分。
 
-### 6.1 今天
+### 6.1 立项时（2026-10-01）
 
 各族 `console.rs` 各自渲染控制台文本；中文帮助与句子在 `main_lang.rs` 的 `ZH_TSV`；守卫的句子在 `guard/say.rs`；GUI 的文字在 `gui/ui/i18n.js`。
 
 ### 6.2 设计
 
-- 核持有消息目录：`CE.Text` 是机制（模板按 key 取 `(en, zh)`，槽位 `{}` 自左至右填，与 Rust `i18n::line` 的读法同），每族的模板在 `CE.Text.<Fam>`，逐字节转录自今天的 Rust 打印处（只有英文的句子 zh = en）。文档本身不带句子：应答另给 `lines`（请求 `lang` 那一种语言的控制台每一行 `[stream, text, ref…]`）与 `exit: {fail}`——一次请求只答一种语言，Rust 按 `[ui] lang` 选语言后发请求、把每个 `{}` 按序换成引用解出的字符串、按 stream 打印。
+- 核持有消息目录：`CE.Text` 是机制（模板按 key 取 `(en, zh)`，槽位 `{}` 自左至右填，与 Rust `i18n::line` 的读法同），每族的模板在 `CE.Text.<Fam>`，逐字节转录自今天的 Rust 打印处（只有英文的句子 zh = en）。文档本身不带句子：应答另给 `lines`（请求 `lang` 那一种语言的控制台每一行 `[stream, text, ref…]`）与 `exit: {fail}`——一次请求只答一种语言，Rust 按 `[ui] lang` 选语言后发请求、把每个 `{}` 按序换成引用解出的字符串、按 stream 打印（立项设计；算法轨 W7 起核随 `strings` 自己填 `{}`，Rust 只按 stream 打印，只有 query 仍由 Rust 绑）。
 - 数字与产品词由核写：整数按 Rust `Display`，`{:+}` 一处（`CE.Text.signed`），一位小数按 Rust `{:.1}` 的读法（取除得的 double 的精确二进制值、半数取偶、负零留负号、零分母 `inf` / `-inf` / `NaN`，`CE.Text.fixed`；子仓 `it/document_number_format.rs` 对 golden 的 ROI 电池逐个用 Rust 格式化比对）；按显示宽度对齐的地方（arch 的度量表）宽度是测量侧事实（`widths` 表送每个目录路径的字节数与字符数）；merge 片段的 40 字符截断是新引用类 `clipped`，由 Rust 截。
 - Rust 留下的：clap `--help` 与 `main_lang.rs` 的 `ZH_TSV`（只服务 `--help`，`zh_surface` 门照旧）、SARIF、写入者（observe feed 行、erase 日志记录）、`hookio` 的截断、退出码 2（降级 / 无核 / 程序错误是测量侧自己的拒绝）；GUI 的 `i18n.js` 不动。
 - 守卫句（`guard/say.rs`）与审计句同理进目录（`guard` / `audit` 两个句子族），PreToolUse 腿经 daemon 的核链取句——daemon 已持核链，无额外往返。
@@ -137,7 +137,7 @@ Rust −≈ 40 KB，Haskell +≈ 40 KB。
 
 **那句话**：新家族都有「参考第二实现 + 200 例等价电池」（`ReferenceQuery` / `ReferenceFlow` / `ReferenceArch`），同一标准该一视同仁。
 
-### 7.1 今天
+### 7.1 立项时（2026-10-01）
 
 新家族三份参考与 200 例对拍在 `core/test`。老家族里已有四份独立参考，都是穷举小实例（比 200 例种子电池更强）：`Reference.hs`（FourClass 的归属判决，有界族全枚举）、`ReferenceGraph.hs`（图判决：4 顶点全部有向图的可达与 SCC、3 顶点全图 × 全入口子集的四路判决）、`ReferenceTed.hs`（按定义枚举 Tai 映射的树编辑距离）、`ReferenceJaccard.hs`（docdup 判决，8 元宇宙全子集对）。Verdict / Score、Structure、Erase、Trend、Tombstone、Similar 六族没有独立参考。
 

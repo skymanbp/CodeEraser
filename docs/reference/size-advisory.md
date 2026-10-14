@@ -16,7 +16,7 @@
   （停止收费=奖励增长），但平方不出契约域 (S,H]。动因=批 6 实战：
   两真实仓库在平方外推下轴 0 收费破万分之十、总分钳 0 全失区分度。
   同修正将 score 聚合改为逐轴**有界密度费** `floor(scale·v/(v+n))`
-  （公式与机会数定义见 [contracts/VERSIONING.md](../../contracts/VERSIONING.md)
+  （公式与机会数定义见 [contracts/VERSIONING-ARCHIVE-2.15-2.33.md](../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md)
   2.17.0 台账），二次分数迁移随发版声明。
 - score 侧：size 轴由二值改梯度 = **分数迁移一次**，发版声明义务
   （[RELEASE.md](../RELEASE.md) §0，修正案①先例）。

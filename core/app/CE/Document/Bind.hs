@@ -16,8 +16,8 @@
 -- a class and integers; a line's holes are counted as Rust's
 -- `str::matches("{}")` counts them and filled left to right, one per
 -- reference, each reference resolving to a string. A request without
--- `strings` (the PreToolUse guard; query until its program crosses)
--- is answered as before, references and holes for the measuring side.
+-- `strings` (query, until its program crosses; the PreToolUse guard
+-- sends them since step 11a) is answered with references and holes.
 module CE.Document.Bind (Resolver, Strings (..), bindDocument, bindLine, entry, indexed, nested, textOf) where
 
 import CE.Document.Contract (DocReq (..))

@@ -9,8 +9,8 @@
 -- The measuring side sends each group's members (unit, lines, file
 -- in-degree) and one tree per member in clone/1's postorder encoding
 -- with four more columns — each node's source-text hash, position
--- class, own-token hash and token-text hash (§5.9.2: no name, path or
--- source text crosses, only integers) — and this side aligns the
+-- class, own-token hash and token-text hash (merge/1 carries integers
+-- only; the report's texts go through document/1) — and this side aligns the
 -- members (a T1/T2 group node for node, a T3 pair by the tree-edit
 -- mapping), finds the holes, widens and numbers the parameters,
 -- and answers per group the parameter count, the member kept, the

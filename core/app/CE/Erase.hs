@@ -8,10 +8,10 @@
 -- coverage, per-language unresolved-site counts) and sends dense
 -- integer rows; this family answers which rows are safe to erase and
 -- names WHY every other row is advisory. Since 7.2.0 (plan v2.30 step
--- 7b) the request may also carry the rows' TARGETS — one
--- [pathId, start, end] per row — and the reply then says which row
--- stands for each target (`kept`, CE.Erase.Cost.keptRows); a request
--- without the table keeps its bytes. Paths never cross the wire
+-- 7b) the request carries the rows' TARGETS (optional then, required
+-- now) — one [pathId, start, end] per row — and the reply says which
+-- row stands for each target (`kept`, CE.Erase.Cost.keptRows); a
+-- request without the table is refused by name. Paths never cross the wire
 -- (§5.9.2) — row index is identity and Rust re-labels on return.
 -- The predicate is deliberately knobless: safety is not tunable.
 module CE.Erase (respond) where

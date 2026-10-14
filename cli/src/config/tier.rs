@@ -40,10 +40,10 @@ pub const PROMOTED_DEFAULT: &str = "deny";
 pub const TIERS: [&str; 4] = ["observe", "warn", "ask", "deny"];
 
 impl Guard {
-    /// Effective tier for one rule class: an explicit `[guard] mode`
-    /// overrides every class; otherwise the plan-§4.2 route default
-    /// for that class applies (PROMOTED_DEFAULT for the two classes
-    /// promoted through the FPR gates, "observe" for everything else).
+    /// Effective tier for a `[guard]` class (`[tombstone]` and `[flow]`
+    /// read their own `tier`): an explicit `[guard] mode` overrides it;
+    /// otherwise the plan-§4.2 route default applies (PROMOTED_DEFAULT
+    /// for the two FPR-promoted classes, "observe" for everything else).
     ///
     /// TOTAL by construction. An unrecognized value used to come back
     /// verbatim, and each consumer then failed its own quiet way:

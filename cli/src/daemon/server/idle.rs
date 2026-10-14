@@ -6,7 +6,7 @@
 //! — the gate degraded to fail-open at the request of any local
 //! process holding no token at all (review 2026-08-20).
 //!
-//! interprocess 2.4.3 exposes no ONE portable mechanism, so there are
+//! interprocess 2.4.4 exposes no ONE portable mechanism, so there are
 //! two:
 //!
 //! * Unix — `Stream::set_recv_timeout` is SO_RCVTIMEO: kernel
@@ -15,7 +15,7 @@
 //!   PRE_AUTH_LINE_MAX bounds that to 4096 drips before the cap
 //!   refuses the connection outright.
 //! * Windows — the same call is a hard `ErrorKind::Unsupported`
-//!   ("named pipes do not support I/O timeouts", interprocess-2.4.3
+//!   ("named pipes do not support I/O timeouts", interprocess-2.4.4
 //!   src/os/windows/named_pipe/local_socket/stream.rs:53), and the
 //!   read underneath is a `ReadFileEx` awaited in an alertable
 //!   `SleepEx`, so the only way to end it from outside that thread is

@@ -35,7 +35,7 @@ pub(super) fn execute(root: &Path, plan: &Plan) -> Result<usize> {
 }
 
 /// Contract order, each refusal by name, nothing written before all
-/// three hold. The repository check demands the resolved toplevel
+/// four hold. The repository check demands the resolved toplevel
 /// EQUAL the erase root: git ascends past an anchorless dir into any
 /// enclosing repository (the hook root-anchoring class), and an
 /// apply silently bound to a parent repo would pass ITS cleanliness

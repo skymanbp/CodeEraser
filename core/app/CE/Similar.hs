@@ -11,9 +11,9 @@
 -- row per kept candidate (the shape bit its own measurement of the
 -- stored shape terms); this family answers the order the candidates
 -- stand in (exact rationals, never the measuring side's fixed point)
--- and which of them play the query's role. Names, words and paths
--- never cross the wire (§5.9.2) — hashes and counts only, row index is
--- identity and Rust re-labels on return. Advisory only: no condition
+-- and which of them play the query's role. similar/1 carries hashes
+-- and counts only (the words go to bags/1 over the local pipe); row
+-- index is identity. Advisory only: no condition
 -- bit, no knob, no tier (booklet 13's posture) — a knobless family
 -- whose one table is not the shared RowsReq (the query bag is its own
 -- key), so it binds the cascade directly.

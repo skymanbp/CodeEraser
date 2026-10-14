@@ -74,9 +74,9 @@ unmentionedHardCap :: Integer
 unmentionedHardCap = 524288
 
 -- | Which rungs count as references: an edge resolved at rung
--- <= minRung is a reference claim. The Rust ladder never guesses
+-- <= minRung is a reference claim. The ladder (resolve/1) never guesses
 -- (ambiguity is Unresolved and never crosses the wire), so every
--- rung it emits (1..5) is admitted by default; the 2h cut table
+-- rung resolve/1 answers (1..5) is admitted by default; the 2h cut table
 -- publishes per-language precision by rung, and lowering this
 -- constant is the ablation lever that trades recall for certainty.
 minRung :: Integer

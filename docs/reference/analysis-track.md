@@ -4,13 +4,13 @@
 
 ## 0. 一句话定位
 
-四个新功能全按既有分工落地：Rust 只把源码降成整数事实（§5.9.2：名字、路径、源文本永不过线），分析与判决全在 Haskell 核，每个功能三面同落（CLI / MCP / GUI）、各过自己的门、各一册方法学。它们是 2026-09-25 用户两裁的功能轨（语言条 Haskell ≥ 40 % / 1.8.0 之后开新功能轨，不改写现有代码）（目标自 2026-10-03 起改为 Haskell 高于 Rust，见 algorithm-track），随 1.9.0 一版发出。
+四个新功能全按既有分工落地：Rust 只做碰世界的事，把读到的事实交给核（计划书 §5.9-6：文本可经本机管道过线；flow/1、merge/1 仍只送整数，query/1 送程序文本，arch/1 送路径），分析与判决全在 Haskell 核，每个功能三面同落（CLI / MCP / GUI）、各过自己的门、各一册方法学。它们是 2026-09-25 用户两裁的功能轨（语言条 Haskell ≥ 40 % / 1.8.0 之后开新功能轨，不改写现有代码）（目标自 2026-10-03 起改为 Haskell 高于 Rust，见 algorithm-track），随 1.9.0 一版发出。
 
 ## 1. 范围与裁定
 
 1. **四个家族**（落码顺序即计划书 T 轨顺序）：① `query/1` 代码查询与架构规则；② `flow/1` 函数内死代码；③ `merge/1` 克隆合并建议；④ `arch/1` 架构分析。每个家族一次 proto minor（7.3.0 → 7.6.0，§3），随各自的步落下，golden 六对起。
-2. **三面同落**：每个家族 = 一个 CLI 子命令（`ce query` 与 `ce rules` 两个、`ce flow`、`ce merge`、`ce arch`）+ MCP 工具（`query` / `rules` / `flow` / `merge_suggestions` / `architecture`）+ GUI 屏（Query〔含规则〕/ Flow / Merge / Arch）+ 报告文档 `ce.<family>-report/0.1.0` + `main_lang.rs` 中文帮助 + parity 表一行。缺一面即该步未完成（三面等价常设指令）。
-3. **判决还是顾问**：`query/1` 的 `assert` 是门（违规退 1，CI 狗粮加腿）；`flow/1` 是判决，按语言过精度门后才成门（§5.7）；`merge/1` 与 `arch/1` 是顾问（报告面自陈 advisory，永不产条件位，册 13 / 15 先例）。
+2. **三面同落**：每个家族 = 一个 CLI 子命令（`ce query` 与 `ce rules` 两个、`ce flow`、`ce merge`、`ce arch`）+ MCP 工具（`query` / `rules` / `flow` / `merge_suggestions` / `architecture`）+ GUI（Query 屏〔含规则〕+ 报告枢纽里的 flow / merge / arch）+ 报告文档 `ce.<family>-report/0.1.0` + `main_lang.rs` 中文帮助 + parity 表一行。缺一面即该步未完成（三面等价常设指令）。
+3. **判决还是顾问**：`query/1` 的 `assert` 是门（违规退 1，CI 狗粮加腿）；`flow/1` 是判决，按语言过精度门后才成门（§5.5）；`merge/1` 与 `arch/1` 是顾问（永不产条件位，册 13 / 15 先例）。
 4. **语言**：`query/1` 与 `arch/1` 读索引里的事实，语言无关；`flow/1` 只对有语句的文法（Python / TypeScript / TSX / Rust / Go / C / C++ / Java / Lua / R 十种；Haskell 无语句、Markdown / HTML / 纯文本无单元，按构造不入）；`merge/1` 对克隆族已判的对与组（`Lang::fingerprints()` 的十一种）。
 5. **不改写现有代码**（用户裁）：四个家族只追加模块、只对既有 wire 做加性 minor；既有十二个家族的判决字节不动，落码每步以「旧二进制 / 新二进制在十语料十面对拍逐字节同」为门。
 6. **不留已知限制**（用户令 2026-09-26）：凡本册想写成「边界」的，先问能不能按规范修对；修不对的在 §13 记立场与证据，不记「已知限制」。
@@ -19,23 +19,23 @@
 ## 2. 不变量：一处权威、整数过线、判决在核、顾问永非判决
 
 - **一处权威**：每个家族的请求形状只在核的 `CE.<Family>.Contract`（或 `CE.<Family>` 的解码段）与 Rust 的 `cli/src/<family>/wire.rs` 各写一次，两边由 golden 对拍钉住；上限与地板只在 `CE.<Family>.Cost` 一处，Rust 只镜像并在 `consume` 处校验回执。
-- **整数过线**：程序文本、名字、路径、glob 都在 Rust 侧解析成整数（请求内稠密 id、fnv1a64 哈希、枚举码）；核的应答只有下标与整数；Rust 用自己的图例把下标翻回名字与行号。查询语言的记号流也是整数（§4.4），核只见记号 kind 与值。
+- **事实过线**：计划书 §5.9-6（2026-10-04 修正）起文本可经本机 `ce` ↔ `ce-core` 管道过线，四族各不同：`flow/1`、`merge/1` 只送整数（请求内稠密 id、fnv1a64 哈希、枚举码），核的应答只有下标与整数，报告的名字与原文经各面的 `document/1` 请求交核拼写；`query/1` 送三段程序原文与 `[rules.pack]` 行，核词法（§4.4）；`arch/1` 送路径、行数与引用弧，核建树与五表（§7.3）。glob 仍在 Rust 侧展开成集合号。
 - **判决在核**：Datalog 求值、分层、推导链；控制流图、可达性、活性；反统一、参数计数、可行性；分层、最小反馈弧集、聚类、影响面——全在核。Rust 侧凡「镜像」核规则的地方（如 `flow` 的语句类表）只作请求形状的自检，不作判决。
-- **顾问永非判决**：`merge/1` 与 `arch/1` 的报告面第一行自陈 advisory；不进 `ce check`、不进守卫、不进基线。
+- **顾问永非判决**：`merge/1` 与 `arch/1` 不带条件位，面从不因它退非零（未判除外）；不进 `ce check`、不进守卫、不进基线。
 - **既有家族不动**：`clone/1` 的树只加一列可选的叶子哈希（§6.2），`ted` 判决不读它；`scan/1` / `graph/1` / `structure/1` 的请求与应答字节不动，新家族各自装配自己的表。
 
 ## 3. wire 契约与版本
 
 | 家族 | proto | 请求表 | 应答表 | 上限（`Cost`）与降级 |
 |---|---|---|---|---|
-| `query/1` | 7.3.0 | `program=[[kind,value]]` 记号流；`facts={"<code>":[[…]]}` 只含程序引用到的表（键 = 谓词码的十进制，`set` 表是其中一张），每表按元组严格升序；`prelude` 前奏子句数；`why` / `schema` 两个布尔 | `goals=[[goal,kind,sorts…]]`、`answers=[[goal,args…]]`、`proof=[[goal,answer,node,parent,rule,pred,args…]]`、`errors=[[token,code]]`、`counts={rules,queries,asserts,strata,facts,derived,answers,violations,proofNodes,proofTruncated}`、`schema=[[code,arity,sorts…]]`（只在请求要时） | 记号 65,536 / 事实行 4,194,304 / 派生元组 2,097,152 / 推导结点 16,384；`query_too_large` |
-| `flow/1` | 7.4.0 | `units=[[u,lang,params]]`、`stmts=[[u,seq,parent,kind,flags,aux]]`、`vars=[[u,v,declSeq,flags]]`、`uses=[[u,seq,v,mode]]` | `findings=[[u,kind,seq,v,seqEnd]]`、`counts={units,stmts,vars,uses,findings,dynamicUnits}` | 行 524,288（四表合计）；`flow_too_large` |
+| `query/1` | 7.3.0 | `texts=[前奏, 规则文件\|null, 查询\|null]`（核词法；`program=[[kind,value]]` 记号流只留作核的测试缝）、可选 `pack`（`[rules.pack]` 行）；`facts={"<code>":[[…]]}` 只含程序引用到的表（键 = 谓词码的十进制，`set` 表是其中一张），每表按元组严格升序；可选 `tree`（目录表由核从树建）；`why` / `schema` / `lex` 三个布尔 | `lexed`（`lex` 请求答回的词法程序，供 Rust 回标）、`dirs`（核从树建的目录，`[label,name,hash]`）、`goals=[[goal,kind,sorts…]]`、`answers=[[goal,args…]]`、`proof=[[goal,answer,node,parent,rule,pred,args…]]`、`errors=[[token,code]]`、`counts={rules,queries,asserts,strata,facts,derived,answers,violations,proofNodes,proofTruncated}`、`schema=[[code,arity,sorts…]]`（只在请求要时） | 记号 65,536 / 事实行 4,194,304 / 派生元组 2,097,152 / 推导结点 16,384；`query_too_large` |
+| `flow/1` | 7.4.0 | `units=[[u,lang,params]]`、`stmts=[[u,seq,parent,kind,flags,aux]]`、`vars=[[u,v,declSeq,flags]]`、`uses=[[u,seq,v,mode]]` | `findings=[[u,kind,seq,v,seqEnd,judged]]`（第六列 9.0.0 起）、`counts={units,stmts,vars,uses,findings,dynamicUnits}` | 行 524,288（四表合计）；`flow_too_large` |
 | `merge/1` | 7.5.0 | `groups=[[g,family,helper]]`、`members=[[g,m,unit,lines,fileIndeg]]`、`trees=[{lab,lld,leaf,slot,own,text}]`（按成员序） | `suggestions=[[g,params,kept,savings,feasible,reason]]`、`holes=[[g,hole,param,m,post,postEnd]]`、`counts` | 组 4,096 / 结点 131,072（两道上限下最宽的请求在协议一行内：定此上限时那一行 32 MiB，9.0.0 起 128 MiB）；`merge_too_large` |
-| `arch/1` | 7.6.0 | `files=[[F,D,lines]]`、`dirs=[[D,parent]]`、`edges=[[F,G,w]]`、`pkgEdges=[[F,D,w]]`、`focus=[F…]` | `layers=[[D,level]]`、`cuts=[[D,E,w,exact]]`、`clusters=[[F,cluster]]`、`misplaced=[[F,M]]`、`impact=[[F,depth]]`、`metrics=[[D,fanIn,fanOut,instability]]`、`counts` | 文件 131,072（`fileCap`）/ 引用 524,288（`edges` + `pkgEdges` 合计，`refCap`）；`arch_too_large` |
+| `arch/1` | 7.6.0 | 路径形（9.0.0 起测量侧只送这一形）：`paths`、`lines`、`arcs`、`sections`、`packages`、`focusPaths`，核建 `files=[[F,D,lines]]`、`dirs=[[D,parent]]`、`edges=[[F,G,w]]`、`pkgEdges=[[F,D,w]]`、`focus=[F…]` 五表并回显 `tables` 与 `dirNames`；整数形五表只留作测试缝 | `layers=[[D,level]]`、`cuts=[[D,E,w,exact]]`、`clusters=[[F,cluster]]`、`misplaced=[[F,M]]`、`impact=[[F,depth]]`、`metrics=[[D,fanIn,fanOut,instability]]`、`counts` | 文件 131,072（`fileCap`）/ 引用 524,288（`edges` + `pkgEdges` 合计，`refCap`）；`arch_too_large` |
 
-- 四个 minor 各随其步，`contracts/VERSIONING.md` 各一条（最新在前），`Protocol.hs` 的 `families` 表各加一行（hello 能力表由它派生），`Version.hs` 与 `corelink.rs` 的 `PROTO` 同步；旧核缺能力时 Rust 经 `corelink/judged.rs::ask` 具名降级「core offers no `<family>/1` (pre-7.x.0)」。
+- 四个 minor 各随其步，`contracts/VERSIONING.md` 各一条（最新在前），家族名与能力版本今在 `CE.Wire.Families` 一处拼写（`CE.Protocol` 的分派表与 hello 能力表由它派生，步 11a C28），协议版本在 `CE/Protocol/Version.hs` 与 `corelink.rs` 的 `PROTO`；立项时旧核缺能力由 `corelink/judged.rs::ask` 具名降级，今握手按主版本与定义包摘要拒掉旧核，走到缺能力只剩两件二进制来自不同构建一种情形，原句为「core offers no `<family>/1`: ce and ce-core are out of step (install both from one release)」（`corelink.rs` 的 `skew`）。
 - 拒绝（contract）按既有形：表形不合、非严格升序、下标越界、负值、成对表缺一——每条点名行号；程序错误（语法 / 未绑定 / 不可分层 / 类别不合 / 未知谓词 / 元数不一）**不是拒绝**，是正常应答里的 `errors` 表（§4.5）。
-- golden：`contracts/fixtures/<family>/golden.ndjson` 六对起（请求 `"proto":"7.0.0"` 锚，回复按核逐字节），十四份既有 golden 只动 proto 字面与 hello 能力表；重生器改为测试子仓的 `--ignored` 腿（`CE_BLESS=1 … fixture_contract::regen`，与 daemon golden 同法），不再靠会话草稿目录里的脚本。
+- golden：`contracts/fixtures/<family>/golden.ndjson` 六对起（请求与回复都带当前 proto 9.0.0，回复按核逐字节），十四份既有 golden 只动 proto 字面与 hello 能力表；重生器改为测试子仓的 `--ignored` 腿（`CE_BLESS=1 … fixture_contract::regen`，与 daemon golden 同法），不再靠会话草稿目录里的脚本。
 
 ## 4. 功能 ①：代码查询与架构规则（`query/1`）
 
@@ -67,7 +67,7 @@ agg      := ('count' | 'min' | 'max' | 'sum') '(' Var (',' Var)* ':' body ')'
 
 ### 4.2 事实库（EDB；Rust 装配，只送程序引用到的表）
 
-结点宇宙 = `graph/1` 请求同一份结点集（文件、包、节、走查到的资产，同一稠密下标；`cli/src/graph/nodes.rs` 一处权威）后接 docdup 族读的纯散文文件；目录树 = `structure/1` 同法在全部结点路径上建的稠密树（根 0 读 `.`，包坐在自己的目录）。落码 = `cli/src/query/legend.rs::SCHEMA`（27 个谓词，码 = 行位）与核 `CE.Query.Schema` 逐行镜像，`schema` 回显钉住。
+结点宇宙 = `graph/1` 请求同一份结点集（文件、包、节、走查到的资产，同一稠密下标；`cli/src/graph/nodes.rs` 一处权威）后接 docdup 族读的纯散文文件；目录树 = `structure/1` 同法在全部结点路径上建的稠密树（根 0 读 `.`，包坐在自己的目录）。落码 = 核 `CE.Query.Schema` 一处（27 个谓词，码 = 行位），名字随 `lexed` 回给 Rust，`schema` 回显钉住。
 
 | 谓词 | 实参类别 | 来源 |
 |---|---|---|
@@ -103,11 +103,11 @@ same_dir(F, G) :- in_dir(F, D), in_dir(G, D), F != G.
 dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 ```
 
-落码 `cli/src/query/prelude.rules`（八条）：`dead` 逐字镜像 `ce deadcode` 的文件级判决——入口 = 带任一角色位的结点（每个角色都落在核的入口掩码里），任一 rung 的引用都沿、只跳 asset / refdef 两种对存活性无效的边；前奏谓词码 1000–1005，用户谓词自 1006 起。
+落码 `cli/src/query/prelude.rules`（八条）：`dead` 逐字镜像 `ce deadcode` 的文件级判决——入口 = 带任一角色位的结点（每个角色都落在核的入口掩码里），任一 rung 的引用都沿、只跳 asset / refdef 两种对存活性无效的边；前奏谓词码 1000–1005，用户谓词随后按首现编号（声明了 `[rules.pack]` 时包谓词排在前奏之后、规则文件之前）。
 
-### 4.4 记号流编码（Rust 词法，核解析）
+### 4.4 记号流编码（核词法、核解析）
 
-`program=[[kind, value]]`：0 谓词码（EDB 固定码，IDB 按首次出现 ≥ 1000）/ 1 变量（每条子句内编号，`_` 每次新号）/ 2 整数 / 3 集合号 / 4 名字哈希（枚举常量也走这一路——`entry` 与 `"entry"` 同一个 fnv1a64，事实表的枚举列送的就是名字哈希；5 空着不用）/ 6 匿名 / 10 以上标点与关键字（`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/` `%` `count` `min` `max` `sum` `:`）。Rust 记每个记号的 `行:列`；核的解析器手写（递归下降，无解析库——核依赖只有 base / aeson / array / bytestring / containers）。这样分工：词法与解析错误的位置回标是文本活（Rust），文法、类别、安全性、分层是判决活（核）。
+`program=[[kind, value]]`：0 谓词码（EDB 固定码，IDB 按首次出现 ≥ 1000）/ 1 变量（每条子句内编号，`_` 每次新号）/ 2 整数 / 3 集合号 / 4 名字哈希（枚举常量也走这一路——`entry` 与 `"entry"` 同一个 fnv1a64，事实表的枚举列送的就是名字哈希；5 空着不用）/ 6 匿名 / 10 以上标点与关键字（`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/` `%` `count` `min` `max` `sum` `:`）。Rust 送三段原文与 `[rules.pack]` 行，核 `CE.Query.Lex` 扫成 `[kind, value]` 并记每个记号的 `来源 行:列`（算法轨 W1 第 2 项自 `cli/src/query/lexer.rs` 与 `program.rs` 搬入，4531a50c），`lex` 请求答回 `lexed` 供 Rust 回标；Rust 只把 glob 展开成集合。核的解析器手写（递归下降，无解析库——核依赖只有 base / aeson / array / bytestring / containers）。
 
 ### 4.5 应答
 
@@ -127,19 +127,19 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 4.7 门
 
-- 核：朴素不动点参考求值器（`ReferenceQuery`：自己分层——谓词图的传递闭包读出强连通分量，负边或聚合边落在分量内即不可分层，分量的层 = 进入它的路径上负边数的最大值；自己的算术、比较、聚合与目标答案；只共用解析器）与核的检查 + 半朴素 + 索引求值器在 `ReferenceQueryGen` 的 200 个有籽随机程序上逐元组等价（每个程序配一张种子事实集；程序由七个可有可无的部分拼成——递归闭包、四种聚合〔一或两个变量，会遇到空集合〕、五种算子〔字面量或事实里的 0 让除法落空〕、六种比较〔已绑定变量上的 `=` 在内〕、否定、否定之上的聚合〔第三、四层〕、十分之一的负环；每部分一个查询，半数程序带成立或违规的断言；程序谓词从 p1200 起，不与前奏的编号混；不可分层的程序核须在头部按名拒；电池逐程序核到每种形状）；分层 / 安全性 / 类别每种程序错误按名；推导链每结点重放规则体得回该元组；聚合与参考实现等价；派生上限降级；golden 八对（步 1 六对：前奏 + schema 回显 / 断言违规 / 带 `why` 的查询 / 语法 / 未绑定 / 不可分层；步 2 加算术 / 集合上的聚合两对，子仓 `query_golden.rs` 钉每条请求行 = 前奏 + 程序经真词法；v2.33 规则包加两对：五项全开的判决、同一包的词法应答带 `packText`）；规则包另有 `PackProps`：五项各自与合起来的渲染文本过检查、`pack_` 重定义在规则文件自己的记号处报错误 7、每项 200 张种子事实表上核的见证行与按集合推导式另写的参考逐行等价（≥ 40 张有违规）、每条拒绝按名。
-- Rust：词法编号与故障位置（`unit/query/program.rs` 六腿）、图例与核回显同表（`unit/query/legend.rs`）、glob 读不出 = 该记号处的程序错误（`unit/query/face.rs` 负向探针）、`consume` 对健康 / 降级 / 偏斜应答（`unit/query/wire.rs`）；集成：`dead(F)` 与 `ce deadcode` 同一文件、糖 / 聚合 / 算术 / 九种错误同一条路、`ce rules` 退出码与控制台、规则文件三种来源（`it/query_face.rs` 两腿、`it/rules_face.rs` 两腿）；三面字节同 = CLI JSON 对库面逐字节、三面经同两个库函数（`face_parity` 一行；选项集与 GUI 直通由第 55 条的门核）。
+- 核：朴素不动点参考求值器（`ReferenceQuery`：自己分层——谓词图的传递闭包读出强连通分量，负边或聚合边落在分量内即不可分层，分量的层 = 进入它的路径上负边数的最大值；自己的算术、比较、聚合与目标答案；只共用解析器）与核的检查 + 半朴素 + 索引求值器在 `ReferenceQueryGen` 的 200 个有籽随机程序上逐元组等价（每个程序配一张种子事实集；程序由七个可有可无的部分拼成——递归闭包、四种聚合〔一或两个变量，会遇到空集合〕、五种算子〔字面量或事实里的 0 让除法落空〕、六种比较〔已绑定变量上的 `=` 在内〕、否定、否定之上的聚合〔第三、四层〕、十分之一的负环；每部分一个查询，半数程序带成立或违规的断言；程序谓词从 p1200 起，不与前奏的编号混；不可分层的程序核须在头部按名拒；电池逐程序核到每种形状）；分层 / 安全性 / 类别每种程序错误按名；推导链每结点重放规则体得回该元组；聚合与参考实现等价；派生上限降级；golden 十二对（步 1 六对：前奏 + schema 回显 / 断言违规 / 带 `why` 的查询 / 语法 / 未绑定 / 不可分层；步 2 加算术 / 集合上的聚合两对，子仓 `query_golden.rs` 钉每条请求行 = 前奏 + 程序经真词法；v2.33 规则包加两对：五项全开的判决、同一包的词法应答带 `packText`；算法轨 W1 再加 `lex` 与 `tree` 两对，今十二对）；规则包另有 `PackProps`：五项各自与合起来的渲染文本过检查、`pack_` 重定义在规则文件自己的记号处报错误 7、每项 200 张种子事实表上核的见证行与按集合推导式另写的参考逐行等价（≥ 40 张有违规）、每条拒绝按名。
+- Rust：词法编号与故障位置（立项时 `unit/query/program.rs` 六腿，今测冻结副本；核词法的回标由 `unit/query/lexed.rs` 钉）、图例与核回显同表（`unit/query/legend.rs`）、glob 读不出 = 该记号处的程序错误（`unit/query/face.rs` 负向探针）、`consume` 对健康 / 降级 / 偏斜应答（`unit/query/wire.rs`）；集成：`dead(F)` 与 `ce deadcode` 同一文件、糖 / 聚合 / 算术 / 九种错误同一条路、`ce rules` 退出码与控制台、规则文件三种来源（`it/query_face.rs` 两腿、`it/rules_face.rs` 两腿）；三面字节同 = CLI JSON 对库面逐字节、三面经同两个库函数（`face_parity` 一行；选项集与 GUI 直通由第 55 条的门核）。
 - 精度：无统计门（语义精确）；自仓 `ce.rules` CI 常绿即验收。
 
 ## 5. 功能 ②：函数内死代码（`flow/1`）
 
-### 5.1 降表（Rust，每语言一张 `FlowSpec` 表，与 `LangSpec` 同目录）
+### 5.1 降表（Rust 执行；表在核 `CE.Lang.<Language>.Flow`，经 `tables/1` 读入，契约在 `cli/src/flow/spec.rs`）
 
 - `stmts=[[u, seq, parent, kind, flags, aux]]`：单元内语句按前序编号；`kind`：0 block / 1 stmt / 2 if / 3 loop / 4 switch / 5 case / 6 try / 7 catch / 8 finally / 9 return / 10 throw / 11 break / 12 continue / 13 goto / 14 label / 15 noreturn-call；`flags` 位：0 has_else / 1 infinite（常真循环头：Rust `loop`、Go `for {}`、Python `while True`、C `for(;;)`）/ 2 fallthrough / 3 dynamic（单元含 `eval` / `exec` / `load` 一类名的调用，按语言表）/ 4 empty；`aux` = break / continue / goto 的目标 seq（无标签 = 最近的循环或 switch）。
 - `vars=[[u, v, declSeq, flags]]`：局部量与形参；`flags`：0 param / 1 captured（被嵌套单元或闭包引用；嵌套单元是独立单元，捕获在宿主侧记位）/ 2 ignored（以 `_` 开头、或语言的丢弃名）/ 3 address_taken（C 族 `&x`、Rust `&mut x` 传出）。
 - `uses=[[u, seq, v, mode]]`：按求值序，`mode`：0 read / 1 write / 2 readwrite（复合赋值、`x++`）。
 - 树形约定（步 3 定；核 `CE.Flow.Tree` / `CE.Flow.Shape` 按名拒，每条点名行）：`parent` −1 = 单元体，同单元 `seq` 自 0 连续、父在前、单元按序出现；if 的子结点 = then〔+ else〕，`has_else` 位 = 第二个子结点在；switch 的子结点全是 case，`has_else` 位 = 有 default（空 switch 不得带）；try 的子结点顺序 = 体 · catch* · finally?（至多一个 finally）；case 只在 switch 下、catch / finally 只在 try 下；stmt / return / throw / break / continue / goto / noreturn 无子结点；`has_else` 只在 if / switch、`infinite` 只在 loop、`fallthrough` 只在 case，`dynamic` / `empty` 任意；`aux` 只在 break / continue / goto 上（break 指包围它的 loop 或 switch、continue 指包围它的 loop、goto 指本单元的 label），其余为 0；`units` 行的 `params` = 该单元 var 表里形参的个数；`vars` 每单元 `v` 自 0 连续，形参 `declSeq` −1 且位 0 为 1、局部量 `declSeq` 指本单元某语句；`uses` 按 `(u, seq)` 不降、`v` 须已声明。
-- 不入表的：表达式内部结构、名字、字面量；只有 `kind` / `flags` / 序号。名字与位置只进 Rust 侧的图例（wire 不送）：每条语句记起点（行，列）、首行文本与终点行，面把类 0 的 `lineEnd` 写成不可达段末句的终点行（提交 E，LEG-1）。
+- 不入表的：表达式内部结构、名字、字面量；只有 `kind` / `flags` / 序号。名字与位置只进 Rust 侧的图例（wire 不送）：每条语句记起点（行，列）、首行文本与终点行（`Legend::stmt_end`，提交 E，LEG-1）；面今仍读起点行，类 0 的 `lineEnd` 是不可达段末句起点所在的行。
 - **降表规则**（步 4 定；每条都是从源码读出的事实，不是判决——核只见整数，这些规则决定它见到什么）：
   1. **单元与容器**：单元 = `scan::functions::extract` 的同一喉口（同一 `fn_kinds`、同一名字、同一序）；单元体 = 文法的 body 字段（表达式体的箭头函数 = 一条 `return`）；语句 = 容器的具名子结点（注释除外）；`block` 类容器 → kind 0，空容器带 `empty`；嵌套单元（闭包 / lambda / 局部函数）不下降——它在自己的单元里判，宿主只记捕获（第 10 条）。
   2. **结构语句的子结点**：if → then〔+ else〕各恰一个子结点（分支是块 → kind 0 块，是裸语句 → 该语句），`elif` / `elseif` 链改写成 else 位上的嵌套 if；loop → 体的语句（或一个块）；switch / match → 每臂一个 case（子结点 = 臂体）；try → 体〔一个块〕· catch* · finally?；Python try 的 `else:` 作体的第二个块子结点（其语句仍可交给 catch——只加路径）。
@@ -177,7 +177,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 5.4 面与档位
 
-- `ce flow [--check] [--kind …] [--format json]`：报告 `ce.flow-report/0.1.0`（每条 `{path, unit, kind, line, lineEnd, var?}`，名字与行号由 Rust 图例回标）；`--check` 在 `[flow] tier` 为 `deny` 且有非顾问发现时退 1。
+- `ce flow [--check] [--kind …] [--format json]`：报告 `ce.flow-report/0.1.0`（每条 `{path, unit, kind, line, lineEnd, var?, judged}`，名字与行号由 Rust 图例回标）；`--check` 在 `[flow] tier` 为 `deny` 且有非顾问发现时退 1。
 - 守卫腿：PreToolUse 对本次写入的单元跑一次（复用 guard 的探针路，daemon `2.1.0` → `2.2.0` 加性请求）；档位 `[flow] tier = observe | warn | ask | deny`（出厂 observe；晋级按 §4.2 铁律：有台账才可 deny）；Stop 审计行加性对象 `flow{findings, kinds}`，feed `ce.observe` minor 加性。
 - MCP `flow`；GUI 报告枢纽的 flow 族（自有渲染器：计数芯片、四个种类筛选芯片、发现表带判决 / 顾问标、被拒单元表；§13 第 26 条）。
 
@@ -199,9 +199,9 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 6.2 树（与 `clone/1` 同一后序编码加四列）
 
-`trees=[{lab, lld, leaf, slot, own, text}]`：`lab` / `lld` 与 `clone/1` 同（命名结点后序、kind 哈希、最左叶）；`leaf` = 叶结点原文的 fnv1a64（标识符与字面量各自的文本；内部结点 0；核以 `Integer` 读，fnv1a64 可超 Int64）；`slot` = 结点位置类：0 语句位 / 1 表达式位 / 2 类型位 / 3 名字位（声明名与局部赋值的裸目标）/ 4 其他；`own` = 结点**自己的匿名记号**（直接子结点里的匿名记号，穿过匿名中间结点取其叶、不进任何命名子结点——正是树的子结点遍历跨过的那些记号）按源码序、记号之间以一个 0x00 相隔的 fnv1a64，一个也没有 = 0；`text` = 子树**整条记号流**（命名叶与匿名记号，源码序，同样以 0x00 相隔）的 fnv1a64——空白不是记号，`()` 与 `( )` 的 `text` 相同而 `leaf` 不同，单记号叶的 `text` 恰等于 `leaf` 是巧合不是契约（§13 第 42 条）。六列出自 `emit` 的同一次遍历（`own` / `text` 在 `cli/src/dedup/t3/tree_text.rs`）；片段的合成根 `own` 0、`text` = 各顶层结点的记号流以 0x00 首尾相接。`clone/1` 的请求同批接受可选的 `leaf` 列（长度须等于结点数，`ted` 不读它——判决字节不变），测量侧的 `clone/1` 请求只发 `lab` / `lld`；`merge/1` 要求四列都在，缺列 / 长度不等 / 负值按名拒。组行 `groups=[[g, family, helper]]`：`helper` = 片段组合并后辅助函数的头尾行数（该语言 slot 表的 `helper_lines`：Python 与 Haskell 1、其余十种 2），整单元组 0（§13 第 47 条）。
+`trees=[{lab, lld, leaf, slot, own, text}]`：`lab` / `lld` 与 `clone/1` 同（命名结点后序、kind 哈希、最左叶）；`leaf` = 叶结点原文的 fnv1a64（标识符与字面量各自的文本；内部结点 0；核以 `Integer` 读，fnv1a64 可超 Int64）；`slot` = 结点位置类：0 语句位 / 1 表达式位 / 2 类型位 / 3 名字位（声明名与局部赋值的裸目标）/ 4 其他；`own` = 结点**自己的匿名记号**（直接子结点里的匿名记号，穿过匿名中间结点取其叶、不进任何命名子结点——正是树的子结点遍历跨过的那些记号）按源码序、记号之间以一个 0x00 相隔的 fnv1a64，一个也没有 = 0；`text` = 子树**整条记号流**（命名叶与匿名记号，源码序，同样以 0x00 相隔）的 fnv1a64——空白不是记号，`()` 与 `( )` 的 `text` 相同而 `leaf` 不同，单记号叶的 `text` 恰等于 `leaf` 是巧合不是契约（§13 第 42 条）。六列出自 `emit` 的同一次遍历（`own` / `text` 在 `cli/src/dedup/t3/tree_text.rs`）；片段的合成根 `own` 0、`text` = 各顶层结点的记号流以 0x00 首尾相接。`clone/1` 的请求同批接受可选的 `leaf` 列（长度须等于结点数，`ted` 不读它——判决字节不变），测量侧的 `clone/1` 请求只发 `lab` / `lld`；`merge/1` 要求四列都在，缺列 / 长度不等 / 负值按名拒。组行 `groups=[[g, family, helper]]`：`helper` = 片段组合并后辅助函数的头尾行数（该语言 slot 表的 `helper_lines`：Python 与 Haskell 1、其余九种 2），整单元组 0（§13 第 47 条）。
 
-位置类由每语言一张表给（`cli/src/merge/slot*.rs`：语句类读 `FlowSpec` 既有字段、不另立语句表；没有流表的 Haskell 在自己的表里带 `stmt_kinds` / `container_kinds`；表不住 `cli/src/flow/`——那个目录去掉 `mod.rs` 是 flow 精度册回答的降表，§13 第 34 条），是语法事实。分类次序（§13 第 49 条）：语句位 → 声明名（`name_fields`；排在类型之前，`struct_item` / `class_declaration` / `type_spec` 的名字因此可达）→ 类型 → 赋值目标（`target_fields` 与 R 的 `target_ops`：目标根是裸 `identifier` = 3〔局部重命名〕，否则 4〔成员 / 下标 / 解引用目标，参数接不到写入〕；`target_lists` 是穿过的目标列表）→ 表达式的组成名与字面量内文（`part_fields` / `part_kinds` = 4，由一级拓宽交给父表达式）→ 表达式 → 其他 4。merge 送的树不含文法的 extra 结点（注释）——T1/T2 的记号流本来没有注释；`clone/1` 的判决树照旧带（§13 第 31 条）。
+位置类由每语言一张表给（表在核，各语言的 `[[slot]]` 经 `tables/1` 读入，`cli/src/merge/slot*.rs` 执行：语句类读 `FlowSpec` 既有字段、不另立语句表；没有流表的 Haskell 在自己的表里带 `stmt_kinds` / `container_kinds`；表不住 `cli/src/flow/`——那个目录去掉 `mod.rs` 是 flow 精度册回答的降表，§13 第 34 条），是语法事实。分类次序（§13 第 49 条）：语句位 → 声明名（`name_fields`；排在类型之前，`struct_item` / `class_declaration` / `type_spec` 的名字因此可达）→ 类型 → 赋值目标（`target_fields` 与 R 的 `target_ops`：目标根是裸 `identifier` = 3〔局部重命名〕，否则 4〔成员 / 下标 / 解引用目标，参数接不到写入〕；`target_lists` 是穿过的目标列表）→ 表达式的组成名与字面量内文（`part_fields` / `part_kinds` = 4，由一级拓宽交给父表达式）→ 表达式 → 其他 4。merge 送的树不含文法的 extra 结点（注释）——T1/T2 的记号流本来没有注释；`clone/1` 的判决树照旧带（§13 第 31 条）。
 
 ### 6.3 判决（核 `CE.Merge.*`）
 
@@ -221,7 +221,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ### 6.5 门
 
-- 核：反统一定律——实例化（骨架 + 每成员的参数向量）逐树复原每个成员；极小性（少一个参数即有成员复原不出）；映射版 TED 距离与原 TED 逐对相等（随机树电池）；golden 六对。
+- 核：反统一定律——实例化（骨架 + 每成员的参数向量）逐树复原每个成员；极小性（少一个参数即有成员复原不出）；映射版 TED 距离与原 TED 逐对相等（随机树电池）；golden 七对。
 - 冻结建议集：本仓 + 四语料的建议集冻结（`contracts/eval/merge-suggestions-v<代>.json`，门读最新一代，旧代留盘作记录），改动即漂移门；盲判精度（可行 / 参数数由独立代理按源码判，第二代起批次提示带 `## Reading rules`——与核的规则逐条对应，§13 第 50 条），读数入册。
 
 ## 7. 功能 ④：架构分析（`arch/1`）
@@ -233,23 +233,23 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 ### 7.2 判决（核 `CE.Arch.*`）
 
 - 目录图：结点 = 全部目录；文件边按目录聚合（同目录内不计）、`pkgEdges` 的 F → D 折成 dir(F) → D（同目录不计），同一对目录的两种边合并、权相加。
-- 分层：反馈弧集按目录图的每个强连通分量各算——分量 ≤ 14 顶点用按顶点子集记忆化的排序 DP 精确（线性序的代价 = 后向弧的 (权和, 弧数, 按 (D,E) 排序的弧表) 三元组字典序；`cost(S) = min over v ∈ S of cost(S∖{v}) ⊕ v 排在 S 末尾时 v → S∖{v} 的弧`，2^14 × 14 状态，回溯取序、cuts = 后向弧集），`exact = 1`；更大用 Eades–Lin–Smyth 加权贪心（汇点入尾段、源点入首段、否则取出权 − 入权最大者、并列取 id 小，每摘一点重判）再按 (D,E) 升序逐条试放回、放回不成环即留下，`exact = 0`；权 = 边的引用数；`cuts=[[D,E,w,exact]]` 按目录粒度出（文件级展开归测量侧——包边没有 G，目录粒度是唯一无洞的形）；去掉 cuts 后 level(D) = 0 若无出弧、否则 1 + max level(E)，`layers` 每目录一行。
+- 分层：反馈弧集按目录图的每个强连通分量各算——分量 ≤ 14 顶点用按顶点子集记忆化的排序 DP 精确（线性序的代价 = 后向弧的 (权和, 弧数, 按 (D,E) 排序的弧表) 三元组字典序；`cost(S) = min over v ∈ S of cost(S∖{v}) ⊕ v 排在 S 末尾时 v → S∖{v} 的弧`，2^14 × 14 状态，回溯取序、cuts = 后向弧集），`exact = 1`；更大用 Eades–Lin–Smyth 加权贪心（汇点入尾段、源点入首段、否则取出权 − 入权最大者、并列取 id 小，每摘一点重判）再按 (D,E) 升序逐条试放回、放回不成环即留下，`exact = 0`；权 = 边的引用数；`cuts=[[D,E,w,exact]]` 按目录粒度出（包边没有 G，目录粒度是唯一无洞的形；文件级展开与簇的多数目录由核 `document/1`〔`CE.Arch.Document`〕推出）；去掉 cuts 后 level(D) = 0 若无出弧、否则 1 + max level(E)，`layers` 每目录一行。
 - 聚类：文件图（只用 `edges`，无向、两向权相加）上的确定性 Louvain：从单点社区起、按结点 id 升序局部移动，增益按 2m·k_{i,C} − Σ_tot(C)·k_i 的整数形比（留在原社区的增益也按先把 i 摘出算）、并列取社区 id 小、只在严格优于留在原社区时移动，一遍无移动即收敛；只聚合一次（超结点按最小成员 id 编号，第二层再局部移动到收敛）即停；簇号按簇内最小文件 id 升序重编 → `clusters`；簇的多数目录 M = 簇内文件最多的目录（并列取 D 小）；文件 F 错位 ⇔ M 在簇内的文件数**严格大于** dir(F) 在簇内的文件数（并列 = 无证据、不错位；单文件簇由此不错位；2026-09-30 由 golden 第 7 对的环形收紧：15 个单文件目录成环时旧规则判 11/15 错位而无一处有证据）= `misplaced=[[F, M]]`。
 - 影响面：从 `focus` 沿反向文件边 BFS（`pkgEdges` 的 F → D 读作 F 引用 D **直属**的每个文件，不含子目录），`impact=[[F, depth]]`，focus 自身 depth 0。
 - 度量：每目录 fanIn / fanOut = 有弧指向它 / 它指向的互异目录数（去 cuts 前）；不稳定度 I = ⌊1000 · out ÷ (in + out)⌋，in + out = 0 记 −1。
 
 ### 7.3 面
 
-`ce arch [--impact <path>…] [--format json]`：报告 `ce.arch-report/0.1.0`（分层表、拆环建议〔目录对带引用数与 `exact`，其下由 Rust 展开成文件级边——`edges` 里落在该目录对的行加 `pkgEdges` 里落在它的行〕、簇〔簇号是核的，Rust 只回标路径与多数目录〕、错位文件、影响面、目录度量〔−1 → null〕；核起不来或答不了、核不提供家族、本地越上限 = `degraded` 具名、六表空，与查询族同一姿态；核对已计价的请求答 degraded 是上限镜像漂移 = 错误）；MCP `architecture`（`impact` 路径数组）；GUI = reports 枢纽里的 arch 报告（自定义渲染：分层带 + 拆环表 + 错位 / 簇 / 影响面 / 度量表，枢纽的路径输入喂 `impact`；§13 第 26 条的读法）；`--impact` 点名不是 measured 文件的路径按名拒、退 2。顾问。测量侧的表：文件结点 = `structure` 同一条取图路的 measured 文件结点按路径序，目录 = `structure::tree::build` 的树（parent < D），`lines` 与 `structure` 的缝定价同一来源，`edges` 收任何 kind / rung 的文件 → 文件边（section 目标折到其文件，自环丢），`pkgEdges` 收 `GRAN_PACKAGE` 目标且目录在树内的边，两表各按 (F, G) / (F, D) 合并计数。
+`ce arch [--impact <path>…] [--format json]`：报告 `ce.arch-report/0.1.0`（分层表、拆环建议〔目录对带引用数与 `exact`，其下由核 `document/1` 展开成文件级边——`edges` 里落在该目录对的行加 `pkgEdges` 里落在它的行〕、簇〔簇号与多数目录都是核的〕、错位文件、影响面、目录度量〔−1 → null〕；核起不来或答不了、核不提供家族 = `degraded` 具名、六表空，与查询族同一姿态；核在自己建的表上计价，越上限答 degraded，测量侧按核建的表与 `limits.caps` 具名 `arch_too_large`）；MCP `architecture`（`impact` 路径数组）；GUI = reports 枢纽里的 arch 报告（自定义渲染：分层带 + 拆环表 + 错位 / 簇 / 影响面 / 度量表，枢纽的路径输入喂 `impact`；§13 第 26 条的读法）；`--impact` 点名不是 measured 文件的路径是核的故障，按名拒、无文档、退 2。顾问。测量侧送路径形：文件结点 = `structure` 同一条取图路的 measured 文件结点按路径序，`lines` 与 `structure` 的缝定价同一来源，弧收任何 kind / rung 的文件 → 文件边（section 目标折到其文件）与 `GRAN_PACKAGE` 目标；核 `CE.Arch.Tables.assemble` 在路径上建树（`CE.Structure.Tree.build`，parent < D）、丢自环、两表各按 (F, G) / (F, D) 合并计数、树外包不入表。
 
 ### 7.4 门
 
-- 核：分层与「去掉 cuts 后无环」互证；精确 FAS（顶点子集 DP）与两个独立参考——弧子集穷举（≤ 12 弧）与全排列枚举——在 4 顶点全体有向图与两族有籽随机图上逐权、逐弧表等价；贪心 FAS 结果无环且极小，对 DP 最小值的比只记录不断言（ELS 是启发式、无常数界；2026-09-30 首轮电池在 8–10 顶点强连通图上观测到最差 4×，正是把精确范围从 ≤ 12 弧抬到 ≤ 14 顶点的缘由）；`exact` 位 ⇔ 分量 ≤ 14 顶点；Louvain 确定性（同图两跑逐字节同）；影响面与朴素闭包等价；golden 七对。
+- 核：分层与「去掉 cuts 后无环」互证；精确 FAS（顶点子集 DP）与两个独立参考——弧子集穷举（≤ 12 弧）与全排列枚举——在 4 顶点全体有向图与两族有籽随机图上逐权、逐弧表等价；贪心 FAS 结果无环且极小，对 DP 最小值的比只记录不断言（ELS 是启发式、无常数界；2026-09-30 首轮电池在 8–10 顶点强连通图上观测到最差 4×，正是把精确范围从 ≤ 12 弧抬到 ≤ 14 顶点的缘由）；`exact` 位 ⇔ 分量 ≤ 14 顶点；Louvain 确定性（同图两跑逐字节同）；影响面与朴素闭包等价；golden 九对（第七对为十五目录环走贪心路，后两对是路径形）。
 - 冻结自仓读数：本仓**一个钉住提交**的分层 / cuts / 目录度量 / 错位 / 簇计数冻结（`contracts/eval/arch-self-v1.json`；门用 `git archive <commit>` 去掉 `.gitmodules` 物化那棵树再量——树不动，读数只随测量或核的行为动，漂移即真漂移；换钉提交 = 按 EVAL-SET 复活协议改签）。
 
 ## 8. 核的模块布局与尺寸
 
-每个家族 = `CE/<Family>.hs`（respond、解码、应答）+ `CE/<Family>/Cost.hs`（上限、地板、码域）+ 判决模块若干（`Query`: `Contract`（请求形与拒绝）、`Syntax` / `Parse`（记号流 → 子句）、`Check`（安全性 / 类别 / 分层；`Check/Sorts`、`Check/Safety`）、`Eval`（半朴素 + 索引；`Eval/Index`、`Eval/Join`）、`Proof`、`Schema`；`Flow`: `Contract`（请求形与拒绝）、`Tree`（四表 → 单元树）、`Shape`（树形契约）、`Cfg`、`Reach`、`Live`；`Merge`: `Align`、`Holes`、`Ted` 的映射扩展；`Arch`: `Layers`、`Fas`、`Louvain`、`Impact`），每文件 ≤ 290 行（`core_size_gate` 的真实上限）。电池 `core/test/<Family>Props.hs` 各一（`WireHarness.runLegs` 两条平行列表形，避开查重门的表同韵）。`core/test/Spec.hs` 现 289 行，每加一家族 +3 行——步 1 先把电池清单拆到 `core/test/Batteries.hs`（`fixture_contract.rs` 读的那三行形不变、只换文件）。
+每个家族 = `CE/<Family>.hs`（respond、解码、应答）+ `CE/<Family>/Cost.hs`（上限、地板、码域）+ 判决模块若干（`Query`: `Contract`（请求形与拒绝）、`Syntax` / `Parse`（记号流 → 子句）、`Check`（安全性 / 类别 / 分层；`Check/Sorts`、`Check/Safety`）、`Eval`（半朴素 + 索引；`Eval/Index`、`Eval/Join`）、`Proof`、`Schema`；`Flow`: `Contract`（请求形与拒绝）、`Tree`（四表 → 单元树）、`Shape`（树形契约）、`Cfg`、`Reach`、`Live`；`Merge`: `Align`、`Holes`、`Ted` 的映射扩展；`Arch`: `Layers`、`Fas`、`Louvain`、`Impact`），每文件 ≤ 290 行（`core_size_gate` 的真实上限）。电池 `core/test/<Family>Props.hs` 各一（`WireHarness.runLegs` 两条平行列表形，避开查重门的表同韵）。`core/test/Spec.hs` 立项时 289 行，每加一家族 +3 行——步 1 拆出 `core/test/SpecProbes.hs`（设计名 `Batteries.hs` 按搬出的内容改，见 §11 步 1 行），今 225 行。
 
 ## 9. 验收与门（每步共用）
 
@@ -259,7 +259,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 
 ## 10. 文档与事实面
 
-- 计数事实：`count:families` 十二 → 十六、`count:screens` 十一 → 十五、`count:mcp_tools` 十六 → 二十一（`it/facts/form.rs` 的数词表到 twenty，先扩到 thirty）、`count:booklets` 十五 → 十九、`count:gates` 六 → 七、`count:golden_requests` 152 → ≥ 176（落地读数见 `contracts/docs-facts.json`：families 十六、screens 十二〔只有 Query 自成一屏，flow / merge / arch 住在诊断 hub 的报告屏里，各是 `registerHub` 的一个家族〕、mcp_tools 二十一、booklets 十九、gates 七、golden_requests 365）；`LITERALS` 里手改的字面（stack.svg 两对的家族行、how 页标题、六处 alt 文字「N families」）逐处改。
+- 计数事实：`count:families` 十二 → 十六、`count:screens` 十一 → 十五、`count:mcp_tools` 十六 → 二十一（`it/facts/form.rs` 的数词表到 twenty，先扩到 thirty）、`count:booklets` 十五 → 十九、`count:gates` 六 → 七、`count:golden_requests` 152 → ≥ 176（落地读数见 `contracts/docs-facts.json`：families 十六、screens 十二〔只有 Query 自成一屏，flow / merge / arch 住在诊断 hub 的报告屏里，各是 `registerHub` 的一个家族〕、mcp_tools 二十一、booklets 十九、gates 七、golden_requests 以 `contracts/docs-facts.json` 的 `count:golden_requests` 为准，今 369）；`LITERALS` 里手改的字面（stack.svg 两对的家族行、how 页标题、六处 alt 文字「N families」）逐处改。
 - 官网 how 页当时 732 行（四张卡移出后 643 行）、硬线 750：四张家族卡放新页对 `site/how/analysis/`（en / zh 各一），how 页目录面板与两首页各加一行入口；`site_contents.rs` 假定 f15 是末卡，改读 f16–f19 在新页；`verify_site.js` 与部署清单加两页。
 - 方法学册 16–19（每家族一册：判决定义、表、门、读数）+ `methodology.md` 索引四行 + 前后导航；架构图 IR（家族数 / 屏数 / 工具数子标签）与判决图（tag 行加四个家族）重渲；README 双语命令表加五行、parity 块随 bless、「三面一体」句、How it works 四行、技术栈条目；plugin/README 工具句；`VERSIONING.md` 四条；`ce-toml.md` 与 `cli.md` 再生；`DAEMON.md` 一行（flow 腿）；CHANGELOG 每步一块；计划书横幅与 T 轨行随步。
 
@@ -336,7 +336,7 @@ dir_ref(D, E) :- ref(F, G, _, _), in_dir(F, D), in_dir(G, E), D != E.
 44. R3 一级拓宽与空洞（2026-10-01，主会话裁定）——类 4 叶上的重标洞、父对两侧都在表达式位 → 洞覆盖父对整棵子树、类 1、父对里的其他洞被吸收；只拓一级、只拓叶、只拓类 4，类 2 不拓。落码时自答：**空洞（各成员文本向量全等）不删出骨架**——复原律要它，它只是不成参数、不定理由、不出洞行；拓宽后若成空洞同此。
 45. R4 间隙一律结构差（2026-10-01，主会话裁定；`00fe2f72ad8f` / `0173d31a603e` 多一个实参）——一侧为空的间隙不再取在场侧的类：森林含语句位 → `spans_statements`，否则 `position`，不可行、不拓宽；两侧非空的间隙同此。落码时自答：**根对不在映射里的 T3 对**是整对一个间隙洞，同读此条。（一侧为空的间隙在表达式父对下的拓宽由第 52 条修订。）
 46. R5 洞序 = 成员 0 的后序（2026-10-01，主会话裁定；成员 1 侧独有的间隙原先一律排最后，与批次提示的「源码序」不符）——洞键三元 `(anchor, rank, tie)`，定义见 §6.3；批次提示同批改成同一句后序读法（第 50 条）。
-47. R6 片段骨架计辅助函数头尾（2026-10-01，主会话裁定；`0164bed5a39c`）——组行第三列 `helper`：片段组 = 该语言 slot 表的 `helper_lines`（Python 与 Haskell 1、其余十种 2，每张表都写、子仓单元腿逐表钉住），整单元组 0；`skeletonLines` 片段族 = 原公式 + `helper`（T3 的按比例估算照旧再加）。
+47. R6 片段骨架计辅助函数头尾（2026-10-01，主会话裁定；`0164bed5a39c`）——组行第三列 `helper`：片段组 = 该语言 slot 表的 `helper_lines`（Python 与 Haskell 1、其余九种 2，每张表都写、子仓单元腿逐表钉住），整单元组 0；`skeletonLines` 片段族 = 原公式 + `helper`（T3 的按比例估算照旧再加）。
 48. R7 参数身份按文本（2026-10-01，主会话裁定；`0003206e2776` 的 identifier `dotall` 与 field_identifier `dotall` 曾算两个参数）——`Hole` 加文本向量，参数按文本向量去重（定义见 §6.3），`paramCap` 6 不变、`wire.rs::consume` 的 `max(param) + 1 == params` 校验不变；格 `(lab, leaf, own, 相对 lld)` 只留给复原律（own = 结点自己的匿名记号哈希，复原律要它；间隙并入骨架同读这一格）。
 49. R8 位置类表三修（2026-10-01，主会话裁定；裸成员名在 TS / Rust / Go / C / C++ 落类 4 判 `position`、在 Python / Java / Lua / R 是 `identifier` 判表达式）——① 次序改为语句 → 声明名 → 类型 → 赋值目标 → 组成名与内文 → 表达式 → 其他；② `target_fields`；③ `part_fields` / `part_kinds`（字面量内文从 `expr_kinds` 移出）。落码时按钉版文法实探自答（`scripts/tsprobe`）：Lua 赋值目标是 `variable_list` 在字段 `name` 上的各项；Go `inc_statement` / `dec_statement`、Java `update_expression` 的操作数不带字段名，表里写空字段 = 任一子结点；Go `assignment_statement.left` 与 Python 的 `pattern_list` / `tuple_pattern` / `list_pattern` 是目标列表（`target_lists`，穿过它取各项）；R 的赋值是 `binary_operator`，按 `operator` 字段区分方向（`target_ops`：`<-` / `<<-` / `=` 取 `lhs`，`->` / `->>` 取 `rhs`）；Haskell 的组成名是 `projection.field`。十一张表的移位分类由子仓单元腿在探针源码上逐条钉住（目标根、裸目标、组成名、内文、类型自己的声明名）。
 50. R9 读法即定义（2026-10-01，主会话裁定）——第二代批次提示在「How to judge」之后加一节 `## Reading rules`（五条，逐条对应 R2–R7，原文在 `it/eval_merge_batches/prompt.rs`），理由次序那句改成后序（「a place inside another first, siblings left to right, and a construct's own operator / keyword / punctuation after everything inside it」）；判官照读法判、核照规则判，是同一张定义表的两种拼写。落码时自答代际：**考题的文档按代**——`eval_merge_parts::GENERATIONS` 一代一行（建议集 / 样本 / 审阅档 / 精度册四份路径），门读最新一代，旧代四档留盘并照旧核对（审阅档仍是样本的审阅、精度册仍是三档读出的数）；抽样 id 的哈希域保持 `merge-sample-v1`（题的身份跨代可比，共有 / 新增 / 消失按 id 计），批次的哈希域随代 `merge-batches-v2`，清单带 `"readings": 2`。
