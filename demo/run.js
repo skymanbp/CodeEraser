@@ -72,7 +72,7 @@ function stopAudit(dir, lang) {
   return line ? JSON.parse(line).reason : null;
 }
 
-/** The audit is read-only, so it is asked once per language: each README's table
+/** The audit is read-only, so it is asked once per language: each language's table
  *  then quotes the verdict in its own language instead of the English one. */
 function stopAudits(dir) {
   return { en: stopAudit(dir, "en"), zh: stopAudit(dir, "zh") };
@@ -183,8 +183,6 @@ const EMBEDS = [
   ["../README.zh.md", "scoreboard.zh.md", "scoreboard"],
   ["../site/index.html", "scoreboard.html", "scoreboard"],
   ["../site/zh/index.html", "scoreboard.zh.html", "scoreboard"],
-  ["../README.md", "summary.md", "demo"],
-  ["../README.zh.md", "summary.zh.md", "demo"],
   ["README.md", "summary.md", "demo"],
   ["../README.md", "vignettes.md", "vignettes"],
   ["../README.zh.md", "vignettes.zh.md", "vignettes"],
