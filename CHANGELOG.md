@@ -7,6 +7,10 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
+## [Unreleased]
+
+**无默认档位变更。** 性能基准套件退役（2026-10-14，用户令「把性能测试相关的全部去掉。readme/网页等等。只留下本身的准确率/召回之类的测试。」）：删掉逐版本延迟系列的单源 `contracts/bench/bench.json`、它的说明页 `docs/BENCH.md`、官网两张仪表盘页 `site/bench/` 与 `site/zh/bench/`（其余十页的页头导航、页脚、首页「性能」一节与它的生成块、技术栈页的「证据」链接改指评估台账 EVAL-SET；技术栈页由 bench.json 生成的「误报纪律」卡改为不带数字的静态卡，指向 FPR-REPLAY；`site/style.css` 只服务仪表盘与首页指标条的规则删去，三张样式表的 `?v=` 随之升一档；`scripts/verify_site.js` 的页表 12 → 10）、两份 README 的延迟块、它下面那段延迟说明（精度与召回那半句留下）、钩子探针延迟的复述芯片、文档列表与官网列表里的 BENCH / bench 链接、对等表的「实测仪表盘」一行；GUI 的实测屏（`gui/ui/bench.js`、标签、视图、`i18n.js` 两种语言的键与 `BENCH_ZH` 模板、`reports.css` 的规则、Tauri 命令 `bench_doc` 与它编进二进制的 bench.json），屏数 十二 → 十一（`count:screens` 由标签条刮取、芯片随祝福移动；架构图 IR 两份按 `diagram.mjs --write` 重渲，技术栈图四份、方法学册 15 / 16 / 19 的标签计数就地改）；测试子仓的七个基准腿与 `bench_support/`（`today` 搬进 `common::ledger`，`fpr_flow_replay` 照旧用它），对等表、`docs_lang` 页表、引文与配方解析腿的基准样例换成别的路径；发布链 `release.yml` 的来源树表去掉 bench.json（十二条 → 十一条，`docs/RELEASE.md` 同改），`.gitattributes` 注释、计划书目录树「官网十二页」→ 十页。`docs/PERF-BUDGET.md` 保留（另待裁定），两处指向 BENCH.md / bench.json 的句子改写为该系列已于本日退役、读数留在本册。精度与召回的评估门（`it/eval_*`、`it/fpr_*`、精度册与审阅表）与它们的台账（EVAL-SET 各册、FPR-REPLAY 等）一个不动；只是此前经 bench.json 转印到 README / 官网 / GUI 的那几个冻结点随转印面一起离开，原数仍在各自台账里。判决代码、wire 与 golden 零改动。
+
 ## [v1.9.0] — 2026-10-14 — 分析轨 v2.31 四个新判决族（查询与规则、函数内死代码、合并建议、架构）、权威轨 v2.32 定义表与文档进核、算法轨 v2.33 阶梯 / 候选 / 顾问 / 报告进核与 Haskell 多于 Rust；wire 9.0.0、文本只过本机管道、协议一行 128 MiB；判决算术对齐，分数与 1.8.0 不可比
 1.9.0 条目的前半（v2.33 W2a 之前：v2.31 分析轨、v2.32 权威轨、v2.33 立项与两轮官网打磨）已于 2026-10-13 逐字节迁入 [CHANGELOG-ARCHIVE-v1.9-part1.md](docs/CHANGELOG-ARCHIVE-v1.9-part1.md)（第八次拆分）。
 

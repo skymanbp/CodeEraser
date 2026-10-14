@@ -98,7 +98,7 @@ writes no rows ([store.rs:12-24](../../../cli/src/similar/store.rs#L12),
 [store.rs:81](../../../cli/src/similar/store.rs#L81)). The cost, measured on this tree of 687
 files: cold `ce dedup` 5.2 → 8.4 s (0.65 s of a sixth parse, ≈1.5 s of random-key posting
 writes that five layouts could not beat), warm unchanged, database 10.7 → 18.0 MB
-([PERF-BUDGET.md:254-273](../../PERF-BUDGET.md#L254)).
+([PERF-BUDGET.md:255-274](../../PERF-BUDGET.md#L255)).
 
 ### 3. Ranking — integer BM25, one road for the instrument and the product
 
@@ -219,7 +219,7 @@ request per arm over one core link, the document asked over the same link ([face
   ([main_similar.rs:30](../../../cli/src/main_similar.rs#L30), [Lines.hs:13](../../../core/app/CE/Similar/Lines.hs#L13)).
 - **MCP** `similar_units` — the fifteenth read-only tool, `{at, text, unit, widen}`, relaying
   the same document ([tools.rs:192](../../../cli/src/mcp/tools.rs#L192)).
-- **GUI** the `similar` screen (the seventh of twelve tabs): inputs for `at`, a unit key or
+- **GUI** the `similar` screen (the seventh of eleven tabs): inputs for `at`, a unit key or
   text, the widen switch, and the candidate table with the six channel hits in one evidence
   column ([similar.js](../../../gui/ui/similar.js),
   [commands_query.rs](../../../gui/src-tauri/src/commands_query.rs)).

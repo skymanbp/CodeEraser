@@ -157,7 +157,7 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
   text-align: right;
 }
 #status.err { color: var(--err); }
-/* Below 1205px the header cannot seat the twelve-tab strip beside the
+/* Below 1205px the header could not seat the twelve-tab strip beside the
    brand, the root field at its 120px minimum, the folder button and
    the language button even with the echo and the status column
    squeezed to nothing — it spills. Measured, not estimated: `node
@@ -191,7 +191,10 @@ header input[type="text"]:focus { border-color: var(--focus); outline: none; }
    the default window and was not taken. Below it the strip takes a
    row of its own and wraps inside that row rather than clip: the
    twelve tabs measure 828px in both languages at the app's 860px
-   minimum window, exactly the 828px the row has there. */
+   minimum window, exactly the 828px the row has there. The bench tab
+   left on 2026-10-14 (eleven tabs since); the strip only narrowed, so
+   the breakpoint measured with twelve still holds and was not
+   re-measured. */
 @media (max-width: 1204px) {
   header { flex-wrap: wrap; }
   #tabs { order: 5; flex-basis: 100%; flex-wrap: wrap; }

@@ -261,7 +261,7 @@ shared string, never a verdict) and lists a selected file's rows with the root-l
 and the two notices the document carries, so "no advisory" and "not judged" never look alike
 ([canvas.rs:17-40](../../../cli/src/graph/canvas.rs#L17),
 [graph.js:33-53](../../../gui/ui/graph.js#L33),
-[graph.js:186-257](../../../gui/ui/graph.js#L186), [i18n.js:114-123](../../../gui/ui/i18n.js#L114)).
+[graph.js:186-257](../../../gui/ui/graph.js#L186), [i18n.js:106-115](../../../gui/ui/i18n.js#L106)).
 A projection gate pins that the symbol column survives the hub's generic table
 ([hub_projection.js](../../../cli/tests/gui/hub_projection.js)).
 
@@ -309,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1766 (1984 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 181 signed) | haskell | 7473 (1717) | 1136 (15) | 15.2 % | 199 / 1136 = 17.5 % | 199 / 6337 |
-| | | rust | 3455 (1901) | 320 (2) | 9.3 % | 2 / 320 = 0.6 % | 2 / 3104 |
+| self @ this commit | 1752 (1969 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 180 signed) | haskell | 7473 (1717) | 1136 (15) | 15.2 % | 199 / 1136 = 17.5 % | 199 / 6337 |
+| | | rust | 3454 (1900) | 320 (2) | 9.3 % | 2 / 320 = 0.6 % | 2 / 3103 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -380,8 +380,8 @@ consumers that never ask must not pay. A/B medians, n = 9 interleaved on two ide
 HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet window:
 `ce audit --hook` 1.186 s → 0.954 s, `ce erase` (plan) 1.526 s → 1.493 s, `ce check`
 1.786 s → 1.802 s (spread 1.729–1.928) — no consumer slower
-([PERF-BUDGET.md:195-204](../../PERF-BUDGET.md#L195)). The pass itself: cold ≈ 1.95 s, warm ≈
-0.54 s on the self corpus ([PERF-BUDGET.md:60](../../PERF-BUDGET.md#L60)).
+([PERF-BUDGET.md:196-205](../../PERF-BUDGET.md#L196)). The pass itself: cold ≈ 1.95 s, warm ≈
+0.54 s on the self corpus ([PERF-BUDGET.md:61](../../PERF-BUDGET.md#L61)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a
 scratch repository ([mention_universe.rs:221-257](../../../cli/tests/it/mention_universe.rs#L221)); the self

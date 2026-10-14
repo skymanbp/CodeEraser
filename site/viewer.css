@@ -1,8 +1,8 @@
 /* codeeraser.dev — the picture viewer's rules: the stage, the bar
    viewer.js builds under it, the screenshot tabs, full screen. Loaded
    by the six pages that hang a picture, beside style.css (which keeps
-   the frame the pictures share with the terminal block); the two
-   bench pages hang none and load neither this nor viewer.js. Same
+   the frame the pictures share with the terminal block); the other
+   four hang none and load neither this nor viewer.js. Same
    caching rule as style.css: editing this file means bumping ?v= on
    every page that links it.
 

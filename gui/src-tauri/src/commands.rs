@@ -198,17 +198,6 @@ pub async fn update_apply(installer: bool) -> Result<Value, String> {
     .map_err(|e| e.to_string())?
 }
 
-/// The bench dashboard document, compiled in at build time — the
-/// shipped GUI shows the bench of its OWN release (single source:
-/// contracts/bench/bench.json; the renderers and CI gate live in
-/// cli/tests/it/bench*.rs). No filesystem read: the user's opened
-/// project has nothing to do with CE's own benchmarks.
-#[tauri::command]
-pub fn bench_doc() -> Result<Value, String> {
-    serde_json::from_str(include_str!("../../../contracts/bench/bench.json"))
-        .map_err(|e| e.to_string())
-}
-
 // The erase PLAN plus its unified-diff preview in one measurement —
 // dry-run by definition (erase.md: the plan is read-only and both
 // faces come from the SAME plan, so the preview can never show bytes

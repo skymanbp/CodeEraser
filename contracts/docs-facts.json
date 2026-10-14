@@ -122,7 +122,7 @@
       "id": "count:screens#word",
       "source": "gui/ui/index.html::data-tab",
       "tier": "scraped",
-      "value": "12"
+      "value": "11"
     },
     {
       "id": "count:skills#word",

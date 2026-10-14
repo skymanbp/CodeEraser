@@ -45,7 +45,6 @@ fn main() {
             commands::erase_preview,
             commands::erase_apply,
             commands::erase_log_report,
-            commands::bench_doc,
             commands::doctor_report,
             commands::update_check,
             commands::update_apply

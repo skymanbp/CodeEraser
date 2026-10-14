@@ -296,7 +296,7 @@ the exclude dialect cannot read is a program error at the glob's token before an
   needed then); the CLI's exit code is its own reading of `counts.violations` and does not exist here
   ([tools.rs:209](../../../cli/src/mcp/tools.rs#L209), [tools.rs:234](../../../cli/src/mcp/tools.rs#L234),
   [adapters.rs:188](../../../cli/src/mcp/adapters.rs#L188)).
-- **The GUI's Query screen** — the eighth of twelve tabs — takes a question in a box with a `why` switch
+- **The GUI's Query screen** — the eighth of eleven tabs — takes a question in a box with a `why` switch
   and a rules-file box (`--file`), answers it as one table per goal under its own column names
   with the derivation rows under an answer, judges the rules file with one button, and shows the
   `ce.query-prelude` texts with another (the Tauri command `query_prelude`); rendering only, a

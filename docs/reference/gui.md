@@ -1,6 +1,6 @@
-# The CodeEraser GUI — <!--ce:count:screens#word-->twelve<!--/ce--> screens over one document set (reference)
+# The CodeEraser GUI — <!--ce:count:screens#word-->eleven<!--/ce--> screens over one document set (reference)
 
-> Status: shipped. <!--ce:count:screens#Word-->Twelve<!--/ce--> screens
+> Status: shipped. <!--ce:count:screens#Word-->Eleven<!--/ce--> screens
 > today, added a few per release since v0.7.3 (the per-screen history
 > is in CHANGELOG.md). The implementation answers to this file;
 > divergence is a defect in one of the two. The screens live in
@@ -35,7 +35,7 @@ Two consequences worth naming:
   face's own word tables (`gui/ui/i18n.js`, en/zh key-for-key, gated
   by `cli/tests/gui/i18n_gate.js`) and never touches the data.
 
-## The <!--ce:count:screens#word-->twelve<!--/ce--> screens
+## The <!--ce:count:screens#word-->eleven<!--/ce--> screens
 
 | tab | document | what it shows |
 |---|---|---|
@@ -48,7 +48,6 @@ Two consequences worth naming:
 | **Similar** | `ce.similar-report` | the same-role advisor's face: a unit at `file:line`, a unit by key (`name/arity`, the **unit** box) or a free text, the candidates in the order the core answered over `similar/1` with its same-role bit and the six-channel evidence row (`N P C D S L` = distinct shared name / shape / callee / doc / structure / literal terms); **widen** adds the in-repo PPMI associative view, its rows tagged. Rendering only: no ranking and no conjunction happen in the webview, and a core without the family shows the document's named degraded posture with a null role column — never a verdict of the screen's own |
 | **Query** | `ce.query-report` / `ce.rules-report` | the code-query family's face: a question in CE Datalog typed into the box, answered by the core's `query/1` as one table per goal under its own column names, every value labelled back to a path or a name, the derivation rows under an answer when **why** is on (an assertion's always); **Rules** judges the project's rules file the way `ce rules` does, each assertion with its verdict and witnesses; the **file** box names another rules file for both, as `--file` does; **Prelude** shows the built-in prelude and the program the core renders from `[rules.pack]` (`ce.query-prelude`, the text `ce query --prelude` prints). Rendering only: a program error shows at its `line:column`, and a core without the family shows the document's named degraded posture |
 | **Reports** | the remaining families | the diagnostics hub: each family's document rendered generically — counts and name lists as chips (a scan's `failed` conditions among them), row arrays as tables — adding zero interpretation (dedup carries its **min tokens** / **min distinct** thresholds and clone its **units** switch, the document `ce clone --units` prints; churn sits here too, with the shared days box); a family whose document is more than flat rows registers its own renderer. `flow` (`ce.flow-report`) does: the counts as chips, four kind chips that narrow the findings table by asking again — the shown kinds travel as the family's `kind`, as `--kind` does, so the document lists them and the counts stay whole (no kind shown lists nothing and asks nothing) — each finding with its lines, variable and judged / advisory mark, the unjudged units with their reasons; `ce.merge-report` nests (a group carries its members, a parameter every member's text at it), so the merge family registers its own renderer (hub_merge.js): the counts and the groups not sent as chips, then a card per group with its members and a parameter table — a row per parameter, a column per member, each text cut on screen with the whole of it in the cell's title; `ce.arch-report` nests (a cut carries its file references, a cluster its files), so the arch family registers its own renderer (hub_arch.js) that still leads with the counts as chips, and an `impact` path box whose comma-separated paths travel as the family's path list |
-| **Bench** | `contracts/bench/bench.json` | the compiled-in benchmark series, pivoted to one row per metric with a column per version; frozen points carry value **and** source |
 | **Doctor** | `ce.doctor-report` | this machine's state: ce-core handshake, guard tier, index freshness, daemon, degraded-run counter, and a row per guard class the hooks judge — `guard` (`[guard] mode`), `flow` (`[flow] tier`), `tombstone` (`[tombstone] tier`) — with its tier (0.4.0) — probed without starting the daemon or rebuilding the index, so the diagnostic reports a state it did not create. A `parked daemon workers` row appears only when the count is non-zero (0.3.0): client conversations the deadline gave up on that have not returned — the read is cancelled at the deadline, so only a connect the kernel still holds can sit here |
 | **Update** | `ce.update-report` | this build against the latest release: the release index's newest tag, that tag's committed SHA256 pins (`plugin/bin/manifest.env` as the release commit wrote it), the install kind read off the binary's own location, and the one action it allows — codes on the wire, words in this face's tables. "Update now" appears only where the library would place anything (a copy placed by hand, or the installer bundle's sidecars) and re-measures before it acts; a copy the plugin or cargo owns names its own command instead. The optional installer box saves the verified GUI installer and shows its path — running it stays the reader's click |
 
@@ -80,10 +79,9 @@ resolution the MCP adapters read too — the CLI's own chain:
 installers stage ce-core as exactly that sibling), run the library
 closure off the async runtime, and bracket it with `ce-task` events
 that the status bar renders. A missing core fails loudly by name,
-same as the CLI. Four commands sit outside that shape by design:
+same as the CLI. Three commands sit outside that shape by design:
 `doctor_report` runs unbracketed (the face a reader reaches for when
-the event plumbing may itself be broken), `bench_doc` reads the series
-compiled into the binary rather than the opened tree, and the Update
+the event plumbing may itself be broken), and the Update
 screen's `update_check` / `update_apply` take no root and resolve no
 core at all — the question they ask is about this build, not the
 opened project.

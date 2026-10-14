@@ -20,9 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Noto+Sans+SC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=12">
-<link rel="stylesheet" href="/style.css?v=12">
-<link rel="stylesheet" href="/viewer.css?v=3">
+<link rel="stylesheet" href="/theme.css?v=13">
+<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/viewer.css?v=4">
 <script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
@@ -35,7 +35,6 @@
     <a href="/zh/how/">原理</a>
     <a href="/zh/math/">数学</a>
     <a href="/zh/stack/">技术栈</a>
-    <a href="/zh/bench/">实测</a>
     <a href="/">English</a>
     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">下载</a>
   </nav>
@@ -56,7 +55,7 @@
     <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --lang zh --roast
-<span class="s">检查分数 925/1000</span> | 判轴 0:74 1:0 2:317 3:0 4:0 5:0 6:135 | 候选 819
+<span class="s">检查分数 925/1000</span> | 判轴 0:73 1:0 2:317 3:0 4:0 5:0 6:135 | 候选 819
 棘轮：新增 0，移除 0，超限 0，动用容差 0 -&gt; <span class="s">pass</span>
 注：10 块并入既有成员，363 个文件内对不入相似表
 <span class="r">毒舌：干净得可疑。你贿赂谁了？</span></pre>
@@ -136,20 +135,6 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="more-link"><a href="/zh/math/">全部十六条规则 →</a></p>
 
-<div class="eyebrow">性能</div>
-<!-- bench:begin -->
-<h2>实测 · v1.8.0</h2>
-<div class="installs">
-<div class="install metric"><span class="k">hook 探针 p50（两文件夹具）</span><code>50 ms</code></div>
-<div class="install metric"><span class="k">全仓扫描 p50</span><code>907 ms</code></div>
-<div class="install metric"><span class="k">增量索引 p50（暖跑，dedup_warm）</span><code>650 ms</code></div>
-<div class="install metric"><span class="k">守卫误报（人裁 630 事件）</span><code>每 500 次编辑 0.00 次误报</code></div>
-<div class="install metric"><span class="k">docdup 判准（冻结黄金集）</span><code>范围内 17/17（100%）</code></div>
-</div>
-<p class="cap">每个数字由回放产生（cli/tests/it/bench.rs 与 bench_backfill.rs），单源 contracts/bench/bench.json——绝不手填。当前发布 v1.9.0 该有自己的行，而它在打 tag 之后才被测量，尚未落表。</p>
-<!-- bench:end -->
-<p class="more-link"><a href="/zh/bench/">完整评估仪表盘 →</a></p>
-
 <div class="eyebrow">架构</div>
 <h2>内部构造</h2>
 <figure class="arch deep" id="architecture">
@@ -192,7 +177,7 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 <footer class="site">
   <div class="cols">
     <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>度量在 Rust，判决在 Haskell，一个只准变好的分数。Apache-2.0。</p></div>
-    <nav aria-label="产品"><p class="k">产品</p><a href="/zh/">概览</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a><a href="/zh/bench/">实测</a></nav>
+    <nav aria-label="产品"><p class="k">产品</p><a href="/zh/">概览</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">最新发布</a></nav>
     <nav aria-label="文档"><p class="k">文档</p><a href="/zh/how/">原理</a><a href="/zh/how/analysis/">分析轨</a><a href="/zh/math/">数学</a><a href="/zh/stack/">技术栈</a></nav>
     <nav aria-label="项目"><p class="k">项目</p><a href="https://github.com/skymanbp/CodeEraser">GitHub 源码</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">完整方法学</a></nav>
   </div>

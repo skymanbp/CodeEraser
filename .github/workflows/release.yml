@@ -249,9 +249,7 @@ jobs:
       #
       # "Built from" is wider than "sources": the first roster listed
       # the directories a reader thinks of as the program and missed
-      # three inputs that decide the bytes just as much —
-      # contracts/bench/bench.json is COMPILED INTO the GUI
-      # (include_str!, gui/src-tauri/src/commands.rs), rust-toolchain.toml
+      # inputs that decide the bytes just as much — rust-toolchain.toml
       # picks the compiler both workspaces are built with, and
       # build-target.yml is the recipe the draft actually ran. Each can
       # differ across the two commits with every tree above identical.
@@ -273,7 +271,7 @@ jobs:
           git cat-file -e "$build^{commit}" || { echo "build commit $build is not in this clone"; exit 1; }
           for tree in cli/src cli/Cargo.toml cli/Cargo.lock core/app core/ce-core.cabal \
                       core/cabal.project core/cabal.project.freeze gui/src-tauri gui/ui \
-                      contracts/bench/bench.json rust-toolchain.toml \
+                      rust-toolchain.toml \
                       .github/workflows/build-target.yml; do
             at_build=$(git rev-parse "$build:$tree")
             at_tag=$(git rev-parse "$GITHUB_SHA:$tree")

@@ -20,9 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/theme.css?v=12">
-<link rel="stylesheet" href="/style.css?v=12">
-<link rel="stylesheet" href="/viewer.css?v=3">
+<link rel="stylesheet" href="/theme.css?v=13">
+<link rel="stylesheet" href="/style.css?v=13">
+<link rel="stylesheet" href="/viewer.css?v=4">
 <script src="/viewer.js?v=1" defer></script>
 </head>
 <body>
@@ -35,7 +35,6 @@
     <a href="/how/">How it works</a>
     <a href="/math/">Math</a>
     <a href="/stack/">Stack</a>
-    <a href="/bench/">Benchmarks</a>
     <a href="/zh/">中文</a>
     <a href="https://github.com/skymanbp/CodeEraser/releases/latest">Download</a>
   </nav>
@@ -57,7 +56,7 @@
     <div class="bar"><i></i><i></i><i></i></div>
 <!-- roast:begin -->
 <pre><span class="p">$</span> ce check --roast
-<span class="s">check score 925/1000</span> | axes 0:74 1:0 2:317 3:0 4:0 5:0 6:135 | 819 candidates
+<span class="s">check score 925/1000</span> | axes 0:73 1:0 2:317 3:0 4:0 5:0 6:135 | 819 candidates
 ratchet: 0 added, 0 removed, 0 over, 0 tolerance drawn -&gt; <span class="s">pass</span>
 note: 10 blocks collapsed into existing members, 363 intra-file pairs off the sim table
 <span class="r">roast: suspiciously clean. who did you pay?</span></pre>
@@ -137,20 +136,6 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 </div>
 <p class="more-link"><a href="/math/">All sixteen rules →</a></p>
 
-<div class="eyebrow">Performance</div>
-<!-- bench:begin -->
-<h2>Measured · v1.8.0</h2>
-<div class="installs">
-<div class="install metric"><span class="k">hook probe p50 (two-file fixture)</span><code>50 ms</code></div>
-<div class="install metric"><span class="k">full scan p50</span><code>907 ms</code></div>
-<div class="install metric"><span class="k">incremental index p50 (warm, dedup_warm)</span><code>650 ms</code></div>
-<div class="install metric"><span class="k">guard false positives (630 arbitrated events)</span><code>0.00 per 500 edits</code></div>
-<div class="install metric"><span class="k">docdup precision (frozen golden set)</span><code>17/17 scoped (100%)</code></div>
-</div>
-<p class="cap">Every number is produced by replay (cli/tests/it/bench.rs and bench_backfill.rs) from one source, contracts/bench/bench.json — never hand-filled. The current release, v1.9.0, earns a row and does not have one yet: it is measured after the tag.</p>
-<!-- bench:end -->
-<p class="more-link"><a href="/bench/">Complete evaluation dashboard →</a></p>
-
 <div class="eyebrow">Architecture</div>
 <h2>Under the hood</h2>
 <figure class="arch deep" id="architecture">
@@ -193,7 +178,7 @@ tolerated(c) = max (c * tolNum `div` tolDen) (c + tolAbs)</pre></div>
 <footer class="site">
   <div class="cols">
     <div><p class="brand"><img src="/icon-256.png" alt="">CodeEraser</p><p>Measurement in Rust, judgment in Haskell, one ratcheted score. Apache-2.0.</p></div>
-    <nav aria-label="Product"><p class="k">Product</p><a href="/">Overview</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a><a href="/bench/">Benchmarks</a></nav>
+    <nav aria-label="Product"><p class="k">Product</p><a href="/">Overview</a><a href="https://github.com/skymanbp/CodeEraser/releases/latest">Latest release</a></nav>
     <nav aria-label="Docs"><p class="k">Docs</p><a href="/how/">How it works</a><a href="/how/analysis/">Analysis track</a><a href="/math/">Math</a><a href="/stack/">Stack</a></nav>
     <nav aria-label="Project"><p class="k">Project</p><a href="https://github.com/skymanbp/CodeEraser">Source on GitHub</a><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology.md">Full methodology</a></nav>
   </div>

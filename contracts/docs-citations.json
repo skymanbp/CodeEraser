@@ -1,8 +1,8 @@
 {
-  "docs/reference/methodology.md|../../README.md|17c31d91d672a861|0": {
+  "docs/reference/methodology.md|../../README.md|c039e4f5b8cf36b6|0": {
     "target": "../../README.md",
-    "line": 198,
-    "text": "- **Philosophy.** Measure in Rust, decide and write in Haskell, print everywhere else. Rust hands the core what it read (integers and, since plan v2.33, text over the local pipe only); the core answers verdicts, documents and every console line in the asked language. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the bench block, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
+    "line": 186,
+    "text": "- **Philosophy.** Measure in Rust, decide and write in Haskell, print everywhere else. Rust hands the core what it read (integers and, since plan v2.33, text over the local pipe only); the core answers verdicts, documents and every console line in the asked language. Nothing on any surface asks a model anything. Hooks fail open and say so. A guard class reaches `deny` only with its own false-positive record in [CHANGELOG](CHANGELOG.md). Documentation is generated or gated: the CLI and config references, the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md) with machine-checked citations, the numbers this page derives from the code, the two diagrams above, the demo, the site's terminal block and its GUI screenshots, the parity table, the NOTICE. This repository is its own first user, and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {
     "target": "../DEVELOPMENT_PLAN.md",
@@ -9058,8 +9058,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../gui/ui/i18n.js|fb52db45798f98d2|0": {
     "target": "../../../gui/ui/i18n.js",
-    "line": 114,
-    "end": 123,
+    "line": 106,
+    "end": 115,
     "text": "advisoryHead: (n, f) => `${n} unmentioned declaration${n === 1 ? \"\" : \"s\"} in ${f} file${f === 1 ? \"\" : \"s\"} — advisory, never a verdict`,"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../DEVELOPMENT_PLAN.md|cdb945e2e366e4a1|0": {
@@ -9069,13 +9069,13 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a2c3821eca59417f|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 195,
-    "end": 204,
+    "line": 196,
+    "end": 205,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a6700d086855d460|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 60,
+    "line": 61,
     "text": "| 提及语料宇宙 pass（`ce graph --mentions`：自有第二 walk + 三发射器分词 + 两表写入，自仓 595 文件 / 199,941 行；plan v2.17 L 轮片 (3)，不在 `dedup::analyze` 热路径内；口径 = pass 本体 = wall − 前置判决索引刷新 ≈0.37 s〔trace 实测〕） | 冷 < 2 s / 暖 < 600 ms（暖地板 = walk 0.26 s + 全量读哈希 0.20 s：spec §5.1 自有内容哈希门必读字节，mtime 门不采） | 冷 ≈1.95 s（wall 2.32 s；32 文件一批提交 + 末尾单次 checkpoint + 每 run 一次 COUNT 快照——每批 COUNT 曾实测 24 ms×19 批 = +0.5 s 且随表线性增长，故不采）/ 暖 ≈0.54 s（wall 0.91 s；`capped` GROUP BY 27 ms 计入；实测 2026-08-27，release，对抗审查修后） | ✅ |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/audit/commitmsg.rs|43e5c1812a48317d|0": {
@@ -10240,8 +10240,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 254,
-    "end": 273,
+    "line": 255,
+    "end": 274,
     "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {

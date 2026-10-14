@@ -76,10 +76,9 @@
    到齐且 success**（空的 check 表里既无 pending 也无失败，旧判据读成「全绿」= 零证据即发布；tag 会另起一次 CI，`build-macos` 自步 9 起每推都跑；排队多久由
    GitHub 说了算——v1.3.1 首打排队 30.6 min 未开工，耗尽当时 30 min 预算而拒发，预算已
    放宽到 2 h，超时按名列出未完成的腿，届时重跑该 job 即可，无须挪 tag），再核**来源**
-   （draft 的 `--target` 构建提交与 tag 提交在**十二条**路径上树哈希逐一相等：`cli/src`、
+   （draft 的 `--target` 构建提交与 tag 提交在**十一条**路径上树哈希逐一相等：`cli/src`、
    `cli/Cargo.{toml,lock}`、`core/app`、`core/ce-core.cabal`、`core/cabal.project{,.freeze}`、
-   `gui/src-tauri`、`gui/ui`，外加同样决定字节的三个输入——`contracts/bench/bench.json`
-   （`include_str!` 编进 GUI）、`rust-toolchain.toml`（两个 workspace 的编译器）、
+   `gui/src-tauri`、`gui/ui`，外加同样决定字节的两个输入——`rust-toolchain.toml`（两个 workspace 的编译器）、
    `.github/workflows/build-target.yml`（draft 跑的那份配方）——pin 提交只该动清单、
    docs-facts 与 `packaging/` 三处）与**说明**，最后
    `verify-publish` 按花名册复核<!--ce:count:assets#word-->十六<!--/ce-->资产（<!--ce:count:binaries#word-->十五<!--/ce-->工件对拍 SHA256SUMS，再逐一对拍 manifest pin）
@@ -137,8 +136,8 @@
   进 `CLOUDFLARE_API_TOKEN` 跑 `npx wrangler pages deploy site
   --project-name codeeraser`，finally 里 DELETE /user/tokens/<id>
   销毁；任何 token 值不落对话/不落库/不打印。wrangler 退 0 后它自己串跑
-  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），12/12 才退 0——上线以此为准；
-  该读者也可单独跑：它把十二页逐个与 `git show HEAD:<page>`
+  `scripts/verify_site.js`（边缘节点最多等 8 × 15 s），10/10 才退 0——上线以此为准；
+  该读者也可单独跑：它把十页逐个与 `git show HEAD:<page>`
   的 blob 对拍。判据**不是**「剥完摘要相同」——那样会连第二处真差异一起吞掉——
   而是「至多一处 Cloudflare 边缘注入的 beacon，剥掉它之后与 blob 逐字节相等」；
   beacon 带属性且连它所在那行的换行一起注入，两点都在脚本头注里写明。

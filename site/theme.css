@@ -7,7 +7,7 @@
    Editing this file? Bump ?v= on every page's <link> — HTML is served
    uncached but this sheet is edge/browser-cached for 4h; without the
    bump, fresh HTML pairs with a stale sheet on returning visitors.
-   Every rule the twelve pages share lives in two sheets and nowhere
+   Every rule the ten pages share lives in two sheets and nowhere
    else — this one (tokens, base type, header, page openers, folds)
    and style.css (the components), loaded in that order with one ?v=
    key; the picture viewer's rules live in viewer.css, loaded only by

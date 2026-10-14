@@ -265,7 +265,7 @@ CodeEraser/
 ├── contracts/    # 契约版本化机制 + 双语言共享 golden fixtures
 ├── docs/         # 本计划、协议文档、评审记录
 ├── demo/         # 仓内真实 demo：seed + Node 驱动 + 冻结产出（`demo_replay` 门）
-├── site/         # 官网十二页（codeeraser.dev；bench/stack 块由门生成，`scripts/deploy_site.js` 部署）
+├── site/         # 官网十页（codeeraser.dev；stack 页与首页的生成块由门生成，`scripts/deploy_site.js` 部署）
 ├── scripts/      # 发布工具（deploy_site.js / shoot_gui.js 等 Node 脚本，不进判决族）
 ├── npm/          # npm 指针包（package.json + README，只转发 Releases、零二进制；版本等 crate 版本由子仓 health_plugin.rs 守）
 ├── packaging/    # 包管理器投影（Homebrew 公式 + winget 三清单）：scripts/packaging.js 从 plugin/bin/manifest.env 的 pin 生成，子仓 it/packaging.rs 守字节并反读 pin，永不手编

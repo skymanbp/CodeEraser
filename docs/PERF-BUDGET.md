@@ -18,8 +18,9 @@
 > 同一台静默机上同形窗口的墙钟已实测漂 1.8×（M5-3h：churn 先决 156.7 s
 > → 落地复测 278.4 s，成因=子进程创建开销随机器状态漂移），共享 CI
 > runner 的代际与邻租噪声只会更宽——门要么天天误报、要么容差宽到形同
-> 虚设。延迟回归的复核路是：本机静默复测入本册 + BENCH.md 单主机逐版本
-> 系列（bench_append/bench_backfill，`#[ignore]` 手跑）；`perf_budget.rs`
+> 虚设。延迟回归的复核路是本机静默复测入本册（BENCH.md 单主机逐版本系列
+> 与它的回放腿 bench_append / bench_backfill 已于 2026-10-14 按用户令退役，
+> 旧行在 git 历史里）；`perf_budget.rs`
 > 需要时按 EVAL-SET.md「再生成」三步复活（checkout 父提交连同同代支撑，
 > 跑毕重退役）。CI 守住的是行为与判决，不是毫秒。
 
@@ -684,7 +685,7 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 | keel | `check` 冷 | 2128.9（2043.3–3134.4） | 1990.5（1844.9–2031.7） | -6.5 % |
 | keel | `check` 暖 | 1033.4（998.9–1066.5） | 796.1（765.3–820.9） | -23.0 % |
 
-七个 bench 面（`contracts/bench/bench.json` 的七项；自仓）：
+七个 bench 面（`contracts/bench/bench.json` 的七项，该系列已于 2026-10-14 按用户令退役，读数留在本节；自仓）：
 
 | 树 | 面 | A（v1.8.0） | B（e8e413dd） | B / A − 1 |
 |---|---|---|---|---|

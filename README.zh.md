@@ -10,7 +10,7 @@
 
 长期由 LLM 协作的代码库以同一种方式漂移：同一个函数实现两遍、同一段话贴进三个文件、更新以追加到来、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。两种拒绝发生在写入时、文件落盘之前。一次会**引入** T1/T2 精确克隆（被替换内容原本不携带的重复）的写入在 PreToolUse 当场被拒，指名它复制的区域，并教出能通过的次序；一次让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行（或超过其 `[[rules.class]]` 声明的那条线）的写入同样当场被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 与 `ce commitmsg` 拒绝提交，CI 退出码拒绝合入。
 
-**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown、HTML（<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十三<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。纯散文臂：`.txt`。纯文本只进文档重复语料，别处一概不进——不进尺寸门、不进预算、不进任何别的判决（`CMakeLists.txt`、`compile_flags.txt`、`robots.txt` 是机器格式，不算文本）。面：CLI · GUI（<!--ce:count:screens#word-->十二<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**范围。** 判决语言：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++（`.h` 按 C++ 读）、Java、Lua、R、Markdown、HTML（<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法上的<!--ce:count:langs#word-->十三<!--/ce-->个语言码）。纯尺寸臂：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。它们进尺寸门、硬预算与棘轮，永不进语义判决。纯散文臂：`.txt`。纯文本只进文档重复语料，别处一概不进——不进尺寸门、不进预算、不进任何别的判决（`CMakeLists.txt`、`compile_flags.txt`、`robots.txt` 是机器格式，不算文本）。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 具体实现，以及它的不同之处
 
@@ -18,7 +18,7 @@
 
 <sub>在 [codeeraser.dev/zh/how/#verdict](https://codeeraser.dev/zh/how/#verdict) 可缩放、拖动查看此图。</sub>
 
-- **在写入的瞬间拦截。** 每个解析过的代码文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在逐项目懒启动 daemon 维护的 SQLite WAL 索引里；PreToolUse 探针 p50 <!--ce:restate:hook-probe:p50-ms:hook-probe#lead-->50<!--/ce--> ms / p95 <!--ce:restate:hook-probe:p95-ms:hook-probe#lead-->57<!--/ce--> ms（两文件夹具），插件全链 p95 0.50 s（末次实测 2026-08-29，墓碑腿加入之前）。守卫只计**新引入**的重复（减去被替换内容本已携带的匹配）：活流口径下 719 条生产探针零误拦（0.00/500）；自仓全史重放（2,274 事件）的全文写口径把 32 条拆文件中间态计作误拦（7.04/500）。两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)，1.8.0 起另有计划 v2.30 新增语言各一行（六语料各 400 提交，误拦 0）。
+- **在写入的瞬间拦截。** 每个解析过的代码文件的规范化 token（标识符→`ID`、字面量→`LIT`、注释丢弃）以 k = 25、w = 26 做 winnowing，任何 50+ token 的共享片段必有共享指纹。指纹存在逐项目懒启动 daemon 维护的 SQLite WAL 索引里，供 PreToolUse 探针读取。守卫只计**新引入**的重复（减去被替换内容本已携带的匹配）：活流口径下 719 条生产探针零误拦（0.00/500）；自仓全史重放（2,274 事件）的全文写口径把 32 条拆文件中间态计作误拦（7.04/500）。两种口径都记在 [FPR-REPLAY](docs/FPR-REPLAY.md)，1.8.0 起另有计划 v2.30 新增语言各一行（六语料各 400 提交，误拦 0）。
 - **两层克隆，一个判决主体。** T1/T2 是上面的热路径。T3 是冷路径：结构指纹 + MinHash/LSH（128 置换、32 带 × 4 行）生成候选而不丢掉任何一对能过线的，由 Haskell 核计算 Zhang–Shasha 树编辑距离、以 TSED ≥ 0.85 判定，全程精确整数。1.8.0 起判过线的对自成一类进 `ce check` 的克隆轴与 `ce join` 的相似腿；核对每对树的判决记在索引里，两棵树、核或旋钮任一变了才重问。
 - **改过措辞也逃不掉的文档重复。** NFC 规范化的词、5 词 shingle、MinHash/LSH 候选，然后在核内以精确有理数判定 Jaccard ≥ 0.80 或 50 词逐字连续段。
 - **被点名而非猜出来的存活性。** 逐语言的解析阶梯（import、include、require、再导出、文档链接、资源、包根）喂出按 rung 过滤的图；SCC、自入口根的可达性与四态判决（未引用/不可达 × 私有/公开）带着由未解析站点台账推出的置信码返回。提及宇宙（每个文本文件里的每个标识符，只存 fnv1a64 哈希）另产出**未被提及的声明**顾问，永不把门翻红。
@@ -93,18 +93,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 ```
 <!-- vignettes:end -->
 
-<!-- bench:begin -->
-### 延迟 · v1.8.0
-
-| 百分位 | `check_warm` | `deadcode_warm` | `dedup_cold` | `dedup_warm` | `docdup_warm` | `hook_probe` | `scan` |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| p50 ms | 4643 | 1482 | 13929 | 650 | 2137 | 50 | 907 |
-| p95 ms | 8340 | 4550 | 14144 | 655 | 2149 | 57 | 2896 |
-
-所有值均由 `contracts/bench/bench.json` 生成；本块手改会被测试拒绝。当前发布 v1.9.0 该有自己的行，而它在打 tag 之后才被测量，尚未落表。[完整回放说明与逐版本系列](docs/BENCH.md) · [网站完整仪表盘](https://codeeraser.dev/zh/bench/)
-<!-- bench:end -->
-
-延迟行是 release 构建在同一台固定主机上的回放，只做版本间比较。精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)；逐语言阶梯的在 [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md)），五语料的那些渲染在 [BENCH](docs/BENCH.md)；对照工具（jscpd、similarity-*）标明所测的确切版本。
+精度与召回点随各自的评估台账冻结（[EVAL-SET](docs/EVAL-SET.md)；逐语言阶梯的在 [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md)）；对照工具（jscpd、similarity-*）标明所测的确切版本。
 
 ## 安装、运行与更新
 
@@ -180,7 +169,6 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 | 只读报告服务器 | — | `ce mcp` | — 插件自行注册 | `.mcp.json` |
 | 卸载 | — | `ce eject` | — 只在 CLI | — |
 | Claude Code 接线 | — | `ce setup`, `ce setup --unwire` | — 只在 CLI：Windows 安装包调用它，AppImage / dmg 用户装后跑一次 | — |
-| 实测仪表盘 | — | — 编译内置序列；README 与官网带同一块 | `bench`, `bench_doc` | — |
 | 根锚定 | — | — 每条命令与钩子都经 `root` 锚定 | `default_root`, `resolve_root` | — |
 <!-- parity:end -->
 
@@ -195,7 +183,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 - **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->** GUI 直接链接同一 crate，webview 内是无构建步骤的原生 JavaScript；**NSIS / AppImage / dmg** 包内以 sidecar 携带 `ce` 与 `ce-core`。
 - **一条 wire。** ce ↔ core 是 stdio 上的 NDJSON，SemVer 协商（proto <!--ce:ver:proto#v-->9.0.0<!--/ce-->，<!--ce:count:families#word-->十六<!--/ce-->个家族）；逐项目 daemon 在 `interprocess` 上讲自己的协议（<!--ce:ver:daemon#v-->2.3.0<!--/ce-->）；协议 major 偏斜是具名拒绝，从不猜。
 - **设计规则。** ADR-001 Rust 前端 · ADR-002 解析层（tree-sitter）归 Rust，判决归 Haskell · ADR-003 懒启动 daemon、30 分钟空闲退出、钩子失败开放 · ADR-004 廉价 PreToolUse、深度 Stop、CI 兜底 · ADR-005 两层克隆 · ADR-006 只收紧的棘轮 · ADR-007 钉扎分发 · ADR-008 策略即 Haskell 数据 · ADR-009 文档事实派生、不手写。计划即契约：[DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
-- **哲学。** 在 Rust 里度量，在 Haskell 里裁决并成文，在其余一切面上印出。Rust 把读到的交给核（整数，v2.33 起也有文本，只走本机管道）；核按请求的语言答出判决、文档与每一行控制台文字。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十九<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、bench 块、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户，每次 push 都在这棵树上跑<!--ce:count:gates#word-->七<!--/ce-->道产品门。
+- **哲学。** 在 Rust 里度量，在 Haskell 里裁决并成文，在其余一切面上印出。Rust 把读到的交给核（整数，v2.33 起也有文本，只走本机管道）；核按请求的语言答出判决、文档与每一行控制台文字。任何面都不问模型任何事。钩子失败开放并明说。守卫类只有在 [CHANGELOG](CHANGELOG.md) 里有了自己的误报记录才能到 `deny`。文档要么生成要么门控：CLI 与配置参考、<!--ce:count:booklets#word-->十九<!--/ce-->册带机器核验引文的[方法学](docs/reference/methodology.md)、本页由代码派生的那些数字、上方两张图、demo、官网的终端块与它的 GUI 截图、等价表、NOTICE。本仓是自己的第一个用户，每次 push 都在这棵树上跑<!--ce:count:gates#word-->七<!--/ce-->道产品门。
 
 ## 已知限制
 
@@ -214,8 +202,8 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 ## 文档
 
 - [CLI 参考](docs/reference/cli.md) · [ce.toml 参考](docs/reference/ce-toml.md)（由二进制与配置 schema 生成，漂移即 CI 变红）· [方法学](docs/reference/methodology.md)（<!--ce:count:booklets#word-->十九<!--/ce-->册，引到实现行）· [结构轴](docs/reference/structure-axes.md) · [尺寸顾问](docs/reference/size-advisory.md) · [擦除契约](docs/reference/erase.md) · [GUI 参考](docs/reference/gui.md) · [插件](plugin/README.md) · [demo](demo/README.md)
-- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [EVAL-SET-SIMILAR](docs/EVAL-SET-SIMILAR.md) · [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md) · [EVAL-SET-FLOW](docs/EVAL-SET-FLOW.md) · [language-expansion](docs/reference/language-expansion.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [BENCH](docs/BENCH.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md) · [FPR-L2](docs/FPR-L2.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)（wire SemVer 与两段式发布 runbook）
-- 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [数学](https://codeeraser.dev/zh/math/) · [技术栈](https://codeeraser.dev/zh/stack/) · [实测](https://codeeraser.dev/zh/bench/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->
+- [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md) · [EVAL-SET](docs/EVAL-SET.md) · [EVAL-SET-SIMILAR](docs/EVAL-SET-SIMILAR.md) · [EVAL-SET-LANGS](docs/EVAL-SET-LANGS.md) · [EVAL-SET-FLOW](docs/EVAL-SET-FLOW.md) · [language-expansion](docs/reference/language-expansion.md) · [FIELD-TEST](docs/FIELD-TEST.md) · [PERF-BUDGET](docs/PERF-BUDGET.md) · [FPR-REPLAY](docs/FPR-REPLAY.md) · [FPR-TOMBSTONE](docs/FPR-TOMBSTONE.md) · [FPR-L2](docs/FPR-L2.md) · [T1-INTERCEPT](docs/T1-INTERCEPT.md) · [contracts/VERSIONING.md](contracts/VERSIONING.md) · [docs/RELEASE.md](docs/RELEASE.md)（wire SemVer 与两段式发布 runbook）
+- 官网：[codeeraser.dev/zh](https://codeeraser.dev/zh/) · [工作原理](https://codeeraser.dev/zh/how/) · [数学](https://codeeraser.dev/zh/math/) · [技术栈](https://codeeraser.dev/zh/stack/) <!-- ce:allow(docdup) -- 文档链接是同一集合，两种语言各列一遍 -->
 
 ## 许可证
 
