@@ -54,7 +54,7 @@
 > where the release it names holds none — so the claim is checkable, and
 > the diff it rests on is public.
 
-The newest row, v1.8.0, is the release this build is.
+The current release, v1.9.0, earns a row and does not have one yet: it is measured after the tag.
 
 ## Latency series (self repository)
 

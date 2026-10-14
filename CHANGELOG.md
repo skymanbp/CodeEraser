@@ -7,8 +7,10 @@
 > 源码克隆与 crates.io 包内即有全史）；GitHub Releases 留发布说明与分数
 > 可比性声明（v1.2.0 及更早的功能面只在那里）。
 
-## [Unreleased]
+## [v1.9.0] — 2026-10-14 — 分析轨 v2.31 四个新判决族（查询与规则、函数内死代码、合并建议、架构）、权威轨 v2.32 定义表与文档进核、算法轨 v2.33 阶梯 / 候选 / 顾问 / 报告进核与 Haskell 多于 Rust；wire 9.0.0、文本只过本机管道、协议一行 128 MiB；判决算术对齐，分数与 1.8.0 不可比
 1.9.0 条目的前半（v2.33 W2a 之前：v2.31 分析轨、v2.32 权威轨、v2.33 立项与两轮官网打磨）已于 2026-10-13 逐字节迁入 [CHANGELOG-ARCHIVE-v1.9-part1.md](docs/CHANGELOG-ARCHIVE-v1.9-part1.md)（第八次拆分）。
+
+**无默认档位变更。** 发版 1.9.0（2026-10-14；判决代码零改动——本提交只动版本号、核重编与派生面）：版本十处一致（`cli/Cargo.toml` 与它的锁行、`gui/src-tauri` 的 Cargo.toml / tauri.conf.json / 两条锁行、`core/ce-core.cabal`、`plugin.json`、`npm/package.json`、`manifest.env` 的 `CE_MANIFEST_VERSION` / `CE_BASE_URL`，十五枚 pin 留待 pin 提交），核重编为 ce-core 1.9.0，握手 golden 的版本回显由 `fixture_contract::regen` 重生成，bench 七个面改说 v1.9.0 该有一行、tag 之后测量，docs-facts `ver:ce#v` / `ver:pin#v` 与各面芯片随祝福，`packaging/` 由 `scripts/packaging.js` 重投影（winget 目录 1.8.0 → 1.9.0），ADR-006 基线具名重立。
 
 **无默认档位变更。** v2.33 步 12 文档车道第三部分（审计 C 的一百八十九条；判决代码、wire 与 golden 零改动，源改动只有十一个文件的注释，各文件行数不变）：方法学十九册与册索引的内容漂移按今日代码改写——过线口径（`similar/1` 只带哈希与计数、词走 `bags/1`；`merge/1` 只带整数、报告文本走 `document/1`；结构请求可带路径形、由核建树与表）、`resolve/1` 答出的解析阶梯、守卫的四个规则类与 `[guard] mode` 只管其中两类、擦除的四道前置检查、同角色与架构两屏是十二个页签的第七与第八、flow 的六列与不判的单元、daemon 2.3.0 等；七十四条引文标签重瞄到锚今日所在的行（两枚按名弃：`CE_DROP_VANISHED=3f583824c43c1243,ebd15a1b8f029b6d`）；分析轨、算法轨（各阶段标出落地提交，§10 补 1a239d7d 与 ce3e7d4a 两行读数，§11 第 124 条「目标达成，W4 / W5 未做」）、权威轨（四节「今天」改「立项时」）、语言扩展（表名改指核 `CE.Lang.*` / `CE.Resolve.*`）、size-advisory 与 `contracts/DAEMON.md` 就地改；`ce-toml.md` 的 `exclude`、`cognitive_fail`、`pack` 三行经子仓 `docs_gate.rs` 源表重生成；源码注释同改（`Structure.hs`、`Similar.hs`、`Merge.hs`、`Graph/Cost.hs`、`Erase.hs`、`Document/Bind.hs`、`erase/apply.rs`、`config/tier.rs`、`mention/mod.rs`、`daemon/server/idle.rs`、`corelink/pipe.rs`）；子仓 `flow_provenance` 的 ANSWERED_BY 补 `core/app/CE/Lang/*/Flow.hs`（十份 flow 精度册生成之后这些文件没有提交，册不退役）；README.zh 第 17 行图注改为「存活性与擦除，以及控制流、合并与架构」。语言条车道终树 Rust 2,216,796 / Haskell 2,317,469 B = 51.11 %，Haskell 多 100,673 B。
 
