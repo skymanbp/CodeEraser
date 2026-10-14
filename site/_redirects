@@ -1,0 +1,4 @@
+# Cloudflare Pages redirects. The performance-benchmark pages were retired on
+# 2026-10-14 (owner order); links that still point at them land on the homepage.
+/bench/*     /     301
+/zh/bench/*  /zh/  301
