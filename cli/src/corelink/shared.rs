@@ -29,14 +29,18 @@ pub(super) fn key(core: &str) -> String {
         .map_or(effective, |p| p.display().to_string())
 }
 
-/// The core binary itself: a path as given, a bare name on PATH.
+/// The core binary itself: a path as given, a bare name on PATH. A given
+/// path is read as the spawner reads it: the literal file, else (Windows)
+/// the same path with `.exe` appended, which is what `CreateProcess` runs
+/// for a path without it (Git Bash's `command -v` answers so).
 pub fn locate(core: &str) -> Option<PathBuf> {
     let given = Path::new(core);
     if given.components().count() > 1 || given.is_absolute() {
-        return given
-            .is_file()
-            .then(|| std::path::absolute(given).ok())
-            .flatten();
+        let spawned = cfg!(windows).then(|| PathBuf::from(format!("{core}.exe")));
+        return std::iter::once(given.to_path_buf())
+            .chain(spawned)
+            .find(|p| p.is_file())
+            .and_then(|p| std::path::absolute(p).ok());
     }
     let exe = format!("{core}.exe");
     let names: &[&str] = if cfg!(windows) {

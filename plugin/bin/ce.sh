@@ -198,6 +198,9 @@ ensure_core() {
     # it BECOMES the bind target. Unmatched PATH cores stay refused —
     # e2e state 8 is the standing guard on that.
     pathcore=$(command -v ce-core 2>/dev/null || true)
+    # Git Bash answers `command -v` without the `.exe` the spawner adds;
+    # bind (and stamp) the file that exists, so ce's locator finds it.
+    case "$pathcore" in *"$ext") ;; *) [ -n "$pathcore" ] && [ -f "$pathcore$ext" ] && pathcore="$pathcore$ext" ;; esac
     [ -n "$pathcore" ] && [ "$(sha_of "$pathcore" 2>/dev/null)" = "$corepin" ] && coretgt="$pathcore"
     # A pin EXISTS for this platform, so BIND ce to the pinned path
     # instead of leaving its resolver free. Removing a mismatching

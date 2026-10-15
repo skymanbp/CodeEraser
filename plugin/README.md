@@ -56,6 +56,7 @@ v1.7.0 起 **`ce setup` 就是这两步**，任何平台同一具身体（`cli/s
 已验证本地副本 → 按 `bin/manifest.env` 的 SHA256 pin（清单每目标钉三枚：`ce` / `ce-core` / GUI 安装包，
 共<!--ce:count:platforms#word-->五<!--/ce-->目标<!--ce:count:binaries#word-->十五<!--/ce-->枚；启动器只取前两枚，v1.7.0 前的清单只钉前三个目标）从 GitHub Releases 下载并校验 → PATH 兜底。校验按会话一次：验证过的
 路径记在 `CLAUDE_PLUGIN_DATA/bound-<清单版本>.env`，同会话后续 hook 直接 exec；
+戳里记的核是磁盘上真有的那个文件（Windows 上 Git Bash 的 `command -v` 答的路径不带 `.exe`，启动器补上再绑定）；
 清单或二进制更新即重验，SessionStart 的 `health` 每会话必验。手放到
 `CLAUDE_PLUGIN_DATA/ce-<清单版本>-<平台>` 的副本走同一道 pin：相符即按已验证执行并落戳，
 不相符具名拒绝、不执行（`CE_AIRGAPPED=1` 永不下载，只在手放副本与 PATH 之间选）。

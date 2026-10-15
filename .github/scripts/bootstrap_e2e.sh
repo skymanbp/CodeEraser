@@ -1,6 +1,6 @@
 #!/bin/sh
 # Bootstrap chain e2e (M7-P1 acceptance + the v0.2.0 core legs):
-# drives plugin/bin/ce.sh through its seventeen states with the just-built
+# drives plugin/bin/ce.sh through its eighteen states with the just-built
 # REAL ce binary as the payload and file:// as the transport
 # (hermetic — the https leg is curl's contract, not ours; stated in
 # the CI step name). States:
@@ -34,7 +34,12 @@
 #                  the pin is the verified leg — exec'd silently, stamped
 #  16 hand reject: a hand-placed copy that does not match is refused BY
 #                  NAME, never exec'd or stamped; PATH ce answers instead
-# Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh>
+#  17 core works : state 10 with the REAL ce-core as the PATH core: a
+#                  measuring command through the starter answers, and
+#                  the stamp names the core file that exists (1.9.2 D1:
+#                  Git Bash's `command -v` drops `.exe`; 1.9.0-1.9.1
+#                  bound that string and every hook went inert)
+# Usage: bootstrap_e2e.sh <path-to-built-ce> <path-to-ce.sh> <path-to-built-ce-core>
 set -eu
 # This suite's whole subject is the PIN resolution chain; an ambient
 # CE_CORE_BIN outranks the pin inside ce and silently rebinds state 8's
@@ -44,6 +49,8 @@ unset CE_CORE_BIN
 CE_BIN=$1
 [ -f "$CE_BIN" ] || CE_BIN="$1.exe"
 STARTER=$2
+CORE_BIN=${3:?bootstrap_e2e: the third argument names the built ce-core (state 17)}
+[ -f "$CORE_BIN" ] || CORE_BIN="$3.exe"
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
@@ -383,4 +390,33 @@ for s in "$work"/data16/bound-*; do
     [ -e "$s" ] && fail 16 "a refused hand-placed copy left a stamp: $s"
 done
 
-echo "bootstrap_e2e: PASS (17 states, key=$key)"
+# --- state 17: state 10 with the REAL core. Every state above stands
+# ce in for ce-core and proves the binding by `--version` / doctor,
+# which spawn the core — and a spawn finds `<path>` as `<path>.exe` on
+# Windows while the package loader did not, so 1.9.0-1.9.1 passed this
+# suite with every measuring command refused (1.9.2 D1). Here the PATH
+# core is the built ce-core, pin-identical, airgapped; one measuring
+# command through the starter must answer, and the stamp must name a
+# core file that exists ----------------------------------------------
+mkdir -p "$work/pathcore17" "$work/data17" "$work/fx17"
+cp "$CORE_BIN" "$work/pathcore17/ce-core$ext"
+cp "$CE_BIN" "$work/data17/$payload"
+printf 'def one():\n    return 1\n' >"$work/fx17/one.py"
+cat >"$work/manifest17.env" <<EOF
+CE_MANIFEST_VERSION="0.0.0-test"
+CE_BASE_URL="file:///nonexistent"
+CE_SHA256_${envkey}_CE="$pin"
+CE_SHA256_${envkey}_CECORE="$(sha_of "$work/pathcore17/ce-core$ext")"
+EOF
+rc=0
+PATH="$work/pathcore17:$PATH" CE_MANIFEST_FILE="$work/manifest17.env" \
+    CE_AIRGAPPED=1 CLAUDE_PLUGIN_DATA="$work/data17" \
+    sh "$STARTER" scan --format json "$work/fx17" >"$work/out17" 2>"$work/err17" || rc=$?
+err=$(cat "$work/err17")
+[ "$rc" -eq 0 ] || fail 17 "a measuring command through the starter refused (rc=$rc): $err"
+case "$err" in *unavailable*) fail 17 "the core was bound but not reachable: $err" ;; esac
+grep -q '"files"' "$work/out17" || fail 17 "scan printed no report: $(cat "$work/out17")"
+bound=$(sed -n 's/^BOUND_CORE=//p' "$work/data17/bound-0.0.0-test.env")
+[ -f "$bound" ] || fail 17 "the stamp names a core file that does not exist: '$bound'"
+
+echo "bootstrap_e2e: PASS (18 states, key=$key)"
