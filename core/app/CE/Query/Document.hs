@@ -194,9 +194,10 @@ grouped answers proof = Grouped (\g -> M.findWithDefault [] g byGoal) nths (\k -
         | otherwise = maybe d (walk (d + 1) at) (M.lookup (g, a, at) parents)
     _ -> 0
 
--- | A proof row; its argument sorts are the goal's at a query root,
--- the core's resolved ones for a program predicate, the schema's for a
--- fact.
+-- | A proof row; its argument sorts are the goal's at a goal's root (a
+-- query's, and an assertion's, whose head no rule defines, so `preds`
+-- never lists it — 1.9.2 W1: the root printed raw ids), the core's
+-- resolved ones for a program predicate, the schema's for a fact.
 proofRow :: (Integer -> Maybe [Integer]) -> (Integer -> Maybe [Integer]) -> Integer -> [Integer] -> Value
 proofRow ofGoal ofPred depth row = case row of
   g : a : node : parent : rule : p : args ->
@@ -213,5 +214,5 @@ proofRow ofGoal ofPred depth row = case row of
   _ -> Null
  where
   sortsAt g p
-    | p < 0 = fromMaybe [] (ofGoal g)
+    | p < 0 || depth == 0 = fromMaybe [] (ofGoal g)
     | otherwise = fromMaybe (fromMaybe [] (sortsOf (fromInteger p))) (ofPred p)

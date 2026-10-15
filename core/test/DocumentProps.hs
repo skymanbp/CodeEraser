@@ -31,7 +31,7 @@ import Data.List (zip4)
 import Data.Maybe (fromMaybe)
 import qualified Data.Set as S
 import DocumentGen (docRequest, requests)
-import DocumentHarness (at, emptiesHeld, familiesNamed, fieldsHeld, int, ints, items, judgedBy, path, rankOf, refsHeld, refsIn, sameBytes)
+import DocumentHarness (at, documentOf, emptiesHeld, emptyRequest, familiesNamed, fieldsHeld, int, ints, items, judgedBy, path, rankOf, refsHeld, refsIn, sameBytes)
 import WireHarness (field, refusedBy, replyObjWith, runLegs, setKey)
 
 battery :: IO Bool
@@ -49,8 +49,9 @@ battery =
     , "the seeded documents are not vacuous: every road and every sorted list occurs"
     , "the limits package holds its stated keys, group by group"
     , "a query's goals name their answers, an answer its proof rows below the root, a row its depth"
+    , "an assertion's proof root labels its arguments by the goal's sorts"
     ]
-    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded, limitsHeld, groupedByWalk]
+    [emptiesHeld five, fieldsHeld fieldTable five, referencesHeld, countsMeasured, ranked, sameBytes (take 50 judged), refusals, capped, catalogued, seeded, limitsHeld, groupedByWalk, assertRoot]
 
 -- | Step 3's families.
 five :: [DocFamily]
@@ -244,6 +245,17 @@ limitsHeld = case limits of
   _ -> False
  where
   stated = [("candidates", 7), ("caps", 11), ("clone", 5), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 17), ("similar", 14), ("zone", 2)]
+
+-- | An assertion's root row (1.9.2 W1): its head no rule defines, so
+-- `preds` never lists it and the root once read sort −1, raw ids; it
+-- reads the goal's sorts, as a query's root does — two nodes here.
+assertRoot :: Bool
+assertRoot = (documentOf r >>= \d -> headOf (items d "proof") >>= path ["args"]) == Just (toJSON [node 5, node 7])
+ where
+  r = setKey "rows" (object (["heads" .= [[0, 1, 2 :: Integer]], "goals" .= [[0, 1, 0, 0 :: Integer]], "answers" .= [[0, 5, 7 :: Integer]], "proof" .= [[0, 0, 0, -1, 9, 1006, 5, 7 :: Integer]]] <> [k .= ([] :: [[Integer]]) | k <- ["faults", "preds", "errors"]])) rules
+  rules = case familiesNamed ["rules"] of f : _ -> setKey "degraded" Null (emptyRequest f); [] -> Null
+  node v = object ["$" .= [String "value", toJSON (0 :: Integer), toJSON (v :: Integer)]]
+  headOf xs = case xs of x : _ -> Just x; [] -> Nothing
 
 -- | The query documents' grouping, restated as the walk the GUI once
 -- did: a goal's answers are the rows naming it, an answer's proof the
