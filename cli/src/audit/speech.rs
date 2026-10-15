@@ -129,7 +129,7 @@ fn asked(link: Option<&mut Link>, said: &Said) -> Result<(Vec<Line>, bool), Stri
 /// The one English line a face says when the core did not phrase it:
 /// the rules whose deny-tier verdict holds, and no decision word — the
 /// decision is the exit code / the Stop's block channel.
-fn fallback(said: &Said, why: &str) -> Line {
+pub(super) fn fallback(said: &Said, why: &str) -> Line {
     let codes: Vec<&str> = [
         ("duplicate", said.dup_blocks()),
         ("tombstone", said.tomb_blocks()),

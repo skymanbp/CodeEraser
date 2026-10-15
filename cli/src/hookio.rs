@@ -14,6 +14,7 @@ fn project_root(cwd: &str) -> std::path::PathBuf {
 }
 
 mod inert;
+pub(crate) use inert::degraded;
 pub use inert::{Gate, gate};
 use std::path::Path;
 
@@ -25,7 +26,9 @@ use std::path::Path;
 /// 0.13.0 (plan v2.32 step 2 follow-up): a hook left inert by an
 /// unreadable definition package writes one line — `probe` /
 /// `settle` / `stop_audit` / `health` with `degraded` true and
-/// `reason` (hookio/inert.rs). Every prior key keeps its shape.
+/// `reason` (hookio/inert.rs); since 1.9.2 the git-hook faces too
+/// (`precommit` / `commitmsg`, which then skip with exit 0). Every
+/// prior key keeps its shape.
 ///
 /// 0.12.0 (plan v2.31 step 5): the `flow` event (`mode` = `[flow]
 /// tier`; a `flow` object: `units`, `before` / `after` finding counts,

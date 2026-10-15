@@ -63,10 +63,17 @@ const EVENTS: [(&str, &str); 4] = [
     ("SessionStart", "health"),
 ];
 
-/// The inert hook's trace: the refusal on stderr and one feed line, the
-/// tool call's file and identity on it when the envelope carries them.
+/// The inert hook's trace: the refusal on stderr and one feed line.
 fn trace(event: &str, root: &Path, raw: &Value, why: &str) {
     eprintln!("ce: {why}");
+    degraded(event, root, raw, why);
+}
+
+/// The feed line of a face left inert by an unreadable package: the
+/// hooks' (named after their command) and the git-hook faces' (`event`
+/// as given, `raw` null), the tool call's file and identity on it when
+/// the envelope carries them.
+pub(crate) fn degraded(event: &str, root: &Path, raw: &Value, why: &str) {
     let name = EVENTS
         .iter()
         .find(|(e, _)| *e == event)
