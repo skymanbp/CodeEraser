@@ -4,7 +4,8 @@
 -- in plan order — the measuring side renders the hunks and checks the
 -- hash), each advisory row with its reason (and the unresolved sites
 -- behind `language_unresolved`), each out-of-class kind with its family
--- command, the plan summary; under `--check` (the `check` fact) the
+-- command, the plan summary (a dry run's or an applying run's, by the
+-- `apply` flag; 1.9.2 W2); under `--check` (the `check` fact) the
 -- refusal on stderr when a row is eraseable; after `--apply` (the
 -- `apply` flag) the apply line with the `applied` count. The veto is
 -- that refusal.
@@ -17,11 +18,12 @@ import Data.List (groupBy)
 
 lines' :: Say -> Value -> DocReq -> [Line]
 lines' say doc req =
-  map (line 0) (diffs <> advisories <> map kind kinds <> [say "summary" [N (c "eraseable"), N (c "advisory")]])
+  map (line 0) (diffs <> advisories <> map kind kinds <> [say summary [N (c "eraseable"), N (c "advisory")]])
     <> [line 1 (say "check" [N (c "eraseable")]) | veto doc req]
     <> [line 0 (say "applied" [N (fact req "applied")]) | flag req "apply"]
  where
   c k = int k (key "counts" doc)
+  summary = if flag req "apply" then "summary_applied" else "summary_dry"
   plan = zip (Erase.planRows req) (arr "rows" doc)
   eraseable = [(i, r) | ((i, r), _) <- plan, take 1 (drop 7 r) == [1]]
   diffs = [say "diff" [R (ref "diff" [a, foldl (\_ (i, _) -> i) a g])] | g@((a, _) : _) <- groupBy ((==) `on` (take 1 . drop 1 . snd)) eraseable]

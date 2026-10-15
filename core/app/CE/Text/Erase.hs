@@ -18,7 +18,8 @@ catalogue =
     \advisory\tadvisory {} {}{}: {}{} ({})\t仅建议 {} {}{}：{}{}（{}）\n\
     \detail\t — {} unresolved reference sites in this language\t——该语言尚有 {} 个未解析引用点位\n\
     \kind\tadvisory {}: {} finding(s) — no deterministic-safe erase; see `{}`\t仅建议 {}：{} 条——无确定性安全擦除；见 `{}`\n\
-    \summary\terase plan: {} eraseable, {} advisory (dry-run; --apply to act)\t擦除计划：可擦 {}，仅建议 {}（演练；--apply 才动手）\n\
+    \summary_dry\terase plan: {} eraseable, {} advisory (dry-run; --apply to act)\t擦除计划：可擦 {}，仅建议 {}（演练；--apply 才动手）\n\
+    \summary_applied\terase plan: {} eraseable, {} advisory (applying the eraseable rows)\t擦除计划：可擦 {}，仅建议 {}（正在执行可擦行）\n\
     \check\terase check: {} eraseable row(s) planned\n\
     \applied\terase applied: {} row(s); audit trail in .ce/erase-log.ndjson\t擦除已执行：{} 行；审计轨迹在 .ce/erase-log.ndjson\n\
     \record\t{} {} {}{} ({}) plan {}\n\

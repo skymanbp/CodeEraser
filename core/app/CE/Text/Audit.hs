@@ -13,7 +13,9 @@ import CE.Text (Catalogue, table)
 catalogue :: Catalogue
 catalogue =
   table
-    "dup_reason\tce audit: this session's edits leave {} duplicate block(s) touching changed files (net {} LOC): {} — deduplicate before stopping.\tce audit：本会话的编辑留下 {} 个触及改动文件的重复块（净 {} 行）：{} — 停止前请先去重。\n\
+    "dup_reason\t{} leave {} duplicate block(s) touching changed files (net {} LOC): {} — {}\t{}留下 {} 个触及改动文件的重复块（净 {} 行）：{} — {}\n\
+    \dup_tail_stop\tdeduplicate before stopping.\t停止前请先去重。\n\
+    \dup_tail_git\tdeduplicate before committing.\t提交前请先去重。\n\
     \block\t{}:{}-{} <-> {}:{}-{} ({} tokens)\n\
     \mount\t{}: {}\n\
     \tomb_reason\t{} leave {} tombstone site(s), past the `[tombstone] budget` of {}: {} — a removed name must not survive as an absence label or an argument from absence; drop the label, or say what replaced it.\t{}留下 {} 处墓碑残留，越过 `[tombstone] budget` 的 {}：{} — 被删的名字不该以「无 X」标签或缺席论证留下；去掉标签，或写清替代物。\n\

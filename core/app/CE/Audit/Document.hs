@@ -97,7 +97,8 @@ lines' say _ req
   faceWord = W (if face == 2 then "commitmsg" else "precommit")
   net = case rows req "net" of [[n]] -> n; _ -> 0
   reasons = [dupReason | dupBlocks req] <> [tombReason | tombBlocks req]
-  dupReason = say "dup_reason" [N (maybe 0 (sum . take 1) (dups req)), W (signed net), P (join "; " (map block (rows req "blocks")))]
+  dupReason = say "dup_reason" [P subject, N (maybe 0 (sum . take 1) (dups req)), W (signed net), P (join "; " (map block (rows req "blocks"))), P dupTail]
+  dupTail = say (if face == 0 then "dup_tail_stop" else "dup_tail_git") []
   block r = case r of
     [k, sa, ae, bs, be, t] -> say "block" [R (ref "block_a" [k]), N sa, N ae, R (ref "block_b" [k]), N bs, N be, N t]
     _ -> plain ""
