@@ -7874,60 +7874,60 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|0117ef516d0e46ec|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 104,
+    "line": 107,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|0b512b5851758714|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 101,
-    "end": 103,
+    "line": 104,
+    "end": 106,
     "text": "/// 0.2.0 adds `session_id`: without it the D2-2 session count and"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 212,
-    "end": 214,
+    "line": 215,
+    "end": 217,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|44411a3af4faf66a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 281,
-    "end": 292,
+    "line": 284,
+    "end": 295,
     "text": "}\nlet Ok(feed) = tail(&root.join(OBSERVE_REL), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 228,
-    "end": 240,
+    "line": 231,
+    "end": 243,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 94,
-    "end": 97,
+    "line": 97,
+    "end": 100,
     "text": "/// 0.5.0 adds the `zone` event (plan v2.6 §A observe leg): a write"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|cfd91ad7337d1de8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 99,
+    "line": 102,
     "text": "/// 0.4.0 adds the `budget` event (§4.2 step-2 per-rule firing records)."
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|d75b50f93e41b875|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 20,
-    "end": 103,
+    "line": 21,
+    "end": 104,
     "text": "/// Observe-feed line schema id, stamped on every entry; bump on any"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|e5b511dd8f8b1e7f|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 89,
-    "end": 92,
+    "line": 92,
+    "end": 95,
     "text": "/// 0.6.0 adds the OPTIONAL `zone_tier` key on `zone` events (plan"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 291,
-    "end": 306,
+    "line": 294,
+    "end": 309,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../core/app/CE/Text/Guard.hs|90ffa29edb5ad9ba|0": {
@@ -9218,19 +9218,19 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|0117ef516d0e46ec|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 104,
+    "line": 107,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|1b5f156f192673ed|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 55,
-    "end": 74,
+    "line": 58,
+    "end": 77,
     "text": "/// 0.9.0 (plan v2.27): the `tombstone` object is judged over the wire"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 273,
-    "end": 289,
+    "line": 276,
+    "end": 292,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
@@ -9601,8 +9601,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Audit/Document.hs|48467bfcd25f0ee9|0": {
     "target": "../../../core/app/CE/Audit/Document.hs",
-    "line": 105,
-    "end": 121,
+    "line": 106,
+    "end": 122,
     "text": "subject = say (case face of 1 -> \"subject_precommit\"; 2 -> \"subject_commitmsg\"; _ -> \"subject_stop\") []"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Audit/Document.hs|cab90d6db3ee8009|0": {
@@ -9757,7 +9757,7 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/hookio.rs|0117ef516d0e46ec|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 104,
+    "line": 107,
     "text": "pub const OBSERVE_SCHEMA: &str = \"ce.observe/0.13.0\";"
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../../cli/src/main_similar.rs|42203d6f2fb5a593|0": {
@@ -10246,12 +10246,12 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
     "target": "../../../.github/workflows/ci.yml",
-    "line": 295,
+    "line": 296,
     "text": "cargo run --locked -- rules tests --core \"$CORE_BIN\"\n\n# The churn axis (score axis 5) needs the git-subprocess walk —"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|2b1f52a541669d9a|0": {
     "target": "../../../.github/workflows/ci.yml",
-    "line": 269,
+    "line": 270,
     "text": "cargo run --locked -- rules .. --core \"$CORE_BIN\"\n\n# The test suite is a READER of this tree (plan v2.18 step #12):\n# its files feed the graph's edges and the advisory's mention\n# universe above and are measured by nobody there. What measures\n# them is the submodule's own ce.toml + baseline — the same seven\n# gates, rooted at cli/tests (root resolution stops at its\n# ce.toml). 978 at the split, floor 975: the same bite; 987 once\n# the crate's unit tests rode in as unit/ (step #13), floor 983;\n# 983 once the clone axis re-denominated (v2.29 step 8), floor 979;\n# 953 once the T3 near-miss pairs entered the sim table (v2.30 step\n# 5b-9), floor 949 — then routine test additions read 948 twice\n# (CHANGELOG: W2-text stage F, W6 item 2) and 950 at step 11b, one point\n# over a floor meant to fire on collapse; re-anchored at 945, five\n# under 950, the main tree's bite (2026-10-13).\n- name: Dogfood the test suite (its own ce.toml + baseline)"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.rules|0abbb9a52b13c833|0": {

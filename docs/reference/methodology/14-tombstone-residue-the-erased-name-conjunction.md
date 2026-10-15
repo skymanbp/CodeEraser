@@ -278,7 +278,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
   [guard/tombstone.rs:143-161](../../../cli/src/guard/tombstone.rs#L143),
-  [hookio.rs:273-289](../../../cli/src/hookio.rs#L273),
+  [hookio.rs:276-292](../../../cli/src/hookio.rs#L276),
   [proto.rs:75-82](../../../cli/src/daemon/proto.rs#L75),
   [Text/Guard.hs:17](../../../core/app/CE/Text/Guard.hs#L17)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
@@ -294,7 +294,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   audit's own link with the paths as references
   ([audit/tombstone.rs:61-68](../../../cli/src/audit/tombstone.rs#L61),
   [Audit/Document.hs:73-85](../../../core/app/CE/Audit/Document.hs#L73),
-  [Audit/Document.hs:105-121](../../../core/app/CE/Audit/Document.hs#L105),
+  [Audit/Document.hs:106-122](../../../core/app/CE/Audit/Document.hs#L106),
   [precommit.rs:21-44](../../../cli/src/audit/precommit.rs#L21)). `ce commitmsg` exits 2
   when it cannot read the file it was handed — a gate that cannot see its input must say so —
   1 on a block, 0 otherwise ([commitmsg.rs:16-35](../../../cli/src/audit/commitmsg.rs#L16)).
@@ -310,8 +310,8 @@ the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `s
 carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:55-74](../../../cli/src/hookio.rs#L55),
-[hookio.rs:104](../../../cli/src/hookio.rs#L104)). The feed is the FPR ledger's raw material
+[hookio.rs:58-77](../../../cli/src/hookio.rs#L58),
+[hookio.rs:107](../../../cli/src/hookio.rs#L107)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated
