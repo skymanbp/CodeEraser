@@ -168,7 +168,7 @@ PreToolUse shapes behaviour; it is not a security wall (shell writes bypass it; 
 - **Distribution.** A release builds <!--ce:count:platforms#word-->five<!--/ce--> targets; `ce setup` wires nothing from an elevated account that is not the logged-in user (exit 13); judging this repository needs the `cli/tests` submodule seated.
 - **One wire line.** A request line to the core is at most <!--ce:gate:wire.line_bytes#digits-->134,217,728<!--/ce--> bytes; larger requests split into batches, and an oversized item is refused by name, never truncated.
 
-Scores are not comparable across a `[[rules.class]]` switch, across a named re-establish that moves `softLine`, or across these releases: v0.7.3 → v1.0.0, v1.2.0 → v1.3.0, v1.3.x → v1.4.0, v1.6.0 → v1.7.0, v1.7.4 → v1.8.0, v1.8.0 → v1.9.0 (1.9.1 is comparable with 1.9.0); the reasons are in [CHANGELOG](CHANGELOG.md).
+Scores are not comparable across a `[[rules.class]]` switch, across a named re-establish that moves `softLine`, or across these releases: v0.7.3 → v1.0.0, v1.2.0 → v1.3.0, v1.3.x → v1.4.0, v1.6.0 → v1.7.0, v1.7.4 → v1.8.0, v1.8.0 → v1.9.0 (1.9.1 and 1.9.2 are comparable with 1.9.0); the reasons are in [CHANGELOG](CHANGELOG.md).
 
 ## Documentation
 
