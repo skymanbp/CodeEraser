@@ -35,6 +35,13 @@ entry_globs = [
     # convention (skills/<name>/SKILL.md) — liveness comes from the
     # external loader, never from an in-corpus reference edge.
     "plugin/skills/",
+    # The security policy is read by GitHub's security tab by path
+    # convention (SECURITY.md at the root, and the plugin's own copy
+    # beside its manifest for the marketplace scanners) — liveness comes
+    # from those external readers, never from an in-corpus edge
+    # (2026-10-16: the deadcode gate called both unreachable).
+    "SECURITY.md",
+    "plugin/SECURITY.md",
 ]
 
 # The built-in rule pack (plan v2.33): checks the core renders to CE
