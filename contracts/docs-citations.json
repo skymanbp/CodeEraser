@@ -10294,7 +10294,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../ce.toml|1d9cfdba9664fff3|0": {
     "target": "../../../ce.toml",
-    "line": 53,
+    "line": 60,
     "text": "[rules.pack]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/config/canonical.rs|aad58beefcb33a11|0": {

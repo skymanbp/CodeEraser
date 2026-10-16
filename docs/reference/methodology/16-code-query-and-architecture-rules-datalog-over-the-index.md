@@ -385,7 +385,7 @@ above the measuring side above the core as `layers`, and three `forbid` pairs (t
 reads its tests, the measuring side never reads the site or the GUI); `no_dir_cycles` is left
 out because 1,653 directory pairs reach each other on this tree, and the two fan caps because
 today's maxima are a test roster and a shared test helper that grow with every test file
-([ce.toml:53](../../../ce.toml#L53)).
+([ce.toml:60](../../../ce.toml#L60)).
 
 ### 12. Gates and goldens
 
