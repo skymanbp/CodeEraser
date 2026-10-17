@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml/badge.svg)](https://github.com/skymanbp/CodeEraser/actions/workflows/ci.yml) [![crates.io](https://img.shields.io/crates/v/codeeraser)](https://crates.io/crates/codeeraser) [![npm](https://img.shields.io/npm/v/codeeraser)](https://www.npmjs.com/package/codeeraser) [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE) [![site](https://img.shields.io/badge/site-codeeraser.dev-e4574a)](https://codeeraser.dev) · English | **[中文](README.zh.md)**
 
-> An eraser against LLM-induced code & document entropy.
+> CodeEraser keeps an agent-written repo small and clean: a write that duplicates code or bloats a file is refused before it lands.
 
 ![The write-time guard refusing a write: an agent asks to create a new file, and CodeEraser answers with the indexed region that content already duplicates and the ordering that would pass instead](demo/out/hero.svg)
 
