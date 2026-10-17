@@ -31,7 +31,7 @@ normalized IR; the **judgment** side is Haskell (`ce-core`) — the rule
 engine, the four-classification, TSED, graph analysis, scoring and the
 ratchet — and turns those facts into verdicts
 ([DEVELOPMENT_PLAN.md:158-161](../DEVELOPMENT_PLAN.md#L158),
-[README.md:159](../../README.md#L159)). The boundary has a one-line
+[README.md:163](../../README.md#L163)). The boundary has a one-line
 test, from ADR-008 as amended in plan v2.33 (2026-10-04): what touches
 the world — files, tree-sitter, SQLite, git, processes — stays in Rust;
 a computation over facts Rust has read, integers or text, belongs to the

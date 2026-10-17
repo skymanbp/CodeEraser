@@ -1,7 +1,7 @@
 {
   "docs/reference/methodology.md|../../README.md|0ea3e1e752cca722|0": {
     "target": "../../README.md",
-    "line": 159,
+    "line": 163,
     "text": "- **Philosophy.** Measure in Rust, decide and write in Haskell, print everywhere else. Nothing asks a model anything; hooks fail open and say so; documentation is generated or gated, including the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md), and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree."
   },
   "docs/reference/methodology.md|../DEVELOPMENT_PLAN.md|10cd12d5adb8dad7|0": {

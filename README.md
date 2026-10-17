@@ -8,11 +8,15 @@
 
 ## What it does
 
-Long-lived LLM-assisted codebases drift the same way: the same function written twice, the same paragraph pasted into three files, files that only ever grow. CodeEraser stops that drift at the moment of writing and gates it in CI, with no model in the loop.
+LLM-assisted codebases drift the same way: the same function written twice, the same paragraph pasted into three files, files that only grow. CodeEraser refuses the write that would do that, before it reaches disk, with no model in the loop.
 
-Two refusals happen before the content reaches disk: a write that would *introduce* an exact T1/T2 clone is denied at PreToolUse with the duplicated region named, and a write leaving a file over <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> lines (or its `[[rules.class]]` line) is denied the same way. Everything else is a report or a gate: the Stop audit refuses the turn, `ce precommit` / `ce commitmsg` refuse the commit, CI refuses the merge.
+- A write that copies code already in the tree is refused, and the refusal names the region it duplicates.
+- A write that leaves a file over <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> lines is refused the same way.
+- Everything else is a report or a gate: the Stop audit refuses the turn, `ce precommit` the commit, CI the merge.
 
-**Scope.** Judged: Python, TypeScript/TSX, Rust, Go, Haskell, C, C++, Java, Lua, R, Markdown and HTML (<!--ce:count:langs#word-->thirteen<!--/ce--> language codes, <!--ce:count:grammars#word-->twelve<!--/ce--> tree-sitter grammars). Size-checked only: js/mjs/cjs/jsx, css/scss/less, vue, svelte, sh/bash, yml/yaml. Documentation duplication only: `.txt`. Faces: CLI · GUI (<!--ce:count:screens#word-->eleven<!--/ce--> screens) · Claude Code plugin (<!--ce:count:hooks#word-->four<!--/ce--> hooks, <!--ce:count:skills#word-->one<!--/ce--> skill, <!--ce:count:commands#word-->one<!--/ce--> command, <!--ce:count:mcp_tools#word-->twenty-one<!--/ce--> read-only MCP tools) · pre-commit · CI.
+**Judges** Python, TypeScript/TSX, Rust, Go, Haskell, C, C++, Java, Lua, R, Markdown and HTML (<!--ce:count:langs#word-->thirteen<!--/ce--> language codes, <!--ce:count:grammars#word-->twelve<!--/ce--> tree-sitter grammars); JS, CSS, Vue, Svelte, shell and YAML files for size only; `.txt` for documentation duplication only.
+
+**Runs as** CLI · GUI (<!--ce:count:screens#word-->eleven<!--/ce--> screens) · Claude Code plugin (<!--ce:count:hooks#word-->four<!--/ce--> hooks, <!--ce:count:skills#word-->one<!--/ce--> skill, <!--ce:count:commands#word-->one<!--/ce--> command, <!--ce:count:mcp_tools#word-->twenty-one<!--/ce--> read-only MCP tools) · pre-commit · CI.
 
 ## The effect: the same task, run twice
 

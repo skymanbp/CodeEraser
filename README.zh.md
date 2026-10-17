@@ -8,11 +8,15 @@
 
 ## 它做什么
 
-长期由 LLM 协作的代码库以同一种方式漂移：同一个函数写两遍、同一段话贴进三个文件、文件只增不减。CodeEraser 在写入当下拦住这种漂移，并在 CI 里把住大门，全链路没有任何模型参与。
+LLM 协作的代码库都往同一个方向漂：同一个函数写两遍、同一段话贴进三个文件、文件只增不减。CodeEraser 在这种写入落盘之前就拒掉它，全程没有任何模型参与。
 
-两种拒绝发生在文件落盘之前：会**引入** T1/T2 精确克隆的写入在 PreToolUse 当场被拒，并指名它复制的区域；让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行（或其 `[[rules.class]]` 声明的线）的写入同样被拒。其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` / `ce commitmsg` 拒绝提交，CI 拒绝合入。
+- 复制了树里已有代码的写入会被拒绝，拒绝理由指名它重复的是哪一块。
+- 让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行的写入同样被拒绝。
+- 其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 拒绝提交，CI 拒绝合入。
 
-**范围。** 判决：Python、TypeScript/TSX、Rust、Go、Haskell、C、C++、Java、Lua、R、Markdown、HTML（<!--ce:count:langs#word-->十三<!--/ce-->个语言码，<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法）。只查尺寸：js/mjs/cjs/jsx、css/scss/less、vue、svelte、sh/bash、yml/yaml。只进文档重复：`.txt`。面：CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
+**判决** Python、TypeScript/TSX、Rust、Go、Haskell、C、C++、Java、Lua、R、Markdown、HTML（<!--ce:count:langs#word-->十三<!--/ce-->个语言码，<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法）；JS、CSS、Vue、Svelte、shell、YAML 只查尺寸；`.txt` 只查文档重复。
+
+**形态** CLI · GUI（<!--ce:count:screens#word-->十一<!--/ce-->屏）· Claude Code 插件（<!--ce:count:hooks#word-->四<!--/ce-->钩、<!--ce:count:skills#word-->一<!--/ce--> skill、<!--ce:count:commands#word-->一<!--/ce-->命令、<!--ce:count:mcp_tools#word-->二十一<!--/ce-->个只读 MCP 工具）· pre-commit · CI。
 
 ## 实际效果：同一任务，跑两遍
 
