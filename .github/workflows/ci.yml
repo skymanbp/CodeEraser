@@ -641,6 +641,12 @@ jobs:
           tap=ci/codeeraser
           brew tap-new --no-git "$tap"
           cp packaging/homebrew/Formula/codeeraser.rb "$(brew --repository "$tap")/Formula/"
+          # Homebrew since 2026-11 refuses to load a formula from a tap it was
+          # not told to trust ("Refusing to load formula ... from untrusted
+          # tap"); the throwaway tap is ours, so it is trusted here. Older
+          # Homebrew (the ubuntu runner's linuxbrew) has no `trust` command
+          # and no such refusal, hence the guard on the command's existence.
+          if brew commands | grep -qx trust; then brew trust "$tap"; fi
           brew style --formula "$tap/codeeraser"
           brew audit --formula --strict "$tap/codeeraser"
           brew install --formula "$tap/codeeraser"
