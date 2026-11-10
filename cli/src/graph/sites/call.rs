@@ -66,7 +66,11 @@ pub(super) fn site<'t>(
     let first = |text: &str| text.split('\n').next().unwrap_or("").to_string();
     match literal(value, reads_names(args, row, formals, src), src) {
         Some(text) => Some((row.label, value, first(text))),
-        None => Some((row.computed?, value, first(value.utf8_text(src).ok()?).trim().to_string())),
+        None => Some((
+            row.computed?,
+            value,
+            first(value.utf8_text(src).ok()?).trim().to_string(),
+        )),
     }
 }
 

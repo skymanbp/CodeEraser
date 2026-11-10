@@ -35,6 +35,7 @@ data Package = Package
   , cpName :: Maybe String
   , cpLibPath :: Maybe String
   , cpBinPaths :: [String]
+  , cpTargetPaths :: [String]
   , cpDeps :: [String]
   }
 
@@ -45,20 +46,24 @@ package rel doc =
     { cpDir = parentDir rel
     , cpName = str (tableAt ["package", "name"])
     , cpLibPath = str (tableAt ["lib", "path"])
-    , cpBinPaths = [p | Just (Array bins) <- [field "bin" doc], b <- toList bins, Just p <- [str (field "path" b)]]
+    , cpBinPaths = paths "bin"
+    , cpTargetPaths = concatMap paths ["example", "test", "bench"]
     , cpDeps = keysUnder ["dependencies", "dev-dependencies", "build-dependencies"] doc
     }
  where
   -- `roots::table_at`: one dotted key path into the document
   tableAt keys = foldl (\cur k -> cur >>= field k) (Just doc) keys
+  -- each `[[<kind>]]` target's declared `path`
+  paths kind = [p | Just (Array ts) <- [field kind doc], t <- toList ts, Just p <- [str (field "path" t)]]
 
--- | `crate_roots`: the declared lib and bin paths, the default targets,
--- and both auto-discovery forms under the conventional target
+-- | `crate_roots`: the declared lib and bin paths, the declared
+-- example, test and bench paths (lane v235_graphtrust), the default
+-- targets, and both auto-discovery forms under the conventional target
 -- directories — those that are walked files.
 crateRoots :: Set.Set String -> Package -> Set.Set String
 crateRoots files p = Set.unions (declared : map (autoTargets files p) ["src/bin", "tests", "examples", "benches"])
  where
-  targets = maybeToList (cpLibPath p) <> cpBinPaths p <> ["src/lib.rs", "src/main.rs", "build.rs"]
+  targets = maybeToList (cpLibPath p) <> cpBinPaths p <> cpTargetPaths p <> ["src/lib.rs", "src/main.rs", "build.rs"]
   declared = Set.fromList [c | t <- targets, Just c <- [joinRel (cpDir p) t], Set.member c files]
 
 -- | `bin_roots`: the declared bin paths, the default main and the

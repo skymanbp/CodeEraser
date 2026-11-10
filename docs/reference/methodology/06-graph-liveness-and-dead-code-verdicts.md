@@ -310,9 +310,11 @@ role 3  ce.toml [graph] entry_globs hit through the ONE ce.toml glob
 role 4  base ∈ {README.md, CLAUDE.md}, or docs/**/{index.md, README.md} [flags.rs:104-108]
 role 5  inline `ce:allow(deadcode) -- <why>` claim (a BARE marker
         claims nothing — the docdup exemption discipline)           [flags.rs:145-153]
-role 6  a manifest-declared build target: Cargo [lib]/[[bin]] paths
-        and conventional targets via crate_roots, cabal main-is
-        through each stanza's source roots                          [targets.rs:44-80; Cabal.hs:72-84; cabal_find.rs:10-26]
+role 6  a manifest-declared target: Cargo [lib]/[[bin]]/[[example]]/
+        [[test]]/[[bench]] paths and conventional targets via
+        crate_roots, cabal main-is through each stanza's source
+        roots, package.json main/module/types/bin/exports, the root
+        pyproject's scripts / gui-scripts / entry-points           [targets.rs:44-80; Cabal.hs:72-84; cabal_find.rs:10-26; Entries.hs:3-27]
 role 7  a declared submodule's node (index `files.owner` = 1; a
         package or section under a foreign file's path), sent ALONE
         — no other role is measured on a reader                     [flags.rs:31-35; deadcode.rs:323-325, 345-346; nodes.rs:32-93]
@@ -333,7 +335,12 @@ references the graph cannot read (a stylesheet's `url()`, a script's fetch, a ma
 keep an asset alive, so it is never a candidate and never a measured node
 ([deadcode.rs:195-197](../../../cli/src/graph/deadcode.rs#L195)). **Role 6 closes
 a ledgered defect**: a declared `[[bin]] path` or cabal `main-is` target is a root, where
-before only the name conventions were — the discovery is nearest-manifest per walked directory
+before only the name conventions were — and, since lane v235_graphtrust, so is every file a manifest
+names as what a runtime or a tool starts: a package.json's `main` / `module` / `types` / `bin` and its
+`exports` leaves (a `*` pattern names every walked file it matches; a `.js` target no walked file answers
+names its TS twin), the root `pyproject.toml`'s `[project.scripts]` / `[project.gui-scripts]` /
+`[project.entry-points.*]` modules, found by the core (resolve/1 `entries`,
+[Entries.hs:3-27](../../../core/app/CE/Resolve/Entries.hs#L3)) — the discovery is nearest-manifest per walked directory
 ([targets.rs:37-82](../../../cli/src/graph/deadcode/targets.rs#L37),
 [cabal_find.rs:10-26](../../../cli/src/graph/cabal_find.rs#L10)). A tree whose manifest lives
 elsewhere — the test-suite submodule is a slice of the `cli` package, its binaries cargo

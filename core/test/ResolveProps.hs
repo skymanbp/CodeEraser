@@ -42,6 +42,7 @@ battery = runLegs names probes
     , "resolve: a document of a file not of the request or not HTML is refused"
     , "resolve: the cap counts the request's text"
     , "resolve: a dynamic site is refused as dynamic though its spec names a walked file, and draws no also row"
+    , "resolve: package.json main / bin / exports patterns and pyproject entry points name their walked files as entries"
     ]
   probes =
     [ all reversible (take 40 cases)
@@ -60,6 +61,7 @@ battery = runLegs names probes
     , refused (setKey "html" (object ["docs" .= [toJSON [toJSON firstFile, Null, Null, Null, Null, toJSON ([] :: [Value]), toJSON ([] :: [Value])]]]) base) "html.docs 0: not an HTML file of the request"
     , capLeg
     , dynamicRefused
+    , entriesNamed
     ]
   base = request firstCase
   -- one site `[lang, kind, file, "x"]` in place of the base request's sites
@@ -136,3 +138,22 @@ dynamicRefused = all one [(langPy, "m.py", "x.py", "x"), (langLua, "m.lua", "x.l
   one (lang, from, target, spec) =
     let v = askCore (siteRequest lang [from, target] [(kindDynamic, from, spec)] (const []))
      in (v >>= answers) == Just [RUnres Dynamic] && (v >>= replyKey "also") == Just ([] :: [(Int, String, Int)])
+
+-- | The manifest-declared entries (lane v235_graphtrust, T2): a
+-- package.json's `main` found by the TS first rung, a `bin` map's `.js`
+-- target through its walked TS twin, an `exports` pattern's every walked
+-- match (an unmatched file is none), and the root pyproject's script and
+-- entry-point modules with their ancestor packages (a module nothing
+-- names is none).
+entriesNamed :: Bool
+entriesNamed = (askCore req >>= replyKey "entries") == Just want
+ where
+  files = words "app/__init__.py app/cli.py app/plug.py app/stray.py lib/src/feat-a.ts lib/src/feat/a.ts lib/src/other.ts main.ts web/src/cli.ts web/src/feat/a.ts web/src/feat/b.ts web/src/other.ts"
+  want = words "app/__init__.py app/cli.py app/plug.py lib/src/feat-a.ts main.ts web/src/cli.ts web/src/feat/a.ts web/src/feat/b.ts" :: [String]
+  pkg rel text = toJSON [toJSON (0 :: Int), toJSON (rel :: String), toJSON ("" :: String), toJSON (2 :: Int), toJSON (text :: String)]
+  rootPkg = "{\"main\": \"main\"}"
+  webPkg = "{\"bin\": {\"w\": \"./src/cli.js\"}, \"exports\": {\"./feat/*\": {\"import\": \"./src/feat/*.ts\"}}}"
+  -- a `*` after a name prefix: feat-a.ts, never other.ts or feat/a.ts
+  libPkg = "{\"exports\": {\"./feat-*\": \"./src/feat-*.ts\"}}"
+  py = object ["project" .= object ["scripts" .= object ["app" .= ("app.cli:main" :: String)], "entry-points" .= object ["g" .= object ["p" .= ("app.plug" :: String)]]]]
+  req = siteRequest langTs files [] (const ["ts" .= object ["packages" .= ["lib/package.json", "package.json", "web/package.json" :: String], "facts" .= [pkg "lib/package.json" libPkg, pkg "package.json" rootPkg, pkg "web/package.json" webPkg]], "py" .= object ["pyproject" .= py]])

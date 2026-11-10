@@ -15,7 +15,10 @@
 //! under (flags.rs); the core reads it and answers the code (resolve/1
 //! `packages`, plan v2.33 W2-text stage B). A cabal's main-is targets
 //! are the core's answer too (resolve/1 `mains`, stage D), and so are a
-//! Cargo.toml's crate roots (resolve/1 `crates`, stage F).
+//! Cargo.toml's crate roots (resolve/1 `crates`, stage F) and the files
+//! a package.json or the root pyproject.toml names as what a runtime
+//! starts (resolve/1 `entries`, lane v235_graphtrust) — the nearest
+//! package.json of each directory holding a TS file.
 
 use crate::graph::resolve::Manifests;
 use crate::graph::{cabal_find, roots};
@@ -23,8 +26,21 @@ use crate::scan::lang::Lang;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
-fn is_r(path: &str) -> bool {
-    Lang::from_path(Path::new(path)) == Some(Lang::R)
+/// The nearest `name` above each directory holding a walked file of
+/// one of `langs` (every walked file when `langs` is empty).
+fn nearest(root: &Path, files: &BTreeSet<String>, langs: &[Lang], name: &str) -> BTreeSet<String> {
+    let of = |f: &&String| {
+        langs.is_empty()
+            || Lang::from_path(Path::new(f.as_str())).is_some_and(|l| langs.contains(&l))
+    };
+    let dirs: BTreeSet<String> = files
+        .iter()
+        .filter(of)
+        .map(|f| roots::parent_dir(f))
+        .collect();
+    dirs.iter()
+        .filter_map(|d| roots::nearest_up(root, d, name))
+        .collect()
 }
 
 /// The per-run declared-target set, and each R package's code by its
@@ -37,39 +53,29 @@ pub(super) struct Declared {
 impl Declared {
     /// One pass over the walked set: nearest Cargo.toml and nearest
     /// .cabal per unique directory, nearest DESCRIPTION per directory
-    /// holding an R file, each manifest's targets computed once. A
-    /// manifest above the repo root is out of tree by construction
-    /// (nearest_up never leaves it). `declared` are the ce.toml crate
-    /// roots, kept where the file is walked. An R package's code, a
-    /// cabal's mains and a Cargo package's crate roots are the core's
-    /// answer; a core that cannot give them is a named refusal.
+    /// holding an R file, nearest package.json per directory holding a
+    /// TS file, each manifest's targets computed once. A manifest above
+    /// the repo root is out of tree by construction (nearest_up never
+    /// leaves it). `declared` are the ce.toml crate roots, kept where
+    /// the file is walked. An R package's code, a cabal's mains, a Cargo
+    /// package's crate roots and the package.json / pyproject.toml
+    /// entries are the core's answer; a core that cannot give them is a
+    /// named refusal.
     pub(super) fn gather(
         root: &Path,
         files: &BTreeSet<String>,
         declared: &BTreeSet<String>,
     ) -> Result<Self, String> {
         let dirs: BTreeSet<String> = files.iter().map(|f| roots::parent_dir(f)).collect();
-        let r_dirs: BTreeSet<String> = files
-            .iter()
-            .filter(|f| is_r(f))
-            .map(|f| roots::parent_dir(f))
-            .collect();
-        let rust: BTreeSet<String> = dirs
-            .iter()
-            .filter_map(|d| roots::nearest_up(root, d, "Cargo.toml"))
-            .collect();
         let haskell: BTreeSet<String> = dirs
             .iter()
             .filter_map(|d| cabal_find::nearest(root, d))
             .collect();
-        let r: BTreeSet<String> = r_dirs
-            .iter()
-            .filter_map(|d| roots::nearest_up(root, d, "DESCRIPTION"))
-            .collect();
         let found = Manifests {
-            descriptions: &r,
+            descriptions: &nearest(root, files, &[Lang::R], "DESCRIPTION"),
             cabals: &haskell,
-            cargo: &rust,
+            cargo: &nearest(root, files, &[], "Cargo.toml"),
+            packages: &nearest(root, files, &[Lang::TypeScript, Lang::Tsx], "package.json"),
         };
         let core = crate::graph::resolve::declared(root, files, &found)?;
         let mut out = Declared {
@@ -79,6 +85,7 @@ impl Declared {
         out.targets.extend(out.packages.values().flatten().cloned());
         out.targets.extend(core.mains);
         out.targets.extend(core.crates);
+        out.targets.extend(core.entries);
         Ok(out)
     }
 

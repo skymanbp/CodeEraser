@@ -130,7 +130,7 @@ fn headers(java: &BTreeMap<String, crate::graph::ladder::java_header::Header>) -
 }
 
 /// The root `pyproject.toml` decoded, null when it is absent or not TOML.
-fn pyproject(root: &Path) -> Value {
+pub fn pyproject(root: &Path) -> Value {
     std::fs::read_to_string(root.join("pyproject.toml"))
         .ok()
         .and_then(|text| text.parse::<toml::Table>().ok())

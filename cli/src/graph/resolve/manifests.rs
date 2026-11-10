@@ -13,13 +13,17 @@ use std::path::Path;
 /// package's code by its root (the core's `packages`; a DESCRIPTION that
 /// cannot be read or names no package is none), the cabals' walked
 /// executable and test mains (`mains`; a .cabal that cannot be read
-/// declares nothing) and the Cargo.toml files' walked crate roots
-/// (`crates`; one that does not read declares none). No manifest, no
-/// request.
+/// declares nothing), the Cargo.toml files' walked crate roots
+/// (`crates`; one that does not read declares none) and the walked
+/// files the package.json files and the root pyproject.toml name as
+/// what a runtime starts (`entries`, lane v235_graphtrust; the core's
+/// CE.Resolve.Entries). No manifest, no request.
+#[derive(Default)]
 pub struct Declared {
     pub packages: BTreeMap<String, BTreeSet<String>>,
     pub mains: BTreeSet<String>,
     pub crates: BTreeSet<String>,
+    pub entries: BTreeSet<String>,
 }
 
 /// The manifests the declared-target pass found, by kind.
@@ -27,6 +31,7 @@ pub struct Manifests<'m> {
     pub descriptions: &'m BTreeSet<String>,
     pub cabals: &'m BTreeSet<String>,
     pub cargo: &'m BTreeSet<String>,
+    pub packages: &'m BTreeSet<String>,
 }
 
 pub fn declared(
@@ -36,25 +41,38 @@ pub fn declared(
 ) -> Result<Declared, String> {
     let r = request::descriptions(root, found.descriptions.iter());
     let hs = request::texts(root, found.cabals.iter());
-    if r.is_empty() && hs.is_empty() && found.cargo.is_empty() {
-        return Ok(Declared {
-            packages: BTreeMap::new(),
-            mains: BTreeSet::new(),
-            crates: BTreeSet::new(),
-        });
+    let py = request::pyproject(root);
+    if r.is_empty()
+        && hs.is_empty()
+        && found.cargo.is_empty()
+        && found.packages.is_empty()
+        && py.is_null()
+    {
+        return Ok(Declared::default());
     }
     let mut body = json!({
         "files": files,
         "r": { "descriptions": r },
         "hs": { "cabals": hs },
         "rs": { "manifests": found.cargo },
+        "ts": { "packages": found.packages },
+        "py": { "pyproject": py },
     });
-    let reply = complete_toml(&mut body, root, found.cargo.iter())?;
+    // the Cargo.toml files as TOML facts, the package.json files as text
+    let rows: Vec<(i64, String, String)> = found
+        .cargo
+        .iter()
+        .map(|m| (3, m.clone(), String::new()))
+        .chain(found.packages.iter().map(|p| (0, p.clone(), String::new())))
+        .collect();
+    facts::answer_facts(&mut body, root, &rows)?;
+    let reply = complete(&mut body, root)?;
     let rows: Vec<(String, BTreeSet<String>)> = judged::table(&reply, "packages")?;
     Ok(Declared {
         packages: rows.into_iter().collect(),
         mains: judged::table(&reply, "mains")?,
         crates: judged::table(&reply, "crates")?,
+        entries: judged::table(&reply, "entries")?,
     })
 }
 

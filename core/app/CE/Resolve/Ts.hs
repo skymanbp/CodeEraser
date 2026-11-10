@@ -23,7 +23,7 @@
 -- (falling to R5 would call an in-corpus package External). What the
 -- rungs need of the file system comes from the facts
 -- (CE.Resolve.TsFacts): a rung that lacks one waits for it.
-module CE.Resolve.Ts (TsEnv (..), resolveTs) where
+module CE.Resolve.Ts (TsEnv (..), resolveTs, firstHit, stringLeaves) where
 
 import CE.Resolve.Answer
 import CE.Resolve.Cost (Reason (..))

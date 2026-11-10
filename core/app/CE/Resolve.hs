@@ -34,7 +34,9 @@
 -- package directory with its code (`[dir, [file]]`, the declared targets
 -- an R package node reaches); `mains` names the carried cabals' declared
 -- executable and test mains that are walked, `crates` the walked crate
--- roots of the Cargo.toml files `rs.manifests` names, and `private` the
+-- roots of the Cargo.toml files `rs.manifests` names, `entries` the walked
+-- files `ts.packages`' package.json files and the root pyproject.toml
+-- declare as what a runtime starts (CE.Resolve.Entries), and `private` the
 -- files of `hs.owners` their owning cabal keeps private and those of
 -- `rs.owners` their owning Cargo package keeps private (the mounts
 -- table's bit 1).
@@ -49,6 +51,7 @@ import CE.Resolve.CompDb (Entry, Expanded (..), parseDb, parseFlags)
 import CE.Resolve.Contract (offence, overCap)
 import CE.Resolve.Cost
 import CE.Resolve.Description (Description (..), packageCode, readDescription)
+import CE.Resolve.Entries (entries)
 import CE.Resolve.Go (GoMod (..), parseGoMod, resolveGo)
 import CE.Resolve.Hs (resolveHs)
 import CE.Resolve.Html (HtmlEnv (..), pageEnv, resolveHtml)
@@ -117,7 +120,8 @@ judged proto rq = reply proto rq resolved body False
   fx = facts False (rqTsFacts rq)
   (ts, reached, tsWaits) = tsHalf w fx rq
   (rs, crates, rsPrivate, rsWaits) = rsHalf w fx rq
-  tsWanted = tsWaits <> rsWaits
+  (declaredEntries, entryWaits) = either (\m -> (Set.empty, m)) (\e -> (e, Set.empty)) (entries w fx (rqTsPackages rq) (py, rqPyproject rq))
+  tsWanted = tsWaits <> rsWaits <> entryWaits
   wanted = xWanted (mconcat (map snd (M.elems parsed)))
   complete = Set.null wanted && Set.null tsWanted
   answers = if complete then map site (rqSites rq) else []
@@ -134,6 +138,7 @@ judged proto rq = reply proto rq resolved body False
     , "packages" .= M.toList packages
     , "mains" .= Set.toList (Set.unions (map (Cabal.mainTargets w) (M.elems cabals)))
     , "crates" .= Set.toList crates
+    , "entries" .= Set.toList declaredEntries
     , "private" .= Set.toList (Set.fromList [f | (f, owner) <- rqHsOwners rq, maybe False (`Cabal.keepsPrivate` f) (M.lookup owner cabals)] <> rsPrivate)
     ]
       <> ["inspected" .= v | Just v <- [inspected <$> rqInspect rq]]
@@ -206,7 +211,7 @@ rsHalf w fx rq = (rs, done crates, done kept, Set.unions (waits crates : waits k
 
 -- | Over-cap: a complete degraded reply with empty tables.
 degraded :: String -> ResolveReq -> B8.ByteString
-degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "also", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "private"]] True
+degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "also", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "entries", "private"]] True
 
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString
