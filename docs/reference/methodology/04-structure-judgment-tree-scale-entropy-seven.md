@@ -107,7 +107,7 @@ absent on the undeclared fixture ([StructureProps.hs:158-166](../../../core/test
 
 `ce.toml`'s `[structure.layout]` maps directory paths to relative weights `>= 1`; `"."` is the
 root and, under deepest-owner semantics, the catch-all bin
-([config.rs:102-113](../../../cli/src/config.rs#L102), [ce.toml:9-23](../../../ce.toml#L9)). Rust sends
+([config.rs:102-113](../../../cli/src/config.rs#L102), [ce.toml:10-24](../../../ce.toml#L10)). Rust sends
 it as `(path, weight)` pairs; the core resolves each path to its directory id (refusing a path
 that names no walked directory), sorts, then checks arity 2, non-negativity, `dirId < |nodes|`,
 `weight >= 1`, and strict ascent by `dirId`
@@ -201,7 +201,7 @@ Notes on the non-obvious ones:
   (CE.Structure.Tree `shapeBits`) from the paths — a `patternShapes` table survives only on the
   integer test seam — and folds them to codes through its STYLE table
   ([Shape.hs:31-44](../../../core/app/CE/Structure/Shape.hs#L31),
-  [Request.hs:184-187](../../../core/app/CE/Structure/Request.hs#L184)). Bits are bounded `0..127`
+  [Request.hs:180-183](../../../core/app/CE/Structure/Request.hs#L180)). Bits are bounded `0..127`
   by the boundary contract ([Structure.hs:105-111](../../../core/app/CE/Structure.hs#L105)); the
   producer-classified `patterns` road (codes `0..6`) was retired at 8.0.0 and is refused by
   name ([Structure.hs:72-79](../../../core/app/CE/Structure.hs#L72)). `600‰` "tolerates one odd name in a
@@ -264,7 +264,7 @@ Since contract 2.26.0 (M9 batch 9 P9, user ruling — a VERSIONING entry, not a 
 version; the protocol is far past it) the structure family runs the **same density
 law as the verdict family**: each axis pairs its flagged-directory count `v` with the one
 opportunity every structure axis shares — the directory total `N` — and maps the odds
-through `chargeAt`, imported from [Score.hs:161](../../../core/app/CE/Verdict/Score.hs#L161)
+through `chargeAt`, imported from [Score.hs:162](../../../core/app/CE/Verdict/Score.hs#L162)
 (one law, two families; [Structure.hs:228-239](../../../core/app/CE/Structure.hs#L228)):
 
 ```

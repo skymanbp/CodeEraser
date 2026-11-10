@@ -10,15 +10,15 @@ The window is the newest `n` **first-parent** commits of `HEAD` ([mod.rs:151](..
 
 ### Boundary contract
 
-Before any arithmetic, the first offender in request order is named and the request refused — the knobbed-table cascade every such family runs, rows first, then knobs ([Wire.hs:208](../../../core/app/CE/Wire.hs#L208)), bound to this family's row and knob contracts ([Trend.hs:30](../../../core/app/CE/Trend.hs#L30)):
+Before any arithmetic, the first offender in request order is named and the request refused — the knobbed-table cascade every such family runs, rows first, then knobs ([Wire.hs:207](../../../core/app/CE/Wire.hs#L207)), bound to this family's row and knob contracts ([Trend.hs:30](../../../core/app/CE/Trend.hs#L30)):
 
 - row must be exactly `[ts, score, scale]`, with `ts >= 0`, `scale > 0`, and `0 <= score <= scale` ([Trend.hs:39-47](../../../core/app/CE/Trend.hs#L39));
 - knob must be `[code, value]` with `code ∈ {0, 1}`, `value >= 0`, and — for `code == 0` — `value >= 2` ([Trend.hs:51-57](../../../core/app/CE/Trend.hs#L51));
 - knob codes must be strictly ascending — one knob-table contract every knobbed family reads ([Rows.hs:74-81](../../../core/app/CE/Wire/Rows.hs#L74)).
 
-Row **order is deliberately unconstrained**: the judged view sorts by timestamp, and first-parent order is topological rather than chronological, so rebased or backdated commits are legal input. The property `orderFree` pins that a shuffled window states the same slope, verdict and fail — and the same cliff FACT: the request index moves with the request, the timestamp it points at must not ([TrendProps.hs:246](../../../core/test/TrendProps.hs#L246)).
+Row **order is deliberately unconstrained**: the judged view sorts by timestamp, and first-parent order is topological rather than chronological, so rebased or backdated commits are legal input. The property `orderFree` pins that a shuffled window states the same slope, verdict and fail — and the same cliff FACT: the request index moves with the request, the timestamp it points at must not ([TrendProps.hs:247](../../../core/test/TrendProps.hs#L247)).
 
-Cap: `length rows + length knobs > 4096` produces a complete **degraded** reply rather than a truncated one, with `reason = "trend_too_large"` ([Cost.hs:37](../../../core/app/CE/Trend/Cost.hs#L37), [Trend.hs:126](../../../core/app/CE/Trend.hs#L126)). One row per mainline commit; 4096 covers roughly a decade of daily commits. The measuring side never asks for a window that cannot fit: the package states the cap (`limits.caps.trend_rows`), and a `--commits` past it less the declared knob rows is refused by name before a commit is measured ([judge.rs:112-115](../../../cli/src/trend/judge.rs#L112)); a degraded reply is read before any field, as the core's reason ([judge.rs:61](../../../cli/src/trend/judge.rs#L61)).
+Cap: `length rows + length knobs > 4096` produces a complete **degraded** reply rather than a truncated one, with `reason = "trend_too_large"` ([Cost.hs:38](../../../core/app/CE/Trend/Cost.hs#L38), [Trend.hs:126](../../../core/app/CE/Trend.hs#L126)). One row per mainline commit; 4096 covers roughly a decade of daily commits. The measuring side never asks for a window that cannot fit: the package states the cap (`limits.caps.trend_rows`), and a `--commits` past it less the declared knob rows is refused by name before a commit is measured ([judge.rs:112-115](../../../cli/src/trend/judge.rs#L112)); a degraded reply is read before any field, as the core's reason ([judge.rs:61](../../../cli/src/trend/judge.rs#L61)).
 
 ### The slope — exact Rational Theil-Sen
 
@@ -29,7 +29,7 @@ x_i = ts_i % 86400              -- seconds → days, exact ratio
 y_i = (score_i * 1000000) % scale_i
 ```
 
-([Cost.hs:61](../../../core/app/CE/Trend/Cost.hs#L61)). `y` renormalizes every commit onto a fixed `10^6` full-scale grid, so rows measured under different `scoreScale` values are commensurable. With the usual `scoreScale = 1000`, one per-mille point of score equals 1000 y-units — a decline of 1‰ per day reads as slope `-1000`.
+([Cost.hs:62](../../../core/app/CE/Trend/Cost.hs#L62)). `y` renormalizes every commit onto a fixed `10^6` full-scale grid, so rows measured under different `scoreScale` values are commensurable. With the usual `scoreScale = 1000`, one per-mille point of score equals 1000 y-units — a decline of 1‰ per day reads as slope `-1000`.
 
 The slope is the **Theil-Sen estimator** — the median of pairwise slopes over timestamp-distinct pairs:
 
@@ -37,20 +37,20 @@ The slope is the **Theil-Sen estimator** — the median of pairwise slopes over 
 slope = median{ (y_j − y_i) / (x_j − x_i) : x_i ≠ x_j }
 ```
 
-([Cost.hs:73](../../../core/app/CE/Trend/Cost.hs#L73), the median a plain order statistic with even counts averaged, [Soft.hs:31-44](../../../core/app/CE/Verdict/Soft.hs#L31); the soft line does not share it — its middles are log-space, `middles`). Units: **millionths of the full scale per day** (one point a day at scale 1000 = 1000). The estimator change (2.31.0, the capability renamed `trend/2` to say so) is a recorded behavior change bought for robustness: one wild point — a broken commit that still measured — drags a least-squares mean anywhere; it cannot move a median past its neighbors. `TrendProps` pins the counterfactual where the two estimators disagree on the SIGN: five points falling 1‰/day plus one wild high outlier — the retired mean, kept in the test as the reference, says `+14000`; the median says `-1000`, through the real `respond` ([TrendProps.hs:91](../../../core/test/TrendProps.hs#L91)). On an exact line every pairwise slope is the line's, so the median is it ([TrendProps.hs:79](../../../core/test/TrendProps.hs#L79)); the grid property checks the shipped walk against an independent derivation — index-pair enumeration plus insertion-sort median ([TrendProps.hs:43](../../../core/test/TrendProps.hs#L43)).
+([Cost.hs:74](../../../core/app/CE/Trend/Cost.hs#L74), the median a plain order statistic with even counts averaged, [Soft.hs:31-44](../../../core/app/CE/Verdict/Soft.hs#L31); the soft line does not share it — its middles are log-space, `middles`). Units: **millionths of the full scale per day** (one point a day at scale 1000 = 1000). The estimator change (2.31.0, the capability renamed `trend/2` to say so) is a recorded behavior change bought for robustness: one wild point — a broken commit that still measured — drags a least-squares mean anywhere; it cannot move a median past its neighbors. `TrendProps` pins the counterfactual where the two estimators disagree on the SIGN: five points falling 1‰/day plus one wild high outlier — the retired mean, kept in the test as the reference, says `+14000`; the median says `-1000`, through the real `respond` ([TrendProps.hs:91](../../../core/test/TrendProps.hs#L91)). On an exact line every pairwise slope is the line's, so the median is it ([TrendProps.hs:79](../../../core/test/TrendProps.hs#L79)); the grid property checks the shipped walk against an independent derivation — index-pair enumeration plus insertion-sort median ([TrendProps.hs:43](../../../core/test/TrendProps.hs#L43)).
 
-It is `Nothing` — underdetermined, not zero — when no pair has distinct timestamps: same-second commits are a legal, common shape (rebases, scripted pushes), so ties ride the wire, and only the *all-tied* window has no RATE to state — the falls it contains still report as shape facts ([Cost.hs:74](../../../core/app/CE/Trend/Cost.hs#L74)).
+It is `Nothing` — underdetermined, not zero — when no pair has distinct timestamps: same-second commits are a legal, common shape (rebases, scripted pushes), so ties ride the wire, and only the *all-tied* window has no RATE to state — the falls it contains still report as shape facts ([Cost.hs:75](../../../core/app/CE/Trend/Cost.hs#L75)).
 
 ### The judged window — tsWindow
 
-Theil-Sen prices `n(n−1)/2` pairwise slopes, so the judgment window is bounded at the judgment, not by the wire cap: the view keeps the `tsWindow = 512` most recent points — 130,816 pairs, measured ~150 ms request-to-reply on the dev machine, median of 5 with process spawn included ([Cost.hs:47](../../../core/app/CE/Trend/Cost.hs#L47)). Rows are stable-sorted by timestamp — ties keep request order — with request indices preserved, and ONE decomposition feeds slope, cliff and decline run alike ([Cost.hs:56](../../../core/app/CE/Trend/Cost.hs#L56)). Older rows still cross and are counted: `counts.rows` is the request, `counts.judged` names the cut ([Trend.hs:125](../../../core/app/CE/Trend.hs#L125)). The `windowed` property sends 513 rows whose OLDEST is a wild outlier: the kept 512 are an exact line and the slope is exactly the line's — the outlier left no trace ([TrendProps.hs:199](../../../core/test/TrendProps.hs#L199)).
+Theil-Sen prices `n(n−1)/2` pairwise slopes, so the judgment window is bounded at the judgment, not by the wire cap: the view keeps the `tsWindow = 512` most recent points — 130,816 pairs, measured ~150 ms request-to-reply on the dev machine, median of 5 with process spawn included ([Cost.hs:48](../../../core/app/CE/Trend/Cost.hs#L48)). Rows are stable-sorted by timestamp — ties keep request order — with request indices preserved, and ONE decomposition feeds slope, cliff and decline run alike ([Cost.hs:57](../../../core/app/CE/Trend/Cost.hs#L57)). Older rows still cross and are counted: `counts.rows` is the request, `counts.judged` names the cut ([Trend.hs:125](../../../core/app/CE/Trend.hs#L125)). The `windowed` property sends 513 rows whose OLDEST is a wild outlier: the kept 512 are an exact line and the slope is exactly the line's — the outlier left no trace ([TrendProps.hs:200](../../../core/test/TrendProps.hs#L200)).
 
 ### Shape facts — the cliff and the decline run
 
 Two facts about the sorted walk ride beside the slope, each naming a commit by **request index** — the row order the client sent; `trend/2` carries no hashes, and the commits reach the core only in the document request that lays the report out:
 
-- `cliff = [i, drop]` — the steepest single-step fall between consecutive points: the request index of the LATER point and the drop in micro units. The first occurrence wins a tie; a monotone rise has no cliff (`null`). A fall between same-second commits counts — the drop is a fact about scores, not about time ([Cost.hs:91](../../../core/app/CE/Trend/Cost.hs#L91)).
-- `declineRun = [i, k]` — the longest run of consecutive strictly-falling steps: the request index of the run's FIRST point and the number of points in the run. The first run wins a length tie; no falling step, no run ([Cost.hs:110](../../../core/app/CE/Trend/Cost.hs#L110)).
+- `cliff = [i, drop]` — the steepest single-step fall between consecutive points: the request index of the LATER point and the drop in micro units. The first occurrence wins a tie; a monotone rise has no cliff (`null`). A fall between same-second commits counts — the drop is a fact about scores, not about time ([Cost.hs:92](../../../core/app/CE/Trend/Cost.hs#L92)).
+- `declineRun = [i, k]` — the longest run of consecutive strictly-falling steps: the request index of the run's FIRST point and the number of points in the run. The first run wins a length tie; no falling step, no run ([Cost.hs:111](../../../core/app/CE/Trend/Cost.hs#L111)).
 
 Both are facts, not verdicts: no knob arms them, and they cannot fail a gate. On the Rust side the indices are fenced against the rows actually sent — an index past the request is core drift, refused before anything renders a commit name from it ([judge.rs:75](../../../cli/src/trend/judge.rs#L75)) — and the core's console lines name the commit behind each one ([Lines.hs:42](../../../core/app/CE/Trend/Lines.hs#L42)).
 
@@ -64,7 +64,7 @@ slope = if enough then slopeMicroPerDay view else Nothing
 verdict = verdictOf floorMicro <$> slope
 ```
 
-([Trend.hs:82](../../../core/app/CE/Trend.hs#L82)). EVERY judgment field serializes as JSON `null` — slope, verdict, cliff, declineRun — and the fail bit stays `false`: nothing was judged, and an unjudged trend must not gate. This is the one case distinguished from a degraded reply, where judgment was *denied* by the cap and `fail = true` says so. The `absence` property pins all four fields to this posture ([TrendProps.hs:220](../../../core/test/TrendProps.hs#L220)).
+([Trend.hs:82](../../../core/app/CE/Trend.hs#L82)). EVERY judgment field serializes as JSON `null` — slope, verdict, cliff, declineRun — and the fail bit stays `false`: nothing was judged, and an unjudged trend must not gate. This is the one case distinguished from a degraded reply, where judgment was *denied* by the cap and `fail = true` says so. The `absence` property pins all four fields to this posture ([TrendProps.hs:221](../../../core/test/TrendProps.hs#L221)).
 
 Validation forbids `minPoints < 2` ([Trend.hs:56](../../../core/app/CE/Trend.hs#L56)), so the knob can never demand a slope from a single point.
 
@@ -78,7 +78,7 @@ slope >  band  → 0  (improving)
 otherwise      → 1  (flat)        where band = floorMicro
 ```
 
-([Cost.hs:128](../../../core/app/CE/Trend/Cost.hs#L128)). The band is **inclusive**: at slope `-1000`, floor `999` says degrading but floor `1000` says flat ([TrendProps.hs:112](../../../core/test/TrendProps.hs#L112)). With the default floor `0` the band collapses to the single point zero, so the raw sign is the report. Console words for the three codes plus the unjudged case are rendering only, in the core's console lines ([Lines.hs:37](../../../core/app/CE/Trend/Lines.hs#L37)).
+([Cost.hs:129](../../../core/app/CE/Trend/Cost.hs#L129)). The band is **inclusive**: at slope `-1000`, floor `999` says degrading but floor `1000` says flat ([TrendProps.hs:113](../../../core/test/TrendProps.hs#L113)). With the default floor `0` the band collapses to the single point zero, so the raw sign is the report. Console words for the three codes plus the unjudged case are rendering only, in the core's console lines ([Lines.hs:37](../../../core/app/CE/Trend/Lines.hs#L37)).
 
 **Fail arming** is a separate decision made at the reply, not in the classifier:
 
@@ -86,7 +86,7 @@ otherwise      → 1  (flat)        where band = floorMicro
 "fail" .= (jDegraded j || (jVerdict j == Just 2 && lookup 1 (jEffective j) > Just 0))
 ```
 
-([Trend.hs:122](../../../core/app/CE/Trend.hs#L122)). Two conjuncts on the judged path: the verdict must be `2` (degrading) **and** a floor must have been declared strictly greater than `0`. Floor `0` — the default every family launches in — is a report-only posture: it can report degrading and cannot fail. The `floorLever` property runs the same falling-1‰/day rows through the real `respond` three times: floor absent → verdict `2`, fail `false`; floor `500` → verdict `2`, fail `true`; floor `5000` → verdict `1`, fail `false` ([TrendProps.hs:139](../../../core/test/TrendProps.hs#L139)).
+([Trend.hs:122](../../../core/app/CE/Trend.hs#L122)). Two conjuncts on the judged path: the verdict must be `2` (degrading) **and** a floor must have been declared strictly greater than `0`. Floor `0` — the default every family launches in — is a report-only posture: it can report degrading and cannot fail. The `floorLever` property runs the same falling-1‰/day rows through the real `respond` three times: floor absent → verdict `2`, fail `false`; floor `500` → verdict `2`, fail `true`; floor `5000` → verdict `1`, fail `false` ([TrendProps.hs:140](../../../core/test/TrendProps.hs#L140)).
 
 The degraded path fails unconditionally, and echoes the **default** knob table rather than the request's unvalidated override.
 

@@ -229,7 +229,7 @@ no malformed reply, is ever read as "no sites" or "not over"
 eleventh ([Protocol.hs:117](../../../core/app/CE/Protocol.hs#L117)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
-knob ([Wire.hs:191-216](../../../core/app/CE/Wire.hs#L191),
+knob ([Wire.hs:190-215](../../../core/app/CE/Wire.hs#L190),
 [Tombstone.hs:35-59](../../../core/app/CE/Tombstone.hs#L35)). The judgment is three lines
 ([Cost.hs:47-58](../../../core/app/CE/Tombstone/Cost.hs#L47),
 [Tombstone.hs:59-65](../../../core/app/CE/Tombstone.hs#L59)):

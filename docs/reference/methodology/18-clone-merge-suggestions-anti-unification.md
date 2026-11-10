@@ -140,7 +140,7 @@ the two lists a flow table would give: `stmt_kinds`, its statement forms (the do
 instances, imports and the rest), and `container_kinds`, the kinds whose children stand in a
 statement position (`do`, `declarations`, `local_binds`, the class and instance bodies). A
 language with a flow table never fills either list — the unit leg holds both ways
-([Haskell.hs:126-141](../../../core/app/CE/Lang/Haskell.hs#L126), [slot.rs:120](../../../cli/src/merge/slot.rs#L120)).
+([Haskell.hs:125-140](../../../core/app/CE/Lang/Haskell.hs#L125), [slot.rs:120](../../../cli/src/merge/slot.rs#L120)).
 The Haskell grammar spells an expression, a pattern and a type with the same kinds (`apply`,
 `variable`, `tuple`…), so its type class holds only the kinds that are types alone — a type
 constructor's `name`, the arrow, `forall`, `context` and the like — and a shared kind reads as an
@@ -281,7 +281,7 @@ The design booklet fixes the core's side; eight rulings of step 7 fix the measur
    member's file node — the same graph `ce deadcode` judges, from the same index ([face.rs:179](../../../cli/src/merge/face.rs#L179)).
 5. One report, `ce.merge-report/0.1.0`, for all three faces, laid out by the core over every
    chunk's rows joined, its counts tallied there, `merged_duplicates` (§1) beside them; each parameter labelled with every member's text at the parameter's first hole
-   ([Document.hs:97](../../../core/app/CE/Merge/Document.hs#L97)). The text runs from the hole's first root
+   ([Document.hs:98](../../../core/app/CE/Merge/Document.hs#L98)). The text runs from the hole's first root
    to its last on that member — a leaf or relabel hole's node, a gap hole's whole forest — and an
    empty side reads `""` ([face.rs:210](../../../cli/src/merge/face.rs#L210)).
 6. The T3 trees are built once for both families; `clone/1` never sends the new columns.
@@ -397,7 +397,7 @@ parameterisation equals the core's ([eval_merge_review.rs:93](../../../cli/tests
 filed verbatim, in the sample's order, as the review doc, every line held to the same row check the gate re-runs
 ([answers.rs:128](../../../cli/tests/it/eval_merge_review/answers.rs#L128)). The precision doc reads no product: it is
 the three frozen docs' readings by definition, so it carries no tree and lands in the review's commit
-([eval_merge_review.rs:229](../../../cli/tests/it/eval_merge_review.rs#L229)). The core's feasibility agrees with the
+([eval_merge_review.rs:226](../../../cli/tests/it/eval_merge_review.rs#L226)). The core's feasibility agrees with the
 audit on 83 of the 100 rows, its reason on 77 and its parameter count on 45 (zod 60 / 56 / 26 of 68, ripgrep 17 / 15 /
 11 of 22, cobra 4 / 4 / 7 of 8, requests 1 / 1 / 1 of 1, this repository 1 / 1 / 0 of 1). Of the 23 reason
 disagreements, 11 are rows the core answers `position` and the judges find feasible, and 4 more are `position` rows

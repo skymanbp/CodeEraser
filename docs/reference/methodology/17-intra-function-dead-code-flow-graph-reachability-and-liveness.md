@@ -65,18 +65,18 @@ paths — the direction in which a verdict can be lost, never invented.
 
 ### 3. Reachability — `unreachable` (kind 0)
 
-A breadth-first walk from the entry ([Reach.hs:13](../../../core/app/CE/Flow/Reach.hs#L13)). The
+A breadth-first walk from the entry ([Reach.hs:15](../../../core/app/CE/Flow/Reach.hs#L15)). The
 statements it never visits are reported as maximal runs of consecutive seqs; since the numbering
 is pre-order, an unreachable statement's whole subtree is one run and an `if` after a `return`
-is one finding, not one per line ([Reach.hs:23](../../../core/app/CE/Flow/Reach.hs#L23)).
+is one finding, not one per line ([Reach.hs:26](../../../core/app/CE/Flow/Reach.hs#L26)).
 
 ### 4. Liveness — `dead_store` (kind 1), `unused_local` (kind 2), `unused_param` (kind 3)
 
 Live-in is solved to a fixpoint of `in = transfer(∪ in of successors)` over the whole graph
-([Live.hs:30](../../../core/app/CE/Flow/Live.hs#L30)). Within one statement the accesses are
+([Live.hs:33](../../../core/app/CE/Flow/Live.hs#L33)). Within one statement the accesses are
 ordered, so the transfer walks them last first — `x = x + 1` reads before it writes — and a
 store's liveness is asked right after that store, inside the statement
-([Live.hs:45](../../../core/app/CE/Flow/Live.hs#L45), [Live.hs:54](../../../core/app/CE/Flow/Live.hs#L54)).
+([Live.hs:53](../../../core/app/CE/Flow/Live.hs#L53), [Live.hs:62](../../../core/app/CE/Flow/Live.hs#L62)).
 A dead store is a write no path reads before the variable is written again or the unit exits.
 Four rules keep the verdict to one fact, one finding: a captured or address-taken variable has
 readers this graph cannot see and is not judged; a variable nothing reads gets its unused finding
@@ -84,16 +84,16 @@ and no dead-store findings; a store in unreachable code is covered by its run; t
 statement's several stores are judged each on its own and reported as one `(seq, v)` row. An
 unused local or parameter is one nothing reads, a read-write counting as a read, the three
 exemptions (captured, ignored, address-taken) leaving it out
-([Live.hs:70-82](../../../core/app/CE/Flow/Live.hs#L70)). Kind 3 is advice by construction: a
+([Live.hs:78-90](../../../core/app/CE/Flow/Live.hs#L78)). Kind 3 is advice by construction: a
 parameter an interface, an overload or an override requires is unread for a reason the unit
 cannot show, so no tier, mask or gate ever reads it as a verdict
-([Document.hs:54](../../../core/app/CE/Flow/Document.hs#L54), [mod.rs:20-43](../../../cli/src/flow_report/mod.rs#L20)).
+([Document.hs:53](../../../core/app/CE/Flow/Document.hs#L53), [mod.rs:20-43](../../../cli/src/flow_report/mod.rs#L20)).
 
 ### 5. Caps and degradation
 
 The four tables are one dimension against one cap, 524,288 rows; crossing it answers a complete
 degraded reply — no findings, the counts, `flow_too_large` — since a request the core refused to
-judge licenses nothing ([Cost.hs:53](../../../core/app/CE/Flow/Cost.hs#L53),
+judge licenses nothing ([Cost.hs:51](../../../core/app/CE/Flow/Cost.hs#L51),
 [Contract.hs:47](../../../core/app/CE/Flow/Contract.hs#L47), [Flow.hs:41-46](../../../core/app/CE/Flow.hs#L41)).
 The measuring side plans its batches under the same cap, and a single unit heavier than it is
 refused by name rather than split ([wire_batch.rs:41](../../../cli/src/flow/wire_batch.rs#L41)).
@@ -108,14 +108,14 @@ from the placed findings this side sends back: the counts (units, statements, va
 uses, findings, dynamic units, unjudged units, judged, shown), each finding with its path, unit,
 kind, lines, variable and whether it is judged, and each unit left unjudged with its reason —
 the ones the lowering could not shape and the ones the core refused
-([Document.hs:104](../../../core/app/CE/Flow/Document.hs#L104), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
+([Document.hs:103](../../../core/app/CE/Flow/Document.hs#L103), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
 A finding's `lineEnd` is the last line of
 the run's last statement, read off the legend's `Legend::stmt_end` (LEG-1; since v2.35 — before,
 the face read the line that statement starts on, so a last statement written over
 several lines was not followed to its end). `--kind` narrows the listing and the `shown` count
 only, never the other counts or the judged count, so a filtered run cannot move the gate; a name the package's flow catalogue
 does not list goes as −1, and the core refuses it, the refusal naming the name as given and the
-catalogue's kinds ([Document.hs:100](../../../core/app/CE/Flow/Document.hs#L100)). The exit codes are the family's own: 2
+catalogue's kinds ([Document.hs:99](../../../core/app/CE/Flow/Document.hs#L99)). The exit codes are the family's own: 2
 when the core is missing (refused by name, no document) or lacks the family (the document names
 the reason), 1 under `--check`
 only when `[flow] tier` is `deny` and a judged finding exists, 0 otherwise
@@ -128,7 +128,7 @@ mask holds the languages whose precision doc passed the gate of §8. Step 4's co
 Python, TSX, Go, C, Java, Lua and R; commit E then fixed the lowering those docs answer by and
 retired all ten; commit G regenerated the ten docs on the fixed lowering (a second exam
 generation for C++, R, Rust and TypeScript) and every language reads judged, so the mask holds
-all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [Document.hs:77-84](../../../core/app/CE/Flow/Document.hs#L77)); since plan v2.33 step 11a the rule is stated once, in the core, and every finding row carries its judged bit as a sixth column ([wire.rs:36-41](../../../cli/src/flow/wire.rs#L36)).
+all ten — since plan v2.32 step 2 the set is the definition package's `flow_judged` column ([mod.rs:35-45](../../../cli/src/flow/mod.rs#L35), [Common.hs:53-56](../../../core/app/CE/Lang/Common.hs#L53), [Document.hs:76-83](../../../core/app/CE/Flow/Document.hs#L76)); since plan v2.33 step 11a the rule is stated once, in the core, and every finding row carries its judged bit as a sixth column ([wire.rs:36-41](../../../cli/src/flow/wire.rs#L36)).
 
 ### 7. The guard class — novel findings at write time
 
@@ -172,7 +172,7 @@ three units each (judged bits and dynamic counts included)
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:115](../../../core/test/Spec.hs#L115)).
+([Spec.hs:117](../../../core/test/Spec.hs#L117)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language
