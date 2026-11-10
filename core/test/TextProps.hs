@@ -28,7 +28,7 @@ battery =
     , ("10,000 strings over six channels: featureTerm = the term bags' own fold", and [featureTerm ch (utf8 s) == bagTerm ch (utf8 s) | (ch, s) <- zip (cycle [0 .. 5]) strings])
     , ("10,000 byte runs: the lazy fnvStep fold = the definition package digest's step", all (\s -> let b = BL.fromStrict (utf8 s) in BL.foldl' fnvStep fnvBasis b == digestFold b) strings)
     , ("the constants are FNV-1a 64's (basis 14695981039346656037, prime 1099511628211)", fnvBasis == 14695981039346656037 && fnvPrime == 1099511628211)
-    , ("10,000 brace strings: splitHoles = the binder's splitter, holes = the old count", all (\s -> splitHoles s == binderSplit s && holes s == oldHoles s) braces)
+    , ("10,000 brace strings: splitHoles = the binder's splitter, holes = the non-overlapping `{}` count", all (\s -> splitHoles s == binderSplit s && holes s == oldHoles s) braces)
     , ("10,000 piece lists: join = the left-fold joiner (text, references, keys)", all (\(sep, ps) -> same (join sep ps) (oldJoin sep ps)) pieceLists)
     , ("the strings reach every UTF-8 width and the surrogate block", all (\w -> any (any w) strings) [(< '\x80'), inWidth 0x80 0x7FF, inWidth 0x800 0xFFFF, (> '\xFFFF'), inWidth 0xD800 0xDFFF])
     , ("the brace strings hold several holes and `{{}}` runs", any ((> 1) . oldHoles) braces && any (any ("{{}}" `isPrefixOf`) . tails) braces)
@@ -131,16 +131,14 @@ binderSplit s = go s ""
         [] -> [reverse acc]
         c : cs -> go cs (c : acc)
 
--- | CE.Text.holes over CE.Text.breakHole.
+-- | The old CE.Text.holes' count — non-overlapping `{}`, left to
+-- right — spelled as a direct count (the old spelling walked
+-- CE.Text.breakHole, which stays in the product unchanged).
 oldHoles :: String -> Int
-oldHoles s = case breakHole s of
-  (_, Just rest) -> 1 + oldHoles rest
-  _ -> 0
- where
-  breakHole t = case t of
-    [] -> ([], Nothing)
-    _ | "{}" `isPrefixOf` t -> ([], Just (drop 2 t))
-    c : rest -> let (b, a) = breakHole rest in (c : b, a)
+oldHoles s = case s of
+  '{' : '}' : rest -> 1 + oldHoles rest
+  _ : rest -> oldHoles rest
+  [] -> 0
 
 -- | CE.Text.join.
 oldJoin :: String -> [Piece] -> Piece

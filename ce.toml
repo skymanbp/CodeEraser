@@ -721,4 +721,12 @@ forbid = [
 # family names by `first`, and the score defaults read as a map by
 # wire name. Row set diffed against the 0e189ab6 tree: those two
 # rows gone, none new. Measured on the formatted tree.
-budget = 31
+# 31 -> 30 (v2.35 cleanup lane, phase A): one row left with the
+# export lists, none bought. CE.Verdict.Join's export head rhymed with
+# CE.Verdict.Score's (58 tokens, Join.hs 26-38 against Score.hs 15-27)
+# until Score exported `classOf`, the one spelling the ratchet now
+# reads too; the test battery that keeps the retired `holes` beside
+# the product (TextProps) counts the holes directly rather than
+# copying CE.Text's `breakHole`. Row set diffed against the 7514e804
+# tree: that row gone, none new.
+budget = 30
