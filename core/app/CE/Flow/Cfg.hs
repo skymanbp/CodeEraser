@@ -53,12 +53,15 @@ cfg u = Cfg entryN exitN (n + 2 + IM.size hubs) (IM.map IS.toList (IM.fromListWi
   single (a, b) = (a, IS.singleton b)
 
 -- | Resolve every hop, then the hubs' hops as their pending targets
--- arrive, until no new (finally, target) pair appears.
+-- arrive, until no new (finally, target) pair appears. The queue is a
+-- front list and a reversed back list: first in, first out, and an
+-- append costs the hops appended.
 resolve :: Unit -> IM.IntMap Int -> [Hop] -> [(Int, Int)]
-resolve u hubs = go S.empty
+resolve u hubs hops0 = go S.empty hops0 []
  where
-  go _ [] = []
-  go seen (Hop from chain target : rest) = (from, to) : go seen' (rest <> new)
+  go _ [] [] = []
+  go seen [] back = go seen (reverse back) []
+  go seen (Hop from chain target : rest) back = (from, to) : go seen' rest (reverse new <> back)
    where
     (to, pending) = route u hubs chain target
     fresh = filter (`S.notMember` seen) pending

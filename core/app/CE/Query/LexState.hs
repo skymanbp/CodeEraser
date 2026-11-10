@@ -45,7 +45,8 @@ data Tok = Tok {tKind :: Integer, tValue :: Integer, tSrc :: Int, tLine :: Int, 
 -- how many of them are the prelude's, how many the binary ships (the
 -- prelude's and the pack's — the clauses whose predicates are
 -- reserved), the pack's rendered text when one was sent, the program
--- predicates by code − 1000, the globs by set id, every name spelled
+-- predicates by code − 1000, the globs by set id (both newest first
+-- while scanning, each with its index by spelling), every name spelled
 -- by hash, and per clause its variable names by number (`_` for an
 -- anonymous one; newest clause first while scanning).
 data Lexed = Lexed
@@ -55,7 +56,9 @@ data Lexed = Lexed
   , lShipped :: Int
   , lPack :: Maybe String
   , lPreds :: [String]
+  , lPredIx :: M.Map String Int
   , lSets :: [String]
+  , lSetIx :: M.Map String Int
   , lNames :: M.Map Word64 String
   , lVars :: [[String]]
   }
@@ -70,7 +73,8 @@ data Frame = Frame {frPred :: Maybe String, frArg :: Int}
 -- | The scanner over one source: the program so far, the source, its
 -- bytes and the cursor (index, line, column), the clause's variables,
 -- the open parentheses (innermost first) and the predicate a `(`
--- would open.
+-- would open. The clause's variables are newest first while scanning,
+-- each named one with its number by spelling.
 data Lx = Lx
   { xP :: Lexed
   , xSrc :: Int
@@ -79,12 +83,14 @@ data Lx = Lx
   , xLine :: Int
   , xCol :: Int
   , xVars :: [String]
+  , xVarIx :: M.Map String Int
+  , xVarN :: Int
   , xFrames :: [Frame]
   , xPending :: Maybe String
   }
 
 emptyLexed :: Lexed
-emptyLexed = Lexed [] 0 0 0 Nothing [] [] M.empty []
+emptyLexed = Lexed [] 0 0 0 Nothing [] M.empty [] M.empty M.empty []
 
 peek :: Lx -> Maybe Word8
 peek x = B.indexMaybe (xB x) (xI x)
@@ -128,7 +134,7 @@ name x text = push x {xP = (xP x) {lNames = M.insertWith (\_ old -> old) h text 
 
 -- | `Lexer::end_clause`.
 endClause :: Lx -> Lx
-endClause x = x {xVars = [], xP = (xP x) {lVars = xVars x : lVars (xP x), lClauses = lClauses (xP x) + 1}}
+endClause x = x {xVars = [], xVarIx = M.empty, xVarN = 0, xP = (xP x) {lVars = reverse (xVars x) : lVars (xP x), lClauses = lClauses (xP x) + 1}}
 
 -- | `Lexer::fault`: a fault where the scanner stands.
 fault :: Lx -> String -> Fault
@@ -139,11 +145,12 @@ faultAt :: Lx -> Int -> Int -> String -> Fault
 faultAt x = Fault (xSrc x)
 
 -- | `program.rs` `intern`: the index of a name in the list, appended
--- when new.
-intern :: [String] -> String -> (Int, [String])
-intern list w = case lookup w (zip list [0 ..]) of
-  Just i -> (i, list)
-  Nothing -> (length list, list <> [w])
+-- when new — over the list newest first and its index by spelling, so
+-- a name costs a lookup, never a walk of the list.
+intern :: ([String], M.Map String Int) -> String -> (Int, ([String], M.Map String Int))
+intern (list, ix) w = case M.lookup w ix of
+  Just i -> (i, (list, ix))
+  Nothing -> let i = M.size ix in (i, (w : list, M.insert w i ix))
 
 -- | `lexer::punct`: punctuation and keywords by spelling
 -- (CE.Query.Cost's codes, 10 up).

@@ -9,12 +9,15 @@ import CE.Flow.Cfg (Cfg (..))
 import qualified Data.IntMap.Strict as IM
 import qualified Data.IntSet as IS
 
--- | Every node a path from the entry visits.
+-- | Every node a path from the entry visits: a breadth-first walk
+-- whose queue is a front list and a reversed back list, so a step
+-- costs its own successors, never the queue's length.
 reachable :: Cfg -> IS.IntSet
-reachable g = go (IS.singleton (entry g)) [entry g]
+reachable g = go (IS.singleton (entry g)) [entry g] []
  where
-  go seen [] = seen
-  go seen (node : queue) = go (foldr IS.insert seen fresh) (queue <> fresh)
+  go seen [] [] = seen
+  go seen [] back = go seen (reverse back) []
+  go seen (node : front) back = go (foldr IS.insert seen fresh) front (reverse fresh <> back)
    where
     fresh = filter (`IS.notMember` seen) (IM.findWithDefault [] node (succs g))
 

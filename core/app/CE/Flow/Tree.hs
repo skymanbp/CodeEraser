@@ -69,7 +69,9 @@ build us ss vs xs = do
   withVars <- grouped "var" varRow withStmts vs
   withUses <- grouped "use" useRow withVars xs
   mapM_ paramsAgree (IM.elems withUses)
-  pure (IM.map (\u -> u {kids = childMap (stmts u)}) withUses)
+  -- accesses were consed per statement as they arrived: put each
+  -- statement's back in evaluation order
+  pure (IM.map (\u -> u {kids = childMap (stmts u), uses = IM.map reverse (uses u)}) withUses)
 
 -- | One table's rows folded into their units in request order. The
 -- driver owns what every table shares — the row's unit must be
@@ -133,16 +135,18 @@ useRow prev _ [u', seq', v', mode'] un
   | (u, sq) < prev = Left "out of order"
   | sq >= IM.size (stmts un) = Left "seq outside the unit"
   | v >= IM.size (vars un) = Left "var not declared"
-  | otherwise = Right (un {uses = IM.insertWith (\new old -> old ++ new) sq [Use sq v (fromInteger mode')] (uses un)}, sq)
+  | otherwise = Right (un {uses = IM.insertWith (++) sq [Use sq v (fromInteger mode')] (uses un)}, sq)
  where
   u = fromInteger u'
   sq = fromInteger seq'
   v = fromInteger v'
 useRow _ _ _ _ = Left "malformed use"
 
--- | Parent → children ascending (the elems walk is ascending by seq).
+-- | Parent → children ascending: the elems walk is ascending by seq,
+-- each child consed in front of its elder siblings, every list
+-- reversed once.
 childMap :: IM.IntMap Stmt -> IM.IntMap [Int]
-childMap m = IM.fromListWith (\new old -> old ++ new) [(sParent s, [sSeq s]) | s <- IM.elems m]
+childMap m = IM.map reverse (IM.fromListWith (++) [(sParent s, [sSeq s]) | s <- IM.elems m])
 
 -- | The unit row's parameter count is the variable table's.
 paramsAgree :: Unit -> Either String ()

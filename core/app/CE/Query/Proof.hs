@@ -10,6 +10,7 @@ module CE.Query.Proof (Node (..), Root (..), proofRows) where
 import CE.Query.Eval (Prov)
 import CE.Query.Eval.Join (Fact)
 import CE.Query.Syntax (isIdb)
+import Data.List (genericDrop, genericLength)
 import qualified Data.Map.Strict as M
 
 -- | A derived tuple as a proof node: the predicate and rule it stands
@@ -29,9 +30,6 @@ data Root = Root
   , rootNode :: Node
   }
 
--- | A tree's rows, and how many nodes it holds.
-data Tree = Tree {treeRows :: [[Integer]], treeNodes :: Integer}
-
 -- | `[goal, answer, node, parent, rule, pred, args…]` rows for the
 -- roots that fit the budget, the count of roots left out, the nodes
 -- emitted.
@@ -40,14 +38,18 @@ proofRows prov budget = go budget [] 0 0
  where
   go _ acc skipped used [] = (concat (reverse acc), skipped, used)
   go left acc skipped used (r : rs)
-    | treeNodes t <= left = go (left - treeNodes t) (treeRows t : acc) skipped (used + treeNodes t) rs
+    | fits = go (left - nodes) (rows : acc) skipped (used + nodes) rs
     | otherwise = go left acc (skipped + 1) used rs
    where
-    t = tree prov r
+    -- a tree holds at least its root, so nothing fits a spent budget;
+    -- otherwise the rows are built only as far as the budget plus one
+    rows = tree prov r
+    fits = left > 0 && null (genericDrop left rows)
+    nodes = genericLength rows
 
 -- | One answer's tree, numbered in pre-order.
-tree :: Prov -> Root -> Tree
-tree prov r = Tree rows (toInteger (length rows))
+tree :: Prov -> Root -> [[Integer]]
+tree prov r = rows
  where
   (rows, _) = expand prov [toInteger (rootGoal r), toInteger (rootAnswer r)] 0 (-1) (rootNode r)
 

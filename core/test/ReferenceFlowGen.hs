@@ -16,7 +16,7 @@
 -- request rows each one sends. Split from the interpreter so both
 -- stand below the core's file wall (the Reference.hs posture:
 -- deterministic, no RNG inside a byte-determinism contract).
-module ReferenceFlowGen (Node (..), Prog (..), G, S (..), batches, langCodes, lcgStep, rand, request, runG, walk) where
+module ReferenceFlowGen (Node (..), Prog (..), G, S (..), batch, batches, langCodes, lcgStep, rand, request, runG, walk) where
 
 import CE.Flow.Cost
 import Data.Aeson (Value)

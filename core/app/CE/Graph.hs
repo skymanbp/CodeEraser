@@ -23,6 +23,7 @@ import qualified CE.Wire.Families as F
 import Data.Aeson
 import Data.Aeson.Types (Pair)
 import qualified Data.ByteString.Char8 as B8
+import qualified Data.IntMap.Strict as IM
 import qualified Data.IntSet as IS
 import Data.List (partition)
 import Data.Maybe (fromMaybe)
@@ -106,9 +107,9 @@ answer proto degraded req =
   -- the confidence column (2.32.0) on every dead row: the ledger it
   -- reads is required since 9.0.0
   deadOut i v = [toInteger i, toInteger v, confidence (unresRows req) (langOf i)]
-  langOf i
-    | ((l : _) : _) <- drop i (reqNodes req) = l
-    | otherwise = error "dead index inside the node table by construction"
+  -- one lookup table, built once: a dead row names its node by index
+  langs = IM.fromList [(i, l) | (i, l : _) <- zip [0 ..] (reqNodes req)]
+  langOf i = IM.findWithDefault (error "dead index inside the node table by construction") i langs
 
 -- | The advisory keys ride exactly when the `unmentioned` table rode
 -- (6.2.0): a legacy request answers the ten keys byte for byte

@@ -28,7 +28,7 @@ import CE.Clone.Ted (Tree (..), ted)
 import CE.Wire (Family (..), Respond, label, respondWith, resultLine, rowCheck, tableOffence, tooLarge)
 import qualified CE.Wire.Families as F
 import Data.Aeson
-import Data.Array.Unboxed (listArray)
+import Data.Array.Unboxed (UArray, listArray, (!))
 import qualified Data.ByteString.Char8 as B8
 import Data.Foldable (asum)
 import qualified Data.IntMap.Strict as IM
@@ -116,13 +116,15 @@ treeShape t tree
   badSpan = lookup True [(not (tiles i), i) | i <- [0 .. length lld - 1]]
   -- postorder reconstructibility (F37 replacement): node i's children
   -- must tile [lld i .. i−1] exactly, walking right to left
+  -- (an array: indexing the list paid the position on every step)
+  lldA = listArray (0, length lld - 1) lld :: UArray Int Int
   tiles i = walk (i - 1)
    where
-    low = lld !! i
+    low = lldA ! i
     walk k
       | k < low = k == low - 1
-      | lld !! k < low = False
-      | otherwise = walk (lld !! k - 1)
+      | lldA ! k < low = False
+      | otherwise = walk (lldA ! k - 1)
 
 pairRow :: Int -> Int -> [Int] -> Maybe String
 pairRow n p row = case row of

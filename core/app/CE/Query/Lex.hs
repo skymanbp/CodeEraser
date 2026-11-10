@@ -23,7 +23,7 @@ import CE.Query.Schema (codeNamed)
 import CE.Text (utf8)
 import qualified Data.ByteString as B
 import Data.Char (chr)
-import Data.List (elemIndex)
+import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 import Data.Word (Word8)
 
@@ -39,7 +39,7 @@ lexProgram prelude pack rules query = do
   let p1 = p1' {lPrelude = lClauses p0, lShipped = lClauses p1', lPack = pack}
   p2 <- maybe (Right p1) (\t -> run 1 t p1) rules
   p3 <- maybe (Right p2) (\t -> run 2 t p2) query
-  Right p3 {lTokens = reverse (lTokens p3), lVars = reverse (lVars p3)}
+  Right p3 {lTokens = reverse (lTokens p3), lVars = reverse (lVars p3), lPreds = reverse (lPreds p3), lSets = reverse (lSets p3)}
 
 -- | `Program::referenced`: the schema predicates the program reads.
 referenced :: Lexed -> S.Set Integer
@@ -48,7 +48,7 @@ referenced p = S.fromList [tValue t | t <- lTokens p, tKind t == kindPred, tValu
 -- | `Lexer::run`: the whole source; an unfinished clause at the end
 -- still seats its variable table (the parser names the syntax error).
 run :: Int -> String -> Lexed -> Either Fault Lexed
-run src text p = go (Lx p src (utf8 text) 0 1 1 [] [] Nothing)
+run src text p = go (Lx p src (utf8 text) 0 1 1 [] M.empty 0 [] Nothing)
  where
   go x0 =
     let x = skipSpace x0
@@ -113,12 +113,12 @@ inSetPosition x = case xFrames x of
 
 -- | `Program::set_id`: a glob's set id by first appearance from 0.
 setId :: Lx -> String -> (Integer, Lx)
-setId x glob = let (i, sets) = intern (lSets (xP x)) glob in (toInteger i, x {xP = (xP x) {lSets = sets}})
+setId x glob = let (i, (sets, ix)) = intern (lSets (xP x), lSetIx (xP x)) glob in (toInteger i, x {xP = (xP x) {lSets = sets, lSetIx = ix}})
 
 -- | `Program::idb_code`: a program predicate's code by first
 -- appearance from 1000.
 idbCode :: Lx -> String -> (Integer, Lx)
-idbCode x w = let (i, preds) = intern (lPreds (xP x)) w in (idbFloor + toInteger i, x {xP = (xP x) {lPreds = preds}})
+idbCode x w = let (i, (preds, ix)) = intern (lPreds (xP x), lPredIx (xP x)) w in (idbFloor + toInteger i, x {xP = (xP x) {lPreds = preds, lPredIx = ix}})
 
 -- | `Lexer::number`: digits after an optional `-`, read as a u64 (a
 -- negative literal down to −2^63).
@@ -153,13 +153,16 @@ wordToken x0 l c
 -- | `Lexer::variable`: a variable by first appearance in its clause;
 -- `_` (and any word starting with it) takes a fresh number every time.
 variable :: Lx -> String -> Int -> Int -> Lx
-variable x w l c = push x {xVars = vars'} kind (toInteger n) w l c
+variable x w l c = push x {xVars = vars', xVarIx = ix', xVarN = xVarN x + (if seat == Nothing then 1 else 0)} kind (toInteger n) w l c
  where
   anon = take 1 w == "_"
-  seat = if anon then Nothing else elemIndex w (xVars x)
-  (n, vars') = case seat of
-    Just i -> (i, xVars x)
-    Nothing -> (length (xVars x), xVars x <> [if anon then "_" else w])
+  seat = if anon then Nothing else M.lookup w (xVarIx x)
+  count = xVarN x
+  (n, vars', ix') = case seat of
+    Just i -> (i, xVars x, xVarIx x)
+    Nothing
+      | anon -> (count, "_" : xVars x, xVarIx x)
+      | otherwise -> (count, w : xVars x, M.insert w count (xVarIx x))
   kind = if anon then kindAnon else kindVar
 
 -- | `Lexer::punct_token`: a two-byte spelling when the two bytes are

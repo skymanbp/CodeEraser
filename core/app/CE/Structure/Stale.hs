@@ -7,7 +7,7 @@
 module CE.Structure.Stale (docRowSpec, nonDescDir, edgesOffence, effectiveStale) where
 
 import Data.Foldable (asum)
-import qualified Data.List as L
+import qualified Data.Map.Strict as M
 
 -- | The staleDocRows spec tuple for the shared dirRow checker:
 -- arity 2, and docTs >= 0 (0 = doc unchanged in the window, the one
@@ -61,14 +61,11 @@ effectiveStale rawDocs edges = fmap (`deriveStale` edges) rawDocs
 -- per-dir [dirId, stale, total], dirId ASCENDING (the BTreeMap
 -- order the Rust pre-judged table always shipped).
 deriveStale :: [[Integer]] -> [[Integer]] -> [[Integer]]
-deriveStale docs edges =
-  [ [d, staleIn d, totalIn d]
-  | d <- L.nub (L.sort [dirId | [dirId, _] <- docs])
-  ]
+deriveStale docs edges = [[d, stale, total] | (d, (stale, total)) <- M.toAscList perDir]
  where
-  staleEdges i = [ts | [j, ts] <- edges, j == i]
-  isStale (i, [_, docTs]) = any (\ts -> docTs == 0 || ts > docTs) (staleEdges i)
-  isStale _ = False
-  indexed = zip [0 :: Integer ..] docs
-  staleIn d = toInteger (length [() | row@(_, [d', _]) <- indexed, d' == d, isStale row])
-  totalIn d = toInteger (length [() | [d', _] <- docs, d' == d])
+  -- each doc's edge targets, and each dir's two counts, in one pass
+  -- apiece (not a scan of every edge per doc, every doc per dir)
+  edgeTs = M.fromListWith (<>) [(j, [ts]) | [j, ts] <- edges]
+  isStale i docTs = any (\ts -> docTs == 0 || ts > docTs) (M.findWithDefault [] i edgeTs)
+  perDir = M.fromListWith plus [(dirId, (if isStale i docTs then 1 else 0, 1)) | (i, [dirId, docTs]) <- zip [0 :: Integer ..] docs]
+  plus (s, t) (s', t') = (s + s', t + t')

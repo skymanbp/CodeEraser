@@ -3,9 +3,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The `ce merge` document (plan v2.32 step 3; design booklet
--- docs/reference/authority-track.md §5), transcribed from the face
--- that assembled it on the measuring side (cli/src/merge/face.rs):
--- every judged group with its family, its members, the parameters in
+-- docs/reference/authority-track.md §5), laid out here: every judged
+-- group with its family, its members, the parameters in
 -- the order its holes first reach them — each with every member's
 -- text at that parameter's first hole — the member kept, the lines
 -- saved and the reason; the groups not sent, counted by why; the
@@ -19,6 +18,7 @@ import CE.Document.Contract
 import Data.Aeson (Value (..), object, (.=))
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
+import qualified Data.Set as S
 
 schemaId :: String
 schemaId = "ce.merge-report/0.1.0"
@@ -86,7 +86,8 @@ assemble req =
     ]
  where
   ids = memberIds req
-  bucket col t = M.fromListWith (flip (<>)) [(g, [r]) | r <- rows req t, g <- take 1 (drop col r)]
+  -- consed per group, each list reversed once back to row order
+  bucket col t = M.map reverse (M.fromListWith (<>) [(g, [r]) | r <- rows req t, g <- take 1 (drop col r)])
   countKeys = words "groups members nodes suggestions holes feasible merged_duplicates"
   unsendable = words "not_isomorphic no_slot_table unbuilt over_cap"
   feasible = toInteger (length [() | r <- rows req "groups", take 1 (drop 4 r) == [1]])
@@ -100,8 +101,10 @@ group :: M.Map (Integer, Integer) Integer -> M.Map Integer [[Integer]] -> M.Map 
 group ids members holes row = case row of
   [g, params, kept, savings, feasible, reason, fam, fragment] ->
     let mine = M.findWithDefault [] g holes
-        firstReach = foldl reach [] [(p, h) | _ : h : p : _ <- mine]
-        reach acc (p, h) = if p `elem` map fst acc then acc else acc <> [(p, h)]
+        firstReach = reverse (snd (foldl reach (S.empty, []) [(p, h) | _ : h : p : _ <- mine]))
+        reach (seen, acc) (p, h) = if S.member p seen then (seen, acc) else (S.insert p seen, (p, h) : acc)
+        -- the rows by hole, in row order, grouped once
+        byHole = M.map reverse (M.fromListWith (<>) [(h, [r]) | r@(_ : h : _) <- mine])
         value r = case r of
           [_, _, _, m, post, postEnd] -> object ["member" .= m, "text" .= ref "text" [M.findWithDefault (-1) (g, m) ids, post, postEnd]]
           _ -> Null
@@ -115,7 +118,7 @@ group ids members holes row = case row of
           , "savings" .= savings
           , "feasible" .= (feasible == 1)
           , "reason" .= nameOf reasons reason
-          , "holes" .= [object ["param" .= p, "values" .= [value r | r <- mine, take 1 (drop 1 r) == [h]]] | (p, h) <- firstReach]
+          , "holes" .= [object ["param" .= p, "values" .= map value (M.findWithDefault [] h byHole)] | (p, h) <- firstReach]
           ]
   _ -> Null
 

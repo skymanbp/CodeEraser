@@ -34,6 +34,7 @@ import qualified CloneProps
 import qualified EntropyProps
 import qualified EraseProps
 import qualified FlowProps
+import qualified FlowLiveProps
 import qualified GraphWireProps
 import qualified GraphProps
 import qualified JoinProps
@@ -169,6 +170,7 @@ batteries =
        , QueryProps.battery
        , PackProps.battery
        , FlowProps.battery
+       , FlowLiveProps.battery
        , MergeProps.battery
        , MergeReferenceProps.battery
        , ArchProps.battery

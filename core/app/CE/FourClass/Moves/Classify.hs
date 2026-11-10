@@ -10,6 +10,7 @@ module CE.FourClass.Moves.Classify (Classified (..), Unit (..), Line (..), class
 
 import CE.FourClass.Moves.Cost (maxBridge)
 import Data.Array (Array, listArray, (!))
+import qualified Data.IntSet as IS
 import Data.List (sortBy)
 import qualified Data.Map.Strict as M
 import Data.Ord (comparing)
@@ -139,10 +140,11 @@ dupSpansOf keyHash bUnits aUnits =
 -- | stacking.rs `top_level_spans`: units no unit of the side encloses
 -- (strictly on one end), stackable keys only, grouped by key.
 topLevelSpans :: [Unit] -> M.Map Int [(Int, Int)]
-topLevelSpans units = foldl' add M.empty [u | u <- units, topLevel u, uStack u]
+topLevelSpans units = M.map reverse (foldl' add M.empty [u | u <- units, topLevel u, uStack u])
  where
   topLevel u = not (any (\v -> (uFrom v < uFrom u && uTo u <= uTo v) || (uFrom v <= uFrom u && uTo u < uTo v)) units)
-  add m u = M.insertWith (flip (<>)) (uKey u) [(uFrom u, uTo u)] m
+  -- consed per key, each list reversed once back to source order
+  add m u = M.insertWith (++) (uKey u) [(uFrom u, uTo u)] m
 
 -- | batch.rs `side_runs`: walk the changed lines (1-based, ascending);
 -- an unchanged gap closes the open run, an insignificant line bridges,
@@ -152,9 +154,10 @@ sideRuns :: Array Int Line -> [Int] -> [Int] -> [[[Integer]]]
 sideRuns ls changed movedLines = reverse (map reverse runs)
  where
   (_, _, _, runs) = foldl' step (False, 0, 0, []) (map (+ 1) changed)
+  moved = IS.fromList movedLines
   step (open0, prev, lastKept, acc) l
     | not (significant t) = (open1, l, lastKept, acc)
-    | l `elem` movedLines = (False, l, lastKept, acc)
+    | IS.member l moved = (False, l, lastKept, acc)
     | open2 = (True, l, l, extend acc)
     | otherwise = (True, l, l, [entry] : acc)
    where

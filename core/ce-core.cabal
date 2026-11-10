@@ -183,7 +183,7 @@ test-suite ce-core-test
                       CE.Resolve.HtmlHead, CE.Resolve.Html,
                       ReferenceResolve, ReferenceResolveGen, ReferenceJava, ReferenceJavaGen, ReferenceHs, ReferenceHsGen, ReferenceTs, ReferenceTsGen, ReferenceRs, ReferenceRsCargo, ReferenceRsGen, ReferenceMd, ReferenceMdGen, ReferenceHtml, ReferenceHtmlGen, ResolveProps, ResolvePyAlsoProps,
                       Reference, ReferenceGraph, ReferenceQuery, ReferenceQueryGen, QueryReferenceProps, QueryProps, ReferencePack, PackProps, SpecProbes, GraphWireProps, GraphProps, AdvisoryProps,
-                      ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps,
+                      ReferenceFlow, ReferenceFlowGen, FlowCases, FlowRefusals, FlowProps, FlowLiveProps,
                       ReferenceTreeGen, MergeCases, MergeRulings, MergeRefusals, MergeProps, ReferenceMergeGen, ReferenceMerge, MergeReferenceProps,
                       ReferenceArch, ArchCases, ArchRefusals, ArchFasProps, ArchProps,
                       ReferenceTed, CloneProps, ReferenceJaccard, ReferenceCandidates, CandidatesProps, ReferenceRank, RankProps, ReferenceBags, BagsProps, ReferenceDocPairs, DocPairsProps, ReferenceMoves, MovesProps,

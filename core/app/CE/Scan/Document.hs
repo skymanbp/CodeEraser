@@ -71,10 +71,16 @@ checked req =
 -- six per function.
 type Placed = (Integer, Integer, ((Integer, Maybe Integer), Integer, Integer))
 
+-- | Each file's function rows, in request order: consed per file and
+-- each list reversed once (an appending combiner re-walks the list it
+-- grows on every row).
+fnsByFile :: DocReq -> M.Map Integer [[Integer]]
+fnsByFile req = M.map reverse (M.fromListWith (++) [(f, [r]) | r@(_ : f : _) <- rows req "fns"])
+
 layoutOf :: DocReq -> [Placed]
 layoutOf req = merge (zip [0 ..] layout) (rows req "levels")
  where
-  fns = M.fromListWith (flip (<>)) [(f, [r]) | r@(_ : f : _) <- rows req "fns"]
+  fns = fnsByFile req
   layout = concat [fileRow r : concatMap fnRows (M.findWithDefault [] f fns) | r@(f : _) <- rows req "files"]
   fileRow r = case r of
     [f, total, _, _] -> (0, ((f, Nothing), 1, total))
@@ -120,7 +126,7 @@ assemble req =
  where
   hits = findings req
   count l = toInteger (length [() | [_, l', _] <- rows req "levels", l' == l])
-  fns = M.fromListWith (flip (<>)) [(f, [r]) | r@(_ : f : _) <- rows req "fns"]
+  fns = fnsByFile req
   file r = case r of
     [f, total, comments, lang] ->
       object

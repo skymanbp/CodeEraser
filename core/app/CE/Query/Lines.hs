@@ -11,6 +11,7 @@
 module CE.Query.Lines (lines', veto) where
 
 import CE.Document.Read
+import qualified Data.Map.Strict as M
 
 lines' :: Bool -> Say -> Value -> DocReq -> [Line]
 lines' rules say doc req =
@@ -20,8 +21,13 @@ lines' rules say doc req =
       <> [say "degraded" [R d] | let d = key "degraded" doc, d /= Null]
       <> (if judged doc then concatMap goal (arr "goals" doc) <> [counts] else [])
  where
+  -- the answers by goal and the proof rows by (goal, answer place),
+  -- each in document order, grouped once rather than rescanned per
+  -- goal and per answer
+  byGoal = M.map reverse (M.fromListWith (<>) [(int "goal" a, [a]) | a <- arr "answers" doc])
+  byAnswer = M.map reverse (M.fromListWith (<>) [((int "goal" p, int "answer" p), [p]) | p <- arr "proof" doc])
   goal g =
-    let mine = [a | a <- arr "answers" doc, int "goal" a == int "goal" g]
+    let mine = M.findWithDefault [] (int "goal" g) byGoal
         cols = join ", " (map (piece . R) (arr "columns" g))
         name = if key "name" g == Null then W "" else R (key "name" g)
         head'
@@ -31,12 +37,15 @@ lines' rules say doc req =
      in head' : concat (zipWith (answered (int "goal" g)) [0 ..] mine)
   answered g i a = say "answer" [P (join "  " (map (piece . fillOf) (arr "values" a)))] : chain g i
   chain g i =
-    let mine = [p | p <- arr "proof" doc, int "goal" p == g, int "answer" p == i]
-        -- each node under its parent; a parent chain that loops (no
-        -- core answers one) stops after every row was walked once
+    let mine = M.findWithDefault [] (g, i) byAnswer
+        -- each node under its parent (the first row of a node, as
+        -- spelled); a parent chain that loops (no core answers one)
+        -- stops after every row was walked once
+        nodes = M.fromListWith (\_ first -> first) [(int "node" p, p) | p <- mine]
+        rowsWalked = length mine
         depth node = walk node (0 :: Int)
-        walk at d = case [p | p <- mine, int "node" p == at] of
-          p : _ | int "parent" p >= 0, d <= length mine -> walk (int "parent" p) (d + 1)
+        walk at d = case M.lookup at nodes of
+          Just p | int "parent" p >= 0, d <= rowsWalked -> walk (int "parent" p) (d + 1)
           _ -> d
      in [ say "proof" [W (concat (replicate (depth (int "node" p) + 1) "  ")), fillOf (key "pred" p), P (join ", " (map (piece . fillOf) (arr "args" p))), P (by p)]
         | p <- mine

@@ -21,7 +21,7 @@ import Data.Bits (xor)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Lazy as BL
-import Data.List (isPrefixOf)
+import Data.List (intercalate, isPrefixOf)
 import Data.Word (Word64, Word8)
 
 -- | The two console languages, by the request's code (0 en, 1 zh).
@@ -146,7 +146,7 @@ plain w = Piece w [] []
 join :: String -> [Piece] -> Piece
 join sep ps = case ps of
   [] -> plain ""
-  p : rest -> foldl (\(Piece t r k) (Piece t' r' k') -> Piece (t <> sep <> t') (r <> r') (k <> k')) p rest
+  _ -> Piece (intercalate sep (map pText ps)) (concatMap pRefs ps) (concatMap pKeys ps)
 
 line :: Integer -> Piece -> Line
 line = Line

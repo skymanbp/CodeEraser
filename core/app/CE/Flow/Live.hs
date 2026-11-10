@@ -14,7 +14,7 @@
 -- gets its unused finding and no dead-store findings — one fact, one
 -- finding. A store in unreachable code is covered by its unreachable
 -- run and is not reported twice.
-module CE.Flow.Live (deadStores, unused) where
+module CE.Flow.Live (deadStores, liveIn, unused) where
 
 import CE.Flow.Cfg (Cfg (..))
 import CE.Flow.Cost
@@ -24,17 +24,25 @@ import qualified Data.IntMap.Strict as IM
 import qualified Data.IntSet as IS
 import qualified Data.Set as S
 
--- | Live-in of every node, to a fixpoint of `in = transfer(∪ in of
--- successors)` over the whole graph; nodes without accesses (entry,
--- exit, hubs) pass their out set through.
+-- | Live-in of every node, the least fixpoint of `in = transfer(∪ in
+-- of successors)` over the whole graph; nodes without accesses (entry,
+-- exit, hubs) pass their out set through. A worklist from the empty
+-- sets, highest node first (statements are numbered in pre-order, so
+-- most edges point to a higher node and a straight run settles in one
+-- pass): a node whose live-in changes puts its predecessors back.
 liveIn :: Unit -> Cfg -> IM.IntMap IS.IntSet
-liveIn u g = go (IM.fromList [(node, IS.empty) | node <- [0 .. nodeCount g - 1]])
+liveIn u g = go (IM.fromList [(node, IS.empty) | node <- nodes]) (IS.fromList nodes)
  where
-  go live
-    | live' == live = live
-    | otherwise = go live'
-   where
-    live' = IM.mapWithKey (\node _ -> transfer (accesses u node) (liveOut live node)) live
+  nodes = [0 .. nodeCount g - 1]
+  inGraph node = node >= 0 && node < nodeCount g
+  preds = IM.fromListWith (<>) [(s, [p]) | (p, ss) <- IM.toList (succs g), inGraph p, s <- ss]
+  go live work = case IS.maxView work of
+    Nothing -> live
+    Just (node, rest)
+      | new == IM.findWithDefault IS.empty node live -> go live rest
+      | otherwise -> go (IM.insert node new live) (foldr IS.insert rest (IM.findWithDefault [] node preds))
+     where
+      new = transfer (accesses u node) (liveOut live node)
   liveOut live node = IS.unions [IM.findWithDefault IS.empty s live | s <- IM.findWithDefault [] node (succs g)]
 
 accesses :: Unit -> Int -> [Use]

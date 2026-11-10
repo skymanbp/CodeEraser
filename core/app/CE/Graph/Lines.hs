@@ -13,7 +13,7 @@ module CE.Graph.Lines (lines', veto) where
 import CE.Document.Read
 import CE.Graph.Cost (unmentionedCap)
 import CE.Graph.Document (advisoryNames)
-import Data.List (nub)
+import qualified Data.Set as S
 
 lines' :: Say -> Value -> DocReq -> [Line]
 lines' say doc req =
@@ -41,7 +41,7 @@ lines' say doc req =
         let rows' = arr "unmentioned" doc
             by c = N (toInteger (length [() | a <- rows', txt "code" a == c]))
          in [say "advisory" [R (key "name" a), N (int "line" a), R (key "symbol" a), W (txt "code" a), W (txt "why" a)] | a <- rows']
-              <> [say "advisory_census" ([N (count rows'), N (count (nub (map (key "name") rows')))] <> map by advisoryNames)]
+              <> [say "advisory_census" ([N (count rows'), N (toInteger (S.size (S.fromList (map (key "name") rows'))))] <> map by advisoryNames)]
               <> [say "advisory_cut" [N unmentionedCap] | bool "unmentioned_cut" doc]
   nDead = count (arr "dead" doc)
   tail' =

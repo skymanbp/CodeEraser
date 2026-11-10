@@ -39,9 +39,11 @@ align ts@(t0 : _) = (build (rootOf t0), widenedHoles <> filter (not . covered) r
   at i = [(t, i) | t <- ts]
   raw = mapMaybe (\i -> nodeHole (i, 1, 0) (at i)) [0 .. rootOf t0]
   wide = IS.fromList [p | i <- [0 .. rootOf t0], isLeafAt t0 i, trigger (at i), let p = parentOf t0 i, p >= 0, widenable (at p)]
-  -- the outermost widened parents: none inside another's subtree
-  outer = IS.filter (\p -> not (any (\q -> q /= p && lldAt t0 q <= p && p < q) (IS.toList wide))) wide
-  inside i = any (\p -> lldAt t0 p <= i && i <= p) (IS.toList outer)
+  -- the outermost widened parents: none inside another's subtree,
+  -- i.e. no proper ancestor (a q with lld q <= p < q) widened too
+  outer = IS.filter (\p -> not (any (`IS.member` wide) (above p))) wide
+  inside i = any (`IS.member` outer) (i : above i)
+  above i = takeWhile (>= 0) (drop 1 (iterate (parentOf t0) i))
   covered Hole {hKey = (i, _, _)} = inside i
   widenedHoles = [widened (p, 1, 0) (at p) | p <- IS.toList outer]
   open = IS.fromList [i | Hole {hKey = (i, _, _)} <- raw]

@@ -16,6 +16,7 @@ module CE.FourClass.Anchor
 
 import CE.FourClass.Cost (anchorFloor, destFloor)
 import CE.FourClass.Wire (Block (..), Pair (..))
+import Data.Array (Array, assocs, bounds, listArray, (!))
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 import Data.Word (Word64)
@@ -41,11 +42,15 @@ bucketCap = 64
 -- | One side occurrence of a hash: (pair, run id, position in run).
 data Occ = Occ {oPair :: !Int, oRun :: !Int, oPos :: !Int}
 
-type RunMap = M.Map (Int, Int) [Entry]
+-- | Every run by (pair, run id), as an array: a block's start test
+-- reads the entry before an occurrence and its extension reads the
+-- entries after it, each in O(1) — a list paid the position again on
+-- every occurrence of every hash.
+type RunMap = M.Map (Int, Int) (Array Int Entry)
 
 buildRuns :: (Pair -> [[Entry]]) -> [Pair] -> RunMap
 buildRuns side ps =
-  M.fromList [((pIdx p, r), run) | p <- ps, (r, run) <- zip [0 ..] (side p)]
+  M.fromList [((pIdx p, r), listArray (0, length run - 1) run) | p <- ps, (r, run) <- zip [0 ..] (side p)]
 
 -- Cons + one reverse, never `flip (++)`: fromListWith applies the
 -- combiner as `f new old`, so the flipped append built `old ++ [new]`
@@ -60,7 +65,7 @@ buildIx rm =
   M.map reverse $
     M.fromListWith
       (++)
-      [(h, [Occ p r i]) | ((p, r), run) <- M.toList rm, (i, (_, h, _)) <- zip [0 ..] run]
+      [(h, [Occ p r i]) | ((p, r), run) <- M.toList rm, (i, (_, h, _)) <- assocs run]
 
 -- | All accepted blocks plus whether the bucket cap tripped.
 sites :: [Pair] -> ([Block], Bool)
@@ -114,12 +119,13 @@ tryBlock rm am ro ao
  where
   rRun = rm M.! (oPair ro, oRun ro)
   aRun = am M.! (oPair ao, oRun ao)
-  rTail = drop (oPos ro) rRun
-  aTail = drop (oPos ao) aRun
+  rTail = from rRun (oPos ro)
+  aTail = from aRun (oPos ao)
+  from run k = [run ! i | i <- [k .. snd (bounds run)]]
   isStart =
     oPos ro == 0
       || oPos ao == 0
-      || hOf (rRun !! (oPos ro - 1)) /= hOf (aRun !! (oPos ao - 1))
+      || hOf (rRun ! (oPos ro - 1)) /= hOf (aRun ! (oPos ao - 1))
   n = length (takeWhile (uncurry (==)) (zip (map hOf rTail) (map hOf aTail)))
   evidence = take n rTail
   distinctEvidence = S.size (S.fromList (map hOf evidence))
