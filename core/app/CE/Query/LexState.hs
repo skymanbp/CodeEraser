@@ -25,13 +25,12 @@ module CE.Query.LexState (
   punct,
   slice,
   sym,
-  utf8,
 ) where
 
 import CE.Query.Cost (kindSym)
-import Data.Bits (shiftR, xor, (.&.), (.|.))
+import CE.Text (fnv1a64, utf8)
+import Data.Bits ((.&.))
 import qualified Data.ByteString as B
-import Data.Char (ord)
 import qualified Data.Map.Strict as M
 import Data.Word (Word64, Word8)
 
@@ -162,18 +161,7 @@ slice from to x = fromUtf8 (B.unpack (B.take (to - from) (B.drop from (xB x))))
 -- | `legend::sym`: the fnv1a64 of a name's UTF-8 bytes — the hash the
 -- mention table and the term bags key by.
 sym :: String -> Word64
-sym = foldl (\h b -> (h `xor` fromIntegral b) * 1099511628211) 14695981039346656037 . utf8
-
--- | A string's UTF-8 bytes.
-utf8 :: String -> [Word8]
-utf8 = concatMap (enc . ord)
- where
-  enc c
-    | c < 0x80 = [fromIntegral c]
-    | c < 0x800 = map fromIntegral [0xC0 .|. shiftR c 6, cont c]
-    | c < 0x10000 = map fromIntegral [0xE0 .|. shiftR c 12, cont (shiftR c 6), cont c]
-    | otherwise = map fromIntegral [0xF0 .|. shiftR c 18, cont (shiftR c 12), cont (shiftR c 6), cont c]
-  cont c = 0x80 .|. (c .&. 0x3F)
+sym = fnv1a64 . utf8
 
 -- | Well-formed UTF-8 bytes back to their characters.
 fromUtf8 :: [Word8] -> String

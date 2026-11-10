@@ -14,10 +14,15 @@
 -- the wire it is `[stream, text, ref…]`. The templates themselves
 -- live one module per family under CE.Text.<Family>; this module
 -- holds no sentence.
-module CE.Text (Catalogue, Fill (..), Lang (..), Line (..), Piece (..), fixed, holes, join, fillOf, langOf, leftIn, line, lineValue, phrase, piece, plain, rightIn, signed, table) where
+module CE.Text (Catalogue, Fill (..), Lang (..), Line (..), Piece (..), fixed, fnv1a64, fnvBasis, fnvPrime, fnvStep, holes, join, fillOf, langOf, leftIn, line, lineValue, phrase, piece, plain, rightIn, signed, splitHoles, table, utf8) where
 
 import Data.Aeson (Result (..), Value (..), fromJSON, toJSON)
+import Data.Bits (xor)
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Builder as BB
+import qualified Data.ByteString.Lazy as BL
 import Data.List (isPrefixOf)
+import Data.Word (Word64, Word8)
 
 -- | The two console languages, by the request's code (0 en, 1 zh).
 data Lang = En | Zh
@@ -89,9 +94,32 @@ breakHole s = case s of
 
 -- | The `{}` holes in a text.
 holes :: String -> Int
-holes s = case breakHole s of
-  (_, Just rest) -> 1 + holes rest
-  _ -> 0
+holes s = length (splitHoles s) - 1
+
+-- | The text cut at every `{}`, left to right, non-overlapping: one
+-- more piece than there are holes.
+splitHoles :: String -> [String]
+splitHoles s = case breakHole s of
+  (before, Just rest) -> before : splitHoles rest
+  (before, Nothing) -> [before]
+
+-- | FNV-1a 64: the hash every byte-keyed fact shares with the
+-- measuring side (`legend::sym`, the mention table, the term bags)
+-- and the definition package's digest. Fold `fnvStep` from
+-- `fnvBasis` over any byte container; `fnv1a64` is the strict one.
+fnvBasis, fnvPrime :: Word64
+fnvBasis = 14695981039346656037
+fnvPrime = 1099511628211
+
+fnvStep :: Word64 -> Word8 -> Word64
+fnvStep h b = (h `xor` fromIntegral b) * fnvPrime
+
+fnv1a64 :: B.ByteString -> Word64
+fnv1a64 = B.foldl' fnvStep fnvBasis
+
+-- | A string's UTF-8 bytes.
+utf8 :: String -> B.ByteString
+utf8 = BL.toStrict . BB.toLazyByteString . BB.stringUtf8
 
 -- | A fill as a piece of its own: a word, a number, one open hole.
 piece :: Fill -> Piece

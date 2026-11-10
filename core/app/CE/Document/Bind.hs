@@ -21,13 +21,12 @@
 module CE.Document.Bind (Resolver, Strings (..), bindDocument, bindLine, entry, indexed, nested, textOf) where
 
 import CE.Document.Contract (DocReq (..))
-import CE.Text (Line (..), Piece (..))
+import CE.Text (Line (..), Piece (..), splitHoles)
 import Data.Aeson (Result (..), Value (..), encode, fromJSON, toJSON)
 import qualified Data.ByteString.Lazy.Char8 as BL8
 import qualified Data.Aeson.KeyMap as KM
 import Data.Foldable (toList)
 import qualified Data.IntMap.Strict as IM
-import Data.List (isPrefixOf)
 import qualified Data.Map.Strict as M
 
 -- | A reference's class and integers to its text; Nothing when the
@@ -113,14 +112,3 @@ bindLine r (Line s (Piece text refs _))
 -- JSON (the classes and integers are ASCII, so the bytes are the text).
 json :: Value -> String
 json = BL8.unpack . encode
-
--- | The text cut at every `{}`, left to right (Rust's `split_once`
--- repeated; `matches` counts the same non-overlapping holes).
-splitHoles :: String -> [String]
-splitHoles s = go s ""
- where
-  go rest acc
-    | "{}" `isPrefixOf` rest = reverse acc : go (drop 2 rest) ""
-    | otherwise = case rest of
-        [] -> [reverse acc]
-        c : cs -> go cs (c : acc)

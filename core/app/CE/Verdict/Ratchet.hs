@@ -14,6 +14,7 @@ module CE.Verdict.Ratchet
   ) where
 
 import qualified CE.Verdict.Cost as Cost
+import CE.Verdict.Score (classOf)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 
@@ -136,14 +137,10 @@ ratchet k classTol present (Just b) cont disc =
   -- charging parameter and never a ratchet fact (plan v2.13 ①)
   rows =
     [ ((u, c), (v, mbv, maybe 0 (tolerated k c (classTol cls c)) mbv))
-    | (u : c : v : rest) <- cont
-    , let cls = classOf rest
+    | row@(u : c : v : _) <- cont
+    , let cls = classOf row
     , let mbv = M.lookup (u, c) baseMap
     ]
-  -- the 4th column when it rides, class 0 (the global table) when it
-  -- does not: an unclassed row keeps the global legs exactly
-  classOf (x : _) = x
-  classOf [] = 0
   curSet = S.fromList disc
   baseSet = S.fromList (bDisc b)
   curKeys = S.fromList [(u, c) | (u : c : _) <- cont]

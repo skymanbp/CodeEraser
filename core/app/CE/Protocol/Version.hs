@@ -6,7 +6,7 @@
 -- again at 6.1.0. So the standing rule is a SUBSTITUTION, not an
 -- append: each version replaces the last one's entry here, and the
 -- history lives at its address.
-module CE.Protocol.Version (majorMatches, maxLineBytes, proto) where
+module CE.Protocol.Version (majorMatches, majorOf, maxLineBytes, proto) where
 
 -- | Protocol version spoken by this server (single source together
 -- with cli/src/corelink.rs::PROTO — contracts/VERSIONING.md §1).
@@ -45,4 +45,10 @@ maxLineBytes = 134217728
 -- with a foreign major, is never answered as if it negotiated.
 majorMatches :: Maybe String -> Bool
 majorMatches Nothing = False
-majorMatches (Just v) = takeWhile (/= '.') v == takeWhile (/= '.') proto
+majorMatches (Just v) = majorOf v == majorOf proto
+
+-- | A SemVer string's major: everything before the first dot. The one
+-- reading of "major": the per-message check above and the hello
+-- (CE.Handshake, against the proto it is handed) both use it.
+majorOf :: String -> String
+majorOf = takeWhile (/= '.')

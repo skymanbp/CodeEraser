@@ -23,6 +23,7 @@ import Data.Array.Unboxed (UArray, listArray)
 import Data.Bits (shiftR, xor, (.&.))
 import qualified Data.IntMap.Strict as IM
 import Data.Word (Word64)
+import CE.Text (fnvBasis, fnvPrime)
 
 -- | Many shingle sets in one unboxed array: set i is entries
 -- [offsets ! i, offsets ! (i + 1)) of `elems`.
@@ -37,8 +38,8 @@ sets rows = Sets n (listArray (0, n) (scanl (+) 0 (map length rows))) (listArray
   total = sum (map length rows)
 
 prime, basis, prime4 :: Word64
-prime = 1099511628211
-basis = 14695981039346656037
+prime = fnvPrime
+basis = fnvBasis
 prime4 = prime * prime * prime * prime
 
 -- | fnv1a continued over the eight little-endian bytes of a word.

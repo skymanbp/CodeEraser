@@ -14,6 +14,7 @@ module CE.Verdict.Score
   , ScoreKnobs (..)
   , chargeAt
   , classKnobsOf
+  , classOf
   , scoreBound
   , effectiveWeights
   , penalties

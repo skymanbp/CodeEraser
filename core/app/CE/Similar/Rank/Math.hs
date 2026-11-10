@@ -5,8 +5,9 @@
 -- compare byte for byte with the Rust road they replace.
 module CE.Similar.Rank.Math (log2Fp, idfFp, contribution, ppmiFp) where
 
-import CE.Similar.Rank.Cost (idfFracBits, minCooc, scoreFracBits)
+import CE.Similar.Rank.Cost (b, idfFracBits, k1, minCooc, scoreFracBits)
 import Data.Bits (shiftL, shiftR, (.|.))
+import Data.Ratio (denominator, numerator)
 import GHC.Num (integerLog2)
 
 -- | floor (2^idfFracBits · log2 (num / den)) for num ≥ den > 0, by
@@ -54,18 +55,27 @@ idfFp n df
   den = 2 * df + 1
 
 -- | One term's contribution, floored to scoreFracBits fixed point:
--- w · idf · (k1 + 1) · tf / (tf + k1 · (1 − b + b · len / avg)) with
--- k1 = 6/5 and b = 3/4 cleared of denominators to
--- 22 · tf · avg / (10 · tf · avg + 3 · avg + 9 · len) — the measuring
--- side's closed form (cli/src/similar/bm25.rs `contribution` until W3),
--- spelled the same way; the battery re-derives it from k1 and b. Every
--- operand is non-negative and the divisor is at least 3 · avg ≥ 3, so
--- `div` floors exactly as the Rust i128 quotient did.
+-- w · idf · (k1 + 1) · tf / (tf + k1 · (1 − b + b · len / avg)), with
+-- k1 = p/q and b = r/s cleared of denominators (`cleared`). Every
+-- operand is non-negative and the divisor is at least `cAvg` · avg ≥ 1,
+-- so `div` floors the rational exactly; the battery re-derives it from
+-- k1 and b in Rational.
 contribution :: Integer -> Integer -> Integer -> Integer -> Integer -> Integer
 contribution w idf tf len avg = num `div` den
  where
-  num = (w * idf * 22 * tf * avg) `shiftL` scoreFracBits
-  den = 10 * tf * avg + 3 * avg + 9 * len
+  (cNum, cTf, cAvg, cLen) = cleared
+  num = (w * idf * cNum * tf * avg) `shiftL` scoreFracBits
+  den = cTf * tf * avg + cAvg * avg + cLen * len
+
+-- | The closed form's four integers: (k1 + 1) · tf · avg over
+-- tf · avg + k1 (1 − b) · avg + k1 b · len, every term times q s and
+-- the four divided by their gcd — (22, 10, 3, 9) at k1 = 6/5, b = 3/4.
+cleared :: (Integer, Integer, Integer, Integer)
+cleared = (cn `div` g, ct `div` g, ca `div` g, cl `div` g)
+ where
+  (p, q, r, s) = (numerator k1, denominator k1, numerator b, denominator b)
+  (cn, ct, ca, cl) = ((p + q) * s, q * s, p * (s - r), p * r)
+  g = foldr1 gcd [cn, ct, ca, cl]
 
 -- | PPMI (a, b) = max (0, log2 (n_ab · N / (n_a · n_b))) in the idf's
 -- fixed point; zero below minCooc.

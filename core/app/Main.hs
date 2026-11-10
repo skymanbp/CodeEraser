@@ -6,10 +6,9 @@
 module Main (main) where
 
 import CE.Protocol (internalError, respond)
+import CE.Text (utf8)
 import Control.Exception (SomeAsyncException, SomeException, evaluate, fromException, throwIO, try)
-import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Char8 as B8
-import qualified Data.ByteString.Lazy as BL
 import Data.Version (showVersion)
 import qualified Paths_ce_core as Meta
 import System.Environment (getArgs)
@@ -38,7 +37,7 @@ main = getArgs >>= \case
 -- (@--version@ stays on putStrLn: showVersion is digits and dots, and
 -- its text-mode newline is what the shipped output already is.)
 hPutUtf8 :: Handle -> String -> IO ()
-hPutUtf8 h = B8.hPutStrLn h . BL.toStrict . BB.toLazyByteString . BB.stringUtf8
+hPutUtf8 h = B8.hPutStrLn h . utf8
 
 serve :: IO ()
 serve = do

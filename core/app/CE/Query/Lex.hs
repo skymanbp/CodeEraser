@@ -20,6 +20,7 @@ module CE.Query.Lex (Tok (..), Lexed (..), Fault (..), lexProgram, referenced) w
 import CE.Query.Cost (idbFloor, kindAnon, kindInt, kindPred, kindSet, kindVar)
 import CE.Query.LexState
 import CE.Query.Schema (codeNamed)
+import CE.Text (utf8)
 import qualified Data.ByteString as B
 import Data.Char (chr)
 import Data.List (elemIndex)
@@ -47,7 +48,7 @@ referenced p = S.fromList [tValue t | t <- lTokens p, tKind t == kindPred, tValu
 -- | `Lexer::run`: the whole source; an unfinished clause at the end
 -- still seats its variable table (the parser names the syntax error).
 run :: Int -> String -> Lexed -> Either Fault Lexed
-run src text p = go (Lx p src (B.pack (utf8 text)) 0 1 1 [] [] Nothing)
+run src text p = go (Lx p src (utf8 text) 0 1 1 [] [] Nothing)
  where
   go x0 =
     let x = skipSpace x0

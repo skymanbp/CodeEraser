@@ -41,6 +41,7 @@ import qualified CE.Lang.Rust.Flow as RsF
 import CE.Lang.Spec (LangTables (..), Language)
 import CE.Lang.Table (rows)
 import CE.Lang.Toml (toml)
+import CE.Text (fnvBasis, fnvStep)
 import qualified CE.Lang.Tsx as Tsx
 import qualified CE.Lang.TypeScript as Ts
 import qualified CE.Lang.TypeScript.Flow as TsF
@@ -48,10 +49,8 @@ import Data.Aeson
 import qualified Data.Aeson.Key as K
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (parseEither)
-import Data.Bits (xor)
 import qualified Data.ByteString.Lazy as BL
 import Data.Maybe (fromMaybe)
-import Data.Word (Word64, Word8)
 
 -- | The judged languages' tables, in wire-code order. TSX reads
 -- TypeScript's document with its own slot piece; C++ reads C's with its
@@ -182,7 +181,4 @@ graft root (path, v) = go (K.fromString <$> splitDots path) root
 -- | The fnv1a64 of a value's canonical bytes (aeson's encoding: keys
 -- in order, no blanks) — a function of the data alone.
 digestOf :: Value -> Integer
-digestOf v = toInteger (BL.foldl' step 14695981039346656037 (encode v))
- where
-  step :: Word64 -> Word8 -> Word64
-  step h b = (h `xor` fromIntegral b) * 1099511628211
+digestOf v = toInteger (BL.foldl' fnvStep fnvBasis (encode v))

@@ -27,6 +27,7 @@ module CE.Similar.Bags (BagsReq (..), bagsCap, overCap, respond) where
 
 import CE.Similar.Bags.Contract (BagsReq (..), Unit, bagsCap, offence, overCap)
 import CE.Similar.Terms
+import CE.Text (utf8)
 import CE.Wire (Respond, tabled)
 import qualified CE.Wire.Families as F
 import Data.Aeson ((.=))

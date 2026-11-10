@@ -19,7 +19,6 @@ module CE.Similar.Terms (
   proseWords,
   wordTerm,
   featureTerm,
-  utf8,
   charClasses,
 ) where
 
@@ -27,11 +26,9 @@ import CE.Resolve.Chars (isRustAlnum)
 import CE.Similar.Chars (isRustLower, isRustNumeric, isRustUpper)
 import CE.Similar.Lower (rustToLower)
 import CE.Similar.Stem (stem)
-import Data.Bits (xor)
+import CE.Text (fnv1a64, utf8)
 import Data.Char (ord)
 import qualified Data.ByteString as B
-import qualified Data.ByteString.Builder as BB
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.Set as S
 import Data.Word (Word64)
 
@@ -98,12 +95,10 @@ featureTerm = term
 
 -- | fnv1a64 over the channel label, a colon and the bytes.
 term :: Int -> B.ByteString -> Word64
-term ch bytes = B.foldl' (\h x -> (h `xor` fromIntegral x) * 1099511628211) 14695981039346656037 tagged
+term ch bytes = fnv1a64 tagged
  where
   tagged = utf8 (take 1 (drop ch "NPCDSL") <> ":") <> bytes
 
-utf8 :: String -> B.ByteString
-utf8 = BL.toStrict . BB.toLazyByteString . BB.stringUtf8
 
 -- | The classes the splitter reads off one character, as the
 -- differential's `inspect` asks them: alphanumeric, numeric, lowercase,

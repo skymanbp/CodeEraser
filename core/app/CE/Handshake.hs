@@ -10,6 +10,7 @@
 -- keep the dependency one-directional.
 module CE.Handshake (respond) where
 
+import CE.Protocol.Version (majorOf)
 import Data.Aeson
 import qualified Data.ByteString.Char8 as B8
 import qualified Data.ByteString.Lazy as BL
@@ -74,9 +75,7 @@ respond :: String -> [String] -> Integer -> String -> B8.ByteString -> B8.ByteSt
 respond proto caps digest version line = BL.toStrict . encode $ case eitherDecodeStrict line of
   Left err -> Reply proto False (Just ("parse error: " <> err)) version caps digest
   Right h
-    | major (helloProto h) /= major proto ->
+    | majorOf (helloProto h) /= majorOf proto ->
         Reply proto False (Just ("incompatible proto: " <> helloProto h)) version caps digest
     | otherwise -> Reply proto True Nothing version caps digest
 
-major :: String -> String
-major = takeWhile (/= '.')

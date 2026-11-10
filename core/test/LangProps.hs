@@ -39,8 +39,9 @@ battery =
     , "the digest is a function of the data"
     , "tables/1 answers the package and the hello's digest"
     , "tables/1 refuses a key beyond the envelope by name"
+    , "the hello compares the major of the proto it is handed"
     ]
-    [codes, extensions, judged, flowJudged, nestOnly, slots, flowNames, flowShape, dispatch, digest, reply, refusal]
+    [codes, extensions, judged, flowJudged, nestOnly, slots, flowNames, flowShape, dispatch, digest, reply, refusal, majors]
 
 codes :: Bool
 codes = map lgCode languages == [0 .. 21]
@@ -133,6 +134,15 @@ refusal = refusedBy respond (setLang request) "tables: unexpected key lang"
  where
   setLang (Object o) = Object (KM.insert "lang" "c" o)
   setLang v = v
+
+-- | `respond` judges against its own `proto` argument, not the server's
+-- constant: a 7.7.0 server takes a 7.1.0 hello and turns 8.0.0 away.
+majors :: Bool
+majors = answer "7.1.0" == (Just (Bool True), Nothing) && answer "8.0.0" == (Just (Bool False), Just "incompatible proto: 8.0.0")
+ where
+  answer v = case decodeStrict (Handshake.respond "7.7.0" [] tablesDigest "0" (B8.pack ("{\"proto\":\"" <> v <> "\"}"))) of
+    Just (Object h) -> (field h "accept", field h "reason")
+    _ -> (Nothing, Nothing)
 
 request :: Value
 request = object ["proto" .= ("7.7.0" :: String), "type" .= ("tables.request" :: String), "id" .= (1 :: Int)]

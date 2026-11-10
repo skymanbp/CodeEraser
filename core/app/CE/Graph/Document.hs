@@ -14,7 +14,7 @@
 -- measuring side's table holds for each row the core kept. The graph
 -- screen embeds this same document (CE.Graph.Screen), so its
 -- statement and assembly are exported.
-module CE.Graph.Document (doc, statement, verdictName, whyCodes) where
+module CE.Graph.Document (advisoryNames, doc, statement, verdictName, whyCodes) where
 
 import CE.Document.Contract
 import Data.Aeson (Value (..), object, toJSON, (.=))
