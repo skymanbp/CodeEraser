@@ -40,7 +40,7 @@ ce.lang	控制台语言（优先于 CE_LANG 与项目 ce.toml 的 `[ui] lang`）
 ce.core	ce-core 可执行文件路径（默认：CE_CORE_BIN、与本二进制同目录的 ce-core、再 PATH）
 judge.root	要分析的目录（默认当前目录）
 judge.db	索引数据库路径（默认 <root>/.ce/index.db）
-doctor	环境与项目健康：ce-core 握手、项目状态行、降级计数（绝不启动守护进程）
+doctor	环境与项目健康：ce-core 握手、定义包、项目状态行、降级计数（绝不启动守护进程）；握手与定义包两者都成立才退 0，否则退 2
 doctor.root	要报告的项目根（默认当前目录）
 scan	度量尺寸 / 复杂度 / 可读性指标；级别由核分级
 scan.path	要扫描的目录（默认当前目录）

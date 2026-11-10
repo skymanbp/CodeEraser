@@ -43,6 +43,11 @@ function renderDoctor() {
     ok
       ? stateRow("ce-core", `${d.core.version} (proto ${d.core.proto})`)
       : stateRow("ce-core", d.core.error ?? tr("posNull"), true),
+    // ce.doctor-report/0.5.0: a core can shake hands and still not answer
+    // its definition package; every measurement gates on the package
+    d.tables.ok
+      ? stateRow(tr("tablesState"), tr("tablesOk"))
+      : stateRow(tr("tablesState"), d.tables.reason ?? tr("posNull"), true),
     stateRow(tr("guardTier"), d.guard),
     // ce.doctor-report/0.4.0: every guard class the hooks read, the key
     // that sets it and its tier

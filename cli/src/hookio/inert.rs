@@ -16,7 +16,7 @@ use std::path::{Path, PathBuf};
 /// to measure (`Open`).
 pub enum Gate<T> {
     Shut,
-    Inert(&'static str),
+    Inert(String),
     Open(T, PathBuf),
 }
 
@@ -46,7 +46,7 @@ pub fn gate<T: serde::de::DeserializeOwned>(
     match crate::tables::load() {
         Ok(_) => Gate::Open(env, root),
         Err(why) => {
-            trace(event, &root, &raw, why);
+            trace(event, &root, &raw, &why);
             Gate::Inert(why)
         }
     }

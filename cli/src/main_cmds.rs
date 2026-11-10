@@ -246,11 +246,12 @@ pub fn ping_cmd(root: Option<PathBuf>) -> ExitCode {
 pub fn doctor(core: &str, root: &Path, as_json: bool) -> ExitCode {
     let d = faces::doctor(root, core);
     if as_json {
-        // the exit code still relays the handshake: a JSON face
+        // the exit code still relays the verdict (the handshake and
+        // the definition package, health::doctor::healthy): a JSON face
         // that always exits 0 would make `ce doctor --format json`
         // the one diagnostic a script cannot gate on
         println!("{d}");
-        return match d["core"]["handshake"] == serde_json::json!(true) {
+        return match codeeraser::health::doctor::healthy(&d) {
             true => ExitCode::SUCCESS,
             false => ExitCode::from(2),
         };

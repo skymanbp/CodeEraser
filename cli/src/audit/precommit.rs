@@ -25,8 +25,8 @@ pub fn run_precommit(root: &Path) -> ExitCode {
 /// speaker and stamps the feed's `event`.
 pub(super) fn run(root: &Path, face: &str, message: Option<&str>) -> ExitCode {
     if let Err(why) = package(root) {
-        crate::hookio::degraded(face, root, &serde_json::Value::Null, why);
-        let line = speech::fallback(&Said::bare(Face::of(face)), why);
+        crate::hookio::degraded(face, root, &serde_json::Value::Null, &why);
+        let line = speech::fallback(&Said::bare(Face::of(face)), &why);
         print(&[line], Mode::Console);
         return ExitCode::SUCCESS;
     }
@@ -53,7 +53,7 @@ pub(super) fn run(root: &Path, face: &str, message: Option<&str>) -> ExitCode {
 /// the measuring code refuses the process (exit 2), which as a git hook
 /// aborts the commit. The faces are fail-open (`ce precommit --help`):
 /// no package is the skip, said and traced as the hooks do (1.9.2 D2).
-fn package(root: &Path) -> Result<(), &'static str> {
+fn package(root: &Path) -> Result<(), String> {
     crate::tables::anchor(root);
     crate::tables::load().map(|_| ())
 }

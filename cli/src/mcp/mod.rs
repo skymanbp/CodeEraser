@@ -126,6 +126,10 @@ fn tools_list() -> Value {
     json!({"tools": tools::TOOLS.iter().map(tools::descriptor).collect::<Vec<_>>()})
 }
 
+/// The tools that answer about the machine, not a project: they run
+/// with no definition package (a missing core IS their finding).
+const PACKAGE_FREE: [&str; 2] = ["doctor", "update_check"];
+
 fn tool_call(root: &Path, params: &Value) -> Result<Value> {
     let name = params["name"].as_str().unwrap_or_default();
     let args = &params["arguments"];
@@ -133,6 +137,15 @@ fn tool_call(root: &Path, params: &Value) -> Result<Value> {
     let Some(tool) = tools::TOOLS.iter().find(|t| t.name == name) else {
         anyhow::bail!("unknown tool: {name}");
     };
+    // the definition package first (v2.35 G3, R3-2): a measuring tool
+    // without one used to reach `tables::get()`, whose exit 2 took the
+    // whole server down — the client saw a disconnect and every later
+    // call, `doctor` included, went unanswered. Now the refusal is this
+    // call's `isError`, named, and the server keeps serving; the two
+    // tools that ask about the machine itself never need the package.
+    if !PACKAGE_FREE.contains(&name) {
+        crate::tables::load().map_err(anyhow::Error::msg)?;
+    }
     let text = (tool.run)(&target, args)?;
     Ok(json!({"content": [{"type": "text", "text": text}], "isError": false}))
 }

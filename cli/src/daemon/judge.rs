@@ -33,6 +33,10 @@ pub struct Judge {
     /// Failed attempts the last successful open recovered from, until
     /// the next classify report carries the number.
     recovered: Option<u32>,
+    /// Why the last core open failed (v2.35 G3, R3-5): it rides every
+    /// degraded reply until an open succeeds, where a bare
+    /// `core_unavailable` hid it (a lazy daemon's stderr is the null device).
+    open_error: Option<String>,
 }
 
 /// First wait after a failure; each further consecutive failure
@@ -118,7 +122,10 @@ impl Judge {
     /// measures THIS pipeline and not a copy of it. `classify` is its
     /// only production caller.
     pub fn judge_changeset(&mut self, inputs: &[PairInput]) -> BatchClassification {
-        let batch = classify_batch(inputs, self.link_mut());
+        let mut batch = classify_batch(inputs, self.link_mut());
+        if batch.degraded.as_deref() == Some("no_link") {
+            batch.degraded = Some(self.unavailable("no_link"));
+        }
         // Keyed on the LINK, not on getting a verdict: a core refusing
         // via its own work budget or its contract is HEALTHY, killing it
         // cost a retry (batch.rs sets link_failed only when the request
@@ -163,9 +170,10 @@ impl Judge {
     /// (an over-cap or contract-violating body: the core answered and
     /// stays healthy, Link::is_broken) does not.
     fn family(&mut self, cap: &str, kind: &str, body: serde_json::Value) -> serde_json::Value {
-        let Some(link) = self.link_mut() else {
-            return degraded("core_unavailable");
-        };
+        if self.link_mut().is_none() {
+            return degraded(&self.unavailable("core_unavailable"));
+        }
+        let link = self.link.as_mut().expect("link_mut just opened it");
         if !link.has(cap) {
             return degraded(&crate::corelink::skew(cap));
         }
@@ -190,18 +198,33 @@ impl Judge {
 
     fn link_mut(&mut self) -> Option<&mut Link> {
         if self.link.is_none() && self.budget.open(Instant::now()) {
-            match core_bin().and_then(|bin| Link::own(&bin).ok()) {
-                Some((link, _reply)) => {
+            let opened = core_bin()
+                .ok_or_else(|| "no ce-core to start".to_string())
+                .and_then(|bin| Link::own(&bin));
+            match opened {
+                Ok((link, _reply)) => {
                     self.link = Some(link);
+                    self.open_error = None;
                     if let Some(n) = self.budget.recovered() {
                         self.recovered = Some(n);
                         eprintln!("ce daemon: ce-core back after {n} failed attempts");
                     }
                 }
-                None => self.note_failure(),
+                Err(why) => {
+                    self.open_error = Some(why);
+                    self.note_failure();
+                }
             }
         }
         self.link.as_mut()
+    }
+
+    /// A no-link reason under its code, then the last open error if any.
+    fn unavailable(&self, code: &str) -> String {
+        match &self.open_error {
+            Some(why) => format!("{code}: {why}"),
+            None => code.to_string(),
+        }
     }
 
     fn note_failure(&mut self) {

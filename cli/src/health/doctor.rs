@@ -16,7 +16,7 @@ use serde_json::{Value, json};
 use std::path::Path;
 
 /// JSON output schema id; bump on shape change (plan §7.1).
-pub const SCHEMA_ID: &str = "ce.doctor-report/0.4.0";
+pub const SCHEMA_ID: &str = "ce.doctor-report/0.5.0";
 
 /// The whole diagnostic. Never returns an error: a core that will
 /// not answer IS the finding, and a doctor that fails outward tells
@@ -27,11 +27,6 @@ pub fn document(root: &Path, core: &str) -> Value {
     let (degraded, entries) = super::degraded_runs(&root);
     let index = super::index_fact(&root);
     let daemon = super::daemon_fact(&root);
-    let (version, proto, handshake, error) = match corelink::Link::own(core).map(|(_, hello)| hello)
-    {
-        Ok(reply) => (Some(reply.version), Some(reply.proto), true, Value::Null),
-        Err(e) => (None, None, false, json!(e)),
-    };
     json!({
         "schema": SCHEMA_ID,
         // the anchor, named: `ce doctor cli` reports the enclosing
@@ -59,13 +54,38 @@ pub fn document(root: &Path, core: &str) -> Value {
         // degraded count alone never returns to zero after one
         // incident and reads as a live alarm forever
         "degradedRuns": {"degraded": degraded, "entries": entries},
-        "core": {
-            "version": version,
-            "proto": proto,
-            "handshake": handshake,
-            "error": error,
-        },
+        "core": core_fact(core),
+        "tables": tables_fact(),
     })
+}
+
+/// The core's handshake: its version and proto, or the error.
+fn core_fact(core: &str) -> Value {
+    match corelink::Link::own(core).map(|(_, hello)| hello) {
+        Ok(reply) => json!({
+            "version": reply.version, "proto": reply.proto, "handshake": true, "error": null,
+        }),
+        Err(e) => json!({"version": null, "proto": null, "handshake": false, "error": e}),
+    }
+}
+
+/// 0.5.0 (v2.35 G3, R3-6): the definition package every measuring
+/// command and hook gates on. A core can shake hands and still not
+/// answer `tables/1` (the 1.9.0–1.9.1 state: doctor green, every
+/// measurement refused), so the package is its own fact and its own
+/// half of the verdict.
+fn tables_fact() -> Value {
+    match crate::tables::load() {
+        Ok(_) => json!({"ok": true, "reason": null}),
+        Err(why) => json!({"ok": false, "reason": why}),
+    }
+}
+
+/// The diagnostic's verdict: the core shook hands AND its definition
+/// package reads — the one bit every face (the console line, the
+/// exit code of both forms) folds.
+pub fn healthy(d: &Value) -> bool {
+    d["core"]["handshake"] == json!(true) && d["tables"]["ok"] == json!(true)
 }
 
 /// The guard classes, each `{class, key, tier}`: the tier the hooks
@@ -149,7 +169,9 @@ pub fn console(d: &Value) -> (Vec<String>, bool) {
     (out, ok)
 }
 
-/// The core's line and the handshake verdict, and whether it held.
+/// The core's line and the handshake verdict, then the package's line
+/// when it does not read (last: the line the console sends to stderr
+/// is the one that failed), and whether the machine can measure.
 fn handshake_lines(d: &Value) -> (Vec<String>, bool) {
     let ok = d["core"]["handshake"] == json!(true);
     let mut out = Vec::new();
@@ -168,7 +190,14 @@ fn handshake_lines(d: &Value) -> (Vec<String>, bool) {
             &[&d["core"]["error"].as_str().unwrap_or("?")],
         ));
     }
-    (out, ok)
+    if d["tables"]["ok"] != json!(true) {
+        out.push(line(
+            "definition package: UNAVAILABLE — {}",
+            "定义包：不可用 — {}",
+            &[&d["tables"]["reason"].as_str().unwrap_or("?")],
+        ));
+    }
+    (out, healthy(d))
 }
 
 /// A string fact of the document, `?` when it is absent.

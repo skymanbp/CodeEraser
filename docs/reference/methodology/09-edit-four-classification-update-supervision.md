@@ -149,7 +149,7 @@ The delta is monotone in one direction only: `removed_deleted → removed_moved`
 
 | condition | pairs | `degraded` reason | `link_failed` |
 |---|---|---|---|
-| no core link | none | `"no_link"` ([batch.rs:55-57](../../../cli/src/fourclass/batch.rs#L55)) | false |
+| no core link | none | `"no_link"` ([batch.rs:55-57](../../../cli/src/fourclass/batch.rs#L55)); the daemon appends its last core-open error, `no_link: <why>` (v2.35) | false |
 | link alive, capability `moves/1` or `fourclass/2` absent | none | `"no_capability"` ([batch.rs:58-60](../../../cli/src/fourclass/batch.rs#L58)) | false |
 | one pair whose `moves/1` body alone passes the protocol's line | none | `moves/1: request line … not sent` ([batch.rs:66-67](../../../cli/src/fourclass/batch.rs#L66)) | false |
 | error on `moves/1` (the link lost, or the core refused) | none | the error string ([batch.rs:69-70](../../../cli/src/fourclass/batch.rs#L69)) | **true** only when the framing was lost (`Link::is_broken`) |

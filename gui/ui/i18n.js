@@ -134,6 +134,8 @@ const CE_I18N = {
     // vocabulary `check` borrows FAIL/pass from — the same two words
     // the CLI's doctor prints (health/doctor.rs), so the faces agree
     handshakeOk: "OK", handshakeFailed: "FAILED",
+    // ce.doctor-report/0.5.0: the definition package the measurements gate on
+    tablesState: "definition package", tablesOk: "readable",
     guardTier: "guard tier", indexState: "index", daemonState: "daemon",
     // the doctor document carries CODES since ce.doctor-report/0.2.0
     // (plan v2.15); an unknown code shows AS the code, because a state
@@ -310,6 +312,7 @@ const CE_I18N = {
     trust: "担保", byVerdict: "按判决",
     tabDoctor: "体检", handshake: "握手", project: "项目",
     handshakeOk: "正常", handshakeFailed: "失败",
+    tablesState: "定义包", tablesOk: "可读",
     guardTier: "守卫档位", indexState: "索引", daemonState: "daemon",
     indexWords: (s, n) => [
       "缺失（首次 dedup/probe 会建立）",

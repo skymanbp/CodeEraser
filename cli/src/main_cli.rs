@@ -47,8 +47,10 @@ pub(crate) struct Cli {
 
 #[derive(Subcommand)]
 pub(crate) enum Cmd {
-    /// Environment + project health: ce-core handshake, project
-    /// status line, degradation counter (never starts the daemon)
+    /// Environment + project health: ce-core handshake, definition
+    /// package, project status line, degradation counter (never
+    /// starts the daemon); exit 2 unless both the handshake and the
+    /// package hold
     Doctor {
         #[arg(long, value_enum, default_value_t = OutFormat::Console)]
         format: OutFormat,

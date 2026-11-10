@@ -45,8 +45,11 @@ static ANCHOR: OnceLock<PathBuf> = OnceLock::new();
 /// one set wins.
 static CORE: OnceLock<String> = OnceLock::new();
 
-/// The package, or why there is none — read once per process.
-static PACK: OnceLock<Result<Pack, String>> = OnceLock::new();
+/// The package, once read. A refusal is never kept (v2.35 G3, R3-37):
+/// a long-lived process — `ce mcp`, the GUI, the daemon — whose first
+/// read met no core asks again on its next use, so installing or
+/// fixing the core heals it without a restart.
+static PACK: OnceLock<Pack> = OnceLock::new();
 
 /// Set by `transient`: read the package, never write the cache.
 static TRANSIENT: AtomicBool = AtomicBool::new(false);
@@ -87,19 +90,21 @@ pub(crate) fn named_core() -> Option<String> {
 }
 
 /// The package, read on first use; Err = the named reason there is
-/// none (no core, a pre-7.7.0 core, a package that does not read). The
-/// hook gate and the GUI ask this one, to stay inert or to show the
-/// reason; everything else asks `get`.
-pub fn load() -> Result<&'static Pack, &'static str> {
-    PACK.get_or_init(|| {
-        let root = match ANCHOR.get() {
-            Some(root) => root.clone(),
-            None => crate::root::project_root(Path::new(".")),
-        };
-        fetch::load(&root, !TRANSIENT.load(Ordering::Relaxed))
-    })
-    .as_ref()
-    .map_err(String::as_str)
+/// none (no core, a core of another major, a package that does not
+/// read), asked again on the next call. The hook gate, the GUI, the
+/// MCP server and `ce doctor` ask this one, to stay inert or to show
+/// the reason; everything else asks `get`.
+pub fn load() -> Result<&'static Pack, String> {
+    if let Some(pack) = PACK.get() {
+        return Ok(pack);
+    }
+    let root = match ANCHOR.get() {
+        Some(root) => root.clone(),
+        None => crate::root::project_root(Path::new(".")),
+    };
+    let pack = fetch::load(&root, !TRANSIENT.load(Ordering::Relaxed))?;
+    // two threads that both read keep the first: the same core gave both
+    Ok(PACK.get_or_init(|| pack))
 }
 
 /// The package. A process without one cannot measure anything, so the
@@ -121,7 +126,7 @@ pub fn get() -> &'static Pack {
 /// package is read, or with a hello that names no digest.
 pub(crate) fn check_hello(core: &str, digest: Option<u64>) -> Result<(), String> {
     match (PACK.get(), digest) {
-        (Some(Ok(pack)), Some(named)) if named != pack.digest => Err(format!(
+        (Some(pack), Some(named)) if named != pack.digest => Err(format!(
             "core {core} names tables digest {named}, but this run read {} from {}",
             pack.digest,
             pack.source.display()

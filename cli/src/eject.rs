@@ -154,7 +154,27 @@ fn targets(root: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
 /// alone and named, along with the build/vendor trees no walk should
 /// enter; a DECLARED submodule is this project's, so a `.ce` a
 /// mis-rooted run minted inside it is a stray of ours and is swept.
+///
+/// The build-output names are the core's (`tables/1`). An uninstall
+/// is exactly when the core may be gone, so without the package the
+/// sweep walks build outputs like any directory instead of refusing
+/// the uninstall (v2.35 G3, R3-3): it still collects only `.ce`
+/// directories, so the cost is a longer walk, never a wrong target.
 fn strays(anchor: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
+    let pruned = match crate::tables::load() {
+        Ok(_) => true,
+        Err(why) => {
+            eprintln!(
+                "{}",
+                line(
+                    "eject: build outputs walked too — {}",
+                    "eject：构建输出目录也一并遍历——{}",
+                    &[&why],
+                )
+            );
+            false
+        }
+    };
     let mut found = (Vec::new(), Vec::new());
     let mut queue = vec![anchor.to_path_buf()];
     while let Some(dir) = queue.pop() {
@@ -175,7 +195,7 @@ fn strays(anchor: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
                     }
                 }
                 ".git" | "node_modules" => {}
-                _ if crate::scan::outputs::is_output(&path) => {}
+                _ if pruned && crate::scan::outputs::is_output(&path) => {}
                 _ if crate::root::project_root(&path) == path => found.1.push(path),
                 _ => queue.push(path),
             }
