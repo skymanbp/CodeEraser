@@ -191,9 +191,9 @@ the safe direction.
 ### 5. Visibility, mounts and the core's code
 
 The core reads two more integer facts per row. The visibility word is three bits: bit 0
-is "exported" ([visibility/mod.rs:90](../../../cli/src/fourclass/visibility/mod.rs#L90)), bit 1 that the enclosing scopes let the
-name out too ([visibility/mod.rs:92](../../../cli/src/fourclass/visibility/mod.rs#L92)), and bit 2 marks a restricted export
-(`pub(crate)` and kin) ([visibility/mod.rs:94](../../../cli/src/fourclass/visibility/mod.rs#L94)). The **mounts** table is one row per node —
+is "exported" ([visibility/mod.rs:93](../../../cli/src/fourclass/visibility/mod.rs#L93)), bit 1 that the enclosing scopes let the
+name out too ([visibility/mod.rs:95](../../../cli/src/fourclass/visibility/mod.rs#L95)), and bit 2 marks a restricted export
+(`pub(crate)` and kin) ([visibility/mod.rs:97](../../../cli/src/fourclass/visibility/mod.rs#L97)). The **mounts** table is one row per node —
 `[node, private, total, bits]` — computed for every node without exception: how many of
 the file's `mod` mounts are private, how many mounts it has, whether a façade re-exports
 it (a Rust `via_reexport` edge or a TS `export *` target — bit 0) and whether its own
@@ -201,7 +201,7 @@ package keeps it private (Go `package main` / `internal/`, a Cargo package with 
 target, a cabal package with no library or a module only in `other-modules`, a Python
 module whose path carries an underscore-led segment, dunders excepted — bit 1)
 ([mounts.rs:44-50](../../../cli/src/graph/mounts.rs#L44), [mounts.rs:69-98](../../../cli/src/graph/mounts.rs#L69),
-[mounts.rs:145-151](../../../cli/src/graph/mounts.rs#L145), [mounts.rs:95-117](../../../cli/src/graph/mounts.rs#L95), [Cargo.hs:88-95](../../../core/app/CE/Resolve/Cargo.hs#L88)).
+[mounts.rs:145-151](../../../cli/src/graph/mounts.rs#L145), [mounts.rs:95-117](../../../cli/src/graph/mounts.rs#L95), [Cargo.hs:93-100](../../../core/app/CE/Resolve/Cargo.hs#L93)).
 
 Both tables ride `graph.request` as optional keys that live and die together — one
 without the other is refused by name, first in the violation chain
@@ -232,7 +232,7 @@ producer cuts at the same number so the two can never disagree — and `unmentio
 ([Cost.hs:42-75](../../../core/app/CE/Graph/Cost.hs#L42),
 [Graph.hs:121-128](../../../core/app/CE/Graph.hs#L121)). The iron rule is two byte-level
 facts: a request without the tables gets the ten-key reply unchanged, and the dead set is
-the same with or without them ([VERSIONING.md:520-522](../../../contracts/VERSIONING.md#L520)).
+the same with or without them ([VERSIONING.md:522-524](../../../contracts/VERSIONING.md#L522)).
 
 ### 6. Rendering — one home, three faces
 
@@ -309,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1775 (1992 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 180 signed) | haskell | 7580 (1718) | 1156 (2) | 15.3 % | 205 / 1156 = 17.7 % | 205 / 6424 |
-| | | rust | 3493 (1918) | 328 (4) | 9.4 % | 2 / 328 = 0.6 % | 2 / 3133 |
+| self @ this commit | 1783 (2000 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 180 signed) | haskell | 7617 (1723) | 1172 (2) | 15.4 % | 205 / 1172 = 17.5 % | 205 / 6445 |
+| | | rust | 3509 (1926) | 333 (4) | 9.5 % | 2 / 333 = 0.6 % | 2 / 3144 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -324,7 +324,7 @@ survivors' population, the share that only a same-name declaration in another fi
 out of the table — is the second number the criterion asked for (§0 clause 3: survival over
 domain, collision-saved over unmentioned); the last column restates the same count over the by-other vetoes, the
 layer it is a partition of. The exported-only survival on the same rows is the extra the
-operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->2<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1718<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.1<!--/ce--> % (the suite is a reader of
+operator reads for the public surface: self haskell <!--ce:restate:survival:self-this-commit:unmentioned-exported#paren-->2<!--/ce--> / <!--ce:restate:survival:self-this-commit:declared-exported#paren-->1723<!--/ce--> = <!--ce:restate:survival:self-this-commit:unmentioned-exported/declared-exported#paren-pct1-->0.1<!--/ce--> % (the suite is a reader of
 this tree since plan v2.18 step #12, so its declarations sit in its own domain, not here), zod typescript
 <!--ce:restate:survival:zod-912f0f5:unmentioned-exported#paren-->197<!--/ce--> / <!--ce:restate:survival:zod-912f0f5:declared-exported#paren-->1127<!--/ce--> = <!--ce:restate:survival:zod-912f0f5:unmentioned-exported/declared-exported#paren-pct1-->17.5<!--/ce--> %, cobra <!--ce:restate:survival:cobra-adbc881:unmentioned-exported#paren-->313<!--/ce--> / <!--ce:restate:survival:cobra-adbc881:declared-exported#paren-->481<!--/ce--> = <!--ce:restate:survival:cobra-adbc881:unmentioned-exported/declared-exported#paren-pct1-->65.1<!--/ce--> %. The spread across languages — two thirds
 of Go's exported surface is unspoken inside its own tree at this layer, most of

@@ -31,9 +31,9 @@ kinds are `import, import_from, export_from, use, mod_decl, link, image, ref_lin
 include, import_star, type_ref, require, load, source, library, href, src, srcset, action, link_asset,
 dynamic` — the
 definition package's `store` table since plan v2.32 step 4
-([Graph.hs:16-19](../../../core/app/CE/Lang/Common/Graph.hs#L16), read at
-[store.rs:205-207](../../../cli/src/graph/store.rs#L205)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:178](../../../cli/src/graph/store.rs#L178), currently <!--ce:ver:graph_rev#digits-->`24`<!--/ce-->); `export_star` (a TS
+([Graph.hs:17-20](../../../core/app/CE/Lang/Common/Graph.hs#L17), read at
+[store.rs:218-220](../../../cli/src/graph/store.rs#L218)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:178](../../../cli/src/graph/store.rs#L178), currently <!--ce:ver:graph_rev#digits-->`26`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -45,7 +45,7 @@ Lua's `require` and `load`, R's `source` and `library`, and HTML's `href`, `src`
 `import` label. Rev 25 (lane v235_graphtrust) added `dynamic`: a load call whose target argument is no
 literal — Lua `require` / `dofile`, R `source` / `library`, Python `importlib.import_module` / `__import__`,
 TS `require` / `import()` — opens a `dynamic` site, which the resolve family refuses as `Dynamic` before any
-rung ([call.rs:9-12](../../../cli/src/graph/sites/call.rs#L9), [Resolve.hs:105](../../../core/app/CE/Resolve.hs#L105)), so its
+rung ([call.rs:9-12](../../../cli/src/graph/sites/call.rs#L9), [Resolve.hs:133](../../../core/app/CE/Resolve.hs#L133)), so its
 language carries an unresolved site and cannot vouch for its dead verdicts; a literal argument opens the
 language's ordinary site (`import` for Python and TS) and walks the ladder. Rev 26 added the site's
 ledger column (`sites.ledger`, §3).
@@ -64,7 +64,7 @@ OwnUnit` (`Empty` = a degenerate specifier such as `import ""`, kept as a site a
 dispatcher before any rung could read the empty string as a name — O60, L round step #15;
 `OwnUnit` = a Java name declared in the referencing file's own compilation unit, no edge drawn,
 plan v2.30 step 5) ([ladder/outcome.rs:14-34](../../../cli/src/graph/ladder/outcome.rs#L14)); a language without rungs must return
-`Unsupported`, never a silent skip ([ladder/mod.rs:209-213](../../../cli/src/graph/ladder/mod.rs#L209)).
+`Unsupported`, never a silent skip ([ladder/mod.rs:222-226](../../../cli/src/graph/ladder/mod.rs#L222)).
 
 Every language's rungs below run in the core's `resolve/1` family: the Python, Go, C / C++ and
 Lua rungs since plan v2.33 wave W2a, then through W2-text the R rungs (stage B), Java (C),
@@ -89,7 +89,7 @@ that reads edges refuses by name until a run settles them
 |---|---|---|---|---|---|
 | TS/TSX | relative + extension order `ts, tsx, d.ts, mts, cts` ([Ts.hs:51-53](../../../core/app/CE/Resolve/Ts.hs#L51), [Ts.hs:77-83](../../../core/app/CE/Resolve/Ts.hs#L77)) | ESM `.js`→`.ts` rewrite, only if the TS twin is in scope and the JS twin is absent on disk ([Ts.hs:89-101](../../../core/app/CE/Resolve/Ts.hs#L89)) | nearest tsconfig `paths`, then `baseUrl` join ([Ts.hs:103-121](../../../core/app/CE/Resolve/Ts.hs#L103)); its `extends` chain read as tsc reads it — an array's last entry is the nearest base, a diamond is no cycle, no hop cap, and a cycle, a missing base or a non-string entry breaks the chain to `config_depth` ([TsConfig.hs:86-93](../../../core/app/CE/Resolve/TsConfig.hs#L86), [TsConfig.hs:46-49](../../../core/app/CE/Resolve/TsConfig.hs#L46)) | workspace member by `name` + `exports` subpath — the exact key, else the single-`*` pattern whose longest prefix encloses it, a `null` entry exporting nothing ([Ts.hs:135-157](../../../core/app/CE/Resolve/Ts.hs#L135), [Ts.hs:159-180](../../../core/app/CE/Resolve/Ts.hs#L159)) | a Node builtin, bare or `node:`-prefixed, ⇒ External before any package is read ([Ts.hs:210-215](../../../core/app/CE/Resolve/Ts.hs#L210), [Ts.hs:69-75](../../../core/app/CE/Resolve/Ts.hs#L69)); a bare specifier in deps or under a `node_modules/` of the importer's directory or any ancestor ⇒ External ([Ts.hs:190-198](../../../core/app/CE/Resolve/Ts.hs#L190)) |
 | Python | leading-dot relative; *n* dots climb *n−1* levels ([Py.hs:49-64](../../../core/app/CE/Resolve/Py.hs#L49)) | absolute dotted path over source roots ([Py.hs:71-89](../../../core/app/CE/Resolve/Py.hs#L71)) | `__init__.py` longest-prefix degradation ([Py.hs:91-100](../../../core/app/CE/Resolve/Py.hs#L91)) | stdlib table, `__future__` by name (a real module the public-names table omits, step 8), or pyproject dep ⇒ External ([Py.hs:113-120](../../../core/app/CE/Resolve/Py.hs#L113)) | — (structurally empty: a computed `import_module` / `__import__` opens a `dynamic` site, refused before the ladder, [Py.hs:15-16](../../../core/app/CE/Resolve/Py.hs#L15)) |
-| Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([Rs.hs:73-84](../../../core/app/CE/Resolve/Rs.hs#L73)); crate roots include Cargo's `<name>/main.rs` auto-discovery form since step 8 ([Cargo.hs:73-80](../../../core/app/CE/Resolve/Cargo.hs#L73)) | `use crate::…` from covering crate roots ([Rs.hs:129](../../../core/app/CE/Resolve/Rs.hs#L129)) — a spec a hand fold cut mid-path is read whole from the `use` on its line, never guessed shallow ([Rs.hs:98-107](../../../core/app/CE/Resolve/Rs.hs#L98)), and a group with no path before its brace opens one site per entry ([sites.rs:235-238](../../../cli/src/graph/sites.rs#L235)); a lib+bin package's two root terminals are settled by the root whose top level defines or imports the next segment, neither or both still refuse ([Rs.hs:147-155](../../../core/app/CE/Resolve/Rs.hs#L147)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([Rs.hs:130-136](../../../core/app/CE/Resolve/Rs.hs#L130), [Rs.hs:178-188](../../../core/app/CE/Resolve/Rs.hs#L178)); a bare head DECLARED as a module in the site's own namespace is read before any crate name — uniform paths, step 8 ([Rs.hs:164-174](../../../core/app/CE/Resolve/Rs.hs#L164)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([Ladder2.hs:103-106](../../../core/app/CE/Lang/Common/Ladder2.hs#L103), [Rs.hs:193-207](../../../core/app/CE/Resolve/Rs.hs#L193)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([Rs.hs:216-227](../../../core/app/CE/Resolve/Rs.hs#L216)); a uniform-path facade `pub use source::Thing` binds too, its hop reading the facade's own `mod source;`; a `pub use p::*` glob is followed when exactly one glob's module exports the name — a pub item of its own or a pub use, never a glob inside it ([Rs.hs:251-261](../../../core/app/CE/Resolve/Rs.hs#L251), [RsSurface.hs:95-98](../../../core/app/CE/Resolve/RsSurface.hs#L95)), and a `pub extern crate x [as y]` binds the crate root under the bound name ([rs_surface.rs:42-45](../../../cli/src/graph/ladder/rs_surface.rs#L42)) |
+| Rust | `mod foo;` child lookup, `#[path]` remap wins outright ([Rs.hs:73-84](../../../core/app/CE/Resolve/Rs.hs#L73)); crate roots include Cargo's `<name>/main.rs` auto-discovery form since step 8 ([Cargo.hs:78-85](../../../core/app/CE/Resolve/Cargo.hs#L78)) | `use crate::…` from covering crate roots ([Rs.hs:129](../../../core/app/CE/Resolve/Rs.hs#L129)) — a spec a hand fold cut mid-path is read whole from the `use` on its line, never guessed shallow ([Rs.hs:98-107](../../../core/app/CE/Resolve/Rs.hs#L98)), and a group with no path before its brace opens one site per entry ([sites.rs:235-238](../../../cli/src/graph/sites.rs#L235)); a lib+bin package's two root terminals are settled by the root whose top level defines or imports the next segment, neither or both still refuse ([Rs.hs:147-155](../../../core/app/CE/Resolve/Rs.hs#L147)) | `self::`/`super::`, inline-`mod` depth consumed before any file climb ([Rs.hs:130-136](../../../core/app/CE/Resolve/Rs.hs#L130), [Rs.hs:178-188](../../../core/app/CE/Resolve/Rs.hs#L178)); a bare head DECLARED as a module in the site's own namespace is read before any crate name — uniform paths, step 8 ([Rs.hs:164-174](../../../core/app/CE/Resolve/Rs.hs#L164)) | builtin crates `std, core, alloc, proc_macro, test` ⇒ External; in-scope package descends its tree ([Ladder2.hs:103-106](../../../core/app/CE/Lang/Common/Ladder2.hs#L103), [Rs.hs:193-207](../../../core/app/CE/Resolve/Rs.hs#L193)) | single unambiguous top-level `pub use` binds **≤1 hop** to the definition file ([Rs.hs:216-227](../../../core/app/CE/Resolve/Rs.hs#L216)); a uniform-path facade `pub use source::Thing` binds too, its hop reading the facade's own `mod source;`; a `pub use p::*` glob is followed when exactly one glob's module exports the name — a pub item of its own or a pub use, never a glob inside it ([Rs.hs:251-261](../../../core/app/CE/Resolve/Rs.hs#L251), [RsSurface.hs:95-98](../../../core/app/CE/Resolve/RsSurface.hs#L95)), and a `pub extern crate x [as y]` binds the crate root under the bound name ([rs_surface.rs:42-45](../../../cli/src/graph/ladder/rs_surface.rs#L42)) |
 | Go | longest in-scope `go.mod` module prefix ([Go.hs:71-90](../../../core/app/CE/Resolve/Go.hs#L71)) | importer's module `replace` directives ([Go.hs:95-111](../../../core/app/CE/Resolve/Go.hs#L95)) | stdlib table, or a dotted first segment with no local match ⇒ External ([Go.hs:127-131](../../../core/app/CE/Resolve/Go.hs#L127)) | — | — |
 | Markdown | relative join, the path percent-decoded after the `#` split; a directory holding in-scope files is a package ([Md.hs:79-88](../../../core/app/CE/Resolve/Md.hs#L79), [Md.hs:109-115](../../../core/app/CE/Resolve/Md.hs#L109)); a walked asset the index holds no parse of (an image, a data file) is a file-level edge, its node standing as an asset ([Md.hs:93-99](../../../core/app/CE/Resolve/Md.hs#L93)) | anchor, percent-decoded, validated against the target's anchor set — rendered-text ATX and setext slugs plus raw-HTML anchor ids ([Md.hs:117-122](../../../core/app/CE/Resolve/Md.hs#L117), [md_slug.rs:42-57](../../../cli/src/graph/ladder/md_slug.rs#L42)) | reference-link definition substituted, chain rerun relabeled ([Md.hs:52-56](../../../core/app/CE/Resolve/Md.hs#L52), [Md.hs:124-136](../../../core/app/CE/Resolve/Md.hs#L124)) | bare fragment = in-file section claim, taken as written ([Md.hs:103-107](../../../core/app/CE/Resolve/Md.hs#L103)) | any URI scheme or `//x` ⇒ External, a site-root `/x` ⇒ Unresolved(OutOfScope) ([Md.hs:70](../../../core/app/CE/Resolve/Md.hs#L70), [Md.hs:81-82](../../../core/app/CE/Resolve/Md.hs#L81), [Url.hs:16](../../../core/app/CE/Resolve/Url.hs#L16)) |
 | Haskell | module name dots→slashes under the owning cabal's stanza source roots ([Hs.hs:49-55](../../../core/app/CE/Resolve/Hs.hs#L49)) — a stanza's roots include the `common` blocks it `import:`s ([CabalWalk.hs:170-175](../../../core/app/CE/Resolve/CabalWalk.hs#L170)), and an `import {-# SOURCE #-} M` answers `M.hs` like any import ([Hs.hs:19-21](../../../core/app/CE/Resolve/Hs.hs#L19)) | a module another in-corpus package exposes — the package a PackageImports spec names (`import "pkg" M`, the spec keeping the quoted package, [Hs.hs:70](../../../core/app/CE/Resolve/Hs.hs#L70)), else any package the owner's `build-depends` declares — under that package's library roots; two such packages ⇒ ambiguous_workspace ([Hs.hs:11-15](../../../core/app/CE/Resolve/Hs.hs#L11), [Hs.hs:101-111](../../../core/app/CE/Resolve/Hs.hs#L101)) | global-package-db table, gated by the owner cabal's `build-depends` ⇒ External ([Hs.hs:115-120](../../../core/app/CE/Resolve/Hs.hs#L115)) | — | — |
@@ -118,7 +118,7 @@ Numeric details that are policy, not taste:
   name that misses is an attribute and an absent `__init__.py` a namespace package, both quiet
   ([PyAlso.hs:1-24](../../../core/app/CE/Resolve/PyAlso.hs#L1)). They are edges every graph reader follows,
   stored with `edges.also` = 1 so the unresolved count still reads each site's own answer alone
-  ([load.rs:60-68](../../../cli/src/graph/load.rs#L60)). A star import (`from pkg import *`, no names of its
+  ([load.rs:71-79](../../../cli/src/graph/load.rs#L71)). A star import (`from pkg import *`, no names of its
   own) whose answer is a package `__init__.py` draws each name that file's literal `__all__` bindings and
   edits list, as `from pkg import n` would — the walk reads the list (`py.all`,
   [py_all.rs:1-7](../../../cli/src/graph/ladder/py_all.rs#L1)); when any binding or edit of `__all__` there is one
@@ -153,7 +153,7 @@ Numeric details that are policy, not taste:
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
   ([Rs.hs:224-226](../../../core/app/CE/Resolve/Rs.hs#L224),
-  [wire.rs:162-163](../../../cli/src/graph/wire.rs#L162)).
+  [wire.rs:168-169](../../../cli/src/graph/wire.rs#L168)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the
 target-content facts a ladder consults are six — the Markdown anchor set, a page's HTML `id`
@@ -161,7 +161,7 @@ set, the Rust top-level surface (pub-use bindings, every top-level `use` binding
 names — the crate rung's tie-break reads the last two), a Java file's declared package, the
 templates a Lua file assigns to `package.path` and a C-family file's include list — and each is
 folded into a hash that is a resolve-key input
-([walkidx.rs:235-285](../../../cli/src/dedup/walkidx.rs#L235),
+([walkidx.rs:241-291](../../../cli/src/dedup/walkidx.rs#L241),
 [md_slug.rs:24-31](../../../cli/src/graph/ladder/md_slug.rs#L24),
 [html_head.rs:77-86](../../../cli/src/graph/ladder/html_head.rs#L77),
 [rs_cst.rs:179-214](../../../cli/src/graph/ladder/rs_cst.rs#L179)). The Markdown and Rust hashes are pinned by
@@ -172,11 +172,11 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:146-179](../../../cli/src/graph/wire.rs#L146)). An edge's
+ledger-visible as sites *without* edges ([wire.rs:152-185](../../../cli/src/graph/wire.rs#L152)). An edge's
 kind follows its site's: code kinds import; the Markdown link family and HTML's page references (`href`, a
 form's `action`) split doc_link / doc_ref by whether the target is a page (Markdown or HTML); an image, a
 `src` / `srcset` resource and an asset `<link>` are always assets
-([wire.rs:206-223](../../../cli/src/graph/wire.rs#L206), [wire.rs:225-234](../../../cli/src/graph/wire.rs#L225)).
+([wire.rs:212-229](../../../cli/src/graph/wire.rs#L212), [wire.rs:231-240](../../../cli/src/graph/wire.rs#L231)).
 Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
@@ -218,9 +218,9 @@ Two transformations happen on the way to the wire:
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
-never saw ([load.rs:100-106](../../../cli/src/graph/load.rs#L100)). `unresolved_sites` is the count of sites
+never saw ([load.rs:112-118](../../../cli/src/graph/load.rs#L112)). `unresolved_sites` is the count of sites
 with no edge row, plus one for each star-import site whose `__all__` is opaque (`sites.ledger` bit 1,
-rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:131-136](../../../cli/src/graph/load.rs#L131)) and travels with the report so
+rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:143-148](../../../cli/src/graph/load.rs#L143)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:27-29](../../../cli/src/graph/deadcode.rs#L27)).
 
@@ -348,16 +348,16 @@ names as what a runtime or a tool starts: a package.json's `main` / `module` / `
 names its TS twin), the root `pyproject.toml`'s `[project.scripts]` / `[project.gui-scripts]` /
 `[project.entry-points.*]` modules, found by the core (resolve/1 `entries`,
 [Entries.hs:3-27](../../../core/app/CE/Resolve/Entries.hs#L3)) — the discovery is nearest-manifest per walked directory
-([targets.rs:37-82](../../../cli/src/graph/deadcode/targets.rs#L37),
+([targets.rs:53-98](../../../cli/src/graph/deadcode/targets.rs#L53),
 [cabal_find.rs:10-26](../../../cli/src/graph/cabal_find.rs#L10)). A tree whose manifest lives
 elsewhere — the test-suite submodule is a slice of the `cli` package, its binaries cargo
 targets only in the superproject's Cargo.toml — declares its roots in `ce.toml [graph]
 crate_roots` (plan v2.18 step #12, zero wire): a declared root is a target for this role
-([targets.rs:76](../../../cli/src/graph/deadcode/targets.rs#L76)) and a crate root for the
+([targets.rs:82](../../../cli/src/graph/deadcode/targets.rs#L82)) and a crate root for the
 Rust ladder's `mod` and `crate::` rungs alike
 ([Rs.hs:62](../../../core/app/CE/Resolve/Rs.hs#L62)), one normalizer serving both readers
 ([graph.rs:77](../../../cli/src/config/graph.rs#L77)); a declared path the walk does not hold, or that
-is no Rust file, is refused by name ([walkidx.rs:189](../../../cli/src/dedup/walkidx.rs#L189)). The legacy flags column this
+is no Rust file, is refused by name ([walkidx.rs:195](../../../cli/src/dedup/walkidx.rs#L195)). The legacy flags column this
 module also produced — bit-identical to the pre-2.28 semantics, and read by no core since
 2.28.0 — retired at 5.0.0, once 4.1.0's symbols table gave visibility the producer whose
 absence had blocked the subtraction.
@@ -479,7 +479,7 @@ Since 2.32.0 the request carries a per-language site ledger (optional until 9.0.
 2  vouched   — a fully resolved reference population
 ```
 
-([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:137](../../../cli/src/graph/load.rs#L137), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
+([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:148](../../../cli/src/graph/load.rs#L148), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 
 ### 9. Acceptance
 
@@ -530,7 +530,7 @@ outside the corpus, so the ladder cannot choose its denominator there either
 | fmt (C++) | 15 | 0 | 17 | 1.0 ([fmt:1571-1573](../../../contracts/eval/lang-precision-fmt-v1.json#L1571)) | yes |
 | gson (Java) | 12 | 0 | 12 | 1.0 ([gson:689-691](../../../contracts/eval/lang-precision-gson-v1.json#L689)) | yes |
 | jsoup (Java) | 24 | 0 | 24 | 1.0 ([jsoup:1083-1085](../../../contracts/eval/lang-precision-jsoup-v1.json#L1083)) | yes |
-| koreader (Lua) | 76 | 0 | 76 | 1.0 ([koreader:1409-1411](../../../contracts/eval/lang-precision-koreader-v2.json#L1409)) | yes |
+| koreader (Lua) | 76 | 0 | 76 | 1.0 ([koreader:1429-1431](../../../contracts/eval/lang-precision-koreader-v2.json#L1429)) | yes |
 | luarocks (Lua) | 10 | 0 | 10 | 1.0 ([luarocks:296-298](../../../contracts/eval/lang-precision-luarocks-v2.json#L296)) | yes |
 | covid19model (R) | 18 | 0 | 18 | 1.0 ([covid19model:1608-1610](../../../contracts/eval/lang-precision-covid19model-v1.json#L1608)) | yes |
 | stringr (R) | 0 | 0 | 0 | — ([stringr:95-97](../../../contracts/eval/lang-precision-stringr-v1.json#L95)) | no (denom < 5) |

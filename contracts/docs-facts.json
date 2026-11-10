@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "370"
+      "value": "371"
     },
     {
       "id": "count:grammars#word",
@@ -446,7 +446,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "24"
+      "value": "26"
     },
     {
       "id": "ver:mention_rev#digits",
