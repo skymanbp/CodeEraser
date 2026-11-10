@@ -15,7 +15,7 @@
 -- first argument and the `in(F, "glob")` sugar, rewritten here to
 -- `set(S, F)`. The text is scanned as its UTF-8 bytes, as the Rust
 -- scanner did: a column counts the bytes that start a character.
-module CE.Query.Lex (Tok (..), Lexed (..), Fault (..), lexProgram, referenced, sym) where
+module CE.Query.Lex (Tok (..), Lexed (..), Fault (..), lexProgram, referenced) where
 
 import CE.Query.Cost (idbFloor, kindAnon, kindInt, kindPred, kindSet, kindVar)
 import CE.Query.LexState

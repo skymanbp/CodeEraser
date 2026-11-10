@@ -28,7 +28,6 @@ module CE.Flow.Cost (
   flagInfinite,
   flagFallthrough,
   flagDynamic,
-  flagEmpty,
   stmtFlagCeil,
   varParam,
   varCaptured,
@@ -37,7 +36,6 @@ module CE.Flow.Cost (
   varFlagCeil,
   modeRead,
   modeWrite,
-  modeReadWrite,
   modeCeil,
   findUnreachable,
   findDeadStore,
@@ -102,7 +100,7 @@ flagEmpty = 4
 
 -- | Flags above the five bits are refused by name.
 stmtFlagCeil :: Integer
-stmtFlagCeil = 31
+stmtFlagCeil = 2 ^ (flagEmpty + 1) - 1
 
 -- | Variable flag bits. A parameter is declared by the unit, at no
 -- statement (`declSeq` −1); a captured variable is read by a nested
@@ -118,7 +116,7 @@ varAddress = 3
 
 -- | Flags above the four bits are refused by name.
 varFlagCeil :: Integer
-varFlagCeil = 15
+varFlagCeil = 2 ^ (varAddress + 1) - 1
 
 -- | Access modes, in evaluation order within a statement: a read, a
 -- write, or a read followed by a write (`x += 1`, `x++`).
@@ -129,7 +127,7 @@ modeReadWrite = 2
 
 -- | A mode above this is refused by name.
 modeCeil :: Integer
-modeCeil = 2
+modeCeil = toInteger modeReadWrite
 
 -- | Finding kinds, the second column of a `findings` row. An
 -- unreachable run names its first and last statement; a dead store

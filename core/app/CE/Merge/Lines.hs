@@ -6,7 +6,7 @@
 -- characters — the cut is the measuring side's to make on the text it
 -- holds (a `clipped` reference carries the cap). No veto: a degraded
 -- document is the face's own refusal, exit 2.
-module CE.Merge.Lines (lines', textCap) where
+module CE.Merge.Lines (lines') where
 
 import CE.Document.Read
 

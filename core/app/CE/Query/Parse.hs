@@ -70,31 +70,30 @@ expect kind = do
 
 clause :: P Clause
 clause = do
-  start <- here
   q <- at tokQuery
   a <- at tokAssert
   if q
-    then advance >> body >>= \b -> expect tokDot >> pure (Query b start)
+    then advance >> body >>= \b -> expect tokDot >> pure (Query b)
     else
       if a
-        then advance >> assertion start
-        else rule start
+        then advance >> assertion
+        else rule
 
-assertion :: Int -> P Clause
-assertion start = do
+assertion :: P Clause
+assertion = do
   h <- atom
   expect tokRule
   b <- body
   expect tokDot
-  pure (Assert h b start)
+  pure (Assert h b)
 
-rule :: Int -> P Clause
-rule start = do
+rule :: P Clause
+rule = do
   h <- atom
   hasBody <- at tokRule
   b <- if hasBody then advance >> body else pure []
   expect tokDot
-  pure (Rule h b start)
+  pure (Rule h b)
 
 body :: P [Lit]
 body = do

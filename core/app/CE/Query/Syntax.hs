@@ -10,7 +10,6 @@ module CE.Query.Syntax (
   Lit (..),
   Term (..),
   TermV (..),
-  clauseAt,
   clauseBody,
   clauseHead,
   isIdb,
@@ -56,28 +55,22 @@ data Lit
 -- | A clause: a rule (a fact is a rule with an empty body), a query,
 -- or an assertion whose head names the witness columns.
 data Clause
-  = Rule Atom [Lit] Int
-  | Query [Lit] Int
-  | Assert Atom [Lit] Int
+  = Rule Atom [Lit]
+  | Query [Lit]
+  | Assert Atom [Lit]
   deriving (Eq, Show)
-
-clauseAt :: Clause -> Int
-clauseAt c = case c of
-  Rule _ _ at -> at
-  Query _ at -> at
-  Assert _ _ at -> at
 
 clauseBody :: Clause -> [Lit]
 clauseBody c = case c of
-  Rule _ body _ -> body
-  Query body _ -> body
-  Assert _ body _ -> body
+  Rule _ body -> body
+  Query body -> body
+  Assert _ body -> body
 
 clauseHead :: Clause -> Maybe Atom
 clauseHead c = case c of
-  Rule h _ _ -> Just h
-  Query _ _ -> Nothing
-  Assert h _ _ -> Just h
+  Rule h _ -> Just h
+  Query _ -> Nothing
+  Assert h _ -> Just h
 
 isIdb :: Int -> Bool
 isIdb code = toInteger code >= idbFloor

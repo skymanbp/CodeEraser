@@ -6,7 +6,7 @@
 -- hold reads as null / empty / 0 / False. It hands a lines module the
 -- request contract and the catalogue machinery too: one import, the
 -- same for every family.
-module CE.Document.Read (module CE.Document.Contract, module CE.Text, Result (..), Say, Value (..), arr, bool, emitted, fields, fromJSON, int, key, nullAt, spoken, txt) where
+module CE.Document.Read (module CE.Document.Contract, module CE.Text, Result (..), Say, Value (..), arr, bool, emitted, fields, fromJSON, int, key, spoken, txt) where
 
 import CE.Document.Contract
 import CE.Text
@@ -81,6 +81,3 @@ txt :: String -> Value -> String
 txt k v = case fromJSON (key k v) of
   Success t -> t
   _ -> ""
-
-nullAt :: String -> Value -> Bool
-nullAt k v = key k v == Null

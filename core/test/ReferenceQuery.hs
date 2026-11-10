@@ -47,7 +47,7 @@ strata clauses
   | or [not pos && together q h | (q, h, pos) <- edges] = Nothing
   | otherwise = Just [[r | r@(h, _) <- rules, level (atomPred h) == l] | l <- nub (sort (map (level . atomPred . fst) rules))]
  where
-  rules = [(h, b) | Rule h b _ <- clauses]
+  rules = [(h, b) | Rule h b <- clauses]
   edges = [(q, atomPred h, pos) | (h, b) <- rules, l <- b, (pos, q) <- readsOf l, isIdb q]
   -- the closure as each predicate's reach set, walked depth first
   succs = M.fromListWith (<>) [(q, [h]) | (q, h, _) <- edges]

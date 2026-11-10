@@ -33,7 +33,6 @@ module CE.Verdict.Join
 
 import CE.Clone.Cost (tsedDen, tsedNum)
 import CE.Docdup.Cost (jaccardDen, jaccardNum)
-import CE.Graph.Cost (entryMask)
 import qualified CE.Verdict.Cost as Cost
 import Data.Bits (bit, testBit, (.&.), (.|.))
 
@@ -76,11 +75,10 @@ data Knobs = Knobs
   , kCochangeFloor :: Integer
   , kRewriteNum :: Integer
   , kRewriteDen :: Integer
-  , kEntryMask :: Integer
   }
 
 -- | The Cost binding the wire boundary passes. The similarity
--- thresholds and entryMask are REUSED from their owning families —
+-- thresholds are REUSED from their owning families —
 -- one authority each; a second copy would let two judgments disagree
 -- about the same fact.
 bound :: Knobs
@@ -93,7 +91,6 @@ bound =
     , kCochangeFloor = Cost.cochangeFloor
     , kRewriteNum = Cost.rewriteNum
     , kRewriteDen = Cost.rewriteDen
-    , kEntryMask = entryMask
     }
 
 -- | legsMask bits: which signals were actually present.
@@ -168,9 +165,11 @@ judgeWith table k l = (code, legsMask, reasons)
     Nothing -> False
   bothRef = maybe False (\(a, b) -> pIndeg a >= 1 && pIndeg b >= 1) pair
   sccDistinct = maybe False (\(a, b) -> pScc a /= pScc b) pair
-  -- x is a dead flank of live partner y: unreferenced, unreachable,
-  -- no entry bit, while y keeps indeg >= 1 (partner survives higher)
-  deadV x y = pIndeg x == 0 && pReach x == 0 && (pFlags x .&. kEntryMask k) == 0 && pIndeg y >= 1
+  -- x is a dead flank of live partner y: unreferenced and
+  -- unreachable (an entry seeds the reach set, so reachIn already
+  -- answers entry-ness), while y keeps indeg >= 1 (partner survives
+  -- higher)
+  deadV x y = pIndeg x == 0 && pReach x == 0 && pIndeg y >= 1
   flanks = maybe [] (\(a, b) -> [(a, b), (b, a)]) pair
   deadFlank = any (uncurry deadV) flanks
   publicGuard = any (\(x, y) -> deadV x y && testBit (pFlags x) 0) flanks

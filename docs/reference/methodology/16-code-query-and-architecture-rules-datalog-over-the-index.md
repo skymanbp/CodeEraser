@@ -56,7 +56,7 @@ left side begins with the variable; whether `Var = expr` binds or compares is th
 [Syntax.hs:48-54](../../../core/app/CE/Query/Syntax.hs#L48)). An `assert`'s head names the witness
 columns; a violation is one head tuple, and the assertion passes when there is none. A `?-`
 answers with the variables its body binds, in the order the safety walk binds them
-([Syntax.hs:58-61](../../../core/app/CE/Query/Syntax.hs#L58), [Front.hs:84](../../../core/app/CE/Query/Front.hs#L84)).
+([Syntax.hs:57-61](../../../core/app/CE/Query/Syntax.hs#L57), [Front.hs:84](../../../core/app/CE/Query/Front.hs#L84)).
 
 ### 2. The facts — twenty-seven predicates read off the index
 

@@ -10,7 +10,7 @@
 -- fields, `counts` as one object, `degraded`, and, only when degraded,
 -- the family's named reason. aeson orders the keys, so a line's bytes
 -- do not depend on the order the caller lists them.
-module CE.Wire.Result (envelope, faultLine, replyLine, resultLine, resultType, tooLarge, tooLargeOf) where
+module CE.Wire.Result (envelope, faultLine, replyLine, resultLine, tooLarge, tooLargeOf) where
 
 import CE.Wire.Families (FamilyName (..))
 import Data.Aeson (Value, encode, object, (.=))

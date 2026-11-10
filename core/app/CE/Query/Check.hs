@@ -56,7 +56,7 @@ checkReserving prelude spelled clauses = do
   strata <- stratify rules
   Right (Checked rules strata (goals sorts) (predSorts sorts rules))
  where
-  rules = [RuleC i h b | (i, Rule h b _) <- zip [0 ..] clauses]
+  rules = [RuleC i h b | (i, Rule h b) <- zip [0 ..] clauses]
   goals sorts = [goal sorts i cl | (i, cl) <- zip [0 ..] clauses, isGoal cl]
   isGoal cl = case cl of Rule {} -> False; _ -> True
   phase errs = if null errs then Right () else Left errs
@@ -95,16 +95,16 @@ unknownErrors clauses =
   , not (IS.member p defined)
   ]
  where
-  defined = IS.fromList [atomPred h | Rule h _ _ <- clauses]
+  defined = IS.fromList [atomPred h | Rule h _ <- clauses]
 
 -- | The first `prelude` clauses (the shipped ones: the prelude's and
 -- the pack's) reserve the predicates they define, and the `spelled`
 -- codes are reserved whoever defines them.
 preludeErrors :: Int -> IS.IntSet -> [Clause] -> [(Int, Integer)]
 preludeErrors prelude spelled clauses =
-  [(atomAt h, errPrelude) | Rule h _ _ <- drop prelude clauses, IS.member (atomPred h) reserved]
+  [(atomAt h, errPrelude) | Rule h _ <- drop prelude clauses, IS.member (atomPred h) reserved]
  where
-  reserved = IS.union spelled (IS.fromList [atomPred h | Rule h _ _ <- take prelude clauses])
+  reserved = IS.union spelled (IS.fromList [atomPred h | Rule h _ <- take prelude clauses])
 
 -- | Strata by the level rule: a head sits at least as high as every
 -- positive body predicate and strictly above every negated or
@@ -140,10 +140,10 @@ fixLevels edges = go (IM.size (IM.fromList [(h, ()) | (_, h, _) <- edges]) + 2)
 -- | A goal's answered terms and their sorts.
 goal :: Sorts -> Int -> Clause -> Goal
 goal sorts i cl = case cl of
-  Query body _ -> Goal i 0 (-1) (map TVar vars) body (map (variableSort sorts i) vars)
+  Query body -> Goal i 0 (-1) (map TVar vars) body (map (variableSort sorts i) vars)
    where
     vars = outerVars body
-  Assert h body _ -> Goal i 1 (atomPred h) (map termOf (atomArgs h)) body (map (termSort sorts i) (atomArgs h))
+  Assert h body -> Goal i 1 (atomPred h) (map termOf (atomArgs h)) body (map (termSort sorts i) (atomArgs h))
   Rule {} -> Goal i 0 (-1) [] [] []
 
 termSort :: Sorts -> Int -> Term -> Integer

@@ -14,7 +14,6 @@ module CE.Similar.Rank.Cost (
   wUnit,
   chanWeight,
   wordChannel,
-  shapeChannel,
   channels,
   topM,
   minCooc,
@@ -60,9 +59,6 @@ chanWeight ch = case ch of
 -- query is widened through; the shape channel is P.
 wordChannel :: Integer -> Bool
 wordChannel ch = ch `elem` [0, 2, 3]
-
-shapeChannel :: Integer
-shapeChannel = 1
 
 -- | Neighbours appended per spelled word term; a neighbour counts only
 -- when it co-occurred in at least minCooc units, and only at or above

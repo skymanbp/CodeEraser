@@ -19,7 +19,7 @@
 -- new variables in term order, a `Var = …` binding its variable;
 -- `not`, comparisons and an aggregate's body bind nothing outward);
 -- an assertion's columns are its head's terms as written.
-module CE.Query.Front (Head (..), goals, lexedValue, located) where
+module CE.Query.Front (lexedValue, located) where
 
 import CE.Query.Cost (idbFloor, kindAnon, kindPred, kindSet, kindVar)
 import CE.Query.Lex (Fault (..), Lexed (..), Tok (..), referenced)

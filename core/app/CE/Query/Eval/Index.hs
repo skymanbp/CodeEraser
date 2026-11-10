@@ -5,7 +5,7 @@
 -- first time it is asked for and never again. Laziness is the memo:
 -- the index table is a spine of thunks, so a mask no join ever uses
 -- costs nothing.
-module CE.Query.Eval.Index (Indexed, Rel, Tuple, allTuples, indexed, lookupBound, size) where
+module CE.Query.Eval.Index (Indexed, Rel, Tuple, indexed, lookupBound) where
 
 import Data.Bits (shiftL, testBit)
 import qualified Data.IntMap as IM
@@ -40,9 +40,3 @@ lookupBound (Indexed rel idx) pat
  where
   mask = sum [1 `shiftL` i | (i, Just _) <- zip [0 :: Int ..] pat]
   key = [v | Just v <- pat]
-
-allTuples :: Indexed -> Rel
-allTuples (Indexed rel _) = rel
-
-size :: Indexed -> Int
-size = S.size . allTuples

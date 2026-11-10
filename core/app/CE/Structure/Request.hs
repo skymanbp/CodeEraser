@@ -19,7 +19,7 @@
 -- the reply echoes, the fault that replaces a judgment, the offence that
 -- refuses it. Test seam: Rust sends the path form only; the integer
 -- form stays as the props' differential seam (plan v2.33 step 11a, C26).
-module CE.Structure.Request (StructReq (..), PathForm (..), patternsOf, seamTables, pathOffence, pathFault, pathKeys) where
+module CE.Structure.Request (StructReq (..), patternsOf, seamTables, pathOffence, pathFault, pathKeys) where
 
 import CE.Structure.Raw (Built (..), Raw, buildRaw, parseRaw, rawOffence)
 import CE.Structure.Shape (foldShapes)
@@ -29,14 +29,10 @@ import Data.Aeson
 import qualified Data.Aeson.KeyMap as KM
 import Data.Aeson.Types (Pair, Parser)
 
--- | The path form as decoded: the tables built (or the fault naming a
--- path the tree cannot place), the offence refusing it, whether the
--- built tables ride back (`inspect`).
-data PathForm = PathForm
-  { pfBuilt :: Either String Built
-  , pfOffence :: Maybe String
-  , pfInspect :: Bool
-  }
+-- | The path form as decoded, in field order: the tables built (or
+-- the fault naming a path the tree cannot place), the offence
+-- refusing it, whether the built tables ride back (`inspect`).
+data PathForm = PathForm (Either String Built) (Maybe String) Bool
 
 data StructReq = StructReq
   { reqPath :: Maybe PathForm
@@ -150,7 +146,7 @@ fill req = case reqPath req of
 
 -- | The path form's refusal, when it rides and is refused.
 pathOffence :: StructReq -> Maybe String
-pathOffence req = reqPath req >>= pfOffence
+pathOffence req = reqPath req >>= \(PathForm _ offence _) -> offence
 
 -- | The path the tree could not place, answered instead of a judgment.
 pathFault :: StructReq -> Maybe String

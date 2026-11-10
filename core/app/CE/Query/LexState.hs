@@ -14,7 +14,6 @@ module CE.Query.LexState (
   peek,
   bump,
   bumpN,
-  isWs,
   skipSpace,
   nextSolid,
   push,

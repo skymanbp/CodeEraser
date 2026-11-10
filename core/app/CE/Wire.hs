@@ -30,7 +30,6 @@ module CE.Wire
   , pick
   , respondWith
   , rowsFamily
-  , tableCap
   , tabled
   , module CE.Wire.Result
   , module CE.Wire.Retired

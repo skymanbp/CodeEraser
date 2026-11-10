@@ -10,7 +10,7 @@
 module JoinProps (battery) where
 
 import CE.Verdict.Join
-import Data.Bits (testBit, xor, (.&.), (.|.))
+import Data.Bits (testBit, (.|.))
 import ReferenceFlowGen (lcgStep)
 
 battery :: IO Bool
@@ -18,7 +18,7 @@ battery = do
   a <- check "non-vacuous: all four verdict classes appear" allClasses
   b <- check "RG10 counterfactual: a public dead flank never deletes" rg10
   c <- check "legsMask honest: gated => 3 legs; graph-absent never gates" legsHonest
-  d <- check "dead knobs all live (clone/dup thresholds, cochange, rewrite, entryMask)" deadKnobs
+  d <- check "dead knobs all live (clone/dup thresholds, cochange, rewrite)" deadKnobs
   e <- check "priority: merge outranks hotspot when both hold" priority
   f <- check "reason bit 0 never fires (deliberately absent)" bitZeroSilent
   g <- check "reason ledger pinned on the delete and guard fixtures" ledgerPinned
@@ -51,8 +51,7 @@ mergeRow :: Legs
 mergeRow = Legs (1, kCloneNum bound, kCloneDen bound) (alive 1 0) (alive 2 1) (0, 0) (0, 0) Nothing
 
 -- | The delete-shape row by the dead flank's flag bits: 0 =
--- delete_candidate, 1 = public (the RG10 guard's fixture), 2 = test
--- entry (dead once the entryMask probe strips that bit). ONE
+-- delete_candidate, 1 = public (the RG10 guard's fixture). ONE
 -- constructor — the three sibling rows differed only here, and the
 -- repo's own ratchet caught the ladder when the ninth bite went
 -- looking for repayment (ADR-008 P1).
@@ -79,7 +78,6 @@ fixtures =
   [ mergeRow
   , deadFlankRow 0
   , deadFlankRow 1
-  , deadFlankRow 2
   , hotspotRow (Just (kCochangeFloor bound))
   , hotspotRow (Just (kCochangeFloor bound + 1))
   , bothRow
@@ -116,7 +114,7 @@ rowAt i =
         ( Pos
             { pIndeg = toInteger (s (n * 11) `mod` 3)
             , pReach = toInteger (s (n * 13) `mod` 2)
-            , pFlags = [0, 1, 2, 4] !! (s (n * 17) `mod` 4)
+            , pFlags = [0, 1] !! (s (n * 17) `mod` 2)
             , pScc = toInteger (s (n * 19) `mod` 3)
             }
         )
@@ -142,7 +140,7 @@ rg10 = not (null dels) && all blocked dels
       | deadish b a -> l {lGraphB = Just b {pFlags = pFlags b .|. 1}}
     _ -> l
   deadish x y =
-    pIndeg x == 0 && pReach x == 0 && (pFlags x .&. kEntryMask bound) == 0 && pIndeg y >= 1
+    pIndeg x == 0 && pReach x == 0 && pIndeg y >= 1
 
 legsHonest :: Bool
 legsHonest = all ok pop
@@ -166,7 +164,6 @@ deadKnobs =
     , census bound {kCochangeFloor = kCochangeFloor bound + 1}
     , census bound {kRewriteNum = kRewriteNum bound + 1}
     , census bound {kRewriteDen = kRewriteDen bound - 1}
-    , census bound {kEntryMask = kEntryMask bound `xor` 2}
     ]
  where
   base = census bound

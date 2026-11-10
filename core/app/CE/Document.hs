@@ -34,7 +34,7 @@
 -- hole filled (CE.Document.Bind, the family's rules in
 -- CE.Document.Spell), the tables that only measured a string (ranks,
 -- widths) measured here; one that does not is answered as before.
-module CE.Document (blankOf, catalogue, emptyOf, families, respond) where
+module CE.Document (catalogue, emptyOf, families, respond) where
 
 import qualified CE.Arch.Document as Arch
 import qualified CE.Arch.Lines as ArchLines

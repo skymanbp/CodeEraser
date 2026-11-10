@@ -117,5 +117,5 @@ joinFamily =
   , coch <- [Nothing, Just 1, Just 2]
   ]
  where
-  sides = Nothing : [Just (Pos i r f s) | i <- [0, 1], r <- [0, 1], f <- [0, 1, 2, 4], s <- [0, 1]]
+  sides = Nothing : [Just (Pos i r f s) | i <- [0, 1], r <- [0, 1], f <- [0, 1], s <- [0, 1]]
   churns = [(0, 0), (3, 1), (1, 3)]

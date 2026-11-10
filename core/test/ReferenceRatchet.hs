@@ -11,10 +11,9 @@
 -- mask are read.
 module ReferenceRatchet (RatchetOut, refConfidence, refJudge, refRatchet, refTolerated) where
 
-import CE.Graph.Cost (entryMask)
 import CE.Verdict.Join (Knobs (..), Legs (..), Pos (..))
 import CE.Verdict.Ratchet (RatchetKnobs (..))
-import Data.Bits (testBit, (.&.))
+import Data.Bits (testBit)
 import Data.List (nub, sort)
 import Data.Maybe (isJust)
 import Data.Ratio ((%))
@@ -83,7 +82,7 @@ conditions k l =
     | otherwise = num % den >= kCloneNum k % kCloneDen k
   graph = (,) <$> lGraphA l <*> lGraphB l
   flanks = maybe [] (\(a, b) -> [(a, b), (b, a)]) graph
-  dead x y = pIndeg x == 0 && pReach x == 0 && pFlags x .&. entryMask == 0 && pIndeg y > 0
+  dead x y = pIndeg x == 0 && pReach x == 0 && pIndeg y > 0
   (apA, rwA) = lChurnA l
   (apB, rwB) = lChurnB l
   total = apA + rwA + apB + rwB

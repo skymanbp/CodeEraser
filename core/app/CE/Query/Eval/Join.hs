@@ -7,7 +7,7 @@
 -- inner body's answers under the outer substitution. Every answer
 -- carries the positive atoms it read, instantiated — the provenance
 -- a proof tree is built from.
-module CE.Query.Eval.Join (Fact, Look, Subst, evalExpr, instantiate, joinBody, pattern) where
+module CE.Query.Eval.Join (Fact, Look, instantiate, joinBody) where
 
 import CE.Query.Cost (tokAdd, tokCount, tokDiv, tokEq, tokGe, tokGt, tokLe, tokLt, tokMax, tokMin, tokMod, tokMul, tokNe, tokSub)
 import CE.Query.Eval.Index (Indexed, Tuple, lookupBound)
