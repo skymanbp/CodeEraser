@@ -33,15 +33,12 @@ scratch/
 # CI; a local repro build must not leak binaries into the tree
 gui/src-tauri/binaries/
 
-# RCA -o joins outdir with the input's relative path; keep tool output out of fixtures
-contracts/fixtures/crosscheck/**/*.json
-
 # ce's own per-project index (ce dedup)
 .ce/
 
 # M4 evaluation-set payloads: full file contents from OTHER private
 # repositories (user decision 2026-08-10 — manifest in-repo, samples
-# local). Regenerable + hash-verifiable via tests/eval_extract.
+# local; the extraction instrument is retired, docs/EVAL-SET.md).
 /.ce-eval/
 
 # === Local credentials (NEVER versioned) ===

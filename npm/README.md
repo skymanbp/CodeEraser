@@ -7,7 +7,9 @@ Get the real thing:
 
 - **Prebuilt binaries & GUI installers** — <https://github.com/skymanbp/CodeEraser/releases>
   (verify against `SHA256SUMS`)
-- **Cargo** — `cargo install codeeraser` (binary name: `ce`)
+- **Cargo** — `cargo install codeeraser` (binary name: `ce`); every
+  measuring command also needs the `ce-core` judgment core beside it
+  (shipped in the release archives and installers, or built with GHC)
 - **Claude Code plugin** — marketplace `skymanbp/CodeEraser`, with
   SHA256-pinned binary bootstrap
 

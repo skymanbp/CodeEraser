@@ -2,8 +2,9 @@
 
 # Only the pinned THIRD-PARTY cross-check sources are exempt from this
 # repo's own standards — they are test data measured by the acceptance
-# harness. Everything else under contracts/ (hook capture script, docs,
-# goldens) is ce-authored and stays scanned (attack-review narrowing).
+# harness. Everything else under contracts/ (docs, goldens, frozen
+# evaluation records) is ce-authored and stays scanned (attack-review
+# narrowing).
 exclude = ["contracts/fixtures/crosscheck/**"]
 
 # Declared layout (M6 S3a, design booklet §2 row A): the weights are

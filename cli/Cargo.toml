@@ -89,9 +89,6 @@ strip = true
 
 [dev-dependencies]
 proptest = "1.11.0"
-# eval-set freeze manifest hashing (tests/eval_extract, M4 D2-1),
-# shared with the updater, citations and screenshot receipts
-sha2 = "0.11"
 
 [target."cfg(windows)".dependencies]
 windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Console", "Win32_System_IO"] }
