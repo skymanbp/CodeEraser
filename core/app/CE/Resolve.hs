@@ -63,6 +63,7 @@ import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
 import CE.Resolve.Rs (RsEnv (..), ctxFor, needAll, resolveRs)
 import CE.Resolve.Str (parentDir)
+import CE.Resolve.Tables (kindDynamic)
 import CE.Resolve.Ts (TsEnv (..), resolveTs)
 import CE.Resolve.TsConfig (package, tsExtendsFiles, tsOptions)
 import CE.Resolve.TsFacts (Fact, Facts, Need, facts, tomlOf, wantedRow)
@@ -96,6 +97,9 @@ judged proto rq = reply proto rq resolved body False
   cabals = M.fromList [(rel, Cabal.parse rel text) | (rel, text) <- rqHsCabals rq]
   pages = pageEnv w rq
   site s
+    -- a load whose target argument is no literal names no target: the
+    -- reserved refusal, before any ladder could read the argument's text
+    | sKind s == kindDynamic = AUnresolved Dynamic
     | sLang s == langPy = resolvePy w py from (sSpec s)
     | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
     | sLang s == langGo = resolveGo w gomods from (sSpec s)
@@ -141,7 +145,7 @@ alsoTable :: World -> Maybe PyProject -> ResolveReq -> [Answer] -> [(Int, String
 alsoTable w py rq answers =
   [ (i, t, r)
   | (i, s, a) <- zip3 [0 ..] (rqSites rq) answers
-  , sLang s == langPy
+  , sLang s == langPy && sKind s /= kindDynamic
   , (t, r) <- alsoPy w py (pathOf w (sFrom s), sSpec s, M.findWithDefault [] i named) a
   ]
  where
@@ -166,8 +170,9 @@ cHalf w rq = (parsed, env, index env founds)
     ]
   env = Env w (searchRoots "c" rq) (M.fromList (cIncludes c)) base
 
+-- | A TS / TSX site its ladder answers (a `dynamic` one never reaches it).
 isTs :: Site -> Bool
-isTs s = sLang s == langTs || sLang s == langTsx
+isTs s = (sLang s == langTs || sLang s == langTsx) && sKind s /= kindDynamic
 
 -- | The TS half of a request: each TS site's answer (Left: the facts it
 -- waits for), every `ts.chains` config's reached files, and the facts the

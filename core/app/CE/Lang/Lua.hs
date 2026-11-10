@@ -8,10 +8,12 @@ top :: String
 top =
   "name = 'lua'\n\
   \# The calls that open a site: a module by `require`, a file by\n\
-  \# `dofile` / `loadfile`.\n\
+  \# `dofile` / `loadfile`; an argument that is no literal\n\
+  \# (`require(prefix .. name)`) names no target and opens a `dynamic`\n\
+  \# site, which the resolve family refuses as dynamic.\n\
   \calls = [\n\
-  \  {label = 'require', callees = ['require'], package = '', unquoted = null},\n\
-  \  {label = 'load', callees = ['dofile', 'loadfile'], package = '', unquoted = null},\n\
+  \  {label = 'require', callees = ['require'], package = '', unquoted = null, computed = 'dynamic'},\n\
+  \  {label = 'load', callees = ['dofile', 'loadfile'], package = '', unquoted = null, computed = 'dynamic'},\n\
   \]\n\
   \# The protected-call wrappers, each with the count of arguments\n\
   \# before the protected function's own.\n\

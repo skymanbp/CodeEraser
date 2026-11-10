@@ -10,8 +10,8 @@ module ResolveProps (battery) where
 
 import CE.Resolve (respond)
 import CE.Resolve.Contract (overCap, requestSize)
-import CE.Resolve.Cost (Reason (..), langHtml, langMd, langPy, resolveCap)
-import CE.Resolve.Tables (kindRefLink)
+import CE.Resolve.Cost (Reason (..), langHtml, langLua, langMd, langPy, langR, langTs, resolveCap)
+import CE.Resolve.Tables (kindDynamic, kindRefLink)
 import CE.Resolve.Request (CReq (..), ResolveReq (..), Site (..))
 import Data.Aeson (Value (..), decodeStrict, encode, object, toJSON, (.=))
 import qualified Data.Aeson.KeyMap as KM
@@ -41,6 +41,7 @@ battery = runLegs names probes
     , "resolve: an HTML site without its page's document is refused"
     , "resolve: a document of a file not of the request or not HTML is refused"
     , "resolve: the cap counts the request's text"
+    , "resolve: a dynamic site is refused as dynamic though its spec names a walked file, and draws no also row"
     ]
   probes =
     [ all reversible (take 40 cases)
@@ -58,6 +59,7 @@ battery = runLegs names probes
     , siteRefused langHtml 0 0 "an HTML site without its file's document"
     , refused (setKey "html" (object ["docs" .= [toJSON [toJSON firstFile, Null, Null, Null, Null, toJSON ([] :: [Value]), toJSON ([] :: [Value])]]]) base) "html.docs 0: not an HTML file of the request"
     , capLeg
+    , dynamicRefused
     ]
   base = request firstCase
   -- one site `[lang, kind, file, "x"]` in place of the base request's sites
@@ -123,3 +125,14 @@ capLeg = requestSize (req []) == resolveCap && not (overCap (req [])) && overCap
  where
   spec = replicate (2 ^ (14 :: Int) - 1) 'a'
   req files = ResolveReq (Number 1) files [] (replicate (2 ^ (14 :: Int)) (Site langPy 0 0 spec Nothing)) M.empty Nothing [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] (CReq "" [] [] [] [] []) Nothing
+
+-- | A `dynamic` site (lane v235_graphtrust: a load call whose target
+-- argument is no literal) in each language that opens one: refused as
+-- dynamic before any ladder reads its spec — which here names a walked
+-- file the language's own rung would answer — with no `also` row.
+dynamicRefused :: Bool
+dynamicRefused = all one [(langPy, "m.py", "x.py", "x"), (langLua, "m.lua", "x.lua", "x"), (langR, "m.R", "x.R", "x.R"), (langTs, "m.ts", "x.ts", "./x")]
+ where
+  one (lang, from, target, spec) =
+    let v = askCore (siteRequest lang [from, target] [(kindDynamic, from, spec)] (const []))
+     in (v >>= answers) == Just [RUnres Dynamic] && (v >>= replyKey "also") == Just ([] :: [(Int, String, Int)])

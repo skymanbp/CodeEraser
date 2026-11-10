@@ -1823,7 +1823,7 @@
       "path": "packages/zod/src/v4/classic/tests/hash.test.ts",
       "sha256": "14633fa651f6bbdd23ef23a8ce4c4520c3981f7462980f8b8cef8ee5fdc85ef5",
       "sites": {
-        "import": 2
+        "import": 3
       }
     },
     {
@@ -3158,8 +3158,8 @@
       "md/ref_def": 10,
       "md/ref_link": 10,
       "ts/export_from": 118,
-      "ts/import": 884
+      "ts/import": 885
     },
-    "total_sites": 1680
+    "total_sites": 1681
   }
 }

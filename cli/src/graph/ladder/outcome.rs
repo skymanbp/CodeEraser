@@ -7,10 +7,10 @@
 /// every edge — ammunition for the per-level cut table.
 pub type Rung = u8;
 
-/// Unresolved reasons — the frozen design §4 vocabulary. `Dynamic`
-/// and `Macro` stay structurally empty so far: the site detector
-/// never opens dynamic imports or macro output (py.rs / rs.rs module
-/// headers state each mechanism).
+/// Unresolved reasons — the frozen design §4 vocabulary. `Dynamic` is
+/// a load call whose target argument is no literal (the `dynamic` site
+/// kind, graph/sites/call.rs, lane v235_graphtrust); `Macro` stays
+/// structurally empty — the site detector never opens macro output.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Reason {
     Dynamic,

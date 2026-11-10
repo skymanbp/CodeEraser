@@ -6,9 +6,14 @@
 //! as one of a row's names (graph/spec/calls.rs CallSite) — bare, or
 //! qualified by the row's package (`base::source("x.R")`, plan v2.30
 //! step 5b; the `base::` opens its own `library` site beside it) — and
-//! the argument naming the target is literal text: a computed argument
-//! (`require(prefix .. name)`) holds no target in the text, so it opens
-//! no site — naming what it would load is a guess (the ladder's rule).
+//! the argument naming the target is literal text. A computed argument
+//! (`require(prefix .. name)`) holds no target in the text — naming what
+//! it would load is a guess (the ladder's rule) — so it opens a site of
+//! the row's `computed` kind instead (`dynamic`, lane v235_graphtrust):
+//! the resolve family refuses it as dynamic, and the unresolved ledger
+//! keeps the language from vouching for a file only such a call reaches.
+//! Python's `importlib.import_module` / `__import__` and TypeScript's
+//! `require` / `import(…)` read the same way beside their statements.
 //! A protected call is the call it protects: Lua's `pcall(require,
 //! "a.b")` loads `a.b` (CE.Lang.Lua `protected`, the package's
 //! `calls.protected`).
@@ -35,7 +40,8 @@ use tree_sitter::Node;
 /// the callee reads one unevaluated (`unquoted` is Some: R's
 /// `library(pkg)`) and the call does not pass that flag as anything but
 /// a literal `FALSE` (`library(p, character.only = TRUE)` loads whatever
-/// `p` holds).
+/// `p` holds). Any other argument opens the row's `computed` site, its
+/// spec the argument's first line, or none when the row names no kind.
 pub(super) fn site<'t>(
     node: Node<'t>,
     src: &[u8],
@@ -57,9 +63,11 @@ pub(super) fn site<'t>(
         .find(|r| r.callees.contains(&name) && package.is_none_or(|p| p == r.package))?;
     let formals = formals(name);
     let value = target_arg(args, formals, src)?;
-    let text = literal(value, reads_names(args, row, formals, src), src)?;
-    let spec = text.split('\n').next().unwrap_or("").to_string();
-    Some((row.label, value, spec))
+    let first = |text: &str| text.split('\n').next().unwrap_or("").to_string();
+    match literal(value, reads_names(args, row, formals, src), src) {
+        Some(text) => Some((row.label, value, first(text))),
+        None => Some((row.computed?, value, first(value.utf8_text(src).ok()?).trim().to_string())),
+    }
 }
 
 /// The argument naming the target, unwrapped to its value: the one
@@ -84,37 +92,60 @@ fn target_arg<'t>(args: &[Node<'t>], formals: &[&str], src: &[u8]) -> Option<Nod
 /// call reads names (`reads_name`); any other shape names no target.
 fn literal<'a>(value: Node<'_>, reads_name: bool, src: &'a [u8]) -> Option<&'a str> {
     match value.kind() {
-        "string" => value
-            .child_by_field_name("content")
-            .map_or(Some(""), |c| c.utf8_text(src).ok()),
+        "string" => content(value, src),
         "identifier" if reads_name => value.utf8_text(src).ok(),
+        _ => None,
+    }
+}
+
+/// A string literal's content: its `content` field (Lua, R), else what
+/// sits between the delimiters a grammar spells as children of their own
+/// (Python's `string_start` / `string_end`, TypeScript's quotes) — none
+/// is `""`, one leaf is its text, and anything else (an interpolation, an
+/// escape beside the text) is no literal.
+fn content<'a>(value: Node<'_>, src: &'a [u8]) -> Option<&'a str> {
+    if let Some(c) = value.child_by_field_name("content") {
+        return c.utf8_text(src).ok();
+    }
+    let kids = ast::children(value);
+    match kids.get(1..kids.len().saturating_sub(1)).unwrap_or(&[]) {
+        [] => Some(""),
+        [leaf] if leaf.named_child_count() == 0 => leaf.utf8_text(src).ok(),
         _ => None,
     }
 }
 
 /// A callee's package qualifier and bare name: a node of the kinds the
 /// recursion arcs read (LangSpec::call_name_kinds) is an unqualified
-/// name; R's `pkg::name` — a namespace_operator over two identifiers —
-/// is `name` under `pkg`. Any other shape (`m.require`, `f()()`) names
-/// no row.
+/// name, and so is a keyword the grammar spells as a node of its own
+/// kind (TypeScript's `import(…)`); a member of the kinds those arcs
+/// read (LangSpec::call_member_kinds) over two such names — R's
+/// `pkg::name`, Python's `importlib.import_module` — is the member under
+/// the object. The row's `package` then decides: `m.require` names no
+/// row whose package is not `m`. Any other shape (`f()()`) names none.
 fn callee<'a>(
     callee: Node<'_>,
     grammar: &LangSpec,
     src: &'a [u8],
 ) -> Option<(Option<&'a str>, &'a str)> {
-    if grammar.call_name_kinds.contains(&callee.kind()) {
-        return Some((None, callee.utf8_text(src).ok()?));
+    let text = callee.utf8_text(src).ok()?;
+    if grammar.call_name_kinds.contains(&callee.kind()) || callee.kind() == text {
+        return Some((None, text));
     }
-    if callee.kind() != "namespace_operator" {
+    if !grammar.call_member_kinds.contains(&callee.kind()) {
         return None;
     }
-    let side = |field: &str| -> Option<&'a str> {
-        let node = callee.child_by_field_name(field)?;
-        (node.kind() == "identifier")
+    let kids = ast::named_children(callee);
+    let word = |node: &Node<'_>| -> Option<&'a str> {
+        grammar
+            .call_name_kinds
+            .contains(&node.kind())
             .then(|| node.utf8_text(src).ok())
             .flatten()
     };
-    Some((Some(side("lhs")?), side("rhs")?))
+    let (object, member) = (kids.first()?, kids.last()?);
+    (object.id() != member.id()).then_some(())?;
+    Some((Some(word(object)?), word(member)?))
 }
 
 /// A call's callee name and arguments, a protected call's being those

@@ -134,6 +134,12 @@ pub use crate::graph::owed::{Resolved, each};
 /// edges (`edges.also` = 1; the core's CE.Resolve.PyAlso) — new columns
 /// and new stored edges, so every site is re-detected and every edge
 /// re-resolved once.
+/// 25 = a load call whose target argument is no literal opens a site of
+/// the new `dynamic` kind (refused as dynamic, so it holds its language
+/// unvouched), Python's `import_module` / `__import__` and TypeScript's
+/// `require` / `import(…)` open sites, and a callee qualified by a
+/// member of the grammar's member kinds reads its package (lane
+/// v235_graphtrust) — new stored sites, every site re-detected once.
 /// 18 = plan v2.30 step 5b's second sub-batch moves stored rows again:
 /// a brace-only Rust `use {a, b};` opens one site per entry, a Haskell
 /// PackageImports import keeps its package in the spec, a qualified R
@@ -162,7 +168,7 @@ pub use crate::graph::owed::{Resolved, each};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 24;
+pub const GRAPH_REV: i64 = 25;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:

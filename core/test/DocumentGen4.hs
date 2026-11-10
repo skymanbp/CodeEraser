@@ -178,7 +178,7 @@ sites = do
   let fs = [0 .. toInteger nf - 1]
   langs <- forM fs (\f -> (\i -> [f, judgedCodes !! i]) <$> rand (length judgedCodes))
   places <- ranks nf
-  per <- forM fs (\f -> rand 4 >>= \n -> replicateM n ((\k l o -> (f, k, l + 1, o)) <$> num 23 <*> num 200 <*> num 2))
+  per <- forM fs (\f -> rand 4 >>= \n -> replicateM n ((\k l o -> (f, k, l + 1, o)) <$> num 24 <*> num 200 <*> num 2))
   let rows' = [[i, f, k, l, nth, o] | (i, (nth, (f, k, l, o))) <- zip [0 ..] (concatMap (zip [0 ..]) per)]
   pure $
     docRequest

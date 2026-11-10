@@ -17,6 +17,12 @@ top =
   \  # the star form first: a re-export target is the mounts table's bit 0\n\
   \  {node = 'export_statement', label = 'export_star', via = {form = 'field_if_star', arg = 'source'}},\n\
   \  {node = 'export_statement', label = 'export_from', via = {form = 'field', arg = 'source'}},\n\
+  \]\n\
+  \# CommonJS `require(…)` and the dynamic `import(…)` load a module by\n\
+  \# an argument: a literal one is an import of that specifier, any\n\
+  \# other names no target and opens a `dynamic` site.\n\
+  \calls = [\n\
+  \  {label = 'import', callees = ['require', 'import'], package = '', unquoted = null, computed = 'dynamic'},\n\
   \]\n"
 
 scan :: String

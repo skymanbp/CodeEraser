@@ -153,7 +153,7 @@ refusals = and (zipWith (refusedBy respond) cases wanted)
     , "candidates 0: column 2 is not a code 0..3"
     , "dead 0: column 1 is not a code 1..4"
     , "rates 0: no language 99"
-    , "sites 0: column 2 is not a code 0..22"
+    , "sites 0: column 2 is not a code 0..23"
     , "graph 0: column 1 is not a code 0..2"
     ]
 
@@ -161,7 +161,7 @@ catalogued :: Bool
 catalogued =
   all (\f -> path [dfName f, "schema"] catalogue == Just (toJSON (dfSchema f))) seven
     && objectKeys catalogue == 22
-    && fmap (\ks -> length ks == 23 && nub ks == ks) (path ["store", "site_kinds"] pack >>= asList) == Just True
+    && fmap (\ks -> length ks == 24 && nub ks == ks) (path ["store", "site_kinds"] pack >>= asList) == Just True
     && (path ["check", "failed"] catalogue >>= asList) == Just failNames
     && all (\f -> (path [f, "reasons"] catalogue >>= asList) == Just coreReasons) (words "check join deadcode graphscreen")
  where

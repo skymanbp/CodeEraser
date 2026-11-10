@@ -158,8 +158,10 @@ instance FromJSON SiteKind where
    where
     names = withObject "names" $ \n -> (,) <$> n .: "field" <*> n .: "inner"
 
--- | A call naming its target by an argument (Lua, R).
-data CallSite = CallSite {csLabel, csPackage :: String, csCallees :: Kinds, csUnquoted :: Maybe String}
+-- | A call naming its target by an argument (Lua, R, Python, TypeScript);
+-- `computed` is the label of the site the call opens when that argument
+-- is no literal (absent: such a call opens none).
+data CallSite = CallSite {csLabel, csPackage :: String, csCallees :: Kinds, csUnquoted, csComputed :: Maybe String}
   deriving stock (Eq, Generic)
   deriving (Blank, FromJSON, ToJSON) via Row 2 CallSite
 

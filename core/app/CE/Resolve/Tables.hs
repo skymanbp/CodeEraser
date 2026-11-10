@@ -28,6 +28,7 @@ module CE.Resolve.Tables (
   skipFlags,
   kindRequire,
   kindLoad,
+  kindDynamic,
   kindSource,
   kindLibrary,
   kindImport,
@@ -107,10 +108,12 @@ packAt path = either refuse id (parseEither parseJSON =<< walk path pack)
 -- | The storage codes of the two Lua site kinds, the two R ones, the
 -- three Java ones, Python's `import_from` (the one kind carrying
 -- names), the two Rust ones, the five Markdown ones and the two HTML
--- ones whose empty specifier lands the page (`store.site_kinds`).
-kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportFrom, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl, kindHref, kindAction :: Integer
+-- ones whose empty specifier lands the page, and the load call whose
+-- target argument is no literal (`store.site_kinds`).
+kindRequire, kindLoad, kindDynamic, kindSource, kindLibrary, kindImport, kindImportFrom, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl, kindHref, kindAction :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
+kindDynamic = kindCode "dynamic"
 kindSource = kindCode "source"
 kindLibrary = kindCode "library"
 kindImport = kindCode "import"

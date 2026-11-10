@@ -12,11 +12,12 @@ store =
   \# Frozen site-kind storage codes: a kind's code is its position in\n\
   \# this table. Appending is cheap; renaming or reordering is a\n\
   \# GRAPH_REV bump, because the index stores kinds as positions. The\n\
-  \# sites document names each site's kind from this table.\n\
+  \# sites document names each site's kind from this table. `dynamic` is\n\
+  \# a load call whose target argument is no literal (a row's `computed`).\n\
   \site_kinds = [\n\
   \  'import', 'import_from', 'export_from', 'use', 'mod_decl', 'link', 'image', 'ref_link',\n\
   \  'ref_def', 'url', 'export_star', 'include', 'import_star', 'type_ref', 'require', 'load',\n\
-  \  'source', 'library', 'href', 'src', 'srcset', 'action', 'link_asset',\n\
+  \  'source', 'library', 'href', 'src', 'srcset', 'action', 'link_asset', 'dynamic',\n\
   \]\n"
 
 fourclass :: String

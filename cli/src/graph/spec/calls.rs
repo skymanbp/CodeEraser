@@ -2,7 +2,9 @@
 //! is graph/sites/call.rs): Lua loads a module by `require` and runs a
 //! file by `dofile` / `loadfile`, R sources a file by `source` and
 //! attaches a package by the `library` family — neither language has an
-//! import statement. Housed beside the node-kind tables of graph/spec.rs
+//! import statement — and Python's `importlib.import_module` /
+//! `__import__` and TypeScript's `require` / `import(…)` load a module by
+//! an argument beside their import statements. Housed beside the node-kind tables of graph/spec.rs
 //! and split out of it on the file-length line (plan v2.30 step 5b).
 
 use crate::scan::lang::Lang;
@@ -21,15 +23,19 @@ leaked! {
 /// exactly, or as a prefix no other formal shares (graph/sites/call.rs)
 /// — and a Lua call passes none, so the first unnamed argument is the
 /// target. That argument must be a string literal, or an identifier
-/// where the callee reads one unevaluated. The rows are the core's
-/// since plan v2.32 step 2 (each language's `calls`, its `protected`
-/// wrappers and R's formals, in CE.Lang.<Language> and CE.Lang.Common),
-/// read off `tables/1` (crate::tables).
+/// where the callee reads one unevaluated; an argument that is neither
+/// opens a site under `computed` (the `dynamic` kind, which the resolve
+/// family refuses as dynamic — lane v235_graphtrust) or, absent, none.
+/// The rows are the core's since plan v2.32 step 2 (each language's
+/// `calls`, its `protected` wrappers and R's formals, in
+/// CE.Lang.<Language> and CE.Lang.Common), read off `tables/1`
+/// (crate::tables).
     pub struct CallSite {
         pub label: &'static str,
         pub callees: &'static [&'static str],
         pub package: &'static str,
         pub unquoted: Option<&'static str>,
+        pub computed: Option<&'static str>,
     }
 }
 

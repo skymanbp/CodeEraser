@@ -12,8 +12,8 @@
 -- Within one root the package/module order is normative (CPython's
 -- FileFinder checks directories before same-named modules), so a double
 -- hit inside a root is not ambiguity — only cross-root disagreement is.
--- `importlib(var)` / `__import__` dynamism never reaches this ladder:
--- the site detector only opens import statements.
+-- A computed `import_module(x)` / `__import__(x)` never reaches this
+-- ladder (its `dynamic` site is refused first); a literal one does.
 module CE.Resolve.Py (resolvePy, PyProject (..), pyproject, moduleAt, packages, relativeFrame, sourceRoots) where
 
 import CE.Resolve.Answer

@@ -13,11 +13,13 @@ top =
   \]\n\
   \# The calls that open a site: a file by `source`, a package by the\n\
   \# `library` family; `library` and `require` read a bare name unless\n\
-  \# the call passes `character.only`.\n\
+  \# the call passes `character.only`. A target argument that is no\n\
+  \# literal (`source(file.path(…))`, `library(p, character.only =\n\
+  \# TRUE)`) names no target and opens a `dynamic` site.\n\
   \calls = [\n\
-  \  {label = 'source', callees = ['source', 'sys.source'], package = 'base', unquoted = null},\n\
-  \  {label = 'library', callees = ['library', 'require'], package = 'base', unquoted = 'character.only'},\n\
-  \  {label = 'library', callees = ['requireNamespace', 'loadNamespace'], package = 'base', unquoted = null},\n\
+  \  {label = 'source', callees = ['source', 'sys.source'], package = 'base', unquoted = null, computed = 'dynamic'},\n\
+  \  {label = 'library', callees = ['library', 'require'], package = 'base', unquoted = 'character.only', computed = 'dynamic'},\n\
+  \  {label = 'library', callees = ['requireNamespace', 'loadNamespace'], package = 'base', unquoted = null, computed = 'dynamic'},\n\
   \]\n"
 
 scan :: String

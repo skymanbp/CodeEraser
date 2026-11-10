@@ -22,6 +22,13 @@ top =
   \  {node = 'import_from_statement', label = 'import_from', via = {form = 'field', arg = 'module_name'}, names = {field = 'name', inner = 'name'}},\n\
   \  # `from __future__ import` has no module field: the site names it\n\
   \  {node = 'future_import_statement', label = 'import_from', via = {form = 'literal', arg = '__future__'}},\n\
+  \]\n\
+  \# The calls that import a module by name: `importlib.import_module`\n\
+  \# and the builtin `__import__` (bare, or qualified by `importlib`). A\n\
+  \# literal name is an absolute import like `import a.b`; any other\n\
+  \# argument names no target and opens a `dynamic` site.\n\
+  \calls = [\n\
+  \  {label = 'import', callees = ['import_module', '__import__'], package = 'importlib', unquoted = null, computed = 'dynamic'},\n\
   \]\n"
 
 scan :: String
