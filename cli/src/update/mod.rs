@@ -97,14 +97,25 @@ pub fn applies_here(action: u64) -> bool {
 
 fn verdict(latest: &anyhow::Result<String>, pins: Option<&manifest::Pins>) -> u8 {
     match (latest, pins) {
-        (Ok(tag), Some(_)) => {
-            let newer =
-                version::parse(&version::of_tag(tag)) > version::parse(env!("CARGO_PKG_VERSION"));
-            u8::from(newer)
-        }
+        (Ok(tag), Some(_)) => newer(tag, env!("CARGO_PKG_VERSION")),
         // a tag with no readable manifest, or no tag at all: the
         // apply leg could place nothing, so the verdict must not
         // promise it
+        _ => 2,
+    }
+}
+
+/// 1 when the release tag names a newer version than `current`, 0
+/// when it does not, and 2 when either does not read as a release
+/// version (v2.35 G7, R3-12): `v2.0.0-hotfix` parsed to None, and
+/// `None > Some(_)` is false — an unreadable tag answered "up to
+/// date", the one verdict that tells the operator nothing is wrong.
+pub(crate) fn newer(tag: &str, current: &str) -> u8 {
+    match (
+        version::parse(&version::of_tag(tag)),
+        version::parse(current),
+    ) {
+        (Some(latest), Some(here)) => u8::from(latest > here),
         _ => 2,
     }
 }
@@ -194,3 +205,7 @@ pub fn action_words(code: i64) -> String {
         &[],
     )
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/update/verdict.rs"]
+mod tests;

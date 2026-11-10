@@ -263,7 +263,8 @@ pub(crate) enum Cmd {
     /// Check for a newer release (exit 0 current / 1 available / 2
     /// unknown); --yes replaces ce and ce-core in place, verified
     /// against the release commit's own SHA256 pins — never a copy
-    /// the plugin or cargo owns (those name their own update)
+    /// the plugin or cargo owns (those name their own update); with
+    /// --yes: exit 0 updated or already current, 2 nothing placed
     Update {
         /// Download and place the verified binaries (default: report only)
         #[arg(long)]
@@ -278,6 +279,11 @@ pub(crate) enum Cmd {
     /// Wire this machine's Claude Code to the plugin (register the
     /// marketplace at its `release` ref, install) and say whether this
     /// binary's directory is on PATH; the installers call it, AppImage
-    /// / dmg users run it once; --unwire removes only what it added
+    /// / dmg users run it once; --unwire removes only what it added.
+    /// Exit 0 wired (a marker that could not be written is said on the
+    /// same line) or unwired · 5 already registered, kept and refreshed
+    /// · 10 no Claude Code · 11 marketplace add failed · 12 install
+    /// failed, or with --unwire a removal failed · 13 the elevated
+    /// account is not the logged-in user (nothing done)
     Setup(SetupArgs),
 }

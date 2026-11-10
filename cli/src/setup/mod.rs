@@ -247,6 +247,15 @@ fn verdict_line(r: &Report) -> String {
             "Claude Code 位于 {}——marketplace {} 已注册（保留）；{} 已安装并刷新——重启 Claude Code 会话即生效",
             &[&s("claude"), &market, &target],
         ),
+        // the marker is what `--unwire` and the uninstaller key on: a
+        // wiring whose marker did not land is said so on the same line
+        // (v2.35 G7, R3-12). Not an exit code of its own — the plugin IS
+        // wired, and hooks.nsh reads every code but 0 and 5 as "not wired"
+        (false, Exit::Wired) if !err.is_empty() => line(
+            "Claude Code at {} — plugin wired: marketplace {} registered, {} installed — restart Claude Code sessions to activate; but {}, so `ce setup --unwire` and the uninstaller will leave this wiring in place (remove it with: claude plugin uninstall {}, then claude plugin marketplace remove {})",
+            "Claude Code 位于 {}——插件已接线：marketplace {} 已注册，{} 已安装——重启 Claude Code 会话即生效；但 {}，故 `ce setup --unwire` 与卸载程序不会拆掉这次接线（自行拆除：claude plugin uninstall {}，再 claude plugin marketplace remove {}）",
+            &[&s("claude"), &source, &target, &err, &target, &market],
+        ),
         (false, Exit::Wired) => line(
             "Claude Code at {} — plugin wired: marketplace {} registered, {} installed — restart Claude Code sessions to activate",
             "Claude Code 位于 {}——插件已接线：marketplace {} 已注册，{} 已安装——重启 Claude Code 会话即生效",

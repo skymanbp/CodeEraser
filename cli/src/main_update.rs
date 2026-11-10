@@ -10,7 +10,10 @@ use std::process::ExitCode;
 
 pub fn update_cmd(yes: bool, installer: bool, format: OutFormat) -> ExitCode {
     let doc = codeeraser::faces::update_check();
-    if !yes {
+    // an install that is already current has nothing to apply: `--yes`
+    // answers the check, exit 0 (v2.35 G7, R3-11 — it bailed through
+    // the apply leg into exit 2, the code the check gives "unknown")
+    if !yes || doc["verdict"].as_u64() == Some(0) {
         return report(&doc, json(format));
     }
     match update::apply::run(&doc, installer) {
