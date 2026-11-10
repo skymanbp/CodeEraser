@@ -275,9 +275,13 @@ fn unmeasured_stop(root: &Path, session: &str, skipped: Option<&str>) {
 /// M4 four-class summary of the session's working-tree diff via the
 /// daemon-owned ce-core link. INFORMATIONAL: no tier reads it, and a
 /// promotion is argued from the changeset ledger (R-L2-4, replayed
-/// through Judge::judge_changeset — docs/FPR-L2.md), never assumed;
-/// `request_if_running` because a Stop must not pay a daemon spawn —
-/// cold = a visible degraded field, not latency.
+/// through Judge::judge_changeset — docs/FPR-L2.md), never assumed.
+///
+/// A cold daemon is started the way the PreToolUse probe starts it
+/// (v2.35 G4, P-A2): `request_if_running` read `daemon_unavailable` on
+/// every Stop of a session with no write before it, while the line's
+/// top-level bit said healthy. Lifting this informational leg into
+/// that bit instead would mark every such Stop's dedup degraded.
 fn fourclass_report(root: &Path) -> serde_json::Value {
     use crate::daemon::{client, proto::Request, proto::Response};
     let Some(pairs) = crate::fourclass::session::head_pairs(root) else {
@@ -286,7 +290,7 @@ fn fourclass_report(root: &Path) -> serde_json::Value {
     if pairs.is_empty() {
         return serde_json::json!({"degraded": null, "relocations": []});
     }
-    match client::request_if_running(root, &Request::FourClass { pairs }) {
+    match client::request(root, &Request::FourClass { pairs }) {
         Ok(Response::FourClassReport { report }) => report,
         _ => serde_json::json!({"degraded": "daemon_unavailable"}),
     }

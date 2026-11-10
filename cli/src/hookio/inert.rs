@@ -28,8 +28,10 @@ pub fn gate<T: serde::de::DeserializeOwned>(
     event: &str,
     base: impl Fn(&T) -> (&str, &str),
 ) -> Gate<T> {
-    let Some(raw) = super::read_envelope::<Value>() else {
-        return Gate::Shut;
+    let raw = match super::read_envelope::<Value>() {
+        Ok(raw) => raw,
+        Err(super::Intake::Refused(why)) => return untraced(event, &why),
+        Err(super::Intake::Ignored) => return Gate::Shut,
     };
     let Ok(env) = T::deserialize(&raw) else {
         return Gate::Shut;
@@ -37,6 +39,14 @@ pub fn gate<T: serde::de::DeserializeOwned>(
     let (got, cwd) = base(&env);
     if got != event || cwd.is_empty() {
         return Gate::Shut;
+    }
+    // a POSIX-form cwd on Windows (`/d/x`) names no directory here: the
+    // ascent fell to an unanchored path and the hook went quiet with no
+    // trace (v2.35 G4, P-A3). Claude Code sends the native form; any
+    // other sender is told, through the feed of the project it runs in
+    if cfg!(windows) && cwd.starts_with('/') {
+        let why = format!("hook envelope cwd `{cwd}` is not a Windows path — not judged");
+        return untraced(event, &why);
     }
     let root = super::project_root(cwd);
     if !crate::root::is_anchored(&root) {
@@ -62,6 +72,20 @@ const EVENTS: [(&str, &str); 4] = [
     ("Stop", "stop_audit"),
     ("SessionStart", "health"),
 ];
+
+/// A hook call refused before its envelope named a project: the trace
+/// goes to the project the hook process runs in (Claude Code starts
+/// hooks in the session's directory), or nowhere when that is no
+/// project — the same rule an unanchored envelope cwd keeps.
+fn untraced<T>(event: &str, why: &str) -> Gate<T> {
+    let root = std::env::current_dir().map(|here| crate::root::project_root(&here));
+    if let Ok(root) = root
+        && crate::root::is_anchored(&root)
+    {
+        trace(event, &root, &Value::Null, why);
+    }
+    Gate::Shut
+}
 
 /// The inert hook's trace: the refusal on stderr and one feed line.
 fn trace(event: &str, root: &Path, raw: &Value, why: &str) {

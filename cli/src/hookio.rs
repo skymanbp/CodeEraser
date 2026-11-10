@@ -139,26 +139,37 @@ pub fn gated_envelope<T: serde::de::DeserializeOwned>(
     }
 }
 
+/// Why an envelope did not reach its hook. Unreadable or unparseable
+/// stdin is not a hook call at all; an envelope over the cap IS one —
+/// the largest Writes — and the hook passes it untraced no more
+/// (v2.35 G4, R3-13): the refusal is named and the gate writes it to
+/// the feed (inert.rs). Both keep the fail-open exit 0.
+pub(crate) enum Intake {
+    Ignored,
+    Refused(String),
+}
+
 /// Read the hook envelope from stdin and deserialize it.
-/// None = unreadable stdin, over-cap payload, or unparseable JSON —
-/// the caller treats that as "not for me" and exits 0 (fail-open).
-pub fn read_envelope<T: serde::de::DeserializeOwned>() -> Option<T> {
+pub(crate) fn read_envelope<T: serde::de::DeserializeOwned>() -> Result<T, Intake> {
     parse_envelope(std::io::stdin().lock())
 }
 
 /// The bounded intake, split off only so a test can hand it an
-/// over-cap reader. Over cap takes the existing fail-open None, never
-/// a truncated parse: a hook that cannot see the whole envelope must
-/// not judge on a prefix of it.
-fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Option<T> {
+/// over-cap reader. Over cap is a named refusal, never a truncated
+/// parse: a hook that cannot see the whole envelope must not judge on
+/// a prefix of it.
+fn parse_envelope<T: serde::de::DeserializeOwned>(src: impl std::io::Read) -> Result<T, Intake> {
     use std::io::Read as _;
     let mut raw = Vec::new();
     // cap + 1: reading one byte past tells us it was truncated
-    src.take(ENVELOPE_CAP + 1).read_to_end(&mut raw).ok()?;
+    src.take(ENVELOPE_CAP + 1)
+        .read_to_end(&mut raw)
+        .map_err(|_| Intake::Ignored)?;
     if raw.len() as u64 > ENVELOPE_CAP {
-        return None;
+        let why = format!("hook envelope over the {ENVELOPE_CAP}-byte cap — not judged");
+        return Err(Intake::Refused(why));
     }
-    serde_json::from_slice(&raw).ok()
+    serde_json::from_slice(&raw).map_err(|_| Intake::Ignored)
 }
 
 /// The observe feed, root-relative: the one spelling every reader and

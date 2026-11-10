@@ -143,9 +143,20 @@ pub(crate) fn index_words((state, files): (i64, Option<i64>)) -> String {
 /// one `ce doctor` could not see. Scanning nested objects instead of
 /// naming `fourclass` covers the next producer too: choosing which
 /// keys to look at is how the hole opened.
+///
+/// A stamp is any `degraded` that is neither absent, null nor `false`
+/// (v2.35 G4, R3-1): every nested producer stamps its REASON as a
+/// string (`"daemon_unavailable"`, `"no_git"`, the core's refusal), and
+/// a counter that took only `true` counted none of them. The tombstone
+/// leg stamps two levels down, `tombstone.judged.degraded`, named here
+/// because its object holds the verdict beside the reason.
 fn line_degraded(line: &serde_json::Value) -> bool {
-    let flag = |v: &serde_json::Value| v["degraded"] == serde_json::Value::Bool(true);
+    let flag = |v: &serde_json::Value| {
+        v.get("degraded")
+            .is_some_and(|d| !d.is_null() && *d != serde_json::Value::Bool(false))
+    };
     flag(line)
+        || flag(&line["tombstone"]["judged"])
         || line
             .as_object()
             .is_some_and(|o| o.values().any(|v| v.is_object() && flag(v)))

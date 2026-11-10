@@ -178,6 +178,7 @@ index.db（schema v12），失效键按原设计钉 = files 表逐文件 content
 |---|---|---|---|
 | `ce audit --hook` e2e 暖 / 冷 | median <1.5 s / <5 s | 721 ms（707–958）/ 3.06 s（评审 PoC） | ✅ |
 | 分解：dedup 单独（暖）/ git 腿 | —（记录） | 469 ms / 80 ms | 记录 |
+| e2e 脏树（4 文件改动）、无暖 daemon：four-class 腿自起 daemon（v2.35 G4，P-A2） | —（记录） | 基线 1.9.2〔`cli/src` 与车道基底同〕3.28 / 3.00 s（腿读 `daemon_unavailable`）→ 车道 5.99 / 4.80 s（腿判出 12 个新增单元），均值差 +2.26 s；2026-11-10 release，同一坐 ABAB ×1，同一个 ce-core 1.9.2，信封 cwd 为 Windows 形，每跑新夹具；**非静默窗**（坐前坐后处理器负载 100 %，用户在玩 Warhammer3）。跑完每个项目留一个 daemon，空闲 30 min（`CE_DAEMON_IDLE_SECS`）自行退出 | 记录 |
 
 ## K 步 10 结果缓存落地后（实测 2026-08-25，release，自仓 ~393 文件，用户会话活跃窗口，n=5）
 
