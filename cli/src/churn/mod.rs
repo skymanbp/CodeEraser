@@ -290,11 +290,9 @@ fn top_pairs(
     pairs
 }
 
+/// `<rev>:./<path>`: the path is ROOT-relative like every measurement
+/// path, and `./` is git's cwd-relative spelling (proc.rs, v2.35 G1).
 fn show(root: &Path, sha: &str, path: &str, parent: bool) -> Option<String> {
-    let rev = if parent {
-        format!("{sha}^:{path}")
-    } else {
-        format!("{sha}:{path}")
-    };
+    let rev = format!("{sha}{}:./{path}", if parent { "^" } else { "" });
     git(root, &["show", &rev]).ok()
 }

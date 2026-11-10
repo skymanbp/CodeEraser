@@ -29,9 +29,10 @@ pub fn head_pairs(root: &Path) -> Option<Vec<PathPair>> {
 /// the ce root's OWN path vocabulary: `--relative` rebases to the root
 /// and scopes to it, the spelling the audit's changed-file universe
 /// already uses (audit/changes.rs) — the tombstone legs' builder,
-/// whose sites name files a person will open from that root. The
-/// three builders above answer repo-root-relative, unscoped, for the
-/// fourclass and churn readers that were written against that.
+/// whose sites name files a person will open from that root. Since the
+/// one git throat passes `diff.relative=true` (proc.rs, v2.35 G1),
+/// `head_pairs` and `commit_pairs` answer in that same root-relative,
+/// scoped vocabulary too; the flag here says so where it is relied on.
 pub fn scoped_pairs(root: &Path, tail: &[&str]) -> Option<Vec<PathPair>> {
     let mut args = vec!["diff", "--name-status", "-z", "-M", "-C", "--relative"];
     args.extend_from_slice(tail);

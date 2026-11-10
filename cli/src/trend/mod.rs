@@ -102,6 +102,8 @@ fn measured(
     // the config's warn line, or the core's own default. Deriving it
     // per point let a bloat commit move its own goalpost.
     let soft = crate::structure::judge::committed_soft(root);
+    let prefix = root_prefix(root)?;
+    let prefix = prefix.as_str();
     let mut have = cached(idx.raw(), &stamp)?;
     let missing: Vec<&(String, i64)> = shas.iter().filter(|(s, _)| !have.contains_key(s)).collect();
     let mut failed = Vec::new();
@@ -114,7 +116,7 @@ fn measured(
     let todo = missing.len().min(batch.unwrap_or(usize::MAX));
     for (n, (sha, ts)) in missing.iter().take(todo).enumerate() {
         crate::progress::at(crate::progress::Phase::Measure, n, todo);
-        match measure(root, core, sha, *ts, soft) {
+        match measure(root, core, (sha.as_str(), *ts), soft, prefix) {
             Ok(row) => {
                 put(idx.raw(), &row, &stamp)?;
                 have.insert(sha.clone(), row);
@@ -134,6 +136,16 @@ fn measured(
         judgment,
     };
     Ok((report, link))
+}
+
+/// Where the root sits inside each worktree (`rev-parse --show-prefix`,
+/// empty at the toplevel): a root below git's toplevel (a ce.toml
+/// sub-project, a scoped run) is measured at its own place in every
+/// point, never as the whole tree (v2.35 G1).
+fn root_prefix(root: &Path) -> Result<String> {
+    Ok(churn::git(root, &["rev-parse", "--show-prefix"])?
+        .trim()
+        .to_string())
 }
 
 /// Newest `n` first-parent commits of HEAD: (full sha, committer
@@ -160,10 +172,20 @@ fn mainline(root: &Path, n: usize) -> Result<Vec<(String, i64)>> {
 /// One commit's absolute score, judged in a detached temp worktree
 /// against a soft line the CALLER pins — see score::Opts::pinned_soft
 /// for why deriving it here made the trajectory self-referential.
-fn measure(root: &Path, core: &str, sha: &str, ts: i64, soft: u64) -> Result<Row> {
+fn measure(
+    root: &Path,
+    core: &str,
+    (sha, ts): (&str, i64),
+    soft: u64,
+    prefix: &str,
+) -> Result<Row> {
     let wt = Worktree::add(root, sha)?;
+    let here = match prefix {
+        "" => wt.path.clone(),
+        sub => wt.path.join(sub),
+    };
     let out = score::run(
-        &wt.path,
+        &here,
         score::Opts {
             db: None, // the worktree's own .ce — removed with it
             core: core.to_string(),

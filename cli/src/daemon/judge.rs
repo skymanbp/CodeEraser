@@ -268,7 +268,8 @@ fn load_pair(
 }
 
 fn head_content(root: &Path, path: &str) -> Option<String> {
-    crate::churn::git(root, &["show", &format!("HEAD:{path}")]).ok()
+    // `./`: root-relative, not toplevel-relative (proc.rs, v2.35 G1)
+    crate::churn::git(root, &["show", &format!("HEAD:./{path}")]).ok()
 }
 
 #[cfg(test)]

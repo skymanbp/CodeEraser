@@ -86,9 +86,27 @@ pub fn refreshed_index(root: &Path, db: Option<PathBuf>) -> Result<(index::Index
 /// invisible because the .gitignore rule was unanchored too. An
 /// explicit `--db` still wins verbatim — that is the escape hatch for
 /// a deliberately separate index.
+///
+/// A run SCOPED below the project (`ce dedup cli`) keeps its own index
+/// at `.ce/scope/<scope>/index.db` (v2.35 G1): writing the shared one
+/// re-keyed its rows to the scope and reaped the rest, leaving the
+/// PreToolUse probe nothing outside the scope until the next whole run.
 pub(crate) fn index_db_path(root: &Path, db: Option<PathBuf>) -> PathBuf {
-    db.unwrap_or_else(|| crate::root::project_root(root).join(INDEX_REL))
+    db.unwrap_or_else(|| {
+        let project = crate::root::project_root(root);
+        let scope = std::path::absolute(root).unwrap_or_else(|_| root.to_path_buf());
+        match scope.strip_prefix(&project) {
+            Ok(rel) if !rel.as_os_str().is_empty() => {
+                project.join(SCOPE_REL).join(rel).join(INDEX_FILE)
+            }
+            _ => project.join(INDEX_REL),
+        }
+    })
 }
+
+/// Scoped indexes: `<project>/<SCOPE_REL>/<scope>/<INDEX_FILE>`.
+const SCOPE_REL: &str = ".ce/scope";
+const INDEX_FILE: &str = "index.db";
 
 /// The index's place under a root: `index_db_path` joins it to the
 /// anchored project root; the daemon joins it to the root it serves.

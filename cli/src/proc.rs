@@ -70,11 +70,22 @@ pub fn git_feed(root: &Path, args: &[&str], input: &[u8]) -> std::io::Result<Chi
     Ok(child)
 }
 
+/// Every git answer is spoken ROOT-relative, the spelling of every
+/// measurement path (v2.35 G1, R2-3). A root below git's toplevel (a
+/// `ce.toml`-anchored sub-project) used to get toplevel-relative paths
+/// from diff and log and join them against root-relative index keys —
+/// the churn, cochange and staleness tables then matched nothing, and
+/// blame of `sub/x.py` from inside `sub/` failed: zeros, silently.
+/// `diff.relative` makes every diff-family answer (diff, log, show)
+/// relative to the root and limited to it; `ls-files` and `ls-tree`
+/// already answer that way, and the `<rev>:<path>` readers spell
+/// `<rev>:./<path>`, git's own cwd-relative form. At the toplevel,
+/// where nearly every root sits, all of this is the identity.
 fn git_command(root: &Path, args: &[&str]) -> Command {
     let mut cmd = command("git");
     cmd.arg("-C")
         .arg(root)
-        .args(["-c", "core.quotePath=false"])
+        .args(["-c", "core.quotePath=false", "-c", "diff.relative=true"])
         .args(args);
     cmd
 }

@@ -29,7 +29,10 @@ pub fn json(format: OutFormat) -> bool {
 pub fn or_cwd(root: Option<PathBuf>) -> PathBuf {
     let root = root.unwrap_or_else(|| PathBuf::from("."));
     codeeraser::i18n::pin_project(&root);
-    codeeraser::tables::anchor(&root);
+    // the package caches under the PROJECT's .ce/, never beside the
+    // scope the run was pointed at (v2.35 G1: `ce dedup a` planted
+    // `a/.ce/tables-*.json`)
+    codeeraser::tables::anchor(&codeeraser::root::project_root(&root));
     root
 }
 
