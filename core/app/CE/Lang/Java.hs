@@ -21,8 +21,7 @@ scan :: String
 scan =
   "[scan]\n\
   \# The Java LangSpec table (plan v2.30 step 3; design booklet §4 the\n\
-  \# Java column). Lives beside spec_launch.rs for the reason every table\n\
-  \# does: spec.rs is the contract alone (RM16).\n\
+  \# Java column).\n\
   \#\n\
   \# The external oracles are lizard (CCN) and PMD's CognitiveComplexity\n\
   \# rule — Java is the first new language whose cognitive complexity an\n\

@@ -99,8 +99,8 @@ keys =
   \]\n\
   \# Source extension → the twins R2 can stat for it. The .mts/.cts\n\
   \# rows mirror esm_rewrite's [(\"js\",\"ts\"),(\"mjs\",\"mts\"),(\"cjs\",\"cts\")]\n\
-  \# table (CE.Resolve.Ts): R2 asks whether the JS twin is a file on\n\
-  \# exactly the .mjs/.cjs twin of an in-scope .mts/.cts source, so\n\
+  \# table (CE.Resolve.Ts): R2 asks whether the JS twin is a file, and\n\
+  \# for an in-scope .mts/.cts source that twin is exactly .mjs/.cjs, so\n\
   \# while those rows were missing, creating or deleting foo.mjs beside\n\
   \# foo.mts flipped R2's answer under an unchanged resolve key and the\n\
   \# edge stayed stale forever — phase-1.5 cannot repair it either,\n\
@@ -158,11 +158,7 @@ flags =
 compdb :: String
 compdb =
   "[compdb]\n\
-  \# Recognized GNU joined spellings, longest conflicting spelling first,\n\
-  \# as one space-separated literal like SKIP below: a slice of a dozen\n\
-  \# `&str` rows is the clone gate's most-rhyming shape (it read these\n\
-  \# two against the tombstone role's stems and the walk's built-in\n\
-  \# excludes).\n\
+  \# Recognized GNU joined spellings, longest conflicting spelling first.\n\
   \gnu = [\n\
   \  '-include-pch', '-iwithprefixbefore', '-isystem-after', '-iwithprefix', '-iframework',\n\
   \  '-idirafter', '-isystem', '-isysroot', '-iquote', '-iprefix', '--include=', '--include',\n\

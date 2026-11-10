@@ -26,26 +26,7 @@ instance FromJSON Hello where
 -- | Informational discovery only — SemVer stays the sole authority
 -- for accept/reject (contracts/VERSIONING.md §1). The list itself
 -- is derived in CE.Protocol from the dispatch table and threaded in
--- (P12); the DECLARATION history stays here, with the hello reply
--- it documents:
--- fourclass/2 = the anchor-width request shape (proto 2.0.0). An
--- old client probing fourclass/1 sees absence and degrades to L1
--- loudly instead of sending the un-parseable two-element shape.
--- graph/1 = the M5-2 graph family (proto 2.1.0, additive).
--- clone/1 + docdup/1 + verdict/1 = the M5-3 families, declared in
--- one additive minor (proto 2.2.0) with stub handlers answering
--- error/contract until each judgment batch lands (M5-3a).
--- scan/1 = the graded-verdict-table family (ADR-008 P3, proto
--- 2.7.0, additive), declared WITH its judgment in one batch.
--- structure/1 = the tree-scale entropy family (M6 S2, proto 2.9.0,
--- additive), likewise declared with its judgment.
--- trend/1 = the score-trajectory slope family (M7.5b, proto 2.13.0,
--- additive), likewise declared with its judgment.
--- erase/1 = the deterministic-eraser predicate family (M9 batch 3,
--- proto 2.16.0, additive), likewise declared with its judgment.
--- audit/1 = the session/commit duplication verdict family (M9
--- batch 7 slice 7, proto 2.24.0, additive), likewise declared with
--- its judgment.
+-- (P12); when each capability was declared is VERSIONING.md's record.
 data Reply = Reply
   { replyProto :: String
   , replyAccept :: Bool
@@ -69,7 +50,7 @@ instance ToJSON Reply where
         <> maybe [] (\why -> ["reason" .= why]) (replyReason r)
 
 -- | Answer one hello line with one response line. @digest@ is the
--- definition package's (7.7.0, CE.Lang): named on every hello, so a
+-- definition package's (CE.Tables.tablesDigest): named on every hello, so a
 -- client knows the package it would read before it asks for it.
 respond :: String -> [String] -> Integer -> String -> B8.ByteString -> B8.ByteString
 respond proto caps digest version line = BL.toStrict . encode $ case eitherDecodeStrict line of

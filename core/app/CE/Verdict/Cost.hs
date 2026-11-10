@@ -30,17 +30,15 @@
 --   bit 3 — bothReferenced: indeg >= 1 on both sides (merge axis).
 --   bit 4 — sccDistinct: the sides sit in different SCCs; merging
 --           inside one cycle is dead-code work, not merge work.
---   bit 5 — deadFlank: one side has indeg 0, reachIn 0 and no entry
---           bit while its partner keeps indeg >= 1 (delete axis —
---           partner-alive is part of THIS bit's definition). On the
---           verdict/1 wire flags are structurally 0 and entry-ness
---           is IMPLIED by reachIn: an entry node is in its own reach
---           set, so reachIn 0 already excludes entries.
+--   bit 5 — deadFlank: one side has indeg 0 and reachIn 0 while its
+--           partner keeps indeg >= 1 (delete axis — partner-alive is
+--           part of THIS bit's definition). Entry-ness is IMPLIED by
+--           reachIn: an entry node is in its own reach set, so
+--           reachIn 0 already excludes entries.
 --   bit 6 — publicGuard: a structurally delete-ready flank was
---           public, so RG10 blocked the delete. File-granularity
---           wire flags carry no exported bit today (symbol facts
---           are R6), so on the wire this guard is dormant — the
---           lattice and its battery keep it live.
+--           public, so RG10 blocked the delete. The exported bit
+--           comes from the request's symbol table (6.1.0,
+--           CE.Verdict.Candidates), so the guard is live on the wire.
 --   bit 7 — cochangeHot: co-change count >= cochangeFloor.
 --   bit 8 — rewriteHot: the window's rewrite share clears
 --           rewriteNum/rewriteDen (cross-multiplied).

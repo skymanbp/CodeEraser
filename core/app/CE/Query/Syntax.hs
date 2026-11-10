@@ -1,8 +1,8 @@
 -- | The query language's syntax tree (design booklet §4.1) as the
 -- parser builds it from the token stream. Every node that an error
--- can point at carries the index of the token it started on — the
--- measuring side turns that index back into `line:column`, the only
--- text-shaped thing about an error, and it never crosses this way.
+-- can point at carries the index of the token it started on, and the
+-- lexed program names each token's place (`located`, CE.Query.Front),
+-- so an error is reported at `line:column`.
 module CE.Query.Syntax (
   Atom (..),
   Clause (..),

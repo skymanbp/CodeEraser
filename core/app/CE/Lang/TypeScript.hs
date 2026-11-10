@@ -65,7 +65,7 @@ scan2 :: String
 scan2 =
   "# `??` counts in CC (a real branch) but NOT here: whitepaper p.6\n\
   \# ignores null-coalescing in CoC. `?.` counts in neither (M1 stance,\n\
-  \# pinned in tests/sonar_whitepaper.rs).\n\
+  \# pinned in cli/tests/it/sonar_whitepaper.rs).\n\
   \coc_operators = ['&&', '||']\n\
   \coc_jump_kinds = ['continue_statement', 'break_statement']\n\
   \label_kinds = ['statement_identifier']\n\

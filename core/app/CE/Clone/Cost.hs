@@ -15,29 +15,29 @@ module CE.Clone.Cost
 -- number without a checkable source, so this repo owns the
 -- definition — clone ⇔ (max − ted)·tsedDen ≥ tsedNum·max, integer
 -- cross-multiplication, no floats anywhere in core (FourClass.Cost:
--- floats tie-break differently across platforms). The Rust candidate
--- prunes use the SAME 85/100 (candidates.rs) — that identity is what
--- makes them admissible.
+-- floats tie-break differently across platforms). The candidate
+-- prunes (CE.Candidates.T3, through CE.Clone.Prefilter) read this same
+-- 85/100 — that identity is what makes them admissible.
 tsedNum :: Integer
 tsedNum = 85
 
 tsedDen :: Integer
 tsedDen = 100
 
+-- | Admission floor for a T3 unit: below this many AST nodes a
+-- "clone" is a signature, not an implementation (batch-7 slice 10;
+-- the ceilings unitNodeCap/pairCap made the trip at M5-3a, this
+-- floor never did). The measuring side reads it from the definition
+-- package (`limits`, `min_unit_nodes`) and sends only units at or
+-- above it, so a sub-floor unit is never paired.
+minUnitNodes :: Integer
+minUnitNodes = 24
+
 -- | Per-tree node ceiling. Sizing anchor (design §4.4, F5):
 -- Zhang-Shasha is O(n1·n2·min(d,l)1·min(d,l)2); at 256 nodes with a
 -- typical min(depth, leaves) ≈ 16 one pair costs ≈ 256·256·16·16 ≈
 -- 1.7×10⁷ strict map updates — bounded work per pair, decided before
 -- any corpus measurement.
--- | Admission floor for a T3 unit: below this many AST nodes a
--- "clone" is a signature, not an implementation (batch-7 slice 10;
--- the ceilings unitNodeCap/pairCap made the trip at M5-3a, this
--- floor never did). Execution stays in Rust at candidate selection
--- (sub-floor units are never paired, never cross); this constant is
--- the authority the echo pins the Rust mirror to.
-minUnitNodes :: Integer
-minUnitNodes = 24
-
 unitNodeCap :: Integer
 unitNodeCap = 256
 
@@ -52,9 +52,7 @@ pairCap = 4096
 
 -- | The clone verdict, stated by the threshold's OWNER (ADR-008 P1:
 -- the reported set is the core's decision, riding each reply as a
--- per-row verdict bit; the Rust is_clone binding the knobs echo pins
--- is a mirror for the frozen 3f instruments and run()'s drift
--- ensure, never an authority).
+-- per-row verdict bit).
 cloneDecides :: Integer -> Integer -> Integer -> Bool
 cloneDecides = cloneDecidesWith (tsedNum, tsedDen)
 

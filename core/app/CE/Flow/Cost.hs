@@ -56,8 +56,9 @@ rowCap = 524288
 -- first child and, under `flagElse`, its second; a loop runs its
 -- children and comes back to its own head; a switch runs one of its
 -- case children; a try runs its body children, may hand any of them
--- to a catch child and leaves through its finally child; the five
--- jumps and the two exits have no children.
+-- to a catch child and leaves through its finally child; the three
+-- jumps (break, continue, goto) and the three exits (return, throw,
+-- noreturn) have no children.
 kindBlock, kindStmt, kindIf, kindLoop, kindSwitch, kindCase, kindTry, kindCatch :: Int
 kindBlock = 0
 kindStmt = 1
@@ -106,8 +107,9 @@ stmtFlagCeil = 2 ^ (flagEmpty + 1) - 1
 -- statement (`declSeq` −1); a captured variable is read by a nested
 -- unit or closure the host side cannot see into; an ignored variable
 -- carries the language's discard spelling (`_x`); an address-taken
--- variable has been handed out by reference. The last three are
--- exemptions: no finding is ever raised on them.
+-- variable has been handed out by reference. Captured and
+-- address-taken variables are exempt from every finding; an ignored
+-- one only from the unused findings (a dead store to it is raised).
 varParam, varCaptured, varIgnored, varAddress :: Int
 varParam = 0
 varCaptured = 1

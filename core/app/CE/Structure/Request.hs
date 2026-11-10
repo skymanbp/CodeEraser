@@ -11,7 +11,7 @@
 -- axis is not judged, an empty one that it judged clean — the
 -- churn-table honesty (absence is spoken, never zero-filled).
 --
--- Since 9.0.0 (plan v2.33 W1 item 3, additive in the unreleased minor) a
+-- Since 9.0.0 (plan v2.33 W1 item 3) a
 -- request may carry the PATH form instead of the dir-keyed tables
 -- (CE.Structure.Raw): the decoder builds the tree and fills the same
 -- fields from it, so every check and the judgment below read one shape.

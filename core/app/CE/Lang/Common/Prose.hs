@@ -90,16 +90,13 @@ tombstone2 =
 docdup :: String
 docdup =
   "[docdup]\n\
-  \# License-header markers (design vol.2 §5.2), `|`-separated. Any one\n\
-  \# on any line of the first comment block inside the head window\n\
-  \# exempts the block. Both marker tables are one literal rather than\n\
-  \# an array: a run of string literals is one repeated token under the\n\
-  \# clone gate.\n\
+  \# License-header markers (design vol.2 §5.2). Any one on any line of\n\
+  \# the first comment block inside the head window exempts the block.\n\
   \license_markers = [\n\
   \  'SPDX-License-Identifier', 'Licensed under the Apache License', 'Copyright (c)',\n\
   \  'Permission is hereby granted', 'MIT License',\n\
   \]\n\
-  \# Structured-docstring skeleton line prefixes, `|`-separated (plan\n\
+  \# Structured-docstring skeleton line prefixes (plan\n\
   \# :79 \"template rows\", stripped line-level from comment/docstring\n\
   \# segments): the Google/Sphinx/NumPy/JSDoc section vocabulary, not\n\
   \# prose, and since plan v2.30 step 5 the Javadoc / Doxygen / roxygen /\n\

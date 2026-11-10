@@ -2,8 +2,8 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The structure request's path form (plan v2.33 W1 item 3, additive
--- inside the unreleased 9.0.0; the port of cli/src/structure/rows.rs and
+-- | The structure request's path form (plan v2.33 W1 item 3, 9.0.0; the
+-- port of cli/src/structure/rows.rs and
 -- edges.rs at c2abca5d): the measuring side sends the walked judged paths,
 -- the graph's measured file paths with their file-to-file arcs, the
 -- declared layout, and — when their axes ride — the staleness facts and

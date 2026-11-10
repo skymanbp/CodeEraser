@@ -199,9 +199,11 @@ cocOver k f =
 -- odds were reversible — a repository with more files and the same
 -- pairs charged less, one with the same files and more pairs among
 -- them charged without bound. Files over files is the ratio every
--- other counting axis already charges; each mass is a subset of its
--- opportunity set, so neither axis can pass half the scale; and the
--- docdup axis reads the documentation universe alone — a repository
+-- other counting axis already charges. Neither mass is held to its
+-- opportunity set here: a clone pair may name a document or a file
+-- with no position, and a docdup pair touches the code files beside
+-- its document, so both axes can pass half the scale (booklet 05).
+-- The docdup axis's opportunity is the documentation universe — a repository
 -- with no documentation has no docdup opportunity and charges nothing
 -- (the honest-absence stance). The verified bar is the owning
 -- family's, cross-multiplied.

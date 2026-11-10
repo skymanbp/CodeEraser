@@ -21,8 +21,7 @@ scan :: String
 scan =
   "[scan]\n\
   \# The Lua LangSpec table (plan v2.30 step 4; design booklet §4 the Lua\n\
-  \# column). Lives beside spec_java.rs for the reason every table does:\n\
-  \# spec.rs is the contract alone (RM16).\n\
+  \# column).\n\
   \#\n\
   \# The external oracle is lizard (CCN; its reader list includes Lua) —\n\
   \# no Lua cognitive oracle exists — and every place the table reads\n\

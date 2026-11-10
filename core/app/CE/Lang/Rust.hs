@@ -78,7 +78,8 @@ slot =
   \# Slot tables for Python, Rust and Go (plan v2.31 step 7), beside the\n\
   \# contract in slot.rs. Every kind and field here is read off the flow\n\
   \# probes (scripts/tsprobe/snippets/flow.*) and checked against the\n\
-  \# pinned grammar by the unit legs; TypeScript and TSX are slot_ts.rs.\n\
+  \# pinned grammar by the unit legs; TypeScript and TSX are\n\
+  \# CE.Lang.TypeScript's.\n\
   \expr_kinds = [\n\
   \  'array_expression', 'binary_expression', 'boolean_literal', 'call_expression',\n\
   \  'closure_expression', 'field_expression', 'identifier', 'index_expression', 'integer_literal',\n\

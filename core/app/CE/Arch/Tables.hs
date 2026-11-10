@@ -2,8 +2,8 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The arch request's path form (plan v2.33 W1 item 3, additive inside
--- the unreleased 9.0.0; the port of cli/src/arch/tables.rs at c2abca5d):
+-- | The arch request's path form (plan v2.33 W1 item 3, 9.0.0; the port
+-- of cli/src/arch/tables.rs at c2abca5d):
 -- the measuring side sends the measured files by path in path order with
 -- their line counts, the file-to-file arcs and the section arcs (folded
 -- onto their files) as slot pairs with multiplicity, the package arcs as

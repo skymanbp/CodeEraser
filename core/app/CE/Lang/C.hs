@@ -32,9 +32,7 @@ scan =
   \# LANGUAGE fact no kind can carry (plan v2.30 step 3): C++ overloads a\n\
   \# name by its parameters and C does not — two same-named C functions\n\
   \# of one scope are one function under two `#if` arms, two C++ ones\n\
-  \# may be two functions (LangSpec::overloads). Lives beside\n\
-  \# spec_hs.rs for the reason that file does: spec.rs is the contract\n\
-  \# alone (RM16).\n\
+  \# may be two functions (LangSpec::overloads).\n\
   \#\n\
   \# The external oracle is lizard (CCN only — no C/C++ cognitive\n\
   \# oracle exists), and every place the table reads differently from it\n\

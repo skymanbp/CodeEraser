@@ -1,4 +1,5 @@
--- | Graph judgment constants — nothing but constants, so the plan
+-- | Graph judgment constants (plus `confidence`, the one fold over
+-- the unresolved-site ledger) — no other logic, so the plan
 -- §7.4 sensitivity test and the ablation table have exactly one
 -- target and a dead knob cannot hide (the CE.FourClass.Cost
 -- convention). The M5-2g knobs (minRung / entryMask / sccFloor) are

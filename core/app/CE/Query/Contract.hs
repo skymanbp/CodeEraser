@@ -31,8 +31,8 @@ import Data.Word (Word64)
 -- | The request: id, the token stream, the fact tables keyed by
 -- predicate code (decimal strings — JSON object keys), how many
 -- leading clauses are the prelude, whether queries carry proofs,
--- whether the schema rides back. Since 9.0.0 (plan v2.33 W1, additive
--- in the unreleased minor) the program may ride as its three texts —
+-- whether the schema rides back. Since 9.0.0 (plan v2.33 W1) the
+-- program may ride as its three texts —
 -- the prelude, the rules file, the query (`null` when absent) — and
 -- this side lexes them (CE.Query.Lex); `lex` asks for the lexed
 -- program alone (CE.Query.Front), `inspect` adds the raw tokens. Since
@@ -40,8 +40,8 @@ import Data.Word (Word64)
 -- and the package nodes (CE.Query.Tree) — and this side builds the four
 -- directory tables the program reads; `dirsOf` keeps each directory's
 -- label, name and hash for the reply, `clashOf` names a directory table
--- sent beside the tree. The `pack` key (plan v2.33, additive in the same
--- unreleased minor) carries the `[rules.pack]` items as rows; `packOf`
+-- sent beside the tree. The `pack` key (plan v2.33, 9.0.0) carries the
+-- `[rules.pack]` items as rows; `packOf`
 -- holds their rendered text or the refusal (CE.Query.Pack), the text is
 -- lexed between the prelude and the rules file, and `preludeOf` then
 -- counts the shipped clauses — the prelude's and the pack's, whose

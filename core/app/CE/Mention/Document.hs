@@ -3,11 +3,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The `ce graph --mentions` document (plan v2.32 step 4; design
--- booklet docs/reference/authority-track.md §5), transcribed from the
--- face that assembled it on the measuring side (cli/src/mention/face.rs
--- `report_json` over cli/src/mention/mod.rs `Stats`,
--- cli/src/mention/census.rs `Outside` and cli/src/mention/rates.rs
--- `census`): the mention pass's header, its skips, this run's
+-- booklet docs/reference/authority-track.md §5), laid out here from the
+-- counts the measuring side's mention pass sends: the pass's header,
+-- its skips, this run's
 -- movement, the judged files outside the universe, and the veto's
 -- census per language. No judgment rides this document — every number
 -- is the measuring side's own, `mention_rev` its index revision

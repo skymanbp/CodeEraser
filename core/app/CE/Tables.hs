@@ -5,10 +5,9 @@
 -- judgment family — it judges nothing and reads no repository fact —
 -- but the judge's own statement of what it judges with: every language
 -- and product definition, one key per table family (CE.Lang), with the
--- digest the hello also names. Every value is a product constant, so
--- the integers-only wire rule (§5.9.2, which keeps the measured
--- repository's names out of the core) is untouched: nothing here came
--- from a repository, and it flows core to measuring side. Since 7.8.0 (plan
+-- digest the hello also names. Every value is a product constant:
+-- nothing here came from a repository, and it flows core to measuring
+-- side. Since 7.8.0 (plan
 -- v2.32 step 3) the package also carries `document`, the document
 -- catalogue (CE.Document): each report family's schema id and empty
 -- document, the one document a face can print without a judgment.

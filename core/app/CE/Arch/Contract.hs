@@ -11,7 +11,7 @@
 -- reference tables and the focus strictly ascending. The first
 -- offender in request order is named as `<table> <i>: <reason>`.
 --
--- Since 9.0.0 (plan v2.33 W1 item 3, additive in the unreleased minor) a
+-- Since 9.0.0 (plan v2.33 W1 item 3) a
 -- request may carry the PATH form instead (CE.Arch.Tables): the decoder
 -- builds the five tables from it, so every check below reads one shape;
 -- `pathOf` keeps the directory paths the reply echoes, or the fault that

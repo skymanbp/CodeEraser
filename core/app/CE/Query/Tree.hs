@@ -2,8 +2,8 @@
 -- (.:)/(.=) need OverloadedStrings (Key's IsString instance).
 {-# LANGUAGE OverloadedStrings #-}
 
--- | The query family's directory tables (plan v2.33 W1 item 3, additive
--- inside the unreleased 9.0.0; the port of `tree_tables` in
+-- | The query family's directory tables (plan v2.33 W1 item 3, 9.0.0;
+-- the port of `tree_tables` in
 -- cli/src/query/facts/graph.rs at c2abca5d): the measuring side sends
 -- every node's path in node order and which nodes are packages; this
 -- module builds the tree over the other nodes' paths (CE.Structure.Tree),

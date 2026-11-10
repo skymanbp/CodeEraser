@@ -44,8 +44,8 @@ log2Fp num den = (intPart `shiftL` idfFracBits) .|. frac
   bitLen x = fromIntegral (integerLog2 x) + 1 :: Int
 
 -- | idf (t) = log2 ((N − df + ½) / (df + ½)) in fixed point, floored at
--- zero: a term in more than half the units carries no discrimination
--- and no penalty.
+-- zero: a term in at least half the units (2·df ≥ N) carries no
+-- discrimination and no penalty.
 idfFp :: Integer -> Integer -> Integer
 idfFp n df
   | num <= den = 0

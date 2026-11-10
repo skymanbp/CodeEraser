@@ -44,7 +44,7 @@ pairRow n arity name i row = case row of
 -- | sim rows carry the ONE enum + ratio the module used to leave
 -- unchecked (review MED: Join routed an out-of-enum kind to the
 -- clone bar while Score scored it zero, and den = 0 made the
--- cross-multiplication vacuously true 鈥?a certain clone from 0/0).
+-- cross-multiplication vacuously true — a certain clone from 0/0).
 simRow :: Integer -> String -> Int -> [Integer] -> Maybe String
 simRow n name i row =
   pairRow n 5 name i row <|> case row of
@@ -77,7 +77,7 @@ posRow unitTier n i row = case row of
 
 -- | continuous entities are FINGERPRINTS (u64), not tier indexes:
 -- the ratchet joins current-vs-baseline on (u, code) across runs,
--- and a tier index shifts whenever a file lands 鈥?so u here is
+-- and a tier index shifts whenever a file lands — so u here is
 -- range-checked against u64, never against the node universe; the
 -- value is a u64 measurement too (plan v2.33 step 11b item 7: an
 -- unbounded value reached the ratchet's arithmetic unrefused).
@@ -148,7 +148,7 @@ selfLoopsOffence n thrs loops = case (floorOne, loops) of
 
 -- | The floor is bounded by the EFFECTIVE score scale (review C7:
 -- the 1000 literal survived scoreScale becoming a knob in the same
--- batch 鈥?a floor above the scale can never pass, and one above
+-- batch — a floor above the scale can never pass, and one above
 -- every reachable score would fail forever undiagnosed; both refuse
 -- by name now). The thresholds table is validated before this row
 -- of the asum, so the [6, v] scan reads checked rows only.
@@ -160,8 +160,8 @@ floorOffence thrs (Just f)
  where
   scale = last (scoreScale : [v | [6, v] <- thrs])
 
--- | plan v2.6 搂B: the judged-LOC multiset is values only,
--- non-descending (duplicates are the POINT of a multiset 鈥?the
+-- | plan v2.6 §B: the judged-LOC multiset is values only,
+-- non-descending (duplicates are the POINT of a multiset — the
 -- strict ascendingBy would refuse two same-length files), in u64.
 judgedLocOffence :: [Integer] -> Maybe String
 judgedLocOffence locs =

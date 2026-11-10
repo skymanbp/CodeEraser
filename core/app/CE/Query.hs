@@ -6,10 +6,10 @@
 -- instalment, design booklet docs/reference/analysis-track.md §4):
 -- the thirteenth judgment family — the Datalog behind `ce query`,
 -- `ce rules`, the MCP tools and the GUI screen. The measuring side
--- lexes the program into a `[kind, value]` token stream, assembles
--- the fact tables the program names from its index (request-local
--- ids, name hashes; no name, path or source text crosses, §5.9.2) and
--- sends both; this side parses, checks, stratifies, evaluates and
+-- sends the program's texts (this side lexes them, CE.Query.Lex) and
+-- the fact tables the program names from its index (request-local ids
+-- and name hashes; the directory tables' paths ride as the `tree`,
+-- CE.Query.Tree); this side parses, checks, stratifies, evaluates and
 -- answers every query's tuples, every assertion's violations, the
 -- proof trees, the program predicates' resolved sorts and the
 -- program's errors — each error at a token index the measuring side

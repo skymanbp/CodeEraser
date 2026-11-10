@@ -18,8 +18,7 @@ top =
 scan :: String
 scan =
   "[scan]\n\
-  \# The Haskell LangSpec table (M5-3k). Lives outside spec.rs per the\n\
-  \# design's split plan (RM16: spec.rs is a 300-line throat).\n\
+  \# The Haskell LangSpec table (M5-3k).\n\
   \#\n\
   \# Every kind below is AST-probed against tree-sitter-haskell 0.23.1\n\
   \# (probe transcripts 2026-08-14, two rounds: constructs + fields),\n\
@@ -27,7 +26,7 @@ scan =
   \# oracle — S3776 names no Haskell constructs — so each mapping is a\n\
   \# recorded STANCE with its nearest whitepaper analogue; the full\n\
   \# divergence register lives in contracts/coc-haskell-divergences.md\n\
-  \# and every entry is pinned by tests/sonar_whitepaper.rs.\n\
+  \# and every entry is pinned by cli/tests/it/sonar_whitepaper.rs.\n\
   \#\n\
   \# Key probe facts the table stands on:\n\
   \# - one `function` node PER EQUATION (same name, own patterns);\n\

@@ -152,7 +152,8 @@ tokColon = 33
 
 -- | Argument sorts. The three id sorts are opaque request-local
 -- numberings the measuring side owns the legend of; int is the only
--- sort arithmetic and ordering apply to; sym is a name hash; set is
+-- sort arithmetic applies to, and ordering applies within any one sort
+-- (`D < E` breaks a symmetric pair); sym is a name hash; set is
 -- a path-set id (the `in(F, "glob")` sugar). `sortOpen` is what the
 -- checker echoes for a program predicate whose position no fact or
 -- literal ever constrained.

@@ -26,8 +26,7 @@ module CE.Docdup.Cost
 -- jaccardNum·union — integer cross-multiplication, no floats in core.
 -- The pre-registered instrument copy (eval_support/docseg.rs
 -- JACCARD_REPORT_FLOOR, frozen with the sample census BEFORE this
--- module existed) and the Rust verdict mirror are both held to these
--- two integers by the knobs echo.
+-- module existed) is held to these two integers by the knobs echo.
 jaccardNum :: Integer
 jaccardNum = 80
 
@@ -114,9 +113,9 @@ docLineCap = 200
 -- 2107.06499, verbatim lower bound 50 tokens): a common word run this
 -- long is a duplicate regardless of what Jaccard says about the rest
 -- of the segment. ADR-008 P1 moved the floor's VERDICT home here: the
--- run lengths already ride each request row ([i,j,run] — F26), the
--- texts never cross the wire (§5.9.2), and the knobs echo pins the
--- measuring side's copy (`docdup.verbatim_floor`) to this number.
+-- measuring side sends each segment's word sequence, this side
+-- measures the common run (CE.Docdup.Runs), and the knobs echo pins
+-- the measuring side's copy (`docdup.verbatim_floor`) to this number.
 verbatimFloor :: Integer
 verbatimFloor = 50
 
@@ -142,8 +141,7 @@ licHeadLines = 5
 
 -- | The Jaccard half of the duplication verdict, stated by the
 -- threshold's OWNER: dup ⇔ inter·jaccardDen ≥ jaccardNum·union.
--- Applied per scored row into counts.jaccardDups, and mirrored by
--- the Rust is_dup binding that the knobs echo pins.
+-- Applied per scored row into counts.jaccardDups.
 dupDecides :: Integer -> Integer -> Bool
 dupDecides = dupDecidesWith jaccardNum jaccardDen
 

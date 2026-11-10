@@ -1,5 +1,5 @@
--- | The `ce merge` console lines (plan v2.32 step 5), transcribed from
--- cli/src/merge/console.rs: one line of counts and of the groups not
+-- | The `ce merge` console lines (plan v2.32 step 5), laid out from the
+-- merge document: one line of counts and of the groups not
 -- sent, then per group (all, or the one `--group` names: the `only`
 -- fact, its number plus one) its head line, its members and one line
 -- per parameter with every member's text at it, cut to `textCap`

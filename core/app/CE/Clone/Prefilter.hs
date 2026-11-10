@@ -1,5 +1,6 @@
 -- | The two provably admissible pre-TED bounds (design vol.2 §4.3),
--- judge-side half of the Rust/Haskell double application. Derivation
+-- applied by the clone judgment and, before it, by the candidate pass
+-- (CE.Candidates.T3). Derivation
 -- (NOT a citation — asserted against brute-force TED as an
 -- exhaustive-family property in core/test/CloneProps.hs, R2):
 --

@@ -1,6 +1,7 @@
 -- | The query language's parser (design booklet §4.1 / §4.4): a
--- recursive descent over the `[kind, value]` token stream the
--- measuring side lexed. The grammar lives here and nowhere else —
+-- recursive descent over the `[kind, value]` token stream
+-- CE.Query.Lex makes of the program's texts. The grammar lives here
+-- and nowhere else —
 -- the lexer knows spellings, this knows shapes — and the first
 -- shape it cannot read is the program's one syntax error, reported
 -- at the token it stopped on (the token count when the program ended

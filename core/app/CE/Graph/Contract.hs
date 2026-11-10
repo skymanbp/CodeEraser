@@ -214,9 +214,6 @@ edgeRow n = rowCheck "edge" "malformed row (need [src,dst,kind,rung])" 4 fields
 nonNegative :: [Integer] -> Maybe String
 nonNegative row = if any (< 0) row then Just "negative field" else Nothing
 
--- notAscending moved to CE.Wire (its birthplace was here — the
--- tenth ratchet bite promoted it to the shared skeleton).
-
 posRow :: Integer -> Int -> Integer -> Maybe String
 posRow n i p
   | p < 0 || p >= n = Just ("pos " <> show i <> ": index out of range")

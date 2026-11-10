@@ -3,9 +3,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | The `ce flow` document (plan v2.32 step 3; design booklet
--- docs/reference/authority-track.md §5), transcribed from the face
--- that assembled it on the measuring side (cli/src/flow_report/face.rs
--- and mod.rs): every placed finding with its kind by name and whether
+-- docs/reference/authority-track.md §5), laid out here: every placed
+-- finding with its kind by name and whether
 -- it is judged or advisory, the units left unjudged with their
 -- reasons, the counts. The measuring side sends the findings it could
 -- place through their units' legends (with the lines and the variable

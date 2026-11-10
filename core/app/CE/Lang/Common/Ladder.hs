@@ -137,8 +137,7 @@ ts =
   \# the bare rung whatever any package.json declares: Node serves a\n\
   \# builtin before any node_modules lookup (the resolver's\n\
   \# LOAD_NODE_MODULES step is never reached), and a `node:` name the\n\
-  \# tables lack is nothing Node can load. Two space-separated literals,\n\
-  \# not a tuple table.\n\
+  \# tables lack is nothing Node can load.\n\
   \builtins = [\n\
   \  '_http_agent', '_http_client', '_http_common', '_http_incoming', '_http_outgoing',\n\
   \  '_http_server', '_stream_duplex', '_stream_passthrough', '_stream_readable',\n\

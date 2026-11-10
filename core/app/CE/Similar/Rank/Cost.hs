@@ -75,7 +75,9 @@ ppmiCap = 4 * 2 ^ idfFracBits
 ppmiScale = 8 * 2 ^ idfFracBits
 
 -- | What the two zero rules reduce to, stated for the measuring side's
--- fetch: a term scores only when n > scoredDfRatio · df (idf > 0), and
+-- fetch: a term scores only if n > scoredDfRatio · df (a positive idf
+-- needs it; the fixed point's floor may still read a barely positive
+-- one as 0, so the fetch is a superset of what scores), and
 -- a word has a neighbour only when neighbourDfRatio · n_a ≤ n (n_ab ≤
 -- n_b bounds PPMI(a, b) by log2 (n / n_a), under minPpmi's two bits as
 -- soon as 4 · n_a > n). Derived here, never restated: the battery pins

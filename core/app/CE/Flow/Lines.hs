@@ -1,5 +1,5 @@
--- | The `ce flow` console lines (plan v2.32 step 5), transcribed from
--- cli/src/flow_report/console.rs: the degraded reason first, one line
+-- | The `ce flow` console lines (plan v2.32 step 5), laid out from the
+-- flow document: the degraded reason first, one line
 -- per listed finding (`path:line  unit  kind  var`, an advisory one
 -- marked), the units left unjudged with their reasons, one counts
 -- line. The veto is `--check`'s under the deny tier: a judged finding

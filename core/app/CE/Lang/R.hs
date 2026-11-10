@@ -24,8 +24,7 @@ scan :: String
 scan =
   "[scan]\n\
   \# The R LangSpec table (plan v2.30 step 4; design booklet §4 the R\n\
-  \# column). Lives beside spec_lua.rs for the reason every table does:\n\
-  \# spec.rs is the contract alone (RM16).\n\
+  \# column).\n\
   \#\n\
   \# The external oracle is lizard (CCN): its R reader,\n\
   \# `lizard_languages/r.py`, was missed when the booklet pinned the\n\

@@ -95,13 +95,14 @@ weightsOffence rows =
 -- (and a zero H or P_max would kill the curve).
 --
 -- Code 4 is the one ceiling that is an EXPONENT, not a line: it
--- reaches `m * spread ^ k` in CE.Verdict.Soft BEFORE the
+-- reaches the fourth power m⁴·r^{4k} in CE.Verdict.Soft BEFORE the
 -- [softMin, softMax] clamp, so an unbounded value never returns a
 -- contract error — the process dies allocating the intermediate
 -- Rational (review 2026-08-20 finding #3: a wire-supplied 1e9 asks
 -- for a multi-gigabyte numerator). judgedLoc is validated under
--- 2^64, so k <= softKMax keeps that intermediate under 2^(64·1024),
--- kilobytes rather than gigabytes, while leaving the knob ~500x its
+-- 2^64, so k <= softKMax keeps that intermediate to about four times
+-- 64·1024 bits (CE.Verdict.Soft states the cost), kilobytes rather
+-- than gigabytes, while leaving the knob ~500x its
 -- calibrated default of 2 — far past where any spread the clamp
 -- cares about has already saturated it.
 ceilingsOffence :: [[Integer]] -> Maybe String

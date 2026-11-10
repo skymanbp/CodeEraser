@@ -3,7 +3,8 @@
 -- argument. The measuring side assembles these tables from the index
 -- and mirrors this table by code (pinned by the `schema` echo, a
 -- request key that asks for it back); the predicate NAMES are the
--- lexer's vocabulary and never cross the wire. A code absent here is
+-- lexer's vocabulary, sent back by name in the `lex` reply
+-- (CE.Query.Front). A code absent here is
 -- a contract refusal on the facts object, so a table the measuring
 -- side invents cannot be judged by accident.
 module CE.Query.Schema (arityOf, codeNamed, schemaNames, schemaRows, sortsOf) where

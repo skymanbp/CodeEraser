@@ -1,9 +1,10 @@
 -- | The cost model — all of it. Two per-line and two per-site
 -- integer constants (floats tie-break differently across platforms;
--- the output contract is byte determinism). Every downstream rule is
--- a consequence of these four numbers, so the ablation and the plan
--- §7.4 sensitivity test have exactly one target and a dead knob
--- cannot hide.
+-- the output contract is byte determinism), one decided floor
+-- (anchorFloor) and the declaration credit; destFloor and declFloor
+-- are derived from them, so the ablation and the plan §7.4
+-- sensitivity test have exactly one target and a dead knob cannot
+-- hide.
 module CE.FourClass.Cost
   ( movedCost
   , plainCost

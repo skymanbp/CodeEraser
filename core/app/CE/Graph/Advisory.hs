@@ -55,8 +55,9 @@ unmentionedRow n = rowCheck "unmentioned" "malformed row (need [node,vis,conv])"
 -- K36). One `Data.Map.Strict` over the mounts table per call: a
 -- request may carry 131072 rows of each table, and a per-row rescan
 -- would be ~1.7e10 comparisons (§4, W9-F6) — the `confidence` rescan
--- in Cost.hs is fine only because validation bounds `unres` to seven
--- rows. A node without a mounts row reads [0,0,0] (§4: the producer
+-- in Cost.hs is fine only because validation bounds `unres` to one
+-- row per judged language. A node without a mounts row reads [0,0,0]
+-- (§4: the producer
 -- covers every node; the core never refuses on coverage).
 judge :: Integer -> [Integer] -> [[Integer]] -> [[Integer]] -> [[Integer]]
 judge visMask exempt mounts rows =
