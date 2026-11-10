@@ -618,8 +618,8 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/Python.hs|3e1ffbdac2000b13|0": {
     "target": "../../../core/app/CE/Lang/Python.hs",
-    "line": 69,
-    "end": 70,
+    "line": 72,
+    "end": 73,
     "text": "\"# Python quotes surface as named string_start/string_end kinds.\\n\\"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../core/app/CE/Lang/R.hs|79f05a6fc773e75f|0": {
@@ -3945,8 +3945,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|314b9bab069679ed|0": {
     "target": "../../../cli/src/graph/ladder/mod.rs",
-    "line": 186,
-    "end": 190,
+    "line": 209,
+    "end": 213,
     "text": "// The sentinel is never walked, and the scan-only arm"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/ladder/mod.rs|77f110197026d16e|0": {
@@ -3980,19 +3980,25 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|0d4b0b0be629773b|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 133,
+    "line": 137,
     "text": "// per-path (total, unresolved) site counts — the graph family's"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|21167c49dd173eee|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 96,
-    "end": 102,
+    "line": 100,
+    "end": 106,
     "text": "// ONE read snapshot for one graph: as three autocommit statements"
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|351ae244131a18de|0": {
+    "target": "../../../cli/src/graph/load.rs",
+    "line": 60,
+    "end": 68,
+    "text": "/// Every path owning at least one unresolved site — the erase"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/load.rs|a5fe474ab9784b27|0": {
     "target": "../../../cli/src/graph/load.rs",
-    "line": 127,
-    "end": 132,
+    "line": 131,
+    "end": 136,
     "text": "let unresolved: i64 = conn.query_row("
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/md_mask.rs|9551917adc7cb5c4|0": {
@@ -4051,8 +4057,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/sites.rs|d604c87ed77ec781|0": {
     "target": "../../../cli/src/graph/sites.rs",
-    "line": 230,
-    "end": 233,
+    "line": 235,
+    "end": 238,
     "text": "/// Rust `use {a::b, c::d};` (Specifier::UseTargets): a group with no"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/sites/html.rs|5a885ae798c92977|0": {
@@ -4069,14 +4075,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|3e0121921e556557|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 92,
-    "end": 97,
+    "line": 106,
+    "end": 111,
     "text": "pub fn sites(lang: Lang) -> &'static [SiteKind] {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|748aa4dd5a69640f|0": {
     "target": "../../../cli/src/graph/spec.rs",
-    "line": 90,
-    "end": 91,
+    "line": 104,
+    "end": 105,
     "text": "/// (graph/sites/java.rs, graph/sites/html.rs); Markdown scans line-wise"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/spec.rs|e57213347ad2937a|0": {
@@ -4091,16 +4097,16 @@
     "end": 55,
     "text": "/// A fixed specifier the node carries as a keyword, not a field:"
   },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|0cc0503a4475842a|0": {
+    "target": "../../../cli/src/graph/store.rs",
+    "line": 165,
+    "text": "pub const GRAPH_REV: i64 = 24;"
+  },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|a830951c191a8896|0": {
     "target": "../../../cli/src/graph/store.rs",
-    "line": 197,
-    "end": 199,
+    "line": 205,
+    "end": 207,
     "text": "fn kinds() -> &'static [&'static str] {"
-  },
-  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/store.rs|d5350aafcc5c6a41|0": {
-    "target": "../../../cli/src/graph/store.rs",
-    "line": 158,
-    "text": "pub const GRAPH_REV: i64 = 23;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/symwire.rs|48c8320d2c66318b|0": {
     "target": "../../../cli/src/graph/symwire.rs",
@@ -4110,14 +4116,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|0d326540934ffa41|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 171,
-    "end": 188,
+    "line": 206,
+    "end": 223,
     "text": "/// Code kinds import; the doc kinds — Markdown's link family and"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|201ccd65b3bae451|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 142,
-    "end": 143,
+    "line": 162,
+    "end": 163,
     "text": "// §4 R5 amendment: same file-level edge, the hop recorded"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|4907f924e5e1d99a|0": {
@@ -4128,14 +4134,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|6fe1564690f4c9bb|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 127,
-    "end": 160,
+    "line": 146,
+    "end": 179,
     "text": "fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|8db1fe7ae025a171|0": {
     "target": "../../../cli/src/graph/wire.rs",
-    "line": 190,
-    "end": 199,
+    "line": 225,
+    "end": 234,
     "text": "/// A page — a Markdown or HTML document — as an edge target, the"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/wire.rs|e47a7e60502158f5|0": {
@@ -4684,13 +4690,13 @@
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Python.hs|cf2d48d100de07a3|0": {
     "target": "../../../core/app/CE/Lang/Python.hs",
     "line": 17,
-    "end": 22,
+    "end": 25,
     "text": "\\sites = [\\n\\\n\\  {node = 'import_statement', label = 'import', via = {form = 'each_import_target'}},\\n\\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/Python.hs|e5c6410ad3506ae7|0": {
     "target": "../../../core/app/CE/Lang/Python.hs",
-    "line": 20,
-    "end": 21,
+    "line": 23,
+    "end": 24,
     "text": "\\  # `from __future__ import` has no module field: the site names it\\n\\"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Lang/TypeScript.hs|bac5a6c39bdeee05|0": {
@@ -5084,14 +5090,14 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|10ab3472312837d4|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 86,
-    "end": 95,
+    "line": 91,
+    "end": 100,
     "text": "-- | Longest strict prefix of the dotted path whose package __init__.py"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|1f65e9d53fe97c3a|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 97,
-    "end": 104,
+    "line": 113,
+    "end": 120,
     "text": "-- | R4: stdlib table or pyproject-declared dependency ⇒ External."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|2050c2a983c20189|0": {
@@ -5102,20 +5108,20 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|444c1586d9304d7d|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 106,
-    "end": 109,
+    "line": 122,
+    "end": 125,
     "text": "-- | `source_roots`: \"\", \"src\", the declared directories, consecutive"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|99f10c6974ffaa19|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 76,
-    "end": 84,
+    "line": 81,
+    "end": 89,
     "text": "-- | One dotted module under one root: package before module."
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|d896287e4c730069|0": {
     "target": "../../../core/app/CE/Resolve/Py.hs",
-    "line": 66,
-    "end": 84,
+    "line": 71,
+    "end": 89,
     "text": "-- | R2 / R3 shared frame: one candidate rule against every source root;"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/Py.hs|eeb3dd8d11ce8500|0": {
@@ -5129,6 +5135,12 @@
     "line": 49,
     "end": 64,
     "text": "-- | R1: dots climb, remainder walks down, package order normative."
+  },
+  "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/PyAlso.hs|5bdbd4ae05aa7bd8|0": {
+    "target": "../../../core/app/CE/Resolve/PyAlso.hs",
+    "line": 1,
+    "end": 24,
+    "text": "-- | The Python import's other references (lane v235_pyimport, proto"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../core/app/CE/Resolve/R.hs|1e31e95b938d304a|0": {
     "target": "../../../core/app/CE/Resolve/R.hs",
@@ -6157,10 +6169,10 @@
     "end": 88,
     "text": "#[test]\nfn a_declared_size_penalty_max_reaches_the_split_advisory() {"
   },
-  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|8cc7b6446f0dbf60|0": {
+  "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../contracts/fixtures/structure/golden.ndjson|a3112f7d9d061be3|0": {
     "target": "../../../contracts/fixtures/structure/golden.ndjson",
     "line": 22,
-    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"9.0.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
+    "text": "{\"axes\":[[0,0],[1,0],[2,0],[3,0],[4,500]],\"degraded\":false,\"entropy\":[[0,0],[1,0]],\"fail\":false,\"findings\":[[0,4]],\"id\":10,\"knobs\":[[0,8],[1,30],[2,5],[3,600],[4,5],[5,3],[6,8],[7,10],[8,1000],[9,1],[10,1],[11,1],[12,300],[13,750],[14,10],[15,250],[16,500],[17,500],[18,150],[19,1],[20,4]],\"proto\":\"9.1.0\",\"score\":900,\"sizeExempt\":[[1,0,0]],\"splitCandidates\":[[0,0,3086,750]],\"type\":\"structure.result\"}"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Document/Spell.hs|98578b01610d2675|0": {
     "target": "../../../core/app/CE/Document/Spell.hs",
@@ -8938,8 +8950,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 515,
-    "end": 517,
+    "line": 520,
+    "end": 522,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -11064,7 +11076,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 113,
+    "line": 114,
     "text": ", goldenPairs \"query/golden.ndjson\""
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../gui/src-tauri/src/commands_query.rs|0603e97b6afa2e54|0": {
@@ -11339,7 +11351,7 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/test/Spec.hs|d280d957b73b8099|0": {
     "target": "../../../core/test/Spec.hs",
-    "line": 114,
+    "line": 115,
     "text": ", goldenPairs \"flow/golden.ndjson\""
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../cli/src/dedup/t3/tree.rs|0c6cacc0a2fe277e|0": {

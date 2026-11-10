@@ -420,7 +420,7 @@ a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair,
 aggregate over a set, the prelude lexed alone, the tree form, and the rule pack judged and
 lexed — and a tests-repo leg regenerates them so every request line carries the prelude and its
 program as texts
-([Spec.hs:113](../../../core/test/Spec.hs#L113), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
+([Spec.hs:114](../../../core/test/Spec.hs#L114), [query_golden.rs:32](../../../cli/tests/it/query_golden.rs#L32),
 [query_golden.rs:148](../../../cli/tests/it/query_golden.rs#L148)).
 
 On the measuring side the unit legs hold the vocabulary to the graph's codes, the core's lex

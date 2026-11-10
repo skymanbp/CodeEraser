@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "369"
+      "value": "370"
     },
     {
       "id": "count:grammars#word",
@@ -446,7 +446,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "23"
+      "value": "24"
     },
     {
       "id": "ver:mention_rev#digits",
@@ -464,7 +464,7 @@
       "id": "ver:proto#v",
       "source": "cli/src/corelink.rs::PROTO",
       "tier": "linked",
-      "value": "9.0.0"
+      "value": "9.1.0"
     },
     {
       "debt": "crate-private const; promote = a pub reader, or the index's own `pragma user_version` face",
