@@ -76,7 +76,11 @@ pub fn place(file: &Lowered, nth: usize, f: &Finding) -> Option<Placed> {
         let l = legend.var_at.get(v)?.0;
         (l, l)
     } else {
-        (at(f.seq)?.0, at(f.seq_end)?.0)
+        // the run's END is its last statement's last line (`stmt_end`,
+        // LEG-1), not where that statement starts (v2.35 G6, R3-10): a
+        // run ending in a call over lines 10–12 read as ending at 10
+        let end = usize::try_from(f.seq_end).ok()?;
+        (at(f.seq)?.0, *legend.stmt_end.get(end)?)
     };
     Some(Placed {
         unit: unit.name.clone(),

@@ -133,7 +133,7 @@ const PACKAGE_FREE: [&str; 2] = ["doctor", "update_check"];
 fn tool_call(root: &Path, params: &Value) -> Result<Value> {
     let name = params["name"].as_str().unwrap_or_default();
     let args = &params["arguments"];
-    let target = resolve(root, args["path"].as_str());
+    let target = resolve(root, args["path"].as_str())?;
     let Some(tool) = tools::TOOLS.iter().find(|t| t.name == name) else {
         anyhow::bail!("unknown tool: {name}");
     };
@@ -153,12 +153,17 @@ fn tool_call(root: &Path, params: &Value) -> Result<Value> {
 /// Subpaths stay inside the served root — an MCP client must not
 /// walk arbitrary directories through us. The test itself lives in
 /// scan::walk beside the other path-vocabulary rules, so the daemon's
-/// socket surface answers to the same authority.
-fn resolve(root: &Path, sub: Option<&str>) -> PathBuf {
+/// socket surface answers to the same authority. A path outside the
+/// root is the call's named refusal (v2.35 G6, R3-40): it used to
+/// become the whole root in silence, so `path: "../other"` answered
+/// about the served project as if it were the one asked about.
+fn resolve(root: &Path, sub: Option<&str>) -> Result<PathBuf> {
     let Some(sub) = sub.filter(|s| !s.is_empty()) else {
-        return root.to_path_buf();
+        return Ok(root.to_path_buf());
     };
-    crate::scan::walk::contained(root, sub).unwrap_or_else(|| root.to_path_buf())
+    crate::scan::walk::contained(root, sub).ok_or_else(|| {
+        anyhow::anyhow!("path `{sub}` is outside the served root {}", root.display())
+    })
 }
 
 #[cfg(test)]

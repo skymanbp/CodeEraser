@@ -81,6 +81,10 @@ pub struct Sink {
     codes: BTreeMap<String, u32>,
     wanted: BTreeSet<u32>,
     tables: BTreeMap<u32, BTreeSet<Vec<u64>>>,
+    /// The first predicate a producer named that the core's schema does
+    /// not hold — a core of another build; `finish` names it (v2.35 G6,
+    /// R3-43: this was a panic).
+    skew: std::cell::RefCell<Option<String>>,
 }
 
 impl Sink {
@@ -90,19 +94,25 @@ impl Sink {
             codes: program.schema(),
             tables: wanted.iter().map(|c| (*c, BTreeSet::new())).collect(),
             wanted,
+            skew: std::cell::RefCell::new(None),
         }
     }
 
-    fn code(&self, name: &str) -> u32 {
-        *self
-            .codes
-            .get(name)
-            .unwrap_or_else(|| panic!("schema predicate {name:?}"))
+    /// The predicate's code in the core's schema; None records the
+    /// first name the schema lacks, for `finish` to refuse by.
+    fn code(&self, name: &str) -> Option<u32> {
+        let code = self.codes.get(name).copied();
+        if code.is_none() {
+            self.skew
+                .borrow_mut()
+                .get_or_insert_with(|| name.to_string());
+        }
+        code
     }
 
     /// Whether the program reads this predicate.
     pub fn wants(&self, name: &str) -> bool {
-        self.wanted.contains(&self.code(name))
+        self.code(name).is_some_and(|c| self.wanted.contains(&c))
     }
 
     pub fn wants_any(&self, names: &[&str]) -> bool {
@@ -111,17 +121,26 @@ impl Sink {
 
     /// One row of a predicate's table; dropped when nothing reads it.
     pub fn row(&mut self, name: &str, row: Vec<u64>) {
-        let code = self.code(name);
+        let Some(code) = self.code(name) else {
+            return;
+        };
         if let Some(t) = self.tables.get_mut(&code) {
             t.insert(row);
         }
     }
 
-    fn finish(self) -> BTreeMap<u32, Vec<Vec<u64>>> {
-        self.tables
+    fn finish(self) -> Result<BTreeMap<u32, Vec<Vec<u64>>>> {
+        if let Some(name) = self.skew.into_inner() {
+            anyhow::bail!(
+                "schema skew: the core's query schema has no predicate `{name}` \
+                 — ce and ce-core are from different builds"
+            );
+        }
+        Ok(self
+            .tables
             .into_iter()
             .map(|(c, rows)| (c, rows.into_iter().collect()))
-            .collect()
+            .collect())
     }
 }
 
@@ -162,7 +181,7 @@ pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -
     text::fill(&ctx, &program.sets, &mut sink, &mut labels)?;
     let tree = graph::tree(&nodes, &mut sink);
     Ok(Facts {
-        tables: sink.finish(),
+        tables: sink.finish()?,
         tree,
         labels,
     })
@@ -177,3 +196,7 @@ fn dictionary(program: &Lexed) -> BTreeMap<u64, String> {
     names.extend(program.names().map(|(h, n)| (h, n.clone())));
     names
 }
+
+#[cfg(test)]
+#[path = "../../../tests/unit/query/facts/sink.rs"]
+mod tests;

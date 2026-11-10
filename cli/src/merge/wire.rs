@@ -249,11 +249,16 @@ fn holes(
             post_end: *post_end,
         });
     }
+    // every parameter 0..params named by some hole, none skipped (v2.35
+    // G6, R3-42): `max + 1` alone read params {0, 2} as three
     for (g, (s, rows)) in groups.iter().enumerate() {
-        let params = rows.iter().map(|r| r.param + 1).max().unwrap_or(0);
-        if params as u64 != s.params {
+        let named: std::collections::BTreeSet<usize> = rows.iter().map(|r| r.param).collect();
+        let top = named.last().map_or(0, |p| p + 1);
+        if top as u64 != s.params || named.len() != top {
             return Err(format!(
-                "wire skew: group {g}'s holes number {params} parameters"
+                "wire skew: group {g}'s holes name {} of {} parameters",
+                named.len(),
+                s.params
             ));
         }
     }

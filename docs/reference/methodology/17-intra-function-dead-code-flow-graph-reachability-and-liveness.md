@@ -109,10 +109,10 @@ uses, findings, dynamic units, unjudged units, judged, shown), each finding with
 kind, lines, variable and whether it is judged, and each unit left unjudged with its reason —
 the ones the lowering could not shape and the ones the core refused
 ([Document.hs:104](../../../core/app/CE/Flow/Document.hs#L104), [face.rs:210](../../../cli/src/flow_report/face.rs#L210)).
-A finding's `lineEnd` is the line on
-which the run's last statement starts. The legend records each statement's last line too
-(`Legend::stmt_end`, LEG-1), but the face does not read it yet, so a last statement written over
-several lines is not followed to its end. `--kind` narrows the listing and the `shown` count
+A finding's `lineEnd` is the last line of
+the run's last statement, read off the legend's `Legend::stmt_end` (LEG-1; since v2.35 — before,
+the face read the line that statement starts on, so a last statement written over
+several lines was not followed to its end). `--kind` narrows the listing and the `shown` count
 only, never the other counts or the judged count, so a filtered run cannot move the gate; a name the package's flow catalogue
 does not list goes as −1, and the core refuses it, the refusal naming the name as given and the
 catalogue's kinds ([Document.hs:100](../../../core/app/CE/Flow/Document.hs#L100)). The exit codes are the family's own: 2

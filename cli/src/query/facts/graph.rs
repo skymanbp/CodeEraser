@@ -144,8 +144,9 @@ pub fn tree(nodes: &Nodes, sink: &mut Sink) -> Option<Value> {
         return None;
     }
     for name in DIR_TABLES {
-        let code = sink.code(name);
-        sink.tables.remove(&code);
+        if let Some(code) = sink.code(name) {
+            sink.tables.remove(&code);
+        }
     }
     let packages: Vec<usize> = (nodes.kinds.iter().enumerate())
         .filter(|(_, k)| **k == GRAN_PACKAGE as usize)
