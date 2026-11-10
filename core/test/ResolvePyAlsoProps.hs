@@ -20,7 +20,7 @@ import ReferenceResolveGen
 import WireHarness (refusedBy, runLegs, setKey)
 
 battery :: IO Bool
-battery = runLegs names (map tree (lines trees) <> refusals <> seeded)
+battery = runLegs (names <> fst starLegs) (map tree (lines trees) <> refusals <> seeded <> snd starLegs)
  where
   names =
     [ "py also: `from pkg import sub` draws pkg/sub.py beside pkg/__init__.py"
@@ -60,6 +60,34 @@ battery = runLegs names (map tree (lines trees) <> refusals <> seeded)
     ]
   seeded = [all namesNeverMove cases, all wellFormed cases]
   refusedNames ns = refusedBy respond (pyRequest [] ["__main__.py", "pkg/__init__.py"] [(1, "__main__.py", "pkg"), (0, "__main__.py", "pkg")] ns)
+
+-- | The star-import legs (lane v235_graphtrust, T3), names and bodies.
+starLegs :: ([String], [Bool])
+starLegs = (names, stars)
+ where
+  names =
+    [ "py star: `from pkg import *` draws each submodule the package's literal __all__ names, an attribute nothing"
+    , "py star: `from . import *` reads the climbed package's __all__"
+    , "py star: an __all__ no literal reads draws nothing and names the site opaque"
+    , "py star: a literal __all__ augmented by what no literal reads draws its literal names and names the site opaque"
+    , "py star: a site with names of its own is no star import, whatever __all__ says"
+    , "py star: py.all out of path order is refused by name"
+    , "py star: py.all naming a file that is no walked __init__.py is refused by name"
+    , "py star: py.all with an empty name is refused by name"
+    ]
+  stars =
+    [ starred pkgFiles [(1, "__main__.py", "pkg")] [] [("pkg/__init__.py", ["helper", "sub"], False)] ([(0, "pkg/sub.py", 2)], [])
+    , starred ["__main__.py", "pkg/__init__.py", "pkg/inner.py", "pkg/sub.py"] [(1, "pkg/inner.py", ".")] [] [("pkg/__init__.py", ["sub"], False)] ([(0, "pkg/sub.py", 1)], [])
+    , starred pkgFiles [(1, "__main__.py", "pkg")] [] [("pkg/__init__.py", [], True)] ([], [0])
+    , starred pkgFiles [(1, "__main__.py", "pkg")] [] [("pkg/__init__.py", ["sub"], True)] ([(0, "pkg/sub.py", 2)], [0])
+    , starred pkgFiles [(1, "__main__.py", "pkg")] [(0, ["helper"])] [("pkg/__init__.py", [], True)] ([], [])
+    , refusedAll [("pkg/sub.py", [], False), ("pkg/__init__.py", [], False)] "py.all 1: not after the path before it"
+    , refusedAll [("pkg/sub.py", ["x"], False)] "py.all 0: not a walked __init__.py"
+    , refusedAll [("pkg/__init__.py", [""], True)] "py.all 0: an empty name"
+    ]
+  pkgFiles = ["__main__.py", "pkg/__init__.py", "pkg/sub.py"]
+  refusedAll :: [(String, [String], Bool)] -> String -> Bool
+  refusedAll alls = refusedBy respond (pyRequest ["all" .= alls] pkgFiles [(1, "__main__.py", "pkg")] [])
 
 -- | One tree per line, in the order of `names`: `files ; sites ; names ;
 -- answers ; also [; lib]` — files space-separated in path order; a site
@@ -122,6 +150,14 @@ tree line = case splitOn ';' line of
   asked pairs (files, sites, ns) want = Just want == do
     v <- askCore (pyRequest pairs files sites ns)
     (,) <$> answers v <*> replyKey "also" v
+
+-- | A star-import request (lane v235_graphtrust, T3): the files, the
+-- sites, `py.names`, `py.all`, and the `also` and `opaque` tables the
+-- core must answer.
+starred :: [String] -> [(Integer, String, String)] -> [(Int, [String])] -> [(String, [String], Bool)] -> ([(Int, String, Int)], [Int]) -> Bool
+starred files sites ns alls want = Just want == do
+  v <- askCore (pyRequest ["all" .= alls] files sites ns)
+  (,) <$> replyKey "also" v <*> replyKey "opaque" v
 
 -- | A Python-only request: the sites `(kind, from, spec)`, `py.names`
 -- and any other `py` keys.

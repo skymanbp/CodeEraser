@@ -68,6 +68,9 @@ mod java;
 mod lua;
 mod py;
 mod r;
+
+/// A Python module's `__all__` as a star import reads it (py.rs).
+pub(crate) use py::module_all_parts;
 #[cfg(test)]
 #[path = "../../../tests/unit/fourclass/visibility/tests.rs"]
 mod tests;

@@ -81,24 +81,30 @@ pub fn edges(sites: &[CachedSite], scope: &Scope) -> anyhow::Result<Resolved> {
         Err(reason) => without_core(&batch, scope, reason)?,
     };
     let mut outcomes = outcomes.into_iter();
-    let rows =
-        at.iter()
-            .map(|found| match found {
-                Some((_, site)) => outcomes.next().expect("one outcome per site").map_or_else(
-                    Vec::new,
-                    |(o, also)| {
-                        let mut out = rows(site.kind, o);
-                        out.extend(
-                            also.into_iter()
-                                .map(|(dst, rung)| also_row(site.kind, dst, rung)),
-                        );
-                        out
-                    },
-                ),
-                None => Vec::new(),
-            })
-            .collect();
-    Ok(Resolved { rows, owed })
+    let (rows, ledger) = at
+        .iter()
+        .map(|found| match found {
+            Some((_, site)) => outcomes
+                .next()
+                .expect("one outcome per site")
+                .map_or_else(|| (Vec::new(), 0), |(o, also)| answered(site.kind, o, also)),
+            None => (Vec::new(), 0),
+        })
+        .unzip();
+    Ok(Resolved { rows, owed, ledger })
+}
+
+/// One answered site's edge rows — its answer's, then its `also`
+/// rows — and its ledger word (store.rs `sites.ledger`): bit 1 an
+/// opaque star import, one more unresolved ledger row.
+fn answered(kind: &str, outcome: Outcome, also: ladder::Also) -> (Vec<EdgeRow>, i64) {
+    let mut out = rows(kind, outcome);
+    out.extend(
+        also.rows
+            .into_iter()
+            .map(|(dst, rung)| also_row(kind, dst, rung)),
+    );
+    (out, i64::from(also.opaque) << 1)
 }
 
 /// The batch with no core to answer: this side's rungs answer their
@@ -134,7 +140,7 @@ fn without_core(batch: &[(Lang, &Site)], scope: &Scope, reason: String) -> anyho
             if held(*l) {
                 None
             } else {
-                answered.next().map(|o| (o, Vec::new()))
+                answered.next().map(|o| (o, ladder::Also::default()))
             }
         })
         .collect();

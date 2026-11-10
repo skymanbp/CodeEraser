@@ -33,7 +33,7 @@ pub(super) fn exported(node: Node<'_>, src: &[u8]) -> bool {
     };
     let module_level =
         !ancestors(node).any(|a| matches!(a.kind(), "class_definition" | "function_definition"));
-    match (module_level, all_names(root_of(node), src)) {
+    match (module_level, module_all(root_of(node), src)) {
         (true, Some(all)) => all.contains(&name),
         _ => public_by_convention(&name),
     }
@@ -56,6 +56,31 @@ pub(super) fn scope_open(node: Node<'_>, src: &[u8]) -> bool {
     })
 }
 
+/// A module's literal `__all__` (the reading `exported` takes, once per
+/// unit): Some(names) when every spelling of the name is a literal
+/// binding or edit, else None — a module that never spells it, or one
+/// that also binds it in a way no literal reads. The whole-tree count
+/// of spellings runs only once an edit was read, so a module without
+/// `__all__` pays the top-level scan alone.
+fn module_all(root: Node<'_>, src: &[u8]) -> Option<BTreeSet<String>> {
+    let (names, read) = literal_edits(root, src);
+    (read > 0 && read == spellings(root, src)).then_some(names)
+}
+
+/// A module's `__all__` as `from m import *` reads it (lane
+/// v235_graphtrust; the graph walk, dedup/walkidx.rs, once per walked
+/// `__init__.py`): None when the module never spells the name, else the
+/// names its literal bindings and edits list and whether any spelling is
+/// one no literal reads (`opaque` — the star import's names are then not
+/// all known). The same edit reader as `module_all`.
+pub(crate) fn module_all_parts(root: Node<'_>, src: &[u8]) -> Option<(BTreeSet<String>, bool)> {
+    let spelled = spellings(root, src);
+    (spelled > 0).then(|| {
+        let (names, read) = literal_edits(root, src);
+        (names, read != spelled)
+    })
+}
+
 /// One top-level statement's contribution to `__all__`: a list of
 /// entries, or one entry.
 enum Edit<'t> {
@@ -63,26 +88,28 @@ enum Edit<'t> {
     One(Node<'t>),
 }
 
-/// The module's literal `__all__`, or None when it declares none or
-/// declares it unreadably (module doc): every identifier spelling the
-/// name must be one the top-level scan consumed — the target of an
-/// assignment, the object of an `extend` / `append` call — or the
-/// list is unreadable, which errs only toward the convention's wider
-/// floor.
-fn all_names(root: Node<'_>, src: &[u8]) -> Option<BTreeSet<String>> {
+/// The names the module's literal `__all__` bindings and edits list,
+/// and how many top-level edits were read with a literal value (module
+/// doc): a list is literal when every identifier spelling the name is
+/// one this scan consumed — the target of an assignment, the object of an
+/// `extend` / `append` call — and opaque otherwise. An opaque list errs
+/// only toward the convention's wider floor (`exported`) and toward an
+/// unvouched star import (the graph).
+fn literal_edits(root: Node<'_>, src: &[u8]) -> (BTreeSet<String>, usize) {
     let mut names = BTreeSet::new();
     let mut read = 0usize;
     for stmt in ast::named_children(root) {
-        let Some(edit) = all_edit(stmt, src) else {
-            continue;
+        let listed = match all_edit(stmt, src) {
+            Some(Edit::Many(value)) => string_literals(value, src),
+            Some(Edit::One(value)) => literal_text(value, src).map(|t| vec![t]),
+            None => continue,
         };
-        read += 1;
-        names.extend(match edit {
-            Edit::Many(value) => string_literals(value, src)?,
-            Edit::One(value) => vec![literal_text(value, src)?],
-        });
+        if let Some(listed) = listed {
+            read += 1;
+            names.extend(listed);
+        }
     }
-    (read > 0 && read == spellings(root, src)).then_some(names)
+    (names, read)
 }
 
 /// A top-level `__all__ = …` / `__all__ += …` (the value is the

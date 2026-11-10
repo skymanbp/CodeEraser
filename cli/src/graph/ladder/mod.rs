@@ -40,6 +40,8 @@ pub mod html_head;
 // (dedup/walkidx.rs)
 pub mod lua_path;
 pub mod md;
+// pub: the walk reads every package's `__all__` with it (dedup/walkidx.rs)
+pub mod py_all;
 // pub: walkidx feeds pubuse_hash into resolve_key (the slug-hash
 // discipline for the binder's cross-file input); the request reads the
 // two CST facts with it (graph/resolve/request.rs)
@@ -89,6 +91,9 @@ pub(crate) use frozen::members;
 /// hashes them, so a target is still never minted from the
 /// filesystem). `includes` is each walked C-family file's include
 /// list (c_head.rs), the compile database closure's input (step 5b).
+/// `py_all` is each walked `__init__.py`'s `__all__` (py_all.rs: the
+/// literal names and whether any binding is opaque), the core's
+/// star-import rule's input (lane v235_graphtrust).
 pub struct Scope<'a> {
     pub files: &'a BTreeSet<String>,
     pub assets: &'a BTreeSet<String>,
@@ -100,6 +105,7 @@ pub struct Scope<'a> {
     pub java: &'a BTreeMap<String, java_header::Header>,
     pub lua: &'a BTreeSet<lua_path::Template>,
     pub includes: &'a BTreeMap<String, Vec<String>>,
+    pub py_all: &'a BTreeMap<String, py_all::All>,
 }
 
 /// The memo's slot table, aliased so the shape reads once.
@@ -153,8 +159,15 @@ pub struct Site<'a> {
 }
 
 /// A site's other references beside its answer — the core's `also` rows
-/// (`(target, rung)` in target order; CE.Resolve.PyAlso, proto 9.1.0).
-pub type Also = Vec<(String, Rung)>;
+/// (`(target, rung)` in target order; CE.Resolve.PyAlso, proto 9.1.0) —
+/// and whether the core holds one more unresolved ledger row against
+/// the site (`opaque`: a star import of a package whose `__all__` no
+/// literal reads, lane v235_graphtrust).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Also {
+    pub rows: Vec<(String, Rung)>,
+    pub opaque: bool,
+}
 
 /// Dispatch one site to its language ladder (`resolve_all` of one).
 pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Result<Outcome, String> {
@@ -202,7 +215,7 @@ pub fn resolve_all_also(
         .iter()
         .map(|(lang, site)| {
             if empty(*lang, site) {
-                (Outcome::Unresolved(Reason::Empty), Vec::new())
+                (Outcome::Unresolved(Reason::Empty), Also::default())
             } else if super::resolve::in_core(*lang) {
                 answered.next().expect("one outcome per core site")
             } else {
@@ -210,7 +223,7 @@ pub fn resolve_all_also(
                 // (plan v2.5) is never indexed — if either ever arrives,
                 // the honest answer is the documented no-rungs stance,
                 // never a guess.
-                (Outcome::Unresolved(Reason::Unsupported), Vec::new())
+                (Outcome::Unresolved(Reason::Unsupported), Also::default())
             }
         })
         .collect())

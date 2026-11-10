@@ -134,6 +134,13 @@ pub use crate::graph::owed::{Resolved, each};
 /// edges (`edges.also` = 1; the core's CE.Resolve.PyAlso) — new columns
 /// and new stored edges, so every site is re-detected and every edge
 /// re-resolved once.
+/// 26 = a star import of a package whose `__all__` is a literal list
+/// imports the submodules it names (`also` edges; the walk reads each
+/// `__init__.py`'s `__all__` into the request and the resolve key), and
+/// one whose `__all__` no literal reads carries one more unresolved
+/// ledger row: the new `sites.ledger` word (bit 1), written per site by
+/// every pass (lane v235_graphtrust) — a new column, every edge
+/// re-resolved once.
 /// 25 = a load call whose target argument is no literal opens a site of
 /// the new `dynamic` kind (refused as dynamic, so it holds its language
 /// unvouched), Python's `import_module` / `__import__` and TypeScript's
@@ -168,7 +175,7 @@ pub use crate::graph::owed::{Resolved, each};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 25;
+pub const GRAPH_REV: i64 = 26;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -191,7 +198,7 @@ CREATE TABLE symbols (id INTEGER PRIMARY KEY,
 CREATE TABLE sites (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
   kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT,
-  names TEXT);
+  names TEXT, ledger INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE edges (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
   dst_path TEXT NOT NULL, dst_unit TEXT NOT NULL,
   kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL,
@@ -446,14 +453,18 @@ fn insert_edges(
         "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity, via_reexport, also)
          VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     )?;
-    let Resolved { rows, owed } = resolve(sites)?;
+    // each site's ledger word (graph/load.rs reads it) is written every
+    // pass, so a word a site no longer earns is cleared with its edges
+    let mut mark = tx.prepare("UPDATE sites SET ledger = ?1 WHERE id = ?2")?;
+    let Resolved { rows, owed, ledger } = resolve(sites)?;
     anyhow::ensure!(
-        rows.len() == sites.len(),
+        rows.len() == sites.len() && ledger.len() == sites.len(),
         "resolver answered {} of {} sites",
-        rows.len(),
+        rows.len().min(ledger.len()),
         sites.len()
     );
-    for (s, edges) in sites.iter().zip(rows) {
+    for ((s, edges), word) in sites.iter().zip(rows).zip(ledger) {
+        mark.execute((word, s.id))?;
         for e in edges {
             ins.execute((
                 s.id,

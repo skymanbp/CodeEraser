@@ -15,6 +15,13 @@
 --   before module (`moduleAt`), its own ancestors with it; a miss is
 --   an attribute and adds nothing; two roots that both hold `M.n` both
 --   draw, never an ambiguity refusal (the safe direction);
+-- * a star import: `from pkg import *` with no names of its own, whose
+--   answer is a package `__init__.py` binding `__all__` (`py.all`, lane
+--   v235_graphtrust), imports each name its literal bindings and edits
+--   list as `from pkg import n` would — the names rule above
+--   (`starNames`); when any binding or edit is one no literal reads,
+--   the names it adds are unknown: the literal names still draw, and the
+--   site carries one more ledger row (`opaque`, CE.Resolve);
 -- * the importer's package: a relative import proves its file is a
 --   package member, whose package chain CPython has executed — each
 --   `__init__.py` from the importer's directory upward while contiguous.
@@ -22,7 +29,7 @@
 -- The primary answer is untouched (computed apart, in CE.Resolve); a
 -- row never names the site's own file or its primary target, one row
 -- per target at its lowest rung, in target order.
-module CE.Resolve.PyAlso (alsoPy) where
+module CE.Resolve.PyAlso (alsoPy, starNames) where
 
 import CE.Resolve.Answer (Answer (..))
 import CE.Resolve.Py (PyProject, moduleAt, packages, relativeFrame, sourceRoots)
@@ -62,6 +69,14 @@ alsoPy w py (from, spec, names) primary =
   chain
     | "." `isPrefixOf` spec = [(p, 1) | p <- takeWhile (member w) [joinDir d "__init__.py" | d <- ancestors (parentDir from)]]
     | otherwise = []
+
+-- | A site with no names of its own, by its answer: the literal names
+-- of the `__all__` of the package `__init__.py` it answers and whether
+-- that `__all__` is opaque; ([], False) for any other answer.
+starNames :: M.Map String ([String], Bool) -> Answer -> ([String], Bool)
+starNames alls a = case a of
+  AFile p _ -> M.findWithDefault ([], False) p alls
+  _ -> ([], False)
 
 -- | The frames a spec is read under: each source root for an absolute
 -- spec, the climbed directory for a relative one (none above the root).

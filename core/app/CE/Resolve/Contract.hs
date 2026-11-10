@@ -40,6 +40,7 @@ import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
 import Data.Char (isDigit)
+import Data.List (isSuffixOf)
 import Data.Maybe (isJust, listToMaybe)
 import qualified Data.Aeson.Key as K
 
@@ -52,6 +53,7 @@ requestSize rq =
     , texts (rqOrigins rq)
     , sum [1 + chars (sSpec s) | s <- rqSites rq]
     , sum [1 + texts ns | (_, ns) <- rqPyNames rq]
+    , sum [2 + chars p + texts ns | (p, ns, _) <- rqPyAll rq]
     , sum [1 + texts ds | ds <- M.elems (rqSearch rq)]
     , maybe 0 doc (rqPyproject rq)
     , sum [1 + chars d + chars s | (d, s) <- rqLuaTemplates rq]
@@ -103,7 +105,7 @@ offence rq =
     [ ascending "file" (rqFiles rq)
     , ascending "origin" (rqOrigins rq)
     , asum [Just ("origin " <> show i <> ": a walked file") | (i, o) <- zip [0 :: Int ..] (rqOrigins rq), Set.member o walked]
-    , asum (zipWith site [0 :: Int ..] (rqSites rq)) <|> pyNamesOffence rq
+    , asum (zipWith site [0 :: Int ..] (rqSites rq)) <|> pyNamesOffence rq <|> pyAllOffence rq walked
     , ascending "java.header" (map fst (rqJavaHeaders rq))
     , asum [Just ("c.db " <> show i <> ": probe out of range") | (i, Db _ p _) <- zip [0 :: Int ..] (cDbs (rqC rq)), p < 0 || p > 2]
     , asum [Just ("c.include " <> show i <> ": not a walked file") | (i, (p, _)) <- zip [0 :: Int ..] (cIncludes (rqC rq)), not (Set.member p walked)]
@@ -147,6 +149,18 @@ offence rq =
     | sKind s < 0 || toInteger (sFrom s) < 0 || toInteger (sFrom s) >= paths = Just ("site " <> show i <> ": kind or file out of range")
     | sLang s == langJava && sLine s == Nothing = Just ("site " <> show i <> ": a Java site without its line")
     | sLang s == langRs && sLine s == Nothing = Just ("site " <> show i <> ": a Rust site without its line")
+    | otherwise = Nothing
+
+-- | `py.all` (lane v235_graphtrust) in strictly ascending path order,
+-- each row a walked package `__init__.py` with no empty name.
+pyAllOffence :: ResolveReq -> Set.Set String -> Maybe String
+pyAllOffence rq walked =
+  ascending "py.all" [p | (p, _, _) <- rqPyAll rq]
+    <|> listToMaybe [label "py.all" i <> why | (i, (p, ns, _)) <- zip [0 :: Int ..] (rqPyAll rq), Just why <- [row p ns]]
+ where
+  row p ns
+    | Set.notMember p walked || not (p == "__init__.py" || "/__init__.py" `isSuffixOf` p) = Just "not a walked __init__.py"
+    | any null ns = Just "an empty name"
     | otherwise = Nothing
 
 -- | `py.names` in strictly ascending site order, each row a Python

@@ -8,7 +8,7 @@
 
 use super::{Params, index, pairs, tokens};
 use crate::config::Config;
-use crate::graph::ladder::{c_head, java_header, lua_path};
+use crate::graph::ladder::{c_head, java_header, lua_path, py_all};
 use crate::graph::store;
 use crate::scan::lang::Lang;
 use crate::scan::walk;
@@ -54,6 +54,11 @@ pub(super) struct WalkIndex {
     /// closure's input (the core's CE.Resolve.CIndex since plan v2.33
     /// W2a; plan v2.30 step 5b).
     pub includes: BTreeMap<String, Vec<String>>,
+    /// Every walked `__init__.py` that spells `__all__`, with its literal
+    /// names or None (lane v235_graphtrust) — the core's star-import
+    /// rule's input (CE.Resolve.PyAlso), handed over through
+    /// ladder::Scope.
+    pub py_all: BTreeMap<String, py_all::All>,
 }
 
 impl WalkIndex {
@@ -82,6 +87,7 @@ pub(super) fn index_all(root: &Path, config: &Config, idx: &mut index::Index) ->
         java: BTreeMap::new(),
         lua: BTreeSet::new(),
         includes: BTreeMap::new(),
+        py_all: BTreeMap::new(),
     };
     // md slug sets are resolver INPUTS like config bytes (the anchor
     // rung reads the target's headings), so they join the key — a
@@ -235,8 +241,9 @@ fn roots_bytes<'r>(roots: impl Iterator<Item = &'r String>) -> Vec<u8> {
 /// Cross-file resolver INPUTS per language (split from index_all at
 /// the E01 fn gate): md heading slugs, a page's id set, the Rust
 /// pub-use surface, a Java file's declared package, the templates a
-/// Lua file assigns to `package.path` and a C-family file's include
-/// list (another file's chains follow it) all join the resolve_key —
+/// Lua file assigns to `package.path`, a C-family file's include list
+/// (another file's chains follow it) and a package's `__all__` (a star
+/// import elsewhere reads it) all join the resolve_key —
 /// one throat. A Java header's imports stay out of the key: they steer
 /// only the file's own sites, which a change to them re-resolves as
 /// the file's refresh does. A Lua file without templates adds no key
@@ -273,6 +280,13 @@ fn lang_fact(
                     .collect();
                 facts.push((rel.to_string(), tokens::fnv1a(&bytes)));
                 out.lua.extend(templates);
+            }
+        }
+        Lang::Python if py_all::is_init(rel) => {
+            if let Some(all) = py_all::read(&text) {
+                let spelled = format!("{}\u{1}{}", all.0.join("\0"), u8::from(all.1));
+                facts.push((rel.to_string(), tokens::fnv1a(spelled.as_bytes())));
+                out.py_all.insert(rel.to_string(), all);
             }
         }
         Lang::C | Lang::Cpp => {

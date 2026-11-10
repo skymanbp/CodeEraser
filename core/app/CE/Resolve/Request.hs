@@ -58,6 +58,7 @@ data ResolveReq = ResolveReq
   , rqSearch :: M.Map String [String]
   , rqPyproject :: Maybe Value
   , rqPyNames :: [(Int, [String])]
+  , rqPyAll :: [(String, [String], Bool)]
   , rqLuaTemplates :: [(String, String)]
   , rqGoMods :: [(String, String)]
   , rqDescriptions :: [(String, String)]
@@ -122,6 +123,7 @@ instance FromJSON ResolveReq where
       <*> maybe (pure M.empty) (withObject "config" (\c -> c .:? "searchRoots" .!= M.empty)) cfg
       <*> maybe (pure Nothing) (withObject "py" (.:? "pyproject")) py
       <*> listAt o "py" "names"
+      <*> listAt o "py" "all"
       <*> listAt o "lua" "templates"
       <*> listAt o "go" "mods"
       <*> listAt o "r" "descriptions"

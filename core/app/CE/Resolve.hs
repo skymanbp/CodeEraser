@@ -61,12 +61,12 @@ import CE.Resolve.JavaPick (javaEnv)
 import CE.Resolve.Lua (resolveLua, searched)
 import CE.Resolve.Md (resolveMd)
 import CE.Resolve.Py (PyProject, pyproject, resolvePy)
-import CE.Resolve.PyAlso (alsoPy)
+import CE.Resolve.PyAlso (alsoPy, starNames)
 import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
 import CE.Resolve.Rs (RsEnv (..), ctxFor, needAll, resolveRs)
 import CE.Resolve.Str (parentDir)
-import CE.Resolve.Tables (kindDynamic)
+import CE.Resolve.Tables (kindDynamic, kindImportFrom)
 import CE.Resolve.Ts (TsEnv (..), resolveTs)
 import CE.Resolve.TsConfig (package, tsExtendsFiles, tsOptions)
 import CE.Resolve.TsFacts (Fact, Facts, Need, facts, tomlOf, wantedRow)
@@ -92,31 +92,9 @@ judged proto rq = reply proto rq resolved body False
   w = world rq
   (parsed, env, ix) = cHalf w rq
   py = pyproject (rqPyproject rq)
-  luaDirs = searched (searchRoots "lua" rq) (rqLuaTemplates rq)
-  gomods = [m | (rel, text) <- rqGoMods rq, let m = parseGoMod rel text, isJust (gmModule m)]
   descs = [d | (rel, text) <- rqDescriptions rq, Just d <- [readDescription (parentDir rel) text]]
   packages = M.fromList [(dDir d, packageCode w d) | d <- descs]
-  java = javaEnv w (rqJavaHeaders rq) (searchRoots "java" rq)
   cabals = M.fromList [(rel, Cabal.parse rel text) | (rel, text) <- rqHsCabals rq]
-  pages = pageEnv w rq
-  site s
-    -- a load whose target argument is no literal names no target: the
-    -- reserved refusal, before any ladder could read the argument's text
-    | sKind s == kindDynamic = AUnresolved Dynamic
-    | sLang s == langPy = resolvePy w py from (sSpec s)
-    | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
-    | sLang s == langGo = resolveGo w gomods from (sSpec s)
-    | sLang s == langR = resolveR (w, searchRoots "r" rq, descs) (sKind s) from (sSpec s)
-    | sLang s == langJava = resolveJava java (sKind s) from (fromMaybe 0 (sLine s)) (sSpec s)
-    | sLang s == langHs = resolveHs w (M.elems cabals) from (sSpec s)
-    | sLang s == langMd = resolveMd (hMd pages) (sKind s) from (sSpec s)
-    | sLang s == langHtml = resolveHtml pages (sKind s) from (sSpec s)
-    -- complete: no TS site waits for a fact
-    | isTs s = either (const (AUnresolved OutOfScope)) id (ts s)
-    | sLang s == langRs = either (const (AUnresolved OutOfScope)) id (rs s)
-    | otherwise = resolveC env ix from (sSpec s)
-   where
-    from = pathOf w (sFrom s)
   fx = facts False (rqTsFacts rq)
   (ts, reached, tsWaits) = tsHalf w fx rq
   (rs, crates, rsPrivate, rsWaits) = rsHalf w fx rq
@@ -124,12 +102,14 @@ judged proto rq = reply proto rq resolved body False
   tsWanted = tsWaits <> rsWaits <> entryWaits
   wanted = xWanted (mconcat (map snd (M.elems parsed)))
   complete = Set.null wanted && Set.null tsWanted
-  answers = if complete then map site (rqSites rq) else []
+  pyMaps = (M.fromList (rqPyNames rq), M.fromList [(p, (ns, o)) | (p, ns, o) <- rqPyAll rq])
+  answers = if complete then map (siteOf (w, rq) (py, descs, M.elems cabals) (env, ix) (ts, rs)) (rqSites rq) else []
   resolved = length [() | a <- answers, case a of AUnresolved _ -> False; _ -> True]
   body =
     [ "results" .= map answerRow answers
     , "sections" .= [(i, slug) | (i, ASection _ slug _) <- zip [0 :: Int ..] answers]
-    , "also" .= alsoTable w py rq answers
+    , "also" .= alsoTable w py (rq, pyMaps) answers
+    , "opaque" .= opaqueTable (rq, pyMaps) answers
     , "forced" .= (if complete then map (\(u, h) -> [u, h]) (forcedArcs env ix) else [])
     , "wanted" .= Set.toList wanted
     , "tsWanted" .= map wantedRow (Set.toList tsWanted)
@@ -143,18 +123,68 @@ judged proto rq = reply proto rq resolved body False
     ]
       <> ["inspected" .= v | Just v <- [inspected <$> rqInspect rq]]
 
+-- | The per-site ladder of one request: each site's answer through its
+-- language's ladder, over the request's own configuration (the C
+-- environment, the DESCRIPTIONs and cabals the reply also reads) and the
+-- TS / Rust halves' answers — used only once the request is complete, so
+-- no TS or Rust site still waits for a fact. The request's environments
+-- (Lua search directories, go.mod files, the Java index, the pages) are
+-- bound once, outside the per-site function. A load whose target
+-- argument is no literal (`dynamic`) names no target: the reserved
+-- refusal, before any ladder could read the argument's text.
+siteOf :: (World, ResolveReq) -> (Maybe PyProject, [Description], [Cabal.Cabal]) -> (Env, Index) -> (Site -> Need Answer, Site -> Need Answer) -> Site -> Answer
+siteOf (w, rq) (py, descs, cabals) (env, ix) (ts, rs) = one
+ where
+  luaDirs = searched (searchRoots "lua" rq) (rqLuaTemplates rq)
+  gomods = [m | (rel, text) <- rqGoMods rq, let m = parseGoMod rel text, isJust (gmModule m)]
+  java = javaEnv w (rqJavaHeaders rq) (searchRoots "java" rq)
+  pages = pageEnv w rq
+  one s
+    | sKind s == kindDynamic = AUnresolved Dynamic
+    | sLang s == langPy = resolvePy w py from (sSpec s)
+    | sLang s == langLua = resolveLua w luaDirs (sKind s) from (sSpec s)
+    | sLang s == langGo = resolveGo w gomods from (sSpec s)
+    | sLang s == langR = resolveR (w, searchRoots "r" rq, descs) (sKind s) from (sSpec s)
+    | sLang s == langJava = resolveJava java (sKind s) from (fromMaybe 0 (sLine s)) (sSpec s)
+    | sLang s == langHs = resolveHs w cabals from (sSpec s)
+    | sLang s == langMd = resolveMd (hMd pages) (sKind s) from (sSpec s)
+    | sLang s == langHtml = resolveHtml pages (sKind s) from (sSpec s)
+    | isTs s = either (const (AUnresolved OutOfScope)) id (ts s)
+    | sLang s == langRs = either (const (AUnresolved OutOfScope)) id (rs s)
+    | otherwise = resolveC env ix from (sSpec s)
+   where
+    from = pathOf w (sFrom s)
+
 -- | The `also` rows (proto 9.1.0): each Python site's other references
 -- beside its answer, `[row, target, rung]` in (row, target) order, read
--- with the names `py.names` gives it; none while the answers wait.
-alsoTable :: World -> Maybe PyProject -> ResolveReq -> [Answer] -> [(Int, String, Int)]
-alsoTable w py rq answers =
+-- with the names `py.names` gives it — or, for a star import, the
+-- literal names its package's `__all__` lists (`py.all`, `starNames`);
+-- none while the answers wait.
+alsoTable :: World -> Maybe PyProject -> (ResolveReq, PyMaps) -> [Answer] -> [(Int, String, Int)]
+alsoTable w py (rq, (named, alls)) answers =
   [ (i, t, r)
   | (i, s, a) <- zip3 [0 ..] (rqSites rq) answers
   , sLang s == langPy && sKind s /= kindDynamic
-  , (t, r) <- alsoPy w py (pathOf w (sFrom s), sSpec s, M.findWithDefault [] i named) a
+  , (t, r) <- alsoPy w py (pathOf w (sFrom s), sSpec s, M.findWithDefault (fst (star alls s a)) i named) a
   ]
- where
-  named = M.fromList (rqPyNames rq)
+
+-- | A request's `py.names` by site and `py.all` by path, built once.
+type PyMaps = (M.Map Int [String], M.Map String ([String], Bool))
+
+-- | The star-import sites whose package binds or edits `__all__` in a
+-- way no literal reads (lane v235_graphtrust): some names it imports
+-- are unknown, so each such site carries one more unresolved ledger
+-- row beside its answer and its literal names' rows — `[row]`
+-- ascending; the answer itself stands.
+opaqueTable :: (ResolveReq, PyMaps) -> [Answer] -> [Int]
+opaqueTable (rq, (named, alls)) answers = [i | (i, s, a) <- zip3 [0 ..] (rqSites rq) answers, M.notMember i named, snd (star alls s a)]
+
+-- | A Python `import_from` site's star names by its answer (`starNames`);
+-- any other site has none.
+star :: M.Map String ([String], Bool) -> Site -> Answer -> ([String], Bool)
+star alls s a
+  | sLang s == langPy && sKind s == kindImportFrom = starNames alls a
+  | otherwise = ([], False)
 
 -- | The C family's half of a request: every JSON database parsed (its
 -- entries, the response files it read and wants), the search
@@ -211,7 +241,7 @@ rsHalf w fx rq = (rs, done crates, done kept, Set.unions (waits crates : waits k
 
 -- | Over-cap: a complete degraded reply with empty tables.
 degraded :: String -> ResolveReq -> B8.ByteString
-degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "also", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "entries", "private"]] True
+degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "also", "opaque", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "entries", "private"]] True
 
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString

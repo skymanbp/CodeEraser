@@ -15,11 +15,13 @@ use anyhow::{Result, bail};
 use rusqlite::Transaction;
 use std::collections::BTreeSet;
 
-/// One batch's answer: each site's edge rows, and — when the core could
-/// not answer — why, with the files whose sites wait for it.
+/// One batch's answer: each site's edge rows and its ledger word (store.rs
+/// `sites.ledger`), and — when the core could not answer — why, with the
+/// files whose sites wait for it.
 pub struct Resolved {
     pub rows: Vec<Vec<EdgeRow>>,
     pub owed: Option<Owed>,
+    pub ledger: Vec<i64>,
 }
 
 pub struct Owed {
@@ -36,6 +38,7 @@ pub fn each(
         Ok(Resolved {
             rows: sites.iter().map(&mut one).collect(),
             owed: None,
+            ledger: vec![0; sites.len()],
         })
     }
 }

@@ -47,7 +47,8 @@ literal — Lua `require` / `dofile`, R `source` / `library`, Python `importlib.
 TS `require` / `import()` — opens a `dynamic` site, which the resolve family refuses as `Dynamic` before any
 rung ([call.rs:9-12](../../../cli/src/graph/sites/call.rs#L9), [Resolve.hs:105](../../../core/app/CE/Resolve.hs#L105)), so its
 language carries an unresolved site and cannot vouch for its dead verdicts; a literal argument opens the
-language's ordinary site (`import` for Python and TS) and walks the ladder.
+language's ordinary site (`import` for Python and TS) and walks the ladder. Rev 26 added the site's
+ledger column (`sites.ledger`, §3).
 
 ### 2. The resolution ladder
 
@@ -117,7 +118,12 @@ Numeric details that are policy, not taste:
   name that misses is an attribute and an absent `__init__.py` a namespace package, both quiet
   ([PyAlso.hs:1-24](../../../core/app/CE/Resolve/PyAlso.hs#L1)). They are edges every graph reader follows,
   stored with `edges.also` = 1 so the unresolved count still reads each site's own answer alone
-  ([load.rs:60-68](../../../cli/src/graph/load.rs#L60)).
+  ([load.rs:60-68](../../../cli/src/graph/load.rs#L60)). A star import (`from pkg import *`, no names of its
+  own) whose answer is a package `__init__.py` draws each name that file's literal `__all__` bindings and
+  edits list, as `from pkg import n` would — the walk reads the list (`py.all`,
+  [py_all.rs:1-7](../../../cli/src/graph/ladder/py_all.rs#L1)); when any binding or edit of `__all__` there is one
+  no literal reads, the literal names still draw and the site carries one more unresolved ledger row
+  (`opaque`, [PyAlso.hs:18-24](../../../core/app/CE/Resolve/PyAlso.hs#L18)).
 - A Go directory counts as an importable package only while it *directly* holds an in-scope
   non-`_test.go` file ([Go.hs:120-125](../../../core/app/CE/Resolve/Go.hs#L120)).
 - GitHub slugging: lowercase, keep alphanumerics/`_`/`-`, spaces→hyphens, everything else
@@ -213,7 +219,8 @@ Two transformations happen on the way to the wire:
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
 never saw ([load.rs:100-106](../../../cli/src/graph/load.rs#L100)). `unresolved_sites` is the count of sites
-with no edge row ([load.rs:131-136](../../../cli/src/graph/load.rs#L131)) and travels with the report so
+with no edge row, plus one for each star-import site whose `__all__` is opaque (`sites.ledger` bit 1,
+rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:131-136](../../../cli/src/graph/load.rs#L131)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:27-29](../../../cli/src/graph/deadcode.rs#L27)).
 

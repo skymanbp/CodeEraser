@@ -24,6 +24,7 @@
 //! session (corelink), shared with every other family the command asks. A core that cannot answer is a named refusal:
 //! there is no copy of the search on this side to fall back on.
 
+mod also;
 mod facts;
 mod manifests;
 mod markdown;
@@ -34,6 +35,7 @@ pub use manifests::{Declared, Manifests, declared, private};
 use super::ladder::{Also, Outcome, Reason, Rung, Scope, Site};
 use crate::corelink::judged;
 use crate::scan::lang::Lang;
+use also::also_rows;
 use request::Input;
 use serde_json::{Value, json};
 use std::cell::RefCell;
@@ -94,6 +96,7 @@ pub fn outcomes(
             includes: scope.includes,
             java: scope.java,
             crate_roots: scope.crate_roots,
+            py_all: scope.py_all,
         };
         RefCell::new(request::tree(&input))
     });
@@ -141,40 +144,6 @@ fn mapped(reply: &Value, sent: usize) -> Result<Vec<(Outcome, Also)>, String> {
     }
     let mut also = also_rows(reply, &out)?;
     Ok(out.into_iter().zip(also.drain(..)).collect())
-}
-
-/// The reply's `also` table (proto 9.1.0) by site: `[site, target,
-/// rung]` strictly ascending by (site, target), never the site's own
-/// answer. An absent table is a core that predates it — refused by name,
-/// since reading it as empty would quietly drop the edges it carries.
-fn also_rows(reply: &Value, out: &[Outcome]) -> Result<Vec<Also>, String> {
-    if reply.get("also").is_none() {
-        return Err("resolve/1: no `also` table: a core before proto 9.1.0".into());
-    }
-    let rows: Vec<(usize, String, Rung)> = judged::table(reply, "also")?;
-    let mut by_site: Vec<Also> = vec![Vec::new(); out.len()];
-    for (i, w) in rows.windows(2).enumerate() {
-        if (w[0].0, &w[0].1) >= (w[1].0, &w[1].1) {
-            return Err(format!(
-                "resolve/1: wire skew: also {}: not after the row before it",
-                i + 1
-            ));
-        }
-    }
-    for (site, target, rung) in rows {
-        let primary = match out.get(site) {
-            None => return Err(format!("resolve/1: wire skew: also names site {site}")),
-            Some(Outcome::Resolved { path, .. }) => Some(path),
-            Some(_) => None,
-        };
-        if primary == Some(&target) {
-            return Err(format!(
-                "resolve/1: wire skew: also repeats site {site}'s answer"
-            ));
-        }
-        by_site[site].push((target, rung));
-    }
-    Ok(by_site)
 }
 
 /// The build's forced includes (`-include x.h`) as unit → header import

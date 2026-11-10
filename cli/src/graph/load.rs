@@ -57,6 +57,17 @@ row_tuple!(t4: A 0, B 1, C 2, D 3);
 row_tuple!(t5: A 0, B 1, C 2, D 3, E 4);
 row_tuple!(t6: A 0, B 1, C 2, D 3, E 4, F 5);
 
+/// A site's unresolved ledger rows: one when its OWN answer drew no edge
+/// (an `also` edge, proto 9.1.0, never vouches for the answer), plus one
+/// when it is a star import whose package's `__all__` no literal reads
+/// (`sites.ledger` bit 1, lane v235_graphtrust).
+const UNRESOLVED_ROWS: &str =
+    "((CASE WHEN NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
+     THEN 1 ELSE 0 END) + ((s.ledger >> 1) & 1))";
+
+/// A site's ledger rows: itself, plus its opaque star row.
+const LEDGER_ROWS: &str = "(1 + ((s.ledger >> 1) & 1))";
+
 /// Every path owning at least one unresolved site — the erase
 /// planner's trust boundary (erase.md: a dead-file row is refused
 /// while its LANGUAGE still carries unresolved sites; the scalar
@@ -70,9 +81,10 @@ pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     super::owed::refuse_if_owed(idx.raw())?;
     rows(
         idx.raw(),
-        "SELECT DISTINCT f.path FROM sites s JOIN files f ON f.id = s.file_id
-         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
-         ORDER BY f.path",
+        &format!(
+            "SELECT DISTINCT f.path FROM sites s JOIN files f ON f.id = s.file_id
+             WHERE {UNRESOLVED_ROWS} > 0 ORDER BY f.path"
+        ),
         |r| r.get(0),
     )
 }
@@ -129,8 +141,7 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Path
     )
     .collect();
     let unresolved: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM sites s
-         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)",
+        &format!("SELECT COALESCE(SUM({UNRESOLVED_ROWS}), 0) FROM sites s"),
         [],
         |r| r.get(0),
     )?;
@@ -140,11 +151,11 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Path
     // inside the SAME snapshot as the edges it vouches about.
     let sites = rows(
         conn,
-        "SELECT f.path, COUNT(*),
-                SUM(CASE WHEN NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
-                    THEN 1 ELSE 0 END)
-         FROM sites s JOIN files f ON f.id = s.file_id
-         GROUP BY f.path ORDER BY f.path",
+        &format!(
+            "SELECT f.path, SUM({LEDGER_ROWS}), SUM({UNRESOLVED_ROWS})
+             FROM sites s JOIN files f ON f.id = s.file_id
+             GROUP BY f.path ORDER BY f.path"
+        ),
         |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
     )?;
     txn.finish()?; // read-only: closing the snapshot, nothing to write

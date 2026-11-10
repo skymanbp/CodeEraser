@@ -8,7 +8,8 @@
 //! every walked Java file's header as the walk read it (package, imports,
 //! type declarations: ladder/java_header.rs),
 //! the root `pyproject.toml` (with the names each Python `from M import
-//! …` site imports, proto 9.1.0) and every JSON compile database decoded
+//! …` site imports, proto 9.1.0, and each walked package's `__all__`,
+//! lane v235_graphtrust) and every JSON compile database decoded
 //! (a library read; the rules applied to them are the core's), each
 //! flags file's text, and the facts that need the file system: the
 //! root's absolute text, the databases clangd's probes find, each
@@ -35,6 +36,7 @@ pub struct Input<'a> {
     pub includes: &'a BTreeMap<String, Vec<String>>,
     pub java: &'a BTreeMap<String, crate::graph::ladder::java_header::Header>,
     pub crate_roots: &'a BTreeSet<String>,
+    pub py_all: &'a BTreeMap<String, crate::graph::ladder::py_all::All>,
 }
 
 /// The sweep's part of a request: everything but the sites. The walk's
@@ -57,7 +59,7 @@ pub fn tree(input: &Input) -> Value {
     json!({
         "files": input.files,
         "config": { "searchRoots": input.search_roots },
-        "py": { "pyproject": pyproject(input.root) },
+        "py": { "pyproject": pyproject(input.root), "all": py_all(input.py_all) },
         "lua": { "templates": input.lua },
         "go": { "mods": texts(input.root, named("go.mod")) },
         "r": { "descriptions": descriptions(input.root, named("DESCRIPTION")) },
@@ -126,6 +128,14 @@ fn headers(java: &BTreeMap<String, crate::graph::ladder::java_header::Header>) -
             let types: Vec<Value> = h.types.iter().map(ty).collect();
             json!([path, h.package, imports, types])
         })
+        .collect()
+}
+
+/// Each walked `__init__.py`'s `__all__`, `[path, [name], opaque]` in
+/// path order (py_all.rs).
+fn py_all(all: &BTreeMap<String, crate::graph::ladder::py_all::All>) -> Vec<Value> {
+    all.iter()
+        .map(|(path, (names, opaque))| json!([path, names, opaque]))
         .collect()
 }
 
