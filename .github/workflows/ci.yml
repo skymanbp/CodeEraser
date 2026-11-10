@@ -647,7 +647,11 @@ jobs:
           # tap"); the throwaway tap is ours, so it is trusted here. Older
           # Homebrew (the ubuntu runner's linuxbrew) has no `trust` command
           # and no such refusal, hence the guard on the command's existence.
-          if brew commands | grep -qx trust; then brew trust "$tap"; fi
+          # The command list is captured before it is searched: a reader that
+          # exits early (grep -q) under pipefail kills `brew commands` with
+          # EPIPE and turns a found command into "not found".
+          cmds=$(brew commands)
+          if grep -qx trust <<<"$cmds"; then brew trust "$tap"; fi
           brew style --formula "$tap/codeeraser"
           brew audit --formula --strict "$tap/codeeraser"
           brew install --formula "$tap/codeeraser"
