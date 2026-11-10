@@ -14,7 +14,7 @@
 -- hit inside a root is not ambiguity — only cross-root disagreement is.
 -- `importlib(var)` / `__import__` dynamism never reaches this ladder:
 -- the site detector only opens import statements.
-module CE.Resolve.Py (resolvePy, PyProject (..), pyproject) where
+module CE.Resolve.Py (resolvePy, PyProject (..), pyproject, moduleAt, packages, relativeFrame, sourceRoots) where
 
 import CE.Resolve.Answer
 import CE.Resolve.Chars (isRustAlnum)
@@ -48,12 +48,17 @@ resolvePy w py from spec
 
 -- | R1: dots climb, remainder walks down, package order normative.
 relative :: World -> String -> String -> Answer
-relative w from spec = case climb (dots - 1) (parentDir from) of
+relative w from spec = case relativeFrame from spec of
   Nothing -> AUnresolved OutOfScope
-  Just dir -> case (moduleAt w dir rest, initPrefix w dir rest) of
+  Just (dir, rest) -> case (moduleAt w dir rest, initPrefix w dir rest) of
     (Just p, _) -> AFile p 1
     (_, Just p) -> AFile p 3
     _ -> AUnresolved OutOfScope
+
+-- | R1's frame: the directory n dots climb to (n−1 levels above the
+-- importer's own) and the dotted remainder; above the root is none.
+relativeFrame :: String -> String -> Maybe (String, String)
+relativeFrame from spec = (\dir -> (dir, rest)) <$> climb (dots - 1) (parentDir from)
  where
   dots = length (takeWhile (== '.') spec)
   rest = drop dots spec
@@ -84,11 +89,22 @@ moduleAt w root dotted = do
     else if member w modul then Just modul else Nothing
 
 -- | Longest strict prefix of the dotted path whose package __init__.py
--- is in scope (R3).
+-- is in scope (R3): the last of `packages`.
 initPrefix :: World -> String -> String -> Maybe String
-initPrefix w root dotted = case [hit | k <- [length segs - 1, length segs - 2 .. 1], Just hit <- [moduleAt w root (dotJoin (take k segs))], "/__init__.py" `isSuffixOf` hit] of
+initPrefix w root dotted = case reverse (packages w root dotted) of
   (hit : _) -> Just hit
   [] -> Nothing
+
+-- | The packages on a dotted path's strict prefixes under a root: each
+-- prefix's `__init__.py` in scope, outermost first — R3 reads the last,
+-- CE.Resolve.PyAlso every one (the parents CPython executes first).
+packages :: World -> String -> String -> [String]
+packages w root dotted =
+  [ hit
+  | k <- [1 .. length segs - 1]
+  , Just hit <- [moduleAt w root (dotJoin (take k segs))]
+  , "/__init__.py" `isSuffixOf` hit
+  ]
  where
   segs = filter (not . null) (splitOn '.' dotted)
   dotJoin [] = ""

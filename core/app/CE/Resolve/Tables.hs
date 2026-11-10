@@ -9,7 +9,7 @@
 -- crates, `ladder.rs`), the
 -- two compile-flag spelling lists (`compdb.gnu`, `compdb.skip`), and the
 -- storage codes of the site kinds the Lua, R, Java, Rust and Markdown
--- ladders branch on.
+-- ladders branch on and the request contract checks.
 -- The package's `resolve` key states which configuration files the
 -- measuring side sends as text — the basenames among the walk's
 -- configs (`configs`): a rule of this family, so not a second list
@@ -31,6 +31,7 @@ module CE.Resolve.Tables (
   kindSource,
   kindLibrary,
   kindImport,
+  kindImportFrom,
   kindImportStar,
   kindTypeRef,
   kindModDecl,
@@ -104,14 +105,16 @@ packAt path = either refuse id (parseEither parseJSON =<< walk path pack)
   refuse e = error ("resolve tables do not read: " <> e)
 
 -- | The storage codes of the two Lua site kinds, the two R ones, the
--- three Java ones, the two Rust ones, the five Markdown ones and the two
--- HTML ones whose empty specifier lands the page (`store.site_kinds`).
-kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl, kindHref, kindAction :: Integer
+-- three Java ones, Python's `import_from` (the one kind carrying
+-- names), the two Rust ones, the five Markdown ones and the two HTML
+-- ones whose empty specifier lands the page (`store.site_kinds`).
+kindRequire, kindLoad, kindSource, kindLibrary, kindImport, kindImportFrom, kindImportStar, kindTypeRef, kindModDecl, kindUse, kindLink, kindImage, kindRefLink, kindRefDef, kindUrl, kindHref, kindAction :: Integer
 kindRequire = kindCode "require"
 kindLoad = kindCode "load"
 kindSource = kindCode "source"
 kindLibrary = kindCode "library"
 kindImport = kindCode "import"
+kindImportFrom = kindCode "import_from"
 kindImportStar = kindCode "import_star"
 kindTypeRef = kindCode "type_ref"
 kindModDecl = kindCode "mod_decl"

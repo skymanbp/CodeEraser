@@ -12,8 +12,10 @@
 //! document, a Rust file's syntax tree), and maps each reply row back to
 //! the ladder's `Outcome`, so the edge store, deadcode, `ce graph
 //! --sites` and the precision documents read the answers they always
-//! read; a batch with Markdown or HTML sites carries what this side read
-//! of the documents up front (markdown.rs: anchor sets, reference tables,
+//! read — a Python site's `also` rows (its ancestor packages and imported
+//! submodules, proto 9.1.0) ride beside its answer as more edges; a
+//! batch with Markdown or HTML sites carries what this side read of the
+//! documents up front (markdown.rs: anchor sets, reference tables,
 //! the walked assets, each page's head facts and id set), so it asks no
 //! extra round.
 //!
@@ -29,7 +31,7 @@ mod request;
 
 pub use manifests::{Declared, Manifests, declared, private};
 
-use super::ladder::{Outcome, Reason, Rung, Scope, Site};
+use super::ladder::{Also, Outcome, Reason, Rung, Scope, Site};
 use crate::corelink::judged;
 use crate::scan::lang::Lang;
 use request::Input;
@@ -62,14 +64,19 @@ pub fn in_core(lang: Lang) -> bool {
     )
 }
 
-/// The sites' outcomes, in order — every site a language `in_core`. The
+/// The sites' outcomes, in order — every site a language `in_core` —
+/// each with its `also` rows; `names` runs beside `sites` (empty: none). The
 /// sweep's part of the request is read once per sweep (the memo), the
 /// response files and facts the core asks for kept in it; each Rust
 /// site's syntax-tree fact at its row goes up front (every Rust rung
 /// reads it), with the Cargo.toml probes of its directory's context
 /// (facts::manifest_probes), and so do the Markdown and HTML facts (the
 /// document facts, markdown.rs).
-pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
+pub fn outcomes(
+    sites: &[(Lang, &Site)],
+    names: &[&[String]],
+    scope: &Scope,
+) -> Result<Vec<(Outcome, Also)>, String> {
     if sites.is_empty() {
         return Ok(Vec::new());
     }
@@ -94,6 +101,7 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
     let mut body = tree.borrow().clone();
     body["sites"] = rows;
     body["origins"] = json!(origins);
+    body["py"]["names"] = request::names(names);
     markdown::add(&mut body, scope, sites);
     let mut rows: Vec<(i64, String, String)> = sites
         .iter()
@@ -112,9 +120,10 @@ pub fn outcomes(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, 
 type Row = (Rung, i64, Option<String>, i64);
 
 /// The reply's rows as outcomes, in order, a section row with its slug
-/// (`sections`, by row); a row count other than the sites sent, or a slug
-/// for no section row, is wire skew, named.
-fn mapped(reply: &Value, sent: usize) -> Result<Vec<Outcome>, String> {
+/// (`sections`, by row), each with its `also` rows; a row count other
+/// than the sites sent, or a slug for no section row, is wire skew,
+/// named.
+fn mapped(reply: &Value, sent: usize) -> Result<Vec<(Outcome, Also)>, String> {
     let rows: Vec<Row> = judged::table(reply, "results")?;
     if rows.len() != sent || judged::count(reply, "sites")? != sent {
         return Err("resolve/1: wire skew: one result per site sent".into());
@@ -127,10 +136,45 @@ fn mapped(reply: &Value, sent: usize) -> Result<Vec<Outcome>, String> {
         .enumerate()
         .map(|(i, row)| outcome(row, sections.next_if(|(at, _)| *at == i).map(|(_, s)| s)))
         .collect::<Result<Vec<_>, String>>()?;
-    match sections.next() {
-        Some(_) => Err("resolve/1: wire skew: a section slug for no section row".into()),
-        None => Ok(out),
+    if sections.next().is_some() {
+        return Err("resolve/1: wire skew: a section slug for no section row".into());
     }
+    let mut also = also_rows(reply, &out)?;
+    Ok(out.into_iter().zip(also.drain(..)).collect())
+}
+
+/// The reply's `also` table (proto 9.1.0) by site: `[site, target,
+/// rung]` strictly ascending by (site, target), never the site's own
+/// answer. An absent table is a core that predates it — refused by name,
+/// since reading it as empty would quietly drop the edges it carries.
+fn also_rows(reply: &Value, out: &[Outcome]) -> Result<Vec<Also>, String> {
+    if reply.get("also").is_none() {
+        return Err("resolve/1: no `also` table: a core before proto 9.1.0".into());
+    }
+    let rows: Vec<(usize, String, Rung)> = judged::table(reply, "also")?;
+    let mut by_site: Vec<Also> = vec![Vec::new(); out.len()];
+    for (i, w) in rows.windows(2).enumerate() {
+        if (w[0].0, &w[0].1) >= (w[1].0, &w[1].1) {
+            return Err(format!(
+                "resolve/1: wire skew: also {}: not after the row before it",
+                i + 1
+            ));
+        }
+    }
+    for (site, target, rung) in rows {
+        let primary = match out.get(site) {
+            None => return Err(format!("resolve/1: wire skew: also names site {site}")),
+            Some(Outcome::Resolved { path, .. }) => Some(path),
+            Some(_) => None,
+        };
+        if primary == Some(&target) {
+            return Err(format!(
+                "resolve/1: wire skew: also repeats site {site}'s answer"
+            ));
+        }
+        by_site[site].push((target, rung));
+    }
+    Ok(by_site)
 }
 
 /// The build's forced includes (`-include x.h`) as unit → header import

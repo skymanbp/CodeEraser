@@ -70,27 +70,40 @@ pub fn edges(sites: &[CachedSite], scope: &Scope) -> anyhow::Result<Resolved> {
         })
         .collect();
     let batch: Vec<(Lang, &Site)> = at.iter().flatten().map(|(l, s)| (*l, s)).collect();
-    let (outcomes, owed) = match ladder::resolve_all(&batch, scope) {
+    let names: Vec<&[String]> = sites
+        .iter()
+        .zip(&at)
+        .filter(|(_, found)| found.is_some())
+        .map(|(site, _)| site.names.as_slice())
+        .collect();
+    let (outcomes, owed) = match ladder::resolve_all_also(&batch, &names, scope) {
         Ok(all) => (all.into_iter().map(Some).collect(), None),
         Err(reason) => without_core(&batch, scope, reason)?,
     };
     let mut outcomes = outcomes.into_iter();
-    let rows = at
-        .iter()
-        .map(|found| match found {
-            Some((_, site)) => outcomes
-                .next()
-                .expect("one outcome per site")
-                .map_or_else(Vec::new, |o| rows(site.kind, o)),
-            None => Vec::new(),
-        })
-        .collect();
+    let rows =
+        at.iter()
+            .map(|found| match found {
+                Some((_, site)) => outcomes.next().expect("one outcome per site").map_or_else(
+                    Vec::new,
+                    |(o, also)| {
+                        let mut out = rows(site.kind, o);
+                        out.extend(
+                            also.into_iter()
+                                .map(|(dst, rung)| also_row(site.kind, dst, rung)),
+                        );
+                        out
+                    },
+                ),
+                None => Vec::new(),
+            })
+            .collect();
     Ok(Resolved { rows, owed })
 }
 
 /// The batch with no core to answer: this side's rungs answer their
 /// languages, the core's languages are none, their files owed.
-type Partial = (Vec<Option<Outcome>>, Option<Owed>);
+type Partial = (Vec<Option<(Outcome, ladder::Also)>>, Option<Owed>);
 
 fn without_core(batch: &[(Lang, &Site)], scope: &Scope, reason: String) -> anyhow::Result<Partial> {
     let held = |l: Lang| super::resolve::in_core(l);
@@ -117,7 +130,13 @@ fn without_core(batch: &[(Lang, &Site)], scope: &Scope, reason: String) -> anyho
     );
     let outcomes = batch
         .iter()
-        .map(|(l, _)| if held(*l) { None } else { answered.next() })
+        .map(|(l, _)| {
+            if held(*l) {
+                None
+            } else {
+                answered.next().map(|o| (o, Vec::new()))
+            }
+        })
         .collect();
     Ok((outcomes, Some(Owed { reason, files })))
 }
@@ -135,6 +154,7 @@ fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
             rung: i64::from(rung),
             granularity: GRAN_FILE,
             via_reexport: 0,
+            also: 0,
         }];
     }
     let (dst_path, dst_unit, rung, granularity, via) = match outcome {
@@ -165,7 +185,22 @@ fn rows(kind: &str, outcome: Outcome) -> Vec<EdgeRow> {
         rung: i64::from(rung),
         granularity,
         via_reexport: via,
+        also: 0,
     }]
+}
+
+/// One `also` row as an edge (proto 9.1.0): the site's own kind against
+/// the file node, flagged so the trust ledger tells it from the answer.
+fn also_row(kind: &str, dst_path: String, rung: ladder::Rung) -> EdgeRow {
+    EdgeRow {
+        kind: edge_kind(kind, &dst_path),
+        dst_path,
+        dst_unit: String::new(),
+        rung: i64::from(rung),
+        granularity: GRAN_FILE,
+        via_reexport: 0,
+        also: 1,
+    }
 }
 
 /// Code kinds import; the doc kinds — Markdown's link family and

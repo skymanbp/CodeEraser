@@ -127,6 +127,13 @@ pub use crate::graph::owed::{Resolved, each};
 /// 23 = the symbols table stores each unit's fourclass kind code
 /// (plan v2.31 step 2, the query family's `unit_kind` table): a new
 /// column on every row, so every symbol is re-detected once.
+/// 24 = Python imports reach what CPython executes (lane v235_pyimport,
+/// proto 9.1.0): a `from M import …` site stores the names it imports
+/// (`sites.names`) and a Python site's ancestor packages, imported
+/// submodules and relative importer's package chain land as `also`
+/// edges (`edges.also` = 1; the core's CE.Resolve.PyAlso) — new columns
+/// and new stored edges, so every site is re-detected and every edge
+/// re-resolved once.
 /// 18 = plan v2.30 step 5b's second sub-batch moves stored rows again:
 /// a brace-only Rust `use {a, b};` opens one site per entry, a Haskell
 /// PackageImports import keeps its package in the spec, a qualified R
@@ -155,7 +162,7 @@ pub use crate::graph::owed::{Resolved, each};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 23;
+pub const GRAPH_REV: i64 = 24;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
@@ -177,11 +184,12 @@ CREATE TABLE symbols (id INTEGER PRIMARY KEY,
   flags INTEGER NOT NULL, conv INTEGER NOT NULL, kind INTEGER NOT NULL);
 CREATE TABLE sites (id INTEGER PRIMARY KEY,
   file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
-  kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT);
+  kind INTEGER NOT NULL, line INTEGER NOT NULL, spec TEXT NOT NULL, owner TEXT,
+  names TEXT);
 CREATE TABLE edges (site_id INTEGER NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
   dst_path TEXT NOT NULL, dst_unit TEXT NOT NULL,
   kind INTEGER NOT NULL, rung INTEGER NOT NULL, granularity INTEGER NOT NULL,
-  via_reexport INTEGER NOT NULL DEFAULT 0);
+  via_reexport INTEGER NOT NULL DEFAULT 0, also INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE resolve_pending (path TEXT PRIMARY KEY);
 CREATE INDEX idx_sym_file ON symbols(file_id, key);
 CREATE UNIQUE INDEX idx_sym_ident ON symbols(file_id, key, nth);
@@ -280,7 +288,8 @@ fn write_sites(
     found: &[crate::graph::sites::RawSite],
 ) -> Result<()> {
     let mut site = tx.prepare(
-        "INSERT INTO sites (file_id, kind, line, spec, owner) VALUES (?1, ?2, ?3, ?4, ?5)",
+        "INSERT INTO sites (file_id, kind, line, spec, owner, names)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
     )?;
     for s in found {
         site.execute((
@@ -289,6 +298,7 @@ fn write_sites(
             s.line as i64,
             super::stored::spec(s.kind, &s.spec),
             s.owner.as_deref(),
+            (!s.names.is_empty()).then(|| s.names.join("\n")),
         ))?;
     }
     Ok(())
@@ -302,6 +312,9 @@ pub struct CachedSite {
     pub line: i64,
     pub spec: String,
     pub owner: Option<String>,
+    /// The names the site imports (`sites.names`, one per line; none
+    /// is the empty list).
+    pub names: Vec<String>,
 }
 
 /// One resolved edge, produced by the 2f resolver callback.
@@ -314,6 +327,10 @@ pub struct EdgeRow {
     /// 1 = the answer crossed a terminal file's re-export surface
     /// (§4 R5 amendment 2026-08-18) — the via_reexport mark.
     pub via_reexport: i64,
+    /// 1 = one of the site's `also` rows (proto 9.1.0): a real
+    /// dependency every graph reader follows, never the site's own
+    /// answer — the trust ledger reads `also = 0` (graph/load.rs).
+    pub also: i64,
 }
 
 /// Phase-2 gate: a matching stored key touches nothing; otherwise one
@@ -420,8 +437,8 @@ fn insert_edges(
     resolve: &mut impl FnMut(&[CachedSite]) -> Result<Resolved>,
 ) -> Result<Option<owed::Owed>> {
     let mut ins = tx.prepare(
-        "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity, via_reexport)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+        "INSERT INTO edges (site_id, dst_path, dst_unit, kind, rung, granularity, via_reexport, also)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     )?;
     let Resolved { rows, owed } = resolve(sites)?;
     anyhow::ensure!(
@@ -440,6 +457,7 @@ fn insert_edges(
                 e.rung,
                 e.granularity,
                 e.via_reexport,
+                e.also,
             ))?;
         }
     }
@@ -450,7 +468,7 @@ fn insert_edges(
 fn cached_sites(tx: &Transaction<'_>) -> Result<Vec<CachedSite>> {
     Ok(tx
         .prepare(
-            "SELECT s.id, f.path, s.kind, s.line, s.spec, s.owner
+            "SELECT s.id, f.path, s.kind, s.line, s.spec, s.owner, s.names
              FROM sites s JOIN files f ON f.id = s.file_id
              ORDER BY f.path, s.id",
         )?
@@ -462,6 +480,9 @@ fn cached_sites(tx: &Transaction<'_>) -> Result<Vec<CachedSite>> {
                 line: r.get(3)?,
                 spec: r.get(4)?,
                 owner: r.get(5)?,
+                names: r
+                    .get::<_, Option<String>>(6)?
+                    .map_or_else(Vec::new, |n| n.split('\n').map(str::to_string).collect()),
             })
         })?
         .collect::<rusqlite::Result<_>>()?)

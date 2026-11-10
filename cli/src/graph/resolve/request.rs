@@ -7,10 +7,12 @@
 //! document and the declared crate roots (`[graph] crate_roots`),
 //! every walked Java file's header as the walk read it (package, imports,
 //! type declarations: ladder/java_header.rs),
-//! the root `pyproject.toml` and every JSON compile database decoded (a library
-//! read; the rules applied to them are the core's), each flags file's
-//! text, and the facts that need the file system: the root's absolute
-//! text, the databases clangd's probes find, each C-family file's
+//! the root `pyproject.toml` (with the names each Python `from M import
+//! …` site imports, proto 9.1.0) and every JSON compile database decoded
+//! (a library read; the rules applied to them are the core's), each
+//! flags file's text, and the facts that need the file system: the
+//! root's absolute text, the databases clangd's probes find, each
+//! C-family file's
 //! include list (read in the walk), the response files the core
 //! asked for (`wanted`) and the facts the TS and Rust rungs asked for
 //! (`tsWanted`, facts.rs).
@@ -209,6 +211,18 @@ pub fn sites(
         Value::Array(rows),
         origins.into_iter().map(str::to_string).collect(),
     ))
+}
+
+/// The `py.names` table (proto 9.1.0): each site that carries names, by
+/// its index in `sites`, with them — the table's rows name only the
+/// sites whose row reads names (graph/sites/names.rs).
+pub fn names(names: &[&[String]]) -> Value {
+    names
+        .iter()
+        .enumerate()
+        .filter(|(_, n)| !n.is_empty())
+        .map(|(i, n)| json!([i, n]))
+        .collect()
 }
 
 /// The response files the core named and the request did not carry,

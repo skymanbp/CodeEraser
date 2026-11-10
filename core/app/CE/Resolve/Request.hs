@@ -17,7 +17,8 @@
 -- the declared Rust crate roots, the Cargo.toml files whose crate roots
 -- the declared-target pass asks for and which one owns each walked Rust
 -- file (the mounts pass),
--- the root `pyproject.toml` and every `compile_commands.json` as the
+-- the root `pyproject.toml` (with `py.names`: per Python `import_from`
+-- site by its index, the names it imports, proto 9.1.0) and every `compile_commands.json` as the
 -- decoded document (format decoding is a library read on that side;
 -- every rule applied to the document is here), each `compile_flags.txt`
 -- and each response file a database names as text. What needs the file system
@@ -56,6 +57,7 @@ data ResolveReq = ResolveReq
   , rqSites :: [Site]
   , rqSearch :: M.Map String [String]
   , rqPyproject :: Maybe Value
+  , rqPyNames :: [(Int, [String])]
   , rqLuaTemplates :: [(String, String)]
   , rqGoMods :: [(String, String)]
   , rqDescriptions :: [(String, String)]
@@ -119,6 +121,7 @@ instance FromJSON ResolveReq where
       <*> o .:? "sites" .!= []
       <*> maybe (pure M.empty) (withObject "config" (\c -> c .:? "searchRoots" .!= M.empty)) cfg
       <*> maybe (pure Nothing) (withObject "py" (.:? "pyproject")) py
+      <*> listAt o "py" "names"
       <*> listAt o "lua" "templates"
       <*> listAt o "go" "mods"
       <*> listAt o "r" "descriptions"

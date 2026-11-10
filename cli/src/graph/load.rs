@@ -61,13 +61,17 @@ row_tuple!(t6: A 0, B 1, C 2, D 3, E 4, F 5);
 /// planner's trust boundary (erase.md: a dead-file row is refused
 /// while its LANGUAGE still carries unresolved sites; the scalar
 /// count travels with the deadcode report, this names the owners so
-/// the language fold is a fact, never a guess).
+/// the language fold is a fact, never a guess). Here and in
+/// `graph_rows`' counts a site is unresolved when its OWN answer drew
+/// no edge: an `also` edge (proto 9.1.0, `edges.also` = 1) is a real
+/// dependency every graph reader follows, but it never vouches for the
+/// site's answer.
 pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     super::owed::refuse_if_owed(idx.raw())?;
     rows(
         idx.raw(),
         "SELECT DISTINCT f.path FROM sites s JOIN files f ON f.id = s.file_id
-         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id)
+         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
          ORDER BY f.path",
         |r| r.get(0),
     )
@@ -126,7 +130,7 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Path
     .collect();
     let unresolved: i64 = conn.query_row(
         "SELECT COUNT(*) FROM sites s
-         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id)",
+         WHERE NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)",
         [],
         |r| r.get(0),
     )?;
@@ -137,7 +141,7 @@ pub fn graph_rows(idx: &Index) -> Result<(Vec<String>, Vec<GraphEdge>, i64, Path
     let sites = rows(
         conn,
         "SELECT f.path, COUNT(*),
-                SUM(CASE WHEN NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id)
+                SUM(CASE WHEN NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
                     THEN 1 ELSE 0 END)
          FROM sites s JOIN files f ON f.id = s.file_id
          GROUP BY f.path ORDER BY f.path",

@@ -54,6 +54,7 @@ import qualified ReferenceJava
 import qualified QueryReferenceProps
 import qualified ReferenceResolve
 import qualified ResolveProps
+import qualified ResolvePyAlsoProps
 import qualified ScanCyclesProps
 import qualified ScanEventsProps
 import qualified ScanReferenceProps
@@ -192,6 +193,7 @@ batteries =
        , DocumentProps5.battery
        , DocumentProps6.battery
        , ResolveProps.battery
+       , ResolvePyAlsoProps.battery
        , SpellProps.battery
        ]
 

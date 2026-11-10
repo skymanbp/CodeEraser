@@ -75,11 +75,25 @@ pub enum Specifier {
 }
 
 leaked! {
-    /// (tree-sitter node kind, stable doc/wire label, specifier source).
+    /// (tree-sitter node kind, stable doc/wire label, specifier source,
+    /// names source).
     pub struct SiteKind {
         pub node: &'static str,
         pub label: &'static str,
         pub via: Specifier,
+        /// absent from every row but those that import names
+        pub names: Option<Names>,
+    }
+}
+
+leaked! {
+    /// Where a site's imported names live (proto 9.1.0; Python's `from M
+    /// import a, b as c`): every child under `field`, read by its own
+    /// `inner` field when it has one, else by its whole text. The
+    /// package's table names the fields; nothing here knows a language.
+    pub struct Names {
+        pub field: &'static str,
+        pub inner: &'static str,
     }
 }
 

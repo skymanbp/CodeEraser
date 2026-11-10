@@ -17,7 +17,9 @@
 -- set a walked Markdown file's and every Markdown reference site's file
 -- with its table, the HTML documents in strictly ascending (path) order,
 -- each an HTML file's of the request, and every HTML site's file with its
--- document — and the cap the request's text counts against. The
+-- document, the `py.names` rows in strictly ascending site order, each a
+-- Python `import_from` site's with no empty name (proto 9.1.0) — and the
+-- cap the request's text counts against. The
 -- first offender is refused by name ("<table> <i>: <why>"); a request
 -- that passes is the one CE.Resolve.World indexes without a check of its
 -- own.
@@ -27,12 +29,13 @@ import CE.Resolve.Cost
 import CE.Resolve.JavaHeader
 import CE.Resolve.Request
 import CE.Resolve.RsSurface (readsAsAt, readsAsSurface)
-import CE.Resolve.Tables (kindRefDef, kindRefLink)
+import CE.Resolve.Tables (kindImportFrom, kindRefDef, kindRefLink)
 import CE.Resolve.World (ofLangs)
 import CE.Wire (label)
 import Data.Array (listArray, (!))
 import Data.Aeson (Value (..), encode)
 import qualified Data.ByteString.Lazy as BL
+import Control.Applicative ((<|>))
 import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 import qualified Data.Set as Set
@@ -48,6 +51,7 @@ requestSize rq =
     [ texts (rqFiles rq)
     , texts (rqOrigins rq)
     , sum [1 + chars (sSpec s) | s <- rqSites rq]
+    , sum [1 + texts ns | (_, ns) <- rqPyNames rq]
     , sum [1 + texts ds | ds <- M.elems (rqSearch rq)]
     , maybe 0 doc (rqPyproject rq)
     , sum [1 + chars d + chars s | (d, s) <- rqLuaTemplates rq]
@@ -99,7 +103,7 @@ offence rq =
     [ ascending "file" (rqFiles rq)
     , ascending "origin" (rqOrigins rq)
     , asum [Just ("origin " <> show i <> ": a walked file") | (i, o) <- zip [0 :: Int ..] (rqOrigins rq), Set.member o walked]
-    , asum (zipWith site [0 :: Int ..] (rqSites rq))
+    , asum (zipWith site [0 :: Int ..] (rqSites rq)) <|> pyNamesOffence rq
     , ascending "java.header" (map fst (rqJavaHeaders rq))
     , asum [Just ("c.db " <> show i <> ": probe out of range") | (i, Db _ p _) <- zip [0 :: Int ..] (cDbs (rqC rq)), p < 0 || p > 2]
     , asum [Just ("c.include " <> show i <> ": not a walked file") | (i, (p, _)) <- zip [0 :: Int ..] (cIncludes (rqC rq)), not (Set.member p walked)]
@@ -143,6 +147,24 @@ offence rq =
     | sKind s < 0 || toInteger (sFrom s) < 0 || toInteger (sFrom s) >= paths = Just ("site " <> show i <> ": kind or file out of range")
     | sLang s == langJava && sLine s == Nothing = Just ("site " <> show i <> ": a Java site without its line")
     | sLang s == langRs && sLine s == Nothing = Just ("site " <> show i <> ": a Rust site without its line")
+    | otherwise = Nothing
+
+-- | `py.names` in strictly ascending site order, each row a Python
+-- `import_from` site's with at least one name and no empty one (the
+-- sites already in range: the site checks come first).
+pyNamesOffence :: ResolveReq -> Maybe String
+pyNamesOffence rq =
+  asum
+    [ asum [Just (label "py.names" i <> "not after the site before it") | (i, (a, b)) <- zip [1 :: Int ..] (zip ixs (drop 1 ixs)), a >= b]
+    , listToMaybe [label "py.names" i <> why | (i, (at, ns)) <- zip [0 :: Int ..] (rqPyNames rq), Just why <- [row at ns]]
+    ]
+ where
+  ixs = map fst (rqPyNames rq)
+  sites = listArray (0, length (rqSites rq) - 1) (rqSites rq)
+  row at ns
+    | at < 0 || at >= length (rqSites rq) = Just "site out of range"
+    | sLang (sites ! at) /= langPy || sKind (sites ! at) /= kindImportFrom = Just "not a Python import_from site"
+    | null ns || any null ns = Just "no names, or an empty one"
     | otherwise = Nothing
 
 -- | The assets, the anchor sets (each a walked Markdown file's) and the

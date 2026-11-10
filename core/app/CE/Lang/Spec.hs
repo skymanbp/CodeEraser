@@ -144,15 +144,19 @@ instance FromJSON Specifier where
       "spanned" -> arg >>= withObject "spanned" (\a -> Spanned <$> a .: "from" <*> a .: "to")
       _ -> fail ("unknown specifier form " <> form)
 
--- | (node kind, frozen label, specifier source): one way a site opens.
-data SiteKind = SiteKind {skNode :: String, skLabel :: String, skVia :: Specifier}
+-- | (node kind, frozen label, specifier source, names source): one way
+-- a site opens, and where the names it imports come from — `{field,
+-- inner}`, written only when the site has them (proto 9.1.0).
+data SiteKind = SiteKind {skNode :: String, skLabel :: String, skVia :: Specifier, skNames :: Maybe (String, String)}
   deriving (Eq)
 
 instance ToJSON SiteKind where
-  toJSON s = object ["node" .= skNode s, "label" .= skLabel s, "via" .= skVia s]
+  toJSON s = object (["node" .= skNode s, "label" .= skLabel s, "via" .= skVia s] <> ["names" .= object ["field" .= f, "inner" .= i] | Just (f, i) <- [skNames s]])
 
 instance FromJSON SiteKind where
-  parseJSON = withObject "site" $ \o -> SiteKind <$> o .: "node" <*> o .: "label" <*> o .: "via"
+  parseJSON = withObject "site" $ \o -> SiteKind <$> o .: "node" <*> o .: "label" <*> o .: "via" <*> (o .:? "names" >>= traverse names)
+   where
+    names = withObject "names" $ \n -> (,) <$> n .: "field" <*> n .: "inner"
 
 -- | A call naming its target by an argument (Lua, R).
 data CallSite = CallSite {csLabel, csPackage :: String, csCallees :: Kinds, csUnquoted :: Maybe String}

@@ -15,6 +15,7 @@
 mod call;
 mod html;
 mod java;
+mod names;
 
 use super::md;
 use super::spec::{SiteKind, Specifier, sites as site_table};
@@ -32,12 +33,15 @@ pub struct RawSite {
     pub nth: usize,
     pub spec: String,
     pub owner: Option<String>,
+    /// The names the statement imports (graph/sites/names.rs), empty
+    /// for every site whose table row reads none.
+    pub names: Vec<String>,
 }
 
 impl RawSite {
-    /// A site at a line, nth assigned centrally in detect(): the
-    /// detectors that read lines and attributes rather than fields
-    /// (Markdown, HTML) construct through here.
+    /// A site at a line, nth assigned centrally in detect(): every
+    /// detector constructs through here, the field-reading ones by way
+    /// of `site`.
     pub fn at(kind: &'static str, line: usize, spec: String) -> Self {
         RawSite {
             kind,
@@ -45,6 +49,7 @@ impl RawSite {
             nth: 0,
             spec,
             owner: None,
+            names: Vec::new(),
         }
     }
 }
@@ -138,11 +143,11 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<RawSite> {
 fn emit(node: tree_sitter::Node, src: &[u8], kind: &SiteKind, out: &mut Vec<RawSite>) -> bool {
     let found = specs(node, src, &kind.via);
     let opened = !found.is_empty();
-    out.extend(
-        found
-            .into_iter()
-            .map(|(at, spec)| site(kind.label, at, spec)),
-    );
+    let names = names::read(node, src, kind.names.as_ref());
+    out.extend(found.into_iter().map(|(at, spec)| RawSite {
+        names: names.clone(),
+        ..site(kind.label, at, spec)
+    }));
     opened
 }
 
@@ -263,13 +268,7 @@ fn import_target(node: tree_sitter::Node, src: &[u8]) -> Option<String> {
 }
 
 fn site(label: &'static str, node: tree_sitter::Node, spec: String) -> RawSite {
-    RawSite {
-        kind: label,
-        line: node.start_position().row + 1,
-        nth: 0, // assigned centrally in detect()
-        spec,
-        owner: None,
-    }
+    RawSite::at(label, node.start_position().row + 1, spec)
 }
 
 fn field_text(node: tree_sitter::Node, src: &[u8], field: &str) -> Option<String> {

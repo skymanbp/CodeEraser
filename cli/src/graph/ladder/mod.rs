@@ -152,34 +152,57 @@ pub struct Site<'a> {
     pub line: usize,
 }
 
+/// A site's other references beside its answer — the core's `also` rows
+/// (`(target, rung)` in target order; CE.Resolve.PyAlso, proto 9.1.0).
+pub type Also = Vec<(String, Rung)>;
+
 /// Dispatch one site to its language ladder (`resolve_all` of one).
 pub fn resolve(lang: Lang, site: &Site, scope: &Scope) -> Result<Outcome, String> {
     let mut out = resolve_all(&[(lang, site)], scope)?;
     Ok(out.pop().expect("one site in, one outcome out"))
 }
 
-/// Dispatch sites to their language ladders, outcomes in site order:
-/// the languages the core holds go in one resolve/1 request, any other
-/// is refused as unsupported. An empty specifier is refused here by name
-/// before any ladder sees it — a bare-package rung or a package-root
-/// lookup would otherwise read `""` as a name; Markdown and HTML keep
-/// their own reading of an empty target (the document itself; the HTML
-/// rungs tell a page reference from an asset fetch of nothing).
+/// Dispatch sites to their language ladders, outcomes in site order
+/// (`resolve_all_also` without its `also` rows).
 pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome>, String> {
+    Ok(resolve_all_also(sites, &[], scope)?
+        .into_iter()
+        .map(|(outcome, _)| outcome)
+        .collect())
+}
+
+/// Dispatch sites to their language ladders, each outcome with its
+/// `also` rows, in site order: the languages the core holds go in one
+/// resolve/1 request, any other is refused as unsupported. `names` runs
+/// beside `sites` — the names each site's statement imports (a Python
+/// `from M import …`, proto 9.1.0) — or is empty when no site carries
+/// any. An empty specifier is refused here by name before any ladder
+/// sees it — a bare-package rung or a package-root lookup would otherwise
+/// read `""` as a name; Markdown and HTML keep their own reading of an
+/// empty target (the document itself; the HTML rungs tell a page
+/// reference from an asset fetch of nothing).
+pub fn resolve_all_also(
+    sites: &[(Lang, &Site)],
+    names: &[&[String]],
+    scope: &Scope,
+) -> Result<Vec<(Outcome, Also)>, String> {
     let empty = |lang: Lang, site: &Site| {
         site.spec.is_empty() && !matches!(lang, Lang::Markdown | Lang::Html)
     };
-    let core: Vec<(Lang, &Site)> = sites
+    let held = |(lang, site): &(Lang, &Site)| !empty(*lang, site) && super::resolve::in_core(*lang);
+    let core: Vec<(Lang, &Site)> = sites.iter().filter(|s| held(s)).copied().collect();
+    let core_names: Vec<&[String]> = sites
         .iter()
-        .filter(|(lang, site)| !empty(*lang, site) && super::resolve::in_core(*lang))
-        .copied()
+        .enumerate()
+        .filter(|(_, s)| held(s))
+        .map(|(i, _)| names.get(i).copied().unwrap_or(&[]))
         .collect();
-    let mut answered = super::resolve::outcomes(&core, scope)?.into_iter();
+    let mut answered = super::resolve::outcomes(&core, &core_names, scope)?.into_iter();
     Ok(sites
         .iter()
         .map(|(lang, site)| {
             if empty(*lang, site) {
-                Outcome::Unresolved(Reason::Empty)
+                (Outcome::Unresolved(Reason::Empty), Vec::new())
             } else if super::resolve::in_core(*lang) {
                 answered.next().expect("one outcome per core site")
             } else {
@@ -187,7 +210,7 @@ pub fn resolve_all(sites: &[(Lang, &Site)], scope: &Scope) -> Result<Vec<Outcome
                 // (plan v2.5) is never indexed — if either ever arrives,
                 // the honest answer is the documented no-rungs stance,
                 // never a guess.
-                Outcome::Unresolved(Reason::Unsupported)
+                (Outcome::Unresolved(Reason::Unsupported), Vec::new())
             }
         })
         .collect())

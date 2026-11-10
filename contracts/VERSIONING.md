@@ -7,6 +7,11 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 6.0.0 止；5.1.0–3.0.0 已于 2026-10-06 逐字节迁入 [VERSIONING-ARCHIVE-3.0-5.1.md](VERSIONING-ARCHIVE-3.0-5.1.md)（算法轨 W6 的 9.0.0 同版加性段落下后正册读 751 行），2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **9.1.0**（Python 导入够到 CPython 执行的模块，加性 minor，车道 v235_pyimport，2026-11-09；方法学册 06 Python 行）：请求加性 `py.names` `[[站点下标, [名字…]]]`——
+> 每个 Python `import_from` 站点导入的名字（严格升序、名字非空，别的站点带名字按名拒绝）；应答加性 `also` `[[站点下标, 路径, 级]]`（按 (站点, 路径) 严格升序）：
+> 站点答案之外 CPython 还执行的文件——点分路径上每级祖先包的 `__init__.py`、作为子模块存在的名字（先包后模块、每个根都试、两根都中两条都出）、相对导入者自己
+> 所在的连续包链（`CE.Resolve.PyAlso`）；从不重复站点自己的文件或答案，未中的名字与缺席的 `__init__.py` 不出行也不进台账。`results` 每行与别的族逐字节不变；
+> 定义包的站点表加 `names` 来源（hello 的 `tablesDigest` 随之变）。golden：`resolve/golden` 加第 22 对，既有各对的应答多一个 `also` 键（第 1 对的 Python 站点得出行），其余只动 proto。
 > **9.0.0**（`resolve/1` 改以文本过线，major，计划 v2.33 算法轨 W2-text 阶段 A，2026-10-04；设计册 `docs/reference/algorithm-track.md` §3 第一条、§6 W2a′ 行与 §11 第 43–49 条）：
 > 请求退役 `segs`、`vocab`、`affixes`、`dirs` 四个键，定义包的 `resolve {words, affixes}` 改为 `resolve {configs}`（测量侧要读的配置文件名：`go.mod`，阶段 B 起加 `DESCRIPTION`）——
 > 带旧键的请求不再被读懂，按 §2 升 major：8.x 的 ce 对 9.0.0 的核、9.0.0 的 ce 对 8.x 的核，都在握手处按 major 不符拒绝。新请求全是文本：`files` = 走查到的路径
@@ -566,7 +571,7 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 {"proto": "<SemVer>", "type": "<message-type>", ...}
 ```
 
-- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->9.0.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
+- `proto`：协议版本，当前 **<!--ce:ver:proto#v-->9.1.0<!--/ce-->**（单一来源：`cli/src/corelink.rs::PROTO`
   与 `core/app/CE/Protocol/Version.hs::proto`，两处必须一致——core 侧由共享
   fixture 钉住，两侧相等由 `cli/tests/it/core_wire.rs::corelink_open_and_desync`
   的 PROTO 断言焊住）。
@@ -714,11 +719,11 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - **request 行的 proto 有意滞留（2.2.0 立场声明，M5-3a；每次 major 重锚）**：2.2.0 翻批只重写
   reply 行、request 行留在 2.1.0；此后每次 major 都把全部 request 行随之机器重写
   （3.0.0 / 4.0.0 / 5.0.0 / 6.0.0 / 7.0.0 / 8.0.0 / 9.0.0 各一次），minor 之间有意滞留——今日锚在 **<!--ce:ver:anchor#v-->9.0.0<!--/ce-->**
-  （<!--ce:count:golden_requests#digits-->369<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）——它们是"minor 偏斜
+  （<!--ce:count:golden_requests#digits-->370<!--/ce--> 行，server 恒答 <!--ce:ver:proto#v-->9.1.0<!--/ce-->）——它们是"minor 偏斜
   必须被接受"（§2：minor/patch 不同 = 接受）的**常设回归 fixture**。后人把
   request 行"修"成与 server 同版 = 删除该回归覆盖，禁止；新增 fixture 的
   request 沿用当前 major 锚（今日 <!--ce:ver:anchor#v-->9.0.0<!--/ce-->；唯 `handshake/hello-ok` 的握手 request 随
-  server 走 <!--ce:ver:proto#v-->9.0.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
+  server 走 <!--ce:ver:proto#v-->9.1.0<!--/ce-->）。这组「行数/锚/答版」三元组里，行数与答版是派生值——行数由 `contracts/fixtures/*/golden.ndjson` 数出、答版即 `PROTO`，两者都以 chip 落在本页；锚是手写常量（`cli/tests/it/facts/ver.rs::ANCHOR`），每逢 major 随请求行一起重锚并复核。
 - `fixtures/hook-payloads/`：Claude Code `PreToolUse(Edit|Write)` 的**实测** stdin
   dump（官方文档无逐字示例，ADR-007 ⚠️ 项）。采集方式见该目录 README。
 - fixture 变更 = 契约变更，走 §2 规则。
@@ -730,5 +735,5 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 | Rust | <!--ce:tool:rust#v-->1.94.1<!--/ce--> | `rust-toolchain.toml`（仓库根） |
 | GHC | <!--ce:tool:ghc#v-->9.14.1<!--/ce-->（LTS） | CI `ghc-version` + 本文件 |
 | 依赖快照 | cabal freeze | `core/cabal.project.freeze`（378fe40 入库，2026-08-07；升级依赖时 `cabal freeze` 重生成） |
-| 协议 | <!--ce:ver:proto#v-->9.0.0<!--/ce--> | §1 所列两处常量 |
+| 协议 | <!--ce:ver:proto#v-->9.1.0<!--/ce--> | §1 所列两处常量 |
 | daemon 协议 | <!--ce:ver:daemon#v-->2.3.0<!--/ce--> | [DAEMON.md](DAEMON.md) + `cli/src/daemon/proto.rs::DAEMON_PROTO`（形状 golden：`fixtures/daemon/`；反引号拼写无入边——dogfood deadcode 门在 CI 首点火即抓获，链接语法即活化） |

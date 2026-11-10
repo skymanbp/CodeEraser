@@ -16,7 +16,10 @@ top =
   \]\n\
   \sites = [\n\
   \  {node = 'import_statement', label = 'import', via = {form = 'each_import_target'}},\n\
-  \  {node = 'import_from_statement', label = 'import_from', via = {form = 'field', arg = 'module_name'}},\n\
+  \  # the names a `from M import …` imports: each child under the `name`\n\
+  \  # field, an `aliased_import` read by its own `name` (the `as` part is\n\
+  \  # the local binding); `*` sits under no `name` field (proto 9.1.0)\n\
+  \  {node = 'import_from_statement', label = 'import_from', via = {form = 'field', arg = 'module_name'}, names = {field = 'name', inner = 'name'}},\n\
   \  # `from __future__ import` has no module field: the site names it\n\
   \  {node = 'future_import_statement', label = 'import_from', via = {form = 'literal', arg = '__future__'}},\n\
   \]\n"

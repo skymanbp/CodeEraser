@@ -16,7 +16,10 @@
 -- External classification. A reply row per site, `[rung, outcome,
 -- target, reason]`, is exactly what the measuring side's outcome
 -- carried, a Markdown section's slug (null: an anchor not confirmed)
--- beside it in `sections` as `[row, slug]`; the C family's forced
+-- beside it in `sections` as `[row, slug]`, a Python site's other
+-- references (its ancestor packages, its imported submodules,
+-- CE.Resolve.PyAlso; proto 9.1.0) in `also` as `[row, target, rung]`
+-- from the names `py.names` carries; the C family's forced
 -- includes (`-include x.h`) ride beside them as `[unit, header]` path
 -- pairs. A response file the expansion
 -- names and the request did not carry is `wanted` (the measuring side
@@ -54,7 +57,8 @@ import CE.Resolve.Java (resolveJava)
 import CE.Resolve.JavaPick (javaEnv)
 import CE.Resolve.Lua (resolveLua, searched)
 import CE.Resolve.Md (resolveMd)
-import CE.Resolve.Py (pyproject, resolvePy)
+import CE.Resolve.Py (PyProject, pyproject, resolvePy)
+import CE.Resolve.PyAlso (alsoPy)
 import CE.Resolve.R (resolveR)
 import CE.Resolve.Request
 import CE.Resolve.Rs (RsEnv (..), ctxFor, needAll, resolveRs)
@@ -83,7 +87,6 @@ judged proto rq = reply proto rq resolved body False
  where
   w = world rq
   (parsed, env, ix) = cHalf w rq
-  expanded = mconcat (map snd (M.elems parsed))
   py = pyproject (rqPyproject rq)
   luaDirs = searched (searchRoots "lua" rq) (rqLuaTemplates rq)
   gomods = [m | (rel, text) <- rqGoMods rq, let m = parseGoMod rel text, isJust (gmModule m)]
@@ -111,13 +114,14 @@ judged proto rq = reply proto rq resolved body False
   (ts, reached, tsWaits) = tsHalf w fx rq
   (rs, crates, rsPrivate, rsWaits) = rsHalf w fx rq
   tsWanted = tsWaits <> rsWaits
-  wanted = xWanted expanded
+  wanted = xWanted (mconcat (map snd (M.elems parsed)))
   complete = Set.null wanted && Set.null tsWanted
   answers = if complete then map site (rqSites rq) else []
   resolved = length [() | a <- answers, case a of AUnresolved _ -> False; _ -> True]
   body =
     [ "results" .= map answerRow answers
     , "sections" .= [(i, slug) | (i, ASection _ slug _) <- zip [0 :: Int ..] answers]
+    , "also" .= alsoTable w py rq answers
     , "forced" .= (if complete then map (\(u, h) -> [u, h]) (forcedArcs env ix) else [])
     , "wanted" .= Set.toList wanted
     , "tsWanted" .= map wantedRow (Set.toList tsWanted)
@@ -129,6 +133,19 @@ judged proto rq = reply proto rq resolved body False
     , "private" .= Set.toList (Set.fromList [f | (f, owner) <- rqHsOwners rq, maybe False (`Cabal.keepsPrivate` f) (M.lookup owner cabals)] <> rsPrivate)
     ]
       <> ["inspected" .= v | Just v <- [inspected <$> rqInspect rq]]
+
+-- | The `also` rows (proto 9.1.0): each Python site's other references
+-- beside its answer, `[row, target, rung]` in (row, target) order, read
+-- with the names `py.names` gives it; none while the answers wait.
+alsoTable :: World -> Maybe PyProject -> ResolveReq -> [Answer] -> [(Int, String, Int)]
+alsoTable w py rq answers =
+  [ (i, t, r)
+  | (i, s, a) <- zip3 [0 ..] (rqSites rq) answers
+  , sLang s == langPy
+  , (t, r) <- alsoPy w py (pathOf w (sFrom s), sSpec s, M.findWithDefault [] i named) a
+  ]
+ where
+  named = M.fromList (rqPyNames rq)
 
 -- | The C family's half of a request: every JSON database parsed (its
 -- entries, the response files it read and wants), the search
@@ -184,7 +201,7 @@ rsHalf w fx rq = (rs, done crates, done kept, Set.unions (waits crates : waits k
 
 -- | Over-cap: a complete degraded reply with empty tables.
 degraded :: String -> ResolveReq -> B8.ByteString
-degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "private"]] True
+degraded proto rq = reply proto rq 0 [k .= ([] :: [Value]) | k <- ["results", "sections", "also", "forced", "wanted", "tsWanted", "tsReached", "responses", "packages", "mains", "crates", "private"]] True
 
 -- | The resolve.result object (aeson writes the keys sorted).
 reply :: String -> ResolveReq -> Int -> [Pair] -> Bool -> B8.ByteString
