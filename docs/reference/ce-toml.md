@@ -76,7 +76,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | key | default | meaning |
 |---|---|---|
 | `min_points` | *(absent)* | History points required before a slope is judged |
-| `decline_floor_micro` | *(absent)* | Decline floor in micro-per-mille per day; declaring it arms the trend fail bit |
+| `decline_floor_micro` | *(absent)* | Decline floor in millionths of the full scale per day (one point a day at scale 1000 = 1000); declaring it arms the trend fail bit |
 
 ## [rules]
 

@@ -5,7 +5,8 @@
 -- Codes are frozen positions:
 --   0 minPoints          fewer rows than this = no verdict (absence,
 --                        never a fabricated flat) — default 3
---   1 declineFloorMicro  micro-per-mille per day; the fail bit trips
+--   1 declineFloorMicro  millionths of the full scale per day (one point
+--                        a day at scale 1000 = 1000); the fail bit trips
 --                        only when a floor was DECLARED (>0) and the
 --                        verdict is degrading — default 0 = the
 --                        report-only posture every family launches in

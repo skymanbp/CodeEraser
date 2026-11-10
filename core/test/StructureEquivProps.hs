@@ -17,7 +17,8 @@ import CE.Structure.Cost (structNodeCap)
 import CE.Structure.Entropy (perMille, tsallis2Norm)
 import qualified CE.Structure.Modularity as Mod
 import CE.Structure.Shape (shapeCode)
-import Data.Aeson (Value (..), toJSON)
+import Data.Aeson (Result (..), Value (..), fromJSON, toJSON)
+import qualified Data.Map.Strict as M
 import ReferenceStructure (SIn (..), diversity, expected, flagged, style)
 import StructureGen (cases, encode')
 import WireHarness (fieldsOf, refusedBy, runLegs, setKey)
@@ -32,6 +33,7 @@ battery =
     , "forged depths, the retired pattern road and an odd inside sum are refused as the reference reads them"
     , "an over-cap request degrades over no facts and the default knobs"
     , "modularity agrees on every three-directory graph of unit edges and intra masses, at four floors"
+    , "booklet 04's range: no axis lists a directory twice, no charge passes half the scale, and at the neutral dial the score is in [scale/2, scale]"
     ]
     [ all (\c -> fieldsOf respond (encode' c) keys == Just (expected False c)) cases
     , nonVacuous
@@ -40,6 +42,7 @@ battery =
     , all forged cases
     , fieldsOf respond big (keys <> ["degraded", "reason"]) == Just (expected True blank <> [Just (Bool True), Just (String "structure_too_large")])
     , modularGrid
+    , all bounded cases && any neutralFlagged cases
     ]
  where
   keys = ["axes", "score", "entropy", "findings", "divergence", "deviations", "splitCandidates", "sizeExempt", "patternShapes"]
@@ -66,6 +69,32 @@ modularGrid =
   arcs = [(a, b) | a <- [0 .. 2], b <- [0 .. 2], a /= b]
   tree refs edges fl mass =
     SIn [[0, 0, 0, 2, 0], [1, 0, 1, 0, 0], [2, 0, 1, 0, 0]] Nothing [] refs [] Nothing [] Nothing (Just edges) Nothing ([], [], [], []) [[19, fl], [20, mass]]
+
+-- | Booklet 04 (the density fold): each axis flags DISTINCT directories
+-- of the N, so v <= N and floor(scale * v / (v + N)) <= scale / 2; the
+-- neutral-dial fold is then at least scale - floor(scale / 2).
+bounded :: SIn -> Bool
+bounded c = case fieldsOf respond (encode' c) ["axes", "score", "findings"] of
+  Just [Just a, Just s, Just f]
+    | Success axs <- (fromJSON a :: Result [[Integer]])
+    , Success sc <- (fromJSON s :: Result Integer)
+    , Success fs <- (fromJSON f :: Result [[Integer]]) ->
+        all (\r -> case r of [_, p] -> 2 * p <= scale; _ -> False) axs
+          && M.size (M.fromList [(r, ()) | r <- fs]) == length fs
+          && (not (neutral c) || (2 * sc >= scale && sc <= scale))
+  _ -> False
+ where
+  scale = knobOf c 8 1000
+
+neutralFlagged :: SIn -> Bool
+neutralFlagged c = neutral c && any (\(_, ds) -> not (null ds)) (flagged c)
+
+neutral :: SIn -> Bool
+neutral c = knobOf c 7 10 == 10
+
+-- | The effective knob: the last declared row, else the default.
+knobOf :: SIn -> Integer -> Integer -> Integer
+knobOf c code dflt = last (dflt : [v | [k, v] <- sKnobs c, k == code])
 
 nonVacuous :: Bool
 nonVacuous =

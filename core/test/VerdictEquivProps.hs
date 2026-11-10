@@ -36,6 +36,7 @@ battery =
     , "the join lattice agrees on every leg combination, verdict, legs, reasons and confidence"
     , "two hundred verdict/1 replies agree on the score, the axes and the weight echo"
     , "past the row cap the reply degrades; a descending sim pair is refused by name"
+    , "booklet 05's bounds: axes 1, 4, 5 and 6 charge at most half the scale; the equal-weight neutral score keeps its floor"
     ]
     [ all charges factCases
     , and [softLine kk lo hi locs == refSoftLine kk lo hi locs | locs <- locCases, (kk, lo, hi) <- [(softLineK, softMin, softMax), (1, 1, 100000)]]
@@ -45,12 +46,38 @@ battery =
     , and [judge bound l == refJudge bound l && confidence mask bits == refConfidence bound l | l <- joinFamily, let (_, mask, bits) = judge bound l]
     , all wired wireCases
     , capAndRefusal
+    , boundsHold
     ]
 
 charges :: (ScoreKnobs, Maybe Integer, Inputs) -> Bool
-charges (k, soft, inp) = pens == refCharges k soft inp && and [score k w pens == refScore k violCostNeutral w pens | w <- [[], [[0, 2], [3, 0], [6, 5]]]]
+charges c@(k, soft, inp) = pens == refCharges k soft inp && and [score k w pens == refScore k violCostNeutral w pens | w <- [[], [[0, 2], [3, 0], [6, 5]]]]
  where
-  pens = penalties k soft (Facts (iSim inp) (iPos inp) (iChurn inp) (iCont inp) (iDocs inp) (classKnobsOf (iClassRows inp)) (iLoops inp))
+  pens = pensOf c
+
+pensOf :: (ScoreKnobs, Maybe Integer, Inputs) -> [(Integer, Integer)]
+pensOf (k, soft, inp) = penalties k soft (Facts (iSim inp) (iPos inp) (iChurn inp) (iCont inp) (iDocs inp) (classKnobsOf (iClassRows inp)) (iLoops inp))
+
+-- | Booklet 05: axes 1, 4, 5 and 6 count rows of their own opportunity
+-- list, so v <= n and the charge is at most half the scale. Axes 0, 2
+-- and 3 are not bounded by the core (the clone and docdup masses may
+-- name files outside their opportunity set — the contract does not
+-- refuse it), so at equal weights and the neutral dial the floor is
+-- scale - floor((3 (scale - 1) + 4 floor(scale / 2)) / 7): 287 at 1000.
+subsets :: (ScoreKnobs, Maybe Integer, Inputs) -> Bool
+subsets c@(k, _, _) =
+  and [2 * p <= s | (a, p) <- pens, a `elem` subsetAxes]
+    && (sViolCost k /= violCostNeutral || fst (score k [] pens) >= s - (3 * (s - 1) + 4 * (s `div` 2)) `div` 7)
+ where
+  s = sScoreScale k
+  pens = pensOf c
+
+subsetAxes :: [Integer]
+subsetAxes = [1, 4, 5, 6]
+
+-- | The bounds over every fact set, and not vacuously: some subset axis
+-- charges.
+boundsHold :: Bool
+boundsHold = all subsets factCases && any (\c -> any (\(a, p) -> a `elem` subsetAxes && p > 0) (pensOf c)) factCases
 
 ratchets :: ([[Integer]], Maybe [Integer], Maybe ([[Integer]], [Integer]), [[Integer]], [Integer]) -> Bool
 ratchets (classRows, present, base, cont, disc) =

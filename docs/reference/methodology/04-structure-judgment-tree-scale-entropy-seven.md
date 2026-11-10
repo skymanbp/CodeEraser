@@ -278,7 +278,11 @@ with `violCost = 10` (knob 7, the family's strictness dial) and its structural n
 [Cost.hs:85-86](../../../core/app/CE/Structure/Cost.hs#L85)): at the
 neutral default the fold is the scale minus the FLOOR of the mean of the bounded charges (each
 charge itself floored once), at most one point above the scale minus the exact mean — lenient by
-less than one — and it cannot saturate.
+less than one — and it cannot saturate. Every axis's flagged directories are distinct members of
+the `N` directories (node ids, map keys over range-checked ids, or a strictly ascending table), so
+`v ≤ N` and `v/(v+N) ≤ 1/2`: no charge passes half the scale, and at the neutral dial the
+structure score lies in `[500, 1000]` (500 = every directory flagged on every judged axis). A
+battery row holds the bound over the seeded trees (StructureEquivProps).
 `scale = 1000` (knob 8). All arithmetic is exact `Rational` then integer `div` — no float
 anywhere on the path. `judgedAxisCount` is 5 to 8 depending on which optional tables
 rode. The axis rows the reply carries are the **charges** (‰ of scale), the verdict-family

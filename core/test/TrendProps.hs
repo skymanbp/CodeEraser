@@ -105,7 +105,8 @@ robustness = case replyObj (wireReq spiked) of
     dx = map (subtract mx) xs
     dy = map (subtract my) ys
 
--- | One day apart, one per-mille drop = -1000 micro-per-mille/day:
+-- | One day apart, one per-mille drop = -1000 millionths of the scale
+-- per day:
 -- floor 999 says degrading, floor 1000 says flat (band inclusive),
 -- rising mirrors to improving, constant is flat at every floor.
 boundaries :: Bool
