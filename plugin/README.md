@@ -24,7 +24,9 @@ MCP：[`.mcp.json`](.mcp.json) 注册只读报告面（`ce mcp`），<!--ce:coun
 一起到位：装插件 = 钩子与报告一起装，不需要另外 `claude mcp add`。工具名
 由 Claude Code 自动命名空间化为 `mcp__plugin_codeeraser_reports__<tool>`。
 `erase` 工具只到**计划**为止、`erase_log` 只读它的审计轨迹：`apply` 没有 face、也不会有，因为一个能凭自己
-的权限删文件的机器面，是橡皮擦唯一不能出的东西；`update_check` 同理只到检查；
+的权限删文件的机器面，是橡皮擦唯一不能出的东西；计划行数超过核的上限（`limits.caps.erase_rows`）时按路径分批
+送核，结果与一次送完逐字节相同；目标靠计算得出的加载与 `__all__` 不全是字面量的星号导入让该语言不能为死文件作保，
+计划不会提议删这些文件；`update_check` 同理只到检查；
 `similar_units` 是同角色顾问（`ce similar` 的同一份文档），只当顾问不判决；
 `query` / `rules` 是代码查询家族（`ce query` / `ce rules` 的同一份文档，问题或规则文件在核的 `query/1`
 上判决），这里只出报告，退出码是 CLI 的事（读核的否决位：`ce rules` 有违规退 1，程序错误或核判不了退 2）；`query` 带 `prelude: true` 时不问问题，

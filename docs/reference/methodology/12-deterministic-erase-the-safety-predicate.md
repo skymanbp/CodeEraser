@@ -163,15 +163,18 @@ degraded reply with `fail:true` and an empty judgment table, so no row can be
 authorized from an over-cap computation
 ([VERSIONING-ARCHIVE-2.15-2.33.md:144-146](../../../contracts/VERSIONING-ARCHIVE-2.15-2.33.md#L144)).
 
-The judgment is one request — the closure chooses across the rows of one path,
-so it cannot be chunked — and the erase client never sends a plan over the
-ceiling: the package states it (`limits.caps.erase_rows`), and a plan with more
-candidates is refused by name before anything is sent, naming the narrowing a
-user has, a subtree or an `exclude` in ce.toml
-([wire.rs:55-66](../../../cli/src/erase/wire.rs#L55)). A degraded reply, should
-one still arrive, is an error carrying the core's reason rather than an empty
-table read as “nothing to erase”, and the decoded count must equal the
-candidate count ([wire.rs:46-52](../../../cli/src/erase/wire.rs#L46), [wire.rs:92-98](../../../cli/src/erase/wire.rs#L92)).
+The erase client never sends a request over the ceiling the package states
+(`limits.caps.erase_rows`): a plan with more candidates goes in several
+requests over the one core link, split by path the way scan/1 splits by file —
+the closure chooses among the rows of one path and nothing across paths, so a
+path's rows never straddle a request and the split plan is the one-request
+plan byte for byte; each request carries its own dense path ids, and the
+verdicts concatenate in request order (lane v235_graphtrust, item T5). One path
+with more candidates than a request holds is refused by name before anything
+is sent ([wire.rs:71-95](../../../cli/src/erase/wire.rs#L71)). A degraded reply,
+should one still arrive, is the plan's refusal, naming the request, rather than
+an empty table read as “nothing to erase”, and each request's decoded count
+must equal its candidate count ([wire.rs:22-56](../../../cli/src/erase/wire.rs#L22), [wire.rs:118-128](../../../cli/src/erase/wire.rs#L118)).
 
 ### 5. `--apply`: predicates before writes
 

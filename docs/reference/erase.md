@@ -96,7 +96,12 @@ v2.30 step 7b; until then the planner closed the set for itself
 `targets=[[pathId,start,end]]` aligned with `rows` (dense path ids —
 names never cross; `0/0` = the whole file; a `verbatim_doc` row names
 a span, the other two classes a whole file; the table in key order),
-and the reply carries `kept`, one bit per row:
+and the reply carries `kept`, one bit per row. The closure never looks
+across paths, so a plan past the core's row ceiling
+(`limits.caps.erase_rows`, 4096) goes in several requests split by
+path — a path's rows never straddle a request, each request numbers
+its own paths from 0 — and plans exactly as one request would; one
+path with more rows than a request holds is refused by name:
 
 1. an eraseable whole-file row owns its path — every span row on that
    path is closed out (an apply that deleted the file and then spliced

@@ -41,11 +41,24 @@ pub fn plan(root: &Path, db: Option<PathBuf>, core: &str) -> Result<Plan> {
 
 /// The plan and the link erase/1 judged it over, for its document.
 pub fn planned(root: &Path, db: Option<PathBuf>, core: &str) -> Result<(Plan, Held)> {
+    let cap = crate::tables::get().limits.caps.erase_rows;
+    planned_within(root, db, core, cap)
+}
+
+/// [`planned`] with the request ceiling named: the rows go to erase/1
+/// in requests of at most `cap` rows, split by path (wire::chunks), so
+/// the plan is the same at any `cap` that holds the largest path.
+pub fn planned_within(
+    root: &Path,
+    db: Option<PathBuf>,
+    core: &str,
+    cap: usize,
+) -> Result<(Plan, Held)> {
     let mut g = gather::candidates(root, db, core)?;
     g.candidates.sort_by(|a, b| {
         (&a.path, a.span, CLASS_NAMES[a.class]).cmp(&(&b.path, b.span, CLASS_NAMES[b.class]))
     });
-    let (verdicts, held) = wire::judge(core, &g.candidates)?;
+    let (verdicts, held) = wire::judge(core, &g.candidates, cap)?;
     let rows: Vec<Row> = g
         .candidates
         .iter()

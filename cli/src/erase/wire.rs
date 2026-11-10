@@ -17,19 +17,47 @@ use crate::erase::model::{Candidate, REASON_NAMES, Verdict};
 use anyhow::{Context, Result, ensure};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
+use std::ops::Range;
 
-/// One erase.request over the open core link. The judgment cannot be
-/// chunked (the closure chooses across the rows of one path), so a plan
-/// over the core's row ceiling (`limits.caps.erase_rows`) is refused by
-/// name before it is sent (plan v2.33 step 11b item 4), and a degraded
-/// reply, should one arrive, is the core's named reason. The link goes
-/// back for the plan's document (none when nothing was judged).
-pub fn judge(core: &str, cands: &[Candidate]) -> Result<(Vec<Verdict>, Held)> {
+/// The erase.requests over one open core link, at most `cap` rows each
+/// (`limits.caps.erase_rows` from the plan): the rows are split by path
+/// the way scan/1 splits by file — a path's rows never straddle a
+/// request, because the closure (`kept`) chooses among the rows of one
+/// path and nothing across paths — and each request carries its own
+/// dense path ids. The verdicts concatenate in request order; one
+/// degraded reply is the plan's refusal, naming the request. The link
+/// goes back for the plan's document (none when nothing was judged).
+pub fn judge(core: &str, cands: &[Candidate], cap: usize) -> Result<(Vec<Verdict>, Held)> {
     if cands.is_empty() {
         return Ok((Vec::new(), Err("no candidate was judged".into())));
     }
-    within_cap(cands.len(), crate::tables::get().limits.caps.erase_rows)?;
+    let parts = chunks(cands, cap)?;
     let mut link = crate::corelink::judged::open(core, "erase/1")?;
+    let mut verdicts = Vec::with_capacity(cands.len());
+    for (k, part) in parts.iter().enumerate() {
+        let slice = &cands[part.clone()];
+        let reply = link
+            .request("erase", request_body(slice))
+            .map_err(anyhow::Error::msg)?;
+        if reply["degraded"] != Value::Bool(false) {
+            let why = crate::corelink::judged::degraded(&reply)
+                .err()
+                .map_or("no degraded flag".into(), String::from);
+            anyhow::bail!(
+                "erase/1 degraded the plan at request {} of {} (rows {}..{}) ({why})",
+                k + 1,
+                parts.len(),
+                part.start,
+                part.end
+            );
+        }
+        verdicts.extend(decode(&reply, slice.len())?);
+    }
+    Ok((verdicts, Ok(link)))
+}
+
+/// One request's body: the fact rows and their target table.
+fn request_body(cands: &[Candidate]) -> Value {
     let rows: Vec<[i64; 5]> = cands
         .iter()
         .map(|c| {
@@ -37,38 +65,40 @@ pub fn judge(core: &str, cands: &[Candidate]) -> Result<(Vec<Verdict>, Held)> {
             [c.class as i64, w, x, y, z]
         })
         .collect();
-    let reply = link
-        .request(
-            "erase",
-            json!({ "rows": rows, "targets": targets_of(cands) }),
-        )
-        .map_err(anyhow::Error::msg)?;
-    if reply["degraded"] != Value::Bool(false) {
-        let why = crate::corelink::judged::degraded(&reply)
-            .err()
-            .map_or("no degraded flag".into(), String::from);
-        anyhow::bail!("erase/1 degraded the plan ({why})");
-    }
-    Ok((decode(&reply, cands.len())?, Ok(link)))
+    json!({ "rows": rows, "targets": targets_of(cands) })
 }
 
-/// The plan's rows against the core's ceiling, before anything is sent:
-/// over it is refused by name with the narrowing a user has — the plan
-/// gathers every family's findings under the root, so a subtree or an
-/// `exclude` in ce.toml is what shrinks it.
-pub(crate) fn within_cap(rows: usize, cap: usize) -> Result<()> {
-    ensure!(
-        rows <= cap,
-        "erase: {rows} candidates over the core's erase_rows cap {cap}; narrow the plan with \
-         `ce erase <subdirectory>` or an `exclude` in ce.toml"
-    );
-    Ok(())
+/// The request split: greedy runs of whole paths, each run at most
+/// `cap` rows. The planner sorts the candidates by path, so a path's
+/// rows are adjacent; one path with more rows than a request holds is
+/// refused by name before anything is sent (it cannot be split without
+/// splitting its closure), with the narrowing a user has.
+pub(crate) fn chunks(cands: &[Candidate], cap: usize) -> Result<Vec<Range<usize>>> {
+    let mut out: Vec<Range<usize>> = Vec::new();
+    let mut at = 0;
+    while at < cands.len() {
+        let path = &cands[at].path;
+        let end = at + cands[at..].iter().take_while(|c| &c.path == path).count();
+        ensure!(
+            end - at <= cap,
+            "erase: {path} alone has {} candidates over the core's erase_rows cap {cap}; a \
+             path's rows are judged in one request — narrow the plan with an `exclude` in ce.toml",
+            end - at
+        );
+        match out.last_mut() {
+            Some(open) if end - open.start <= cap => open.end = end,
+            _ => out.push(at..end),
+        }
+        at = end;
+    }
+    Ok(out)
 }
 
 /// The target table: one [pathId, start, end] per candidate — path
-/// ids dense in order of first appearance (the planner sorts the
-/// candidates by path before judging, so the ids ascend with the
-/// rows and the table is in the key order the contract asks for),
+/// ids dense in order of first appearance, from 0 in each request
+/// (the planner sorts the candidates by path before judging, so the
+/// ids ascend with the rows and the table is in the key order the
+/// contract asks for),
 /// 0/0 for a whole file, else the span's 1-based inclusive lines.
 fn targets_of(cands: &[Candidate]) -> Vec<[i64; 3]> {
     let mut ids: BTreeMap<&str, i64> = BTreeMap::new();
