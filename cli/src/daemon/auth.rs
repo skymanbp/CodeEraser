@@ -29,7 +29,7 @@ pub fn establish(root: &Path) -> Result<String> {
     let token: String = bytes.iter().map(|b| format!("{b:02x}")).collect();
     let path = root.join(TOKEN_FILE);
     if let Some(dir) = path.parent() {
-        std::fs::create_dir_all(dir).with_context(|| format!("mkdir {}", dir.display()))?;
+        crate::root::make_state_dir(dir).with_context(|| format!("mkdir {}", dir.display()))?;
     }
     write_owner_only(&path, &token)?;
     Ok(token)

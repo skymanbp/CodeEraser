@@ -32,8 +32,13 @@ fn main() -> ExitCode {
     // this process is a console face — the only one that arms
     // progress, which is how the MCP, GUI and daemon consumers of the
     // same library stay silent without opting out (plan v2.16). After
-    // the language pin, because the phase words switch with it.
-    codeeraser::progress::arm();
+    // the language pin, because the phase words switch with it. `ce
+    // mcp` and `ce daemon` are this binary but no console: armed, the
+    // project's `[ui] lang` pinned their machine faces and a forced
+    // `CE_PROGRESS=1` painted over a protocol's stderr (v2.35 G9, R3-36)
+    if !matches!(cli.cmd, Cmd::Mcp { .. } | Cmd::Daemon { .. }) {
+        codeeraser::progress::arm();
+    }
     // which core is a process-level question since every command
     // reads the core's definition package (plan v2.32 step 2):
     // named once, before any command runs

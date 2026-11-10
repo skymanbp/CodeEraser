@@ -104,11 +104,20 @@ CE_MANIFEST_VERSION="0.0.0-test"
 CE_BASE_URL="file:///nonexistent"
 CE_SHA256_${envkey}_CE="$pin"
 EOF
+# a partial a killed run left two days ago is swept by the download;
+# a live sibling's fresh one is not (v2.35 G9, P-A6)
+mkdir -p "$work/data1"
+: > "$work/data1/$payload.download.99999"
+touch -t 202001010000 "$work/data1/$payload.download.99999"
+: > "$work/data1/$payload.download.88888"
 out=$(CE_MANIFEST_FILE="$work/manifest1.env" \
       CE_BOOTSTRAP_BASE_URL="file://$work/src" \
       CLAUDE_PLUGIN_DATA="$work/data1" sh "$STARTER" --version)
 [ "$out" = "$want" ] || fail 1 "downloaded binary answered '$out' not '$want'"
 [ -f "$work/data1/$payload" ] || fail 1 "verified binary not placed"
+[ ! -f "$work/data1/$payload.download.99999" ] || fail 1 "a day-old partial was not swept"
+[ -f "$work/data1/$payload.download.88888" ] || fail 1 "a fresh partial was swept"
+rm -f "$work/data1/$payload.download.88888"
 
 # --- state 2: warm — source gone, cached copy answers ----------------
 rm "$work/src/$payload"

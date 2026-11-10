@@ -190,7 +190,7 @@ pub fn observe_append(root: &Path, session: Option<&str>, mut line: serde_json::
     let path = root.join(OBSERVE_REL);
     if path
         .parent()
-        .is_some_and(|dir| std::fs::create_dir_all(dir).is_err())
+        .is_some_and(|dir| crate::root::make_state_dir(dir).is_err())
     {
         return;
     }

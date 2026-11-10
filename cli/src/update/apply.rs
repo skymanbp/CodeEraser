@@ -64,8 +64,7 @@ pub fn run(doc: &Value, installer: bool) -> Result<Value> {
             return Err(e);
         }
     };
-    place(&ce_tmp, &ce_target)?;
-    place(&core_tmp, &core_target)?;
+    place_pair((&ce_tmp, &ce_target), (&core_tmp, &core_target))?;
     let saved = if installer {
         Some(save_installer(&pins, &plat)?)
     } else {
@@ -134,21 +133,78 @@ fn fetch_verified(
     Ok(tmp)
 }
 
-fn place(tmp: &Path, target: &Path) -> Result<()> {
-    let old = target.with_extension("old");
-    if target.exists() {
-        std::fs::rename(target, &old).with_context(|| format!("retire {}", target.display()))?;
+/// Place `ce`, then `ce-core`, as the PAIR the header promises (v2.35
+/// G9, R3-39): when the second rename fails the first is rolled back,
+/// so a failed apply never leaves a new `ce` beside an old core. The
+/// retired copies are dropped only once both have landed.
+pub(super) fn place_pair(ce: (&Path, &Path), core: (&Path, &Path)) -> Result<()> {
+    let first = place(ce.0, ce.1)?;
+    match place(core.0, core.1) {
+        Ok(second) => {
+            first.finish();
+            second.finish();
+            Ok(())
+        }
+        Err(e) => {
+            let _ = std::fs::remove_file(core.0);
+            Err(match first.undo() {
+                Ok(()) => e.context("ce-core was not placed; ce is back at the version it was"),
+                Err(u) => e.context(format!(
+                    "ce-core was not placed, and ce could not be put back ({u}) — re-run the update"
+                )),
+            })
+        }
     }
-    std::fs::rename(tmp, target).with_context(|| format!("place {}", target.display()))?;
+}
+
+/// One binary in place, its retired copy kept until the pair lands.
+struct Placed {
+    target: PathBuf,
+    old: Option<PathBuf>,
+}
+
+impl Placed {
+    /// Put the retired copy back (none: remove what was placed).
+    fn undo(&self) -> std::io::Result<()> {
+        std::fs::remove_file(&self.target)?;
+        match &self.old {
+            Some(old) => std::fs::rename(old, &self.target),
+            None => Ok(()),
+        }
+    }
+
+    /// The retired copy may still be the running process (Windows):
+    /// best effort now, swept for certain on the next apply.
+    fn finish(self) {
+        if let Some(old) = self.old {
+            let _ = std::fs::remove_file(old);
+        }
+    }
+}
+
+fn place(tmp: &Path, target: &Path) -> Result<Placed> {
+    let old = target.with_extension("old");
+    let old = if target.exists() {
+        std::fs::rename(target, &old).with_context(|| format!("retire {}", target.display()))?;
+        Some(old)
+    } else {
+        None
+    };
+    if let Err(e) = std::fs::rename(tmp, target) {
+        if let Some(old) = &old {
+            let _ = std::fs::rename(old, target);
+        }
+        return Err(e).with_context(|| format!("place {}", target.display()));
+    }
     #[cfg(unix)]
     {
         use std::os::unix::fs::PermissionsExt as _;
         std::fs::set_permissions(target, std::fs::Permissions::from_mode(0o755))?;
     }
-    // the retired copy may still be the running process (Windows):
-    // best effort now, swept for certain on the next apply
-    let _ = std::fs::remove_file(&old);
-    Ok(())
+    Ok(Placed {
+        target: target.to_path_buf(),
+        old,
+    })
 }
 
 /// Remove the `.old` twins a previous apply could not delete while

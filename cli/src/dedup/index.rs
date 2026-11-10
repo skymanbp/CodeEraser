@@ -88,7 +88,8 @@ impl Index {
     /// silently reused stale fingerprints for unchanged files).
     pub fn open(db_path: &Path, p: Params) -> Result<Self> {
         if let Some(dir) = db_path.parent() {
-            std::fs::create_dir_all(dir).with_context(|| format!("create {}", dir.display()))?;
+            crate::root::make_state_dir(dir)
+                .with_context(|| format!("create {}", dir.display()))?;
         }
         let conn = Connection::open(db_path)
             .with_context(|| format!("open index {}", db_path.display()))?;

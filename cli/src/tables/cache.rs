@@ -79,7 +79,7 @@ pub(super) fn write(file: &Path, core: &Identity, digest: u64, pack: &str) {
     let Some(dir) = file.parent() else {
         return;
     };
-    if std::fs::create_dir_all(dir).is_err() {
+    if crate::root::make_state_dir(dir).is_err() {
         return;
     }
     let head = serde_json::json!({

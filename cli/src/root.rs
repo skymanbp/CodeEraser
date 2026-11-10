@@ -117,6 +117,36 @@ pub fn judging_root(session: &Path, target: &Path) -> Option<PathBuf> {
     }
 }
 
+/// Create `dir`, a directory inside a project's `.ce/`, and leave in
+/// that `.ce/` a `.gitignore` of `*` whenever it has none (v2.35 G9,
+/// P-A5): the state directory holds the index, the observe feed and the
+/// daemon's token, and a repository that never ignored it showed all
+/// three to `git add -A` — an existing `.ce/` from before this rule
+/// included. `*` ignores the file itself, so a clean tree stays clean;
+/// a `.gitignore` already there, whatever it says, is never rewritten.
+/// The one door every writer of `.ce/` takes; a directory with no `.ce`
+/// ancestor (a `--db` placed elsewhere) is only created.
+pub(crate) fn make_state_dir(dir: &Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dir)?;
+    let Some(ce) = dir
+        .ancestors()
+        .find(|a| a.file_name().is_some_and(|n| n == ".ce"))
+    else {
+        return Ok(());
+    };
+    // create_new: two writers racing on a missing file both succeed,
+    // and neither overwrites what the other (or a user) put there
+    let made = std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(ce.join(".gitignore"));
+    match made {
+        Ok(mut file) => std::io::Write::write_all(&mut file, b"*\n"),
+        Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
 /// Whether `p` itself carries an anchor — the discriminator between
 /// "this directory is a project" and "project_root fell back to what
 /// it was given". The guard uses it to stay INERT in anchorless

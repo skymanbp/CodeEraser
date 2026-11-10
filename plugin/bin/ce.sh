@@ -138,8 +138,13 @@ pin_for() {
 # how it degrades), 2 SHA256 mismatch (said here). The temp is
 # PID-suffixed: two sessions sharing one data dir once curled into ONE
 # path, the interleaved bytes failed the hash and an rm -f deleted the
-# sibling's file mid-verify.
+# sibling's file mid-verify. A partial left by a run that was killed
+# mid-download is swept here once it is a day old (v2.35 G9, P-A6):
+# a live sibling's temp is minutes old, and nothing else ever removes
+# the dead ones.
 fetch_verified() {
+    find "$(dirname "$2")" -maxdepth 1 -type f -name '*.download.*' -mtime +0 \
+        -exec rm -f {} + 2>/dev/null || true
     ftmp="$2.download.$$"
     if ! fetch "$1" "$ftmp"; then
         rm -f "$ftmp"

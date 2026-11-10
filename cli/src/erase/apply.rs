@@ -155,7 +155,7 @@ fn append_log(root: &Path, r: &Row, plan_hash: u64) -> Result<()> {
     use std::io::Write;
     let path = root.join(super::log::LOG_REL);
     if let Some(dir) = path.parent() {
-        std::fs::create_dir_all(dir)?;
+        crate::root::make_state_dir(dir)?;
     }
     let ts_ms = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)

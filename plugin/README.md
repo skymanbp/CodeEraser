@@ -94,7 +94,7 @@ file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒�
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
 分级区档位映射（软线→硬线之间按位置 <25 % observe / 25–75 % warn / >75 % ask）走 `[guard] zone_tiers`
 这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
-观察档数据在 `<project>/.ce/observe.ndjson`（已被 `.ce/` gitignore 规则覆盖），
+观察档数据在 `<project>/.ce/observe.ndjson`（`.ce/` 里缺 `.gitignore` 时 ce 写一份内容为 `*` 的，整个目录不进版本库；已有的不改），
 每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`，版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
 `tombstone` 事件行（PreToolUse 一次写入删掉了名字、或它的标题 / 标识符 / 散文把本会话删掉的名字
 写回成「无 X」时才落一行，只记名字的哈希）、`settled` 事件行（PostToolUse 腿：PreToolUse 答 `ask` 后工具真跑了才落一行，只带 `file` 与 `tool_use_id`；同一次工具调用的各行都带 `tool_use_id`，`probe` 行另带钩子对这次事件的决定 `decision`，墓碑行的 `applied` 为 null 时按有无对应的 `settled` 行读）与 Stop / precommit / commitmsg 行上的 `tombstone` 对象
