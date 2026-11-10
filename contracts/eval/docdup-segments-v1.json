@@ -366,11 +366,11 @@
       },
       "live": 4,
       "path": "cli/src/fourclass/session.rs",
-      "seg_sha256": "866cf35e9528658f1dd351ed2b8fcea150faefae0951a795b54eb89bb7055b92",
+      "seg_sha256": "00629bf539a548c1e16cdb758f293f4d07c4596d7b8f6bc4aedf137b38011f4f",
       "segs_by": {
         "comment_block": 4
       },
-      "sha256": "2acdcbe425e166972a6425892976b6db4a9594265ce03a1c985f050cbaaaad15"
+      "sha256": "f10980b8856edff62cf497ac8b21f7897f12ea57d1856e5f4fb20162bf1d45b1"
     },
     {
       "exempt_by": {},

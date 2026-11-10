@@ -141,7 +141,7 @@ yes ([candidates.rs:91-113](../../../cli/src/mention/candidates.rs#L91)):
    text inside the declaring file that a loader or a reader treats as a reference
    ([selfref.rs:81-131](../../../cli/src/mention/selfref.rs#L81),
    [doc.rs:21-72](../../../cli/src/mention/selfref/doc.rs#L21),
-   [blocks.rs:18-27](../../../cli/src/mention/selfref/doc/blocks.rs#L18)).
+   [blocks.rs:19-28](../../../cli/src/mention/selfref/doc/blocks.rs#L19)).
 
 A survivor becomes one row keyed `[node, vis, conv]` with its names kept beside the key
 on the Rust side — the `graph/1` table carries integers only, so the core judges no name; the
@@ -309,8 +309,8 @@ The pin is the formula, the row is the reading.
 
 | corpus | U (listed − terms) | language | declared (exported) | unmentioned (exported) | survival | collision-saved / unmentioned | of by-other |
 |---|---|---|---|---|---|---|---|
-| self @ this commit | 1762 (1979 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 180 signed) | haskell | 7523 (1724) | 1147 (15) | 15.2 % | 199 / 1147 = 17.3 % | 199 / 6376 |
-| | | rust | 3462 (1905) | 321 (2) | 9.3 % | 2 / 321 = 0.6 % | 2 / 3110 |
+| self @ this commit | 1771 (1988 − 23 pattern-ignored − 2 oversize − 12 early-NUL − 180 signed) | haskell | 7523 (1724) | 1147 (15) | 15.2 % | 199 / 1147 = 17.3 % | 199 / 6376 |
+| | | rust | 3493 (1918) | 328 (4) | 9.4 % | 2 / 328 = 0.6 % | 2 / 3133 |
 | | | python | 17 (17) | 0 (0) | 0.0 % | 0 / 0 | 0 / 17 |
 | | | typescript | 5 (5) | 0 (0) | 0.0 % | 0 / 0 | 0 / 5 |
 | cobra adbc881 | 65 (66 − 1 early-NUL) | go | 613 (481) | 403 (313) | 65.7 % | 4 / 403 = 1.0 % | 4 / 200 |
@@ -380,7 +380,7 @@ consumers that never ask must not pay. A/B medians, n = 9 interleaved on two ide
 HEAD trees with their own `.ce/`, old client (1f493df) vs this batch, quiet window:
 `ce audit --hook` 1.186 s → 0.954 s, `ce erase` (plan) 1.526 s → 1.493 s, `ce check`
 1.786 s → 1.802 s (spread 1.729–1.928) — no consumer slower
-([PERF-BUDGET.md:196-205](../../PERF-BUDGET.md#L196)). The pass itself: cold ≈ 1.95 s, warm ≈
+([PERF-BUDGET.md:197-206](../../PERF-BUDGET.md#L197)). The pass itself: cold ≈ 1.95 s, warm ≈
 0.54 s on the self corpus ([PERF-BUDGET.md:61](../../PERF-BUDGET.md#L61)).
 
 **Gates in CI**: the self-U formula pin and every term of the formula witnessed on a

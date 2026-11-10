@@ -278,7 +278,7 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
   [guard/tombstone.rs:143-161](../../../cli/src/guard/tombstone.rs#L143),
-  [hookio.rs:276-292](../../../cli/src/hookio.rs#L276),
+  [hookio.rs:287-303](../../../cli/src/hookio.rs#L287),
   [proto.rs:75-82](../../../cli/src/daemon/proto.rs#L75),
   [Text/Guard.hs:17](../../../core/app/CE/Text/Guard.hs#L17)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the

@@ -39,58 +39,58 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|049be84698107cae|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 356,
+    "line": 357,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// The raw connection. Read surface for the graph domain"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|4941b6562b468902|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 175,
-    "end": 192,
+    "line": 176,
+    "end": 193,
     "text": "let toks = if lang.fingerprints() {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|8ea0435b9504d203|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 139,
+    "line": 140,
     "text": "let chash = tokens::fnv1a(src) as i64;\nlet stored: Option<(i64, bool)> = self"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|b7a4b1ebd6335ed2|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 155,
+    "line": 156,
     "text": "Ok(stored != Some((chash, foreign)))"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|cd3b9b36ea3bf35e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 182,
-    "end": 215,
+    "line": 183,
+    "end": 216,
     "text": "let tx = self.conn.transaction()?;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|d4d0ef2ed905d0c6|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 180,
-    "end": 181,
+    "line": 181,
+    "end": 182,
     "text": "let hashes: Vec<u64> = toks.iter().map(|t| t.hash).collect();"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|df57b763e96f63e4|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 338,
+    "line": 339,
     "text": "rows.sort();\nOk(rows)\n}\n\n/// Every fingerprint occurrence of an OWN file, deterministically"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/index.rs|e3dd79e176b2419e|0": {
     "target": "../../../cli/src/dedup/index.rs",
-    "line": 429,
-    "end": 430,
+    "line": 430,
+    "end": 431,
     "text": "let start = toks[f.start].start_line;"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|20fa5e5d34020a2d|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 136,
-    "end": 139,
+    "line": 154,
+    "end": 157,
     "text": "let filter = pairs::Filter {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 264,
-    "end": 272,
+    "line": 282,
+    "end": 290,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|4e0cd4185a41b141|0": {
@@ -101,25 +101,25 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|8417d9b1774d5bed|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 243,
-    "end": 252,
+    "line": 261,
+    "end": 270,
     "text": "/// One run's walk counters and the two report filters it used — the"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|94988c2d0aa739bb|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 138,
+    "line": 156,
     "text": "min_distinct: min_distinct.unwrap_or_else(pairs::default_min_distinct),"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 254,
-    "end": 257,
+    "line": 272,
+    "end": 275,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 272,
-    "end": 277,
+    "line": 290,
+    "end": 295,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/mod.rs|cd2d93872a10c371|0": {
@@ -313,14 +313,14 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|37a579bd02b95508|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 182,
-    "end": 204,
+    "line": 181,
+    "end": 203,
     "text": "pub(crate) fn schema_current(conn: &Connection, p: Params) -> Result<bool> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|41f41e9c4daadc13|0": {
     "target": "../../../cli/src/dedup/schema.rs",
-    "line": 191,
-    "end": 201,
+    "line": 190,
+    "end": 200,
     "text": "fn meta_entries(p: Params) -> [(&'static str, i64); 7] {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema.rs|659deda6c25737e8|0": {
@@ -330,7 +330,7 @@
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/schema/parser.rs|393a9b6adcd8c25e|0": {
     "target": "../../../cli/src/dedup/schema/parser.rs",
-    "line": 26,
+    "line": 56,
     "text": "pub(super) fn invalidate(tx: &Transaction<'_>, epoch: i64) -> Result<()> {"
   },
   "docs/reference/methodology/01-t1-t2-clone-detection-winnowing-fingerprint.md|../../../cli/src/dedup/tokens.rs|1640d969ccad876c|0": {
@@ -669,14 +669,14 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|25b89bbb801865ff|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 264,
-    "end": 268,
+    "line": 282,
+    "end": 286,
     "text": "impl Params {\n/// Winnowing guarantee threshold t: every match of at least this"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/mod.rs|b63b570494f0d35b|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 272,
-    "end": 280,
+    "line": 290,
+    "end": 298,
     "text": "impl Default for Params {"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/pairs.rs|46b878bf058b8b23|0": {
@@ -699,7 +699,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/schema/parser.rs|95a6d7067bf206ae|0": {
     "target": "../../../cli/src/dedup/schema/parser.rs",
-    "line": 34,
+    "line": 64,
     "text": "DELETE FROM t3ted;"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/dedup/sources.rs|3c40da0fa353b216|0": {
@@ -2994,8 +2994,8 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/trend/mod.rs|5af2e9a2d6460f64|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 181,
-    "end": 184,
+    "line": 203,
+    "end": 206,
     "text": "// the pinned baseline is the request's own identity (O34), so a"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Clone/Cost.hs|626115d91a368b79|0": {
@@ -4009,8 +4009,8 @@
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/md_mask.rs|9d1180021f74c445|0": {
     "target": "../../../cli/src/graph/md_mask.rs",
-    "line": 137,
-    "end": 155,
+    "line": 127,
+    "end": 145,
     "text": "pub(crate) fn list_item(trimmed: &str) -> Option<usize> {"
   },
   "docs/reference/methodology/06-graph-liveness-and-dead-code-verdicts.md|../../../cli/src/graph/nodes.rs|3ff37ff122970805|0": {
@@ -5365,7 +5365,7 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 137,
+    "line": 155,
     "text": "min_tokens: min_tokens.unwrap_or(p.guarantee()),"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/probe.rs|5959c3e2b25fe5a1|0": {
@@ -6728,20 +6728,20 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|19cee92be350da23|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 113,
-    "end": 123,
+    "line": 114,
+    "end": 124,
     "text": "// The index is the CORE's, so it is checked here rather than"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|3de2c8ae6e838625|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 135,
-    "end": 139,
+    "line": 136,
+    "end": 140,
     "text": "let suspicions: Vec<serde_json::Value> = batch"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|49f81cd4f4c48f86|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 93,
-    "end": 97,
+    "line": 94,
+    "end": 98,
     "text": "// judged_path: the scan-only arm (plan v2.5) is size-gated,"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|5e8587e3a602fb04|0": {
@@ -6758,8 +6758,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/session.rs|b9421a160d39c7d3|0": {
     "target": "../../../cli/src/fourclass/session.rs",
-    "line": 83,
-    "end": 86,
+    "line": 84,
+    "end": 87,
     "text": "Some('C') => {"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../cli/src/fourclass/units.rs|004c0c93214d773a|0": {
@@ -7385,13 +7385,13 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|02421ffd7685ec74|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 173,
-    "end": 184,
+    "line": 195,
+    "end": 206,
     "text": "pinned_soft: Some(soft), // ...but ONE fence for every point"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|0920e96e3069fb9c|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 127,
+    "line": 129,
     "text": "rows.reverse(); // git log is newest-first; charts read oldest-first"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|616b5c49e8b1db54|0": {
@@ -7401,12 +7401,12 @@
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|837592edb2511f12|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 160,
+    "line": 172,
     "text": "/// One commit's absolute score, judged in a detached temp worktree"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|a48e784705f6169e|0": {
     "target": "../../../cli/src/trend/mod.rs",
-    "line": 139,
+    "line": 151,
     "text": "/// Newest `n` first-parent commits of HEAD: (full sha, committer"
   },
   "docs/reference/methodology/10-score-trajectory-the-trend-slope-verdict.md|../../../cli/src/trend/mod.rs|a5d917234234f42d|0": {
@@ -7641,8 +7641,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/mod.rs|ac2c5564282c6467|0": {
     "target": "../../../cli/src/dedup/mod.rs",
-    "line": 254,
-    "end": 280,
+    "line": 272,
+    "end": 298,
     "text": "/// Winnowing parameters. Guarantee threshold t = matches of at least"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/dedup/pairs.rs|60965f2ba816a1d8|0": {
@@ -7897,20 +7897,20 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|3a8b54ca5c2a102a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 215,
-    "end": 217,
+    "line": 226,
+    "end": 228,
     "text": "pub const WARN_BUDGET_TOKENS: usize = 200;"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|44411a3af4faf66a|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 284,
-    "end": 295,
+    "line": 295,
+    "end": 306,
     "text": "}\nlet Ok(feed) = tail(&root.join(OBSERVE_REL), FEED_WINDOW) else {"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|6b228056b04890ac|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 231,
-    "end": 243,
+    "line": 242,
+    "end": 254,
     "text": "/// Clip an injected reason to its token budget, on a char boundary,"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|b3476063b36213f7|0": {
@@ -7938,8 +7938,8 @@
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../cli/src/hookio.rs|f4ff7db88736dfe8|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 294,
-    "end": 309,
+    "line": 305,
+    "end": 320,
     "text": "/// §4.4 B4 session-level suppression: has this (rule, file) already"
   },
   "docs/reference/methodology/11-fpr-discipline-and-the-guard-tier-ladder.md|../../../core/app/CE/Text/Guard.hs|90ffa29edb5ad9ba|0": {
@@ -8762,8 +8762,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/selfref/doc/blocks.rs|b655885efd4aa60d|0": {
     "target": "../../../cli/src/mention/selfref/doc/blocks.rs",
-    "line": 18,
-    "end": 27,
+    "line": 19,
+    "end": 28,
     "text": "pub(super) fn code_blocks(lang: Lang, lines: &[String]) -> Vec<String> {"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../cli/src/mention/store.rs|295d30e8a6dc7f2e|0": {
@@ -9081,8 +9081,8 @@
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a2c3821eca59417f|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 196,
-    "end": 205,
+    "line": 197,
+    "end": 206,
     "text": "## L 轮片 (7)+(8) K45 传否路 A/B（实测 2026-08-28，release，自仓 HEAD da68275 两棵 worktree 各自 `.ce/`，用户会话静默窗，n=9 交错 ABAB）"
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../PERF-BUDGET.md|a6700d086855d460|0": {
@@ -9241,8 +9241,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/hookio.rs|6f2c810537010e09|0": {
     "target": "../../../cli/src/hookio.rs",
-    "line": 276,
-    "end": 292,
+    "line": 287,
+    "end": 303,
     "text": "/// This session's lines in the feed window, parsed — the accumulator"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/scan/opaque.rs|e7ce4e4e02d6c391|0": {
@@ -10252,8 +10252,8 @@
   },
   "docs/reference/methodology/15-same-role-advisor-sparse-retrieval-and-in-repo-association.md|../../PERF-BUDGET.md|e1c5c11930d6dd52|0": {
     "target": "../../PERF-BUDGET.md",
-    "line": 255,
-    "end": 274,
+    "line": 256,
+    "end": 275,
     "text": "## v2.29 步 3 词袋倒排表入索引后冷 / 暖索引 A/B（实测 2026-09-05，release，同一台机，自仓 687 文件，`ce dedup --db <scratch>` 各自成库，A/B 交错 n=3，量前 `Get-CimInstance` 系统占用 ≈10 %）"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../.github/workflows/ci.yml|0955ece8a2c484ec|0": {
@@ -10455,7 +10455,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/graph.rs|f2f974f576dc2712|0": {
     "target": "../../../cli/src/query/facts/graph.rs",
-    "line": 163,
+    "line": 164,
     "text": "fn line_counts(ctx: &Ctx<'_>, sink: &mut Sink) -> Result<()> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|179260bdca83ea10|0": {
@@ -10465,7 +10465,7 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|8e9bc98f8ad96c9c|0": {
     "target": "../../../cli/src/query/facts/mod.rs",
-    "line": 140,
+    "line": 159,
     "text": "pub fn assemble(root: &Path, db: Option<PathBuf>, core: &str, program: &Lexed) -> Result<Facts> {"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../cli/src/query/facts/mod.rs|f9803ac8e916bbe8|0": {

@@ -390,7 +390,13 @@
       "units": 1
     },
     "fourclass": {
-      "degraded": "daemon_unavailable"
+      "added_moved": 0,
+      "added_novel": 11,
+      "degraded": null,
+      "relocations": [],
+      "removed_deleted": 0,
+      "removed_moved": 0,
+      "suspicions": []
     },
     "mode": "observe",
     "net_loc": 11,

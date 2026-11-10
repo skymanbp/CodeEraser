@@ -128,7 +128,7 @@ Numeric details that are policy, not taste:
   before the lookup ([Url.hs:30-46](../../../core/app/CE/Resolve/Url.hs#L30)); an indented
   code block offers no heading and no site — four columns past the innermost open list item's content
   column, or past the margin outside a list, where no paragraph is open
-  ([md_mask.rs:28-38](../../../cli/src/graph/md_mask.rs#L28), [md_mask.rs:137-155](../../../cli/src/graph/md_mask.rs#L137)).
+  ([md_mask.rs:28-38](../../../cli/src/graph/md_mask.rs#L28), [md_mask.rs:127-145](../../../cli/src/graph/md_mask.rs#L127)).
   Anything but exactly one
   match degrades to a file-level edge, never invents a section
   ([Md.hs:117-122](../../../core/app/CE/Resolve/Md.hs#L117)).

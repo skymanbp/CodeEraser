@@ -75,7 +75,7 @@ sym 4, set 5; a position nothing constrained resolves to the open sort, −1
 | `in_dir(N, D)` · `dir(D)` · `parent(D, P)` · `dir_name(D, S)` | node, dir, sym | the directory tree the core builds over every node path the measuring side sends (plan v2.33 W1 item 3), a package seated at its own directory; root is dir 0 and reads `.`, and `parent` has no row for it ([Tree.hs:41](../../../core/app/CE/Query/Tree.hs#L41)) |
 | `lang(F, L)` | node, sym | `Lang::name` of every file-shaped node, `unknown` where no language claims the path |
 | `role(N, R)` | node, sym | one row per set role bit: `entry_named` / `entry_dir` / `test` / `glob` / `doc` / `allow` / `declared` / `foreign` / `unit` / `asset` ([graph.rs:89](../../../cli/src/query/facts/graph.rs#L89), [flags.rs:53](../../../cli/src/graph/deadcode/flags.rs#L53)) |
-| `lines(F, N)` | node, int | one read per file-shaped node, only when a program asks ([graph.rs:163](../../../cli/src/query/facts/graph.rs#L163)) |
+| `lines(F, N)` | node, int | one read per file-shaped node, only when a program asks ([graph.rs:164](../../../cli/src/query/facts/graph.rs#L164)) |
 | `ref(N, M, K, R)` | node, node, sym, int | every resolved edge of the graph wire with its kind (`import` / `doc_link` / `doc_ref` / `asset` / `contain` / `refdef`) and its rung; External and Unresolved sites have no edge, and `unresolved(F, N)` counts the latter per file ([wire.rs:39](../../../cli/src/graph/wire.rs#L39)) |
 | `unit(U, F)` · `unit_kind(U, K)` · `unit_lines(U, N)` · `unit_at(U, L)` | unit, node, sym, int | the index's symbol rows in one dense order (file, first line, last line, key, nth), each seated in its file node; kinds `fn` / `named` / `impl` / `section` ([units.rs:43](../../../cli/src/query/facts/units.rs#L43)) |
 | `named(U, S)` · `exported(U)` · `params(U, N)` | unit, sym, int | the declared name the mention pass would spell, the visibility bit, the arity off the key |
@@ -90,7 +90,7 @@ Only the tables the program names are built, and the costly ones — a scan for 
 numbers, the T3 and docdup judgments, the mention pass, a read of every file for its line count
 — only when their predicate is read; a table is a set, sorted and deduplicated before it goes up
 ([mod.rs:1-7](../../../cli/src/query/facts/mod.rs#L1), [mod.rs:80](../../../cli/src/query/facts/mod.rs#L80),
-[mod.rs:140](../../../cli/src/query/facts/mod.rs#L140)). One hash serves every name-shaped
+[mod.rs:159](../../../cli/src/query/facts/mod.rs#L159)). One hash serves every name-shaped
 constant: `mention("foo", F)` meets the index's own rows because the core's lexer and the
 measuring side's mention table key by the same fnv1a64 (spelled once on each side; the
 differential leg holds the names they give equal), and the enum words a table spells (`entry_named`, `import`, `t3`) are

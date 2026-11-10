@@ -207,7 +207,7 @@
     {
       "lang": "rs",
       "path": "cli/src/fourclass/session.rs",
-      "sha256": "2acdcbe425e166972a6425892976b6db4a9594265ce03a1c985f050cbaaaad15",
+      "sha256": "f10980b8856edff62cf497ac8b21f7897f12ea57d1856e5f4fb20162bf1d45b1",
       "sites": {
         "mod_decl": 1,
         "use": 3

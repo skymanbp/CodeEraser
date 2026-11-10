@@ -4,6 +4,8 @@
 
 Every block below is the binary's own `--help` output (English face; `--lang zh`, `CE_LANG=zh` or the project's `[ui] lang = "zh"` in ce.toml switches the console at runtime, in that order of precedence).
 
+A `[ROOT]` names the analysis SCOPE; the project's state (`ce.toml`, `ce-baseline.json`, `.ce/`) belongs to the nearest ancestor holding a `ce.toml` or a `.git`. A scope below that project keeps its own index at `.ce/scope/<scope>/index.db` and its report paths stay relative to the scope; the project's shared `.ce/index.db`, the one the hooks read, is written only by a run rooted at the project. Every path git answers is read relative to the root, so a `ce.toml` project below git's toplevel sees its own history.
+
 ## ce
 
 ```text
@@ -12,7 +14,7 @@ CodeEraser — erase LLM-induced code & document entropy
 Usage: ce [OPTIONS] <COMMAND>
 
 Commands:
-  doctor     Environment + project health: ce-core handshake, project status line, degradation counter (never starts the daemon)
+  doctor     Environment + project health: ce-core handshake, definition package, project status line, degradation counter (never starts the daemon); exit 2 unless both the handshake and the package hold
   scan       Measure size / complexity / readability metrics; levels graded by the core
   churn      Time-dimension metrics: append vs rewrite, windowed churn, co-change pairs (report-only; the join consumes them). Costs minutes on the default window — a git subprocess per commit and a blame per touched file; progress rides stderr
   graph      Dependency-graph subsystem: --sites lists reference sites (resolution-free); --mentions refreshes the mention universe and reports its header; liveness lives under `ce deadcode`
@@ -42,8 +44,8 @@ Commands:
   commitmsg  commit-msg gate: `ce precommit` re-run with the message file git hands the hook as one more surface — a removed name argued away in the message is a tombstone site like one in a README (feed and reason name it COMMIT_EDITMSG:line). Wire it as .git/hooks/commit-msg running `ce commitmsg "$1"`; a PR body saved to a file is the same surface (a CI recipe, not a hook)
   mcp        MCP server over stdio: the read-only report face of every judgment family, plus this machine's and this build's own diagnostics — none of the tools can write
   eject      Uninstall project state: .ce/, baseline, pins (dry-run default)
-  update     Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
-  setup      Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added
+  update     Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update); with --yes: exit 0 updated or already current, 2 nothing placed
+  setup      Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added. Exit 0 wired (a marker that could not be written is said on the same line) or unwired · 5 already registered, kept and refreshed · 10 no Claude Code · 11 marketplace add failed · 12 install failed, or with --unwire a removal failed · 13 the elevated account is not the logged-in user (nothing done)
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -56,7 +58,7 @@ Options:
 ## ce doctor
 
 ```text
-Environment + project health: ce-core handshake, project status line, degradation counter (never starts the daemon)
+Environment + project health: ce-core handshake, definition package, project status line, degradation counter (never starts the daemon); exit 2 unless both the handshake and the package hold
 
 Usage: ce doctor [OPTIONS] [ROOT]
 
@@ -603,7 +605,7 @@ Options:
 ## ce update
 
 ```text
-Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update)
+Check for a newer release (exit 0 current / 1 available / 2 unknown); --yes replaces ce and ce-core in place, verified against the release commit's own SHA256 pins — never a copy the plugin or cargo owns (those name their own update); with --yes: exit 0 updated or already current, 2 nothing placed
 
 Usage: ce update [OPTIONS]
 
@@ -619,7 +621,7 @@ Options:
 ## ce setup
 
 ```text
-Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added
+Wire this machine's Claude Code to the plugin (register the marketplace at its `release` ref, install) and say whether this binary's directory is on PATH; the installers call it, AppImage / dmg users run it once; --unwire removes only what it added. Exit 0 wired (a marker that could not be written is said on the same line) or unwired · 5 already registered, kept and refreshed · 10 no Claude Code · 11 marketplace add failed · 12 install failed, or with --unwire a removal failed · 13 the elevated account is not the logged-in user (nothing done)
 
 Usage: ce setup [OPTIONS]
 
