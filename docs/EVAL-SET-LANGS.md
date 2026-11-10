@@ -722,3 +722,7 @@ dea7914f 与阶梯提交 95521640 都在它之前或就是它，阶梯在盲窗�
 ## 算法轨 v2.33 步 11b 之后：十一份精度册第十七次退役并重生成（2026-10-13）
 
 线协议车道（4d3a58fa）与行上限车道（30a56389）改写了语言考题阶梯共读的 `core/app/CE/Resolve/Cost.hs` 的注释：真正起作用的是协议的行上限（`CE.Protocol.Version.maxLineBytes`，现 128 MiB），`resolveCap` 留作解码侧的护栏——常量与阶梯的答案都没有移动，门按路径读而按名拒了十一份。处置与前几次同形：**退役**（本提交）十一份删档、六门考题 `stage` 翻回 `Audited`，册 06 §9 引的十一处 summary 行在本提交上按构造缺目标；**重生成**（下一提交）在本提交的干净树上逐份生成、每份挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，`stage` 翻回 `Scored`。**读数**：十一份在 1ed34653 的干净树上逐份生成、`dirty = false`，与退役前那一代逐份比对只差 `generated_from.commit` 一行（9ccbffd4 → 1ed34653），判决、真值、宇宙台账与两段 RG1 处置逐字节同。
+
+## 车道 v235 Python 导入之后：十一份精度册第十八次退役并重生成（2026-11-10）
+
+Python 导入车道（c93e18b9）给 Python 的 `from pkg import sub` / `from . import sub` / `import pkg.sub` 补上 CPython 执行到的子模块名、祖先包与导入者自己的包链（`core/app/CE/Resolve/PyAlso.hs` 新模块、`CE.Resolve.Py` 导出 `packages`、resolve/1 加性 `py.names` / `also`、`GRAPH_REV` 24），改动落在语言考题阶梯共读的 `core/app/CE/Resolve.hs`、`core/app/CE/Resolve/` 与 `cli/src/graph/` 上，门按路径读而按名拒了十一份——六门考题没有一门是 Python，只有 Python 站点会出 `also` 行，主答案逐字不动。处置与前几次同形：**退役**（本提交）十一份删档、六门考题 `stage` 翻回 `Audited`，册 06 §9 引的十一处 summary 行在本提交上按构造缺目标；**重生成**（下一提交）在本提交的干净树上逐份生成、每份挪出树再生成下一份，两份 Lua 档带退役前那两段 RG1 处置原文，十一份齐了放回，`stage` 翻回 `Scored`。**读数**：<待填>
