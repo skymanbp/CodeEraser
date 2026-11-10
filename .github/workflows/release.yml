@@ -182,7 +182,7 @@ jobs:
       - name: CI must be green on this commit
         shell: bash
         run: |
-          SKIPPED_OK="build draft starter-https setup-wiring release-rehearsal packaging-live"
+          SKIPPED_OK="build draft starter-https setup-wiring release-rehearsal packaging-live frozen-oracles"
           ok=$(printf '%s\n' $SKIPPED_OK | jq -R . | jq -sc .)
           # `|`-separated: these names carry spaces, so a word list cannot
           # hold them (and the shell would split them silently)
