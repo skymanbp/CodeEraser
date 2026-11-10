@@ -3,6 +3,7 @@
 //! forms each language's doc tool renders as code, read from the
 //! run's lines with their comment markers already stripped.
 
+use crate::graph::md::{Fence, FenceLine, fence_marker};
 use crate::scan::lang::Lang;
 
 /// The code blocks of a doc run, in the forms the language's doc tool
@@ -35,7 +36,7 @@ fn javadoc(lines: &[String]) -> Vec<String> {
     for tag in ["{@code", "{@snippet"] {
         out.extend(inline_tags(&doc, tag));
     }
-    out.extend(between(lines, is_fence, is_fence));
+    out.extend(fences(lines));
     out
 }
 
@@ -45,8 +46,19 @@ fn doxygen(lines: &[String]) -> Vec<String> {
     let opens = |t: &str| t.starts_with("@code") || t.starts_with("\\code");
     let closes = |t: &str| t.starts_with("@endcode") || t.starts_with("\\endcode");
     let mut out = between(lines, opens, closes);
-    out.extend(between(lines, is_fence, is_fence));
+    out.extend(fences(lines));
     out
+}
+
+/// The lines inside Markdown fences, read by the Markdown scanner's own
+/// fence rule (`graph::md::Fence`).
+fn fences(lines: &[String]) -> Vec<String> {
+    let mut fence = Fence::default();
+    lines
+        .iter()
+        .filter(|l| fence.step(l.trim()) == FenceLine::Inside)
+        .cloned()
+        .collect()
 }
 
 /// The lines strictly between an opening line and the next closing one
@@ -95,10 +107,6 @@ fn tagged(lines: &[String], tags: &[&str]) -> Vec<String> {
     out
 }
 
-fn is_fence(t: &str) -> bool {
-    t.starts_with("```") || t.starts_with("~~~")
-}
-
 /// CommonMark's indented code block (spec 0.31.2 §4.4) — rustdoc
 /// compiles one as a doctest, Doxygen and a Markdown doc comment render
 /// one as code: lines four columns past the run's common indent (the
@@ -135,7 +143,7 @@ fn indented(lines: &[String]) -> Vec<String> {
             out.push(line.clone());
         } else {
             code = false;
-            open = is_heading(t) || is_fence(t);
+            open = is_heading(t) || fence_marker(t).is_some();
         }
     }
     out
@@ -202,18 +210,24 @@ fn inline_tags(doc: &str, tag: &str) -> Vec<String> {
 /// count.
 fn fenced(lines: &[String]) -> Vec<String> {
     let mut out = Vec::new();
-    let (mut fence, mut at) = (false, false);
+    let (mut fence, mut at) = (Fence::default(), false);
     for line in lines {
         let t = line.trim();
-        if t.starts_with("```") || t.starts_with("~~~") {
-            fence = !fence;
-        } else if t == "@" {
-            at = !at;
-        } else if fence || at {
-            out.push(line.clone());
-        } else if let Some(bird) = t.strip_prefix('>') {
-            out.push(bird.to_string());
+        match fence.step(t) {
+            FenceLine::Marker => {}
+            FenceLine::Inside => out.push(line.clone()),
+            FenceLine::Outside if t == "@" => at = !at,
+            FenceLine::Outside if at => out.push(line.clone()),
+            FenceLine::Outside => {
+                if let Some(bird) = t.strip_prefix('>') {
+                    out.push(bird.to_string());
+                }
+            }
         }
     }
     out
 }
+
+#[cfg(test)]
+#[path = "../../../../tests/unit/mention/selfref_blocks.rs"]
+mod tests;

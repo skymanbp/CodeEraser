@@ -23,7 +23,7 @@
 
 use super::sites::RawSite;
 use mask::{Blocks, comment_mask};
-pub(crate) use mask::{list_item, merge_code_spans};
+pub(crate) use mask::{Fence, FenceLine, fence_marker, list_item, merge_code_spans};
 
 #[path = "md_mask.rs"]
 mod mask;

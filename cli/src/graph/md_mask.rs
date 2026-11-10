@@ -26,8 +26,8 @@
 /// recognise keeps the reading it had (its link-shaped content stays
 /// a site, its `#` lines stay headings), never the reverse.
 pub(super) struct Blocks {
-    /// The open fence's marker and run length.
-    fence: Option<(char, usize)>,
+    /// The fence state, CommonMark's run rule (`Fence`).
+    fence: Fence,
     /// The open indented block's column: the code column it opened at.
     indented: Option<usize>,
     /// No paragraph is open: nothing yet, or the previous line was
@@ -40,7 +40,7 @@ pub(super) struct Blocks {
 impl Default for Blocks {
     fn default() -> Self {
         Blocks {
-            fence: None,
+            fence: Fence::default(),
             indented: None,
             open: true,
             lists: Vec::new(),
@@ -61,11 +61,14 @@ impl Blocks {
             }
             self.indented = None;
         }
-        if !in_comment && let Some((mark, len)) = fence_marker(trimmed) {
-            self.toggle_fence(mark, len);
+        if !in_comment && fence_marker(trimmed).is_some() {
+            // a marker line is never content and leaves no paragraph
+            // open, whichever way it turned the fence
+            self.fence.step(trimmed);
+            self.open = true;
             return true;
         }
-        if self.fence.is_some() {
+        if self.fence.is_open() {
             return true;
         }
         if blank {
@@ -82,19 +85,6 @@ impl Blocks {
         }
         self.open = false;
         false
-    }
-
-    /// A fence marker line: it closes the open fence when it matches the
-    /// opening run (same character, at least as long), is text inside a
-    /// fence of the other character, and opens a fence otherwise; either
-    /// way no paragraph is open after it.
-    fn toggle_fence(&mut self, mark: char, len: usize) {
-        match self.fence {
-            Some((open, run)) if open == mark && len >= run => self.fence = None,
-            Some(_) => {}
-            None => self.fence = Some((mark, len)),
-        }
-        self.open = true;
     }
 
     /// The column where indented code starts for a non-blank line at
@@ -154,9 +144,54 @@ pub(crate) fn list_item(trimmed: &str) -> Option<usize> {
     Some(marker + if gap > 4 { 1 } else { gap })
 }
 
-/// Three-or-more backticks or tildes open/close a fence: the marker
-/// and its run length (a closer must match both, module doc).
-fn fence_marker(trimmed: &str) -> Option<(char, usize)> {
+/// One fence's state under CommonMark's run rule — the ONE reading the
+/// Markdown scanner and the doc-comment code reader share (v2.35 G8,
+/// R1-8: the doc reader toggled on any fence-shaped line, so a
+/// ```` ``` ```` inside a `~~~` block closed it and the code after it
+/// read as prose). A marker line closes the open fence when it matches
+/// the opening run (same character, at least as long), is content
+/// inside a fence of the other character or a longer run, and opens a
+/// fence otherwise.
+#[derive(Default)]
+pub(crate) struct Fence(Option<(char, usize)>);
+
+/// What one line was to the fence.
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum FenceLine {
+    /// A marker that opened or closed the fence.
+    Marker,
+    /// A line inside the fence (a marker that does not close it too).
+    Inside,
+    /// A line outside any fence.
+    Outside,
+}
+
+impl Fence {
+    /// Feed one trimmed line.
+    pub(crate) fn step(&mut self, trimmed: &str) -> FenceLine {
+        match (self.0, fence_marker(trimmed)) {
+            (Some((open, run)), Some((mark, len))) if open == mark && len >= run => {
+                self.0 = None;
+                FenceLine::Marker
+            }
+            (Some(_), _) => FenceLine::Inside,
+            (None, Some(marker)) => {
+                self.0 = Some(marker);
+                FenceLine::Marker
+            }
+            (None, None) => FenceLine::Outside,
+        }
+    }
+
+    /// Whether a fence is open.
+    pub(crate) fn is_open(&self) -> bool {
+        self.0.is_some()
+    }
+}
+
+/// A fence-shaped line: three or more backticks or tildes, the marker
+/// and its run.
+pub(crate) fn fence_marker(trimmed: &str) -> Option<(char, usize)> {
     ['`', '~']
         .into_iter()
         .map(|mark| (mark, trimmed.chars().take_while(|&c| c == mark).count()))

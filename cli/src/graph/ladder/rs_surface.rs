@@ -81,7 +81,7 @@ fn flatten(node: tree_sitter::Node, src: &str, prefix: &str, row: usize, out: &m
         "use_as_clause" => {
             let alias = field("alias");
             if !alias.is_empty() {
-                out.push((alias, split(&join(prefix, &field("path"))), row));
+                out.push((alias, bound_path(prefix, &field("path")), row));
             }
         }
         "use_wildcard" => {
@@ -95,16 +95,24 @@ fn flatten(node: tree_sitter::Node, src: &str, prefix: &str, row: usize, out: &m
             }
         }
         "identifier" | "scoped_identifier" | "crate" | "super" | "self" => {
-            let mut segs = split(&join(prefix, crate::scan::ast::text(node, src.as_bytes())));
-            if segs.last().is_some_and(|s| s == "self") {
-                segs.pop(); // `{self, …}` binds the module itself
-            }
+            let segs = bound_path(prefix, crate::scan::ast::text(node, src.as_bytes()));
             if let Some(last) = segs.last() {
                 out.push((last.clone(), segs.clone(), row));
             }
         }
         _ => {}
     }
+}
+
+/// The path one binding names: a trailing `self` names the module
+/// itself — `{self, …}` under the module's own name, `{self as b}`
+/// under `b` (v2.35 G8, R1-7: the aliased form kept `a::self`).
+fn bound_path(prefix: &str, tail: &str) -> Vec<String> {
+    let mut segs = split(&join(prefix, tail));
+    if segs.last().is_some_and(|s| s == "self") {
+        segs.pop();
+    }
+    segs
 }
 
 /// pub / pub(crate) visibility only — a private use re-exports
