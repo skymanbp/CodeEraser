@@ -27,8 +27,8 @@ pub struct Verdict {
 }
 
 /// The audit's core link — the shared head every judged surface
-/// speaks (lockstep::open_family), demanding audit/1. None = no
-/// spawnable core, or a pre-2.24 core without the capability: the
+/// speaks (`corelink::judged::open`), demanding audit/1. None = no
+/// spawnable core, or a core of another major (refused at hello): the
 /// callers' visible degraded skip; local re-judging stays forbidden.
 pub(super) fn open() -> Option<Link> {
     let bin = crate::daemon::judge::core_bin()?;
@@ -59,20 +59,20 @@ pub fn judge(root: &Path, changed: &[String], link: Option<&mut Link>) -> Option
 }
 
 /// The reply, consumed: convicted indices re-labelled into their
-/// blocks. A degraded reply (over-cap) or an out-of-range index (wire
-/// skew) answers None — the callers' degraded path, by design.
+/// blocks. A degraded reply (over-cap), a `fail` that is no boolean or
+/// an out-of-range index anywhere in the list (wire skew) answers None
+/// — the callers' degraded path, by design (v2.35 G5, R3-8: an absent
+/// `fail` read as a pass, and only the ten shown indices were checked).
 fn consume(reply: &Value, blocks: &[crate::dedup::pairs::Block]) -> Option<Verdict> {
-    if reply["degraded"] == json!(true) {
+    crate::corelink::judged::degraded(reply).ok()?;
+    let fail = reply["fail"].as_bool()?;
+    let dups: Vec<usize> = serde_json::from_value(reply["dups"].clone()).ok()?;
+    if dups.iter().any(|&i| i >= blocks.len()) {
         return None;
     }
-    let dups: Vec<usize> = serde_json::from_value(reply["dups"].clone()).ok()?;
-    let shown = dups
-        .iter()
-        .take(10)
-        .map(|&i| blocks.get(i).cloned())
-        .collect::<Option<Vec<_>>>()?;
+    let shown = dups.iter().take(10).map(|&i| blocks[i].clone()).collect();
     Some(Verdict {
-        fail: reply["fail"] == json!(true),
+        fail,
         dups: dups.len(),
         shown,
     })

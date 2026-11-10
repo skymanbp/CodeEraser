@@ -106,12 +106,19 @@ fn auto_reading(lines: &[&str]) -> Option<(char, usize)> {
 
 /// The message with every comment line blanked — blanked, not removed,
 /// so a site's line is the file's own line (git strips them itself
-/// only after this hook has run); under `Auto`, everything from the
-/// scissors line on is blanked too.
+/// only after this hook has run); everything from the scissors line on
+/// is blanked too, under a fixed prefix as under `Auto` (v2.35 G5,
+/// R3-4: `git commit -v` writes the staged diff below
+/// `# ------------------------ >8 ------------------------`, and its
+/// `-` / `+` lines, starting with no `#`, were measured as prose).
 fn uncommented(text: &str, prefix: &Prefix) -> String {
     let lines: Vec<&str> = text.lines().collect();
     let (comment, cut) = match prefix {
-        Prefix::Fixed(p) => (p.clone(), lines.len()),
+        Prefix::Fixed(p) => {
+            let scissors = format!("{p} {CUT_LINE}");
+            let cut = lines.iter().position(|l| *l == scissors);
+            (p.clone(), cut.unwrap_or(lines.len()))
+        }
         Prefix::Auto => match auto_reading(&lines) {
             Some((c, cut)) => (c.to_string(), cut),
             None => return lines.join("\n"),
