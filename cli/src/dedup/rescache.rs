@@ -27,10 +27,28 @@ use rusqlite::Connection;
 /// running accumulator, so the fold is order-sensitive without
 /// duplicating the hash body. Sub-ms at hundreds of rows — the miss
 /// path pays noise.
+///
+/// The fold is SEEDED with what the blocks depend on beyond the files
+/// (v2.35 G2, R2-4): the definition package's digest — the comment
+/// kinds, literal delimiters and floors the fingerprints were cut
+/// with are the core's — and `hot_cap`, the group size above which
+/// pairing chains (pairs.rs). A core whose package moved can then
+/// never be served the previous package's blocks, whatever the
+/// index's own key does.
 pub(super) fn digest(conn: &Connection) -> Result<i64> {
+    let pack = crate::tables::get();
+    digest_under(conn, (pack.digest, pack.limits.dedup.hot_cap))
+}
+
+/// `digest` under an explicit (package digest, hot cap) seed — the
+/// pure half, so a leg can move either and watch the slot key move.
+pub(super) fn digest_under(conn: &Connection, (package, hot_cap): (u64, usize)) -> Result<i64> {
     let mut stmt = conn.prepare("SELECT path, content_hash, owner FROM files ORDER BY path")?;
     let mut rows = stmt.query([])?;
-    let mut acc = tokens::fnv1a(b"rescache/2");
+    let mut seed = b"rescache/3".to_vec();
+    seed.extend_from_slice(&package.to_le_bytes());
+    seed.extend_from_slice(&(hot_cap as u64).to_le_bytes());
+    let mut acc = tokens::fnv1a(&seed);
     while let Some(row) = rows.next()? {
         let path: String = row.get(0)?;
         let hash: i64 = row.get(1)?;

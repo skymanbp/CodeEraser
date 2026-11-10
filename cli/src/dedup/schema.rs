@@ -149,8 +149,7 @@ fn rebuild(tx: &Transaction, p: Params) -> Result<()> {
     for (k, v) in meta_entries(p) {
         stmt.execute((k, v))?;
     }
-    stmt.execute(("epoch", new_epoch()))?;
-    Ok(())
+    parser::stamp(tx, new_epoch())
 }
 
 /// A generation stamp for one wipe. The cache key protects against a
