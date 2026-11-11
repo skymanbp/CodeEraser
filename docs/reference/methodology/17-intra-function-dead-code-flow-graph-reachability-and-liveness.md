@@ -52,6 +52,12 @@ whose tree cannot be lowered to the contract's shape is not sent (`unlowered`); 
 still refuses by name is mapped back from the refusal's row, dropped, and the batch asked again,
 so one unit's defect never costs the others their verdict
 ([wire_batch.rs:82](../../../cli/src/flow/wire_batch.rs#L82), [wire_batch.rs:128](../../../cli/src/flow/wire_batch.rs#L128)).
+A placeholder inside a string reads the name it captures — a Rust macro's strings by std's
+placeholder grammar, an R glue string's `{name}` — and the braces pair left to right the way the
+formatters pair them, `{{` one literal brace, so `{{{x}}}` is a literal brace, the field `x` and a
+literal brace, and reads `x` (since v2.35; before, every `{` beside another was skipped, the read
+was lost and the local could be reported unused —
+[format.rs:26-32](../../../cli/src/flow/format.rs#L26)).
 
 ### 2. The graph
 

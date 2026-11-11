@@ -8,22 +8,22 @@ use super::rows::Mode;
 use tree_sitter::Node;
 
 /// The `{name}` pieces of a string: a run of name characters right
-/// after a `{` that no second `{` escapes.
+/// after a `{` that opens a field. Braces pair left to right the way
+/// the formatters read them — `{{` is one literal brace — so `{{{x}}}`
+/// is a literal `{`, the field `x`, a literal `}` (v2.35 V9, R3-41: a
+/// rule that skipped every `{` beside another lost that read).
 pub(super) fn braced(text: &str) -> Vec<String> {
-    let bytes = text.as_bytes();
     let mut out = Vec::new();
-    for (i, _) in text.match_indices('{') {
-        if i > 0 && bytes[i - 1] == b'{' || bytes.get(i + 1) == Some(&b'{') {
-            continue;
-        }
-        let name: String = text[i + 1..]
+    super::format::each_field(text, |rest| {
+        let name: String = rest
             .chars()
             .take_while(|c| c.is_alphanumeric() || *c == '_' || *c == '.')
             .collect();
         if name.starts_with(|c: char| c.is_alphabetic() || c == '_') {
             out.push(name);
         }
-    }
+        Some(0)
+    });
     out
 }
 

@@ -11,28 +11,39 @@
 /// read nothing, and `{{` / `}}` are literal braces. A raw string reads
 /// the same: its prefix and quotes hold no brace.
 pub(super) fn format_names(text: &str) -> Vec<String> {
-    let bytes = text.as_bytes();
     let mut out = Vec::new();
+    each_field(text, |rest| {
+        let len = rest.find('}')?;
+        let inner = &rest[..len];
+        let (arg, spec) = inner.split_once(':').unwrap_or((inner, ""));
+        out.extend(ident(arg.trim()));
+        out.extend(counts(spec));
+        Some(len + 1)
+    });
+    out
+}
+
+/// A string's `{` openings, left to right, paired the way the
+/// formatters pair braces — `{{` is one literal brace: `field` is
+/// called at each `{` that opens a field with the text after it, and
+/// answers how many bytes past that `{` the walk resumes, or `None` to
+/// stop. The one walk both `format_names` and `access_write::braced`
+/// read (v2.35 V9).
+pub(super) fn each_field(text: &str, mut field: impl FnMut(&str) -> Option<usize>) {
+    let bytes = text.as_bytes();
     let mut i = 0;
     while i < bytes.len() {
         if bytes[i] != b'{' {
             i += 1;
-            continue;
-        }
-        if bytes.get(i + 1) == Some(&b'{') {
+        } else if bytes.get(i + 1) == Some(&b'{') {
             i += 2;
-            continue;
+        } else {
+            match field(&text[i + 1..]) {
+                Some(step) => i += 1 + step,
+                None => break,
+            }
         }
-        let Some(len) = text[i + 1..].find('}') else {
-            break;
-        };
-        let inner = &text[i + 1..i + 1 + len];
-        let (arg, spec) = inner.split_once(':').unwrap_or((inner, ""));
-        out.extend(ident(arg.trim()));
-        out.extend(counts(spec));
-        i += len + 2;
     }
-    out
 }
 
 /// The spec's `name$` counts: the identifier ending right before
