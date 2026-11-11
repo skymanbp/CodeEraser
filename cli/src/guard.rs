@@ -134,7 +134,10 @@ impl Tiered {
     ) -> Self {
         let (c, fence) = cfg.map_or((None, Fence::None), |(c, f)| (Some(c), *f));
         let Some(a) = applied else {
-            return Self { tomb: None, flow: None };
+            return Self {
+                tomb: None,
+                flow: None,
+            };
         };
         Self {
             tomb: tombstone::observe(root, env, c, fence, &a.text),

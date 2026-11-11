@@ -14,15 +14,15 @@
 module CE.Relocate (respond) where
 
 import CE.Relocate.Cost (relocateRowCap, relocated)
-import CE.Wire (Respond, RowsReq (..), knoblessRows, resultLine, rowCheck, tooLarge)
+import qualified CE.Wire as W
 import qualified CE.Wire.Families as F
 import Data.Aeson ((.=))
 import qualified Data.ByteString.Char8 as B8
 
-respond :: Respond
-respond proto = knoblessRows F.relocate relocateRowCap rowShape (const Nothing) (reply proto True) (reply proto False)
+respond :: W.Respond
+respond proto = W.knoblessRows F.relocate relocateRowCap rowShape (const Nothing) (reply proto True) (reply proto False)
  where
-  rowShape = rowCheck "row" "malformed row (need [occHead,occNow])" 2 rowChecks
+  rowShape = W.rowCheck "row" "malformed row (need [occHead,occNow])" 2 rowChecks
 
 -- | The write's own copy is always in the count (it is the target's
 -- applied text), so `occNow = 0` names a measuring side that lost it —
@@ -38,15 +38,15 @@ rowChecks row = case row of
 -- | The relocate.result object: the relocation row indices in request
 -- order and whether every row is one (an empty or refused request is
 -- never `all`). Over the cap: degraded, nothing credited.
-reply :: String -> Bool -> RowsReq -> B8.ByteString
+reply :: String -> Bool -> W.RowsReq -> B8.ByteString
 reply proto isDegraded req =
-  resultLine
+  W.resultLine
     proto
     F.relocate
-    (rowsId req)
+    (W.rowsId req)
     ["relocated" .= moved, "all" .= (not (null rows) && length moved == length rows)]
-    ["rows" .= length (rowsOf req)]
-    (tooLarge F.relocate isDegraded)
+    ["rows" .= length (W.rowsOf req)]
+    (W.tooLarge F.relocate isDegraded)
  where
-  rows = if isDegraded then [] else rowsOf req
+  rows = if isDegraded then [] else W.rowsOf req
   moved = [i | (i, r) <- zip [0 :: Integer ..] rows, relocated r]

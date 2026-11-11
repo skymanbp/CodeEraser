@@ -49,7 +49,10 @@ fn reindex(root: &Path, file_path: &str) -> Result<Option<&'static str>> {
     // the one rel_str throat)
     let canon = std::fs::canonicalize(&path).unwrap_or_else(|_| path.clone());
     let rel = walk::rel_str(root, &canon);
-    if !matches!(gitmodules::owner(root, &gitmodules::declared(root), &rel), Owner::Own) {
+    if !matches!(
+        gitmodules::owner(root, &gitmodules::declared(root), &rel),
+        Owner::Own
+    ) {
         return Ok(Some("foreign"));
     }
     let (db, p) = (root.join(crate::dedup::INDEX_REL), Params::default());

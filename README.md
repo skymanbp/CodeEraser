@@ -11,7 +11,7 @@
 LLM-assisted codebases drift the same way: the same function written twice, the same paragraph pasted into three files, files that only grow. CodeEraser refuses the write that would do that, before it reaches disk, with no model in the loop.
 
 - A write that copies code already in the tree is refused, and the refusal names the region it duplicates.
-- A write that leaves a file over <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> lines is refused the same way.
+- A write that grows a file past <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> lines is refused the same way.
 - Everything else is a report or a gate: the Stop audit refuses the turn, `ce precommit` the commit, CI the merge.
 
 **Judges** Python, TypeScript/TSX, Rust, Go, Haskell, C, C++, Java, Lua, R, Markdown and HTML (<!--ce:count:langs#word-->thirteen<!--/ce--> language codes, <!--ce:count:grammars#word-->twelve<!--/ce--> tree-sitter grammars); JS, CSS, Vue, Svelte, shell and YAML files for size only; `.txt` for documentation duplication only.

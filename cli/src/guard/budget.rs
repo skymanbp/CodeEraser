@@ -73,7 +73,14 @@ fn before_of(p: &Prior) -> Result<usize, ()> {
 
 /// The refusal a breach speaks: the file's line, the size before and
 /// after, which kind, and the fence the budget was judged under.
-fn over_budget(env: &Envelope, kind: Budget, prior: &Prior, lines: usize, cap: usize, fence: Fence) -> Said {
+fn over_budget(
+    env: &Envelope,
+    kind: Budget,
+    prior: &Prior,
+    lines: usize,
+    cap: usize,
+    fence: Fence,
+) -> Said {
     Said::OverBudget {
         file: env.tool_input.file_path.clone(),
         lines,
@@ -149,7 +156,13 @@ pub(super) fn size_classes(
 /// a refused one (`kind`), a carried one (`carried: true`, no reason),
 /// or one whose size before could not be read (`before_unread`, a
 /// degraded stamp: refused as the rule stood, with no allowance).
-fn budget_line(env: &Envelope, mode: &str, lines: usize, prior: &Prior, kind: Budget) -> serde_json::Value {
+fn budget_line(
+    env: &Envelope,
+    mode: &str,
+    lines: usize,
+    prior: &Prior,
+    kind: Budget,
+) -> serde_json::Value {
     let mut line = serde_json::json!({
         "event": "budget",
         "file": env.tool_input.file_path,

@@ -418,7 +418,7 @@ otherwise      → 1  (flat)        where band = floorMicro</pre>
   <pre>TIERS = ["observe", "warn", "ask", "deny"]
 PROMOTED_DEFAULT = "deny"</pre>
   <pre>cap      = lines_for(file).file_lines_fail     // the file's class table; 750 for class 0
-breach   <span class="op">⇔</span> cap != 0 &amp;&amp; lines <span class="op">&gt;</span> cap
+breach   <span class="op">⇔</span> cap != 0 &amp;&amp; after <span class="op">&gt;</span> cap &amp;&amp; after <span class="op">&gt;</span> before
 
 permille = (lines - S) * 1000 / (H - S)
 0   ..= 249  →  observe
@@ -435,17 +435,19 @@ permille = (lines - S) * 1000 / (H - S)
     </tbody>
   </table>
   </div>
-  <p class="note">Determinism comes from <em>replaying the write</em>:
-  <code>resulting_lines</code> computes the exact post-write line count, and a call that would fail on
-  its own (missing file, ambiguous non-<code>replace_all</code> match) returns <code>None</code>, so the
-  rule stays silent. An unrecognized <code>[guard] mode</code> resolves to
+  <p class="note">Determinism comes from <em>replaying the write</em>, once per hook call: the
+  exact post-write text and line count, and the line count before it. A file already past its line is
+  refused only a write that grows it, so splitting it can go one step at a time; a write that keeps or
+  shrinks it is recorded as <code>carried</code>. A call that would fail on its own (missing file,
+  no match, an ambiguous non-<code>replace_all</code> match) leaves the rules silent and the probe line
+  names why. An unrecognized <code>[guard] mode</code> resolves to
   <code>observe (ce.toml ERROR: …)</code>, never passed through.</p>
   <p class="note"><strong>A class earns deny by its record.</strong> M3:
   <strong>≤ 1 mis-block in 500 real normal edits</strong>, <code>N=1</code> demonstrations disallowed.
   M4: <strong>FPR ≤ 1% over 500 real normal edits</strong> on a set pre-registered before
   implementation, ≥ 200 edit samples, ≥ 50% from real agent transcripts, sampled only from observe-mode
   and pre-guard sessions so the guard cannot certify itself. Two classes have paid: T1/T2 exact duplicate
-  write, and hard-budget breach at <code>file &gt; its hard line</code> (750 by default, or the file's
+  write, and a write that grows a file past its hard line (750 by default, or the file's
   <code>[[rules.class]]</code> line), so the hook denies exactly where the CI wall fails.
   <em>Every other rule stays at observe for want of its own record.</em></p>
   <p class="note"><strong>Since CodeEraser 1.2.0 the duplicate-write rule charges novel
@@ -464,7 +466,9 @@ permille = (lines - S) * 1000 / (H - S)
   <p class="note">The graded zone reads <code>S</code> and <code>H</code> off the hard
   budget's per-file table. <code>[guard] zone_tiers</code> is <strong>off by default</strong>: its
   pre-registered rule armed only if <em>every</em> corpus read ≤ 1 %, and the first run read self
-  0.54 % but requests 2.46 % (variant B), held by <code>cli/tests/it/fpr_zone_gate.rs</code>. Warns are
+  0.54 % but requests 2.46 % (variant B); the 2026-11 re-freeze, with the hook's own population and
+  tiers firing only on growth, reads self 1.90 % and requests 1.12 %, held by
+  <code>cli/tests/it/fpr_zone_gate.rs</code>. Warns are
   rate-limited to once per (rule, file, session) and clipped at a token budget; a deny is not.</p>
   <ul class="consts">
     <li><b>file_lines_warn S</b> 300</li>
@@ -474,7 +478,7 @@ permille = (lines - S) * 1000 / (H - S)
     <li><b>WARN_BUDGET_TOKENS</b> 200</li>
     <li><b>STOP_BUDGET_TOKENS</b> 400</li>
     <li><b>CHARS_PER_TOKEN</b> 4</li>
-    <li><b>feed schema</b> ce.observe/0.13.0</li>
+    <li><b>feed schema</b> ce.observe/0.14.0</li>
   </ul></details>
 </div>
 

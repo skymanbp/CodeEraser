@@ -29,6 +29,10 @@
   64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
   纪律不变。
 - 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.3.0<!--/ce-->**：
+  2.4.0 = 加性 `relocate{rows}` 请求与 `relocate_report{reply}` 应答、加性 `reindex{file_path}` 请求与 `reindex_report{report}` 应答，
+  `probe_report.matches` 每条加性 `at`（片段一侧的起始 token）〔v2.35 守卫车道；`relocate` 是重复写入类的一道工序：钩子按 HEAD 与写后树
+  数出每条匹配的 `[occHead, occNow]` 整数行，daemon 原样送核（relocate/1）；`reindex` 是 PostToolUse 腿请正在跑的 daemon 把刚落盘的一个文件在共享索引里重量一次
+  ——只量指纹语言、作用域内、本项目自己的文件，只在索引存在且是当前这一代时，从不建索引；2.4.0 客户端遇 2.3.0 daemon 同走 §2 回执校验的 stale 路〕；
   2.3.0 = 加性 `document{body}` 请求与 `document_report{reply}` 应答〔计划 v2.32 步 5；`body` 是钩子拼好的整份
   `document.request` 体（`guard` 族：规则码与数字成行、字符串成引用），daemon 原样送核（document/1），钩子按自己的字符串绑回
   `lines`；2.3.0 客户端遇 2.2.0 daemon 同走 §2 回执校验的 stale 路〕；2.2.0 = 加性 `flow{units,stmts,vars,uses}` 请求与 `flow_report{reply}` 应答〔计划 v2.31 步 5；
@@ -126,6 +130,8 @@
 | `tombstone{rows,budget?}` | v2.27 墓碑判决：度量钩子的 `[kind,marks,erasedNames]` 行与声明预算走同一条 ce-core link（tombstone/1）；只有**整数**过 socket，行序由钩子回贴成站点 | `tombstone_report{reply}`（原样 `tombstone.result`，或 `{degraded:true,reason}`——核缺席 / 无此能力 / 链断各具名） |
 | `flow{units,stmts,vars,uses}` | v2.31 函数内死代码判决：写入一侧的降表四表（`flow::wire::body` 的原样）走同一条 ce-core link（flow/1）；只有**整数**过 socket，发现由钩子按自己的图例回标 | `flow_report{reply}`（原样 `flow.result`，或 `{degraded:true,reason}`——同上具名） |
 | `document{body}` | v2.32 守卫的句子：钩子拼好的 `document.request` 体（`guard` 族，`lang` 随钩子进程的语言）走同一条 ce-core link（document/1）；规则码与数字是整数，路径与名字是引用，钩子按自己的字符串绑回 | `document_report{reply}`（原样 `document.result`，或 `{degraded:true,reason}`——同上具名） |
+| `relocate{rows}` | v2.35 重复写入类的搬移信用：每条匹配一行 `[occHead, occNow]`（钩子在 HEAD 与写后树里数出的那段 token 的出现次数）走同一条 ce-core link（relocate/1）；只有**整数**过 socket | `relocate_report{reply}`（原样 `relocate.result`：`relocated` 下标、`all`，或 `{degraded:true,reason}`——同上具名） |
+| `reindex{file_path}` | v2.35 PostToolUse 腿：把刚落盘的一个文件在共享索引里重量一次（与整跑同一个逐文件刷新、一个事务），下一次探针就能看见本会话自己写的代码；不在作用域、不是本项目的、不是指纹语言、没有索引、索引不是当前这一代、冷启动未完成都只答跳过的原因 | `reindex_report{report}`（`{refreshed}`、`{skipped:<原因>}` 或 `{degraded:<错误>}`） |
 | `shutdown` | 退出 | `bye` |
 
 - 任何请求的失败面 → `error{message}`；降级信息在 report **内部**
@@ -142,7 +148,7 @@
   `cargo test --test it daemon_proto::`（CE_BLESS=1 蓄意重生成）守护。
 - **覆盖边界（清零批审查注记）**：golden 冻结的是 enum 变体的**信封
   形状**；`dedup_report.report`、`probe_report.matches`、
-  `four_class_report.report`、`tombstone_report.reply`、`flow_report.reply`、`document.body` / `document_report.reply` 七个嵌套载荷是 `serde_json::Value` 直通，
+  `four_class_report.report`、`tombstone_report.reply`、`flow_report.reply`、`document.body` / `document_report.reply`、`relocate_report.reply`、`reindex_report.report` 九个嵌套载荷是 `serde_json::Value` 直通，
   其内部键**不在**本门覆盖内（fixture 里的载荷是示意占位）。各自的
   权威与钉点：dedup report = `faces::dedup` 的文档（`dedup::gated` →
   `dedup::report::answer`，核 `CE.Dedup.Document` 排版；report_schema
@@ -152,7 +158,8 @@
   ce-core 的 `tombstone.result`（wire golden `fixtures/tombstone/` + `tombstone::wire::consume` 单元腿）、flow reply =
   ce-core 的 `flow.result`（wire golden `fixtures/flow/` + `flow::wire::consume`，经 daemon 一腿 `daemon_flow`）、document
   body / reply = ce-core 的 `document.request` / `document.result`（wire golden `fixtures/document/` + `document::lines::bind_lines`
-  单元腿，经 daemon 一腿 `daemon_document`）。
+  单元腿，经 daemon 一腿 `daemon_document`）、relocate reply = ce-core 的 `relocate.result`（wire golden `fixtures/relocate/` +
+  `dedup::relocate::consume` 单元腿，经钩子一腿 `guard_relocate`）、reindex report = `daemon/server/reindex.rs`（钩子一腿 `guard_reindex`）。
 
 ## 5. 复跑
 

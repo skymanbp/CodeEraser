@@ -5,8 +5,8 @@
 | hook | 命令 | 行为 |
 |---|---|---|
 | SessionStart | `ce health --hook` | 健康行（版本/guard 档/索引/daemon）+ daemon 预热；有新版本时另起一行更新通知（检查结果缓存一天，`CE_UPDATE_CHECK=0` 关闭，无网络即无此行） |
-| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后行数超本文件那条硬线）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声；函数内死代码类按自己的 `[flow] tier`（出厂 observe）只在这次写入带来新的被判决发现时出声 |
-| PostToolUse (Write\|Edit) | `ce settle --hook` | 只记不说：本会话的 PreToolUse 对同一次工具调用（同一 `tool_use_id`）答过 `ask`、而工具真跑完了，就往观察账本追加一行 `settled`——人放行了这次写入；拒绝不触发任何钩子，所以没有这一行就是拒绝的记录 |
+| PreToolUse (Write\|Edit) | `ce probe --hook` | 对将写入的内容做 T1/T2 重复探针 + 硬预算（写后超过本文件那条硬线且比写前更长；不变长的写入只记账不拒）两类，按 `ce.toml [guard] mode` 决策；未超硬线而落在软线与硬线之间的写入由分级区观察器记账，`[guard] zone_tiers` 开启后才按落点出声；墓碑类按自己的 `[tombstone] tier` 与 budget 在核里判，只在核答 over 时出声；函数内死代码类按自己的 `[flow] tier`（出厂 observe）只在这次写入带来新的被判决发现时出声 |
+| PostToolUse (Write\|Edit) | `ce settle --hook` | 只记不说：本会话的 PreToolUse 对同一次工具调用（同一 `tool_use_id`）答过 `ask`、而工具真跑完了，就往观察账本追加一行 `settled`——人放行了这次写入；拒绝不触发任何钩子，所以没有这一行就是拒绝的记录。daemon 在跑时另请它把刚落盘的这一个文件在共享索引里重量一次，下一次写入的重复探针就能看见本会话自己刚写的代码；只量指纹语言、作用域内、本项目自己的文件，只在索引存在且是当前这一代时，从不建索引、从不起 daemon，失败只在 `settled` 行上记 `reindex.degraded` |
 | Stop | `ce audit --hook` | 净 LOC + 涉改重复块，仅 deny 档拦停；墓碑腿同样在核里按 `[tombstone] tier` 与 budget 判、也只有 deny 档拦停。四分类汇总（跨文件搬迁 / 堆叠嫌疑）只记不判，账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)；同角色顾问行（本会话新增的单元其 top-1 带角色位时）只落进 observe 账本，永不拦停 |
 
 拒写理由与 Stop / precommit / commitmsg 的每一行都由核按当时的语言写出（钩子经 daemon 的核链、审计经自己的核链问一次）；核说不出时决定照旧，句子换成一句英文兜底 `ce: rule … fired; the core could not phrase the reason: …`——只点名触发的规则、不说决定，各档位同一拼写（审计面是 `ce <面>: rule … fired; the core could not phrase the verdict: …`，本地规则不拦时没有 `rule … fired; ` 这一段）。
@@ -92,10 +92,10 @@ file_lines_fail = 900   # 该类自己的硬预算——PreToolUse 按这条拒�
 
 默认档位 = §4.2 路线第 3 级（2026-08-17 1.0 档位切换生效，依据见根目录
 [CHANGELOG.md](../CHANGELOG.md)）：**T1/T2 精确重复写入**与**硬预算超限
-（写后文件超过其硬线：默认 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce-->，或其 `[[rules.class]]` 声明的那条；hook 经 `guard::budget::lines_for` 读 `scan::classes::Classes::thresholds_for`，`ce scan` 送每行的类号（`Classes::class_of`）、由核按 `gradeOverrides` 分级——两面读的是同一张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
+（写入让文件长过其硬线：默认 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce-->，或其 `[[rules.class]]` 声明的那条；hook 经 `guard::budget::lines_for` 读 `scan::classes::Classes::thresholds_for`，`ce scan` 送每行的类号（`Classes::class_of`）、由核按 `gradeOverrides` 分级——两面读的是同一张类尺）**两类 PreToolUse 规则默认 `deny`；Stop 审计 /
 precommit 不在晋升类，默认仍 observe。显式 `mode` 统一覆盖全部规则类。
 分级区档位映射（软线→硬线之间按位置 <25 % observe / 25–75 % warn / >75 % ask）走 `[guard] zone_tiers`
-这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
+这一个开关；首测自仓 28/5196 = 0.5388 %、requests 11/448 = 2.4553 %，后者超 1 %，采用变体 B，默认仍为 `false`；v2.35 按钩子自己的总体、只在变长时出档复冻，自仓 184/9707 = 1.8955 %、requests 5/448 = 1.1160 %，两份都超 1 %，默认不变。硬预算自己的台账在同页「硬预算的台账」节。完整台账在 [docs/FPR-REPLAY.md](../docs/FPR-REPLAY.md)「分级区档位映射」节。
 观察档数据在 `<project>/.ce/observe.ndjson`（`.ce/` 里缺 `.gitignore` 时 ce 写一份内容为 `*` 的，整个目录不进版本库；已有的不改），
 每行带 `schema`（单一来源 `cli/src/hookio.rs::OBSERVE_SCHEMA`，版本号以那一处为准，此处不再抄写；M5 收口审计抓获抄本 0.3.0 陈旧于实际 0.4.0）、`session_id` 与 `ts_ms`；
 `tombstone` 事件行（PreToolUse 一次写入删掉了名字、或它的标题 / 标识符 / 散文把本会话删掉的名字
@@ -107,6 +107,7 @@ FPR 账本见 [docs/FPR-L2.md](../docs/FPR-L2.md)：821 事件零跳过，严格
 `similar` 对象（本会话新增的单元逐个问过同角色顾问：`rev`、`new_units`、`queried`，以及核的 top-1 带角色位时的 `rows` 行 `{unit,twin,score}`；无核或读不到索引时只记 `degraded`）同样永不出声：顾问不判决，评估台账见 [docs/EVAL-SET-SIMILAR.md](../docs/EVAL-SET-SIMILAR.md)；
 `flow` 事件行（PreToolUse 一次写入的前后两侧各降表经核 flow/1 判一次，后侧有发现才落一行：`before` / `after` 发现数、按 `(单元名, 种类, 变量名)` 多重集相减得的 `novel`、按种类计数的 `kinds`、语言是否在判决掩码 `judged`；`mode` 是类自己的 `[flow] tier`，出厂 observe）与 Stop / precommit / commitmsg 行上的 `flow` 对象（改动集里有单元的文件数、单元数、发现数、`kinds`、被判决的条数）自 feed 0.12.0 起加性出现；Stop 腿在任何档位都不拦停，站点清单在 `ce flow` 里；
 核的定义包读不到（没有核、核的协议 major 与本构建不同）时钩子不度量、退 0、从不拒写，但每个钩子各落一行（PreToolUse `probe`、PostToolUse `settle`、Stop `stop_audit`、SessionStart `health`）：`degraded` 为真、`reason` 是 CLI 拒绝时的同一句，PreToolUse / PostToolUse 行另带 `file` 与 `tool_use_id`，自 feed 0.13.0 起加性出现；`ce doctor` 的降级计数把它们算进去，SessionStart 那一行写「tables: unavailable — <原因>」，每个会话说一次；
+feed 0.14.0 起加性出现：`budget` 行的 `before_lines` 与 `kind`（`crossing` 越线 / `growth` 增长）或 `carried: true`（已超线而不变长，放行），写前行数读不到时 `before_unread` 加一个 `degraded` 戳；`zone` 行的 `before_lines` 与不变长时的 `carried`；`probe` 行的 `unapplied`（Edit 套不上：`absent` / `unreadable` / `no_match` / `ambiguous`，`unreadable` 另带 `apply.degraded`）与 `relocated`（多少条匹配是搬移、按 HEAD 与写后树的计数由核 `relocate/1` 判），没有搬移信用时 `relocation` 写明原因；`settled` 行的 `reindex`（重量失败时）；
 `session_id` 为 `null` 表示该条不属于任何会话；`ce precommit` / `ce commitmsg`（后者把提交说明也当一个面，站点记 `COMMIT_EDITMSG:行 prose`）跑在终端里、
 不是 hook，是仅有的会出现 null 的来源。按会话切分是 M4 评估集的前置
 （计划 D2-1 样本纯净度 / D2-2 观察档会话计数）。

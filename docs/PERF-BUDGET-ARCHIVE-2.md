@@ -1,6 +1,6 @@
 # 热路径延迟分解表——归档第二册（2026-10-05 与 2026-10-06 实测的五节）
 
-> 自 [PERF-BUDGET.md](PERF-BUDGET.md) 于 2026-10-07（算法轨 v2.33 W2-text 阶段 H）逐字节迁入，原文一字未改：正册放不下阶段 H 的一节，第一册 [PERF-BUDGET-ARCHIVE.md](PERF-BUDGET-ARCHIVE.md) 离 `ce scan` 的 300 行警告线只剩 2 行。2026-10-07（W2-text 阶段 Z）正册又放不下阶段 Z 的一节时，阶段 D、E 两节同样逐字节迁入，接在阶段 C 一节之后。2026-10-08（遗留核查第 3 项）正册放不下遗留核查第 3 项的一节时，W2-text 阶段 F 与 W1 两节（实测 2026-10-06）同样逐字节迁入，接在阶段 E 一节之后。
+> 自 [PERF-BUDGET.md](PERF-BUDGET.md) 于 2026-10-07（算法轨 v2.33 W2-text 阶段 H）逐字节迁入，原文一字未改：正册放不下阶段 H 的一节，第一册 [PERF-BUDGET-ARCHIVE.md](PERF-BUDGET-ARCHIVE.md) 离 `ce scan` 的 300 行警告线只剩 2 行。2026-10-07（W2-text 阶段 Z）正册又放不下阶段 Z 的一节时，阶段 D、E 两节同样逐字节迁入，接在阶段 C 一节之后。2026-10-08（遗留核查第 3 项）正册放不下遗留核查第 3 项的一节时，W2-text 阶段 F 与 W1 两节（实测 2026-10-06）同样逐字节迁入，接在阶段 E 一节之后。2026-11-10（v2.35 守卫车道）正册放不下守卫车道的一节时，W2-text 阶段 G 一节（实测 2026-10-06）同样逐字节迁入，接在文末。
 
 ## v2.33 W2-text 阶段 C Java 阶梯进核 A/B（实测 2026-10-05，release，同一台机、同一坐：A = 27d0d56d 的 ce + 它的核〔`git archive` 构建〕，B = 车道树 5a7fbe7f 的 ce + 它的核〔Java 的四级阶梯与类型注解读法在核，每个走查到的 Java 文件头随请求过线〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，03:53–04:16 共 23 次 18–85 %，含本坐自己的 ce）
 
@@ -175,3 +175,39 @@
 - **请求字节**（§3 第 5 点；自仓头树，暖，经中继核记下每个 `query.request` 与应答的字节；两臂输出逐字节同）：`ce query` 一个请求 304,417 B、应答 3,485 B → 两个请求（一个 `lex`）306,762 B、应答 12,287 B；`ce rules` 一个请求 289,265 B、应答 414 B → 两个请求 291,697 B、应答 8,859 B。多出来的是程序原文（前奏八条 + 用户程序）与核答回的分词结果。
 - **钩子**：本车道动的读者都不在 PreToolUse 探针上——`ce query` / `ce rules` 只由命令行、MCP 与 GUI 调用；留在钩子路上的镜像（`dedup/pairs.rs` 的 `minDistinct` 过滤、`score/knobs.rs` 的出厂值、`guard/zone.rs`）一个没动，故未单独量探针。
 - 复跑：车道目录 `v233_w1_scratch/perf_w1.py 7`，读数原文 `perf_w1.log`、逐跑 `perf_w1.ndjson`、负载 `perf_w1_load.txt`；请求字节 `reqbytes_q.sh`（读数 `reqbytes_q.log`）。
+
+## v2.33 W2-text 阶段 G Markdown 阶梯的判定进核 A/B（实测 2026-10-06，release，同一台机、同一坐：A = 3b7234eb 的 ce〔sha256 55770aed…〕+ 它的核〔sha256 9abb0c79…；`git archive` 构建〕，B = 车道树 bd82ae99（变基前，基于 3b7234eb）的 ce〔sha256 6805afc8…，构建进车道的 scratch target；它对 3b7234eb 的 `cli/src` 与 `core/app` 改动与变基后第一个提交对 dbed2fc6 的改动只差一处：`CE.Resolve.Lower` 的逐字符映射改读 W6 落下的 `CE.Similar.Lower`（同一张 rustc 1.94.1 的表；`lower` 读法腿对每个标量值复核），本节不重量（每阶段一坐）〕+ 它的核〔sha256 5d36a8da…；Markdown 阶梯的判定在核，测量侧把锚集、定义与资产随首问送过去〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，11:04–12:01 共 56 次 2–50 %；本坐持着机器的 HEAVY_LOCK，别的车道的重活不在坐内）
+
+口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）、真树里 Markdown 最多的一棵 Claude-Code-Local（`ts_trees/`）与 ripgrep@3fce3b5（`gate1g/seed-rs-ripgrep`），各提交一次。
+
+| 树 | 面 | A（3b7234eb） | B（车道） | B / A − 1 |
+|---|---|---|---|---|
+| self | `graph --sites` 冷 | 1773.4（1743.7–2187.4） | 1772.6（1744.7–1835.6） | -0.0 % |
+| self | `graph --sites` 暖 | 1666.7（1628.3–1761.4） | 1676.0（1652.2–1682.0） | +0.6 % |
+| self | `deadcode` 冷 | 35635.5（32635.3–39247.0） | 35900.8（33064.6–37844.7） | +0.7 % |
+| self | `deadcode` 暖 | 2460.4（2397.8–2693.1） | 2448.2（2393.2–2511.6） | -0.5 % |
+| self | `check` 暖 | 10985.1（10257.9–17239.0） | 11028.3（10247.3–18304.9） | +0.4 % |
+| Claude-Code-Local | `graph --sites` 冷 | 9706.2（8910.2–10911.3） | 9621.9（9227.9–10566.5） | -0.9 % |
+| Claude-Code-Local | `graph --sites` 暖 | 9903.2（8469.2–10684.9） | 9840.8（8494.7–10207.0） | -0.6 % |
+| Claude-Code-Local | `deadcode` 冷 | 128404.2（113102.1–138874.0） | 128359.5（120032.4–140371.7） | -0.0 % |
+| Claude-Code-Local | `deadcode` 暖 | 5992.6（5432.1–7610.5） | 5699.8（5509.0–6450.9） | -4.9 % |
+| Claude-Code-Local | `check` 暖 | 20365.1（18528.4–22560.3） | 20996.1（18490.9–21425.7） | +3.1 % |
+| ripgrep | `graph --sites` 冷 | 927.7（908.1–1011.3） | 917.0（903.8–1048.1） | -1.2 % |
+| ripgrep | `graph --sites` 暖 | 815.7（779.0–940.0） | 796.7（756.1–950.1） | -2.3 % |
+| ripgrep | `deadcode` 冷 | 5775.3（5464.1–6922.7） | 5800.7（5382.0–6016.0） | +0.4 % |
+| ripgrep | `deadcode` 暖 | 779.1（730.6–820.9） | 763.9（737.2–780.9） | -2.0 % |
+| ripgrep | `check` 暖 | 3276.6（3181.6–25881.0） | 3304.8（3216.1–26244.7） | +0.9 % |
+
+- 预算（任务书）：暖 `ce check` ≤ +15 %——三棵树 +0.4 %、+3.1 %、+0.9 %，都在线内（自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立；Claude-Code-Local 两臂都退 2，早于本阶段）。`deadcode` 与 `graph --sites` 都在 ±5 % 内。
+- **请求字节**（同一棵树一次冷 `deadcode`，经中继核记下每个 `resolve.request` 与应答的字节；站点按请求累加，同一个站点每轮各算一次；两臂 `deadcode` 输出逐字节同）：
+
+| 树 | 请求个数 A → B | 请求字节 A → B | 应答字节 A → B | 站点 A → B |
+|---|---|---|---|---|
+| self | 15 → 15 | 35,343,801 → 37,746,071 | 217,904 → 315,032 | 84,864 → 117,468 |
+| Claude-Code-Local | 5 → 5 | 1,689,248 → 2,206,434 | 358,013 → 486,553 | 46,256 → 52,444 |
+
+- **多出来的字节从哪来**：问答轮数不变（自仓仍是阶段 F 的 13 轮带站点的重问加两个不带站点的请求，Claude-Code-Local 两轮加三个）；每个带站点的请求多带本批的 Markdown 站点（自仓 2,508 个、Claude-Code-Local 3,094 个，A 臂在 Rust 里判掉、不过线）与 `assets` / `md` 两键（自仓 58,840 B、Claude-Code-Local 110,633 B，测量侧每次扫一遍只读一次）。自仓的 13 轮把这份事实送了 13 遍（764,920 B），是阶段 F 逐轮重问的老代价，不是本阶段加的轮。
+- **核单独计时**（`coretime_g.sh`：把 B 臂那次冷 `deadcode` 的 `resolve/1` 会话经中继录下，单独喂核 5 次）：self 37,746,136 B → 中位 3495.5 ms（3450.5–3705.8）、Claude-Code-Local 2,206,499 B → 376.7 ms（364.8–417.4）。
+- **其余七个面**（`warmreq_g.sh`：每臂冷跑一次 `graph --sites` 建索引，再经中继核把各面跑一次）：两棵树上每个面两臂的请求种类与个数相同，`structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 的 `resolve.request` 不带站点、字节两臂相同（自仓 64,404 B，Claude-Code-Local 两个共 136,310 B）。
+- **钩子**：PreToolUse 探针不问 `resolve/1`——在 Claude-Code-Local 拷贝上写入一个带文件链接、跨文件锚、目录、图片、引用链接与定义、没人用的定义、裸片段与自动链接的新 Markdown 文件的 `Write` 信封经 `ce probe --hook` 冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_g.sh`），与阶段 A–F 同。
+- 复跑：车道目录 `v233_w2t_scratch/perf_g.py 7`（树拷自车道归档、`ts_trees/Claude-Code-Local` 与 `gate1g/seed-rs-ripgrep`），读数原文 `perf_g_all.log`、逐跑 `perf_g.ndjson`、负载 `perf_g_load.txt`；请求字节 `reqbytes_g.sh`（`reqbytes_g_sum.py`），各面请求 `warmreq_g.sh`（`warmreq_g_sum.py`），钩子 `hookprobe_g.sh`，核单独计时 `coretime_g.sh`。

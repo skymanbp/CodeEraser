@@ -11,7 +11,7 @@
 LLM 协作的代码库都往同一个方向漂：同一个函数写两遍、同一段话贴进三个文件、文件只增不减。CodeEraser 在这种写入落盘之前就拒掉它，全程没有任何模型参与。
 
 - 复制了树里已有代码的写入会被拒绝，拒绝理由指名它重复的是哪一块。
-- 让文件超过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行的写入同样被拒绝。
+- 让文件长过 <!--ce:gate:size.file_lines_fail#digits-->750<!--/ce--> 行的写入同样被拒绝（已超线的文件不变长的写入照常通过，可以一步步拆分）。
 - 其余一切都是报告或门：Stop 审计拒绝结束本轮，`ce precommit` 拒绝提交，CI 拒绝合入。
 
 **判决** Python、TypeScript/TSX、Rust、Go、Haskell、C、C++、Java、Lua、R、Markdown、HTML（<!--ce:count:langs#word-->十三<!--/ce-->个语言码，<!--ce:count:grammars#word-->十二<!--/ce-->套 tree-sitter 语法）；JS、CSS、Vue、Svelte、shell、YAML 只查尺寸；`.txt` 只查文档重复。

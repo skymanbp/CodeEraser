@@ -8,7 +8,7 @@
 > [PERF-BUDGET-ARCHIVE.md](PERF-BUDGET-ARCHIVE.md)（正册离 `ce scan` 的 750 行硬线
 > 只剩 7 行，算法轨 v2.33 W2-text 阶段 C 的一节放不下）；阶段 E 的一节又放不下时，
 > 末尾两节（v2.33 W3 与 W2a，实测 2026-10-03–10-04）同样逐字节迁去。W1 的一节（2026-10-06）又放不下时，v2.32 步 2 一节（实测 2026-10-01）同样逐字节迁去。W7 的一节（2026-10-06）又放不下时，v2.32 步 3B 一节（实测 2026-10-01）同样逐字节迁去。算法轨 v2.33 W6 的一节
-> 让正册过 750 行时，v2.33 W2-text 阶段 A、B 两节（实测 2026-10-04）也逐字节迁去。W2-text 阶段 H 的一节（2026-10-07）又放不下、而第一册离 300 行的警告线只剩 2 行时，阶段 C 一节（实测 2026-10-05）逐字节迁入第二册[PERF-BUDGET-ARCHIVE-2.md](PERF-BUDGET-ARCHIVE-2.md)。W2-text 阶段 Z 的一节（2026-10-07）又放不下时，阶段 D、E 两节（实测 2026-10-05）同样逐字节迁入第二册。遗留核查第 3 项的一节（2026-10-08）又放不下时，W2-text 阶段 F 与 W1 两节（实测 2026-10-06）同样逐字节迁入第二册。
+> 让正册过 750 行时，v2.33 W2-text 阶段 A、B 两节（实测 2026-10-04）也逐字节迁去。W2-text 阶段 H 的一节（2026-10-07）又放不下、而第一册离 300 行的警告线只剩 2 行时，阶段 C 一节（实测 2026-10-05）逐字节迁入第二册[PERF-BUDGET-ARCHIVE-2.md](PERF-BUDGET-ARCHIVE-2.md)。W2-text 阶段 Z 的一节（2026-10-07）又放不下时，阶段 D、E 两节（实测 2026-10-05）同样逐字节迁入第二册。遗留核查第 3 项的一节（2026-10-08）又放不下时，W2-text 阶段 F 与 W1 两节（实测 2026-10-06）同样逐字节迁入第二册。v2.35 守卫车道的一节（2026-11-10）又放不下时，W2-text 阶段 G 一节（实测 2026-10-06）同样逐字节迁入第二册。
 
 > 口径：被动 guard 的 PreToolUse 端到端 = hook 触发 → 判定返回。
 > 预算为硬上界；"实测"列只写真实测过的数字，未测项标注实测里程碑，
@@ -512,42 +512,6 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - 钩子：PreToolUse 探针只读索引、不刷新（§11 第 19 条），不问 `bags/1`；Stop 腿（`audit/similar.rs`）在本会话新增了单元时多问一次 `bags/1`（新增单元一次问齐），本坐没有单独计时。
 - 复跑：车道目录 `v233_w6_scratch/perf_w6.py 7`（树拷自 `gate_w6/seed-self` 与 `.ce-eval/corpora/koreader`），读数原文 `perf_w6.log`、逐跑 `perf_w6.ndjson`、负载 `perf_w6_load.txt`；请求字节 `reqbytes_w6.py`（中继 `relay_w6.py`，读数 `reqbytes_w6.log`）。
 
-## v2.33 W2-text 阶段 G Markdown 阶梯的判定进核 A/B（实测 2026-10-06，release，同一台机、同一坐：A = 3b7234eb 的 ce〔sha256 55770aed…〕+ 它的核〔sha256 9abb0c79…；`git archive` 构建〕，B = 车道树 bd82ae99（变基前，基于 3b7234eb）的 ce〔sha256 6805afc8…，构建进车道的 scratch target；它对 3b7234eb 的 `cli/src` 与 `core/app` 改动与变基后第一个提交对 dbed2fc6 的改动只差一处：`CE.Resolve.Lower` 的逐字符映射改读 W6 落下的 `CE.Similar.Lower`（同一张 rustc 1.94.1 的表；`lower` 读法腿对每个标量值复核），本节不重量（每阶段一坐）〕+ 它的核〔sha256 5d36a8da…；Markdown 阶梯的判定在核，测量侧把锚集、定义与资产随首问送过去〕；每臂每棵树各一份拷贝〔`.ce` 删掉〕；冷 = 跑前删 `.ce`，暖 = 有 `.ce` 之后的一跑；每个（树、面、冷暖）ABAB ×7，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，11:04–12:01 共 56 次 2–50 %；本坐持着机器的 HEAVY_LOCK，别的车道的重活不在坐内）
-
-口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：本车道 HEAD 的归档（测试子仓就位）、真树里 Markdown 最多的一棵 Claude-Code-Local（`ts_trees/`）与 ripgrep@3fce3b5（`gate1g/seed-rs-ripgrep`），各提交一次。
-
-| 树 | 面 | A（3b7234eb） | B（车道） | B / A − 1 |
-|---|---|---|---|---|
-| self | `graph --sites` 冷 | 1773.4（1743.7–2187.4） | 1772.6（1744.7–1835.6） | -0.0 % |
-| self | `graph --sites` 暖 | 1666.7（1628.3–1761.4） | 1676.0（1652.2–1682.0） | +0.6 % |
-| self | `deadcode` 冷 | 35635.5（32635.3–39247.0） | 35900.8（33064.6–37844.7） | +0.7 % |
-| self | `deadcode` 暖 | 2460.4（2397.8–2693.1） | 2448.2（2393.2–2511.6） | -0.5 % |
-| self | `check` 暖 | 10985.1（10257.9–17239.0） | 11028.3（10247.3–18304.9） | +0.4 % |
-| Claude-Code-Local | `graph --sites` 冷 | 9706.2（8910.2–10911.3） | 9621.9（9227.9–10566.5） | -0.9 % |
-| Claude-Code-Local | `graph --sites` 暖 | 9903.2（8469.2–10684.9） | 9840.8（8494.7–10207.0） | -0.6 % |
-| Claude-Code-Local | `deadcode` 冷 | 128404.2（113102.1–138874.0） | 128359.5（120032.4–140371.7） | -0.0 % |
-| Claude-Code-Local | `deadcode` 暖 | 5992.6（5432.1–7610.5） | 5699.8（5509.0–6450.9） | -4.9 % |
-| Claude-Code-Local | `check` 暖 | 20365.1（18528.4–22560.3） | 20996.1（18490.9–21425.7） | +3.1 % |
-| ripgrep | `graph --sites` 冷 | 927.7（908.1–1011.3） | 917.0（903.8–1048.1） | -1.2 % |
-| ripgrep | `graph --sites` 暖 | 815.7（779.0–940.0） | 796.7（756.1–950.1） | -2.3 % |
-| ripgrep | `deadcode` 冷 | 5775.3（5464.1–6922.7） | 5800.7（5382.0–6016.0） | +0.4 % |
-| ripgrep | `deadcode` 暖 | 779.1（730.6–820.9） | 763.9（737.2–780.9） | -2.0 % |
-| ripgrep | `check` 暖 | 3276.6（3181.6–25881.0） | 3304.8（3216.1–26244.7） | +0.9 % |
-
-- 预算（任务书）：暖 `ce check` ≤ +15 %——三棵树 +0.4 %、+3.1 %、+0.9 %，都在线内（自仓 `check` 两臂都退 1：归档树里基线尚未按本车道重立；Claude-Code-Local 两臂都退 2，早于本阶段）。`deadcode` 与 `graph --sites` 都在 ±5 % 内。
-- **请求字节**（同一棵树一次冷 `deadcode`，经中继核记下每个 `resolve.request` 与应答的字节；站点按请求累加，同一个站点每轮各算一次；两臂 `deadcode` 输出逐字节同）：
-
-| 树 | 请求个数 A → B | 请求字节 A → B | 应答字节 A → B | 站点 A → B |
-|---|---|---|---|---|
-| self | 15 → 15 | 35,343,801 → 37,746,071 | 217,904 → 315,032 | 84,864 → 117,468 |
-| Claude-Code-Local | 5 → 5 | 1,689,248 → 2,206,434 | 358,013 → 486,553 | 46,256 → 52,444 |
-
-- **多出来的字节从哪来**：问答轮数不变（自仓仍是阶段 F 的 13 轮带站点的重问加两个不带站点的请求，Claude-Code-Local 两轮加三个）；每个带站点的请求多带本批的 Markdown 站点（自仓 2,508 个、Claude-Code-Local 3,094 个，A 臂在 Rust 里判掉、不过线）与 `assets` / `md` 两键（自仓 58,840 B、Claude-Code-Local 110,633 B，测量侧每次扫一遍只读一次）。自仓的 13 轮把这份事实送了 13 遍（764,920 B），是阶段 F 逐轮重问的老代价，不是本阶段加的轮。
-- **核单独计时**（`coretime_g.sh`：把 B 臂那次冷 `deadcode` 的 `resolve/1` 会话经中继录下，单独喂核 5 次）：self 37,746,136 B → 中位 3495.5 ms（3450.5–3705.8）、Claude-Code-Local 2,206,499 B → 376.7 ms（364.8–417.4）。
-- **其余七个面**（`warmreq_g.sh`：每臂冷跑一次 `graph --sites` 建索引，再经中继核把各面跑一次）：两棵树上每个面两臂的请求种类与个数相同，`structure` / `check` / `join --days 14` / `arch` / `erase` / `rules` 的 `resolve.request` 不带站点、字节两臂相同（自仓 64,404 B，Claude-Code-Local 两个共 136,310 B）。
-- **钩子**：PreToolUse 探针不问 `resolve/1`——在 Claude-Code-Local 拷贝上写入一个带文件链接、跨文件锚、目录、图片、引用链接与定义、没人用的定义、裸片段与自动链接的新 Markdown 文件的 `Write` 信封经 `ce probe --hook` 冷跑、暖跑各一次，中继核记下的 `resolve.request` 都是 0（`hookprobe_g.sh`），与阶段 A–F 同。
-- 复跑：车道目录 `v233_w2t_scratch/perf_g.py 7`（树拷自车道归档、`ts_trees/Claude-Code-Local` 与 `gate1g/seed-rs-ripgrep`），读数原文 `perf_g_all.log`、逐跑 `perf_g.ndjson`、负载 `perf_g_load.txt`；请求字节 `reqbytes_g.sh`（`reqbytes_g_sum.py`），各面请求 `warmreq_g.sh`（`warmreq_g_sum.py`），钩子 `hookprobe_g.sh`，核单独计时 `coretime_g.sh`。
-
 ## v2.33 W1 第 3 项 目录树与建表进核 A/B（实测 2026-10-07 00:29–00:50Z，在变基到 e393e1cf〔W2b 阶段 G 落地〕之前对 924fddab 量，按「每阶段只量一次」变基后不重量；release，同一台机、同一坐：A = 924fddab 的 ce〔sha256 508ee2a5…〕+ 它的核〔sha256 c4ef9e53…〕，在 924fddab 的工作树里构建，`cli/src` 与 `core/` 与 dbed2fc6 相同；B = 车道树的 ce〔sha256 a53db263…，构建进车道的 scratch target，与本项提交的 `cli/src` 相同〕+ 它的核〔sha256 efe4bfc4…〕——structure / arch / query 的请求带路径原文，核建目录树与按目录的表；每臂每棵树各一份拷贝〔`.ce` 删掉〕，每个（树、面）先跑一次，再 ABAB ×7 暖跑，`python` `perf_counter` 夹 `subprocess.run`、含进程起，stdout 丢弃；坐时每分钟 `Get-CimInstance` 处理器负载，00:29–00:49Z 共 20 次 48–100 %——**不是静默窗**：20 次的首个进程都是用户在玩的 Warhammer3，为不和用户抢机器，第一条计时之前〔逐跑记录还是 0 行〕把计时脚本的进程调到 BelowNormal，两臂之后起的 ce 都继承这一档）
 
 口径：整个进程的墙钟，中位数（最小–最大），毫秒。树：dbed2fc6 的归档（测试子仓 f64c57d 就位）与两棵真树 requests、cobra（拷自 W2-text 车道的 `.ce-eval/corpora`）。只量暖跑：本项动的是三族判决请求的组装与目录表，不碰索引刷新与冷建。`query` 用的问题是读目录表的 `in_dir(F, D), dir_name(D, N)`。
@@ -746,3 +710,20 @@ rowid + 双索引 2.45 s / 14.8 MB、WITHOUT ROWID (term, unit) + unit 索引 2.
 - 端到端（本车道的真构建：车道树的核 + release ce；2026-10-13，持 HEAVY_LOCK）：`ce check --format json .` 在两棵树的冷拷贝上 careeros 退 0、分数 763，用时 558 s；Claude-Code-Local 退 0、分数 785，620 s；两份输出与探针核那一坐逐字节相同。探针核那一坐另跑过 `ce join --days 14`：careeros 退 0、619 s，Claude-Code-Local 退 0、689 s，都无降级。
 - 负载：每个读数都在 HEAVY_LOCK 下量，但别的车道在锁外一直在编译——load_probe 总负载 37–100 %、其他进程占机器 30–100 %、同时活着的编译进程 2–13 个。内存读数跨跑稳定；用时是负载下的读数，不是静默窗读数。
 - 证据（仓库外，车道 scratch `D:/Projects/.worktrees/CodeEraser/v233_p11_linecap_scratch/`）：录下的请求 `dumps/`（共 722,646,597 B；`P-careeros/90800-027.req`、`P-Claude-Code-Local/39664-021.req`、`P-self/105848-015.req`、`A-careeros/68780-003.req`、`A-Claude-Code-Local/90176-009.req`），逐跑行 `record.ndjson` / `replay.ndjson`，每项字节 `derive.json`，端到端 `gate2/`，仪器 `record.py` / `replay.py` / `derive.py` / `gate2.sh`，日志 `JOURNAL.md`。
+
+## v2.35 守卫车道 钩子与门 A/B（实测 2026-11-10 17:56–19:06 本地时，release，同一台机、同一坐：A = 98060a45 的 ce〔由 ce00d731 构建：两者的 `cli/src` 与 `cli/Cargo.lock` 逐字节相同、`cli/Cargo.toml` 只差一项 dev 依赖；sha256 fb42afa7…〕+ 98060a45 的核〔`git archive` 构建，sha256 0f4b2cd1…〕，B = 车道终树的 ce〔sha256 c2c5137f…〕+ 车道终树的核〔sha256 80dc79f2…〕；树 = 自仓 98060a45 的克隆〔去掉未就位的测试子仓〕、requests、gson，每臂每棵树各一份拷贝；钩子 ABAB ×6〔冷 = 先按 PID 杀掉该拷贝自己的 daemon〕，门 ABAB ×3〔冷 = 跑前删 `.ce`〕；`python` `perf_counter` 夹 `subprocess.run`、含进程起；**不是静默窗**：坐时处理器负载 100 %，别的车道在编译）
+
+| 面 | 自仓 A → B（ms） | requests A → B | gson A → B |
+|---|---|---|---|
+| PreToolUse Write 放行 冷 / 暖 | 397 → 397 / 98 → 102 | 412 → 404 / 85 → 79 | 398 → 395 / 83 → 85 |
+| PreToolUse Edit 放行 冷 / 暖 | 224 → 209 / 88 → 76 | 230 → 200 / 89 → 71 | 232 → 222 / 95 → 71 |
+| PreToolUse 拒绝（精确复制）冷 / 暖 | 423 → 698 / 109 → 339 | 436 → 622 / 101 → 267 | 415 → 638 / 93 → 380 |
+| PostToolUse settle 冷 / 暖 | 60 → 54 / 54 → 53 | 56 → 55 / 55 → 49 | 58 → 63 / 54 → 53 |
+| Stop audit 冷 / 暖 | 740 → 659 / 651 → 755 | 715 → 622 / 693 → 550 | 812 → 691 / 620 → 699 |
+| `ce dedup .` 冷 / 暖 | 39451 → 37081 / 1048 → 1029 | 1951 → 1937 / 288 → 299 | 12093 → 11163 / 837 → 685 |
+| `ce check .` 冷 / 暖 | 64596 → 64387 / 18195 → 17865 | 3937 → 3786 / 1189 → 1067 | 36488 → 35434 / 4965 → 4466 |
+
+- 放行路（Write / Edit）、settle、两道门都平：暖 settle 带上 GD7 的重量请求之后 0.90–0.98 倍。Stop audit 的代码车道没动，自仓与 gson 暖跑 1.13–1.16 倍、requests 0.79 倍，两向都有，记为坐时噪声。
+- **拒绝路慢 140–175 ms，原因是搬移工序的两次 git 读**：只在探针命中时才走（放行路不付）。拆法：同一坐 ABAB ×8 只量拒绝（`abab3.log`：暖 自仓 96 → 279、requests 84 → 227、gson 85 → 239 ms）；把 `GIT_CEILING_DIRECTORIES` 设到拷贝的上一级、让工序在第一次 git 读就停下，B 仍慢 140–165 ms（`abab4.log`）——花的是起两个 git 进程，不是它们做的事；临时加计时行的构建（不入库）逐段读数：探针本身 15–25 ms、切片 0–1 ms、`Tree::read`（两次 git 读并发 + `cat-file --batch`）137–182 ms、核的判决 1–4 ms（`timing_run.log`）。两次 git 读是评审定下的形状（REVIEW-1 Q5），本节如实记账、不改。
+- gson 的搬移案例 B 慢（暖 80 → 356 ms）不是回退：A 在源文件改过之后按旧偏移核不上同文件里的孪生（GD5 修的正是这个），探针 0 条匹配、什么都不做；B 找到 4 条、搬移工序把 4 条都记作搬移、放行。
+- 复跑：车道目录 `v235_guard_scratch/abab2.py 6 3`、`ABAB_CASES=refuse ABAB_OUT=abab3 python abab2.py 8 0`、`abab4.py 8`、`timing_run.py`（计时构建由 `edits/timing_patch.py` 临时打补丁、构建进 scratch 目标目录后还原）。

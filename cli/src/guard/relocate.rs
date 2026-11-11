@@ -71,7 +71,12 @@ pub(super) fn credit(
 
 /// The core's verdict over the daemon's held link.
 fn judged(root: &Path, rows: &[[u64; 2]]) -> Result<relocate::Verdict, String> {
-    let reply = client::relay(root, &Request::Relocate { rows: rows.to_vec() })?;
+    let reply = client::relay(
+        root,
+        &Request::Relocate {
+            rows: rows.to_vec(),
+        },
+    )?;
     relocate::consume(&reply, rows.len())
 }
 
@@ -84,7 +89,9 @@ fn counted(
     matches: &[serde_json::Value],
 ) -> Result<Vec<[u64; 2]>, String> {
     let target = Path::new(&env.tool_input.file_path);
-    let lang = Lang::from_path(target).filter(|l| l.fingerprints()).ok_or("language")?;
+    let lang = Lang::from_path(target)
+        .filter(|l| l.fingerprints())
+        .ok_or("language")?;
     let applied = applied.ok_or("unapplied")?;
     let runs = runs(probed, lang, matches)?;
     let tree = Tree::read(root, &crate::scan::walk::rel_str(root, target))?;
@@ -142,13 +149,18 @@ impl Tree {
             });
             (diff.join(), others.join())
         });
-        let changed = changed.map_err(|_| "git diff panicked")?.map_err(|e| format!("git: {e}"))?;
-        let untracked = untracked.map_err(|_| "git ls-files panicked")?.map_err(|e| format!("git: {e}"))?;
+        let changed = changed
+            .map_err(|_| "git diff panicked")?
+            .map_err(|e| format!("git: {e}"))?;
+        let untracked = untracked
+            .map_err(|_| "git ls-files panicked")?
+            .map_err(|e| format!("git: {e}"))?;
         let pairs = pairs(root, &changed, &untracked, target);
         if pairs.len() > texts::PAIR_CAP {
             return Err(format!("cap_files: {} files differ from HEAD", pairs.len()));
         }
-        let (loaded, unread) = texts::load(root, &pairs, Side::Rev("HEAD"), Side::Worktree).ok_or("git: cat-file")?;
+        let (loaded, unread) =
+            texts::load(root, &pairs, Side::Rev("HEAD"), Side::Worktree).ok_or("git: cat-file")?;
         if unread > 0 {
             return Err(format!("unread: {unread} file(s)"));
         }
@@ -156,7 +168,10 @@ impl Tree {
         if bytes > RELOC_BYTES {
             return Err(format!("cap_bytes: {bytes}"));
         }
-        let mut tree = Tree { head: Vec::new(), now: Vec::new() };
+        let mut tree = Tree {
+            head: Vec::new(),
+            now: Vec::new(),
+        };
         for l in &loaded {
             tree.head.push(hashes(l.before.as_bytes(), l.lang)?);
             tree.now.push(hashes(l.after.as_bytes(), l.lang)?);
@@ -165,7 +180,10 @@ impl Tree {
     }
 
     fn head(&self, run: &[u64]) -> u64 {
-        self.head.iter().map(|s| relocate::occurrences(s, run)).sum()
+        self.head
+            .iter()
+            .map(|s| relocate::occurrences(s, run))
+            .sum()
     }
 
     fn now(&self, run: &[u64]) -> u64 {

@@ -7,6 +7,12 @@
 > Cost.anchorFloor 的站点锚地板——请求形状破坏性变更，按 §2 升 major。
 
 > **以下按版本倒序（最新在前），至 6.0.0 止；5.1.0–3.0.0 已于 2026-10-06 逐字节迁入 [VERSIONING-ARCHIVE-3.0-5.1.md](VERSIONING-ARCHIVE-3.0-5.1.md)（算法轨 W6 的 9.0.0 同版加性段落下后正册读 751 行），2.15.0–2.33.0 已于 2026-10-01 逐字节迁入 [VERSIONING-ARCHIVE-2.15-2.33.md](VERSIONING-ARCHIVE-2.15-2.33.md)（正册离 `ce scan` 的 750 行硬线只剩 5 行），2.1.0–2.14.0 的最初顺序段已于 2026-09-29 迁入 [VERSIONING-ARCHIVE-2.1-2.14.md](VERSIONING-ARCHIVE-2.1-2.14.md)，2.0.0 仍在上方导语段。**
+> **9.1.0 同版加性**（重复写入类的搬移工序，v2.35 守卫车道，2026-11-10；方法学册 11 重复写入段；9.1.0 未发布，同上不另升版号）：新能力 `relocate/1`——
+> 不是新家族，是重复写入类的一道工序（与 `candidates/1` 等前段同列，不计进家族数）。请求 `rows` `[[occHead, occNow]]`：探针的每条匹配一行，钩子在 HEAD 与写入留下的那棵树里
+> 数出那段 token 的出现次数（`occNow` 含这次写入自己的一份，为 0 按名拒绝；负数按名拒绝；行数上限 `CE.Relocate.Cost.relocateRowCap` 4,096，超了答一份完整的降级应答、一行都不信用）；
+> 应答 `relocated`（`occNow ≤ occHead` 的行下标，严格升序）、`all`（每一行都是搬移）与 `counts.rows`。钩子只在 `all` 为真时放行这次写入。golden：新文件
+> `relocate/golden`（三对），其余各族只动 hello 的能力表。
+
 > **9.1.0**（Python 导入够到 CPython 执行的模块，加性 minor，车道 v235_pyimport，2026-11-09；方法学册 06 Python 行）：请求加性 `py.names` `[[站点下标, [名字…]]]`——
 > 每个 Python `import_from` 站点导入的名字（严格升序、名字非空，别的站点带名字按名拒绝）；应答加性 `also` `[[站点下标, 路径, 级]]`（按 (站点, 路径) 严格升序）：
 > 站点答案之外 CPython 还执行的文件——点分路径上每级祖先包的 `__init__.py`、作为子模块存在的名字（先包后模块、每个根都试、两根都中两条都出）、相对导入者自己
@@ -598,12 +604,12 @@ ce ↔ ce-core 的每条消息 = 一行 NDJSON（UTF-8，无 BOM，`\n` 结尾�
 - `hello` 应答自 0.2.0 起带 `capabilities`（当前 `["hello","fourclass/2","graph/1",
   "clone/1","docdup/1","verdict/1","scan/1","structure/1","trend/2","erase/1","audit/1","tombstone/1",
   "similar/1","query/1","flow/1","merge/1","arch/1","tables/1","document/1","resolve/1",
-  "candidates/1","rank/1","docpairs/1","moves/1","bags/1"]`；fourclass/2 =
+  "candidates/1","rank/1","docpairs/1","moves/1","bags/1","relocate/1"]`；fourclass/2 =
   2.0.0 的锚宽请求形状，7.1.0 加性 `declRem` / `declAdd` → `unitEdges`（能力名不变）——旧客户端探 /1 得缺席，响亮降级 L1 而非发不可解析的二元形状；
   graph/1 = M5-2 图族；clone/docdup/verdict = M5-3 三族，2.2.0 同批声明；scan/1 =
   ADR-008 P3 分级判决族，2.7.0 声明；structure/1 = M6 结构族，2.9.0 声明；
   trend/2 = M7.5b 趋势族，2.13.0 以 trend/1 声明、2.31.0 随 Theil-Sen 行为变化升 /2；erase/1 = M9 批 3 擦除谓词族，2.16.0
-  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明；bags/1 = 同角色顾问的词袋〔similar 索引的前段〕，9.0.0 同版加性声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
+  声明；audit/1 = M9 批 7 会话审计族，2.24.0 声明；tombstone/1 = 墓碑残留族，6.6.0 声明；similar/1 = 同角色顾问族，6.7.0 声明；query/1 = 代码查询与架构规则族，7.3.0 声明；flow/1 = 函数内死代码族，7.4.0 声明；merge/1 = 克隆合并建议族，7.5.0 声明；arch/1 = 架构分析族，7.6.0 声明；tables/1 = 定义包族〔不是判决族〕，7.7.0 声明，同版 hello 应答加性 `tablesDigest`；document/1 = 文档族〔不是判决族〕，7.8.0 声明；resolve/1 = 引用阶梯查找族，8.1.0 声明；candidates/1 / rank/1 / docpairs/1 / moves/1 = W3 四族〔判决的前段〕，8.2.0–8.5.0 各一个声明；bags/1 = 同角色顾问的词袋〔similar 索引的前段〕，9.0.0 同版加性声明；relocate/1 = 重复写入类的搬移工序〔不是家族〕，9.1.0 同版加性声明）——**纯信息发现**，接受/拒绝的唯一权威仍是
   §2 的 SemVer；能力缺席 = 客户端走 L1 并显式降级（A9f）。
 - 客户端规则：应答 `type` 非预期或 `id` 不回显 = 失步 → 视为 L2 不可用，
   回退 L1 且降级可见——绝不给错答案，只给响亮的答案。例外只有一种：`error` 应答
