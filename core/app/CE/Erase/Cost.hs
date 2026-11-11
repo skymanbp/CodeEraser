@@ -21,14 +21,28 @@
 --                  exists for it — the H3 scope line)
 --   3 dead_file    the confidence road (2.32.0, H3): fact 1 is the
 --                  graph family's OWN per-row confidence (0
---                  unvouched / 1 vacuous / 2 vouched) — refused
---                  only at 0, so the trust judgment lives with the
---                  family that owns the site ledger
--- Reason codes are frozen positions too — the advisory face names
--- WHY a row is refused, never just that it was:
+--                  unvouched / 1 vacuous / 2 vouched), the trust
+--                  judgment living with the family that owns the
+--                  site ledger
+-- Classes 2 and 3 delete a WHOLE FILE, and since 9.1.0 (lane
+-- v235_licence) neither has an eraseable outcome: their evidence is
+-- the graph's dead verdict, which answers "does any reference site of
+-- the corpus land on this file?" — and a file is also used with no
+-- such site: run by its name (a script, a command in a Makefile or a
+-- package script), found by a tool's convention (setup.py,
+-- docs/conf.py, package-info.java), served or read by its path. Past
+-- the bars below the row is refused as reachable_by_name; it stays
+-- in the plan as an advisory row that says what will not be touched.
+-- Only class 1 still erases: byte-identical prose is redundant by a
+-- proof that does not depend on who reads the file.
+-- Reason codes are frozen positions too (the domain only grows) — the
+-- advisory face names WHY a row is refused, never just that it was:
 --   0 eraseable / 1 language_unresolved / 2 not_full_segment
 --   3 bytes_differ / 4 copy_not_dead / 5 unit_not_covered
 --   6 public_surface (6.1.0) — the RG10 firewall reaching this face
+--   7 reachable_by_name (9.1.0) — a whole-file row whose every other
+--     fact holds: nothing in the tree references the file, which is
+--     not evidence that nothing uses it
 -- v1 has NO knobs: the safety predicate is not tunable — a knob that
 -- loosens "safe" would be a licence to guess (contract §boundaries).
 module CE.Erase.Cost (
@@ -38,7 +52,6 @@ module CE.Erase.Cost (
   eraseRowCap,
   judgeRow,
   keptRows,
-  licence,
   publicDeadVerdicts,
   reasonNames,
 ) where
@@ -63,7 +76,7 @@ publicDeadVerdicts = [2, 4]
 -- (plan v2.32 step 5).
 classNames, reasonNames :: [String]
 classNames = ["(retired)", "verbatim_doc", "t1_twin", "dead_file"]
-reasonNames = words "eraseable language_unresolved not_full_segment bytes_differ copy_not_dead unit_not_covered public_surface"
+reasonNames = words "eraseable language_unresolved not_full_segment bytes_differ copy_not_dead unit_not_covered public_surface reachable_by_name"
 
 -- | Row ceiling: candidates are bounded by dead files + verbatim
 -- pairs + whole-unit twins; 4096 is far above any honest plan.
@@ -85,14 +98,18 @@ judgeRow [2, unitCovered, bytesEqual, copyDead, langUnresolved]
   | copyDead == 0 = (False, 4)
   | copyDead `elem` publicDeadVerdicts = (False, 6)
   | langUnresolved /= 0 = (False, 1)
-  | otherwise = (True, 0)
+  | otherwise = (False, 7)
 -- a public surface is refused BEFORE the trust fact is weighed: no
 -- amount of confidence makes an exported API eraseable, so naming
--- the categorical bar tells the reader more than naming the strength
+-- the categorical bar tells the reader more than naming the strength.
+-- reachable_by_name comes LAST on both whole-file roads: it holds for
+-- every such row, so it is named only when the evidence itself is
+-- complete — a reader told language_unresolved learns the graph could
+-- not even show the file unreferenced, which is the stronger fact
 judgeRow [3, verdict, conf, _, _]
   | verdict `elem` publicDeadVerdicts = (False, 6)
   | conf == 0 = (False, 1)
-  | otherwise = (True, 0)
+  | otherwise = (False, 7)
 judgeRow _ = (False, 4) -- unreachable behind famOffence; refuse, never erase
 
 -- | A fact row's class — its first field; an empty row (unreachable
@@ -103,22 +120,11 @@ classOf row = case row of
   (cls : _) -> cls
   [] -> 0
 
--- | How much a class's ERASEABLE row tells the reader (7.0.0, O51;
--- judged here since 7.2.0, plan v2.30 step 7b): a twin names the live
--- unit it duplicates, a dead file names only its death, a verbatim
--- segment never shares a target with either. The richer row stands
--- for the target — before 7.0.0 the dead-file row won by class-name
--- order and the twin class could never reach apply.
-licence :: Integer -> Integer
-licence cls = case cls of
-  2 -> 2
-  3 -> 1
-  _ -> 0
-
 -- | Which ADVISORY row stands when no row of a target is eraseable:
 -- the dead file's — its reason names the file's own verdict, the
--- categorical bar (public_surface) or the trust fact
--- (language_unresolved) — over the twin's, whose reason is about the
+-- categorical bar (public_surface), the trust fact
+-- (language_unresolved) or the file's own reachability
+-- (reachable_by_name) — over the twin's, whose reason is about the
 -- copy. The reader sees the refusal that is about the file.
 advisoryFirst :: Integer -> Integer
 advisoryFirst cls = case cls of
@@ -134,31 +140,25 @@ advisoryFirst cls = case cls of
 -- itself until this step (erase/mod.rs `close_targets`); which
 -- verdict the reader acts on is judgment, so the rule lives here.
 --
--- Three rules, in order: (1) an eraseable whole-file row owns its
--- path, and every span row on that path is closed out — an apply
--- that deleted the file and then spliced lines out of it would
--- refuse on the hash it can no longer read; (2) within one target
--- the eraseable row with the richest `licence` stands; (3) with no
--- eraseable row the `advisoryFirst` row stands. Ties inside one
--- class break to the EARLIEST row — which is why the contract asks
--- for key order: two producers sending the same rows in the same
--- order close the same way. Targets, fact rows and verdicts are
--- parallel lists in request order; the answer is one bit per row.
+-- Two rules, in order: (1) within one target an eraseable row stands
+-- over an advisory one; (2) with no eraseable row the
+-- `advisoryFirst` row stands. Ties break to the EARLIEST row — which
+-- is why the contract asks for key order: two producers sending the
+-- same rows in the same order close the same way. Targets, fact rows
+-- and verdicts are parallel lists in request order; the answer is one
+-- bit per row. Since 9.1.0 only a class-1 span row can be eraseable,
+-- so two rules of 7.2.0 can no longer fire and went with it: "an
+-- eraseable whole-file row owns its path" (no such row exists) and
+-- the `licence` ranking among eraseable rows of one target (every
+-- eraseable row is a verbatim_doc row of equal licence).
 keptRows :: [[Integer]] -> [[Integer]] -> [(Bool, Integer)] -> [Bool]
 keptRows targets rows verdicts = [i `S.member` winners | i <- [0 .. length rows - 1]]
  where
   judged = zip3 [0 :: Int ..] (zip targets rows) (map fst verdicts)
-  owned = S.fromList [p | (_, ([p, 0, 0], _), True) <- judged]
-  subsumed [p, s, _] = s > 0 && p `S.member` owned
-  subsumed _ = False
   standing cls eraseable
-    | eraseable = (1 :: Integer, licence cls)
+    | eraseable = (1 :: Integer, 0)
     | otherwise = (0, advisoryFirst cls)
-  open =
-    [ (take 3 t, (standing (classOf r) e, i))
-    | (i, (t, r), e) <- judged
-    , not (subsumed t)
-    ]
+  open = [(take 3 t, (standing (classOf r) e, i)) | (i, (t, r), e) <- judged]
   -- fromListWith applies `better new old`, so a strictly better
   -- standing replaces and an equal one keeps the earlier row
   better new old = if fst new > fst old then new else old

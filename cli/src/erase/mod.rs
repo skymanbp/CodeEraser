@@ -29,8 +29,7 @@ pub use model::{
 use std::path::{Path, PathBuf};
 
 /// The whole plan: measure, judge, label. The closure over targets —
-/// one row per (path, span), a whole-file deletion owning its path —
-/// is the core's answer (`kept`), and the rows go out in the order
+/// one row per (path, span) — is the core's answer (`kept`), and the rows go out in the order
 /// the plan renders them (path, span, class name) because the
 /// closure's tie inside one class breaks to the EARLIEST row: two
 /// producers sending the same rows in the same order close the same

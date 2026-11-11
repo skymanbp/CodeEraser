@@ -44,13 +44,27 @@ carry whole-unit coverage, byte equality, copy-file liveness, and the locally
 folded per-language unresolved count
 ([gather.rs:172-235](../../../cli/src/erase/gather.rs#L172)).
 
-### 2. Four frozen class codes, three provable families
+### 2. Four frozen class codes, three judged families, one that erases
 
 The class positions are part of the source contract: position `0` is
 retired, `1` is `verbatim_doc`, `2` is `t1_twin`, and `3` is `dead_file`
 ([Cost.hs:5-26](../../../core/app/CE/Erase/Cost.hs#L5), [model.rs:16-24](../../../cli/src/erase/model.rs#L16)). Each class below is
 written as facts → predicate → guard, so the row's evidence and its refusal
 path stay visible together.
+
+Since 9.1.0 (lane v235_licence) only class 1 has an eraseable outcome.
+Classes 2 and 3 delete a whole file, and their evidence is the graph's
+dead verdict, which answers whether any reference site of the corpus
+lands on the file. A file is also used with no such site — run by its
+name, found by a tool's convention, served or read by its path — so a
+whole-file row past every other bar is refused as `reachable_by_name`
+and stays in the plan as an advisory row
+([Cost.hs:27-37](../../../core/app/CE/Erase/Cost.hs#L27)). The released
+1.9.2 offered for deletion two Python scripts that import nothing and a
+Java tree's `package-info.java` and `module-info.java`; the standing
+rule that a class acts only with its own measured record has no record
+to read for these two classes, because the precision docs measure where
+a site lands, not whether an unreferenced file is unused.
 
 #### Class 0 — retired at 4.0.0 (superseded at 2.32.0 by class 3)
 
@@ -105,48 +119,52 @@ language unresolved count ([gather.rs:180-235](../../../cli/src/erase/gather.rs#
 Until proto 7.0.0 the third fact was a death bit, so the RG10 bar never reached
 this road: the acceptance fixture's public `copy.py` twin was refused only
 because the `dead_file` row for the same path won the plan's closure by
-class-name order (plan v2.29 step 8, O51). The closure keeps the richer
-eraseable row for a target — a twin names the live unit it duplicates, a dead
-file names only its death — and since 7.2.0 it is the core's: an eraseable
-whole-file row owns its path and closes the span rows on it, the richest
-`licence` stands among eraseable rows, the dead file's categorical refusal
-stands among advisory ones, and a tie inside one class breaks to the earliest
-row ([Cost.hs:129-165](../../../core/app/CE/Erase/Cost.hs#L129)).
+class-name order (plan v2.29 step 8, O51). Since 7.2.0 the closure is
+the core's: an eraseable row stands over an advisory one for its target, the
+dead file's refusal stands over the twin's among advisory ones (its reason is
+about the file), and a tie inside one class breaks to the earliest row
+([Cost.hs:134-164](../../../core/app/CE/Erase/Cost.hs#L134)). Two rules of
+7.2.0 left with 9.1.0, when no input could reach them any more: an eraseable
+whole-file row owning its path, and the `licence` ranking that put an
+eraseable twin over an eraseable dead file.
 
 **Predicate.** `judgeRow` evaluates those facts in source order: coverage must
 be `1`, bytes must be equal, the copy must be dead and not a public surface
 (`copyDead` outside `publicDeadVerdicts`), and unresolved sites must be `0`;
-only then is the row `(True, 0)`
-([Cost.hs:82-88](../../../core/app/CE/Erase/Cost.hs#L82)).
+a row past all four is `(False, 7)`, never `(True, 0)`
+([Cost.hs:96-102](../../../core/app/CE/Erase/Cost.hs#L96)).
 
 **Guard.** The first failed fact wins. Missing whole-unit coverage emits `5`, a
-byte mismatch emits `3`, a live copy emits `4`, and unresolved sites emit `1`
-([Cost.hs:82-88](../../../core/app/CE/Erase/Cost.hs#L82)). This is why a T1
-block that crosses only part of a unit cannot become an erase authorization:
-the coverage fact is explicit and checked before the other evidence.
+byte mismatch emits `3`, a live copy emits `4`, a public copy `6`, unresolved
+sites emit `1`, and `7` closes the list
+([Cost.hs:96-102](../../../core/app/CE/Erase/Cost.hs#L96)). The coverage fact
+is explicit and checked before the other evidence, so the reason a reader sees
+for a partial-unit block is the coverage, not the liveness.
 
 #### Class 3 — `dead_file`, the confidence road (2.32.0)
 
-The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:94](../../../core/app/CE/Erase/Cost.hs#L94)). Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:49-59](../../../core/app/CE/Erase/Cost.hs#L49)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:19-21](../../../core/app/CE/Erase/Cost.hs#L19)).
+The same candidate family as class 0 with the trust judgment moved to its owner: fact 1 is no longer a locally folded per-language unresolved count but the graph family's OWN per-row confidence (book 06 §8 — 0 unvouched / 1 vacuous / 2 vouched), and the predicate refuses at 0 ([Cost.hs:112](../../../core/app/CE/Erase/Cost.hs#L112)) and as `reachable_by_name` past it (9.1.0, [Cost.hs:113](../../../core/app/CE/Erase/Cost.hs#L113)): the trust fact is named first because it says the graph could not even show the file unreferenced, which tells the reader more than the residual rule that holds for every whole-file row. Since 6.1.0 the verdict code is read as well, and read FIRST: `unref_public` (2) and `unreach_public` (4) are refused whatever their confidence ([Cost.hs:49-59](../../../core/app/CE/Erase/Cost.hs#L49)) — CE.Graph.Dead splits dead along public/private precisely so an exported API cannot be treated as plain dead, and a face that reads past the code turns that firewall into a deletion proposal. The bar is categorical, so it is named before the strength question is asked. Shape: the dead verdict stays bounded 1..4 and the confidence 0..2 ([Erase.hs:47-51](../../../core/app/CE/Erase.hs#L47)). The Rust planner refuses a dead row that carries no confidence — a reply whose request never shipped the ledger licences nothing ([gather.rs:123](../../../cli/src/erase/gather.rs#L123)). Class 0 kept judging through its grace window and RETIRED at 4.0.0, its position frozen and refused by name ([Cost.hs:6-10](../../../core/app/CE/Erase/Cost.hs#L6)); the class-2 twin row deliberately keeps its local count — a twin row is not a graph dead row, so no core confidence exists for it ([Cost.hs:19-21](../../../core/app/CE/Erase/Cost.hs#L19)).
 
-### 3. The seven reason codes
+### 3. The eight reason codes
 
-The advisory vocabulary is frozen at seven positions in the client model
-([model.rs:26-41](../../../cli/src/erase/model.rs#L26)). The table records the
+The advisory vocabulary is frozen at eight positions in the client model
+([model.rs:26-46](../../../cli/src/erase/model.rs#L26)). The table records the
 meaning and the exact `judgeRow` condition that emits each code. Reason `0` is
-the successful verdict; the other six are refusals. The domain only ever
-grows — position 6 arrived at 6.1.0 and nothing renumbered, because a frozen
-position that moves silently rewrites every plan a reader has already read.
+the successful verdict; the other seven are refusals. The domain only ever
+grows — position 6 arrived at 6.1.0 and position 7 at 9.1.0, and nothing
+renumbered, because a frozen position that moves silently rewrites every plan
+a reader has already read.
 
 | position/name | meaning | condition in `judgeRow` |
 |---|---|---|
-| `0 eraseable` | every class-specific safety test passed | class 1 falls through after the full-segment and byte tests, class 2 after all four checks, class 3 after a non-public verdict and a non-zero confidence ([Cost.hs:78-95](../../../core/app/CE/Erase/Cost.hs#L78)) |
+| `0 eraseable` | every class-specific safety test passed | class 1 alone, after the full-segment and byte tests ([Cost.hs:92-95](../../../core/app/CE/Erase/Cost.hs#L92)) |
 | `1 language_unresolved` | the owning language still has unresolved graph sites | class 2: the final guard sees `langUnresolved /= 0`; class 3: the graph family's confidence is `0` ([Cost.hs:82-88](../../../core/app/CE/Erase/Cost.hs#L82), [Cost.hs:92-95](../../../core/app/CE/Erase/Cost.hs#L92)) |
 | `2 not_full_segment` | the reported verbatim run does not cover either segment | class 1: `verbatim < wordsA || verbatim < wordsB` ([Cost.hs:78-79](../../../core/app/CE/Erase/Cost.hs#L78)) |
 | `3 bytes_differ` | the candidate and its survivor are not byte-identical | class 1 or class 2: `bytesEqual /= 1` ([Cost.hs:78-84](../../../core/app/CE/Erase/Cost.hs#L78)) |
 | `6 public_surface` | the dead file is an EXPORT surface, and RG10 forbids acting on one | class 3: `verdict` is 2 `unref_public` or 4 `unreach_public`, tested before the confidence ([Cost.hs:92-93](../../../core/app/CE/Erase/Cost.hs#L92)); class 2: `copyDead` in the same table, tested after the death itself ([Cost.hs:86](../../../core/app/CE/Erase/Cost.hs#L86), table at [Cost.hs:58-59](../../../core/app/CE/Erase/Cost.hs#L58)) |
 | `4 copy_not_dead` | the T1 twin's target file is not graph-dead | class 2: `copyDead == 0`; the catch-all malformed-row arm also refuses with this code ([Cost.hs:82-96](../../../core/app/CE/Erase/Cost.hs#L82)) |
 | `5 unit_not_covered` | the duplicate block does not cover a whole unit | class 2: `unitCovered /= 1` ([Cost.hs:82-83](../../../core/app/CE/Erase/Cost.hs#L82)) |
+| `7 reachable_by_name` | a whole-file row whose every other fact holds: nothing in the tree references the file, which is not evidence that nothing uses it | class 2 after all five checks, class 3 after a non-public verdict and a non-zero confidence ([Cost.hs:96-113](../../../core/app/CE/Erase/Cost.hs#L96)) |
 
 The order in the table is operational, not descriptive. For a class-2 row with
 several bad facts, the first failing guard determines the one reason returned;
@@ -179,8 +197,11 @@ must equal its candidate count ([wire.rs:22-56](../../../cli/src/erase/wire.rs#L
 ### 5. `--apply`: predicates before writes
 
 Applying a plan enters the executor only after it has collected the rows marked
-eraseable. The executor's precondition function is deliberately ordered
-([apply.rs:37-43](../../../cli/src/erase/apply.rs#L37)).
+eraseable, and refuses by name any whole-file row among them before a
+precondition runs: no plan holds one since 9.1.0, so every write is a line
+splice ([apply.rs:16-31](../../../cli/src/erase/apply.rs#L16)). The
+executor's precondition function is deliberately ordered
+([apply.rs:46-52](../../../cli/src/erase/apply.rs#L46)).
 
 1. **Repository identity.** `git rev-parse --show-toplevel` must succeed, and
    its canonical path must equal the supplied erase root

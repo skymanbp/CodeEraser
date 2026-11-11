@@ -3,7 +3,10 @@
 //! checkout away), a CLEAN worktree (never entangled with
 //! uncommitted work), every target inside THAT repository (never
 //! below a gitlink), every target's bytes still the plan's — then
-//! the writes and the append-only audit record. The convergence
+//! the writes and the append-only audit record. Every write is a
+//! line splice: since 9.1.0 no whole-file row is eraseable (the core's
+//! reachable_by_name), so the executor holds no file deletion and
+//! refuses a hand-built plan that asks for one. The convergence
 //! re-plan lives in mod.rs (apply_plan), which calls DOWN into this
 //! executor — never the other way. Only files the plan named are
 //! ever touched; the log is part of the contract, so unlike the
@@ -18,6 +21,13 @@ pub(super) fn execute(root: &Path, plan: &Plan) -> Result<usize> {
     let targets: Vec<&Row> = plan.eraseable().collect();
     if targets.is_empty() {
         return Ok(0);
+    }
+    if let Some(r) = targets.iter().find(|r| r.span.is_none()) {
+        anyhow::bail!(
+            "{}: a whole-file erase row — no plan holds one since 9.1.0 \
+             (reachable_by_name): a file nothing references may still run by its name",
+            r.path
+        );
     }
     preconditions(root, &targets)?;
     let plan_hash = crate::dedup::tokens::fnv1a(
@@ -129,13 +139,11 @@ fn per_file<'a>(targets: &[&'a Row]) -> Vec<Vec<&'a Row>> {
     out
 }
 
-/// One file's writes: a whole-file row deletes it; span rows splice
-/// in DESCENDING span order so earlier line numbers stay valid.
+/// One file's writes: its span rows spliced out in DESCENDING span
+/// order so earlier line numbers stay valid (`execute` refused any
+/// whole-file row before this point).
 fn write_target(root: &Path, chunk: &[&Row]) -> Result<()> {
     let file = root.join(&chunk[0].path);
-    if chunk.iter().any(|r| r.span.is_none()) {
-        return std::fs::remove_file(&file).with_context(|| chunk[0].path.clone());
-    }
     let text = std::fs::read_to_string(&file).with_context(|| chunk[0].path.clone())?;
     let mut lines: Vec<&str> = text.split_inclusive('\n').collect();
     let mut spans: Vec<(i64, i64)> = chunk.iter().filter_map(|r| r.span).collect();

@@ -26,16 +26,18 @@ ce erase . --apply    # act on it (git repo + clean worktree required)
 ce erase . --log      # the audit trail every apply appended (.ce/erase-log.ndjson)
 ```
 
-Three classes erase without judgment (dead files, verbatim doc
-duplicates, whole-unit byte-identical twins in dead files) — the tool
-plans them deterministically, applies behind preconditions, and
-proves its own convergence (contract: docs/reference/erase.md); the
-trail it leaves is the same document the MCP tool `erase_log` and the
-GUI erase screen's audit-log section show, and a record the reader
-cannot parse is named by line. Do NOT hand-delete anything the plan
-already covers. Everything it
-prints as `advisory` is YOUR half — that is where the judgment below
-begins.
+One class erases without judgment: verbatim doc duplicates (a
+byte-identical segment, every copy after the first) — the tool plans
+them deterministically, applies behind preconditions, and proves its
+own convergence (contract: docs/reference/erase.md); the trail it
+leaves is the same document the MCP tool `erase_log` and the GUI erase
+screen's audit-log section show, and a record the reader cannot parse
+is named by line. Do NOT hand-delete anything the plan already
+covers. Everything it prints as `advisory` is YOUR half — that is
+where the judgment below begins. Dead files and whole-unit twins in
+dead files are always advisory (`reachable_by_name`,
+`language_unresolved` or `public_surface`): nothing in the tree
+references them, which is not proof that nothing uses them.
 
 ## 2. Collect the advisory candidates (three signals, JSON faces)
 
@@ -82,6 +84,13 @@ For every candidate pair or dead unit:
    nothing, and dedup exemptions go through `.ceignore`.
 4. Dead code with an `entry_globs` match or exported surface may be a
    public API — confirm before removing.
+5. A dead FILE may be used by its name with no reference in the tree:
+   run as a script or by a command (Makefile, CI workflow, package
+   script, README instructions), found by a tool's convention
+   (`setup.py`, `docs/conf.py`, `package-info.java`, a test data
+   directory), or served or read by its path. Search the repository
+   for its basename and stem before deleting it, and name what you
+   searched in the report.
 
 ## 4. Delete in small batches, re-gate each batch
 

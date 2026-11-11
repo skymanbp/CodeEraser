@@ -730,4 +730,13 @@ forbid = [
 # the product (TextProps) counts the holes directly rather than
 # copying CE.Text's `breakHole`. Row set diffed against the 7514e804
 # tree: that row gone, none new.
-budget = 30
+# 30 -> 29 (v2.35 licence lane, item L1): one row left with the
+# battery's header, none bought. core/test/EraseProps.hs's module
+# head rhymed with core/test/AuditProps.hs's (55 tokens, AuditProps.hs
+# 3-21 against EraseProps.hs 3-23) until the erase battery's header
+# named the 9.1.0 rule it now carries (no whole-file row eraseable)
+# and the import list took `reasonNames`. Row set diffed against the
+# c7ca2e69 tree: that row gone, none new (EraseProps.hs's own
+# truth-table / mixed-request row moved 46-52 / 99-107 -> 49-55 /
+# 105-113, the same block).
+budget = 29

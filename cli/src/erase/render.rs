@@ -44,24 +44,11 @@ pub fn file_diffs(root: &Path, p: &Plan) -> Result<Vec<(usize, String)>> {
     Ok(out)
 }
 
+/// One file's hunks. Every eraseable row is a span since 9.1.0 (no
+/// whole-file row is eraseable: the core's reachable_by_name).
 fn file_diff(out: &mut String, text: &str, rows: &[&Row]) {
     let lines: Vec<&str> = text.lines().collect();
     let path = &rows[0].path;
-    if rows.iter().any(|r| r.span.is_none()) {
-        let r = rows.iter().find(|r| r.span.is_none()).expect("checked");
-        out.push_str(&format!("--- a/{path}\n+++ /dev/null\n"));
-        out.push_str(&format!(
-            "@@ -1,{} +0,0 @@ ## {} {} fnv1a64:{:016x}\n",
-            lines.len(),
-            r.class,
-            r.provenance,
-            r.hash
-        ));
-        for l in &lines {
-            out.push_str(&format!("-{l}\n"));
-        }
-        return;
-    }
     out.push_str(&format!("--- a/{path}\n+++ b/{path}\n"));
     let mut removed_so_far = 0usize;
     for group in hunks(rows, lines.len()) {

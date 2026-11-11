@@ -10,12 +10,14 @@
 -- with an EMPTY verdict table (a refused plan licenses nothing), and
 -- since 7.2.0 (plan v2.30 step 7b) the target closure — the rule
 -- that says which judged row stands for a target — against its own
--- hand-written table, through the real respond, with its refusals.
+-- hand-written table, through the real respond, with its refusals;
+-- and since 9.1.0 (lane v235_licence) the rule that no whole-file row
+-- is ever eraseable, over every legal fact combination.
 -- Scaffolding lives in WireHarness.
 module EraseProps (battery) where
 
 import CE.Erase (respond)
-import CE.Erase.Cost (eraseRowCap, judgeRow, keptRows)
+import CE.Erase.Cost (eraseRowCap, judgeRow, keptRows, reasonNames)
 import Data.Aeson
 import WireHarness (degradedFace, field, refusedBy, replyObjWith, rowsRequest, runLegs, setKey)
 
@@ -28,10 +30,11 @@ battery = runLegs names probes
     , "erase refusals name the offender"
     , "the family is knobless: any knob row refuses by name"
     , "an over-cap erase request degrades to an EMPTY table that FAILS"
-    , "the target closure keeps the richest eraseable row, else the categorical advisory"
+    , "the target closure keeps an eraseable row, else the advisory about the file"
     , "kept rides on every judged reply, a request without targets is refused by name, and target refusals name the offender"
+    , "no t1_twin or dead_file row is eraseable under any legal fact combination"
     ]
-  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace]
+  probes = [truthTable, mixed, refusals, knobless, degradedFails, closure, targetsFace, noFileLicence]
 
 -- | Exact expected (eraseable, reason) per fact combination — the
 -- independent second derivation is this literal table, written from
@@ -52,26 +55,29 @@ truthTable =
     , [1, 60, 60, 61, 1], [1, 60, 60, 60, 0]
     , [2, 1, 1, 1, 0], [2, 0, 1, 1, 0], [2, 1, 0, 1, 0]
     , [2, 1, 1, 0, 0], [2, 1, 1, 1, 3]
-    , -- class 2 across the dead domain (7.0.0): the private codes 1
-      -- and 3 license the twin, the public codes 2 and 4 are refused
-      -- as public_surface BEFORE the trust fact is weighed (the last
-      -- row names the order), and the 6.x boolean 1 is code 1
+    , -- class 2 across the dead domain (7.0.0): the public codes 2
+      -- and 4 are refused as public_surface BEFORE the trust fact is
+      -- weighed (the last row names the order), and the 6.x boolean 1
+      -- is code 1; a private copy whose every fact holds is refused
+      -- as reachable_by_name (9.1.0), never licensed
       [2, 1, 1, 3, 0], [2, 1, 1, 2, 0], [2, 1, 1, 4, 0], [2, 1, 1, 2, 3]
     , -- class 3 across the WHOLE dead domain x the trust fact
-      -- (6.1.0). The private codes 1 and 3 answer to confidence
-      -- alone as they always did; the public codes 2 and 4 are
-      -- refused whatever their confidence, because RG10 is a bar
-      -- and not a strength -- and the last row is the one that
-      -- names the order: unvouched AND public reports public.
+      -- (6.1.0). The public codes 2 and 4 are refused whatever their
+      -- confidence, because RG10 is a bar and not a strength -- the
+      -- last row names the order: unvouched AND public reports
+      -- public; a private code answers language_unresolved at
+      -- confidence 0 and reachable_by_name past it, the trust fact
+      -- named first because it says the graph could not even show
+      -- the file unreferenced (9.1.0)
       [3, 1, 0, 0, 0], [3, 1, 2, 0, 0], [3, 3, 2, 0, 0]
-    , [3, 2, 2, 0, 0], [3, 4, 2, 0, 0], [3, 2, 0, 0, 0]
+    , [3, 2, 2, 0, 0], [3, 4, 2, 0, 0], [3, 2, 0, 0, 0], [3, 3, 1, 0, 0]
     ]
   wants =
     [ (True, 0), (False, 2), (False, 2), (False, 3)
-    , (True, 0), (False, 5), (False, 3), (False, 4), (False, 1)
-    , (True, 0), (False, 6), (False, 6), (False, 6)
-    , (False, 1), (True, 0), (True, 0)
-    , (False, 6), (False, 6), (False, 6)
+    , (False, 7), (False, 5), (False, 3), (False, 4), (False, 1)
+    , (False, 7), (False, 6), (False, 6), (False, 6)
+    , (False, 1), (False, 7), (False, 7)
+    , (False, 6), (False, 6), (False, 6), (False, 7)
     ]
 
 -- | An erase request over `rows`, its target table (required at 9.0.0)
@@ -89,17 +95,17 @@ bare = rowsRequest "7.0.0" "erase.request"
 mixed :: Bool
 mixed = case replyObjWith respond (req rows) of
   Just o ->
-    field o "rows" == Just (toJSON [[1, 0 :: Integer], [0, 1], [1, 0], [0, 3]])
+    field o "rows" == Just (toJSON [[0, 7 :: Integer], [0, 1], [1, 0], [0, 3]])
       && field o "degraded" == Just (Bool False)
       && field o "fail" == Just (Bool False)
-      && (counts o "eraseable" == Just 2)
-      && (counts o "advisory" == Just 2)
+      && (counts o "eraseable" == Just 1)
+      && (counts o "advisory" == Just 3)
       && (counts o "rows" == Just 4)
   Nothing -> False
  where
   -- the two dead_file rows ride class 3 since 4.0.0 retired class
-  -- 0; confidence 2 (vouched) and 0 (unvouched) reproduce exactly
-  -- the verdicts the local-count road gave them
+  -- 0; confidence 2 (vouched) refuses as reachable_by_name since
+  -- 9.1.0, confidence 0 (unvouched) as language_unresolved
   rows =
     [ [3, 3, 2, 0, 0]
     , [3, 1, 0, 0, 0]
@@ -152,14 +158,15 @@ degradedFails = degradedFace respond (req big) "rows" "erase_too_large"
   big = replicate (fromInteger eraseRowCap + 1) [3, 1, 0, 0, 0]
 
 -- | The closure's own truth table (erase.md §closure), written from
--- the contract: (fact rows, targets, the kept bits) — an eraseable
--- twin over an eraseable dead file for one whole-file target, and
--- that eraseable whole-file row closing the span row on its path;
--- an eraseable dead file over an advisory twin; an eraseable twin
--- over an advisory dead file; both advisory, the dead file's
--- categorical refusal stands; a span on a path whose whole-file row
--- is ADVISORY stays; two rows of one class on one target break to
--- the earliest; two paths close independently. Fact rows, targets
+-- the contract: (fact rows, targets, the kept bits) — a private dead
+-- file and its private twin on one whole-file target, both advisory
+-- since 9.1.0, the dead file's row standing and the span row on the
+-- same path staying (no whole-file row owns a path any more); the
+-- dead file's row over a twin whose bytes differ, over a twin whose
+-- file is unvouched, over a public twin; a span on a path whose
+-- whole-file row is advisory stays; two rows of one class on one
+-- target break to the earliest; an eraseable span over an advisory
+-- span on one target; two paths close independently. Fact rows, targets
 -- and kept bits ride as three PARALLEL lists (the truthTable
 -- discipline: a tuple row per case was a T2 clone chain by this
 -- repo's own measure; the length conjuncts guard zipWith3's silent
@@ -178,6 +185,7 @@ closure =
     , [[3, 2, 2, 0, 0], [1, 80, 80, 80, 1]]
     , [[1, 80, 80, 80, 1], [1, 90, 90, 90, 1]]
     , [[3, 1, 2, 0, 0], [1, 80, 80, 80, 1]]
+    , [[1, 59, 60, 60, 1], [1, 80, 80, 80, 1]]
     ]
   targets =
     [ [[0, 0, 0], [0, 0, 0], [0, 4, 9]]
@@ -187,15 +195,17 @@ closure =
     , [[0, 0, 0], [0, 3, 5]]
     , [[2, 3, 5], [2, 3, 5]]
     , [[0, 0, 0], [1, 3, 5]]
+    , [[1, 3, 5], [1, 3, 5]]
     ]
   wants =
-    [ [False, True, False]
+    [ [True, False, True]
     , [True, False]
+    , [True, False]
+    , [True, False]
+    , [True, True]
+    , [True, False]
+    , [True, True]
     , [False, True]
-    , [True, False]
-    , [True, True]
-    , [True, False]
-    , [True, True]
     ]
 
 -- | The wire face of the closure: `kept` rides one bit per row on every
@@ -205,7 +215,7 @@ closure =
 targetsFace :: Bool
 targetsFace =
   and
-    [ fmap (`field` "kept") (replyObjWith respond withTargets) == Just (Just (toJSON [0, 1, 0 :: Integer]))
+    [ fmap (`field` "kept") (replyObjWith respond withTargets) == Just (Just (toJSON [1, 0, 1 :: Integer]))
     , refusedBy respond (bare rows) "targets: required at 9.0.0"
     , fmap (`field` "kept") (replyObjWith respond (targeted big (replicate (length big) [0, 0, 0]))) == Just Nothing
     , length refusedRows == length refusedTargets && length refusedTargets == length whys
@@ -230,3 +240,17 @@ targetsFace =
     [ "targets: 0 rows for 1 fact rows", "target 0: malformed row", "target 0: negative field", "target 0: half-open span"
     , "target 0: span end before start", "target 0: verbatim_doc row names a whole file", "target 0: whole-file class names a span", "target 1: out of key order"
     ]
+
+-- | The 9.1.0 rule as a sweep, not a sample: every legal fact row of
+-- the two whole-file classes (each fact over its whole contract range)
+-- judges advisory with a reason inside the frozen table, and the rows
+-- that pass every other bar name reachable_by_name, so the refusal is
+-- the rule and not an accident of some earlier bar.
+noFileLicence :: Bool
+noFileLicence =
+  not (any (fst . judgeRow) (twins <> deads))
+    && all ((< toInteger (length reasonNames)) . snd . judgeRow) (twins <> deads)
+    && map judgeRow [[2, 1, 1, 1, 0], [2, 1, 1, 3, 0], [3, 1, 1, 0, 0], [3, 3, 2, 0, 0]] == replicate 4 (False, 7)
+ where
+  twins = [[2, w, x, y, z] | w <- [0, 1], x <- [0, 1], y <- [0 .. 4], z <- [0 .. 3]]
+  deads = [[3, w, x, y, z] | w <- [1 .. 4], x <- [0 .. 2], y <- [0 .. 2], z <- [0 .. 2]]

@@ -486,23 +486,26 @@ permille = (lines - S) * 1000 / (H - S)
 
 <div class="fam">
   <h3 id="f12"><span class="n">12</span><a href="https://github.com/skymanbp/CodeEraser/blob/main/docs/reference/methodology/12-deterministic-erase-the-safety-predicate.md">Deterministic erase — the safety predicate</a></h3>
-  <p class="job">Judges erase-plan rows for <!--ce:count:erase_classes#word-->three<!--/ce--> provable
-  classes (<code>dead_file</code>, <code>verbatim_doc</code>, <code>t1_twin</code>) and refuses every
-  unsafe row with a named reason code.</p>
+  <p class="job">Judges erase-plan rows for <!--ce:count:erase_classes#word-->three<!--/ce--> classes
+  (<code>dead_file</code>, <code>verbatim_doc</code>, <code>t1_twin</code>), erases only
+  byte-identical doc segments, and refuses every other row with a named reason code.</p>
   <pre>class  = 0 (retired 4.0.0, refused by name) | 1 verbatim_doc | 2 t1_twin
          3 dead_file (confidence road, 2.32.0)
 reason = 0 eraseable | 1 language_unresolved | 2 not_full_segment
          3 bytes_differ | 4 copy_not_dead | 5 unit_not_covered
-         6 public_surface (6.1.0)</pre>
+         6 public_surface (6.1.0) | 7 reachable_by_name (9.1.0)</pre>
   <p class="note rule">Rust assembles integer facts from the three source families; Haskell applies
   a fixed first-failure predicate. Since proto 2.32.0 class 3 trusts the graph family's per-row
   confidence; since proto 6.1.0 a public dead verdict (2 unref_public, 4 unreach_public) is refused as
   public_surface <em>before</em> confidence is weighed, so an exported API is never eraseable; only
-  then does an unvouched confidence refuse the row.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Class 0, the local-count road, retired at proto 4.0.0; the core refuses
+  then does an unvouched confidence refuse the row. Since 9.1.0 the two whole-file classes have no
+  eraseable outcome: a row past every other bar is refused as reachable_by_name, because the graph
+  says no reference site lands on the file, and a script run by name or a file a tool finds by
+  convention leaves no such site.</p><details class="more"><summary>Derivation and constants</summary><p class="note">Class 0, the local-count road, retired at proto 4.0.0; the core refuses
   it by name. A degraded over-cap reply authorizes nothing, and the safety surface has no knobs.</p>
   <ul class="consts">
     <li><b>classes</b> 4</li>
-    <li><b>reason codes</b> 7</li>
+    <li><b>reason codes</b> 8</li>
     <li><b>eraseRowCap</b> 4096</li>
     <li><b>since proto</b> 2.16.0</li>
     <li><b>wire</b> erase/1</li>

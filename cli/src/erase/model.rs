@@ -29,8 +29,12 @@ pub const CLASS_NAMES: [&str; 4] = ["(retired)", "verbatim_doc", "t1_twin", "dea
 /// name, because the four-way dead code exists precisely so an
 /// exported API cannot be treated as plain dead. Since 7.0.0 the twin
 /// road (class 2) carries the copy's verdict code too and meets the
-/// same bar.
-pub const REASON_NAMES: [&str; 7] = [
+/// same bar. Position 7 arrived at 9.1.0 (lane v235_licence): the two
+/// whole-file classes have no eraseable outcome — a row whose every
+/// other fact holds is refused as `reachable_by_name`, because "nothing
+/// in the tree references this file" is not evidence that nothing uses
+/// it (a script run by name, a file a tool finds by convention).
+pub const REASON_NAMES: [&str; 8] = [
     "eraseable",
     "language_unresolved",
     "not_full_segment",
@@ -38,6 +42,7 @@ pub const REASON_NAMES: [&str; 7] = [
     "copy_not_dead",
     "unit_not_covered",
     "public_surface",
+    "reachable_by_name",
 ];
 
 /// The one out-of-class kind gather.rs counts: a verified T1/T2 clone
@@ -94,7 +99,7 @@ pub struct Counts {
     pub candidates: usize,
     pub eraseable: usize,
     pub advisory: usize,
-    /// Findings OUTSIDE the three deterministic-safe classes, named
+    /// Findings OUTSIDE the three planned classes, named
     /// in aggregate: the plan hands the reader their family commands
     /// instead of pretending they have a safe erase.
     pub out_of_class: BTreeMap<&'static str, usize>,

@@ -1,8 +1,8 @@
 # `ce erase` — the deterministic two-phase eraser (contract)
 
 > Status: implemented (M9 batch 3, plan v2.8 ruling ②; wire face
-> `erase/1`, introduced at proto 2.16.0, RG10 firewall at 6.1.0;
-> predicate in CE.Erase.Cost). The
+> `erase/1`, introduced at proto 2.16.0, RG10 firewall at 6.1.0, no
+> whole-file deletion since 9.1.0; predicate in CE.Erase.Cost). The
 > implementation answers to this file; divergence is a defect in one
 > of the two. Acceptance is pinned by `cli/tests/it/erase_e2e.rs` and
 > the CI Dogfood `erase .. --check` self-gate.
@@ -17,13 +17,19 @@ eraseability judgment in the Haskell core. **Never an LLM rewrite**:
 this product's thesis is deterministic computation auditing
 non-deterministic output, and an eraser that guesses would forfeit it.
 
-## What may be erased (v1 classes, and why each is safe)
+## What the plan judges, and what may be erased
 
-| class | source verdict | the erase | why it is deterministic-safe |
+| class | source verdict | the erase | why |
 |---|---|---|---|
-| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) and **private**: verdict 1 `unref_private` or 3 `unreach_private` | delete the file | the graph verdict IS the safety proof: nothing in-corpus references it; the unresolved-site count must be zero for its language, else the row is refused (a verdict that assumed no in-corpus lands is not a deletion licence). The PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — is refused by name as `public_surface` since 6.1.0: a library's exported API is unreferenced in-corpus by construction, so "nothing here calls it" is not evidence about its callers, and the four-way dead code exists precisely to keep the two apart (RG10) |
-| verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss; the survivor is chosen deterministically, never judged "better" |
-| whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical AND whose copy is itself graph-dead **and private** — the row carries the copy's dead verdict code, and 2 / 4 are refused as `public_surface` like a dead file's (proto 7.0.0) | delete the dead copy | the narrow intersection of the clone and liveness verdicts — a cross-function clone with live references has NO deterministic-safe erase, and this contract says so instead of pretending |
+| verbatim doc duplicate | `docdup` pair with **verbatim = full segment** (byte-identical after the family's own masking) | delete every occurrence after the first, in path-lexicographic order | prose has no call sites; byte-identity means zero information loss whoever reads the file; the survivor is chosen deterministically, never judged "better" |
+| dead file | `deadcode` file-tier dead (no kept in-edge, no entry flag, `ce deadcode --check`'s own bar) | **none** — an advisory row with its reason | the graph verdict answers "does any reference site of the corpus land on this file?", and a file is also used with no such site: run by its name (a script, a command in a Makefile, a CI file or a package script), found by a tool's convention (`setup.py`, `docs/conf.py`, `package-info.java`, a test runner's data directory), served or opened by its path. So the row is refused by name in this order: the PUBLIC half of the dead domain — 2 `unref_public`, 4 `unreach_public` — as `public_surface` (6.1.0, RG10: a library's exported API is unreferenced in-corpus by construction); an unvouched language (the graph family's confidence 0) as `language_unresolved`; every other row as `reachable_by_name` (9.1.0) |
+| whole-unit T1 twin | `dedup` T1 block spanning an ENTIRE unit whose twin is byte-identical, and whose copy's file is graph-dead (the row carries the copy's dead verdict code, proto 7.0.0) | **none** — an advisory row with its reason | the copy is a whole file, so the dead file's question stands: refused as `unit_not_covered`, `bytes_differ`, `copy_not_dead`, `public_surface`, `language_unresolved` or, past all of them, `reachable_by_name` — the first that holds |
+
+README's permanent stance applies: a class acts only with its own
+measured record, and the two file-deleting classes have none — the
+precision docs measure where a reference site lands, not whether an
+unreferenced file is unused. The plan says what it will not touch and
+why.
 
 The planner runs only `deadcode`, `docdup`, and `dedup`. Candidates
 from those families that fail the core predicate remain non-eraseable
@@ -54,6 +60,10 @@ user files; it may create or refresh the `.ce/` cache):
 
 **`ce erase --apply`** additionally requires, in order:
 
+0. no whole-file row among the rows it would act on — the planner
+   never makes one eraseable (9.1.0), and a hand-built plan that asks
+   for a file deletion is refused by name before anything else runs;
+   every write is a line splice;
 1. a git repository (revert must be one `git checkout` away);
 2. a CLEAN worktree (`git status --porcelain` empty — an erase must
    never be entangled with uncommitted work; the tool's OWN state
@@ -89,7 +99,8 @@ user files; it may create or refresh the `.ce/` cache):
 A target is one (path, span): the whole file, or one line span in it.
 Several candidate rows may name one target — a dead file that is also
 a byte-identical twin of a live unit names its path twice, once per
-class — and the plan holds ONE row per target. Which row stands is
+class, and two doc pairs can name one later segment — and the plan
+holds ONE row per target. Which row stands is
 judgment and lives in the core (`CE.Erase.Cost.keptRows`) since plan
 v2.30 step 7b; until then the planner closed the set for itself
 (`close_targets`, 7.0.0 O51). The request carries
@@ -103,20 +114,24 @@ path — a path's rows never straddle a request, each request numbers
 its own paths from 0 — and plans exactly as one request would; one
 path with more rows than a request holds is refused by name:
 
-1. an eraseable whole-file row owns its path — every span row on that
-   path is closed out (an apply that deleted the file and then spliced
-   lines out of it would refuse on the hash it can no longer read);
-2. within one target the eraseable row with the richest `licence`
-   stands: `t1_twin` (names the live unit it duplicates) over
-   `dead_file` (names only its death) over `verbatim_doc`;
-3. with no eraseable row the `dead_file` row stands over the `t1_twin`
+1. within one target an eraseable row stands over an advisory one —
+   since 9.1.0 only a `verbatim_doc` span can be eraseable, so this
+   rule fires when two doc pairs name one segment and only one of them
+   is a full byte-identical match;
+2. with no eraseable row the `dead_file` row stands over the `t1_twin`
    row (`advisoryFirst`): its reason is about the file — the
-   categorical `public_surface` bar or the trust fact — where the
-   twin's is about the copy;
-4. ties inside one class break to the EARLIEST row, which is why the
+   categorical `public_surface` bar, the trust fact or
+   `reachable_by_name` — where the twin's is about the copy;
+3. ties inside one class break to the EARLIEST row, which is why the
    contract asks for key order: the planner sends its rows sorted by
    (path, span, class name), so two producers sending the same rows in
    the same order close the same way.
+
+Two rules of 7.2.0 went with 9.1.0 because no input can reach them:
+"an eraseable whole-file row owns its path" (there is none, so a span
+row on a dead file's path always stays) and the `licence` ranking
+among eraseable rows of one target (every eraseable row is a
+`verbatim_doc` row).
 
 A reply without `kept` is refused by name as a pre-7.2.0 core: a plan
 closed on this side would hold two rows per target.
@@ -136,16 +151,17 @@ closed on this side would hold two rows per target.
 
 ## Acceptance (the gate this feature must pass)
 
-- plan-then-apply on a fixture tree erases one dead file, one
-  verbatim-doc span and one private dead twin through `t1_twin`
-  itself (`spare.py`, whose `_spare_total` duplicates the live unit
-  in `__main__.py`), while the tree's second dead file (`copy.py`,
-  which declares an exported `def`) is refused by name as
-  `public_surface` — RG10 held at the acceptance gate through apply,
-  not only in the table above — and the re-run proves zero surviving
-  source verdicts;
-- a dirty worktree, a drifted file hash, and a non-repo root each
-  refuse BY NAME without touching anything;
+- plan-then-apply on a fixture tree erases one verbatim-doc span and
+  nothing else: the private dead file `orphan.md` and the private
+  dead twin `spare.py` (whose `_spare_total` duplicates the live unit
+  in `__main__.py`; its `dead_file` row stands for the target) are
+  refused by name as `reachable_by_name`, and the public dead file
+  `copy.py` (which declares an exported `def`) as `public_surface` —
+  all three survive the apply, not only the plan — and the re-run
+  proves zero surviving source verdicts;
+- a dirty worktree, a drifted file hash, a non-repo root and a
+  hand-built whole-file row each refuse BY NAME without touching
+  anything;
 - an advisory row (live T2 clone) is never planned;
 - `ce erase` twice = byte-identical plans (determinism pinned by test);
 - the self repo: `ce erase` at HEAD plans ZERO rows (this repository

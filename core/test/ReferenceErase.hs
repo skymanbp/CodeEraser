@@ -5,13 +5,14 @@
 -- | The erase family's second implementation (plan v2.32 step 7,
 -- authority-track §7): booklet 12's safety predicate as per-class
 -- LISTS of (refusal reason, holds) whose first holding entry names the
--- refusal, and the target closure as a SET-FORM definition checked by
--- pairwise comparison — a row stands for its target when no eraseable
--- whole-file row owns its path from above and no other open row of
--- the same target outranks it (eraseable first, then the class's
--- licence or, unlicensed, its advisory precedence, then the earlier
--- row). The shipped closure groups by Map and folds; this one compares
--- every pair. Only the family's frozen constants are read.
+-- refusal (a whole-file class's list ends in an entry that always
+-- holds: reachable_by_name, 9.1.0), and the target closure as a
+-- SET-FORM definition checked by pairwise comparison — a row stands
+-- for its target when no other row of the same target outranks it
+-- (eraseable first, then, unlicensed, the class's advisory
+-- precedence, then the earlier row). The shipped closure groups by Map
+-- and folds; this one compares every pair. Only the family's frozen
+-- constants are read.
 module ReferenceErase (expected, exhaustive) where
 
 import CE.Erase.Cost (eraseRowCap, publicDeadVerdicts)
@@ -30,20 +31,19 @@ refusals :: [Integer] -> [(Integer, Bool)]
 refusals row = case row of
   [1, verbatim, a, b, same] -> [(2, verbatim < max a b), (3, same /= 1)]
   [2, covered, same, copy, unresolved] ->
-    [(5, covered /= 1), (3, same /= 1), (4, copy == 0), (6, copy `elem` publicDeadVerdicts), (1, unresolved /= 0)]
-  [3, dead, conf, _, _] -> [(6, dead `elem` publicDeadVerdicts), (1, conf == 0)]
+    [(5, covered /= 1), (3, same /= 1), (4, copy == 0), (6, copy `elem` publicDeadVerdicts), (1, unresolved /= 0), (7, True)]
+  [3, dead, conf, _, _] -> [(6, dead `elem` publicDeadVerdicts), (1, conf == 0), (7, True)]
   _ -> [(4, True)]
 
--- | (licence when eraseable, advisory precedence when not) per class:
--- the twin names the live unit it duplicates, the dead file only its
--- death; unlicensed, the dead file's own refusal is the one shown.
-precedence :: [(Integer, (Integer, Integer))]
-precedence = [(1, (0, 0)), (2, (2, 1)), (3, (1, 2))]
+-- | Advisory precedence per class: the dead file's own refusal is the
+-- one shown over the twin's, which is about the copy.
+precedence :: [(Integer, Integer)]
+precedence = [(1, 0), (2, 1), (3, 2)]
 
 standing :: [Integer] -> Bool -> (Integer, Integer)
-standing row ok = case lookup (classOf row) precedence of
-  Just (lic, adv) -> if ok then (1, lic) else (0, adv)
-  Nothing -> (if ok then 1 else 0, 0)
+standing row ok
+  | ok = (1, 0)
+  | otherwise = (0, sum (lookup (classOf row) precedence))
  where
   classOf r = case r of
     (c : _) -> c
@@ -51,19 +51,15 @@ standing row ok = case lookup (classOf row) precedence of
 
 -- | One bit per row: does it stand for its target?
 kept :: [[Integer]] -> [[Integer]] -> [Bool]
-kept targets rows = [isOpen i && all (not . outranks i) others | (i, _) <- indexed]
+kept targets rows = [all (not . outranks i) others | (i, _) <- indexed]
  where
   oks = map (fst . verdict) rows
   indexed = zip [0 :: Int ..] (zip targets rows)
   others = [j | (j, _) <- indexed]
   at i = snd (indexed !! i)
   key i = take 3 (fst (at i))
-  owners = [p | (j, ([p, 0, 0], _)) <- indexed, oks !! j]
-  isOpen i = case key i of
-    [p, s, _] -> not (s > 0 && p `elem` owners)
-    _ -> True
   rank i = standing (snd (at i)) (oks !! i)
-  outranks i j = j /= i && isOpen j && key j == key i && (rank j > rank i || (rank j == rank i && j < i))
+  outranks i j = j /= i && key j == key i && (rank j > rank i || (rank j == rank i && j < i))
 
 -- | The contract, in the cascade's order: each row, then any knob,
 -- then the target table (present — required at 9.0.0 — then
@@ -132,7 +128,7 @@ expected rows knobs targets
 -- (so rows sharing a target arrive in every order, and the earlier-row
 -- tie is exercised both ways) and every multiset of four rows
 -- over three paths, a whole-file twin and a whole-file dead row each
--- eraseable or not, and a verbatim segment on one of two spans
+-- private or public, and a verbatim segment on one of two spans
 -- eraseable or not — each sent in key order, stably.
 exhaustive :: [([[Integer]], [[Integer]])]
 exhaustive = [unzip (sortOn fst picks) | picks <- concatMap (\n -> sequence (replicate n alphabet)) [0 .. 3] <> multisets (4 :: Int) alphabet]
