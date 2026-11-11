@@ -9,7 +9,7 @@ flow =
   \# Flow tables for the C family (plan v2.31 step 4), beside the contract\n\
   \# in spec.rs. C and C++ read one text, FAMILY, and part only on the\n\
   \# noreturn names (§5.1 rule 3: C++ adds `std::exit`, `std::abort` and\n\
-  \# `std::terminate`) — the text form of scan::spec_c's `..FAMILY`.\n\
+  \# `std::terminate`) — the one text both tables compose (CE.Lang).\n\
   \# FAMILY names C++-only constructs (try, lambdas, range-for, condition\n\
   \# clauses, references, default arguments, `and` / `or`): a C tree never\n\
   \# holds them, and the unit legs pin that exact list as absent from the\n\
@@ -79,7 +79,7 @@ flow2 =
 noreturn :: String
 noreturn =
   "# Rule 3's C names, the list left open: C++ adds its three `std::`\n\
-  \# spellings (STD) before END closes it, so no name is written twice.\n\
+  \# spellings (CE.Lang.Cpp `std`) before `close` ends it, so no name is written twice.\n\
   \noreturn = [\n\
   \  'exit', '_exit', '_Exit', 'abort', 'quick_exit', 'longjmp', 'siglongjmp',\n\
   \  '__builtin_unreachable', '__builtin_trap',\n"
