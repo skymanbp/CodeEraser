@@ -12,7 +12,6 @@
 //! never guessed shallow. A group with no path before its brace
 //! (`use {a::b, c::d};`) opens one site per entry (Specifier::UseTargets).
 
-mod call;
 mod html;
 mod java;
 mod names;
@@ -21,6 +20,7 @@ use super::md;
 use super::spec::{SiteKind, Specifier, sites as site_table};
 use crate::fourclass::units;
 use crate::scan::ast::{self, children};
+use crate::scan::call_site;
 use crate::scan::lang::Lang;
 
 /// One detected site, before path attachment. `nth` is the site's
@@ -127,8 +127,8 @@ fn walk_sites(root: tree_sitter::Node, src: &[u8], lang: Lang) -> Vec<RawSite> {
                 break;
             }
         }
-        // a call opens its site from the call table (graph/sites/call.rs)
-        out.extend(call::site(node, src, lang).map(|(label, at, spec)| site(label, at, spec)));
+        // a call opens its site from the call table (scan/call_site.rs)
+        out.extend(call_site::site(node, src, lang).map(|(label, at, spec)| site(label, at, spec)));
         // deterministic order: children pushed reversed => visited
         // in document order after the stack pop
         for child in children(node).into_iter().rev() {

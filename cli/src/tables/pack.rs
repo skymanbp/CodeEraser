@@ -21,7 +21,7 @@ type Chars = &'static [char];
 /// Rows whose head is itself a name list.
 type Pairs = &'static [(Names, Names)];
 /// Each language's call sites.
-type CallSites = ByLang<Vec<crate::graph::spec::CallSite>>;
+type CallSites = ByLang<Vec<crate::scan::call_table::CallSite>>;
 /// Each language's protected-call wrappers and their argument counts.
 type Wrappers = ByLang<Vec<(String, usize)>>;
 /// Each language's docstring hosts.

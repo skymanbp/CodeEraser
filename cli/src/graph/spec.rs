@@ -16,12 +16,6 @@
 use crate::scan::lang::Lang;
 use crate::tables::leak::leaked;
 
-/// The calls that open a site — CallSite and its tables — live beside
-/// the node-kind tables in spec/calls.rs, split out on the file-length
-/// line (plan v2.30 step 5b); one door for both vocabularies.
-mod calls;
-pub use calls::{CallSite, calls, formals, protected};
-
 /// How to pull the specifier string out of a matched node. Read
 /// adjacently tagged (`{"form": "field", "arg": "source"}`, a unit
 /// form without `arg`) — the tables/1 shape (VERSIONING 7.7.0).

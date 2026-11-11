@@ -1,5 +1,5 @@
 //! The calls that open a reference site (plan v2.30 step 4; the reader
-//! is graph/sites/call.rs): Lua loads a module by `require` and runs a
+//! is scan/call_site.rs): Lua loads a module by `require` and runs a
 //! file by `dofile` / `loadfile`, R sources a file by `source` and
 //! attaches a package by the `library` family — neither language has an
 //! import statement — and Python's `importlib.import_module` /
@@ -20,7 +20,7 @@ leaked! {
 /// qualified call); and `unquoted`, the argument that turns off reading
 /// a bare identifier as the target. The argument naming the target is
 /// the callee's first formal (`formals`): R matches a name first —
-/// exactly, or as a prefix no other formal shares (graph/sites/call.rs)
+/// exactly, or as a prefix no other formal shares (scan/call_site.rs)
 /// — and a Lua call passes none, so the first unnamed argument is the
 /// target. That argument must be a string literal, or an identifier
 /// where the callee reads one unevaluated; an argument that is neither

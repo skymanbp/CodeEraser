@@ -140,7 +140,7 @@ pub struct LangSpec {
     /// object, one without it the bare road (booklet §4 (c)). The one
     /// spelling every reader of a call uses, with call_kinds — the arcs
     /// here, the similar advisor's callee words and the graph's call
-    /// sites (graph/sites/call.rs).
+    /// sites (scan/call_site.rs).
     pub call_fields: (&'static str, Option<&'static str>),
     /// Callee shapes spelling a bare name, matched against the WHOLE
     /// unit name — a Go method reads `(T) g`, so `g()` never reaches it.

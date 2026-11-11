@@ -8,6 +8,8 @@
 
 pub mod ast;
 pub mod binding;
+pub mod call_site;
+pub mod call_table;
 pub mod callees;
 pub mod calls;
 pub mod chunk;

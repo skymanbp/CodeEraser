@@ -3,7 +3,7 @@
 //! `dofile` / `loadfile`, R sources a file with `source("x.R")` and
 //! attaches a package with `library(pkg)` — no import statement exists
 //! in either language. A call is a site only when its callee is spelled
-//! as one of a row's names (graph/spec/calls.rs CallSite) — bare, or
+//! as one of a row's names (scan/call_table.rs CallSite) — bare, or
 //! qualified by the row's package (`base::source("x.R")`, plan v2.30
 //! step 5b; the `base::` opens its own `library` site beside it) — and
 //! the argument naming the target is literal text. A computed argument
@@ -18,10 +18,10 @@
 //! "a.b")` loads `a.b` (CE.Lang.Lua `protected`, the package's
 //! `calls.protected`).
 
-use crate::graph::spec::{CallSite, calls, formals, protected};
-use crate::scan::ast;
-use crate::scan::lang::Lang;
-use crate::scan::spec::LangSpec;
+use super::ast;
+use super::call_table::{CallSite, calls, formals, protected};
+use super::lang::Lang;
+use super::spec::LangSpec;
 use tree_sitter::Node;
 
 /// The site `node` opens as a call: its row's label, the node it sits on
@@ -42,7 +42,7 @@ use tree_sitter::Node;
 /// a literal `FALSE` (`library(p, character.only = TRUE)` loads whatever
 /// `p` holds). Any other argument opens the row's `computed` site, its
 /// spec the argument's first line, or none when the row names no kind.
-pub(super) fn site<'t>(
+pub(crate) fn site<'t>(
     node: Node<'t>,
     src: &[u8],
     lang: Lang,
@@ -72,6 +72,13 @@ pub(super) fn site<'t>(
             first(value.utf8_text(src).ok()?).trim().to_string(),
         )),
     }
+}
+
+/// Whether `node` is a call the call-site table opens a site for — the
+/// load a load statement holds (scan/loads.rs). One reading with the
+/// graph's call sites (graph/sites.rs reads `site`).
+pub(crate) fn opens_site(node: Node<'_>, src: &[u8], lang: Lang) -> bool {
+    site(node, src, lang).is_some()
 }
 
 /// The argument naming the target, unwrapped to its value: the one
@@ -213,5 +220,5 @@ fn formal_matches(given: &str, formal: &str, formals: &[&str]) -> bool {
 }
 
 #[cfg(test)]
-#[path = "../../../tests/unit/graph/sites/call.rs"]
+#[path = "../../tests/unit/scan/call_site.rs"]
 mod tests;
