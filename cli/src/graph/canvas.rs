@@ -68,9 +68,7 @@ fn graph_rows(w: &GraphWire) -> Vec<[i64; 3]> {
 
 /// `cycles` = [[sccId, [nodeIdx..]]] flattened to [sccId, member].
 fn cycle_rows(reply: &Value) -> Result<Vec<[i64; 2]>> {
-    let rows: Vec<(i64, Vec<i64>)> =
-        serde_json::from_value(reply["cycles"].clone()).context("cycle rows")?;
-    Ok(rows
+    Ok(deadcode::cycle_table(reply)?
         .into_iter()
         .flat_map(|(c, members)| members.into_iter().map(move |m| [c, m]))
         .collect())
