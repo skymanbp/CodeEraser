@@ -28,7 +28,7 @@
   每连接一线程（静默连接只占住自己，卡不住 accept 循环；线程上限
   64），dispatch 经 judge 互斥锁逐条执行——ADR-003 的一次一请求
   纪律不变。
-- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.3.0<!--/ce-->**：
+- 版本常量：`cli/src/daemon/proto.rs::DAEMON_PROTO`（当前 **<!--ce:ver:daemon#v-->2.4.0<!--/ce-->**：
   2.4.0 = 加性 `relocate{rows}` 请求与 `relocate_report{reply}` 应答、加性 `reindex{file_path}` 请求与 `reindex_report{report}` 应答，
   `probe_report.matches` 每条加性 `at`（片段一侧的起始 token）〔v2.35 守卫车道；`relocate` 是重复写入类的一道工序：钩子按 HEAD 与写后树
   数出每条匹配的 `[occHead, occNow]` 整数行，daemon 原样送核（relocate/1）；`reindex` 是 PostToolUse 腿请正在跑的 daemon 把刚落盘的一个文件在共享索引里重量一次

@@ -15,7 +15,7 @@ Declarative-only by design (plan §5.9): no executable fields, ever. An unknown 
 | key | default | meaning |
 |---|---|---|
 | `file_lines_warn` | `300` | Warn once a source file passes this line count |
-| `file_lines_fail` | `750` | Hard file budget: scan fails past it, and the guard refuses writes that would land past it |
+| `file_lines_fail` | `750` | Hard file budget: scan fails past it, and the guard refuses a write that grows a file past it (a file already past it may keep or shrink, so it can be split one step at a time) |
 | `fn_lines_warn` | `50` | Warn once a function passes this line count |
 | `fn_lines_fail` | `75` | Fail once a function passes this line count |
 | `params_warn` | `5` | Warn once a function takes more parameters than this |

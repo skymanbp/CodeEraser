@@ -226,7 +226,7 @@ rows sent, counts that do not add up to it, or an `over` that is no boolean: no 
 no malformed reply, is ever read as "no sites" or "not over"
 ([wire.rs:53-88](../../../cli/src/tombstone/wire.rs#L53),
 [judged.rs:45-58](../../../cli/src/corelink/judged.rs#L45)). The core registers the family as the
-eleventh ([Protocol.hs:117](../../../core/app/CE/Protocol.hs#L117)) and answers it through
+eleventh ([Protocol.hs:118](../../../core/app/CE/Protocol.hs#L118)) and answers it through
 the knobbed-table cascade `trend/2` minted: rows and knob rows count against one cap
 together, the first malformed row in request order is the offence, else the first malformed
 knob ([Wire.hs:190-215](../../../core/app/CE/Wire.hs#L190),
@@ -278,9 +278,9 @@ of the canonical form, so spelled at its default it is silence and spelled elsew
   ([guard/tombstone.rs:1-15](../../../cli/src/guard/tombstone.rs#L1),
   [guard/tombstone.rs:72-82](../../../cli/src/guard/tombstone.rs#L72),
   [guard/tombstone.rs:143-161](../../../cli/src/guard/tombstone.rs#L143),
-  [hookio.rs:287-303](../../../cli/src/hookio.rs#L287),
-  [proto.rs:75-82](../../../cli/src/daemon/proto.rs#L75),
-  [Text/Guard.hs:17](../../../core/app/CE/Text/Guard.hs#L17)).
+  [hookio.rs:308-324](../../../cli/src/hookio.rs#L308),
+  [proto.rs:79-86](../../../cli/src/daemon/proto.rs#L79),
+  [Text/Guard.hs:21](../../../core/app/CE/Text/Guard.hs#L21)).
 - **Stop / precommit / commitmsg** measure the whole changeset with an empty session (the
   Stop sees the session's diff at once), judge over the audit's own core link, and block only
   when three things agree — the tier is `deny`, the core said `over`, and the measurement was
@@ -310,8 +310,8 @@ the git-hook faces write theirs with `session_id` null; the PostToolUse leg's `s
 carries `file` and `tool_use_id` alone (0.11.0).
 No name text is ever written ([feed.rs:1-4](../../../cli/src/tombstone/feed.rs#L1),
 [feed.rs:8-59](../../../cli/src/tombstone/feed.rs#L8),
-[hookio.rs:58-77](../../../cli/src/hookio.rs#L58),
-[hookio.rs:107](../../../cli/src/hookio.rs#L107)). The feed is the FPR ledger's raw material
+[hookio.rs:79-98](../../../cli/src/hookio.rs#L79),
+[hookio.rs:128](../../../cli/src/hookio.rs#L128)). The feed is the FPR ledger's raw material
 and the evaluation set's; its shape is pinned by the observe golden (§9).
 
 ### 8. Residual risks, stated

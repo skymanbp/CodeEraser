@@ -137,15 +137,15 @@ would produce — judges each over the daemon's core link (the additive `flow` r
 now 2.3.0, carrying the four tables exactly as `flow::wire::body` assembles them), places the
 findings through each side's legend and subtracts
 ([flow.rs:1-12](../../../cli/src/guard/flow.rs#L1), [flow.rs:36](../../../cli/src/guard/flow.rs#L36),
-[proto.rs:32](../../../cli/src/daemon/proto.rs#L32)). The subtraction is the guard's usual
+[proto.rs:36](../../../cli/src/daemon/proto.rs#L36)). The subtraction is the guard's usual
 novelty, applied to findings: a multiset difference keyed on (unit name, kind, variable name),
 the line left out so a finding the edit merely moves is not this write's doing
-([flow.rs:130-134](../../../cli/src/guard/flow.rs#L130)). The class's condition is a
+([flow.rs:135-139](../../../cli/src/guard/flow.rs#L135)). The class's condition is a
 novel finding the core judged — a non-advisory kind in a judged language, the finding row's sixth column — and the feed's `novel` counts those
 kinds only: an unused parameter the write brings shows in `kinds`, never in `novel`. The class
 speaks at its own tier,
 `[flow] tier`, shipped at observe, and never on a degraded side — a side the daemon could not
-judge is named in the line, never a decision ([flow.rs:120](../../../cli/src/guard/flow.rs#L120),
+judge is named in the line, never a decision ([flow.rs:125](../../../cli/src/guard/flow.rs#L125),
 [flow.rs:20-25](../../../cli/src/config/flow.rs#L20)). Each side is one question to the daemon, so
 a side the core refuses, even for one unit, is degraded whole and named in the line: the
 drop-and-ask-again of §1 is the batch road `ce flow` walks, and the hook keeps a write's cost to
@@ -172,7 +172,7 @@ three units each (judged bits and dynamic counts included)
 hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
-([Spec.hs:117](../../../core/test/Spec.hs#L117)).
+([Spec.hs:118](../../../core/test/Spec.hs#L118)).
 
 A language's findings become verdicts only through its precision exam, registered in
 [EVAL-SET-FLOW.md](../../EVAL-SET-FLOW.md): the unit universe of one pinned corpus per language

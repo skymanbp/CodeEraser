@@ -48,7 +48,7 @@ $ Write invoicer/discount.py
 
 ```console
 $ Write invoicer/invoice.py
-✗ ce: this write leaves <work>/invoicer/invoice.py at 93 lines, past the hard budget of 40 (plan §4.1). Split the file instead of growing it.
+✗ ce: <work>/invoicer/invoice.py is already past the hard budget of 40 at 51 lines; this write grows it to 93 (plan §4.1). A write that keeps or shrinks it passes: split it step by step.
 $ ce scan .
 FAIL invoicer/invoice.py:1 file-lines = 51 (limit 40) [invoicer/invoice.py]
 warn invoicer/report.py:1 file-lines = 35 (limit 30) [invoicer/report.py]
@@ -158,7 +158,7 @@ Every capability reaches the CLI, the GUI and the plugin with its MCP server, or
 
 - **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->** (edition <!--ce:tool:edition#name-->2024<!--/ce-->): tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> with <!--ce:count:grammars#word-->twelve<!--/ce--> grammars, rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce--> (index schema <!--ce:ver:schema.index#digits-->17<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->26<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->4<!--/ce-->), a per-project daemon.
 - **Haskell (GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->)**: `ce-core`, every judgment family. **Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->**: the GUI over the same crate.
-- **One wire:** NDJSON over stdio (proto <!--ce:ver:proto#v-->9.1.0<!--/ce-->, <!--ce:count:families#word-->sixteen<!--/ce--> families); the daemon speaks its own protocol (<!--ce:ver:daemon#v-->2.3.0<!--/ce-->).
+- **One wire:** NDJSON over stdio (proto <!--ce:ver:proto#v-->9.1.0<!--/ce-->, <!--ce:count:families#word-->sixteen<!--/ce--> families); the daemon speaks its own protocol (<!--ce:ver:daemon#v-->2.4.0<!--/ce-->).
 - **Design rules:** ADR-001 … ADR-009 (Rust frontend, parse layer in Rust, lazy daemon, cheap PreToolUse, two clone layers, shrink-only ratchet, pinned distribution, policy as Haskell data, derived documentation facts) in [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md).
 - **Philosophy.** Measure in Rust, decide and write in Haskell, print everywhere else. Nothing asks a model anything; hooks fail open and say so; documentation is generated or gated, including the <!--ce:count:booklets#word-->nineteen<!--/ce-->-booklet [methodology](docs/reference/methodology.md), and every push runs the <!--ce:count:gates#word-->seven<!--/ce--> product gates on this tree.
 

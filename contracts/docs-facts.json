@@ -57,7 +57,7 @@
     },
     {
       "id": "count:families#word",
-      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1 and the W6 stage bags/1)",
+      "source": "contracts/fixtures/handshake/hello-ok.ndjson::capabilities (minus hello, tables/1, document/1, the W2a stage resolve/1 and the W3 stages candidates/1, rank/1, docpairs/1, moves/1 the W6 stage bags/1 and the v2.35 stage relocate/1)",
       "tier": "linked",
       "value": "16"
     },
@@ -72,7 +72,7 @@
       "id": "count:golden_requests#digits",
       "source": "contracts/fixtures/*/golden.ndjson (request lines; the pairing is cli/tests/it/fixture_contract.rs)",
       "tier": "linked",
-      "value": "371"
+      "value": "374"
     },
     {
       "id": "count:grammars#word",
@@ -300,7 +300,7 @@
       "id": "report:observe#schemaver",
       "source": "cli/src/hookio.rs (typed)",
       "tier": "linked",
-      "value": "ce.observe/0.13.0"
+      "value": "ce.observe/0.14.0"
     },
     {
       "id": "report:query#schemaver",
@@ -434,7 +434,7 @@
       "id": "ver:daemon#v",
       "source": "cli/src/daemon/proto.rs::DAEMON_PROTO",
       "tier": "linked",
-      "value": "2.3.0"
+      "value": "2.4.0"
     },
     {
       "id": "ver:docdup_rev#digits",

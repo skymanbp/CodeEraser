@@ -9,7 +9,7 @@ $ Write invoicer/discount.py
 
 ```console
 $ Write invoicer/invoice.py
-✗ ce: this write leaves <work>/invoicer/invoice.py at 93 lines, past the hard budget of 40 (plan §4.1). Split the file instead of growing it.
+✗ ce: <work>/invoicer/invoice.py is already past the hard budget of 40 at 51 lines; this write grows it to 93 (plan §4.1). A write that keeps or shrinks it passes: split it step by step.
 $ ce scan .
 FAIL invoicer/invoice.py:1 file-lines = 51 (limit 40) [invoicer/invoice.py]
 warn invoicer/report.py:1 file-lines = 35 (limit 30) [invoicer/report.py]

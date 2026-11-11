@@ -9,7 +9,7 @@ $ Write invoicer/discount.py
 
 ```console
 $ Write invoicer/invoice.py
-✗ ce：这次写入会让 <work>/invoicer/invoice.py 达到 93 行，越过 40 行的硬预算（计划 §4.1）。请拆分文件，而不是继续让它长大。
+✗ ce：<work>/invoicer/invoice.py 已越过 40 行的硬预算，现有 51 行；这次写入会让它长到 93 行（计划 §4.1）。不增加行数的写入可以通过：请一步步拆分它。
 $ ce scan .
 FAIL invoicer/invoice.py:1 file-lines = 51（上限 40）[invoicer/invoice.py]
 warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
