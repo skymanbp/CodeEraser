@@ -85,6 +85,7 @@ facts =
     , fDocFiles = [9 .. 16] <> [80]
     , fClassKnobs = classKnobsOf []
     , fSelfLoops = []
+    , fDocOwners = Nothing
     }
 
 battWeights :: [[Integer]]
@@ -201,7 +202,7 @@ docFilesCycle =
  where
   scale = sScoreScale scoreBound
   cycleFacts docs =
-    Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs (classKnobsOf []) []
+    Facts [] [[0, 1, 1, 0, 2, 1], [1, 1, 1, 0, 2, 1], [2, 0, 0, 1, 1, 0]] [] [] docs (classKnobsOf []) [] Nothing
   noDocs = cycleFacts []
   oneDoc = cycleFacts [0]
   absent = cycleFacts []
@@ -243,7 +244,7 @@ nearMissKind =
 -- doc) hold positions, a node past them holds none; the docs and
 -- the sim table are the leg's own.
 probeTree :: [Integer] -> [[Integer]] -> [(Integer, Integer)]
-probeTree docs sim = penalties scoreBound Nothing (Facts sim pos [] [] docs (classKnobsOf []) [])
+probeTree docs sim = penalties scoreBound Nothing (Facts sim pos [] [] docs (classKnobsOf []) [] Nothing)
  where
   pos = [[0, 1, 1, 0, 1, 1], [1, 1, 1, 1, 1, 1], [2, 1, 0, 2, 1, 1]]
 

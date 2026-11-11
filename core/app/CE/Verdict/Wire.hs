@@ -16,20 +16,8 @@ module CE.Verdict.Wire
   ) where
 
 import CE.Verdict.Ratchet (Baseline (..))
+-- every boundary checker the module exports (CE.Verdict.Rows)
 import CE.Verdict.Rows
-  ( contRow
-  , discEntry
-  , docFilesOffence
-  , floorOffence
-  , judgedLocOffence
-  , nodeRow
-  , pairRow
-  , posRow
-  , presentOffence
-  , selfLoopsOffence
-  , simRow
-  , tierRow
-  )
 import CE.Verdict.Table
   ( ascendingBy
   , ceilingsOffence
@@ -146,6 +134,13 @@ data VerdictReq = VerdictReq
     -- self-arc, required exactly at cycleFloor 1 (thresholds code 7)
     -- and refused elsewhere — CE.Verdict.Rows.selfLoopsOffence.
     reqSelfLoops :: Maybe [Integer]
+  , -- v2.35 V2 (9.1.0, additive): the DOCDUP UNIVERSE — ascending
+    -- file indices owning at least one live docdup segment, the
+    -- files the docdup family judges. Present, it is axis 3's
+    -- opportunity and the sim table's split is a contract
+    -- (Rows.simSplitOffence): a kind-2 endpoint owns a segment, a
+    -- clone endpoint is a code file. Absent = the 9.0.0 reading.
+    reqDocOwners :: Maybe [Integer]
   }
 
 instance FromJSON VerdictReq where
@@ -179,6 +174,7 @@ instance FromJSON VerdictReq where
       <*> o .:? "symbols" .!= []
       <*> o .:? "present"
       <*> o .:? "cycleSelfLoops"
+      <*> o .:? "docOwners"
 
 -- | First boundary-contract offender, if any. The row checkers are
 -- top-level functions taking the universe size n (the M5-close warn
@@ -192,7 +188,9 @@ violation :: Either String (Maybe Baseline) -> VerdictReq -> Maybe String
 violation parsed req =
   asum
     [ asum (zipWith tierRow [0 :: Int ..] (reqTier req))
-    , table "sim" (simRow n) 2 (reqSim req)
+    , -- the identity is (u, v, kind) since 9.1.0 (v2.35 V2): a pair
+      -- rides once per family that judged it
+      table "sim" (simRow n) 3 (reqSim req)
     , asum (zipWith (posRow unitTier n) [0 :: Int ..] (reqPos req))
         <|> ascendingBy "pos" 1 (reqPos req)
     , table "churn" (nodeRow n 3) 1 (reqChurn req)
@@ -225,6 +223,10 @@ violation parsed req =
       -- the self-loop set, whose presence is tied to the cycle floor
       maybe Nothing presentOffence (reqPresent req)
     , selfLoopsOffence n (reqThresholds req) (reqSelfLoops req)
+    , -- the docdup universe (9.1.0): an index set like docFiles, then
+      -- the sim table's two families held to their opportunity sets
+      maybe Nothing (docOwnersOffence n) (reqDocOwners req)
+    , maybe Nothing (simSplitOffence (reqSim req) (reqPos req) (reqDocFiles req)) (reqDocOwners req)
     ]
  where
   n = toInteger (length (reqTier req))

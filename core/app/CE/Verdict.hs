@@ -80,6 +80,8 @@ rowTotal req =
     , -- the 6.4.0 tables: provenance (O40) and the self-loop set (O59)
       maybe 0 length (reqPresent req)
     , maybe 0 length (reqSelfLoops req)
+    , -- the docdup universe (9.1.0, v2.35 V2)
+      maybe 0 length (reqDocOwners req)
     ]
 
 -- | Baseline rows count toward the SAME row cap as the live tables —
@@ -127,7 +129,7 @@ judged parsed req =
   rk = effectiveRatchet (reqTolerance req)
   jk = effectiveJoin k (reqThresholds req)
   -- the class rows fold into ONE Map here, once per judgment (3.1.0)
-  facts = Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) knobs (maybe [] id (reqSelfLoops req))
+  facts = Facts (reqSim req) (reqPos req) (reqChurn req) (reqCont req) (reqDocFiles req) knobs (maybe [] id (reqSelfLoops req)) (reqDocOwners req)
   pens = penalties k effSoft facts
   (perMille, _viol) = score k (reqWeights req) pens
   base = either (const Nothing) id parsed

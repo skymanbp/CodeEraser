@@ -101,6 +101,14 @@ pub struct Request {
     /// singleton cycles. Rides exactly when `[graph] scc_floor = 1`
     /// — the core requires it at cycleFloor 1 and refuses it elsewhere.
     pub cycle_self_loops: Option<Vec<i64>>,
+    /// The docdup universe (9.1.0, v2.35 V2): verdict-universe indices
+    /// of the files owning a live docdup segment — the files that
+    /// family judges. Some on the check road, an empty table included:
+    /// it is axis 3's opportunity, and its presence makes the sim
+    /// table's split a contract (a docdup endpoint owns a segment, a
+    /// clone endpoint is a code file). None on the dedup and join
+    /// roads, which send no docdup rows.
+    pub doc_owners: Option<Vec<i64>>,
 }
 
 /// The core's verdict, raw: nothing here is derived Rust-side.
@@ -178,6 +186,7 @@ impl Request {
             dedup_min_distinct: floor,
             judged_loc: Vec::new(),
             doc_files: Vec::new(),
+            doc_owners: None,
         }
     }
 }
@@ -236,6 +245,10 @@ pub fn body(r: &Request) -> Value {
             "cycleSelfLoops",
             r.cycle_self_loops.as_ref().map(|l| json!(l)),
         ),
+        // an option for the same reason: an empty universe is a fact
+        // (no docdup opportunity, every kind-2 row refused) on the
+        // check road, and an absent one is a road with no docdup rows
+        ("docOwners", r.doc_owners.as_ref().map(|o| json!(o))),
     ];
     for (key, value) in optional.into_iter().flat_map(|(k, v)| v.map(|v| (k, v))) {
         o[key] = value;

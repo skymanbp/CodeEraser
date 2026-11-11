@@ -35,8 +35,8 @@ battery =
     , "two hundred ratchet cases agree on over, drawn, added, removed, dropped and the new baseline"
     , "the join lattice agrees on every leg combination, verdict, legs, reasons and confidence"
     , "two hundred verdict/1 replies agree on the score, the axes and the weight echo"
-    , "past the row cap the reply degrades; a descending sim pair is refused by name"
-    , "booklet 05's bounds: axes 1, 4, 5 and 6 charge at most half the scale; the equal-weight neutral score keeps its floor"
+    , "past the row cap the reply degrades; a descending sim pair, a repeated (u, v, kind) and an endpoint outside its family's set are refused by name; one pair under two families is judged"
+    , "booklet 05's bounds: axes 1, 4, 5 and 6 (and 2, 3 when the docdup universe rides) charge at most half the scale; mass inside opportunity; the equal-weight neutral score keeps its floor"
     ]
     [ all charges factCases
     , and [softLine kk lo hi locs == refSoftLine kk lo hi locs | locs <- locCases, (kk, lo, hi) <- [(softLineK, softMin, softMax), (1, 1, 100000)]]
@@ -55,29 +55,51 @@ charges c@(k, soft, inp) = pens == refCharges k soft inp && and [score k w pens 
   pens = pensOf c
 
 pensOf :: (ScoreKnobs, Maybe Integer, Inputs) -> [(Integer, Integer)]
-pensOf (k, soft, inp) = penalties k soft (Facts (iSim inp) (iPos inp) (iChurn inp) (iCont inp) (iDocs inp) (classKnobsOf (iClassRows inp)) (iLoops inp))
+pensOf (k, soft, inp) = penalties k soft (Facts (iSim inp) (iPos inp) (iChurn inp) (iCont inp) (iDocs inp) (classKnobsOf (iClassRows inp)) (iLoops inp) (iOwners inp))
 
 -- | Booklet 05: axes 1, 4, 5 and 6 count rows of their own opportunity
--- list, so v <= n and the charge is at most half the scale. Axes 0, 2
--- and 3 are not bounded by the core (the clone and docdup masses may
--- name files outside their opportunity set — the contract does not
--- refuse it), so at equal weights and the neutral dial the floor is
--- scale - floor((3 (scale - 1) + 4 floor(scale / 2)) / 7): 287 at 1000.
+-- list, so v <= n and the charge is at most half the scale. A request
+-- naming the docdup universe (9.1.0) holds axes 2 and 3 there too, by
+-- contract: every clone endpoint is a code file and every docdup
+-- endpoint a segment owner (CE.Verdict.Rows.simSplitOffence; the
+-- generator keeps only the rows it admits), so each mass is a subset of
+-- its opportunity. With k axes unbounded (axis 0 always; 2 and 3 on a
+-- request naming no universe) the equal-weight neutral floor is
+-- scale - floor((k (scale - 1) + (7 - k) floor(scale / 2)) / 7): 287
+-- at 1000 with k = 3, 429 with k = 1.
 subsets :: (ScoreKnobs, Maybe Integer, Inputs) -> Bool
-subsets c@(k, _, _) =
-  and [2 * p <= s | (a, p) <- pens, a `elem` subsetAxes]
-    && (sViolCost k /= violCostNeutral || fst (score k [] pens) >= s - (3 * (s - 1) + 4 * (s `div` 2)) `div` 7)
+subsets c@(k, _, inp) =
+  and [2 * p <= s | (a, p) <- pens, a `elem` bounded]
+    && massesInside inp
+    && (sViolCost k /= violCostNeutral || fst (score k [] pens) >= s - (open * (s - 1) + (7 - open) * (s `div` 2)) `div` 7)
  where
   s = sScoreScale k
   pens = pensOf c
+  bounded = subsetAxes (iOwners inp)
+  open = 7 - toInteger (length bounded)
 
-subsetAxes :: [Integer]
-subsetAxes = [1, 4, 5, 6]
+-- | The axes whose mass is a subset of their opportunity.
+subsetAxes :: Maybe [Integer] -> [Integer]
+subsetAxes owners = maybe [1, 4, 5, 6] (const [1, 2, 3, 4, 5, 6]) owners
 
--- | The bounds over every fact set, and not vacuously: some subset axis
--- charges.
+-- | Mass inside opportunity, set by set, on a request naming the
+-- universe: the files the clone rows touch are code files, the files
+-- the docdup rows touch are owners.
+massesInside :: Inputs -> Bool
+massesInside inp = case iOwners inp of
+  Nothing -> True
+  Just owners -> all (`elem` code) (ends [0, 1]) && all (`elem` owners) (ends [2])
+ where
+  code = [u | (u : _) <- iPos inp, u `notElem` iDocs inp]
+  ends kinds = [x | [u, v, kind, _, _] <- iSim inp, kind `elem` kinds, x <- [u, v]]
+
+-- | The bounds over every fact set, and not vacuously: a subset axis
+-- charges, and so does axis 3 on a request naming its universe.
 boundsHold :: Bool
-boundsHold = all subsets factCases && any (\c -> any (\(a, p) -> a `elem` subsetAxes && p > 0) (pensOf c)) factCases
+boundsHold =
+  all subsets factCases
+    && any (\c -> any (\(a, p) -> a `elem` [1, 4, 5, 6] && p > 0) (pensOf c)) factCases
+    && any (\c@(_, _, inp) -> iOwners inp /= Nothing && any (\(a, p) -> a == 3 && p > 0) (pensOf c)) factCases
 
 ratchets :: ([[Integer]], Maybe [Integer], Maybe ([[Integer]], [Integer]), [[Integer]], [Integer]) -> Bool
 ratchets (classRows, present, base, cont, disc) =
@@ -119,17 +141,27 @@ wired c@(sim, pos, churn, cont, classes, locs, docs, weights, _) =
  where
   -- the establishing derivation is fenced under the effective hard
   -- line as well as softMax (9.0.0)
-  pens = refCharges scoreBound (refSoftLine softLineK softMin (min softMax (sSizeHard scoreBound)) locs) (Inputs sim pos churn cont docs classes [])
+  pens = refCharges scoreBound (refSoftLine softLineK softMin (min softMax (sSizeHard scoreBound)) locs) (Inputs sim pos churn cont docs classes [] Nothing)
   (perMille, _) = refScore scoreBound violCostNeutral weights pens
 
--- | The reference's own reading of the two boundaries: one discrete
--- entry past verdictRowCap degrades, and a sim pair whose endpoints
--- descend is the contract's to refuse.
+-- | The reference's own reading of the boundaries: one discrete entry
+-- past verdictRowCap degrades, a sim pair whose endpoints descend is
+-- the contract's to refuse — and since 9.1.0 the sim identity is
+-- (u, v, kind): one pair under two families is a request, the same
+-- (u, v, kind) twice is not, and a request naming the docdup universe
+-- has each family's endpoints held to its own set.
 capAndRefusal :: Bool
 capAndRefusal =
   fieldsOf respond big ["degraded", "reason", "score"] == Just [Just (Bool True), Just (String "verdict_too_large"), Just (toJSON (0 :: Int))]
     && and [refusedBy respond (request (swapped sim, p, ch, co, cl, l, d, w, n)) "sim 0: pair not ascending" | (sim@(_ : _), p, ch, co, cl, l, d, w, n) <- take 40 wireCases]
+    && fieldsOf respond (split [[0, 1, 0, 100, 100], [0, 1, 2, 100, 100]] [0, 1]) ["axes"] == Just [Just (toJSON [[0, 0 :: Int], [1, 0], [2, 400], [3, 500], [4, 0], [5, 0], [6, 0]])]
+    && refusedBy respond (split [[0, 1, 2, 100, 100], [0, 1, 2, 100, 100]] [0, 1]) "sim 1: not strictly ascending"
+    && refusedBy respond (split [[0, 2, 2, 100, 100]] [0, 1]) "sim 0: docdup endpoint owns no segment"
+    && refusedBy respond (setKey "docFiles" (toJSON [1 :: Int]) (split [[0, 1, 0, 100, 100]] [0, 1])) "sim 0: clone endpoint is not a code file"
  where
+  -- three files with a position each, the pair (0, 1) under the given
+  -- sim rows, the docdup universe named
+  split sim owners = setKey "docOwners" (toJSON (owners :: [Integer])) (request (sim, [[u, 1, 1, u, 1, 1] | u <- [0 .. 2]], [], [], [], [], [], [], 3))
   big = setKey "discrete" (toJSON [0 .. verdictRowCap]) (request ([], [], [], [], [], [], [], [], 1))
   swapped rows = case rows of
     ((u : v : rest) : more) -> (v : u : rest) : more

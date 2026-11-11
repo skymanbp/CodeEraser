@@ -18,15 +18,21 @@ import Data.Bits (bit)
 import qualified Data.IntSet as IS
 import qualified Data.Map.Strict as M
 
--- | Join-candidate rows, one per sim row (split from result at the
--- E01 line — the leg maps are the candidates' concern alone). The
--- effective Join knobs arrive from the same thresholds table the
--- score reads, so the two judgments share one authority.
+-- | Join-candidate rows, one per sim PAIR (split from result at the
+-- E01 line — the leg maps are the candidates' concern alone). The sim
+-- table's identity is (u, v, kind) since 9.1.0 (v2.35 V2), so a pair
+-- two families judged rides twice; the join reads the STRONGER
+-- finding, the first row of the pair's run — the table ascends by
+-- kind within a pair and the kind enum is ordered by strength (0
+-- t1t2, 1 t3, 2 docdup). The effective Join knobs arrive from the
+-- same thresholds table the score reads, so the two judgments share
+-- one authority.
 candidates :: Knobs -> VerdictReq -> [[Integer]]
 candidates jk req =
   [ -- the 6th column is the leg-agreement confidence (2.33.0, H4)
     [u, v, code, bits, mask, confidence mask bits]
-  | row@(u : v : _) <- reqSim req
+  | (row@(u : v : _), prev) <- zip (reqSim req) (Nothing : map Just (reqSim req))
+  , fmap (take 2) prev /= Just [u, v]
   , let (code, mask, bits) = judge jk (legsOf row)
   ]
  where

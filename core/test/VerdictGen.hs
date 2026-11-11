@@ -25,7 +25,12 @@ subset :: Integer -> G [Integer]
 subset n = concat <$> mapM (\u -> (\r -> [u | r == 0]) <$> rand 2) [0 .. n - 1]
 
 -- | Fact sets over a universe of up to eight files, under knobs moved
--- off their defaults one time in two, with a soft line or none.
+-- off their defaults one time in two, with a soft line or none. One
+-- time in two the set names its docdup universe (9.1.0) and then
+-- keeps only the sim rows the contract admits — a clone row between
+-- two code files (a pos row outside the doc set), a docdup row
+-- between two owners — so the bounds leg reads what the core can
+-- judge; the owners are every docdup endpoint and some more files.
 factCases :: [(ScoreKnobs, Maybe Integer, Inputs)]
 factCases = seeded 11 $ do
   n <- (+ 1) <$> int 8
@@ -36,7 +41,18 @@ factCases = seeded 11 $ do
   classes <- classLines 500
   k <- knobs
   soft <- (\r s -> if r == 0 then Nothing else Just s) <$> rand 3 <*> ((+ 150) <$> int 400)
-  pure (k, soft, Inputs sim pos churn cont docs classes loops)
+  named <- (== 0) <$> rand 2
+  extra <- subset n
+  let code = [u | (u : _) <- pos, u `notElem` docs]
+      owners = sort (nubSorted (sort (extra <> [x | [u, v, 2, _, _] <- sim, x <- [u, v]])))
+      admitted [u, v, kind, _, _] = if kind == 2 then True else all (`elem` code) [u, v]
+      admitted _ = False
+      sim' = if named then filter admitted sim else sim
+  pure (k, soft, Inputs sim' pos churn cont docs classes loops (if named then Just owners else Nothing))
+
+-- | Adjacent duplicates out of a sorted list.
+nubSorted :: [Integer] -> [Integer]
+nubSorted xs = [x | (x, prev) <- zip xs (Nothing : map Just xs), prev /= Just x]
 
 -- | The graph-side tables over n file nodes: candidate pairs u < v
 -- around both similarity bars, positions, churn.

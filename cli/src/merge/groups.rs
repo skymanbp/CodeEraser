@@ -69,8 +69,8 @@ impl Group {
     }
 }
 
-/// One suggestion per member set (score::one_row_per_pair's stand, 0
-/// over 1): a T1/T2 group covers a T3 group over the same members — an
+/// One suggestion per member set (the join's strongest-kind stand, 0
+/// over 1, CE.Verdict.Candidates): a T1/T2 group covers a T3 group over the same members — an
 /// exact isomorphism is the stronger claim. The order is kept (the sort
 /// is stable and T1/T2 plans come first); the groups dropped are the
 /// same suggestion twice, not unsendable, and their number is returned.

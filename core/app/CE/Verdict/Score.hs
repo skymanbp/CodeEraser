@@ -49,6 +49,8 @@ data Facts = Facts
   -- ^ (classId, code) -> value: the ceilings codes 0/1/2 under a class (3.1.0)
   , fSelfLoops :: [Integer]
   -- ^ file-universe indices carrying a self-arc (6.4.0): a singleton SCC is a cycle only through one
+  , fDocOwners :: Maybe [Integer]
+  -- ^ file-universe indices owning a live docdup segment (9.1.0): axis 3's opportunity when present
   }
 
 -- | The class overrides as ONE Map, built once per judgment from the
@@ -127,7 +129,7 @@ penalties k soft f =
       [ (0, sizeMass k soft f, files)
       , (1, cnt (cocOver k f), functions)
       , (2, cnt (cloneFiles k f), codeFiles)
-      , (3, cnt (dupFiles k f), docFiles)
+      , (3, cnt (dupFiles k f), docUniverse)
       , (4, cnt (deadFiles k f), nodes)
       , (5, cnt (churnHeavy k f), churned)
       , (6, cnt (cycleMembers k f), codeFiles)
@@ -141,12 +143,14 @@ penalties k soft f =
   functions = count [() | (_ : 1 : _) <- fCont f]
   nodes = toInteger (length (fPos f))
   churned = toInteger (length (fChurn f))
-  -- the two halves of the verdict universe (7.0.0, O22): the clone
-  -- and cycle axes read the code files, the docdup axis the doc files.
-  -- A document with no graph position — a plain-text file (plan v2.30
-  -- step 5b-8) — is a docdup opportunity and no node, so the code
-  -- files are the pos rows outside the doc set, never `nodes − docFiles`
-  docFiles = toInteger (length (fDocFiles f))
+  -- the clone and cycle axes read the code files: the pos rows outside
+  -- the documentation-language set (7.0.0, O22; a plain-text file has
+  -- no graph position, so never `nodes − docFiles`). The docdup axis
+  -- reads the docdup universe — the files owning a live segment, the
+  -- files that family judges, comments and docstrings included — when
+  -- the request names it (9.1.0, v2.35 V2); a 9.0.0 request is read on
+  -- the documentation-language files, as it always was
+  docUniverse = toInteger (length (maybe (fDocFiles f) id (fDocOwners f)))
   codeFiles = count [() | (u : _) <- fPos f, IS.notMember (fromInteger u) (docSet f)]
 
 -- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means
@@ -199,14 +203,15 @@ cocOver k f =
 -- odds were reversible — a repository with more files and the same
 -- pairs charged less, one with the same files and more pairs among
 -- them charged without bound. Files over files is the ratio every
--- other counting axis already charges. Neither mass is held to its
--- opportunity set here: a clone pair may name a document or a file
--- with no position, and a docdup pair touches the code files beside
--- its document, so both axes can pass half the scale (booklet 05).
--- The docdup axis's opportunity is the documentation universe — a repository
--- with no documentation has no docdup opportunity and charges nothing
--- (the honest-absence stance). The verified bar is the owning
--- family's, cross-multiplied.
+-- other counting axis already charges. A request naming the docdup
+-- universe (9.1.0) holds each mass to its opportunity by contract
+-- (CE.Verdict.Rows.simSplitOffence): a clone endpoint is a code file,
+-- a docdup endpoint owns a segment, so v <= n and neither axis passes
+-- half the scale (booklet 05). A 9.0.0 request carries no such
+-- contract and both axes can pass it. A tree whose docdup family
+-- judges nothing has no docdup opportunity and charges nothing (the
+-- honest-absence stance). The verified bar is the owning family's,
+-- cross-multiplied.
 cloneFiles :: ScoreKnobs -> Facts -> Integer
 cloneFiles k f =
   touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]

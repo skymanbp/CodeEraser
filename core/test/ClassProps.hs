@@ -55,7 +55,7 @@ battery = do
 -- | Size and complexity facts alone: classed rows and the knob rows,
 -- folded the way CE.Verdict folds them.
 contFacts :: [[Integer]] -> [[Integer]] -> Facts
-contFacts rows knobs = Facts [] [] [] rows [] (classKnobsOf knobs) []
+contFacts rows knobs = Facts [] [] [] rows [] (classKnobsOf knobs) [] Nothing
 
 axis :: Integer -> Facts -> Integer
 axis code f = maybe (-1) id (lookup code (penalties scoreBound Nothing f))

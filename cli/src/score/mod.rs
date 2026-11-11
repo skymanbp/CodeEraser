@@ -109,6 +109,9 @@ struct Measured {
     /// the discrete members above and the continuous function rows
     /// size_facts mints both key on them.
     anchors: anchor::Anchors,
+    /// The docdup universe (9.1.0): verdict-universe indices of the
+    /// files owning a live docdup segment, ascending.
+    doc_owners: Vec<i64>,
 }
 
 fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
@@ -146,7 +149,13 @@ fn measure(root: &Path, opts: &Opts) -> Result<Measured> {
         .map(|(a, b, _)| (segs[*a].path.as_str(), segs[*b].path.as_str()));
     let (sim, skipped_self) = sim_table(&clones, dup_pairs, &idx);
     let (members, collapsed) = member_set(&anchors, &found.blocks);
+    // the docdup universe (9.1.0, v2.35 V2): the files owning a live
+    // segment — every kind-2 row's two files are among them
+    let owners: BTreeSet<i64> = (segs.iter())
+        .filter_map(|s| idx.get(s.path.as_str()).copied())
+        .collect();
     Ok(Measured {
+        doc_owners: owners.into_iter().collect(),
         pos: pos_rows(&files, &posmap),
         symbols: crate::graph::symwire::rekeyed(&w, &idx)?,
         self_loops: deadcode::self_loop_rows(&w, &loops),
@@ -250,6 +259,7 @@ pub fn run(root: &Path, opts: Opts) -> Result<Outcome> {
         dedup_min_distinct: None,
         judged_loc,
         doc_files: doc_file_indices(&m.files),
+        doc_owners: Some(m.doc_owners),
         files: m.files,
     };
     let (reply, link) = wire::judge(&opts.core, &req)?;
@@ -323,8 +333,14 @@ pub(crate) fn pos_rows(files: &[String], posmap: &HashMap<String, join::Pos>) ->
 }
 
 /// The sim table off one snapshot: the two clone families' rows
-/// (kind 0, then kind 1), the docdup family's (kind 2), one row per
-/// pair; returns it with the self pairs counted out.
+/// (kind 0, then kind 1) and the docdup family's (kind 2), sorted to
+/// the wire's identity (u, v, kind) — a pair rides once per family
+/// that judged it (9.1.0, v2.35 V2): axis 2 reads the clone rows,
+/// axis 3 the docdup rows, and the join reads the strongest row of a
+/// pair on the core's side (CE.Verdict.Candidates). Until 9.1.0 the
+/// identity was the pair and a merge kept the clone row alone, so a
+/// pair that shared code AND prose never charged the docdup axis.
+/// Returns the table with the self pairs counted out.
 fn sim_table<'a>(
     clones: &Similar<'_>,
     dup_pairs: impl Iterator<Item = (&'a str, &'a str)>,
@@ -332,7 +348,7 @@ fn sim_table<'a>(
 ) -> (Vec<[i64; 5]>, usize) {
     let mut sim = Vec::new();
     let skipped_self = clone_rows(clones, idx, &mut sim) + pair_rows(dup_pairs, idx, 2, &mut sim);
-    one_row_per_pair(&mut sim);
+    sim.sort_unstable();
     (sim, skipped_self)
 }
 
@@ -346,8 +362,8 @@ pub struct Similar<'a> {
 
 /// File pairs with at least one verified clone block, kind 0 (t1t2),
 /// then the pairs the T3 family verified, kind 1 (plan v2.30 step
-/// 5b-9). Each family's set is ascending alone; the caller merges
-/// them to one row per pair (`one_row_per_pair`).
+/// 5b-9). Each family's set is ascending alone; the caller sorts the
+/// concatenation to the wire's (u, v, kind) identity.
 pub(crate) fn clone_rows(
     sim: &Similar<'_>,
     idx: &HashMap<&str, i64>,
@@ -389,34 +405,6 @@ fn pair_rows<'a>(
     }
     out.extend(set.into_iter().map(|(u, v)| [u, v, kind, 100, 100]));
     skipped_self
-}
-
-/// ONE row per file pair, ascending: the sim table's wire identity is
-/// the pair alone (`table "sim" (simRow n) 2`, strictly ascending)
-/// and the core emits one join candidate per row. Each family hands
-/// over its OWN ascending set, so their concatenation is neither
-/// ordered nor unique across the two — a pair both judged arrived
-/// twice and the core refused the whole request by name (`contract:
-/// sim <i>: not strictly ascending`), taking `ce check` down on the
-/// tree. Until 7.0.0 the case could not arise: only the clone family
-/// sent rows. It arises on any tree where two files share code AND
-/// prose, which is the ordinary shape of sibling modules — ten such
-/// pairs in one 55-file directory of the first repository that hit it.
-/// Since plan v2.30 step 5b-9 the join road merges as well: a pair
-/// both clone families found arrives once per family there too.
-///
-/// The survivor is the STRONGER finding: the sort orders kind within
-/// a pair and the kind enum is ordered by strength (0 t1t2, 1 t3,
-/// 2 docdup), so the first row of each run is the clone it is rather
-/// than the prose that also matches. That choice changes no judgment
-/// today — both rows carry their family's VERIFIED ratio 100/100 and
-/// kind only picks which bar the ratio is cross-multiplied against
-/// (clone 85/100, docdup 80/100, both cleared) — which is exactly why
-/// the unit test pins it: nothing downstream would redden if it
-/// flipped.
-pub(crate) fn one_row_per_pair(sim: &mut Vec<[i64; 5]>) {
-    sim.sort_unstable();
-    sim.dedup_by(|a, b| a[0] == b[0] && a[1] == b[1]);
 }
 
 /// The discrete clone-member set: every block's sides attributed to

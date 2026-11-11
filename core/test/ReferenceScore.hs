@@ -18,12 +18,14 @@ import Data.Ratio (denominator, numerator, (%))
 -- | The fact tables as they ride the wire: sim [u,v,kind,num,den],
 -- pos [u,indeg,outdeg,scc,size,reach], churn [u,rewrite,append],
 -- continuous [u,code,value(,class)], the doc-file indices, the class
--- knob rows [class,code,value] and the self-loop indices.
+-- knob rows [class,code,value], the self-loop indices and the docdup
+-- universe when the request names it (9.1.0).
 data Inputs = Inputs
   { iSim, iPos, iChurn, iCont :: [[Integer]]
   , iDocs :: [Integer]
   , iClassRows :: [[Integer]]
   , iLoops :: [Integer]
+  , iOwners :: Maybe [Integer]
   }
 
 -- | p(x) on the zone (s, h] as one fraction: pMax·(x−s)²/(h−s)²
@@ -85,8 +87,13 @@ refCharges k soft inp = zip [0 ..] (zipWith (density (sScoreScale k)) masses opp
     ]
   opportunities =
     map genericLength [sizeRows, fnRows]
-      <> [genericLength codeFiles, genericLength (iDocs inp), genericLength (iPos inp), genericLength (iChurn inp), genericLength codeFiles]
+      <> [genericLength codeFiles, genericLength docUniverse, genericLength (iPos inp), genericLength (iChurn inp), genericLength codeFiles]
   genericLength xs = toInteger (length xs)
+  -- the docdup axis's opportunity: the segment owners when named, the
+  -- documentation files of a request that names none
+  docUniverse = case iOwners inp of
+    Just owners -> owners
+    Nothing -> iDocs inp
 
 -- | (per-mille, total charge): each axis's effective weight is the
 -- first wire row naming it, else the default; the weighted mean of

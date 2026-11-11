@@ -42,8 +42,9 @@ pub fn judge_pairs(
     let idx = score::row_index(&files);
     let mut rows = Vec::new();
     score::clone_rows(sim, &idx, &mut rows);
-    // two clone families on this road too (5b-9): one row per pair
-    score::one_row_per_pair(&mut rows);
+    // two clone families on this road too (5b-9): a pair rides once per
+    // family (9.1.0) and the core reads its strongest row
+    rows.sort_unstable();
     let (churn_t, cochange_t) = score::churn_tables(ch, &idx);
     let pos = score::pos_rows(&files, posmap);
     // RG10's fact on this road too (6.1.0): `ce join` is the face
@@ -111,6 +112,8 @@ fn request(
         dedup_min_distinct: None,
         judged_loc: Vec::new(),
         doc_files: score::doc_file_indices(&files),
+        // no docdup row rides this road
+        doc_owners: None,
         files,
     })
 }
