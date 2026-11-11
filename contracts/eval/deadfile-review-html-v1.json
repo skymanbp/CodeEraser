@@ -1,0 +1,674 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 0,
+      "same_side": 0,
+      "share": null
+    },
+    "first_named": {
+      "rows": 5,
+      "same_side": 5,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 1,
+      "same_side": 1,
+      "share": 1.0
+    },
+    "overall": {
+      "rows": 6,
+      "same_side": 6,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "html",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:161 (maven-javadoc-plugin), pom.xml:174-177 (attach-javadoc execution, goal jar)",
+        "mechanism": "maven-javadoc-plugin convention: the 'overview' parameter defaults to ${basedir}/src/main/javadoc/overview.html (maven-javadoc-plugin javadoc:jar goal documentation); the plugin runs with an attach-javadoc jar execution, so the file becomes the overview page of the published javadoc jar",
+        "searched": "git grep -F overview / src/main/javadoc in *.java *.xml *.yml *.md *.properties; pom.xml javadoc plugin config (no explicit overview, so the default applies)",
+        "tag": "generic"
+      },
+      "path": "src/main/javadoc/overview.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:156",
+        "mechanism": "test fixture opened by path from a test",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/bomtests/bom_utf16be.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:161",
+        "mechanism": "test fixture opened by path from a test",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/bomtests/bom_utf16le.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:166",
+        "mechanism": "test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/bomtests/bom_utf32be.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:171",
+        "mechanism": "test fixture opened by path from a test",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/bomtests/bom_utf32le.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:212; src/test/java/org/jsoup/integration/ConnectTest.java:789",
+        "mechanism": "test fixture opened by path from a test (also served by test server)",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/bomtests/bom_utf8.html",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:212 getFile(\"/bomtests/bom_utf8.html\"); src/test/java/org/jsoup/integration/ConnectTest.java:789",
+        "mechanism": "test fixture opened by path",
+        "searched": "git grep bom_utf8, bomtests",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/FuzzFixesTest.java:23 (testDir), :26 (listFiles), :57 (@MethodSource testFiles); src/test/java/org/jsoup/integration/ParserSoakIT.java:28,31",
+        "mechanism": "directory walk: FuzzFixesTest lists every file in /fuzztests/ and feeds each to parameterized tests (also ParserSoakIT)",
+        "searched": "git grep -F basename and stem (no hits); git grep fuzztests in *.java *.xml *.yml *.md",
+        "tag": "generic"
+      },
+      "path": "src/test/resources/fuzztests/ex-inselect16.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/internal/ReaderTest.java:21; src/test/java/org/jsoup/integration/FuzzFixesTest.java:26",
+        "mechanism": "test fixture opened by path from a test; also every file in /fuzztests/ is walked by FuzzFixesTest",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/fuzztests/garble.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/parser/HtmlParserTest.java:2137",
+        "mechanism": "test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/adopt-1.html",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/parser/HtmlParserTest.java:2137 ParseTest.getFile(\"/htmltests/adopt-1.html\")",
+        "mechanism": "test fixture opened by path",
+        "searched": "git grep adopt-1",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/nodes/DocumentTest.java:145",
+        "mechanism": "test fixture opened by path from a test",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/basehref.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:205; src/test/java/org/jsoup/integration/ConnectTest.java:469",
+        "mechanism": "test data opened by path and served by the test server",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/charset-base.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/SessionIT.java:33; pom.xml:291",
+        "mechanism": "test fixture opened by path from a test via test server in failsafe integration test SessionIT (not tagged long-running)",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/comments.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ConnectTest.java:923",
+        "mechanism": "test fixture opened by path from a test (served by test server)",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/escapes-across-buffer.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ConnectTest.java:1124",
+        "mechanism": "test fixture opened by path from a test (served by test server)",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/form-tests.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none: plain-text source of gzip.html.gz / gzip.html.z; tests open only the compressed variants",
+        "searched": "git grep -F 'gzip.html' (only hits are gzip.html.gz/.z in DataUtilTest.java:257-283); listFiles walkers only cover /fuzztests/ (FuzzFixesTest.java:23, ParserSoakIT.java:28); pom.xml, CI, docs: no mention",
+        "tag": null
+      },
+      "path": "src/test/resources/htmltests/gzip.html",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; tests open only the compressed variants gzip.html.gz / gzip.html.z (this is their uncompressed source)",
+        "searched": "git grep 'gzip.html\"', '\"/htmltests/\" +' concatenations, -w gzip in src/test/resources, pom.xml, *.md; directory walkers (listFiles, Files.list, Files.walk, newDirectoryStream) in src/test: none; FileRoute/TestServer file.url callers (ConnectTest, ConnectIT) never request /htmltests/gzip.html; only hits are DataUtilTest.java:257-283 for the .gz/.z files",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed",
+        "unused_convention"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/helper/DataUtilTest.java:329; src/test/java/org/jsoup/integration/ConnectTest.java:419",
+        "mechanism": "test data opened by path and served by the test server",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/large.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ParseTest.java:63",
+        "mechanism": "test data opened by path from the test classpath",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/lowercase-charset-test.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/JsoupTest.java:19; src/test/java/org/jsoup/helper/DataUtilTest.java:139",
+        "mechanism": "test data opened by path and served by the test server",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/medium.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ParseTest.java:33",
+        "mechanism": "test fixture opened by path from a test",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/meta-charset-1.html",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ParseTest.java:33",
+        "mechanism": "test data file opened by path in a JUnit test",
+        "searched": "git grep basename/stem/htmltests",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ParseTest.java:39",
+        "mechanism": "test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/meta-charset-2.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ParseTest.java:45",
+        "mechanism": "test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/meta-charset-3.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/parser/HtmlParserTest.java:1625",
+        "mechanism": "test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/table-invalid-elements.html",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/parser/HtmlParserTest.java:1625",
+        "mechanism": "test data file opened by path in a JUnit test",
+        "searched": "git grep basename/stem/htmltests",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/parser/HtmlParserTest.java:1801",
+        "mechanism": "test fixture opened by path from a test",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/table-polymer-template.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/integration/ConnectTest.java:940; src/test/java/org/jsoup/nodes/FormElementTest.java:197",
+        "mechanism": "page served by the test server and fetched by tests",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/htmltests/upload-form.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/nodes/PrinterTest.java:19",
+        "mechanism": "test input opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/printertests/input-1.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/nodes/PrinterTest.java:46",
+        "mechanism": "test fixture opened by path from a test (expected output)",
+        "searched": "git grep -F basename and stem across clone (src, pom.xml, docs); directory walkers (listFiles/Files.walk) in src/test/java",
+        "tag": "named"
+      },
+      "path": "src/test/resources/printertests/outline-1.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/nodes/PrinterTest.java:34",
+        "mechanism": "expected-output test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/printertests/passthru-1.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/test/java/org/jsoup/nodes/PrinterTest.java:22",
+        "mechanism": "expected-output test data opened by path",
+        "searched": "git grep -F basename across the tree",
+        "tag": "named"
+      },
+      "path": "src/test/resources/printertests/pretty-1.html",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "docs/conf.py:46; docs/conf.py:175",
+        "mechanism": "Sphinx template: templates_path ['_templates'] and html_sidebars lists sidebar.html; rendered into the published docs",
+        "searched": "git grep sidebar/_templates in docs",
+        "tag": "named"
+      },
+      "path": "docs/_templates/sidebar.html",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "docs/conf.py:46; docs/conf.py:175",
+        "mechanism": "Sphinx sidebar template in templates_path, named in html_sidebars",
+        "searched": "docs/conf.py templates_path and html_sidebars",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

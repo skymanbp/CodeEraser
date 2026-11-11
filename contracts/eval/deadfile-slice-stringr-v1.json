@@ -1,0 +1,118 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "stringr",
+    "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "LICENSE.md",
+      "sha256": "630521e04c13e4db4bc6e09a0dee764b5f21477c7c1d2a222d54a4b2b6296fb6",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "NEWS.md",
+      "sha256": "62d2485784d47de5bd1dc18972630ba67b77dd041810f0a33b59eacf5ae85684",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "cran-comments.md",
+      "sha256": "26b107ef5e42f43790508b897e7fc9fb0524777b357cd8e491d29e5413c1e922",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "revdep/cran.md",
+      "sha256": "09693b2e212efe5df269e604c229d8a800e85eacb13b1856a1ea447aa1c59f8f",
+      "stem_spelled": 5,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "revdep/failures.md",
+      "sha256": "3a738db87f112a789c72588ef7015951628eba41853efa32bed6f35142dbb719",
+      "stem_spelled": 6,
+      "verdict": "unref_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "markdown": {
+        "basename_spelled": 0,
+        "convention": 0,
+        "document": 5,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 5,
+        "stem_spelled": 4,
+        "vouched": 5
+      }
+    },
+    "rows": 5
+  }
+}

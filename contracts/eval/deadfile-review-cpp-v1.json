@@ -1,0 +1,238 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    },
+    "first_named": {
+      "rows": 0,
+      "same_side": 0,
+      "share": null
+    },
+    "first_not_in_use": {
+      "rows": 0,
+      "same_side": 0,
+      "share": null
+    },
+    "overall": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "cpp",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test/gtest-extra-test.cc:10 (#include <gtest/gtest-spi.h>); test/gtest/CMakeLists.txt:6-7",
+        "mechanism": "included by a test source and listed in the gtest CMake library target",
+        "searched": "git grep gtest-spi; test/gtest/CMakeLists.txt",
+        "tag": "named"
+      },
+      "path": "test/gtest/gtest/gtest-spi.h",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "makefile:145 ($(ALL_O): makefile ltests.h); makefile:69; testes/packtests:48",
+        "mechanism": "build dependency in the makefile (every object depends on it) and the LUA_USER_H test header; shipped by testes/packtests",
+        "searched": "git grep ltests; makefile; onelua.c; testes/packtests",
+        "tag": "named"
+      },
+      "path": "ltests.h",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/build_spec.lua:510-512; spec/fixtures/with_external_dep-0.1-1.rockspec:11 (header = \"foo/foo.h\"); spec/fixtures/with_external_dep.c:1",
+        "mechanism": "test fixture: the rockspec's external dependency header, found through FOO_INCDIR pointed at fixtures/with_external_dep in the build spec; included by the fixture C source",
+        "searched": "git grep with_external_dep, foo.h, foo/",
+        "tag": "named"
+      },
+      "path": "spec/fixtures/with_external_dep/foo/foo.h",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001 (INSTALL_LUA: COPY win32\\lua5.1\\include\\*.* \"$LUA_INCDIR\"); makedist:121-149 ships git ls-files incl. win32/ in the -win32.zip",
+        "mechanism": "packaged and installed by the Windows installer (copy of the whole include dir); included by lua.hpp",
+        "searched": "git grep win32 / basename / stem across install.bat, makedist, Makefiles, .github/workflows, spec/, docs/",
+        "tag": "generic"
+      },
+      "path": "win32/lua5.1/include/lauxlib.h",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001",
+        "mechanism": "bundled Lua header copied by the Windows installer into LUA_INCDIR (wildcard copy of the include dir)",
+        "searched": "git grep lauxlib, lua5.1, win32 paths; install.bat; binary/Makefile.windows; win32/COPYING",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001 (INSTALL_LUA: COPY win32\\lua5.1\\include\\*.* \"$LUA_INCDIR\"); makedist:121-149 ships git ls-files incl. win32/ in the -win32.zip",
+        "mechanism": "packaged and installed by the Windows installer: install.bat copies the whole bundled include dir into LUA_INCDIR when it installs the bundled Lua 5.1; the legacy win32 release zip carries it",
+        "searched": "git grep win32 / basename / stem across install.bat, makedist, Makefiles, .github/workflows, spec/, docs/",
+        "tag": "generic"
+      },
+      "path": "win32/lua5.1/include/lua.h",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001 (INSTALL_LUA: COPY win32\\lua5.1\\include\\*.* \"$LUA_INCDIR\"); makedist:121-149 ships git ls-files incl. win32/ in the -win32.zip",
+        "mechanism": "packaged and installed by the Windows installer (copy of the whole include dir)",
+        "searched": "git grep win32 / basename / stem across install.bat, makedist, Makefiles, .github/workflows, spec/, docs/",
+        "tag": "generic"
+      },
+      "path": "win32/lua5.1/include/lua.hpp",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001 (INSTALL_LUA: COPY win32\\lua5.1\\include\\*.* \"$LUA_INCDIR\"); makedist:121-149 ships git ls-files incl. win32/ in the -win32.zip",
+        "mechanism": "packaged and installed by the Windows installer (copy of the whole include dir); included by lua.h",
+        "searched": "git grep win32 / basename / stem across install.bat, makedist, Makefiles, .github/workflows, spec/, docs/",
+        "tag": "generic"
+      },
+      "path": "win32/lua5.1/include/luaconf.h",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001",
+        "mechanism": "bundled Lua header copied by the Windows installer into LUA_INCDIR (wildcard copy of the include dir)",
+        "searched": "git grep luaconf, lua5.1, win32 paths; install.bat; binary/Makefile.windows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1001 (INSTALL_LUA: COPY win32\\lua5.1\\include\\*.* \"$LUA_INCDIR\"); makedist:121-149 ships git ls-files incl. win32/ in the -win32.zip",
+        "mechanism": "packaged and installed by the Windows installer (copy of the whole include dir); included by lua.hpp",
+        "searched": "git grep win32 / basename / stem across install.bat, makedist, Makefiles, .github/workflows, spec/, docs/",
+        "tag": "generic"
+      },
+      "path": "win32/lua5.1/include/lualib.h",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

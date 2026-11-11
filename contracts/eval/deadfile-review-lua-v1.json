@@ -1,0 +1,2202 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 4,
+      "same_side": 4,
+      "share": 1.0
+    },
+    "first_named": {
+      "rows": 18,
+      "same_side": 18,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 4,
+      "same_side": 4,
+      "share": 1.0
+    },
+    "overall": {
+      "rows": 26,
+      "same_side": 26,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "lua",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "platform/kobo/enable-wifi.sh:85 platform/kobo/disable-wifi.sh:81 platform/kobo/koreader.sh:202",
+        "mechanism": "run by path via luajit from the Kobo shell scripts (wifi power toggle, startup)",
+        "searched": "git grep ntx_io",
+        "tag": "named"
+      },
+      "path": "frontend/device/kobo/ntx_io.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:813 frontend/ui/widget/virtualkeyboard.lua:857",
+        "mechanism": "virtual keyboard maps language code to layout name and require()s ui/data/keyboardlayouts/<name>",
+        "searched": "git grep keyboardlayouts and the layout name across *.lua",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/cs_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:814 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> da_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/da_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:816 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> el_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/el_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:817 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> en_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/en_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:818 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> es_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/es_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua:2",
+        "mechanism": "dofile() by literal path from a keyboard layout",
+        "searched": "git grep keypopup/",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ar_popup.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua:2 (ar_keyboard chosen at frontend/ui/widget/virtualkeyboard.lua:810,857)",
+        "mechanism": "dofile by path from the Arabic keyboard layout, which virtualkeyboard selects by language",
+        "searched": "git grep ar_popup/keypopup; virtualkeyboard.lua layout table",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/en_keyboard.lua:1",
+        "mechanism": "dofile() by literal path from a keyboard layout",
+        "searched": "git grep keypopup/",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/en_popup.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua:1",
+        "mechanism": "dofile by path from keyboard layouts",
+        "searched": "git grep en_popup/keypopup",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/ml_keyboard.lua:1",
+        "mechanism": "dofile() by literal path from a keyboard layout",
+        "searched": "git grep keypopup/",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ml_popup.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/ro_keyboard.lua:2 frontend/ui/widget/virtualkeyboard.lua:830",
+        "mechanism": "dofile'd by path from ro_keyboard.lua (lang ro)",
+        "searched": "git grep ro_popup",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ro_popup.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/ru_keyboard.lua:1",
+        "mechanism": "dofile() by literal path from a keyboard layout",
+        "searched": "git grep keypopup/",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ru_popup.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/sr_keyboard.lua:2 frontend/ui/widget/virtualkeyboard.lua:833",
+        "mechanism": "dofile'd by path from sr_keyboard.lua (lang sr)",
+        "searched": "git grep sr_popup",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sr_popup.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:826 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> ml_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/ml_keyboard.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:826 frontend/ui/widget/virtualkeyboard.lua:857",
+        "mechanism": "required by name built from lang_to_keyboard_layout table",
+        "searched": "git grep ml_keyboard; virtualkeyboard loader",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:827 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> no_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/no_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:828 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> pl_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/pl_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:829 frontend/ui/widget/virtualkeyboard.lua:857",
+        "mechanism": "virtual keyboard maps language code to layout name and require()s ui/data/keyboardlayouts/<name>",
+        "searched": "git grep keyboardlayouts and the layout name across *.lua",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/pt_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:830 frontend/ui/widget/virtualkeyboard.lua:857",
+        "mechanism": "virtual keyboard maps language code to layout name and require()s ui/data/keyboardlayouts/<name>",
+        "searched": "git grep keyboardlayouts and the layout name across *.lua",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/ro_keyboard.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:830 frontend/ui/widget/virtualkeyboard.lua:857",
+        "mechanism": "required by name built from lang_to_keyboard_layout table",
+        "searched": "git grep ro_keyboard; virtualkeyboard loader",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:837 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> uk_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/uk_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:838 frontend/ui/widget/virtualkeyboard.lua:857 frontend/ui/elements/menu_keyboard_layout.lua:97",
+        "mechanism": "virtual keyboard loads the layout module by a path built from the language table (lang -> vi_keyboard) and require(\"ui/data/keyboardlayouts/\" .. keyboard_layout)",
+        "searched": "git grep keyboardlayouts / basename / stem across the tree",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/vi_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/virtualkeyboard.lua:839 frontend/ui/widget/virtualkeyboard.lua:857",
+        "mechanism": "virtual keyboard maps language code to layout name and require()s ui/data/keyboardlayouts/<name>",
+        "searched": "git grep keyboardlayouts and the layout name across *.lua",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/zh_CN_keyboard.lua:9 frontend/ui/widget/virtualkeyboard.lua:840",
+        "mechanism": "dofile'd by path from zh_CN_keyboard.lua, loaded for lang zh_CN",
+        "searched": "git grep zh_pinyin_data",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/zh_pinyin_data.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/zh_CN_keyboard.lua:9",
+        "mechanism": "dofile by path from zh_CN keyboard (selected at virtualkeyboard.lua:840)",
+        "searched": "git grep zh_pinyin_data",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua:76 frontend/ui/widget/virtualkeyboard.lua:839",
+        "mechanism": "dofile'd by path from zh_keyboard.lua, which the virtual keyboard loads for lang zh",
+        "searched": "git grep zh_stroke_data",
+        "tag": "named"
+      },
+      "path": "frontend/ui/data/keyboardlayouts/zh_stroke_data.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua:76",
+        "mechanism": "dofile by path from zh keyboard (selected at virtualkeyboard.lua:839)",
+        "searched": "git grep zh_stroke_data",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "unused",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "only mentioned in comments (httpinspector main.lua:96 commented-out require; simpletcpserver.lua:9 comment); no live require",
+        "searched": "git grep streammessagequeueserver / StreamMessageQueueServer over whole tree incl. spec/, plugins/, make/, CI; only comments and the file itself",
+        "tag": null
+      },
+      "path": "frontend/ui/message/streammessagequeueserver.lua",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "only a commented-out require and a comment mention it",
+        "searched": "git grep streammessagequeueserver / StreamMessageQueueServer (hits: plugins/httpinspector.koplugin/main.lua:96 commented out, frontend/ui/message/simpletcpserver.lua:9 comment); git grep ui/message/ loaders; Makefiles, make/*.mk, .ci, spec",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "unsure",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "frontend/ui/widget/buttondialogtitle.lua:1",
+        "mechanism": "deprecation shim (logs a warning, returns ui/widget/buttondialog); nothing in the repo requires it, but it exists so third-party plugins (loaded from extra plugin paths) that still require ui/widget/buttondialogtitle keep working; whether that external API counts cannot be settled from the tree",
+        "searched": "git grep -i buttondialogtitle over the whole tree (only the file itself); plugins/, spec/, frontend/, make/, docs",
+        "tag": null
+      },
+      "path": "frontend/ui/widget/buttondialogtitle.lua",
+      "second": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "deprecated compatibility shim (its own header says use ButtonDialog) re-exporting ui/widget/buttondialog; nothing in the tree requires it, but it is kept for out-of-tree plugins/user patches, which cannot be checked from the repo",
+        "searched": "git grep buttondialogtitle / ButtonDialogTitle (only the file itself); git grep ui/widget/ dynamic loaders; spec, plugins, Makefiles",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "unsure"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "platform/remarkable/koreader.sh:175 make/remarkable.mk:16",
+        "mechanism": "run by name from the reMarkable launcher script and installed by the reMarkable make target",
+        "searched": "git grep qtfb_keep_alive",
+        "tag": "named"
+      },
+      "path": "platform/remarkable/qtfb_keep_alive.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/SSH.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/autosuspend.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader convention: every *.koplugin directory's _meta.lua is dofile'd by path",
+        "searched": "git grep _meta across lua; read pluginloader.lua",
+        "tag": "named"
+      },
+      "path": "plugins/autowarmth.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader convention: every *.koplugin directory's _meta.lua is dofile'd by path",
+        "searched": "git grep _meta across lua; read pluginloader.lua",
+        "tag": "named"
+      },
+      "path": "plugins/cloudstorage.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/coverbrowser.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/coverimage.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader convention: every *.koplugin directory's _meta.lua is dofile'd by path",
+        "searched": "git grep _meta across lua; read pluginloader.lua",
+        "tag": "named"
+      },
+      "path": "plugins/exporter.koplugin/_meta.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209",
+        "mechanism": "plugin loader opens <plugin_root>/_meta.lua by convention",
+        "searched": "git grep _meta",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "unused",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "",
+        "searched": "git grep for find-keyboard, find_keyboard, FindKeyboard, externalkeyboard.koplugin/find across the whole tree (only hit: a comment in plugins/externalkeyboard.koplugin/main.lua:370 saying main.lua reimplements FindKeyboard:find via FBInkInput); read main.lua and keyboard_layout.lua dofile/loadfile/require calls (event_map_keyboard.lua, keyboard_layout.lua, keyboard_layouts/ only); pluginloader loads only main.lua/_meta.lua; Makefile copies plugins/ wholesale and luacheck lints plugins/ but nothing names this file",
+        "tag": null
+      },
+      "path": "plugins/externalkeyboard.koplugin/find-keyboard.lua",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "superseded by FBInkInput-based findKeyboards; only a comment names FindKeyboard",
+        "searched": "git grep find-keyboard / find%-keyboard / FindKeyboard (only plugins/externalkeyboard.koplugin/main.lua:370 comment); main.lua dofile/require list; keyboard_layout.lua; Makefiles, make/*.mk, spec",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/main.lua:218 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin walks keyboard_layouts/ with lfs.dir and loadfile()s every <name>.lua for its layout menu; layouts also loaded by name",
+        "searched": "git grep keyboard_layouts; plugin main.lua, keyboard_layout.lua, tools/xkb_to_lua.lua",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/be.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "directory walk of keyboard_layouts lists and loadfile()s each *.lua",
+        "searched": "git grep keyboard_layouts; main.lua loader",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin enumerates keyboard_layouts/ with lfs.dir for the layout menu and loadfile's the chosen layout by name",
+        "searched": "git grep keyboard_layouts, lfs.dir, loadfile in the plugin",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/br.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/main.lua:218 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin walks keyboard_layouts/ with lfs.dir and loadfile()s every <name>.lua for its layout menu; layouts also loaded by name",
+        "searched": "git grep keyboard_layouts; plugin main.lua, keyboard_layout.lua, tools/xkb_to_lua.lua",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/cz.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin enumerates keyboard_layouts/ with lfs.dir for the layout menu and loadfile's the chosen layout by name",
+        "searched": "git grep keyboard_layouts, lfs.dir, loadfile in the plugin",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/es.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "directory walk of keyboard_layouts lists and loadfile()s each *.lua",
+        "searched": "git grep keyboard_layouts; main.lua loader",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/main.lua:218 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin walks keyboard_layouts/ with lfs.dir and loadfile()s every <name>.lua for its layout menu; layouts also loaded by name",
+        "searched": "git grep keyboard_layouts; plugin main.lua, keyboard_layout.lua, tools/xkb_to_lua.lua",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/fr.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/main.lua:218 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin walks keyboard_layouts/ with lfs.dir and loadfile()s every <name>.lua for its layout menu; layouts also loaded by name",
+        "searched": "git grep keyboard_layouts; plugin main.lua, keyboard_layout.lua, tools/xkb_to_lua.lua",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/pl.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/main.lua:218 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin walks keyboard_layouts/ with lfs.dir and loadfile()s every <name>.lua for its layout menu; layouts also loaded by name",
+        "searched": "git grep keyboard_layouts; plugin main.lua, keyboard_layout.lua, tools/xkb_to_lua.lua",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/uk.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "directory walk of keyboard_layouts lists and loadfile()s each *.lua",
+        "searched": "git grep keyboard_layouts; main.lua loader",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin enumerates keyboard_layouts/ with lfs.dir for the layout menu and loadfile's the chosen layout by name",
+        "searched": "git grep keyboard_layouts, lfs.dir, loadfile in the plugin",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-altgr-intl.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/main.lua:200",
+        "mechanism": "directory walk of keyboard_layouts lists and loadfile()s each *.lua (pattern ^[%w_-]+%.lua$ admits the hyphen)",
+        "searched": "git grep keyboard_layouts; main.lua loader",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/main.lua:199 plugins/externalkeyboard.koplugin/keyboard_layout.lua:54",
+        "mechanism": "external keyboard plugin enumerates keyboard_layouts/ with lfs.dir for the layout menu and loadfile's the chosen layout by name",
+        "searched": "git grep keyboard_layouts, lfs.dir, loadfile in the plugin",
+        "tag": "generic"
+      },
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-intl.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/gestures.koplugin/_meta.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209",
+        "mechanism": "plugin loader opens <plugin_root>/_meta.lua by convention",
+        "searched": "git grep _meta",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/hotkeys.koplugin/main.lua:120",
+        "mechanism": "opened by path (joinPath(self.path, \"defaults.lua\")) via LuaSettings in the hotkeys plugin",
+        "searched": "grep defaults in plugins/hotkeys.koplugin/main.lua",
+        "tag": "named"
+      },
+      "path": "plugins/hotkeys.koplugin/defaults.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/httpinspector.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/movetoarchive.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/perceptionexpander.koplugin/_meta.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209",
+        "mechanism": "plugin loader opens <plugin_root>/_meta.lua by convention",
+        "searched": "git grep _meta",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader convention: every *.koplugin directory's _meta.lua is dofile'd by path",
+        "searched": "git grep _meta across lua; read pluginloader.lua",
+        "tag": "named"
+      },
+      "path": "plugins/readtimer.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/terminal.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "frontend/pluginloader.lua:209 frontend/pluginloader.lua:253",
+        "mechanism": "plugin loader builds <plugin_root>/_meta.lua for every *.koplugin directory and dofile()s it (and loads it in place of main.lua when the plugin is disabled)",
+        "searched": "pluginloader.lua discovery/_load; git grep for _meta",
+        "tag": "named"
+      },
+      "path": "plugins/wallabag.koplugin/_meta.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "make/emulator.mk:55",
+        "mechanism": "run by name in the coverage-run make target",
+        "searched": "git grep merge_luacov",
+        "tag": "named"
+      },
+      "path": "tools/merge_luacov_stats.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "make/emulator.mk:55",
+        "mechanism": "run by name from the coverage make target",
+        "searched": "git grep merge_luacov",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/keyboard_layouts/br.lua:1 make/gettext.mk:33",
+        "mechanism": "maintainer generator for the committed external-keyboard layout tables (each names it as its generator; default output dir is that folder); also swept into the gettext source list by make/gettext.mk's find over tools/*.lua",
+        "searched": "git grep xkb_to_lua, tools/ in Makefile, make/*.mk, doc/*.md, .ci; no CI or make target runs it by name",
+        "tag": "named"
+      },
+      "path": "tools/xkb_to_lua.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plugins/externalkeyboard.koplugin/keyboard_layouts/be.lua:1",
+        "mechanism": "maintainer generator for the committed external-keyboard layouts; every generated layout names it as its source (no build/CI runs it)",
+        "searched": "git grep xkb_to_lua (only generated headers and the file itself); Makefiles, make/*.mk, kodev, .ci, .github",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "all:5; testes/packtests:7",
+        "mechanism": "the test-suite entry point, run by the root script 'all' (../lua -W all.lua)",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/all.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "all:5 testes/packtests:7",
+        "mechanism": "test driver run by the top-level all script; also packed by packtests",
+        "searched": "git grep all.lua",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:173; all:5; testes/packtests:9",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/attrib.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:198; all:5; testes/packtests:11",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/bitwise.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:198 testes/packtests:11",
+        "mechanism": "dofile'd by the test driver",
+        "searched": "git grep bitwise",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/bitwise.lua:6; testes/all.lua:198; testes/packtests:12",
+        "mechanism": "loaded as a module by bitwise.lua (require \"bwcoercion\"), which all.lua runs",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/bwcoercion.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:176; all:5; testes/packtests:16",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/constructs.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:193; all:5; testes/packtests:17",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/coroutine.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:184; all:5; testes/packtests:18",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/cstack.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:167; all:5; testes/packtests:19",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/db.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:190; all:5; testes/packtests:21",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/events.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:200; all:5; testes/packtests:22",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/files.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:164; all:5; testes/packtests:23",
+        "mechanism": "loaded by name by the test driver (loadfile('gc.lua')); also packed by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/gc.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:174; all:5; testes/packtests:24",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/gengc.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:194; all:5; testes/packtests:25",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/goto.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/packtests:26",
+        "mechanism": "not run by all.lua or any script (manual heavy test); but listed by name in the test-tarball packaging script, whose tar --create would fail without it",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/heavy.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/packtests:26",
+        "mechanism": "shipped in the test-suite tarball list (run manually, not from all.lua)",
+        "searched": "git grep heavy (all.lua does not load it)",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:175; all:5; testes/packtests:28",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/locals.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:175",
+        "mechanism": "test file run by name by the test-suite driver all.lua",
+        "searched": "git grep 'locals' across the clone",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:196; all:5; testes/packtests:30",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/math.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:197; all:5; testes/packtests:34",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/sort.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:172; all:5; testes/packtests:36",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/tpack.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:161; testes/packtests:37",
+        "mechanism": "loaded as a module by the test driver (require\"tracegc\" from testes/)",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/tracegc.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "testes/all.lua:199; all:5; testes/packtests:40",
+        "mechanism": "run by name by the test-suite driver all.lua (dofile), which the root script 'all' runs; also packed into the test tarball by testes/packtests",
+        "searched": "git grep -n for basename and stem across the clone; read testes/all.lua (runner), root script 'all', testes/packtests, makefile, testes/libs/makefile, README.md, .gitignore; no CI workflows or package manifests exist in the tree",
+        "tag": "named"
+      },
+      "path": "testes/verybig.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/build_spec.lua:310",
+        "mechanism": "test fixture opened by path as a rockspec source URL (file://fixtures_dir/a_rock.lua) in build_spec",
+        "searched": "git grep a_rock.lua over spec/ and fixtures rockspecs",
+        "tag": "named"
+      },
+      "path": "spec/fixtures/a_rock.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "expanded copy of the contents of spec/fixtures/busted_project-0.1.tar.gz; tests use the tarball and a_repo/busted_project-0.1-1.src.rock, never this directory",
+        "searched": "git grep busted_project, sum.lua, \"busted_project/\"; spec/unit/fetch_spec.lua:402-407 checks sum.lua extracted from the tarball into a temp dir; spec/test_spec.lua:47-49 downloads/unpacks the src.rock; mock-server.lua:66 /file/{name:[^/]+} cannot serve a subdirectory path; .busted excludes sum_spec; test_env.lua copy_dir calls (only git_repo, double_deploy_type, mixed_deploy_type); GNUmakefile/Makefile/.github/workflows; no script rebuilds the tarball from the directory",
+        "tag": null
+      },
+      "path": "spec/fixtures/busted_project/sum.lua",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "unpacked source copy of the tracked fixture tarball spec/fixtures/busted_project-0.1.tar.gz; tests unpack the tarball (fetch_spec.lua:406 checks the extracted copy in a tmp dir), never read this directory; .busted:5 excludes the fixture's sum_spec from runs",
+        "searched": "git grep busted_project, sum.lua, \"sum\"; .busted config; spec/util/test_env.lua fixtures_dir uses; all spec/*.lua fixtures_dir paths (no copy_dir of busted_project); .github/workflows/test.yml; rockspecs reference sum.lua only as the module inside the tarball",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "unused_convention"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/fixtures/double_deploy_type/double_deploy_type-0.1.0-1.rockspec:18 ddt = \"ddt/ddt1.lua\"; spec/make_spec.lua:187; spec/make_spec.lua:197",
+        "mechanism": "test fixture installed by the 0.1.0 fixture rockspec; make_spec copies the directory and runs luarocks make, asserting the deployed ddt.lua returns ddt1",
+        "searched": "git grep ddt1, double_deploy_type",
+        "tag": "named"
+      },
+      "path": "spec/fixtures/double_deploy_type/ddt1.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/fixtures/double_deploy_type/double_deploy_type-0.2.0-1.rockspec:18 ddt = \"ddt/ddt2.lua\"; spec/make_spec.lua:187 copy_dir(.../double_deploy_type); spec/make_spec.lua:205",
+        "mechanism": "test fixture installed by the 0.2.0 fixture rockspec; make_spec copies the directory and runs luarocks make on that rockspec, asserting the deployed ddt.lua returns ddt2",
+        "searched": "git grep ddt2, double_deploy_type",
+        "tag": "named"
+      },
+      "path": "spec/fixtures/double_deploy_type/ddt2.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/fixtures/legacyexternalcommand-0.1-1.rockspec:4 (url .../file/legacyexternalcommand.lua); spec/util/mock-server.lua:73-74 (opens basedir/name, basedir = spec/fixtures); spec/external_spec.lua:16",
+        "mechanism": "test fixture served by the test mock server: the fixture rockspec's source.url fetches it from localhost:8080/file/, which the mock server reads from spec/fixtures; external_spec installs that rockspec and runs the command",
+        "searched": "git grep legacyexternalcommand; read mock-server.lua, external_spec.lua, test_env.lua mock_server_init",
+        "tag": "named"
+      },
+      "path": "spec/fixtures/legacyexternalcommand.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/make_spec.lua:286 spec/fixtures/mixed_deploy_type/mixed_deploy_type-0.1.0-1.rockspec",
+        "mechanism": "test fixture: make_spec copies the fixture directory and builds its rockspec, which lists mdt/mdt.lua as a module",
+        "searched": "git grep mixed_deploy_type / mdt over spec/",
+        "tag": "named"
+      },
+      "path": "spec/fixtures/mixed_deploy_type/mdt.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "spec/util/test_env.lua:1021 local mock_server = Q(dir_path(testing_paths.util_dir, \"mock-server.lua\"))",
+        "mechanism": "test mock server launched by the test helper by path",
+        "searched": "git grep mock-server / mock_server",
+        "tag": "named"
+      },
+      "path": "spec/util/mock-server.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/admin/cmd/add.lua:12 local cache = require(\"luarocks.admin.cache\")",
+        "mechanism": "required module of luarocks-admin commands add / refresh_cache / remove",
+        "searched": "git grep luarocks.admin.cache",
+        "tag": "named"
+      },
+      "path": "src/luarocks/admin/cache.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks-admin:14 remove = \"luarocks.admin.cmd.remove\"",
+        "mechanism": "command module registered by name in the luarocks-admin command table (luarocks-admin remove)",
+        "searched": "git grep luarocks.admin.cmd.remove",
+        "tag": "named"
+      },
+      "path": "src/luarocks/admin/cmd/remove.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/cmd/build.lua:17 local build = require(\"luarocks.build\"); src/luarocks/cmd/make.lua:10; GNUmakefile:128",
+        "mechanism": "required module of the luarocks CLI (build/make/unpack commands); also installed by the GNUmakefile install glob",
+        "searched": "git grep luarocks.build\" outside .tl; GNUmakefile install rules",
+        "tag": "named"
+      },
+      "path": "src/luarocks/build.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:30",
+        "mechanism": "command module loaded by name from the `luarocks` command table (`luarocks config`)",
+        "searched": "git grep luarocks.cmd.config over src/bin and src/",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/config.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:20 src/luarocks/cmd/build.lua:19",
+        "mechanism": "command module required by name: `luarocks make` dispatch table, and required by cmd/build.lua",
+        "searched": "git grep luarocks.cmd.make over src/, src/bin",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/make.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:13 pack = \"luarocks.cmd.pack\"",
+        "mechanism": "command module registered by name in the luarocks command table (luarocks pack)",
+        "searched": "git grep luarocks.cmd.pack",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/pack.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:27",
+        "mechanism": "command module loaded by name from the `luarocks` command table (`luarocks purge`)",
+        "searched": "git grep luarocks.cmd.purge over src/bin and src/",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/purge.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:27",
+        "mechanism": "command module required by the luarocks CLI command table",
+        "searched": "git grep luarocks.cmd.purge",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:19 remove = \"luarocks.cmd.remove\"",
+        "mechanism": "command module registered by name in the luarocks command table (luarocks remove)",
+        "searched": "git grep luarocks.cmd.remove",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/remove.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:17",
+        "mechanism": "command module loaded by name from the `luarocks` command table (`luarocks search`)",
+        "searched": "git grep luarocks.cmd.search over src/bin and src/",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/search.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:17",
+        "mechanism": "command module required by the luarocks CLI command table",
+        "searched": "git grep luarocks.cmd.search",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:32 test = \"luarocks.cmd.test\"",
+        "mechanism": "command module registered by name in the luarocks command table (luarocks test)",
+        "searched": "git grep luarocks.cmd.test",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/test.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:14",
+        "mechanism": "command module loaded by name from the `luarocks` command table (`luarocks unpack`)",
+        "searched": "git grep luarocks.cmd.unpack over src/bin and src/",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/unpack.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:31",
+        "mechanism": "command module loaded by name from the `luarocks` command table (`luarocks which`)",
+        "searched": "git grep luarocks.cmd.which over src/bin and src/",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/which.lua",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:31",
+        "mechanism": "command module required by the luarocks CLI command table",
+        "searched": "git grep luarocks.cmd.which",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:26 src/luarocks/cmd/init.lua:13",
+        "mechanism": "command module loaded by name from the `luarocks` command table and required by cmd/init.lua",
+        "searched": "git grep luarocks.cmd.write_rockspec over src/",
+        "tag": "named"
+      },
+      "path": "src/luarocks/cmd/write_rockspec.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/fs.lua:132 load_platform_fns(\"luarocks.fs.%s\", inits); src/luarocks/fs.lua:63 pcall(require, module_name)",
+        "mechanism": "loaded by string-built module name: fs.init loads luarocks.fs.<platform> for each platform, 'unix' among them",
+        "searched": "git grep luarocks.fs.unix (no literal require); read src/luarocks/fs.lua loader; GNUmakefile:128 installs it",
+        "tag": "generic"
+      },
+      "path": "src/luarocks/fs/unix.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/fs.lua:138",
+        "mechanism": "loaded by a module name built from a format string: load_platform_fns(\"luarocks.fs.%s.tools\") with platform unix",
+        "searched": "git grep fs.unix.tools / unix.tools / \"tools\" over *.lua; read fs.lua loader",
+        "tag": "named"
+      },
+      "path": "src/luarocks/fs/unix/tools.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/bin/luarocks:6 local loader = require(\"luarocks.loader\"); docs/using_luarocks.md:126; GNUmakefile:172",
+        "mechanism": "required by both CLI entry scripts and documented public module (lua -lluarocks.loader); explicitly installed by GNUmakefile",
+        "searched": "git grep luarocks.loader / luarocks/loader",
+        "tag": "named"
+      },
+      "path": "src/luarocks/loader.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/repo_writer.lua:7 src/luarocks/admin/cmd/make_manifest.lua:7",
+        "mechanism": "required by admin commands and repo_writer",
+        "searched": "git grep luarocks.manif.writer over *.lua",
+        "tag": "named"
+      },
+      "path": "src/luarocks/manif/writer.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "GNUmakefile:128 find src/luarocks/ -type f -name '*.lua' ... INSTALL_DATA; CHANGELOG.md:1195 (luarocks.loader superseding luarocks.require)",
+        "mechanism": "packaged public backward-compatibility module luarocks.require (one line: return require(\"luarocks.loader\")), the legacy module name superseded by luarocks.loader; installed with every src/luarocks/*.lua by make install, so deleting it removes an installed module users may require",
+        "searched": "git grep luarocks.require (only CHANGELOG mentions, no in-repo require); GNUmakefile install rules; luarocks-dev-1.rockspec (no module list)",
+        "tag": "named"
+      },
+      "path": "src/luarocks/require.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/cmd/upload.lua:19",
+        "mechanism": "required by the upload command",
+        "searched": "git grep luarocks.upload.api over *.lua",
+        "tag": "named"
+      },
+      "path": "src/luarocks/upload/api.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/luarocks/cmd/upload.lua:152 src/luarocks/upload/api.lua:30",
+        "mechanism": "required by the upload command and upload/api.lua",
+        "searched": "git grep upload.multipart over *.lua",
+        "tag": "named"
+      },
+      "path": "src/luarocks/upload/multipart.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "install.bat:1226 install.bat:1015",
+        "mechanism": "Windows installer copies the win32 directory's files (COPY win32 *.*) and runs LuaRocks.reg.lua by name to expand the registry template",
+        "searched": "git grep LuaRocks.reg across tree",
+        "tag": "named"
+      },
+      "path": "win32/LuaRocks.reg.lua",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

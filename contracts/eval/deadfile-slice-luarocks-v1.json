@@ -1,0 +1,1347 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "luarocks",
+    "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "CODE_OF_CONDUCT.md",
+      "sha256": "fb92fe03a368989307281a68f5bdfe3dfee4acc11ed73cbd70e44c9d6e5cb450",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "SECURITY.md",
+      "sha256": "40ed3c673d06f80ca6e5b343c121f000d7b627a417e15a22846b50242b273859",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 14,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/a_rock.lua",
+      "sha256": "1232d8379de77e154ca533689af2e42629dd7574bda5a0a390799849f07607c3",
+      "stem_spelled": 42,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/busted_project/sum.lua",
+      "sha256": "991cbbf2c741ba28e51b7db2e1e7cb94d9ab36a7eb979a05787db9c40dcc98ce",
+      "stem_spelled": 14,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/double_deploy_type/ddt1.lua",
+      "sha256": "1436d4652db725b575166d21216c4a11c3535eb5adae1175f998b2a3145be259",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/double_deploy_type/ddt2.lua",
+      "sha256": "b7ce9ccbb53d54ca2893160fda18c6c3791d41e5412497e9ee462e524bc24ab1",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "spec/fixtures/legacyexternalcommand.lua",
+      "sha256": "3d65440844f789dedd2dfe8b5091f82051c0bbf072e562f98b0fa875daa560e9",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/mixed_deploy_type/mdt.lua",
+      "sha256": "40adbbe99b5eef9898983528278d199e43ba8485c29ecb72df9da340afc16673",
+      "stem_spelled": 4,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "preproc_def"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "spec/fixtures/with_external_dep/foo/foo.h",
+      "sha256": "50120b669b880563d8b7ab9502a7919eeffe9943ee8fc2714185cbc5e6c56997",
+      "stem_spelled": 42,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "spec"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "hash_bang_line",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/util/mock-server.lua",
+      "sha256": "94e22dea688bf158a2e5505e6059cf4a4b7259444420ffffc45b12d14306764d",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "src/luarocks/admin/cache.lua",
+      "sha256": "431aa016cde186b130ee2d795e6489115f0eb90455ff8592f5f900b2136942d7",
+      "stem_spelled": 33,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/admin/cmd/add.lua",
+      "sha256": "d92969e055a8cd7a67af5fb8336ace59eccfafc92648f217e4d2d838516e77fd",
+      "stem_spelled": 43,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/admin/cmd/make_manifest.lua",
+      "sha256": "c17849469a461299989870c6e8a23b918806896d123e0a6189755476139cd5f5",
+      "stem_spelled": 14,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/admin/cmd/refresh_cache.lua",
+      "sha256": "28fd7fe750fb6efd1844bdd8ddc6d5494c283e89192d94fffc84e16fcc39133f",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/admin/cmd/remove.lua",
+      "sha256": "d1f7f3fef94aeed0b419e79fca3090ad164614d661237eb1df6b99959ab4c266",
+      "stem_spelled": 90,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/admin/index.lua",
+      "sha256": "73d97bb55c8ce073c112f548cbecca9360d44e33e4734df6935f8e2d69e56518",
+      "stem_spelled": 29,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "do_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 12,
+      "path": "src/luarocks/build.lua",
+      "sha256": "481466b8a0f353584efb2872fc5baf1ff32494cc701b85565eacd988dd3fad4b",
+      "stem_spelled": 133,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/build/make.lua",
+      "sha256": "178d7d9bf276f59612320f9d340e2117ed1aedf91cbadaf3ef4990aa947c1af9",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "do_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 9,
+      "path": "src/luarocks/cmd.lua",
+      "sha256": "896fc52877ec46f02f26adf87fd4f70a136128102d297e6f008d64812c6eb022",
+      "stem_spelled": 77,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 13,
+      "path": "src/luarocks/cmd/build.lua",
+      "sha256": "c5747e9677cb073bbf6bc31372f031b4ede38d19d1c4056b5283e87137b99e06",
+      "stem_spelled": 133,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/config.lua",
+      "sha256": "26a530e06f8b0547cc26c39e3f0154351162481b63ea525aafa7efd1cd92ad2a",
+      "stem_spelled": 92,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/cmd/doc.lua",
+      "sha256": "89550bad74c61259b825a6c6cc09cdc1f244bf1e943b859ce4c67f5bcae54f64",
+      "stem_spelled": 27,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/cmd/download.lua",
+      "sha256": "26c994d094301b9cdee3661e0b3dfd57c3c7ad38b4ba3d507d078d2ea40e0223",
+      "stem_spelled": 45,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/cmd/init.lua",
+      "sha256": "618f54016e6cb47b50acf8661a70935f2d7fa9098e07abaa6ea921e1350fb36d",
+      "stem_spelled": 61,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 13,
+      "path": "src/luarocks/cmd/install.lua",
+      "sha256": "37b939133662312d13ce91599f75e7787df6248f485853c95d62bf8c5bfb2f00",
+      "stem_spelled": 90,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/cmd/lint.lua",
+      "sha256": "b5d1d25db235197e454696a3a89d46840381ad4ca2b7ae5c8673c45338cb2942",
+      "stem_spelled": 9,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/cmd/list.lua",
+      "sha256": "682e34e12b6d4d7171b064af34c91c25a5d452bd65826f132c83877a1e3e7984",
+      "stem_spelled": 56,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 9,
+      "path": "src/luarocks/cmd/make.lua",
+      "sha256": "c338199111550e953e58906cdbfbc30261089ef2f4529f13fb12c4be40b49c06",
+      "stem_spelled": 70,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/new_version.lua",
+      "sha256": "310a908bc07dc84f932e00fe28cf9ff3ca97bb098fb9b373f97d86060a340036",
+      "stem_spelled": 9,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/cmd/pack.lua",
+      "sha256": "5eaea6c387ba440e6082c499a1d6459a125d753ecd298df2e7fa29c46d31227c",
+      "stem_spelled": 42,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 10,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/cmd/path.lua",
+      "sha256": "2ce89b8c869fad56921753cfc4f4db02d2bfecdf1686d7f9c75ebef784ba76be",
+      "stem_spelled": 158,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/cmd/purge.lua",
+      "sha256": "000c4ed43c19b3b486b6abf401f2ba808b9e2a2e578c5d47b29a696fdbe33d09",
+      "stem_spelled": 8,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/remove.lua",
+      "sha256": "19eb9d9155d48d4000016767c7e18948739b7289c6a70b04938ed08d54bda92e",
+      "stem_spelled": 90,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "src/luarocks/cmd/search.lua",
+      "sha256": "75dc247adb6ae2ae444c95840bfc30e95573a03cdfa4262d3de57e36605f684d",
+      "stem_spelled": 49,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 10,
+      "path": "src/luarocks/cmd/show.lua",
+      "sha256": "e2bb46317792e361a12803e7df5bee5cb01500655a058a21411b79557c0af396",
+      "stem_spelled": 31,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 21,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/cmd/test.lua",
+      "sha256": "ec510b41752da9b9ba9d42c8e1dcb165e8de79e4f8e1b19a8fadecae823599f4",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/cmd/unpack.lua",
+      "sha256": "3cb8f32a1c4caf2e7b4e613e178f4c586e086b0e0891cf6a93541921dc39e3fe",
+      "stem_spelled": 42,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/upload.lua",
+      "sha256": "0af44601f944d082a70a2c301afa68195591df007f94222e1180168835899d45",
+      "stem_spelled": 23,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/cmd/which.lua",
+      "sha256": "2c4cafe1a217e722bec4c709a63d67890004553dbcad81dd090a7993d117b24d",
+      "stem_spelled": 74,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "do_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 9,
+      "path": "src/luarocks/cmd/write_rockspec.lua",
+      "sha256": "917c41143501b7b7eaf22dababaa8399906e8e34d481a01626e38f66abf4aad1",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "src/luarocks/config.lua",
+      "sha256": "b1b6dcdbf4e4b1afcf25d205d49d94fabb169049bec6988ce9c97df3af82ff2e",
+      "stem_spelled": 92,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "src/luarocks/core/types/rockspec.lua",
+      "sha256": "76b5d05548b932f8838d02cba1eb47fc317fd633d938be7e4c032117f242d497",
+      "stem_spelled": 209,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/download.lua",
+      "sha256": "20423bb6ff96a1b8f6c60aec117ee55596385887247fbdd03162cec93ef45e40",
+      "stem_spelled": 45,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/fs/linux.lua",
+      "sha256": "d8b2750398e8c4ee84d549a839439dad0f3085710c702c37189aa03a6bad482c",
+      "stem_spelled": 19,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/fs/lua.lua",
+      "sha256": "8f303cb6d086d26c0369b52f1f1f37b5e91440b54dbfdd17d0ec192cb859b072",
+      "stem_spelled": 193,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/fs/macosx.lua",
+      "sha256": "b85c0ff65d8b67ba65d100aced9130a7c78ac7f1f776418f957ad7e4606b384e",
+      "stem_spelled": 12,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/fs/tools.lua",
+      "sha256": "74c5e4a46e1439fab0e16423108ce615b37be58fa830f01e7fe02aa0da52dc2b",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "for_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "src/luarocks/fs/unix.lua",
+      "sha256": "9b525a659a507027eb8289aeb8d7efb6cf6bc0f4092c2f1152f6b3ab80f03c3f",
+      "stem_spelled": 29,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/fs/unix/tools.lua",
+      "sha256": "3331b5d700f1288d435082d6c12cde14a2f8b765d2b0b5601a981cd5c6ec8b16",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "src/luarocks/fs/win32.lua",
+      "sha256": "3e6aecc46b6920f152ed773833652c1c600ad97621f2cef21a6781d6db5071d8",
+      "stem_spelled": 20,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/fs/win32/tools.lua",
+      "sha256": "0d2410cdb5a99d476821c5e1f1be142472c3f0ce86e7811165a7c52958045c28",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 6,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "src/luarocks/loader.lua",
+      "sha256": "6f94b262ef4bbe10d7fbf94c3b374d92f0ecab8dab389949146c54e8eeb753f2",
+      "stem_spelled": 23,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 13,
+      "path": "src/luarocks/manif/writer.lua",
+      "sha256": "cb68fd7eb5f34b4b182c9d90c422b441ab61a806f4816c4a885b137f9cb44080",
+      "stem_spelled": 13,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 11,
+      "path": "src/luarocks/pack.lua",
+      "sha256": "9db7f0e74f8210c9cdcc577e4a52b55413cd85ff76f02e1404a300faad71dee5",
+      "stem_spelled": 42,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 10,
+      "path": "src/luarocks/remove.lua",
+      "sha256": "934c86d064f46b1a4591762f0f88deddcb18970fe3b497646bc671402c24d2f5",
+      "stem_spelled": 90,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "src/luarocks/repo_writer.lua",
+      "sha256": "550d138fc9ae5673975d6aada01e22754902664acd288dac545211041676a616",
+      "stem_spelled": 9,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/repos.lua",
+      "sha256": "f8e5b18c14ffef5b9e55564b0beab07280ac7b5ced130f640bd307d40ec5982a",
+      "stem_spelled": 25,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "src/luarocks/require.lua",
+      "sha256": "04371d314081a3975f1ce52d79ba28de2f0906f796054740ddbc3d06b4ea9fc9",
+      "stem_spelled": 255,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/tools/zip.lua",
+      "sha256": "2721a9c542548dc623b9e4a109101d0caaac9d2a4dd13a7029c65cf207457693",
+      "stem_spelled": 30,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/upload/api.lua",
+      "sha256": "eef4beb557c4b6de2b8dd1fcff038232e080ee8c484fa6ee4f00cdd288aeac35",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "src/luarocks/upload/multipart.lua",
+      "sha256": "f2a849c872431a9756aa43559c2f59ee1520e5157e6cec9b3f8d89c7517325ec",
+      "stem_spelled": 6,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tlconfig.lua",
+      "sha256": "6735b9441df57d79006e5f64a78e541af0e37fdef30f5a7c46f144984f3ca986",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "for_statement",
+        "function_call",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "win32/LuaRocks.reg.lua",
+      "sha256": "954c1caf6f8d67737d0ef888eca9f050199ade1ed64425b4756ced554240d91d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 8,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 1,
+      "path": "win32/lua5.1/include/lauxlib.h",
+      "sha256": "c741f9c1587f29fd08a79acbe0c46884768a47f89bee4147669f774c5cf50fc0",
+      "stem_spelled": 9,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 25,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 1,
+      "path": "win32/lua5.1/include/lua.h",
+      "sha256": "470551c185f058360f8d0f9e5c54a29a3950f78af6a93f3fe9e4039a380c7b87",
+      "stem_spelled": 193,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "linkage_specification"
+      ],
+      "lang": "cpp",
+      "out_edges": 3,
+      "path": "win32/lua5.1/include/lua.hpp",
+      "sha256": "fd83f7e823cfbb03ac2da937ec83f01b4a6ddaac220a4fa1ffd6c6c3842c5890",
+      "stem_spelled": 193,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "win32/lua5.1/include/luaconf.h",
+      "sha256": "1511066011626152b142f2346e7595163681aab7615fba113cfd1f5b2f5b86b1",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 1,
+      "path": "win32/lua5.1/include/lualib.h",
+      "sha256": "13f880e9dd997a0f7fd0b17ccd949c98f33e95bd120f084de66084e888217413",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "win32/pe-parser.lua",
+      "sha256": "37639a21c0cc31d10baa045a35bd8ccb2ff6a3cda7a14bccc0215cf516456878",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "cpp": {
+        "basename_spelled": 6,
+        "convention": 1,
+        "document": 0,
+        "out_edges": 4,
+        "private": 1,
+        "rows": 6,
+        "stem_spelled": 6,
+        "vouched": 0
+      },
+      "lua": {
+        "basename_spelled": 20,
+        "convention": 7,
+        "document": 0,
+        "out_edges": 50,
+        "private": 8,
+        "rows": 61,
+        "stem_spelled": 60,
+        "vouched": 0
+      },
+      "markdown": {
+        "basename_spelled": 0,
+        "convention": 0,
+        "document": 2,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 2,
+        "stem_spelled": 0,
+        "vouched": 0
+      }
+    },
+    "rows": 69
+  }
+}

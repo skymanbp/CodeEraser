@@ -1,0 +1,711 @@
+{
+  "allocation": {
+    "zod": 29
+  },
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "lang": "tsx",
+  "method": "per language over the frozen slices: rank id = sha256(domain|corpus|commit|path); at most `total` primary rows by the language exams' quota rule over corpora (each corpus first min(15, pool), the seats left by largest remainder), each corpus taking its lowest rank-domain hashes; the reserve is the audit-domain rank over the unpicked rest, at most `reserve` rows; a language with fewer than `whole_below` rows is taken whole with no reserve. Rows stored in audit-domain order.",
+  "pool": 29,
+  "reserve": [],
+  "rows": [
+    {
+      "audit": "001a5ff4b0dcc29e4e400ba98f99b6b4619a707c396bfd548dffdae89c269389",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/hero-logo.tsx",
+      "rank": "0c532eb518dba55c5660ecc6d9fe1205c5088381e465930f45ee459a5752da67",
+      "sha256": "785a539cf75e6f3421413b474a10d240692e57d3dda67d03c1cb2340db4ccdab",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "03ced8917fc7b303c906f752579d6b3766f6e883091304a1eb34158a128c4747",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/app/layout.config.tsx",
+      "rank": "742ff257134b44c499117487f508dfa69a309af4a3e597c2b352a82c22cde7ea",
+      "sha256": "cbd81c7e2e81f211cf01321c2d29a70b81559f97c1caf8a45abb89326c6dda00",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "1e3b448bcd9c276a18c9463702d33d9cd28bffc217f36f6c8b39dd9f0ccd12b0",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "ambient_declaration",
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/pages/api/_og.tsx",
+      "rank": "729992f7fe423083c2ab834bc6a68c05028431808c5f21234ed3254471f392de",
+      "sha256": "af92e7907c949c4563470e525e2f3e1d701dea3b367e46cbe719ce32036043d1",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "1eb2c9d2f4806893297c737d73fd8cd2be973905a237687f73d7716963ea6a89",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "function_declaration",
+        "import_statement",
+        "interface_declaration",
+        "lexical_declaration",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/components/ecosystem.tsx",
+      "rank": "8f63941b68f3ff00c7a60197685c63ae6c60b4ba0692ec48413f25347aaae680",
+      "sha256": "edceabeeea2209aa42e9b80cc6e2986906b2db68ffab3fe35a435a93ad681141",
+      "stem_spelled": 14,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "279fb1b49ebbb88f7c3ecc89e377dd0fcbfae7bba53fe020807b4509f053c5a9",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/scroller.tsx",
+      "rank": "07b6fc82f7b39d14f9a73ffd2df346b5e6ed92ddbcf88029512065f176ff5f5e",
+      "sha256": "83601e8acd1978334c91d85843b1097c880ace2cf3882ebf2ab6b4b14bf93c1c",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "2b5c24e1150d20986ec9c3580e665b608b8e117852a6bea465ad8ca7c62f19ba",
+      "basename_spelled": 1,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/blog/layout.tsx",
+      "rank": "e2667183f4ba2e9f36b821c6fc16851ff2243afd2cf4caa043ae79d6f87483a9",
+      "sha256": "e2eff8ec6972b209984351310afa9089b0c92fdd76591cfc6d878c15cce4ab69",
+      "stem_spelled": 7,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "4a0eb05c924f2cdd20381474b4a971c86d9cd1d1645f0af0e1fbcd3593b4c984",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/featured.tsx",
+      "rank": "4b1014dd45951a2194c46fc8cfe29ad1fa406366e004c77f20e0ab15cf5a71b4",
+      "sha256": "ab0c2a4e9ec9429a5216ac5087a793f94abb4236511b786106b9bbe90d01e894",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "56abc46a5dc4ea6619f24701bb11ba84915ee689965924bfe4bea77a7035309a",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/inkeep-search.tsx",
+      "rank": "cdb44d6dc3b014f21bd6e29613d7dff9df56cb32e576756c1037753bbae11e44",
+      "sha256": "63d815a9ba38aef8ec8e595ee74f86760904ca276f369e5af6a1638538c342f4",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "5dff3b885dad7f2cd4c086298f2f54d78a20f1017f55380792fb6263e829d63d",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/inkeep-bubble.tsx",
+      "rank": "ddb6072a688eefa1d612cf617d6e6bdf5ec3de7dd12dbddb2799ec14366aef03",
+      "sha256": "776dd717c14fa3b9469123c061e15bfd44df6aa8e6c65c77ed8b9a1f4ca09427",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "74eb74c858d40a7b48bcfbd2bbc04d6d630e00745a5ecabcdef6ed6c5293fa28",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/app/og.png/route.tsx",
+      "rank": "e21c51dbad4f226bc974def9f756d3ba992ac0a591406026e0c91570dd5b5e87",
+      "sha256": "9aeee8671371fd9a6459a6ffcfe8232332b3bd5ed27ef8b30fa9f1e3acdf6dfc",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "801b212353c415dafbf8337558dca639bfb19dabbcea8c6eee98100702051107",
+      "basename_spelled": 1,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 3,
+      "path": "packages/docs/app/layout.tsx",
+      "rank": "2794dbf4d5436bdadf9cb66bfb955ec1d20a58afb87d059360851bbd3f7f365a",
+      "sha256": "0502a2c1662357d266ea7e2bcfcbf7c5347dcbd264f716f5167f0ed72f2d3dd8",
+      "stem_spelled": 8,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "8e8878a303c5ab8b40ff298beb62792b62cbe448588818350336c6db93eda6ad",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/copy-markdown-button.tsx",
+      "rank": "492f4669efd4fc82e8bc8f10ec963973d75032d4b7c2c7603f8a2291793f7f3c",
+      "sha256": "22778c1683b173b636ff58addf5ffdc41d51def3c6206991b82ecefd21a00b86",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "934bb714a3818d45340b94f9e1acc21a1e60ab82e2a02ffec7a1bdc4f8831dc2",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/codec-image.tsx",
+      "rank": "5847771711e567e2088241d1432967afe86d616b30986ca46067c9d268b5b928",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "9ce54fff78fd4b3408e755fe06ee28e40df89bd73f1e3f33ae3217821a1c9ad5",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 5,
+      "path": "packages/docs/app/(doc)/[[...slug]]/page.tsx",
+      "rank": "9bdce4c93adcc1ea9db10efd066a2dca7843325aca6998e664e9373af292f910",
+      "sha256": "c39517331f63df814ee465a1d6611a223c45597435f3eac6cefd9324ad930399",
+      "stem_spelled": 19,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "a26fba46dc11cc7b991f8fa6d01faab72ed5187df95cbbf9deb9d6913b4abb11",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/bronze.tsx",
+      "rank": "45ccd3a95988414bec6c88316e645476a3baffc8665a4b609c227aa284e1198d",
+      "sha256": "3e7715198faaa7ef7ec5fd6646d097b35646a7e6dca7e78f9348426e360b7795",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "a2b61b53228a32d659ea372b5b6f88e64400e5be6aecaf98fad86816600f437e",
+      "basename_spelled": 1,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 4,
+      "path": "packages/docs/app/(doc)/layout.tsx",
+      "rank": "daf165261b2b95d4810ed44375434693ca58c49afa56f07e88b790111b0068de",
+      "sha256": "97930d860aaf2e029dda85ec1c025758088ea2ba316bb9bbb9b1e23bf29c47ab",
+      "stem_spelled": 7,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "a398ce288a9aa922ca7711f3284221ae326b6cea5853e64386dd511c38d92a61",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/sidebar-item.tsx",
+      "rank": "4157d0e56bdccbe2c918482b0c0e9af82c0f6eb8b33af9cf7d693722c9cf996e",
+      "sha256": "254e634b0bb08871afd203466b220139510e4b88b1dfdf74dd7ef12975e0ab0e",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "c8c00167c374878bdb60181d0a77a07da437e3480f291ae11926a0650c85b7b1",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/gold.tsx",
+      "rank": "f5d34acdbc2dc1952f957268c210c47f00bafe3d69a766fa8c054b288e009e22",
+      "sha256": "64f8af6861df70372e2177e7b237baf5b9bc5d15b558e88d527d7bf65c96d55f",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "cb01cb1d3e71b12d106867196587dd1cf7096e400c9c1422f280aa82fdcbb616",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/blog/page.tsx",
+      "rank": "c4700e300c6a699b518bcea3134c377fc1bef4d685a06ce5e675793dd126bb6b",
+      "sha256": "a5692b11e64eb7c290bbba1fb9fb239650274cbd54e11b040dcc7c3c90a02d0c",
+      "stem_spelled": 20,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "cd57e19ed3b6691fd709cd1a5e9166dca56b678309a8ca3441ab3ae6ffbb40c6",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration",
+        "lexical_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/tabs.tsx",
+      "rank": "3132575715931f5bdddfb43c16e35bf635947df69a19f12b2e0280914dd1bcba",
+      "sha256": "052887048bf403cf65f39443b49aa8837614d5b6aa4cd6fbe4632bb5094cf6e1",
+      "stem_spelled": 15,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "d0e2aa377140be297a7898e299fa95780d3e5949b1e50f21c0262aa784ab875b",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/blog/[slug]/page.tsx",
+      "rank": "3ede0a371989901345514a3cc5b2c4b27ef81604176982f4d990c51caadfb5a4",
+      "sha256": "c261813758eee1145399fa29f7230b85c692229385a068e3df3fd39f211fe0c9",
+      "stem_spelled": 19,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "d82be821de3714eb7a77dda26d542f8b91cc92fff9850f679f8b727debe9d667",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/themed-image.tsx",
+      "rank": "23480768bf3f9611794614bbb348b7c35f3faae0ccb3959931617ee69b04ee53",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "de2110562b515e4273811ab7158bf372cd34dce146f443e9bff589effc9aec67",
+      "basename_spelled": 1,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/if.tsx",
+      "rank": "888ef263ab2f84b1dfd5c500d9c23fe58b91a96f8c589875798ce9e0bf33aa1e",
+      "sha256": "770713a4d177df7ced37736ca49643c325ec4002502462a0b0b4c361294cd1f2",
+      "stem_spelled": 209,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "eadea1dae76895de52cdcfd0dbe036c21a9734764d97197b563a94d881a07504",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/silver.tsx",
+      "rank": "700c59e32759c253ac772932c345b0dfbaefe9d3ac01b7af696f96042b727093",
+      "sha256": "9c279cd0bf6a740a9e2436f4f9aa3e7dcdfd5c78d30a9d17d572495437b13cbe",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "f1260f208a6b358797f487db81c17402586b6c0b9c4401c626d2eaa7a93c87c1",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/accordion.tsx",
+      "rank": "bd4e7fb711e476d926b9b2b8b63d68b8cf9882ae0a91fe824c3a4f5d589848d7",
+      "sha256": "f351178747de83ee72402681f045fbe8af50bd9f4718590cf8a1d9d5f4e65370",
+      "stem_spelled": 9,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "f244a00a31759f828870eb329bfa5e514adf0fef99e8823a214f7b4dae16d23b",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/heading.tsx",
+      "rank": "e781da64cd23db38437510e51c86cc872fcb6874daabca094975c5b682ff1aea",
+      "sha256": "5ab895539f3b168d78a91c408736ed580f9bd3f38b3affbaf2b8ffe139187afe",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "f8f638aaeb11751ba1c86b8c14d4c472e0c03aeb20f7d3b15053fe59b3e829e7",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/not-found.tsx",
+      "rank": "2e77d98b90f70dc8976b7075b4141be8ad46efe64908f5c28444256c2223f5d3",
+      "sha256": "55a852bc61e14f164e49a060e80fa364ff926e97bb697ae5b2705aaf02ea4868",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "fb3564f04e42d2684b60b3accae896d05e1e48c2942ea36f4c992f9829e1ab43",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/platinum.tsx",
+      "rank": "6b69d9c349e12c6701e374eb6aa298844e8141560e1ad3382fca3a863947d256",
+      "sha256": "b31c56a8366194cc53873bba708e64db64c218a963ed4bd2776b3d90895febbe",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "fd5d9d48f22d4432a7972ab0539ff6e8176714d75697560e9759b50c25abf5d4",
+      "basename_spelled": 0,
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "zod",
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/sidebar-logo.tsx",
+      "rank": "501b61d973a16d23b9cb02702fa48f121e7d0022090786782e1d90f3c5d2b8e1",
+      "sha256": "ec0be393cf14dcd3bbaed8ddffbf61070df2677bdb54052145d932488a79ddb0",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    }
+  ],
+  "schema": "ce.eval-deadfile-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "cobra",
+      "rows": 0,
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+    },
+    {
+      "corpus": "codeeraser",
+      "rows": 0,
+      "tip": "af1c29958f2ee4d2322594784a4f9b7524559194"
+    },
+    {
+      "corpus": "covid19model",
+      "rows": 64,
+      "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+    },
+    {
+      "corpus": "fmt",
+      "rows": 12,
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+    },
+    {
+      "corpus": "gson",
+      "rows": 21,
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+    },
+    {
+      "corpus": "jsoup",
+      "rows": 53,
+      "tip": "093e2f58492c531667e551e8793513a41b22443e"
+    },
+    {
+      "corpus": "koreader",
+      "rows": 150,
+      "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+    },
+    {
+      "corpus": "lua",
+      "rows": 34,
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+    },
+    {
+      "corpus": "luarocks",
+      "rows": 69,
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+    },
+    {
+      "corpus": "requests",
+      "rows": 5,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+    },
+    {
+      "corpus": "ripgrep",
+      "rows": 4,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "corpus": "stringr",
+      "rows": 5,
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+    },
+    {
+      "corpus": "zod",
+      "rows": 142,
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+    }
+  ]
+}

@@ -1,0 +1,2164 @@
+{
+  "agreement": {
+    "every_row_twice": true,
+    "first_generic": {
+      "rows": 22,
+      "same_side": 18,
+      "share": 0.8181818181818182
+    },
+    "first_named": {
+      "rows": 3,
+      "same_side": 3,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 1,
+      "same_side": 1,
+      "share": 1.0
+    },
+    "overall": {
+      "rows": 26,
+      "same_side": 22,
+      "share": 0.8461538461538461
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "typescript",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner (`pnpm bench array` -> packages/bench/index.ts resolves ./<name>)",
+        "searched": "git grep 'bench/array' and basename; bench package.json; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/array.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/bench/array.ts:1 packages/bench/metabench.ts:8",
+        "mechanism": "imported (as './benchUtil.js') by most bench scripts and by metabench.ts",
+        "searched": "git grep 'benchUtil'",
+        "tag": "named"
+      },
+      "path": "packages/bench/benchUtil.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/bench/error-handling.ts:1; packages/bench/array.ts:1; packages/bench/metabench.ts:8",
+        "mechanism": "helper module imported by the benchmark scripts",
+        "searched": "git grep benchUtil",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name via `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep for ./boolean imports in packages/bench (none); package.json scripts; workflows",
+        "tag": "generic"
+      },
+      "path": "packages/bench/boolean.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name via `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep datetime-regex (no hits); package.json scripts; workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/datetime-regex.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner (`pnpm bench datetime` -> packages/bench/index.ts resolves ./<name>)",
+        "searched": "git grep 'bench/datetime' and basename; bench package.json; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/datetime.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name: root `pnpm bench <name>` runs packages/bench/index.ts, which resolves ./<name> and runs it with tsx",
+        "searched": "git grep discriminated-union (no other naming); package.json scripts; workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/discriminated-union.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/error-handling.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench error-handling`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/package.json:14",
+        "mechanism": "run by the root bench script and the bench package script",
+        "searched": "root and packages/bench package.json",
+        "tag": "named"
+      },
+      "path": "packages/bench/index.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/init.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench init`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name via `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep instanceof filename (no file references); package.json scripts; workflows",
+        "tag": "generic"
+      },
+      "path": "packages/bench/instanceof.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench instanceof`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/docs/content/v4/index.mdx:61",
+        "mechanism": "run by name through the documented `pnpm bench <name>` dispatcher: root script runs packages/bench/index.ts, which resolves `./${file}` from the CLI argument and runs it with tsx",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "generic"
+      },
+      "path": "packages/bench/ipv4-regex.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name via `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep jit-union (no hits); package.json scripts; workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/jit-union.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/docs/content/v4/index.mdx:61",
+        "mechanism": "run by name through the documented `pnpm bench <name>` dispatcher: root script runs packages/bench/index.ts, which resolves `./${file}` from the CLI argument and runs it with tsx",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "generic"
+      },
+      "path": "packages/bench/key-iteration.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench key-iteration`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/lazy-box.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/libs.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:82 packages/bench/object-moltar.ts:4 packages/bench/object-safe.ts:1",
+        "mechanism": "imported by the bench scripts; object-moltar.ts imports it and is run by the root script `pnpm moltar` (= pnpm bench object-moltar)",
+        "searched": "git grep metabench (imported by ~25 files under packages/bench); root and package package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/bench/metabench.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner (`pnpm bench number` -> packages/bench/index.ts resolves ./<name>)",
+        "searched": "git grep 'bench/number' and basename; bench package.json; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/number.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench number`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/object-async.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench object-async`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner (`pnpm bench object-creation` -> packages/bench/index.ts resolves ./<name>)",
+        "searched": "git grep basename/stem (no other hits); bench package.json; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/object-creation.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench object-creation`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/docs/content/v4/index.mdx:61",
+        "mechanism": "run by name through the documented `pnpm bench <name>` dispatcher: root script runs packages/bench/index.ts, which resolves `./${file}` from the CLI argument and runs it with tsx",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "generic"
+      },
+      "path": "packages/bench/object-fail.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench object-fail`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/object-moltar-jitless.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:82 packages/docs/content/v4/index.mdx:105",
+        "mechanism": "run by name: root script `moltar` runs `pnpm bench object-moltar`, also documented in the v4 release notes",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "named"
+      },
+      "path": "packages/bench/object-moltar.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner (`pnpm bench object-safe` -> packages/bench/index.ts resolves ./<name>)",
+        "searched": "git grep basename/stem (no other hits); bench package.json; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/object-safe.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/docs/content/v4/index.mdx:61",
+        "mechanism": "run by name through the documented `pnpm bench <name>` dispatcher: root script runs packages/bench/index.ts, which resolves `./${file}` from the CLI argument and runs it with tsx",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "generic"
+      },
+      "path": "packages/bench/object-safeasync.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench object-safeasync`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/bench/object-safe.ts:2 packages/bench/index.ts:6 package.json:81",
+        "mechanism": "imported by the bench scripts object-safe/object-async/object-fail/object-safeasync, which are run by name through `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep object-setup; packages/bench/index.ts loader; root package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/bench/object-setup.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/docs/content/v4/index.mdx:61",
+        "mechanism": "run by name through the documented `pnpm bench <name>` dispatcher: root script runs packages/bench/index.ts, which resolves `./${file}` from the CLI argument and runs it with tsx",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "named"
+      },
+      "path": "packages/bench/object.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench object`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner: `pnpm bench <name>` runs packages/bench/index.ts, which resolves ./<name> beside itself and runs it with tsx",
+        "searched": "git grep basename/stem (no other hits); root and packages/bench package.json; bench index.ts loader; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/property-access.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench property-access`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name via `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep for ./safe imports in packages/bench (none); package.json scripts; workflows",
+        "tag": "generic"
+      },
+      "path": "packages/bench/safe.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/safeparse.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench safeparse`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/bench/package.json:14",
+        "mechanism": "benchmark script run by name: `pnpm bench <name>` -> packages/bench/index.ts resolves `./${name}` from argv and runs it with tsx (same pattern as the root `moltar` script = `pnpm bench object-moltar`); no file names this one specifically, it is reached only through the argv dispatcher",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/bench/single-element-enum.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/v4/index.mdx:61 (`pnpm bench <name>`); package.json:81 (bench script runs packages/bench/index.ts); packages/bench/index.ts:6 (path built as ./<argv name>)",
+        "mechanism": "benchmark script run by name through the documented `pnpm bench <name>` command (index.ts resolves ./<name> from argv); deleting it breaks `pnpm bench single-element-enum`; no other file imports it",
+        "searched": "git grep for basename, stem (filtered to bench contexts), \"./<stem>\" imports across packages; packages/bench/package.json, root package.json, tsconfig.json/tsconfig.bench.json, docs mdx, .github workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6 packages/docs/content/v4/index.mdx:61",
+        "mechanism": "run by name through the documented `pnpm bench <name>` dispatcher: root script runs packages/bench/index.ts, which resolves `./${file}` from the CLI argument and runs it with tsx",
+        "searched": "git grep -F -w of the stem and basename across the tree; root and packages/bench package.json scripts; .github/workflows; docs mdx; packages/bench/index.ts dispatcher",
+        "tag": "generic"
+      },
+      "path": "packages/bench/single-item-union.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "bench script run by name via `pnpm bench <name>` (index.ts resolves ./<name>)",
+        "searched": "git grep for imports of ./string in packages/bench (none); package.json scripts; workflows",
+        "tag": "generic"
+      },
+      "path": "packages/bench/string.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:81 packages/bench/index.ts:6",
+        "mechanism": "benchmark run by name through the bench runner (`pnpm bench union` -> packages/bench/index.ts resolves ./<name>)",
+        "searched": "git grep 'bench/union' and basename; bench package.json; CI workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/bench/union.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/api/search/route.ts:4",
+        "mechanism": "Next.js App Router route handler convention: app/api/search/route.ts is served as the /api/search endpoint of the docs site (Next.js documentation, 'Route Handlers'); it is the fumadocs search server built from the docs source",
+        "searched": "git grep 'api/search' in packages/docs (no client reference; layout uses Inkeep search box, packages/docs/app/layout.tsx:2); next config; docs package.json",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/api/search/route.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:10",
+        "mechanism": "Next.js App Router route-handler convention (Next.js docs, 'Route Handlers'): serves /llms-full.txt, a URL the published package points to",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/llms-full.txt/route.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:7 packages/docs/content/index.mdx:115 packages/zod/package.json:9",
+        "mechanism": "Next.js App Router route handler convention (Next.js docs, 'Route Handlers': app/<segment>/route.ts) serves https://zod.dev/llms.txt, linked from docs and the zod package manifest",
+        "searched": "git grep llms.txt; docs package.json/next.config.mjs",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/llms.txt/route.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/llms-full.txt/route.ts:3 packages/docs/app/(doc)/[[...slug]]/page.tsx:4 packages/docs/tsconfig.json:19",
+        "mechanism": "imported through the docs tsconfig alias `@/*` -> `./*` by the doc page and the llms-full.txt route (published page)",
+        "searched": "git grep -F 'get-llm-text'; packages/docs/tsconfig.json paths",
+        "tag": "named"
+      },
+      "path": "packages/docs/loaders/get-llm-text.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/layout.tsx:2 packages/docs/app/llms-full.txt/route.ts:4 packages/docs/tsconfig.json:19",
+        "mechanism": "imported through the tsconfig path alias @/* by the docs Next.js app",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "packages/docs/loaders/source.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/components/ecosystem.tsx:1 packages/docs/tsconfig.json:19",
+        "mechanism": "imported through the docs tsconfig alias `@/*` by the ecosystem component of the docs site",
+        "searched": "git grep -F -w 'stars'; packages/docs/tsconfig.json paths",
+        "tag": "named"
+      },
+      "path": "packages/docs/loaders/stars.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:9 packages/docs/next.config.mjs:1 packages/docs/tsconfig.json:18",
+        "mechanism": "fumadocs-mdx convention: the fumadocs-mdx CLI (postinstall) and createMDX in next.config read source.config.ts to generate .source (fumadocs-mdx docs, 'Getting started / source.config.ts')",
+        "searched": "packages/docs package.json, next.config.mjs, tsconfig.json",
+        "tag": "generic"
+      },
+      "path": "packages/docs/source.config.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "vitest.config.ts:19 .github/workflows/test.yml:33",
+        "mechanism": "vitest project config: root vitest.config.ts projects packages/* loads each project's vitest.config.ts (vitest docs, 'Test Projects'); pnpm test runs in CI",
+        "searched": "root vitest.config.ts, vitest.root.mjs, packages/docs files, test.yml",
+        "tag": "generic"
+      },
+      "path": "packages/docs/vitest.config.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "vitest.config.ts:19 (projects: [\"packages/*\"]); package.json:76 (\"test\": \"vitest run\"); .github/workflows/test.yml:33",
+        "mechanism": "Vitest project config: the root vitest.config.ts declares projects packages/*, and Vitest picks up each project's vitest.config.ts; this one sets the typecheck tsconfig for packages/docs/content/api.test.ts, run by `pnpm test` in CI",
+        "searched": "root vitest.config.ts, vitest.root.mjs, package.json scripts, .github/workflows/test.yml, git ls-files packages/docs | grep test",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/integration/fixtures/ai-sdk/tsconfig.json:14 packages/integration/package.json:17 .github/workflows/test.yml:35",
+        "mechanism": "type-checked by the integration package's test:source script (tsconfig include ./**/*.ts), run in CI",
+        "searched": "packages/integration/package.json; fixture tsconfig; .github/workflows",
+        "tag": "generic"
+      },
+      "path": "packages/integration/fixtures/ai-sdk/index.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/integration/package.json:17; packages/integration/fixtures/ai-sdk/tsconfig.json:14; .github/workflows/test.yml:35",
+        "mechanism": "type-checked by the integration test script (tsc --project fixtures/ai-sdk/tsconfig.json, include ./**/*.ts), run in CI",
+        "searched": "packages/integration/package.json scripts, fixture tsconfigs, .github/workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/integration/package.json:17 packages/integration/fixtures/drizzle-zod/tsconfig.json:14 .github/workflows/test.yml:35",
+        "mechanism": "the only source of the tsc project fixtures/drizzle-zod (include ./**/*.ts) type-checked by @zod/integration test:source, run in CI",
+        "searched": "packages/integration/package.json, fixture tsconfig, test.yml",
+        "tag": "generic"
+      },
+      "path": "packages/integration/fixtures/drizzle-zod/index.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/integration/fixtures/internal-types/tsconfig.node16-cjs.json:13 packages/integration/package.json:18 .github/workflows/test.yml:35",
+        "mechanism": "type-checked by the integration test: tsconfig.node16-cjs.json includes it and `test:built` runs tsc on that project; CI runs `pnpm run --filter @zod/integration test:all`",
+        "searched": "git grep 'cjs-test', 'internal-types'; integration package.json; CI workflows",
+        "tag": "named"
+      },
+      "path": "packages/integration/fixtures/internal-types/cjs-test.cts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/integration/fixtures/internal-types/tsconfig.bundler.json:14 packages/integration/package.json:18 .github/workflows/test.yml:35",
+        "mechanism": "type-checked by the integration package's test:built script (tsconfig include ./**/*.ts), run in CI",
+        "searched": "packages/integration/package.json; fixture tsconfigs; .github/workflows",
+        "tag": "generic"
+      },
+      "path": "packages/integration/fixtures/internal-types/index.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/integration/package.json:18; packages/integration/fixtures/internal-types/tsconfig.bundler.json:14; .github/workflows/test.yml:35",
+        "mechanism": "type-checked by test:built (tsc --project fixtures/internal-types/tsconfig.*.json, include ./**/*.ts), run in CI",
+        "searched": "packages/integration/package.json scripts, fixture tsconfigs, .github/workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/resolution/tsconfig.build.json:12 packages/resolution/test-resolution.ts:39 packages/resolution/package.json:19 .github/workflows/test.yml:34",
+        "mechanism": "compiled by test-resolution.ts (tsc -p tsconfig.build.json includes src/*.cts) to dist/index.cjs, which the test then runs; test:all runs in CI",
+        "searched": "packages/resolution package.json, tsconfigs, test-resolution.ts, .github/workflows",
+        "tag": "named"
+      },
+      "path": "packages/resolution/src/index.cts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/resolution/tsconfig.build.json:12 packages/resolution/test-resolution.ts:53 .github/workflows/test.yml:34",
+        "mechanism": "compiled by tsconfig.build.json (include src/*.mts) in test-resolution.ts buildTsc, then executed as ./dist/index.mjs by testMjs; run in CI via test:all",
+        "searched": "packages/resolution package.json, tsconfig.build.json, test-resolution.ts",
+        "tag": "named"
+      },
+      "path": "packages/resolution/src/index.mts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/resolution/package.json:21 packages/resolution/tsconfig.build.json:12 .github/workflows/test.yml:34",
+        "mechanism": "build entry of the resolution test package (zshy entry, tsc include src/*.ts); its test:all runs in CI",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "packages/resolution/src/index.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/resolution/package.json:19 .github/workflows/test.yml:34",
+        "mechanism": "run by @zod/resolution test:all, which CI runs",
+        "searched": "packages/resolution/package.json, test.yml",
+        "tag": "named"
+      },
+      "path": "packages/resolution/test-resolution.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/resolution/package.json:19; .github/workflows/test.yml:34",
+        "mechanism": "run by name by the package's test:all script, which CI runs",
+        "searched": "packages/resolution/package.json, .github/workflows/test.yml, release.yml",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "vitest.config.ts:19 packages/resolution/package.json:19 .github/workflows/test.yml:34",
+        "mechanism": "vitest project config: root vitest.config.ts declares projects packages/* and each project's vitest.config.ts is loaded (vitest docs, 'Test Projects'); also `pnpm vitest run` in @zod/resolution test:all, run in CI",
+        "searched": "root vitest.config.ts, vitest.root.mjs, packages/resolution/package.json, test.yml",
+        "tag": "generic"
+      },
+      "path": "packages/resolution/vitest.config.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "entry file for the treeshake package's bundle script, which takes the entry file as its argument (`rollup -c rollup.config.js --input <file>`); the package's input files are the only candidates; no doc or CI names this file itself",
+        "searched": "git grep -F -w of the stem/basename; packages/treeshake/package.json; packages/treeshake/rollup.config.js; .configs/rollup.config.js; root package.json; .github/workflows; biome.jsonc",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/example-mini.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size input of the @zod/treeshaking package: scripts bundle a file named on the command line (rollup --input <file>), rollup.config.js has no fixed input",
+        "searched": "git grep 'example.ts' (no hits), stem too generic; package scripts; rollup.config.js; CI workflows",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/example.ts",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "scratch input (mostly commented-out code) for the manual rollup bundling script; no doc, script, CI or config names it",
+        "searched": "git grep 'example.ts', 'treeshake' across the tree (only biome.jsonc ignore list and rollup treeshake option); packages/treeshake/package.json scripts (bundle takes an arbitrary --input); rollup.config.js (input commented out); .github/workflows; packages/docs/content bundle-size sections (mini.mdx)",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size comparison input of the @zod/treeshaking package: scripts bundle a file named on the command line (rollup --input <file>)",
+        "searched": "git grep basename/stem (no hits); package scripts; rollup.config.js; CI workflows; READMEs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/valibot-boolean.ts",
+      "second": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "candidate input for the manual `pnpm bundle --input <file>` script (packages/treeshake/package.json:7); the directory exists to hold such inputs, but no doc, script, CI or config names this file",
+        "searched": "git grep 'valibot-boolean', 'treeshake' across the tree; packages/treeshake/package.json, rollup.config.js (no input set); .github/workflows; packages/docs/content/packages/mini.mdx bundle-size tables. Unsettled: whether a hand-picked bundle-size input with no recorded invocation counts as used.",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/package.json:25",
+        "mechanism": "bundle-size comparison input of the @zod/treeshaking package (valibot is in its devDependencies): scripts bundle a file named on the command line (rollup --input <file>)",
+        "searched": "git grep basename/stem (no hits); package scripts; rollup.config.js; CI workflows; READMEs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/valibot-object.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "input file for the treeshake package's bundle-size script `pnpm bundle <file>` (rollup --input); not named anywhere, argument-driven maintainer tool only, not in CI",
+        "searched": "git grep valibot-simple-object / treeshake (only biome.jsonc:80 ignore, rollup configs); package.json scripts; workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/valibot-simple-object.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "bundle-size probe passed by name as the rollup input: `pnpm bundle <file>` = `rollup -c rollup.config.js --input <file>` in packages/treeshake; no file names this one specifically, it is reached only as a command-line argument",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/valibot-string.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "input file for the treeshake package's bundle-size script `pnpm bundle <file>` (rollup --input); argument-driven maintainer tool only, not in CI",
+        "searched": "git grep zod-boolean (no hits); package.json scripts; workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-boolean.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "bundle-size probe passed by name as the rollup input: `pnpm bundle <file>` = `rollup -c rollup.config.js --input <file>` in packages/treeshake; no file names this one specifically, it is reached only as a command-line argument",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-full.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "bundle-size probe passed by name as the rollup input: `pnpm bundle <file>` = `rollup -c rollup.config.js --input <file>` in packages/treeshake; no file names this one specifically, it is reached only as a command-line argument",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-locale.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "bundle-size probe passed by name as the rollup input: `pnpm bundle <file>` = `rollup -c rollup.config.js --input <file>` in packages/treeshake; no file names this one specifically, it is reached only as a command-line argument",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-locales.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size input of the @zod/treeshaking package: scripts bundle a file named on the command line (rollup --input <file>), rollup.config.js has no fixed input",
+        "searched": "git grep basename/stem (no hits); package scripts; rollup.config.js; CI workflows; READMEs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-mini-boolean.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size input of the @zod/treeshaking package: scripts bundle a file named on the command line (rollup --input <file>), rollup.config.js has no fixed input",
+        "searched": "git grep basename/stem (no hits); package scripts; rollup.config.js; CI workflows; READMEs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-mini-full.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size input of the @zod/treeshaking package: its scripts bundle a file named on the command line (rollup --input <file>), rollup.config.js has no fixed input",
+        "searched": "git grep basename/stem (no hits); package scripts; rollup.config.js; CI workflows; READMEs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-mini-object.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size input of the @zod/treeshaking package: its only scripts bundle a file named on the command line (rollup -c rollup.config.js --input <file>, run in packages/treeshake); rollup.config.js has no fixed input, so the package's sibling .ts files are its inputs",
+        "searched": "git grep -F basename and stem across tree (no hits besides the file); root and package package.json scripts; rollup.config.js; .github/workflows/*.yml; READMEs, AGENTS.md, CONTRIBUTING.md; tsconfig includes",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-mini-simple-object.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "entry file for the treeshake package's bundle script, which takes the entry file as its argument (`rollup -c rollup.config.js --input <file>`); the package's input files are the only candidates; no doc or CI names this file itself",
+        "searched": "git grep -F -w of the stem/basename; packages/treeshake/package.json; packages/treeshake/rollup.config.js; .configs/rollup.config.js; root package.json; .github/workflows; biome.jsonc",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-mini-string.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "entry file for the treeshake package's bundle script, which takes the entry file as its argument (`rollup -c rollup.config.js --input <file>`); the package's input files are the only candidates; no doc or CI names this file itself",
+        "searched": "git grep -F -w of the stem/basename; packages/treeshake/package.json; packages/treeshake/rollup.config.js; .configs/rollup.config.js; root package.json; .github/workflows; biome.jsonc",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-object.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "bundle-size probe passed by name as the rollup input: `pnpm bundle <file>` = `rollup -c rollup.config.js --input <file>` in packages/treeshake; no file names this one specifically, it is reached only as a command-line argument",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod-string.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7 packages/treeshake/rollup.config.js:10",
+        "mechanism": "bundle-size input of the @zod/treeshaking package: its scripts bundle a file named on the command line (rollup --input <file>), rollup.config.js has no fixed input",
+        "searched": "git grep basename/stem (no hits); package scripts; rollup.config.js; CI workflows; READMEs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod3-boolean.ts",
+      "second": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "candidate input for the manual `pnpm bundle --input <file>` script; no doc, script, CI or config names this file",
+        "searched": "git grep 'zod3-boolean', 'treeshake' across the tree; packages/treeshake/package.json, rollup.config.js; .github/workflows; packages/docs/content bundle-size sections. Unsettled: whether a hand-picked bundle-size input with no recorded invocation counts as used.",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "bundle-size probe passed by name as the rollup input: `pnpm bundle <file>` = `rollup -c rollup.config.js --input <file>` in packages/treeshake; no file names this one specifically, it is reached only as a command-line argument",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod3-full.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "entry file for the treeshake package's bundle script, which takes the entry file as its argument (`rollup -c rollup.config.js --input <file>`); the package's input files are the only candidates; no doc or CI names this file itself",
+        "searched": "git grep -F -w of the stem/basename; packages/treeshake/package.json; packages/treeshake/rollup.config.js; .configs/rollup.config.js; root package.json; .github/workflows; biome.jsonc",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod3-object.ts",
+      "second": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "candidate input for the manual `pnpm bundle --input <file>` script; no doc, script, CI or config names this file",
+        "searched": "git grep 'zod3-object', 'treeshake' across the tree; packages/treeshake/package.json, rollup.config.js; .github/workflows; packages/docs/content bundle-size sections. Unsettled: whether a hand-picked bundle-size input with no recorded invocation counts as used.",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/treeshake/package.json:7",
+        "mechanism": "input file for the treeshake package's bundle-size script `pnpm bundle <file>` (rollup --input); argument-driven maintainer tool only, not in CI",
+        "searched": "git grep zod3-string (no hits); package.json scripts; workflows; docs",
+        "tag": "generic"
+      },
+      "path": "packages/treeshake/zod3-string.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29",
+        "mechanism": "run by the @zod/tsc-perftest bench script",
+        "searched": "packages/tsc/package.json, README",
+        "tag": "named"
+      },
+      "path": "packages/tsc/bench/index.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29 packages/tsc/bench/index.ts:12 packages/docs/content/v4/index.mdx:148",
+        "mechanism": "run by name through `pnpm bench <name>` in packages/tsc (tsx ./bench/index.ts resolves `./${file}` from argv); the command is documented in the v4 release notes",
+        "searched": "git grep of stem/basename; packages/tsc/package.json; packages/tsc/bench/index.ts; docs mdx; .github/workflows",
+        "tag": "generic"
+      },
+      "path": "packages/tsc/bench/lots-of-objects.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29; packages/tsc/bench/index.ts:13",
+        "mechanism": "benchmark selected by name: `pnpm bench <name>` runs bench/index.ts, which resolves ./<name> inside bench/ from argv and runs it with tsx",
+        "searched": "git grep 'lots-of-objects' (no literal mention); packages/tsc/package.json scripts; bench/index.ts loader; README.md",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/bench/index.ts:9 packages/tsc/bench/index.ts:12 packages/tsc/package.json:27",
+        "mechanism": "tsc benchmark run by name: `pnpm bench` in packages/tsc runs bench/index.ts, which resolves ./<name>; the runner's own usage message names this benchmark",
+        "searched": "git grep basename/stem; packages/tsc package.json, tsconfig.bench.json, README.md; CI workflows",
+        "tag": "named"
+      },
+      "path": "packages/tsc/bench/object-with-extend.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29 packages/tsc/bench/index.ts:12 packages/docs/content/v4/index.mdx:148",
+        "mechanism": "run by name through `pnpm bench <name>` in packages/tsc (tsx ./bench/index.ts resolves `./${file}` from argv); the command is documented in the v4 release notes",
+        "searched": "git grep of stem/basename; packages/tsc/package.json; packages/tsc/bench/index.ts; docs mdx; .github/workflows",
+        "tag": "generic"
+      },
+      "path": "packages/tsc/bench/omit-extend.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29 packages/tsc/bench/index.ts:12 packages/docs/content/v4/index.mdx:148",
+        "mechanism": "run by name through `pnpm bench <name>` in packages/tsc (tsx ./bench/index.ts resolves `./${file}` from argv); the command is documented in the v4 release notes",
+        "searched": "git grep of stem/basename; packages/tsc/package.json; packages/tsc/bench/index.ts; docs mdx; .github/workflows",
+        "tag": "generic"
+      },
+      "path": "packages/tsc/bench/string.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29; packages/tsc/bench/index.ts:13",
+        "mechanism": "benchmark selected by name: `pnpm bench string` runs bench/index.ts, which resolves ./<name> inside bench/ from argv",
+        "searched": "git grep 'bench/string', 'string.ts'; packages/tsc/package.json scripts; bench/index.ts loader; README.md",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:29 packages/tsc/bench/index.ts:12",
+        "mechanism": "type-check benchmark run by name: `pnpm bench <name>` in packages/tsc -> bench/index.ts resolves `./${name}` from argv; no file names this one specifically",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/tsc/bench/strongly-connected.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/package.json:30",
+        "mechanism": "run by name: package script bisect = tsx bisect.ts",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "packages/tsc/bisect.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "every line of the file is commented out; nothing names or loads it",
+        "searched": "git grep -F 'extend.ts', './extend', 'tsc/extend' (no hits); packages/tsc package.json scripts (generate/build/build:bench/bench/bisect), tsconfig.bench.json (files: src/index.ts only), tsconfig.json, bench/index.ts loader (resolves only within packages/tsc/bench/), README.md; root package.json scripts and tsconfig; vitest configs (typecheck only *.test.ts); .github/workflows/*.yml",
+        "tag": null
+      },
+      "path": "packages/tsc/extend.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/tsc/bench/lots-of-objects.ts:4 packages/tsc/package.json:24",
+        "mechanism": "imported by the tsc benchmarks (and run by the `generate` script)",
+        "searched": "git grep 'generate.js' / 'generate'; packages/tsc/package.json",
+        "tag": "named"
+      },
+      "path": "packages/tsc/generate.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:3 packages/zod/package.json:15 packages/zod/jsr.json:71",
+        "mechanism": "imported by the v3 benchmark entry (index.ts, './datetime.js'); and shipped in the published npm and JSR packages, whose file lists include all of src",
+        "searched": "git grep 'benchmarks', basename and stem; packages/zod package.json/jsr.json/tsconfigs; root scripts; CI workflows",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/datetime.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:4",
+        "mechanism": "imported (./discriminatedUnion.js -> .ts) by the v3 benchmark runner",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:15 (files: src, wholesale)",
+        "mechanism": "none: v3 benchmark runner reachable only by running the file directly; no script, CI job or doc runs it. It ships to npm only because package.json `files` lists the whole `src` directory, and no export path reaches it",
+        "searched": "git grep -F 'benchmarks' / 'v3/benchmarks' across scripts, package.json files, .github/workflows, docs; packages/zod/package.json exports and zshy exports; jsr.json",
+        "tag": null
+      },
+      "path": "packages/zod/src/v3/benchmarks/index.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:5 packages/zod/package.json:15 packages/zod/jsr.json:71",
+        "mechanism": "imported by the v3 benchmark entry (index.ts, './ipv4.js', --ipv4 flag); shipped in the npm and JSR packages via the src file list",
+        "searched": "git grep 'ipv4', 'benchmarks'; packages/zod package.json/jsr.json; root scripts; CI workflows",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/ipv4.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:15 packages/zod/src/v3/benchmarks/index.ts:9",
+        "mechanism": "packaged: zod's npm files list ships the whole src directory (and jsr publish includes src); also imported by src/v3/benchmarks/index.ts, which no script runs",
+        "searched": "git grep benchmarks; packages/zod/package.json files/scripts; jsr.json; workflows",
+        "tag": "generic"
+      },
+      "path": "packages/zod/src/v3/benchmarks/object.ts",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:6",
+        "mechanism": "imported (as ./object.js) by the v3 benchmark harness, which runs its suites by default or with --object; the file also ships in the npm tarball via files: src. Note: no package script runs the harness, it is invoked by hand",
+        "searched": "packages/zod/src/v3/benchmarks/index.ts; git grep 'benchmarks/index', 'v3/benchmarks' (no script names the harness); packages/zod/package.json scripts and files",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:7",
+        "mechanism": "imported (./primitives.js -> .ts) by the v3 benchmark runner",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:8 packages/zod/package.json:15 packages/zod/jsr.json:71",
+        "mechanism": "imported by the v3 benchmark entry (index.ts, './realworld.js', default suite); shipped in the npm and JSR packages via the src file list",
+        "searched": "git grep 'realworld', 'benchmarks'; packages/zod package.json/jsr.json; CI workflows",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/realworld.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/src/v3/benchmarks/index.ts:9 packages/zod/package.json:15 packages/zod/jsr.json:71",
+        "mechanism": "imported by the v3 benchmark entry (index.ts, './string.js'); shipped in the npm and JSR packages via the src file list",
+        "searched": "git grep 'benchmarks'; v3/benchmarks/index.ts; packages/zod package.json/jsr.json; CI workflows",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/string.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:15 packages/zod/jsr.json publish.include \"src\" packages/zod/src/v3/benchmarks/index.ts:10",
+        "mechanism": "packaged: zod's npm files list ships the whole src directory (and jsr publish includes src, excluding only tests); also imported by src/v3/benchmarks/index.ts, which no script runs",
+        "searched": "git grep benchmarks (no script, workflow or doc runs src/v3/benchmarks/index.ts; docs-v3 CHANGELOG mentions an old `yarn benchmark`); packages/zod/package.json files/scripts/zshy exports; jsr.json",
+        "tag": "named"
+      },
+      "path": "packages/zod/src/v3/benchmarks/union.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:15 (files: src, wholesale)",
+        "mechanism": "none: orphan module; nothing imports ./config.js (globalConfig/config are served from elsewhere in core), core/index.ts does not re-export it, no export path names it. Ships to npm only via the wholesale `src` entry in package.json files",
+        "searched": "git grep for its module specifier (`./config.js`, `/config`) and its exported names across packages; packages/zod/package.json zshy exports and exports map; packages/zod/jsr.json exports; packages/zod/src/v4/core/index.ts; root/package scripts; .github/workflows; docs",
+        "tag": null
+      },
+      "path": "packages/zod/src/v4/core/config.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:15 (files: src, wholesale)",
+        "mechanism": "none: orphan module (types/draft of a serialization format); nothing imports ./zsf.js, core/index.ts does not re-export it, no export path names it. Ships to npm only via the wholesale `src` entry in package.json files",
+        "searched": "git grep for its module specifier (`./zsf.js`, `/zsf`) and its exported names across packages; packages/zod/package.json zshy exports and exports map; packages/zod/jsr.json exports; packages/zod/src/v4/core/index.ts; root/package scripts; .github/workflows; docs",
+        "tag": null
+      },
+      "path": "packages/zod/src/v4/core/zsf.ts",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "type definitions not imported by any module; ships in the npm tarball only through the blanket files: src glob (packages/zod/package.json:15), but the exports map only exposes index entry points, so no consumer can reach it",
+        "searched": "git grep -w 'zsf' and 'zsf.js' / '/zsf' across the tree excluding svg and lockfile (only the file itself); packages/zod/src/v4/core/index.ts imports; packages/zod/package.json zshy exports and exports map; jsr.json exports",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "vitest.config.ts:19 package.json:76",
+        "mechanism": "Vitest test-projects convention: root vitest.config.ts declares projects packages/* and each project's vitest.config.ts is its config (Vitest docs, 'Test Projects'); `pnpm test` runs vitest",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "generic"
+      },
+      "path": "packages/zod/vitest.config.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:80 CONTRIBUTING.md:90",
+        "mechanism": "run by name: root script dev:play and documented in CONTRIBUTING",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "play.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; the check:semver script runs scripts/check-versions.ts, not this file",
+        "searched": "git grep -n check-semver / -w check-semver (no hits outside the file); root package.json scripts (check:semver -> check-versions.ts at package.json:88); packages/*/package.json; .husky/pre-commit, .husky/pre-push; .github/workflows/*.yml; vitest configs; biome.jsonc",
+        "tag": null
+      },
+      "path": "scripts/check-semver.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:88 packages/zod/package.json:133 AGENTS.md:48",
+        "mechanism": "run by name from package scripts: root `check:semver` (pre-commit, per AGENTS.md) and the zod package's prepublishOnly",
+        "searched": "git grep 'check-versions'",
+        "tag": "named"
+      },
+      "path": "scripts/check-versions.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "vitest.config.ts:22 vitest.root.mjs:20",
+        "mechanism": "vitest setupFiles for the whole test run (pnpm test in CI)",
+        "searched": "git grep fail-on-console; vitest configs; .github/workflows/test.yml",
+        "tag": "named"
+      },
+      "path": "scripts/fail-on-console.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/zod/package.json:130",
+        "mechanism": "run by name in zod package postbuild",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "scripts/write-stub-package-jsons.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "package.json:76 packages/zod/vitest.config.ts:2",
+        "mechanism": "Vitest config-file convention for `pnpm test` (vitest run) at the root (Vitest docs, 'Configuring Vitest'); also imported by packages/zod/vitest.config.ts",
+        "searched": "git grep -F basename/stem over the tracked tree; root, packages/bench, packages/treeshake, packages/tsc package.json scripts; .github/workflows/*.yml; CONTRIBUTING.md, AGENTS.md, README.md; tsconfig/vitest/rollup configs; the directory loaders packages/bench/index.ts, packages/tsc/bench/index.ts",
+        "tag": "named"
+      },
+      "path": "vitest.config.ts",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

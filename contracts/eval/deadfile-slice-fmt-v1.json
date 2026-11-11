@@ -1,0 +1,263 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "fmt",
+    "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "CONTRIBUTING.md",
+      "sha256": "be39c4f99e35a65dc2212867fc13a58478c0591e2e1e523cc07a9e77a0c681f3",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "ChangeLog.md",
+      "sha256": "544e1b0fbbaf332d76478e4644fde49b5172e64e89daeff3b395913d5682605d",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "doc/ChangeLog-old.md",
+      "sha256": "779707b9ed897e64896d9bcd6b43ccee83786667f653cf571ff5d6c694ad2619",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 21,
+      "path": "doc/api.md",
+      "sha256": "7b166aa8f9bf3ca0d34217acfea49a517b6c9cdfa12bc0d1e246ea0886ffff45",
+      "stem_spelled": 10,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 2,
+      "path": "doc/get-started.md",
+      "sha256": "9ff59ec8d29adb40c612ff8fb739594bf010a7655ffd19d18c03589911cfc823",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "doc/index.md",
+      "sha256": "9def1ca3fca208d57126e67815fe9ec823037cf448cce46986cebd9256762601",
+      "stem_spelled": 22,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 3,
+      "path": "doc/syntax.md",
+      "sha256": "a4bf0f50977f71cf7a49f47cb77d1cfd861e23d2bab8e4896299a46399040c27",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "expression_statement",
+        "function_definition",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/docopt.py",
+      "sha256": "ee8a677f71fa3ab35fb456c141d8853a366fe91d5fe73c2f84e7b4d3014f6980",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "function_definition",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/printable.py",
+      "sha256": "c60d5af1143573bfb0995b36c3de7b56b2d8f8a910fbd7fea58b64bccf95f669",
+      "stem_spelled": 6,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "decorated_definition",
+        "expression_statement",
+        "function_definition",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "sha256": "16277cfc9b8b3a97a6759668276a58f40f2b75062bca60dbc1c7a1235c0bddf1",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "expression_statement",
+        "function_definition",
+        "future_import_statement",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/release.py",
+      "sha256": "188a8b8659d71441632d5011726495d7ace476a69d6bb22e3a466e52b331a0e1",
+      "stem_spelled": 8,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "test/gtest/gtest/gtest-spi.h",
+      "sha256": "bc7de52471740743412a62784af636375d05bf913302c74fc50483f20eff45f4",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "cpp": {
+        "basename_spelled": 1,
+        "convention": 1,
+        "document": 0,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 1,
+        "stem_spelled": 1,
+        "vouched": 0
+      },
+      "markdown": {
+        "basename_spelled": 7,
+        "convention": 0,
+        "document": 7,
+        "out_edges": 3,
+        "private": 0,
+        "rows": 7,
+        "stem_spelled": 7,
+        "vouched": 0
+      },
+      "python": {
+        "basename_spelled": 2,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 4,
+        "stem_spelled": 4,
+        "vouched": 0
+      }
+    },
+    "rows": 12
+  }
+}

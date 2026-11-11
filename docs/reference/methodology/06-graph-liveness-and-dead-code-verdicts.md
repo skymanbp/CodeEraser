@@ -32,8 +32,8 @@ include, import_star, type_ref, require, load, source, library, href, src, srcse
 dynamic` — the
 definition package's `store` table since plan v2.32 step 4
 ([Graph.hs:17-20](../../../core/app/CE/Lang/Common/Graph.hs#L17), read at
-[store.rs:218-220](../../../cli/src/graph/store.rs#L218)) — positions, not names, so reordering is a
-`GRAPH_REV` bump ([store.rs:178](../../../cli/src/graph/store.rs#L178), currently <!--ce:ver:graph_rev#digits-->`26`<!--/ce-->); `export_star` (a TS
+[store.rs:223-225](../../../cli/src/graph/store.rs#L223)) — positions, not names, so reordering is a
+`GRAPH_REV` bump ([store.rs:178](../../../cli/src/graph/store.rs#L178), currently <!--ce:ver:graph_rev#digits-->`27`<!--/ce-->); `export_star` (a TS
 `export *` / `export * as ns` statement) was split out of `export_from` at rev 13 because the mounts table
 reads it as a re-export target. Rev 14 (plan v2.17 L round step 8) added no kind: a Python `from
 __future__` opens an `import_from` site on the literal module name and a TS `import x = require("…")`
@@ -118,7 +118,7 @@ Numeric details that are policy, not taste:
   name that misses is an attribute and an absent `__init__.py` a namespace package, both quiet
   ([PyAlso.hs:1-24](../../../core/app/CE/Resolve/PyAlso.hs#L1)). They are edges every graph reader follows,
   stored with `edges.also` = 1 so the unresolved count still reads each site's own answer alone
-  ([load.rs:71-79](../../../cli/src/graph/load.rs#L71)). A star import (`from pkg import *`, no names of its
+  ([load.rs:74-82](../../../cli/src/graph/load.rs#L74)). A star import (`from pkg import *`, no names of its
   own) whose answer is a package `__init__.py` draws each name that file's literal `__all__` bindings and
   edits list, as `from pkg import n` would — the walk reads the list (`py.all`,
   [py_all.rs:1-7](../../../cli/src/graph/ladder/py_all.rs#L1)); when any binding or edit of `__all__` there is one
@@ -153,7 +153,7 @@ Numeric details that are policy, not taste:
 - Rust's `ResolvedVia` keeps the **original walk's rung** and records the hop as a separate
   `via_reexport` column, not as a new rung
   ([Rs.hs:224-226](../../../core/app/CE/Resolve/Rs.hs#L224),
-  [wire.rs:168-169](../../../cli/src/graph/wire.rs#L168)).
+  [wire.rs:171-172](../../../cli/src/graph/wire.rs#L171)).
 
 Cross-file staleness is closed at the resolve key rather than by re-sweeping: the
 target-content facts a ladder consults are six — the Markdown anchor set, a page's HTML `id`
@@ -172,22 +172,22 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:152-185](../../../cli/src/graph/wire.rs#L152)), and
+ledger-visible as sites *without* edges ([wire.rs:155-188](../../../cli/src/graph/wire.rs#L155)), and
 an `External` one is marked answered in its ledger word — `sites.ledger` bit 0, so the trust
 ledger never counts a stdlib, registry or vendored target as a miss (lane v235_licence,
-[wire.rs:97-110](../../../cli/src/graph/wire.rs#L97), [load.rs:60-69](../../../cli/src/graph/load.rs#L60)). An edge's
+[wire.rs:98-111](../../../cli/src/graph/wire.rs#L98), [load.rs:60-69](../../../cli/src/graph/load.rs#L60)). An edge's
 kind follows its site's: code kinds import; the Markdown link family and HTML's page references (`href`, a
 form's `action`) split doc_link / doc_ref by whether the target is a page (Markdown or HTML); an image, a
 `src` / `srcset` resource and an asset `<link>` are always assets
-([wire.rs:212-229](../../../cli/src/graph/wire.rs#L212), [wire.rs:231-240](../../../cli/src/graph/wire.rs#L231)).
+([wire.rs:215-232](../../../cli/src/graph/wire.rs#L215), [wire.rs:234-243](../../../cli/src/graph/wire.rs#L234)).
 Edge kinds
 are frozen positions: `EDGE_IMPORT = 0`, `EDGE_DOC_LINK = 1`, `EDGE_DOC_REF = 2`,
 `EDGE_ASSET = 3`, `EDGE_CONTAIN = 4`, and since 2.29.0 `EDGE_REFDEF_UNUSED = 5` — an unused
 reference definition's in-scope target, which resolves and travels as an edge while the core
 excludes it from liveness beside the asset kind
-([wire.rs:26-35](../../../cli/src/graph/wire.rs#L26), [Cost.hs:170-177](../../../core/app/CE/Graph/Cost.hs#L170)); granularity
+([wire.rs:27-36](../../../cli/src/graph/wire.rs#L27), [Cost.hs:170-177](../../../core/app/CE/Graph/Cost.hs#L170)); granularity
 codes are `GRAN_FILE = 0`, `GRAN_PACKAGE = 1`, `GRAN_SECTION = 2`
-([wire.rs:43-46](../../../cli/src/graph/wire.rs#L43)).
+([wire.rs:44-47](../../../cli/src/graph/wire.rs#L44)).
 
 Node identity is the pair `(path, unit)` over a `BTreeSet` of every walked file plus every edge
 target, so the id assignment is a function of the graph and the wire bytes are shuffle-proof
@@ -221,9 +221,9 @@ Two transformations happen on the way to the wire:
 
 The whole read runs in **one snapshot transaction**: as three autocommit statements a
 convergent writer landing between them could hand the edge query a source file the files query
-never saw ([load.rs:112-118](../../../cli/src/graph/load.rs#L112)). `unresolved_sites` is the count of sites
+never saw ([load.rs:115-121](../../../cli/src/graph/load.rs#L115)). `unresolved_sites` is the count of sites
 with no edge row, plus one for each star-import site whose `__all__` is opaque (`sites.ledger` bit 1,
-rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:143-148](../../../cli/src/graph/load.rs#L143)) and travels with the report so
+rev 26; [load.rs:60-69](../../../cli/src/graph/load.rs#L60)) ([load.rs:146-151](../../../cli/src/graph/load.rs#L146)) and travels with the report so
 the reader sees what the graph refuses to know
 ([deadcode.rs:27-29](../../../cli/src/graph/deadcode.rs#L27)).
 
@@ -487,7 +487,7 @@ which is a statement about sites, not about use: a file run by its name or found
 convention leaves no site, so a vouched dead file can still be in use, and the erase family
 never deletes one (book 12 §2, `reachable_by_name`).
 
-([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:148](../../../cli/src/graph/load.rs#L148), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
+([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:151](../../../cli/src/graph/load.rs#L151), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 
 ### 9. Acceptance
 

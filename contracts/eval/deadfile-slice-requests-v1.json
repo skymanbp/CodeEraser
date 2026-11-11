@@ -1,0 +1,153 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "requests",
+    "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "HISTORY.md",
+      "sha256": "f779ef32bdb04e23869a197f63812b0ca1f40ca1c4621f38cbcce06dbb6085b8",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "docs/_templates/sidebar.html",
+      "sha256": "1863aecd1bc986fe30ddb944aca522f99e669ef36e257e48a244e0b544c51a0c",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "import_from_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "docs/_themes/flask_theme_support.py",
+      "sha256": "bba3677c6eeb99f678e808e90142a025b798b7658bac1ab4632591df8441d209",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 1,
+      "path": "docs/conf.py",
+      "sha256": "6ae03d28d23dcc0dbbaf18334a7208a07eb87268bc1ebb6f81ad6931f9f217af",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "setup.py",
+      "sha256": "1728c11af4134997015ab07547544852e2f7e103c79a5b0486a8486799f50e0a",
+      "stem_spelled": 10,
+      "verdict": "unref_private"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "html": {
+        "basename_spelled": 1,
+        "convention": 0,
+        "document": 1,
+        "out_edges": 0,
+        "private": 1,
+        "rows": 1,
+        "stem_spelled": 1,
+        "vouched": 0
+      },
+      "markdown": {
+        "basename_spelled": 1,
+        "convention": 0,
+        "document": 1,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 1,
+        "stem_spelled": 1,
+        "vouched": 0
+      },
+      "python": {
+        "basename_spelled": 2,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 1,
+        "private": 2,
+        "rows": 3,
+        "stem_spelled": 3,
+        "vouched": 0
+      }
+    },
+    "rows": 5
+  }
+}

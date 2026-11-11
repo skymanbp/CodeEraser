@@ -1,0 +1,1354 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 0,
+      "same_side": 0,
+      "share": null
+    },
+    "first_named": {
+      "rows": 10,
+      "same_side": 10,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    },
+    "overall": {
+      "rows": 12,
+      "same_side": 12,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "r",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Brazil.r:109 source('Brazil/code/plot-3-panel.r'); README.md:95",
+        "mechanism": "sourced by base-Brazil.r (documented entry)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "Brazil/code/plot-3-panel.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Brazil.r:21 source(\"Brazil/code/preprocessing-subnation-brazil.r\")",
+        "mechanism": "sourced by base-Brazil.r",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "Brazil/code/preprocessing-subnation-brazil.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "Italy/code/plotting/make-plots.r:4; base-Italy.r:148",
+        "mechanism": "sourced by Italy/code/plotting/make-plots.r and make-scenario-plots-top7.r, both sourced by base-Italy.r",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "Italy/code/plotting/format-data-plotting.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:148",
+        "mechanism": "sourced by base-Italy.r (README Version 4 command)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "Italy/code/plotting/make-plots.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:148 source(\"Italy/code/plotting/make-plots.r\"); Italy/code/utils/simulate-regional.r:133",
+        "mechanism": "sourced by path from the Italy entry script (documented in README:105 as `Rscript base-italy.r ...`) and from the scenario simulator",
+        "searched": "git grep for basename/stem make-plots across all tracked files",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "Italy/code/plotting/make-plots.r:6 base-Italy.r:148",
+        "mechanism": "sourced by Italy/code/plotting/make-plots.r, sourced by base-Italy.r",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "Italy/code/plotting/make-rt-plot.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:183",
+        "mechanism": "sourced by base-Italy.r (scenario runs)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "Italy/code/plotting/make-scenario-plots-top7.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none: superseded by make-scenario-plots-top7.r which base-Italy.r sources (base-Italy.r:183); this file itself sources a non-existent Subnational_Analysis/... path (line 3)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": null
+      },
+      "path": "Italy/code/plotting/make-scenario-plots.r",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; base-Italy.r:183 sources the sibling make-scenario-plots-top7.r instead, and this file itself sources a non-existent path Subnational_Analysis/code/plotting/format_data_plotting.R",
+        "searched": "git grep 'make-scenario-plots', 'scenario-plots', 'scenario_plots', '/plotting', list.files/dir( loaders over *.r *.R *.md *.yml *.sh docker/*; README, docker/Dockerfile (copies only top-level *.r, nature, utils, data, stan-models), .github/workflows/ci.yml; Italy/code/utils/simulate-regional.r (paste0 subdir path builds only make-plots.r); only the usa/ copy is sourced (base-usa.r:203)",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "Italy/code/plotting/make-plots.r:5 base-Italy.r:148",
+        "mechanism": "sourced by Italy/code/plotting/make-plots.r, sourced by base-Italy.r",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "Italy/code/plotting/make-three-panel-plots.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:151",
+        "mechanism": "sourced by base-Italy.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "Italy/code/utils/make-table.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:18",
+        "mechanism": "sourced by base-Italy.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "Italy/code/utils/process-covariates-italy.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:17 source('Italy/code/utils/read-data-subnational.r'); README.md:105 (names base-italy.r, case differs)",
+        "mechanism": "sourced by base-Italy.r (documented Version 4 entry) and Italy/code/plotting/make-plots.r",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "Italy/code/utils/read-data-subnational.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-Italy.r:158",
+        "mechanism": "sourced by base-Italy.r in FULL mode",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "Italy/code/utils/simulate-regional.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:95 `Rscript base-Brazil.r`",
+        "mechanism": "documented README command (entry script of Version 5)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "base-Brazil.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:105 'source the base-italy.r file ... `Rscript base-italy.r ...`'",
+        "mechanism": "documented Version 4 entry (README spells it base-italy.r; same file on case-insensitive FS)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "generic"
+      },
+      "path": "base-Italy.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:69",
+        "mechanism": "documented command in README ('Rscript base-nature.r')",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "base-nature.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:37",
+        "mechanism": "documented entry script run by name",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "base-usa-cases.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:83",
+        "mechanism": "documented entry script run by name",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "base-usa.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:83 ... run the following command `Rscript base-usa.r`",
+        "mechanism": "documented top-level command",
+        "searched": "git grep base-usa",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:191 `Rscript base.r base`; docker/Dockerfile:34 CMD Rscript base.r base",
+        "mechanism": "documented main run command; Docker image CMD",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "base.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:120 'base_general.r and base_general.stan ... are now valid models for only version2'",
+        "mechanism": "named in README notice as a still-valid model for version 2 (no script runs it)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "base_general.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:59 docker/Dockerfile:26",
+        "mechanism": "documented script to run (Version 8 release); also copied into Docker image by COPY *.r",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "compute-ifr-europe.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:59 'The two files to run are `compute-ifr-europe.r` and `compute-ifr-usa.r`'",
+        "mechanism": "documented README command (Version 8 IFR scripts)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "compute-ifr-usa.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:59 The two files to run are `compute-ifr-europe.r` and `compute-ifr-usa.r`.",
+        "mechanism": "documented script to run",
+        "searched": "git grep compute-ifr-usa",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:108",
+        "mechanism": "run by name via system('Rscript covariate-size-effects.r') from base.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "covariate-size-effects.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none: only reference is commented-out code web-fetch-and-run.r:2; the CSV/RDS it would produce are committed; Docker COPY data data/ (docker/Dockerfile:23) copies the directory wholesale but nothing runs the script",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": null
+      },
+      "path": "data/fetch-ecdc.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:136",
+        "mechanism": "run by name via system('Rscript make-table.r') from base.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "make-table.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-nature.r:129 README.md:69 .github/workflows/ci.yml:60",
+        "mechanism": "sourced by base-nature.r (documented Nature entry, run in CI)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "nature/utils/covariate-size-effects.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-nature.r:129 source('nature/utils/covariate-size-effects.r'); README.md:69; .github/workflows/ci.yml:60",
+        "mechanism": "sourced by path from base-nature.r, which README documents (`Rscript base-nature.r`) and the CI conda job runs",
+        "searched": "git grep covariate-size-effects (other hits refer to the top-level covariate-size-effects.r)",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "nature/utils/make-table.r:9; base-nature.r:133; README.md:69",
+        "mechanism": "sourced by nature/utils/make-table.r, which base-nature.r sources",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "nature/utils/format-data.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "nature/utils/make-table.r:9 source('nature/utils/format-data.r'); base-nature.r:133 source('nature/utils/make-table.r')",
+        "mechanism": "sourced by nature/utils/make-table.r, itself sourced by base-nature.r (documented README.md:69)",
+        "searched": "git grep format-data, make-table",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "nature/utils/plot-3-panel.r:16 base-nature.r:125 .github/workflows/ci.yml:60",
+        "mechanism": "sourced by nature/utils/plot-3-panel.r, sourced by base-nature.r which CI runs",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "nature/utils/geom-stepribbon.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-nature.r:133 source('nature/utils/make-table.r'); README.md:69",
+        "mechanism": "sourced by base-nature.r",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "nature/utils/make-table.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-nature.r:125",
+        "mechanism": "sourced by base-nature.r (README.md:69 documented command)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "nature/utils/plot-3-panel.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-nature.r:19 source('nature/utils/process-covariates.r'); README.md:69 `Rscript base-nature.r`",
+        "mechanism": "sourced by base-nature.r, which README documents as the Nature run command",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "nature/utils/process-covariates.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:124 README.md:191",
+        "mechanism": "run by base.r via Rscript (default documented entry)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "plot-3-panel.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:130",
+        "mechanism": "run by name via system('Rscript plot-forecast.r') from base.r, the README's documented entry point (README.md:191)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "plot-forecast.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "preprocessing provenance script; its own header says 'No need to run this file'; its output tiers/data/npis_23Mar_02Dec.csv is committed and README.md:11 documents only tiers/spline_LFA.R",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls; grep for backdate_tiers / no_need_to_run / tiers/ found only .gitignore and README.md:11 (spline_LFA.R); spline_LFA.R reads tiers/data/*.rds, not this script",
+        "tag": null
+      },
+      "path": "tiers/no_need_to_run/backdate_tiers.R",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "none",
+        "mechanism": "self-declared provenance script ('No need to run this file'); nothing sources or runs it; its saveRDS of the output is commented out; spline_LFA.R reads the committed tiers/data/rt_covars_combined.rds",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": null
+      },
+      "path": "tiers/no_need_to_run/create_data.R",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "README.md:11",
+        "mechanism": "documented command to reproduce Tiers paper",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "tiers/spline_LFA.R",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/scrape-required-data.r:8",
+        "mechanism": "run by name via system('Rscript ...') from usa/code/scrape-required-data.r (referenced at base-usa.r:18)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/data-scrape/process-death-data-jhu.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/scrape-required-data.r:6 system(paste0(\"Rscript usa/code/data-scrape/process-death-data-nyt.r\"))",
+        "mechanism": "run by name from usa/code/scrape-required-data.r (the documented data refresh script)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "usa/code/data-scrape/process-death-data-nyt.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/scrape-required-data.r:6 system(\"Rscript usa/code/data-scrape/process-death-data-nyt.r\"); base-usa.r:18 '## to get latest data please run the scrape-required-data.r file'",
+        "mechanism": "run by name via Rscript from the data-update script that the USA entry script tells users to run",
+        "searched": "git grep process-death-data-nyt, scrape-required-data",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/scrape-required-data.r:25",
+        "mechanism": "run by name via system('Rscript ...') from usa/code/scrape-required-data.r, which base-usa.r:18 tells users to run for latest data",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/data-scrape/process-interventions.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "none",
+        "mechanism": "defines make_covariate_effect_size_plot; only calls are commented out inside the file itself; no source()/Rscript names the file",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": null
+      },
+      "path": "usa/code/plotting/covariate-effect-sizes.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/plotting/make-plots.r:1 base-usa.r:168 README.md:83",
+        "mechanism": "sourced by usa/code/plotting/make-plots.r, which base-usa.r and base-usa-cases.r source (README run commands)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/format-data-plotting.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:172",
+        "mechanism": "sourced by base-usa.r",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/infectiousness-plots.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:172 source(\"usa/code/plotting/infectiousness-plots.r\")",
+        "mechanism": "sourced by path from documented entry script base-usa.r (README.md:83)",
+        "searched": "git grep infectiousness-plots",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:168",
+        "mechanism": "sourced by base-usa.r (README Version 6 command)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/make-plots.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:168 source(\"usa/code/plotting/make-plots.r\"); base-usa-cases.r:169",
+        "mechanism": "sourced by path from documented entry scripts",
+        "searched": "git grep make-plots",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:183 source(\"usa/code/plotting/make-rt-percentage-map.r\"); README.md:83 `Rscript base-usa.r`",
+        "mechanism": "sourced by base-usa.r in FULL mode; base-usa.r is a documented README command",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/make-rt-percentage-map.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/plotting/make-plots.r:3 base-usa.r:168",
+        "mechanism": "sourced by usa/code/plotting/make-plots.r, sourced by base-usa.r",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/make-rt-plot.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/plotting/make-plots.r:3 source(\"usa/code/plotting/make-rt-plot.r\")",
+        "mechanism": "sourced by usa make-plots.r, which base-usa.r sources",
+        "searched": "git grep make-rt-plot",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:203",
+        "mechanism": "sourced by base-usa.r (scenario runs)",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/make-scenario-plots.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "usa/code/plotting/make-plots.r:2",
+        "mechanism": "sourced by usa/code/plotting/make-plots.r, which base-usa.r sources",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/plotting/make-three-panel-plots.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "near-duplicate of usa/code/plotting/make-rt-plot.r; usa/code/plotting/make-plots.r:3 sources make-rt-plot.r, nothing names make_rt_plot.R",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls; grep for make_rt_plot / rt_plot / make_rt / list.files / dir( found only the file itself and make-rt-plot.r",
+        "tag": null
+      },
+      "path": "usa/code/plotting/make_rt_plot.R",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:18 '## to get latest data please run the scrape-required-data.r file'; base-usa-cases.r:18",
+        "mechanism": "documented in base-usa.r as the step to run for latest data (commented system() call)",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "usa/code/scrape-required-data.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:195 source(\"usa/code/simulate.r\"); README.md:83",
+        "mechanism": "sourced by base-usa.r in FULL mode",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "usa/code/simulate.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:173",
+        "mechanism": "sourced by base-usa.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/calculate-infectiousness.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:215",
+        "mechanism": "sourced by base-usa.r in FULL mode",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/create-output-files.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:90 base-usa-cases.r:94 usa/code/scrape-required-data.r:47",
+        "mechanism": "documented manual step: base-usa.r tells the user to run this file to get foursquare-based mobility predictions (google-mobility-forecast.csv); its call in scrape-required-data.r is commented out",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/mobility-reg/mobility-regression.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa-cases.r:17; README.md:37 `Rscript base-usa-cases.r`",
+        "mechanism": "sourced by base-usa-cases.r, a documented README command",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/process-covariates-usa-cases.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:17 source('usa/code/utils/process-covariates.r'); README.md:83",
+        "mechanism": "sourced by base-usa.r and usa/code/simulate.r",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/process-covariates.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa-cases.r:16 README.md:37",
+        "mechanism": "sourced by base-usa-cases.r (documented entry)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/read-data-usa-cases.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base-usa.r:16",
+        "mechanism": "sourced by base-usa.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "usa/code/utils/read-data-usa.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "plot-3-panel.r:17 plot-forecast.r:16 base.r:124 docker/Dockerfile:34",
+        "mechanism": "sourced by plot-3-panel.r and plot-forecast.r, which base.r runs via Rscript (default README/Docker command)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "utils/geom-stepribbon.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "compute-ifr-europe.r:10 compute-ifr-usa.r:8",
+        "mechanism": "sourced by compute-ifr-europe.r and compute-ifr-usa.r (documented scripts)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "utils/get-ar.r",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "compute-ifr-usa.r:8 source(\"utils/get-ar.r\"); compute-ifr-europe.r:10; README.md:59",
+        "mechanism": "sourced by the documented IFR scripts",
+        "searched": "git grep get-ar",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:11",
+        "mechanism": "sourced by base.r, the README's documented entry point",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "utils/process-covariates.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:10 README.md:191",
+        "mechanism": "sourced by base.r (documented default entry)",
+        "searched": "git grep -n for basename/stem/dir; all source(/system(/Rscript calls; list.files/dir/Sys.glob loaders (none); README.md, docker/Dockerfile, .dockerignore, .github/workflows/ci.yml, docker/run_model_script.sh",
+        "tag": "named"
+      },
+      "path": "utils/read-data.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none: only effect is being swept into the Docker image by the glob COPY *.r (docker/Dockerfile:26), which runs base.r, not this file; nothing runs or documents it",
+        "searched": "git grep -n -i for basename, stem and directory across all tracked files (excluding csv/ipynb); read README.md, docker/Dockerfile, docker/README.md, docker/run_model_script.sh, .github/workflows/ci.yml, nature/README.md, environment.yml; checked source()/system('Rscript ...') loaders and list.files/dir() walkers",
+        "tag": null
+      },
+      "path": "web-fetch-and-run.r",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; it only runs `Rscript base.r base` (its ECDC fetch is commented out); the Docker image CMD and docker/run_model_script.sh run base.r directly",
+        "searched": "git grep web-fetch-and-run, web-fetch, fetch in *.md *.sh *.yml docker/*; README.md, docker/README.md, docker/Dockerfile (COPY *.r copies it into the image but CMD is `Rscript base.r base`), docker/run_model_script.sh, .github/workflows/ci.yml; all *.r for system()/source() calls",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "base.r:142",
+        "mechanism": "run by name via system('Rscript web-verify-output.r') from base.r",
+        "searched": "git grep -F of basename and stem over the whole tree (r/R/md/yml/sh/Dockerfile), README.md, nature/README.md, docker/README.md, docker/Dockerfile, .github/workflows/ci.yml, source()/system('Rscript') calls",
+        "tag": "named"
+      },
+      "path": "web-verify-output.r",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

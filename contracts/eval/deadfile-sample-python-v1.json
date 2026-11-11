@@ -1,0 +1,355 @@
+{
+  "allocation": {
+    "covid19model": 2,
+    "fmt": 4,
+    "koreader": 2,
+    "requests": 3
+  },
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "lang": "python",
+  "method": "per language over the frozen slices: rank id = sha256(domain|corpus|commit|path); at most `total` primary rows by the language exams' quota rule over corpora (each corpus first min(15, pool), the seats left by largest remainder), each corpus taking its lowest rank-domain hashes; the reserve is the audit-domain rank over the unpicked rest, at most `reserve` rows; a language with fewer than `whole_below` rows is taken whole with no reserve. Rows stored in audit-domain order.",
+  "pool": 11,
+  "reserve": [],
+  "rows": [
+    {
+      "audit": "05ff945e3b0dcac75b2954c24e76e630310926f17e43b962f57e932ba889d696",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "function_definition",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "Python/src/util.py",
+      "rank": "20b8f6791a987f9ce9f13ad6c8ced1bada4505956563570bf7b6d791fa30f3bb",
+      "sha256": "6dda30d879bf203f3688f2590963592ecaf70e1398c9bb71f590848ac0a234e9",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "5230bec37942593f032ed359111d9060fe41e9e12210cd38693fcadc0f5e3bae",
+      "basename_spelled": 0,
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "fmt",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "decorated_definition",
+        "expression_statement",
+        "function_definition",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "rank": "dc8fcb3289e0a8abae39bc7af70e551a315009cb81488910c6bc32230c78113e",
+      "sha256": "16277cfc9b8b3a97a6759668276a58f40f2b75062bca60dbc1c7a1235c0bddf1",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "5e4f4c18114577a620fd93388eed6ece2351c948087d7976cb905aca99ba1b8f",
+      "basename_spelled": 1,
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "fmt",
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "expression_statement",
+        "function_definition",
+        "future_import_statement",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/release.py",
+      "rank": "53d109ba98bdcf613d95a3b491a013541c07ff310be2b87f72277faadea612aa",
+      "sha256": "188a8b8659d71441632d5011726495d7ace476a69d6bb22e3a466e52b331a0e1",
+      "stem_spelled": 8,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "70d53a93f77858a77d4a50c63de41a45881b22c3e47544945203f855bc873182",
+      "basename_spelled": 2,
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "requests",
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "setup.py",
+      "rank": "cda59ae198f48c4efb8907dfb7b6d05798d3709a34803f7d3517ab2a404d54f3",
+      "sha256": "1728c11af4134997015ab07547544852e2f7e103c79a5b0486a8486799f50e0a",
+      "stem_spelled": 10,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "8c3723da2f7a087a9cfb5df5dc97c77cba8bad6a4716faccd5c768553e7e80cc",
+      "basename_spelled": 0,
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "fmt",
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "expression_statement",
+        "function_definition",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/docopt.py",
+      "rank": "a07a8fc18952ba64874f8eb790dacbd8d8c2550a23ab2b3b20640bc6c7b9e0fb",
+      "sha256": "ee8a677f71fa3ab35fb456c141d8853a366fe91d5fe73c2f84e7b4d3014f6980",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "a66828666ba59a045f8b2806e7550ede972c0da669938f35787539b3046967df",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "function_definition",
+        "if_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "tools/logcat.py",
+      "rank": "f15899395fc33784b9396193edf45a8912574ca24c2acc7a0e17871147bd1281",
+      "sha256": "a1f805019ff5593a2d7efbcb2f4061e046a846fa56a0b38a9432080541f5cffb",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "b168b83d1b6c3e9b7c0134b01010649965639d417d26f698da281af6b357b828",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "expression_statement",
+        "function_definition",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "tools/ja_keyboard_generate.py",
+      "rank": "bc923768ee064bd334bc26247185fcd9f5b8129e6df916461b26bcc1b7f2cf3c",
+      "sha256": "f1fc6531ea165e5ae397f5b2f0bdb8681a969f55083cb317db6dc3a9c6125018",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "bca44ee26570c22dc3d2a7d8a9d203c2b5becf74b2fc595b6f86d3d848e55e93",
+      "basename_spelled": 1,
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "fmt",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "function_definition",
+        "if_statement",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "support/printable.py",
+      "rank": "52fda4a60b023541aa27f2cdc230e649e5e00ad72159840c5185277aa5d89b34",
+      "sha256": "c60d5af1143573bfb0995b36c3de7b56b2d8f8a910fbd7fea58b64bccf95f669",
+      "stem_spelled": 6,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "c690a8f2e4d50499268e9959613aeeb825976b9b9c252a3e5122892eb0dd426e",
+      "basename_spelled": 1,
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "requests",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 1,
+      "path": "docs/conf.py",
+      "rank": "b4b3391e1d6fb3e08d1778fee761e03771416c3d0b408de0f729b5a6da7676e6",
+      "sha256": "6ae03d28d23dcc0dbbaf18334a7208a07eb87268bc1ebb6f81ad6931f9f217af",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "cabd9fd15e0e624252522a7daed5c66217987cc22d561e168672ca6dc9659218",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "Python/src/dataset.py",
+      "rank": "ab72bee4c6829943d408846fe050143dc3e5aa8a69fb71275db1d7be88db0e5c",
+      "sha256": "7da8877e68e5a057bf1286bb21fcf27b7078fa9233fd8944a70af8224beb7968",
+      "stem_spelled": 5,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "de06ee998271ee474011b70e316f11c5f8d5305224f4b3335e60b08d1417d553",
+      "basename_spelled": 0,
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "requests",
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "import_from_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "docs/_themes/flask_theme_support.py",
+      "rank": "c601b8f458d1b521e53119a8fe3c8f6009db897164d3d88ba193e0ac604d7185",
+      "sha256": "bba3677c6eeb99f678e808e90142a025b798b7658bac1ab4632591df8441d209",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    }
+  ],
+  "schema": "ce.eval-deadfile-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "cobra",
+      "rows": 0,
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+    },
+    {
+      "corpus": "codeeraser",
+      "rows": 0,
+      "tip": "af1c29958f2ee4d2322594784a4f9b7524559194"
+    },
+    {
+      "corpus": "covid19model",
+      "rows": 64,
+      "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+    },
+    {
+      "corpus": "fmt",
+      "rows": 12,
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+    },
+    {
+      "corpus": "gson",
+      "rows": 21,
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+    },
+    {
+      "corpus": "jsoup",
+      "rows": 53,
+      "tip": "093e2f58492c531667e551e8793513a41b22443e"
+    },
+    {
+      "corpus": "koreader",
+      "rows": 150,
+      "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+    },
+    {
+      "corpus": "lua",
+      "rows": 34,
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+    },
+    {
+      "corpus": "luarocks",
+      "rows": 69,
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+    },
+    {
+      "corpus": "requests",
+      "rows": 5,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+    },
+    {
+      "corpus": "ripgrep",
+      "rows": 4,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "corpus": "stringr",
+      "rows": 5,
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+    },
+    {
+      "corpus": "zod",
+      "rows": 142,
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+    }
+  ]
+}

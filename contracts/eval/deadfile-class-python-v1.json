@@ -1,0 +1,309 @@
+{
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "python",
+  "method": "every universe row of one language, from the frozen slices: sample membership from the frozen sample (primary / reserve / undrawn); doc_class and K0 from the slice row (universe_counts.py's DECLARES over the slice's top-level kinds); K1 and K1-strict from the text at the pinned tip through the product's parser (BARS.md section 2 with addenda 2 and 3: k1.rs, k1_lang.rs, k1_tables.rs), each with the kind and line of its first active top-level statement; the ruling numbers the K1 walk met; the lines of ruling 16's fragments; the sha256 of the classified bytes. Per corpus the pool and primary counts of BARS section 1's weights.",
+  "per_corpus": {
+    "covid19model": {
+      "pool": 2,
+      "primary": 2
+    },
+    "fmt": {
+      "pool": 4,
+      "primary": 4
+    },
+    "koreader": {
+      "pool": 2,
+      "primary": 2
+    },
+    "requests": {
+      "pool": 3,
+      "primary": 3
+    }
+  },
+  "rows": [
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "Python/src/dataset.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "7da8877e68e5a057bf1286bb21fcf27b7078fa9233fd8944a70af8224beb7968"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "Python/src/util.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6dda30d879bf203f3688f2590963592ecaf70e1398c9bb71f590848ac0a234e9"
+    },
+    {
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "support/docopt.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ee8a677f71fa3ab35fb456c141d8853a366fe91d5fe73c2f84e7b4d3014f6980"
+    },
+    {
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        42
+      ],
+      "k1_witness": [
+        "expression_statement",
+        42
+      ],
+      "path": "support/printable.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c60d5af1143573bfb0995b36c3de7b56b2d8f8a910fbd7fea58b64bccf95f669"
+    },
+    {
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        16
+      ],
+      "k1_witness": [
+        "if_statement",
+        16
+      ],
+      "path": "support/python/mkdocstrings_handlers/cxx/__init__.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "16277cfc9b8b3a97a6759668276a58f40f2b75062bca60dbc1c7a1235c0bddf1"
+    },
+    {
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        114
+      ],
+      "k1_witness": [
+        "if_statement",
+        114
+      ],
+      "path": "support/release.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "188a8b8659d71441632d5011726495d7ace476a69d6bb22e3a466e52b331a0e1"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        38
+      ],
+      "k1_witness": [
+        "expression_statement",
+        38
+      ],
+      "path": "tools/ja_keyboard_generate.py",
+      "rulings": [
+        9,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "f1fc6531ea165e5ae397f5b2f0bdb8681a969f55083cb317db6dc3a9c6125018"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        346
+      ],
+      "k1_witness": [
+        "if_statement",
+        346
+      ],
+      "path": "tools/logcat.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a1f805019ff5593a2d7efbcb2f4061e046a846fa56a0b38a9432080541f5cffb"
+    },
+    {
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "docs/_themes/flask_theme_support.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "bba3677c6eeb99f678e808e90142a025b798b7658bac1ab4632591df8441d209"
+    },
+    {
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        24
+      ],
+      "k1_witness": [
+        "expression_statement",
+        24
+      ],
+      "path": "docs/conf.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6ae03d28d23dcc0dbbaf18334a7208a07eb87268bc1ebb6f81ad6931f9f217af"
+    },
+    {
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        3
+      ],
+      "k1_witness": [
+        "if_statement",
+        3
+      ],
+      "path": "setup.py",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "1728c11af4134997015ab07547544852e2f7e103c79a5b0486a8486799f50e0a"
+    }
+  ],
+  "schema": "ce.eval-deadfile-class/1.0.0",
+  "summary": {
+    "k1_differs_from_strict": 0,
+    "primary": {
+      "k0": {
+        "declares": 3,
+        "runs-alone": 8
+      },
+      "k1": {
+        "declares": 4,
+        "runs-alone": 7
+      },
+      "k1_strict": {
+        "declares": 4,
+        "runs-alone": 7
+      }
+    },
+    "rows": 11,
+    "rows_per_ruling": {
+      "15": 1,
+      "9": 1
+    },
+    "universe": {
+      "k0": {
+        "declares": 3,
+        "runs-alone": 8
+      },
+      "k1": {
+        "declares": 4,
+        "runs-alone": 7
+      },
+      "k1_strict": {
+        "declares": 4,
+        "runs-alone": 7
+      }
+    }
+  }
+}

@@ -1,0 +1,975 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    },
+    "first_named": {
+      "rows": 8,
+      "same_side": 8,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 0,
+      "same_side": 0,
+      "share": null
+    },
+    "overall": {
+      "rows": 10,
+      "same_side": 10,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "java",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:224 (-Xplugin:ErrorProne); .github/workflows/build.yml:55 (mvn verify javadoc:jar)",
+        "mechanism": "Compiled from src/main/java; supplies the published package Javadoc and the package-level @CheckReturnValue enforced by Error Prone",
+        "searched": "git grep package-info / module-info in *.xml *.yml *.md *.pro; gson/pom.xml compiler, javadoc, moditect, gson-subset config; root pom.xml Error Prone and javadoc config",
+        "tag": "generic"
+      },
+      "path": "gson/src/main/java/com/google/gson/annotations/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java:43 (@IgnoreJRERequirement); pom.xml:532",
+        "mechanism": "Annotation type used in source and named in the animal-sniffer Android API check configuration; deleting it breaks compilation and the API check",
+        "searched": "git grep -w IgnoreJRERequirement",
+        "tag": "named"
+      },
+      "path": "gson/src/main/java/com/google/gson/internal/bind/IgnoreJRERequirement.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java:43 @IgnoreJRERequirement; pom.xml:532",
+        "mechanism": "package-private annotation applied by a sibling class (compile dependency) and named in the animal-sniffer Android compatibility check config",
+        "searched": "git grep IgnoreJRERequirement",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java:983 (Class.forName(\"com.google.gson.internal.bind.JavaTimeTypeAdapters\")); GsonBuilder.java:980",
+        "mechanism": "Loaded reflectively by fully-qualified class name string; provides the java.time adapters GsonBuilder installs",
+        "searched": "git grep -w JavaTimeTypeAdapters; git grep javaTimeTypeAdapterFactory",
+        "tag": "named"
+      },
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:224 (-Xplugin:ErrorProne on maven-compiler-plugin); the file itself applies @com.google.errorprone.annotations.CheckReturnValue to the package",
+        "mechanism": "Maven compiles every file under src/main/java; package-info carries the package Javadoc and the package-level @CheckReturnValue that the Error Prone compiler plugin enforces on the build",
+        "searched": "git grep package-info / module-info in *.xml *.yml *.md *.pro; gson/pom.xml compiler, javadoc, moditect, gson-subset config; root pom.xml Error Prone and javadoc config",
+        "tag": "generic"
+      },
+      "path": "gson/src/main/java/com/google/gson/internal/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/pom.xml:432 (<include>com/google/gson/package-info.java</include>); .github/workflows/build.yml:72",
+        "mechanism": "Compiled from src/main/java (package Javadoc + @CheckReturnValue for Error Prone) and explicitly copied by path into the gson-subset profile build run in CI",
+        "searched": "git grep package-info / module-info in *.xml *.yml *.md *.pro; gson/pom.xml compiler, javadoc, moditect, gson-subset config; root pom.xml Error Prone and javadoc config",
+        "tag": "named"
+      },
+      "path": "gson/src/main/java/com/google/gson/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:224 (-Xplugin:ErrorProne); .github/workflows/build.yml:55 (mvn verify javadoc:jar)",
+        "mechanism": "Compiled from src/main/java; supplies the published package Javadoc and the package-level @CheckReturnValue enforced by Error Prone",
+        "searched": "git grep package-info / module-info in *.xml *.yml *.md *.pro; gson/pom.xml compiler, javadoc, moditect, gson-subset config; root pom.xml Error Prone and javadoc config",
+        "tag": "generic"
+      },
+      "path": "gson/src/main/java/com/google/gson/reflect/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/pom.xml:438 (<include>com/google/gson/stream/package-info.java</include>); .github/workflows/build.yml:72 (gson-subset profile)",
+        "mechanism": "Compiled from src/main/java (package Javadoc + @CheckReturnValue for Error Prone) and explicitly copied by path into the gson-subset profile build run in CI",
+        "searched": "git grep package-info / module-info in *.xml *.yml *.md *.pro; gson/pom.xml compiler, javadoc, moditect, gson-subset config; root pom.xml Error Prone and javadoc config",
+        "tag": "named"
+      },
+      "path": "gson/src/main/java/com/google/gson/stream/package-info.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/pom.xml:438 <include>com/google/gson/stream/package-info.java</include>",
+        "mechanism": "javac/javadoc package-info convention (package Javadoc + @CheckReturnValue on the package, JLS 7.4.1); also listed explicitly in the gson module build",
+        "searched": "git grep package-info, javadoc in pom.xml, gson/pom.xml",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/pom.xml:325 (<moduleInfoFile>${project.build.sourceDirectory}/module-info.java</moduleInfoFile>); gson/pom.xml:111-112",
+        "mechanism": "Compiled and added to the published JAR by the ModiTect plugin (excluded from default-compile, read by path)",
+        "searched": "git grep module-info in *.xml *.md *.pro",
+        "tag": "named"
+      },
+      "path": "gson/src/main/java/module-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "gson/pom.xml:183 (Failsafe plugin 'see `*IT.java` test classes'); .github/workflows/build.yml:55 (mvn verify)",
+        "mechanism": "Maven Failsafe convention: *IT.java test classes run in the integration-test phase of `mvn verify`",
+        "searched": "git grep OSGiManifestIT (no name references); gson/pom.xml failsafe config; build.yml",
+        "tag": "generic"
+      },
+      "path": "gson/src/test/java/com/google/gson/integration/OSGiManifestIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitivesDeserializationBenchmark.java:44; CollectionsDeserializationBenchmark.java:36; SerializationBenchmark.java:43; .github/workflows/build.yml:55 (mvn verify, metrics not excluded)",
+        "mechanism": "Same-package compile dependency of the metrics benchmarks; deleting it breaks compilation of the metrics module, which the CI build compiles",
+        "searched": "git grep -w BagOfPrimitives",
+        "tag": "named"
+      },
+      "path": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitives.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "metrics/README.md:3 (module contains the source for running benchmark tests); ReleaseProcess.md:105 (vogar --benchmark ... path/to/Benchmark.java)",
+        "mechanism": "Standalone Caliper benchmark entry point (public static void main) of the metrics module, whose stated purpose is running benchmarks; ReleaseProcess.md documents running any benchmark file by path with vogar. Not named individually anywhere.",
+        "searched": "git grep -w on the class name over the whole tree; metrics/pom.xml (no exec/plugin config), metrics/README.md, ReleaseProcess.md, .github/workflows/*.yml (build.yml:55 compiles metrics but runs no benchmark)",
+        "tag": "generic"
+      },
+      "path": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitivesDeserializationBenchmark.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "ReleaseProcess.md:108 and ReleaseProcess.md:116",
+        "mechanism": "Run by name in a documented command (vogar benchmark example)",
+        "searched": "git grep -w CollectionsDeserializationBenchmark",
+        "tag": "named"
+      },
+      "path": "metrics/src/main/java/com/google/gson/metrics/CollectionsDeserializationBenchmark.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "ReleaseProcess.md:116 src/main/java/com/google/gson/metrics/CollectionsDeserializationBenchmark.java (vogar --benchmark example); pom.xml:35 <module>metrics</module>",
+        "mechanism": "documented benchmark command in release docs",
+        "searched": "git grep CollectionsDeserializationBenchmark, metrics in .github and docs",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitivesDeserializationBenchmark.java:38; ParseBenchmark.java:165; SerializationBenchmark.java:37; CollectionsDeserializationBenchmark.java:43; .github/workflows/build.yml:55",
+        "mechanism": "Same-package compile dependency: every benchmark main() calls NonUploadingCaliperRunner.run; deleting it breaks compilation of the metrics module",
+        "searched": "git grep -w NonUploadingCaliperRunner",
+        "tag": "named"
+      },
+      "path": "metrics/src/main/java/com/google/gson/metrics/NonUploadingCaliperRunner.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "metrics/README.md:3; ReleaseProcess.md:105 (vogar --benchmark ... path/to/Benchmark.java); ParseBenchmark.java:149 opens /ParseBenchmarkData.zip",
+        "mechanism": "Standalone Caliper benchmark entry point (main) of the metrics module and the only reader of metrics/src/main/resources/ParseBenchmarkData.zip; not named individually in docs or scripts",
+        "searched": "git grep -w on the class name over the whole tree; metrics/pom.xml (no exec/plugin config), metrics/README.md, ReleaseProcess.md, .github/workflows/*.yml (build.yml:55 compiles metrics but runs no benchmark)",
+        "tag": "generic"
+      },
+      "path": "metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "metrics/README.md:3; metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java:164; pom.xml:35 <module>metrics</module>; .github/workflows/build.yml:55",
+        "mechanism": "standalone benchmark program (public static void main via NonUploadingCaliperRunner) of the metrics module, whose README says the module exists to run internal benchmarks; it is the only reader of the module's ParseBenchmarkData.zip resource; compiled by CI mvn verify over all modules",
+        "searched": "git grep ParseBenchmark, metrics, caliper across repo, workflows, docs. Note: not named in any doc command; deleting would not break a build, only remove a runnable benchmark (borderline)",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "metrics/README.md:3; ReleaseProcess.md:105 (vogar --benchmark ... path/to/Benchmark.java)",
+        "mechanism": "Standalone Caliper benchmark entry point (main) of the metrics module; not named individually in docs or scripts",
+        "searched": "git grep -w on the class name over the whole tree; metrics/pom.xml (no exec/plugin config), metrics/README.md, ReleaseProcess.md, .github/workflows/*.yml (build.yml:55 compiles metrics but runs no benchmark)",
+        "tag": "generic"
+      },
+      "path": "metrics/src/main/java/com/google/gson/metrics/SerializationBenchmark.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test-jpms/README.md:3 (test module-info is the subject of the module); pom.xml:31 (<module>test-jpms</module>); .github/workflows/build.yml:55 (mvn verify); test-jpms has no other main sources (git ls-files test-jpms)",
+        "mechanism": "Dummy main module descriptor compiled by maven-compiler-plugin; per its own Javadoc the plugin fails to compile test sources that have module-info.java when main sources lack one, so deleting it breaks the test-jpms build",
+        "searched": "git ls-files test-jpms; test-jpms/pom.xml; test-jpms/README.md; root pom.xml modules",
+        "tag": "named"
+      },
+      "path": "test-jpms/src/main/java/module-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test-jpms/README.md:3 (\"The module declaration file `src/test/java/module-info.java` uses Gson's module.\"); pom.xml:31",
+        "mechanism": "The test module descriptor that test-jpms exists to compile and run against Gson's module (JPMS tests)",
+        "searched": "git ls-files test-jpms; test-jpms/README.md; test-jpms/pom.xml",
+        "tag": "named"
+      },
+      "path": "test-jpms/src/test/java/module-info.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test-jpms/pom.xml:25 <name>Test: Java Platform Module System (JPMS)</name>; pom.xml:31 <module>test-jpms</module>; .github/workflows/build.yml:55 mvn verify",
+        "mechanism": "Java module descriptor convention (javac / Maven Compiler Plugin treat module-info.java in a source root as the module declaration); the test-jpms module exists to test JPMS and its tests depend on these requires/opens",
+        "searched": "test-jpms/pom.xml, root pom modules, workflows",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test-shrinker/src/test/java/com/google/gson/it/ShrinkingIT.java:234; test-shrinker/common.pro:18",
+        "mechanism": "Loaded by class-name string from the shrunken JAR by ShrinkingIT and kept by name in the ProGuard/R8 rule files",
+        "searched": "git grep -w NoSerializedNameMain",
+        "tag": "named"
+      },
+      "path": "test-shrinker/src/main/java/com/example/NoSerializedNameMain.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test-shrinker/src/test/java/com/google/gson/it/ShrinkingIT.java:24 and :314; test-shrinker/common.pro:44",
+        "mechanism": "Deliberately unused fixture: ShrinkingIT imports it and asserts the shrinker removed it; common.pro keeps its name",
+        "searched": "git grep -w UnusedClass",
+        "tag": "named"
+      },
+      "path": "test-shrinker/src/main/java/com/example/UnusedClass.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "test-shrinker/pom.xml:201-206 (maven-failsafe-plugin integration-test goal); ShrinkingIT.java:43; .github/workflows/build.yml:55",
+        "mechanism": "Maven Failsafe convention: *IT.java runs in integration-test phase of test-shrinker during mvn verify",
+        "searched": "git grep ShrinkingIT; test-shrinker/pom.xml",
+        "tag": "generic"
+      },
+      "path": "test-shrinker/src/test/java/com/google/gson/it/ShrinkingIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:242",
+        "mechanism": "packaged into the jsoup-examples classifier jar (jar-examples execution includes org/jsoup/examples/**) and named as that jar's Main-Class",
+        "searched": "git grep -w HtmlToPlainText, pom.xml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/examples/HtmlToPlainText.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:233-237; src/main/java/org/jsoup/examples/package-info.java:3",
+        "mechanism": "packaged into the jsoup-examples classifier jar (jar-examples execution includes org/jsoup/examples/**); documented CLI command in its own javadoc and examples package-info",
+        "searched": "git grep -w ListLinks (no other hits), pom.xml",
+        "tag": "generic"
+      },
+      "path": "src/main/java/org/jsoup/examples/ListLinks.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:233-237; README.md:20",
+        "mechanism": "packaged into the jsoup-examples classifier jar (jar-examples execution includes org/jsoup/examples/**); README links its source as the sample",
+        "searched": "git grep -w Wikipedia, pom.xml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/examples/Wikipedia.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79",
+        "mechanism": "package-info.java convention; compiled by compile-package-info and supplies the examples package javadoc",
+        "searched": "pom.xml, build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/examples/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/helper/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/internal/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/nodes/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/package-info.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 <include>**/package-info.java</include> (compile-package-info execution, pom.xml:70)",
+        "mechanism": "package-info convention (package Javadoc + @NullMarked package annotation), compiled by a dedicated pom execution",
+        "searched": "git grep package-info in pom.xml and sources",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/parser/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/safety/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:79 (<include>**/package-info.java</include> in compile-package-info); pom.xml:173-176 (attach-javadoc jar)",
+        "mechanism": "javac/javadoc package-info.java convention (JLS 7.4.1; package annotations + package javadoc); compiled explicitly by the compile-package-info execution and fed to the javadoc jar",
+        "searched": "pom.xml, .github/workflows/build.yml",
+        "tag": "named"
+      },
+      "path": "src/main/java/org/jsoup/select/package-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:509-511",
+        "mechanism": "module-info.java convention (JLS 7.7) in the java11 overlay compile root; becomes META-INF/versions/11/module-info.class of the multi-release jar",
+        "searched": "pom.xml, build.yml",
+        "tag": "generic"
+      },
+      "path": "src/main/java11/module-info.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/main/java/org/jsoup/helper/RequestDispatch.java:25; src/test/java11/org/jsoup/integration/MultiReleaseJarIT.java:33",
+        "mechanism": "loaded reflectively by name (Java 11 overlay of the multi-release jar); verified by MultiReleaseJarIT",
+        "searched": "git grep -w HttpClientExecutor",
+        "tag": "named"
+      },
+      "path": "src/main/java11/org/jsoup/helper/HttpClientExecutor.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/main/java/org/jsoup/helper/RequestDispatch.java:25 Class.forName(\"org.jsoup.helper.HttpClientExecutor\"); pom.xml:509 compileSourceRoot src/main/java11",
+        "mechanism": "multi-release JAR Java 11 overlay source root, loaded reflectively by class name",
+        "searched": "git grep HttpClientExecutor, java11 in pom/sources",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/main/java/org/jsoup/helper/AuthenticationHandler.java:21; pom.xml:509",
+        "mechanism": "loaded reflectively by name from the Java 11 overlay of the multi-release jar",
+        "searched": "git grep -w RequestAuthHandler",
+        "tag": "named"
+      },
+      "path": "src/main/java11/org/jsoup/helper/RequestAuthHandler.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "src/main/java/org/jsoup/helper/AuthenticationHandler.java:21 Class.forName(\"org.jsoup.helper.RequestAuthHandler\"); pom.xml:509",
+        "mechanism": "multi-release JAR Java 11 overlay, loaded reflectively by class name",
+        "searched": "git grep RequestAuthHandler",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "unused",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none found: test-scope helper class with only a static run(); no @Test, name does not match surefire (*Test) or failsafe (*IT) patterns, never called",
+        "searched": "git grep -n -w Benchmark (no hits outside the file), git grep Benchmark.run, pom.xml surefire/failsafe config, build.yml, README/CHANGES/CONTRIBUTING; no reflective loaders name it",
+        "tag": null
+      },
+      "path": "src/test/java/org/jsoup/integration/Benchmark.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:290-300; .github/workflows/build.yml:31; src/test/java11/org/jsoup/integration/HttpClientConnectIT.java:24",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify; also superclass of HttpClientConnectIT",
+        "searched": "git grep -w ConnectIT, pom.xml, build.yml",
+        "tag": "named"
+      },
+      "path": "src/test/java/org/jsoup/integration/ConnectIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:36; pom.xml:559-563; src/test/java/org/jsoup/integration/FuzzFixesTest.java:20",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify; tagged long-running, excluded by default and run with the long-running profile (-Plong-running); referenced by FuzzFixesTest comment",
+        "searched": "git grep -w ParserSoakIT, pom.xml, build.yml, CHANGES.md:96",
+        "tag": "named"
+      },
+      "path": "src/test/java/org/jsoup/integration/ParserSoakIT.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:560 <id>long-running</id> (clears pom.xml:36 excludedGroups); src/test/java/org/jsoup/integration/ParserSoakIT.java:22 Run with mvn -Plong-running -Dit.test=ParserSoakIT verify; CHANGES.md:96",
+        "mechanism": "Maven Failsafe *IT.java default inclusion (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); tagged long-running, excluded by default and opted in by the documented long-running profile",
+        "searched": "git grep ParserSoak, long-running, failsafe in pom.xml, .github, *.md",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:290-300; .github/workflows/build.yml:31; src/test/java11/org/jsoup/integration/HttpClientSessionIT.java:7",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify; also superclass of HttpClientSessionIT",
+        "searched": "git grep -w SessionIT, pom.xml, build.yml",
+        "tag": "named"
+      },
+      "path": "src/test/java/org/jsoup/integration/SessionIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:290-300; .github/workflows/build.yml:31",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify",
+        "searched": "git grep -w ParserIT (none), pom.xml, build.yml",
+        "tag": "generic"
+      },
+      "path": "src/test/java/org/jsoup/parser/ParserIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:290-300; .github/workflows/build.yml:31",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify",
+        "searched": "git grep -w SelectorIT (none), pom.xml failsafe, build.yml",
+        "tag": "generic"
+      },
+      "path": "src/test/java/org/jsoup/select/SelectorIT.java",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:291 maven-failsafe-plugin integration-test/verify; .github/workflows/build.yml:31 mvn -X verify",
+        "mechanism": "Maven Failsafe default inclusion of **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'; no includes override in pom), run by CI mvn verify",
+        "searched": "git grep SelectorIT, failsafe, includes in pom.xml, .github",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:462; pom.xml:290-300; .github/workflows/build.yml:31",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify on JDK 11+ via build-helper add-test-source src/test/java11",
+        "searched": "git grep -w HttpClientConnectIT, pom.xml, build.yml",
+        "tag": "generic"
+      },
+      "path": "src/test/java11/org/jsoup/integration/HttpClientConnectIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:462; pom.xml:290-300; .github/workflows/build.yml:31",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify on JDK 11+ via build-helper add-test-source src/test/java11",
+        "searched": "git grep -w HttpClientSessionIT, pom.xml, build.yml",
+        "tag": "generic"
+      },
+      "path": "src/test/java11/org/jsoup/integration/HttpClientSessionIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "pom.xml:462; pom.xml:304; .github/workflows/build.yml:31",
+        "mechanism": "maven-failsafe-plugin default includes **/*IT.java (Maven Failsafe Plugin docs, 'Inclusions and Exclusions of Tests'); failsafe bound to integration-test/verify, CI runs mvn verify on JDK 11+ via build-helper add-test-source src/test/java11; reads the jsoup.test.jar property failsafe sets",
+        "searched": "git grep -w MultiReleaseJarIT, pom.xml, build.yml",
+        "tag": "generic"
+      },
+      "path": "src/test/java11/org/jsoup/integration/MultiReleaseJarIT.java",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

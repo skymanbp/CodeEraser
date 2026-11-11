@@ -1,0 +1,1139 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "covid19model",
+    "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Brazil/code/plot-3-panel.r",
+      "sha256": "b80c959fd85aebc4b7a333a2bfb957ba3469b01cebf90569d2273eeb1b24ac4a",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Brazil/code/preprocessing-subnation-brazil.r",
+      "sha256": "c1d13dc0bdbf5fcaf518ec3d4478ef6ae05c58917a320cb9ccca2635e4c927f1",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/format-data-plotting.r",
+      "sha256": "5e1aaf22f601865c0c8cfed2eb3a88475f2b5edb75f6a3ec7271a69ca0e40079",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 4,
+      "path": "Italy/code/plotting/make-plots.r",
+      "sha256": "41f1669de9f8849a895d80523f4b9c73dd5ca5f88377fd3c9fe55cf1a9048e85",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/make-rt-plot.r",
+      "sha256": "a16eba97c66c21390ceb13322693a4af0f0732e479b8c7aa2c04670725caad0e",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "Italy/code/plotting/make-scenario-plots-top7.r",
+      "sha256": "bb06998b4294359c96506e45a6da56ffb1350f47efaf2729581e39db7e1a656f",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/make-scenario-plots.r",
+      "sha256": "c0c72fa76e31192aca1d1207d31be7aa950cdd46af7646d88da83f2009412f32",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/make-three-panel-plots.r",
+      "sha256": "f7de6a010790822873c4037bc343944bc72f67f13294a5a794cc43221bfb00b7",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "Italy/code/utils/make-table.r",
+      "sha256": "c33df9530f7cfaa70438a19d4fb5dccd70ce3693a2ed5347eb0cd5f50f0db40f",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/utils/process-covariates-italy.r",
+      "sha256": "edc0379d37729536212fcde2b79f00435bef4b8eb583b7f0ce0656249405e78e",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/utils/read-data-subnational.r",
+      "sha256": "9c10a4b02bd191d2ca1f2aeef1178dbe3496acb9248dbfb5f9406c5ecbeb0d67",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/utils/simulate-regional.r",
+      "sha256": "0e54ec606e2520d8edb17695fa8257416409b1fa7e7218f0ef6a9ac82fec4a95",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "Python/src/dataset.py",
+      "sha256": "7da8877e68e5a057bf1286bb21fcf27b7078fa9233fd8944a70af8224beb7968",
+      "stem_spelled": 5,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_definition",
+        "import_from_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "Python/src/util.py",
+      "sha256": "6dda30d879bf203f3688f2590963592ecaf70e1398c9bb71f590848ac0a234e9",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 2,
+      "path": "base-Brazil.r",
+      "sha256": "80c624e5402eb0d92d0aa9d3f54855fedf1bf47a2b76559434b8023bd8d87b1f",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 6,
+      "path": "base-Italy.r",
+      "sha256": "9844c122aa1a99dc0fd8126571da3d81df500328bbd99674ba1adfcc710b9f19",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 4,
+      "path": "base-nature.r",
+      "sha256": "cbf92aeb95a0f16b74ba0952839bfec3b90d67efafa77eec69283b2195250516",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 3,
+      "path": "base-usa-cases.r",
+      "sha256": "64ad751fd6e9d65a5c296c734d2cb4ad98dc1794d8c5c602ad2eef9b4898ad44",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 9,
+      "path": "base-usa.r",
+      "sha256": "1f837cedfc69f9e0175446b08fef1617a492e0f68901c07ba005b231ad256e68",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 6,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 2,
+      "path": "base.r",
+      "sha256": "3c3e390a645bb40cda5f5e7a45e980d48ae5d3dab1f903502d04e99e0b74ef18",
+      "stem_spelled": 99,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "base_general.r",
+      "sha256": "5a3c911320b54196e64a703defcc72f09a334307bb4e0eaf14575c9e87de8eee",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "compute-ifr-europe.r",
+      "sha256": "25c635a3ad87b2e10145b5b128c02b8707b6620d52a21133538513a241d36483",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "compute-ifr-usa.r",
+      "sha256": "486079944ae189a642fc3b728f72fd371df97aab9ff0b1096e5f1651bab5b2b8",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "identifier"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "covariate-size-effects.r",
+      "sha256": "473510cb331d3ed7cfd075c8f326f90ad3564834a5a3c291ebd0e4c4a8978c0f",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "data/fetch-ecdc.r",
+      "sha256": "6a239224b819c3774fe0ca26354c076cc22401f0c1e24758fe17e93632297bd3",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement",
+        "subset"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "make-table.r",
+      "sha256": "8efb513c52df57219389588f60a42208527b0dc281f2b2279329f6914822f1c3",
+      "stem_spelled": 4,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/covariate-size-effects.r",
+      "sha256": "e277fe6d56c07a96a3fdce5384af17116c08662ac696eb7ed216d91d56f4e390",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/format-data.r",
+      "sha256": "45afb157b2beee8032dcfa5a878a0f5e5a873d595f99e29b4ead5a5a911c1ec4",
+      "stem_spelled": 5,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/geom-stepribbon.r",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "nature/utils/make-table.r",
+      "sha256": "c7f014e97a11a16ffd60f7325e974b37752190ffd5ba6b15fd47fae46ac8f5f1",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "nature/utils/plot-3-panel.r",
+      "sha256": "92cdd1dd8202b3429f53adade383120197add275b92db2a01e949ea1ae6fb21b",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/process-covariates.r",
+      "sha256": "7f6954ecabea996f0cd1273613c28394c7a0ffd3040980f03fabe9ff50d6ffd1",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "plot-3-panel.r",
+      "sha256": "6a65987614e978ad45258db74088446e0709eed87a913f838769ce7099139886",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "plot-forecast.r",
+      "sha256": "42b00f61a216abb78cac1e7144c8c13a5ea825063ccd3ca21c520ae4a9c188a9",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "tiers/no_need_to_run/backdate_tiers.R",
+      "sha256": "6ca8b43397c3b8e385f82e6cf542238be1dc4fcbd08dc2b8d9c91cb7b6118793",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "tiers/no_need_to_run/create_data.R",
+      "sha256": "d7f2a45a242f10d650c241a2f132619d22f02f9845cd8de318bd232864437f34",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "tiers/spline_LFA.R",
+      "sha256": "114acd0779713c86206e89715050b194ab5cb8e7d73311214cf72e507d1d3570",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/data-scrape/process-death-data-jhu.r",
+      "sha256": "9f085f4a192dd2ca20091b13aa0c53cc47b40dcff03bca745a9cc2f04dc0a6f9",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/data-scrape/process-death-data-nyt.r",
+      "sha256": "f0775e781679c627b88d000dd204a2b37065c8f9ae5134422294aaece15c5986",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/data-scrape/process-interventions.r",
+      "sha256": "3c1e6b4fd9d92196d52f3512586129fbd30136a82bb3ece24590d34b286537b1",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/plotting/covariate-effect-sizes.r",
+      "sha256": "84de862660afd637780ad3da4943e3c118ce74de9fb08853fce08c636b768bc0",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/format-data-plotting.r",
+      "sha256": "2ac87df1bceb050276c7877ff1264f7c7ecae62e56c9710e1655fcdb2e07e67c",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/plotting/infectiousness-plots.r",
+      "sha256": "07ac12e87d7c61ce9c90bbaba9ece85aeb52805057123d57236848fd1bb3b4cd",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 3,
+      "path": "usa/code/plotting/make-plots.r",
+      "sha256": "ec99e9fb9b989e430e5b70e631d48766772914cb226e3d3f30f600f4bad00895",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make-rt-percentage-map.r",
+      "sha256": "582c513105d67c7ada6c28cb36c0660042b325ec0a4246d0aef2a083aa7f26f9",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make-rt-plot.r",
+      "sha256": "ad38f456b385bfaae54ff590dd08c1f47dd9cf1ebe9d60f49907c9cd7a3765f5",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/plotting/make-scenario-plots.r",
+      "sha256": "768553378a1a5729ea7dd3876ad774fff64b083a3b78553d4ad4e518a9193621",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make-three-panel-plots.r",
+      "sha256": "08dd95af86fb0e18c530babcbf34ea31dcd9b32f2421c9154ad4331ba8eeeaf4",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make_rt_plot.R",
+      "sha256": "32302a73805c621040dc42c6c1a9668325fe8f1d2bd71604fd0b7aa7dd528bd8",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/scrape-required-data.r",
+      "sha256": "86e22c4365e68bacd9c7c027739333ec47cd1a9f47ee2036cdb97fab9cab860a",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/simulate.r",
+      "sha256": "bc2d771998d33d9f363afdfb4b680c0ca8ccb777ca0e92a3b389400956c56843",
+      "stem_spelled": 13,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/calculate-infectiousness.r",
+      "sha256": "2d8fe0e851b75dac6ad87c5bbcd300692e44bc73f8a116065e03dc6465bf0a5b",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/create-output-files.r",
+      "sha256": "07ca737c054287c4dedc2092406b6e536ea751102bf94eae06ad743a21b64170",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/utils/mobility-reg/mobility-regression.r",
+      "sha256": "387a31d88b1d67f06dff1a28a06d5530f25d899dcb1f46c64f7213a724c74eb0",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/process-covariates-usa-cases.r",
+      "sha256": "a5c9e8e1865869eae0e3a35ec08f277fed9167b7581b4edfa1364eb90a8b1526",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/process-covariates.r",
+      "sha256": "8c5957117f038a7660f7ecad3dd872b43b97acb746241b22b4ac00dea19a33f9",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/read-data-usa-cases.r",
+      "sha256": "42da79ad4ca0a45263a0dc0d1abc194dfdb2f0c15f2ec7627278d2b30e4b5a49",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/read-data-usa.r",
+      "sha256": "b5e3f1ea8914191f86193654885a9ad6e094c847bf39afef94fff04853ece588",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/geom-stepribbon.r",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/get-ar.r",
+      "sha256": "51118f142530aa914c90184cb33347264d69f1d1ae76de42656434d75672e030",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/process-covariates.r",
+      "sha256": "b1bb70e4b864b114e75c2a62a826b241ea439271bf729f3aca5a8171694ff614",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/read-data.r",
+      "sha256": "dd1cc953140e9bf0ff9dc6e112293fb73df7ecdb8201ba7dcce847bf46ec6e03",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "web-fetch-and-run.r",
+      "sha256": "e8500d49b9b94d2a7afd36d96624933c949751820ffee555310f1de854bda302",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "web-verify-output.r",
+      "sha256": "59d2d2f765a8235b742c657c49cc422bbe9c555fb27677a2ce9b5dc715550e90",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "python": {
+        "basename_spelled": 2,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 2,
+        "stem_spelled": 2,
+        "vouched": 0
+      },
+      "r": {
+        "basename_spelled": 56,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 21,
+        "private": 19,
+        "rows": 62,
+        "stem_spelled": 56,
+        "vouched": 0
+      }
+    },
+    "rows": 64
+  }
+}

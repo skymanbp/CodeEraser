@@ -1,0 +1,2599 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "koreader",
+    "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 1,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "doc/DataStore.md",
+      "sha256": "14c43b98d8c176d530416da1451550933b0b8abad37195f757cde0e8af27dfa7",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 1,
+      "path": "doc/Development_guide.md",
+      "sha256": "99fd7b53ff735924a1e3ce09aab84ec7f417717ad3422eac6ebc8339dc41ea53",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "doc/Events.md",
+      "sha256": "7394bdeaaebaa1148d4d69d6e3ba114fb53ecd2530a2c218e7c865700a3ce9f0",
+      "stem_spelled": 10,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "doc/Hacking.md",
+      "sha256": "a98733a21f08673c0a65e83711fdaad8008c9d14020be961a78df466556aabd6",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "doc/Unit_tests.md",
+      "sha256": "d8f606292c0ddfc9feaa540eee895738eb5f6385a406ade82d589b558c580fcd",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/device/dummy/device.lua",
+      "sha256": "1aac1546623f1cfbd29bb5911cb28b53cd58ddc4f301544b6d14b8f9ffc71d56",
+      "stem_spelled": 281,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/device/kobo/ntx_io.lua",
+      "sha256": "a53f4c6114f523c5af29b690c9f797fe60a8140a8b82cb21692aa4ec8e1ebc83",
+      "stem_spelled": 5,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua",
+      "sha256": "4544bfcffc3042cd6c3f84685eb4371deaf5f0580195379c9db0f0c041b5c154",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/bg_keyboard.lua",
+      "sha256": "14c7ade857c17caf297a5d1ec3bda5b05a6389b91264e5fe973ff1af5aabdf96",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/bn_keyboard.lua",
+      "sha256": "34f1f3cba30e60ba797821c8428693911b75ec269ff41e242415612166583e53",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/cs_keyboard.lua",
+      "sha256": "cf4d85bf6ce1d73e301a1223c51fb631d996a72aa2d997f04bdaf1a14507d86a",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/da_keyboard.lua",
+      "sha256": "6c331d08c9645831db32b513b59bf857edf4452f5420dddb6b7a078adb5269ba",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/de_keyboard.lua",
+      "sha256": "402fa10922bdc60c0d874e870733f628d8a9faf7b2e60990fadaaab552a811ef",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/el_keyboard.lua",
+      "sha256": "d9128ed087e08c492517d1db4a9711058c0ea6955216451eb164dcb486be047f",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 10,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/en_keyboard.lua",
+      "sha256": "aec6218ddf1ceb302396fe6cccfba130b9e21c6d5ce4e0535b453814610555b8",
+      "stem_spelled": 12,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/es_keyboard.lua",
+      "sha256": "1cabdaecceabdc7e2f69d5d5bd4375b98b09ca2e41b5de81c75ec0d417b26778",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/fa_keyboard.lua",
+      "sha256": "381a0fd39e942454ee2c840bceb6bebfeadb3f8ca18cb72f87007fffdc2f58e5",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/fr_keyboard.lua",
+      "sha256": "fb427ebeb131c6bb01d0e6db98e678b8ece42613471403fc7163eb14d83908b6",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/generic_ime.lua",
+      "sha256": "e2439f3e2d62722f7356c448de56ebb81b7239ea995284426f7e7a2f8d4a7bdd",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/he_keyboard.lua",
+      "sha256": "e9f9015d026aa5bd95b8b10b662c8ddb34ffb0a61a43bdf62095d11e8d2cd8d7",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/hu_keyboard.lua",
+      "sha256": "f36b2d6a088f52c865b199758192a1f8b92904eef5d363125447d32781bbdae3",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "frontend/ui/data/keyboardlayouts/ja_keyboard.lua",
+      "sha256": "56b21ab47c3705c386bcd14b8adee03e83833b2ce9efcde78ce3072416069b84",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/ja_keyboard_keys.lua",
+      "sha256": "efc6e6addea5cbffc18ba747dde2ed3bbf254c205f0541a1e8286cadcd68a929",
+      "stem_spelled": 3,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ka_keyboard.lua",
+      "sha256": "9c47948317c00fec7fe73919ffb7b213b8b02c35e7c2a94c385310380f4ae24d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ar_popup.lua",
+      "sha256": "26df783d9466f5885850a850550ee888739adb8be86001f225749035ad12d5c3",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/bn_popup.lua",
+      "sha256": "cf9648f966d47dd434cf5cf598f3a391dc6a1fc49ed076a26260eaf651dfa191",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/el_popup.lua",
+      "sha256": "a17d4674faac02dd83b215cca5f047a1769ee025a3b26e410129096a5b4e3e8f",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 8,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/en_popup.lua",
+      "sha256": "3afb575b482e2d098db022150a08e5b3d1e37b81e7b7f5932cae50daf6ca18cd",
+      "stem_spelled": 9,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/fa_popup.lua",
+      "sha256": "12c59c21c9abc4a49bd6a0109496ca83bc3344b64df7f71b05af94bb94374adc",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/he_popup.lua",
+      "sha256": "e6d58c5495a88b4350a99d6c94ae1aa9a924f9e2a026f466b31f2436e18bb6e5",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ka_popup.lua",
+      "sha256": "73f9f43efb2e7ecb013ee9bb792babb66629687e3d03c76b27acc749a35aa851",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ml_popup.lua",
+      "sha256": "af6549304808b32053696884b78a246c5da56211e0584937c75ab8b195c83e67",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ro_popup.lua",
+      "sha256": "7cfada090f8c4dfc51982f2804eeee233f53edaec5fe39a9d59137f2cb2ff593",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ru_popup.lua",
+      "sha256": "26595e7760bce5b51f08ba8fac7e9dd520221ef6260d2f38f17d107d21768c64",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sk_popup.lua",
+      "sha256": "dc67c546a6927ba6a36c7df8c8ca1ada506e5c6224f9e831af14e9565e4262fb",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sr_popup.lua",
+      "sha256": "4efbc439377486c713b5d3c7086ebbfe2d0fc1dd8ce89c794f98cbb42db652d0",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/uk_popup.lua",
+      "sha256": "323889772436969d7a1fdb16d504d319b81f3e7940d6b7ff3ef57f4f1648dcde",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ko_KR_helper.lua",
+      "sha256": "21e04c17da803aedda697bd1b5739a5b0dc09e96bb185a496b8a14803b5a78e3",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "frontend/ui/data/keyboardlayouts/ko_KR_keyboard.lua",
+      "sha256": "4fffcf7721937539d989125e5860e10ff2e528cea630923b53922e9688d53ec3",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/ml_keyboard.lua",
+      "sha256": "f8b6ed906639c69f3131b185ec7067d649878c751a3556057e1ad2a5f62aaf6e",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/no_keyboard.lua",
+      "sha256": "989cdb9d19cc7caf68ac555d3dccb5f5ef142763f047156c877d2966fbf59e0b",
+      "stem_spelled": 3,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/pl_keyboard.lua",
+      "sha256": "968f96e724c666f483a7a6b7148fa16069a3f620bdbf80aa51d6d1e9be26d789",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/pt_keyboard.lua",
+      "sha256": "45bdd4cf0e80649aaecfd09a0439ef8bb92b089d9be524878ddc65d57cb23597",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ro_keyboard.lua",
+      "sha256": "6e4ea570c4782f441b77b4785d77dc39794217fcd582f810a64a1783588adfc8",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/ru_keyboard.lua",
+      "sha256": "7df663e1367ab4153223fd1431737acdb73d3256c42ca8248a0d7747b1814973",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/sk_keyboard.lua",
+      "sha256": "a3a788fd4775ff54b6916342470a0e3d8ce9eac7e7e4c010429116b78fecd62e",
+      "stem_spelled": 2,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/sr_keyboard.lua",
+      "sha256": "5ce46e14ea8a322d17ca439b2d148a6162c664b9cc8fbe9553c9c4ef05f94869",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/sv_keyboard.lua",
+      "sha256": "e3928bee3e952f285195361f157515f90427822276fb7c80c01ef39d184dcb71",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/th_keyboard.lua",
+      "sha256": "686d42adf6cfaa141c4dc0a5da20e9cd1586818eea91920b2dfd61a32a1a911e",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/tr_keyboard.lua",
+      "sha256": "01b61d4fdbfbe1b096bf2db39fde8cb6e7e221e941d3ca58a7e7ef3ff64e9769",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/uk_keyboard.lua",
+      "sha256": "3e685c6fde6c0fcc1b5f2f1ad32664730873b216002593e2787881e95122f2f2",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "frontend/ui/data/keyboardlayouts/vi_keyboard.lua",
+      "sha256": "3558394e85922325a035cab49d5bab552d2e4e1f0d83100c42212a02db19a482",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/vi_telex_data.lua",
+      "sha256": "8ae720124f2e6be6d59454eb9a4df290fe9f75a212f93c13cc6dda458285b7ce",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "frontend/ui/data/keyboardlayouts/zh_CN_keyboard.lua",
+      "sha256": "73f7e1ae3222de68d92a01a5078fcaa42f0b6de2cfe2fee32bafedb21ec730ee",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua",
+      "sha256": "407804be13440177392ab4362320df5eef85444ebac3fb2d99d10be996fb7411",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/zh_pinyin_data.lua",
+      "sha256": "231d810693602a12a1309097d3c68820c71c46f546a6cc12cfb67b057b2a2443",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/zh_stroke_data.lua",
+      "sha256": "9a3a7f5d13e4c842a2f4ae2e91620ca9a5eb1dc1645f66037d48f98633e1ad1b",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 13,
+      "path": "frontend/ui/data/onetime_migration.lua",
+      "sha256": "f2f629eac26445001c7734c2ad2fa080e206a7d474f3adf7e3244f17b829718b",
+      "stem_spelled": 6,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/elements/avoid_flashing_ui.lua",
+      "sha256": "32c320d96da670bae8c5867fa95d73a7acbe12a534efbcff436e1993d1f47280",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/message/filemessagequeue.lua",
+      "sha256": "7b9f00740ef7a3de1fae0cff1d28f5f884661d4db28c8cf636c64d2b34c67a3c",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/message/streammessagequeueserver.lua",
+      "sha256": "4c212574a239d230bd67d75ef625ef40e606e1e632462ffb96aa0f084ed5b19d",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "frontend/ui/network/wpa_supplicant.lua",
+      "sha256": "56c2a948e9012e0ff704a61d811dbc01237e976e1ecd194d3594d1eb50f68f12",
+      "stem_spelled": 13,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "frontend/ui/plugin/background_task_plugin.lua",
+      "sha256": "47f8485bfdd9135138285751840fe3ea34e76b87e478c921cb448b76f78096b9",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/plugin/insert_menu.lua",
+      "sha256": "e5836570782614c7b3f172f1002470503b2fc806ddcfc27fd923dbc30c94d763",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/widget/buttondialogtitle.lua",
+      "sha256": "e4a100fe01cbc11f9f3ac5a8fa654ef0788d7cd45ffc774d02074dab7b1807b9",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/widget/container/alphacontainer.lua",
+      "sha256": "c1f095142fd4fb04e40193065f34c430d422aacb49f8b7d92cadd3488248de7b",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "platform/android/llapp_main.lua",
+      "sha256": "2adbda7899e0999d8e6379aed0420d0914e784dc015d6c38efc4c34be0cfef60",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "platform/remarkable/README_aarch64.md",
+      "sha256": "8698ab7dda2aa242cc27351343eed2dffb2e12697bb06a1da91384e15765688f",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "platform/remarkable/qtfb_keep_alive.lua",
+      "sha256": "0dcdf5c756657485d2afdf0786c46d60f8a525bc3382e90abbfa9fdea01ae38d",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/SSH.koplugin/_meta.lua",
+      "sha256": "d55ad2fd60f01aca333455c52b5809dc19e1841d653f7cef512321df68679f13",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/archiveviewer.koplugin/_meta.lua",
+      "sha256": "f178f482a979fee8726ef9058cd39b49df1d6b2af79aff8239b3f369905071b3",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/autodim.koplugin/_meta.lua",
+      "sha256": "8c4c2e29d4d9568e12832c72367ddbb4d0cbb4bc35de7e470a3faba04ac2d894",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/autostandby.koplugin/_meta.lua",
+      "sha256": "429df34efb34271849f31e267da25c7e88a21c43a89726eec929d442417a3152",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/autosuspend.koplugin/_meta.lua",
+      "sha256": "eab769a7c4f6e7a7abba89f19be0add8949616e88c63a91a83ab8218187f6966",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/autoturn.koplugin/_meta.lua",
+      "sha256": "05dcff9110e07b1494b30f0a304f6a0567bb06717a4be381a58a894c2fb7245b",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "plugins/autowarmth.koplugin/_meta.lua",
+      "sha256": "5935f52648d9bfd7f85fe8695ece735da3fd59667dc1ac97d24d78887be81876",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/batterystat.koplugin/_meta.lua",
+      "sha256": "0c225b48b170304500cf248033f4f2420877fecfe867e20ff34dda55b199723f",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/bookshortcuts.koplugin/_meta.lua",
+      "sha256": "f64f16050d64758729c69e8fe943866ae48e82235b4afc26ae96e352b08c9b9d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/calibre.koplugin/_meta.lua",
+      "sha256": "6c21bb96c67826ae9b9904a1c38e95ec5619c829b10bce1aa9829650231334ba",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/cloudstorage.koplugin/_meta.lua",
+      "sha256": "8b80d2fc41c6dadfc89ebf7fe0227ab5c211cc53a4d90d25d094319fb417926d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 10,
+      "path": "plugins/cloudstorage.koplugin/providers/dropbox.lua",
+      "sha256": "e61e60ea9c72170856ecb9b6e901026f3386d93c7b9e0de9d7420363905fdf0c",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 10,
+      "path": "plugins/cloudstorage.koplugin/providers/ftp.lua",
+      "sha256": "62fce33e9a32f2f1aa9fd8ddff801de9cb40e50e9b17f6d1db9e2dc054a3073f",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 10,
+      "path": "plugins/cloudstorage.koplugin/providers/webdav.lua",
+      "sha256": "95e217a8992da0b20b807fc6698024cae5a8b7e87fa642ab7b65ef3ee5f611f3",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/coverbrowser.koplugin/_meta.lua",
+      "sha256": "50fe960839f50882436399eb8b71a5446b05dec9e6d25d680c71b8be1524c30d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/coverimage.koplugin/_meta.lua",
+      "sha256": "58b9c2880c70daa5651724aed93b11012b4cc3b9e2b2a0d4c0b934a86e883280",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/docsettingtweak.koplugin/_meta.lua",
+      "sha256": "8186eb0627df10f9ad69a2344c28ad5d75bef0a1198700b878359e8cb62293e8",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "plugins/docsettingtweak.koplugin/directory_defaults_template.lua",
+      "sha256": "91b87349d061c1f340378a00ccd40aeac05e4bc95f673a36155b190f6dd6d9f7",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/exporter.koplugin/_meta.lua",
+      "sha256": "dcbc174471a4639cca8c71d36f9dde24a5a09c2ad7d71bc964c5844ca4960c6c",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/_meta.lua",
+      "sha256": "f036c85805f2a9bb168322ad5e639de2f408d3736109051dfd715f5c7d133d09",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "plugins/externalkeyboard.koplugin/find-keyboard.lua",
+      "sha256": "613f4541bd60de6b9fb1f333d7dc6b4529ff8a3d6486a428f63d2ac876110f74",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ar.lua",
+      "sha256": "da4a67a02b7afc051cd3f0d3ef700afe1d3365ce0f53e25f0cb278ae44632ec0",
+      "stem_spelled": 11,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/be.lua",
+      "sha256": "3f0ba711a9c44961749e8f0c20c74934844ed2f36277804397a34658a7ba966e",
+      "stem_spelled": 341,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/br.lua",
+      "sha256": "b1ca837829e5d8bfcb83f2a3df4edb0a6b8ed9948b8b2e436719f05197fee764",
+      "stem_spelled": 18,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/cz.lua",
+      "sha256": "57ddf27b3ae6a002dd4f9761d73519c44db26871c9ec3251765bb051e2c1b4cb",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/de.lua",
+      "sha256": "b9a7142c094e51dab3d65a2ad25c953480d5595dd190b57a022b2944a28d228f",
+      "stem_spelled": 38,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/el.lua",
+      "sha256": "a6865101f37c94493fbb2b4531aa6ef42a8f2a2bb6ce90fdb588e1e33de4717f",
+      "stem_spelled": 13,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 8,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/es.lua",
+      "sha256": "288eddfa278ff832fe4a285ee09e111dc88254a4436006009ae7583e3c55d186",
+      "stem_spelled": 16,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/fr.lua",
+      "sha256": "7619a283f15fa986a4d94637ba15df656032eb9f7a79fd5a4672e8101b523fae",
+      "stem_spelled": 17,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/gb.lua",
+      "sha256": "c73f2c9cb401b1ba84de1c803ce4a2cd4a415853e570f8a1418b0c5bfd2d756f",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/he.lua",
+      "sha256": "28215b6f006473860c6ac8b013e028cb9d19e35da7069116b61371afce62ed34",
+      "stem_spelled": 21,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/hu.lua",
+      "sha256": "8e8f0ed3f6acf9e50776a07770393ccc9b36f5028fec36a989722dab16237b10",
+      "stem_spelled": 9,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/it.lua",
+      "sha256": "c787b6ca529a43533f9b85a7863208e309d300741b9959b524a98fca2735537e",
+      "stem_spelled": 388,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/kz.lua",
+      "sha256": "f0bf60b63b1df41e5c14a51853d3407c4162b0b51a1da1f7f28620af6c0b6ea1",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/nl.lua",
+      "sha256": "644bf4cff3f85a80d2af53421428abca96b564ae16eea562a2f0f8b1e3a92654",
+      "stem_spelled": 10,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/pl.lua",
+      "sha256": "e1a74cb49b62ee814d5cb72d1448e535447152e52c34a261003e20e9ae3311d0",
+      "stem_spelled": 12,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ro.lua",
+      "sha256": "bf2489931a207febf59fb43d878cce46515796def39392884d0428e471b192a8",
+      "stem_spelled": 12,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ru.lua",
+      "sha256": "7fa5a1e088c15722294089cd732b023897a890643cd661d6e8e818ed0f28a141",
+      "stem_spelled": 16,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/uk.lua",
+      "sha256": "5b26ca927ae529e7518201427caeed350d05d124921e235dbc0382863a92bb37",
+      "stem_spelled": 9,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-altgr-intl.lua",
+      "sha256": "6349ebfc55ac21f26e224c29105f9882e0daf38d1653c4d183875b6cae05101f",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-intl.lua",
+      "sha256": "9c01fc7d6ac26c7c53d953da0c8ff37819b7979183f576f4f69044a0fcb311a7",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us.lua",
+      "sha256": "2607879bb3e5edbfa526d1c78acc46b1397ee142683f8e2e101fe93b304e48fb",
+      "stem_spelled": 111,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/gestures.koplugin/_meta.lua",
+      "sha256": "38f297acf09f288829b67045d790ce8f1cb21afc67ebfce88828989e9c73a386",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 9,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/gestures.koplugin/defaults.lua",
+      "sha256": "c9420680b8355ce1a43059afb65f0b44534a7396a2d4e1ef3028a0fb73a3a6bf",
+      "stem_spelled": 55,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/hello.koplugin/_meta.lua",
+      "sha256": "871155fbd6e2d854d825c78b5127af5703456a8838e424c2a7bc83beae2485ff",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/hotkeys.koplugin/_meta.lua",
+      "sha256": "8620f25072aff3d486b56f224730e02372800c83c380ac3e7a8367ee2d18cce5",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 9,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "plugins/hotkeys.koplugin/defaults.lua",
+      "sha256": "47058c23f69ec67c6c2de595c8b188d76817706adfb18a34c63b019d915866b4",
+      "stem_spelled": 54,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/httpinspector.koplugin/_meta.lua",
+      "sha256": "8fafef7bbb26402e12665c94715998f099bc36f0a1d4e54f3c90fa0b175f540d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/japanese.koplugin/_meta.lua",
+      "sha256": "00192b68496e51972cfcac4c6e5d0d9ef9721378976b174d45f5e50d8d7524cd",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/keepalive.koplugin/_meta.lua",
+      "sha256": "bf3d65789ee0d6037d708e2212e10659df1165f64425d66f0f09f4f1c1cb5c89",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/kosync.koplugin/_meta.lua",
+      "sha256": "fc4d4a16f9dd3f3594aa7ce8501e7a97de00df72a463e97cfb4123015d49317a",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/movetoarchive.koplugin/_meta.lua",
+      "sha256": "6be2e480aeeaa9dd7e21e66b7e69ae0732bbe51b25ec55bfe17440e73fe54a32",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/newsdownloader.koplugin/_meta.lua",
+      "sha256": "603fbae044add7035411379ca114f0a70c2f39848ce68095c3f741e227b12945",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "plugins/newsdownloader.koplugin/feed_config.lua",
+      "sha256": "ecdb8a3e376ae413a392256f7fcd81e3ea877594c8b91bac396792509030dd8b",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/opds.koplugin/_meta.lua",
+      "sha256": "1054e9c7a1068c755746267bb3fae4b7698c1a54d1098ad78ed648b2431a66f4",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/perceptionexpander.koplugin/_meta.lua",
+      "sha256": "7eb37c2a9946ecaff9b8522d51358957630f65eb207b75e763fe22dfccfb28f0",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/profiles.koplugin/_meta.lua",
+      "sha256": "ece7849ac212daa043a578c403580a75523109ba4bdd674532a4fe05aeec54eb",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/qrclipboard.koplugin/_meta.lua",
+      "sha256": "5036b867ef9bbf362d105b29d1c90475f238397e8e387c795f8f0a86d1883d0b",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/readtimer.koplugin/_meta.lua",
+      "sha256": "87e5cd79428728824a5664d0da9c6446064b265e2667a1a948e60ae5a088dc9e",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/statistics.koplugin/_meta.lua",
+      "sha256": "9afc8b61b4b08f15dec62b4912fc4cea0006a5e581edd9e185944b5593b0e258",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/systemstat.koplugin/_meta.lua",
+      "sha256": "982d7454cb1f280ee04ab26acd2c2ec50297b7bedc24a4fe154500303ee81c56",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/terminal.koplugin/_meta.lua",
+      "sha256": "7a2cd67cd8b763611775126dbfc7e5144b3af10aa12a1af7d2e5151043adc2b7",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/texteditor.koplugin/_meta.lua",
+      "sha256": "7f42c368ceab9da25fa5516f3a3fb15da68278df4d408fbf572529401e22ea3a",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/timesync.koplugin/_meta.lua",
+      "sha256": "6683e9a96238540dc5332cc923944444fcaf94eab67ff70d6a416174e8af728f",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/vocabbuilder.koplugin/_meta.lua",
+      "sha256": "0ebcd20e8bde3d0ab485b4e2fcf944fd049545c41d70d8a4562667f1a9293884",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/wallabag.koplugin/_meta.lua",
+      "sha256": "1f9c861209a6cdfe4e5b9cd969f147498ad0173203096660abd4efd6bc39624e",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 25,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "function_call",
+        "function_declaration",
+        "hash_bang_line",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 21,
+      "path": "reader.lua",
+      "sha256": "1e39148f3fbe312653bd2ede233569317bd35257ab5e42c9c4e3c497cfc271b8",
+      "stem_spelled": 119,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "resources/icons/mdlight/LICENSE-SIL-OFL-1.1.md",
+      "sha256": "5508d429b47af5d7032e2e8500c230c5cc253c2408b4817cd4c1fd5423ad9a77",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "setupkoenv.lua",
+      "sha256": "8e0abd2e33734bd61a7593a19f042349eae045d30975a9c0bbf40e0f426e0da9",
+      "stem_spelled": 8,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "spec"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "function_call",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "spec/unit/pdf_bench.lua",
+      "sha256": "ad1fdcaedb447cbbb009e99cc261ea72c895ed7f135c8da12f837bbd9451c7fc",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "spec"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "function_call",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "spec/unit/taskqueue_bench.lua",
+      "sha256": "4a3ca77705490797aff0c221145d3e49f9c6e1f016c959b9155cb4fa41e5efbb",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "spec"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "function_call",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "spec/unit/uimanager_bench.lua",
+      "sha256": "5ed3929e767dab13d350a0b79355bc2cab50ccfec99dfc7d303efd6e8a13df11",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "tools/bench/djvu_getpagetextboxes_bench.lua",
+      "sha256": "78b1cdf256770adf144474cc4b8060f1702ef23ee77874d44b483657b9620ab7",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "tools/benchmark.lua",
+      "sha256": "780606915d342e8de09f99fd3e1f59a3239bb83150f76fa34e912cee5bc50398",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "expression_statement",
+        "function_definition",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "tools/ja_keyboard_generate.py",
+      "sha256": "f1fc6531ea165e5ae397f5b2f0bdb8681a969f55083cb317db6dc3a9c6125018",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "class_definition",
+        "comment",
+        "function_definition",
+        "if_statement",
+        "import_statement"
+      ],
+      "lang": "python",
+      "out_edges": 0,
+      "path": "tools/logcat.py",
+      "sha256": "a1f805019ff5593a2d7efbcb2f4061e046a846fa56a0b38a9432080541f5cffb",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "for_statement",
+        "function_call",
+        "hash_bang_line",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tools/merge_luacov_stats.lua",
+      "sha256": "0919b45817d66c6f0fecbc68d80ae2cdf91a3d0f256a30fc0e955594c669985d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tools/trace_require.lua",
+      "sha256": "959357c83f9af81e074be1f23e280a01b2bc6bca87d48648e00363d96edbb15b",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "function_declaration",
+        "hash_bang_line",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "tools/update-metadata.lua",
+      "sha256": "ec6260ca8c55114583faa2d39d1aa1892b7b3ba53a121ae4d9392a6e87f11ede",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 29,
+      "path": "tools/wbuilder.lua",
+      "sha256": "574e6d778140ee71dfe0a538e1c46ae3b54c0a4d101ada61dc4e96e583ef98b3",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 21,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "hash_bang_line",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tools/xkb_to_lua.lua",
+      "sha256": "e89eff42ac238fd298a9175af0f53f7d9f49a50b437722a14c0ddf4ab0bd3f94",
+      "stem_spelled": 21,
+      "verdict": "unref_private"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "lua": {
+        "basename_spelled": 80,
+        "convention": 4,
+        "document": 0,
+        "out_edges": 113,
+        "private": 118,
+        "rows": 141,
+        "stem_spelled": 131,
+        "vouched": 0
+      },
+      "markdown": {
+        "basename_spelled": 6,
+        "convention": 0,
+        "document": 7,
+        "out_edges": 1,
+        "private": 0,
+        "rows": 7,
+        "stem_spelled": 6,
+        "vouched": 7
+      },
+      "python": {
+        "basename_spelled": 2,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 2,
+        "stem_spelled": 2,
+        "vouched": 0
+      }
+    },
+    "rows": 150
+  }
+}

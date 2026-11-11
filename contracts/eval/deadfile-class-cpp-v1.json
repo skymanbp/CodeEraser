@@ -1,0 +1,259 @@
+{
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "cpp",
+  "method": "every universe row of one language, from the frozen slices: sample membership from the frozen sample (primary / reserve / undrawn); doc_class and K0 from the slice row (universe_counts.py's DECLARES over the slice's top-level kinds); K1 and K1-strict from the text at the pinned tip through the product's parser (BARS.md section 2 with addenda 2 and 3: k1.rs, k1_lang.rs, k1_tables.rs), each with the kind and line of its first active top-level statement; the ruling numbers the K1 walk met; the lines of ruling 16's fragments; the sha256 of the classified bytes. Per corpus the pool and primary counts of BARS section 1's weights.",
+  "per_corpus": {
+    "fmt": {
+      "pool": 1,
+      "primary": 1
+    },
+    "lua": {
+      "pool": 1,
+      "primary": 1
+    },
+    "luarocks": {
+      "pool": 6,
+      "primary": 6
+    }
+  },
+  "rows": [
+    {
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "preproc_ifdef",
+        36
+      ],
+      "k1_witness": [
+        "expression_statement",
+        41
+      ],
+      "path": "test/gtest/gtest/gtest-spi.h",
+      "rulings": [
+        1
+      ],
+      "sample": "primary",
+      "sha256": "bc7de52471740743412a62784af636375d05bf913302c74fc50483f20eff45f4"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "preproc_ifdef",
+        7
+      ],
+      "k1_witness": null,
+      "path": "ltests.h",
+      "rulings": [
+        1,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "6d2e3db39c58bdadc3a0aaf3ded12873e0b56ad898ce11a872717da72efb4829"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "spec/fixtures/with_external_dep/foo/foo.h",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "50120b669b880563d8b7ab9502a7919eeffe9943ee8fc2714185cbc5e6c56997"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "preproc_ifdef",
+        8
+      ],
+      "k1_witness": null,
+      "path": "win32/lua5.1/include/lauxlib.h",
+      "rulings": [
+        1
+      ],
+      "sample": "primary",
+      "sha256": "c741f9c1587f29fd08a79acbe0c46884768a47f89bee4147669f774c5cf50fc0"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "preproc_ifdef",
+        9
+      ],
+      "k1_witness": null,
+      "path": "win32/lua5.1/include/lua.h",
+      "rulings": [
+        1
+      ],
+      "sample": "primary",
+      "sha256": "470551c185f058360f8d0f9e5c54a29a3950f78af6a93f3fe9e4039a380c7b87"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "linkage_specification",
+        5
+      ],
+      "k1_witness": null,
+      "path": "win32/lua5.1/include/lua.hpp",
+      "rulings": [
+        1
+      ],
+      "sample": "primary",
+      "sha256": "fd83f7e823cfbb03ac2da937ec83f01b4a6ddaac220a4fa1ffd6c6c3842c5890"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [
+        288
+      ],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "preproc_ifdef",
+        8
+      ],
+      "k1_witness": [
+        "expression_statement",
+        283
+      ],
+      "path": "win32/lua5.1/include/luaconf.h",
+      "rulings": [
+        1,
+        16
+      ],
+      "sample": "primary",
+      "sha256": "1511066011626152b142f2346e7595163681aab7615fba113cfd1f5b2f5b86b1"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "preproc_ifdef",
+        8
+      ],
+      "k1_witness": null,
+      "path": "win32/lua5.1/include/lualib.h",
+      "rulings": [
+        1
+      ],
+      "sample": "primary",
+      "sha256": "13f880e9dd997a0f7fd0b17ccd949c98f33e95bd120f084de66084e888217413"
+    }
+  ],
+  "schema": "ce.eval-deadfile-class/1.0.0",
+  "summary": {
+    "k1_differs_from_strict": 5,
+    "primary": {
+      "k0": {
+        "declares": 8
+      },
+      "k1": {
+        "declares": 6,
+        "runs-alone": 2
+      },
+      "k1_strict": {
+        "declares": 1,
+        "runs-alone": 7
+      }
+    },
+    "rows": 8,
+    "rows_per_ruling": {
+      "1": 7,
+      "13": 1,
+      "16": 1
+    },
+    "universe": {
+      "k0": {
+        "declares": 8
+      },
+      "k1": {
+        "declares": 6,
+        "runs-alone": 2
+      },
+      "k1_strict": {
+        "declares": 1,
+        "runs-alone": 7
+      }
+    }
+  }
+}

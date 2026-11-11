@@ -1,0 +1,425 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "gson",
+    "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 2,
+      "path": "ReleaseProcess.md",
+      "sha256": "702c14f7452e3ba9db60424f6c8a1c2ce3bb5d46b6691873428fc3cc571e9fbc",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/com/google/gson/annotations/package-info.java",
+      "sha256": "e353085f37c03f53e075ad8afabcf40a696da532f7e0980a73654ba9be1a19e3",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "annotation_type_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/com/google/gson/internal/bind/IgnoreJRERequirement.java",
+      "sha256": "deb00e3f5167f80b3b96e5f6db7a1285edddf4eb77789a2221e14ca5bb131da1",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 19,
+      "path": "gson/src/main/java/com/google/gson/internal/bind/JavaTimeTypeAdapters.java",
+      "sha256": "d26ba63d400721bf6dc1626ef1714c83db2813c68ea97dfae7b22a8ad571024f",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/com/google/gson/internal/package-info.java",
+      "sha256": "727921b6f154ac878b6c90938415fa088bc3dd710d2eb4f241c2df815366a0ac",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/com/google/gson/package-info.java",
+      "sha256": "442e253e10cd85d2277c58b1c8ea46178aebf2a79bec282645e2f0034e78e8e1",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/com/google/gson/reflect/package-info.java",
+      "sha256": "c6fa09d4dda7ad9a256df4ffe11e5e0af933639e92a26d9653cdd3ac6957d457",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/com/google/gson/stream/package-info.java",
+      "sha256": "e0be86105fc9b95cab38a3f5d6258583866281afbdb207dca33bbb4fba7d053e",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 6,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "module_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "gson/src/main/java/module-info.java",
+      "sha256": "52b1aa6d35aaafedb89e48367cca6eb66cec7ef310b3a69eae22c44af9ae3ccf",
+      "stem_spelled": 11,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 2,
+      "path": "gson/src/test/java/com/google/gson/integration/OSGiManifestIT.java",
+      "sha256": "196cb03b219822e0504fbc859a064028838b00d78e6cf0f8f02b4b03f347402e",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitives.java",
+      "sha256": "6d67a297a32e132aac43cb1eab283bf0499ec608a21376fdb225f14ae32a033a",
+      "stem_spelled": 23,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 6,
+      "path": "metrics/src/main/java/com/google/gson/metrics/BagOfPrimitivesDeserializationBenchmark.java",
+      "sha256": "17ac526100f216e179d30dce407f94d279b5e70195a3bc6fa95e95be7b79ddaf",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 8,
+      "path": "metrics/src/main/java/com/google/gson/metrics/CollectionsDeserializationBenchmark.java",
+      "sha256": "b329033e5fbfa7700ca2711a35d6c833f3601d6a20bb7c7793836b8d5f100a29",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "metrics/src/main/java/com/google/gson/metrics/NonUploadingCaliperRunner.java",
+      "sha256": "3645935c8e18b79785592277e62ea2dea8b42d30846cd6efe6d5e3efc7ee67f1",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 15,
+      "path": "metrics/src/main/java/com/google/gson/metrics/ParseBenchmark.java",
+      "sha256": "0229cc56912701c07b15b3a062308b3740f49843f1c74b8185a22fe7341d2ff5",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 6,
+      "path": "metrics/src/main/java/com/google/gson/metrics/SerializationBenchmark.java",
+      "sha256": "111af9e945aeccff90d70291ab6d28303997e2c6bc3141a81145d02bf072c775",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "module_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "test-jpms/src/main/java/module-info.java",
+      "sha256": "4516367668bbfa4084c8780b42ee92c4f39d388df1234c5193aec063d20233e4",
+      "stem_spelled": 10,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 6,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "module_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "test-jpms/src/test/java/module-info.java",
+      "sha256": "607e78a3f283b668e7dfc3be057e767e1c0f3df320b520f74cdd710a9f5fd90b",
+      "stem_spelled": 11,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 5,
+      "path": "test-shrinker/src/main/java/com/example/NoSerializedNameMain.java",
+      "sha256": "384b1419bd397b84a480754d5da171c51fada6fec0fc3788174f4aa3fcfaa6f6",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 2,
+      "path": "test-shrinker/src/main/java/com/example/UnusedClass.java",
+      "sha256": "f18180b696a6095412b812aa1096610daa6a5edba574c6a7a08a1b5cc2781458",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 2,
+      "path": "test-shrinker/src/test/java/com/google/gson/it/ShrinkingIT.java",
+      "sha256": "ad6b34cb2537d3c25beb0cf3bfab45279e54d1d3b15fb5b3795e7f2b9724cf9c",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "java": {
+        "basename_spelled": 9,
+        "convention": 3,
+        "document": 0,
+        "out_edges": 9,
+        "private": 8,
+        "rows": 20,
+        "stem_spelled": 16,
+        "vouched": 0
+      },
+      "markdown": {
+        "basename_spelled": 0,
+        "convention": 0,
+        "document": 1,
+        "out_edges": 1,
+        "private": 0,
+        "rows": 1,
+        "stem_spelled": 0,
+        "vouched": 1
+      }
+    },
+    "rows": 21
+  }
+}

@@ -1,0 +1,692 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    },
+    "first_named": {
+      "rows": 4,
+      "same_side": 4,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    },
+    "overall": {
+      "rows": 8,
+      "same_side": 8,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "tsx",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6 packages/docs/app/(doc)/[[...slug]]/page.tsx:1",
+        "mechanism": "Next.js App Router page convention (optional catch-all segment [[...slug]] renders every docs page, per Next.js docs 'File Conventions: page.js' / 'Dynamic Routes'); it is the page that serves all of zod.dev's docs",
+        "searched": "app/ tree listing; package.json scripts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/(doc)/[[...slug]]/page.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6",
+        "mechanism": "Next.js App Router file convention (Next.js docs, 'File-system conventions': layout.js / page.js / not-found.js), built by `next build`; route-group layout wrapping the docs pages",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/(doc)/layout.tsx",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6 (\"build\": \"next build\"); convention per Next.js App Router docs (File Conventions: layout.js)",
+        "mechanism": "Next.js App Router convention: layout.tsx in an app/ route segment is the layout for that segment, built by `next build` of the docs site (zod.dev)",
+        "searched": "packages/docs/package.json, packages/docs/app tree, next.config.mjs",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6",
+        "mechanism": "Next.js App Router file convention (Next.js docs, 'File-system conventions': layout.js / page.js / not-found.js), built by `next build`; /blog/[slug] dynamic page serving content/blog posts",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/blog/[slug]/page.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6 (next build) packages/docs/app/blog/layout.tsx:1",
+        "mechanism": "Next.js App Router file convention: layout.tsx in a route segment wraps that segment's pages (app/blog/page.tsx, app/blog/[slug]/page.tsx); named convention per Next.js App Router docs 'File Conventions: layout.js'",
+        "searched": "app/ tree listing; Next.js is the build tool (package.json scripts)",
+        "tag": "named"
+      },
+      "path": "packages/docs/app/blog/layout.tsx",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6 (\"build\": \"next build\"); convention per Next.js App Router docs (File Conventions: layout.js)",
+        "mechanism": "Next.js App Router convention: layout for the /blog segment of the docs site",
+        "searched": "packages/docs/package.json, packages/docs/app/blog tree",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6",
+        "mechanism": "Next.js App Router file convention (Next.js docs, 'File-system conventions': layout.js / page.js / not-found.js), built by `next build`; /blog index page",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/blog/page.tsx",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6 (\"build\": \"next build\"); convention per Next.js App Router docs (File Conventions: page.js)",
+        "mechanism": "Next.js App Router convention: page.tsx makes /blog a published route of the docs site",
+        "searched": "packages/docs/package.json, packages/docs/app/blog tree",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/layout.tsx:1 packages/docs/app/blog/layout.tsx:1",
+        "mechanism": "imported via the @/ tsconfig alias by the doc and blog layouts",
+        "searched": "git grep -F layout.config; tsconfig.json paths @/*",
+        "tag": "named"
+      },
+      "path": "packages/docs/app/layout.config.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/package.json:6",
+        "mechanism": "Next.js App Router root layout convention (app/layout.tsx is required by next build, per Next.js docs 'File Conventions: layout.js', root layout)",
+        "searched": "app/ tree listing; package.json scripts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/layout.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/[[...slug]]/page.tsx:20",
+        "mechanism": "Next.js App Router file convention (Next.js docs, 'File-system conventions': layout.js / page.js / not-found.js), built by `next build`; rendered on notFound() calls",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/not-found.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/[[...slug]]/page.tsx:100",
+        "mechanism": "Next.js App Router route handler convention (route.tsx served at /og.png, per Next.js docs 'File Conventions: route.js'); the docs page metadata points openGraph images at /og.png",
+        "searched": "git grep -F og.png",
+        "tag": "generic"
+      },
+      "path": "packages/docs/app/og.png/route.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "no importer; all MDX pages import Accordion from 'fumadocs-ui/components/accordion' instead",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts; grep -i accordion outside the file and pnpm-lock: only fumadocs-ui imports in content/*.mdx (e.g. content/api.mdx:8)",
+        "tag": null
+      },
+      "path": "packages/docs/components/accordion.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/index.mdx:13",
+        "mechanism": "imported by the docs home page MDX (sponsor tier list)",
+        "searched": "git grep -F bronze / Bronze",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/bronze.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "",
+        "searched": "git grep for codec-image, ThemedImage, themed-image across repo: codecs.mdx:7 imports ThemedImage from @/components/themed-image (a duplicate file), nothing imports codec-image; checked content/*.mdx, app/, loaders/, source.config.ts, next.config.mjs, tsconfig paths; tsconfig include **/*.tsx only typechecks it",
+        "tag": null
+      },
+      "path": "packages/docs/components/codec-image.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/[[...slug]]/page.tsx:1",
+        "mechanism": "imported by the docs page component via @/ alias",
+        "searched": "git grep -F copy-markdown-button",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/copy-markdown-button.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/ecosystem.mdx:14",
+        "mechanism": "imported by the Ecosystem docs page MDX (ApiLibraries, FormIntegrations, ...) and rendered on zod.dev/ecosystem",
+        "searched": "git grep -F components/ecosystem across repo",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/ecosystem.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "",
+        "searched": "git grep for featured, Featured, components/featured across whole repo (excluding pnpm-lock): only hits are inside the file itself and a prose line in docs-v3/home.md; no import in content/*.mdx, app/, loaders/, source.config.ts, next.config.mjs; no mdx-components registry exists; tsconfig include **/*.tsx only typechecks it",
+        "tag": null
+      },
+      "path": "packages/docs/components/featured.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/index.mdx:11",
+        "mechanism": "imported and rendered by the docs home page MDX",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/gold.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/[[...slug]]/page.tsx:2",
+        "mechanism": "imported by the docs page renderer for h1-h4",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/heading.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/index.mdx:14",
+        "mechanism": "imported by the docs home page MDX (fumadocs content dir, source.config.ts dir: content) and rendered on zod.dev",
+        "searched": "git grep -F hero-logo / HeroLogo across repo",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/hero-logo.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "packages/docs/tsconfig.json:28",
+        "mechanism": "only named in tsconfig include (redundant with **/*.tsx; a missing explicit include entry does not fail tsc); If component never imported",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts; grep for 'If' usage and './if' / 'components/if' imports: none",
+        "tag": null
+      },
+      "path": "packages/docs/components/if.tsx",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "packages/docs/tsconfig.json:28 (include entry only)",
+        "mechanism": "exports an `If` component that no file imports and no MDX content uses; the only mention is a redundant explicit entry in tsconfig include (already covered by **/*.tsx; a missing explicit include entry is not an error)",
+        "searched": "git grep for components/if, './if', '<If', whole-word 'If' across packages/docs (*.tsx, *.ts, *.mdx: only prose 'If'); MDX component maps in app/(doc)/[[...slug]]/page.tsx and app/blog/[slug]/page.tsx",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/layout.tsx:1",
+        "mechanism": "imported and rendered by root layout",
+        "searched": "git grep -F inkeep-bubble",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/inkeep-bubble.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/layout.tsx:2",
+        "mechanism": "imported by root layout and passed as the SearchDialog",
+        "searched": "git grep -F inkeep-search",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/inkeep-search.tsx",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/layout.tsx:2",
+        "mechanism": "imported through the tsconfig path alias @/* by the root layout of the docs site",
+        "searched": "git grep 'components/inkeep-search' in packages/docs; tsconfig.json paths '@/*'",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/index.mdx:10",
+        "mechanism": "imported and rendered by the docs home page MDX",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/platinum.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/layout.tsx:5",
+        "mechanism": "imported and rendered by the root layout via @/ alias",
+        "searched": "git grep -F scroller / Scroller",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/scroller.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/layout.tsx:6",
+        "mechanism": "imported by the docs layout",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/sidebar-item.tsx",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/layout.tsx:6",
+        "mechanism": "imported through the tsconfig path alias @/* by the docs layout",
+        "searched": "git grep 'components/sidebar-item' in packages/docs; tsconfig.json paths '@/*'",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/layout.tsx:7",
+        "mechanism": "imported by the docs layout",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/sidebar-logo.tsx",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/layout.tsx:7",
+        "mechanism": "imported through the tsconfig path alias @/* by the docs layout",
+        "searched": "git grep 'components/sidebar-logo' in packages/docs; tsconfig.json paths '@/*'",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/index.mdx:12",
+        "mechanism": "imported and rendered by the docs home page MDX",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/silver.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/app/(doc)/[[...slug]]/page.tsx:3",
+        "mechanism": "imported by the docs page renderer",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/tabs.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs/content/codecs.mdx:7",
+        "mechanism": "imported and rendered by codecs.mdx",
+        "searched": "git grep for basename, stem, '@/components/<stem>' and relative imports across the clone; packages/docs/tsconfig.json paths; source.config.ts; content/*.mdx imports; package.json scripts",
+        "tag": "named"
+      },
+      "path": "packages/docs/components/themed-image.tsx",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unsure",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "Next.js Pages Router file under pages/api: if Next builds it, it is an edge API route served at /api/_og; nothing in the repo calls that URL (OG images are served by app/og.png/route.tsx, referenced from app/(doc)/[[...slug]]/page.tsx:100)",
+        "searched": "git grep for _og, api/og, /api/_ across repo (only binary jpg hits); next.config.mjs; package.json scripts; vercel/should-build-site.sh. Could not settle from the repo alone whether the underscore-prefixed pages/api file is a published route (Next.js routing convention) that anything external relies on",
+        "tag": null
+      },
+      "path": "packages/docs/pages/api/_og.tsx",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "old Pages-router OG image endpoint superseded by app/og.png/route.tsx; the site requests /og.png (app/(doc)/[[...slug]]/page.tsx:100), nothing requests /api/_og",
+        "searched": "git grep '_og', 'api/og', '/api/' across the tree (only an external URL in components/ecosystem.tsx); og.png usage; next.config.mjs redirects; git log of the file. Note: next build would still compile it as a route, but nothing links or fetches it.",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "fixed",
+        "unsure"
+      ]
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

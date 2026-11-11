@@ -1,0 +1,888 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "lua",
+    "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "ltests.h",
+      "sha256": "6d2e3db39c58bdadc3a0aaf3ded12873e0b56ad898ce11a872717da72efb4829",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "hash_bang_line",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 29,
+      "path": "testes/all.lua",
+      "sha256": "f1b8b8075a71e7abc40260f6b9112e8d2a1057772f26374df4bc800d10296309",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/api.lua",
+      "sha256": "1601abc0d700cba2240c123afd513c2bb638e378b7cf11470edbbac8291efce0",
+      "stem_spelled": 3,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/attrib.lua",
+      "sha256": "dd2eb13be29628ac0268cddfafdc6a816edcba6552ae15e8637afc6a79742e52",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "for_statement",
+        "function_call",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/big.lua",
+      "sha256": "6396916f2f7c857cf1e1bfa70e5de58bbdbcf44984357c2c4d1578d33eee12e6",
+      "stem_spelled": 15,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "testes/bitwise.lua",
+      "sha256": "ea36f2c261483e85a65dffe41b0674fb92869a6372ac744ed7fea8304e6a8a19",
+      "stem_spelled": 9,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/bwcoercion.lua",
+      "sha256": "e74cea2bb42125daca7f5536df31bb2684b74ffcbeb3b1198e31cc257aa659f6",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/calls.lua",
+      "sha256": "e0331ba5557c09ba844c11a54810ca7cc01998638316d5192e252a2ab0a2d407",
+      "stem_spelled": 27,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "implicit_variable_declaration",
+        "repeat_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/closure.lua",
+      "sha256": "d03b641a7a7c4cb395762321200532f786e1554395e8499838e702b56d21880a",
+      "stem_spelled": 21,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/code.lua",
+      "sha256": "b63335ff980dd318f1cc4aa81bbd54952afc7ac3688c7d9042ea4c45e9993663",
+      "stem_spelled": 56,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "repeat_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/constructs.lua",
+      "sha256": "fd4eeece596bf53ee3a8ed015960dd34f34abcc9991a332e3c4b83a374cb5514",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/coroutine.lua",
+      "sha256": "d38f7fa8570abb09154d9bf0d8cea34fee08953f0880f3e9c5a641a826c6dfc9",
+      "stem_spelled": 23,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "testes/cstack.lua",
+      "sha256": "52ad964a0cf6161c58161d9dd0fcbec81bec949fb7ebd4ea1201c5c978df899c",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "repeat_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/db.lua",
+      "sha256": "82ed710f0aa5ab23eb86fc0ad73705e6d8f8b0cd9c8a3d1b4da31623c3e40f10",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/errors.lua",
+      "sha256": "57bb9cc9e622b16646f5aec072e4f9295a2401b886e98ad4af21f4bd5b19f53d",
+      "stem_spelled": 41,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/events.lua",
+      "sha256": "90449c1607a12a7c1841123a68237e0d23b7d6e109b8c445937fcd99306897c9",
+      "stem_spelled": 7,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/files.lua",
+      "sha256": "8761bcfc301a48f189849960bb518e11d8e60d2a10a931dcb6de7e5c17ea84b4",
+      "stem_spelled": 10,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/gc.lua",
+      "sha256": "e1768dd5a40921af0e5d24b1d61c9fd4727c45716e28bf167246a45e38735a99",
+      "stem_spelled": 10,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_call",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/gengc.lua",
+      "sha256": "0ad770331e3a5fecccc3f75d5580b8e2de4ea50856fd9f1a6eb5f4aa1b13b646",
+      "stem_spelled": 2,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "label_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/goto.lua",
+      "sha256": "2e5168bba512878d4874398ba43d411741db0a68400a49818ec7b52ba62dc7cf",
+      "stem_spelled": 16,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "function_declaration",
+        "implicit_variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/heavy.lua",
+      "sha256": "fe806b885b962d67a1856d65c2d5cc0d0c2aa7c105b8321ced41498bdb1e2f8d",
+      "stem_spelled": 4,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/literals.lua",
+      "sha256": "ab77f2eb07f794cbb1d704000752fee994a10b6d865c5281f0050fdc149b5af3",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "repeat_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "testes/locals.lua",
+      "sha256": "56b5126c40f48bb1a701f041af28cd72a3a7d50b3db9b05da5659f2485f740c1",
+      "stem_spelled": 10,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/math.lua",
+      "sha256": "24b1e2a94ab2e5f70d1fca0820e0c2746deca27d7e1a6152499b033de1b463b1",
+      "stem_spelled": 38,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/memerr.lua",
+      "sha256": "02cc2a754e688bdfcbf507e009d899c4d367f27ced45094b68fdf208a6912491",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/nextvar.lua",
+      "sha256": "a49a917beb9e5c000d60baed697cefcdcb4ca985bba27b71d587cff8776b5029",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/pm.lua",
+      "sha256": "f1413157b8dc0979f9cda8b2551cc9a953a719e5b14d2b84f375462e56355dc5",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/sort.lua",
+      "sha256": "283f72b600acda62016689c92a694f2b91c1fc49dbcba377a9a5ed78b2784dc3",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/strings.lua",
+      "sha256": "f0c37cf255fa07c385e69bd1ea729a31a2f05ed7f65061b4ab0a84e882ac3ba2",
+      "stem_spelled": 39,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/tpack.lua",
+      "sha256": "43984831af8269b9f9c1be90d39880863b395e835bf094e5dc5be2025674a246",
+      "stem_spelled": 3,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/tracegc.lua",
+      "sha256": "b064a642e2d5d22c2101ec4fe0a5d805ba633ca5b69470d20ec48b4ee5ca360b",
+      "stem_spelled": 5,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/utf8.lua",
+      "sha256": "ba41997fb956fcd4a48d07c31c0b9e404cb88f0e2ea99ddf4a5cdcf48eb09696",
+      "stem_spelled": 5,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "function_call",
+        "function_declaration",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/vararg.lua",
+      "sha256": "46405b18946c40a9c092cc63216df9a3944562ce222acfd5e63ae78f19f356be",
+      "stem_spelled": 21,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/verybig.lua",
+      "sha256": "2b6d30c69cbe6974068881108eae297bdedd275b429be8ec614bf5f8ee89707e",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "cpp": {
+        "basename_spelled": 1,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 0,
+        "private": 0,
+        "rows": 1,
+        "stem_spelled": 1,
+        "vouched": 0
+      },
+      "lua": {
+        "basename_spelled": 33,
+        "convention": 33,
+        "document": 0,
+        "out_edges": 4,
+        "private": 8,
+        "rows": 33,
+        "stem_spelled": 33,
+        "vouched": 0
+      }
+    },
+    "rows": 34
+  }
+}

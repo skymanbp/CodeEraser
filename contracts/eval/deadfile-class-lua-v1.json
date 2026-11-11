@@ -1,0 +1,5155 @@
+{
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "lua",
+  "method": "every universe row of one language, from the frozen slices: sample membership from the frozen sample (primary / reserve / undrawn); doc_class and K0 from the slice row (universe_counts.py's DECLARES over the slice's top-level kinds); K1 and K1-strict from the text at the pinned tip through the product's parser (BARS.md section 2 with addenda 2 and 3: k1.rs, k1_lang.rs, k1_tables.rs), each with the kind and line of its first active top-level statement; the ruling numbers the K1 walk met; the lines of ruling 16's fragments; the sha256 of the classified bytes. Per corpus the pool and primary counts of BARS section 1's weights.",
+  "per_corpus": {
+    "koreader": {
+      "pool": 141,
+      "primary": 52,
+      "reserve": 29,
+      "undrawn": 60
+    },
+    "lua": {
+      "pool": 33,
+      "primary": 20,
+      "reserve": 1,
+      "undrawn": 12
+    },
+    "luarocks": {
+      "pool": 61,
+      "primary": 28,
+      "reserve": 10,
+      "undrawn": 23
+    }
+  },
+  "rows": [
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/device/dummy/device.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "1aac1546623f1cfbd29bb5911cb28b53cd58ddc4f301544b6d14b8f9ffc71d56"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        3
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        3
+      ],
+      "path": "frontend/device/kobo/ntx_io.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a53f4c6114f523c5af29b690c9f797fe60a8140a8b82cb21692aa4ec8e1ebc83"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "4544bfcffc3042cd6c3f84685eb4371deaf5f0580195379c9db0f0c041b5c154"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/bg_keyboard.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "14c7ade857c17caf297a5d1ec3bda5b05a6389b91264e5fe973ff1af5aabdf96"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/bn_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "34f1f3cba30e60ba797821c8428693911b75ec269ff41e242415612166583e53"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/cs_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "cf4d85bf6ce1d73e301a1223c51fb631d996a72aa2d997f04bdaf1a14507d86a"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/da_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "6c331d08c9645831db32b513b59bf857edf4452f5420dddb6b7a078adb5269ba"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/de_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "undrawn",
+      "sha256": "402fa10922bdc60c0d874e870733f628d8a9faf7b2e60990fadaaab552a811ef"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/el_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d9128ed087e08c492517d1db4a9711058c0ea6955216451eb164dcb486be047f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/en_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "aec6218ddf1ceb302396fe6cccfba130b9e21c6d5ce4e0535b453814610555b8"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/es_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "1cabdaecceabdc7e2f69d5d5bd4375b98b09ca2e41b5de81c75ec0d417b26778"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/fa_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "381a0fd39e942454ee2c840bceb6bebfeadb3f8ca18cb72f87007fffdc2f58e5"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/fr_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "undrawn",
+      "sha256": "fb427ebeb131c6bb01d0e6db98e678b8ece42613471403fc7163eb14d83908b6"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/generic_ime.lua",
+      "rulings": [
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "e2439f3e2d62722f7356c448de56ebb81b7239ea995284426f7e7a2f8d4a7bdd"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/he_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "e9f9015d026aa5bd95b8b10b662c8ddb34ffb0a61a43bdf62095d11e8d2cd8d7"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/hu_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "undrawn",
+      "sha256": "f36b2d6a088f52c865b199758192a1f8b92904eef5d363125447d32781bbdae3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        13
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        13
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ja_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "56b21ab47c3705c386bcd14b8adee03e83833b2ce9efcde78ce3072416069b84"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/ja_keyboard_keys.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "efc6e6addea5cbffc18ba747dde2ed3bbf254c205f0541a1e8286cadcd68a929"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ka_keyboard.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "9c47948317c00fec7fe73919ffb7b213b8b02c35e7c2a94c385310380f4ae24d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ar_popup.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "26df783d9466f5885850a850550ee888739adb8be86001f225749035ad12d5c3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/bn_popup.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "cf9648f966d47dd434cf5cf598f3a391dc6a1fc49ed076a26260eaf651dfa191"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/el_popup.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "a17d4674faac02dd83b215cca5f047a1769ee025a3b26e410129096a5b4e3e8f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/en_popup.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3afb575b482e2d098db022150a08e5b3d1e37b81e7b7f5932cae50daf6ca18cd"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/fa_popup.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "12c59c21c9abc4a49bd6a0109496ca83bc3344b64df7f71b05af94bb94374adc"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/he_popup.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "e6d58c5495a88b4350a99d6c94ae1aa9a924f9e2a026f466b31f2436e18bb6e5"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ka_popup.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "73f9f43efb2e7ecb013ee9bb792babb66629687e3d03c76b27acc749a35aa851"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ml_popup.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "af6549304808b32053696884b78a246c5da56211e0584937c75ab8b195c83e67"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ro_popup.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "7cfada090f8c4dfc51982f2804eeee233f53edaec5fe39a9d59137f2cb2ff593"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ru_popup.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "26595e7760bce5b51f08ba8fac7e9dd520221ef6260d2f38f17d107d21768c64"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sk_popup.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "dc67c546a6927ba6a36c7df8c8ca1ada506e5c6224f9e831af14e9565e4262fb"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sr_popup.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4efbc439377486c713b5d3c7086ebbfe2d0fc1dd8ce89c794f98cbb42db652d0"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/uk_popup.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "323889772436969d7a1fdb16d504d319b81f3e7940d6b7ff3ef57f4f1648dcde"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        24
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        24
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ko_KR_helper.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "21e04c17da803aedda697bd1b5739a5b0dc09e96bb185a496b8a14803b5a78e3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ko_KR_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "4fffcf7721937539d989125e5860e10ff2e528cea630923b53922e9688d53ec3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ml_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f8b6ed906639c69f3131b185ec7067d649878c751a3556057e1ad2a5f62aaf6e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/no_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "989cdb9d19cc7caf68ac555d3dccb5f5ef142763f047156c877d2966fbf59e0b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/pl_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "968f96e724c666f483a7a6b7148fa16069a3f620bdbf80aa51d6d1e9be26d789"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/pt_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "45bdd4cf0e80649aaecfd09a0439ef8bb92b089d9be524878ddc65d57cb23597"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ro_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6e4ea570c4782f441b77b4785d77dc39794217fcd582f810a64a1783588adfc8"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/ru_keyboard.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "7df663e1367ab4153223fd1431737acdb73d3256c42ca8248a0d7747b1814973"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/sk_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "a3a788fd4775ff54b6916342470a0e3d8ce9eac7e7e4c010429116b78fecd62e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/sr_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "5ce46e14ea8a322d17ca439b2d148a6162c664b9cc8fbe9553c9c4ef05f94869"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/sv_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "e3928bee3e952f285195361f157515f90427822276fb7c80c01ef39d184dcb71"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/th_keyboard.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "686d42adf6cfaa141c4dc0a5da20e9cd1586818eea91920b2dfd61a32a1a911e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/tr_keyboard.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "undrawn",
+      "sha256": "01b61d4fdbfbe1b096bf2db39fde8cb6e7e221e941d3ca58a7e7ef3ff64e9769"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/uk_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3e685c6fde6c0fcc1b5f2f1ad32664730873b216002593e2787881e95122f2f2"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/vi_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3558394e85922325a035cab49d5bab552d2e4e1f0d83100c42212a02db19a482"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/vi_telex_data.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "8ae720124f2e6be6d59454eb9a4df290fe9f75a212f93c13cc6dda458285b7ce"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/zh_CN_keyboard.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "73f7e1ae3222de68d92a01a5078fcaa42f0b6de2cfe2fee32bafedb21ec730ee"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        18
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        18
+      ],
+      "path": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "407804be13440177392ab4362320df5eef85444ebac3fb2d99d10be996fb7411"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/zh_pinyin_data.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "231d810693602a12a1309097d3c68820c71c46f546a6cc12cfb67b057b2a2443"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "frontend/ui/data/keyboardlayouts/zh_stroke_data.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9a3a7f5d13e4c842a2f4ae2e91620ca9a5eb1dc1645f66037d48f98633e1ad1b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "frontend/ui/data/onetime_migration.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "f2f629eac26445001c7734c2ad2fa080e206a7d474f3adf7e3244f17b829718b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/elements/avoid_flashing_ui.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "32c320d96da670bae8c5867fa95d73a7acbe12a534efbcff436e1993d1f47280"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/message/filemessagequeue.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "7b9f00740ef7a3de1fae0cff1d28f5f884661d4db28c8cf636c64d2b34c67a3c"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/message/streammessagequeueserver.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4c212574a239d230bd67d75ef625ef40e606e1e632462ffb96aa0f084ed5b19d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "frontend/ui/network/wpa_supplicant.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "56c2a948e9012e0ff704a61d811dbc01237e976e1ecd194d3594d1eb50f68f12"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        7
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        7
+      ],
+      "path": "frontend/ui/plugin/background_task_plugin.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "47f8485bfdd9135138285751840fe3ea34e76b87e478c921cb448b76f78096b9"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "frontend/ui/plugin/insert_menu.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "e5836570782614c7b3f172f1002470503b2fc806ddcfc27fd923dbc30c94d763"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "frontend/ui/widget/buttondialogtitle.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e4a100fe01cbc11f9f3ac5a8fa654ef0788d7cd45ffc774d02074dab7b1807b9"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        19
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        19
+      ],
+      "path": "frontend/ui/widget/container/alphacontainer.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "c1f095142fd4fb04e40193065f34c430d422aacb49f8b7d92cadd3488248de7b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "platform/android/llapp_main.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "2adbda7899e0999d8e6379aed0420d0914e784dc015d6c38efc4c34be0cfef60"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "platform/remarkable/qtfb_keep_alive.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "0dcdf5c756657485d2afdf0786c46d60f8a525bc3382e90abbfa9fdea01ae38d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/SSH.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d55ad2fd60f01aca333455c52b5809dc19e1841d653f7cef512321df68679f13"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/archiveviewer.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "f178f482a979fee8726ef9058cd39b49df1d6b2af79aff8239b3f369905071b3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/autodim.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "8c4c2e29d4d9568e12832c72367ddbb4d0cbb4bc35de7e470a3faba04ac2d894"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/autostandby.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "429df34efb34271849f31e267da25c7e88a21c43a89726eec929d442417a3152"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/autosuspend.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "eab769a7c4f6e7a7abba89f19be0add8949616e88c63a91a83ab8218187f6966"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/autoturn.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "05dcff9110e07b1494b30f0a304f6a0567bb06717a4be381a58a894c2fb7245b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/autowarmth.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "5935f52648d9bfd7f85fe8695ece735da3fd59667dc1ac97d24d78887be81876"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/batterystat.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "0c225b48b170304500cf248033f4f2420877fecfe867e20ff34dda55b199723f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/bookshortcuts.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "f64f16050d64758729c69e8fe943866ae48e82235b4afc26ae96e352b08c9b9d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/calibre.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "6c21bb96c67826ae9b9904a1c38e95ec5619c829b10bce1aa9829650231334ba"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/cloudstorage.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "8b80d2fc41c6dadfc89ebf7fe0227ab5c211cc53a4d90d25d094319fb417926d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/cloudstorage.koplugin/providers/dropbox.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "e61e60ea9c72170856ecb9b6e901026f3386d93c7b9e0de9d7420363905fdf0c"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/cloudstorage.koplugin/providers/ftp.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "62fce33e9a32f2f1aa9fd8ddff801de9cb40e50e9b17f6d1db9e2dc054a3073f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/cloudstorage.koplugin/providers/webdav.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "95e217a8992da0b20b807fc6698024cae5a8b7e87fa642ab7b65ef3ee5f611f3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/coverbrowser.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "50fe960839f50882436399eb8b71a5446b05dec9e6d25d680c71b8be1524c30d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/coverimage.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "58b9c2880c70daa5651724aed93b11012b4cc3b9e2b2a0d4c0b934a86e883280"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/docsettingtweak.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "8186eb0627df10f9ad69a2344c28ad5d75bef0a1198700b878359e8cb62293e8"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "plugins/docsettingtweak.koplugin/directory_defaults_template.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "91b87349d061c1f340378a00ccd40aeac05e4bc95f673a36155b190f6dd6d9f7"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/exporter.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "dcbc174471a4639cca8c71d36f9dde24a5a09c2ad7d71bc964c5844ca4960c6c"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/externalkeyboard.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "f036c85805f2a9bb168322ad5e639de2f408d3736109051dfd715f5c7d133d09"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/externalkeyboard.koplugin/find-keyboard.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "613f4541bd60de6b9fb1f333d7dc6b4529ff8a3d6486a428f63d2ac876110f74"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ar.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "da4a67a02b7afc051cd3f0d3ef700afe1d3365ce0f53e25f0cb278ae44632ec0"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/be.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3f0ba711a9c44961749e8f0c20c74934844ed2f36277804397a34658a7ba966e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/br.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b1ca837829e5d8bfcb83f2a3df4edb0a6b8ed9948b8b2e436719f05197fee764"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/cz.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "57ddf27b3ae6a002dd4f9761d73519c44db26871c9ec3251765bb051e2c1b4cb"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/de.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "b9a7142c094e51dab3d65a2ad25c953480d5595dd190b57a022b2944a28d228f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/el.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "a6865101f37c94493fbb2b4531aa6ef42a8f2a2bb6ce90fdb588e1e33de4717f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/es.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "288eddfa278ff832fe4a285ee09e111dc88254a4436006009ae7583e3c55d186"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/fr.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "7619a283f15fa986a4d94637ba15df656032eb9f7a79fd5a4672e8101b523fae"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/gb.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "c73f2c9cb401b1ba84de1c803ce4a2cd4a415853e570f8a1418b0c5bfd2d756f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/he.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "28215b6f006473860c6ac8b013e028cb9d19e35da7069116b61371afce62ed34"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/hu.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "8e8f0ed3f6acf9e50776a07770393ccc9b36f5028fec36a989722dab16237b10"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/it.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "c787b6ca529a43533f9b85a7863208e309d300741b9959b524a98fca2735537e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/kz.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "f0bf60b63b1df41e5c14a51853d3407c4162b0b51a1da1f7f28620af6c0b6ea1"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/nl.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "644bf4cff3f85a80d2af53421428abca96b564ae16eea562a2f0f8b1e3a92654"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/pl.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e1a74cb49b62ee814d5cb72d1448e535447152e52c34a261003e20e9ae3311d0"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ro.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "bf2489931a207febf59fb43d878cce46515796def39392884d0428e471b192a8"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ru.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "7fa5a1e088c15722294089cd732b023897a890643cd661d6e8e818ed0f28a141"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/uk.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "5b26ca927ae529e7518201427caeed350d05d124921e235dbc0382863a92bb37"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-altgr-intl.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6349ebfc55ac21f26e224c29105f9882e0daf38d1653c4d183875b6cae05101f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-intl.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9c01fc7d6ac26c7c53d953da0c8ff37819b7979183f576f4f69044a0fcb311a7"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "2607879bb3e5edbfa526d1c78acc46b1397ee142683f8e2e101fe93b304e48fb"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/gestures.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "38f297acf09f288829b67045d790ce8f1cb21afc67ebfce88828989e9c73a386"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "plugins/gestures.koplugin/defaults.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "c9420680b8355ce1a43059afb65f0b44534a7396a2d4e1ef3028a0fb73a3a6bf"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/hello.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "871155fbd6e2d854d825c78b5127af5703456a8838e424c2a7bc83beae2485ff"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/hotkeys.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "8620f25072aff3d486b56f224730e02372800c83c380ac3e7a8367ee2d18cce5"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        2
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        2
+      ],
+      "path": "plugins/hotkeys.koplugin/defaults.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "47058c23f69ec67c6c2de595c8b188d76817706adfb18a34c63b019d915866b4"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/httpinspector.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "8fafef7bbb26402e12665c94715998f099bc36f0a1d4e54f3c90fa0b175f540d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/japanese.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "00192b68496e51972cfcac4c6e5d0d9ef9721378976b174d45f5e50d8d7524cd"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/keepalive.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "bf3d65789ee0d6037d708e2212e10659df1165f64425d66f0f09f4f1c1cb5c89"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/kosync.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "fc4d4a16f9dd3f3594aa7ce8501e7a97de00df72a463e97cfb4123015d49317a"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/movetoarchive.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6be2e480aeeaa9dd7e21e66b7e69ae0732bbe51b25ec55bfe17440e73fe54a32"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/newsdownloader.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "603fbae044add7035411379ca114f0a70c2f39848ce68095c3f741e227b12945"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "plugins/newsdownloader.koplugin/feed_config.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "ecdb8a3e376ae413a392256f7fcd81e3ea877594c8b91bac396792509030dd8b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/opds.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "1054e9c7a1068c755746267bb3fae4b7698c1a54d1098ad78ed648b2431a66f4"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/perceptionexpander.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "7eb37c2a9946ecaff9b8522d51358957630f65eb207b75e763fe22dfccfb28f0"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/profiles.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "ece7849ac212daa043a578c403580a75523109ba4bdd674532a4fe05aeec54eb"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/qrclipboard.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "5036b867ef9bbf362d105b29d1c90475f238397e8e387c795f8f0a86d1883d0b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/readtimer.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "87e5cd79428728824a5664d0da9c6446064b265e2667a1a948e60ae5a088dc9e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/statistics.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "9afc8b61b4b08f15dec62b4912fc4cea0006a5e581edd9e185944b5593b0e258"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/systemstat.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "982d7454cb1f280ee04ab26acd2c2ec50297b7bedc24a4fe154500303ee81c56"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/terminal.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "7a2cd67cd8b763611775126dbfc7e5144b3af10aa12a1af7d2e5151043adc2b7"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/texteditor.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "7f42c368ceab9da25fa5516f3a3fb15da68278df4d408fbf572529401e22ea3a"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/timesync.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "6683e9a96238540dc5332cc923944444fcaf94eab67ff70d6a416174e8af728f"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/vocabbuilder.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "0ebcd20e8bde3d0ab485b4e2fcf944fd049545c41d70d8a4562667f1a9293884"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        1
+      ],
+      "path": "plugins/wallabag.koplugin/_meta.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "1f9c861209a6cdfe4e5b9cd969f147498ad0173203096660abd4efd6bc39624e"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "reader.lua",
+      "rulings": [
+        2,
+        4,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "1e39148f3fbe312653bd2ede233569317bd35257ab5e42c9c4e3c497cfc271b8"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "assignment_statement",
+        2
+      ],
+      "k1_witness": [
+        "assignment_statement",
+        2
+      ],
+      "path": "setupkoenv.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "8e0abd2e33734bd61a7593a19f042349eae045d30975a9c0bbf40e0f426e0da9"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        1
+      ],
+      "k1_witness": [
+        "function_call",
+        1
+      ],
+      "path": "spec/unit/pdf_bench.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "ad1fdcaedb447cbbb009e99cc261ea72c895ed7f135c8da12f837bbd9451c7fc"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        1
+      ],
+      "k1_witness": [
+        "function_call",
+        1
+      ],
+      "path": "spec/unit/taskqueue_bench.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "4a3ca77705490797aff0c221145d3e49f9c6e1f016c959b9155cb4fa41e5efbb"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        1
+      ],
+      "k1_witness": [
+        "function_call",
+        1
+      ],
+      "path": "spec/unit/uimanager_bench.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "5ed3929e767dab13d350a0b79355bc2cab50ccfec99dfc7d303efd6e8a13df11"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        13
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        13
+      ],
+      "path": "tools/bench/djvu_getpagetextboxes_bench.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "undrawn",
+      "sha256": "78b1cdf256770adf144474cc4b8060f1702ef23ee77874d44b483657b9620ab7"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "tools/benchmark.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "780606915d342e8de09f99fd3e1f59a3239bb83150f76fa34e912cee5bc50398"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        3
+      ],
+      "path": "tools/merge_luacov_stats.lua",
+      "rulings": [
+        4
+      ],
+      "sample": "primary",
+      "sha256": "0919b45817d66c6f0fecbc68d80ae2cdf91a3d0f256a30fc0e955594c669985d"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "tools/trace_require.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "959357c83f9af81e074be1f23e280a01b2bc6bca87d48648e00363d96edbb15b"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "assignment_statement",
+        10
+      ],
+      "path": "tools/update-metadata.lua",
+      "rulings": [
+        4
+      ],
+      "sample": "undrawn",
+      "sha256": "ec6260ca8c55114583faa2d39d1aa1892b7b3ba53a121ae4d9392a6e87f11ede"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "tools/wbuilder.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "574e6d778140ee71dfe0a538e1c46ae3b54c0a4d101ada61dc4e96e583ef98b3"
+    },
+    {
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        23
+      ],
+      "path": "tools/xkb_to_lua.lua",
+      "rulings": [
+        4
+      ],
+      "sample": "primary",
+      "sha256": "e89eff42ac238fd298a9175af0f53f7d9f49a50b437722a14c0ddf4ab0bd3f94"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        11
+      ],
+      "path": "testes/all.lua",
+      "rulings": [
+        2,
+        3,
+        4,
+        5,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "f1b8b8075a71e7abc40260f6b9112e8d2a1057772f26374df4bc800d10296309"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        4
+      ],
+      "k1_witness": [
+        "if_statement",
+        4
+      ],
+      "path": "testes/api.lua",
+      "rulings": [
+        2,
+        3,
+        8,
+        13,
+        15
+      ],
+      "sample": "undrawn",
+      "sha256": "1601abc0d700cba2240c123afd513c2bb638e378b7cf11470edbbac8291efce0"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/attrib.lua",
+      "rulings": [
+        2,
+        3,
+        8,
+        9,
+        13,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "dd2eb13be29628ac0268cddfafdc6a816edcba6552ae15e8637afc6a79742e52"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        4
+      ],
+      "k1_witness": [
+        "if_statement",
+        4
+      ],
+      "path": "testes/big.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "6396916f2f7c857cf1e1bfa70e5de58bbdbcf44984357c2c4d1578d33eee12e6"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/bitwise.lua",
+      "rulings": [
+        2,
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "ea36f2c261483e85a65dffe41b0674fb92869a6372ac744ed7fea8304e6a8a19"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        7
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        47
+      ],
+      "path": "testes/bwcoercion.lua",
+      "rulings": [
+        5
+      ],
+      "sample": "primary",
+      "sha256": "e74cea2bb42125daca7f5536df31bb2684b74ffcbeb3b1198e31cc257aa659f6"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        6
+      ],
+      "path": "testes/calls.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "e0331ba5557c09ba844c11a54810ca7cc01998638316d5192e252a2ab0a2d407"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        6
+      ],
+      "path": "testes/closure.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "d03b641a7a7c4cb395762321200532f786e1554395e8499838e702b56d21880a"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "if_statement",
+        6
+      ],
+      "path": "testes/code.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "b63335ff980dd318f1cc4aa81bbd54952afc7ac3688c7d9042ea4c45e9993663"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/constructs.lua",
+      "rulings": [
+        2,
+        3,
+        8,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "fd4eeece596bf53ee3a8ed015960dd34f34abcc9991a332e3c4b83a374cb5514"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/coroutine.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "d38f7fa8570abb09154d9bf0d8cea34fee08953f0880f3e9c5a641a826c6dfc9"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "testes/cstack.lua",
+      "rulings": [
+        2
+      ],
+      "sample": "primary",
+      "sha256": "52ad964a0cf6161c58161d9dd0fcbec81bec949fb7ebd4ea1201c5c978df899c"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        6
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        6
+      ],
+      "path": "testes/db.lua",
+      "rulings": [
+        2,
+        3,
+        9,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "82ed710f0aa5ab23eb86fc0ad73705e6d8f8b0cd9c8a3d1b4da31623c3e40f10"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/errors.lua",
+      "rulings": [
+        2,
+        3,
+        9
+      ],
+      "sample": "reserve",
+      "sha256": "57bb9cc9e622b16646f5aec072e4f9295a2401b886e98ad4af21f4bd5b19f53d"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/events.lua",
+      "rulings": [
+        2,
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "90449c1607a12a7c1841123a68237e0d23b7d6e109b8c445937fcd99306897c9"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        6
+      ],
+      "path": "testes/files.lua",
+      "rulings": [
+        2,
+        3,
+        5
+      ],
+      "sample": "primary",
+      "sha256": "8761bcfc301a48f189849960bb518e11d8e60d2a10a931dcb6de7e5c17ea84b4"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/gc.lua",
+      "rulings": [
+        2,
+        3
+      ],
+      "sample": "primary",
+      "sha256": "e1768dd5a40921af0e5d24b1d61c9fd4727c45716e28bf167246a45e38735a99"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/gengc.lua",
+      "rulings": [
+        2,
+        3
+      ],
+      "sample": "primary",
+      "sha256": "0ad770331e3a5fecccc3f75d5580b8e2de4ea50856fd9f1a6eb5f4aa1b13b646"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        8
+      ],
+      "path": "testes/goto.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        6,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "2e5168bba512878d4874398ba43d411741db0a68400a49818ec7b52ba62dc7cf"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        173
+      ],
+      "path": "testes/heavy.lua",
+      "rulings": [
+        5
+      ],
+      "sample": "primary",
+      "sha256": "fe806b885b962d67a1856d65c2d5cc0d0c2aa7c105b8321ced41498bdb1e2f8d"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/literals.lua",
+      "rulings": [
+        2,
+        5,
+        9
+      ],
+      "sample": "undrawn",
+      "sha256": "ab77f2eb07f794cbb1d704000752fee994a10b6d865c5281f0050fdc149b5af3"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        6
+      ],
+      "path": "testes/locals.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        6,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "56b5126c40f48bb1a701f041af28cd72a3a7d50b3db9b05da5659f2485f740c1"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/math.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        6,
+        8,
+        9,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "24b1e2a94ab2e5f70d1fca0820e0c2746deca27d7e1a6152499b033de1b463b1"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "if_statement",
+        10
+      ],
+      "k1_witness": [
+        "if_statement",
+        10
+      ],
+      "path": "testes/memerr.lua",
+      "rulings": [
+        2,
+        3,
+        5
+      ],
+      "sample": "undrawn",
+      "sha256": "02cc2a754e688bdfcbf507e009d899c4d367f27ced45094b68fdf208a6912491"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        6
+      ],
+      "path": "testes/nextvar.lua",
+      "rulings": [
+        2,
+        3,
+        5,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "a49a917beb9e5c000d60baed697cefcdcb4ca985bba27b71d587cff8776b5029"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        7
+      ],
+      "k1_witness": [
+        "function_call",
+        7
+      ],
+      "path": "testes/pm.lua",
+      "rulings": [
+        2,
+        3,
+        5
+      ],
+      "sample": "undrawn",
+      "sha256": "f1413157b8dc0979f9cda8b2551cc9a953a719e5b14d2b84f375462e56355dc5"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/sort.lua",
+      "rulings": [
+        2,
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "283f72b600acda62016689c92a694f2b91c1fc49dbcba377a9a5ed78b2784dc3"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        6
+      ],
+      "k1_witness": [
+        "function_call",
+        8
+      ],
+      "path": "testes/strings.lua",
+      "rulings": [
+        2,
+        3,
+        5
+      ],
+      "sample": "undrawn",
+      "sha256": "f0c37cf255fa07c385e69bd1ea729a31a2f05ed7f65061b4ab0a84e882ac3ba2"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        8
+      ],
+      "k1_witness": [
+        "function_call",
+        8
+      ],
+      "path": "testes/tpack.lua",
+      "rulings": [
+        2,
+        3,
+        8
+      ],
+      "sample": "primary",
+      "sha256": "43984831af8269b9f9c1be90d39880863b395e835bf094e5dc5be2025674a246"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        12
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        12
+      ],
+      "path": "testes/tracegc.lua",
+      "rulings": [
+        5
+      ],
+      "sample": "primary",
+      "sha256": "b064a642e2d5d22c2101ec4fe0a5d805ba633ca5b69470d20ec48b4ee5ca360b"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "implicit_variable_declaration",
+        6
+      ],
+      "k1_witness": [
+        "function_call",
+        8
+      ],
+      "path": "testes/utf8.lua",
+      "rulings": [
+        2,
+        5
+      ],
+      "sample": "undrawn",
+      "sha256": "ba41997fb956fcd4a48d07c31c0b9e404cb88f0e2ea99ddf4a5cdcf48eb09696"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/vararg.lua",
+      "rulings": [
+        2
+      ],
+      "sample": "undrawn",
+      "sha256": "46405b18946c40a9c092cc63216df9a3944562ce222acfd5e63ae78f19f356be"
+    },
+    {
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "corpus": "lua",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "function_call",
+        4
+      ],
+      "k1_witness": [
+        "function_call",
+        4
+      ],
+      "path": "testes/verybig.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "2b6d30c69cbe6974068881108eae297bdedd275b429be8ec614bf5f8ee89707e"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "spec/fixtures/a_rock.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "1232d8379de77e154ca533689af2e42629dd7574bda5a0a390799849f07607c3"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "spec/fixtures/busted_project/sum.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "991cbbf2c741ba28e51b7db2e1e7cb94d9ab36a7eb979a05787db9c40dcc98ce"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "spec/fixtures/double_deploy_type/ddt1.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "1436d4652db725b575166d21216c4a11c3535eb5adae1175f998b2a3145be259"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "spec/fixtures/double_deploy_type/ddt2.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b7ce9ccbb53d54ca2893160fda18c6c3791d41e5412497e9ee462e524bc24ab1"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "spec/fixtures/legacyexternalcommand.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3d65440844f789dedd2dfe8b5091f82051c0bbf072e562f98b0fa875daa560e9"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "spec/fixtures/mixed_deploy_type/mdt.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "40adbbe99b5eef9898983528278d199e43ba8485c29ecb72df9da340afc16673"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "spec/util/mock-server.lua",
+      "rulings": [
+        4
+      ],
+      "sample": "primary",
+      "sha256": "94e22dea688bf158a2e5505e6059cf4a4b7259444420ffffc45b12d14306764d"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/admin/cache.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "431aa016cde186b130ee2d795e6489115f0eb90455ff8592f5f900b2136942d7"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/admin/cmd/add.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "d92969e055a8cd7a67af5fb8336ace59eccfafc92648f217e4d2d838516e77fd"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/admin/cmd/make_manifest.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "c17849469a461299989870c6e8a23b918806896d123e0a6189755476139cd5f5"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        6
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        6
+      ],
+      "path": "src/luarocks/admin/cmd/refresh_cache.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "28fd7fe750fb6efd1844bdd8ddc6d5494c283e89192d94fffc84e16fcc39133f"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/admin/cmd/remove.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "d1f7f3fef94aeed0b419e79fca3090ad164614d661237eb1df6b99959ab4c266"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/admin/index.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "73d97bb55c8ce073c112f548cbecca9360d44e33e4734df6935f8e2d69e56518"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/build.lua",
+      "rulings": [
+        2,
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "481466b8a0f353584efb2872fc5baf1ff32494cc701b85565eacd988dd3fad4b"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/build/make.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "178d7d9bf276f59612320f9d340e2117ed1aedf91cbadaf3ef4990aa947c1af9"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd.lua",
+      "rulings": [
+        2,
+        3,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "896fc52877ec46f02f26adf87fd4f70a136128102d297e6f008d64812c6eb022"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/build.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "c5747e9677cb073bbf6bc31372f031b4ede38d19d1c4056b5283e87137b99e06"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/config.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "26a530e06f8b0547cc26c39e3f0154351162481b63ea525aafa7efd1cd92ad2a"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/doc.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "89550bad74c61259b825a6c6cc09cdc1f244bf1e943b859ce4c67f5bcae54f64"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        7
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        7
+      ],
+      "path": "src/luarocks/cmd/download.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "26c994d094301b9cdee3661e0b3dfd57c3c7ad38b4ba3d507d078d2ea40e0223"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/init.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "618f54016e6cb47b50acf8661a70935f2d7fa9098e07abaa6ea921e1350fb36d"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/install.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "37b939133662312d13ce91599f75e7787df6248f485853c95d62bf8c5bfb2f00"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/lint.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "b5d1d25db235197e454696a3a89d46840381ad4ca2b7ae5c8673c45338cb2942"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/list.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "682e34e12b6d4d7171b064af34c91c25a5d452bd65826f132c83877a1e3e7984"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/make.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "c338199111550e953e58906cdbfbc30261089ef2f4529f13fb12c4be40b49c06"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/new_version.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "310a908bc07dc84f932e00fe28cf9ff3ca97bb098fb9b373f97d86060a340036"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/pack.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "5eaea6c387ba440e6082c499a1d6459a125d753ecd298df2e7fa29c46d31227c"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/path.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "2ce89b8c869fad56921753cfc4f4db02d2bfecdf1686d7f9c75ebef784ba76be"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        8
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        8
+      ],
+      "path": "src/luarocks/cmd/purge.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "000c4ed43c19b3b486b6abf401f2ba808b9e2a2e578c5d47b29a696fdbe33d09"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/remove.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "19eb9d9155d48d4000016767c7e18948739b7289c6a70b04938ed08d54bda92e"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/search.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "75dc247adb6ae2ae444c95840bfc30e95573a03cdfa4262d3de57e36605f684d"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/show.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "e2bb46317792e361a12803e7df5bee5cb01500655a058a21411b79557c0af396"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/test.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "ec510b41752da9b9ba9d42c8e1dcb165e8de79e4f8e1b19a8fadecae823599f4"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/unpack.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "3cb8f32a1c4caf2e7b4e613e178f4c586e086b0e0891cf6a93541921dc39e3fe"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/upload.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "0af44601f944d082a70a2c301afa68195591df007f94222e1180168835899d45"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        7
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        7
+      ],
+      "path": "src/luarocks/cmd/which.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "2c4cafe1a217e722bec4c709a63d67890004553dbcad81dd090a7993d117b24d"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/cmd/write_rockspec.lua",
+      "rulings": [
+        2,
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "917c41143501b7b7eaf22dababaa8399906e8e34d481a01626e38f66abf4aad1"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/config.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "b1b6dcdbf4e4b1afcf25d205d49d94fabb169049bec6988ce9c97df3af82ff2e"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "src/luarocks/core/types/rockspec.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "76b5d05548b932f8838d02cba1eb47fc317fd633d938be7e4c032117f242d497"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/download.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "20423bb6ff96a1b8f6c60aec117ee55596385887247fbdd03162cec93ef45e40"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "src/luarocks/fs/linux.lua",
+      "rulings": [],
+      "sample": "reserve",
+      "sha256": "d8b2750398e8c4ee84d549a839439dad0f3085710c702c37189aa03a6bad482c"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        7
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        7
+      ],
+      "path": "src/luarocks/fs/lua.lua",
+      "rulings": [
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "8f303cb6d086d26c0369b52f1f1f37b5e91440b54dbfdd17d0ec192cb859b072"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "src/luarocks/fs/macosx.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "b85c0ff65d8b67ba65d100aced9130a7c78ac7f1f776418f957ad7e4606b384e"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "src/luarocks/fs/tools.lua",
+      "rulings": [
+        2,
+        13
+      ],
+      "sample": "reserve",
+      "sha256": "74c5e4a46e1439fab0e16423108ce615b37be58fa830f01e7fe02aa0da52dc2b"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "src/luarocks/fs/unix.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9b525a659a507027eb8289aeb8d7efb6cf6bc0f4092c2f1152f6b3ab80f03c3f"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        5
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        5
+      ],
+      "path": "src/luarocks/fs/unix/tools.lua",
+      "rulings": [
+        2,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "3331b5d700f1288d435082d6c12cde14a2f8b765d2b0b5601a981cd5c6ec8b16"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        6
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        6
+      ],
+      "path": "src/luarocks/fs/win32.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "3e6aecc46b6920f152ed773833652c1c600ad97621f2cef21a6781d6db5071d8"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        7
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        7
+      ],
+      "path": "src/luarocks/fs/win32/tools.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "0d2410cdb5a99d476821c5e1f1be142472c3f0ce86e7811165a7c52958045c28"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/loader.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "6f94b262ef4bbe10d7fbf94c3b374d92f0ecab8dab389949146c54e8eeb753f2"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/manif/writer.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "cb68fd7eb5f34b4b182c9d90c422b441ab61a806f4816c4a885b137f9cb44080"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/pack.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "9db7f0e74f8210c9cdcc577e4a52b55413cd85ff76f02e1404a300faad71dee5"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/remove.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "934c86d064f46b1a4591762f0f88deddcb18970fe3b497646bc671402c24d2f5"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        4
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        4
+      ],
+      "path": "src/luarocks/repo_writer.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "550d138fc9ae5673975d6aada01e22754902664acd288dac545211041676a616"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/repos.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "f8e5b18c14ffef5b9e55564b0beab07280ac7b5ced130f640bd307d40ec5982a"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "return_statement",
+        2
+      ],
+      "k1_witness": [
+        "return_statement",
+        2
+      ],
+      "path": "src/luarocks/require.lua",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "04371d314081a3975f1ce52d79ba28de2f0906f796054740ddbc3d06b4ea9fc9"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/tools/zip.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "undrawn",
+      "sha256": "2721a9c542548dc623b9e4a109101d0caaac9d2a4dd13a7029c65cf207457693"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/upload/api.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "eef4beb557c4b6de2b8dd1fcff038232e080ee8c484fa6ee4f00cdd288aeac35"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "empty_statement",
+        1
+      ],
+      "k1_witness": [
+        "if_statement",
+        1
+      ],
+      "path": "src/luarocks/upload/multipart.lua",
+      "rulings": [
+        3,
+        13
+      ],
+      "sample": "primary",
+      "sha256": "f2a849c872431a9756aa43559c2f59ee1520e5157e6cec9b3f8d89c7517325ec"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "tlconfig.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "6735b9441df57d79006e5f64a78e541af0e37fdef30f5a7c46f144984f3ca986"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "variable_declaration",
+        12
+      ],
+      "k1_witness": [
+        "variable_declaration",
+        12
+      ],
+      "path": "win32/LuaRocks.reg.lua",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "954c1caf6f8d67737d0ef888eca9f050199ade1ed64425b4756ced554240d91d"
+    },
+    {
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "win32/pe-parser.lua",
+      "rulings": [],
+      "sample": "undrawn",
+      "sha256": "37639a21c0cc31d10baa045a35bd8ccb2ff6a3cda7a14bccc0215cf516456878"
+    }
+  ],
+  "schema": "ce.eval-deadfile-class/1.0.0",
+  "summary": {
+    "k1_differs_from_strict": 0,
+    "primary": {
+      "k0": {
+        "declares": 48,
+        "runs-alone": 52
+      },
+      "k1": {
+        "declares": 14,
+        "runs-alone": 86
+      },
+      "k1_strict": {
+        "declares": 14,
+        "runs-alone": 86
+      }
+    },
+    "rows": 235,
+    "rows_per_ruling": {
+      "13": 57,
+      "15": 12,
+      "2": 34,
+      "3": 60,
+      "4": 6,
+      "5": 18,
+      "6": 3,
+      "8": 5,
+      "9": 5
+    },
+    "universe": {
+      "k0": {
+        "declares": 125,
+        "runs-alone": 110
+      },
+      "k1": {
+        "declares": 29,
+        "runs-alone": 206
+      },
+      "k1_strict": {
+        "declares": 29,
+        "runs-alone": 206
+      }
+    }
+  }
+}

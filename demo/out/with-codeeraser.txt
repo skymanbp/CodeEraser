@@ -42,8 +42,8 @@ $ ce docdup . --check
 dups: 0 duplicate pair(s) over 2 live segment(s) — 0 judged, 0 by Jaccard | exempt_allow 0, exempt_license 0, hot_bands 0, hot_shingles 0, lsh_pairs 0, over_cap_segments 0, requests 0, seed_pairs 0, sent 0
 $ ce deadcode . --check
 dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
-dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]
-deadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 5 unresolved sites (verdicts assume none lands in-corpus)
+dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]
+deadcode: 11 nodes, 16 kept edges, 2 dead, 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
 deadcode check: 2 dead file(s) — disposition or entry_globs them
 $ ce erase . --check
 erase plan: 0 eraseable, 2 advisory (dry-run; --apply to act)

@@ -1,0 +1,2141 @@
+{
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "typescript",
+  "method": "every universe row of one language, from the frozen slices: sample membership from the frozen sample (primary / reserve / undrawn); doc_class and K0 from the slice row (universe_counts.py's DECLARES over the slice's top-level kinds); K1 and K1-strict from the text at the pinned tip through the product's parser (BARS.md section 2 with addenda 2 and 3: k1.rs, k1_lang.rs, k1_tables.rs), each with the kind and line of its first active top-level statement; the ruling numbers the K1 walk met; the lines of ruling 16's fragments; the sha256 of the classified bytes. Per corpus the pool and primary counts of BARS section 1's weights.",
+  "per_corpus": {
+    "zod": {
+      "pool": 98,
+      "primary": 98
+    }
+  },
+  "rows": [
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/array.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e888a6783db46b1aae4dcda3bb04cf8f06e58635c8c1d5297b61db934d57965e"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/bench/benchUtil.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "89f257f8079661e7056881113f6e2ede02743de5834232b6bb5d48b29be5b2a7"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/boolean.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6931d98dac4ca0d2cd38528691380fe607ff42e424fbd9a7f951a433313a14a4"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/bench/datetime-regex.ts",
+      "rulings": [
+        7
+      ],
+      "sample": "primary",
+      "sha256": "25fa33abdba1af623f533d387df58b58a44f09195c7b9dbf5c9df4534a4c502f"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/datetime.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "98b754e446320d9a11d3208ef9d8a3b2246d4187e4afbd910a94ef6bd93e37ab"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "path": "packages/bench/discriminated-union.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c999539984ecfbb3ca4aaec3e52793a8b3614209797cf4f908a5d371b990d07a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        7
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        7
+      ],
+      "path": "packages/bench/error-handling.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f26da233a3e30f6ea0ed4db5a905d444c2d1c6b881fa97b3391463328d1bc303"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/bench/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d27110d4bd9a04943ce05403120142a2a40ffecda8af1019f188f03866d7d02a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/bench/init.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "283d3ab70be84b44a7da188e200e3b6b76add82a859d83349878af9987e6cc72"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        13
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        13
+      ],
+      "path": "packages/bench/instanceof.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "81ede367e55164d1ad07511dc710fffba8f5670c346f6088963f7425eba5690a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/ipv4-regex.ts",
+      "rulings": [
+        7
+      ],
+      "sample": "primary",
+      "sha256": "e3a53e8f66e340bdb47254170fd9345b31b7485d6463e2e3c25eb5186950aa49"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/bench/jit-union.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "84af9d8ea24b5e51f1349a0333d15f832eb1c4713a42e22e0ab1c7433416e053"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/bench/key-iteration.ts",
+      "rulings": [
+        13
+      ],
+      "sample": "primary",
+      "sha256": "5dd73d8d5e5df73e44acf73b3c0cb7f40ad394c8d7996e4b82146bdc97c5ead6"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        43
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        43
+      ],
+      "path": "packages/bench/lazy-box.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "640a699fe11c64924c165fda6cc4f0a5d8f34d323c7ac814280f1e2ee550b299"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "path": "packages/bench/libs.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b4bf81d075a9bed253b294f25246115d8e0b55d86b468ba6c9f59a24778b418b"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        11
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        11
+      ],
+      "path": "packages/bench/metabench.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "342d0c32460b6dff14beff99a3b72b8fbd24e312593ef63abae0dd4ac1e946c3"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/number.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4209f50172a1a4601cc2866c1aba5ab535f8a23290d5cc2616a098b164d808f1"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/object-async.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "dc260ad18a2295ebc1285fffb842f90e3cc31963f7867890f5cd341ce0861adf"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "path": "packages/bench/object-creation.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d27768af53e0c9b25f8a7ca109f9dfa119ea4f48583a6640bed73221acedf669"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/object-fail.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "45e5ebbdb6a762f2fcaf800799ae250580c651da0bd536e05598d1b525f9c09a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        6
+      ],
+      "k1_witness": [
+        "expression_statement",
+        6
+      ],
+      "path": "packages/bench/object-moltar-jitless.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "5a875ffb5bfb960279ddbdc2d0f131d1aaf87635b57213d6c095ee425e1361e8"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/bench/object-moltar.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b28dbdb4c061f0f6f5f8cabc5cfc0996f824786530cf1ed58145bbc91789a868"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/object-safe.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "28a023622878fc5a4cbf4807f3f51f725ea5776b0c53198d4a63aea59ecab8cd"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/object-safeasync.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "eaab86e84ee49769eb72baaa5c1bf6aefa9253b11ec68059df6b6c0d24585632"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "export_statement",
+        4
+      ],
+      "path": "packages/bench/object-setup.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "43129577572798fc9d79e24e04f4a6511d8d2765362d4ff40b0cf16a15848bea"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/bench/object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3ee9b68e1849e88e9bb2bdd64447fe2a9b7c04f461e39f053d2909c21e8daa5c"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "export_statement",
+        4
+      ],
+      "path": "packages/bench/property-access.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "799328120485c29a4e56e10f72542e93411a22ad393e05146349e630529af306"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        18
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        18
+      ],
+      "path": "packages/bench/safe.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "750435a0ad2cbbf79d949b511afc3ee723c5f7c6390619deebac9dfc9a51abe6"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/safeparse.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "500f98a07dcada24dd3ba6781e6d011978ffd7b7671dd7ef3c064097893f2e29"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        4
+      ],
+      "k1_witness": [
+        "expression_statement",
+        4
+      ],
+      "path": "packages/bench/single-element-enum.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "5d5481eccfce8e5bc11ce3ba9e955ebf86fc52a1f11d79692db97e850a995f9e"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        4
+      ],
+      "k1_witness": [
+        "expression_statement",
+        4
+      ],
+      "path": "packages/bench/single-item-union.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f92443eb549b9b11aec00658cc9de5f282fd31c91a05b680409fc9b5dc846d4d"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "69f0d7d61540fe4aed89eb070fe1c6f5d7e46ee170b95b6962670ea9322dcd82"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        4
+      ],
+      "path": "packages/bench/union.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d8b0dc13196d6e3c64c8ca778ce9b1ad1d095388c2a5b85cf7464c62b4ce352a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "export_statement",
+        4
+      ],
+      "path": "packages/docs/app/api/search/route.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "83e6215d2264e6f437bfee232678208dc944b902ada0c29e67b02fdc65ac89b5"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/llms-full.txt/route.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "510276e7433835dfdb3bcbd34c6864248b2bcd8eb8b3be08f45af462aa219c13"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/llms.txt/route.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f774b8c8adbdd089c937461d0615845bfb87f55032ae61a151499ae3443e9eb1"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        12
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        12
+      ],
+      "path": "packages/docs/loaders/get-llm-text.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d6e6203578509ed242d2a79eb373c59d90e1c11959796df1ea1c052c55381eb9"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        9
+      ],
+      "k1_witness": [
+        "export_statement",
+        9
+      ],
+      "path": "packages/docs/loaders/source.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4d02ae83003a622f1f7e1df5ed8ffa1cd88c41f0026142c55785173e0e3b1e41"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        1
+      ],
+      "k1_witness": null,
+      "path": "packages/docs/loaders/stars.ts",
+      "rulings": [
+        8
+      ],
+      "sample": "primary",
+      "sha256": "f3bb939c538aafcc75e05c249471cec570e9df8669363178087f00897ac19691"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        3
+      ],
+      "k1_witness": [
+        "export_statement",
+        3
+      ],
+      "path": "packages/docs/source.config.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "67de45af6983f5001c45b795ac8ef9c9ac6d7a602434cbb0332f260a197950a2"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "export_statement",
+        4
+      ],
+      "path": "packages/docs/vitest.config.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "8fc5dec98e5eb40e6090cfff0bb621b08cf0bea5c7555c5bc1f34cc3317dc9e1"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        8
+      ],
+      "path": "packages/integration/fixtures/ai-sdk/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "bf6e0f6b3858481fcf0b6f7cfab6ee3d6ec3e939a3a66f19c001be1f646c6815"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        9
+      ],
+      "k1_witness": [
+        "expression_statement",
+        9
+      ],
+      "path": "packages/integration/fixtures/drizzle-zod/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "14039451255da47d90225d3c8094d69c005949b97c09f54e83ab1141cefa43da"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/integration/fixtures/internal-types/cjs-test.cts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "11a80346b2993b9cd63ff3b68665d94e7844d5f0fd20701c0055519b90a069fe"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        7
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        7
+      ],
+      "path": "packages/integration/fixtures/internal-types/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "99af96637a410ac264f19d03d6b84ff7a1c3092783088754fe4c51de3dddc2d6"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        11
+      ],
+      "k1_witness": [
+        "expression_statement",
+        11
+      ],
+      "path": "packages/resolution/src/index.cts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "52e70312a382208e111b628ae417e6433758722f38e538856ea16bff65ed6246"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        11
+      ],
+      "k1_witness": [
+        "expression_statement",
+        11
+      ],
+      "path": "packages/resolution/src/index.mts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9af58c9002f4268dd599436d5772646ccd290ded32bf0ea3cde3881a83b13781"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        11
+      ],
+      "k1_witness": [
+        "expression_statement",
+        11
+      ],
+      "path": "packages/resolution/src/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f7665e1286e9eea47466c1a2680415ecb36ce36ddcb72ba2b1aa27a9dfce3560"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "path": "packages/resolution/test-resolution.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9bf5ab4f9599e6688f416f6f8825c5f7affcb2304e7098db219872380ec94f56"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "export_statement",
+        4
+      ],
+      "path": "packages/resolution/vitest.config.ts",
+      "rulings": [
+        8
+      ],
+      "sample": "primary",
+      "sha256": "6469722039db4cca732e06bb82b9151fb3e0437ff64ae12c2ddd181b23bd8fa4"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        3
+      ],
+      "k1_witness": [
+        "expression_statement",
+        3
+      ],
+      "path": "packages/treeshake/example-mini.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f4839656bbd37a51e7f87df135dad7cd3fdfed09da2967599bc4c8d5da633487"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        10
+      ],
+      "k1_witness": [
+        "expression_statement",
+        10
+      ],
+      "path": "packages/treeshake/example.ts",
+      "rulings": [
+        3
+      ],
+      "sample": "primary",
+      "sha256": "680f74eac73702c5e72f838b142097c23f51f499b9148d4d13e99d550636cd53"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/valibot-boolean.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "05ff6163ffb948a42d3a3244a1be68dc1a70265ae5c5a7ae70bfe37ba9e524e7"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/valibot-object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "2be8017e0acd9f67496898fa39fd8243b6d45aaba9852b29c968ce6a1aeb000e"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/valibot-simple-object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9b966b91fef20359ac3c58e6d831f7e4c5fc768aa4adfdce93ba363c3c89a05b"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/valibot-string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4b746b7c81bdc4c96dbe1e470c6b5286250f4233f1c9990a623ec07c9a93439d"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-boolean.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "427398ee5106bb9ed8e0dee59d277c5dc2956a6f90380ddde3df0e1658a16b2a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        3
+      ],
+      "k1_witness": [
+        "export_statement",
+        3
+      ],
+      "path": "packages/treeshake/zod-full.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "af119d3601b281ff89c874298c950ba945d5f37fdd9b998f1d544dd7f5020036"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        4
+      ],
+      "k1_witness": [
+        "expression_statement",
+        4
+      ],
+      "path": "packages/treeshake/zod-locale.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a6dd56e70907d5c351248376ea7cf20ed34830810e01b295c065a0988037e6d3"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        3
+      ],
+      "k1_witness": [
+        "expression_statement",
+        3
+      ],
+      "path": "packages/treeshake/zod-locales.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d557ba708d86d94453e4b7da58ac68fb13d51973e10b382078e5d33aad410bf7"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-mini-boolean.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "bf6c2f0e6daf5100b20a7247c66dd37e9ab154d7d7faa7581996061060d042b6"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        3
+      ],
+      "k1_witness": [
+        "export_statement",
+        3
+      ],
+      "path": "packages/treeshake/zod-mini-full.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "03b9ebd144eab89114359f0a2d7d43c886f15a9cdc5a1a9c96d16704ee7eefe6"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-mini-object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "65f170608fbe0d0a52391ed6c6330e53651d716b1617a05e427c0d3f0dee8167"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-mini-simple-object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c906647ccb51fa8e0205cecb22f572a61a31a0272b66f922c0b56d4a1630015b"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-mini-string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "26f36d6dab0618c2112ee67baf51b752b662abd0bedbbda04d48e85ddc32a18a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "297f55933dbf877ef1606159216e639e86595371735da0eecb86bbaafc6a4c7a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod-string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e774fb6ee7ae7b0e06d82fef6ed69dab8746369efa26af1df957a7a967978257"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod3-boolean.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "11d8cca9b461f6c7b677a91933d1f5f4921f2b8265fd1cf3b621a281034d448b"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        3
+      ],
+      "k1_witness": [
+        "export_statement",
+        3
+      ],
+      "path": "packages/treeshake/zod3-full.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "75bfb1f97ee5607d6800c1f8ed6821b5bfd8856ece22721bf6b71c2cd80e4f89"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod3-object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "14548646b0bb4a5d1f25e1fb3cead266e7216b2c978d50e90a0bfdee4a0313cd"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/treeshake/zod3-string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a6733760be8a7f5d16c442778a1e80f43e1ce4f7640fa524d025ad7ace75aaba"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/tsc/bench/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "16c8ca35c19d84104a654d3b25c8445e85d8b89f5906f4a094cd9fc555eb781e"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/tsc/bench/lots-of-objects.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "772e4a2aeb8e21df163b971d53b98c5df21aca29a1b472c6141480d7e97c09b9"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/tsc/bench/object-with-extend.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ae9d02b4fdef1de55503e300de9272c1c479bd0f6571b349c281673d69a7893b"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/tsc/bench/omit-extend.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "2a32b18e2d6a56342fab74307cad0c9971b0cf6a7ed78427ef6869c964055d3d"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/tsc/bench/string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "07f45341272ce81ab18da41c6c57486bf260c06aec2d1db5cea7518eda4b2e8f"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/tsc/bench/strongly-connected.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6a6a3391ac048337f2c10ceb8228482a4228a0984af397322aeb0db4d8d53dba"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "expression_statement",
+        5
+      ],
+      "k1_witness": [
+        "expression_statement",
+        5
+      ],
+      "path": "packages/tsc/bisect.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "28280053c989b54a25e0fc79468304a3025ef26fada6ff15ffdb838c50892363"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/tsc/extend.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "712a4d622fb2ccfa20f52ad17e7f57fad3a6cb77426dc8de7df0c53aa018334a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "expression_statement",
+        28
+      ],
+      "path": "packages/tsc/generate.ts",
+      "rulings": [
+        8,
+        12
+      ],
+      "sample": "primary",
+      "sha256": "d05cd89dcfc2cbc24c4e392922beb308a6525942c108dd0744c94ae35720cbe1"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/zod/src/v3/benchmarks/datetime.ts",
+      "rulings": [
+        7
+      ],
+      "sample": "primary",
+      "sha256": "0d1a81e5608b286c1843aaecb20bd7d1f62b6674a610a51dc7d1043bed05963d"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "path": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "33e4f792dbfdc735a72f92fcc117d3dbaea8e7ff3937d523bef3df44814805d3"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        12
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        12
+      ],
+      "path": "packages/zod/src/v3/benchmarks/index.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "27f4322ad98e28575d5849a7612c6acea55cd5be8a1571d1885a656e8a9d5620"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "packages/zod/src/v3/benchmarks/ipv4.ts",
+      "rulings": [
+        7
+      ],
+      "sample": "primary",
+      "sha256": "3ef475926d7e95a5880cd9d7bd780f98642189010046bb9748e27e50360da333"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "path": "packages/zod/src/v3/benchmarks/object.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "706d51c7048aff5108dd71b33b5c66d354a6856be0a48b23bc32e55d284c31d0"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "path": "packages/zod/src/v3/benchmarks/realworld.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9bcc944a5e875ca191ca10542c113dde3c754e45a196400726f251b045e14215"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "packages/zod/src/v3/benchmarks/string.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ed17ef186249dc4f1da01a2d5e0bd3c87da6d0d2dcad89e8afa05e0920d98536"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "path": "packages/zod/src/v3/benchmarks/union.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9eec8e3e58cb4d3dd76be11874187f71a99c27e06c639de0cc9d8d928687fe0a"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/zod/src/v4/core/config.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3c3ec0c03ee7387685f7a5e0155d9d55f251ffe4cfb5f4447bcbd380aed3d847"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/zod/src/v4/core/zsf.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "975e61b52c8de9fad0a0086952b9ee8a1abbacfa4489659529c53e80dd78094e"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        4
+      ],
+      "k1_witness": [
+        "export_statement",
+        4
+      ],
+      "path": "packages/zod/vitest.config.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "49c9e26afb17070d77b674403513523739f11eb6cdb2fc60ea9a0a2a05963420"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "play.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f989fc8e38a6211ee21df40f5c87a65b231e0a5d370057c6cc9b1afe90fe0432"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "scripts/check-semver.ts",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b603ca1db3e5ecae9750b850ce2d996a42f4b2f2ff417ca9fabdc8fa84a14d59"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        6
+      ],
+      "path": "scripts/check-versions.ts",
+      "rulings": [
+        8,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "5a4189f39d2f3d27ca012ed51ca165dec968ede87016b813f99fcb4ce19f6a75"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        3
+      ],
+      "path": "scripts/fail-on-console.ts",
+      "rulings": [
+        8,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "3c174b24fdf1b10e0aa222616b85e8529899e245f3e09f93e69f7e1a82bdbe43"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "hash_bang_line",
+        1
+      ],
+      "k1_witness": [
+        "expression_statement",
+        87
+      ],
+      "path": "scripts/write-stub-package-jsons.ts",
+      "rulings": [
+        4,
+        12
+      ],
+      "sample": "primary",
+      "sha256": "ba6fd4ac5c84f2a26fdc0525b75a53779d187544f8a58bc1f0a02fe5201915fd"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        5
+      ],
+      "path": "vitest.config.ts",
+      "rulings": [
+        8
+      ],
+      "sample": "primary",
+      "sha256": "04a55003ffaa3fe760fc652388e112af0f96938581422d109e4605791c0ffe8d"
+    }
+  ],
+  "schema": "ce.eval-deadfile-class/1.0.0",
+  "summary": {
+    "k1_differs_from_strict": 1,
+    "primary": {
+      "k0": {
+        "declares": 20,
+        "runs-alone": 78
+      },
+      "k1": {
+        "declares": 7,
+        "runs-alone": 91
+      },
+      "k1_strict": {
+        "declares": 6,
+        "runs-alone": 92
+      }
+    },
+    "rows": 98,
+    "rows_per_ruling": {
+      "12": 2,
+      "13": 1,
+      "15": 2,
+      "3": 1,
+      "4": 1,
+      "7": 4,
+      "8": 6
+    },
+    "universe": {
+      "k0": {
+        "declares": 20,
+        "runs-alone": 78
+      },
+      "k1": {
+        "declares": 7,
+        "runs-alone": 91
+      },
+      "k1_strict": {
+        "declares": 6,
+        "runs-alone": 92
+      }
+    }
+  }
+}

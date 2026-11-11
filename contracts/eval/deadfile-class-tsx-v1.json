@@ -1,0 +1,552 @@
+{
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "tsx",
+  "method": "every universe row of one language, from the frozen slices: sample membership from the frozen sample (primary / reserve / undrawn); doc_class and K0 from the slice row (universe_counts.py's DECLARES over the slice's top-level kinds); K1 and K1-strict from the text at the pinned tip through the product's parser (BARS.md section 2 with addenda 2 and 3: k1.rs, k1_lang.rs, k1_tables.rs), each with the kind and line of its first active top-level statement; the ruling numbers the K1 walk met; the lines of ruling 16's fragments; the sha256 of the classified bytes. Per corpus the pool and primary counts of BARS section 1's weights.",
+  "per_corpus": {
+    "zod": {
+      "pool": 29,
+      "primary": 29
+    }
+  },
+  "rows": [
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/(doc)/[[...slug]]/page.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c39517331f63df814ee465a1d6611a223c45597435f3eac6cefd9324ad930399"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        11
+      ],
+      "k1_witness": [
+        "export_statement",
+        11
+      ],
+      "path": "packages/docs/app/(doc)/layout.tsx",
+      "rulings": [
+        8,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "97930d860aaf2e029dda85ec1c025758088ea2ba316bb9bbb9b1e23bf29c47ab"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/blog/[slug]/page.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c261813758eee1145399fa29f7230b85c692229385a068e3df3fd39f211fe0c9"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/blog/layout.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e2eff8ec6972b209984351310afa9089b0c92fdd76591cfc6d878c15cce4ab69"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/blog/page.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a5692b11e64eb7c290bbba1fb9fb239650274cbd54e11b040dcc7c3c90a02d0c"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        5
+      ],
+      "k1_witness": [
+        "export_statement",
+        5
+      ],
+      "path": "packages/docs/app/layout.config.tsx",
+      "rulings": [
+        8,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "cbd81c7e2e81f211cf01321c2d29a70b81559f97c1caf8a45abb89326c6dda00"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "lexical_declaration",
+        12
+      ],
+      "k1_witness": [
+        "lexical_declaration",
+        12
+      ],
+      "path": "packages/docs/app/layout.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "0502a2c1662357d266ea7e2bcfcbf7c5347dcbd264f716f5167f0ed72f2d3dd8"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/not-found.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "55a852bc61e14f164e49a060e80fa364ff926e97bb697ae5b2705aaf02ea4868"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/app/og.png/route.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9aeee8671371fd9a6459a6ffcfe8232332b3bd5ed27ef8b30fa9f1e3acdf6dfc"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "export_statement",
+        7
+      ],
+      "k1_witness": [
+        "export_statement",
+        7
+      ],
+      "path": "packages/docs/components/accordion.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f351178747de83ee72402681f045fbe8af50bd9f4718590cf8a1d9d5f4e65370"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/bronze.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "3e7715198faaa7ef7ec5fd6646d097b35646a7e6dca7e78f9348426e360b7795"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/codec-image.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/copy-markdown-button.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "22778c1683b173b636ff58addf5ffdc41d51def3c6206991b82ecefd21a00b86"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/ecosystem.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "edceabeeea2209aa42e9b80cc6e2986906b2db68ffab3fe35a435a93ad681141"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/featured.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ab0c2a4e9ec9429a5216ac5087a793f94abb4236511b786106b9bbe90d01e894"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/gold.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "64f8af6861df70372e2177e7b237baf5b9bc5d15b558e88d527d7bf65c96d55f"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/heading.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "5ab895539f3b168d78a91c408736ed580f9bd3f38b3affbaf2b8ffe139187afe"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/hero-logo.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "785a539cf75e6f3421413b474a10d240692e57d3dda67d03c1cb2340db4ccdab"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/if.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "770713a4d177df7ced37736ca49643c325ec4002502462a0b0b4c361294cd1f2"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/inkeep-bubble.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "776dd717c14fa3b9469123c061e15bfd44df6aa8e6c65c77ed8b9a1f4ca09427"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/inkeep-search.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "63d815a9ba38aef8ec8e595ee74f86760904ca276f369e5af6a1638538c342f4"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/platinum.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b31c56a8366194cc53873bba708e64db64c218a963ed4bd2776b3d90895febbe"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/scroller.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "83601e8acd1978334c91d85843b1097c880ace2cf3882ebf2ab6b4b14bf93c1c"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/sidebar-item.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "254e634b0bb08871afd203466b220139510e4b88b1dfdf74dd7ef12975e0ab0e"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/sidebar-logo.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ec0be393cf14dcd3bbaed8ddffbf61070df2677bdb54052145d932488a79ddb0"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/silver.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9c279cd0bf6a740a9e2436f4f9aa3e7dcdfd5c78d30a9d17d572495437b13cbe"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/tabs.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "052887048bf403cf65f39443b49aa8837614d5b6aa4cd6fbe4632bb5094cf6e1"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/components/themed-image.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d"
+    },
+    {
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "declares",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "packages/docs/pages/api/_og.tsx",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "af92e7907c949c4563470e525e2f3e1d701dea3b367e46cbe719ce32036043d1"
+    }
+  ],
+  "schema": "ce.eval-deadfile-class/1.0.0",
+  "summary": {
+    "k1_differs_from_strict": 0,
+    "primary": {
+      "k0": {
+        "declares": 16,
+        "runs-alone": 13
+      },
+      "k1": {
+        "declares": 25,
+        "runs-alone": 4
+      },
+      "k1_strict": {
+        "declares": 25,
+        "runs-alone": 4
+      }
+    },
+    "rows": 29,
+    "rows_per_ruling": {
+      "15": 2,
+      "8": 2
+    },
+    "universe": {
+      "k0": {
+        "declares": 16,
+        "runs-alone": 13
+      },
+      "k1": {
+        "declares": 25,
+        "runs-alone": 4
+      },
+      "k1_strict": {
+        "declares": 25,
+        "runs-alone": 4
+      }
+    }
+  }
+}

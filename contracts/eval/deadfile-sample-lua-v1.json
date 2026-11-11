@@ -1,0 +1,3262 @@
+{
+  "allocation": {
+    "koreader": 52,
+    "lua": 20,
+    "luarocks": 28
+  },
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "lang": "lua",
+  "method": "per language over the frozen slices: rank id = sha256(domain|corpus|commit|path); at most `total` primary rows by the language exams' quota rule over corpora (each corpus first min(15, pool), the seats left by largest remainder), each corpus taking its lowest rank-domain hashes; the reserve is the audit-domain rank over the unpicked rest, at most `reserve` rows; a language with fewer than `whole_below` rows is taken whole with no reserve. Rows stored in audit-domain order.",
+  "pool": 235,
+  "reserve": [
+    {
+      "audit": "00032202ff0a36d8ecaba769dd866e59c164881b7e5926f8bd123bdb66fdaf18",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "frontend/ui/data/keyboardlayouts/zh_CN_keyboard.lua",
+      "rank": "70eaaf27207c1b2226791ee6193733a63c5a3f0ea859636c667b992de1abb73c",
+      "sha256": "73f7e1ae3222de68d92a01a5078fcaa42f0b6de2cfe2fee32bafedb21ec730ee",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "01904db258af6f3a90745d3ab2bcef9034bd90aac15d82d0bee7f701de1192d7",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ka_keyboard.lua",
+      "rank": "723c15d3c2288568e49122aaf50473a81222d7c55ab7e3860f56d8eae9d69216",
+      "sha256": "9c47948317c00fec7fe73919ffb7b213b8b02c35e7c2a94c385310380f4ae24d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "03a13e47a5e724095a62d6365bfb408cabdf914ffb02dfba388faf421bc9331b",
+      "basename_spelled": 25,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "function_call",
+        "function_declaration",
+        "hash_bang_line",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 21,
+      "path": "reader.lua",
+      "rank": "b30e395bed811892ba454dea9ea6600e0132146bdf927ada1c65ec109c581fd6",
+      "sha256": "1e39148f3fbe312653bd2ede233569317bd35257ab5e42c9c4e3c497cfc271b8",
+      "stem_spelled": 119,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "04539d802c846c62a735a79493de356d798935750e8aacfd619afc0aaafd4442",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 10,
+      "path": "plugins/cloudstorage.koplugin/providers/dropbox.lua",
+      "rank": "c38cd610082fae21bfa31c0ef27a04bfcb7c594493cbcab72c9f49fcdb0eda8f",
+      "sha256": "e61e60ea9c72170856ecb9b6e901026f3386d93c7b9e0de9d7420363905fdf0c",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "050a55a35bd02e5ed8ca3f012d6ea85ad3ec53c4469b9d1401cdbcf6d67c73b8",
+      "basename_spelled": 9,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/gestures.koplugin/defaults.lua",
+      "rank": "d12005f28558dce19eddeaf257a4bed4ecfad595fb217a5e41f7cfe8e527c527",
+      "sha256": "c9420680b8355ce1a43059afb65f0b44534a7396a2d4e1ef3028a0fb73a3a6bf",
+      "stem_spelled": 55,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "07478c583fae14dd3149bb08e493ce06241628af45b734ed231ae8edadc6052c",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/ru.lua",
+      "rank": "6f45d3197115236a04d9fa059e7749727d7b63be5799ee0975a7817c35b03cfb",
+      "sha256": "7fa5a1e088c15722294089cd732b023897a890643cd661d6e8e818ed0f28a141",
+      "stem_spelled": 16,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "0a6575f1d4ca7f9cd8dc97b7b3cfc074f024e00cf22ad0684dbfe49744e71e50",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/vocabbuilder.koplugin/_meta.lua",
+      "rank": "fecd226514a982e8747dc674b8723bc9ae03bb94ab09886df5ffc268876d9029",
+      "sha256": "0ebcd20e8bde3d0ab485b4e2fcf944fd049545c41d70d8a4562667f1a9293884",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "0ab2023b423aa64177ee053bd22321abe358eb826712859253072e5e09bb0830",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/kz.lua",
+      "rank": "eb5ed40902083e6935cffc9edb16441c5f5b870aa2a6b807ee333ebd1687f909",
+      "sha256": "f0bf60b63b1df41e5c14a51853d3407c4162b0b51a1da1f7f28620af6c0b6ea1",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "0cecc04e23101db0459b41328c611da1f2055a66ec98b85eebc9b9bd7e465aad",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ar_keyboard.lua",
+      "rank": "ab6ce5b3ad03f3c48405e4a2578780441d0208ed5f891f626ca0e00604696153",
+      "sha256": "4544bfcffc3042cd6c3f84685eb4371deaf5f0580195379c9db0f0c041b5c154",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "0d545fcb04fe07d4d82574369a3f2d5e9105704d850b4a8bc5cd4b21f052f32e",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/cmd/download.lua",
+      "rank": "f7d1ff076137eb493a9a30b128a048979acf6dedced66b4ecf5b0aa399bb9540",
+      "sha256": "26c994d094301b9cdee3661e0b3dfd57c3c7ad38b4ba3d507d078d2ea40e0223",
+      "stem_spelled": 45,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "0d83d5bba72fb37ffac4749c0d66ee3f357ec7ea47949f0122fc7e870aeddf22",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "do_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 9,
+      "path": "src/luarocks/cmd.lua",
+      "rank": "bfd44d123320e71a41ae6a9309c0da507a4b39c51958ef8ba72f4e696cf30d11",
+      "sha256": "896fc52877ec46f02f26adf87fd4f70a136128102d297e6f008d64812c6eb022",
+      "stem_spelled": 77,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "0f9152f4e6dc73fd137d9471f12b732969fd2324a0ca19fd355ffe1f6d2aff9f",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/hello.koplugin/_meta.lua",
+      "rank": "84b244da1f461e5c93ba305f4e0e03d823f221f9bedab2d87b7c1d957945d048",
+      "sha256": "871155fbd6e2d854d825c78b5127af5703456a8838e424c2a7bc83beae2485ff",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "107f7d114f8bdd66a7cd0a4c23c0eaf1849c231a5fcede7d9225f281569419eb",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 13,
+      "path": "frontend/ui/data/onetime_migration.lua",
+      "rank": "68c6b5790f2ef39bb3dff63aa2bc193dd2440ac6234eb44a7f18f0a380cd79e0",
+      "sha256": "f2f629eac26445001c7734c2ad2fa080e206a7d474f3adf7e3244f17b829718b",
+      "stem_spelled": 6,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "132ec564296c7dea54055a129530493267ef3bbf35775c41d0addcb665fab9dd",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/_meta.lua",
+      "rank": "7f98cc8733d44269e787e64e0fd48cfa287224284ebdc3bfce9f04553793b550",
+      "sha256": "f036c85805f2a9bb168322ad5e639de2f408d3736109051dfd715f5c7d133d09",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "13f2c5080ffe97e181a5a9bdca5dbc39aa71b1523b2d173bc235cfab5f374ae5",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/el_popup.lua",
+      "rank": "ee6b44b5facc04196f24714755bcd46802a1043629585c0ee22dece3e36ba3ea",
+      "sha256": "a17d4674faac02dd83b215cca5f047a1769ee025a3b26e410129096a5b4e3e8f",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "15711788806e16d608aa5b30db22d5c9395b1b8da9c077a0110f8439cb17430d",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [
+        "spec"
+      ],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "function_call",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "spec/unit/pdf_bench.lua",
+      "rank": "c0afa97b3cc5dae0becafda2f9bcfddb06b060c3a6383ed192a16c78f4b07784",
+      "sha256": "ad1fdcaedb447cbbb009e99cc261ea72c895ed7f135c8da12f837bbd9451c7fc",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "1c16940001f3074509ff9ef2340c1c439bb2a74327998c0335bb283d4d4f162f",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "tools/benchmark.lua",
+      "rank": "7811c7f29f03bce6793599801fd8b727c03c5e140a48fe0b0572df394fd64ff1",
+      "sha256": "780606915d342e8de09f99fd3e1f59a3239bb83150f76fa34e912cee5bc50398",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "1c66b9b1f7bb8de471e402f793ee3dc7035da46208f2bcfac664e7ca4dde250f",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/timesync.koplugin/_meta.lua",
+      "rank": "6e110aed302c12b48b814fc6b4494bcd87dd1f6077179f5acbade60e67025cab",
+      "sha256": "6683e9a96238540dc5332cc923944444fcaf94eab67ff70d6a416174e8af728f",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "1cf6c2c94d185fc373b8e141f3c32f061796cfa16f1176c040ba9bb06794edfb",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/admin/cmd/refresh_cache.lua",
+      "rank": "f8f1adfb72d54862ac643b6c3104f9a6ed1dfe84f6a49e6ac4d6741ec5e5a2a4",
+      "sha256": "28fd7fe750fb6efd1844bdd8ddc6d5494c283e89192d94fffc84e16fcc39133f",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "235d64b7f1b5bb6dd044c94436c56ca745d2e5e48760ce33ac15446f0e877c1c",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/cmd/doc.lua",
+      "rank": "cca7c36efab8ba735f578d003c2cf60ae1d0769a88b04f90806feb62d10faabc",
+      "sha256": "89550bad74c61259b825a6c6cc09cdc1f244bf1e943b859ce4c67f5bcae54f64",
+      "stem_spelled": 27,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "25a75ea4d7d768f97fd34feff6fa7f6d59946ab08464830317630a5a7c9b8503",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/fs/linux.lua",
+      "rank": "ec602ad24018b0a59117843bda9b19dbd3a8c32a87308b5aca7411e4bc4c12a5",
+      "sha256": "d8b2750398e8c4ee84d549a839439dad0f3085710c702c37189aa03a6bad482c",
+      "stem_spelled": 19,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "2694f59ecd70db790be933e56538f6100f22dcf1a6d7c154a6e2a629cfc01324",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/systemstat.koplugin/_meta.lua",
+      "rank": "cc88d132fb67890789258b1ba3c2b928384475e38680e22ee00548543f1f2aca",
+      "sha256": "982d7454cb1f280ee04ab26acd2c2ec50297b7bedc24a4fe154500303ee81c56",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "27611c3a7b1196ca3227798a419e6e1cc9c5642aabc14d8587be9aa20303676c",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/uk_popup.lua",
+      "rank": "c2f10670952fe484efad1224b77aa0dbbe63e7c091b518de5afe824fe139eb58",
+      "sha256": "323889772436969d7a1fdb16d504d319b81f3e7940d6b7ff3ef57f4f1648dcde",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "28753384cc6e8b78f848ab313028011beb06e61b3bf8e42d69ffd353bc95c22a",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/hotkeys.koplugin/_meta.lua",
+      "rank": "87a7207b8583d58d9a19d346913856f94771615de067f5c0c6def4ec06f52830",
+      "sha256": "8620f25072aff3d486b56f224730e02372800c83c380ac3e7a8367ee2d18cce5",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "318f69f3a92b334c1f27d15d1f0048a45de7678ffb383119e1a9e21779613e75",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/opds.koplugin/_meta.lua",
+      "rank": "a24d3db40490c3157e3a7fb6af8c7da579b1edb239fec43ef6687a1cd7efd788",
+      "sha256": "1054e9c7a1068c755746267bb3fae4b7698c1a54d1098ad78ed648b2431a66f4",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "324280db0bbe2e084f75a84dd961e92a66bb4ad398e3ccbd78ff440a5f5f59bf",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/fa_popup.lua",
+      "rank": "9adb0ff32b6ab2823350c64d32c908a84d00d460dad3623f37b5990903ea3ed6",
+      "sha256": "12c59c21c9abc4a49bd6a0109496ca83bc3344b64df7f71b05af94bb94374adc",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "32c734a14edc9f3ebaaf30df8b87767c396cab0c13e7926555527fe71b06bfdc",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/keepalive.koplugin/_meta.lua",
+      "rank": "fbd55a0f9eef57fa971f451c1d195e516ed0f82d14fb2b185346de12f6de7933",
+      "sha256": "bf3d65789ee0d6037d708e2212e10659df1165f64425d66f0f09f4f1c1cb5c89",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "336666d5d912c21f6a9c0c6323a3d2451e873114a91b5d0ac1f7160214e46e09",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/kosync.koplugin/_meta.lua",
+      "rank": "e8a4ef1950d8cb2410914e18751634e46786698a93b2d237fee71d131c0ea319",
+      "sha256": "fc4d4a16f9dd3f3594aa7ce8501e7a97de00df72a463e97cfb4123015d49317a",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "36732fa59b731697d72d4be681d52b92febc236121f0d7c9bdf069c82a947ab2",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/profiles.koplugin/_meta.lua",
+      "rank": "bc970a5984d7c3a21da7487aad97946dfaa28a4e798543757bc5cba0943b3d52",
+      "sha256": "ece7849ac212daa043a578c403580a75523109ba4bdd674532a4fe05aeec54eb",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "37e7e83bcdf1d8e94f482eb60c68823d59615434d31bcf1a374d25be938475c0",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tools/trace_require.lua",
+      "rank": "7845ba5969c11fe2a4117c3d4ed0b61fc202922fe6a3d2cae1896648c91dd493",
+      "sha256": "959357c83f9af81e074be1f23e280a01b2bc6bca87d48648e00363d96edbb15b",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "383bdfbb3542e1ed137adb641d0f222a4e12f640aa9049df91def5c6f29270bb",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/cmd/list.lua",
+      "rank": "c6c4e09f93538edf2c889d4f733d66ee1c6278abff412375810d35c43cc2b47c",
+      "sha256": "682e34e12b6d4d7171b064af34c91c25a5d452bd65826f132c83877a1e3e7984",
+      "stem_spelled": 56,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "38cfdb112bbaf3c1005e577998212ca06771e61ef19d8def626eb7d1729cfc8b",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/bg_keyboard.lua",
+      "rank": "6392828a36dae85b78509c8e51cd3ec94b779c8abfc90de62837c37471bd45a7",
+      "sha256": "14c7ade857c17caf297a5d1ec3bda5b05a6389b91264e5fe973ff1af5aabdf96",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "399a14f0e8605a1d6340418363d1decfa2ce647265b0c116286fb6aabdd081a3",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/fs/lua.lua",
+      "rank": "df7d248aad7c3c1a6731370269366948bdc5a41030814cd5ba7bf1f672cc4e6b",
+      "sha256": "8f303cb6d086d26c0369b52f1f1f37b5e91440b54dbfdd17d0ec192cb859b072",
+      "stem_spelled": 193,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "3c03a32662b16ae4cbc4a81b4ef2e90a89f24527ddfc7306fac2b49721b6b190",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/he.lua",
+      "rank": "e8e8aa11926a1db5c600226e5750834388f9d5c986a7c396c7a7f98490e8b747",
+      "sha256": "28215b6f006473860c6ac8b013e028cb9d19e35da7069116b61371afce62ed34",
+      "stem_spelled": 21,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "3d6a10f5a3cf530d240bde4a559f029cbb2c349d48f3803f70cdd155ea2ce5b2",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/fs/tools.lua",
+      "rank": "7916fefc4a750202b40f2f535bd417166901b890e6f955683b34848eb857b19d",
+      "sha256": "74c5e4a46e1439fab0e16423108ce615b37be58fa830f01e7fe02aa0da52dc2b",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "40b27f3c14240cda6ed6b7aa5be111709c7cc8ebeb62d7b9308a4cbc042f6cff",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/download.lua",
+      "rank": "af1c7840f408f9a389d9427b9f95cb91a226b0e97d63ebf224976143e7ca1ab9",
+      "sha256": "20423bb6ff96a1b8f6c60aec117ee55596385887247fbdd03162cec93ef45e40",
+      "stem_spelled": 45,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "426f9320260952a743ca4e26127dab65f8039ab34b82dde289dc165628054d30",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/ru_keyboard.lua",
+      "rank": "6476ca419057074317c2cbe029ca7916d70474996388e74a57092e9d9a9e69ce",
+      "sha256": "7df663e1367ab4153223fd1431737acdb73d3256c42ca8248a0d7747b1814973",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "42ef169092f4f610684b4317fc267118a8bfb31a1c68c8d12bdc831bf42de0c7",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/errors.lua",
+      "rank": "eb06786a8f4026a02dc199a18e038185ca81c4042d2b6bb57d7d04880df06bc1",
+      "sha256": "57bb9cc9e622b16646f5aec072e4f9295a2401b886e98ad4af21f4bd5b19f53d",
+      "stem_spelled": 41,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "443d9b11b8077d2d97c255c14ae9f7009a6783ee1ebcb3ca616f4e1a83d77570",
+      "basename_spelled": 5,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/device/dummy/device.lua",
+      "rank": "e8b5d540365858402ce6a26a8cb48fad61e4bb805715cd3a9a41a5233ed3639a",
+      "sha256": "1aac1546623f1cfbd29bb5911cb28b53cd58ddc4f301544b6d14b8f9ffc71d56",
+      "stem_spelled": 281,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "4634e383fbffadce0a811288d6e4d67c15c49235494cb8823a5ecdea998e02c9",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/new_version.lua",
+      "rank": "d72093aad312e339db576ea68202d2396e36c42791fce01519b29bcfa10cc8b7",
+      "sha256": "310a908bc07dc84f932e00fe28cf9ff3ca97bb098fb9b373f97d86060a340036",
+      "stem_spelled": 9,
+      "verdict": "unref_public"
+    }
+  ],
+  "rows": [
+    {
+      "audit": "02b1b193a8beaa04ef85106b6f5159f43eccb8db1446e744e72169979af1f337",
+      "basename_spelled": 1,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "spec/fixtures/legacyexternalcommand.lua",
+      "rank": "295530354a8ef1a6864efd56372e44c3f3c8cdd31339c2f42efce1093fe06fbc",
+      "sha256": "3d65440844f789dedd2dfe8b5091f82051c0bbf072e562f98b0fa875daa560e9",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "03f4cc8aeb492b43e6f88737d2e577dd80fdb308c67577e955dff6b3c2d564c7",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/ml_keyboard.lua",
+      "rank": "307c9a5e5fad955dacb54e17306d48410f16dca444ca96dc861db086b8936382",
+      "sha256": "f8b6ed906639c69f3131b185ec7067d649878c751a3556057e1ad2a5f62aaf6e",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "04bbc481864abff9aa1fa1c2bb45c3e70304c17022a10df429db77562324cc19",
+      "basename_spelled": 5,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "do_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 12,
+      "path": "src/luarocks/build.lua",
+      "rank": "276b37baed83dc10018a62ff87dc8d419e5d41b34325f52ac135c97cc23de596",
+      "sha256": "481466b8a0f353584efb2872fc5baf1ff32494cc701b85565eacd988dd3fad4b",
+      "stem_spelled": 133,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "07e711d2eb7112786305360689211df4113cce4bc68fe81ee6babdce05198836",
+      "basename_spelled": 3,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "platform/remarkable/qtfb_keep_alive.lua",
+      "rank": "58170baf49d29da953a6cc0aff1a5cbd8a80290bf78c193bfd098efddaad09ac",
+      "sha256": "0dcdf5c756657485d2afdf0786c46d60f8a525bc3382e90abbfa9fdea01ae38d",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "0821a55e9f606687238f3457602e168ef0e0e640b80868061a36aa1ec750af04",
+      "basename_spelled": 1,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/bwcoercion.lua",
+      "rank": "247d480ba3520b7bc495a5f8c940a29abf44a19a950abd2e4137e546cb86fdbd",
+      "sha256": "e74cea2bb42125daca7f5536df31bb2684b74ffcbeb3b1198e31cc257aa659f6",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "0956746d5748bf58dd787b3c705bad1b4227dfa792ce52672ac4fddc6aab3bc7",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/zh_stroke_data.lua",
+      "rank": "29ac9e349300742522ed96ec46ce5157e5289792a794018e803b339f38ed6245",
+      "sha256": "9a3a7f5d13e4c842a2f4ae2e91620ca9a5eb1dc1645f66037d48f98633e1ad1b",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "0cae9e20198f549a1a3eafea5735f36f78002ab972141046bd111742e37cd455",
+      "basename_spelled": 4,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/device/kobo/ntx_io.lua",
+      "rank": "249c08e1da072ee8c4b60dc0498be63e415b8a22d7927c6a9c560af155f12329",
+      "sha256": "a53f4c6114f523c5af29b690c9f797fe60a8140a8b82cb21692aa4ec8e1ebc83",
+      "stem_spelled": 5,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "152074c86df6c0e7bd141bc3ce065f9023dba27f985c439e44aab8cce2b1e109",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/es_keyboard.lua",
+      "rank": "379ca3228585f1b4b3dc53c7ba067f6f1f82dfc0c6a6dcb4878f14c315c00482",
+      "sha256": "1cabdaecceabdc7e2f69d5d5bd4375b98b09ca2e41b5de81c75ec0d417b26778",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "176bd98e5bb06f9e1ee6b6a94c608ec850749e1639c89136ad82aa5a72baf63c",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "plugins/autowarmth.koplugin/_meta.lua",
+      "rank": "416a0a86c24690e9c6d5da616e8ab6f989bdb4f7f97dd346955cff415f46df0d",
+      "sha256": "5935f52648d9bfd7f85fe8695ece735da3fd59667dc1ac97d24d78887be81876",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "1842700d4dfb851c05b5c142e336dce09ee075d8674e25ede3c2e0e21f032be3",
+      "basename_spelled": 9,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "plugins/hotkeys.koplugin/defaults.lua",
+      "rank": "43da582112649e4b45683ec6a31fe0ee8a5421ba5a74bbe094a1ac80f797a98b",
+      "sha256": "47058c23f69ec67c6c2de595c8b188d76817706adfb18a34c63b019d915866b4",
+      "stem_spelled": 54,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "1fb0ded2f056d41f123791526525e94ed6979574a23096dbe88e9058cc70319f",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/files.lua",
+      "rank": "9155fc4ac70e273ed24212cd6825a8d8547ea7c3ea406734634dd6a564589ada",
+      "sha256": "8761bcfc301a48f189849960bb518e11d8e60d2a10a931dcb6de7e5c17ea84b4",
+      "stem_spelled": 10,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "22e52bb6add8e02c9825aaabbbed1f414b2e5712d5e4a13a6621a6617e72ff4e",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/tpack.lua",
+      "rank": "1631badbfbd3b897a1b75bff7c3f960452f05ab84c7ce5976aebb7244fce32d8",
+      "sha256": "43984831af8269b9f9c1be90d39880863b395e835bf094e5dc5be2025674a246",
+      "stem_spelled": 3,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "23b38ca6068ff4acb6c51dd80736c16ca58ef5726b64b5b9b909ad075a05043d",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/cmd/pack.lua",
+      "rank": "02b42e2107b55eaa147ec02ea9f1bcd6bf3d4ec479d44942fea3ee7ddd1bd188",
+      "sha256": "5eaea6c387ba440e6082c499a1d6459a125d753ecd298df2e7fa29c46d31227c",
+      "stem_spelled": 42,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "272dadbc9a346646429a128cac3a4917da0a40253643edefd6c84666f8e1a95f",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/zh_pinyin_data.lua",
+      "rank": "428106c4b8329775dd740ca82c5bfb1961f57b9d3a249d06f832ec3e02457509",
+      "sha256": "231d810693602a12a1309097d3c68820c71c46f546a6cc12cfb67b057b2a2443",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "27aa9dceceade2fcb29289e49676eacb61e854394807d841a1983b29945d5868",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "for_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "src/luarocks/fs/unix.lua",
+      "rank": "68307e6c4d3f0ad797fee34d53549abee9ae0b4ebdef3317822c5f69c0d98994",
+      "sha256": "9b525a659a507027eb8289aeb8d7efb6cf6bc0f4092c2f1152f6b3ab80f03c3f",
+      "stem_spelled": 29,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "2d9c1a3afb47522e3f7ed9434b4b90d754bf813187a13cc5f4625bbd857f037f",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/admin/cmd/remove.lua",
+      "rank": "1e0582bc554c2cbb43aa7b11bfc5fa08ae1bcee178e66dc2fb3b8531703ac874",
+      "sha256": "d1f7f3fef94aeed0b419e79fca3090ad164614d661237eb1df6b99959ab4c266",
+      "stem_spelled": 90,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "2f22bbfb402f298182a7de7f42abaa6fbc5091c0cbd92f849785b075c02f4254",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/math.lua",
+      "rank": "5fb6e957c9d37684d6f69e89e3d2da1ac41e43f84ebcd0f147b5a528e89ee321",
+      "sha256": "24b1e2a94ab2e5f70d1fca0820e0c2746deca27d7e1a6152499b033de1b463b1",
+      "stem_spelled": 38,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "330fe086f9c00e9d2cdd487ee400f38c027b2383e810f58e2b67715ec29b2e80",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ro_popup.lua",
+      "rank": "477310ce65b904fcc508d546b9531862974ce24ef5fc9045de31cbee38e73fcb",
+      "sha256": "7cfada090f8c4dfc51982f2804eeee233f53edaec5fe39a9d59137f2cb2ff593",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "3548e5eafd4095d35612153ea6096dce4210797c114f95e338cbc85120cbbaca",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-altgr-intl.lua",
+      "rank": "5e7590188fd63fdab17914bb38c100703c05aa8ad8bfaa80d2573051ad486625",
+      "sha256": "6349ebfc55ac21f26e224c29105f9882e0daf38d1653c4d183875b6cae05101f",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "364611583f88b09f47f5523d7f32b14959a5e191921c2f89b2472301a1794447",
+      "basename_spelled": 4,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/busted_project/sum.lua",
+      "rank": "421a3a3bad64b1f1e0d88ba6dda7335e694769e3a8f0345a10e8c1e44894e247",
+      "sha256": "991cbbf2c741ba28e51b7db2e1e7cb94d9ab36a7eb979a05787db9c40dcc98ce",
+      "stem_spelled": 14,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "3e19824cfc7a12547983847c6f4312f0a83155394b085deb2a4c0bbf5370ee9b",
+      "basename_spelled": 10,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/en_keyboard.lua",
+      "rank": "39379ec3eb96f473a33f2f9c4ce5c077d87699eee63529975d61ae291b877e65",
+      "sha256": "aec6218ddf1ceb302396fe6cccfba130b9e21c6d5ce4e0535b453814610555b8",
+      "stem_spelled": 12,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "41eb67ae66fe8c5e71c5bc89bd3025e75267633ec8c798fe9d5421b1dc053abd",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/exporter.koplugin/_meta.lua",
+      "rank": "530dc9c2816a627c309710f835ca1d56f732a6cb07f55293c8e2ebda930935bf",
+      "sha256": "dcbc174471a4639cca8c71d36f9dde24a5a09c2ad7d71bc964c5844ca4960c6c",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "42e5502f35ae8babfa25c61ca25d0b066bf399cf8b2c320cb3642314659b1983",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/sr_popup.lua",
+      "rank": "06514910fbaf22c12967c691cb95f0d3ed06ab8c3b3b09664955e3c3fada682c",
+      "sha256": "4efbc439377486c713b5d3c7086ebbfe2d0fc1dd8ce89c794f98cbb42db652d0",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "48106f0ebae4e93dbe24c674b8700729e2cbdc25673ca3abb51e9243e13eff83",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/pl_keyboard.lua",
+      "rank": "409a090d5126c65d59ee9ee5e0804a13e59db98615e118c318e5bbea2ff75474",
+      "sha256": "968f96e724c666f483a7a6b7148fa16069a3f620bdbf80aa51d6d1e9be26d789",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "49345c05c14c7acb7b415f366d870a3edacdfa22daf6d8ef7d153dc7a7bea763",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/br.lua",
+      "rank": "1e12d7939ffb12870aa00da7bcee8c95ed9e26cc577cbebba9bcc02a13a06369",
+      "sha256": "b1ca837829e5d8bfcb83f2a3df4edb0a6b8ed9948b8b2e436719f05197fee764",
+      "stem_spelled": 18,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "4a5207511bacef8d93f6b5dc067947087db54339b0f22b8d4e2ee8f8fad9f2f9",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/us-intl.lua",
+      "rank": "6028d61584afc3e81d26ebb107e9567cfd750afd7b050af4153cad54b0d31f7c",
+      "sha256": "9c01fc7d6ac26c7c53d953da0c8ff37819b7979183f576f4f69044a0fcb311a7",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "4f92b99a6e8d8a85db3d47dabedf042fab5f2628ef9eb1a0ba97311220947f67",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/events.lua",
+      "rank": "a7ab2a1f5a30ecdcc17791f5a7368abe739f2ca68ca388c8443896defea3bd39",
+      "sha256": "90449c1607a12a7c1841123a68237e0d23b7d6e109b8c445937fcd99306897c9",
+      "stem_spelled": 7,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "561c385a87f33527b31dd6c0e058bf0d0ab108a678f232476e80af442daf4f85",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/cloudstorage.koplugin/_meta.lua",
+      "rank": "3322cb400bc6a3f52dc075ecb50a542800409073b455975f1aa89db2132dcdf7",
+      "sha256": "8b80d2fc41c6dadfc89ebf7fe0227ab5c211cc53a4d90d25d094319fb417926d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "56f8dc5203af7a7033f175c7391fcb10dbebcc88c515a6ac2bedbc3aecb3aa1a",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/uk_keyboard.lua",
+      "rank": "1bf4ed009cd28e70e5e67f3c1d3d54e5c4dd6264d37b97f6c147f79749b1b282",
+      "sha256": "3e685c6fde6c0fcc1b5f2f1ad32664730873b216002593e2787881e95122f2f2",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "57cc745a7205f3fc92549cd4502d737ac3278218d582518e75710df435b8a062",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/da_keyboard.lua",
+      "rank": "61a4c91221d82849bbf85124fa02f3cf5a9c77f9d73dc5b5f82950423f32a679",
+      "sha256": "6c331d08c9645831db32b513b59bf857edf4452f5420dddb6b7a078adb5269ba",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "585e8b361a8bb52c964f040c8a2d8c3b0d24f4cc1f6fb04811759a3bb4779b87",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/remove.lua",
+      "rank": "5bcaeb28a45e9f7f5b1d47168a44000446cf5804b34d7ea1d31263a18a34bcc8",
+      "sha256": "19eb9d9155d48d4000016767c7e18948739b7289c6a70b04938ed08d54bda92e",
+      "stem_spelled": 90,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "5d601fed2ae451395ec652cb1f6546c21e4d8aff7f506adf3246a395d03bd55d",
+      "basename_spelled": 8,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/es.lua",
+      "rank": "0ddc3e4e479d5fd86bc9812f93d00db965de53ac13f5366fe974bd43231b1e93",
+      "sha256": "288eddfa278ff832fe4a285ee09e111dc88254a4436006009ae7583e3c55d186",
+      "stem_spelled": 16,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "5e047866cb89ad4eec9509f742cac36c57f6523c287071094bdb40fec80f27cf",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/readtimer.koplugin/_meta.lua",
+      "rank": "349c3a82a18a2ffe85e9ccb0a417a039cb37d0df1035c6bd2e420ef4d3345b21",
+      "sha256": "87e5cd79428728824a5664d0da9c6446064b265e2667a1a948e60ae5a088dc9e",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "61c3683bf68d21838569ff86b10b26f3493e853d4726dd86717f2ddb76671e74",
+      "basename_spelled": 6,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "src/luarocks/loader.lua",
+      "rank": "1933b318cd85902565f52bbd4e04bcf96fead6fb933e50c7df14ada559c90a77",
+      "sha256": "6f94b262ef4bbe10d7fbf94c3b374d92f0ecab8dab389949146c54e8eeb753f2",
+      "stem_spelled": 23,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "68bc19728f93fccbc73700f623d07e39d919631b75e3e2735d76a6ca275ce2ef",
+      "basename_spelled": 1,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/double_deploy_type/ddt2.lua",
+      "rank": "245b8175df864ab87ef8b4b0088643b4b7453428adb1126d39340e6cec33aec9",
+      "sha256": "b7ce9ccbb53d54ca2893160fda18c6c3791d41e5412497e9ee462e524bc24ab1",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "69ac2ff8eb98214a00754df21d336304e98ed3a799cc27e31a572535bd410a57",
+      "basename_spelled": 21,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "hash_bang_line",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tools/xkb_to_lua.lua",
+      "rank": "2ec1095991a78e909ec89bcc2539fc8124d35488b10244648d12d3b1b30a1211",
+      "sha256": "e89eff42ac238fd298a9175af0f53f7d9f49a50b437722a14c0ddf4ab0bd3f94",
+      "stem_spelled": 21,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "6fd7648635bba4e23178a5159d48404874ad15a3b4f6b2c4c8dbc689c63b36ed",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "plugins/externalkeyboard.koplugin/find-keyboard.lua",
+      "rank": "120e497bc33249a60adfabe9b854f0e74f19b3d5c799642a6c0b6e7e76770800",
+      "sha256": "613f4541bd60de6b9fb1f333d7dc6b4529ff8a3d6486a428f63d2ac876110f74",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "6ff3c76030b4ff336ec787530168e8a895a66f6de91405ddcfc23476c04f6725",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "src/luarocks/require.lua",
+      "rank": "5649be672c6c54db103bd0a25e3870e750f6c4103d81a6bbe28ae9a39708e512",
+      "sha256": "04371d314081a3975f1ce52d79ba28de2f0906f796054740ddbc3d06b4ea9fc9",
+      "stem_spelled": 255,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "7655cb85b286704b8e8f8603b05655ebfd2ed6d5550ae0ba71bf95e08547c0c9",
+      "basename_spelled": 21,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "src/luarocks/cmd/test.lua",
+      "rank": "46ddda14f3a397c08f71540c6fe8dd4ad2e0144ac85b18c1bd10bbfa16fdbc0d",
+      "sha256": "ec510b41752da9b9ba9d42c8e1dcb165e8de79e4f8e1b19a8fadecae823599f4",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "795da0cdb1c69044fa2ce1674da40b785b8287775a972418b63a82cb490f06d5",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/el_keyboard.lua",
+      "rank": "5b89ee5ccc349b4531776b4c524ea536a8802d15cd2f17c7e7b67116d41a75f6",
+      "sha256": "d9128ed087e08c492517d1db4a9711058c0ea6955216451eb164dcb486be047f",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "7b02e0177a600d91a27453e6c0b795808e27099ffa2809c221bf7fe2a3ab2344",
+      "basename_spelled": 2,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "src/luarocks/admin/cache.lua",
+      "rank": "3b260ac2c183328900b897110a8c3ace8cbbab9d9b398c52dc95472961739242",
+      "sha256": "431aa016cde186b130ee2d795e6489115f0eb90455ff8592f5f900b2136942d7",
+      "stem_spelled": 33,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "7f4e6ade080e0621d5f0301db20412e68f59684e5058aa83da34d53e641607e2",
+      "basename_spelled": 1,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "hash_bang_line",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/util/mock-server.lua",
+      "rank": "5350edaff8356d543a0455a5dcf6bde6b24ddf4ee665164fe87c087c48d2fb6b",
+      "sha256": "94e22dea688bf158a2e5505e6059cf4a4b7259444420ffffc45b12d14306764d",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "8143b706904c101fe7e15146dc34d0cc163bb1d3d364c48fc3f6a7dc188e51b9",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 4,
+      "path": "frontend/ui/data/keyboardlayouts/vi_keyboard.lua",
+      "rank": "2224236a184013664007e5a1fa424bb2b8869f5dcf79c5e573560ffe1705efdf",
+      "sha256": "3558394e85922325a035cab49d5bab552d2e4e1f0d83100c42212a02db19a482",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "8604b9fab99575b6a27d258f913b6036e6c72b8f77c59da94b05ce2d20a1c378",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/no_keyboard.lua",
+      "rank": "288b0debd8f5576cb150ed837f19e150752b72288e55fc3fab0486c7efb18a92",
+      "sha256": "989cdb9d19cc7caf68ac555d3dccb5f5ef142763f047156c877d2966fbf59e0b",
+      "stem_spelled": 3,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "863cf66ec4af6312e22e58146905cd8f90dc9a36dc8823373209d5991f32b98c",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/attrib.lua",
+      "rank": "693c6f407665613b3bc7c5e942bb8bbe1f81b9ac20de182203e15c9b5c440c1e",
+      "sha256": "dd2eb13be29628ac0268cddfafdc6a816edcba6552ae15e8637afc6a79742e52",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "8641ae4e7b16ca0f5e0e9de63ea06de0034bb17bf4572ee6c51d87bc8478fab8",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "testes/cstack.lua",
+      "rank": "6e14a0215cec0b00dae6f487eceb7bdd21ce66ec9a5cbb3649fe1e7ef894a5e2",
+      "sha256": "52ad964a0cf6161c58161d9dd0fcbec81bec949fb7ebd4ea1201c5c978df899c",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "864873ba45f5ded48283e715a14fb7ef28b7c4d38439506d55bebc386d7cb847",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/uk.lua",
+      "rank": "553c5a7ffd3119c7f4aebdfbe640d90be10674057e56cc71fa23d18311cac320",
+      "sha256": "5b26ca927ae529e7518201427caeed350d05d124921e235dbc0382863a92bb37",
+      "stem_spelled": 9,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "8cfa44fe4678f7750d3a30c5bcf283a8f99ca6f2e82d94c215a72676bc1ddc52",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/perceptionexpander.koplugin/_meta.lua",
+      "rank": "1b37eeddb3fc566a27476d5cb37d0d58d4dc570794d3c5217d2301200935fc19",
+      "sha256": "7eb37c2a9946ecaff9b8522d51358957630f65eb207b75e763fe22dfccfb28f0",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "8f33a19fd26b2c83978a383e6c080bf3af95ed16c6c2e63216c9919faef2bdd6",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "label_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/goto.lua",
+      "rank": "3fb8bb497ca666df6580883480043fd1277c6973d0bcde968596a02cdd1bbff4",
+      "sha256": "2e5168bba512878d4874398ba43d411741db0a68400a49818ec7b52ba62dc7cf",
+      "stem_spelled": 16,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "91454beed3045b77d2bc399f7caa3cbedb4fda465f9a395e1b3eafe98cc202e0",
+      "basename_spelled": 1,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/double_deploy_type/ddt1.lua",
+      "rank": "1a0e6d5c525279e22d57dfb743c8f6b7bb34c017743b48876a8e06acc0961404",
+      "sha256": "1436d4652db725b575166d21216c4a11c3535eb5adae1175f998b2a3145be259",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "949e261fd480eca996bf241e794634dd3d85833ca0dccef40dbe4bae03cd9fc8",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/coverbrowser.koplugin/_meta.lua",
+      "rank": "492dfd62d1d8be6ea1eff6bb112fc92a8bfa1c9d712a9c84a8b9822cb216ceb2",
+      "sha256": "50fe960839f50882436399eb8b71a5446b05dec9e6d25d680c71b8be1524c30d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "96c66b44a3a787f815828000879573ec1e521c5970b97d61090c88e88fcac949",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 9,
+      "path": "src/luarocks/cmd/make.lua",
+      "rank": "465ebb56365718e31967f009a0dcd5d4e47f5c51d4b9a7478b6e640d42f96b36",
+      "sha256": "c338199111550e953e58906cdbfbc30261089ef2f4529f13fb12c4be40b49c06",
+      "stem_spelled": 70,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "98a0e73fc033a30cb330dcdf7860bbdc561218c7d2fea54004644bd5f08cb345",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_call",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/gengc.lua",
+      "rank": "4e880b627c3b0ce87273dc53b67aca568b137414577d220aec8d1d4e2dd0be68",
+      "sha256": "0ad770331e3a5fecccc3f75d5580b8e2de4ea50856fd9f1a6eb5f4aa1b13b646",
+      "stem_spelled": 2,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "9966a6585f3fe879277595abf053493527778a4690d210e0cb4d85a9cfd82019",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/sort.lua",
+      "rank": "7d002257ef073d4d0bfab88397dccc97cd4c6cc4317c09fd98ea6a0b906d41b8",
+      "sha256": "283f72b600acda62016689c92a694f2b91c1fc49dbcba377a9a5ed78b2784dc3",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "9abaea81ea556a4731b6db42a9a84e43769d35e371acf5b76257fb44b1f8e16d",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "frontend/ui/data/keyboardlayouts/cs_keyboard.lua",
+      "rank": "4172fc060abd8ef343767486a412ca6f599035797eee82c1e2c4dddb7d1a7dc5",
+      "sha256": "cf4d85bf6ce1d73e301a1223c51fb631d996a72aa2d997f04bdaf1a14507d86a",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "9bb820738ddd1fe711cf7a2a24c067b2fcb96cf85faa28b95044c7cb8de7deae",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/cmd/which.lua",
+      "rank": "693471bf5ad533195072824d598763d3875a8b594bdf3664cbd3f33a15281bd5",
+      "sha256": "2c4cafe1a217e722bec4c709a63d67890004553dbcad81dd090a7993d117b24d",
+      "stem_spelled": 74,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "9e5bbde5ab44c58ebbfedd475f390aea852601da0813f8924f600b643c8738ce",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 8,
+      "path": "src/luarocks/cmd/purge.lua",
+      "rank": "1432b3af8a91dc6e8c0226a7fa31b1e1fcdcc789430f5c4ba2dc6e88deb28258",
+      "sha256": "000c4ed43c19b3b486b6abf401f2ba808b9e2a2e578c5d47b29a696fdbe33d09",
+      "stem_spelled": 8,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "9fa532847e57df2cf0761584ae416087a525bff01d4a049a8fd3cc26e2538d20",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "src/luarocks/cmd/search.lua",
+      "rank": "240cf3174894db306ce900f257acb576a20b610279d4e68e9008f60431fd7ef3",
+      "sha256": "75dc247adb6ae2ae444c95840bfc30e95573a03cdfa4262d3de57e36605f684d",
+      "stem_spelled": 49,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "a5da55cc66439294264a65987257d93673941714d488567c708c1fda9d94d526",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/be.lua",
+      "rank": "25edfee8e7612dd7e95a2f8e9a5a9dcafd42796cd9e10e78139b50a8274390a7",
+      "sha256": "3f0ba711a9c44961749e8f0c20c74934844ed2f36277804397a34658a7ba966e",
+      "stem_spelled": 341,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "a860c717550fec3a3ac996e42dad5869f2a567e1f8d4ca69a7aea361554c6a58",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/SSH.koplugin/_meta.lua",
+      "rank": "0845c2b2b8b8f1a6ebeb211693e5139477018cca29fbb3ed34ea9a762eb92774",
+      "sha256": "d55ad2fd60f01aca333455c52b5809dc19e1841d653f7cef512321df68679f13",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "ae5b1f99aaa984368b974d6819d825d9bd1f080b9ef48468642efb06824eca6e",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/autosuspend.koplugin/_meta.lua",
+      "rank": "50038d129352f187fc91e35097b176ebfc5d651adab2816045e87dca96fbc25d",
+      "sha256": "eab769a7c4f6e7a7abba89f19be0add8949616e88c63a91a83ab8218187f6966",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "aedaa0b67cb79d37332efc665f441efe71cc6b3bc799ce10abcdbb8037e5f333",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "do_statement",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 3,
+      "path": "src/luarocks/fs/unix/tools.lua",
+      "rank": "6e2c1225c1caea2d0d950233638a94407c9562f550ff971bb2e65c10bb50a29f",
+      "sha256": "3331b5d700f1288d435082d6c12cde14a2f8b765d2b0b5601a981cd5c6ec8b16",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "b03419c8fbdb60833dda427891638b5e31b82ded81395316c9037fa8febef579",
+      "basename_spelled": 1,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "for_statement",
+        "function_call",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "win32/LuaRocks.reg.lua",
+      "rank": "1554ed20382330091ad009fed36e5042f116404526bacc80500f9fd01240d291",
+      "sha256": "954c1caf6f8d67737d0ef888eca9f050199ade1ed64425b4756ced554240d91d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "b8a1591212104f18b436ff8869346babbcde8fa1a732fb070c5298545ba2a2d0",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/cz.lua",
+      "rank": "0170b8a67f6a2b3b237ec0805792de01cb403cf7c6a4fdff503ad94f7895b83c",
+      "sha256": "57ddf27b3ae6a002dd4f9761d73519c44db26871c9ec3251765bb051e2c1b4cb",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "ba379c882514f973aa69fe40d6c624a3b2b193004f455773194f4f493a828a3d",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "repeat_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/constructs.lua",
+      "rank": "0e7e48a06d4ad4d7655447ba4b9214f08ee0346753b5992b296df6ed5cc9e1d0",
+      "sha256": "fd4eeece596bf53ee3a8ed015960dd34f34abcc9991a332e3c4b83a374cb5514",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "bbda05f89d9f0405ffaf85c615a3598a7e76475ab75ac1003b44cfd796b0f446",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/data/keyboardlayouts/ro_keyboard.lua",
+      "rank": "1635841401cd437e17e0df1dbe2882278cff3f20933781b0c068c0e111f76309",
+      "sha256": "6e4ea570c4782f441b77b4785d77dc39794217fcd582f810a64a1783588adfc8",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "bbfc861a09d1747e02185f92436e10f5776544c013f15ddc9e10a78aa57f07fe",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/httpinspector.koplugin/_meta.lua",
+      "rank": "084428a93d5be99d402a8e26c251472352afc6fc7845772d79b105e64d7632da",
+      "sha256": "8fafef7bbb26402e12665c94715998f099bc36f0a1d4e54f3c90fa0b175f540d",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "bd8e9cfb0db3de7a2858fda1ce251a21b5df574412b930e5a2fdfb16415734e0",
+      "basename_spelled": 1,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/tracegc.lua",
+      "rank": "857ab6afb93b1dc86dde5ac0418a3a4f353aca82f56a6bba3a6ad07aeacc41ca",
+      "sha256": "b064a642e2d5d22c2101ec4fe0a5d805ba633ca5b69470d20ec48b4ee5ca360b",
+      "stem_spelled": 5,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "be25ca750c96d56f86754258a57afc9a2d51b02eb87405e846f72ea863b6248d",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/wallabag.koplugin/_meta.lua",
+      "rank": "4ff41aa44d0bde61c1cb09f88759d6abaae0a1184912145d15d5ef3c8fd98dea",
+      "sha256": "1f9c861209a6cdfe4e5b9cd969f147498ad0173203096660abd4efd6bc39624e",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "be92c1dbe3c1ea09b2ffa1add78ca73c064c5f744e9d2e78e87a20b978b0f5a5",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/cmd/unpack.lua",
+      "rank": "58c67421984c10c3af6ad9715f303091c2c49320bccaca16ef4dacecde62214b",
+      "sha256": "3cb8f32a1c4caf2e7b4e613e178f4c586e086b0e0891cf6a93541921dc39e3fe",
+      "stem_spelled": 42,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "bed0d10750d3188675eedff8a393167c95136ba179cf2b29cbf8aed81d3a7c8d",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/movetoarchive.koplugin/_meta.lua",
+      "rank": "53bf72a6eab79cba354212e4f9964afce98186971fbfb1e25ebc5dff2e134ea4",
+      "sha256": "6be2e480aeeaa9dd7e21e66b7e69ae0732bbe51b25ec55bfe17440e73fe54a32",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "bf8ba9746d9d8c092ac6787db25e4745c7ebab59f0baeb862594c60bf96ecb75",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/verybig.lua",
+      "rank": "62886c0dc88a3ec31e2218666efd0ecacaf25cbfc7bc5420ccfa3713714df3df",
+      "sha256": "2b6d30c69cbe6974068881108eae297bdedd275b429be8ec614bf5f8ee89707e",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "c02c7c46eac86b8d0751f1acfe40b1b2e7446c7170828698e1b5f0284ce8307f",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 6,
+      "path": "src/luarocks/upload/api.lua",
+      "rank": "55abae1b724fb3d485621722a9ffc6b478e0193de72ce4f245fa2f4af1d5df27",
+      "sha256": "eef4beb557c4b6de2b8dd1fcff038232e080ee8c484fa6ee4f00cdd288aeac35",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "c119b74f8bdc1bfa51c41a13bbe62f1cd2dce4b658269dfe98bc6d001f30e812",
+      "basename_spelled": 3,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "hash_bang_line",
+        "if_statement",
+        "implicit_variable_declaration",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 29,
+      "path": "testes/all.lua",
+      "rank": "26b5c3f445b04d87f314cb4c72015ad753a9f801cf13d4fa3d451f457760dbbc",
+      "sha256": "f1b8b8075a71e7abc40260f6b9112e8d2a1057772f26374df4bc800d10296309",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "c1d505f57acdce50f46b5c0e20503c99bad018d7b8c0000f006baf693f3f2b96",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/gestures.koplugin/_meta.lua",
+      "rank": "5a989762a45cd6e490b5a190f339c86c6994172b0be5213379f7bbc5fa63fc17",
+      "sha256": "38f297acf09f288829b67045d790ce8f1cb21afc67ebfce88828989e9c73a386",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "c39d69b96b04baaff71050188f7ad13b4a3e9bab41d45db82772a12e6b5bdd6e",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/pt_keyboard.lua",
+      "rank": "1dd184b307ededd6f1b024e64e5b8e97aa2252742b4a14f6e693ffd86f6900b2",
+      "sha256": "45bdd4cf0e80649aaecfd09a0439ef8bb92b089d9be524878ddc65d57cb23597",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "c606c758ba203290c17c35e72aec76b83cdd2fb7ced39327417b44343fcffd17",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "src/luarocks/upload/multipart.lua",
+      "rank": "4f1af85eff2f1b9fb57744973f0fe6c3a7efab59bd356d68a48109bb20e07889",
+      "sha256": "f2a849c872431a9756aa43559c2f59ee1520e5157e6cec9b3f8d89c7517325ec",
+      "stem_spelled": 6,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "c919b196824f80ad486afdbcd5a2a27371da961b58cc4bb268e524399725e244",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "implicit_variable_declaration",
+        "repeat_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "testes/locals.lua",
+      "rank": "98c3b70fad5cdba106c5e71012df949428106fc0a4faf9bf95243a14e330c4aa",
+      "sha256": "56b5126c40f48bb1a701f041af28cd72a3a7d50b3db9b05da5659f2485f740c1",
+      "stem_spelled": 10,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "ca2e30e5ef0db79ed3d63087f251b67531f46022276e93e3987cede971388015",
+      "basename_spelled": 2,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/mixed_deploy_type/mdt.lua",
+      "rank": "6a3742feeb2a7a2e6fafc3fd0f8926f5833fa9ce740cd75bdbc8e9324c3a758a",
+      "sha256": "40adbbe99b5eef9898983528278d199e43ba8485c29ecb72df9da340afc16673",
+      "stem_spelled": 4,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "cb98f08422239e61816df79525cd96f384f210eade58469a828a52b6c93fdad9",
+      "basename_spelled": 1,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "function_declaration",
+        "implicit_variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/heavy.lua",
+      "rank": "a6f7105d7d24dbb7fa9de591376fe6f0035f6687270b5bf034065fcde6a00b44",
+      "sha256": "fe806b885b962d67a1856d65c2d5cc0d0c2aa7c105b8321ced41498bdb1e2f8d",
+      "stem_spelled": 4,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "ce099895498ab1cefb530aeeea49dc1588aa9a913dad74ab64e217c1c6993441",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/terminal.koplugin/_meta.lua",
+      "rank": "4a5503e5f21ae7b8860cceae23ca96ef763ec25a563198fe0ee4ae26935b3498",
+      "sha256": "7a2cd67cd8b763611775126dbfc7e5144b3af10aa12a1af7d2e5151043adc2b7",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d1730fa61038fec9ce2626e19a883524c9e6235d63ef4a4414748c2b2e08ddd0",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "do_statement",
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 9,
+      "path": "src/luarocks/cmd/write_rockspec.lua",
+      "rank": "0e95905f5ad7f7ac0ae50abc378a26e9afca5cbc3b60b3892bac2da4b0013549",
+      "sha256": "917c41143501b7b7eaf22dababaa8399906e8e34d481a01626e38f66abf4aad1",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "d2323dd126fbdc91d0b21c67097c2c06ce4b7816c85a2f7667e4b07375928842",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ar_popup.lua",
+      "rank": "5e9bfb8aca160e74f83d54fcbaf7adfef23f879f6b34f714ac0a0363f913a09c",
+      "sha256": "26df783d9466f5885850a850550ee888739adb8be86001f225749035ad12d5c3",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "d73d5b1a32d606fe6122fd5f4b2558375056251a5a2b2d00f58497be52e53381",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 5,
+      "path": "frontend/ui/data/keyboardlayouts/zh_keyboard.lua",
+      "rank": "1f529f4ea1cf432118bea7e1a969c5598110e6d3e79c4c4bf565b4c462c5125a",
+      "sha256": "407804be13440177392ab4362320df5eef85444ebac3fb2d99d10be996fb7411",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "d76262bef9bc747fe512413e957604ab8893ba0d2a1d4a4e2e5462ab34e24aba",
+      "basename_spelled": 0,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 13,
+      "path": "src/luarocks/manif/writer.lua",
+      "rank": "2ab6a328f2a87a192493909ce337ea35b397d5597d68c3b49bf4a00ab526e808",
+      "sha256": "cb68fd7eb5f34b4b182c9d90c422b441ab61a806f4816c4a885b137f9cb44080",
+      "stem_spelled": 13,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "d7d14c275ce6c9c64e6d75380cf151678b3f75830f0738eb79bda76c56e483e4",
+      "basename_spelled": 8,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/en_popup.lua",
+      "rank": "006c5f95610d5881f8299c24c25f463e7942c1994542cc3b30005771a7028c19",
+      "sha256": "3afb575b482e2d098db022150a08e5b3d1e37b81e7b7f5932cae50daf6ca18cd",
+      "stem_spelled": 9,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "dba094f4da5e4c1124b842b913eb990711bacb482bf04e07ddf6fcaeb96c0626",
+      "basename_spelled": 13,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "empty_statement",
+        "function_declaration",
+        "if_statement",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 7,
+      "path": "src/luarocks/cmd/config.lua",
+      "rank": "5ce46bc4886fe2c6a2c9da2d9f4533f1922ecdb02c0e4ebf052d796ed538aac5",
+      "sha256": "26a530e06f8b0547cc26c39e3f0154351162481b63ea525aafa7efd1cd92ad2a",
+      "stem_spelled": 92,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "dbcc5b2b847f5f9e859e3d3ab732f99593a78dd5996ab0c1fc53962ae4588e3d",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/coroutine.lua",
+      "rank": "a15930230c633f607706be4699e37f0607166d7e42c0ea6e205771937fc358fe",
+      "sha256": "d38f7fa8570abb09154d9bf0d8cea34fee08953f0880f3e9c5a641a826c6dfc9",
+      "stem_spelled": 23,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "dd8f33d724712c762d64b8894f1164676750e97f1d8053b736246f397245337c",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "for_statement",
+        "function_call",
+        "hash_bang_line",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "tools/merge_luacov_stats.lua",
+      "rank": "2ad9b5cdd0d80c55991aa97034dedffff33c7ca6293b7cb2bce8be137663fecb",
+      "sha256": "0919b45817d66c6f0fecbc68d80ae2cdf91a3d0f256a30fc0e955594c669985d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "e2ef63ca33f73129ba7afffa6679843f7b0efddcec3cc9caf644de5916a6d65e",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "function_call",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/widget/buttondialogtitle.lua",
+      "rank": "3fa119e472f5e3704b89108ef797c0ac0c84f3c604fa754b99ec88d7b9faad95",
+      "sha256": "e4a100fe01cbc11f9f3ac5a8fa654ef0788d7cd45ffc774d02074dab7b1807b9",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "e6d79fc62e297faa9f3328a97da93d6edc648fa6d93282bade686f31e28d508c",
+      "basename_spelled": 2,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/coverimage.koplugin/_meta.lua",
+      "rank": "14e37037c509daa82aa1dc331b68ddbc71d81826fe2f6119cf651935476aa57d",
+      "sha256": "58b9c2880c70daa5651724aed93b11012b4cc3b9e2b2a0d4c0b934a86e883280",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "e879282876fef87c97943f447a79a37e43c12a244209825fe3c21210a3c2c1a4",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/fr.lua",
+      "rank": "3f9d848a097ab5edea0156b7e1bbec0fed86329e155f2c77d9a792f7e827f73f",
+      "sha256": "7619a283f15fa986a4d94637ba15df656032eb9f7a79fd5a4672e8101b523fae",
+      "stem_spelled": 17,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "e9f5279444913d436f58047f8c30d67bcea583b5d6c956e6ea3fd2c08b97772c",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ml_popup.lua",
+      "rank": "4c9713ffc71bf52238ae0def73d5b015e06bc46044bdf1e56a1e34fe626efe5c",
+      "sha256": "af6549304808b32053696884b78a246c5da56211e0584937c75ab8b195c83e67",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "audit": "eee3e89b97f27879fcfebc43eec38963e04e51693cce34dc683a1217b1fa8027",
+      "basename_spelled": 0,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "plugins/externalkeyboard.koplugin/keyboard_layouts/pl.lua",
+      "rank": "53c754eddc2cf6b0eba327d0e4bb3a98b2b6b22e85225b1bc273cfa48166d31c",
+      "sha256": "e1a74cb49b62ee814d5cb72d1448e535447152e52c34a261003e20e9ae3311d0",
+      "stem_spelled": 12,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f0323c7e7cafac5b6aca1db37412d232a0691a73f1d6a98273331f7d78d52885",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "if_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 1,
+      "path": "testes/bitwise.lua",
+      "rank": "9a13de3b0eeea80ca535c7a90858f2ce5043fbf91f07f1322b4c518904164e61",
+      "sha256": "ea36f2c261483e85a65dffe41b0674fb92869a6372ac744ed7fea8304e6a8a19",
+      "stem_spelled": 9,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "f47680008398f1cd2cc6bbf13463bc6c619e643d5da9e78c64a6d1631495963c",
+      "basename_spelled": 14,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "spec/fixtures/a_rock.lua",
+      "rank": "0dfcd945796d0fddcd33d40b4b3836f8a5e5256c99764b3bbea669eeba9b7a37",
+      "sha256": "1232d8379de77e154ca533689af2e42629dd7574bda5a0a390799849f07607c3",
+      "stem_spelled": 42,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "fa2906de652e33684f0dac4f46b6e5123b676ae22aa2d2703fd2736f4f903a05",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "function_declaration",
+        "return_statement",
+        "variable_declaration"
+      ],
+      "lang": "lua",
+      "out_edges": 2,
+      "path": "frontend/ui/message/streammessagequeueserver.lua",
+      "rank": "02e04f4d64d7e2a4c2741b59ec0279ee2305c38d48028ff9ea97d589e0975ae1",
+      "sha256": "4c212574a239d230bd67d75ef625ef40e606e1e632462ffb96aa0f084ed5b19d",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "fb94ec89b12f06aaf26352f4df1c84e07fc69fb6842c5351a5d2d18e77758d3e",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "repeat_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/db.lua",
+      "rank": "622ee6ff6f5096dffd8d5821e50c10533aded78658085d906bda0abbea2eb99a",
+      "sha256": "82ed710f0aa5ab23eb86fc0ad73705e6d8f8b0cd9c8a3d1b4da31623c3e40f10",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "fd300d5a35f2e0e35dcae6563978348f71d76478bb0b1c1c40bbe98ccbe25c0c",
+      "basename_spelled": 3,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [
+        "testes"
+      ],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "assignment_statement",
+        "comment",
+        "do_statement",
+        "empty_statement",
+        "for_statement",
+        "function_call",
+        "function_declaration",
+        "if_statement",
+        "variable_declaration",
+        "while_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "testes/gc.lua",
+      "rank": "a778ac097f0077d91f0e9b23b984470ccd2aacbb9c59926b98584cd76421a56b",
+      "sha256": "e1768dd5a40921af0e5d24b1d61c9fd4727c45716e28bf167246a45e38735a99",
+      "stem_spelled": 10,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "fdfbdd112f0e59af9748c85ea08ac21ad0f4f7b4473a997a118362713ab45e10",
+      "basename_spelled": 1,
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "koreader",
+      "doc_class": null,
+      "kinds": [
+        "return_statement"
+      ],
+      "lang": "lua",
+      "out_edges": 0,
+      "path": "frontend/ui/data/keyboardlayouts/keypopup/ru_popup.lua",
+      "rank": "2c304275124fac5c1665e252c7b42ebcbd6b0663c99baa187ef961f729029842",
+      "sha256": "26595e7760bce5b51f08ba8fac7e9dd520221ef6260d2f38f17d107d21768c64",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    }
+  ],
+  "schema": "ce.eval-deadfile-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "cobra",
+      "rows": 0,
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+    },
+    {
+      "corpus": "codeeraser",
+      "rows": 0,
+      "tip": "af1c29958f2ee4d2322594784a4f9b7524559194"
+    },
+    {
+      "corpus": "covid19model",
+      "rows": 64,
+      "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+    },
+    {
+      "corpus": "fmt",
+      "rows": 12,
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+    },
+    {
+      "corpus": "gson",
+      "rows": 21,
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+    },
+    {
+      "corpus": "jsoup",
+      "rows": 53,
+      "tip": "093e2f58492c531667e551e8793513a41b22443e"
+    },
+    {
+      "corpus": "koreader",
+      "rows": 150,
+      "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+    },
+    {
+      "corpus": "lua",
+      "rows": 34,
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+    },
+    {
+      "corpus": "luarocks",
+      "rows": 69,
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+    },
+    {
+      "corpus": "requests",
+      "rows": 5,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+    },
+    {
+      "corpus": "ripgrep",
+      "rows": 4,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "corpus": "stringr",
+      "rows": 5,
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+    },
+    {
+      "corpus": "zod",
+      "rows": 142,
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+    }
+  ]
+}

@@ -1,0 +1,1406 @@
+{
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "r",
+  "method": "every universe row of one language, from the frozen slices: sample membership from the frozen sample (primary / reserve / undrawn); doc_class and K0 from the slice row (universe_counts.py's DECLARES over the slice's top-level kinds); K1 and K1-strict from the text at the pinned tip through the product's parser (BARS.md section 2 with addenda 2 and 3: k1.rs, k1_lang.rs, k1_tables.rs), each with the kind and line of its first active top-level statement; the ruling numbers the K1 walk met; the lines of ruling 16's fragments; the sha256 of the classified bytes. Per corpus the pool and primary counts of BARS section 1's weights.",
+  "per_corpus": {
+    "covid19model": {
+      "pool": 62,
+      "primary": 62
+    }
+  },
+  "rows": [
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "Brazil/code/plot-3-panel.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b80c959fd85aebc4b7a333a2bfb957ba3469b01cebf90569d2273eeb1b24ac4a"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Brazil/code/preprocessing-subnation-brazil.r",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "c1d13dc0bdbf5fcaf518ec3d4478ef6ae05c58917a320cb9ccca2635e4c927f1"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/plotting/format-data-plotting.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "5e1aaf22f601865c0c8cfed2eb3a88475f2b5edb75f6a3ec7271a69ca0e40079"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/plotting/make-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "41f1669de9f8849a895d80523f4b9c73dd5ca5f88377fd3c9fe55cf1a9048e85"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        2
+      ],
+      "k1_witness": [
+        "call",
+        2
+      ],
+      "path": "Italy/code/plotting/make-rt-plot.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a16eba97c66c21390ceb13322693a4af0f0732e479b8c7aa2c04670725caad0e"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/plotting/make-scenario-plots-top7.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "bb06998b4294359c96506e45a6da56ffb1350f47efaf2729581e39db7e1a656f"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/plotting/make-scenario-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c0c72fa76e31192aca1d1207d31be7aa950cdd46af7646d88da83f2009412f32"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "Italy/code/plotting/make-three-panel-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "f7de6a010790822873c4037bc343944bc72f67f13294a5a794cc43221bfb00b7"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/utils/make-table.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c33df9530f7cfaa70438a19d4fb5dccd70ce3693a2ed5347eb0cd5f50f0db40f"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/utils/process-covariates-italy.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "edc0379d37729536212fcde2b79f00435bef4b8eb583b7f0ce0656249405e78e"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/utils/read-data-subnational.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "9c10a4b02bd191d2ca1f2aeef1178dbe3496acb9248dbfb5f9406c5ecbeb0d67"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "Italy/code/utils/simulate-regional.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "0e54ec606e2520d8edb17695fa8257416409b1fa7e7218f0ef6a9ac82fec4a95"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base-Brazil.r",
+      "rulings": [
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "80c624e5402eb0d92d0aa9d3f54855fedf1bf47a2b76559434b8023bd8d87b1f"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base-Italy.r",
+      "rulings": [
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "9844c122aa1a99dc0fd8126571da3d81df500328bbd99674ba1adfcc710b9f19"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base-nature.r",
+      "rulings": [
+        8,
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "cbf92aeb95a0f16b74ba0952839bfec3b90d67efafa77eec69283b2195250516"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base-usa-cases.r",
+      "rulings": [
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "64ad751fd6e9d65a5c296c734d2cb4ad98dc1794d8c5c602ad2eef9b4898ad44"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base-usa.r",
+      "rulings": [
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "1f837cedfc69f9e0175446b08fef1617a492e0f68901c07ba005b231ad256e68"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base.r",
+      "rulings": [
+        8,
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "3c3e390a645bb40cda5f5e7a45e980d48ae5d3dab1f903502d04e99e0b74ef18"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "base_general.r",
+      "rulings": [
+        8,
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "5a3c911320b54196e64a703defcc72f09a334307bb4e0eaf14575c9e87de8eee"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        5
+      ],
+      "k1_witness": [
+        "call",
+        5
+      ],
+      "path": "compute-ifr-europe.r",
+      "rulings": [
+        10
+      ],
+      "sample": "primary",
+      "sha256": "25c635a3ad87b2e10145b5b128c02b8707b6620d52a21133538513a241d36483"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        4
+      ],
+      "k1_witness": [
+        "call",
+        4
+      ],
+      "path": "compute-ifr-usa.r",
+      "rulings": [
+        9,
+        10
+      ],
+      "sample": "primary",
+      "sha256": "486079944ae189a642fc3b728f72fd371df97aab9ff0b1096e5f1651bab5b2b8"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "covariate-size-effects.r",
+      "rulings": [
+        8,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "473510cb331d3ed7cfd075c8f326f90ad3564834a5a3c291ebd0e4c4a8978c0f"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "data/fetch-ecdc.r",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "6a239224b819c3774fe0ca26354c076cc22401f0c1e24758fe17e93632297bd3"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "make-table.r",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "8efb513c52df57219389588f60a42208527b0dc281f2b2279329f6914822f1c3"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "nature/utils/covariate-size-effects.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e277fe6d56c07a96a3fdce5384af17116c08662ac696eb7ed216d91d56f4e390"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "nature/utils/format-data.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "45afb157b2beee8032dcfa5a878a0f5e5a873d595f99e29b4ead5a5a911c1ec4"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "binary_operator",
+        53
+      ],
+      "k1_witness": [
+        "binary_operator",
+        53
+      ],
+      "path": "nature/utils/geom-stepribbon.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "nature/utils/make-table.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "c7f014e97a11a16ffd60f7325e974b37752190ffd5ba6b15fd47fae46ac8f5f1"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "nature/utils/plot-3-panel.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "92cdd1dd8202b3429f53adade383120197add275b92db2a01e949ea1ae6fb21b"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "nature/utils/process-covariates.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "7f6954ecabea996f0cd1273613c28394c7a0ffd3040980f03fabe9ff50d6ffd1"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "plot-3-panel.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "6a65987614e978ad45258db74088446e0709eed87a913f838769ce7099139886"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "plot-forecast.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "42b00f61a216abb78cac1e7144c8c13a5ea825063ccd3ca21c520ae4a9c188a9"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        3
+      ],
+      "k1_witness": [
+        "call",
+        3
+      ],
+      "path": "tiers/no_need_to_run/backdate_tiers.R",
+      "rulings": [
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "6ca8b43397c3b8e385f82e6cf542238be1dc4fcbd08dc2b8d9c91cb7b6118793"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        3
+      ],
+      "k1_witness": [
+        "call",
+        3
+      ],
+      "path": "tiers/no_need_to_run/create_data.R",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "d7f2a45a242f10d650c241a2f132619d22f02f9845cd8de318bd232864437f34"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "tiers/spline_LFA.R",
+      "rulings": [
+        10,
+        11,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "114acd0779713c86206e89715050b194ab5cb8e7d73311214cf72e507d1d3570"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        4
+      ],
+      "k1_witness": [
+        "call",
+        4
+      ],
+      "path": "usa/code/data-scrape/process-death-data-jhu.r",
+      "rulings": [
+        10,
+        15
+      ],
+      "sample": "primary",
+      "sha256": "9f085f4a192dd2ca20091b13aa0c53cc47b40dcff03bca745a9cc2f04dc0a6f9"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/data-scrape/process-death-data-nyt.r",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "f0775e781679c627b88d000dd204a2b37065c8f9ae5134422294aaece15c5986"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        4
+      ],
+      "k1_witness": [
+        "call",
+        4
+      ],
+      "path": "usa/code/data-scrape/process-interventions.r",
+      "rulings": [
+        15
+      ],
+      "sample": "primary",
+      "sha256": "3c1e6b4fd9d92196d52f3512586129fbd30136a82bb3ece24590d34b286537b1"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/plotting/covariate-effect-sizes.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "84de862660afd637780ad3da4943e3c118ce74de9fb08853fce08c636b768bc0"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/plotting/format-data-plotting.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "2ac87df1bceb050276c7877ff1264f7c7ecae62e56c9710e1655fcdb2e07e67c"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/plotting/infectiousness-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "07ac12e87d7c61ce9c90bbaba9ece85aeb52805057123d57236848fd1bb3b4cd"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/plotting/make-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ec99e9fb9b989e430e5b70e631d48766772914cb226e3d3f30f600f4bad00895"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/plotting/make-rt-percentage-map.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "582c513105d67c7ada6c28cb36c0660042b325ec0a4246d0aef2a083aa7f26f9"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        2
+      ],
+      "k1_witness": [
+        "call",
+        2
+      ],
+      "path": "usa/code/plotting/make-rt-plot.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "ad38f456b385bfaae54ff590dd08c1f47dd9cf1ebe9d60f49907c9cd7a3765f5"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/plotting/make-scenario-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "768553378a1a5729ea7dd3876ad774fff64b083a3b78553d4ad4e518a9193621"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "usa/code/plotting/make-three-panel-plots.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "08dd95af86fb0e18c530babcbf34ea31dcd9b32f2421c9154ad4331ba8eeeaf4"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        2
+      ],
+      "k1_witness": [
+        "call",
+        2
+      ],
+      "path": "usa/code/plotting/make_rt_plot.R",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "32302a73805c621040dc42c6c1a9668325fe8f1d2bd71604fd0b7aa7dd528bd8"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/scrape-required-data.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "86e22c4365e68bacd9c7c027739333ec47cd1a9f47ee2036cdb97fab9cab860a"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/simulate.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "bc2d771998d33d9f363afdfb4b680c0ca8ccb777ca0e92a3b389400956c56843"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "usa/code/utils/calculate-infectiousness.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "2d8fe0e851b75dac6ad87c5bbcd300692e44bc73f8a116065e03dc6465bf0a5b"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "usa/code/utils/create-output-files.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "07ca737c054287c4dedc2092406b6e536ea751102bf94eae06ad743a21b64170"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/utils/mobility-reg/mobility-regression.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "387a31d88b1d67f06dff1a28a06d5530f25d899dcb1f46c64f7213a724c74eb0"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/utils/process-covariates-usa-cases.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "a5c9e8e1865869eae0e3a35ec08f277fed9167b7581b4edfa1364eb90a8b1526"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/utils/process-covariates.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "8c5957117f038a7660f7ecad3dd872b43b97acb746241b22b4ac00dea19a33f9"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/utils/read-data-usa-cases.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "42da79ad4ca0a45263a0dc0d1abc194dfdb2f0c15f2ec7627278d2b30e4b5a49"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "usa/code/utils/read-data-usa.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b5e3f1ea8914191f86193654885a9ad6e094c847bf39afef94fff04853ece588"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "binary_operator",
+        53
+      ],
+      "k1_witness": [
+        "binary_operator",
+        53
+      ],
+      "path": "utils/geom-stepribbon.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "declares",
+      "k1_strict": "declares",
+      "k1_strict_witness": null,
+      "k1_witness": null,
+      "path": "utils/get-ar.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "51118f142530aa914c90184cb33347264d69f1d1ae76de42656434d75672e030"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "utils/process-covariates.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "b1bb70e4b864b114e75c2a62a826b241ea439271bf729f3aca5a8171694ff614"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "utils/read-data.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "dd1cc953140e9bf0ff9dc6e112293fb73df7ecdb8201ba7dcce847bf46ec6e03"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "binary_operator",
+        7
+      ],
+      "k1_witness": [
+        "binary_operator",
+        7
+      ],
+      "path": "web-fetch-and-run.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "e8500d49b9b94d2a7afd36d96624933c949751820ffee555310f1de854bda302"
+    },
+    {
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "corpus": "covid19model",
+      "doc_class": null,
+      "fragments": [],
+      "k0": "runs-alone",
+      "k1": "runs-alone",
+      "k1_strict": "runs-alone",
+      "k1_strict_witness": [
+        "call",
+        1
+      ],
+      "k1_witness": [
+        "call",
+        1
+      ],
+      "path": "web-verify-output.r",
+      "rulings": [],
+      "sample": "primary",
+      "sha256": "59d2d2f765a8235b742c657c49cc422bbe9c555fb27677a2ce9b5dc715550e90"
+    }
+  ],
+  "schema": "ce.eval-deadfile-class/1.0.0",
+  "summary": {
+    "k1_differs_from_strict": 0,
+    "primary": {
+      "k0": {
+        "runs-alone": 62
+      },
+      "k1": {
+        "declares": 6,
+        "runs-alone": 56
+      },
+      "k1_strict": {
+        "declares": 6,
+        "runs-alone": 56
+      }
+    },
+    "rows": 62,
+    "rows_per_ruling": {
+      "10": 12,
+      "11": 1,
+      "15": 16,
+      "8": 4,
+      "9": 1
+    },
+    "universe": {
+      "k0": {
+        "runs-alone": 62
+      },
+      "k1": {
+        "declares": 6,
+        "runs-alone": 56
+      },
+      "k1_strict": {
+        "declares": 6,
+        "runs-alone": 56
+      }
+    }
+  }
+}

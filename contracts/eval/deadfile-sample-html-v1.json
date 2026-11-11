@@ -1,0 +1,759 @@
+{
+  "allocation": {
+    "jsoup": 28,
+    "requests": 1
+  },
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "lang": "html",
+  "method": "per language over the frozen slices: rank id = sha256(domain|corpus|commit|path); at most `total` primary rows by the language exams' quota rule over corpora (each corpus first min(15, pool), the seats left by largest remainder), each corpus taking its lowest rank-domain hashes; the reserve is the audit-domain rank over the unpicked rest, at most `reserve` rows; a language with fewer than `whole_below` rows is taken whole with no reserve. Rows stored in audit-domain order.",
+  "pool": 29,
+  "reserve": [],
+  "rows": [
+    {
+      "audit": "1680632785f13ecf3b61399a4d2d75acbe889f62740fcbaed76f3aa901de82d3",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/lowercase-charset-test.html",
+      "rank": "ce175d3e6612a7593a6e7baceb383ed65872e2c28b04fac9b9801c8e3c963762",
+      "sha256": "ecba3ba81ce7bd7cc60b6b2167159afa5dbb992c42a29fd39a33494b523370ca",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "1b787d61fe3b050122d4e299b793b36bd7dab377ff37b0879edc6e0169d75192",
+      "basename_spelled": 0,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/main/javadoc/overview.html",
+      "rank": "63673aa34b29b62e005b523e15050e4ea04c5cf78d608ffc7477eee1c029d26a",
+      "sha256": "3c84d93a7b655a6ac2856ca7217b4c625b6a12a40a8dcfb3bb5ade96e3321298",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "30278176d21050eb43e5c49885ab236dc57abb30486a91af6b28ef5ae207302a",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/passthru-1.html",
+      "rank": "10d0e9489b54b851a183bd1d92df476976a550dd070f86bf4af7fe9bccbcfc98",
+      "sha256": "a4950e3fac0c88fab69448c0eedffea81372d6ff2b603e5d238df0d3c5091592",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "36bff48034b9bd5b4ece07fb83a63961609b17d26941d0ce255b7f909ef13828",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/adopt-1.html",
+      "rank": "620716932b03220d1e26970c8346cc41fc787531cf17fe376ca03c7651460dd4",
+      "sha256": "79bbeda6aca09c647cd76c329427695a5b391a550f40bf199b07c1a2665d3c78",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "3ea389fba11f33fa2f9c6c4808ee410be9260f6511328680990de2055ad25b70",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/meta-charset-2.html",
+      "rank": "92f5a1db15c4c348a740d8a4e993347775195e3e7f90a334dfa0985fb3de738a",
+      "sha256": "5e66e7c9259d84be14542b1f979156b41b3c5f30049dcfc4fc05c25e714c8c00",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "40352239a569a338d37a83426700ee76dc12b2a5b833cd00bf01b1421c38c3dc",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/table-invalid-elements.html",
+      "rank": "fa905af59acbe577f41709605fd2b1b2c191ea36726107506288cd673da96021",
+      "sha256": "2f01d838b430d22b51ebced8ca7b9fec7347f112c62b38a915aa3098dc37e940",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "4e8826b7a12b273cbd764d307878326d95f0b34fea152c2d7bfd3680472d5ffb",
+      "basename_spelled": 2,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/charset-base.html",
+      "rank": "ed23cc84b4226a2b211797192a2bd68f78d7d00bc0bf907b6c539c20c350e79e",
+      "sha256": "f4bd41bdcabb282c568c2056e19850c3da552f69f02fb9a37f62b7162d4baffd",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "50ad39eb5e771c338cb54b1e5cce2a727568e96284a0c9a1e01c29261fcee746",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/meta-charset-3.html",
+      "rank": "311d5bddd388489e2279e6a17c023762036925e8cbfc8ea92f952b6fe5e6aa9b",
+      "sha256": "056d153e6358556adc29c222c23650a177c4cd5b85f0307fd829d766c7729b13",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "5220eaa2cad1fcdfd08be641f12c24c839348e94e4f886b5c3dd9a14ae176330",
+      "basename_spelled": 3,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/upload-form.html",
+      "rank": "b3b9543f7d9ee6622eed23a0c712482c588573f066069295076fe05521dcb71b",
+      "sha256": "3f641566ab787b8deb8769d4d5faae369bfab4e1a64091688336b0f2b0168c9c",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "5642d912631ab6c0fe513c53486a251f824a93faa51d2d6d968bcc74a82847c5",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/pretty-1.html",
+      "rank": "245cdd68d8e5ff2410c769824cb42855a56fa8fd8c42ff68ba83e803888de656",
+      "sha256": "dfdf97478a6cbfa2f78bb99cc8bbb574f72efecab8e9362bfecbd165b9617033",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "65c34c1c55544840b13f85180449612d9052f6046d7530d4dc4d69f995b3036d",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/input-1.html",
+      "rank": "8fcdef279c44e5abdccd2c41e212578a45a631fad28c025bd9d749bbbe78c275",
+      "sha256": "b242d669ff47b06ffbbdada6c60f9d3f8c0d554e85a36c9dbb5f82b335fba990",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "7d1472f0c460d8c5e875c915f0065568b0a8b91cf8d3700cb0192a02c9f629e2",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf32be.html",
+      "rank": "b4538207d9bcb608a426d2ad48dc761d6d49c111b413e9059a7ef7b1a5920a25",
+      "sha256": "3549ea74c9e5fe9be10747c893cb54f711f4ddf9e7f3ad62ed01466c3375ace6",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "82a59fd44871efb452ce9880693b6384c15f08ddb121150c6b10e305eda435fa",
+      "basename_spelled": 8,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/large.html",
+      "rank": "46beef33528a5fc383d28bfd777133a2d957601c423313306158e16101f792f9",
+      "sha256": "e442d37dd793e60f21015f9c7c7b8dcc8b0727c3382f1e7c25ef5144d6b199a7",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "8f3f2ac26975a52c8c33c916dbefe4f2cc1986da0eacf30b38f7afed90f69d01",
+      "basename_spelled": 5,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/medium.html",
+      "rank": "5f9e894946cd4319287bf8f6242ce05e6b15d7cbff9d087622ca085447a8b526",
+      "sha256": "242d46b4be153aea31032fa8c1c98d25697ec9280d5987e0a17d792a95c3b10f",
+      "stem_spelled": 5,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "a4797b6f98dd52e0f76afa89b7932a5f267079182362914c0f7b3234e720aef4",
+      "basename_spelled": 0,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "element",
+        "erroneous_end_tag",
+        "start_tag",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/fuzztests/ex-inselect16.html",
+      "rank": "fadddae7101e746e635b4587a840f493363636985761b3901cf892fb91834489",
+      "sha256": "14808c37a260b2feaa2b3a1351bd25d43e66fd92b77bf12b326f9e8ca431af45",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "b5f47afc65e7217835be250038eaba0d514690b8f9fb3cb9dcccce7ebc427d8a",
+      "basename_spelled": 1,
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "requests",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "docs/_templates/sidebar.html",
+      "rank": "f0a732a9e7ff834690677654236b690a5242f9fb2314ed0b900214b9aefea459",
+      "sha256": "1863aecd1bc986fe30ddb944aca522f99e669ef36e257e48a244e0b544c51a0c",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "b6448f9f82ff1c3d43581ba2230343cfeafb056b98ad96c7412145e837038c42",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/form-tests.html",
+      "rank": "d8ca43a6b763175c18b9f0503a3a76541329711f1e6b375c56708d24f3e2da83",
+      "sha256": "0977e3150adc79e8f1d0168e0224e954da335f31b6a709afd4d4b08fe9afcc20",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "bb4c884af7d5f051ddf1a83a2c7787c894a91fc103e10e3c8d39b8f975a59208",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/gzip.html",
+      "rank": "073ebf347f653e695676059ec12a24ee0c37b4b515809ca3150001cc498e4a67",
+      "sha256": "9e932401d4f3667ea8d403b976974d0bcfd3f092461a4b285160028aad782f1f",
+      "stem_spelled": 8,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "bdf4558e3cb664f7b788bfb2ec311af7210a693407d0add1687f89309419b695",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/meta-charset-1.html",
+      "rank": "f291874fd175a881ce2fae76944c9e0bc05c5c684d0877b5da9da1a600184cf7",
+      "sha256": "0aea811a481da61ed356a62c3859b8e8390d2c51943a5695f502ab4600fd9a6c",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "c16006a70a68c5a1b188246776481bb9daf20e0d055ea60a057ed0e3741484ba",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/outline-1.html",
+      "rank": "c24e13031eaf9939b4778a305d9e9c8f2a93b4630f40b10fb89d6cc4be751e95",
+      "sha256": "086d919507b6126ecf6cdf8a635e8307dcca97d8398a5403d0bd12f5876f133b",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d1de5385a15bd8099308315c76f68b642f7e8a66278208bef23e5c24cf66c3e0",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf32le.html",
+      "rank": "337c87a110222e9df8f900e8fb433df699ce6633288b7a758184487d725845f6",
+      "sha256": "bc8b7d06432982ba253ecda865e660f5027e8bdf437528fde7c43c0637b9c48c",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d61b468281d83a1e97e19dc6d7e09f250d87c4a777eda3be04a8b8ddf2f68b19",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf16le.html",
+      "rank": "e91a24fa954b8553c66442e492bdc6ddef6d2a3f00ce9d0dcdc103e8ebb956d7",
+      "sha256": "afaf2bba42d04f2dab73a90f64a1109683b76167a14d7083aaa906fafe61c961",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d6a2f2839be9843e3b3d60eda6e1bc75c887dd411881323884fcfa0a09134e07",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/table-polymer-template.html",
+      "rank": "2a8888a82e749e01f8149edd60c09fdb7fd43e32c0695d228a8633b85ca6b446",
+      "sha256": "348162f4c14e3148a0f8506536976f43c72a7b564d591ab8f509faaa84fbcedd",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f1a0208f7df99708f3764147227fc206846bc7f294ddfff1617b8244144042e2",
+      "basename_spelled": 2,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf8.html",
+      "rank": "76eb48ef4a2f044d4e5d82ebec920c0282807d8cc7a0a13170fd54cb1b67fb87",
+      "sha256": "8763d66033b22f2feb45041f058db6e2cfb110664826d8de2dbd560b862664e8",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f3da00129f9ab04867d0071d2fa3e2d0068a5b198471aa62b4c439033e70248d",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/escapes-across-buffer.html",
+      "rank": "4e4d74efc7b95733925a36a0235a3cc3d6e153f99620dc953f877952975ce9fb",
+      "sha256": "63472721af4b4a159f49bef2857101067996f643e9635f209d63bbbe532e4c64",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f45e3e1b1ec3d21c3757e15696c8d7983d9ae4d26ea3d2347b1231273724b138",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/basehref.html",
+      "rank": "91f912d7afb4739cc6578c63e5804f18405413a51b7bf86cd6443d847a7034d6",
+      "sha256": "6a0b5262afc11d1c761fe23fad185dab1b3c640ef6eee9bc2d088ae2ddd888ea",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f799a2fe28abee28748df4ea00e300406792499f2e54b1810549caaba09c5015",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/fuzztests/garble.html",
+      "rank": "8e4c74f8a41ca49793b15b6a6cf86f15acc15c61333d16973d2109f7b8fe1c6a",
+      "sha256": "861586ec575d0d2391a1e7a15ce0f85eaad8d3add475936ade2089f1e3c02b24",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f7d45015003a37f133669f49ca05d107f7c0192a8bfdc0cd43fec39cce323b12",
+      "basename_spelled": 2,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/comments.html",
+      "rank": "341aaa6ba805f929e5ef949d49a29bdebd12acb921d07668a1ae5d9a420419a0",
+      "sha256": "aae1b57def1a962ac41b4b54194d2703c3f20670c698fdd4f03419d7a73af871",
+      "stem_spelled": 15,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "fc197f18b09165de6f865ccd0c5d7b5472e1e71e542e28127de3beb7212ddf76",
+      "basename_spelled": 1,
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "corpus": "jsoup",
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf16be.html",
+      "rank": "919825f9fe697a53593f4f57b29df80c94e5e768edd875930dfe89622f79f8e4",
+      "sha256": "01f4e3e14e69cae3b484e6d475c154b032cd8a1fe9cc427f4ab7a852b04836ef",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    }
+  ],
+  "schema": "ce.eval-deadfile-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "cobra",
+      "rows": 0,
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+    },
+    {
+      "corpus": "codeeraser",
+      "rows": 0,
+      "tip": "af1c29958f2ee4d2322594784a4f9b7524559194"
+    },
+    {
+      "corpus": "covid19model",
+      "rows": 64,
+      "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+    },
+    {
+      "corpus": "fmt",
+      "rows": 12,
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+    },
+    {
+      "corpus": "gson",
+      "rows": 21,
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+    },
+    {
+      "corpus": "jsoup",
+      "rows": 53,
+      "tip": "093e2f58492c531667e551e8793513a41b22443e"
+    },
+    {
+      "corpus": "koreader",
+      "rows": 150,
+      "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+    },
+    {
+      "corpus": "lua",
+      "rows": 34,
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+    },
+    {
+      "corpus": "luarocks",
+      "rows": 69,
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+    },
+    {
+      "corpus": "requests",
+      "rows": 5,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+    },
+    {
+      "corpus": "ripgrep",
+      "rows": 4,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "corpus": "stringr",
+      "rows": 5,
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+    },
+    {
+      "corpus": "zod",
+      "rows": 142,
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+    }
+  ]
+}

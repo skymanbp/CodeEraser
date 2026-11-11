@@ -1,0 +1,958 @@
+{
+  "agreement": {
+    "every_row_twice": false,
+    "first_generic": {
+      "rows": 1,
+      "same_side": 1,
+      "share": 1.0
+    },
+    "first_named": {
+      "rows": 2,
+      "same_side": 2,
+      "share": 1.0
+    },
+    "first_not_in_use": {
+      "rows": 3,
+      "same_side": 3,
+      "share": 1.0
+    },
+    "overall": {
+      "rows": 6,
+      "same_side": 6,
+      "share": 1.0
+    }
+  },
+  "constants": {
+    "bars_sha256": {
+      "BARS-ADDENDUM-1.md": "d42c6f7020c05dac791901f75d137fd9d6c42f29a94bee643cbc4f80a0024a31",
+      "BARS-ADDENDUM-2.md": "e2d5860908eb00ca722d4b83a1c557563e72feba3d1fb59f88e8c63b11baa07b",
+      "BARS-ADDENDUM-3.md": "8bc0404efe4e4b5fc32bc41029c9c3c95bb7f55fcfecf4b2111c6668aaf59667",
+      "BARS.md": "2934ab1c7f33f3373065a8fbc37b349a35b816481a882a4e94b7c3145a29fa65"
+    },
+    "k0_sha256": "549337f8b658574a1181ee79836b00a1293dbc3f4a5279ca5a088822dd5dd0f4",
+    "rulings": {
+      "both_active": [
+        7,
+        9,
+        14,
+        15
+      ],
+      "confirmed": [
+        11,
+        12,
+        13
+      ],
+      "strict_active": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        10,
+        16
+      ]
+    }
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "8b1429c46a46271102e67effe93da5d296a391c6",
+    "dirty": false
+  },
+  "lang": "markdown",
+  "method": "per language, the class doc's primary rows in stored order (a reserve row only where a first reading names it), each with its first and second reading from the committed record, BARS section 1's check and addendum 1 B's tag of every reading read off the pinned tree, the second-reading reasons, the final answer (a failing first answer replaced by a passing second one; two different answers settled by the committed settlement, never by a vote) and its tag.",
+  "rows": [
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": ".github/pull_request_template.md:3",
+        "mechanism": "linked from the PR template and read by GitHub's contributing-guidelines convention (root file, no .github/CONTRIBUTING.md)",
+        "searched": "git grep -i contributing; git ls-files .github",
+        "tag": "named"
+      },
+      "path": "CONTRIBUTING.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "CMakeLists.txt:297 support/release.py:127",
+        "mechanism": "listed as a source of the fmt target and edited/committed by the release script",
+        "searched": "git grep ChangeLog; CMakeLists.txt; support/release.py; support/mkdocs.yml",
+        "tag": "named"
+      },
+      "path": "ChangeLog.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "ChangeLog.md:3593",
+        "mechanism": "documentation link: the current changelog points readers to this file for versions 0.8.0-7.1.3 (it is excluded from the mkdocs build at support/mkdocs.yml:54)",
+        "searched": "git grep ChangeLog-old / ChangeLog; support/mkdocs.yml; CMakeLists.txt doc install (:597-613)",
+        "tag": "named"
+      },
+      "path": "doc/ChangeLog-old.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "support/mkdocs.yml:51 CMakeLists.txt:597",
+        "mechanism": "docs build: mkdocs nav page and copied by the CMake doc target",
+        "searched": "git grep api.md across support/, doc/, CMakeLists.txt",
+        "tag": "named"
+      },
+      "path": "doc/api.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "support/mkdocs.yml:50 CMakeLists.txt:597",
+        "mechanism": "mkdocs nav page (docs_dir ../doc) and copied by the CMake doc target",
+        "searched": "git grep get-started; support/mkdocs.yml; CMakeLists.txt",
+        "tag": "named"
+      },
+      "path": "doc/get-started.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "support/mkdocs.yml:49 CMakeLists.txt:597",
+        "mechanism": "mkdocs home page (docs_dir ../doc) and copied by the CMake doc target",
+        "searched": "git grep index.md; support/mkdocs.yml; CMakeLists.txt",
+        "tag": "named"
+      },
+      "path": "doc/index.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "corpus": "fmt",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "support/mkdocs.yml:52 CMakeLists.txt:597",
+        "mechanism": "docs build: mkdocs nav page and copied by the CMake doc target",
+        "searched": "git grep syntax.md across support/, doc/, CMakeLists.txt",
+        "tag": "named"
+      },
+      "path": "doc/syntax.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "854c8255b625cf1e13c701a83ea9ccb4caaa576a",
+      "corpus": "gson",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; maintainer prose read by humans, nothing names or loads it",
+        "searched": "git grep -i 'ReleaseProcess' and 'release process' (only the file's own title), pom.xml files, .github workflows and templates, README.md, CONTRIBUTING docs",
+        "tag": null
+      },
+      "path": "ReleaseProcess.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "change-archive.txt:4",
+        "mechanism": "documentation sentence names it as the location of recent change notes (the changelog maintained per release)",
+        "searched": "git grep CHANGES; pom.xml (no resource/packaging reference); .github workflows and CONTRIBUTING.md",
+        "tag": "named"
+      },
+      "path": "CHANGES.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "093e2f58492c531667e551e8793513a41b22443e",
+      "corpus": "jsoup",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs 'Adding a security policy to your repository' (SECURITY.md in root, docs or .github)",
+        "mechanism": "forge convention: GitHub shows a root SECURITY.md as the repository security policy (.github/ has no SECURITY.md)",
+        "searched": "git ls-files .github (CONTRIBUTING.md, FUNDING.yml, dependabot.yml, workflows only); git grep SECURITY.md",
+        "tag": "generic"
+      },
+      "path": "SECURITY.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "doc/config.ld:11",
+        "mechanism": "ldoc topic of the generated developer docs (doc/config.ld; html published by .ci/after_success_docs_translation.sh)",
+        "searched": "git grep DataStore; doc/config.ld; doc/Makefile; README.md",
+        "tag": "named"
+      },
+      "path": "doc/DataStore.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "doc/config.ld:12",
+        "mechanism": "ldoc topic of the generated developer docs",
+        "searched": "git grep Development_guide; doc/config.ld; README.md",
+        "tag": "named"
+      },
+      "path": "doc/Development_guide.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "doc/config.ld:13 frontend/ui/event.lua:9",
+        "mechanism": "ldoc topic rendered into the developer docs and cross-linked from frontend/ui/event.lua's ldoc comment",
+        "searched": "git grep Events.md; doc/config.ld; doc/Makefile",
+        "tag": "named"
+      },
+      "path": "doc/Events.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "doc/config.ld:14 doc/Makefile:5 Makefile:223",
+        "mechanism": "listed as an ldoc topic; rendered by the docs build into the published developer docs",
+        "searched": "git grep Hacking; doc/config.ld; doc/Makefile; top Makefile; .ci scripts",
+        "tag": "named"
+      },
+      "path": "doc/Hacking.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "doc/config.ld:16 doc/Makefile:5 Makefile:223 .ci/after_success_docs_translation.sh:27",
+        "mechanism": "listed as an ldoc topic; the docs build (make -C doc -> ldoc .) renders it into the published developer docs",
+        "searched": "git grep Unit_tests; doc/config.ld topics; doc/Makefile; top Makefile; .ci scripts",
+        "tag": "named"
+      },
+      "path": "doc/Unit_tests.md",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "doc/config.ld:16",
+        "mechanism": "LDoc docs build topic list",
+        "searched": "git grep Unit_tests; doc/config.ld; .ci docs script",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "make/remarkable.mk:28",
+        "mechanism": "packaged: the reMarkable make target symlinks it into the install tree as README_remarkable.md",
+        "searched": "git grep README_aarch64 and platform/remarkable",
+        "tag": "named"
+      },
+      "path": "platform/remarkable/README_aarch64.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "dc76367495d00cd30b0e934bcc6f9a167ac5154b",
+      "corpus": "koreader",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "Makefile:56",
+        "mechanism": "packaged: the whole resources/ tree (icon fonts/svgs it licenses, loaded from resources/icons/mdlight by iconwidget.lua:26) is installed into the release; resources/icons/mdlight is not in UPDATE_PATH_EXCLUDES, so the licence ships alongside the icons it covers",
+        "searched": "git grep LICENSE-SIL/SIL-OFL/mdlight; Makefile INSTALL_FILES and UPDATE_PATH_EXCLUDES (Makefile:56-77); make/*.mk; frontend/ui/widget/iconwidget.lua:26",
+        "tag": "generic"
+      },
+      "path": "resources/icons/mdlight/LICENSE-SIL-OFL-1.1.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs: Adding a code of conduct to your project (root CODE_OF_CONDUCT.md)",
+        "mechanism": "forge convention: GitHub reads CODE_OF_CONDUCT.md in the repo root as the community code of conduct (GitHub Docs, 'Adding a code of conduct to your project')",
+        "searched": "git grep -i code_of_conduct / 'code of conduct'; .github/ (no other CoC file); README",
+        "tag": "generic"
+      },
+      "path": "CODE_OF_CONDUCT.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "corpus": "luarocks",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs 'Adding a security policy to your repository' (SECURITY.md in root, docs or .github)",
+        "mechanism": "forge convention: GitHub shows a root SECURITY.md as the repository security policy (no .github/SECURITY.md shadows it)",
+        "searched": "git ls-files for other SECURITY files (none)",
+        "tag": "generic"
+      },
+      "path": "SECURITY.md",
+      "second": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "convention: GitHub Docs, Adding a security policy to your repository",
+        "mechanism": "repository-root security policy read by the forge (GitHub Docs: 'Adding a security policy to your repository' - SECURITY.md in root, docs/ or .github/)",
+        "searched": "git grep SECURITY (only binary hits); no other references",
+        "tag": "generic"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "8068356288978c4f54661ae6f95afe0e0831885e",
+      "corpus": "requests",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "MANIFEST.in:1 docs/community/updates.rst:18",
+        "mechanism": "packaged in the sdist and included in the Sphinx docs",
+        "searched": "git grep HISTORY; MANIFEST.in; docs/; Makefile; .github/CODEOWNERS",
+        "tag": "named"
+      },
+      "path": "HISTORY.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "corpus": "ripgrep",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "GitHub Docs 'Configuring issue templates for your repository'; .github/ISSUE_TEMPLATE/config.yml:1",
+        "mechanism": "forge convention: GitHub offers Markdown files in .github/ISSUE_TEMPLATE as issue templates on the new-issue page (config.yml does not disable them)",
+        "searched": "git ls-files .github; .github/ISSUE_TEMPLATE/config.yml; git grep feature_request",
+        "tag": "generic"
+      },
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "corpus": "ripgrep",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "CONTRIBUTING.md:6",
+        "mechanism": "the contribution guide sends contributors to this file by its master-branch URL and makes compliance a condition",
+        "searched": "git grep -i AI_POLICY / 'AI policy'; .github/ templates and workflows; Cargo.toml",
+        "tag": "named"
+      },
+      "path": "AI_POLICY.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "corpus": "ripgrep",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs 'Setting guidelines for repository contributors' (CONTRIBUTING file in root, docs or .github)",
+        "mechanism": "forge convention: GitHub links a root CONTRIBUTING.md on new issues/PRs (no .github/CONTRIBUTING.md)",
+        "searched": "git ls-files .github; git grep -i contributing",
+        "tag": "generic"
+      },
+      "path": "CONTRIBUTING.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "corpus": "ripgrep",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "standalone human-read maintainer checklist; nothing names or loads it",
+        "searched": "git grep -i RELEASE-CHECKLIST / 'release checklist' / checklist; README.md, CONTRIBUTING.md, .github/workflows/release.yml and ci.yml, Cargo.toml include/exclude",
+        "tag": null
+      },
+      "path": "RELEASE-CHECKLIST.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "ae054b1d28f630fee22ddb3cb7525396e62af4fe",
+      "corpus": "stringr",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": ".Rbuildignore:21 _pkgdown.yml:1 .github/workflows/pkgdown.yaml; pkgdown documentation of build_home() (renders LICENSE.md)",
+        "mechanism": "pkgdown convention: the published site (built by the pkgdown workflow) renders LICENSE.md as the licence page; it is deliberately excluded from the CRAN tarball by .Rbuildignore, which names it",
+        "searched": "git grep LICENSE; DESCRIPTION License field (MIT + file LICENSE); .Rbuildignore; _pkgdown.yml; .github/workflows",
+        "tag": "named"
+      },
+      "path": "LICENSE.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "ae054b1d28f630fee22ddb3cb7525396e62af4fe",
+      "corpus": "stringr",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "_pkgdown.yml:81",
+        "mechanism": "pkgdown builds the site's news page from NEWS.md (news: section configured); also shipped in the R package (not in .Rbuildignore) and read by utils::news()",
+        "searched": "_pkgdown.yml; .Rbuildignore; .github/workflows/pkgdown.yaml (build_site_github_pages); git grep news",
+        "tag": "generic"
+      },
+      "path": "NEWS.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "ae054b1d28f630fee22ddb3cb7525396e62af4fe",
+      "corpus": "stringr",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "devtools documentation: release()/submit_cran() read cran-comments.md; .Rbuildignore:9",
+        "mechanism": "devtools release convention: devtools::release()/submit_cran() read cran-comments.md as the submission comments sent to CRAN (devtools reference, 'release' / 'submit_cran'); deliberately kept out of the built package",
+        "searched": "git grep cran-comments; .Rbuildignore; .github/workflows/*; DESCRIPTION",
+        "tag": "named"
+      },
+      "path": "cran-comments.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "ae054b1d28f630fee22ddb3cb7525396e62af4fe",
+      "corpus": "stringr",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "output of revdepcheck::revdep_report(); not read by any build, check, pkgdown or CI step; revdep/ is excluded from the package build",
+        "searched": "git grep cran.md / revdep; .Rbuildignore (^revdep$ at :8); _pkgdown.yml; .github/workflows/*; revdep/README.md; cran-comments.md (contains its own copy of the text, does not link)",
+        "tag": null
+      },
+      "path": "revdep/cran.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "ae054b1d28f630fee22ddb3cb7525396e62af4fe",
+      "corpus": "stringr",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "output of revdepcheck::revdep_report(); not read by any build/check/pkgdown/CI step; revdep/README.md does not link it (it links problems.md only); revdep/ excluded from the package",
+        "searched": "git grep failures.md / revdep; .Rbuildignore:8; revdep/README.md; _pkgdown.yml; .github/workflows/*",
+        "tag": null
+      },
+      "path": "revdep/failures.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "CLAUDE.md:1 (symlink -> AGENTS.md) .cursorrules:1 (symlink -> AGENTS.md)",
+        "mechanism": "agent instruction file: CLAUDE.md and .cursorrules are git symlinks (mode 120000) to AGENTS.md, read by Claude Code and Cursor; AGENTS.md is also the agents.md convention read by Codex-style agents",
+        "searched": "git grep AGENTS; git ls-files -s CLAUDE.md .cursorrules AGENTS.md",
+        "tag": "named"
+      },
+      "path": "AGENTS.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs: Adding a code of conduct to your project (root CODE_OF_CONDUCT.md)",
+        "mechanism": "forge convention: GitHub reads CODE_OF_CONDUCT.md in the repo root as the community code of conduct (GitHub Docs, 'Adding a code of conduct to your project')",
+        "searched": "git grep -i code_of_conduct; .github/ (no CoC there); root listing",
+        "tag": "generic"
+      },
+      "path": "CODE_OF_CONDUCT.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs 'Setting guidelines for repository contributors' (CONTRIBUTING file in root, docs or .github)",
+        "mechanism": "forge convention: GitHub links a root CONTRIBUTING.md on new issues/PRs (no .github/CONTRIBUTING.md shadows it)",
+        "searched": "git ls-files for other CONTRIBUTING files (only packages/docs-v3/CONTRIBUTING.md); git grep CONTRIBUTING",
+        "tag": "generic"
+      },
+      "path": "CONTRIBUTING.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "convention",
+        "evidence": "GitHub Docs 'Adding a security policy to your repository' (SECURITY.md in root, docs or .github)",
+        "mechanism": "forge convention: GitHub shows a root SECURITY.md as the repository security policy (no .github/SECURITY.md)",
+        "searched": "git ls-files for other SECURITY files (none); git grep SECURITY",
+        "tag": "generic"
+      },
+      "path": "SECURITY.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "generic",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/home.md:3077",
+        "mechanism": "linked from the v3 docs home page and translations",
+        "searched": "git grep CHANGELOG; packages/docs-v3/home.md, README_KO.md:3032, README_ZH.md:2052",
+        "tag": "named"
+      },
+      "path": "packages/docs-v3/CHANGELOG.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; GitHub reads the code of conduct only from root/.github/docs (root CODE_OF_CONDUCT.md exists), and no page of the docsify v3 site links it",
+        "searched": "git grep CODE_OF_CONDUCT across the tree (no hits outside the file names); packages/docs-v3/index.html docsify config (homepage home.md, no sidebar/alias); home.md, README_KO/ZH, CONTRIBUTING.md in docs-v3; package.json scripts; .github",
+        "tag": null
+      },
+      "path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "duplicate of the root CODE_OF_CONDUCT.md; the forge reads only root/docs/.github; the docsify v3 site (index.html, homepage home.md) never links it",
+        "searched": "git grep -i code_of_conduct / conduct (only the root copy's own text); packages/docs-v3/index.html docsify config, home.md links, _redirects; git ls-files for other conduct files",
+        "tag": null
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "unused_convention"
+      ]
+    },
+    {
+      "answer": "unsure",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "same as docs-v3/MIGRATION.md: lives in the deployed docsify directory (routerMode history makes it a reachable URL) but no link, sidebar or config names it, and the deploy config is not in the repo; the forge's CONTRIBUTING convention uses the root CONTRIBUTING.md, not this copy",
+        "searched": "git grep -i contributing across repo; packages/docs-v3/home.md, index.html, _redirects; root CONTRIBUTING.md; .github/",
+        "tag": null
+      },
+      "path": "packages/docs-v3/CONTRIBUTING.md",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "stale copy of the root CONTRIBUTING.md; GitHub reads only the root, .github/ or docs/ copy, and the docsify site (packages/docs-v3/index.html homepage home.md) has no link to it",
+        "searched": "git grep -i 'contributing' over the whole tree (only the two CONTRIBUTING.md files hit); packages/docs-v3/home.md .md links (README_ZH, README_KO, ERROR_HANDLING, CHANGELOG only); packages/docs-v3/index.html and blog/index.html docsify config; _redirects; .github/workflows/*; git log -S CONTRIBUTING.md -- packages/docs-v3. Caveat: the whole docs-v3 directory is deployed statically to v3.zod.dev (commit 6f5e99fd), so the raw file is reachable by URL, but nothing links it.",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "unsure"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/home.md:2394 packages/docs-v3/MIGRATION.md:77 packages/docs-v3/index.html:287",
+        "mechanism": "published page of the docsify v3 docs site (v3.zod.dev), linked from the site homepage and migration guide",
+        "searched": "git grep ERROR_HANDLING (home.md, MIGRATION.md, CHANGELOG.md, README_KO/ZH, packages/docs/next.config.mjs redirects)",
+        "tag": "named"
+      },
+      "path": "packages/docs-v3/ERROR_HANDLING.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unsure",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unsure",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "packages/docs-v3 is a static docsify site (index.html routerMode history; deployed as v3.zod.dev per packages/docs/app/(doc)/layout.tsx:33), so every .md in the directory is a reachable URL; but no link, sidebar or config names this file and the deploy config is not in the repo, so whether it is a served page anyone reaches cannot be settled",
+        "searched": "git grep -i MIGRATION / migration.md across repo; packages/docs-v3/home.md, README_KO/ZH, index.html $docsify config, _redirects; .github/workflows; packages/docs/next.config.mjs redirects",
+        "tag": null
+      },
+      "path": "packages/docs-v3/MIGRATION.md",
+      "second": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "Zod 3 migration guide whose links were removed (git log -S MIGRATION.md: e59243a4 'Remove migration info'); no page of the docsify site links it",
+        "searched": "git grep -i -E 'MIGRATION|migration\\.md' over the tree (hits only the file itself and unrelated docs prose); packages/docs-v3/home.md .md links; index.html / blog/index.html docsify config; _redirects; packages/docs/next.config.mjs redirects (only /ERROR_HANDLING and /CHANGELOG); .github/workflows. Caveat: docs-v3 is statically deployed to v3.zod.dev so the raw file remains reachable by direct URL, but nothing in the repo points at it.",
+        "tag": null
+      },
+      "status": "settled by evidence",
+      "substitute": false,
+      "tag": null,
+      "twice": [
+        "unsure"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/home.md:43",
+        "mechanism": "linked from the docsify home page of the v3 docs site (Korean translation)",
+        "searched": "git grep README_KO across repo; packages/docs-v3/index.html docsify config; _redirects",
+        "tag": "named"
+      },
+      "path": "packages/docs-v3/README_KO.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/home.md:43 packages/docs-v3/index.html:287 packages/docs/app/(doc)/layout.tsx:33",
+        "mechanism": "published page of the docsify v3 docs site (served at v3.zod.dev); linked from the site's homepage",
+        "searched": "git grep README_ZH (home.md:43, README_KO.md:47); docsify config in packages/docs-v3/index.html (homepage home.md); v3.zod.dev references",
+        "tag": "named"
+      },
+      "path": "packages/docs-v3/README_ZH.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/blog/index.html:267",
+        "mechanism": "docsify homepage of the blog page (served at /blog/* via _redirects)",
+        "searched": "packages/docs-v3/blog/index.html; packages/docs-v3/_redirects; git grep clerk-fellowship",
+        "tag": "named"
+      },
+      "path": "packages/docs-v3/blog/clerk-fellowship.md",
+      "second": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/blog/index.html:267",
+        "mechanism": "docsify homepage of the published blog page: blog/index.html sets homepage to this markdown, which docsify fetches client-side; the page is deployed at v3.zod.dev/blog (rewrite in _redirects) and linked as https://zod.dev/blog/clerk-fellowship from the v3 index",
+        "searched": "packages/docs-v3/blog/index.html, packages/docs-v3/_redirects, packages/docs-v3/index.html crossOriginLinks",
+        "tag": "named"
+      },
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": [
+        "fixed"
+      ]
+    },
+    {
+      "answer": "in_use",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "in_use",
+        "check": "ok",
+        "evidence": "packages/docs-v3/index.html:287",
+        "mechanism": "docsify homepage of the v3 docs site",
+        "searched": "packages/docs-v3/index.html $docsify config; git grep home.md",
+        "tag": "named"
+      },
+      "path": "packages/docs-v3/home.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": "named",
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "none; file is a single heading '# RFCs' with no body",
+        "searched": "git grep for 'rfcs' / 'index.md' across the tree (only prose mentions of 'RFCs' in two blog posts, no link to the file); package.json scripts, pnpm-workspace.yaml (packages/* only), .github workflows, docs-v3 docsify config, packages/docs next.config.mjs redirects",
+        "tag": null
+      },
+      "path": "rfcs/index.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    },
+    {
+      "answer": "unused",
+      "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+      "corpus": "zod",
+      "first": {
+        "answer": "unused",
+        "check": "ok",
+        "evidence": "",
+        "mechanism": "internal reference note; nothing names or loads it (wiki/ is referenced nowhere)",
+        "searched": "git grep -i optionality.md / wiki (excluding wiki/); AGENTS.md, CLAUDE.md, README.md, CONTRIBUTING.md, package.json, .github/workflows, biome.jsonc, vitest configs",
+        "tag": null
+      },
+      "path": "wiki/optionality.md",
+      "second": null,
+      "status": "ok",
+      "substitute": false,
+      "tag": null,
+      "twice": []
+    }
+  ],
+  "schema": "ce.eval-deadfile-review/1.0.0"
+}

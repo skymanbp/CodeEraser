@@ -1,0 +1,1393 @@
+{
+  "allocation": {
+    "covid19model": 62
+  },
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "lang": "r",
+  "method": "per language over the frozen slices: rank id = sha256(domain|corpus|commit|path); at most `total` primary rows by the language exams' quota rule over corpora (each corpus first min(15, pool), the seats left by largest remainder), each corpus taking its lowest rank-domain hashes; the reserve is the audit-domain rank over the unpicked rest, at most `reserve` rows; a language with fewer than `whole_below` rows is taken whole with no reserve. Rows stored in audit-domain order.",
+  "pool": 62,
+  "reserve": [],
+  "rows": [
+    {
+      "audit": "02736d1abc1dbf9cef32b0719604536e2684eed551ec39d1d4033075f970be3f",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/format-data-plotting.r",
+      "rank": "cb4d80db54d9c3384dca32ecdc27a90cb62c553f5634696ed8eb02009b948947",
+      "sha256": "2ac87df1bceb050276c7877ff1264f7c7ecae62e56c9710e1655fcdb2e07e67c",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "0e18cc67f22423149247aba9a13f66562a428d295a28601e5384b20469c91750",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 9,
+      "path": "base-usa.r",
+      "rank": "f7848dbe3284cd08cad2061b51092230e183cb4bc5f0f94a88398fdc6ea51a90",
+      "sha256": "1f837cedfc69f9e0175446b08fef1617a492e0f68901c07ba005b231ad256e68",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "156f9e04939c48e9c95a03d0458d850a7aa3f580f228e47565a977a51de66b84",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/make-three-panel-plots.r",
+      "rank": "f14afec0c518c8232b6d6e12dd926758e01381a38363845681273487045deed4",
+      "sha256": "f7de6a010790822873c4037bc343944bc72f67f13294a5a794cc43221bfb00b7",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "1576640292ca1f13848df140453666a8b984faab08f3ba804f66082b74cb7f05",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/create-output-files.r",
+      "rank": "d50a46ccf63516e11d87d24c7ee5e2df379dedff425301808aa24a62b1be9970",
+      "sha256": "07ca737c054287c4dedc2092406b6e536ea751102bf94eae06ad743a21b64170",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "197c910c6bb247a36dabaf8127369e36815142416ea40bc20947a478e5b1598c",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/geom-stepribbon.r",
+      "rank": "1796d3e6b7063c4d8d30931220b720b35b8d409cc78346c6451a11c1f8959ba6",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "2566c88f1bda6fe2a92350a0eb3ef7983acdb9de77242828cea1ae331df99386",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/read-data-usa-cases.r",
+      "rank": "602f941795e0fb122b9cc05a550d1a648f23ecfc53eb0a98d05e3e4d003fa96c",
+      "sha256": "42da79ad4ca0a45263a0dc0d1abc194dfdb2f0c15f2ec7627278d2b30e4b5a49",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "26f0c3bd0cd4d2ad96a64568b0d1d89844c6a073d1112db9bdc4abe84824a0f3",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/read-data.r",
+      "rank": "df54a40663330697b245e220b05288940dcc4460957875f61870f2d995d3b138",
+      "sha256": "dd1cc953140e9bf0ff9dc6e112293fb73df7ecdb8201ba7dcce847bf46ec6e03",
+      "stem_spelled": 12,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "271e913fe3fcb1627d540ba31615262612cd34ad5f0b2811963013b0851dba4c",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "tiers/spline_LFA.R",
+      "rank": "36a387b505e7a92002c92140c09b1f4937aa89eee078025206c574dc4a893c59",
+      "sha256": "114acd0779713c86206e89715050b194ab5cb8e7d73311214cf72e507d1d3570",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "298a052a16219ee657ff6eeff47a98474fd4059775e6679b3b0149586dc5e991",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/utils/mobility-reg/mobility-regression.r",
+      "rank": "79ab50b20c59e27d2420bb59484b8fc06e74ff539183876992ece351237a13b6",
+      "sha256": "387a31d88b1d67f06dff1a28a06d5530f25d899dcb1f46c64f7213a724c74eb0",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "304208435a7584cdc1323db03be2bb54728aa20e45394f71259ef402162852fe",
+      "basename_spelled": 0,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/plotting/covariate-effect-sizes.r",
+      "rank": "a0e33e6909dffc044e7fc1ef451904482a8f396694b6346cf4dff4d14844b9e6",
+      "sha256": "84de862660afd637780ad3da4943e3c118ce74de9fb08853fce08c636b768bc0",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "328866a54b79b438c5f300ed7e8ee8847fb05a61283c768e46e8d8a5fff4ce18",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/plotting/infectiousness-plots.r",
+      "rank": "778e103a7461086de41b2c2a379722c8b98f8d7af5d4288119379488ee24f646",
+      "sha256": "07ac12e87d7c61ce9c90bbaba9ece85aeb52805057123d57236848fd1bb3b4cd",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "3cf58d63f6466c0c4b992cb0620d3f78d28b45b98cd0a8e57c1dba7ab73e7e3f",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "compute-ifr-europe.r",
+      "rank": "f47dee08f3353f2cb3001dea5610fcbdaaa53e25e5479da891e3ab5c8aa14ae3",
+      "sha256": "25c635a3ad87b2e10145b5b128c02b8707b6620d52a21133538513a241d36483",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "3f3c88f31d913a063b21405a7f20899a3affd3aa62ba443458d65167265746a1",
+      "basename_spelled": 0,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "tiers/no_need_to_run/create_data.R",
+      "rank": "d0d75ad517f4f1734b3f34a750d1847b3e25e56bbb1b30bcffa9e835a83c16c4",
+      "sha256": "d7f2a45a242f10d650c241a2f132619d22f02f9845cd8de318bd232864437f34",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "4287dd6a1acc54528fe53f661ee76207601e31e4f1d8130af981825118b24ca7",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 3,
+      "path": "base-usa-cases.r",
+      "rank": "9834b8e80d9fb84a4c2e123bd75b07388f5af52ff113b7e7f68b153cf05243e4",
+      "sha256": "64ad751fd6e9d65a5c296c734d2cb4ad98dc1794d8c5c602ad2eef9b4898ad44",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "45a5a22c01ad6743794ffe080ae5f144bdc010fe9e4d5b1fff29488800cc7a34",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/get-ar.r",
+      "rank": "c103650b9f02484508764cae3855f8a33c0e75e52bda775e56809a6c87014de1",
+      "sha256": "51118f142530aa914c90184cb33347264d69f1d1ae76de42656434d75672e030",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "4643814e8497029f50ae349979ba2dbc1b205dfa7a332cfcf6f6304250d45fbb",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/make-rt-plot.r",
+      "rank": "9676c8c2b4e249ba7b2bb6a67cc835890908a6cecea6a51703343966ae38e532",
+      "sha256": "a16eba97c66c21390ceb13322693a4af0f0732e479b8c7aa2c04670725caad0e",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "50a18b460ac1ebabcd2673580eaf93b60eeb0221c41a3107911d08d272f7afd9",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/utils/simulate-regional.r",
+      "rank": "afaa59e771dacb0d3781415f30aa16539ac781409b711cdbb7f41a0fb36f664f",
+      "sha256": "0e54ec606e2520d8edb17695fa8257416409b1fa7e7218f0ef6a9ac82fec4a95",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "5e8d9e574b824362659dbce0da115290be1cf5c4c6d384d4928dc59140937739",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "plot-3-panel.r",
+      "rank": "8da50f158abb5e306bb7914cc7fba892f1a51c6f69fccc190732626271495728",
+      "sha256": "6a65987614e978ad45258db74088446e0709eed87a913f838769ce7099139886",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "664258d405ca871efa349f8d4b3c5181bb059c8d043a3d875625791962f8cb1d",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/geom-stepribbon.r",
+      "rank": "f44ebedf3e583cb307054a5fbbe57a545d8cd3c14a4135f501a5e47a01e4d03c",
+      "sha256": "e3b651accd1ce7ea4f1bf1ed0cbbc8ab4eaa2858535aa1279371ca890967f3cf",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "66a1125a426a14cfef9693d772949defffc2dbfecd66daf6cc7e1c7f1490debb",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make-rt-plot.r",
+      "rank": "7d8a6d87a4606df40f5d8aeadf5650d9978559582969f4b1c963545e86ac5781",
+      "sha256": "ad38f456b385bfaae54ff590dd08c1f47dd9cf1ebe9d60f49907c9cd7a3765f5",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "6b9007a27dec25f5bb86feea3ea0726f98dc69c5189b6b7681fc71b3dca1c5b0",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/covariate-size-effects.r",
+      "rank": "e55201566d789f84abe8f2cf5f5bcfe8a7a383b305203540c6f4009463d31b37",
+      "sha256": "e277fe6d56c07a96a3fdce5384af17116c08662ac696eb7ed216d91d56f4e390",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "6e382c9d7ebfa1951f216d113802dc69f820ba16de437118c5adbb918def5071",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 2,
+      "path": "base-Brazil.r",
+      "rank": "230192b32b4da819cd98c68afa1a5dc8671c9123f04a29cefc46d6f4ad6a78c7",
+      "sha256": "80c624e5402eb0d92d0aa9d3f54855fedf1bf47a2b76559434b8023bd8d87b1f",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "753a0cb80a5db036c3bf8ff8440c80272a34e8cb6525faf7b2a55d80ae2c2ef4",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "compute-ifr-usa.r",
+      "rank": "7fecf0e573eda59a95d49023b1aaa9e97c32ec029ec5a0338840af8777cddfa5",
+      "sha256": "486079944ae189a642fc3b728f72fd371df97aab9ff0b1096e5f1651bab5b2b8",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "76f47d1e86a8b07c614ef97efc4b671d4a31d5b905a3759c77d21f9fee5f5e50",
+      "basename_spelled": 5,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/process-covariates.r",
+      "rank": "06d03846386593c8bba65953462f2894a8cf39f3571fa624ddde2f401b81e7a1",
+      "sha256": "7f6954ecabea996f0cd1273613c28394c7a0ffd3040980f03fabe9ff50d6ffd1",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "78f1a483271caffb5b969f8a9bc0e896b98c8f7ae24b08e083c58aa9927fe7af",
+      "basename_spelled": 0,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "web-fetch-and-run.r",
+      "rank": "33cffb4caa99168a57ffe4cbf3e76d052d637d823aeabc3acdeeef57e5c48219",
+      "sha256": "e8500d49b9b94d2a7afd36d96624933c949751820ffee555310f1de854bda302",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "79724eca82c690787b21f15dbe570ffb0589b3b31b8837c6a87a1d25677d2b78",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/utils/read-data-subnational.r",
+      "rank": "ac325052311e4a2a2b392ea36ec0e5d22acf8f21780c549e4af7012cb8bfd10e",
+      "sha256": "9c10a4b02bd191d2ca1f2aeef1178dbe3496acb9248dbfb5f9406c5ecbeb0d67",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "7b993e4dae065898c91afe81f5e3ce453130c2c2f9a6022a55ceab2b1ab8d28d",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/make-scenario-plots.r",
+      "rank": "2aae61db76c6796442974a8a1ca9ecac51292c52611a1554e17d52d738f64480",
+      "sha256": "c0c72fa76e31192aca1d1207d31be7aa950cdd46af7646d88da83f2009412f32",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "7e1332d49d8a62cd4e445fb128923e130446f2d95cafafb11af44510ca54235f",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "data/fetch-ecdc.r",
+      "rank": "a9feddd0309b233cb1050e378ecf0eacf5205d1aecc6691ad7d7b9a6d15cffa2",
+      "sha256": "6a239224b819c3774fe0ca26354c076cc22401f0c1e24758fe17e93632297bd3",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "848352e415d7142c43970562013159e6daa84528d1590c5043876f863f47a532",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make-rt-percentage-map.r",
+      "rank": "f2591467457abe003055a964d59e6ed4fb23b8555d0551245f5183517cd4da39",
+      "sha256": "582c513105d67c7ada6c28cb36c0660042b325ec0a4246d0aef2a083aa7f26f9",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "86d0e34453a4ed28fc3f6b462d9515956ee803f3b6e6545fec17091e681a1eeb",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Brazil/code/plot-3-panel.r",
+      "rank": "1743bbfa3fb0f6cb14a2405177fc33ce3ae14b70904aef124a1098bb51a2f5cc",
+      "sha256": "b80c959fd85aebc4b7a333a2bfb957ba3469b01cebf90569d2273eeb1b24ac4a",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "8a483d7d94321f2d7c51a299e02c178bb4b8f794a3de2f311f2f37465696bdbf",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/plotting/format-data-plotting.r",
+      "rank": "937f0ecb3f1e3087128a497ca3608e8dc49dd0c34e4c962bf6d9754505532418",
+      "sha256": "5e1aaf22f601865c0c8cfed2eb3a88475f2b5edb75f6a3ec7271a69ca0e40079",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "8ca10abbca8cf9359317df39eff05276fd395692fa811e898842693d205c7be9",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/scrape-required-data.r",
+      "rank": "43fa83424eff7b5f60894c369af7409224fd5d952ba63aa09c2c0cb5540992f0",
+      "sha256": "86e22c4365e68bacd9c7c027739333ec47cd1a9f47ee2036cdb97fab9cab860a",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "9090167c187b4bc6d2b715331d30b39c4c238b25d412cb5df11c3c4a749fd5a8",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/simulate.r",
+      "rank": "fc1011506e3bf5b28c7d6cbeb0adbdde11a00744db7f168d569a71b6d36948f7",
+      "sha256": "bc2d771998d33d9f363afdfb4b680c0ca8ccb777ca0e92a3b389400956c56843",
+      "stem_spelled": 13,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "90c250d90e0ca259b2675655d5b464b8a4b467f1f1ade3bad783071cda66f5a3",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Brazil/code/preprocessing-subnation-brazil.r",
+      "rank": "e32e571d29dfa80c7bafe43e41c27d399938707ec52bb4824a6b4a2910801542",
+      "sha256": "c1d13dc0bdbf5fcaf518ec3d4478ef6ae05c58917a320cb9ccca2635e4c927f1",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "91d665b6f6eb95ebe071076a65cbcf684f098d5f6fae78d588a05f4c513cc6ef",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "nature/utils/format-data.r",
+      "rank": "7d0b5c4b0937d54983452682228964630d873fb3f820edbabaf6814b62ea1786",
+      "sha256": "45afb157b2beee8032dcfa5a878a0f5e5a873d595f99e29b4ead5a5a911c1ec4",
+      "stem_spelled": 5,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "936077d5d09b45c6696faa27dfa2dc73a18e48f01e3bb9cd794365ff61b7adc4",
+      "basename_spelled": 5,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/process-covariates.r",
+      "rank": "a756b2f2653686448565084676e817b7f63f73767e95585d53255bd4c9f6193d",
+      "sha256": "8c5957117f038a7660f7ecad3dd872b43b97acb746241b22b4ac00dea19a33f9",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "937284bf759f7db7da815d117b14574bab0bb03a28fabf0b10bf3df00580a591",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/data-scrape/process-death-data-nyt.r",
+      "rank": "9ecf291a2043e310b37e53818127bf7226bc8fd89c750f8e03e55798c6753a47",
+      "sha256": "f0775e781679c627b88d000dd204a2b37065c8f9ae5134422294aaece15c5986",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "952c7e3f7fb8261f2bdfaa209857d5b44fb9af05cac71ebaf9a48349abe3cfdc",
+      "basename_spelled": 6,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 2,
+      "path": "base.r",
+      "rank": "7a60147ca037dae5b3313795358a2d1cae9c14cbbb148fb8f08036cf8ded28a1",
+      "sha256": "3c3e390a645bb40cda5f5e7a45e980d48ae5d3dab1f903502d04e99e0b74ef18",
+      "stem_spelled": 99,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "98c24c57f410de9df2aae7a08bd98ae7feb73af14755f4a2d344ce0cf2b6a591",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "nature/utils/make-table.r",
+      "rank": "7e8a83210fa62b74e3015c26ce65021c140f77ee374eba06a0abbe827453a2e2",
+      "sha256": "c7f014e97a11a16ffd60f7325e974b37752190ffd5ba6b15fd47fae46ac8f5f1",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "98c9dfaf9d482b62d0bfa7f6a848526a202c0729701908cc7cd9eeb6a5f0e4e3",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "base_general.r",
+      "rank": "385ced56966c71cc80fb1554cc495a10459a0e99b12eb44ebe4395090b448ec2",
+      "sha256": "5a3c911320b54196e64a703defcc72f09a334307bb4e0eaf14575c9e87de8eee",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "9b92c9ee64c5512877be1d71d356eaddf66d7ff300098c60deb53924ea8382d9",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/process-covariates-usa-cases.r",
+      "rank": "09a79290df00caefa7533a1b18db2b602cd1992464a24a80079aef4493628959",
+      "sha256": "a5c9e8e1865869eae0e3a35ec08f277fed9167b7581b4edfa1364eb90a8b1526",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "9bead6c5d09af2ece65650a7cca10580b56fa62a05efec199a237b5b01783f0e",
+      "basename_spelled": 0,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 6,
+      "path": "base-Italy.r",
+      "rank": "2413f18391d15ee0b47930e6a2704fd31f86680e9ac994a0d3256736ad60f575",
+      "sha256": "9844c122aa1a99dc0fd8126571da3d81df500328bbd99674ba1adfcc710b9f19",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "9ccfc567cf4733cb78657edae41ec8722bc185c56108a19f865479a610b733ef",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "plot-forecast.r",
+      "rank": "c72a52ed593f94015436ced5ad45c2ddd046c0fd9de8cf58877dd57b354f4239",
+      "sha256": "42b00f61a216abb78cac1e7144c8c13a5ea825063ccd3ca21c520ae4a9c188a9",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "a5efb0bde651dad90e865372cef61aa167db34cdd0cde43d061649a63303a490",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 4,
+      "path": "Italy/code/plotting/make-plots.r",
+      "rank": "1ee6d0f3164be2a8d36a0f61abf82b87f93a5ded875c6adb9b358bf79238e203",
+      "sha256": "41f1669de9f8849a895d80523f4b9c73dd5ca5f88377fd3c9fe55cf1a9048e85",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "a6b779c9580dbf83b006975486fac8fb405b1cef6fcac3b1789345a162d7cb3f",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make-three-panel-plots.r",
+      "rank": "7b7605e6696603058b16c4b8269ace795d1715d5e28953751870195bbeb2bf5f",
+      "sha256": "08dd95af86fb0e18c530babcbf34ea31dcd9b32f2421c9154ad4331ba8eeeaf4",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "a7b1672fc0e636827400c2c78a010e6591af2e5249c024079ea8f66f953462b8",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "Italy/code/utils/make-table.r",
+      "rank": "58eef6f8698f819f56017d152c47e14a905729a6f4fe88d2dda2145d8cd20bc0",
+      "sha256": "c33df9530f7cfaa70438a19d4fb5dccd70ce3693a2ed5347eb0cd5f50f0db40f",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "b3f55473a4b3d9380e137fd37b03b702198ff57ab46f53fcc1e80ba7c274c91a",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "Italy/code/plotting/make-scenario-plots-top7.r",
+      "rank": "4b2b7f3d64341d8c1e6e6928cb28a7d2419acc237658ea4622d586d71a36667f",
+      "sha256": "bb06998b4294359c96506e45a6da56ffb1350f47efaf2729581e39db7e1a656f",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "b4c13efb86224e75295613b75b53f26df28e0583ef4f3205b1ede30e98bcd4b1",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "Italy/code/utils/process-covariates-italy.r",
+      "rank": "96759366a84b0c6738faeece15fd91411a29213e2950001c97644f0df82c8c0e",
+      "sha256": "edc0379d37729536212fcde2b79f00435bef4b8eb583b7f0ce0656249405e78e",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "b546e7f7244d8c8df02ec04e38ff88719644e23a57335bc7aa915dba337e3763",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/data-scrape/process-interventions.r",
+      "rank": "9c6e1ccd2c069a53c6d1b7a872ec92841507a997966540c1ad1107cc6eee0f0c",
+      "sha256": "3c1e6b4fd9d92196d52f3512586129fbd30136a82bb3ece24590d34b286537b1",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "b9dcbedaef6eb6f1bf5e0d8cc7ec41728232990d98d15880f8f2d4023d8f05f4",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "nature/utils/plot-3-panel.r",
+      "rank": "0031caa6c6ae9fba95fd8707825f3de445f9c02a2d9a8f20b84c9eafc7e17712",
+      "sha256": "92cdd1dd8202b3429f53adade383120197add275b92db2a01e949ea1ae6fb21b",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "c86d51fcb15054583d57db8063f86c57e25467191e804f3f13f0e11e97caa075",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement",
+        "subset"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "make-table.r",
+      "rank": "62574bf4239105261caabea99e81fb1ee4c056826499abee2450978d91c9ee48",
+      "sha256": "8efb513c52df57219389588f60a42208527b0dc281f2b2279329f6914822f1c3",
+      "stem_spelled": 4,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d3afcc2fae1eed3259fffba4f13d65c5fc7c62991eb68b206af0511f85c87dc6",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/data-scrape/process-death-data-jhu.r",
+      "rank": "264cb39ea312ce986bbf8f183bea98037c435c08f509706d2e4cf1d2d384fe39",
+      "sha256": "9f085f4a192dd2ca20091b13aa0c53cc47b40dcff03bca745a9cc2f04dc0a6f9",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d3e5e1c8d701b6412458c56b06468c73d251cd41b43591686303f58938717ebf",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "identifier"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "covariate-size-effects.r",
+      "rank": "42e5ebeb3d44eb0df9a6a9e7e1a2279a0c5e06ce7f4ad71296327753ed48e292",
+      "sha256": "473510cb331d3ed7cfd075c8f326f90ad3564834a5a3c291ebd0e4c4a8978c0f",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "e692d2ba304e29e4614f1f70eb639bda01d7e6d8e9d142c2c93ea21433e507ab",
+      "basename_spelled": 2,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "web-verify-output.r",
+      "rank": "206032d9bbe20ec35317fea00356f5152816ee4baf496d8b46e14c994a5c2a04",
+      "sha256": "59d2d2f765a8235b742c657c49cc422bbe9c555fb27677a2ce9b5dc715550e90",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "ec49bfac6f91e1c8d863a7b694fcbd19840d27961057158641c5e35dfaaf24f8",
+      "basename_spelled": 0,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/plotting/make_rt_plot.R",
+      "rank": "7d0a433cbaaa199ee84fc86e8e120f41d232c1847e2bdf80cae3ce73e39dce67",
+      "sha256": "32302a73805c621040dc42c6c1a9668325fe8f1d2bd71604fd0b7aa7dd528bd8",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "efe83833ddc6b2a135a0dc7ea489090a619203d86e23bca400e81c5f04573130",
+      "basename_spelled": 4,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 3,
+      "path": "usa/code/plotting/make-plots.r",
+      "rank": "a97c43ea324113cf0ef1306bada0d82924891f5a354a23bf71678679b1882db9",
+      "sha256": "ec99e9fb9b989e430e5b70e631d48766772914cb226e3d3f30f600f4bad00895",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "f1a9e26df4a22640c0cb098f9f7ea80f130a18b9cca8273a1346877d586be855",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/calculate-infectiousness.r",
+      "rank": "79454f5fa8993fd6b05fb6765a3a9373d3386c7468f4ca1fd105ecba78d22a55",
+      "sha256": "2d8fe0e851b75dac6ad87c5bbcd300692e44bc73f8a116065e03dc6465bf0a5b",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "f2b2f4a7e099175f04fc9dde2a4e55a93b2baae6bd125ebbbcab463ff7ff459c",
+      "basename_spelled": 0,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "for_statement",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "tiers/no_need_to_run/backdate_tiers.R",
+      "rank": "f50d9db37ac218037f9b9e43e3ad22a3d929dd71748f0797ba5982b4d0b4e295",
+      "sha256": "6ca8b43397c3b8e385f82e6cf542238be1dc4fcbd08dc2b8d9c91cb7b6118793",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "f57a818b7ac723cde1ebb0b6820463da2beb0d21bd7f4fe1d081c71bcf56b911",
+      "basename_spelled": 5,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "usa/code/utils/read-data-usa.r",
+      "rank": "ee55178850ad2f0b573e34d4c31942754fe2c6664ac208676ae27c6b9d13a443",
+      "sha256": "b5e3f1ea8914191f86193654885a9ad6e094c847bf39afef94fff04853ece588",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "fa3b749122fcca735d0bb7f2bf0294351280870d8c8a773e7a41977d2ca1fbc1",
+      "basename_spelled": 3,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call",
+        "comment",
+        "if_statement"
+      ],
+      "lang": "r",
+      "out_edges": 4,
+      "path": "base-nature.r",
+      "rank": "8d7aef73c190daf4c3fe81613e082f54d5230093499b9f36c70cce7720ef840c",
+      "sha256": "cbf92aeb95a0f16b74ba0952839bfec3b90d67efafa77eec69283b2195250516",
+      "stem_spelled": 3,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "fbef8b4bb7bda7d5977cb54cc2b3df5986c322515dbb6f83b0913ddd4de14c2f",
+      "basename_spelled": 5,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 0,
+      "path": "utils/process-covariates.r",
+      "rank": "c964c32add5256611af40e36eef5b181192101b6021c117518a34e5cfdda8f4a",
+      "sha256": "b1bb70e4b864b114e75c2a62a826b241ea439271bf729f3aca5a8171694ff614",
+      "stem_spelled": 8,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "fdb7510093d237e4ac2ca25ad9be8d0bda87d13af09e52d438a8b7e2a6cfdb5a",
+      "basename_spelled": 1,
+      "commit": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "covid19model",
+      "doc_class": null,
+      "kinds": [
+        "binary_operator",
+        "call"
+      ],
+      "lang": "r",
+      "out_edges": 1,
+      "path": "usa/code/plotting/make-scenario-plots.r",
+      "rank": "384ad0f29de481a8aa00833830923ee9d398d1b028c462470d5c392b29a8ce06",
+      "sha256": "768553378a1a5729ea7dd3876ad774fff64b083a3b78553d4ad4e518a9193621",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    }
+  ],
+  "schema": "ce.eval-deadfile-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "cobra",
+      "rows": 0,
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+    },
+    {
+      "corpus": "codeeraser",
+      "rows": 0,
+      "tip": "af1c29958f2ee4d2322594784a4f9b7524559194"
+    },
+    {
+      "corpus": "covid19model",
+      "rows": 64,
+      "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+    },
+    {
+      "corpus": "fmt",
+      "rows": 12,
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+    },
+    {
+      "corpus": "gson",
+      "rows": 21,
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+    },
+    {
+      "corpus": "jsoup",
+      "rows": 53,
+      "tip": "093e2f58492c531667e551e8793513a41b22443e"
+    },
+    {
+      "corpus": "koreader",
+      "rows": 150,
+      "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+    },
+    {
+      "corpus": "lua",
+      "rows": 34,
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+    },
+    {
+      "corpus": "luarocks",
+      "rows": 69,
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+    },
+    {
+      "corpus": "requests",
+      "rows": 5,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+    },
+    {
+      "corpus": "ripgrep",
+      "rows": 4,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "corpus": "stringr",
+      "rows": 5,
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+    },
+    {
+      "corpus": "zod",
+      "rows": 142,
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+    }
+  ]
+}

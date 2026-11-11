@@ -46,9 +46,9 @@ dups: 1 duplicate pair(s) over 3 live segment(s) — 1 judged, 1 by Jaccard | ex
 docdup check: 1 reported duplication(s) — resolve or exempt them
 $ ce deadcode . --check
 dead: docs/DISCOUNTS.md  unref_public  (no kept in-edge and no entry flag) [vouched]
-dead: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]
-dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [unvouched: unresolved sites in this language]
-deadcode: 12 nodes, 16 kept edges, 3 dead, 0 aggregate reports, 6 unresolved sites (verdicts assume none lands in-corpus)
+dead: invoicer/discount.py  unref_public  (no kept in-edge and no entry flag) [vouched]
+dead: invoicer/report.py  unref_public  (no kept in-edge and no entry flag) [vouched]
+deadcode: 12 nodes, 16 kept edges, 3 dead, 0 aggregate reports, 0 unresolved sites (verdicts assume none lands in-corpus)
 deadcode check: 3 dead file(s) — disposition or entry_globs them
 $ ce erase . --check
 @@ -1,13 +1,5 @@ ## verbatim_doc docdup: twin of docs/DISCOUNTS.md:3-10 (J 98/98, verbatim 102 words) fnv1a64:fa6f7a63e41bfa36

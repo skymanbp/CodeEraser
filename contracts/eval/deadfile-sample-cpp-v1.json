@@ -1,0 +1,269 @@
+{
+  "allocation": {
+    "fmt": 1,
+    "lua": 1,
+    "luarocks": 6
+  },
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "lang": "cpp",
+  "method": "per language over the frozen slices: rank id = sha256(domain|corpus|commit|path); at most `total` primary rows by the language exams' quota rule over corpora (each corpus first min(15, pool), the seats left by largest remainder), each corpus taking its lowest rank-domain hashes; the reserve is the audit-domain rank over the unpicked rest, at most `reserve` rows; a language with fewer than `whole_below` rows is taken whole with no reserve. Rows stored in audit-domain order.",
+  "pool": 8,
+  "reserve": [],
+  "rows": [
+    {
+      "audit": "01cbad08bb8d1221798f7dfc1c0d2d08b2bf9c59240677a84c547888c0703e8a",
+      "basename_spelled": 25,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 1,
+      "path": "win32/lua5.1/include/lua.h",
+      "rank": "fb55dc524af882f96cf725d66d4ed44be6a6544d7ae6621a1fe5c5adaa4b1204",
+      "sha256": "470551c185f058360f8d0f9e5c54a29a3950f78af6a93f3fe9e4039a380c7b87",
+      "stem_spelled": 193,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "24eec644763a04ff1c839e63b862377c242b1b657f784a99564c73523ed2fa5c",
+      "basename_spelled": 2,
+      "commit": "6d71f74624be5daa548073ff8e4e0c8aa5476010",
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "corpus": "fmt",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "test/gtest/gtest/gtest-spi.h",
+      "rank": "52ee1aadb6d8bdb8d31c51a5a20bc7898574856158f8694dd2ec09d3e26cc999",
+      "sha256": "bc7de52471740743412a62784af636375d05bf913302c74fc50483f20eff45f4",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "2d4634cd079ce0166f3ee99835f9ecab5890fcdc58f5334c547d5a7d18f6063a",
+      "basename_spelled": 2,
+      "commit": "0b29f408433e92953cc72b1d3e06c7ac8139e439",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "lua",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "ltests.h",
+      "rank": "9a9747b3c4e07cd8f90538650e692a140da185a4092007ffe5007ca6e6601085",
+      "sha256": "6d2e3db39c58bdadc3a0aaf3ded12873e0b56ad898ce11a872717da72efb4829",
+      "stem_spelled": 4,
+      "verdict": "unref_public"
+    },
+    {
+      "audit": "5a8edbd630a3042be40f1d34d50024f4dd97dec2c1733098bcb46ee482c36781",
+      "basename_spelled": 2,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "win32/lua5.1/include/luaconf.h",
+      "rank": "a341c512d1c19b0979d8d0754d5399b6d4390dbed5df9e192f0c118c02eab213",
+      "sha256": "1511066011626152b142f2346e7595163681aab7615fba113cfd1f5b2f5b86b1",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "a9047b5beb0dd5cc2c3e3121e7fd50e41ea88d71edd9ccb70d7f5d1e604ce623",
+      "basename_spelled": 8,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 1,
+      "path": "win32/lua5.1/include/lauxlib.h",
+      "rank": "04e0b81afc345a47c3f20f996c25319027dfdf3bee3172ce2dace4aee157a8c0",
+      "sha256": "c741f9c1587f29fd08a79acbe0c46884768a47f89bee4147669f774c5cf50fc0",
+      "stem_spelled": 9,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "bbe5abe7a59d2f3e9aa333837bce89077537a290a336c03ee0f2c68f6e56d692",
+      "basename_spelled": 3,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "preproc_ifdef"
+      ],
+      "lang": "cpp",
+      "out_edges": 1,
+      "path": "win32/lua5.1/include/lualib.h",
+      "rank": "36a7269c1c11b3412fd549ec49d932db92c2816ca0a106800475ecbfd90465ac",
+      "sha256": "13f880e9dd997a0f7fd0b17ccd949c98f33e95bd120f084de66084e888217413",
+      "stem_spelled": 3,
+      "verdict": "unreach_public"
+    },
+    {
+      "audit": "bf96144489b2900bc790e3e798d218cc2d21d460023622f620adf2d7c98e9601",
+      "basename_spelled": 1,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "linkage_specification"
+      ],
+      "lang": "cpp",
+      "out_edges": 3,
+      "path": "win32/lua5.1/include/lua.hpp",
+      "rank": "5b9bd19ee4e484800bab94525224e67b917d0facb5438ccb3a51930c9ffbd029",
+      "sha256": "fd83f7e823cfbb03ac2da937ec83f01b4a6ddaac220a4fa1ffd6c6c3842c5890",
+      "stem_spelled": 193,
+      "verdict": "unref_private"
+    },
+    {
+      "audit": "d0bd074e275d307df594564bfa1a67f646a645ffd1a6caf827c5ef8f7e36c0e1",
+      "basename_spelled": 2,
+      "commit": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5",
+      "confidence": 0,
+      "conventions": [
+        "spec",
+        "fixtures"
+      ],
+      "corpus": "luarocks",
+      "doc_class": null,
+      "kinds": [
+        "preproc_def"
+      ],
+      "lang": "cpp",
+      "out_edges": 0,
+      "path": "spec/fixtures/with_external_dep/foo/foo.h",
+      "rank": "904739309c37aad789f3aa6230f005aba961b3959de8559d5946233189f217c6",
+      "sha256": "50120b669b880563d8b7ab9502a7919eeffe9943ee8fc2714185cbc5e6c56997",
+      "stem_spelled": 42,
+      "verdict": "unref_public"
+    }
+  ],
+  "schema": "ce.eval-deadfile-sample/1.0.0",
+  "sources": [
+    {
+      "corpus": "cobra",
+      "rows": 0,
+      "tip": "adbc8813901bba65827259daa8e22ff94ec1f30e"
+    },
+    {
+      "corpus": "codeeraser",
+      "rows": 0,
+      "tip": "af1c29958f2ee4d2322594784a4f9b7524559194"
+    },
+    {
+      "corpus": "covid19model",
+      "rows": 64,
+      "tip": "fcc30e2b8d046ddf3ef10dfc222e42b5cd732622"
+    },
+    {
+      "corpus": "fmt",
+      "rows": 12,
+      "tip": "6d71f74624be5daa548073ff8e4e0c8aa5476010"
+    },
+    {
+      "corpus": "gson",
+      "rows": 21,
+      "tip": "854c8255b625cf1e13c701a83ea9ccb4caaa576a"
+    },
+    {
+      "corpus": "jsoup",
+      "rows": 53,
+      "tip": "093e2f58492c531667e551e8793513a41b22443e"
+    },
+    {
+      "corpus": "koreader",
+      "rows": 150,
+      "tip": "dc76367495d00cd30b0e934bcc6f9a167ac5154b"
+    },
+    {
+      "corpus": "lua",
+      "rows": 34,
+      "tip": "0b29f408433e92953cc72b1d3e06c7ac8139e439"
+    },
+    {
+      "corpus": "luarocks",
+      "rows": 69,
+      "tip": "2d2cc8eff2f03c23d142f8059146fb241dcf56b5"
+    },
+    {
+      "corpus": "requests",
+      "rows": 5,
+      "tip": "8068356288978c4f54661ae6f95afe0e0831885e"
+    },
+    {
+      "corpus": "ripgrep",
+      "rows": 4,
+      "tip": "3fce3b5bb0236da2df6d99672afb8a719642eca7"
+    },
+    {
+      "corpus": "stringr",
+      "rows": 5,
+      "tip": "ae054b1d28f630fee22ddb3cb7525396e62af4fe"
+    },
+    {
+      "corpus": "zod",
+      "rows": 142,
+      "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+    }
+  ]
+}

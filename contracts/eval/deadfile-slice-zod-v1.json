@@ -1,0 +1,2560 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "zod",
+    "tip": "912f0f51b0ced654d0069741e7160834dca742ee"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "AGENTS.md",
+      "sha256": "9f6b470dbca541fc400059e5d8eb337184a24545b4b71a864db9f79f38a01177",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "CODE_OF_CONDUCT.md",
+      "sha256": "fa9eb2d3adc70da2e63084c10384661326b4f7ad956352dae7cf7b857fbe314e",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 1,
+      "path": "CONTRIBUTING.md",
+      "sha256": "f5721d0b1f486c4268e377900bc19a675543aa1e52d4b99209584eb5d099b082",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "SECURITY.md",
+      "sha256": "246450874a5d11493c4eb283671af9e25b855daddf6f7789f582c703c8ed8b71",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/array.ts",
+      "sha256": "e888a6783db46b1aae4dcda3bb04cf8f06e58635c8c1d5297b61db934d57965e",
+      "stem_spelled": 153,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "function_declaration",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/benchUtil.ts",
+      "sha256": "89f257f8079661e7056881113f6e2ede02743de5834232b6bb5d48b29be5b2a7",
+      "stem_spelled": 18,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/boolean.ts",
+      "sha256": "6931d98dac4ca0d2cd38528691380fe607ff42e424fbd9a7f951a433313a14a4",
+      "stem_spelled": 122,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/datetime-regex.ts",
+      "sha256": "25fa33abdba1af623f533d387df58b58a44f09195c7b9dbf5c9df4534a4c502f",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/datetime.ts",
+      "sha256": "98b754e446320d9a11d3208ef9d8a3b2246d4187e4afbd910a94ef6bd93e37ab",
+      "stem_spelled": 86,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/discriminated-union.ts",
+      "sha256": "c999539984ecfbb3ca4aaec3e52793a8b3614209797cf4f908a5d371b990d07a",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/error-handling.ts",
+      "sha256": "f26da233a3e30f6ea0ed4db5a905d444c2d1c6b881fa97b3391463328d1bc303",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/bench/index.ts",
+      "sha256": "d27110d4bd9a04943ce05403120142a2a40ffecda8af1019f188f03866d7d02a",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/init.ts",
+      "sha256": "283d3ab70be84b44a7da188e200e3b6b76add82a859d83349878af9987e6cc72",
+      "stem_spelled": 7,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/instanceof.ts",
+      "sha256": "81ede367e55164d1ad07511dc710fffba8f5670c346f6088963f7425eba5690a",
+      "stem_spelled": 90,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/ipv4-regex.ts",
+      "sha256": "e3a53e8f66e340bdb47254170fd9345b31b7485d6463e2e3c25eb5186950aa49",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/jit-union.ts",
+      "sha256": "84af9d8ea24b5e51f1349a0333d15f832eb1c4713a42e22e0ab1c7433416e053",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/key-iteration.ts",
+      "sha256": "5dd73d8d5e5df73e44acf73b3c0cb7f40ad394c8d7996e4b82146bdc97c5ead6",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/lazy-box.ts",
+      "sha256": "640a699fe11c64924c165fda6cc4f0a5d8f34d323c7ac814280f1e2ee550b299",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/libs.ts",
+      "sha256": "b4bf81d075a9bed253b294f25246115d8e0b55d86b468ba6c9f59a24778b418b",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "abstract_class_declaration",
+        "class_declaration",
+        "comment",
+        "export_statement",
+        "import_statement",
+        "interface_declaration",
+        "lexical_declaration",
+        "type_alias_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/metabench.ts",
+      "sha256": "342d0c32460b6dff14beff99a3b72b8fbd24e312593ef63abae0dd4ac1e946c3",
+      "stem_spelled": 30,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/number.ts",
+      "sha256": "4209f50172a1a4601cc2866c1aba5ab535f8a23290d5cc2616a098b164d808f1",
+      "stem_spelled": 243,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/object-async.ts",
+      "sha256": "dc260ad18a2295ebc1285fffb842f90e3cc31963f7867890f5cd341ce0861adf",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/object-creation.ts",
+      "sha256": "d27768af53e0c9b25f8a7ca109f9dfa119ea4f48583a6640bed73221acedf669",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/object-fail.ts",
+      "sha256": "45e5ebbdb6a762f2fcaf800799ae250580c651da0bd536e05598d1b525f9c09a",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/object-moltar-jitless.ts",
+      "sha256": "5a875ffb5bfb960279ddbdc2d0f131d1aaf87635b57213d6c095ee425e1361e8",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/object-moltar.ts",
+      "sha256": "b28dbdb4c061f0f6f5f8cabc5cfc0996f824786530cf1ed58145bbc91789a868",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/object-safe.ts",
+      "sha256": "28a023622878fc5a4cbf4807f3f51f725ea5776b0c53198d4a63aea59ecab8cd",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/object-safeasync.ts",
+      "sha256": "eaab86e84ee49769eb72baaa5c1bf6aefa9253b11ec68059df6b6c0d24585632",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/object-setup.ts",
+      "sha256": "43129577572798fc9d79e24e04f4a6511d8d2765362d4ff40b0cf16a15848bea",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/object.ts",
+      "sha256": "3ee9b68e1849e88e9bb2bdd64447fe2a9b7c04f461e39f053d2909c21e8daa5c",
+      "stem_spelled": 207,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/property-access.ts",
+      "sha256": "799328120485c29a4e56e10f72542e93411a22ad393e05146349e630529af306",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "comment",
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/safe.ts",
+      "sha256": "750435a0ad2cbbf79d949b511afc3ee723c5f7c6390619deebac9dfc9a51abe6",
+      "stem_spelled": 21,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/bench/safeparse.ts",
+      "sha256": "500f98a07dcada24dd3ba6781e6d011978ffd7b7671dd7ef3c064097893f2e29",
+      "stem_spelled": 7,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/single-element-enum.ts",
+      "sha256": "5d5481eccfce8e5bc11ce3ba9e955ebf86fc52a1f11d79692db97e850a995f9e",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/single-item-union.ts",
+      "sha256": "f92443eb549b9b11aec00658cc9de5f282fd31c91a05b680409fc9b5dc846d4d",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/string.ts",
+      "sha256": "69f0d7d61540fe4aed89eb070fe1c6f5d7e46ee170b95b6962670ea9322dcd82",
+      "stem_spelled": 325,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/bench/union.ts",
+      "sha256": "d8b0dc13196d6e3c64c8ca778ce9b1ad1d095388c2a5b85cf7464c62b4ce352a",
+      "stem_spelled": 73,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 1,
+      "path": "packages/docs-v3/CHANGELOG.md",
+      "sha256": "491c8ddc14fc19791c2aadef4b9738d49fb1cf2432ff6cb74ad0e14927db2cc6",
+      "stem_spelled": 4,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "packages/docs-v3/CODE_OF_CONDUCT.md",
+      "sha256": "fa9eb2d3adc70da2e63084c10384661326b4f7ad956352dae7cf7b857fbe314e",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "packages/docs-v3/CONTRIBUTING.md",
+      "sha256": "60b1be452fcddb467deb636ad8a5488d613c3249c14c0dc9b006895c7c51b8fa",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 2,
+      "path": "packages/docs-v3/ERROR_HANDLING.md",
+      "sha256": "e71b94b27fbe3343b97bea89c668c9d50a2e06a963d989e351a9ed735313c37c",
+      "stem_spelled": 6,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 5,
+      "path": "packages/docs-v3/MIGRATION.md",
+      "sha256": "68765886315699ff7bce6256b44fcf16a91b73a42c7b35417a1103b974fc7be4",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 118,
+      "path": "packages/docs-v3/README_KO.md",
+      "sha256": "b2ec8df2d489349c412dcf2d39b830c2f66b1bcdbc269fa1975d51870e66973a",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 68,
+      "path": "packages/docs-v3/README_ZH.md",
+      "sha256": "2239a1314940842794c34c0fec37cc13559516865c6a354dbd6f4e183e3f22c9",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "packages/docs-v3/blog/clerk-fellowship.md",
+      "sha256": "b0b4e3b6ec4ab9a462ef1712ca8331e678a06eea503280f694d16e41378395a6",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 116,
+      "path": "packages/docs-v3/home.md",
+      "sha256": "88a6829adb8fa3ad5a791266a70fbee0a68ad81720d3be28c88883f913c43afb",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 5,
+      "path": "packages/docs/app/(doc)/[[...slug]]/page.tsx",
+      "sha256": "c39517331f63df814ee465a1d6611a223c45597435f3eac6cefd9324ad930399",
+      "stem_spelled": 19,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 4,
+      "path": "packages/docs/app/(doc)/layout.tsx",
+      "sha256": "97930d860aaf2e029dda85ec1c025758088ea2ba316bb9bbb9b1e23bf29c47ab",
+      "stem_spelled": 7,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/docs/app/api/search/route.ts",
+      "sha256": "83e6215d2264e6f437bfee232678208dc944b902ada0c29e67b02fdc65ac89b5",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/blog/[slug]/page.tsx",
+      "sha256": "c261813758eee1145399fa29f7230b85c692229385a068e3df3fd39f211fe0c9",
+      "stem_spelled": 19,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/blog/layout.tsx",
+      "sha256": "e2eff8ec6972b209984351310afa9089b0c92fdd76591cfc6d878c15cce4ab69",
+      "stem_spelled": 7,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/blog/page.tsx",
+      "sha256": "a5692b11e64eb7c290bbba1fb9fb239650274cbd54e11b040dcc7c3c90a02d0c",
+      "stem_spelled": 20,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/app/layout.config.tsx",
+      "sha256": "cbd81c7e2e81f211cf01321c2d29a70b81559f97c1caf8a45abb89326c6dda00",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 3,
+      "path": "packages/docs/app/layout.tsx",
+      "sha256": "0502a2c1662357d266ea7e2bcfcbf7c5347dcbd264f716f5167f0ed72f2d3dd8",
+      "stem_spelled": 8,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 2,
+      "path": "packages/docs/app/llms-full.txt/route.ts",
+      "sha256": "510276e7433835dfdb3bcbd34c6864248b2bcd8eb8b3be08f45af462aa219c13",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "function_declaration",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/docs/app/llms.txt/route.ts",
+      "sha256": "f774b8c8adbdd089c937461d0615845bfb87f55032ae61a151499ae3443e9eb1",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/app/not-found.tsx",
+      "sha256": "55a852bc61e14f164e49a060e80fa364ff926e97bb697ae5b2705aaf02ea4868",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/app/og.png/route.tsx",
+      "sha256": "9aeee8671371fd9a6459a6ffcfe8232332b3bd5ed27ef8b30fa9f1e3acdf6dfc",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/accordion.tsx",
+      "sha256": "f351178747de83ee72402681f045fbe8af50bd9f4718590cf8a1d9d5f4e65370",
+      "stem_spelled": 9,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/bronze.tsx",
+      "sha256": "3e7715198faaa7ef7ec5fd6646d097b35646a7e6dca7e78f9348426e360b7795",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/codec-image.tsx",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/copy-markdown-button.tsx",
+      "sha256": "22778c1683b173b636ff58addf5ffdc41d51def3c6206991b82ecefd21a00b86",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "function_declaration",
+        "import_statement",
+        "interface_declaration",
+        "lexical_declaration",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 1,
+      "path": "packages/docs/components/ecosystem.tsx",
+      "sha256": "edceabeeea2209aa42e9b80cc6e2986906b2db68ffab3fe35a435a93ad681141",
+      "stem_spelled": 14,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/featured.tsx",
+      "sha256": "ab0c2a4e9ec9429a5216ac5087a793f94abb4236511b786106b9bbe90d01e894",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/gold.tsx",
+      "sha256": "64f8af6861df70372e2177e7b237baf5b9bc5d15b558e88d527d7bf65c96d55f",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/heading.tsx",
+      "sha256": "5ab895539f3b168d78a91c408736ed580f9bd3f38b3affbaf2b8ffe139187afe",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/hero-logo.tsx",
+      "sha256": "785a539cf75e6f3421413b474a10d240692e57d3dda67d03c1cb2340db4ccdab",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/if.tsx",
+      "sha256": "770713a4d177df7ced37736ca49643c325ec4002502462a0b0b4c361294cd1f2",
+      "stem_spelled": 209,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/inkeep-bubble.tsx",
+      "sha256": "776dd717c14fa3b9469123c061e15bfd44df6aa8e6c65c77ed8b9a1f4ca09427",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/inkeep-search.tsx",
+      "sha256": "63d815a9ba38aef8ec8e595ee74f86760904ca276f369e5af6a1638538c342f4",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/platinum.tsx",
+      "sha256": "b31c56a8366194cc53873bba708e64db64c218a963ed4bd2776b3d90895febbe",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/scroller.tsx",
+      "sha256": "83601e8acd1978334c91d85843b1097c880ace2cf3882ebf2ab6b4b14bf93c1c",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/sidebar-item.tsx",
+      "sha256": "254e634b0bb08871afd203466b220139510e4b88b1dfdf74dd7ef12975e0ab0e",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/sidebar-logo.tsx",
+      "sha256": "ec0be393cf14dcd3bbaed8ddffbf61070df2677bdb54052145d932488a79ddb0",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/silver.tsx",
+      "sha256": "9c279cd0bf6a740a9e2436f4f9aa3e7dcdfd5c78d30a9d17d572495437b13cbe",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration",
+        "lexical_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/tabs.tsx",
+      "sha256": "052887048bf403cf65f39443b49aa8837614d5b6aa4cd6fbe4632bb5094cf6e1",
+      "stem_spelled": 15,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/components/themed-image.tsx",
+      "sha256": "4bef35dbc730e0e48bd42949557a2ee8723f94768994f71a00275c34db2b928d",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/docs/loaders/get-llm-text.ts",
+      "sha256": "d6e6203578509ed242d2a79eb373c59d90e1c11959796df1ea1c052c55381eb9",
+      "stem_spelled": 2,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/docs/loaders/source.ts",
+      "sha256": "4d02ae83003a622f1f7e1df5ed8ffa1cd88c41f0026142c55785173e0e3b1e41",
+      "stem_spelled": 54,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/docs/loaders/stars.ts",
+      "sha256": "f3bb939c538aafcc75e05c249471cec570e9df8669363178087f00897ac19691",
+      "stem_spelled": 7,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "ambient_declaration",
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "tsx",
+      "out_edges": 0,
+      "path": "packages/docs/pages/api/_og.tsx",
+      "sha256": "af92e7907c949c4563470e525e2f3e1d701dea3b367e46cbe719ce32036043d1",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/docs/source.config.ts",
+      "sha256": "67de45af6983f5001c45b795ac8ef9c9ac6d7a602434cbb0332f260a197950a2",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/docs/vitest.config.ts",
+      "sha256": "8fc5dec98e5eb40e6090cfff0bb621b08cf0bea5c7555c5bc1f34cc3317dc9e1",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/integration/fixtures/ai-sdk/index.ts",
+      "sha256": "bf6e0f6b3858481fcf0b6f7cfab6ee3d6ec3e939a3a66f19c001be1f646c6815",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/integration/fixtures/drizzle-zod/index.ts",
+      "sha256": "14039451255da47d90225d3c8094d69c005949b97c09f54e83ab1141cefa43da",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration",
+        "type_alias_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/integration/fixtures/internal-types/cjs-test.cts",
+      "sha256": "11a80346b2993b9cd63ff3b68665d94e7844d5f0fd20701c0055519b90a069fe",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [
+        "fixtures"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration",
+        "type_alias_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/integration/fixtures/internal-types/index.ts",
+      "sha256": "99af96637a410ac264f19d03d6b84ff7a1c3092783088754fe4c51de3dddc2d6",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/resolution/src/index.cts",
+      "sha256": "52e70312a382208e111b628ae417e6433758722f38e538856ea16bff65ed6246",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/resolution/src/index.mts",
+      "sha256": "9af58c9002f4268dd599436d5772646ccd290ded32bf0ea3cde3881a83b13781",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/resolution/src/index.ts",
+      "sha256": "f7665e1286e9eea47466c1a2680415ecb36ce36ddcb72ba2b1aa27a9dfce3560",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/resolution/test-resolution.ts",
+      "sha256": "9bf5ab4f9599e6688f416f6f8825c5f7affcb2304e7098db219872380ec94f56",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/resolution/vitest.config.ts",
+      "sha256": "6469722039db4cca732e06bb82b9151fb3e0437ff64ae12c2ddd181b23bd8fa4",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/example-mini.ts",
+      "sha256": "f4839656bbd37a51e7f87df135dad7cd3fdfed09da2967599bc4c8d5da633487",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "empty_statement",
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/example.ts",
+      "sha256": "680f74eac73702c5e72f838b142097c23f51f499b9148d4d13e99d550636cd53",
+      "stem_spelled": 38,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/valibot-boolean.ts",
+      "sha256": "05ff6163ffb948a42d3a3244a1be68dc1a70265ae5c5a7ae70bfe37ba9e524e7",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/valibot-object.ts",
+      "sha256": "2be8017e0acd9f67496898fa39fd8243b6d45aaba9852b29c968ce6a1aeb000e",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/valibot-simple-object.ts",
+      "sha256": "9b966b91fef20359ac3c58e6d831f7e4c5fc768aa4adfdce93ba363c3c89a05b",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/valibot-string.ts",
+      "sha256": "4b746b7c81bdc4c96dbe1e470c6b5286250f4233f1c9990a623ec07c9a93439d",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-boolean.ts",
+      "sha256": "427398ee5106bb9ed8e0dee59d277c5dc2956a6f90380ddde3df0e1658a16b2a",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-full.ts",
+      "sha256": "af119d3601b281ff89c874298c950ba945d5f37fdd9b998f1d544dd7f5020036",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-locale.ts",
+      "sha256": "a6dd56e70907d5c351248376ea7cf20ed34830810e01b295c065a0988037e6d3",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-locales.ts",
+      "sha256": "d557ba708d86d94453e4b7da58ac68fb13d51973e10b382078e5d33aad410bf7",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-mini-boolean.ts",
+      "sha256": "bf6c2f0e6daf5100b20a7247c66dd37e9ab154d7d7faa7581996061060d042b6",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-mini-full.ts",
+      "sha256": "03b9ebd144eab89114359f0a2d7d43c886f15a9cdc5a1a9c96d16704ee7eefe6",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-mini-object.ts",
+      "sha256": "65f170608fbe0d0a52391ed6c6330e53651d716b1617a05e427c0d3f0dee8167",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-mini-simple-object.ts",
+      "sha256": "c906647ccb51fa8e0205cecb22f572a61a31a0272b66f922c0b56d4a1630015b",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-mini-string.ts",
+      "sha256": "26f36d6dab0618c2112ee67baf51b752b662abd0bedbbda04d48e85ddc32a18a",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-object.ts",
+      "sha256": "297f55933dbf877ef1606159216e639e86595371735da0eecb86bbaafc6a4c7a",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod-string.ts",
+      "sha256": "e774fb6ee7ae7b0e06d82fef6ed69dab8746369efa26af1df957a7a967978257",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod3-boolean.ts",
+      "sha256": "11d8cca9b461f6c7b677a91933d1f5f4921f2b8265fd1cf3b621a281034d448b",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod3-full.ts",
+      "sha256": "75bfb1f97ee5607d6800c1f8ed6821b5bfd8856ece22721bf6b71c2cd80e4f89",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod3-object.ts",
+      "sha256": "14548646b0bb4a5d1f25e1fb3cead266e7216b2c978d50e90a0bfdee4a0313cd",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/treeshake/zod3-string.ts",
+      "sha256": "a6733760be8a7f5d16c442778a1e80f43e1ce4f7640fa524d025ad7ace75aaba",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/tsc/bench/index.ts",
+      "sha256": "16c8ca35c19d84104a654d3b25c8445e85d8b89f5906f4a094cd9fc555eb781e",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/tsc/bench/lots-of-objects.ts",
+      "sha256": "772e4a2aeb8e21df163b971d53b98c5df21aca29a1b472c6141480d7e97c09b9",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/tsc/bench/object-with-extend.ts",
+      "sha256": "ae9d02b4fdef1de55503e300de9272c1c479bd0f6571b349c281673d69a7893b",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/tsc/bench/omit-extend.ts",
+      "sha256": "2a32b18e2d6a56342fab74307cad0c9971b0cf6a7ed78427ef6869c964055d3d",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/tsc/bench/string.ts",
+      "sha256": "07f45341272ce81ab18da41c6c57486bf260c06aec2d1db5cea7518eda4b2e8f",
+      "stem_spelled": 325,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "bench"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/tsc/bench/strongly-connected.ts",
+      "sha256": "6a6a3391ac048337f2c10ceb8228482a4228a0984af397322aeb0db4d8d53dba",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration",
+        "while_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/tsc/bisect.ts",
+      "sha256": "28280053c989b54a25e0fc79468304a3025ef26fada6ff15ffdb838c50892363",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/tsc/extend.ts",
+      "sha256": "712a4d622fb2ccfa20f52ad17e7f57fad3a6cb77426dc8de7df0c53aa018334a",
+      "stem_spelled": 34,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "interface_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/tsc/generate.ts",
+      "sha256": "d05cd89dcfc2cbc24c4e392922beb308a6525942c108dd0744c94ae35720cbe1",
+      "stem_spelled": 14,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/datetime.ts",
+      "sha256": "0d1a81e5608b286c1843aaecb20bd7d1f62b6674a610a51dc7d1043bed05963d",
+      "stem_spelled": 86,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/discriminatedUnion.ts",
+      "sha256": "33e4f792dbfdc735a72f92fcc117d3dbaea8e7ff3937d523bef3df44814805d3",
+      "stem_spelled": 21,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 13,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "for_in_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 8,
+      "path": "packages/zod/src/v3/benchmarks/index.ts",
+      "sha256": "27f4322ad98e28575d5849a7612c6acea55cd5be8a1571d1885a656e8a9d5620",
+      "stem_spelled": 70,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/ipv4.ts",
+      "sha256": "3ef475926d7e95a5880cd9d7bd780f98642189010046bb9748e27e50360da333",
+      "stem_spelled": 75,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/object.ts",
+      "sha256": "ea0f6d4b3e2c6f47bf1739a53473997da4aaacc1e5f59e57f00cfb6b7f59a4e5",
+      "stem_spelled": 207,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/zod/src/v3/benchmarks/primitives.ts",
+      "sha256": "706d51c7048aff5108dd71b33b5c66d354a6856be0a48b23bc32e55d284c31d0",
+      "stem_spelled": 10,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/realworld.ts",
+      "sha256": "9bcc944a5e875ca191ca10542c113dde3c754e45a196400726f251b045e14215",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/string.ts",
+      "sha256": "ed17ef186249dc4f1da01a2d5e0bd3c87da6d0d2dcad89e8afa05e0920d98536",
+      "stem_spelled": 325,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v3/benchmarks/union.ts",
+      "sha256": "9eec8e3e58cb4d3dd76be11874187f71a99c27e06c639de0cc9d8d928687fe0a",
+      "stem_spelled": 73,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/zod/src/v4/core/config.ts",
+      "sha256": "3c3ec0c03ee7387685f7a5e0155d9d55f251ffe4cfb5f4447bcbd380aed3d847",
+      "stem_spelled": 55,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "export_statement",
+        "type_alias_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "packages/zod/src/v4/core/zsf.ts",
+      "sha256": "975e61b52c8de9fad0a0086952b9ee8a1abbacfa4489659529c53e80dd78094e",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "packages/zod/vitest.config.ts",
+      "sha256": "49c9e26afb17070d77b674403513523739f11eb6cdb2fc60ea9a0a2a05963420",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 4,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "play.ts",
+      "sha256": "f989fc8e38a6211ee21df40f5c87a65b231e0a5d370057c6cc9b1afe90fe0432",
+      "stem_spelled": 6,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "rfcs/index.md",
+      "sha256": "40523cc0828b05074a61584b7c1ab548acf4aecf0a21dc7c80936fe1bdbac35c",
+      "stem_spelled": 70,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "import_statement",
+        "lexical_declaration",
+        "try_statement"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "scripts/check-semver.ts",
+      "sha256": "b603ca1db3e5ecae9750b850ce2d996a42f4b2f2ff417ca9fabdc8fa84a14d59",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "if_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 1,
+      "path": "scripts/check-versions.ts",
+      "sha256": "5a4189f39d2f3d27ca012ed51ca165dec968ede87016b813f99fcb4ce19f6a75",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "expression_statement",
+        "function_declaration",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "scripts/fail-on-console.ts",
+      "sha256": "3c174b24fdf1b10e0aa222616b85e8529899e245f3e09f93e69f7e1a82bdbe43",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "comment",
+        "expression_statement",
+        "function_declaration",
+        "hash_bang_line",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "scripts/write-stub-package-jsons.ts",
+      "sha256": "ba6fd4ac5c84f2a26fdc0525b75a53779d187544f8a58bc1f0a02fe5201915fd",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "export_statement",
+        "import_statement",
+        "lexical_declaration"
+      ],
+      "lang": "typescript",
+      "out_edges": 0,
+      "path": "vitest.config.ts",
+      "sha256": "04a55003ffaa3fe760fc652388e112af0f96938581422d109e4605791c0ffe8d",
+      "stem_spelled": 1,
+      "verdict": "unreach_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "wiki/optionality.md",
+      "sha256": "ad0f482fe55c1c8db7d5cfca04880e74c62b74f70f9ba7401211be04663ca514",
+      "stem_spelled": 6,
+      "verdict": "unref_public"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "markdown": {
+        "basename_spelled": 6,
+        "convention": 0,
+        "document": 15,
+        "out_edges": 7,
+        "private": 0,
+        "rows": 15,
+        "stem_spelled": 8,
+        "vouched": 0
+      },
+      "tsx": {
+        "basename_spelled": 4,
+        "convention": 0,
+        "document": 0,
+        "out_edges": 8,
+        "private": 1,
+        "rows": 29,
+        "stem_spelled": 26,
+        "vouched": 0
+      },
+      "typescript": {
+        "basename_spelled": 15,
+        "convention": 43,
+        "document": 0,
+        "out_edges": 47,
+        "private": 79,
+        "rows": 98,
+        "stem_spelled": 56,
+        "vouched": 0
+      }
+    },
+    "rows": 142
+  }
+}

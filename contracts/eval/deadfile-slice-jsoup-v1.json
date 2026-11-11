@@ -1,0 +1,1047 @@
+{
+  "constants": {
+    "convention_segments": [
+      "test",
+      "tests",
+      "testes",
+      "spec",
+      "fixtures",
+      "testdata",
+      "bench",
+      "examples"
+    ],
+    "domains": {
+      "audit": "ce-deadfile-audit-v1",
+      "rank": "ce-deadfile-rank-v1"
+    },
+    "reserve": 40,
+    "total": 100,
+    "whole_below": 30
+  },
+  "corpus": {
+    "name": "jsoup",
+    "tip": "093e2f58492c531667e551e8793513a41b22443e"
+  },
+  "excluded": {},
+  "files": [
+    {
+      "basename_spelled": 1,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 1,
+      "path": "CHANGES.md",
+      "sha256": "a7705790b9e51ed6d669355d7b9d7d845fb25219d7f60bc722d66362c9a98d5b",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 2,
+      "conventions": [],
+      "doc_class": "markdown",
+      "kinds": [],
+      "lang": "markdown",
+      "out_edges": 0,
+      "path": "SECURITY.md",
+      "sha256": "63a50e139b88f9a7781393e203fa14cfe27a2f8723b4337521aecb66c226b4b2",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "examples"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 20,
+      "path": "src/main/java/org/jsoup/examples/HtmlToPlainText.java",
+      "sha256": "3f7e6718b8518240a8d538f60030edeab37648c0b7e70b6c620ee26a434bac7e",
+      "stem_spelled": 2,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "examples"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 10,
+      "path": "src/main/java/org/jsoup/examples/ListLinks.java",
+      "sha256": "a4e4260d8e9671de4fa49d9a0016bec7170631efed2dc5422e4a7583a60cd86e",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "examples"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 8,
+      "path": "src/main/java/org/jsoup/examples/Wikipedia.java",
+      "sha256": "abf753f2d99f3b5bbd83e55d8af178ebc5a01749a544cb5a0ec1d4f8331a0aa1",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "examples"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/examples/package-info.java",
+      "sha256": "995cdbbfecde15035d09eea28005fe3911cec22de2cc61b5d9daeb537c5861fa",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/helper/package-info.java",
+      "sha256": "51ae1eef9089ec1ff5be148bc7119c2290755f962e4c79cb5fe48d55c004a28d",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/internal/package-info.java",
+      "sha256": "3c55a5a2a42cc3231e89d826393abd13fb7448d11dd566716d1b577f0966641a",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/nodes/package-info.java",
+      "sha256": "4534f106a90a47f7b5c3ac8c9273e7f408eb9b68b89a09ede8a12b3648cde396",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/package-info.java",
+      "sha256": "07ab7e28716d579619e064a6e64ee55ae7792377515603e42e27c2e5b9a30d52",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/parser/package-info.java",
+      "sha256": "9f7d619d98bd6f20ccfff008e2bb2f02e9dfeb4da4ae956d7aef6e1744231cd6",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/safety/package-info.java",
+      "sha256": "927799d1e3b86e983374130a463e243fc28f1c74da48925f2547d75f59c7a0bb",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java/org/jsoup/select/package-info.java",
+      "sha256": "5c5e118a884a2ac12e752d43f00fa6028aded19660721ef79414c557ca343ea7",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "module_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/main/java11/module-info.java",
+      "sha256": "35e54a5eb753dfa48e603a4d3f1bfe7f3111debdab62c3c06077e4b64678269a",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 8,
+      "path": "src/main/java11/org/jsoup/helper/HttpClientExecutor.java",
+      "sha256": "c74ce30cbb8dd1531136fcdb7531d7bfd3b9eab2aff85f71be6d75bb945e33a5",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 2,
+      "path": "src/main/java11/org/jsoup/helper/RequestAuthHandler.java",
+      "sha256": "9121ad786b1a91d5b2914545e984781e13b63079c7372b249420b7d9fbe75c38",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [],
+      "doc_class": "html",
+      "kinds": [
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/main/javadoc/overview.html",
+      "sha256": "3c84d93a7b655a6ac2856ca7217b4c625b6a12a40a8dcfb3bb5ade96e3321298",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/test/java/org/jsoup/integration/Benchmark.java",
+      "sha256": "e928f9cfbd7e67be3bb4dcee16a4023aa9971edf20f970190a95608e904473ce",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 19,
+      "path": "src/test/java/org/jsoup/integration/ConnectIT.java",
+      "sha256": "b30ca83354d9d3b3a499ccadbbb9bcfd8e3dd4af3c995099a6120ca9177b7837",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 7,
+      "path": "src/test/java/org/jsoup/integration/ParserSoakIT.java",
+      "sha256": "ecc4ea61abfa16851fbb20202d0ad18c8db5f8d4ab318ead670486c13e29c775",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 9,
+      "path": "src/test/java/org/jsoup/integration/SessionIT.java",
+      "sha256": "27e65d484f528555ccc1e64937b604681485177b2d5bd030a7f8b3f062f60c6d",
+      "stem_spelled": 1,
+      "verdict": "unreach_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "block_comment",
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 5,
+      "path": "src/test/java/org/jsoup/parser/ParserIT.java",
+      "sha256": "c9600b787033037369c7dc75037e0521ef9656a4b8279ce3d68e910717800a3d",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 9,
+      "path": "src/test/java/org/jsoup/select/SelectorIT.java",
+      "sha256": "ae40b2d53e97593ea8a312d8d006642b737711409d7671ac89f6299da53ad70a",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 9,
+      "path": "src/test/java11/org/jsoup/integration/HttpClientConnectIT.java",
+      "sha256": "cd4bf8cdff53bf1a2be57e9ee4d4106fbd4f54b8eda2c06d6519578635f8b007",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 3,
+      "path": "src/test/java11/org/jsoup/integration/HttpClientSessionIT.java",
+      "sha256": "cb9fb7ed86ee47bbd20709465212309643a4d22a8f0162d022d2824c127ebe64",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test"
+      ],
+      "doc_class": null,
+      "kinds": [
+        "class_declaration",
+        "import_declaration",
+        "package_declaration"
+      ],
+      "lang": "java",
+      "out_edges": 0,
+      "path": "src/test/java11/org/jsoup/integration/MultiReleaseJarIT.java",
+      "sha256": "2b17a8206ed4bcded241204c7a46513f2a225eb0c974c3d179f195deb7a4e9bb",
+      "stem_spelled": 0,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf16be.html",
+      "sha256": "01f4e3e14e69cae3b484e6d475c154b032cd8a1fe9cc427f4ab7a852b04836ef",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf16le.html",
+      "sha256": "afaf2bba42d04f2dab73a90f64a1109683b76167a14d7083aaa906fafe61c961",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf32be.html",
+      "sha256": "3549ea74c9e5fe9be10747c893cb54f711f4ddf9e7f3ad62ed01466c3375ace6",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf32le.html",
+      "sha256": "bc8b7d06432982ba253ecda865e660f5027e8bdf437528fde7c43c0637b9c48c",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/bomtests/bom_utf8.html",
+      "sha256": "8763d66033b22f2feb45041f058db6e2cfb110664826d8de2dbd560b862664e8",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 0,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "element",
+        "erroneous_end_tag",
+        "start_tag",
+        "text"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/fuzztests/ex-inselect16.html",
+      "sha256": "14808c37a260b2feaa2b3a1351bd25d43e66fd92b77bf12b326f9e8ca431af45",
+      "stem_spelled": 0,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/fuzztests/garble.html",
+      "sha256": "861586ec575d0d2391a1e7a15ce0f85eaad8d3add475936ade2089f1e3c02b24",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/adopt-1.html",
+      "sha256": "79bbeda6aca09c647cd76c329427695a5b391a550f40bf199b07c1a2665d3c78",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/basehref.html",
+      "sha256": "6a0b5262afc11d1c761fe23fad185dab1b3c640ef6eee9bc2d088ae2ddd888ea",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/charset-base.html",
+      "sha256": "f4bd41bdcabb282c568c2056e19850c3da552f69f02fb9a37f62b7162d4baffd",
+      "stem_spelled": 2,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 2,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "ERROR",
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/comments.html",
+      "sha256": "aae1b57def1a962ac41b4b54194d2703c3f20670c698fdd4f03419d7a73af871",
+      "stem_spelled": 15,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/escapes-across-buffer.html",
+      "sha256": "63472721af4b4a159f49bef2857101067996f643e9635f209d63bbbe532e4c64",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/form-tests.html",
+      "sha256": "0977e3150adc79e8f1d0168e0224e954da335f31b6a709afd4d4b08fe9afcc20",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/gzip.html",
+      "sha256": "9e932401d4f3667ea8d403b976974d0bcfd3f092461a4b285160028aad782f1f",
+      "stem_spelled": 8,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 8,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/large.html",
+      "sha256": "e442d37dd793e60f21015f9c7c7b8dcc8b0727c3382f1e7c25ef5144d6b199a7",
+      "stem_spelled": 17,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/lowercase-charset-test.html",
+      "sha256": "ecba3ba81ce7bd7cc60b6b2167159afa5dbb992c42a29fd39a33494b523370ca",
+      "stem_spelled": 1,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 5,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/medium.html",
+      "sha256": "242d46b4be153aea31032fa8c1c98d25697ec9280d5987e0a17d792a95c3b10f",
+      "stem_spelled": 5,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/meta-charset-1.html",
+      "sha256": "0aea811a481da61ed356a62c3859b8e8390d2c51943a5695f502ab4600fd9a6c",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/meta-charset-2.html",
+      "sha256": "5e66e7c9259d84be14542b1f979156b41b3c5f30049dcfc4fc05c25e714c8c00",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/meta-charset-3.html",
+      "sha256": "056d153e6358556adc29c222c23650a177c4cd5b85f0307fd829d766c7729b13",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/table-invalid-elements.html",
+      "sha256": "2f01d838b430d22b51ebced8ca7b9fec7347f112c62b38a915aa3098dc37e940",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/table-polymer-template.html",
+      "sha256": "348162f4c14e3148a0f8506536976f43c72a7b564d591ab8f509faaa84fbcedd",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 3,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/htmltests/upload-form.html",
+      "sha256": "3f641566ab787b8deb8769d4d5faae369bfab4e1a64091688336b0f2b0168c9c",
+      "stem_spelled": 3,
+      "verdict": "unref_public"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/input-1.html",
+      "sha256": "b242d669ff47b06ffbbdada6c60f9d3f8c0d554e85a36c9dbb5f82b335fba990",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/outline-1.html",
+      "sha256": "086d919507b6126ecf6cdf8a635e8307dcca97d8398a5403d0bd12f5876f133b",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/passthru-1.html",
+      "sha256": "a4950e3fac0c88fab69448c0eedffea81372d6ff2b603e5d238df0d3c5091592",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    },
+    {
+      "basename_spelled": 1,
+      "confidence": 0,
+      "conventions": [
+        "test",
+        "resources"
+      ],
+      "doc_class": "html",
+      "kinds": [
+        "comment",
+        "doctype",
+        "element"
+      ],
+      "lang": "html",
+      "out_edges": 0,
+      "path": "src/test/resources/printertests/pretty-1.html",
+      "sha256": "dfdf97478a6cbfa2f78bb99cc8bbb574f72efecab8e9362bfecbd165b9617033",
+      "stem_spelled": 1,
+      "verdict": "unref_private"
+    }
+  ],
+  "generated_from": {
+    "ce": "1.9.2",
+    "commit": "92b9e7123dc2c7d13d1d75e44eb99477c3310981",
+    "dirty": false
+  },
+  "method": "file-tier dead universe of one pinned corpus: every dead row of the product's deadcode family (graph wire without the symbol advisory, the core's verdict and confidence) at the pinned tip of a clean checkout, one row per file, with the measured features of features.rs - top-level node kinds through the product's parser, kept out-edges off the same graph wire, other files of the pinned tree spelling the basename (git grep -F) and the stem as a word (git grep -F -w), convention path segments, document class - and the sha256 of the text. Frozen before any audit is read and before any rule reads these features.",
+  "schema": "ce.eval-deadfile-slice/1.0.0",
+  "scope": {
+    "walk": "the product's own walk of the checkout (ce.toml, ignore files, built-ins)"
+  },
+  "summary": {
+    "by_lang": {
+      "html": {
+        "basename_spelled": 26,
+        "convention": 27,
+        "document": 28,
+        "out_edges": 0,
+        "private": 24,
+        "rows": 28,
+        "stem_spelled": 26,
+        "vouched": 0
+      },
+      "java": {
+        "basename_spelled": 9,
+        "convention": 13,
+        "document": 0,
+        "out_edges": 12,
+        "private": 9,
+        "rows": 23,
+        "stem_spelled": 16,
+        "vouched": 0
+      },
+      "markdown": {
+        "basename_spelled": 1,
+        "convention": 0,
+        "document": 2,
+        "out_edges": 1,
+        "private": 0,
+        "rows": 2,
+        "stem_spelled": 1,
+        "vouched": 2
+      }
+    },
+    "rows": 53
+  }
+}

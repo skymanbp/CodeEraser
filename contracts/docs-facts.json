@@ -46,7 +46,7 @@
       "id": "count:erase_reasons#word",
       "source": "cli/src/erase/model.rs::REASON_NAMES",
       "tier": "linked",
-      "value": "7"
+      "value": "8"
     },
     {
       "debt": "a Haskell list read by line; promote = the names on the hello wire",
@@ -141,13 +141,13 @@
       "id": "gate:dedup.main#digits",
       "source": "ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "30"
+      "value": "29"
     },
     {
       "id": "gate:dedup.tests#digits",
       "source": "cli/tests/ce.toml::[dedup] budget (config::Config::load)",
       "tier": "linked",
-      "value": "90"
+      "value": "89"
     },
     {
       "debt": "a Haskell const read by line; promote = the cap on the hello wire",
@@ -446,7 +446,7 @@
       "id": "ver:graph_rev#digits",
       "source": "cli/src/graph/store.rs::GRAPH_REV",
       "tier": "linked",
-      "value": "26"
+      "value": "27"
     },
     {
       "id": "ver:mention_rev#digits",

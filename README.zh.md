@@ -156,7 +156,7 @@ warn invoicer/report.py:1 file-lines = 35（上限 30）[invoicer/report.py]
 
 <sub>在 [codeeraser.dev/zh/#architecture](https://codeeraser.dev/zh/#architecture) 可缩放、拖动查看此图。</sub>
 
-- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）：tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十二<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（索引 schema <!--ce:ver:schema.index#digits-->17<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->26<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->4<!--/ce-->）、逐项目 daemon。
+- **Rust <!--ce:tool:rust#v-->1.94.1<!--/ce-->**（edition <!--ce:tool:edition#name-->2024<!--/ce-->）：tree-sitter <!--ce:tool:tree_sitter#vminor-->0.27<!--/ce--> 与<!--ce:count:grammars#word-->十二<!--/ce-->套语法、rusqlite <!--ce:tool:rusqlite#vminor-->0.40<!--/ce-->（索引 schema <!--ce:ver:schema.index#digits-->17<!--/ce--> / GRAPH_REV <!--ce:ver:graph_rev#digits-->27<!--/ce--> / MENTION_REV <!--ce:ver:mention_rev#digits-->4<!--/ce-->）、逐项目 daemon。
 - **Haskell（GHC <!--ce:tool:ghc#v-->9.14.1<!--/ce-->）**：`ce-core`，每个判决家族。**Tauri <!--ce:tool:tauri#digits-->2<!--/ce-->**：同一 crate 之上的 GUI。
 - **一条 wire：** stdio 上的 NDJSON（proto <!--ce:ver:proto#v-->9.1.0<!--/ce-->，<!--ce:count:families#word-->十六<!--/ce-->个家族）；daemon 讲自己的协议（<!--ce:ver:daemon#v-->2.4.0<!--/ce-->）。
 - **设计规则：** ADR-001 … ADR-009（Rust 前端、解析层归 Rust、懒启动 daemon、廉价 PreToolUse、两层克隆、只收紧的棘轮、钉扎分发、策略即 Haskell 数据、文档事实派生）见 [DEVELOPMENT_PLAN](docs/DEVELOPMENT_PLAN.md)。
