@@ -8,7 +8,7 @@
 
 use super::candidates::Unit;
 use super::index::Instance;
-use super::{Params, pairs, walkidx};
+use super::{Params, anchors, pairs, walkidx};
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -32,14 +32,10 @@ pub(super) type NearRun = [(String, i64); 2];
 /// read_streams makes no claim on drifted files instead.
 pub(super) fn near_runs(root: &Path, instances: &[Instance]) -> Vec<NearRun> {
     let p = Params::default();
-    let files = pairs::candidate_files(instances);
+    let files = anchors::candidate_files(instances);
     let streams = walkidx::read_streams(root, &files);
-    let filter = pairs::Filter {
-        min_tokens: p.guarantee(),
-        min_distinct: 0,
-    };
-    let (_, near) = pairs::clone_blocks_near(instances, &streams, filter, p.kgram);
-    near.into_iter()
+    pairs::near_blocks(instances, &streams, p.guarantee(), p.kgram)
+        .into_iter()
         .map(|run| {
             [
                 (run.a_file, run.a_start as i64),

@@ -31,6 +31,9 @@ use std::process::{Child, Stdio};
 /// and L. Same version, lane v235_licence part 4C: resolve/1's `also`
 /// also names, for a Markdown or HTML site whose answer is a confirmed
 /// section of another file, that file (CE.Resolve.Answer `holderOf`).
+/// Same version, lane v235_imports: cover/1 (additive), the T1/T2
+/// coverage rule C_t (dedup/pairs/cover.rs sends the verified runs, the
+/// core classes them; at most `limits.caps.cover_rows` rows a request).
 /// Every other family's bytes stand.
 /// The per-version change ledger lives in contracts/VERSIONING.md and
 /// nowhere else; Version.hs points here for the reason. The ledger

@@ -74,24 +74,13 @@ fn request_body(cands: &[Candidate]) -> Value {
 /// refused by name before anything is sent (it cannot be split without
 /// splitting its closure), with the narrowing a user has.
 pub(crate) fn chunks(cands: &[Candidate], cap: usize) -> Result<Vec<Range<usize>>> {
-    let mut out: Vec<Range<usize>> = Vec::new();
-    let mut at = 0;
-    while at < cands.len() {
-        let path = &cands[at].path;
-        let end = at + cands[at..].iter().take_while(|c| &c.path == path).count();
-        ensure!(
-            end - at <= cap,
-            "erase: {path} alone has {} candidates over the core's erase_rows cap {cap}; a \
+    crate::corelink::judged::whole_groups(cands, cap, |a, b| a.path == b.path).map_err(|(at, n)| {
+        anyhow::anyhow!(
+            "erase: {} alone has {n} candidates over the core's erase_rows cap {cap}; a \
              path's rows are judged in one request — narrow the plan with an `exclude` in ce.toml",
-            end - at
-        );
-        match out.last_mut() {
-            Some(open) if end - open.start <= cap => open.end = end,
-            _ => out.push(at..end),
-        }
-        at = end;
-    }
-    Ok(out)
+            cands[at].path
+        )
+    })
 }
 
 /// The target table: one [pathId, start, end] per candidate — path

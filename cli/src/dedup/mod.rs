@@ -3,9 +3,11 @@
 //! SIGMOD'03) → SQLite inverted index → clone blocks. T1/T2 only
 //! here; T3 is the M5 cold path.
 
+mod anchors;
 mod budget;
 mod candidate_wire;
 pub mod candidates;
+pub mod cover;
 pub mod groups;
 pub mod index;
 pub mod pairs;
@@ -186,7 +188,7 @@ fn recompute(
     filter: pairs::Filter,
 ) -> Result<pairs::Blocks> {
     let mut instances = idx.all_instances()?;
-    let streams = walkidx::load_streams(root, &pairs::candidate_files(&instances), idx, p)?;
+    let streams = walkidx::load_streams(root, &anchors::candidate_files(&instances), idx, p)?;
     if !streams.1.is_empty() {
         // a file changed between refresh and stream load; the streams
         // were re-fed into the index, so re-fetch the instances to
@@ -199,7 +201,7 @@ fn recompute(
     // (clearance review: a row count read a concurrent writer's
     // partial index as complete)
     idx.mark_full_build()?;
-    let found = pairs::clone_blocks(&instances, &streams.0, filter);
+    let found = pairs::clone_blocks(&instances, &streams.0, filter)?;
     // the digest is re-read: the D1 re-feed above can move file rows
     // mid-run, and the slot must describe the state the blocks came from
     rescache::store(idx.raw(), rescache::digest(idx.raw())?, filter, &found)?;

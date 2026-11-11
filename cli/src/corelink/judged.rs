@@ -184,6 +184,40 @@ impl std::io::Write for Count {
     }
 }
 
+/// A request plan of whole groups: greedy runs of adjacent items, at most
+/// `cap` each, a group (`same` holds for its adjacent items — the caller
+/// sorted them so) never split. A group longer than `cap` alone is
+/// `Err((its first index, its length))`, for the caller to refuse by name
+/// before anything is sent: erase/1 splits by path (a path's closure is
+/// judged in one request), cover/1 by file pair. Not one of lockstep's
+/// planners (`by_count`, `by_work`, `within_line`), which cut between any
+/// two pairs and let a pair past the work cap ride alone to be degraded:
+/// here a group is one judgment, so no cut may fall inside it.
+pub fn whole_groups<T>(
+    items: &[T],
+    cap: usize,
+    same: impl Fn(&T, &T) -> bool,
+) -> Result<Vec<std::ops::Range<usize>>, (usize, usize)> {
+    let mut out: Vec<std::ops::Range<usize>> = Vec::new();
+    let mut at = 0;
+    while at < items.len() {
+        let end = at
+            + items[at..]
+                .iter()
+                .take_while(|x| same(&items[at], x))
+                .count();
+        if end - at > cap {
+            return Err((at, end - at));
+        }
+        match out.last_mut() {
+            Some(open) if end - open.start <= cap => open.end = end,
+            _ => out.push(at..end),
+        }
+        at = end;
+    }
+    Ok(out)
+}
+
 /// A reply's degraded posture, read before any table: the core's named
 /// reason (or the bare word) is a named non-judgment.
 pub fn degraded(reply: &Value) -> Result<(), Unread> {

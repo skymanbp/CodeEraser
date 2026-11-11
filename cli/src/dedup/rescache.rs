@@ -10,11 +10,15 @@
 //! hit the same slot through the one `analyze` throat. Params and
 //! every algorithm revision already key the WHOLE database
 //! (schema::meta_entries): a rev bump wipes this table with the
-//! rest, so the slot never spells them. Single slot by design —
+//! rest, so the slot never spells them — except the selection rule:
+//! which runs are kept is the core's (cover/1), so the digest's seed
+//! spells that capability and a slot one rule filled is never served
+//! under another. Single slot by design —
 //! every production caller runs the default filter; a calibration
 //! run with custom knobs simply overwrites and the next default run
 //! recomputes once.
 
+use super::cover;
 use super::pairs::{Blocks, Filter};
 use super::tokens;
 use anyhow::Result;
@@ -37,17 +41,24 @@ use rusqlite::Connection;
 /// index's own key does.
 pub(super) fn digest(conn: &Connection) -> Result<i64> {
     let pack = crate::tables::get();
-    digest_under(conn, (pack.digest, pack.limits.dedup.hot_cap))
+    digest_under(conn, (pack.digest, pack.limits.dedup.hot_cap, cover::CAP))
 }
 
-/// `digest` under an explicit (package digest, hot cap) seed — the
-/// pure half, so a leg can move either and watch the slot key move.
-pub(super) fn digest_under(conn: &Connection, (package, hot_cap): (u64, usize)) -> Result<i64> {
+/// `digest` under an explicit (package digest, hot cap, selection rule)
+/// seed — the pure half, so a leg can move any of them and watch the
+/// slot key move. The rule is the capability that selected the blocks
+/// (cover::CAP, v2.35): blocks one rule kept are never served as
+/// another's, whatever the tokenizer's revision says.
+pub(super) fn digest_under(
+    conn: &Connection,
+    (package, hot_cap, rule): (u64, usize, &str),
+) -> Result<i64> {
     let mut stmt = conn.prepare("SELECT path, content_hash, owner FROM files ORDER BY path")?;
     let mut rows = stmt.query([])?;
     let mut seed = b"rescache/3".to_vec();
     seed.extend_from_slice(&package.to_le_bytes());
     seed.extend_from_slice(&(hot_cap as u64).to_le_bytes());
+    seed.extend_from_slice(rule.as_bytes());
     let mut acc = tokens::fnv1a(&seed);
     while let Some(row) = rows.next()? {
         let path: String = row.get(0)?;

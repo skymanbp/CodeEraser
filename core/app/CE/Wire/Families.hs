@@ -12,6 +12,7 @@ module CE.Wire.Families
   , bags
   , candidates
   , clone
+  , cover
   , docdup
   , docpairs
   , document
@@ -41,12 +42,13 @@ data FamilyName = FamilyName {nameWord :: String, nameVersion :: Int}
 first :: String -> FamilyName
 first w = FamilyName w 1
 
-arch, audit, bags, candidates, clone, docdup, docpairs, document, erase, flow, graph :: FamilyName
+arch, audit, bags, candidates, clone, cover, docdup, docpairs, document, erase, flow, graph :: FamilyName
 arch = first "arch"
 audit = first "audit"
 bags = first "bags"
 candidates = first "candidates"
 clone = first "clone"
+cover = first "cover"
 docdup = first "docdup"
 docpairs = first "docpairs"
 document = first "document"

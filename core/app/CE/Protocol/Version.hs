@@ -18,8 +18,12 @@ module CE.Protocol.Version (majorMatches, majorOf, maxLineBytes, proto) where
 -- each axis's own share and `extent` carries E and L. Same version,
 -- lane v235_licence part 4C: resolve/1's `also` also names, for a
 -- Markdown or HTML site whose answer is a confirmed section of another
--- file, that file (CE.Resolve.Answer `holderOf`). Every other family
--- answers as before.
+-- file, that file (CE.Resolve.Answer `holderOf`). Same version, lane
+-- v235_imports: cover/1 (additive), the T1/T2 coverage rule C_t
+-- (CE.Dedup.Cover) — runs [[fileA,fileB,a0,b0,len,distinct]] ascending
+-- on the first four, minTokens and minDistinct (0 = the floor off) in;
+-- reported / suppressed / dropped index tables and their counts out; at
+-- most limits.caps.cover_rows rows. Every other family answers as before.
 -- The per-version
 -- ledger lives in contracts/VERSIONING.md and nowhere else; only
 -- THIS version's entry stays beside the constant. The reason the

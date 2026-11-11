@@ -37,11 +37,13 @@ leaked! {
     /// the two an index refresh's batched bags ask is planned by (W2-text
     /// Z4: the bags/1 item ceiling, the protocol's line in bytes), and the
     /// two whole requests this side refuses by name before sending (step
-    /// 11b: erase/1's rows, trend/2's rows with its knob rows).
+    /// 11b: erase/1's rows, trend/2's rows with its knob rows), and the
+    /// one the T1/T2 run set is split between file pairs by (v2.35:
+    /// cover/1's rows).
     WireCaps { scan_rows: usize, flow_rows: usize, merge_groups: usize,
                merge_tree_nodes: usize, structure_nodes: usize, arch_files: usize,
                arch_refs: usize, bags_items: usize, line_bytes: usize, erase_rows: usize,
-               trend_rows: usize,
+               trend_rows: usize, cover_rows: usize,
                // plan v2.35 C6: the bytes one bags ask is planned under
                bags_bytes: usize }
     /// The graph family's cycle floor and the `unmentioned` table's

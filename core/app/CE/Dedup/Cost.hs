@@ -9,7 +9,7 @@
 -- tier (methodology 11) is calibrated for exactly this number. Since
 -- plan v2.33 W3 the measuring side holds no copy: it reads the floor
 -- and the hot-group cap from the definition package (CE.Limits).
-module CE.Dedup.Cost (dedupKgram, dedupWindow, hotCap, minDistinct) where
+module CE.Dedup.Cost (coverRowCap, dedupKgram, dedupWindow, hotCap, minDistinct) where
 
 -- | The winnowing operating point the report states (plan v2.32 step
 -- 5): k-gram 25 and window 26, so the guarantee t = window + kgram − 1
@@ -38,3 +38,14 @@ minDistinct = 7
 -- and S4 and the docdup coarse filter (CE.Candidates.Groups).
 hotCap :: Integer
 hotCap = 64
+
+-- | cover/1's row ceiling (v2.35 imports lane): runs per request. The
+-- runs of a file pair are judged together and pairs are independent, so
+-- the measuring side splits its run set between pairs at this many rows
+-- and the answers concatenate exactly; one pair past it alone is refused
+-- by name before anything is sent. 2^18: the largest one-run set measured
+-- (zod, 19,134 runs) is 7 % of it; a row is at most ~60 bytes, so a full
+-- request stays near 16 MB, far inside the protocol's line, and the core's
+-- working set over it stays a few hundred megabytes.
+coverRowCap :: Integer
+coverRowCap = 262144

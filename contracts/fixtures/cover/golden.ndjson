@@ -1,0 +1,6 @@
+{"proto":"9.0.0","type":"cover.request","id":701,"minTokens":50,"minDistinct":7,"runs":[[0,1,0,0,120,3],[0,1,30,30,60,20],[2,2,0,100,60,20],[2,2,0,200,60,20],[2,2,100,200,60,20]]}
+{"counts":{"dropped":1,"reported":3,"rows":5,"suppressed":1},"degraded":false,"dropped":[4],"id":701,"minDistinct":7,"minTokens":50,"proto":"9.1.0","reported":[1,2,3],"suppressed":[0],"type":"cover.result"}
+{"proto":"9.0.0","type":"cover.request","id":702,"minTokens":50,"minDistinct":7,"runs":[[0,1,0,0,60,20],[0,1,200,300,52,20],[3,3,102,255,153,10],[3,3,102,272,152,10]]}
+{"counts":{"dropped":1,"reported":3,"rows":4,"suppressed":0},"degraded":false,"dropped":[3],"id":702,"minDistinct":7,"minTokens":50,"proto":"9.1.0","reported":[0,1,2],"suppressed":[],"type":"cover.result"}
+{"proto":"9.0.0","type":"cover.request","id":703,"minTokens":50,"minDistinct":7,"runs":[[0,1,0,0,60,20],[0,1,0,0,60,20]]}
+{"code":"contract","id":703,"message":"runs 1: not strictly ascending","proto":"9.1.0","type":"error"}

@@ -21,7 +21,8 @@
 -- across the rows of one path — so the measuring side refuses a plan
 -- over it by name before sending) and trend/2's (rows and declared knob
 -- rows count against it together; the measuring side refuses a window
--- that cannot fit before measuring a commit of it).
+-- that cannot fit before measuring a commit of it). v2.35 added
+-- cover/1's row ceiling, the T1/T2 run set is split between pairs by it.
 module CE.Limits (limits) where
 
 import qualified CE.Arch.Cost as Arch
@@ -113,6 +114,7 @@ caps =
     , "line_bytes" .= maxLineBytes
     , "erase_rows" .= Erase.eraseRowCap
     , "trend_rows" .= Trend.trendRowCap
+    , "cover_rows" .= Dedup.coverRowCap
     ]
 
 -- | The similar family's ceilings and the ranking's constants.
