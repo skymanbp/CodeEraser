@@ -19,14 +19,7 @@ use crate::tombstone::Row;
 use serde_json::Value;
 use std::path::Path;
 
-/// Why a write was judged against the shipped budgets rather than the
-/// declared ones (O33): its code is the `say` row's fence column.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(super) enum Fence {
-    None,
-    Drifted,
-    Unreadable,
-}
+pub(super) use super::zone::Fence;
 
 /// One duplicated region the probe matched.
 pub(super) struct Match {
@@ -45,12 +38,17 @@ pub(super) enum Said {
         regions: usize,
         top: Vec<Match>,
     },
-    /// The hard budget: the write leaves the file past its class line.
+    /// The hard budget: the write grows the file past its class line
+    /// (GD1) — from `before` lines (None = the file did not exist) to
+    /// `lines`; `kind` is never `Carried` here (a carried write is not
+    /// refused).
     OverBudget {
         file: String,
         lines: usize,
         cap: usize,
         fence: Fence,
+        before: Option<usize>,
+        kind: super::zone::Budget,
     },
     /// The graded zone (v2.7 ①, opt-in): under the hard line, `permille`
     /// into (soft, cap].
@@ -159,6 +157,21 @@ fn shown_rows<'a, const N: usize>(
     first
 }
 
+/// The `say` row's kind column for a refused budget write
+/// (CE.Guard.Document): 0 a crossing of an existing file, 1 a growth of
+/// a file already past the line, 2 the size before could not be read
+/// (the one-number sentence), 3 a crossing by a file the write creates.
+fn budget_code(kind: super::zone::Budget, existed: bool) -> i64 {
+    use super::zone::Budget;
+    match (kind, existed) {
+        (Budget::Crossing, true) => 0,
+        (Budget::Growth, _) => 1,
+        (Budget::Unread, _) => 2,
+        (Budget::Crossing, false) => 3,
+        (Budget::Carried, _) => unreachable!("a carried write is never refused"),
+    }
+}
+
 /// A string's index in `list`, once pushed.
 fn push(list: &mut Vec<String>, s: &str) -> i64 {
     list.push(s.to_string());
@@ -184,9 +197,13 @@ impl Strings {
                 lines,
                 cap,
                 fence,
+                before,
+                kind,
             } => {
                 let f = push(&mut self.files, file);
-                [1, f, n(*lines), n(*cap), *fence as i64, 0, 0]
+                let b = before.map_or(0, n);
+                let k = budget_code(*kind, before.is_some());
+                [1, f, n(*lines), n(*cap), *fence as i64, b, k]
             }
             Said::Zone {
                 file,

@@ -9,6 +9,7 @@
 //! leg (settle.rs, `ce settle --hook`) closes the one record this hook
 //! cannot write: what the person did with an `ask`.
 
+mod applied;
 mod budget;
 mod flow;
 mod probe;
@@ -77,9 +78,12 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     let mode = crate::config::tier_of(&loaded, crate::config::PROMOTED_DEFAULT);
     // the budgets this hook judges with: the declared config, or the
     // shipped ones while it drifts from the fenced baseline (O33)
-    let cfg = loaded.ok().map(|c| budget::fenced(root, c));
+    let cfg = loaded.ok().map(|c| zone::fenced(root, c));
     let file_path = &env.tool_input.file_path;
     let probed = probed(root, env);
+    // the write as it would land, worked out once for the size classes,
+    // the flow leg and the tombstone leg (F3)
+    let applied = applied::apply(env);
     // B4 suppression consults the feed BEFORE this event lands in it;
     // it shapes the warn INJECTION only — deny/ask are enforcement,
     // not context bloat, and repeat every time they hold
@@ -94,15 +98,16 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     {
         reasons.push(probe::reason(file_path, ms));
     }
-    let sized = budget::size_classes(root, env, cfg.as_ref(), &mode, budget_seen);
+    let text = applied.as_ref().ok();
+    let sized = budget::size_classes(root, env, cfg.as_ref(), text, &mode, budget_seen);
     reasons.extend(sized.budget);
-    let mut own = Tiered::observe(root, env, cfg.as_ref());
-    let spoken = sized.zone.into_iter().chain(own.spoken()).collect();
+    let mut own = Tiered::observe(root, env, cfg.as_ref(), text);
+    let spoken = sized.tiered.into_iter().chain(own.spoken()).collect();
     let decided = emit_reasons(root, &mode, reasons, spoken, broken);
     if let Some(p) = own.flow {
         feed(root, env, p.line);
     }
-    observe_log(root, env, &probed, &mode, decided);
+    observe_log(root, env, &probed, &mode, decided, applied.as_ref().err());
     for line in sized.lines {
         feed(root, env, line);
     }
@@ -120,11 +125,19 @@ struct Tiered {
 }
 
 impl Tiered {
-    fn observe(root: &Path, env: &Envelope, cfg: Option<&(Config, Fence)>) -> Self {
+    fn observe(
+        root: &Path,
+        env: &Envelope,
+        cfg: Option<&(Config, Fence)>,
+        applied: Option<&applied::Applied>,
+    ) -> Self {
         let (c, fence) = cfg.map_or((None, Fence::None), |(c, f)| (Some(c), *f));
+        let Some(a) = applied else {
+            return Self { tomb: None, flow: None };
+        };
         Self {
-            tomb: tombstone::observe(root, env, c, fence),
-            flow: flow::observe(root, env, c),
+            tomb: tombstone::observe(root, env, c, fence, &a.text),
+            flow: flow::observe(root, env, c, &a.text),
         }
     }
 
@@ -240,20 +253,34 @@ fn probed(root: &Path, env: &Envelope) -> Probed {
 /// written once the event is decided so that it carries `decision` —
 /// the tier the hook decided the whole event at (0.11.0), which the
 /// PostToolUse leg reads to know an `ask` when the tool then runs.
-fn observe_log(root: &Path, env: &Envelope, p: &Probed, mode: &str, decision: &str) {
-    feed(
-        root,
-        env,
-        serde_json::json!({
-            "event": "probe",
-            "file": env.tool_input.file_path,
-            "mode": mode,
-            "degraded": p.matches.is_none(),
-            "matches": p.matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
-            "elapsed_ms": p.elapsed_ms,
-            "decision": decision,
-        }),
-    );
+/// An Edit the hook could not apply says why (0.14.0, GD3): the size,
+/// flow and tombstone legs were silent for want of a text, and an I/O
+/// failure reading the target is a nested degraded stamp (`apply`),
+/// which `ce doctor` counts beside the probe's own bit.
+fn observe_log(
+    root: &Path,
+    env: &Envelope,
+    p: &Probed,
+    mode: &str,
+    decision: &str,
+    unapplied: Option<&applied::Unapplied>,
+) {
+    let mut line = serde_json::json!({
+        "event": "probe",
+        "file": env.tool_input.file_path,
+        "mode": mode,
+        "degraded": p.matches.is_none(),
+        "matches": p.matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
+        "elapsed_ms": p.elapsed_ms,
+        "decision": decision,
+    });
+    if let Some(u) = unapplied {
+        line["unapplied"] = u.code().into();
+        if let applied::Unapplied::Unreadable(kind) = u {
+            line["apply"] = serde_json::json!({"degraded": format!("unreadable: {kind:?}")});
+        }
+    }
+    feed(root, env, line);
 }
 
 /// Every line this hook and its PostToolUse leg write, stamped with

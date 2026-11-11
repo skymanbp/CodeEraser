@@ -8,10 +8,18 @@
 //! copy of 25/75 living in a test would measure a rule the product
 //! does not run — which is the failure the clone ratchet and the
 //! "a stated rule needs an executor" discipline both exist to refuse.
+//! The hard-budget predicate lives here too (v2.35 guard lane, GD1),
+//! for the same reason: its replay ledger (fpr_budget_replay) and the
+//! zone's must run the hook's own rule.
 //!
-//! Nothing here touches the disk or the clock. The hook's transports
-//! — reading the committed baseline, appending the feed line, asking
-//! whether this session already warned — stay in budget.rs.
+//! The fence over the budget inputs (`fenced`) lives here as well: the
+//! replay instruments materialise each parent commit's ce.toml and
+//! baseline and must judge with the budgets the hook would have used.
+//! It reads the committed baseline under the root it is handed;
+//! nothing else here touches the disk or the clock (the line counter
+//! reads whatever reader it is handed). The hook's transports —
+//! appending the feed line, asking whether this session already warned
+//! — stay in budget.rs.
 
 use crate::config::{Config, Thresholds};
 use crate::scan::classes::Classes;
@@ -72,6 +80,87 @@ pub fn landing(
     Some(Landing { permille, tier })
 }
 
+/// What the hard-budget rule makes of one write (v2.35 guard lane,
+/// GD1): a write is refused for what it ADDS, measured against the
+/// file before it — the K-round ruling for the duplicate class, now the
+/// budget class's. `breach ⇔ cap ≠ 0 ∧ after > cap ∧ after > before`.
+/// This predicate is the measuring side's on purpose: the budget class
+/// is the hook's daemon-free class (it holds when no daemon can start),
+/// and splitting one two-clause comparison across two languages would
+/// make the hook's hardest refusal depend on a warm core.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Budget {
+    /// The write takes the file across the line (before ≤ cap).
+    Crossing,
+    /// The file was already past the line and the write grows it.
+    Growth,
+    /// Past the line, but the write keeps or shrinks it: no refusal.
+    Carried,
+    /// Past the line and the size before could not be read: refused
+    /// as the rule stood before GD1 (no allowance on an unanswered
+    /// question).
+    Unread,
+}
+
+/// The tier a GROWTH refusal speaks at: the class tier, like a
+/// crossing (the rule as shipped). One literal, pinned by the budget
+/// ledger's gate (fpr_budget_gate), so the tier cannot move without the
+/// gate and the ledger moving with it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GrowthTier {
+    /// The class mode (`[guard] mode`, or the route default).
+    Class,
+    /// A named tier of its own.
+    Named(&'static str),
+}
+
+pub const GROWTH_TIER: GrowthTier = GrowthTier::Class;
+
+/// The rule over one write. `before` = the file's line count before
+/// the write (0 for a new file), `Err` when it could not be read.
+/// `None` = under the line, or no line (`cap == 0`, the P3 grade-table
+/// contract's published "no line").
+pub fn budget_kind(before: Result<usize, ()>, after: usize, cap: usize) -> Option<Budget> {
+    if cap == 0 || after <= cap {
+        return None;
+    }
+    Some(match before {
+        Err(()) => Budget::Unread,
+        Ok(_) if !grows(before, after) => Budget::Carried,
+        Ok(b) if b <= cap => Budget::Crossing,
+        Ok(_) => Budget::Growth,
+    })
+}
+
+/// Does the write add lines? An unread `before` answers yes: an
+/// allowance never rides an unanswered question. The graded zone's
+/// tier fires only on a growing write (GD1), the hard budget likewise.
+pub fn grows(before: Result<usize, ()>, after: usize) -> bool {
+    !before.is_ok_and(|b| after <= b)
+}
+
+/// A line count from BYTES, streamed: the number of `\n`, plus one when
+/// the input is non-empty and does not end in `\n` — the value
+/// `str::lines().count()` gives on the same bytes, LF or CRLF. No size
+/// cap and no UTF-8 requirement: a line count is not a text, so only a
+/// real I/O failure leaves `before` unread (REVIEW-1 Q10). The replay
+/// instruments count blobs through the same function.
+pub fn count_lines_in(mut r: impl std::io::Read) -> std::io::Result<usize> {
+    let mut buf = [0u8; 64 * 1024];
+    let (mut newlines, mut last) = (0usize, None);
+    loop {
+        let n = match r.read(&mut buf) {
+            Ok(0) => break,
+            Ok(n) => n,
+            Err(e) if e.kind() == std::io::ErrorKind::Interrupted => continue,
+            Err(e) => return Err(e),
+        };
+        newlines += buf[..n].iter().filter(|b| **b == b'\n').count();
+        last = Some(buf[n - 1]);
+    }
+    Ok(newlines + usize::from(last.is_some_and(|b| b != b'\n')))
+}
+
 /// The zone's two core-authored inputs as a committed baseline
 /// document carries them. Absent or unsound keys answer None, which
 /// is the caller's own fallback — never a made-up value.
@@ -95,6 +184,56 @@ fn tiers_of(doc: &Value) -> Option<(usize, usize)> {
     let warn = usize::try_from(doc["zoneTiers"][0].as_u64()?).ok()?;
     let ask = usize::try_from(doc["zoneTiers"][1].as_u64()?).ok()?;
     (warn >= 1 && warn <= ask).then_some((warn, ask))
+}
+
+/// Why a write was judged against the shipped budgets rather than the
+/// declared ones (O33): its code is the guard `say` row's fence column.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Fence {
+    None,
+    Drifted,
+    Unreadable,
+}
+
+/// The config the hook judges budgets with (6.4.0, O33): the declared
+/// one when the tree is unfenced (no committed baseline — the fence
+/// arms with the file, nowhere else) or the fence matches; the
+/// SHIPPED defaults for the three budget inputs — thresholds, the
+/// exclude list, the classes — when the declared ce.toml drifted from
+/// the fenced baseline or the baseline cannot be read. A drifted
+/// config is an unverified document, and a guard that kept any part
+/// of it would let the edit that produced the drift choose its own
+/// budget (`file_lines_fail = 0` = no line; `exclude = ["src/**"]` =
+/// out of scope). `[guard]` mode and the tier arming stay as
+/// declared: a mode is not a budget, it prints in the status line,
+/// and loosening it is a visible act. The fence rides the deny reason.
+pub fn fenced(root: &Path, cfg: Config) -> (Config, Fence) {
+    match crate::score::baseline::fence_status(root, &cfg) {
+        Ok(f) if !f.drifted() => (cfg, Fence::None),
+        Ok(_) => (shipped_budgets(cfg), Fence::Drifted),
+        Err(_) => (shipped_budgets(cfg), Fence::Unreadable),
+    }
+}
+
+/// The budget inputs at their shipped values; everything else as
+/// declared. The tombstone table's ledger and terms are budget inputs
+/// too (a drifted ledger could exempt the very file being written);
+/// its tier stays declared, as `[guard] mode` does, and so does its
+/// BUDGET: the shipped one is absent, which evaluates no condition at
+/// all, so a drift that dropped the declared budget would have
+/// switched the class off — the fence's strict side is the declared
+/// number (codex review 2026-09-04).
+fn shipped_budgets(mut cfg: Config) -> Config {
+    let shipped = Config::default();
+    cfg.thresholds = shipped.thresholds;
+    cfg.exclude = shipped.exclude;
+    cfg.rules = shipped.rules;
+    cfg.tombstone = crate::config::TombstoneCfg {
+        tier: cfg.tombstone.tier.take(),
+        budget: cfg.tombstone.budget,
+        ..shipped.tombstone
+    };
+    cfg
 }
 
 /// The threshold table one root-relative path is measured against

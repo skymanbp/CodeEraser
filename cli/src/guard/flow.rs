@@ -33,9 +33,14 @@ pub(super) struct Pending {
 /// Measure and judge one Write/Edit: a judged language with a flow
 /// table, inside the config's walk, whose applied text parses into at
 /// least one unit. A new file's before side is empty.
-pub(super) fn observe(root: &Path, env: &Envelope, cfg: Option<&Config>) -> Option<Pending> {
+pub(super) fn observe(
+    root: &Path,
+    env: &Envelope,
+    cfg: Option<&Config>,
+    applied: &str,
+) -> Option<Pending> {
     let (lang, before_text) = env.judged_pair(root, cfg)?;
-    let after = lower_file(&super::budget::resulting_text(env)?, lang)?;
+    let after = lower_file(applied, lang)?;
     if after.units.is_empty() {
         return None;
     }

@@ -1,4 +1,5 @@
--- | Every sentence the PreToolUse guard speaks (plan v2.32 step 5),
+-- | Every sentence the PreToolUse guard speaks (plan v2.32 step 5;
+-- the three budget kinds since the v2.35 guard lane, GD1),
 -- transcribed byte for byte from cli/src/guard/say.rs (a `\` line
 -- continuation there drops the next line's leading space), the
 -- duplicate probe's match list (cli/src/guard/probe.rs `reason`) and
@@ -13,6 +14,9 @@ catalogue =
     "duplicate\tce: content for {} duplicates {} indexed region(s): {}. Reuse the existing implementation instead of re-writing it. Moving it? Trim the source region first: the probe verifies against the current tree, and the same write then passes.\tce：{} 的内容与 {} 处已索引区域重复：{}。请复用既有实现，而不是另写一份。若是在搬移？先删去源区域：探针以当前树为准校验，同一次写入随即通过。\n\
     \match\t{}:{}-{} ({} tokens)\n\
     \over_budget\tce: this write leaves {} at {} lines, past the hard budget of {} (plan §4.1). Split the file instead of growing it.{}\tce：这次写入会让 {} 达到 {} 行，越过 {} 行的硬预算（计划 §4.1）。请拆分文件，而不是继续让它长大。{}\n\
+    \over_budget_cross\tce: this write takes {} from {} to {} lines, past the hard budget of {} (plan §4.1). Split the file instead of growing it.{}\tce：这次写入会让 {} 从 {} 行变成 {} 行，越过 {} 行的硬预算（计划 §4.1）。请拆分文件，而不是继续让它长大。{}\n\
+    \over_budget_new\tce: this write creates {} at {} lines, past the hard budget of {} (plan §4.1). Split it into smaller files.{}\tce：这次写入会新建 {}，共 {} 行，越过 {} 行的硬预算（计划 §4.1）。请把它拆成更小的文件。{}\n\
+    \over_budget_growth\tce: {} is already past the hard budget of {} at {} lines; this write grows it to {} (plan §4.1). A write that keeps or shrinks it passes: split it step by step.{}\tce：{} 已越过 {} 行的硬预算，现有 {} 行；这次写入会让它长到 {} 行（计划 §4.1）。不增加行数的写入可以通过：请一步步拆分它。{}\n\
     \graded_zone\tce: this write leaves {} at {} lines, {}‰ into the graded zone ({}..{}); `ce structure --split-candidates` prices its best seam.\tce：这次写入会让 {} 达到 {} 行，进入分级区 {}‰（{}..{}）；`ce structure --split-candidates` 会为它最好的那条切缝定价。\n\
     \tombstone_over\tce: this write leaves {} tombstone site(s), past the `[tombstone] budget` of {}: {}. A removed name must not survive as an absence label or an argument from absence — drop the label, or say what replaced it.\tce：这次写入留下 {} 处墓碑残留，越过 `[tombstone] budget` 的 {}：{}。被删的名字不该以「无 X」标签或缺席论证的形式留下——去掉标签，或写清替代物。\n\
     \place\t{}:{} {}\n\

@@ -38,29 +38,29 @@ pub(super) struct Pending {
 
 /// Measure and judge one Write/Edit. Scope is the budget rule's (a
 /// judged language, inside the config's walk) and the applied text is
-/// the budget rule's too (budget::resulting_text) — a tool call that
-/// is failing on its own measures nothing. `fence` = why the hook
+/// the hook's one applied text (applied::apply) — a tool call that is
+/// failing on its own measures nothing. `fence` = why the hook
 /// judges with the shipped budgets, when it does (budget::fenced).
 pub(super) fn observe(
     root: &Path,
     env: &Envelope,
     cfg: Option<&Config>,
     fence: Fence,
+    applied: &str,
 ) -> Option<Pending> {
     let (lang, before) = env.judged_pair(root, cfg)?;
-    let after = super::budget::resulting_text(env)?;
     let rel = crate::scan::walk::rel_str(root, Path::new(&env.tool_input.file_path));
     let policy = cfg.map(|c| Policy::of(root, c)).unwrap_or_default();
     let session = session_keys(root, &env.session_id, &policy);
     let pair = PairText {
         rel: &rel,
         before: &before,
-        after: &after,
+        after: applied,
         lang,
     };
     let f = tombstone::measure(&[pair], &session, &policy);
     // the session keys this edit declares again are alive after all
-    let declared = tombstone::declared_keys(&after, lang, &policy);
+    let declared = tombstone::declared_keys(applied, lang, &policy);
     let revived: Vec<u64> = session
         .intersection(&declared)
         .copied()

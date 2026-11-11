@@ -28,7 +28,9 @@ doc = spoken T.catalogue lines' (\_ _ -> False) (docFamily "guard" "" statement 
 
 -- | A `say` row is [rule, a, b, c, d, e, f]: rule 0 duplicate [file,
 -- regions, first match, matches shown], 1 over the hard budget [file,
--- lines, cap, fence], 2 the graded zone [file, lines, permille, soft,
+-- lines, cap, fence, before, kind] (kind 0 a crossing of an existing
+-- file, 1 a growth of a file already past the line, 2 the size before
+-- unread, 3 a crossing by a file the write creates), 2 the graded zone [file, lines, permille, soft,
 -- cap], 3 tombstone [sites, budget, fence, first place, places shown],
 -- 4 a new flow finding [file, novel, unit, kind, line], 5 an
 -- unreadable ce.toml [error]; unused columns 0. A fence is 0 none, 1
@@ -51,7 +53,7 @@ checked req =
  where
   row i r = case r of
     [0, f, _, a, n, _, _] -> asum [inside "files" f, span' "matches" a n]
-    [1, f, _, _, fence, _, _] -> asum [inside "files" f, fenced fence]
+    [1, f, _, _, fence, b, k] -> asum [inside "files" f, fenced fence, named "not a budget kind" (if b < 0 || k < 0 || k > 3 then Just (show k) else Nothing)]
     [2, f, _, _, _, _, _] -> inside "files" f
     [3, _, _, fence, a, n, _] -> asum [fenced fence, span' "places" a n]
     [4, f, _, u, k, _, _] -> asum [inside "files" f, inside "units" u, if k < 0 || k >= toInteger (length Flow.kindTable) then Just "kind" else Nothing]
@@ -75,7 +77,7 @@ lines' say _ req = map (line 0 . sentence) (rows req "say")
   sentence r = case r of
     [0, f, regions, a, n, _, _] ->
       say "duplicate" [file f, N regions, P (join "; " [say "match" [R (ref "match_file" [k]), N s, N e, N t] | [k, s, e, t] <- slice "matches" a n])]
-    [1, f, ls, cap, fence, _, _] -> say "over_budget" [file f, N ls, N cap, P (note fence)]
+    [1, f, ls, cap, fence, b, k] -> overBudget k f ls cap b (P (note fence))
     [2, f, ls, permille, soft, cap, _] -> say "graded_zone" [file f, N ls, N permille, N soft, N cap]
     [3, sites, budget, fence, a, n, _] ->
       let shown = join "; " [say "place" [R (ref "place_file" [i]), N l, W (kindName k)] | [i, l, k] <- slice "places" a n]
@@ -83,5 +85,10 @@ lines' say _ req = map (line 0 . sentence) (rows req "say")
     [4, f, novel, u, k, l, _] -> say "flow_novel" [N novel, file f, R (ref "unit" [u]), W (flowKind k), N l]
     [5, e, _, _, _, _, _] -> say "config_unreadable" [R (ref "error" [e])]
     _ -> plain ""
+  overBudget k f ls cap b n = case k of
+    0 -> say "over_budget_cross" [file f, N b, N ls, N cap, n]
+    1 -> say "over_budget_growth" [file f, N cap, N b, N ls, n]
+    3 -> say "over_budget_new" [file f, N ls, N cap, n]
+    _ -> say "over_budget" [file f, N ls, N cap, n]
   kindName = nameOf kindNames
   flowKind = nameOf Flow.kinds

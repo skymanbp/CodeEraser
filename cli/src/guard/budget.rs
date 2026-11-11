@@ -1,10 +1,16 @@
 //! The hard-budget rule class (§4.2 step 2, split from guard.rs at
-//! the 300-line dogfood wall): would this write leave the file past
-//! thresholds.file_lines_fail? Exact arithmetic on the applied edit,
-//! daemon-free, scan-scope only.
+//! the 300-line dogfood wall): does this write GROW the file past
+//! thresholds.file_lines_fail? Exact arithmetic on the applied edit
+//! (zone::budget_kind, v2.35 guard lane GD1), daemon-free, scan-scope
+//! only. A write that keeps or shrinks a file already past the line is
+//! carried — recorded, never refused — so "split the file" can be done
+//! one step at a time.
 
+use super::applied::{self, Applied};
 use super::envelope::Envelope;
-use super::speech::{Fence, Said};
+use super::speech::Said;
+use super::zone::Fence;
+use super::zone::{Budget, GROWTH_TIER, GrowthTier};
 use crate::config::{Config, Thresholds};
 use std::path::Path;
 
@@ -41,13 +47,10 @@ impl ZoneLines {
 }
 
 /// Scope + exact post-write size — ONE measurement feeding both the
-/// hard-budget rule and the v2.6 zone observer (a second copy of
-/// this stanza is exactly what the dedup ratchet exists to refuse).
-/// Scope is judged BEFORE any disk read: the old order read the
-/// target file whole and only then asked whether the scanner would
-/// ever count it — a hook must not pay (or take) an unbounded read
-/// for a file it is about to declare out of scope.
-pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<usize> {
+/// hard-budget rule and the v2.6 zone observer. Scope is judged BEFORE
+/// any disk read: a hook must not pay (or take) an unbounded read for a
+/// file it is about to declare out of scope.
+fn sized_write(root: &Path, cfg: &Config, env: &Envelope, applied: &Applied) -> Option<usize> {
     let path = Path::new(&env.tool_input.file_path);
     // sized_path (plan v2.30 step 5b-8): a prose-only file has no size
     // budget, exactly like an unknown extension
@@ -55,220 +58,176 @@ pub(super) fn sized_write(root: &Path, cfg: &Config, env: &Envelope) -> Option<u
     if !crate::scan::walk::in_scope(root, path, &cfg.exclude) {
         return None;
     }
-    resulting_lines(env)
+    Some(applied.text.lines().count())
 }
 
-/// The write would leave the file past ITS hard budget — the file's
-/// class line, or the global one (lines_for). `fence` is why a
-/// drifted config was judged with the shipped budgets (fenced): the
-/// reason says which budget it was judged against and why.
-pub(super) fn budget_breach(
-    t: &Thresholds,
-    env: &Envelope,
-    lines: usize,
-    fence: Fence,
-) -> Option<Said> {
-    let cap = t.file_lines_fail;
-    // cap 0 = no hard line exists (the P3 grade-table contract) —
-    // without this the hook read 0 as "every write breaches"
-    if cap == 0 || lines <= cap {
-        return None;
-    }
-    Some(Said::OverBudget {
+/// The size before this write, read only when a rule needs it (a write
+/// that lands under the soft line pays nothing): `Ok(None)` = the file
+/// does not exist yet.
+type Prior = Result<Option<usize>, std::io::ErrorKind>;
+
+/// The prior as the pure rule reads it: absent = 0 lines, unread = Err.
+fn before_of(p: &Prior) -> Result<usize, ()> {
+    p.map(Option::unwrap_or_default).map_err(|_| ())
+}
+
+/// The refusal a breach speaks: the file's line, the size before and
+/// after, which kind, and the fence the budget was judged under.
+fn over_budget(env: &Envelope, kind: Budget, prior: &Prior, lines: usize, cap: usize, fence: Fence) -> Said {
+    Said::OverBudget {
         file: env.tool_input.file_path.clone(),
         lines,
         cap,
         fence,
-    })
-}
-
-/// The config the hook judges budgets with (6.4.0, O33): the declared
-/// one when the tree is unfenced (no committed baseline — the fence
-/// arms with the file, nowhere else) or the fence matches; the
-/// SHIPPED defaults for the three budget inputs — thresholds, the
-/// exclude list, the classes — when the declared ce.toml drifted from
-/// the fenced baseline or the baseline cannot be read. A drifted
-/// config is an unverified document, and a guard that kept any part
-/// of it would let the edit that produced the drift choose its own
-/// budget (`file_lines_fail = 0` = no line; `exclude = ["src/**"]` =
-/// out of scope). `[guard]` mode and the tier arming stay as
-/// declared: a mode is not a budget, it prints in the status line,
-/// and loosening it is a visible act. The fence rides the deny reason.
-pub(super) fn fenced(root: &Path, cfg: Config) -> (Config, Fence) {
-    match crate::score::baseline::fence_status(root, &cfg) {
-        Ok(f) if !f.drifted() => (cfg, Fence::None),
-        Ok(_) => (shipped_budgets(cfg), Fence::Drifted),
-        Err(_) => (shipped_budgets(cfg), Fence::Unreadable),
+        before: prior.ok().flatten(),
+        kind,
     }
-}
-
-/// The budget inputs at their shipped values; everything else as
-/// declared. The tombstone table's ledger and terms are budget inputs
-/// too (a drifted ledger could exempt the very file being written);
-/// its tier stays declared, as `[guard] mode` does, and so does its
-/// BUDGET: the shipped one is absent, which evaluates no condition at
-/// all, so a drift that dropped the declared budget would have
-/// switched the class off — the fence's strict side is the declared
-/// number (codex review 2026-09-04).
-fn shipped_budgets(mut cfg: Config) -> Config {
-    let shipped = Config::default();
-    cfg.thresholds = shipped.thresholds;
-    cfg.exclude = shipped.exclude;
-    cfg.rules = shipped.rules;
-    cfg.tombstone = crate::config::TombstoneCfg {
-        tier: cfg.tombstone.tier.take(),
-        budget: cfg.tombstone.budget,
-        ..shipped.tombstone
-    };
-    cfg
-}
-
-/// Exact post-write text: Write is the payload itself; Edit is the
-/// payload applied to the on-disk file under Edit's own semantics —
-/// CRLF-normalized, and single replacement requires a UNIQUE match
-/// exactly as the real tool does (attack review F11: replacen on a
-/// non-unique old_string would judge a write that will never land).
-/// None = the tool call is failing on its own (missing file, absent
-/// or ambiguous old_string) — the budget rule stays silent, and so
-/// does the tombstone leg, which reads the same text.
-pub(super) fn resulting_text(env: &Envelope) -> Option<String> {
-    let t = &env.tool_input;
-    if env.tool_name == "Write" {
-        return Some(t.content.clone());
-    }
-    let on_disk = std::fs::read_to_string(&t.file_path)
-        .ok()?
-        .replace("\r\n", "\n");
-    let (old, new) = (
-        t.old_string.replace("\r\n", "\n"),
-        t.new_string.replace("\r\n", "\n"),
-    );
-    if old.is_empty() {
-        return None;
-    }
-    let applied = match (t.replace_all, on_disk.matches(&old).count()) {
-        (_, 0) => return None,
-        (false, 1) => on_disk.replacen(&old, &new, 1),
-        (false, _) => return None, // the real Edit rejects ambiguity
-        (true, _) => on_disk.replace(&old, &new),
-    };
-    Some(applied)
-}
-
-/// Exact post-write line count, off the same applied text.
-fn resulting_lines(env: &Envelope) -> Option<usize> {
-    resulting_text(env).map(|text| text.lines().count())
 }
 
 /// What the two size classes leave for the decision: their feed lines
 /// (a budget line, or a zone line — the hook writes them after the
-/// probe's, 0.11.0), the budget reason unless the breach was warned
-/// this session already, and the zone's own-tier firing.
+/// probe's, 0.11.0), the budget reason at the class tier unless the
+/// breach was warned this session already, and the firings that speak
+/// at their own tier (the armed zone; a growth when GROWTH_TIER names
+/// one).
 pub(super) struct SizeClasses {
     pub lines: Vec<serde_json::Value>,
     pub budget: Option<Said>,
-    pub zone: Option<(&'static str, Said)>,
+    pub tiered: Vec<(&'static str, Said)>,
 }
 
 /// Both size classes over one write, measured once: the hard budget
 /// against the lines THIS file is measured against — its class's, or
 /// the global table (plan v2.13 ① P4) — and, under it, the graded
-/// zone. No config, or a write outside the scan's scope, is nothing.
+/// zone. No config, a write outside the scan's scope, or an Edit that
+/// cannot apply (GD3: the probe line says why) is nothing.
 pub(super) fn size_classes(
     root: &Path,
     env: &Envelope,
     cfg: Option<&(Config, Fence)>,
+    applied: Option<&Applied>,
     mode: &str,
     budget_seen: bool,
 ) -> SizeClasses {
     let mut out = SizeClasses {
         lines: Vec::new(),
         budget: None,
-        zone: None,
+        tiered: Vec::new(),
     };
-    let Some((c, fence)) = cfg else {
+    let (Some((c, fence)), Some(a)) = (cfg, applied) else {
         return out;
     };
-    let Some(lines) = sized_write(root, c, env) else {
+    let Some(lines) = sized_write(root, c, env, a) else {
         return out;
     };
     let t = lines_for(root, c, &env.tool_input.file_path);
-    if let Some(why) = budget_breach(&t, env, lines, *fence) {
-        out.lines.push(budget_line(env, mode, lines));
-        out.budget = (!budget_seen).then_some(why);
-    } else {
-        // sub-H writes: the zone observer, plus the v2.7 ① OPT-IN
-        // tier map (default stays feed-only)
-        let (line, fired) = zone_assess(root, &ZoneLines::of(&t, c), env, mode, lines);
-        out.lines.extend(line);
-        out.zone = fired;
+    let prior = || applied::before_lines(env, a);
+    let cap = t.file_lines_fail;
+    if cap != 0 && lines > cap {
+        let p = prior();
+        let kind = super::zone::budget_kind(before_of(&p), lines, cap).expect("past a line");
+        out.lines.push(budget_line(env, mode, lines, &p, kind));
+        if kind == Budget::Carried || budget_seen {
+            return out;
+        }
+        let said = over_budget(env, kind, &p, lines, cap, *fence);
+        match (kind, GROWTH_TIER) {
+            (Budget::Growth, GrowthTier::Named(tier)) => out.tiered.push((tier, said)),
+            _ => out.budget = Some(said),
+        }
+        return out;
     }
+    // under the hard line: the zone observer, plus the v2.7 ① OPT-IN
+    // tier map (default stays feed-only)
+    let (line, fired) = zone_assess(root, &ZoneLines::of(&t, c), env, mode, (lines, prior));
+    out.lines.extend(line);
+    out.tiered.extend(fired);
     out
 }
 
-/// Budget firings get their own feed line (accounting for the §4.2
-/// step-3 decision at 1.0 needs per-rule records), in every tier.
-fn budget_line(env: &Envelope, mode: &str, lines: usize) -> serde_json::Value {
-    serde_json::json!({
+/// Every write past the line gets its own feed line, in every tier —
+/// a refused one (`kind`), a carried one (`carried: true`, no reason),
+/// or one whose size before could not be read (`before_unread`, a
+/// degraded stamp: refused as the rule stood, with no allowance).
+fn budget_line(env: &Envelope, mode: &str, lines: usize, prior: &Prior, kind: Budget) -> serde_json::Value {
+    let mut line = serde_json::json!({
         "event": "budget",
         "file": env.tool_input.file_path,
         "mode": mode,
         "resulting_lines": lines,
-    })
+        "before_lines": prior.ok().map(Option::unwrap_or_default),
+    });
+    match (kind, prior) {
+        (Budget::Carried, _) => line["carried"] = true.into(),
+        (Budget::Unread, Err(e)) => {
+            line["before_unread"] = format!("{e:?}").into();
+            line["degraded"] = format!("before_unread: {e:?}").into();
+        }
+        (Budget::Crossing, _) => line["kind"] = "crossing".into(),
+        (Budget::Growth, _) => line["kind"] = "growth".into(),
+        (Budget::Unread, Ok(_)) => unreachable!("budget_kind reads Unread only off an Err"),
+    }
+    line
 }
 
 /// plan v2.6 §A observe leg + the v2.7 ① OPT-IN tier map: a write
 /// landing INSIDE the graded zone (S, H] gets a `zone` feed line in
-/// every tier; with `[guard] zone_tiers` armed the position maps to
-/// a tier (<25% observe / 25–75% warn / >75% ask) and the firing
-/// returns (tier, reason) for the decision line — the DEFAULT stays
-/// observe-only (§4.2 FPR discipline). A zone warn rides the same
-/// per-session (rule, file) injection budget as the class warns;
-/// ask is enforcement and repeats. S = the committed baseline's
-/// frozen softLine, falling back to the file's warn line (its class's
-/// since P4, else thresholds.file_lines_warn) — the same fallback the
-/// score's size axis uses; H is the file's hard line likewise; a
-/// degenerate zone (H <= S, or no hard line) logs nothing rather
-/// than a made-up position.
+/// every tier; with `[guard] zone_tiers` armed the position maps to a
+/// tier (<25% observe / 25–75% warn / >75% ask) and the firing returns
+/// (tier, reason) — the DEFAULT stays observe-only (§4.2 FPR
+/// discipline). Since GD1 a tier fires only on a write that GROWS the
+/// file: a write that keeps or shrinks it logs `carried: true` and
+/// `zone_tier: observe`. A zone warn rides the same per-session (rule,
+/// file) injection budget as the class warns; ask is enforcement and
+/// repeats. S = the committed baseline's frozen softLine, falling back
+/// to the file's warn line (its class's since P4, else
+/// thresholds.file_lines_warn); H is the file's hard line likewise; a
+/// degenerate zone (H <= S, or no hard line) logs nothing rather than a
+/// made-up position.
 fn zone_assess(
     root: &Path,
     z: &ZoneLines,
     env: &Envelope,
     mode: &str,
-    lines: usize,
+    (lines, prior): (usize, impl FnOnce() -> Prior),
 ) -> (Option<serde_json::Value>, Option<(&'static str, Said)>) {
-    let (cap, armed) = (z.cap, z.armed);
     let (frozen, tiers) = committed(root);
     let soft = frozen.unwrap_or(z.warn);
     let Some(super::zone::Landing { permille, tier }) =
-        super::zone::landing(lines, soft, cap, tiers)
+        super::zone::landing(lines, soft, z.cap, tiers)
     else {
         return (None, None);
     };
+    let p = prior();
+    let grows = super::zone::grows(before_of(&p), lines);
+    let tier = if grows { tier } else { "observe" };
     let file = &env.tool_input.file_path;
-    // the B4 suppression consults the feed BEFORE this event lands
-    // in it (the probe rule's ordering — a warn must not read its
-    // own fresh line as "already warned")
+    // the B4 suppression consults the feed BEFORE this event lands in
+    // it (a warn must not read its own fresh line as "already warned")
     let seen = tier == "warn" && crate::hookio::already_warned(root, &env.session_id, "zone", file);
     let mut line = serde_json::json!({
         "event": "zone",
         "file": file,
         "mode": mode,
         "resulting_lines": lines,
+        "before_lines": p.ok().map(Option::unwrap_or_default),
         "soft": soft,
-        "hard": cap,
+        "hard": z.cap,
         "zone_permille": permille,
     });
-    if armed {
+    if !grows {
+        line["carried"] = true.into();
+    }
+    if z.armed {
         line["zone_tier"] = tier.into();
     }
-    let fired = (armed && tier != "observe" && !seen).then(|| {
+    let fired = (z.armed && tier != "observe" && !seen).then(|| {
         let said = Said::Zone {
             file: file.clone(),
             lines,
             permille,
             soft,
-            cap,
+            cap: z.cap,
         };
         (tier, said)
     });
@@ -278,11 +237,9 @@ fn zone_assess(
 /// The zone's two core-authored inputs off the committed
 /// ce-baseline.json — the hook's one channel to the §B fence
 /// (daemon-free by design, so a plain local read is the honest
-/// transport). ONE read per write: the frozen soft line and the tier
-/// cut pair used to open, parse and drop the same document twice, on
-/// a file that is 25 000 lines in this repository. An unreadable or
-/// absent baseline answers (None, None) — every fallback is the pure
-/// half's, spelled once (guard::zone).
+/// transport). ONE read per write. An unreadable or absent baseline
+/// answers (None, None) — every fallback is the pure half's, spelled
+/// once (guard::zone).
 fn committed(root: &Path) -> (Option<usize>, Option<(usize, usize)>) {
     match crate::score::baseline::document(root) {
         Ok(Some(doc)) => super::zone::envelope(&doc),

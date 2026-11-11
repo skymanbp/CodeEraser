@@ -23,6 +23,20 @@ use std::path::Path;
 /// evaluation-set raw material, so its shape is a contract, pinned
 /// by contracts/fixtures/observe-feed/feed.golden.json).
 ///
+/// 0.14.0 (v2.35 guard lane): the PreToolUse classes judge what a
+/// write ADDS. A `budget` line (written for every write past the
+/// line) carries `before_lines` and exactly one of `kind` (`crossing`
+/// | `growth`, a refused write), `carried: true` (a write that keeps or
+/// shrinks a file already past the line: recorded, not refused) or
+/// `before_unread` (the size before could not be read: refused as
+/// before, with a top-level `degraded` string); a `zone` line carries
+/// `before_lines` and `carried: true` on a write that does not grow
+/// the file (its tier then does not fire, `zone_tier` reads
+/// `observe`); a `probe` line whose Edit the hook could not apply
+/// carries `unapplied` (`absent` | `unreadable` | `no_match` |
+/// `ambiguous`) — and for `unreadable` a nested `apply.degraded`
+/// stamp. Every prior key keeps its shape.
+///
 /// 0.13.0 (plan v2.32 step 2 follow-up): a hook left inert by an
 /// unreadable definition package writes one line — `probe` /
 /// `settle` / `stop_audit` / `health` with `degraded` true and
@@ -104,7 +118,7 @@ use std::path::Path;
 /// 0.2.0 adds `session_id`: without it the D2-2 session count and
 /// the D2-1 sample purity could not be measured (49 entries, one hour,
 /// no way to tell one session from ten).
-pub const OBSERVE_SCHEMA: &str = "ce.observe/0.13.0";
+pub const OBSERVE_SCHEMA: &str = "ce.observe/0.14.0";
 
 /// How much envelope the hooks take from stdin. A bare `read_to_string`
 /// bounds nothing: an oversized payload is materialized whole, and a
@@ -312,6 +326,9 @@ pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> boo
     session_lines(root, session).iter().any(|v| {
         v["event"] == rule
             && v["file"] == file
+            // a carried budget line (0.14.0) recorded a write the rule
+            // let through: nothing was said, so nothing was warned
+            && (rule != "budget" || v["carried"] != true)
             && (rule != "probe" || v["matches"].as_u64().unwrap_or(0) > 0)
             && (rule != "zone" || v["zone_tier"].as_str().is_some_and(|t| t != "observe"))
     })
