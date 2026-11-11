@@ -134,90 +134,99 @@ goldens =
   , goldenPairs "cover/golden.ndjson"
   ]
 
+-- | Every battery: the goldens, the judgments, and what they are settled
+-- against — the verdict and the four-class judgment, each family against
+-- its second implementation, the definition package, the documents, the
+-- resolver and the report strings.
 batteries :: [IO Bool]
-batteries =
-  goldens
-    <> [ SpecProbes.structural
-       , SpecProbes.refusalProbes
-       , SpecProbes.docdupStructural
-       , SpecProbes.costModel
-       , Reference.equivalence
-       , QueryReferenceProps.equivalence
-       , ReferenceResolve.equivalence
-       , ReferenceJava.equivalence
-       , ReferenceHs.equivalence
-       , ReferenceTs.equivalence
-       , ReferenceRs.equivalence
-       , ReferenceMd.equivalence
-       , ReferenceHtml.equivalence
-       , ReferenceGraph.equivalence
-       , ReferenceJaccard.equivalence
-       , GraphProps.battery
-       , GraphWireProps.battery
-       , AdvisoryProps.battery
-       , CloneProps.battery
-       , CandidatesProps.battery
-       , RankProps.battery
-       , BagsProps.battery
-       , DocPairsProps.battery
-       , MovesProps.battery
-       , EntropyProps.battery
-       , JoinProps.battery
-       , ScanProps.battery
-       , ScanCyclesProps.battery
-       , ScanEventsProps.battery
-       , ScanReferenceProps.battery
-       , StructureProps.battery
-       , StructureModularityProps.battery
-       , TrendProps.battery
-       , EraseProps.battery
-       , AuditProps.battery
-       , TombstoneProps.battery
-       , RelocateProps.battery
-       , CoverProps.battery
-       , SimilarProps.battery
-       , QueryProps.battery
-       , PackProps.battery
-       , FlowProps.battery
-       , FlowLiveProps.battery
-       , MergeProps.battery
-       , MergeReferenceProps.battery
-       , ArchProps.battery
-       , VerdictProps.battery
-       , VerdictWireProps.battery
-       , VerdictFenceProps.battery
-       , VerdictKnobProps.battery
-       , VerdictLeverProps.battery
-       , SoftProps.battery
-       , TextProps.battery
-       , SplitProps.battery
-       , SplitZoneProps.battery
-       , ClassProps.battery
-       , StackingProps.battery
-       , FourClassReferenceProps.battery
-       , DeclProps.battery
-       , TombstoneEquivProps.battery
-       , SimilarEquivProps.battery
-       , EraseEquivProps.battery
-       , TrendEquivProps.battery
-       , VerdictEquivProps.battery
-       , StructureEquivProps.battery
-       , LangProps.battery
-       , DocumentProps.battery
-       , DocumentProps4.battery
-       , DocumentProps5.battery
-       , DocumentProps6.battery
-       ]
-    <> resolveBatteries
+batteries = goldens <> judgments <> settled
+ where
+  settled =
+    -- the verdict, its soft line, text and split, and the four-class judgment
+    [ VerdictProps.battery
+    , VerdictWireProps.battery
+    , VerdictFenceProps.battery
+    , VerdictKnobProps.battery
+    , VerdictLeverProps.battery
+    , SoftProps.battery
+    , TextProps.battery
+    , SplitProps.battery
+    , SplitZoneProps.battery
+    , ClassProps.battery
+    , StackingProps.battery
+    , FourClassReferenceProps.battery
+    , DeclProps.battery
+    -- each judgment family against its second implementation
+    , TombstoneEquivProps.battery
+    , SimilarEquivProps.battery
+    , EraseEquivProps.battery
+    , TrendEquivProps.battery
+    , VerdictEquivProps.battery
+    , StructureEquivProps.battery
+    -- the definition package, the documents, the resolver and the report strings
+    , LangProps.battery
+    , DocumentProps.battery
+    , DocumentProps4.battery
+    , DocumentProps5.battery
+    , DocumentProps6.battery
+    , ResolveProps.battery
+    , ResolvePyAlsoProps.battery
+    , ResolveHolderProps.battery
+    , SpellProps.battery
+    ]
 
--- | The resolve family's batteries and the last one, in the order they
--- ran inside `batteries` (split off under the 75-line function line).
-resolveBatteries :: [IO Bool]
-resolveBatteries =
-  [ ResolveProps.battery
-  , ResolvePyAlsoProps.battery
-  , ResolveHolderProps.battery
-  , SpellProps.battery
+-- | The judgments: the structural probes, each judgment against a second
+-- spelling of it, and every family's battery.
+judgments :: [IO Bool]
+judgments =
+  -- the structural probes and the reference evaluators
+  [ SpecProbes.structural
+  , SpecProbes.refusalProbes
+  , SpecProbes.docdupStructural
+  , SpecProbes.costModel
+  , Reference.equivalence
+  , QueryReferenceProps.equivalence
+  , ReferenceResolve.equivalence
+  , ReferenceJava.equivalence
+  , ReferenceHs.equivalence
+  , ReferenceTs.equivalence
+  , ReferenceRs.equivalence
+  , ReferenceMd.equivalence
+  , ReferenceHtml.equivalence
+  , ReferenceGraph.equivalence
+  , ReferenceJaccard.equivalence
+  -- the families' batteries, graph to arch
+  , GraphProps.battery
+  , GraphWireProps.battery
+  , AdvisoryProps.battery
+  , CloneProps.battery
+  , CandidatesProps.battery
+  , RankProps.battery
+  , BagsProps.battery
+  , DocPairsProps.battery
+  , MovesProps.battery
+  , EntropyProps.battery
+  , JoinProps.battery
+  , ScanProps.battery
+  , ScanCyclesProps.battery
+  , ScanEventsProps.battery
+  , ScanReferenceProps.battery
+  , StructureProps.battery
+  , StructureModularityProps.battery
+  , TrendProps.battery
+  , EraseProps.battery
+  , AuditProps.battery
+  , TombstoneProps.battery
+  , RelocateProps.battery
+  , CoverProps.battery
+  , SimilarProps.battery
+  , QueryProps.battery
+  , PackProps.battery
+  , FlowProps.battery
+  , FlowLiveProps.battery
+  , MergeProps.battery
+  , MergeReferenceProps.battery
+  , ArchProps.battery
   ]
 
 -- | One named check through the shared runner.
