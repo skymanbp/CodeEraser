@@ -33,11 +33,16 @@ use std::collections::{BTreeSet, HashMap, HashSet};
 
 /// Bump when a row's meaning changes (the key, the slot order, the
 /// NULL reading): it sits in the generation, so old rows are emptied.
-const CACHE_REV: i64 = 1;
+/// 2 (plan v2.35 C1): the core's label-sequence bound decides most
+/// non-clones without a distance, so a pair the previous form stored
+/// with a distance is a NULL row now; the old rows are emptied by name,
+/// never read under the new meaning.
+const CACHE_REV: i64 = 2;
 
 /// CREATE-only DDL (the DROP half lives in dedup/schema.rs — one wipe
-/// lifecycle). `ted` NULL = the core's prefilter proved the pair below
-/// threshold: no score row and no bit, remembered as such.
+/// lifecycle). `ted` NULL = one of the core's admissible bounds (size,
+/// label, label sequence) proved the pair not a clone: no score row and
+/// no bit, remembered as such.
 pub const T3TED_SCHEMA: &str = "
 CREATE TABLE t3ted (
   ka INTEGER NOT NULL, kb INTEGER NOT NULL,
@@ -49,7 +54,7 @@ CREATE TABLE t3ted (
 /// One remembered outcome in the slot's (ka, kb) order.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Row {
-    /// The core's prefilter proved the pair below threshold.
+    /// One of the core's admissible bounds proved the pair not a clone.
     Below { na: i64, nb: i64 },
     /// The core scored it: ted, the two sizes, its verdict bit.
     Scored {
@@ -205,14 +210,12 @@ pub(super) fn fresh(
     out.into_iter().collect()
 }
 
-/// Remember the fresh outcomes and sweep the held rows whose trees
-/// left the tree — one transaction, so a reader never sees half a run.
-pub fn remember(
-    conn: &Connection,
-    fresh: &[((i64, i64), Row)],
-    live: &BTreeSet<i64>,
-    held: &Table,
-) -> Result<()> {
+/// Remember one answered request's outcomes (plan v2.35 C4: called per
+/// request, before the next is asked, so a judgment cut by the reply
+/// deadline, a killed core or an interrupt keeps what the core already
+/// judged and the next run asks only the rest) — one transaction per
+/// request, so a reader never sees half of one.
+pub fn put(conn: &Connection, fresh: &[((i64, i64), Row)]) -> Result<()> {
     let tx = conn.unchecked_transaction()?;
     {
         let mut put = tx.prepare(
@@ -226,6 +229,17 @@ pub fn remember(
             };
             put.execute((ka, kb, na, nb, ted, clone as i64))?;
         }
+    }
+    tx.commit()?;
+    Ok(())
+}
+
+/// Sweep the held rows whose trees left the tree — once, at the end of
+/// a completed judgment (an interrupted one keeps them: they may still
+/// be live).
+pub fn sweep(conn: &Connection, live: &BTreeSet<i64>, held: &Table) -> Result<()> {
+    let tx = conn.unchecked_transaction()?;
+    {
         let mut del = tx.prepare("DELETE FROM t3ted WHERE ka = ?1 AND kb = ?2")?;
         for (ka, kb) in held.keys() {
             if !live.contains(ka) || !live.contains(kb) {

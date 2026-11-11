@@ -1,7 +1,7 @@
 //! `ce clone` T3 judgment (design vol.2 §4, M5-3e): the frozen
 //! candidate pass picks the pairs, this driver rebuilds each unit's
 //! postorder tree (tree.rs), ships chunks of at most the package's
-//! clone `pair_cap` pairs
+//! clone `pair_cap` pairs and `work_cap` Σ n1·n2 (plan v2.35 C3)
 //! over one core link, and maps the raw TED scores back to unit
 //! identities. Every drop is a ledger line (over-cap units, forest
 //! spans, the pairs they strand) — the tally discipline candidates.rs

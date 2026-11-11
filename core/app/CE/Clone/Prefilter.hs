@@ -17,7 +17,7 @@
 -- the candidate pass (CE.Candidates.T3) applies the same two bounds
 -- through `boundOf`, before any tree is built; this module is the one
 -- statement of both.
-module CE.Clone.Prefilter (Bound (..), boundOf, histo, provablyBelow, provablyBelowH, reachFloor, sizeBelow) where
+module CE.Clone.Prefilter (Bound (..), boundOf, cloneCeiling, cloneCeilingWith, histo, provablyBelow, provablyBelowH, reachFloor, sizeBelow) where
 
 import CE.Clone.Cost (tsedDen, tsedNum)
 import qualified Data.IntMap.Strict as IM
@@ -51,6 +51,20 @@ sizeBelow q mx = q * fromInteger tsedDen < fromInteger tsedNum * mx
 reachFloor :: (Integral a) => a -> a
 reachFloor mx = (fromInteger tsedNum * mx + fromInteger tsedDen - 1) `div` fromInteger tsedDen
 {-# SPECIALIZE reachFloor :: Int -> Int #-}
+
+-- | The largest distance a clone may have against the larger size mx
+-- (plan v2.35 C1): for a distance t ≥ 0, t ≤ cloneCeiling mx ⇔
+-- cloneDecides t n1 n2 with mx = max n1 n2, since
+-- (mx − t)·den ≥ num·mx ⇔ t·den ≤ (den − num)·mx ⇔ t ≤ ⌊(den − num)·mx / den⌋;
+-- it is also mx − reachFloor mx. CloneSeqProps holds all three equal;
+-- the sequence bound (CE.Clone.Sequence) tests "within" this.
+cloneCeiling :: (Integral a) => a -> a
+cloneCeiling = cloneCeilingWith (tsedNum, tsedDen)
+{-# SPECIALIZE cloneCeiling :: Int -> Int #-}
+
+-- | The threshold-parameterized form (the cloneDecidesWith posture).
+cloneCeilingWith :: (Integral a) => (Integer, Integer) -> a -> a
+cloneCeilingWith (num, den) mx = (fromInteger (den - num) * mx) `div` fromInteger den
 
 -- | The decision over the two sizes and the label intersection I; I is
 -- forced only when the size bound passes.

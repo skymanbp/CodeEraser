@@ -3,27 +3,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 -- | clone.request handler (T3, design vol.2 §4): decode postorder
--- trees, enforce the Cost caps (over-cap = a complete degraded
--- reply, never a truncated one), machine-check the boundary contract
--- in request order (lab/lld lengths, lld range, postorder
--- reconstructibility, non-negative labels, in-range strictly
--- ascending pairs) — then judge: the judge-side admissible prefilter
--- first, Zhang-Shasha TED for the rest. Raw ted and sizes cross the
--- wire, never a ratio — the pre-registered cut table recomputes from
--- one run — and since ADR-008 P1 each score row carries the OWNER's
--- verdict bit (Cost.cloneDecides): the reported set is the core's
--- decision, relayed by Rust, never re-derived there. The M5-3a stub
--- refused here; this batch replaced exactly that refusal, and the
--- computation lives behind the exhaustive reference harness
--- (core/test/CloneProps.hs ≡ ReferenceTed). `decide` (plan v2.33 W3,
--- additive): rows [ted,n1,n2] the caller's verdict cache replays —
--- the reply's `decided` carries this core's bit for each, so a
--- replayed row still passes the owner's decision (Rust holds no copy
--- of the threshold).
+-- trees, enforce the Cost caps — the node ceiling per tree, the pair
+-- ceiling and, since plan v2.35 C3, the work ceiling Σ n1·n2 over the
+-- pairs (over any cap = a complete degraded reply, never a truncated
+-- one) — machine-check the boundary contract in request order
+-- (lab/lld lengths, lld range, postorder reconstructibility,
+-- non-negative labels, in-range strictly ascending pairs) — then
+-- judge: the three admissible bounds first (size, label, label
+-- sequence), Zhang-Shasha TED for the rest. Raw ted and sizes cross
+-- the wire, never a ratio, and since ADR-008 P1 each score row
+-- carries the OWNER's verdict bit (Cost.cloneDecides): the reported
+-- set is the core's decision, relayed by Rust, never re-derived there.
+-- A pair a bound decides crosses no distance (C1), so a cut table that
+-- re-thresholds below the shipped ratio needs a core built at its
+-- lowest ratio (CloneSeqProps: the ceiling only grows as the ratio
+-- falls). The M5-3a stub refused here; this batch replaced exactly
+-- that refusal, and the computation lives behind the exhaustive
+-- reference harness (core/test/CloneProps.hs ≡ ReferenceTed).
+-- `decide` (plan v2.33 W3, additive): rows [ted,n1,n2] the caller's
+-- verdict cache replays — the reply's `decided` carries this core's
+-- bit for each, so a replayed row still passes the owner's decision
+-- (Rust holds no copy of the threshold).
 module CE.Clone (WireTree (..), decodeTree, respond, treeShape) where
 
-import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap)
-import CE.Clone.Prefilter (histo, provablyBelowH)
+import CE.Clone.Cost (cloneDecides, minUnitNodes, pairCap, tsedDen, tsedNum, unitNodeCap, workCap)
+import CE.Clone.Prefilter (cloneCeiling, histo, provablyBelowH)
+import CE.Clone.Sequence (preorder, sequenceOver)
 import CE.Clone.Ted (Tree (..), ted)
 import CE.Wire (Family (..), Respond, label, respondWith, resultLine, rowCheck, tableOffence, tooLarge)
 import qualified CE.Wire.Families as F
@@ -64,6 +69,7 @@ respond proto =
       , famOverCap = \req ->
           any (\t -> toInteger (length (wLab t)) > unitNodeCap) (reqTrees req)
             || toInteger (length (reqPairs req)) > pairCap
+            || workOf req > workCap
             || toInteger (maybe 0 length (reqDecide req)) > pairCap
       , famOffence = violation
       , famDegraded = \req -> reply proto req [] (0, 0) True
@@ -72,14 +78,27 @@ respond proto =
            in reply proto req scores (judged, pre) False
       }
 
+-- | The request's work (plan v2.35 C3): Σ n1·n2 over its pairs, a
+-- pair's endpoint read as size 0 when it names no tree (the contract
+-- refuses that pair by name after the cap; the cap must not crash on it).
+workOf :: CloneReq -> Integer
+workOf req = sum [size i * size j | [i, j] <- reqPairs req]
+ where
+  sizes = IM.fromList (zip [0 ..] (map (toInteger . length . wLab) (reqTrees req)))
+  size k = IM.findWithDefault 0 k sizes
+
 decodeTree :: WireTree -> Tree
 decodeTree t =
   Tree
-    { tLab = listArray (0, length (wLab t) - 1) (wLab t)
-    , tLld = listArray (0, length (wLld t) - 1) (wLld t)
+    { tLab = lab
+    , tLld = lld
     , tSize = length (wLab t)
     , tHisto = histo (wLab t)
+    , tPre = preorder lab lld
     }
+ where
+  lab = listArray (0, length (wLab t) - 1) (wLab t)
+  lld = listArray (0, length (wLld t) - 1) (wLld t)
 
 -- | First boundary-contract offender in request order (Graph.hs
 -- posture: the message names the violator deterministically); the
@@ -149,17 +168,22 @@ decideRow = rowCheck "decide" "malformed row (need [ted,n1,n2])" 3 checks
       | any (< 1) sizes -> Just "empty tree size"
     _ -> Nothing
 
--- | Judge every pair: the admissible prefilter proves "below
--- threshold" without TED where it can (below threshold ⇒ not a
--- clone, so no row and no bit); the rest get exact Zhang-Shasha.
--- Score rows carry raw ted and sizes, each paired with the owner's
--- verdict (ADR-008 P1).
+-- | Judge every pair: three admissible bounds prove "not a clone"
+-- without TED where they can — the size and label bounds
+-- (CE.Clone.Prefilter), then the label-sequence bound
+-- (CE.Clone.Sequence, plan v2.35 C1: the sequence distance exceeds the
+-- clone ceiling) — so such a pair has no row and no bit and is counted
+-- prefiltered; the rest get exact Zhang-Shasha. Score rows carry raw
+-- ted and sizes, each paired with the owner's verdict (ADR-008 P1).
+-- Since C1 a non-clone carries a distance only when no bound decided
+-- it; every clone keeps its exact distance.
 judge :: [Tree] -> [[Int]] -> ([([Integer], Bool)], Int, Int)
 judge trees ps = foldr step ([], 0, 0) ps
  where
   arr = IM.fromList (zip [0 ..] trees)
   step [i, j] (rows, judged, pre)
     | provablyBelowH (tSize a, tHisto a) (tSize b, tHisto b) = (rows, judged, pre + 1)
+    | sequenceOver (cloneCeiling (max (tSize a) (tSize b))) a b = (rows, judged, pre + 1)
     | otherwise =
         ( ( [fromIntegral i, fromIntegral j, d, size a, size b]
           , cloneDecides d (size a) (size b)

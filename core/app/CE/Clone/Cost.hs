@@ -1,14 +1,8 @@
 -- | The T3 knobs — every constant the clone judgment reads, nothing
 -- else (the CE.Graph.Cost posture: ablation targets live in ONE
--- module, so a dead knob has nowhere to hide).
-module CE.Clone.Cost
-  (minUnitNodes,  tsedNum
-  , tsedDen
-  , unitNodeCap
-  , pairCap
-  , cloneDecides
-  , cloneDecidesWith
-  ) where
+-- module, so a dead knob has nowhere to hide). Every binding here is
+-- exported, so the module states no export list.
+module CE.Clone.Cost where
 
 -- | The clone threshold as an integer ratio (0.85). Defined in-repo
 -- and documented here (2026-08-13 decision ②): plan §4.1 gives the
@@ -49,6 +43,21 @@ unitNodeCap = 256
 -- silent edit.
 pairCap :: Integer
 pairCap = 4096
+
+-- | Per-request work ceiling (plan v2.35 C3): the sum of n1·n2 over a
+-- request's pairs, beside pairCap. The node counts are facts the
+-- measuring side holds, so it plans chunks under both ceilings; a
+-- request over it answers like one over pairCap (complete, degraded).
+-- One pair always fits: unitNodeCap² = 65,536 < workCap. Calibration
+-- (counting on no bound, every pair a clone): the Zhang-Shasha CPU
+-- seconds per unit of n1·n2 over the recorded clone.requests of zod,
+-- jsoup, gson and fmt (26 requests, an in-process probe on this build,
+-- 2026-11-11, AMD Ryzen 7 7700, the machine itself at 100 % CPU)
+-- run 2.6e-7 to 7.3e-7 s; at the worst, 2 s is 2.7·10⁶ and the nearest
+-- power of two is 2^21: 1.5 s of distance per request at the worst
+-- slope, about 40x under the 60 s reply deadline (CE_CORE_DEADLINE_SECS).
+workCap :: Integer
+workCap = 2097152
 
 -- | The clone verdict, stated by the threshold's OWNER (ADR-008 P1:
 -- the reported set is the core's decision, riding each reply as a

@@ -56,6 +56,8 @@ limits =
           , "min_unit_nodes" .= Clone.minUnitNodes
           , "unit_node_cap" .= Clone.unitNodeCap
           , "pair_cap" .= Clone.pairCap
+          -- plan v2.35 C3: the per-request work ceiling, Σ n1·n2 over a request's pairs
+          , "work_cap" .= (Clone.workCap :: Integer)
           ]
     , "candidates"
         .= object

@@ -47,7 +47,7 @@ impl Session {
             version: env!("CARGO_PKG_VERSION"),
         };
         let line = serde_json::to_string(&hello).map_err(|e| e.to_string())?;
-        let parsed = serde_json::from_str(&session.exchange(&line)?)
+        let parsed = serde_json::from_str(&session.exchange(&line, "hello")?)
             .map_err(|e| format!("bad hello reply: {e}"))?;
         session.hello = super::validate(parsed)?;
         crate::tables::check_hello(core, session.hello.tables_digest)?;
@@ -67,7 +67,8 @@ impl Session {
         obj.insert("type".into(), format!("{kind}.request").into());
         obj.insert("id".into(), self.next_id.into());
         let line = serde_json::to_string(&body).map_err(|e| e.to_string())?;
-        let reply: Value = serde_json::from_str(&self.exchange(&line)?).map_err(|e| {
+        let waiting = format!("{kind}.request ({} bytes)", line.len());
+        let reply: Value = serde_json::from_str(&self.exchange(&line, &waiting)?).map_err(|e| {
             self.broken = true;
             format!("bad reply: {e}")
         })?;
@@ -96,11 +97,11 @@ impl Session {
     }
 
     /// One line out and one line back; a failure either way breaks the
-    /// session.
-    fn exchange(&mut self, line: &str) -> Result<String, String> {
+    /// session. `waiting` names the line for the deadline's message.
+    fn exchange(&mut self, line: &str, waiting: &str) -> Result<String, String> {
         let got = self
             .send(line)
-            .and_then(|()| pipe::next_line(&self.replies, self.deadline, &mut self.child));
+            .and_then(|()| pipe::next_line(&self.replies, self.deadline, &mut self.child, waiting));
         self.broken |= got.is_err();
         got
     }

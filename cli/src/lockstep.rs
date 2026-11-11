@@ -49,30 +49,69 @@ pub type Scored<E> = (Vec<(usize, usize, E)>, [u64; 2]);
 /// counters, and the request count.
 pub type Judged<E> = (Vec<(usize, usize, E)>, u64, u64, usize);
 
+/// The chunks of a family planned by pair count alone (`fam.chunk`).
+pub fn by_count<'p, P>(fam: &Family<'_>, pairs: &'p [P]) -> Vec<&'p [P]> {
+    pairs.chunks(fam.chunk).collect()
+}
+
+/// The chunks of a family planned by pair count AND by work (plan
+/// v2.35 C3): consecutive runs of at most `fam.chunk` pairs whose
+/// weights sum to at most `work`, order kept, no pair dropped; a pair
+/// heavier than `work` alone rides alone (the core then answers it
+/// degraded, refused by name — never silently skipped).
+pub fn by_work<'p, P>(
+    fam: &Family<'_>,
+    pairs: &'p [P],
+    work: u64,
+    weight: impl Fn(&P) -> u64,
+) -> Vec<&'p [P]> {
+    let (mut out, mut start, mut sum) = (Vec::new(), 0, 0u64);
+    for (i, p) in pairs.iter().enumerate() {
+        let w = weight(p);
+        if i > start && (i - start == fam.chunk || sum.saturating_add(w) > work) {
+            out.push(&pairs[start..i]);
+            (start, sum) = (i, 0);
+        }
+        sum = sum.saturating_add(w);
+    }
+    if start < pairs.len() {
+        out.push(&pairs[start..]);
+    }
+    out
+}
+
 /// Chunked lockstep judging over ONE link the caller opened through
 /// `judged::open` (plan v2.30 step 5b-9: the T3 family reads the
 /// core's proto off the link before deciding what its verdict cache
-/// may answer, then sends only the rest): chunk, build a
-/// request-local body, one request per chunk (cut further when its line
-/// would pass the protocol's ceiling, `within_line`), map each wire
-/// row's endpoints through its chunk's rank order, accumulate the two
-/// family counters, sort.
-pub fn lockstep_scores<P, E: Ord>(
+/// may answer, then sends only the rest): over the planned `chunks`
+/// (`by_count`, `by_work`), `wire.0` builds a request-local body, one
+/// request per chunk (cut further when its line would pass the
+/// protocol's ceiling, `within_line`), `wire.1` parses the reply; each
+/// wire row's endpoints map through its chunk's rank order, the two
+/// family counters accumulate, the rows are sorted. `answered` sees
+/// each answered request's pairs and its global rows before the next
+/// request is asked (plan v2.35 C4: the T3 family remembers them, so a
+/// judgment cut between requests keeps what the core already judged).
+pub fn lockstep_scores<'p, P: 'p, E: Ord>(
     link: &mut Link,
     fam: &Family<'_>,
-    pairs: &[P],
-    build: impl Fn(&[P]) -> (Vec<usize>, Value),
-    parse: impl Fn(&Value) -> anyhow::Result<Scored<E>>,
+    chunks: Vec<&'p [P]>,
+    (build, parse): (
+        impl Fn(&[P]) -> (Vec<usize>, Value),
+        impl Fn(&Value) -> anyhow::Result<Scored<E>>,
+    ),
+    mut answered: impl FnMut(&[P], &[(usize, usize, E)]) -> anyhow::Result<()>,
 ) -> anyhow::Result<Judged<E>> {
     let (mut rows, mut c0, mut c1, mut requests) = (Vec::new(), 0, 0, 0);
     let fits = |body: &Value| {
         judged::fits_line(fam.kind, body).map_err(|why| format!("{}: {why}", fam.kind))
     };
-    let mut send = |order: Vec<usize>, body: Value| -> anyhow::Result<()> {
+    let mut send = |chunk: &[P], order: Vec<usize>, body: Value| -> anyhow::Result<()> {
         let reply = judged::ask(link, fam.cap, fam.kind, body)?;
         let (ws, counts) = parse(&reply)?;
         c0 += counts[0];
         c1 += counts[1];
+        let start = rows.len();
         // `order[i]` on a CORE-supplied rank: request endpoints are
         // contract-checked (Clone.hs, Docdup.hs), the reply's were not.
         for (i, j, e) in ws {
@@ -82,9 +121,9 @@ pub fn lockstep_scores<P, E: Ord>(
             rows.push((a, b, e));
         }
         requests += 1;
-        Ok(())
+        answered(chunk, &rows[start..])
     };
-    for c in pairs.chunks(fam.chunk) {
+    for c in chunks {
         within_line(c, &build, &fits, &mut send)?;
     }
     rows.sort_unstable();
@@ -102,11 +141,11 @@ pub(crate) fn within_line<P>(
     c: &[P],
     build: &impl Fn(&[P]) -> (Vec<usize>, Value),
     fits: &impl Fn(&Value) -> Result<(), String>,
-    send: &mut impl FnMut(Vec<usize>, Value) -> anyhow::Result<()>,
+    send: &mut impl FnMut(&[P], Vec<usize>, Value) -> anyhow::Result<()>,
 ) -> anyhow::Result<()> {
     let (order, body) = build(c);
     match fits(&body) {
-        Ok(()) => send(order, body),
+        Ok(()) => send(c, order, body),
         Err(why) if c.len() <= 1 => anyhow::bail!("{why} (one pair alone)"),
         Err(_) => {
             drop(body);

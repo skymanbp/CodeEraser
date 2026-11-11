@@ -79,11 +79,15 @@ fn pump<R: Read + Send + 'static>(src: R, cap: u64) -> Receiver<std::io::Result<
 /// One reply line within the deadline. On timeout the core is REAPED
 /// here — kill then wait, so a wedge cannot hold the exe (Windows
 /// file lock) or leak a process — and the caller sees an Err, which
-/// every family already treats as its degraded path (A9f).
+/// every family already treats as its degraded path (A9f). `waiting`
+/// names what was asked (the request kind and its line's bytes, plan
+/// v2.35 C5), so a deadline on one oversized request reads as that,
+/// not as a wedge; the variable that sets the wait is named beside it.
 pub(super) fn next_line(
     rx: &Receiver<std::io::Result<String>>,
     deadline: Duration,
     child: &mut Child,
+    waiting: &str,
 ) -> Result<String, String> {
     match rx.recv_timeout(deadline) {
         Ok(Ok(line)) => Ok(line),
@@ -93,7 +97,7 @@ pub(super) fn next_line(
             let _ = child.kill();
             let _ = child.wait();
             Err(format!(
-                "core reply deadline exceeded ({deadline:?}) — core killed"
+                "core reply deadline exceeded ({deadline:?}) waiting on {waiting} — core killed (CE_CORE_DEADLINE_SECS sets the wait)"
             ))
         }
     }

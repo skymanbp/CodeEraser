@@ -14,9 +14,11 @@
 module CloneProps (battery) where
 
 import CE.Clone (respond)
-import CE.Clone.Cost (cloneDecides, cloneDecidesWith, tsedDen, tsedNum)
+import CE.Clone.Cost (cloneDecides, cloneDecidesWith, tsedDen, tsedNum, unitNodeCap, workCap)
 import CE.Clone.Prefilter (histo, provablyBelow)
+import CE.Clone.Sequence (preorder)
 import CE.Clone.Ted (Tree (..), ted)
+import qualified CloneSeqProps
 import Data.Aeson (Value, decodeStrict, encode, object, toJSON, (.=))
 import qualified Data.Aeson.KeyMap as KM
 import Data.Array.Unboxed (listArray)
@@ -60,8 +62,27 @@ battery = do
           && not (cloneDecidesWith (86, 100) 15 100 90)
       )
   i <- decideLegs teds
+  j <- CloneSeqProps.battery toTree fam
+  k <- workLegs
   putStrLn ("     clone family: maxN " <> show maxN <> ", trees " <> show (length fam))
-  pure (a && b && c && d && e && f && g && h && i)
+  pure (a && b && c && d && e && f && g && h && i && j && k)
+
+-- | The work ceiling (plan v2.35 C3): seventeen 128-node chains, so a
+-- pair weighs 128² = 16,384 and workCap / 16,384 pairs sit exactly on
+-- the ceiling — judged, not degraded — while one pair more is answered
+-- complete and degraded (no score row, judged 0), as over pairCap; and
+-- one pair of two trees at the node ceiling fits under it.
+workLegs :: IO Bool
+workLegs = do
+  let chain n = object ["lab" .= replicate n (0 :: Int), "lld" .= replicate n (0 :: Int)]
+      pairs = [[x, y] | x <- [0 .. 16 :: Int], y <- [x + 1 .. 16]]
+      atCap = fromInteger (workCap `div` (128 * 128))
+      ask ps = respond "test" (BL.toStrict (encode (object ["id" .= (1 :: Int), "trees" .= replicate 17 (chain 128), "pairs" .= take ps pairs])))
+      field key r = either (const Nothing) (\bs -> decodeStrict bs >>= (KM.lookup key :: KM.KeyMap Value -> Maybe Value)) r
+  a <- check "work ceiling: Σ n1·n2 = workCap is judged" (field "degraded" (ask atCap) == Just (toJSON False))
+  b <- check "work ceiling: one pair past it degrades, complete and empty" (field "degraded" (ask (atCap + 1)) == Just (toJSON True) && field "scores" (ask (atCap + 1)) == Just (toJSON ([] :: [Value])))
+  c <- check "work ceiling: one pair at the node ceiling fits" (unitNodeCap * unitNodeCap < workCap && length pairs > atCap)
+  pure (a && b && c)
 
 check :: String -> Bool -> IO Bool
 check name ok = putStrLn ((if ok then "ok   " else "FAIL ") <> name) >> pure ok
@@ -69,8 +90,10 @@ check name ok = putStrLn ((if ok then "ok   " else "FAIL ") <> name) >> pure ok
 type T = ([Int], [Int])
 
 toTree :: T -> Tree
-toTree (labs, llds) =
-  Tree (listArray (0, length labs - 1) labs) (listArray (0, length llds - 1) llds) (length labs) (histo labs)
+toTree (labs, llds) = Tree lab lld (length labs) (histo labs) (preorder lab lld)
+ where
+  lab = listArray (0, length labs - 1) labs
+  lld = listArray (0, length llds - 1) llds
 
 zs :: T -> T -> Integer
 zs a b = ted (toTree a) (toTree b)

@@ -2,13 +2,15 @@
 //! 5b-9), split out of mod.rs at the 300-line soft line: the verdict
 //! cache answers the pairs it holds for this core's proto and knobs
 //! (cache.rs), the rest ride the ONE lockstep machine over one link,
-//! and what the core answered is remembered for the next run. A
+//! and what the core answered is remembered request by request, before
+//! the next is asked (plan v2.35 C4), the dead rows swept once at the
+//! end of a completed judgment. A
 //! replayed scored row still passes the core's decision (clone/1
 //! `decide`): a cached bit the core would not give is a corrupt cache
 //! row, refused by name.
 
 use super::{Outcome, Scored, cache, wire};
-use crate::dedup::candidates::PairRow;
+use crate::dedup::candidates::{PairRow, limits};
 use crate::lockstep;
 use anyhow::Result;
 
@@ -27,25 +29,27 @@ pub(super) fn judge(
     let keys = cache::Keys::of(built);
     let (mut rows, send, cached) = cache::replay(&held, &keys, sendable);
     decided(&mut link, &rows)?;
+    let tree = |g: usize| match &built[g] {
+        Outcome::Tree(t) => t,
+        _ => unreachable!("sendable pairs reference built trees only"),
+    };
+    // plan v2.35 C3: by pair count and by the work the core states,
+    // Σ n1·n2 over a request's pairs
+    let fam = wire::family(core);
+    let size = |g: usize| tree(g).lab.len() as u64;
+    let chunks = lockstep::by_work(&fam, &send, limits().work_cap, |p| size(p.a) * size(p.b));
+    let request = |chunk: &[&PairRow]| {
+        let ab: Vec<(usize, usize)> = chunk.iter().map(|p| (p.a, p.b)).collect();
+        wire::chunk_request(&ab, tree)
+    };
     let (scored, judged, prefiltered, requests) = lockstep::lockstep_scores(
         &mut link,
-        &wire::family(core),
-        &send,
-        |chunk| {
-            let ab: Vec<(usize, usize)> = chunk.iter().map(|p| (p.a, p.b)).collect();
-            wire::chunk_request(&ab, |g| match &built[g] {
-                Outcome::Tree(t) => t,
-                _ => unreachable!("sendable pairs reference built trees only"),
-            })
-        },
-        wire::parse_result,
+        &fam,
+        chunks,
+        (request, wire::parse_result),
+        |chunk, answered| cache::put(conn, &cache::fresh(&keys, chunk, answered)),
     )?;
-    cache::remember(
-        conn,
-        &cache::fresh(&keys, &send, &scored),
-        &keys.live(),
-        &held,
-    )?;
+    cache::sweep(conn, &keys.live(), &held)?;
     rows.extend(scored);
     rows.sort_unstable();
     Ok((rows, [judged, prefiltered, cached], requests, link))

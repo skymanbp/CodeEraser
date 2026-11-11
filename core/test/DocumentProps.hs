@@ -244,7 +244,7 @@ limitsHeld = case limits of
   Object o -> [(Key.toString k, length g) | (k, Object g) <- KM.toAscList o] == stated && KM.size o == length stated
   _ -> False
  where
-  stated = [("candidates", 7), ("caps", 11), ("clone", 5), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 15), ("similar", 14), ("zone", 2)]
+  stated = [("candidates", 7), ("caps", 11), ("clone", 6), ("dedup", 2), ("docdup", 6), ("graph", 2), ("moves", 2), ("score_defaults", 15), ("similar", 14), ("zone", 2)]
 
 -- | An assertion's root row (1.9.2 W1): its head no rule defines, so
 -- `preds` never lists it and the root once read sort −1, raw ids; it

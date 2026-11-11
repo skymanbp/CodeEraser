@@ -30,12 +30,16 @@ import Data.List (sort)
 -- histogram — a property of the tree, not of any pair — attached
 -- lazily at decode so the prefilter reads it once per OPERAND while
 -- a tree whose pairs are all decided by the O(1) size corollary
--- never forces it (batch 9 P11). ted itself never reads it.
+-- never forces it (batch 9 P11). tPre is the labels in preorder, as
+-- lazy and for the same reason: only the sequence bound reads it
+-- (CE.Clone.Sequence), and only for a pair the postorder test left
+-- open. ted itself reads neither.
 data Tree = Tree
   { tLab :: UArray Int Int
   , tLld :: UArray Int Int
   , tSize :: Int
   , tHisto :: IM.IntMap Integer
+  , tPre :: UArray Int Int
   }
 
 -- | Tree edit distance. The empty tree is total-function territory

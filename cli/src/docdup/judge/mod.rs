@@ -99,27 +99,15 @@ fn judged_over(
     let (rows, judged, jaccard_dups, requests) = crate::lockstep::lockstep_scores(
         &mut link,
         &fam,
-        &cand.pairs,
-        |chunk| wire::chunk_request(chunk, |g| &cand.seqs[&g]),
-        wire::parse_result,
+        crate::lockstep::by_count(&fam, &cand.pairs),
+        (
+            |chunk: &[(usize, usize)]| wire::chunk_request(chunk, |g| &cand.seqs[&g]),
+            wire::parse_result,
+        ),
+        |_, _| Ok(()),
     )?;
     let judged_rows = reported_rows(&rows, &cand.pairs)?;
-    let dups = judged_rows
-        .iter()
-        .filter(|r| r[5] == 1)
-        .map(|r| {
-            let m = |k: usize| r[k] as u64;
-            (
-                r[0] as usize,
-                r[1] as usize,
-                Doc {
-                    inter: m(2),
-                    union: m(3),
-                    verbatim: m(4),
-                },
-            )
-        })
-        .collect();
+    let dups = dup_pairs(&judged_rows);
     let (exempt_license, exempt_allow) = candidates::exempt_counts(idx)?;
     let counts = Counts {
         sent: cand.pairs.len() as u64,
@@ -137,6 +125,27 @@ fn judged_over(
         counts,
     };
     Ok((judged, link))
+}
+
+/// The pairs the core's verdict bit names duplicates, each with its
+/// metric — split from judged_over at the E01 line.
+fn dup_pairs(judged_rows: &[[i64; 6]]) -> Vec<(usize, usize, Doc)> {
+    judged_rows
+        .iter()
+        .filter(|r| r[5] == 1)
+        .map(|r| {
+            let m = |k: usize| r[k] as u64;
+            (
+                r[0] as usize,
+                r[1] as usize,
+                Doc {
+                    inter: m(2),
+                    union: m(3),
+                    verbatim: m(4),
+                },
+            )
+        })
+        .collect()
 }
 
 /// One scored row as wire::parse_result decodes it: the pair and

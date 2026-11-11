@@ -8,7 +8,9 @@ use super::leak::{leaked, owned};
 leaked! {
     /// The clone judgment's thresholds and ceilings (CE.Clone.Cost).
     CloneLimits { tsed_num: i64, tsed_den: i64, min_unit_nodes: i64, unit_node_cap: i64,
-                  pair_cap: usize }
+                  pair_cap: usize,
+                  // plan v2.35 C3: the per-request work ceiling, Σ n1·n2 over a request's pairs
+                  work_cap: u64 }
     /// The candidates family's ceilings and the MinHash/LSH shape
     /// (CE.Candidates.Cost).
     CandidateLimits { unit_cap: usize, sig_cap: usize, print_cap: usize, near_cap: usize,
