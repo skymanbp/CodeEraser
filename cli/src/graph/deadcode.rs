@@ -30,12 +30,14 @@
 
 mod advisory;
 mod convention;
+pub mod cycles;
 mod document;
 mod flags;
 mod targets;
 
 pub use advisory::{Advised, Named};
 pub use convention::Position;
+pub use cycles::self_loop_nodes;
 pub(crate) use document::request as doc_request;
 pub use document::{AdvisoryRow, Counts, DeadRow, Report, Reported};
 pub(crate) use flags::ROLE_NAMES;
@@ -415,24 +417,6 @@ pub fn request_body(w: &GraphWire, pos: &[i64]) -> Value {
         );
     }
     body
-}
-
-/// The graph reply's `cycles` table, [[sccId, [nodeIdx..]]] — the one
-/// reading of it (the screen's canvas flattens it, the verdict roads
-/// keep its singletons).
-pub fn cycle_table(reply: &Value) -> Result<Vec<(i64, Vec<i64>)>> {
-    serde_json::from_value(reply["cycles"].clone()).context("cycle rows")
-}
-
-/// The node indices the graph reply lists as singleton cycles —
-/// non-empty only at `sccFloor` 1, where a lone node is a cycle
-/// exactly when it carries a self-arc (6.4.0, O59).
-pub fn self_loop_nodes(reply: &Value) -> Result<Vec<i64>> {
-    Ok(cycle_table(reply)?
-        .into_iter()
-        .filter(|(_, m)| m.len() == 1)
-        .map(|(_, m)| m[0])
-        .collect())
 }
 
 /// Those nodes re-keyed to the verdict universe — the measured nodes'

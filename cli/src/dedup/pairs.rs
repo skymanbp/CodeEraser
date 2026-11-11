@@ -13,13 +13,17 @@
 //! boilerplate-dense regions and built pathological blocks
 //! (DEDUP-CALIBRATION.md).
 
-use super::anchors::{GroupEvent, each_hash_pair};
-use super::cover;
 use super::index::Instance;
 use super::tokens::Token;
+use anchors::{GroupEvent, each_hash_pair};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+
+mod anchors;
+pub mod cover;
+
+pub use anchors::candidate_files;
 
 /// A verified maximal common token run, mapped back to lines.
 #[derive(Debug, Clone, Serialize, Deserialize)]

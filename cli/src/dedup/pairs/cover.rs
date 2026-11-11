@@ -65,23 +65,19 @@ pub fn classify(runs: &[Run], (t, d): (usize, usize)) -> Result<Vec<Class>> {
     if runs.is_empty() {
         return Ok(Vec::new());
     }
-    // `--min-distinct 0` turns the floor off; every run holds at least
-    // one distinct token, so floor 1 selects exactly the same runs, and
-    // that is the floor the contract (d >= 1) is asked under
-    let f = (t, d.max(1));
     let rows = wire_rows(runs);
     let cap = crate::tables::get().limits.caps.cover_rows;
     let mut classes = vec![Class::Dropped; runs.len()];
     for part in chunks(&rows, cap)? {
         let slice = &rows[part];
         let body = json!({
-            "minTokens": f.0,
-            "minDistinct": f.1,
+            "minTokens": t,
+            "minDistinct": d,
             "runs": slice.iter().map(|(_, row)| row).collect::<Vec<_>>(),
         });
         SENT.with(|n| n.set(n.get() + 1));
         let reply = judged::session_ask((CAP, KIND), body).map_err(anyhow::Error::msg)?;
-        for ((i, _), class) in slice.iter().zip(consume(&reply, slice.len(), f)?) {
+        for ((i, _), class) in slice.iter().zip(consume(&reply, slice.len(), (t, d))?) {
             classes[*i] = class;
         }
     }
@@ -178,5 +174,5 @@ fn field(reply: &Value, key: &str) -> Result<usize> {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/dedup/cover.rs"]
+#[path = "../../../tests/unit/dedup/pairs/cover.rs"]
 mod tests;

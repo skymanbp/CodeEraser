@@ -68,7 +68,7 @@ fn graph_rows(w: &GraphWire) -> Vec<[i64; 3]> {
 
 /// `cycles` = [[sccId, [nodeIdx..]]] flattened to [sccId, member].
 fn cycle_rows(reply: &Value) -> Result<Vec<[i64; 2]>> {
-    Ok(deadcode::cycle_table(reply)?
+    Ok(deadcode::cycles::cycle_table(reply)?
         .into_iter()
         .flat_map(|(c, members)| members.into_iter().map(move |m| [c, m]))
         .collect())

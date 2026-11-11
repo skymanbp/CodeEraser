@@ -1,10 +1,10 @@
-//! The anchor walk of the T1/T2 extension (split from pairs.rs, v2.35
+//! The anchor walk of the T1/T2 extension (a child of pairs.rs, v2.35
 //! imports lane): instances grouped by fingerprint hash, every candidate
 //! pair visited — chained above the hot cap — and the files any shared
 //! hash touches. pairs.rs verifies the pairs this walk yields; the T3
 //! candidate source reads the same walk's near runs through it.
 
-use super::index::Instance;
+use crate::dedup::index::Instance;
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Above this group size, pairing switches from full pairwise

@@ -18,7 +18,7 @@
 //! run with custom knobs simply overwrites and the next default run
 //! recomputes once.
 
-use super::cover;
+use super::pairs::cover;
 use super::pairs::{Blocks, Filter};
 use super::tokens;
 use anyhow::Result;
