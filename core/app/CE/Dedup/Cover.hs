@@ -10,7 +10,7 @@
 -- reported, which suppressed and which dropped (CE.Dedup.Cover.Rule).
 --
 --   minTokens     t, the report threshold (>= 1)
---   minDistinct   d, the diversity floor (>= 1)
+--   minDistinct   d, the diversity floor (>= 0; 0 = the floor is off)
 --   runs          [fileA, fileB, a0, b0, len, distinct], file codes by
 --                 path rank, strictly ascending on (fileA, fileB, a0, b0)
 --
@@ -50,7 +50,7 @@ offence r =
   asum
     [ if rows > coverRowCap then Just ("runs: " <> show rows <> " rows over the cap of " <> show coverRowCap) else Nothing
     , if minTokens r < 1 then Just "minTokens: below 1" else Nothing
-    , if minDistinct r < 1 then Just "minDistinct: below 1" else Nothing
+    , if minDistinct r < 0 then Just "minDistinct: negative" else Nothing
     , tableOffence "runs" (take 4) (rowCheck "runs" "malformed run (need [fileA,fileB,a0,b0,len,distinct])" 6 runRow) (runs r)
     ]
  where

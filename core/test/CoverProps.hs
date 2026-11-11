@@ -23,6 +23,7 @@ battery =
   runLegs
     [ "cover: completeness and non-redundancy on every generated pair"
     , "cover: the rule agrees with the token-position spelling on the small universe"
+    , "cover: floor 0 (off) and floor 1 give the same classes on every set"
     , "cover: R2-11's two runs on one line pair are both kept"
     , "cover: a low-diversity run never suppresses a diverse one"
     , "cover: a same-file pair shares one cover (three copies, two rows; a periodic list, one)"
@@ -30,7 +31,7 @@ battery =
     , "cover: every contract offence is refused by name"
     , "cover: the reply partitions the rows, counts them and echoes t and d"
     ]
-    [properties, agreement, r211, lowNeverHides, sharedCover, family2x2, refusals, replyShape]
+    [properties, agreement, floorOff, r211, lowNeverHides, sharedCover, family2x2, refusals, replyShape]
 
 -- | The rule's codes in row order (0 reported, 1 suppressed, 2 dropped).
 codes :: Integer -> Integer -> [Row] -> [Int]
@@ -40,9 +41,9 @@ codes t d rows = map code (classify t d [Run a b a0 b0 n k | (a, b, a0, b0, n, k
 
 -- | The small universe: one pair of two files and one same-file pair,
 -- every set of up to three runs over a short grid with distinct (a0, b0),
--- under t in 1..3 and d in 1..2.
+-- under t in 1..3 and d in 0..2.
 universe :: [(Integer, Integer, [Row])]
-universe = [(t, d, rows) | t <- [1 .. 3], d <- [1, 2], rows <- sets]
+universe = [(t, d, rows) | t <- [1 .. 3], d <- [0 .. 2], rows <- sets]
  where
   sets = filter fresh (upTo3 cross <> upTo3 self)
   cross = [(0, 1, a0, b0, n, k) | a0 <- [0 .. 2], b0 <- [0 .. 2], n <- [1 .. 3], k <- [1, n]]
@@ -63,6 +64,11 @@ properties = all holds universe
 
 agreement :: Bool
 agreement = all (\(t, d, rows) -> codes t d rows == refClasses t d rows) universe
+
+-- | Every run has at least one distinct token, so the floor off (0) and
+-- floor 1 put every run in the diverse class alike.
+floorOff :: Bool
+floorOff = and [codes t 0 rows == codes t 1 rows | (t, 1, rows) <- universe]
 
 r211 :: Bool
 r211 = codes 50 7 [(0, 1, 0, 0, 60, 20), (0, 1, 200, 300, 52, 20)] == [0, 0]
@@ -97,8 +103,8 @@ refusals :: Bool
 refusals =
   refusedBy respond (req 50 7 (replicate (fromInteger coverRowCap + 1) [0, 1, 0, 0, 1, 1])) ("rows over the cap of " <> show coverRowCap)
     && refusedBy respond (req 0 7 []) "minTokens: below 1"
-    && refusedBy respond (req 50 0 []) "minDistinct: below 1"
-    && and (zipWith (ows why -> refusedBy respond (req 50 7 rows) why) offending offences)
+    && refusedBy respond (req 50 (-1) []) "minDistinct: negative"
+    && and (zipWith (\rows why -> refusedBy respond (req 50 7 rows) why) offending offences)
  where
   offending =
     [ [[0, 1, 0, 0, 1]]
