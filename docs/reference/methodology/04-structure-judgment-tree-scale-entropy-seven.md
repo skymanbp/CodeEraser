@@ -175,7 +175,7 @@ the score today ([structure-axes.md:49-50](../structure-axes.md#L49)).
 | **S2** mixing | `[dirId,inside,outside,count]` | `ins + outs >= mixRefFloor && outs > ins` | 4 `mixRefFloor=5` |
 | **S3** misplacement | `[dirId,inside,outside,count]` | per file `outside >= misplaceMin && outside > 2*inside`, then dedup to dirs | 5 `misplaceMin=3` |
 | **S4** documentation | `[id,…,files]` + `[dirId,bits]` | `(files >= bigDirFloor && even bits) \|\| (id == 0 && bits < 2)` | 6 `bigDirFloor=8` |
-| **S5** staleness | wire `staleDocs` by path, core-built into `[dirId,docTs]` + `[docIdx,targetTs]` and derived into `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
+| **S5** staleness | wire `staleDocs` by path (each file's newest first-parent commit time in the window, a merge's files read by its first-parent diff — the churn window's parent rule), core-built into `[dirId,docTs]` + `[docIdx,targetTs]` and derived into `[dirId,stale,total]` | `stale >= staleMin` | 11 `staleMin=1` |
 | **S6** redundancy | wire `clonePairs` + `deadPaths` by path, core-built into `[dirId,dupBlocks,deadUnits]` | `dupBlocks >= dupMin \|\| deadUnits >= deadMin` | 9 `dupMin=1`, 10 `deadMin=1` |
 | **S7** modularity | `[fromDir,toDir,count]` + `fileRefs`' `inside` sums, both core-built from the one arc list | `mu >= modMassFloor && mu < m && 1000*(e*m − o*i) < modFloor*mu*(m−mu)` | 19 `modFloor=1`, 20 `modMassFloor=4` |
 

@@ -135,9 +135,13 @@ churn = do
   let ps = [0 .. toInteger np - 1]
   wide <- num 4
   pairs <- if wide == 0 then replicateM 23 ((\a b n -> [a, b, n + 2]) <$> num np <*> num np <*> num 9) else some 2 [[a, b, 3] | a <- ps, b <- ps, a < b]
-  facts <- drawn "commits appended rewrote surviving skipped" 300
+  facts <- drawn "commits appended rewrote skipped" 300
+  -- every survivor is an added line (CE.Churn.Document `survivors`)
+  surviving <- num (1 + fromInteger (sum [v | (k, v) <- facts, k `elem` ["appended", "rewrote"]]))
+  -- the lines blame gives the window past the ledger: any count
+  beyond <- num 40
   days <- (+ 1) <$> num 30
-  pure (docRequest "churn" [("paths", toInteger np), ("submodules", toInteger nsub)] [("cochange", pairs)] (("days", days) : facts) Nothing)
+  pure (docRequest "churn" [("paths", toInteger np), ("submodules", toInteger nsub)] [("cochange", pairs)] (("days", days) : ("surviving", surviving) : ("beyond_ledger", beyond) : facts) Nothing)
 
 trend :: G Value
 trend = do

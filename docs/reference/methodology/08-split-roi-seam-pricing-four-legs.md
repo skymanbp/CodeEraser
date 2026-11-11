@@ -161,8 +161,8 @@ block splits one coherent duplicate span across two files — priced dearer than
 reference [Cost.hs:168-173](../../../core/app/CE/Structure/Cost.hs#L168).
 
 **Leg 3 — crossing co-change pairs.** Pairs of top-level units that the churn window edits in
-the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent
---no-merges`, path-limited to the seam files)
+the same commit. Commits are narrowed at git (`--since {14} days ago --first-parent`, merges
+read by their first-parent diff as the churn window reads them, path-limited to the seam files)
 [seams.rs:177-191](../../../cli/src/structure/seams.rs#L177), then each commit's ledger rows are
 joined onto the *current* snapshot's units at key level; renamed units drop out honestly, and
 a tree without git history prices the leg at zero rather than failing the advisory

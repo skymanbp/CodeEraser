@@ -29,6 +29,11 @@ pub struct Report {
     /// Per-unit ledger, sorted by (path, key, anchor).
     pub units: Vec<UnitRow>,
     pub surviving: usize,
+    /// Lines HEAD's blame gives to a window commit beyond the ledger's
+    /// added lines for that (commit, path) — a line end, a final
+    /// newline, another diff alignment (survival.rs): counted, so the
+    /// survivors stay a part of the added lines.
+    pub beyond_ledger: usize,
     pub cochange: Vec<(String, String, usize)>,
     pub skipped_large: usize,
     /// Declared submodules holding judged files whose history is not
@@ -49,9 +54,9 @@ impl Report {
 }
 
 /// The churn document and its lines, laid out by the core at `core`:
-/// the window's sums, the survivors and the skip count as facts, each
-/// co-change pair `[a, b, commits]` over the paths it names, and the
-/// paths and submodules the core spells in.
+/// the window's sums, the survivors, the lines beyond the ledger and
+/// the skip count as facts, each co-change pair `[a, b, commits]` over
+/// the paths it names, and the paths and submodules the core spells in.
 pub fn answer(core: &str, r: &Report, days: u32) -> Result<Answer> {
     let mut paths = Paths::default();
     let cochange: Vec<[i64; 3]> = r
@@ -67,6 +72,7 @@ pub fn answer(core: &str, r: &Report, days: u32) -> Result<Answer> {
         .fact("appended", r.append_lines())
         .fact("rewrote", r.rewrite_lines())
         .fact("surviving", r.surviving)
+        .fact("beyond_ledger", r.beyond_ledger)
         .fact("skipped", r.skipped_large)
         .rows("cochange", cochange);
     let req = req

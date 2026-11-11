@@ -27,19 +27,18 @@
 //! caveat with at 7.0.0, and a deletion elsewhere in the file moves
 //! it not.
 //!
-//! Recorded basis, beside that caveat: the window has exactly ONE
-//! clock on BOTH sides — COMMITTER time. window_commits selects with
-//! `git log --since`, which is committer-dated, so survival dates
-//! blame lines the same way. The author-time filter it replaced
-//! disagreed with its own numerator: a rebased or cherry-picked
-//! commit carries an old author date and a fresh committer date, so
-//! `--since` counted its lines as window additions while the
-//! survivor pass threw every one of them out — churn biased upward
-//! by construction, worst on exactly the histories that rebase most.
-//!
-//! Report-only in M4 (no thresholds, no gating); numbers feed the
-//! M5 three-signal join. Report shapes live in report.rs (the 300
-//! dogfood gate split).
+//! Recorded basis, beside that caveat: ONE commit set, ONE parent rule
+//! on both sides. window_commits takes the first-parent commits
+//! `git log --since` (committer-dated) reaches, merges INCLUDED by
+//! their first-parent diff (v2.35 V1: `--no-merges` read +100 merged
+//! lines as 0 added while blame counted 100 survivors). The survivor
+//! pass blames `--first-parent` the files the ledger attributed and
+//! counts a line only when its commit is IN that set, per (commit,
+//! path) capped at the ledger's added lines — two valid diffs agree on
+//! HOW MANY lines a commit added, not WHICH; the rest is counted as
+//! `beyond_ledger` (survival.rs) — so the core refuses, not clamps, a
+//! report whose survivors exceed the added lines. Report-only (no
+//! thresholds); shapes in report.rs (the 300 dogfood gate split).
 
 mod gitio;
 mod report;
@@ -74,19 +73,14 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
     let mut ledger = Ledger::new();
     let mut pair_counts: HashMap<(String, String), usize> = HashMap::new();
     let mut skipped_large = 0usize;
-    let mut touched: Vec<String> = Vec::new();
+    let mut added = survival::Added::new();
     for (n, sha) in shas.iter().enumerate() {
         crate::progress::at(crate::progress::Phase::Commits, n, shas.len());
         let pairs = session::commit_pairs(root, sha).unwrap_or_default();
-        classify_commit(root, sha, &pairs, &mut ledger);
-        count_cochange(&pairs, &mut pair_counts, &mut skipped_large);
-        for (_, after) in &pairs {
-            if let Some(f) = after
-                && !touched.contains(f)
-            {
-                touched.push(f.clone());
-            }
+        for (f, lines) in classify_commit(root, sha, &pairs, &mut ledger) {
+            *added.entry((sha.clone(), f.to_string())).or_default() += lines;
         }
+        count_cochange(&pairs, &mut pair_counts, &mut skipped_large);
     }
     // the wire floor follows the CONFIGURED knob when one is set
     // (batch-7 slice 12: the hardcoded >= 2 silently withheld
@@ -100,10 +94,12 @@ pub fn run(root: &Path, days: u32) -> Result<Report> {
         .map(|f| f as usize)
         .unwrap_or(2);
     let excludes = config.map(|c| c.exclude).unwrap_or_default();
+    let lived = survival::survival(root, &shas, &added)?;
     Ok(Report {
         commits: shas.len(),
         units: sorted_rows(ledger),
-        surviving: survival::survival(root, days, &touched)?,
+        surviving: lived.surviving,
+        beyond_ledger: lived.beyond_ledger,
         cochange: top_pairs(pair_counts, floor),
         skipped_large,
         submodules_without_history: unhistoried(root, &excludes),
@@ -167,14 +163,7 @@ fn window_commits(root: &Path, days: u32) -> Result<Vec<String>> {
     let since = format!("{days} days ago");
     let out = git(
         root,
-        &[
-            "log",
-            "--since",
-            &since,
-            "--first-parent",
-            "--no-merges",
-            "--format=%H",
-        ],
+        &["log", "--since", &since, "--first-parent", "--format=%H"],
     )?;
     Ok(out.split_whitespace().map(str::to_string).collect())
 }
@@ -206,12 +195,22 @@ pub fn pair_texts<'p>(
 /// from the same container-chain function the baseline's members
 /// carry (fourclass/anchor.rs), so a HEAD-side join on (path, key,
 /// anchor) names the same unit whatever was deleted in between.
-fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: &mut Ledger) {
+/// Answers each after path it attributed with the lines it added
+/// there: the survivor pass blames those and no other file, and caps
+/// each (commit, path) at that count (survival.rs).
+fn classify_commit<'p>(
+    root: &Path,
+    sha: &str,
+    pairs: &'p [session::PathPair],
+    ledger: &mut Ledger,
+) -> Vec<(&'p str, usize)> {
+    let mut attributed = Vec::new();
     for pair in pairs {
         let Some((after_path, before, after, lang)) = pair_texts(root, sha, pair) else {
             continue;
         };
         let (changed, _) = crate::fourclass::changed(&before, &after);
+        attributed.push((after_path, changed.added.len()));
         let before_units = units::segments(&before, lang);
         let after_units = units::segments(&after, lang);
         let anchors = crate::fourclass::anchor::for_units(&after_units);
@@ -227,6 +226,7 @@ fn classify_commit(root: &Path, sha: &str, pairs: &[session::PathPair], ledger: 
             }
         }
     }
+    attributed
 }
 
 /// Ledger identity of `owner`: pointer-match into the SAME unit slice

@@ -108,9 +108,20 @@ pub fn stale_docs(root: &Path, w: &GraphWire, days: u32) -> Result<StaleDocs> {
 /// doc citing `cli/tests/…` can never be found stale by that target
 /// here — one-directional (a missed staleness, never a false alarm),
 /// named by `ce churn`'s report rather than widened onto this wire.
+/// The churn window's parent rule (churn/mod.rs header): first parent,
+/// merges included — `--first-parent` makes git list a merge's files by
+/// its first-parent diff, so a file changed on a side branch is dated
+/// by the merge that brought it.
 fn newest_in_window(root: &Path, days: u32) -> Result<BTreeMap<String, i64>> {
     let since = format!("--since={days} days ago");
-    let log = crate::churn::git(root, &["log", &since, "--format=%x01%ct", "--name-only"])?;
+    let args = [
+        "log",
+        &since,
+        "--first-parent",
+        "--format=%x01%ct",
+        "--name-only",
+    ];
+    let log = crate::churn::git(root, &args)?;
     let mut newest: BTreeMap<String, i64> = BTreeMap::new();
     let mut cur = 0i64;
     for line in log.lines() {

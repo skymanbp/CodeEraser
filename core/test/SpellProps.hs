@@ -157,6 +157,6 @@ documents =
 unspelled :: Bool
 unspelled = holed (ask False) && not (holed (ask True)) && "a.rs" `isInfixOf` ask True
  where
-  body s = object (["proto" .= proto, "type" .= ("document.request" :: String), "id" .= (1 :: Int), "family" .= ("churn" :: String), "ranges" .= object ["paths" .= (2 :: Int), "submodules" .= (0 :: Int)], "facts" .= object [k .= (0 :: Int) | k <- ["days", "commits", "appended", "rewrote", "surviving", "skipped"]], "rows" .= object ["cochange" .= [[0, 1, 2 :: Int]]], "lang" .= (0 :: Int)] <> ["strings" .= object ["path" .= ["a.rs", "b.rs" :: String], "submodule" .= ([] :: [String])] | s])
+  body s = object (["proto" .= proto, "type" .= ("document.request" :: String), "id" .= (1 :: Int), "family" .= ("churn" :: String), "ranges" .= object ["paths" .= (2 :: Int), "submodules" .= (0 :: Int)], "facts" .= object [k .= (0 :: Int) | k <- ["days", "commits", "appended", "rewrote", "surviving", "beyond_ledger", "skipped"]], "rows" .= object ["cochange" .= [[0, 1, 2 :: Int]]], "lang" .= (0 :: Int)] <> ["strings" .= object ["path" .= ["a.rs", "b.rs" :: String], "submodule" .= ([] :: [String])] | s])
   ask s = either (const "") B8.unpack (respond proto (BL.toStrict (encode (body s))))
   holed out = "{\"$\"" `isInfixOf` out

@@ -71,7 +71,7 @@ fieldTable =
   \erase-trail schema string\nerase-trail log string\nerase-trail present bool\nerase-trail rows array\n\
   \erase-trail unreadable array\nerase-trail counts object\n\
   \churn schema string\nchurn commits number\nchurn append_lines number\nchurn rewrite_lines number\n\
-  \churn added_in_window number\nchurn surviving number\nchurn churned number\nchurn cochange array\n\
+  \churn added_in_window number\nchurn surviving number\nchurn churned number\nchurn beyond_ledger number\nchurn cochange array\n\
   \churn skipped_large_commits number\nchurn submodules_without_file_history array\n\
   \trend schema string\ntrend window number\ntrend pending number\ntrend rows array\ntrend failed array\ntrend judgment object\n\
   \similar schema string\nsimilar similar_rev number\nsimilar query object\nsimilar candidates array\nsimilar counts object\nsimilar degraded ref?"
@@ -102,13 +102,15 @@ refusalTable =
   \erase\t{\"paths\":1,\"cands\":0}\t{}\t{\"applied\":2}\t-\tfacts: applied without apply\n\
   \erase-trail\t{\"paths\":1,\"records\":0,\"unread\":1}\t{\"unreadable\":[[0,3]]}\t{}\t-\trecords: a trail that is not present\n\
   \churn\t{\"paths\":1,\"submodules\":0}\t{\"cochange\":[[0,1,2]]}\t{}\t-\tcochange 0: column 1 out of range paths\n\
+  \churn\t{\"paths\":1,\"submodules\":0}\t{}\t{\"appended\":3,\"rewrote\":2,\"surviving\":6}\t-\tfacts: surviving exceeds the window's added lines\n\
+  \churn\t{\"paths\":0,\"submodules\":0}\t{}\t{\"beyond_ledger\":-1}\t-\tfacts: beyond_ledger is negative\n\
   \trend\t{\"points\":1,\"failed\":0}\t{\"points\":[[0,1,900,1000,3]]}\t{}\t-\tpoints 0: an axis without its value\n\
   \trend\t{\"points\":2,\"failed\":0}\t{\"points\":[[0,1,900,1000],[1,2,800,1000]],\"cliff\":[[1,5],[1,6]]}\t{}\t-\tcliff: more than one row\n\
   \similar\t{\"seats\":1,\"why\":0}\t{\"candidates\":[[0,0,3,1,0,0,0,0,0,0,0,3]]}\t{}\t-\tcandidates 0: column 11 is not a code 0..2\n\
   \churn\t{\"paths\":0,\"submodules\":0}\t{}\t{}\t0\tdegraded: out of range why"
 
 refusals :: Bool
-refusals = length cases == 17 && all refused cases
+refusals = length cases == 19 && all refused cases
  where
   cases = map (splitOn '\t') (lines refusalTable)
   refused c = case c of
@@ -187,7 +189,7 @@ seeded = all (\(fam, test) -> any (\(f, _, d) -> dfName f == fam && test d) judg
     , ("docdup", not . null . (`items` "dups"))
     , ("erase", \d -> int (path ["counts", "eraseable"] d) > 0 && int (path ["counts", "advisory"] d) > 0)
     , ("erase-trail", \d -> not (null (items d "rows")) && not (null (items d "unreadable")))
-    , ("churn", \d -> length (items d "cochange") > 20 && not (null (items d "submodules_without_file_history")))
+    , ("churn", \d -> length (items d "cochange") > 20 && not (null (items d "submodules_without_file_history")) && int (path ["beyond_ledger"] d) > 0)
     , ("trend", \d -> path ["judgment", "cliff"] d /= Just Null && not (null (items d "failed")))
     , ("similar", \d -> at d "degraded" /= Just Null && not (null (items d "candidates")))
     ]
