@@ -2,7 +2,7 @@
 -- the text form FlowCases reads: a header `! <message>` and the
 -- smallest rows that trip it — the row shapes and ranges
 -- (CE.Flow.Contract), the neighbour checks of the tree builder
--- (CE.Flow.Tree), the shape of the tree (CE.Flow.Shape). Forty-two
+-- (CE.Flow.Tree), the shape of the tree (CE.Flow.Shape). Forty-three
 -- cases, one per refusal a request can reach; the tree builder's
 -- three totality clauses (`malformed stmt / var / use`, a row of the
 -- wrong width) sit behind the contract's row-shape check and have no
@@ -48,7 +48,8 @@ rowShapes =
   \x 0 0 0 3\n"
 
 -- | The checks that need a row's neighbours: units declared and
--- ascending, seqs and ids consecutive, parents earlier, declaring
+-- ascending, seqs and ids consecutive, parents earlier and on the
+-- pre-order path, declaring
 -- statements inside the unit, parameters at no statement, accesses
 -- ordered and naming what exists.
 treeNeighbours :: String
@@ -65,6 +66,11 @@ treeNeighbours =
   \s 0 2 -1 1 0 0\n\
   \! stmt 0: parent not before\n\
   \s 0 0 0 1 0 0\n\
+  \! stmt 3: parent not on the pre-order path\n\
+  \s 0 0 -1 0 0 0\n\
+  \s 0 1 0 0 0 0\n\
+  \s 0 2 -1 1 0 0\n\
+  \s 0 3 1 1 0 0\n\
   \! var 0: unit not declared\n\
   \v 1 0 -1 1\n\
   \! var 1: not strictly ascending\n\

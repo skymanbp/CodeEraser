@@ -138,7 +138,10 @@ Every token keeps the line and column it came from, so an error the core reports
 index reads back as `where line:column` through the lex reply's `at` table
 ([Front.hs:39](../../../core/app/CE/Query/Front.hs#L39), [lexed.rs:93](../../../cli/src/query/lexed.rs#L93)). A malformed
 token or table is the measuring side's fault and is refused by name before any judging —
-unknown kind, negative value, unknown predicate code, unknown fact predicate, wrong arity,
+unknown kind, negative value, a predicate code or variable number at 2^31 or past it (each becomes
+an `Int` past the contract; since v2.35 — `[0, 2^64+5]` wrapped to predicate 5 before), unknown
+predicate code, unknown fact predicate (a table's key read as an `Integer` below 1000, so no key
+wraps onto another — `"18446744073709551617"` read as table 1 until v2.35), wrong arity,
 negative fact value, a table not strictly ascending, a negative prelude count, texts that do not
 lex, a `lex` request without texts, a directory table sent beside the `tree` form
 ([Contract.hs:5-13](../../../core/app/CE/Query/Contract.hs#L5), [Contract.hs:118](../../../core/app/CE/Query/Contract.hs#L118),

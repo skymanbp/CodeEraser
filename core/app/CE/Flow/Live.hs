@@ -13,7 +13,8 @@
 -- ignored variable was named to be ignored. A variable nothing reads
 -- gets its unused finding and no dead-store findings — one fact, one
 -- finding. A store in unreachable code is covered by its unreachable
--- run and is not reported twice.
+-- run and is not reported twice, and so is a local declared there: the
+-- unreachable run wins over its unused finding (v2.35 V8).
 module CE.Flow.Live (deadStores, liveIn, unused) where
 
 import CE.Flow.Cfg (Cfg (..))
@@ -79,12 +80,14 @@ readVars :: Unit -> IS.IntSet
 readVars u = IS.fromList [v | acc <- IM.elems (uses u), Use _ v m <- acc, m /= modeWrite]
 
 -- | `(kind, variable, declSeq)` for every unread variable the
--- exemptions leave: an unused local, or an unused parameter.
-unused :: Unit -> [(Integer, Int, Int)]
-unused u =
+-- exemptions leave: an unused local declared at a reachable statement,
+-- or an unused parameter.
+unused :: Unit -> IS.IntSet -> [(Integer, Int, Int)]
+unused u seen =
   [ (if param then findUnusedParam else findUnusedLocal, vId v, vDecl v)
   | v <- IM.elems (vars u)
   , IS.notMember (vId v) (readVars u)
   , not (any (testBit (vFlags v)) [varCaptured, varIgnored, varAddress])
+  , vDecl v < 0 || IS.member (vDecl v) seen
   , let param = testBit (vFlags v) varParam
   ]

@@ -28,8 +28,13 @@ hOf :: Entry -> Word64
 hOf (_, h, _) = h
 
 -- | Per-hash pairing budget: a hash whose removed x added occurrence
--- product exceeds bucketCap^2 degrades the request (all-or-nothing,
--- attack review F3) — the product IS the work the site enumeration
+-- product exceeds bucketCap^2 is not enumerated, and the reply names
+-- `reason: bucket_cap` (CE.FourClass.Provenance) beside the moved
+-- lines, blocks and suspicions the other hashes still gave — the
+-- all-or-nothing of attack review F3 is the measuring side's: it reads
+-- the reason first and drops the whole reply (cli/src/fourclass/batch.rs
+-- `consume`), so a partial answer never stands as a complete one. The
+-- product IS the work the site enumeration
 -- spends, so the bound is the same worst case as the old per-side
 -- form while never firing on real shapes the per-side count
 -- mislabeled: ripgrep b9de003f8 adds 66 identical #[inline] lines

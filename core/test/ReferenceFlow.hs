@@ -131,7 +131,8 @@ runSwitch labels inTry n =
 -- body or the catches produced (the union the graph's hub takes); a
 -- truncated trace runs no finally. A try inside a try is one more of
 -- these on the way out: a return two trys deep runs the inner
--- finally, resumes as a return, and runs the outer.
+-- finally, resumes as a return, and runs the outer. Where its body may
+-- throw, the body may also throw before its first statement runs.
 runTry :: Labels -> Bool -> Node -> [([Int], Comp)]
 runTry labels inTry n = [(s : tr, c) | (tr, c) <- stuck <> finished]
  where
@@ -139,7 +140,8 @@ runTry labels inTry n = [(s : tr, c) | (tr, c) <- stuck <> finished]
   bodyKids = [c | c <- nKids n, nKind c `notElem` [kindCatch, kindFinally]]
   has k = any ((== k) . nKind) (nKids n)
   outward = inTry || has kindFinally
-  bodyRuns = runList labels (outward || has kindCatch) bodyKids
+  throws = outward || has kindCatch
+  bodyRuns = [([], Thr) | throws] <> runList labels throws bodyKids
   caught = [(tr <> ct, cc) | (tr, Thr) <- bodyRuns, c <- nKids n, nKind c == kindCatch, (ct, cc) <- runNode labels outward c]
   pend = bodyRuns <> caught
   stuck = [(tr, Stuck) | (tr, Stuck) <- pend]
@@ -176,7 +178,7 @@ unitFindings :: Integer -> Prog -> [[Integer]]
 unitFindings u p =
   [[u, findUnreachable, toInteger a, -1, toInteger b] | (a, b) <- groupRuns [s | s <- [0 .. pSize p - 1], IS.notMember s seen]]
     <> [[u, findDeadStore, toInteger s, toInteger v, toInteger s] | (s, v) <- deadStores]
-    <> [[u, kind, toInteger decl, toInteger v, toInteger decl] | (v, (decl, flags)) <- zip [0 ..] (pVars p), IS.notMember v readVars, not (any (testBit flags) [varCaptured, varIgnored, varAddress]), let kind = if testBit flags varParam then findUnusedParam else findUnusedLocal]
+    <> [[u, kind, toInteger decl, toInteger v, toInteger decl] | (v, (decl, flags)) <- zip [0 ..] (pVars p), IS.notMember v readVars, not (any (testBit flags) [varCaptured, varIgnored, varAddress]), decl < 0 || IS.member decl seen, let kind = if testBit flags varParam then findUnusedParam else findUnusedLocal]
  where
   traces = map fst (runList (labelsOf (pRoots p)) False (pRoots p))
   accOf = IM.fromList [(nSeq n, nAcc n) | (_, n) <- walk (-1) (pRoots p)]

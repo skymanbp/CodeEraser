@@ -26,7 +26,9 @@ tables are the whole of what the core sees (the design booklet's §5.1,
 
 - `units=[[u, lang, params]]` — one row per unit with its language's wire code and its
   parameter count;
-- `stmts=[[u, seq, parent, kind, flags, aux]]` — the statements in pre-order, sixteen kinds
+- `stmts=[[u, seq, parent, kind, flags, aux]]` — the statements in pre-order (each parent is the
+  statement just before or one of its ancestors, refused by name otherwise since v2.35 —
+  [Tree.hs:97-106](../../../core/app/CE/Flow/Tree.hs#L97)), sixteen kinds
   (block, stmt, if, loop, switch, case, try, catch, finally, return, throw, break, continue, goto,
   label, no-return call), five flag bits (has-else, infinite, fallthrough, dynamic, empty) and the
   jump target in `aux`;
@@ -55,7 +57,9 @@ so one unit's defect never costs the others their verdict
 
 `CE.Flow.Cfg` unfolds the structured statements into edges: an if to its then and else, a loop
 back to its head (an infinite head has no exit edge), a switch to each case with fallthrough to
-the next, a try body's every statement to each of its catches, every statement in the body or
+the next, a try body's every statement to each of its catches — and the try itself, as if it threw
+before its first body statement, so the state at its entry reaches its catches whatever the body
+opens with (since v2.35; [Cfg.hs:119-137](../../../core/app/CE/Flow/Cfg.hs#L119)) —, every statement in the body or
 a catch of a try with a finally on through that finally as a throw that continues outward (catch or
 no catch; ruling 2026-10-13), jumps to their targets, return, throw and no-return calls to the exit ([Cfg.hs:1-14](../../../core/app/CE/Flow/Cfg.hs#L1),
 [Cfg.hs:44](../../../core/app/CE/Flow/Cfg.hs#L44)). A finally is one hub, not a copy per target:
@@ -80,7 +84,8 @@ store's liveness is asked right after that store, inside the statement
 A dead store is a write no path reads before the variable is written again or the unit exits.
 Four rules keep the verdict to one fact, one finding: a captured or address-taken variable has
 readers this graph cannot see and is not judged; a variable nothing reads gets its unused finding
-and no dead-store findings; a store in unreachable code is covered by its run; the same
+and no dead-store findings; a store in unreachable code is covered by its run, and so is a local
+declared there, which gets no unused finding beside its run (since v2.35); the same
 statement's several stores are judged each on its own and reported as one `(seq, v)` row. An
 unused local or parameter is one nothing reads, a read-write counting as a read, the three
 exemptions (captured, ignored, address-taken) leaving it out
@@ -163,13 +168,14 @@ the changeset's findings are recorded, and the site list is `ce flow`'s.
 
 The core holds its judgment to a reference that builds no graph at all: a tree-walking
 interpreter that enumerates every execution trace of a structured unit — every branch and case,
-each loop head at most twice, every statement of a try body free to hand control to a catch,
+each loop head at most twice, every statement of a try body free to hand control to a catch
+and the body free to throw before its first statement,
 and of the body or a catch of a try with a finally free to throw on out through it,
 a finally continuing with the union of the pending completions — and reads the findings off the
 traces; the shipped judgment must agree finding for finding on 200 seeded random requests of one to
 three units each (judged bits and dynamic counts included)
 ([ReferenceFlow.hs:1-12](../../../core/test/ReferenceFlow.hs#L1)). The battery adds the
-hand-written cases of every kind, forty-two contract refusals pinned by name, the cap and the
+hand-written cases of every kind, forty-three contract refusals pinned by name, the cap and the
 skipped unit's counts ([FlowProps.hs:5-12](../../../core/test/FlowProps.hs#L5)), and six golden
 pairs pin the wire bytes, their requests lowered from real source since step 4
 ([Spec.hs:118](../../../core/test/Spec.hs#L118)).

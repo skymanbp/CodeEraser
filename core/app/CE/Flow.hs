@@ -68,7 +68,7 @@ unitFindings u =
     judgedOn
     ( [[me, findUnreachable, toInteger a, -1, toInteger b] | (a, b) <- runs (IM.size (stmts u)) seen]
         <> [[me, findDeadStore, toInteger s, toInteger v, toInteger s] | (s, v) <- deadStores u g seen]
-        <> [[me, kind, toInteger decl, toInteger v, toInteger decl] | (kind, v, decl) <- unused u]
+        <> [[me, kind, toInteger decl, toInteger v, toInteger decl] | (kind, v, decl) <- unused u seen]
     )
  where
   judgedOn row = case row of

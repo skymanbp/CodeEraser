@@ -183,9 +183,12 @@ refusals =
     , refusedBy respond (program [[7, 0]]) "token 0: unknown token kind 7"
     , refusedBy respond (program [[1, -1]]) "token 0: negative token value"
     , refusedBy respond (program [[0, 500]]) "token 0: unknown predicate code 500"
+    , refusedBy respond (program [[0, 2 ^ (64 :: Int) + 5]]) "token 0: token value past 2^31"
+    , refusedBy respond (program [[1, 2 ^ (31 :: Int)]]) "token 0: token value past 2^31"
     , isJust (replyObjWith respond (program [[2, -1]]))
     , refusedBy respond (tables ["99" .= rows []]) "facts 99: unknown fact predicate"
     , refusedBy respond (tables ["007" .= rows []]) "facts 007: unknown fact predicate"
+    , refusedBy respond (tables ["18446744073709551617" .= rows [[0]]]) "facts 18446744073709551617: unknown fact predicate"
     , refusedBy respond (tables ["1" .= rows [[0, 1]]]) "facts 1 0: malformed fact (need 1 values)"
     , refusedBy respond (tables ["1" .= rows [[-1]]]) "facts 1 0: negative fact value"
     , refusedBy respond (tables ["1" .= rows [[1], [1]]]) "facts 1 1: not strictly ascending"

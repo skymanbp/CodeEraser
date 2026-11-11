@@ -121,15 +121,20 @@ chainOf u s = [(a, partOf child) | (child, a) <- zip (s : anc) anc, kindOf u a =
 -- a try it sits in the body or a catch of has a finally, the implicit
 -- throw's hop to the unit's exit — routing takes it through the
 -- innermost such finally, whose hub owes the exit on outward, the
--- road an explicit throw already takes.
+-- road an explicit throw already takes. A try throws as if from its
+-- own body too, before any body statement ran (v2.35 V8): the state at
+-- its entry reaches its catches whatever its first body child is — a
+-- body opening with a statement rather than a block lost that edge,
+-- and `x = 0; try { x = f() } catch { use(x) }` read `x = 0` dead.
 hops :: Unit -> (Int -> Int) -> Stmt -> [Hop]
 hops u hubOf s =
   [Hop me c t | (c, t) <- successors u hubOf s]
-    <> [Hop me chain c | (t, Body) <- chain, c <- catchesOf u t]
-    <> [Hop me chain (IM.size (stmts u) + 1) | any finallyAhead chain]
+    <> [Hop me throwing c | (t, Body) <- throwing, c <- catchesOf u t]
+    <> [Hop me throwing (IM.size (stmts u) + 1) | any finallyAhead throwing]
  where
   me = sSeq s
   chain = chainOf u me
+  throwing = if sKind s == kindTry then (me, Body) : chain else chain
   finallyAhead (t, part) = part /= Finally && finallyOf u t /= Nothing
 
 -- | Where a statement's structure sends control, each target under

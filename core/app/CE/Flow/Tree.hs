@@ -3,8 +3,11 @@
 -- variables by id, its accesses by statement in evaluation order.
 -- Assembly IS the second half of the boundary contract — the rows
 -- were shaped one by one in CE.Flow.Contract, and here the checks
--- that need the neighbours run: a statement's unit exists and its
--- seq continues the unit's pre-order, its parent came before it, a
+-- that need the neighbours run: a statement's unit exists, its seq
+-- continues the unit's numbering and its parent is the statement just
+-- before it or one of that one's ancestors — the pre-order (v2.35 V8:
+-- "parent earlier" alone let a later sibling hang under a closed
+-- subtree, and CE.Flow.Reach's runs then merged unrelated seqs), a
 -- variable's declaring statement is in its unit, an access names a
 -- statement and a variable that exist, and the unit's declared
 -- parameter count is the count the variable table shows. The tree's
@@ -95,12 +98,14 @@ continues :: (Int, Int) -> Int -> Int
 continues (pu, pk) u = if u == pu then pk + 1 else 0
 
 -- | A statement: units ascending, seq continuing the unit's
--- pre-order, the parent earlier than the statement.
+-- numbering, the parent earlier than the statement and on the path
+-- from the body to the statement before it (the pre-order).
 stmtRow :: (Int, Int) -> Int -> [Integer] -> Unit -> Either String (Unit, Int)
 stmtRow prev i [u', seq', parent', kind', flags', aux'] un
   | u < fst prev = Left "not strictly ascending"
   | continues prev u /= sq = Left "seq not consecutive"
   | par >= sq = Left "parent not before"
+  | par >= 0 && par `notElem` (sq - 1 : ancestors un (sq - 1)) = Left "parent not on the pre-order path"
   | otherwise = Right (un {stmts = IM.insert sq (Stmt i sq par (fromInteger kind') (fromInteger flags') (fromInteger aux')) (stmts un)}, sq)
  where
   u = fromInteger u'

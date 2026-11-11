@@ -140,7 +140,17 @@ judgmentsB =
   \v 0 0 2 0\n\
   \x 0 2 0 1\n\
   \x 0 4 0 0\n\
-  \x 0 6 0 0\n"
+  \x 0 6 0 0\n\
+  \# a try throws before its first body statement: the store before a try whose body opens with a statement is read in the catch\n\
+  \s 0 0 -1 1 0 0\n\
+  \s 0 1 -1 6 0 0\n\
+  \s 0 2 1 1 0 0\n\
+  \s 0 3 1 7 0 0\n\
+  \s 0 4 3 1 0 0\n\
+  \v 0 0 0 0\n\
+  \x 0 0 0 1\n\
+  \x 0 2 0 1\n\
+  \x 0 4 0 0\n"
 
 -- | continue, goto and label, the exemptions, the dynamic skip (the
 -- table's last case, which FlowProps also reads for its counts).
@@ -170,6 +180,12 @@ judgmentsC =
   \v 0 0 1 0\n\
   \x 0 1 0 0\n\
   \x 0 2 0 1\n\
+  \# a local declared in unreachable code is covered by the unreachable run, not named unused as well\n\
+  \s 0 0 -1 9 0 0\n\
+  \s 0 1 -1 1 0 0\n\
+  \v 0 0 1 0\n\
+  \x 0 1 0 1\n\
+  \= 0 0 1 -1 1\n\
   \# captured, address-taken and ignored variables are never judged\n\
   \s 0 0 -1 1 0 0\n\
   \v 0 0 -1 5\n\

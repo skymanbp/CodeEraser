@@ -145,11 +145,16 @@ textsShape req = case (lexOf req, lexedOf req) of
 tokenShape :: Int -> [Integer] -> Maybe String
 tokenShape = rowCheck "token" "malformed token (need [kind,value])" 2 tokenChecks
 
+-- | A predicate code and a variable number become an `Int` past the
+-- contract, so each is bounded below 2^31 here (v2.35 V8: `[0, 2^64+5]`
+-- passed and wrapped to predicate 5); a name hash or an integer stays an
+-- `Integer` and is not bounded.
 tokenChecks :: [Integer] -> Maybe String
 tokenChecks tok = case tok of
   [kind, v]
     | not (knownKind kind) -> Just ("unknown token kind " <> show kind)
     | kind /= kindInt && v < 0 -> Just "negative token value"
+    | kind `elem` [kindPred, kindVar] && v >= 2 ^ (31 :: Int) -> Just "token value past 2^31"
     | kind == kindPred && v < idbFloor && arityOf (fromInteger v) == Nothing -> Just ("unknown predicate code " <> show v)
   _ -> Nothing
 
@@ -167,11 +172,15 @@ tableShape (key, rows) = case tableCode key >>= \c -> fmap ((,) c) (arityOf c) o
     negative row = if any (< 0) row then Just "negative fact value" else Nothing
 
 -- | A key is a code when it is a plain decimal (no sign, no leading
--- zero beyond "0" itself), so "007" and "-1" cannot alias a table.
+-- zero beyond "0" itself) below the program predicates' floor, read as
+-- an `Integer` before it narrows — so "007", "-1" and
+-- "18446744073709551617" (which `read :: Int` wrapped to 1, v2.35 V8)
+-- cannot alias a table: two keys are one code only when they are one
+-- string.
 tableCode :: String -> Maybe Int
 tableCode key = case key of
   "0" -> Just 0
-  c : _ | c /= '0' && all isDigit key -> Just (read key)
+  c : _ | c /= '0' && all isDigit key, n <- read key :: Integer, n < idbFloor -> Just (fromInteger n)
   _ -> Nothing
 
 -- | The tokens as pairs, after the contract fixed their shape.
