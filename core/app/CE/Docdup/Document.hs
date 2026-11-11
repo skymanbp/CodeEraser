@@ -19,7 +19,7 @@ import Data.Foldable (asum)
 import qualified Data.Map.Strict as M
 
 doc :: DocFamily
-doc = docFamily "docdup" (enSchema report) statement checked (enveloped report) []
+doc = envelopedFamily "docdup" report statement checked
 
 -- | The report: a pair row's metrics are [inter, union, verbatim run];
 -- the counters are the measuring side's, as the report names them.

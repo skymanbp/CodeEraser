@@ -21,7 +21,7 @@ import Data.Aeson (Value, object, (.=))
 import Data.Foldable (asum)
 
 doc :: DocFamily
-doc = docFamily "clone" (enSchema report) statement verdicts (enveloped report) []
+doc = envelopedFamily "clone" report statement verdicts
 
 -- | The T3 report: a pair row's metrics are [ted, n1, n2]; the
 -- counters are the measuring side's, as the report names them.

@@ -11,7 +11,7 @@
 -- hit)], in the order the judgment answered; a hit is two references
 -- of the family's class and its metrics by name; the counts are the
 -- universe, the measuring side's counters and the hits, in that order.
-module CE.Document.Envelope (Envelope (..), envelopeOf, enveloped, envelopeStatement, verdicts) where
+module CE.Document.Envelope (Envelope (..), envelopeOf, enveloped, envelopedFamily, envelopeStatement, verdicts) where
 
 import CE.Document.Contract
 import Data.Aeson (Value, object, (.=))
@@ -49,6 +49,12 @@ envelopeStatement e =
     <> "\n"
  where
   u = snd (enUniverse e)
+
+-- | An enveloped family's document: its schema id and its assembly both
+-- read off the one envelope, no extras — the family names its word, its
+-- envelope, its statement and its check, and nothing twice.
+envelopedFamily :: String -> Envelope -> String -> (DocReq -> Maybe String) -> DocFamily
+envelopedFamily name e statement check = docFamily name (enSchema e) statement check (enveloped e) []
 
 -- | The verdict column is a bit.
 verdicts :: DocReq -> Maybe String
