@@ -8,24 +8,38 @@
 module QueryReferenceProps (equivalence) where
 
 import CE.Query.Check (Checked (..), check)
-import CE.Query.Cost (errUnstratified)
+import CE.Query.Cost (arityCap, errUnstratified)
 import CE.Query.Eval (evalProgram, goalAnswers)
 import CE.Query.Parse (parseProgram)
 import CE.Query.Syntax (isIdb)
 import qualified Data.IntMap.Strict as IM
 import qualified Data.Set as S
-import ReferenceQuery (events, goalAnswersRef, naive, strataCount, toks)
+import ReferenceQuery (events, goalAnswersRef, headRefusal, naive, strataCount, toks)
 import ReferenceQueryGen (QCase (..), cases)
 import WireHarness (generated, runChecks)
 
 equivalence :: IO Bool
-equivalence = runChecks (generated names agrees reached shapes cases)
+equivalence = runChecks (generated names agrees reached shapes (cases <> headCases))
  where
   names = ("two hundred generated programs agree with the naive reference: refusals, program predicates and goal answers", "the generated programs reach every shape §4.1 states")
+
+-- | Two programs the heads refuse (v2.35 V7): a rule defining the fact
+-- predicate a negation reads (the audit's wrong answer: both rules in
+-- one stratum), and a predicate one argument past the cap.
+headCases :: [QCase]
+headCases =
+  [ QCase ["a fact-predicate head refused"] "p16 ( v0 ) :- p2 ( v0 , _ ) . p1000 ( v0 ) :- p2 ( v0 , _ ) , not p16 ( v0 ) . ?- p1000 ( v0 ) ." False facts
+  , QCase ["an arity past the cap refused"] (unwords ("p1000 (" : replicate arityCap "i1 ," <> ["i1 ) ."])) False facts
+  ]
+ where
+  facts = IM.fromList [(2, S.fromList [[5, 0]])]
 
 agrees :: QCase -> Maybe String
 agrees c = case parseProgram (toks (qText c)) of
   Left e -> Just ("parse " <> show e <> ": " <> qText c)
+  Right clauses | Just code <- headRefusal clauses -> case check 0 clauses of
+    Left errs | not (null errs), all ((== code) . snd) errs -> Nothing
+    _ -> Just ("head refusal " <> show code <> " not answered: " <> qText c)
   Right clauses -> case (naive clauses (qFacts c), check 0 clauses) of
     (Nothing, Left errs) | not (null errs), all ((== errUnstratified) . snd) errs -> Nothing
     (Just want, Right chk) -> case evalProgram chk (qFacts c) of
@@ -53,3 +67,4 @@ shapes =
     <> ["a division by zero fails its literal", "a bound = compares"]
     <> ["comparison " <> op | op <- ["!=", "<", "<=", ">", ">="]]
     <> ["recursion", "negation", "three strata or more", "an unstratifiable program refused", "an assertion that holds", "an assertion with violations"]
+    <> ["a fact-predicate head refused", "an arity past the cap refused"]

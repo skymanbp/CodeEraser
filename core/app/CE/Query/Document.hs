@@ -74,6 +74,8 @@ errorNames =
   , "prelude predicate redefined"
   , "aggregate shape"
   , "anonymous head"
+  , "fact predicate as rule head"
+  , "arity over the cap"
   ]
 
 -- | A sort's name by code (CE.Query.Cost); any other is `open`.
@@ -86,7 +88,7 @@ aligned :: DocReq -> Maybe String
 aligned req =
   asum
     [ if null (rows req "faults") || all (null . rows req) verdict then Nothing else Just "faults: beside the core's rows"
-    , codes req "errors" 1 1 9
+    , codes req "errors" 1 1 11
     , if judged req then asum [dense req "heads" goals, dense req "goals" goals, headsMatch] else Nothing
     ]
  where

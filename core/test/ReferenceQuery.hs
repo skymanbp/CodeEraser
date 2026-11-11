@@ -15,7 +15,7 @@
 -- fact set, refusal for refusal and tuple for tuple
 -- (QueryReferenceProps). The same reference replays a proof tree node
 -- by node: each rule node's children must be one solution of its body.
-module ReferenceQuery (Db, events, goalAnswersRef, naive, replays, strataCount, toks) where
+module ReferenceQuery (Db, events, goalAnswersRef, headRefusal, naive, replays, strataCount, toks) where
 
 import CE.Query.Cost
 import CE.Query.Syntax
@@ -63,6 +63,20 @@ strata clauses
   memo = M.fromList [(c, compLevel c) | c <- nub [rep (atomPred h) | (h, _) <- rules]]
   compLevel c = maximum ((0 :: Int) : [M.findWithDefault 0 (rep q) memo + (if pos then 0 else 1) | (q, h, pos) <- edges, rep h == c, rep q /= c])
   level p = M.findWithDefault 0 (rep p) memo
+
+-- | The program's heads as the reference reads them (v2.35 V7): a rule
+-- that would derive tuples of a sent table, or a predicate written with
+-- more arguments than an index can key, is refused before anything
+-- else — the code each answers, or Nothing.
+headRefusal :: [Clause] -> Maybe Integer
+headRefusal clauses
+  | any sentTable [atomPred h | Rule h _ <- clauses] = Just errFactHead
+  | any tooWide (concatMap atomsIn clauses) = Just errArityCap
+  | otherwise = Nothing
+ where
+  sentTable p = toInteger p < idbFloor
+  tooWide (Atom p args _) = toInteger p >= idbFloor && length args > arityCap
+  atomsIn cl = maybeToList (clauseHead cl) <> concatMap (map snd . litAtoms) (clauseBody cl)
 
 -- | How many strata the program stands in, or Nothing.
 strataCount :: [Clause] -> Maybe Int

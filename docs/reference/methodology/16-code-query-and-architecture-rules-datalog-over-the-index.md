@@ -146,14 +146,24 @@ lex, a `lex` request without texts, a directory table sent beside the `tree` for
 
 ### 5. The checks — arity, sorts, safety, stratification
 
-A parsed program passes six phases before anything is evaluated, and the first phase that finds
+A parsed program passes seven phases before anything is evaluated, and the first phase that finds
 fault answers every error it found, each at a token; a program with an error answers nothing
-([Check.hs:42](../../../core/app/CE/Query/Check.hs#L42)). The codes: 1 syntax, 2 unknown
+([Check.hs:43](../../../core/app/CE/Query/Check.hs#L43)). The codes: 1 syntax, 2 unknown
 predicate, 3 arity, 4 sort, 5 unsafe variable, 6 unstratifiable negation, 7 prelude predicate
-redefined, 8 aggregate shape, 9 anonymous head; 0 is the measuring side's own (a lexical fault, or
-a glob the exclude dialect cannot read), reported at its place ([Cost.hs:172-173](../../../core/app/CE/Query/Cost.hs#L172),
+redefined, 8 aggregate shape, 9 anonymous head, 10 fact predicate as rule head, 11 arity over the
+cap; 0 is the measuring side's own (a lexical fault, or a glob the exclude dialect cannot read),
+reported at its place ([Cost.hs:181-185](../../../core/app/CE/Query/Cost.hs#L181),
 [Document.hs:65](../../../core/app/CE/Query/Document.hs#L65)).
 
+- **Heads.** No rule defines a fact predicate: a head that spells one of the schema's names is
+  error 10 at the head's token. A fact predicate is the tables the measuring side sent; were a rule
+  to add to one, stratification — which orders the rules by the program predicates they read —
+  would put no order between that rule and a `not` over the same predicate, and the negation
+  would be read before the rule ran (until v2.35 V7 `exported(U) :- unit(U, F).` beside
+  `r(U) :- unit(U, F), not exported(U).` answered every unit). A program predicate takes at most
+  `arityCap` = 16 arguments, error 11 past it at the atom's token: an index is keyed by a bitmask
+  over the positions ([Check.hs:73-80](../../../core/app/CE/Query/Check.hs#L73),
+  [Cost.hs:91-98](../../../core/app/CE/Query/Cost.hs#L91)).
 - **Arity.** A fact predicate's arity is the schema's; a program predicate's is fixed by its
   first appearance.
 - **Sorts.** A union-find over three kinds of node — a clause variable, a program predicate's
@@ -195,12 +205,15 @@ over the full database, then each rule whose body reads a predicate of its own s
 once per such position with the previous round's new tuples routed to that position, until a
 round derives nothing new. Relations below the stratum are indexed once for the whole stratum,
 the stratum's own once per round ([Eval.hs:1-11](../../../core/app/CE/Query/Eval.hs#L1),
-[Eval.hs:50](../../../core/app/CE/Query/Eval.hs#L50), [Eval.hs:73](../../../core/app/CE/Query/Eval.hs#L73)).
+[Eval.hs:56](../../../core/app/CE/Query/Eval.hs#L56), [Eval.hs:89](../../../core/app/CE/Query/Eval.hs#L89)).
 An index is lazy: a join asks for the tuples that agree with the positions already bound, and
 each distinct set of bound positions — a bitmask over the arity — gets its map the first time
-it is asked for and never again, so a mask no join uses costs nothing; lookups come back in the
-relation's own order, which makes every join deterministic
-([Index.hs:1-7](../../../core/app/CE/Query/Eval/Index.hs#L1), [Index.hs:36](../../../core/app/CE/Query/Eval/Index.hs#L36)).
+it is asked for and never again. Which positions are bound at a literal is static under the
+written order, so a relation is indexed on the masks the program's bodies ask with alone, read
+off the checked program; a mask outside that set is answered by a filter, never by nothing.
+Lookups come back in the relation's own order, which makes every join deterministic
+([Index.hs:1-13](../../../core/app/CE/Query/Eval/Index.hs#L1), [Index.hs:45](../../../core/app/CE/Query/Eval/Index.hs#L45),
+[Index.hs:59](../../../core/app/CE/Query/Eval/Index.hs#L59)).
 
 A body is joined literal by literal in written order, each narrowing the substitutions before
 it: a positive atom joins through the routed index, a negation tests absence, a comparison
@@ -238,9 +251,11 @@ row under the answer ([Lines.hs:50](../../../core/app/CE/Query/Lines.hs#L50),
 Four request dimensions, each with its own ceiling. Tokens (65,536) and fact rows (4,194,304)
 are counted before judging and answer a complete degraded reply — empty tables, `degraded:
 true`, `reason: query_too_large`; a program the core refused to judge has no answers and no
-errors. The derived ceiling (2,097,152 tuples) is checked after every round of every stratum,
-and crossing it abandons the whole evaluation for the same degraded reply with the count it
-reached — never a partial answer. The proof ceiling (16,384 nodes) never degrades: it stops
+errors. The derived ceiling (2,097,152 tuples) rides into every rule's run as the budget left:
+a rule stops reading its answers the moment its new tuples would carry the count past it, so no
+round builds more than the ceiling and one tuple, and crossing it abandons the whole evaluation
+for the same degraded reply with the count it reached — never a partial answer
+([Eval.hs:85-109](../../../core/app/CE/Query/Eval.hs#L85)). The proof ceiling (16,384 nodes) never degrades: it stops
 expanding and counts ([Cost.hs:75-79](../../../core/app/CE/Query/Cost.hs#L75),
 [Contract.hs:109](../../../core/app/CE/Query/Contract.hs#L109), [Query.hs:141](../../../core/app/CE/Query.hs#L141)).
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
@@ -395,7 +410,7 @@ token, the erroring program answering nothing; proof trees replayed node by node
 naive reference; the four aggregates with their empty cases and grouping; arithmetic, `=` on a
 bound variable as a comparison, division by zero, `<` on ids; goals with their kinds and sorts
 and `preds` with the open sort; the schema echo only when asked; every contract refusal by name;
-the three capped dimensions; proof trees past the budget left out whole; the empty program; and
+the three capped dimensions, one round stopping at the ceiling and one tuple; proof trees past the budget left out whole; the empty program; and
 the texts lexed in the core — judged as the token stream they lex to, a `lex` request answering
 the lexed program, a lexical fault named
 ([QueryProps.hs:5-14](../../../core/test/QueryProps.hs#L5), [QueryProps.hs:65](../../../core/test/QueryProps.hs#L65)).
@@ -412,7 +427,8 @@ list-comprehension form, its own arithmetic, comparisons and aggregates — that
 parser; the shipped checker and evaluator must agree refusal for refusal and tuple for tuple on
 200 seeded programs (recursion, every aggregate over rows and over nothing, every operator with
 divisions by zero, comparisons, negation up to a fourth stratum, a negative cycle in one program
-in ten, assertions that hold or are violated), and the same reference replays a proof tree by
+in ten, assertions that hold or are violated) and two programs the heads refuse — the reference
+reading both refusals in its own spelling ([ReferenceQuery.hs:67-79](../../../core/test/ReferenceQuery.hs#L67)) —, and the same reference replays a proof tree by
 checking that each rule node's children are one solution of its body ([ReferenceQuery.hs:1-17](../../../core/test/ReferenceQuery.hs#L1),
 [ReferenceQuery.hs:68](../../../core/test/ReferenceQuery.hs#L68)). Twelve golden pairs pin the
 wire bytes — the prelude with the schema echo, an assertion's violation, a `why` query negating

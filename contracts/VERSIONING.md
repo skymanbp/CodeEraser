@@ -24,6 +24,9 @@
 > 此前按名拒绝的「一对两种」请求现在有效（同一 `(u, v, kind)` 两行仍拒）；join 候选每对一行，取该对的第一行（种类最强：0 > 1 > 2）。请求加性 `docOwners`
 > （拥有至少一个存活 docdup 段的文件下标，严格升序）：在场时轴 3 的机会集是它，且契约按名拒绝端点不在其中的 kind 2 行（`docdup endpoint owns no segment`）
 > 与端点不是代码文件（无 pos 行或在 `docFiles` 里）的 kind ≤ 1 行（`clone endpoint is not a code file`），两轴因此按契约是子集轴；缺席 = 9.0.0 的读法逐字节不变。
+> 同版加宽（车道 v235_verdicts V7，方法学册 16 错误表）：`query/1` 应答的程序错误码 1..9 加两个——10 = 规则头拼的是事实谓词（指在头的记号上），
+> 11 = 程序谓词的元数超过 `arityCap`（16，指在该原子上）；`ce query` / `ce rules` 文档请求（`document/1`）的 `errors` 码域随之 1..11。测量侧读 1..11、此前读 1..9：两侧随同一个发布走，
+> 旧 ce 对新核遇到 10 / 11 按 `wire skew` 拒，故这一条放宽只在 ce 与核同版时成立（ce 与核本就成对发出）；不含这两种错误的程序应答逐字节不变。
 > **9.0.0**（`resolve/1` 改以文本过线，major，计划 v2.33 算法轨 W2-text 阶段 A，2026-10-04；设计册 `docs/reference/algorithm-track.md` §3 第一条、§6 W2a′ 行与 §11 第 43–49 条）：
 > 请求退役 `segs`、`vocab`、`affixes`、`dirs` 四个键，定义包的 `resolve {words, affixes}` 改为 `resolve {configs}`（测量侧要读的配置文件名：`go.mod`，阶段 B 起加 `DESCRIPTION`）——
 > 带旧键的请求不再被读懂，按 §2 升 major：8.x 的 ce 对 9.0.0 的核、9.0.0 的 ce 对 8.x 的核，都在握手处按 major 不符拒绝。新请求全是文本：`files` = 走查到的路径

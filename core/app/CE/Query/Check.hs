@@ -1,6 +1,7 @@
 -- | The checker (design booklet §4.1 / §4.5): a parsed program passes
--- arity, sorts, safety, predicate existence, prelude reservation and
--- stratification before anything is evaluated, and the first phase
+-- its heads (no rule defines a fact predicate, no program predicate
+-- passes the arity cap), arity, sorts, safety, predicate existence,
+-- prelude reservation and stratification before anything is evaluated, and the first phase
 -- that finds fault answers its errors — every one at a token. What
 -- comes out is the evaluator's program: the rules with their strata,
 -- the goals with their projections and sorts.
@@ -8,7 +9,7 @@ module CE.Query.Check (Checked (..), Goal (..), RuleC (..), check, checkReservin
 
 import CE.Query.Check.Safety (outerVars, safetyErrors)
 import CE.Query.Check.Sorts (Sorts, inferSorts, positionSort, variableSort)
-import CE.Query.Cost (errArity, errPrelude, errUnknownPred, errUnstratified, sortInt, sortSym, sortSet)
+import CE.Query.Cost (arityCap, errArity, errArityCap, errFactHead, errPrelude, errUnknownPred, errUnstratified, sortInt, sortSym, sortSet)
 import CE.Query.Schema (arityOf)
 import CE.Query.Syntax
 import qualified Data.Graph as G
@@ -48,6 +49,7 @@ check prelude = checkReserving prelude IS.empty
 -- them.
 checkReserving :: Int -> IS.IntSet -> [Clause] -> Either [(Int, Integer)] Checked
 checkReserving prelude spelled clauses = do
+  phase (headErrors clauses)
   phase (arityErrors clauses)
   sorts <- either (Left . (: [])) Right (inferSorts clauses)
   phase (concatMap safetyErrors clauses)
@@ -67,6 +69,15 @@ checkReserving prelude spelled clauses = do
 predSorts :: Sorts -> [RuleC] -> [(Int, [Integer])]
 predSorts sorts rules =
   M.toAscList (M.fromList [(p, [positionSort sorts p i | i <- [0 .. length (atomArgs h) - 1]]) | RuleC _ h _ <- rules, let p = atomPred h])
+
+-- | A rule's head that spells a fact predicate (at the head's token),
+-- then every program predicate's atom past the arity cap (at the
+-- atom's): the first is what keeps the fact tables out of the rules'
+-- dependency graph, the second what keeps an index mask in an `Int`.
+headErrors :: [Clause] -> [(Int, Integer)]
+headErrors clauses =
+  [(atomAt h, errFactHead) | Rule h _ <- clauses, not (isIdb (atomPred h))]
+    <> [(at, errArityCap) | Atom p args at <- concatMap atomsOf clauses, isIdb p, length args > arityCap]
 
 -- | Every atom's arity against the schema, or against the first
 -- appearance of a program predicate.

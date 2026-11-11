@@ -134,10 +134,10 @@ pub fn consume(reply: &Value, tokens: usize) -> Result<Judged, String> {
     j.proof = proof_of(reply, &j.goals)?;
     for row in judged::table::<Vec<Vec<i64>>>(reply, "errors")? {
         match row.as_slice() {
-            [at, code] if *at >= 0 && (*at as usize) <= tokens && (1..=9).contains(code) => {
+            [at, code] if *at >= 0 && (*at as usize) <= tokens && (1..=11).contains(code) => {
                 j.errors.push((*at as usize, *code));
             }
-            _ => return Err("wire skew: an error is [token <= sent, code 1..9]".into()),
+            _ => return Err("wire skew: an error is [token <= sent, code 1..11]".into()),
         }
     }
     j.schema = optional(reply, "schema")?;

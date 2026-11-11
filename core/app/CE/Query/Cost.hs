@@ -12,6 +12,7 @@ module CE.Query.Cost (
   derivedCap,
   proofCap,
   layerCap,
+  arityCap,
   forbidCap,
   packPrefix,
   idbFloor,
@@ -63,6 +64,8 @@ module CE.Query.Cost (
   errPrelude,
   errAggregate,
   errHead,
+  errFactHead,
+  errArityCap,
 ) where
 
 -- | Program tokens, fact rows, derived tuples and proof nodes are four
@@ -86,6 +89,13 @@ proofCap = 16384
 layerCap, forbidCap :: Int
 layerCap = 16
 forbidCap = 64
+
+-- | The most arguments a program predicate takes (v2.35 V7): an index
+-- is keyed by a bitmask over the positions, and a cap keeps every mask
+-- well inside an `Int`; past it the atom is program error 11. Every
+-- fact predicate's arity is the schema's and far below it.
+arityCap :: Int
+arityCap = 16
 
 -- | Every predicate the pack renders is spelled with this prefix, and
 -- the prefix is reserved: a rule outside the shipped clauses whose head
@@ -168,8 +178,11 @@ sortOpen = -1
 
 -- | Program errors, answered in a normal reply's `errors` table as
 -- `[tokenIndex, code]` — a misspelled rule is the program's fault,
--- never the core's, so it is not a contract refusal.
-errSyntax, errUnknownPred, errArity, errSort, errUnsafe, errUnstratified, errPrelude, errAggregate, errHead :: Integer
+-- never the core's, so it is not a contract refusal. 10 (v2.35 V7): a
+-- rule whose head spells a fact predicate — a fact predicate is the
+-- sent tables, never derived, so stratification never orders a rule
+-- that would define one; 11: a program predicate past `arityCap`.
+errSyntax, errUnknownPred, errArity, errSort, errUnsafe, errUnstratified, errPrelude, errAggregate, errHead, errFactHead, errArityCap :: Integer
 errSyntax = 1
 errUnknownPred = 2
 errArity = 3
@@ -179,3 +192,5 @@ errUnstratified = 6
 errPrelude = 7
 errAggregate = 8
 errHead = 9
+errFactHead = 10
+errArityCap = 11

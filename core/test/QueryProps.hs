@@ -73,7 +73,7 @@ names =
   , "goals carry their kind and column sorts, preds every program predicate's position sorts; a position nothing constrains echoes the open sort"
   , "the schema rides back only when asked"
   , "query refusals name the offender"
-  , "an over-cap token stream degrades to empty tables; fact rows are priced at the cap; the derived cap aborts with the count reached"
+  , "an over-cap token stream degrades to empty tables; fact rows are priced at the cap; the derived cap aborts with the count reached, and one round stops reading at the cap and one tuple"
   , "proof trees past the node budget are left out whole and counted"
   , "an empty program answers empty tables"
   , "texts lex in the core: judged as the token stream they lex to, a lex request answers the lexed program, a lexical fault is named"
@@ -120,6 +120,8 @@ errorsNamed =
         , ("p1000 ( v0 ) :- p1 ( v0 ) . p1000 ( v0 ) :- p7 ( v0 , _ ) .", 1, 10, errPrelude)
         , ("?- p8 ( v0 , v1 ) , v1 = count ( v2 : p1 ( v2 ) ) .", 0, 8, errAggregate)
         , ("p1000 ( _ ) :- p1 ( v0 ) . ?- p1000 ( v0 ) .", 0, 2, errHead)
+        , ("p16 ( v0 ) :- p2 ( v0 , _ ) . p1000 ( v0 ) :- p2 ( v0 , _ ) , not p16 ( v0 ) . ?- p1000 ( v0 ) .", 0, 0, errFactHead)
+        , (unwords ("p1000 (" : replicate (arityCap - 1) "i1 ," <> ["i1 , i1 ) ."]), 0, 0, errArityCap)
         ]
     ]
 
@@ -200,10 +202,15 @@ capped =
     && not (overCap (tabled (fromInteger factCap)))
     && either (>= 4) (const False) (evaluated 3)
     && either (const False) (\(_, _, n) -> n == 4) (evaluated 4)
+    && either (== 11) (const False) (product3 10)
  where
   big = setKey "program" (toJSON (replicate (fromInteger tokenCap + 1) [tokDot, 0])) (request "" [] [])
   tabled n = QueryReq Null Nothing False False [] [("1", replicate n [0])] 0 False False Nothing Nothing Nothing []
-  evaluated cap = case parseProgram (toks (prelude <> " ?- p1001 ( v0 ) .")) >>= either (const (Left 0)) Right . check 3 of
+  evaluated cap = evalAt cap 3 (prelude <> " ?- p1001 ( v0 ) .")
+  -- one rule whose first round alone would build 64 tuples: it stops
+  -- reading at the cap and one more (v2.35 V7)
+  product3 cap = evalAt cap 0 "p1002 ( v0 , v1 , v2 ) :- p1 ( v0 ) , p1 ( v1 ) , p1 ( v2 ) . ?- p1002 ( v0 , v1 , v2 ) ."
+  evalAt cap pre text = case parseProgram (toks text) >>= either (const (Left 0)) Right . check pre of
     Right chk -> evalProgramWith cap chk (IM.fromList [(c, S.fromList t) | (c, t) <- facts4])
     Left _ -> Left 0
 
