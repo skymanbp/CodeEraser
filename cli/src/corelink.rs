@@ -15,6 +15,7 @@ mod session;
 mod shared;
 mod watch;
 
+pub use session::sent_on_this_thread;
 pub use shared::{locate, release};
 
 use serde::{Deserialize, Serialize};

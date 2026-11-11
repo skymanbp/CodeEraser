@@ -115,6 +115,9 @@ impl Session {
     /// One line out and one line back; a failure either way breaks the
     /// session. `waiting` names the line for the rule's message.
     fn exchange(&mut self, line: &str, waiting: &str) -> Result<String, String> {
+        // the asking thread's tally, here and not in the writer: the
+        // writer is a thread of its own whose count would die with it
+        SENT.with(|n| n.set(n.get() + 1));
         let got = self.watched(line, waiting);
         self.broken |= got.is_err();
         got
@@ -254,6 +257,21 @@ fn write_counted(stdin: &mut ChildStdin, line: &str, written: &AtomicU64) -> Res
         written.fetch_add(chunk.len() as u64, Ordering::Relaxed);
     }
     stdin.flush().map_err(|e| format!("flush: {e}"))
+}
+
+thread_local! {
+    /// Lines the thread has asked a core to read (`exchange`, every one).
+    static SENT: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+/// The count of lines the calling thread has asked a core to read —
+/// every request and every hello, on any session — counted on the asking
+/// thread, though the bytes leave on the exchange's writer thread. Read
+/// by legs that hold "this path asks no core" or "this plan sends n
+/// requests"; per thread, so another thread's judgments never move it.
+/// No per-family counter.
+pub fn sent_on_this_thread() -> usize {
+    SENT.with(std::cell::Cell::get)
 }
 
 impl Drop for Session {

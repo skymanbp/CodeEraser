@@ -13,7 +13,6 @@
 use crate::corelink::judged;
 use anyhow::{Context, Result, bail, ensure};
 use serde_json::{Value, json};
-use std::cell::Cell;
 use std::collections::BTreeMap;
 use std::ops::Range;
 
@@ -44,18 +43,6 @@ pub enum Class {
     Dropped,
 }
 
-thread_local! {
-    /// cover.requests this thread has sent: the leg that proves the
-    /// write-time probe sends none reads it (a thread-local, so no other
-    /// thread's dedup moves it).
-    static SENT: Cell<usize> = const { Cell::new(0) };
-}
-
-/// The cover.requests sent from this thread so far.
-pub fn sent_on_this_thread() -> usize {
-    SENT.with(Cell::get)
-}
-
 /// Every run's class, in the order given. The run set goes to the core
 /// split BETWEEN file pairs at the core's row cap (`limits.caps.
 /// cover_rows`): pairs are judged independently, so the answers
@@ -75,7 +62,6 @@ pub fn classify(runs: &[Run], (t, d): (usize, usize)) -> Result<Vec<Class>> {
             "minDistinct": d,
             "runs": slice.iter().map(|(_, row)| row).collect::<Vec<_>>(),
         });
-        SENT.with(|n| n.set(n.get() + 1));
         let reply = judged::session_ask((CAP, KIND), body).map_err(anyhow::Error::msg)?;
         for ((i, _), class) in slice.iter().zip(consume(&reply, slice.len(), (t, d))?) {
             classes[*i] = class;
