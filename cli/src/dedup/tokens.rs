@@ -112,15 +112,13 @@ pub fn tokenize(root: Node<'_>, src: &[u8], lang: Lang) -> Vec<Token> {
     out
 }
 
-/// A comment, or a declaration of the import family — a NAMED node of
-/// an `import_kinds` kind: Haskell's `foreign import` keyword is an
-/// unnamed node of kind `import` and stays a token. Both give no token
-/// (v2.35 imports lane: the standing treatment of a comment, extended to
-/// name plumbing — the PMD CPD Java lexer and SonarQube's Java statement
-/// chunker discard package and import statements the same way).
+/// A comment, or a declaration of the import family
+/// (`loads::import_declaration`). Both give no token (v2.35 imports
+/// lane: the standing treatment of a comment, extended to name plumbing
+/// — the PMD CPD Java lexer and SonarQube's Java statement chunker
+/// discard package and import statements the same way).
 fn skipped(node: Node<'_>, spec: &LangSpec) -> bool {
-    spec.comment_kinds.contains(&node.kind())
-        || (node.is_named() && spec.import_kinds.contains(&node.kind()))
+    spec.comment_kinds.contains(&node.kind()) || loads::import_declaration(node, spec)
 }
 
 fn token(class: &Class, kind: &str, node: Node<'_>) -> Token {

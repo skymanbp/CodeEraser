@@ -89,10 +89,16 @@ scan2 =
   \call_import_kinds = ['import_from_statement', 'import_statement']\n\
   \opaque_fields = []\n\
   \# The import family (v2.35 imports lane): name plumbing gives the\n\
-  \# clone tokenizer no token, the way a comment gives none. The\n\
-  \# declarations by kind; a load statement by shape — a statement of a\n\
-  \# statement list whose path ends only in calls the `calls` rows open\n\
-  \# a site for (`m = importlib.import_module(\"x\")`, `__import__(\"x\")`).\n\
+  \# clone tokenizer no token, the way a comment gives none. It is the\n\
+  \# body-less declarations the reference graph reads as a module\n\
+  \# reference or identity — import, include, use, extern crate, the\n\
+  \# package clause, the module mount, the re-export — and the load\n\
+  \# statements. A declaration by kind: '<kind>', or '<kind> <field>'\n\
+  \# (the node has a child under that field) or '<kind> !<field>' (it\n\
+  \# has none). A load statement by shape — a statement of a statement\n\
+  \# list whose path ends only in calls the `calls` rows open a site for\n\
+  \# (`m = importlib.import_module(\"x\")`, `__import__(\"x\")`).\n\
+  \# `__all__` names no module and stays code.\n\
   \import_kinds = ['import_statement', 'import_from_statement', 'future_import_statement']\n\
   \loads = {statement_lists = ['module', 'block'], shapes = ['expression_statement assignment right', 'expression_statement call']}\n"
 

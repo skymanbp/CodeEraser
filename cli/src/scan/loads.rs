@@ -1,4 +1,6 @@
-//! Load statements (v2.35 imports lane): a statement that is nothing
+//! The import family's two readings (v2.35 imports lane): its
+//! declarations (`import_declaration` below) and its load statements.
+//! A load statement is a statement that is nothing
 //! but loads bound to names — Lua `local x = require("m")`, R
 //! `library(x)`, CommonJS `const x = require("m")`, Python
 //! `m = importlib.import_module("x")`. With the import declarations
@@ -14,6 +16,24 @@ use super::call_site;
 use super::lang::Lang;
 use super::spec::LangSpec;
 use tree_sitter::Node;
+
+/// Whether `node` is a declaration of the import family: a NAMED node
+/// matching an `import_kinds` entry — `<kind>`, `<kind> <field>` (it
+/// has a child under that field: TS `export_statement source`, the
+/// re-export) or `<kind> !<field>` (it has none: Rust `mod_item !body`,
+/// the module mount). Haskell's `foreign import` keyword is an unnamed
+/// node of kind `import` and is no declaration.
+pub fn import_declaration(node: Node<'_>, spec: &LangSpec) -> bool {
+    node.is_named()
+        && spec.import_kinds.iter().any(|entry| {
+            let (kind, field) = entry.split_once(' ').unwrap_or((entry, ""));
+            kind == node.kind()
+                && match field.strip_prefix('!') {
+                    Some(absent) => node.child_by_field_name(absent).is_none(),
+                    None => field.is_empty() || node.child_by_field_name(field).is_some(),
+                }
+        })
+}
 
 /// Whether `node` — a child of a statement list (`loads.statement_lists`)
 /// — is a load statement: one of the shapes holds for it.

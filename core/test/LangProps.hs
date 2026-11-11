@@ -73,8 +73,9 @@ nestOnly = all dead (map ltScan allTables)
 -- | The import family (v2.35 imports lane): a language without an
 -- import statement (Lua, R) names no import kind and states load
 -- shapes, read against its `calls` rows; an import kind is no comment
--- or unit kind; a shape opens with a statement kind, never with one of
--- the statement lists it is read under.
+-- or unit kind, read by its kind word (an entry is '<kind>', '<kind>
+-- <field>' or '<kind> !<field>'); a shape opens with a statement kind,
+-- never with one of the statement lists it is read under.
 importFamily :: Bool
 importFamily = all ok allTables
  where
@@ -82,13 +83,20 @@ importFamily = all ok allTables
     let s = ltScan t
         l = scLoads s
         heads = map (takeWhile (/= ' ')) (ldShapes l)
+        kinds = map (takeWhile (/= ' ')) (scImportKinds s)
      in null (scImportKinds s) == (ltName t `elem` ["lua", "r", "markdown", "html"])
           && null (ldShapes l) == null (ldStatementLists l)
           && (null (ldShapes l) || not (null (ltCalls t)))
-          && not (any (`elem` (scCommentKinds s <> scFnKinds s)) (scImportKinds s))
+          && all (entry . words) (scImportKinds s)
+          && not (any (`elem` (scCommentKinds s <> scFnKinds s)) kinds)
           && not (any (`elem` ldStatementLists l) heads)
           && unique (scImportKinds s)
           && unique (ldShapes l)
+  entry [_] = True
+  entry [_, f] = let name = maybe f id (stripBang f) in not (null name) && '!' `notElem` name
+  entry _ = False
+  stripBang ('!' : f) = Just f
+  stripBang _ = Nothing
 
 -- | Expression, type, part, other and statement kinds part; the
 -- statement and container lists are the slot table's own exactly when no

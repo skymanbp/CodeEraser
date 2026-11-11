@@ -73,8 +73,10 @@ scan2 =
   \opaque_fields = []\n\
   \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
   \# rule): every `use`, `pub use` included — a re-export is name\n\
-  \# plumbing too — and `extern crate`; `mod x;` stays code.\n\
-  \import_kinds = ['use_declaration', 'extern_crate_declaration']\n"
+  \# plumbing too — `extern crate`, and the module mount `mod x;` (a\n\
+  \# mod_item without a body, the graph's mod_decl site; its attributes\n\
+  \# are sibling nodes and stay). `mod x { … }` stays code.\n\
+  \import_kinds = ['use_declaration', 'extern_crate_declaration', 'mod_item !body']\n"
 
 slot :: String
 slot =

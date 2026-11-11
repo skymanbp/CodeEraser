@@ -91,8 +91,11 @@ scan2 =
   \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
   \# rule): `import … = require(…)` is an import_statement too; the\n\
   \# CommonJS `const x = require(\"m\")` and a bare `require(\"m\")` /\n\
-  \# `import(\"m\")` are load statements. A re-export stays code.\n\
-  \import_kinds = ['import_statement']\n\
+  \# `import(\"m\")` are load statements. A re-export — an\n\
+  \# export_statement with a `source`, `export … from \"m\"` — is the\n\
+  \# graph's re-export site; `export const`, `export default` and\n\
+  \# `export { a, b };` stay code.\n\
+  \import_kinds = ['import_statement', 'export_statement source']\n\
   \loads = {statement_lists = ['program', 'statement_block'], shapes = ['lexical_declaration variable_declarator value', 'variable_declaration variable_declarator value', 'expression_statement call_expression']}\n"
 
 shared :: String
