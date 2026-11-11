@@ -164,6 +164,13 @@ impl Judge {
         self.family(CAP, KIND, body)
     }
 
+    /// The duplicate class's relocation stage over the same link, the
+    /// same way (v2.35 guard lane, GD4).
+    pub fn relocate(&mut self, rows: &[[u64; 2]]) -> serde_json::Value {
+        use crate::dedup::relocate;
+        self.family(relocate::CAP, relocate::KIND, relocate::body(rows))
+    }
+
     /// One family's request behind its capability, every failure a
     /// named degraded object; a request that broke the link counts
     /// against its budget, a missing capability or the core's refusal

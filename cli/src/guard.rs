@@ -13,6 +13,7 @@ mod applied;
 mod budget;
 mod flow;
 mod probe;
+mod relocate;
 mod settle;
 mod speech;
 mod tombstone;
@@ -80,10 +81,12 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     // shipped ones while it drifts from the fenced baseline (O33)
     let cfg = loaded.ok().map(|c| zone::fenced(root, c));
     let file_path = &env.tool_input.file_path;
-    let probed = probed(root, env);
-    // the write as it would land, worked out once for the size classes,
-    // the flow leg and the tombstone leg (F3)
+    // the write as it would land, worked out once for the duplicate
+    // class's relocation stage, the size classes, the flow leg and the
+    // tombstone leg (F3)
     let applied = applied::apply(env);
+    let text = applied.as_ref().ok();
+    let probed = probe::probed(root, env, text);
     // B4 suppression consults the feed BEFORE this event lands in it;
     // it shapes the warn INJECTION only — deny/ask are enforcement,
     // not context bloat, and repeat every time they hold
@@ -92,13 +95,10 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
         |rule| !enforced && crate::hookio::already_warned(root, &env.session_id, rule, file_path);
     let (dup_seen, budget_seen) = (seen("probe"), seen("budget"));
     let mut reasons = Vec::new();
-    if let Some(ms) = &probed.matches
-        && !ms.is_empty()
-        && !dup_seen
-    {
-        reasons.push(probe::reason(file_path, ms));
+    let refusing = probed.refusing();
+    if !refusing.is_empty() && !dup_seen {
+        reasons.push(probe::reason(file_path, &refusing));
     }
-    let text = applied.as_ref().ok();
     let sized = budget::size_classes(root, env, cfg.as_ref(), text, &mode, budget_seen);
     reasons.extend(sized.budget);
     let mut own = Tiered::observe(root, env, cfg.as_ref(), text);
@@ -107,7 +107,8 @@ fn decide(root: &Path, env: &Envelope) -> ExitCode {
     if let Some(p) = own.flow {
         feed(root, env, p.line);
     }
-    observe_log(root, env, &probed, &mode, decided, applied.as_ref().err());
+    let line = probe::line(env, &probed, (&mode, decided), applied.as_ref().err());
+    feed(root, env, line);
     for line in sized.lines {
         feed(root, env, line);
     }
@@ -231,56 +232,6 @@ fn emit_decision(mode: &str, reason: impl FnOnce() -> String) {
         }
     });
     println!("{payload}");
-}
-
-/// The duplicate probe's answer and its cost — one measurement, one
-/// record (the `probe` line every probed event leaves).
-struct Probed {
-    matches: Option<Vec<serde_json::Value>>,
-    elapsed_ms: u128,
-}
-
-fn probed(root: &Path, env: &Envelope) -> Probed {
-    let started = std::time::Instant::now();
-    let matches = probe::novel_matches(root, env);
-    Probed {
-        matches,
-        elapsed_ms: started.elapsed().as_millis(),
-    }
-}
-
-/// One NDJSON line per probed event, all modes (M4 evaluation feed),
-/// written once the event is decided so that it carries `decision` —
-/// the tier the hook decided the whole event at (0.11.0), which the
-/// PostToolUse leg reads to know an `ask` when the tool then runs.
-/// An Edit the hook could not apply says why (0.14.0, GD3): the size,
-/// flow and tombstone legs were silent for want of a text, and an I/O
-/// failure reading the target is a nested degraded stamp (`apply`),
-/// which `ce doctor` counts beside the probe's own bit.
-fn observe_log(
-    root: &Path,
-    env: &Envelope,
-    p: &Probed,
-    mode: &str,
-    decision: &str,
-    unapplied: Option<&applied::Unapplied>,
-) {
-    let mut line = serde_json::json!({
-        "event": "probe",
-        "file": env.tool_input.file_path,
-        "mode": mode,
-        "degraded": p.matches.is_none(),
-        "matches": p.matches.as_deref().map(<[serde_json::Value]>::len).unwrap_or(0),
-        "elapsed_ms": p.elapsed_ms,
-        "decision": decision,
-    });
-    if let Some(u) = unapplied {
-        line["unapplied"] = u.code().into();
-        if let applied::Unapplied::Unreadable(kind) = u {
-            line["apply"] = serde_json::json!({"degraded": format!("unreadable: {kind:?}")});
-        }
-    }
-    feed(root, env, line);
 }
 
 /// Every line this hook and its PostToolUse leg write, stamped with

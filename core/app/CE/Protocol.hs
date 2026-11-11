@@ -26,6 +26,7 @@ import qualified CE.Graph as Graph
 import qualified CE.Handshake as Handshake
 import qualified CE.Merge as Merge
 import qualified CE.Query as Query
+import qualified CE.Relocate as Relocate
 import qualified CE.Resolve as Resolve
 import CE.Protocol.Version (majorMatches, maxLineBytes, proto)
 import qualified CE.Scan as Scan
@@ -128,6 +129,7 @@ families =
   , Fam F.docpairs DocPairs.respond
   , Fam F.moves Moves.respond
   , Fam F.bags Bags.respond
+  , Fam F.relocate Relocate.respond
   ]
 
 -- | Every non-hello message must carry a proto with the server's

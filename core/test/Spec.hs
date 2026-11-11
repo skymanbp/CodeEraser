@@ -13,6 +13,7 @@ import qualified ArchProps
 import qualified AuditProps
 import qualified CandidatesProps
 import qualified RankProps
+import qualified RelocateProps
 import qualified BagsProps
 import qualified DocPairsProps
 import qualified MovesProps
@@ -125,6 +126,7 @@ goldens =
   , goldenPairs "docpairs/golden.ndjson"
   , goldenPairs "moves/golden.ndjson"
   , goldenPairs "bags/golden.ndjson"
+  , goldenPairs "relocate/golden.ndjson"
   ]
 
 batteries :: [IO Bool]
@@ -166,6 +168,7 @@ batteries =
        , EraseProps.battery
        , AuditProps.battery
        , TombstoneProps.battery
+       , RelocateProps.battery
        , SimilarProps.battery
        , QueryProps.battery
        , PackProps.battery

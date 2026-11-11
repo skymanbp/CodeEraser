@@ -21,8 +21,12 @@ use std::path::Path;
 /// and older minor) before it ever sends one; 2.2.0 (plan v2.31 step
 /// 5) adds the `flow` request the same additive way; 2.3.0 (plan v2.32
 /// step 5) adds the `document` request — the guard's sentences, laid
-/// out by the core over the daemon's held link — the same way.
-pub const DAEMON_PROTO: &str = "2.3.0";
+/// out by the core over the daemon's held link — the same way; 2.4.0
+/// (v2.35 guard lane) adds the `relocate` request (the duplicate
+/// class's relocation stage, relocate/1) and the probe reply's
+/// additive `at` per match, and the `reindex` request (the session's
+/// own writes become probe candidates at PostToolUse), the same way.
+pub const DAEMON_PROTO: &str = "2.4.0";
 
 /// The flow/1 request's four integer tables, exactly as
 /// `flow::wire::body` assembles them (a unit's rows led by its request
@@ -92,6 +96,21 @@ pub enum Request {
     Document {
         body: serde_json::Value,
     },
+    /// The relocation stage (v2.35 guard lane, GD4): one
+    /// `[occHead, occNow]` row per match a would-refuse write has,
+    /// judged over the daemon-owned core link (relocate/1). Only
+    /// integers cross this socket.
+    Relocate {
+        rows: Vec<[u64; 2]>,
+    },
+    /// The PostToolUse re-measure (v2.35 guard lane, GD7): the one file
+    /// a write the hook saw just landed, refreshed in the shared index
+    /// by the per-file refresh a whole run performs — so the next probe
+    /// meets the session's own writes. Never builds or rebuilds an
+    /// index; the client asks only a daemon already running.
+    Reindex {
+        file_path: String,
+    },
     Shutdown,
 }
 
@@ -133,6 +152,16 @@ pub enum Response {
     /// The raw document.result, or the same degraded object (A9f).
     DocumentReport {
         reply: serde_json::Value,
+    },
+    /// The raw relocate.result, or the same degraded object (A9f).
+    RelocateReport {
+        reply: serde_json::Value,
+    },
+    /// `{"refreshed": bool}` (false = the stored bytes already
+    /// matched), `{"skipped": "<why>"}` (not this index's file, or no
+    /// current index to touch), or `{"degraded": "<error>"}`.
+    ReindexReport {
+        report: serde_json::Value,
     },
     Error {
         message: String,

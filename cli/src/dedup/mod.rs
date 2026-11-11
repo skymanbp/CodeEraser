@@ -10,6 +10,7 @@ pub mod groups;
 pub mod index;
 pub mod pairs;
 pub mod probe;
+pub mod relocate;
 mod report;
 mod rescache;
 pub(crate) mod schema;

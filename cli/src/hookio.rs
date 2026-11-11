@@ -35,7 +35,14 @@ use std::path::Path;
 /// `observe`); a `probe` line whose Edit the hook could not apply
 /// carries `unapplied` (`absent` | `unreadable` | `no_match` |
 /// `ambiguous`) — and for `unreadable` a nested `apply.degraded`
-/// stamp. Every prior key keeps its shape.
+/// stamp; a `probe` line whose novel matches went to the relocation
+/// stage carries `relocated` (how many the core judged relocations —
+/// all of them, and the class did not refuse) or `relocation` (why the
+/// stage could not credit: no git, a cap, an unread blob, the core);
+/// the PostToolUse leg re-measures the file that landed in the shared
+/// index (GD7) and, when that fails, writes a `settled` line carrying
+/// `reindex.degraded` (a settled line without an ask behind it is that
+/// record alone). Every prior key keeps its shape.
 ///
 /// 0.13.0 (plan v2.32 step 2 follow-up): a hook left inert by an
 /// unreadable definition package writes one line — `probe` /
@@ -329,7 +336,10 @@ pub fn already_warned(root: &Path, session: &str, rule: &str, file: &str) -> boo
             // a carried budget line (0.14.0) recorded a write the rule
             // let through: nothing was said, so nothing was warned
             && (rule != "budget" || v["carried"] != true)
-            && (rule != "probe" || v["matches"].as_u64().unwrap_or(0) > 0)
+            // a probe line warned when matches remained that were not
+            // relocations (0.14.0: `relocated` counts those credited)
+            && (rule != "probe"
+                || v["matches"].as_u64().unwrap_or(0) > v["relocated"].as_u64().unwrap_or(0))
             && (rule != "zone" || v["zone_tier"].as_str().is_some_and(|t| t != "observe"))
     })
 }

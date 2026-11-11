@@ -106,7 +106,8 @@ pub fn relay(root: &Path, req: &Request) -> std::result::Result<serde_json::Valu
     match (req, request(root, req)) {
         (Request::Tombstone { .. }, Ok(Response::TombstoneReport { reply }))
         | (Request::Flow(_), Ok(Response::FlowReport { reply }))
-        | (Request::Document { .. }, Ok(Response::DocumentReport { reply })) => Ok(reply),
+        | (Request::Document { .. }, Ok(Response::DocumentReport { reply }))
+        | (Request::Relocate { .. }, Ok(Response::RelocateReport { reply })) => Ok(reply),
         (_, Ok(other)) => Err(format!("daemon answered {other:?}")),
         (_, Err(e)) => Err(format!("daemon: {e}")),
     }

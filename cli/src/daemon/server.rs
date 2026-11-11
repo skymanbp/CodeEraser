@@ -13,6 +13,7 @@ mod bind;
 mod conn;
 mod dispatch;
 mod idle;
+mod reindex;
 mod replies;
 mod state;
 

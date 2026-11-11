@@ -1,8 +1,14 @@
 //! Content probe (M3 PreToolUse cheap gate, ADR-004): given the text
 //! about to be written, find verified T1/T2 matches against the
-//! project index. Deliberately CHEAP: no index refresh, no walk —
-//! the index may lag the working tree (deep judgment runs at
-//! PostToolUse/Stop); a stale anchor is skipped, never a panic.
+//! project index. Deliberately CHEAP: no index refresh, no walk. The
+//! index SELECTS the candidate files (the ones holding a fingerprint
+//! of the content); each candidate is then matched by the fingerprints
+//! of its CURRENT token stream, which the probe reads anyway (v2.35
+//! guard lane, GD5): a candidate edited since the last refresh used to
+//! be extended at its stale indexed offsets, and its twin went unseen
+//! until the Stop audit. On an unchanged file the current fingerprints
+//! ARE the indexed ones (the same winnowing over the same stream), so a
+//! fresh index answers exactly as before.
 
 use super::index::Index;
 use super::pairs::{self, Filter, Streams};
@@ -22,6 +28,10 @@ pub struct Match {
     /// Exact verified common-run length in normalized tokens.
     pub tokens: usize,
     pub distinct: usize,
+    /// Where the run starts in the PROBED content's token stream (v2.35
+    /// GD4, additive): the hook's relocation stage counts that very run
+    /// in HEAD and in the tree the write leaves.
+    pub at: usize,
 }
 
 /// What is about to be written: destination (excluded from matching —
@@ -49,17 +59,44 @@ pub fn probe(
     let hashes: Vec<u64> = snippet.iter().map(|t| t.hash).collect();
     let fps = winnow::fingerprints(&hashes, p);
     let wanted: Vec<u64> = fps.iter().map(|fp| fp.hash).collect();
-    let instances: Vec<_> = idx
+    let files: BTreeSet<String> = idx
         .instances_for_hashes(&wanted)?
         .into_iter()
-        .filter(|i| i.file != rel_self)
+        .map(|i| i.file)
+        .filter(|file| file != rel_self)
         .collect();
-    let streams = load_candidate_streams(root, &instances)?;
+    let streams = load_candidate_streams(root, &files)?;
+    let instances = current_instances(&streams, &wanted.into_iter().collect(), p);
     Ok(collect_matches(&snippet, &fps, &instances, &streams, f))
 }
 
-fn load_candidate_streams(root: &Path, instances: &[super::index::Instance]) -> Result<Streams> {
-    let files: BTreeSet<&str> = instances.iter().map(|i| i.file.as_str()).collect();
+/// The candidates' fingerprints as their current streams give them,
+/// kept where the content holds the same hash — what the index would
+/// hold for each file after a refresh, without writing it.
+fn current_instances(
+    streams: &Streams,
+    wanted: &BTreeSet<u64>,
+    p: Params,
+) -> Vec<super::index::Instance> {
+    let mut out = Vec::new();
+    for (file, stream) in streams {
+        let hashes: Vec<u64> = stream.iter().map(|t| t.hash).collect();
+        for fp in winnow::fingerprints(&hashes, p) {
+            if wanted.contains(&fp.hash) {
+                out.push(super::index::Instance {
+                    hash: fp.hash,
+                    file: file.clone(),
+                    start_tok: fp.start,
+                    start_line: stream[fp.start].start_line,
+                    end_line: stream[fp.start + p.kgram - 1].end_line,
+                });
+            }
+        }
+    }
+    out
+}
+
+fn load_candidate_streams(root: &Path, files: &BTreeSet<String>) -> Result<Streams> {
     let mut out = Streams::new();
     for rel in files {
         let Some((path, lang)) = super::walkidx::lang_path(root, rel) else {
@@ -97,9 +134,6 @@ fn collect_matches(
             let Some(stream) = streams.get(&inst.file) else {
                 continue;
             };
-            if inst.start_tok >= stream.len() {
-                continue; // index lags the working tree — deep pass will catch up
-            }
             let Some((a0, b0, len)) =
                 pairs::extend(snippet, fp.start, stream, inst.start_tok, false)
             else {
@@ -122,6 +156,7 @@ fn collect_matches(
                 end_line: stream[b0 + len - 1].end_line,
                 tokens: len,
                 distinct,
+                at: a0,
             });
         }
     }

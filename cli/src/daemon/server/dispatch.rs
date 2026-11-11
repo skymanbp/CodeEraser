@@ -47,6 +47,7 @@ pub(super) fn build(shared: &Shared, req: Request) -> (Response, bool) {
             super::replies::probe_reply(root, &file_path, &content),
             true,
         ),
+        Request::Reindex { file_path } => (super::reindex::reply(root, &file_path), true),
         Request::Shutdown => (Response::Bye, false),
         judged => (over_the_link(&mut judge, root, judged), true),
     }
@@ -66,6 +67,9 @@ fn over_the_link(judge: &mut Judge, root: &std::path::Path, req: Request) -> Res
         },
         Request::Document { body } => Response::DocumentReport {
             reply: judge.document(body),
+        },
+        Request::Relocate { rows } => Response::RelocateReport {
+            reply: judge.relocate(&rows),
         },
         other => Response::Error {
             message: format!("not a judgment: {other:?}"),

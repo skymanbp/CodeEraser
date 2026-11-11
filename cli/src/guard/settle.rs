@@ -12,7 +12,18 @@
 //! PreToolUse lines), once, and never speaks: PostToolUse output goes
 //! to the model, and a recording leg that talks is the context-entropy
 //! source the plan retired the deep PostToolUse leg over (§3, B4).
+//!
+//! It also re-measures the one file that landed (v2.35 guard lane,
+//! GD7): the write-time probe never refreshes the index, so a file the
+//! session just wrote was invisible to the next probe until the Stop
+//! audit — a copy of code written minutes ago passed. A daemon that is
+//! already running refreshes that file in the shared index
+//! (daemon/server/reindex.rs); none is ever started here (PostToolUse
+//! must stay cheap), and a refresh that fails is a degraded stamp on the
+//! `settled` line, never a block.
 
+use crate::daemon::client;
+use crate::daemon::proto::{Request, Response};
 use std::path::Path;
 use std::process::ExitCode;
 
@@ -24,14 +35,31 @@ pub fn run_hook() -> ExitCode {
     let Some((env, root)) = super::write_event("PostToolUse") else {
         return ExitCode::SUCCESS;
     };
-    if !env.tool_use_id.is_empty() && asked(&root, &env.session_id, &env.tool_use_id) {
-        super::feed(
-            &root,
-            &env,
-            serde_json::json!({"event": "settled", "file": env.tool_input.file_path}),
-        );
+    let failed = reindex(&root, &env.tool_input.file_path);
+    let asked = !env.tool_use_id.is_empty() && asked(&root, &env.session_id, &env.tool_use_id);
+    if asked || failed.is_some() {
+        let mut line = serde_json::json!({"event": "settled", "file": env.tool_input.file_path});
+        if let Some(why) = failed {
+            line["reindex"] = serde_json::json!({"degraded": why});
+        }
+        super::feed(&root, &env, line);
     }
     ExitCode::SUCCESS
+}
+
+/// The landed file re-measured by a daemon already running: None when
+/// it was refreshed, had nothing to refresh, or no daemon runs; the
+/// failure otherwise.
+fn reindex(root: &Path, file_path: &str) -> Option<String> {
+    let req = Request::Reindex {
+        file_path: file_path.to_string(),
+    };
+    match client::request_if_running(root, &req) {
+        Ok(Response::ReindexReport { report }) => report["degraded"].as_str().map(str::to_string),
+        Ok(other) => Some(format!("daemon answered {other:?}")),
+        // not running is no failure: nothing to keep current
+        Err(e) => client::is_running(root).then(|| format!("daemon: {e}")),
+    }
 }
 
 /// Whether this session's feed holds tool call `id` decided at `ask`

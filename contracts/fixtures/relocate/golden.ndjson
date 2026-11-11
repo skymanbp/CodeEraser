@@ -1,0 +1,6 @@
+{"proto":"9.0.0","type":"relocate.request","id":601,"rows":[[2,2],[1,2],[3,1]]}
+{"all":false,"counts":{"rows":3},"degraded":false,"id":601,"proto":"9.1.0","relocated":[0,2],"type":"relocate.result"}
+{"proto":"9.0.0","type":"relocate.request","id":602,"rows":[[1,1],[4,4]]}
+{"all":true,"counts":{"rows":2},"degraded":false,"id":602,"proto":"9.1.0","relocated":[0,1],"type":"relocate.result"}
+{"proto":"9.0.0","type":"relocate.request","id":603,"rows":[[1,1],[2,0]]}
+{"code":"contract","id":603,"message":"row 1: occNow 0: the write's own copy is missing from the count","proto":"9.1.0","type":"error"}

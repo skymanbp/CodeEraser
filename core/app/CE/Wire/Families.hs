@@ -23,6 +23,7 @@ module CE.Wire.Families
   , moves
   , query
   , rank
+  , relocate
   , resolve
   , scan
   , similar
@@ -53,11 +54,12 @@ erase = first "erase"
 flow = first "flow"
 graph = first "graph"
 
-merge, moves, query, rank, resolve, scan, similar, structure, tables, tombstone, verdict :: FamilyName
+merge, moves, query, rank, relocate, resolve, scan, similar, structure, tables, tombstone, verdict :: FamilyName
 merge = first "merge"
 moves = first "moves"
 query = first "query"
 rank = first "rank"
+relocate = first "relocate"
 resolve = first "resolve"
 scan = first "scan"
 similar = first "similar"
