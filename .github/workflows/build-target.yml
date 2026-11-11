@@ -99,23 +99,25 @@ jobs:
             gui/src-tauri
       - name: GUI system deps (ubuntu)
         if: startsWith(inputs.os, 'ubuntu')
-        # Same apt armor as ci.yml (see the full why there): mirrorlist
-        # pinned off the black-holing azure mirror, per-try timeout(1)
-        # so retries actually cycle, step timeout as the hard floor.
-        # The sleep is retry backoff, not race masking. x86_64 packages
-        # live on archive.ubuntu.com, arm64 (the O70 runner) on ports —
-        # the pin must follow the runner's own architecture.
+        # Same apt armor as ci.yml, the same lines (see the full why
+        # there): one mirror host per try, Canonical's and the azure
+        # one in turn, per-try timeout(1) so retries actually cycle,
+        # step timeout as the hard floor. The sleep is retry backoff,
+        # not race masking. x86_64 packages live on archive.ubuntu.com,
+        # arm64 (the O70 runner) on ports — both hosts follow the
+        # runner's own architecture.
         timeout-minutes: 15
         run: |
           case "$(dpkg --print-architecture)" in
-            arm64) echo 'https://ports.ubuntu.com/ubuntu-ports/' ;;
-            *) echo 'https://archive.ubuntu.com/ubuntu/' ;;
-          esac | sudo tee /etc/apt/apt-mirrors.txt
+            arm64) mirrors='https://ports.ubuntu.com/ubuntu-ports/ http://azure.ports.ubuntu.com/ubuntu-ports/' ;;
+            *) mirrors='https://archive.ubuntu.com/ubuntu/ http://azure.archive.ubuntu.com/ubuntu/' ;;
+          esac
           APT='-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30'
           ok=""
-          for i in 1 2 3; do
+          for mirror in $mirrors $mirrors; do
+            echo "$mirror" | sudo tee /etc/apt/apt-mirrors.txt
             if timeout 120 sudo apt-get $APT update && timeout 420 sudo apt-get $APT install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev libssl-dev; then ok=1; break; fi
-            echo "apt attempt $i failed; backing off" && sleep 10
+            echo "apt failed on $mirror; backing off" && sleep 10
           done
           [ -n "$ok" ]
       # ce-core ships beside ce from v0.2.0 — the judgment layer stops
