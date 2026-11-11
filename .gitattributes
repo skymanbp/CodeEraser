@@ -83,3 +83,16 @@ site/** text eol=lf
 # output by tests/it/packaging.rs on every platform.
 packaging/** text eol=lf
 *.png binary
+
+# The dead-file exam's record (lane v235_licence, part 3A): the bars and
+# their addenda, the auditors' brief, both readings' answers, the
+# settlement and the citation input are the main session's bytes, each
+# pinned by its sha256 in the exam's gate (it/eval_deadfile_review.rs) —
+# an EOL rewrite on checkout would fail every pin. Never translate; LATER
+# than the `contracts/**/*.json text eol=lf` rule above, so it wins.
+contracts/eval/deadfile-bars*-v1.md -text
+contracts/eval/deadfile-auditor-brief-v1.md -text
+contracts/eval/deadfile-answers-v1/** -text
+contracts/eval/deadfile-answers2-v1/** -text
+contracts/eval/deadfile-settlement-v1.json -text
+contracts/eval/deadfile-convention-docs-v1.json -text

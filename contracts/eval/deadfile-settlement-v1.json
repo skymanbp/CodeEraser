@@ -1,0 +1,51 @@
+[
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/docs-v3/CONTRIBUTING.md",
+  "answer": "unsure",
+  "reason": "unsure against unused: a served static page nothing links; not known unused (SETTLEMENT.md)"
+ },
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/docs-v3/MIGRATION.md",
+  "answer": "unsure",
+  "reason": "unsure against unused: a served static page nothing links; not known unused (SETTLEMENT.md)"
+ },
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/docs/pages/api/_og.tsx",
+  "answer": "unsure",
+  "reason": "unsure against unused: a route the build still compiles, nothing requests it; not known unused (SETTLEMENT.md)"
+ },
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/treeshake/example.ts",
+  "answer": "in_use",
+  "reason": "cited packages/treeshake/package.json:7 exists at the tip and is the script that takes its input on the command line; in_use stands, tag generic (SETTLEMENT.md)"
+ },
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/treeshake/valibot-boolean.ts",
+  "answer": "in_use",
+  "reason": "cited packages/treeshake/package.json:7 exists at the tip and is the script that takes its input on the command line; in_use stands, tag generic (SETTLEMENT.md)"
+ },
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/treeshake/zod3-boolean.ts",
+  "answer": "in_use",
+  "reason": "cited packages/treeshake/package.json:7 exists at the tip and is the script that takes its input on the command line; in_use stands, tag generic (SETTLEMENT.md)"
+ },
+ {
+  "corpus": "zod",
+  "commit": "912f0f51b0ced654d0069741e7160834dca742ee",
+  "path": "packages/treeshake/zod3-object.ts",
+  "answer": "in_use",
+  "reason": "cited packages/treeshake/package.json:7 exists at the tip and is the script that takes its input on the command line; in_use stands, tag generic (SETTLEMENT.md)"
+ }
+]

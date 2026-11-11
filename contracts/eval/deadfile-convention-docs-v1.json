@@ -1,0 +1,142 @@
+{
+  "package-info.java": {
+    "url": "https://docs.oracle.com/javase/specs/jls/se25/html/jls-7.html",
+    "quote": "The sole annotated package declaration, if it exists, is placed in a source file called package-info.java in the directory containing the source files for the package.",
+    "more": [
+      {
+        "url": "https://docs.oracle.com/en/java/javase/25/docs/specs/man/javac.html",
+        "quote": "Generates a package-info.class file for every package-info.java file."
+      }
+    ],
+    "reading": "F: a named kind of directory at any depth",
+    "position": {"kind": "basename", "names": ["package-info.java"]}
+  },
+  "module-info.java": {
+    "url": "https://docs.oracle.com/en/java/javase/25/docs/specs/man/javac.html",
+    "quote": "the file named module-info.java in one of the locations on the source path or one the module source path for the module.",
+    "reading": "I: the source path is an argument",
+    "position": {"kind": "basename", "names": ["module-info.java"]}
+  },
+  "vitest.config": {
+    "url": "https://vitest.dev/config/",
+    "quote": "When an explicit `--config` option is not provided, Vitest looks for `vitest.config.{ts,mts,cts,js,mjs,cjs}` first and `vite.config.{ts,mts,cts,js,mjs,cjs}` second in the project [`root`](/config/root).",
+    "reading": "I: the project root is where the tool runs",
+    "position": {
+      "kind": "basename",
+      "names": [
+        "vitest.config.ts",
+        "vitest.config.mts",
+        "vitest.config.cts",
+        "vitest.config.js",
+        "vitest.config.mjs",
+        "vitest.config.cjs"
+      ]
+    }
+  },
+  "next-app-entry": {
+    "url": "https://nextjs.org/docs/app/getting-started/project-structure",
+    "quote": "A route becomes public when a `page` or `route` file exists.",
+    "more": [
+      {
+        "url": "https://nextjs.org/docs/app/getting-started/project-structure",
+        "quote": "This indicates the folder is a private implementation detail and should not be considered by the routing system, thereby **opting the folder and all its subfolders** out of routing."
+      },
+      {
+        "url": "https://nextjs.org/docs/app/api-reference/file-conventions/src-folder",
+        "quote": "To use the `src` folder, move the `app` Router folder or `pages` Router folder to `src/app` or `src/pages` respectively."
+      }
+    ],
+    "reading": "F under a directory named app; the project root itself is I. Narrower reading where the text is silent: the FIRST directory segment named app is taken as the router folder, and no directory segment after it may begin with an underscore.",
+    "position": {
+      "kind": "under",
+      "segment": "app",
+      "names": ["page.tsx", "layout.tsx", "route.ts"],
+      "no_later_prefix": "_"
+    }
+  },
+  "setup.py": {
+    "url": "https://pip.pypa.io/en/stable/cli/pip_install/",
+    "quote": "Local directory (which must contain a ``pyproject.toml`` or ``setup.py``, otherwise pip will report an error).",
+    "reading": "I: the directory is an argument",
+    "position": {"kind": "basename", "names": ["setup.py"]}
+  },
+  "sphinx-conf.py": {
+    "url": "https://www.sphinx-doc.org/en/master/man/sphinx-build.html",
+    "quote": ":program:`sphinx-build` looks for ``<sourcedir>/conf.py`` for the configuration settings.",
+    "reading": "I: the source directory is an argument. The broadest of the twelve rules; the table prints its carrying rows by name.",
+    "print_rows": true,
+    "position": {"kind": "basename", "names": ["conf.py"]}
+  },
+  "tlconfig.lua": {
+    "url": "https://github.com/teal-language/tl/blob/master/docs/src/compiler_options.md",
+    "quote": "the compiler will try to read the compilation options from a file called `tlconfig.lua` inside the current working directory.",
+    "reading": "I: the working directory",
+    "position": {"kind": "basename", "names": ["tlconfig.lua"]}
+  },
+  "busted-spec": {
+    "url": "https://github.com/lunarmodules/busted/blob/master/busted/modules/cli.lua",
+    "quote": "test script file/folder. Folders will be traversed for any file that matches the --pattern option.",
+    "more": [
+      {
+        "url": "https://github.com/lunarmodules/busted/blob/master/busted/modules/cli.lua",
+        "quote": "only run test files matching the Lua pattern"
+      }
+    ],
+    "gap": "The default ROOT ('spec') and the default pattern ('_spec') are in the tool's option definitions, not in a prose page; the rendered site prints the pattern default and prints the ROOT default as nil.",
+    "reading": "F under a directory named spec (that directory's parent is I); the runner keeps a file whose basename contains _spec",
+    "position": {"kind": "under", "segment": "spec", "names": ["*_spec*"]}
+  },
+  "maven-test-resources": {
+    "url": "https://maven.apache.org/ref/current/maven-model-builder/super-pom.html",
+    "quote": "<directory>${project.basedir}/src/test/resources</directory>",
+    "more": [
+      {
+        "url": "https://maven.apache.org/plugins/maven-resources-plugin/testResources-mojo.html",
+        "quote": "Copy resources for the test source code to the test output directory."
+      }
+    ],
+    "reading": "F under a module's base directory, which is any directory holding a pom.xml",
+    "position": {"kind": "sequence", "dirs": ["src", "test", "resources"]}
+  },
+  "CONTRIBUTING.md": {
+    "url": "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
+    "quote": "you can add a file with contribution guidelines to your project repository's root, `docs`, or `.github` folder.",
+    "more": [
+      {
+        "url": "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/setting-guidelines-for-repository-contributors",
+        "quote": "Contributing guidelines filenames are not case sensitive."
+      }
+    ],
+    "reading": "F: three places, compared without case",
+    "beside": {"kind": "basename", "names": ["CONTRIBUTING.md"]},
+    "position": {
+      "kind": "exact",
+      "nocase": true,
+      "paths": ["CONTRIBUTING.md", "docs/CONTRIBUTING.md", ".github/CONTRIBUTING.md"]
+    }
+  },
+  "SECURITY.md": {
+    "url": "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file",
+    "quote": "For supported files that can be stored in more than one location, {% data variables.product.github %} uses the following order of precedence:",
+    "more": [
+      {
+        "url": "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file",
+        "quote": "* The `.github` folder * The root of the repository * The `docs` folder"
+      }
+    ],
+    "reading": "F: the .github folder, the root of the repository, the docs folder",
+    "position": {
+      "kind": "exact",
+      "paths": ["SECURITY.md", "docs/SECURITY.md", ".github/SECURITY.md"]
+    }
+  },
+  "CODE_OF_CONDUCT.md": {
+    "url": "https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/adding-a-code-of-conduct-to-your-project",
+    "quote": "{% data variables.product.github %} looks for a code of conduct in the `.github` directory, then the root of the repository, then the `docs` directory, and uses the first file it finds.",
+    "reading": "F: three places",
+    "position": {
+      "kind": "exact",
+      "paths": ["CODE_OF_CONDUCT.md", "docs/CODE_OF_CONDUCT.md", ".github/CODE_OF_CONDUCT.md"]
+    }
+  }
+}

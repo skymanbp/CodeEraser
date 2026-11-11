@@ -16,5 +16,6 @@
   "docs/EVAL-SET-FLOW-GEN1.md": "frozen evaluation record (v2.31 flow exams, first generation): the TypeScript, Rust, C++ and R first-generation sections moved out of EVAL-SET-FLOW.md byte for byte on 2026-09-30 (F'); same standing as EVAL-SET.md",
   "docs/EVAL-SET-LANGS-REGEN.md": "frozen evaluation record (v2.30 language exams): the four earlier retire-and-regenerate records moved out of EVAL-SET-LANGS.md byte for byte on 2026-10-03 (v2.33 W2a); same standing as EVAL-SET.md",
   "docs/EVAL-SET-MERGE.md": "frozen evaluation record (v2.31 clone-merge audit): same standing as EVAL-SET.md",
-  "docs/FIELD-TEST.md": "frozen field-test record: the two real repositories' line numbers are theirs, at their pinned commits"
+  "docs/FIELD-TEST.md": "frozen field-test record: the two real repositories' line numbers are theirs, at their pinned commits",
+  "docs/EVAL-SET-DEADFILE.md": "frozen evaluation record (the dead-file exam, generation 1): same standing as EVAL-SET.md; its tables are rendered from the committed record and checked by it/eval_deadfile_review.rs"
 }
