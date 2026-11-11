@@ -67,7 +67,7 @@ code back to the side that assembles the tables
 ([Schema.hs:19](../../../core/app/CE/Query/Schema.hs#L19), [Schema.hs:72](../../../core/app/CE/Query/Schema.hs#L72),
 [lexed.rs:109](../../../cli/src/query/lexed.rs#L109)). Sorts are node 0, dir 1, unit 2, int 3,
 sym 4, set 5; a position nothing constrained resolves to the open sort, −1
-([Cost.hs:160](../../../core/app/CE/Query/Cost.hs#L160)).
+([Cost.hs:170](../../../core/app/CE/Query/Cost.hs#L170)).
 
 | predicate | sorts | read off |
 |---|---|---|
@@ -96,7 +96,7 @@ measuring side's mention table key by the same fnv1a64 (spelled once on each sid
 differential leg holds the names they give equal), and the enum words a table spells (`entry_named`, `import`, `t3`) are
 name constants in the program, so `role(N, entry_named)` and `role(N, "entry_named")` are one
 token ([LexState.hs:170](../../../core/app/CE/Query/LexState.hs#L170), [legend.rs:23](../../../cli/src/query/legend.rs#L23),
-[Cost.hs:107](../../../core/app/CE/Query/Cost.hs#L107)).
+[Cost.hs:117](../../../core/app/CE/Query/Cost.hs#L117)).
 
 ### 3. The prelude
 
@@ -129,11 +129,11 @@ themselves as `program`): 0 a predicate code, 1 a variable, 2
 an integer, 3 a set id, 4 a name hash, 6 an anonymous variable, and 10 to 33 the punctuation and
 keywords (`:-` `,` `.` `(` `)` `not` `?-` `assert` `=` `!=` `<` `<=` `>` `>=` `+` `-` `*` `/`
 `%` `count` `min` `max` `sum` `:`); 5 was an enum kind in the booklet's first draft and is
-deliberately unassigned ([Cost.hs:107](../../../core/app/CE/Query/Cost.hs#L107)). Variables number per clause by first
+deliberately unassigned ([Cost.hs:117](../../../core/app/CE/Query/Cost.hs#L117)). Variables number per clause by first
 appearance; program predicates number from 1000 by first appearance across every source —
 the prelude first, then the rule pack's rendered text (§11), then the rules file, then the ad hoc
 query — and codes below 1000 are the schema's ([Lex.hs:155](../../../core/app/CE/Query/Lex.hs#L155), [Lex.hs:35](../../../core/app/CE/Query/Lex.hs#L35),
-[Lex.hs:120](../../../core/app/CE/Query/Lex.hs#L120), [Cost.hs:100-101](../../../core/app/CE/Query/Cost.hs#L100)).
+[Lex.hs:120](../../../core/app/CE/Query/Lex.hs#L120), [Cost.hs:110-111](../../../core/app/CE/Query/Cost.hs#L110)).
 Every token keeps the line and column it came from, so an error the core reports at a token
 index reads back as `where line:column` through the lex reply's `at` table
 ([Front.hs:39](../../../core/app/CE/Query/Front.hs#L39), [lexed.rs:93](../../../cli/src/query/lexed.rs#L93)). A malformed
@@ -187,18 +187,18 @@ reported at its place ([Cost.hs:181-185](../../../core/app/CE/Query/Cost.hs#L181
 - **Unknown and prelude.** A program predicate read anywhere but defined by no rule; a rule past
   the shipped clauses (the prelude's, then the pack's) whose head is a predicate they define, or
   any predicate spelled with the reserved `pack_` prefix (§11)
-  ([Check.hs:103](../../../core/app/CE/Query/Check.hs#L103)).
+  ([Check.hs:114](../../../core/app/CE/Query/Check.hs#L114)).
 - **Stratification.** A head sits at least as high as every positive body predicate and strictly
   above every negated or aggregated one (an aggregate's body counts as negative dependence); the
   levels are raised to a fixpoint, and a negative edge inside a strongly connected component of
   the dependency graph is the unstratifiable rule, named at its head
-  ([Check.hs:113](../../../core/app/CE/Query/Check.hs#L113), [Check.hs:130](../../../core/app/CE/Query/Check.hs#L130),
+  ([Check.hs:124](../../../core/app/CE/Query/Check.hs#L124), [Check.hs:141](../../../core/app/CE/Query/Check.hs#L141),
   [Syntax.hs:81](../../../core/app/CE/Query/Syntax.hs#L81)).
 
 What comes out is the evaluator's program: the rules with their strata, the goals with their
 projections and sorts, and every program predicate's resolved position sorts — the reply's
 `preds` table, which the measuring side labels a proof node's arguments by
-([Check.hs:30-39](../../../core/app/CE/Query/Check.hs#L30), [Check.hs:67](../../../core/app/CE/Query/Check.hs#L67),
+([Check.hs:31-40](../../../core/app/CE/Query/Check.hs#L31), [Check.hs:69](../../../core/app/CE/Query/Check.hs#L69),
 [Query.hs:98](../../../core/app/CE/Query.hs#L98)).
 
 ### 6. Evaluation — semi-naive, one stratum at a time
@@ -229,7 +229,7 @@ have no value, so their literal fails; groups follow the outer binding
 ([Join.hs:76](../../../core/app/CE/Query/Eval/Join.hs#L76), [Join.hs:95](../../../core/app/CE/Query/Eval/Join.hs#L95),
 [Join.hs:109](../../../core/app/CE/Query/Eval/Join.hs#L109)). The first derivation of every tuple
 is kept as its provenance — the rule and the facts that rule read — and a goal's answers are
-read off the final database in tuple order ([Eval.hs:93](../../../core/app/CE/Query/Eval.hs#L93)).
+read off the final database in tuple order ([Eval.hs:117](../../../core/app/CE/Query/Eval.hs#L117)).
 
 ### 7. Proofs
 
@@ -247,7 +247,7 @@ derivation and no answer is ever dropped for its proof's sake
 ([Proof.hs:36](../../../core/app/CE/Query/Proof.hs#L36)). The console prints each node under its
 answer, indented by depth, with `(clause N)` or `(fact)` beside it; the GUI does the same in a
 row under the answer ([Lines.hs:50](../../../core/app/CE/Query/Lines.hs#L50),
-[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:179-195](../../../core/app/CE/Query/Document.hs#L179)).
+[query.js:103](../../../gui/ui/query.js#L103)); the document groups the rows — a goal's `answers`, an answer's `proof` — and states each row's depth, so neither face walks the parents ([Document.hs:181-197](../../../core/app/CE/Query/Document.hs#L181)).
 
 ### 8. Caps and degradation
 
@@ -259,7 +259,7 @@ a rule stops reading its answers the moment its new tuples would carry the count
 round builds more than the ceiling and one tuple, and crossing it abandons the whole evaluation
 for the same degraded reply with the count it reached — never a partial answer
 ([Eval.hs:85-109](../../../core/app/CE/Query/Eval.hs#L85)). The proof ceiling (16,384 nodes) never degrades: it stops
-expanding and counts ([Cost.hs:75-79](../../../core/app/CE/Query/Cost.hs#L75),
+expanding and counts ([Cost.hs:78-82](../../../core/app/CE/Query/Cost.hs#L78),
 [Contract.hs:109](../../../core/app/CE/Query/Contract.hs#L109), [Query.hs:141](../../../core/app/CE/Query.hs#L141)).
 On the measuring side a degraded reply is a named non-judgment carried in the document, a core
 that offers no `query/1` reads the same way, and a reply whose tables disagree with what was
@@ -279,7 +279,7 @@ and the named reason when the core did not judge. The core lays the document out
 since proto 7.8.0) from the program's facts, its answered tables and the goals as spelled, which
 this side sends back; this side puts every position, name and value back through the request's
 own tables, and a core it cannot reach for the layout is refused by name, exit 2
-([Document.hs:101](../../../core/app/CE/Query/Document.hs#L101), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
+([Document.hs:103](../../../core/app/CE/Query/Document.hs#L103), [face.rs:1-12](../../../cli/src/query/face.rs#L1),
 [face.rs:265](../../../cli/src/query/face.rs#L265), [mod.rs:45](../../../cli/src/query/facts/mod.rs#L45)). A question is wrapped once into query form —
 `?-` in front, `.` behind — unless written ([face.rs:37](../../../cli/src/query/face.rs#L37)); a glob
 the exclude dialect cannot read is a program error at the glob's token before any table is built
@@ -384,12 +384,12 @@ its place — `pack line:column` ([Pack.hs:154](../../../core/app/CE/Query/Pack.
 shipped clauses whose predicates no later rule may define, and any rule past them that defines a
 `pack_…` predicate is program error 7 whether or not a pack declared it, so switching an item on
 later never meets a user's own predicate of that name; reading one is ordinary
-([Cost.hs:94](../../../core/app/CE/Query/Cost.hs#L94), [Check.hs:49](../../../core/app/CE/Query/Check.hs#L49)).
+([Cost.hs:104](../../../core/app/CE/Query/Cost.hs#L104), [Check.hs:50](../../../core/app/CE/Query/Check.hs#L50)).
 What cannot be rendered is refused by name before any judging: an unknown item, a malformed row,
 an item declared twice (`forbid` excepted), fewer than two layers, a negative or out-of-range
 count, a glob holding a quote or a newline, a pack without texts — and the two lists past their
 ceilings, `layers` above 16 globs and `forbid` above 64 pairs; the rendered text counts against
-the token cap like any other ([Cost.hs:86](../../../core/app/CE/Query/Cost.hs#L86),
+the token cap like any other ([Cost.hs:89](../../../core/app/CE/Query/Cost.hs#L89),
 [Contract.hs:132](../../../core/app/CE/Query/Contract.hs#L132)). The lex reply carries the text
 back as `packText`, and `ce query --prelude` prints it after the prelude, so a reader sees what was
 judged ([face.rs:97](../../../cli/src/query/face.rs#L97)). Like `[rules] file` the table is never a
@@ -433,7 +433,7 @@ divisions by zero, comparisons, negation up to a fourth stratum, a negative cycl
 in ten, assertions that hold or are violated) and two programs the heads refuse — the reference
 reading both refusals in its own spelling ([ReferenceQuery.hs:67-79](../../../core/test/ReferenceQuery.hs#L67)) —, and the same reference replays a proof tree by
 checking that each rule node's children are one solution of its body ([ReferenceQuery.hs:1-17](../../../core/test/ReferenceQuery.hs#L1),
-[ReferenceQuery.hs:68](../../../core/test/ReferenceQuery.hs#L68)). Twelve golden pairs pin the
+[ReferenceQuery.hs:82](../../../core/test/ReferenceQuery.hs#L82)). Twelve golden pairs pin the
 wire bytes — the prelude with the schema echo, an assertion's violation, a `why` query negating
 a prelude predicate, a syntax error, an unsafe variable, an unstratifiable pair, arithmetic, an
 aggregate over a set, the prelude lexed alone, the tree form, and the rule pack judged and

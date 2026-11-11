@@ -83,10 +83,10 @@ is one finding, not one per line ([Reach.hs:26](../../../core/app/CE/Flow/Reach.
 ### 4. Liveness — `dead_store` (kind 1), `unused_local` (kind 2), `unused_param` (kind 3)
 
 Live-in is solved to a fixpoint of `in = transfer(∪ in of successors)` over the whole graph
-([Live.hs:33](../../../core/app/CE/Flow/Live.hs#L33)). Within one statement the accesses are
+([Live.hs:34](../../../core/app/CE/Flow/Live.hs#L34)). Within one statement the accesses are
 ordered, so the transfer walks them last first — `x = x + 1` reads before it writes — and a
 store's liveness is asked right after that store, inside the statement
-([Live.hs:53](../../../core/app/CE/Flow/Live.hs#L53), [Live.hs:62](../../../core/app/CE/Flow/Live.hs#L62)).
+([Live.hs:54](../../../core/app/CE/Flow/Live.hs#L54), [Live.hs:63](../../../core/app/CE/Flow/Live.hs#L63)).
 A dead store is a write no path reads before the variable is written again or the unit exits.
 Four rules keep the verdict to one fact, one finding: a captured or address-taken variable has
 readers this graph cannot see and is not judged; a variable nothing reads gets its unused finding
@@ -95,7 +95,7 @@ declared there, which gets no unused finding beside its run (since v2.35); the s
 statement's several stores are judged each on its own and reported as one `(seq, v)` row. An
 unused local or parameter is one nothing reads, a read-write counting as a read, the three
 exemptions (captured, ignored, address-taken) leaving it out
-([Live.hs:78-90](../../../core/app/CE/Flow/Live.hs#L78)). Kind 3 is advice by construction: a
+([Live.hs:79-91](../../../core/app/CE/Flow/Live.hs#L79)). Kind 3 is advice by construction: a
 parameter an interface, an overload or an override requires is unread for a reason the unit
 cannot show, so no tier, mask or gate ever reads it as a verdict
 ([Document.hs:53](../../../core/app/CE/Flow/Document.hs#L53), [mod.rs:20-43](../../../cli/src/flow_report/mod.rs#L20)).

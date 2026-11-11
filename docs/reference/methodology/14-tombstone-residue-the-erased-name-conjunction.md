@@ -112,8 +112,8 @@ not made of reserved words alone — `user_data` is a name, `data` is not; the r
 are every judged code language's, C / C++, Java, Lua and R included since `TOMBSTONE_REV` 2
 (v2.35), so `final`, `local` or `typedef` alone is syntax
 ([names.rs:83-98](../../../cli/src/tombstone/names.rs#L83),
-[Prose.hs:80-85](../../../core/app/CE/Lang/Common/Prose.hs#L80),
-[vocab.rs:34-46](../../../cli/src/tombstone/vocab.rs#L34)). A text that is an absence word
+[Prose.hs:88-93](../../../core/app/CE/Lang/Common/Prose.hs#L88),
+[vocab.rs:37-49](../../../cli/src/tombstone/vocab.rs#L37)). A text that is an absence word
 WHOLE (`NotFound`, `no_std`) spells no name at all: its `found` half must not enter R just
 because the word is compound ([names.rs:126-130](../../../cli/src/tombstone/names.rs#L126),
 [Prose.hs:9-16](../../../core/app/CE/Lang/Common/Prose.hs#L9)).
@@ -135,7 +135,7 @@ A label fires when an absence frame in it binds an erased name. The frames are f
 English prefixes (`no`, `not`, `non`, `without`, `sans`, `minus`), English suffixes (`free`,
 `less`, `removed`, `dropped`, `gone`), and the Chinese forms, read inside one run
 (`无东坡肉`) or as a word before an ASCII name (`无cache`)
-([Prose.hs:35-53](../../../core/app/CE/Lang/Common/Prose.hs#L35)). A prefix binds the
+([Prose.hs:43-61](../../../core/app/CE/Lang/Common/Prose.hs#L43)). A prefix binds the
 1..=`join_max` words after it (`no more` counts as one prefix), a suffix the words before it,
 a Chinese form the rest of its own run; the candidates are spellings, the hub keys them and
 asks the erased set — a candidate that names nothing erased is nothing
@@ -171,7 +171,7 @@ number is the floor's input, not a tally; `names` counts the known names it spel
 window and every wide erased name it contains as a substring (a Chinese sentence is one
 word), once per key across both scripts
 ([frames.rs:250-277](../../../cli/src/tombstone/frames.rs#L250),
-[Prose.hs:54-64](../../../core/app/CE/Lang/Common/Prose.hs#L54),
+[Prose.hs:62-72](../../../core/app/CE/Lang/Common/Prose.hs#L62),
 [names.rs:70-81](../../../cli/src/tombstone/names.rs#L70),
 [names.rs:174-182](../../../cli/src/tombstone/names.rs#L174),
 [candidates.rs:72-101](../../../cli/src/tombstone/candidates.rs#L72)). Which of those rows is a site is
@@ -193,7 +193,7 @@ message, which is a surface and no file ([candidates.rs:113-144](../../../cli/sr
 | **declared** | `[tombstone] ledger`, the exclude list's dialect, compiled once per run | the file, whatever its language | `declared` ([policy.rs:1-6](../../../cli/src/tombstone/policy.rs#L1), [policy.rs:37-42](../../../cli/src/tombstone/policy.rs#L37)) |
 | **path** | the stem (`changelog`, `news`, `history`, `migration`, `upgrading`, …, `adr-*`) or a directory on the path (`adr`, `decisions`, `releases`, …) | the file | `path` ([role.rs:47-102](../../../cli/src/tombstone/role.rs#L47)) |
 | **ledger** | the SHAPE: at least three headings, at least half of the level-2/3 ones version-indexed — a word the segment witness's reader takes for a version (exactly three numeric parts, or two behind `v`), an ISO date, `Unreleased` / `未发布`; since `TOMBSTONE_REV` 2 a section number (`### 4.1`) is none, where "digits . digits anywhere" had read a numbered design booklet as a ledger | the file | `ledger` ([role.rs:104-148](../../../cli/src/tombstone/role.rs#L104)) |
-| **segment** | the segment around a candidate row — the `>` quote run when the line is quoted (a banner is one run), else the section body from the nearest heading at or above down to the next heading of any level, its own quoted rows left out (a quote run is a segment by itself and lends the prose around it no tokens) — and its distinct ledger tokens | that segment only, counted once per segment | `segment` ([role.rs:173-198](../../../cli/src/tombstone/role.rs#L173), [candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)) |
+| **segment** | the segment around a candidate row — the `>` quote run when the line is quoted (a banner is one run), else the section body from the nearest heading at or above down to the next heading of any level, its own quoted rows left out (a quote run is a segment by itself and lends the prose around it no tokens) — and its distinct ledger tokens | that segment only, counted once per segment | `segment` ([role.rs:177-202](../../../cli/src/tombstone/role.rs#L177), [candidates.rs:113-144](../../../cli/src/tombstone/candidates.rs#L113)) |
 
 The third witness exists because a file-level answer had to get one of two things wrong: the
 plan book's banner is a ledger and its §4 is a norm. Its threshold is `SEGMENT_TOKENS` = 3
@@ -204,8 +204,8 @@ carrying both a digit and a letter; `§4.2`, `0.57`, a `file:102-103` span and a
 none of these. Three is where a list becomes a ledger — the floor `ledger_shape` already
 applies to headings — and the replay that set it left a window of [1, 33]: every true
 positive's segment carried 0 tokens and the three in-between sites' segments 33, 75 and 77
-(§9; [role.rs:162-169](../../../cli/src/tombstone/role.rs#L162),
-[role.rs:241-277](../../../cli/src/tombstone/role.rs#L241)). `[tombstone] ledger` is the
+(§9; [role.rs:166-173](../../../cli/src/tombstone/role.rs#L166),
+[role.rs:245-281](../../../cli/src/tombstone/role.rs#L245)). `[tombstone] ledger` is the
 backstop the 2026-09-04 ruling gave the witness — ledger-like files no witness reads, named
 by the repository itself — and `[tombstone] terms` is the same table's vocabulary key: words
 that never spell a name, whole or as a word of a compound
@@ -322,7 +322,7 @@ and the evaluation set's; its shape is pinned by the observe golden (§9).
   three-character floor and in no table; four of the six true positives the replay found bound
   a single word. The 2026-09-04 ruling keeps them and keeps the floor — a false site on a
   common word is a `[tombstone] terms` entry away, by the repository's own word
-  ([FPR-TOMBSTONE.md:111-117](../../FPR-TOMBSTONE.md#L111)).
+  ([FPR-TOMBSTONE.md:124-130](../../FPR-TOMBSTONE.md#L124)).
 - **CJK is measured at word boundaries only.** A Chinese phrase is one token of the word cut —
   the segmentation limit the spec states rather than solves — so a wide name is spelled only
   where a run is a heading, a list lead or an identifier by itself, survives only as a whole
@@ -411,8 +411,8 @@ class stays at its tier. The
 ledger carries the exact 95 % Clopper–Pearson interval of every row (0 / 400 → 0–0.918 %,
 1 / 537 → 0.005–1.033 %, 6 / 537 → 0.411–2.416 %) and calls itself what it is: calibration
 evidence on two corpora, not a bound on the field ([FPR-TOMBSTONE.md:24-34](../../FPR-TOMBSTONE.md#L24),
-[FPR-TOMBSTONE.md:47-57](../../FPR-TOMBSTONE.md#L47),
-[FPR-TOMBSTONE.md:95-105](../../FPR-TOMBSTONE.md#L95)). The K = 3 derivation is the ledger's
+[FPR-TOMBSTONE.md:48-58](../../FPR-TOMBSTONE.md#L48),
+[FPR-TOMBSTONE.md:105-115](../../FPR-TOMBSTONE.md#L105)). The K = 3 derivation is the ledger's
 own table (§5). The replay stays a standing `#[ignore]` leg under the EVAL-SET retirement
 rule; its command line is the ledger's last section.
 

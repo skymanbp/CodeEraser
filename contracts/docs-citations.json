@@ -906,13 +906,13 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 130,
+    "line": 133,
     "text": "let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 347,
-    "end": 364,
+    "line": 363,
+    "end": 380,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../cli/tests/unit/dedup/t3/wire.rs|852d91320c904172|0": {
@@ -1338,7 +1338,7 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Verdict/Score.hs|ffed7fc4a3ab3316|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 212,
+    "line": 217,
     "text": "touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/app/CE/Wire/Result.hs|2b18a37c2d41233e|0": {
@@ -1401,8 +1401,8 @@
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../../core/test/VerdictProps.hs|94000713a90044f4|0": {
     "target": "../../../core/test/VerdictProps.hs",
-    "line": 228,
-    "end": 240,
+    "line": 229,
+    "end": 241,
     "text": "-- | Plan v2.30 step 5b-9: the T3 family's verified pairs enter the sim"
   },
   "docs/reference/methodology/02-t3-near-miss-clones-tree-edit-distance-tsed.md|../../DEVELOPMENT_PLAN.md|1d930b6a042906aa|0": {
@@ -2285,20 +2285,20 @@
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common/Prose.hs|29b54ac156107d11|0": {
     "target": "../../../core/app/CE/Lang/Common/Prose.hs",
-    "line": 99,
-    "end": 113,
+    "line": 107,
+    "end": 121,
     "text": "\\# Structured-docstring skeleton line prefixes (plan\\n\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common/Prose.hs|58b50a2cf06c5b02|0": {
     "target": "../../../core/app/CE/Lang/Common/Prose.hs",
-    "line": 114,
-    "end": 116,
+    "line": 122,
+    "end": 124,
     "text": "\\# The inline exemption marker (plan :79-80). Without a ` -- <why>`\\n\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Lang/Common/Prose.hs|ebc155351a85d80c|0": {
     "target": "../../../core/app/CE/Lang/Common/Prose.hs",
-    "line": 95,
-    "end": 98,
+    "line": 103,
+    "end": 106,
     "text": "\\license_markers = [\\n\\"
   },
   "docs/reference/methodology/03-documentation-duplication-shingling-minhash.md|../../../core/app/CE/Wire.hs|6c6e6a1e762976b9|0": {
@@ -2349,108 +2349,108 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|051d7dbd13e1db66|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 140,
-    "end": 154,
+    "line": 147,
+    "end": 161,
     "text": "-- | depth == parent.depth + 1 for every non-root row. nodeRow's"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|3d54266a3b6aab2f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 120,
-    "end": 123,
+    "line": 127,
+    "end": 130,
     "text": "declOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 156,
-    "end": 169,
+    "line": 163,
+    "end": 176,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|4fb04ff75aa64c5b|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 156,
-    "end": 169,
+    "line": 163,
+    "end": 176,
     "text": "-- | Shared shape for the dir-keyed tables — the table's identity"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|686a95d8bdf853af|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 178,
-    "end": 180,
+    "line": 185,
+    "end": 187,
     "text": "-- fail = degraded alone (the report-only stance, by ruling: no"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 180,
-    "end": 184,
+    "line": 187,
+    "end": 191,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6993c0b04cc0beec|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 180,
-    "end": 200,
+    "line": 187,
+    "end": 207,
     "text": "-- reply carries fail=true (P1) and echoes the defaults. The S3"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6ad8993d8911e54e|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 199,
+    "line": 206,
     "text": "<> [\"fail\" .= degraded, \"knobs\" .= [[c, g k] | (c, g, _) <- knobTable], \"degraded\" .= degraded]"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|6ee4d71203da0175|0": {
+    "target": "../../../core/app/CE/Structure.hs",
+    "line": 54,
+    "end": 69,
+    "text": "-- | The rows the cap prices: every table the core reads — the path"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 77,
+    "line": 84,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|7c98810652f2a381|1": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 77,
-    "end": 79,
+    "line": 84,
+    "end": 86,
     "text": ": [ tableOffence nm proj (dirRow n spec) rows"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|82207190ce81caf3|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 125,
-    "end": 138,
+    "line": 132,
+    "end": 145,
     "text": "-- | One dense node row: id == index, parent < id (root 0 loops to"
-  },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|89c38eabd37e152a|0": {
-    "target": "../../../core/app/CE/Structure.hs",
-    "line": 57,
-    "end": 62,
-    "text": "priced :: StructReq -> Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|9a0838deb182648f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 112,
-    "end": 115,
+    "line": 119,
+    "end": 122,
     "text": "convOk row = case row of"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|a5ff01411ccb2dda|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 105,
-    "end": 111,
+    "line": 112,
+    "end": 118,
     "text": "-- the [dir, key, count] reading: the key under its cap, the count"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|b48a97004c2921f5|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 72,
-    "end": 79,
+    "line": 79,
+    "end": 86,
     "text": "violation req ="
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ddfc9813db49d347|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 228,
-    "end": 239,
+    "line": 235,
+    "end": 246,
     "text": "-- the DENSITY fold (2.26.0, batch 9 P9 — the user's ruling):"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|f179c7361af37e1a|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 96,
-    "end": 123,
+    "line": 103,
+    "end": 130,
     "text": "dirTables =\n[ ((3, \"patternShapes\", capOk \"shape bits outside 0..127\" shapeBitsCap), take 2, fromMaybe [] (reqShapes req))"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure.hs|ff6fdcfd5200b86f|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 71,
-    "end": 90,
+    "line": 78,
+    "end": 97,
     "text": "violation :: StructReq -> Maybe String"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Axes.hs|1ce45d9f1e01be3f|0": {
@@ -2554,12 +2554,6 @@
     "end": 181,
     "text": "geometry :: Knobs -> Facts -> [Integer]"
   },
-  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|18c9f0eea6030e9d|0": {
-    "target": "../../../core/app/CE/Structure/Cost.hs",
-    "line": 180,
-    "end": 183,
-    "text": "-- | Node ceiling (the verdictRowCap magnitude anchor): over-cap"
-  },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|2300974f81b4c175|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
     "line": 65,
@@ -2586,6 +2580,12 @@
     "target": "../../../core/app/CE/Structure/Cost.hs",
     "line": 40,
     "text": "fanoutCeil :: Integer"
+  },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|855f641334f27ea0|0": {
+    "target": "../../../core/app/CE/Structure/Cost.hs",
+    "line": 180,
+    "end": 183,
+    "text": "-- | Request-row ceiling (the verdictRowCap magnitude anchor; the name"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Cost.hs|96546d4a91108585|0": {
     "target": "../../../core/app/CE/Structure/Cost.hs",
@@ -2767,6 +2767,12 @@
     "end": 48,
     "text": "endpointsByDir :: [[Integer]] -> M.Map Integer (Integer, Integer)"
   },
+  "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Raw.hs|2492777c11593b4a|0": {
+    "target": "../../../core/app/CE/Structure/Raw.hs",
+    "line": 74,
+    "end": 82,
+    "text": "-- | The rows the path form carries: every path, arc, layout entry, doc"
+  },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|852e1eb276447cfc|0": {
     "target": "../../../core/app/CE/Structure/Request.hs",
     "line": 14,
@@ -2775,8 +2781,8 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Request.hs|d6dac33d467172f0|0": {
     "target": "../../../core/app/CE/Structure/Request.hs",
-    "line": 180,
-    "end": 183,
+    "line": 185,
+    "end": 188,
     "text": "-- | The [dirId, code, count] distribution the axes read: the shape"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Structure/Shape.hs|04ef9ff20f51e83d|0": {
@@ -2793,7 +2799,7 @@
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/app/CE/Verdict/Score.hs|d905740cc99e57ad|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 162,
+    "line": 166,
     "text": "chargeAt :: Integer -> Rational -> Integer -> Integer"
   },
   "docs/reference/methodology/04-structure-judgment-tree-scale-entropy-seven.md|../../../core/test/EntropyProps.hs|b06af21d08a58f16|0": {
@@ -2953,31 +2959,31 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 130,
+    "line": 133,
     "text": "let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 121,
-    "end": 125,
+    "line": 124,
+    "end": 128,
     "text": "// the docdup family's verified pairs (7.0.0, O46): until then this"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|71cb5dc9ffd38839|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 213,
-    "end": 217,
+    "line": 222,
+    "end": 226,
     "text": "let baseline = match (opts.establish, opts.pinned_soft) {"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|b0a71c3df04991be|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 422,
-    "end": 437,
+    "line": 410,
+    "end": 425,
     "text": "/// The discrete clone-member set: every block's sides attributed to"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 347,
-    "end": 364,
+    "line": 363,
+    "end": 380,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../cli/src/score/pinned.rs|8d50bc0eaca6e15c|0": {
@@ -3055,48 +3061,48 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|13f33461aefff164|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 102,
+    "line": 104,
     "text": ", \"ratchet\" .= ratchetObj (isJust (reqPresent req)) r conds"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|1673217720b81c48|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 160,
-    "end": 167,
+    "line": 162,
+    "end": 169,
     "text": "-- the fence (5.1.0, plan v2.14 ②): the digest the ceilings were"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|307400576096ea7f|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 199,
-    "end": 212,
+    "line": 201,
+    "end": 214,
     "text": "-- | The verdict.result line, one reply with the degraded flag: the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|519ccf349e6063d5|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 158,
+    "line": 160,
     "text": "floorFail = maybe False (perMille <) (reqFloor req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|5267f37c538565c1|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 129,
-    "end": 130,
+    "line": 131,
+    "end": 132,
     "text": "-- the class rows fold into ONE Map here, once per judgment (3.1.0)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|559a51d13591df9e|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 177,
-    "end": 186,
+    "line": 179,
+    "end": 188,
     "text": "dedupLeg :: VerdictReq -> (Integer, Integer, Bool)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|56743e615ed9c0b8|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 214,
-    "end": 217,
+    "line": 216,
+    "end": 219,
     "text": "-- | What a degraded reply answers: empty tables, the defaults, and a"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|6c3516d7f8b5804b|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 142,
-    "end": 143,
+    "line": 144,
+    "end": 145,
     "text": "effSoft = case base of"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|6df58d645f65d232|0": {
@@ -3107,14 +3113,14 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|854205522b2ef6da|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 150,
-    "end": 156,
+    "line": 152,
+    "end": 158,
     "text": "r = ratchet rk classTol (reqPresent req) base (reqCont req) (reqDisc req)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|c21dd7adccd4467a|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 134,
-    "end": 141,
+    "line": 136,
+    "end": 143,
     "text": "-- the soft line judging THIS run: the committed one, or (only at"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|cd8ea2e3ad0d9d7d|0": {
@@ -3125,14 +3131,20 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|e137781e7295add5|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 117,
-    "end": 120,
+    "line": 119,
+    "end": 122,
     "text": ", -- the effective weight table 0..6 (review C3, 2.8.0"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict.hs|f0b88112837d6d4d|0": {
     "target": "../../../core/app/CE/Verdict.hs",
     "line": 54,
     "text": "parsed = parseBaseline (reqBaseline req)"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Candidates.hs|515896a710b29b5f|0": {
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 30,
+    "end": 37,
+    "text": "candidates :: Knobs -> VerdictReq -> [[Integer]]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Cost.hs|00e1dee4a2d8d938|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -3430,131 +3442,136 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Rows.hs|b49585f26d3b58c8|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 89,
-    "end": 101,
+    "line": 91,
+    "end": 103,
     "text": "contRow :: String -> Int -> [Integer] -> Maybe String"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Rows.hs|f7d24dd8670cbf12|0": {
+    "target": "../../../core/app/CE/Verdict/Rows.hs",
+    "line": 113,
+    "end": 131,
+    "text": "-- | The sim table's split, a contract once the request names the"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|0047c55e846ad4db|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 215,
+    "line": 220,
     "text": "dupFiles k f = touched [(u, v) | [u, v, 2, n, d] <- fSim f, n * sDupDen k >= d * sDupNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|07869a65a6a23383|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 189,
-    "end": 195,
+    "line": 193,
+    "end": 199,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|07869a65a6a23383|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 189,
-    "end": 195,
+    "line": 193,
+    "end": 199,
     "text": "cocOver :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|14fb74480fd1eb86|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 226,
+    "line": 231,
     "text": "count [() | [_, rw, ap] <- fChurn f, rw + ap > 0, rw * sRewriteDen k >= (rw + ap) * sRewriteNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|3636fd2f7c9eb1b1|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 197,
-    "end": 207,
+    "line": 201,
+    "end": 211,
     "text": "-- | Axis 2 / axis 3 mass (7.0.0, O22): the FILES a verified pair"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|398835d61e497791|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 90,
-    "end": 109,
+    "line": 92,
+    "end": 111,
     "text": "scoreBound :: ScoreKnobs"
+  },
+  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|48513b17646a4da9|0": {
+    "target": "../../../core/app/CE/Verdict/Score.hs",
+    "line": 153,
+    "text": "docUniverse = toInteger (length (maybe (fDocFiles f) id (fDocOwners f)))"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|49a9c5a3b2637360|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 272,
-    "end": 279,
+    "line": 277,
+    "end": 284,
     "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|49a9c5a3b2637360|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 272,
-    "end": 279,
+    "line": 277,
+    "end": 284,
     "text": "score :: ScoreKnobs -> [[Integer]] -> [(Integer, Integer)] -> (Integer, Integer)"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|53ce9d036606538c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 210,
-    "end": 212,
+    "line": 215,
+    "end": 217,
     "text": "cloneFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 180,
-    "end": 186,
+    "line": 184,
+    "end": 190,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 180,
-    "end": 186,
+    "line": 184,
+    "end": 190,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|56d38f2c62912da9|2": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 180,
-    "end": 188,
+    "line": 184,
+    "end": 192,
     "text": "sizeMass :: ScoreKnobs -> Maybe Integer -> Facts -> Rational"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|57124610f8b6b134|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 233,
-    "end": 243,
+    "line": 238,
+    "end": 248,
     "text": "cycleMembers :: ScoreKnobs -> Facts -> Integer"
-  },
-  "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6507a526d9217ff6|0": {
-    "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 149,
-    "end": 150,
-    "text": "docFiles = toInteger (length (fDocFiles f))"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|656b9739094cc571|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 187,
+    "line": 191,
     "text": "s = maybe (sSizeCeil k) id soft"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 152,
-    "end": 165,
+    "line": 156,
+    "end": 169,
     "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|1": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 152,
-    "end": 157,
+    "line": 156,
+    "end": 161,
     "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|6623cd394987e37f|2": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 152,
-    "end": 165,
+    "line": 156,
+    "end": 169,
     "text": "-- | floor(scale · v/(v+n)): the odds→probability map. n = 0 means"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|67ae4563ca2c76a8|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 66,
-    "end": 69,
+    "line": 68,
+    "end": 71,
     "text": "classOf :: [Integer] -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|87e11f21877ed3c2|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 224,
-    "end": 226,
+    "line": 229,
+    "end": 231,
     "text": "churnHeavy :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|993827d7e86e206a|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 221,
-    "end": 222,
+    "line": 226,
+    "end": 227,
     "text": "deadFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|9a33567040c58443|0": {
@@ -3565,47 +3582,47 @@
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|aa447550ddf1042c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 214,
-    "end": 215,
+    "line": 219,
+    "end": 220,
     "text": "dupFiles :: ScoreKnobs -> Facts -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|aacc4ec38599f419|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 239,
+    "line": 244,
     "text": ", size > 1 || IS.member (fromInteger u) loops"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|b9b5ad04a3a3c78b|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 218,
-    "end": 219,
+    "line": 223,
+    "end": 224,
     "text": "touched :: [(Integer, Integer)] -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|cf1e0c54c1524a6c|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 150,
+    "line": 154,
     "text": "codeFiles = count [() | (u : _) <- fPos f, IS.notMember (fromInteger u) (docSet f)]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|e53c6ab8a40735d4|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 255,
-    "end": 258,
+    "line": 260,
+    "end": 263,
     "text": "effWeight :: ScoreKnobs -> [[Integer]] -> Integer -> Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|f51a2f3edddd803b|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 59,
-    "end": 62,
+    "line": 61,
+    "end": 64,
     "text": "type ClassKnobs = M.Map (Integer, Integer) Integer"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|fc5edbc46f904ee6|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 261,
-    "end": 262,
+    "line": 266,
+    "end": 267,
     "text": "effectiveWeights :: ScoreKnobs -> [[Integer]] -> [[Integer]]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Score.hs|ffed7fc4a3ab3316|0": {
     "target": "../../../core/app/CE/Verdict/Score.hs",
-    "line": 212,
+    "line": 217,
     "text": "touched [(u, v) | [u, v, kind, n, d] <- fSim f, kind <= 1, n * sCloneDen k >= d * sCloneNum k]"
   },
   "docs/reference/methodology/05-scoring-and-the-adr-006-ratchet.md|../../../core/app/CE/Verdict/Soft.hs|240872b953950d90|0": {
@@ -5386,10 +5403,16 @@
     "line": 286,
     "text": "| **M5-2** 图 + 死码 | `graph`（独立子系统，验收对齐 ops-codegraph-tool 锚点；调用边=import-绑定层，R6 全仓同名匹配为条件项：须独立 100 调用点审计 ≥90% 方开——2026-08-12 拍板；**实测铸边精度 38/66=0.576 < 0.90，按本判据永久关闭（RG10 收案 2026-08-17，见 ADR-008）**）、`deadcode` | 3–4 周 ± | import 边 precision ≥ 90%（抽样人工核对 100 条，覆盖五门首发语言——D2-4；TS/Go 语料=crosscheck 已钉 zod/cobra commit）；`unreferenced_public` 独立报告类不并入 dead；本仓库 deadcode 发现全处置；core 判定不变量属性电池入 CI（2g 起——2026-08-12 拍板） |"
   },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|615f3f591132c947|0": {
+    "target": "../../../cli/src/churn/mod.rs",
+    "line": 166,
+    "end": 172,
+    "text": "&[\"log\", \"--since\", &since, \"--first-parent\", \"--format=%H\"],"
+  },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|a6cae4e7dac804e4|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 91,
-    "end": 101,
+    "line": 85,
+    "end": 95,
     "text": "// the wire floor follows the CONFIGURED knob when one is set"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/mod.rs|daf5ed578a3c4511|0": {
@@ -5397,6 +5420,12 @@
     "line": 270,
     "end": 288,
     "text": "}\n\n/// Every pair at or over the floor, count-descending — NO rank cut"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/churn/survival.rs|ca421eaa39e71c7e|0": {
+    "target": "../../../cli/src/churn/survival.rs",
+    "line": 47,
+    "end": 92,
+    "text": "pub(super) fn survival(root: &Path, window: &[String], added: &Added) -> Result<Survival> {"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/dedup/mod.rs|fb0cbf149272cc91|0": {
     "target": "../../../cli/src/dedup/mod.rs",
@@ -5546,54 +5575,54 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|3da7180540faadff|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 130,
+    "line": 133,
     "text": "let t3 = dedup::t3::judge_index(root, &snap, &opts.core)?;"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|4606d9bb72d3fa37|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 534,
-    "end": 539,
+    "line": 522,
+    "end": 527,
     "text": "let mut coch: BTreeSet<[i64; 3]> = BTreeSet::new();"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|505e57f8f619d387|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 289,
-    "end": 305,
+    "line": 299,
+    "end": 315,
     "text": "/// Graph judgment + the degraded refusal in one leg (split from run"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|5689d7a55603d1fb|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 121,
-    "end": 125,
+    "line": 124,
+    "end": 128,
     "text": "// the docdup family's verified pairs (7.0.0, O46): until then this"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|6a0758bc889ed01d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 366,
-    "end": 392,
+    "line": 382,
+    "end": 408,
     "text": "/// File pairs with at least one verified finding of one family, as"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|8ac4dac384dae07d|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 508,
-    "end": 511,
+    "line": 496,
+    "end": 499,
     "text": "/// Per-file churn sums over the per-unit ledger plus the co-change"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|93ac992555aaab33|0": {
+    "target": "../../../cli/src/score/mod.rs",
+    "line": 335,
+    "end": 353,
+    "text": "/// The sim table off one snapshot: the two clone families' rows"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cad1f0683af53da3|0": {
     "target": "../../../cli/src/score/mod.rs",
-    "line": 347,
-    "end": 364,
+    "line": 363,
+    "end": 380,
     "text": "/// File pairs with at least one verified clone block, kind 0 (t1t2),"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/mod.rs|cd401e3b9371f9ac|0": {
-    "target": "../../../cli/src/score/mod.rs",
-    "line": 408,
-    "end": 420,
-    "text": "/// The survivor is the STRONGER finding: the sort orders kind within"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/wire.rs|a40a0820e026d366|0": {
     "target": "../../../cli/src/score/wire.rs",
-    "line": 110,
+    "line": 118,
     "text": "pub candidates: Vec<[i64; 6]>,"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../cli/src/score/wire.rs|a5e9bb1e3b606c05|0": {
@@ -5608,15 +5637,21 @@
     "end": 27,
     "text": "assert_eq!(crossing.id.key, \"\", \"cross-unit span is not guessed\");"
   },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Churn/Document.hs|3bd7d25cd671b350|0": {
+    "target": "../../../core/app/CE/Churn/Document.hs",
+    "line": 32,
+    "end": 35,
+    "text": "survivors :: DocReq -> Maybe String"
+  },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Churn/Document.hs|af8831dc58f4c755|0": {
     "target": "../../../core/app/CE/Churn/Document.hs",
-    "line": 33,
+    "line": 49,
     "text": "cochangeFileCap = 20"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Churn/Document.hs|bb6c396a26191fd7|0": {
     "target": "../../../core/app/CE/Churn/Document.hs",
-    "line": 28,
-    "end": 33,
+    "line": 44,
+    "end": 49,
     "text": "-- | Commits changing more files than this are left out of the pair"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Clone/Cost.hs|5cad32f8a4cc001c|0": {
@@ -5726,36 +5761,42 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|15998cfcbbcdc99b|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 168,
+    "line": 170,
     "text": "conds = failConditions r floorFail dedupOver digestDrift"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict.hs|8c8cfcceeca29fc9|0": {
     "target": "../../../core/app/CE/Verdict.hs",
-    "line": 209,
+    "line": 211,
     "text": "(\"joinSeverity\" .= [[c, s] | (c, s) <- severities])"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|21332bdaec0e965e|0": {
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 21,
+    "end": 36,
+    "text": "-- | Join-candidate rows, one per sim PAIR (split from result at the"
+  },
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|21332bdaec0e965e|1": {
+    "target": "../../../core/app/CE/Verdict/Candidates.hs",
+    "line": 21,
+    "end": 37,
+    "text": "-- | Join-candidate rows, one per sim PAIR (split from result at the"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|3a0e1a98252fd865|0": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 27,
-    "end": 28,
+    "line": 32,
+    "end": 33,
     "text": "[ -- the 6th column is the leg-agreement confidence (2.33.0, H4)"
   },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|482468b895b699ce|0": {
+  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|4499d172aed12562|0": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 21,
-    "end": 31,
-    "text": "-- | Join-candidate rows, one per sim row (split from result at the"
+    "line": 38,
+    "end": 47,
+    "text": "where\n-- pFlags carries the EXPORT axis and nothing else. Entry-ness"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|cd1528b591443644|0": {
     "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 51,
+    "line": 57,
     "text": "churnMap = M.fromList [(u, (ap, rw)) | [u, rw, ap] <- reqChurn req]"
-  },
-  "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Candidates.hs|ea99e78bd3725dbc|0": {
-    "target": "../../../core/app/CE/Verdict/Candidates.hs",
-    "line": 29,
-    "end": 42,
-    "text": "| row@(u : v : _) <- reqSim req"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Cost.hs|25abab9c9efb2321|0": {
     "target": "../../../core/app/CE/Verdict/Cost.hs",
@@ -6004,14 +6045,14 @@
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Rows.hs|8cd2d720fbab8cbf|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 48,
-    "end": 54,
+    "line": 50,
+    "end": 56,
     "text": "simRow :: Integer -> String -> Int -> [Integer] -> Maybe String"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/app/CE/Verdict/Rows.hs|90a07d33766d9aa0|0": {
     "target": "../../../core/app/CE/Verdict/Rows.hs",
-    "line": 39,
-    "end": 40,
+    "line": 41,
+    "end": 42,
     "text": "| u >= n || v >= n -> Just (label name i <> \"endpoint out of range\")"
   },
   "docs/reference/methodology/07-the-three-signal-join.md|../../../core/test/JoinProps.hs|0ccc8b54b312b30a|0": {
@@ -6070,8 +6111,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/churn/mod.rs|812a523d59043b9f|0": {
     "target": "../../../cli/src/churn/mod.rs",
-    "line": 51,
-    "end": 52,
+    "line": 50,
+    "end": 51,
     "text": "/// The churn window's default in days, every face's: the §4.1 two-week anchor."
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/scan/opaque.rs|78e9a6cb3c67711e|0": {
@@ -6106,20 +6147,20 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|005c173dd605b093|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 177,
-    "end": 191,
+    "line": 179,
+    "end": 193,
     "text": "let since = format!(\"{CHURN_WINDOW_DAYS} days ago\");"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|115da39e5377117c|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 271,
-    "end": 289,
+    "line": 272,
+    "end": 290,
     "text": "/// Word-bounded containment: the name with no identifier character"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|16cddbf1ce3c8d52|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 241,
-    "end": 269,
+    "line": 242,
+    "end": 270,
     "text": "/// One mention edge per (from, to) unit pair where `to`'s bare name"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|1f1c9651d4bc18a4|0": {
@@ -6130,7 +6171,7 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2349130d2081cba4|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 231,
+    "line": 232,
     "text": "let end = (u.end_line as u64).min(total);"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|2a9b86b0c06b2975|0": {
@@ -6147,8 +6188,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|3eb1197a1630aff5|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 248,
-    "end": 269,
+    "line": 249,
+    "end": 270,
     "text": "fn push_refs(out: &mut SeamFacts, fid: u64, tops: &[units::Unit], text: &str, lang: Lang) {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|51dde1bfb2cad0a0|0": {
@@ -6189,13 +6230,13 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|ee6577134b4b67bd|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 261,
+    "line": 262,
     "text": "if i == j || name.len() < NAME_FLOOR {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/src/structure/seams.rs|fe03c940e631e227|0": {
     "target": "../../../cli/src/structure/seams.rs",
-    "line": 212,
-    "end": 226,
+    "line": 213,
+    "end": 227,
     "text": "fn top_level(all: &[units::Unit]) -> Vec<units::Unit> {"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../cli/tests/it/structure_knobs.rs|618d30c6681b777f|0": {
@@ -6217,8 +6258,8 @@
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure.hs|9052aaf7c085616b|0": {
     "target": "../../../core/app/CE/Structure.hs",
-    "line": 220,
-    "end": 227,
+    "line": 227,
+    "end": 234,
     "text": "-- the split-ROI keys exist exactly when seamFiles rode the wire"
   },
   "docs/reference/methodology/08-split-roi-seam-pricing-four-legs.md|../../../core/app/CE/Structure/Axes.hs|1c6da934c477c2cd|0": {
@@ -6835,8 +6876,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../contracts/VERSIONING.md|6d7aafec469cebbb|0": {
     "target": "../../../contracts/VERSIONING.md",
-    "line": 602,
-    "end": 603,
+    "line": 464,
+    "end": 465,
     "text": "0.x 实现只在 hello 协商，裸发/错 major 的请求曾被静默应答）：缺失或 major"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/Docdup/Cost.hs|7c9458d1e60503bc|0": {
@@ -6871,63 +6912,63 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|0b91e082d50a9fed|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 39,
-    "end": 40,
+    "line": 44,
+    "end": 45,
     "text": "bucketCap :: Int"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|0cbd996e3fefb035|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 129,
+    "line": 134,
     "text": "n = length (takeWhile (uncurry (==)) (zip (map hOf rTail) (map hOf aTail)))"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|123ae74687a1029c|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 78,
-    "end": 81,
+    "line": 83,
+    "end": 86,
     "text": "-- Integer, not Int: machine-width Int is 32-bit on some GHC"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|1604c410dfd63ece|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 109,
-    "end": 112,
+    "line": 114,
+    "end": 117,
     "text": "-- The evidence must also include one ANCHOR line (>= anchorFloor"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|42fa21e5818ce8d2|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 82,
-    "end": 91,
+    "line": 87,
+    "end": 96,
     "text": "overWork remOccs addOccs ="
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|67b3e80b9ae84675|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 113,
-    "end": 132,
+    "line": 118,
+    "end": 137,
     "text": "tryBlock :: RunMap -> RunMap -> Occ -> Occ -> Maybe Block"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|890f1f138bae8591|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 105,
-    "end": 108,
+    "line": 110,
+    "end": 113,
     "text": "-- sides and fail the start test). The floor counts DISTINCT content"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|a4efcbdd1164b6e0|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 116,
+    "line": 121,
     "text": "| distinctEvidence >= destFloor && anchored ="
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|b8cae082d53a55e7|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 38,
+    "line": 43,
     "text": "-- floor-dead anyway). Measured self-slice headroom: largest bucket 9."
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|c373e3a64dafa322|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 131,
+    "line": 136,
     "text": "distinctEvidence = S.size (S.fromList (map hOf evidence))"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|e3fd22464e769cd8|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 132,
+    "line": 137,
     "text": "anchored = any (\\(_, _, w) -> w >= anchorFloor) evidence"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|e8409a666bcb0546|0": {
@@ -6938,8 +6979,8 @@
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Anchor.hs|f974af5c6ba0defe|0": {
     "target": "../../../core/app/CE/FourClass/Anchor.hs",
-    "line": 125,
-    "end": 128,
+    "line": 130,
+    "end": 133,
     "text": "isStart =\noPos ro == 0"
   },
   "docs/reference/methodology/09-edit-four-classification-update-supervision.md|../../../core/app/CE/FourClass/Cost.hs|4414b96ce66c7773|0": {
@@ -9014,10 +9055,10 @@
     "end": 53,
     "text": "fn the_census_counts_the_veto_per_language_and_names_the_collisions() {"
   },
-  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING.md|710a376fefdbe63c|0": {
-    "target": "../../../contracts/VERSIONING.md",
-    "line": 528,
-    "end": 530,
+  "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../contracts/VERSIONING-ARCHIVE-6.0-7.1.md|710a376fefdbe63c|0": {
+    "target": "../../../contracts/VERSIONING-ARCHIVE-6.0-7.1.md",
+    "line": 115,
+    "end": 117,
     "text": "> `exportUnmentioned: []` + `unmentionedDropped: true`（**只在掉表时在场**）。**铁律**（K16/K33）："
   },
   "docs/reference/methodology/13-unmentioned-declaration-advisory.md|../../../core/app/CE/Graph.hs|771b58aeca86e49f|0": {
@@ -9541,14 +9582,14 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|079979cb5b16f276|0": {
     "target": "../../../cli/src/tombstone/role.rs",
-    "line": 241,
-    "end": 277,
+    "line": 245,
+    "end": 281,
     "text": "/// Distinct version-ledger tokens in a text: a semver (`1.6.0`, or a"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|5cb832905b0d0281|0": {
     "target": "../../../cli/src/tombstone/role.rs",
-    "line": 162,
-    "end": 169,
+    "line": 166,
+    "end": 173,
     "text": "/// Distinct ledger tokens a segment must carry to be a ledger by"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|6d0262850e2eda52|0": {
@@ -9559,14 +9600,14 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|867a356f73c72967|0": {
     "target": "../../../cli/src/tombstone/role.rs",
-    "line": 173,
-    "end": 198,
+    "line": 177,
+    "end": 202,
     "text": "/// The segment around `line` of a Markdown text and its distinct"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|97aa17f9fc7098ee|0": {
     "target": "../../../cli/src/tombstone/role.rs",
     "line": 104,
-    "end": 137,
+    "end": 148,
     "text": "/// At least three headings, and at least half of the level-2/3 ones"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/role.rs|fb57d917b47e3cef|0": {
@@ -9643,8 +9684,8 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/vocab.rs|b8bd1d1f0bc539d7|0": {
     "target": "../../../cli/src/tombstone/vocab.rs",
-    "line": 34,
-    "end": 46,
+    "line": 37,
+    "end": 49,
     "text": "/// Whether `w` is a word of the instrument's own vocabulary — a frame,"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../cli/src/tombstone/wire.rs|132d1988f574ae82|0": {
@@ -9697,20 +9738,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|7059d0771533dce5|0": {
     "target": "../../../core/app/CE/Lang/Common/Prose.hs",
-    "line": 35,
-    "end": 53,
+    "line": 43,
+    "end": 61,
     "text": "\\# English absence frames: a prefix binds the words after it, a\\n\\"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|e6e8d810b3c5ad28|0": {
     "target": "../../../core/app/CE/Lang/Common/Prose.hs",
-    "line": 80,
-    "end": 85,
+    "line": 88,
+    "end": 93,
     "text": "\\# Fewest chars an ASCII name has (`ab` is a preposition, not a name).\\n\\"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Lang/Common/Prose.hs|f55874f52532ebe5|0": {
     "target": "../../../core/app/CE/Lang/Common/Prose.hs",
-    "line": 54,
-    "end": 64,
+    "line": 62,
+    "end": 72,
     "text": "\\# Retrospective marks a prose segment carries: lower-cased English\\n\\"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../../core/app/CE/Protocol.hs|25de4926b263c061|0": {
@@ -9805,20 +9846,20 @@
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|699a5a6150e43137|0": {
     "target": "../../FPR-TOMBSTONE.md",
-    "line": 95,
-    "end": 105,
+    "line": 105,
+    "end": 115,
     "text": "| CodeEraser 自仓全史（第六轮） | 530 | 7 | 3 / 530 = **0.57 %**（折 /500 = 2.8） | 7 / 530 = 1.32 % | 0.117 – 1.645 % / 0.533 – 2.702 % |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|72c4b93385abcd8d|0": {
     "target": "../../FPR-TOMBSTONE.md",
-    "line": 111,
-    "end": 117,
+    "line": 124,
+    "end": 130,
     "text": "## 第二段的两条口径（2026-09-04 用户裁定）"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../../FPR-TOMBSTONE.md|dde372e2459f573f|0": {
     "target": "../../FPR-TOMBSTONE.md",
-    "line": 47,
-    "end": 57,
+    "line": 48,
+    "end": 58,
     "text": "| # | 提交 | 站点 | 绑定的名字 | 判 | 理由 |\n|---|---|---|---|---|---|\n| 1 | b883b5a1 | `cli/src/health.rs:48` | `doctor_line` | 真阳 | 头注追述被删的孪生函数「used to sit beside this one」 |"
   },
   "docs/reference/methodology/14-tombstone-residue-the-erased-name-conjunction.md|../ce-toml.md|ac90a37ea26067cc|0": {
@@ -10745,38 +10786,44 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|00a611cc3b67762d|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 103,
+    "line": 114,
     "text": "preludeErrors :: Int -> IS.IntSet -> [Clause] -> [(Int, Integer)]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|048f2b701d4b7139|0": {
+    "target": "../../../core/app/CE/Query/Check.hs",
+    "line": 73,
+    "end": 80,
+    "text": "-- | A rule's head that spells a fact predicate (at the head's token),"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|40d63182767b3b7b|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 49,
+    "line": 50,
     "text": "checkReserving :: Int -> IS.IntSet -> [Clause] -> Either [(Int, Integer)] Checked"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|70f3b3e93369e1c1|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 30,
-    "end": 39,
+    "line": 31,
+    "end": 40,
     "text": "data Checked = Checked"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|737dff05a7885263|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 67,
+    "line": 69,
     "text": "predSorts :: Sorts -> [RuleC] -> [(Int, [Integer])]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|90f543781fd5cf30|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 42,
+    "line": 43,
     "text": "check :: Int -> [Clause] -> Either [(Int, Integer)] Checked"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|9e97ea98c9f3b9eb|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 130,
+    "line": 141,
     "text": "fixLevels :: [(Int, Int, Bool)] -> IM.IntMap Int -> IM.IntMap Int"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check.hs|b842ea3861ccd559|0": {
     "target": "../../../core/app/CE/Query/Check.hs",
-    "line": 113,
+    "line": 124,
     "text": "stratify :: [RuleC] -> Either [(Int, Integer)] [[Int]]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Check/Safety.hs|0d89e4e62a80445c|0": {
@@ -10844,56 +10891,62 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|0f2ba5f8addc02bf|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 160,
+    "line": 170,
     "text": "sortNode, sortDir, sortUnit, sortInt, sortSym, sortSet, sortOpen :: Integer"
-  },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|152676cf191cebf9|0": {
-    "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 172,
-    "end": 173,
-    "text": "errSyntax, errUnknownPred, errArity, errSort, errUnsafe, errUnstratified, errPrelude, errAggregate, errHead :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|361927163b0ab109|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 75,
-    "end": 79,
+    "line": 78,
+    "end": 82,
     "text": "tokenCap, factCap, derivedCap, proofCap :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|3aa3975185a2f5d2|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 100,
-    "end": 101,
+    "line": 110,
+    "end": 111,
     "text": "idbFloor :: Integer"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|91acd145a1cd94ba|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 91,
+    "end": 98,
+    "text": "forbidCap = 64"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 107,
+    "line": 117,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|9d1dfd44a7cc2497|1": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 107,
+    "line": 117,
     "text": "kindPred, kindVar, kindInt, kindSet, kindSym, kindAnon :: Integer"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|be12768b1912a4da|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 94,
+    "line": 104,
     "text": "packPrefix :: String"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|e6c4bffed9f4a3e5|0": {
+    "target": "../../../core/app/CE/Query/Cost.hs",
+    "line": 181,
+    "end": 185,
+    "text": "-- never the core's, so it is not a contract refusal. 10 (v2.35 V7): a"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Cost.hs|f51cdd4278a67362|0": {
     "target": "../../../core/app/CE/Query/Cost.hs",
-    "line": 86,
+    "line": 89,
     "text": "layerCap, forbidCap :: Int"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|89c255e038efd961|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 101,
+    "line": 103,
     "text": "assemble :: DocReq -> Value"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|a8c875d1ab83f2a3|0": {
     "target": "../../../core/app/CE/Query/Document.hs",
-    "line": 179,
-    "end": 195,
+    "line": 181,
+    "end": 197,
     "text": "data Grouped = Grouped (Integer -> [Int]) [Integer] ((Integer, Integer) -> [Int]) [Integer]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Document.hs|e8d2a5abc1d0b176|0": {
@@ -10901,10 +10954,10 @@
     "line": 65,
     "text": "errorNames :: [String]"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|7ae381ed02bd7ae3|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|1ee3b4f0ad5be22f|0": {
     "target": "../../../core/app/CE/Query/Eval.hs",
-    "line": 50,
-    "text": "stratumFix :: Integer -> [RuleC] -> State -> Either Integer State"
+    "line": 56,
+    "text": "stratumFix :: Integer -> Masks -> [RuleC] -> State -> Either Integer State"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|8b9708d9f9f46137|0": {
     "target": "../../../core/app/CE/Query/Eval.hs",
@@ -10912,25 +10965,36 @@
     "end": 11,
     "text": "-- | Bottom-up evaluation of a checked program (design booklet §4.1,"
   },
-  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|8bfd37d927611d8e|0": {
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|ba66f8feecd5ccf9|0": {
     "target": "../../../core/app/CE/Query/Eval.hs",
-    "line": 73,
-    "text": "derive :: IM.IntMap Indexed -> (State, Prov) -> (RuleC, Maybe (Int, Indexed)) -> (State, Prov)"
+    "line": 85,
+    "end": 109,
+    "text": "-- | Run one rule against the round's snapshot (with a delta routed to"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|cd56c7d729404a17|0": {
     "target": "../../../core/app/CE/Query/Eval.hs",
-    "line": 93,
+    "line": 117,
     "text": "goalAnswers :: Db -> Goal -> [(Tuple, [Fact])]"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval.hs|f955752ea41d3da9|0": {
+    "target": "../../../core/app/CE/Query/Eval.hs",
+    "line": 89,
+    "text": "derive :: Integer -> IM.IntMap Indexed -> (State, Prov) -> (RuleC, Maybe (Int, Indexed)) -> (State, Prov)"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Index.hs|40702a583479336f|0": {
     "target": "../../../core/app/CE/Query/Eval/Index.hs",
     "line": 1,
-    "end": 7,
+    "end": 13,
     "text": "-- | A relation with lazily built lookup indexes (design booklet"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Index.hs|99a1acbfb749fdbd|0": {
+    "target": "../../../core/app/CE/Query/Eval/Index.hs",
+    "line": 59,
+    "text": "usedMasks :: [[Lit]] -> Masks"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Index.hs|fe26076829368463|0": {
     "target": "../../../core/app/CE/Query/Eval/Index.hs",
-    "line": 36,
+    "line": 45,
     "text": "lookupBound :: Indexed -> [Maybe Integer] -> [Tuple]"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/app/CE/Query/Eval/Join.hs|abb36240968aa503|0": {
@@ -11137,8 +11201,14 @@
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|94924658d6780d5d|0": {
     "target": "../../../core/test/ReferenceQuery.hs",
-    "line": 68,
+    "line": 82,
     "text": "strataCount :: [Clause] -> Maybe Int"
+  },
+  "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/ReferenceQuery.hs|9fb4ddb13f63e569|0": {
+    "target": "../../../core/test/ReferenceQuery.hs",
+    "line": 67,
+    "end": 79,
+    "text": "-- | The program's heads as the reference reads them (v2.35 V7): a rule"
   },
   "docs/reference/methodology/16-code-query-and-architecture-rules-datalog-over-the-index.md|../../../core/test/Spec.hs|8ac3dbbbd8e120fd|0": {
     "target": "../../../core/test/Spec.hs",
@@ -11180,6 +11250,12 @@
     "target": "../../../cli/src/daemon/proto.rs",
     "line": 36,
     "text": "pub struct FlowTables {"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/format.rs|c069eacb055e87c3|0": {
+    "target": "../../../cli/src/flow/format.rs",
+    "line": 26,
+    "end": 32,
+    "text": "/// A string's `{` openings, left to right, paired the way the"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../cli/src/flow/lower.rs|781cc0b73892d887|0": {
     "target": "../../../cli/src/flow/lower.rs",
@@ -11318,6 +11394,12 @@
     "end": 59,
     "text": "dynamic :: Unit -> Bool"
   },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cfg.hs|4164ba50b16951d9|0": {
+    "target": "../../../core/app/CE/Flow/Cfg.hs",
+    "line": 119,
+    "end": 137,
+    "text": "-- | A statement's outgoing hops: its structural successors; for"
+  },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Cfg.hs|5385685dfe41e6e3|0": {
     "target": "../../../core/app/CE/Flow/Cfg.hs",
     "line": 44,
@@ -11368,23 +11450,23 @@
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|010f702fd264722d|0": {
     "target": "../../../core/app/CE/Flow/Live.hs",
-    "line": 62,
+    "line": 63,
     "text": "deadStores :: Unit -> Cfg -> IS.IntSet -> [(Int, Int)]"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|4198322d174c6622|0": {
     "target": "../../../core/app/CE/Flow/Live.hs",
-    "line": 53,
+    "line": 54,
     "text": "transfer :: [Use] -> IS.IntSet -> IS.IntSet"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|44c0fe461b0d52ce|0": {
     "target": "../../../core/app/CE/Flow/Live.hs",
-    "line": 78,
-    "end": 90,
+    "line": 79,
+    "end": 91,
     "text": "readVars :: Unit -> IS.IntSet"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Live.hs|9c9fb63f16ee4a34|0": {
     "target": "../../../core/app/CE/Flow/Live.hs",
-    "line": 33,
+    "line": 34,
     "text": "liveIn :: Unit -> Cfg -> IM.IntMap IS.IntSet"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Reach.hs|892a15c653d7d74a|0": {
@@ -11396,6 +11478,12 @@
     "target": "../../../core/app/CE/Flow/Reach.hs",
     "line": 26,
     "text": "runs :: Int -> IS.IntSet -> [(Int, Int)]"
+  },
+  "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Flow/Tree.hs|894b4135ed34d7ba|0": {
+    "target": "../../../core/app/CE/Flow/Tree.hs",
+    "line": 97,
+    "end": 106,
+    "text": "continues :: (Int, Int) -> Int -> Int"
   },
   "docs/reference/methodology/17-intra-function-dead-code-flow-graph-reachability-and-liveness.md|../../../core/app/CE/Lang/Common.hs|ce1041f77630cc79|0": {
     "target": "../../../core/app/CE/Lang/Common.hs",
@@ -11728,6 +11816,12 @@
     "target": "../../../core/app/CE/Clone/Ted.hs",
     "line": 56,
     "text": "tedMapping :: Tree -> Tree -> (Integer, [(Int, Int)])"
+  },
+  "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Lang/C.hs|4e74fa873bd94024|0": {
+    "target": "../../../core/app/CE/Lang/C.hs",
+    "line": 154,
+    "end": 160,
+    "text": "\\expr_kinds = [\\n\\"
   },
   "docs/reference/methodology/18-clone-merge-suggestions-anti-unification.md|../../../core/app/CE/Lang/Haskell.hs|ce773f8bdfa6e731|0": {
     "target": "../../../core/app/CE/Lang/Haskell.hs",

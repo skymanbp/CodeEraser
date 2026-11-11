@@ -11,8 +11,8 @@
     "2": "vacuous"
   },
   "generated_from": {
-    "ce": "1.8.0",
-    "commit": "9ccbffd47893ac45eed12cfd516fc96796a867aa",
+    "ce": "1.9.2",
+    "commit": "2edb9f106c6244edc0db809677aec42b3183789a",
     "dirty": false
   },
   "generation": 1,

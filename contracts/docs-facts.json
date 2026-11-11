@@ -204,7 +204,7 @@
       "id": "report:churn#schemaver",
       "source": "core/app/CE/Churn/Document.hs (schemaId)",
       "tier": "linked",
-      "value": "ce.churn-report/0.2.0"
+      "value": "ce.churn-report/0.3.0"
     },
     {
       "id": "report:clone#schemaver",
