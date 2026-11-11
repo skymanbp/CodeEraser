@@ -156,7 +156,7 @@ shared =
   \  'field_expression', 'identifier', 'number_literal', 'char_literal', 'parenthesized_expression',\n\
   \  'pointer_expression', 'string_literal', 'escape_sequence',\n\
   \  'concatenated_string', 'subscript_expression', 'true', 'false', 'null', 'sizeof_expression',\n\
-  \  'cast_expression', 'unary_expression',\n\
+  \  'cast_expression', 'unary_expression', 'compound_literal_expression',\n\
   \]\n\
   \type_kinds = [\n\
   \  'primitive_type', 'type_identifier', 'sized_type_specifier', 'struct_specifier',\n\

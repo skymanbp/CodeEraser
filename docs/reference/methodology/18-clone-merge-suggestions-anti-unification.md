@@ -132,7 +132,11 @@ names its language's helper lines — the head and closing lines a merged functi
 fragment: 1 in Python and Haskell, 2 elsewhere ([slot.rs:66](../../../cli/src/merge/slot.rs#L66)). A table is
 read in pieces: TSX reads TypeScript's shared piece and its JSX kinds while TypeScript adds the one
 kind only its grammar has, and C and C++ share a piece the same way — so a shared piece never names
-a kind the other grammar lacks ([slot.rs:24-28](../../../cli/src/merge/slot.rs#L24)).
+a kind the other grammar lacks ([slot.rs:24-28](../../../cli/src/merge/slot.rs#L24)), and a kind
+both grammars have sits in the shared piece, so one construct answers one class in a `.c` and a
+`.cpp` file: the compound literal `(P){1,2}` is an expression in both
+([C.hs:154-160](../../../core/app/CE/Lang/C.hs#L154); until v2.35 it sat in the C++ piece alone and
+answered 4 in C).
 
 Haskell has no flow table, and it is this repository's core language, so its slot table carries
 the two lists a flow table would give: `stmt_kinds`, its statement forms (the do block's `bind`,

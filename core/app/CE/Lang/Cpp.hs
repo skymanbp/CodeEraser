@@ -26,7 +26,7 @@ std =
 only :: String
 only =
   "[[slot]]\n\
-  \expr_kinds = ['lambda_expression', 'this', 'qualified_identifier', 'compound_literal_expression']\n\
+  \expr_kinds = ['lambda_expression', 'this', 'qualified_identifier']\n\
   \type_kinds = ['auto', 'placeholder_type_specifier', 'template_type', 'template_argument_list']\n\
   \name_fields = [['optional_parameter_declaration', 'declarator']]\n\
   \other_kinds = [\n\
