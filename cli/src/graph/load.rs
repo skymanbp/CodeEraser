@@ -58,11 +58,14 @@ row_tuple!(t5: A 0, B 1, C 2, D 3, E 4);
 row_tuple!(t6: A 0, B 1, C 2, D 3, E 4, F 5);
 
 /// A site's unresolved ledger rows: one when its OWN answer drew no edge
-/// (an `also` edge, proto 9.1.0, never vouches for the answer), plus one
-/// when it is a star import whose package's `__all__` no literal reads
-/// (`sites.ledger` bit 1, lane v235_graphtrust).
-const UNRESOLVED_ROWS: &str =
-    "((CASE WHEN NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
+/// (an `also` edge, proto 9.1.0, never vouches for the answer) and was
+/// not External — a stdlib, registry or vendored target is a correct
+/// terminal answer, not a miss (booklet 06 §2; `sites.ledger` bit 0) —
+/// plus one when it is a star import whose package's `__all__` no
+/// literal reads (bit 1). Bit 1 since lane v235_graphtrust, bit 0
+/// since lane v235_licence.
+const UNRESOLVED_ROWS: &str = "((CASE WHEN (s.ledger & 1) = 0
+     AND NOT EXISTS (SELECT 1 FROM edges e WHERE e.site_id = s.id AND e.also = 0)
      THEN 1 ELSE 0 END) + ((s.ledger >> 1) & 1))";
 
 /// A site's ledger rows: itself, plus its opaque star row.
@@ -73,10 +76,10 @@ const LEDGER_ROWS: &str = "(1 + ((s.ledger >> 1) & 1))";
 /// while its LANGUAGE still carries unresolved sites; the scalar
 /// count travels with the deadcode report, this names the owners so
 /// the language fold is a fact, never a guess). Here and in
-/// `graph_rows`' counts a site is unresolved when its OWN answer drew
-/// no edge: an `also` edge (proto 9.1.0, `edges.also` = 1) is a real
-/// dependency every graph reader follows, but it never vouches for the
-/// site's answer.
+/// `graph_rows`' counts a site counts by UNRESOLVED_ROWS: an `also`
+/// edge (proto 9.1.0, `edges.also` = 1) is a real dependency every
+/// graph reader follows, but it never vouches for the site's answer;
+/// an External answer is no miss.
 pub fn unresolved_paths(idx: &Index) -> Result<Vec<String>> {
     super::owed::refuse_if_owed(idx.raw())?;
     rows(

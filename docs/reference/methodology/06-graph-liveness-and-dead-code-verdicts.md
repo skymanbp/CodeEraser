@@ -172,7 +172,10 @@ a coupling battery asserting `hash(a)==hash(b) ⟺ projection(a)==projection(b)`
 ### 3. Edge extraction and node identity
 
 Only in-corpus outcomes become stored rows; `External` and `Unresolved` sites stay
-ledger-visible as sites *without* edges ([wire.rs:152-185](../../../cli/src/graph/wire.rs#L152)). An edge's
+ledger-visible as sites *without* edges ([wire.rs:152-185](../../../cli/src/graph/wire.rs#L152)), and
+an `External` one is marked answered in its ledger word — `sites.ledger` bit 0, so the trust
+ledger never counts a stdlib, registry or vendored target as a miss (lane v235_licence,
+[wire.rs:97-110](../../../cli/src/graph/wire.rs#L97), [load.rs:60-69](../../../cli/src/graph/load.rs#L60)). An edge's
 kind follows its site's: code kinds import; the Markdown link family and HTML's page references (`href`, a
 form's `action`) split doc_link / doc_ref by whether the target is a page (Markdown or HTML); an image, a
 `src` / `srcset` resource and an asset `<link>` are always assets
@@ -478,6 +481,11 @@ Since 2.32.0 the request carries a per-language site ledger (optional until 9.0.
    ledger row reads (0, 0))
 2  vouched   — a fully resolved reference population
 ```
+
+`vouched` says every reference site of the language is answered — in-corpus or External —
+which is a statement about sites, not about use: a file run by its name or found by a tool's
+convention leaves no site, so a vouched dead file can still be in use, and the erase family
+never deletes one (book 12 §2, `reachable_by_name`).
 
 ([Cost.hs:153-168](../../../core/app/CE/Graph/Cost.hs#L153)). This is the erase family's trust boundary — *a language with unresolved sites cannot vouch for its dead verdicts* — executed by the family that owns the ledger; the erase predicate consumes the column as a fact (book 12 §class 3). Until 9.0.0 a request without the key kept two-column dead rows; since 9.0.0, which made the measuring side's standing practice the contract, such a request is refused by name (`unres: required at 9.0.0`). The Rust side folds per-path site counts to the per-language rows inside the same snapshot that produced the edges ([load.rs:148](../../../cli/src/graph/load.rs#L148), [deadcode.rs:269,277-290](../../../cli/src/graph/deadcode.rs#L269)), fences every returned index and bounds the column ([deadcode.rs:489-506](../../../cli/src/graph/deadcode.rs#L489)), and the core renders the trust word beside each dead file ([Lines.hs:29-35](../../../core/app/CE/Graph/Lines.hs#L29)). The props battery pins all three codes through the real `respond`, the refusal of a request without the ledger beside them, and every ledger refusal by name ([GraphWireProps.hs:135](../../../core/test/GraphWireProps.hs#L135)).
 

@@ -2,8 +2,9 @@
 //! ladder dispatch (one batch: the core holds every language's rungs,
 //! plan v2.33 W2a / W2-text) → edge rows per site. Only in-corpus resolutions become
 //! rows — External and Unresolved sites stay ledger-visible as sites
-//! without edges (the eval instrument re-runs the ladder itself, so
-//! refusal reasons need no storage). A ResolvedPackage lands ONE row
+//! without edges, an External one marked answered in its ledger word
+//! (`sites.ledger` bit 0, `answered` below; the eval instrument re-runs
+//! the ladder itself, so refusal reasons need no storage). A ResolvedPackage lands ONE row
 //! against the package node (dir, "") — the design's "fan out to
 //! every member file" is the judgment layer's expansion (2g), which
 //! also owns the //go:build exclusion flags: a collapsed fan-out
@@ -95,16 +96,18 @@ pub fn edges(sites: &[CachedSite], scope: &Scope) -> anyhow::Result<Resolved> {
 }
 
 /// One answered site's edge rows — its answer's, then its `also`
-/// rows — and its ledger word (store.rs `sites.ledger`): bit 1 an
-/// opaque star import, one more unresolved ledger row.
+/// rows — and its ledger word (store.rs `sites.ledger`): bit 0 an
+/// External answer, a correct terminal answer that draws no edge and
+/// is no miss; bit 1 an opaque star import, one more unresolved row.
 fn answered(kind: &str, outcome: Outcome, also: ladder::Also) -> (Vec<EdgeRow>, i64) {
+    let external = i64::from(matches!(outcome, Outcome::External { .. }));
     let mut out = rows(kind, outcome);
     out.extend(
         also.rows
             .into_iter()
             .map(|(dst, rung)| also_row(kind, dst, rung)),
     );
-    (out, i64::from(also.opaque) << 1)
+    (out, external | i64::from(also.opaque) << 1)
 }
 
 /// The batch with no core to answer: this side's rungs answer their
@@ -238,3 +241,7 @@ fn doc_page(dst: &str) -> bool {
         Some(Lang::Markdown | Lang::Html)
     )
 }
+
+#[cfg(test)]
+#[path = "../../tests/unit/graph/wire.rs"]
+mod tests;

@@ -134,6 +134,11 @@ pub use crate::graph::owed::{Resolved, each};
 /// edges (`edges.also` = 1; the core's CE.Resolve.PyAlso) — new columns
 /// and new stored edges, so every site is re-detected and every edge
 /// re-resolved once.
+/// 27 = an External answer is an answer, not a miss (lane
+/// v235_licence, graphtrust's T4): `sites.ledger` bit 0 records it and the trust
+/// ledger (graph/load.rs) counts a site without an edge as unresolved
+/// only when it is not External — every edge re-resolved once so each
+/// site's word is written.
 /// 26 = a star import of a package whose `__all__` is a literal list
 /// imports the submodules it names (`also` edges; the walk reads each
 /// `__init__.py`'s `__all__` into the request and the resolve key), and
@@ -175,7 +180,7 @@ pub use crate::graph::owed::{Resolved, each};
 /// changes (Java's source sets and own units, Lua's own directory)
 /// ride the same one-release bump: only an index a development build
 /// of an earlier step wrote could still hold the old edges.
-pub const GRAPH_REV: i64 = 26;
+pub const GRAPH_REV: i64 = 27;
 
 /// CREATE-only DDL (design §3 verbatim); the DROP half belongs to the
 /// wipe lifecycle in dedup/schema.rs. `dst_path` is TEXT, not an FK:
