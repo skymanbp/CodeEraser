@@ -87,7 +87,13 @@ scan2 =
   \owner_kinds = []\n\
   \overloads = null\n\
   \call_import_kinds = []\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): `import … = require(…)` is an import_statement too; the\n\
+  \# CommonJS `const x = require(\"m\")` and a bare `require(\"m\")` /\n\
+  \# `import(\"m\")` are load statements. A re-export stays code.\n\
+  \import_kinds = ['import_statement']\n\
+  \loads = {statement_lists = ['program', 'statement_block'], shapes = ['lexical_declaration variable_declarator value', 'variable_declaration variable_declarator value', 'expression_statement call_expression']}\n"
 
 shared :: String
 shared =

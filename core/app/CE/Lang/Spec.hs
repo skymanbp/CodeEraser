@@ -15,6 +15,7 @@ module CE.Lang.Spec
   , LangTables (..)
   , Larger (..)
   , Language (..)
+  , Loads (..)
   , NameStyle (..)
   , Overloads (..)
   , Pairs
@@ -59,18 +60,25 @@ data Overloads = Overloads {ovOptional, ovVariadic, ovIgnored, ovSpread, ovUnrea
   deriving stock (Eq, Generic)
   deriving (Blank, FromJSON, ToJSON) via Row 2 Overloads
 
+-- | A language's load statements: the statement lists whose children
+-- are read, and the shapes a load statement has.
+data Loads = Loads {ldStatementLists, ldShapes :: Kinds}
+  deriving stock (Eq, Generic)
+  deriving (Blank, FromJSON, ToJSON) via Row 2 Loads
+
 -- | A language's scan table: units, both complexity metrics, the
--- literal delimiters, the call arcs.
+-- literal delimiters, the call arcs, the import family.
 data ScanSpec = ScanSpec
   { scFnKinds, scParamListKinds, scCcKinds, scCcOperators, scChainKinds :: Kinds
   , scCocNestingKinds, scIfKinds, scCocFlatKinds, scCocNestOnlyKinds :: Kinds
   , scCocOperators, scCocJumpKinds, scLabelKinds, scCommentKinds, scLiteralDelims :: Kinds
   , scCallKinds, scCallNameKinds, scCallMemberKinds, scCallSelfWords :: Kinds
-  , scCallMemberScopes, scOwnerKinds, scCallImportKinds :: Kinds
+  , scCallMemberScopes, scOwnerKinds, scCallImportKinds, scImportKinds :: Kinds
   , scFnRequiredFields, scOpaqueFields :: Pairs
   , scNameStyle :: NameStyle
   , scCallFields :: (String, Maybe String)
   , scOverloads :: Maybe Overloads
+  , scLoads :: Loads
   }
   deriving stock (Eq, Generic)
   deriving (Blank, FromJSON, ToJSON) via Row 2 ScanSpec

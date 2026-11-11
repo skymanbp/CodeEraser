@@ -32,6 +32,7 @@ battery =
     , "the judged mask is 0x17847F, the wire contracts read it (CE.Wire.Mask), and the tables are the judged languages"
     , "the flow-judged mask is 1540127, inside the judged set"
     , "no nest-only kind is a unit kind"
+    , "the import family: kinds where a language has import statements, load shapes where it has load calls"
     , "the slot sets are disjoint and the name pairs single"
     , "flow name tables are plain and single"
     , "every flow table has containers, exits and names; the C family's for"
@@ -41,7 +42,7 @@ battery =
     , "tables/1 refuses a key beyond the envelope by name"
     , "the hello compares the major of the proto it is handed"
     ]
-    [codes, extensions, judged, flowJudged, nestOnly, slots, flowNames, flowShape, dispatch, digest, reply, refusal, majors]
+    [codes, extensions, judged, flowJudged, nestOnly, importFamily, slots, flowNames, flowShape, dispatch, digest, reply, refusal, majors]
 
 codes :: Bool
 codes = map lgCode languages == [0 .. 21]
@@ -68,6 +69,26 @@ nestOnly :: Bool
 nestOnly = all dead (map ltScan allTables)
  where
   dead s = not (any (`elem` scFnKinds s) (scCocNestOnlyKinds s))
+
+-- | The import family (v2.35 imports lane): a language without an
+-- import statement (Lua, R) names no import kind and states load
+-- shapes, read against its `calls` rows; an import kind is no comment
+-- or unit kind; a shape opens with a statement kind, never with one of
+-- the statement lists it is read under.
+importFamily :: Bool
+importFamily = all ok allTables
+ where
+  ok t =
+    let s = ltScan t
+        l = scLoads s
+        heads = map (takeWhile (/= ' ')) (ldShapes l)
+     in null (scImportKinds s) == (ltName t `elem` ["lua", "r", "markdown", "html"])
+          && null (ldShapes l) == null (ldStatementLists l)
+          && (null (ldShapes l) || not (null (ltCalls t)))
+          && not (any (`elem` (scCommentKinds s <> scFnKinds s)) (scImportKinds s))
+          && not (any (`elem` ldStatementLists l) heads)
+          && unique (scImportKinds s)
+          && unique (ldShapes l)
 
 -- | Expression, type, part, other and statement kinds part; the
 -- statement and container lists are the slot table's own exactly when no

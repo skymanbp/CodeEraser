@@ -192,6 +192,22 @@ pub struct LangSpec {
     /// branches and its calls no arcs (register D1). Empty where the
     /// grammar has no preprocessor.
     pub opaque_fields: &'static [(&'static str, &'static str)],
+    /// The import family's declarations (v2.35 imports lane): named
+    /// nodes of these kinds give the clone tokenizer no token, the way a
+    /// comment gives none (dedup/tokens.rs).
+    pub import_kinds: Kinds,
+    /// The import family's load statements (scan/loads.rs).
+    pub loads: Loads,
+}
+}
+
+leaked! {
+/// Load statements: the statement lists whose children are read, and the
+/// shapes a load statement has — `<statement kind> <position>…`, every
+/// path ending in calls the call-site table opens a site for.
+pub struct Loads {
+    pub statement_lists: Kinds,
+    pub shapes: Kinds,
 }
 }
 

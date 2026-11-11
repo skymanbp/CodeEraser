@@ -133,7 +133,11 @@ scan3 =
   \overloads = {optional = [], variadic = ['spread_parameter'], ignored = ['receiver_parameter'], spread = [], unreachable = ['constructor_declaration', 'compact_constructor_declaration']}\n\
   \# Java has no import below the file header\n\
   \call_import_kinds = []\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): the package and import declarations; annotations stay\n\
+  \# code.\n\
+  \import_kinds = ['import_declaration', 'package_declaration']\n"
 
 slot :: String
 slot =

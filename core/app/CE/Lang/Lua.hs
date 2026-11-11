@@ -113,7 +113,13 @@ scan3 =
   \# 5b); one bound to a function value is a unit the index seats and\n\
   \# shadows nothing (scan/calls.rs shadowed)\n\
   \call_import_kinds = ['variable_declaration']\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): Lua has no import statement; a load statement is a\n\
+  \# `local` or global assignment every value of which is a load\n\
+  \# (`local x = require(\"m\")`, `local ok, m = pcall(require, \"m\")`)\n\
+  \# or a bare load call; `require(\"m\").f` stays code.\n\
+  \loads = {statement_lists = ['chunk', 'block'], shapes = ['variable_declaration assignment_statement expression_list value', 'assignment_statement expression_list value', 'function_call']}\n"
 
 slot :: String
 slot =

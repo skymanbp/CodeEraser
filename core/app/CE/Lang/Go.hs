@@ -74,7 +74,10 @@ scan2 =
   \owner_kinds = []\n\
   \overloads = null\n\
   \call_import_kinds = []\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): the package clause and the import declarations.\n\
+  \import_kinds = ['import_declaration', 'package_clause']\n"
 
 slot :: String
 slot =

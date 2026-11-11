@@ -142,7 +142,11 @@ scan3 =
   \# D1 — fmt's is_big_endian read 2 for the `&&` in its `#elif`\n\
   \# before this line existed); `#ifdef` names an identifier, not an\n\
   \# expression, and needs no row\n\
-  \opaque_fields = [['preproc_if', 'condition'], ['preproc_elif', 'condition']]\n"
+  \opaque_fields = [['preproc_if', 'condition'], ['preproc_elif', 'condition']]\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): `#include`, wherever it stands; C++ `using` and `#define`\n\
+  \# stay code.\n\
+  \import_kinds = ['preproc_include']\n"
 
 shared :: String
 shared =

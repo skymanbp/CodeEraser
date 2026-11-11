@@ -21,6 +21,7 @@ pub mod functions;
 pub mod globs;
 pub mod html;
 pub mod lang;
+pub mod loads;
 pub mod metrics;
 pub mod opaque;
 pub mod outputs;

@@ -70,7 +70,11 @@ scan2 =
   \owner_kinds = []\n\
   \overloads = null\n\
   \call_import_kinds = ['use_declaration']\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): every `use`, `pub use` included — a re-export is name\n\
+  \# plumbing too — and `extern crate`; `mod x;` stays code.\n\
+  \import_kinds = ['use_declaration', 'extern_crate_declaration']\n"
 
 slot :: String
 slot =

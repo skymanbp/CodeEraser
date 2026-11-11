@@ -105,7 +105,12 @@ scan2 =
   \owner_kinds = []\n\
   \overloads = null\n\
   \call_import_kinds = []\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): R has no import statement; a load statement is a bare\n\
+  \# `library` / `require` / `requireNamespace` / `source` call at\n\
+  \# statement level. `x <- library(y)` and a wrapped call stay code.\n\
+  \loads = {statement_lists = ['program', 'braced_expression'], shapes = ['call']}\n"
 
 slot :: String
 slot =

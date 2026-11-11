@@ -1,8 +1,8 @@
 //! Leaf-token extraction + T2 normalization: identifiers → ID,
 //! literals → LIT (pieces of ONE literal node collapse into one, and
 //! a string, char or user-defined literal node is one token whole —
-//! `whole_literal`), comments skipped as whole subtrees, everything
-//! else kept as its kind text. Classification rules derive from leaf-kind AST probes
+//! `whole_literal`), comments and the import family skipped as whole
+//! subtrees (`skipped`), everything else kept as its kind text. Classification rules derive from leaf-kind AST probes
 //! of all four grammars, not guesses. Known M2 stances (documented,
 //! deliberate): booleans/None are NOT collapsed (their identity is
 //! usually semantic, unlike numbers/strings); Go `blank_identifier`
@@ -10,6 +10,7 @@
 
 use crate::scan::ast;
 use crate::scan::lang::Lang;
+use crate::scan::loads;
 use crate::scan::spec::LangSpec;
 use anyhow::{Context, Result};
 use tree_sitter::Node;
@@ -25,7 +26,11 @@ use tree_sitter::Node;
 /// their own, so a raw literal weighed five where a plain one weighed
 /// one; every other grammar's pieces already merged, and their
 /// streams are byte-identical across the bump.
-pub const TOKENIZER_REV: i64 = 4;
+/// 5: the import family gives no token (v2.35 imports lane): the
+/// package's `[scan] import_kinds` declarations and `[scan] loads`
+/// statements are skipped whole like a comment, so a run may continue
+/// across an import one side lacks.
+pub const TOKENIZER_REV: i64 = 5;
 
 /// One normalized token, carrying its source span for report mapping.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -50,11 +55,10 @@ pub fn stream(src: &[u8], lang: Lang) -> Result<Vec<Token>> {
     let grammar = lang
         .grammar()
         .context("size-only language has no token stream")?;
-    let sp = crate::scan::spec::spec(lang);
     let mut parser = tree_sitter::Parser::new();
     parser.set_language(&grammar).context("set_language")?;
     let tree = parser.parse(src, None).context("parse")?;
-    Ok(tokenize(tree.root_node(), sp))
+    Ok(tokenize(tree.root_node(), src, lang))
 }
 
 /// Normalized token stream of a whole parsed file. Literal pieces
@@ -62,12 +66,13 @@ pub fn stream(src: &[u8], lang: Lang) -> Result<Vec<Token>> {
 /// lexical-adjacency merging swallowed whole statements — a Python
 /// attribute docstring after a string assignment vanished and its
 /// lines ballooned the previous LIT's span).
-pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {
+pub fn tokenize(root: Node<'_>, src: &[u8], lang: Lang) -> Vec<Token> {
+    let spec = crate::scan::spec::spec(lang);
     let mut out: Vec<Token> = Vec::new();
     let mut lit_parent: Option<usize> = None;
     let mut stack = vec![root];
     while let Some(node) = stack.pop() {
-        if spec.comment_kinds.contains(&node.kind()) {
+        if skipped(node, spec) {
             continue; // lit_parent intentionally unchanged
         }
         if whole_literal(node, spec) {
@@ -76,7 +81,16 @@ pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {
             continue;
         }
         if node.child_count() > 0 {
-            stack.extend(ast::children(node).into_iter().rev());
+            // a statement list's load statements are name plumbing too
+            // (scan/loads.rs); read where the parent is in hand, so the
+            // walk never asks a node for its parent
+            let lists = spec.loads.statement_lists.contains(&node.kind());
+            stack.extend(
+                ast::children(node)
+                    .into_iter()
+                    .rev()
+                    .filter(|c| !(lists && loads::is_load(*c, src, lang, spec))),
+            );
             continue;
         }
         match classify(node.kind(), spec) {
@@ -96,6 +110,17 @@ pub fn tokenize(root: Node<'_>, spec: &LangSpec) -> Vec<Token> {
         }
     }
     out
+}
+
+/// A comment, or a declaration of the import family — a NAMED node of
+/// an `import_kinds` kind: Haskell's `foreign import` keyword is an
+/// unnamed node of kind `import` and stays a token. Both give no token
+/// (v2.35 imports lane: the standing treatment of a comment, extended to
+/// name plumbing — the PMD CPD Java lexer and SonarQube's Java statement
+/// chunker discard package and import statements the same way).
+fn skipped(node: Node<'_>, spec: &LangSpec) -> bool {
+    spec.comment_kinds.contains(&node.kind())
+        || (node.is_named() && spec.import_kinds.contains(&node.kind()))
 }
 
 fn token(class: &Class, kind: &str, node: Node<'_>) -> Token {

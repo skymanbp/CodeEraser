@@ -87,7 +87,14 @@ scan2 =
   \owner_kinds = []\n\
   \overloads = null\n\
   \call_import_kinds = ['import_from_statement', 'import_statement']\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane): name plumbing gives the\n\
+  \# clone tokenizer no token, the way a comment gives none. The\n\
+  \# declarations by kind; a load statement by shape — a statement of a\n\
+  \# statement list whose path ends only in calls the `calls` rows open\n\
+  \# a site for (`m = importlib.import_module(\"x\")`, `__import__(\"x\")`).\n\
+  \import_kinds = ['import_statement', 'import_from_statement', 'future_import_statement']\n\
+  \loads = {statement_lists = ['module', 'block'], shapes = ['expression_statement assignment right', 'expression_statement call']}\n"
 
 slot :: String
 slot =

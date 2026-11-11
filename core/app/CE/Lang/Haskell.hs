@@ -119,7 +119,12 @@ scan3 =
   \# same-named units of one scope are one callable, never overloads\n\
   \overloads = null\n\
   \call_import_kinds = []\n\
-  \opaque_fields = []\n"
+  \opaque_fields = []\n\
+  \# The import family (v2.35 imports lane; CE.Lang.Python states the\n\
+  \# rule): the named `import` declaration — the keyword of a\n\
+  \# `foreign import` is an unnamed node of the same kind and stays;\n\
+  \# the module header with its export list stays code.\n\
+  \import_kinds = ['import']\n"
 
 slot :: String
 slot =
