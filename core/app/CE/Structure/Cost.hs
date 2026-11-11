@@ -177,7 +177,9 @@ roiCloneMilli = 500
 roiChurnMilli :: Integer
 roiChurnMilli = 150
 
--- | Node ceiling (the verdictRowCap magnitude anchor): over-cap
--- answers a complete degraded reply that FAILS (the P1 posture).
+-- | Request-row ceiling (the verdictRowCap magnitude anchor; the name
+-- predates the tables it now prices — CE.Structure `priced` counts
+-- every table the core reads): over-cap answers a complete degraded
+-- reply that FAILS (the P1 posture).
 structNodeCap :: Integer
 structNodeCap = 524288

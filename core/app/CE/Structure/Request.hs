@@ -19,9 +19,9 @@
 -- the reply echoes, the fault that replaces a judgment, the offence that
 -- refuses it. Test seam: Rust sends the path form only; the integer
 -- form stays as the props' differential seam (plan v2.33 step 11a, C26).
-module CE.Structure.Request (StructReq (..), patternsOf, seamTables, pathOffence, pathFault, pathKeys) where
+module CE.Structure.Request (StructReq (..), patternsOf, seamTables, pathOffence, pathFault, pathKeys, pathRows) where
 
-import CE.Structure.Raw (Built (..), Raw, buildRaw, parseRaw, rawOffence)
+import CE.Structure.Raw (Built (..), Raw, buildRaw, parseRaw, rawOffence, rawRows)
 import CE.Structure.Shape (foldShapes)
 import CE.Structure.Tree (dirPaths)
 import CE.Wire (patternsSent)
@@ -31,8 +31,9 @@ import Data.Aeson.Types (Pair, Parser)
 
 -- | The path form as decoded, in field order: the tables built (or
 -- the fault naming a path the tree cannot place), the offence
--- refusing it, whether the built tables ride back (`inspect`).
-data PathForm = PathForm (Either String Built) (Maybe String) Bool
+-- refusing it, whether the built tables ride back (`inspect`), the rows
+-- the path form itself carries (priced with the rest, CE.Structure).
+data PathForm = PathForm (Either String Built) (Maybe String) Bool Integer
 
 data StructReq = StructReq
   { reqPath :: Maybe PathForm
@@ -123,14 +124,14 @@ pathForm o raw = do
       offence = case mixed of
         k : _ -> Just ("paths beside the dir-keyed table " <> show k)
         [] -> rawOffence raw
-  pure (PathForm (maybe (buildRaw raw) Left offence) offence inspect)
+  pure (PathForm (maybe (buildRaw raw) Left offence) offence inspect (rawRows raw))
  where
   integerKeys = ["nodes", "patternShapes", "conventions", "fileRefs", "declared", "staleDocRows", "staleEdgeRows", "redundancy", "dirEdges"]
 
 -- | The dir-keyed fields filled from the built path form.
 fill :: StructReq -> StructReq
 fill req = case reqPath req of
-  Just (PathForm (Right b) Nothing _) ->
+  Just (PathForm (Right b) Nothing _ _) ->
     req
       { reqNodes = bNodes b
       , reqShapes = Just (bShapes b)
@@ -146,12 +147,16 @@ fill req = case reqPath req of
 
 -- | The path form's refusal, when it rides and is refused.
 pathOffence :: StructReq -> Maybe String
-pathOffence req = reqPath req >>= \(PathForm _ offence _) -> offence
+pathOffence req = reqPath req >>= \(PathForm _ offence _ _) -> offence
+
+-- | The rows the path form carries, 0 for the integer form.
+pathRows :: StructReq -> Integer
+pathRows req = maybe 0 (\(PathForm _ _ _ rows) -> rows) (reqPath req)
 
 -- | The path the tree could not place, answered instead of a judgment.
 pathFault :: StructReq -> Maybe String
 pathFault req = case reqPath req of
-  Just (PathForm (Left fault) Nothing _) -> Just fault
+  Just (PathForm (Left fault) Nothing _ _) -> Just fault
   _ -> Nothing
 
 -- | What a path-form reply adds: the tree rows and each directory's name
@@ -159,7 +164,7 @@ pathFault req = case reqPath req of
 -- with `inspect` — the dir-keyed tables built.
 pathKeys :: Integer -> StructReq -> [Pair]
 pathKeys priced req = case reqPath req of
-  Just (PathForm (Right b) Nothing inspect) ->
+  Just (PathForm (Right b) Nothing inspect _) ->
     ["tree" .= bNodes b, "dirs" .= map dotted (dirPaths (bTree b))]
       <> ["priced" .= priced | priced > 0]
       <> ["built" .= object (built b) | inspect]

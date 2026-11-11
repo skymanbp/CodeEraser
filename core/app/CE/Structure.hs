@@ -26,7 +26,7 @@ import CE.Verdict.Score (chargeAt, classKnobsOf)
 import CE.Verdict.Table (classKnobsOffence)
 import CE.Structure.Declared (declaredRows)
 import CE.Structure.Knobs (effective, knobTable, knobsOffence)
-import CE.Structure.Request (StructReq (..), pathFault, pathKeys, pathOffence, patternsOf, seamTables)
+import CE.Structure.Request (StructReq (..), pathFault, pathKeys, pathOffence, pathRows, patternsOf, seamTables)
 import CE.Structure.Shape (shapeBitsCap)
 import CE.Structure.Split (splitOffence, splitRows)
 import qualified CE.Structure.Stale as Stale
@@ -51,15 +51,22 @@ respond proto =
       , famJudged = \req -> maybe (reply proto req (effective (reqKnobs req)) False) (faultLine proto F.structure (reqId req)) (pathFault req)
       }
 
--- | The rows the cap prices: the nodes, the seam tables and the dir-edge
--- table together (C15: a declared cap that misses a request dimension
--- walks it uncapped).
+-- | The rows the cap prices: every table the core reads — the path
+-- form's own rows when it rides, the nodes and every dir-keyed table
+-- (built from the paths or sent as integers), the staleness rows, the
+-- seam tables and the knob rows (C15: a declared cap that misses a
+-- request dimension walks it uncapped; v2.35 V6 priced the seven tables
+-- the cap had missed, `deriveStale`'s two among them).
 priced :: StructReq -> Integer
-priced req = toInteger (length (reqNodes req) + seamRows + edgeRows)
+priced req = pathRows req + toInteger (sum (map length tables))
  where
   (u, r, c, h) = seamTables req
-  seamRows = maybe 0 length (reqSeamFiles req) + sum (map length [u, r, c, h])
-  edgeRows = maybe 0 length (reqDirEdges req)
+  tables =
+    [ reqNodes req, fromMaybe [] (reqShapes req), reqConventions req, reqFileRefs req
+    , reqDeclared req, fromMaybe [] (reqStaleDocRows req), reqStaleEdges req
+    , fromMaybe [] (reqRedundancy req), fromMaybe [] (reqDirEdges req)
+    , fromMaybe [] (reqSeamFiles req), u, r, c, h, reqKnobs req, reqClassKnobs req
+    ]
 
 -- | First boundary-contract offender in request order — the three
 -- dir-keyed tables walk ONE loop over their spec rows (the twelfth

@@ -349,11 +349,18 @@ and returns the *first* offender by name ([Structure.hs:71-90](../../../core/app
   ([Structure.hs:96-123](../../../core/app/CE/Structure.hs#L96)).
 
 **Over-cap.** `structNodeCap = 524288` ([Cost.hs:180-183](../../../core/app/CE/Structure/Cost.hs#L180)).
-Node rows, the seam tables *and* (7.1.0) the dir-edge table count against the same cap — a declared
-cap that misses a request dimension walks that dimension uncapped
-([Structure.hs:57-62](../../../core/app/CE/Structure.hs#L57)). Since plan v2.33 W1 item 3 the core
-prices the tables it built from the paths, and a path-form reply that degrades carries the rows it
-priced, which the measuring side prints in its refusal
+Every table the core reads counts against the one cap — a declared cap that misses a request
+dimension walks that dimension uncapped: the path form's own rows (each path, arc, layout entry,
+staleness doc with each of its target times, clone pair and dead path), the nodes and every
+dir-keyed table, built from the paths or sent as integers, the staleness rows, the seam tables and
+the knob rows ([Structure.hs:54-69](../../../core/app/CE/Structure.hs#L54),
+[Raw.hs:74-82](../../../core/app/CE/Structure/Raw.hs#L74)). Until v2.35 the cap priced the nodes,
+the seam tables and the dir-edge table alone, and seven tables — the shape, convention, reference,
+layout, redundancy and both staleness tables — walked uncapped; on this repository and the nine
+external corpora every request `ce structure --days 14 --split-candidates --deep` sends sums well
+under the cap (the largest, fmt, 49,903 rows; this repository 8,620), so no request that was judged
+is refused. A path-form reply that
+degrades carries the rows it priced, which the measuring side prints in its refusal
 ([wire.rs:172-182](../../../cli/src/structure/wire.rs#L172)). Over-cap answers a **complete degraded
 reply that fails**: facts are emptied, the A-layer and split keys drop, `fail` and `degraded`
 are both true and `reason` is `structure_too_large`

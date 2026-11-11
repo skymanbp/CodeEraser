@@ -12,7 +12,7 @@
 -- ones the measuring side sent as integers until then. A path the tree
 -- cannot place is a fault answered by name (the message the measuring
 -- side printed), never a guess.
-module CE.Structure.Raw (Raw (..), Built (..), parseRaw, rawOffence, buildRaw, rustDebug) where
+module CE.Structure.Raw (Raw (..), Built (..), parseRaw, rawOffence, rawRows, buildRaw, rustDebug) where
 
 import CE.Structure.Tree (Dir (..), Tree (..), build, dirOf)
 import Data.Aeson (Object, (.!=), (.:?))
@@ -70,6 +70,16 @@ parseRaw o = do
           <*> o .:? "staleDocs"
           <*> o .:? "clonePairs"
           <*> o .:? "deadPaths"
+
+-- | The rows the path form carries: every path, arc, layout entry, doc
+-- with each of its target times, clone pair and dead path.
+rawRows :: Raw -> Integer
+rawRows raw =
+  toInteger $
+    sum [length (rPaths raw), length (rRefPaths raw), length (rRefPairs raw), length (rLayout raw)]
+      + maybe 0 (sum . map (\(_, _, ts) -> 1 + length ts)) (rStale raw)
+      + maybe 0 length (rClones raw)
+      + maybe 0 length (rDead raw)
 
 -- | The path form's own contract: every arc a pair of slots of
 -- `refPaths`. (The built tables then meet the integer form's checks.)

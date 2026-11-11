@@ -17,7 +17,7 @@ import CE.Structure.Cost (structNodeCap)
 import CE.Structure.Entropy (perMille, tsallis2Norm)
 import qualified CE.Structure.Modularity as Mod
 import CE.Structure.Shape (shapeCode)
-import Data.Aeson (Result (..), Value (..), fromJSON, toJSON)
+import Data.Aeson (Result (..), Value (..), fromJSON, object, toJSON, (.=))
 import qualified Data.Map.Strict as M
 import ReferenceStructure (SIn (..), diversity, expected, flagged, style)
 import StructureGen (cases, encode')
@@ -32,6 +32,7 @@ battery =
     , "the diversity agrees with the shipped Tsallis-2 on every vector of up to four bins of 0..4"
     , "forged depths, the retired pattern road and an odd inside sum are refused as the reference reads them"
     , "an over-cap request degrades over no facts and the default knobs"
+    , "every table the core reads is priced: seven tables each under the cap but together over it, and a path form's own arcs, degrade by name (v2.35 V6)"
     , "modularity agrees on every three-directory graph of unit edges and intra masses, at four floors"
     , "booklet 04's range: no axis lists a directory twice, no charge passes half the scale, and at the neutral dial the score is in [scale/2, scale]"
     ]
@@ -41,6 +42,7 @@ battery =
     , and [perMille (tsallis2Norm cs) == diversity cs | k <- [0 .. 4], cs <- sequence (replicate k [0 .. 4])]
     , all forged cases
     , fieldsOf respond big (keys <> ["degraded", "reason"]) == Just (expected True blank <> [Just (Bool True), Just (String "structure_too_large")])
+    , all tooLarge [spread, arcs]
     , modularGrid
     , all bounded cases && any neutralFlagged cases
     ]
@@ -48,6 +50,23 @@ battery =
   keys = ["axes", "score", "entropy", "findings", "divergence", "deviations", "splitCandidates", "sizeExempt", "patternShapes"]
   blank = SIn [[0, 0, 0, 0, 0]] Nothing [] [] [] Nothing [] Nothing Nothing Nothing ([], [], [], []) []
   big = setKey "seamUnits" (toJSON (replicate (fromInteger structNodeCap) [0, 0, 1, 1 :: Integer])) (encode' blank)
+  tooLarge r = fieldsOf respond r ["degraded", "reason"] == Just [Just (Bool True), Just (String "structure_too_large")]
+  -- the seven tables the cap missed until V6, one seventh of the cap
+  -- and one more row each
+  spread = foldr (\(k, row) -> setKey k (toJSON (replicate each row))) (encode' blank) unpriced
+  each = fromInteger (structNodeCap `div` 7 + 1)
+  unpriced =
+    [ ("patternShapes", [0, 1, 1 :: Integer]), ("conventions", [0, 1]), ("fileRefs", [0, 0, 0, 1])
+    , ("declared", [0, 1]), ("staleDocRows", [0, 0]), ("staleEdgeRows", [0, 1]), ("redundancy", [0, 1, 0])
+    ]
+  -- one file and the cap's count of arcs from it to itself: the built
+  -- tables stay one row each, the path form's own rows are the price
+  arcs =
+    object
+      [ "proto" .= ("9.0.0" :: String), "type" .= ("structure.request" :: String), "id" .= (1 :: Int)
+      , "paths" .= ["a.py" :: String], "refPaths" .= ["a.py" :: String]
+      , "refPairs" .= replicate (fromInteger structNodeCap) [0, 0 :: Integer]
+      ]
 
 -- | Every directed unit-edge set over three directories, every intra
 -- mass 0..2 per directory, the floors 1, 250, 500 and 1000 per mille
